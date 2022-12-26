@@ -45,7 +45,6 @@
       <path value="$PROJECT_DIR$/vendor/phpunit/php-invoker" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/hydrogen-framework" />
       <path value="$PROJECT_DIR$/vendor/league/html-to-markdown" />
-      <path value="$PROJECT_DIR$/vendor/ceus-media/bootstrap" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/markdown" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/hydrogen-source-indexer" />
       <path value="$PROJECT_DIR$/vendor/php-parallel-lint/php-parallel-lint" />
@@ -67,6 +66,7 @@
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan-strict-rules" />
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/template-engine" />
+      <path value="$PROJECT_DIR$/vendor/ceus-media/bootstrap" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.4">

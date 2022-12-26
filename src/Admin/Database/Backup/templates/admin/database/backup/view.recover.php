@@ -15,11 +15,11 @@ $iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$w	= (object) array(
+$w	= (object) [
 	'labelPasswordCurrent_title'	=> 'Passwort',
 	'labelPasswordCurrent'			=> 'Passwort',
 	'buttonRecover'					=> 'wiederherstellen',
-);
+];
 
 return '
 <div class="content-panel">
@@ -37,10 +37,10 @@ return '
 			'.HTML::Buttons( array(
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6', array(
+					HTML::DivClass( 'span6', [
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							HtmlTag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', [
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',
@@ -48,10 +48,10 @@ return '
 								'required'		=> 'required',
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
-							) ).
+							] ).
 							HtmlElements::Button( 'save', '<i class="fa fa-fw fa-check"></i> '.$w->buttonRecover, 'btn btn-primary' )
 						)
-					) )
+					] )
 				)
 			) ).'
 		</form>

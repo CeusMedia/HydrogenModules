@@ -11,17 +11,17 @@ class View_Admin_Mail_Queue extends View
 	{
 		$model			= new Model_Mail( $this->env );
 
-		$statuses		= array(
+		$statuses		= [
 			Model_Mail::STATUS_SENT		=> 'versendet',
 			Model_Mail::STATUS_FAILED	=> 'fehlgeschlagen',
 			Model_Mail::STATUS_ABORTED	=> 'gescheitert',
-		);
-		$ranges		= array(
+		];
+		$ranges		= [
 			1		=> 'Tag',
 			7		=> 'Woche',
 			30		=> 'Monat',
 			365		=> 'Jahr',
-		);
+		];
 		$data	= [];
 		foreach( $statuses as $statusKey => $statusLabel ){
 			$data[$statusKey]	= [];
@@ -45,11 +45,11 @@ class View_Admin_Mail_Queue extends View
 		foreach( $statuses as $statusKey => $statusLabel ){
 			$row	= [];
 			foreach( array_reverse( $ranges, TRUE ) as $days => $label ){
-				$lastRange	= (object) array(
+				$lastRange	= (object) [
 					'key'		=> $days,
 					'value'		=> $data[$statusKey][$days],
 					'label'		=> $label,
-				);
+				];
 				break;
 			}
 			foreach( array_reverse( $ranges, TRUE ) as $rangeKey => $rangeLabel ){
@@ -66,30 +66,30 @@ class View_Admin_Mail_Queue extends View
 			$row[]	= HtmlTag::create( 'th', $statusLabel );
 			$rows[]	= HtmlTag::create( 'tr', array_reverse( $row ) );
 		}
-		$table2	= HtmlTag::create( 'table', array(
+		$table2	= HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( '', '15%', '15%', '15%', '15%' ),
 			HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) ),
 			HtmlTag::create( 'tbody', $rows ),
-		), array(
+		], [
 			'class'		=> 'table table-condensed table-fixed',
-		) );
-		$table1	= HtmlTag::create( 'table', array(
+		] );
+		$table1	= HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( '20%', '80%' ),
-			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( ['status' => 0] ).'</span>', ['style' => 'text-align: right; vertical-align: bottom'] ),
 				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', ['style' => 'vertical-align: bottom'] ),
-			) ) ),
-		), array(
+			] ) ),
+		], [
 			'class'		=> 'table table-fixed',
-		) );
+		] );
 		return $table1.'<br/>'.$table2;
 	}
 
-	public function enqueue()
+	public function enqueue(): void
 	{
 	}
 
-	public function html()
+	public function html(): void
 	{
 		try{
 			$mail	= $this->getData( 'mail' );
@@ -98,25 +98,25 @@ class View_Admin_Mail_Queue extends View
 			print( $helper->render() );
 		}
 		catch( Exception $e ){
-			HTmlExceptionPage::display( $e );
+			HtmlExceptionPage::display( $e );
 		}
 		exit;
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$script	= 'ModuleAdminMail.Queue.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	public function view()
+	public function view(): void
 	{
 	}
 
-	public function renderFact( $key, $value ): string
+	public function renderFact( string $key, $value ): string
 	{
 		$words	= $this->env->getLanguage()->getWords( 'admin/mail/queue' );
-		if($key === 'object')
+		if( $key === 'object')
 			return '';
 		if( $key === 'status' ){
 			$value = $words['states'][$value].' <small class="muted">('.$value.')</small>';

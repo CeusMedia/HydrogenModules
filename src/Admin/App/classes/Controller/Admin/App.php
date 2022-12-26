@@ -71,7 +71,8 @@ class Controller_Admin_App extends Controller
 	{
 		try{
 			$logo = (object) $this->request->get( 'logo' );
-			if( $fileName = $this->uploadImage( $logo ) ){
+			$fileName = $this->uploadImage( $logo );
+			if( $fileName ){
 				$this->setConfig( 'app.logo', $fileName );
 				$this->messenger->noteSuccess( 'Das Logo wurde geändert.' );
 			}
@@ -124,7 +125,7 @@ class Controller_Admin_App extends Controller
 	 *	@param		object		$upload
 	 *	@return		string|FALSE|NULL
 	 */
-	protected function uploadImage( object $upload )
+	protected function uploadImage( object $upload ): ?string
 	{
 		if( $upload->error === 4 )
 			return NULL;

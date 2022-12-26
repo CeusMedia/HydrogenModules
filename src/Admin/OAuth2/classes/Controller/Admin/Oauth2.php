@@ -1,17 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Oauth2 extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $modelProvider;
-	protected $modelProviderDefault;
-	protected $providersIndex				= [];
-	protected $providersAvailable			= [];
-	protected $filterPrefix					= 'filter_admin_oauth2_';
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Model_Oauth_Provider $modelProvider;
+	protected Model_Oauth_ProviderDefault $modelProviderDefault;
+	protected array $providersIndex				= [];
+	protected array $providersAvailable			= [];
+	protected string $filterPrefix					= 'filter_admin_oauth2_';
 
 	public function add()
 	{

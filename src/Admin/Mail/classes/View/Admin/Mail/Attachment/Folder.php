@@ -13,7 +13,7 @@ class View_Admin_Mail_Attachment_Folder extends View
 		return $tabs->renderTabs( 'folder' );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 

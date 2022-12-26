@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
@@ -7,8 +9,9 @@ use CeusMedia\Common\XML\Element as XmlElement;
 
 class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
 {
-	protected $mangopay;
-	protected $request;
+	protected Dictionary $request;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected Dictionary $moduleConfig;
 
 	public function index()
 	{
@@ -63,7 +66,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->restart( NULL, TRUE );
 	}
 
-	public function wallet()
+	public function wallet(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
@@ -76,7 +79,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->restart( NULL, TRUE );
 	}
 
-	public function user()
+	public function user(): void
 	{
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 		if( $sellerUserId ){
@@ -107,6 +110,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->mangopay		= Logic_Payment_Mangopay::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 	}
+
 
 	protected function configureLocalModule( $moduleId, $pairs )
 	{

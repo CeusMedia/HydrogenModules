@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Backup extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function restore()
+	public function restore(): void
 	{
 	}
 }

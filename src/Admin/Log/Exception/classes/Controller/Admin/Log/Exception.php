@@ -10,6 +10,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	System Log Controller.
@@ -20,25 +21,27 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Controller_Admin_Log_Exception extends Controller
 {
-	protected $logic;
+	protected Logic_Log_Exception $logic;
 
-	protected $messenger;
+	protected MessengerResource $messenger;
 
-	protected $model;
+	protected Model_Log_Exception $model;
 
 	protected Dictionary $moduleConfig;
 
-	protected $request;
+	protected Dictionary $request;
 
-	protected $filterPrefix		= 'filter_admin_log_exception_';
+	protected Dictionary $session;
 
-	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
+	protected string $filterPrefix		= 'filter_admin_log_exception_';
+
+	public static function ___onLogException( Environment $env, object $context, object $module, array & $payload )
 	{
-		if( is_object( $data ) && $data instanceof Exception )
-			$data	= ['exception' => $data];
-		if( !isset( $data['exception'] ) )
+//		if( is_object( $payload ) && $payload instanceof Exception )
+//			$payload	= ['exception' => $payload];
+		if( !isset( $payload['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
-		$exception	= $data['exception'];
+		$exception	= $payload['exception'];
 		self::handleException( $env, $exception );
 	}
 
@@ -61,13 +64,13 @@ class Controller_Admin_Log_Exception extends Controller
 
 	public function filter( $reset = NULL )
 	{
-        if( $reset ){
-            foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
-                $this->session->remove( $this->filterPrefix.$key );
-        }
-        else{
-            $this->session->set( $this->filterPrefix.'message', $this->request->get( 'message' ) );
-            $this->session->set( $this->filterPrefix.'type', $this->request->get( 'type' ) );
+		if( $reset ){
+			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
+				$this->session->remove( $this->filterPrefix.$key );
+		}
+		else{
+			$this->session->set( $this->filterPrefix.'message', $this->request->get( 'message' ) );
+			$this->session->set( $this->filterPrefix.'type', $this->request->get( 'type' ) );
 			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
 			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
 			$this->session->set( $this->filterPrefix.'order', $this->request->get( 'order' ) );
@@ -135,7 +138,7 @@ class Controller_Admin_Log_Exception extends Controller
 	{
 		$this->model->remove( $id );
 		$page	= $this->session->get( $this->filterPrefix.'page' );
-		$this->restart( $page ? $page : NULL, TRUE );
+		$this->restart( $page ?: NULL, TRUE );
 	}
 
 	public function setInstance( $instanceKey )
@@ -171,6 +174,10 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -180,7 +187,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->logic			= $this->env->getLogic()->get( 'logException' );
 		$this->model			= new Model_Log_Exception( $this->env );
 
-		$instances	= array( 'this' => (object) ['title' => 'Diese Instanz'] );
+		$instances	= ['this' => (object) ['title' => 'Diese Instanz']];
 		$path		= $this->env->getConfig()->get( 'path.logs' );
 		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 

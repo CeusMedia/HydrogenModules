@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Bootstrap\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
@@ -9,13 +10,14 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var object[] $payins */
+/** @var int $pages */
+/** @var int $page */
 
-$colors		= array(
+$colors		= [
 	Model_Mangopay_Payin::STATUS_CREATED	=> 'label-info',
 	Model_Mangopay_Payin::STATUS_FAILED		=> 'label-important',
 	Model_Mangopay_Payin::STATUS_SUCCEEDED	=> 'label-success',
-);
-
+];
 
 $helperMoney	= new View_Helper_Mangopay_Entity_Money( $env );
 $helperMoney->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
@@ -32,12 +34,12 @@ if( $payins ){
 		$status		= Model_Mangopay_Payin::getStatusLabel( $item->status );
 		$status		= HtmlTag::create( 'label', $status, ['class' => 'label '.$colors[$item->status]] );
 		$fromUser	= HtmlTag::create( 'tt', $item->user->FirstName.' '.$item->user->LastName );
-		$tags		= HtmlTag::create( 'div', array(
+		$tags		= HtmlTag::create( 'div', [
 			HtmlTag::create( 'label', $resource->Nature, ['class' => 'label'] ).' ',
 			HtmlTag::create( 'label', $resource->ExecutionType, ['class' => 'label'] ).' ',
 			HtmlTag::create( 'label', Model_Mangopay_Payin::getTypeLabel( $item->type ), ['class' => 'label'] ).' ',
-		) );
-		$list[]	= HtmlTag::create( 'tr', array(
+		] );
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $fromUser ),
 			HtmlTag::create( 'td', $tags ),
@@ -45,34 +47,34 @@ if( $payins ){
 			HtmlTag::create( 'td', $status ),
 /*			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $item->createdAt ) ),*/
 			HtmlTag::create( 'td', HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $item->modifiedAt ) ) ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['50', '', '', '100px', '100px', '140px'] );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'#',
 		'Person',
 		'Einordnung',
 		'Betrag',
 		'Zustand',
 		'Datum',
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed table-condensed'] );
 }
 
 $buttonbar	= '';
-$pagination	= new \CeusMedia\Bootstrap\PageControl( 'admin/payment/mangopay/payin', $page, $pages );
+$pagination	= new PageControl( 'admin/payment/mangopay/payin', $page, $pages );
 if( $pages > 1 )
-	$buttonbar	= HtmlTag::create( 'div', array(
+	$buttonbar	= HtmlTag::create( 'div', [
 		$pagination,
-	), ['class' => 'buttonbar'] );
+	], ['class' => 'buttonbar'] );
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'payin' );
 
-return $tabs.HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Payins' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$list,
 		$buttonbar,
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );

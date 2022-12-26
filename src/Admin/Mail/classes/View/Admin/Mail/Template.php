@@ -5,14 +5,14 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Mail_Template extends View
 {
-	public function add()
+	public function add(): void
 	{
 		$template	= $this->getData( 'template' );
-		$defaults	= array(
+		$defaults	= [
 			'plain'	=> 'default.txt',
 			'html'	=> 'default.html',
 			'css'	=> 'default.css',
-		);
+		];
 		$defaultsPath	= 'admin/mail/template/';
 		foreach( $defaults as $key => $value ){
 			if( empty( $template->{$key} ) ){
@@ -22,22 +22,22 @@ class View_Admin_Mail_Template extends View
 		}
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 		$template	= $this->getData( 'template' );
-		$script	= 'ModuleAdminMail.TemplateEditor.init('.$template->mailTemplateId.');';
+		$script		= 'ModuleAdminMail.TemplateEditor.init('.$template->mailTemplateId.');';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	public function import()
+	public function import(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function remove()
+	public function remove(): void
 	{
 	}
 

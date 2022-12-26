@@ -5,7 +5,7 @@ use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class Controller_Admin_Cache extends Controller
 {
-	public function add()
+	public function add(): void
 	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->getCache();
@@ -29,22 +29,21 @@ class Controller_Admin_Cache extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$list		= [];
 		$cache		= $this->getCache();
-		$persistent	= $cache->getType() !== 'Noop';
-		if( $cache && $persistent ){
+		if( $cache ){
 			foreach( $cache->index() as $key ){
 				$value	= $cache->get( $key );
-				$list[]	= (object) array(
+				$list[]	= (object) [
 					'key'	=> $key,
 					'value'	=> $value,
 					'type'	=> gettype( $value )
-				);
+				];
 			}
 		}
-		$this->addData( 'hasCache', $cache && $persistent );
+		$this->addData( 'hasCache', $cache );
 		$this->addData( 'list', $list );
 	}
 

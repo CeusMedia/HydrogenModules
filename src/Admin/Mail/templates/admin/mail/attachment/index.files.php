@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Web $env */
 /** @var View $view */
 /** @var array<array<string,string>> $words */
+/** @var string $path */
 /** @var string[] $files */
 
 $w	= (object) $words['index.files'];

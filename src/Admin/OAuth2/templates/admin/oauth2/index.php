@@ -82,8 +82,8 @@ return $textTop.HtmlTag::create( 'div', [
 function calculateColor( float $ratio ): string
 {
 	$hue	= 255;
-	$r		= $ratio < 0.5 ? 255 : round( ( 1 - $ratio ) * 2 * $hue );	//  calculate red channel
-	$g		= $ratio > 0.5 ? 255 : round( $ratio * 2 * $hue );			//  calculate green channel
-	$b		= 0;														//  calculate blue channel
+	$r		= $ratio < 0.5 ? 255 : round( ( 1 - $ratio ) * 2 * $hue );		//  calculate red channel
+	$g		= $ratio > 0.5 ? 255 : round( $ratio * 2 * $hue );				//  calculate green channel
+	$b		= 0;																//  calculate blue channel
 	return sprintf( 'rgb(%d,%d,%d)', $r, $g, $b );						//  return RGB property value
 }

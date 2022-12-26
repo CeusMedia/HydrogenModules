@@ -14,6 +14,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var string[] $folders */
 /** @var string[] $files */
+/** @var string $basePath */
+/** @var string[] $paths */
+/** @var string $selectedPath */
 
 $iconRemove		= new Icon( 'remove' );
 $iconUpload		= new Icon( 'folder-open' );

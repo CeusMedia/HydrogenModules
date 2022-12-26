@@ -1,9 +1,16 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Payment_Mangopay_Client extends Controller
 {
+	protected Dictionary $request;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected MessengerResource $messenger;
+	protected Dictionary $moduleConfig;
+
 	public function edit()
 	{
 		if( $this->request->has( 'save' ) ){
@@ -19,13 +26,13 @@ class Controller_Admin_Payment_Mangopay_Client extends Controller
 		}
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->addData( 'client', $this->mangopay->getClient() );
 		$this->addData( 'clientWallets', $this->mangopay->getClientWallets() );
 	}
 
-	public function logo( $remove = NULL )
+	public function logo( $remove = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$logicUpload	= new Logic_Upload( $this->env );

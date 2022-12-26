@@ -13,19 +13,19 @@ class View_Admin_Mail_Attachment extends View
 		return $tabs->renderTabs( $current );
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function upload()
+	public function upload(): void
 	{
 	}
 

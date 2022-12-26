@@ -1,20 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Database_Backup_Copy extends Controller
 {
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $logicBackup;
-	protected $logicCopy;
+	protected Dictionary $config;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Database_Backup $logicBackup;
+	protected Logic_Database_Backup_Copy $logicCopy;
 
 	public function activate( $backupId )
 	{
 		$backup		= $this->checkBackupId( $backupId );
-		$copyPrefix	= isset( $backup->comment['copyPrefix'] ) ? $backup->comment['copyPrefix'] : NULL;
+		$copyPrefix	= $backup->comment['copyPrefix'] ?? '';
 		if( strlen( trim( $copyPrefix ) ) ){
 			$this->session->set( 'admin-database-backup-copy-prefix', $copyPrefix );
 			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde aktiviert.' );
@@ -38,8 +40,8 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		}
 		$copyPrefix		= 'copy_'.substr( md5( $backupId ), 16 ).'_';
 		$copyDbName		= $this->config->get( 'module.admin_database_backup.copy.database' );
-		$defaultDbName	= $this->env->config->get( 'module.resource_database.access.name' );
-		$dbName			= $copyDbName ? $copyDbName : $defaultDbName;
+		$defaultDbName	= $this->env->getConfig()->get( 'module.resource_database.access.name' );
+		$dbName			= $copyDbName ?: $defaultDbName;
 		try{
 			$this->logicBackup->load( $backupId, $copyDbName, $copyPrefix );
 			$this->logicBackup->storeDataInComment( $backupId, array(
@@ -51,7 +53,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde installiert.' );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( $e->getMessage );
+			$this->messenger->noteFailure( $e->getMessage() );
 		}
 		if( $from = $this->request->get( 'from' ) )
 			$this->restart( $from );
@@ -65,10 +67,10 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$copyPrefix	= $this->session->get( 'admin-database-backup-copy-prefix' );
 		if( $copyPrefix && isset( $backup->comment['copyPrefix'] ) ){
 			if( $backup->comment['copyPrefix'] === $copyPrefix ){
+				$dbName	= $this->config->get( 'module.resource_database.access.name' );
 				try{
-					$efaultDbName	= $this->config->get( 'module.resource_database.access.name' );
-					$database->setName( $efaultDbName );
-					$copyPrefix	= $this->session->remove( 'admin-database-backup-copy-prefix' );
+					$database->setName( $dbName );
+					$this->session->remove( 'admin-database-backup-copy-prefix' );
 					$this->messenger->clear();
 					$this->messenger->noteSuccess( 'Switching back to default database.' );
 				}
@@ -105,12 +107,12 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$tables	= $database->getTables( $backup->comment['copyPrefix'] );
 		foreach( $tables as $tableName )
 			$database->query( 'DROP TABLE `'.$tableName.'`;' );
-		$this->logicBackup->storeDataInComment( $backupId, array(
+		$this->logicBackup->storeDataInComment( $backupId, [
 			'copyBackupId'	=> NULL,
 			'copyDatabase'	=> NULL,
 			'copyPrefix'	=> NULL,
 			'copyTimestamp'	=> NULL,
-		) );
+		] );
 		$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde entfernt <small>('.count( $tables ).' Tabellen entfernt)</small>.' );
 		if( $currentDbName != $dbName )
 			$database->setName( $currentDbName );
@@ -123,12 +125,17 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 
 	protected function checkBackupId( $backupId )
 	{
-		if( ( $backup = $this->logicBackup->check( $backupId, FALSE ) ) )
+		$backup	= $this->logicBackup->check( $backupId, FALSE );
+		if( FALSE !== $backup )
 			return $backup;
 		$this->messenger->noteError( 'Invalid backup ID' );
 		$this->restart( 'admin/database/backup' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();

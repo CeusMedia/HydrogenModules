@@ -1,18 +1,18 @@
 <?php
-use CeusMedia\Common\FS\File\Reader as FileReader;
-use CeusMedia\Common\FS\File\Writer as FileWriter;
+
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
 
 class Model_Oauth_ProviderDefault
 {
-	protected $filePath		= 'config/oauth2_providers.json';
+	protected string $filePath		= 'config/oauth2_providers.json';
 
-	protected $providers	= [];
+	protected array $providers	= [];
 
 	public function __construct()
 	{
 		if( !file_exists( $this->filePath ) )
-			FileReader::save( $this->filePath, '[]' );
+			JsonFileWriter::save( $this->filePath, [] );
 		$this->read();
 	}
 
@@ -34,7 +34,7 @@ class Model_Oauth_ProviderDefault
 	}
 
 	/**
-	 *	Save changed provier.
+	 *	Save changed provider.
 	 *	Not used right now.
 	 *	@access		public
 	 *	@param		string		$providerKey		Key of provider default to change
@@ -44,11 +44,11 @@ class Model_Oauth_ProviderDefault
 	public function set( string $providerKey, array $changes = [] )
 	{
 		$currentValues	= $this->get( $providerKey );
-		$newValues		= array_merge( (array) $currentValues, (array) $changes );
+		$newValues		= array_merge( (array) $currentValues, $changes );
 		if( $currentValues === $newValues )
 			return 0;
-		$this->providers[$providerKey]	= (object) $values;
-		FileWriter::save( $this->filePath, $this->providers );
+		$this->providers[$providerKey]	= (object) $newValues;
+		JsonFileWriter::save( $this->filePath, $this->providers );
 	}
 
 	/*  --  PROTECTED  --  */

@@ -1,30 +1,30 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Template extends Controller
 {
-	protected $request;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 	protected Model_Mail_Template $modelTemplate;
 	protected string $appPath;
 	protected string $appUrl;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$title		= strip_tags( trim( $this->request->get( 'template_title' ) ) );
-			$found		= $this->modelTemplate->getByIndices( array(
-				'title'				=> $title,
-			) );
+			$found		= $this->modelTemplate->getByIndices( ['title' => $title] );
 
 			if( !trim( $title ) )
 				$this->messenger->noteError( 'No title given.' );
 			else if( $found )
 				$this->messenger->noteError( 'Template with this title already existing.' );
 			else{
-				$templateId	= $this->modelTemplate->add( array(
+				$templateId	= $this->modelTemplate->add( [
 					'status'		=> Model_Mail_Template::STATUS_NEW,
 					'title'			=> $title,
 					'language'		=> $this->request->get( 'template_language' ),
@@ -33,7 +33,7 @@ class Controller_Admin_Mail_Template extends Controller
 					'css'			=> trim( $this->request->get( 'template_css' ) ),
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
-				), FALSE );
+				], FALSE );
 				$this->messenger->noteSuccess( 'Template added.' );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
@@ -52,8 +52,7 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'template', $data );
 	}
 
-
-	public function copy( $templateId )
+	public function copy( $templateId ): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$title	= trim( $this->request->get( 'title' ) );
@@ -63,7 +62,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->restart( 'edit/'.$templateId, TRUE );
 			}
 			$template	= $this->modelTemplate->get( $templateId );
-			$templateId	= $this->modelTemplate->add( array(
+			$templateId	= $this->modelTemplate->add( [
 				'status'		=> Model_Mail_Template::STATUS_NEW,
 				'language'		=> $template->language,
 				'title'			=> $title,
@@ -74,13 +73,18 @@ class Controller_Admin_Mail_Template extends Controller
 				'images'		=> $template->images,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			), FALSE );
+			], FALSE );
 			$this->messenger->noteSuccess( 'Vorlage "'.$template->title.'" nach "'.$title.'" kopiert.' );
 		}
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function edit( $templateId )
+	/**
+	 *	@param		$templateId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function edit( $templateId ): void
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
@@ -91,47 +95,47 @@ class Controller_Admin_Mail_Template extends Controller
 		if( $this->request->has( 'save' ) ){
 			if( strlen( $this->request->get( 'template_title' ) ) ){
 				$title		= strip_tags( trim( $this->request->get( 'template_title' ) ) );
-				$found		= $this->modelTemplate->getByIndices( array(
+				$found		= $this->modelTemplate->getByIndices( [
 					'title'				=> $title,
 					'mailTemplateId'	=> '!= '.$templateId
-				) );
+				] );
 				if( !trim( $title ) )
 					$this->messenger->noteError( 'No title given.' );
 				else if( $found )
 					$this->messenger->noteError( 'Template with this title already existing.' );
 				else{
-					$this->modelTemplate->edit( $templateId, array(
+					$this->modelTemplate->edit( $templateId, [
 						'title'			=> $title,
 						'language'		=> $this->request->get( 'language' ),
 	//					'plain'			=> strip_tags( $this->request->get( 'template_plain' ) ),
 	//					'html'			=> trim( $this->request->get( 'template_html' ) ),
 	//					'css'			=> trim( $this->request->get( 'template_css' ) ),
 						'modifiedAt'	=> time(),
-					), FALSE );
+					], FALSE );
 				}
 				$this->messenger->noteSuccess( 'Template information saved.' );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			else if( $this->request->get( 'template_style' ) ){
 				$template	= $this->modelTemplate->get( $templateId );
-				if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]", $template->styles ) )
+				if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]/", $template->styles ) )
 					$template->styles	= json_encode( explode( ",", $template->styles ) );
 				$list		= trim( $template->styles ) ? json_decode( $template->styles, TRUE ) : [];
 				$list[]		= trim( $this->request->get( 'template_style' ) );
-				$this->modelTemplate->edit( $templateId, array(
+				$this->modelTemplate->edit( $templateId, [
 					'styles'	=> json_encode( $list )
-				) );
+				] );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			else if( $this->request->get( 'template_image' ) ){
 				$template	= $this->modelTemplate->get( $templateId );
-				if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]", $template->images ) )
+				if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
 					$template->images	= json_encode( explode( ",", $template->images ) );
 				$list		= trim( $template->images ) ? json_decode( $template->images, TRUE ) : [];
 				$list[]		= trim( $this->request->get( 'template_image' ) );
-				$this->modelTemplate->edit( $templateId, array(
+				$this->modelTemplate->edit( $templateId, [
 					'images'	=> json_encode( $list )
-				) );
+				] );
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			foreach( $this->modelTemplate->getColumns() as $key ){
@@ -147,7 +151,11 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'template', $template );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index(): void
 	{
 		$templates			= $this->modelTemplate->getAll();
 		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
@@ -200,7 +208,7 @@ class Controller_Admin_Mail_Template extends Controller
 		exit;
 	}
 
-	public function remove( $templateId )
+	public function remove( $templateId ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $template->status == Model_Mail_Template::STATUS_ACTIVE ){
@@ -212,44 +220,44 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeImage( $templateId, $pathBase64 )
+	public function removeImage( $templateId, $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$images		= json_decode( $template->images, TRUE );
 		foreach( $images as $nr => $image )
 			if( base64_encode( $image ) === $pathBase64 )
 				unset( $images[$nr] );
-		$this->modelTemplate->edit( $templateId, array(
+		$this->modelTemplate->edit( $templateId, [
 			'images'		=> json_encode( $images ),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function removeStyle( $templateId, $pathBase64 )
+	public function removeStyle( $templateId, $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$styles		= json_decode( $template->styles, TRUE );
 		foreach( $styles as $nr => $style )
 			if( base64_encode( $style ) === $pathBase64 )
 				unset( $styles[$nr] );
-		$this->modelTemplate->edit( $templateId, array(
+		$this->modelTemplate->edit( $templateId, [
 			'styles'		=> json_encode( $styles ),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function setStatus( $templateId, $status )
+	public function setStatus( $templateId, $status ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $status == Model_Mail_Template::STATUS_ACTIVE ){
 			if( $template->status != $status ){
 				$active		= $this->modelTemplate->getByIndex( 'status', $status );
 				if( $active )
-					$this->modelTemplate->edit( $active->mailTemplateId, array(
+					$this->modelTemplate->edit( $active->mailTemplateId, [
 						'status'	=> Model_Mail_Template::STATUS_USABLE
-					) );
+					] );
 				$this->modelTemplate->edit( $templateId, ['status' => $status] );
 				$this->env->getMessenger()->noteSuccess( sprintf(
 					'Template "%s" aktiviert.',
@@ -265,7 +273,12 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function test( $templateId )
+	/**
+	 *	@param		$templateId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function test( $templateId ): void
 	{
 		$email		= trim( $this->request->get( 'email' ) );
 		if( !strlen( trim( $email ) ) ){
@@ -281,6 +294,10 @@ class Controller_Admin_Mail_Template extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

@@ -1,20 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Attachment extends Controller
 {
-	protected $request;
+	protected Dictionary $request;
 	protected Model_Mail_Attachment $model;
 	protected string $attachmentPath;
-	protected $messenger;
+	protected MessengerResource $messenger;
 	protected array $languages;
 	protected Logic_Mail $logicMail;
 	protected Logic_Upload $logicUpload;
 
-	public function add()
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'add' ) ){
@@ -174,6 +176,10 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();

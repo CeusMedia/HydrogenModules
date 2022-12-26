@@ -17,16 +17,16 @@ $panelLogo			= $view->loadTemplateFile( 'admin/payment/mangopay/client/panelLogo
 $panelColor			= $view->loadTemplateFile( 'admin/payment/mangopay/client/panelColor.php' );
 $panelWallets		= $view->loadTemplateFile( 'admin/payment/mangopay/client/panelWallets.php' );
 
-$panelData	= HtmlTag::create( 'div', array(
+$panelData	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Daten' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'small', print_m( $client, NULL, NULL, TRUE ), ['class' => 'muted'] ),
-	), ['class' => 'content-panel-inner', 'style' => 'max-height: 200px; overflow-y: auto'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner', 'style' => 'max-height: 200px; overflow-y: auto'] ),
+], ['class' => 'content-panel'] );
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env );
 
-return $tabs.HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', [$panelCompany, $panelHeadquarter, $panelEmails], array( 'class' => 'span8') ),
-	HtmlTag::create( 'div', [$panelWallets, $panelLogo, $panelColor, $panelData], array( 'class' => 'span4') ),
-), ['class' => 'row-fluid'] );
+return $tabs.HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [$panelCompany, $panelHeadquarter, $panelEmails], ['class' => 'span8'] ),
+	HtmlTag::create( 'div', [$panelWallets, $panelLogo, $panelColor, $panelData], ['class' => 'span4'] ),
+], ['class' => 'row-fluid'] );

@@ -11,6 +11,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $module */
 /** @var string $moduleId */
 
+/** @var string $versions */
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
 $iconLock		= HtmlTag::create( 'i', '', ['class' => 'icon-lock'] );
@@ -32,21 +34,21 @@ $rows	= [];
 foreach( $module->config as $item ){
 	$input	= $view->renderConfigInput( $moduleId, $item );
 
-	$protection	= HtmlTag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
+	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => 'public - öffentlich (bekannt im Browser)'] );
 	if( $item->protected === "user" )
 		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => 'user - durch Benutzer konfigurierbar'] );
 	if( $item->protected === "yes" )
-		$protection	= HtmlTag::create( 'abbr', $iconLock, array( 'title' => 'protected - nicht öffentlich (nur auf Server bekannt)' ) );
+		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => 'protected - nicht öffentlich (nur auf Server bekannt)'] );
 
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
 	$type	= '<small class="muted">'.$item->type.'</small>';
-	$rows[$item->key]	= HtmlTag::create( 'tr', array(
+	$rows[$item->key]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $protection, ['class' => 'cell-protection'] ),
 		HtmlTag::create( 'td', $key, ['class' => 'cell-key autocut'] ),
 		HtmlTag::create( 'td', $type, ['class' => 'cell-type'] ),
 		HtmlTag::create( 'td', $input, ['class' => 'cell-value'] ),
-	) );
+	] );
 //	ksort( $rows );
 }
 
@@ -65,19 +67,19 @@ if( $versions ){
 		'class'	=> 'btn btn-inverse btn-mini'
 	) );
 }
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'	=> './admin/config/view/'.$moduleId,
 	'class'	=> 'btn btn-small',
-) );
-$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, array(
+] );
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 	'href'	=> './admin/config',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 
 return $textTop.'
 <div class="content-panel">

@@ -4,54 +4,58 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Admin_Mail_Template extends AjaxController
 {
-	protected $modelTemplate;
+	protected Model_Mail_Template $modelTemplate;
 
-	public function render( $templateId )
+	public function render( $templateId ): void
 	{
 		$this->checkTemplate( $templateId );
 		$mail		= new Mail_Test( $this->env, ['mailTemplateId' => $templateId] );
 		$helper		= new View_Helper_Mail_View_HTML( $this->env );
 		$helper->setMailObjectInstance( $mail );
-		$this->respondData( array( 'html' => $helper->render() ) );
+		$this->respondData( ['html' => $helper->render()] );
 	}
 
-	public function saveCss( $templateId )
+	public function saveCss( $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
-		$this->modelTemplate->edit( $templateId, array(
+		$this->modelTemplate->edit( $templateId, [
 			'css'			=> trim( $content ),
 			'modifiedAt'	=> time(),
-		), FALSE );
+		], FALSE );
 		$this->respondData( TRUE );
 	}
 
-	public function saveHtml( $templateId )
+	public function saveHtml( $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
-		$this->modelTemplate->edit( $templateId, array(
+		$this->modelTemplate->edit( $templateId, [
 			'html'			=> trim( $content ),
 			'modifiedAt'	=> time(),
-		), FALSE );
+		], FALSE );
 		$this->respondData( TRUE );
 	}
 
-	public function savePlain( $templateId )
+	public function savePlain( $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
-		$this->modelTemplate->edit( $templateId, array(
+		$this->modelTemplate->edit( $templateId, [
 			'plain'			=> trim( $content ),
 			'modifiedAt'	=> time(),
-		), FALSE );
+		], FALSE );
 		$this->respondData( TRUE );
 	}
 
-	public function setTab( $tabId )
+	public function setTab( $tabId ): void
 	{
 		if( strlen( trim( $tabId ) ) && $tabId != 'undefined' )
 			$this->env->getSession()->set( 'admin-mail-template-edit-tab', $tabId );
 		$this->respondData( TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelTemplate	= new Model_Mail_Template( $this->env );

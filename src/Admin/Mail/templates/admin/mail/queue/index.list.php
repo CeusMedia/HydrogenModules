@@ -1,6 +1,19 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<array<string,string>> $words */
+/** @var Dictionary $filters */
+/** @var object[] $mails */
+/** @var string[] $mailClasses */
+/** @var int|NULL $page */
+/** @var int|NULL $total */
+/** @var int|NULL $limit */
 
 $w		= (object) $words['index'];
 $wl		= (object) $words['index-list'];
@@ -9,14 +22,23 @@ $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconAttachment	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-paperclip'] );
 
-$statusClasses	= array(
-	-3	=> 'important',
-	-2	=> 'important',
-	-1	=> 'info',
-	0	=> 'warning',
-	1	=> 'warning',
+$statusClasses	= [
+	Model_Mail::STATUS_ABORTED	=> 'important',
+	Model_Mail::STATUS_FAILED	=> 'important',
+	Model_Mail::STATUS_RETRY	=> 'info',
+	Model_Mail::STATUS_NEW		=> 'warning',
+	Model_Mail::STATUS_SENDING	=> 'warning',
 	2	=> 'success',
-);
+];
+
+$statusLabelClasses	= [
+	Model_Mail::STATUS_ABORTED	=> 'inverse',
+	Model_Mail::STATUS_FAILED	=> 'danger',
+	Model_Mail::STATUS_RETRY	=> 'warning',
+	Model_Mail::STATUS_NEW		=> 'info',
+	Model_Mail::STATUS_SENDING	=> 'info',
+	Model_Mail::STATUS_SENT		=> 'success',
+];
 
 $helper	= new View_Helper_TimePhraser( $env );
 $logic	= new Logic_Mail( $env );
@@ -47,34 +69,26 @@ if( $mails ){
 		$link			= HtmlTag::create( 'a', $mail->subject, ['href' => './admin/mail/queue/view/'.$mail->mailId.$paramPage] );
 
 		$buttons		= [];
-		$buttons[]		= HtmlTag::create( 'a', $iconView, array(
+		$buttons[]		= HtmlTag::create( 'a', $iconView, [
 			'href'		=> './admin/mail/queue/view/'.$mail->mailId.$paramPage,
 			'class'		=> 'btn btn-info btn-mini',
 			'title'		=> 'anzeigen',
-		) );
-		$buttons[]		= HtmlTag::create( 'a', $iconRemove, array(
+		] );
+		$buttons[]		= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './admin/mail/queue/remove/'.$mail->mailId.$paramPage,
 			'class'		=> 'btn btn-danger btn-mini',
 			'title'		=> 'entfernen',
-		) );
+		] );
 		$buttons		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 
-		$statusClass	= 'success';
-		if( in_array( $mail->status, [1, 0] ) )
-			$statusClass	= 'info';
-		if( in_array( $mail->status, [-1] ) )
-			$statusClass	= 'warning';
-		if( in_array( $mail->status, [-2] ) )
-			$statusClass	= 'danger';
-		if( in_array( $mail->status, [-3] ) )
-			$statusClass	= 'inverse';
+		$statusClass	= $statusLabelClasses[$mail->status];
 
 		$status		= HtmlTag::create( 'span', $words['states'][$mail->status], ['class' => 'label label-'.$statusClass] );
-		$checkbox	= HtmlTag::create ('input', NULL, array(
+		$checkbox	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'class'		=> 'checkbox-mail',
 			'id'		=> 'admin-mail-queue-list-all-item-'.$mail->mailId,
-		), ['id' => $mail->mailId,] );
+		], ['id' => $mail->mailId,] );
 
 
 		$features	= [];
@@ -96,45 +110,45 @@ if( $mails ){
 		$rows[]		= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	}
 
-	$checkboxAll	= HtmlTag::create( 'input', NULL, array(
+	$checkboxAll	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'id'		=> 'admin-mail-queue-list-all-items-toggle',
-	) );
+	] );
 
-	$heads	= HtmlElements::TableHeads( array(
+	$heads	= HtmlElements::TableHeads( [
 		$checkboxAll,
 		'',
 		'Sender und Betreff',
 		'Empfänger',
 		'Status',
 		'',
-	) );
+	] );
 
 	$colgroup		= HtmlElements::ColumnGroup( ['30px', '25px', '', '30%', '120px', '80px'] );
 	$thead			= HtmlTag::create( 'thead', $heads );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$table			= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 
-	$dropdownMenu	= HtmlTag::create( 'ul', array(
+	$dropdownMenu	= HtmlTag::create( 'ul', [
 		HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-remove"></i> <strike>abbrechen</strike>', ['class' => '#', 'id' => 'action-button-abort'] )
+			HtmlTag::create( 'a', '<i class="fa fa-remove"></i> <del>abbrechen</del>', ['class' => '#', 'id' => 'action-button-abort'] )
 		),
 		HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-refresh"></i> <strike>erneut versuchen</strike>', ['class' => '#', 'id' => 'action-button-retry'] )
+			HtmlTag::create( 'a', '<i class="fa fa-refresh"></i> <del>erneut versuchen</del>', ['class' => '#', 'id' => 'action-button-retry'] )
 		),
 		HtmlTag::create( 'li',
 			HtmlTag::create( 'a', '<i class="fa fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
 		),
-	), ['class' => 'dropdown-menu not-pull-right'] );
+	], ['class' => 'dropdown-menu not-pull-right'] );
 
-	$dropdownToggle	= HtmlTag::create( 'button', 'Aktion <span class="caret"></span>', array(
+	$dropdownToggle	= HtmlTag::create( 'button', 'Aktion <span class="caret"></span>', [
 		'type'		=> 'button',
 		'class'		=> 'btn dropdown-toggle',
-	), ['toggle' => 'dropdown'] );
+	], ['toggle' => 'dropdown'] );
 	$dropdown		= HtmlTag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
 }
 
-$pagination		= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
+$pagination		= new PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
 
 return '
 	<div class="content-panel">
@@ -149,4 +163,3 @@ return '
 			</form>
 		</div>
 	</div>';
-?>

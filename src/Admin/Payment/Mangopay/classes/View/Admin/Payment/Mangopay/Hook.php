@@ -1,9 +1,15 @@
 <?php
-class View_Admin_Payment_Mangopay_Hook extends View_Admin_Payment_Mangopay{
+class View_Admin_Payment_Mangopay_Hook extends View_Admin_Payment_Mangopay
+{
+	public function apply(): void
+	{
+	}
 
-	public function apply(){}
+	public function index(): void
+	{
+	}
 
-	public function index(){}
-
-	public function view(){}
+	public function view(): void
+	{
+	}
 }

@@ -69,6 +69,7 @@ class Controller_Admin_Backup extends Controller
 	 *	@param		string		$backupId
 	 *	@return		void
 	 *	@todo		implement
+	 *	@noinspection	PhpUnusedParameterInspection
 	 */
 	public function restore( string $backupId ): void
 	{
@@ -81,6 +82,7 @@ class Controller_Admin_Backup extends Controller
 	 *	@param		string		$backupId
 	 *	@return		void
 	 *	@todo		implement
+	 *	@noinspection	PhpUnusedParameterInspection
 	 */
 	public function remove( string $backupId ): void
 	{
@@ -88,6 +90,10 @@ class Controller_Admin_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();

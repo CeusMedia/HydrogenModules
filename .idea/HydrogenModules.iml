@@ -42,7 +42,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpunit/php-invoker" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/hydrogen-framework" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/league/html-to-markdown" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/bootstrap" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/markdown" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/hydrogen-source-indexer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-parallel-lint/php-parallel-lint" />
@@ -64,6 +63,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan-strict-rules" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpstan/phpstan" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/template-engine" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/bootstrap" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

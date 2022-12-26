@@ -69,7 +69,7 @@ $tabs->add( 'admin-mail-template-edit-tab-css', '#', $w->tabCss, $contentCss );
 $tabs->add( 'admin-mail-template-edit-tab-styles', '#', $w->tabStyles, $contentStyles );
 $tabs->add( 'admin-mail-template-edit-tab-images', '#', $w->tabImages, $contentImages );
 $tabs->add( 'admin-mail-template-edit-tab-preview', '#', $w->tabPreview, $contentPreview );
-$tabs->setActive( $tabId ? $tabId : 'admin-mail-template-edit-tab-facts' );
+$tabs->setActive( $tabId ?: 'admin-mail-template-edit-tab-facts' );
 
 $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->setCurrentId( $template->mailTemplateId )
@@ -80,10 +80,10 @@ $helperNav	= View_Helper_Pagination_PrevNext::create( $env )
 	->setOrderColumn( 'mailTemplateId' );
 $navPrevNext	= HtmlTag::create( 'div', $helperNav->render(), ['class' => 'pull-right'] );
 
-$heading3	= HtmlTag::create( 'h3', vsprintf( $w->heading, array(
+$heading3	= HtmlTag::create( 'h3', vsprintf( $w->heading, [
 	'./admin/mail/template',
 	htmlentities( $template->title, ENT_QUOTES, 'UTF-8' )
-) ).$navPrevNext );
+] ).$navPrevNext );
 
 [$textTop, $textBottom]	= array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/template/edit/' ) );
 

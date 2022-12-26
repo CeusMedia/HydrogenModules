@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array $classes */
+/** @var string $class */
+/** @var string $subject */
+/** @var string $body */
+/** @var string $sender */
+/** @var string $receiver */
+
 $optClass	= HtmlElements::Options( array_combine( $classes, $classes ), $class );
 //$optClass['_selected']	= $class;
 
@@ -42,6 +49,4 @@ return '
 			</div>
 		</form>
 	</div>
-</div>
-';
-?>
+</div>';

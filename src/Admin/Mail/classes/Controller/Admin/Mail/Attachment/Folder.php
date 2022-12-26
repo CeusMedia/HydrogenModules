@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
@@ -8,16 +9,16 @@ use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
-	protected $request;
-	protected $model;
-	protected $basePath;
-	protected $messenger;
-	protected $languages;
-	protected $logicMail;
-	protected $logicUpload;
+	protected Dictionary $request;
+	protected Model_Mail_Attachment $model;
+	protected string $basePath;
+	protected MessengerResource $messenger;
+	protected Logic_Mail $logicMail;
+	protected Logic_Upload $logicUpload;
 
 	public function add()
 	{
@@ -122,7 +123,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 	 *	Stores a new attachment file via HTTP upload to attachment file folder.
 	 *	@access		public
 	 *	@return		void
-	 *	@todo		kriss: handle failure (with mail to developer or exception log)
+	 *	@todo		handle failure (with mail to developer or exception log)
 	 */
 	public function upload()
 	{
@@ -161,6 +162,10 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();

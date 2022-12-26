@@ -1,20 +1,23 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<array<string,string>> $words */
+/** @var object $template */
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $w		= (object) $words['add'];
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'	=> './admin/mail/template',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 return '
 <div class="row-fluid">
@@ -58,4 +61,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

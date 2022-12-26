@@ -1,15 +1,17 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Database_Backup extends Controller
 {
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $logicBackup;
+	protected Dictionary $config;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Database_Backup $logicBackup;
 
 	public function backup()
 	{

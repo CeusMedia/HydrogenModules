@@ -4,7 +4,10 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Admin_Cache extends AjaxController
 {
-	public function remove()
+	/**
+	 *	@return		void
+	 */
+	public function remove(): void
 	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 		$cache	= $this->env->getCache();

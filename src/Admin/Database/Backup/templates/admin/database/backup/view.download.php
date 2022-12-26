@@ -15,11 +15,11 @@ $iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$w	= (object) array(
+$w	= (object) [
 	'labelPasswordCurrent_title'	=> 'Passwort',
 	'labelPasswordCurrent'			=> 'Passwort',
 	'buttonDownload'				=> 'herunterladen',
-);
+];
 
 return '
 <div class="content-panel">

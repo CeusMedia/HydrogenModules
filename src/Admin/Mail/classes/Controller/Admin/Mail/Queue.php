@@ -1,20 +1,26 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Loader as ClassLoader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\Mail\Part\Attachment as MailV1Attachment;
+use CeusMedia\Mail\Part\InlineImage as MailV1InlineImage;
+use CeusMedia\Mail\Message\Part\Attachment as MailV2Attachment;
+use CeusMedia\Mail\Message\Part\InlineImage as MailV2InlineImage;
 
 class Controller_Admin_Mail_Queue extends Controller
 {
 	/** @var Dictionary $request */
-	protected $request;
+	protected Dictionary $request;
 
-	protected $session;
-	protected $messenger;
-	protected $logic;
-	protected $model;
-	protected $filterPrefix	= 'filter_admin_mail_queue_';
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Mail $logic;
+	protected Model_Mail $model;
+	protected string $filterPrefix	= 'filter_admin_mail_queue_';
 
 	public function ajaxRenderDashboardPanel( string $panelId )
 	{
@@ -42,18 +48,19 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->env->getMessenger()->noteError( $message );
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
+
 		$mailObjectParts	= $mail->object->instance->mail->getParts();
 		$attachments		= [];
 		foreach( $mailObjectParts as $key => $part ){
 			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				$isAttachment	= $part instanceof \CeusMedia\Mail\Message\Part\Attachment;
-				$isInlineImage	= $part instanceof \CeusMedia\Mail\Message\Part\InlineImage;
+				$isAttachment	= $part instanceof MailV2Attachment;
+				$isInlineImage	= $part instanceof MailV2InlineImage;
 				if( $isAttachment || $isInlineImage )
 					$attachments[$key]	= $part;
 			}
 			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				$isAttachment	= $part instanceof \CeusMedia\Mail\Part\Attachment;
-				$isInlineImage	= $part instanceof \CeusMedia\Mail\Part\InlineImage;
+				$isAttachment	= $part instanceof MailV1Attachment;
+				$isInlineImage	= $part instanceof MailV1InlineImage;
 				if( $isAttachment || $isInlineImage )
 					$attachments[$key]	= $part;
 			}
@@ -70,13 +77,13 @@ class Controller_Admin_Mail_Queue extends Controller
 		}
 		else{
 			$response	= $this->env->getResponse();
-			$headers	= array(
+			$headers	= [
 				'Cache-Control'				=> 'private, max-age=0, must-revalidate',
 				'Pragma'					=> 'public',
 				'Content-Transfer-Encoding'	=> 'binary',
 				'Content-Disposition'		=> 'inline; filename="'.$item->getFileName().'"',
 				'Content-Type'				=> $item->getMimeType(),
-			);
+			];
 			foreach( $headers as $key => $value )
 				$response->addHeaderPair( $key, $value );
 			$response->setBody( $item->getContent() );
@@ -85,7 +92,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		exit;
 	}
 
-	public function bulk()
+	public function bulk(): void
 	{
 		$type	= $this->request->get( 'type' );
 		$ids	= preg_split( '/\s*,\s*/', $this->request->get( 'ids' ) );
@@ -103,7 +110,12 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function cancel( $mailId )
+	/**
+	 *	@param		$mailId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function cancel( $mailId ): void
 	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
@@ -121,19 +133,24 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
-	public function enqueue()
+	public function enqueue(): void
 	{
 		$language	= $this->env->getLanguage()->getLanguage();
+		$class		= trim( $this->request->get( 'class' ) );
+		$sender		= trim( $this->request->get( 'sender' ) );
+		$receiver	= trim( $this->request->get( 'receiver' ) );
+		$subject	= trim( $this->request->get( 'subject' ) );
+		$body		= trim( $this->request->get( 'body' ) );
 		if( $this->request->has( 'add' ) ){
-			if( !strlen( $class	= trim( $this->request->get( 'class' ) ) ) )
+			if( !strlen( $class ) )
 				$this->messenger->noteError( 'Mail class is missing.' );
-			if( !strlen( $sender	= trim( $this->request->get( 'sender' ) ) ) )
+			if( !strlen( $sender ) )
 				$this->messenger->noteError( 'Sender address is missing.' );
-			if( !strlen( $receiver	= trim( $this->request->get( 'receiver' ) ) ) )
+			if( !strlen( $receiver ) )
 				$this->messenger->noteError( 'Receiver address is missing.' );
-			if( !strlen( $subject	= trim( $this->request->get( 'subject' ) ) ) )
+			if( !strlen( $subject ) )
 				$this->messenger->noteError( 'Mail subject is missing.' );
-			if( !strlen( $body		= trim( $this->request->get( 'body' ) ) ) )
+			if( !strlen( $body ) )
 				$this->messenger->noteError( 'Mail body is missing.' );
 			if( !$this->messenger->gotError() ){
 				try{
@@ -155,14 +172,14 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->restart( 'enqueue', TRUE );
 		}
 		$this->addData( 'classes', $this->logic->getMailClassNames() );
-		$this->addData( 'class', $this->request->get( 'class' ) );
-		$this->addData( 'subject', $this->request->get( 'subject' ) );
-		$this->addData( 'body', $this->request->get( 'body' ) );
-		$this->addData( 'sender', $this->request->get( 'sender' ) );
-		$this->addData( 'receiver', $this->request->get( 'receiver' ) );
+		$this->addData( 'class', $class );
+		$this->addData( 'subject', $subject );
+		$this->addData( 'body', $body );
+		$this->addData( 'sender', $sender );
+		$this->addData( 'receiver', $receiver );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
@@ -196,12 +213,12 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function html( $mailId )
+	public function html( $mailId ): void
 	{
 		$this->addData( 'mail', $this->logic->getMail( (int) $mailId ) );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 //		if( !$this->session->get( $this->filterPrefix.'status' ) )
 //			$this->session->set( $this->filterPrefix.'status', [0] );
@@ -256,7 +273,11 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->addData( 'mailClasses', $mailClasses );
 	}
 
-	public function remove( $mailId )
+	/**
+	 *	@param		$mailId
+	 *	@return		void
+	 */
+	public function remove( $mailId ): void
 	{
 		$this->logic->removeMail( $mailId );
 		if( ( $page = $this->request->get( 'page' ) ) )
@@ -264,12 +285,17 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function resend( $mailId )
+	/**
+	 *	@param		$mailId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function resend( $mailId ): void
 	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
 		if( !$mail ){
-			$this->env->getMessenger->noteError( 'Invalid mail ID' );
+			$this->env->getMessenger()->noteError( 'Invalid mail ID' );
 			$this->restart( NULL, TRUE );
 		}
 /*		if( $mail->status > 1 ){
@@ -323,6 +349,10 @@ class Controller_Admin_Mail_Queue extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -334,7 +364,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-			\CeusMedia\Common\Loader::registerNew( 'php', 'Mail_', $path.'classes/Mail/' );
+			ClassLoader::registerNew( 'php', 'Mail_', $path.'classes/Mail/' );
 		}
 		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
 			$this->session->set( $this->filterPrefix.'status', []);
@@ -344,17 +374,17 @@ class Controller_Admin_Mail_Queue extends Controller
 	{
 		if( !count( $mailIds ) )
 			return 0;
-		$mailIds	= $this->model->getAll( array(
+		$mailIds	= $this->model->getAll( [
 			'mailId'	=> $mailIds,
-			'status'	=> array(
+			'status'	=> [
 				Model_Mail::STATUS_FAILED,
 				Model_Mail::STATUS_RETRY,
 				Model_Mail::STATUS_NEW,
-			) ), [], [], ['mailId'] );
-		$data	= array(
+			]], [], [], ['mailId'] );
+		$data	= [
 			'status'		=> Model_Mail::STATUS_ABORTED,
 			'modifiedAt'	=> time(),
-		);
+		];
 		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 
@@ -362,16 +392,16 @@ class Controller_Admin_Mail_Queue extends Controller
 	{
 		if( !count( $mailIds ) )
 			return 0;
-		$mailIds	= $this->model->getAll( array(
+		$mailIds	= $this->model->getAll( [
 			'mailId'	=> $mailIds,
-			'status'	=> array(
+			'status'	=> [
 				Model_Mail::STATUS_ABORTED,
 				Model_Mail::STATUS_FAILED,
-			) ), [], [], ['mailId'] );
-		$data	= array(
+			]], [], [], ['mailId'] );
+		$data	= [
 			'status'		=> Model_Mail::STATUS_RETRY,
 			'modifiedAt'	=> time(),
-		);
+		];
 		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 

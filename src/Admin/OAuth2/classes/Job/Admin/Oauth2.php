@@ -1,10 +1,10 @@
 <?php
 class Job_Auth_Oauth2 extends Job_Abstract
 {
-	protected $modelProvider;
-	protected $modelProviderDefault;
-	protected $providersIndex				= [];
-	protected $providersAvailable			= [];
+	protected Model_Oauth_Provider $modelProvider;
+	protected Model_Oauth_ProviderDefault $modelProviderDefault;
+	protected array $providersIndex				= [];
+	protected array $providersAvailable			= [];
 
 	public function migrate()
 	{
@@ -45,7 +45,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 
 	protected function migrateScopes()
 	{
-		$module	= $this->env->modules->get( 'Resource_Authentication_Backend_OAuth2' );
+		$module	= $this->env->getModules()->get( 'Resource_Authentication_Backend_OAuth2' );
 		$versionInstalled	= $module->versionInstalled;
 		remark( 'versionInstalled: '.$versionInstalled );
 //		if( version_compare( $versionInstalled, ..., '>' ) ){
@@ -53,7 +53,6 @@ class Job_Auth_Oauth2 extends Job_Abstract
 //			}
 //		}
 
-		$list	= [];
 		foreach( $this->providersIndex as $providerData ){
 			$provider	= $this->modelProvider->getByIndex( 'title', $providerData->title );
 			if( !$provider )
@@ -69,14 +68,14 @@ class Job_Auth_Oauth2 extends Job_Abstract
 				$scopes	= array_merge( $provider->scopes, $providerData->scopes );
 //				remark( 'Provider Config Scopes: ' );
 //				print_m( $providerData->scopes );
-				$this->out( vsprintf( 'Updating scopes of provider "%s" from "%s" to "%s".', array(
+				$this->out( vsprintf( 'Updating scopes of provider "%s" from "%s" to "%s".', [
 					$providerData->title,
 					join( ',', $provider->scopes ),
 					join( ',', $scopes ),
-				) ) );
-				$this->modelProvider->edit( $provider->oauthProviderId, array(
+				] ) );
+				$this->modelProvider->edit( $provider->oauthProviderId, [
 					'scopes' => join( ',', $scopes )
-				) );
+				] );
 			}
 		}
 	}

@@ -4,21 +4,22 @@ use CeusMedia\Common\ADT\String_;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Admin_Mail_Template_Export extends Controller
 {
-	protected $messenger;
-	protected $modelTemplate;
+	protected Messenger $messenger;
+	protected Model_Mail_Template $modelTemplate;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		Environment	$env			Application Environment Object
+	 *	@param		WebEnvironment	$env			Application Environment Object
 	 *	@return		void
 	 */
-    public function __construct( Environment $env )
-    {
+	public function __construct( WebEnvironment $env )
+	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );

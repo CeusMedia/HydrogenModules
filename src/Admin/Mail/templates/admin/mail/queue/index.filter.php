@@ -1,37 +1,43 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var array<array<string,string>> $words */
+/** @var Dictionary $filters */
+/** @var string[] $mailClasses */
 
 $w		= (object) $words['index'];
 $wl		= (object) $words['index-list'];
 $wf		= (object) $words['index-filter'];
 
-$statusClasses	= array(
+$statusClasses	= [
 	-3	=> 'important',
 	-2	=> 'important',
 	-1	=> 'info',
 	0	=> 'warning',
 	1	=> 'warning',
 	2	=> 'success',
-);
+];
 
 $optStatus		= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $key.': '.$value;
 $optStatus		= HtmlElements::Options( $optStatus, $filters->get( 'status' ) );
 
-$optOrder		= array(
+$optOrder		= [
 	''				=> '- egal -',
 	'subject'		=> 'Betreff',
 	'enqueuedAt'	=> 'Eingangsdatum',
 	'sentAt'		=> 'Ausgangsdatum',
-);
+];
 $optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
-$optDirection	= array(
+$optDirection	= [
 	'ASC'		=> 'aufsteigend',
 	'DESC'		=> 'absteigend',
-);
+];
 $optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
 $optMailClass	= ['' => '- alle -'];
@@ -122,4 +128,3 @@ return '
 		</div>
 	</div>
 ';
-?>

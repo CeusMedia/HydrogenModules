@@ -15,14 +15,14 @@ $iconRestore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cog'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', [
 	'href'	=> './admin/database/backup/',
 	'class'	=> 'btn'
-) );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+] );
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 	'href'	=> './admin/database/backup/remove/'.$backup->id,
 	'class'	=> 'btn btn-danger'
-) );
+] );
 
 $comment	= $backup->comment['comment'] ?: '<em class="muted">Kein Kommentar</em>';
 

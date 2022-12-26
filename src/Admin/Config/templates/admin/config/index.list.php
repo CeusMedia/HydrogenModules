@@ -30,9 +30,9 @@ $list	= [];
 foreach( $modules as $module ){
 	if( !count( $module->config ) )
 		continue;
-	$link	= HtmlTag::create( 'a', $module->title.' <small class="muted">('.count( $module->config ).')</small>', array(
+	$link	= HtmlTag::create( 'a', $module->title.' <small class="muted">('.count( $module->config ).')</small>', [
 		'href'	=> './admin/config/view/'.$module->id
-	) );
+	] );
 	$list[]	= HtmlTag::create( 'li', $link );
 }
 

@@ -12,5 +12,4 @@ return '
 	<div class="content-panel-inner"
 		<p>Not implemented, yet.</p>
 	</div>
-</div>
-';
+</div>';

@@ -12,6 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var array $templates */
+/** @var string $moduleTemplateId */
 
 $modelMail		= new Model_Mail( $env );
 
@@ -27,13 +28,12 @@ foreach( $templates as $template ){
 		$title		= $template->title.'&nbsp;<small class="muted">(Standard)</small>';
 		$rowClass	= 'success';
 	}
-	$title	= Html::create( 'a', $title, array(
+	$title	= Html::create( 'a', $title, [
 		'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
 		'class'	=> 'autocut',
-	) );
+	] );
+	$badgeClass	= 'badge';
 	switch( $template->status ){
-		default:
-			$badgeClass	= 'badge';
 		case Model_Mail_Template::STATUS_NEW:
 		case Model_Mail_Template::STATUS_IMPORTED:
 			$badgeClass	= 'badge badge-warning';
@@ -46,36 +46,36 @@ foreach( $templates as $template ){
 			break;
 	}
 	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], ['class' => $badgeClass] );
-	$rows[]	= Html::create( 'tr', array(
+	$rows[]	= Html::create( 'tr', [
 		Html::create( 'td', $title ),
 		Html::create( 'td', $badgeStatus ),
 		Html::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
 		Html::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
 		Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
-	), ['class' => $rowClass] );
+	], ['class' => $rowClass] );
 }
-$tableHeads	= HtmlElements::tableHeads( array(
+$tableHeads	= HtmlElements::tableHeads( [
 	$words['index']['headTitle'],
 	$words['index']['headStatus'],
 	$words['index']['headUsed'],
 	$words['index']['headCreated'],
 	$words['index']['headModified']
-) );
+] );
 
-$table	= Html::create( 'table', array(
+$table	= Html::create( 'table', [
 	HtmlElements::ColumnGroup( ['', '120', '120', '140', '140'] ),
 	Html::create( 'thead', $tableHeads ),
 	Html::create( 'tbody', $rows ),
-), ['class' => 'table table-fixed'] );
+], ['class' => 'table table-fixed'] );
 
-$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './admin/mail/template/add',
 	'class'	=> 'btn btn-success',
-) );
-$buttonImport	= Html::create( 'a', $iconImport.'&nbsp;'.$words['index']['buttonImport'], array(
+] );
+$buttonImport	= Html::create( 'a', $iconImport.'&nbsp;'.$words['index']['buttonImport'], [
 	'href'	=> './admin/mail/template/import',
 	'class'	=> 'btn',
-) );
+] );
 
 $iconList		= Html::create( 'b', '', ['class' => 'icon-list'] );
 $iconCancel		= Html::create( 'b', '', ['class' => 'icon-arrow-left'] );

@@ -33,29 +33,29 @@ $helperBic	= new View_Helper_Mangopay_Entity_BIC( $env );
 if( $sellerBanks ){
 	$list	= [];
 	foreach( $sellerBanks as $bankAccount ){
-		$buttonPayOut	= HtmlTag::create( 'button', $iconBank.'&nbsp;auszahlen', array(
+		$buttonPayOut	= HtmlTag::create( 'button', $iconBank.'&nbsp;auszahlen', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-mini',
-		) );
+		] );
 //		$wallet->Description	= $wallet->Id;
 		$id			= HtmlTag::create( 'small' , $bankAccount->Id );
 		$title		= HtmlTag::create( 'div', $bankAccount->OwnerName, ['class' => 'autocut'] );
 		$iban		= HtmlTag::create( 'small', $helperIban->set( $bankAccount->Details->IBAN ) );
 		$bic		= HtmlTag::create( 'small', $helperBic->set( $bankAccount->Details->BIC) );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 //			HtmlTag::create( 'td', $id ),
 			HtmlTag::create( 'td', $title ),
 			HtmlTag::create( 'td', $iban.'<br/>'.$bic, [] ),
 			HtmlTag::create( 'td', $buttonPayOut ),
-		) );
+		] );
 	}
 	$cols	= HtmlElements::ColumnGroup( [/*'60', */'', '240', '100'] );
-	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 //		HtmlTag::create( 'th', $w->headId ),
 		HtmlTag::create( 'th', $w->headTitle ),
 		HtmlTag::create( 'th', $w->headDetails ),
 		HtmlTag::create( 'th', $w->headActions ),
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $cols.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
@@ -118,12 +118,12 @@ $trigger->setModalId( 'modal-admin-payment-mangopay-seller-bank-add' );
 $trigger->setLabel( $iconAdd.'&nbsp;'.$w->buttonAdd );
 $trigger->setAttributes( ['class' => 'btn btn-success'] );
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $iconBank.'&nbsp;Bankkonten' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$list,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$trigger
-		), ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] ).$modal;
+		], ['class' => 'buttonbar'] ),
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] ).$modal;

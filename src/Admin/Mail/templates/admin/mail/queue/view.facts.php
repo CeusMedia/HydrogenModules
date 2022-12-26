@@ -1,34 +1,41 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var object $mail */
+/** @var int $page */
 
 $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $buttons		= [];
-$buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;zurück', array(
+$buttons[]	= HtmlTag::create( 'a', $iconBack.'&nbsp;zurück', [
 	'href'	=> './admin/mail/queue/',
 	'class'	=> 'btn btn-small'
-) );
+] );
 if( in_array( $mail->status, [Model_Mail::STATUS_NEW, Model_Mail::STATUS_RETRY] ) ){
-	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen', array(
+	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen', [
 		'href'	=> './admin/mail/queue/cancel/'.$mail->mailId,
 		'class'	=> 'btn btn-inverse btn-small'
-	) );
+	] );
 }
 if( $mail->status == 2 || $mail->status == -2 ){
-	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;noch einmal versenden', array(
+	$buttons[]	= HtmlTag::create( 'a', $iconCancel.'&nbsp;noch einmal versenden', [
 		'href'	=> './admin/mail/queue/resend/'.$mail->mailId,
 		'class'	=> 'btn btn-primary btn-small'
-	) );
+	] );
 }
-$buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 	'href'	=> './admin/mail/queue/remove/'.$mail->mailId.( $page ? '?page='.$page : '' ),
 	'class'	=> 'btn btn-danger btn-small'
-) );
+] );
 $buttons	= join( ' ', $buttons );
 
-$listKeys	= array(
+$listKeys	= [
 	'mailId',
 	'subject',
 	'senderAddress',
@@ -38,7 +45,7 @@ $listKeys	= array(
 	'receiverId',
 	'mailClass',
 	'language',
-);
+];
 $list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
@@ -46,13 +53,13 @@ foreach( $listKeys as $key )
 
 $listLeft	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
-$listKeys	= array(
+$listKeys	= [
 	'status',
 	'attempts',
 	'enqueuedAt',
 	'attemptedAt',
 	'sentAt',
-);
+];
 $list	= [];
 foreach( $listKeys as $key )
 	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
@@ -76,4 +83,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

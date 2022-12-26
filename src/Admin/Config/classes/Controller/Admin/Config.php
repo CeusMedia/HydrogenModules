@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
@@ -9,8 +10,8 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Config extends Controller
 {
-	protected $request;
-	protected $session;
+	protected Dictionary $request;
+	protected Dictionary $session;
 
 	/*	public function direct()
 	{

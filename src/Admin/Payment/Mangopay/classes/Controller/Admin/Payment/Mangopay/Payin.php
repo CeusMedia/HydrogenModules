@@ -1,9 +1,17 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Payment_Mangopay_Payin extends Controller
 {
+	protected Dictionary $request;
+	protected MessengerResource $messenger;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected Model_Mangopay_Payin $model;
+	protected Dictionary $modulConfig;
+
 	public function index( $page = 0 )
 	{
 		$limit		= 15;
@@ -26,7 +34,7 @@ class Controller_Admin_Payment_Mangopay_Payin extends Controller
 		$this->addData( 'page', $page );
 	}
 
-	public function view( $payinId )
+	public function view( $payinId ): void
 	{
 		$payin	= $this->model->get( $payinId );
 		if( !$payin ){

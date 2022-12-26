@@ -1,19 +1,20 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Payment_Mangopay extends Controller
 {
-	protected $messenger;
-
-	protected function __onInit(): void
-	{
-		$this->messenger	= $this->env->getMessenger();
-	}
+	protected MessengerResource $messenger;
 
 	public function index()
 	{
 		$this->restart( 'client', TRUE );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->messenger	= $this->env->getMessenger();
 	}
 
 	protected function handleMangopayResponseException( $e )

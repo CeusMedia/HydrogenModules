@@ -10,11 +10,11 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var object $sellerUser */
 
-$words['legaluser-types']	= array(
+$words['legaluser-types']	= [
 	'SOLETRADER'	=> 'Einzelunternehmer',
 	'ORGANIZATION'	=> 'Verein / Organisation',
 	'BUSINESS'		=> 'Unternehmen',
-);
+];
 $optType	= HtmlElements::Options( $words['legaluser-types'], $sellerUser->LegalPersonType );
 
 $w	= (object) $words['panel-user'];
@@ -124,17 +124,16 @@ if( !$sellerUser->Id ){
 			<button type="submit" name="save" class="btn btn-primary"><i class="fa fa-fw fa-check"></i>&nbsp;'.$w->buttonSave.'</button>
 		</div>
 	</form>';
-	return HtmlTag::create( 'div', array(
+	return HtmlTag::create( 'div', [
 		HtmlTag::create( 'h3', $w->heading ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$form
-		), ['class' => 'content-panel-inner'] ),
-	), ['class' => 'content-panel'] );
+		], ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel'] );
 }
 else {
 
 	$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-
 
 	$body		= '<div class="row-fluid">
 		<div class="span6">
@@ -182,13 +181,13 @@ else {
 		</dl>
 		'.$trigger;
 
-	$panelCompany	= HtmlTag::create( 'div', array(
+	$panelCompany	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Unternehmen' ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$content,
 			$modal
-		), ['class' => 'content-panel-inner'] ),
-	), ['class' => 'content-panel'] );
+		], ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel'] );
 
 
 	$body	= '
@@ -265,13 +264,13 @@ else {
 			<dd>'.htmlentities( $sellerUser->LegalRepresentativeAddress->Region, ENT_QUOTES, 'UTF-8' ).'</dd>
 		</dl>'.$trigger;
 
-	$panelRepresentative	= HtmlTag::create( 'div', array(
+	$panelRepresentative	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Juristischer Vertreter' ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$content,
 			$modal
-		), ['class' => 'content-panel-inner'] ),
-	), ['class' => 'content-panel'] );
+		], ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel'] );
 
 
 	$body		= '<div class="row-fluid">
@@ -326,35 +325,36 @@ else {
 			<dt>'.$w->labelHeadquarterRegion.'</dt>
 			<dd>'.htmlentities( $sellerUser->HeadquartersAddress->Region, ENT_QUOTES, 'UTF-8' ).'</dd>
 		</dl>'.$trigger;
-	$panelHeadquarters	= HtmlTag::create( 'div', array(
+
+	$panelHeadquarters	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Hauptsitz' ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$content,
 			$modal
-		), ['class' => 'content-panel-inner'] ),
-	), ['class' => 'content-panel'] );
+		], ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel'] );
 
-	return $panelCompany.$panelRepresentative.$panelHeadquarters.'<style>
-	.input-value {
-		height: 22px;
-		padding: 5px 6px 3px 8px;
-	/*	background-color: rgba(191, 191, 191, 0.33);*/
-	/*	border: 1px solid rgba(191, 191, 191, 1);*/
-		background-color: rgba(255, 255, 255, 1);
-		border-radius: 4px;
-		margin: 1px 0px 10px 0px;
-		}
-	body.moduleAdminPaymentMangopay dl.dl-horizontal dt {
-		width: 150px;
-		font-weight: normal;
-		font-size: 0.9em;
-		letter-spacing: -0px;
-		opacity: 0.75;
-		}
-	body.moduleAdminPaymentMangopay dl.dl-horizontal dd {
-		margin-left: 170px;
-		}
+	$style	= '
+.input-value {
+	height: 22px;
+	padding: 5px 6px 3px 8px;
+/*	background-color: rgba(191, 191, 191, 0.33);*/
+/*	border: 1px solid rgba(191, 191, 191, 1);*/
+	background-color: rgba(255, 255, 255, 1);
+	border-radius: 4px;
+	margin: 1px 0px 10px 0px;
+	}
+body.moduleAdminPaymentMangopay dl.dl-horizontal dt {
+	width: 150px;
+	font-weight: normal;
+	font-size: 0.9em;
+	letter-spacing: -0px;
+	opacity: 0.75;
+	}
+body.moduleAdminPaymentMangopay dl.dl-horizontal dd {
+	margin-left: 170px;
+	}
+';
 
-
-			</style>';
+	return $panelCompany.$panelRepresentative.$panelHeadquarters.'<style>'.$style.'</style>';
 }

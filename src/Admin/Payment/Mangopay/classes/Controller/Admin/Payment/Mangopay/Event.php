@@ -20,11 +20,11 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 	public function close( $eventId )
 	{
 		$event	= $this->checkEvent( $eventId, 'view/'.$eventId.'?page='.$this->request->get( 'page' ) );
-		$this->model->edit( $eventId, array(
+		$this->model->edit( $eventId, [
 			'status'	=> Model_Mangopay_Event::STATUS_CLOSED,
 			'output'	=> $event->output.'<br/><strong>CLOSED MANUALLY</strong>',
 			'handledAt'	=> time(),
-		), FALSE );
+		], FALSE );
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
@@ -64,7 +64,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			}
 			if( !$this->verify( $eventType, $resourceId ) )
 				throw new InvalidArgumentException( 'Event verification failed' );
-			$eventId	= $this->model->add( array(
+			$eventId	= $this->model->add( [
 				'status'		=> Model_Mangopay_Event::STATUS_RECEIVED,
 				'id'			=> $resourceId,
 				'type'			=> $eventType,
@@ -72,7 +72,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 				'receivedAt'	=> time(),
 				'output'		=> '',
 				'handledAt'		=> 0,
-			) );
+			] );
 			$response->setStatus( 200 );
 			$response->setBody( '<h1>OK</h1><p>Event has been received and handled.</p>' );
 		}
@@ -98,9 +98,9 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			$this->messenger->noteError( 'Only failed or unsuccessful events can be reactivated.' );
 			$this->restart( 'view/'.$eventId, TRUE );
 		}
-		$this->model->edit( $eventId, array(
+		$this->model->edit( $eventId, [
 			'status'	=> Model_Mangopay_Event::STATUS_RECEIVED,
-		) );
+		] );
 		$this->restart( 'view/'.$eventId.'?page='.$this->request->get( 'page' ), TRUE );
 	}
 
@@ -119,10 +119,10 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$mail		= ObjectFactory::createObject( $className, $arguments );
 		$receiver	= ['email' => $this->moduleConfig->get( 'mail.hook' )];
 		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
+		return $this->env->getLogic()->get( 'Mail' )->sendMail( $mail, $receiver, $language );
 	}
 
-	public function view( $eventId, $run = NULL )
+	public function view( $eventId ): void
 	{
 		$event	= $this->model->get( $eventId );
 		if( !$event ){
@@ -146,7 +146,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 	}
 
-	protected function checkEvent( $eventId, $failUrl = 'view/%s' )
+	protected function checkEvent( $eventId, string $failUrl = 'view/%s' )
 	{
 		$event	= $this->model->get( $eventId );
 		if( $event )
@@ -155,7 +155,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 		$this->restart( sprintf( $failUrl, $eventId ), TRUE );
 	}
 
-	protected function verify( $eventType, $resourceId )
+	protected function verify( $eventType, $resourceId ): bool
 	{
 		if( preg_match( '@_CREATED$@', $eventType ) )
 			$status	= 'CREATED';
@@ -163,7 +163,7 @@ class Controller_Admin_Payment_Mangopay_Event extends Controller
 			$status	= 'FAILED';
 		else if( preg_match( '@_SUCCEEDED$@', $eventType ) )
 			$status	= 'SUCCEEDED';
-		else return TRUE;														//  no handleable and verifyable event found
+		else return TRUE;														//  no handleable and verifiable event found
 		$entity	= $this->mangopay->getEventResource( $eventType, $resourceId );
 		if( $entity && $entity->Status === $status )
 			return TRUE;

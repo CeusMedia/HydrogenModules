@@ -1,9 +1,13 @@
 <?php
+
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var array<array<string,string>> $words */
+/** @var object $template */
 
 $buttonActivate	= LinkButton::create(
 	'./admin/mail/template/setStatus/'.$template->mailTemplateId.'/'.Model_Mail_Template::STATUS_ACTIVE,
@@ -175,10 +179,10 @@ $buttonPreviewText	= BootstrapModalTrigger::create(
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
 	->setAttributes( ['class' => 'btn btn-info btn-mini'] );
-$iframeText		= HtmlTag::create( 'iframe', '', array(
+$iframeText		= HtmlTag::create( 'iframe', '', [
 	'src'			=> './admin/mail/template/preview/'.$template->mailTemplateId.'/text',
 	'frameborder'	=> '0',
-) );
+] );
 
 $panelPreview		= '
 <div class="content-panel">

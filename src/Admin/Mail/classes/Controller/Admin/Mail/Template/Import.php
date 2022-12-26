@@ -1,15 +1,18 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File;
 use CeusMedia\Common\FS\Folder;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class Controller_Admin_Mail_Template_Import extends Controller
 {
-	protected $messenger;
-	protected $request;
-	protected $modelTemplate;
+	protected MessengerResource $messenger;
+	protected Dictionary $request;
+	protected Model_Mail_Template $modelTemplate;
 
 	/**
 	 *	Constructor.
@@ -25,7 +28,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$upload	= $this->env->getLogic()->get( 'upload' );
@@ -92,6 +95,11 @@ class Controller_Admin_Mail_Template_Import extends Controller
 		];
 	}
 
+	/**
+	 *	@param		object		$template
+	 *	@return		array
+	 *	@throws		IoException
+	 */
 	protected function getDataFromExportV2( object $template ): array
 	{
 		$entity		= $template->entity;

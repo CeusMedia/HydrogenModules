@@ -12,6 +12,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var object[] $attachments */
+/** @var string $path */
+/** @var int $page */
+/** @var int $total */
+/** @var int $limit */
 
 $iconEnable		= new Icon( 'toggle-on' );
 $iconDisable	= new Icon( 'toggle-off' );

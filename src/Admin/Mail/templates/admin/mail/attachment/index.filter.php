@@ -9,6 +9,11 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<array<string,string>> $words */
 /** @var string[] $files */
 /** @var string[] $classes */
+/** @var string[] $languages */
+/** @var string|NULL $filterFile */
+/** @var string|NULL $filterClass */
+/** @var string|NULL $filterStatus */
+/** @var string|NULL $filterLanguage */
 
 $w	= (object) $words['filter'];
 

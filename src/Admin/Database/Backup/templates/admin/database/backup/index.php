@@ -10,9 +10,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var object[] $backups */
+/** @var string $currentCopyPrefix */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-
 
 $list	= HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
 if( $backups ){

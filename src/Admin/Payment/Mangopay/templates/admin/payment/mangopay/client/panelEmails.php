@@ -30,9 +30,9 @@ $form	= '<form action="./admin/payment/mangopay/client/edit" method="post">
 	</div>
 </form>';
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$form,
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

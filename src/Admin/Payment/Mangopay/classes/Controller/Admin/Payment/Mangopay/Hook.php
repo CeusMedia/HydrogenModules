@@ -1,17 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Payment_Mangopay_Hook extends Controller
 {
-	public static $verbose	= TRUE;
+	public static bool $verbose	= TRUE;
 
-	protected $mangopay;
-	protected $model;
-	protected $modulConfig;
-	protected $baseUrl;
+	protected Dictionary $request;
+	protected MessengerResource $messenger;
+	protected Logic_Payment_Mangopay $mangopay;
+	protected Model_Mangopay_Event $model;
+	protected Dictionary $modulConfig;
+	protected string $baseUrl;
 
-	public function apply()
+	public function apply(): void
 	{
 		$hooks		= $this->mangopay->getHooks();
 		$hookedEventTypes	= [];
@@ -49,7 +53,7 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 		$this->addData( 'currentUrl', $hooks ? $hooks[0]->Url : '' );
 	}
 
-	public function index( $refresh = NULL )
+	public function index( $refresh = NULL ): void
 	{
 		if( $hookId )
 			$this->restart( 'view/'.$hookId, TRUE );
@@ -63,7 +67,7 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 		$this->addData( 'hookedEventTypes', $hookedEventTypes );
 	}
 
-	public function view( $hookId )
+	public function view( $hookId ): void
 	{
 		$hook	= $this->mangopay->getHook( $hookId );
 		if( !$hook ){
@@ -86,7 +90,8 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 		$this->addData( 'baseUrl', $this->baseUrl );
 	}
 
-	protected function handleMangopayResponseException( $e ){
+	protected function handleMangopayResponseException( $e ): void
+	{
 		ob_start();
 		print_r( $e->GetErrorDetails() );
 		$details	= ob_get_clean();

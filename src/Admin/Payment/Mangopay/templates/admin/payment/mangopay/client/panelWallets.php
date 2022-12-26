@@ -21,18 +21,18 @@ $list	= [];
 foreach( $clientWallets as $wallet ){
 	$wallet->Description	= $wallet->Id;
 	$balance	= HtmlTag::create( 'strong', $helperMoney->set( $wallet->Balance ) );
-	$list[]	= HtmlTag::create( 'tr', array(
+	$list[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $wallet->Id ),
 		HtmlTag::create( 'td', $balance, ['style' => 'text-align: right'] ),
-	) );
+	] );
 }
 $cols	= HtmlElements::ColumnGroup( ['', '120'] );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $cols.$tbody, ['class' => 'table table-fixed'] );
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $iconWallet.'&nbsp;Client Wallets' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$list
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

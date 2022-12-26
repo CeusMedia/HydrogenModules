@@ -15,23 +15,23 @@ $panelWallets		= $view->loadTemplateFile( 'admin/payment/mangopay/seller/panelWa
 $panelBanks			= $view->loadTemplateFile( 'admin/payment/mangopay/seller/panelBanks.php' );
 
 
-$panelData	= HtmlTag::create( 'div', array(
+$panelData	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Daten' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'small', print_m( $sellerUser, NULL, NULL, TRUE ), ['class' => 'muted'] ),
-	), ['class' => 'content-panel-inner', 'style' => 'max-height: 200px; overflow-y: auto'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner', 'style' => 'max-height: 200px; overflow-y: auto'] ),
+], ['class' => 'content-panel'] );
 
 
 $tabs	= View_Admin_Payment_Mangopay::renderTabs( $env, 'seller' );
 
-return $tabs.HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
 		$panelUser,
-	), ['class' => 'span6'] ),
-	HtmlTag::create( 'div', array(
+	], ['class' => 'span6'] ),
+	HtmlTag::create( 'div', [
 		$panelWallets,
 		$panelBanks,
 		$panelData
-	), ['class' => 'span6'] ),
-), ['class' => 'row-fluid'] );
+	], ['class' => 'span6'] ),
+], ['class' => 'row-fluid'] );
