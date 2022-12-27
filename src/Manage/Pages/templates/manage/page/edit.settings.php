@@ -126,4 +126,3 @@ return $hints.'
 	</div>
 </div>
 ';
-?>

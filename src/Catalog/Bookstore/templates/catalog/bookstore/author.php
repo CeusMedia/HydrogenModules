@@ -3,11 +3,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**
  *	Template for Univerlag Frontend.
- *	@package		Univerlag.templates.article
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			20.11.2005
- *	@version		3.0
  */
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object[] $articles */
+/** @var object $author */
+
 $w		= (object) $words['author'];
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog_Bookstore( $env );
@@ -90,4 +93,3 @@ return '
 	<a href="#" onclick="history.back()" class="btn btn-small">'.$w->link_back.'</a>
 </div>
 ';
-?>

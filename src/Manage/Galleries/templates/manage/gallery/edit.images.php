@@ -70,4 +70,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

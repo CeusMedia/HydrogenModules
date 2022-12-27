@@ -1,5 +1,13 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+
 $w	= (object) $words['view'];
 
 $this->env->getPage()->js->addScriptOnReady('WorkMissionsViewer.init('.$mission->missionId.')');
@@ -16,4 +24,3 @@ return '
 var missionId = '.$mission->missionId.';
 </script>
 ';
-?>

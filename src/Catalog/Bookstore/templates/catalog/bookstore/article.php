@@ -3,11 +3,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**
  *	Template for Univerlag Frontend.
- *	@package		Univerlag.templates.article
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			20.11.2005
- *	@version		3.0
  */
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $article */
+/** @var object $category */
 
 $a			= clone( $article );
 $w			= (object) $words['article'];
@@ -45,6 +47,3 @@ return '
 	<br/>
 	'.$panelRelations.'
 </div>';
-
-
-?>

@@ -39,4 +39,3 @@ $panelFacts		= '
 </div>';
 
 return $panelFacts;
-?>

@@ -48,4 +48,3 @@ class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 		$this->url		= $url;
 	}
 }
-?>

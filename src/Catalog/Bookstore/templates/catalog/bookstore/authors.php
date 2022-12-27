@@ -1,8 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$helper	= new View_Helper_Catalog_Bookstore( $env );
+/** @var Environment $env */
+/** @var object[] $authors */
 
+$helper	= new View_Helper_Catalog_Bookstore( $env );
 
 $list	= [];
 foreach( $authors as $author ){
@@ -15,4 +17,3 @@ return '
 <h3>Autoren</h3>
 '.$list.'
 ';
-?>

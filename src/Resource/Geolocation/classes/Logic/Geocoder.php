@@ -80,4 +80,3 @@ class Logic_Geocoder{
 		return $point;
 	}
 }
-?>

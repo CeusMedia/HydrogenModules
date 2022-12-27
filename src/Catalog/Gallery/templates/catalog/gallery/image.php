@@ -3,11 +3,16 @@
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var object[] $images */
+/** @var object $category */
+/** @var string $pathImages */
 
 $iconCategory	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
-
 
 $pos	= -1;
 foreach( $images as $nr => $item ){
@@ -21,7 +26,7 @@ $list			= [];
 $pathPreview	= $pathImages.'preview/'.$category->path.'/';
 $pathOriginal	= $pathImages.'original/'.$category->path.'/';
 
-$title		= $image->title ? $image->title : $image->filename;
+$title		= $image->title ?: $image->filename;
 $label		= HtmlTag::create( 'p', $title );
 $preview	= HtmlTag::create( 'img', NULL, array(
 	'src'	=> $pathPreview.$image->filename,
@@ -50,33 +55,33 @@ if( $hasShop ){
 		$buttonOrder	= '<a href="./catalog/gallery/order/'.$image->galleryImageId.'" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;in den Warenkorb</a>';
 }
 
-$buttonBack	= HtmlTag::create( 'a', $iconCategory, array(
+$buttonBack	= HtmlTag::create( 'a', $iconCategory, [
 	'href'		=> './catalog/gallery/category/'.$category->galleryCategoryId,
 	'class'		=> 'btn not-btn-small btn-large',
 	'alt'		=> 'zur Kategorie',
 	'title'		=> 'zur Kategorie',
-) );
-$buttonPrev		= HtmlTag::create( 'a', $iconPrev, array(
+] );
+$buttonPrev		= HtmlTag::create( 'a', $iconPrev, [
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
 	'title'		=> 'zum Vorherigen',
 	'alt'		=> 'zum Vorherigen',
-) );
-$buttonNext		= HtmlTag::create( 'a', $iconNext, array(
+] );
+$buttonNext		= HtmlTag::create( 'a', $iconNext, [
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
 	'title'		=> 'zum Nächsten',
 	'alt'		=> 'zum Nächsten',
-) );
+] );
 
 if( $pos > 0 ){
 	$imagePrev		= $images[$pos - 1];
-	$buttonPrev		= HtmlTag::create( 'a', $iconPrev, array(
+	$buttonPrev		= HtmlTag::create( 'a', $iconPrev, [
 		'href'		=> './catalog/gallery/image/'.$imagePrev->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
 		'title'		=> 'zum Vorherigen',
 		'alt'		=> 'zum Vorherigen',
-	) );
+	] );
 }
 if( $pos < count( $images ) - 1 ){
 	$imageNext		= $images[$pos + 1];
@@ -142,8 +147,4 @@ return '
 	</div>
 </div>
 <br/>
-'.$textBottom.'
-';
-
-
-?>
+'.$textBottom;

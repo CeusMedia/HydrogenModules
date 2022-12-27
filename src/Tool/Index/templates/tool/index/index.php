@@ -31,4 +31,3 @@ return '
 		'.$list.'
 	</div>
 ';
-?>

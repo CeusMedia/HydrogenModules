@@ -126,4 +126,3 @@ class Controller_Manage_Company extends Controller
 		$this->addData( 'companies', $model->getAll() );
 	}
 }
-?>

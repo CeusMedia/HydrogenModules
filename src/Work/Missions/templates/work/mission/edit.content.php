@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 /*  THIS TEMPLATE IS USED FOR MARKDOWN - NOT FOR HTML  */
 if( strtoupper( $format ) === "HTML" )
 	return '';
@@ -103,4 +105,3 @@ $panelContentSplitted	= '
 	</div>
 </div>';
 return $panelContentSplitted;
-?>

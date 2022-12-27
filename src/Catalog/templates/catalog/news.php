@@ -1,4 +1,10 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Catalog $view */
+/** @var array $words */
+
 $env->getRuntime()->reach( 'Template: Catalog/News: start' );
 
 extract( $view->populateTexts( ['news.top', 'news.bottom'], 'html/catalog/' ) );
@@ -17,5 +23,3 @@ return $textNewsTop.'
 	'.$list.'
 </div>
 '.$textNewsBottom;
-
-?>

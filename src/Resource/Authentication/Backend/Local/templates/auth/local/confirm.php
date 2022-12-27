@@ -68,4 +68,3 @@ return HtmlTag::create( 'div', array(
 //return HTML::DivClass( "auth-confirm-text-top", $textTop ).
 //HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
 //) ).HTML::DivClass( "auth-confirm-text-bottom", $textBottom );
-?>

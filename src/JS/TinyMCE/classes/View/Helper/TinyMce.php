@@ -134,4 +134,3 @@ class View_Helper_TinyMce extends Abstraction
 		return $html;
 	}
 }
-?>

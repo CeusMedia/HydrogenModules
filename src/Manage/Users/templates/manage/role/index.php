@@ -79,4 +79,3 @@ table tr td blockquote {
 		</div>
 	</div>
 </div>'.$textIndexBottom;
-?>

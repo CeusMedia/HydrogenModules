@@ -25,4 +25,3 @@ class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay
 		</div>';
 	}
 }
-?>

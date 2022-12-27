@@ -5,15 +5,15 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Catalog_Bookstore extends Hook
 {
-	public function onRenderContent()
+	public function onRenderContent(): void
 	{
 		$pattern		= "/^(.*)(\[CatalogBookstoreRelations([^\]]+)?\])(.*)$/sU";
 		$helper			= new View_Helper_Catalog_Bookstore_Relations( $this->env );
-		$defaultAttr	= array(
+		$defaultAttr	= [
 			'articleId'		=> '',
 			'tags'			=> '',
 			'heading'		=> '',
-		);
+		];
 
 		if( preg_match( $pattern, $this->payload['content'] ) ){
 			$code		= preg_replace( $pattern, "\\2", $this->payload['content'] );
@@ -39,16 +39,16 @@ class Hook_Catalog_Bookstore extends Hook
 				$subcontent	= '';
 			}
 			$replacement	= "\\1".$subcontent."\\4";												//  insert content of nested page...
-			$this->payload['content']	= preg_replace( $pattern, $replacement, $this->payload['content'] );				//  ...into page content
+			$this->payload['content']	= preg_replace( $pattern, $replacement, $this->payload['content'] );			//  ...into page content
 		}
 	}
 
-	public function onRenderNewsItem()
+	public function onRenderNewsItem(): void
 	{
 		$this->context->content	= View_Helper_Catalog_Bookstore::applyLinks( $this->env, $this->context->content );
 	}
 
-	public function onRenderSearchResults()
+	public function onRenderSearchResults(): void
 	{
 		$helper			= new View_Helper_Catalog_Bookstore( $this->env );
 		$modelArticle	= new Model_Catalog_Bookstore_Article( $this->env );
@@ -65,12 +65,12 @@ class Hook_Catalog_Bookstore extends Hook
 				if( $articleId = (int) $path ){
 					$article	= $modelArticle->get( $articleId );
 					$articleUri	= $helper->getArticleUri( $articleId );
-					$resultDocument->facts	= (object) array(
+					$resultDocument->facts	= (object) [
 						'title'			=> $article->title,
 						'link'			=> preg_replace( '/^\.\//', '', $articleUri ),
 						'category'		=> $categories->article,
 						'image'			=> $article->cover ? './file/bookstore/article/s/'.$article->cover : '',
-					);
+					];
 				}
 			}
 			if( preg_match( "@^catalog/bookstore/author/@", $resultDocument->path ) ){
@@ -81,12 +81,12 @@ class Hook_Catalog_Bookstore extends Hook
 					if( $author->firstname )
 						$title	= $author->firstname." ".$title;
 					$authorUri	= $helper->getAuthorUri( $author->authorId );
-					$resultDocument->facts	= (object) array(
+					$resultDocument->facts	= (object) [
 						'title'			=> $title,
 						'link'			=> preg_replace( '/^\.\//', '', $authorUri ),
 						'category'		=> $categories->author,
 						'image'			=> $author->image ? './file/bookstore/author/'.$author->image : '',
-					);
+					];
 				}
 			}
 			if( preg_match( "@^catalog/bookstore/category/@", $resultDocument->path ) ){
@@ -94,27 +94,27 @@ class Hook_Catalog_Bookstore extends Hook
 				if( $categoryId = (int) $path ){
 					$category		= $modelCategory->get( $categoryId );
 					$categoryUri	= $helper->getCategoryUri( $categoryId );
-					$resultDocument->facts	= (object) array(
+					$resultDocument->facts	= (object) [
 						'title'			=> $category->label_de,
 						'link'			=> preg_replace( '/^\.\//', '', $categoryUri ),
 						'category'		=> $categories->category,
 						'image'			=> '',
-					);
+					];
 				}
 			}
 			if( preg_match( "@^catalog/bookstore/news@", $resultDocument->path ) ){
 				$title		= $resultDocument->title;
-				$resultDocument->facts	= (object) array(
+				$resultDocument->facts	= (object) [
 					'category'		=> $categories->news,
 					'title'			=> 'Neuerscheinungen',
 					'link'			=> $resultDocument->path,
 					'image'			=> NULL,
-				);
+				];
 			}
 		}
 	}
 
-	public function onRegisterSitemapLinks()
+	public function onRegisterSitemapLinks(): void
 	{
 		$baseUrl	= $this->env->url.'catalog/bookstore/';
 		$logic		= new Logic_Catalog_Bookstore( $this->env );

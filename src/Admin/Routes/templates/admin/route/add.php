@@ -14,19 +14,19 @@ $iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] )
 $iconList		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-list"] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );
 
-$optStatus	= array(
+$optStatus	= [
 	0		=> 'inaktiv',
 	1		=> 'aktiv',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, @$data->status );
 
-$optRegex	= array(
+$optRegex	= [
 	0		=> 'nein',
 	1		=> 'ja',
-);
+];
 $optRegex	= HtmlElements::Options( $optRegex, @$data->regex );
 
-$optCode	= array(
+$optCode	= [
 	200 => "200 OK",
 	201 => "201 Created",
 	202 => "202 Accepted",
@@ -73,18 +73,18 @@ $optCode	= array(
 //	505 => "505 HTTP Version Not Supported",
 	508 => "508 Loop Detected",
 //	511 => "511 Network Authentication Required",
-);
+];
 $optCode	= HtmlElements::Options( $optCode, @$data->code );
 
-$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 	'href'		=> './admin/route',
 	'class'		=> 'btn',
-) );
-$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+] );
+$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 
 return '<div class="content-panel">
 	<h3>Neue Route</h3>

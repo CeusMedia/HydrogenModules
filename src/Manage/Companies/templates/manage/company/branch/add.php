@@ -84,4 +84,3 @@ return HTML::DivClass( 'row-fluid',
 		''
 	)
 );
-?>

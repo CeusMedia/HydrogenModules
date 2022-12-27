@@ -1,13 +1,15 @@
 <?php
-class Job_User_Provision extends Job_Abstract{
-
+class Job_User_Provision extends Job_Abstract
+{
 	/** @todo rework */
-	public function manageLicenses( $parameters = [] ){
+	public function manageLicenses( array $parameters = [] )
+	{
 //		$this->handleOutdatedUserLicenses();
 		$this->manageOrderedLicenses();
 	}
 
-	protected function manageOrderedLicenses(){
+	protected function manageOrderedLicenses(): void
+	{
 		$logicBridge	= new Logic_ShopBridge( $this->env );
 		$logicShop		= Logic_Shop::getInstance( $this->env );
 		$logicProvision	= Logic_User_Provision::getInstance( $this->env );
@@ -54,7 +56,8 @@ class Job_User_Provision extends Job_Abstract{
 		}
 	}
 
-	protected function handleOutdatedUserLicenses(){
+	protected function handleOutdatedUserLicenses(): void
+	{
 		$logic	= Logic_User_Provision::getInstance( $this->env );
 		$keys	= $logic->handleExpiredLicenses();
 		if( $keys ){

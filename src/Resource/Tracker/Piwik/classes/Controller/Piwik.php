@@ -98,4 +98,3 @@ initPiwik('.json_encode( $config->getAll() ).');';
 	public function index(){
 	}
 }
-?>

@@ -31,4 +31,3 @@ class View_Helper_Panel{
 	}
 
 }
-?>

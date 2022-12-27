@@ -1,8 +1,6 @@
 <?php
 /**
  *	Data model of bookstore states.
- *	@category		cmProjects
- *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
@@ -10,8 +8,6 @@ use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data model of bookstore states.
- *	@category		cmProjects
- *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Catalog_Bookstore_Status extends Model

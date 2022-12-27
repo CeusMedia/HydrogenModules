@@ -1,7 +1,8 @@
 <?php
-class View_Helper_Text{
-
-	static public function applyFormat( $text ){
+class View_Helper_Text
+{
+	public static function applyFormat( string $text ): string
+	{
 		$text	= preg_replace( '/(_{4,})/', '<hr/>', $text );
 		$text	= preg_replace( '/\/\/(.+)\/\//U', '<em>\\1</em>', $text );
 		$text	= preg_replace( '/\*\*(.+)\*\*/U', '<b>\\1</b>', $text );
@@ -15,7 +16,7 @@ class View_Helper_Text{
 	 *	@param		string		$content		Content to be realized with internal Links
 	 *	@return		string
 	 */
-	static public function applyLinks( $content )
+	static public function applyLinks( string $content ): string
 	{
 		$content	= preg_replace( "@\[article:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;article_id,\\1'>\\2</a>", $content );
 		$content	= preg_replace( "@\[category:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;categoryId,\\1'>\\2</a>", $content );
@@ -23,7 +24,8 @@ class View_Helper_Text{
 		return $content;
 	}
 
-	static public function applyExpandable( $text, $length = 0, $labelMore = FALSE, $labelLess = FALSE ){
+	public static function applyExpandable( string $text, $length = 0, $labelMore = FALSE, $labelLess = FALSE )
+	{
 		if( $length && strlen( $text ) > $length ){
 			$count	= -1;
 			$list	= [];
@@ -49,4 +51,4 @@ class View_Helper_Text{
 		return $text;
 	}
 }
-?>
+

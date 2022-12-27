@@ -1,6 +1,22 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Catalog $view */
+/** @var array $words */
+/** @var object[] $authors */
+/** @var object[] $categories */
+/** @var int $page */
+/** @var int $total */
+/** @var int $limit */
+/** @var object $articles */
+/** @var string $searchTerm */
+/** @var string $searchCategoryId */
+/** @var string $searchAuthorId */
 
 $helper	= new View_Helper_Catalog( $env );
 $words	= (object) $words['search'];
@@ -24,7 +40,7 @@ if( $searchTerm || $searchAuthorId ){
 		foreach( $articles as $article )
 			$list[]	= $helper->renderArticleListItem( $article );
 		$list	= HtmlTag::create( 'div', $list, ['class' => 'articleList'] );
-		$pages	= new \CeusMedia\Bootstrap\Nav\PageControl( './catalog/search', $page, ceil( $total / $limit ) );
+		$pages	= new PageControl( './catalog/search', $page, ceil( $total / $limit ) );
 	}
 }
 
@@ -61,4 +77,3 @@ return $textSearchTop.'
 </form>
 '.$list.'
 '.$pages.$textSearchBottom;
-?>

@@ -1,11 +1,15 @@
 <?php
 /**
  *	Template for Univerlag Frontend.
- *	@package		Univerlag.templates.article
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			20.11.2005
- *	@version		3.0
  */
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object $article */
+/** @var object $category */
 
 $a			= clone( $article );
 $w			= (object) $words['article'];
@@ -34,6 +38,3 @@ return '
 	<br/>
 	'.$panelRelations.'
 </div>';
-
-
-?>

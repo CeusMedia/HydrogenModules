@@ -59,7 +59,7 @@ class Logic_Catalog_Provision extends Logic
 	 *	@param		integer		$productId		Product ID
 	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
 	 *	@todo		check project existence and activity
-	 *	@todo   		rework
+	 *	@todo		rework
 	 */
 	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
 	{
@@ -82,11 +82,11 @@ class Logic_Catalog_Provision extends Logic
 			$nextUserKey	= $this->modelUserKey->get( $nextUserKeyId );
 			$userLicense	= $this->modelUserLicense->get( $nextUserKey->userLicenseId );
 			$duration		= $this->getDurationInSeconds( $userLicense->duration );
-			$this->modelUserKey->edit( $nextUserKeyId, array(
+			$this->modelUserKey->edit( $nextUserKeyId, [
 				'status'	=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
 				'startsAt'	=> time(),
 				'endsAt'	=> time() + $duration,
-			) );
+			] );
 			return $nextUserKeyId;
 		}
 		return NULL;
@@ -134,7 +134,7 @@ class Logic_Catalog_Provision extends Logic
 	 *	@throws		RangeException				if given user ID is invalid
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
-	 *	@todo   		rework
+	 *	@todo		rework
 	 */
 	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
 	{

@@ -48,4 +48,3 @@ class View_Database_Lock extends View{
 		$this->setPageTitle();
 	}
 }
-?>

@@ -106,4 +106,3 @@ else {
 }
 
 return $content;
-?>

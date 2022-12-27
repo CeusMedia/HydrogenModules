@@ -12,4 +12,3 @@ return $textIndexTop.'
 	<div class="span9">
 	</div>
 </div>'.$textIndexBottom;
-?>

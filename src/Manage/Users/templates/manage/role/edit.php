@@ -99,4 +99,3 @@ return $textIndexTop.'
 		'.$panelRights.'
 	</div>
 </div>'.$textIndexBottom;
-?>

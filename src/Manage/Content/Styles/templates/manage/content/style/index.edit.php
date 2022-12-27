@@ -52,4 +52,3 @@ return '
 			</div>
 		</div>
 	</div>';
-?>

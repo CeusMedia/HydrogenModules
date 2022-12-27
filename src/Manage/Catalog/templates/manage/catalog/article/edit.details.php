@@ -74,4 +74,3 @@ return '
 	</div>
 </div>
 <!--  /Manage: Catalog: Article: Details  -->';
-?>

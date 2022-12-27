@@ -27,4 +27,3 @@ return '
 			'.$panelImages.'
 		</div>
 	</div>';
-?>

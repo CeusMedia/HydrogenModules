@@ -70,4 +70,3 @@ return $tabs.'
 		'.$panelEdit.'
 	</div>
 </div>';
-?>

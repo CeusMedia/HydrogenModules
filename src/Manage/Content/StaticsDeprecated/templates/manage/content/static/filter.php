@@ -21,4 +21,3 @@ return '
 		<button type="button" class="button reset"><span>'.$w->buttonReset.'</span>
 	</fieldset>
 </form>';
-?>

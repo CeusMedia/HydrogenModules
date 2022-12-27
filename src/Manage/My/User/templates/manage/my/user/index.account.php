@@ -42,4 +42,3 @@ return HTML::DivClass( 'content-panel content-panel-info', array(
 		HTML::BR
 	) )
 ) );
-?>

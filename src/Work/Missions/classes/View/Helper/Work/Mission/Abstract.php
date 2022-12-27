@@ -1,14 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 {
-	protected $useAvatar	= FALSE;
-	protected $users		= [];
+	protected bool $useAvatar	= FALSE;
+	protected array $users		= [];
 	protected $modules;
 
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		$this->setEnv( $env );
 		$this->modules		= $this->env->getModules();
 		$useAvatar			= $this->modules->has( 'Manage_My_User_Avatar' );
@@ -16,7 +18,8 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 		$this->useAvatar	= $useAvatar || $useGravatar;
 	}
 
-	protected function formatDays( $days ){
+	protected function formatDays( $days ): string
+	{
 		if( $days > 365.25 )
 			return floor( $days / 365.25 )."y";
 		if( $days > 30.42 )
@@ -26,13 +29,15 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 		return $days;
 	}
 
-	protected function renderTime( $timestamp ){
+	protected function renderTime( $timestamp ): string
+	{
 		$hours	= date( 'H', $timestamp );
 		$mins	= '<sup><small>'.date( 'i', $timestamp ).'</small></sup>';
 		return $hours.$mins;
 	}
 
-	protected function renderUser( $user ){
+	protected function renderUser( $user ): string
+	{
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$helper	= new View_Helper_Member( $this->env );
 			$helper->setUser( $user );
@@ -53,7 +58,8 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 	 *	@deprecated use renderUser instead
 	 *	@todo		to be removed
 	 */
-	protected function renderUserWithAvatar( $userId, $width = 160 ){
+	protected function renderUserWithAvatar( $userId, int $width = 160 ): string
+	{
 		$modelUser	= new Model_User( $this->env );
 		if( !array_key_exists( (int) $userId, $this->users ) )
 			$this->users[(int) $userId] = $modelUser->get( (int) $userId );
@@ -81,10 +87,9 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 
 		$workerPic	= HtmlTag::create( 'div', $avatar, ['class' => 'user-avatar'] );
 		$workerName	= HtmlTag::create( 'div', $worker->username, ['class' => 'user-label autocut', 'style' => 'width: '.$width.'px'] );
-		return HtmlTag::create( 'div', $workerPic.$workerName, array(
+		return HtmlTag::create( 'div', $workerPic.$workerName, [
 			'class'	=> 'user not-autocut',
 			'title'	=> $worker->username,
-		) );
+		] );
 	}
 }
-?>

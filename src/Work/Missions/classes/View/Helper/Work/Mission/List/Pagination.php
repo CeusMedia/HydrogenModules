@@ -1,12 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Work_Mission_List_Pagination extends Abstraction
 {
-	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ){
+	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ): string
+	{
 		if( !$total )
-			return "";
+			return '';
 		$limit			= abs( (int) $limit ) >= 10 ? abs( $limit ) : 10;
 		$offset			= abs( (int) $page ) * $limit;
 		$attrBtnPrev	= ['type' => 'button', 'class' => 'btn disabled'];
@@ -33,4 +35,3 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 		return $buttons;
 	}
 }
-?>

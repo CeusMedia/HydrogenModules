@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 /*
 	@deprecated		seems to be unused
 	@todo			find/clarify out which component is handling this approach
@@ -62,4 +64,4 @@ $env->getPage()->addHead( $script );
 
 return $buttons.$content;
 */
-?>
+

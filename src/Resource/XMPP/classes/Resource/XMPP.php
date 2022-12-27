@@ -47,4 +47,3 @@ class Resource_XMPP{
 		}
 	}
 }
-?>

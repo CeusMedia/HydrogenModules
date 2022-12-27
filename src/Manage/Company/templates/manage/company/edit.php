@@ -106,5 +106,4 @@ HTML::DivClass( 'row-fluid',
 		$panelBranches.
 		$panelUsers
 	)
-)
-?>
+);

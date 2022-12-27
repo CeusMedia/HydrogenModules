@@ -130,4 +130,3 @@ HTML::DivClass( 'row-fluid',
 		$panelImages
 	)
 );
-?>

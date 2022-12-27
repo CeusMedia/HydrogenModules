@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Catalog_Provision_Product extends View
 {
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function license()
+	public function license(): void
 	{
 	}
 
-	public function view()
+	public function view(): void
 	{
 	}
 

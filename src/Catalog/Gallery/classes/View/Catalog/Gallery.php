@@ -6,28 +6,28 @@ use CeusMedia\HydrogenFramework\View;
 class View_Catalog_Gallery extends View
 {
 	/**	@var	Logic_Catalog_Gallery	$logic */
-	protected $logic;
+	protected Logic_Catalog_Gallery $logic;
 
-	public function category()
+	public function category(): void
 	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category->galleryCategoryId, FALSE ) );
 	}
 
-	public function image()
+	public function image(): void
 	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
 		$this->addData( 'categoryList', $this->renderCategoryList( $categories, $category->galleryCategoryId, FALSE ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$categories	= $this->getData( 'categories' );
 	}
 
-	public function preview()
+	public function preview(): void
 	{
 		$category	= $this->getData( 'category' );
 		$categories	= $this->getData( 'categories' );
@@ -42,7 +42,7 @@ class View_Catalog_Gallery extends View
 	/**
 	 *	@todo	implement auto-path (see controller)
 	 */
-	protected function renderCategoryList( $categories, $currentId = NULL, $badges = TRUE )
+	protected function renderCategoryList( array $categories, $currentId = NULL, bool $badges = TRUE ): string
 	{
 		$list   	= [];
 		$pathModule	= $this->logic->pathModule;
@@ -63,7 +63,7 @@ class View_Catalog_Gallery extends View
 		return HtmlTag::create( 'ul', $list, $attr );
 	}
 
-	protected function renderCategoryMatrix( $categories )
+	protected function renderCategoryMatrix( array $categories ): string
 	{
 		$list  		= [];
 		$pathImages	= $this->logic->pathImages;
@@ -90,7 +90,7 @@ class View_Catalog_Gallery extends View
 		return HtmlTag::create( 'div', $list, $attr );
 	}
 
-	protected function renderImageMatrix( $category, $images )
+	protected function renderImageMatrix( object $category, array $images ): string
 	{
 		$list  		= [];
 		$pathModule	= $this->logic->pathModule;
@@ -103,11 +103,11 @@ class View_Catalog_Gallery extends View
 					$label	= HtmlTag::create( 'div', $image->title.'&nbsp;', ['class' => "gallery-image-matrix-item-label autocut"] );
 				$url	= $this->logic->pathModule.'image/'.$image->galleryImageId;				//   @todo	implement auto-path
 				$src	= $pathImages."preview/".rawurlencode( $category->path )."/".rawurlencode( $image->filename );
-				$attr	= array(
+				$attr	= [
 					'class'		=> "gallery-image-matrix-item",
 					'href'		=> $url,
 					'style'		=> 'background-image: url('.$src.');'
-				);
+				];
 				$list[]	= HtmlTag::create( 'a', ''/*$label*/, $attr );
 			}
 		}

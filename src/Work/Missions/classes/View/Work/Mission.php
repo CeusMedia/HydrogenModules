@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\View;
  */
 class View_Work_Mission extends View
 {
-	public function help()
+	public function help(): string
 	{
 		$topic	= $this->getData( 'topic' );
 		if( $topic == "sync" ){
@@ -24,7 +24,7 @@ class View_Work_Mission extends View
 		return "HELP";
 	}
 
-	public function ajaxRenderDashboardPanel()
+	public function ajaxRenderDashboardPanel(): string
 	{
 		try{
 			switch( $this->getData( 'panelId' ) ){
@@ -46,7 +46,7 @@ class View_Work_Mission extends View
 		}
 	}
 
-	public static function formatSeconds( $duration, $space = ' ' )
+	public static function formatSeconds( $duration, string $space = ' ' )
 	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
@@ -88,26 +88,26 @@ class View_Work_Mission extends View
 		return $seconds;
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$page		= $this->env->getPage();
 //		$page->js->addScriptOnReady( 'WorkMissions.init("now");' );			//  @deprecated use Page::runScript instead
 		$page->runScript( 'WorkMissions.init("now");', 9 );
 	}
 
-	public function remove()
+	public function remove(): void
 	{
 	}
 
-	public function view()
+	public function view(): void
 	{
 		$page			= $this->env->getPage();
 		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsViewer.js' );
@@ -117,17 +117,18 @@ class View_Work_Mission extends View
 	{
 		$page			= $this->env->getPage();
 		$session		= $this->env->getSession();
+		$config			= $this->env->getConfig();
 		$monthsLong		= array_values( (array) $this->getWords( 'months' ) );
 		$monthsShort	= array_values( (array) $this->getWords( 'months-short' ) );
 
 		$page->js->addScript( 'var monthNames = '.json_encode( $monthsLong).';' );
 		$page->js->addScript( 'var monthNamesShort = '.json_encode( $monthsShort).';' );
 
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsEditor.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsFilter.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissionsList.js' );
-		$page->js->addUrl( $this->env->getConfig()->get( 'path.scripts' ).'WorkMissions.js' );
+		$page->js->addUrl( $config->get( 'path.scripts' ).'WorkMissionsCalendar.js' );
+		$page->js->addUrl( $config->get( 'path.scripts' ).'WorkMissionsEditor.js' );
+		$page->js->addUrl( $config->get( 'path.scripts' ).'WorkMissionsFilter.js' );
+		$page->js->addUrl( $config->get( 'path.scripts' ).'WorkMissionsList.js' );
+		$page->js->addUrl( $config->get( 'path.scripts' ).'WorkMissions.js' );
 
 		/*		$this->config		= $this->env->getConfig();
 				$this->session		= $this->env->getSession();
@@ -141,9 +142,9 @@ class View_Work_Mission extends View
 		if( !strlen( $time ) )
 			return '-';
 		list( $hours, $minutes ) = explode( ':', $time );
-		return HtmlTag::create( 'span', array(
+		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
-		), ['class' => 'time-nice'] );
+		], ['class' => 'time-nice'] );
 	}
 }

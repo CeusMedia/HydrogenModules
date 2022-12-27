@@ -1,5 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var string $pathImages */
+/** @var object $category */
+/** @var array $images */
 
 //$categories	= '...[categories]...';
 //$categories	= $view->renderCategoryList( $categories );
@@ -38,9 +45,7 @@ $w	= (object) $words['categories'];
 
 extract( $this->populateTexts( ['top', 'content', 'bottom'], 'html/catalog/gallery/category/' ) );
 
-return '
-
-'.$textTop.'
+return $textTop.'
 <div class="row-fluid">
 	<div class="span3" id="catalog-gallery-category-list">
 		<h3>'.$w->heading.'</h3>
@@ -51,7 +56,4 @@ return '
 		'.$imageMatrix.'
 	</div>
 </div>
-'.$textBottom.'
-';
-
-?>
+'.$textBottom;

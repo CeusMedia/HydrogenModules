@@ -514,4 +514,3 @@ class DiffOperation {
 		$this->EndInNew = $endInNew;
 	}
 }
-?>

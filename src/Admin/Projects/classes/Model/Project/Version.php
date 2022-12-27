@@ -1,8 +1,6 @@
 <?php
 /**
  *	Project Version Model.
- *	@category		cmApps
- *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */
@@ -11,8 +9,6 @@ use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Project Version Model.
- *	@category		cmApps
- *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010 Ceus Media
  */

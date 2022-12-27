@@ -32,4 +32,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

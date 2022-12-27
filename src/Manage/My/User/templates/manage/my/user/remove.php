@@ -82,4 +82,3 @@ return HTML::DivClass( 'row-fluid', array(
 		$textRemoveRight
 	) )
 ) );
-?>

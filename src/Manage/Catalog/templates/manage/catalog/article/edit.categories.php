@@ -119,4 +119,3 @@ return '
 '.$panelCategories.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Categories  -->';
-?>

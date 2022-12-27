@@ -1,5 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object $article */
+/** @var object $category */
+/** @var object[] $documents */
+/** @var object[] $authors */
+/** @var object[] $tags */
 
 $a			= clone( $article );
 $w			= (object) $words['article'];
@@ -41,7 +50,7 @@ if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){
 		$link	= $helper->renderDocumentLink( $document );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'document') );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'document'] );
 	}
 	$a->documents	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled documents documentList'] );
 }
@@ -59,7 +68,7 @@ if( $tags ){
 }
 
 
-$keys	= array(
+$keys	= [
 	'author'		=> 'authors',
 	'language'		=> 'languages',
 	'publication'	=> 'publication',
@@ -70,7 +79,7 @@ $keys	= array(
 	'documents'		=> 'documents',
 //	'tags'			=> 'tags',
 	'status'		=> 'status',
-);
+];
 $list	= [];
 foreach( $keys as $key => $value )
 	if( !empty( $value ) )
@@ -82,19 +91,19 @@ $a->tags			= "-";
 if( $tags ){
 	$list	= [];
 	foreach( $tags as $tag ){
-		$list[]	= HtmlTag::create( 'a', $tag->tag, array(
+		$list[]	= HtmlTag::create( 'a', $tag->tag, [
 			'href'	=> $helper->getTagUri( $tag ),
 			'class'	=> 'link-article-tag',
-		) );
+		] );
 	}
 	$a->tags	= join( ", ", $list );
 }
 
-$keys	= array(
+$keys	= [
 	'description',
 //	'recension',
 //	'tags'
-);
+];
 if( $env->getRequest()->has( 'testing123' ) ){
 	$keys[]	= 'tags';
 }
@@ -106,7 +115,7 @@ foreach( $keys as $key )
 		$list[]	= '<dt>'.$w->$key.'</dt><dd>'.$a->$key.'</dd>';
 $definitions	= '<dl class="dl-horizontal">'.join( $list ).'</dl>';
 
-$image			= $helper->renderArticleImage( $article, "" );
+$image			= $helper->renderArticleImage( $article );
 
 return '
 <div id="panel-catalog-article-details">
@@ -133,9 +142,9 @@ return '
 	'.$definitions.'
 </div>
 <script>
-var ViewHelperText = {
+let ViewHelperText = {
 	toggleLongText: function(toggler){
-		var parent = $(toggler).parent().parent();
+		let parent = $(toggler).parent().parent();
 //console.log(parent);
 		$("div.text_more", parent).toggle();
 		$("div.text_less", parent).toggle();

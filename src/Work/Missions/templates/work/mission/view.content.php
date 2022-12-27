@@ -1,5 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
 
 $w  = (object) $words['view-content'];
 
@@ -25,23 +32,23 @@ if( 1 || $mission->versions ){
 		$date	= date( 'Y-m-d H:i:s', $version->timestamp );
 		$date	= $phraser->convert( $version->timestamp, TRUE );
 		$label	= '#'.$version->version.' <small class="muted">('.$date.') von '.$version->user->username.'</small>';
-		$link	= HtmlTag::create( 'a', $label, array(
+		$link	= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/mission/view/'.$mission->missionId.'#version-'.$version->version,
-		) );
-		$list[]	= HtmlTag::create( 'li', $link, array(
+		] );
+		$list[]	= HtmlTag::create( 'li', $link, [
 			'class'				=> 'version-list-item',
 			'data-version'		=> $version->version,
-		) );
+		] );
 	}
 	$label	= '<strong>aktuell</strong>';
-	$link	= HtmlTag::create( 'a', $label, array(
+	$link	= HtmlTag::create( 'a', $label, [
 		'href'		=> './work/mission/view/'.$mission->missionId,
 		'onclick'	=> 'return false'
-	) );
-	$list[]	= HtmlTag::create( 'li', $link, array(
+	] );
+	$list[]	= HtmlTag::create( 'li', $link, [
 		'class'				=> 'version-list-item active',
 //		'data-version'		=> 'current',
-	) );
+	] );
 	$list	= array_reverse( $list );
 	$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 	$panelVersions		= '
@@ -79,4 +86,3 @@ return '
 		'.$panelVersions.'
 	</div>
 </div>';
-?>

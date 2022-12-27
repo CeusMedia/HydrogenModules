@@ -42,4 +42,3 @@ class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 }
-?>

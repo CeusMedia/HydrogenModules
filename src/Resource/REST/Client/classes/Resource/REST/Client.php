@@ -210,4 +210,3 @@ class Resource_REST_Client{
 		$this->__initCache();
 	}
 }
-?>

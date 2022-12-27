@@ -1,5 +1,9 @@
 <?php
 
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $category */
+
 $w				= (object) $words['category'];
 $language		= $env->getLanguage()->getLanguage();
 $helper			= new View_Helper_Catalog_Bookstore( $env );
@@ -24,4 +28,3 @@ return '
 '.$articleList.'
 '.$children.'
 ';
-?>

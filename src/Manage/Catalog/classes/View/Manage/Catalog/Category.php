@@ -55,4 +55,3 @@ class View_Manage_Catalog_Category extends View_Manage_Catalog{
 		return $listMain;
 	}
 }
-?>

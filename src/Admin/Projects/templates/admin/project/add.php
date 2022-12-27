@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 
-$title		= empty( $title ) ? '' : $title;
+$title			= empty( $title ) ? '' : $title;
 $description	= empty( $description ) ? '' : $description;
 $description	= empty( $status ) ? '' : $status;
 

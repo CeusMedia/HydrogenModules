@@ -16,4 +16,3 @@ class View_Manage_Project extends View{
 
 	public function view(){}
 }
-?>

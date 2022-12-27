@@ -198,4 +198,3 @@ class Controller_Manage_Branch extends Controller
 		$this->setData( $model->getAll(), 'list' );
 	}
 }
-?>

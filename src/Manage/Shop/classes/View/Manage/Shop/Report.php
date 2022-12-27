@@ -15,4 +15,3 @@ class View_Manage_Shop_Report extends View_Manage_Shop{
 	}
 
 }
-?>

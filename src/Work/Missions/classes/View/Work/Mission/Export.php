@@ -4,9 +4,10 @@ use CeusMedia\Common\FS\File\ICal\Builder as IcalFileBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Mission_Export extends View{
-
-	public function ical(){
+class View_Work_Mission_Export extends View
+{
+	public function ical(): string
+	{
 		$request	= $this->env->getRequest();
 		$root		= new XmlNode( 'event');
 		$calendar	= new XmlNode( 'VCALENDAR' );
@@ -67,4 +68,3 @@ class View_Work_Mission_Export extends View{
 		return $this->loadContentFile( 'html/work/mission/export.html' );
 	}*/
 }
-?>

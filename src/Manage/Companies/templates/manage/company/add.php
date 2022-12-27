@@ -70,4 +70,3 @@ return '
 		'.$panelAdd.'
 	</div>
 </div>';
-?>

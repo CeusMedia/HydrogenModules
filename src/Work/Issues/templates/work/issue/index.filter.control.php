@@ -172,4 +172,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

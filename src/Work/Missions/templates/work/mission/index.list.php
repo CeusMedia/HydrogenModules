@@ -5,6 +5,14 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object[] $missions */
+
 $w	= (object) $words['index'];
 
 $iconUp		= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/arrow_up.png', $words['filter-directions']['ASC'] );
@@ -15,7 +23,7 @@ $iconEdit	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/pe
 $iconRemove	= HtmlElements::Image( 'https://cdn.ceusmedia.de/img/famfamfam/silk/bin_closed.png', $words['list-actions']['remove'] );
 
 //  --  LIST  --  //
-$list	= array(
+$list	= [
 	0 => [],
 	1 => [],
 	2 => [],
@@ -24,7 +32,7 @@ $list	= array(
 	5 => [],
 	6 => [],
 	7 => [],
-);
+];
 $indicator	= new HtmlIndicator();
 $disabled	= [];
 $today		= strtotime( date( 'Y-m-d', time() ) );
@@ -52,36 +60,39 @@ foreach( $missions as $mission ){
 	if( $days < 0 )
 		$daysOverdue	= HtmlTag::create( 'div', abs( $days ), ['class' => "overdue"] );
 
-	$cells	= array(
+	$cells	= [
 		'<td><div style="padding: 4px 2px 2px 2px;">'.$graph.$daysOverdue.'</div></td>',
 		'<td>'.$link.'</td>',
 		'<td><small>'.$priority.'</small></td>',
 		'<td class="actions">'.$buttonEdit.' | '.$buttonLeft.$buttonRight.'</td>',
-	);
+	];
 	$list[$daysBound][]	= HtmlTag::create( 'tr', join( $cells ), ['class' => $class] );
 }
 
-function getFutureDate( $daysInFuture = 0, $words = NULL ){
+function getFutureDate( int $daysInFuture = 0, ?array $words = NULL ): string
+{
 	$then	= new DateTime();
 	$then->modify( $daysInFuture );
 	$day	= $words ? $words['days'][$then->format( "w" )].', ' : '';
 	return $day.$then->format( "j.n." );
 }
 
-function getCount( $list, $days ){
+function getCount( $list, $days ): ?string
+{
 	$count	= count( $list[$days] );
 	if( $count )
 #		return ' <small>('.$count.')</small>';
 		return ' <div class="mission-number">'.$count.'</div>';
+	return '';
 }
 
 $colgroup	= HtmlElements::ColumnGroup( "120px", "", "90px", "115px" );
-$tableHeads	= HtmlElements::TableHeads( array(
+$tableHeads	= HtmlElements::TableHeads( [
 	HtmlTag::create( 'div', 'Zustand', ['class' => 'sortable', 'data-column' => 'status'] ),
 	HtmlTag::create( 'div', 'Aufgabe', ['class' => 'sortable', 'data-column' => 'title'] ),
 	HtmlTag::create( 'div', 'Priorität', ['class' => 'sortable', 'data-column' => 'priority'] ),
 	HtmlTag::create( 'div', 'Aktion', ['class' => 'sortable', 'data-column' => NULL] )
-) );
+] );
 
 $folders	= [];
 
@@ -125,4 +136,3 @@ if( count( $list[6] ) ){
 }
 
 return join( $folders );
-?>

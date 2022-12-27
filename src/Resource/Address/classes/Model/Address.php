@@ -1,18 +1,13 @@
 <?php
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Address extends Model

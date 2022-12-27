@@ -19,4 +19,3 @@ class View_Manage_Shop_Bridge extends View_Manage_Shop{
 	}
 
 }
-?>

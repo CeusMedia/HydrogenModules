@@ -203,4 +203,3 @@ return '
 		'.$panelInfo.'
 	</div>
 </div>';
-?>

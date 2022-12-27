@@ -112,4 +112,3 @@ $(document).ready(function(){
 		<button type="submit" class="btn btn-small btn-primary" name="save"><i class="icon-ok icon-white"></i> speichern</button>
 	</div>
 </form>';
-?>

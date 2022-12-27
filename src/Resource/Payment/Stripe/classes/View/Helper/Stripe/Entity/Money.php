@@ -79,4 +79,3 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 }
-?>

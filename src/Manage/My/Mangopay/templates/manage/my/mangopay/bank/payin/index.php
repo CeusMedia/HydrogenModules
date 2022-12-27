@@ -150,4 +150,3 @@ return '<div class="row-fluid">
 	<div class="span4">
 	</div>
 </div>';
-?>

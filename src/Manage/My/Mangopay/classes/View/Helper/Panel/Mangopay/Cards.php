@@ -50,4 +50,3 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 		</div>';
 	}
 }
-?>

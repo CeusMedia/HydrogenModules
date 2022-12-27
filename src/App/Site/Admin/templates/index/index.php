@@ -1,8 +1,14 @@
 <?php
 
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var bool $isInside */
+
 //  --  LOAD STATIC HTML CONTENT FILE ...
 
 //  --  ... BY REQUESTED PATH  --  //
+
 if( !empty( $path ) ){
 	if( $view->hasContentFile( 'html/'.$path.'.html' ) )
 		return $view->loadContentFile( 'html/'.$path.'.html' );

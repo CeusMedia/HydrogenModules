@@ -22,4 +22,3 @@ class View_Manage_Catalog_Article extends View_Manage_Catalog{
 	}
 
 }
-?>

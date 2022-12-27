@@ -110,4 +110,3 @@ class View_Helper_UserAvatar{
 	}
 
 }
-?>

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
@@ -8,15 +9,15 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Route extends Controller
 {
-	protected $request;
-	protected $frontend;
-	protected $fileName;
-	protected $model;
-	protected $source;
-	protected $routes			= [];
-	protected $routeMapBySource	= [];
+	protected Dictionary $request;
+	protected Logic_Frontend $frontend;
+	protected string $fileName;
+	protected Model_Route $model;
+	protected ?string $source				= NULL;
+	protected array $routes					= [];
+	protected array $routeMapBySource		= [];
 
-	public function activate( string $id )
+	public function activate( string $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':
@@ -32,12 +33,12 @@ class Controller_Admin_Route extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			switch( $this->source ){
 				case 'Database':
-					$this->model->add( array(
+					$this->model->add( [
 						'status'	=> $this->request->get( 'status' ),
 						'regex'		=> $this->request->get( 'regex' ),
 						'code'		=> $this->request->get( 'code' ),
@@ -45,17 +46,17 @@ class Controller_Admin_Route extends Controller
 						'target'	=> $this->request->get( 'target' ),
 						'title'		=> $this->request->get( 'title' ),
 						'createdAt'	=> time(),
-					) );
+					] );
 					break;
 				case 'XML':
 				default:
-					$this->routes[]	= (object) array(
+					$this->routes[]	= (object) [
 						'source'	=> $this->request->get( 'source' ),
 						'target'	=> $this->request->get( 'target' ),
 						'code'		=> $this->request->get( 'code' ),
 						'status'	=> $this->request->get( 'status' ),
 						'regex'		=> $this->request->get( 'regex' ),
-					);
+					];
 					$this->saveRoutes();
 			}
 			$this->restart( NULL, TRUE );
@@ -63,7 +64,7 @@ class Controller_Admin_Route extends Controller
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function deactivate( $id )
+	public function deactivate( $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':
@@ -79,21 +80,21 @@ class Controller_Admin_Route extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $id )
+	public function edit( $id ): void
 	{
 		if( !array_key_exists( $id, $this->routes ) )
 			$this->restart( NULL, TRUE );
 		if( $this->request->has( 'save' ) ){
 			switch( $this->source ){
 				case 'Database':
-					$this->model->edit( $id, array(
+					$this->model->edit( $id, [
 						'source'		=> $this->request->get( 'source' ),
 						'target'		=> $this->request->get( 'target' ),
 						'code'			=> $this->request->get( 'code' ),
 						'status'		=> $this->request->get( 'status' ),
 						'regex'			=> $this->request->get( 'regex' ),
 //						'modifiedAt'	=> time(),
-					) );
+					] );
 					break;
 				case 'XML':
 				default:
@@ -109,11 +110,11 @@ class Controller_Admin_Route extends Controller
 		$this->addData( 'route', $this->routes[$id] );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function remove( $id )
+	public function remove( $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':

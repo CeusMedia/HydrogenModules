@@ -26,7 +26,8 @@ class View_Helper_Catalog_Bookstore
 		$this->cache	= $this->env->getCache();
 	}
 
-	static public function applyLinks( Environment $env, $content/*&$item*/ ){
+	public static function applyLinks( Environment $env, $content/*&$item*/ )
+	{
 //		$content	= $item->content;
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
 		$logic	= new Logic_Catalog_Bookstore( $env );
@@ -157,7 +158,7 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		string		$labelNoPicture		Title of placeholder image
 	 *	@return		string		Rendered HTML tag of article cover image (or placeholder).
 	 */
-	public function renderArticleImage( $article, string $labelNoPicture = '', bool $absolute = FALSE ): string
+	public function renderArticleImage( object $article, string $labelNoPicture = '', bool $absolute = FALSE ): string
 	{
 		if( $article->cover ){
 			$logicBucket	= new Logic_FileBucket( $this->env );
@@ -295,7 +296,7 @@ class View_Helper_Catalog_Bookstore
 	public function renderPositionFromArticle( $article, string $language = 'de' ): string
 	{
 		$helper	= new View_Helper_Catalog_Bookstore_Position( $this->env );
-		return $helper->renderFromArticle( $article, $language );
+		return $helper->renderFromArticle( $article );
 	}
 
 	public function renderPositionFromCategory( $category = NULL ): string

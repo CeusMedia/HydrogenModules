@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $article */
 
 if( !in_array( $article->status, [-1, 0, 1] ) )
 	return '';
@@ -25,7 +30,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 //	$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-money'] );
 }
 
-$inputQuantity	= HtmlTag::create( 'input', NULL, array(
+$inputQuantity	= HtmlTag::create( 'input', NULL, [
 	'type'		=> 'number',
 	'step'		=> 1,
 	'min'		=> 1,
@@ -35,19 +40,19 @@ $inputQuantity	= HtmlTag::create( 'input', NULL, array(
 	'class'		=> 'span2 numeric',
 	'required'	=> 'required',
 	'value'		=> min( 1000, max( 1, (int) $request->get( 'quantity' ) ) ),
-) );
+] );
 
-$buttonOrder	= HtmlTag::create( 'button', $iconOrder.' '.$labelButtonOrder, array(
+$buttonOrder	= HtmlTag::create( 'button', $iconOrder.' '.$labelButtonOrder, [
 	'type'	=> 'submit',
 	'name'	=> 'order',
 //	'class'	=> 'btn btn-primary',
 	'class'	=> 'btn not-btn-primary',
-) );
-$buttonCart	= HtmlTag::create( 'a', $iconCart.' '.$labelButtonCart, array(
+] );
+$buttonCart	= HtmlTag::create( 'a', $iconCart.' '.$labelButtonCart, [
 	'href'		=> "./shop/cart",
 //	'class'		=> "btn not-btn-success not-btn-small",
 	'class'		=> "btn btn-success",
-) );
+] );
 if( !$cart )
 	$buttonCart	= '';
 
@@ -67,4 +72,3 @@ return '<div class="content-panel">
 		</form>
 	</div>
 </div>';
-?>

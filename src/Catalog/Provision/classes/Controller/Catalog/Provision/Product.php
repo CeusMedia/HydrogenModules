@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Catalog_Provision_Product extends Controller
 {
-	protected $modelProduct;
-	protected $modelLicense;
-	protected $logicCatalog;
+	protected Model_Provision_Product $modelProduct;
+	protected Model_Provision_Product_License $modelLicense;
+	protected Logic_Catalog_Provision $logicCatalog;
 
-	public function index( $productId = NULL )
+	public function index( $productId = NULL ): void
 	{
 		if( !is_null( $productId ) && strlen( trim( $productId ) ) )
 			$this->restart( 'view/'.$productId );
@@ -16,16 +16,16 @@ class Controller_Catalog_Provision_Product extends Controller
 		$orders		= ['rank' => 'ASC'];
 		$products	= $this->modelProduct->getAll( $conditions, $orders );
 		foreach( $products as $nr => $product ){
-			$licenses	= $this->modelLicense->getAllByIndices( array(
+			$licenses	= $this->modelLicense->getAllByIndices( [
 				'productId'	=> $product->productId,
-			), ['rank' => 'ASC'] );
+			], ['rank' => 'ASC'] );
 			if( !$licenses )
 				unset( $products[$nr] );
 		}
 		$this->addData( 'products', $products );
 	}
 
-	public function license( $licenseId )
+	public function license( $licenseId ): void
 	{
 		$licenseId		= (int) $licenseId;
 		$license		= $this->modelLicense->get( $licenseId );
@@ -36,7 +36,7 @@ class Controller_Catalog_Provision_Product extends Controller
 		$this->addData( 'licenseId', $licenseId );
 	}
 
-	public function view( $productId )
+	public function view( $productId ): void
 	{
 		$productId		= (int) $productId;
 		$this->addData( 'product', $this->modelProduct->get( $productId ) );

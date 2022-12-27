@@ -93,4 +93,3 @@ return '
 '.$panelDocuments.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Documents  -->';
-?>

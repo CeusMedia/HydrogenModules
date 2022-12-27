@@ -17,4 +17,3 @@ $body	= '
 
 $page->addBody( $body );
 return $page->build();
-?>

@@ -6,12 +6,14 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Catalog_Clothing extends Controller
 {
-	public function index(){
+	public function index(): void
+	{
 	}
 
-	public static function __onRenderServicePanels( Environment $env, $context, $module, $data = [] )
+	public static function __onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		$arguments	= new Dictionary( $data );
+		/** @var Environment\Web $env */
+		$arguments	= new Dictionary( $payload );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Clothing( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogClothing( $env );

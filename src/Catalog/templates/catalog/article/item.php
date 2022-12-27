@@ -1,4 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+
 if( $image )
 	return "
 <div class='catalog-article-item status_".$app_lan."_".$status." "./*$style.*/"'>
@@ -25,4 +31,3 @@ return "
 		<span class='isbn'>".$isbn."</span><br/>
 	</div>
 </div>";
-?>

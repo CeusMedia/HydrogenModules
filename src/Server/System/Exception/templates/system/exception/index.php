@@ -73,4 +73,3 @@ return '<h3>'.$words['index']['heading'].'</h3>
 </div>
 '.$panelFacts.'
 '.$textBottom;
-?>

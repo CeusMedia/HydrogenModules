@@ -120,4 +120,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

@@ -27,4 +27,3 @@ return '
 		'.$list.'
 	</div>
 </div>';
-?>

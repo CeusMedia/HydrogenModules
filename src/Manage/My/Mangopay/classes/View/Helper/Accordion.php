@@ -60,4 +60,3 @@ class View_Helper_Accordion{
 		) );
 	}
 }
-?>

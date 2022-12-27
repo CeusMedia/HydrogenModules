@@ -23,7 +23,8 @@ $optVersion		= [];
 		$label	.= ' ('.$version->title.')';
 	$optVersion[$version->projectVersionId]	= $label;
 }
-*/$optVersion	= HtmlElements::Options( $optVersion );
+*/
+$optVersion	= HtmlElements::Options( $optVersion );
 
 $optStatus	= $words['states-project'];
 ksort( $optStatus );

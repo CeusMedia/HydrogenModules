@@ -1,5 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+/** @var object[] $users */
+/** @var object[] $userProjects */
 
 $w	= (object) $words['add'];
 
@@ -224,4 +231,3 @@ $(document).ready(function(){
 //	$("#input_title").focus();
 });
 </script>';
-?>

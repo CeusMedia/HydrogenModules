@@ -23,4 +23,3 @@ class Controller_Manage_Content extends Controller{
 		return $tabs;
 	}
 }
-?>

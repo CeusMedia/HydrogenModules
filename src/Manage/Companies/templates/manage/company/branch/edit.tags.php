@@ -45,4 +45,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

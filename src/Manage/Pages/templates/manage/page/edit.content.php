@@ -69,4 +69,3 @@ var pageType = '.(int) $page->type.';
 	</script>';
 }
 return $content;
-?>

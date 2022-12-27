@@ -18,4 +18,3 @@ return $textTop.'
 	</div>
 </div>
 '.$textBottom;
-?>

@@ -81,4 +81,3 @@ return '
 	'.$panelAdd.'
 </form>
 <!--  Manage: Catalog: Article: Tags  -->';
-?>

@@ -151,4 +151,3 @@ return '
 </dl>'.$buttonInvite;
  */
 
-?>

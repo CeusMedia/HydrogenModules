@@ -24,4 +24,3 @@ class View_Manage_Content extends View{
 		return $tabs;
 	}
 }
-?>

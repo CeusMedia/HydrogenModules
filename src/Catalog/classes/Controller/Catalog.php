@@ -1,21 +1,27 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
+use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Catalog extends Controller
 {
 	/**	@var	Logic_ShopBridge	$bridge */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
 
 	/**	@var	integer				$bridgeId */
 	protected $bridgeId;
 
 	/**	@var	Logic_Catalog		$logic */
-	protected $logic;
+	protected Logic_Catalog $logic;
 
-	public static function ___onRegisterSitemapLinks( Environment $env, $context, $module, $data )
+	protected Request $request;
+	protected Messenger $messenger;
+
+	public static function ___onRegisterSitemapLinks( Environment $env, object $context, object $module, array & $payload )
 	{
 		$baseUrl	= $env->url.'catalog/';
 		$logic		= new Logic_Catalog( $env );
@@ -23,7 +29,7 @@ class Controller_Catalog extends Controller
 		foreach( $articles as $article ){
 			$url	= $logic->getArticleUri( $article, TRUE );
 			$date	= max( $article->createdAt, $article->modifiedAt );
-			$context->addLink( $url, $date > 0 ? $data : NULL );
+			$context->addLink( $url, $date > 0 ? $payload : NULL );
 		}
 		$authors	= $logic->getAuthors( [], ['authorId' => 'DESC'] );
 		foreach( $authors as $author ){
@@ -33,7 +39,7 @@ class Controller_Catalog extends Controller
 		}
 	}
 
-	public function article( $articleId )
+	public function article( $articleId ): void
 	{
 		$articleId	= (int) $articleId;
 		$article	= $this->logic->getArticle( $articleId );
@@ -59,11 +65,11 @@ class Controller_Catalog extends Controller
 		}
 	}
 
-	public function articles()
+	public function articles(): void
 	{
 	}
 
-	public function author( $authorId )
+	public function author( $authorId ): void
 	{
 //		$authorId	= preg_replace( "/-[a-z0-9_-]*$/", "", $authorId );
 		$authorId	= (int) $authorId;
@@ -75,12 +81,12 @@ class Controller_Catalog extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
-	public function authors()
+	public function authors(): void
 	{
 		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 	}
 
-	public function categories()
+	public function categories(): void
 	{
 		$cache	= $this->env->getCache();
 		if( NULL === ( $categories = $cache->get( 'catalog.categories' ) ) ){
@@ -96,7 +102,7 @@ class Controller_Catalog extends Controller
 		$this->addData( 'categories', $categories );
 	}
 
-	public function category( $categoryId )
+	public function category( $categoryId ): void
 	{
 		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
@@ -110,7 +116,7 @@ class Controller_Catalog extends Controller
 		$this->addData( 'category', $category );
 	}
 
-	public function index( $categoryId = NULL )
+	public function index( $categoryId = NULL ): void
 	{
 		if( $categoryId && (int) $categoryId )
 			$this->restart( 'category/'.$categoryId, TRUE );
@@ -118,12 +124,12 @@ class Controller_Catalog extends Controller
 	}
 
 	/**
-	 *	@todo		kriss: extract head and foot to module MerchantFeed with hook support
-	 *	@todo		kriss: rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
-	 *	@todo		kriss: extract labels
-	 *	@todo		kriss: BONUS: draft resolution for Google categories and implement solution for hooked modules
+	 *	@todo		extract head and foot to module MerchantFeed with hook support
+	 *	@todo		rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
+	 *	@todo		extract labels
+	 *	@todo		BONUS: draft resolution for Google categories and implement solution for hooked modules
 	 */
-	public function feed()
+	public function feed(): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.catalog.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -189,13 +195,13 @@ class Controller_Catalog extends Controller
 		exit;
 	}
 
-	public function news()
+	public function news(): void
 	{
 		$articles	= $this->logic->getArticles( ['new' => 1], ['createdAt' => 'DESC'] );
 		$this->addData( 'articles', $articles );
 	}
 
-	public function order()
+	public function order(): void
 	{
 		$request	= $this->env->getRequest();
 		$articleId	= (int) $request->get( 'articleId' );
@@ -208,7 +214,7 @@ class Controller_Catalog extends Controller
 		$this->restart( $url );
 	}
 
-	public function rss( $categoryId = NULL )
+	public function rss( $categoryId = NULL ): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.catalog.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -216,14 +222,14 @@ class Controller_Catalog extends Controller
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog( $this->env );
 		$rss		= new RssBuilder();
-		$data		= array(
+		$data		= [
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,
 			'description'	=> $words->description,
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
-		);
+		];
 		if( $options->get( 'image.url' ) ){
 			$data['imageUrl']	= $options->get( 'image.url' );
 			if( $options->get( 'image.link' ) )
@@ -237,10 +243,10 @@ class Controller_Catalog extends Controller
 		}
 		$rss->setChannelData( $data );
 
-		$conditions		= array(
+		$conditions		= [
 			'status'	=> [0, 1],
 			'new'		=> 1
-		);
+		];
 		if( $categoryId ){
 			$categories	= [$categoryId];
 			$children	= $this->logic->getCategories( ['parentId' => $categoryId] );
@@ -259,7 +265,7 @@ class Controller_Catalog extends Controller
 			$categories	= [];
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
-			$item	= array(
+			$item	= [
 				"title"			=> $article->title,
 				"description"	=> $article->description,
 				"link"			=> $helper->getArticleUri( $article->articleId, TRUE ),
@@ -267,7 +273,7 @@ class Controller_Catalog extends Controller
 				"pubDate"		=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
 				"guid"			=> $this->env->url.'catalog/article/'.$article->articleId ,
 				"source"		=> $this->env->url.'catalog/rss',
-			);
+			];
 			$rss->addItem($item);
 		}
 		$xml	= $rss->build();
@@ -277,7 +283,7 @@ class Controller_Catalog extends Controller
 		exit;
 	}
 
-	public function search( $page = 0 )
+	public function search( $page = 0 ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -317,31 +323,31 @@ class Controller_Catalog extends Controller
 		if( strlen( trim( $session->get( 'catalog_search_term' ) ) ) ){
 			$terms		= explode( " ", trim( $session->get( 'catalog_search_term' ) ) );
 			foreach( $terms as $term ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_articles AS a",
 					$prefix."catalog_article_tags AS c",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = c.articleId",
 //					"c.tag LIKE '%".$term."%'"
 					"c.tag LIKE '%".trim( $term )."%'"
-				);
+				];
 				$query		= "SELECT DISTINCT(a.articleId) FROM ".join( ', ', $tables )." WHERE ".join( ' AND ', $conditions );
 				$results	= $database->query( $query );
 				foreach( $results->fetchAll( PDO::FETCH_OBJ ) as $result )
 					$idsTags[]	= $result->articleId;
 			}
 			foreach( $terms as $term ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_articles AS a",
 					$prefix."catalog_article_authors AS ab",
 					$prefix."catalog_authors AS b",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = ab.articleId",
 					"ab.authorId = b.authorId",
 					"CONCAT(a.title, a.subtitle, a.description, a.isn, b.firstname, b.lastname) LIKE '%".$term."%'"
-				);
+				];
 				$query		= "SELECT DISTINCT(a.articleId) FROM ".join( ', ', $tables )." WHERE ".join( ' AND ', $conditions );
 				$results	= $database->query( $query );
 				foreach( $results->fetchAll( PDO::FETCH_OBJ ) as $result )
@@ -354,18 +360,16 @@ class Controller_Catalog extends Controller
 			else
 				$articleIds	= $idsSearch;
 
-
-
 			if( $articleIds ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_articles AS a",
 					$prefix."catalog_article_authors AS ab",
 					$prefix."catalog_authors AS b",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = ab.articleId",
 					"ab.authorId = b.authorId",
-				);
+				];
 				if( $session->get( 'catalog_search_isAvailable' ) )
 					$conditions[]	= "a.status = 0";
 				if( $session->get( 'catalog_search_hasPicture' ) )

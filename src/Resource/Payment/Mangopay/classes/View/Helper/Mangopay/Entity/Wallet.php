@@ -33,4 +33,3 @@ class View_Helper_Mangopay_Entity_Wallet extends View_Helper_Mangopay_Abstract{
 		return $this;
 	}
 }
-?>

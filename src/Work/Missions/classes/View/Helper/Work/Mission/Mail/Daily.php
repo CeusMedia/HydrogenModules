@@ -7,7 +7,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 {
-	public function render( $data ){
+	public function render( $data )
+	{
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 		$w				= (object) $words['mail-daily'];
@@ -17,7 +18,7 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new HtmlIndicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	realize date format in module config
 
 //		$words			= $this->getWords( 'work/mission' );
 
@@ -72,4 +73,3 @@ class View_Helper_Work_Mission_Mail_Daily extends Abstraction
 		return $this->page->build( ['class' => $class] );
 	}
 }
-?>

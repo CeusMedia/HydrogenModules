@@ -35,4 +35,3 @@ $env->getPage()->addBodyClass( 'auth-centered' );
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', $panelLogin, ['class' => 'centered-pane'] )
 ), ['class' => 'centered-pane-container'] );
-?>

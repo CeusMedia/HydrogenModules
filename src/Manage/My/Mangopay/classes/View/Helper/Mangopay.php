@@ -19,4 +19,3 @@ abstract class View_Helper_Mangopay{
 		return '<tt>'.$number.'</tt>';
 	}
 }
-?>

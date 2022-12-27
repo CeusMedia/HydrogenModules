@@ -33,4 +33,3 @@ class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 }
-?>

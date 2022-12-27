@@ -1,24 +1,27 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mission_List{
+class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mission_List
+{
+	protected array $dayMissions	= [];
 
-	protected $dayMissions	= [];
-
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		parent::__construct( $env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$buttons	= [];
 		$numbers	= [];
 		for( $i=0; $i<6; $i++ )
-			$numbers[$i]	= count( $this->dayMissions[$i] );										//  @todo	kriss: exception management
+			$numbers[$i]	= count( $this->dayMissions[$i] );										//  @todo	exception management
 		$max		= max( $numbers );
 		for( $i=0; $i<6; $i++ ){
 			$label		= $this->renderDayButtonLabel( $i, $numbers[$i], $max );
 			$class		= $numbers[$i] ? '' : 'empty-day';
-			$attributes	= array(
+			$attributes	= [
 				'href'				=> '#',
 				'data-toggle'		=> 'tab',
 				'onclick'			=> 'WorkMissions.showDayTable('.$i.', true); return false',
@@ -27,7 +30,7 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 				'data-day-nr'		=> $i,
 				'data-items'		=> $numbers[$i],
 				'data-items-max'	=> $max,
-			);
+			];
 			$link		= HtmlTag::create( 'a', $label, $attributes );
 			$buttons[]	= HtmlTag::create( 'li', $link );
 		}
@@ -36,7 +39,8 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 		return $container;
 	}
 
-	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ){
+	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ): string
+	{
 		$then		= time() - $this->logic->timeOffset + ( $day * 24 * 60 * 60 );
 		$dayName	= $this->words['days-short'][date( "w", $then )];
 		$dayCount	= '<small class="muted">'.$number.'</small>';
@@ -55,7 +59,8 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
-	protected function renderDayLoadIndicator( $number, $max, $useInfo = FALSE ){
+	protected function renderDayLoadIndicator( $number, $max, $useInfo = FALSE ): string
+	{
 		$max		= $max < 18 ? 18 : $max;														//  max is atleast 18
 		$ratio		= $number / $max;
 		if( $useInfo ){
@@ -80,16 +85,17 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 			else if( $ratio > 0 )
 				$color		= "bar-success";
 		}
-		$attributes	= array(
+		$attributes	= [
 			'class'		=> 'bar '.$color,
 			'style'		=> 'width: '.$width,
-		);
+		];
 		$bar	= HtmlTag::create( 'div', "", $attributes );
 		return HtmlTag::create( 'div', $bar, ['class' => 'progress', 'data-max' => $max] );
 	}
 
-	public function setDayMissions( $dayMissions ){
+	public function setDayMissions( $dayMissions ): self
+	{
 		$this->dayMissions	= $dayMissions;
+		return $this;
 	}
 }
-?>

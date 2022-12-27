@@ -3,6 +3,11 @@
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Environment $env */
+/** @var array $words */
+/** @var object[] $tags */
+/** @var object[] $relatedArticles */
+
 if( !$env->getRequest()->has( 'testing123' ) )
 	return '';
 
@@ -14,7 +19,7 @@ $total				= count( $relatedArticles );
 $relatedArticles	= array_slice( $relatedArticles, 0, $limit );
 $helper				= new View_Helper_Catalog_Bookstore( $env );
 
-$list	= [];
+$list		= [];
 $tagList	= [];
 foreach( $tags as $tag ){
 	$tagList[]	= HtmlTag::create( 'a', $tag->tag, array(
@@ -60,4 +65,3 @@ $(document).ready(function(){
 	ModuleCatalogBookstoreRelatedArticlesSlider.init('.count( $relatedArticles ).', 260);
 })
 </script>';
-?>

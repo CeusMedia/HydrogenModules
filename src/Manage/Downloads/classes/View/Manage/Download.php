@@ -10,4 +10,3 @@ class View_Manage_Download extends View{
 
 	public function view(){}
 }
-?>

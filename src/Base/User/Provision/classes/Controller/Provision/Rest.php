@@ -3,8 +3,8 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
-class Controller_Provision_Rest extends Controller{
-
+class Controller_Provision_Rest extends Controller
+{
 	protected Logic_User_Provision $logic;
 
 	public function __construct( Environment $env, $setupView = TRUE )
@@ -37,16 +37,16 @@ class Controller_Provision_Rest extends Controller{
 	}
 
 	/**
-	 *	@todo 		kriss: finish implementation (exception log)
+	 *	@todo 		finish implementation (exception log)
 	 */
 	public function handleJsonExceptionResponse( $exception )
 	{
-		$this->handleJsonResponse( 'exception', array(
+		$this->handleJsonResponse( 'exception', [
 			'message'	=> $exception->getMessage(),
 			'code'		=> $exception->getCode(),
 			'file'		=> $exception->getFile(),
 			'line'		=> $exception->getLine(),
-		) );
+		] );
 	}
 
 	public function hasActiveKey( $showExceptions = FALSE )
@@ -60,12 +60,12 @@ class Controller_Provision_Rest extends Controller{
 			$this->handleJsonErrorResponse( 'No product ID given' );
 		if( (int) $userId < 1 )
 			$this->handleJsonErrorResponse( 'No user ID given' );
-		$data	= array(
+		$data	= [
 			'code'		=> 0,
-			'active'	=> null,
-			'pending'	=> null,
-			'outdated'	=> null,
-		);
+			'active'	=> NULL,
+			'pending'	=> NULL,
+			'outdated'	=> NULL,
+		];
 		try{
 			$data['product']	= $this->logic->getProduct( $productId );
 			$keys	= $this->logic->getUserLicenseKeysFromUser( $userId, FALSE, $productId );
@@ -95,7 +95,8 @@ class Controller_Provision_Rest extends Controller{
 	 *	ATTENTION: Commercial or group licenses are not order-able using this interface.
 	 *	ATTENTION: Free single user licenses are order-able only once for one user.
 	 */
-	public function orderLicense(){
+	public function orderLicense()
+	{
 		$request			= $this->env->getRequest();
 		$userId				= $request->get( 'userId' );
 //		$password			= $request->get( 'password' );
@@ -148,11 +149,12 @@ class Controller_Provision_Rest extends Controller{
 		}
 	}
 
-	public function test(){
-		$data	= array(
+	public function test()
+	{
+		$data	= [
 			'products' => $this->getProducts(),
 			'licenses' => $this->getLicenses( 1 ),
-		);
+		];
 		$this->handleJsonResponse( 'data', $data );
 	}
 

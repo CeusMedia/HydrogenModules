@@ -8,4 +8,3 @@ class View_Manage_My_Company_Branch extends View{
 	public function add(){}
 	public function edit(){}
 }
-?>

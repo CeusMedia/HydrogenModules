@@ -13,4 +13,3 @@ class Job_Test_Scheduler extends Job_Abstract{
 		$this->out( 'New day: '.date( 'd.m.Y' ) );
 	}
 }
-?>

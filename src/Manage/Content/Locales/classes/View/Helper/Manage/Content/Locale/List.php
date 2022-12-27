@@ -68,4 +68,3 @@ class View_Helper_Manage_Content_Locale_List{
 		$this->language	= $language;
 	}
 }
-?>

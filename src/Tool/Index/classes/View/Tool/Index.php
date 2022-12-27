@@ -6,4 +6,3 @@ class View_Tool_Index extends View{
 
 	public function index(){}
 }
-?>

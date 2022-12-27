@@ -67,4 +67,3 @@ return '
 		'.$panelPayIn.'
 	</div>
 </div>';
-?>

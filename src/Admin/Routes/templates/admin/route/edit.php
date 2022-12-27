@@ -17,19 +17,19 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-remove"] );
 
 //print_m( $route );die;
 
-$optStatus	= array(
+$optStatus	= [
 	0		=> 'inaktiv',
 	1		=> 'aktiv',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $route->status );
 
-$optRegex	= array(
+$optRegex	= [
 	0		=> 'nein',
 	1		=> 'ja',
-);
+];
 $optRegex	= HtmlElements::Options( $optRegex, $route->regex );
 
-$optCode	= array(
+$optCode	= [
 	200 => "200 OK",
 	201 => "201 Created",
 	202 => "202 Accepted",
@@ -76,24 +76,24 @@ $optCode	= array(
 //	505 => "505 HTTP Version Not Supported",
 	508 => "508 Loop Detected",
 //	511 => "511 Network Authentication Required",
-);
+];
 
 $optCode	= HtmlElements::Options( $optCode, $route->code );
 
-$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonsCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 	'href'		=> './admin/route',
 	'class'		=> 'btn',
-) );
-$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+] );
+$buttonsSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
-$buttonsRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+] );
+$buttonsRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 	'href'		=> './admin/route/remove/'.$route->routeId,
 	'class'		=> 'btn btn-small btn-danger',
 	'title'		=> 'entfernen'
-) );
+] );
 
 return '<div class="content-panel">
 	<h3>Route verändern</h3>

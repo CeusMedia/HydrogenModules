@@ -1,7 +1,12 @@
 <?php
 
-use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var array $relatedArticles */
+/** @var array $tags */
 
 if( !$env->getRequest()->has( 'testing123' ) )
 	return '';
@@ -27,8 +32,8 @@ $tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), ['class' => 'tag-lis
 foreach( $relatedArticles as $relation ){
 	$title		= $relation->article->title;//TextTrimmer::trim( $relation->article->title, 60 );
 	$subtitle	= $relation->article->subtitle;//TextTrimmer::trim( $relation->article->subtitle, 60 );
-	$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
-	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), ['href' => $url] );
+	$url		= $helper->getArticleUri( $relation->article->articleId );
+	$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article ), ['href' => $url] );
 	$image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );
 	$title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, ['href' => $url] ) );
 	$sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle.'&nbsp;('.$relation->matches.')', ['class' => ''] ) );
@@ -56,7 +61,7 @@ return '
 <br/>
 <br/>
 <script>
-var RelatedArticlesSlider = {
+let RelatedArticlesSlider = {
 	pos: 0,
 	animating: false,
 	init: function(number, width){
@@ -69,7 +74,7 @@ var RelatedArticlesSlider = {
 	onScroll: function(container){
 		if(RelatedArticlesSlider.animating)
 			return;
-		var pos = $(this).scrollLeft();
+		let pos = $(this).scrollLeft();
 		RelatedArticlesSlider.pos = Math.round(pos / RelatedArticlesSlider.width);
 		RelatedArticlesSlider.updateArrows();
 	},
@@ -85,10 +90,10 @@ var RelatedArticlesSlider = {
 			$(".related-articles-arrow-right").stop(true).animate({opacity: 1});
 	},
 	slideToCurrentPosition: function(options){
-		var options = $.extend({
+		let options = $.extend({
 			callback: function(){}
 		}, options);
-		var pos = RelatedArticlesSlider.pos * RelatedArticlesSlider.width;
+		let pos = RelatedArticlesSlider.pos * RelatedArticlesSlider.width;
 		RelatedArticlesSlider.animating = true;
 		RelatedArticlesSlider.updateArrows();
 		$(".related-articles-container").stop(true).animate({scrollLeft: pos}, {complete: function(){
@@ -184,4 +189,3 @@ $(document).ready(function(){
 	height: 120px;
 	}
 </style>';
-?>

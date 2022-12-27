@@ -41,4 +41,3 @@ class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 }
-?>

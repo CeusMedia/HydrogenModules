@@ -8,4 +8,3 @@ class View_Manage_Testimonial extends View{
 	function edit() {}
 	function index() {}
 }
-?>

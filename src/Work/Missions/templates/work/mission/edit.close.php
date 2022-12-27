@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 $w	= (object) $words['edit-panel-close'];
 
 if( $mission->status < 0 )
@@ -68,4 +70,3 @@ function closeMission(status, confirm){
 	}
 }
 </script>';
-?>

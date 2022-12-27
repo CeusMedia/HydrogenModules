@@ -64,4 +64,3 @@ return '
 		'.$text['info'].'
 	</div>
 </div>';
-?>

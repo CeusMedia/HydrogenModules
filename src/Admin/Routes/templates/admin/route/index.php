@@ -32,24 +32,24 @@ if( $routes ){
 //			$buttons[]	= HtmlTag::create( 'a', '<i class="icon-remove icon-white"></i>', ['href' => './admin/route/deactivate/'.$id, 'class' => 'btn btn-small btn-inverse', 'title' => 'deaktivieren'] );
 		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $status, ['class' => 'cell-route-status'] ),
 			HtmlTag::create( 'td', $code, ['class' => 'cell-route-code'] ),
 			HtmlTag::create( 'td', $route->source, ['class' => 'cell-route-source autocut'] ),
 			HtmlTag::create( 'td', $route->target, ['class' => 'cell-route-target autocut'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'cell-route-actions'] ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "8%", "7%", "", "", "8%" );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Aktiv', 'Code', 'Quelle', 'Ziel', ''] ) );
-	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Aktiv', 'Code', 'Quelle', 'Ziel', ''] ) );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Route', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Route', [
 	'href'	=> './admin/route/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <style>

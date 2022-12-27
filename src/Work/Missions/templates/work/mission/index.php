@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+
 $w				= (object) $words['index'];
 
 $panelFilter	= $view->loadTemplateFile( 'work/mission/index.filter.php' );
@@ -59,4 +66,3 @@ $(document).ready(function(){
 $env->getPage()->addHead( $script );
 
 return '<div id="work_mission_mode_'.$filterMode.'">'.$panelFilter.$panelContent.'</div>';
-?>

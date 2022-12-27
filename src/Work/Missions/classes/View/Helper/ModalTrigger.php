@@ -1,9 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_ModalTrigger{
+class View_Helper_ModalTrigger
+{
+	protected $env;
 
-	protected $attributes	= [];
+	protected array $attributes	= [];
 	protected $id;
 	protected $label;
 	protected $modalId;
@@ -13,7 +15,8 @@ class View_Helper_ModalTrigger{
 	 *	@access		public
 	 *	@param		object		$env			Instance of Hydrogen Environment
 	 */
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 	}
 
@@ -22,18 +25,19 @@ class View_Helper_ModalTrigger{
 	 *	@access		public
 	 *	@return		string
 	 */
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->label )
 			throw new RuntimeException( 'No label set' );
 		if( !$this->modalId )
 			throw new RuntimeException( 'No modal ID set' );
-		$attributes	= array(
+		$attributes	= [
 			'id'			=> $this->id,
 			'href'			=> "#".$this->modalId,
 			'role'			=> "button",
 			'class'			=> "btn",
 			'data-toggle'	=> "modal",
-		);
+		];
 		foreach( $this->attributes as $key => $value ){
 			switch( strtolower( $key ) ){
 				case 'id':
@@ -59,7 +63,8 @@ class View_Helper_ModalTrigger{
 	 *	@param		array		$attributes		Map of button attributes
 	 *	@return		self
 	 */
-	public function setAttributes( $attributes ){
+	public function setAttributes( array $attributes ): self
+	{
 		$this->attributes	= $attributes;
 		return $this;
 	}
@@ -71,7 +76,8 @@ class View_Helper_ModalTrigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setId( $id ){
+	public function setId( $id ): self
+	{
 		$this->id		= $id;
 		return $this;
 	}
@@ -83,7 +89,8 @@ class View_Helper_ModalTrigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setLabel( $label ){
+	public function setLabel( $label ): self
+	{
 		$this->label	= $label;
 		return $this;
 	}
@@ -95,9 +102,9 @@ class View_Helper_ModalTrigger{
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setModalId( $modalId ){
+	public function setModalId( $modalId ): self
+	{
 		$this->modalId	= $modalId;
 		return $this;
 	}
 }
-?>

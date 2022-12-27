@@ -95,4 +95,3 @@ return '
 '.$panelCover.'
 '.$panelUpload.'
 <!--  /Manage: Catalog: Article: Cover  -->';
-?>

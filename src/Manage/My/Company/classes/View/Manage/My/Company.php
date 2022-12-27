@@ -8,4 +8,3 @@ class View_Manage_My_Company extends View{
 
 	public function index(){}
 }
-?>

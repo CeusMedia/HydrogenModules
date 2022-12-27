@@ -259,4 +259,3 @@ $(document).ready(function(){
 });
 </script>
 ';
-?>

@@ -106,4 +106,3 @@ return $textIndexTop.'
 		'.$panelEdit.'
 	</div>
 </div>'.$textIndexBottom;
-?>

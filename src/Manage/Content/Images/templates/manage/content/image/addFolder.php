@@ -51,4 +51,3 @@ return $textTop.'
 	</div>
 </div>
 ';
-?>

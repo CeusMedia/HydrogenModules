@@ -24,4 +24,3 @@ class View_Manage_Catalog_Author extends View_Manage_Catalog{
 		return $list;
 	}
 }
-?>

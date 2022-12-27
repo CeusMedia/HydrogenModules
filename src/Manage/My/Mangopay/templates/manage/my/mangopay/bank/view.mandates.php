@@ -71,4 +71,3 @@ return '
 		</div>
 	</div>
 </div>';
-?>

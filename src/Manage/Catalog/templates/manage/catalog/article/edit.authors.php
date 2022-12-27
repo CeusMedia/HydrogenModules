@@ -100,4 +100,3 @@ return '
 '.$panelAuthors.'
 '.$panelAdd.'
 <!--  /Manage: Catalog: Article: Authors  -->';
-?>

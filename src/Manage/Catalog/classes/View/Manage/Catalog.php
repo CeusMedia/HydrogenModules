@@ -21,4 +21,3 @@ class View_Manage_Catalog extends View{
 		return HtmlTag::create( 'ul', $list, ['class' => "nav nav-tabs"] );
 	}
 }
-?>

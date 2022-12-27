@@ -35,4 +35,3 @@ $panelMove	= '
 </div>';
 
 return $panelMove;
-?>

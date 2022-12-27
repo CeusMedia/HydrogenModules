@@ -40,4 +40,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

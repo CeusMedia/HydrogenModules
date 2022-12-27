@@ -141,4 +141,3 @@ HTML::DivClass( 'row-fluid',
 		$panelUsers
 	)
 );
-?>

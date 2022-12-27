@@ -158,4 +158,3 @@ class View_Work_Issue extends View{
 		return $map.$image;
 	}
 }
-?>

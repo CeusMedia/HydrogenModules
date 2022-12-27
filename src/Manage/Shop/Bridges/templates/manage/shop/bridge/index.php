@@ -16,4 +16,3 @@ return $tabs.'
 	<div class="span8">
 	</div>
 </div>';
-?>

@@ -92,4 +92,3 @@ $(document).ready(function(){
 });
 </script>
 <div style="clear: both"></div>';
-?>

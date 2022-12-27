@@ -221,4 +221,3 @@ class View_Manage_My_User_Setting extends View{
 		return join( $rows );
 	}
 }
-?>

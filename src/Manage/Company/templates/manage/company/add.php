@@ -66,4 +66,3 @@ return HTML::DivClass( 'column-left-50',
 ).
 HTML::DivClass( 'column-left' ).
 HTML::DivClass( 'column-clear' );
-?>

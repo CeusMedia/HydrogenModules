@@ -1,25 +1,27 @@
 <?php
 
-use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Catalog_Bookstore_Relations{
+class View_Helper_Catalog_Bookstore_Relations
+{
+	protected $articleId		= 0;
+	protected Environment $env;
+	protected int $limit				= 20;
+	protected Logic_Catalog_Bookstore $logic;
+	protected string $heading			= "Ähnliche Veröffentlichungen";
+	protected array $tags				= [];
 
-	protected $articleId	= 0;
-	protected $env;
-	protected $limit		= 20;
-	protected $logic;
-	protected $heading		= "Ähnliche Veröffentlichungen";
-	protected $tags			= [];
-
-	public function __construct( $env ){
+	public function __construct( $env )
+	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->tags )
-			return;
+			return '';
 		$relatedArticles	= $this->logic->getArticlesFromTags( $this->tags, [$this->articleId] );
 		foreach( $relatedArticles as $id => $relation )
 			if( !$relation->article->cover )
@@ -27,7 +29,7 @@ class View_Helper_Catalog_Bookstore_Relations{
 		$total				= count( $relatedArticles );
 		$relatedArticles	= array_slice( $relatedArticles, 0, $this->limit );
 		if( !$total )
-			return;
+			return '';
 
 		$helper				= new View_Helper_Catalog_Bookstore( $this->env );
 
@@ -35,8 +37,8 @@ class View_Helper_Catalog_Bookstore_Relations{
 		foreach( $relatedArticles as $relation ){
 			$title		= $relation->article->title;//TextTrimmer::trim( $relation->article->title, 60 );
 			$subtitle	= $relation->article->subtitle;//TextTrimmer::trim( $relation->article->subtitle, 60 );
-			$url		= $helper->getArticleUri( $relation->article->articleId, !TRUE );
-			$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article, "" ), ['href' => $url] );
+			$url		= $helper->getArticleUri( $relation->article->articleId );
+			$image		= HtmlTag::create( 'a', $helper->renderArticleImage( $relation->article ), ['href' => $url] );
 		    $image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );
 		    $title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, ['href' => $url] ) );
 		    $sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle, ['class' => ''] ) );
@@ -60,18 +62,24 @@ class View_Helper_Catalog_Bookstore_Relations{
 </div>';
 	}
 
-	public function setArticleId( $articleId ){
+	public function setArticleId( $articleId ): self
+	{
 		$this->tags			= [];
 		$this->articleId	= $articleId;
-		foreach( $this->logic->getTagsOfArticle( $articleId, FALSE ) as $tag )
+		foreach( $this->logic->getTagsOfArticle( $articleId ) as $tag )
 			$this->tags[]	= $tag->tag;
+		return $this;
 	}
 
-	public function setHeading( $heading ){
+	public function setHeading( string $heading ): self
+	{
 		$this->heading	= $heading;
+		return $this;
 	}
 
-	public function setTags( $tags ){
+	public function setTags( array $tags ): self
+	{
 		$this->tags	= $tags;
+		return $this;
 	}
 }

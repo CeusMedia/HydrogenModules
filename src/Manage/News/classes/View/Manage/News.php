@@ -31,4 +31,3 @@ class View_Manage_News extends View{
 		return str_replace( 'textarea.', '', $editorClass );
 	}
 }
-?>

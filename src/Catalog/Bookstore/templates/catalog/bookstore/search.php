@@ -1,6 +1,18 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object[] $authors */
+/** @var object[] $articles */
+/** @var object[] $categories */
+/** @var int $page */
+/** @var int $limit */
+/** @var int $total */
 
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 $words	= (object) $words['search'];
@@ -61,4 +73,3 @@ return $textSearchTop.'
 </form>
 '.$list.'
 '.$pages.$textSearchBottom;
-?>

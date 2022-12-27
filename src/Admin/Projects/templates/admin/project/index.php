@@ -50,19 +50,3 @@ return '
 		</div>
 	</fieldset>
 </div>';
-?>
-
-
-<fieldset>
-	<legend>'.$words['index']['legend'].'</legend>
-	<table width="100%">
-		<colgroup>
-			<col width="3%"/>
-			<col width="72%"/>
-			<col width="15%"/>
-			<col width="10%"/>
-		</colgroup>
-		'.$heads.'
-		'.$rows.'
-	</table>
-</fieldset>

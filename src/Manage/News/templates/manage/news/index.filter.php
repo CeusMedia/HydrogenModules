@@ -49,4 +49,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

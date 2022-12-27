@@ -7,4 +7,3 @@ class View_Manage_My_User_Invite extends View{
 	public function invite(){}
 	public function promote(){}
 }
-?>

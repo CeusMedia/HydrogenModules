@@ -88,4 +88,3 @@ return $textIndexTop.'
 		'.$panelAddFile.'
 	</div>
 </div>'.$textIndexBottom;
-?>

@@ -8,4 +8,3 @@ return '
 		'.$panelList.'
 	</div>
 </div>';
-?>

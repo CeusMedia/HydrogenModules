@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 $w			= (object) @$words['view-documents'];
 
 $phraser	= new View_Helper_TimePhraser( $env );

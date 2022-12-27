@@ -75,4 +75,3 @@ class View_Helper_JsonServerResponseCodeHandler extends Abstraction
 			return $messenger->noteFailure( 'Unexpected error while calling action "'.$action.'" in controller "'.$controller.'".');
 	}
 }
-?>

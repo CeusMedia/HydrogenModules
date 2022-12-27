@@ -48,4 +48,3 @@ class Resource_SqliteCache{
 		die;
 	}
 }
-?>

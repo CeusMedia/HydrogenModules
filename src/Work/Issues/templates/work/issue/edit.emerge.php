@@ -2,6 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Work_Issue $view */
+/** @var array $words */
+/** @var object $issue */
+/** @var object[] $users */
+
 $optType		= $view->renderOptions( $words['types'], 'type', $issue->type, 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $issue->severity, 'issue-severity severity-%1$d');
 $optPriority	= $view->renderOptions( $words['priorities'], 'priority', $issue->priority, 'issue-priority priority-%1$d');
@@ -43,22 +48,9 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
 ) );
 */
 
+
 return '
 	<script>
-function getColor(ratio,opacity){
-	opacity	= typeof opacity == "undefined" ? 1 : opacity;
-	ratio	= Math.max(0,Math.min(1,ratio));									//  keep ratio between 0 and 1
-	var colorR	= ( 1 - ratio ) > 0.5 ? 255 : Math.round( ( 1 - ratio ) * 2 * 255 );
-	var colorG	= ratio > 0.5 ? 255 : Math.round( ratio * 2 * 255 );
-	return "rgba(" + colorR + "," + colorG + ",0,"+opacity+")";
-}
-
-function updateSlider(value, opacity){
-	$("#progress-slider.ui-slider").css("background", getColor(value/100, opacity));
-	$("#progress").val(value);
-	$("#progress-view").html(value + "%");
-}
-
 $(document).ready(function(){
 	var value = parseInt($("#progress").hide().val());
 	$("#progress-slider").slider({
@@ -72,6 +64,20 @@ $(document).ready(function(){
 	}).fadeIn("slow");
 	updateSlider(value, 0.5);
 });
+
+function getColor(ratio,opacity){
+	opacity	= typeof opacity == "undefined" ? 1 : opacity;
+	ratio	= Math.max(0,Math.min(1,ratio));									//  keep ratio between 0 and 1
+	var colorR	= ( 1 - ratio ) > 0.5 ? 255 : Math.round( ( 1 - ratio ) * 2 * 255 );
+	var colorG	= ratio > 0.5 ? 255 : Math.round( ratio * 2 * 255 );
+	return "rgba(" + colorR + "," + colorG + ",0,"+opacity+")";
+}
+
+function updateSlider(value, opacity){
+	$("#progress-slider.ui-slider").css("background", getColor(value/100, opacity));
+	$("#progress").val(value);
+	$("#progress-view").html(value + "%");
+}
 
 </script>
 <div class="content-panel">
@@ -145,18 +151,3 @@ $(document).ready(function(){
 		</form>
 	</div>
 </div>';
-?>
-<?php
-
-return '
-<div class="content-panel">
-	<h3>Zuweisung</h3>
-	<div class="content-panel-inner">
-		<form action="./work/issue/edit/'.$issue->issueId.'" method="post">
-			<div class="buttonbar">
-				'.$buttonSave.'
-			</div>
-		</form>
-	</div>
-</div>';
-?>

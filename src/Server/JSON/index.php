@@ -20,4 +20,3 @@ catch( Exception $e ){
 	#HtmlExceptionPage::display( $e );
 	die( "Exception: ".$e->getMessage() );
 }
-?>

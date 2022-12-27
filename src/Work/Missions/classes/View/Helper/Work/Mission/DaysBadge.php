@@ -1,12 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Work_Mission_DaysBadge extends Abstraction
 {
-	protected $badgesColored	= TRUE;
+	protected bool $badgesColored	= TRUE;
+	protected Logic_Work_Mission $logic;
 
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		$this->env			= $env;
 		$this->logic		= Logic_Work_Mission::getInstance( $env );
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );

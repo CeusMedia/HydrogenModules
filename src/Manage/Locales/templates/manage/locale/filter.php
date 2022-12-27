@@ -20,4 +20,3 @@ return '
 		<button type="submit" class="button filter"><span>'.$w->buttonFilter.'</span></button>
 		<button type="button" class="button reset"><span>'.$w->buttonReset.'</span>
 </form>';
-?>

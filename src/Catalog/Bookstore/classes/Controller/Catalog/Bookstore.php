@@ -3,20 +3,26 @@
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\ADT\URL\Compare as UrlCompare;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Catalog_Bookstore extends Controller
 {
 	/**	@var	Logic_ShopBridge			$bridge */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
 
 	/**	@var	integer						$bridgeId */
-	protected $bridgeId;
+	protected int $bridgeId;
 
 	/**	@var	Logic_Catalog_Bookstore		$logic */
-	protected $logic;
+	protected Logic_Catalog_Bookstore $logic;
+
+	protected HttpRequest $request;
+
+	protected MessengerResource $messenger;
 
 	public function article( string $articleId )
 	{
@@ -271,7 +277,7 @@ class Controller_Catalog_Bookstore extends Controller
 			$categories	= [];
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
-			$item	= array(
+			$item	= [
 				"title"			=> $article->title,
 				"description"	=> $article->description,
 				"link"			=> $helper->getArticleUri( $article->articleId, TRUE ),
@@ -279,7 +285,7 @@ class Controller_Catalog_Bookstore extends Controller
 				"pubDate"		=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
 				"guid"			=> $this->env->url.'catalog/bookstore/article/'.$article->articleId ,
 				"source"		=> $this->env->url.'catalog/bookstore/rss',
-			);
+			];
 			$rss->addItem($item);
 		}
 		$xml	= $rss->build();
@@ -289,7 +295,7 @@ class Controller_Catalog_Bookstore extends Controller
 		exit;
 	}
 
-	public function search( $page = 0 )
+	public function search( $page = 0 ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -324,36 +330,34 @@ class Controller_Catalog_Bookstore extends Controller
 		$idsTags	= [];
 		$idsSearch	= [];
 
-			$articleIds	= [];
-
 		if( strlen( trim( $session->get( 'catalog_bookstore_search_term' ) ) ) ){
 			$terms		= explode( " ", trim( $session->get( 'catalog_bookstore_search_term' ) ) );
 			foreach( $terms as $term ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_bookstore_articles AS a",
 					$prefix."catalog_bookstore_article_tags AS c",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = c.articleId",
 //					"c.tag LIKE '%".$term."%'"
 					"c.tag LIKE '%".trim( $term )."%'"
-				);
+				];
 				$query		= "SELECT DISTINCT(a.articleId) FROM ".join( ', ', $tables )." WHERE ".join( ' AND ', $conditions );
 				$results	= $database->query( $query );
 				foreach( $results->fetchAll( PDO::FETCH_OBJ ) as $result )
 					$idsTags[]	= $result->articleId;
 			}
 			foreach( $terms as $term ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_bookstore_articles AS a",
 					$prefix."catalog_bookstore_article_authors AS ab",
 					$prefix."catalog_bookstore_authors AS b",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = ab.articleId",
 					"ab.authorId = b.authorId",
 					"CONCAT(a.title, a.subtitle, a.description, a.isn, b.firstname, b.lastname) LIKE '%".$term."%'"
-				);
+				];
 				$query		= "SELECT DISTINCT(a.articleId) FROM ".join( ', ', $tables )." WHERE ".join( ' AND ', $conditions );
 				$results	= $database->query( $query );
 				foreach( $results->fetchAll( PDO::FETCH_OBJ ) as $result )
@@ -367,15 +371,15 @@ class Controller_Catalog_Bookstore extends Controller
 				$articleIds	= $idsSearch;
 
 			if( $articleIds ){
-				$tables		= array(
+				$tables		= [
 					$prefix."catalog_bookstore_articles AS a",
 					$prefix."catalog_bookstore_article_authors AS ab",
 					$prefix."catalog_bookstore_authors AS b",
-				);
-				$conditions	= array(
+				];
+				$conditions	= [
 					"a.articleId = ab.articleId",
 					"ab.authorId = b.authorId",
-				);
+				];
 				if( $session->get( 'catalog_bookstore_search_isAvailable' ) )
 					$conditions[]	= "a.status = 0";
 				if( $session->get( 'catalog_bookstore_search_hasPicture' ) )
@@ -429,7 +433,7 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
-	public function tag( $tagId = NULL )
+	public function tag( $tagId = NULL ): void
 	{
 		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );

@@ -102,4 +102,3 @@ class Model_OpenGeo{
 		return array_values( $list );
 	}
 }
-?>

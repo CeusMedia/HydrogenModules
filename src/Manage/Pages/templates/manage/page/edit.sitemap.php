@@ -36,4 +36,3 @@ return '
 	</div>
 </div>
 ';
-?>

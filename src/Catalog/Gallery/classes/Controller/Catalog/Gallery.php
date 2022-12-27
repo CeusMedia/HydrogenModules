@@ -4,42 +4,42 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Catalog_Gallery extends Controller
 {
 	/**	@var	Logic_ShopBridge				$bridge */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
 
 	/**	@var	integer							$bridgeId */
 	protected $bridgeId							= 0;
 
 	/**	@var	Logic_Catalog_Gallery			$logic */
-	protected $logic;
+	protected Logic_Catalog_Gallery $logic;
 
-	protected $messenger;
+	protected Messenger $messenger;
 
 	/**	@var	Model_Catalog_Gallery_Category	$modelCategory */
-	protected $modelCategory;
+	protected Model_Catalog_Gallery_Category $modelCategory;
 
 	/**	@var	Model_Catalog_Gallery_Image		$modelImage */
-	protected $modelImage;
+	protected Model_Catalog_Gallery_Image $modelImage;
 
-	public static function __onRenderServicePanels( Environment $env, $context, $module, $data = [] )
+	protected ?array $categories			= [];
+
+	public static function __onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		$arguments	= new Dictionary( $data );
+		/** @var Environment\Web $env */
+		$arguments	= new Dictionary( $payload );
 		if( $orderId = $arguments->get( 'orderId' ) ){
 			$view		= new View_Catalog_Gallery( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogGallery( $env );
 			$helper->setOrderId( $orderId );
-			$context->registerServicePanel(
-				'CatalogGallery',
-				$helper,
-				2
-			);
+			$context->registerServicePanel( 'CatalogGallery', $helper, 2 );
 		}
 	}
 
-	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL )
+	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL ): void
 	{
 //		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
@@ -50,12 +50,10 @@ class Controller_Catalog_Gallery extends Controller
 		$this->addData( 'category', $category );
 		$this->addData( 'images', $this->logic->getCategoryImages( $categoryId ) );
 		$this->addData( 'pathImages', $this->logic->pathImages );
-
 	}
 
-	public function downloadOrder( $orderId )
+	public function downloadOrder( $orderId ): void
 	{
-
 		$logic	= new Logic_Shop( $this->env );
 		$order	= $logic->getOrder( $orderId, TRUE );
 		if( !$order ){
@@ -94,7 +92,7 @@ class Controller_Catalog_Gallery extends Controller
 		exit;
 	}
 
-	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL )
+	public function image( $imageId = NULL, $arg2 = NULL, $arg3 = NULL ): void
 	{
 		$imageId	= (int) $imageId;
 		$image	= $this->logic->getImage( $imageId );
@@ -108,11 +106,11 @@ class Controller_Catalog_Gallery extends Controller
 		$this->addData( 'images', $this->logic->getCategoryImages( $image->galleryCategoryId ) );
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL )
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL ): void
 	{
 	}
 
-	public function order( $imageId )
+	public function order( $imageId ): void
 	{
 		$image	= $this->modelImage->get( $imageId );
 		if( !$image ){

@@ -174,4 +174,3 @@ if( $textRight )
 </div>';
 
 return $textBefore.$content.$textAfter;
-?>

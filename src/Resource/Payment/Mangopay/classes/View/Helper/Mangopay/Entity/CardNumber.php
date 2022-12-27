@@ -42,4 +42,3 @@ class View_Helper_Mangopay_Entity_CardNumber extends View_Helper_Mangopay_Abstra
 		return $this;
 	}
 }
-?>

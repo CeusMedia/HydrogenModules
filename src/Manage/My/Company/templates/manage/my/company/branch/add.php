@@ -75,4 +75,3 @@ return '
 		'.$textInfo.'
 	</div>
 </div>';
-?>

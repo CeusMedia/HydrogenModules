@@ -48,4 +48,3 @@ class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract{
 		$this->url		= $url;
 	}
 }
-?>

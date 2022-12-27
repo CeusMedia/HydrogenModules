@@ -1,5 +1,11 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Catalog_Gallery $view */
+/** @var object[] $categories */
+
 extract( $this->populateTexts( ['top', 'content', 'bottom'], 'html/catalog/gallery/index/' ) );
 
 $categoryList	= $view->renderCategoryList( $categories, 0, FALSE );
@@ -19,11 +25,5 @@ return '
 		'.$categoryMatrix.'
 	</div>
 </div>
-
-<style>
-
-</style>
-'.$textBottom.'
-';
-
-?>
+<style></style>
+'.$textBottom;

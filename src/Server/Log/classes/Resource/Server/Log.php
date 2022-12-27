@@ -152,4 +152,3 @@ class Resource_Server_Log{
 		return static::staticLog( $env, Model_Log_Message::TYPE_WARNING, $message, $format, $context );
 	}
 }
-?>

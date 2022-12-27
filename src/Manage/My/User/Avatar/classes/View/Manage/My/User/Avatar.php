@@ -13,4 +13,3 @@ class View_Manage_My_User_Avatar extends View{
 	public function index(){
 	}
 }
-?>

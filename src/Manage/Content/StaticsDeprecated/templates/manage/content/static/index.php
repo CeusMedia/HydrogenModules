@@ -55,4 +55,3 @@ return '
 	<div class="column-clear"></div>
 </div>
 ';
-?>

@@ -1,5 +1,9 @@
 <?php
 
+/** @var Environment $env */
+/** @var array $words */
+/** @var object[] $categories */
+
 $language	= $env->getLanguage()->getLanguage();
 
 $filter		= '
@@ -39,5 +43,3 @@ return '
 		'.$filter.'
 		'.$list.'
 	</div>';
-
-?>

@@ -94,4 +94,3 @@ td.cell-change {
 	}
 </style>
 ';
-?>

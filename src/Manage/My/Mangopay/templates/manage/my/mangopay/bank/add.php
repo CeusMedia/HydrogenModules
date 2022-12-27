@@ -63,4 +63,3 @@ return '
 		'.$panelAdd.'
 	</div>
 </div>';
-?>

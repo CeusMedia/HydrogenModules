@@ -61,4 +61,3 @@ class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
 		return $this;
 	}
 }
-?>

@@ -42,4 +42,3 @@ class Resource_Uberlog{
 		return $curl->exec();
 	}
 }
-?>

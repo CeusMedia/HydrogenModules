@@ -46,4 +46,3 @@ class View_Helper_Mangopay_Entity_BIC extends View_Helper_Mangopay_Abstract{
 		return $this;
 	}
 }
-?>

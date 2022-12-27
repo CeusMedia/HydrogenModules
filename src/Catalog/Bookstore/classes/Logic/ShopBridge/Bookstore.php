@@ -10,12 +10,12 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	public float $taxIncluded;
 
 	/**	@var	Logic_Catalog_Bookstore		$logic		Bookstore logic instance */
-	protected $logic;
+	protected Logic_Catalog_Bookstore $logic;
 
 	/**	@var	Dictionary			$moduleConfig */
 	protected Dictionary $moduleConfig;
 
-	public function changeQuantity( $articleId, $change )
+	public function changeQuantity( $articleId, $change ): int
 	{
 		return $this->logic->changeQuantity( $articleId, $change );
 	}
@@ -23,8 +23,8 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	/**
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@return		object						Bridged article data object if found
+	 *	@param		integer			$articleId		ID of article
+	 *	@return		object|FALSE	Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
 	public function check( $articleId, bool $strict = TRUE )
@@ -149,7 +149,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 */
 	public function getTax( $articleId, int $amount = 1 ): float
 	{
-		$amount		= abs( (integer) $amount );												//  sanitize amount
+		$amount		= abs( $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
 		$factor		= $this->taxPercent / 100;												//  calculate tax factor on top of price
 		if( $this->taxIncluded )															//  tax is already included in price

@@ -28,4 +28,3 @@ return '<h3>Manage:My:Mangopay</h3>
 </div>
 ';
 
-?>

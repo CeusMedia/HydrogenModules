@@ -29,4 +29,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

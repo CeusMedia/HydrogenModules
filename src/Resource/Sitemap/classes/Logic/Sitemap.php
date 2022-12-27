@@ -87,4 +87,3 @@ class Logic_Sitemap{
 		return $result;
 	}
 }
-?>

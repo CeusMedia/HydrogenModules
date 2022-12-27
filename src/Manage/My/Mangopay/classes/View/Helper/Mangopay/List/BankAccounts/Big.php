@@ -62,4 +62,3 @@ class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Ab
 		return $this;
 	}
 }
-?>

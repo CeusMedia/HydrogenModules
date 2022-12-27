@@ -13,4 +13,3 @@ else{
 	$layout	= $filter.$list;
 }
 return '<div>'.$layout.'<div class="column-clear"></div></div>';
-?>

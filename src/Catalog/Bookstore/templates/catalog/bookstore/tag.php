@@ -1,5 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object[] $articles */
 
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 $words	= (object) $words['tag'];
@@ -22,5 +30,3 @@ return $textTagTop.'
 <br/>
 '.$list.'
 '.$textTagBottom;
-
-?>

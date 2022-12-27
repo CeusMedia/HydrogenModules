@@ -70,4 +70,3 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 		), ['autocomplete' => 'off'] )
 	) )
 );
-?>

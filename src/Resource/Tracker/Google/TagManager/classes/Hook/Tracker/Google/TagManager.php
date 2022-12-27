@@ -43,4 +43,3 @@ class Hook_Tracker_Google_TagManager extends Controller{
 		$context->addBody( HtmlTag::create( 'noscript', $iframe ) );							//  prepend noscript tag to body
 	}
 }
-?>

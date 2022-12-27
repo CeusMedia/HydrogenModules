@@ -1,4 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $missions */
+
 $w			= (object) $words['index'];
 
 //class_exists( 'View_Helper_MissionList' );
@@ -69,4 +78,3 @@ return '
 var missionShowDay = '.$currentDay.';
 </script>
 ';*/
-?>

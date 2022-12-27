@@ -1,13 +1,18 @@
 <?php
 
-use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Calendar extends View
 {
-	public function ajaxRenderIndex()
+	protected Logic_Work_Mission $logic;
+	protected array $words;
+	protected array $projects				= [];
+	protected DateTime $today;
+
+
+	public function ajaxRenderIndex(): void
 	{
 		extract( $this->getData() );
 
@@ -16,27 +21,27 @@ $(document).ready(function(){
 	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
 	if(typeof cmContextMenu !== "undefined"){
 		WorkMissionsCalendar.initContextMenu();
-	};
+	}
 });
 </script>';
 //		$this->env->getPage()->addHead( $script );
 
-		$data			= array(
+		$data			= [
 			'total'		=> 1,
-			'buttons'	=> array(
+			'buttons'	=> [
 				'large'	=> $this->renderControls( $year, $month ),
 				'small'	=> $this->renderControls( $year, $month ),
-			),
-			'lists' => array(
+			],
+			'lists' => [
 				'large'	=> $this->renderCalendarLarge( $userId, $year, $month ).$script,
 				'small'	=> $this->renderCalendarSmall( $userId, $year, $month ),
-			)
-		);
+			]
+		];
 		print( json_encode( $data ) );
 		exit;
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$page		= $this->env->getPage();
 		$words		= $this->env->getLanguage()->load( 'work/mission' );
@@ -66,7 +71,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$this->addData( 'filter', $this->loadTemplateFile( 'work/mission/index.filter.php' ) );
 	}
 
-	public function renderCalendarLarge( $userId, $year, $month )
+	public function renderCalendarLarge( $userId, $year, $month ): string
 	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
@@ -126,7 +131,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 	}
 
-	protected function renderCalendarSmall( $userId, $year, $month )
+	protected function renderCalendarSmall( $userId, $year, $month ): string
 	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
@@ -181,61 +186,61 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		return $tableSmall;
 	}
 
-	protected function renderControls( $year, $month )
+	protected function renderControls( $year, $month ): string
 	{
 		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
-		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
 			'title'		=> '1 Monat vor',
-		) );
-		$btnControlNext	= HtmlTag::create( 'button', '&raquo;',  array(
+		] );
+		$btnControlNext	= HtmlTag::create( 'button', '&raquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
 			'title'		=> '1 Monat weiter',
-		) );
-		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;',  array(
+		] );
+		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
 			'title'		=> 'aktueller Monat',
 			'disabled'	=> $isNow ? 'disabled' : NULL,
-		) );
+		] );
 
 		$label			= $this->renderLabel( $year, $month );
 
-		$btnExport		= HtmlTag::create( 'div', array(
+		$btnExport		= HtmlTag::create( 'div', [
 			HtmlTag::create( 'a', 'Export <span class="caret"></span>', ['href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown'] ),
-			HtmlTag::create( 'ul', array(
-				HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', array(
+			HtmlTag::create( 'ul', [
+				HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', [
 						'href'		=> './work/mission/export/ical',
 						'target'	=> '_blank',
-					) ),
-				), ['style' => 'text-align: left'] ),
-				HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', array(
+					] ),
+				], ['style' => 'text-align: left'] ),
+				HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', [
 						'href'		=> './work/mission/export/csv',
 						'target'	=> '_blank',
-					) ),
-				), ['style' => 'text-align: left'] ),
-				HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', array(
+					] ),
+				], ['style' => 'text-align: left'] ),
+				HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im XML-Format', [
 						'href'		=> './work/mission/export/xml',
 						'target'	=> '_blank',
-					) ),
-				), ['style' => 'text-align: left'] ),
+					] ),
+				], ['style' => 'text-align: left'] ),
 				HtmlTag::create( 'li', '', ['class' => 'divider'] ),
-				HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', array(
+				HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', '<i class="fa fa-question-sign"></i>&nbsp;Anleitung', [
 						'href'		=> './work/mission/export/help',
 						'target'	=> '_blank',
-					) )
-				), ['style' => 'text-align: left'] )
-			), ['class' => 'dropdown-menu pull-right'] )
-		), ['class' => 'btn-group'] );
+					] )
+				], ['style' => 'text-align: left'] )
+			], ['class' => 'dropdown-menu pull-right'] )
+		], ['class' => 'btn-group'] );
 		return '
 	<div id="mission-calendar-control" class="row-fluid">
 		<div class="span8">
@@ -256,7 +261,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	</div>';
 	}
 
-	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL )
+	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ): string
 	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
@@ -268,14 +273,14 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		foreach( $missions as $mission ){
 		//	$title		= TextTrimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
-			$title		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $title );
+			$title		= preg_replace( "/^--(.+)--$/", "<del>\\1</del>", $title );
 			$url		= './work/mission/view/'.$mission->missionId;
 			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
 			$overdue	= '';
 			if( 0 && $isPast )
 				$overdue	= $this->renderOverdue( $mission );
-			$list[]	= HtmlTag::create( 'li', $overdue.$title, array(
+			$list[]	= HtmlTag::create( 'li', $overdue.$title, [
 				"class"			=> 'priority-'.$mission->priority,
 				"data-id"		=> $mission->missionId,
 				"data-type"		=> $mission->type,
@@ -285,23 +290,23 @@ WorkMissionsList.loadCurrentListAndDayControls();
 				"data-date"		=> date( "j.n. Y", strtotime( $mission->dayStart ) ),
 				"data-time"		=> $mission->type ? $mission->timeStart.' - '.$mission->timeEnd : null,
 				"data-project"	=> $mission->projectId ? $this->projects[$mission->projectId]->title : $mission->projectId,
-			) );
+			] );
 		}
 		$class	= $isToday ? 'active today' : ( $isPast ? 'past' : 'active future' );
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		$list	= '<ul>'.join( $list ).'</ul>';
 		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
-		return HtmlTag::create( 'td', $label.$list, array(
+		return HtmlTag::create( 'td', $label.$list, [
 			"oncontextmenu"	=> "return false",
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
 			"data-month"	=> $date->format( "n" ),
 			"data-year"		=> $date->format( "Y" ),
 			"data-date"		=> $date->format( "Y-m-d" )
-		) );
+		] );
 	}
 
-	protected function renderLabel( $year, $month )
+	protected function renderLabel( $year, $month ): string
 	{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
@@ -318,11 +323,12 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
 	 */
-	protected function renderOverdue( $mission )
+	protected function renderOverdue( object $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
+		return '';
 	}
 }

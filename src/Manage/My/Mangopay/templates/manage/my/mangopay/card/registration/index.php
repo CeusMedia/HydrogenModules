@@ -169,4 +169,3 @@ jQuery(document).ready(function(){
 	ModulePaymentMangopayCardRegistration.init();
 });
 </script>';
-?>

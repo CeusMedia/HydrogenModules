@@ -1,12 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object[] $articles */
+/** @var object $author */
 
 /**
  *	Template for Univerlag Frontend.
- *	@package		Univerlag.templates.article
  *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- *	@since			20.11.2005
- *	@version		3.0
  */
 $w		= (object) $words['author'];
 $language	= $env->getLanguage()->getLanguage();
@@ -91,4 +94,3 @@ return '
 	<a href="#" onclick="history.back()" class="btn btn-small">'.$w->link_back.'</a>
 </div>
 ';
-?>

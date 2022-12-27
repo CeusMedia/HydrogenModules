@@ -46,4 +46,3 @@ class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 }
-?>

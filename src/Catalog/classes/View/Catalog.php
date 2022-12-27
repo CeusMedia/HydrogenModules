@@ -10,9 +10,11 @@ class View_Catalog extends View
 	/**
 	 * @todo #hook
 	 */
-	static public function ___onRenderSearchResults( Environment $env, $context, $module, $data ){
+	public static function ___onRenderSearchResults( Environment $env, object $context, object $module, array & $payload ): void
+	{
+		/** @var Environment\Web $env */
 		$helper		= new View_Helper_Catalog( $env );
-		foreach( $data->documents as $resultDocument  ){
+		foreach( $payload['documents'] as $resultDocument  ){
 
 			if( !preg_match( "@^catalog/@", $resultDocument->path ) )
 				continue;
@@ -37,9 +39,6 @@ class View_Catalog extends View
 						<div><span class="article-link">'.$link.'</span></div>
 					</div>
 					';
-
-
-
 				}
 			}
 			if( preg_match( "@^catalog/author/@", $resultDocument->path ) ){
@@ -53,14 +52,39 @@ class View_Catalog extends View
 		}
 	}
 
-	public function article(){}
-	public function author(){}
-	public function authors(){}
-	public function categories(){}
-	public function category(){}
-	public function index(){}
-	public function news(){}
-	public function search(){}
-	public function tag(){}
+	public function article(): void
+	{
+	}
+
+	public function author(): void
+	{
+	}
+
+	public function authors(): void
+	{
+	}
+
+	public function categories(): void
+	{
+	}
+
+	public function category(): void
+	{
+	}
+
+	public function index(): void
+	{
+	}
+
+	public function news(): void
+	{
+	}
+
+	public function search(): void
+	{
+	}
+
+	public function tag(): void
+	{
+	}
 }
-?>

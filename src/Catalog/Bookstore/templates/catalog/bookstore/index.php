@@ -1,5 +1,9 @@
 <?php
 
+/** @var Environment $env */
+/** @var array $words */
+/** @var object[] $categories */
+
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog_Bookstore( $env );
 
@@ -28,5 +32,3 @@ $(document).ready(function(){
 			'.$list2.'
 		</div>
 	</div>';
-
-?>

@@ -335,4 +335,3 @@ class Logic_Upload{
 		$this->sanitizeFileName();
 	}
 }
-?>

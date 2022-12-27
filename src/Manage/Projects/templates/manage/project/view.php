@@ -165,4 +165,3 @@ return '
 		'.$panelRelations.'
 	</div>
 </div>';
-?>

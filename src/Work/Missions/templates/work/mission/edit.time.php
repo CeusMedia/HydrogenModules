@@ -1,5 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+/** @var bool $useTimer */
 
 if( !$useTimer )
 	return '';
@@ -60,4 +68,3 @@ return '
 		</div>
 	</div>
 </div>'.$modalAdd.$modalAssign;
-?>

@@ -1,37 +1,43 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Helper_Shop_FinishPanel_CatalogClothing{
+class View_Helper_Shop_FinishPanel_CatalogClothing
+{
+	protected WebEnvironment $env;
+	protected Logic_Shop $logicShop;
+	protected Dictionary $options;
+	protected $orderId					= NULL;
+	protected ?object $address			= NULL;
 
-	protected $env;
-	protected $orderId;
-	protected $options;
-	protected $address;
-
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		$this->env			= $env;
 		$this->logicShop	= new Logic_Shop( $this->env );
 		$this->options		= $env->getConfig()->getAll( 'module.catalog_clothing.', TRUE );
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->orderId )
 			throw new RuntimeException( 'No order ID set' );
 		$view	= new View( $this->env );
 
 		$order			= $this->logicShop->getOrder( $this->orderId );
 		$modelAddress	= new Model_Address( $this->env );
-		$address		= $modelAddress->getByIndices( array(
+		$address		= $modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $order->userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 
 		$helperAddress		= new View_Helper_Shop_AddressView( $this->env );
 		$helperAddress->setAddress( $address );
@@ -48,16 +54,18 @@ class View_Helper_Shop_FinishPanel_CatalogClothing{
 		return $view->loadContentFile( 'html/catalog/clothing/finished.html', $data );
 	}
 
-	public function setOrderId( $orderId ){
+	public function setOrderId( $orderId ): self
+	{
 		$this->orderId	= $orderId;
 		$order			= $this->logicShop->getOrder( $orderId );
 		if( $this->env->getModules()->has( 'Resource_Address' ) ){
 			$modelAddress	= new Model_Address( $this->env );
-			$this->address	= $modelAddress->getByIndices( array(
+			$this->address	= $modelAddress->getByIndices( [
 				'relationType'	=> 'user',
 				'relationId'	=> $order->userId,
 				'type'			=> Model_Address::TYPE_DELIVERY,
-			) );
+			] );
 		}
+		return $this;
 	}
 }

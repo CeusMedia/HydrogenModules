@@ -190,4 +190,3 @@ return $tabs.$selector.'
 	}
 </script>
 ';
-?>

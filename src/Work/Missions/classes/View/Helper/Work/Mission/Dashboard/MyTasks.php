@@ -86,4 +86,3 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 		$this->tasks	= $tasks;
 	}
 }
-?>

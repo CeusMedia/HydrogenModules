@@ -138,4 +138,3 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 			$this->session->set( $this->sessionPrefix.$sessionKey, $from );
 	}
 }
-?>

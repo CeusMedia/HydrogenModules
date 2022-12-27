@@ -17,7 +17,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
-	 *	@return		object						Bridged article data object if found
+	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
 	public function check( $articleId, bool $strict = TRUE )
@@ -137,7 +137,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 */
 	public function getTax( $articleId, int $amount = 1 ): float
 	{
-		$amount		= abs( (integer) $amount );												//  sanitize amount
+		$amount		= abs( $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
 		if( $this->taxIncluded )															//  tax is already included in price
 			return $price * $this->taxPercent / ( 100 + $this->taxPercent );				//  calculate tax within price

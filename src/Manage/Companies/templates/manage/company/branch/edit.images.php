@@ -107,4 +107,3 @@ return HTML::DivClass( 'row-fluid',
 		$panelAddImage
 	)
 ).$style;
-?>

@@ -85,4 +85,3 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 		</div>';
 	}*/
 }
-?>

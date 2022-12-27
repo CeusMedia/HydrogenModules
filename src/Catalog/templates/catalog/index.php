@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object[] $categories */
 
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog( $env );
@@ -42,5 +47,3 @@ $(document).ready(function(){
 			'.$list2.'
 		</div>
 	</div>';
-
-?>

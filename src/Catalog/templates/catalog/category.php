@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object $category */
 
 $w				= (object) $words['category'];
 $language		= $env->getLanguage()->getLanguage();
@@ -24,4 +29,3 @@ return '
 '.$articleList.'
 '.$children.'
 ';
-?>

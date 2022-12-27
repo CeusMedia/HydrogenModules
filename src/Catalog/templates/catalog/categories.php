@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object[] $categories */
+
 $language	= $env->getLanguage()->getLanguage();
 $helper		= new View_Helper_Catalog( $env );
 
@@ -44,5 +50,3 @@ $(document).ready(function(){
 		<br/>
 		'.$lists.'
 	</div>';
-
-?>

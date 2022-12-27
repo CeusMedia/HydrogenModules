@@ -1,10 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
-
+class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
+{
 	protected $icons		= [];
-	protected $list			= array(
+	protected $list			= [
 		0 => [],
 		1 => [],
 		2 => [],
@@ -12,9 +13,10 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		4 => [],
 		5 => [],
 		6 => [],
-	);
+	];
 
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		parent::__construct( $env );
 /*		$this->icons	= array(
 			'left'		=> HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] ),
@@ -24,7 +26,8 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		);*/
 	}
 
-	public function countMissions( $day = NULL ){
+	public function countMissions( $day = NULL ): int
+	{
 		if( $day !== NULL ){
 			if( !is_int( $day ) )
 				throw new InvalidArgumentException( 'Day must be of integer' );
@@ -39,13 +42,15 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		return $sum;
 	}
 
-	public function getDayMissions( $day = NULL ){
+	public function getDayMissions( $day = NULL )
+	{
 		if( is_int( $day ) && $day >= 0 && $day	< 7 )
 			return $this->list[$day];
 		return $this->list;
 	}
 
-	public function getNearestFallbackDay( $day ){
+	public function getNearestFallbackDay( $day )
+	{
 		$left	= $right	= (int) $day;
 		while( $left >= 0 || $right <= 6 ){
 			if( --$left >= 0 && count( $this->list[$left] ) )
@@ -56,25 +61,28 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List{
 		return -1;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$list	= [];
 		for( $i=0; $i<6; $i++ )
 			$list[]		= $this->renderDayList( 1, $i, TRUE, TRUE, FALSE, TRUE );
 		return join( $list );
 	}
 
-	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
+	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ): string
+	{
 		$this->missions	= $this->list[$day];
 		return parent::renderDayList( $tense, $day, $showStatus, $showPriority, $showDate, $showActions );
 	}
 
-	public function setMissions( $missions ){
+	public function setMissions( $missions ): self
+	{
 		foreach( $missions as $mission ){															//  iterate missions
 			$diff	= $this->today->diff( new DateTime( $mission->dayStart ) );						//  get difference to today
 			$days	= $diff->invert ? -1 * $diff->days : $diff->days;								//  calculate days left
 			$days	= max( min( $days , 6 ), 0 );													//  restrict to be within 0 and 6
 			$this->list[$days][]	= $mission;														//  assign mission to day list
 		}
+		return $this;
 	}
 }
-?>

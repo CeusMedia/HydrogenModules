@@ -173,4 +173,3 @@ HTML::DivClass( 'row-fluid',
 		$panelTags
 	)
 );
-?>

@@ -80,4 +80,3 @@ return '
 		</form>
 	</div>
 </div>';
-?>

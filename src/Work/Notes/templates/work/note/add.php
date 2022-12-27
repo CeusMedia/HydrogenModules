@@ -71,4 +71,3 @@ return $textTop.'
 </div>
 <div class="column-clear"></div>
 '.$textBottom;
-?>

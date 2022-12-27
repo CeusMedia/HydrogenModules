@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+
 if( empty( $wordsFilter ) )
 	$wordsFilter	= $words;
 
@@ -15,13 +22,13 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAddEvent	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clock-o'] );
 	$iconAddTask	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 }
-$toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', array(
+$toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', [
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="fa fa-fw fa-plus"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
 		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
 	</ul>'
-), ['class' => 'btn-group'] ) );
+], ['class' => 'btn-group'] ) );
 
 //  --  FILTER BUTTONS  --  //
 $toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTypeSwitch( $filterMode ) );
@@ -44,10 +51,10 @@ $toolbar2->addButton( 'toolbar-filters', 'priorities', $helperFilter->renderPrio
 if( $filterMode !== "kanban" )
 	$toolbar2->addButton( 'toolbar-filters', 'states', $helperFilter->renderStateFilter( $filterStates ) );
 $toolbar2->addButton( 'toolbar-filters', 'types', $helperFilter->renderTypeFilter( $filterTypes ) );
-$toolbar2->addButton( 'toolbar-filters', 'search', HtmlTag::create( 'div', array(
+$toolbar2->addButton( 'toolbar-filters', 'search', HtmlTag::create( 'div', [
 		$helperFilter->renderSearch( $filterQuery ),
 		$helperFilter->renderReset()
-	), ['class' => 'input-append'] )
+	], ['class' => 'input-append'] )
 );
 
 //$toolbar1->sort();
@@ -62,4 +69,3 @@ return $modals.'
 		'.$toolbar2->render().'<div class="clearfix"></div>
 	</div>
 </div>';
-?>

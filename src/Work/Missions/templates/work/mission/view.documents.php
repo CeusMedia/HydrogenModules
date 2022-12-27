@@ -2,6 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+/** @var object[] $documents */
+
 $w			= (object) @$words['view-documents'];
 $phraser	= new View_Helper_TimePhraser( $env );
 $table		= '<div class="alert alert-hint">'.$w->noEntries.'</div>';
@@ -18,22 +27,22 @@ foreach( $documents as $document ){
 		'class'	=> 'btn btn-small not-btn-info',
 		'title'	=> 'anzeigen',
 	) );*/
-	$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', array(
+	$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', [
 		'href'	=> './work/mission/downloadDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'class'	=> 'btn btn-small btn-info',
 		'title'	=> 'runterladen',
-	) );
+	] );
 	$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload], ['class' => 'btn-group'] );
-	$label			= HtmlTag::create( 'a', $document->filename, array(
+	$label			= HtmlTag::create( 'a', $document->filename, [
 		'href'		=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'target'	=> '_blank',
 		'class'		=> NULL,
-	) );
-	$rows[]	= HtmlTag::create( 'tr', array(
+	] );
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $label, ['class' => 'cell-document-title'] ),
 		HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-document-createdAt'] ),
 		HtmlTag::create( 'td', $buttons, ['class' => 'cell-document-actions'] ),
-	) );
+	] );
 }
 
 $colgroup	= HtmlElements::ColumnGroup( '*', '150px', '50px' );

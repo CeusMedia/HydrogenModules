@@ -1,25 +1,27 @@
 <?php
 
-use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_Calendar{
+class View_Helper_Work_Mission_Calendar
+{
+	protected WebEnvironment $env;
+	protected Logic_Work_Mission $logic;
+	protected array $projects	= [];
+	protected DateTime $today;
+	protected array $words;
 
-	protected $env;
-	protected $logic;
-	protected $projects	= [];
-	protected $today;
-	protected $words;
-
-	public function __construct( $env ){
+	public function __construct( WebEnvironment $env )
+	{
 		$this->env		= $env;
 		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 	}
 
-	public function render( $userId, $year, $month ){
+	public function render( $userId, $year, $month ): string
+	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
@@ -126,7 +128,7 @@ class View_Helper_Work_Mission_Calendar{
 ';
 		$script	= '<script>
 $(document).ready(function(){
-//	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'auth_user_id' ).';
+//	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
 	WorkMissionsCalendar.monthCurrent = '.date( "n" ).';
 	WorkMissionsCalendar.monthShow    = '.(int) $showMonth.';
 //	$("table#mission-calendar tr td ul li").draggable({containment: "#mission-calendar tbody", revert: true});
@@ -144,36 +146,37 @@ $(document).ready(function(){
 		return $table;
 	}
 
-	protected function renderControls( $year, $month ){
+	protected function renderControls( $year, $month ): string
+	{
 		$isNow		= $year	=== date( "Y" ) && $month === date( "m" );
-		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
 			'title'		=> '1 Monat vor',
-		) );
-		$btnControlNext	= HtmlTag::create( 'button', '&raquo;',  array(
+		] );
+		$btnControlNext	= HtmlTag::create( 'button', '&raquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
 			'title'		=> '1 Monat weiter',
-		) );
-		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;',  array(
+		] );
+		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
 			'title'		=> 'aktueller Monat',
 			'disabled'	=> $isNow ? 'disabled' : NULL,
-		) );
+		] );
 
-		$label      = $this->renderLabel( $year, $month );
+		$label		= $this->renderLabel( $year, $month );
 
-		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
 			'style'		=> 'font-weight: normal',
-		) );
+		] );
 		return '
 	<div id="mission-calendar-control" class="row-fluid">
 		<div class="span8">
@@ -194,7 +197,8 @@ $(document).ready(function(){
 	</div>';
 	}
 
-	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ){
+	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ): string
+	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
@@ -204,14 +208,14 @@ $(document).ready(function(){
 		foreach( $missions as $mission ){
 		//	$title		= TextTrimmer::trim( $mission->title, 20 );
 			$title		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
-			$title		= preg_replace( "/^--(.+)--$/", "<strike>\\1</strike>", $title );
+			$title		= preg_replace( "/^--(.+)--$/", "<del>\\1</del>", $title );
 			$url		= './work/mission/edit/'.$mission->missionId;
 			$class		= 'mission-icon-label mission-type-'.$mission->type;
 			$title		= '<a class="'.$class.'" href="'.$url.'">'.$title.'</a>';
 			$overdue	= '';
 			if( $isPast )
 				$overdue	= $this->renderOverdue( $mission );
-			$list[]	= HtmlTag::create( 'li', $overdue.$title, array(
+			$list[]	= HtmlTag::create( 'li', $overdue.$title, [
 				"class"			=> 'priority-'.$mission->priority,
 				"data-id"		=> $mission->missionId,
 				"data-type"		=> $mission->type,
@@ -221,23 +225,24 @@ $(document).ready(function(){
 				"data-date"		=> date( "j.n. Y", strtotime( $mission->dayStart ) ),
 				"data-time"		=> $mission->type ? $mission->timeStart.' - '.$mission->timeEnd : null,
 				"data-project"	=> $mission->projectId ? $this->projects[$mission->projectId]->title : $mission->projectId,
-			) );
+			] );
 		}
 		$class	= $isToday ? 'active today' : ( $isPast ? 'past' : 'active future' );
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
 		$list	= '<ul>'.join( $list ).'</ul>';
 		$label	= '<div class="date-label '.$class.'">'.$date->format( "j.n." ).'</div>';
-		return HtmlTag::create( 'td', $label.$list, array(
+		return HtmlTag::create( 'td', $label.$list, [
 			"oncontextmenu"	=> "return false",
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
 			"data-month"	=> $date->format( "n" ),
 			"data-year"		=> $date->format( "Y" ),
 			"data-date"		=> $date->format( "Y-m-d" )
-		) );
+		] );
 	}
 
-	protected function renderLabel( $year, $month ){
+	protected function renderLabel( $year, $month ): string
+	{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
@@ -253,11 +258,12 @@ $(document).ready(function(){
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
 	 */
-	public function renderOverdue( $mission ){
+	public function renderOverdue( object $mission ): string
+	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
+		return '';
 	}
 }
-?>

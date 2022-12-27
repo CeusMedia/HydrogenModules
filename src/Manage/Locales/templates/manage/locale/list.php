@@ -40,4 +40,3 @@ return '
 <h3>'.$w->heading.'</h3>
 '.$list.'
 ';
-?>

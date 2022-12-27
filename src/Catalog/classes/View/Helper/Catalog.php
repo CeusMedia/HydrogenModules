@@ -1,31 +1,39 @@
 <?php
 
+use CeusMedia\Cache\SimpleCacheInterface;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
 
-class View_Helper_Catalog{
+class View_Helper_Catalog
+{
+	/**	@var	WebEnvironment					$env */
+	protected WebEnvironment $env;
 
-	/**	@var	Environment					$env */
-	protected $env;
 	/**	@var	Language					$language */
-	protected $language;
-	/**	@var	Logic_Catalog				$logic */
-	protected $logic;
+	protected Language $language;
 
-	public function __construct( Environment $env ){
+	/**	@var	Logic_Catalog				$logic */
+	protected Logic_Catalog $logic;
+
+	protected SimpleCacheInterface $cache;
+
+	public function __construct( WebEnvironment $env )
+	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog( $env );
 		$this->language	= $this->env->getLanguage();
 		$this->cache	= $this->env->getCache();
 	}
 
-	static public function ___onRenderNewsItem( Environment $env, &$context, $module, $data = [] ){
+	public static function ___onRenderNewsItem( Environment $env, object $context, object $module, array & $payload ): void
+	{
 		$context->content	= self::applyLinks( $env, $context->content );
 	}
 
-	static public function applyLinks( Environment $env, $content/*&$item*/ ){
+	public static function applyLinks( Environment $env, string $content/*&$item*/ ): string
+	{
 //		$content	= $item->content;
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
 		$logic	= new Logic_Catalog( $env );
@@ -65,14 +73,15 @@ class View_Helper_Catalog{
 	}
 
 	/**
-	 *  Returns a float formated as Currency.
-	 *  @static
-	 *  @access     public
-	 *  @param      mixed       $price          Price to be formated
-	 *  @param      string      $separator      Separator
-	 *  @return     string
+	 *	Returns a float formatted as currency.
+	 *	@static
+	 *	@access		public
+	 *	@param		mixed		$price			Price to be formatted
+	 *	@param		string		$separator		Separator
+	 *	@return		string
 	 */
-	static public function formatPrice( $price, $separator = "." ){
+	public static function formatPrice( $price, string $separator = "." ): string
+	{
 		$price  = (float) $price;
 		ob_start();
 		$price  = sprintf( "%01.2f", $price );
@@ -80,19 +89,23 @@ class View_Helper_Catalog{
 		return $price;
 	}
 
-	public function getArticleUri( $articleId, $absolute = FALSE ){
+	public function getArticleUri( $articleId, bool $absolute = FALSE ): string
+	{
 		return $this->logic->getArticleUri( (int) $articleId, $absolute );
 	}
 
-	public function getCategoryUri( $categoryOrId ){
+	public function getCategoryUri( $categoryOrId ): string
+	{
 		return $this->logic->getCategoryUri( $categoryOrId );
 	}
 
-	public function getTagUri( $tagOrId ){
+	public function getTagUri( $tagOrId ): string
+	{
 		return $this->logic->getTagUri( $tagOrId );
 	}
 
-	public function prepareArticleData( $article ){
+	public function prepareArticleData( object $article ): array
+	{
 		$config		= $this->env->getConfig();
 		$language	= $this->env->getLanguage();
 		$words		= $language->getWords( 'catalog' );
@@ -101,13 +114,13 @@ class View_Helper_Catalog{
 		$item		= [];
 		$item['volume']	= !empty( $article->volume ) ? $words['volume'].$article->volume : "";
 
-		$authorlist	= [];
+		$authorList	= [];
 		$logic		= new Logic_Catalog( $this->env );
 		$authors	= $logic->getAuthorsOfArticle( $article->articleId );
 		foreach( $authors as $author ){
-			$authorlist[] = $this->renderAuthorLink( $author );
+			$authorList[] = $this->renderAuthorLink( $author );
 		}
-		$item['author']	= implode( ", ", $authorlist );
+		$item['author']	= implode( ", ", $authorList );
 
 		$item['future']	= "";
 #		if( $article->publication ){
@@ -125,7 +138,7 @@ class View_Helper_Catalog{
 		if( $article->digestion )
 			$info[]	= $article->digestion;
 		if( $article->price )
-			$info[]	= str_replace( ".", ",", $this->formatPrice( $article->price, "." ) ).$words['price_suffix'];
+			$info[]	= str_replace( ".", ",", $this->formatPrice( $article->price ) ).$words['price_suffix'];
 		$item['info']	= implode( ", ", $info );
 		$labelISN	= $article->series ? $words['issn'] : $words['isbn'];
 		if( isset( $article->branches ) )
@@ -147,27 +160,31 @@ class View_Helper_Catalog{
 	 *	@param		string		$labelNoPicture		Title of placeholder image
 	 *	@return		string		Rendered HTML tag of article cover image (or placeholder).
 	 */
-	public function renderArticleImage( $article, $labelNoPicture = "" ){
+	public function renderArticleImage( object $article, string $labelNoPicture = '' ): string
+	{
 		$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
-		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article, FALSE/*, TRUE*/ ) ) )
+		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article ) ) )
 			return HtmlElements::Image( $uri, $title, 'thumb dropshadow' );
 		$pathImages	= $this->env->getConfig()->get( 'path.images' );
 		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
-	public function renderArticleLink( $article ){
+	public function renderArticleLink( object $article ): string
+	{
 		$title		= View_Helper_Text::applyFormat( $article->title );
 		$url		= $this->logic->getArticleUri( (int) $article->articleId, $article );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderArticleListItem( $article ){
+	public function renderArticleListItem( object $article ): string
+	{
 		$data	= $this->prepareArticleData( $article );
 		$view	= new View_Catalog( $this->env );
 		return $view->loadTemplateFile( 'catalog/article/item.php', $data );
 	}
 
-	public function renderArticleThumbnail( $article, $labelNoPicture = "" ){
+	public function renderArticleThumbnail( object $article, string $labelNoPicture = '' ): string
+	{
 		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article, TRUE/*, TRUE*/ ) ) ){
 			$url	= $this->logic->getArticleUri( $article );
 			$title	= htmlentities( strip_tags( View_Helper_Text::applyFormat( $article->title ) ) );
@@ -178,7 +195,8 @@ class View_Helper_Catalog{
 		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
-	public function renderAuthorLink( $author ){
+	public function renderAuthorLink( object $author ): string
+	{
 		$name	= $author->lastname;
 		if( $author->firstname )
 			$name	= $author->firstname." ".$name;
@@ -191,7 +209,8 @@ class View_Helper_Catalog{
 		return HtmlTag::create( 'a', $name, ['href' => $url] );
 	}
 
-	public function renderCategory( $category, $heading = NULL ){
+	public function renderCategory( object $category, ?string $heading = NULL ): string
+	{
 		if( is_string( $heading ) )
 			$heading	= HtmlTag::create( 'h3', $heading );
 		else if( $heading ){
@@ -212,7 +231,8 @@ class View_Helper_Catalog{
 		return $heading.$descriptions.$articles;
 	}
 
-	public function renderCategoryArticleList( $category ){
+	public function renderCategoryArticleList( object $category ): string
+	{
 		$cacheKey	= 'catalog.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
 			$orders		= array( 'ABS(volume)' => 'DESC', 'articleId' => 'DESC' );
@@ -225,14 +245,16 @@ class View_Helper_Catalog{
 		return $list;
 	}
 
-	public function renderCategoryLink( $category, $language = "de" ){
+	public function renderCategoryLink( object $category, string $language = 'de' ): string
+	{
 		$labelKey	= 'label_'.$language;
 		$title		= View_Helper_Text::applyFormat( $category->$labelKey );
 		$url		= $this->logic->getCategoryUri( $category, $language );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderCategoryList( $data, $language = "de" ){
+	public function renderCategoryList( array $data, string $language = 'de' ): string
+	{
 		$list	= [];
 		foreach( $data as $category ){
 			$sub	= [];
@@ -251,24 +273,25 @@ class View_Helper_Catalog{
 		return HtmlElements::unorderedList( $list, 0, ['class' => 'branches'] );
 	}
 
-	public function renderDocumentLink( $document ){
+	public function renderDocumentLink( object $document ): string
+	{
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		$config		= $this->env->getConfig();
 		$path		= $config->get( 'path.contents' ).'articles/documents/';
 		$url		= $path.$id.'_'.$document->url;
 		$attributes	= ['href' => $url, 'class' => 'document', 'target' => '_blank'];
-		$link		= HtmlTag::create( 'a', $document->title, $attributes );
-		return $link;
+		return HtmlTag::create( 'a', $document->title, $attributes );
 	}
 
-	public function renderPositionFromArticle( $article, $language = "de" ){
+	public function renderPositionFromArticle( object $article, string $language = 'de' ): string
+	{
 		$helper	= new View_Helper_Catalog_Position( $this->env );
-		return $helper->renderFromArticle( $article, $language );
+		return $helper->renderFromArticle( $article );
 	}
 
-	public function renderPositionFromCategory( $category = NULL ){
+	public function renderPositionFromCategory( ?string $category = NULL ): string
+	{
 		$helper	= new View_Helper_Catalog_Position( $this->env );
 		return $helper->renderFromCategory( $category );
 	}
 }
-?>

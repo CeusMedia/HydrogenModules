@@ -2,7 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$phraser    = new View_Helper_TimePhraser( $env );
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $mission */
+/** @var object[] $missionUsers */
+
+$phraser	= new View_Helper_TimePhraser( $env );
 
 $canEditProject	= $acl->hasRight( $userRoleId, 'manage_project', 'edit' );
 
@@ -13,7 +22,8 @@ print_m( $mission->worker );
 die;
 */
 
-function renderUserLabel( $user ){
+function renderUserLabel( ?object $user = NULL ): string
+{
 	if( !$user )
 		return "-";
 	$iconUser	= HtmlTag::create( 'i', '', ['class' => 'icon-user'] );
@@ -84,7 +94,8 @@ xmp( $labelStart );
 die;
 */
 
-function renderDuration( $minutes, $useTimerHelper = FALSE ){
+function renderDuration( $minutes, bool $useTimerHelper = FALSE ): string
+{
 	if( $useTimerHelper )
 		return View_Helper_Work_Time::formatSeconds( $minutes * 60 );
 	$hours	= floor( $minutes / 60 );
@@ -112,17 +123,17 @@ if( $totalMinsTracked ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) * 60 );
 	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked * 60 );
-	$list[]	= HtmlTag::create( 'dd', 'erfasst: '.$time.' '.$diff, array(
+	$list[]	= HtmlTag::create( 'dd', 'erfasst: '.$time.' '.$diff, [
 		'class' => $isOverrunTracked ? 'warning' : NULL,
-	) );
+	] );
 }
 if( $totalMinsRequired ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsRequired ) );
 	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsRequired );
-	$list[]	= HtmlTag::create( 'dd', 'benötigt: '.$time.' '.$diff, array(
+	$list[]	= HtmlTag::create( 'dd', 'benötigt: '.$time.' '.$diff, [
 		'class' => $isOverrunRequired ? 'warning' : NULL,
-	) );
+	] );
 }
 $factHours	= $list ? '<dt>'.$w->labelHours.'</dt>'.join( $list ) : '';
 
@@ -170,9 +181,9 @@ dl dd.warning {
 							<dd>geplant: '.( (int) $hoursProjected || (int) $minutesProjected ? $hoursProjected.':'.$minutesProjected : '-' ).'</dd>
 							<dd>benötigt: '.$hoursRequired.':'.$minutesRequired.'</dd>-->
 <!--							<dt>'.$w->labelLocation.'</dt>
-							<dd>'.htmlentities( $mission->location ? $mission->location : '-', ENT_QUOTES, 'UTF-8' ).'</dd>
+							<dd>'.htmlentities( $mission->location ?: '-', ENT_QUOTES, 'UTF-8' ).'</dd>
 							<dt>'.$w->labelReference.'</dt>
-							<dd>'.htmlentities( $mission->reference ? $mission->reference : '-', ENT_QUOTES, 'UTF-8' ).'</dd>-->
+							<dd>'.htmlentities( $mission->reference ?: '-', ENT_QUOTES, 'UTF-8' ).'</dd>-->
 						</dl>
 					</div>
 					<div style="float: left; width: 50%">
@@ -203,4 +214,3 @@ dl dd.warning {
 		</div>
 	</div>
 </div>';
-?>

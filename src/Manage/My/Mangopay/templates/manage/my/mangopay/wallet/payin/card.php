@@ -26,4 +26,3 @@ $panelCards	= '
 	</div>
 </div>';
 return $panelCards;
-?>

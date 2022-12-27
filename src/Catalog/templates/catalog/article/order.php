@@ -1,5 +1,11 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object $article */
+
 $w				= (object) $words['article'];
 $iconCart		= '<i class="icon-shopping-cart icon-white"></i>';
 
@@ -26,5 +32,3 @@ if( in_array( $article->status, [-1, 0, 1] ) ){
 }
 
 return $panelOrder;
-
-?>

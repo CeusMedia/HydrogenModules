@@ -2,18 +2,18 @@
 class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 {
 	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instance */
-	protected $logic;
+	protected Logic_Catalog_Gallery $logic;
 
 	/**	@var	Model_Catalog_Gallery_Category		$modelCategory	Category model instance */
-	protected $modelCategory;
+	protected Model_Catalog_Gallery_Category $modelCategory;
 
 	/**	@var	Model_Catalog_Gallery_Image			$modelImage		Gallery model instance */
-	protected $modelImage;
+	protected Model_Catalog_Gallery_Image $modelImage;
 
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
-	protected $taxRate = 7;
+	protected int $taxRate = 7;
 
-	public function getAll( $conditions = [], $orders = [], $limits = [] )
+	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return [];
 	}
@@ -27,7 +27,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, $change )
+	public function changeQuantity( $articleId, int $change )
 	{
 	}
 
@@ -38,7 +38,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@return		object						Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, $strict = TRUE )
+	public function check( $articleId, bool $strict = TRUE )
 	{
 		$article	= $this->modelImage->get( $articleId );
 		if( $article )
@@ -52,37 +52,37 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	...
 	 *	@access		public
 	 *	@param		integer		$articleId
-	 *	@return		string
+	 *	@return		object
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( $articleId, int $quantity = 1 ): object
 	{
 		$image	= $this->check( $articleId );
-		return (object) array(
+		return (object) [
 			'id'		=> $articleId,
 			'link'		=> $this->getLink( $articleId ),
-			'picture'	=> (object) array(
+			'picture'	=> (object) [
 				'relative'	=> $this->getPicture( $articleId ),
 				'absolute'	=> $this->getPicture( $articleId, TRUE ),
-			),
-			'price'	=> (object) array(
+			],
+			'price'	=> (object) [
 				'one'	=> $this->getPrice( $articleId ),
 				'all'	=> $this->getPrice( $articleId, $quantity ),
-			),
-			'tax'	=> (object) array(
+			],
+			'tax'	=> (object) [
 				'one'	=> $this->getTax( $articleId ),
 				'rate'	=> $this->taxRate,
 				'all'	=> $this->getTax( $articleId, $quantity ),
-			),
-			'weight'	=> (object) array(
+			],
+			'weight'	=> (object) [
 				'one'	=> $this->getWeight( $articleId ),
 				'all'	=> $this->getWeight( $articleId, $quantity ),
-			),
+			],
 			'single'		=> TRUE,
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
 			'bridge'		=> $this->getBridgeClass(),
 			'bridgeId'		=> $this->getBridgeId(),
-		);
+		];
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId )
+	public function getDescription( $articleId ): string
 	{
 		$image		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $image->galleryCategoryId );
@@ -104,7 +104,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId )
+	public function getLink( $articleId ): string
 	{
 		return $this->logic->pathModule.'image/'.$articleId;
 	}
@@ -117,7 +117,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, $absolute = FALSE )
+	public function getPicture( $articleId, bool $absolute = FALSE ): string
 	{
 		$image		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $image->galleryCategoryId );
@@ -132,7 +132,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( $articleId, int $amount = 1 ): float
 	{
 		$image	= $this->check( $articleId );
 		return $image->price * $amount;
@@ -145,7 +145,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( $articleId, int $amount = 1 ): float
 	{
 		$image	= $this->check( $articleId );
 		return $image->price * ( $this->taxRate / 100 ) * $amount;
@@ -157,10 +157,10 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId )
+	public function getTitle( $articleId ): string
 	{
 		$image	= $this->check( $articleId );
-		return $image->title ? $image->title : $image->filename;
+		return $image->title ?: $image->filename;
 	}
 
 	/**
@@ -170,7 +170,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		integer
 	 */
-	public function getWeight( $articleId, $amount = 1 )
+	public function getWeight( $articleId, int $amount = 1 )
 	{
 		return 0;
 	}

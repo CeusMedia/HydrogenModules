@@ -124,4 +124,3 @@ return '
 		'.$textRight.'
 	</div>
 </div>';
-?>

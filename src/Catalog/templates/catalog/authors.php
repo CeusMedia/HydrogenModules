@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var object[] $authors */
 
 $helper	= new View_Helper_Catalog( $env );
 
@@ -14,4 +19,3 @@ return '
 <h3>Autoren</h3>
 '.$list.'
 ';
-?>

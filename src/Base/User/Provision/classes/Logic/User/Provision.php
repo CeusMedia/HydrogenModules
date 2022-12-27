@@ -59,9 +59,9 @@ class Logic_User_Provision extends Logic
 	 *	@param		integer			$userLicenseId		User license ID
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about revokation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about revokation
-	 *	@return		boolean
+	 *	@return		bool
 	 */
-	public function revokeUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE )
+	public function revokeUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -88,7 +88,7 @@ class Logic_User_Provision extends Logic
 		return TRUE;
 	}
 
-/*	public function expireUserLicense( $userLicenseId )
+/*	public function expireUserLicense( $userLicenseId ): bool
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -147,9 +147,10 @@ class Logic_User_Provision extends Logic
 
 	/**
 	 *	@todo		doc
+	 *	@return		bool
 	 *	@throws		ReflectionException
 	 */
-	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 )
+	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 ): bool
 	{
 		if( !$this->env->getDatabase()->getOpenTransactions() )										//  only if not database transactions are open
 			$this->getUserLicenseKey( $userLicenseKeyId );											//  check if user

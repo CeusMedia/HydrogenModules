@@ -86,4 +86,3 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 		$this->projects	= $projects;
 	}
 }
-?>

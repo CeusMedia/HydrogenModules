@@ -127,4 +127,3 @@ $panelFilter = '
 </div>';
 
 return $panelFilter;
-?>

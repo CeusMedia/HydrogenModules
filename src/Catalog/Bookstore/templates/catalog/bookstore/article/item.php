@@ -25,4 +25,3 @@ return "
 		<span class='isbn'>".$isbn."</span><br/>
 	</div>
 </div>";
-?>

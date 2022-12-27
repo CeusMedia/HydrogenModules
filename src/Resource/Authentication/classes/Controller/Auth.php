@@ -186,4 +186,3 @@ class Controller_Auth extends Controller
 		}
 	}
 }
-?>

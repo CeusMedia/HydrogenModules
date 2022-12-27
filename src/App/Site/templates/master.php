@@ -102,4 +102,3 @@ $body	= '
 
 $page->addBody( $header.$body.$footer );
 return $page->build();
-?>

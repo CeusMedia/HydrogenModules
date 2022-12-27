@@ -232,4 +232,3 @@ class Controller_Auth_Json extends Controller
 		}
 	}*/
 }
-?>

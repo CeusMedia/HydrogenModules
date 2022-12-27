@@ -262,4 +262,3 @@ table.table td.cell-position-quantity {
 		</div>
 	</div>
 </div>';
-?>

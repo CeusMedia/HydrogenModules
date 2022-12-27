@@ -1,13 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_Filter{
+class View_Helper_Work_Mission_Filter
+{
+	protected array $defaultFilterValues	= [];
+	protected array $words;
+	protected array $modals	= [];
+	protected View_Helper_ModalRegistry $modalRegistry;
 
-	protected $defaultFilterValues	= [];
-	protected $words;
-	protected $modals	= [];
-
-	public function __construct( $env, $defaultFilterValues, $words ){
+	public function __construct( WebEnvironment $env, $defaultFilterValues, $words )
+	{
 		$this->env	= $env;
 		$this->setDefaultFilterValues( $defaultFilterValues );
 		$this->setWords( $words );
@@ -15,7 +18,8 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	/*  -- mission types  --  */
-	public function renderTypeFilter( $filteredTypes ){
+	public function renderTypeFilter( $filteredTypes ): string
+	{
 		$helper	= new View_Helper_Work_Mission_Filter_Type( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
 		$helper->setValues( $this->defaultFilterValues['types'], $filteredTypes );
@@ -23,7 +27,8 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	/*  -- mission priorities  --  */
-	public function renderPriorityFilter( $filteredPriorities ){
+	public function renderPriorityFilter( $filteredPriorities ): string
+	{
 		$helper	= new View_Helper_Work_Mission_Filter_Priority( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
 		$helper->setValues( $this->defaultFilterValues['priorities'], $filteredPriorities );
@@ -31,7 +36,8 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	/*  -- mission states  --  */
-	public function renderStateFilter( $filteredStates ){
+	public function renderStateFilter( $filteredStates ): string
+	{
 		$helper	= new View_Helper_Work_Mission_Filter_Status( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
 		$helper->setValues( $this->defaultFilterValues['states'], $filteredStates );
@@ -39,57 +45,63 @@ class View_Helper_Work_Mission_Filter{
 	}
 
 	/*  -- mission projects  --  */
-	public function renderProjectFilter( $filteredProjects, $userProjects ){
+	public function renderProjectFilter( $filteredProjects, $userProjects ): string
+	{
 		$helper	= new View_Helper_Work_Mission_Filter_Project( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
 		$helper->setValues( $userProjects, $filteredProjects );
 		return $helper->render();
 	}
 
-	public function renderWorkerFilter( $filteredWorkers, $workers ){
+	public function renderWorkerFilter( $filteredWorkers, $workers ): string
+	{
 		$helper	= new View_Helper_Work_Mission_Filter_Worker( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
 		$helper->setValues( $workers, $filteredWorkers );
 		return $helper->render();
 	}
 
-	public function renderModals(){
+	public function renderModals(): string
+	{
 		return $this->modalRegistry->render();
 	}
 
 	/*  -- query search  --  */
-	public function renderSearch( $filteredQuery ){
-		$inputSearch	= HtmlTag::create( 'input', NULL, array(
+	public function renderSearch( $filteredQuery ): string
+	{
+		$inputSearch	= HtmlTag::create( 'input', NULL, [
 			'type'			=> "text",
 			'name'			=> "query",
 			'id'			=> "filter_query",
 			'class'			=> 'span2 '.( $filteredQuery ? 'changed' : '' ),
 			'value'			=> htmlentities( $filteredQuery, ENT_QUOTES, 'UTF-8' ),
 			'placeholder'	=> $this->words['index']['labelQuery'],
-		) );
+		] );
 
 		$label				= '<i class="icon-search '.( $filteredQuery ? 'icon-white' : '' ).'"></i>';
-		$buttonSearch	= HtmlTag::create( 'button', $label, array(
+		$buttonSearch	= HtmlTag::create( 'button', $label, [
 			'type'		=> "button",
 			'class'		=> 'btn '.( $filteredQuery ? 'btn-info' : '' ),
 			'id'		=> 'button_filter_search'
-		) );
+		] );
 		return $inputSearch.$buttonSearch;
 	}
 
-	public function renderReset(){
+	public function renderReset(): string
+	{
 		$label				= '<i class="icon-remove-circle"></i>';
-		$buttonSearchReset	= HtmlTag::create( 'button', $label, array(
+		$buttonSearchReset	= HtmlTag::create( 'button', $label, [
 			'type'				=> "button",
 			'disabled'			=> "disabled",/*$changedFilters ? NULL : "disabled",*/
 			'class'				=> 'btn',/*'btn '.( $changedFilters ? 'btn-inverse' : "" ),*/
 			'id'				=> 'button_filter_reset',					//  remove query only: 'button_filter_search_reset',
 			'title'				=> 'alle Filter zurücksetzen',
-		) );
+		] );
 		return $buttonSearchReset;
 	}
 
-	public function renderViewTypeSwitch( $mode ){
+	public function renderViewTypeSwitch( $mode ): string
+	{
 		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
 
@@ -125,16 +137,17 @@ class View_Helper_Work_Mission_Filter{
 		}
 
 		$labelFilter	= $this->words['filters']['viewType'];
-		return HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', ['class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown"] ),
 	//		HtmlTag::create( 'button', $caret, ['class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown"] ),
 			HtmlTag::create( 'ul', $items, ['class' => 'dropdown-menu'] ),
-		), ['class' => 'btn-group'] );
+		], ['class' => 'btn-group'] );
 	}
 
-	public function renderViewModeSwitch( $mode ){
+	public function renderViewModeSwitch( $mode ): string
+	{
 		if( !in_array( $mode, ['archive', 'now', 'future'] ) )
-			return "";
+			return '';
 		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
 
@@ -167,19 +180,22 @@ class View_Helper_Work_Mission_Filter{
 			$current	= $mode === $modeKey ? $modeLabel : $current;
 		}
 		$labelFilter	= $this->words['filters']['modeType'];
-		return HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'button', '<span class="not-muted">'.$labelFilter.':</span> <b>'.$current.'</b>', ['class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown"] ),
 //			HtmlTag::create( 'button', $caret, ['class' => 'btn dropdown-toggle', 'data-toggle' => "dropdown"] ),
 			HtmlTag::create( 'ul', $items, ['class' => 'dropdown-menu'] ),
-		), ['class' => 'btn-group'] );
+		], ['class' => 'btn-group'] );
 	}
 
-	public function setDefaultFilterValues( $defaultFilterValues ){
+	public function setDefaultFilterValues( $defaultFilterValues ): self
+	{
 		$this->defaultFilterValues	= $defaultFilterValues;
+		return $this;
 	}
 
-	public function setWords( $words ){
+	public function setWords( $words ): self
+	{
 		$this->words	= $words;
+		return $this;
 	}
 }
-?>

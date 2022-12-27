@@ -1,37 +1,40 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Project extends Controller
 {
+	protected Dictionary $request;
+	protected MessengerResource $messenger;
+	protected Model_Project $modelProject;
+	protected Model_Project_Version $modelVersion;
+
 	public function add()
 	{
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
 		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
 
-		$title			= $request->get( 'title' );
-		$description		= $request->get( 'description' );
-		$status			= $request->get( 'status' );
-		$model			= new Model_Project( $this->env );
-		if( $request->get( 'doAdd' ) )
+		$title			= $this->request->get( 'title' );
+		$description	= $this->request->get( 'description' );
+		$status			= $this->request->get( 'status' );
+#		if( $this->request->get( 'doAdd' ) )
 		{
 			if( empty( $title ) )
-				$messenger->noteError( $words['add']['msgErrorTitleEmpty'] );
+				$this->messenger->noteError( $words['add']['msgErrorTitleEmpty'] );
 			else
 			{
-				if( $model->getAll( ['title' => $title] ) )
-					$messenger->noteError( $words['add']['msgErrorTitleNotUnique'], $title );
-				else
-				{
-					$data	= array(
-						'title'		=> $title,
+				if( $this->modelProject->getAll( ['title' => $title] ) )
+					$this->messenger->noteError( $words['add']['msgErrorTitleNotUnique'], $title );
+				else{
+					$data	= [
+						'title'			=> $title,
 						'description'	=> $description,
-						'status'	=> $status,
-						'createdAt'	=> time(),
-					);
-					$model->add( $data );
-					$messenger->noteSuccess( $words['add']['msgSuccess'], $title );
+						'status'		=> $status,
+						'createdAt'		=> time(),
+					];
+					$this->modelProject->add( $data );
+					$this->messenger->noteSuccess( $words['add']['msgSuccess'], $title );
 					$this->restart( 'admin/project' );
 				}
 			}
@@ -41,124 +44,117 @@ class Controller_Admin_Project extends Controller
 		$this->view->addData( 'status', $status );
 	}
 
-	public function addVersion( $projectId ){
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
+	public function addVersion( $projectId ): void
+	{
 		$words			= (object) $this->getWords( 'addVersion' );
-		$model			= new Model_Project_Version( $this->env );
-		$data	= array(
-			'projectId'	=> $projectId,
-			'status'	=> $request->get( 'status' ),
-			'version'	=> $request->get( 'version' ),
-			'title'		=> $request->get( 'title' ),
-			'description'	=> $request->get( 'description' ),
-			'createdAt'	=> time(),
-		);
-		$model->add( $data );
-		$messenger->noteSuccess( $words->msgSuccess );
+		$data	= [
+			'projectId'		=> $projectId,
+			'status'		=> $this->request->get( 'status' ),
+			'version'		=> $this->request->get( 'version' ),
+			'title'			=> $this->request->get( 'title' ),
+			'description'	=> $this->request->get( 'description' ),
+			'createdAt'		=> time(),
+		];
+		$this->modelProject->add( $data );
+		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->restart( './admin/project/edit/'.$projectId );
 	}
 
-	public function ajaxGetVersions( $projectId ){
-		$modelVersion	= new Model_Project_Version( $this->env );
-		$versions		= $modelVersion->getAllByIndex( 'projectId', $projectId );
+	public function ajaxGetVersions( $projectId ): void
+	{
+		$versions		= $this->modelVersion->getAllByIndex( 'projectId', $projectId );
 		print( json_encode( $versions ) );
 		exit;
 	}
 
-	public function edit( $projectId )
+	public function edit( string $projectId ): void
 	{
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'edit' );
-
-		$model			= new Model_Project( $this->env );
-		$project		= $model->get( $projectId );
+		$project		= $this->modelProject->get( $projectId );
 		if( !$project ){
-			$messenger->noteError( $words->msgErrorInvalidId );
+			$this->messenger->noteError( $words->msgErrorInvalidId );
 			$this->restart( './admin/project' );
 		}
 
-		if( $request->get( 'doEdit' ) )
-		{
-			$title			= $request->get( 'title' );
+		if( $this->request->get( 'doEdit' ) ) {
+			$title			= $this->request->get( 'title' );
 			if( empty( $title ) )
-				$messenger->noteError( $words->msgErrorTitleEmpty );
-			else
-			{
-				if( $model->getAll( ['title' => $title, 'projectId' => '!= '.$projectId] ) )
-					$messenger->noteError( $words->msgErrorTitleNotUnique, $title );
-				else
-				{
-					$data	= array(
+				$this->messenger->noteError( $words->msgErrorTitleEmpty );
+			else{
+				if( $this->modelProject->getAll( ['title' => $title, 'projectId' => '!= '.$projectId] ) )
+					$this->messenger->noteError( $words->msgErrorTitleNotUnique, $title );
+				else{
+					$data	= [
 						'title'			=> $title,
-						'description'	=> $request->get( 'description' ),
-						'status'		=> $request->get( 'status' ),
+						'description'	=> $this->request->get( 'description' ),
+						'status'		=> $this->request->get( 'status' ),
 						'modifiedAt'	=> time(),
-					);
-					$messenger->noteSuccess( $words->msgSuccess, $title );
+					];
+					$this->modelProject->edit( $projectId, $data );
+					$this->messenger->noteSuccess( $words->msgSuccess, $title );
 					$this->restart( './admin/project' );
 				}
 			}
 		}
-		$modelVersion	= new Model_Project_Version( $this->env );
-		$versions		= $modelVersion->getAllByIndex( 'projectId', $project->projectId );#
-		$data			= array(
+		$versions		= $this->modelVersion->getAllByIndex( 'projectId', $project->projectId );
+		$data			= [
 			'projectId'	=> $project->projectId,
 			'project'	=> $project,
 			'versions'	=> $versions,
-		);
+		];
 		$this->view->setData( $data );
 	}
 
-	public function filter()
+	public function filter(): void
 	{
-		$this->env->getMessenger()->noteSuccess( "Tests have been filtered." );
+		$this->messenger->noteSuccess( "Tests have been filtered." );
 		$this->restart( 'test/table' );
 	}
 
-	public function index()
+	public function index(): void
 	{
-		$modelProject	= new Model_Project( $this->env );
-		$modelVersion	= new Model_Project_Version( $this->env );
-		$projects	= $modelProject->getAll();
+		$projects	= $this->modelProject->getAll();
 		foreach( $projects as $project ){
 			$indices	= ['projectId' => $project->projectId, 'status' => 1];
-			$project->version	= $modelVersion->getByIndices( $indices );
+			$project->version	= $this->modelVersion->getByIndices( $indices );
 		}
 		$this->view->addData( 'projects', $projects );
 	}
 
-	public function remove( $projectId )
+	public function remove( string $projectId ): void
 	{
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'remove' );
 
-		$modelProject	= new Model_Project( $this->env );
-		$project		= $modelProject->get( $projectId );
+		$project		= $this->modelProject->get( $projectId );
 		if( !$project ){
-			$messenger->noteError( $words->msgErrorInvalidId );
+			$this->messenger->noteError( $words->msgErrorInvalidId );
 			$this->restart( './admin/project/edit/'.$projectId );
 		}
 
-		$modelVersion	= new Model_Project_Version( $this->env );
-		$modelVersion->removeByIndex( 'projectId', $projectId );
-		$modelProject->remove( $projectId );
+		$this->modelVersion->removeByIndex( 'projectId', $projectId );
+		$this->modelProject->remove( $projectId );
 
-		$messenger->noteSuccess( $words->msgSuccess, $project->title );
+		$this->messenger->noteSuccess( $words->msgSuccess, $project->title );
 		$this->restart( './admin/project' );
 	}
 
-	public function removeVersion( $versionId )
+	public function removeVersion( string $versionId ): void
 	{
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
-
-		$model			= new Model_Project_Version( $this->env );
-		$version		= $model->get( $versionId );
-		$model->remove( $versionId );
+		$version		= $this->modelVersion->get( $versionId );
+		if( $version )
+			$this->modelVersion->remove( $versionId );
 		$this->restart( './admin/project/edit/'.$version->projectId );
 	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function __onInit(): void
+	{
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->modelProject		= new Model_Project( $this->env );
+		$this->modelVersion		= new Model_Project_Version( $this->env );
+	}
 }
-?>
