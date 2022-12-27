@@ -1,6 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var object[] $users */
+/** @var object[] $roles */
+/** @var object[] $servers */
+/** @var array $words */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -10,11 +19,11 @@ foreach( $users as $user )
 	$optManagerId[$user->userId]	= $user->username;
 $optManagerId	= HtmlElements::Options( $optManagerId );
 
-$optStatus		= array(
+$optStatus		= [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
+];
 $optStatus		= HtmlElements::Options( $optStatus, 0 );
 
 $optRoleId	= [];
@@ -180,8 +189,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 ), ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env );
-$layout	= HtmlTag::create( 'div', array(
+$layout	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', $panelAdd, ['class' => 'span6'] ),
-), ['class' => 'row-fluid'] );
+], ['class' => 'row-fluid'] );
 
 return $tabs.$layout;

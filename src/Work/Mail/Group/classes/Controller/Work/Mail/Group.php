@@ -1,22 +1,24 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Mail_Group extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $modelGroup;
-	protected $modelMember;
-	protected $modelRole;
-	protected $modelServer;
-	protected $modelAction;
-	protected $modelUser;
-	protected $logicGroup;
-	protected $logicMail;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Model_Mail_Group $modelGroup;
+	protected Model_Mail_Group_Member $modelMember;
+	protected Model_Mail_Group_Role $modelRole;
+	protected Model_Mail_Group_Server $modelServer;
+	protected Model_Mail_Group_Action $modelAction;
+	protected Model_User $modelUser;
+	protected Logic_Mail_Group $logicGroup;
+	protected Logic_Mail $logicMail;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$title		= trim( $this->request->get( 'title' ) );
@@ -29,7 +31,7 @@ class Controller_Work_Mail_Group extends Controller
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'add', TRUE );
 			}
-			$data		= array(
+			$data		= [
 				'mailGroupServerId'	=> 1,
 				'defaultRoleId'		=> $this->request->get( 'roleId' ),
 				'status'			=> $this->request->get( 'status' ),
@@ -43,7 +45,7 @@ class Controller_Work_Mail_Group extends Controller
 				'bounce'			=> '',
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			);
+			];
 			$groupId	= $this->modelGroup->add( $data );
 			$this->messenger->noteSuccess( 'Added.' );
 			$this->restart( 'edit/'.$groupId, TRUE );
@@ -55,7 +57,7 @@ class Controller_Work_Mail_Group extends Controller
 		$this->addData( 'roles', $roles );
 	}
 
-	public function addMember( $groupId )
+	public function addMember( $groupId ): void
 	{
 		$title		= $this->request->get( 'title' );
 		$address	= $this->request->get( 'address' );
@@ -67,7 +69,7 @@ class Controller_Work_Mail_Group extends Controller
 		if( $invite )
 			$status		= Model_Mail_Group_Member::STATUS_REGISTERED;
 
-		$memberId	= $this->modelMember->add( array(
+		$memberId	= $this->modelMember->add( [
 			'mailGroupId'	=> $groupId,
 			'roleId'		=> $this->request->get( 'roleId' ),
 			'status'		=> $status,				//$this->request->get( 'status' ),
@@ -75,36 +77,36 @@ class Controller_Work_Mail_Group extends Controller
 			'address'		=> $address,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( !$quiet )
 			$action	= $this->logicGroup->registerMemberAction( 'informAfterFirstActivate', $groupId, $memberId, '' );
 		if( $invite ){
 			$action	= $this->logicGroup->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, '' );
-			$mailData	= array(
+			$mailData	= [
 				'group'		=> $this->checkGroupId( $groupId ),
 				'member'	=> $this->modelMember->get( $memberId ),
 				'action'	=> $action,
-			);
+			];
 			$mail		= new Mail_Info_Mail_Group_Member_Invited( $this->env, $mailData );
 		}
 		else{
-			$mailData	= array(
+			$mailData	= [
 				'group'		=> $this->checkGroupId( $groupId ),
 				'member'	=> $this->modelMember->get( $memberId ),
-			);
+			];
 			$mail		= new Mail_Info_Mail_Group_Member_Added( $this->env, $mailData );
 		}
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $title,
 			'email'		=> $address
-		);
+		];
 		$language	= $this->env->getLanguage()->getLanguage();
 		$this->logicMail->appendRegisteredAttachments( $mail, $language );
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
-	public function edit( $groupId )
+	public function edit( $groupId ): void
 	{
 		$group	= $this->checkGroupId( $groupId );
 		if( $this->request->has( 'save' ) ){
@@ -118,7 +120,7 @@ class Controller_Work_Mail_Group extends Controller
 				$this->messenger->noteError( 'Address "%s" is already existing.' );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
-			$data		= array(
+			$data		= [
 				'mailGroupServerId'	=> 1,
 				'defaultRoleId'		=> $this->request->get( 'roleId' ),
 				'status'			=> $this->request->get( 'status' ),
@@ -130,7 +132,7 @@ class Controller_Work_Mail_Group extends Controller
 				'description'		=> $this->request->get( 'description' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			);
+			];
 			if( strlen( trim( $this->request->get( 'password' ) ) ) )
 				$data['password']	= trim( $this->request->get( 'password' ) );
 			$this->modelGroup->edit( $groupId, $data );
@@ -147,7 +149,7 @@ class Controller_Work_Mail_Group extends Controller
 		$this->addData( 'roles', $roles );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$groups		= $this->modelGroup->getAll();
 		foreach( $groups as $group )
@@ -159,26 +161,26 @@ class Controller_Work_Mail_Group extends Controller
 		$this->addData( 'groups', $groups );
 	}
 
-	public function removeMember( $mailGroupId, $mailGroupMemberId )
+	public function removeMember( $mailGroupId, $mailGroupMemberId ): void
 	{
 		$member	= $this->checkMemberId( $mailGroupMemberId );
 		$this->modelMember->remove( $mailGroupMemberId );
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	public function editMember( $mailGroupId, $mailGroupMemberId )
+	public function editMember( $mailGroupId, $mailGroupMemberId ): void
 	{
 		$member	= $this->checkMemberId( $mailGroupMemberId );
-		$this->modelMember->edit( $mailGroupMemberId, array(
+		$this->modelMember->edit( $mailGroupMemberId, [
 			'address'		=> $this->request->get( 'address' ),
 			'title'			=> $this->request->get( 'title' ),
 			'roleId'		=> $this->request->get( 'roleId' ),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( 'edit/'.$mailGroupId, TRUE );
 	}
 
-	public function setMemberStatus( $mailGroupId, $mailGroupMemberId, $status )
+	public function setMemberStatus( $mailGroupId, $mailGroupMemberId, $status ): void
 	{
 		$group		= $this->checkGroupId( $mailGroupId );
 		$member		= $this->checkMemberId( $mailGroupMemberId );
@@ -213,12 +215,12 @@ class Controller_Work_Mail_Group extends Controller
 		$this->logicMail	= $this->getLogic( 'mail' );
 	}
 
-	protected function checkGroupId( $groupId, bool $strict = TRUE )
+	protected function checkGroupId( $groupId, bool $strict = TRUE ): ?object
 	{
 		return $this->logicGroup->checkGroupId( $groupId, $strict );
 	}
 
-	protected function checkMemberId( $memberId, bool $strict = TRUE )
+	protected function checkMemberId( $memberId, bool $strict = TRUE ): object
 	{
 		return $this->logicGroup->checkMemberId( $memberId, $strict );
 	}

@@ -3,6 +3,13 @@ use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var object $message */
+/** @var array $words */
 
 $iconAdd		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconEdit		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
@@ -91,6 +98,7 @@ $modalMemberAddTrigger->setLabel( $iconAdd.'&nbsp;hinzufügen' );
 $modalMemberAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
 
 //  --  MEMBERS LIST  --  //
+$modals	= [];
 
 $list	= Html::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
 if( $members ){
@@ -156,7 +164,7 @@ if( $members ){
 		$modal->setFormAction( './work/mail/group/editMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId );
 		$modal->setSubmitButtonLabel( $iconSave.' speichern' );
 		$modal->setCloseButtonLabel( $iconCancel.' abbrechen' );
-		$modal->setBody( array(
+		$modal->setBody( Html::create( 'div', array(
 			Html::create( 'div', array(
 				Html::create( 'div', array(
 					Html::create( 'label', 'Name', ['for' => 'input_title'] ),
@@ -189,7 +197,7 @@ if( $members ){
 					) ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
-		) );
+		) ) );
 		$modals[]	= $modal;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '20%', '100px' );

@@ -24,7 +24,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		return $this->logicMessage->checkId( $messageId );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'groupId' );
@@ -33,7 +33,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function html( $messageId )
+	public function html( $messageId ): void
 	{
 		try{
 			$message	= $this->checkId( $messageId );
@@ -58,7 +58,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		HttpResponseSender::sendResponse( $response, NULL, TRUE, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$filterGroupId	= $this->session->get( $this->filterPrefix.'groupId' );
 
@@ -98,7 +98,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		}
 	}*/
 
-	public function parseAgainFromRaw( $messageId )
+	public function parseAgainFromRaw( $messageId ): void
 	{
 		$message		= $this->checkId( $messageId );
 		if( $message->status == Model_Mail_Group_Message::STATUS_NEW ){
@@ -110,7 +110,7 @@ class Controller_Work_Mail_Group_Message extends Controller
 		$this->restart( 'view/'.$messageId );
 	}
 
-	public function view( $messageId )
+	public function view( $messageId ): void
 	{
 		$message		= $this->checkId( $messageId );
 		$message->raw		= $this->logicMessage->getMessageRawMail( $message );

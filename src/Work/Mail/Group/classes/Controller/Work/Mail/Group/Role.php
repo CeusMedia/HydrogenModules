@@ -1,16 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Mail_Group_Role extends Controller
 {
-	protected $modelRole;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Model_Mail_Group_Role $modelRole;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$title	= trim( $this->request->get( 'title' ) );
-			$this->modelRole->add( array(
+			$this->modelRole->add( [
 				'status'		=> $this->request->get( 'status' ),
 				'rank'			=> $this->request->get( 'rank' ),
 				'read'			=> $this->request->get( 'read' ),
@@ -18,7 +23,7 @@ class Controller_Work_Mail_Group_Role extends Controller
 				'title'			=> $title,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$role	= [];
@@ -27,7 +32,7 @@ class Controller_Work_Mail_Group_Role extends Controller
 		$this->addData( 'role', (object) $role );
 	}
 
-	public function checkId( $roleId )
+	public function checkId( $roleId, bool $strict = TRUE )
 	{
 		$role	= $this->modelRole->get( $roleId );
 		if( $role )
@@ -37,24 +42,24 @@ class Controller_Work_Mail_Group_Role extends Controller
 		return NULL;
 	}
 
-	public function edit( $roleId )
+	public function edit( $roleId ): void
 	{
 		$role	= $this->checkId( $roleId );
 		if( $this->request->has( 'save' ) ){
 			$title	= trim( $this->request->get( 'title' ) );
-			$this->modelRole->edit( $roleId, array(
+			$this->modelRole->edit( $roleId, [
 				'status'		=> $this->request->get( 'status' ),
 				'rank'			=> $this->request->get( 'rank' ),
 				'read'			=> $this->request->has( 'read' ) ? 1 : 0,
 				'write'			=> $this->request->has( 'write' ) ? 1 : 0,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'role', $role );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$indices	= [];
 		$orders		= ['title' => 'ASC'];
@@ -63,7 +68,7 @@ class Controller_Work_Mail_Group_Role extends Controller
 		$this->addData( 'roles', $roles );
 	}
 
-	public function remove()
+	public function remove( $roleId ): void
 	{
 		$role	= $this->checkId( $roleId );
 		if( $role ){
@@ -72,14 +77,14 @@ class Controller_Work_Mail_Group_Role extends Controller
 		}
 	}
 
-	public function setStatus( $roleId, $status )
+	public function setStatus( $roleId, $status ): void
 	{
 		$role	= $this->checkId( $roleId );
 		if( $role ){
-			$this->modelRole->edit( $roleId, array(
+			$this->modelRole->edit( $roleId, [
 				'status'		=> (int) $status,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 	}
 
