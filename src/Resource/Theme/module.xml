@@ -2,19 +2,19 @@
 <module>
 	<title>Resource: Theme</title>
 	<description><![CDATA[Support for app themes.]]></description>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support relocation of themes modules.</log> 
-<!--	<log version="0.2.x">Extract hook to own class.</log>-->
+	<log version="0.2.2">Extract hook to own class.</log> 
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
-		<class>Resource/Theme.php</class>
+		<class>Hook/Resource/Theme.php</class>
 	</files>
-	<hook type="resource" resource="Page" event="build">Resource_Theme::___onPageBuild</hook>
+	<hook type="resource" resource="Page" event="build">Hook_Resource_Theme::onPageBuild</hook>
 	<relations>
 		<needs type="module">App_Site</needs>
 	</relations>
