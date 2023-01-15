@@ -291,37 +291,3 @@ else if( version_compare( PHP_VERSION, '8.0.0', '>=' ) ){
 	}
 	class Resource_Database extends Resource_Database_PHP8 {}
 }
-else{
-	class Resource_Database_PHP7 extends Resource_Database_Base
-	{
-		/**
-		 *	Wrapper for PDO::exec to support lazy connection mode.
-		 *	Tries to connect database if not connected yet (lazy mode).
-		 *	@access		public
-		 *	@param		string		$statement		SQL statement to execute
-		 *	@return		integer		Number of affected rows
-		 */
-		public function exec( $statement ): int
-		{
-			if( $this->status == self::STATUS_UNKNOWN )
-				$this->tryToConnect();
-			return parent::exec( $statement );
-		}
-
-		/**
-		 *	Wrapper for PDO::query to support lazy connection mode.
-		 *	Tries to connect database if not connected yet (lazy mode).
-		 *	@access		public
-		 *	@param		string		$statement		SQL statement to query
-		 *	@param		integer		$mode			Fetch mode, default: 2 (FETCH_ASSOC)
-		 *	@return		PDOStatement				PDO statement containing fetchable results
-		 *	@noinspection PhpComposerExtensionStubsInspection
-		 */
-		public function query( $statement, int $mode = PDO::FETCH_ASSOC, $arg3 = NULL, array $ctorargs = [] ){
-			if( $this->status == self::STATUS_UNKNOWN )
-				$this->tryToConnect();
-			return parent::query( $statement, $mode );
-		}
-	}
-	class Resource_Database extends Resource_Database_PHP7 {}
-}
