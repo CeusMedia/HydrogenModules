@@ -96,9 +96,25 @@ $body	= '
 		<div id="layout-content">
 			'.$hints.'
 			'.$content.'
+			<div id="auth-auto-logout-timer"></div>
 		</div>
 	</div>
-</div>';
+</div>
+<style>
+#auth-auto-logout-timer:empty{
+	display: none;
+	}
+#auth-auto-logout-timer:before{
+	content: "Auto-Logout in ";
+	}
+#auth-auto-logout-timer{
+	border-top: 2px solid red;
+	margin-top: 1em;
+	padding-top: 0.5em;
+	}
+</style>
+
+';
 
 $page->addBody( $header.$body.$footer );
 return $page->build();
