@@ -148,10 +148,11 @@ class Job_Mail_Group extends Job_Abstract
 
 	public function test()
 	{
+		$this->out( 'PHP Version: '.phpversion() );
 		$this->out( 'Dry Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
 		$this->out( 'Verbose Mode: '.( $this->verbose ? 'yes' : 'no' ) );
 		$this->out( 'DEPRECATED: Use job Mail.Group.handle with dry mode, instead!' );
-		return;
+		throw new Exception( 'Test exception thrown' );
 	}
 
 	public function handle()
@@ -165,7 +166,7 @@ class Job_Mail_Group extends Job_Abstract
 			if( (int) $group->status === Model_Mail_Group::STATUS_WORKING )
 				continue;
 			$groupId	= $group->mailGroupId;
-			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_WORKING );
+//			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_WORKING );
 			$this->out( '* Group: '.$group->title.' (ID: '.$groupId.')' );
 			$this->out( '  - Date: '.date( 'r' ) );
 
@@ -237,11 +238,13 @@ class Job_Mail_Group extends Job_Abstract
 						$this->out( '    Subject: '.$mailObject->getSubject() );
 					}
 				}
-			} catch( Exception $e ){
-				$this->logError( $e->getMessage() );
-				$this->out( 'ERROR: '.$e->getMessage().' @ '.$e->getFile().':'.$e->getLine().PHP_EOL.$e->getTraceAsString() );
 			}
-			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_ACTIVATED );
+			catch( Throwable $t ){																	//  on throwable error or exception
+				$this->logError( $t->getMessage() );
+				$this->out( 'ERROR: '.$t->getMessage().' @ '.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString() );
+			}
+//			$this->logicGroup->setGroupStatus( $groupId, Model_Mail_Group::STATUS_ACTIVATED );
+			$this->logicGroup->setGroupStatus( $groupId, (int) $group->status );					//  restore old group status
 		}
 	}
 
