@@ -2,7 +2,6 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
-use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -14,7 +13,6 @@ use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Content_Image extends Controller
@@ -32,41 +30,7 @@ class Controller_Manage_Content_Image extends Controller
 	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected View_Helper_Thumbnailer $thumbnailer;
-	protected string $imagePath;
-
-	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
-	{
-		self::___onTinyMCE_getLinkList( $env, $context, $module, ['hidePrefix' => TRUE] );
-	}
-
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$frontend		= Logic_Frontend::getInstance( $env );
-		$pathFront		= trim( $frontend->getPath() );
-		$pathImages		= trim( $moduleConfig->get( 'path.images' ) );
-		$pathIgnore		= trim( $moduleConfig->get( 'path.ignore' ) );
-		$hidePrefix		= 1 || !empty( $arguments['hidePrefix'] ) && $arguments['hidePrefix'];
-
-		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
-		$prefixes	= (object) $words['link-prefixes'];
-//		$label		= $prefixes->image;
-		$list		= [];
-		$index		= self::getImageList( $env );
-		foreach( $index as $item ){
-			$list[]	= (object) array(
-				'title'	=> $hidePrefix ? $item->label : $prefixes->image.$item->label,
-				'type'	=> 'image',
-				'value'	=> $item->uri,
-			);
-		}
-		$list	= array( (object) array(
-			'title'	=> $prefixes->image,
-			'menu'	=> array_values( $list ),
-		) );
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
-	}
+	protected string $imagePath ;
 
 	public function addFolder( $folderHash = NULL )
 	{
@@ -390,39 +354,6 @@ class Controller_Manage_Content_Image extends Controller
 		exit;
 	}
 
-	protected static function getImageList( Environment $env ): array
-	{
-		$cache		= $env->getCache();
-		if( $list = $env->cache->get( 'ManageContentImages.list.static' ) )
-			return $list;
-		$frontend		= Logic_Frontend::getInstance( $env );
-		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_content_images.', TRUE );
-		$pathImages		= $frontend->getPath().$moduleConfig->get( 'path.images' );
-		$pathIgnore		= trim( $moduleConfig->get( 'path.ignore' ) );
-		$extensions		= preg_split( "/\s*,\s*/", $moduleConfig->get( 'extensions' ) );
-		$list			= [];
-
-		$regexExt	= "/\.(".join( "|", $extensions ).")$/i";
-		$index		= new RecursiveRegexFileIndex( $pathImages, $regexExt );
-		foreach( $index as $item ){
-			$path	= substr( $item->getPathname(), strlen( $pathImages ) );
-			if( $pathIgnore && preg_match( $pathIgnore, $path ) )
-				continue;
-			$parts	= explode( "/", $path );
-			$level	= count( $parts );
-			$file	= array_pop( $parts );
-//			$path	= implode( '/', array_slice( $parts, 1 ) );
-			$path	= implode( '/', $parts );
-			$label	= $path ? $path.'/'.$file : $file;
-			$uri	= substr( $item->getPathname(), strlen( $frontend->getPath() ) );
-			$key	= str_replace( "/", "_", strtolower( $label ) );
-			$list[$key]	= (object) ['label' => $label, 'uri' => $uri];
-		}
-		ksort( $list );
-		$env->getCache()->set( 'ManageContentImages.list.static', $list );
-		return $list;
-	}
-
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -455,7 +386,7 @@ class Controller_Manage_Content_Image extends Controller
 			}
 			natcasesort( $this->folders );
 		}
-		$this->imagePath	= $this->session->get( 'filter_manage_content_image_path' );
+		$this->imagePath	= $this->session->get( 'filter_manage_content_image_path', '' );
 		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 120, 80 );
 
 //		$path	= trim( $this->env->getRequest()->get( 'path' ) );

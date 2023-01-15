@@ -3,7 +3,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.4.9</version>
+	<version>0.5.0</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -35,11 +35,13 @@
 	<log version="0.4.7">Add image processing.</log>
 	<log version="0.4.8">Condense folder list.</log>
 	<log version="0.4.9">Support SVG images in thumbnail helper.</log>
+	<log version="0.5.0">Extract hooks to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Content/Image.php</class>
+		<class>Hook/Manage/Content/Image.php</class>
 		<class>Model/Image/Thumbnail.php</class>
 		<class>View/Manage/Content/Image.php</class>
 		<class>View/Helper/Thumbnailer.php</class>
@@ -77,8 +79,8 @@
 	<config type="string" name="extensions" mandatory="yes" title="list of accepted file extensions, case insensitive">gif,jpe,jpeg,jpg,png</config>
 	<link xml:lang="de" path="manage/content/image">Bilder</link>
 	<link xml:lang="en" path="manage/content/image">Images</link>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Content_Image::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_Manage_Content_Image::onTinyMceGetLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Content_Image::onTinyMceGetLinkList</hook>
 	<sql on="update" type="mysql" version="0.3.20"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>image_thumbnails`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>image_thumbnails` (
