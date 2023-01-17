@@ -44,10 +44,10 @@ class Logic_Project extends Logic
 
 	public function getDefaultProject( $userId )
 	{
-		$relation	= $this->modelProjectUser->getByIndices( array(
+		$relation	= $this->modelProjectUser->getByIndices( [
 			'userId'	=> $userId,
 			'isDefault'	=> 1
-		) );
+		] );
 		return $relation ? $relation->projectId : NULL;
 	}
 
@@ -151,10 +151,10 @@ class Logic_Project extends Logic
 	public function removeProjectUser( $projectId, $userId, bool $informOthers = TRUE )
 	{
 		try{
-			$this->modelProjectUser->removeByIndices( array(
+			$this->modelProjectUser->removeByIndices( [
 				'projectId'		=> $projectId,
 				'userId'		=> $userId
-			) );
+			] );
 			if( $informOthers ){
 				$logicMail		= Logic_Mail::getInstance( $this->env );
 				$language		= $this->env->getLanguage();
@@ -178,17 +178,17 @@ class Logic_Project extends Logic
 
 	public function setDefaultProject( $userId, $projectId )
 	{
-		$this->modelProjectUser->editByIndices( array(
+		$this->modelProjectUser->editByIndices( [
 			'userId'		=> $userId,
 			'isDefault'		=> 1
-		), array(
+		], array(
 			'isDefault'		=> "0",
 			'modifiedAt'	=> time()
 		) );
-		return $this->modelProjectUser->editByIndices( array(
+		return $this->modelProjectUser->editByIndices( [
 			'projectId'		=> $projectId,
 			'userId'		=> $userId,
-		), array(
+		], array(
 			'isDefault'		=> "1",
 			'modifiedAt'	=> time()
 		) );

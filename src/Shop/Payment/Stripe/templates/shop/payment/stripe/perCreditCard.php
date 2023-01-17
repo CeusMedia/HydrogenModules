@@ -43,9 +43,9 @@ $env->page->js->addScriptOnReady( $script );
 
 $panel	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $w->heading ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$form,
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
 
 $w				= (object) $words['modal-loading'];

@@ -8,13 +8,13 @@ class Controller_Manage_Form_Mail extends Controller{
 	protected Model_Form $modelForm;
 	protected Model_Form $modelMail;
 	protected string $filterPrefix		= 'filter_manage_form_mail_';
-	protected array $filters			= array(
+	protected array $filters			= [
 		'mailId',
 		'roleType',
 		'identifier',
 		'format',
 		'title',
-	);
+	];
 
 	public function add(){
 		if( $this->env->getRequest()->has( 'save' ) ){

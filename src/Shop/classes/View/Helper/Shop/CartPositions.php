@@ -420,24 +420,24 @@ class View_Helper_Shop_CartPositions
 			$urlRemove		.= '?forwardTo='.urlencode( $this->forwardPath );
 		}
 
-		$buttonPlus		= HtmlTag::create( 'a', $iconPlus, array(
+		$buttonPlus		= HtmlTag::create( 'a', $iconPlus, [
 			'href'		=> $urlIncrease,
 			'class'		=> 'btn btn-mini btn-success',
 			'id'		=> 'btn-shop-cart-plus',
 			'title'		=> $w->altIncrease,
-		) );
-		$buttonMinus	= HtmlTag::create( 'a', $iconMinus, array(
+		] );
+		$buttonMinus	= HtmlTag::create( 'a', $iconMinus, [
 			'href'		=> $urlDecrease,
 			'class'		=> 'btn btn-mini btn-warning',
 			'id'		=> 'btn-shop-cart-minus',
 			'title'		=> $w->altDecrease,
-		) );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		] );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-danger',
 			'id'		=> 'btn-shop-cart-remove',
 			'title'		=> $w->altRemove,
-		) );
+		] );
 		if( isset( $position->article->single ) && $position->article->single )
 			return $buttonRemove;
 		$buttons		= [$buttonPlus, $buttonMinus, $buttonRemove];

@@ -52,10 +52,10 @@ foreach( $groups as $group ){
 		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
 	) );
 	$buttons	= HtmlTag::create( 'div', $buttonRemove, ['class' => 'btn-group'] );
-	$link		= HtmlTag::create( 'a', $group->title, array(
+	$link		= HtmlTag::create( 'a', $group->title, [
 		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailGroupId,
 		'class'	=> '',
-	) );
+	] );
 	$link		.= '&nbsp;'.HtmlTag::create( 'small', '('.$group->numbers->total.')', ['class' => 'muted'] );
 	$createdAt	= HtmlTag::create( 'small', date( 'd.m.Y', $group->createdAt ) );
 

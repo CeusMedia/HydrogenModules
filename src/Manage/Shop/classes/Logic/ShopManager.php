@@ -47,16 +47,16 @@ class Logic_ShopManager extends Logic
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
@@ -70,16 +70,16 @@ class Logic_ShopManager extends Logic
 		$user	= $model->get( $customerId );
 		if( !$user )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
@@ -115,10 +115,10 @@ class Logic_ShopManager extends Logic
 
 	public function getOpenSessionOrder( $sessionId ): array
 	{
-		$conditions	= array(
+		$conditions	= [
 			'session_id'		=> $sessionId,
 			'status'			=> '< 2',
-		);
+		];
 		return $this->modelOrder->getAll( $conditions );
 	}
 

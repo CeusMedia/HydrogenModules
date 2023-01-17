@@ -20,9 +20,9 @@ class Hook_Form extends Hook
 		$processor->setContent( $payload->content );
 //		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= array(
-			'form'		=> array(
+			'form'		=> [
 				'id'		=> 0,
-			)
+			]
 		);
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )

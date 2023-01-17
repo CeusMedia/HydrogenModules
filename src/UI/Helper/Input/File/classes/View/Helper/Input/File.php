@@ -25,30 +25,30 @@ class View_Helper_Input_File
 
 	public function render(): string
 	{
-		$input		= HtmlTag::create( 'input', NULL, array(
+		$input		= HtmlTag::create( 'input', NULL, [
 			'type'				=> "file",
 			'name'				=> $this->name,
 			'class'				=> 'bs-input-file',
 			'id'				=> 'input_'.$this->name,
 			'multiple'			=> $this->multiple ? 'multiple' : NULL,
 			'webkitdirectory'	=> $this->folder ? '' : NULL,
-		) );
-		$toggle		= HtmlTag::create( 'a', $this->label, array(
+		] );
+		$toggle		= HtmlTag::create( 'a', $this->label, [
 			'class'		=> 'btn '.$this->buttonClass.' bs-input-file-toggle',
 			'href'		=> "javascript:;"
-		) );
-		$info		= HtmlTag::create( 'input', NULL, array(
+		] );
+		$info		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'text',
 			'class'		=> 'span12 bs-input-file-info',
 			'required'	=> $this->required ? 'required' : NULL
-		) );
-		$upload		= HtmlTag::create( 'div', $info.$input.$toggle, array(
+		] );
+		$upload		= HtmlTag::create( 'div', $info.$input.$toggle, [
 			'class'		=> 'span12 input-append bs-input-file',
 			'style'		=> 'position: relative;'
-		) );
-		$container	= HtmlTag::create( 'div', $upload, array(
+		] );
+		$container	= HtmlTag::create( 'div', $upload, [
 			'class'		=> 'row-fluid'
-		) );
+		] );
 		return $container;
 	}
 

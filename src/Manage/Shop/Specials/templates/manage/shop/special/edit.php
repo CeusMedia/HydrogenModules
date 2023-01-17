@@ -29,15 +29,15 @@ if( $special->styleFiles ){
 			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
 			HtmlTag::create( 'td', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'a', $iconOpen, array(
+					HtmlTag::create( 'a', $iconOpen, [
 						'href'		=> $appUrl.$styleFile,
 						'class'		=> 'btn btn-small btn-info',
 						'target'	=> '_blank',
-					) ),
-					HtmlTag::create( 'a', $iconRemove, array(
+					] ),
+					HtmlTag::create( 'a', $iconRemove, [
 						'href'	=> './manage/shop/special/removeStyleFile/'.$special->shopSpecialId.'/'.$nr,
 						'class'	=> 'btn btn-small btn-inverse',
-					) ),
+					] ),
 				), ['class' => 'btn-group pull-right'] ),
 			) )
 		) );
@@ -52,50 +52,50 @@ return HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Katalog', ['for' => 'input_bridgeId'] ),
-					HtmlTag::create( 'input', '', array(
+					HtmlTag::create( 'input', '', [
 						'type'		=> 'text',
 						'name'		=> 'bridgeId',
 						'id'		=> 'input_bridgeId',
 						'class'		=> 'span12',
 						'value'		=> $bridge->data->title,
 						'readonly'	=> 'readonly',
-					) ),
+					] ),
 				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Artikel', ['for' => 'input_articleId'] ),
-					HtmlTag::create( 'input', '', array(
+					HtmlTag::create( 'input', '', [
 						'type'		=> 'text',
 						'name'		=> 'articleId',
 						'id'		=> 'input_articleId',
 						'class'		=> 'span12',
 						'value'		=> $special->article->title,
 						'readonly'	=> 'readonly',
-					) ),
+					] ),
 				), ['class' => 'span9'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'	=> 'text',
 						'name'	=> 'title',
 						'id'	=> 'input_title',
 						'class'	=> 'span12',
 						'value'	=> $special->title,
-					) ),
+					] ),
 				), ['class' => 'span6'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'hr', NULL ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Style-Angaben', ['for' => 'input_styleRules'] ),
-					HtmlTag::create( 'textarea', $special->styleRules, array(
+					HtmlTag::create( 'textarea', $special->styleRules, [
 						'name'			=> 'styleRules',
 						'id'			=> 'input_styleRules',
 						'class'			=> 'ace-auto',
 						'data-ace-mode'	=> 'css',
 						'rows'			=> '20',
-					) ),
+					] ),
 				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Style-Dateien' ),
@@ -103,12 +103,12 @@ return HtmlTag::create( 'div', array(
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'label', 'Datei hinzufügen' ),
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'		=> 'text',
 								'name'		=> 'styleFile',
 								'id'		=> 'input_styleFile',
 								'class'		=> 'span12',
-							) ),
+							] ),
 						), ['class' => 'span10'] ),
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'div', array(
@@ -120,23 +120,23 @@ return HtmlTag::create( 'div', array(
 				), ['class' => 'span6'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', array(
-				HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+				HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 					'href'	=> './manage/shop/special',
 					'class'	=> 'btn',
-				) ),
-				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				] ),
+				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
-				) ),
-				HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				] ),
+				HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'	=> './manage/shop/special/remove/'.$special->shopSpecialId,
 					'class'	=> 'btn btn-danger',
-				) ) ,
+				] ) ,
 			) ), ['class' => 'buttonbar'] ),
-		), array(
+		), [
 			'action'	=> './manage/shop/special/edit/'.$special->shopSpecialId,
 			'method'	=> 'POST',
-		) ),
+		] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] ).$script.$modalStyle;

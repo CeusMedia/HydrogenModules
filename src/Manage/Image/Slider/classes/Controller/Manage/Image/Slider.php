@@ -43,10 +43,10 @@ class Controller_Manage_Image_Slider extends Controller
 		$words	= (object) $this->getWords( 'msg' );
 		try{
 			$image		= $this->request->get( 'image' );
-			$indices	= array(
+			$indices	= [
 				'sliderId'  => $sliderId,
 				'source'    => $image['name']
-			);
+			];
 			if( $this->modelSlide->getByIndices( $indices ) ){
 				$this->messenger->noteError( $words->errorSlideExists, $image['name'] );
 				$this->restart( './edit/'.$sliderId, TRUE );

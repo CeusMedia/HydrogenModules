@@ -126,11 +126,11 @@ class Controller_Manage_Page_Ajax extends AjaxController
 
 	public function setTab( $tabKey ){
 		$this->session->set( $this->sessionPrefix.$this->appFocus.'.tab', $tabKey );
-		$this->respondData( array(
+		$this->respondData( [
 			'app'		=> $this->appFocus,
 			'tab'		=> $tabKey,
 			'result'	=> TRUE,
-		) );
+		] );
 	}
 
 	public function suggestKeywords(){

@@ -8,13 +8,13 @@ use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 $pagination	= "";
 if( $limit && $total > $limit )
 {
-	$options	= array(
+	$options	= [
 		'uri'	=> './admin/user/index/'.$limit.'/',
 		'keyRequest'	=> '',
 		'keyParam'		=> '',
 		'keyOffset'		=> '',
 		'keyAssign'		=> '',
-	);
+	];
 	$pagination	= new HtmlPagination( $options );
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }

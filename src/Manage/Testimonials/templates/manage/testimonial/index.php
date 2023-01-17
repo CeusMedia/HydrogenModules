@@ -4,23 +4,23 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$optStatus	= array(
+$optStatus	= [
 	0	=> 'nicht sichtbar',
 	1	=> 'sichtbar',
-);
+];
 
-$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> neuer Eintrag', array(
+$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> neuer Eintrag', [
 	'href'	=> './manage/testimonial/add',
 	'class'	=> 'btn btn-small btn-success',
-) );
+] );
 
 $list	= '<div class="muted"><em>Keine gefunden.</em></div>';
 if( $testimonials ){
 	$list	= [];
 	foreach( $testimonials as $testimonial ){
-		$link	= HtmlTag::create( 'a', $testimonial->title, array(
+		$link	= HtmlTag::create( 'a', $testimonial->title, [
 			'href'	=> './manage/testimonial/edit/'.$testimonial->testimonialId,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $testimonial->username ),
@@ -29,9 +29,9 @@ if( $testimonials ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '20%', '15%', '20%'] );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Überschrift', 'Autor', 'Zustand', 'Zeitpunkt'
-	) ) );
+	] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }

@@ -14,11 +14,11 @@ class Controller_Manage_Bookmark extends Controller
 		$model		= new Model_Bookmark( $env );
 		$orders		= ['title' => 'ASC'];
 		foreach( $model->getAll( [], $orders ) as $nr => $link ){
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'title'	=> /*$prefixes->bookmark.*/$link->title,
 				'type'	=> 'link:bookmark',
 				'value'	=> $link->url,
-			);
+			];
 		}
 		$list	= array( (object) array(
 			'title'	=> $prefixes->bookmark,

@@ -9,9 +9,9 @@ class Hook_UI_Image_Slider extends Hook
 	{
 		$processor		= $env->getLogic()->get( 'Shortcode' );
 		$shortCodes		= array(
-			'slider'	=> array(
+			'slider'	=> [
 				'id'		=> 0,
-			)
+			]
 		);
 
 		/** @todo remove this legacy support */

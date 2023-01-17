@@ -16,10 +16,10 @@ class View_Admin_Module_Installer extends View_Admin_Module {
 		$file1	= FileReader::loadArray( $fileLocal );
 		$file2	= FileReader::loadArray( $fileSource );
 
-		$options = array(
+		$options = [
 			'ignoreWhitespace'	=> true,
 	//		'ignoreCase'		=> true,
-		);
+		];
 		$diff		= new Diff( $file1, $file2, $options );											//  initialize the diff class
 		$renderer	= new Diff_Renderer_Html_Inline;
 		$body		= '

@@ -77,20 +77,20 @@ class View_Work_Bill extends View
 					if( $path )
 						$url	.= '?from='.$path;
 					$label	= '<i class="icon-ok icon-white"></i>&nbsp;bezahlt';
-					$action	= HtmlTag::create( 'a', $label, array(
+					$action	= HtmlTag::create( 'a', $label, [
 						'class' => 'btn btn-mini btn-success',
 						'href'	=> $url
-					) );
+					] );
 				}
 				else{
 					$url	= './work/bill/setStatus/'.$bill->billId.'/0';
 					if( $path )
 						$url	.= '?from='.$path;
 					$label	= '<i class="icon-remove icon-white"></i>&nbsp;storniert';
-					$action	= HtmlTag::create( 'a', $label, array(
+					$action	= HtmlTag::create( 'a', $label, [
 						'class' => 'btn btn-mini btn-danger',
 						'href'	=> $url
-					) );
+					] );
 				}
 				$class	= 'bill-type-'.$bill->type;
 				if( $colored )
@@ -103,12 +103,12 @@ class View_Work_Bill extends View
 					HtmlTag::create( 'td', $action ),
 				), ['class' => $class] );
 			}
-			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 				'Title',
 				'Betrag',
 				'Zustand',
 				'Fälligkeit',
-			) ) );
+			] ) );
 			$colgroup	= HtmlElements::ColumnGroup( '40', '15%', '15%', '15%', '15%' );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
 			$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-condensed'] );

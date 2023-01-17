@@ -32,9 +32,9 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 		$helperFacts->add( 'title', $project->title );
 		$helperFacts->add( 'description', $view->renderContent( $project->description ), $project->description );
 		if( $project->url )
-			$helperFacts->add( 'url', HtmlTag::create( 'a', $project->url, array(
+			$helperFacts->add( 'url', HtmlTag::create( 'a', $project->url, [
 				'href'		=> $project->url,
-			) ) );
+			] ) );
 
 		//  --  FACTS: MEMBERS  --  //
 		$list	= [];

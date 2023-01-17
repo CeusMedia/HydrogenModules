@@ -32,10 +32,10 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			];
 			$buttons[]	= HtmlTag::create( 'a', $label, $attributes );
 		}
-		return HtmlTag::create( 'div', $buttons, array(
+		return HtmlTag::create( 'div', $buttons, [
 			'id'	=> 'day-controls-btn-group',
 			'class' => 'btn-group',
-		) );
+		] );
 	}
 
 	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ): string

@@ -4,24 +4,24 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 	protected $filterKeyPrefix	= 'filter.work.mission.future.';
 
 	protected $defaultFilterValues	= array(
-		'states'		=> array(
+		'states'		=> [
 			Model_Mission::STATUS_NEW,
 			Model_Mission::STATUS_ACCEPTED,
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
 	);

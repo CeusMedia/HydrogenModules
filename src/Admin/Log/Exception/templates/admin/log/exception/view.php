@@ -36,10 +36,10 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', array(
 	'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
 	'class'		=> 'btn btn-small',
 ) );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 	'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
 	'class'		=> 'btn btn-small btn-danger',
-) );
+] );
 
 return '
 <div class="row-fluid">

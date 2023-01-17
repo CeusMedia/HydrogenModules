@@ -29,9 +29,9 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
-		$this->modelArticle->edit( $articleId, array(
+		$this->modelArticle->edit( $articleId, [
 			'quantity'	=> $article->quantity + $change
-		) );
+		] );
 		return $article->quantity + $change;
 	}
 

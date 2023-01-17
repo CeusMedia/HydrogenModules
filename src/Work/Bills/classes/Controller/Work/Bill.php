@@ -102,9 +102,9 @@ class Controller_Work_Bill extends Controller
 			$session->set( 'filter_work_bill_status', [0, 1] );
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
 
-		$conditions	= array(
+		$conditions	= [
 			'userId'	=> $this->userId,
-		);
+		];
 		if( $filters->get( 'id' ) )
 			$conditions['billId']	= $filters->get( 'id' );
 		if( $filters->get( 'term' ) )

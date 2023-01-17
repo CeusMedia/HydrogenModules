@@ -4,18 +4,18 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 function renderNavButton( $formId, $tabId, $label, $dir ){
 	$iconClass	= 'fa fa-fw fa-arrow-'.( $dir === 'prev' ? 'left' : 'right' );
 	$icon		= HtmlTag::create( 'i', '', ['class' => $iconClass] );
-	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, array(
+	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, [
 		'href'		=> './manage/form/setTab/'.$formId.'/'.$tabId,
 		'class'		=> 'btn',
-	) );
+	] );
 }
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
 $navButtons	= array(
-	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 		'href'		=> './manage/form',
 		'class'		=> 'btn',
-	) ),
+	] ),
 	'prevFacts'			=> renderNavButton( $form->formId, 'facts', 'Fakten', 'prev' ),
 	'prevView'			=> renderNavButton( $form->formId, 'view', 'Ansicht', 'prev' ),
 //	'prevBlocks'		=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'prev' ),

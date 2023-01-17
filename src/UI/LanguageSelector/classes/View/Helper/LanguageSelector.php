@@ -81,19 +81,19 @@ class View_Helper_LanguageSelector extends Abstraction
 				$icon	= HtmlTag::create( 'i', '', array(
 					'class'	=> ( $entry == $this->current ) ? 'icon-ok' : 'icon-empty',
 				) );
-				$link	= HtmlTag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], array(
+				$link	= HtmlTag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], [
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
-				) );
+				] );
 				$payload	= ["label" => $link, "language" => $entry];
 				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $payload );
 				$link		= $payload['label'];
 				$list[]		= HtmlTag::create( 'li', $link );
 			}
 		}
-		$listMenu		= HtmlTag::create( 'ul', $list, array(
+		$listMenu		= HtmlTag::create( 'ul', $list, [
 			'class'		=> 'dropdown-menu pull-'.$this->dropdownAlign,
-		) );
+		] );
 
 		$label			= '<%?OPTIONALICON%>'.$this->words['selector']['label'];
 		$payload 		= ["label" => $label, "language" => $this->language->GetLanguage()];
@@ -105,11 +105,11 @@ class View_Helper_LanguageSelector extends Abstraction
 		$flagimg		.= '&nbsp;'
 */
 		$caret			= HtmlTag::create( 'span', '', ['class' => 'caret'] );
-		$buttonToggle	= HtmlTag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, array(
+		$buttonToggle	= HtmlTag::create( 'a', $label.'&nbsp;&nbsp;'.$caret, [
 			'class'			=> "btn btn-small dropdown-toggle language-selector-button",
 			'data-toggle'	=> "dropdown",
 			'href'			=> "#",
-		) );
+		] );
 		$component		= HtmlTag::create( 'div', [$buttonToggle, $listMenu], [
 			'class'		=> 'btn-group',
 			'id'		=> 'language-selector',
@@ -126,11 +126,11 @@ class View_Helper_LanguageSelector extends Abstraction
 		$options	= HtmlElements::Options( $options, $this->current );
 
 		$uri	= $this->path.'?switchLanguageTo=';
-		$select	= HtmlTag::create( 'select', $options, array(
+		$select	= HtmlTag::create( 'select', $options, [
 			'onchange'	=> "document.location.href='".$uri."'+this.value;",
 			'class'		=> 'span12',
 			'id'		=> 'language-selector-input',
-		) );
+		] );
 		return $select;
 	}
 }

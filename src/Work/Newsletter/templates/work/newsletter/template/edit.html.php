@@ -16,10 +16,10 @@ extract( $view->populateTexts( ['placeholders'], 'html/work/newsletter/template/
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= HtmlTag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -57,14 +57,14 @@ $content	= $textTop.'
 				</div>
 			</h3>
 			<div class="content-panel-inner">
-				'.HtmlTag::create( 'textarea', $value, array(
+				'.HtmlTag::create( 'textarea', $value, [
 					'name'		=> 'html',
 					'id'		=> 'input_html',
 					'class'		=> 'CodeMirror-auto',
 					'rows'		=> 30,
 					'readonly'	=> $isUsed ? "readonly" : NULL,
 //					'disabled'	=> $isUsed ? "disabled" : NULL,
-				) ).'
+				] ).'
 				'.$buttons.'
 			</div>
 		</div>

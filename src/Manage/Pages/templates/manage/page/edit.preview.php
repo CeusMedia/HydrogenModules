@@ -2,14 +2,14 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $noPreview	= FALSE;
-$controllerActions	= array(
+$controllerActions	= [
 	'Auth::login',
 	'Auth::logout',
-);
-$controllers	= array(
+];
+$controllers	= [
 	'Auth',
 	'Manage_Page',
-);
+];
 
 $logicPage	= new Logic_Page( $env );
 
@@ -35,10 +35,10 @@ if( 1 /*config:useMask*/ )
 else
 	$divContainer	= HtmlTag::create( 'div', $divIFrame, ['id' => "page-preview-container"] );
 
-$divPreview		= HtmlTag::create( 'div', $divContainer, array(
+$divPreview		= HtmlTag::create( 'div', $divContainer, [
 	'id'		=> "page-preview",
 	'data-url'	=> $pagePreviewUrl,
-) );
+] );
 
 $linkPage		= HtmlTag::create( 'a', $pageUrl, ['href' => $pageUrl] );
 

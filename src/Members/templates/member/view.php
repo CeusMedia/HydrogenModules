@@ -46,10 +46,10 @@ $role		= $modelRole->get( $user->roleId );
 
 $data	= print_m( $user, NULL, NULL, TRUE );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'		=> $from ? $from : './member/search',
 	'class'		=> 'btn btn-small',
-) );
+] );
 
 $buttonRequest	= '';
 $buttonRevoke	= '';
@@ -62,14 +62,14 @@ $helperTime		= new View_Helper_TimePhraser( $env );
 if( $user->userId !== $currentUserId ){
 	if( $relation ){
 		if( $relation->status == 1 && $relation->direction == "in" ){
-			$buttonAccept	= HtmlTag::create( 'a', $iconAccept.'&nbsp;'.$w->buttonAccept, array(
+			$buttonAccept	= HtmlTag::create( 'a', $iconAccept.'&nbsp;'.$w->buttonAccept, [
 				'href'		=> './member/accept/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn btn-success',
-			) );
-			$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
+			] );
+			$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, [
 				'href'		=> './member/reject/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn btn-danger',
-			) );
+			] );
 		}
 		if( $relation->status == 2 ){
 			$buttonRevoke	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
@@ -80,10 +80,10 @@ if( $user->userId !== $currentUserId ){
 		}
 	}
 	else{
-		$buttonRequest	= HtmlTag::create( 'a', $iconRequest.'&nbsp;'.$w->buttonRequest, array(
+		$buttonRequest	= HtmlTag::create( 'a', $iconRequest.'&nbsp;'.$w->buttonRequest, [
 			'href'		=> './member/request/'.$user->userId.'?from='.$from,
 			'class'		=> 'btn btn-small btn-primary',
-		) );
+		] );
 	}
 }
 

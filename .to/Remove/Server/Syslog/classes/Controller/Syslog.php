@@ -130,12 +130,12 @@ class Controller_Syslog extends Controller_Abstract
 			return -5;
 		try
 		{
-			$mail	= new Mail_Syslog( $this->env, array(
+			$mail	= new Mail_Syslog( $this->env, [
 				'body'		=> $body,
 				'prefix'	=> $prefix,
 				'subject'	=> $subject,
 				'sender'	=> $fromName ? $fromName.' <'.$fromAddress.'>' : $fromAddress,
-			) );
+			] );
 			$mail->sendToAddress( $receiver );
 			return 1;
 		}

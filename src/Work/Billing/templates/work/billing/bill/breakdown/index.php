@@ -12,10 +12,10 @@ $leftAmount	= (float) $bill->amountNetto;
 
 if( $billExpenses ){
 	foreach( $billExpenses as $expense ){
-		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', [
 			'href'	=> './work/billing/bill/breakdown/removeExpense/'.$expense->billExpenseId,
 			'class'	=> 'btn btn-inverse btn-mini',
-		) );
+		] );
 		if( $bill->status == Model_Billing_Bill::STATUS_BOOKED )
 			$buttonRemove	= '';
 		$list[]	= HtmlTag::create( 'tr', array(
@@ -30,10 +30,10 @@ if( $billExpenses ){
 }
 if( $billReserves ){
 	foreach( $billReserves as $billReserve ){
-		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', [
 			'href'	=> './work/billing/bill/breakdown/removeReserve/'.$billReserve->billReserveId,
 			'class'	=> 'btn btn-inverse btn-mini',
-		) );
+		] );
 		if( $billReserve->status == Model_Billing_Bill_Reserve::STATUS_BOOKED )
 			$buttonRemove	= '';
 		$list[]	= HtmlTag::create( 'tr', array(
@@ -50,10 +50,10 @@ if( $billReserves ){
 $sharedAmount	= 0;
 if( $billShares ){
 	foreach( $billShares as $billShare ){
-		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', array(
+		$buttonRemove	= HtmlTag::create( 'a', 'entfernen', [
 			'href'	=> './work/billing/bill/breakdown/removeShare/'.$billShare->billShareId,
 			'class'	=> 'btn btn-inverse btn-mini',
-		) );
+		] );
 		if( $billShare->status == Model_Billing_Bill_Share::STATUS_BOOKED )
 			$buttonRemove	= '';
 
@@ -104,10 +104,10 @@ $tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 1 );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 
-	$buttonUnbook		= HtmlTag::create( 'a', $iconUndo.' zurücksetzen', array(
+	$buttonUnbook		= HtmlTag::create( 'a', $iconUndo.' zurücksetzen', [
 		'href'		=> './work/billing/bill/unbook/'.$bill->billId,
 		'class'		=> 'btn btn-mini',
-	) );
+	] );
 	return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.' - '.$bill->title.'</h2>
 '.$tabs.'
 <div class="content-panel">
@@ -121,10 +121,10 @@ if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 </div>';
 }
 
-$optType	= array(
+$optType	= [
 	0	=> 'Person',
 	1	=> 'Unternehmen',
-);
+];
 $optType	= HtmlElements::Options( $optType );
 
 
@@ -143,42 +143,42 @@ foreach( $reserves as $reserve )
 	$optReserve[$reserve->reserveId]	= $reserve->title;
 $optReserve	= HtmlElements::Options( $optReserve );
 
-$buttonBook		= HtmlTag::create( 'button', $iconSave.' buchen', array(
+$buttonBook		= HtmlTag::create( 'button', $iconSave.' buchen', [
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn btn-primary',
-) );
-$buttonAddExpense	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', array(
+] );
+$buttonAddExpense	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', [
 	'href'			=> '#modal-add-expense',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
-) );
-$buttonAddReserve	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', array(
+] );
+$buttonAddReserve	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', [
 	'href'			=> '#modal-add-reserve',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
-) );
-$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', array(
+] );
+$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', [
 	'href'			=> '#modal-add-share',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
-) );
+] );
 if( $bill->amountNetto - $bill->amountAssigned == 0 ){
-	$buttonBook		= HtmlTag::create( 'a', $iconSave.' buchen', array(
+	$buttonBook		= HtmlTag::create( 'a', $iconSave.' buchen', [
 		'href'	=> './work/billing/bill/breakdown/book/'.$bill->billId,
 		'class'	=> 'btn btn-primary',
-	) );
-/*	$buttonAddExpense	= HtmlTag::create( 'button', $iconAdd.' neue Ausgabe', array(
+	] );
+/*	$buttonAddExpense	= HtmlTag::create( 'button', $iconAdd.' neue Ausgabe', [
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
-	) );*/
-	$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', array(
+	] );*/
+	$buttonAddShare		= HtmlTag::create( 'a', $iconAdd.' neuer Anteil', [
 		'class'			=> 'btn btn-success',
 		'disabled'		=> 'disabled',
-	) );
+	] );
 }
 
 return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.' - '.$bill->title.'</h2>

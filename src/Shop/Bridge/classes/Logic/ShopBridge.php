@@ -242,11 +242,11 @@ class Logic_ShopBridge
 		$this->bridgeClasses	= [];
 		foreach( $this->model->getAll() as $bridge ){
 			$className	= "Logic_ShopBridge_".$bridge->class;
-			$bridge		= (object) array(
+			$bridge		= (object) [
 				'data'		=> $bridge,
 				'status'	=> -1,
 				'object'	=> NULL,
-			);
+			];
 			if( !class_exists( $className ) ){
 				$this->env->getMessenger()->noteFailure( 'Shop bridge "'.$bridge->data->class.'" is not existing.' );
 			}

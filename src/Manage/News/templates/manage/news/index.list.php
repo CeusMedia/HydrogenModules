@@ -4,11 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$colors	= array(
+$colors	= [
 	Model_News::STATUS_HIDDEN	=> 'info',
 	Model_News::STATUS_NEW		=> 'warning',
 	Model_News::STATUS_PUBLIC	=> 'success'
-);
+];
 
 $table	= HtmlTag::create( 'div', $words['index']['empty'], ['class' => 'alert alert-info'] );
 if( $news ){
@@ -33,23 +33,23 @@ if( $news ){
 		);
 		$rows[]	= HtmlTag::create( 'tr', $cells, ['class' => $colors[$item->status]] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( [
 		'*',
 		'30%',
-	) );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	] );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		$words['index']['headTitle'],
 		$words['index']['headRange'],
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './manage/news/add',
 	'class'	=> 'btn btn-small btn-success',
-) );
+] );
 
 $pagination     = new \CeusMedia\Bootstrap\Nav\PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
 
@@ -58,10 +58,10 @@ return '
 	<h3>'.$words['index']['heading'].'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
-		'.HtmlTag::create( 'div', join( '&nbsp;', array(
+		'.HtmlTag::create( 'div', join( '&nbsp;', [
 			$pagination,
 			$buttonAdd,
-		) ), ['class' => 'buttonbar'] ).'
+		] ), ['class' => 'buttonbar'] ).'
 		</div>
 	</div>
 </div>';

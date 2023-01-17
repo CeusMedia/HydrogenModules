@@ -172,10 +172,10 @@ class Controller_Info_Blog extends Controller
 		$language	= $this->env->getLanguage();
 		$comment	= $this->modelComment->get( $commentId );
 		$post		= $this->checkPost( $comment->postId );
-		$data	= array(
+		$data	= [
 			'comment'	=> $comment,
 			'post'		=> $post,
-		);
+		];
 
 		$mail		= new Mail_Info_Blog_Comment( $this->env, $data );								//  generate mail to post author
 		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver

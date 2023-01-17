@@ -10,19 +10,19 @@ foreach( $catalogs as $bridge )
 
 $rows	= [];
 foreach( $specials as $special ){
-	$link	= HtmlTag::create( 'a', $special->title, array(
+	$link	= HtmlTag::create( 'a', $special->title, [
 		'href'	=> './manage/shop/special/edit/'.$special->shopSpecialId,
-	) );
+	] );
 	$rows[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $bridgeMap[$special->bridgeId] ),
 		HtmlTag::create( 'td', $link ),
 	) );
 }
 $buttonbar	= HtmlTag::create( 'div', array(
-	HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Spezialität', array(
+	HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Spezialität', [
 		'href'	=> './manage/shop/special/add',
 		'class'	=> 'btn btn-primary',
-	) )
+	] )
 ), ['class' => 'buttonbar'] );
 $colgroup	= HtmlElements::ColumnGroup( '30%', '70%' );
 $tableHeads	= HtmlElements::TableHeads( ['Katalog', 'Artikel'] );
@@ -32,8 +32,8 @@ $table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'tab
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Spezialitäten' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );

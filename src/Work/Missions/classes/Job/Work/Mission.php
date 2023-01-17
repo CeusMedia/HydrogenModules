@@ -93,11 +93,11 @@ class Job_Work_Mission extends Job_Abstract
 		) ) );
 		if( $missionIds ){
 			$missionIds	= $modelMission->getAll( array(
-				'status'	=> array(
+				'status'	=> [
 					Model_Mission::STATUS_ABORTED,
 					Model_Mission::STATUS_REJECTED,
 					Model_Mission::STATUS_FINISHED,
-				),
+				],
 				'missionId'	=> $missionIds,
 			), [], [], ['missionId'] );
 
@@ -159,10 +159,10 @@ class Job_Work_Mission extends Job_Abstract
 				if( $timer->module === 'Work_Missions' ){
 					$mission	= $modelMission->get( $timer->moduleId );
 					if( $mission ){
-						$modelWorkTimer->edit( $timer->workTimerId, array(
+						$modelWorkTimer->edit( $timer->workTimerId, [
 							'moduleId'	=> $mission->missionId,
 							'projectId'	=> $mission->projectId,
-						) );
+						] );
 						$countTimerMoved++;
 					}
 					else{

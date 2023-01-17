@@ -4,7 +4,7 @@ class Model_Module_Page
 	protected $acl;
 	protected $env;
 	protected $useAcl;
-	protected $baseItem		= array(
+	protected $baseItem		= [
 		'parentId'		=> 0,
 		'status'		=> 0,
 		'type'			=> 0,
@@ -20,15 +20,15 @@ class Model_Module_Page
 		'template'		=> '',
 		'createdAt'		=> 0,
 		'modifiedAt'	=> 0,
-	);
-	protected $scopes		= array(
+	];
+	protected $scopes		= [
 		0	=> 'main',
-	);
-	protected $types		= array(
+	];
+	protected $types		= [
 		0	=> 'page',
 		1	=> 'menu',
 		2	=> 'module'
-	);
+	];
 
 	public function __construct( $env )
 	{

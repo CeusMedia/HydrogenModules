@@ -255,11 +255,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		$buttonEdit	= $showActions ? $this->renderRowButtonEdit( $event ) : '';
 		$cells		= [];
 
-/*		$checkbox	= HtmlTag::create( 'input', '', array(
+/*		$checkbox	= HtmlTag::create( 'input', '', [
 			'type'	=> 'checkbox',
 			'name'	=> 'missionIds[]',
 			'value'	=> $event->missionId,
-		) );
+		] );
 		$cells[]	= HtmlTag::create( 'td', $checkbox );*/
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];

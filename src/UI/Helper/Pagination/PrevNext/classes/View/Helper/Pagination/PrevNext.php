@@ -26,12 +26,12 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	const BUTTON_SIZE_MINI			= 'mini';
 	const BUTTON_SIZE_LARGE			= 'large';
 
-	const BUTTON_SIZES				= array(
+	const BUTTON_SIZES				= [
 		self::BUTTON_SIZE_DEFAULT,
 		self::BUTTON_SIZE_SMALL,
 		self::BUTTON_SIZE_MINI,
 		self::BUTTON_SIZE_LARGE,
-	);
+	];
 
 	const BUTTON_STATE_DEFAULT		= '';
 	const BUTTON_STATE_PRIMARY		= 'primary';
@@ -45,7 +45,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	const BUTTON_STATE_DARK			= 'dark';
 	const BUTTON_STATE_LINK			= 'link';
 
-	const BUTTON_STATES				= array(
+	const BUTTON_STATES				= [
 		self::BUTTON_STATE_DEFAULT,
 		self::BUTTON_STATE_PRIMARY,
 		self::BUTTON_STATE_SECONDARY,
@@ -57,7 +57,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		self::BUTTON_STATE_LIGHT,
 		self::BUTTON_STATE_DARK,
 		self::BUTTON_STATE_LINK,
-	);
+	];
 
 	public function __construct( Environment $env )
 	{

@@ -29,14 +29,14 @@ class View_Helper_Work_Issue_Changes
 			$list[]		= HtmlTag::create( 'tr',
 				HtmlTag::create( 'td',
 					HtmlTag::create( 'div', array(
-						HtmlTag::create( 'div', $helperFacts->render(), array(
+						HtmlTag::create( 'div', $helperFacts->render(), [
 							'class'	=> 'span5',
 							'id'	=> 'issue-change-list-facts'
-						) ),
-						HtmlTag::create( 'div', $helperNote->render(), array(
+						] ),
+						HtmlTag::create( 'div', $helperNote->render(), [
 							'class'	=> 'span7',
 							'id'	=> 'issue-change-list-note'
-						) ),
+						] ),
 						'<br/>'
 					), ['class' => 'issue-note row-fluid'] )
 				)

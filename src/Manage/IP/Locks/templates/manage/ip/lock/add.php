@@ -5,15 +5,15 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'	=> './manage/ip/lock',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $optReason	= [];
 foreach( $reasons as $reason )

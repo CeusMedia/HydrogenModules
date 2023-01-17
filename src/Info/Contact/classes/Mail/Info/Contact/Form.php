@@ -30,11 +30,11 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		if( array_key_exists( 'mail-type-'.$do->type, $words ) )
 			$wordsMail	= array_merge( $wordsMail, $words['mail-type-'.$do->type] );
 
-		$mailSubject	= vsprintf( $wordsMail['subject'], array(
+		$mailSubject	= vsprintf( $wordsMail['subject'], [
 			$do->subject,
 			$do->person,
 			$do->email,
-		) );
+		] );
 
 		$this->setSubject( $mailSubject );
 		$this->setSender( $config->get( 'mail.sender' ) );
@@ -53,7 +53,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'address'		=> htmlentities( $valueAddress, ENT_QUOTES, 'UTF-8' ),
 			'body'			=> nl2br( htmlentities( $do->body, ENT_QUOTES, 'UTF-8' ) ),
 		) ) );
-		$this->setText( $this->view->loadContentFile( 'mail/info/contact/form.txt', array(
+		$this->setText( $this->view->loadContentFile( 'mail/info/contact/form.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,
 			'type'			=> $words['form-types'][$do->type],
@@ -62,7 +62,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> $do->company,
 			'address'		=> $valueAddress,
 			'body'			=> $do->body,
-		) ) );
+		] ) );
 		return $this;
 	}
 }

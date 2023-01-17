@@ -113,10 +113,10 @@ if( !empty( $projects ) ){
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	$projects	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
-	$facts[]	= array(
+	$facts[]	= [
 		'label'	=> 'Projekte',
 		'value'	=> $projects
-	);
+	];
 }
 
 foreach( $facts as $nr => $fact )

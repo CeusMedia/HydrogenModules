@@ -15,12 +15,12 @@ class Hook_JS_WYMeditor extends Hook
 	 */
 	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
-		$options = json_encode( array(
+		$options = json_encode( [
 			'containersHtml'	=> '',
 			'classesHtml'		=> '',
 			'logoHtml'			=> '',
 			'statusHtml'		=> '',
-		) );
+		] );
 		$script	= 'jQuery("textarea.WYMeditor").wymeditor('.$options.')';
 		$context->js->addScriptOnReady( $script );
 	}

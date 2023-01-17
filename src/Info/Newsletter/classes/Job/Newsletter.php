@@ -14,14 +14,14 @@ class Job_Newsletter extends Job_Abstract
 		$age		= $this->parameters->get( '--age', '1Y' ) ;
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
 		$conditions	= array(
-			'status'		=> array(
+			'status'		=> [
 				Model_Mail::STATUS_ABORTED,														//  status: -3
 				Model_Mail::STATUS_FAILED,														//  status: -2
 				Model_Mail::STATUS_SENT,														//  status: 2
 				Model_Mail::STATUS_RECEIVED,													//  status: 3
 				Model_Mail::STATUS_OPENED,														//  status: 4
 				Model_Mail::STATUS_REPLIED,														//  status: 5
-			),
+			],
 			'mailClass'		=> 'Mail_Newsletter',
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
 		);
@@ -51,16 +51,16 @@ class Job_Newsletter extends Job_Abstract
 		$words		= (object) $this->words->send;													//  get words or like date formats
 
 		$total		= 0;
-		$conditions	= array( 'status' => array(
+		$conditions	= array( 'status' => [
 			Model_Newsletter_Queue::STATUS_NEW,
 			Model_Newsletter_Queue::STATUS_RUNNING
-		) );
+		] );
 		$queues		= $this->logic->getQueues( $conditions );
 		foreach( $queues as $queue ){
-			$conditions	= array(
+			$conditions	= [
 				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 				'newsletterQueueId'	=> $queue->newsletterQueueId,
-			);
+			];
 			$letters	= $this->logic->getReaderLetters( $conditions );							//  get letters to send
 			$total		+= count( $letters );
 		}
@@ -75,10 +75,10 @@ class Job_Newsletter extends Job_Abstract
 		}
 		$results	= $this->recoverReaderLetterQueueIds( $verbose );
 		if( $verbose && ( 1 || $results->letters ) )
-			$this->out( vsprintf( "Migrated %d letters into %d queues.", array(
+			$this->out( vsprintf( "Migrated %d letters into %d queues.", [
 				$results->letters,
 				$results->queues
-			) ) );
+			] ) );
 
 		if( $verbose ){
 			$this->out( '' );
@@ -86,11 +86,11 @@ class Job_Newsletter extends Job_Abstract
 		}
 		$results	= $this->recoverReaderLetterMailIds( $verbose );
 		if( $verbose && ( 1 || $results->newsletters ) )
-			$this->out( vsprintf( 'Scanned %d newsletters, found %d reader letters and recovered %d mail ID.', array(
+			$this->out( vsprintf( 'Scanned %d newsletters, found %d reader letters and recovered %d mail ID.', [
 				$results->newsletters,
 				$results->letters,
 				$results->recovered,
-			) ) );
+			] ) );
 	}
 
 	public function send( $verbose = FALSE )
@@ -99,10 +99,10 @@ class Job_Newsletter extends Job_Abstract
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
 		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
 		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$conditions	= array( 'status' => array(
+		$conditions	= array( 'status' => [
 			Model_Newsletter_Queue::STATUS_NEW,
 			Model_Newsletter_Queue::STATUS_RUNNING
-		) );
+		] );
 		$queues		= $this->logic->getQueues( $conditions );
 		$queueIds	= [];
 		foreach( $queues as $queue ){
@@ -112,10 +112,10 @@ class Job_Newsletter extends Job_Abstract
 		}
 		if( !$queueIds )
 			return;
-		$conditions	= array(
+		$conditions	= [
 			'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 			'newsletterQueueId'	=> $queueIds,
-		);
+		];
 		$number		= 0;																		//  prepare counter for round limit
 		$orders		= [];																	//  no order
 		$limits		= [0, $max];															//  limit letters
@@ -127,9 +127,9 @@ class Job_Newsletter extends Job_Abstract
 					usleep( $sleep * pow( 10, 6 ) );											//  sleep n seconds
 				$letter		= array_shift( $letters );											//  get next letter
 				$reader		= $letter->reader;													//  shortcut letter reader
-				$mail		= new Mail_Newsletter( $this->env, array(
+				$mail		= new Mail_Newsletter( $this->env, [
 					'readerLetterId'	=> $letter->newsletterReaderLetterId,
-				) );
+				] );
 				$language	= $this->env->getLanguage()->getLanguage();
 				$receiver	= $this->logic->getReader( $letter->newsletterReaderId );
 				$logicMail->appendRegisteredAttachments( $mail, $language );
@@ -149,16 +149,16 @@ class Job_Newsletter extends Job_Abstract
 		$time	= round( microtime( TRUE ) - $start, 3 ) * 1000;
 		$this->log( sprintf( 'sent %d mails in %d ms', $number, $time ) );
 		foreach( $queues as $queue ){
-			$conditions	= array(
+			$conditions	= [
 				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
 				'newsletterQueueId'	=> $queue->newsletterQueueId,
-			);
+			];
 			if( !count( $this->logic->getReaderLetters( $conditions ) ) ){
 				$newsletter	= $this->logic->getNewsletter( $queue->newsletterId );
 				$this->log( sprintf( 'Newsletter %s is done.', $newsletter->title ) );
-				$this->logic->editNewsletter( $queue->newsletterId, array(
+				$this->logic->editNewsletter( $queue->newsletterId, [
 					'status'	=> Model_Newsletter::STATUS_SENT
-				) );
+				] );
 				$this->logic->setQueueStatus(
 					$queue->newsletterQueueId,
 					Model_Newsletter_Queue::STATUS_DONE
@@ -190,16 +190,16 @@ class Job_Newsletter extends Job_Abstract
 		$orders			= ['newsletterId' => 'ASC'];
 		$newsletters	= $this->logic->getNewsletters( $conditions, $orders );
 		foreach( $newsletters as $newsletter ){
-			$letters	= $this->logic->getReaderLetters( array(
+			$letters	= $this->logic->getReaderLetters( [
 				'newsletterId'	=> $newsletter->newsletterId,
 				'mailId'		=> '0',
-			) );
+			] );
 			if( !$letters )
 				continue;
-			$entries[$newsletter->newsletterId]	= (object) array(
+			$entries[$newsletter->newsletterId]	= (object) [
 				'newsletter'	=> $newsletter,
 				'readerLetters'	=> [],
-			);
+			];
 			$countLetters	+= count( $letters );
 			foreach( $letters as $letter ){
 				if( !isset( $readers[$letter->newsletterReaderId] ) ){
@@ -212,11 +212,11 @@ class Job_Newsletter extends Job_Abstract
 		foreach( array_values( $entries ) as $nr => $entry ){
 			$countRecoveredOld	= $countRecovered;
 			foreach( $entry->readerLetters as $letter ){
-				$mailId	= $modelMail->getByIndices( array(
+				$mailId	= $modelMail->getByIndices( [
 					'mailClass'			=> 'Mail_Newsletter',
 					'receiverAddress'	=> $readers[$letter->newsletterReaderId]->email,
 					'subject'			=> $entry->newsletter->subject,
-				), [], ['mailId'] );
+				], [], ['mailId'] );
 				if( $mailId ){
 					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 					$countRecovered	+= 1;
@@ -247,26 +247,26 @@ class Job_Newsletter extends Job_Abstract
 		$newsletterIds	= [];
 		foreach( $letters as $letter ){
 			if( !array_key_exists( $letter->newsletterId, $newsletterIds ) ){
-				$newsletterIds[$letter->newsletterId]	= array(
+				$newsletterIds[$letter->newsletterId]	= [
 					'newsletterId'	=> $letter->newsletterId,
 					'creatorId'		=> 0,
 					'status'		=> Model_Newsletter_Queue::STATUS_DONE,
 					'createdAt'		=> $letter->enqueuedAt,
 					'modifiedAt'	=> $letter->enqueuedAt,
-				);
+				];
 			}
 		}
 		foreach( $newsletterIds as $newsletterId => $queueData ){
-			$conditions	= array(
+			$conditions	= [
 				'newsletterQueueId' => 0,
 				'newsletterId'		=> $newsletterId,
-			);
+			];
 			$letters	= $modelLetter->getAll( $conditions, $orders );
 			$queueId	= $modelQueue->add( $queueData );
 			foreach( $letters as $letter ){
-				$modelLetter->edit( $letter->newsletterReaderLetterId, array(
+				$modelLetter->edit( $letter->newsletterReaderLetterId, [
 					'newsletterQueueId'	=> $queueId,
-				) );
+				] );
 			}
 		}
 		return (object) array(

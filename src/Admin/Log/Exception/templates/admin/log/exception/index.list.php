@@ -50,14 +50,14 @@ if( $exceptions ){
 		$time	= date( 'H:i:s', $exception->createdAt );
 
 		$buttons	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', $iconView, array(
+			HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn not-btn-mini btn-small not-btn-info',
 				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
-			) ),
-			HtmlTag::create( 'a', $iconRemove, array(
+			] ),
+			HtmlTag::create( 'a', $iconRemove, [
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
-			) ),
+			] ),
 		), ['class' => 'btn-group'] );
 
 		$checkbox		= HtmlTag::create( 'input', NULL, [

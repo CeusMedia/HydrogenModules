@@ -23,12 +23,12 @@ if( $branch->images ){
 		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',
-				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), array(
+				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), [
  					'class'	=> 'fancybox-auto',
 					'href'	=> $urlImage,
 					'rel'	=> 'gallery',
 					'title'	=> $image->title,
-				) )
+				] )
 			).
 			HtmlTag::create( 'td',
 				HTML::DivClass( 'image-item',
@@ -37,11 +37,11 @@ if( $branch->images ){
 						HTML::Li( 'Datum: '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
 						HTML::Li( 'Größe: '.$img->getWidth().' x '.$img->getHeight() )
 					).
-					HtmlTag::create( 'a', $iconRemove, array(
+					HtmlTag::create( 'a', $iconRemove, [
 						'href'	=> $urlRemove,
 						'title'	=> $w->buttonRemove,
 						'class'	=> 'btn btn-mini btn-inverse'
-					) )
+					] )
 				)
 			)
 		);

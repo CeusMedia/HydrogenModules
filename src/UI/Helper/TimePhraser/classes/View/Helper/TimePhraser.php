@@ -8,10 +8,10 @@ class View_Helper_TimePhraser
 	const MODE_HINT		= 1;
 	const MODE_BREAK	= 2;
 
-	const MODES			= array(
+	const MODES			= [
 		self::MODE_HINT,
 		self::MODE_BREAK,
-	);
+	];
 
 	protected $env;
 	protected $asHtml			= TRUE;

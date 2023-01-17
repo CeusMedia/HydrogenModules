@@ -24,10 +24,10 @@ $buttonRemove	= '';
 if( $avatar ){
 	$imageAvatar	= View_Helper_UserAvatar::renderStatic( $env, $user, 256 );
 	$imageAvatar	= '<div class="thumbnail" style="max-width: 256px">'.$imageAvatar.'</div>';
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'	=> './manage/my/user/avatar/remove',
 		'class'	=> 'btn btn-inverse btn-small'
-	) );
+	] );
 }
 
 extract( $view->populateTexts( ['top', 'bottom', 'info.avatar', 'info.gravatar'], 'html/manage/my/user/avatar/', array(

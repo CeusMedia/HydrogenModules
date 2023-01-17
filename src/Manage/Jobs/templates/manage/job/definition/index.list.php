@@ -14,10 +14,10 @@ $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-off'
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './manage/job/definition/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', ['class' => 'alert'] );
 
@@ -35,38 +35,38 @@ if( $definitions ){
 				$parts[$nr]	= HtmlTag::create( 'b', $part );
 		}
 		$identifier	= join( '.', $parts );
-		$link	= HtmlTag::create( 'a', $identifier, array(
+		$link	= HtmlTag::create( 'a', $identifier, [
 			'href'		=> './manage/job/definition/view/'.$item->jobDefinitionId,
 			'title'		=> 'Details anzeigen',
-		) );
-/*		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, array(
+		] );
+/*		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/job/definition/edit/'.$item->jobDefinitionId,
 			'class'		=> 'btn not-btn-info btn-small',
 			'title'		=> 'Eintrag bearbeiten',
-		) );*/
-/*		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		] );*/
+/*		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './manage/job/definition/remove/'.$item->jobDefinitionId,
 			'class'		=> 'btn btn-inverse btn-small',
 			'title'		=> 'Eintrag entfernen',
-		) );*/
-/*		$buttonStatus	= HtmlTag::create( 'a', $iconActivate, array(
+		] );*/
+/*		$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 			'href'		=> './manage/job/definition/setStatus/'.$item->jobDefinitionId.'/1',
 			'class'		=> 'btn btn-success btn-small',
 			'title'		=> 'aktivieren',
-		) );*/
+		] );*/
 /*		if( $item->status == Model_Job_Definition::STATUS_ENABLED )
-			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, array(
+			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/job/definition/setStatus/'.$item->jobDefinitionId.'/0',
 				'class'		=> 'btn btn-warning btn-small',
 				'title'		=> 'deaktivieren',
-			 ) );
+			 ] );
 			 */
 
-/*		$buttons	= HtmlTag::create( 'div', array(
+/*		$buttons	= HtmlTag::create( 'div', [
 			$buttonEdit,
 			$buttonStatus,
 			$buttonRemove
-		), ['class' => 'btn-group'] );*/
+		], ['class' => 'btn-group'] );*/
 
 
 		$runs	= $item->runs ? '<div>'.$item->runs.' Runs</div>' : '-';
@@ -82,14 +82,14 @@ if( $definitions ){
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '100px', '120px', '120px', '140px'/*, '140px'*/ );
 
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 //		$words['index']['tableHeadId'],
 		$words['index']['tableHeadIdentifier'],
 		$words['index']['tableHeadStats'],
 		$words['index']['tableHeadMode'],
 		$words['index']['tableHeadStatus'],
 		$words['index']['tableHeadLastRun'],
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table table-striped table-condensed'] );
 
@@ -102,9 +102,9 @@ return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
 	HtmlTag::create( 'div', array(
 		$table,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$buttonAdd,
-		), ['class' => 'buttonbar'] ),
+		], ['class' => 'buttonbar'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
 

@@ -69,11 +69,11 @@ class View_Manage_My_User_Setting extends View{
 			case 'integer':
 				if( $config->values ){
 					$options	= HtmlElements::Options( array_combine( $config->values, $config->values ), $config->value );
-					$input		= HtmlTag::create( 'select', $options, array(
+					$input		= HtmlTag::create( 'select', $options, [
 						'name'	=> $inputKey,
 						'id'	=> 'input_'.$inputKey,
 						'class'	=> "span3 numeric",
-					) );
+					] );
 				}
 				else{
 					$input	= HtmlTag::create( 'input', NULL, array(
@@ -96,21 +96,21 @@ class View_Manage_My_User_Setting extends View{
 						}
 					}
 					$options	= HtmlElements::Options( $labels, $config->value );
-					$input		= HtmlTag::create( 'select', $options, array(
+					$input		= HtmlTag::create( 'select', $options, [
 						'name'	=> $inputKey,
 						'class'	=> 'span6',
 						'id'	=> 'input_'.$inputKey
-					) );
+					] );
 				}
 				else{
 					$isPassword	= preg_match( "/password$/i", $config->key."|".$config->type );			//  setting is a password or key ends with 'password'
 					if( $isPassword ){
-						$input	= HtmlTag::create( 'input', NULL, array(
+						$input	= HtmlTag::create( 'input', NULL, [
 							'type'	=> "password",
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
 							'class'	=> "span6",
-						) );
+						] );
 					}
 					else if( substr_count( $config->value, "," ) ){										//  contains several values
 						$content	= htmlentities( $config->value, ENT_QUOTES, 'UTF-8' );

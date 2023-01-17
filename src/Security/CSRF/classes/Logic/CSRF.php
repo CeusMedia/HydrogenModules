@@ -50,25 +50,25 @@ class Logic_CSRF
 			'timestamp'	=> '< '.( time() - $this->moduleConfig->get( 'duration' ) ),
 		) );
 		foreach( $outdatedTokens as $token ){
-			$this->model->edit( $token->tokenId, array(
+			$this->model->edit( $token->tokenId, [
 				'status'	=> self::STATUS_OUTDATED
-			) );
+			] );
 		}
 		return count( $outdatedTokens );
 	}
 
 	protected function cancelOldTokens( $formName )
 	{
-		$tokens  = $this->model->getAllByIndices( array(
+		$tokens  = $this->model->getAllByIndices( [
 			'status'	=> self::STATUS_OPEN,
 			'sessionId'	=> $this->sessionId,
 			'ip'		=> $this->ip,
 			'formName'	=> $formName,
-		) );
+		] );
 		foreach( $tokens as $token ){
-			$this->model->edit( $token->tokenId, array(
+			$this->model->edit( $token->tokenId, [
 				'status'	=> self::STATUS_NOT_USED
-			) );
+			] );
 		}
 		return count( $tokens );
 	}

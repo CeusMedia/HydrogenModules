@@ -11,10 +11,10 @@ if( $branch->tags ){
 	$list	= [];
 	foreach( $branch->tags as $tag ){
 		$label	= $tag->label;
-		$button	= HtmlTag::create( 'a', $iconRemove, array(
+		$button	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './manage/company/branch/removeTag/'.$tag->branchTagId,
 			'class'	=> 'btn btn-mini not-btn-inverse btn-danger'
-		) );
+		] );
 		$button 	= HtmlTag::create( 'span', $button, ['class' => 'pull-right'] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $tag->label, ['class' => 'cell-tag-label'] ),

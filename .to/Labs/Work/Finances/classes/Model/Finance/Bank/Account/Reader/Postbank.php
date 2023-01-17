@@ -31,12 +31,12 @@ class Model_Finance_Bank_Account_Reader_Postbank
 
 	protected function getPostString(): string
 	{
-		$data	 = array(
+		$data	 = [
 			'nutzername'	=> $this->bank->username,
 			'kennwort'		=> $this->bank->password,
 			'loginButton'	=> 'Anmelden',
 			'jsDisabled'	=> 'true'
-		);
+		];
 		return http_build_query( $data, NULL, '&' );
 	}
 

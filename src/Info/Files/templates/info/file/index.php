@@ -35,25 +35,25 @@ foreach( $files as $item ){
 	$label			= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'name'] );
 	$buttons		= [];
 	if( in_array( 'download', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconDownload, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconDownload, [
 			'href'	=> $urlDownload,
 			'class'	=> 'btn not-btn-small btn-primary',
 			'title'	=> $w->buttonDownload
-		) );
+		] );
 	}
 	if( in_array( 'editFile', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconEdit, [
 			'href'	=> './info/file/editFile/'.$item->downloadFileId,
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonEdit,
-		) );
+		] );
 	}
 	if( in_array( 'remove', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> $urlRemove,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $w->buttonRemove
-		) );
+		] );
 	}
 	$actions		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 //	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, ['class' => 'pull-right'] );
@@ -80,11 +80,11 @@ foreach( $folders as $item ){
 	$label	= HtmlTag::create( 'a', $label.$info, ['class' => 'name', 'href' => $url] );
 
 	$buttons	= [];
-	$buttons[]	= HtmlTag::create( 'a', $iconOpenFolder, array(
+	$buttons[]	= HtmlTag::create( 'a', $iconOpenFolder, [
 		'href'	=> $url,
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $w->buttonOpenFolder
-	) );
+	] );
 	if( 0 && in_array( 'ajaxRenameFolder', $rights ) ){
 		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
 			'onclick'	=> 'InfoFile.changeFolderName('.$item->downloadFolderId.', \''.$item->title.'\')',
@@ -93,30 +93,30 @@ foreach( $folders as $item ){
 		) );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
-		$buttons[]	= HtmlTag::create( 'a', $iconUp, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconUp, [
 			'href'	=> './info/file/rankFolder/'.$item->downloadFolderId,
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonUp,
-		) );
-		$buttons[]	= HtmlTag::create( 'a', $iconDown, array(
+		] );
+		$buttons[]	= HtmlTag::create( 'a', $iconDown, [
 			'href'	=> './info/file/rankFolder/'.$item->downloadFolderId.'/down',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonUp,
-		) );
+		] );
 	}
 	if( in_array( 'editFolder', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconEdit, [
 			'href'	=> './info/file/editFolder/'.$item->downloadFolderId,
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonEdit,
-		) );
+		] );
 	}
 	if( in_array( 'removeFolder', $rights ) && !$item->nrFiles && !$item->nrFolders ){
-		$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './info/file/removeFolder/'.$item->downloadFolderId,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $w->buttonRemove
-		) );
+		] );
 	}
 	$actions	= HtmlTag::create( 'div', join( $buttons ), ['class' => 'btn-group pull-right'] );
 //	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, ['class' => 'pull-right'] );
@@ -152,10 +152,10 @@ $panelList	= '
 
 $linkUp		= '';
 if( !$search && $folderId && $folder->downloadFolderId > 0 ){
-	$linkUp	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonBack, array(
+	$linkUp	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonBack, [
 		'href'		=> './info/file/index/'.$folder->parentId,
 		'class'		=> 'btn btn-small',
-	) );
+	] );
 }
 
 $panels		= [];

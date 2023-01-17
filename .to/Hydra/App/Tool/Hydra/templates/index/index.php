@@ -6,10 +6,10 @@ $panelSystem	= $view->loadTemplate( 'index', 'index.system' );
 
 if( $instanceId )
 {
-	return $view->loadTemplate( 'index', 'index.instance' , array(
+	return $view->loadTemplate( 'index', 'index.instance' , [
 		'panelList'		=> $panelList,
 		'panelSystem'	=> $panelSystem
-	) );
+	] );
 }
 else{
 	return '

@@ -27,10 +27,10 @@ $panelRelations	= $this->loadTemplateFile( 'catalog/bookstore/article/relations.
 
 $linkBack		= '';
 if( isset( $from ) && strlen( $from ) )
-	$linkBack		= HtmlTag::create( 'a', $iconBack.' zurück', array(
+	$linkBack		= HtmlTag::create( 'a', $iconBack.' zurück', [
 		'href'	=> './'.$from,
 		'class'	=> 'btn btn-small',
-	) );
+	] );
 
 return '
 <div class="article">

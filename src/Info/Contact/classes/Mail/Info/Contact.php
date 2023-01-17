@@ -31,14 +31,14 @@ class Mail_Info_Contact extends Mail_Abstract
 			'message'		=> nl2br( htmlentities( $do->message, ENT_QUOTES, 'UTF-8' ) ),
 			'newsletter'	=> $valueNewsletter,
 		) ) );
-		$this->setText( $this->view->loadContentFile( 'mail/info/contact.txt', array(
+		$this->setText( $this->view->loadContentFile( 'mail/info/contact.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,
 			'subject'		=> $do->subject,
 			'fullname'		=> $do->fullname,
 			'message'		=> $do->message,
 			'newsletter'	=> $valueNewsletter,
-		) ) );
+		] ) );
 		return $this;
 	}
 }

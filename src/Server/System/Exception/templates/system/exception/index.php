@@ -16,10 +16,10 @@ if( !empty( $exceptionUrl ) ){
 	) );
 }
 
-$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset'], array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset'], [
 	'href'	=> './system/exception/reset',
 	'class'	=> 'btn',
-) );
+] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/system/exception' ) );
 

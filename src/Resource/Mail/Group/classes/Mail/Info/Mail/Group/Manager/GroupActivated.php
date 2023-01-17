@@ -12,9 +12,9 @@ class Mail_Info_Mail_Group_Manager_GroupActivated extends Mail_Abstract
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
-		$data['link']		= array(
+		$data['link']		= [
 			'group'			=> $this->env->url.'work/mail/group/view/'.$data['group']->mailGroupId,
-		);
+		];
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/groupActivated.txt', $data );
 		$this->setText( $plain );

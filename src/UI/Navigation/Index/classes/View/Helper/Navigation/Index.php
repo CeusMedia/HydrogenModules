@@ -92,10 +92,10 @@ class View_Helper_Navigation_Index
 //			return;
 		$href		= $page->path == "index" ? './' : './'.$page->link;
 		$icon		= $page->icon ? HtmlTag::create( 'i', '', ['class' => $page->icon] ).'&nbsp;' : '';
-		$link		= HtmlTag::create( 'a', $icon.$page->label, array(
+		$link		= HtmlTag::create( 'a', $icon.$page->label, [
 			'href'	=> $href,
 			'class'	=> 'btn btn-large btn-block nav-index-topic-item-link'
-		) );
+		] );
 		return HtmlTag::create( 'li', $link, ['class' => 'nav-index-topic-item'] );
 	}
 

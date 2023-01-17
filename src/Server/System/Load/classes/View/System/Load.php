@@ -35,12 +35,12 @@ class View_System_Load extends View{
 				);
 				$barValue	= max( 0, min( 100, $loads[0] / 1 * 100 ) );
 				$barStyle	= '';
-				$barStyles	= array(
+				$barStyles	= [
 					20 => 'info',
 					40 => 'success',
 					60 => 'warning',
 					80 => 'danger',
-				);
+				];
 				foreach( $barStyles as $edge => $style )
 					if( $barValue > $edge )
 						$barStyle	= $style;

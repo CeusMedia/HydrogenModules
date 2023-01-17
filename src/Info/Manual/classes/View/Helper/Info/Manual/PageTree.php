@@ -27,19 +27,19 @@ class View_Helper_Info_Manual_PageTree
 		$words	= $this->env->getLanguage()->getWords( 'info/manual' );
 
 		if( $this->categoryId ){
-			$conditions		= array(
+			$conditions		= [
 				'status'			=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'			=> 0,
 				'manualCategoryId'	=> $this->categoryId,
-			);
+			];
 			$orders		= ['rank' => 'ASC'];
 			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
 		else if( $this->parentPageId ){
-			$conditions		= array(
+			$conditions		= [
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'		=> $this->parentPageId,
-			);
+			];
 			$orders		= ['rank' => 'ASC'];
 			$pages		= $this->modelPage->getAll( $conditions, $orders );
 		}
@@ -121,10 +121,10 @@ InfoManual.UI.Tree.init("#page-tree");';
 	{
 		$tree	= [];
 		foreach( $pages as $page ){
-			$conditions		= array(
+			$conditions		= [
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'		=> $page->manualPageId,
-			);
+			];
 			$orders		= ['rank' => 'ASC'];
 			$children	= $this->modelPage->getAll( $conditions, $orders );
 			$page->children	= $this->getPageTree( $children );
@@ -163,10 +163,10 @@ die;*/
 				'text'			=> $entry->title,
 				'href'			=> $link,
 				'selectable'	=> false,
-				'state'			=> (object) array(
+				'state'			=> (object) [
 					'expanded'	=> $isOpen,
 					'selected'	=> $this->activePageId == $entry->manualPageId,
-				),
+				],
 				'color'			=> '!inherit',
 //				'data'			=> ['pageId' => $entry->manualPageId],				//  not working with this version of bootstrap-treeview
 //				'tags'			=> ['pageId:'.$entry->manualPageId],					//  not working with this version of bootstrap-treeview

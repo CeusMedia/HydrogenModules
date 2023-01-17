@@ -43,14 +43,14 @@ class Resource_Database_Base extends DatabasePdoConnection
 	/**	@var	Dictionary		$options	Module configuration options */
 	protected $options;
 
-	protected $defaultDriverOptions	= array(
+	protected $defaultDriverOptions	= [
 		'ATTR_PERSISTENT'				=> TRUE,
 		'ATTR_ERRMODE'					=> "PDO::ERRMODE_EXCEPTION",
 		'ATTR_DEFAULT_FETCH_MODE'		=> "PDO::FETCH_OBJ",
 		'ATTR_CASE'						=> "PDO::CASE_NATURAL",
 		'MYSQL_ATTR_USE_BUFFERED_QUERY'	=> TRUE,
 		'MYSQL_ATTR_INIT_COMMAND'		=> "SET NAMES 'utf8';",
-	);
+	];
 
 	protected $status	= self::STATUS_UNKNOWN;
 

@@ -126,11 +126,11 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$provider	= $this->checkProvider( $providerId );
 		if( !class_exists( $provider->className ) )
 			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
-		$options		= array(
+		$options		= [
 			'clientId'		=> $provider->clientId,
 			'clientSecret'	=> $provider->clientSecret,
 			'redirectUri'	=> $this->env->url.'manage/my/user/oauth2/add/'.$providerId,
-		);
+		];
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
 		return ObjectFactory::createObject( $provider->className, [$options] );

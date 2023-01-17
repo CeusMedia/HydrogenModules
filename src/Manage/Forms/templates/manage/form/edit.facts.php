@@ -11,17 +11,17 @@ $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 
-$statuses	= array(
+$statuses	= [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
+];
 $optStatus	= HtmlElements::Options( $statuses, $form->status );
 
-$types		= array(
+$types		= [
 	0		=> 'direkter Versand',
 	1		=> 'mit Double-Opt-In',
-);
+];
 $optType	= HtmlElements::Options( $types, $form->type );
 
 $optMailCustomer	= ['' => '- keine -'];
@@ -108,11 +108,11 @@ return '
 			</div>
 			<div class="buttonbar">
 				'.$navButtons['list'].'
-				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
-				) ).'
+				] ).'
 				'.$navButtons['nextView'].'
 				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
 					'href'		=> './manage/form/remove/'.$form->formId,

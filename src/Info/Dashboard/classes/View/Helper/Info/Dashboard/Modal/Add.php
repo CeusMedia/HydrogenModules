@@ -33,9 +33,9 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 					'checked'	=> in_array( $panelId, $defaultPanels ) ? "checked" : NULL,
 				) );
 				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
-				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, [
 					'class'	=> 'checkbox',
-				) );
+				] );
 			}
 			ksort( $list );
 			$list	= HtmlTag::create( 'div', $list, ['style' => "padding: 0 0.5em 1em 0.5em;"] );

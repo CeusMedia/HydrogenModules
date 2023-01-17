@@ -6,9 +6,9 @@ $list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['clas
 if( $unpayedBillShares ){
 	$list	= [];
 	foreach( $unpayedBillShares as $unpayedBillShare ){
-		$link		= HtmlTag::create( 'a', $unpayedBillShare->bill->number, array(
+		$link		= HtmlTag::create( 'a', $unpayedBillShare->bill->number, [
 			'href'	=> './work/billing/bill/edit/'.$unpayedBillShare->bill->billId
-		) );
+		] );
 		$billTitle	= $unpayedBillShare->bill->title;
 		$amount		= number_format( $unpayedBillShare->amount, 2, ',', '.' ).'&nbsp;&euro;';
 		$list[]	= HtmlTag::create( 'tr', array(

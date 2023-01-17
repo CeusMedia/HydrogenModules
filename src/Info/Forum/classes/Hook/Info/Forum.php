@@ -10,10 +10,10 @@ class Hook_Info_Forum extends Hook
 		$model			= new Model_Forum_Thread( $env );
 		$oneDay			= 24 * 60 * 60;
 		$conditions		= array( 'modifiedAt' => '> '.( time() - 7 * $oneDay ) );
-		$orders			= array(
+		$orders			= [
 			'modifiedAt'	=> 'DESC',
 			'createdAt'		=> 'DESC',
-		);
+		];
 		$threads		= $model->getAll( $conditions, $orders, [0, 3] );
 		foreach( $threads as $thread ){
 			$context->news[]	= (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(

@@ -8,30 +8,30 @@ $helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMA
 $helperCardLogo->setNodeName( 'span' );
 
 $cardTypes	= array(
-	'VISA'			=> (object) array(
+	'VISA'			=> (object) [
 		'provider'		=> $words['cardProviders']['VISA'],
 		'type'			=> 'CB_VISA_MASTERCARD',
-	),
-	'MASTERCARD'	=> (object) array(
+	],
+	'MASTERCARD'	=> (object) [
 		'provider'		=> $words['cardProviders']['MASTERCARD'],
 		'type'			=> 'CB_VISA_MASTERCARD',
-	),
-/*	'AMEX'			=> (object) array(
+	],
+/*	'AMEX'			=> (object) [
 		'provider'		=> $words['cardProviders']['AMEX'],
 		'type'			=> 'AMEX',
-	),*/
-	'MAESTRO'		=> (object) array(
+	],*/
+	'MAESTRO'		=> (object) [
 		'provider'		=> $words['cardProviders']['MAESTRO'],
 		'type'			=> 'MAESTRO',
-	),
-/*	'MASTERPASS'		=> (object) array(
+	],
+/*	'MASTERPASS'		=> (object) [
 		'provider'		=> $words['cardProviders']['MASTERPASS'],
 		'type'			=> 'MASTERPASS',
-	),*/
-	'DINERS'		=> (object) array(
+	],*/
+	'DINERS'		=> (object) [
 		'provider'		=> $words['cardProviders']['DINERS'],
 		'type'			=> 'DINERS',
-	),
+	],
 );
 foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
 	$logo		= $helperCardLogo->setProvider( $cardTypeKey )->render();
@@ -45,9 +45,9 @@ foreach( $cardTypes as $cardTypeKey => $cardTypeItem ){
 	$link	= HtmlTag::create( 'a', $logo.'&nbsp;'.$cardTypeItem->provider, array(
 		'href'	=> $helperUrl->render(),
 	) );
-	$list[]	= HtmlTag::create( 'li', $link, array(
+	$list[]	= HtmlTag::create( 'li', $link, [
 		'class'	=> $cardProvider == $cardTypeKey ? 'active' : NULL,
-	) );
+	] );
 }
 $inputCardType	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 
@@ -63,13 +63,13 @@ $part2	= '
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_cardNumber">Kartennummer<!--Card Number--></label>
-			'.HtmlTag::create( 'input', NULL, array(
+			'.HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'cardNumber',
 				'id'			=> 'input_cardNumber',
 				'class'			=> 'span12',
 				'required'		=> 'required',
-			) ).'
+			] ).'
 		</div>
 	</div>
 	<div class="row-fluid">
@@ -109,12 +109,12 @@ if( $cardType ){
 	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
 	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
 	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
-	$buttonSave		= HtmlTag::create( 'button', '<b class="fa fa-check"></b> registrieren', array(
+	$buttonSave		= HtmlTag::create( 'button', '<b class="fa fa-check"></b> registrieren', [
 		'type'		=> "submit",
 		'name'		=> "save",
 		'value'		=> "register",
 		'class'		=> "btn btn-primary"
-	) );
+	] );
 	$form	= '
 		<form action="'.$registration->CardRegistrationURL.'" method="post">
 			<input type="hidden" name="data" value="'.$registration->PreregistrationData.'" />

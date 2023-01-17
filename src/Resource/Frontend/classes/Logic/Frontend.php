@@ -19,7 +19,7 @@ class Logic_Frontend extends Logic
 	protected array $installedModules	= [];
 	protected $path;
 	protected array $paths				= [];
-	protected array $defaultPaths		= array(
+	protected array $defaultPaths		= [
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
 		'contents'	=> 'contents/',
@@ -29,7 +29,7 @@ class Logic_Frontend extends Logic
 		'logs'		=> 'logs/',
 		'locales'	=> 'locales/',
 		'templates'	=> 'templates/',
-	);
+	];
 	protected $url;
 
 	public function getAppConfigValue( string $key )
@@ -62,11 +62,11 @@ class Logic_Frontend extends Logic
 
 	public function getEnv(): RemoteEnvironment
 	{
-		$env	= new RemoteEnvironment( array(
+		$env	= new RemoteEnvironment( [
 			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
-		) );
+		] );
 		return $env;
 	}
 
@@ -172,11 +172,11 @@ class Logic_Frontend extends Logic
 	static public function getRemoteEnv(Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
 		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
-		$env		= new RemoteEnvironment( array(
+		$env		= new RemoteEnvironment( [
 			'configFile'	=> $path.'config/config.ini',
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
-		) );
+		] );
 //		print_m( $env );die;
 		return $env;
 	}

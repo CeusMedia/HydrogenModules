@@ -17,11 +17,11 @@ class Job_Auth_Oauth2 extends Job_Abstract
 		foreach( $this->providersIndex as $providerKey => $providerData ){
 			$scopes		= join(',', $providerData->scopes );
 			if( $providerData->scopes ){
-				$list[]	= vsprintf( "UPDATE %s SET scopes='%s' WHERE title='%s';", array(
+				$list[]	= vsprintf( "UPDATE %s SET scopes='%s' WHERE title='%s';", [
 					'<%?prefix%>oauth_providers',
 					$scopes,
 					$providerData->title,
-				) );
+				] );
 			}
 		}
 		xmp( join( PHP_EOL, $list ) );die;

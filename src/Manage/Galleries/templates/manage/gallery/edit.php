@@ -7,11 +7,11 @@ $galleries	= $this->renderList( $gallery->galleryId );
 $optStatus	= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $gallery->status );
 
-$tabs	= array(
+$tabs	= [
 	$words['tabs'][1],
 	$words['tabs'][2],
 	$words['tabs'][3],
-);
+];
 
 $currentTab		= $this->env->getSession()->get( 'module.manage_galleries.tab' );
 $listTabs		= [];

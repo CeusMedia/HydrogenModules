@@ -20,41 +20,41 @@ class View_Manage_Catalog_Gallery extends View
 		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'title'	=> $category->title,
 				'value'	=> $pathImages.$category->image,
-			);
+			];
 		}
-		$list	= array( (object) array(
+		$list	= array( (object) [
 			'title'	=> 'Galerien:',
 			'menu'	=> $list,
-		) );
+		] );
 		$context->list	= array_merge( $context->list, $list );
 
 		/*  --  CATEGORY IMAGES  --  */
 		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
-			$images		= $modelImage->getAllByIndices( array(
+			$images		= $modelImage->getAllByIndices( [
 				'status'			=> '1',
 				'galleryCategoryId'	=> $category->galleryCategoryId
-			), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
+			], ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 			foreach( $images as $nr => $image ){
 				$label	= !empty( $image->title ) ? $image->title : $image->filename;
-				$images[$nr]	= (object) array(
+				$images[$nr]	= (object) [
 					'title'	=> $label,
 					'value'	=> $pathImages.$category->path.'/'.$image->filename,
-				);
+				];
 			}
 			$list[] = (object) array(
 				'title'	=> $category->title,
 				'menu'	=> array_values( $images ),
 			);
 		}
-		$list	= array( (object) array(
+		$list	= array( (object) [
 			'title'	=> 'Bilder in Galerien:',
 			'menu'	=> $list,
-		) );
+		] );
 		$context->list	= array_merge( $context->list, $list );
 	}
 
@@ -67,41 +67,41 @@ class View_Manage_Catalog_Gallery extends View
 		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'title'	=> $category->title,
 				'value'	=> 'catalog/gallery/category/'.$category->galleryCategoryId,
-			);
+			];
 		}
-		$list	= array( (object) array(
+		$list	= array( (object) [
 			'title'	=> 'Galerien:',
 			'menu'	=> $list,
-		) );
+		] );
 		$context->list	= array_merge( $context->list, $list );
 
 		/*  --  CATEGORY IMAGES  --  */
 		$list			= [];
 		$categories		= $modelCategory->getAllByIndex( 'status', '1' );
 		foreach( $categories as $category ){
-			$images		= $modelImage->getAllByIndices( array(
+			$images		= $modelImage->getAllByIndices( [
 				'status'			=> '1',
 				'galleryCategoryId'	=> $category->galleryCategoryId
-			), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
+			], ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 			foreach( $images as $nr => $image ){
 				$label	= !empty( $image->title ) ? $image->title : $image->filename;
-				$images[$nr]	= (object) array(
+				$images[$nr]	= (object) [
 					'title'	=> $label,
 					'value'	=> 'catalog/gallery/image/'.$image->galleryImageId,
-				);
+				];
 			}
 			$list[] = (object) array(
 				'title'	=> $category->title,
 				'menu'	=> array_values( $images ),
 			);
 		}
-		$list	= array( (object) array(
+		$list	= array( (object) [
 			'title'	=> 'Bilder in Galerien:',
 			'menu'	=> $list,
-		) );
+		] );
 		$context->list	= array_merge( $context->list, $list );
 	}
 
@@ -170,13 +170,13 @@ class View_Manage_Catalog_Gallery extends View
 			'style'		=> $imageUrl ? 'background-image: url('.$imageUrl.');' : NULL,
 		) );
 		$label	= strlen( trim( $label ) ) ? trim( $label ) : '&nbsp;';
-		$label	= HtmlTag::create( 'span', $label, array(
+		$label	= HtmlTag::create( 'span', $label, [
 /*			'href'	=> $url,*/
 			'class'	=> "gallery-matrix-item-label autocut"
-		) );
-		return HtmlTag::create( 'div', $image.$label, array(
+		] );
+		return HtmlTag::create( 'div', $image.$label, [
 			'class'		=> "gallery-matrix-item img-polaroid status".$status.' '.$class,
 			'onclick'	=> 'document.location.href="'.$url.'"',
-		) );
+		] );
 	}
 }

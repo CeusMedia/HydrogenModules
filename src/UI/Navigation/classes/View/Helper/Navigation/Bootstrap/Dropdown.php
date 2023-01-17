@@ -61,11 +61,11 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 				$class		= $page->active ? 'dropdown active' : 'dropdown';
 				$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'dropdown-menu'] );
 				$title		= $this->renderLabelWithIcon( $page ).' <b class="caret"></b>';
-				$link	= HtmlTag::create( 'a', $title, array(
+				$link	= HtmlTag::create( 'a', $title, [
 					'href'			=> '#',
 					'class' 		=> 'dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
-				) );
+				] );
 				$list[]	= HtmlTag::create( 'li', $link.$sublist, ['class' => $class] );
 			}
 			else{
@@ -93,15 +93,15 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		}
 		$label	= $icon.'&nbsp;'.$this->logoTitle;
 		if( !$this->logoLink )
-			return HtmlTag::create( 'div', $label, array(
+			return HtmlTag::create( 'div', $label, [
 //				'id'	=> "logo",
 				'class'	=> 'brand'
-			) );
-		return HtmlTag::create( 'a', $label, array(
+			] );
+		return HtmlTag::create( 'a', $label, [
 			'href'	=> $this->logoLink,
 //			'id'	=> "logo",
 			'class'	=> 'brand'
-		) );
+		] );
 	}
 
 	public function setInverse( bool $boolean = NULL ): self

@@ -13,12 +13,12 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> $helperUrl->render(),
 	'class'	=> 'btn',
 ) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' weiter', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' weiter', [
 	'type'	=> "submit",
  	'name'	=> "save",
 	'value'	=> "select",
 	'class'	=> "btn btn-primary",
-) );
+] );
 
 $panelAdd	= '
 <div class="content-panel">

@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Work_Issue extends Controller
 {
-	protected $filters	= array(
+	protected $filters	= [
 		'issueId',
 		'reporterId',
 		'managerId',
@@ -26,7 +26,7 @@ class Controller_Work_Issue extends Controller
 		'direction',
 		'limit',
 		'relation',
-	);
+	];
 
 	protected $logic;
 	protected $userProjects;
@@ -120,7 +120,7 @@ class Controller_Work_Issue extends Controller
 		$issue			= $modelIssue->get( $issueId );
 		if( $request->has( 'save' ) ){
 			$this->logic->informAboutChange( $issueId, $this->userId );
-			$changeTypes	= array(
+			$changeTypes	= [
 				'reporterId'	=> Logic_Issue::CHANGE_REPORTER,
 				'managerId'		=> Logic_Issue::CHANGE_MANAGER,
 				'projectId'		=> Logic_Issue::CHANGE_PROJECT,
@@ -129,7 +129,7 @@ class Controller_Work_Issue extends Controller
 				'priority'		=> Logic_Issue::CHANGE_PRIORITY,
 				'status'		=> Logic_Issue::CHANGE_STATUS,
 				'progress'		=> Logic_Issue::CHANGE_PROGRESS,
-			);
+			];
 			$changes		= array(
 				'modifiedAt'	=> time()
 			);
@@ -167,15 +167,15 @@ class Controller_Work_Issue extends Controller
 	{
 		$request	= $this->env->getRequest();
 		if( !($filters	= $request->get( 'filters' ) ) )
-			$filters	= array(
+			$filters	= [
 				'type'		=> 0,
 				'status'	=> [1, 2, 3, 4, 5],
-			);
+			];
 		if( !($orders	= $request->get( 'orders' ) ) )
-			$orders	= array(
+			$orders	= [
 				'priority'	=> 'ASC',
 				'status'	=> 'ASC',
-			);
+			];
 		$modelIssue		= new Model_Issue( $this->env );
 		$issues		= $modelIssue->getAll( $filters, $orders, [$offset, $limit] );
 		print( json_encode( $issues ) );

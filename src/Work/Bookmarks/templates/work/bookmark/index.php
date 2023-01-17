@@ -10,16 +10,16 @@ if( $bookmarks ){
 	foreach( $bookmarks as $bookmark ){
 		$urlVisit	= './work/bookmark/visit/'.$bookmark->bookmarkId;
 		$urlView	= './work/bookmark/view/'.$bookmark->bookmarkId;
-		$linkTitle	= HtmlTag::create( 'a', $bookmark->title, array(
+		$linkTitle	= HtmlTag::create( 'a', $bookmark->title, [
 			'href'		=> $urlView,
 			'target'	=> '_blank',
 			'class'		=> 'autocut',
-		) );
+		] );
 		$linkLabel	= preg_replace( "@^[a-z]{3,6}://@", '', $bookmark->url );
-		$linkUrl	= HtmlTag::create( 'a', $linkLabel, array(
+		$linkUrl	= HtmlTag::create( 'a', $linkLabel, [
 			'href'		=> $urlVisit,
 			'target'	=> '_blank',
-		) );
+		] );
 		$title	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'big', $linkTitle )
 		), ['class' => 'title'] );
@@ -35,9 +35,9 @@ if( $bookmarks ){
 		$pageTitle	= '';
 		if( $bookmark->pageTitle !== $bookmark->title ){
 			$pageTitle	= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'small', $bookmark->pageTitle, array(
+				HtmlTag::create( 'small', $bookmark->pageTitle, [
 					'class' => 'muted',
-				) ),
+				] ),
 			) );
 		}
 
@@ -48,33 +48,33 @@ if( $bookmarks ){
 		$tags	= HtmlTag::create( 'ul', $tags, ['class' => 'inline list-inline'] );
 
 		$rows[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', array(
+			HtmlTag::create( 'td', [
 				$title,
 				$pageTitle,
 				$url,
 				$description,
 				$tags,
-			), ['class' => NULL] ),
+			], ['class' => NULL] ),
 			HtmlTag::create( 'td', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'a', $iconVisit, array(
+					HtmlTag::create( 'a', $iconVisit, [
 						'href'		=> './work/bookmark/visit/'.$bookmark->bookmarkId,
 						'target'	=> '_blank',
 						'class'		=> 'btn btn-mini',
 						'title'		=> 'visit',
-					) ),
+					] ),
 					'<br/>',
-					HtmlTag::create( 'a', $iconView, array(
+					HtmlTag::create( 'a', $iconView, [
 						'href'		=> './work/bookmark/view/'.$bookmark->bookmarkId,
 						'class'		=> 'btn btn-mini',
 						'title'		=> 'details',
-					) ),
+					] ),
 					'<br/>',
-					HtmlTag::create( 'a', $iconEdit, array(
+					HtmlTag::create( 'a', $iconEdit, [
 						'href'		=> './work/bookmark/edit/'.$bookmark->bookmarkId,
 						'class'		=> 'btn btn-mini',
 						'title'		=> 'edit',
-					) ),
+					] ),
 				), ['class' => 'not-btn-group pull-right'] ),
 			), ['class' => NULL] ),
 		), [] );
@@ -84,17 +84,17 @@ if( $bookmarks ){
 
 $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Table' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel content-panel-list content-panel-table'] );
 
 
 $form	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Table' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel content-panel-list content-panel-table'] );
 
 
@@ -135,34 +135,34 @@ $panelFilter	= HtmlTag::create( 'div', array(
 						'value'	=> htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ),
 					) ),
 				), ['class' => 'span8'] ),
-				HtmlTag::create( 'div', array(
-				), ['class' => 'span4'] ),
+				HtmlTag::create( 'div', [
+				], ['class' => 'span4'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'button', 'filter', array(
+				HtmlTag::create( 'button', 'filter', [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-small btn-primary',
-				) ),
-				HtmlTag::create( 'a', 'reset', array(
+				] ),
+				HtmlTag::create( 'a', 'reset', [
 					'href'	=> './work/bookmark/filter/reset',
 					'class'	=> 'btn btn-small btn-inverse',
-				) ),
+				] ),
 			), ['class' => 'buttonbar'] ),
 		), ['action' => './work/bookmark/filter', 'method' => 'post'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel content-panel-form'] );
 
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$panelFilter,
-	), ['class' => 'span3'] ),
-	HtmlTag::create( 'div', array(
+	], ['class' => 'span3'] ),
+	HtmlTag::create( 'div', [
 		$panelList,
-	), ['class' => 'span6'] ),
-	HtmlTag::create( 'div', array(
+	], ['class' => 'span6'] ),
+	HtmlTag::create( 'div', [
 		$panelAdd,
-	), ['class' => 'span3'] ),
+	], ['class' => 'span3'] ),
 ), ['class' => 'row-fluid'] ).'
 <style>
 small>a {

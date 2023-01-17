@@ -7,15 +7,15 @@ $w	= (object) $words['add'];
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonBack, [
 	'href'		=> './manage/relocation',
 	'class'		=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-success',
-) );
+] );
 
 $optStatus		= HtmlElements::Options( $words['states'], (int) $relocation->status );
 $helper			= new View_Helper_TimePhraser( $env );

@@ -12,7 +12,7 @@ class View_Helper_Job_Attribute
 	const ATTRIBUTE_SCHEDULE_STATUS		= 4;
 	const ATTRIBUTE_SCHEDULE_TYPE		= 5;
 
-	const RUN_STATUS_CLASSES				= array(
+	const RUN_STATUS_CLASSES				= [
 		Model_Job_Run::STATUS_TERMINATED		=> 'label label-important',
 		Model_Job_Run::STATUS_FAILED			=> 'label label-important',
 		Model_Job_Run::STATUS_ABORTED			=> 'label label-important',
@@ -20,8 +20,8 @@ class View_Helper_Job_Attribute
 		Model_Job_Run::STATUS_RUNNING			=> 'label label-warning',
 		Model_Job_Run::STATUS_DONE				=> 'label label-info',
 		Model_Job_Run::STATUS_SUCCESS			=> 'label label-success',
-	);
-	const RUN_STATUS_ICON_CLASSES			= array(
+	];
+	const RUN_STATUS_ICON_CLASSES			= [
 		Model_Job_Run::STATUS_TERMINATED		=> 'fa fa-fw fa-times',
 		Model_Job_Run::STATUS_FAILED			=> 'fa fa-fw fa-exclamation-triangle',
 		Model_Job_Run::STATUS_ABORTED			=> 'fa fa-fw fa-ban',
@@ -29,48 +29,48 @@ class View_Helper_Job_Attribute
 		Model_Job_Run::STATUS_RUNNING			=> 'fa fa-fw fa-cog fa-spin',
 		Model_Job_Run::STATUS_DONE				=> 'fa fa-fw fa-check',
 		Model_Job_Run::STATUS_SUCCESS			=> 'fa fa-fw fa-',
-	);
-	const RUN_TYPE_CLASSES					= array(
+	];
+	const RUN_TYPE_CLASSES					= [
 		Model_Job_Run::TYPE_MANUALLY			=> 'label label-info',
 		Model_Job_Run::TYPE_SCHEDULED			=> 'label label-success',
-	);
-	const RUN_TYPE_ICON_CLASSES				= array(
+	];
+	const RUN_TYPE_ICON_CLASSES				= [
 		Model_Job_Run::TYPE_MANUALLY			=> 'fa fa-fw fa-hand-paper-o',
 		Model_Job_Run::TYPE_SCHEDULED			=> 'fa fa-fw fa-clock-o',
-	);
-	const DEFINITION_STATUS_CLASSES			= array(
+	];
+	const DEFINITION_STATUS_CLASSES			= [
 		Model_Job_Definition::STATUS_DISABLED	=> 'label label-inverse',
 		Model_Job_Definition::STATUS_ENABLED	=> 'label label-success',
 		Model_Job_Definition::STATUS_DEPRECATED	=> 'label label-warning',
-	);
-	const DEFINITION_STATUS_ICON_CLASSES	= array(
+	];
+	const DEFINITION_STATUS_ICON_CLASSES	= [
 		Model_Job_Definition::STATUS_DISABLED	=> 'fa fa-fw fa-toggle-off',
 		Model_Job_Definition::STATUS_ENABLED	=> 'fa fa-fw fa-toggle-on',
 		Model_Job_Definition::STATUS_DEPRECATED	=> 'fa fa-fw fa-ban',
-	);
-	const DEFINITION_MODE_CLASSES			= array(
+	];
+	const DEFINITION_MODE_CLASSES			= [
 		Model_Job_Definition::MODE_UNDEFINED	=> 'not-label not-label-info',
 		Model_Job_Definition::MODE_SINGLE		=> 'not-label not-label-info',
 		Model_Job_Definition::MODE_MULTIPLE		=> 'not-label not-label-success',
 		Model_Job_Definition::MODE_EXCLUSIVE	=> 'not-label not-label-success',
-	);
-	const DEFINITION_MODE_ICON_CLASSES		= array(
+	];
+	const DEFINITION_MODE_ICON_CLASSES		= [
 		Model_Job_Definition::MODE_UNDEFINED	=> 'fa fa-fw fa-exclamation-circle ',
 		Model_Job_Definition::MODE_SINGLE		=> 'fa fa-fw fa-square',
 		Model_Job_Definition::MODE_MULTIPLE		=> 'fa fa-fw fa-th-large',
 		Model_Job_Definition::MODE_EXCLUSIVE	=> 'fa fa-fw fa-square-o',
-	);
+	];
 
-	const SCHEDULE_STATUS_CLASSES			= array(
+	const SCHEDULE_STATUS_CLASSES			= [
 		Model_Job_Schedule::STATUS_DISABLED		=> 'label label-inverse',
 		Model_Job_Schedule::STATUS_ENABLED		=> 'label label-success',
 		Model_Job_Schedule::STATUS_PAUSED		=> 'label label-warning',
-	);
-	const SCHEDULE_STATUS_ICON_CLASSES	= array(
+	];
+	const SCHEDULE_STATUS_ICON_CLASSES	= [
 		Model_Job_Schedule::STATUS_DISABLED		=> 'fa fa-fw fa-toggle-off',
 		Model_Job_Schedule::STATUS_ENABLED		=> 'fa fa-fw fa-toggle-on',
 		Model_Job_Schedule::STATUS_PAUSED		=> 'fa fa-fw fa-pause',
-	);
+	];
 
 	protected $env;
 	protected $attribute		= 0;

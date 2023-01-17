@@ -185,10 +185,10 @@ if( $isInstallable && $module->sql ){
 $panelFiles	= '';
 if( $files ){
 	$helper	= new View_Helper_Module_Files( $this->env );
-	$table		= $helper->render( $files, $words, array(
+	$table		= $helper->render( $files, $words, [
 		'useCheckboxes'	=> !FALSE,
 		'useActions'	=> !FALSE,
-	) );
+	] );
 	$panelFiles	= '<fieldset><legend class="database">'.$w->files.'</legend>'.$table.'</fieldset>';
 }
 
@@ -202,11 +202,11 @@ function renderPositions( $positions ){
 	return $positions;
 }
 
-$positions	= array(
+$positions	= [
 #	'Liste'		=> './admin/module',
 #	'Übersicht'	=> './admin/module/installer',
 	'Ansicht'	=> './admin/module/viewer/index/'.$module->id
-);
+];
 
 /*  --  HEADING  --  */
 $urlForm	= './admin/module/installer/install/'.$module->id;

@@ -9,28 +9,28 @@ class Mail_Job_Report extends Mail_Abstract
 		$data	= $this->data;
 //		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );
 		$words	= array(
-			'job-run-statuses'	=> array(
+			'job-run-statuses'	=> [
 				Model_Job_Run::STATUS_TERMINATED	=> 'terminiert',
 				Model_Job_Run::STATUS_FAILED		=> 'gescheitert',
 				Model_Job_Run::STATUS_ABORTED		=> 'abgebrochen',
 				Model_Job_Run::STATUS_PREPARED		=> 'vorbereitet',
 				Model_Job_Run::STATUS_RUNNING		=> 'läuft',
 				Model_Job_Run::STATUS_DONE			=> 'erledigt',
-			),
-			'job-run-types'		=> array(
+			],
+			'job-run-types'		=> [
 				Model_Job_Run::TYPE_MANUALLY		=> 'manuell',
 				Model_Job_Run::TYPE_SCHEDULED		=> 'geplant',
-			)
+			]
 		);
 
 		$data['words']	= $words;
 
 		$this->addCommonStyle( 'module.resource.jobs-mail.css' );
 //		print_m( $data );
-		$this->setSubject( vsprintf( 'Job: %s: %s', array(
+		$this->setSubject( vsprintf( 'Job: %s: %s', [
 			$data['definition']->identifier,
 			$words['job-run-statuses'][$data['run']->status],
-		) ) );
+		] ) );
 		$this->setHtml( $this->renderHtml() );
 		$this->setText( $this->renderText() );
 		return $this;
@@ -68,12 +68,12 @@ class Mail_Job_Report extends Mail_Abstract
 		$list	= [];
 		foreach( explode( PHP_EOL, $trace ) as $nr => $line ){
 			$matches	= [];
-			$item		= (object) array(
+			$item		= (object) [
 				'nr'	=> $nr,
 				'file'	=> NULL,
 				'line'	=> NULL,
 				'call'	=> NULL,
-			);
+			];
 			if( preg_match( '@^(#(\d+) )((\S+)\((\d+)\)): (.+)$@', trim( $line ), $matches ) ){
 				$item->file	= $matches[4];
 				$item->line	= $matches[5];
@@ -111,14 +111,14 @@ class Mail_Job_Report extends Mail_Abstract
 
 	protected function renderFactsBlockAsHtml( $data ): string
 	{
-		$statusClasses	= array(
+		$statusClasses	= [
 			Model_Job_Run::STATUS_TERMINATED	=> 'label-inverse',
 			Model_Job_Run::STATUS_FAILED		=> 'label-important',
 			Model_Job_Run::STATUS_ABORTED		=> '',
 			Model_Job_Run::STATUS_PREPARED		=> 'label-warning',
 			Model_Job_Run::STATUS_RUNNING		=> 'label-info',
 			Model_Job_Run::STATUS_DONE			=> 'label-success',
-		);
+		];
 		$durationHelper	= new TimeDuration();
 		$typeWord		= $data['words']['job-run-types'][$data['run']->type];
 		$typeLabel		= $typeWord;
@@ -174,10 +174,10 @@ class Mail_Job_Report extends Mail_Abstract
 			$list[]	= HtmlTag::create( 'dt', $key );
 			$list[]	= HtmlTag::create( 'dd', $value );
 		}
-		return HtmlTag::create( 'dl', $list, array(
+		return HtmlTag::create( 'dl', $list, [
 			'class'	=> $listClass,
 			'id'	=> $listId
-		) );
+		] );
 	}
 
 	protected function stripAppPathFromAbsoluteFilePath( string $filePath ): string

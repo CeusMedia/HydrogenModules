@@ -149,23 +149,23 @@ class View_Helper_TinyMce_FileBrowser
 
 		$path		= base64_encode( $path );
 		$image	= HtmlTag::create( 'i', '', ['class' => $this->cssClassPrefix.'-item-icon fa fa-fw fa-'.$icon] );
-		$label	= HtmlTag::create( 'div', $label.'<br/>'.$facts, array(
+		$label	= HtmlTag::create( 'div', $label.'<br/>'.$facts, [
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
-		) );
+		] );
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
-		return HtmlTag::create( 'li', $image.$label, array(
+		return HtmlTag::create( 'li', $image.$label, [
 			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-folder trigger-folder',
 			'data-url'		=> './manage/tinyMce/setPath/'.$mode.'/'.$this->topicId.'/'.$path,
 			'data-label'	=> $label,
-		) );
+		] );
 	}
 
 	protected function renderItemException( $itemUri, $itemLabel, $exception )
 	{
-		return HtmlTag::create( 'li', $exception->getMessage(), array(
+		return HtmlTag::create( 'li', $exception->getMessage(), [
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
 			'data-url'	=> '',
-		) );
+		] );
 	}
 
 	protected function renderImageItem( $path, $filePath, $size = NULL, $icon = 'image' )
@@ -223,9 +223,9 @@ class View_Helper_TinyMce_FileBrowser
 			) );
 		}
 
-		$label	= HtmlTag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, array(
+		$label	= HtmlTag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, [
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
-		) );
+		] );
 		return HtmlTag::create( 'li', $thumbnail.$label, array(
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
 			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
@@ -283,16 +283,16 @@ class View_Helper_TinyMce_FileBrowser
 		$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-external-link'] );
 //		$icon	= HtmlTag::create( 'a', $icon, ['href' => $fullpath, 'target' => '_blank'] );
 		$url	= HtmlTag::create( 'small', $url.'&nbsp;'.$icon, ['class' => 'muted'] );
-		$label	= HtmlTag::create( 'div', $label.'<br/>'.$url, array(
+		$label	= HtmlTag::create( 'div', $label.'<br/>'.$url, [
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
-		) );
-		return HtmlTag::create( 'li', $image.$label, array(
+		] );
+		return HtmlTag::create( 'li', $image.$label, [
 			'class' 		=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-link trigger-submit',
 			'data-url'		=> $fullpath,
 			'data-path'		=> $path,
 			'data-label'	=> $filePath,
 			'data-type'		=> 'link',
-		) );
+		] );
 	}
 
 	protected function renderLinkMode()
@@ -389,15 +389,15 @@ class View_Helper_TinyMce_FileBrowser
 		foreach( $this->topics as $topicId => $topic ){
 			$count	= HtmlTag::create( 'small', '('.count( $topic->menu ).')', ['class' => 'muted'] );
 			$title	= rtrim( trim( $topic->title ), ":" );
-			$link	= HtmlTag::create( 'a', $title.'&nbsp;'.$count, array(
+			$link	= HtmlTag::create( 'a', $title.'&nbsp;'.$count, [
 				'href'	=> './manage/tinyMce/setTopic/'.$mode.'/'.$topicId,
-			) );
-			$list[]	= HtmlTag::create( 'li', $link, array(
+			] );
+			$list[]	= HtmlTag::create( 'li', $link, [
 				'class'		=> $topicId == $this->topicId ? 'active' : NULL,
-			) );
+			] );
 		}
-		return HtmlTag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, [
 			'class'	=> 'nav nav-pills nav-stacked'
-		) );
+		] );
 	}
 }

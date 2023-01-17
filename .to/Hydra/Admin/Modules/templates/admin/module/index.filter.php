@@ -8,19 +8,19 @@ $filterCategories	= $session->get( 'filter-modules-categories' );
 $filterSources		= $session->get( 'filter-modules-sources' );
 
 if( $filterTypes === NULL )
-	$filterTypes	= array(
+	$filterTypes	= [
 		Model_Module::TYPE_CUSTOM,
 		Model_Module::TYPE_COPY,
 		Model_Module::TYPE_LINK,
 		Model_Module::TYPE_SOURCE
-	);
+	];
 
-$typeMap	= array(
+$typeMap	= [
 	Model_Module::TYPE_SOURCE		=> 'verfügbar',
 	Model_Module::TYPE_LINK			=> 'eingebunden',
 	Model_Module::TYPE_COPY			=> 'kopiert',
 	Model_Module::TYPE_CUSTOM		=> 'eigenständig',
-);
+];
 
 $list	= [];
 $types[]	= '';

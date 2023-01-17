@@ -87,10 +87,10 @@ class Hook_Manage_My_User_Setting extends Hook
 		$model		= new Model_User_Setting( $env );
 		$settings	= $model->getAllByIndex( 'userId', $data->userId );
 		foreach( $settings as $setting ){
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? '#'.$setting->key : NULL,
 				'label'		=> $setting->moduleId.' :: '.$setting->key,
-			);
+			];
 		}
 
 		if( $list )

@@ -16,9 +16,9 @@ class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract{
 		$logo		= $helperCardLogo->setProvider( $this->card->CardProvider )->render();
 		$number		= $helperCardNumber->set( $this->card->Alias )->render();
 		$item		= $logo.$number;
-		$attributes	= array(
+		$attributes	= [
 			'class'		=> 'card-list-item-small',
-		);
+		];
 		if( $this->url ){
 			$url	= sprinf( $this->url, $this->card->id );
 			if( $this->nodeName == 'a' )

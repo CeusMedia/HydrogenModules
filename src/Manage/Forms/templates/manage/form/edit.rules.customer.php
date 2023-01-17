@@ -23,9 +23,9 @@ if( $rulesCustomer ){
 		$mail	= '<em>unbekannt</em>';
 		foreach( $mailsCustomer as $item ){
 			if( $item->mailId == $rule->mailId ){
-				$mail	= Html::create( 'a', $iconMail.'&nbsp;'.$item->title, array(
+				$mail	= Html::create( 'a', $iconMail.'&nbsp;'.$item->title, [
 					'href'	=> './manage/form/mail/edit/'.$item->mailId,
-				) );
+				] );
 			}
 		}
 
@@ -34,10 +34,10 @@ if( $rulesCustomer ){
 			$list[]	= Html::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
 		$list	= Html::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
-		$buttonRemove	= Html::create( 'a', $iconRemove, array(
+		$buttonRemove	= Html::create( 'a', $iconRemove, [
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
-		) );
+		] );
 		$listRules[]	= Html::create( 'tr', array(
 			Html::create( 'td', $list ),
 			Html::create( 'td', $mail ),

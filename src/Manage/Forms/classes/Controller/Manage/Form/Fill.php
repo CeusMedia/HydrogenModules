@@ -142,9 +142,9 @@ class Controller_Manage_Form_Fill extends Controller
 	public function markAsConfirmed( $fillId )
 	{
 		$this->checkId( $fillId );
-		$this->modelFill->edit( $fillId, array(
+		$this->modelFill->edit( $fillId, [
 			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
-		) );
+		] );
 		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
 		$page		= (int) $this->env->getRequest()->get( 'page' );
@@ -154,9 +154,9 @@ class Controller_Manage_Form_Fill extends Controller
 	public function markAsHandled( $fillId )
 	{
 		$this->checkId( $fillId );
-		$this->modelFill->edit( $fillId, array(
+		$this->modelFill->edit( $fillId, [
 			'status'	=> Model_Form_Fill::STATUS_HANDLED
-		) );
+		] );
 		$page		= (int) $this->env->getRequest()->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
@@ -236,10 +236,10 @@ class Controller_Manage_Form_Fill extends Controller
 				$this->logicFill->sendConfirmMail( $fillId );
 			}
 			$status	= 'ok';
-			$data	= array(
+			$data	= [
 				'formId'	=> $form->formId,
 				'formType'	=> $form->type,
-			);
+			];
 		}
 		catch( Exception $e ){
 			$payload	= ['exception' => $e];

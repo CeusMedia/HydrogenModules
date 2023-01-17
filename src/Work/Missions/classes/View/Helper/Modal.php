@@ -25,9 +25,9 @@ class View_Helper_Modal{
 	 *	@return		string
 	 */
 	public function render(){
-		$body		= HtmlTag::create( 'div', $this->body, array(
+		$body		= HtmlTag::create( 'div', $this->body, [
 			'class'	=> 'modal-body',
-		) );
+		] );
 		$footer		= $this->renderFooter();
 		$header		= $this->renderHeader();
 		$attributes	= array(
@@ -54,42 +54,42 @@ class View_Helper_Modal{
 		}
 		$modal		= HtmlTag::create( 'div', [$header, $body, $footer], $attributes );
 		if( $this->formAction ){
-			$modal	= HtmlTag::create( 'form', $modal, array(
+			$modal	= HtmlTag::create( 'form', $modal, [
 				'action'	=> $this->formAction,
 				'method'	=> 'POST',
-			) );
+			] );
 		}
 		return $modal;
 	}
 
 	protected function renderFooter(){
-		$buttonClose	= HtmlTag::create( 'button', 'Schließen', array(
+		$buttonClose	= HtmlTag::create( 'button', 'Schließen', [
 			'class'			=> 'btn',
 			'data-dismiss'	=> 'modal',
 			'aria-hidden'	=> 'true',
-		) );
-		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', array(
+		] );
+		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', [
 			'class'		=> 'btn btn-primary',
 			'type'		=> 'submit',
-		) );
+		] );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], array(
+		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], [
 			'class'	=> 'modal-footer',
-		) );
+		] );
 		return $footer;
 	}
 
 	protected function renderHeader(){
-		$buttonClose	= HtmlTag::create( 'button', '×', array(
+		$buttonClose	= HtmlTag::create( 'button', '×', [
 			'type'			=> "button",
 			'class'			=> "close",
 			'data-dismiss'	=> "modal",
 			'aria-hidden'	=> "true",
-		) );
+		] );
 		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
-		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], array(
+		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], [
 			'class'	=> 'modal-header',
-		) );
+		] );
 		return $header;
 	}
 

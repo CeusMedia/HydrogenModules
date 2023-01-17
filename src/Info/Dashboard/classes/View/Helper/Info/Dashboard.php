@@ -41,20 +41,20 @@ class View_Helper_Info_Dashboard extends Abstraction
 					'onclick'	=> 'if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;',
 					'title'		=> $w->buttonRemove,
 				) ),
-/*				HtmlTag::create( 'a', $iconMove, array(
+/*				HtmlTag::create( 'a', $iconMove, [
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
-				) ),*/
+				] ),*/
 				HtmlTag::create( 'h4', $icon.$panel->heading ),
 			), ['class' => 'dashboard-panel-handle'] );
-			$container	= HtmlTag::create( 'div', '', array(
+			$container	= HtmlTag::create( 'div', '', [
 				'class'	=> 'dashboard-panel-container',
 				'id'	=> NULL,
-			) );
+			] );
 
 			$list[]	= HtmlTag::create( 'li', array(
-				HtmlTag::create( 'div', $handle.$container, array(
+				HtmlTag::create( 'div', $handle.$container, [
 					'class'		=> 'thumbnail',
-				) )
+				] )
 			), array(
 				'class'			=> 'dashboard-panel span'.( 12 * $panel->cols / $this->columns ),
 				'data-panel-id'	=> $panel->id,

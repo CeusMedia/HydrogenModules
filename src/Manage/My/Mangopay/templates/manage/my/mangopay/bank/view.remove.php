@@ -3,11 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-remove"] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => "fa fa-trash"] );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.' entfernen', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-danger',
-) );
+] );
 
 $textRemove		= '
 		<strong>Ist das Bankkonto nicht mehr aktuell?</strong>

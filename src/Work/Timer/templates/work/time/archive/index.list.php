@@ -38,37 +38,37 @@ foreach( $timers as $timer ){
 	$urlStart		= './work/time/start/'.$timer->workTimerId;
 	$urlPause		= './work/time/pause/'.$timer->workTimerId;
 	$urlStop		= './work/time/stop/'.$timer->workTimerId;
-/*	$buttonStart 	= HtmlTag::create( 'button', $iconStart, array(
+/*	$buttonStart 	= HtmlTag::create( 'button', $iconStart, [
 		'onclick'	=> 'document.location.href=\''.$urlStart.'\';',
 		'class'		=> 'btn btn-small btn-success',
 		'disabled'	=> $timer->status == 1 ? 'disabled' : NULL,
-	) );
-	$buttonPause	= HtmlTag::create( 'button', $iconPause, array(
+	] );
+	$buttonPause	= HtmlTag::create( 'button', $iconPause, [
 		'onclick'	=> 'document.location.href=\''.$urlPause.'\';',
 		'class'		=> 'btn btn-small btn-warning',
 		'disabled'	=> $timer->status != 1 ? 'disabled' : NULL,
-	) );
-	$buttonStop 	= HtmlTag::create( 'button', $iconClose, array(
+	] );
+	$buttonStop 	= HtmlTag::create( 'button', $iconClose, [
 		'onclick'	=> 'document.location.href=\''.$urlStop.'\';',
 		'class'		=> 'btn btn-small btn-danger',
 		'disabled'	=> $timer->status == 3 ? 'disabled' : NULL,
-	) );
+	] );
 	$buttons		= HtmlTag::create( 'div', $buttonStart.$buttonPause.$buttonStop, ['class' => 'btn-group pull-right'] );
 */
 	$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
-	$link			= HtmlTag::create( 'a', $timer->title, array(
+	$link			= HtmlTag::create( 'a', $timer->title, [
 		'href'		=> './work/time/edit/'.$timer->workTimerId.'?from=',
 		'class'		=> 'autocut',
-	) );
+	] );
 
 	View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
 	$linkRelation	= 'unbekannt';
 	if( $timer->moduleId )
-		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), [
 			'href'	=> $timer->relationLink,
 			'class'	=> 'title autocut',
-		) );
+		] );
 
 	$rows[]		= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $link, ['class' => 'title'] ),

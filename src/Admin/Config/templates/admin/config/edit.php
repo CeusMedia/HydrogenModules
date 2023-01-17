@@ -62,10 +62,10 @@ $w	= (object) $words['edit'];
 
 $buttonRestore	= '';
 if( $versions ){
-	$buttonRestore	= HtmlTag::create( 'a', $w->buttonRestore.' <small class="not-muted">('.$versions.')</small>', array(
+	$buttonRestore	= HtmlTag::create( 'a', $w->buttonRestore.' <small class="not-muted">('.$versions.')</small>', [
 		'href'	=> './admin/config/restore/'.$moduleId,
 		'class'	=> 'btn btn-inverse btn-mini'
-	) );
+	] );
 }
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'	=> './admin/config/view/'.$moduleId,

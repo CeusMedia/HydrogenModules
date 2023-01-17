@@ -14,20 +14,20 @@ if( $relations ){
 		$link	= HtmlTag::create( 'a', $relation->project->title, ['href' => $url] );
 		$urlRemove		= './manage/customer/project/remove/'.$relation->customerId.'/'.$relation->projectId;
 		$iconRemove		= '<i class="icon-remove icon-white"></i>';
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'class'		=> 'btn btn-small btn-danger',
 			'href'		=> $urlRemove,
 			'title'		=> 'entfernen',
-		) );
+		] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $buttonRemove )
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "100%" );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Titel'
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }

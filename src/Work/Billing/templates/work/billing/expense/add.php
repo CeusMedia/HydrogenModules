@@ -5,56 +5,56 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/expense',
 	'class'	=> 'btn btn',
-) );
+] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
-$optStatus	= array(
+$optStatus	= [
 	0		=> 'deaktiviert',
 	1		=> 'aktiv',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, 1 );
 
-$optCorporation	= array(
+$optCorporation	= [
 //	'0'	=> '- kein Unternehmen -',
-);
+];
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
 $optCorporation	= HtmlElements::Options( $optCorporation );
 
-$optPerson	= array(
+$optPerson	= [
 //	'0'	=> '- keine Person -',
-);
+];
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
 $optPerson	= HtmlElements::Options( $optPerson );
 
-$optFrequency	= array(
+$optFrequency	= [
 	1		=> 'jährlich',
 	2		=> 'quartalsweise',
 	3		=> 'monatlich',
 	4		=> 'wöchentlich',
 	5		=> 'täglich',
-);
+];
 $optFrequency	= HtmlElements::Options( $optFrequency );
 
-$optType	= array(
+$optType	= [
 	1		=> 'Person',
 	2		=> 'Unternehmen',
-);
+];
 $optFromType	= HtmlElements::Options( $optType, 1 );
-$optType	= array(
+$optType	= [
 	0		=> '- keiner / extern -',
 	1		=> 'Person',
 	2		=> 'Unternehmen',
-);
+];
 $optToType	= HtmlElements::Options( $optType, 0 );
 
 return '

@@ -118,16 +118,16 @@ $panelFilter	= HtmlTag::create( 'div', array(
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], [
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn not-btn-small btn-info not-btn-primary',
-					) ),
+					] ),
 //					HtmlTag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
-					HtmlTag::create( 'a', $iconReset, array(
+					HtmlTag::create( 'a', $iconReset, [
 						'href'	=> './manage/job/run/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
-					) ),
+					] ),
 				), ['class' => 'btn-group'] ),
 			), ['class' => 'buttonbar'] ),
 		), ['action' => './manage/job/run/filter', 'method' => 'POST'] ),

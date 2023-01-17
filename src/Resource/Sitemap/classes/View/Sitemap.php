@@ -60,9 +60,9 @@ class View_Sitemap extends View
 				$xml    = gzencode( $xml );
 				break;
 		}
-		return (object) array(
+		return (object) [
 			'mimeType'	=> $type,
 			'content'	=> $xml,
-		);
+		];
 	}
 }

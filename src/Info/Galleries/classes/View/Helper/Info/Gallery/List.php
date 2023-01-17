@@ -13,10 +13,10 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 			$heading		= HtmlTag::create( 'a', $heading, ['href' => $urlGallery] );
 			$description	= self::renderGalleryDescription( $this->env, $this, $gallery );
 			$image			= $this->renderGalleryImage( $gallery->galleryId );
-			$button			= HtmlTag::create( 'a', $words['index']['buttonGallery'], array(
+			$button			= HtmlTag::create( 'a', $words['index']['buttonGallery'], [
 				'href'	=> $urlGallery,
 				'class'	=> 'btn not-btn-primary',
-			) );
+			] );
 			$item	= '<div class="row-fluid"><div class="span3">'.$image.'</div><div class="span9">'.$heading.$description.'<br/>'.$button.'</div></div>';
 			$list[]	= $item;
 		}

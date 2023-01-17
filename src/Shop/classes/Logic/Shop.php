@@ -73,16 +73,16 @@ class Logic_Shop extends Logic
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
@@ -122,16 +122,16 @@ class Logic_Shop extends Logic
 		$customer	= $model->get( $customerId );
 		if( !$customer )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
-		$customer->addressBilling	= $this->modelAddress->getByIndices( array(
+		$customer->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$customer->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$customer->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		if( $customer->addressDelivery ){
 			$customer->userId		= 0;
 			$customer->gender		= 0;
@@ -230,12 +230,12 @@ class Logic_Shop extends Logic
 				}
 			}
 		}
-		return (object) array(
+		return (object) [
 			'price'			=> $price,
 			'tax'			=> $tax,
 			'priceTaxed'	=> $priceTaxed,
 			'taxRate'		=> $taxRate,
-		);
+		];
 	}
 
 	public function getOrderTaxes( $orderId )
@@ -263,10 +263,10 @@ class Logic_Shop extends Logic
 	 */
 /*	public function getOpenSessionOrder( $sessionId )
 	{
-		$conditions	= array(
+		$conditions	= [
 			'sessionId'		=> $sessionId,
 			'status'		=> '< 2',
-		);
+		];
 		return $this->modelOrder->getAll( $conditions );
 	}*/
 

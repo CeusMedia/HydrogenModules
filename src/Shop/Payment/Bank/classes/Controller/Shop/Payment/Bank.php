@@ -45,7 +45,7 @@ class Controller_Shop_Payment_Bank extends Controller
 
 	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -53,7 +53,7 @@ class Controller_Shop_Payment_Bank extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'mode'		=> 'delayed',
-		);
+		];
 	}
 
 	protected function __onInit(): void

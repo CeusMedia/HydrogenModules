@@ -5,15 +5,15 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$words['add']['buttonCancel'], array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$words['add']['buttonCancel'], [
 	'href'	=> './manage/image/slider',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSave'], array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSave'], [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 $optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status', NULL ) );
 $optEasing		= HtmlElements::Options( $words['optEasing'], $data->get( 'easing' ) );

@@ -26,10 +26,10 @@ class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
 			$item	= $logo.$number.$title;
 			$url	= sprintf( $this->link, $card->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
-			$list[]	= HtmlTag::create( 'div', $item, array(
+			$list[]	= HtmlTag::create( 'div', $item, [
 				'class'		=> 'card-list-item-large',
 				'onclick'	=> 'document.location.href="./'.$url.'";',
-			) );
+			] );
 		}
 		if( $this->allowAdd ){
 			$logo	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus fa-4x'] );
@@ -37,10 +37,10 @@ class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
 			$item	= $logo.$number;
 			$urlAdd	= 'manage/my/mangopay/card/registration';
 			$urlAdd	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
-			$list[]	= HtmlTag::create( 'div', $item, array(
+			$list[]	= HtmlTag::create( 'div', $item, [
 				'class'		=> 'card-list-item-large',
 				'onclick'	=> 'document.location.href="./'.$urlAdd.'";',
-			) );
+			] );
 		}
 		$list	= HtmlTag::create( 'div', $list );
 		return $list;

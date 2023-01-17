@@ -130,12 +130,12 @@ class Controller_Auth_Rest extends Controller
 				else if( $user->data == -30 )
 					$this->messenger->noteError( $words->msgInvalidPassword );
 			}
-/*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+/*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = [
 						'backend'	=> 'rest',
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
-					) );*/
+					] );*/
 		}
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
@@ -206,13 +206,13 @@ class Controller_Auth_Rest extends Controller
 			$message	= 'error-'.$level.$code;
 			$message	= isset( $words[$message] ) ? $words[$message] : $message;
 			$this->messenger->noteError( $message );
-			$data		= array_merge( array(
+			$data		= array_merge( [
 				'business'			=> FALSE,
 				'billing_address'	=> FALSE,
-			), $data );
+			], $data );
 		}
 		if( !$data ){
-			$data	= array(
+			$data	= [
 				'firstname'			=> 'Hans',
 				'surname'			=> 'Testmann',
 				'username'			=> 'htestmann',
@@ -234,7 +234,7 @@ class Controller_Auth_Rest extends Controller
 				'billing_street'	=> 'Straße 2',
 				'billing_email'		=> 'testmann@aol.com',
 				'billing_phone'		=> '0123/9876543',
-			);
+			];
 		}
 
 		$this->addData( 'data', (object) $data );

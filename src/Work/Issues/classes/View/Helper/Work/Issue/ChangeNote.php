@@ -8,10 +8,10 @@ class View_Helper_Work_Issue_ChangeNote
 	const FORMAT_HTML		= 1;
 	const FORMAT_TEXT		= 2;
 
-	const FORMATS			= array(
+	const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
-	);
+	];
 
 	protected $env;
 	protected $note;

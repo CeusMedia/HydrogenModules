@@ -15,7 +15,7 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 
 	protected $defaultFilterValues	= array(
 		'mode'		=> 'now',
-		'states'	=> array(
+		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
 			Model_Mission::STATUS_NEW,
@@ -23,19 +23,19 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY,
 			Model_Mission::STATUS_FINISHED
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
 	);
@@ -87,10 +87,10 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 				$responseStatus		= TRUE;
 				$mission	= $this->model->get( $missionId );
 			}
-			print json_encode( array(
+			print json_encode( [
 				'status'	=> $responseStatus,
 				'item'		=> $mission,
-			) );
+			] );
 		}
 		catch( Exception $e ){
 			header( "HTTP/1.1 400 OK" );

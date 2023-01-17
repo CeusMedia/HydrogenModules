@@ -4,17 +4,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/bill',
 	'class'	=> 'btn btn',
-) );
+] );
 
 if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
-	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 		'type'	=> 'submit',
 		'name'	=> 'save',
 		'class'	=> 'btn btn-primary',
-	) );
+	] );
 	$panelFacts	= '
 <div class="content-panel">
 	<h3>Rechnung <small class="muted">(gebucht)</small></h3>
@@ -62,11 +62,11 @@ if( $bill->status == Model_Billing_Bill::STATUS_BOOKED ){
 }
 else{
 
-	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern und aufteilen', array(
+	$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern und aufteilen', [
 		'type'	=> 'submit',
 		'name'	=> 'save',
 		'class'	=> 'btn btn-primary',
-	) );
+	] );
 
 	$panelFacts	= '
 <div class="content-panel">

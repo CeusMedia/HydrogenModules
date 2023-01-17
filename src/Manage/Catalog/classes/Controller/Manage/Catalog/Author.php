@@ -28,10 +28,10 @@ class Controller_Manage_Catalog_Author extends Controller
 					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
 //					$label	= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
 					$label	= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
-					$list[] = (object) array(
+					$list[] = (object) [
 						'title'	=> $label,
 						'value'	=> $pathImages.$id.'_'.$item->image,
-					);
+					];
 				}
 			}
 			$cache->set( 'catalog.tinymce.images.authors', $list );

@@ -27,10 +27,10 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 		}
 		$buttonPrev	= HtmlTag::create( 'button', '<', $attrBtnPrev );
 		$buttonNext	= HtmlTag::create( 'button', '>', $attrBtnNext );
-		$buttonPos	= HtmlTag::create( 'button', 'Seite '.( $page + 1 ).' / '. $pages, array(
+		$buttonPos	= HtmlTag::create( 'button', 'Seite '.( $page + 1 ).' / '. $pages, [
 			'type'	=> 'button',
 			'class'	=> 'btn disabled'
-		) );
+		] );
 		$buttons	= HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, ['class' => 'btn-group'] );
 		return $buttons;
 	}

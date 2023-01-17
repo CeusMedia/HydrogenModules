@@ -12,13 +12,13 @@ class Hook_Tool_Calculator extends Hook
 		$helper		= new View_Helper_Tool_Calculator( $env );
 		$helper->setId( 'calc-modal' );
 		$env->getPage()->js->addScriptOnReady( 'prepareCalculatorLink();' );
-		$payload->content	.= HtmlTag::create( 'div', $helper->render(), array(
+		$payload->content	.= HtmlTag::create( 'div', $helper->render(), [
 			'id'				=> 'modalCalculator',
 			'class'				=> 'modal hide',
 			'tabindex'			=> '-1',
 			'role'				=> 'dialog',
 			'aria-labelledby'	=> 'myModalLabel',
 			'aria-hidden'		=> 'true',
-		) );
+		] );
 	}
 }

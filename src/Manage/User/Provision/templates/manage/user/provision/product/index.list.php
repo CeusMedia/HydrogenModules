@@ -15,12 +15,12 @@ if( $licenses ){
 	foreach( $licenses as $license ){
 		$class		= isset( $licenseId ) && $licenseId == $license->productLicenseId ? 'active' : NULL;
 		$label		= $license->license->title.' <small class="muted">()</small>';
-		$link		= HtmlTag::create( 'a', $iconsStatus[$license->status].'&nbsp;'.$label, array(
+		$link		= HtmlTag::create( 'a', $iconsStatus[$license->status].'&nbsp;'.$label, [
 //			'href'			=> '#modal-license-edit-'.$license->productLicenseId,
 			'href'			=> './manage/catalog/provision/license/edit/'.$license->product->productId.'/'.$license->userLicenseId,
 			'role'			=> 'button',
 			'data-toggle'	=> 'modal',
-		) );
+		] );
 		$class		= NULL;
 		$list[]		= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),

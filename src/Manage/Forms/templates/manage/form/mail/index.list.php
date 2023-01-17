@@ -7,13 +7,13 @@ $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 
-$formats	= array(
+$formats	= [
 	0	=> 'nicht definiert',
 	1	=> 'Text',
 	2	=> 'HTML',
-);
+];
 
-$roleTypeMap	= array(
+$roleTypeMap	= [
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
@@ -24,17 +24,17 @@ $roleTypeMap	= array(
 	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
-);
+];
 
 
 $modelForm	= new Model_Form( $env );
 
 $rows		= [];
 foreach( $mails as $mail ){
-	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
 		'href'	=> './manage/form/mail/view/'.$mail->mailId,
 		'class'	=> 'btn btn-mini btn-info',
-	) );
+	] );
 	$linkEdit	= HtmlTag::create( 'a', $mail->title, ['href' => './manage/form/mail/edit/'.$mail->mailId] );
 	$nrForms	= $modelForm->countByIndex( 'customerMailId', $mail->mailId ) + $modelForm->countByIndex( 'managerMailId', $mail->mailId );
 	$rows[]	= HtmlTag::create( 'tr', array(
@@ -59,10 +59,10 @@ $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Formular-E-Mail', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Formular-E-Mail', [
 	'href'	=> './manage/form/mail/add',
 	'class'	=> 'btn btn-success'
-) );
+] );
 
 $pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/mail', $page, $pages );
 

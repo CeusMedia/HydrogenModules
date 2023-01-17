@@ -41,91 +41,91 @@ class View_Helper_Info_Contact_Form_Modal
 		);
 		$fieldType	= array(
 			Html::create( 'label', $w->labelType, ['for' => 'input_type'] ),
-			Html::create( 'select', $optType, array(
+			Html::create( 'select', $optType, [
 				'name'		=> 'type',
 				'id'		=> 'input_type',
 				'class'		=> 'span12 has-optionals',
-			) ),
+			] ),
 		);
 		$fieldBody	= array(
 			Html::create( 'label', $w->labelBodyQuestion, ['for' => 'input_body', 'class' => 'mandatory required optional type type-question' ] ),
 			Html::create( 'label', $w->labelBodyRequest, ['for' => 'input_body', 'class' => 'mandatory required optional type type-request' ] ),
 			Html::create( 'label', $w->labelBodyProblem, ['for' => 'input_body', 'class' => 'mandatory required optional type type-problem' ] ),
-			Html::create( 'textarea', NULL, array(
+			Html::create( 'textarea', NULL, [
 				'name'		=> 'body',
 				'id'		=> 'input_body',
 				'class'		=> 'span12',
 				'rows'		=> 4,
 				'required'	=> 'required',
-			) ),
+			] ),
 		);
 		$fieldEmail	= array(
 			Html::create( 'label', $w->labelEmail, ['for' => 'input_email', 'class' => 'mandatory required'] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'email',
 				'id'		=> 'input_email',
 				'class'		=> 'span12',
 				'required'	=> 'required',
-			) ),
+			] ),
 		);
 		$fieldPhone	= array(
 			Html::create( 'label', $w->labelPhone, ['for' => 'input_phone', 'class' => ''] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'phone',
 				'id'		=> 'input_phone',
 				'class'		=> 'span12',
-			) ),
+			] ),
 		);
 		$fieldPerson	= array(
 			Html::create( 'label', $w->labelPerson, ['for' => 'input_person', 'class' => 'mandatory required'] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'person',
 				'id'		=> 'input_person',
 				'class'		=> 'span12',
 				'required' => 'required',
-			) ),
+			] ),
 		);
 		$fieldCompany	= array(
 			Html::create( 'label', $w->labelCompany, ['for' => 'input_company'] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'company',
 				'id'		=> 'input_company',
 				'class'		=> 'span12',
-			) ),
+			] ),
 		);
 		$fieldStreet	= array(
 			Html::create( 'label', $w->labelStreet, ['for' => 'input_street'/*, 'class' => 'mandatory required'*/] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'street',
 				'id'		=> 'input_street',
 				'class'		=> 'span12',
 //				'required'	=> 'required',
-			) ),
+			] ),
 		);
 		$fieldCity	= array(
 			Html::create( 'label', $w->labelCity, ['for' => 'input_city'/*, 'class' => 'mandatory required'*/] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'city',
 				'id'		=> 'input_city',
 				'class'		=> 'span12',
 //				'required'	=> 'required',
-			) ),
+			] ),
 		);
 		$fieldPostcode	= array(
 			Html::create( 'label', 'PLZ', ['for' => 'input_postcode'/*, 'class' => 'mandatory required'*/] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'postcode',
 				'id'		=> 'input_postcode',
 				'class'		=> 'span12',
 //				'required'	=> 'required',
-			) ),
+			] ),
 		);
 		if( !$this->moduleConfig->get( 'modal.show.company' ) )
 			$fieldCompany	= '';

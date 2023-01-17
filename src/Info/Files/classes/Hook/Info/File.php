@@ -11,7 +11,7 @@ class Hook_Info_File extends Hook
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
-			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
+			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -20,7 +20,7 @@ class Hook_Info_File extends Hook
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFolderId,
 				'icon'		=> 'fa fa-fw fa-file-o',
-			) ) );
+			] ) );
 		}
 	}
 
@@ -30,7 +30,7 @@ class Hook_Info_File extends Hook
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
-			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, array(
+			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [
 				'module'	=> 'Info_Files',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -39,7 +39,7 @@ class Hook_Info_File extends Hook
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/file/download/'.$file->downloadFileId,
 				'icon'		=> 'fa fa-fw fa-folder',
-			) ) );
+			] ) );
 		}
 	}
 }

@@ -6,9 +6,9 @@ extract( $view->populateTexts( ['top', 'bottom', 'service'], 'html/shop/' ) );
 $panels	= [];
 foreach( $servicePanels as $servicePanel ){
 	$key	= (float) $servicePanel->priority.'.'.time();
-	$panels[$key]	= HtmlTag::create( 'div', $servicePanel->content, array(
+	$panels[$key]	= HtmlTag::create( 'div', $servicePanel->content, [
 		'id'	=> 'panel-shop-service-'.$servicePanel->key,
-	) );
+	] );
 	ksort( $panels );
 }
 

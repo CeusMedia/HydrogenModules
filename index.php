@@ -107,11 +107,11 @@ class Modules
 			try{
 				$module	= Reader::load( $entry->getPathname(), $id );
 				if( !$full )
-					$module	= (object) array(
+					$module	= (object) [
 						'title'			=> $module->title,
 						'description'	=> $module->description,
 						'version'		=> $module->version,
-					);
+					];
 				$list[$id]	= $module;
 			}
 			catch( Exception $e ){

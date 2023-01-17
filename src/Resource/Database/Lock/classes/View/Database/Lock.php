@@ -26,9 +26,9 @@ class View_Database_Lock extends View{
 				$lock->relation			= $entry;
 				$lock->relationTitle	= $entry->{$module->column};
 				$lock->relationLink		= str_replace( "{id}", $lock->entryId, $module->link );
-				$link		= HtmlTag::create( 'a', $lock->relationTitle, array(
+				$link		= HtmlTag::create( 'a', $lock->relationTitle, [
 					'href' => $lock->relationLink,
-				) );
+				] );
 				$time		= ceil( ( time() - $lock->timestamp ) / 60 ) * 60;
 				$time		= View_Helper_Work_Time::formatSeconds( $time);
 				$username	= HtmlTag::create( 'small', $lock->user->username );

@@ -37,11 +37,11 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, arr
 	'class'	=> "btn btn-small"
 ) );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'		=> "submit",
 	'name'		=> "save",
 	'class'		=> "btn btn-primary"
-) );
+] );
 
 $panelRelated	= $view->loadTemplateFile( 'work/time/edit.related.php' );
 
@@ -68,37 +68,37 @@ return $textEditTop.'
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_workerId">'.$w->labelWorkerId.'</label>
-							'.HtmlTag::create( 'select', $optWorker, array(
+							'.HtmlTag::create( 'select', $optWorker, [
 								'name'		=> 'workerId',
 								'id'		=> 'input_workerId',
 								'class'		=> 'span12',
-							) ).'
+							] ).'
 						</div>
 						<div class="span8">
 							<label for="input_projectId">'.$w->labelProjectId.'</label>
-							'.HtmlTag::create( 'select', $optProject, array(
+							'.HtmlTag::create( 'select', $optProject, [
 								'name'		=> 'projectId',
 								'id'		=> 'input_projectId',
 								'class'		=> 'span12',
 								'readonly'	=> TRUE,
 								'disabled'	=> TRUE,
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_time_planned">'.$w->labelTimePlanned.'</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> 'text',
 								'name'		=> 'time_planned',
 								'id'		=> 'input_time_planned',
 								'class'		=> 'span12',
 								'value'		=> $timePlanned,
-							) ).'
+							] ).'
 						</div>
 						<div class="span4">
 							<label for="input_time_needed">'.$w->labelTimeNeeded.'</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> 'text',
 								'name'		=> 'time_needed',
 								'id'		=> 'input_time_needed',
@@ -106,15 +106,15 @@ return $textEditTop.'
 								'value'		=> $timer->status == 1 ? 'wird erfasst' : $timeNeeded,
 								'readonly'	=> $timer->status == 1 ? 'readonly' : NULL,
 								'disabled'	=> $timer->status == 1 ? 'disabled' : NULL,
-							) ).'
+							] ).'
 						</div>
 						<div class="span4">
 							<label for="input_status">'.$w->labelStatus.'</label>
-							'.HtmlTag::create( 'select', $optStatus, array(
+							'.HtmlTag::create( 'select', $optStatus, [
 								'name'		=> 'status',
 								'id'		=> 'input_status',
 								'class'		=> 'span12',
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="row-fluid">

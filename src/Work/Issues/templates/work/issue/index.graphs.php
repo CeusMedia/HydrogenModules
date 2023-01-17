@@ -12,11 +12,11 @@ require_once 'jpgraph/3.0.7/src/jpgraph.php';
 require_once 'jpgraph/3.0.7/src/jpgraph_pie.php';
 require_once 'jpgraph/3.0.7/src/jpgraph_pie3d.php';
 
-$data	= array(
+$data	= [
 	'status'	=> [],
 	'priority'	=> [],
 	'type'		=> []
-);
+];
 $model	= new Model_Issue( $env );
 foreach( $words['states'] as $key => $value ){
 	$data['status'][]	= array(
@@ -53,10 +53,10 @@ $width	= $env->getConfig()->get( 'module.work_issues.graph.all.width' );
 #die;
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', [
 	'href'	=> './work/issue/add',
 	'class'	=> 'btn btn-success'
-) );
+] );
 
 return '
 <style>

@@ -18,33 +18,33 @@ $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 			HTML::DivClass( 'row-fluid', array(
 				HTML::DivClass( 'span12', array(
 					HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'hidden',
 						'name'		=> 'from',
 						'value'		=> $from
-					) ),
-					HtmlTag::create( 'input', NULL, array(
+					] ),
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'confirm_code',
 						'id'		=> 'input_confirm_code',
 						'class'		=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
 						'required'	=> 'required',
 						'value'		=> $pak
-					) ),
+					] ),
 				) ),
 			) ),
 			HTML::DivClass( "buttonbar", array(
-				HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, array(
+				HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, [
 					'type'	=> "submit",
 					'name'	=> "confirm",
 					'class'	=> "btn btn-primary btn-large"
-				) )
+				] )
 			) )
-		), array(
+		), [
 			'action'	=> './auth/local/confirm',
 			'method'	=> 'POST',
 			'name'		=> 'auth-confirm'
-		) )
+		] )
 	) )
 ) );
 
@@ -66,5 +66,5 @@ return HtmlTag::create( 'div', array(
 ), ['class' => 'centered-pane-container'] );
 
 //return HTML::DivClass( "auth-confirm-text-top", $textTop ).
-//HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", array(
-//) ).HTML::DivClass( "auth-confirm-text-bottom", $textBottom );
+//HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", [
+//] ).HTML::DivClass( "auth-confirm-text-bottom", $textBottom );

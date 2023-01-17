@@ -17,9 +17,9 @@ class Mail_Info_Mail_Group_Members_MemberJoined extends Mail_Abstract
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
-		$data['link']		= array(
+		$data['link']		= [
 			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
-		);
+		];
 		$data['greeting']	= strlen( trim( $data['greeting'] ) ) ? $data['greeting'] : '-';
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberJoined.txt', $data );

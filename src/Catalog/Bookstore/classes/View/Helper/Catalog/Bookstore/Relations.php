@@ -42,9 +42,9 @@ class View_Helper_Catalog_Bookstore_Relations
 		    $image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );
 		    $title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, ['href' => $url] ) );
 		    $sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle, ['class' => ''] ) );
-		    $list[]		=  HtmlTag::create( 'div', [$image, $title, $sub], array(
+		    $list[]		=  HtmlTag::create( 'div', [$image, $title, $sub], [
 				'class'	=> 'related-articles-list-item',
-			) );
+			] );
 		}
 
 		return '

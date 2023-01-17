@@ -18,11 +18,11 @@ class Controller_Ajax_Info_Manual extends AjaxController
 		else
 			unset( $openPages[array_search( $pageId, $openPages )] );
 		$this->session->set( $sessionKey, implode( ',', $openPages ) );
-		$this->respondData( array(
+		$this->respondData( [
 			'pageId'		=> $pageId,
 			'categoryId'	=> $categoryId,
 			'openPages'		=> $openPages,
-		) );
+		] );
 	}
 
 	protected function __onInit(): void

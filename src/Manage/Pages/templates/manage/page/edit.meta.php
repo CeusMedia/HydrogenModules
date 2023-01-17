@@ -12,10 +12,10 @@ $iconCopy		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSuggest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-magic'] );
 $iconExclude	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-ban'] );
 
-$metaPageTypes	= array(
+$metaPageTypes	= [
 	Model_Page::TYPE_CONTENT,
 	Model_Page::TYPE_MODULE,
-);
+];
 if( !in_array( (int) $page->type, $metaPageTypes, TRUE ) )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta.'</em></div>';
 
@@ -25,22 +25,22 @@ $optPriority	= HtmlElements::Options( $words['priorities'], $page->priority );
 $buttonSuggest		= '';
 $buttonBlacklist	= '';
 if( $page->type == 0 ){
-	$buttonSuggest	= HtmlTag::create( 'button', $iconSuggest.'&nbsp;'.$wMeta->buttonSuggest, array(
+	$buttonSuggest	= HtmlTag::create( 'button', $iconSuggest.'&nbsp;'.$wMeta->buttonSuggest, [
 		'type'			=> "button",
 		'class'			=> "btn btn-mini",
 		'id'			=> 'btn-meta-suggest',
 		'data-page-id'	=> $page->pageId,
 		'data-target'	=> '#input_page_keywords',
 		'data-question'	=> 'Wörter ausschließen, getrennt mit Leerzeichen',
-	) );
-	$buttonBlacklist	= HtmlTag::create( 'button', $iconExclude.'&nbsp;'.$wMeta->buttonBlacklist, array(
+	] );
+	$buttonBlacklist	= HtmlTag::create( 'button', $iconExclude.'&nbsp;'.$wMeta->buttonBlacklist, [
 		'type'			=> "button",
 		'class'			=> "btn btn-mini",
 		'id'			=> 'btn-meta-blacklist',
 		'data-page-id'	=> $page->pageId,
 		'data-target'	=> '#input_page_keywords',
 		'data-question'	=> 'Wörter ausschließen, getrennt mit Leerzeichen',
-	) );
+	] );
 }
 
 return '

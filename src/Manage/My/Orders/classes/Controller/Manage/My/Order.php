@@ -32,7 +32,7 @@ class Controller_Manage_My_Order extends Controller
 	 *	@return		void
 	 */
 	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = [] ){
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -40,7 +40,7 @@ class Controller_Manage_My_Order extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
 	public function view( $orderId ){

@@ -6,64 +6,64 @@ $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash-o'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/expense',
 	'class'	=> 'btn btn',
-) );
+] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 	'href'	=> './work/billing/expense/remove/'.$expense->expenseId,
 	'class'	=> 'btn btn-danger',
-) );
+] );
 
-$optStatus	= array(
+$optStatus	= [
 	0		=> 'deaktiviert',
 	1		=> 'aktiv',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $expense->status );
 
-$optCorporation	= array(
+$optCorporation	= [
 //	'0'	=> '- kein Unternehmen -',
-);
+];
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
 $optFromCorporation	= HtmlElements::Options( $optCorporation, $expense->fromCorporationId );
 $optToCorporation	= HtmlElements::Options( $optCorporation, $expense->toCorporationId );
 
-$optPerson	= array(
+$optPerson	= [
 //	'0'	=> '- keine Person -',
-);
+];
 foreach( $persons as $person )
 	$optPerson[$person->personId]	= $person->firstname.' '.$person->surname;
 $optFromPerson	= HtmlElements::Options( $optPerson, $expense->fromPersonId );
 $optToPerson	= HtmlElements::Options( $optPerson, $expense->toPersonId );
 
-$optFrequency	= array(
+$optFrequency	= [
 	1		=> 'jährlich',
 	2		=> 'quartalsweise',
 	3		=> 'monatlich',
 	4		=> 'wöchentlich',
 	5		=> 'täglich',
-);
+];
 $optFrequency	= HtmlElements::Options( $optFrequency, $expense->frequency );
 
 
-$optType	= array(
+$optType	= [
 	1		=> 'Person',
 	2		=> 'Unternehmen',
-);
+];
 $optFromType	= HtmlElements::Options( $optType, $expense->fromCorporationId ? 2 : 1 );
-$optType	= array(
+$optType	= [
 	0		=> '- keiner / extern -',
 	1		=> 'Person',
 	2		=> 'Unternehmen',
-);
+];
 $toType		= $expense->toCorporationId ? 2 : ( $expense->toPersonId ? 1 : 0 );
 $optToType	= HtmlElements::Options( $optType, $toType );
 

@@ -59,14 +59,14 @@ class Controller_Admin_Instance extends Controller
 #			if( $path == '/' )
 #				$this->env->getMessenger()->noteError( 'Der Pfad fehlt.' );
 			if( !$this->messenger->gotError() ){
-				$data		= array(
+				$data		= [
 					'id'			=> $id,
 					'title'			=> $title,
 					'protocol'		=> $protocol,
 					'host'			=> $host,
 					'path'			=> $path,
 					'uri'			=> $uri,
-				);
+				];
 				if( $configPath != '/' && $configPath != 'config/' )
 					$data['configPath']	= $configPath;
 				if( $configFile != 'config.ini' )
@@ -238,13 +238,13 @@ class Controller_Admin_Instance extends Controller
 					}
 				}
 			}
-			$data		= array(
+			$data		= [
 				'title'		=> $title,
 				'protocol'	=> $protocol,
 				'host'		=> $host,
 				'path'		=> $path,
 				'uri'		=> $uri,
-			);
+			];
 			if( $configPath != '/' && $configPath != 'config/' )
 				$data['configPath']	= $configPath;
 			if( $configFile != 'config.ini' )

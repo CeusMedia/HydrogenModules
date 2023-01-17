@@ -5,29 +5,29 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
-$statuses	= array(
+$statuses	= [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
-$types		= array(
+];
+$types		= [
 	0		=> 'direkter Versand',
 	1		=> 'mit Double-Opt-In',
-);
+];
 
-$optType	= array(
+$optType	= [
 	''							=> '- alle -',
 	Model_Form::TYPE_NORMAL		=> $types[Model_Form::TYPE_NORMAL],
 	Model_Form::TYPE_CONFIRM	=> $types[Model_Form::TYPE_CONFIRM],
-);
+];
 $optType	= HtmlElements::Options( $optType, $filterType );
 
-$optStatus	= array(
+$optStatus	= [
 	''							=> '- alle -',
 	Model_Form::STATUS_DISABLED		=> $statuses[Model_Form::STATUS_DISABLED],
 	Model_Form::STATUS_NEW			=> $statuses[Model_Form::STATUS_NEW],
 	Model_Form::STATUS_ACTIVATED	=> $statuses[Model_Form::STATUS_ACTIVATED],
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optCustomerMail	= ['' => '- alle -', 0 => '- keine Zuweisung -'];

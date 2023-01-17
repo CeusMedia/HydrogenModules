@@ -14,9 +14,9 @@ if( $reserves ){
 		$corporation	= '<em class="muted">Person per Anteil</em>';
 		if( $reserve->corporationId ){
 			$corporation	= $corporations[$reserve->corporationId];
-			$corporation	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+			$corporation	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, [
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
-			) );
+			] );
 		}
 		$percent	= (float) $reserve->percent ? number_format( $reserve->percent, 2, ',', '.' ).'&nbsp;%' : '-';
 		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
@@ -28,13 +28,13 @@ if( $reserves ){
 			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( [
 		'25%',
 		'25%',
 		'80',
 		'100',
 		'100',
-	) );
+	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Bezeichnung' ),
 		HtmlTag::create( 'th', 'Zielkonto' ),
@@ -46,10 +46,10 @@ if( $reserves ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rücklage', [
 	'href'	=> './work/billing/reserve/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="row-fluid">

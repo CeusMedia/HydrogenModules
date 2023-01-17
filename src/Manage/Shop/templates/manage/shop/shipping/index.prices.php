@@ -18,7 +18,7 @@ if( $zones || $grades ){
 		foreach( $grades as $grade ){
 			$price	= $priceMatrix[$zone->zoneId][$grade->gradeId];
 		//	$price	= number_format( $price, 2, ',', '.' );
-			$input	= HtmlTag::create( 'input', NULL, array(
+			$input	= HtmlTag::create( 'input', NULL, [
 				'type'	=> 'number',
 				'step'	=> '0.01',
 				'min'	=> '0',
@@ -27,7 +27,7 @@ if( $zones || $grades ){
 				'class'	=> 'span6',
 				'value'	=> $price,
 				'style'	=> 'text-align: right;',
-			) )/*.'&nbsp;€'*/;
+			] )/*.'&nbsp;€'*/;
 			$row[]	= HtmlTag::create( 'td', $input, ['class' => 'cell-price'] );
 		}
 		$rows[]	= HtmlTag::create( 'tr', $row );
@@ -40,16 +40,16 @@ if( $zones || $grades ){
 			HtmlTag::create( 'form', array(
 				$table,
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+					HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 						'type'	=> 'submit',
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary',
-					) ),
+					] ),
 				), ['class' => 'buttonbar'] ),
-			), array(
+			), [
 				'action'	=> './manage/shop/shipping/setPrices',
 				'method'	=> 'POST',
-			) ),
+			] ),
 		), ['class' => 'content-panel-inner'] ),
 	), ['class' => 'content-panel'] );
 }

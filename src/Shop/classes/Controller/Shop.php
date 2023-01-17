@@ -56,12 +56,12 @@ class Controller_Shop extends Controller
 		}
 		$source		= $this->bridge->getBridgeObject( (int) $bridgeId );
 		$article	= $source->get( $articleId, $quantity );
-		$positions[$bridgeId.'_'.$articleId]	= (object) array(
+		$positions[$bridgeId.'_'.$articleId]	= (object) [
 			'bridgeId'	=> $bridgeId,
 			'articleId'	=> $articleId,
 			'quantity'	=> $quantity,
 			'article'	=> $article,
-		);
+		];
 		$this->modelCart->set( 'positions', $positions );
 		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
 		$this->messenger->noteSuccess( $this->words->successAddedToCart, $article->title, $quantity );
@@ -261,7 +261,7 @@ class Controller_Shop extends Controller
 		if( $this->request->has( 'save' ) ){
 			$customer	= $this->request->getAll( 'customer_', TRUE );
 			$labels		= $this->getWords( 'customer' );
-			$mandatory	= array(
+			$mandatory	= [
 				'firstname',
 				'lastname',
 				'email',
@@ -269,7 +269,7 @@ class Controller_Shop extends Controller
 				'city',
 				'postcode',
 				'address',
-			);
+			];
 			foreach( $mandatory as $name ){
 				if( !$customer->get( $name ) ){
 					$label	= TextCamelCase::convert( $name, FALSE );
@@ -316,7 +316,7 @@ class Controller_Shop extends Controller
 	 */
 	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -324,16 +324,16 @@ class Controller_Shop extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
 	public function registerServicePanel( $key, $content, $priority )
 	{
-		$this->servicePanels[$key]	= (object) array(
+		$this->servicePanels[$key]	= (object) [
 			'key'		=> $key,
 			'content'	=> $content,
 			'priority'	=> $priority,
-		);
+		];
 	}
 
 	/**
@@ -443,10 +443,10 @@ class Controller_Shop extends Controller
 		$language   = !empty( $customer->language ) ? $customer->language : $language;
 
 		$logic		= Logic_Mail::getInstance( $this->env );
-		$mail		= new Mail_Shop_Customer_Ordered( $this->env, array(
+		$mail		= new Mail_Shop_Customer_Ordered( $this->env, [
 			'orderId'			=> $orderId,
 			'paymentBackends'	=> $this->backends,
-		) );
+		] );
 		$logic->appendRegisteredAttachments( $mail, $language );
 		$logic->handleMail( $mail, $customer, $language );
 	}
@@ -456,10 +456,10 @@ class Controller_Shop extends Controller
 		$language	= $this->env->getLanguage()->getLanguage();
 		$email		= $this->env->getConfig()->get( 'module.shop.mail.manager' );
 		$logic		= Logic_Mail::getInstance( $this->env );
-		$mail		= new Mail_Shop_Manager_Ordered( $this->env, array(
+		$mail		= new Mail_Shop_Manager_Ordered( $this->env, [
 			'orderId'			=> $orderId,
 			'paymentBackends'	=> $this->backends,
-		) );
+		] );
 		$logic->appendRegisteredAttachments( $mail, $language );
 		$logic->handleMail( $mail, (object) ['email' => $email], $language );
 	}

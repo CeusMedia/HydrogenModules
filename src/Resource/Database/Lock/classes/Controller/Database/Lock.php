@@ -16,9 +16,9 @@ class Controller_Database_Lock extends Controller
 	static public function ___onAuthLogout( Environment $env, $context, $module, $data = [] )
 	{
 		$model		= new Model_Lock( $env );
-		$model->removeByIndices( array(
+		$model->removeByIndices( [
 			'userId'	=> $data['userId'],
-		) );
+		] );
 	}
 
 	/**
@@ -29,14 +29,14 @@ class Controller_Database_Lock extends Controller
 	{
 		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'resource-database-locks', array(
+		$context->registerPanel( 'resource-database-locks', [
 			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
 			'title'			=> 'Datenbank-Sperren',
 			'heading'		=> 'Datenbank-Sperren',
 			'icon'			=> 'fa fa-fw fa-lock',
 			'rank'			=> 90,
 			'refresh'		=> 10,
-		) );
+		] );
 	}
 
 	public function ajaxRenderDashboardPanel( $panelId )

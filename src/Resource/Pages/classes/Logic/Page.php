@@ -93,10 +93,10 @@ class Logic_Page extends Logic
 	{
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
-		$page	= $this->getPageModel()->getByIndices( array(
+		$page	= $this->getPageModel()->getByIndices( [
 			'type'		=> Model_Page::TYPE_COMPONENT,
 			'fullpath'	=> $path
-		) );
+		] );
 		if( !$page ){
 			if( !$strict )
 				return NULL;
@@ -169,21 +169,21 @@ class Logic_Page extends Logic
 	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
-		$page	= $this->getPageModel()->getByIndices( array(
+		$page	= $this->getPageModel()->getByIndices( [
 			'controller'	=> $controllerName,
 			'action'		=> $action,
-		) );
+		] );
 		if( !$page ){
 			if( !$strict )
 				return NULL;
 			throw new RangeException( 'No page set for controller action: '.$controllerName.':'.$action );
 		}
 		$page	= $this->getPage( $page->pageId );
-		$page->dispatcher	= (object) array(
+		$page->dispatcher	= (object) [
 			'type'		=> 'module',
 			'module'	=> 'Resource_Page',
 			'strategy'	=> 'controller_action',
-		);
+		];
 		return $this->translatePage( $page );
 	}
 
@@ -331,10 +331,10 @@ class Logic_Page extends Logic
 			'type'		=> [Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE],				//  ... being of page type content or module
 			'status'	=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],			//  ... being visible or hidden, but not disabled
 		);
-		$dispatcher	= array(
+		$dispatcher	= [
 			'type'		=> 'module',
 			'module'	=> 'Resource_Page',
-		);
+		];
 
 		/**
 		 *	Strategy: fullpath_backward
@@ -352,9 +352,9 @@ class Logic_Page extends Logic
 			) ) );
 			if( $candidate ){																		//  page found
 				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
-				$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+				$candidate->dispatcher	= (object) array_merge( $dispatcher, [
 					'strategy'	=> 'fullpath_backward',
-				) );
+				] );
 				return $candidate;
 			}
 		}
@@ -378,9 +378,9 @@ class Logic_Page extends Logic
 			) ) );
 			if( $candidate ){																		//  page found
 				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
-				$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+				$candidate->dispatcher	= (object) array_merge( $dispatcher, [
 					'strategy'	=> 'absolute_backward',
-				) );
+				] );
 				return $candidate;
 			}
 		}
@@ -405,9 +405,9 @@ class Logic_Page extends Logic
 			if( !$candidate )
 				break;
 			$candidate->arguments	= $parts;
-			$candidate->dispatcher	= (object) array_merge( $dispatcher, array(
+			$candidate->dispatcher	= (object) array_merge( $dispatcher, [
 				'strategy'	=> 'relative_forward',
-			) );
+			] );
 			$parentPageId			= $candidate->pageId;
 			$lastPage				= $candidate;
 		}

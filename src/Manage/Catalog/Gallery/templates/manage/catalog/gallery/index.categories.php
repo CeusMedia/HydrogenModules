@@ -19,10 +19,10 @@ $tbody		= HtmlTag::create( 'tbody', $list );
 $list		= HtmlTag::create( 'table', /*$colgroup.*/$tbody, ['class' => 'table'] );
 
 
-$buttonAdd		= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i>&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd		= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i>&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './manage/catalog/gallery/addCategory',
 	'class'	=> "btn btn-success btn-small"
-) );
+] );
 
 return '
 <div class="content-panel">

@@ -3,14 +3,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['remove'];
 
-extract( $view->populateTexts( array(
+extract( $view->populateTexts( [
 	'remove.top',
 	'remove.above',
 	'remove.info',
 	'remove.right',
 	'remove.below',
 	'remove.bottom',
-), 'html/manage/my/user/' ) );
+], 'html/manage/my/user/' ) );
 
 $relations			= '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
@@ -46,7 +46,7 @@ return HTML::DivClass( 'row-fluid', array(
 							HTML::DivClass( 'row-fluid', array(
 								HTML::DivClass( 'span12', array(
 									HTML::Label( 'username', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
-									HtmlTag::create( 'input', NULL, array(
+									HtmlTag::create( 'input', NULL, [
 										'type'			=> "password",
 										'name'			=> "password",
 										'id'			=> "input_password_username",
@@ -55,7 +55,7 @@ return HTML::DivClass( 'row-fluid', array(
 										'value'			=> '',
 										'placeholder'	=> $w->labelPassword_holder,
 										'autocomplete'	=> "current-password"
-									) ),
+									] ),
 								) )
 							) ),
 						) ),
@@ -63,22 +63,22 @@ return HTML::DivClass( 'row-fluid', array(
 					) ),
 					HTML::DivClass( 'buttonbar', array(
 						HTML::DivClass( 'btn-toolbar', array(
-							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 								'href'  => './manage/my/user',
 								'class' => 'btn btn-small',
-							) ),
-							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, array(
+							] ),
+							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
 								'type'  => 'submit',
 								'name'  => 'remove',
 								'class' => 'btn btn-danger',
-							) )
+							] )
 						) )
 					) )
 				) )
 			) )
 		) )
 	) ),
-	HTML::DivClass( 'span4', array(
+	HTML::DivClass( 'span4', [
 		$textRemoveRight
-	) )
+	] )
 ) );

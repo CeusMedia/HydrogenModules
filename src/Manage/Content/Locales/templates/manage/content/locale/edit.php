@@ -9,12 +9,12 @@ $fileExt			= strtolower( pathinfo( $file, PATHINFO_EXTENSION ) );
 
 if( $editor === "CodeMirror" ){
 	$classAutoEditor	= "CodeMirror-auto";
-	$style				= array(
+	$style				= [
 		'width: 100%',
 		'height: 485px',
 		'font-size: 1.1em',
 		'padding: 1em',
-	);
+	];
 	$options			= 	array(
 		'codemirror-read-only'			=> $readonly ? 'nocursor' : NULL,
 		'codemirror-callback-save'		=> 'ModuleManageContentLocale.onCodeMirrorSave',
@@ -30,9 +30,9 @@ else if( $editor === "Ace" ){
 		if( $fileExt === 'txt' )
 			$mode	= 'ace/mode/text';
 	}
-	$options			= array(
+	$options			= [
 		'ace-option-mode'	=> $mode,
-	);
+	];
 	$script	= '
 		ModuleAceAutoSave.applyToEditor(
 			jQuery("#input_content").data("ace-editor-instance"),
@@ -55,13 +55,13 @@ $textarea	= HtmlTag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UT
 	'style'		=> join( "; ", $style ),
 ), $options );
 
-$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], array(
+$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], [
 	'type'	=> 'submit',
 	'name'	=> 'do',
 	'value'	=> 'save',
 	'class'	=> 'btn btn-primary',
 	'disabled'	=> $readonly ? 'disabled' : NULL,
-) );
+] );
 
 $buttonbar	= '';
 if( $editor !== "Ace" )

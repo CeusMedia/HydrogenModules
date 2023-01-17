@@ -15,11 +15,11 @@ $buttonAdd 		= HtmlElements::LinkButton( './admin/project/add', $words['index'][
 /*  --  PROJECT TABLE  --  */
 $list	= [];
 foreach( $projects as $projectId => $project ){
-	$attributes	= array(
+	$attributes	= [
 		'class'		=> 'project available',
 		'title'		=> $project->description,
 		'href'		=> './admin/project/edit/'.$project->projectId
-	);
+	];
 	$link		= HtmlTag::create( 'a', $project->title, $attributes );
 	$type		= '<span class="project-status status-'.$project->status.'">'.$words['states'][(int) $project->status].'</span>';
 	$class		= 'project available status-'.$project->status;

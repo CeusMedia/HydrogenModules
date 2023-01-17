@@ -43,10 +43,10 @@ $tabContent	= HtmlTag::create( 'div', array(
 			), ['class' => 'span6'] ),
 		), ['class' => 'row-fluid'] ),
 		$textCheckoutBottom,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$buttonPrev, ' ',
 			$buttonNext,
-		), ['class' => 'buttonbar well well-small'] ),
+		], ['class' => 'buttonbar well well-small'] ),
 	), ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
 ) );
 

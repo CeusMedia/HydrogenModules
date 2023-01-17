@@ -7,16 +7,16 @@ $panelList		= $view->loadTemplate( 'manage/content/static', 'list' );
 
 $w	= (object) $words['edit'];
 
-$attributesTextarea	= array(
+$attributesTextarea	= [
 	'style'	=> 'width: 97%; min-height: 250px; font-size: 1.1em; padding: 0.2em 0.3em;',
 	'name'	=> 'content',
-);
-$attributesButton	= array(
+];
+$attributesButton	= [
 	'type'	=> 'submit',
 	'name'	=> 'do',
 	'value'	=> 'save',
 	'class'	=> 'button save',
-);
+];
 
 $optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );

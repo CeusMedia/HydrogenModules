@@ -29,13 +29,13 @@ class View_Helper_Shop_Tabs
 		$session	= $this->env->getSession();
 		$modelCart	= new Model_Shop_Cart( $this->env );
 		$positions	= $modelCart->get( 'positions' );
-		$disabled	= array(
+		$disabled	= [
 			'shop-customer',
 			'shop-conditions',
 			'shop-payment',
 			'shop-checkout',
 			'shop-service'
-		);
+		];
 
 		if( is_array( $positions ) && count( $positions ) ){
 			unset( $disabled[array_search( 'shop-customer', $disabled )] );

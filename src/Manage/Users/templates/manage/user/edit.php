@@ -82,10 +82,10 @@ if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
 
 $buttonRole	= '';
 if( $env->getAcl()->has( 'manage/role', 'edit' ) ){
-	$buttonRole	= HtmlTag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, array(
+	$buttonRole	= HtmlTag::create( 'a', $iconGroup.'&nbsp;'.$w->buttonRole, [
 		'class'	=> 'btn btn-small btn-info',
 		'href'	=> './manage/role/edit/'.$user->roleId
-	) );
+	] );
 }
 
 $panelEdit	= '

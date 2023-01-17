@@ -9,10 +9,10 @@ $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-off'
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './manage/job/schedule/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 //return print_m( $allDefinedJobs, NULL, NULL, TRUE );
 
@@ -22,39 +22,39 @@ if( $scheduledJobs ){
 	$rows	= [];
 
 	foreach( $scheduledJobs as $item ){
-		$buttonView		= HtmlTag::create( 'a', $iconView, array(
+		$buttonView		= HtmlTag::create( 'a', $iconView, [
 			'href'		=> './manage/job/schedule/view/'.$item->jobScheduleId,
 			'class'		=> 'btn btn-info btn-small',
 			'title'		=> 'Details anzeigen',
-		) );
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, array(
+		] );
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/job/schedule/edit/'.$item->jobScheduleId,
 			'class'		=> 'btn not-btn-info btn-small',
 			'title'		=> 'Eintrag bearbeiten',
-		) );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		] );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './manage/job/schedule/remove/'.$item->jobScheduleId,
 			'class'		=> 'btn btn-inverse btn-small',
 			'title'		=> 'Eintrag entfernen',
-		) );
-		$buttonStatus	= HtmlTag::create( 'a', $iconActivate, array(
+		] );
+		$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 			'href'		=> './manage/job/schedule/setStatus/'.$item->jobScheduleId.'/1',
 			'class'		=> 'btn btn-success btn-small',
 			'title'		=> 'aktivieren',
-		) );
+		] );
 		if( $item->status == Model_Job_Schedule::STATUS_ENABLED )
-			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, array(
+			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/job/schedule/setStatus/'.$item->jobScheduleId.'/0',
 				'class'		=> 'btn btn-warning btn-small',
 				'title'		=> 'deaktivieren',
-			 ) );
+			 ] );
 
-		$buttons	= HtmlTag::create( 'div', array(
+		$buttons	= HtmlTag::create( 'div', [
 			$buttonView,
 			$buttonEdit,
 			$buttonStatus,
 			$buttonRemove
-		), ['class' => 'btn-group'] );
+		], ['class' => 'btn-group'] );
 		$status	= HtmlTag::create( 'span', 'aktiv', ['class' => 'badge badge-success'] );
 		if( $item->status == Model_Job_Schedule::STATUS_DISABLED )
 			$status	= HtmlTag::create( 'span', 'deaktiviert', ['class' => 'badge badge-warning'] );
@@ -87,9 +87,9 @@ return $tabs.HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
 	HtmlTag::create( 'div', array(
 		$table,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$buttonAdd,
-		), ['class' => 'buttonbar'] ),
+		], ['class' => 'buttonbar'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
 

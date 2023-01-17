@@ -23,17 +23,17 @@ foreach( $images as $i ){
 	if( $i->status == 1 ){
 		$title	= $i->title ? $i->title : $i->filename;
 		$label	= HtmlTag::create( 'p', $title );
-		$image	= HtmlTag::create( 'img', NULL, array(
+		$image	= HtmlTag::create( 'img', NULL, [
 			'src'	=> $pathThumbs.$i->filename,
 			'alt'	=> $title,
 			'title'	=> $title
-		) );
+		] );
 		$item	= HtmlTag::create( 'div', $image, ['class' => 'not-span4 thumb'] );
-		$link	= HtmlTag::create( 'a', $item, array(
+		$link	= HtmlTag::create( 'a', $item, [
 			'href'	=> $pathModule.'image/'.$i->galleryImageId,
 			'title'	=> $title,
 			'class'	=> ''
-		) );
+		] );
 		$box	= HtmlTag::create( 'div', $link, ['style' => 'width: 220px; height: 160px; float: left; margin: auto auto; vertical-align: middle; '] );
 		$list[]	= HtmlTag::create( 'li', $box, ['class' => 'not-thumb',] );
 	}

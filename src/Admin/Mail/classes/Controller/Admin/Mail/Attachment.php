@@ -27,11 +27,11 @@ class Controller_Admin_Mail_Attachment extends Controller
 				$this->messenger->noteError( $words->errorFileMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
 			if( !strlen( $language = trim( $this->request->get( 'language' ) ) ) )
 				$this->messenger->noteError( $words->errorLanguageMissing, htmlentities( $file, ENT_QUOTES, 'UTF-8' ) );
-			$indices	= array(
+			$indices	= [
 				'className'	=> $class,
 				'filename'	=> $file,
 				'language'	=> $language
-			);
+			];
 			if( $this->model->count( $indices ) )
 				$this->messenger->noteError(
 					$words->errorAlreadyRegistered,

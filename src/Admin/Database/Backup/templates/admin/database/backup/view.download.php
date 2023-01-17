@@ -42,7 +42,7 @@ return '
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							HtmlTag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', [
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',
@@ -50,7 +50,7 @@ return '
 								'required'		=> 'required',
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
-							) ).
+							] ).
 							HtmlElements::Button( 'save', '<i class="fa fa-fw fa-download"></i> '.$w->buttonDownload, 'btn btn-primary' )
 						)
 					) )

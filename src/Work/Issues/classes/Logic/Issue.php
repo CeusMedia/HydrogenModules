@@ -150,10 +150,10 @@ class Logic_Issue extends Logic
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
-				$mail		= new Mail_Work_Issue_New( $this->env, array(
+				$mail		= new Mail_Work_Issue_New( $this->env, [
 					'issue'		=> $issue,
 					'user'		=> $user,
-				) );
+				] );
 				$logicMail->handleMail( $mail, $user, 'de' );
 			}
 		}
@@ -177,10 +177,10 @@ class Logic_Issue extends Logic
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
-				$mail		= new Mail_Work_Issue_Change( $this->env, array(
+				$mail		= new Mail_Work_Issue_Change( $this->env, [
 					'issue'		=> $issue,
 					'user'		=> $user,
-				) );
+				] );
 				$logicMail->handleMail( $mail, $user, 'de' );
 			}
 		}

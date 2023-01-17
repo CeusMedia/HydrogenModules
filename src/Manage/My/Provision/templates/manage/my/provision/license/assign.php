@@ -7,20 +7,20 @@ $iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart']
 $iconSearch		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconUser		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
 
-$buttonSearch	= HtmlTag::create( 'a', $iconSearch.' suchen', array(
+$buttonSearch	= HtmlTag::create( 'a', $iconSearch.' suchen', [
 	'href'			=> '#modalSelectUser',
 	'role'			=> 'button',
 	'class'			=> 'btn btn-success btn-small',
 	'data-toggle'	=> 'modal',
-) );
-$buttonAssignSelf	= HtmlTag::create( 'a', $iconUser.' selbst verwenden', array(
+] );
+$buttonAssignSelf	= HtmlTag::create( 'a', $iconUser.' selbst verwenden', [
 	'href'		=> './manage/my/provision/license/assign/'.$userLicense->userLicenseId.'/?userId='.$currentUserId.'&save',
 	'class'		=> 'btn btn-small',
-) );
-$buttonRemove		= '';/*HtmlTag::create( 'a', 'entziehen', array(
+] );
+$buttonRemove		= '';/*HtmlTag::create( 'a', 'entziehen', [
 	'href'		=> './manage/my/provision/license/unassign/'.$userLicense->userLicenseId.'/'.$currentUserId,
 	'class'		=> 'btn btn-small btn-remove',
-) );*/
+] );*/
 
 
 $user	= '<div id="user-container">

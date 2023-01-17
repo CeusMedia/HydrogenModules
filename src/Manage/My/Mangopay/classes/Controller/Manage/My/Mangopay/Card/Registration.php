@@ -11,10 +11,10 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$number		= $this->request->get( 'cardNumber' );
 		$provider	= $this->request->get( 'cardProvider' );
 		$result		= $this->logic->validateCardNumber( $number, $provider );
-		print( json_encode( array(
+		print( json_encode( [
 			'status'	=> 'data',
 			'data'		=> $result
-		) ) );
+		] ) );
 		exit;
 	}
 

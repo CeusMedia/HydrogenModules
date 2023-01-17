@@ -31,13 +31,13 @@ class View_Helper_Blog{
 
 	static public function formatEmoticons( Environment $env, $content ){
 		$path		= './images/emoticons/';
-		$emoticons	= array(
-			' :)'	=> '1.ico',
+		$emoticons	= [
+			' :]'	=> '1.ico',
 			' :('	=> '3.ico',
 			' ;)'	=> '6.ico',
 			' :D'	=> '7.ico',
 			' <3'	=> '14.ico',
-		);
+		];
 		foreach( $emoticons as $key => $value ){
 			$image		= HtmlElements::Image( $path.$value, trim( $key ), 16, 16 );
 			$content	= str_replace( $key, ' '.$image, $content );
@@ -57,12 +57,12 @@ class View_Helper_Blog{
 			$thumb		= './blog/thumb/'.$fileName;
 			$image		= HtmlElements::Image( $thumb, $title, 'thumb' );
 			if( file_exists( $uri ) ){
-				$attributes	= array(
+				$attributes	= [
 					'href'	=> $uri,
 					'class'	=> 'no-thickbox layer-image',
 					'title'	=> $title,
 					'rel'	=> 'blog-article-gallery',
-				);
+				];
 				$image		= HtmlTag::create( 'a', $image, $attributes );
 			}
 			$container	= HtmlTag::create( 'div', $image, array( 'class'=>'image' ) );
@@ -76,7 +76,7 @@ class View_Helper_Blog{
 		preg_match_all( '/\[iframe:(\S+)\]\r?\n/U', $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$uri		= $matches[1][$i];
-			$attributes	= array(
+			$attributes	= [
 				'src'			=> $uri,
 				'width'			=> 600,
 				'height'		=> 460,
@@ -84,7 +84,7 @@ class View_Helper_Blog{
 				'scrolling'		=> 'no',
 				'marginheight'	=> 0,
 				'marginwidth'	=> 0,
-			);
+			];
 			$frame		= HtmlTag::create( 'iframe', '', $attributes );
 			$content	= str_replace( $matches[0][$i], $frame, $content );
 		}
@@ -108,10 +108,10 @@ class View_Helper_Blog{
 		$keywords	= "";
 		if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
 			$keywords	= self::getArticleTitleUrlLabel( $article );
-		$attributes	= array(
+		$attributes	= [
 			'class'	=> 'not-icon-label not-link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.$version.'/'.$keywords,
-		);
+		];
 		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
 		return HtmlTag::create( 'a', $icon.$label, $attributes );
 	}

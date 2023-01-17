@@ -80,10 +80,10 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 
 	public function setRelation( $module, $moduleId ): self
 	{
-		$this->relation	= (object) array(
+		$this->relation	= (object) [
 			'module'	=> $module,
 			'moduleId'	=> $moduleId,
-		);
+		];
 		return $this;
 	}
 

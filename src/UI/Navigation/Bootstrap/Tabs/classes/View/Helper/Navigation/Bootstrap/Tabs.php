@@ -25,12 +25,12 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 
 	public function registerTab( string $url, string $label, int $priority = 5, bool $disabled = NULL ): self
 	{
-		$this->tabs[]	= (object) array(
+		$this->tabs[]	= (object) [
 			'url'		=> $url,
 			'label'		=> $label,
 			'priority'	=> $priority,
 			'disabled'	=> $disabled,
-		);
+		];
 		return $this;
 	}
 

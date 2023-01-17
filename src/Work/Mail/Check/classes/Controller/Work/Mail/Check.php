@@ -200,13 +200,13 @@ class Controller_Work_Mail_Check extends Controller
 			$addresses	= $this->modelAddress->getAll( $conditions, ['address' => 'ASC'], [10, 0] );
 			$data		= [];
 
-			$columns	= array_merge( json_decode( $group->columns ), array(
+			$columns	= array_merge( json_decode( $group->columns ), [
 				'Code',
 				'Code-Beschreibung',
 				'Fehler-Code',
 				'Fehler-Beschreibung',
 				'Server-Meldung',
-			) );
+			] );
 			foreach( $addresses as $address ){
 				$check	= $this->modelCheck->getByIndices(
 					array( 'mailAddressId' => $address->mailAddressId ),
@@ -436,15 +436,15 @@ class Controller_Work_Mail_Check extends Controller
 		$indices	= ['mailGroupId' => $groupId];
 		$this->setData( array(
 			'total'		=> $this->modelAddress->countByIndices( $indices ),
-			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> 1,
-			) ) ),
-			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			] ) ),
+			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> [-2, -1],
-			) ) ),
-			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			] ) ),
+			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> 2,
-			) ) ),
+			] ) ),
 		) );
 	}
 

@@ -28,13 +28,13 @@ $(document).ready(function(){
 });';
 $env->page->js->addScript( $script );
 
-extract( $view->populateTexts( array(
+extract( $view->populateTexts( [
 	'panel.password.top',
 	'panel.password.above',
 	'panel.password.info',
 	'panel.password.below',
 	'panel.password.bottom',
-), 'html/manage/my/user/', ['pwdMinLength' => $pwdMinLength] ) );
+], 'html/manage/my/user/', ['pwdMinLength' => $pwdMinLength] ) );
 
 return HTML::DivClass( 'content-panel content-panel-form', array(
 	HtmlTag::create( 'h4', $w->legend ),
@@ -46,7 +46,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory', sprintf( $w->labelPasswordNew_title, $pwdMinLength ) ),
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'			=> "password",
 								'name'			=> "passwordNew",
 								'id'			=> "input_passwordNew",
@@ -54,13 +54,13 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'value'			=> "",
 								'autocomplete'	=> "new-password"
-							) ),
+							] ),
 						) )
 					),
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'passwordConfirm', $w->labelPasswordConfirm, 'mandatory', $w->labelPasswordConfirm_title ),
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'			=> "password",
 								'name'			=> "passwordConfirm",
 								'id'			=> "input_passwordConfirm",
@@ -68,7 +68,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'value'			=> "",
 								'autocomplete'	=> "new-password"
-							) ),
+							] ),
 						) )
 					),
 				) ),
@@ -81,7 +81,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							HtmlTag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', [
 								'type'			=> 'password',
 								'name'			=> 'passwordOld',
 								'id'			=> 'input_passwordOld',
@@ -89,7 +89,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
-							) ).
+							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )

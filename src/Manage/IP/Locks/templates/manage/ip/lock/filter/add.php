@@ -5,28 +5,28 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'	=> './manage/ip/lock/filter',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
-$optMethod	= HtmlElements::Options( array(
+$optMethod	= HtmlElements::Options( [
 	'' => 'alle',
 	'GET'	=> 'GET',
 	'HEAD'	=> 'HEAD',
 	'POST'	=> 'POST',
 	'PUT'	=> 'PUT'
-) );
+] );
 
-$optLockStatus	= HtmlElements::Options( array(
+$optLockStatus	= HtmlElements::Options( [
 	1		=> 'aktive Sperre',
 	0		=> 'nur Sperrantrag',
-) );
+] );
 
 $optReason	= [];
 foreach( $reasons as $reason )

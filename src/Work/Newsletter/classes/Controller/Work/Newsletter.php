@@ -32,10 +32,10 @@ class Controller_Work_Newsletter extends Controller
 			}
 			else if( $this->request->get( 'newsletterTemplateId' ) ){
 				$template	= $this->logic->getTemplate( $this->request->get( 'newsletterTemplateId' ) );
-				$data		= array_merge( $data, array(
+				$data		= array_merge( $data, [
 					'senderName'		=> $template->senderName,
 					'senderAddress'		=> $template->senderAddress,
-				) );
+				] );
 			}
 			$data	= array_merge( $data, array(
 				'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
@@ -147,14 +147,14 @@ class Controller_Work_Newsletter extends Controller
 
 		$queues		= $this->logic->getQueuesOfNewsletter( $newsletterId );
 
-		$letterQueue	= $this->logic->getReaderLetters( array(
+		$letterQueue	= $this->logic->getReaderLetters( [
 			'newsletterId'	=> $newsletterId,
 			'status'		=> 0
-		) );
-		$letterHistory	= $this->logic->getReaderLetters( array(
+		] );
+		$letterHistory	= $this->logic->getReaderLetters( [
 			'newsletterId'	=> $newsletterId,
 			'status'		=> '!= 0'
-		) );
+		] );
 
 		$isUsed	= $newsletter->status >= Model_Newsletter::STATUS_SENT;
 		$this->addData( 'isUsed', $isUsed );
@@ -197,10 +197,10 @@ class Controller_Work_Newsletter extends Controller
 			$this->session->set( 'queueId-'.$newsletterId, $queueId );				//  note queue in session
 		}
 
-		$negativeStatues	= array(
+		$negativeStatues	= [
 			Model_Newsletter_Queue::STATUS_REJECTED,
 			Model_Newsletter_Queue::STATUS_CANCELLED,
-		);
+		];
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );					//  get newsletter data object for later
 		$queue		= $this->logic->getQueue( $queueId );							//  get queue data object
 		if( in_array( $queue->status, $negativeStatues ) ){							//  queue has been rejected or cancelled

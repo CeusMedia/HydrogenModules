@@ -34,9 +34,9 @@ $listOpenFuture	= $view->renderTable( $openFutureBills, './work/bill/graph', FAL
 
 
 /*  --  GRAPH DATA  --  */
-$conditions	= array(
+$conditions	= [
 	'userId'	=> $userId,
-);
+];
 $orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 

@@ -215,9 +215,9 @@ class Logic_Shortcode extends Logic
 			$position++;
 			continue;
 		}
-		return array(
+		return [
 			'nodename'		=> $nodename,
 			'attributes'	=> $attributes,
-		);
+		];
 	}
 }

@@ -44,32 +44,32 @@ foreach( $addresses as $address ){
 		'onclick'	=> 'startTest(this)',
 		'href'		=> './work/mail/check/check?addressId='.$address->mailAddressId.'&from=./work/mail/check/'.$page
 	) );
-	$buttonTestDisabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', array(
+	$buttonTestDisabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', [
 		'class'		=> 'btn btn-mini btn-primary disabled',
-	) );
+	] );
 	$buttonEditEnabled	= HtmlTag::create( 'a', $iconEdit, array(
 		'class'		=> 'btn btn-mini',
 		'title'		=> 'bearbeiten',
 		'onclick'	=> 'editAddress('.$address->mailAddressId.', \''.htmlentities( $address->address, ENT_QUOTES, 'UTF-8' ).'\')'
 	) );
-	$buttonEditDisabled	= HtmlTag::create( 'a', $iconEdit, array(
+	$buttonEditDisabled	= HtmlTag::create( 'a', $iconEdit, [
 		'class'		=> 'btn btn-mini disabled',
 		'title'		=> 'bearbeiten',
-	) );
-	$buttonRemoveEnabled	= HtmlTag::create( 'a', $iconRemove, array(
+	] );
+	$buttonRemoveEnabled	= HtmlTag::create( 'a', $iconRemove, [
 		'class'		=> 'btn btn-mini btn-inverse',
 		'title'		=> 'entfernen',
 		'href'		=> './work/mail/check/remove?addressId='.$address->mailAddressId
-	) );
-	$buttonRemoveDisabled	= HtmlTag::create( 'a', $iconRemove, array(
+	] );
+	$buttonRemoveDisabled	= HtmlTag::create( 'a', $iconRemove, [
 		'class'		=> 'btn btn-mini btn-inverse disabled',
 		'title'		=> 'entfernen',
-	) );
-	$buttonInfoEnabled		= HtmlTag::create( 'a', $iconInfo, array(
+	] );
+	$buttonInfoEnabled		= HtmlTag::create( 'a', $iconInfo, [
 		'class'			=> 'btn btn-mini not-btn-info modal-trigger',
 		'title'			=> 'info',
 		'href'			=> './work/mail/check/ajaxAddress/'.$address->mailAddressId,
-	) );
+	] );
 
 	$status			= '-';
 	$buttonEdit		= $buttonEditEnabled;
@@ -101,10 +101,10 @@ foreach( $addresses as $address ){
 		HtmlTag::create( 'td', $status, ['class' => 'cell-address-status'] ),
 		HtmlTag::create( 'td', $date.' '.$time, ['class' => 'cell-address-datetime'] ),
 		HtmlTag::create( 'td', $buttons ),
-	), array(
+	), [
 		'class'		=> 'mail-check-address-status-'.$address->status,
 		'data-id'	=> $address->mailAddressId
-	) );
+	] );
 }
 
 $colgroup	= HtmlElements::ColumnGroup( ["", "15%", "140px", "130px"] );

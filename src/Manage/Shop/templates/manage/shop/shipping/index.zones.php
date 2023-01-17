@@ -29,12 +29,12 @@ $listCountries	= [];
 foreach( $countryMap as $countryCode => $countryLabel ){
 	if( in_array( $countryCode, $zoneCountries ) )
 		continue;
-	$input	= Html::create( 'input', NULL, array(
+	$input	= Html::create( 'input', NULL, [
 		'type'	=> 'checkbox',
 		'name'	=> 'country[]',
 		'id'	=> 'input_country_'.$countryCode,
 		'value'	=> $countryCode,
-	) );
+	] );
 	$label	= Html::create( 'label', $input.'&nbsp;'.$countryLabel, ['class' => 'checkbox'] );
 	$listCountries[]	= Html::create( 'li', $label );
 }
@@ -43,13 +43,13 @@ $modalBody	= array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
 			Html::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',
 				'id'		=> 'input_title',
 				'class'		=> 'span12',
 				'required'	=> 'required',
-			) ),
+			] ),
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(

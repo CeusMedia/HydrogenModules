@@ -12,18 +12,18 @@ use CeusMedia\HydrogenFramework\View;
 
 $w		= (object) $words->index;
 
-$statusIcons		= array(
+$statusIcons		= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'check',
 	2		=> 'globe',
-);
-$statusColors	= array(
+];
+$statusColors	= [
 	-1		=> "error",
 	0		=> "warning",
 	1		=> "success",
 	2		=> "info",
-);
+];
 
 extract( $view->populateTexts( ['noneExisting', 'noneFound'], 'html/work/newsletter/index/list/' ) );
 
@@ -56,10 +56,10 @@ if( $total ){
 }
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'href'	=> './work/newsletter/add',
 	'class'	=> 'btn btn-small btn-success btn-small'
-) );
+] );
 
 $modalAddTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modal-add-trigger' );
 $modalAddTrigger->setModalId( 'modal-add' );

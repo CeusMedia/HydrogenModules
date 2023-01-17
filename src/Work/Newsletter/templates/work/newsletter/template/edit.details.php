@@ -34,10 +34,10 @@ if( $newsletters ){
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $urlPreview		= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml		= HtmlTag::create( 'iframe', '', array(
+$iframeHtml		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -56,10 +56,10 @@ $panelPreviewHtml	= '
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
 $urlPreview		= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
-$iframeText		= HtmlTag::create( 'iframe', '', array(
+$iframeText		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -115,10 +115,10 @@ if( isset( $newsletters ) && count( $newsletters ) )
 
 
 /*  --  PANEL: COPY  --  */
-$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
+$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
 	'class'		=> "btn btn-success",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
-) );
+] );
 $panelCopy		= '
 <div class="content-panel">
 	<h3>Vorlage kopieren</h3>
@@ -177,7 +177,7 @@ $panelEdit		= '
 					<div class="span12">
 						<label for="input_title" class="mandatory">'.$words->edit->labelTitle.'</label>
 <!--						<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>-->
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> 'text',
 							'name'		=> 'title',
 							'id'		=> 'input_title',
@@ -185,19 +185,19 @@ $panelEdit		= '
 							'value'		=> $template->title,
 							'required'	=> 'required',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
-						) ).'
+						] ).'
 					</div>
 				</div>
 <!--				<div class="row-fluid">
 					<div class="span4">
 						<label for="input_status">'.$words->edit->labelStatus.'</label>
-						'.HtmlTag::create( 'select', $optStatus, array(
+						'.HtmlTag::create( 'select', $optStatus, [
 							'name'		=> 'status',
 							'id'		=> 'input_status',
 							'class'		=> 'span12',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 				</div>-->
 				<div class="row-fluid">
@@ -231,7 +231,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_status" class="checkbox">
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> 'checkbox',
 							'name'		=> 'status',
 							'value'		=> Model_Newsletter_Template::STATUS_READY,
@@ -239,7 +239,7 @@ $panelEdit		= '
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 							'checked'	=> $template->status >= Model_Newsletter_Template::STATUS_READY ? 'checked' : NULL,
-						) ).'
+						] ).'
 							'.$words->edit->labelReady.'
 						</label>
 					</div>
@@ -299,7 +299,7 @@ $panelEdit		= '
 			</div>
 			<div class="span4">
 				<label for="input_imprint">'.$words->edit->labelImprint.'</label>
-				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
+				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), [
 					'name'		=> 'imprint',
 					'id'		=> 'input_imprint',
 					'class'		=> 'span12',
@@ -307,7 +307,7 @@ $panelEdit		= '
 					'required'	=> 'required',
 					'readonly'	=> $isUsed ? 'readonly' : NULL,
 					'disabled'	=> $isUsed ? 'disabled' : NULL,
-				) ).'
+				] ).'
 			</div>
 		</div>
 		'.$buttons.'

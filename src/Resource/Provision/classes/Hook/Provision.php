@@ -99,13 +99,13 @@ class Hook_Provision extends Hook
 				$license	= $resource->getLicense( $registerLicense );
 				if( (float) $license->price > 0 || $license->users > 1 )
 					return;
-				$postData	= array(
+				$postData	= [
 					'userId'			=> $data['userId'],
 //					'password'			=> $user->password,											//  @todo GET USER PASSWORD
 					'productLicenseId'	=> $license->productLicenseId,
 					'assign'			=> TRUE,
 					'activate'			=> TRUE,
-				);
+				];
 				if( $resource->request( 'provision/rest/orderLicense', $postData ) )
 					$env->getMessenger()->noteSuccess( 'Die Lizenz "'.$license->title.'" wurde aktiviert.' );
 			}
@@ -162,20 +162,20 @@ return;
 		$body	= '';
 		$list	= [];
 		foreach( $response as $license ){
-			$check	= HtmlTag::create( 'input', NULL, array(
+			$check	= HtmlTag::create( 'input', NULL, [
 				'type'	=> 'radio',
 				'name'	=> 'license',
 				'value'	=> $license->productLicenseId,
-			) );
+			] );
 			$content	= implode( '<br/>', array(
 				$license->title,
 				HtmlTag::create( 'small', $license->price.' / '.$license->duration ),
 				$check,
 			) );
-			$label	= HtmlTag::create( 'label', $content, array(
+			$label	= HtmlTag::create( 'label', $content, [
 				'class'	=> 'btn btn-large',
 				'style'	=> 'text-align: center',
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'div', $label, ['class' => 'span4'] );
 			if( count( $list ) % 3 === 0 ){
 				$body	.= HtmlTag::create( 'div', $list, ['class' => 'row-fluid'] );

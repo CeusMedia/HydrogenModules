@@ -12,14 +12,14 @@ class Hook_Info_NewsList extends Hook
 		$processor->setContent( $payload->content );
 		$words			= $env->getLanguage()->getWords( 'info/newslist' );
 		$shortCodes		= array(
-			'newslist'	=> array(
+			'newslist'	=> [
 				'resource'				=> 'Info_NewsList',
 				'action'				=> 'collectNews',
 				'panel'					=> FALSE,
 				'panel-heading'			=> $words['panel']['heading'],
 				'panel-heading-level'	=> 3,
 				'limit'					=> '5',
-			)
+			]
 		);
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )

@@ -49,15 +49,15 @@ class View_Helper_Image_Slider
 		if( !$slider )
 			throw new InvalidArgumentException( 'Invalid slider ID: '.$sliderId );
 		$this->modelSlider->edit( $sliderId, ['views' => $slider->views + 1] );
-		$conditions	= array(
+		$conditions	= [
 			'sliderId'	=> $sliderId,
 			'status'	=> 1,
-		);
+		];
 		$slider->slides	= $this->modelSlide->getAll( $conditions, ['rank' => 'ASC'] );
 		if( $slider->randomOrder )
 			shuffle( $slider->slides );
 
-		$config	= array(
+		$config	= [
 			'durationShow'	=> $slider->durationShow,
 			'durationSlide'	=> $slider->durationSlide,
 			'animation'		=> $slider->animation,
@@ -68,7 +68,7 @@ class View_Helper_Image_Slider
 			'showButtons'	=> 1 || $slider->showButtons,
 			'showTitle'		=> $slider->showTitle,
 			'scaleToFit'	=> $slider->scaleToFit,
-		);
+		];
 		$script	= 'UI.Image.Slider.init('.$slider->sliderId.', '.  json_encode( $config ).');';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 
@@ -122,14 +122,14 @@ class View_Helper_Image_Slider
 	{
 		if( !$slider->showButtons || count( $slider->slides ) < 2 )
 			return '';
-		$buttonPrev	= HtmlTag::create( 'button', '‹', array(
+		$buttonPrev	= HtmlTag::create( 'button', '‹', [
 			'type'	=> 'button',
 			'class'	=> $this->selectorPrefix.'button-prev'
-		) );
-		$buttonNext	= HtmlTag::create( 'button', '›', array(
+		] );
+		$buttonNext	= HtmlTag::create( 'button', '›', [
 			'type'	=> 'button',
 			'class'	=> $this->selectorPrefix.'button-next'
-		) );
+		] );
 		return $buttonPrev.$buttonNext;
 	}
 
@@ -140,11 +140,11 @@ class View_Helper_Image_Slider
 		$dots		= [];
 		$number		= 0;
 		foreach( $slider->slides as $slide ){
-			$attr	= array(
+			$attr	= [
 				'id'		=> $this->selectorPrefix.$slider->sliderId.'-dot-'.$number,
 				'class'		=> $this->selectorPrefix.'dot',
 				'data-nr'	=> $number,
-			);
+			];
 			if( $slide->title )
 				$attr['title']	= $slide->title;
 			if( !$number )
@@ -152,10 +152,10 @@ class View_Helper_Image_Slider
 			$dots[]	= HtmlTag::create( 'div', NULL, $attr );
 			$number	+= 1;
 		}
-		$attr		= array(
+		$attr		= [
 			'id'	=> $this->selectorPrefix.$slider->sliderId.'-dots',
 			'class'	=> $this->selectorPrefix.'dots',
-		);
+		];
 		return HtmlTag::create( 'div', join( $dots ), $attr );
 	}
 
@@ -175,21 +175,21 @@ class View_Helper_Image_Slider
 			}
 			$image	= HtmlTag::create( 'img', NULL, $attr );
 			if( $slide->link && strlen( trim( $slide->link ) ) ){
-				$attr	= array(
+				$attr	= [
 					'href'	=> $slide->link,
 					'title'	=> $slide->title
-				);
+				];
 				$image	= HtmlTag::create( 'a', $image, $attr );
 			}
-			$attr	= array(
+			$attr	= [
 				'id'	=> $slider->sliderId.'-slide-'.$number,
 				'class'	=> $this->selectorPrefix.'slide',
-			);
+			];
 			$content	= "";
 			if( trim( $slide->content ) )
-				$content	= HtmlTag::create( 'div', $slide->content, array(
+				$content	= HtmlTag::create( 'div', $slide->content, [
 					'class'	=> $this->selectorPrefix.'slide-content'
-				) );
+				] );
 			$item	= HtmlTag::create( 'div', $image.$content, $attr );
 			$list[]	= $item;
 			$number	+= 1;

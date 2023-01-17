@@ -27,10 +27,10 @@ class Job_Mail_Queue extends Job_Abstract
 		$listSent	= [];
 		$listFailed	= [];
 		$conditions	= array(
-			'status'		=> array(
+			'status'		=> [
 				Model_Mail::STATUS_NEW,
 				Model_Mail::STATUS_RETRY
-			),
+			],
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		);
 		$orders		= ['status' => 'ASC', 'mailId' => 'ASC'];
@@ -38,10 +38,10 @@ class Job_Mail_Queue extends Job_Abstract
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 			$this->out( 'Would send '.$count.' mails.' );
-			$this->results	= array(
+			$this->results	= [
 				'mode'		=> 'dry',
 				'count'		=> $count,
-			);
+			];
 			return;
 		}
 		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){

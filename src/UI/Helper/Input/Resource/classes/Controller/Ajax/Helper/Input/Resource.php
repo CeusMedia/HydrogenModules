@@ -7,10 +7,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Ajax_Helper_Input_Resource extends AjaxController
 {
-	protected $extensions	= array(
+	protected $extensions	= [
 		'image'	=> ['png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg'],
 		'style'	=> ['css', 'scss', 'less'],
-	);
+	];
 
 	public function render()
 	{
@@ -57,17 +57,17 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 						HtmlTag::create( 'span', $fileName ),
 						'<br/>',
 						HtmlTag::create( 'small', $filePath, ['class' => 'muted'] ),
-					), array(
+					), [
 						'class' => 'source-list-label',
-					) )
+					] )
 				), array(
 					'class'		=> 'source-list-item',
 					'onclick'	=> 'HelperInputResource.setSourceItem(this)',
- 				), array(
+ 				), [
 					'source-path'	=> $path.$relativePath,
  					'modal-id'		=> $modalId,
 					'input-id'		=> $inputId
-				) );
+				] );
 			}
 			if( !$sublist )
 				continue;
@@ -95,9 +95,9 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 						$helper	= new View_Helper_Thumbnailer( $env, 36, 36 );
 						$image	= $helper->get( $env->uri.$path.$relativePath );
 						$image	= HtmlTag::create( 'img', NULL, ['src' => $image] );
-						$div	= HtmlTag::create( 'div', $image, array(
+						$div	= HtmlTag::create( 'div', $image, [
 							'class'	=> 'source-list-image',
-						) );
+						] );
 					}
 				}
 				catch( Exception $e ){
@@ -107,9 +107,9 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 			default:
 				return HtmlTag::create( 'div', array(
 					HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-2x fa-file-code-o'] )
-				), array(
+				), [
 					'class'	=> 'source-list-image',
-				) );
+				] );
 		}
 	}
 }

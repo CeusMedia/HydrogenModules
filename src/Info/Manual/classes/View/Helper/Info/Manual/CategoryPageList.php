@@ -42,10 +42,10 @@ class View_Helper_Info_Manual_CategoryPageList
 	public function setCategoryId( $categoryId ): self
 	{
 		$model			= new Model_Manual_Page( $this->env );
-		$conditions		= array(
+		$conditions		= [
 			'status'			=> '>= '.Model_Manual_Page::STATUS_NEW,
 			'manualCategoryId'	=> $categoryId,
-		);
+		];
 		$orders			= ['rank' => 'ASC'];
 		$this->pages	= $model->getAll( $conditions, $orders );
 		return $this;

@@ -37,22 +37,22 @@ return HTML::DivClass( 'row-fluid', array(
 					$relations,
 					HTML::DivClass( 'buttonbar', array(
 						HTML::DivClass( 'btn-toolbar', array(
-							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 								'href'  => './manage/project/edit/'.$project->projectId,
 								'class' => 'btn btn-small',
-							) ),
-							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, array(
+							] ),
+							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
 								'type'  => 'submit',
 								'name'  => 'remove',
 								'class' => 'btn btn-danger',
-							) )
+							] )
 						) )
 					) )
 				) )
 			) )
 		) )
 	) ),
-	HTML::DivClass( 'span4', array(
+	HTML::DivClass( 'span4', [
 		$textRemoveRight
-	) )
+	] )
 ) );

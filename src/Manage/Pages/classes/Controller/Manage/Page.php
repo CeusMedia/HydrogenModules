@@ -411,10 +411,10 @@ ModuleManagePages.PageEditor.init();
 		$apps	= [];
 
 		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
-			$apps			= array(
+			$apps			= [
 				'self'		=> 'Administration',
 				'frontend'	=> 'Webseite',
-			);
+			];
 			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
 			if( !array_key_exists( $this->appFocus, $apps ) )
 				$this->appFocus	= current( array_keys( $apps ) );
@@ -544,11 +544,11 @@ ModuleManagePages.PageEditor.init();
 	protected function preparePageTree( ?string $currentPageId = NULL ): void
 	{
 		$scope		= (int) $this->appSession->get( 'scope' );
-		$indices	= array(
+		$indices	= [
 			'parentId'	=> 0,
 			'status'	=> '> -2',
 			'scope'		=> $scope,
-		);
+		];
 		$pages		= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
 		$tree		= [];
 		$parentMap	= ['0' => '-'];

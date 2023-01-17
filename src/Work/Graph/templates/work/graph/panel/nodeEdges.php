@@ -12,9 +12,9 @@ if( $edgesIn ){
 		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', ['class' => 'muted'] );
 		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], ['class' => 'muted'] );
 		$label			= $nodeFrom.$edge->label.$nodeTo;
-		$link			= HtmlTag::create( 'a', $label, array(
+		$link			= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/graph/edge/'.$edge->edgeId.'/'.$nodeId,
-		) );
+		] );
 		$key		= strtolower( $edge->label ).'_'.microtime( TRUE );
 		$listEdgesIn[$key]	= HtmlTag::create( 'li', $link );
 	}
@@ -29,9 +29,9 @@ if( $edgesOut ){
 		$nodeFrom		= HtmlTag::create( 'small', $nodeIndex[$edge->fromNodeId].' -> ', ['class' => 'muted'] );
 		$nodeTo			= HtmlTag::create( 'small', ' -> '.$nodeIndex[$edge->toNodeId], ['class' => 'muted'] );
 		$label			= $nodeFrom.$edge->label.$nodeTo;
-		$link			= HtmlTag::create( 'a', $label, array(
+		$link			= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/graph/edge/'.$edge->edgeId.'/'.$nodeId,
-		) );
+		] );
 		$key		= strtolower( $edge->label ).'_'.microtime( TRUE );
 		$listEdgesOut[$key]	= HtmlTag::create( 'li', $link );
 	}

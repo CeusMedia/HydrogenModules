@@ -112,15 +112,15 @@ class Logic_Mail_Group_Message extends Logic
 		$groupIds	= array_keys( $this->getGroups() );
 		$groupIds	= $groupId > 0 ? [$groupId] : $groupIds;
 
-		$results	= (object) array(
+		$results	= (object) [
 			'mailsImported'	=> [],
 			'errors'		=> [],
-		);
+		];
 		foreach( $groupIds as $groupId ){
-			$indices	= array(
+			$indices	= [
 				'groupId'	=> $groupId,
 				'status'	=> Model_Mail_Group_Message::STATUS_NEW,
-			);
+			];
 			$orders		= ['createdAt' => 'ASC'];
 			$messages	= $this->modelMessage->getAll( $indices, $orders );
 			foreach( $messages as $message ){
@@ -131,28 +131,28 @@ class Logic_Mail_Group_Message extends Logic
 
 	public function handleImportedGroupMessages( $groupId, $dry = FALSE )
 	{
-		$senderMemberStatusesToReject	= array(
+		$senderMemberStatusesToReject	= [
 			Model_Mail_Group_Member::STATUS_DEACTIVATED,
 			Model_Mail_Group_Member::STATUS_UNREGISTERED,
-		);
-		$senderMemberStatusesToStall	= array(
+		];
+		$senderMemberStatusesToStall	= [
 			Model_Mail_Group_Member::STATUS_REGISTERED,
 			Model_Mail_Group_Member::STATUS_CONFIRMED,
-		);
+		];
 		$group		= $this->logicGroup->checkGroupId( $groupId );
 //print( 'Group:'.PHP_EOL );
 //print_m( $group );
 		if( !$group )
 			throw new InvalidArgumentException( 'Invalid group ID' );
-		$results	= (object) array(
+		$results	= (object) [
 			'rejected'		=> [],
 			'stalled'		=> [],
 			'forwarded'		=> [],
-		);
-		$indices	= array(
+		];
+		$indices	= [
 			'mailGroupId'		=> $groupId,
 			'status'			=> Model_Mail_Group_Message::STATUS_NEW,
-		);
+		];
 		$orders		= ['createdAt' => 'ASC'];
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
@@ -213,14 +213,14 @@ class Logic_Mail_Group_Message extends Logic
 	{
 		$group		= $this->logicGroup->checkGroupId( $groupId );
 
-		$results	= (object) array(
+		$results	= (object) [
 			'forwarded'	=> [],
 			'rejected'	=> [],
-		);
-		$indices	= array(
+		];
+		$indices	= [
 			'mailGroupId'	=> $groupId,
 			'status'		=> Model_Mail_Group_Message::STATUS_STALLED,
-		);
+		];
 		$orders		= ['createdAt' => 'ASC'];
 		$messages	= $this->modelMessage->getAllByIndices( $indices, $orders );
 		foreach( $messages as $message ){
@@ -250,10 +250,10 @@ class Logic_Mail_Group_Message extends Logic
 	protected function forwardMessage( $message, bool $dryMode = FALSE )
 	{
 		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
-		$allowedMessageStatuses	= array(
+		$allowedMessageStatuses	= [
 			Model_Mail_Group_Message::STATUS_NEW,
 			Model_Mail_Group_Message::STATUS_STALLED,
-		);
+		];
 		if( !in_array( (int) $message->status, $allowedMessageStatuses ) )
 			throw new RuntimeException( 'Only new or stalled messages can be sent' );
 		if( !$message->mailGroupMemberId )

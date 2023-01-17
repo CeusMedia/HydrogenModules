@@ -8,23 +8,23 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 	protected $request;
 
 	protected $defaultFilterValues	= array(
-		'states'		=> array(
+		'states'		=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
 			Model_Mission::STATUS_FINISHED
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
 	);
@@ -54,12 +54,12 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 			$this->session->set( $this->filterKeyPrefix.'page', $page = 0 );
 		$offset		= $page * $limit;
 		$missions	= array_slice( $missions, $offset, $limit );
-		$this->setData( array(
+		$this->setData( [
 			'limit'		=> $limit,
 			'page'		=> $page,
 			'total'		=> $total,
 			'missions'	=> $missions,
-		) );
+		] );
 //		$json	= $this->view->ajaxRenderIndex();
 //		print( json_encode( $json ) );
 //		exit;

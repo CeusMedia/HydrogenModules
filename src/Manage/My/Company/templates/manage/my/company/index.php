@@ -8,9 +8,9 @@ if( $companies ){
 	$timeHelper	= new View_Helper_TimePhraser( $env );
 	$rows		= [];
 	foreach( $companies as $company ){
-		$link	= HtmlTag::create( 'a', $company->title, array(
+		$link	= HtmlTag::create( 'a', $company->title, [
 			'href' => './manage/my/company/edit/'.$company->companyId
-		) );
+		] );
 		$createdAt	= $timeHelper->convert( $company->createdAt, TRUE );
 		$modifiedAt	= $company->modifiedAt ? $timeHelper->convert( $company->modifiedAt ) : "-";
 		$rows[]	= HtmlTag::create( 'tr', array(
@@ -19,13 +19,13 @@ if( $companies ){
 			HtmlTag::create( 'td', $modifiedAt ),
 		) );
 	}
-	$heads	= array(
+	$heads	= [
 	//	'<input type="checkbox" class="toggler"/>',
 		$words['index']['headTitle'],
 		$words['index']['headCreatedAt'],
 		$words['index']['headModifiedAt'],
 	//	$words['index']['headAction'],
-	);
+	];
 	$heads		= HtmlElements::TableHeads( $heads );
 	$colgroup	= HtmlElements::ColumnGroup( '57%', '15%', '15%' );
 	$thead		= HtmlTag::create( 'thead', $heads );

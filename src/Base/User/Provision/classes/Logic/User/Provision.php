@@ -102,10 +102,10 @@ class Logic_User_Provision extends Logic
 		if( $result )
 			return FALSE;
 
-		$userLicenseKeys	= $this->modelUserKey->getAll( array(
+		$userLicenseKeys	= $this->modelUserKey->getAll( [
 			'productLicenseId'	=> $userLicense->productLicenseId,
 			'status'			=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-		) );
+		] );
 		foreach( $userLicenseKeys as $key )
 			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $key->userId );
 		return TRUE;

@@ -66,7 +66,7 @@ class Job_Shop extends Job_Abstract
 		}
 		$data	= array(
 			'testOrders'	=> array(
-				'template'	=> array(
+				'template'	=> [
 					'country'				=> 'Deutschland',
 					'city'					=> 'Leipzig',
 					'region'				=> 'Sachsen',
@@ -81,9 +81,9 @@ class Job_Shop extends Job_Abstract
 					'billing_address'		=> '',
 					'billing_phone'			=> '',
 					'billing_email'			=> '',
-				),
+				],
 				'accounts'	=> array(
-					'test1'	=> array(
+					'test1'	=> [
 						'institution'	=> 'Mein Unternehmen',
 						'email'			=> 'test1@meinunternehmen.de',
 						'firstname'		=> 'Hans',
@@ -91,11 +91,11 @@ class Job_Shop extends Job_Abstract
 						'postcode'		=> '04105',
 						'address'		=> 'Am Markt 1',
 						'phone'			=> '0049 341 12 34 567',
-					),
+					],
 				),
-				'emails'	=> array(
+				'emails'	=> [
 					'test2@meinunternehmen.de'	=> 'test1',
-				),
+				],
 			),
 			'countries'	=> array(
 				'sanitizeMap'	=> array(
@@ -113,15 +113,15 @@ class Job_Shop extends Job_Abstract
 				)
 			),
 			'migrants'	=> array(
-				'skipEmails'	=> array(
+				'skipEmails'	=> [
 					'test1@meinunternehmen.de',
 					'test2@meinunternehmen.de'
-				),
-				'captcha'	=> array(
+				],
+				'captcha'	=> [
 					'length'		=> 12,
 					'useDigits'		=> FALSE,
 					'useSymbols'	=> FALSE
-				)
+				]
 			)
 		);
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
@@ -166,10 +166,10 @@ class Job_Shop extends Job_Abstract
  				continue;
 			if( !array_key_exists( $customer->country, $countryMap ) )
  				continue;
-			$emails[$customer->email]	= (object) array(
+			$emails[$customer->email]	= (object) [
 				'customer'	=> $customer,
 				'order'		=> $order,
-			);
+			];
 		}
 		$captcha	= new ImageCaptcha();
 		$captcha->length		= $this->data->migrants->captcha->length;
@@ -241,7 +241,7 @@ class Job_Shop extends Job_Abstract
 				$country	= $countries['DE'];
 				if( array_key_exists( $customer->country, $countries ) )
 					$country	= $countries[$customer->country];
-				$modelAddress->add( array(
+				$modelAddress->add( [
 					'relationId'	=> $customer->customerId,
 					'relationType'	=> 'customer',
 					'type'			=> Model_Address::TYPE_DELIVERY,
@@ -257,12 +257,12 @@ class Job_Shop extends Job_Abstract
 					'institution'	=> $customer->institution,
 					'createdAt'		=> $order->createdAt,
 					'modifiedAt'	=> $order->createdAt,
-				) );
+				] );
 				if( (int) $customer->alternative > 0 ){
 					$country	= $countries['DE'];
 					if( array_key_exists( $customer->billing_country, $countries ) )
 						$country	= $countries[$customer->billing_country];
-					$modelAddress->add( array(
+					$modelAddress->add( [
 						'relationId'	=> $customer->customerId,
 						'relationType'	=> 'customer',
 						'type'			=> Model_Address::TYPE_BILLING,
@@ -275,7 +275,7 @@ class Job_Shop extends Job_Abstract
 						'firstname'		=> $customer->billing_firstname,
 						'createdAt'		=> $order->createdAt,
 						'modifiedAt'	=> $order->createdAt,
-					) );
+					] );
 				}
 				$modelCustomerNew->add( ['customerId' => $customer->customerId] );
 				$modelCustomerOld->remove( $customer->customerId );
@@ -355,7 +355,7 @@ class Job_Shop extends Job_Abstract
 	 */
 	protected function cleanupOldCustomerInvalidOrders(){
 		$this->loadConfig();
-		$dataDefault		= array(
+		$dataDefault		= [
 			'country'				=> 'Deutschland',
 			'firstname'				=> 'Test',
 			'lastname'				=> 'Invalid',
@@ -370,7 +370,7 @@ class Job_Shop extends Job_Abstract
 			'billing_address'		=> '',
 			'billing_phone'			=> '',
 			'billing_email'			=> '',
-		);
+		];
 
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
 		if( version_compare( $this->versionShop, '0.8', '>=' ) )

@@ -7,9 +7,9 @@ foreach( $paymentBackends as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->icon )
 		$icon	= HtmlTag::create( 'i', '', ['class' => $paymentBackend->icon] ).'&nbsp;';
-	$link	= HtmlTag::create( 'a', $icon.$paymentBackend->title, array(
+	$link	= HtmlTag::create( 'a', $icon.$paymentBackend->title, [
 		'href'	=> './shop/pay/'.$paymentBackend->key,
-	) );
+	] );
 	$key	= $paymentBackend->priority.'.'.uniqid();
 	$list[$key]	= HtmlTag::create( 'li', $link, ['class' => 'payment-method-list-item'] );
 }

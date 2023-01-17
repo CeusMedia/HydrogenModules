@@ -163,10 +163,10 @@ class Controller_Info_Forum extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		$modelUser	= new Model_User( $this->env );
-		$indices	= array(
+		$indices	= [
 			'threadId'	=> $threadId,
 			'status'	=> [0, 1],
-		);
+		];
 		$posts	= $this->modelPost->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $posts as $nr => $post )
 			$posts[$nr]->author	= $modelUser->get( $post->authorId );

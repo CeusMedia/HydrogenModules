@@ -16,7 +16,7 @@ else{
 	if( !count( $files ) )
 		return "";
 
-	$states	= array(
+	$states	= [
 		-3	=> 'missing',
 		-2	=> 'inaccessible',
 		-1	=> 'protected',
@@ -26,7 +26,7 @@ else{
 		3	=> 'linked',
 		4	=> 'foreign',
 		5	=> 'refered',
-	);
+	];
 
 	$list	= [];
 	foreach( $files as $file ){
@@ -61,11 +61,11 @@ else{
 			HtmlTag::create( 'td', $file->name, ['class' => 'cell-name'] ),
 			HtmlTag::create( 'td', join( " ", $actions ), ['class' => 'cell-actions'] ),
 		);
-		$list[]	= HtmlTag::create( 'tr', $cells, array(
+		$list[]	= HtmlTag::create( 'tr', $cells, [
 			'class'	=> 'status-'.$states[$file->status],
 			'data-file-source'	=> $file->pathSource,
 			'data-file-local'	=> $file->pathLocal
-		) );
+		] );
 	}
 
 	$checkAll	= HtmlTag::create( 'input', NULL, array(

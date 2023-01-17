@@ -126,8 +126,8 @@ class View_Helper_Pagination
 
 	protected function renderListNumber( string $type, $value ): string
 	{
-		return HtmlTag::create( 'span', $value, array(
+		return HtmlTag::create( 'span', $value, [
 			'class'	=> 'list-number-'.$type
-		) );
+		] );
 	}
 }

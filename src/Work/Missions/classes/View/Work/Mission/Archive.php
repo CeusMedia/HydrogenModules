@@ -27,12 +27,12 @@ class View_Work_Mission_Archive extends View
 		}
 
 		$data		= array(
-			'buttons'	=> array(
+			'buttons'	=> [
 				'large'	=> $buttonsLarge,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'large'	=> $listLarge,
-			)
+			]
 		);
 		print( json_encode( $data ) );
 		exit;

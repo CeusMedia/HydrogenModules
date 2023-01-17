@@ -10,14 +10,14 @@ class Job_Mail_Migration extends Job_Abstract
 
 	protected $libraries;
 
-	protected $statusesHandledMails	= array(
+	protected $statusesHandledMails	= [
 		Model_Mail::STATUS_ABORTED,																//  status: -3
 		Model_Mail::STATUS_FAILED,																//  status: -2
 		Model_Mail::STATUS_SENT,																//  status: 2
 		Model_Mail::STATUS_RECEIVED,															//  status: 3
 		Model_Mail::STATUS_OPENED,																//  status: 4
 		Model_Mail::STATUS_REPLIED,																//  status: 5
-	);
+	];
 
 	/**
 	 *	Applies several migration processes.
@@ -66,10 +66,10 @@ class Job_Mail_Migration extends Job_Abstract
 						$changedColumn = trim( $mail->$key ) != trim( $value );
 //						print( "Col: ".$key.' '.($newColumn?'N':'').($changedColumn?'C':'').PHP_EOL );
 						if( $newColumn || $changedColumn ){
-							$changes[$key]	= (object) array(
+							$changes[$key]	= (object) [
 								'old'	=> $mail->$key,
 								'new'	=> $value,
-							);
+							];
 						}
 					}
 				}
@@ -209,12 +209,12 @@ class Job_Mail_Migration extends Job_Abstract
 
 	private function _migrateMailClass( $mail )
 	{
-		$classMigrations	= array(
+		$classMigrations	= [
 			'Mail_Auth_Password'		=> 'Mail_Auth_Local_Password',
 			'Mail_Auth_Register'		=> 'Mail_Auth_Local_Register',
 			'Mail_Shop_Order_Customer'	=> 'Mail_Shop_Customer_Ordered',
 			'Mail_Shop_Order_Manager'	=> 'Mail_Shop_Manager_Ordered',
-		);
+		];
 
 		if( !array_key_exists( $mail->mailClass, $classMigrations ) )
 			return FALSE;

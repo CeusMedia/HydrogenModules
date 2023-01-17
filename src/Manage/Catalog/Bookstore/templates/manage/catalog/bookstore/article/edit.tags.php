@@ -21,29 +21,29 @@ if( $articleTags ){
 	$listTags	= [];
 	foreach( $articleTags as $item ){
 		$urlRemove	= './manage/catalog/bookstore/article/removeTag/'.$article->articleId.'/'.$item->articleTagId;
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-danger',
-		) );
+		] );
 		$listTags[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $item->tag ),
 			HtmlTag::create( 'td', '<div class="pull-right">'.$buttonRemove.'</div>' )
 		) );
 	}
 /*
-	$inputFile	= HtmlTag::create( 'input', NULL, array(
+	$inputFile	= HtmlTag::create( 'input', NULL, [
 		'type'	=> 'text',
 		'class'	=> 'span12',
 		'name'	=> 'tag',
 		'id'	=> 'input_type',
 		'placeholder'	=> 'neues Schlagwort',
-	) );
+	] );
 
-	$buttonSave	= HtmlTag::create( 'button', $iconPlus.' hinzufügen', array(
+	$buttonSave	= HtmlTag::create( 'button', $iconPlus.' hinzufügen', [
 		'class'		=> 'btn btn-primary',
 		'type'		=> 'submit',
 		'name'		=> 'save',
-	) );
+	] );
 
 	$listTags[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $inputFile ),

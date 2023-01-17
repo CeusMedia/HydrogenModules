@@ -28,10 +28,10 @@ class Controller_Provision_Rest extends Controller
 
 	public function handleJsonErrorResponse( $message, $code = 0 ): void
 	{
-		$this->handleJsonResponse( 'error', array(
+		$this->handleJsonResponse( 'error', [
 			'message'	=> $message,
 			'code'		=> $code,
-		) );
+		] );
 	}
 
 	/**
@@ -56,12 +56,12 @@ class Controller_Provision_Rest extends Controller
 			$this->handleJsonErrorResponse( 'No product ID given' );
 		if( (int) $userId < 1 )
 			$this->handleJsonErrorResponse( 'No user ID given' );
-		$data	= array(
+		$data	= [
 			'code'		=> 0,
 			'active'	=> null,
 			'pending'	=> null,
 			'outdated'	=> null,
-		);
+		];
 		try{
 			$data['product']	= $this->logic->getProduct( $productId );
 			$keys	= $this->logic->getUserLicenseKeysFromUser( $userId, FALSE, $productId );

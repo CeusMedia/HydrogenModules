@@ -13,10 +13,10 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 	public function render(): string
 	{
 		$model		= new Model_Page( $this->env );
-		$indices	= array(
+		$indices	= [
 			'parentId'	=> 0,
 			'scope'		=> $this->scopeId,
-		);
+		];
 		$pages		= $model->getAllByIndices( $indices, ['rank' => 'ASC'] );
 		$list	= [];
 		foreach( $pages as $page ){

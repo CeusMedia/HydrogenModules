@@ -142,13 +142,13 @@ class Controller_Shop_Payment_Stripe extends Controller
 				'type'		=> 'giropay',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),
-				'redirect'	=> array(
+				'redirect'	=> [
 					'return_url'	=> $this->env->url.'shop/payment/stripe',
-				),
-				'owner'	=> array(
+				],
+				'owner'	=> [
 					'name'	=> $this->buyerData->firstname.' '.$this->buyerData->surname,
 					'email'	=> $this->buyerData->email,
-				)
+				]
 			));
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
@@ -171,16 +171,16 @@ class Controller_Shop_Payment_Stripe extends Controller
 				'type'		=> 'sofort',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),
-				'redirect'	=> array(
+				'redirect'	=> [
 					'return_url'	=> $this->env->url.'shop/payment/stripe',
-				),
-				'owner'	=> array(
+				],
+				'owner'	=> [
 					'name'	=> $this->buyerData->firstname.' '.$this->buyerData->surname,
 					'email'	=> $this->buyerData->email,
-				),
-				'sofort'	=> array(
+				],
+				'sofort'	=> [
 					'country'	=> $this->buyerData->country,
-				)
+				]
 			));
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
@@ -196,7 +196,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 
 	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -204,7 +204,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'mode'		=> 'instant',
-		);
+		];
 	}
 
 	protected function __onInit(): void
@@ -271,21 +271,21 @@ class Controller_Shop_Payment_Stripe extends Controller
 		}
 		$modelUser	= new Model_User( $this->env );
 		$user		= $modelUser->get( $this->localUserId );
-		$address	= $modelAddress->getByIndices( array(
+		$address	= $modelAddress->getByIndices( [
 			'relationId'	=> $this->localUserId,
 			'relationType'	=> 'user',
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
+		] );
 		if( !$address )
 			throw new RuntimeException( 'Customer has no billing address' );
-		$buyerData	= (object) array(
+		$buyerData	= (object) [
 			'mode'		=> Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT,
 			'id'		=> $this->localUserId,
 			'firstname'	=> $user->firstname,
 			'surname'	=> $user->surname,
 			'email'		=> $user->email,
 			'country'	=> $address->country,
-		);
+		];
 		return $buyerData;
 	}
 

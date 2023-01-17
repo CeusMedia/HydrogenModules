@@ -25,15 +25,15 @@ $iconsStatus	= array(
 	Model_Form::STATUS_ACTIVATED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] ),
 );
 
-$statuses	= array(
+$statuses	= [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
-$types		= array(
+];
+$types		= [
 	0		=> 'direkter Versand',
 	1		=> 'Double-Opt-In',
-);
+];
 
 $listLabelsStatus	= array(
 	Model_Form::STATUS_DISABLED		=> HtmlTag::create( 'label', $iconsStatus[Model_Form::STATUS_DISABLED].' '.$statuses[Model_Form::STATUS_DISABLED], ['class' => 'label label-inverse'] ),
@@ -119,10 +119,10 @@ $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
 $heading	= HtmlTag::create( 'h2', 'Formulare' );
-$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neues Formular', array(
+$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neues Formular', [
 	'href'	=> './manage/form/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $pagination	= '';
 if( $pages > 1 ){
@@ -135,8 +135,8 @@ $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$linkAdd, $pagination] ), 
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Formulare' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );

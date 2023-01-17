@@ -12,23 +12,23 @@ use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 $configFile		= "config/config.ini";											//  set an alternative config file
 $pathClasses	= 'classes/';
 $verbose		= FALSE;
-$modes			= array(
+$modes			= [
 	'live',
 	'test',
 	'dev',
-);
+];
 $mode			= 'dev';
-$errorHandling	= array(
+$errorHandling	= [
 	'report'	=> E_ALL,
 	'display'	=> TRUE,
 	'catch'		=> TRUE,
-);
+];
 */
-$errorHandling	= array(
+$errorHandling	= [
 	'report'	=> E_ALL,
 	'display'	=> !TRUE,
 	'catch'		=> TRUE,
-);
+];
 
 
 /*  --  JOB SCRIPT  --  */
@@ -46,16 +46,16 @@ $helper->run();
 class JobScriptHelper
 {
 	protected $configFile		= "config/config.ini";							//  config file
-	protected $errorHandling	= array(
+	protected $errorHandling	= [
 		'report'	=> E_ALL,
 		'display'	=> TRUE,
 		'catch'		=> TRUE,
-	);
-	protected $modes			= array(
+	];
+	protected $modes			= [
 		'live',
 		'test',
 		'dev',
-	);
+	];
 	protected $mode;
 	protected $pathClasses		= 'classes/';
 	protected $verbose			= FALSE;

@@ -123,11 +123,11 @@ class Logic_IP_Lock extends Logic
 	public function lock( $ipLockId, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
-		$states	= array(
+		$states	= [
 			Model_IP_Lock::STATUS_UNLOCKED,
 			Model_IP_Lock::STATUS_REQUEST_LOCK,
 			Model_IP_Lock::STATUS_REQUEST_UNLOCK
-		);
+		];
 		if( !in_array( $lock->status, $states ) )													//  transition is not allowed
 			return FALSE;																			//  indicate: lock exists but is not activatable
 		return $this->setStatus( $ipLockId, Model_IP_Lock::STATUS_LOCKED, $strict );				//  realize lock and return TRUE

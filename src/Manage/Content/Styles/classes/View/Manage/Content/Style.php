@@ -40,9 +40,9 @@ class View_Manage_Content_Style extends View
 			) );
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, [
 			'class'	=> 'nav nav-pills nav-stacked'
-		) );
+		] );
 	}
 
 	protected function __onInit(): void

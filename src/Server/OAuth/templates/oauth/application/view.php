@@ -37,10 +37,10 @@ $listRefreshTokens	= '<div class="muted"><em><small>Keine Refresh-Tokens aktiv.<
 if( !empty( $refreshTokens ) ){
 	$listRefreshTokens	= [];
 	foreach( $refreshTokens as $token ){
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', [
 			'href'		=> './oauth/application/remove/'.$token->oauthApplicationId.'/refresh/'.$token->oauthRefreshTokenId,
 			'class'		=> 'btn btn-mini btn-danger'
-		) );
+		] );
 		$listRefreshTokens[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $token->token ),
 /*			HtmlTag::create( 'td', $buttonRemove ),*/

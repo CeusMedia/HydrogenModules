@@ -31,14 +31,14 @@ if( count( $servers ) ){
 			HtmlTag::create( 'td', $helperTimestamp->convert( $server->createdAt, TRUE, 'vor' ) ),
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Titel',
 		'IMAP-Server',
 		'SMTP-Server',
 //		'Zustand',
 //		$iconUsers,
 		'erstellt',
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-fixed'] );
 }

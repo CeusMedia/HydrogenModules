@@ -38,13 +38,13 @@ class Controller_Oauth_Resource extends Controller
 
 	public static function registerResource( Environment $env, $path, $class, $method, $scope = NULL )
 	{
-		self::$resources[]	= (object) array(
+		self::$resources[]	= (object) [
 			'env'		=> $env,
 			'path'		=> $path,
 			'class'		=> $class,
 			'method'	=> $method,
 			'scope'		=> $scope,
-		);
+		];
 	}
 
 	protected function __onInit(): void

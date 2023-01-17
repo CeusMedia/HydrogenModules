@@ -35,13 +35,13 @@ $toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewTyp
 $toolbar1->addButton( 'toolbar-views', 'view-type', $helperFilter->renderViewModeSwitch( $filterMode ) );
 
 /*
-$toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
+$toolbar1->addButtonGroup( 'toolbar-sync', 'sync', [
 	'<a href="./work/mission/help/sync" class="btn not-btn-info" title="Synchronisation"><i class="icon-refresh not-icon-white"></i></a>'
-) );
+] );
 
-$toolbar1->addButtonGroup( 'toolbar-sync', 'sync', array(
+$toolbar1->addButtonGroup( 'toolbar-sync', 'sync', [
 	'<a href="./work/mission/help" class="btn btn-info" title="Hilfe"><i class="icon-question-sign icon-white"></i></a>'
-) );
+] );
 */
 
 if( !empty( $userProjects ) )

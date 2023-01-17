@@ -23,11 +23,11 @@ class View_RegionIndicator{
 	}
 
 	public function addRegion( $weight, $color, $content ){
-		$this->regions[]	= (object) array(
+		$this->regions[]	= (object) [
 			'color'		=> $color,
 			'content'	=> $content,
 			'weight'	=> $weight,
-		);
+		];
 	}
 
 	public function render( $width, $height ){
@@ -53,10 +53,10 @@ class View_RegionIndicator{
 #		print_m( $ranges );
 #		die;
 		foreach( $ranges as $nr => $range ){
-			$a			= array(
+			$a			= [
 				'class'	=> 'region-content',
 				'style'	=> 'left: '.$width.'px'
-			);
+			];
 			$pin		= HtmlTag::create( 'div', '', ['class' => 'region-content-pin'] );
 			$content	= $this->regions[$nr]->content.$pin;
 			$content	= HtmlTag::create( 'div', $content, ['class' => 'region-content-inner'] );
@@ -64,11 +64,11 @@ class View_RegionIndicator{
 
 			$a	= array(
 				'class'		=> 'region-bar',
-				'style'		=> join( '; ', array(
+				'style'		=> join( '; ', [
 					'top: '.$range->offset.'px',
 					'height: '.$range->size.'px',
 					'background-color: '.$this->regions[$nr]->color,
-				) )
+				] )
 			);
 
 			$list[]	= HtmlTag::create( 'div', $content, $a );

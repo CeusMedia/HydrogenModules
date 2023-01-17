@@ -144,7 +144,7 @@ class Controller_Manage_Company_Branch extends Controller
 
 /*		if( $image['error'] ){
 			$words			= $this->env->getLanguage()->getWords( 'main' );
-			$messages		= array(
+			$messages		= [
 				UPLOAD_ERR_INI_SIZE		=> $words['upload-errors']['UPLOAD_ERR_INI_SIZE'],
 				UPLOAD_ERR_FORM_SIZE	=> $words['upload-errors']['UPLOAD_ERR_FORM_SIZE'],
 				UPLOAD_ERR_PARTIAL		=> $words['upload-errors']['UPLOAD_ERR_PARTIAL'],
@@ -152,7 +152,7 @@ class Controller_Manage_Company_Branch extends Controller
 				UPLOAD_ERR_NO_TMP_DIR	=> $words['upload-errors']['UPLOAD_ERR_NO_TMP_DIR'],
 				UPLOAD_ERR_CANT_WRITE	=> $words['upload-errors']['UPLOAD_ERR_CANT_WRITE'],
 				UPLOAD_ERR_EXTENSION	=> $words['upload-errors']['UPLOAD_ERR_EXTENSION'],
-			);
+			];
 			$handler		= new \CeusMedia\Common\Net\HTTP\UploadErrorHandler();
 			$handler->setMessages( $messages );
 			$handler->handleErrorFromUpload( $image );
@@ -182,10 +182,10 @@ class Controller_Manage_Company_Branch extends Controller
 		$list		= [];
 		if( $tags ){
 			foreach( $tags as $tag ){
-				$indices	= array(
+				$indices	= [
 					'branchId'	=> $branchId,
 					'label'		=> $tag
-				);
+				];
 				if( !$this->modelTag->getByIndices( $indices ) ){
 					$indices['createdAt']	= time();
 					$this->modelTag->add( $indices );

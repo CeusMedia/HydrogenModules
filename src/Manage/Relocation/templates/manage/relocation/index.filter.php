@@ -7,31 +7,31 @@ $w			= (object) $words['index-filter'];
 $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
-$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
-) );
+] );
 
-$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, [
 	'href'	=> './manage/relocation/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse',
-) );
+] );
 
 $optStatus	= HtmlElements::Options( $words['states'], $filterStatus );
 
-$optOrderColumn	= array(
+$optOrderColumn	= [
 	'title'			=> 'Titel',
 	'views'			=> 'Klicks',
 	'usedAt' 		=> 'Nutzung',
 	'relocationId'	=> 'ID',
-);
+];
 $optOrderColumn	= HtmlElements::Options( $optOrderColumn, $filterOrderColumn );
 
-$optOrderDirection	= array(
+$optOrderDirection	= [
 	'asc' 	=> 'aufsteigend',
 	'desc'	=> 'absteigend',
-);
+];
 $optOrderDirection	= HtmlElements::Options( $optOrderDirection, $filterOrderDirection );
 
 return '

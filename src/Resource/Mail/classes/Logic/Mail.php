@@ -213,11 +213,11 @@ class Logic_Mail extends Logic
 	public function decompressMailObject( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
 	{
 		if( is_string( $mail->object ) ){
-			$mail->object	= (object) array(
+			$mail->object	= (object) [
 				'raw'		=> $mail->object,
 				'serial'	=> NULL,
 				'instance'	=> NULL,
-			);
+			];
 		}
 		if( empty( $mail->object->raw ) )
 			throw new RuntimeException( 'No raw (compressed) mail object serial available' );
@@ -752,10 +752,10 @@ class Logic_Mail extends Logic
 				$mail->object->instance->sendToUser( $mail->receiverId );
 			}
 			else{
-				$receiver	= (object) array(
+				$receiver	= (object) [
 					'email'		=> $mail->receiverAddress,
 					'username'	=> $mail->receiverName,
-				);
+				];
 				$mail->object->instance->sendTo( $receiver );
 			}
 			$this->modelQueue->edit( $mailId, array(
@@ -942,9 +942,9 @@ class Logic_Mail extends Logic
 						$address	= $address->getAddress();
 					else if( $mail->object->instance->mail->getSender() instanceof \CeusMedia\Mail\Participant )		//  use library CeusMedia/Mail version 1
 						$address	= $address->getAddress();
-					$this->modelQueue->edit( $mail->mailId, array(
+					$this->modelQueue->edit( $mail->mailId, [
 						'senderAddress'	=> $address,
-					) );
+					] );
 				}
 			}
 		}

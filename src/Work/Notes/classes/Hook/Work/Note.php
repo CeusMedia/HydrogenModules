@@ -55,10 +55,10 @@ class Hook_Work_Note extends Hook
 //			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? $note->noteId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data
@@ -101,10 +101,10 @@ class Hook_Work_Note extends Hook
 //			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? $note->noteId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data

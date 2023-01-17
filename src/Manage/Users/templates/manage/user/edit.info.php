@@ -40,22 +40,22 @@ if( !empty( $projects ) ){
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	$projects	= HtmlTag::create( 'ul', join( $list ), ['class' => 'projects project-list'] );
-	$facts[]	= array(
+	$facts[]	= [
 		'label'	=> 'Projekte',
 		'value'	=> $projects,
 		'style'	=> 'max-height: 200px; overflow-y: auto',
 //		'class'	=> 'fact-list-definition-multiple',
-	);
+	];
 }
 
 foreach( $facts as $nr => $fact ){
 	$fact['class']	= !empty( $fact['class'] ) ? $fact['class'] : NULL;
 	$fact['style']	= !empty( $fact['style'] ) ? $fact['style'] : NULL;
 	$term			= HtmlTag::create( 'dt', $fact['label'] );
-	$definition		= HtmlTag::create( 'dd', $fact['value'], array(
+	$definition		= HtmlTag::create( 'dd', $fact['value'], [
 		'class'		=> $fact['class'],
 		'style'		=> $fact['style']
-	) );
+	] );
 	$facts[$nr]		= $term.$definition;
 }
 $facts	= HtmlTag::create( 'dl', join( $facts ) );

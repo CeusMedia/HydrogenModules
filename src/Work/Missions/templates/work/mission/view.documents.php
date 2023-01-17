@@ -22,11 +22,11 @@ $rows	= [];
 foreach( $documents as $document ){
 	$modifiedAt	= max( $document->createdAt, $document->modifiedAt );
 	$modifiedAt	= 'vor '.$phraser->convert( $modifiedAt, TRUE );
-/*	$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', array(
+/*	$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', [
 		'href'	=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'class'	=> 'btn btn-small not-btn-info',
 		'title'	=> 'anzeigen',
-	) );*/
+	] );*/
 	$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', [
 		'href'	=> './work/mission/downloadDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'class'	=> 'btn btn-small btn-info',

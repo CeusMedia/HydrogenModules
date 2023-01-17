@@ -6,9 +6,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $list	= [];
 foreach( $bridges as $bridge ){
 	$label	= $bridge->title ? $bridge->title : $bridge->class;
-	$link	= HtmlTag::create( 'a', $label, array(
+	$link	= HtmlTag::create( 'a', $label, [
 		'href'	=> './manage/shop/bridge/edit/'.$bridge->bridgeId,
-	) );
+	] );
 	$class	= ( isset( $bridgeId) && $bridgeId === $bridge->bridgeId ) ? 'active' : NULL;
 	$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 }

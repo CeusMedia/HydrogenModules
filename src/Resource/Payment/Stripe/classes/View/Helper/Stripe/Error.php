@@ -16,10 +16,10 @@ class View_Helper_Stripe_Error{
 		$this->words	= $this->env->getLanguage()->getWords( 'resource/payment/stripe/error' );
 		foreach( $this->words as $section => $pairs ){
 			foreach( $pairs as $key => $label ){
-				$this->map[$key]	= (object) array(
+				$this->map[$key]	= (object) [
 					'section'	=> $section,
 					'label'		=> $label,
-				);
+				];
 			}
 		}
 //		print_m( $this->map );die;

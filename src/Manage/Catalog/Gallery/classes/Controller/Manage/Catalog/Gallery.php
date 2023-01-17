@@ -150,9 +150,9 @@ class Controller_Manage_Catalog_Gallery extends Controller
 			$this->restart( 'editCategory/'.$categoryId, TRUE );
 		}
 		$category	= $this->modelCategory->get( $categoryId );
-		$category->images	= $this->modelImage->getAll( array(
+		$category->images	= $this->modelImage->getAll( [
 			'galleryCategoryId'	=> $categoryId,
-		), ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
+		], ['rank' => 'ASC', 'galleryImageId' => 'ASC'] );
 		$this->addData( 'categoryId', (int) $categoryId );
 		$this->addData( 'category', $category );
 	}

@@ -8,17 +8,17 @@ $modelBlock	= new Model_Form_Block( $env );
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$statuses	= array(
+$statuses	= [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
+];
 $optStatus	= HtmlElements::Options( $statuses );
 
-$types		= array(
+$types		= [
 	0		=> 'direkter Versand',
 	1		=> 'mit Double-Opt-In',
-);
+];
 $optType	= HtmlElements::Options( $types );
 
 $optDelivery	= ['' => '- keine -'];

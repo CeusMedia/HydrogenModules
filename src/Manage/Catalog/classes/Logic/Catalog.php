@@ -121,12 +121,12 @@ class Logic_Catalog extends Logic
 		if( !move_uploaded_file( $file->tmp_name, $uri ) )
 			throw new RuntimeException( 'Storing uploaded file failed' );
 
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'type'			=> $extension,
 			'url'			=> $filename,
 			'title'			=> $title,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
@@ -137,10 +137,10 @@ class Logic_Catalog extends Logic
 	 */
 	public function addArticleTag( $articleId, $tag )
 	{
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );												//
 		return $this->modelArticleTag->add( $data );
 	}
@@ -192,11 +192,11 @@ class Logic_Catalog extends Logic
 	 */
 	public function addAuthorToArticle( $articleId, $authorId, $role )
 	{
-		$data		= array(
+		$data		= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
 			'editor'	=> $role,
-		);
+		];
 		$relationId	= $this->modelArticleAuthor->add( $data );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -220,11 +220,11 @@ class Logic_Catalog extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 			'volume'		=> $volume,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->add( $indices );
@@ -246,9 +246,9 @@ class Logic_Catalog extends Logic
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
-		$this->modelArticle->edit( $articleId, array(
+		$this->modelArticle->edit( $articleId, [
 			'quantity'	=> $article->quantity + $change
-		) );
+		] );
 		return $article->quantity + $change;
 	}
 
@@ -687,10 +687,10 @@ class Logic_Catalog extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
@@ -729,10 +729,10 @@ class Logic_Catalog extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
-		);
+		];
 		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -775,10 +775,10 @@ class Logic_Catalog extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );

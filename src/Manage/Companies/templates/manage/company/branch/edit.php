@@ -55,24 +55,24 @@ if( $branch->longitude ){
 
 $buttonActivate	= '';
 if( in_array( $branch->status, [0, 1] ) ){
-	$buttonActivate		= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, array(
+	$buttonActivate		= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, [
 		'href'	=> './manage/company/branch/activate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-success',
-	) );
+	] );
 }
 $buttonReject	= '';
 if( in_array( $branch->status, [0, 1] ) ){
-	$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, array(
+	$buttonReject	= HtmlTag::create( 'a', $iconReject.'&nbsp;'.$w->buttonReject, [
 		'href'	=> './manage/company/branch/reject/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',
-	) );
+	] );
 }
 $buttonDeactivate	= '';
 /*if( in_array( $branch->status, [0, 1] ) ){
-	$buttonDeactivate	= HtmlTag::create( 'a', $iconDeactivate.'&nbsp;'.$w->buttonDeactivate, array(
+	$buttonDeactivate	= HtmlTag::create( 'a', $iconDeactivate.'&nbsp;'.$w->buttonDeactivate, [
 		'href'	=> './manage/company/branch/deactivate/'.$branch->branchId,
 		'class'	=> 'btn btn-small btn-inverse',
-	) );
+	] );
 }*/
 
 $panelEdit	= HTML::DivClass( 'content-panel',
@@ -130,12 +130,12 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'url', $w->labelDescription ).
-					HtmlTag::create( 'textarea', $branch->description, array(
+					HtmlTag::create( 'textarea', $branch->description, [
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',
 						'rows' => '10'
-					) )
+					] )
 				)
 			).
 			HTML::DivClass( 'buttonbar',

@@ -45,24 +45,24 @@ class Controller_Work_Mission extends Controller
 
 	protected $defaultFilterValues	= array(
 		'mode'		=> 'now',
-		'states'	=> array(
+		'states'	=> [
 			Model_Mission::STATUS_NEW,
 			Model_Mission::STATUS_ACCEPTED,
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
 	);
@@ -222,10 +222,10 @@ class Controller_Work_Mission extends Controller
 		$path		= 'contents/documents/missions/';
 		if( !file_exists( $path ) )
 			mkdir( $path, 0777, TRUE );
-		$document	= $model->getByIndices( array(
+		$document	= $model->getByIndices( [
 			'missionId'	=> $missionId,
 			'filename'	=> $upload->name,
-		) );
+		] );
 		$hashname	= $document ? $document->hashname : ID::uuid();
 		$logic		= new Logic_Upload( $this->env );
 //		$logic->checkMimeType( [] );

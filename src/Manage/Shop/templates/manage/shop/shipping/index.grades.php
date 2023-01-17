@@ -29,13 +29,13 @@ $modalBody	= array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
 			Html::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',
 				'id'		=> 'input_title',
 				'class'		=> 'span12',
 				'required'	=> 'required',
-			) ),
+			] ),
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(
@@ -43,12 +43,12 @@ $modalBody	= array(
 			Html::create( 'label', 'Gewicht in Gramm' ),
 			Html::create( 'div', array(
 				Html::create( 'div', array(
-					Html::create( 'input', NULL, array(
+					Html::create( 'input', NULL, [
 						'type'	=> 'text',
 						'name'	=> 'weight',
 						'id'	=> 'input_weight',
 						'class'	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span6'] ),
 				Html::create( 'div', array(
 					Html::create( 'label', join( array(

@@ -46,10 +46,10 @@ class Logic_Work_Timer
 	{
 		$timer		= $this->checkTimerId( $timerId );
 		if( $timer->status != 1 ){
-			$active 	= $this->modelTimer->getByIndices( array(
+			$active 	= $this->modelTimer->getByIndices( [
 				'workerId'	=> $this->userId,
 				'status'	=> 1
-			) );
+			] );
 			if( $active )
 				$this->pause( $active->workTimerId );
 			$this->modelTimer->edit( $timerId, array( 'status' => 1, 'modifiedAt' => time() ) );

@@ -90,10 +90,10 @@ class Controller_Blog extends Controller{
 			if( $tag ){
 				$tagId	= $tag->tagId;
 				$number	= $tag->number;
-				$indices	= array(
+				$indices	= [
 					'articleId'	=> $articleId,
 					'tagId'		=> $tagId,
-				);
+				];
 				if( $modelRelation->getByIndices( $indices ) )
 					$this->restart( './blog/edit/'.$articleId );
 			}
@@ -101,10 +101,10 @@ class Controller_Blog extends Controller{
 				$tagId	= $modelTag->add( array( 'title' => trim( $tagName ) ) );
 				$number	= 0;
 			}
-			$data	= array(
+			$data	= [
 				'articleId'	=> $articleId,
 				'tagId'		=> $tagId,
-			);
+			];
 			$modelRelation->add( $data );
 			$modelTag->edit( $tagId, array( 'number' => ++$number ) );
 		}
@@ -318,10 +318,10 @@ class Controller_Blog extends Controller{
 
 	public function removeTag( $articleId, $tagId ){
 		$model	= new Model_ArticleTag( $this->env );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'tagId'		=> $tagId,
-		);
+		];
 		if( $model->removeByIndices( $indices ) ){
 			$model	= new Model_Tag( $this->env );
 			$tag	= $model->get( $tagId );
@@ -414,12 +414,12 @@ class Controller_Blog extends Controller{
 			$articles[$nr]->authors	= $this->model->getArticleAuthors( $article->articleId );
 			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
 		}
-		$this->setData( array(
+		$this->setData( [
 			'articles'	=> $articles,
 			'tag'		=> $tag,
 			'tagName'	=> $tagName,
 			'friends'	=> $relatedTags
-		) );
+		] );
 	}
 
 	public function thumb( $file ){

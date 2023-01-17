@@ -21,11 +21,11 @@ foreach( $instances as $id => $entry ){
 			$badge		= '';
 	}
 	$url		= './admin/instance/select/'.$id;
-	$attributes	= array(
+	$attributes	= [
 		'href'				=> $url,
 		'class'				=> 'instance',
 		'data-instance-id'	=> $id,
-	);
+	];
 	$link		= HtmlTag::create( 'a', $entry->title, $attributes ).$badge;
 	$attributes	= array(
 		'class'		=> join( ' ', $class ),

@@ -115,7 +115,7 @@ class Controller_Info_Dashboard extends Controller
 
 	public function registerPanel( $panelId, $data )
 	{
-		$data		= array_merge( array(
+		$data		= array_merge( [
 			'id'		=> $panelId,
 			'url'		=> NULL,
 			'title'		=> 'Untitled',
@@ -126,7 +126,7 @@ class Controller_Info_Dashboard extends Controller
 			'rank'		=> '50',
 			'icon'		=> NULL,
 			'refresh'	=> 0
-		), $data );
+		], $data );
 		$this->panels[$panelId]	= (object) $data;
 	}
 
@@ -139,9 +139,9 @@ class Controller_Info_Dashboard extends Controller
 				$this->restart( NULL, TRUE );
 			}
 			$this->model->remove( $dashboardId );
-			$dashboard	= $this->model->getByIndices( array(
+			$dashboard	= $this->model->getByIndices( [
 				'userId'		=> $this->userId,
-			), ['modifiedAt' => 'DESC'] );
+			], ['modifiedAt' => 'DESC'] );
 			if( $dashboard )
 				$this->logic->setUserDashboard( $this->userId, $dashboard->dashboardId );
 			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboard->title );

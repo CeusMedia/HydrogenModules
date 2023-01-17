@@ -17,16 +17,16 @@ $buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', ['href' => 
 $isEditor		= TRUE;
 
 if( $isEditor && (int) $application->status === 0 )
-	$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', array(
+	$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', [
 		'href'		=> "./oauth/application/enable/".$applicationId,
 		'class'		=> "btn btn-default btn-small"
-	) );
+	] );
 
 if( $isEditor && (int) $application->status === 1 )
-	$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', array(
+	$buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', [
 		'href'		=> "./oauth/application/disable/".$applicationId,
 		'class'		=> "btn not-btn-inverse btn-small"
-	) );
+	] );
 
 return '
 <h2 class="muted">OAuth-Server</h2>

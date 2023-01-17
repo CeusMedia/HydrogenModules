@@ -124,9 +124,9 @@ class Job_Job extends Job_Abstract
 		$now	= new DateTime();
 
 
-		$lastUpdate	= $modelStats->getByIndices( array(
+		$lastUpdate	= $modelStats->getByIndices( [
 			'span'
-		) );
+		] );
 		if( $lastUpdate ){
 
 		}

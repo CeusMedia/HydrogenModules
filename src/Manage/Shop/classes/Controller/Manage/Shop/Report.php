@@ -45,10 +45,10 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 				);
 				$modelPosition->edit( $position->positionId, $data );
 			}
-			$data	= array(
+			$data	= [
 				'price' 		=> $sum,
 				'priceTaxed'	=> $tax,
-			);
+			];
 			$modelOrder->edit( $order->orderId, $data );
 		}
 		$queryOrdersPerYear	= "
@@ -74,11 +74,11 @@ WHERE
 	o.status >= 2 AND
 	o.customerId > 0";
 			$turnover	= $dbc->query( $queryYearTurnover )->fetch( PDO::FETCH_OBJ )->turnover;
-			$years[]	= (object) array(
+			$years[]	= (object) [
 				'year'		=> $row->year,
 				'orders'	=> $row->per_year,
 				'turnover'	=> $turnover,
-			);
+			];
 		}
 		$this->addData( 'ordersPerYear', $years );
 	}

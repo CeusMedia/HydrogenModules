@@ -19,10 +19,10 @@ class View_Manage_Blog extends View
 
 	public function renderTabs( $current = NULL )
 	{
-		$tabs	= array(
+		$tabs	= [
 			''				=> 'Blog-Einträge',
 			'/category'		=> 'Kategorien',
-		);
+		];
 		$list	= [];
 		$badge	= '';
 		if( $this->hasData( 'course' ) && $this->hasData( 'courses' ) ){

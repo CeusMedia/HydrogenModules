@@ -162,11 +162,11 @@ class Jobber extends ConsoleApplication
 		if( $reportMode && $reportReceivers && !$reportChannel )
 			$reportChannel	= Model_Job_Run::REPORT_CHANNEL_MAIL;
 
-		$options	= array(
+		$options	= [
 			'reportMode'		=> $reportMode,
 			'reportChannel'		=> $reportChannel,
 			'reportReceivers'	=> $reportReceivers,
-		);
+		];
 		if( !empty( $parameters['--title'] ) ){
 			$options['title']	= trim( $parameters['--title'] );
 		}

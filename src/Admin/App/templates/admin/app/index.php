@@ -56,24 +56,24 @@ $helperUploadLogo->setName( 'logo' );
 $helperUploadLogo->setLabel( $iconFile );
 
 $currentLogo	= '<em class="muted">Derzeit:<br/>Standard-Logo</em>';
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
-) );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+] );
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', [
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
-) );
+] );
 if( $appLogo ){
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 		'href'	=> './admin/app/removeLogo',
 		'class'	=> 'btn btn-small btn-inverse',
-	) );
-	$currentLogo	= HtmlTag::create( 'img', NULL, array(
+	] );
+	$currentLogo	= HtmlTag::create( 'img', NULL, [
 		'src'		=> $appLogo,
 		'class'		=> 'thumbnail',
-	) );
+	] );
 }
 
 $panelLogo	= '
@@ -104,24 +104,24 @@ $helperUploadIcon->setName( 'icon' );
 $helperUploadIcon->setLabel( $iconFile );
 
 $currentIcon	= '<em class="muted">Derzeit:<br/>Standard-Icon</em>';
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 	'class'		=> 'btn btn-primary',
 	'type'		=> 'submit',
-) );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+] );
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', [
 	'class'		=> 'btn btn-mini btn-inverse',
 	'disabled'	=> 'disabled',
 	'type'		=> 'button',
-) );
+] );
 if( $appIcon ){
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 		'href'	=> './admin/app/removeIcon',
 		'class'	=> 'btn btn-small btn-inverse',
-	) );
-	$currentIcon	= HtmlTag::create( 'img', NULL, array(
+	] );
+	$currentIcon	= HtmlTag::create( 'img', NULL, [
 		'src'		=> $appIcon,
 		'class'		=> 'thumbnail',
-	) );
+	] );
 }
 
 $panelIcon	= '

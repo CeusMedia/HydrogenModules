@@ -32,7 +32,7 @@ function ButtonLink( $url, $label, $class = NULL, $confirm = NULL, $disabled = N
 	return HtmlTag::create( 'a', $label, $attributes );
 }
 
-$types	= array(
+$types	= [
 	'add',
 	'edit',
 	'save',
@@ -56,7 +56,7 @@ $types	= array(
 	'info',
 	'exit',
 	'run',
-);
+];
 $url	= './lab?t='.time();
 $r		= [];
 foreach( $types as $nr => $type ){

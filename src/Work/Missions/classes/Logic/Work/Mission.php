@@ -163,10 +163,10 @@ class Logic_Work_Mission extends Logic
 
 	public function getVersion( $missionId, $version )
 	{
-		return $this->modelVersion->getByIndices( array(
+		return $this->modelVersion->getByIndices( [
 			'missionId'	=> $missionId,
 			'version'	=> $version,
-		) );
+		] );
 	}
 
 	public function getVersions( $missionId )

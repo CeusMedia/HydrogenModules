@@ -6,10 +6,10 @@ class View_Helper_Work_Issue_ChangeFacts
 {
 	const FORMAT_HTML		= 1;
 	const FORMAT_TEXT		= 2;
-	const FORMATS			= array(
+	const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
-	);
+	];
 
 	protected $note;
 	protected $format		= self::FORMAT_HTML;

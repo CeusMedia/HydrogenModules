@@ -18,11 +18,11 @@ class Controller_Manage_Project extends Controller
 
 	public function acceptInvite( string $projectId )
 	{
-		$indices	= array(
+		$indices	= [
 			'projectId'	=> $projectId,
 			'userId'	=> $this->userId,
 			'status'	=> 0,
-		);
+		];
 		$relation	= $this->modelProjectUser->getByIndices( $indices );
 		if( !$relation ){
 			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
@@ -123,11 +123,11 @@ class Controller_Manage_Project extends Controller
 
 	public function declineInvite( string $projectId )
 	{
-		$indices	= array(
+		$indices	= [
 			'projectId'	=> $projectId,
 			'userId'	=> $this->userId,
 			'status'	=> 0,
-		);
+		];
 		$relation	= $this->modelProjectUser->getByIndices( $indices );
 		if( !$relation ){
 			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
@@ -163,10 +163,10 @@ class Controller_Manage_Project extends Controller
 				$this->messenger->noteError( $words->msgTitleMissing );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}
-			$found	= $this->modelProject->getByIndices( array(
+			$found	= $this->modelProject->getByIndices( [
 				'title'		=> $title,
 				'creatorId'	=> $this->userId,
-			) );
+			] );
 			if( $found && $found->projectId != $projectId ){
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
 				$this->restart( 'edit/'.$projectId, TRUE );
@@ -285,10 +285,10 @@ class Controller_Manage_Project extends Controller
 		else{
 			if( strlen( trim( $filterQuery ) ) ){
 				$projectIds		= [];
-				$filters	= array(
+				$filters	= [
 					"title LIKE '%".$filterQuery."%'",
 					"description LIKE '%".$filterQuery."%'",
-				);
+				];
 				$query	= "SELECT * FROM ".$this->modelProject->getName()." WHERE ".join( " OR ", $filters )." LIMIT 1000";
 				foreach( $this->env->getDatabase()->query( $query ) as $result )
 					$projectIds[]	= $result['projectId'];
@@ -488,10 +488,10 @@ class Controller_Manage_Project extends Controller
 
 	protected function checkDefault()
 	{
-		$default	= $this->modelProjectUser->getByIndices( array(
+		$default	= $this->modelProjectUser->getByIndices( [
 			'userId'	=> $this->userId,
 			'isDefault'	=> 1,
-		) );
+		] );
 		if( !$default ){
 			$from	= $this->request->get( '__path' );
 			$this->restart( 'setDefault'.( $from ? '?from='.$from : '' ), TRUE );
@@ -506,10 +506,10 @@ class Controller_Manage_Project extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $checkMembership ){
-			$isMember	= $this->modelProjectUser->getByIndices( array(
+			$isMember	= $this->modelProjectUser->getByIndices( [
 				'projectId'	=> $projectId,
 				'userId'	=> $this->userId,
-			) );
+			] );
 			if( !$isMember && !$this->isAdmin ){
 				$this->messenger->noteError( 'You cannot access this project. Redirection to index.' );
 				$this->restart( NULL, TRUE );

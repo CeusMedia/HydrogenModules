@@ -89,7 +89,7 @@ class Hook_JS_CodeMirror extends Hook
 		if( !$configAuto->get( 'active' ) )
 			return;
 		$configOptions	= $configAuto->getAll( 'option.', !TRUE );
-		$options		= array(
+		$options		= [
 			'gutter'			=> $configOptions['lineNumbers'] && !$configOptions['lineWrapping'],
 			'fixedGutter'		=> $configOptions['lineNumbers'] && !$configOptions['lineWrapping'],
 			'lineNumbers'		=> $configOptions['lineNumbers'],
@@ -97,7 +97,7 @@ class Hook_JS_CodeMirror extends Hook
 			'lineWrapping'		=> $configOptions['lineWrapping'],
 			'indentWithTabs'	=> $configOptions['indentWithTabs'],
 			'theme'				=> $configOptions['theme']
-		);
+		];
 
 		$verbose	= json_encode( $configAuto->get( 'verbose' ) );
 		$selector	= json_encode( $configAuto->get( 'selector' ) );

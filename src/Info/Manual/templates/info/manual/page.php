@@ -28,9 +28,9 @@ if( $moduleConfig->get( 'editor' ) ){
 		$buttonReload	= HtmlTag::create( 'a', $iconReload.' '.$words['list']['buttonReload'], ['href' => './info/manual/reload', 'class' => "btn btn-small"] );
 }
 
-$attributes	= array(
+$attributes	= [
 	'id'	=> 'content-container'
-);
+];
 switch( $renderer ){
 	case 'server-ajax':
 	case 'client':

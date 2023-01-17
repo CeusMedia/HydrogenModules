@@ -8,46 +8,46 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] )
 $iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'	=> './manage/ip/lock/reason',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+] );
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 	'href'	=> './manage/ip/lock/reason/remove/'.$reason->ipLockReasonId,
 	'class'	=> 'btn btn-danger btn-small',
-) );
+] );
 
-$buttonStatus	= HtmlTag::create( 'a', $iconActivate.' aktivieren', array(
+$buttonStatus	= HtmlTag::create( 'a', $iconActivate.' aktivieren', [
 	'href'		=> './manage/ip/lock/reason/activate/'.$reason->ipLockReasonId,
 	'class'		=> 'btn btn-success btn-small',
 	'title'		=> 'activate',
-) );
+] );
 if( $reason->status ){
-	$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate.' deaktivieren', array(
+	$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate.' deaktivieren', [
 		'href'	=> './manage/ip/lock/reason/deactivate/'.$reason->ipLockReasonId,
 		'class'	=> 'btn btn-inverse btn-small',
 		'title'	=> 'deactivate',
-	) );
+	] );
 }
 
-$optStatus	= HtmlElements::Options( array(
+$optStatus	= HtmlElements::Options( [
 	1		=> 'aktiv',
 	0		=> 'inaktiv',
-), $reason->status );
+], $reason->status );
 
 
 $list	= '<div><em><small>Keine Filter vorhanden.</small></em></div>';
 if( $reason->filters ){
 	$list	= [];
 	foreach( $reason->filters as $filter ){
-		$link	= HtmlTag::create( 'a', $filter->title, array(
+		$link	= HtmlTag::create( 'a', $filter->title, [
 			'href'	=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link, [] );
 	}
 	$list	= HtmlTag::create( 'ul', $list );

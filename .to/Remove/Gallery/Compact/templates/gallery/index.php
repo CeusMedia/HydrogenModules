@@ -80,12 +80,12 @@ foreach( $files as $file ){
 	);
 	$image		= HtmlTag::create( 'image', NULL, $attributes );
 	if( $mobile )
-		$attributes	= array(
+		$attributes	= [
 			'href'	=> './gallery/info/'.$source.$data['filename'].'.'.$data['extension'],
 			'title'		=> $title,
-		);
+		];
 	else
-		$attributes	= array(
+		$attributes	= [
 			'href'			=> $path.$source.$data['filename'].'.medium.'.$data['extension'],
 			'data-fancybox'	=> '1',
 			'class'			=> 'no-thickbox no-layer-image no-darkbox fancybox-auto',
@@ -93,7 +93,7 @@ foreach( $files as $file ){
 //			'target'		=> '_blank',
 			'title'			=> $title,
 			'data-original'	=> $source.$data['filename'].'.'.$data['extension'],
-		);
+		];
 	
 	$image		= HtmlTag::create( 'a', $image, $attributes );
 	$list[$fileName]		= HtmlTag::create( 'div', $image, array( 'class' => 'thumbnail' ) );

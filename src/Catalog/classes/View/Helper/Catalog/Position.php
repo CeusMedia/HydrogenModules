@@ -52,10 +52,10 @@ class View_Helper_Catalog_Position
 	{
 		$level		= count( $categories );
 		$labelKey	= 'label_'.$this->language->getLanguage();
-		array_unshift( $categories, (object) array(
+		array_unshift( $categories, (object) [
 			'label_de'		=> 'Übersicht',
 			'categoryId'	=> 0,
-		));
+		]);
 		$list	= [];
 		foreach( $categories as $nr => $category ){
 			$url	= './catalog'.( $category->categoryId ? '/category/'.$category->categoryId : '' );

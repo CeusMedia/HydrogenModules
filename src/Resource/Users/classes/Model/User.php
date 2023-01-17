@@ -115,10 +115,10 @@ class Model_User extends Model
 		if( count( $users ) ){
 			$modelUser	= new Model_User( $this->env );
 			foreach( $users as $user )
-				$modelUser->edit( $user->userId,  array(
+				$modelUser->edit( $user->userId,  [
 					'street'	=> $user->street.' '.$user->number,
 					'number'	=> NULL,
-				) );
+				] );
 		}
 
 		/**
@@ -130,9 +130,9 @@ class Model_User extends Model
 		if( count( $users ) ){
 			$modelUser	= new Model_User( $this->env );
 			foreach( $users as $user )
-				$modelUser->edit( $user->userId, array(
+				$modelUser->edit( $user->userId, [
 					'country'	=> 'DE',
-				) );
+				] );
 		}
 	}
 }

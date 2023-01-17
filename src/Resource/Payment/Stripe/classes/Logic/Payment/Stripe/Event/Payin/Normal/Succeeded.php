@@ -2,10 +2,10 @@
 class Logic_Payment_Stripe_Event_Payin_Normal_Succeeded extends Logic_Payment_Stripe_Event_Payin_Normal{
 
 	public function handle(){
-		$indices	= array(
+		$indices	= [
 			'status' 	=> Model_Stripe_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
-		);
+		];
 		$payin		= $this->entity;
 		$data		= $this->modelPayin->getByIndices( $indices );
 		if( !$data )

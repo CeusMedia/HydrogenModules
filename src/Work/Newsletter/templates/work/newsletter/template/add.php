@@ -54,13 +54,13 @@ $panelAdd	= '
 						</div>
 						<div class="span4 optional templateId templateId-">
 							<label for="input_imprint" class="mandatory">'.$words->add->labelImprint.'</label>
-							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
+							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), [
 								'name'		=> 'imprint',
 								'id'		=> 'input_imprint',
 								'class'		=> 'span12',
 								'rows'		=> 8,
 								'required'	=> 'required',
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="row-fluid optional templateId templateId-">

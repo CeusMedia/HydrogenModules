@@ -115,19 +115,19 @@ class Controller_Admin_Mail_Template_Export extends Controller
 				'key'		=> $titleKey,
 				'version'	=> '0',
 				'language'	=> $template->language ?: '*',
-				'contents'	=> array(
+				'contents'	=> [
 					'text'		=> $template->plain,
 					'html'		=> $template->html,
 					'css'		=> $template->css,
-				),
-				'files'		=> array(
+				],
+				'files'		=> [
 					'styles'	=> $files['styles'],
 					'images'	=> $files['images'],
-				),
-				'dates'		=> array(
+				],
+				'dates'		=> [
 					'createdAt'		=> $template->createdAt,
 					'modifiedAt'	=> $template->modifiedAt,
-				)
+				]
 			)
 		);
 		return json_encode( $data, JSON_PRETTY_PRINT );

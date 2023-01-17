@@ -29,12 +29,12 @@ class View_Manage_Customer extends View
 
 	public static function registerTab( $url, $label, $priority = 5, $disabled = NULL )
 	{
-		self::$tabs[]	= (object) array(
+		self::$tabs[]	= (object) [
 			'url'		=> $url,
 			'label'		=> $label,
 			'priority'	=> $priority,
 			'disabled'	=> $disabled,
-		);
+		];
 	}
 
 	public static function renderTabs( Environment $env, $customerId, $current = 0 )

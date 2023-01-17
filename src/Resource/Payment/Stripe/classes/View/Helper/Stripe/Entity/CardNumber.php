@@ -13,9 +13,9 @@ class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 		$pattern	= '/^([^x]+)(x+)(.+)$/i';
 		$replace	= '\\1<small class="muted">\\2</small>\\3';
 		$number		= preg_replace( $pattern, $replace, $this->number );
-		return HtmlTag::create( $this->nodeName, $number, array(
+		return HtmlTag::create( $this->nodeName, $number, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
 	static public function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){

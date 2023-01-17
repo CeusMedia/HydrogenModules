@@ -5,18 +5,18 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Auszahlung', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Auszahlung', [
 	'href'			=> '#modal-add-payout',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
-) );
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', array(
+] );
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> $corporation->balance < 1 ? 'disabled' : NULL,
-) );
+] );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
 $helper->setHeading( 'Auszahlungen' );

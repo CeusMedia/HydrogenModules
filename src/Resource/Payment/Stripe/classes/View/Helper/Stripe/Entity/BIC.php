@@ -17,9 +17,9 @@ class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 			substr( $this->bic, 8, 3 ),
 		);
 		$label		= implode( ' ', $parts );
-		return HtmlTag::create( $this->nodeName, $label, array(
+		return HtmlTag::create( $this->nodeName, $label, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
 	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){

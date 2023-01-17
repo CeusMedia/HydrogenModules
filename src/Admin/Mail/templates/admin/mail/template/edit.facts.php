@@ -162,10 +162,10 @@ $buttonPreviewHtml	= BootstrapModalTrigger::create(
 	$words['edit']['buttonPreview']
 )	->setIcon( 'eye' )
 	->setAttributes( ['class' => 'btn btn-info btn-mini'] );
-$iframeHtml		= HtmlTag::create( 'iframe', '', array(
+$iframeHtml		= HtmlTag::create( 'iframe', '', [
 	'src'			=> './admin/mail/template/preview/'.$template->mailTemplateId.'/html',
 	'frameborder'	=> '0',
-) );
+] );
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
 $modalPreviewText	= new BootstrapModalDialog( 'modal-admin-mail-template-preview-text' );

@@ -16,23 +16,23 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconView		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-eye'] );
 }
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './manage/image/slider',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
+] );
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 	'href'	=> './manage/image/slider/remove/'.$slider->sliderId,
 	'class'	=> 'btn btn-danger btn-small',
-) );
-$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, array(
+] );
+$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, [
 	'href'	=> './manage/image/slider/demo/'.$slider->sliderId,
 	'class'	=> 'btn btn-info btn-small',
-) );
+] );
 
 $optStatus		= HtmlElements::Options( $words['states'], $slider->status );
 $optEasing		= HtmlElements::Options( $words['optEasing'], $slider->easing );

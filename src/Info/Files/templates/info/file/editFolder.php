@@ -10,21 +10,21 @@ unset( $folders[$folder->downloadFolderId] );
 $folders	= array_merge( [0	=> ''], $folders );
 $optFolder	= HtmlElements::Options( $folders, $folder->parentId );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'		=> './info/file/index/'.$folder->parentId,
 	'class'		=> 'btn',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 $buttonRemove	= '';
 if( in_array( 'remove', $rights ) && count( $files ) === 0 )
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 		'href'		=> './info/file/removeFolder/'.$folder->downloadFolderId,
 		'class'		=> 'btn btn-danger',
-	) );
+	] );
 
 $panelEdit	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Ordner verändern <small class="muted">(umbenennen oder verschieben)</small>' ),
@@ -44,20 +44,20 @@ $panelEdit	= HtmlTag::create( 'div', array(
 				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_parentId'] ),
-					HtmlTag::create( 'select', $optFolder, array(
+					HtmlTag::create( 'select', $optFolder, [
 						'type'		=> 'text',
 						'name'		=> 'parentId',
 						'id'		=> 'input_parentId',
 						'class'		=> 'span12',
 				 //		'required'	=> 'required',
-					) ),
+					] ),
 				), ['class' => 'span6'] ),
 			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', join( ' ', array(
+			HtmlTag::create( 'div', join( ' ', [
 				$buttonCancel,
 				$buttonSave,
 				$buttonRemove
-			) ), ['class' => 'buttonbar'] ),
+			] ), ['class' => 'buttonbar'] ),
 		), ['action' => './info/file/editFolder/'.$folder->downloadFolderId, 'method' => 'post'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
@@ -67,7 +67,7 @@ extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' 
 return $textIndexTop.'
 <div>'.View_Info_File::renderPosition( $env, $folder->downloadFolderId, NULL ).'</div><br/>'
 .HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$panelEdit,
-	), ['class' => 'span9'] ),
+	], ['class' => 'span9'] ),
 ), ['class' => 'row-fluid'] );

@@ -153,12 +153,12 @@ class Controller_Catalog extends Controller
 		$builder->addItemElement( 'g:gtin', TRUE );
 		$builder->addItemElement( 'g:image_link', FALSE );
 
-		$availabilities	= array(
+		$availabilities	= [
 			-2		=> "Nicht auf Lager",
 			-1		=> "Vorbestellt",
 			0		=> "Auf Lager",
 			1		=> "Bestellbar"
-		);
+		];
 
 		$conditions		= ['price' => '> 0', 'isn' => '> 0'/*, 'status' => array[0, 1]*/];
 		$orders			= ['createdAt' => 'DESC'];

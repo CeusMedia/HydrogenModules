@@ -5,15 +5,15 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
-$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', array(
+$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-small btn-info'
-) );
-$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
+] );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'href'	=> './manage/form/block/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse'
-) );
+] );
 
 $optIdentifier	= array( '' => '- alle -');
 foreach( $identifiers as $identifier )

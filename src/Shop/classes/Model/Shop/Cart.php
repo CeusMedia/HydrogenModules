@@ -18,11 +18,11 @@ class Model_Shop_Cart
 	/**	@var	Logic_ShopBridge		$brige */
 	protected $bridge;
 
-	protected $ignoreOnUpdate		= array(
+	protected $ignoreOnUpdate		= [
 		'customerMode',
 		'price',
 		'priceTaxed',
-	);
+	];
 
 	public function __construct( Environment $env )
 	{
@@ -80,12 +80,12 @@ class Model_Shop_Cart
 				foreach( $this->modelPosition->getAllByIndex( 'orderId', $orderId ) as $item ){
 					$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
 					$article	= $source->get( $item->articleId, $item->quantity );
-					$positions[$item->articleId]	= (object) array(
+					$positions[$item->articleId]	= (object) [
 						'bridgeId'		=> $item->bridgeId,
 						'articleId'		=> $item->articleId,
 						'quantity'		=> $item->quantity,
 						'article'		=> $article,
-					);
+					];
 				}
 				$this->data->set( 'positions', $positions );
 			}
@@ -135,7 +135,7 @@ class Model_Shop_Cart
 
 	protected function createEmpty()
 	{
-		$this->data	= new Dictionary( array(
+		$this->data	= new Dictionary( [
 			'orderStatus'		=> Model_Shop_Order::STATUS_NEW,
 			'acceptRules'		=> FALSE,
 			'paymentMethod'		=> NULL,
@@ -144,7 +144,7 @@ class Model_Shop_Cart
 			'positions'			=> [],
 			'customer'			=> [],
 			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
-		) );
+		] );
 		$this->session->set( 'shop_cart', $this->data->getAll() );
 	}
 
@@ -209,11 +209,11 @@ class Model_Shop_Cart
 		}
 
 		foreach( $this->data->get( 'positions' ) as $item ){
-			$relation	= $this->modelPosition->getByIndices( array(
+			$relation	= $this->modelPosition->getByIndices( [
 				'orderId'	=> $orderId,
 				'bridgeId'	=> $item->bridgeId,
 				'articleId'	=> $item->articleId
-			) );
+			] );
 			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
 			$article	= $source->get( $item->articleId, $item->quantity );
 			$price		= $article->price->one;
@@ -276,9 +276,9 @@ class Model_Shop_Cart
 		//  --  OPTIONS  --  //
 		// @todo implement!
 
-		$this->modelOrder->edit( $orderId, array(
+		$this->modelOrder->edit( $orderId, [
 			'price'			=> $price,
 			'priceTaxed'	=> $priceTaxed,
-		) );
+		] );
 	}
 }

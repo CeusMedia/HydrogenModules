@@ -16,16 +16,16 @@ class Logic_Member
 	public function getRelatedUserIds( $userId, $status = NULL )
 	{
 		$userIds	= [];
-		$relations	= $this->modelRelation->getAllByIndices( array(
+		$relations	= $this->modelRelation->getAllByIndices( [
 			'fromUserId'	=> $userId,
 			'status'		=> $status ? $status : "!0",
-		) );
+		] );
 		foreach( $relations as $relation )
 			$userIds[]	= $relation->toUserId;
-		$relations	= $this->modelRelation->getAllByIndices( array(
+		$relations	= $this->modelRelation->getAllByIndices( [
 			'toUserId'		=> $userId,
 			'status'		=> $status ? $status : "!0",
-		) );
+		] );
 		foreach( $relations as $relation )
 			$userIds[]	= $relation->fromUserId;
 		return $userIds;
@@ -38,10 +38,10 @@ class Logic_Member
 		$userIds	= [];
 
 		$query		= str_replace( ' ', '%', trim( $query ) );
-		$conditions	= array(
+		$conditions	= [
 			'status'	=> '>= '.Model_User::STATUS_UNCONFIRMED,
 			'username'	=> '%'.$query.'%'
-		);
+		];
 		$byUsername	= $this->modelUser->getAll( $conditions, ['username' => 'ASC'] );
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
@@ -59,10 +59,10 @@ class Logic_Member
 
 	public function getUserRelation( $currentUserId, $relatedUserId, $status = NULL )
 	{
-		$conditions	= array(
+		$conditions	= [
 			'fromUserId'	=> $currentUserId,
 			'toUserId'		=> $relatedUserId,
-		);
+		];
 		if( !is_null( $status ) )
 			$conditions['status']	= $status;
 		$relation	= $this->modelRelation->getByIndices( $conditions );
@@ -70,10 +70,10 @@ class Logic_Member
 			$relation->direction	= 'out';
 			return $relation;
 		}
-		$conditions	= array(
+		$conditions	= [
 			'fromUserId'	=> $relatedUserId,
 			'toUserId'		=> $currentUserId,
-		);
+		];
 		if( !is_null( $status ) )
 			$conditions['status']	= $status;
 		$relation	= $this->modelRelation->getByIndices( $conditions );

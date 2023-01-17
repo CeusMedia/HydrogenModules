@@ -57,14 +57,14 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span3',
 					HTML::Label( 'number', $w->labelCountry, $mandatoryAddress ? 'mandatory' : '' ).
-					HtmlTag::create( 'select', HtmlElements::Options( $countries, $user->country ), array(
+					HtmlTag::create( 'select', HtmlElements::Options( $countries, $user->country ), [
 						'name'			=> 'country',
 						'id'			=> 'input_country',
 						'class'			=> 'span12',
 						'required'		=> $mandatoryAddress ? 'required' : NULL,
 						'autocomplete'	=> 'country'
-					) )
-/*					HtmlTag::create( 'input', NULL, array(
+					] )
+/*					HtmlTag::create( 'input', NULL, [
 						'type'			=> 'text',
 						'name'			=> 'country',
 						'id'			=> 'input_country',
@@ -72,7 +72,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 						'class'			=> 'span12 typeahead',
 						'data-provide'	=> 'typeahead',
 						'autocomplete'	=> 'off'
-					) )*/
+					] )*/
 				).
 				HTML::DivClass( 'span2',
 					HTML::Label( 'postcode', $w->labelPostcode, $mandatoryAddress ? 'mandatory' : '', $w->labelPostcode_title ).
@@ -128,7 +128,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							HtmlTag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', [
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',
@@ -136,7 +136,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
-							) ).
+							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )

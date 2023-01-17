@@ -40,20 +40,20 @@ class Logic_Note extends Logic
 
 	public function addTagToNote( $tagId, $noteId, $status = Model_Note_Tag::STATUS_NORMAL, $strict = TRUE )
 	{
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'tagId'		=> $tagId,
 			'status'	=> $status,
-		);
+		];
 		if( ( $relation	= $this->modelNoteTag->getByIndices( $indices ) ) ){
 			if( $strict )
 				throw new InvalidArgumentException( 'tag already related to note' );
 			return $relation->noteTagId;
 		}
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'tagId'		=> $tagId,
-		);
+		];
 		if( ( $relation = $this->modelNoteTag->getByIndices( $indices ) ) ){
 			if( $relation->status != $status ){
 				$this->modelNoteTag->edit( $relation->noteTagId, array(
@@ -123,10 +123,10 @@ class Logic_Note extends Logic
 		}
 
 		$note->tags	= [];
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $tag )
 			$note->tags[]	= $this->modelTag->get( $tag->tagId );
 		return $note;
@@ -150,10 +150,10 @@ class Logic_Note extends Logic
 			$noteIds	= [];
 			$tagIds		= array_unique( $tagIds );
 			foreach( $tagIds as $tagId ){
-				$indices	= array(
+				$indices	= [
 					'tagId'		=> $tagId,
 					'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-				);
+				];
 				foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation ){
 					if( !isset( $noteIds[$relation->noteId] ) )
 						$noteIds[$relation->noteId]	= [];
@@ -167,10 +167,10 @@ class Logic_Note extends Logic
 		}
 
 		$noteIds			= [];
-		$indices	= array(
+		$indices	= [
 			'tagId'		=> $tagIds,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation )
 			$noteIds[]	= $relation->noteId;
 		return $noteIds;
@@ -181,19 +181,19 @@ class Logic_Note extends Logic
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
 		$noteTags	= [];
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $noteTag )
 			$noteTags[]	= $noteTag->tagId;
 
 		$list		= [];
 		foreach( $relatedNoteIds as $relatedNoteId => $count ){
-			$indices	= array(
+			$indices	= [
 				'noteId'	=> $relatedNoteId,
 				'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-			);
+			];
 			$relatedNoteTags	= $this->modelNoteTag->getAllByIndices( $indices );
 			foreach( $relatedNoteTags as $relatedNoteTag ){
 				if( !isset( $list[$relatedNoteTag->tagId] ) )
@@ -201,10 +201,10 @@ class Logic_Note extends Logic
 				$list[$relatedNoteTag->tagId]		+= $count;
 			}
 		}
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'status'	=> '< '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $noteTag )
 			if( isset( $list[$noteTag->tagId] ) )
 				unset( $list[$noteTag->tagId] );
@@ -224,16 +224,16 @@ class Logic_Note extends Logic
 	public function getRelatedNoteIds( $noteId )
 	{
 		$relatedNoteIds	= [];
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		$noteTags		= $this->modelNoteTag->getAllByIndices( $indices );
 		foreach( $noteTags as $noteTag ){
-			$indices	= array(
+			$indices	= [
 				'tagId'		=> $noteTag->tagId,
 				'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-			);
+			];
 			$notes		= $this->modelNoteTag->getAllByIndices( $indices );
 			foreach( $notes as $note ){
 				if( $note->noteId != $noteId ){
@@ -264,10 +264,10 @@ class Logic_Note extends Logic
 	public function getRankedTagIdsFromNoteIds( $noteIds, $skipTagIds = [] )
 	{
 		$tagIds	= [];
-		$indices	= array(
+		$indices	= [
 			'noteId'	=> $noteIds,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		);
+		];
 		foreach( $this->modelNoteTag->getAllByIndices( $indices ) as $relation ){
 			if( !in_array( $relation->tagId, $skipTagIds ) ){
 				if( !isset( $tagIds[$relation->tagId] ) )
@@ -294,11 +294,11 @@ class Logic_Note extends Logic
 	{
 		$clock		= new Clock();
 		if( !$orders )
-			$orders		= array(
+			$orders		= [
 				'modifiedAt'	=> 'DESC',
 				'createdAt'		=> 'DESC',
 				'title'			=> 'ASC',
-			);
+			];
 		if( !$limits )
 			$limits		= [0, 10];
 		$conditions	= $this->sharpenConditions( $conditions );
@@ -335,9 +335,9 @@ class Logic_Note extends Logic
 		}
 
 		$tagIds	= [];
-		$conditions	= array(
+		$conditions	= [
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL
-		);
+		];
 		if( $this->userId && $this->userProjects )
 			$conditions['noteId']	= array_merge( [0], $this->userNoteIds );
 		foreach( $this->modelNoteTag->getAll( $conditions ) as $relation ){
@@ -363,10 +363,10 @@ class Logic_Note extends Logic
 		$note->tags		= [];
 
 		$links	= $this->modelNoteLink->getAllByIndex( 'noteId', $note->noteId );
-		$tags	= $this->modelNoteTag->getAllByIndices( array(
+		$tags	= $this->modelNoteTag->getAllByIndices( [
 			'noteId'	=> $note->noteId,
 			'status'	=> '>= '.Model_Note_Tag::STATUS_NORMAL,
-		) );
+		] );
 
 		foreach( $links as $relation ){
 			$link			= $this->modelLink->get( $relation->linkId );
@@ -458,13 +458,13 @@ class Logic_Note extends Logic
 		if( $query ){
 			$terms 	= explode( ' ', trim( $query ) );
 			foreach( $terms as $term ){
-				$ors	= array(
+				$ors	= [
 					'n.title LIKE "%'.$term.'%"',
 					'n.content LIKE "%'.$term.'%"',
 					'l.url LIKE "%'.$term.'%"',
 					'nl.title LIKE "%'.$term.'%"',
 					't.content="'.$term.'"'
-				);
+				];
 				$conditions[]	= '('.join( ' OR ', $ors ).')';
 			}
 		}

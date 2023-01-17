@@ -8,11 +8,11 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->setOptions( array(
+		$this->setOptions( [
 			'linkItem'	=> './manage/my/mangopay/card/view/%s',
 			'linkBack'	=> './manage/my/mangopay/card',
 			'linkAdd'	=> './manage/my/mangopay/card/add',
-		) );
+		] );
 		$this->words	= $this->env->getLanguage()->getWords( 'manage/my/mangopay/card' );
 	}
 

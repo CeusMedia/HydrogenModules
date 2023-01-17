@@ -2,14 +2,14 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$states	= array(
+$states	= [
 	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
 	-2	=> 'unlocked',
 	-1	=> '...',
 	0	=> 'lock requested',
 	1	=> 'locked',
 	2	=> 'unlock requested',
-);
+];
 
 $iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
@@ -32,58 +32,58 @@ if( $locks ){
 	foreach( $locks as $lock ){
 		if( $lock->reason->status < 1 )
 			$lock->status = -10;
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, array(
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/ip/lock/edit/'.$lock->ipLockId,
 			'class'		=> 'btn btn-small',
 			'title'		=> 'bearbeiten',
-		) );
+		] );
 		$buttonStatus	= "";
 		if( in_array( $lock->status, [-2, -1, 0] ) ){
-			$buttonStatus	= HtmlTag::create( 'a', $iconLock, array(
+			$buttonStatus	= HtmlTag::create( 'a', $iconLock, [
 				'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-success',
 				'title'		=> 'aktivieren',
-			) );
+			] );
 		}
 		else if( in_array( $lock->status, [1, 2] ) ){
-			$buttonStatus	= HtmlTag::create( 'a', $iconUnlock, array(
+			$buttonStatus	= HtmlTag::create( 'a', $iconUnlock, [
 				'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-inverse',
 				'title'		=> 'deaktivieren',
-			) );
+			] );
 		}
 		$buttonRemove	= "";
 		if( in_array( $lock->status, [-2, -10] ) ){
-			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 				'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-danger',
 				'title'		=> 'cancel lock',
-			) );
+			] );
 		}
 
 		$unlockAt	= '<small class="muted">nie</small>';
 		if( $lock->reason->duration ){
 			$unlockAt	= $lock->lockedAt + $lock->reason->duration;
-			$unlockDate	= HtmlTag::create( 'span', date( "Y-m-d", $unlockAt ), array(
+			$unlockDate	= HtmlTag::create( 'span', date( "Y-m-d", $unlockAt ), [
 				'class' => 'lock-unlock-date',
-			) );
-			$unlockTime	= HtmlTag::create( 'small', date( "H:i:s", $unlockAt ), array(
+			] );
+			$unlockTime	= HtmlTag::create( 'small', date( "H:i:s", $unlockAt ), [
                 'class' => 'lock-unlock-time muted',
-            ) );
+            ] );
 			$unlockAt	= $unlockDate.'&nbsp;'.$unlockTime;
 		}
 
-		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus.$buttonRemove, array(
+		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus.$buttonRemove, [
 			'class'		=> 'btn-group'
-		) );
+		] );
 
 		$lockedAt	= date( 'Y-m-d H:i:s', $lock->lockedAt );
 		if( $helperTime )
 			$lockedAt	= $helperTime->convert( $lock->lockedAt, TRUE, 'vor ' );
 
-		$link	= HtmlTag::create( 'a', '<kbd><small>'.$lock->IP.'</small></kbd>', array(
+		$link	= HtmlTag::create( 'a', '<kbd><small>'.$lock->IP.'</small></kbd>', [
 			'href'	=> './manage/ip/lock/edit/'.$lock->ipLockId,
-		) );
+		] );
 		$reason	= HtmlTag::create( 'div', $lock->reason->title, ['class' => 'autocut'] );
 		$rowClass	= 'success';
 		if( $lock->status < 1 )
@@ -100,14 +100,14 @@ if( $locks ){
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
 		), ['class' => $rowClass] );
 	}
-	$heads	= array(
+	$heads	= [
 		'IP-Adresse',
 		'Zustand',
 		'Sperrung',
 		'Aufhebung',
 		'Grund',
 		'Aktion',
-	);
+	];
 	$colgroup	= HtmlElements::ColumnGroup( "140px", "10%", "120px", "140px", "", "110px" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
@@ -115,10 +115,10 @@ if( $locks ){
 }
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
 	'href'	=> './manage/ip/lock/add',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 
 function renderListNumbers( $page, $limit, $count, $total ){

@@ -7,13 +7,13 @@ UI_HTML_Tabs::$version	= 4;
 $tabs	= new UI_HTML_Tabs();
 $activeTab	= 0;
 
-$mapTabs	= array(
+$mapTabs	= [
 	'resources'	=> 'tabResources',
 	'config'	=> 'tabConfiguration',
 	'database'	=> 'tabDatabase',
 //	'links'		=> 'tabLinks',
 	'relations'	=> 'tabRelations',
-);
+];
 $nr			= 0;
 $disabled	= [];
 foreach( $mapTabs as $key => $tabLabel ){
@@ -30,10 +30,10 @@ foreach( $mapTabs as $key => $tabLabel ){
 	$nr++;
 }
 
-$options	= array(
+$options	= [
 	'active'	=> $activeTab,
 	'disabled'	=> $disabled
-);
+];
 
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 */

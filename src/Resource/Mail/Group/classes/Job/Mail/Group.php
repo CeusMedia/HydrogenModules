@@ -18,10 +18,10 @@ class Job_Mail_Group extends Job_Abstract
 			if( $group->type == Model_Mail_Group::TYPE_INVITE )
 				continue;
 
-			$indices	= array(
+			$indices	= [
 				'mailGroupId'	=> $group->mailGroupId,
 				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
-			);
+			];
 			$members	= $modelMember->getAllByIndices( $indices );
 			if( $members )
 				$this->out( 'Mail Group: '.$group->title );
@@ -32,12 +32,12 @@ class Job_Mail_Group extends Job_Abstract
 						'modifiedAt'	=> time(),
 					) );
 
-				$action	= $modelAction->getByIndices( array(
+				$action	= $modelAction->getByIndices( [
 					'action'			=> 'activateAfterConfirm',
 					'mailGroupId'		=> $group->mailGroupId,
 					'mailGroupMemberId'	=> $member->mailGroupMemberId,
 					'status'			=> 0,
-				) );
+				] );
 
 				if( $action ){
 					$count++;
@@ -47,25 +47,25 @@ class Job_Mail_Group extends Job_Abstract
 							continue;
 						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
 							continue;
-						$mailData	= array(
+						$mailData	= [
 							'member'	=> $member,
 							'group'		=> $group,
 							'greeting'	=> $action->message,
-						);
-						$receiver	= (object) array(
+						];
+						$receiver	= (object) [
 							'username'	=> $entry->title,
 							'email'		=> $entry->address
-						);
+						];
 						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
 						$language	= $this->env->getLanguage()->getLanguage();
 						if( !$this->dryMode )
 							$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
 					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
-					$receiver	= (object) array(
+					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address
-					);
+					];
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){
@@ -90,11 +90,11 @@ class Job_Mail_Group extends Job_Abstract
 		$groups			= $this->logicGroup->getGroups();
 		$count			= 0;
 		foreach( $groups as $group ){
-			$actions	= $modelAction->getAllByIndices( array(
+			$actions	= $modelAction->getAllByIndices( [
 				'action'			=> 'informAfterFirstActivate',
 				'mailGroupId'		=> $group->mailGroupId,
 				'status'			=> 0,
-			) );
+			] );
 			if( $actions ){
 				$manager	= $modelUser->get( $group->managerId );
 				foreach( $actions as $action ){
@@ -111,15 +111,15 @@ class Job_Mail_Group extends Job_Abstract
 							continue;
 						if( $entry->mailGroupMemberId === $member->mailGroupMemberId )
 							continue;
-						$mailData	= array(
+						$mailData	= [
 							'member'	=> $member,
 							'group'		=> $group,
 							'greeting'	=> $action->message,
-						);
-						$receiver	= (object) array(
+						];
+						$receiver	= (object) [
 							'username'	=> $entry->title,
 							'email'		=> $entry->address
-						);
+						];
 						$mail		= new Mail_Info_Mail_Group_Members_MemberJoined( $this->env, $mailData );
 						$language	= $this->env->getLanguage()->getLanguage();
 						if( !$this->dryMode )
@@ -127,10 +127,10 @@ class Job_Mail_Group extends Job_Abstract
 						$this->out( '  - Member: "'.$entry->title.'" <'.$entry->address.'>' );
 					}
 					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
-					$receiver	= (object) array(
+					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address
-					);
+					];
 					$language	= $this->env->getLanguage()->getLanguage();
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){

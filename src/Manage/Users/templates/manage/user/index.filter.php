@@ -93,17 +93,17 @@ return '
 			</div>
 			<div class="buttonbar">
 				'.HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, array(
+					HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, [
 						'type'		=> 'submit',
 						'name'		=> 'filter',
 						'title'		=> $w->buttonFilter,
 						'class'		=> 'btn not-btn-sm btn-info'
-					) ),
-					HtmlTag::create( 'a', $iconReset, array(
+					] ),
+					HtmlTag::create( 'a', $iconReset, [
 						'href'		=> './manage/user/filter/reset',
 						'title'		=> $w->buttonReset,
 						'class'		=> 'btn not-btn-sm bs2-btn-inverse bs3-btn-default bs4-btn-dark'
-					) ),
+					] ),
 				), ['class' => 'btn-group'] ).'
 			</div>
 		</form>

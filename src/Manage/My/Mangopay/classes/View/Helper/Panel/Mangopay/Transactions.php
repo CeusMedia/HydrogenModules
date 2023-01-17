@@ -7,11 +7,11 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay{
 
 	public function __construct( Environment $env, $options = [] ){
-		parent::__construct( $env, array_merge( array(
+		parent::__construct( $env, array_merge( [
 			'linkItem'	=> './manage/my/mangopay/transaction/view/%s',
 			'linkBack'	=> '',
 			'linkAdd'	=> '',
-		), $options ) );
+		], $options ) );
 	}
 
 	public function render(){

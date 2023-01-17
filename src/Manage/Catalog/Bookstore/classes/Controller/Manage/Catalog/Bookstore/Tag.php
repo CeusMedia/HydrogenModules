@@ -40,10 +40,10 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 //print_m( $list[0] );die;
 		foreach( $list as $item ){
 			if( !array_key_exists( $item->tag, $tags ) ){
-				$tags[$item->tag]	= (object) array(
+				$tags[$item->tag]	= (object) [
 					'tag'			=> $item->tag,
 					'articleIds'	=> [],
-				);
+				];
 			}
 			$tags[$item->tag]->articleIds[]	= $item->articleId;
 		}

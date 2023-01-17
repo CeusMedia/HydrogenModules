@@ -71,9 +71,9 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 
 	protected function renderLinkedTitle( $mission )
 	{
-		return HtmlTag::create( 'a', $mission->title, array(
+		return HtmlTag::create( 'a', $mission->title, [
 			'href'	=> './work/mission/view/'.$mission->missionId
-		) );
+		] );
 	}
 
 	protected function setSubjectFromMission( $mission )

@@ -53,11 +53,11 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$gradeId	= $this->modelGrade->add( $data );
 
 		foreach( $this->request->get( 'price' ) as $zoneId => $price )
-			$this->modelPrice->add( array(
+			$this->modelPrice->add( [
 				'gradeId'	=> $gradeId,
 				'zoneId'	=> $zoneId,
 				'price'		=> $price,
-			) );
+			] );
 
 		$this->restart( NULL, TRUE );
 	}
@@ -71,18 +71,18 @@ class Controller_Manage_Shop_Shipping extends Controller
 			$this->modelZone->edit( $zoneId, ['fallback' => 1] );
 		else{
 			foreach( $this->request->get( 'country' ) as $countryCode )
-			$this->modelCountry->add( array(
+			$this->modelCountry->add( [
 				'zoneId'		=> $zoneId,
 				'countryCode'	=> $countryCode,
-			) );
+			] );
 		}
 
 		foreach( $this->request->get( 'price' ) as $gradeId => $price )
-			$this->modelPrice->add( array(
+			$this->modelPrice->add( [
 				'gradeId'	=> $gradeId,
 				'zoneId'	=> $zoneId,
 				'price'		=> $price,
-			) );
+			] );
 
 		$this->restart( NULL, TRUE );
 	}
@@ -102,23 +102,23 @@ class Controller_Manage_Shop_Shipping extends Controller
 
 		foreach( $grades as $grade ){
 			foreach( $zones as $zone ){
-				$indices	= array(
+				$indices	= [
 					'gradeId'	=> $grade->gradeId,
 					'zoneId'	=> $zone->zoneId,
-				);
+				];
 				if( isset( $prices[$zone->zoneId][$grade->gradeId] ) ){
 					$price	= $prices[$zone->zoneId][$grade->gradeId];
 					$price	= str_replace( ',', '.', $price );
 					if( !isset( $priceMatrix[$zone->zoneId][$grade->gradeId] ) ){
-						$this->modelPrice->add( array_merge( $indices ), array(
+						$this->modelPrice->add( array_merge( $indices ), [
 							'price'	=> $price,
-						) );
+						] );
 					}
 					else{
 						if( $priceMatrix[$zone->zoneId][$grade->gradeId] != $price ){
-							$this->modelPrice->editByIndices( $indices, array(
+							$this->modelPrice->editByIndices( $indices, [
 								'price'	=> $price,
-							) );
+							] );
 						}
 					}
 				}

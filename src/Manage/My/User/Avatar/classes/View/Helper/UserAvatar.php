@@ -25,10 +25,10 @@ class View_Helper_UserAvatar{
 			throw new RuntimeException( "No user set" );
 		if( isset( $this->cache[$this->userId] ) )
 			return $this->cache[$this->userId];
-		$avatar	= $this->modelAvatar->getByIndices( array(
+		$avatar	= $this->modelAvatar->getByIndices( [
 			'userId'	=> $this->userId,
 //			'status'	=> 1,
-		) );
+		] );
 		$this->cache[$this->userId]	= $avatar;
 		if( !$avatar )
 			return NULL;

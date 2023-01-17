@@ -121,12 +121,12 @@ class Controller_Work_Billing_Bill extends Controller
 		$billShares			= $this->logic->getBillShares( $billId );
 		$billReserves		= $this->logic->getBillReserves( $billId );
 		foreach( $billReserves as $billReserve ){
-			$transactions	= $this->logic->getTransactions( array(
+			$transactions	= $this->logic->getTransactions( [
 				'fromType'	=> Model_Billing_Transaction::TYPE_BILL,
 				'fromId'	=> $billId,
 				'status'	=> Model_Billing_Transaction::STATUS_BOOKED,
 				'relation'	=> '%|billReserve:'.$billReserve->billReserveId.'|%',
-			) );
+			] );
 			foreach( $transactions as $transaction )
 //				remark( 'Revert share transaction '.$transaction->transactionId );
 				$this->logic->revertTransaction( $transaction->transactionId );

@@ -84,10 +84,10 @@ class Controller_Info_Manual extends Controller
 		$categoryId	= (int) $categoryId;
 		$category	= $this->checkCategoryId( $categoryId );
 		$this->session->set( 'filter_info_manual_categoryId', $categoryId );
-		$conditions	 = array(
+		$conditions	 = [
 			'manualCategoryId'	=> $category->manualCategoryId,
 			'status'			=> '>= '.Model_Manual_Category::STATUS_NEW,
-		);
+		];
 		$orders		= ['rank' => 'ASC'];
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
 		if( !$pages ){

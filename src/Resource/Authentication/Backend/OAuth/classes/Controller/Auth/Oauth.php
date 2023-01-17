@@ -66,9 +66,9 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $response->error ) ){
 					$error	= $response->error;
 					if( !empty( $response->error_description ) )
-						$error	= HtmlTag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, [
 							'title' => $response->error_description
-						) );
+						] );
 					$this->messenger->noteError( $error );
 				}
 				else{
@@ -161,9 +161,9 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $responseData->error ) ){
 					$error	= $responseData->error;
 					if( !empty( $responseData->error_description ) )
-						$error	= HtmlTag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, [
 							'title' => $responseData->error_description
-						) );
+						] );
 					$this->messenger->noteError( $error );
 				}
 
@@ -351,9 +351,9 @@ class Controller_Auth_Oauth extends Controller
 					if( !empty( $response->error ) ){
 						$error	= $response->error;
 						if( !empty( $response->error_description ) )
-							$error	= HtmlTag::create( 'abbr', $error, array(
+							$error	= HtmlTag::create( 'abbr', $error, [
 								'title' => $response->error_description
-							) );
+							] );
 						$this->messenger->noteError( $error );
 						$this->logout();
 					}

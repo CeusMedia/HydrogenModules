@@ -267,7 +267,7 @@ die;																								//  @todo handle exception without die
 
 	protected function compareModuleFiles( string $moduleId, array $pathLinks = [] )
 	{
-		$fileTypes	= array(
+		$fileTypes	= [
 			'classes'	=> 'class',
 			'files'		=> 'file',
 			'images'	=> 'image',
@@ -275,7 +275,7 @@ die;																								//  @todo handle exception without die
 			'scripts'	=> 'script',
 			'styles'	=> 'style',
 			'templates'	=> 'template',
-		);
+		];
 		$files			= [];
 		$moduleLocal	= $this->logic->getModule( $moduleId );
 
@@ -315,7 +315,7 @@ die;																								//  @todo handle exception without die
 							$status	= 2;
 					}
 				}
-				$files[]	= (object) array(
+				$files[]	= (object) [
 					'moduleId'		=> $moduleId,
 					'status'		=> $status,
 					'file'			=> $file,
@@ -325,7 +325,7 @@ die;																								//  @todo handle exception without die
 					'pathLocal'		=> $target,
 					'pathSource'	=> $source,
 //					'diff'			=> $diff
-				);
+				];
 			}
 		}
 		return $files;

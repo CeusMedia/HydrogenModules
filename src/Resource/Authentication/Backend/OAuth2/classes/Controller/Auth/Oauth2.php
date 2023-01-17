@@ -345,11 +345,11 @@ class Controller_Auth_Oauth2 extends Controller
 			throw new RangeException( 'Invalid provider ID' );
 		if( !class_exists( $provider->className ) )
 			throw new RuntimeException( 'OAuth2 provider class is not existing: '.$provider->className );
-		$options		= array(
+		$options		= [
 			'clientId'		=> $provider->clientId,
 			'clientSecret'	=> $provider->clientSecret,
 			'redirectUri'	=> $this->env->url.$redirectPath,
-		);
+		];
 		if( $provider->options )
 			$options	= array_merge( $options, json_decode( $provider->options, TRUE ) );
 		return ObjectFactory::createObject( $provider->className, [$options] );

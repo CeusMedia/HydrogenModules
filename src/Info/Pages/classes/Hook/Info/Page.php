@@ -119,11 +119,11 @@ class Hook_Info_Page extends Hook
 			return;
 		$acl	= $env->getAcl();
 		$model	= new Model_Page( $env );
-		$paths	= array(
+		$paths	= [
 			'public'	=> ['info_page_index'],
 			'inside'	=> [],
 			'outside'	=> []
-		);
+		];
 		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );						//  get all module based pages
 		foreach( $pages as $page ){																	//  iterate pages
 			$className	= 'Controller_'.$page->controller;											//  page delivers unprefixed controller class name
@@ -240,12 +240,12 @@ class Hook_Info_Page extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
 		$shortCodes		= array(
-			'page'		=> array(
+			'page'		=> [
 				'nr'		=> 0,
 				'id'		=> '',
 				'disabled'	=> FALSE,
 				'ignore'	=> FALSE,
-			)
+			]
 		);
 		$words	= $env->getLanguage()->getWords( 'info/pages' );
 		$msgs	= (object) $words['hook-dispatch'];
@@ -329,12 +329,12 @@ class Hook_Info_Page extends Hook
 			$suffix	= $options->get( 'title.separator' ).$words['main']['title'];
 			$title	= preg_replace( '/'.preg_quote( $suffix, '/' ).'$/', '', $resultDocument->title );
 
-			$resultDocument->facts	= (object) array(
+			$resultDocument->facts	= (object) [
 				'category'		=> 'Seite:',
 				'title'			=> $title,
 				'link'			=> $resultDocument->path,
 				'image'			=> NULL,
-			);
+			];
 		}
 	}
 }

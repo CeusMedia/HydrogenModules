@@ -400,10 +400,10 @@ class Controller_Manage_User extends Controller
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
 			$orders	= [$order => $dir];
-		$data	= array(
+		$data	= [
 			'filters'	=> $filters,
 			'orders'	=> $orders
-		);
+		];
 
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );

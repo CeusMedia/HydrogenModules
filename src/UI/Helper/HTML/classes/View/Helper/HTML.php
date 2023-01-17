@@ -19,9 +19,9 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 	{
 		if( !strlen( trim( $title ) ) )
 			$label;
-		$attributes	= array(
+		$attributes	= [
 			'title'		=> $title
-		);
+		];
 		return self::Tag( 'abbr', $label, $attributes );
 	}
 
@@ -85,13 +85,13 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function File( string $name, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes	= array(
+		$attributes	= [
 			'type'		=> 'file',
 			'name'		=> $name,
 			'id'		=> self::$prefixIdInput.$name,
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
@@ -102,13 +102,13 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			$content	= join( $content );
 		if( substr_count( $content, ' type="file"' ) )
 			$enctype	= 'multipart/form-data';
-		$attributes		= array_merge( array(
+		$attributes		= array_merge( [
 			'name'		=> $name,
 			'action'	=> $url,
 			'id'		=> $name === NULL ? NULL : self::$prefixIdForm.$name,
 			'method'	=> "post",
 			'enctype'	=> $enctype,
-		), $attributes );
+		], $attributes );
 		return self::Tag( 'form', $content, $attributes );
 	}
 
@@ -167,10 +167,10 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			$content	= self::Tag( 'abbr', $content, ['title' => $acronym] );
 		if( $suffix )
 			$content	.= '&nbsp;'.self::Tag( 'small', '('.$suffix.')', ['class' => 'muted'] );
-		$attributes	= array(
+		$attributes	= [
 			'for'		=> $inputName === NULL ? NULL : self::$prefixIdInput.$inputName,
 			'class'		=> $class,
-		);
+		];
 		return self::Tag( 'label', $content, $attributes );
 	}
 
@@ -223,13 +223,13 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function Password( string $name, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes		= array(
+		$attributes		= [
 			'type'		=> 'password',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
@@ -265,13 +265,13 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 	public static function Text( string $name, $content, string $class = NULL, int $numberRows = NULL, bool $readonly = NULL ): string
 	{
 		$content	= htmlspecialchars( $content, ENT_COMPAT, 'UTF-8' );
-		$attributes	= array(
+		$attributes	= [
 			'name'		=> $name,
 			'id'		=> self::$prefixIdInput.$name,
 			'class'		=> $class,
 			'rows'		=> $numberRows,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		return HTML::Tag( 'textarea', $content, $attributes );
 	}
 

@@ -61,11 +61,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	 */
 	public function addOutsideLink( string $path, string $label, string $icon = NULL ): self
 	{
-		$this->linksOutside[]	= (object) array(
+		$this->linksOutside[]	= (object) [
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
-		);
+		];
 		return $this;
 	}
 
@@ -140,16 +140,16 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			$avatar,
 			$labels,
 			HtmlTag::create( 'div', '', ['class' => 'clearfix'] ),
-		), array(
+		), [
 			'id' 			=> 'drop-account',
 			'role'			=> 'button',
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
-		) );
-		return HtmlTag::create( 'div', [$trigger, $links], array(
+		] );
+		return HtmlTag::create( 'div', [$trigger, $links], [
 			'id' => 'account-menu',
 			'class' => 'dropdown '.$classMenu
-		) );
+		] );
 	}
 
 	protected function renderMenuLinks(): string
@@ -161,18 +161,18 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		foreach( $pages as $page ){
 			$class	= $page->active ? 'active' : NULL;
 //			$href	= $page->path == "index" ? './' : './'.$page->link;
-			$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array(
+			$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), [
 				'role'		=> "menuitem",
 				'tabindex'	=> "-1",
 				'href'		=> $page->link,
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, [
 			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
-		) );
+		] );
 	}
 
 	protected function renderSetLinks( array $links ): string
@@ -182,27 +182,27 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 				$icon	= "";
 				if( $link->icon )
 					$icon	= HtmlTag::create( 'i', "", ['class' => $link->icon] ).'&nbsp;';
-				$attributes	= array(
+				$attributes	= [
 					'role'		=> "menuitem",
 					'tabindex'	=> "-1",
 					'href'		=> $link->link,
-				);
+				];
 				$link	= HtmlTag::create( 'a', $icon.$link->label, $attributes );
 				$list[]	= HtmlTag::create( 'li', $link , ['role' => 'presentation'] );
 			}
 			else{
-				$attributes	= array(
+				$attributes	= [
 					'role'	=> "presentation",
 					'class'	=> "divider"
-				);
+				];
 				$list[]	= HtmlTag::create( 'li', "", $attributes );
 			}
 		}
-		$attributes	= array(
+		$attributes	= [
 			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
-		);
+		];
 		$links	= HtmlTag::create( 'ul', $list, $attributes );
 		return $links;
 	}

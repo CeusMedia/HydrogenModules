@@ -50,12 +50,12 @@ foreach( $modules as $moduleId => $module ){
 		<td>'.$category.'</td>
 	</tr>';
 }
-$heads		= array(
+$heads		= [
 	$words['index']['headTitle'],
 	$words['index']['headType'],
 	$words['index']['headVersion'],
 	$words['index']['headCategory'],
-);
+];
 $heads		= HtmlElements::TableHeads( $heads );
 $colGroup	= HtmlElements::ColumnGroup( "58%,14%,8%,20%" );
 $listAll	= '<table class="modules all table table-striped" style="table-layout: fixed">

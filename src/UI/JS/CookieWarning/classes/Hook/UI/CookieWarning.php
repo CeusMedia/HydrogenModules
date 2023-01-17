@@ -29,9 +29,9 @@ class Hook_UI_CookieWarning extends Hook
 				}
 				$buttons	= join( '&nbsp;', $buttons );
 				$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
-				$content	= HtmlTag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, array(
+				$content	= HtmlTag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, [
 					'id'	=> 'cookie-warning-inner'
-				) );
+				] );
 				$bar		= HtmlTag::create( 'div', $content, array(
 					'class'	=> $options->get( 'absolute' ) ? 'absolute '.$options->get( 'absolute.position' ) : 'static',
 					'id'	=> 'cookie-warning',

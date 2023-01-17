@@ -157,16 +157,16 @@ $(document).ready(function(){
 		}
 
 
-		$btnControlPrev	= HtmlTag::create( 'a', '&laquo;',  array(
+		$btnControlPrev	= HtmlTag::create( 'a', '&laquo;',  [
 			'href'		=> './info/event/setMonth/'.$prevYear.'/'.$prevMonth,
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat vor',
-		) );
-		$btnControlNext	= HtmlTag::create( 'a', '&raquo;',  array(
+		] );
+		$btnControlNext	= HtmlTag::create( 'a', '&raquo;',  [
 			'href'		=> './info/event/setMonth/'.$nextYear.'/'.$nextMonth,
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat weiter',
-		) );
+		] );
 		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  array(
 			'href'		=> './info/event/setMonth/'.date( 'Y' ).'/'.date( 'm' ),
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
@@ -176,12 +176,12 @@ $(document).ready(function(){
 
 		$label      = $this->renderLabel( $this->year, $this->month );
 
-		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', array(
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
 			'href'		=> './info/event/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',
 			'style'		=> 'font-weight: normal',
-		) );
+		] );
 		return '
 	<div id="mission-calendar-control" class="row-fluid">
 		<div class="span8">
@@ -210,11 +210,11 @@ $(document).ready(function(){
 			if( $eventDate->diff( $date )->days !== 0 )
 				continue;
 			$title		= htmlentities( $event->title, ENT_QUOTES, 'UTF-8' );
-			$title		= HtmlTag::create( 'a', $title, array(
+			$title		= HtmlTag::create( 'a', $title, [
 				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
-			) );
+			] );
 			$list[]		= HtmlTag::create( 'li', $title, array(
 				"data-id"		=> $event->eventId,
 				"data-status"	=> $event->status,

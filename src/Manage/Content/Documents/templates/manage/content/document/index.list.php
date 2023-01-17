@@ -23,10 +23,10 @@ if( $documents ){
 		);
 		$remove		= HtmlTag::create( 'a', $iconRemove, $attributes );
 		$filePath	= $frontendPath.$pathDocuments.$entry;
-		$link		= HtmlTag::create( 'a', $entry, array(
+		$link		= HtmlTag::create( 'a', $entry, [
 			'href'		=> $filePath,
 			'target'	=> '_blank'
-		) );
+		] );
 		$uploadedAt	= $helper->convert( filemtime( $filePath ), TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 		$size		= UnitFormater::formatBytes( filesize( $filePath ) );
 		$actions	= in_array( 'remove', $rights ) ? $remove : '';
@@ -47,10 +47,10 @@ if( $documents ){
 	);
 	$colgroup	= HtmlElements::ColumnGroup( "", "140px", "80px", "40px" );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> 'table table-striped table-fixed',
 		'id'	=> 'table-documents',
-	) );
+	] );
 }
 
 

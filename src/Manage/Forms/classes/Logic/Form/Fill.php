@@ -222,10 +222,10 @@ class Logic_Form_Fill extends Logic
 
 		$form		= clone $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
-		$rulesets	= $this->modelRule->getAllByIndices( array(
+		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
-		) );
+		] );
 		foreach( $rulesets as $rulesetNr => $ruleset ){
 			$ruleset->rules	= json_decode( $ruleset->rules );
 			if( count( $ruleset->rules ) ){
@@ -249,10 +249,10 @@ class Logic_Form_Fill extends Logic
 			throw new DomainException( 'Invalid mail ID ('.$form->customerMailId.') connected to form ('.$form->formId.')' );
 
 		$form->attachments	= [];
-		$rulesets	= $this->modelRule->getAllByIndices( array(
+		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_ATTACHMENT,
-		) );
+		] );
 //print_m( $rulesets );
 
 		foreach( $rulesets as $rulesetNr => $ruleset ){
@@ -322,10 +322,10 @@ class Logic_Form_Fill extends Logic
 		$form		= $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
 		$receivers	= [];
-		$rulesets	= $this->modelRule->getAllByIndices( array(
+		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,
-		) );
+		] );
 		foreach( $rulesets as $ruleset ){
 			$ruleset->rules	= json_decode( $ruleset->rules );
 			$valid	= TRUE;

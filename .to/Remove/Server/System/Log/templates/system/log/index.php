@@ -15,14 +15,14 @@ if( $exceptions ){
 		$time	= date( 'H:i:s', $exception->timestamp );
 
 		$buttons	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', $iconView, array(
+			HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn btn-mini not-btn-info',
 				'href'	=> './system/log/view/'.$exception->id
-			) ),
-			HtmlTag::create( 'a', $iconRemove, array(
+			] ),
+			HtmlTag::create( 'a', $iconRemove, [
 				'class'	=> 'btn btn-mini btn-danger',
 				'href'	=> './system/log/remove/'.$exception->id
-			) ),
+			] ),
 		), array( 'class' => 'btn-group' ) );
 
 		$list[]	= HtmlTag::create( 'tr', array(

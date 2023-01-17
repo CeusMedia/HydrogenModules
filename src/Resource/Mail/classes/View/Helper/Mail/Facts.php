@@ -15,10 +15,10 @@ class View_Helper_Mail_Facts
 	const FORMAT_HTML				= 0;
 	const FORMAT_TEXT				= 1;
 
-	const FORMATS					= array(
+	const FORMATS					= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
-	);
+	];
 
 	public function add( $keyOrLabel, $valueAsHtml, $valueAsText = NULL, $direction = NULL ): self
 	{
@@ -28,13 +28,13 @@ class View_Helper_Mail_Facts
 			$label	= $this->labels[$key];
 		if( !empty( $this->labels['label'.ucFirst( $key )] ) )
 			$label	= $this->labels['label'.ucFirst( $key )];
-		$this->facts[]	= (object) array(
+		$this->facts[]	= (object) [
 			'key'		=> $key,
 			'label'		=> $label,
 			'valueHtml'	=> $valueAsHtml,
 			'valueText'	=> $valueAsText,
 			'direction'	=> $direction,
-		);
+		];
 		return $this;
 	}
 
@@ -93,9 +93,9 @@ class View_Helper_Mail_Facts
 					$class	= $this->changedFactClassPos;
 				else if( $fact->direction === FALSE || $fact->direction === -1 )
 					$class	= $this->changedFactClassNeg;
-				$value	= HtmlTag::create( 'span', $fact->valueHtml, array(
+				$value	= HtmlTag::create( 'span', $fact->valueHtml, [
 					'class'	=> $class
-				) );
+				] );
 			}
 			$term		= HtmlTag::create( 'dt', $fact->label );
 			$definition	= HtmlTag::create( 'dd', $value.'&nbsp;' );

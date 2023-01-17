@@ -6,11 +6,11 @@ use CeusMedia\Common\CLI\RequestReceiver;
 use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 
 $configFile		= "config/config.ini";								//  set (an alternative) config file
-$modes			= array(
+$modes			= [
 	'live',
 	'test',
 	'dev',
-);
+];
 
 //  --  NO NEED TO CHANGE BELOW  --  //
 require_once "vendor/autoload.php";

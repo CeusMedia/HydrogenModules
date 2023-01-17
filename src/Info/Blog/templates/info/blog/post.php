@@ -10,18 +10,18 @@ if( strlen( $post->content ) === strlen( strip_tags( $post->content ) ) )
 $content	= $view->renderContent( $post->content, 'HTML' );
 $infobar	= View_Info_Blog::renderPostInfoBarStatic( $env, $post );
 
-$blogPost	= HtmlTag::create( 'div', $title.$infobar.$content, array(
+$blogPost	= HtmlTag::create( 'div', $title.$infobar.$content, [
 	'class'		=> 'blog-post'
-) );
+] );
 
 $iconIndex	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $linkNext	= '';
 $linkPrev	= '';
-$linkIndex	= HtmlTag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, array(
+$linkIndex	= HtmlTag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, [
 	'href'	=> './info/blog',
 	'class'	=> 'btn'
-) );
+] );
 
 if( $prevPost ){
 	$label		= HtmlTag::create( 'span', $w->linkPrev, ['class' => 'muted'] );

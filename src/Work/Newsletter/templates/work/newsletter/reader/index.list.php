@@ -13,11 +13,11 @@ $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconImport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] ).'&nbsp;';
 $iconExport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
 
-$statusIcons	= array(
+$statusIcons	= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'check',
-);
+];
 
 $labelEmpty	= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
 $list		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
@@ -46,12 +46,12 @@ if( $readers ){
 		$list[]			= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
-	$tableHeads		= HtmlElements::TableHeads( array(
+	$tableHeads		= HtmlElements::TableHeads( [
 		$words->index->columnTitle,
 		$words->index->columnGroups,
 		$words->index->columnStatus,
 		$words->index->columnRegister
-	) );
+	] );
 	$tableColumns	= HtmlElements::ColumnGroup( ['', '40%', '100px', '100px'] );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
@@ -63,25 +63,25 @@ $pagination		= new \CeusMedia\Bootstrap\PageControl( './work/newsletter/reader',
 $buttonImport	= '';
 if( $env->getAcl()->has( 'work/newsletter/reader', 'import' ) ){
 	$buttonImport	= HtmlTag::create( 'div', array(
-		HtmlTag::create( 'a', $iconImport.'importieren&nbsp;<span class="caret"></span>', array(
+		HtmlTag::create( 'a', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
-		) ),
+		] ),
 		HtmlTag::create( 'ul', array(
 			HtmlTag::create( 'li', array(
-				HtmlTag::create( 'a', 'aus Empfängerliste', array(
+				HtmlTag::create( 'a', 'aus Empfängerliste', [
 					'href'			=> '#modalImportList',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
-				) )
+				] )
 			) ),
 			HtmlTag::create( 'li', array(
-				HtmlTag::create( 'a', 'aus CSV-Exportdatei', array(
+				HtmlTag::create( 'a', 'aus CSV-Exportdatei', [
 					'href'			=> '#modalImportCsv',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
-				) )
+				] )
 			) ),
 		), ['class' => 'dropdown-menu'] ),
 	), ['class' => 'btn-group'] );
@@ -97,21 +97,21 @@ if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
 $buttonExport	= '';
 if( $env->getAcl()->has( 'work/newsletter/reader', 'export' ) ){
 	$buttonExport	= HtmlTag::create( 'div', array(
-		HtmlTag::create( 'a', $iconExport.'exportieren&nbsp;<span class="caret"></span>', array(
+		HtmlTag::create( 'a', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
-		) ),
+		] ),
 		HtmlTag::create( 'ul', array(
 			HtmlTag::create( 'li', array(
-				HtmlTag::create( 'a', 'in Empfängerliste', array(
+				HtmlTag::create( 'a', 'in Empfängerliste', [
 					'href'	=> './work/newsletter/reader/export/list',
-				) )
+				] )
 			) ),
 			HtmlTag::create( 'li', array(
-				HtmlTag::create( 'a', 'in CSV-Exportdatei', array(
+				HtmlTag::create( 'a', 'in CSV-Exportdatei', [
 					'href'	=> './work/newsletter/reader/export/csv',
-				) )
+				] )
 			) ),
 		), ['class' => 'dropdown-menu'] ),
 	), ['class' => 'btn-group'] );
@@ -124,10 +124,10 @@ if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
 	) );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'neuer Abonnent', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'neuer Abonnent', [
 	'href'		=> './work/newsletter/reader/add',
 	'class'		=> 'btn btn-success btn-small',
-) );
+] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 1 ) )
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.'neuer Leser', array(
 		'type'		=> 'button',

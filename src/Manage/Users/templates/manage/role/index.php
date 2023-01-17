@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
 
-$heads	= array(
+$heads	= [
 	$wf->headTitle,
 	$wf->headUsers,
 	$wf->headAccess,
 	$wf->headRegister
-);
+];
 
 $rows	= [];
 foreach( $roles as $nr => $role ){
@@ -45,10 +45,10 @@ if( $hasRightToAdd ){
 	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
 		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
-	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, array(
+	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, [
 		'href'	=> './manage/role/add',
 		'class'	=> 'btn btn-success'
-	) );
+	] );
 }
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/role/' ) );

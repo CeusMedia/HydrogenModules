@@ -20,45 +20,45 @@ return '
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">Titel</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> "text",
 								'id'		=> "input_title",
 								'name'		=> "title",
 								'class'		=> "span12",
 								'required'	=> "required",
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_form">Ausführung</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> "text",
 								'id'		=> "input_form",
 								'name'		=> "form",
 								'class'		=> "span12",
 								'required'	=> "required",
-							) ).'
+							] ).'
 						</div>
 						<div class="span4">
 							<label for="input_size">Größe</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> "text",
 								'id'		=> "input_size",
 								'name'		=> "size",
 								'class'		=> "span12",
 								'required'	=> "required",
-							) ).'
+							] ).'
 						</div>
 						<div class="span4">
 							<label for="input_price">Preis <small class="muted">(€€.¢¢)</small></label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> "text",
 								'id'		=> "input_price",
 								'name'		=> "price",
 								'class'		=> "span12",
 								'required'	=> "required",
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="buttonbar">

@@ -15,23 +15,23 @@ $list	= '<div class="muted"><em><small>No exceptions logged.</small></em></div>'
 if( $exceptions ){
 	$list	= [];
 	foreach( $exceptions as $item ){
-		$link	= HtmlTag::create( 'a', $item->message, array(
+		$link	= HtmlTag::create( 'a', $item->message, [
 			'href'	=> './server/log/exception/view/'.$item->exceptionId,
 			'class'	=> 'autocut',
-		) );
+		] );
 		$date	= date( 'Y.m.d', $item->createdAt );
 		$time	= date( 'H:i:s', $item->createdAt );
 		$buttons	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'a', $iconView, array(
+			HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn btn-mini not-btn-info',
 				'href'	=> './server/log/exception/view/'.$item->exceptionId,
 				'title'	=> $w->buttonView,
-			) ),
-			HtmlTag::create( 'a', $iconRemove, array(
+			] ),
+			HtmlTag::create( 'a', $iconRemove, [
 				'class'	=> 'btn btn-mini btn-danger',
 				'href'	=> './server/log/exception/remove/'.$item->exceptionId,
 				'title'	=> $w->buttonRemove,
-			) ),
+			] ),
 		), ['class' => 'btn-group'] );
 
 		$list[]	= HtmlTag::create( 'tr', array(

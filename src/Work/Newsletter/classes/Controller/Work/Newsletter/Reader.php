@@ -16,14 +16,14 @@ class Controller_Work_Newsletter_Reader extends Controller
 	protected Dictionary $moduleConfig;
 	protected $limiter;
 
-	protected $filters		= array(
+	protected $filters		= [
 		'email',
 		'firstname',
 		'surname',
 		'status',
 		'groupId',
 		'limit',
-	);
+	];
 	protected $filterPrefix	= 'filter_work_newsletter_reader_';
 
 	public function add()
@@ -49,11 +49,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 						$groups[]	= $this->logic->getGroup( $groupId );
 					}
 				}
-				$data	= array(
+				$data	= [
 					'readerId'	=> $readerId,
 					'reader'	=> $reader,
 					'groups'	=> $groups,
-				);
+				];
 				$status	= (int) $this->request->get( 'status' );
 				if( $this->request->has( 'inform' ) || $status === Model_Newsletter_Reader::STATUS_REGISTERED ){
 					$mail	= new Mail_Work_Newsletter_Invite( $this->env, $data );
@@ -176,12 +176,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 		$filterOrder	= ['email' => 'ASC'];
 
-		$statuses		= array(
+		$statuses		= [
 			-2	=> 'deactivated',
 			-1	=> 'unregistered',
 			0	=> 'registered',
 			1	=> 'confirmed',
-		);
+		];
 
 		$readers		= $this->logic->getReaders( $conditions, $filterOrder );
 		switch( strtolower( $mode ) ){
@@ -200,7 +200,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				print( HtmlTag::create( 'xmp', join( ', ', $list ) ) );
 				exit;
 			case 'csv':
-				$headers	= array(
+				$headers	= [
 					'nr'			=> NULL,
 					'id'			=> NULL,
 					'email'			=> TRUE,
@@ -212,7 +212,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					'institution'	=> TRUE,
 					'groups'		=> TRUE,
 					'registeredAt'	=> TRUE,
-				);
+				];
 				$data	= [join( ';', array_keys( $headers ) )];
 				foreach( array_values( $readers ) as $nr => $reader ){
 					$row	= [];

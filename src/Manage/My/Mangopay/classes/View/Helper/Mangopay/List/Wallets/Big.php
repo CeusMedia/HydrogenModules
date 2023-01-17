@@ -30,10 +30,10 @@ class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstrac
 			$item		= $logo.$title.$balance;
 			$url	= sprintf( $this->link, $wallet->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
-			$list[]	= HtmlTag::create( 'div', $item, array(
+			$list[]	= HtmlTag::create( 'div', $item, [
 				'class'		=> 'card-list-item-large',
 				'onclick'	=> 'document.location.href="./'.$url.'";',
-			) );
+			] );
 		}
 		$list	= HtmlTag::create( 'div', $list );
 		return $list;

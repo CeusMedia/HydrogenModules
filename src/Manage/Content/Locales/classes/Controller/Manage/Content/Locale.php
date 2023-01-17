@@ -22,11 +22,11 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Manage_Content_Locale extends Controller
 {
-	public static $folders	= array(
+	public static $folders	= [
 		'locale'		=> '',
 		'html'			=> 'html/',
 		'mail'			=> 'mail/',
-	);
+	];
 
 	public static $filterPrefix	= 'filter_manage_content_locale_';
 

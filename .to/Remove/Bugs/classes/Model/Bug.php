@@ -20,7 +20,7 @@ class Model_Bug extends Model
 {
 	protected string $name			= 'bugs';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'bugId',
 		'reporterId',
 		'managerId',
@@ -33,18 +33,18 @@ class Model_Bug extends Model
 		'content',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'bugId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'reporterId',
 		'managerId',
 		'type',
 		'severity',
 		'priority',
 		'status',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

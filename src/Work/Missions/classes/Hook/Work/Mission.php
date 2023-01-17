@@ -6,12 +6,12 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Mission extends Hook
 {
-	static $statusesActive	= array(
+	static $statusesActive	= [
 		Model_Mission::STATUS_NEW,
 		Model_Mission::STATUS_ACCEPTED,
 		Model_Mission::STATUS_PROGRESS,
 		Model_Mission::STATUS_READY,
-	);
+	];
 
 	static public function onCollectNovelties( Environment $env, $context, $module, $payload = [] )
 	{
@@ -33,19 +33,19 @@ class Hook_Work_Mission extends Hook
 
 	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
 	{
-		$context->registerModule( (object) array(
+		$context->registerModule( (object) [
 			'moduleId'		=> 'Work_Missions',
 			'typeLabel'		=> 'Aufgabe',
 			'modelClass'	=> 'Model_Mission',
 			'linkDetails'	=> 'work/mission/view/{id}',
-		) );
+		] );
 	}
 
 	static public function onDatabaseLockReleaseCheck( Environment $env, $context, $module, $payload = [] )
 	{
 		$data	= (object) $payload;
 		$controllerAction	= $data->controller.'/'.$data->action;
-		$skipActions		= array(
+		$skipActions		= [
 			'work/mission/export/ical',
 			'work/mission/addDocument',
 			'work/mission/edit',
@@ -53,7 +53,7 @@ class Hook_Work_Mission extends Hook
 			'work/time/start',
 			'work/time/pause',
 			'work/time/stop',
-		);
+		];
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
 		if( !$data->userId )
@@ -129,10 +129,10 @@ class Hook_Work_Mission extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? $mission->missionId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data
@@ -189,10 +189,10 @@ class Hook_Work_Mission extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? $mission->missionId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		if( $list )
 			View_Helper_ItemRelationLister::enqueueRelations(
@@ -248,12 +248,12 @@ class Hook_Work_Mission extends Hook
 			}
 			foreach( $missions as $mission ){
 				$old	= clone $mission;
-				$listProgressingMissionStatues	= array(
+				$listProgressingMissionStatues	= [
 					Model_Mission::STATUS_ACCEPTED,
 					Model_Mission::STATUS_PROGRESS,
 					Model_Mission::STATUS_READY,
 					Model_Mission::STATUS_FINISHED,
-				);
+				];
 				if( $mission->creatorId == $data->userId )
 					$mission->creatorId		= $nextUserId;
 				if( $mission->workerId == $data->userId )
@@ -273,10 +273,10 @@ class Hook_Work_Mission extends Hook
 		if( $nrMissionsChanged )
 			$env->getMessenger()->noteSuccess( 'Reassigned %d missions.', $nrMissionsChanged );
 		if( isset( $data->counts ) )
-			$data->counts['Work_Missions']	= (object) array(
+			$data->counts['Work_Missions']	= (object) [
 				'entities'		=> $nrMissionsRemoved,
 				'relations'		=> $nrMissionsChanged,
-			);
+			];
 	}
 
 	static public function onStartTimer( Environment $env, $context, $module, $payload = [] )
@@ -303,21 +303,21 @@ class Hook_Work_Mission extends Hook
 
 	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload = [] )
 	{
-		$context->registerPanel( 'work-mission-my-today', array(
+		$context->registerPanel( 'work-mission-my-today', [
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
 			'title'		=> 'Heute & Termine',
 			'heading'	=> 'Heute & Termine',
 			'icon'		=> 'fa fa-fw fa-calendar-o',
 			'rank'		=> 10,
 			'refresh'	=> 60,
-		) );
-		$context->registerPanel( 'work-mission-my-tasks', array(
+		] );
+		$context->registerPanel( 'work-mission-my-tasks', [
 			'url'		=> 'work/mission/ajaxRenderDashboardPanel',
 			'title'		=> 'Aufgaben: Meine - Heute',
 			'heading'	=> 'Meine heutigen Aufgaben',
 			'icon'		=> 'fa fa-fw fa-thumb-tack',
 			'rank'		=> 20,
 			'refresh'	=> 120,
-		) );
+		] );
 	}
 }

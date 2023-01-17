@@ -39,10 +39,10 @@ class View_Helper_Manage_Content_Locale_List{
 			$class		= $file->size ? NULL : 'empty';
 			$fileExt	= HtmlTag::create( 'small', '.'.$file->extension, ['class' => 'muted'] );
 			$fileBase	= $file->baseName;
-			$link	= HtmlTag::create( 'a', $fileBase.$fileExt, array(
+			$link	= HtmlTag::create( 'a', $fileBase.$fileExt, [
 				'href'	=> $url,
 				'class'	=> $class
-			) );
+			] );
 			$class	= $this->current == $file->pathName ? "active" : "";
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}

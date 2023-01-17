@@ -50,12 +50,12 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 
 			$rowClass		= $timer->status == 1 ? 'success' : ( $timer->status == 2 ? 'notice' : '' );
 			$rows[]			= HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', array(
+				HtmlTag::create( 'td', [
 					$title,
 					$worker,
 					$linkRelation,
 					$buttons
-				) ),
+				] ),
 			), ['class' => $rowClass] );
 		}
 		$tableHeads	= HtmlTag::create( 'tr', array(
@@ -64,10 +64,10 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		$table		= HtmlTag::create( 'table', array(
 			HtmlTag::create( 'thead', $tableHeads ),
 			HtmlTag::create( 'tbody', $rows ),
-		), array(
+		), [
 			'class'	=> 'table table-striped table-condensed',
 			'style'	=> 'table-layout: fixed'
-		) );
+		] );
 		$script		= 'WorkTimer.init(".timer-short-list", "&nbsp;");';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		return $table;
@@ -149,13 +149,13 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	{
 		if( !$timer->moduleId )
 			return '';
-		$labelType		= HtmlTag::create( 'span', $timer->type.':', array(
+		$labelType		= HtmlTag::create( 'span', $timer->type.':', [
 			'class' => 'muted',
-		) );
-		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+		] );
+		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), [
 			'href'		=> $timer->relationLink,
 			'class'		=> 'title autocut',
-		) );
+		] );
 		$linkRelation	= HtmlTag::create( 'small', [$labelType, $linkRelation] );
 		return HtmlTag::create( 'div', $linkRelation, ['class' => 'autocut'] );
 	}

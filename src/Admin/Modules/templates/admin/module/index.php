@@ -13,11 +13,11 @@ use CeusMedia\HydrogenFramework\View;
 /*  --  MODULE TABLE  --  */
 $list	= [];
 foreach( $modules as $moduleId => $module ){
-	$attributes	= array(
+	$attributes	= [
 		'class'		=> 'module available',
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
-	);
+	];
 	$link		= HtmlTag::create( 'a', $module->title, $attributes );
 	$type		= '<span class="module-type type-'.$module->type.'">'.$words['types'][(int) $module->type].'</span>';
 	$class		= 'module available type-'.$module->type;
@@ -39,11 +39,11 @@ $listAll	= '<table class="modules all">'.$heads.join( $list ).'</table>';
 /*  --  AVAILABLE  --  */
 /*$list	= [];
 foreach( $modulesAvailable as $moduleId => $module ){
-	$attributes	= array(
+	$attributes	= [
 		'class'		=> 'module available',
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
-	);
+	];
 	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module available">'.$link.'</li>';
 }
@@ -53,11 +53,11 @@ $listAvailable	= '<ul class="modules available">'.join( $list ).'</ul>';
 /*  --  INSTALLED  --  */
 /*$list	= [];
 foreach( $modulesInstalled as $moduleId => $module ){
-	$attributes	= array(
+	$attributes	= [
 		'class'		=> 'module installed',
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
-	);
+	];
 	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module installed">'.$link.'</li>';
 }
@@ -67,11 +67,11 @@ $listInstalled	= '<ul class="modules installed">'.join( $list ).'</ul>';
 /*  --  NOT INSTALLED  --  */
 /*$list	= [];
 foreach( $modulesNotInstalled as $moduleId => $module ){
-	$attributes	= array(
+	$attributes	= [
 		'class'		=> 'module',
 		'title'		=> $module->description,
 		'href'		=> './admin/module/view/'.$moduleId
-	);
+	];
 	$link	= HtmlTag::create( 'a', $module->title, $attributes );
 	$list[]	= '<li class="module">'.$link.'</li>';
 }

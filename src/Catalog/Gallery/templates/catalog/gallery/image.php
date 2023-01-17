@@ -28,18 +28,18 @@ $pathOriginal	= $pathImages.'original/'.$category->path.'/';
 
 $title		= $image->title ?: $image->filename;
 $label		= HtmlTag::create( 'p', $title );
-$preview	= HtmlTag::create( 'img', NULL, array(
+$preview	= HtmlTag::create( 'img', NULL, [
 	'src'	=> $pathPreview.$image->filename,
 	'alt'	=> $title,
 	'title'	=> $title,
 	'class'	=> 'thumb',
-) );
+] );
 //$item	= HtmlTag::create( 'div', $preview, ['class' => 'not-span4 thumb'] );
-/*$link	= HtmlTag::create( 'a', $preview, array(
+/*$link	= HtmlTag::create( 'a', $preview, [
 	'href'	=> './catalog/gallery/image/'.$image->galleryImageId,
 	'title'	=> $title,
 	'class'	=> 'thumb'
-) );*/
+] );*/
 $link	= $preview;
 
 $articleId	= $image->galleryImageId;
@@ -85,12 +85,12 @@ if( $pos > 0 ){
 }
 if( $pos < count( $images ) - 1 ){
 	$imageNext		= $images[$pos + 1];
-	$buttonNext		= HtmlTag::create( 'a', $iconNext, array(
+	$buttonNext		= HtmlTag::create( 'a', $iconNext, [
 		'href'		=> './catalog/gallery/image/'.$imageNext->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
 		'title'		=> 'zum Nächsten',
 		'alt'		=> 'zum Nächsten',
-	) );
+	] );
 }
 
 

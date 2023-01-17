@@ -49,10 +49,10 @@ class Job_Info_Forum extends Job_Abstract
 
 		if( $posts ){
 			foreach( $receivers as $receiver ){
-				$data	= array(
+				$data	= [
 					'posts'			=> $posts,
 					'user'			=> $receiver,
-				);
+				];
 				$mail	= new Mail_Forum_Daily( $this->env, $data );
 				if( $this->options->get( 'mail.sender' ) )
 					$mail->setSender( $this->options->get( 'mail.sender' ) );

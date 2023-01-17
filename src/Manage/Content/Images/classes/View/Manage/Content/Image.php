@@ -103,9 +103,9 @@ class View_Manage_Content_Image extends View
 		}
 		$time	= '<div class="label">'.round( ( microtime( TRUE ) - $start ) * 1000, 1 ).'ms</div>';
 		if( $list )
-			return HtmlTag::create( 'ul', $list, array(
+			return HtmlTag::create( 'ul', $list, [
 				'class'	=> 'nav nav-pills nav-stacked not-nav-bordered nav-resizing',
 				'id'	=> 'list-folders',
-		) );
+		] );
 	}
 }

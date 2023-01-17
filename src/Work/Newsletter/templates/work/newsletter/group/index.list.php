@@ -12,11 +12,11 @@ $w		= (object) $words['index'];
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
-$statusIcons		= array(
+$statusIcons		= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'check',
-);
+];
 
 $labelEmpty	= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
 $list		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
@@ -24,10 +24,10 @@ $list		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 if( $groups ){
 	$list	= [];
 	foreach( $groups as $group ){
-		$attributes		= array(
+		$attributes		= [
 			'href'	=> './work/newsletter/group/edit/'.$group->newsletterGroupId,
 			'title'	=> $group->title,
-		);
+		];
 
 		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$group->status]] );
 		$link			= HtmlTag::create( 'a', $group->title, $attributes );
@@ -49,23 +49,23 @@ if( $groups ){
 		$list[]	= HtmlTag::create( 'tr', $cells, $attributes );
 	}
 	$tableRows		= join( $list );
-	$tableHeads		= HtmlElements::TableHeads( array(
+	$tableHeads		= HtmlElements::TableHeads( [
 		$words['index']['columnTitle'],
 		$words['index']['columnType'],
 		$words['index']['columnStatus'],
 		$words['index']['columnCreated'],
 		$words['index']['columnModified']
-	) );
+	] );
 	$tableColumns	= HtmlElements::ColumnGroup( ['', '150px', '120px', '100px', '100px'] );
 	$tableHead		= HtmlTag::create( 'thead', $tableHeads );
 	$tableBody		= HtmlTag::create( 'tbody', $tableRows );
 	$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'href'	=> "./work/newsletter/group/add",
 	'class'	=> "btn btn-small btn-success",
-) );
+] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:maxItems', $totalGroups + 1 ) )
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
 		'class'		=> 'btn btn-small btn-success disabled',

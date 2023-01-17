@@ -120,7 +120,7 @@ class View_Helper_TinyMce extends Abstraction
 
 	static public function tidyHtml( $html, $options = [] ){
 		if( function_exists( 'tidy_repair_string' ) ){
-			$html	= tidy_repair_string( $html, array_merge( array(
+			$html	= tidy_repair_string( $html, array_merge( [
 				'clean'				=> FALSE,
 				'doctype'			=> 'omit',
 				'show-body-only'	=> TRUE,
@@ -128,7 +128,7 @@ class View_Helper_TinyMce extends Abstraction
 				'indent'			=> TRUE,
 				'indent-spaces'		=> 4,
 				'wrap'				=> 0,
-			), $options ) );
+			], $options ) );
 			$html	= str_replace( "    ", "\t", $html );
 		}
 		return $html;

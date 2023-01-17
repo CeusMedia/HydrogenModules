@@ -12,9 +12,9 @@ class View_Helper_Mangopay_Entity_IBAN extends View_Helper_Mangopay_Abstract{
 	public function render(){
 		$parts		= str_split( trim( $this->iban ), 4 );
 		$label		= implode( ' ', $parts );
-		return HtmlTag::create( $this->nodeName, $label, array(
+		return HtmlTag::create( $this->nodeName, $label, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
 	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){

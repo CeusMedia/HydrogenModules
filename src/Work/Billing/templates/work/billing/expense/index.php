@@ -8,14 +8,14 @@ $iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] )
 
 $list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 
-$frequencies	= array(
+$frequencies	= [
 	0		=> '- keine Wiederholung -',
 	1		=> 'jährlich',
 	2		=> 'quartalsweise',
 	3		=> 'monatlich',
 	4		=> 'wöchentlich',
 	5		=> 'täglich',
-);
+];
 
 if( $expenses ){
 	$list	= [];
@@ -30,28 +30,28 @@ if( $expenses ){
 		$link	= HtmlTag::create( 'a', $title, ['href' => './work/billing/expense/edit/'.$expense->expenseId] );
 		if( $expense->fromCorporationId ){
 			$corporation	= $corporations[$expense->fromCorporationId];
-			$from			= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+			$from			= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, [
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
-			) );
+			] );
 		}
 		else if( $expense->fromPersonId ){
 			$person		= $persons[$expense->fromPersonId];
-			$from		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
+			$from		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, [
 				'href'	=> './work/billing/person/edit/'.$person->personId
-			) );
+			] );
 		}
 		$to	= '-';
 		if( $expense->toCorporationId ){
 			$corporation	= $corporations[$expense->toCorporationId];
-			$to			= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, array(
+			$to			= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, [
 				'href'	=> './work/billing/corporation/edit/'.$corporation->corporationId
-			) );
+			] );
 		}
 		else if( $expense->toPersonId ){
 			$person		= $persons[$expense->toPersonId];
-			$to		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, array(
+			$to		= HtmlTag::create( 'a', $iconPerson.'&nbsp;'.$person->firstname.' '.$person->surname, [
 				'href'	=> './work/billing/person/edit/'.$person->personId
-			) );
+			] );
 		}
 		$amount		= (float) $expense->amount ? number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
 		$list[]	= HtmlTag::create( 'tr', array(
@@ -62,28 +62,28 @@ if( $expenses ){
 			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
 		), ['class' => $expense->status ? 'success' : 'warning'] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( [
 		'',
 		'120',
 		'180',
 		'180',
 		'100',
-	) );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	] );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Bezeichnung',
 		'Wiederholung',
 		'Belasteter',
 		'Begünstigter',
 		'Betrag'
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Ausgabe', [
 	'href'	=> './work/billing/expense/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="row-fluid">

@@ -18,7 +18,7 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Admin_User extends Controller
 {
-	protected $filters	= array(
+	protected $filters	= [
 		'username',
 		'roomId',
 		'roleId',
@@ -28,7 +28,7 @@ class Controller_Admin_User extends Controller
 		'order',
 		'direction',
 		'limit'
-	);
+	];
 
 	public function accept( $userId )
 	{
@@ -258,10 +258,10 @@ class Controller_Admin_User extends Controller
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
 			$orders	= array( $order => $dir );
-		$data	= array(
+		$data	= [
 			'filters'	=> $filters,
 			'orders'	=> $orders
-		);
+		];
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 		$all		= $modelUser->count();

@@ -8,9 +8,9 @@ class Controller_Work_Billing_Person_Unbooked extends Controller
 
 	public function index( $personId )
 	{
-		$unpayedBillShares	= $this->logic->getPersonBillShares( $personId, array(
+		$unpayedBillShares	= $this->logic->getPersonBillShares( $personId, [
 			'status' => Model_Billing_Bill_Share::STATUS_NEW
-		) );
+		] );
 		foreach( $unpayedBillShares as $unpayedBillShare )
 			$unpayedBillShare->bill	= $this->logic->getBill( $unpayedBillShare->billId );
 		$this->addData( 'unpayedBillShares', $unpayedBillShares );

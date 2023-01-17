@@ -15,10 +15,10 @@ $w			= (object) $words['edit'];
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
-$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$words['edit']['buttonList'], array(
+$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$words['edit']['buttonList'], [
 	'href'	=> './admin/mail/template',
 	'class'	=> 'btn btn-small',
-) );
+] );
 
 $contentText	= '
 <div class="content-panel">

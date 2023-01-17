@@ -5,12 +5,12 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 class Logic_Module_Creator extends Logic_Module{
 	
 	public function createLocalModule( $moduleId, $title, $description = NULL, $version = NULL, $route = NULL ){
-		$data	= array(
+		$data	= [
 			'title'			=> $title,
 			'description'	=> $description,
 			'version'		=> $version,
 			'route'			=> $route
-		);
+		];
 		$xml	= UI_Template::render( 'templates/admin/module/creator/module.xml.tmpl', $data );
 		return (bool) FileWriter::save( $path.$moduleId.'.xml', $xml );
 	}
@@ -44,13 +44,13 @@ class Logic_Module_Creator extends Logic_Module{
 		$tmplFile	= strtolower( $classPath ).'/index.php';
 		$localFile	= strtolower( $path ).strtolower( $className ).'.ini';
 		$classKey	= str_replace( '/', '_', $classPath );
-		$data	= array(
+		$data	= [
 			'moduleId'	=> $moduleId,
 			'className'	=> $className,
 			'classPath'	=> $classPath,
 			'classKey'	=> $classKey,
 			'tmplFile'	=> $tmplFile,
-		);
+		];
 		print_m( $data );
 		
 		$fileLogic		= $this->env->pathApp.'classes/Logic/'.$className.'.php5';

@@ -7,11 +7,11 @@ $canAdd			= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
 $url			= './blog/add';
 
 $icon			= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-plus fa-fw' ) );
-$linkAdd		= $canAdd ? '&nbsp;'.HtmlTag::create( 'a', $icon, array(
+$linkAdd		= $canAdd ? '&nbsp;'.HtmlTag::create( 'a', $icon, [
 	'href'		=> $url,
 	'class'		=> 'btn btn-mini',
 	'title'		=> 'neuer Eintrag',
-) ) : '';
+] ) : '';
 
 $articleList	= HtmlTag::create( 'em', 'Keine Artikel gefunden.' );
 if( $articles )

@@ -32,12 +32,12 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$model		= new Model_Novelty( $this->env );
 		$iconAck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 		foreach( $this->news as $item ){
-			$conditions	= array(
+			$conditions	= [
 				'userId'	=> $userId,
 				'type'		=> $item->type,
 				'entryId'	=> $item->id,
 				'timestamp'	=> $item->timestamp,
-			);
+			];
 			if( $model->count( $conditions ) )
 				continue;
 			$key	= $item->timestamp.'.'.microtime( TRUE );
@@ -48,18 +48,18 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 			$badgeClass	= $badgeUnit == 'm' ? 'important' : ( $badgeUnit == 'h' ? 'info' : '' );
 
 
-			$date		= HtmlTag::create( 'small', $date, array(
+			$date		= HtmlTag::create( 'small', $date, [
 				'class' => 'label label-'.$badgeClass,
 				'style'	=> 'font-weight: normal'
-			) );
+			] );
 			$buttons	= array(
-				HtmlTag::create( 'button', $iconAck, array(
+				HtmlTag::create( 'button', $iconAck, [
 					'class'				=> 'btn btn-mini',
 					'title'				=> 'ausblenden',
 					'data-type'			=> $item->type,
 					'data-id'			=> $item->id,
 					'data-timestamp'	=> $item->timestamp,
-				) ),
+				] ),
 			);
 			$type		= isset( $item->typeLabel ) ? $item->typeLabel : $item->type;
 			$type		= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
@@ -73,9 +73,9 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$list	= array_slice( $list, 0, $this->limit );
 		$colgroup	= HtmlElements::ColumnGroup( "45", "", "50" );
 		$tbody	= HtmlTag::create( 'tbody', $list );
-		$list	= HtmlTag::create( 'table', $colgroup.$tbody, array(
+		$list	= HtmlTag::create( 'table', $colgroup.$tbody, [
 			'class'		=> 'table not-table-striped table-condensed table-fixed',
-		) );
+		] );
 $script	= '
 <script>
 var InfoNoveltyDashboardPanel = {

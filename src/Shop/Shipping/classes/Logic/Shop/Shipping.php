@@ -30,10 +30,10 @@ class Logic_Shop_Shipping extends Logic
 	{
 		$zone	= $this->getZoneFromCountryCode( $countryCode );
 		$grade	= $this->getGradeFromWeight( $weight );
-		$price	= $this->modelPrice->getByIndices( array(
+		$price	= $this->modelPrice->getByIndices( [
 			'zoneId'	=> $zone->zoneId,
 			'gradeId'	=> $grade->gradeId,
-		) );
+		] );
 		return (float) $price->price;
 	}
 

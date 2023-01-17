@@ -26,10 +26,10 @@ if( $rulesAttachment ){
 
 		$file	= $rule->filePath;
 
-		$buttonRemove	= Html::create( 'a', $iconRemove, array(
+		$buttonRemove	= Html::create( 'a', $iconRemove, [
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
-		) );
+		] );
 		$listRules[]	= Html::create( 'tr', array(
 			Html::create( 'td', $list ),
 			Html::create( 'td', $file ),

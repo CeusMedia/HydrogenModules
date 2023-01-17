@@ -32,9 +32,9 @@ class View_Work_Graph extends View{
 		}
 		if( !$list )
 			return;
-		return HtmlTag::create( 'dl', $list, array(
+		return HtmlTag::create( 'dl', $list, [
 			'class'	=> 'dl-horizontal',
-		) );
+		] );
 	}
 
 }

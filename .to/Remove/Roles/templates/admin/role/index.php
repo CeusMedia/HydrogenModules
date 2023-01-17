@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
 
-$heads	= array(
+$heads	= [
 	$wf->headTitle,
 	$wf->headUsers,
 	$wf->headAccess,
 	$wf->headRegister
-);
+];
 $heads	= HtmlElements::TableHeads( $heads );
 $number	= 0;
 

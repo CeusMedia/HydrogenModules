@@ -28,20 +28,20 @@ class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Ab
 			$url	= sprintf( $this->link, $item->Id );
 			$url	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
 
-			$list[]	= HtmlTag::create( 'div', $label, array(
+			$list[]	= HtmlTag::create( 'div', $label, [
 				'class'		=> 'bankaccount-list-item',
 				'onclick'	=> 'document.location.href="'.$url.'";',
-			) );
+			] );
 		}
 		if( $this->allowAdd ){
 			$number	= HtmlTag::create( 'div', 'Konto hinzufügen' );
 			$item	= $logoAdd.$number;
 			$urlAdd	= 'manage/my/mangopay/bank/add';
 			$urlAdd	.= strlen( trim( $this->from ) ) ? '?from='.$this->from : '';
-			$list[]	= HtmlTag::create( 'div', $item, array(
+			$list[]	= HtmlTag::create( 'div', $item, [
 				'class'		=> 'bankaccount-list-item',
 				'onclick'	=> 'document.location.href="'.$urlAdd.'";',
-			) );
+			] );
 		}
 		$list	= HtmlTag::create( 'div', $list );
 		return $list;

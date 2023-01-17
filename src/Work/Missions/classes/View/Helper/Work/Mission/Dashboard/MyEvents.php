@@ -20,16 +20,16 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'small', HtmlTag::create( 'abbr', 'KW', ['title' => "Kalenderwoche"] ) ),
 				HtmlTag::create( 'br' ),
-				HtmlTag::create( 'span', (int) date( 'W' ), array(
+				HtmlTag::create( 'span', (int) date( 'W' ), [
 					'style' => 'font-size: 2em;'
-				) ),
+				] ),
 			), ['style' => 'text-align: center; float: right; width: 50px'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'span', $words['days'][date( 'w' )], ['style' => 'font-size: 1.8em'] ),
 				HtmlTag::create( 'br' ),
-				HtmlTag::create( 'span', date( 'd' ).'. '.$words['months'][date( 'n' )].' '.date( 'Y' ), array(
+				HtmlTag::create( 'span', date( 'd' ).'. '.$words['months'][date( 'n' )].' '.date( 'Y' ), [
 					'style' => 'font-size: 1.1em'
-				) ),
+				] ),
 			), ['style' => 'text-align: center'] ),
 		) );
 		$content	= HtmlTag::create( 'div', 'Keine Termine.', ['class' => 'alert alert-info'] );
@@ -37,13 +37,13 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 			$rows	= [];
 			foreach( $this->events as $event ){
 				$project		= $this->projects[$event->projectId];
-				$labelProject	= HtmlTag::create( 'span', $project->title, array(
+				$labelProject	= HtmlTag::create( 'span', $project->title, [
 					'style'		=> 'font-size: smaller'
-				) );
-				$link			= HtmlTag::create( 'a', $event->title, array(
+				] );
+				$link			= HtmlTag::create( 'a', $event->title, [
 					'href'		=> './work/mission/view/'.$event->missionId,
 					'style'		=> 'font-size: larger'
-				) );
+				] );
 				$label	= $link.'<br/>'.$labelProject;
 				$rows[]	= HtmlTag::create( 'tr', array(
 					HtmlTag::create( 'td', $this->renderNiceTime( $event->timeStart ).'<br/><small class="muted">'.$this->renderNiceTime( $event->timeEnd ).'</small>' ),
@@ -51,20 +51,20 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 //							HtmlTag::create( 'td', '#'.$event->priority ),
 				) );
 			};
-			$colgroup	= HtmlElements::ColumnGroup( array(
+			$colgroup	= HtmlElements::ColumnGroup( [
 				'50px',
 //						'20px',
 				'',
-			) );
+			] );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
-			$content	= HtmlTag::create( 'table', $colgroup.$tbody, array(
+			$content	= HtmlTag::create( 'table', $colgroup.$tbody, [
 				'class'	=> 'table table-condensed table-fixed'
-			) );
+			] );
 		}
-		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neuer Termin', array(
+		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neuer Termin', [
 			'href'	=> './work/mission/add?type=1',
 			'class'	=> 'btn btn-block btn-success',
-		) );
+		] );
 		return '<br/>'.$today.'<br/>'.$content.$buttonAdd;
 	}
 

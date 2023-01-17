@@ -10,11 +10,11 @@ $iconUpload	= '<i class="icon-folder-open icon-white"></i>';
 
 $thumb		= "";
 if( $category->image )
-	$thumb	= HtmlTag::create( 'img', NULL, array(
+	$thumb	= HtmlTag::create( 'img', NULL, [
 		'src'		=> $pathImages.$category->image,
 		'class'		=> 'img-polaroid',
 		'width'		=> "100%",
-	) );
+	] );
 
 return '
 <div class="content-panel">

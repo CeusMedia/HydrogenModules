@@ -59,7 +59,7 @@ class Model_Config_Page
 
 	public function getColumns(): array
 	{
-		return $columns	= array(
+		return $columns	= [
 			'pageId',
 			'parentId',
 			'type',
@@ -81,7 +81,7 @@ class Model_Config_Page
 			'template',
 			'createdAt',
 			'modifiedAt'
-		);
+		];
 	}
 
 	public function getByIndices( array $indices = [], array $orders = [] )

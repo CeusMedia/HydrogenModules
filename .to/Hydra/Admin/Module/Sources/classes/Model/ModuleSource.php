@@ -11,12 +11,12 @@ class Model_ModuleSource
 	protected $fileName;
 	protected $hymn;
 	protected $status		= self::STATUS_NONE;
-	protected $default		= array(
+	protected $default		= [
 		'active'	=> TRUE,
 		'type'		=> 'folder',
 		'path'		=> '',
 		'title'		=> '',
-	);
+	];
 
 	public function __construct( $env )
 	{

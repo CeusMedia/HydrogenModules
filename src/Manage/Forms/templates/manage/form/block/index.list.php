@@ -8,10 +8,10 @@ $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 
 $rows		= [];
 foreach( $blocks as $block ){
-	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
 		'href'	=> './manage/form/block/view/'.$block->blockId,
 		'class'	=> 'btn btn-mini btn-info',
-	) );
+	] );
 	$linkEdit	= HtmlTag::create( 'a', $block->title, ['href' => './manage/form/block/edit/'.$block->blockId] );
 	$rows[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', HtmlTag::create( 'small', $block->blockId ), ['style' => 'text-align: right'] ),
@@ -29,10 +29,10 @@ $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
-$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Block', array(
+$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Block', [
 	'href'	=> './manage/form/block/add',
 	'class'	=> 'btn btn-success'
-) );
+] );
 
 $pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/block', $page, $pages );
 

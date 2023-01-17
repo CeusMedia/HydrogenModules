@@ -381,10 +381,10 @@ class Controller_Manage_Download extends Controller
 			$nrFiles	= $this->modelFile->count( ['downloadFolderId' => $parentId] );
 			$entryName	= $entry->getFilename();
 			if( $entry->isDir() ){
-				$data	= array(
+				$data	= [
 					'parentId'	=> $parentId,
 					'title'		=> $entryName
-				);
+				];
 				$folder	= $this->modelFolder->getByIndices( $data );
 				if( $folder )
 					$folderId	= $folder->downloadFolderId;
@@ -398,10 +398,10 @@ class Controller_Manage_Download extends Controller
 				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
 			}
 			else if( $entry->isFile() ){
-				$data		= array(
+				$data		= [
 					'downloadFolderId'	=> $parentId,
 					'title'				=> $entryName
-				);
+				];
 				if( !$this->modelFile->count( $data ) ){
 					$data['rank']		= $nrFiles++;
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );

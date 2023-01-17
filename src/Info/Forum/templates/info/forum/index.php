@@ -20,16 +20,16 @@ $rows	= [];
 foreach( $topics as $topic ){
 	$buttons	= [];
 	if( in_array( 'rankTopic', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconUp, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconUp, [
 			'href'	=> './info/forum/rankTopic/'.$topic->topicId,
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonUp'],
-		) );
-		$buttons[]	= HtmlTag::create( 'a', $iconDown, array(
+		] );
+		$buttons[]	= HtmlTag::create( 'a', $iconDown, [
 			'href'	=> './info/forum/rankTopic/'.$topic->topicId.'/down',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonUp'],
-		) );
+		] );
 	}
 	if( in_array( 'ajaxRenameTopic', $rights ) ){
 		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
@@ -39,11 +39,11 @@ foreach( $topics as $topic ){
 		) );
 	}
 	if( in_array( 'removeTopic', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './info/forum/removeTopic/'.$topic->topicId,
 			'class'	=> 'btn not-btn-small btn-danger',
 			'title'	=> $words['index']['buttonRemove'],
-		) );
+		] );
 	}
 	$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 	$url		= './info/forum/topic/'.$topic->topicId;
@@ -57,10 +57,10 @@ foreach( $topics as $topic ){
 	);
 	$rows[]	= HtmlTag::create( 'tr', $cells );
 }
-$heads	= HtmlElements::TableHeads( array(
+$heads	= HtmlElements::TableHeads( [
 	$words['index']['headTitle'],
 	'',//$words['index']['headFacts'],
-) );
+] );
 $colgroup	= HtmlElements::ColumnGroup( '90%', '20%' );
 $thead		= HtmlTag::create( 'thead', $heads );
 $tbody		= HtmlTag::create( 'tbody', $rows );

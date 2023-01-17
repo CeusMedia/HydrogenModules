@@ -139,7 +139,7 @@ class Controller_Admin_Module_Source extends Controller{
 			if( !strlen( $path ) )
 				$this->env->getMessenger()->noteError( $words->errorPathMissing );
 			if( !$messenger->gotError() ){
-				$data		= array(
+				$data		= [
 					'id'			=> $id,
 					'active'		=> $active,
 					'type'			=> $type,
@@ -147,7 +147,7 @@ class Controller_Admin_Module_Source extends Controller{
 					'path'			=> $path,
 #					'username'		=> $username,
 #					'password'		=> $password,
-				);
+				];
 				$sourceId	= $this->model->add( $data );
 				$messenger->noteSuccess( $words->successAdded, $id );
 				$this->restart( 'edit/'.$sourceId, TRUE );
@@ -187,14 +187,14 @@ class Controller_Admin_Module_Source extends Controller{
 			if( !strlen( $path ) )
 				$this->env->getMessenger()->noteError( $words->errorPathMissing );
 			if( !$messenger->gotError() ){
-				$data		= array(
+				$data		= [
 					'active'		=> $active,
 					'type'			=> $type,
 					'title'			=> $title,
 					'path'			=> $path,
 #					'username'		=> $username,
 #					'password'		=> $password,
-				);
+				];
 				$this->model->edit( $sourceId, $data );
 				if( $sourceId !== $id )
 					$this->model->changeId( $sourceId, $id );

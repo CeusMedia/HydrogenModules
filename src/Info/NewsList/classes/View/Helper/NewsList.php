@@ -11,14 +11,14 @@ class View_Helper_NewsList implements Countable
 	protected $news		= [];
 	protected $limit	= 5;
 
-	public static $defaultAttributes	= array(
+	public static $defaultAttributes	= [
 		'title'		=> NULL,
 		'timestamp'	=> NULL,
 		'module'	=> NULL,
 		'type'		=> NULL,
 		'url'		=> NULL,
 		'icon'		=> NULL,
-	);
+	];
 
 
 	public function __construct( Environment $env )
@@ -81,9 +81,9 @@ class View_Helper_NewsList implements Countable
 			HtmlTag::create( 'th', $this->words['panel']['headerAge'], ['style' => 'text-align: right'] ),
 		) ) );
 		$tbody	= HtmlTag::create( 'tbody', $list );
-		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 			'class'		=> 'table table-striped table-fixed',
-		) );
+		] );
 		return $list;
 	}
 

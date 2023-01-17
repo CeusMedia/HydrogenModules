@@ -25,10 +25,10 @@ class Hook_Info_Dashboard extends Hook
 		$words			= $env->getLanguage()->getWords( 'info/dashboard' );
 
 		foreach( $dashboards as $dashboard ){
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $linkable ? $dashboard->dashboardId : NULL,
 				'label'		=> $icon.'&nbsp;'.$dashboard->title,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data

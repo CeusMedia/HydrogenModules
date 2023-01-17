@@ -8,12 +8,12 @@ class View_Helper_Messenger_Bootstrap
 {
 	protected $env;
 
-	protected $classes	= array(
+	protected $classes	= [
 		'0'	=> 'messenger messenger-failure alert alert-danger bs4-alert-dark',
 		'1'	=> 'messenger messenger-error alert alert-danger',
 		'2'	=> 'messenger messenger-notice alert alert-info',
 		'3'	=> 'messenger messenger-success alert alert-success',
-	);
+	];
 
 	public function __construct( Environment $env )
 	{

@@ -95,11 +95,11 @@ class Controller_Manage_My_User extends Controller
 			}
 		}
 		else{
-			$indices	= array(
+			$indices	= [
 				'email'		=> $email,
 				'userId'	=> '!= '.$this->userId,
 //				'status'	=> '>= -1',																//  disabled for integrity
-			);
+			];
 			if( $this->modelUser->getByIndices( $indices ) ){
 				$this->messenger->noteError( $words->msgEmailExisting, $email );
 				$this->restart( NULL, TRUE );
@@ -237,11 +237,11 @@ class Controller_Manage_My_User extends Controller
 			$this->messenger->noteNotice( $words->msgNoticeNoChanges );
 			$this->restart( NULL, TRUE );
 		}
-		$indices	= array(
+		$indices	= [
 			'username'	=> $username,
 			'userId'	=> '!= '.$this->userId,
 //			'status'	=> '>= -1',																//  disabled for integrity
-		);
+		];
 		if( $this->modelUser->getByIndices( $indices ) ){
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			$this->restart( NULL, TRUE );

@@ -13,9 +13,9 @@ class Hook_Info_Manual_Shortcode extends Hook
 		$processor->setContent( $data->content );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
 		$shortCodes		= array(
-			'manual:page'	=> array(
+			'manual:page'	=> [
 				'id'		=> 0,
-			)
+			]
 		);
 
 		$modelPage		= new Model_Manual_Page( $env );

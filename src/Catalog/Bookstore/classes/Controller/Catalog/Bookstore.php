@@ -161,12 +161,12 @@ class Controller_Catalog_Bookstore extends Controller
 		$builder->addItemElement( 'g:gtin', TRUE );
 		$builder->addItemElement( 'g:image_link', FALSE );
 
-		$availabilities	= array(
+		$availabilities	= [
 			-2		=> "out of stock",
 			-1		=> "preorder",
 			0		=> "in stock",
 			1		=> "in stock"
-		);
+		];
 
 		$conditions		= ['price' => '> 0', 'isn' => '> 0'/*, 'status' => array[ 0, 1]*/];
 		$orders			= ['createdAt' => 'DESC'];
@@ -255,10 +255,10 @@ class Controller_Catalog_Bookstore extends Controller
 		}
 		$rss->setChannelData( $data );
 
-		$conditions		= array(
+		$conditions		= [
 			'status'	=> [0, 1],
 			'new'		=> 1
-		);
+		];
 		if( $categoryId ){
 			$categories	= [$categoryId];
 			$children	= $this->logic->getCategories( ['parentId' => $categoryId] );

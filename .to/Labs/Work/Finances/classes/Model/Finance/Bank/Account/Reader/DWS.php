@@ -83,7 +83,7 @@ die;
 
 	protected function getPostString(): string
 	{
-		$data	 = array(
+		$data	 = [
 			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:txtUserID'		=> $this->account->username,
 			'_ctl0:MainPlaceHolder:mainPanel:loginPanel:passwordBox'	=> $this->account->password,
 			'__EVENTTARGET'			=> '_ctl0$MainPlaceHolder$mainPanel$loginPanel$btnGo$btnGoLinkButton',
@@ -93,7 +93,7 @@ die;
 			'__VIEWSTATE'			=> $this->state,
 			'SessionID'				=> '@-1',
 			'__EVENTVALIDATION'		=> '+LTNAt8l8hoD18Koia0M5a9XLGei65qdbardAZ2UeIMbeR6wp+aPE1FXsLcmZTo1QMsdksRZKP6Y52EjiWflzw==',
-		);
+		];
 		return http_build_query( $data, NULL, '&' );
 	}
 

@@ -25,20 +25,20 @@ class Hook_Work_Time extends Hook
 	{
 		if( !$env->getAcl()->has( 'ajax/work/time', 'renderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'work-timer-my', array(
+		$context->registerPanel( 'work-timer-my', [
 			'url'			=> 'ajax/work/time/renderDashboardPanel',
 			'title'			=> 'Aktivität: Meine',
 			'heading'		=> 'Meine letzte Aktivität',
 			'icon'			=> 'fa fa-fw fa-play',
 			'rank'			=> 10,
-		) );
-		$context->registerPanel( 'work-timer-others', array(
+		] );
+		$context->registerPanel( 'work-timer-others', [
 			'url'			=> 'work/time/ajaxRenderDashboardPanel',
 			'title'			=> 'Aktivität: Andere',
 			'heading'		=> 'Aktivitäten der Anderen',
 			'rank'			=> 20,
 			'refresh'		=> 10,
-		) );
+		] );
 	}
 
 	public static function onProjectRemove( Environment $env, $context, $module, $payload )

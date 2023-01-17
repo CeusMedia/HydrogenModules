@@ -20,15 +20,15 @@ $listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= [];
 	foreach( $withinForms as $item ){
-		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/edit/'.$item->formId,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	$listWithinForms	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
-$optRoleType	= array(
+$optRoleType	= [
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
@@ -39,14 +39,14 @@ $optRoleType	= array(
 	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
-);
+];
 $optRoleType	= HtmlElements::Options( $optRoleType, (int) $mail->roleType );
 
-$optFormat	= array(
+$optFormat	= [
 	0	=> 'nicht definiert',
 	1	=> 'Text',
 	2	=> 'HTML',
-);
+];
 $optFormat	= HtmlElements::Options( $optFormat, $mail->format );
 
 return '

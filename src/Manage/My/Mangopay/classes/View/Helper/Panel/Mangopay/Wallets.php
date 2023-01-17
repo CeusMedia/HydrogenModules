@@ -6,11 +6,11 @@ class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
 
 	public function __construct( $env ){
 		parent::__construct( $env );
-		$this->setOptions( array(
+		$this->setOptions( [
 			'linkItem'	=> './manage/my/mangopay/wallet/view/%s',
 			'linkBack'	=> '',
 			'linkAdd'	=> '',
-		) );
+		] );
 	}
 
 	public function render(){

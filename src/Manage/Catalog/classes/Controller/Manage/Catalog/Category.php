@@ -18,10 +18,10 @@ class Controller_Manage_Catalog_Category extends Controller
 				$conditions	= ['visible' => '> 0', 'parentId' => $item->categoryId];
 				$subs		= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
 				foreach( $subs as $nr2 => $sub ){
-					$subs[$nr2] = (object) array(
+					$subs[$nr2] = (object) [
 						'title'	=> $sub->{"label_".$language},
 						'value'	=> 'catalog/category/'.$item->categoryId,
-					);
+					];
 				}
 				$categories[$nr1] = (object) array(
 					'title'	=> $item->{"label_".$language},

@@ -32,18 +32,18 @@ if( $sliders ){
 			$iconSlides.' '.count( $slider->slides ).' Slides',
 			$iconFormat.' '.$slider->width.'&times;'.$slider->height.'px',
 		) );
-		$transition	= join( ', ', array(
+		$transition	= join( ', ', [
 			'Animation: '.$words['optAnimation'][$slider->animation],
 			'Übergang: '.$words['optEasing'][$slider->easing],
-		) );
+		] );
 		$durations	= join( '<br/>', array(
 			$iconDurationShow.' '.$helperDuration->formatDuration( $slider->durationShow ).'s',
 			HtmlTag::create( 'acronym', $iconDurationTransition.' '.$helperDuration->formatDuration( $slider->durationSlide ).'s', ['title' => $transition] ),
 		) );
-		$views		= join( '<br/>', array(
+		$views		= join( '<br/>', [
 			$iconViews.' '.$slider->views,
 			$iconAge.' '.$createdAt,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $cover, ['class' => 'image-slider-cover', 'style' => 'text-align: center'] ),
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$slider->path.'</small>', ['class' => 'image-slider-title'] ),
@@ -52,13 +52,13 @@ if( $sliders ){
 			HtmlTag::create( 'td', $views, ['class' => 'image-slider-views-since'] ),
 		), ['class' => $rowClass, 'style' => 'height: 70px'] );
 	}
-	$heads	= array(
+	$heads	= [
 		'Cover',
 		'Title / Path',
 		'Dimensions',
 		'Durations',
 		'Views since',
-	);
+	];
 	$colgroup	= HtmlElements::ColumnGroup( "84px", "", "130px", "120px", "135px" );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
@@ -71,10 +71,10 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAdd	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus fa-inverse'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'		=> './manage/image/slider/add',
 	'class'		=> 'btn btn-small not-btn-info btn-success',
-) );
+] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 

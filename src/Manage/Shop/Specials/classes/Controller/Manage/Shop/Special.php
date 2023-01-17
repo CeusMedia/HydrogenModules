@@ -12,10 +12,10 @@ class Controller_Manage_Shop_Special extends Controller
 		$data	=  [];
 		$column	= $bridge->data->articleIdColumn;
 		foreach( $articles as $article )
-			$data[]	= (object) array(
+			$data[]	= (object) [
 				'id'	=> $article->{$column},
 				'title'	=> $article->title,
-			);
+			];
 		print( json_encode( $data ) );
 		die;
 	}

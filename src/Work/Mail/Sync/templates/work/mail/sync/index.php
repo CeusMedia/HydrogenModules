@@ -23,22 +23,22 @@ $panelHosts	= '<div class="content-panel">
 	</div>
 </div>';
 
-$statusLabels	= array(
+$statusLabels	= [
 	-1		=> "Fehler",
 	0		=> "neu",
 	1		=> "bereit",
 	2		=> "in Arbeit",
 	3		=> "synchronisiert",
 	4		=> "abgeschlossen",
-);
-$statusClasses	= array(
+];
+$statusClasses	= [
 	-1		=> "progress-danger",
 	0		=> "",
 	1		=> "progress-warning",
 	2		=> "progress-warning progress-striped",
 	3		=> "progress-success",
 	4		=> "progress-info",
-);
+];
 
 $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
@@ -62,13 +62,13 @@ if( $syncs ){
 		if( $sync->status == Model_Mail_Sync::STATUS_ERROR )
 			$statusLabel	= HtmlTag::create( 'acronym', $statusLabel, ['title' => $sync->run->message] );
 		$status	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', $statusLabel, array(
+			HtmlTag::create( 'div', $statusLabel, [
 				'class'	=> 'bar',
 				'style'	=> 'width: 100%',
-			) )
-		), array(
+			] )
+		), [
 			'class'	=> 'progress '.$statusClasses[$sync->status],
-		) );
+		] );
 
 		$iconActivate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-toggle-on'] );
 		$iconClose		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check-square-o'] );
@@ -127,14 +127,14 @@ if( $syncs ){
 			HtmlTag::create( 'td', $buttons ),
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Quelle',
 		'Ziel',
 		'Zustand',
 		'<i class="fa fa-fw fa-repeat" title="Durchläufe"></i>',
 		'<i class="fa fa-fw fa-envelope" title="Nachrichten übertragen"></i>',
 		'',
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$colgroup	= HtmlElements::ColumnGroup( '30%', '30%', '20%', '5%', '5%', '10%' );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );

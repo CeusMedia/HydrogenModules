@@ -7,12 +7,12 @@ $panelList		= $view->loadTemplateFile( 'manage/job/definition/index.list.php' );
 $tabs	= View_Manage_Job::renderTabs( $env, 'definition' );
 
 return $tabs.HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$panelFilter,
-	), ['class' => 'span3'] ),
-	HtmlTag::create( 'div', array(
+	], ['class' => 'span3'] ),
+	HtmlTag::create( 'div', [
 		$panelList,
-	), ['class' => 'span9'] ),
+	], ['class' => 'span9'] ),
 ), ['class' => 'row-fluid'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

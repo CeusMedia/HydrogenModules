@@ -40,28 +40,28 @@ $optFormat		= array_flip( ObjectConstants::staticGetAll( 'Model_Manual_Page', 'F
 $optFormat		= HtmlElements::Options( array_reverse( $optFormat, TRUE ) );
 
 $buttonCancel	= HtmlTag::create( 'a', 'zurück', ['href' => './info/manual', 'class' => 'btn'] );
-$buttonSave		= HtmlTag::create( 'button', 'importieren', array(
+$buttonSave		= HtmlTag::create( 'button', 'importieren', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class' 	=> 'btn btn-primary',
-) );
+] );
 
 $preset		= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'label', 'Kategorie', ['for' => 'input_categoryId'] ),
-		HtmlTag::create( 'select', $optCategory, array(
+		HtmlTag::create( 'select', $optCategory, [
 			'name'		=> 'categoryId',
 			'id'		=> 'input_categoryId',
 			'class'		=> 'span12'
-		) ),
+		] ),
 	), ['class' => 'span4'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'label', 'Format', ['for' => 'input_format'] ),
-		HtmlTag::create( 'select', $optFormat, array(
+		HtmlTag::create( 'select', $optFormat, [
 			'name'		=> 'format',
 			'id'		=> 'input_format',
 			'class'		=> 'span12'
-		) ),
+		] ),
 	), ['class' => 'span4'] ),
 ), ['class' => 'row-fluid'] );
 
@@ -69,15 +69,15 @@ $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Import' ),
 	HtmlTag::create( 'div', array(
 		$table,
-		HtmlTag::create( 'div', join( '&nbsp;', array(
+		HtmlTag::create( 'div', join( '&nbsp;', [
 			$preset,
 			$buttonCancel,
 			$buttonSave,
-		) ), ['class' => 'buttonbar'] ),
+		] ), ['class' => 'buttonbar'] ),
 	), ['class' => 'content-panel-inner'] )
 ), ['class' => 'content-panel'] );
 
-return HtmlTag::create( 'form', $panelList, array(
+return HtmlTag::create( 'form', $panelList, [
 	'action'	=> './info/manual/import',
 	'method'	=> 'POST',
-) );
+] );

@@ -69,7 +69,7 @@ class Controller_Manage_My_Branch extends Controller
 		if( $image['error'] ){
 			$w			= (object) $this->getWords( 'upload-errors', 'main' );
 
-			$messages		= array(
+			$messages		= [
 				UPLOAD_ERR_INI_SIZE		=> $w->UPLOAD_ERR_INI_SIZE,
 				UPLOAD_ERR_FORM_SIZE	=> $w->UPLOAD_ERR_FORM_SIZE,
 				UPLOAD_ERR_PARTIAL		=> $w->UPLOAD_ERR_PARTIAL,
@@ -77,7 +77,7 @@ class Controller_Manage_My_Branch extends Controller
 				UPLOAD_ERR_NO_TMP_DIR	=> $w->UPLOAD_ERR_NO_TMP_DIR,
 				UPLOAD_ERR_CANT_WRITE	=> $w->UPLOAD_ERR_CANT_WRITE,
 				UPLOAD_ERR_EXTENSION	=> $w->UPLOAD_ERR_EXTENSION,
-			);
+			];
 			$handler		= new UploadErrorHandler();
 			$handler->setMessages( $messages );
 			try{

@@ -8,9 +8,9 @@ $table	= HtmlTag::create( 'div', 'Noch keine vorhanden.', ['class' => 'alert ale
 if( $orders ){
 	$rows	= [];
 	foreach( $orders as $item ){
-		$link	= HtmlTag::create( 'a', 'Bestellung am '.date( 'd.m.Y', $item->createdAt ), array(
+		$link	= HtmlTag::create( 'a', 'Bestellung am '.date( 'd.m.Y', $item->createdAt ), [
 			'href'	=> './manage/my/order/view/'.$item->orderId,
-		) );
+		] );
 		$status	= $wordsShop['statuses-order'][$item->status];
 		$status	= HtmlTag::create( 'acronym', $status, ['title' => $wordsShop['statuses-order-title'][$item->status]] );
 		$method	= $item->paymentMethod;

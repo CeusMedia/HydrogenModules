@@ -70,13 +70,13 @@ if( $mode == 1 ){
 				<tr>
 					<td>
 						<label for="status">'.$words['indexFilter']['labelStatus'].'</label><br/>
-						'.HtmlTag::create( 'select', $optStatus, array(
+						'.HtmlTag::create( 'select', $optStatus, [
 							'name'		=> 'status[]',
 							'id'		=> 'input_status',
 							'multiple'	=> 'multiples',
 							'class'		=> 'span12',
 							'rows'		=> 8
-						) ).'
+						] ).'
 <!--						'.HtmlElements::Select( 'status[]', $optStatus, 'm rows-8', NULL, 'filter-issues' ).'-->
 					</td>
 					<td>

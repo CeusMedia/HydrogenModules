@@ -75,13 +75,13 @@ class Logic_Catalog_Bookstore extends Logic
 		$fileName		= Logic_Upload::sanitizeFileNameStatic( $article->title.' - '.$title.'.'.$extension );
 		$logicBucket->add( $sourceFile, 'bookstore/document/'.$fileName, $mimeType, 'catalog_bookstore' );
 
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'status'	=> 0,
 			'type'		=> 0,
 			'url'		=> $fileName,
 			'title'		=> $title,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->cache->remove( 'catalog.bookstore.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
@@ -804,10 +804,10 @@ class Logic_Catalog_Bookstore extends Logic
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );

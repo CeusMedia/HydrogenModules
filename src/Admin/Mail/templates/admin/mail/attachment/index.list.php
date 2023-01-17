@@ -26,22 +26,22 @@ $list	= '<div class="alert alert-warning"><em class="muted">'.$w->noEntries.'</e
 if( count( $attachments ) ){
 	$list	= [];
 	foreach( $attachments as $attachment ){
-		$buttonStatus	= HtmlTag::create( 'a', $iconEnable, array(
+		$buttonStatus	= HtmlTag::create( 'a', $iconEnable, [
 			'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/1',
 			'class'	=> 'btn btn-success not-btn-small',
 			'title'	=> $w->buttonActivate
-		) );
+		] );
 		if( $attachment->status )
-			$buttonStatus	= HtmlTag::create( 'a', $iconDisable, array(
+			$buttonStatus	= HtmlTag::create( 'a', $iconDisable, [
 				'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0',
 				'class'	=> 'btn btn-danger',
 				'title'	=> $w->buttonDeactivate
-			) );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+			] );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './admin/mail/attachment/unregister/'.$attachment->mailAttachmentId,
 			'class'	=> 'btn btn-inverse',
 			'title'	=> $w->buttonUnregister
-		) );
+		] );
 
 		$language	= HtmlTag::create( 'span', $attachment->language, ['class' => 'label'] );
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.' '.$attachment->mimeType );
@@ -64,12 +64,12 @@ if( count( $attachments ) ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "", "140px", "80px" );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		$w->headFile,
 		$w->headClass,
 		$w->headCreatedAt,
 		$w->headActions
-	) ) );
+	] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }

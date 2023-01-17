@@ -167,14 +167,14 @@ class View_Blog extends View
 			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
 				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
 
-			$data	= array(
+			$data	= [
 				'title'			=> $article->title,
 				'description'	=> $content,
 				'guid'			=> $uri,
 				'link'			=> $uri,
 				'category'		=> 'Blog-Artikel',
 				'source'		=> $baseUrl.'blog/feed',
-			);
+			];
 			if( $module->get( 'niceURLs' ) )
 				$data['link']	.= '-'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 			$timestamp	= $article->createdAt;
@@ -268,7 +268,7 @@ class View_Blog extends View
 
 	protected function __onInit()
 	{
-		$converters	= array(
+		$converters	= [
 			"formatText",
 			"formatLinks",
 			"formatImageSearch",
@@ -283,7 +283,7 @@ class View_Blog extends View
 			"formatBreaks",
 			"formatCodeBlocks",
 			"formatLists",
-		);
+		];
 #		foreach( $converters as $converter )
 #			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
 	}

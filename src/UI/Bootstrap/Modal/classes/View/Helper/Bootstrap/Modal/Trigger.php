@@ -42,13 +42,13 @@ class View_Helper_Bootstrap_Modal_Trigger
 			throw new RuntimeException( 'No label set' );
 		if( !$this->modalId )
 			throw new RuntimeException( 'No modal ID set' );
-		$attributes	= array(
+		$attributes	= [
 			'id'			=> $this->id,
 			'href'			=> "#".$this->modalId,
 			'role'			=> "button",
 			'class'			=> "btn",
 			'data-toggle'	=> "modal",
-		);
+		];
 		foreach( $this->attributes as $key => $value ){
 			switch( strtolower( $key ) ){
 				case 'id':

@@ -29,16 +29,16 @@ foreach( $userLicense->keys as $key ){
 		$user	= $helper->render();
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_NEW ){
-		$buttonAssign	= HtmlTag::create( 'a', $iconAdd.'&nbsp;vergeben', array(
+		$buttonAssign	= HtmlTag::create( 'a', $iconAdd.'&nbsp;vergeben', [
 			'href'	=> './manage/my/provision/license/assign/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-success btn-small'
-		) );
+		] );
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
-		$buttonAssign	= HtmlTag::create( 'a', $iconRevoke.'&nbsp;entziehen', array(
+		$buttonAssign	= HtmlTag::create( 'a', $iconRevoke.'&nbsp;entziehen', [
 			'href'	=> './manage/my/provision/license/revoke/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-inverse btn-small'
-		) );
+		] );
 
 	}
 
@@ -46,9 +46,9 @@ foreach( $userLicense->keys as $key ){
 
 	$link	= $key->uid;
 	if( 1 ){
-		$link	= HtmlTag::create( 'a', $link, array(
+		$link	= HtmlTag::create( 'a', $link, [
 			'href'	=> './manage/my/provision/license/key/view/'.$key->userLicenseKeyId,
-		) );
+		] );
 	}
 	$list[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $link ),

@@ -49,12 +49,12 @@ foreach( $tests as $entry )
 }
 $rows	= implode( "\n", $rows );
 
-$heads	= array(
+$heads	= [
 	'<input type="checkbox" class="toggler"/>',
 	$words['index']['headTitle'],
 	$words['index']['headTimestamp'],
 	$words['index']['headAction'],
-);
+];
 $heads	= HtmlElements::TableHeads( $heads );
 
 

@@ -4,18 +4,18 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;erstellen', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;erstellen', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> 'disabled',
-) );
+] );
 
-$optGender	= array(
+$optGender	= [
 	0		=> 'männlich',
 	1		=> 'weiblich',
 	2		=> 'transgender',
-);
+];
 $optGender	= HtmlElements::Options( $optGender );
 
 return '

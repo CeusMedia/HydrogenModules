@@ -8,25 +8,25 @@ class Hook_Work_Issue extends Hook
 {
 	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
 	{
-		$context->registerModule( (object) array(
+		$context->registerModule( (object) [
 			'moduleId'		=> 'Work_Issues',
 			'typeLabel'		=> 'Problem',
 			'modelClass'	=> 'Model_Issue',
 			'linkDetails'	=> 'work/issue/edit/{id}',
-		) );
+		] );
 	}
 
 	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
 	{
 		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'work-issues', array(
+		$context->registerPanel( 'work-issues', [
 			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
 			'title'			=> 'offene Probleme',
 			'heading'		=> 'offene Probleme',
 			'icon'			=> 'fa fa-fw fa-exclamation',
 			'rank'			=> 20,
-		) );
+		] );
 	}
 
 	static public function onProjectRemove( Environment $env, $context, $module, $payload )
@@ -62,9 +62,9 @@ class Hook_Work_Issue extends Hook
 		//  @todo		problem: what if manager is reporter?
 		$managedIssues	= $modelIssue->getAllByIndex( 'managerId', $payload->userId );
 		foreach( $managedIssues as $managedIssue )
-			$modelIssue->edit( $managedIssue->issueId, array(
+			$modelIssue->edit( $managedIssue->issueId, [
 				'managerId'	=> $managedIssue->reporterId,
-			) );
+			] );
 
 		$changes	= $modelChange->getAllByIndex( 'userId', $payload->userId );
 		foreach( $changes as $change )
@@ -112,10 +112,10 @@ class Hook_Work_Issue extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $payload->linkable ? $issue->issueId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$payload,																				//  hook content data
@@ -165,10 +165,10 @@ class Hook_Work_Issue extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $payload->linkable ? $issue->issueId : NULL,
 				'label'		=> $label,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$payload,																				//  hook content data

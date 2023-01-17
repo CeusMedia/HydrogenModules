@@ -4,10 +4,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$wordsCurrencies	= array(
+$wordsCurrencies	= [
 	'EUR'		=> 'EUR',
 	'USD'		=> 'USD',
-);
+];
 
 $currencies	= [];
 foreach( $wallets as $item )
@@ -19,18 +19,18 @@ foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
 $optCurrency	= HtmlElements::Options( $optCurrency );
 
-$inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
+$inputCurrency	= HtmlTag::create( 'select', $optCurrency, [
 	'id'		=> 'input_currency',
 	'name'		=> 'currency',
 	'class'		=> 'span12',
-));
+]);
 if( count( $currencies ) == 1 )
-	$inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
+	$inputCurrency	= HtmlTag::create( 'select', $optCurrency, [
 		'id'		=> 'input_currency',
 		'name'		=> 'currency',
 		'class'		=> 'span12',
 		'disabled'	=> 'disabled',
-	));
+	]);
 
 
 if( count( $wallets ) > 1 ){
@@ -46,11 +46,11 @@ if( count( $wallets ) > 1 ){
 				</div>';
 }
 else{
-	$fieldWallet	= HtmlTag::create( 'input', NULL, array(
+	$fieldWallet	= HtmlTag::create( 'input', NULL, [
 		'type'	=> 'hidden',
 		'name'	=> 'walletId',
 		'value'	=> $wallets[0]->Id
-	) );
+	] );
 }
 
 return '

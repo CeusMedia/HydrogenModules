@@ -114,7 +114,7 @@ if( $runs ){
 		) );
 	}
 
-	$columns	= array(
+	$columns	= [
 		$words['index']['tableHeadId']				=> '60px',
 		$words['index']['tableHeadJobId']			=> '*',
 		$words['index']['tableHeadType']			=> '120px',
@@ -124,7 +124,7 @@ if( $runs ){
 //		$words['index']['tableHeadFinishedId']		=> '120px',
 		$words['index']['tableHeadDuration']		=> '60px',
 		$words['index']['tableHeadActions']			=> '60px',
-	);
+	];
 
 	$cols	= HtmlElements::ColumnGroup( array_values( $columns ) );
 
@@ -138,9 +138,9 @@ if( $runs ){
 }
 $panelList	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
-	), ['class' => 'content-panel-inner'] )
+	], ['class' => 'content-panel-inner'] )
 ), ['class' => 'content-panel'] );
 
 return $panelList;

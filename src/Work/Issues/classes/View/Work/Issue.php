@@ -29,9 +29,9 @@ class View_Work_Issue extends View{
 		);
 		foreach( $issues as $issue ) {
 			$icon	= $icons[$issue->type];
-			$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$issue->title, array(
+			$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$issue->title, [
 				'href'	=> './work/issue/edit/'.$issue->issueId
-			) );
+			] );
 			$rows[]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
 			) );

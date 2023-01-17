@@ -17,17 +17,17 @@ if( $monthEnd > 12 ){
 	$monthEnd	-= 12;
 }
 
-$statusClasses	= array(
+$statusClasses	= [
 	'error',
 	'warning',
 	'success',
-);
+];
 
-$conditions	= array(
+$conditions	= [
 	'userId'	=> $userId,
 //	'date'		=> '>'.$yearStart.$monthStart.'00',
 //	'date'		=> '<'.$yearEnd.$monthEnd.'32',
-);
+];
 $orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 */

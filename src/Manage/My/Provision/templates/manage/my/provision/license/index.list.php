@@ -21,12 +21,12 @@ $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 
-$rowColors	= array(
+$rowColors	= [
 	-1	=> '',
 	0	=> 'warning',
 	1	=> 'success',
 	2	=> 'info',
-);
+];
 
 $helper		= new View_Helper_Member( $this->env );
 
@@ -34,45 +34,45 @@ if( $userLicenses ){
 	$list	= [];
 	foreach( $userLicenses as $userLicense ){
 		$rowColor	= $rowColors[$userLicense->status];
-		$link	= HtmlTag::create( 'a', $userLicense->uid, array(
+		$link	= HtmlTag::create( 'a', $userLicense->uid, [
 			'href'	=> './manage/my/provision/license/view/'.$userLicense->userLicenseId
-		) );
+		] );
 
 		$buttons	= [];
-		$buttons[]	= HtmlTag::create( 'a', $iconView.' anzeigen', array(
+		$buttons[]	= HtmlTag::create( 'a', $iconView.' anzeigen', [
 			'href'		=> './manage/my/provision/license/view/'.$userLicense->userLicenseId,
 			'class'		=> 'btn btn-small'
-		) );
+		] );
 		if( $userLicense->status == 0 ){
 			if( isset( $userLicense->bridgeId ) ){
-/*				$buttons[]	= HtmlTag::create( 'a', $iconCart.' weiter', array(
+/*				$buttons[]	= HtmlTag::create( 'a', $iconCart.' weiter', [
 					'href'		=> './shop/addArticle/'.$userLicense->bridgeId.'/'.$userLicense->productLicenseId,
 					'class'		=> 'btn btn-small btn-primary'
-				) );*/
-/*				$buttons[]	= HtmlTag::create( 'a', $iconRemove.' abbrechen', array(
+				] );*/
+/*				$buttons[]	= HtmlTag::create( 'a', $iconRemove.' abbrechen', [
 					'href'		=> './manage/my/provision/license/cancel/'.$userLicense->userLicenseId,
 					'class'		=> 'btn btn-small btn-inverse'
-				) );*/
+				] );*/
 			}
 		}
 		else{
 /*			if( $userLicense->status == Model_User_License::STATUS_ACTIVE ){
-				$buttons[]	= HtmlTag::create( 'a', $iconRemove.' vorzeitig beenden', array(
+				$buttons[]	= HtmlTag::create( 'a', $iconRemove.' vorzeitig beenden', [
 					'href'		=> './manage/my/provision/license/deactivate/'.$userLicense->userLicenseId,
 					'class'		=> 'btn btn-small btn-danger'
-				) );
+				] );
 			}*/
 /*			if( $userLicense->status == 1 ){
-				$buttons[]	= HtmlTag::create( 'a', $iconDeactivate.' sperren', array(
+				$buttons[]	= HtmlTag::create( 'a', $iconDeactivate.' sperren', [
 					'href'		=> './manage/my/provision/license/deactivate/'.$userLicense->userLicenseId,
 					'class'		=> 'btn btn-small btn-danger'
-				) );
+				] );
 			}
 			if( $userLicense->status == -1 ){
-				$buttons[]	= HtmlTag::create( 'a', $iconActivate.' entsperren', array(
+				$buttons[]	= HtmlTag::create( 'a', $iconActivate.' entsperren', [
 					'href'		=> './manage/my/provision/license/activate/'.$userLicense->userLicenseId,
 					'class'		=> 'btn btn-small btn-success'
-				) );
+				] );
 			}*/
 		}
 
@@ -103,10 +103,10 @@ if( $userLicenses ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', [
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="content-panel">

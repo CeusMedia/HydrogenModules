@@ -48,12 +48,12 @@ class View_Helper_Module extends Abstraction
 			case 'boolean':
 				$strValue	= $item->value === TRUE ? 'yes' : 'no';
 				$options	= HtmlElements::Options( $words, $strValue );
-				$attributes	= array(
+				$attributes	= [
 					'class'		=> 's'.$class.' active-'.$strValue,
 					'name'		=> $name,
 					'id'		=> 'input_'.$name,
 					'readonly'	=> $readonly ? 'readonly' : NULL
-				);
+				];
 				$input		= HtmlTag::create( 'select', $options, $attributes );
 				break;
 			case 'int':
@@ -61,7 +61,7 @@ class View_Helper_Module extends Abstraction
 			case 'float':
 			case 'double':
 			case 'real':
-				$input	= HtmlTag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, [
 					'type'		=> 'text',
 					'name'		=> 'config['.$item->key.']',
 					'id'		=> 'config['.$item->key.']',
@@ -69,10 +69,10 @@ class View_Helper_Module extends Abstraction
 					'data-init'	=> $item->value,
 					'class'		=> 's'.$class,
 					'readonly'	=> $readonly ? 'readonly' : NULL
-				) );
+				] );
 				break;
 			default:
-				$input	= HtmlTag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, [
 					'type'		=> 'text',
 					'name'		=> 'config['.$item->key.']',
 					'id'		=> 'config['.$item->key.']',
@@ -80,7 +80,7 @@ class View_Helper_Module extends Abstraction
 					'data-init'	=> $item->value,
 					'class'		=> 'max'.$class,
 					'readonly'	=> $readonly ? 'readonly' : NULL
-				) );
+				] );
 				if( count( $item->values ) ){
 					$options	= array_combine( $item->values, $item->values );
 					$options	= HtmlElements::Options( $options, $item->value );

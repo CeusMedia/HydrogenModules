@@ -78,10 +78,10 @@ class Controller_Work_Time extends Controller
 		else{
 			$count	= 0;
 			foreach( $timerIds as $timerId ){
-				$count		+= $this->modelTimer->edit( $timerId, array(
+				$count		+= $this->modelTimer->edit( $timerId, [
 					'module'	=> $module,
 					'moduleId'	=> $moduleId,
-				) );
+				] );
 			}
 			$this->messenger->noteSuccess( '%d Timer(s) assigned.', $count );
 		}
@@ -191,10 +191,10 @@ class Controller_Work_Time extends Controller
 		if( $timer )
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
-		$conditions	= array(
+		$conditions	= [
 			'moduleId'	=> 0,
 			'userId'	=> $this->userId
-		);
+		];
 		$unrelatedTimers	= $this->modelTimer->getAll( $conditions );
 
 		$this->addData( 'userId', $this->userId );

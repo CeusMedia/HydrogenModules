@@ -47,12 +47,12 @@ class Controller_Shop_Customer extends Controller
 			$this->restart( NULL, TRUE );
 
 		if( $addressId && $remove ){
-			$this->modelAddress->removeByIndices( array(
+			$this->modelAddress->removeByIndices( [
 				'addressId'		=> $addressId,
  				'relationId'	=> $relationId,
 				'relationType'	=> $relationType,
 				'type'			=> $type,
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$data		= $this->request->getAll( NULL, TRUE );
@@ -61,11 +61,11 @@ class Controller_Shop_Customer extends Controller
 			$country	= $data->get( 'country' );
 		if( $this->request->has( 'save' ) ){
 			if( $addressId > 0 ){
-				$address	= $this->modelAddress->getByIndices( array(
+				$address	= $this->modelAddress->getByIndices( [
 					'addressId'		=> $addressId,
 	 				'relationId'	=> $relationId,
 					'relationType'	=> $relationType
-				) );
+				] );
 				if( !$address ){
 				//	@todo: handle this situation!
 				}
@@ -83,7 +83,7 @@ class Controller_Shop_Customer extends Controller
 				if( !$type || !in_array( (int) $type, [Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING] ) ){
 				//	@todo: handle this situation!
 				}
-				$mandatory	= array(
+				$mandatory	= [
 					'firstname',
 					'surname',
 					'email',
@@ -91,7 +91,7 @@ class Controller_Shop_Customer extends Controller
 					'city',
 					'postcode',
 					'street',
-				);
+				];
 				$labels		= $this->getWords( 'customer' );
 				foreach( $mandatory as $name ){
 					if( !$data->get( $name ) ){
@@ -115,12 +115,12 @@ class Controller_Shop_Customer extends Controller
 			if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
 				if( $type === Model_Address::TYPE_BILLING ){
 					$address	= $this->modelAddress->get( $addressId );
-					$this->modelUser->edit( $relationId, array(
+					$this->modelUser->edit( $relationId, [
 						'firstname'	=> $address->firstname,
 						'surname'	=> $address->surname,
 						'email'		=> $address->email,
 						'country'	=> $address->country,
-					) );
+					] );
 				}
 			}
 			$payload	= [
@@ -198,7 +198,7 @@ class Controller_Shop_Customer extends Controller
 	 */
 	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -206,7 +206,7 @@ class Controller_Shop_Customer extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
 	protected function __onInit(): void
@@ -254,16 +254,16 @@ class Controller_Shop_Customer extends Controller
 				if( !$this->modelCart->get( 'userId' ) )
 					$this->modelCart->set( 'userId', $userId );
 				$user		= $this->modelUser->get( $userId );
-				$addressDelivery	= $this->modelAddress->getByIndices( array(
+				$addressDelivery	= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
 					'type'			=> Model_Address::TYPE_DELIVERY,
-				) );
-				$addressBilling		= $this->modelAddress->getByIndices( array(
+				] );
+				$addressBilling		= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
 					'type'			=> Model_Address::TYPE_BILLING,
-				) );
+				] );
 				if( $this->request->has( 'save' ) && $addressDelivery && $addressBilling ){
 					$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
 					$this->modelCart->set( 'userId', $userId );
@@ -308,16 +308,16 @@ class Controller_Shop_Customer extends Controller
 			$logicAuth->setIdentifiedUser( $this->modelUser->get( $userId ) );
 			$this->modelCart->set( 'userId', $userId );
 		}
-		$addressDelivery	= $this->modelAddress->getByIndices( array(
+		$addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
-		$addressBilling		= $this->modelAddress->getByIndices( array(
+		] );
+		$addressBilling		= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
+		] );
 		$this->addData( 'addressBilling', $addressBilling );
 		$this->addData( 'addressDelivery', $addressDelivery );
 
@@ -331,7 +331,7 @@ class Controller_Shop_Customer extends Controller
 			$this->restart( 'shop/conditions' );
 		}
 
-		$user	= (object) array(
+		$user	= (object) [
 			'firstname'	=> NULL,
 			'surname'	=> NULL,
 			'email'		=> NULL,
@@ -341,7 +341,7 @@ class Controller_Shop_Customer extends Controller
 			'country'	=> NULL,
 			'region'	=> NULL,
 			'phone'		=> NULL,
-		);
+		];
 		if( $addressBilling && !$addressDelivery ){
 			$user	= $addressBilling;
 		}

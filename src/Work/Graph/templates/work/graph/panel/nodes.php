@@ -9,13 +9,13 @@ if( $nodes ){
 	foreach( $nodes as $node ){
 		$class		= $nodeId == $node->nodeId ? 'active' : NULL;
 		$label			= $node->label ? $node->label : $node->ID;
-		$link			= HtmlTag::create( 'a', $label, array(
+		$link			= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/graph/node/'.$node->nodeId
-		) );
+		] );
 		$key		= strtolower( $label ).'_'.microtime( TRUE );
-		$listNodes[$key]	= HtmlTag::create( 'li', $link, array(
+		$listNodes[$key]	= HtmlTag::create( 'li', $link, [
 			'class'	=> $class,
-		) );
+		] );
 	}
 	ksort( $listNodes );
 	$listNodes		= HtmlTag::create( 'ul', $listNodes, ['class' => 'not-unstyled nav nav-pills nav-stacked'] );

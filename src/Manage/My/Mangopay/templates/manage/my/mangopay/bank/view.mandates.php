@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$statuses	= array(
+$statuses	= [
 	'CREATED'		=> 'beantragt',
 	'SUBMITTED'		=> 'erteilt',
 	'ACTIVE'		=> 'bestätigt',
 	'FAILED'		=> 'abgebrochen',
-);
+];
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
@@ -19,23 +19,23 @@ if( $mandates ){
 	$list	= [];
 	foreach( $mandates as $mandate ){
 		$status	= HtmlTag::create( 'span', $statuses[$mandate->Status], ['class' => 'label'] );
-		$buttonDocument	= HtmlTag::create( 'a', $iconDownload.' Dokument', array(
+		$buttonDocument	= HtmlTag::create( 'a', $iconDownload.' Dokument', [
 			'href'		=> $mandate->DocumentURL,
 			'target'	=> '_blank',
 			'class'		=> 'btn btn-small'
-		) );
-		$buttonRevoke	= HtmlTag::create( 'button', $iconRevoke.' entziehen', array(
+		] );
+		$buttonRevoke	= HtmlTag::create( 'button', $iconRevoke.' entziehen', [
 			'type'		=> 'button',
 			'disabled'	=> 'disabld',
 			'class'		=> 'btn btn-danger btn-small',
-		) );
+		] );
 
 		if( $mandate->Status === 'SUBMITTED' || $mandate->Status === 'ACTIVE' ){
 			$countActive++;
-			$buttonRevoke	= HtmlTag::create( 'a', $iconRevoke.' entziehen', array(
+			$buttonRevoke	= HtmlTag::create( 'a', $iconRevoke.' entziehen', [
 				'href'		=> './manage/my/mangopay/bank/mandate/revoke/'.$mandate->Id,
 				'class'		=> 'btn btn-danger btn-small',
-			) );
+			] );
 		}
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $status ),
@@ -49,16 +49,16 @@ if( $mandates ){
 	$list	= HtmlTag::create( 'table', $tbody, ['class' => 'tabe table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' Mandate erstellen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' Mandate erstellen', [
 	'href'	=> './manage/my/mangopay/bank/mandate/'.$bankAccountId,
 	'class'	=> 'btn btn-success',
-) );
+] );
 if( $countActive ){
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.' Mandate erstellen', array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.' Mandate erstellen', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-success',
 		'disabled'	=> 'disabled',
-	) );
+	] );
 }
 
 return '

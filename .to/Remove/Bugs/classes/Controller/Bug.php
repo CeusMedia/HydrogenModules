@@ -16,7 +16,7 @@ class Controller_Bug extends Controller{
 	const CHANGE_ATTACHMENT		= 10;
 	const CHANGE_PATCH			= 11;
 
-	protected $filters	= array(
+	protected $filters	= [
 		'bugId',
 		'type',
 		'severity',
@@ -26,7 +26,7 @@ class Controller_Bug extends Controller{
 		'order',
 		'direction',
 		'limit'
-	);
+	];
 
 	public function add(){
 		$request	= $this->env->request;
@@ -75,14 +75,14 @@ class Controller_Bug extends Controller{
 		$bug			= $modelBug->get( $bugId );
 		if( $request->has( 'save' ) ){
 
-			$changeTypes	= array(
+			$changeTypes	= [
 				'type'		=> self::CHANGE_TYPE,
 				'severity'	=> self::CHANGE_SEVERITY,
 				'priority'	=> self::CHANGE_PRIORITY,
 				'status'	=> self::CHANGE_STATUS,
 				'progress'	=> self::CHANGE_PROGRESS,
 				'managerId'	=> self::CHANGE_MANAGER,
-			);
+			];
 			$changes		= array(
 				'modifiedAt'	=> time()
 			);

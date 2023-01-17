@@ -6,7 +6,7 @@ class Model_Article extends Model
 {
 	protected string $name		= 'articles';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'articleId',
 //		'authorId',
 		'status',
@@ -14,14 +14,14 @@ class Model_Article extends Model
 		'content',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'articleId';
 
-	protected array $indices	= array(
+	protected array $indices	= [
 //		'authorId',
 		'status',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 

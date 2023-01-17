@@ -8,11 +8,11 @@ class Controller_Manage_Form_Block extends Controller
 	protected $modelForm;
 	protected $modelBlock;
 	protected $filterPrefix		= 'filter_manage_form_block_';
-	protected $filters			= array(
+	protected $filters			= [
 		'blockId',
 		'title',
 		'identifier',
-	);
+	];
 
 	public function add()
 	{

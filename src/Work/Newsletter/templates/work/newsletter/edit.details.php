@@ -54,10 +54,10 @@ $buttonRemove		= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, a
 	'class'		=> 'btn btn-danger btn-small',
 	'disabled'	=> (int) $newsletter->status >= Model_Newsletter::STATUS_SENT ? 'disabled' : NULL,
 ) );
-$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
+$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn bs4-btn-secondary not-btn-small',
-) );
+] );
 
 $panelDetails	= '
 <div class="row-fluid">
@@ -105,7 +105,7 @@ $panelDetails	= '
 						</div>-->
 				<!--		<div class="span6">
 								<label for="input_status" class="checkbox">
-								'.HtmlTag::create( 'input', NULL, array(
+								'.HtmlTag::create( 'input', NULL, [
 									'type'		=> 'checkbox',
 									'name'		=> 'status',
 									'value'		=> Model_Newsletter::STATUS_READY,
@@ -113,7 +113,7 @@ $panelDetails	= '
 									'readonly'	=> $isUsed ? 'readonly' : NULL,
 									'disabled'	=> $isUsed ? 'disabled' : NULL,
 									'checked'	=> $newsletter->status >= Model_Newsletter::STATUS_READY ? 'checked' : NULL,
-								) ).'
+								] ).'
 									'.$words->edit->labelReady.'
 								</label>
 						</div>-->
@@ -205,10 +205,10 @@ else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED ){
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $urlPreview		= './work/newsletter/preview/html/'.$newsletterId;
-$iframeHtml		= HtmlTag::create( 'iframe', '', array(
+$iframeHtml		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -227,10 +227,10 @@ $panelPreviewHtml	= '
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
 $urlPreview		= './work/newsletter/preview/text/'.$newsletterId;
-$iframeText		= HtmlTag::create( 'iframe', '', array(
+$iframeText		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',

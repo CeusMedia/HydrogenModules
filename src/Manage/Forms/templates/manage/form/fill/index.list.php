@@ -21,11 +21,11 @@ $statuses	= array(
 $rows		= [];
 foreach( $fills as $fill ){
 	$fill->data	= json_decode( $fill->data );
-	$linkView	= HtmlTag::create( 'a', $iconView, array(
+	$linkView	= HtmlTag::create( 'a', $iconView, [
 		'href'	=> './manage/form/fill/view/'.$fill->fillId.'?page='.$page,
 		'class'	=> 'btn btn-mini btn-info',
 		'title'	=> 'anzeigen',
-	) );
+	] );
 	$linkRemove	= HtmlTag::create( 'a', $iconRemove, array(
 		'href'		=> './manage/form/fill/remove/'.$fill->fillId.'?page='.$page,
 		'class'		=> 'btn btn-mini btn-danger',
@@ -78,11 +78,11 @@ $thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-M
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped not-table-condensed'] );
 
-$buttonExport	= HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
+$buttonExport	= HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', [
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn',
-) );
+] );
 if( !empty( $filterFormId ) && 0 !== count( array_filter( $filterFormId ) ) )
 	$buttonExport	= HtmlTag::create( 'a', $iconDownload.'&nbsp;exportieren', array(
 		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ).'/'.$filterStatus,
@@ -99,8 +99,8 @@ $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$buttonExport, $pagination
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Einträge' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,
-	), ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );

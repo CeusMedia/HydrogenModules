@@ -38,25 +38,25 @@ class Logic_Versions{
 
 	public function get( $module, $id, $version = NULL ){
 		if( !is_null( $version ) ){
-			$conditions = array(
+			$conditions = [
 				'module'	=> $module,
 				'id'		=> $id,
 				'version'	=> $version,
-			);
+			];
 			return $this->model->getByIndices( $conditions );
 		}
-		$conditions	= array(
+		$conditions	= [
 			'module'	=> $module,
 			'id'		=> $id,
-		);
+		];
 		return $this->model->getByIndices( $conditions, ['version' => 'DESC'] );
 	}
 
 	public function getAll( $module, $id, $conditions = [], $orders = [], $limits = [] ){
-		$indices	= array(
+		$indices	= [
 			'module'	=> $module,
 			'id'		=> $id,
-		);
+		];
 		if( $orders )
 			$orders	= ['version' => 'ASC'];
 		$conditions	= array_merge( $conditions, $indices );
@@ -74,10 +74,10 @@ class Logic_Versions{
 	}
 
 	protected function getNextVersionNr( $module, $id ){
-		$latest		= $this->model->getByIndices( array(
+		$latest		= $this->model->getByIndices( [
 			'module'	=> $module,
 			'id'		=> $id,
-		), ['version' => 'DESC'] );
+		], ['version' => 'DESC'] );
 		if( $latest )
 			return (int) $latest->version + 1;
 		return 0;

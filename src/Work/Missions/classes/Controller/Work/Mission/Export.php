@@ -89,7 +89,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		$orders		= ['dayStart' => 'ASC'];
 		$missions	= $this->getUserMissions( $conditions, $orders );
 
-		$statesTask		= array(
+		$statesTask		= [
 			-2		=> 'CANCELLED',
 			-1		=> 'CANCELLED',
 			0		=> 'NEEDS-ACTION',
@@ -97,9 +97,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			2		=> 'IN-PROCESS',
 			3		=> 'NEEDS-ACTION',
 			4		=> 'COMPLETED',
-		);
+		];
 
-		$statesEvent	= array(
+		$statesEvent	= [
 			-2		=> 'CANCELLED',
 			-1		=> 'CANCELLED',
 			0		=> 'TENTATIVE',
@@ -107,7 +107,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			2		=> 'CONFIRMED',
 			3		=> 'CONFIRMED',
 			4		=> 'CONFIRMED',
-		);
+		];
 
 		$root		= new XmlNode( 'event');
 		$calendar	= new XmlNode( 'VCALENDAR' );

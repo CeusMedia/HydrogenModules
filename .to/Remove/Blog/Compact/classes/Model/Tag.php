@@ -6,17 +6,17 @@ class Model_Tag extends Model
 {
 	protected string $name		= 'tags';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'tagId',
 		'title',
 		'number'
-	);
+	];
 
 	protected string $primaryKey	= 'tagId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title'
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 

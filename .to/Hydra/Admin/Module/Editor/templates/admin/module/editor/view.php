@@ -8,7 +8,7 @@ UI_HTML_Tabs::$version	= 4;
 $tabs	= new HtmlTabs();
 
 $tab	= $request->get( 'tab' );
-$mapTabs	= array(
+$mapTabs	= [
 	'general'	=> 'tabGeneral',
 	'resources'	=> 'tabResources',
 	'config'	=> 'tabConfiguration',
@@ -16,7 +16,7 @@ $mapTabs	= array(
 	'relations'	=> 'tabRelations',
 	'links'		=> 'tabLinks',
 	'xml'		=> 'tabXml',
-);
+];
 
 $selected	= 0;
 $nr	= 0;

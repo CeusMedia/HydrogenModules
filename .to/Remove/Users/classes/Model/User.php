@@ -20,7 +20,7 @@ class Model_User extends Model
 {
 	protected string $name		= 'users';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'userId',
 		'roleId',
 		'roomId',
@@ -43,18 +43,18 @@ class Model_User extends Model
 		'modifiedAt',
 		'loggedAt',
 		'activeAt',
-	);
+	];
 
 	protected string $primaryKey	= 'userId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'roleId',
 		'roomId',
 		'companyId',
 		'status',
 		'username',
 		'email',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

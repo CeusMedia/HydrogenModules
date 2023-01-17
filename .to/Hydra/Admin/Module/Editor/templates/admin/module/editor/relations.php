@@ -46,12 +46,12 @@ if( $relations ){
 		$rows[]	= '<tr><td>'.$type.'</td><td>'.$label.'</td><td>'.$status.'</td><td>'.$linkRemove.'</td></tr>';
 	}
 	$colgroup		= HtmlElements::ColumnGroup( '20%', '50%', '20%', '10%' );
-	$heads			= array(
+	$heads			= [
 		$w->headRelation,
 		$w->headModule,
 		$w->headStatus,
 		$w->headAction,
-	);
+	];
 	$heads			= HtmlElements::TableHeads( $heads );
 	$tableRelations	= '<table>'.$colgroup.$heads.join( $rows ).'</table>';
 }

@@ -38,10 +38,10 @@ if( $readerGroups ){
 		$label			= $readerGroup->title;
 		$urlRemove		= './work/newsletter/reader/removeGroup/'.$reader->newsletterReaderId.'/'.$readerGroup->newsletterGroupId;
 		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'icon-'.$statusIcons[$readerGroup->status]] );
-		$attributes		= array(
+		$attributes		= [
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-inverse',
-		);
+		];
 		$linkRemove		= HtmlTag::create( 'a', '<i class="fa fa-remove"></i>', $attributes );
 		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
@@ -56,24 +56,24 @@ if( $readerGroups ){
 	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Gruppen', ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listGroups );
-	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> "table table-condensed table-striped table-fixed"
-	) );
+	] );
 }
 
 $listLetters	= '<em><small class="muted">Keine.</small></em>';
 
 if( $readerLetters ){
-	$stats		= (object) array(
+	$stats		= (object) [
 		'sent'		=> 0,
 		'opened'	=> 0,
 		'ratio'		=> 0,
-	);
+	];
 	$listLetters	= [];
 	foreach( $readerLetters as $letter ){
-		$attributes		= array(
+		$attributes		= [
 			'href'	=> './work/newsletter/edit/'.$letter->newsletterId
-		);
+		];
 		$class	= 'label label-error';
 		if( $letter->status >= 1 ){
 			$stats->sent++;

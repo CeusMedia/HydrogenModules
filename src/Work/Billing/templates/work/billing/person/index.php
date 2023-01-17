@@ -24,11 +24,11 @@ if( $persons ){
 			HtmlTag::create( 'td', number_format( $person->balance, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		) );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( [
 		'',
 		'120',
 		'100',
-	) );
+	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Person' ),
 		HtmlTag::create( 'th', 'Auszahlungen' ),
@@ -43,10 +43,10 @@ if( $persons ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Person', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Person', [
 	'href'	=> './work/billing/person/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="content-panel">

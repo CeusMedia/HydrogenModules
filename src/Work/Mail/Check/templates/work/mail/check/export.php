@@ -9,11 +9,11 @@ foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title;
 $optGroup	= HtmlElements::Options( $optGroup, $groups ? $groups[0]->mailGroupId : NULL );
 
-$statuses	= array(
+$statuses	= [
 	-2	=> 'nicht erreichbar',
 	-1	=> 'abgelehnt',
 	2	=> 'erreichbar',
-);
+];
 
 $optStatus	= [];
 foreach( $statuses as $key => $label )

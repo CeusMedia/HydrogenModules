@@ -20,10 +20,10 @@ class Hook_Resource_Mail_Group_Member extends Hook
 		$payload->informMembers	= property_exists( $payload, 'informMembers' ) ? $payload->informMembers : NULL;
 
 		$mail		= new Mail_Info_Mail_Group_Member_Activated( $env, (array) $payload );
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $payload->member->title,
 			'email'		=> $payload->member->address
-		);
+		];
 		$language		= $env->getLanguage()->getLanguage();
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 		$logicMail->handleMail( $mail, $receiver, $language );
@@ -37,10 +37,10 @@ class Hook_Resource_Mail_Group_Member extends Hook
 				continue;
 			$data		= array_merge( (array) $payload, ['user' => $item] );
 			$mail		= new Mail_Info_Mail_Group_Members_MemberActivated( $env, $data );
-			$receiver	= (object) array(
+			$receiver	= (object) [
 				'username'	=> $item->title,
 				'email'		=> $item->address
-			);
+			];
 			$language	= $env->getLanguage()->getLanguage();
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $receiver, $language );
@@ -63,10 +63,10 @@ class Hook_Resource_Mail_Group_Member extends Hook
 		$payload->informMembers	= property_exists( $payload, 'informMembers' ) ? $payload->informMembers : NULL;
 
 		$mail		= new Mail_Info_Mail_Group_Member_Deactivated( $env, (array) $payload );
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $payload->member->title,
 			'email'		=> $payload->member->address
-		);
+		];
 		$language		= $env->getLanguage()->getLanguage();
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 		$logicMail->handleMail( $mail, $receiver, $language );
@@ -80,10 +80,10 @@ class Hook_Resource_Mail_Group_Member extends Hook
 				continue;
 			$data		= array_merge( (array) $payload, ['user' => $item] );
 			$mail		= new Mail_Info_Mail_Group_Members_MemberDeactivated( $env, $data );
-			$receiver	= (object) array(
+			$receiver	= (object) [
 				'username'	=> $item->title,
 				'email'		=> $item->address
-			);
+			];
 			$language	= $env->getLanguage()->getLanguage();
 			$logicMail->appendRegisteredAttachments( $mail, $language );
 			$logicMail->handleMail( $mail, $receiver, $language );
@@ -103,10 +103,10 @@ class Hook_Resource_Mail_Group_Member extends Hook
 		$payload->member	= self::checkMemberPayload( $env, $payload );
 
 		$mail		= new Mail_Info_Mail_Group_Member_Rejected( $env, (array) $payload );
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $payload->member->title,
 			'email'		=> $payload->member->address
-		);
+		];
 		$language		= $env->getLanguage()->getLanguage();
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 		$logicMail->handleMail( $mail, $receiver, $language );
