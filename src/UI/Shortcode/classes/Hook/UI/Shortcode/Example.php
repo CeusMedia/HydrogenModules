@@ -11,11 +11,11 @@ class Hook_UI_Shortcode_Example extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
-		$shortCodes		= array(
+		$shortCodes		= [
 			'example'	=> [
 				'type'			=> 'default',
 			]
-		);
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

@@ -92,14 +92,14 @@ class Job_Work_Mission extends Job_Abstract
 			array( 'missionId' )
 		) ) );
 		if( $missionIds ){
-			$missionIds	= $modelMission->getAll( array(
+			$missionIds	= $modelMission->getAll( [
 				'status'	=> [
 					Model_Mission::STATUS_ABORTED,
 					Model_Mission::STATUS_REJECTED,
 					Model_Mission::STATUS_FINISHED,
 				],
 				'missionId'	=> $missionIds,
-			), [], [], ['missionId'] );
+			], [], [], ['missionId'] );
 
 			if( $this->dryMode ){
 				$this->out( 'DRY RUN - no changes will be made.' );

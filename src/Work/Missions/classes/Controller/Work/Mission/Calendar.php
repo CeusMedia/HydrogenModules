@@ -13,7 +13,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 {
 	protected $filterKeyPrefix	= 'filter.work.mission.calendar.';
 
-	protected $defaultFilterValues	= array(
+	protected $defaultFilterValues	= [
 		'mode'		=> 'now',
 		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
@@ -38,7 +38,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{

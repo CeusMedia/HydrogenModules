@@ -7,7 +7,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 
 	protected $request;
 
-	protected $defaultFilterValues	= array(
+	protected $defaultFilterValues	= [
 		'states'		=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
@@ -27,7 +27,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{

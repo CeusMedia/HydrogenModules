@@ -18,7 +18,7 @@ class Controller_Manage_Content_Locale extends Controller
 {
 	protected $frontend;
 	protected $languages	= [];
-	protected $types		= array(
+	protected $types		= [
 		'language'	=> [
 			'folder'		=> '',
 			'extensions'	=> 'ini'
@@ -31,7 +31,7 @@ class Controller_Manage_Content_Locale extends Controller
 			'folder'		=> 'mail/',
 			'extensions'	=> 'html,txt'
 		],
-	);
+	];
 
 	public function ajaxSaveContent()
 	{

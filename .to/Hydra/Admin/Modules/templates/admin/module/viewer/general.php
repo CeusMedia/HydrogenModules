@@ -7,14 +7,14 @@ $sources	= [];
 $model		= new Model_ModuleSource( $this->env );
 $sources	= $model->getAll();
 
-$icon	= $module->icon ? HtmlTag::create( 'img', NULL, array(
+$icon	= $module->icon ? HtmlTag::create( 'img', NULL, [
 	'src'	=> $module->icon,
 	'style'	=> [
 		'min-width'		=> '64px',
 		'min-height'	=> '64px',
 		'max-width'		=> '128px',
 		'max-height'	=> '128px'
-] ) ) : '';
+] ] ) : '';
 
 $desc	= trim( $module->description );
 $desc	= strlen( $desc ) ? View_Helper_ContentConverter::render( $env, $desc ).'<br/>' : '';

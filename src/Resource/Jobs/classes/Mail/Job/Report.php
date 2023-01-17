@@ -8,7 +8,7 @@ class Mail_Job_Report extends Mail_Abstract
 	{
 		$data	= $this->data;
 //		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );
-		$words	= array(
+		$words	= [
 			'job-run-statuses'	=> [
 				Model_Job_Run::STATUS_TERMINATED	=> 'terminiert',
 				Model_Job_Run::STATUS_FAILED		=> 'gescheitert',
@@ -21,7 +21,7 @@ class Mail_Job_Report extends Mail_Abstract
 				Model_Job_Run::TYPE_MANUALLY		=> 'manuell',
 				Model_Job_Run::TYPE_SCHEDULED		=> 'geplant',
 			]
-		);
+		];
 
 		$data['words']	= $words;
 

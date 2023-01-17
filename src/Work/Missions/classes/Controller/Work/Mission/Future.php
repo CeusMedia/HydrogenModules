@@ -3,7 +3,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 {
 	protected $filterKeyPrefix	= 'filter.work.mission.future.';
 
-	protected $defaultFilterValues	= array(
+	protected $defaultFilterValues	= [
 		'states'		=> [
 			Model_Mission::STATUS_NEW,
 			Model_Mission::STATUS_ACCEPTED,
@@ -24,7 +24,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{

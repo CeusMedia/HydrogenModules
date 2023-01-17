@@ -65,7 +65,7 @@ class Job_Shop extends Job_Abstract
 			return;
 		}
 		$data	= array(
-			'testOrders'	=> array(
+			'testOrders'	=> [
 				'template'	=> [
 					'country'				=> 'Deutschland',
 					'city'					=> 'Leipzig',
@@ -82,7 +82,7 @@ class Job_Shop extends Job_Abstract
 					'billing_phone'			=> '',
 					'billing_email'			=> '',
 				],
-				'accounts'	=> array(
+				'accounts'	=> [
 					'test1'	=> [
 						'institution'	=> 'Mein Unternehmen',
 						'email'			=> 'test1@meinunternehmen.de',
@@ -92,14 +92,14 @@ class Job_Shop extends Job_Abstract
 						'address'		=> 'Am Markt 1',
 						'phone'			=> '0049 341 12 34 567',
 					],
-				),
+				],
 				'emails'	=> [
 					'test2@meinunternehmen.de'	=> 'test1',
 				],
-			),
-			'countries'	=> array(
-				'sanitizeMap'	=> array(
-					'Deutschland'		=> array(
+			],
+			'countries'	=> [
+				'sanitizeMap'	=> [
+					'Deutschland'		=> [
 						'Germany',
 						'BRD',
 						'Deutschland (Germany)',
@@ -109,10 +109,10 @@ class Job_Shop extends Job_Abstract
 						'BR Deutschland',
 						'Deutschlan',
 						'DEutschland',
-					),
-				)
-			),
-			'migrants'	=> array(
+					],
+				]
+			],
+			'migrants'	=> [
 				'skipEmails'	=> [
 					'test1@meinunternehmen.de',
 					'test2@meinunternehmen.de'
@@ -122,7 +122,7 @@ class Job_Shop extends Job_Abstract
 					'useDigits'		=> FALSE,
 					'useSymbols'	=> FALSE
 				]
-			)
+			]
 		);
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
 	}

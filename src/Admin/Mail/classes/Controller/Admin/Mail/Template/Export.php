@@ -107,10 +107,10 @@ class Controller_Admin_Mail_Template_Export extends Controller
 		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();											//  preserve whitespace in title as hyphen
 
-		$data	= array(
+		$data	= [
 			'type'		=> 'mail-template',
 			'version'	=> 2,
-			'entity'	=> array(
+			'entity'	=> [
 				'title'		=> $template->title,
 				'key'		=> $titleKey,
 				'version'	=> '0',
@@ -128,8 +128,8 @@ class Controller_Admin_Mail_Template_Export extends Controller
 					'createdAt'		=> $template->createdAt,
 					'modifiedAt'	=> $template->modifiedAt,
 				]
-			)
-		);
+			]
+		];
 		return json_encode( $data, JSON_PRETTY_PRINT );
 	}
 }

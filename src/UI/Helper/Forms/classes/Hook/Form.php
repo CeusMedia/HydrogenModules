@@ -19,11 +19,11 @@ class Hook_Form extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );
 //		$words			= $env->getLanguage()->getWords( 'info/news' );
-		$shortCodes		= array(
+		$shortCodes		= [
 			'form'		=> [
 				'id'		=> 0,
 			]
-		);
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

@@ -11,7 +11,7 @@ class Hook_Info_NewsList extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload->content );
 		$words			= $env->getLanguage()->getWords( 'info/newslist' );
-		$shortCodes		= array(
+		$shortCodes		= [
 			'newslist'	=> [
 				'resource'				=> 'Info_NewsList',
 				'action'				=> 'collectNews',
@@ -20,7 +20,7 @@ class Hook_Info_NewsList extends Hook
 				'panel-heading-level'	=> 3,
 				'limit'					=> '5',
 			]
-		);
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

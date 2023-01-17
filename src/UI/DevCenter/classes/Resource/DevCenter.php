@@ -19,7 +19,7 @@ class Resource_DevCenter
 	protected function __construct( Environment $env )
 	{
 		$this->env		= $env;
-		$this->modules	= array(
+		$this->modules	= [
 			'request'		=> [
 				'label'		=> "Request",
 				'resource'	=> $_REQUEST,
@@ -44,7 +44,7 @@ class Resource_DevCenter
 				'label'		=> "Server",
 				'resource'	=> $_SERVER,
 			],
-		);
+		];
 	}
 
 	protected function __clone()

@@ -239,14 +239,14 @@ class Hook_Info_Page extends Hook
 			return;
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
-		$shortCodes		= array(
+		$shortCodes		= [
 			'page'		=> [
 				'nr'		=> 0,
 				'id'		=> '',
 				'disabled'	=> FALSE,
 				'ignore'	=> FALSE,
 			]
-		);
+		];
 		$words	= $env->getLanguage()->getWords( 'info/pages' );
 		$msgs	= (object) $words['hook-dispatch'];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){

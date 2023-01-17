@@ -43,7 +43,7 @@ class Controller_Work_Mission extends Controller
 	protected $userRoleId		= 0;
 	protected $contentFormat;
 
-	protected $defaultFilterValues	= array(
+	protected $defaultFilterValues	= [
 		'mode'		=> 'now',
 		'states'	=> [
 			Model_Mission::STATUS_NEW,
@@ -65,7 +65,7 @@ class Controller_Work_Mission extends Controller
 		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{
