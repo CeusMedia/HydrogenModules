@@ -7,10 +7,10 @@ class View_Helper_Work_Mission_Filter_Worker
 {
 	protected WebEnvironment $env;
 	protected array $words;
-	protected $modalRegistry		= NULL;
-	protected array $values			= [];
-	protected $selected				= NULL;
-	protected ?string $userId		= NULL;
+	protected ?View_Helper_ModalRegistry $modalRegistry		= NULL;
+	protected array $values									= [];
+	protected array $selected								= [];
+	protected ?string $userId								= NULL;
 
 	public function __construct( WebEnvironment $env )
 	{
@@ -19,13 +19,13 @@ class View_Helper_Work_Mission_Filter_Worker
 		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 
-	public function setModalRegistry( $modalRegistry ): self
+	public function setModalRegistry( View_Helper_ModalRegistry $modalRegistry ): self
 	{
 		$this->modalRegistry	= $modalRegistry;
 		return $this;
 	}
 
-	public function setValues( $all, $selected ): self
+	public function setValues( array $all, array $selected ): self
 	{
 		$this->values	= $all;
 		$this->selected	= $selected;
@@ -115,7 +115,8 @@ class View_Helper_Work_Mission_Filter_Worker
 		$modal->setHeading( 'Filter: Bearbeiter' );
 		$modal->setBody( $table );
 		$modal->setFade( FALSE );
-		$this->modalRegistry->register( 'workMissionFilterWorkers', $modal );
+		if( NULL !== $this->modalRegistry )
+			$this->modalRegistry->register( 'workMissionFilterWorkers', $modal );
 
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )

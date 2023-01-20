@@ -15,9 +15,9 @@ class View_Work_Mission_Future extends View
 
 			$helperList->setMissions( $this->getData( 'missions' ) );
 			$helperList->setWords( $words );
-			$helperList->setBadges( FALSE, TRUE, TRUE );
+			$helperList->setBadges( FALSE );
 
-			$listLarge		= $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE );
+			$listLarge		= $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE );
 			$buttonsLarge	= $helperButtons->render( $total, $limit, $page );
 		}
 		else{

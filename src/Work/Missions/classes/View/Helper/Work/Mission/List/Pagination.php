@@ -1,16 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Work_Mission_List_Pagination extends Abstraction
 {
-	public function render( $total, $limit = NULL, $page = 0, $reverse = FALSE ): string
+	public function __construct( Environment $env )
+	{
+		$this->setEnv( $env );
+	}
+
+	public function render( int $total, ?int $limit = NULL, int $page = 0, bool $reverse = FALSE ): string
 	{
 		if( !$total )
 			return '';
 		$limit			= abs( (int) $limit ) >= 10 ? abs( $limit ) : 10;
-		$offset			= abs( (int) $page ) * $limit;
+		$offset			= abs( $page ) * $limit;
 		$attrBtnPrev	= ['type' => 'button', 'class' => 'btn disabled'];
 		$attrBtnNext	= ['type' => 'button', 'class' => 'btn disabled'];
 		$pages			= ceil( $total / $limit );
@@ -31,7 +36,6 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 			'type'	=> 'button',
 			'class'	=> 'btn disabled'
 		] );
-		$buttons	= HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, ['class' => 'btn-group'] );
-		return $buttons;
+		return HtmlTag::create( 'div', $buttonPrev.$buttonNext.$buttonPos, ['class' => 'btn-group'] );
 	}
 }

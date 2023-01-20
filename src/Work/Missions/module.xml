@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && ./job.php work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.66</version>
+	<version>0.9.68</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable splitted markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -113,6 +113,8 @@ code>
 	<log version="0.9.64">Replace job file by module configuration.</log>
 	<log version="0.9.65">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="0.9.66">Update code style.</log>
+	<log version="0.9.67">Code update: PHP 7.4.</log>
+	<log version="0.9.68">Extract ICal export to view helper.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -134,7 +136,6 @@ code>
 		<class>View/Work/Mission.php</class>
 		<class>View/Work/Mission/Archive.php</class>
 		<class>View/Work/Mission/Calendar.php</class>
-		<class>View/Work/Mission/Export.php</class>
 		<class>View/Work/Mission/Future.php</class>
 		<class>View/Work/Mission/Kanban.php</class>
 		<class>View/Helper/Modal.php</class>
@@ -145,6 +146,7 @@ code>
 		<class>View/Helper/Work/Mission/Dashboard/MyEvents.php</class>
 		<class>View/Helper/Work/Mission/Dashboard/MyTasks.php</class>
 		<class>View/Helper/Work/Mission/DaysBadge.php</class>
+		<class>View/Helper/Work/Mission/Export/Ical.php</class>
 		<class>View/Helper/Work/Mission/Filter.php</class>
 		<class>View/Helper/Work/Mission/Filter/Priority.php</class>
 		<class>View/Helper/Work/Mission/Filter/Project.php</class>
