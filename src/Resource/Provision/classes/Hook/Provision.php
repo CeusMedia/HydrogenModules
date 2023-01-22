@@ -117,7 +117,7 @@ class Hook_Provision extends Hook
 
 	/**
 	 *	@deprecated		if combination of add-free-license-after-confirm and redirect to account-status-on-app-dispatch is used
-	 *	@todo 			kriss: remove if not needed or keep as fallback if upper case is not configured (needs to be configurable)
+	 *	@todo 			 remove if not needed or keep as fallback if upper case is not configured (needs to be configurable)
 	 */
 	static public function onAuthCheckBeforeLogin( Environment $env, $context, $module, $data )
 	{

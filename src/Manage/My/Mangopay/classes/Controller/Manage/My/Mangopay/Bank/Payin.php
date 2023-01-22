@@ -19,7 +19,7 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 		}
 
 		$fees			= $this->moduleConfig->getAll( 'fees.payin.' );
-		$this->saveBackLink( 'from', 'from' );											//  @todo kriss: may be earlier?
+		$this->saveBackLink( 'from', 'from' );											//  @todo  may be earlier?
 		$isPost			= $this->request->getMethod() === "POST";
 		$hasAmount		= strlen( trim( $this->request->get( 'amount' ) ) );
 		$hasCurrency	= strlen( trim( $this->request->get( 'currency' ) ) );

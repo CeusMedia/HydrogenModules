@@ -69,7 +69,7 @@ class View_Work_Issue extends View{
 	 *	@access		private
 	 *	@param		string		$type		Type of graph (status|priority|type)
 	 *	@return 	string
-	 *	@todo		kriss: finish integration (words, config etc.)
+	 *	@todo		 finish integration (words, config etc.)
 	 */
 	public function buildGraph( $data, $words, $type ){
 		$config			= $this->env->getConfig();

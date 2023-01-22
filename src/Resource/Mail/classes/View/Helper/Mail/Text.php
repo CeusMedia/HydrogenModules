@@ -12,7 +12,7 @@ use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
  *	Collection of functions for rendering text mails.
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@todo		kriss: finish code doc
+ *	@todo		 finish code doc
  */
 class View_Helper_Mail_Text
 {

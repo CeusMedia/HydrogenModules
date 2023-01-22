@@ -113,7 +113,7 @@ class Logic_Project extends Logic
 		}
 		else{																						//  normal access
 			if( $activeOnly )																		//  reduce to active projects
-				$conditions['status']	= [0, 1, 2];											//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
+				$conditions['status']	= [0, 1, 2];											//  @todo  insert Model_Project::STATES_ACTIVE of available
 			$projects	= $this->modelProject->getUserProjects( $userId, $conditions, $orders );
 			foreach( $projects as $project )														//  get and iterate user assigned projects
 				$userProjects[$project->projectId]  = $project;										//  add to projects map
@@ -140,7 +140,7 @@ class Logic_Project extends Logic
 		}
 		else{																						//  normal access
 			if( $activeOnly )																		//  reduce to active projects
-				$conditions['status']	= [0, 1, 2];											//  @todo kriss: insert Model_Project::STATES_ACTIVE of available
+				$conditions['status']	= [0, 1, 2];											//  @todo  insert Model_Project::STATES_ACTIVE of available
 			$projects	= $this->modelProject->getUserProjects( $userIds, $conditions, $orders );
 			foreach( $projects as $project )														//  get and iterate user assigned projects
 				$userProjects[$project->projectId]  = $project;										//  add to projects map

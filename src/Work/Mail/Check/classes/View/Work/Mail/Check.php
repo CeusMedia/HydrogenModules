@@ -9,34 +9,34 @@ class View_Work_Mail_Check extends View
 	{
 	}
 
-	public function ajaxAddress()
+	public function ajaxAddress(): void
 	{
 		$html	= $this->loadTemplateFile( 'work/mail/check/ajaxAddress.php' );
 		print( $html );
 		exit;
 	}
 
-	public function export()
+	public function export(): void
 	{
 	}
 
-	public function group()
+	public function group(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function import()
+	public function import(): void
 	{
 	}
 
-	public function status()
+	public function status(): void
 	{
 	}
 
-	public static function renderTabs( Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/mail/check/' );

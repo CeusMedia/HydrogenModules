@@ -23,7 +23,7 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new HtmlIndicator();
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );
 

@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 class View_Helper_Navigation_Bootstrap_NavbarMobileTitle extends View_Helper_Navigation_Bootstrap_Navbar
 {
 	/**
-	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
 	public function __toString()
 	{

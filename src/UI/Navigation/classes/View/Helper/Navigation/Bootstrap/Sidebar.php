@@ -24,7 +24,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 	}
 
 	/**
-	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
 	public function __toString()
 	{

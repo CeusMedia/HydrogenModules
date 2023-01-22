@@ -98,7 +98,7 @@ class Controller_Work_Mission extends Controller
 		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->userMap		= $this->logicProject->getCoworkers( $this->userId, NULL, TRUE );
 
-		//  @todo	kriss: DO NOT DO THIS!!! (badly scaling)
+		//  @todo	 DO NOT DO THIS!!! (badly scaling)
 //		$model			= new Model_User( $this->env );
 //		foreach( $model->getAll() as $user )
 //			$this->userMap[$user->userId]	= $user;
@@ -328,7 +328,7 @@ class Controller_Work_Mission extends Controller
 			$day		= (int) $this->session->get( $this->filterKeyPrefix.'day' );
 
 			$missions	= $this->getFilteredMissions( $this->userId );
-			$missions	= array_slice( $missions, 0, 100 );										//  @todo	kriss: make configurable
+			$missions	= array_slice( $missions, 0, 100 );										//  @todo	 make configurable
 
 			$listLarge		= new View_Helper_Work_Mission_List_Days( $this->env );
 			$listLarge->setMissions( $missions );
@@ -478,7 +478,7 @@ class Controller_Work_Mission extends Controller
 	 *	@access		public
 	 *	@param		integer		$mission		ID of mission to move in time
 	 *	@return		void
-	 *	@todo		kriss: enable this feature for AJAX called EXCEPT gid list
+	 *	@todo		 enable this feature for AJAX called EXCEPT gid list
 	 */
 	public function changeDay( $missionId )
 	{
@@ -976,10 +976,10 @@ class Controller_Work_Mission extends Controller
 		$conditions['status']	= $this->defaultFilterValues['states'];
 		switch( $this->session->get( $this->filterKeyPrefix.'mode' ) ){
 			case 'now':
-				$conditions['dayStart']	= '< '.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+				$conditions['dayStart']	= '< '.date( "Y-m-d", time() + 7 * 24 * 60 * 60 );				//  @todo:  calculation is incorrect
 				break;
 //			case 'future':
-//				$conditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+//				$conditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo:  calculation is incorrect
 //				break;
 		}
 		foreach( $conditions as $key => $value )

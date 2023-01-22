@@ -35,7 +35,7 @@ class Controller_Provision_Rest extends Controller
 	}
 
 	/**
-	 *	@todo 		kriss: finish implementation (exception log)
+	 *	@todo 		 finish implementation (exception log)
 	 */
 	public function handleJsonExceptionResponse( $exception ){
 		$this->handleJsonResponse( 'exception', array(

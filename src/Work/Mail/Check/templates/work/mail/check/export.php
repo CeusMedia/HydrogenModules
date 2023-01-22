@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var object[] $groups */
+
 $optType	= ['CSV' => 'CSV'];
 $optType	= HtmlElements::Options( $optType, key( $optType ) );
 

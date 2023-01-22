@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object[] $groups */
+
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
 
@@ -68,7 +70,7 @@ foreach( $groups as $group ){
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getested', 'Qualität', 'Erstellung'] ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getestet', 'Qualität', 'Erstellung'] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 

@@ -125,7 +125,7 @@ class Controller_Work_Bill extends Controller
 						$conditions['date'][]	= date( "Ymd", $start + ( $i * 24 * 60 * 60 ) );
 				}
 				else{
-					throw new InvalidArgumentException( '!!!' );									//  @todo kriss: handle invalid start/end date
+					throw new InvalidArgumentException( '!!!' );									//  @todo  handle invalid start/end date
 				}
 			}
 			else{

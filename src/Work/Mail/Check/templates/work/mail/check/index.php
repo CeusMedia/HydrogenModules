@@ -1,6 +1,15 @@
 <?php
+
+use CeusMedia\Bootstrap\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
+
+/** @var object[] $addresses */
+/** @var object[] $groups */
+/** @var int $total */
+/** @var int $limit */
+/** @var int $page */
 
 $rows	= [];
 
@@ -9,34 +18,8 @@ $iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check-circle'] );
 $iconInfo	= HtmlTag::create( 'i', '', ['class' => 'fa not-fa-fw fa-question-circle'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
-function renderCodeBadge( $check, $label = NULL ){
-	$code	= $check->code;
-	switch( (int) substr( $check->code, 0, 1 ) ){
-		case 0:
-			$code		= str_pad( $check->error, 3, "0", STR_PAD_LEFT );
-			$labelCode  = 'label-inverse';
-			break;
-		case 1:
-		case 2:
-		case 3:
-			$labelCode  = 'label-success';
-			break;
-		case 4:
-			$labelCode  = 'label-warning';
-			break;
-		case 5:
-			$labelCode  = 'label-important';
-			break;
-		default:
-			$labelCode  = '<em>unknown</em>';
-			break;
-	}
-	$label	= strlen( trim( $label ) ) ? trim( $label ) : $code;
-	return HtmlTag::create( 'span', $label, ['class' => 'label '.$labelCode] );
-}
-
 foreach( $addresses as $address ){
-	$timestamp	= $address->checkedAt ? $address->checkedAt : $address->createdAt;
+	$timestamp	= $address->checkedAt ?: $address->createdAt;
 	$time		= HtmlTag::create( 'small', date( "H:i:s", $timestamp ), ['class' => 'muted'] );
 	$date		= date( "Y-m-d", $timestamp );
 	$buttonTestEnabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', array(
@@ -91,7 +74,7 @@ foreach( $addresses as $address ){
 		$buttonInfo		= '';
 	}
 	else if( $address->status < 0 ){
-		$description	= \CeusMedia\Mail\Transport\SMTP\Code::getText( $address->check->code, FALSE );
+		$description	= SmtpCode::getText( $address->check->code, FALSE );
 		$status		 	= HtmlTag::create( 'abbr', renderCodeBadge( $address->check ), ['title' => $description] );
 	}
 	$status		.= '&nbsp;'.$buttonInfo;
@@ -114,7 +97,7 @@ $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table not-table-striped table-condensed'] );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/mail/check', $page, ceil( $total / $limit ) );
+$pagination	= new PageControl( './work/mail/check', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 $panelList	= '
@@ -241,13 +224,13 @@ return $tabs.'
 
 <script>
 function startTest(elem){
-	var icon = $(elem).children("i");
+	let icon = $(elem).children("i");
 	icon.removeClass("fa-check-circle");
 	icon.addClass("fa-spin fa-spinner");
 	$(elem).attr("disabled", "disabled");
 }
 function editAddress(id, address){
-	edited = prompt("What?", address);
+	let edited = prompt("What?", address);
 	if(edited){
 		$.ajax({
 			url: "./work/mail/check/ajaxEditAddress",
@@ -270,10 +253,37 @@ $(document).ready(function() {
 			dataType: "HTML",
 			method: "GET",
  			success: function(data) {
-				var div = $(".modal-body");
+				let div = $(".modal-body");
 				div.html(data).parent().modal();
 			}
 		});
 	});
 });
 </script>';
+
+function renderCodeBadge( object $check, ?string $label = NULL ): string
+{
+	$code	= $check->code;
+	switch( (int) substr( $check->code, 0, 1 ) ){
+		case 0:
+			$code		= str_pad( $check->error, 3, "0", STR_PAD_LEFT );
+			$labelCode  = 'label-inverse';
+			break;
+		case 1:
+		case 2:
+		case 3:
+			$labelCode  = 'label-success';
+			break;
+		case 4:
+			$labelCode  = 'label-warning';
+			break;
+		case 5:
+			$labelCode  = 'label-important';
+			break;
+		default:
+			$labelCode  = '<em>unknown</em>';
+			break;
+	}
+	$label	= strlen( trim( $label ) ) ? trim( $label ) : $code;
+	return HtmlTag::create( 'span', $label, ['class' => 'label '.$labelCode] );
+}

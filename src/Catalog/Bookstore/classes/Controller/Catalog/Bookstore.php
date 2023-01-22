@@ -132,10 +132,10 @@ class Controller_Catalog_Bookstore extends Controller
 	}
 
 	/**
-	 *	@todo		kriss: extract head and foot to module MerchantFeed with hook support
-	 *	@todo		kriss: rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
-	 *	@todo		kriss: extract labels
-	 *	@todo		kriss: BONUS: draft resolution for Google categories and implement solution for hooked modules
+	 *	@todo		 extract head and foot to module MerchantFeed with hook support
+	 *	@todo		 rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
+	 *	@todo		 extract labels
+	 *	@todo		 BONUS: draft resolution for Google categories and implement solution for hooked modules
 	 */
 	public function feed()
 	{

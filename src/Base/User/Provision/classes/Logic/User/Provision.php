@@ -625,7 +625,7 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo 		kriss: finish implementation
+	 *	@todo 		 finish implementation
 	 */
 	public function setUserLicenseStatus( $userLicenseId, $status )
 	{

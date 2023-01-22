@@ -66,7 +66,7 @@ class Controller_Oauth_Application extends Controller
 	}
 
 	/**
-	 *	@todo 		kriss: think about the fullAccess code below - is it needed?
+	 *	@todo 		 think about the fullAccess code below - is it needed?
 	 */
 	public function index( $page = 0, $limit = 10 )
 	{

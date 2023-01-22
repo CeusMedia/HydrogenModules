@@ -25,7 +25,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	 *	@param		array			$payload
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public static function ___onTinyMCE_getImageList( Environment $env, object $context, object $module, array & $payload ): void
 	{
@@ -64,7 +64,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	 *	@param		array			$payload
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload ): void
 	{

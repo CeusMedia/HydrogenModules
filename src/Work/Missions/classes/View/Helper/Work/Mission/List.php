@@ -46,7 +46,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 			'edit'		=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
 			'view'		=> HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] ),
 		];
-	}
+	}.</log>
+	<log version="0.9.68">E
 
 	public function renderBadgeDaysOverdue( object $mission ): string
 	{

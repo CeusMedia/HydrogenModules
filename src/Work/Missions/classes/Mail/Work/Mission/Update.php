@@ -191,7 +191,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$data			= $this->data;
 		$indicator		= new HtmlIndicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
@@ -232,7 +232,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	{
 		$data			= $this->data;
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
 		$modifier		= $this->modelUser->get( $new->modifierId );

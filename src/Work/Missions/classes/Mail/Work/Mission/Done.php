@@ -27,7 +27,7 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new \CeusMedia\Common\UI\HTML\Indicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );
 

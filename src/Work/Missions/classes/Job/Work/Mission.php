@@ -230,7 +230,7 @@ class Job_Work_Mission extends Job_Abstract
 		if( $user->userId != 4 )
 			return;
 		if( !strlen( trim( $user->email ) ) )													//  no mail address configured for user
-			return;																				//  @todo kriss: handle this exception state!
+			return;																				//  @todo  handle this exception state!
 		$config			= $this->env->getConfig();
 		$language		= $this->language;														//  @todo get user language instead of current language
 		if( $this->useSettings )

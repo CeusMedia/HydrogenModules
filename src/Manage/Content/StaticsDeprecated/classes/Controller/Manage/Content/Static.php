@@ -28,7 +28,7 @@ class Controller_Manage_Content_Static extends Controller
 
 	public function add()
 	{
-		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
+		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
@@ -62,7 +62,7 @@ class Controller_Manage_Content_Static extends Controller
 
 	public function addFolder()
 	{
-		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
+		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'addFolder' );
@@ -91,7 +91,7 @@ class Controller_Manage_Content_Static extends Controller
 
 	public function edit( $fileHash = NULL )
 	{
-		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
+		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
@@ -124,7 +124,7 @@ class Controller_Manage_Content_Static extends Controller
 				$editor	= new FileEditor( $fileUri );
 				if( $content != $newContent ){
 					try{
-						$editor->writeString( $newContent);						//  @todo	kriss: security !!!
+						$editor->writeString( $newContent);						//  @todo	 security !!!
 						$content	= $newContent;
 						$messenger->noteSuccess( $words->msgSuccess, $newName, $newPath );
 					}
@@ -171,7 +171,7 @@ class Controller_Manage_Content_Static extends Controller
 
 	public function remove( $fileHash )
 	{
-		$config		= $this->env->getConfig();									//  @todo	kriss: define and use configured rule
+		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );

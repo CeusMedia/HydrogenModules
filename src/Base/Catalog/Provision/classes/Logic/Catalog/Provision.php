@@ -228,7 +228,7 @@ class Logic_Catalog_Provision extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getUriPart( string $label, string $delimiter = '_' ): string
 	{

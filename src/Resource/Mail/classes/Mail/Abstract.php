@@ -632,7 +632,7 @@ abstract class Mail_Abstract
 	 *	@access		protected
 	 *	@param		string		$email		Target email address
 	 *	@return		boolean		TRUE if success
-	 *	@todo		kriss: Notwendigkeit dieser Methode prüfen.
+	 *	@todo		 Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email )
 	{

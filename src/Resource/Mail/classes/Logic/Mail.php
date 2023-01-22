@@ -557,8 +557,8 @@ class Logic_Mail extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
-	 *	@todo		kriss: (migration) adjust regex for upcoming Hydrogen with namespaces, maybe use reflection
+	 *	@todo		 (performance) remove double preg check for class (remove 3rd argument on index and double check if clause in loop)
+	 *	@todo		 (migration) adjust regex for upcoming Hydrogen with namespaces, maybe use reflection
 	 */
 	public function getMailClassNames( bool $strict = TRUE, string $sort = 'ASC' ): array
 	{

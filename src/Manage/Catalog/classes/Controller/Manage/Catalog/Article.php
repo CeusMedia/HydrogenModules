@@ -23,7 +23,7 @@ class Controller_Manage_Catalog_Article extends Controller
 	 *	@param		unknown		$module
 	 *	@param		unknown		$arguments
 	 *	@return		void
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
 	{
@@ -61,7 +61,7 @@ class Controller_Manage_Catalog_Article extends Controller
 	 *	@param		unknown		$module
 	 *	@param		unknown		$arguments
 	 *	@return		void
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{

@@ -1,5 +1,12 @@
 <?php
 
+use CeusMedia\Bootstrap\Progress as ProgressBar;
+
+/** @var int $total */
+/** @var int $open */
+/** @var int $negative */
+/** @var int $positive */
+
 $percentTested	= round( ( $positive + $negative ) / $total * 100, 2 );
 $percentQuality	= $positive + $negative ? round( $positive / ( $positive + $negative ) * 100, 1 ) : 0;
 
@@ -7,16 +14,15 @@ $percentPositive	= round( $positive / $total * 100, 1 );
 $percentNegative	= round( $negative / $total * 100, 1 );
 
 
-$bar1	= new \CeusMedia\Bootstrap\ProgressBar();
-$bar1->addBar( $percentTested, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_INFO, $percentTested.'%' );
+$bar1	= new ProgressBar();
+$bar1->addBar( $percentTested, ProgressBar::BAR_CLASS_INFO, $percentTested.'%' );
 
-$bar2	= new \CeusMedia\Bootstrap\ProgressBar( \CeusMedia\Bootstrap\ProgressBar::CLASS_DANGER );
-$bar2->addBar( $percentPositive, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_SUCCESS, $percentPositive.'%' );
-$bar2->addBar( $percentNegative, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_DANGER, $percentNegative.'%' );
+$bar2	= new ProgressBar( ProgressBar::CLASS_DANGER );
+$bar2->addBar( $percentPositive, ProgressBar::BAR_CLASS_SUCCESS, $percentPositive.'%' );
+$bar2->addBar( $percentNegative, ProgressBar::BAR_CLASS_DANGER, $percentNegative.'%' );
 
-
-$bar3	= new \CeusMedia\Bootstrap\ProgressBar( \CeusMedia\Bootstrap\ProgressBar::CLASS_DANGER );
-$bar3->addBar( $percentQuality, \CeusMedia\Bootstrap\ProgressBar::BAR_CLASS_SUCCESS, $percentQuality.'%' );
+$bar3	= new ProgressBar( ProgressBar::CLASS_DANGER );
+$bar3->addBar( $percentQuality, ProgressBar::BAR_CLASS_SUCCESS, $percentQuality.'%' );
 
 	$content	= '
 <div>
@@ -47,11 +53,6 @@ $(document).ready(function(){
 	}, 12000);
 })
 </script>';
-
-if( $open ){
-}
-else{
-}
 
 return '
 <div class="content-panel">
