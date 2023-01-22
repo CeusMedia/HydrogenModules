@@ -3,14 +3,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Mail_Facts
 {
-	protected $changedFactClassPos  = 'label label-success';
-	protected $changedFactClassNeg  = 'label label-important';
-	protected $changedFactClassInfo	= 'label label-info';
-	protected $facts				= [];
-	protected $labels				= [];
-	protected $format				= 0;
-	protected $listClass			= 'dl-horizontal';
-	protected $textLabelLength		= 23;
+	protected string $changedFactClassPos  = 'label label-success';
+	protected string $changedFactClassNeg  = 'label label-important';
+	protected string $changedFactClassInfo	= 'label label-info';
+	protected array $facts					= [];
+	protected array $labels					= [];
+	protected int $format					= 0;
+	protected string $listClass				= 'dl-horizontal';
+	protected int $textLabelLength			= 23;
 
 	const FORMAT_HTML				= 0;
 	const FORMAT_TEXT				= 1;
@@ -20,7 +20,7 @@ class View_Helper_Mail_Facts
 		self::FORMAT_TEXT,
 	];
 
-	public function add( $keyOrLabel, $valueAsHtml, $valueAsText = NULL, $direction = NULL ): self
+	public function add( string $keyOrLabel, string $valueAsHtml, ?string $valueAsText = NULL, $direction = NULL ): self
 	{
 		$key	= $label	= $keyOrLabel;
 		$valueAsText	= $valueAsText !== NULL ? $valueAsText : strip_tags( $valueAsHtml );
@@ -40,16 +40,16 @@ class View_Helper_Mail_Facts
 
 	public function render(): string
 	{
-		if( !count( $this->facts ) )
-			return '';
-		if( $this->format === self::FORMAT_HTML )
-			return $this->renderAsHtml();
-		if( $this->format === self::FORMAT_TEXT )
-			return $this->renderAsText();
+		if( count( $this->facts ) ) {
+			if ($this->format === self::FORMAT_HTML)
+				return $this->renderAsHtml();
+			if ($this->format === self::FORMAT_TEXT)
+				return $this->renderAsText();
+		}
+		return '';
 	}
 
-
-	public function setFormat( $format ): self
+	public function setFormat( int $format ): self
 	{
 		if( !in_array( $format, self::FORMATS, TRUE ) )
 			throw new RangeException( 'Invalid helper output format' );
@@ -57,19 +57,19 @@ class View_Helper_Mail_Facts
 		return $this;
 	}
 
-	public function setLabels( $labels ): self
+	public function setLabels( array $labels ): self
 	{
 		$this->labels	= $labels;
 		return $this;
 	}
 
-	public function setListClass( $listClass ): self
+	public function setListClass( string $listClass ): self
 	{
 		$this->listClass	= $listClass;
 		return $this;
 	}
 
-	public function setTextLabelLength( $integer ): self
+	public function setTextLabelLength( int $integer ): self
 	{
 		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
 		return $this;

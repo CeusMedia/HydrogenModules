@@ -6,18 +6,17 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Modal_Assign extends Abstraction
 {
-	protected $from;
-	protected $module;
-	protected $moduleId;
-	protected $timers	= [];
-	protected $userId;
+	protected array $timers	= [];
+	protected ?string $userId;
+	protected ?object $relation;
+	protected ?string $from;
 
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$words		= $this->env->getLanguage()->getWords( 'work/time' );
 		$w			= (object) $words['assign'];
@@ -72,7 +71,7 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 ';
 	}
 
-	public function setFrom( $from ): self
+	public function setFrom( string $from ): self
 	{
 		$this->from		= $from;
 		return $this;
@@ -87,13 +86,13 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 		return $this;
 	}
 
-	public function setTimers( $timers ): self
+	public function setTimers( array $timers ): self
 	{
 		$this->timers	= $timers;
 		return $this;
 	}
 
-	public function setUserId( $userId ): self
+	public function setUserId( string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;

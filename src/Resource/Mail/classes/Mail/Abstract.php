@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
+use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\TemplateEngine\Template;
 
 /**
@@ -19,47 +20,47 @@ use CeusMedia\TemplateEngine\Template;
  */
 abstract class Mail_Abstract
 {
-	/**	@var		object					$mail			Mail objectm, build on construction */
-	public $mail;
+	/**	@var		MailMessage				$mail			Mail object, build on construction */
+	public MailMessage $mail;
 
 	/**	@var		Environment				$env			Environment object */
-	protected $env;
+	protected Environment $env;
 
 	/**	@var		Dictionary				$config			Application configuration object */
-	protected $config;
+	protected Dictionary $config;
 
 	/**	@var		Dictionary				$options		Module configuration object */
-	protected $options;
+	protected Dictionary $options;
 
 	/** @var		Logic_Mail				$logicMail		Mail logic object */
-	protected $logicMail;
+	protected Logic_Mail $logicMail;
 
 	/** @var		HtmlPage $page			Empty page object for HTML mails */
-	protected $page;
+	protected HtmlPage $page;
 
 	/** @var		object					$transport		Mail transport object, build on construction */
-	protected $transport;
+	protected object $transport;
 
-	/** @var		View $view			General view instance */
-	protected $view;
+	/** @var		View 					$view			General view instance */
+	protected View $view;
 
 	/** @var		Model_Mail_Template		$modelTemplate	Mail template model object */
-	protected $modelTemplate;
+	protected Model_Mail_Template $modelTemplate;
 
 	/** @var		string					$baseUrl		Application base URL */
-	protected $baseUrl;
+	protected string $baseUrl;
 
 	/** @var		array					$bodyClasses	List of Stylesheet files to integrate into HTML body */
-	protected $addedStyles		= [];
+	protected array $addedStyles			= [];
 
 	/** @var		array					$bodyClasses	List of classes to apply to HTML body */
-	protected $bodyClasses		= [];
+	protected array $bodyClasses			= [];
 
 	/** @var		array					$data			Data assigned for mail body generation, for HTML and text */
-	protected $data				= [];
+	protected array $data					= [];
 
 	/** @var		array					$contents		Map of generated and rendered contents */
-	protected $contents			= [
+	protected array $contents				= [
 		'htmlGenerated'		=> '',
 		'htmlRendered'		=> '',
 		'textGenerated'		=> '',
@@ -67,16 +68,16 @@ abstract class Mail_Abstract
 	];
 
 	/** @var		integer					$templateId		ID of template to force to use on rendering of mail contents */
-	protected $templateId		= 0;
+	protected $templateId					= 0;
 
 	/** @var		string					$encodingHtml	Default encoding for HTML */
-	protected $encodingHtml		= 'quoted-printable';
+	protected string $encodingHtml			= 'quoted-printable';
 
 	/** @var		string					$encodingHtml	Default encoding for subject */
-	protected $encodingSubject	= 'quoted-printable';
+	protected string $encodingSubject		= 'quoted-printable';
 
 	/** @var		string					$encodingHtml	Default encoding for text */
-	protected $encodingText		= 'quoted-printable';
+	protected string$encodingText			= 'quoted-printable';
 
 	/**
 	 *	Constructor.
@@ -86,11 +87,11 @@ abstract class Mail_Abstract
 	 *	@param		boolean			$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
 	 */
-	public function __construct( Environment $env, $data = [], bool $defaultStyle = TRUE )
+	public function __construct( Environment $env, array $data = [], bool $defaultStyle = TRUE )
 	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
-		$this->mail				= new \CeusMedia\Mail\Message();
+		$this->mail				= new MailMessage();
 //		$this->view				= new View( $env );
 		$this->page				= new HtmlPage();
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );

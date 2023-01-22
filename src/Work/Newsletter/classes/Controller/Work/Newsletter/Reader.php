@@ -3,20 +3,23 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\Mail\Address\Collection\Parser as MailAddressCollectionParser;
 
 class Controller_Work_Newsletter_Reader extends Controller
 {
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
-	protected $logic;
-	protected $session;
-	protected $request;
-	protected $messenger;
+	protected Logic_Newsletter_Editor $logic;
+	protected Dictionary $session;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
 	protected $limiter;
 
-	protected $filters		= [
+	protected array $filters		= [
 		'email',
 		'firstname',
 		'surname',
@@ -24,9 +27,9 @@ class Controller_Work_Newsletter_Reader extends Controller
 		'groupId',
 		'limit',
 	];
-	protected $filterPrefix	= 'filter_work_newsletter_reader_';
+	protected string $filterPrefix	= 'filter_work_newsletter_reader_';
 
-	public function add()
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->has( 'save' ) ){
@@ -82,7 +85,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				$this->restart( 'edit/'.$readerId, TRUE );
 			}
 		}
-		$reader		= (object) array(
+		$reader		= (object) [
 			'status'		=> $this->request->get( 'status' ),
 			'gender'		=> $this->request->get( 'gender' ),
 			'prefix'		=> $this->request->get( 'prefix' ),
@@ -90,7 +93,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 			'surname'		=> $this->request->get( 'surname' ),
 			'email'			=> $this->request->get( 'email' ),
 			'institution'	=> $this->request->get( 'institution' ),
-		);
+		];
 
 		$selectedGroups	= $this->request->get( 'groups' );
 		if( !is_array( $selectedGroups ) )
@@ -119,7 +122,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'totalReaders', $totalReaders );
 	}
 
-	public function addGroup( $readerId, $groupId = NULL )
+	public function addGroup( $readerId, $groupId = NULL ): void
 	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		if( $groupId )
@@ -127,7 +130,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
-	public function edit( $readerId )
+	public function edit( $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkReaderId( $readerId ) ){
@@ -147,7 +150,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  ['status' => '>= 1'], ['title' => 'ASC'] ) );
 	}
 
-	public function export( $mode = 'csv' )
+	public function export( $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
 			$this->messenger->noteNotice( 'Exportieren ist deaktivert. Vorgang abgebrochen.' );
@@ -247,7 +250,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 	}
 
-	public function filter( $reset = FALSE )
+	public function filter( $reset = FALSE ): void
 	{
 		if( $reset ){
 			foreach( $this->filters as $key )
@@ -262,7 +265,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( './work/newsletter/reader' );
 	}
 
-	public function import( $mode = 'csv' )
+	public function import( $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
 			$this->messenger->noteNotice( 'Importieren ist deaktivert. Vorgang abgebrochen.' );
@@ -272,7 +275,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$groupId	= $this->request->get( 'groupId' );
 		switch( strtolower( $mode ) ){
 			case 'list':
-				$parser		= new \CeusMedia\Mail\Parser\AddressList();
+				$parser		= new MailAddressCollectionParser();
 				$list		= $parser->parse( $this->request->get( 'addresses' ) );
 				foreach( $list as $entry ){
 					$conditions	= ['email' => strtolower( $entry['address'] )];
@@ -280,13 +283,13 @@ class Controller_Work_Newsletter_Reader extends Controller
 					if( $existing )
 						$readerId	= $existing[0]->newsletterReaderId;
 					else{
-						$data	= array(
+						$data	= [
 							'status'		=> $this->request->get( 'status' ),
 							'email'			=> $entry['address'],
 							'surname'		=> $entry['fullname'],
 							'firstname'		=> '',
 							'gender'		=> '2',
-						);
+						];
 						$readerId	= $this->logic->addReader( $data );
 					}
 					if( $groupId )
@@ -301,7 +304,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$upload->setUpload( $this->request->get( 'upload' ) );
 					$upload->saveTo( $fileName );
 					$reader	= new CsvFileReader( $fileName, TRUE );
-					$csv	= $reader->toAssocArray();
+					$csv	= $reader->toArray();
 					foreach( $csv as $entry ){
 						$conditions	= ['email' => strtolower( $entry['email'] )];
 						$existing	= $this->logic->getReaders( $conditions );						//  get others by address
@@ -321,7 +324,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL )
+	public function index( $page = NULL ): void
 	{
 		if( is_null( $page ) ){
 			$page	= 0;
@@ -387,7 +390,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'totalReaders', $total );
 	}
 
-	public function remove( $readerId )
+	public function remove( $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 
@@ -401,7 +404,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $readerId, $groupId = NULL )
+	public function removeGroup( $readerId, $groupId = NULL ): void
 	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		$this->logic->removeReaderFromGroup( $readerId, $groupId );

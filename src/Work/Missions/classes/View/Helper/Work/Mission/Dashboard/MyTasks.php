@@ -1,22 +1,26 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 {
-	protected $projects		= [];
-	protected $tasks		= [];
-	protected $rowStyles	= [
+	protected array $projects		= [];
+	protected array $tasks		= [];
+	protected array $rowStyles	= [
 		33 => 'warning',
 		66 => 'error',
 	];
 
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !count( $this->projects ) )
 //			throw new RuntimeException( 'No user projects set or available' );
 			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
@@ -78,11 +82,15 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 		return $content;
 	}
 
-	public function setProjects( $projects ){
+	public function setProjects( array $projects ): self
+	{
 		$this->projects	= $projects;
+		return $this;
 	}
 
-	public function setTasks( $tasks ){
+	public function setTasks( array $tasks ): self
+	{
 		$this->tasks	= $tasks;
+		return $this;
 	}
 }

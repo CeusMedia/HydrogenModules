@@ -5,10 +5,14 @@
  *	@package		Work.Missions
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Acl\Abstraction as AclResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	Controller.
@@ -25,23 +29,24 @@ class Controller_Work_Mission extends Controller
 		$this->addData( 'topic', (string) $topic );
 	}
 
-	protected $acl;
-	protected $filterKeyPrefix	= 'filter.work.mission.';
-	protected $isEditor;
-	protected $isViewer;
-	protected $hasFullAccess	= FALSE;
+	protected AclResource $acl;
+	protected string $filterKeyPrefix	= 'filter.work.mission.';
+	protected bool $isEditor;
+	protected bool $isViewer;
+	protected bool $hasFullAccess	= FALSE;
 	protected $lock;
-	protected $logic;
-	protected $logicProject;
-	protected $messenger;
-	protected $model;
-	protected $request;
-	protected $session;
-	protected $useIssues		= FALSE;
-	protected $userMap			= [];
-	protected $userId			= 0;
-	protected $userRoleId		= 0;
-	protected $contentFormat;
+	protected Logic_Work_Mission $logic;
+	protected Logic_Authentication $logicAuth;
+	protected Logic_Project $logicProject;
+	protected MessengerResource $messenger;
+	protected Model_Mission $model;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected bool $useIssues			= FALSE;
+	protected array $userMap			= [];
+	protected $userId					= 0;
+	protected $userRoleId				= 0;
+	protected string $contentFormat;
 
 	protected $defaultFilterValues	= [
 		'mode'		=> 'now',

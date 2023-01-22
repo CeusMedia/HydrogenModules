@@ -1,20 +1,26 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 {
-	protected $events		= [];
+	protected array $events		= [];
 
-	protected $projects		= [];
+	protected array $projects		= [];
 
-	public function __construct( $env )
+	/**
+	 * @param Environment $env
+	 */
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 		$today			= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
@@ -50,7 +56,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 					HtmlTag::create( 'td', $label, ['class' => 'autocut'] ),
 //							HtmlTag::create( 'td', '#'.$event->priority ),
 				) );
-			};
+			}
 			$colgroup	= HtmlElements::ColumnGroup( [
 				'50px',
 //						'20px',
@@ -68,21 +74,26 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 		return '<br/>'.$today.'<br/>'.$content.$buttonAdd;
 	}
 
-	protected function renderNiceTime( $time ){
+	protected function renderNiceTime( $time ): string
+	{
 		if( !strlen( trim( $time ) ) )
 			return '-';
 		list( $hours, $minutes ) = explode( ':', $time );
-		return HtmlTag::create( 'span', array(
+		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),
-		), ['class' => 'time-nice'] );
+		], ['class' => 'time-nice'] );
 	}
 
-	public function setEvents( $events ){
+	public function setEvents( array $events ): self
+	{
 		$this->events	= $events;
+		return $this;
 	}
 
-	public function setProjects( $projects ){
+	public function setProjects( array $projects ): self
+	{
 		$this->projects	= $projects;
+		return $this;
 	}
 }
