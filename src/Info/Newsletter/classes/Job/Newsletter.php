@@ -51,10 +51,10 @@ class Job_Newsletter extends Job_Abstract
 		$words		= (object) $this->words->send;													//  get words or like date formats
 
 		$total		= 0;
-		$conditions	= array( 'status' => [
+		$conditions	= ['status' => [
 			Model_Newsletter_Queue::STATUS_NEW,
 			Model_Newsletter_Queue::STATUS_RUNNING
-		] );
+		]];
 		$queues		= $this->logic->getQueues( $conditions );
 		foreach( $queues as $queue ){
 			$conditions	= [
@@ -99,10 +99,10 @@ class Job_Newsletter extends Job_Abstract
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
 		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
 		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$conditions	= array( 'status' => [
+		$conditions	= ['status' => [
 			Model_Newsletter_Queue::STATUS_NEW,
 			Model_Newsletter_Queue::STATUS_RUNNING
-		] );
+		]];
 		$queues		= $this->logic->getQueues( $conditions );
 		$queueIds	= [];
 		foreach( $queues as $queue ){

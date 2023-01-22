@@ -65,7 +65,7 @@ class View_Helper_Blog{
 				];
 				$image		= HtmlTag::create( 'a', $image, $attributes );
 			}
-			$container	= HtmlTag::create( 'div', $image, array( 'class'=>'image' ) );
+			$container	= HtmlTag::create( 'div', $image, ['class'=>'image'] );
 			$content	= str_replace( $matches[0][$i], $container, $content );
 		}
 		return $content;
@@ -92,7 +92,7 @@ class View_Helper_Blog{
 	}
 
 	static public function getArticleTitleUrlLabel( $article ){
-		$cut	= array( '?', '!', ':', '.', ';', '"', "'" );
+		$cut	= ['?', '!', ':', '.', ';', '"', "'"];
 		$label	= str_replace( $cut, '', strip_tags( $article->title ) );							//  remove inappropriate characters and HTML tags
 		$label	= trim( preg_replace( '/ +/', '_', $label ) );										//  shorten spaces to one and trim
 		return rawurlencode( $label.'.html' );														//  return encoded URL component
@@ -112,7 +112,7 @@ class View_Helper_Blog{
 			'class'	=> 'not-icon-label not-link-blog',
 			'href'	=> 'blog/article/'.$article->articleId.'/'.$version.'/'.$keywords,
 		];
-		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
+		$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-comment fa-fw'] ).'&nbsp;';
 		return HtmlTag::create( 'a', $icon.$label, $attributes );
 	}
 
@@ -120,12 +120,12 @@ class View_Helper_Blog{
 		$list		= [];
 		$model		= new Model_Article( $env );
 		$conditions	= array( 'status' => 1, 'createdAt' => '<= '.time() );
-		$latest		= $model->getAll( $conditions, array( 'createdAt' => 'DESC' ), array( $offset, $limit ) );
+		$latest		= $model->getAll( $conditions, ['createdAt' => 'DESC'], [$offset, $limit] );
 		foreach( $latest as $article ){
 			$link	= self::renderArticleLink( $env, $article );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'blog-item autocut' ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => 'blog-item autocut'] );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'list-latest-articles' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'list-latest-articles'] );
 	}
 
 	static public function renderTagLink( Environment $env, $tagName ){
@@ -133,12 +133,12 @@ class View_Helper_Blog{
 			'href'	=> './blog/tag/'.rawurlencode( str_replace( '&', '%26', $tagName ) ),
 			'class'	=> 'not-icon-label not-link-tag'
 		);
-		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-tag fa-fw' ) ).'&nbsp;';
+		$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-tag fa-fw'] ).'&nbsp;';
 		return HtmlTag::create( 'a', $icon.$tagName, $attributes );
 	}
 
-	static public function renderTopTags( Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
-		$states		= is_array( $states ) ? $states : array( $states );
+	static public function renderTopTags( Environment $env, $limit, $offset = 0, $states = [1] ){
+		$states		= is_array( $states ) ? $states : [$states];
 		$prefix		= $env->getDatabase()->getPrefix();
 		$query		= '
 			SELECT
@@ -159,17 +159,17 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= [];
 		foreach( $tags as $relation ){
-			$nr		= HtmlTag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
+			$nr		= HtmlTag::create( 'span', $relation->nr, ['class' => 'badge badge-info pull-right not-number-indicator'] );
 			$link	= self::renderTagLink( $env, $relation->title );
 			$list[]	= HtmlTag::create( 'li', $nr.$link );
 		}
 		if( !$list )
 			return NULL;
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'top-tags'] );
 	}
 
-	static public function renderFlopTags( Environment $env, $limit, $offset = 0, $states = array( 1 ) ){
-		$states		= is_array( $states ) ? $states : array( $states );
+	static public function renderFlopTags( Environment $env, $limit, $offset = 0, $states = [1] ){
+		$states		= is_array( $states ) ? $states : [$states];
 		$prefix		= $env->getDatabase()->getPrefix();
 		$query		= '
 			SELECT
@@ -190,13 +190,13 @@ class View_Helper_Blog{
 		$tags	= $env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		$list	= [];
 		foreach( $tags as $relation ){
-			$nr		= HtmlTag::create( 'span', $relation->nr, array( 'class' => 'badge badge-info pull-right not-number-indicator' ) );
+			$nr		= HtmlTag::create( 'span', $relation->nr, ['class' => 'badge badge-info pull-right not-number-indicator'] );
 			$link	= self::renderTagLink( $env, $relation->title );
 			$list[]	= HtmlTag::create( 'li', $nr.$link );
 		}
 		if( !$list )
 			return NULL;
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'top-tags' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'top-tags'] );
 	}
 }
 ?>

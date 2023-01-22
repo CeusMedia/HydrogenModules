@@ -1,7 +1,7 @@
 <?php
 if( $user ){
 	if( $view->hasContent( 'index', 'index.inside', 'html/' ) ){
-		$content	= $view->loadContent( 'index', 'index.inside',  array( 'user' => $user ) );
+		$content	= $view->loadContent( 'index', 'index.inside',  ['user' => $user] );
 		if( $env->getModules()->has( 'UI_Helper_Content' ) )
 			$content	= View_Helper_ContentConverter::render( $env, $content );
 		return $content;

@@ -30,7 +30,7 @@ class Controller_System_Log extends Controller
 		if( !$config->get( 'active' ) )
 			return;
 		if( is_object( $data ) && $data instanceof Exception )
-			$data	= array( 'exception' => $data );
+			$data	= ['exception' => $data];
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		$exception	= $data['exception'];
@@ -68,7 +68,7 @@ class Controller_System_Log extends Controller
 			foreach( explode( ",", $config->get( 'email.receivers' ) ) as $receiver ){
 				if( strlen( trim( $receiver ) ) ){
 					$user	= (object) array( 'email' => trim( $receiver ) );
-					$mail	= new Mail_System_Log_Exception( $env, array( 'exception' => $exception ) );
+					$mail	= new Mail_System_Log_Exception( $env, ['exception' => $exception] );
 					try{
 						$logic->handleMail( $mail, $user, $language );
 //						$mail->sendTo( $user );

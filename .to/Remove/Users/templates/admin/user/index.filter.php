@@ -22,7 +22,7 @@ foreach( $states as $status => $label ){
 }
 $optStatus	= join( $optStatus );
 
-$optOrder	= array( '' => '-' );
+$optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $env->getSession()->get( 'filter-user-order' );

@@ -31,7 +31,7 @@ class View_Admin_Role extends View
 	public function edit()
 	{
 		$disclosure	= new Disclosure();
-		$options	= array( 'classPrefix' => 'Controller_', 'readParameters' => FALSE );
+		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'acl', $this->env->getAcl() );
 	}

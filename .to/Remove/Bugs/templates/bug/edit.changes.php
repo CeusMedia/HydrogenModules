@@ -14,23 +14,23 @@ foreach( $bug->notes as $note ){
 		$labelType	= HtmlTag::create( 'dt', $words['changes'][$change->type] );
 		switch( $change->type ){
 			case 4:
-				$from	= HtmlTag::create( 'span', $words['types'][$change->from], array( 'class' => 'bug-type type-'.$change->from ) );
-				$to		= HtmlTag::create( 'span', $words['types'][$change->to], array( 'class' => 'bug-type type-'.$change->to ) );
+				$from	= HtmlTag::create( 'span', $words['types'][$change->from], ['class' => 'bug-type type-'.$change->from] );
+				$to		= HtmlTag::create( 'span', $words['types'][$change->to], ['class' => 'bug-type type-'.$change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 5:
-				$from	= HtmlTag::create( 'span', $words['severities'][$change->from], array( 'class' => 'bug-severity severity-'.$change->from ) );
-				$to		= HtmlTag::create( 'span', $words['severities'][$change->to], array( 'class' => 'bug-severity severity-'.$change->to ) );
+				$from	= HtmlTag::create( 'span', $words['severities'][$change->from], ['class' => 'bug-severity severity-'.$change->from] );
+				$to		= HtmlTag::create( 'span', $words['severities'][$change->to], ['class' => 'bug-severity severity-'.$change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 6:
-				$from	= HtmlTag::create( 'span', $words['priorities'][$change->from], array( 'class' => 'bug-priority priority-'.$change->from ) );
-				$to		= HtmlTag::create( 'span', $words['priorities'][$change->to], array( 'class' => 'bug-priority priority-'.$change->to ) );
+				$from	= HtmlTag::create( 'span', $words['priorities'][$change->from], ['class' => 'bug-priority priority-'.$change->from] );
+				$to		= HtmlTag::create( 'span', $words['priorities'][$change->to], ['class' => 'bug-priority priority-'.$change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 7:
-				$from	= HtmlTag::create( 'span', $words['states'][$change->from], array( 'class' => 'bug-status status-'.$change->from ) );
-				$to		= HtmlTag::create( 'span', $words['states'][$change->to], array( 'class' => 'bug-status status-'.$change->to ) );
+				$from	= HtmlTag::create( 'span', $words['states'][$change->from], ['class' => 'bug-status status-'.$change->from] );
+				$to		= HtmlTag::create( 'span', $words['states'][$change->to], ['class' => 'bug-status status-'.$change->to] );
 				$change	= $from." -> ".$to;
 				break;
 			case 8:
@@ -49,7 +49,7 @@ foreach( $bug->notes as $note ){
 	$user	= '-';
 	if( $note->userId ){
 		$user	= HtmlElements::Link( './user/edit/'.$note->userId, $note->user->username );
-		$user	= HtmlTag::create( 'span', $user, array( 'class' => 'role role'.$note->user->roleId ) );
+		$user	= HtmlTag::create( 'span', $user, ['class' => 'role role'.$note->user->roleId] );
 	}
 
 //	$noteChanges	= HtmlTag::create( 'dl', join( $noteChanges ) );
@@ -72,10 +72,10 @@ foreach( $bug->notes as $note ){
 ';
 	
 	
-	$item	= HtmlTag::create( 'li', $content, array( 'class' => 'bug-note' ) );
+	$item	= HtmlTag::create( 'li', $content, ['class' => 'bug-note'] );
 	$list[]	= $item;
 }
-$list	= $list ? HtmlTag::create( 'ul', join( $list ), array( 'class' => 'list' ) ) : '';
+$list	= $list ? HtmlTag::create( 'ul', join( $list ), ['class' => 'list'] ) : '';
 	
 return '
 <fieldset>

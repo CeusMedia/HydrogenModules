@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $categories		= array_combine( $categories, $categories );
 $categories['']	= $words['index']['categoryNone'];
-$filters		= ['type' => array( Model_Module::TYPE_CUSTOM, Model_Module::TYPE_COPY, Model_Module::TYPE_LINK )];
+$filters		= ['type' => [Model_Module::TYPE_CUSTOM, Model_Module::TYPE_COPY, Model_Module::TYPE_LINK]];
 
 $listSections	= $this->renderModuleSections( $modules, $categories, $filters );
 

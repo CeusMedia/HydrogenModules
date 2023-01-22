@@ -165,7 +165,7 @@ class Controller_Admin_User extends Controller
 			if( $needsEmail && empty( $email ) )
 				$messenger->noteError( $words->msgNoEmail );
 			else if( !empty( $email ) )
-				if( $modelUser->getByIndices( array( 'email' => $email, 'userId' => '!= '.$userId ) ) )
+				if( $modelUser->getByIndices( ['email' => $email, 'userId' => '!= '.$userId] ) )
 					$messenger->noteError( $words->msgEmailExisting, $email );
 
 			if( $needsFirstname && empty( $data['firstname'] ) )
@@ -244,20 +244,20 @@ class Controller_Admin_User extends Controller
 		if( !$limit )
 			$limit		= 10;
 		$offset		= is_null( $offset ) ? 0 : abs( $offset );
-		$limits		= array( $limit, $offset );
+		$limits		= [$limit, $offset];
 
 		$filters	= [];
 		foreach( $session->getAll() as $key => $value )
 			if( preg_match( '/^filter-user-/', $key ) ){
 				$column	= preg_replace( '/^filter-user-/', '', $key );
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
+				if( !in_array( $column, ['order', 'direction', 'limit'] ) )
 					$filters[$column] = $value;
 			}
 		$orders	= [];
 		$order	= $session->get( 'filter-user-order' );
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
-			$orders	= array( $order => $dir );
+			$orders	= [$order => $dir];
 		$data	= [
 			'filters'	=> $filters,
 			'orders'	=> $orders

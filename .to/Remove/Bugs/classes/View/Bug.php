@@ -26,7 +26,7 @@ class View_Bug extends View
 	{
 		$list		= [];
 		if( !is_array( $values ) )
-			$values = $values ? array( $values ) : array();
+			$values = $values ? [$values] : array();
 		foreach( $options as $key => $value ){
 			$selected	= !strlen( $key ) && !$values;
 			if( strlen( $key ) )

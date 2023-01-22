@@ -9,7 +9,7 @@ foreach( $articles as $item ){
 	$articleList[$item->articleId]	= $item;
 }
 $index		= array_search( $articleId, $articleIndex );
-$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-comment fa-fw' ) ).'&nbsp;';
+$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-comment fa-fw'] ).'&nbsp;';
 $linkNext	= '';
 $linkPrev	= '';
 if( isset( $articleIndex[$index-1] ) ){
@@ -48,7 +48,7 @@ if( $article->versions ){
 	if( $env->getConfig()->get( 'module.blog_compact.niceURLs' ) )
 		$url	.= '/'.View_Helper_Blog::getArticleTitleUrlLabel( $article );
 	$list[]	= HtmlElements::Link( $url, $label, $class );
-	$listVersions	= HtmlTag::create( 'span', join( '&nbsp;', $list ), array( 'class' => 'not-editor-list versions' ) );
+	$listVersions	= HtmlTag::create( 'span', join( '&nbsp;', $list ), ['class' => 'not-editor-list versions'] );
 }
 else
 	$listVersions	= '<b>1</b>';

@@ -190,8 +190,8 @@ class Controller_Manage_Download extends Controller
 
 	public function scan()
 	{
-		$statsImport	= (object) array( 'folders' => [], 'files' => [] );
-		$statsClean		= (object) array( 'folders' => [], 'files' => [] );
+		$statsImport	= (object) ['folders' => [], 'files' => []];
+		$statsClean		= (object) ['folders' => [], 'files' => []];
 		$this->scanRecursive( 0, '', $statsImport );
 		$this->cleanRecursive( 0, '', $statsClean );
 

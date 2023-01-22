@@ -6,7 +6,7 @@ $roleId			= $this->env->getSession()->get( 'roleId');
 $canAdd			= $roleId && $this->env->getAcl()->hasRight( $roleId, 'blog', 'add' );
 $url			= './blog/add';
 
-$icon			= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-plus fa-fw' ) );
+$icon			= HtmlTag::create( 'b', '', ['class' => 'fa fa-plus fa-fw'] );
 $linkAdd		= $canAdd ? '&nbsp;'.HtmlTag::create( 'a', $icon, [
 	'href'		=> $url,
 	'class'		=> 'btn btn-mini',
@@ -28,9 +28,9 @@ $flopTags		= View_Helper_Blog::renderFlopTags( $env, 5, 0, $states );
 $listTopTags	= $topTags ? '<h4>Häufige Schlüsselwörter</h4>'.$topTags : '';
 $listFlopTags	= $flopTags ? '<h4>Seltenste Schlüsselwörter</h4>'.$flopTags : '';
 
-$iconPublic		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-check fa-fw' ) ).'&nbsp;';
-$iconWork		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-pencil fa-fw' ) ).'&nbsp;';
-$iconTrash		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-trash fa-fw' ) ).'&nbsp;';
+$iconPublic		= HtmlTag::create( 'b', '', ['class' => 'fa fa-check fa-fw'] ).'&nbsp;';
+$iconWork		= HtmlTag::create( 'b', '', ['class' => 'fa fa-pencil fa-fw'] ).'&nbsp;';
+$iconTrash		= HtmlTag::create( 'b', '', ['class' => 'fa fa-trash fa-fw'] ).'&nbsp;';
 
 $listStates		= '
 	<h4>Artikel-Zustände</h4>

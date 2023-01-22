@@ -22,7 +22,7 @@ $facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
 $list	= [];
 foreach( $facts as $key => $value )
 	$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
-$list	= HtmlTag::create( 'dl', $list, array( 'class' => 'dl-horizontal' ) );
+$list	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
 return '
 <div class="row-fluid">

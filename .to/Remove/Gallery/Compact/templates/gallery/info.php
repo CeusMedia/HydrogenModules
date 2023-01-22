@@ -57,52 +57,52 @@ $modes		= [];
 $hints		= [];
 if( $useFullscreen ){
 	$label		= HtmlTag::create( 'span', "Vollbild" );
-	$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrows-alt fa-fw' ) ).'&nbsp;';
-	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-fullscreen" );
+	$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-arrows-alt fa-fw'] ).'&nbsp;';
+	$attr		= ['type' => "button", 'class' => "btn btn-small", 'id' => "button-fullscreen"];
 	$modes['fullscreen']	= HtmlTag::create( 'button', $icon.$label, $attr );
 	$hints['fullscreen']	= 'Klicke auf das Bild für die Vollbildanzeige. <b>Tipp:</b> Drücke vorher <kbd>F11</kbd>';
 }
 if( $useMagnifier ){
 	$label		= HtmlTag::create( 'span', "Lupe" );
-	$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-search fa-fw' ) ).'&nbsp;';
-	$attr		= array( 'type' => "button", 'class' => "btn btn-small", 'id' => "button-magnifier" );
+	$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-search fa-fw'] ).'&nbsp;';
+	$attr		= ['type' => "button", 'class' => "btn btn-small", 'id' => "button-magnifier"];
 	$modes['magnifier']		= HtmlTag::create( 'button', $icon.$label, $attr );
 	$hints['magnifier']		= '<b>Tipp:</b> Die Lupe ist aktiviert. Fahre mit der Maus über das Bild!';
 }
 $viewMode	= '';
 if( $modes ){
-	$group		= HtmlTag::create( 'div', $modes, array( 'class' => 'btn-group' ) );
-	$viewMode	= HtmlTag::create( 'div', 'Modus: '.$group, array( 'class' => 'gallery-image-view-modes' ) ).'<br/>';
+	$group		= HtmlTag::create( 'div', $modes, ['class' => 'btn-group'] );
+	$viewMode	= HtmlTag::create( 'div', 'Modus: '.$group, ['class' => 'gallery-image-view-modes'] ).'<br/>';
 }
 foreach( $hints as $key => $value )
-	$hints[$key]	= HtmlTag::create( 'div', $value, array( 'id' => 'hint-'.$key, 'class' => 'alert alert-info alert-center' ) );
-$hints	= HtmlTag::create( 'div', $hints, array( 'class' => 'gallery-image-view-mode-hints' ) );
+	$hints[$key]	= HtmlTag::create( 'div', $value, ['id' => 'hint-'.$key, 'class' => 'alert alert-info alert-center'] );
+$hints	= HtmlTag::create( 'div', $hints, ['class' => 'gallery-image-view-mode-hints'] );
 
 
 //  --  ACTION CONTROLS  --  //
 $buttons	= [];
 if( 1 ){
-	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-arrow-left fa-fw' ) ).'&nbsp;';
+	$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-arrow-left fa-fw'] ).'&nbsp;';
 	$label	= HtmlTag::create( 'span', $icon.'zur Galerieansicht' );
-	$attr	= array( 'type' => "button", 'class' => "not-button not-cancel btn btn-small", 'id' => "button-gallery" );
+	$attr	= ['type' => "button", 'class' => "not-button not-cancel btn btn-small", 'id' => "button-gallery"];
 	$buttons[$label]	= $attr;
 }
 if( $useDownload ){
-	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-download fa-fw' ) ).'&nbsp;';
+	$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-download fa-fw'] ).'&nbsp;';
 	$label	= HtmlTag::create( 'span', $icon.'Download der Bilddatei' );
-	$attr	= array( 'type' => "button", 'class' => "not-button not-save not-download btn btn-small", 'id' => "button-download" );
+	$attr	= ['type' => "button", 'class' => "not-button not-save not-download btn btn-small", 'id' => "button-download"];
 	$buttons[$label]	= $attr;
 }
 if( $useWallpaper ){
-	$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-heart fa-fw' ) ).'&nbsp;';
+	$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-heart fa-fw'] ).'&nbsp;';
 	$label	= HtmlTag::create( 'span', $icon."als Wallpaper verwenden" );
-	$attr	= array( 'type' => "button", 'class' => "not-button not-save btn btn-small", 'id' => "button-wallpaper" );
+	$attr	= ['type' => "button", 'class' => "not-button not-save btn btn-small", 'id' => "button-wallpaper"];
 	$buttons[$label]	= $attr;
 }
 $list	= [];
 foreach( $buttons as $label => $attributes )
 	$list[]	= HtmlTag::create( 'div', HtmlTag::create( 'button', $label, $attributes ) );
-$buttons	= HtmlTag::create( 'div', $list, array( 'class' => 'buttons list-actions' ) );
+$buttons	= HtmlTag::create( 'div', $list, ['class' => 'buttons list-actions'] );
 
 //  --  IMAGE DATA / EXIF  --  //
 $listExif	= '';
@@ -115,7 +115,7 @@ if( $useExif ){
 		$data['Kamera']			= $exif->get( 'Make' ).' <b>'.$model.'</b>';
 	}
 	if( strlen( $exif->get( 'ExposureTime' ) ) )
-		$data['Belichtungszeit']	= View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), array( ' Sekunde', ' Sekunden' ) );
+		$data['Belichtungszeit']	= View_Helper_Gallery::calculateFraction( $exif->get( 'ExposureTime' ), [' Sekunde', ' Sekunden'] );
 	if( strlen( $exif->get( 'FNumber' ) ) )
 		$data['Blende']			= eval( 'return '.$exif->get( 'FNumber' ).';' );
 	if( strlen( $exif->get( 'ISOSpeedRatings' ) ) )
@@ -176,7 +176,7 @@ $(document).ready(function(){
 			<div class="row-fluid">
 				<div style="width: 90%" class="image">
 					'.$image.'
-					'.( $title ? HtmlTag::create( 'div',$title, array( 'class' => 'image-title' ) ) : '' ).'
+					'.( $title ? HtmlTag::create( 'div',$title, ['class' => 'image-title'] ) : '' ).'
 				</div>
 			</div>
 			<div class="row-fluid">

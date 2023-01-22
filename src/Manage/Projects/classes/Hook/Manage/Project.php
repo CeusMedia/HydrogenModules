@@ -59,7 +59,7 @@ class Hook_Manage_Project extends Hook
 		$modelRelation	= new Model_Project_User( $env );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 
-		$lists	= (object) array( 'entities' => [], 'relations' => [] );
+		$lists	= (object) ['entities' => [], 'relations' => []];
 		foreach( $projects as $project ){
 			$modelRelation->removeByIndices( [
 				'projectId'	=> $project->projectId,
@@ -101,7 +101,7 @@ class Hook_Manage_Project extends Hook
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] );
 
-		$lists	= (object) array( 'entities' => [], 'relations'	=> [] );
+		$lists	= (object) ['entities' => [], 'relations'	=> []];
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
 			$item		= (object) [

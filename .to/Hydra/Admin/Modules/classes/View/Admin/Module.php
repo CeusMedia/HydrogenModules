@@ -46,7 +46,7 @@ class View_Admin_Module extends View{
 	 *	@access		protected
 	 *	@param		array		$modules		Map of all modules
 	 *	@param		array		$categories		Map of all category labels
-	 *	@param		array		$filters		Map of filters to apply on overview, example: ['type' => array( Model_Module::TYPE_CUSTOM] )
+	 *	@param		array		$filters		Map of filters to apply on overview, example: ['type' => [Model_Module::TYPE_CUSTOM]]
 	 *	@return		string		Rendered HTML of section modules.
 	 */
 	protected function renderModuleSections( $modules, $categories, $filters = [] ){

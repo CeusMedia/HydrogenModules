@@ -30,7 +30,7 @@ return '
 			<li>
 				<label for="description">'.$words['add']['labelDescription'].'</label><br/>
 		<!--		'.HtmlElements::Textarea( 'description', $role->get( 'description' ), 'xl-l' ).'-->
-				'.HtmlTag::create( 'textarea', $role->get( 'description' ), array( 'name' => 'description', 'rows' => 4 ) ).'
+				'.HtmlTag::create( 'textarea', $role->get( 'description' ), ['name' => 'description', 'rows' => 4] ).'
 			</li>
 			<li>
 				<label for="access">'.$words['add']['labelAccess'].'</label><br/>

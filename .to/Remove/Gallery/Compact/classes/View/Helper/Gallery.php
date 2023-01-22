@@ -11,7 +11,7 @@ class View_Helper_Gallery{
 		if( !strlen( trim( $fraction ) ) )
 			return "";
 		if( !$words )
-			$words	= array( 's', 's' );
+			$words	= ['s', 's'];
 		$value	= eval( 'return '.$fraction.';' );
 		$label	= $value.$words[1];
 		if( $value <= 1 )
@@ -44,7 +44,7 @@ class View_Helper_Gallery{
 		$pathName	= $path == dirname( $path ) ? '' : dirname( $path ).'/';
 		$parts		= explode( " ", $folderName );
 		$date		=  NULL;
-		$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-folder-open fa-fw' ) ).'&nbsp';
+		$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-folder-open fa-fw'] ).'&nbsp';
 		$class		= 'not-icon-label not-link-gallery';
 		if( $dateMode == 0 || $dateMode == 2 ){
 			if( preg_match( str_replace( ' ', '', $pattern ), $parts[0] ) && count( $parts ) > 1 ){
@@ -62,7 +62,7 @@ class View_Helper_Gallery{
 		$label		= implode( " ", $parts );
 		$url		= './gallery/index/'.$pathName.rawurlencode( $folderName );
 		$link		= HtmlElements::Link( $url, $icon.$label.$date );
-		return HtmlTag::create( 'span', $link, array( 'class' => $class ) );
+		return HtmlTag::create( 'span', $link, ['class' => $class] );
 
 		$attributes	= array(
 			'class'	=> 'icon-label link-blog',
@@ -73,8 +73,8 @@ class View_Helper_Gallery{
 
 	static public function renderImageLabel( Environment $env, $fileName, $withIcon = TRUE ){
 		$ext	= pathinfo( basename( $fileName ), PATHINFO_EXTENSION );
-		$ext	= HtmlTag::create( "span", '.'.$ext, array( 'class' => 'file-ext' ) );
-		$icon	= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-image fa-fw' ) ).'&nbsp;';
+		$ext	= HtmlTag::create( "span", '.'.$ext, ['class' => 'file-ext'] );
+		$icon	= HtmlTag::create( 'b', '', ['class' => 'fa fa-image fa-fw'] ).'&nbsp;';
 		if( !$withIcon )
 			$icon	= '';
 		$name	= pathinfo( basename( $fileName ), PATHINFO_FILENAME );
@@ -85,7 +85,7 @@ class View_Helper_Gallery{
 		$label	= self::renderImageLabel( $env, $pathName );
 		$url	= './gallery/info/'.str_replace( '%2F', '/', rawurlencode( $pathName ) );
 		$class	= 'not-icon-label not-link-image';
-		return HtmlTag::create( 'a', $label, array( 'href' => $url, 'class'=> $class ) );
+		return HtmlTag::create( 'a', $label, ['href' => $url, 'class'=> $class] );
 	}
 
 	static public function renderLatestGalleries( Environment $env, $limit, $offset = 0, $dateMode = 0 ){
@@ -107,9 +107,9 @@ class View_Helper_Gallery{
 		$list		= [];
 		foreach( $latest as $title => $path ){
 			$link	= self::renderGalleryLink( $env, $path, $dateMode, $dateFormat );
-			$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'gallery-item' ) );
+			$list[]	= HtmlTag::create( 'li', $link, ['class' => 'gallery-item'] );
 		}
-		return HtmlTag::create( 'ul', $list, array( 'class' => 'list-latest-galleries' ) );
+		return HtmlTag::create( 'ul', $list, ['class' => 'list-latest-galleries'] );
 	}
 
 	static public function renderStepNavigation( Environment $env, $source ){
@@ -126,22 +126,22 @@ class View_Helper_Gallery{
 			else{																					//  last step
 				if( preg_match( "/\.(jpg|jpe|jpeg|png|gif|bmp|ico)$/i", $parts[$i] ) ){				//  last step is an image
 					$ext	= '.'.pathinfo( $parts[$i], PATHINFO_EXTENSION );
-					$ext	= HtmlTag::create( "span", $ext, array( 'class' => 'file-ext' ) );
+					$ext	= HtmlTag::create( "span", $ext, ['class' => 'file-ext'] );
 					$parts[$i]	= self::renderImageLabel( $env, $parts[$i] );
 				}
 				else
 					$parts[$i]	= self::renderGalleryLink( $env, implode( '/', $steps ), 2 );
 				$class	= 'not-link-gallery-current';
-				$list[]	= HtmlTag::create( "span", $parts[$i], array( 'class' => $class ) );
+				$list[]	= HtmlTag::create( "span", $parts[$i], ['class' => $class] );
 			}
 		}
-		$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-folder fa-fw' ) ).'&nbsp';
-		$link		= HtmlTag::create( "a", $icon.'Start', array( 'href' => './gallery', 'class' => 'not-icon-label not-link-gallery' ) );
+		$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-folder fa-fw'] ).'&nbsp';
+		$link		= HtmlTag::create( "a", $icon.'Start', ['href' => './gallery', 'class' => 'not-icon-label not-link-gallery'] );
 		array_unshift( $list, $link );
-		$icon		= HtmlTag::create( 'b', '', array( 'class' => 'fa fa-angle-right fa-fw' ) );
+		$icon		= HtmlTag::create( 'b', '', ['class' => 'fa fa-angle-right fa-fw'] );
 		$steps		= implode( "&nbsp;".$icon."&nbsp;", $list );
 		$steps		= HtmlTag::create( "span", 'Position: ' ) . $steps;
-		return HtmlTag::create( "div", $steps, array( 'class' => 'navi-steps' ) );
+		return HtmlTag::create( "div", $steps, ['class' => 'navi-steps'] );
 	}
 }
 ?>

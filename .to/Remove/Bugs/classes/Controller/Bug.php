@@ -50,7 +50,7 @@ class Controller_Bug extends Controller{
 			}
 		}
 		$model	= new Model_Project( $this->env );
-		$this->addData( 'projects', $model->getAll( array( 'status' => '> 0' ), array( 'title' => 'ASC' ) ) );
+		$this->addData( 'projects', $model->getAll( ['status' => '> 0'], ['title' => 'ASC'] ) );
 	}
 
 	protected function compactFilterInput( $input ){
@@ -146,9 +146,9 @@ class Controller_Bug extends Controller{
 		}
 		$bug			= $modelBug->get( $bugId );
 
-		$notes		= $modelBugNote->getAllByIndex( 'bugId', $bugId, array( 'timestamp' => 'ASC' ) );
+		$notes		= $modelBugNote->getAllByIndex( 'bugId', $bugId, ['timestamp' => 'ASC'] );
 		foreach( $notes as $nr => $note ){
-			$changes	= $modelBugChange->getAllByIndex( 'noteId', $note->bugNoteId, array( 'type' => 'ASC' ) );
+			$changes	= $modelBugChange->getAllByIndex( 'noteId', $note->bugNoteId, ['type' => 'ASC'] );
 			if( $note->userId )
 				$notes[$nr]->user	= $users[$note->userId];
 			$notes[$nr]->changes	= $changes;
@@ -157,7 +157,7 @@ class Controller_Bug extends Controller{
 					$changes[$nr]->user	= $users[$change->userId];
 		}
 		$bug->notes		= $notes;
-		$bug->changes	= $modelBugChange->getAll( array( 'bugId' => $bugId, 'noteId' => 0 ), array( 'timestamp' => 'ASC' ) );
+		$bug->changes	= $modelBugChange->getAll( ['bugId' => $bugId, 'noteId' => 0], ['timestamp' => 'ASC'] );
 
 		if( $bug->reporterId )
 			$bug->reporter	= $users[$bug->reporterId];
@@ -196,7 +196,7 @@ class Controller_Bug extends Controller{
 		foreach( $session->getAll() as $key => $value )
 			if( preg_match( '/^filter-bug-/', $key ) ){
 				$column	= preg_replace( '/^filter-bug-/', '', $key );
-				if( !in_array( $column, array( 'order', 'direction', 'limit' ) ) )
+				if( !in_array( $column, ['order', 'direction', 'limit'] ) )
 					$filters[$column] = $value;
 			}
 
@@ -206,17 +206,17 @@ class Controller_Bug extends Controller{
 		$limit	= $session->get( 'filter-bug-limit' );
 		$limit	= $limit > 0 ? $limit : 10;
 		if( $order && $dir )
-			$orders	= array( $order => $dir );
+			$orders	= [$order => $dir];
 
 		$modelBug		= new Model_Bug( $this->env );
 		$modelNote		= new Model_Bug_Note( $this->env );
 		$modelChange	= new Model_Bug_Change( $this->env );
 		$modelUser		= new Model_User( $this->env );
 
-		$bugs		= $modelBug->getAll( $filters, $orders, array( 0, $limit ) );
+		$bugs		= $modelBug->getAll( $filters, $orders, [0, $limit] );
 		foreach( $bugs as $nr => $bug ){
-			$bugs[$nr]->notes = $modelNote->getAllByIndex( 'bugId', $bug->bugId, array( 'timestamp' => 'ASC' ) );
-			$bugs[$nr]->changes	= $modelChange->getAllByIndex( 'bugId', $bug->bugId, array( 'timestamp' => 'ASC' ) );
+			$bugs[$nr]->notes = $modelNote->getAllByIndex( 'bugId', $bug->bugId, ['timestamp' => 'ASC'] );
+			$bugs[$nr]->changes	= $modelChange->getAllByIndex( 'bugId', $bug->bugId, ['timestamp' => 'ASC'] );
 		}
 		$this->addData( 'bugs', $bugs );
 

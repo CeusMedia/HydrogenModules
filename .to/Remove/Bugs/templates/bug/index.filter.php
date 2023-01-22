@@ -13,7 +13,7 @@ $title	= $this->env->getSession()->get( 'filter-bug-title' );
 $limit	= $this->env->getSession()->get( 'filter-bug-limit' );
 $bugId	= $this->env->getSession()->get( 'filter-bug-bugId' );
 
-$optOrder	= array( '' => '-' );
+$optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label )
 	$optOrder[$column]	= $label;
 $optOrder['_selected']	= $this->env->getSession()->get( 'filter-bug-order' );
@@ -30,10 +30,10 @@ $mode	= (int) $session->get( 'bug-filter-panel-mode' );
 
 if( $mode == 1 ){
 
-	$words['types']			= array( '' => '- alle -' ) + $words['types'];
-	$words['severities']	= array( '' => '- alle -' ) + $words['severities'];
-	$words['priorities']	= array( '' => '- alle -' ) + $words['priorities'];
-	$words['states']		= array( '' => '- alle -' ) + $words['states'];
+	$words['types']			= ['' => '- alle -'] + $words['types'];
+	$words['severities']	= ['' => '- alle -'] + $words['severities'];
+	$words['priorities']	= ['' => '- alle -'] + $words['priorities'];
+	$words['states']		= ['' => '- alle -'] + $words['states'];
 
 	$optType		= $this->renderOptions( $words['types'], 'type', $session->get( 'filter-bug-type' ), 'bug-type type-%1$d');
 	$optSeverity	= $this->renderOptions( $words['severities'], 'severity', $session->get( 'filter-bug-severity' ), 'bug-severity severity-%1$d');

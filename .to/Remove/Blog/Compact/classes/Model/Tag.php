@@ -31,7 +31,7 @@ class Model_Tag extends Model
 			foreach( $relations as $relation ){
 				if( $relation->tagId == $tagId )
 					continue;
-				$conditions	= array( 'articleId' => $relation->articleId, 'status' => 1 );
+				$conditions	= ['articleId' => $relation->articleId, 'status' => 1];
 				if( !$modelArticle->getByIndices( $conditions ) )
 					continue;
 				if( !isset( $list[$relation->tagId] ) )

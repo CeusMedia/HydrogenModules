@@ -30,7 +30,7 @@ $panelEdit	= '
 				<li>
 				<label for="description">'.$words['edit']['labelDescription'].'</label><br/>
 		<!--		'.HtmlElements::Textarea( 'description', $role->description, 'xl-l' ).'-->
-				'.HtmlTag::create( 'textarea', $role->description, array( 'name' => 'description', 'rows' => 4 ) ).'
+				'.HtmlTag::create( 'textarea', $role->description, ['name' => 'description', 'rows' => 4] ).'
 				</li>
 				<li>
 					<label for="access">'.$words['edit']['labelAccess'].'</label><br/>

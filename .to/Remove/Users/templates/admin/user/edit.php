@@ -109,10 +109,10 @@ if( !empty( $projects ) ){
 	$list	= [];
 	foreach( $projects as $project ){
 		$url	= './manage/project/edit/'.$project->projectId;
-		$link	= HtmlTag::create( 'a', $project->title, array( 'href' => $url, 'class' => 'project' ) );
+		$link	= HtmlTag::create( 'a', $project->title, ['href' => $url, 'class' => 'project'] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
-	$projects	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'projects' ) );
+	$projects	= HtmlTag::create( 'ul', join( $list ), ['class' => 'projects'] );
 	$facts[]	= [
 		'label'	=> 'Projekte',
 		'value'	=> $projects

@@ -40,7 +40,7 @@ foreach( $folders as $entry ){
 krsort( $list );
 $folders	= '';
 if( $list ){
-	$lists	= array( $list );
+	$lists	= [$list];
 	$width	= 12;
 	if( count( $list ) > 5 ){
 /*		if( count( $list ) > 10 ){
@@ -59,8 +59,8 @@ if( $list ){
 //		}
 	}
 	foreach( $lists as $list ){
-		$list		= HtmlElements::unorderedList( $list, 0, array( 'class' => 'folders' ) );
-		$folders	.= HtmlTag::create( 'div', $list, array( 'class' => 'span'.$width ) );
+		$list		= HtmlElements::unorderedList( $list, 0, ['class' => 'folders'] );
+		$folders	.= HtmlTag::create( 'div', $list, ['class' => 'span'.$width] );
 	}
 }
 
@@ -96,7 +96,7 @@ foreach( $files as $file ){
 		];
 	
 	$image		= HtmlTag::create( 'a', $image, $attributes );
-	$list[$fileName]		= HtmlTag::create( 'div', $image, array( 'class' => 'thumbnail' ) );
+	$list[$fileName]		= HtmlTag::create( 'div', $image, ['class' => 'thumbnail'] );
 }
 ksort( $list );
 $files		= $list ? implode( "", $list ) : NULL;
