@@ -1,5 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $bill */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -116,7 +120,7 @@ else{
 </div>';
 }
 
-$tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId, 0 );
+$tabs	= View_Work_Billing_Bill::renderTabs( $env, $bill->billId );
 
 return '<h2 class="autocut"><span class="muted">Rechnung</span> '.$bill->number.' - '.$bill->title.'</h2>
 '.$tabs.'

@@ -47,7 +47,7 @@ class View_Work_Billing_Helper_Transactions
 		return $this;
 	}
 
-	public function setFilterUrl( $url ): self
+	public function setFilterUrl( string $url ): self
 	{
 		$this->filterUrl	= $url;
 		return $this;
@@ -195,7 +195,7 @@ class View_Work_Billing_Helper_Transactions
 		return $filter->render();
 	}
 
-	protected function transformDateInTitle( $title ): string
+	protected function transformDateInTitle( string $title ): string
 	{
 		if( preg_match( '/\[date\.Y\]/', $title ) )
 			$title	= preg_replace( '/\[date.Y\]/', date( 'Y' ), $title );
@@ -206,7 +206,7 @@ class View_Work_Billing_Helper_Transactions
 		return $title;
 	}
 
-	protected function transformRelationToTitle( $transaction ): string
+	protected function transformRelationToTitle( object $transaction ): string
 	{
 		$parts		= [];
 		$title		= '';

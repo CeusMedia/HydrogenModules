@@ -1,5 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $corporation */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -47,7 +51,7 @@ $panelFacts		= '
 </div>';
 
 
-$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 0 );
+$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId );
 $heading	= '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>';
 
 return $heading.$tabs.'

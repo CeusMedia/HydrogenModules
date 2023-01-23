@@ -6,7 +6,7 @@ class Controller_Work_Billing_Bill_Transaction extends Controller
 {
 	protected Logic_Billing $logic;
 
-	public function index( $billId )
+	public function index( string $billId ): void
 	{
 		$bill	= $this->logic->getBill( $billId );
 		$this->addData( 'bill', $bill );

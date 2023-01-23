@@ -1,21 +1,22 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Billing_Bill_Breakdown extends Controller
 {
-	protected $request;
-	protected $logic;
-	protected $modelBill;
+	protected HttpRequest $request;
+	protected Logic_Billing $logic;
+	protected Model_Billing_Bill $modelBill;
 
-	public function addReserve( $billId )
+	public function addReserve( string $billId ): void
 	{
 		$reserveId	= $this->request->get( 'reserveId' );
 		$this->logic->addBillReserve( $billId, $reserveId );
 		$this->restart( $billId, TRUE );
 	}
 
-	public function addShare( $billId )
+	public function addShare( string $billId ): void
 	{
 		$type		= (int) $this->request->get( 'type' );
 		$percent	= $this->request->get( 'percent' );
@@ -33,22 +34,22 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		$this->restart( $billId, TRUE );
 	}
 
-	public function addExpense( $billId )
+	public function addExpense( string $billId ): void
 	{
 		$title	= $this->request->get( 'title' );
 		$amount	= $this->request->get( 'amount' );
 		$status	= $this->request->get( 'status' );
-		$this->logic->addBillExpense( $billId, 0, $amount, $title );
+		$this->logic->addBillExpense( $billId, $status, $amount, $title );
 		$this->restart( $billId, TRUE );
 	}
 
-	public function book( $billId )
+	public function book( string $billId ): void
 	{
 		$this->logic->closeBill( $billId );
 		$this->restart( './work/billing/bill/transaction/'.$billId );
 	}
 
-	public function index( $billId )
+	public function index( string $billId ): void
 	{
 		$bill	= $this->logic->getBill( $billId );
 		$billShares	= $this->logic->getBillShares( $billId );
@@ -61,7 +62,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 
 		$reserves		= $this->logic->getReserves();
 		$persons		= $this->logic->getPersons();
-		$corporations		= $this->logic->getCorporations();
+		$corporations	= $this->logic->getCorporations();
 		$billReserves	= $this->logic->getBillReserves( $billId );
 		$billExpenses	= $this->logic->getBillExpenses( $billId );
 
@@ -77,7 +78,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 //		$this->addData( 'corporationTransactions', $this->logic->getBillCorporationTransactions( $billId ) );
 	}
 
-	public function removeReserve( $billReserveId )
+	public function removeReserve( string $billReserveId ): void
 	{
 		$billReserve	= $this->logic->getBillReserve( $billReserveId );
 		if( !$billReserve )
@@ -86,7 +87,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		$this->restart( $billReserve->billId, TRUE );
 	}
 
-	public function removeShare( $billShareId )
+	public function removeShare( string $billShareId ): void
 	{
 		$billShare	= $this->logic->getBillShare( $billShareId );
 		if( !$billShare )
@@ -95,7 +96,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		$this->restart( $billShare->billId, TRUE );
 	}
 
-	public function removeExpense( $billExpenseId )
+	public function removeExpense( string $billExpenseId ): void
 	{
 		$billExpense	= $this->logic->getBillExpense( $billExpenseId );
 		if( !$billExpense )

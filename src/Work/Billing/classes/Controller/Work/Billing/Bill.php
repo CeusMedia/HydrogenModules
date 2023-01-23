@@ -7,11 +7,11 @@ class Controller_Work_Billing_Bill extends Controller
 {
 	protected Dictionary $request;
 	protected Dictionary $session;
-	protected string $filterPrefix;
 	protected Logic_Billing $logic;
 	protected Model_Billing_Bill $modelBill;
+	protected string $filterPrefix;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$billId		= $this->modelBill->add( [
@@ -26,7 +26,7 @@ class Controller_Work_Billing_Bill extends Controller
 		}
 	}
 
-	public function edit( $billId )
+	public function edit( string $billId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$this->logic->editBill( $billId, $this->request->getAll() );
@@ -54,7 +54,7 @@ class Controller_Work_Billing_Bill extends Controller
 		$this->addData( 'corporationTransactions', $this->logic->getBillCorporationTransactions( $billId ) );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'status' );
@@ -75,7 +75,7 @@ class Controller_Work_Billing_Bill extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
@@ -83,6 +83,8 @@ class Controller_Work_Billing_Bill extends Controller
 		$filterNumber	= $this->session->get( $this->filterPrefix.'number' );
 		$filterTitle	= $this->session->get( $this->filterPrefix.'title' );
 		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' );
+
+		$conditions		= [];
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 
@@ -113,7 +115,7 @@ class Controller_Work_Billing_Bill extends Controller
 		$this->addData( 'pages', ceil( $total / 15 ) );
 	}
 
-	public function unbook( $billId )
+	public function unbook( string $billId ): void
 	{
 		$bill				= $this->logic->getBill( $billId );
 		$modelBillShare		= new Model_Billing_Bill_Share( $this->env );
@@ -154,11 +156,11 @@ class Controller_Work_Billing_Bill extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->logic		= new Logic_Billing( $this->env );
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-		$this->filterPrefix	= 'filter_work_billing_bill_';
+		$this->logic		= new Logic_Billing( $this->env );
 		$this->modelBill	= new Model_Billing_Bill( $this->env );
+		$this->filterPrefix	= 'filter_work_billing_bill_';
 
 		if( !$this->session->has( $this->filterPrefix.'year' ) )
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );

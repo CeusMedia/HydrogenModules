@@ -9,7 +9,7 @@ class Controller_Work_Billing_Person extends Controller
 	protected Dictionary $session;
 	protected Logic_Billing $logic;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$personId		= $this->logic->addPerson(
@@ -22,7 +22,7 @@ class Controller_Work_Billing_Person extends Controller
 		}
 	}
 
-	public function edit( $personId )
+	public function edit( string $personId ): void
 	{
 		$this->addData( 'person', $this->logic->getPerson( $personId ) );
 		$dbc	= $this->env->getDatabase();
@@ -32,7 +32,7 @@ class Controller_Work_Billing_Person extends Controller
 		$this->addData( 'outcome', (float) $dbc->query( $query)->fetch( PDO::FETCH_OBJ )->outcome );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$persons	= $this->logic->getPersons();
 		foreach( $persons as $person ){
@@ -41,7 +41,7 @@ class Controller_Work_Billing_Person extends Controller
 		$this->addData( 'persons', $persons );
 	}
 
-	public function remove( $personId )
+	public function remove( string $personId ): void
 	{
 	}
 

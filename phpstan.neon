@@ -7,20 +7,20 @@ parameters:
 	level: 0
 #	level: max
 	paths:
-		- src/Admin
-		- src/App
-		- src/Base
-		- src/Catalog
-		- src/Info
-		- src/JS
-		- src/Manage
-		- src/Members
-		- src/Resource
-		- src/Security
-		- src/Server
-		- src/Shop
-		- src/Tool
-		- src/UI
+#		- src/Admin
+#		- src/App
+#		- src/Base
+#		- src/Catalog
+#		- src/Info
+#		- src/JS
+#		- src/Manage
+#		- src/Members
+#		- src/Resource
+#		- src/Security
+#		- src/Server
+#		- src/Shop
+#		- src/Tool
+#		- src/UI
 		- src/Work
 	fileExtensions:
 		- php

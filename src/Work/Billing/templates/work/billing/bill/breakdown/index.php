@@ -1,6 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $bill */
+/** @var object[] $billExpenses */
+/** @var object[] $billReserves */
+/** @var object[] $billShares */
+/** @var object[] $corporations */
+/** @var object[] $persons */
+/** @var object[] $reserves */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );

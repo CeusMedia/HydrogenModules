@@ -1,6 +1,13 @@
 <?php
+
+use CeusMedia\Bootstrap\PageControl as BootstrapPageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var object $bill */
+/** @var object[] $bills */
+/** @var int $page */
+/** @var int $pages */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
@@ -97,7 +104,7 @@ $optMonth	= [
 ];
 $optMonth	= HtmlElements::Options( $optMonth, $filterMonth );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/billing/bill', $page, $pages );
+$pagination	= new BootstrapPageControl( './work/billing/bill', $page, $pages );
 
 $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 

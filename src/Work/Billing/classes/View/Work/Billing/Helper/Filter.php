@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Work_Billing_Helper_Filter
 {
 	protected Environment $env;
-	protected array $filters			= [];
 	protected Dictionary $session;
+	protected array $filters			= [];
 	protected string $sessionPrefix;
 	protected string $url;
 
