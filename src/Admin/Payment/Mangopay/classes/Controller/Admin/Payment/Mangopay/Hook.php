@@ -55,8 +55,6 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 
 	public function index( $refresh = NULL ): void
 	{
-		if( $hookId )
-			$this->restart( 'view/'.$hookId, TRUE );
 		$hooks		= $this->mangopay->getHooks( $refresh );
 		$hookedEventTypes	= [];
 		foreach( $hooks as $hook )

@@ -5,11 +5,13 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_PageTree
 {
-	protected $env;
-	protected $modelPage;
-	protected $pages			= [];
-	protected $activePageId		= 0;
-	protected $openParents		= [];
+	protected Environment $env;
+	protected Model_Manual_Page $modelPage;
+	protected array $pages						= [];
+	protected array $openParents				= [];
+	protected ?string $activePageId				= NULL;
+	protected ?string $parentPageId				= NULL;
+	protected ?string $categoryId				= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -84,7 +86,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 	}
 
 
-	public function setActivePageId( $pageId ): self
+	public function setActivePageId( string $pageId ): self
 	{
 		$this->activePageId	= $pageId;
 		$this->openParents	= [];
@@ -97,21 +99,25 @@ InfoManual.UI.Tree.init("#page-tree");';
 		return $this;
 	}
 
-	public function setCategoryId( $categoryId ): self
+	public function setCategoryId( string $categoryId ): self
 	{
 		$this->categoryId	= $categoryId;
 		return $this;
 	}
 
-	public function setPages( $pages ): self
+	/**
+	 *	@param		object[]		$pages
+	 *	@return		self
+	 */
+	public function setPages( array $pages ): self
 	{
 		$this->pages	= $pages;
 		return $this;
 	}
 
-	public function setParentPage( $pageId ): self
+	public function setParentPage( string $pageId ): self
 	{
-		$this->parentPageId	= $parentPageId;
+		$this->parentPageId		= $pageId;
 		return $this;
 	}
 
@@ -125,10 +131,10 @@ InfoManual.UI.Tree.init("#page-tree");';
 				'status'		=> '>= '.Model_Manual_Page::STATUS_NEW,
 				'parentId'		=> $page->manualPageId,
 			];
-			$orders		= ['rank' => 'ASC'];
-			$children	= $this->modelPage->getAll( $conditions, $orders );
+			$orders			= ['rank' => 'ASC'];
+			$children		= $this->modelPage->getAll( $conditions, $orders );
 			$page->children	= $this->getPageTree( $children );
-			$tree[]	= $page;
+			$tree[]			= $page;
 		}
 		return $tree;
 	}
@@ -142,19 +148,9 @@ InfoManual.UI.Tree.init("#page-tree");';
 		$openPages		= array_filter( explode( ',', $session->get( $sessionKeyOpen ) ) );
 		$openPages		= array_merge( $openPages, $this->openParents );
 
-
 		$list	= [];
 		foreach( $tree as $entry ){
 			$isOpen		= in_array( $entry->manualPageId, $openPages );
-
-/*print_m($entry);
-print_m($session->getAll());
-print_m($categoryId);
-print_m($sessionKeyOpen);
-print_m($session->get( $sessionKeyOpen ));
-print_m($openPages);
-print_m($isOpen);
-die;*/
 
 			$sublist	= '';
 			$link		= './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title );
@@ -170,7 +166,7 @@ die;*/
 				'color'			=> '!inherit',
 //				'data'			=> ['pageId' => $entry->manualPageId],				//  not working with this version of bootstrap-treeview
 //				'tags'			=> ['pageId:'.$entry->manualPageId],					//  not working with this version of bootstrap-treeview
-				'nodes'			=> $children ? $children : NULL,
+				'nodes'			=> $children ?: NULL,
 			);
 		}
 		return $list;

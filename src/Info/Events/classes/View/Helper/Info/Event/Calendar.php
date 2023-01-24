@@ -6,12 +6,13 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Event_Calendar
 {
-	protected $env;
-	protected $logic;
-	protected $projects	= [];
-	protected $today;
-	protected $words;
-	protected $events	= [];
+	protected Environment $env;
+	protected DateTime $today;
+	protected string $year;
+	protected string $month;
+	protected array $words;
+	protected array $projects	= [];
+	protected array $events	= [];
 
 	public function __construct( Environment $env )
 	{
@@ -203,7 +204,6 @@ $(document).ready(function(){
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
-		$conditions	= ['dayStart' => $date->format( "Y-m-d" ), 'status' => [0, 1, 2, 3]];
 		$list		= [];
 		foreach( $this->events as $event ){
 			$eventDate	= new DateTime( $event->dateStart );
@@ -215,26 +215,26 @@ $(document).ready(function(){
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 			] );
-			$list[]		= HtmlTag::create( 'li', $title, array(
+			$list[]		= HtmlTag::create( 'li', $title, [
 				"data-id"		=> $event->eventId,
 				"data-status"	=> $event->status,
 				"data-title"	=> htmlentities( $event->title, ENT_QUOTES, 'UTF-8' ),
 				"data-date"		=> date( "j.n. Y", strtotime( $event->dateStart ) ),
 				"data-time"		=> $event->timeStart.' - '.$event->timeEnd,
-			) );
+			] );
 		}
 		$class	= $isToday ? 'active today' : ( $isPast ? 'past' : 'active future' );
 		$class	= $cellClass ? $cellClass.' '.$class : $class;
-		return HtmlTag::create( 'td', array(
-				$label	= HtmlTag::create( 'div', $date->format( "j" ), ['class' => 'date-label '.$class] ),
-				$list	= HtmlTag::create( 'ul', $list ),
-			), array(
+		return HtmlTag::create( 'td', [
+			HtmlTag::create( 'div', $date->format( "j" ), ['class' => 'date-label '.$class] ),
+			HtmlTag::create( 'ul', $list ),
+		], [
 			"class"			=> $class,
 			"data-day"		=> $date->format( "j" ),
 			"data-month"	=> $date->format( "n" ),
 			"data-year"		=> $date->format( "Y" ),
 			"data-date"		=> $date->format( "Y-m-d" )
-		) );
+		] );
 	}
 
 	protected function renderLabel( string $year, string $month ): string
@@ -243,7 +243,7 @@ $(document).ready(function(){
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
 		return HtmlTag::create( 'span', array(
-			HtmlTag::create( 'span', $this->words['months'][(int) $month], ['class' => "month-label"] ),
+			HtmlTag::create( 'span', $this->words['months'][$month], ['class' => "month-label"] ),
 			HtmlTag::create( 'span', $year, ['class' => "year-label"] ),
 		), ['id' => 'mission-calendar-control-label'] );
 	}

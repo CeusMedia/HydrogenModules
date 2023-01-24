@@ -4,25 +4,30 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Manual extends Controller
 {
-	protected $request;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 	protected string $docPath;
-	protected array $files			= [];
-	protected $userId				= 0;
+	protected array $files					= [];
+	protected string $userId				= '0';
 	protected Model_Manual_Category $modelCategory;
 	protected Model_Manual_Page $modelPage;
 	protected Model_User $modelUser;
 	protected Model_Manual_Version $modelVersion;
-
-	/** @var	Dictionary	$order */
+	protected View_Helper_Info_Manual_Url $helperUrl;
 	protected Dictionary $order;
-	protected string $ext				= ".md";
+	protected string $ext					= ".md";
+	protected bool $isEditable				= FALSE;
+	protected array $rights					= [];
+	protected array $categories				= [];
 
-	public function add()
+	public function add(): void
 	{
 		if( !$this->isEditable || !in_array( 'add', $this->rights ) )
 			$this->restart( NULL, TRUE );
@@ -168,12 +173,12 @@ class Controller_Info_Manual extends Controller
 			$categoryId	= $this->request->get( 'categoryId' );
 			$format		= $this->request->get( 'format' );
 			$files		= $this->request->get( 'files' );
+			$category	= $this->checkCategoryId( $categoryId );
 			$newPages	= [];
 			foreach( $files as $fileHash ){
 				$fileName	= base64_decode( $fileHash );
 				if( file_exists( $this->docPath.$fileName ) ){
 					$content	= FileReader::load( $this->docPath.$fileName );
-					$category	= $this->checkCategoryId( $categoryId );
 					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
 					$newPages[]	= $this->modelPage->add( array(
 						'manualCategoryId'	=> $categoryId,
@@ -238,7 +243,6 @@ class Controller_Info_Manual extends Controller
 				$category	= $categories[0];
 				$this->restartToCategory( $category );
 			}
-
 			else{
 			}
 		}
@@ -358,6 +362,10 @@ class Controller_Info_Manual extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -434,9 +442,9 @@ class Controller_Info_Manual extends Controller
 			$fileName	= str_replace( './info/manual/page/', '', $matches[2] );
 			if( file_exists( $this->docPath.urldecode( $fileName ).$this->ext ) )
 				return $matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).')';
-			return '<strike>'.$matches[1].'('.'./info/manual/page/'.urlencode( $fileName ).').</strike>';
+			return '<del>' .$matches[1].'('.'./info/manual/page/'.urlencode( $fileName ). ').</del>';
 		}
-		return '<strike>'.$matches[1].'('.urlencode( $matches[2] ).')</strike>';
+		return '<del>' .$matches[1].'('.urlencode( $matches[2] ). ')</del>';
 	}
 
 	protected function checkCategoryId( $categoryId ): object
@@ -495,9 +503,9 @@ class Controller_Info_Manual extends Controller
 	protected function urlencode( string $name ): string
 	{
 		return urlencode( $name );
-		$name	= rawurldecode( $name );
+/*		$name	= rawurldecode( $name );
 		$name	= str_replace( "%2F", "/", $name );
 		$name	= str_replace( " ", "%20", $name );
-		return $name;
+		return $name;*/
 	}
 }

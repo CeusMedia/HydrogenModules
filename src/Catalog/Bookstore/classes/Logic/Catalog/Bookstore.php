@@ -488,18 +488,16 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@access		public
 	 *	@param		string		$articleId			ID of Article
 	 *	@return		bool
-	 *	@throws		ReflectionException
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
 	 */
 	public function isFuture( string $articleId ): bool
 	{
-		$tc		= new TimeConverter();
-		$model	= new Model_Article( $this->env, $articleId );
-		$data	= $model->getData( true );
-		$format	= strpos( $data['publication'], "." ) ? 'date' : 'year';
-		$time	= $tc->convertToTimestamp( $data['publication'], $format );
+		$tc			= new TimeConverter();
+		$article	= $this->modelArticle->get( $articleId );
+		$format		= strpos( $article->publication, "." ) ? 'date' : 'year';
+		$time		= $tc->convertToTimestamp( $article->publication, $format );
 		return $time > time();
 	}
 

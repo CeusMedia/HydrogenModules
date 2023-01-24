@@ -712,7 +712,7 @@ class Logic_User_Provision extends Logic
 		foreach( $usersRevoked as $userId => $key )													//  iterate user to inform about revokation
 			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $userId );				//  send mail to user of outdated user license key
 		foreach( $usersAssigned as $userId => $key )												//  iterate user to inform about assignment
-			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId );						//  send mail to user of next user license key
+			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $userId );				//  send mail to user of next user license key
 
 		return (object) [
 			'outdatedUserLicense'	=> $outdatedUserLicense,

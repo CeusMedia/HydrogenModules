@@ -3,6 +3,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 {
+	protected ?string $galleryId		= NULL;
+	protected ?object $gallery			= NULL;
+
 	public function render(): string
 	{
 		$list	= [];
@@ -27,13 +30,13 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 		return HtmlTag::create( 'ul', $list, ['class' => 'thumbnails equalize-auto'] );
 	}
 
-	public function setGallery( $galleryId ): self
+	public function setGallery( string $galleryId ): self
 	{
 		$this->galleryId	= $galleryId;
 		$this->gallery		= $this->modelGallery->get( $galleryId );
 
 		$parts	= [];
-		foreach( preg_split( '@/@', $this->gallery->path ) as $part )
+		foreach( explode( '/', $this->gallery->path ) as $part )
 			$parts[]	= rawurlencode( $part );
 		$this->gallery->path = join( '/', $parts );
 		return $this;

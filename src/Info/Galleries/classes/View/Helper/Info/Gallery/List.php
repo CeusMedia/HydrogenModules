@@ -3,6 +3,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 {
+	protected ?string $baseUriPath		= NULL;
+
 	public function render(): string
 	{
 		$list		= [];
@@ -29,7 +31,9 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 		return $this;
 	}
 
-	protected function renderGalleryImage( $galleryId ): string
+	//  --  PROTECTED  --  //
+
+	protected function renderGalleryImage( string $galleryId ): string
 	{
 		$gallery		= $this->modelGallery->get( $galleryId );
 		$images			= $this->getGalleryImages( $galleryId );

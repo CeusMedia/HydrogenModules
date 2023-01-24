@@ -41,14 +41,14 @@ class Model_Oauth_ProviderDefault
 	 *	@param		array		$changes			Map of changed to apply on provider default
 	 *	@return		integer		Number of bytes saved to file.
 	 */
-	public function set( string $providerKey, array $changes = [] )
+	public function set( string $providerKey, array $changes = [] ): int
 	{
 		$currentValues	= $this->get( $providerKey );
 		$newValues		= array_merge( (array) $currentValues, $changes );
 		if( $currentValues === $newValues )
 			return 0;
 		$this->providers[$providerKey]	= (object) $newValues;
-		JsonFileWriter::save( $this->filePath, $this->providers );
+		return JsonFileWriter::save( $this->filePath, $this->providers );
 	}
 
 	/*  --  PROTECTED  --  */

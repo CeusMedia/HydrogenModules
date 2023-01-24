@@ -4,25 +4,34 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Info_Forum extends AjaxController
 {
-	public function countUpdates( $threadId, $lastPostId )
+	protected Model_Forum_Post $modelPost;
+	protected Model_Forum_Thread $modelThread;
+	protected Model_Forum_Topic $modelTopic;
+
+	public function countUpdates( $threadId, $lastPostId ): int
 	{
 		$thread		= $this->modelThread->get( $threadId );
-		if( !$thread ){
-			$data	= ['status' => 'error', 'error' => 'invalid thread id'];
-		}
-		else{
-			$data	= ['status' => 'data', 'data' => ['count' => 0, 'postId' => NULL]];
-			$conditions		= ['threadId' => $threadId, 'postId' => '> '.$lastPostId];
-			$orders			= ['postId' => 'ASC'];
-			$posts			= $this->modelPost->getAll( $conditions, $orders );
-			$data['data']['count']	= count( $posts );
-			$post			= array_pop( $posts );
-			$data['data']['postId']	= $post->postId;
-		}
-		$this->respondData( $data );
+		if( !$thread )
+			return $this->respondError( 404, 'Invalid thread ID', 404 );
+
+		$conditions		= ['threadId' => $threadId, 'postId' => '> '.$lastPostId];
+		$orders			= ['postId' => 'ASC'];
+		$posts			= $this->modelPost->getAll( $conditions, $orders );
+		$post			= array_pop( $posts );
+
+		return $this->respondData( [
+			'status'	=> 'data',
+			'data'		=> [
+				'count'		=> count( $posts ),
+				'postId'	=> $post->postId
+			]
+		] );
 	}
 
-	public function editPost()
+	/**
+	 * @return void
+	 */
+	public function editPost(): void
 	{
 		$postId		= $this->request->get( 'postId' );
 		$content	= $this->request->get( 'content' );
@@ -34,7 +43,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		exit;
 	}
 
-	public function getPost( $postId )
+	public function getPost( string $postId ): void
 	{
 		$post		= $this->modelPost->get( $postId );
 		if( !$post )
@@ -42,7 +51,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		$this->respondData( $post );
 	}
 
-	public function renameThread()
+	public function renameThread(): void
 	{
 		$threadId	= $this->request->get( 'threadId' );
 		$name		= $this->request->get( 'name' );
@@ -52,7 +61,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		exit;
 	}
 
-	public function renameTopic()
+	public function renameTopic(): void
 		{
 		$topicId	= $this->request->get( 'topicId' );
 		$name		= $this->request->get( 'name' );
@@ -62,12 +71,23 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		exit;
 	}
 
-	public function starThread( $threadId )
+	public function starThread( $threadId ): void
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		if( $thread ){
 			$this->modelThread->edit( (int) $threadId, ['type' => $thread->type ? 0 : 1] );
 		}
 		exit;
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function __onInit(): void
+	{
+		$this->modelPost	= new Model_Forum_Post( $this->env );
+		$this->modelThread	= new Model_Forum_Thread( $this->env );
+		$this->modelTopic	= new Model_Forum_Topic( $this->env );
 	}
 }

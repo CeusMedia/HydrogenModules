@@ -1,34 +1,29 @@
 <?php
 class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 {
-	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instanc */
-//	protected $logic;
+//	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instance */
+//	protected Logic_Catalog_Gallery $logic;
 
-	/**	@var	Model_Catalog_Torso					$modelArticle	Article model instance */
-	protected $modelArticle;
+	/**	@var	Model_Catalog_Clothing_Article		$modelArticle	Article model instance */
+	protected Model_Catalog_Clothing_Article $modelArticle;
 
-	/**	@var	Model_Catalog_Gallery_Category		$modelCategory	Gallery logic instance */
-	protected $modelCategory;
+	/**	@var	Model_Catalog_Clothing_Category		$modelCategory	Gallery logic instance */
+	protected Model_Catalog_Clothing_Category $modelCategory;
 
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
-	protected $taxRate = 19;
+	protected int $taxRate = 19;
 
 	/**
 	 *	Change stock quantity of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, $change )
+	public function changeQuantity( string $articleId, int $change ): int
 	{
-		$change		= (int) $change;
-		$article	= $this->modelArticle->get( $articleId );
-		if( !$article && $strict )
-			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
-		if( !$article )
-			return FALSE;
+		$article	= $this->check( $articleId );
 		$this->modelArticle->edit( $articleId, [
 			'quantity'	=> $article->quantity + $change
 		] );
@@ -36,10 +31,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	}
 
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
-	 *	@return		object						Bridged article data object if found
+	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
 	public function check( $articleId, bool $strict = TRUE )
@@ -55,10 +50,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
-	 *	@return		string
+	 *	@param		string		$articleId
+	 *	@param		integer		$quantity
+	 *	@return		object
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( string $articleId, int $quantity = 1 ): object
 	{
 		return (object) array(
 			'id'		=> $articleId,
@@ -86,10 +82,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId )
+	public function getDescription( string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		return $article->title;
@@ -98,10 +94,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId )
+	public function getLink( string $articleId ): string
 	{
 //		return $this->logic->pathModule.'image/'.$articleId;
 		return $articleId;
@@ -110,28 +106,28 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, $absolute = FALSE )
+	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
 		return '';
-		$image		= $this->check( $articleId );
-		$category	= $this->modelCategory->get( $image->galleryCategoryId );
-		$uri		= $this->logic->pathImages.'thumbnail/'.$category->path.'/'.$image->filename;
-		return $absolute ? $this->env->url.ltrim( $uri, './' ) : $uri;
+//		$image		= $this->check( $articleId );
+//		$category	= $this->modelCategory->get( $image->galleryCategoryId );
+//		$uri		= $this->logic->pathImages.'thumbnail/'.$category->path.'/'.$image->filename;
+//		return $absolute ? $this->env->url.ltrim( $uri, './' ) : $uri;
 	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
 		$image	= $this->check( $articleId );
 		return $image->price * $amount;
@@ -140,11 +136,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( string $articleId, int $amount = 1 ): float
 	{
 		$article	= $this->check( $articleId );
 		return $article->price * ( $this->taxRate / 100 ) * $amount;
@@ -153,19 +149,33 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId )
+	public function getTitle( string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
-		return $article->title ? $article->title : $article->filename;
+		return $article->title ?: $article->filename;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$articleId
+	 *	@param		integer		$amount
+	 *	@return		float
+	 */
+	public function getWeight( string $articleId, int $amount = 1 ): float
+	{
+		$article	= $this->check( $articleId );
+		return (float) $article->weight;
 	}
 
 	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

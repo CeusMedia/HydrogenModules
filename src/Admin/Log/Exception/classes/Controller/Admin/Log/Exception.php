@@ -35,16 +35,6 @@ class Controller_Admin_Log_Exception extends Controller
 
 	protected string $filterPrefix		= 'filter_admin_log_exception_';
 
-	public static function ___onLogException( Environment $env, object $context, object $module, array & $payload )
-	{
-//		if( is_object( $payload ) && $payload instanceof Exception )
-//			$payload	= ['exception' => $payload];
-		if( !isset( $payload['exception'] ) )
-			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
-		$exception	= $payload['exception'];
-		self::handleException( $env, $exception );
-	}
-
 	public function bulk()
 	{
 		$action	= $this->request->get( 'type' );
@@ -206,6 +196,5 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$this->addData( 'instances', $instances );
 //		$this->addData( 'currentInstance', $instanceKey );
-		$this->filePath	= $path.$fileName;
 	}
 }
