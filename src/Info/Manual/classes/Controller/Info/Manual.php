@@ -262,8 +262,8 @@ class Controller_Info_Manual extends Controller
 			$this->restartToPage( $page );
 
 		// @todo implement
-		if( $page->manualCategoryId )
-			$this->rankPagesOfCategory( $page->manualCategoryId );
+//		if( $page->manualCategoryId )
+//			$this->rankPagesOfCategory( $page->manualCategoryId );
 		$this->restartToPage( $page );
 	}
 
@@ -276,8 +276,8 @@ class Controller_Info_Manual extends Controller
 			$this->restartToPage( $page );
 
 		// @todo implement
-		if( $page->manualCategoryId )
-			$this->rankPagesOfCategory( $page->manualCategoryId );
+//		if( $page->manualCategoryId )
+//			$this->rankPagesOfCategory( $page->manualCategoryId );
 		$this->restartToPage( $page );
 	}
 
@@ -306,8 +306,8 @@ class Controller_Info_Manual extends Controller
 
 //		$filePath	= $this->docPath.$fileName.$this->ext;
 		$this->modelPage->remove( $page->manualPageId );
-		if( $page->manualCategoryId )
-			$this->rankPagesOfCategory( $page->manualCategoryId );
+//		if( $page->manualCategoryId )
+//			$this->rankPagesOfCategory( $page->manualCategoryId );
 		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $page->title, ENT_QUOTES, 'UTF-8' ) );
 			$this->restartToCategory( $this->modelCategory->get( $page->manualCategoryId ) );
 		$this->restart( NULL, TRUE );
@@ -395,7 +395,7 @@ class Controller_Info_Manual extends Controller
 		}
 		else if( count( $this->files ) ){
 			$this->order	= new Dictionary( array_values( $this->files ) );
-			$this->saveOrder();
+//			$this->saveOrder();
 		}
 
 		$this->addData( 'path', $this->docPath );

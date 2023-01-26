@@ -5,19 +5,19 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_Shop_Shipping extends Logic
 {
 	/**	@var		Model_Shop_Shipping_Country			$modelShippingCountry */
-	protected $modelShippingCountry;
+	protected Model_Shop_Shipping_Country $modelShippingCountry;
 
 	/**	@var		Model_Shop_Shipping_Grade			$modelShippingGrade */
-	protected $modelShippingGrade;
+	protected Model_Shop_Shipping_Grade $modelShippingGrade;
 
 	/**	@var		Model_Shop_Shipping_Option			$modelShippingOption */
-	protected $modelShippingOption;
+	protected Model_Shop_Shipping_Option $modelShippingOption;
 
 	/**	@var		Model_Shop_Shipping_Price			$modelShippingPrice */
-	protected $modelShippingPrice;
+	protected Model_Shop_Shipping_Price $modelShippingPrice;
 
 	/**	@var		Model_Shop_Shipping_Zone			$modelShippingZone */
-	protected $modelShippingZone;
+	protected Model_Shop_Shipping_Zone $modelShippingZone;
 
 	/**
 	 *	Returns Shipping Grade ID by Quantity.
@@ -35,15 +35,15 @@ class Logic_Shop_Shipping extends Logic
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		int		$shippingzone_id 		ID of Shipping Zone
-	 *	@param		int		$shippinggrade_id 		ID of Shipping Grade
+	 *	@param		int		$shippingZoneId 		ID of Shipping Zone
+	 *	@param		int		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@todo		remove method and its calls
 	 */
-	public function getPrice( $shippingzone_id, $shippinggrade_id )
+	public function getPrice( $shippingZoneId, $shippingGradeId )
 	{
-		$model		= new Model_Shop_Shipping_Price();
-		$conditions	= ['shippingzone_id' => $shippingZoneId, 'shippinggrade_id' => $shippingGradeId];
+		$model		= new Model_Shop_Shipping_Price( $this->env );
+		$conditions	= ['zoneId' => $shippingZoneId, 'gradeId' => $shippingGradeId];
 		$data		= $model->getByIndices( $conditions );
 		if( $data )
 			return $data->price;
@@ -52,16 +52,16 @@ class Logic_Shop_Shipping extends Logic
 
 	/**
 	 *	Alias for getShippingZoneId.
-	 *	@param		integer		$country_id
+	 *	@param		integer		$countryId
 	 *	@return		integer|NULL
 	 *	@todo		remove method and its calls
 	 */
-	public function getZoneId( $country_id )
+	public function getZoneId( $countryId )
 	{
-		$model	= new Model_Shop_Shipping_Country();
-		$data	= $model->getByIndex( 'country_id', $countryId );
+		$model	= new Model_Shop_Shipping_Country( $this->env );
+		$data	= $model->getByIndex( 'countryId', $countryId );
 		if( $data )
-			return $data->shippingzone_id;
+			return $data->zoneId;
 		return NULL;
 	}
 

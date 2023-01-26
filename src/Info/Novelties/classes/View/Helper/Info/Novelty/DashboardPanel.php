@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 {
-	protected $env;
-	protected $news		= [];
+	protected array $news		= [];
+	protected int $limit		= 10;
 
 	public function __construct( Environment $env )
 	{
@@ -46,7 +46,6 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 
 			$badgeUnit	= substr( $date, -1 );
 			$badgeClass	= $badgeUnit == 'm' ? 'important' : ( $badgeUnit == 'h' ? 'info' : '' );
-
 
 			$date		= HtmlTag::create( 'small', $date, [
 				'class' => 'label label-'.$badgeClass,

@@ -1,10 +1,22 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language as LanguageResource;
+
 class Job_Info_Files extends Job_Abstract
 {
-	protected $language;
+	protected Dictionary $config;
+	protected Dictionary $options;
+	protected LanguageResource $language;
+	protected Model_Download_Folder $modelFolder;
+	protected Model_Download_File $modelFile;
 
-	protected $words;
+//	protected array $words;
 
+	/**
+	 *	@return	void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
@@ -16,13 +28,13 @@ class Job_Info_Files extends Job_Abstract
 		$this->modelFile	= new Model_Download_File( $this->env );
 	}
 
-	public function migrate()
+	public function migrate(): void
 	{
 		$count	= $this->migrateFilesInFolderByFolderId( 0, 'contents/files/' );
 		$this->out( 'Migrated '.$count.' files.' );
 	}
 
-	protected function migrateFilesInFolderByFolderId( $folderId, string $path, int $level = 0 )
+	protected function migrateFilesInFolderByFolderId( string $folderId, string $path, int $level = 0 ): int
 	{
 		$count	= 0;
 		$files	= $this->modelFile->getAllByIndex( 'downloadFolderId', $folderId );

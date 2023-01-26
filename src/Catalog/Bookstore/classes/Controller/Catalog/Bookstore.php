@@ -1,5 +1,8 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
 
+/** @noinspection SqlResolve */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\ADT\URL\Compare as UrlCompare;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
@@ -24,58 +27,58 @@ class Controller_Catalog_Bookstore extends Controller
 
 	protected MessengerResource $messenger;
 
-	public function article( string $articleId )
+	public function article( string $articleId ): void
 	{
-		$articleId	= (int) $articleId;
-		$article	= $this->logic->getArticle( $articleId );
-		if( !$article ){
-			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
-			$this->restart( NULL, TRUE );
-		}
-		$logicShop	= new Logic_Shop( $this->env );
-		$this->addData( 'article', $article );
-		$this->addData( 'tags', $this->logic->getTagsOfArticle( $articleId, FALSE ) );				//  append article tags (unsorted)
-		$this->addData( 'authors', $this->logic->getAuthorsOfArticle( $articleId ) );
-		$this->addData( 'category', $this->logic->getCategoryOfArticle( $articleId ) );
-		$this->addData( 'documents', $this->logic->getDocumentsOfArticle( $articleId ) );
-		$this->addData( 'cart', (bool) $logicShop->countArticlesInCart() );
-		$this->addData( 'inCart', $logicShop->countArticleInCart( $this->bridgeId, $articleId ) );
+		try{
+			$article	= $this->logic->getArticle( $articleId );
+			$logicShop	= new Logic_Shop( $this->env );
+			$this->addData( 'article', $article );
+			$this->addData( 'tags', $this->logic->getTagsOfArticle( $articleId ) );				//  append article tags (unsorted)
+			$this->addData( 'authors', $this->logic->getAuthorsOfArticle( $articleId ) );
+			$this->addData( 'category', $this->logic->getCategoryOfArticle( $articleId ) );
+			$this->addData( 'documents', $this->logic->getDocumentsOfArticle( $articleId ) );
+			$this->addData( 'cart', (bool) $logicShop->countArticlesInCart() );
+			$this->addData( 'inCart', $logicShop->countArticleInCart( $this->bridgeId, $articleId ) );
 
-		$fileImageLarge	= $this->logic->getArticleCoverUrl( $article, 'l', FALSE );
+			$fileImageLarge	= $this->logic->getArticleCoverUrl( $article, 'l' );
 //print_m( $fileImageLarge );die;
 //		if( $fileImageLarge && !file_exists( $fileImageLarge ) )
 //			$fileImageLarge = NULL;
-		$this->addData( 'uriCoverLarge', $fileImageLarge );
+			$this->addData( 'uriCoverLarge', $fileImageLarge );
 
-		if( getEnv( 'HTTP_REFERER' ) ){
-			$urlFrom	=  new Url( getEnv( 'HTTP_REFERER' ), new Url( $this->env->url ) );
-			if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
-				$this->addData( 'from', $urlFrom->getRelative() );
+			if( getEnv( 'HTTP_REFERER' ) ){
+				$urlFrom	=  new Url( getEnv( 'HTTP_REFERER' ), new Url( $this->env->url ) );
+				if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+					$this->addData( 'from', $urlFrom->getRelative() );
+				}
+			}
+			if( $this->request->get( 'from' ) ){
+				$urlFrom	=  new Url( $this->request->get( 'from' ), new Url( $this->env->url ) );
+				if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
+					$this->addData( 'from', $urlFrom->getRelative() );
+				}
+			}
+
+			$tags	= [];
+			foreach( $this->logic->getTagsOfArticle( $articleId ) as $tag )
+				$tags[]	= $tag->tag;
+
+			if( $tags ){
+				$relatedArticles	= $this->logic->getArticlesFromTags( $tags, [$article->articleId] );
+				$this->addData( 'relatedArticles', $relatedArticles );
 			}
 		}
-		if( $this->request->get( 'from' ) ){
-			$urlFrom	=  new Url( $this->request->get( 'from' ), new Url( $this->env->url ) );
-			if( UrlCompare::sameBaseStatic( $urlFrom, $this->env->url ) ){
-				$this->addData( 'from', $urlFrom->getRelative() );
-			}
-		}
-
-		$tags	= [];
-		foreach( $this->logic->getTagsOfArticle( $articleId, FALSE ) as $tag )
-			$tags[]	= $tag->tag;
-
-		$relatedArticles	= [];
-		if( $tags ){
-			$relatedArticles	= $this->logic->getArticlesFromTags( $tags, [$article->articleId] );
-			$this->addData( 'relatedArticles', $relatedArticles );
+		catch( Throwable $e ){
+			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
+			$this->restart( NULL, TRUE );
 		}
 	}
 
-	public function articles()
+	public function articles(): void
 	{
 	}
 
-	public function author( $authorId )
+	public function author( string $authorId ): void
 	{
 //		$authorId	= preg_replace( "/-[a-z0-9_-]*$/", "", $authorId );
 		$authorId	= (int) $authorId;
@@ -87,12 +90,12 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
-	public function authors()
+	public function authors(): void
 	{
 		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 	}
 
-	public function categories()
+	public function categories(): void
 	{
 		$cache	= $this->env->getCache();
 		if( NULL === ( $categories = $cache->get( 'catalog.bookstore.categories' ) ) ){
@@ -110,9 +113,8 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'categories', $categories );
 	}
 
-	public function category( $categoryId )
+	public function category( string $categoryId ): void
 	{
-		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
 
 		//  --  SUBCATEGORIES  --  //
@@ -124,7 +126,7 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'category', $category );
 	}
 
-	public function index( $categoryId = NULL )
+	public function index( ?string $categoryId = NULL ): void
 	{
 		if( $categoryId && (int) $categoryId )
 			$this->restart( 'category/'.$categoryId, TRUE );
@@ -137,29 +139,29 @@ class Controller_Catalog_Bookstore extends Controller
 	 *	@todo		 extract labels
 	 *	@todo		 BONUS: draft resolution for Google categories and implement solution for hooked modules
 	 */
-	public function feed()
+	public function feed(): void
 	{
-		$options	= $this->env->getConfig()->getAll( 'module.catalog_bookstore.feed.', TRUE );
+//		$options	= $this->env->getConfig()->getAll( 'module.catalog_bookstore.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog_Bookstore( $this->env );
 
 		$builder	= new RssGoogleBaseBuilder();
-		$builder->setChannelData( array(
+		$builder->setChannelData( [
 			'title'			=> TextTrimmer::trim( $this->env->title, 150 ),
 			'link'			=> $this->env->url,
 			'description'	=> TextTrimmer::trim( $words->description, 5000 ),
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
-		) );
+		] );
 
 		$builder->addItemElement( 'g:price', TRUE );
 		$builder->addItemElement( 'g:condition', TRUE );
 		$builder->addItemElement( 'g:price', TRUE );
 		$builder->addItemElement( 'g:availability', TRUE );
 		$builder->addItemElement( 'g:gtin', TRUE );
-		$builder->addItemElement( 'g:image_link', FALSE );
+		$builder->addItemElement( 'g:image_link' );
 
 		$availabilities	= [
 			-2		=> "out of stock",
@@ -181,7 +183,7 @@ class Controller_Catalog_Bookstore extends Controller
 				"description"		=> TextTrimmer::trim( $article->description, 5000 ),
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"			=> join( ', ', $categories ),
-				"pubDate"			=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"			=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"				=> $this->env->url.'catalog/bookstore/article/'.$article->articleId ,
 				"g:id"				=> $article->articleId,
 				"g:price"			=> number_format( $price, 2, '.', '' ).' EUR',
@@ -191,7 +193,7 @@ class Controller_Catalog_Bookstore extends Controller
 				"g:gtin"			=> $article->isn
 			);
 			if( $article->status == -1 )
-				$item['g:availability_​​date']	= date( "r", strtotime( $article->publication ) );
+				$item['g:availability_date']	= date( "r", strtotime( $article->publication ) );
 			if( $article->cover )
 				$item['g:image_link']	= $this->logic->getArticleCoverUrl( $article, 'm', TRUE );
 			$builder->addItem( $item );
@@ -205,13 +207,13 @@ class Controller_Catalog_Bookstore extends Controller
 		exit;
 	}
 
-	public function news()
+	public function news(): void
 	{
 		$articles	= $this->logic->getArticles( ['new' => 1], ['createdAt' => 'DESC'] );
 		$this->addData( 'articles', $articles );
 	}
 
-	public function order()
+	public function order(): void
 	{
 		$request	= $this->env->getRequest();
 		$articleId	= (int) $request->get( 'articleId' );
@@ -226,8 +228,9 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->restart( $url );
 	}
 
-	public function rss( $categoryId = NULL )
+	public function rss( ?string $categoryId = NULL ): void
 	{
+		/** @var Dictionary $options */
 		$options	= $this->env->getConfig()->getAll( 'module.catalog_bookstore.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$categoryId	= (int) $categoryId;
@@ -282,7 +285,7 @@ class Controller_Catalog_Bookstore extends Controller
 				"description"	=> $article->description,
 				"link"			=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"		=> join( ', ', $categories ),
-				"pubDate"		=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"		=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"			=> $this->env->url.'catalog/bookstore/article/'.$article->articleId ,
 				"source"		=> $this->env->url.'catalog/bookstore/rss',
 			];
@@ -433,9 +436,11 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
-	public function tag( $tagId = NULL ): void
+	public function tag( string $tagId = NULL ): void
 	{
-		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
+		if( !$tagId )
+			$this->restart( NULL, TRUE );
+		if( !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );
 
 		$articles	= $this->logic->getArticlesFromTags( [$tag->tag] );

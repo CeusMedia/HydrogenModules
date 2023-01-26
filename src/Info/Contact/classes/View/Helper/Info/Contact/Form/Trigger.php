@@ -3,11 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Info_Contact_Form_Trigger
 {
-	protected $class		= 'btn';
-	protected $icon;
-	protected $iconPosition	= 'left';
-	protected $label;
-	protected $modalId;
+	protected string $class				= 'btn';
+	protected ?string $icon				= NULL;
+	protected string $iconPosition		= 'left';
+	protected ?string $label			= NULL;
+	protected ?string $modalId			= NULL;
 
 	public function render(): string
 	{
@@ -19,7 +19,7 @@ class View_Helper_Info_Contact_Form_Trigger
 
 		$label		= $this->label;
 		if( $this->icon ){
-			$icon	= $this->icon ? HtmlTag::create( 'i', '', ['class' => $this->icon] ) : '';
+			$icon	= HtmlTag::create( 'i', '', ['class' => $this->icon] );
 			$label	= $icon.'&nbsp;'.$this->label;
 			if( $this->iconPosition === 'right' )
 				$label	= $this->label.'&nbsp;'.$icon;
@@ -27,31 +27,31 @@ class View_Helper_Info_Contact_Form_Trigger
 		return $trigger->setLabel( $label )->render();
 	}
 
-	public function setModalId( $modalId ): self
+	public function setModalId( string $modalId ): self
 	{
 		$this->modalId	= $modalId;
 		return $this;
 	}
 
-	public function setClass( $class ): self
+	public function setClass( string $class ): self
 	{
 		$this->class	= $class;
 		return $this;
 	}
 
-	public function setIcon( $icon ): self
+	public function setIcon( string $icon ): self
 	{
 		$this->icon		= $icon;
 		return $this;
 	}
 
-	public function setIconPosition( $position = 'left' ): self
+	public function setIconPosition( string $position = 'left' ): self
 	{
 		$this->iconPosition	= $position;
 		return $this;
 	}
 
-	public function setLabel( $label ): self
+	public function setLabel( string $label ): self
 	{
 		$this->label	= $label;
 		return $this;

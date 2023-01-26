@@ -122,6 +122,7 @@ class Logic_Catalog_Bookstore extends Logic
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
 			return (object) $data;
 		$this->checkArticleId( $articleId, TRUE );
+		/** @var object $data */
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.bookstore.article.'.$articleId, $data );
 		return $data;

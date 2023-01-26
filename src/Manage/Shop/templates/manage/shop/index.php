@@ -6,7 +6,7 @@ $panelOpenOrders	= '
 	<div class="content-panel-inner">
 		<ul class="nav nav-pills nav-stacked">
 			<li><a href="./manage/shop/order/filter?status[]=2">'.number_format( count( $ordersNotPayed ), 0, ',', '.' ).' nicht bezahlt</a></li>
-			<li><a href="./manage/shop/order/filter?status[]=3&status[]=4">'.number_format( count( $ordersNotDelievered ), 0, ',', '.' ).' nicht zugestellt</a></li>
+			<li><a href="./manage/shop/order/filter?status[]=3&status[]=4">'.number_format( count( $ordersNotDelivered ), 0, ',', '.' ).' nicht zugestellt</a></li>
 			<li><a href="./manage/shop/order/filter?status[]=2&status[]=3&status[]=4&status[]=5">'.number_format( count( $ordersNotFinished ), 0, ',', '.' ).' nicht abgeschlossen</a></li>
 		</ul>
 	</div>

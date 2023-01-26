@@ -1,26 +1,29 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Contact_Form_Modal
 {
-	protected $id;
-	protected $subject;
-	protected $heading;
-	protected $type;
-	protected $types;
-	protected $moduleConfig;
-	protected $moduleWords;
+	protected Environment $env;
+	protected ?string $id				= NULL;
+	protected ?string $subject			= NULL;
+	protected ?string $heading			= NULL;
+	protected ?string $type				= NULL;
+	protected array $types				= [];
+	protected Dictionary $moduleConfig;
+	protected array $moduleWords;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_contact.', TRUE );
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'info/contact' );
 	}
 
-	public function render()
+	public function render(): string
 	{
 		if( !$this->id )
 			throw new RuntimeException( 'No ID set' );
@@ -161,7 +164,7 @@ class View_Helper_Info_Contact_Form_Modal
 //		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
 		$modal->setFormAction( './info/contact/ajax/form' );
 		$modal->setFormSubmit( 'ModuleInfoContactForm.sendContactForm(this)' );
-		$modal->setHeading( $this->heading ? $this->heading : $words['form']['heading'] );
+		$modal->setHeading( $this->heading ?: $this->moduleWords['form']['heading'] );
 		$modal->setBody( $form );
 		$modal->setFade( !FALSE );
 		$modal->setAttributes( ['class' => 'modal-info-contact-form'] );
@@ -179,13 +182,13 @@ class View_Helper_Info_Contact_Form_Modal
 		return $this;
 	}
 
-	public function setHeading( $heading ): self
+	public function setHeading( string $heading ): self
 	{
 		$this->heading		= $heading;
 		return $this;
 	}
 
-	public function setSubject( $subject ): self
+	public function setSubject( string $subject ): self
 	{
 		$this->subject	= $subject;
 		return $this;
@@ -209,14 +212,14 @@ class View_Helper_Info_Contact_Form_Modal
 	}*/
 
 	//  --  PROTECTED  --  //
-	protected function renderTypeOptions()
+	protected function renderTypeOptions(): string
 	{
 		//  TYPES: Enabled thru config and hook param
 		$typesConfig	= [];
 		foreach( $this->moduleConfig->getAll( 'modal.show.type.' ) as $key => $value )
 			if( $value )
 				$typesConfig[]	= $key;
-		$typesHook		= $this->types ? $this->types : $typesConfig;
+		$typesHook		= $this->types ?: $typesConfig;
 		$typesEnabled	= array_intersect( $typesConfig, $typesHook );
 
 		//  DEFAULT TYPE: Set by config or hook param

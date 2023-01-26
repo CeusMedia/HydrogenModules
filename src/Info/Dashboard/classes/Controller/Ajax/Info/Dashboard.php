@@ -4,12 +4,16 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Info_Dashboard extends AjaxController
 {
-	protected $logic;
-	protected $model;
-	protected $panels			= [];
-	protected $userId			= 0;
+	protected Logic_Info_Dashboard $logic;
+	protected Model_Dashboard $model;
+	protected array $panels				= [];
+	protected string $userId			= '0';
 
-	public function rename()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function rename(): void
 	{
 		if( !$this->logic->checkUserDashboardsEnabled( FALSE ) )
 			$this->respondError( -1, 'Dashboards are not enabled for the current user.' );
@@ -38,7 +42,11 @@ class Controller_Ajax_Info_Dashboard extends AjaxController
 		$this->respondData( $result );
 	}
 
-	public function saveOrder()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function saveOrder(): void
 	{
 		if( !$this->logic->checkUserDashboardsEnabled( FALSE ) )
 			$this->respondError( -1, 'Dashboards are not enabled for the current user.' );
@@ -60,13 +68,13 @@ class Controller_Ajax_Info_Dashboard extends AjaxController
 		/*  --  MODULE RESOURCES  --  */
 		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
 		$this->model		= new Model_Dashboard( $this->env );
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
+//		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_dashboard.', TRUE );
 
 		/*  --  USER SUPPORT  --  */
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$logicAuth		= Logic_Authentication::getInstance( $this->env );
 			$this->userId	= $logicAuth->getCurrentUserId( FALSE );
-			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
+//			$this->user		= $logicAuth->getCurrentUser( FALSE, TRUE );
 		}
 	}
 }

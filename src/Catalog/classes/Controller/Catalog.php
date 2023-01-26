@@ -423,9 +423,11 @@ class Controller_Catalog extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
-	public function tag( $tagId = NULL )
+	public function tag( string $tagId = NULL ): void
 	{
-		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
+		if( !$tagId )
+			$this->restart( NULL, TRUE );
+		if( !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );
 
 		$articles	= $this->logic->getArticlesFromTags( [$tag->tag] );

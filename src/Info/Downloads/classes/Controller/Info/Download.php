@@ -9,24 +9,24 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 class Controller_Info_Download extends Controller
 {
 	/**	@var	Messenger										$messenger	*/
-	protected $messenger;
+	protected Messenger $messenger;
 
 	/**	@var	Model_Download_File								$modelFile			Database model of files */
-	protected $modelFile;
+	protected Model_Download_File $modelFile;
 
 	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
-	protected $modelFolder;
+	protected Model_Download_Folder $modelFolder;
 
 	/**	@var	Dictionary										$options			Module configuration object */
-	protected $options;
+	protected Dictionary $options;
 
 	/**	@var	string											$path				Base path to download files */
-	protected $path;
+	protected string $path;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= [];
+	protected array $rights		= [];
 
-	public function deliver( $fileId = NULL )
+	public function deliver( $fileId = NULL ): void
 	{
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
@@ -44,7 +44,7 @@ class Controller_Info_Download extends Controller
 		exit;
 	}
 
-	public function download( $fileId )
+	public function download( string $fileId ): void
 	{
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
@@ -60,7 +60,7 @@ class Controller_Info_Download extends Controller
 		exit;
 	}
 
-	public function index( $folderId = NULL )
+	public function index( $folderId = NULL ): void
 	{
 		$folderId	= (int) $folderId;
 		$orders		= ['rank' => 'ASC'];
@@ -83,7 +83,7 @@ class Controller_Info_Download extends Controller
 		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
 	}
 
-	public function view( $fileId = NULL )
+	public function view( $fileId = NULL ): void
 	{
 		$file		= $this->modelFile->get( $fileId );
 		if( !$file ){
@@ -109,7 +109,6 @@ class Controller_Info_Download extends Controller
 		$this->path			= $this->options->get( 'path' );
 		$this->modelFolder	= new Model_Download_Folder( $this->env );
 		$this->modelFile	= new Model_Download_File( $this->env );
-		$this->messages		= (object) $this->getWords( 'msg' );
 	}
 
 	protected function checkFolder( $folderId ): bool
@@ -136,22 +135,6 @@ class Controller_Info_Download extends Controller
 		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
-	protected function countIn( string $path, bool $recursive = FALSE ): int
-	{
-		$files		= 0;
-		$folders	= 0;
-		if( $recursive ){
-			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
-			foreach( $index as $entry )
-//				if( !$entry->isDot() )
-					$entry->isDir() ? $folders++ : $files++;
-		}
-		else{
-			die( "no implemented yet" );
-		}
-		return ['folders' => $folders, 'files' => $files];
-	}
-
 	protected function getPathFromFolderId( $folderId, bool $withBasePath = FALSE ): string
 	{
 		$path	= '';
@@ -163,6 +146,22 @@ class Controller_Info_Download extends Controller
 			$folderId	= $folder->parentId;
 		}
 		return $withBasePath ? $this->path.$path : $path;
+	}
+
+	protected function countIn( string $path, bool $recursive = FALSE ): array
+	{
+		$files		= 0;
+		$folders	= 0;
+		if( $recursive ){
+			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
+			foreach( $index as $entry )
+//				if( !$entry->isDot() )
+				$entry->isDir() ? $folders++ : $files++;
+		}
+		else{
+			die( "no implemented yet" );
+		}
+		return ['folders' => $folders, 'files' => $files];
 	}
 
 	protected function getStepsFromFolderId( $folderId ): array
@@ -179,7 +178,7 @@ class Controller_Info_Download extends Controller
 		return $steps;
 	}
 
-	protected function updateNumber( $folderId, $type, $diff = 1 )
+	protected function updateNumber( string $folderId, string $type, int $diff = 1 ): void
 	{
 		if( !in_array( $type, ['folder', 'file'] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );

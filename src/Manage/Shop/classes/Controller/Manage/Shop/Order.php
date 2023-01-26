@@ -1,13 +1,8 @@
 <?php
+
 class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 {
-	/**	@var		Logic_ShopManager	$logicShop			Instance of shop manager logic */
-	protected $logicShop;
-
-	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
-	protected $logicBridge;
-
-	public function edit( $orderId )
+	public function edit( $orderId ): void
 	{
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		if( !$order ){
@@ -29,7 +24,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 		$this->addData( 'order', $order );
 	}
 
-	public function filter( $reset = FALSE )
+	public function filter( $reset = FALSE ): void
 	{
 		$sessionPrefix	= 'module.manage_shop_order.filter.';
 		$this->session->set( $sessionPrefix.'customer', trim( $this->request->get( 'customer' ) ) );
@@ -43,7 +38,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $pageNr = 0 )
+	public function index( $pageNr = 0 ): void
 	{
 		$filters	= $this->session->getAll( 'module.manage_shop_order.filter.' );
 		$orders		= [];
@@ -87,14 +82,14 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 //		$this->addData( 'customers', $customers );
 	}
 
-	public function setPositionStatus( $positionId, $status )
+	public function setPositionStatus( $positionId, $status ): void
 	{
 		$this->logicShop->setOrderPositionStatus( $positionId, $status );
 		$position	= $this->logicShop->getOrderPosition( $positionId );
 		$this->restart( 'edit/'.$position->orderId, TRUE );
 	}
 
-	public function setStatus( $orderId, $status )
+	public function setStatus( $orderId, $status ): void
 	{
 		$this->logicShop->setOrderStatus( $orderId, $status );
 		$this->restart( 'edit/'.$orderId, TRUE );

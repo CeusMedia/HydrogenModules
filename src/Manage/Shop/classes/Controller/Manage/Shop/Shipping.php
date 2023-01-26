@@ -1,22 +1,25 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Shop_Shipping extends Controller
 {
+	protected HttpRequest $request;
+
 	/** @var		Model_Shop_Shipping_Grade		$modelGrade */
-	protected $modelGrade;
+	protected Model_Shop_Shipping_Grade $modelGrade;
 
 	/** @var		Model_Shop_Shipping_Zone		$modelZone */
-	protected $modelZone;
+	protected Model_Shop_Shipping_Zone $modelZone;
 
 	/** @var		Model_Shop_Shipping_Price		$modelPrice */
-	protected $modelPrice;
+	protected Model_Shop_Shipping_Price $modelPrice;
 
 	/** @var		Model_Shop_Shipping_Country		$modelCountry */
-	protected $modelCountry;
+	protected Model_Shop_Shipping_Country $modelCountry;
 
-	public function index()
+	public function index(): void
 	{
 		$countryMap		= $this->getWords( 'countries', 'address' );
 		$grades			= $this->modelGrade->getAll( [], ['fallback' => 'ASC', 'weight' => 'ASC'] );
@@ -43,7 +46,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->addData( 'countryMap', $countryMap );
 	}
 
-	public function addGrade()
+	public function addGrade(): void
 	{
 		$data		= ['title' => $this->request->get( 'title' )];
 		if( $this->request->get( 'fallback' ) )
@@ -62,7 +65,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function addZone()
+	public function addZone(): void
 	{
 		$zoneId	= $this->modelZone->add( array(
 			'title'	=> $this->request->get( 'title' ),
@@ -87,7 +90,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setPrices()
+	public function setPrices(): void
 	{
 		$grades	= $this->modelGrade->getAll();
 		$zones	= $this->modelZone->getAll();
@@ -110,9 +113,9 @@ class Controller_Manage_Shop_Shipping extends Controller
 					$price	= $prices[$zone->zoneId][$grade->gradeId];
 					$price	= str_replace( ',', '.', $price );
 					if( !isset( $priceMatrix[$zone->zoneId][$grade->gradeId] ) ){
-						$this->modelPrice->add( array_merge( $indices ), [
+						$this->modelPrice->add( array_merge( $indices, [
 							'price'	=> $price,
-						] );
+						] ) );
 					}
 					else{
 						if( $priceMatrix[$zone->zoneId][$grade->gradeId] != $price ){
@@ -127,14 +130,14 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGrade( $gradeId )
+	public function removeGrade( string $gradeId ): void
 	{
 		$this->modelPrice->removeByIndex( 'gradeId', $gradeId );
 		$this->modelGrade->remove( $gradeId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeZone( $zoneId )
+	public function removeZone( string $zoneId ): void
 	{
 		$this->modelPrice->removeByIndex( 'zoneId', $zoneId );
 		$this->modelCountry->removeByIndex( 'zoneId', $zoneId );

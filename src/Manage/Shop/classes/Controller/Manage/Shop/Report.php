@@ -1,4 +1,7 @@
 <?php
+
+/** @noinspection SqlResolve */
+
 class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 {
 	public function index()

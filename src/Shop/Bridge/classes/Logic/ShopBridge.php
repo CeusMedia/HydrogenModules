@@ -212,7 +212,7 @@ class Logic_ShopBridge
 		return $this->getBridgeObject( $bridgeIdOrClass );
 	}
 
-	public function getBridgeObject( $bridgeIdOrClass )
+	public function getBridgeObject( $bridgeIdOrClass ): object
 	{
 		if( is_int( $bridgeIdOrClass ) || (int) $bridgeIdOrClass == $bridgeIdOrClass ){
 			if( !isset( $this->bridges[(int) $bridgeIdOrClass] ) )

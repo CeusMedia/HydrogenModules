@@ -49,7 +49,7 @@ class Hook_Info_NewsList extends Hook
 					);
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$this->env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
 					break;
 				}
 			}

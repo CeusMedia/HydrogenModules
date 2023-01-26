@@ -4,24 +4,25 @@ includes:
 	
 parameters:
 	phpVersion: 70400
-#	level: 0
-	level: max
+	level: 0
+#	level: 1
+#	level: max
 	paths:
-		- src/Admin
-		- src/App
-		- src/Base
-		- src/Catalog
-		- src/Info
-		- src/JS
+#		- src/Admin
+#		- src/App
+#		- src/Base
+#		- src/Catalog
+#		- src/Info
+#		- src/JS
 		- src/Manage
-		- src/Members
-		- src/Resource
-		- src/Security
-		- src/Server
-		- src/Shop
-		- src/Tool
-		- src/UI
-		- src/Work
+#		- src/Members
+#		- src/Resource
+#		- src/Security
+#		- src/Server
+#		- src/Shop
+#		- src/Tool
+#		- src/UI
+#		- src/Work
 	fileExtensions:
 		- php
 	excludePaths:

@@ -34,7 +34,7 @@ class Hook_Info_Contact extends Hook
 				continue;
 			$isFirst		= TRUE;
 			$helperModal	= new View_Helper_Info_Contact_Form_Modal( $env );
-			$helperTrigger	= new View_Helper_Info_Contact_Form_Trigger( $env );
+			$helperTrigger	= new View_Helper_Info_Contact_Form_Trigger();
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					if( substr( $attr['button-class'], 0, 4 ) === 'btn-' )
@@ -71,7 +71,7 @@ class Hook_Info_Contact extends Hook
 					}
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$code );
+					$env->getMessenger()->noteFailure( 'Short code failed: '.$shortCode );
 					break;
 				}
 			}

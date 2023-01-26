@@ -1,12 +1,14 @@
 <?php
-
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Dashboard extends Controller
 {
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 	protected Logic_Info_Dashboard $logic;
 	protected Model_Dashboard $model;
 	protected array $panels					= [];
@@ -186,7 +188,7 @@ class Controller_Info_Dashboard extends Controller
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
-			if( !( $dashboard = $this->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
+			if( !( $dashboard = $this->logic->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
 				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
 				$this->restart( NULL, TRUE );
 			}

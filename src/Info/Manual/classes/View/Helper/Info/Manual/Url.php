@@ -85,6 +85,6 @@ class View_Helper_Info_Manual_Url
 
 	public static function spawn( $env ): self
 	{
-		return new static( $env );
+		return new self( $env );
 	}
 }
