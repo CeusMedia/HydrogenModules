@@ -1,19 +1,18 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Page as PageResource;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_CodeMirror extends Hook
 {
-	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload )
+	public function onPageApplyModules(): void
 	{
-		$moduleConfig	= $env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.js_codemirror.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
 
-		$page		= $env->getPage();															//  $context is page too, but this is more readable
-		$pathJs		= $env->getConfig()->get( 'path.scripts' );
+		$page		= $this->env->getPage();															//  $context is page too, but this is more readable
+		$pathJs		= $this->env->getConfig()->get( 'path.scripts' );
 		$configLoad	= $moduleConfig->getAll( 'load.', TRUE );
 		$cdn		= $configLoad->get( 'cdn' );
 
@@ -60,7 +59,7 @@ class Hook_JS_CodeMirror extends Hook
 			$modes		= explode( ',', $configLoad->get( 'modes' ) );
 			$addons		= explode( ',', $configLoad->get( 'addons' ) );
 			$themes		= explode( ',', $configLoad->get( 'themes' ) );
-			$pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );							//  get default CDN from config
+			$pathJsLib	= $this->env->getConfig()->get( 'path.scripts.lib' );							//  get default CDN from config
  			if( !strlen( trim( $pathJsLib ) ) )
 				throw new RuntimeException( 'No default CDN configured' );
 			$pathCdn		= $pathJsLib.'CodeMirror/'.$version.'/';
@@ -119,24 +118,19 @@ CodeMirror.on(window, "resize", function() {
 	}
 
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onGetAvailableContentEditor( Environment $env, object $context, object $module, array & $payload )
+	public function onGetAvailableContentEditor(): void
 	{
-		if( !empty( $payload['type'] ) && !in_array( $payload['type'], ['code'] ) )
+		if( !empty( $this->payload['type'] ) && $this->payload['type'] !== 'code')
 			return;
-		if( !empty( $payload['format'] ) && !in_array( $payload['format'], ['html', 'markdown', 'md'/*, '*'*/] ) )
+		if( !empty( $this->payload['format'] ) && !in_array( $this->payload['format'], ['html', 'markdown', 'md'/*, '*'*/], TRUE ) )
 			return;
 		$editor	= (object) [
 			'key'		=> 'codemirror',
 			'label'		=> 'Code Mirror',
 			'type'		=> 'code',
-			'format'	=> $payload['format'],
+			'format'	=> $this->payload['format'],
 			'score'		=> 5,
 		];
 		$criteria	= [
@@ -145,11 +139,11 @@ CodeMirror.on(window, "resize", function() {
 			'force'			=> 10,
 		];
 		foreach( $criteria as $key => $value )
-			if( !empty( $payload[$key] ) && strtolower( $payload[$key] ) === $editor->key )
+			if( !empty( $payload[$key] ) && strtolower( $this->payload[$key] ) === $editor->key )
 				$editor->score	+= $value;
 
 //		if( !empty( $payload['format'] ) ){}
 		$key	= str_pad( $editor->score * 1000, 8, '0', STR_PAD_LEFT ).'_'.$editor->key;
-		$payload['list'][$key]	= $editor;
+		$this->payload['list'][$key]	= $editor;
 	}
 }

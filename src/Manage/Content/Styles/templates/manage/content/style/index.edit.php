@@ -15,14 +15,14 @@ if( $file ){
 			'class'	=> 'ace-auto CodeMirror-auto span12',
 			'style'	=> 'height: 660px',
 			'rows'	=> 10,
-		], 	array(
+		], 	[
 			'ace-mode'						=> 'css',
 			'ace-option-maxLines'			=> 30,
 			'codemirror-mode'				=> 'text/css',
 			'codemirror-read-only'			=> $readonly ? 'nocursor' : NULL,
 			'codemirror-callback-change'	=> 'ModuleManageStyle.onCodeMirrorChange',
 			'codemirror-callback-save'		=> 'ModuleManageStyle.onCodeMirrorSave',
-	) );
+	] );
 	$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave, [
 		'type'		=> 'submit',
 		'name'		=> 'save',

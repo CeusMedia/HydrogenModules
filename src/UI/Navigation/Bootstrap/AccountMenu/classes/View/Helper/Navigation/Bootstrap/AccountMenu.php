@@ -37,11 +37,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	 */
 	public function addInsideLink( string $path, string $label, string $icon = NULL ): self
 	{
-		$this->linksInside[]	= (object)array(
+		$this->linksInside[]	= (object)[
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
-		);
+		];
 		return $this;
 	}
 

@@ -138,7 +138,7 @@ class Controller_Info_Forum extends Controller
 			foreach( $threads as $thread )
 				$threadIds[]	= $thread->threadId;
 			if( $threadIds )
-				$topic->posts	+= $this->modelPost->countByIndex( 'threadId', $threadIds );
+				$topic->posts	+= $this->modelPost->countByIndices( ['threadId' => $threadIds] );
 		}
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'topics', $topics );

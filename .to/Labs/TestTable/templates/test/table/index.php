@@ -91,11 +91,11 @@ return '
 $colgroup	= $this->html->ColumnGroup( '10%', '70%', '20%' );
 $caption	= $this->html->TableCaption( $words['index']['caption'] );
 $heads		= $this->html->TableHeads(
-	array(
+	[
 		$words['index']['head_id'],
 		$words['index']['head_field'],
 		$words['index']['head_timestamp']
-	)
+	]
 );
 
 $content	= '

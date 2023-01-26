@@ -4,13 +4,20 @@ use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\OutputBuffer;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_TinyMce_FileBrowser
 {
-	protected $thumbnailer;
-	protected $displayMode			= 0;
-	protected $sourceMode			= 0;
-	protected $cssClassPrefix		= 'list';
+	protected WebEnvironment $env;
+	protected View_Helper_Thumbnailer $thumbnailer;
+	protected View_Helper_TimePhraser $timePhraser;
+	protected int $displayMode			= 0;
+	protected int $sourceMode			= 0;
+	protected string $cssClassPrefix		= 'list';
+	protected string $baseUrl;
+	protected string $topicId;
+	protected array $topics;
+	protected string $path;
 
 	const DISPLAY_MODE_LIST			= 0;
 	const DISPLAY_MODE_GRID			= 1;
@@ -18,13 +25,13 @@ class View_Helper_TinyMce_FileBrowser
 	const SOURCE_MODE_IMAGE			= 0;
 	const SOURCE_MODE_LINK			= 1;
 
-	public function __construct( $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env	= $env;
 		$this->__onInit();
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$buffer		= new OutputBuffer();
 		$helper		= new View_Helper_TinyMce( $this->env );
@@ -45,11 +52,11 @@ class View_Helper_TinyMce_FileBrowser
 			die;
 		}
 		$messages		= $buffer->get( TRUE );
-		$html			= HtmlTag::create( 'div', array(
+		$html			= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', $listTopics, ['id' => 'tinymce-file-browser-sidebar'] ),
 			HtmlTag::create( 'div', $topbar, ['id' => 'tinymce-file-browser-topbar'] ),
 			HtmlTag::create( 'div', $messages.$content, ['id' => 'tinymce-file-browser-content'] ),
-		), ['id' => 'container-tinymce-file-browser'] );
+		], ['id' => 'container-tinymce-file-browser'] );
 
 		$page	= $this->env->getPage();
 		$page->js->addScriptOnReady( 'tinymce.FileBrowser.initBrowser();' );
@@ -59,32 +66,32 @@ class View_Helper_TinyMce_FileBrowser
 		exit;
 	}
 
-	public function setDisplayMode( $displayMode )
+	public function setDisplayMode( int $displayMode ): self
 	{
 		$this->displayMode		= $displayMode;
 		$this->cssClassPrefix	= $displayMode == self::DISPLAY_MODE_GRID ? 'grid' : 'list';
 		return $this;
 	}
 
-	public function setSourceMode( $sourceMode )
+	public function setSourceMode( int $sourceMode ): self
 	{
 		$this->sourceMode	= $sourceMode;
 		return $this;
 	}
 
-	public function setTopicId( $topicId )
+	public function setTopicId( string $topicId ): self
 	{
 		$this->topicId	= $topicId;
 		return $this;
 	}
 
-	public function setTopics( $topics )
+	public function setTopics( array $topics ): self
 	{
 		$this->topics	= $topics;
 		return $this;
 	}
 
-	public function setPath( $path )
+	public function setPath( string $path ): self
 	{
 		$this->path		= $path;
 		return $this;
@@ -139,7 +146,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $list;
 	}
 
-	protected function renderFolderItem( $path, $label, $count = NULL, $icon = 'folder-open' )
+	protected function renderFolderItem( string $path, string $label, $count = NULL, string $icon = 'folder-open' ): string
 	{
 		$facts		= [];
 		if( is_int( $count ) && $count > 0 ){
@@ -160,7 +167,7 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
-	protected function renderItemException( $itemUri, $itemLabel, $exception )
+	protected function renderItemException( $itemUri, $itemLabel, $exception ): string
 	{
 		return HtmlTag::create( 'li', $exception->getMessage(), [
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
@@ -168,7 +175,7 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
-	protected function renderImageItem( $path, $filePath, $size = NULL, $icon = 'image' )
+	protected function renderImageItem( string $path, string $filePath, $size = NULL, string $icon = 'image' ): string
 	{
 		$labelParts	= explode( "/", $filePath );
 		$label	= $labelParts[count( $labelParts ) - 1];
@@ -188,18 +195,18 @@ class View_Helper_TinyMce_FileBrowser
 
 		try{
 			$image		= new Image( $remoteFilePath );
-			$facts		= HtmlTag::create( 'dl', array(
+			$facts		= HtmlTag::create( 'dl', [
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
 				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
 				sprintf( '<dt>Typ</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
-				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
-			), ['class' => 'dl-inline'] );
+				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
+			], ['class' => 'dl-inline'] );
 		}
 		catch( Exception $e ){
 			$facts		= HtmlTag::create( 'dl', array(
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
-				sprintf( '<dt>Alter</dt><dd>'.$this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ).'</dd>' ),
+				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
 			), ['class' => 'dl-inline'] );
 		}
 		$facts		= HtmlTag::create( 'small', $facts, ['class' => 'muted'] );
@@ -209,7 +216,7 @@ class View_Helper_TinyMce_FileBrowser
 			$thumbnail	= HtmlTag::create( 'div', NULL, array(
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
 				'style'			=> 'background-image: url('.$data.')',
-				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUrl().$path,
 				'data-type'		=> 'image',
 				'data-label'	=> $filePath,
 			) );
@@ -217,7 +224,7 @@ class View_Helper_TinyMce_FileBrowser
 		catch( Exception $e ){
 			$thumbnail			= HtmlTag::create( 'div', NULL, array(
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
-				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
+				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUrl().$path,
 				'data-type'		=> 'image',
 				'data-label'	=> $filePath,
 			) );
@@ -232,7 +239,7 @@ class View_Helper_TinyMce_FileBrowser
 		) );
 	}
 
-	protected function renderImageMode()
+	protected function renderImageMode(): string
 	{
 		if( !isset( $this->topics[$this->topicId] ) )
 			throw new DomainException( 'Invalid topic ID' );
@@ -271,7 +278,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $listItems;
 	}
 
-	protected function renderLinkItem( $path, $filePath, $size = NULL, $icon = 'link' )
+	protected function renderLinkItem( string $path, string $filePath, $size = NULL, string $icon = 'link' ): string
 	{
 		$fullpath	= preg_replace( '/^\.\//', '', $path );
 		if( !preg_match( '/^https?:\/\//', $fullpath ) )
@@ -295,7 +302,7 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
-	protected function renderLinkMode()
+	protected function renderLinkMode(): string
 	{
 		if( !isset( $this->topics[$this->topicId] ) )
 			throw new DomainException( 'Invalid topic ID' );
@@ -326,7 +333,7 @@ class View_Helper_TinyMce_FileBrowser
 					$icon	= 'camera';
 				if( $link->type === 'link:bookmark' )
 					$icon	= 'bookmark';
-				if( $link->type === 'unkown' )
+				if( $link->type === 'unknown' )
 					$icon	= 'link';
 				if( isset( $link->value ) )
 					$list[]		= $this->renderLinkItem( $link->value, $link->title, NULL, $icon );
@@ -342,7 +349,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $listItems;
 	}
 
-	protected function renderTopBar()
+	protected function renderTopBar(): string
 	{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
 		$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
@@ -382,7 +389,7 @@ class View_Helper_TinyMce_FileBrowser
 			), ['class' => 'buttons'] );
 	}
 
-	protected function renderTopicList()
+	protected function renderTopicList(): string
 	{
 		$list	= [];
 		$mode	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';

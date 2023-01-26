@@ -5,16 +5,16 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Block extends Controller
 {
-	protected $modelForm;
-	protected $modelBlock;
-	protected $filterPrefix		= 'filter_manage_form_block_';
-	protected $filters			= [
+	protected Model_Form $modelForm;
+	protected Model_Form_Block $modelBlock;
+	protected string $filterPrefix		= 'filter_manage_form_block_';
+	protected array $filters			= [
 		'blockId',
 		'title',
 		'identifier',
 	];
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->env->getRequest()->has( 'save' ) ){
 			$data		= $this->env->getRequest()->getAll();
@@ -23,7 +23,7 @@ class Controller_Manage_Form_Block extends Controller
 		}
 	}
 
-	public function edit( $blockId )
+	public function edit( string $blockId ): void
 	{
 		$block	= $this->checkId( $blockId );
 
@@ -47,7 +47,7 @@ class Controller_Manage_Form_Block extends Controller
 		) );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -64,7 +64,7 @@ class Controller_Manage_Form_Block extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$session		= $this->env->getSession();
 		$filters		= new Dictionary( array_merge(
@@ -103,13 +103,13 @@ class Controller_Manage_Form_Block extends Controller
 		$this->addData( 'identifiers', $identifiers );
 	}
 
-	public function view( $blockId )
+	public function view( string $blockId ): void
 	{
 		$block	= $this->checkId( $blockId );
 		$this->addData( 'block', $block );
 	}
 
-	public function remove( $blockId )
+	public function remove( string $blockId ): void
 	{
 		$this->checkId( $blockId );
 		$this->modelBlock->remove( $blockId );
@@ -123,7 +123,7 @@ class Controller_Manage_Form_Block extends Controller
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 	}
 
-	protected function applyChangedIdentifier( $oldIdentifier, $newIdentifier )
+	protected function applyChangedIdentifier( string $oldIdentifier, string $newIdentifier ): array
 	{
 		$forms	= $this->modelForm->getAll(
 			array( 'content'	=> '%[block_'.$oldIdentifier.']%' )
@@ -156,7 +156,7 @@ class Controller_Manage_Form_Block extends Controller
 		);
 	}
 
-	protected function checkId( $blockId, bool $strict = TRUE )
+	protected function checkId( string $blockId, bool $strict = TRUE )
 	{
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );
@@ -169,9 +169,9 @@ class Controller_Manage_Form_Block extends Controller
 		return FALSE;
 	}
 
-	protected function checkIsPost()
+	protected function checkIsPost(): void
 	{
-		if( !$this->env->getRequest()->isMethod( 'POST' ) )
+		if( !$this->env->getRequest()->getMethod()->isPost() )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 }

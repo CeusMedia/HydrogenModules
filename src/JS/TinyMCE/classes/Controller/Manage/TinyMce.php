@@ -1,15 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_TinyMce extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $thumbnailer;
-	protected $cssClassPrefix		= 'list';
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected View_Helper_TinyMce_FileBrowser $helper;
+	protected View_Helper_Thumbnailer $thumbnailer;
+	protected string $sessionPrefix;
+	protected string $cssClassPrefix		= 'list';
+	protected string $baseUrl;
 
-	public function index( $mode = 'image' )
+	public function index( string $mode = 'image' )
 	{
 		$topicId	= (int) $this->session->get( $this->sessionPrefix.$mode );
 		$path		= (string) $this->session->get( $this->sessionPrefix.$mode.'_'.$topicId );
@@ -29,19 +34,19 @@ class Controller_Manage_TinyMce extends Controller
 		$this->helper->render();
 	}
 
-	public function setTopic( $mode, $topicId )
+	public function setTopic( string $mode, string $topicId ): void
 	{
 		$this->session->set( $this->sessionPrefix.$mode, $topicId );
 		$this->restart( $mode, TRUE );
 	}
 
-	public function setDisplayMode( $mode, $displayMode )
+	public function setDisplayMode( string $mode, string $displayMode ): void
 	{
 		$this->session->set( $this->sessionPrefix.'displayMode', $displayMode );
 		$this->restart( $mode, TRUE );
 	}
 
-	public function setPath( $mode, $topicId, $pathBase64 = '' )
+	public function setPath( string $mode, string $topicId, string $pathBase64 = '' ): void
 	{
 		$this->session->set( $this->sessionPrefix.$mode.'_'.$topicId, base64_decode( $pathBase64 ) );
 		$this->restart( $mode, TRUE );

@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
 
-$states	= 	array(
+$states	= 	[
 	'0'		=> '<br/><span class="alert alert-error">Noch keiner Person zugewiesen.</span>',
 	'1'		=> 'bereit',
 	'2'		=> 'aktuell aktiv',
 	'3'		=> 'abgelaufen',
-);
+];
 
 $iconsStatus	= array(
 	0	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),

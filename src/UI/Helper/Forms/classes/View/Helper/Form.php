@@ -7,14 +7,14 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Form extends Abstraction
 {
-	protected $env;
-	protected $blocks				= [];
-	protected $form;
-	protected $formId;
-	protected $modelBlock;
-	protected $modelForm;
-	protected $returnCode;
-	protected $mode					= '';
+	protected ?Environment $env;
+	protected array $blocks						= [];
+	protected ?object $form						= NULL;
+	protected ?string $formId					= NULL;
+	protected Model_Form_Block $modelBlock;
+	protected Model_Form $modelForm;
+	protected int $returnCode;
+	protected ?string $mode						= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -85,7 +85,7 @@ class View_Helper_Form extends Abstraction
 		return $this;
 	}
 
-	public function setMode( string $mode ): self
+	public function setMode( ?string $mode ): self
 	{
 		if( in_array( $mode, [NULL, '', 'extended'] ) ){
 			$this->mode	= (string) $mode;

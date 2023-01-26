@@ -15,11 +15,11 @@ if( $editor === "CodeMirror" ){
 		'font-size: 1.1em',
 		'padding: 1em',
 	];
-	$options			= 	array(
+	$options			= 	[
 		'codemirror-read-only'			=> $readonly ? 'nocursor' : NULL,
 		'codemirror-callback-save'		=> 'ModuleManageContentLocale.onCodeMirrorSave',
 		'codemirror-callback-change'	=> 'ModuleManageContentLocale.onCodeMirrorChange',
-	);
+	];
 }
 else if( $editor === "Ace" ){
 	$classAutoEditor	= "ace-auto";

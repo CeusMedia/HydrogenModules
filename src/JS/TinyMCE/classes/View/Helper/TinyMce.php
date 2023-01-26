@@ -7,17 +7,19 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_TinyMce extends Abstraction
 {
-	public $list		= [];
-	public $listImages	= [];
-	public $listLinks	= [];
+	public array $list		= [];
+	public array $listImages	= [];
+	public array $listLinks	= [];
 
-	static protected $loaded	= FALSE;
+	protected static bool $loaded	= FALSE;
 
-	/**	@var	Dictionary		$config		Module configuration */
+	/**	@var	Dictionary		$config			Module configuration */
 	protected $config;
 
-	/**	@var 	string			$pathFront	Path to frontend application */
+	/**	@var 	string			$pathFront		Path to frontend application */
 	protected $pathFront;
+
+	protected $cache;
 
 	/**
 	 *	Constructor.
@@ -32,7 +34,8 @@ class View_Helper_TinyMce extends Abstraction
 		$this->cache		= $this->env->getCache();
 	}
 
-	static public function load( Environment $env ){
+	public static function load( Environment $env ): void
+	{
 		if( self::$loaded )
 			return;
 
@@ -57,7 +60,8 @@ class View_Helper_TinyMce extends Abstraction
 		self::$loaded	= TRUE;
 	}
 
-	static public function getLanguage( Environment $env ){
+	public static function getLanguage( Environment $env ): string
+	{
 		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$languages	= explode( ",", $config->get( 'languages' ) );
@@ -68,7 +72,8 @@ class View_Helper_TinyMce extends Abstraction
 		return $language;
 	}
 
-	protected function __compare( $a, $b ){
+	protected function __compare( object $a, object $b ): int
+	{
 		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 
@@ -77,7 +82,8 @@ class View_Helper_TinyMce extends Abstraction
 	 *	@access		public
 	 *	@return		array		List of images
 	 */
-	public function getImageList( $refresh = FALSE ){
+	public function getImageList( bool $refresh = FALSE ): array
+	{
 		$cacheKey	= 'tinymce.images';
 		if( $refresh ){
 			$this->listImages	= [];
@@ -87,7 +93,7 @@ class View_Helper_TinyMce extends Abstraction
 			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) ){	 										//  get module handler resource if existing
 				$payload	= ['hidePrefix' => FALSE];
-				$modules->callHook( 'TinyMCE', 'getImageList', $this, $payload );								//  call related module event hooks
+				$modules->callHookWithPayload( 'TinyMCE', 'getImageList', $this, $payload );	//  call related module event hooks
 			}
 			$this->listImages	= $this->list;
 			usort( $this->listImages, [$this, "__compare"] );
@@ -101,7 +107,8 @@ class View_Helper_TinyMce extends Abstraction
 	 *	@access		public
 	 *	@return		array		List of links
 	 */
-	public function getLinkList( $refresh = FALSE ){
+	public function getLinkList( bool $refresh = FALSE ): array
+	{
 		$cacheKey	= 'tinymce.links';
 		if( $refresh || 1 ){
 			$this->listLinks	= [];
@@ -118,7 +125,8 @@ class View_Helper_TinyMce extends Abstraction
 		return $this->listLinks;
 	}
 
-	static public function tidyHtml( $html, $options = [] ){
+	public static function tidyHtml( string $html, array $options = [] ): string
+	{
 		if( function_exists( 'tidy_repair_string' ) ){
 			$html	= tidy_repair_string( $html, array_merge( [
 				'clean'				=> FALSE,

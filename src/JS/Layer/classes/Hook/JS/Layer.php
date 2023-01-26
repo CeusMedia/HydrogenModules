@@ -1,22 +1,16 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_Layer extends Hook
 {
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 *	@todo		implement module main switch
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public function onPageApplyModules(): void
 	{
-		$config	= $env->getConfig()->getAll( 'module.js_layer.', TRUE );
+		$config	= $this->env->getConfig()->getAll( 'module.js_layer.', TRUE );
 		if( !$config->get( 'active' ) )
 			return;
 
@@ -34,6 +28,6 @@ Layer.labelButtonNext = '.json_encode( $configButtonImage->get( 'next.label' ) )
 Layer.labelButtonInfo = '.json_encode( $configButtonImage->get( 'info.label' ) ).';
 Layer.labelButtonLoad = '.json_encode( $configButtonImage->get( 'download.label' ) ).';
 ';
-		$context->js->addScriptOnReady( $script );
+		$this->context->js->addScriptOnReady( $script );
 	}
 }

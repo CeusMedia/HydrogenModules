@@ -12,11 +12,11 @@ $preview	= HtmlTag::create( 'a', HtmlTag::create( 'img', NULL, array(
 		'src'   => $pathPreview.rawurlencode( $category->path ).'/'.$image->filename,
 		'class' => 'img-polaroid',
 	) ),
-	array(
+	[
 		'href'  => $pathPreview.$category->path.'/'.$image->filename,
 		'href'	=> './manage/catalog/gallery/viewOriginal/'.$image->galleryImageId.'?.jpg',
 		'class' => 'fancybox-auto',
-) );
+] );
 
 $uriOriginal	=  './manage/catalog/gallery/viewOriginal/'.$image->galleryImageId;
 $uriPreview		=  $pathPreview.rawurlencode( $category->path ).'/'.$image->filename;

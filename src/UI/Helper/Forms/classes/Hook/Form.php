@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Form extends Hook
@@ -8,16 +7,12 @@ class Hook_Form extends Hook
 	/**
 	 *	...
 	 *	@access		public
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Object scope to apply hook within
-	 *	@param		???				$module		???
-	 *	@param		object			$payload	Data array or object for hook event handler
+	 *	@return		void
 	 */
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload )
+	public function onViewRenderContent(): void
 	{
-		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload->content );
+		$processor		= new Logic_Shortcode( $this->env );
+		$processor->setContent( $this->payload['content'] );
 //		$words			= $env->getLanguage()->getWords( 'info/news' );
 		$shortCodes		= [
 			'form'		=> [
@@ -27,7 +22,7 @@ class Hook_Form extends Hook
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
-			$helper		= new View_Helper_Form( $env );
+			$helper		= new View_Helper_Form( $this->env );
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					$helper->setId( $attr['id'] );
@@ -38,11 +33,11 @@ class Hook_Form extends Hook
 					);
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$this->env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
 					break;
 				}
 			}
 		}
-		$payload->content	= $processor->getContent();
+		$this->payload['content']	= $processor->getContent();
 	}
 }
