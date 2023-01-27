@@ -1,6 +1,8 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Method as HttpMethod;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
@@ -68,8 +70,12 @@ if( $exceptions ){
 
 		$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path' ), ENT_QUOTES, 'utf-8' ).'</small>';
 		$method			= 'CLI';
-		if( preg_match( '/Web/', $exceptionEnv['class'] ) )
-			$method		= $exceptionRequest->getMethod()->get();
+		if( preg_match( '/Web/', $exceptionEnv['class'] ) && $exceptionRequest instanceof HttpRequest ){
+			try{
+				$method	= $exceptionRequest->getMethod();
+			}
+			catch( Error $e ){}
+		}
 		$envClass		= preg_replace( '/^(\\\\CeusMedia\\\\HydrogenFramework\\\\Environment\\\\)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
 		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';

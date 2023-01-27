@@ -60,6 +60,12 @@ class Model_Job_Code
 	{
 		if( !( file_exists( $filePath ) && ( is_file( $filePath ) || is_link( $filePath ) ) ) )
 			throw new DomainException( 'File is not existing' );
+
+		return $this->readFileWithParser( $filePath );
+	}
+
+	protected function readFileWithParser( string $filePath ): object
+	{
 		$parser	= new CeusMedia\PhpParser\Parser\Regular();
 		$file	= $parser->parseFile( $filePath, '' );
 		foreach( $file->getClasses() as $className => $class ){

@@ -88,23 +88,23 @@ class Model_Job
 	{
 		$this->jobs	= [];
 		if( $this->format === static::FORMAT_XML ){
-			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job ){
+			foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
 					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
 		else if( $this->format === static::FORMAT_JSON ){
-			foreach( self::readJobsFromJsonFiles( $this->pathJobs, $modes ) as $jobId => $job ){
+			foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job ){
 				if( $strict && array_key_exists( $jobId, $this->jobs ) )
 					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
 				$this->jobs[$jobId]	= $job;
 			}
 		}
 		else if( $this->format === static::FORMAT_AUTO ){
-			foreach( self::readJobsFromXmlFiles( $this->pathJobs, $modes ) as $jobId => $job )
+			foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job )
 				$this->jobs[$jobId]	= $job;
-			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job )
+			foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job )
 				$this->jobs[$jobId]	= $job;
 		}
 		else if( $this->format === static::FORMAT_MODULE ){
@@ -204,7 +204,7 @@ class Model_Job
 		return $jobs;
 	}
 
-	protected function readJobsFromXmlFiles( $modes = [] ): array
+	protected function readJobsFromXmlFiles( array $modes = [] ): array
 	{
 		$jobs			= [];
 		$index			= new RegexFileFilter( $this->pathJobs, '/\.xml$/i' );

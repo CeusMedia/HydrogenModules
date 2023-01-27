@@ -85,7 +85,7 @@ class Controller_Manage_Job_Definition extends Controller
 			$this->env->getMessenger()->noteError( 'Invalid Job Definition ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php5' );
+		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php' );
 		$definitionCode	= $this->modelCode->getClassMethodSourceCode( 'Job_'.$definition->className, $definition->methodName );
 		$runs	= $this->modelRun->getAllByIndex( 'jobDefinitionId', $jobDefinitionId, ['createdAt' => 'DESC'], [0, 10] );
 		$this->addData( 'definition', $definition );
