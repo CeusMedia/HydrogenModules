@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $connections */
+/** @var array $connectorMap */
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
@@ -17,7 +22,6 @@ $authTypes	= [
 	1	=> 'per Login',
 	2	=> 'mit Schlüssel',
 ];
-
 
 if( count( $connections ) > 0 ){
 	$rows	= [];
@@ -38,11 +42,12 @@ if( count( $connections ) > 0 ){
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 
 	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table'] );
-	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => 'manage/import/add', 'class' => 'btn btn-success'] );
 }
 
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => 'manage/import/add', 'class' => 'btn btn-success'] );
+
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Connections' ),
+	HtmlTag::create( 'h3', 'Importverbindungen' ),
 	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] ),

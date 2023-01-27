@@ -25,6 +25,7 @@
         "ext-dom": "*",
         "ext-exif": "*",
         "ext-fileinfo": "*",
+        "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
         "ext-zlib": "*",

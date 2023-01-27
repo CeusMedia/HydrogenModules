@@ -1,18 +1,19 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Import extends Controller
 {
-	protected $request;
-	protected $modelConnection;
-	protected $modelConnector;
-	protected $connectorMap		= [];
+	protected HttpRequest $request;
+	protected Model_Import_Connection $modelConnection;
+	protected Model_Import_Connector $modelConnector;
+	protected array $connectorMap		= [];
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
-			$this->modelConnection->add( array(
+			$this->modelConnection->add( [
 				'importConnectorId'	=> $this->request->get( 'importConnectorId' ),
 //				'creatorId'			=> $this->localUserId,
 				'status'			=> $this->request->get( 'status' ),
@@ -27,15 +28,15 @@ class Controller_Manage_Import extends Controller
 				'description'		=> $this->request->get( 'description' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			) );
-			$this->redirect( NULL, TRUE );
+			] );
+			$this->restart( NULL, TRUE );
 		}
 	}
 
-	public function edit( $connectionId )
+	public function edit( string $connectionId ): void
 	{
 		if( $this->request->getMethod()->isPost() ){
-			$this->modelConnection->edit( $connectionId, array(
+			$this->modelConnection->edit( $connectionId, [
 				'importConnectorId'	=> $this->request->get( 'importConnectorId' ),
 				'status'			=> $this->request->get( 'status' ),
 				'hostName'			=> $this->request->get( 'hostName' ),
@@ -48,14 +49,14 @@ class Controller_Manage_Import extends Controller
 				'title'				=> $this->request->get( 'title' ),
 				'description'		=> $this->request->get( 'description' ),
 				'modifiedAt'		=> time(),
-			) );
-			$this->redirect( NULL, TRUE );
+			] );
+			$this->restart( NULL, TRUE );
 		}
 		$connection	= $this->modelConnection->get( $connectionId );
 		$this->addData( 'connection', $connection );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$connections	= $this->modelConnection->getAll();
 		$this->addData( 'connections', $connections );
@@ -63,6 +64,10 @@ class Controller_Manage_Import extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

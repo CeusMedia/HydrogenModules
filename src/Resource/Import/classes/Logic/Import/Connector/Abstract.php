@@ -4,15 +4,17 @@ use CeusMedia\HydrogenFramework\Logic;
 
 abstract class Logic_Import_Connector_Abstract extends Logic
 {
-	protected $modelConnection;
+	protected Model_Import_Connection $modelConnection;
 
-	protected $options			= [];
+	protected $connection;
 
-	protected $limit			= 0;
+	protected array $options		= [];
 
-	protected $offet			= 0;
+	protected int $limit			= 0;
 
-	abstract public function find( $conditions, $orders = [], $limit = [] ): array;
+	protected int $offset			= 0;
+
+	abstract public function find( array $conditions, array $orders = [], array $limit = [] ): array;
 
 	abstract public function getFolders( bool $recursive = FALSE ): array;
 
@@ -45,9 +47,9 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 		return $this;
 	}
 
-	public function setOffset( int $offet ): self
+	public function setOffset( int $offset ): self
 	{
-		$this->offet	= $offet;
+		$this->offset	= $offset;
 		return $this;
 	}
 
@@ -58,7 +60,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 	}
 
-	protected function getEmptySourceItem( string $id, string $type, $conditions, array $orders, array $limit )
+	protected function getEmptySourceItem( string $id, string $type, $conditions, array $orders, array $limit ): object
 	{
 		return (object) [
 			'source'	=> (object) [

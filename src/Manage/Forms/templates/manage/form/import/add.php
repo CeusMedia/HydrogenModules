@@ -83,7 +83,7 @@ return '<div class="content-panel" id="rule-import-add">
 				</div>
 				<div class="span6">
 					<label for="input_options">Optionen <small class="muted">(im JSON-Format)</small></label>
-					<textarea name="rules" id="input_options" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">{}</textarea>
+					<textarea name="options" id="input_options" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">{}</textarea>
 				</div>
 			</div>
 <!--			<div class="row-fluid">

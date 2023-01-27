@@ -166,7 +166,7 @@ class Controller_Manage_Form_Fill extends Controller
 	{
 		error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
 		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
-		$origin	= $origin ? $origin : $this->env->getBaseUrl();
+		$origin	= $origin ?: $this->env->getBaseUrl();
 		$origin	= rtrim( $origin, '/' );
 		header( 'Access-Control-Allow-Origin: '.$origin );
 		header( 'Access-Control-Allow-Credentials: true' );
