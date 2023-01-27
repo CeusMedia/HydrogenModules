@@ -5,17 +5,17 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Helper_Auth_Local_Panel_Login implements Renderable
 {
-	protected $env;
-	protected $useOAuth2	= TRUE;
-	protected $useRemember	= TRUE;
-	protected $useRegister	= TRUE;
+	protected Environment $env;
+	protected bool $useOAuth2	= TRUE;
+	protected bool $useRemember	= TRUE;
+	protected bool $useRegister	= TRUE;
 
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$words		= $this->env->getLanguage()->getWords( 'auth/local' );
 		$wordsLogin	= $words['login'];

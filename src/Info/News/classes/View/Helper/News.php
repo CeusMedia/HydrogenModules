@@ -5,9 +5,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_News
 {
-	protected $env;
+	protected Environment $env;
 
-	protected $limit	= 10;
+	protected int $limit	= 10;
 
 	public function __construct( Environment $env )
 	{

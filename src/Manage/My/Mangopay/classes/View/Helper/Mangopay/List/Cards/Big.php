@@ -1,19 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
+class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract
+{
+	protected array $cards			= [];
+	protected ?bool $allowAdd		= NULL;
+	protected ?string $from			= NULL;
+	protected ?string $link			= NULL;
 
-	protected $allowAdd;
-	protected $cards;
-	protected $from;
-	protected $link;
-
-	public function allowAdd( $allow ){
+	public function allowAdd( bool $allow ): self
+	{
 		$this->allowAdd	= $allow;
 		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$helperCardLogo		= new View_Helper_Mangopay_Entity_CardProviderLogo( $this->env );
 		$helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_LARGE );
 		$helperCardNumber	= new View_Helper_Mangopay_Entity_CardNumber( $this->env );
@@ -46,17 +48,20 @@ class View_Helper_Mangopay_List_Cards_Big extends View_Helper_Mangopay_Abstract{
 		return $list;
 	}
 
-	public function setCards( $cards ){
+	public function setCards( array $cards ): self
+	{
 		$this->cards	= $cards;
 		return $this;
 	}
 
-	public function setFrom( $from ){
+	public function setFrom( string $from ): self
+	{
 		$this->from		= $from;
 		return $this;
 	}
 
-	public function setLink( $link ){
+	public function setLink( string $link ): self
+	{
 		$this->link		= $link;
 		return $this;
 	}

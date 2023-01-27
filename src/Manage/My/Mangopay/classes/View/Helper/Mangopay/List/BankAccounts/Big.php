@@ -1,19 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Abstract{
+class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Abstract
+{
+	protected array $bankAccounts		= [];
+	protected ?bool $allowAdd			= NULL;
+	protected ?string $from				= NULL;
+	protected ?string $link				= NULL;
 
-	protected $allowAdd;
-	protected $bankAccounts;
-	protected $from;
-	protected $link;
-
-	public function allowAdd( $allow ){
+	public function allowAdd( bool $allow ): self
+	{
 		$this->allowAdd	= $allow;
 		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$logoBank	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-bank fa-4x'] );
 		$logoAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus fa-4x'] );
 
@@ -47,17 +49,20 @@ class View_Helper_Mangopay_List_BankAccounts_Big extends View_Helper_Mangopay_Ab
 		return $list;
 	}
 
-	public function setBankAccounts( $bankAccounts ){
+	public function setBankAccounts( array $bankAccounts ): self
+	{
 		$this->bankAccounts	= $bankAccounts;
 		return $this;
 	}
 
-	public function setFrom( $from ){
+	public function setFrom( string $from ): self
+	{
 		$this->from		= $from;
 		return $this;
 	}
 
-	public function setLink( $link ){
+	public function setLink( string $link ): self
+	{
 		$this->link		= $link;
 		return $this;
 	}

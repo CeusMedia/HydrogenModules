@@ -6,12 +6,12 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_NewsList implements Countable
 {
-	protected $env;
-	protected $words;
-	protected $news		= [];
-	protected $limit	= 5;
+	protected Environment $env;
+	protected array $words;
+	protected array $news		= [];
+	protected int $limit		= 5;
 
-	public static $defaultAttributes	= [
+	public static array $defaultAttributes	= [
 		'title'		=> NULL,
 		'timestamp'	=> NULL,
 		'module'	=> NULL,
@@ -20,20 +20,19 @@ class View_Helper_NewsList implements Countable
 		'icon'		=> NULL,
 	];
 
-
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
 	}
 
-	public function add( $item ): self
+	public function add( object $item ): self
 	{
 		$this->news[]	= $item;
 		return $this;
 	}
 
-	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = [] ): int
+	public function collect( string $resource = 'Info_NewsList', string $event = 'collectNews', array $options = [] ): int
 	{
 		$this->env->getCaptain()->callHook( $resource, $event, $this, $options );
 		return $this->count();

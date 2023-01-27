@@ -1,19 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Manage_Content_Locale_List{
+class View_Helper_Manage_Content_Locale_List
+{
+	protected Environment $env;
+	protected array $files;
+	protected ?string $current		= NULL;
+	protected ?string $folder		= NULL;
+	protected ?string $language		= NULL;
 
-	protected $current;
-	protected $env;
-	protected $files;
-	protected $folder;
-	protected $language;
-
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$filterPrefix	= Controller_Manage_Content_Locale::$filterPrefix;
 		if( !$this->folder )
  			throw new RuntimeException( 'No folder set' );
@@ -51,20 +54,28 @@ class View_Helper_Manage_Content_Locale_List{
 		return $list;
 	}
 
-	public function setCurrent( $current ){
+	public function setCurrent( string $current ): self
+	{
 		$this->current	= $current;
+		return $this;
 	}
 
-	public function setFiles( $files ){
+	public function setFiles( array $files ): self
+	{
 		$this->files	= $files;
 		ksort( $this->files, SORT_FLAG_CASE | SORT_NATURAL );
+		return $this;
 	}
 
-	public function setFolder( $folder ){
+	public function setFolder( string $folder ): self
+	{
 		$this->folder	= $folder;
+		return $this;
 	}
 
-	public function setLanguage( $language ){
+	public function setLanguage( string $language ): self
+	{
 		$this->language	= $language;
+		return $this;
 	}
 }

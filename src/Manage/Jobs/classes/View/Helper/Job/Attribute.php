@@ -72,10 +72,10 @@ class View_Helper_Job_Attribute
 		Model_Job_Schedule::STATUS_PAUSED		=> 'fa fa-fw fa-pause',
 	];
 
-	protected $env;
-	protected $attribute		= 0;
-	protected $object;
-	protected $id;
+	protected Environment $env;
+	protected int $attribute		= 0;
+	protected ?object $object		= NULL;
+	protected array $words;
 
 	public function __construct( Environment $env )
 	{
@@ -131,7 +131,7 @@ class View_Helper_Job_Attribute
 		return $this;
 	}
 
-	public function setObject( $jobDefinitionOrRun ): self
+	public function setObject( object $jobDefinitionOrRun ): self
 	{
 		$this->object	= $jobDefinitionOrRun;
 		return $this;

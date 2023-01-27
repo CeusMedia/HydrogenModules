@@ -8,12 +8,12 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Info_Contact_Form_Modal
 {
 	protected Environment $env;
+	protected Dictionary $moduleConfig;
 	protected ?string $id				= NULL;
 	protected ?string $subject			= NULL;
 	protected ?string $heading			= NULL;
 	protected ?string $type				= NULL;
 	protected array $types				= [];
-	protected Dictionary $moduleConfig;
 	protected array $moduleWords;
 
 	public function __construct( Environment $env )
@@ -31,17 +31,17 @@ class View_Helper_Info_Contact_Form_Modal
 		$w			= (object) $this->moduleWords['modal-form'];
 		$optType	= $this->renderTypeOptions();
 
-		$fieldSubject	= array(
+		$fieldSubject	= [
 			Html::create( 'label', $w->labelSubject, ['for' => 'input_subject', 'class' => 'mandatory required'] ),
-			Html::create( 'input', NULL, array(
+			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'subject',
 				'id'		=> 'input_subject',
 				'class'		=> 'span12',
 				'required'	=> 'required',
 				'value'		=> htmlentities( $this->subject, ENT_QUOTES, 'utf-8' ),
-			) ),
-		);
+			] ),
+		];
 		$fieldType	= array(
 			Html::create( 'label', $w->labelType, ['for' => 'input_type'] ),
 			Html::create( 'select', $optType, [
@@ -81,7 +81,7 @@ class View_Helper_Info_Contact_Form_Modal
 				'class'		=> 'span12',
 			] ),
 		);
-		$fieldPerson	= array(
+		$fieldPerson	= [
 			Html::create( 'label', $w->labelPerson, ['for' => 'input_person', 'class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -90,8 +90,8 @@ class View_Helper_Info_Contact_Form_Modal
 				'class'		=> 'span12',
 				'required' => 'required',
 			] ),
-		);
-		$fieldCompany	= array(
+		];
+		$fieldCompany	= [
 			Html::create( 'label', $w->labelCompany, ['for' => 'input_company'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -99,8 +99,8 @@ class View_Helper_Info_Contact_Form_Modal
 				'id'		=> 'input_company',
 				'class'		=> 'span12',
 			] ),
-		);
-		$fieldStreet	= array(
+		];
+		$fieldStreet	= [
 			Html::create( 'label', $w->labelStreet, ['for' => 'input_street'/*, 'class' => 'mandatory required'*/] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -109,18 +109,8 @@ class View_Helper_Info_Contact_Form_Modal
 				'class'		=> 'span12',
 //				'required'	=> 'required',
 			] ),
-		);
-		$fieldCity	= array(
-			Html::create( 'label', $w->labelCity, ['for' => 'input_city'/*, 'class' => 'mandatory required'*/] ),
-			Html::create( 'input', NULL, [
-				'type'		=> 'text',
-				'name'		=> 'city',
-				'id'		=> 'input_city',
-				'class'		=> 'span12',
-//				'required'	=> 'required',
-			] ),
-		);
-		$fieldPostcode	= array(
+		];
+		$fieldPostcode	= [
 			Html::create( 'label', 'PLZ', ['for' => 'input_postcode'/*, 'class' => 'mandatory required'*/] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -129,34 +119,44 @@ class View_Helper_Info_Contact_Form_Modal
 				'class'		=> 'span12',
 //				'required'	=> 'required',
 			] ),
-		);
+		];
+		$fieldCity	= [
+			Html::create( 'label', $w->labelCity, ['for' => 'input_city'/*, 'class' => 'mandatory required'*/] ),
+			Html::create( 'input', NULL, [
+				'type'		=> 'text',
+				'name'		=> 'city',
+				'id'		=> 'input_city',
+				'class'		=> 'span12',
+//				'required'	=> 'required',
+			] ),
+		];
 		if( !$this->moduleConfig->get( 'modal.show.company' ) )
 			$fieldCompany	= '';
 
-		$form	= Html::create( 'div', array(
-			Html::create( 'div', array(
+		$form	= Html::create( 'div', [
+			Html::create( 'div', [
 				Html::create( 'div', $fieldSubject, ['class' => 'span10 offset1'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
 				Html::create( 'div', $fieldType, ['class' => 'span10 offset1'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
 				Html::create( 'div', $fieldBody, ['class' => 'span10 offset1'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
 				Html::create( 'div', $fieldEmail, ['class' => 'span6 offset1'] ),
 				Html::create( 'div', $fieldPhone, ['class' => 'span4'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
 				Html::create( 'div', $fieldPerson, ['class' => 'span5 offset1'] ),
 				Html::create( 'div', $fieldCompany, ['class' => 'span5'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
 				Html::create( 'div', $fieldStreet, ['class' => 'span5 offset1'] ),
 				Html::create( 'div', $fieldCity, ['class' => 'span3'] ),
 				Html::create( 'div', $fieldPostcode, ['class' => 'span2'] ),
-			), ['class' => 'row-fluid optional type type-request'] ),
-		) );
+			], ['class' => 'row-fluid optional type type-request'] ),
+		] );
 
 		$iconCancel	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 		$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -176,7 +176,7 @@ class View_Helper_Info_Contact_Form_Modal
 	}
 
 	//  --  SETTERS  --  //
-	public function setId( $id ): self
+	public function setId( string $id ): self
 	{
 		$this->id		= $id;
 		return $this;
@@ -194,13 +194,13 @@ class View_Helper_Info_Contact_Form_Modal
 		return $this;
 	}
 
-	public function setType( $type ): self
+	public function setType( string $type ): self
 	{
 		$this->type		= $type;
 		return $this;
 	}
 
-	public function setTypes( $types ): self
+	public function setTypes( array $types ): self
 	{
 		$this->types		= $types;
 		return $this;

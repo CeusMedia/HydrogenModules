@@ -15,7 +15,7 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$this->env	= $env;
 	}
 
-	public function add( $item ): self
+	public function add( object $item ): self
 	{
 		$this->news[]	= $item;
 		return $this;
@@ -51,7 +51,7 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 				'class' => 'label label-'.$badgeClass,
 				'style'	=> 'font-weight: normal'
 			] );
-			$buttons	= array(
+			$buttons	= [
 				HtmlTag::create( 'button', $iconAck, [
 					'class'				=> 'btn btn-mini',
 					'title'				=> 'ausblenden',
@@ -59,8 +59,8 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 					'data-id'			=> $item->id,
 					'data-timestamp'	=> $item->timestamp,
 				] ),
-			);
-			$type		= isset( $item->typeLabel ) ? $item->typeLabel : $item->type;
+			];
+			$type		= $item->typeLabel ?? $item->type;
 			$type		= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
 			$list[$key]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $date, ['style' => 'text-align: right'] ),

@@ -6,9 +6,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_CategorySelector
 {
-	protected $env;									// \CeusMedia\HydrogenFramework\Environment
-	protected $categories		 = [];
-	protected $categoryId;
+	protected Environment $env;						// \CeusMedia\HydrogenFramework\Environment
+	protected array $categories			= [];
+	protected ?string $categoryId		= NULL;
 
 	/**
 	 *	Constructor.
@@ -53,13 +53,13 @@ class View_Helper_Info_Manual_CategorySelector
 			<script></script>';
 	}
 
-	public function setActiveCategoryId( $categoryId ): self
+	public function setActiveCategoryId( string $categoryId ): self
 	{
 		$this->categoryId	= $categoryId;
 		return $this;
 	}
 
-	public function setCategories( $categories ): self
+	public function setCategories( array $categories ): self
 	{
 		$this->categories	= $categories;
 		return $this;

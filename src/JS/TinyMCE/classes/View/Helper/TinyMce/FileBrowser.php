@@ -106,7 +106,7 @@ class View_Helper_TinyMce_FileBrowser
 		$this->timePhraser	= new View_Helper_TimePhraser( $this->env );
 	}
 
-	protected function filterFoldersByPath( $items, string $path ): array
+	protected function filterFoldersByPath( array $items, string $path ): array
 	{
 		$list	= [];
 		foreach( $items as $item ){
@@ -127,7 +127,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $list;
 	}
 
-	protected function filterItemsByPath( $items, string $path ): array
+	protected function filterItemsByPath( array $items, string $path ): array
 	{
 		$list	= [];
 		foreach( $items as $item ){

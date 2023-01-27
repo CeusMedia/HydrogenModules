@@ -6,8 +6,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Dashboard_Modal_AddPanel extends Abstraction
 {
-	protected $dashboard;
-	protected $panels		= [];
+	protected ?object $dashboard	= NULL;
+	protected array $panels			= [];
 
 	public function __construct( Environment $env )
 	{
@@ -72,7 +72,7 @@ class View_Helper_Info_Dashboard_Modal_AddPanel extends Abstraction
 </form>';
 	}
 
-	public function setDashboard( $dashboard ): self
+	public function setDashboard( object $dashboard ): self
 	{
 		$this->dashboard	= $dashboard;
 		return $this;

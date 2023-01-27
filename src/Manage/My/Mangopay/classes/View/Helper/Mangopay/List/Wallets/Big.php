@@ -3,17 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstract{
 
-	protected $allowAdd;
-	protected $wallets;
-	protected $from;
-	protected $link;
+	protected array $wallets		= [];
+	protected ?bool $allowAdd		= NULL;
+	protected ?string $from			= NULL;
+	protected ?string $link			= NULL;
 
-	public function allowAdd( $allow ){
+	public function allowAdd( bool $allow ): self
+	{
 		$this->allowAdd	= $allow;
 		return $this;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$helperWalletLogo	= new View_Helper_Mangopay_Entity_WalletLogo( $this->env );
 		$helperWalletLogo->setSize( View_Helper_Mangopay_Entity_WalletLogo::SIZE_LARGE );
 
@@ -39,17 +41,20 @@ class View_Helper_Mangopay_List_Wallets_Big extends View_Helper_Mangopay_Abstrac
 		return $list;
 	}
 
-	public function set( $wallets ){
+	public function set( array $wallets ): self
+	{
 		$this->wallets	= $wallets;
 		return $this;
 	}
 
-	public function setFrom( $from ){
+	public function setFrom( string $from ): self
+	{
 		$this->from		= $from;
 		return $this;
 	}
 
-	public function setLink( $link ){
+	public function setLink( string $link ): self
+	{
 		$this->link		= $link;
 		return $this;
 	}
