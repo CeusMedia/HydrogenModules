@@ -5,12 +5,14 @@ use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Issue extends View{
-
-	public function add(){
+class View_Work_Issue extends View
+{
+	public function add(): void
+	{
 	}
 
-	public function ajaxRenderDashboardPanel(){
+	public function ajaxRenderDashboardPanel(): string
+	{
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$modelIssue		= new Model_Issue( $this->env );
@@ -40,13 +42,16 @@ class View_Work_Issue extends View{
 		return HtmlTag::create( 'div', $table );
 	}
 
-	public function edit(){
+	public function edit(): void
+	{
 	}
 
-	public function index(){
+	public function index(): void
+	{
 	}
 
-	public function renderOptions( $options, $key, $values, $class = '' ){
+	public function renderOptions( array $options, $key, $values, string $class = '' ): string
+	{
 		$list		= [];
 		if( !is_array( $values ) )
 			$values = $values ? [$values] : [];
@@ -71,7 +76,8 @@ class View_Work_Issue extends View{
 	 *	@return 	string
 	 *	@todo		 finish integration (words, config etc.)
 	 */
-	public function buildGraph( $data, $words, $type ){
+	public function buildGraph( array $data, $words, $type ): string
+	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
 

@@ -24,7 +24,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 		$issue		= $this->data['issue'];
 		$message	= [];
 		if( $issue->reporterId ){
-			$reporter	= $this->renderUser( $issue->reporter, TRUE );
+			$reporter	= $this->renderUser( $issue->reporter );
 			$message[]	= $reporter.' hat einen neuen Problemreport geschrieben.';
 		}
 		else
@@ -73,7 +73,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 '.View_Helper_Mail_Text::underscore( 'Neuer Eintrag' ).PHP_EOL.'
 '.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
-'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
+'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL;
 
 		$list	= [];
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )

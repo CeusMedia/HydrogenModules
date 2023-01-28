@@ -86,7 +86,7 @@ class Controller_Work_Mail_Check extends Controller
 		}
 	}
 
-	public function ajaxEditAddress()
+	public function ajaxEditAddress(): void
 	{
 		$addressId	= $this->request->get( 'id' );
 		$address	= $this->request->get( 'address' );
@@ -427,7 +427,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $groupId )
+	public function removeGroup( string $groupId ): void
 	{
 		$group	= $this->checkGroupId( $groupId );
 		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
@@ -437,7 +437,8 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( 'group', TRUE );
 	}
 
-	public function status( $groupId ){
+	public function status( string $groupId ): void
+	{
 		$group		= $this->checkGroupId( $groupId );
 		$indices	= ['mailGroupId' => $groupId];
 		$this->setData( [

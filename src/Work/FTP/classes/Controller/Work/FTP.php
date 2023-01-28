@@ -1,12 +1,16 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Time\Clock;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_FTP extends Controller
 {
+	protected Dictionary $config;
+	protected Dictionary $session;
+
 	/**	@var	Logic_FTP	$logic */
-	protected $logic;
+	protected Logic_FTP $logic;
 
 	public function login()
 	{
@@ -34,7 +38,7 @@ class Controller_Work_FTP extends Controller
 
 	public function ajaxIndex()
 	{
-		$path		= $this->env->getRequest()->getFromResource( 'path', 'GET' );
+		$path		= $this->env->getRequest()->getFromSource( 'path', 'GET' );
 		$folders	= [];
 		$files		= [];
 		foreach( $this->logic->index( $path ) as $entry ){
@@ -80,9 +84,9 @@ class Controller_Work_FTP extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->config			= $this->env->getConfig();
-		$this->session	= $this->env->getSession();
-		$this->logic	= new Logic_FTP();
+		$this->config		= $this->env->getConfig();
+		$this->session		= $this->env->getSession();
+		$this->logic		= new Logic_FTP( $this->env );
 	}
 
 	protected function connect()

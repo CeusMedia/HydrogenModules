@@ -8,7 +8,7 @@ return $textLoginTop.'
 <div class="row-fluid">
 	<div class="span6">
 		<h3>Verbindung zu FTP-Server herstellen</h3>
-		<form action="./work/FTP/login" methods="post">
+		<form action="./work/FTP/login" method="post">
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_ftp_host">Host <small class="muted"><em>(z.B. example.org)</em></small></label>

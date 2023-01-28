@@ -1,14 +1,17 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Issue extends Hook
 {
-	static public function onRegisterTimerModule( Environment $env, $context, $module, $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onRegisterTimerModule(): void
 	{
-		$context->registerModule( (object) [
+		$this->context->registerModule( (object) [
 			'moduleId'		=> 'Work_Issues',
 			'typeLabel'		=> 'Problem',
 			'modelClass'	=> 'Model_Issue',
@@ -16,11 +19,15 @@ class Hook_Work_Issue extends Hook
 		] );
 	}
 
-	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onRegisterDashboardPanels(): void
 	{
-		if( !$env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'work-issues', [
+		$this->context->registerPanel( 'work-issues', [
 			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
 			'title'			=> 'offene Probleme',
 			'heading'		=> 'offene Probleme',
@@ -29,31 +36,89 @@ class Hook_Work_Issue extends Hook
 		] );
 	}
 
-	static public function onProjectRemove( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onProjectRemove(): void
 	{
-		$projectId	= $payload['projectId'];
-		$model		= new Model_Issue( $env );
-		$logic		= new Logic_Issue( $env );
+		$projectId	= $this->payload['projectId'];
+		$model		= new Model_Issue( $this->env );
+		$logic		= new Logic_Issue( $this->env );
 		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $issue ){
 			$logic->remove( $issue->issueId );
 		}
 	}
 
 	/**
-	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	static public function onUserRemove( Environment $env, $context, $module, $payload )
+	public function onListUserRelations(): void
 	{
-		$payload	= (object) $payload;
+		$payload	= (object) $this->payload;
 		if( empty( $payload->userId ) ){
-			$message	= 'Hook "Work_Issues::onUserRemove" is missing user ID in data.';
-			$env->getMessenger()->noteFailure( $message );
+			$message	= 'Hook "Work_Issues::onListUserRelations" is missing user ID in data.';
+			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$logic			= Logic_Issue::getInstance( $env );
-		$modelIssue		= new Model_Issue( $env );
-		$modelChange	= new Model_Issue_Change( $env );
-		$modelNote		= new Model_Issue_Note( $env );
+		$modelIssue		= new Model_Issue( $this->env );
+
+		$activeOnly		= $payload->activeOnly ?? FALSE;
+		$linkable		= $payload->linkable ?? FALSE;
+		$statusesActive	= [0, 1, 2, 3, 4, 5];
+		$list			= [];
+		$indices		= ['reporterId' => $payload->userId];
+		if( $activeOnly )
+			$indices['status']	= $statusesActive;
+		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
+		$icons			= array(
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
+		);
+		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
+		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
+		foreach( $reportedIssues as $issue ){
+			$icon		= $icons[$issue->type];
+			$isOpen		= in_array( $issue->status, $statusesActive );
+			$status		= '('.$words['states'][$issue->status].')';
+			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
+			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
+			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
+			$list[]		= (object) [
+				'id'		=> $payload->linkable ? $issue->issueId : NULL,
+				'label'		=> $label,
+			];
+		}
+		View_Helper_ItemRelationLister::enqueueRelations(
+			$payload,																				//  hook content data
+			$this->module,																			//  module called by hook
+			'entity',																			//  relation type: entity or relation
+			$list,																					//  list of related items
+			$words['hook-relations']['label'],														//  label of type of related items
+			'Work_Issue',																	//  controller of entity
+			'edit'																			//  action to view or edit entity
+		);
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
+	 */
+	public function onUserRemove(): void
+	{
+		$payload	= (object) $this->payload;
+		if( empty( $payload->userId ) ){
+			$message	= 'Hook "Work_Issues::onUserRemove" is missing user ID in data.';
+			$this->env->getMessenger()->noteFailure( $message );
+			return;
+		}
+		$logic			= Logic_Issue::getInstance( $this->env );
+		$modelIssue		= new Model_Issue( $this->env );
+		$modelChange	= new Model_Issue_Change( $this->env );
+		$modelNote		= new Model_Issue_Note( $this->env );
 
 		$reportedIssues	= $modelIssue->getAllByIndex( 'reporterId', $payload->userId );
 		foreach( $reportedIssues as $reportedIssue )
@@ -75,78 +140,34 @@ class Hook_Work_Issue extends Hook
 			$modelNote->remove( $note->issueNoteId );
 
 		if( isset( $payload->counts ) )
-			$payload->counts['Work_Issues']	= (object) array(
+			$payload->counts['Work_Issues']	= (object) [
 				'entities'	=> count( $reportedIssues ) + count( $managedIssues ) + count( $changes ) + count( $notes ),
-			);
-	}
-
-	static public function onListUserRelations( Environment $env, $context, $module, $payload )
-	{
-		$payload	= (object) $payload;
-		if( empty( $payload->userId ) ){
-			$message	= 'Hook "Work_Issues::onListUserRelations" is missing user ID in data.';
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-		$modelIssue		= new Model_Issue( $env );
-
-		$activeOnly		= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
-		$linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
-		$statusesActive	= [0, 1, 2, 3, 4, 5];
-		$list			= [];
-		$indices		= ['reporterId' => $payload->userId];
-		if( $activeOnly )
-			$indices['status']	= $statusesActive;
-		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
-		$icons			= array(
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
-		$words			= $env->getLanguage()->getWords( 'work/issue' );
-		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
-		foreach( $reportedIssues as $issue ){
-			$icon		= $icons[$issue->type];
-			$isOpen		= in_array( $issue->status, $statusesActive );
-			$status		= '('.$words['states'][$issue->status].')';
-			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
-			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
-			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) [
-				'id'		=> $payload->linkable ? $issue->issueId : NULL,
-				'label'		=> $label,
 			];
-		}
-		View_Helper_ItemRelationLister::enqueueRelations(
-			$payload,																				//  hook content data
-			$module,																				//  module called by hook
-			'entity',																				//  relation type: entity or relation
-			$list,																					//  list of related items
-			$words['hook-relations']['label'],														//  label of type of related items
-			'Work_Issue',																			//  controller of entity
-			'edit'																					//  action to view or edit entity
-		);
 	}
 
-	static public function onListProjectRelations( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onListProjectRelations(): void
 	{
-		$modelProject	= new Model_Project( $env );
+		$modelProject	= new Model_Project( $this->env );
 		if( empty( $payload->projectId ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations" is missing project ID in data.';
-			$env->getMessenger()->noteFailure( $message );
+			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		if( !( $project = $modelProject->get( $payload->projectId ) ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations": Invalid project ID.';
-			$env->getMessenger()->noteFailure( $message );
+			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$payload->activeOnly	= isset( $payload->activeOnly ) ? $payload->activeOnly : FALSE;
-		$payload->linkable		= isset( $payload->linkable ) ? $payload->linkable : FALSE;
-		$language		= $env->getLanguage();
+		$payload->activeOnly	= $payload->activeOnly ?? FALSE;
+		$payload->linkable		= $payload->linkable ?? FALSE;
+		$language		= $this->env->getLanguage();
 		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
-		$modelIssue		= new Model_Issue( $env );
+		$modelIssue		= new Model_Issue( $this->env );
 		$indices		= ['projectId' => $payload->projectId];
 		if( $payload->activeOnly )
 			$indices['status']	= $statusesActive;
@@ -172,12 +193,12 @@ class Hook_Work_Issue extends Hook
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$payload,																				//  hook content data
-			$module,																				//  module called by hook
-			'entity',																				//  relation type: entity or relation
+			$this->module,																			//  module called by hook
+			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label'],														//  label of type of related items
-			'Work_Issue',																			//  controller of entity
-			'edit'																					//  action to view or edit entity
+			'Work_Issue',																	//  controller of entity
+			'edit'																			//  action to view or edit entity
 		);
 	}
 }

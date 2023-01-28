@@ -5,8 +5,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_Changes
 {
-	protected $env;
-	protected $modelNote;
+	protected Environment $env;
+	protected Model_Issue_Note $modelNote;
+	protected ?object $issue		= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -47,7 +48,7 @@ class View_Helper_Work_Issue_Changes
 		return $table;
 	}
 
-	public function setIssue( $issue ): self
+	public function setIssue( object $issue ): self
 	{
 		$this->issue	= $issue;
 		return $this;

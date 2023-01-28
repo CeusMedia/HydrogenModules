@@ -11,9 +11,17 @@ class View_Helper_Work_Issue_ChangeFacts
 		self::FORMAT_TEXT,
 	];
 
-	protected $note;
-	protected $format		= self::FORMAT_HTML;
+	protected Environment $env;
+	protected Model_User $modelUser;
+	protected Model_Issue_Change $modelChange;
+	protected ?View_Helper_Mail_Facts $factsChanges		= NULL;
+	protected ?object $note								= NULL;
+	protected int $format								= self::FORMAT_HTML;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
@@ -34,7 +42,7 @@ class View_Helper_Work_Issue_ChangeFacts
 		return $this;
 	}
 
-	public function setNote( $note ): self
+	public function setNote( object $note ): self
 	{
 		$this->note	= $note;
 		$this->prepareFacts();
@@ -43,7 +51,7 @@ class View_Helper_Work_Issue_ChangeFacts
 
 	//  --  PROTECTED  --  //
 
-	protected function prepareFacts()
+	protected function prepareFacts(): void
 	{
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		$changerHtml	= '-';
@@ -68,7 +76,7 @@ class View_Helper_Work_Issue_ChangeFacts
 
 		$changedAt		= '<span class="issue-note-date">'.date( 'd.m.Y H:i:s', $this->note->timestamp ).'</span>';
 
-		$this->factsChanges		= new View_Helper_Mail_Facts( $this->env );
+		$this->factsChanges		= new View_Helper_Mail_Facts();
 		$this->factsChanges->setLabels( $words['changes'] );
 		$this->factsChanges->setListClass( 'facts-vertical' );
 		$this->factsChanges->setTextLabelLength( 13 );

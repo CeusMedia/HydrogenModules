@@ -3,13 +3,22 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Work_Graph extends View{
+class View_Work_Graph extends View
+{
+	public function index(): void
+	{
+	}
 
-	public function index(){}
-	public function node(){}
-	public function edge(){}
+	public function node(): void
+	{
+	}
 
-	public function renderFacts( $facts ){
+	public function edge(): void
+	{
+	}
+
+	public function renderFacts( array $facts ): string
+	{
 		$list	= [];
 		foreach( $facts as $fact ){
 			if( !isset( $fact[2] ) )
@@ -31,7 +40,7 @@ class View_Work_Graph extends View{
 			$list[]	= HtmlTag::create( 'dd', $value );
 		}
 		if( !$list )
-			return;
+			return '';
 		return HtmlTag::create( 'dl', $list, [
 			'class'	=> 'dl-horizontal',
 		] );

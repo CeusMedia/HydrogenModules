@@ -13,9 +13,9 @@ class View_Helper_Work_Issue_ChangeNote
 		self::FORMAT_TEXT,
 	];
 
-	protected $env;
-	protected $note;
-	protected $format		= self::FORMAT_HTML;
+	protected Environment $env;
+	protected ?object $note		= NULL;
+	protected int $format		= self::FORMAT_HTML;
 
 	public function __construct( Environment $env )
 	{
@@ -35,7 +35,7 @@ class View_Helper_Work_Issue_ChangeNote
 		return $this;
 	}
 
-	public function setNote( $note ): self
+	public function setNote( object $note ): self
 	{
 		$this->note	= $note;
 		return $this;
