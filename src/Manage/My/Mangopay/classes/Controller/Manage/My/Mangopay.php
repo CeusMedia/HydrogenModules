@@ -1,8 +1,8 @@
 <?php
 class Controller_Manage_My_Mangopay extends Controller_Manage_My_Mangopay_Abstract{
 
-	public function index(){
-
+	public function index(): void
+	{
 		try{
 			$cacheKey	= 'user_'.$this->userId.'_bankaccounts';
 			if( is_null( $bankAccounts = $this->cache->get( $cacheKey ) ) ){
@@ -52,5 +52,4 @@ class Controller_Manage_My_Mangopay extends Controller_Manage_My_Mangopay_Abstra
 			$this->restart( NULL );
 		}
 	}
-
 }

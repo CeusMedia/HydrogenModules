@@ -3,13 +3,14 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Mangopay_Entity_IBAN extends View_Helper_Mangopay_Abstract{
+class View_Helper_Mangopay_Entity_IBAN extends View_Helper_Mangopay_Abstract
+{
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'tt';
+	protected string $iban;
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'tt';
-	protected $iban;
-
-	public function render(){
+	public function render(): string
+	{
 		$parts		= str_split( trim( $this->iban ), 4 );
 		$label		= implode( ' ', $parts );
 		return HtmlTag::create( $this->nodeName, $label, [
@@ -17,26 +18,30 @@ class View_Helper_Mangopay_Entity_IBAN extends View_Helper_Mangopay_Abstract{
 		] );
 	}
 
-	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
+	public static function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ): string
+	{
 		$instance	= new self( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $iban )->render();
 	}
 
-	public function set( $iban ){
+	public function set( string $iban ): self
+	{
 		$this->iban	= $iban;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}

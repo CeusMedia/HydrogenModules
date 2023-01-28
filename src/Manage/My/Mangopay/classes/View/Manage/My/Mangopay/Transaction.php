@@ -1,9 +1,15 @@
 <?php
-class View_Manage_My_Mangopay_Transaction extends View_Manage_My_Mangopay{
+class View_Manage_My_Mangopay_Transaction extends View_Manage_My_Mangopay
+{
+	public function index(): void
+	{
+	}
 
-	public function index(){}
+	public function view(): void
+	{
+	}
 
-	public function view(){}
-
-	public function refund(){}
+	public function refund(): void
+	{
+	}
 }

@@ -1,12 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
+class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay
+{
+	protected array $words;
 
-	protected $words;
-
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		parent::__construct( $env );
 		$this->setOptions( [
 			'linkItem'	=> './manage/my/mangopay/card/view/%s',
@@ -16,7 +18,8 @@ class View_Helper_Panel_Mangopay_Cards extends View_Helper_Panel_Mangopay{
 		$this->words	= $this->env->getLanguage()->getWords( 'manage/my/mangopay/card' );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$rows		= [];
 		foreach( $this->data as $item ){
 		//	if( !$item->Active )

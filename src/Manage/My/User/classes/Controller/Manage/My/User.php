@@ -1,6 +1,9 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	@todo		localize
@@ -9,9 +12,9 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Manage_My_User extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 	protected Logic_Authentication $logicAuth;
 	protected Model_User $modelUser;
 	protected string $userId;
@@ -19,7 +22,7 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
-	public function edit()
+	public function edit(): void
 	{
 		$this->checkConfirmationPassword();
 
@@ -75,7 +78,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
 	 */
-	public function email()
+	public function email(): void
 	{
 		$this->checkConfirmationPassword();
 
@@ -110,7 +113,7 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$roleId		= $this->session->get( 'auth_role_id' );
@@ -145,7 +148,7 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
-	public function password()
+	public function password(): void
 	{
 		$words		= (object) $this->getWords( 'password' );
 		$user		= $this->modelUser->get( $this->userId );
@@ -190,7 +193,7 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( './manage/my/user' );
 	}
 
-	public function remove( $confirmed = NULL )
+	public function remove( $confirmed = NULL ): void
 	{
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'user', $this->modelUser->get( $this->userId ) );
@@ -220,7 +223,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo   	Redesign: Send mail with confirmation before applying new username
 	 */
-	public function username()
+	public function username(): void
 	{
 		$this->checkConfirmationPassword();
 

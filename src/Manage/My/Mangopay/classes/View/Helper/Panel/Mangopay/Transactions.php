@@ -4,9 +4,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay{
-
-	public function __construct( Environment $env, $options = [] ){
+class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
+{
+	public function __construct( Environment $env, array $options = [] )
+	{
 		parent::__construct( $env, array_merge( [
 			'linkItem'	=> './manage/my/mangopay/transaction/view/%s',
 			'linkBack'	=> '',
@@ -14,7 +15,8 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 		], $options ) );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$rows		= [];
 		foreach( $this->data as $transaction ){
 //			print_m( $transaction );die;
@@ -67,14 +69,15 @@ class View_Helper_Panel_Mangopay_Transactions extends View_Helper_Panel_Mangopay
 		</div>';
 	}
 
-/*	public function render(){
-		$list	= new View_Helper_Accordion( 'user-transations' );
+/*	public function render(): string
+	{
+		$list	= new View_Helper_Accordion( 'user-transactions' );
 		$list->setSingleOpen( TRUE );
 		foreach( $this->data as $item ){
 			$id			= HtmlTag::create( 'small', $item->Id.':', ['class' => 'muted'] );
 			$title		= $id.'&nbsp;'.self::formatMoney( $item->DebitedFunds );
 			$content	= ltrim( print_m( $item, NULL, NULL, TRUE ), '<br/>' );
-			$list->add( 'user-transation-'.$item->Id, $title, $content );
+			$list->add( 'user-transaction-'.$item->Id, $title, $content );
 		}
 		return '
 		<div class="content-panel">

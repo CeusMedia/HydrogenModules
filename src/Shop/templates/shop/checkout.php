@@ -3,6 +3,12 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $address $w */
 
 $w				= (object) $words['checkout'];
 

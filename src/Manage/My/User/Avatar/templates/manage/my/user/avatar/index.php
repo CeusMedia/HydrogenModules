@@ -1,8 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var Dictionary $moduleConfig */
 
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );

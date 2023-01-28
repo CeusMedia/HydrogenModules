@@ -4,7 +4,8 @@
  */
 class Controller_Manage_My_Mangopay_Bank_Debit extends Controller_Manage_My_Mangopay_Abstract
 {
-	protected $words;
+	protected array $words;
+	protected string $sessionPrefix;
 
 	public function index( $bankAccountId, $walletId = NULL, $amount = NULL )
 	{

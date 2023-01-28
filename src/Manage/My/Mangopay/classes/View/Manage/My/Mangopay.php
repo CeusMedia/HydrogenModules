@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_My_Mangopay extends View
 {
-	public static function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 )
+	public static function formatMoney( $money, string $separator = "&nbsp;", int $accuracy = 2 ): string
 	{
 		$price		= number_format( $money->Amount / 100, $accuracy, ',', '.' );
 //		$pattern	= '{Amount}&nbsp;{Currency}';
@@ -13,7 +13,7 @@ class View_Manage_My_Mangopay extends View
 		return sprintf( $pattern, $money->Currency, $price );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 

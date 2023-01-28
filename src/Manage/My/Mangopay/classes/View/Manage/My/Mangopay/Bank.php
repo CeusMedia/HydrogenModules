@@ -1,14 +1,23 @@
 <?php
-class View_Manage_My_Mangopay_Bank extends View_Manage_My_Mangopay{
+class View_Manage_My_Mangopay_Bank extends View_Manage_My_Mangopay
+{
+	public function add(): void
+	{
+	}
 
-	public function add(){}
+	public function index(): void
+	{
+	}
 
-	public function index(){}
+	public function payIn(): void
+	{
+	}
 
-	public function payIn(){}
+	public function payOut(): void
+	{
+	}
 
-	public function payOut(){}
-
-	public function view(){}
-
+	public function view(): void
+	{
+	}
 }

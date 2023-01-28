@@ -11,16 +11,17 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
 	const NUMBER_FORMAT_DOT				= 0;
 	const NUMBER_FORMAT_COMMA			= 1;
 
-	protected $accuracy			= 2;
-	protected $amount			= 0;
-	protected $currency			= "EUR";
-	protected $format			= self::FORMAT_CURRENCY_SPACE_AMOUNT;
-	protected $nodeClass		= NULL;
-	protected $nodeName			= 'span';
-	protected $numberFormat		= self::NUMBER_FORMAT_DOT;
-	protected $separator		= "&nbsp;";
+	protected int $accuracy				= 2;
+	protected int $amount				= 0;
+	protected string $currency			= "EUR";
+	protected string $format			= self::FORMAT_CURRENCY_SPACE_AMOUNT;
+	protected ?string $nodeClass		= NULL;
+	protected string $nodeName			= 'span';
+	protected int $numberFormat			= self::NUMBER_FORMAT_DOT;
+	protected string $separator			= "&nbsp;";
 
-	public function render(){
+	public function render(): string
+	{
 		$price		= number_format(
 			$this->amount / 100,
 			$this->accuracy,
@@ -31,7 +32,8 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
 		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
-	public function set( \Stripe\Money $money, $accuracy = NULL ){
+	public function set( \Stripe\Money $money, ?int $accuracy = NULL ): self
+	{
 		$this->setAmount( $money->Amount );
 		$this->setCurrency( $money->Currency );
 		if( $accuracy !== NULL )
@@ -39,42 +41,50 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
 		return $this;
 	}
 
-	public function setAccuracy( $accuracy ){
+	public function setAccuracy( int $accuracy ): self
+	{
 		$this->accuracy	= $accuracy;
 		return $this;
 	}
 
-	public function setAmount( $amount ){
+	public function setAmount( int $amount ): self
+	{
 		$this->amount	= $amount;
 		return $this;
 	}
 
-	public function setCurrency( $currency ){
+	public function setCurrency( string $currency ): self
+	{
 		$this->currency	= $currency;
 		return $this;
 	}
 
-	public function setFormat( $format ){
+	public function setFormat( string $format ): self
+	{
 		$this->format	= $format;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}
 
-	public function setNumberFormat( $numberFormat ){
+	public function setNumberFormat( int $numberFormat ): self
+	{
 		$this->numberFormat	= $numberFormat;
 		return $this;
 	}
 
-	public function setSeparator( $separator ){
+	public function setSeparator( string $separator ): self
+	{
 		$this->separator	= $separator;
 		return $this;
 	}

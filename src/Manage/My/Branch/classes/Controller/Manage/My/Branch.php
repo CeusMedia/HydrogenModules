@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_Branch extends Controller
 {
-	public function activate( $branchId )
+	public function activate( string $branchId ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -16,7 +16,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( './manage/my/branch' );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
@@ -28,7 +28,6 @@ class Controller_Manage_My_Branch extends Controller
 		$modelUser		= new Model_User( $this->env );
 		$user			= $modelUser->get( (int) $session->get( 'auth_user_id' ) );
 		$data['companyId']	= $user->companyId;
-
 
 		if( $request->get( 'doAdd' ) ){
 			if( empty( $data['title'] ) )
@@ -60,7 +59,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->view->addData( 'branch', $data );
 	}
 
-	public function addImage( $branchId )
+	public function addImage( $branchId ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -87,7 +86,6 @@ class Controller_Manage_My_Branch extends Controller
 				$messenger->noteError( $e->getMessage() );
 				$this->restart( './manage/my/branch/edit/'.$branchId );
 			}
-
 		}
 		$model	= new Model_Branch_Image( $this->env );
 
@@ -121,7 +119,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}*/
 
-	public function deactivate( $branchId )
+	public function deactivate( $branchId ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -132,7 +130,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $branchId )
+	public function edit( $branchId ): void
 	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
@@ -205,7 +203,7 @@ class Controller_Manage_My_Branch extends Controller
 		return $model->getAllByIndex( 'companyId', $user->companyId );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -240,7 +238,8 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@todo		check ownership of branch
 	 */
-	public function removeImage( $branchId, $imageId ){
+	public function removeImage( $branchId, $imageId ): void
+	{
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch_Image( $this->env );
 		$words			= (object) $this->getWords( 'removeImage' );
@@ -260,7 +259,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->env->page->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
+		$this->env->getPage()->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
 	}
 
 	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' )

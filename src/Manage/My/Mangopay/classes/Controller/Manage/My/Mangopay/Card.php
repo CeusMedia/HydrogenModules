@@ -4,14 +4,15 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 
 class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_Abstract
 {
-	protected $words;
+	protected array $words;
+	protected string $sessionPrefix;
 
-	public function add()
+	public function add(): void
 	{
 		$this->restart( 'registration', TRUE );
 	}
 
-	public function deactivate( $cardId )
+	public function deactivate( $cardId ): void
 	{
 		$card	= $this->checkIsOwnCard( $cardId );
 		$card->Active	= FALSE;
@@ -21,7 +22,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $cardId = NULL, $refresh = NULL )
+	public function index( $cardId = NULL, $refresh = NULL ): void
 	{
 		if( $cardId )
 			$this->restart( 'view/'.$cardId, TRUE );
@@ -39,7 +40,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'from', $this->session->get( $this->sessionPrefix.'from' ) );
 	}
 
-	public function edit( $cardId )
+	public function edit( $cardId ): void
 	{
 		$card	= $this->checkIsOwnCard( $cardId );
 		if( $this->request->has( 'save' ) ){
@@ -65,7 +66,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 	}
 
-	public function payOut()
+	public function payOut(): void
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 
@@ -75,7 +76,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
 	}
 
-	public function view( $cardId )
+	public function view( $cardId ): void
 	{
 
 		$card	= $this->checkIsOwnCard( $cardId );
@@ -106,7 +107,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$this->addData( 'cards', $cards );
 	}
 
-	protected function handleErrorCode( $errorCode, $goBack = TRUE )
+	protected function handleErrorCode( $errorCode, $goBack = TRUE ): void
 	{
 		$errorCodes	= Dictionary::create( $this->words )->getAll( 'errorCode-' );
 		if( !array_key_exists( $errorCode, $errorCodes ) )

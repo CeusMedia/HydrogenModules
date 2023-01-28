@@ -1,12 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 {
-	protected $request;
-	protected $messenger;
-	protected $session;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $session;
 	protected Logic_Payment_Mangopay $logic;
 	protected Resource_Mangopay $mangopay;
 	protected string $userId;

@@ -5,14 +5,19 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_My_User_Avatar extends Hook
 {
-	static public function onUserRemove( Environment $env, $context, $module, $data = [] )
+	public function onRegisterTab()
 	{
-		$data	= (object) $data;
-		if( !empty( $data->userId ) ){
-			$model	= new Model_User_Avatar( $env );
-			$count	= $model->removeByIndex( 'userId', $data->userId );
-			if( isset( $data->counts ) )
-				$data->counts['Manage_My_User_Avatar']	= (object) ['entities' => $count];
+		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user/avatar' );	//  load words
+		$this->context->registerTab( 'avatar', $words->module['tab'], 6 );							//  register main tab
+	}
+
+	public function onUserRemove(): void
+	{
+		if( !empty( $this->payload['userId'] ) ){
+			$model	= new Model_User_Avatar( $this->env );
+			$count	= $model->removeByIndex( 'userId', $this->payload['userId'] );
+			if( isset( $this->payload['counts'] ) )
+				$this->payload['counts']['Manage_My_User_Avatar']	= (object) ['entities' => $count];
 		}
 	}
 }
