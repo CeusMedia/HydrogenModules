@@ -219,13 +219,14 @@ class Logic_Newsletter extends Logic
 		return $letters;
 	}
 
-	public function getNewsletter( string $newsletterId, bool $strict = TRUE ): object
+	public function getNewsletter( string $newsletterId, bool $strict = TRUE ): ?object
 	{
-		$this->checkNewsletterId( $newsletterId, $strict );
-		return $this->modelNewsletter->get( $newsletterId );
+		if( $this->checkNewsletterId( $newsletterId, $strict ) )
+			return $this->modelNewsletter->get( $newsletterId );
+		return NULL;
 	}
 
-    public function getQueue( $queueId, $extended = FALSE )
+	public function getQueue( $queueId, $extended = FALSE )
 	{
 		$queue	= $this->modelQueue->get( $queueId );
 		if( $extended ){
@@ -284,10 +285,11 @@ class Logic_Newsletter extends Logic
 		return $queues;
 	}
 
-	public function getReader( string $readerId, bool $strict = TRUE ): object
+	public function getReader( string $readerId, bool $strict = TRUE ): ?object
 	{
-		$this->checkReaderId( $readerId, $strict );
-		return $this->modelReader->get( $readerId );
+		if( $this->checkReaderId( $readerId, $strict ) )
+			return $this->modelReader->get( $readerId );
+		return NULL;
 	}
 
 	public function getReaderLetter( string $readerLetterId ): object

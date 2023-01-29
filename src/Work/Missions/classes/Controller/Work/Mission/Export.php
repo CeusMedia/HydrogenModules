@@ -21,7 +21,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			switch( strtoupper( $method ) ){
 				case 'PUT':
 //					$ical	= file_get_contents( "php://input" );							//  read PUT data
-					$ical	= $this->request->getBody();									//  get PUT content from request body
+					$ical	= $this->request->getRawPostData();								//  get PUT content from request body
 					$this->importFromIcal( $ical );											//  import
 					break;
 				case 'GET':
@@ -32,7 +32,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 						HttpDownload::sendString( $ical , $fileName );					//  deliver downloadable file
 					}
 					else{
-						$mimeType	= "text/calendar";
+//						$mimeType	= "text/calendar";
 						$mimeType	= "text/plain;charset=utf-8";
 						header( "Content-type: ".$mimeType );
 						header( "Last-Modified: ".date( 'r' ) );
@@ -55,7 +55,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		exit;
 	}
 
-	public function index( $format = NULL, $debug = FALSE )
+	public function index( string $missionId = NULL ): void
 	{
 		$this->restart( './work/mission/help/sync' );
 	}
@@ -93,9 +93,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
 */		$projects	= [];
-		$conditions	= ['dayStart' => '> 0'];
 		$defaultProjectId	= 0;
-		foreach( $this->logic->getUserProjects( $this->userId, $conditions ) as $project ){
+		foreach( $this->logic->getUserProjects( $this->userId, TRUE ) as $project ){
 			if( $project->isDefault )
 				$defaultProjectId	=  $project->projectId;
 			$projects[$project->title]	= $project->projectId;
@@ -119,9 +118,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			$item['type']		= $node->getNodeName();									//  note ical node type
 			if( isset( $item['dtstamp'] ) ){											//  node was changed or created by client
 				$item	= $this->remapCalendarItem( $item, $projects, $defaultProjectId );					//  translate ical node item to mission item
-				$item['modifierId']	= $this->userId;									//  node modifing user
+				$item['modifierId']	= $this->userId;									//  node modifying user
 				if( isset( $missions[$item['uid']] ) ){									//  ical node UID is known
-					$changes	= [];												//  prepare empty changes array
+					$changes	= [];													//  prepare empty changes array
 					$mission	= (array) $missions[$item['uid']];						//  get mission by UID
 					unset( $missions[$item['uid']] );									//  remove mission from list of local missions
 					foreach( $item as $key => $value )									//  iterate item attributes

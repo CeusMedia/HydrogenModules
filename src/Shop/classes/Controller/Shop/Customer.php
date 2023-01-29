@@ -1,15 +1,23 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Shop_Customer extends Controller
 {
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $moduleConfig;
+	protected object $words;
+
 	/**	@var	array					$backends			List of available payment backends */
 	protected array $backends			= [];
 
 	/**	@var	float					$cartTotal			Total price of cart */
-	protected $cartTotal				= 0;
+	protected float $cartTotal			= .0;
 
 	/**	@var	Model_Address			$modelAddress		Model for address objects*/
 	protected Model_Address $modelAddress;
@@ -21,22 +29,20 @@ class Controller_Shop_Customer extends Controller
 	protected Model_User $modelUser;
 
 	/**	@var	boolean					$useAuth			Flag: Shop allows user registration and login */
-	protected bool $useAuth					= FALSE;
+	protected bool $useAuth				= FALSE;
 
 	/** @var	Logic_Authentication	$logicAuth			Instance of authentication logic, if available */
 	protected Logic_Authentication $logicAuth;
 
-	protected object $words;
-
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$addressId		ID of address to edit
+	 *	@param		string		$addressId		ID of address to edit
 	 *	@param		integer		$type			...
 	 *	@param		boolean		$remove			Flag: remove address and return
 	 *	@return		void
 	 */
-	public function address( $addressId, $type = NULL, $remove = NULL )
+	public function address( string $addressId, $type = NULL, bool $remove = NULL ): void
 	{
 		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
@@ -152,11 +158,11 @@ class Controller_Shop_Customer extends Controller
 	public function index( $mode = NULL )
 	{
 		if( $mode === 'account' && $this->useAuth )
-			$mode	= Model_Shop_CART::CUSTOMER_MODE_ACCOUNT;
+			$mode	= Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT;
 		else if( $mode === 'guest' )
-			$mode	= Model_Shop_CART::CUSTOMER_MODE_GUEST;
+			$mode	= Model_Shop_Cart::CUSTOMER_MODE_GUEST;
 		else if( $mode === 'reset' )
-			$mode	= Model_Shop_CART::CUSTOMER_MODE_UNKNOWN;
+			$mode	= Model_Shop_Cart::CUSTOMER_MODE_UNKNOWN;
 		if( is_int( $mode ) ){
 			$logicShop	= new Logic_Shop( $this->env );
 			$this->modelCart->set( 'customerMode', (int) $mode );
@@ -168,16 +174,16 @@ class Controller_Shop_Customer extends Controller
 		}
 		if( $this->useAuth ){
 			if( $this->logicAuth->isAuthenticated() )
-				$this->modelCart->set( 'customerMode', Model_Shop_CART::CUSTOMER_MODE_ACCOUNT );
+				$this->modelCart->set( 'customerMode', Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT );
 			if( !$this->modelCart->get( 'customerMode' ) )
-				$this->modelCart->set( 'customerMode', Model_Shop_CART::CUSTOMER_MODE_ACCOUNT );
+				$this->modelCart->set( 'customerMode', Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT );
 		}
 		$this->addData( 'cart', $this->modelCart );
 		switch( $this->modelCart->get( 'customerMode' ) ){
-			case Model_Shop_CART::CUSTOMER_MODE_ACCOUNT:
+			case Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT:
 				$this->handleAccount();
 				break;
-			case Model_Shop_CART::CUSTOMER_MODE_GUEST:
+			case Model_Shop_Cart::CUSTOMER_MODE_GUEST:
 			default:
 				$this->handleGuest();
 				break;
@@ -209,6 +215,10 @@ class Controller_Shop_Customer extends Controller
 		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -240,7 +250,7 @@ class Controller_Shop_Customer extends Controller
 	}
 
 	/**
-	 *	Handle customer having an user account.
+	 *	Handle customer having a user account.
 	 *	@access		protected
 	 *	@return		void
 	 */
@@ -291,19 +301,19 @@ class Controller_Shop_Customer extends Controller
 	protected function handleGuest()
 	{
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
-		$this->addData( 'mode', Model_Shop_CART::CUSTOMER_MODE_GUEST );
+		$this->addData( 'mode', Model_Shop_Cart::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
 
 		$userId		= $this->modelCart->get( 'userId' );
 		if( !$userId ){
-			$userId		= $this->modelUser->add( array(
+			$userId		= $this->modelUser->add( [
 				'username'		=> 'Guest User '.uniqid(),
 				'password'		=> '-1',
 				'status'		=> Model_User::STATUS_UNCONFIRMED,
 				'roleId'		=> $this->moduleConfig->get( 'customerRoleId' ),
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 			$logicAuth->setIdentifiedUser( $this->modelUser->get( $userId ) );
 			$this->modelCart->set( 'userId', $userId );

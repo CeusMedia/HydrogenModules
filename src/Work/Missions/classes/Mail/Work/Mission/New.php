@@ -21,7 +21,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	public function prepareFacts( array $data ): void
 	{
 		$mission	= $data['mission'];
-		$this->helperFacts	= new View_Helper_Mail_Facts( $this->env );
+		$this->helperFacts	= new View_Helper_Mail_Facts();
 		$this->helperFacts->setLabels( (array) $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 

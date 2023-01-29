@@ -16,18 +16,28 @@ class View_Helper_Shop_FinishPanel_Stripe
 	/**
 	 * @var		Environment		$env
 	 */
-	protected $env;
+	protected Environment $env;
 
-	protected $modelPayment;
+	protected Model_Shop_Payment_Stripe $modelPayment;
 
-	protected $modelOrder;
+	protected Model_Shop_Order $modelOrder;
 
-	protected $payin;
+	protected ?object $payin			= NULL;
 
-	protected $outputFormat			= self::OUTPUT_FORMAT_HTML;
+	protected int $outputFormat			= self::OUTPUT_FORMAT_HTML;
 
-	protected $listClass			= 'dl-horizontal';
+	protected string $listClass			= 'dl-horizontal';
 
+	protected ?object $payment			= NULL;
+
+	protected ?object $order			= NULL;
+
+	protected string $heading;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
@@ -38,18 +48,17 @@ class View_Helper_Shop_FinishPanel_Stripe
 
 	public function render(): string
 	{
-		if( !$this->payment )
-//			throw new RuntimeException( 'No payment selected' );
-			return '';
-
-		switch( $this->order->paymentMethod ){
-			case 'Stripe:Card':
-				return $this->renderCreditCard();
-			case 'Stripe:Giropay':
-				return $this->renderGiropay();
-			case 'Stripe:Sofort':
-				return $this->renderSofort();
+		if( $this->payment ){
+			switch( $this->order->paymentMethod ){
+				case 'Stripe:Card':
+					return $this->renderCreditCard();
+				case 'Stripe:Giropay':
+					return $this->renderGiropay();
+				case 'Stripe:Sofort':
+					return $this->renderSofort();
+			}
 		}
+		return '';
 	}
 
 	public function setListClass( string $class ): self
@@ -75,7 +84,7 @@ class View_Helper_Shop_FinishPanel_Stripe
 		return $this;
 	}
 
-	public function setPaymentId( $paymentId ): self
+	public function setPaymentId( string $paymentId ): self
 	{
 		$this->payment	= $this->modelPayment->get( $paymentId );
 		if( strlen( $this->payment->object ) )
@@ -86,64 +95,64 @@ class View_Helper_Shop_FinishPanel_Stripe
 
 	protected function renderCreditCard(): string
 	{
-		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts		= new View_Helper_Mail_Facts();
 		$facts->add( 'Methode', 'per Kreditkarte' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
+			return HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h3', $this->heading ),
-					$facts->render( $this->listClass ),
-				), ['class' => 'content-panel-inner'] ),
-			), ['class' => 'content-panel'] );
+					$facts->setListClass( $this->listClass )->render(),
+				], ['class' => 'content-panel-inner'] ),
+			], ['class' => 'content-panel'] );
 
-		return PHP_EOL.join( PHP_EOL, array(
+		return PHP_EOL.join( PHP_EOL, [
 			View_Helper_Mail_Text::underscore( $this->heading ),
-			$facts->renderAsText(),
-		) ).PHP_EOL.PHP_EOL;
+			$facts->setFormat( $facts::FORMAT_TEXT )->render(),
+		] ).PHP_EOL.PHP_EOL;
 	}
 
 	protected function renderGiropay(): string
 	{
-		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts		= new View_Helper_Mail_Facts();
 		$facts->add( 'Methode', 'per GiroPay' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
+			return HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h3', $this->heading ),
-					$facts->render( $this->listClass ),
-				), ['class' => 'content-panel-inner'] ),
-			), ['class' => 'content-panel'] );
+					$facts->setListClass( $this->listClass )->render(),
+				], ['class' => 'content-panel-inner'] ),
+			], ['class' => 'content-panel'] );
 
-		return PHP_EOL.join( PHP_EOL, array(
+		return PHP_EOL.join( PHP_EOL, [
 			View_Helper_Mail_Text::underscore( $this->heading ),
-			$facts->renderAsText(),
-		) ).PHP_EOL.PHP_EOL;
+			$facts->setFormat( $facts::FORMAT_TEXT )->render(),
+		] ).PHP_EOL.PHP_EOL;
 	}
 
 	protected function renderSofort(): string
 	{
-		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts		= new View_Helper_Mail_Facts();
 		$facts->add( 'Methode', 'per Sofortüberweisung' );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 		$facts->add( 'Status', 'Wir haben den Betrag dankend erhalten.' );
 
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
-			return HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
+			return HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h3', $this->heading ),
-					$facts->render( $this->listClass ),
-				), ['class' => 'content-panel-inner'] ),
-			), ['class' => 'content-panel'] );
+					$facts->setListClass( $this->listClass )->render(),
+				], ['class' => 'content-panel-inner'] ),
+			], ['class' => 'content-panel'] );
 
-		return PHP_EOL.join( PHP_EOL, array(
+		return PHP_EOL.join( PHP_EOL, [
 			View_Helper_Mail_Text::underscore( $this->heading ),
-			$facts->renderAsText(),
-		) ).PHP_EOL.PHP_EOL;
+			$facts->setFormat( $facts::FORMAT_TEXT )->render(),
+		] ).PHP_EOL.PHP_EOL;
 	}
 }

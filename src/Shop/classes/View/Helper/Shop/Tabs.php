@@ -1,16 +1,18 @@
 <?php
 
+use CeusMedia\Bootstrap\Nav\Tabs as BootstrapTabsNav;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_Tabs
 {
-	protected $backends;
-	protected $cartTotal			= 0;
+	protected Environment $env;
+	protected array $words;
+	protected array $backends;
+	protected float $cartTotal			= .0;
 	protected $content;
-	protected $current;
-	protected $env;
-	protected $whiteIcons;
+	protected ?string $current			= NULL;
+	protected bool $whiteIcons			= FALSE;
 
 	public function __construct( Environment $env )
 	{
@@ -25,8 +27,8 @@ class View_Helper_Shop_Tabs
 
 	public function render(): string
 	{
-		$tabs	= new \CeusMedia\Bootstrap\Nav\Tabs( "tabs-cart" );
-		$session	= $this->env->getSession();
+		$tabs		= new BootstrapTabsNav( "tabs-cart" );
+//		$session	= $this->env->getSession();
 		$modelCart	= new Model_Shop_Cart( $this->env );
 		$positions	= $modelCart->get( 'positions' );
 		$disabled	= [
@@ -100,14 +102,14 @@ class View_Helper_Shop_Tabs
 			$this->current === 'shop-service' ? $this->content : ''
 		);
 
-		$tabs->setActive( $this->current ? $this->current : 0 );
+		$tabs->setActive( $this->current ?: 0 );
 
 		foreach( $disabled as $nr )
 			$tabs->disableTab( $nr );
 		return $tabs->render();
 	}
 
-	public function setCartTotal( $cartTotal ): self
+	public function setCartTotal( float $cartTotal ): self
 	{
 		$this->cartTotal	= $cartTotal;
 		return $this;
@@ -125,13 +127,13 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setPaymentBackends( $backends ): self
+	public function setPaymentBackends( array $backends ): self
 	{
 		$this->backends	= $backends;
 		return $this;
 	}
 
-	public function setWhiteIcons( $bool ): self
+	public function setWhiteIcons( bool $bool ): self
 	{
 		$this->whiteIcons	= $bool;
 		return $this;

@@ -4,7 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 {
-	protected ?View_Helper_Work_Issue_ChangeFacts $factsChanges		= NULL;
+	/** @var View_Helper_Mail_Facts|View_Helper_Work_Issue_ChangeFacts $factsChanges */
+	protected ?object $factsChanges					= NULL;
+	protected ?View_Helper_Work_Issue_ChangeNote $changeNote		= NULL;
 	protected array $labelsStates;
 	protected ?object $note											= NULL;
 
@@ -117,7 +119,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 '.View_Helper_Mail_Text::underscore( 'Änderungen' ).PHP_EOL.'
 '.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
-'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
+'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL;
 
 		$list	= [];
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )

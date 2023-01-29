@@ -20,7 +20,8 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@package		Work.Missions
  *	@todo			implement
  *	@todo			code documentation
- *	@todo			1200 lines of code !?
+ *	@todo			1300 lines of code !?
+ *	@todo			extract AJAX actions to own controller class
  */
 class Controller_Work_Mission extends Controller
 {
@@ -29,26 +30,27 @@ class Controller_Work_Mission extends Controller
 		$this->addData( 'topic', (string) $topic );
 	}
 
-	protected AclResource $acl;
-	protected string $filterKeyPrefix	= 'filter.work.mission.';
-	protected bool $isEditor;
-	protected bool $isViewer;
-	protected bool $hasFullAccess	= FALSE;
-	protected $lock;
-	protected Logic_Work_Mission $logic;
-	protected Logic_Authentication $logicAuth;
-	protected Logic_Project $logicProject;
-	protected MessengerResource $messenger;
-	protected Model_Mission $model;
 	protected HttpRequest $request;
 	protected Dictionary $session;
-	protected bool $useIssues			= FALSE;
-	protected array $userMap			= [];
-	protected $userId					= 0;
-	protected $userRoleId				= 0;
+	protected MessengerResource $messenger;
+	protected AclResource $acl;
+	protected Logic_Work_Mission $logic;
+	protected Logic_Authentication $logicAuth;
+	protected ?Logic_Database_Lock $lock	= NULL;
+	protected Logic_Project $logicProject;
+	protected Model_Mission $model;
+	protected array $userProjects;
+	protected array $userMap;
+	protected bool $isEditor;
+	protected bool $isViewer;
+	protected bool $useIssues;
+	protected bool $useTimer;
+	protected string $filterKeyPrefix		= 'filter.work.mission.';
+	protected string $userId				= '0';
+	protected string $userRoleId			= '0';
 	protected string $contentFormat;
 
-	protected $defaultFilterValues	= [
+	protected array $defaultFilterValues	= [
 		'mode'		=> 'now',
 		'states'	=> [
 			Model_Mission::STATUS_NEW,
@@ -72,6 +74,10 @@ class Controller_Work_Mission extends Controller
 		'direction'		=> 'ASC',
 	];
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -129,10 +135,10 @@ class Controller_Work_Mission extends Controller
 	 *	Add a new mission.
 	 *	Redirects to index if editor right is missing.
 	 *	@access		public
-	 *	@param		integer		$copyFromMissionId		ID of mission to copy default values from (optional)
+	 *	@param		string|NULL		$copyFromMissionId		ID of mission to copy default values from (optional)
 	 *	@return		void
 	 */
-	public function add( $copyFromMissionId = NULL )
+	public function add( ?string $copyFromMissionId = NULL ): void
 	{
 		$words			= (object) $this->getWords( 'add' );
 
@@ -162,8 +168,8 @@ class Controller_Work_Mission extends Controller
 			if( !$title )
 				$this->messenger->noteError( $words->msgNoTitle );
 			if( !$this->messenger->gotError() ){
-				$type		= (int) $this->request->get( 'type' );
-				$data	= array(
+				$type	= (int) $this->request->get( 'type' );
+				$data	= [
 					'creatorId'			=> (int) $this->userId,
 					'modifierId'		=> (int) $this->userId,
 					'workerId'			=> (int) $this->request->get( 'workerId' ),
@@ -183,7 +189,7 @@ class Controller_Work_Mission extends Controller
 					'reference'			=> $this->request->get( 'reference' ),
 					'format'			=> $format,
 					'createdAt'			=> time(),
-				);
+				];
 				$missionId	= $this->model->add( $data, FALSE );
 				$message	= $type == 1 ? $words->msgSuccessEvent : $words->msgSuccessTask;
 				$this->messenger->noteSuccess( $message );
@@ -219,7 +225,12 @@ class Controller_Work_Mission extends Controller
 		$this->addData( 'userProjects', $this->userProjects );
 	}
 
-	public function addDocument( $missionId )
+	/**
+	 *	@param		string		$missionId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function addDocument( string $missionId ): void
 	{
 		$upload		= (object) $this->env->getRequest()->get( 'document' );
 		$model		= new Model_Mission_Document( $this->env );
@@ -239,11 +250,11 @@ class Controller_Work_Mission extends Controller
 		$logic->saveTo( $path.$hashname );
 
 		if( $document ){
-			$model->edit( $document->missionDocumentId, array(
+			$model->edit( $document->missionDocumentId, [
 				'userId'		=> $this->userId,
 				'size'			=> $upload->size,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		else{
 			$model->add( [
@@ -262,7 +273,12 @@ class Controller_Work_Mission extends Controller
 		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
-	public function ajaxGetProjectUsers( $projectId )
+	/**
+	 *	@param		string		$projectId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function ajaxGetProjectUsers( string $projectId ): void
 	{
 		$list	= [];
 		$model	= new Model_Project( $this->env );
@@ -276,7 +292,7 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function ajaxRenderContent()
+	public function ajaxRenderContent(): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$html		= View_Helper_Markdown::transformStatic( $this->env, $content );
@@ -286,7 +302,7 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId )
+	public function ajaxRenderDashboardPanel( string $panelId ): string
 	{
 		$this->addData( 'panelId', $panelId );
 		$logic		= Logic_Work_Mission::getInstance( $this->env );
@@ -321,7 +337,11 @@ class Controller_Work_Mission extends Controller
 		return $this->view->ajaxRenderDashboardPanel();
 	}
 
-	public function ajaxRenderIndex()
+	/**
+	 * @return		void
+	 * @throws		ReflectionException
+	 */
+	public function ajaxRenderIndex(): void
 	{
 		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode && $mode !== 'now' )
@@ -377,7 +397,7 @@ class Controller_Work_Mission extends Controller
 		}
 	}
 
-	public function ajaxRenderMissionContent( $missionId, $version = NULL, $versionCompare = NULL )
+	public function ajaxRenderMissionContent( string $missionId, $version = NULL, $versionCompare = NULL ): void
 	{
 		try{
 //			if( !$this->request->isAjax() )
@@ -402,14 +422,14 @@ class Controller_Work_Mission extends Controller
 					}
 				}
 			}
-			$this->handleJsonResponse( "data", (string) $content );
+			$this->handleJsonResponse( "data", $content );
 		}
 		catch( Exception $e ){
 			$this->handleJsonResponse( "error", $e->getMessage() );
 		}
 	}
 
-	public function ajaxSaveContent( $missionId )
+	public function ajaxSaveContent( string $missionId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$this->model->edit( $missionId, [														//  store in database
@@ -424,13 +444,18 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function ajaxSelectDay( $day )
+	/**
+	 *	@param		string		$day
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function ajaxSelectDay( string $day ): void
 	{
 		$this->session->set( $this->filterKeyPrefix.'day', (int) $day );
 		$this->ajaxRenderIndex();
 	}
 
-	protected function assignFilters()
+	protected function assignFilters(): void
 	{
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'viewType', (int) $this->session->get( 'work-mission-view-type' ) );
@@ -441,7 +466,7 @@ class Controller_Work_Mission extends Controller
 		if( !$order )
 			$this->restart( './work/mission/filter?order=priority' );
 
-		$direction	= $direction ? $direction : 'ASC';
+		$direction	= $direction ?: 'ASC';
 		$this->session->set( $this->filterKeyPrefix.'direction', $direction );
 
 		$this->setData( [																		//  assign data t$
@@ -463,7 +488,7 @@ class Controller_Work_Mission extends Controller
 		$this->addData( 'wordsFilter', $this->env->getLanguage()->getWords( 'work/mission' ) );
 	}
 
-	public function bulk()
+	public function bulk(): void
 	{
 		$action	= $this->request->get( '__action' );
 		$missionIds	= $this->request->get( 'missionIds' );
@@ -481,11 +506,11 @@ class Controller_Work_Mission extends Controller
 	 *	Moving an event mission will affect start and end date.
 	 *	If called using AJAX list rendering is triggered.
 	 *	@access		public
-	 *	@param		integer		$mission		ID of mission to move in time
+	 *	@param		string		$missionId		ID of mission to move in time
 	 *	@return		void
 	 *	@todo		 enable this feature for AJAX called EXCEPT gid list
 	 */
-	public function changeDay( $missionId )
+	public function changeDay( string $missionId ): void
 	{
 		$date		= trim( $this->request->get( 'date' ) );
 		$mission	= $this->model->get( $missionId );
@@ -519,7 +544,7 @@ class Controller_Work_Mission extends Controller
 			$this->model->edit( $missionId, $data );
 			$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		}
-		if( $this->env->request->isAjax() )
+		if( $this->request->isAjax() )
 			$this->ajaxRenderIndex();
 		$this->restart( NULL, TRUE );
 	}
@@ -539,21 +564,22 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	protected function checkIsEditor( $missionId = NULL, $strict = TRUE, $status = 403 )
+	protected function checkIsEditor( ?string $missionId = NULL, bool $strict = TRUE, int $status = 403 ): bool
 	{
 		if( $this->isEditor )
 			return TRUE;
-		if( !$strict )
-			return FALSE;
-		$words		= (object) $this->getWords( 'msg' );
-		$message	= $words->errorNoRightToAdd;
-		$redirect	= NULL;
-		if( $missionId ){
-			$message	= $words->errorNoRightToEdit;
-			$redirect	= 'view/'.$missionId;
+		if( $strict ){
+			$words		= (object) $this->getWords( 'msg' );
+			$message	= $words->errorNoRightToAdd;
+			$redirect	= NULL;
+			if( $missionId ){
+				$message	= $words->errorNoRightToEdit;
+				$redirect	= 'view/'.$missionId;
+			}
+			$this->env->getMessenger()->noteError( $message );
+			$this->restart( $redirect, TRUE, $status );
 		}
-		$this->env->getMessenger()->noteError( $message );
-		$this->restart( $redirect, TRUE, $status );
+		return FALSE;
 	}
 
 
@@ -580,7 +606,7 @@ class Controller_Work_Mission extends Controller
 		die( "Not implemented yet" );
 	}
 
-	public function convertContent( $missionId, $format )
+	public function convertContent( string $missionId, string $format ): void
 	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
@@ -591,7 +617,7 @@ class Controller_Work_Mission extends Controller
 			$this->messenger->noteError( $words->msgInvalidId );
 		if( strtoupper( $mission->format ) === 'MARKDOWN' && strtoupper( $format ) === 'HTML' ){
 			$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
-			$data	= [
+			$data		= [
 				'content'		=> $content,
 				'format'		=> 'HTML',
 				'modifiedAt'	=> time(),
@@ -610,7 +636,6 @@ class Controller_Work_Mission extends Controller
 				'bold_style'		=> '**',
 				'italic_style'		=> '*',
 			] );
-			$content	= $converter->convert( $mission->content );
 			$data	= [
 				'content'		=> $converter->convert( $mission->content ),
 				'format'		=> 'Markdown',
@@ -623,9 +648,14 @@ class Controller_Work_Mission extends Controller
 	}
 
 	/**
-	 *	@todo  			check sanity, see below
+	 *	@param		string		$missionId
+	 *	@param		string		$missionDocumentId
+	 *	@param		bool		$download
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@todo		check sanity, see below
 	 */
-	protected function deliverDocument( $missionId, $missionDocumentId, $download = FALSE )
+	protected function deliverDocument( string $missionId, string $missionDocumentId, bool $download = FALSE ): void
 	{
 	//	check missionId against user
 	//	check missionDocumentId against missionId
@@ -656,12 +686,17 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function downloadDocument( $missionId, $missionDocumentId )
+	public function downloadDocument( string $missionId, string $missionDocumentId ): void
 	{
 		$this->deliverDocument( $missionId, $missionDocumentId, TRUE );
 	}
 
-	public function edit( $missionId )
+	/**
+	 *	@param		string		$missionId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function edit( string $missionId ): void
 	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
@@ -739,7 +774,6 @@ class Controller_Work_Mission extends Controller
 				$this->restart( './work/mission' );
 			}
 		}
-		$modelUser	= new Model_User( $this->env );
 		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
 		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
@@ -755,7 +789,7 @@ class Controller_Work_Mission extends Controller
 			$missionUsers[$user->userId]	= $user;
 		$this->addData( 'userProjects', $this->userProjects );
 		$this->addData( 'missionUsers', $missionUsers );
-		$this->addData( 'format', $mission->format ? $mission->format : $this->contentFormat );
+		$this->addData( 'format', $mission->format ?: $this->contentFormat );
 
 		if( $this->useIssues ){
 			$this->env->getLanguage()->load( 'work/issue' );
@@ -785,7 +819,7 @@ class Controller_Work_Mission extends Controller
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
-	public function filter( $reset = NULL)
+	public function filter( $reset = NULL): void
 	{
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		if( $this->request->has( 'reset' ) || $reset ){
@@ -830,7 +864,7 @@ class Controller_Work_Mission extends Controller
 //		$this->request->isAjax() ? exit : $this->restart( '', TRUE );
 	}
 
-	protected function getFilteredMissions( $userId, $additionalConditions = [], $limit = 0, $offset = 0 )
+	protected function getFilteredMissions( string $userId, array $additionalConditions = [], int $limit = 0, int $offset = 0 ): array
 	{
 		$conditions	= $this->logic->getFilterConditions( $this->filterKeyPrefix, $additionalConditions );
 		$direction	= $this->session->get( $this->filterKeyPrefix.'direction' );
@@ -842,13 +876,13 @@ class Controller_Work_Mission extends Controller
 		if( $order != "title" )					//  if not ordered by title
 			$orders['title']	= 'ASC';		//  order by title at last
 		$limits	= [];
-		if( $limit !== NULL && (int) $limit >= 10 ){
+		if( $limit !== NULL && $limit >= 10 ){
 			$limits	= [abs( $offset ), $limit];
 		}
 		return $this->logic->getUserMissions( $userId, $conditions, $orders, $limits );
 	}
 
-	protected function getMinutesFromInput( $input )
+	protected function getMinutesFromInput( string $input ): int
 	{
 		if( !strlen( trim( $input ) ) )
 			return 0;
@@ -859,7 +893,7 @@ class Controller_Work_Mission extends Controller
 		return (int) $input;
 	}
 
-	protected function getModeFilterKeyPrefix()
+	protected function getModeFilterKeyPrefix(): string
 	{
 		$mode	= '';
 		if( $this->session->get( $this->filterKeyPrefix.'mode' ) !== 'now' )
@@ -870,12 +904,16 @@ class Controller_Work_Mission extends Controller
 	/**
 	 * @todo	remove this because all methods receiver userId and this is using roleId from session
 	 */
-	protected function hasFullAccess()
+	protected function hasFullAccess(): bool
 	{
 		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'auth_role_id' ) );
 	}
 
-	public function import()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function import(): void
 	{
 		$this->checkIsEditor();
 		$file	= $this->env->getRequest()->get( 'serial' );
@@ -907,7 +945,7 @@ class Controller_Work_Mission extends Controller
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function index( $missionId = NULL )
+	public function index( string $missionId = NULL ): void
 	{
 		if( trim( $missionId ) )
 			$this->restart( 'view/'.$missionId, TRUE );
@@ -966,7 +1004,7 @@ class Controller_Work_Mission extends Controller
 		}
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		if( !(int) $userId )
 			return;
@@ -991,19 +1029,19 @@ class Controller_Work_Mission extends Controller
 			$this->logic->generalConditions[$key]	= $value;
 	}
 
-	public function kanban()
+	public function kanban(): void
 	{
 		$this->session->set( $this->filterKeyPrefix.'mode', 'kanban' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function now()
+	public function now(): void
 	{
 		$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function recoverFilters( $userId )
+	protected function recoverFilters( string $userId ): void
 	{
 		$model	= new Model_Mission_Filter( $this->env );
 		$serial	= $model->getByIndex( 'userId', $userId, [], ['serial'], FALSE );
@@ -1022,13 +1060,13 @@ class Controller_Work_Mission extends Controller
 		}
 	}
 
-	public function removeDocument( $missionId, $missionDocumentId )
+	public function removeDocument( string $missionId, string $missionDocumentId ): void
 	{
 		$this->logic->removeDocument( $missionDocumentId );
 		$this->restart( 'edit/'.$missionId.'#documents', TRUE );
 	}
 
-	protected function saveFilters( $userId )
+	protected function saveFilters( string $userId ): void
 	{
 		$model		= new Model_Mission_Filter( $this->env );
 		$serial		= serialize( $this->session->getAll( $this->filterKeyPrefix ) );
@@ -1041,7 +1079,7 @@ class Controller_Work_Mission extends Controller
 			$model->add( $data + $indices );
 	}
 
-	public function setFilter( $name, $value = NULL, $set = FALSE, $onlyThisOne = FALSE )
+	public function setFilter( $name, $value = NULL, bool $set = FALSE, bool $onlyThisOne = FALSE ): void
 	{
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		$storedValues	= $this->session->get( $sessionPrefix.$name );
@@ -1049,9 +1087,9 @@ class Controller_Work_Mission extends Controller
 		if( is_array( $storedValues ) ){
 			$newValues	= $storedValues;
 			if( is_null( $value ) )																	//  no value given at all
-				$newValues	= [];																//  resest values, will be set to all by controller
+				$newValues	= [];																	//  reset values, will be set to all by controller
 			else if( $onlyThisOne )																	//  otherwise: only set this value
-				$newValues	= [$value];														//  replace all by just this value
+				$newValues	= [$value];																//  replace all by just this value
 			else{																					//  otherwise: specific mode
 				if( $set )																			//  new value to be set
 					$newValues[]	= $value;														//  append new value
@@ -1065,7 +1103,7 @@ class Controller_Work_Mission extends Controller
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
 		if( $this->env->getRequest()->isAjax() ){
-			$this->redirect( 'work/mission/ajaxRenderIndex' );										//  @todo replace redirect but keep AJAX request in mind
+			$this->redirect( 'work/mission/ajaxRenderIndex' );								//  @todo replace redirect but keep AJAX request in mind
 //			header( 'Content-Type: application/json' );
 //			print( json_encode( TRUE ) );
 //			exit;
@@ -1073,47 +1111,52 @@ class Controller_Work_Mission extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setPriority( $missionId, $priority, $showMission = FALSE )
+	public function setPriority( string $missionId, $priority, bool $showMission = FALSE ): void
 	{
 		$this->checkIsEditor( $missionId );
 		$data	= [];
-		$this->model->edit( $missionId, [														//  store in database
+		$this->model->edit( $missionId, [															//  store in database
 			'priority'		=> $priority,															//  - new priority
 			'modifierId'	=> $this->userId,														//  - modifying user id
 			'modifiedAt'	=> time(),																//  - modification time
 		] );
 		if( !$showMission )																			//  back to list
-			$this->restart( NULL, TRUE );															//  jump to list
-		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
+			$this->restart( NULL, TRUE );											//  jump to list
+		$this->restart( 'edit/'.$missionId, TRUE );									//  otherwise jump to or stay in mission
 	}
 
-	public function setStatus( $missionId, $status, $showMission = FALSE )
+	public function setStatus( string $missionId, $status, bool $showMission = FALSE ): void
 	{
 		$this->checkIsEditor( $missionId );
-		$this->model->edit( $missionId, [														//  store in database
+		$this->model->edit( $missionId, [															//  store in database
 			'status'		=> $status,																//  - new status
 			'modifierId'	=> $this->userId,														//  - modifying user id
 			'modifiedAt'	=> time(),																//  - modification time
 		] );
 		if( $status < 0 || !$showMission )															//  mission aborted/done or back to list
-			$this->restart( NULL, TRUE );															//  jump to list
-		$this->restart( 'edit/'.$missionId, TRUE );													//  otherwise jump to or stay in mission
+			$this->restart( NULL, TRUE );											//  jump to list
+		$this->restart( 'edit/'.$missionId, TRUE );									//  otherwise jump to or stay in mission
 	}
 
-	public function testMail( $type, $send = FALSE )
+	/**
+	 * @param		string		$type
+	 * @param		boolean		$send
+	 * @return		void
+	 * @throws		ReflectionException
+	 */
+	public function testMail( string $type, bool $send = FALSE ): void
 	{
 		switch( $type ){
 			case "daily":																			//
 				$modelUser		= new Model_User( $this->env );										//
-				$modelMission	= new Model_Mission( $this->env );									//
 				$user			= $modelUser->get( $this->userId );									//
 
-				$groupings	= ['missionId'];													//  group by mission ID to apply HAVING clause
-				$havings	= [																//  apply filters after grouping
+				$groupings	= ['missionId'];														//  group by mission ID to apply HAVING clause
+				$havings	= [																		//  apply filters after grouping
 					'creatorId = '.(int) $user->userId,												//
 					'workerId = '.(int) $user->userId,												//
 				];
-				if( $this->env->getModules()->has( 'Manage_Projects' ) ){							//  look for module
+				if( $this->env->getModules()->has( 'Manage_Projects' ) ){					//  look for module
 					$modelProject	= new Model_Project( $this->env );								//
 					$userProjects	= $modelProject->getUserProjects( $user->userId );				//  get projects assigned to user
 					if( $userProjects )																//  projects found
@@ -1122,25 +1165,25 @@ class Controller_Work_Mission extends Controller
 				$havings	= [join( ' OR ', $havings )];									//  render HAVING clause
 
 				//  --  TASKS  --  //
-				$filters	= [																//  task filters
+				$filters	= [																		//  task filters
 					'type'		=> 0,																//  tasks only
-					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
-					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  present and past (overdue)
+					'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
+					'dayStart'	=> "<= ".date( "Y-m-d", time() ),							//  present and past (overdue)
 				];
 				$order	= ['priority' => 'ASC'];
-				$tasks	= $modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered tasks ordered by priority
+				$tasks	= $this->model->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered tasks ordered by priority
 
 				//  --  EVENTS  --  //
-				$filters	= [																//  event filters
+				$filters	= [																		//  event filters
 					'type'		=> 1,																//  events only
-					'status'	=> [0, 1, 2, 3],												//  states: new, accepted, progressing, ready
-					'dayStart'	=> "<= ".date( "Y-m-d", time() ),									//  starting today
+					'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
+					'dayStart'	=> "<= ".date( "Y-m-d", time() ),							//  starting today
 				];
 				$order	= ['timeStart' => 'ASC'];
-				$events	= $modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered events ordered by start time
+				$events	= $this->model->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered events ordered by start time
 
 				if( $events || $tasks ){															//  user has tasks or events
-					$mail		= new Mail_Work_Mission_Daily( $this->env, [					//  create mail and populate data
+					$mail		= new Mail_Work_Mission_Daily( $this->env, [						//  create mail and populate data
 						'user'		=> $user,
 						'tasks'		=> $tasks,
 						'events'	=> $events
@@ -1155,7 +1198,7 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function testMailNew( $missionId, $asText = NULL )
+	public function testMailNew( string $missionId, ?bool $asText = NULL ): void
 	{
 		$data	= [
 			'mission'	=> $this->model->get( $missionId ),
@@ -1166,7 +1209,7 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function testMailUpdate( $missionId, $asText = NULL )
+	public function testMailUpdate( string $missionId, ?bool $asText = NULL ): void
 	{
 		$missionOld		= $this->model->get( $missionId );
 		$missionNew		= clone( $missionOld );
@@ -1198,7 +1241,12 @@ class Controller_Work_Mission extends Controller
 		exit;
 	}
 
-	public function view( $missionId )
+	/**
+	 *	@param		string		$missionId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function view( string $missionId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 
@@ -1221,14 +1269,13 @@ class Controller_Work_Mission extends Controller
 			$this->session->set( $this->filterKeyPrefix.'mode', 'now' );
 		}*/
 
-		$title		= $this->request->get( 'title' );
+/*		$title		= $this->request->get( 'title' );
 		$dayStart	= $this->request->get( 'dayStart' );
 		$dayEnd		= $this->request->get( 'dayEnd' );
 		if( $this->request->get( 'type' ) == 0 ){
 			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork' ) );
 			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
-		}
-		$modelUser	= new Model_User( $this->env );
+		}*/
 		$mission->creator	= array_key_exists( $mission->creatorId, $this->userMap ) ? $this->userMap[$mission->creatorId] : NULL;
 		$mission->modifier	= array_key_exists( $mission->modifierId, $this->userMap ) ? $this->userMap[$mission->modifierId] : NULL;
 		$mission->worker	= array_key_exists( $mission->workerId, $this->userMap ) ? $this->userMap[$mission->workerId] : NULL;
@@ -1258,8 +1305,14 @@ class Controller_Work_Mission extends Controller
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
 	}
 
-	public function viewDocument( $missionId, $missionDocumentId )
+	/**
+	 *	@param		string		$missionId
+	 *	@param		string		$missionDocumentId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function viewDocument( string $missionId, string $missionDocumentId ): void
 	{
-		$this->deliverDocument( $missionId, $missionDocumentId, FALSE );
+		$this->deliverDocument( $missionId, $missionDocumentId );
 	}
 }

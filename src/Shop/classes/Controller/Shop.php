@@ -2,30 +2,39 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	@todo	complete flow implementation, currently stopped at method "pay"
  */
 class Controller_Shop extends Controller
 {
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+
 	/**	@var	Logic_ShopBridge		$brige */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
 
 	/**	@var	Logic_Shop				$logic */
-	protected $logic;
+	protected Logic_Shop $logic;
 
 	/**	@var	Dictionary				$options */
-	protected $options;
+	protected Dictionary $options;
 
 	/**	@var	Model_Shop_Cart			$modelCart */
-	protected $modelCart;
+	protected Model_Shop_Cart $modelCart;
 
-	protected $backends			= [];
+	protected array $words;
 
-	protected $servicePanels	= [];
+	protected array $backends			= [];
 
-	protected $cartTotal		= 0;
+	protected array $servicePanels		= [];
+
+	protected float $cartTotal			= .0;
+
 
 	/**
 	 *	Add article to cart.
@@ -33,10 +42,10 @@ class Controller_Shop extends Controller
 	 *	Will restart application to shop cart if forwarding is not used.
 	 *	Otherwise: Will direct to given forward path if set by request (GET parameter forwardTo).
 	 *	@access		public
-	 *	@param		integer		$articleId			ID of article to remove from cart
+	 *	@param		string		$articleId			ID of article to remove from cart
 	 *	@return		void
 	 */
-	public function addArticle( $bridgeId, $articleId, $quantity = 1 )
+	public function addArticle( string $bridgeId, string $articleId, int $quantity = 1 )
 	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
@@ -63,9 +72,9 @@ class Controller_Shop extends Controller
 			'article'	=> $article,
 		];
 		$this->modelCart->set( 'positions', $positions );
-		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
-		$this->messenger->noteSuccess( $this->words->successAddedToCart, $article->title, $quantity );
-		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
+//		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
+		$this->messenger->noteSuccess( $this->words['successAddedToCart'], $article->title, $quantity );
+		$this->restart( $forwardTo ?: 'shop/cart' );
 	}
 
 	public function cart()
@@ -84,7 +93,15 @@ class Controller_Shop extends Controller
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
-	public function changePositionQuantity( $bridgeId, $articleId, $quantity, $operation = NULL )
+	/**
+	 *	@param		$bridgeId
+	 *	@param		$articleId
+	 *	@param		$quantity
+	 *	@param		$operation
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function changePositionQuantity( $bridgeId, $articleId, int $quantity, ?string $operation = NULL )
 	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
@@ -110,22 +127,22 @@ class Controller_Shop extends Controller
 				$positions[$nr]	= $position;
 				if( !$position->quantity ){
 					unset( $positions[$nr] );
-					$this->messenger->noteSuccess( $this->words->successRemovedFromCart, $position->article->title );
+					$this->messenger->noteSuccess( $this->words['successRemovedFromCart'], $position->article->title );
 				}
 				else{
-					$this->messenger->noteSuccess( $this->words->successChangedQuantity, $position->article->title, $position->quantity );
+					$this->messenger->noteSuccess( $this->words['successChangedQuantity'], $position->article->title, $position->quantity );
 				}
 				$this->modelCart->set( 'positions', $positions );
 			}
 		}
-		$this->restart( $forwardTo ? $forwardTo : 'shop/cart' );
+		$this->restart( $forwardTo ?: 'shop/cart' );
 	}
 
-	public function checkout()
+	public function checkout(): void
 	{
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 //		print_m( $this->session->getAll( 'shop_' ) );die;
-		if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
+		if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT ){
 			$logicAuth	= new Logic_Authentication( $this->env );
 			if( !$logicAuth->isIdentified() ){
 				$this->modelCart->set( 'userId', 0 );
@@ -133,7 +150,7 @@ class Controller_Shop extends Controller
 				$this->restart( 'customer', TRUE );
 			}
 		}
-		else if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+		else if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_GUEST ){
 			if( !$this->modelCart->get( 'userId' ) )
 				$this->restart( 'customer', TRUE );
 		}
@@ -165,17 +182,17 @@ class Controller_Shop extends Controller
 		if( !$userId )
 			$this->restart( 'customer', TRUE );
 		if( !$positions ){
-			$this->messenger->noteNotice( $this->words->errorCheckoutEmptyCart );
+			$this->messenger->noteNotice( $this->words['errorCheckoutEmptyCart'] );
 			$this->restart( 'cart', TRUE );
 		}
 //		$this->addData( 'order', $order );
 //		$this->addData( 'positions', $positions );
 		$this->addData( 'cart', $this->modelCart );
 		switch( $this->modelCart->get( 'customerMode' ) ){
-		 	case Model_Shop_CART::CUSTOMER_MODE_ACCOUNT:
+		 	case Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT:
 				$customer	= $this->logic->getAccountCustomer( $userId );
 				break;
-		 	case Model_Shop_CART::CUSTOMER_MODE_GUEST:
+		 	case Model_Shop_Cart::CUSTOMER_MODE_GUEST:
 			default:
 				$customer	= $this->logic->getAccountCustomer( $userId );
 				break;
@@ -186,7 +203,7 @@ class Controller_Shop extends Controller
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
 	}
 
-	public function conditions()
+	public function conditions(): void
 	{
 //		$order		= $this->session->get( 'shop_order' );
 		$positions	= $this->modelCart->get( 'positions' );
@@ -199,12 +216,12 @@ class Controller_Shop extends Controller
 
 		if( $this->request->has( 'saveConditions' ) ){
 			if( !$this->request->get( 'accept_rules' ) ){
-				$this->messenger->noteError( $this->words->errorRulesNotAccepted );
+				$this->messenger->noteError( $this->words['errorRulesNotAccepted'] );
 //				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_NEW );
 				$this->modelCart->set( 'acceptRules', FALSE );
 			}
 			else{
-//				$this->messenger->noteSuccess( $this->words->successRulesAccepted );
+//				$this->messenger->noteSuccess( $this->words['successRulesAccepted'] );
 //				$this->modelCart->set( 'orderStatus', Model_Shop_Order::STATUS_AUTHENTICATED );
 				$this->modelCart->set( 'acceptRules', TRUE );
 				$this->restart( 'payment', TRUE );
@@ -216,11 +233,11 @@ class Controller_Shop extends Controller
 		$this->addData( 'cart', $this->modelCart );
 	}
 
-	public function finish()
+	public function finish(): void
 	{
 		$orderId	= $this->modelCart->get( 'orderId' );
 		if( !$orderId ){
-			$this->env->getMessenger()->noteError( $this->words->errorFinishEmptyCart );
+			$this->env->getMessenger()->noteError( $this->words['errorFinishEmptyCart'] );
 			$this->restart( 'cart', TRUE );
 		}
 		$order	= $this->logic->getOrder( $orderId );
@@ -230,34 +247,35 @@ class Controller_Shop extends Controller
 		$this->sentOrderMailManager( $orderId );
 		$this->session->set( 'shop_order_lastId', $orderId );
 		$this->modelCart->releaseOrder();
-		$this->env->getMessenger()->noteSuccess( $this->words->successFinished );
+		$this->env->getMessenger()->noteSuccess( $this->words['successFinished'] );
 		$order		= $this->logic->getOrder( $orderId );
 		$payload	= [
 			'orderId'	=> $orderId,
 			'order'		=> $order,
 		];
-		$this->env->getModules()->callHook( 'Shop', 'onFinish', $this, $payload );
+		$this->env->getModules()->callHookWithPayload( 'Shop', 'onFinish', $this, $payload );
 		$this->restart( 'service', TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->restart( 'cart', TRUE );
 	}
 
-	public function payment()
+	public function payment(): void
 	{
 		if( $this->cartTotal == 0 || count( $this->backends ) === 1 ){
 			$paymentBackend		= $this->backends[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
-		$orderId	= $this->modelCart->get( 'orderId' );
+//		$orderId	= $this->modelCart->get( 'orderId' );
 		$this->addData( 'cart', $this->modelCart );
 
 		$this->addData( 'billingAddress', $this->logic->getBillingAddressFromCart() );
 	}
 
-/*	public function register(){
+/*	public function register(): void
+	{
 		if( $this->request->has( 'save' ) ){
 			$customer	= $this->request->getAll( 'customer_', TRUE );
 			$labels		= $this->getWords( 'customer' );
@@ -274,7 +292,7 @@ class Controller_Shop extends Controller
 				if( !$customer->get( $name ) ){
 					$label	= TextCamelCase::convert( $name, FALSE );
 					$this->messenger->noteError(
-						$this->words->errorFieldEmpty,
+						$this->words['errorFieldEmpty'],
 						'customer_'.$name,
 						$labels['labelCustomer'.$label]
 					);
@@ -314,7 +332,7 @@ class Controller_Shop extends Controller
 	 *	@param		string		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
+	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] ): void
 	{
 		$this->backends[]	= (object) [
 			'backend'	=> $backend,
@@ -327,7 +345,7 @@ class Controller_Shop extends Controller
 		];
 	}
 
-	public function registerServicePanel( $key, $content, $priority )
+	public function registerServicePanel( $key, $content, $priority ): void
 	{
 		$this->servicePanels[$key]	= (object) [
 			'key'		=> $key,
@@ -341,10 +359,10 @@ class Controller_Shop extends Controller
 	 *	Will restart application to shop cart if forwarding is not used.
 	 *	Otherwise: Will direct to given forward path if set by request (GET parameter forwardTo).
 	 *	@access		public
-	 *	@param		integer		$articleId			ID of article to remove from cart
+	 *	@param		string		$articleId			ID of article to remove from cart
 	 *	@return		void
 	 */
-	public function removeArticle( $articleId )
+	public function removeArticle( string $articleId ): void
 	{
 		$positions		= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position )
@@ -356,11 +374,11 @@ class Controller_Shop extends Controller
 		$this->restart( 'cart', TRUE );
 	}
 
-	public function rules()
+	public function rules(): void
 	{
 	}
 
-	public function service()
+	public function service(): void
 	{
 		$orderId	= $this->session->get( 'shop_order_lastId' );
 		if( !$orderId )
@@ -377,7 +395,7 @@ class Controller_Shop extends Controller
 		$this->env->getModules()->callHookWithPayload( 'Shop', 'onPaymentSuccess', $this, $payload );
 	}
 
-	public function setPaymentBackend( $paymentBackendKey = NULL )
+	public function setPaymentBackend( $paymentBackendKey = NULL ): void
 	{
 		if( $paymentBackendKey ){
 			$this->modelCart->set( 'paymentMethod', $paymentBackendKey );
@@ -395,7 +413,7 @@ class Controller_Shop extends Controller
 		$this->logic		= new Logic_Shop( $this->env );
 		$this->bridge		= new Logic_ShopBridge( $this->env );
 		$this->modelCart	= new Model_Shop_Cart( $this->env );
-		$this->words		= (object) $this->getWords( 'msg' );
+		$this->words		= $this->getWords( 'msg' );
 		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$this->addData( 'options', $this->options );
@@ -421,7 +439,7 @@ class Controller_Shop extends Controller
 /*		$grade		= new Model_Shop_Shipping_Grade();
 		$grade		= $grade->getGradeID( $total['weight'] );
 		$zone		= new Model_Shop_Shipping_Country();
-		$zone		= $zone->getZoneID( $udata['country'] );
+		$zone		= $zone->getZoneID( $data['country'] );
 		$price		= new Model_Shop_Shipping_Price();
 		$charges	= $price->getPrice( $zone, $grade );
 */		$option		= new Model_Shop_Shipping_Option( $this->env );
@@ -430,12 +448,12 @@ class Controller_Shop extends Controller
 			$set_options	= explode( "|", $order['options'] );
 			foreach( $options as $option )
 				if( in_array( $option['shippingoption_id'], $set_options ) )
-					$charges	+= (float)$option['price'];
+					$charges	+= (float) $option['price'];
 		}
 		return $charges;
 	}
 
-	protected function sentOrderMailCustomer( $orderId )
+	protected function sentOrderMailCustomer( $orderId ): void
 	{
 		$order		= $this->logic->getOrder( $orderId );
 		$customer	= $this->logic->getOrderCustomer( $orderId );
@@ -451,7 +469,7 @@ class Controller_Shop extends Controller
 		$logic->handleMail( $mail, $customer, $language );
 	}
 
-	protected function sentOrderMailManager( $orderId )
+	protected function sentOrderMailManager( string $orderId ): void
 	{
 		$language	= $this->env->getLanguage()->getLanguage();
 		$email		= $this->env->getConfig()->get( 'module.shop.mail.manager' );
@@ -464,7 +482,7 @@ class Controller_Shop extends Controller
 		$logic->handleMail( $mail, (object) ['email' => $email], $language );
 	}
 
-	protected function submitOrder()
+	protected function submitOrder(): void
 	{
 //		$this->acceptRules();
 		$this->saveConditions();

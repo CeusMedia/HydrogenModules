@@ -30,7 +30,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$old		= $data['missionBefore'];
 		$new		= $data['missionAfter'];
 
-		$this->helperFacts	= new View_Helper_Mail_Facts( $this->env );
+		$this->helperFacts	= new View_Helper_Mail_Facts();
 		$this->helperFacts->setLabels( $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 

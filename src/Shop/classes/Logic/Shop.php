@@ -143,10 +143,12 @@ class Logic_Shop extends Logic
 		return $customer;
 	}
 
-	public function getOrder( $orderId, bool $extended = FALSE )
+	public function getOrder( string $orderId, bool $extended = FALSE ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
-		if( $order && $extended ){
+		if( !$order )
+			throw new RangeException( 'Invalid order ID: '.$orderId );
+		if( $extended ){
 			$order->customer	= $this->getOrderCustomer( $orderId );
 			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
 			$order->shipping	= $this->getOrderShipping( $orderId );

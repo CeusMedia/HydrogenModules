@@ -62,14 +62,15 @@ class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 <div class="text-salute">'.$salute.'</div>
 <div class="text-signature">'.$w->textSignature.'</div>';
 
-		$this->addPrimerStyle( 'layout.css' );
-		$this->addThemeStyle( 'layout.css' );
-		$this->addThemeStyle( 'site.user.css' );
-		$this->addThemeStyle( 'site.mission.css' );
-		$this->addThemeStyle( 'indicator.css' );
+		$page	= clone $this->env->getPage();
+		$page->addPrimerStyle( 'layout.css' );
+		$page->addThemeStyle( 'layout.css' );
+		$page->addThemeStyle( 'site.user.css' );
+		$page->addThemeStyle( 'site.mission.css' );
+		$page->addThemeStyle( 'indicator.css' );
 
-		$this->page->addBody( $body );
+		$page->addBody( $body );
 		$class	= 'moduleWorkMission jobWorkMission job-work-mission-mail-daily';
-		return $this->page->build( ['class' => $class] );
+		return $page->build( ['class' => $class] );
 	}
 }

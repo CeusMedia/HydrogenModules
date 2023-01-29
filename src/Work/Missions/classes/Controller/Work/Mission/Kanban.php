@@ -11,9 +11,9 @@
  */
 class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.kanban.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.kanban.';
 
-	protected $defaultFilterValues	= [
+	protected array $defaultFilterValues	= [
 		'mode'		=> 'now',
 		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
@@ -48,20 +48,20 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		$this->initFilters( $this->session->get( 'auth_user_id' ) );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
-		$this->setData( array(
+		$this->setData( [
 			'userId'	=> $this->session->get( 'auth_user_id' ),
 			'year'		=> $date[0],
 			'month'		=> $date[1],
-		) );
+		] );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId	= $this->getData( 'userId' );
 		$this->addData( 'users', $this->userMap );
 	}
 
-	public function ajaxSetMissionStatus()
+	public function ajaxSetMissionStatus(): void
 	{
 		$missionId	= $this->request->get( 'missionId' );
 		$status		= (int) $this->request->get( 'status' );
@@ -76,10 +76,10 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 				throw new InvalidArgumentException( 'Invalid mission ID given' );
 			$responseStatus	= FALSE;
 			if( $mission->status != $status ){
-				$data	= array(
+				$data	= [
 					'status'		=> $status,
 					'modifiedAt'	=> time(),
-				);
+				];
 //				if( $status === 1 )
 //					$data['workerId']	= $this->userId;
 				$this->model->edit( $missionId, $data );
@@ -99,19 +99,19 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		exit;
 	}
 
-	public function index( $year = NULL, $month = NULL )
+	public function index( $year = NULL, $month = NULL ): void
 	{
 		$this->assignFilters();
 	}
 
-	protected function initDefaultFilters()
+	protected function initDefaultFilters(): void
 	{
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

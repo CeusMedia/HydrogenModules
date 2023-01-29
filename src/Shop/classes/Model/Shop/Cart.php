@@ -15,15 +15,26 @@ class Model_Shop_Cart
 		self::CUSTOMER_MODE_ACCOUNT,
 	];
 
+	protected Environment $env;
+	protected Dictionary $session;
 	/**	@var	Logic_ShopBridge		$brige */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
+	protected Model_Shop_Order $modelOrder;
+	protected Model_Shop_Order_Position $modelPosition;
+	protected Dictionary $data;
+	protected bool $taxIncluded;
+	protected string $defaultCurrency;
 
-	protected $ignoreOnUpdate		= [
+	protected array $ignoreOnUpdate		= [
 		'customerMode',
 		'price',
 		'priceTaxed',
 	];
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
@@ -49,7 +60,7 @@ class Model_Shop_Cart
 
 	}
 
-	public function get( $key )
+	public function get( string $key )
 	{
 		return $this->data->get( $key );
 	}
@@ -59,14 +70,14 @@ class Model_Shop_Cart
 		return $this->data->getAll();
 	}
 
-	public function has( $key )
+	public function has( string $key ): bool
 	{
 		return $this->data->has( $key );
 	}
 
 	public function loadOrder( $orderId = NULL )
 	{
-		$orderId	= $orderId ? $orderId : $this->data->get( 'orderId' );
+		$orderId	= $orderId ?: $this->data->get( 'orderId' );
 		if( $orderId ){
 			$order	= $this->modelOrder->get( $orderId );
 			if( $order ){
@@ -98,8 +109,12 @@ class Model_Shop_Cart
 			$this->createEmpty();
 	}
 
-
-	public function remove( $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	public function remove( string $key ): bool
 	{
 		$this->data->remove( $key );
 		if( $this->data->get( 'orderId' ) )
@@ -111,9 +126,10 @@ class Model_Shop_Cart
 	/**
 	 *	Saves cart from session to order in database.
 	 *	@access		public
-	 *	@return		integer		Order ID
+	 *	@return		string		Order ID
+	 *	@throws		ReflectionException
 	 */
-	public function saveOrder()
+	public function saveOrder(): string
 	{
 		$orderId	= $this->data->get( 'orderId' );
 		if( $orderId && $this->modelOrder->get( $orderId ) ){
@@ -122,7 +138,13 @@ class Model_Shop_Cart
 		return $this->createOrder();
 	}
 
-	public function set( $key, $value )
+	/**
+	 *	@param		string		$key
+	 *	@param		mixed		$value
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	public function set( string $key, $value ): bool
 	{
 		$this->data->set( $key, $value );
 		if( $this->data->get( 'orderId' ) )
@@ -143,14 +165,18 @@ class Model_Shop_Cart
 			'currency'			=> $this->defaultCurrency,
 			'positions'			=> [],
 			'customer'			=> [],
-			'customerMode'		=> Model_Shop_CART::CUSTOMER_MODE_UNKNOWN,
+			'customerMode'		=> Model_Shop_Cart::CUSTOMER_MODE_UNKNOWN,
 		] );
 		$this->session->set( 'shop_cart', $this->data->getAll() );
 	}
 
-	protected function createOrder()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	protected function createOrder(): string
 	{
-		$orderId	= $this->modelOrder->add( array(
+		$orderId	= $this->modelOrder->add( [
 			'userId'		=> $this->data->get( 'userId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
 			'paymentMethod'	=> $this->data->get( 'paymentMethod' ),
@@ -159,7 +185,7 @@ class Model_Shop_Cart
 			'priceTaxed'	=> 0,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 
 		foreach( $this->data->get( 'positions' ) as $item ){
 			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
@@ -170,7 +196,7 @@ class Model_Shop_Cart
 				$price		-= $article->tax->one;											//  reduce by tax added by default
 				$priceTaxed	-= $article->tax->one;											//  reduce by tax added by default
 			}
-			$positionId	= $this->modelPosition->add( array(
+			$positionId	= $this->modelPosition->add( [
 				'orderId'		=> $orderId,
 				'bridgeId'		=> $item->bridgeId,
 				'articleId'		=> $item->articleId,
@@ -181,22 +207,27 @@ class Model_Shop_Cart
 				'priceTaxed'	=> $priceTaxed,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		$this->updateOrderPrices( $orderId );
 		$this->set( 'orderId', $orderId );
 		return $orderId;
 	}
 
-	protected function updateOrder( $orderId )
+	/**
+	 *	@param		string		$orderId
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	protected function updateOrder( string $orderId ): string
 	{
-		$this->modelOrder->edit( $orderId, array(
+		$this->modelOrder->edit( $orderId, [
 			'userId'		=> $this->data->get( 'userId' ),
 			'status'		=> $this->data->get( 'orderStatus' ),
 //			'options'		=> $this->data->get( 'options' ),
 			'paymentMethod'	=> $this->data->get( 'paymentMethod' ),
 			'modifiedAt'	=> time(),
-		)  );
+		] );
 
 		$relations	= $this->modelPosition->getAllByIndex( 'orderId', $orderId );
 		foreach( $relations as $relation ){
@@ -224,16 +255,16 @@ class Model_Shop_Cart
 			}
 			if( $relation ){
 				if( $relation->quantity != $item->quantity ){
-					$this->modelPosition->edit( $relation->positionId, array(
+					$this->modelPosition->edit( $relation->positionId, [
 						'quantity'		=> $item->quantity,
 						'price'			=> $price,
 						'priceTaxed'	=> $priceTaxed,
 						'modifiedAt'	=> time(),
-					) );
+					] );
 				}
 			}
 			else{
-				$positionId	= $this->modelPosition->add( array(
+				$positionId	= $this->modelPosition->add( [
 					'orderId'		=> $orderId,
 					'bridgeId'		=> $item->bridgeId,
 					'articleId'		=> $item->articleId,
@@ -246,14 +277,19 @@ class Model_Shop_Cart
 					'priceTaxed'	=> $priceTaxed,
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
-				) );
+				] );
 			}
 		}
 		$this->updateOrderPrices( $orderId );
 		return $orderId;
 	}
 
-	protected function updateOrderPrices( $orderId )
+	/**
+	 *	@param		string		$orderId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	protected function updateOrderPrices( string $orderId ): bool
 	{
 		$price			= 0;
 		$priceTaxed		= 0;
@@ -276,7 +312,7 @@ class Model_Shop_Cart
 		//  --  OPTIONS  --  //
 		// @todo implement!
 
-		$this->modelOrder->edit( $orderId, [
+		return (bool) $this->modelOrder->edit( $orderId, [
 			'price'			=> $price,
 			'priceTaxed'	=> $priceTaxed,
 		] );

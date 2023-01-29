@@ -11,9 +11,9 @@
  */
 class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.calendar.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.calendar.';
 
-	protected $defaultFilterValues	= [
+	protected array $defaultFilterValues	= [
 		'mode'		=> 'now',
 		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
@@ -56,19 +56,19 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 		] );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId	= $this->getData( 'userId' );
 	}
 
-	protected function initDefaultFilters()
+	protected function initDefaultFilters(): void
 	{
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	public function index( $year = NULL, $month = NULL )
+	public function index( $year = NULL, $month = NULL ): void
 	{
 		$this->initFilters( $this->userId );
 		$this->assignFilters();
@@ -104,7 +104,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 */
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

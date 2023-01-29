@@ -1,13 +1,9 @@
 <?php
 class Controller_Work_Mission_Archive extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.archive.';
+	protected string $filterKeyPrefix	= 'filter.work.mission.archive.';
 
-	protected $options;
-
-	protected $request;
-
-	protected $defaultFilterValues	= [
+	protected array $defaultFilterValues	= [
 		'states'		=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
@@ -35,7 +31,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		$this->session->set( 'filter.work.mission.mode', 'archive' );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 20;
@@ -65,7 +61,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 //		exit;
 	}
 
-	public function index( $missionId = NULL )
+	public function index( string $missionId = NULL ): void
 	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
@@ -73,7 +69,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		$this->assignFilters();
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

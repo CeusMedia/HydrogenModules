@@ -142,7 +142,7 @@ class View_Helper_ItemRelationLister
 			'list'			=> [],
 		] );
 		$this->env->getCaptain()->callHook( $this->hookResource, $this->hookEvent, $this, $payload );
-		$this->relations	= $data['list'];
+		$this->relations	= $payload['list'];
 	}
 
 	protected function renderRelationsAsList(): string

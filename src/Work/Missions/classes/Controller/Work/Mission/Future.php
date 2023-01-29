@@ -1,9 +1,9 @@
 <?php
 class Controller_Work_Mission_Future extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.future.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.future.';
 
-	protected $defaultFilterValues	= [
+	protected array $defaultFilterValues	= [
 		'states'		=> [
 			Model_Mission::STATUS_NEW,
 			Model_Mission::STATUS_ACCEPTED,
@@ -32,13 +32,13 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 		$this->session->set( 'filter.work.mission.mode', 'future' );
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 		$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo:  calculation is incorrect
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId		= $this->session->get( 'auth_user_id' );
 
@@ -72,7 +72,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 //		exit;
 	}
 
-	public function index( $missionId = NULL )
+	public function index( $missionId = NULL ): void
 	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );

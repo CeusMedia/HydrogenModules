@@ -16,9 +16,12 @@ class View_Helper_Shop_AddressView
 		self::OUTPUT_HTML,
 	];
 
-	protected $env;
-	protected $address;
-	protected $output			= self::OUTPUT_HTML;
+	protected Environment $env;
+	protected Model_Address $model;
+	protected array $words;
+	protected int $output			= self::OUTPUT_HTML;
+	protected ?object $address		= NULL;
+	protected ?string $textTop		= NULL;			//  unused atm
 
 	public function __construct( Environment $env )
 	{
@@ -40,18 +43,23 @@ class View_Helper_Shop_AddressView
 	{
 		if( $countryCode && array_key_exists( $countryCode, $this->words['countries'] ) )
 			return $this->words['countries'][$countryCode];
+		return $countryCode;
 	}
 
 	public function render(): string
 	{
-		if( !$this->address )
-			return '';
-		switch( $this->output ){
-			case self::OUTPUT_HTML:
-				return $this->renderAsHtml();
-			case self::OUTPUT_TEXT:
-				return $this->renderAsText();
+		$content	= '';
+		if( $this->address ){
+			switch( $this->output ){
+				case self::OUTPUT_HTML:
+					$content	= $this->renderAsHtml();
+					break;
+				case self::OUTPUT_TEXT:
+					$content	= $this->renderAsText();
+					break;
+			}
 		}
+		return $content;
 	}
 
 	public function setAddress( $addressOrId ): self
@@ -67,12 +75,17 @@ class View_Helper_Shop_AddressView
 
 	public function setOutput( int $format ): string
 	{
-		if( !in_array( (int) $format, [self::OUTPUT_HTML, self::OUTPUT_TEXT] ) )
+		if( !in_array( $format, [self::OUTPUT_HTML, self::OUTPUT_TEXT] ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= (int) $format;
+		$this->output		= $format;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$text
+	 *	@return		self
+	 *	@todo		unused atm, decide to use or remove
+	 */
 	public function setTextTop( string $text ): self
 	{
 		$this->textTop		= $text;
@@ -127,15 +140,15 @@ class View_Helper_Shop_AddressView
 	{
 		$w		= $this->words['view'];
 		$label	= $w['label'.ucfirst( $labelKey )];
-		return HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'small', $label, ['class' => 'muted'] )
-				) ),
-				HtmlTag::create( 'div', array(
+				] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'big', $content, ['class' => NULL] )
-				) ),
-			), ['class' => 'span12'] )
-		), ['class' => 'row-fluid'] );
+				] ),
+			], ['class' => 'span12'] )
+		], ['class' => 'row-fluid'] );
 	}
 }

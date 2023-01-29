@@ -1,22 +1,25 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
-	protected $logic;
-	protected $session;
-	protected $request;
-	protected $messenger;
+	protected Logic_Newsletter_Editor $logic;
+	protected Dictionary $session;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
-	protected $limiter;
-	protected $filterPrefix	= 'filter_work_newsletter_';
+	protected ?Logic_Limiter $limiter			= NULL;
+	protected string $filterPrefix				= 'filter_work_newsletter_';
+	protected string $frontendUrl;
 
-	public function add()
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() ){
@@ -37,7 +40,7 @@ class Controller_Work_Newsletter extends Controller
 					'senderAddress'		=> $template->senderAddress,
 				] );
 			}
-			$data	= array_merge( $data, array(
+			$data	= array_merge( $data, [
 				'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
 				'title'				=> $this->request->get( 'title' ),
 				'subject'			=> trim( $this->request->get( 'subject' ) ),
@@ -46,7 +49,7 @@ class Controller_Work_Newsletter extends Controller
 //				'senderAddress'		=> trim( $this->request->get( 'senderAddress' ) ),
 				'trackingCode'		=> trim( $this->request->get( 'trackingCode' ) ),
 				'createdAt'			=> time(),
-			) );
+			] );
 			if( !strlen( $data['subject'] ) )
 				$data['subject']	= $data['title'];
 			if( $this->logic->getNewsletters( ['title' => $data['title']] ) ){
@@ -67,7 +70,7 @@ class Controller_Work_Newsletter extends Controller
 		}
 
 		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
-		$newsletter		= (object) array(
+		$newsletter		= (object) [
 			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
 			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
 			'creatorId'				=> (int) $this->session->get( 'auth_user_id' ),
@@ -77,20 +80,20 @@ class Controller_Work_Newsletter extends Controller
 			'heading'				=> trim( $this->request->get( 'heading' ) ),
 			'subject'				=> trim( $this->request->get( 'subject' ) ),
 			'trackingCode'			=> trim( $this->request->get( 'trackingCode' ) ),
-		);
+		];
 		$this->addData( 'templates', $templates );
 		$this->addData( 'newsletters', $newsletters );
 		$this->addData( 'newsletter', $newsletter );
 	}
 
-	public function dequeueLetter( $readerLetterId )
+	public function dequeueLetter( string $readerLetterId ): void
 	{
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
 		$this->logic->dequeue( $readerLetterId );
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
-	public function edit( $newsletterId )
+	public function edit( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'edit' );
@@ -133,7 +136,6 @@ class Controller_Work_Newsletter extends Controller
 			$groups[$group->newsletterGroupId]	= $group;
 		}
 
-		$model			= new Model_Newsletter_Reader_Group( $this->env );
 		$groupIds		= $this->request->get( 'groupIds' );
 		if( !$groupIds )
 			$groupIds	= [];
@@ -173,7 +175,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
 	}
 
-	public function editFull( $newsletterId )
+	public function editFull( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
@@ -185,7 +187,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
 	}
 
-	public function enqueue( $newsletterId )
+	public function enqueue( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'enqueue' );
@@ -214,7 +216,6 @@ class Controller_Work_Newsletter extends Controller
 			$this->restart( 'edit/'.$newsletterId, TRUE );
 		}
 
-
 		$numberSent		= 0;
 		$numberSkipped	= 0;
 		foreach( $readerIds as $readerId )
@@ -232,7 +233,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( 'setContentTab/'.$newsletterId.'/5', TRUE );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'title' );
@@ -245,7 +246,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
@@ -262,7 +263,6 @@ class Controller_Work_Newsletter extends Controller
 		if( strlen( $filterStatus ) )
 			$conditions['status']	= $filterStatus;
 
-
 		$orders		= ['newsletterId' => 'DESC'];
 		$limits		= [$page * $filterLimit, $filterLimit];
 		$this->addData( 'newsletters', $this->logic->getNewsletters( $conditions, $orders, $limits ) );
@@ -274,19 +274,18 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'filterLimit', $filterLimit );
 	}
 
-	public function preview( $format, $newsletterId, $simulateOffline = FALSE )
+	public function preview( string $format, string $newsletterId, bool $simulateOffline = FALSE ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'preview' );
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
-		$template	= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
-		$baseUri	= $this->env->url;
+//		$template	= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
+		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUri	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
-		$urlOptOut	= $baseUri.'info/newsletter/unregister';
-		$urlTrack	= $baseUri.'info/newsletter/track/0';
-		$data		= array(
+		$urlTrack	= $baseUrl.'info/newsletter/track/0';
+		$data		= [
 			'nr'				=> $newsletter->newsletterId,
 			'title'				=> $newsletter->heading,
 			'content'			=> $newsletter->plain,
@@ -300,7 +299,7 @@ class Controller_Work_Newsletter extends Controller
 			'linkUnregister'	=> "javascript:alert('".$words->alertDisabledInPreview."')",
 			'linkView'			=> "javascript:alert('".$words->alertDisabledInPreview."')",
 			'preview'			=> TRUE,
-		);
+		];
 		$mail	= new View_Helper_Newsletter_Mail( $this->env );
 		$mail->setTemplateId( $newsletter->newsletterTemplateId );
 		switch( strtolower( $format ) ){
@@ -308,7 +307,6 @@ class Controller_Work_Newsletter extends Controller
 				$data['content']		= $newsletter->plain;
 				$data['linkUnregister']	= '('.$words->alertDisabledInPreview.')';
 				$data['linkView']		= '('.$words->alertDisabledInPreview.')';
-				$mail->setMode( View_Helper_Newsletter_Mail::MODE_PLAIN );
 				$mail->setData( $data );
 				$content	= HtmlTag::create( 'xmp', $mail->render() );
 				break;
@@ -316,7 +314,7 @@ class Controller_Work_Newsletter extends Controller
 				$data['content']		= $newsletter->html;
 				$mail->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
 				$mail->setData( $data );
-				$content	= $mail->render( $data );
+				$content	= $mail->render();
 				if( $simulateOffline )
 					$content	= preg_replace( '@https?://@', "noschema://", $content );
 				break;
@@ -325,17 +323,16 @@ class Controller_Work_Newsletter extends Controller
 		}
 		print( $content );
 		exit;
-		return $content;
 	}
 
 	/**
-	 *	Resends a readers newletter.
+	 *	Resends a readers newsletter.
 	 *	@access		public
-	 *	@param		integer		$readerLetterId		ID of former send reader newsletter
+	 *	@param		string		$readerLetterId		ID of former send reader newsletter
 	 *	@return		void
 	 *	@todo		extend by queue support, otherwise this wont work anymore
 	 */
-	public function sendLetter( $readerLetterId )
+	public function sendLetter( string $readerLetterId ): void
 	{
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
 		if( !$letter )
@@ -348,34 +345,33 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
-	public function setContentTab( $newsletterId, $tabKey )
+	public function setContentTab( string $newsletterId, string $tabKey ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$this->session->set( 'work.newsletter.content.tab', $tabKey );
 		$this->restart( './work/newsletter/edit/'.$newsletterId );
 	}
 
-	public function setStatus( $newsletterId, $status )
+	public function setStatus( string $newsletterId, $status ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
-		$urlForwardTo	= $this->request->get( 'forwardTo' );
 
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkNewsletterId( $newsletterId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
-		if( !in_array( (int) $status, [-1, 0, 1, 2] ) ){
+		if( !in_array( (int) $status, [-1, 0, 1, 2], TRUE ) ){
 			$this->messenger->noteError( 'Invalid status.', $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
 		$this->logic->editNewsletter( $newsletterId, array( 'status' => (int) $status ) );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$urlForwardTo	= $this->request->get( 'forwardTo' );
-		$this->restart( $urlForwardTo ? $urlForwardTo : 'edit/'.$newsletterId, TRUE );
+		$this->restart( $urlForwardTo ?: 'edit/'.$newsletterId, TRUE );
 	}
 
-	public function test( $newsletterId )
+	public function test( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$w			= (object) $this->getWords( 'test' );
@@ -384,7 +380,6 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( 'No receivers selected.' );
 			$this->restart( 'edit/'.$newsletterId, TRUE );
 		}
-		$readerLetterIds	= [];
 		foreach( $readerIds as $readerId )
 			$this->logic->sendTestLetter( $newsletterId, $readerId );
 		$this->messenger->noteSuccess( $w->msgSuccess, count( $readerIds ) );
@@ -396,26 +391,30 @@ class Controller_Work_Newsletter extends Controller
 //		$this->restart( 'setContentTab/'.$newsletterId.'/4', TRUE );
 	}
 
-	public function view( $readerLetterId )
+	public function view( string $readerLetterId ): void
 	{
 		try{
 			$letter		= $this->logic->getReaderLetter( $readerLetterId );
 			$newsletter	= $this->logic->getNewsletter( $letter->newsletterId );
-			$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
-			$data		= $helper->prepareReaderDataForLetter( $readerLetterId, TRUE );
-			$mail		= $helper->renderNewsletterHtml( $letter->newsletterId, $letter->newsletterReaderId, $data );
-			print( $mail );
-			die;
+			try{
+				$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
+				$data		= $helper->prepareReaderDataForLetter( $readerLetterId, TRUE );
+				$mail		= $helper->renderNewsletterHtml( $letter->newsletterId, $letter->newsletterReaderId, $data );
+				print( $mail );
+				die;
+			}
+			catch( Exception $e ){
+				HtmlExceptionPage::display( $e );
+				exit;
+			}
 		}
 		catch( Exception $e ){
-			HtmlExceptionPage::display( $e );
-			die;
 			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
 			$this->restart( NULL, TRUE );
 		}
 	}
 
-	public function remove( $newsletterId )
+	public function remove( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$this->logic->removeNewsletter( $newsletterId );
@@ -435,7 +434,7 @@ class Controller_Work_Newsletter extends Controller
 
 		$this->frontendUrl		= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->frontendUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$this->frontendUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 		$this->addData( 'frontendUrl', $this->frontendUrl );
 
 		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
@@ -451,9 +450,9 @@ class Controller_Work_Newsletter extends Controller
 			$this->session->set( $this->filterPrefix.'limit', 10 );
 	}
 
-	protected function checkNewsletterId( $newsletterId )
+	protected function checkNewsletterId( string $newsletterId ): void
 	{
-		if( !$this->logic->checkNewsletterId( $newsletterId, FALSE ) ){
+		if( !$this->logic->checkNewsletterId( $newsletterId ) ){
 			$words		= (object) $this->getWords( 'edit' );
 			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
 			$this->restart( NULL, TRUE );
