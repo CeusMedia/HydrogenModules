@@ -1,10 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconNotice			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
-$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'';
+$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] );
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );

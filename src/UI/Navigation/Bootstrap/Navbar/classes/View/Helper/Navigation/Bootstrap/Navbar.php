@@ -1,25 +1,24 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
-use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleAutoTabs;
 
 class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 {
-	protected $container			= FALSE;
-	protected $inverse				= FALSE;
-	protected $logoTitle;
-	protected $logoLink;
-	protected $logoIcon;
-	protected $position				= "static";
-	protected $helperAccountMenu;
-	protected $helperNavigation;
-	protected $linksToSkip			= [];
-	protected $hideOnMobileDevice	= FALSE;
+	protected bool $container				= FALSE;
+	protected bool $inverse					= FALSE;
+	protected ?string $logoTitle			= NULL;
+	protected ?string $logoLink				= NULL;
+	protected ?string $logoIcon				= NULL;
+	protected string $position				= 'static';
+	protected ?object $helperAccountMenu	= NULL;
+	protected ?object $helperNavigation		= NULL;
+	protected array $linksToSkip			= [];
+	protected bool $hideOnMobileDevice		= FALSE;
 
 	/**
 	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->render();
 	}
@@ -34,36 +33,22 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 	{
 		$this->env->getPage()->addBodyClass( "navbar-".$this->position );
 
-		if( $this->helperNavigation ){
-			$this->helperNavigation->setInverse( $this->inverse );
-			$this->helperNavigation->setLinksToSkip( $this->linksToSkip );
-			$links	= $this->helperNavigation->render();
+		if( !$this->helperNavigation )
+			throw new RuntimeException( 'No navigation helper set' );
+		$this->helperNavigation->setInverse( $this->inverse );
+		$this->helperNavigation->setLinksToSkip( $this->linksToSkip );
+		$links	= $this->helperNavigation->render();
 
-			if( $this->container )
-				$links	= HtmlTag::create( 'div', $links, ['class' => 'container'] );
+		if( $this->container )
+			$links	= HtmlTag::create( 'div', $links, ['class' => 'container'] );
 
-			$inner	= HtmlTag::create( 'div', $links, ['class' => 'navbar-inner'] );
-			$class	= "navbar navbar-".$this->position."-top";
-			if( $this->inverse )
-				$class	.= ' navbar-inverse';
-			$links	= HtmlTag::create( 'div', $inner, ['class' => $class] );
-		}
-		else{
-			$helperNavbar	= new SingleAutoTabs( $this->env );
-			$helperNavbar->classContainer	= "navbar navbar-".$this->position."-top";
-			$helperNavbar->classWidget		= "navbar-inner";
-			$helperNavbar->classHelper		= "nav";
-			$helperNavbar->classTab			= "";
-			$helperNavbar->classTabActive	= "active";
-			$helperNavbar->setContainer( $this->container );
-			foreach( $this->linksToSkip as $path )
-				$helperNavbar->skipLink( $path );
-			if( $this->inverse )
-				$helperNavbar->classContainer	.= " navbar-inverse";
-			$links			= $helperNavbar->render();
-		}
+		$inner	= HtmlTag::create( 'div', $links, ['class' => 'navbar-inner'] );
+		$class	= "navbar navbar-".$this->position."-top";
+		if( $this->inverse )
+			$class	.= ' navbar-inverse';
+		$links		= HtmlTag::create( 'div', $inner, ['class' => $class] );
 
-		$inverse		= $this->inverse ? 'inverse' : '';
+		$inverse	= $this->inverse ? 'inverse' : '';
 
 		$accountMenu	= "";
 		if( $this->helperAccountMenu )
@@ -81,18 +66,17 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 
 	public function renderLogo(): string
 	{
-		if( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ){
-			$icon	= "";
-			if( $this->logoIcon ){
-				$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
-				$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
-			}
-			$label	= $icon.$this->logoTitle;
-			if( $this->logoLink )
-				$label	= HtmlTag::create( 'a', $label, ['href' => $this->logoLink] );
-			return HtmlTag::create( 'div', $label, ['id' => "navbar-logo"] );
+		if( 0 === strlen( trim( $this->logoTitle ) ) && 0 === strlen( trim( $this->logoIcon ) ) )
+			return '';
+		$icon	= '';
+		if( $this->logoIcon ){
+			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
+			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 		}
-		return '';
+		$label	= $icon.$this->logoTitle;
+		if( $this->logoLink )
+			$label	= HtmlTag::create( 'a', $label, ['href' => $this->logoLink] );
+		return HtmlTag::create( 'div', $label, ['id' => "navbar-logo"] );
 	}
 
 	public function setAccountMenuHelper( $helper ): self

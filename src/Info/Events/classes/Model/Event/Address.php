@@ -2,7 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Model;
 
-class Model_Address extends Model
+class Model_Event_Address extends Model
 {
 	const STATUS_INACTIVE	= -2;
 	const STATUS_REJECTED	= -1;
@@ -20,7 +20,7 @@ class Model_Address extends Model
 
 	protected int $radiusEarth  = 6371;
 
-	protected string $name			= 'addresses';
+	protected string $name			= 'event_addresses';
 
 	protected array $columns		= [
 		'addressId',

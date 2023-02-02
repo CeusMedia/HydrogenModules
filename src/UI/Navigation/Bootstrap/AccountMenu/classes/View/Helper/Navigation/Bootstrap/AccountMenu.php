@@ -1,25 +1,26 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_AccountMenu
 {
-	public $guestLabel			= "Guest";
-	public $guestEmail			= "<em>(not logged in)</em>";
+	public string $guestLabel			= "Guest";
+	public string $guestEmail			= "<em>(not logged in)</em>";
 
-	protected $env;
-	protected $user;
-	protected $showAvatar		= TRUE;
-	protected $showEmail		= FALSE;
-	protected $showFullname		= TRUE;
-	protected $showUsername		= TRUE;
-	protected $linksInside		= [];
-	protected $linksOutside		= [];
-	protected $imageSize		= 32;
-	protected $menu;
+	protected Environment $env;
+	protected ?object $user				= NULL;
+	protected bool $showAvatar			= TRUE;
+	protected bool $showEmail			= FALSE;
+	protected bool $showFullname		= TRUE;
+	protected bool $showUsername		= TRUE;
+	protected array $linksInside		= [];
+	protected array $linksOutside		= [];
+	protected int $imageSize			= 32;
+	protected ?Model_Menu $menu			= NULL;
 	protected $scope;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 
 	public function __construct( Environment $env )
 	{
@@ -177,6 +178,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 
 	protected function renderSetLinks( array $links ): string
 	{
+		$list	= [];
 		foreach( $links as $link ){
 			if( is_object( $link ) ){
 				$icon	= "";
@@ -203,8 +205,9 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
 		];
-		$links	= HtmlTag::create( 'ul', $list, $attributes );
-		return $links;
+		if( !$list )
+			return '';
+		return HtmlTag::create( 'ul', $list, $attributes );
 	}
 
 	public function setLinks( $menu, $scope ): self
@@ -214,6 +217,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		return $this;
 	}
 
+	/**
+	 *	@param		object|string $userObjectOrId
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function setUser( $userObjectOrId ): self
 	{
 		if( is_object( $userObjectOrId ) )
@@ -272,9 +280,9 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		if( !isset( $entry->icon ) )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
-			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+//		if( !preg_match( "/^fa/", $entry->icon ) )
+//			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon	= HtmlTag::create( 'i', '', ['class' => $class] );
 		return $icon.'&nbsp;'.$entry->label;
-    }
+	}
 }

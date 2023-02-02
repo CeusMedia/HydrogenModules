@@ -46,7 +46,7 @@ class Model_Event extends Model
 SELECT e.*, a.country, a.postcode, a.city, a.street, a.number, a.latitude, a.longitude, a.x, a.y, a.z
 FROM
 	events as e,
-	addresses as a
+	event_addresses as a
 WHERE e.addressId=a.addressId
 AND dateStart >= '".$timeRange->getDateStart()."'
 AND dateEnd <= '".$timeRange->getDateEnd()."'

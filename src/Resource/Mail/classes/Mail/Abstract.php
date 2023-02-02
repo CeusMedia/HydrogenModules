@@ -1,6 +1,7 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
@@ -10,6 +11,8 @@ use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Mail\Message as MailMessage;
+use CeusMedia\Mail\Transport\Local as LocalMailTransport;
+use CeusMedia\Mail\Transport\SMTP as SmtpMailTransport;
 use CeusMedia\TemplateEngine\Template;
 
 /**
@@ -20,6 +23,11 @@ use CeusMedia\TemplateEngine\Template;
  */
 abstract class Mail_Abstract
 {
+	const CONTENT_TYPE_HTML_GENERATED		= 'htmlGenerated';
+	const CONTENT_TYPE_HTML_RENDERED		= 'htmlRendered';
+	const CONTENT_TYPE_TEXT_GENERATED		= 'textGenerated';
+	const CONTENT_TYPE_TEXT_RENDERED		= 'textRendered';
+
 	/**	@var		MailMessage				$mail			Mail object, build on construction */
 	public MailMessage $mail;
 
@@ -61,14 +69,14 @@ abstract class Mail_Abstract
 
 	/** @var		array					$contents		Map of generated and rendered contents */
 	protected array $contents				= [
-		'htmlGenerated'		=> '',
-		'htmlRendered'		=> '',
-		'textGenerated'		=> '',
-		'textRendered'		=> '',
+		self::CONTENT_TYPE_HTML_GENERATED	=> '',
+		self::CONTENT_TYPE_HTML_RENDERED	=> '',
+		self::CONTENT_TYPE_TEXT_GENERATED	=> '',
+		self::CONTENT_TYPE_TEXT_RENDERED	=> '',
 	];
 
 	/** @var		integer					$templateId		ID of template to force to use on rendering of mail contents */
-	protected $templateId					= 0;
+	protected int $templateId				= 0;
 
 	/** @var		string					$encodingHtml	Default encoding for HTML */
 	protected string $encodingHtml			= 'quoted-printable';
@@ -77,7 +85,7 @@ abstract class Mail_Abstract
 	protected string $encodingSubject		= 'quoted-printable';
 
 	/** @var		string					$encodingHtml	Default encoding for text */
-	protected string$encodingText			= 'quoted-printable';
+	protected string $encodingText			= 'quoted-printable';
 
 	/**
 	 *	Constructor.
@@ -86,6 +94,7 @@ abstract class Mail_Abstract
 	 *	@param		array			$data			Map of template mail data
 	 *	@param		boolean			$defaultStyle	Flag: load default mail style file
 	 *	@todo		resolve todos below after all modules have adjusted
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env, array $data = [], bool $defaultStyle = TRUE )
 	{
@@ -94,17 +103,15 @@ abstract class Mail_Abstract
 		$this->mail				= new MailMessage();
 //		$this->view				= new View( $env );
 		$this->page				= new HtmlPage();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 		$this->config			= $this->env->getConfig();
 
 		//  apply encoding settings from module config
-		if( $this->options->get( 'encoding.html' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.html' );
-		if( $this->options->get( 'encoding.subject' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.subject' );
-		if( $this->options->get( 'encoding.text' ) )
-			$this->encodingHtml		= $this->options->get( 'encoding.text' );
+		$this->encodingHtml			= $this->options->get( 'encoding.html', $this->encodingHtml );
+		$this->encodingSubject		= $this->options->get( 'encoding.subject', $this->encodingSubject );
+		$this->encodingText			= $this->options->get( 'encoding.text', $this->encodingText );
 
 		$this->baseUrl	= !empty( $env->baseUrl ) ? $env->baseUrl : $this->config->get( 'app.base.url' );
 		if( !$this->baseUrl )
@@ -115,7 +122,7 @@ abstract class Mail_Abstract
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
 		$this->__onInit();
 		$this->data		= $data;
-		$this->generate( $data );												//  @todo remove argument, use $this->data instead
+		$this->generate();
 	}
 
 	/**
@@ -133,7 +140,15 @@ abstract class Mail_Abstract
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
 	}*/
 
-	public function addAttachment( string $filePath, ?string $mimeType = NULL, ?string $encoding = NULL, ?string $fileName = NULL )
+	/**
+	 * @param		string			$filePath
+	 * @param		string|NULL		$mimeType
+	 * @param		string|NULL		$encoding
+	 * @param		string|NULL		$fileName
+	 * @return		self
+	 * @throws		IoException
+	 */
+	public function addAttachment( string $filePath, ?string $mimeType = NULL, ?string $encoding = NULL, ?string $fileName = NULL ): self
 	{
 		$libraries		= $this->logicMail->detectAvailableMailLibraries();
 		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
@@ -143,6 +158,7 @@ abstract class Mail_Abstract
 
 		switch( $library ){
 			case Logic_Mail::LIBRARY_MAIL_V1:
+				/** @noinspection PhpUndefinedMethodInspection */
 				$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
 				break;
 			case Logic_Mail::LIBRARY_MAIL_V2:
@@ -152,6 +168,11 @@ abstract class Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return			array
+	 *	@noinspection	PhpUndefinedNamespaceInspection
+	 *	@noinspection	PhpUndefinedClassInspection
+	 */
 	public function getAttachments(): array
 	{
 		$list			= [];
@@ -189,7 +210,7 @@ abstract class Mail_Abstract
 		return $this->contents[$key];
 	}
 
-	public function getPage()
+	public function getPage(): HtmlPage
 	{
 		return $this->page;
 	}
@@ -204,7 +225,7 @@ abstract class Mail_Abstract
 		return $this->mail->getSubject();
 	}
 
-	public function getTemplateId()
+	public function getTemplateId(): int
 	{
 		$template	= $this->getTemplateToUse( 0, TRUE, FALSE );
 		if( $template )
@@ -212,16 +233,22 @@ abstract class Mail_Abstract
 		return 0;
 	}
 
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function initTransport( bool $verbose = FALSE ): self
 	{
 		if( empty( $this->logicMail ) )
+			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
 				if( $libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){
-					$this->transport	= \CeusMedia\Mail\Transport\SMTP::getInstance(
+					$this->transport	= SmtpMailTransport::getInstance(
 						$options->get( 'hostname' ),
 						$options->get( 'port' ),
 						$options->get( 'username' ),
@@ -236,7 +263,7 @@ abstract class Mail_Abstract
 			case 'local':
 			case 'default':
 			case 'sendmail':
-				$this->transport	= new \CeusMedia\Mail\Transport\Local();
+				$this->transport	= new LocalMailTransport();
 				break;
 			default:
 				throw new RuntimeException( 'No mail transport configured' );
@@ -247,10 +274,10 @@ abstract class Mail_Abstract
 	/**
 	 *	Sends mail to an email address.
 	 *	@access		public
-	 *	@param		stdClass	$user		User model object
+	 *	@param		object|array		$user		User model object
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendTo( $user )
+	public function sendTo( $user ): bool
 	{
 		if( is_array( $user ) )
 			$user	= (object) $user;
@@ -263,10 +290,11 @@ abstract class Mail_Abstract
 	 *	Sends mail to user by its user ID.
 	 *	Attention: Module "Users" must be installed to use this feature.
 	 *	@access		public
-	 *	@param		integer		$userId		ID of user to send mail to
+	 *	@param		string		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
+	 *	@throws		ReflectionException
 	 */
-	public function sendToUser( $userId ): bool
+	public function sendToUser( string $userId ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			throw new RuntimeException( 'Module "Resource_Users" is not installed' );
@@ -305,6 +333,7 @@ abstract class Mail_Abstract
 	 *	@param		boolean		$usePrefix		Flag: Prepend mail subject prefix defined by mail module
 	 *	@param		boolean		$useTemplate	Flag: Insert subject into mail subject prefix defined by mail module
 	 *	@return		self
+	 *	@throws		ReflectionException
 	 */
 	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): self
 	{
@@ -363,8 +392,9 @@ abstract class Mail_Abstract
 	 *	@see		http://wiki.apache.org/spamassassin/Rules/BASE64_LENGTH_78_79
 	 *	@deprecated	use setHtml instead
 	 *	@todo		to be removed
+	 *	@throws		Exception
 	 */
-	protected function addHtmlBody( $html )
+	protected function addHtmlBody( string $html )
 	{
 		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
@@ -381,6 +411,7 @@ abstract class Mail_Abstract
 	 *	@return		void
 	 *	@deprecated	use setText instead
 	 *	@todo		to be removed
+	 *	@throws		Exception
 	 */
 	protected function addTextBody( string $text ): self
 	{
@@ -428,8 +459,8 @@ abstract class Mail_Abstract
 //		$style	= str_replace( '(/lib/', '(http://'.getEnv( 'HTTP_HOST' ).'/lib/', $style );
 
 		$path	= dirname( $filePath );
-		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( dirname( dirname( $path ) ) ).'/', $style );
-		$style	= str_replace( '(../../', '('.$this->env->url.dirname( dirname( $path ) ).'/', $style );
+		$style	= str_replace( '(../../../', '('.$this->env->url.dirname( $path, 3 ) .'/', $style );
+		$style	= str_replace( '(../../', '('.$this->env->url.dirname( $path, 2 ) .'/', $style );
 		$style	= str_replace( '(../', '('.$this->env->url.dirname( $path ).'/', $style );
 		$tag	= HtmlTag::create( 'style', $style, ['type' => 'text/css'] );
 		$this->page->addHead( $tag );
@@ -451,6 +482,13 @@ abstract class Mail_Abstract
 		return $this->addStyle( $path.$filePath );
 	}
 
+	/**
+	 *	@param		string			$content
+	 *	@param		string|int		$templateId
+	 *	@return		string
+	 *	@throws		IoException
+	 *	@throws		Exception
+	 */
 	protected function applyTemplateToHtml( string $content, $templateId = NULL ): string
 	{
 		$messenger	= $this->env->getMessenger();
@@ -487,6 +525,7 @@ abstract class Mail_Abstract
 					}
 				}
 				if( $libraries & Logic_Mail::LIBRARY_MAIL_V1 )
+					/** @noinspection PhpUndefinedMethodInspection */
 					$this->mail->addHtmlImage( 'image'.( $nr + 1), $this->env->uri.$image );
 				else if( $libraries & Logic_Mail::LIBRARY_MAIL_V2 )
 					$this->mail->addInlineImage( 'image'.( $nr + 1), $this->env->uri.$image, NULL, 'base64' );
@@ -596,12 +635,12 @@ abstract class Mail_Abstract
 	 *	- default mail template ID of mail resource module
 	 *	The first of these templates being usable will be stored and returned.
 	 *	@access		public
-	 *	@param		integer		$preferredTemplateId	Template ID to override database and module defaults, if usable
-	 *	@param		boolean		$considerFrontend		Flag: consider mail resource module of frontend, if available
-	 *	@param		boolean		$strict					Flag: throw exception if something goes wrong
-	 *	@return		objects		Model entity object of detected mail template
+	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
+	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
+	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
+	 *	@return		object|NULL		Model entity object of detected mail template
 	 */
-	protected function getTemplateToUse( $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE )
+	protected function getTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
 	{
 		if( $this->templateId )
 			if( ( $template = $this->modelTemplate->get( $this->templateId ) ) )
@@ -612,8 +651,8 @@ abstract class Mail_Abstract
 	/**
 	 *	Loads View Class of called Controller.
 	 *	@access		protected
-	 *	@param		string		$topic		Locale file key, eg. test/my
-	 *	@param		string|NULL	$section	Section in locale file
+	 *	@param		string			$topic		Locale file key, eg. test/my
+	 *	@param		string|NULL		$section	Section in locale file
 	 *	@return		array
 	 */
 	protected function getWords( string $topic, ?string $section = NULL ): array
@@ -633,7 +672,7 @@ abstract class Mail_Abstract
 	 *	@access		protected
 	 *	@param		string		$email		Target email address
 	 *	@return		boolean		TRUE if success
-	 *	@todo		 Notwendigkeit dieser Methode prüfen.
+	 *	@todo		Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( $email )
 	{
@@ -652,6 +691,7 @@ abstract class Mail_Abstract
 	 *	@param		string		$content	HTML mail body to set
 	 *	@param		integer		$templateId		ID of mail template to use in favour
 	 *	@return		self
+	 *	@throws		IoException
 	 */
 	protected function setHtml( string $content, $templateId = 0 ): self
 	{
@@ -678,8 +718,8 @@ abstract class Mail_Abstract
 				$classes[]	= 'content-panel-style-'.$options->get( 'style' );
 			$contentFull	= $page->build( ['class' => $classes] );
 		}
-		$this->contents['htmlGenerated']	= $content;
-		$this->contents['htmlRendered']		= $contentFull;
+		$this->contents[self::CONTENT_TYPE_HTML_GENERATED]	= $content;
+		$this->contents[self::CONTENT_TYPE_HTML_RENDERED]	= $contentFull;
 		$this->mail->addHTML( $contentFull, 'UTF-8', $this->encodingHtml );
 		return $this;
 	}
@@ -712,8 +752,8 @@ abstract class Mail_Abstract
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
 		$contentFull	= $this->applyTemplateToText( $content, $templateId );
-		$this->contents['textGenerated']	= $content;
-		$this->contents['textRendered']		= $contentFull;
+		$this->contents[self::CONTENT_TYPE_TEXT_GENERATED]	= $content;
+		$this->contents[self::CONTENT_TYPE_TEXT_RENDERED]	= $contentFull;
 		$this->mail->addText( $contentFull, 'UTF-8', $this->encodingText );
 		return $this;
 	}

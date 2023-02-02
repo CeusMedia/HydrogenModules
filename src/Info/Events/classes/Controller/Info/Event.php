@@ -10,7 +10,7 @@ class Controller_Info_Event extends Controller
 	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
-	protected Model_Address $modelAddress;
+	protected Model_Event_Address $modelAddress;
 	protected Model_Event $modelEvent;
 
 	public function calendar(): void
@@ -130,7 +130,7 @@ class Controller_Info_Event extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->modelAddress	= new Model_Address( $this->env );
+		$this->modelAddress	= new Model_Event_Address( $this->env );
 		$this->modelEvent	= new Model_Event( $this->env );
 
 		if( !$this->session->get( 'filter_info_event_year' ) )

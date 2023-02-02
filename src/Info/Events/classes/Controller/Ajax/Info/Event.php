@@ -6,19 +6,19 @@ use CeusMedia\HydrogenFramework\View;
 
 class Controller_Ajax_Info_Event extends AjaxController
 {
-	protected Model_Address $modelAddress;
+	protected Model_Event_Address $modelAddress;
 	protected Model_Event $modelEvent;
 
 	protected function __onInit(): void
 	{
-		$this->modelAddress	= new Model_Address( $this->env );
+		$this->modelAddress	= new Model_Event_Address( $this->env );
 		$this->modelEvent	= new Model_Event( $this->env );
 	}
 
 	public function typeaheadCities( $startsWith = NULL )
 	{
 		$list		= [];
-		$startsWith	= $startsWith ? $startsWith : $this->request->get( 'query' );
+		$startsWith	= $startsWith ?: $this->request->get( 'query' );
 		if( strlen( trim( $startsWith ) ) ){
 			$geocoder	= new Logic_Geocoder( $this->env );
 			$cities		= $geocoder->getCities( $startsWith );
