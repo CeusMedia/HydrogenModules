@@ -7,11 +7,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Payment_PayPal
 {
+	public ?object $latestResponse		= NULL;
+
 	protected Environment $env;
-	protected $password;
-	protected $username;
-	protected $signature;
-	public $latestResponse;
 
 	/**	@var	Model_Shop_Payment_Paypal		$model			*/
 	protected Model_Shop_Payment_Paypal $model;
@@ -19,6 +17,14 @@ class Logic_Payment_PayPal
 	/**	@var	Dictionary				$config			Module configuration dictionary */
 	protected Dictionary $config;
 
+	protected ?string $password			= NULL;
+	protected ?string $username			= NULL;
+	protected ?string $signature		= NULL;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -26,7 +32,7 @@ class Logic_Payment_PayPal
 		$this->config	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 	}
 
-	public function finishPayment( $paymentId )
+	public function finishPayment( string $paymentId ): bool
 	{
 		$payment	= $this->getPayment( $paymentId );
 		if( !$payment->payerId )
@@ -58,13 +64,13 @@ class Logic_Payment_PayPal
 		}
 	}
 
-	public function getPayerId( $paymentId )
+	public function getPayerId( string $paymentId ): string
 	{
 		$payment	= $this->getPayment( $paymentId );
 		return $payment->payerId;
 	}
 
-	public function getPayment( $paymentId )
+	public function getPayment( string $paymentId ): object
 	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
@@ -72,7 +78,7 @@ class Logic_Payment_PayPal
 		return $payment;
 	}
 
-	public function getPaymentFromToken( string $token )
+	public function getPaymentFromToken( string $token ): object
 	{
 		$payment	= $this->model->getByIndex( 'token', $token );
 		if( !$payment )
@@ -80,13 +86,13 @@ class Logic_Payment_PayPal
 		return $payment;
 	}
 
-	public function getStatus( $paymentId )
+	public function getStatus( string $paymentId ): int
 	{
-		$payment	= $this->getPaymentData( $paymentId );
-		return $payment->status;
+		$payment	= $this->getPayment( $paymentId );
+		return (int) $payment->status;
 	}
 
-	public function getToken( $paymentId )
+	public function getToken( string $paymentId ): string
 	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
@@ -94,7 +100,7 @@ class Logic_Payment_PayPal
 		return $payment->token;
 	}
 
-	public function requestPayerDetails( $paymentId )
+	public function requestPayerDetails( string $paymentId ): void
 	{
 		$payment	= $this->getPayment( $paymentId );
 		$data	= [
@@ -127,11 +133,12 @@ class Logic_Payment_PayPal
 	/**
 	 *	Requests token from PayPal and returns payment ID.
 	 *	@access		public
-	 *	@param		integer		$orderId		ID of shop order
-	 *	@param		float		$amount			Total cart price
-	 *	@return		integer		Payment ID
+	 *	@param		string			$orderId		ID of shop order
+	 *	@param		float			$amount			Total cart price
+	 *	@param		string|NULL		$subject
+	 *	@return		string			Payment ID
 	 */
-	public function requestToken( $orderId, $amount, $subject = NULL )
+	public function requestToken( string $orderId, float $amount, ?string $subject = NULL ): string
 	{
 		$language		= $this->env->getLanguage();
 		$titleCart		= $language->getWords( 'shop/payment/paypal' )['cart']['title'];
@@ -184,9 +191,9 @@ class Logic_Payment_PayPal
 			$items['DESC'.$nr]			= $article->description;
 			$items['QTY'.$nr]			= $position->quantity;
 //			$items['ITEMCATEGORY'.$nr]	= 'Digital';
-			$items['AMT'.$nr]			= number_format( $article->price->all, 2, ".", "," );
+			$items['AMT'.$nr]			= number_format( $article->price->all, 2 );
 			if( !$taxIncluded )
-				$items['TAXAMT'.$nr]	= number_format( $article->tax->all, 2, ".", "," );
+				$items['TAXAMT'.$nr]	= number_format( $article->tax->all, 2 );
 		}
 		foreach( $items as $key => $value )
 			$data['L_PAYMENTREQUEST_0_'.$key]	= $value;
@@ -194,18 +201,18 @@ class Logic_Payment_PayPal
 		$total	= $totalPrice + $shipping + $handling + $insurance;
 		if( !$taxIncluded ){
 			$total	+= $totalTax;
-			$data['PAYMENTREQUEST_0_TAXAMT']	= number_format( $totalTax, 2, ".", "," );
+			$data['PAYMENTREQUEST_0_TAXAMT']	= number_format( $totalTax, 2 );
 		}
 
 		$data['PAYMENTINFO_0_CURRENCYCODE']		= 'EUR';
 		$data['PAYMENTREQUEST_0_PAYMENTACTION']	= 'Sale';
 		$data['PAYMENTREQUEST_0_CURRENCYCODE']	= 'EUR';
 		$data['PAYMENTREQUEST_0_DESC']			= sprintf( $titleCart, $titleApp );
-		$data['PAYMENTREQUEST_0_ITEMAMT']		= number_format( $totalPrice, 2, ".", "," );
-		$data['PAYMENTREQUEST_0_SHIPPINGAMT']	= number_format( $shipping, 2, ".", "," );;
-		$data['PAYMENTREQUEST_0_HANDLINGAMT']	= number_format( $handling, 2, ".", "," );;
-		$data['PAYMENTREQUEST_0_INSURANCEAMT']	= number_format( $insurance, 2, ".", "," );;
-		$data['PAYMENTREQUEST_0_AMT']			= number_format( $total, 2, ".", "," );
+		$data['PAYMENTREQUEST_0_ITEMAMT']		= number_format( $totalPrice, 2 );
+		$data['PAYMENTREQUEST_0_SHIPPINGAMT']	= number_format( $shipping, 2 );
+		$data['PAYMENTREQUEST_0_HANDLINGAMT']	= number_format( $handling, 2 );
+		$data['PAYMENTREQUEST_0_INSURANCEAMT']	= number_format( $insurance, 2 );
+		$data['PAYMENTREQUEST_0_AMT']			= number_format( $total, 2 );
 
 		try{
 			$response	= (object) $this->request( $data );
@@ -245,17 +252,24 @@ class Logic_Payment_PayPal
 		}
 	}
 
+	/**
+	 *	@param		string		$username
+	 *	@param		string		$password
+	 *	@param		string		$signature
+	 *	@return		self
+	 *	@throws		InvalidArgumentException
+	 */
 	public function setAccount( string $username, string $password, string $signature ): self
 	{
 		if( !strlen( trim( $username ) ) )
-			throw new Exception( "Merchant username is missing" );
+			throw new InvalidArgumentException( "Merchant username is missing" );
 		if( !strlen( trim( $password ) ) )
-			throw new Exception( "Merchant password is missing" );
+			throw new InvalidArgumentException( "Merchant password is missing" );
 		if( !strlen( trim( $signature ) ) )
-			throw new Exception( "Merchant signature is missing" );
-		$this->username	= $username;
-		$this->password	= $password;
-		$this->signature = $signature;
+			throw new InvalidArgumentException( "Merchant signature is missing" );
+		$this->username		= $username;
+		$this->password		= $password;
+		$this->signature	= $signature;
 		return $this;
 	}
 

@@ -2,14 +2,16 @@
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_My_User_Oauth2 extends Controller
 {
-	protected $messenger;
-	protected $modelProvider;
-	protected $modelUserOauth;
+	protected MessengerResource $messenger;
+	protected Model_Oauth_Provider $modelProvider;
+	protected Model_Oauth_User $modelUserOauth;
+	protected Logic_Authentication $logicAuth;
 
-	public function add( $providerId )
+	public function add( string $providerId ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -46,7 +48,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 			}
 			catch( Exception $e ){
 				$this->env->getLog()->log( 'error', $e->getMessage(), $client );
-				$this->env->getLog()->logException( $e->getMessage(), $this );
+				$this->env->getLog()->logException( $e, $this );
 				$this->messenger->noteError( $words->msgException, $provider->title );
 			}
 			$this->restart( NULL, TRUE );
@@ -65,7 +67,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		}
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$providers	= $this->modelProvider->getAll(
 			array( 'status' => Model_Oauth_Provider::STATUS_ACTIVE ),
@@ -77,8 +79,8 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->addData( 'providers', $list );
 
 		$relations	= $this->modelUserOauth->getAll(
-			array( 'localUserId' => $this->logicAuth->getCurrentUserId() ),
-			array( 'oauthUserId' => 'ASC' )
+			['localUserId' => $this->logicAuth->getCurrentUserId()],
+			['oauthUserId' => 'ASC']
 		);
 		$list	= [];
 		foreach( $relations as $relation )
@@ -86,7 +88,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->addData( 'relations', $list );
 	}
 
-	public function remove( $providerId )
+	public function remove( string $providerId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$provider	= $this->checkProvider( $providerId );
@@ -112,7 +114,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 	}
 
-	protected function checkProvider( $providerId, bool $strict = TRUE )
+	protected function checkProvider( string $providerId, bool $strict = TRUE ): ?object
 	{
 		if( $provider = $this->modelProvider->get( $providerId ) )
 			return $provider;
@@ -121,7 +123,7 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		return NULL;
 	}
 
-	protected function getProviderObject( $providerId )
+	protected function getProviderObject( string $providerId ): object
 	{
 		$provider	= $this->checkProvider( $providerId );
 		if( !class_exists( $provider->className ) )

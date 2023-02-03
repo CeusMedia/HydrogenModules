@@ -1,13 +1,21 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_Shop_Payment_Mangopay extends Job_Abstract
 {
-	protected $logicMangopay;
-	protected $logicShop;
-	protected $modelEvent;
-	protected $modelMangopayPayin;
-	protected $modelShopPayin;
-	protected $backends				= [];
+	protected Logic_Shop_Payment_Mangopay $logicMangopay;
+	protected Logic_Shop $logicShop;
+	protected Model_Mangopay_Event $modelEvent;
+	protected Model_Mangopay_Payin $modelMangopayPayin;
+	protected Model_Shop_Payment_Mangopay $modelShopPayin;
+	protected Dictionary $moduleConfig;
+	protected array $backends				= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function handle()
 	{
 		$this->handleFailedBankWirePayIns();
@@ -17,15 +25,16 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 	/**
 	 *	Register a payment backend.
 	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
+	 *	@param		string			$backend		...
+	 *	@param		string			$key			...
+	 *	@param		string			$title			...
+	 *	@param		string			$path			...
+	 *	@param		integer			$priority		...
+	 *	@param		string|NULL		$icon			...
+	 *	@param		array			$countries		...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
+	public function registerPaymentBackend( string $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] ): void
 	{
 		$this->backends[]	= (object) [
 			'backend'	=> $backend,
@@ -38,6 +47,10 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicMangopay		= new Logic_Shop_Payment_Mangopay( $this->env );
@@ -49,9 +62,13 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 
 		$captain	= $this->env->getCaptain();
 		$payload	= [];
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handleFailedBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
@@ -97,6 +114,10 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handleSucceededBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );

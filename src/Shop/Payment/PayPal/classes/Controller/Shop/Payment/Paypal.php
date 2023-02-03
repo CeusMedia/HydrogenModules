@@ -2,20 +2,26 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Shop_Payment_Paypal extends Controller
 {
 	/**	@var	Dictionary					$config			Module configuration dictionary */
 	protected Dictionary $config;
 
-	/**	@var	Logic_Payment				$provider		Payment provider logic instance */
-	protected Logic_Payment $logicProvider;
+	/**	@var	Logic_Payment_PayPal		$provider		Payment provider logic instance */
+	protected Logic_Payment_PayPal $logicProvider;
 
 	/**	@var	Logic_Shop					$shop			Shop logic instance */
-	protected $logicShop;
+	protected Logic_Shop $logicShop;
 
 	/**	@var	Dictionary					$session		Session resource */
 	protected Dictionary $session;
+
+	protected MessengerResource $messenger;
+
+	protected ?string $orderId				= NULL;
+	protected ?object $order				= NULL;
 
 	public function authorize()
 	{
@@ -78,6 +84,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		}
 		try{
 			$payment	= $this->logicProvider->getPayment( $paymentId );
+			$this->logicShop->setOrderStatus( $payment->orderId, 3 );
 		}
 		catch( Exception $e ){
 			$messenger->noteError( 'Ungültiger Bezahlvorgang. Weiterleitung zum Warenkorb.' );
@@ -87,21 +94,24 @@ class Controller_Shop_Payment_Paypal extends Controller
 			$this->logicProvider->finishPayment( $paymentId );
 			$this->session->remove( 'paymentId' );
 			$this->session->remove( 'token' );
+			$this->restart( './shop/finish' );
 		}
 		catch( Exception $e ){
-			$messenger->noteErrorFailure( 'Bezahlvorgang gescheitert. Weiterleitung zum Warenkorb.' );
+			$messenger->noteError( 'Bezahlvorgang gescheitert. Weiterleitung zum Warenkorb.' );
 			$this->restart( './shop/cart' );
 		}
-		$this->logicShop->setOrderStatus( $payment->orderId, 3 );
-		$this->restart( './shop/finish' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logicProvider	= new Logic_Payment_Paypal( $this->env );
+		$this->logicProvider	= new Logic_Payment_PayPal( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$modelCart			= new Model_Shop_Cart( $this->env );

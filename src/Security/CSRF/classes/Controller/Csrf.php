@@ -1,13 +1,14 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Csrf extends Controller
 {
 	protected Logic_CSRF $logic;
-	protected $messenger;
+	protected MessengerResource $messenger;
 
-	public function checkToken( $redirectUrl = NULL )
+	public function checkToken( ?string $redirectUrl = NULL ): bool
 	{
 		$token		= $this->env->getRequest()->get( 'csrf_token' );							//  get token from request
 		$formName	= $this->env->getRequest()->get( 'csrf_form_name' );						//  get form name from request
@@ -16,16 +17,16 @@ class Controller_Csrf extends Controller
 			$statusCode	= 401;																	//  HTTP status: Forbidden
 			$msg		= (object) $this->getWords( 'msg', 'csrf' );							//  load language
 			switch( $result ){																	//  dispatch error
-				case LOGIC_CSRF::CHECK_FORM_NAME_MISSING:										//  form name is missing
+				case Logic_CSRF::CHECK_FORM_NAME_MISSING:										//  form name is missing
 					$this->messenger->noteFailure( $msg->error_form_name_missing );				//  note failure
 					break;
-				case LOGIC_CSRF::CHECK_TOKEN_MISSING:											//  token is missing
+				case Logic_CSRF::CHECK_TOKEN_MISSING:											//  token is missing
 					$this->messenger->noteFailure( $msg->error_token_missing );					//  note failure
 					break;
-				case LOGIC_CSRF::CHECK_TOKEN_INVALID:											//  token not found
+				case Logic_CSRF::CHECK_TOKEN_INVALID:											//  token not found
 					$this->messenger->noteFailure( $msg->error_token_invalid );					//  note failure
 					break;
-				case LOGIC_CSRF::CHECK_TOKEN_USED:												//  token already has been used
+				case Logic_CSRF::CHECK_TOKEN_USED:												//  token already has been used
 					$this->messenger->noteError( $msg->error_token_used );						//  note error
 					break;
 				case Logic_CSRF::CHECK_TOKEN_REPLACED:											//  form has been loaded again since
@@ -58,6 +59,10 @@ class Controller_Csrf extends Controller
 		return TRUE;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= $this->env->getLogic()->get( 'CSRF' );

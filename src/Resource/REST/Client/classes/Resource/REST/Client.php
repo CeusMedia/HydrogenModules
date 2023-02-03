@@ -1,16 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Cache\SimpleCacheFactory as CacheFactory;
+use CeusMedia\REST\Client as RestClient;
 
 /**
  *	@todo		Code doc
  */
-class Resource_REST_Client{
-
+class Resource_REST_Client
+{
+	protected Environment $env;
+	protected Dictionary $session;
+	protected Dictionary $moduleConfig;
 	protected $cache;
-	protected $client;
-	protected $enabled	= TRUE;
+	protected RestClient $client;
+	protected bool $enabled	= TRUE;
 
 	/**
 	 *	Constructor.
@@ -18,7 +24,8 @@ class Resource_REST_Client{
 	 *	@param		Environment		$env		Environment instance
 	 *	@return		void
 	 */
-	public function __construct( Environment $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );
@@ -27,18 +34,170 @@ class Resource_REST_Client{
 		$this->__initCache();
 	}
 
-	protected function __initClient(){
+	/**
+	 *	Clear cache completely with in context.
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function clear(): void
+	{
+		$this->client->flush();
+	}
+
+	/**
+	 *	Remove cache content.
+	 *	@access		public
+	 *	@param		string		$path		Resource path
+	 *	@param		array		$data		GET parameters
+	 *	@return		mixed		Server response
+	 */
+	public function delete( string $path, array $data = [] )
+	{
+		$this->invalidateCachePathRecursive( $path );
+		return $this->client->delete( $path, $data );
+	}
+
+	/**
+	 *	@deprecated	use module configuration instead
+	 *	@todo		to be removed
+	 */
+	public function disableCache(): void
+	{
+		$this->enabled = FALSE;
+		$this->__initCache();
+	}
+
+	/**
+	 *	@deprecated	use module configuration instead
+	 *	@todo		to be removed
+	 */
+	public function enableCache(): void
+	{
+		$this->enabled = TRUE;
+		$this->__initCache();
+	}
+
+	/**
+	 *	Set expected response format.
+	 *	@access		public
+	 *	@param		string		$format		Response format to set
+	 *	@return		void
+	 */
+	public function expectFormat( string $format ): void
+	{
+		$this->client->expectFormat( $format );
+	}
+
+	public function getCacheKey( string $path ): string
+	{
+		return str_replace( "/", ".", $path );
+		return md5( $path );
+	}
+
+	/**
+	 *	Read cache content.
+	 *	@access		public
+	 *	@param		string		$path			Resource path
+	 *	@param		array		$parameters		GET parameters
+	 *	@return		mixed		Resource content
+	 */
+	public function get( string $path, array $parameters = [] )
+	{
+		$isEnabled	= $this->moduleConfig->get( 'cache.enabled' );					//  shortcut cache status
+		$isCachable	= $isEnabled && !count( $parameters );							//  also request has no GET parameters
+		$cacheKey	= $this->getCacheKey( $path );									//  render cache key
+		if( $isCachable && ( $cached = $this->cache->get( $cacheKey ) ) !== NULL )	//  cache hit by cache key
+			return $cached;															//  return cached content
+		$response	= $this->client->get( $path, $parameters );						//  request resource
+		if( isset( $response->data->data ) && $response->data->data === "error" ){
+//			$this->lastestResponse	= $response;
+			throw new RuntimeException( "Request to server failed: ".$response->data->error );
+		}
+		if( $isCachable )															//  cache is enabled for request
+			$this->cache->set( $cacheKey, $response );								//  cache resource content
+		return $response;															//  return resource content
+	}
+
+	public function invalidateCachePathRecursive( string $path ): void
+	{
+		if( !$this->moduleConfig->get( 'cache.enabled' ) )
+			return;
+		$parts	= explode( "/", $path );
+		while( $parts ){
+			$cacheKey	= $this->getCacheKey( implode( "/", $parts ) );
+			$this->cache->remove( $cacheKey );
+			array_pop( $parts );
+		}
+	}
+
+	/**
+	 *	Send data to create new resource.
+	 *	@access		public
+	 *	@param		string		$path		Resource path
+	 *	@param		array		$data		GET parameters
+	 *	@return		mixed		Resource content
+	 */
+	public function post( string $path, array $data = [] )
+	{
+		$this->invalidateCachePathRecursive( $path );
+		return $this->client->post( $path, $data );
+	}
+
+	/**
+	 *	Send updated resource.
+	 *	@access		public
+	 *	@param		string		$path		Resource path
+	 *	@param		array		$data		GET parameters
+	 *	@return		mixed		Resource content
+	 */
+	public function put( string $path, array $data = [] )
+	{
+		$this->invalidateCachePathRecursive( $path );
+		return $this->client->put( $path, $data );
+	}
+
+	public function setAuthToken( string $token ): void
+	{
+		$this->client->addRequestHeader( 'X-REST-Token', $token );
+	}
+
+	/**
+	 *	Set credentials for HTTP Basic Authentication.
+	 *	@access		public
+	 *	@param		string		$username	HTTP Basic Auth username
+	 *	@param		string		$password	HTTP Basic Auth password
+	 *	@return		void
+	 */
+	public function setBasicAuth( string $username, string $password ): void
+	{
+		$this->client->setBasicAuth( $username, $password );
+	}
+
+	/**
+	 *  @deprecated use module configuration instead
+     *  @todo       to be removed
+     */
+	public function useCache( bool $status = TRUE ): void
+	{
+		$this->enabled = $status;
+		$this->moduleConfig->set( 'cache.enabled', $status );
+		$this->__initCache();
+	}
+
+	protected function __initClient(): void
+	{
 		$options		= $this->moduleConfig->getAll( 'server.', TRUE );
 		$curlOptions	= array(
 			CURLOPT_SSL_VERIFYHOST	=> $options->get( 'verifyHost' ),
 			CURLOPT_SSL_VERIFYPEER	=> $options->get( 'verifyPeer' ),
 		);
-		$this->client	= new \CeusMedia\REST\Client( $options->get( 'URL' ), $curlOptions );
+		$this->client	= new RestClient( $options->get( 'URL' ), $curlOptions );
 		$this->client->expectFormat( $options->get( 'format' ) );
 		$this->client->setBasicAuth( $options->get( 'username' ), $options->get( 'password' ) );
 	}
 
-	protected function __initLogging(){
+	protected function __initLogging(): void
+	{
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
 		$options	= $this->moduleConfig->getAll( 'log.', TRUE );
 		if( $options->get( 'requests' ) ){
@@ -55,7 +214,8 @@ class Resource_REST_Client{
 		}
 	}
 
-	protected function __initCache(){
+	protected function __initCache(): void
+	{
 		$config		= $this->moduleConfig->getAll( 'cache.', TRUE );
 		if( !$this->moduleConfig->get( 'cache.enabled' ) )
 			return;
@@ -68,145 +228,8 @@ class Resource_REST_Client{
 
 /*		$type		= 'Session';
 		$resource	= md5( getCwd() );
-		$context	= 'cache.';
-*/
-		$this->cache	= \CeusMedia\Cache\Factory::createStorage( $type, $resource, $context );
-	}
+		$context	= 'cache.';*/
 
-	/**
-	 *	Clear cache completely with in context.
-	 *	@access		public
-	 *	@return		void
-	 */
-	public function clear(){
-		$this->client->flush();
-	}
-
-	/**
-	 *	Remove cache content.
-	 *	@access		public
-	 *	@param		string		$path		Resource path
-	 *	@param		array		$data		GET parameters
-	 *	@return		mixed		Server response
-	 */
-	public function delete( $path, $data = [] ){
-		$this->invalidateCachePathRecursive( $path );
-		return $this->client->delete( $path, $data );
-	}
-
-	/**
-	 *	@deprecated	use module configuration instead
-	 *	@todo		to be removed
-	 */
-	public function disableCache(){
-		$this->enabled = FALSE;
-		$this->__initCache();
-	}
-
-	/**
-	 *	@deprecated	use module configuration instead
-	 *	@todo		to be removed
-	 */
-	public function enableCache(){
-		$this->enabled = TRUE;
-		$this->__initCache();
-	}
-
-	/**
-	 *	Set expected response format.
-	 *	@access		public
-	 *	@param		string		$format		Response format to set
-	 *	@return		void
-	 */
-	public function expectFormat( $format ){
-		$this->client->expectFormat( $format );
-	}
-
-	public function getCacheKey( $path ){
-		return str_replace( "/", ".", $path );
-		return md5( $path );
-	}
-
-	/**
-	 *	Read cache content.
-	 *	@access		public
-	 *	@param		string		$path		Resource path
-	 *	@param		array		$data		GET parameters
-	 *	@return		mixed		Resource content
-	 */
-	public function get( $path, $parameters = [] ){
-		$isEnabled	= $this->moduleConfig->get( 'cache.enabled' );					//  shortcut cache status
-		$isCachable	= $isEnabled && !count( $parameters );							//  also request has no GET parameters
-		$cacheKey	= $this->getCacheKey( $path );									//  render cache key
-		if( $isCachable && ( $cached = $this->cache->get( $cacheKey ) ) !== NULL )	//  cache hit by cache key
-			return $cached;															//  return cached content
-		$response	= $this->client->get( $path, $parameters );						//  request resource
-		if( isset( $response->data->data ) && $response->data->data === "error" ){
-//			$this->lastestResonse	= $response;
-			throw new RuntimeException( "Request to server failed: ".$response->data->error );
-		}
-		if( $isCachable )															//  cache is enabled for request
-			$this->cache->set( $cacheKey, $response );								//  cache resource content
-		return $response;															//  return resource content
-	}
-
-	public function invalidateCachePathRecursive( $path ){
-		if( !$this->moduleConfig->get( 'cache.enabled' ) )
-			return TRUE;
-		$parts	= explode( "/", $path );
-		while( $parts ){
-			$cacheKey	= $this->getCacheKey( implode( "/", $parts ) );
-			$this->cache->remove( $cacheKey );
-			array_pop( $parts );
-		}
-	}
-
-	/**
-	 *	Send data to create new resource.
-	 *	@access		public
-	 *	@param		string		$path		Resource path
-	 *	@param		array		$data		GET parameters
-	 *	@return		mixed		Resource content
-	 */
-	public function post( $path, $data = [] ){
-		$this->invalidateCachePathRecursive( $path );
-		return $this->client->post( $path, $data );
-	}
-
-	/**
-	 *	Send updated resource.
-	 *	@access		public
-	 *	@param		string		$path		Resource path
-	 *	@param		array		$data		GET parameters
-	 *	@return		mixed		Resource content
-	 */
-	public function put( $path, $data = [] ){
-		$this->invalidateCachePathRecursive( $path );
-		return $this->client->put( $path, $data );
-	}
-
-	public function setAuthToken( $token ){
-		$this->client->addRequestHeader( 'X-REST-Token', $token );
-	}
-
-	/**
-	 *	Set credentials for HTTP Basic Authentication.
-	 *	@access		public
-	 *	@param		string		$username	HTTP Basic Auth username
-	 *	@param		string		$password	HTTP Basic Auth password
-	 *	@return		void
-	 */
-	public function setBasicAuth( $username, $password ){
-		$this->client->setBasicAuth( $username, $password );
-	}
-
-	/**
-	 *  @deprecated use module configuration instead
-     *  @todo       to be removed
-     */
-	public function useCache( $status = TRUE ){
-		$this->enabled = (bool) $status;
-		$this->moduleConfig->set( 'cache.enabled', (bool) $status );
-		$this->__initCache();
+		$this->cache	= CacheFactory::createStorage( $type, $resource, $context );
 	}
 }

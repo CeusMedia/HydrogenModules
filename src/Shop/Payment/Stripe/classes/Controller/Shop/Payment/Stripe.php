@@ -1,13 +1,26 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Shop_Payment_Stripe extends Controller
 {
+	/**	@var	HttpRequest					$request		HTTP request */
+	protected HttpRequest $request;
+
+	/**	@var	MessengerResource			$messenger		Messenger resource */
+	protected MessengerResource $messenger;
+
+	/**	@var	Dictionary					$session		Session resource */
+	protected Dictionary $session;
+
+	protected Model_Shop_Cart $modelCart;
+
 	/**	@var	Dictionary					$config			Module configuration dictionary */
-	protected Dictionary $config;
+	protected Dictionary $configShop;
 
 	/**	@var	Logic_Shop_Payment_Stripe	$logicPayment	Stripe payment logic instance */
 	protected Logic_Shop_Payment_Stripe $logicPayment;
@@ -18,18 +31,13 @@ class Controller_Shop_Payment_Stripe extends Controller
 	/**	@var	Logic_Payment_Stripe		$provider		Payment provider logic instance */
 	protected Logic_Payment_Stripe $provider;
 
-	/**	@var	Dictionary					$session		Session resource */
-	protected Dictionary $session;
-
-	protected $request;
-	protected $messenger;
-	protected $orderId;
-	protected $order;
-	protected $localUserId;
-	protected $userId;
-	protected $wallet;
-	protected $backends			= [];
-	protected $modelCart;
+	protected array $backends			= [];
+	protected string $orderId;
+	protected object $order;
+	protected ?string $localUserId		= NULL;
+	protected ?string $userId			= NULL;
+	protected ?object $wallet			= NULL;
+	protected ?object $buyerData		= NULL;
 
 	public function index()
 	{
@@ -53,7 +61,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 					$this->restart( 'shop/checkout' );
 			}
 		}
-		print_m( $payIn );die;
+		print_m( $source );die;
 	}
 
 	public function perBankWire()
@@ -138,7 +146,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
 		try{
-			$source	= \Stripe\Source::create(array(
+			$source	= \Stripe\Source::create( [
 				'type'		=> 'giropay',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),
@@ -149,7 +157,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 					'name'	=> $this->buyerData->firstname.' '.$this->buyerData->surname,
 					'email'	=> $this->buyerData->email,
 				]
-			));
+			] );
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
 		}
@@ -167,7 +175,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
 		try{
-			$source	= \Stripe\Source::create(array(
+			$source	= \Stripe\Source::create( [
 				'type'		=> 'sofort',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),
@@ -181,7 +189,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 				'sofort'	=> [
 					'country'	=> $this->buyerData->country,
 				]
-			));
+			] );
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
 		}
@@ -207,6 +215,10 @@ class Controller_Shop_Payment_Stripe extends Controller
 		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session			= $this->env->getSession();
@@ -230,7 +242,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 
 		$this->localUserId	= $this->session->get( 'auth_user_id' );
 
-		$this->buyerData	= $this->getBuyerDataFromOrder( $this->order, $this->modelCart );
+		$this->buyerData	= $this->getBuyerDataFromOrder( $this->order );
 		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );
 		if( !$this->userId ){
 			$account		= $this->provider->createCustomerFromLocalUser( $this->localUserId );
@@ -247,7 +259,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 
-	protected function getOrderFromCartInSession()
+	protected function getOrderFromCartInSession(): object
 	{
 		$orderId		= $this->modelCart->get( 'orderId' );
 		if( !$orderId ){
@@ -257,7 +269,12 @@ class Controller_Shop_Payment_Stripe extends Controller
 		return $this->logicShop->getOrder( $orderId );
 	}
 
-	protected function getBuyerDataFromOrder( $order, $modelCart )
+	/**
+	 *	@param		object		$order
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 */
+	protected function getBuyerDataFromOrder( object $order ): object
 	{
 		$modelAddress		= new Model_Address( $this->env );
 
@@ -278,7 +295,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		] );
 		if( !$address )
 			throw new RuntimeException( 'Customer has no billing address' );
-		$buyerData	= (object) [
+		return (object) [
 			'mode'		=> Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT,
 			'id'		=> $this->localUserId,
 			'firstname'	=> $user->firstname,
@@ -286,15 +303,14 @@ class Controller_Shop_Payment_Stripe extends Controller
 			'email'		=> $user->email,
 			'country'	=> $address->country,
 		];
-		return $buyerData;
 	}
 
-	protected function handleStripeResponseException( $e )
+	protected function handleStripeResponseException( $e ): void
 	{
-		$error		= (object) array_merge( $e->getJsonBody()['error'], array(
+		$error		= (object) array_merge( $e->getJsonBody()['error'], [
 			'http'		=> $e->getHttpStatus(),
 			'class'		=> get_class( $e ),
-		) );
+		] );
 		$details	= print_m( $error, NULL, NULL, TRUE );
 		$message	= 'Response Exception "%s" (%s)<br/><small>%s</small>';
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );

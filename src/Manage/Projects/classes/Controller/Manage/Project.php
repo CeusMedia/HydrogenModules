@@ -1,22 +1,29 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Project extends Controller
 {
-	protected $logic;
-	protected $logicMail;
-	protected $messenger;
-	protected $session;
-	protected $modelProject;
-	protected $modelProjectUser;
-	protected $modelUser;
-	protected $useMissions		= FALSE;
-	protected $useCompanies		= FALSE;
-	protected $useCustomers		= FALSE;
-	protected $userId;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $session;
+	protected Logic_Project $logic;
+	protected Logic_Mail $logicMail;
+	protected Model_Project $modelProject;
+	protected Model_Project_User $modelProjectUser;
+	protected Model_User $modelUser;
+	protected bool $useMissions			= FALSE;
+	protected bool $useCompanies		= FALSE;
+	protected bool $useCustomers		= FALSE;
+	protected ?string $userId;
+	protected ?string $roleId;
+	protected bool $isAdmin;
+	protected bool $isEditor;
 
-	public function acceptInvite( string $projectId )
+	public function acceptInvite( string $projectId ): void
 	{
 		$indices	= [
 			'projectId'	=> $projectId,
@@ -37,7 +44,7 @@ class Controller_Manage_Project extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		$words			= (object) $this->getWords( 'add' );
 
@@ -79,7 +86,7 @@ class Controller_Manage_Project extends Controller
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
 	}
 
-	public function addUser( string $projectId, ?string $userId = NULL )
+	public function addUser( string $projectId, ?string $userId = NULL ): void
 	{
 		$userId			= $userId ? $userId : $this->request->get( 'userId' );
 		$forwardTo		= $this->request->get( 'forwardTo' );
@@ -121,7 +128,7 @@ class Controller_Manage_Project extends Controller
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
-	public function declineInvite( string $projectId )
+	public function declineInvite( string $projectId ): void
 	{
 		$indices	= [
 			'projectId'	=> $projectId,
@@ -142,7 +149,7 @@ class Controller_Manage_Project extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( string $projectId )
+	public function edit( string $projectId ): void
 	{
 		$words			= (object) $this->getWords( 'edit' );
 		$project		= $this->checkProject( $projectId, TRUE );
@@ -207,9 +214,9 @@ class Controller_Manage_Project extends Controller
 		if( $this->useCompanies ){
 			$modelCompany			= new Model_Company( $this->env );
 			$modelProjectCompany	= new Model_Project_Company( $this->env );
-			$this->addData( 'companies', $modelCompanies->getAll() );				//   @todo: order!
+			$this->addData( 'companies', $modelCompany->getAll() );				//   @todo: order!
 			$conditions		= ['projectId' => $project->projectId];
-			$this->addData( 'projectCompanies', $modelProjectCompanies->get( $conditions ) );	//   @todo: order!
+			$this->addData( 'projectCompanies', $modelProjectCompany->get( $conditions ) );	//   @todo: order!
 		}
 		if( $this->useCustomers ){
 			$modelCustomer	= new Model_Customer( $this->env );
@@ -220,7 +227,7 @@ class Controller_Manage_Project extends Controller
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
 	}
 
-	public function filter( ?string $mode = NULL )
+	public function filter( ?string $mode = NULL ): void
 	{
 		if( $mode === "reset" )
 			foreach( array_keys( $this->session->getAll( 'filter_manage_project_' ) ) as $key )
@@ -250,7 +257,7 @@ class Controller_Manage_Project extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$this->checkDefault();
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, ['projectId' => '43'] );
@@ -361,7 +368,7 @@ class Controller_Manage_Project extends Controller
 	/**
 	 *	@todo		finish: implement hook on other modules and test
 	 */
-	public function remove( string $projectId, bool $confirmed = FALSE )
+	public function remove( string $projectId, bool $confirmed = FALSE ): void
 	{
 		$this->checkDefault();
 		$project	= $this->checkProject( $projectId, TRUE, TRUE, TRUE );
@@ -397,7 +404,7 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'project', $project );
 	}
 
-	public function removeUser( string $projectId, string $userId )
+	public function removeUser( string $projectId, string $userId ): void
 	{
 		$project		= $this->checkProject( $projectId, TRUE, TRUE );
 		$words			= (object) $this->getWords( 'edit-panel-users' );
@@ -425,7 +432,7 @@ class Controller_Manage_Project extends Controller
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
-	public function setDefault( string $projectId = NULL )
+	public function setDefault( string $projectId = NULL ): void
 	{
 		$this->checkUserProjects();
 		$projectId	= $projectId ? $projectId : $this->request->get( 'projectId' );
@@ -446,7 +453,7 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'from', $this->request->get( 'from' ) );
 	}
 
-	public function view( string $projectId )
+	public function view( string $projectId ): void
 	{
 		$project			= $this->checkProject( $projectId, TRUE );
 		$project->users		= $this->logic->getProjectUsers( $projectId );
@@ -472,8 +479,8 @@ class Controller_Manage_Project extends Controller
 		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
 		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->roleId			= $this->session->get( 'auth_role_id' );
-//		$this->logic			= Logic_Project::getInstance( $this->env );
-//		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->logic			= Logic_Project::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->logic			= $this->getLogic( 'Project' );
 		$this->logicMail		= $this->getLogic( 'Mail' );
 		$this->modelProject		= $this->getModel( 'Project' );

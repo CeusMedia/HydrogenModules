@@ -1,8 +1,10 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Shop_Payment_Mangopay extends Controller
 {
@@ -15,16 +17,19 @@ class Controller_Shop_Payment_Mangopay extends Controller
 	/**	@var	Logic_Payment_Mangopay		$provider		Payment provider logic instance */
 	protected Logic_Payment_Mangopay $provider;
 
+	protected Logic_Shop_Payment_Mangopay $logicPayment;
+	protected Model_Shop_Payment_Mangopay $modelPayment;
+
 	/**	@var	Dictionary				$session		Session resource */
 	protected Dictionary $session;
 
-	protected $request;
-	protected $messenger;
-	protected $orderId;
-	protected $order;
-	protected $localUserId;
-	protected $userId;
-	protected $wallet;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected ?string $orderId;
+	protected ?object $order;
+	protected ?string $localUserId;
+	protected ?string $userId;
+	protected ?object $wallet;
 
 	public function index( $transactionId = NULL )
 	{
@@ -147,6 +152,10 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment.', TRUE );

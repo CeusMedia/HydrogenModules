@@ -1,18 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 class Logic_Shop_Payment_Stripe extends Logic
 {
-	protected $logicStripe;
-	protected $logicShop;
-	protected $modelPayin;
-	protected $modelPayment;
-	protected $session;
+	protected Logic_Payment_Stripe $logicStripe;
+	protected Logic_Shop $logicShop;
+	protected Model_Stripe_Payin $modelPayin;
+	protected Model_Shop_Payment_Stripe $modelPayment;
+	protected Dictionary $session;
 
 	public function notePayment( $source, $stripeUserId, $orderId )
 	{
-		$paymentId	= $this->modelPayment->add( array(
+		$paymentId	= $this->modelPayment->add( [
 			'orderId'		=> $orderId,
 			'userId'		=> $stripeUserId,
 			'payInId'		=> $source->id,
@@ -20,14 +21,14 @@ class Logic_Shop_Payment_Stripe extends Logic
 			'status'		=> 0,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->logicShop->setOrderPaymentId( $orderId, $paymentId );
 		$this->session->set( 'shop_payment_stripe_id', $paymentId );
 		$this->session->set( 'shop_payment_stripe_sourceId', $source->id );
 		return $paymentId;
 	}
 
-	public function updatePayment( $source )
+	public function updatePayment( object $source ): bool
 	{
 		$payment	= $this->modelPayment->getByIndex( 'payInId', $source->id );
 		if( $source->redirect->status === "succeeded" )
@@ -35,15 +36,15 @@ class Logic_Shop_Payment_Stripe extends Logic
 		else if( $source->redirect->status === "failed" )
 			$status	= Model_Shop_Payment_Stripe::STATUS_FAILED;
 		else
-			return 0;
-		return $this->modelPayment->edit( $payment->paymentId, array(
-			'status'		=> (int) $status,
+			return FALSE;
+		return (bool) $this->modelPayment->edit( $payment->paymentId, [
+			'status'		=> $status,
 			'object'		=> json_encode( $source ),
 		 	'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
-	public function transferOrderAmountToClientSeller( $orderId, $payIn, bool $strict = TRUE )
+	public function transferOrderAmountToClientSeller( string $orderId, $payIn, bool $strict = TRUE )
 	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
@@ -92,7 +93,7 @@ class Logic_Shop_Payment_Stripe extends Logic
 	{
 		$this->logicStripe		= new Logic_Payment_Stripe( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
-		$this->modelPayins		= new Model_Stripe_Payin( $this->env );
+		$this->modelPayin		= new Model_Stripe_Payin( $this->env );
 		$this->modelPayment		= new Model_Shop_Payment_Stripe( $this->env );
 		$this->session			= $this->env->getSession();
 	}

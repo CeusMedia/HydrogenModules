@@ -3,19 +3,23 @@
 use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
+use CeusMedia\HydrogenFramework\Environment;
 
-class Logic_Upload{
+class Logic_Upload
+{
+	protected Environment $env;
 
-	/**	@var		$upload			Upload data object from request */
-	protected $upload;
+	/**	@var	object		$upload			Upload data object from request */
+	protected object $upload;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		object			$env				Environment object
+	 *	@param		Environment		$env				Environment object
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env	= $env;
 	}
 
@@ -39,13 +43,11 @@ class Logic_Upload{
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 *	@throws		RuntimeException					if no upload has been set before
-	 *	@throws		InvalidArgumentException			if given list of extensions is not an array
 	 */
-	public function checkExtension( $allowedExtensions, $noteError = FALSE ){
+	public function checkExtension( array $allowedExtensions, bool $noteError = FALSE ): bool
+	{
 		if( !$this->upload )
 			throw new RuntimeException( 'No upload set' );
-		if( !is_array( $allowedExtensions ) )
-			throw new InvalidArgumentException( 'Allowed extensions must be given as list' );
 		$this->upload->allowedExtensions	= $allowedExtensions;
 //		if( $this->upload->error )
 //			return FALSE;
@@ -62,7 +64,8 @@ class Logic_Upload{
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 */
-	public function checkIsImage( $noteError = FALSE ){
+	public function checkIsImage( bool $noteError = FALSE ): bool
+	{
 //		if( $this->upload->error )
 //			return FALSE;
 		$extension  = $this->getExtension( TRUE );
@@ -79,7 +82,8 @@ class Logic_Upload{
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 */
-	public function checkMimeType( $allowedMimeTypes, $noteError = FALSE ){
+	public function checkMimeType( $allowedMimeTypes, bool $noteError = FALSE ): bool
+	{
 		if( $this->upload->error )
 			return FALSE;
 		if( is_string( $allowedMimeTypes ) ){
@@ -105,7 +109,8 @@ class Logic_Upload{
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if given size is not an integer larger than 0
 	 */
-	public function checkSize( $maxSize, $noteError = FALSE ){
+	public function checkSize( int $maxSize, bool $noteError = FALSE ): bool
+	{
 		if( $this->upload->error )
 			return FALSE;
 		$maxSize	= UnitParser::parse( $maxSize, 'B' );
@@ -124,7 +129,8 @@ class Logic_Upload{
 	/**
 	 *	@todo	implement using clamav
 	 */
-	public function checkVirus( $noteError = FALSE ){
+	public function checkVirus( bool $noteError = FALSE )
+	{
 		try{
 			if( $this->upload->error )
 //				throw new Exception( 'Upload failed beforehand' );
@@ -149,7 +155,8 @@ class Logic_Upload{
 		return $result;
 	}
 
-	public function getContent(){
+	public function getContent(): string
+	{
 		if( $this->upload->error )
 			throw new Exception( 'Upload failed beforehand' );
 		return file_get_contents( $this->upload->tmp_name );
@@ -162,7 +169,8 @@ class Logic_Upload{
 	 *	@return		string		Extension of uploaded file
 	 *	@throws		RuntimeException				if no file has been uploaded
 	 */
-	public function getExtension( $lowAndSimple = FALSE ){
+	public function getExtension( bool $lowAndSimple = FALSE ): string
+	{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
 		$extension	= pathinfo( $this->upload->name, PATHINFO_EXTENSION );
@@ -173,11 +181,13 @@ class Logic_Upload{
 		return $extension;
 	}
 
-	public function getError(){
+	public function getError()
+	{
 		return $this->upload->error;
 	}
 
-	public function getFileName(){
+	public function getFileName()
+	{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
 		if( $this->upload->error )
@@ -185,13 +195,15 @@ class Logic_Upload{
 		return $this->upload->name;
 	}
 
-	public function getFileSize(){
+	public function getFileSize()
+	{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
 		return $this->upload->size;
 	}
 
-	public function getObject(){
+	public function getObject(): ?object
+	{
 		return $this->upload;
 	}
 
@@ -207,7 +219,8 @@ class Logic_Upload{
 	 *	@param		array			$otherLimits		Map of other given limits
 	 *	@return		integer
 	 */
-	static function getMaxUploadSize( $otherLimits = [] ){
+	static function getMaxUploadSize( array $otherLimits = [] ): int
+	{
 		foreach( $otherLimits as $key => $value )
 			if( preg_match( "/[a-z]$/i", trim( $value ) ) )
 				$otherLimits[$key]	= UnitParser::parse( trim( $value ) );
@@ -223,19 +236,22 @@ class Logic_Upload{
 	 *	@return		string
 	 *	@throws		RuntimeException				if no file has been uploaded
 	 */
-	public function getMimeType(){
+	public function getMimeType(): string
+	{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No file uploaded' );
 		return $this->upload->type;
 	}
 
-	public function sanitizeFileName(){
+	public function sanitizeFileName(): string
+	{
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No file uploaded' );
 		return $this->upload->name = self::sanitizeFileNameStatic( $this->upload->name );
 	}
 
-	static public function sanitizeFileNameStatic( $filename, $urlEncode = FALSE, $maxLength = 256 ){
+	public static function sanitizeFileNameStatic( string $filename, bool $urlEncode = FALSE, int $maxLength = 256 ): string
+	{
 		$filename	= str_replace( ' ', '_', $filename );											//  replace whitespace by underscore
 		$filename	= str_replace( '/', ',', $filename );											//  replace whitespace by underscore
 		$filename	= preg_replace(
@@ -273,7 +289,8 @@ class Logic_Upload{
 	 *	@throws		RuntimeException				if upload is invalid (after checks)
 	 *	@throws		RuntimeException				if target file cannot be created
 	 */
-	public function saveTo( $targetFile ){
+	public function saveTo( string $targetFile ): bool
+	{
 		if( $this->upload->error )
 			throw new RuntimeException( 'Cannot save upload with errors' );
 		$result	= @copy( $this->upload->tmp_name, $targetFile );
@@ -282,7 +299,8 @@ class Logic_Upload{
 		return TRUE;
 	}
 
-	public function saveToBucket( $uriPath, $moduleId = NULL ){
+	public function saveToBucket( string $uriPath, ?string $moduleId = NULL ): ?object
+	{
 		if( !$this->env->getModules()->has( 'Resource_FileBucket' ) )
 			throw new RuntimeException( 'Module Resource:FileBucket is not installed' );
 		$logicBucket	= new Logic_FileBucket( $this->env );
@@ -292,10 +310,18 @@ class Logic_Upload{
 			$this->getMimeType(),
 			$moduleId
 		) );
-
 	}
 
-	public function scaleImage( $targetFile, $maxWidth, $maxHeight, $quality = NULL ){
+	/**
+	 *	@param		string		$targetFile
+	 *	@param		int			$maxWidth
+	 *	@param		int			$maxHeight
+	 *	@param		int|NULL	$quality
+	 *	@return		bool
+	 *	@throws		Exception
+	 */
+	public function scaleImage( string $targetFile, int $maxWidth, int $maxHeight, ?int $quality = NULL ): bool
+	{
 		if( !$this->checkIsImage() )
 			return FALSE;
 		$this->saveTo( $targetFile );
@@ -318,7 +344,8 @@ class Logic_Upload{
 	 *	@throws		InvalidArgumentException			if given upload data is neither array nor object
 	 *	@throws		InvalidArgumentException			if given upload data is missing error property
 	 */
-	public function setUpload( $uploadData, $maxSize = 0, $allowedExtensions = [] ){
+	public function setUpload( $uploadData, int $maxSize = 0, array $allowedExtensions = [] ): void
+	{
 		if( is_array( $uploadData ) )
 			$uploadData	= (object) $uploadData;
 		if( !is_object( $uploadData ) )

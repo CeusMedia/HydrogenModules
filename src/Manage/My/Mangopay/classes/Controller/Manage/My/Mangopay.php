@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_My_Mangopay extends Controller_Manage_My_Mangopay_Abstract{
-
+class Controller_Manage_My_Mangopay extends Controller_Manage_My_Mangopay_Abstract
+{
 	public function index(): void
 	{
 		try{

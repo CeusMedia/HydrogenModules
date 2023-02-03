@@ -5,20 +5,20 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_ShopBridge
 {
-	/**	@var	Environment			$env			Environment instance */
-	protected $env;
+	/**	@var	Environment				$env			Environment instance */
+	protected Environment $env;
 
-	/**	@var	array				$bridges		Map of registered bridges by ID */
-	protected $bridges				= [];
+	/**	@var	array					$bridges		Map of registered bridges by ID */
+	protected array $bridges			= [];
 
-	/**	@var	array				$bridgeClasses	Map of registered bridges by class name */
-	protected $bridgeClasses		= [];
+	/**	@var	array					$bridgeClasses	Map of registered bridges by class name */
+	protected array $bridgeClasses		= [];
 
-	/**	@var	string				$pathToBridges */
-	static public $pathToBridges	= "classes/Logic/ShopBridge/";
+	/**	@var	string					$pathToBridges */
+	public static string $pathToBridges	= "classes/Logic/ShopBridge/";
 
-	/**	@var	Model_Shop_Bridge	$model			Model of shop bridges */
-	protected $model;
+	/**	@var	Model_Shop_Bridge		$model			Model of shop bridges */
+	protected Model_Shop_Bridge $model;
 
 	/**
 	 *	Constructor.
@@ -26,6 +26,7 @@ class Logic_ShopBridge
 	 *	@access		public
 	 *	@param		Environment		$env	Environment
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -36,7 +37,7 @@ class Logic_ShopBridge
 	//		$this->readBridges();
 	}
 
-	public function discoverBridges( bool $install = FALSE )
+	public function discoverBridges( bool $install = FALSE ): array
 	{
 		$list	= [];
 		foreach( new DirectoryIterator( self::$pathToBridges ) as $entry ){							//  iterate list of classes in bridge class folder
@@ -50,7 +51,7 @@ class Logic_ShopBridge
 				$title		= str_replace( " ", ": ", ucwords( $name ) );
 				$className	= str_replace( " ", "_",ucwords( $name ) );
 				$pathName	= strtolower( str_replace( " ", "/", $name ) ).'/';
-				$data		= array(
+				$data		= [
 					'class'					=> $class,
 					'title'					=> $title,
 					'frontendController'	=> $className,
@@ -60,7 +61,7 @@ class Logic_ShopBridge
 					'articleTableName'		=> '',
 					'articleIdColumn'		=> '',
 					'createdAt'				=> time(),
-				);
+				];
 				if( $install )
 					$this->model->add( $data );
 				$list[]	= (object) $data;
@@ -72,11 +73,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
-	 *	@return		string
+	 *	@param		mixed		$bridge			Bridge ID or class name
+	 *	@param		string		$articleId		Article ID
+	 *	@param		integer		$quantity
+	 *	@return		object
 	 */
-	public function getArticle( $bridge, $articleId, int $quantity = 1 )
+	public function getArticle( $bridge, string $articleId, int $quantity = 1 ): object
 	{
 		return $this->bridge( $bridge )->get( $articleId, $quantity );
 	}
@@ -85,10 +87,10 @@ class Logic_ShopBridge
 	 *	...
 	 *	@access		public
 	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
+	 *	@param		string		$articleId	Article ID
 	 *	@return		string
 	 */
-	public function getArticleDescription( $bridge, $articleId ): string
+	public function getArticleDescription( $bridge, string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getDescription( $articleId );
 	}
@@ -97,10 +99,10 @@ class Logic_ShopBridge
 	 *	...
 	 *	@access		public
 	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
-	 *	@return		float
+	 *	@param		string		$articleId	Article ID
+	 *	@return		string
 	 */
-	public function getArticleLink( $bridge, $articleId ): string
+	public function getArticleLink( $bridge, string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getLink( $articleId );
 	}
@@ -108,11 +110,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
+	 *	@param		mixed		$bridge			Bridge ID or class name
+	 *	@param		string		$articleId		Article ID
+	 *	@param		bool		$absolute		...
 	 *	@return		string
 	 */
-	public function getArticlePicture( $bridge, $articleId, bool $absolute = FALSE ): string
+	public function getArticlePicture( $bridge, string $articleId, bool $absolute = FALSE ): string
 	{
 		return $this->bridge( $bridge )->getPicture( $articleId, $absolute );
 	}
@@ -120,12 +123,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
+	 *	@param		mixed		$bridge			Bridge ID or class name
+	 *	@param		string		$articleId		Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getArticlePrice( $bridge, $articleId, int $amount = 1 ): float
+	public function getArticlePrice( $bridge, string $articleId, int $amount = 1 ): float
 	{
 		return $this->bridge( $bridge )->getPrice( $articleId, $amount );
 	}
@@ -133,12 +136,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
+	 *	@param		mixed		$bridge			Bridge ID or class name
+	 *	@param		string		$articleId		Article ID
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getArticleTax( $bridge, $articleId, int $amount = 1 ): float
+	public function getArticleTax( $bridge, string $articleId, int $amount = 1 ): float
 	{
 		return $this->bridge( $bridge )->getTax( $articleId, $amount );
 	}
@@ -146,11 +149,11 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
-	 *	@param		integer		$articleId	Article ID
+	 *	@param		mixed		$bridge			Bridge ID or class name
+	 *	@param		string		$articleId		Article ID
 	 *	@return		string
 	 */
-	public function getArticleTitle( $bridge, $articleId ): string
+	public function getArticleTitle( $bridge, string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getTitle( $articleId );
 	}
@@ -175,7 +178,7 @@ class Logic_ShopBridge
 	 *	@return		string
 	 *	@throws		InvalidArgumentException		if a given object is not a bridge object
 	 */
-	public function getBridgeClass( $bridgeIdOrObject )
+	public function getBridgeClass( $bridgeIdOrObject ): string
 	{
 		if( is_object( $bridgeIdOrObject ) ){
 			if( $bridgeIdOrObject instanceof Logic_ShopBridge_Abstract )
@@ -190,7 +193,7 @@ class Logic_ShopBridge
 		throw new InvalidArgumentException( 'Invalid bridge data type: Needs ID or object' );
 	}
 
-	public function getBridgeId( $bridgeClassOrObject )
+	public function getBridgeId( $bridgeClassOrObject ): string
 	{
 		if( is_object( $bridgeClassOrObject ) )
 			$bridgeClassOrObject	= $this->getBridgeClass( $bridgeClassOrObject );
@@ -207,7 +210,7 @@ class Logic_ShopBridge
 	 *	@param		mixed		$bridgeIdOrClass	Bridge ID or class name
 	 *	@return		Logic_ShopBridge_Abstract
 	 */
-	public function bridge( $bridgeIdOrClass )
+	public function bridge( $bridgeIdOrClass ): object
 	{
 		return $this->getBridgeObject( $bridgeIdOrClass );
 	}
@@ -219,11 +222,9 @@ class Logic_ShopBridge
 				throw new RuntimeException( 'Bridge with ID '.$bridgeIdOrClass.' is not registered' );
 			return $this->bridges[(int) $bridgeIdOrClass]->object;
 		}
-		if( is_string( $bridgeIdOrClass ) ){
-			if( !isset( $this->bridgeClasses[$bridgeIdOrClass] ) )
-				throw new RuntimeException( 'Bridge of type '.$bridgeIdOrClass.' is not registered' );
-			return $this->bridgeClasses[$bridgeIdOrClass]->object;
-		}
+		if( !isset( $this->bridgeClasses[$bridgeIdOrClass] ) )
+			throw new RuntimeException( 'Bridge of type '.$bridgeIdOrClass.' is not registered' );
+		return $this->bridgeClasses[$bridgeIdOrClass]->object;
 	}
 
 	/**
@@ -231,7 +232,7 @@ class Logic_ShopBridge
 	 *	@access		public
 	 *	@return		array
 	 */
-	public function getBridges()
+	public function getBridges(): array
 	{
 		return $this->bridges;
 	}

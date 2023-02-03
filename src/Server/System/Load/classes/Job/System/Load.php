@@ -1,6 +1,11 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_System_Load extends Job_Abstract
 {
+	protected Dictionary $options;
+
 	public function note()
 	{
 		if( !class_exists( 'RRDCreator' ) )

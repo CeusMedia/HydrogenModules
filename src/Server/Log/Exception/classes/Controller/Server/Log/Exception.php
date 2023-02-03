@@ -18,8 +18,9 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Server_Log_Exception extends Controller
 {
-	protected $model;
-	protected $logic;
+	protected Model_Log_Exception $model;
+	protected Logic_Log_Exception $logic;
+	protected string $filterPrefix		= 'filter_server_system_';
 
 	public function index( $page = 0, $limit = 20 )
 	{
@@ -79,12 +80,11 @@ class Controller_Server_Log_Exception extends Controller
 		$this->model		= new Model_Log_Exception( $this->env );
 		$this->logic		= $this->env->getLogic()->get( 'logException');
 		$this->logic->importFromLogFile();
-		$this->filterPrefix	= 'filter_server_system_';
 	}
 
-	protected function check( $id, $strict = TRUE )
+	protected function check( string $id, bool $strict = TRUE )
 	{
-		$exception	= $this->logic->check( $id, FALSE );
+		$exception	= $this->logic->check( $id, $strict );
 		if( !$exception ){
 			$this->env->getMessenger()->noteError( 'Invalid exception ID.' );
 			$this->restart( NULL, TRUE );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\CSS\Compressor as CssFileCompressor;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
@@ -7,19 +8,22 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Newsletter_Mail
 {
 	const MODE_PLAIN		= 0;
 	const MODE_HTML			= 1;
 
-	protected $cachePath	= "contents/cache/";
-	protected $data			= [];
-	protected $mode			= self::MODE_PLAIN;
-	protected $template;
-	protected $letter;
-	protected $reader;
-	protected $newsletter;
+	protected Environment $env;
+	protected Logic_Newsletter $logic;
+	protected string $cachePath		= "contents/cache/";
+	protected array $data			= [];
+	protected int $mode				= self::MODE_PLAIN;
+	protected ?object $template		= NULL;
+	protected ?object $letter		= NULL;
+	protected ?object $reader		= NULL;
+	protected ?object $newsletter	= NULL;
 
 	public function __construct( $env/*, $templateId = NULL*/ )
 	{
@@ -29,7 +33,11 @@ class View_Helper_Newsletter_Mail
 			FolderEditor::createFolder( $this->cachePath );
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		IoException
+	 */
+	public function render(): string
 	{
 		if( !$this->template )
 			throw new RuntimeException( 'No mail template set' );
@@ -37,8 +45,7 @@ class View_Helper_Newsletter_Mail
 			throw new RuntimeException( 'No mail data set' );
 		if( $this->mode == self::MODE_HTML )
 			return $this->renderHtml();
-		else
-			return $this->renderPlain();
+		return $this->renderPlain();
 	}
 
 	public function setData( $data ): self
@@ -70,14 +77,22 @@ class View_Helper_Newsletter_Mail
 		return $this;
 	}
 
-	public function setReaderId( $readerId ): self
+	/**
+	 *	@param		string		$readerId
+	 *	@return		self
+	 */
+	public function setReaderId( string $readerId ): self
 	{
 		$this->logic->checkReaderId( $readerId );
 		$this->reader	= $this->logic->getReader( $readerId );
 		return $this;
 	}
 
-	public function setTemplateId( $templateId ): self
+	/**
+	 *	@param		string		$templateId
+	 *	@return		self
+	 */
+	public function setTemplateId( string $templateId ): self
 	{
 		$this->logic->checkTemplateId( $templateId, TRUE );
 		$this->template	= $this->logic->getTemplate( $templateId );
@@ -89,9 +104,9 @@ class View_Helper_Newsletter_Mail
 	//  --  PROTECTED  --  //
 
 	/**
-	 *	@param		$mode		Mail format: 0 - Plain, 1 - HTML
+	 *	@param		array		$matches
 	 */
-	protected function callbackReplacePlainColumns( $matches )
+	protected function callbackReplacePlainColumns( array $matches )
 	{
 		$columns	= $matches[1];
 		$content	= $matches[2];
@@ -103,7 +118,7 @@ class View_Helper_Newsletter_Mail
 		die;
 	}
 
-	protected function prepareData( $mode = self::MODE_PLAIN )
+	protected function prepareData( int $mode = self::MODE_PLAIN ): array
 	{
 		$data		= $this->data;
 		$words		= $this->env->getLanguage()->getWords( 'resource/newsletter' );
@@ -111,7 +126,7 @@ class View_Helper_Newsletter_Mail
 
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 		$data['baseUrl']		= $baseUrl;
 		$data['templateId']		= $this->template->newsletterTemplateId;
 
@@ -177,7 +192,12 @@ class View_Helper_Newsletter_Mail
 		return $content;
 	}
 
-	protected function renderHtml( $strict = TRUE )
+	/**
+	 *	@param		boolean		$strict
+	 *	@return		string
+	 *	@throws		IoException
+	 */
+	protected function renderHtml( bool $strict = TRUE ): string
 	{
 		$data	= $this->prepareData( self::MODE_HTML );
 		$data['imprint']	= $this->renderImprint( TRUE );
@@ -260,15 +280,14 @@ class View_Helper_Newsletter_Mail
 		return $content;
 	}
 
-	protected function renderPlain()
+	protected function renderPlain(): string
 	{
-		$data	= $this->prepareData( self::MODE_PLAIN );
+		$data	= $this->prepareData();
 		$data['imprint']	= $this->renderImprint();
 		$content	= $this->template->plain;
 		foreach( $data as $key => $value )
 			$content	= str_replace( '[#'.$key.'#]', $value, $content );
 		$content	= $this->realizeColumns( $content, 0 );
-		$content	= wordwrap( $content, 78 );
-		return $content;
+		return wordwrap( $content, 78 );
 	}
 }
