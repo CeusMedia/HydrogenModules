@@ -1,19 +1,22 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Job_Schedule extends Controller
 {
-	protected $modelSchedule;
-	protected $modelDefinition;
-	protected $modelRun;
-	protected $logic;
+	protected HttpRequest $request;
+	protected Logic_Job $logic;
+	protected Model_Job_Schedule $modelSchedule;
+	protected Model_Job_Definition $modelDefinition;
+	protected Model_Job_Run $modelRun;
+	protected array $allDefinitions				= [];
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$format	= $this->request->get( 'format' );
-			$data	= array(
+			$data	= [
 				'jobDefinitionId'	=> $this->request->get( 'jobDefinitionId' ),
 				'type'				=> Model_Job_Schedule::TYPE_UNKNOWN,
 				'status'			=> $this->request->get( 'status' ),
@@ -24,7 +27,7 @@ class Controller_Manage_Job_Schedule extends Controller
 				'reportReceivers'	=> $this->request->get( 'reportReceivers' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			);
+			];
 			if( in_array( $format, ['cron-month', 'cron-week'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_CRON;
 				$data['expression']	= $this->request->get( 'expressionCron' );
@@ -43,7 +46,7 @@ class Controller_Manage_Job_Schedule extends Controller
 		}
 	}
 
-	public function edit( $jobScheduleId )
+	public function edit( string $jobScheduleId ): void
 	{
 		if( !( $jobSchedule = $this->modelSchedule->get( $jobScheduleId ) ) ){
 			$this->env->getMessenger()->noteError( 'Ungültige ID gegeben. Weiterleitung zur Liste.' );
@@ -51,7 +54,7 @@ class Controller_Manage_Job_Schedule extends Controller
 		}
 		if( $this->request->getMethod()->isPost() ){
 			$format	= $this->request->get( 'format' );
-			$data	= array(
+			$data	= [
 				'jobDefinitionId'	=> $this->request->get( 'jobDefinitionId' ),
 				'status'			=> $this->request->get( 'status' ),
 				'title'				=> $this->request->get( 'title' ),
@@ -61,7 +64,7 @@ class Controller_Manage_Job_Schedule extends Controller
 				'reportReceivers'	=> $this->request->get( 'reportReceivers' ),
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			);
+			];
 			if( in_array( $format, ['cron-month', 'cron-week'] ) ){
 				$data['type']		= Model_Job_Schedule::TYPE_CRON;
 				$data['expression']	= $this->request->get( 'expressionCron' );
@@ -81,7 +84,7 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->addData( 'item', $jobSchedule );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$schedule		= $this->modelSchedule->getAll( [], [] );
 		foreach( $schedule as $item ){
@@ -91,22 +94,26 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->addData( 'scheduledJobs', $schedule );
 	}
 
-	public function remove( $jobScheduleId )
+	public function remove( string $jobScheduleId ): void
 	{
 	}
 
-	public function setStatus( $jobScheduleId, $status )
+	public function setStatus( string $jobScheduleId, $status ): void
 	{
 		$from	= $this->request->get( 'from' );
-		$this->modelSchedule->edit( $jobScheduleId, array(
+		$this->modelSchedule->edit( $jobScheduleId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( $from ? $from : NULL, !$from );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -115,7 +122,6 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 
-		$this->allDefinitions	= [];
 		$definitions	= $this->modelDefinition->getAll( [], ['identifier' => 'ASC'] );
 		foreach( $definitions as $definition )
 			$this->allDefinitions[(int) $definition->jobDefinitionId] = $definition;

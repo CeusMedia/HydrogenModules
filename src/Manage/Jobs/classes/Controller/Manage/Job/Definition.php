@@ -1,16 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Job_Definition extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $modelDefinition;
-	protected $modelRun;
-	protected $modelSchedule;
-	protected $logic;
-	protected $filterPrefix			= 'filter_manage_job_definition_';
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected Model_Job_Definition $modelDefinition;
+	protected Model_Job_Run $modelRun;
+	protected Model_Job_Schedule $modelSchedule;
+	protected Model_Job_Code $modelCode;
+	protected Logic_Job $logic;
+	protected string $filterPrefix			= 'filter_manage_job_definition_';
 
 	public function filter( $reset = NULL )
 	{

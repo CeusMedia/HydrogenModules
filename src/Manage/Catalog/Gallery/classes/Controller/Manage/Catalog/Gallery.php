@@ -1,25 +1,31 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Gallery extends Controller
 {
-	protected $request;
-	protected $options;
-
-	protected $pathImages;
-	protected $pathImagesOriginal;
-	protected $pathImagesPreview;
-	protected $pathImagesThumbnail;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Logic_Frontend $frontend;
+	protected Model_Catalog_Gallery_Image $modelImage;
+	protected Model_Catalog_Gallery_Category $modelCategory;
+	protected string $pathImages;
+	protected string $pathImagesOriginal;
+	protected string $pathImagesPreview;
+	protected string $pathImagesThumbnail;
 
 	public function addCategory( $parentCategoryId = 0 )
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
-			$data	= array(
+			$data	= [
 				'parentId'		=> $parentCategoryId,
 				'status'		=> $this->request->get( 'status' ),
 				'path'			=> str_replace( "/", "", $this->request->get( 'path' ) ),
@@ -28,7 +34,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'rank'			=> $this->request->get( 'rank' ),
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			);
+			];
 			$categoryId	= $this->modelCategory->add( $data );
 			mkdir( $this->pathImagesPreview.$data['path'] );
 			mkdir( $this->pathImagesThumbnail.$data['path'] );
@@ -48,12 +54,12 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'categoryId', $parentCategoryId );
 	}
 
-	public function addImage( $categoryId )
+	public function addImage( string $categoryId ): void
 	{
 		$category	= $this->checkCategoryId( $categoryId );
 		if( $this->request->has( 'save') ){
 			$words	= (object) $this->getWords( 'msg' );
-			$data	= array(
+			$data	= [
 				'title'				=> $this->request->get( 'title' ),
 				'status'			=> $this->request->get( 'status' ),
 				'price'				=> $this->request->get( 'price' ),
@@ -63,7 +69,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'galleryCategoryId'	=> $categoryId,
 				'single'			=> TRUE,
 				'modifiedAt'		=> time(),
-			);
+			];
 			try{
 				$imageId	= $this->modelImage->add( $data );
 				$this->rerankImages( $categoryId );
@@ -99,24 +105,24 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'category', $category );
 	}
 
-	public function addImageToSlider( $imageId )
+	public function addImageToSlider( string $imageId ): void
 	{
 		$this->restart( './manage/catalog/gallery/editImage/'.$imageId );
 	}
 
-	public function editCategory( $categoryId )
+	public function editCategory( string $categoryId ): void
 	{
 		$category	= $this->checkCategoryId( $categoryId );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
-			$data	= array(
+			$data		= [
 				'path'			=> $this->request->get( 'path' ),
 				'title'			=> $this->request->get( 'title' ),
 				'status'		=> $this->request->get( 'status' ),
 				'price'			=> $this->request->get( 'price' ),
 				'rank'			=> $this->request->get( 'rank' ),
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( $category->path !== $data['path'] ){
 				rename( $this->pathImagesPreview.$category->path, $this->pathImagesPreview.$data['path'] );
 				rename( $this->pathImagesOriginal.$category->path, $this->pathImagesOriginal.$data['path'] );
@@ -157,17 +163,17 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'category', $category );
 	}
 
-	public function edit( $imageId )
+	public function edit( string $imageId ): void
 	{
 		$this->restart( 'editImage/'.$imageId, TRUE );
 	}
 
-	public function editImage( $imageId )
+	public function editImage( string $imageId ): void
 	{
 		$image		= $this->checkImageId( $imageId );
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
-			$data	= array(
+			$data	= [
 				'galleryCategoryId'	=> $this->request->get( 'categoryId' ),
 				'filename'		=> $this->request->get( 'filename' ),
 				'title'			=> $this->request->get( 'title' ),
@@ -176,7 +182,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'rank'			=> $this->request->get( 'rank' ),
 				'type'			=> $this->request->get( 'type' ),
 				'modifiedAt'	=> time(),
-			);
+			];
 			$filenameHasChanged	= $image->filename !== $data['filename'];
 			$categoryHasChanged	= $image->galleryCategoryId != $data['galleryCategoryId'];
 			if( $filenameHasChanged || $categoryHasChanged ){
@@ -217,13 +223,13 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'imageObject', new Image( $pathOriginal ) );
 	}
 
-	public function index( $categoryId = 0 )
+	public function index( $categoryId = 0 ): void
 	{
 		if( $categoryId )
 			$this->restart( 'editCategory/'.$categoryId, TRUE );
 	}
 
-	public function viewOriginal( $imageId )
+	public function viewOriginal( string $imageId ): void
 	{
 		$image			= $this->checkImageId( $imageId );
 		$category		= $this->checkCategoryId( $image->galleryCategoryId );
@@ -231,11 +237,11 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$imageObject	= new Image( $uri );
 		$mimeType		= $imageObject->getMimeType();
 		header( 'Content-Type: '.$imageObject->getMimeType() );
-		print File_Reader::load( $uri );
+		print FileReader::load( $uri );
 		exit;
 	}
 
-	public function removeCategory( $categoryId )
+	public function removeCategory( string $categoryId ): void
 	{
 		$category	= $this->checkCategoryId( $categoryId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -256,19 +262,19 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeCategoryCover( $categoryId )
+	public function removeCategoryCover( string $categoryId ): void
 	{
 		$category	= $this->checkCategoryId( $categoryId );
 		$words		= (object) $this->getWords( 'msg' );
 		unlink( $this->pathImages.$category->image );
-		$this->modelCategory->edit( $categoryId, array(
+		$this->modelCategory->edit( $categoryId, [
 			'image'			=> NULL,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( 'editCategory/'.$categoryId, TRUE );
 	}
 
-	public function removeImage( $imageId )
+	public function removeImage( string $imageId ): void
 	{
 		$image		= $this->checkImageId( $imageId );
 		$category	= $this->checkCategoryId( $image->galleryCategoryId );
@@ -281,6 +287,10 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( $image->galleryCategoryId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -304,7 +314,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 			mkdir( $this->pathImagesThumbnail );
 
 		if( !file_exists( $this->pathImagesOriginal.'.htaccess' ) )
-			File_Writer::save( $this->pathImagesOriginal.'.htaccess', 'Deny from all' );
+			FileWriter::save( $this->pathImagesOriginal.'.htaccess', 'Deny from all' );
 
 		$categories	= $this->modelCategory->getAll( [], ['rank' => 'ASC', 'galleryCategoryId' => 'ASC']);
 		foreach( $categories as $nr => $category ){
@@ -321,7 +331,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkCategoryId( $categoryId )
+	protected function checkCategoryId( string $categoryId )
 	{
 		$category	= $this->modelCategory->get( $categoryId );
 		if( $category )
@@ -331,7 +341,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function checkImageId( $imageId )
+	protected function checkImageId( string $imageId )
 	{
 		$image	= $this->modelImage->get( $imageId );
 		if( $image )
@@ -352,7 +362,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		}
 	}
 
-	protected function rerankImages( $categoryId, $start = 1 )
+	protected function rerankImages( string $categoryId, $start = 1 )
 	{
 		$conditions	= ['galleryCategoryId' => $categoryId];
 		if( ( $rank = max( 1, (int) $start ) ) > 1 )
@@ -364,7 +374,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		}
 	}
 
-	protected function uploadImage( $imageId, $uploadData )
+	protected function uploadImage( string $imageId, $uploadData )
 	{
 		$image		= $this->checkImageId( $imageId );
 		$category	= $this->checkCategoryId( $image->galleryCategoryId );

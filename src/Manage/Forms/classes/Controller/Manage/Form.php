@@ -1,24 +1,28 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form extends Controller
 {
-	protected $modelForm;
-	protected $modelFill;
-	protected $modelRule;
-	protected $modelMail;
-	protected $modelTransferTarget;
-	protected $modelTransferRule;
-	protected $modelImportRule;
-	protected $modelImportConnector;
-	protected $modelImportConnection;
-	protected $basePath;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected Model_Form $modelForm;
+	protected Model_Form_Fill $modelFill;
+	protected Model_Form_Rule $modelRule;
+	protected Model_Form_Mail $modelMail;
+	protected Model_Form_Transfer_Target $modelTransferTarget;
+	protected Model_Form_Transfer_Rule $modelTransferRule;
+	protected Model_Form_Import_Rule $modelImportRule;
+	protected Model_Import_Connector $modelImportConnector;
+	protected Model_Import_Connection $modelImportConnection;
+	protected string $basePath;
 
-	protected $filters		= [
+	protected array $filters		= [
 		'formId',
 		'type',
 		'status',
@@ -27,9 +31,9 @@ class Controller_Manage_Form extends Controller
 		'title'
 	];
 
-	protected $transferTargetMap		= [];
+	protected array $transferTargetMap		= [];
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$this->checkIsPost();
@@ -44,7 +48,7 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mails', $mails );
 	}
 
-	public function addRule( $formId, $formType )
+	public function addRule( string $formId, $formType )
 	{
 		$data		= [];
 		for( $i=0; $i<3; $i++ ){
@@ -68,7 +72,7 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function addTransferRule( $formId )
+	public function addTransferRule( string $formId ): void
 	{
 		$this->checkIsPost();
 		$title		= $this->request->get( 'title' );
@@ -80,14 +84,14 @@ class Controller_Manage_Form extends Controller
 		if( empty( $targetId ) )
 			throw new InvalidArgumentException( 'No target ID given' );
 
-		$this->modelTransferRule->add([
+		$this->modelTransferRule->add( [
 			'formTransferTargetId'	=> $targetId,
 			'formId'				=> $formId,
 			'title'					=> $title,
 			'rules'					=> $rules,
 			'createdAt'				=> time(),
 			'modifiedAt'			=> time(),
-		]);
+		] );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
@@ -96,13 +100,18 @@ class Controller_Manage_Form extends Controller
 		$fillId		= $this->request->get( 'fillId' );
 		$fill		= $this->modelFill->get( $fillId );
 		$this->modelFill->edit( $fillId, [
-			'status'		=> Model_Fill::STATUS_CONFIRMED,
+			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'modifiedAt'	=> time(),
 		] );
 		return 'Okay.';
 	}
 
-	public function edit( $formId )
+	/**
+	 *	@param		string		$formId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function edit( string $formId ): void
 	{
 		$this->addData( 'activeTab', $this->session->get( 'manage_forms_tab' ) );
 		$form		= $this->checkId( $formId );
@@ -161,7 +170,7 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'references', array_unique( $list ) );
 	}
 
-	public function editTransferRule( $formId, $transferRuleId )
+	public function editTransferRule( string $formId, string $transferRuleId ): void
 	{
 		$this->checkIsPost();
 		$rule		= $this->checkTransferRuleId( $transferRuleId );
@@ -179,6 +188,7 @@ class Controller_Manage_Form extends Controller
 			if( $ruleSet )
 				$rules	= json_encode( $ruleSet, JSON_PRETTY_PRINT );
 		}
+		$data	= [];
 		if( $rule->formTransferTargetId !== $targetId )
 			$data['formTransferTargetId']	= $targetId;
 		if( $rule->title !== $title )
@@ -192,7 +202,7 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->filters as $filterKey )
@@ -242,7 +252,7 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
-	public function ajaxTestTransferRules()
+	public function ajaxTestTransferRules(): void
 	{
 		$this->checkIsPost();
 		$ruleId	= $this->request->get( 'ruleId' );
@@ -260,7 +270,7 @@ class Controller_Manage_Form extends Controller
 		if( strlen( trim( $rules ) ) ){
 			$parser	= new JsonParser;
 			try{
-				$ruleSet	= $parser->parse( $rules, FALSE );
+				$parser->parse( $rules, FALSE );
 				$response['status']	= 'parsed';
 			}
 			catch( RuntimeException $e ){
@@ -272,30 +282,30 @@ class Controller_Manage_Form extends Controller
 		print( json_encode( $response ) );
 		exit;
 
-		$this->respond( $rules );
+//		$this->respond( $rules );
 	}
 
-	public function remove( $formId )
+	public function remove( string $formId ): void
 	{
 		$this->checkId( $formId );
 		$this->modelForm->remove( $formId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeRule( $formId, $ruleId )
+	public function removeRule( string $formId, string $ruleId ): void
 	{
 		$this->modelRule->remove( $ruleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function removeTransferRule( $formId, $transferRuleId )
+	public function removeTransferRule( string $formId, string $transferRuleId ): void
 	{
 		$this->checkTransferRuleId( $transferRuleId );
 		$this->modelTransferRule->remove( $transferRuleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function setTab( $formId, $tabId )
+	public function setTab( string $formId, string $tabId ): void
 	{
 		$this->session->set( 'manage_forms_tab', $tabId );
 		if( $this->request->isAjax() ){
@@ -306,9 +316,9 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function view( $formId, $mode = NULL )
+	public function view( string $formId, ?string $mode = NULL )
 	{
-		$form	= $this->checkId( (int) $formId );
+		$this->checkId( (int) $formId );
 		$this->addData( 'formId', $formId );
 		$this->addData( 'mode', (string) $mode );
 //		$helper	= new View_Helper_Form( $this->env );
@@ -318,6 +328,10 @@ class Controller_Manage_Form extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -384,7 +398,7 @@ class Controller_Manage_Form extends Controller
 			Model_Form_Mail::ROLE_TYPE_LEADER_REACT,
 			Model_Form_Mail::ROLE_TYPE_LEADER_ALL,
 		] ] );
-		$orders		= $orders ? $orders : [
+		$orders		= $orders ?: [
 			'roleType'	=> 'ASC',
 			'title'		=> 'ASC',
 		];
@@ -402,13 +416,18 @@ class Controller_Manage_Form extends Controller
 			Model_Form_Mail::ROLE_TYPE_MANAGER_REACT,
 			Model_Form_Mail::ROLE_TYPE_MANAGER_ALL,
 		] ] );
-		$orders		= $orders ? $orders : [
+		$orders		= $orders ?: [
 			'roleType'	=> 'ASC',
 			'title'		=> 'ASC',
 		];
 		return $this->modelMail->getAll( $conditions, $orders );
 	}
 
+	/**
+	 *	@param		$content
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 */
 	protected function getBlocksFromFormContent( $content ): array
 	{
 		$modelBlock	= new Model_Form_Block( $this->env );

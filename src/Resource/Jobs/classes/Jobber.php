@@ -8,7 +8,7 @@
  */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
-use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
+use CeusMedia\HydrogenFramework\Application\ConsoleAbstraction as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -20,15 +20,14 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Jobber extends ConsoleApplication
 {
-	protected $jobs	= [];
-	protected $lock;
-	protected $modelJob;
-//	protected $modelLock;
-	protected $pathLogs;
-	protected $pathJobs;
+	protected array $jobs	= [];
+	protected Logic_Job $logic;
+	protected Model_Job $modelJob;
+//	protected Model_Job_Lock $modelLock;
 	protected $mode;
-	protected $logic;
-	protected $runningJob;
+	protected string $pathJobs;
+	protected ?string $pathLogs;
+	protected ?object $runningJob			= NULL;
 
 	public function __construct( Environment $env = NULL )
 	{
