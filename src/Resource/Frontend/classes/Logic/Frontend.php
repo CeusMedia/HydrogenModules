@@ -13,13 +13,13 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Frontend extends Logic
 {
-	protected static Logic_Frontend $instance;
+	protected static ?Logic_Frontend $instance	= NULL;
 
 	protected Dictionary $config;
 	protected Environment $env;
-	protected array $installedModules	= [];
-	protected array $paths				= [];
-	protected array $defaultPaths		= [
+	protected array $installedModules			= [];
+	protected array $paths						= [];
+	protected array $defaultPaths				= [
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
 		'contents'	=> 'contents/',
@@ -30,8 +30,8 @@ class Logic_Frontend extends Logic
 		'locales'	=> 'locales/',
 		'templates'	=> 'templates/',
 	];
-	protected ?string $path				= NULL;
-	protected ?string $url				= NULL;
+	protected ?string $path						= NULL;
+	protected ?string $url						= NULL;
 
 	/**
 	 * @param		Environment		$env
@@ -39,7 +39,7 @@ class Logic_Frontend extends Logic
 	 */
 	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance )
+		if( NULL === self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
