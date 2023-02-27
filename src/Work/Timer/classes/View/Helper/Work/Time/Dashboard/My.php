@@ -6,12 +6,19 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Dashboard_My extends Abstraction
 {
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
@@ -115,12 +122,12 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 				<script>jQuery(document).ready(function(){WorkTimer.init("#dashboard-timer", "&nbsp;");});</script>';
 		}
 		return $content;
-		$panel	= HtmlTag::create( 'div', array(
+		$panel	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', 'aktuelle Aktivität' ),
 			HtmlTag::create( 'div', $content, [
 				'class' => 'content-panel-inner'
 			] )
-		), [
+		], [
 			'class' => 'content-panel content-panel-info'
 		] );
 		return $panel;

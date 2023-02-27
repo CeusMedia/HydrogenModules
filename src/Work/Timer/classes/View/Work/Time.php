@@ -8,23 +8,40 @@ class View_Work_Time extends View
 	protected Model_Work_Timer $modelTimer;
 	protected Model_Project $modelProject;
 
-	public function add()
+	/**
+	 *	@return void
+	 */
+	public function add(): void
 	{
 	}
 
-	public function ajaxRenderDashboardPanel()
+	/**
+	 *	@return void
+	 */
+	public function ajaxRenderDashboardPanel(): void
 	{
 	}
 
-	public function edit()
+	/**
+	 *	@return void
+	 */
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	/**
+	 *	@return void
+	 */
+	public function index(): void
 	{
 	}
 
-	public static function renderTabs( Environment $env, $current = 0 )
+	/**
+	 *	@param		Environment $env
+	 *	@param		$current
+	 *	@return		string
+	 */
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/time/' );

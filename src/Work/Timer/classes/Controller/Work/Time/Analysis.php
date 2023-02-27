@@ -58,6 +58,10 @@ class Controller_Work_Time_Analysis extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function index()
 	{
 		$filterProjectIds	= $this->session->get( $this->filterPrefix.'projectIds' );
@@ -70,7 +74,7 @@ class Controller_Work_Time_Analysis extends Controller
 		$filterMonth		= $this->session->get( $this->filterPrefix.'month' );
 		$filterWeek			= $this->session->get( $this->filterPrefix.'week' );
 
-		$data		= [];
+		$data			= [];
 
 		$userMap		= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $this->userId );
 
@@ -173,6 +177,10 @@ class Controller_Work_Time_Analysis extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

@@ -9,12 +9,19 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 {
-	protected static array $modules	= [];
+	protected static array $modules		= [];
 
 	protected ?string $moduleId			= NULL;
 	protected ?string $module			= NULL;
 
-	static public function decorateTimer( Environment $env, $timer, bool $strict = TRUE )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object		$timer
+	 *	@param		bool		$strict
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE )
 	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )
@@ -45,12 +52,20 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		}
 	}
 
-	static public function getRegisteredModules(): array
+	/**
+	 *	@return		array
+	 */
+	public static function getRegisteredModules(): array
 	{
 		return self::$modules;
 	}
 
-	public function registerModule( $module ): self
+	/**
+	 *	@param		object		$module
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
+	public function registerModule( object $module ): self
 	{
 		$arguments		= [$this->env];
 		$modelInstance	= ObjectFactory::createObject( $module->modelClass, $arguments );
@@ -66,6 +81,10 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		$conditions	= [];
@@ -131,12 +150,20 @@ $(document).ready(function(){
 	</script>';
 	}
 
+	/**
+	 *	@param		string		$module
+	 *	@return		self
+	 */
 	public function setModule( string $module ): self
 	{
 		$this->module		= $module;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@return		self
+	 */
 	public function setModuleId( string $moduleId ): self
 	{
 		$this->moduleId	= $moduleId;

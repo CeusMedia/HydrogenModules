@@ -34,5 +34,5 @@ class Model_Work_Timer extends Model
 		'status',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_OBJ;
 }

@@ -6,12 +6,19 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 {
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$logicProject	= Logic_Project::getInstance( $this->env );

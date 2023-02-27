@@ -4,24 +4,30 @@ use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment;
 
-
 class View_Helper_Work_Time_Buttons
 {
-	protected array $buttons	= [];
 	protected Environment $env;
-	protected $from;
-	protected $size;
-	protected $userId;
-	protected $workerId;
 	protected Model_Work_Timer $modelTimer;
-	protected $timerId;
+	protected array $buttons					= [];
+	protected ?string $from						= NULL;
+	protected ?string $size						= NULL;
+	protected ?string $userId					= NULL;
+	protected ?string $workerId					= NULL;
+	protected ?string $timerId					= NULL;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelTimer	= new Model_Work_Timer( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( !$this->userId )
@@ -124,10 +130,20 @@ class View_Helper_Work_Time_Buttons
 		return Html::create( 'div', $buttons, ['class' => 'btn-group'] ).join( $modals );
 	}
 
-	public static function renderStatic( Environment $env, $timerId, $userId, $buttons, $size, $from )
+	/**
+	 * @param		Environment		$env
+	 * @param		string			$timerId
+	 * @param		string			$userId
+	 * @param		array			$buttons
+	 * @param		string			$size
+	 * @param		string			$from
+	 * @return		string
+	 * @throws		ReflectionException
+	 */
+	public static function renderStatic( Environment $env, string $timerId, string $userId, array $buttons, string $size, string $from ): string
 	{
 		$helper	= new self( $env );
-		$helper->setTimerId( $userId );
+		$helper->setTimerId( $timerId );
 		$helper->setUserId( $userId );
 		$helper->setButtons( $buttons );
 		$helper->setSize( $size );
@@ -135,31 +151,51 @@ class View_Helper_Work_Time_Buttons
 		return $helper->render();
 	}
 
+	/**
+	 *	@param		array		$buttons
+	 *	@return		self
+	 */
 	public function setButtons( array $buttons = [] ): self
 	{
 		$this->buttons	= $buttons;
 		return $this;
 	}
 
-	public function setFrom( $from ): self
+	/**
+	 *	@param		string		$from
+	 *	@return		self
+	 */
+	public function setFrom( string $from ): self
 	{
 		$this->from	= $from;
 		return $this;
 	}
 
-	public function setSize( $size ): self
+	/**
+	 *	@param		string		$size
+	 *	@return		self
+	 */
+	public function setSize( string $size ): self
 	{
 		$this->size	= $size;
 		return $this;
 	}
 
-	public function setTimerId( $timerId ): self
+	/**
+	 *	@param		string		$timerId
+	 *	@return		self
+	 */
+	public function setTimerId( string $timerId ): self
 	{
 		$this->timerId	= $timerId;
 		return $this;
 	}
 
-	public function setUserId( $userId ): self
+	/**
+	 *	@param		string		$userId
+	 *	@return		self
+	 */
+	public function setUserId( string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;
