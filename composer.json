@@ -27,7 +27,7 @@
         "ext-pdo": "*",
         "ext-zlib": "*",
         "ext-fileinfo": "*",
-        "ceus-media/common": "^0.9 | ^0.9@dev",
+        "ceus-media/common": "^1.0 | ^1.0.x-dev",
         "ceus-media/hydrogen-framework": "^0.9 | 0.9.x-dev"
     },
     "require-dev": {
