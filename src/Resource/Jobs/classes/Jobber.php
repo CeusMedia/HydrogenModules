@@ -8,7 +8,7 @@
  */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
-use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
+use CeusMedia\HydrogenFramework\Application\ConsoleAbstraction as ConsoleApplication;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
