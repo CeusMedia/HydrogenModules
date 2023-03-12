@@ -194,8 +194,8 @@ class JobScriptHelper
 	{
 		!file_exists( "vendor" ) ? die( 'Please install first, using composer!' ) : NULL;
 		require_once 'vendor/autoload.php';
-		require_once "vendor/ceus-media/common/compat.php";
-		Loader::registerNew( 'php5', NULL, $this->pathClasses );				//  register autoloader for project classes
+		require_once "vendor/ceus-media/common/src/compat8.php";
+		Loader::registerNew( 'php', NULL, $this->pathClasses );				//  register autoloader for project classes
 
 		$request	= new RequestReceiver();									//
 		$this->request	= new Dictionary( $request->getAll() );					//
