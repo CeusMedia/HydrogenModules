@@ -338,13 +338,13 @@ class Logic_Upload
 	 *	Checks file extension if allowedExtensions argument is given.
 	 *	@access		public
 	 *	@param		array|object	$uploadData			Array or object from request
-	 *	@param		integer			$maxSize			Maximum allowed bytes of uploaded file
+	 *	@param		integer|string	$maxSize			Maximum allowed bytes of uploaded file
 	 *	@param		array			$allowedExtensions	List of allowed file extensions
 	 *	@return		void
 	 *	@throws		InvalidArgumentException			if given upload data is neither array nor object
 	 *	@throws		InvalidArgumentException			if given upload data is missing error property
 	 */
-	public function setUpload( $uploadData, int $maxSize = 0, array $allowedExtensions = [] ): void
+	public function setUpload( $uploadData, $maxSize = 0, array $allowedExtensions = [] ): void
 	{
 		if( is_array( $uploadData ) )
 			$uploadData	= (object) $uploadData;
@@ -355,7 +355,7 @@ class Logic_Upload
 		$this->upload	= $uploadData;
 		$this->upload->allowedMimeTypes		= [];
 		$this->upload->allowedExtensions	= $allowedExtensions;
-		$this->upload->allowedSize			= UnitParser::parse( trim( $maxSize ) );
+		$this->upload->allowedSize			= UnitParser::parse( trim( (string) $maxSize ) );
 
 		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;
