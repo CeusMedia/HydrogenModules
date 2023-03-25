@@ -104,26 +104,26 @@ class Logic_Upload
 	/**
 	 *	Indicates whether uploaded file is within allowed file size.
 	 *	@access		public
-	 *	@param		integer			$maxSize			Maximum allowed file size in bytes
+	 *	@param		integer|string	$maxSize			Maximum allowed file size in bytes or suffixed unit form
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if given size is not an integer larger than 0
 	 */
-	public function checkSize( int $maxSize, bool $noteError = FALSE ): bool
+	public function checkSize( $maxSize, bool $noteError = FALSE ): bool
 	{
 		if( $this->upload->error )
 			return FALSE;
-		$maxSize	= UnitParser::parse( $maxSize, 'B' );
-		$maxSize	= Logic_Upload::getMaxUploadSize( ['config' => $maxSize] );
-		$this->upload->allowedSize	= $maxSize;
+		$maxSizeInt	= UnitParser::parse( (string) $maxSize, 'B' );
+		$maxSizeInt	= Logic_Upload::getMaxUploadSize( ['config' => $maxSizeInt] );
+		$this->upload->allowedSize	= $maxSizeInt;
 
 		if( $maxSize <= 0 )
 			throw new InvalidArgumentException( 'Invalid size' );
 //		$size	= filesize( $this->upload->tmp_name );
 		$size	= $this->upload->size;
-		if( !( $size <= $maxSize ) && $noteError )
+		if( !( $size <= $maxSizeInt ) && $noteError )
 			$this->upload->error	= 10;
-		return $size <= $maxSize;
+		return $size <= $maxSizeInt;
 	}
 
 	/**
