@@ -19,7 +19,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4 | ^8",
+        "php": "^8",
         "ext-bz2": "*",
         "ext-curl": "*",
         "ext-dom": "*",
@@ -31,8 +31,9 @@
         "ext-pdo": "*",
         "ext-rrd": "*",
         "ext-zlib": "*",
-        "ceus-media/common": "^0.9 | ^1.0 | 0.9.x-dev | 1.0.x-dev",
-        "ceus-media/hydrogen-framework": "^0.9 | ^1.0 | 0.9.x-dev | 1.0.x-dev"
+        "ext-fileinfo": "*",
+        "ceus-media/common": "^1.0 | ^1.0.x-dev",
+        "ceus-media/hydrogen-framework": "^1.0 | ^1.0.x-dev"
     },
     "require-dev": {
         "ceus-media/bootstrap": "^0.6 | 0.6.x-dev",

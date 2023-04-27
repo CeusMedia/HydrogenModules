@@ -254,5 +254,3 @@ class Resource_Database_PHP7 extends Resource_Database_Base
 		return parent::query( $statement, $mode );
 	}
 }
-
-class Resource_Database extends Resource_Database_PHP7 {}
