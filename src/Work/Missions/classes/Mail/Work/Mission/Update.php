@@ -5,8 +5,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 {
-	protected $languageSection	= 'mail-update';
-	protected $helperFacts;
+	protected ?string $languageSection	= 'mail-update';
+	protected ?View_Helper_Mail_Facts $helperFacts;
 
 	public function generate(): self
 	{
@@ -19,19 +19,19 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		return $this;
 	}
 
-	protected function renderLabel( $content, $class = NULL )
+	protected function renderLabel( string $content, ?string $class = NULL ): string
 	{
 		$class	= 'label'.( $class ? ' label-'.$class : '' );
 		return HtmlTag::create( 'span', $content, ['class' => $class] );
 	}
 
-	protected function prepareFacts( $data )
+	protected function prepareFacts( array $data ): void
 	{
 		$old		= $data['missionBefore'];
 		$new		= $data['missionAfter'];
 
-		$this->helperFacts	= new View_Helper_Mail_Facts( $this->env );
-		$this->helperFacts->setLabels( (array) $this->labels );
+		$this->helperFacts	= new View_Helper_Mail_Facts();
+		$this->helperFacts->setLabels( $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 
 		$typeHtml	= $this->labelsTypes[$old->type];
@@ -191,7 +191,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$data			= $this->data;
 		$indicator		= new HtmlIndicator();
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
@@ -200,31 +200,31 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 		$dateFull		= $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth;
 
-		$content		= HtmlTag::create( 'em', $this->words->emptyContent, ['class' => 'muted'] );
+		$content		= HtmlTag::create( 'em', $this->words['emptyContent'], ['class' => 'muted'] );
 		if( strlen( trim( $new->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $new->content );
 
-		$data	= array_merge( $data, array(
+		$data	= array_merge( $data, [
 			'baseUrl'	=> $this->baseUrl,
-			'words'		=> $this->words,
-			'values'	=> array(
+			'words'		=> (object) $this->words,
+			'values'	=> [
 				'type'		=> $this->labelsTypes[$old->type],
 				'modifier'	=> $this->renderUser( $this->modelUser->get( $new->modifierId ) ),
 				'url'		=> $url,
 				'link'		=> HtmlTag::create( 'a', $old->title, ['href' => $url] ),
-				'today'		=> array(
+				'today'		=> [
 					'long'	=> HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] ),
 					'short'	=> HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] ),
-				),
+				],
 				'content'	=> $content,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'facts'		=> $this->helperFacts->render(),
-			),
-			'texts'		=> array(
+			],
+			'texts'		=> [
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
-			)
-		) );
+			]
+		] );
 		return $this->view->loadContentFile( 'mail/work/mission/update.html', $data );
 	}
 
@@ -232,37 +232,37 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	{
 		$data			= $this->data;
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
 		$modifier		= $this->modelUser->get( $new->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 
-		$content		= $this->words->emptyContent;
+		$content		= $this->words['emptyContent'];
 		if( strlen( trim( $new->content ) ) )
 			$content	=  strip_tags( $new->content );
 
-		$data	= array_merge( $data, array(
+		$data	= array_merge( $data, [
 			'baseUrl'	=> $this->baseUrl,
-			'words'		=> $this->words,
-			'values'	=> array(
+			'words'		=> (object) $this->words,
+			'values'	=> [
 				'type'		=> $this->labelsTypes[$old->type],
 				'modifier'	=> $this->renderUserAsText( $modifier ),
 				'link'		=> $this->baseUrl.'work/mission/'.$old->missionId,
-				'today'		=> array(
+				'today'		=> [
 					'long'	=> $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth,
 					'short'	=> date( $formatDate ),
-				),
+				],
 				'content'	=> $content,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'facts'		=> $this->helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render()
-			),
-			'texts'		=> array(
+			],
+			'texts'		=> [
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
-			)
-		) );
+			]
+		] );
 		return $this->view->loadContentFile( 'mail/work/mission/update.txt', $data );
 	}
 }

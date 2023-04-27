@@ -57,31 +57,31 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 }
 
 
-$buttonCancel	= HtmlTag::create( 'a', $iconList.' '.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconList.' '.$w->buttonCancel, [
 	'href'		=> './manage/project',
 	'class'		=> 'btn btn-small'
-) );
-$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, array(
+] );
+$buttonView		= HtmlTag::create( 'a', $iconView.' '.$w->buttonView, [
 	'href'		=> './manage/project/view/'.$project->projectId,
 	'class'		=> 'btn btn-small btn-info'
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn not-btn-success btn-primary',
 	'disabled'	=> !$canEdit ? 'disabled' : NULL,
- ) );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+ ] );
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/project/remove/'.$project->projectId,
 	'class'		=> 'btn btn-small btn-danger',
 	'disabled'	=> !$canRemove ? 'disabled' : NULL,
-) );
+] );
 
-$buttonDefault	= HtmlTag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, array(
+$buttonDefault	= HtmlTag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, [
 	'href'		=> './manage/project/setDefault/'.$project->projectId,
 	'class'		=> 'btn btn-small',
 	'disabled'	=> $isDefault ? 'disabled' : NULL,
-) );
+] );
 
 $panelEdit	= '
 <div class="content-panel content-panel-form">

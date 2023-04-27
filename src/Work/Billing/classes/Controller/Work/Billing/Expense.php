@@ -10,7 +10,7 @@ class Controller_Work_Billing_Expense extends Controller
 	protected Logic_Billing $logic;
 	protected Model_Billing_Expense $modelExpense;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= [
@@ -34,7 +34,7 @@ class Controller_Work_Billing_Expense extends Controller
 		$this->addData( 'persons', $this->logic->getPersons() );
 	}
 
-	public function edit( $expenseId )
+	public function edit( string $expenseId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= [
@@ -64,7 +64,7 @@ class Controller_Work_Billing_Expense extends Controller
 		$this->addData( 'persons', $this->logic->getPersons() );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$expenses	= $this->logic->getExpenses();
 		$this->addData( 'expenses', $expenses );
@@ -80,7 +80,7 @@ class Controller_Work_Billing_Expense extends Controller
 		$this->addData( 'persons', $persons );
 	}
 
-	public function remove( $expenseId )
+	public function remove( string $expenseId ): void
 	{
 		$expense	= $this->modelExpense->get( $expenseId );
 		$this->modelExpense->remove( $expenseId );
@@ -89,9 +89,9 @@ class Controller_Work_Billing_Expense extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->logic	= new Logic_Billing( $this->env );
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();
+		$this->logic	= new Logic_Billing( $this->env );
 		$this->modelExpense		= new Model_Billing_Expense( $this->env );
 	}
 }

@@ -1,13 +1,11 @@
 <?php
 
-use CeusMedia\Common\FS\File\ICal\Builder as IcalFileBuilder;
 use CeusMedia\Common\FS\File\ICal\Parser as IcalFileParser;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
-use CeusMedia\Common\XML\DOM\Node as XmlNode;
 
 class Controller_Work_Mission_Export extends Controller_Work_Mission
 {
-	protected $pathLogs;
+	protected ?string $pathLogs		= NULL;
 
 	public function ical()
 	{
@@ -23,7 +21,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			switch( strtoupper( $method ) ){
 				case 'PUT':
 //					$ical	= file_get_contents( "php://input" );							//  read PUT data
-					$ical	= $this->request->getBody();									//  get PUT content from request body
+					$ical	= $this->request->getRawPostData();								//  get PUT content from request body
 					$this->importFromIcal( $ical );											//  import
 					break;
 				case 'GET':
@@ -34,7 +32,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 						HttpDownload::sendString( $ical , $fileName );					//  deliver downloadable file
 					}
 					else{
-						$mimeType	= "text/calendar";
+//						$mimeType	= "text/calendar";
 						$mimeType	= "text/plain;charset=utf-8";
 						header( "Content-type: ".$mimeType );
 						header( "Last-Modified: ".date( 'r' ) );
@@ -44,7 +42,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		}
 		catch( Exception $e ){
 			$lines	= array(
-				str_repeat( "-". 78 ),
+				str_repeat( "-", 78 ),
 				"Date: ".date( "Y-m-d H:i:s" ),
 				"Request: ".$method." ".$this->request->get( '__path' ),
 				"Error: ".$e->getMessage(),
@@ -57,22 +55,10 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		exit;
 	}
 
-	public function index( $format = NULL, $debug = FALSE )
+	public function index( string $missionId = NULL ): void
 	{
 		$this->restart( './work/mission/help/sync' );
-/*
-		switch( $format ){
-			case 'ical':
-				$ical	= $this->exportAsIcal( $debug );
-				$debug ? xmp( $ical ) : print( $ical );
-				die;
-				break;
-			default:
-				$missions	= $this->model->getAll();												//  get all missions
-				$zip		= gzencode( serialize( $missions ) );									//  gzip serial of mission objects
-				\CeusMedia\Common\Net\HTTP\Download::sendString( $zip , 'missions_'.date( 'Ymd' ).'.gz' );			//  deliver downloadable file
-		}
-*/	}
+	}
 
 	//  --  PROTECTED  --  //
 
@@ -83,103 +69,32 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 //		$this->logPrefix	= 'work.mission.ical.export.log';
 	}
 
-	protected function exportAsIcal()
+	protected function exportAsIcal(): string
 	{
-		$conditions	= ['status' => [0, 1, 2, 3]];
-		$orders		= ['dayStart' => 'ASC'];
-		$missions	= $this->getUserMissions( $conditions, $orders );
+		$conditions		= ['status' => [0, 1, 2, 3]];
+		$orders			= ['dayStart' => 'ASC'];
+		$missions		= $this->getUserMissions($conditions, $orders);
 
-		$statesTask		= array(
-			-2		=> 'CANCELLED',
-			-1		=> 'CANCELLED',
-			0		=> 'NEEDS-ACTION',
-			1		=> 'NEEDS-ACTION',
-			2		=> 'IN-PROCESS',
-			3		=> 'NEEDS-ACTION',
-			4		=> 'COMPLETED',
-		);
-
-		$statesEvent	= array(
-			-2		=> 'CANCELLED',
-			-1		=> 'CANCELLED',
-			0		=> 'TENTATIVE',
-			1		=> 'CONFIRMED',
-			2		=> 'CONFIRMED',
-			3		=> 'CONFIRMED',
-			4		=> 'CONFIRMED',
-		);
-
-		$root		= new XmlNode( 'event');
-		$calendar	= new XmlNode( 'VCALENDAR' );
-		$calendar->addChild( new XmlNode( 'VERSION', '2.0' ) );
-		foreach( $missions as $mission ){
-			switch( $mission->type ){
-				case 0:
-					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
-					$node	= new XmlNode( 'VTODO' );
-					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
-					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
-					break;
-				case 1:
-					$node	= new XmlNode( 'VEVENT' );
-					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					if( $mission->dayStart ){
-						$day	= $mission->dayStart;
-						if( strlen( $mission->timeStart ) )
-							$day	.= ' '.$mission->timeStart;
-						$datetime	= date( "Ymd\THis", strtotime( $day ) );
-						$node->addChild( new XmlNode( 'DTSTART', $datetime ) );
-					}
-					$node->addChild( new XmlNode( 'STATUS', $statesEvent[$mission->status] ) );
-					if( !$mission->dayEnd && $mission->dayStart )
-						$mission->dayEnd	= $mission->dayStart;
-					if( $mission->dayEnd ){
-						$day	= $mission->dayEnd;
-						if( strlen( $mission->timeEnd ) )
-							$day	.= ' '.$mission->timeEnd;
-						else if( $mission->timeStart && $mission->dayStart == $mission->dayEnd ){
-							$parts	= explode( ':', $mission->timeStart );
-							$day	.= ' '.str_pad( ++$parts[0], 2, 0, STR_PAD_LEFT ).':'.$parts[1];
-						}
-						$datetime	= date( "Ymd\THis", strtotime( $day ) );
-						$node->addChild( new XmlNode( 'DTEND', $datetime ) );
-					}
-					break;
-			}
-			$modelProject	= new Model_Project( $this->env );
-			$node->addChild( new XmlNode( 'SUMMARY', $mission->title ) );
-			$node->addChild( new XmlNode( 'CREATED', date( "Ymd\THis", $mission->createdAt ) ) );
-			if( $mission->modifiedAt )
-				$node->addChild( new XmlNode( 'LAST-MODIFIED', date( "Ymd\THis", $mission->modifiedAt ) ) );
-			if( $mission->location )
-				$node->addChild( new XmlNode( 'LOCATION', $mission->location ) );
-			if( $mission->priority )
-				$node->addChild( new XmlNode( 'PRIORITY', round( $mission->priority * 2 - 1 ) ) );
-			if( $mission->projectId )
-				$node->addChild( new XmlNode( 'CATEGORIES', $modelProject->get( $mission->projectId )->title ) );
-			$calendar->addChild( $node );
-		}
-		$root->addChild( $calendar );
-		$ical	= new IcalFileBuilder();
-		return trim( $ical->build( $root ) );
+		$helper = new View_Helper_Work_Mission_Export_Ical();
+		$helper->setEnv( $this->env );
+		$helper->setMissions($missions);
+		return $helper->render();
 	}
 
-	protected function getUserMissions( $conditions = [], $orders = [], $limits = [] )
+	protected function getUserMissions( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );							//  get user projects from model
 		$conditions['projectId']	= array_keys( $userProjects );									//
 		return $this->model->getAll( $conditions, $orders, $limits );	//  return missions matched by conditions
 	}
 
-	protected function importFromIcal( $ical /*= NULL */)
+	protected function importFromIcal( string $ical )
 	{
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
 */		$projects	= [];
-		$conditions	= ['dayStart' => '> 0'];
 		$defaultProjectId	= 0;
-		foreach( $this->logic->getUserProjects( $this->userId, $conditions ) as $project ){
+		foreach( $this->logic->getUserProjects( $this->userId, TRUE ) as $project ){
 			if( $project->isDefault )
 				$defaultProjectId	=  $project->projectId;
 			$projects[$project->title]	= $project->projectId;
@@ -192,9 +107,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 
 		$parser	= new IcalFileParser();
 		$tree	= $parser->parse( "test", $ical );
-		if( !$tree )
-			return;
-		$root	= @array_pop( $tree->getChildren() );
+		$nodes	= $tree->getChildren();
+		$root	= @array_pop( $nodes );
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes
 			if( !in_array( $node->getNodeName(), ['vevent', 'vtodo'] ) )			//  neither a task nor an event
 				continue;																//  go on
@@ -204,9 +118,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			$item['type']		= $node->getNodeName();									//  note ical node type
 			if( isset( $item['dtstamp'] ) ){											//  node was changed or created by client
 				$item	= $this->remapCalendarItem( $item, $projects, $defaultProjectId );					//  translate ical node item to mission item
-				$item['modifierId']	= $this->userId;									//  node modifing user
+				$item['modifierId']	= $this->userId;									//  node modifying user
 				if( isset( $missions[$item['uid']] ) ){									//  ical node UID is known
-					$changes	= [];												//  prepare empty changes array
+					$changes	= [];													//  prepare empty changes array
 					$mission	= (array) $missions[$item['uid']];						//  get mission by UID
 					unset( $missions[$item['uid']] );									//  remove mission from list of local missions
 					foreach( $item as $key => $value )									//  iterate item attributes
@@ -247,7 +161,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		}
 	}
 
-	protected function remapCalendarItem( $item, $projects, $defaultProjectId )
+	protected function remapCalendarItem( $item, array $projects, string $defaultProjectId ): array
 	{
 		$data	= [];
 		foreach( $item as $attribute => $content ){
@@ -268,8 +182,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 				case 'categories':
 					$data['projectId']	= $defaultProjectId;
 					foreach( explode( ",", $content ) as $category ){
-						if( array_key_exists( $content, $projects ) ){
-							$data['projectId']	= $projects[$content];
+						if( array_key_exists( $category, $projects ) ){
+							$data['projectId']	= $projects[$category];
 							break;
 						}
 					}

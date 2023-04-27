@@ -127,9 +127,9 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->env->getMessenger()->noteError( 'Mail already sent' );
 			$this->restart( NULL, TRUE );
 		}
-		$model->edit( $mailId, array(
+		$model->edit( $mailId, [
 			'status'	=> Model_Mail::STATUS_ABORTED,
-		) );
+		] );
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
@@ -302,9 +302,9 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->env->getMessenger->noteError( 'Mail already sent' );
 			$this->restart( NULL, TRUE );
 		}*/
-		$model->edit( $mailId, array(
+		$model->edit( $mailId, [
 			'status'	=> Model_Mail::STATUS_NEW,
-		) );
+		] );
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 

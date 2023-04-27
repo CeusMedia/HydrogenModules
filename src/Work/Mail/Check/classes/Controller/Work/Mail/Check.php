@@ -1,21 +1,27 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
 use CeusMedia\Common\FS\File\CSV\Writer as CsvFileWriter;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\Mail\Address as MailAddress;
+use CeusMedia\Mail\Address\Check\Availability as MailAvailabilityCheck;
+use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
 
 class Controller_Work_Mail_Check extends Controller
 {
-	protected $messenger;
-	protected $modelAddress;
-	protected $modelCheck;
-	protected $modelGroup;
-	protected $options;
-	protected $request;
-	protected $session;
+	protected MessengerResource $messenger;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected Dictionary $moduleOptions;
+	protected Model_Mail_Address $modelAddress;
+	protected Model_Mail_Address_Check $modelCheck;
+	protected Model_Mail_Group $modelGroup;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$addresses	= $this->request->get( 'address' );
@@ -31,46 +37,46 @@ class Controller_Work_Mail_Check extends Controller
 					$this->messenger->noteError( 'Address &quot;%s&quot; is already existing in group &quot;%s&quot;.', $address, $group->title );
 					$this->restart( NULL, TRUE );
 				}
-				$addressId	= $this->modelAddress->add( array(
+				$addressId	= $this->modelAddress->add( [
 					'mailGroupId'	=> $groupId,
 					'address'		=> $address,
 					'status'		=> 0,
 					'createdAt'		=> time(),
-				) );
+				] );
 				$this->messenger->noteSuccess( 'Added address "%s".', htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 			}
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function addGroup()
+	public function addGroup(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$title		= $this->request->get( 'title' );
 			$mailColumn	= $this->request->get( 'mailColumn' );
-			$columns	= trim( $this->request->get( 'columns' ) );
+			$columns	= array_filter( explode( "\n", trim( $this->request->get( 'columns' ) ) ) );
 			if( !strlen( trim( $title ) ) ){
 				$this->messenger->noteError( 'Group title is missing.' );
 				$this->restart( 'group', TRUE );
 			}
 			if( !strlen( trim( $mailColumn ) ) )
 				$mailColumn	= "Email";
-			foreach( explode( "\n", $columns ) as $nr => $column )
+			foreach( $columns as $nr => $column )
 				$columns[$nr]	= trim( $column );
 			array_unshift( $columns, $mailColumn );
-			$this->modelGroup->add( array(
+			$this->modelGroup->add( [
 				'title'			=> $title,
 				'mailColumn'	=> $mailColumn,
 				'columns'		=> json_encode( $columns ),
 				'createdAt'		=> time(),
-			) );
+			] );
 	//		$this->messenger->noteSuccess( 'Group "%s" added.', htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 			$this->messenger->noteSuccess( 'Group "%s" added.', $title );
 		}
 		$this->restart( 'group', TRUE );
 	}
 
-	public function ajaxAddress( $addressId )
+	public function ajaxAddress( string $addressId ): void
 	{
 		$address	= $this->modelAddress->get( $addressId );
 		if( $address ){
@@ -80,32 +86,32 @@ class Controller_Work_Mail_Check extends Controller
 		}
 	}
 
-	public function ajaxEditAddress()
+	public function ajaxEditAddress(): void
 	{
 		$addressId	= $this->request->get( 'id' );
 		$address	= $this->request->get( 'address' );
 
 		$result	= FALSE;
 		if( $this->modelAddress->get( $addressId ) ){
-			$this->modelAddress->edit( $addressId, array(
+			$this->modelAddress->edit( $addressId, [
 				'address'	=> trim( $address ),
 				'status'	=> 0
-			) );
+			] );
 			$result	= TRUE;
 		}
 		print( json_encode( $result ) );
 		exit;
 	}
 
-	public function check()
+	public function check(): void
 	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )
 			$addressIds	= [$addressIds];
 
-		$sender		= new \CeusMedia\Mail\Participant( $this->moduleOptions->get( 'sender' ) );
-		$checker	= new \CeusMedia\Mail\Check\Recipient( $sender, TRUE );
-		$checker->setVerbose( !TRUE );
+		$sender		= new MailAddress( $this->moduleOptions->get( 'sender' ) );
+		$checker	= new MailAvailabilityCheck( $sender );
+#		$checker->setVerbose( TRUE );
 
 		foreach( $addressIds as $addressId ){
 			$address	= $this->modelAddress->get( $addressId );
@@ -116,42 +122,42 @@ class Controller_Work_Mail_Check extends Controller
 			$this->modelAddress->edit( $addressId, ['status' => 1] );
 
 			try{
-				$result		= $checker->test( new \CeusMedia\Mail\Participant( $address->address ) );
+				$result		= $checker->test( new MailAddress( $address->address ) );
 				$response	= $checker->getLastResponse();
 
-				$this->modelCheck->add( array(
+				$this->modelCheck->add( [
 					'mailAddressId'	=> $addressId,
 					'status'		=> $result ? 1 : -1,
 					'error'			=> $response->error,
 					'code'			=> $response->code,
 					'message'		=> $response->message,
 					'createdAt'		=> time(),
-				) );
+				] );
 				$status	= 2;
 				if( !$result ){
 					$status	= -2;
 					if( substr( $response->code, 0, 1 ) == "4" )
 						$status	= -1;
 				}
-				$this->modelAddress->edit( $addressId, array(
+				$this->modelAddress->edit( $addressId, [
 					'status'	=> $status,
 					'checkedAt'	=> time(),
-				) );
+				] );
 		//		$this->messenger->noteSuccess( 'Checked.' );
 			}
 			catch( Exception $e ){
-				$this->modelCheck->add( array(
+				$this->modelCheck->add( [
 					'mailAddressId'	=> $addressId,
 					'status'		=> -2,
 					'error'			=> 0,
 					'code'			=> $e->getCode(),
 					'message'		=> $e->getMessage(),
 					'createdAt'		=> time(),
-				) );
-				$this->modelAddress->edit( $addressId, array(
+				] );
+				$this->modelAddress->edit( $addressId, [
 					'status'	=> -2,
 					'checkedAt'	=> time(),
-				) );
+				] );
 		//		$this->messenger->noteError( 'Check failed: '.$e->getMessage() );
 			}
 		}
@@ -160,7 +166,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function checkAll()
+	public function checkAll(): void
 	{
 		$conditions		= [];
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
@@ -180,7 +186,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );*/
 	}
 
-	public function export( $show = FALSE )
+	public function export( $show = FALSE ): void
 	{
 		if( $this->request->has( 'save' ) ){
 
@@ -193,38 +199,38 @@ class Controller_Work_Mail_Check extends Controller
 				$this->restart( 'export', TRUE );
 			}
 			$group		= $this->modelGroup->get( $groupId );
-			$conditions	= array(
+			$conditions	= [
 				'status'		=> $this->request->get( 'status' ),
 				'mailGroupId'	=> $groupId,
-			);
+			];
 			$addresses	= $this->modelAddress->getAll( $conditions, ['address' => 'ASC'], [10, 0] );
 			$data		= [];
 
-			$columns	= array_merge( json_decode( $group->columns ), array(
+			$columns	= array_merge( json_decode( $group->columns ), [
 				'Code',
 				'Code-Beschreibung',
 				'Fehler-Code',
 				'Fehler-Beschreibung',
 				'Server-Meldung',
-			) );
+			] );
 			foreach( $addresses as $address ){
 				$check	= $this->modelCheck->getByIndices(
-					array( 'mailAddressId' => $address->mailAddressId ),
-					array( 'mailAddressCheckId' => 'DESC' )
+					['mailAddressId' => $address->mailAddressId],
+					['mailAddressCheckId' => 'DESC']
 				);
 				if( !strlen( $address->data ) )
 					$address->data	= '[]';
 				$additionalData	= json_decode( $address->data, TRUE );
 				$data[]			= array_merge(
-					array( trim( $address->address ) ),
+					[trim( $address->address )],
 	 				array_values( $additionalData ),
-					array(
+					[
 						$check->code,
-						\CeusMedia\Mail\Transport\SMTP\Code::getText( $check->code ),
+						SmtpCode::getText( $check->code ),
 						$words['errorCodes'][$check->error],
 						$words['errorLabels'][$check->error],
 						$check->message,
-					)
+					]
 				);
 			}
 			switch( $type ){
@@ -233,7 +239,7 @@ class Controller_Work_Mail_Check extends Controller
 					$extension	= '.csv';
 					$fileName	= tempnam( sys_get_temp_dir(), 'export' );
 					$writer		= new CsvFileWriter( $fileName, ';' );
-					$writer->write( $data, $columns, TRUE );
+					$writer->write( $data, $columns );
 			}
 			$date	= date( 'Y-m-d' );
 			HttpDownload::sendFile( $fileName, $group->title.'_'.$date.$extension, TRUE );
@@ -241,7 +247,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->addData( 'groups', $this->modelGroup->getAll( [], ['title' => 'ASC'] ) );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'work_mail_check_filter_groupId' );
@@ -256,18 +262,18 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function group()
+	public function group(): void
 	{
 		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		foreach( $groups as $group ){
 			$addresses	= $this->modelAddress->getAll( ['mailGroupId' => $group->mailGroupId] );
-			$group->numbers	= (object) array(
+			$group->numbers	= (object) [
 				'total'		=> count( $addresses ),
 				'negative'	=> 0,
 				'positive'	=> 0,
 				'untested'	=> 0,
 				'tested'	=> 0,
-			);
+			];
 			foreach( $addresses as $address ){
 				if( in_array( $address->status, [-2, -1] ) )
 					$group->numbers->negative++;
@@ -281,7 +287,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->addData( 'groups', $groups );
 	}
 
-	public function import( $abort = NULL )
+	public function import( $abort = NULL ): void
 	{
 		if( $abort ){
 			$this->session->remove( 'addressesToImport' );
@@ -294,15 +300,15 @@ class Controller_Work_Mail_Check extends Controller
 			switch( $logic->getMimeType() ){
 				case 'text/csv':
 					$reader		= new CsvFileReader( $file->tmp_name, TRUE );
-					$this->session->set( 'addressesToImport', (object) array(
+					$this->session->set( 'addressesToImport', (object) [
 						'type'		=> 'CSV',
 						'mimeType'	=> $file->type,
 						'name'		=> basename( $file->name, '.csv' ),
 						'size'		=> $file->size,
-						'count'		=> $reader->getRowCount(),
-						'columns'	=> $reader->getColumnHeaders(),
-						'data'		=> $reader->toAssocArray(),
-					) );
+						'count'		=> $reader->count(),
+						'columns'	=> $reader->getHeaders(),
+						'data'		=> $reader->toArray(),
+					] );
 					break;
 			}
 			$this->restart( 'import', TRUE );
@@ -315,21 +321,21 @@ class Controller_Work_Mail_Check extends Controller
 				$this->messenger->noteError( 'No group name given.' );
 				$this->restart( 'import', TRUE );
 			}
-			$groupId	= $this->modelGroup->add( array(
+			$groupId	= $this->modelGroup->add( [
 				'title'			=> $group,
 				'createdAt'		=> time(),
 				'columns'		=> json_encode( $importData->columns ),
 				'mailColumn'	=> $column,
-			) );
+			] );
 			foreach( $importData->data as $item ){
 				$address	= $item[$column];
 				unset( $item[$column] );
-				$this->modelAddress->add( array(
+				$this->modelAddress->add( [
 					'mailGroupId'	=> $groupId,
 					'address'		=> $address,
 					'data'			=> json_encode( $item ),
 					'createdAt'		=> time(),
-				) );
+				] );
 			}
 			$this->session->remove( 'addressesToImport' );
 			$this->restart( 'filter/?groupId='.$groupId, TRUE );
@@ -346,9 +352,9 @@ class Controller_Work_Mail_Check extends Controller
 		}
 	}
 
-	public function index( $page = 0 )
+	public function index( int $page = 0 ): void
 	{
-		$limit			= 20;															//  @todo	kriss: replace by configurable default limit (not existing in config atm)
+		$limit			= 20;															//  @todo	 replace by configurable default limit (not existing in config atm)
 		if( !$this->session->get( 'work_mail_check_filter_limit' ) )
 			$this->session->set( 'work_mail_check_filter_limit', $limit );
 
@@ -372,10 +378,10 @@ class Controller_Work_Mail_Check extends Controller
 		$total			= $this->modelAddress->count( $conditions );
 		$addresses		= $this->modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
-			if( !in_array( $address->status, [0, 1] ) ){											//  @todo	kriss: why exclude status 1 aswell? a retesting address has a history eventually
+			if( !in_array( $address->status, [0, 1] ) ){											//  @todo	why exclude status 1 as well? a retesting address has a history eventually
 				$address->check	= $this->modelCheck->getByIndices(
-					array( 'mailAddressId' => $address->mailAddressId ),
-					array( 'mailAddressCheckId' => 'DESC' )
+					['mailAddressId' => $address->mailAddressId],
+					['mailAddressCheckId' => 'DESC']
 				);
 			}
 		}
@@ -384,13 +390,13 @@ class Controller_Work_Mail_Check extends Controller
 		$indices		= [];
 		if( $filterGroupId )
 			$indices['mailGroupId']	= $filterGroupId;
-		$countByStatus	= array(
+		$countByStatus	= [
 			-2	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -2] ) ),
 			-1	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -1] ) ),
 			0	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 0] ) ),
 			1	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 1] ) ),
 			2	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => 2] ) ),
-		);
+		];
 
 		$countByGroup	= [];
 		foreach( $groups as $group )
@@ -421,7 +427,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $groupId )
+	public function removeGroup( string $groupId ): void
 	{
 		$group	= $this->checkGroupId( $groupId );
 		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
@@ -431,23 +437,28 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( 'group', TRUE );
 	}
 
-	public function status( $groupId ){
+	public function status( string $groupId ): void
+	{
 		$group		= $this->checkGroupId( $groupId );
 		$indices	= ['mailGroupId' => $groupId];
-		$this->setData( array(
+		$this->setData( [
 			'total'		=> $this->modelAddress->countByIndices( $indices ),
-			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> 1,
-			) ) ),
-			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			] ) ),
+			'negative'	=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> [-2, -1],
-			) ) ),
-			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, array(
+			] ) ),
+			'positive'	=> $this->modelAddress->countByIndices( array_merge( $indices, [
 				'status'	=> 2,
-			) ) ),
-		) );
+			] ) ),
+		] );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -464,21 +475,21 @@ class Controller_Work_Mail_Check extends Controller
 	/**
 	 *	Checks whether a group ID is existing and returns data entity.
 	 *	Otherwise, in default strict mode, an exception will be thrown.
-	 *	Otherwise a user message will be noted followed by a redirection.
+	 *	Otherwise, a user message will be noted followed by a redirection.
 	 *	The default redirection is to the root of this module.
 	 *	Redirections can be set by third "from" parameter.
 	 *	Disabling the fourth "withinModule" parameter will unlock the module scope for redirections.
 	 *
 	 *	@access		protected
-	 *	@param		integer		$groupId		ID of mail check group to check
-	 *	@param		boolean		$strict			Flag: throw exception it not existing
-	 *	@param		string		$from			Path to redirect to
-	 *	@param		boolean		$withinModule	Flag: reduce scope of redirection to current module
-	 *	@return		object|array				Group data entity
-	 *	@throws		InvalidArgumentException	if group is not existing and strict mode is enabled
-	 *	@todo		kriss: implement OAuth user focus for ASP solution
+	 *	@param		string			$groupId		ID of mail check group to check
+	 *	@param		boolean			$strict			Flag: throw exception if not existing
+	 *	@param		string|NULL		$from			Path to redirect to
+	 *	@param		boolean			$withinModule	Flag: reduce scope of redirection to current module
+	 *	@return		object|NULL						Group data entity
+	 *	@throws		InvalidArgumentException		if group is not existing and strict mode is enabled
+	 *	@todo		Implement OAuth user focus for ASP solution
 	 */
-	protected function checkGroupId( $groupId, bool $strict = TRUE, string $from = NULL, bool $withinModule = TRUE )
+	protected function checkGroupId( string $groupId, bool $strict = TRUE, string $from = NULL, bool $withinModule = TRUE ): ?object
 	{
 		if( $group = $this->modelGroup->get( $groupId ) )
 			return $group;
@@ -488,5 +499,6 @@ class Controller_Work_Mail_Check extends Controller
 		if( $from )
 			$this->restart( $from, $withinModule );
 		$this->restart( NULL, $withinModule );
+		return NULL;
 	}
 }

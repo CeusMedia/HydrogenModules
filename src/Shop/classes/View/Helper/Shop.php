@@ -1,9 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop
 {
+	protected Environment $env;
+	protected Dictionary $config;
+	protected array $words;
+	protected string $language;
+
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;

@@ -91,10 +91,10 @@ class View_File extends View
 					$response->setBody( 'Error 404: Not found' );
 					$response->send( NULL, TRUE, TRUE );
 				case 'application/xml':
-					$node	= new XmlNode( 'response', 'Not found', array(
+					$node	= new XmlNode( 'response', 'Not found', [
 						'type'	=> 'error',
 						'code'	=> 404,
-					) );
+					] );
 					$response->setBody( XmlBuilder::build( $node ) );
 					$response->send( NULL, TRUE, TRUE );
 				case 'application/json':

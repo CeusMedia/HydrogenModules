@@ -24,22 +24,21 @@ class Logic_Issue extends Logic
 	const CHANGE_ATTACHMENT		= 11;
 	const CHANGE_PATCH			= 12;
 
-	protected $logicProject;
-
-	protected $modelUser;
-	protected $modelIssue;
-	protected $modelIssueNote;
-	protected $modelIssueChange;
+	protected Logic_Project $logicProject;
+	protected Model_User $modelUser;
+	protected Model_Issue $modelIssue;
+	protected Model_Issue_Note $modelIssueNote;
+	protected Model_Issue_Change $modelIssueChange;
 
 	/**
 	 *	Return issue data object
 	 *	@access		public
-	 *	@param		integer		$issueId		ID of issue
+	 *	@param		string		$issueId		ID of issue
 	 *	@param		boolean		$extended		Flag: extend issue by project, notes and changes
 	 *	@return		object		Issue data object
 	 *	@throws		OutOfRangeException			if issue ID is not valid
 	 */
-	public function get( $issueId, bool $extended = FALSE )
+	public function get( string $issueId, bool $extended = FALSE ): object
 	{
 		$issue		= $this->modelIssue->get( $issueId );											//  get issue
 		if( !$issue )																				//  not found
@@ -70,10 +69,10 @@ class Logic_Issue extends Logic
 	 *	Returns map of all users participating on an issue.
 	 *	This includes project members, note authors, change authors and former assigned users.
 	 *	@access		public
-	 *	@param		integer		$issueId		ID of issue to get participating users for
+	 *	@param		string		$issueId		ID of issue to get participating users for
 	 *	@return		array		Map of ordered participating users by ID
 	 */
-	public function getParticitatingUsers( $issueId )
+	public function getParticitatingUsers( string $issueId ): array
 	{
 		$issue		= $this->get( $issueId, TRUE );
 		$userIds	= [];																		//  prepare empty list of user IDs
@@ -116,9 +115,9 @@ class Logic_Issue extends Logic
 	/**
 	 *	...
 	 *	@access		public
-	 *	@todo		kriss:support conditions ot orders
+	 *	@todo		support conditions ot orders
 	 */
-	public function getProjectUsers( $projectId )
+	public function getProjectUsers( string $projectId ): array
 	{
 		return $this->logicProject->getProjectUsers( $projectId );
 	}
@@ -127,13 +126,40 @@ class Logic_Issue extends Logic
 	 *	...
 	 *	@access		public
 	 */
-	public function getUserProjects()
+	public function getUserProjects(): array
 	{
 		$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
-	public function informAboutNew( $issueId, $currentUserId )
+	public function informAboutNew( string $issueId, string $currentUserId ): array
+	{
+		$users		= $this->getParticitatingUsers( $issueId );
+		$issue		= $this->get( $issueId, TRUE );
+		if( $issue->reporterId )
+			$issue->reporter	= $users[$issue->reporterId];
+		if( $issue->managerId )
+			$issue->manager		= $users[$issue->managerId];
+		if( isset( $users[$currentUserId] ) )
+			unset( $users[$currentUserId] );
+		if( count( $users ) ){
+			$logicMail		= Logic_Mail::getInstance( $this->env );
+			if( $issue->projectId ){
+				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$issue->project		= $userProjects[$issue->projectId];
+			}
+			foreach( $users as $user ){
+				$mail		= new Mail_Work_Issue_New( $this->env, [
+					'issue'		=> $issue,
+					'user'		=> $user,
+				] );
+				$logicMail->handleMail( $mail, $user, 'de' );
+			}
+		}
+		return $users;
+	}
+
+	public function informAboutChange( string $issueId, string $currentUserId ): array
 	{
 		$users				= $this->getParticitatingUsers( $issueId );
 		$issue				= $this->get( $issueId, TRUE );
@@ -150,46 +176,19 @@ class Logic_Issue extends Logic
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
-				$mail		= new Mail_Work_Issue_New( $this->env, array(
+				$mail		= new Mail_Work_Issue_Change( $this->env, [
 					'issue'		=> $issue,
 					'user'		=> $user,
-				) );
+				] );
 				$logicMail->handleMail( $mail, $user, 'de' );
 			}
 		}
 		return $users;
 	}
 
-	public function informAboutChange( $issueId, $currentUserId )
+	public function noteChange( string $issueId, string $noteId, $type, $from, $to ): string
 	{
-		$users				= $this->getParticitatingUsers( $issueId );
-		$issue				= $this->get( $issueId, TRUE );
-		if( $issue->reporterId )
-			$issue->reporter	= $users[$issue->reporterId];
-		if( $issue->managerId )
-			$issue->manager		= $users[$issue->managerId];
-		if( isset( $users[$currentUserId] ) )
-			unset( $users[$currentUserId] );
-		if( count( $users ) ){
-			$logicMail		= Logic_Mail::getInstance( $this->env );
-			if( $issue->projectId ){
-				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
-				$issue->project		= $userProjects[$issue->projectId];
-			}
-			foreach( $users as $user ){
-				$mail		= new Mail_Work_Issue_Change( $this->env, array(
-					'issue'		=> $issue,
-					'user'		=> $user,
-				) );
-				$logicMail->handleMail( $mail, $user, 'de' );
-			}
-		}
-		return $users;
-	}
-
-	public function noteChange( $issueId, $noteId, $type, $from, $to )
-	{
-		$data	= array(
+		$data	= [
 			'issueId'	=> $issueId,
 			'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
 			'noteId'	=> $noteId,
@@ -197,15 +196,15 @@ class Logic_Issue extends Logic
 			'from'		=> $from,
 			'to'		=> $to,
 			'timestamp'	=> time(),
-		);
+		];
 		return $this->modelIssueChange->add( $data );
 	}
 
-	public function remove( $issueId )
+	public function remove( string $issueId ): bool
 	{
 		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
 		$this->modelIssueChange->removeByIndex( 'issueId', $issueId );
-		$this->modelIssue->remove( $issueId );
+		return $this->modelIssue->remove( $issueId );
 	}
 
 	//  --  PROTECTED  --  //

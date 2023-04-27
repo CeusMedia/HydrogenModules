@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*
-$tabs	 = array(
+$tabs	 = [
 	'manage/content'			=> 'Übersicht',
 	'manage/content/link'		=> 'Links',
 	'manage/content/document'	=> 'Dokumente',
 	'manage/content/image'		=> 'Bilder',
-);
+];
 $current	= 'manage/content/link';
 $list	= [];
 foreach( $tabs as $key => $value ){

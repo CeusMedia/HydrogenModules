@@ -4,16 +4,16 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/person',
 	'class'	=> 'btn btn',
-) );
+] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 return '
 <div class="row-fluid">

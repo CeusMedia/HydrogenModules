@@ -15,13 +15,8 @@ class Controller_Admin_Payment_Mangopay_Client extends Controller
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
-			try{
-				$result	= $this->mangopay->updateClient( $data );
-				$this->messenger->noteSuccess( 'Saved.' );
-			}
-			catch( Exception $e ){
-				$this->handleMangopayException( $e );
-			}
+			$this->mangopay->updateClient( $data );
+			$this->messenger->noteSuccess( 'Saved.' );
 			$this->restart( NULL, TRUE );
 		}
 	}

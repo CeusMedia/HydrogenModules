@@ -31,7 +31,7 @@ if( $tags ){
 		$linkTag	= View_Helper_Blog::renderTagLink( $env, $tag->title );
 		$list[]		= HtmlElements::ListItem( $linkRemove.$linkTag );
 	}
-	$listTags	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
+	$listTags	= HtmlTag::create( 'ul', join( $list ), ['class' => 'editor-list'] );
 }
 
 $list	= [];
@@ -43,7 +43,7 @@ if( $authors ){
 		$linkRemove	= HtmlElements::LinkButton( $urlRemove, '', 'button tiny remove' );
 		$list[]	= HtmlElements::ListItem( $linkRemove.$linkUser );
 	}
-	$listAuthors	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'editor-list' ) );
+	$listAuthors	= HtmlTag::create( 'ul', join( $list ), ['class' => 'editor-list'] );
 }
 
 $list	= [];
@@ -51,15 +51,15 @@ if( $article->versions ){
 	$label	= 'Version '.( count( $article->versions ) + 1 );
 	$link	= HtmlElements::Link( './blog/edit/'.$article->articleId, $label, 'version latest' );
 	$class	= $version != count( $article->versions ) ? 'current' : NULL;
-	$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => $class ) );
+	$list[]	= HtmlElements::ListItem( $link, 0, ['class' => $class] );
 	foreach( $article->versions as $nr => $articleVersion ){
 		$label	= 'Version '.++$nr;
 		$url	= './blog/edit/'.$article->articleId.'/'.$nr;
 		$class	= $version == $nr ? 'current' : NULL;
 		$link	= HtmlElements::Link( $url, $label, 'version' );
-		$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => $class ) );
+		$list[]	= HtmlElements::ListItem( $link, 0, ['class' => $class] );
 	}
-	$listVersions	= HtmlTag::create( 'ul', join( $list ), array( 'class' => 'not-editor-list versions' ) );
+	$listVersions	= HtmlTag::create( 'ul', join( $list ), ['class' => 'not-editor-list versions'] );
 }
 
 $isHistory			= $version <= count( $article->versions );

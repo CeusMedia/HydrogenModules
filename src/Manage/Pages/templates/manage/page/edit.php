@@ -1,13 +1,13 @@
 <?php
 $w		= (object) $words['edit'];
 
-$tabTemplates	= array(
+$tabTemplates	= [
 	'settings'	=> 'edit.settings.php',
 	'preview'	=> 'edit.preview.php',
 	'content'	=> 'edit.content.php',
 	'meta'		=> 'edit.meta.php',
 	'sitemap'	=> 'edit.sitemap.php',
-);
+];
 //if( !$appHasMetaModule )
 //	unset( $words['tabs']['meta'] );
 

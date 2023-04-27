@@ -7,7 +7,7 @@ $listReasons	= [];
 foreach( $reasons as $reason ){
 	$listReasons[]	= HtmlTag::create( 'li', array(
 		HtmlTag::create( 'label', array(
-			HtmlTag::create( 'input', NULL, array(
+			HtmlTag::create( 'input', NULL, [
 				'type'				=> 'checkbox',
 				'name'				=> 'reasonIds[]',
 				'id'				=> 'input_reasonIds-'.$reason->ipLockReasonId,
@@ -15,7 +15,7 @@ foreach( $reasons as $reason ){
 				'checked'			=> 'checked',
 				'class'				=> 'has-optionals',
 				'data-animation'	=> 'slide',
-			) ),
+			] ),
 			HtmlTag::create( 'div', array(
 				$reason->title,
 				' ',
@@ -24,52 +24,52 @@ foreach( $reasons as $reason ){
 		), ['class' => 'checkbox'] ),
 	) );
 }
-$listReasons	= HtmlTag::create( 'ul', $listReasons, array(
+$listReasons	= HtmlTag::create( 'ul', $listReasons, [
 	'class'		=> 'unstyled',
 	'style'		=> 'padding-left: 1.5em;',
-) );
+] );
 
 $listFilters	= [];
 foreach( $filters as $filter ){
 	$listFilters[]	= HtmlTag::create( 'li', array(
 		HtmlTag::create( 'label', array(
-			HtmlTag::create( 'input', NULL, array(
+			HtmlTag::create( 'input', NULL, [
 				'type'		=> 'checkbox',
 				'name'		=> 'filterIds[]',
 				'id'		=> 'input_filterIds-'.$filter->ipLockFilterId,
 				'value'		=> $filter->ipLockFilterId,
 				'checked'	=> 'checked',
-			) ),
+			] ),
 			HtmlTag::create( 'div', $filter->title ),
 		), ['class' => 'checkbox'] ),
 	), ['class' => 'optional reasonIds-'.$filter->reasonId.' reasonIds-'.$filter->reasonId.'-true'] );
 }
-$listFilters	= HtmlTag::create( 'ul', $listFilters, array(
+$listFilters	= HtmlTag::create( 'ul', $listFilters, [
 	'class'		=> 'unstyled',
 	'style'		=> 'padding-left: 1.5em;',
-) );
+] );
 
 $panelExport	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Export' ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
-			HtmlTag::create( 'input', NULL, array(
+			HtmlTag::create( 'input', NULL, [
 				'type'	=> 'hidden',
 				'name'	=> 'not-filters',
 				'value'	=> 'all',
-			) ),
+			] ),
 			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', join( '<br/>', array(
+				HtmlTag::create( 'div', join( '<br/>', [
 					'Bestehende Gründe und Regeln werden in eine JSON-Datei gespeichert.',
 					'Aktuelle Sperren werden dabei nicht exportiert.',
 					'Die JSON-Datei kann zur Archivierung abgelegt oder in einer anderen Applikation importiert werden.'
-				 ) ) ),
+				 ] ) ),
 			), ['class' => 'alert alert-success'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'h4', 'Gründe' ),
 					HtmlTag::create( 'label', array(
-						HtmlTag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, [
 							'type'				=> 'checkbox',
 							'name'				=> 'reasons',
 							'id'				=> 'input_reasons',
@@ -77,14 +77,14 @@ $panelExport	= HtmlTag::create( 'div', array(
 							'checked'			=> 'checked',
 							'class'				=> 'has-optionals',
 							'data-animation'	=> 'slide',
-						) ),
+						] ),
 						HtmlTag::create( 'div', 'alle Gründe' ),
 					), ['class' => 'checkbox'] ),
 					HtmlTag::create( 'div', array(
 						$listReasons,
 						HtmlTag::create( 'h4', 'Filter' ),
 						HtmlTag::create( 'label', array(
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'				=> 'checkbox',
 								'name'				=> 'filters',
 								'id'				=> 'input_filters',
@@ -92,12 +92,12 @@ $panelExport	= HtmlTag::create( 'div', array(
 								'checked'			=> 'checked',
 								'class'				=> 'has-optionals',
 								'data-animation'	=> 'slide',
-							) ),
+							] ),
 							HtmlTag::create( 'div', 'alle Filter' ),
 						), ['class' => 'checkbox'] ),
-						HtmlTag::create( 'div', array(
+						HtmlTag::create( 'div', [
 							$listFilters,
-						), ['class' => 'optional filters filters-false', 'style' => 'display: none'] ),
+						], ['class' => 'optional filters filters-false', 'style' => 'display: none'] ),
 
 					), ['class' => 'optional reasons reasons-false', 'style' => 'display: none'] ),
 				), ['class' => 'span12'] ),
@@ -116,16 +116,16 @@ $panelExport	= HtmlTag::create( 'div', array(
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', array(
+				HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary'
-				) )
+				] )
 			), ['class' => 'buttonbar'] ),
-		), array(
+		), [
 			'action'	=> './manage/ip/lock/transport/export',
 			'method'	=> 'post',
-		) ),
+		] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
 

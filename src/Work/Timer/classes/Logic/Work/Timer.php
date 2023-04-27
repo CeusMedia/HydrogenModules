@@ -11,45 +11,70 @@ class Logic_Work_Timer
 	protected Model_Work_Timer $modelTimer;
 	protected ?string $userId;
 
-	public function get( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		object|NULL
+	 */
+	public function get( string $timerId ): ?object
 	{
 		return $this->checkTimerId( $timerId );
 	}
 
+	/**
+	 *	@param		array|string	$conditions
+	 *	@param		array			$orders
+	 *	@param		array			$limits
+	 *	@return		array
+	 */
 	public function index( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelTimer->getAll( $conditions, $orders, $limits );
 	}
 
-	static public function getInstance( $env ): self
+	/**
+	 *	@param		Environment		$env
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 */
+	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
-			self::$instance = new Logic_Work_Timer( $env );
+			self::$instance		= new Logic_Work_Timer( $env );
 		return self::$instance;
 	}
 
-	public function pause( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function pause( string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status != 2 ){
-			$this->modelTimer->edit( $timerId, array(
+			$this->modelTimer->edit( $timerId, [
 				'status'		=> 2,
 				'secondsNeeded'	=> $timer->secondsNeeded + ( time() - $timer->modifiedAt ),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$payload	= ['timer' => $this->checkTimerId( $timerId )];
 			$this->env->getCaptain()->callHook( 'Work_Timer', 'onPauseTimer', $this, $payload );
 		}
 	}
 
-	public function start( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function start( string $timerId ): void
 	{
 		$timer		= $this->checkTimerId( $timerId );
 		if( $timer->status != 1 ){
-			$active 	= $this->modelTimer->getByIndices( array(
+			$active 	= $this->modelTimer->getByIndices( [
 				'workerId'	=> $this->userId,
 				'status'	=> 1
-			) );
+			] );
 			if( $active )
 				$this->pause( $active->workTimerId );
 			$this->modelTimer->edit( $timerId, array( 'status' => 1, 'modifiedAt' => time() ) );
@@ -58,22 +83,32 @@ class Logic_Work_Timer
 		}
 	}
 
-	public function stop( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function stop( string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status == 1 )
 			$this->pause( $timerId );
-		$this->modelTimer->edit( $timerId, array(
+		$this->modelTimer->edit( $timerId, [
 			'status'		=> 3,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$payload	= ['timer' => $this->checkTimerId( $timerId )];
 		$this->env->getCaptain()->callHook( 'Work_Timer', 'onStopTimer', $this, $payload );
 	}
 
-	public function sumTimersOfModuleId( string $moduleKey, $moduleId, array $statuses = [2, 3] ): int
+	/**
+	 *	@param		string		$moduleKey
+	 *	@param		string		$moduleId
+	 *	@param		array		$statuses
+	 *	@return		int
+	 */
+	public function sumTimersOfModuleId( string $moduleKey, string $moduleId, array $statuses = [2, 3] ): int
 	{
-		$modelTimer	= new Model_Work_Timer( $this->env );
 		$indices	= ['module' => $moduleKey, 'moduleId' => $moduleId, 'status' => $statuses];
 		$timers		= $this->modelTimer->getAllByIndices( $indices );
 		$seconds	= 0;
@@ -82,6 +117,10 @@ class Logic_Work_Timer
 		return $seconds;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@return		int
+	 */
 	public function countTimers( array $conditions ): int
 	{
 		return $this->modelTimer->count( $conditions );
@@ -91,15 +130,24 @@ class Logic_Work_Timer
 
 	protected function __clone(){}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	protected function __construct( Environment $env )
 	{
-		$this->env				= $env;
-		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'auth_user_id' );
-		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		$this->env			= $env;
+		$this->session		= $this->env->getSession();
+		$this->userId		= $this->session->get( 'auth_user_id' );
+		$this->modelTimer	= new Model_Work_Timer( $this->env );
 	}
 
-	protected function checkTimerId( $timerId, bool $strict = TRUE )
+	/**
+	 *	@param		string		$timerId
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 */
+	protected function checkTimerId( string $timerId, bool $strict = TRUE ): ?object
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( $timer )

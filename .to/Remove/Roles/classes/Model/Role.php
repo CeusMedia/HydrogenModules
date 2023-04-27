@@ -29,7 +29,7 @@ class Model_Role extends Model
 
 	protected string $name		= 'roles';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'roleId',
 		'access',
 		'register',
@@ -37,15 +37,15 @@ class Model_Role extends Model
 		'description',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'roleId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'access',
 		'register',
 		'title',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

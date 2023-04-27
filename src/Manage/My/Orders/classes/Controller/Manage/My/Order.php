@@ -5,10 +5,11 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_My_Order extends Controller
 {
 	protected array $backends	= [];
-	protected $logicShop;
-	protected $logicAuth;
+	protected Logic_Shop $logicShop;
+	protected Logic_Authentication $logicAuth;
 
-	public function index( $page = 0 ){
+	public function index( $page = 0 ): void
+	{
 		$limit		= 10;
 		$conditions	= array( 'userId' => $this->logicAuth->getCurrentUserId() );
 		$orders		= ['orderId' => 'DESC'];
@@ -23,16 +24,17 @@ class Controller_Manage_My_Order extends Controller
 	/**
 	 *	Register a payment backend.
 	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
+	 *	@param		string			$backend		...
+	 *	@param		string			$key			...
+	 *	@param		string			$title			...
+	 *	@param		string			$path			...
+	 *	@param		integer			$priority		...
+	 *	@param		string|NULL		$icon			...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, $key, $title, $path, $priority = 5, $icon = NULL, $countries = [] ){
-		$this->backends[]	= (object) array(
+	public function registerPaymentBackend( string $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL, array $countries = [] ): void
+	{
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -40,10 +42,11 @@ class Controller_Manage_My_Order extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
-	public function view( $orderId ){
+	public function view( string $orderId ): void
+	{
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		if( $order->userId !== $this->logicAuth->getCurrentUserId() ){
 			$this->env->getMessenger()->noteError( 'Zugriff verweigert.' );

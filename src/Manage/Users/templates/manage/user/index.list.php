@@ -37,10 +37,10 @@ if( $total ){
 			HtmlTag::create( 'td', $labelStatus, ['class' => 'cell-status'] ),
 			HtmlTag::create( 'td', $phraser->convert( $user->createdAt, TRUE ), ['class' => 'cell-created'] ),
 			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt, TRUE ), ['class' => 'cell-logged'] ),
-		), array(
+		), [
 			'data-user-role'	=> $user->roleId,
 			'data-user-status'	=> $user->status,
-		) );
+		] );
 	}
 	$heads		= HtmlElements::TableHeads( $words['indexListHeads'] );
 	$list		= HtmlTag::create( 'table', array(
@@ -58,10 +58,10 @@ if( $hasRightToAdd ){
 	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
+	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 		'href'	=> './manage/user/add',
 		'class'	=> 'btn btn-success'
-	) );
+	] );
 }
 
 return '

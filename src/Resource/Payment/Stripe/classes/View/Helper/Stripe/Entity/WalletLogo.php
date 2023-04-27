@@ -40,9 +40,9 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 		}
 		$classes	= ['fa fa-fw', $icon, $this->size];
 		$image		= HtmlTag::create( 'i', '', ['class' => join( ' ', $classes )] );
-		return HtmlTag::create( $this->nodeName, $image, array(
+		return HtmlTag::create( $this->nodeName, $image, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
 	public function setNodeClass( $classNames )

@@ -7,10 +7,10 @@ $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconPayin		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-in'] );
 $iconCard		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-credit-card'] );
 
-$wordsCurrencies	= array(
+$wordsCurrencies	= [
 	'EUR'		=> 'EUR',
 	'USD'		=> 'USD',
-);
+];
 
 //Logic_Payment_Mangopay::$typeCurrencies;
 //$possibleCurrencies	= [];

@@ -4,21 +4,22 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 
 class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_My_Mangopay_Abstract
 {
-	protected $words;
+	protected array $words;
+	protected string $sessionPrefix;
 
-	public function ajaxValidateCardNumber()
+	public function ajaxValidateCardNumber(): void
 	{
 		$number		= $this->request->get( 'cardNumber' );
 		$provider	= $this->request->get( 'cardProvider' );
 		$result		= $this->logic->validateCardNumber( $number, $provider );
-		print( json_encode( array(
+		print( json_encode( [
 			'status'	=> 'data',
 			'data'		=> $result
-		) ) );
+		] ) );
 		exit;
 	}
 
-	public function index()
+	public function index(): void
 	{
 //			$this->logic->uncache( 'user_'.$this->userId.'_cards' );
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
@@ -57,7 +58,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->addData( 'cardProvider', $this->request->get( 'cardProvider' ) );
 	}
 
-	public function finish()
+	public function finish(): void
 	{
 		$registrationId	= $this->env->getSession()->get( 'cardRegisterId' );
 		$registration	= $this->mangopay->CardRegistrations->Get( $registrationId );
@@ -118,7 +119,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 		$this->sessionPrefix	= 'manage_my_mangopay_card_';
 	}
 
-	protected function handleErrorCode( $errorCode )
+	protected function handleErrorCode( $errorCode ): void
 	{
 		$errorCodes	= Dictionary::create( $this->words )->getAll( 'errorCode-' );
 		if( !array_key_exists( $errorCode, $errorCodes ) )

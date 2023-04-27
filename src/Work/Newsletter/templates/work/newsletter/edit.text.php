@@ -21,10 +21,10 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&n
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/preview/text/'.$newsletter->newsletterId;
-$iframeText			= HtmlTag::create( 'iframe', '', array(
+$iframeText			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewText	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -75,11 +75,11 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, ar
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
 ) );
 
-$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'href'		=> './work/newsletter/preview/text/'.$newsletterId.'/1',
 	'target'	=> 'NewsletterPreview',
 	'class'		=> 'btn btn-info btn-small',
-) );
+] );
 
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'type'			=> "button",
@@ -89,14 +89,14 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/text/'.$newsletterId.'/1\');'
 ) );
 
-$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
+$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn not-btn-small',
-) );
-$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
+] );
+$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/3',
 	'class'	=> 'btn not-btn-small',
-) );
+] );
 
 $panelForm	= '
 <div class="content-panel content-panel-form">
@@ -105,13 +105,13 @@ $panelForm	= '
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			<div class="row-fluid">
 				<label for="input_generatePlain" class="checkbox">
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "checkbox",
 						'name'		=> "generatePlain",
 						'id'		=> 'input_generatePlain',
 						'value'		=> 1,
 						'checked'	=> $newsletter->generatePlain ? 'checked' : NULL,
-					) ).' '.$w->labelGeneratePlain.'</label>
+					] ).' '.$w->labelGeneratePlain.'</label>
 			</div>
 			'.$fieldContent.'
 			<div class="buttonbar">

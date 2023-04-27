@@ -44,12 +44,12 @@ class View_Helper_DevProfiler
 		$total		= '<tr class="total"><td>Total</td><td colspan="2" class="task-measure">'.self::formatTime( $timeTotal ).'s</td><td></td></tr>';
 		$list[]		= HtmlTag::create( 'tfoot', $total );
 		$colgroup	= HtmlElements::ColumnGroup( "400", "50", "75", "" );
-		$heads		= array(
+		$heads		= [
 			'<th>'.$words['layer']['headTask'].'</th>',
 			'<th class="task-measure">'.$words['layer']['headPercentage'].'</th>',
 			'<th class="task-measure">'.$words['layer']['headTime'].'</th>',
 			'<th>'.$words['layer']['headProportion'].'</th>'
-		);
+		];
 		$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', join( $heads ) ) );
 		$tbody		= HtmlTag::create( 'tbody', join( $list ) );
 		$content	= $colgroup.$thead.$tbody;

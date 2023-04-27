@@ -7,11 +7,14 @@
  *	@copyright		2011 Ceus Media
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	Locale Content Management Controller.
@@ -22,13 +25,24 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Manage_Content_Locale extends Controller
 {
-	public static $folders	= array(
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected array $languages;
+	protected string $language;
+	protected string $basePath;
+	protected string $folderPathFull;
+	protected Model_Provision_Product_License $modelLicense;
+	protected ?string $folder			= NULL;
+	protected ?string $file			= NULL;
+
+	public static array $folders	= [
 		'locale'		=> '',
 		'html'			=> 'html/',
 		'mail'			=> 'mail/',
-	);
+	];
 
-	public static $filterPrefix	= 'filter_manage_content_locale_';
+	public static string $filterPrefix	= 'filter_manage_content_locale_';
 
 	public function ajaxSaveContent()
 	{
@@ -87,13 +101,13 @@ class Controller_Manage_Content_Locale extends Controller
 				$editors[]	= 'CodeMirror';
 			if( $this->env->getModules()->has( 'JS_TinyMCE' ) && $this->folder !== 'locale' )
 				$editors[]	= 'TinyMCE';
-			$this->addData( 'editors', $editorsCopy = $editors );
+			$this->addData( 'editors', $editors );
 
 			$ext	= strtolower( pathinfo( $this->file, PATHINFO_EXTENSION ) );
 			$editor	= $this->session->get( static::$filterPrefix.'editor_'.$ext );
-			$editor	= $editor ? $editor : $this->session->get( static::$filterPrefix.'editor' );
-			$editor	= $editor ? $editor : array_shift( $editor );
-			$editor	= $editor ? $editor : 'Plain';
+			$editor	= $editor ?: $this->session->get( static::$filterPrefix.'editor' );
+			$editor	= $editor ?: array_shift( $editor );
+			$editor	= $editor ?: 'Plain';
 			$this->addData( 'editor', $editor );
 			$this->addData( 'editorByExt', $this->session->get( static::$filterPrefix.'editor_'.$ext ) );
 			$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
@@ -266,7 +280,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->addData( 'files', $list );
 	}
 
-	protected function setFile( $file )
+	protected function setFile( string $file ): ?bool
 	{
 		if( $this->file === $file )
 			return NULL;
@@ -285,7 +299,7 @@ class Controller_Manage_Content_Locale extends Controller
 		return TRUE;
 	}
 
-	protected function setFolder( $folder )
+	protected function setFolder( string $folder ): ?bool
 	{
 		if( $this->folder === $folder )
 			return NULL;
@@ -297,7 +311,7 @@ class Controller_Manage_Content_Locale extends Controller
 		return TRUE;
 	}
 
-	protected function setLanguage( $language )
+	protected function setLanguage( string $language ): ?bool
 	{
 		if( $this->language === $language )
 			return NULL;

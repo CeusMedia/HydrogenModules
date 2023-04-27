@@ -68,23 +68,23 @@ $panelWorkers	= '
 
 /*  --  FACTS  --  */
 
-$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp'.$words['view']['buttonList'], array(
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp'.$words['view']['buttonList'], [
 	'href'		=> './manage/project',
 	'class'		=> 'btn not-btn-small',
-) );
+] );
 
-$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], [
 	'href'		=> '#',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> 'disabled',
-) );
+] );
 
 
 if( 1 || $canEdit ){
-	$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], array(
+	$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp'.$words['view']['buttonEdit'], [
 		'href'		=> './manage/project/edit/'.$project->projectId,
 		'class'		=> 'btn btn-primary',
-	) );
+	] );
 }
 
 $graph		= $helperIndicator->build( $project->status + 2, 5, '150' );
@@ -92,11 +92,11 @@ $status		= htmlentities( $words['states'][$project->status], ENT_QUOTES, 'UTF-8'
 $priority	= htmlentities( $words['priorities'][$project->priority], ENT_QUOTES, 'UTF-8' );
 $dateChange	= max( $project->createdAt, $project->modifiedAt );
 
-$factUrl	= $project->url ? HtmlTag::create( 'a', htmlentities( $project->url, ENT_QUOTES, 'UTF-8' ), array(
+$factUrl	= $project->url ? HtmlTag::create( 'a', htmlentities( $project->url, ENT_QUOTES, 'UTF-8' ), [
 	'href'		=> $project->url,
 	'target'	=> "_blank",
 	'class'		=> "external",
-) ) : '-';
+] ) : '-';
 
 $panelFacts		= '
 <div class="content-panel">

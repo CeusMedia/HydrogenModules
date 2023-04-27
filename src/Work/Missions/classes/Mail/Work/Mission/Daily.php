@@ -18,12 +18,12 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 		$data			= $this->data;
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
-		$monthNames		= (array) $this->getWords( 'work/mission', 'months' );
-		$weekdays		= (array) $this->getWords( 'work/mission', 'days' );
-		$salutes		= (array) $this->getWords( 'work/mission', 'mail-salutes' );
+		$monthNames		= $this->getWords( 'work/mission', 'months' );
+		$weekdays		= $this->getWords( 'work/mission', 'days' );
+		$salutes		= $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
 		$indicator		= new HtmlIndicator();
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );
 
@@ -62,6 +62,8 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 		$dateFull	= HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] );
 		$dateShort	= HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] );
 		$greeting	= sprintf( $w->greeting, $username, $dateFull, $dateShort );
+		/** @noinspection XmlDeprecatedElement */
+		/** @noinspection HtmlDeprecatedTag */
 		$body	= '
 <!--<div class="text-greeting text-info">'.$greeting.'</div>-->
 <big>Datum: '.$dateFull.'</big>

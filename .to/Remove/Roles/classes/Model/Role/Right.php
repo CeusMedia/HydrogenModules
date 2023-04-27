@@ -20,21 +20,21 @@ class Model_Role_Right extends Model
 {
 	protected string $name		= 'role_rights';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'roleRightId',
 		'roleId',
 		'controller',
 		'action',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'roleRightId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'roleId',
 		'controller',
 		'action',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 
@@ -45,6 +45,6 @@ class Model_Role_Right extends Model
 
 	public static function minifyController( $controller )
 	{
-		return str_replace( array( '-', '/' ), '_', strtolower( $controller ) );
+		return str_replace( ['-', '/'], '_', strtolower( $controller ) );
 	}
 }

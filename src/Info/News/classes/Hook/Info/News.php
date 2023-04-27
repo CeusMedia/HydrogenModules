@@ -11,14 +11,14 @@ class Hook_Info_News extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
 		$words			= $env->getLanguage()->getWords( 'info/news' );
-		$shortCodes		= array(
-			'news'	=> array(
+		$shortCodes		= [
+			'news'	=> [
 				'panel'					=> FALSE,
 				'panel-heading'			=> $words['panel']['heading'],
 				'panel-heading-level'	=> 3,
 				'limit'					=> '5',
-			)
-		);
+			]
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

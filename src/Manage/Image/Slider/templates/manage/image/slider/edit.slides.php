@@ -33,19 +33,19 @@ if( $slider->slides ){
 			HtmlTag::create( 'td', $thumb, ['class' => 'cell-slide-thumb'] ),
 			HtmlTag::create( 'td', $title.'<br/>'.$source, ['class' => 'cell-slide-title'] ),
 			HtmlTag::create( 'td', $buttonEdit.$buttons, ['class' => 'cell-slide-actions'] ),
-		), array(
+		), [
 //			'id'	=> 'slide-'.$slide->sliderSlideId,
 			'class'	=> $rowClass,
 			'data-slide-id' => $slide->sliderSlideId,
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "50px", "75px", "", "90px" );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		$w->headRank,
 		$w->headImage,
 		$w->headSource,
 		$w->headActions,
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed', 'id' => 'table-slides'] );
 }

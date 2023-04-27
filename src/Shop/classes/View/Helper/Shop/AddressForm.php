@@ -5,12 +5,14 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_AddressForm
 {
-	protected $env;
-	protected $address;
-	protected $heading;
-	protected $textTop;
-	protected $type					= 0;
-	protected $defaultCountryCode	= 'DE';
+	protected Environment $env;
+	protected Model_Address $model;
+	protected array $words;
+	protected string $defaultCountryCode	= 'DE';
+	protected ?object $address				= NULL;
+	protected ?string $heading				= NULL;
+	protected ?string $textTop				= NULL;
+	protected $type							= 0;
 
 	public function __construct( Environment $env )
 	{
@@ -20,7 +22,7 @@ class View_Helper_Shop_AddressForm
 
 	public function render(): string
 	{
-		$addressId	= isset( $this->address->addressId ) ? $this->address->addressId : 0;
+		$addressId	= $this->address->addressId ?? 0;
 		$w			= (object) $this->words['form'];
 		$d			= $this->address;
 
@@ -37,7 +39,7 @@ class View_Helper_Shop_AddressForm
 		<form action="./shop/customer/address/'.$addressId.'/'.$this->type.'" method="post">
 			<!--	HACK: Force autocomplete to be off for newer Chrome versions.
 					DESC: Chrome has new AutoFill feature whichs need autocomplete="false" which breaks other browsers.
-					LINK: http://stackoverflow.com/a/33766566
+					LINK: https://stackoverflow.com/a/33766566
 					CODE: https://bugs.chromium.org/p/chromium/issues/detail?id=468153#hc41
 		 	-->
 			<div style="display: none;">
@@ -112,9 +114,9 @@ class View_Helper_Shop_AddressForm
 	</div>
 </div>
 <script>
-$(document).ready(function(){
-	$(".typeahead").each(function(){
-		$(this).typeahead({
+jQuery(document).ready(function(){
+	jQuery(".typeahead").each(function(){
+		jQuery(this).typeahead({
 			source: '.json_encode( array_values( $this->words['countries'] ) ).',
 			items: 4
 		});

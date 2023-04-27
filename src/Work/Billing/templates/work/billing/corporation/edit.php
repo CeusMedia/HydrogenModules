@@ -1,19 +1,23 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $corporation */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/corporation',
 	'class'	=> 'btn btn',
-) );
+] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 $panelFacts		= '
 <div class="content-panel">
@@ -47,7 +51,7 @@ $panelFacts		= '
 </div>';
 
 
-$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId, 0 );
+$tabs		= View_Work_Billing_Corporation::renderTabs( $env, $corporation->corporationId );
 $heading	= '<h2 class="autocut"><span class="muted">Unternehmen</span> '.$corporation->title.'</h2>';
 
 return $heading.$tabs.'

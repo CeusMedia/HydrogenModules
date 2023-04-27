@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object[] $groups */
+
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
 
@@ -52,10 +54,10 @@ foreach( $groups as $group ){
 		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
 	) );
 	$buttons	= HtmlTag::create( 'div', $buttonRemove, ['class' => 'btn-group'] );
-	$link		= HtmlTag::create( 'a', $group->title, array(
+	$link		= HtmlTag::create( 'a', $group->title, [
 		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailGroupId,
 		'class'	=> '',
-	) );
+	] );
 	$link		.= '&nbsp;'.HtmlTag::create( 'small', '('.$group->numbers->total.')', ['class' => 'muted'] );
 	$createdAt	= HtmlTag::create( 'small', date( 'd.m.Y', $group->createdAt ) );
 
@@ -68,7 +70,7 @@ foreach( $groups as $group ){
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getested', 'Qualität', 'Erstellung'] ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getestet', 'Qualität', 'Erstellung'] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 

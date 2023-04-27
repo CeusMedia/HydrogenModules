@@ -5,19 +5,19 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_ShopManager extends Logic
 {
 	/**	@var		Model_User					$modelUser */
-	protected $modelUser;
+	protected Model_User $modelUser;
 
 	/**	@var		Model_Address				$modelAddress */
-	protected $modelAddress;
+	protected Model_Address $modelAddress;
 
 	/**	@var		Model_Shop_Order			$modelOrder */
-	protected $modelOrder;
+	protected Model_Shop_Order $modelOrder;
 
 	/**	@var		Model_Shop_Order_Position	$modelOrderPosition */
-	protected $modelOrderPosition;
+	protected Model_Shop_Order_Position $modelOrderPosition;
 
 	/**	@var		Logic_Shop_Shipping			$shipping			Shipping logic if module is installed */
-	protected $shipping;
+	protected Logic_Shop_Shipping $shipping;
 
 	/**
 	 *	Returns number of orders for given conditions.
@@ -47,16 +47,16 @@ class Logic_ShopManager extends Logic
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
@@ -70,16 +70,16 @@ class Logic_ShopManager extends Logic
 		$user	= $model->get( $customerId );
 		if( !$user )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
@@ -98,7 +98,7 @@ class Logic_ShopManager extends Logic
 		return $order;
 	}
 
-	public function getOrders( $conditions = [], array $orders = [], array $limits = [] )
+	public function getOrders( $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}
@@ -115,10 +115,10 @@ class Logic_ShopManager extends Logic
 
 	public function getOpenSessionOrder( $sessionId ): array
 	{
-		$conditions	= array(
+		$conditions	= [
 			'session_id'		=> $sessionId,
 			'status'			=> '< 2',
-		);
+		];
 		return $this->modelOrder->getAll( $conditions );
 	}
 
@@ -126,16 +126,16 @@ class Logic_ShopManager extends Logic
 	{
 		if( !$this->shipping && $strict )
 			throw new RuntimeException( 'Shipping module is not installed' );
-		return $this->shipping ? $this->shipping : NULL;
+		return $this->shipping ?: NULL;
 	}
 
 	/**
 	 *	Returns Shipping Grade ID by Quantity.
 	 *	@access		public
-	 *	@param		integer		 $quantity		Quantity to ge Shipping Grade for
+	 *	@param		integer		$quantity		Quantity to ge Shipping Grade for
 	 *	@return		int
 	 */
-	public function getShippingGradeIdByQuantity( $quantity )
+	public function getShippingGradeIdByQuantity( int $quantity ): int
 	{
 		return $this->getShipping()->getShippingGradeIdByQuantity( $quantity );
 	}

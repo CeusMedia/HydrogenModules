@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_FTP extends View
 {
-	public function index()
+	public function index(): void
 	{
 		$pathCurrent	= $this->getData( 'pathCurrent' );
 		$pathDeepest	= $this->getData( 'pathDeepest' );
@@ -17,7 +17,7 @@ class View_Work_FTP extends View
 		$this->addData( 'position', $this->renderPosition( $pathCurrent, $pathDeepest ) );
 	}
 
-	public function login()
+	public function login(): void
 	{
 	}
 
@@ -70,12 +70,12 @@ class View_Work_FTP extends View
 				$link	= $label;
 			}
 
-			$cells	= array(
+			$cells	= [
 				HtmlTag::create( 'td', $link ),
 				HtmlTag::create( 'td', $size ),
 				HtmlTag::create( 'td', $entry->day.' '.$entry->month.' '.$entry->year ),
 				HtmlTag::create( 'td', $entry->permissions ),
-			);
+			];
 			$entry->html	= HtmlTag::create( 'tr', $cells );
 			if( $entry->isdir ){
 				$folders[$entry->name]	= $entry->html;

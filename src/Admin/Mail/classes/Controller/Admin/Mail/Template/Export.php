@@ -107,29 +107,29 @@ class Controller_Admin_Mail_Template_Export extends Controller
 		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();											//  preserve whitespace in title as hyphen
 
-		$data	= array(
+		$data	= [
 			'type'		=> 'mail-template',
 			'version'	=> 2,
-			'entity'	=> array(
+			'entity'	=> [
 				'title'		=> $template->title,
 				'key'		=> $titleKey,
 				'version'	=> '0',
 				'language'	=> $template->language ?: '*',
-				'contents'	=> array(
+				'contents'	=> [
 					'text'		=> $template->plain,
 					'html'		=> $template->html,
 					'css'		=> $template->css,
-				),
-				'files'		=> array(
+				],
+				'files'		=> [
 					'styles'	=> $files['styles'],
 					'images'	=> $files['images'],
-				),
-				'dates'		=> array(
+				],
+				'dates'		=> [
 					'createdAt'		=> $template->createdAt,
 					'modifiedAt'	=> $template->modifiedAt,
-				)
-			)
-		);
+				]
+			]
+		];
 		return json_encode( $data, JSON_PRETTY_PRINT );
 	}
 }

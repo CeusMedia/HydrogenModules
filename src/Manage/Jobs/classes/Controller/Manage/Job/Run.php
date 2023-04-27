@@ -41,7 +41,7 @@ class Controller_Manage_Job_Run extends Controller
 
 	public function filter( $reset = NULL )
 	{
-		$filters	= array(
+		$filters	= [
 			'limit',
 			'status',
 			'type',
@@ -50,7 +50,7 @@ class Controller_Manage_Job_Run extends Controller
 			'className',
 			'startFrom',
 			'startTo',
-		);
+		];
 		if( $reset ){
 			foreach( $filters as $filterKey )
 				$this->session->remove( $this->filterPrefix.$filterKey );

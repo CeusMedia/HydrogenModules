@@ -25,13 +25,13 @@ class Hook_Shop_FinishPanel extends Hook
 //		$order		= $modelOrder->get( $payload['orderId'] );
 
 		$path	= 'html/shop/panel/';
-		$files	= array(
+		$files	= [
 			1	=> 'finishTop.html',
 			3	=> 'finishAbove.html',
 			5	=> 'finish.html',
 			7	=> 'finishBelow.html',
 			9	=> 'finishBottom.html',
-		);
+		];
 		foreach( $files as $priority => $file ){
 			if( $view->hasContentFile( $path.$file ) ){
 				$content	= $view->loadContentFile( $path.$file );

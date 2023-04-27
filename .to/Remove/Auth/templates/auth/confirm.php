@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['confirm'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/confirm.' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/confirm.' ) );
 
 return '
 '.$textTop.'

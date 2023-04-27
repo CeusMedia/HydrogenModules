@@ -1,66 +1,65 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Form_Mail extends Controller{
-
+class Controller_Manage_Form_Mail extends Controller
+{
+	protected HttpRequest $request;
+	protected Dictionary $session;
 	protected Model_Form $modelForm;
-	protected Model_Form $modelMail;
+	protected Model_Form_Mail $modelMail;
 	protected string $filterPrefix		= 'filter_manage_form_mail_';
-	protected array $filters			= array(
+	protected array $filters			= [
 		'mailId',
 		'roleType',
 		'identifier',
 		'format',
 		'title',
-	);
+	];
 
-	public function add(){
-		if( $this->env->getRequest()->has( 'save' ) ){
-			$data		= $this->env->getRequest()->getAll();
+	public function add(): void
+	{
+		if( $this->request->has( 'save' ) ){
+			$data		= $this->request->getAll();
 			$mailId	= $this->modelMail->add( $data, FALSE );
 			$this->restart( 'edit/'.$mailId, TRUE );
 		}
 	}
 
-	public function edit( $mailId ){
+	public function edit( $mailId ): void
+	{
 		$mail	= $this->checkId( $mailId );
-		if( $this->env->getRequest()->has( 'save' ) ){
-			$data	= $this->env->getRequest()->getAll();
+		if( $this->request->has( 'save' ) ){
+			$data	= $this->request->getAll();
 			$this->modelMail->edit( $mailId, $data, FALSE );
 			$this->restart( 'edit/'.$mailId, TRUE );
 		}
 		$this->addData( 'mail', $mail );
 	}
 
-	public function filter( $reset = NULL ){
-		$request	= $this->env->getRequest();
-		$session	= $this->env->getSession();
+	public function filter( $reset = NULL ): void
+	{
 		if( $reset ){
 			foreach( $this->filters as $filter )
-				$session->remove( $this->filterPrefix.$filter );
+				$this->session->remove( $this->filterPrefix.$filter );
 		}
 		foreach( $this->filters as $filter ){
-			if( $request->has( $filter ) ){
-				$value	= $request->get( $filter );
-				$session->set( $this->filterPrefix.$filter, $value );
+			if( $this->request->has( $filter ) ){
+				$value	= $this->request->get( $filter );
+				$this->session->set( $this->filterPrefix.$filter, $value );
 			}
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ){
-		$session		= $this->env->getSession();
+	public function index( $page = 0 ): void
+	{
 		$filters		= new Dictionary( array_merge(
 			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
-			$session->getAll( $this->filterPrefix )
+			$this->session->getAll( $this->filterPrefix )
 		) );
-
-		$filterMailId		= $filters->get( 'mailId' );
-		$filterTitle		= $filters->get( 'title' );
-		$filterIdentifier	= $filters->get( 'identifier' );
-		$filterFormat		= $filters->get( 'format' );
 
 		$limit		= 15;
 		$conditions	= [];
@@ -103,25 +102,33 @@ class Controller_Manage_Form_Mail extends Controller{
 			array(),
 			array( 'format' )
 		);
-		array_unique( $formats );
+		$formats	= array_unique( $formats );
 		$this->addData( 'formats', $formats );
 	}
 
-	public function remove( $mailId ){
+	public function remove( string $mailId ): void
+	{
 		$this->checkId( $mailId );
 		$this->modelMail->remove( $mailId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $mailId ){
+	public function view( string $mailId ): void
+	{
 		$mail	= $this->checkId( $mailId );
 		$this->addData( 'mail', $mail );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
+		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->modelForm	= new Model_Form( $this->env );
-		$this->modelMail	= new Model_Form( $this->env );
+		$this->modelMail	= new Model_Form_Mail( $this->env );
 	}
 
 	protected function checkId( string $mailId ): object
@@ -135,7 +142,7 @@ class Controller_Manage_Form_Mail extends Controller{
 
 	protected function checkIsPost()
 	{
-		if( !$this->env->getRequest()->getMethod()->isPost() )
+		if( !$this->request->getMethod()->isPost() )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 }

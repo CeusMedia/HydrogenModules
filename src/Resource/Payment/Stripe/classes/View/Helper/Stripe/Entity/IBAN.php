@@ -3,40 +3,67 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract{
+class View_Helper_Stripe_Entity_IBAN extends View_Helper_Stripe_Abstract
+{
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'tt';
+	protected string $iban			= '';
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'tt';
-	protected $iban;
-
-	public function render(){
+	/**
+	 *	@return		string
+	 */
+	public function render(): string
+	{
 		$parts		= str_split( trim( $this->iban ), 4 );
 		$label		= implode( ' ', $parts );
-		return HtmlTag::create( $this->nodeName, $label, array(
+		return HtmlTag::create( $this->nodeName, $label, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
-	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
+	/**
+	 *	@param		Environment		$env
+	 *	@param		$iban
+	 *	@param		string|NULL		$nodeName
+	 *	@param		string|NULL		$nodeClass
+	 *	@return		string
+	 */
+	public static function renderStatic( Environment $env, $iban, ?string $nodeName = NULL, ?string $nodeClass = NULL ): string
+	{
 		$instance	= new self( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $iban )->render();
 	}
 
-	public function set( $iban ){
+	/**
+	 *	@param		string		$iban
+	 *	@return		self
+	 */
+	public function set( string $iban ): self
+	{
 		$this->iban	= $iban;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	/**
+	 *	@param		string		$classNames
+	 *	@return		self
+	 */
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	/**
+	 *	@param		string		$nodeName
+	 *	@return		self
+	 */
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}

@@ -11,6 +11,7 @@
 	<log version="0.2.3">Added English Language Files.</log>
 	<log version="0.2.4">Improve code style.</log>
 	<log version="0.2.5">Extract AJAX actions to own controller class.</log>
+	<log version="0.2.6">Move addresses table.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -77,8 +78,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>events` (
   KEY `dateEnd` (`dateEnd`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
+	<sql type="mysql" on="update" version="0.2.6"><![CDATA[
+ALTER TABLE `<%?prefix%>addresses` RENAME TO `<%?prefix%>event_addresses`;
+]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>addresses`;
+DROP TABLE IF EXISTS `<%?prefix%>event_addresses`;
 DROP TABLE IF EXISTS `<%?prefix%>events`;
 ]]></sql>
 </module>

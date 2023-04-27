@@ -27,10 +27,10 @@ class Hook_Manage_Page extends Hook
 				$page->identifier   = $parent->identifier.'/'.$page->identifier;
 				$page->title		= $parent->title.' / '.$page->title;
 			}
-			$list[$page->title.$nr]	= (object) array(
+			$list[$page->title.$nr]	= (object) [
 				'title'	=> $page->title,
 				'value'	=> './'.$page->identifier,
-			);
+			];
 		}
 		if( $list ){
 			ksort( $list );

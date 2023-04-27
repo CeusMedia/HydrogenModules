@@ -1,11 +1,23 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Logic_Member
 {
-	protected static $instance;
+	protected static Logic_Member $instance;
 
+	protected Environment $env;
+	protected MessengerResource $messenger;
+	protected Model_User $modelUser;
+	protected Model_User_Relation $modelRelation;
+	protected ?string $userId;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
@@ -13,19 +25,19 @@ class Logic_Member
 		return self::$instance;
 	}
 
-	public function getRelatedUserIds( $userId, $status = NULL )
+	public function getRelatedUserIds( string $userId, $status = NULL ): array
 	{
 		$userIds	= [];
-		$relations	= $this->modelRelation->getAllByIndices( array(
+		$relations	= $this->modelRelation->getAllByIndices( [
 			'fromUserId'	=> $userId,
-			'status'		=> $status ? $status : "!0",
-		) );
+			'status'		=> $status ?: "<> 0",
+		] );
 		foreach( $relations as $relation )
 			$userIds[]	= $relation->toUserId;
-		$relations	= $this->modelRelation->getAllByIndices( array(
+		$relations	= $this->modelRelation->getAllByIndices( [
 			'toUserId'		=> $userId,
-			'status'		=> $status ? $status : "!0",
-		) );
+			'status'		=> $status ?: "<> 0",
+		] );
 		foreach( $relations as $relation )
 			$userIds[]	= $relation->fromUserId;
 		return $userIds;
@@ -38,10 +50,10 @@ class Logic_Member
 		$userIds	= [];
 
 		$query		= str_replace( ' ', '%', trim( $query ) );
-		$conditions	= array(
+		$conditions	= [
 			'status'	=> '>= '.Model_User::STATUS_UNCONFIRMED,
 			'username'	=> '%'.$query.'%'
-		);
+		];
 		$byUsername	= $this->modelUser->getAll( $conditions, ['username' => 'ASC'] );
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
@@ -57,12 +69,12 @@ class Logic_Member
 		return $userIds;
 	}
 
-	public function getUserRelation( $currentUserId, $relatedUserId, $status = NULL )
+	public function getUserRelation( string $currentUserId, string $relatedUserId, $status = NULL ): ?object
 	{
-		$conditions	= array(
+		$conditions	= [
 			'fromUserId'	=> $currentUserId,
 			'toUserId'		=> $relatedUserId,
-		);
+		];
 		if( !is_null( $status ) )
 			$conditions['status']	= $status;
 		$relation	= $this->modelRelation->getByIndices( $conditions );
@@ -70,10 +82,10 @@ class Logic_Member
 			$relation->direction	= 'out';
 			return $relation;
 		}
-		$conditions	= array(
+		$conditions	= [
 			'fromUserId'	=> $relatedUserId,
 			'toUserId'		=> $currentUserId,
-		);
+		];
 		if( !is_null( $status ) )
 			$conditions['status']	= $status;
 		$relation	= $this->modelRelation->getByIndices( $conditions );
@@ -84,7 +96,7 @@ class Logic_Member
 		return NULL;
 	}
 
-	public function getUsersWithRelations( $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
+	public function getUsersWithRelations( string $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
 	{
 		$key	= array_search( $currentUserId, $userIds );
 		if ( $key !== FALSE )
@@ -103,9 +115,13 @@ class Logic_Member
 	{
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	protected function __construct( Environment $env )
 	{
-		$this->env		= $env;
+		$this->env				= $env;
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelRelation	= new Model_User_Relation( $this->env );

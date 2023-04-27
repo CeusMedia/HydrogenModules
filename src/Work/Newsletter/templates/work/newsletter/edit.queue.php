@@ -19,18 +19,18 @@ $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 
 $list	= [];
 
-$buttonRunDisabled	= HtmlTag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', array(
+$buttonRunDisabled	= HtmlTag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-success disabled',
-) );
-$buttonStopDisabled	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
+] );
+$buttonStopDisabled	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-warning disabled',
-) );
-$buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
+] );
+$buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-danger disabled',
-) );
+] );
 
 foreach( $queues as $queue ){
 //	print_m( $queue);die;
@@ -48,18 +48,18 @@ foreach( $queues as $queue ){
 		Progress::BAR_CLASS_DANGER
 	);
 
-	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', array(
+	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-success',
-	) );
-	$buttonStop	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', array(
+	] );
+	$buttonStop	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-warning',
-	) );
-	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', array(
+	] );
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-danger',
-	) );
+	] );
 
 	$buttons	= [$buttonRunDisabled, $buttonStopDisabled, $buttonCancelDisabled];
 	if( $queue->status == 0 )
@@ -70,9 +70,9 @@ foreach( $queues as $queue ){
 
 	$creator	= '-';
 	if( $queue->creatorId && $queue->creator ){
-		$creator	= HtmlTag::create( 'abbr', $queue->creator->username, array(
+		$creator	= HtmlTag::create( 'abbr', $queue->creator->username, [
 			'title'	=> $queue->creator->firstname.' '.$queue->creator->surname
-		) );
+		] );
 	}
 
 	$percent	= round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ).'%';
@@ -89,7 +89,7 @@ foreach( $queues as $queue ){
 	) );
 }
 $columnGroup	= HtmlElements::columnGroup( ['100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/] );
-$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 	'Queue',
 	'Empfänger',
 	'Zustand',
@@ -98,7 +98,7 @@ $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
 	'Ersteller',
 	'erstellt vor',
 //	'Fortschritt',
-) ) );
+] ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, ['class' => 'table table-striped tabled-fixed'] );
 
@@ -131,12 +131,12 @@ if( $letterQueue ){
 		$buttonSend		= '<a class="btn btn-small btn-success" href="'.$urlSend.'">'.$labelLetterButtonSend.'</a>';
 		$buttonRemove	= '<a class="btn btn-small btn-danger" href="'.$urlRemove.'">'.$labelLetterButtonRemove.'</a>';
 		$buttonView		= '<a class="btn btn-small" href="'.$urlView.'" target="_blank">'.$labelLetterButtonView.'</a>';
-		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', array(
+		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', [
 			$readerLetter->reader->firstname.' '.$readerLetter->reader->surname,
 			$readerLetter->reader->email,
 			$words->letterStates[$readerLetter->status],
 			$buttonView.' '.$buttonSend.' '.$buttonRemove
-		) ).'</td></tr>';
+		] ).'</td></tr>';
 	}
 	$columns	= HtmlElements::ColumnGroup( "35%", "25%", "15%", "25%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';

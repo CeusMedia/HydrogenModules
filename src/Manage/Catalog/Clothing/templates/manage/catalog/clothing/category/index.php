@@ -19,9 +19,9 @@ $panelFilter	= '
 
 $rows	= [];
 foreach( $categories as $category ){
-	$link	= HtmlTag::create( 'a', $category->title, array(
+	$link	= HtmlTag::create( 'a', $category->title, [
 		'href'	=> './manage/catalog/clothing/category/edit/'.$category->categoryId,
-	) );
+	] );
 	$rows[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $link, ['class' => 'cell-category-title'] ),
 	) );
@@ -29,10 +29,10 @@ foreach( $categories as $category ){
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-fixed'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neue Kategorie', array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neue Kategorie', [
 	'href'	=> './manage/catalog/clothing/category/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $panelList	= '
 <div class="content-panel">

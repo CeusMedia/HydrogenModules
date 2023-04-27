@@ -17,27 +17,27 @@ if( $documents ){
 
 		$modifiedAt	= max( $document->createdAt, $document->modifiedAt );
 		$modifiedAt	= 'vor '.$phraser->convert( $modifiedAt, TRUE );
-/*		$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', array(
+/*		$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', [
 			'href'	=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small not-btn-info',
 			'title'	=> 'anzeigen',
-		) );*/
-		$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', array(
+		] );*/
+		$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', [
 			'href'	=> './work/mission/downloadDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small btn-info',
 			'title'	=> 'runterladen',
-		) );
-		$buttonRemove	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i>', array(
+		] );
+		$buttonRemove	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i>', [
 			'href'	=> './work/mission/removeDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small btn-inverse',
 			'title'	=> 'entfernen',
-		) );
+		] );
 		$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload.$buttonRemove], ['class' => 'btn-group'] );
-		$label			= HtmlTag::create( 'a', $document->filename, array(
+		$label			= HtmlTag::create( 'a', $document->filename, [
 			'href'		=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'target'	=> '_blank',
 			'class'		=> NULL,
-		) );
+		] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $label, ['class' => 'cell-document-title'] ),
 			HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-document-createdAt'] ),

@@ -5,43 +5,48 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'tt';
-	protected $bic;
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'tt';
+	protected object $bic;
 
-	public function render(){
-		$parts	= array(
+	public function render(): string
+	{
+		$parts	= [
 			substr( $this->bic, 0, 4 ),
 			substr( $this->bic, 4, 2 ),
 			substr( $this->bic, 6, 2 ),
 			substr( $this->bic, 8, 3 ),
-		);
+		];
 		$label		= implode( ' ', $parts );
-		return HtmlTag::create( $this->nodeName, $label, array(
+		return HtmlTag::create( $this->nodeName, $label, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
-	static public function renderStatic( Environment $env, $iban, $nodeName = NULL, $nodeClass = NULL ){
+	public static function renderStatic( Environment $env, string $iban, ?string $nodeName = NULL, ?string $nodeClass = NULL ): string
+	{
 		$instance	= new self( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $iban )->render();
 	}
 
-	public function set( $bic ){
+	public function set( object $bic ): self
+	{
 		$this->bic	= $bic;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}

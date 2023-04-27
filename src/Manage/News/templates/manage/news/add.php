@@ -11,15 +11,15 @@ $optStatus	= HtmlElements::Options( $words['states'], $news->status );
 
 $env->getPage()->js->addScriptOnReady( 'ModuleNewsEditor.init();' );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './manage/news',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+] );
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 
 $editorClass	= View_Manage_News::getEditorClass( $env );
 
@@ -51,10 +51,10 @@ return '
 				<textarea name="content" id="input_content" class="span12 '.$editorClass.'" data-tinymce-mode="minimal" rows="12">'.htmlentities( $news->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 			<br/>
-			'.HtmlTag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', [
 				$buttonAdd,
 				$buttonSave,
-			) ), ['class' => 'buttonbar'] ).'
+			] ), ['class' => 'buttonbar'] ).'
 		</form>
 	</div>
 </div>';

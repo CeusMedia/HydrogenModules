@@ -21,18 +21,18 @@ if( $timer ){
 	$buttonStop		= '<a href="./work/time/stop/'.$timer->workTimerId.$from.'" class="btn not-btn-large btn-danger"><i class="icon-stop icon-white"></i> abschließen</a>';
 	$buttonEdit		= '<a href="./work/time/edit/'.$timer->workTimerId.$from.'" class="btn"><i class="fa fa-fw fa-pencil"></i> bearbeiten</a>';
 
-	$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
+	$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 		'href'	=> './manage/project/view/'.$timer->project->projectId,
 		'class'	=> 'autocut',
-	) );
+	] );
 	$linkRelation	= HtmlTag::create( 'em', 'Nicht zugeordnet.', ['class' => 'muted'] );
 	if( $timer->relationTitle ){
 		$linkRelation	= $timer->relationTitle;
 		if( $timer->relationLink )
-			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
+			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, [
 				'href'	=> $timer->relationLink,
 				'class'	=> 'autocut',
-			) );
+			] );
 	}
 	$labelType	= $timer->type ? $timer->type : 'Zuordnung';
 	$seconds	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );

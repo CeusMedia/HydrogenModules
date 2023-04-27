@@ -1,12 +1,19 @@
 <?php
-class View_Manage_My_Mangopay_Card extends View_Manage_My_Mangopay{
+class View_Manage_My_Mangopay_Card extends View_Manage_My_Mangopay
+{
+	public function edit(): void
+	{
+	}
 
-	public function edit(){}
+	public function index(): void
+	{
+	}
 
-	public function index(){}
+	public function payOut(): void
+	{
+	}
 
-	public function payOut(){}
-
-	public function view(){}
-
+	public function view(): void
+	{
+	}
 }

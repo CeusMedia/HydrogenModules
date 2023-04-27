@@ -8,13 +8,13 @@ use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 $pagination	= "";
 if( $limit && $total > $limit )
 {
-	$options	= array(
+	$options	= [
 		'uri'	=> './admin/user/index/'.$limit.'/',
 		'keyRequest'	=> '',
 		'keyParam'		=> '',
 		'keyOffset'		=> '',
 		'keyAssign'		=> '',
-	);
+	];
 	$pagination	= new HtmlPagination( $options );
 	$pagination	= $pagination->build( $total, $limit, $offset );
 }
@@ -27,7 +27,7 @@ if( count( $users ) ){
 	$rows	= [];
 	foreach( $users as $nr => $user ){
 
-		$classes	= array( 'user' );
+		$classes	= ['user'];
 		$classes[]	= "role role".$user->roleId;
 		$classes[]	= "status".$user->status;
 
@@ -49,7 +49,7 @@ if( count( $users ) ){
 		$label	= $user->username;
 		$url	= './admin/user/edit/'.$user->userId;
 		$alt	= sprintf( $words['indexList']['alt-user'], $user->username );
-		$attr	= array( 'href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt );
+		$attr	= ['href' => $url, 'class' => $classes, 'alt' => $alt, 'title' => $alt];
 		$link	= HtmlTag::create( 'a', $label, $attr );
 		$line	= sprintf(
 			$line,

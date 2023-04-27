@@ -107,7 +107,7 @@ class Controller_Admin_Role extends Controller
 		}
 
 		$modelRight	= new Model_Role_Right( $this->env );
-		$orders		= array( 'controller' => 'ASC', 'action' => 'ASC' );
+		$orders		= ['controller' => 'ASC', 'action' => 'ASC'];
 		$this->addData( 'rights', $modelRight->getAllByIndex( 'roleId', $roleId, $orders ) );
 
 		$this->addData( 'roleId', $roleId );

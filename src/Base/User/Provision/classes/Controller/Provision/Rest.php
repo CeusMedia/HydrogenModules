@@ -30,10 +30,10 @@ class Controller_Provision_Rest extends Controller
 
 	public function handleJsonErrorResponse( $message, $code = 0 ): void
 	{
-		$this->handleJsonResponse( 'error', array(
+		$this->handleJsonResponse( 'error', [
 			'message'	=> $message,
 			'code'		=> $code,
-		) );
+		] );
 	}
 
 	/**

@@ -6,7 +6,7 @@ $env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
 
 $w				= (object) $words['add'];
 
-$optStatus		= $words['status'] + array( '_selected' => $user->status );
+$optStatus		= $words['status'] + ['_selected' => $user->status];
 
 $script		= '
 $(document).ready(function(){

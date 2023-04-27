@@ -10,11 +10,11 @@ $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $blocksWithin = $this->getData( 'blocksWithin', [] ) ){
 	$list	= [];
 	foreach( $blocksWithin as $identifier => $item ){
-		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
-		), array(
+		], [
 			'identifier'	=> $item->identifier,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )

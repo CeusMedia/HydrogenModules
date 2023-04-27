@@ -32,10 +32,10 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 			];
 			$buttons[]	= HtmlTag::create( 'a', $label, $attributes );
 		}
-		return HtmlTag::create( 'div', $buttons, array(
+		return HtmlTag::create( 'div', $buttons, [
 			'id'	=> 'day-controls-btn-group',
 			'class' => 'btn-group',
-		) );
+		] );
 	}
 
 	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ): string
@@ -54,7 +54,7 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 
 	protected function renderDayLoadIndicator( $number, $max, bool $useInfo = FALSE ): string
 	{
-		$max		= $max < 18 ? 18 : $max;														//  max is atleast 18
+		$max		= max( $max, 18 );														//  max is at least 18
 		$ratio		= $number / $max;
 		if( $useInfo ){
 			$width		= "100%";																	//  

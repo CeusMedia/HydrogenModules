@@ -41,7 +41,7 @@ $tabsContent	= $this->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $cu
 
 $listSents	= '<em><small class="muted">Keine.</small></em>';
 
-$tabTemplates	= array(
+$tabTemplates	= [
 	0	=> 'details',
 	1	=> 'html',
 	2	=> 'text',
@@ -50,7 +50,7 @@ $tabTemplates	= array(
 	5	=> 'queue',
 	6	=> 'history',
 	7	=> 'statistics',
-);
+];
 $content	= "Invalid tab: ".$currentTab;
 if( array_key_exists( $currentTab, $tabTemplates ) )
 	$content	= $view->loadTemplate( 'work/newsletter', 'edit.'.$tabTemplates[$currentTab] );

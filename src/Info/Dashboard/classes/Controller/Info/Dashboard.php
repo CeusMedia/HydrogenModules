@@ -1,12 +1,14 @@
 <?php
-
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Dashboard extends Controller
 {
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 	protected Logic_Info_Dashboard $logic;
 	protected Model_Dashboard $model;
 	protected array $panels					= [];
@@ -115,7 +117,7 @@ class Controller_Info_Dashboard extends Controller
 
 	public function registerPanel( $panelId, $data )
 	{
-		$data		= array_merge( array(
+		$data		= array_merge( [
 			'id'		=> $panelId,
 			'url'		=> NULL,
 			'title'		=> 'Untitled',
@@ -126,7 +128,7 @@ class Controller_Info_Dashboard extends Controller
 			'rank'		=> '50',
 			'icon'		=> NULL,
 			'refresh'	=> 0
-		), $data );
+		], $data );
 		$this->panels[$panelId]	= (object) $data;
 	}
 
@@ -139,9 +141,9 @@ class Controller_Info_Dashboard extends Controller
 				$this->restart( NULL, TRUE );
 			}
 			$this->model->remove( $dashboardId );
-			$dashboard	= $this->model->getByIndices( array(
+			$dashboard	= $this->model->getByIndices( [
 				'userId'		=> $this->userId,
-			), ['modifiedAt' => 'DESC'] );
+			], ['modifiedAt' => 'DESC'] );
 			if( $dashboard )
 				$this->logic->setUserDashboard( $this->userId, $dashboard->dashboardId );
 			$this->messenger->noteSuccess( $this->messages->successDashboardRemoved, $dashboard->title );
@@ -186,7 +188,7 @@ class Controller_Info_Dashboard extends Controller
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
-			if( !( $dashboard = $this->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
+			if( !( $dashboard = $this->logic->checkUserDashboard( $this->userId, $dashboardId, FALSE ) ) ){
 				$this->messenger->noteError( $this->messages->errorInvalidUserDashboard );
 				$this->restart( NULL, TRUE );
 			}

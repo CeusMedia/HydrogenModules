@@ -4,15 +4,34 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Time_Analysis extends View
 {
-	protected $modelTimer;
-	protected $modelProject;
+	protected Model_Work_Timer $modelTimer;
+	protected Model_Project $modelProject;
 
-	public function add(){}
+	/**
+	 *	@return void
+	 */
+	public function add(): void
+	{
+	}
 
-	public function edit(){}
+	/**
+	 *	@return void
+	 */
+	public function edit(): void
+	{
+	}
 
-	public function index(){}
+	/**
+	 *	@return void
+	 */
+	public function index(): void
+	{
+	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

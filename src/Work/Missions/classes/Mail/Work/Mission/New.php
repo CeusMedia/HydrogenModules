@@ -3,8 +3,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 {
-	protected $languageSection	= 'mail-new';
-	protected $helperFacts;
+	protected ?string $languageSection				= 'mail-new';
+	protected ?View_Helper_Mail_Facts $helperFacts	= NULL;
 
 	public function generate(): self
 	{
@@ -18,10 +18,10 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		return $this;
 	}
 
-	public function prepareFacts( $data )
+	public function prepareFacts( array $data ): void
 	{
 		$mission	= $data['mission'];
-		$this->helperFacts	= new View_Helper_Mail_Facts( $this->env );
+		$this->helperFacts	= new View_Helper_Mail_Facts();
 		$this->helperFacts->setLabels( (array) $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 
@@ -76,7 +76,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	{
 		$data			= $this->data;
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
 		$url			= $this->baseUrl.'work/mission/'.$mission->missionId;
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
@@ -87,27 +87,27 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 
-		$data	= array_merge( $data, array(
+		$data	= array_merge( $data, [
 			'baseUrl'	=> $this->baseUrl,
 			'words'		=> $this->words,
-			'values'	=> array(
+			'values'	=> [
 				'type'		=> $this->labelsTypes[$mission->type],
 				'modifier'	=> $this->renderUser( $this->modelUser->get( $mission->modifierId ) ),
 				'url'		=> $url,
 				'link'		=> HtmlTag::create( 'a', $mission->title, ['href' => $url] ),
-				'today'		=> array(
+				'today'		=> [
 					'long'	=> HtmlTag::create( 'span', $dateFull, ['class' => 'text-date-full'] ),
 					'short'	=> HtmlTag::create( 'span', date( $formatDate ), ['class' => 'text-date-short'] ),
-				),
+				],
 				'content'	=> $content,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'facts'		=> $this->helperFacts->render().' ',
-			),
-			'texts'		=> array(
+			],
+			'texts'		=> [
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
-			)
-		) );
+			]
+		] );
 		return $this->view->loadContentFile( 'mail/work/mission/new.html', $data );
 	}
 
@@ -115,7 +115,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	{
 		$data			= $this->data;
 		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
-		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	kriss: realize date format in module config
+		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
 		$modifier		= $this->modelUser->get( $mission->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
@@ -125,26 +125,26 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= strip_tags( $mission->content );
 
-		$data	= array_merge( $data, array(
+		$data	= array_merge( $data, [
 			'baseUrl'	=> $this->baseUrl,
 			'words'		=> $this->words,
-			'values'	=> array(
+			'values'	=> [
 				'type'		=> $this->labelsTypes[$mission->type],
 				'modifier'	=> $this->renderUserAsText( $modifier ),
 				'link'		=> $this->baseUrl.'work/mission/'.$mission->missionId,
-				'today'		=> array(
+				'today'		=> [
 					'long'	=> $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth,
 					'short'	=> date( $formatDate ),
-				),
+				],
 				'content'	=> $content,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'facts'		=> $this->helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render()
-			),
-			'texts'		=> array(
+			],
+			'texts'		=> [
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
-			)
-		) );
+			]
+		] );
 		return $this->view->loadContentFile( 'mail/work/mission/new.txt', $data );
 	}
 }

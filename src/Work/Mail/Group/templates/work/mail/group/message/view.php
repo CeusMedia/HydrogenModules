@@ -43,10 +43,10 @@ if( !$message->html )
 	$fieldHtml	= '';
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 	'href'	=> './work/mail/group/message',
 	'class'	=> 'btn',
-) );
+] );
 
 $iconParse		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 $buttonParse	= '';

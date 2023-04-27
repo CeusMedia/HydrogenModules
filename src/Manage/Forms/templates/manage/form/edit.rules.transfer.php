@@ -19,11 +19,11 @@ if( $transferRules ){
 		$ruleId		= $rule->formTransferRuleId;
 		$target		= $transferTargets[$rule->formTransferTargetId];
 
-		$buttonTest	= Html::create( 'button', $iconTest, array(
+		$buttonTest	= Html::create( 'button', $iconTest, [
 			'type'	=> 'button',
 			'id'	=> 'button-test-'.$ruleId,
 			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
-		), ['rule-id' => $ruleId] );
+		], ['rule-id' => $ruleId] );
 
 		$optTransferTarget	= [];
 		foreach( $transferTargets as $item )
@@ -59,10 +59,10 @@ if( $transferRules ){
 		$modalTrigger->setAttributes( ['class' => 'btn not-btn-primary btn-small'] );
 
 
-		$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+		$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', [
 			'href'	=> './manage/form/removeTransferRule/'.$form->formId.'/'.$rule->formTransferRuleId,
 			'class'	=> 'btn btn-inverse btn-small',
-		) );
+		] );
 		$buttons		= Html::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
 		$listRules[]	= Html::create( 'tr', array(
 			Html::create( 'td', $rule->title ),

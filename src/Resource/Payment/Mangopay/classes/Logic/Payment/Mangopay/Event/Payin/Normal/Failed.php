@@ -2,10 +2,10 @@
 class Logic_Payment_Mangopay_Event_Payin_Normal_Failed extends Logic_Payment_Mangopay_Event_Payin_Normal{
 
 	public function handle(){
-		$indices	= array(
+		$indices	= [
 			'status' 	=> Model_Mangopay_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
-		);
+		];
 		$payin		= $this->entity;
 		$data		= $this->modelPayin->getByIndices( $indices );
 		if( !$data )

@@ -1,15 +1,12 @@
 <?php
 use CeusMedia\Mail\Mailbox;
 use CeusMedia\Mail\Mailbox\Connection;
-use CeusMedia\Mail\Mailbox\Mail;
-use CeusMedia\Mail\Mailbox\Search;
-use CeusMedia\Mail\Message;
 
 abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connector_Abstract implements Logic_Import_Connector_Interface
 {
-	protected $connection;
+	protected ?Mailbox $mailbox		= NULL;
 
-	protected $mailbox;
+	protected Connection $resource;
 
 	public function connect()
 	{
@@ -23,13 +20,14 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 			die( 'Error: No mailbox user name defined.' );
 		if( !$this->connection->authPassword )
 			die( 'Error: No mailbox user password defined.' );
-		$connection	= new Connection(
+		$this->resource	= new Connection(
 			$this->connection->hostName,
 			$this->connection->authUsername,
 			$this->connection->authPassword
 		);
-		$connection->setSecure( TRUE, TRUE )->connect();
-		$this->mailbox	= new Mailbox( $connection );
+		$this->resource->setSecure( TRUE, TRUE );
+		$this->resource->connect();
+		$this->mailbox	= new Mailbox( $this->resource );
 		return $this;
 	}
 
@@ -37,18 +35,22 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 	{
 		if( !$this->connection || !$this->mailbox )
 			throw new RuntimeException( 'No connection set') ;
-		$this->mailbox->disconnect();
-
+		$this->resource->disconnect();
 	}
 
-	public function renameTo( $id, $newName )
+	public function renameTo( int $mailId, string $newName ): bool
 	{
-
+		return FALSE;
 	}
 
-	public function moveTo( $id, $target )
+	/**
+	 *	@param		integer		$mailId			Mail UID
+	 *	@param		string		$targetFolder	Target folder, encoded as UTF-8, will be encoded to UTF-7-IMAP internally
+	 *	@return		bool
+	 */
+	public function moveTo( int $mailId, string $targetFolder ): bool
 	{
-
+		return $this->mailbox->moveMail( $mailId, $targetFolder, TRUE );
 	}
 
 	public function getFolders( bool $recursive = FALSE ): array

@@ -3,16 +3,20 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 {
-	protected $ownerId		= NULL;
-	protected $workerId		= NULL;
-	protected $status		= NULL;
-	protected $projectId	= NULL;
-	protected $module		= NULL;
-	protected $moduleId		= NULL;
-	protected $buttons		= ['start', 'pause', 'stop'];
-	protected $limits		= [0, 20];
-	protected $orders		= ['createdAt' => 'ASC'];
+	protected array $buttons		= ['start', 'pause', 'stop'];
+	protected array $limits			= [0, 20];
+	protected array $orders			= ['createdAt' => 'ASC'];
+	protected ?string $ownerId		= NULL;
+	protected ?string $workerId		= NULL;
+	protected ?string $status		= NULL;
+	protected ?string $projectId	= NULL;
+	protected ?string $module		= NULL;
+	protected ?string $moduleId		= NULL;
 
+	/**
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	public function render(): string
 	{
 		$conditions	= [];
@@ -43,43 +47,52 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 			$time			= $this->renderTimes( $timer );
 			$buttonGroup	= $this->renderButtons( $timer );
 
-			$buttons		= HtmlTag::create( 'div', array(
+			$buttons		= HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', $buttonGroup, ['class' => 'span4']  ),
 				HtmlTag::create( 'div', $time , ['class' => 'span8', 'style' => 'text-align: right'] ),
-			), ['class' => 'row-fluid'] );
+			], ['class' => 'row-fluid'] );
 
 			$rowClass		= $timer->status == 1 ? 'success' : ( $timer->status == 2 ? 'notice' : '' );
-			$rows[]			= HtmlTag::create( 'tr', array(
-				HtmlTag::create( 'td', array(
+			$rows[]			= HtmlTag::create( 'tr', [
+				HtmlTag::create( 'td', [
 					$title,
 					$worker,
 					$linkRelation,
 					$buttons
-				) ),
-			), ['class' => $rowClass] );
+				] ),
+			], ['class' => $rowClass] );
 		}
-		$tableHeads	= HtmlTag::create( 'tr', array(
+		$tableHeads	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'th', 'Aktivität' ),
-		) );
-		$table		= HtmlTag::create( 'table', array(
+		] );
+		$table		= HtmlTag::create( 'table', [
 			HtmlTag::create( 'thead', $tableHeads ),
 			HtmlTag::create( 'tbody', $rows ),
-		), array(
+		], [
 			'class'	=> 'table table-striped table-condensed',
 			'style'	=> 'table-layout: fixed'
-		) );
+		] );
 		$script		= 'WorkTimer.init(".timer-short-list", "&nbsp;");';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		return $table;
 	}
 
-	public function setButtons( $buttons ): self
+	/**
+	 *	@param		array		$buttons
+	 *	@return		self
+	 */
+	public function setButtons( array $buttons ): self
 	{
 		$this->buttons	= $buttons;
 		return $this;
 	}
 
-	public function setLimits( $limit, $offset = 0 ): self
+	/**
+	 *	@param		int			$limit
+	 *	@param		int			$offset
+	 *	@return		self
+	 */
+	public function setLimits( int $limit, int $offset = 0 ): self
 	{
 		$limit			= min( 100, max( 1, $limit ) );
 		$offset			= max( 0, $offset );
@@ -87,13 +100,21 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		return $this;
 	}
 
-	public function setModule( $module ): self
+	/**
+	 *	@param		string		$module
+	 *	@return		self
+	 */
+	public function setModule( string $module ): self
 	{
 		$this->module		= $module;
 		return $this;
 	}
 
-	public function setModuleId( $moduleId ): self
+	/**
+	 *	@param		string		$moduleId
+	 *	@return		self
+	 */
+	public function setModuleId( string $moduleId ): self
 	{
 		if( !$this->module )
 			throw new RuntimeException( 'No module set beforehand' );
@@ -101,19 +122,31 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		return $this;
 	}
 
-	public function setOrders( $orders ): self
+	/**
+	 *	@param		array		$orders
+	 *	@return		self
+	 */
+	public function setOrders( array $orders ): self
 	{
 		$this->orders		= $orders;
 		return $this;
 	}
 
-	public function setOwnerId( $userId ): self
+	/**
+	 *	@param		string		$userId
+	 *	@return		self
+	 */
+	public function setOwnerId( string $userId ): self
 	{
 		$this->ownerId	= $userId;
 		return $this;
 	}
 
-	public function setProjectId( $projectId ): self
+	/**
+	 *	@param		string		$projectId
+	 *	@return		self
+	 */
+	public function setProjectId( string $projectId ): self
 	{
 		$this->projectId	= $projectId;
 		return $this;
@@ -125,7 +158,11 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		return $this;
 	}
 
-	public function setWorkerId( $userId ): self
+	/**
+	 *	@param		string		$userId
+	 *	@return		self
+	 */
+	public function setWorkerId( string $userId ): self
 	{
 		$this->workerId	= $userId;
 		return $this;
@@ -133,7 +170,12 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 
 	//  --  PROTECTED  --  //
 
-	protected function renderButtons( $timer ): string
+	/**
+	 *	@param		object		$timer
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	protected function renderButtons( object $timer ): string
 	{
 		$helperButtons	= new View_Helper_Work_Time_Buttons( $this->env );
 		$helperButtons->setUserId( $this->userId );
@@ -141,53 +183,67 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		$helperButtons->setSize( 'mini' );
 		$helperButtons->setFrom( $this->from );
 		$helperButtons->setTimerId( $timer->workTimerId );
-		$buttonGroup	= $helperButtons->render();
-		return $buttonGroup;
+		return $helperButtons->render();
 	}
 
-	protected function renderRelationLink( $timer ): string
+	/**
+	 *	@param		object		$timer
+	 *	@return		string
+	 */
+	protected function renderRelationLink( object $timer ): string
 	{
 		if( !$timer->moduleId )
 			return '';
-		$labelType		= HtmlTag::create( 'span', $timer->type.':', array(
+		$labelType		= HtmlTag::create( 'span', $timer->type.':', [
 			'class' => 'muted',
-		) );
-		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+		] );
+		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), [
 			'href'		=> $timer->relationLink,
 			'class'		=> 'title autocut',
-		) );
+		] );
 		$linkRelation	= HtmlTag::create( 'small', [$labelType, $linkRelation] );
 		return HtmlTag::create( 'div', $linkRelation, ['class' => 'autocut'] );
 	}
 
-	protected function renderTimes( $timer ): string
+	/**
+	 *	@param		object		$timer
+	 *	@return		string
+	 */
+	protected function renderTimes( object $timer ): string
 	{
 		$secondsPlanned	= $timer->secondsPlanned;
 		$secondsNeeded	= $timer->status == 1 ? $timer->secondsNeeded + ( time() - $timer->modifiedAt ) : $timer->secondsNeeded;
 		$classes		= [];
 		if( $timer->status == 1 )
 			$classes[]	= 'timer-short-list';
-		$timeNeeded		= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsNeeded, '&nbsp;' ), array(
+		$timeNeeded		= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsNeeded, '&nbsp;' ), [
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsNeeded,
-		) );
+		] );
 		$classes	= [];
-		$timePlanned	= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsPlanned, '&nbsp;' ), array(
+		$timePlanned	= HtmlTag::create( 'small', View_Helper_Work_Time::formatSeconds( $secondsPlanned, '&nbsp;' ), [
 			'class'			=> join( ' ', $classes ),
 			'data-value'	=> $secondsPlanned,
-		) );
+		] );
 		return $timeNeeded.' / '.$timePlanned;
 	}
 
-	protected function renderTitleLink( $timer ): string
+	/**
+	 *	@param		object		$timer
+	 *	@return		string
+	 */
+	protected function renderTitleLink( object $timer ): string
 	{
 		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
 		$title	= HtmlTag::create( 'a', $title, ['href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from] );
-		$title	= HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
-		return $title;
+		return HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
 	}
 
-	protected function renderWorker( $timer ): string
+	/**
+	 *	@param		object		$timer
+	 *	@return		string
+	 */
+	protected function renderWorker( object $timer ): string
 	{
 		if( !class_exists( 'View_Helper_Member' ) )
 			return '';

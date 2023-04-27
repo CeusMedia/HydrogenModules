@@ -16,21 +16,21 @@ $disableParent	= $category->parentId == 0 ? 'disabled="disabled"' : "";
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> "./manage/catalog/category",
 	'class'	=> 'btn btn-small'
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'
-) );
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.' '.$w->buttonRemove, array(
+] );
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.' '.$w->buttonRemove, [
 	'disabled'	=> $nrArticles ? 'disabled' : NULL,
 	'type'		=> 'button',
 	'class'		=> "btn btn-small btn-danger",
 	'onclick'	=> "document.location.href='./manage/catalog/category/remove/".$category->categoryId."';"
-) );
+] );
 
 return '
 		<div class="content-panel">

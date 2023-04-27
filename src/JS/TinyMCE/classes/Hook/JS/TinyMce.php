@@ -1,20 +1,18 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_TinyMce extends Hook
 {
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload )
+	public function onPageApplyModules(): void
 	{
+		/** @var WebEnvironment $env */
+		$env	= $this->env;
 		View_Helper_TinyMce::load( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 
@@ -43,135 +41,130 @@ class Hook_JS_TinyMce extends Hook
 				}
 			}
 
-			$styleFormats	= array(
-				array(
+			$styleFormats	= [
+				[
 					'title'		=> 'Blöcke',
-					'items'		=> array(
-						array(
+					'items'		=> [
+						[
 							'title'				=> 'Absatz',
 							'block'				=> 'p',
-						),
-						array(
+						],
+						[
 							'title'				=> 'Textblock',
 							'block'				=> 'div',
-						),
-						array(
+						],
+						[
 							'title'				=> 'Zitatblock',
 							'block'				=> 'blockquote',
 							'wrapper'			=> TRUE,
-						),
-						array(
+						],
+						[
 							'title'				=> 'vorformatierter Text',
 							'block'				=> 'pre',
-						),
-						array(
+						],
+						[
 							'title'				=> 'Abbildung',
 							'block'				=> 'figure',
 							'wrapper'			=> TRUE,
-						),
-						array(
+						],
+						[
 							'title'				=> 'HTML5: Sektion',
 							'block'				=> 'section',
 							'wrapper'			=> TRUE,
 							'merge_siblings'	=> FALSE,
-						),
-						array(
+						],
+						[
 							'title'				=> 'HTML5: Artikel',
 							'block'				=> 'article',
 							'wrapper'			=> TRUE,
 							'merge_siblings'	=> FALSE,
-						),
-						array(
+						],
+						[
 							'title'				=> 'HTML5: Marginale',
 							'block'				=> 'aside',
 							'wrapper'			=> TRUE,
-						),
-					)
-				),
-				array(
+						],
+					]
+				],
+				[
 					'title'		=> 'Bildformatierung',
-					'items'		=> array(
-						array(
+					'items'		=> [
+						[
 							'title'		=> 'Ausrichtung',
-							'items'		=> array(
-								array(
+							'items'		=> [
+								[
 									'title'		=> 'links',
 									'selector'	=> 'img',
 									'styles'	=> ['float' => 'left', 'margin' => '0 20px 10px 0px'],
-								),
-								array(
+								],
+								[
 									'title'		=> 'rechts',
 									'selector'	=> 'img',
 									'styles'	=> ['float' => 'right', 'margin' => '0 0 10px 20px'],
-								),
-							)
-						),
-						array(
+								],
+							]
+						],
+						[
 							'title'		=> 'Dekoration',
-							'items'		=> array(
-								array(
+							'items'		=> [
+								[
 									'title'		=> 'abgerundet',
 									'selector'	=> 'img',
 									'classes'	=> 'img-rounded',
-								),
-								array(
+								],
+								[
 									'title'		=> 'kreisrund',
 									'selector'	=> 'img',
 									'classes'	=> 'img-circle',
-								),
-								array(
+								],
+								[
 									'title'		=> 'Polaroid',
 									'selector'	=> 'img',
 									'classes'	=> 'img-polaroid',
-								),
-							)
-						),
-						array(
+								],
+							]
+						],
+						[
 							'title'				=> 'In Lightbox öffnen',
 							'selector'			=> 'a',
 							'classes'			=> 'fancybox-auto',
-						),
-					)
-				)
-			);
+						],
+					]
+				]
+			];
 
-			$options	= array(
+			$options	= [
 				'languages'		=> $languages,
 				'envUri'		=> $env->url,
 				'frontendUri'	=> $baseUrl,
 				'frontendTheme'	=> $env->getConfig()->get( 'layout.theme' ),
 				'language'		=> $language,
 				'styleFormats'	=> $styleFormats,
-			);
-			if(0){
+			];
+			if( 0 ){
 				$helper	= new View_Helper_TinyMce( $env );
 				$options['listImages']	= json_encode( $helper->getImageList() );
 				$options['listLinks']	= json_encode( $helper->getLinkList() );
 			}
-			$context->js->addScriptOnReady( 'ModuleJsTinyMce.configAuto('.json_encode( $options ).')' );
-			$context->js->addScriptOnReady( 'ModuleJsTinyMce.applyAuto()' );
+			$this->context->js->addScriptOnReady( 'ModuleJsTinyMce.configAuto('.json_encode( $options ).')' );
+			$this->context->js->addScriptOnReady( 'ModuleJsTinyMce.applyAuto()' );
 		}
 	}
 
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onGetAvailableContentEditor( Environment $env, object $context, object $module, array & $payload )
+	public function onGetAvailableContentEditor(): void
 	{
-		if( !empty( $payload['type'] ) && !in_array( $payload['type'], ['wys'] ) )
+		if( !empty( $this->payload['type'] ) && $this->payload['type'] !== 'wys')
 			return;
-		if( !empty( $payload['format'] ) && !in_array( $payload['format'], ['html'] ) )
+		if( !empty( $this->payload['format'] ) && $this->payload['format'] !== 'html')
 			return;
 		$editor	= (object) [
 			'key'		=> 'tinymce',
 			'label'		=> 'TinyMCE',
 			'type'		=> 'wys',
-			'format'	=> $payload['format'],
+			'format'	=> $this->payload['format'],
 			'score'		=> 5,
 		];
 		$criteria	= [
@@ -180,11 +173,11 @@ class Hook_JS_TinyMce extends Hook
 			'force'			=> 10,
 		];
 		foreach( $criteria as $key => $value )
-			if( !empty( $payload[$key] ) && strtolower( $payload[$key] ) === $editor->key )
+			if( !empty( $this->payload[$key] ) && strtolower( $this->payload[$key] ) === $editor->key )
 				$editor->score	+= $value;
 
 //		if( !empty( $payload['format'] ) ){}
 		$key	= str_pad( $editor->score * 1000, 8, '0', STR_PAD_LEFT ).'_'.$editor->key;
-		$payload['list'][$key]	= $editor;
+		$this->payload['list'][$key]	= $editor;
 	}
 }

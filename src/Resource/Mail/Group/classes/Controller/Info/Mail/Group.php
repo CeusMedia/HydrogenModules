@@ -76,10 +76,10 @@ class Controller_Info_Mail_Group extends Controller
 		$limit		= $this->session->get( $this->filterPrefix.'limit' );
 		$filterType	= $this->session->get( $this->filterPrefix.'type' );
 
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> Model_Mail_Group::STATUS_ACTIVATED,
 			'visibility'	=> Model_Mail_Group::VISIBILITY_PUBLIC,
-		);
+		];
 		if( $filterType )
 			$conditions['type']	= $filterType;
 		$orders	= ['title' => 'ASC'];
@@ -149,11 +149,11 @@ class Controller_Info_Mail_Group extends Controller
 				$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
 
 				$member	= $this->logic->getGroupMember( $memberId, FALSE );
-				$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, array(
+				$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, [
 					'member'	=> $member,
 					'group'		=> $group,
 					'action'	=> $action,
-				) );
+				] );
 				$receiver	= (object) ['email' => $member->address];
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->appendRegisteredAttachments( $mail, $language );
@@ -205,15 +205,15 @@ class Controller_Info_Mail_Group extends Controller
 					else{
 						$action	= $this->logic->registerMemberAction( 'deactivateAfterLeaving', $groupId, $memberId, $greeting );
 
-						$mail	= new Mail_Info_Mail_Group_Member_Leaving( $this->env, array(
+						$mail	= new Mail_Info_Mail_Group_Member_Leaving( $this->env, [
 							'member'	=> $member,
 							'group'		=> $group,
 							'action'	=> $action,
-						) );
-						$receiver	= (object) array(
+						] );
+						$receiver	= (object) [
 							'email'		=> $member->address,
 							'username'	=> $member->title
-						);
+						];
 						$language	= $this->env->getLanguage()->getLanguage();
 						$this->logicMail->appendRegisteredAttachments( $mail, $language );
 						$this->logicMail->handleMail( $mail, $receiver, $language );

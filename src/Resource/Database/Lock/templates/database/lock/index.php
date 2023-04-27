@@ -11,10 +11,10 @@ $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 if( count( $locks ) > 0 ){
 	$list	= [];
 	foreach( $locks as $lock ){
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 			'href'		=> './database/lock/unlock/'.$lock->lockId,
 			'class'		=> 'btn btn-mini btn-danger'
-		) );
+		] );
 		$moduleTitle	= $lock->module ? $lock->module : '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $lock->user->username, ['class' => 'lock-user'] ),
@@ -25,13 +25,13 @@ if( count( $locks ) > 0 ){
 		) );
 	}
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		$w->headUser,
 		$w->headModule,
 		$w->headTitle,
 		$w->headDate,
 		$w->headActions
-	) ) );
+	] ) );
 	$colgroup	= HtmlElements::ColumnGroup( '150px', '180px', '', '160px', '120px' );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-not-condensed'] );
 }

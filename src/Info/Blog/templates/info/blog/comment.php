@@ -9,12 +9,12 @@ if( $env->getModules()->has( 'UI_Bootstrap' ) )
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'value'		=> '1',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 
 if( $moduleConfig->get( 'comments.ajax' ) )
 	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(

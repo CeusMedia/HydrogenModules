@@ -4,19 +4,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $wf		= (object) $words['index'];
 
-$heads	= array(
+$heads	= [
 	$wf->headTitle,
 	$wf->headUsers,
 	$wf->headAccess,
 	$wf->headRegister
-);
+];
 $heads	= HtmlElements::TableHeads( $heads );
 $number	= 0;
 
 $rows	= [];
 foreach( $roles as $nr => $role )
 {
-	$classes	= array( 'role' );
+	$classes	= ['role'];
 	$classes[]	= "role".$role->roleId;
 
 	if( !( $nr++ % 10 ) )
@@ -34,10 +34,10 @@ foreach( $roles as $nr => $role )
 	if( $hasRightToEdit ){
 		$url	= './admin/role/edit/'.$role->roleId;
 		$alt	= "";#sprintf( $wf->alt-user'], $user->username );
-		$attr	= array( 'href' => $url, 'alt' => $alt, 'title' => $alt );
+		$attr	= ['href' => $url, 'alt' => $alt, 'title' => $alt];
 		$label	= HtmlTag::create( 'a', $label, $attr );
 	}
-	$label	= HtmlTag::create( 'span', $label, array( 'class' => $classes ) );
+	$label	= HtmlTag::create( 'span', $label, ['class' => $classes] );
 	$line	= sprintf(
 		$line,
 		$label,
@@ -80,9 +80,9 @@ foreach( $roles as $role )
 	if( trim( $role->description ) )
 		$label	= HtmlElements::Acronym( $role->title, htmlspecialchars( $role->description ) );
 	$link	= HtmlElements::Link( './admin/role/edit/'.$role->roleId, $label );
-	$list[]	= HtmlElements::ListItem( $link, 0, array( 'class' => 'role' ) );
+	$list[]	= HtmlElements::ListItem( $link, 0, ['class' => 'role'] );
 }
-$list	= HtmlElements::unorderedList( $list, 0, array( 'class' => 'list' ) );
+$list	= HtmlElements::unorderedList( $list, 0, ['class' => 'list'] );
 return '
 <fieldset style="width: 300px">
 	<legend>'.$wf->legend.'</legend>

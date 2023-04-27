@@ -101,10 +101,10 @@ class Logic_Payment_Stripe extends Logic
 	public function setUserIdForLocalUserId( $userId, $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
-		$relation		= $modelAccount->getByIndices( array(
+		$relation		= $modelAccount->getByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'stripe',
-		) );
+		] );
 		if( $relation ){
 			$modelAccount->edit( $relation->userPaymentAccountId, array(
 				'paymentAccountId'	=> $userId,
@@ -124,10 +124,10 @@ class Logic_Payment_Stripe extends Logic
 	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
-		$relation		= $modelAccount->getByIndices( array(
+		$relation		= $modelAccount->getByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'stripe',
-		) );
+		] );
 		if( !$relation && $strict )
 			throw new RuntimeException( 'No payment account available' );
 		if( !$relation )

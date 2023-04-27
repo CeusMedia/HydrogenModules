@@ -1,48 +1,47 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Billing extends Hook
 {
-	public static function onPageApplyModules( Environment $env, object $context, object $module, array & $payload )
+	public function onPageApplyModules(): void
 	{
-		$context->js->addScriptOnReady( 'WorkBilling.init()' );
+		$this->context->js->addScriptOnReady( 'WorkBilling.init()' );
 	}
 
-	public static function onBillingBillRegisterTab( Environment $env, object $context, object $module, array & $payload )
+	public function onBillingBillRegisterTab(): void
 	{
-//		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
-//		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
-		$modelBill	= new Model_Billing_Bill( $env );
-		$bill		= $modelBill->get( $payload['billId'] );
-		$context->registerTab( 'edit/'.$payload['billId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
-		$context->registerTab( 'breakdown/'.$payload['billId'], '<i class="fa fa-fw fa-pie-chart"></i> Aufteilung', 1 );
-		$context->registerTab( 'transaction/'.$payload['billId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 2, $bill->status == 0 );
+//		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user' );				//  load words
+//		$this->context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
+		$modelBill	= new Model_Billing_Bill( $this->env );
+		$bill		= $modelBill->get( $this->payload['billId'] );
+		$this->context->registerTab( 'edit/'.$this->payload['billId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
+		$this->context->registerTab( 'breakdown/'.$this->payload['billId'], '<i class="fa fa-fw fa-pie-chart"></i> Aufteilung', 1 );
+		$this->context->registerTab( 'transaction/'.$this->payload['billId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 2, $bill->status == 0 );
 	}
 
-	public static function onBillingPersonRegisterTab( Environment $env, object $context, object $module, array & $payload )
+	public function onBillingPersonRegisterTab(): void
 	{
-//		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
-//		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
-		$context->registerTab( 'edit/'.$payload['personId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
-//		$context->registerTab( 'transaction/'.$payload['personId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
-		$context->registerTab( 'reserve/'.$payload['personId'], '<i class="fa fa-fw fa-plus-square-o"></i> Einnahmen / Rücklagen', 1 );
-		$context->registerTab( 'expense/'.$payload['personId'], '<i class="fa fa-fw fa-minus-square-o"></i> Ausgaben', 2 );
-		$context->registerTab( 'payin/'.$payload['personId'], '<i class="fa fa-fw fa-sign-in"></i> Einzahlungen', 3 );
-		$context->registerTab( 'payout/'.$payload['personId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );
-		$context->registerTab( 'unbooked/'.$payload['personId'], '<i class="fa fa-fw fa-question-circle-o"></i> Ausstehend', 5 );
+//		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user' );				//  load words
+//		$this->context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
+		$this->context->registerTab( 'edit/'.$this->payload['personId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
+//		$this->context->registerTab( 'transaction/'.$this->payload['personId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
+		$this->context->registerTab( 'reserve/'.$this->payload['personId'], '<i class="fa fa-fw fa-plus-square-o"></i> Einnahmen / Rücklagen', 1 );
+		$this->context->registerTab( 'expense/'.$this->payload['personId'], '<i class="fa fa-fw fa-minus-square-o"></i> Ausgaben', 2 );
+		$this->context->registerTab( 'payin/'.$this->payload['personId'], '<i class="fa fa-fw fa-sign-in"></i> Einzahlungen', 3 );
+		$this->context->registerTab( 'payout/'.$this->payload['personId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );
+		$this->context->registerTab( 'unbooked/'.$this->payload['personId'], '<i class="fa fa-fw fa-question-circle-o"></i> Ausstehend', 5 );
 	}
 
-	public static function onBillingCorporationRegisterTab( Environment $env, object $context, object $module, array & $payload )
+	public function onBillingCorporationRegisterTab(): void
 	{
-//		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user' );						//  load words
-//		$context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
-		$context->registerTab( 'edit/'.$payload['corporationId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
-//		$context->registerTab( 'transaction/'.$payload['corporationId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
-		$context->registerTab( 'reserve/'.$payload['corporationId'], '<i class="fa fa-fw fa-plus-square-o"></i> Einnahmen / Rücklagen', 1 );
-		$context->registerTab( 'expense/'.$payload['corporationId'], '<i class="fa fa-fw fa-minus-square-o"></i> Ausgaben', 2 );
-		$context->registerTab( 'payin/'.$payload['corporationId'], '<i class="fa fa-fw fa-sign-out"></i> Einzahlungen', 3 );
-		$context->registerTab( 'payout/'.$payload['corporationId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );
+//		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user' );				//  load words
+//		$this->context->registerTab( '', $words->tabs['user'], 0 );								//  register main tab
+		$this->context->registerTab( 'edit/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-edit"></i> Daten', 0 );
+//		$this->context->registerTab( 'transaction/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-exchange"></i> Transaktionen', 1 );
+		$this->context->registerTab( 'reserve/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-plus-square-o"></i> Einnahmen / Rücklagen', 1 );
+		$this->context->registerTab( 'expense/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-minus-square-o"></i> Ausgaben', 2 );
+		$this->context->registerTab( 'payin/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-sign-out"></i> Einzahlungen', 3 );
+		$this->context->registerTab( 'payout/'.$this->payload['corporationId'], '<i class="fa fa-fw fa-sign-out"></i> Auszahlungen', 4 );
 	}
 }

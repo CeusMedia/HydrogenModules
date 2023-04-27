@@ -4,12 +4,16 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\View as HtmlExceptionView;
 use CeusMedia\Common\XML\Element as XmlElement;
+use MangoPay\Address;
+use MangoPay\Libraries\ResponseException;
+use MangoPay\UserLegal;
 
 class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_Mangopay
 {
-	protected Dictionary $request;
+	protected HttpRequest $request;
 	protected Logic_Payment_Mangopay $mangopay;
 	protected Dictionary $moduleConfig;
 
@@ -24,10 +28,10 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 			$this->addData( 'sellerBanks', $banks );
 		}
 		else{
-			$user	= new \MangoPay\UserLegal();
+			$user	= new UserLegal();
 			$user->CompanyNumber = NULL;
-			$user->HeadquartersAddress	= new \MangoPay\Address();
-			$user->LegalRepresentativeAddress	= new \MangoPay\Address();
+			$user->HeadquartersAddress	= new Address();
+			$user->LegalRepresentativeAddress	= new Address();
 
 		}
 		if( !isset( $user->CompanyNumber ) )
@@ -53,7 +57,8 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 					);
 					$this->mangopay->createBankAccount( $sellerUserId, $iban, $bic, $title, $address );
 				}
-				catch( \MangoPay\Libraries\ResponseException $e ){
+				/** @noinspection PhpUndefinedClassInspection */
+				catch( ResponseException $e ){
 					$this->handleMangopayResponseException( $e );
 					$this->restart( NULL );
 				}
@@ -90,7 +95,8 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 				$result	= $this->mangopay->createLegalUser( $this->request->getAll() );
 				$this->mangopay->setUserIdForLocalUserId( $result->Id, 0 );
 			}
-			catch( \MangoPay\Libraries\ResponseException $e ){
+			/** @noinspection PhpUndefinedClassInspection */
+			catch( ResponseException $e ){
 				$this->handleMangopayResponseException( $e );
 				$this->restart( NULL );
 			}

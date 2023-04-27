@@ -6,8 +6,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 {
-	protected $dashboards	= [];
-	protected $panels		= [];
+	protected array $dashboards	= [];
+	protected array $panels		= [];
 
 	public function __construct( Environment $env )
 	{
@@ -33,9 +33,9 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 					'checked'	=> in_array( $panelId, $defaultPanels ) ? "checked" : NULL,
 				) );
 				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
-				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, array(
+				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, [
 					'class'	=> 'checkbox',
-				) );
+				] );
 			}
 			ksort( $list );
 			$list	= HtmlTag::create( 'div', $list, ['style' => "padding: 0 0.5em 1em 0.5em;"] );
@@ -97,7 +97,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 	 *	@param		array		$dashboards			List of user dashboards
 	 *	@return		self
 	 */
-	public function setDashboards( $dashboards ): self
+	public function setDashboards( array $dashboards ): self
 	{
 		$this->dashboards	= $dashboards;
 		return $this;
@@ -109,7 +109,7 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 	 *	@param		array		$panels				Map of registered panels
 	 *	@return		self
 	 */
-	public function setPanels( $panels ): self
+	public function setPanels( array $panels ): self
 	{
 		$this->panels		= $panels;
 		return $this;

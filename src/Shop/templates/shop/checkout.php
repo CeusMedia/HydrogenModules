@@ -3,6 +3,12 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $address $w */
 
 $w				= (object) $words['checkout'];
 
@@ -43,10 +49,10 @@ $tabContent	= HtmlTag::create( 'div', array(
 			), ['class' => 'span6'] ),
 		), ['class' => 'row-fluid'] ),
 		$textCheckoutBottom,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$buttonPrev, ' ',
 			$buttonNext,
-		), ['class' => 'buttonbar well well-small'] ),
+		], ['class' => 'buttonbar well well-small'] ),
 	), ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
 ) );
 

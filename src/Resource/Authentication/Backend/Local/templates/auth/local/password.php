@@ -10,24 +10,24 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
-$buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'		=> './auth/local',
 	'class'		=> 'btn',
-) );
-$buttonSave			= HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, array(
+] );
+$buttonSave			= HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, [
 	'type'		=> 'submit',
 	'id'		=> 'button_save',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'sendPassword',
 	'disabled'	=> 'disabled',
-) );
-$buttonSaveBlock	= HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, array(
+] );
+$buttonSaveBlock	= HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, [
 	'type'		=> 'submit',
 	'id'		=> 'button_save',
 	'class'		=> 'btn btn-primary btn-block',
 	'name'		=> 'sendPassword',
 	'disabled'	=> 'disabled',
-) );
+] );
 
 $labelEmail	= $w->labelEmail;
 if( !empty( $w->labelEmail_info ) )
@@ -41,10 +41,10 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 		HtmlTag::create( 'form', array(
 			HTML::DivClass( 'row-fluid', array(
 				HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', array(
-					HtmlTag::create( 'label',$labelEmail, array(
+					HtmlTag::create( 'label',$labelEmail, [
 						'for'			=> 'input_password_email',
 						'class'			=> 'mandatory'
-					) ),
+					] ),
 					HtmlTag::create( 'input', NULL, array(
 						'type'			=> 'text',
 						'name'			=> 'password_email',
@@ -56,14 +56,14 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', array(
 				) )
 			) ),
 		/*	HTML::DivClass( 'buttonbar buttonbar-blocks', $buttonSave ),*/
-			HTML::DivClass( 'buttonbar', join( ' ', array(
+			HTML::DivClass( 'buttonbar', join( ' ', [
 				$buttonCancel,
 				$buttonSave,
-			) ) ),
-		), array(
+			] ) ),
+		), [
 			'action'	=> './auth/local/password',
 			'method'	=> 'post',
-		) )
+		] )
 	) ),
 ) );
 

@@ -5,7 +5,7 @@ class Model_Finance_Bank extends Model
 {
 	protected string $name		= 'finance_banks';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'bankId',
 		'userId',
 		'type',
@@ -15,14 +15,14 @@ class Model_Finance_Bank extends Model
 		'createdAt',
 		'modifiedAt',
 		'updatedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'bankId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'type',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

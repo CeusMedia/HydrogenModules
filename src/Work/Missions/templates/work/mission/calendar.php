@@ -20,19 +20,19 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
     $iconAddTask    = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 }
 
-$toolbar->addButtonGroup( 'tb_0', 'add', array(
+$toolbar->addButtonGroup( 'tb_0', 'add', [
 	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><i class="icon-plus icon-white"></i></button>
 	<ul class="dropdown-menu">
 		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
 		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
 	</ul>'
-) );
+] );
 
-$toolbar->addButtonGroup( 'tb_1', 'view-type', array(
+$toolbar->addButtonGroup( 'tb_1', 'view-type', [
 	'<button type="button" disabled="disabled" class="btn"><span id="number-total" class="badge badge-success"><i class="icon-refresh icon-white"></i></span></button>',
 	'<button type="button" id="work-mission-view-type-0" class="btn"><i class="icon-tasks"></i> Liste</button>',
 	'<button type="button" id="work-mission-view-type-1" disabled="disabled" class="btn"><i class="icon-calendar"></i> Monat</button>'
-) );
+] );
 
 $toolbar->sort();
 $buttons	= '<div id="work-mission-buttons">'.$toolbar->render().'</div><div class="clearfix"></div>';

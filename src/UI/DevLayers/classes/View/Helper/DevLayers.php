@@ -18,12 +18,12 @@ class View_Helper_DevLayers
 
 	public static function add( $id, string $label, $content, $measure = NULL )
 	{
-		self::$layers[]	= (object) array(
+		self::$layers[]	= (object) [
 			'id'		=> $id,
 			'label'		=> $label,
 			'content'	=> $content,
 			'measure'	=> $measure
-		);
+		];
 	}
 
 	public function render(): string

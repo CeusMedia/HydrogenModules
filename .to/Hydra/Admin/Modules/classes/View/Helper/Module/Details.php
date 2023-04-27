@@ -38,14 +38,14 @@ class View_Helper_Module_Details extends Abstraction
 		$tabs	= new HtmlTabs();
 		$activeTab	= 0;
 
-		$mapTabs	= array(
+		$mapTabs	= [
 			'resources'		=> 'tabResources',
 			'config'		=> 'tabConfiguration',
 			'database'		=> 'tabDatabase',
 		//	'links'			=> 'tabLinks',
 			'relations'		=> 'tabRelations',
 //			'instances'		=> 'tabInstances',
-		);
+		];
 
 		$nr			= 0;
 		$disabled	= [];
@@ -64,10 +64,10 @@ class View_Helper_Module_Details extends Abstraction
 			$nr++;
 		}
 
-		$options	= array(
+		$options	= [
 			'active'	=> $activeTab,
 			'disabled'	=> $disabled
-		);
+		];
 		$this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 		return $tabs->buildTabs( 'tabs-module' );
 	}

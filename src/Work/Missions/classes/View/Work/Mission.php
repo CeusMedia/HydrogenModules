@@ -46,7 +46,7 @@ class View_Work_Mission extends View
 		}
 	}
 
-	public static function formatSeconds( $duration, string $space = ' ' )
+	public static function formatSeconds( $duration, string $space = ' ' ): string
 	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
@@ -116,7 +116,6 @@ class View_Work_Mission extends View
 	protected function __onInit(): void
 	{
 		$page			= $this->env->getPage();
-		$session		= $this->env->getSession();
 		$config			= $this->env->getConfig();
 		$monthsLong		= array_values( (array) $this->getWords( 'months' ) );
 		$monthsShort	= array_values( (array) $this->getWords( 'months-short' ) );

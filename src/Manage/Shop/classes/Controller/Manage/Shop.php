@@ -1,15 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Shop extends Controller
 {
-	/**	@var		Logic_Shop			$logicShop			Instance of shop logic */
-	protected $logicShop;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 
-	/**	@var		Logic_ShopBridge	$logicBridge		Instance of shop bridge logic */
-	protected $logicBridge;
+	/**	@var		Logic_ShopManager		$logicShop			Instance of shop logic */
+	protected Logic_ShopManager $logicShop;
+
+	/**	@var		Logic_ShopBridge		$logicBridge		Instance of shop bridge logic */
+	protected Logic_ShopBridge $logicBridge;
 
 
 	public function index()
@@ -23,7 +30,7 @@ class Controller_Manage_Shop extends Controller
 
 		$this->addData( 'ordersNotFinished', $this->logicShop->getOrders( ['status' => [2, 3, 4, 5]], $orders ) );
 		$this->addData( 'ordersNotPayed', $this->logicShop->getOrders( ['status' => '2'], $orders ) );
-		$this->addData( 'ordersNotDelievered', $this->logicShop->getOrders( ['status' => [3, 4]], $orders ) );
+		$this->addData( 'ordersNotDelivered', $this->logicShop->getOrders( ['status' => [3, 4]], $orders ) );
 		$this->addData( 'ordersTotal', $ordersTotal );
 
 		$customers	= [];

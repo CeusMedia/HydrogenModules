@@ -26,11 +26,11 @@ return '
 		<div class="pull-right">
 		<button type="button" class="btn btn-mini btn-info" id="button-toggle">
 			<label class="checkbox">
-				'.HtmlTag::create( 'input', NULL, array(
+				'.HtmlTag::create( 'input', NULL, [
 					'type'		=> "checkbox",
 					'id'		=> "input-toggle-rights-all",
 					'checked'	=> $showAll ? 'checked' : NULL,
-				) ).'
+				] ).'
 				'.$w->labelShowAll.'
 			</label>
 		</button>
@@ -127,15 +127,15 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 				break;
 		}
 		$label	= HtmlTag::create( 'span', $method->name, [] );
-		$list[]	= HtmlTag::create( 'li', $check.$label, array(
+		$list[]	= HtmlTag::create( 'li', $check.$label, [
 			'class'	=> 'action '.$class,
 			'id'	=> $changable ? $id : NULL,
 			'title'	=> $title,
 			'style'	=> $changable /*|| $showAll*/ ? NULL : 'display: none',
-		), array(
+		], [
 			'controller'	=> $controller->name,
 			'action'		=> $action,
-		) );
+		] );
 		$changableAtAll	= $changableAtAll || $changable;
 	}
 	return (object) ['list' => $list, 'changable' => $changableAtAll];

@@ -4,7 +4,10 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Target extends Controller
 {
-	public function add()
+	protected Model_Form_Transfer_Target $modelTarget;
+	protected Model_Form_Fill_Transfer $modelTransfer;
+
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->getMethod()->isPost() ){
@@ -23,7 +26,7 @@ class Controller_Manage_Form_Target extends Controller
 		}
 	}
 
-	public function edit( $targetId )
+	public function edit( $targetId ): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->getMethod()->isPost() ){
@@ -44,7 +47,7 @@ class Controller_Manage_Form_Target extends Controller
 		$this->addData( 'fails', $this->getLatestUnhandledFailedTransfers( $targetId ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$targets	= $this->modelTarget->getAll( [], ['title' => 'ASC'] );
 		foreach( $targets as $target ){
@@ -55,7 +58,7 @@ class Controller_Manage_Form_Target extends Controller
 		$this->addData( 'targets', $targets );
 	}
 
-	public function remove( $targetId )
+	public function remove( string $targetId ): void
 	{
 		$this->modelTarget->remove( $targetId );
 		$this->restart( NULL, TRUE );
@@ -67,12 +70,13 @@ class Controller_Manage_Form_Target extends Controller
 		$this->modelTransfer	= new Model_Form_Fill_Transfer( $this->env );
 	}
 
-	protected function getLatestUnhandledFailedTransfers( $targetId )
+	protected function getLatestUnhandledFailedTransfers( string $targetId )
 	{
 		$query	= <<<EOT
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
 SELECT
---  FROM_UNIXTIME(ff.createdAt) AS created,
---  FROM_UNIXTIME(fft_latest.timestamp) AS failed,
+-- 	FROM_UNIXTIME(ff.createdAt) AS created,
+-- 	FROM_UNIXTIME(fft_latest.timestamp) AS failed,
 	ff.fillId AS fillId,
 -- 	f.formId,
 -- 	ff.fillId AS formFillId,
@@ -82,11 +86,11 @@ SELECT
 -- 	f.formStatus,
 -- 	ff.status AS formfillStatus,
 -- 	fft_latest.fillTransferStatus,
-    f.title AS formTitle,
+	f.title AS formTitle,
 -- 	ff.data,
-    ftr.transferRuleTitle,
-    ftt.transferTargetTitle,
-    fft_latest.fillTransferMessage,
+	ftr.transferRuleTitle,
+	ftt.transferTargetTitle,
+	fft_latest.fillTransferMessage,
 	ff.createdAt,
 	fft_latest.timestamp AS failedAt
 FROM
@@ -104,29 +108,29 @@ FROM
 	) AS fft_latest,
 	(	SELECT
 			formId,
-            status AS formStatus,
-            title
+			status AS formStatus,
+			title
 		FROM forms
 -- 		WHERE status IN (1)
 	) AS f,
 	(	SELECT
 			formTransferRuleId AS transferRuleId,
 			formTransferTargetId AS transferTargetId,
-            title as transferRuleTitle
+			title as transferRuleTitle
 		FROM form_transfer_rules
 	) AS ftr,
 	(	SELECT
 			formTransferTargetId as transferTargetId,
-            title AS transferTargetTitle
+			title AS transferTargetTitle
 		FROM form_transfer_targets
 	) AS ftt
 WHERE
 	ff.fillId = fft_latest.fillId AND
 	ff.formId = f.formId AND
 	fft_latest.transferRuleId = ftr.transferRuleId AND
-    ftr.transferTargetId = ftt.transferTargetId AND
+	ftr.transferTargetId = ftt.transferTargetId AND
 	ff.status = 1 AND
-    ff.createdAt > UNIX_TIMESTAMP(DATE_SUB(now(), INTERVAL 4 WEEK	)) AND
+	ff.createdAt > UNIX_TIMESTAMP(DATE_SUB(now(), INTERVAL 4 WEEK	)) AND
 	ftt.transferTargetId = $targetId
 ORDER BY ff.createdAt DESC
 ;

@@ -3,11 +3,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract{
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'span';
-	protected $wallet;
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'span';
+	protected object $wallet;
 
-	public function render(){
+	public function render(): string
+	{
 		$helper		= new View_Helper_Stripe_Entity_Money( $this->env );
 		$helper->setFormat( View_Helper_Stripe_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helper->setNumberFormat( View_Helper_Stripe_Entity_Money::NUMBER_FORMAT_COMMA );
@@ -18,17 +19,20 @@ class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract{
 		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
-	public function set( $wallet ){
+	public function set( object $wallet ): self
+	{
 		$this->wallet	= $wallet;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}

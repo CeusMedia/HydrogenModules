@@ -1,7 +1,11 @@
 <?php
-class View_Manage_My_Mangopay_Wallet extends View_Manage_My_Mangopay{
+class View_Manage_My_Mangopay_Wallet extends View_Manage_My_Mangopay
+{
+	public function index(): void
+	{
+	}
 
-	public function index(){}
-
-	public function view(){}
+	public function view(): void
+	{
+	}
 }

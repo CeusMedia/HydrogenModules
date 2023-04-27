@@ -5,39 +5,59 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'tt';
-	protected $number;
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'tt';
+	protected string $number		= '';
 
-	public function render(){
+	/**
+	 *	@return		string
+	 */
+	public function render(): string
+	{
 		$pattern	= '/^([^x]+)(x+)(.+)$/i';
 		$replace	= '\\1<small class="muted">\\2</small>\\3';
 		$number		= preg_replace( $pattern, $replace, $this->number );
-		return HtmlTag::create( $this->nodeName, $number, array(
+		return HtmlTag::create( $this->nodeName, $number, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
-	static public function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ){
+	public static function renderStatic( Environment $env, $number, ?string $nodeName = NULL, ?string $nodeClass = NULL ): string
+	{
 		$instance	= new View_Helper_Stripe_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $number )->render();
 	}
 
-	public function set( $number ){
+	/**
+	 *	@param		string		$number
+	 *	@return		self
+	 */
+	public function set( string $number ): self
+	{
 		$this->number	= $number;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	/**
+	 *	@param		string		$classNames
+	 *	@return		self
+	 */
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	/**
+	 *	@param		string		$nodeName
+	 *	@return		self
+	 */
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}

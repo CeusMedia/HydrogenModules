@@ -8,7 +8,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	public float $taxPercent;
 	public float $taxIncluded;
 
-	public function changeQuantity( $articleId, $change )
+	public function changeQuantity( string $articleId, int $change ): int
 	{
 		return $this->logic->changeQuantity( $articleId, $change );
 	}
@@ -16,11 +16,11 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE )
 	{
 		$article	= $this->logic->getArticle( $articleId );
 		if( $article )
@@ -158,13 +158,13 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns weight of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		integer
 	 */
-	public function getWeight( $articleId, int $amount = 1 )
+	public function getWeight( string $articleId, int $amount = 1 ): float
 	{
-		return $this->check( $articleId )->weight * $amount;
+		return (float) ( $this->check( $articleId )->weight * $amount );
 	}
 
 	protected function __onInit(): void

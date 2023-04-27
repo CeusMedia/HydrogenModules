@@ -9,9 +9,9 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 
 	public function activate( $reasonId )
 	{
-		$this->model->edit( $reasonId, array(
+		$this->model->edit( $reasonId, [
 			'status' => Model_IP_Lock_Reason::STATUS_ENABLED
-		) );
+		] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -30,9 +30,9 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 
 	public function deactivate( $reasonId )
 	{
-		$this->model->edit( $reasonId, array(
+		$this->model->edit( $reasonId, [
 			'status' => Model_IP_Lock_Reason::STATUS_DISABLED
-		) );
+		] );
 		$this->restart( NULL, TRUE );
 	}
 

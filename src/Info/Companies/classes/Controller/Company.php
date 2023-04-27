@@ -1,11 +1,14 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Company extends Controller
 {
-	protected $modelBranch;
-	protected $modelCompany;
+	protected MessengerResource $messenger;
+	protected Model_Branch $modelBranch;
+	protected Model_Company $modelCompany;
 
 	public function index( $companyId = NULL )
 	{
@@ -34,6 +37,7 @@ class Controller_Company extends Controller
 
 	protected function __onInit(): void
 	{
+		$this->messenger	= $this->env->getMessenger();
 		$this->modelBranch	= new Model_Branch( $this->env );
 		$this->modelCompany	= new Model_Company( $this->env );
 	}

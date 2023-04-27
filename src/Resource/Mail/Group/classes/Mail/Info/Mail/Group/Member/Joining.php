@@ -17,11 +17,11 @@ class Mail_Info_Mail_Group_Member_Joining extends Mail_Abstract
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
-		$data['link']		= array(
+		$data['link']		= [
 			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
 			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 			'confirm'		=> $this->env->url.'info/mail/group/completeMemberAction/'.$data['action']->mailGroupActionId.'/'.$data['action']->uuid,
-		);
+		];
 
 		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/joining.txt', $data );
 		$this->setText( $plain );

@@ -6,12 +6,19 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 {
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$logicProject	= Logic_Project::getInstance( $this->env );
@@ -28,9 +35,9 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 			$timers		= $modelTimer->getAllByIndices( array(
 				'workerId'	=> array_keys( $coworkers ),
 				'status'	=> [1],
-			), array(
+			), [
 				'modifiedAt'	=> 'DESC',
-			), [10, 0] );
+			], [10, 0] );
 			$rows	= [];
 			foreach( $timers as $timer ){
 				View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
@@ -38,13 +45,13 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 				$timePlanned	= View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned );
 				$timeNeeded		= View_Helper_Work_Time::formatSeconds( $secondsNeeded );
 				$from			= 'info/dashboard';
-				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, array(
+				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, [
 					'class'			=>  "dashboard-timer-others",
 					'data-value'	=>  $secondsNeeded,
-				) );
-				$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
+				] );
+				$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 					'href'	=> './manage/project/view/'.$timer->project->projectId.'?from='.$from,
-				) );
+				] );
 				$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
 					'href'	=> join( array(
 						$timer->relationLink,

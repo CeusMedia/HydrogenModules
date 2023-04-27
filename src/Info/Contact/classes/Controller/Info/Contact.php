@@ -34,16 +34,16 @@ class Controller_Info_Contact extends Controller
 		}
 		header( 'Content-Type: application/json' );
 		if( $message ){
-			print( json_encode( array(
+			print( json_encode( [
 				'status'	=> "error",
 				'message'	=> $message,
-			) ) );
+			] ) );
 		}
 		else{
-			print( json_encode( array(
+			print( json_encode( [
 				'status'	=> "data",
 				'data'		=> $data,
-			) ) );
+			] ) );
 		}
 		exit;
 	}
@@ -164,12 +164,12 @@ class Controller_Info_Contact extends Controller
 			$topics		= [];
 			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
 				$model	= new Model_Newsletter_Group( $this->env );
-				$conditions	= array(
+				$conditions	= [
 					'status'	=> Model_Newsletter_Group::STATUS_USABLE,
-					'type'		=> array(
+					'type'		=> [
 						Model_Newsletter_Group::TYPE_DEFAULT,
 						Model_Newsletter_Group::TYPE_AUTOMATIC
-					) );
+					] ];
 				$orders		= ['title' => 'ASC'];
 				$topics		= $model->getAll( $conditions, $orders );
 			}

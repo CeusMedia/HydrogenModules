@@ -1,22 +1,25 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Json extends Logic
 {
-	public function checkPassword( $userId, string $password )
+	protected Dictionary $session;
+
+	public function checkPassword( string $username, string $password ): bool
 	{
-		$data	= array(
-			'filters'	=> array(
+		$data	= [
+			'filters'	=> [
 				'username'	=> $username,
 				'password'	=> md5( $password )
-			)
-		);
+			]
+		];
 		$result = $this->env->getServer()->postData( 'user', 'index', NULL, $data );
 		return count( $result ) === 1;
 	}
 
-	public function clearCurrentUser()
+	public function clearCurrentUser(): void
 	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
@@ -24,10 +27,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		$this->session->remove( 'auth_account_id' );
 		$this->session->remove( 'auth_token' );
 		$this->session->remove( 'auth_rights' );
-		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
+		$payload	= [];
+		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -40,7 +44,7 @@ class Logic_Authentication_Backend_Json extends Logic
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	public function getCurrentRoleId( bool $strict = TRUE ): ?string
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -76,32 +80,32 @@ class Logic_Authentication_Backend_Json extends Logic
 		return $this->env->getSession()->get( 'auth_user_id' );
 	}
 
-	public function isAuthenticated()
+	public function isAuthenticated(): bool
 	{
 		if( !$this->isIdentified() )
 			return FALSE;
 		$authStatus	= (int) $this->session->get( 'auth_status' );
-		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
+		return $authStatus === Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
-	public function isIdentified()
+	public function isIdentified(): bool
 	{
-		return $this->session->get( 'auth_user_id' );
+		return 0 !== strlen( trim( $this->session->get( 'auth_user_id', '' ) ) );
 	}
 
-	public function isCurrentUserId( $userId )
+	public function isCurrentUserId( string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
-	public function setAuthenticatedUser( $user )
+	public function setAuthenticatedUser( object $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user )
+	public function setIdentifiedUser( object $user ): self
 	{
 		$this->session->set( 'auth_user_id', $user->userId );
 		$this->session->set( 'auth_role_id', $user->roleId );

@@ -2,7 +2,7 @@
  *	Handles optional contents related to input elements.
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2012-2019 Ceus Media (https://ceusmedia.de)
+ *	@copyright	2012-2023 Ceus Media (https://ceusmedia.de)
  */
 var FormOptionals = {
 	init: function (selector) {
@@ -44,7 +44,7 @@ var FormOptionals = {
 		if (!jQuery(elem).data("status")) {										//  initial run
 			toHide.hide();														//  hide disabled optionals right now
 			toShow.show();														//  show enabled optionals right now
-			jQuery(elem).data("status", 1);										//  note inital run
+			jQuery(elem).data("status", 1);										//  note initial run
 			return;
 		}
 

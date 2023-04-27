@@ -20,10 +20,10 @@ foreach( $products as $item ){
 $list	= HtmlTag::create( 'ul', $list, ['class' => "nav nav-pills nav-stacked"] );
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/catalog/provision/product/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="content-panel">

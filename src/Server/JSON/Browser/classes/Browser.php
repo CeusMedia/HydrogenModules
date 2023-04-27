@@ -76,10 +76,10 @@ class Browser
 				'debug'		=> isset( $response->debug ) ? $response->debug : '',
 				'exception'	=> isset( $response->exception ) ? $response->exception : '',
 			),
-			'json'			=> (object) array(
+			'json'			=> (object) [
 				'raw'		=> $body,
 				'object'	=> $response
-			),
+			],
 			'time_init'		=> round( $this->time1, 1 ),
 			'time_render'	=> round( $this->env->getClock()->stop( 3, 1 ) - $this->time1, 1 ),
 			'url'			=> getEnv( 'REQUEST_URI' ),

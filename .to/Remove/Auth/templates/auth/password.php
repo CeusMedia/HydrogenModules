@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w		= (object) $words['password'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/password.' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/password.' ) );
 
 return '
 '.$textTop.'

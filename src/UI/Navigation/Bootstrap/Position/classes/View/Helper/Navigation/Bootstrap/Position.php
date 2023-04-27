@@ -33,11 +33,11 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 		if( ( $currentPage = $model->getCurrent() ) ){
 			$path	= $currentPage->path;
 			while( $path && isset( $pageMap[$path] ) && $page = $pageMap[$path] ){
-				$item	= (object) array(
+				$item	= (object) [
 					'label'		=> $page->label,
 					'link'		=> NULL,
 					'current'	=> FALSE,
-				);
+				];
 				if( $page->path === $currentPage->path ){
 					$item->current = TRUE;
 				}
@@ -51,28 +51,28 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 				$parts	= explode( "/", $path );
 				$path	= implode( "/", array_slice( $parts, 0, count( $parts ) - 1 ) );
 			}
-			array_unshift( $itemList, (object) array(
+			array_unshift( $itemList, (object) [
 				'label'		=> $this->labelHome,
 				'link'		=> './',
-			) );
+			] );
 		}
 		else {
 			if( !$this->moduleConfig->get( 'showOnHome' ) )
 				return '';
-			array_unshift( $itemList, (object) array(
+			array_unshift( $itemList, (object) [
 				'label'		=> $this->labelHome,
 				'link'		=> NULL,
-			) );
+			] );
 		}
 		$barList	= [];
 		foreach( $itemList as $entry ){
 			$label	= $entry->label;
 			if( isset( $entry->link ) )
 				$label	= HtmlTag::create( 'a', $label, ['href' => $entry->link] );
-			$barList[]	= HtmlTag::create( 'span', $label, array(
+			$barList[]	= HtmlTag::create( 'span', $label, [
 				'class'	=> 'position-bar-path-list-item',
 			'href'	=> '#',
-			) );
+			] );
 		}
 		$divider	= HtmlTag::create( 'span', $this->divider, ['class' => 'position-bar-path-divider'] );
 		$barList	= implode( $divider, $barList );

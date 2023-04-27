@@ -206,11 +206,11 @@ if( $module->files->scripts ){
 		$urlView		= './admin/module/editor/viewCode/'.$moduleId.'/script/'.base64_encode( $uri );
 		$urlUnlink		= './admin/module/editor/removeFile/'.$moduleId.'/script/'.base64_encode( $item->file ).'?tab=resources';
 #		$buttonView		= HtmlElements::Link( $urlView, $iconView, 'button tiny layer-html', NULL, '['.$module->title.'] '.$item->file );
-		$buttonView		= HtmlTag::create( 'a', $iconView, array(
+		$buttonView		= HtmlTag::create( 'a', $iconView, [
 			'href'		=> $urlView,
 			'class'		=> 'button tiny layer-html',
 			'title'		=> '['.$module->title.'] '.$item->file
-		) );
+		] );
 		$buttonUnlink	= HtmlElements::Link( $urlUnlink, $iconUnlink, 'button tiny' );
 
 		if( !checkFile( $uri ) ){

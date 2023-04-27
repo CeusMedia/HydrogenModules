@@ -26,10 +26,10 @@ $iconCopy		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clone'] ).'&nbsp
 $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] ).'&nbsp;';
 $iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, [
 	'class'		=> "btn btn-small",
 	'href'		=> "./work/newsletter/template/index",
-) );
+] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
 	'type'			=> "submit",
 	'class'			=> "btn btn-primary".( $isUsed ? ' disabled' : '' ),
@@ -45,34 +45,34 @@ $buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPre
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("./work/newsletter/template/preview/'.$format.'/'.$templateId.'");'
 ) );
 /*
-$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'class'		=> "btn btn-info",
 	'href'		=> './work/newsletter/template/preview/'.$format.'/'.$templateId.'/1',
 	'target'	=> "NewsletterTemplatePreview",
-) );*/
+] );*/
 $buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
 	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
 ) );
-$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, array(
+$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
 	'class'		=> "btn btn-success btn-small",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
-) );
-$buttonExport	= HtmlTag::create( 'a', $iconExport.$words->edit->buttonExport, array(
+] );
+$buttonExport	= HtmlTag::create( 'a', $iconExport.$words->edit->buttonExport, [
 	'class'		=> "btn",
 	'href'		=> "./work/newsletter/template/export/".$templateId
-) );
+] );
 
-$buttons		= HtmlTag::create( 'div', join( ' ', array(
+$buttons		= HtmlTag::create( 'div', join( ' ', [
 	$buttonCancel,
 	$buttonSave,
 	$buttonPreview,
 	$buttonExport,
 //	$buttonRemove,
 //	$buttonCopy,
-) ), ['class' => 'buttonbar'] );
+] ), ['class' => 'buttonbar'] );
 
 switch( $currentTab ){
 	case 0:
@@ -133,10 +133,10 @@ $modalStyleAdd	= '
 	</form>
 </div>';
 
-extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/template/edit/', array(
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/template/edit/', [
 	'words'		=> $words,
 	'template'	=> $template
-) ) );
+] ) );
 
 return $textTop.'
 <div class="newsletter-content">

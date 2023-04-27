@@ -19,12 +19,12 @@ foreach( $words['states'] as $key => $value )
 	$optStatus[(string)$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, (string) $filterStatus );
 
-$optOrder	= array(
+$optOrder	= [
 	'title:ASC'			=> 'Titel aufsteigend',
 	'title:DESC'		=> 'Titel absteigend',
 	'createdAt:ASC'		=> 'Erstellung aufsteigend',
 	'createdAt:DESC'	=> 'Erstellung absteigend',
-);
+];
 $optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 return '

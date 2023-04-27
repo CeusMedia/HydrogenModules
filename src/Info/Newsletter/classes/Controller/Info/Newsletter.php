@@ -33,13 +33,13 @@ class Controller_Info_Newsletter extends Controller
 //		$order		= $modelOrder->get( $payload['orderId'] );
 
 		$path	= 'html/info/newsletter/';
-		$files	= array(
+		$files	= [
 			1	=> 'finishTop.html',
 			3	=> 'finishAbove.html',
 			5	=> 'finish.html',
 			7	=> 'finishBelow.html',
 			9	=> 'finishBottom.html',
-		);
+		];
 		foreach( $files as $priority => $file ){
 			if( $view->hasContentFile( $path.$file ) ){
 				$content	= $view->loadContentFile( $path.$file );
@@ -138,17 +138,17 @@ class Controller_Info_Newsletter extends Controller
 				foreach( $this->logic->getGroups( $conditions ) as $group )						//  iterate found groups
 					$this->logic->addReaderToGroup( $readerId, $group->newsletterGroupId );		//  add reader to group
 
-				$data	= array(
+				$data	= [
 					'readerId'		=> $readerId,
 					'reader'		=> $reader,
-				);
+				];
 				$mail	= new Mail_Info_Newsletter_Register( $this->env, $data );
 				$logicMail	= Logic_Mail::getInstance( $this->env );
 				$logicMail->appendRegisteredAttachments( $mail, $language );
-				$receiver	= (object) array(
+				$receiver	= (object) [
 					'username'	=> $reader->firstname.' '.$reader->surname,
 					'email'		=> $reader->email,
-				);
+				];
 				$logicMail->handleMail( $mail, $receiver, $language );
 				$this->messenger->noteSuccess( $words->msgSuccess, $reader->email );
 				$this->restart( NULL, TRUE );

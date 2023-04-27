@@ -94,10 +94,10 @@ class Logic_Instance
 				$fileConfig	= !empty( $instance->pathFile ) ? $instance->pathFile : 'config.ini';
 				if( !file_exists( $instance->uri.$pathConfig.$fileConfig ) )
 					throw new RuntimeException( 'Instance config file missing' );
-				$options	= array(
+				$options	= [
 					'configFile'	=> $instance->uri.$pathConfig.$fileConfig,
 					'pathApp'		=> $instance->uri
-				);
+				];
 				try{
 					$remote		= new RemoteEnvironment( $options );
 					$modules	= $remote->getModules()->getAll();

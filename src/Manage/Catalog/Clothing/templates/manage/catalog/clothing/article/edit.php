@@ -22,14 +22,14 @@ $panelFacts	= '
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">Titel</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_title",
 						'name'		=> "title",
 						'class'		=> "span12",
 						'required'	=> "required",
 						'value'		=> $article->title
-					) ).'
+					] ).'
 				</div>
 				<div class="span4">
 					<label for="input_categoryId">Kategorie</label>
@@ -39,42 +39,42 @@ $panelFacts	= '
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_form">Ausführung</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_form",
 						'name'		=> "form",
 						'class'		=> "span12",
 						'required'	=> "required",
 						'value'		=> $article->form
-					) ).'
+					] ).'
 				</div>
 				<div class="span3">
 					<label for="input_size">Größe</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_size",
 						'name'		=> "size",
 						'class'		=> "span12",
 						'required'	=> "required",
 						'value'		=> $article->size
-					) ).'
+					] ).'
 				</div>
 				<div class="span3">
 					<label for="input_color">Farbe</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_color",
 						'name'		=> "color",
 						'class'		=> "span12",
 						'required'	=> "required",
 						'value'		=> $article->color
-					) ).'
+					] ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_price">Preis <small class="muted">(€€.¢¢)</small></label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "number",
 						'step'		=> '0.01',
 						'min'		=> '0',
@@ -84,20 +84,20 @@ $panelFacts	= '
 						'class'		=> "span12",
 						'required'	=> "required",
 						'value'		=> $article->price
-					) ).'
+					] ).'
 				</div>
 				<div class="span3">
 					<label for="input_price">Währung</label>
-					'.HtmlTag::create( 'select', $optCurrency, array(
+					'.HtmlTag::create( 'select', $optCurrency, [
 						'id'		=> "input_currency",
 						'name'		=> "currency",
 						'class'		=> "span12",
 						'required'	=> "required",
-					) ).'
+					] ).'
 				</div>
 				<div class="span3">
 					<label for="input_price">Lagerbestand</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "number",
 						'step'		=> '1',
 						'min'		=> '0',
@@ -106,7 +106,7 @@ $panelFacts	= '
 						'name'		=> "quantity",
 						'class'		=> "span12",
 						'value'		=> $article->quantity
-					) ).'
+					] ).'
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -128,30 +128,30 @@ $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
 
 $image			= '';
-$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', array(
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove.'&nbsp;entfernen', [
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn btn-inverse'
-) );
+] );
 
 if( $article->image ){
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 		'href'	=> './manage/catalog/clothing/article/setImage/'.$article->articleId.'/remove',
 		'class'	=> 'btn btn-inverse'
-	) );
-	$image	= HtmlTag::create( 'img', NULL, array(
+	] );
+	$image	= HtmlTag::create( 'img', NULL, [
 		'src'	=> $path.$article->image,
 		'class'	=> 'img-polaroid',
-	) ).'<hr/>';
+	] ).'<hr/>';
 }
 $upload		= new View_Helper_Input_File( $env );
 $upload->setLabel( $iconUpload );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;hochladen', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;hochladen', [
 	'type'	=> "submit",
 	'name'	=> "save",
  	'class'	=> "btn btn-primary",
-) );
+] );
 
 $panelImage	= '
 <div class="content-panel">

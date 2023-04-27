@@ -6,9 +6,9 @@ $list		= '<div><em><small class="muted">Noch keine vorhanden.</small></em></div>
 if( $users ){
 	$list	= [];
 	foreach( $users as $user ){
-		$link	= HtmlTag::create( 'a', $user->username, array(
+		$link	= HtmlTag::create( 'a', $user->username, [
 			'href'	=> './member/view/'.$user->userId,
-		) );
+		] );
 		$relation	= $user->relation ? 'yes' : 'no';
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),

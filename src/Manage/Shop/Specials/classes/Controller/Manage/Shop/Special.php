@@ -1,9 +1,19 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Shop_Special extends Controller
 {
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Logic_ShopBridge $logicBridge;
+	protected Model_Shop_Special $modelSpecial;
+	protected array $shopBridges;
+	protected string $appPath;
+	protected string $appUrl;
+
 	public function ajaxLoadCatalogArticles( $bridgeId )
 	{
 		$bridge 	= $this->logicBridge->getBridge( $bridgeId );
@@ -12,10 +22,10 @@ class Controller_Manage_Shop_Special extends Controller
 		$data	=  [];
 		$column	= $bridge->data->articleIdColumn;
 		foreach( $articles as $article )
-			$data[]	= (object) array(
+			$data[]	= (object) [
 				'id'	=> $article->{$column},
 				'title'	=> $article->title,
-			);
+			];
 		print( json_encode( $data ) );
 		die;
 	}
@@ -39,7 +49,7 @@ class Controller_Manage_Shop_Special extends Controller
 		$this->addData( 'specials', $this->modelSpecial->getAll() );
 	}
 
-	public function edit( $specialId )
+	public function edit( string $specialId ): void
 	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
 			$this->messenger->noteError( 'Ungültige ID.' );
@@ -79,11 +89,11 @@ class Controller_Manage_Shop_Special extends Controller
 		$this->addData( 'special', $special );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function removeStyleFile( $specialId, $nr )
+	public function removeStyleFile( $specialId, $nr ): void
 	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
 			$this->messenger->noteError( 'Ungültige ID.' );

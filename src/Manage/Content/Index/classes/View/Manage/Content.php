@@ -8,12 +8,12 @@ class View_Manage_Content extends View{
 
 	protected function renderTabs(){
 		$current	= $this->env->getRequest()->get( '__controller' );
-		$tabs	    = array(
+		$tabs	    = [
 			'manage/content'			=> 'Übersicht',
 			'manage/content/link'		=> 'Links',
 			'manage/content/document'	=> 'Dokumente',
 			'manage/content/image'		=> 'Bilder',
-		);
+		];
 		$list   = [];
 		foreach( $tabs as $key => $value ){
 			$class	= $key == $current ? 'active' : NULL;

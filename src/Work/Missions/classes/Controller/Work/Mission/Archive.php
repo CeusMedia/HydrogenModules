@@ -1,33 +1,29 @@
 <?php
 class Controller_Work_Mission_Archive extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.archive.';
+	protected string $filterKeyPrefix	= 'filter.work.mission.archive.';
 
-	protected $options;
-
-	protected $request;
-
-	protected $defaultFilterValues	= array(
-		'states'		=> array(
+	protected array $defaultFilterValues	= [
+		'states'		=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
 			Model_Mission::STATUS_FINISHED
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{
@@ -35,7 +31,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		$this->session->set( 'filter.work.mission.mode', 'archive' );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 20;
@@ -54,18 +50,18 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 			$this->session->set( $this->filterKeyPrefix.'page', $page = 0 );
 		$offset		= $page * $limit;
 		$missions	= array_slice( $missions, $offset, $limit );
-		$this->setData( array(
+		$this->setData( [
 			'limit'		=> $limit,
 			'page'		=> $page,
 			'total'		=> $total,
 			'missions'	=> $missions,
-		) );
+		] );
 //		$json	= $this->view->ajaxRenderIndex();
 //		print( json_encode( $json ) );
 //		exit;
 	}
 
-	public function index( $missionId = NULL )
+	public function index( string $missionId = NULL ): void
 	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );
@@ -73,7 +69,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 		$this->assignFilters();
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

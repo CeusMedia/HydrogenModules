@@ -15,10 +15,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
  */
 class View_EvolutionIndicator{
 
-	static public $options	= array(
+	static public $options	= [
 		'width'		=> 100,
 		'height'	=> 8
-	);
+	];
 
 	static public function getColor( $ratio ){
 		$colorR	= ( 1 - $ratio ) > 0.5 ? 255 : round( ( 1 - $ratio ) * 2 * 255 );
@@ -40,22 +40,22 @@ class View_EvolutionIndicator{
 			$width	= $ranges[$nr]->size;
 			$attributes	= array(
 				'class'	=> 'bar',
-				'style'	=> join( '; ', array(
+				'style'	=> join( '; ', [
 					'float: left',
 					'width: '.$width.'px',
 					'height: 100%',
 					'background-color: '.$color
-				) )
+				] )
 			);
 			$bars[]	= HtmlTag::create( 'div', '', $attributes );
 		}
 		$attributes	= array(
 			'class'		=> 'indicator-evolution container',
-			'style'		=> join( '; ', array(
+			'style'		=> join( '; ', [
 				'float: left',
 				'width: '.$options['width'].'px',
 				'height: '.$options['height'].'px'
-			) )
+			] )
 		);
 		return HtmlTag::create( 'div', join( $bars ), $attributes );
 	}

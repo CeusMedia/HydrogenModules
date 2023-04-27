@@ -1,7 +1,8 @@
 <?php
 class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay_Abstract{
 
-	public function index( $walletId = NULL ){
+	public function index( $walletId = NULL ): void
+	{
 		if( $walletId )
 			$this->restart( 'view/'.$walletId, TRUE );
 
@@ -18,7 +19,8 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		}
 	}
 
-	public function view( $walletId, $amount = NULL ){
+	public function view( $walletId, $amount = NULL ): void
+	{
 		$this->addData( 'backwardTo', $this->request->get( 'backwardTo' ) );
 		$this->addData( 'forwardTo', $this->request->get( 'forwardTo' ) );
 
@@ -58,7 +60,8 @@ class Controller_Manage_My_Mangopay_Wallet extends Controller_Manage_My_Mangopay
 		$this->addData( 'amount', $amount );
 	}
 
-/*	public function transfer( $sourceWalletId ){
+/*	public function transfer( $sourceWalletId ): void
+	{
 		$sourceWallet		= $this->mangopay->Wallets->Get( $sourceWalletId );
 
 		$targetWallets		= [];

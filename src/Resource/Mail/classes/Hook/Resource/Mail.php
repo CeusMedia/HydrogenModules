@@ -50,13 +50,13 @@ class Hook_Resource_Mail extends Hook
 		$orders			= ['mailId' => 'DESC'];
 		$fields			= ['mailId', 'status', 'subject', 'enqueuedAt'];
 		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o', 'title' => 'E-Mail'] );
-		$statusesActive	= array(
+		$statusesActive	= [
 			Model_Mail::STATUS_SENT,
 			Model_Mail::STATUS_RECEIVED,
 			Model_Mail::STATUS_OPENED,
 			Model_Mail::STATUS_REPLIED,
 			Model_Mail::STATUS_ARCHIVED,
-		);
+		];
 		$words			= $env->getLanguage()->getWords( 'mail' );
 
 		//  RECEIVED MAILS
@@ -66,10 +66,10 @@ class Hook_Resource_Mail extends Hook
 		$list		= [];
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mails as $mail )
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $linkable ? $mail->mailId : NULL,
 				'label'		=> $icon.'&nbsp;'.$mail->subject,
-			);
+			];
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data
 			$module,																				//  module called by hook
@@ -88,10 +88,10 @@ class Hook_Resource_Mail extends Hook
 
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mails as $mail )
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $linkable ? $mail->mailId : NULL,
 				'label'		=> $icon.'&nbsp;'.$mail->subject,
-			);
+			];
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data
 			$module,																				//  module called by hook

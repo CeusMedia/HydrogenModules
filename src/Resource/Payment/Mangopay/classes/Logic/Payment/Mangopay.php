@@ -10,7 +10,7 @@ class Logic_Payment_Mangopay extends Logic
 	protected $skipCacheOnNextRequest;
 	protected $baseUrl;
 
-	public static $typeCurrencies	= array(
+	public static $typeCurrencies	= [
 		'CB_VISA_MASTERCARD'	=> [],
 		'MAESTRO'				=> ['EUR'],
 		'DINERS'				=> ['EUR'],
@@ -21,7 +21,7 @@ class Logic_Payment_Mangopay extends Logic
 		'BCMC'					=> ['EUR'],
 		'P24'					=> ['PLN'],
 		'BANKWIRE'				=> [],
-	);
+	];
 
 	public function deactivateBankAccount( $userId, $bankAccountId )
 	{
@@ -286,11 +286,11 @@ print_m( $items );
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
-		$address		= $modelAddress->get( array(
+		$address		= $modelAddress->get( [
 			'relationType'	=> 'user',
 			'relationId'	=> $this->localUserId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
+		] );
 
 		$user = new \MangoPay\UserLegal();
 		$user->LegalPersonType	= "BUSINESS";
@@ -386,11 +386,11 @@ print_m( $items );
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
 		$user			= $modelUser->get( $localUserId );
-		$address		= $modelAddress->get( array(
+		$address		= $modelAddress->get( [
 			'relationType'	=> 'user',
 			'relationId'	=> $this->localUserId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
+		] );
 
 		$user	= new \MangoPay\UserNatural();
 		$user->PersonType			= "NATURAL";
@@ -629,10 +629,10 @@ print_m( $items );
 	public function setUserIdForLocalUserId( $userId, $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
-		$relation		= $modelAccount->getByIndices( array(
+		$relation		= $modelAccount->getByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'mangopay',
-		) );
+		] );
 		if( $relation ){
 			$modelAccount->edit( $relation->userPaymentAccountId, array(
 				'paymentAccountId'	=> $userId,
@@ -652,10 +652,10 @@ print_m( $items );
 	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
-		$relation		= $modelAccount->getByIndices( array(
+		$relation		= $modelAccount->getByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'mangopay',
-		) );
+		] );
 		if( !$relation && $strict )
 			throw new RuntimeException( 'No payment account available' );
 		if( !$relation )
@@ -684,10 +684,10 @@ print_m( $items );
 	public function hasPaymentAccount( $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
-		$relation		= $modelAccount->countByIndices( array(
+		$relation		= $modelAccount->countByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'mangopay',
-		) );
+		] );
 		return $relation;
 	}
 
@@ -753,37 +753,37 @@ print_m( $items );
 	{
 		$client	= $this->getClient();
 		$copy	= clone( $client );
-		$map	= array(
+		$map	= [
 			'PrimaryButtonColour'	=> 'colorButton',
 			'PrimaryThemeColour'	=> 'colorTheme',
 			'TaxNumber'				=> 'taxNumber',
 			'PlatformType'			=> 'platformType',
 			'PlatformDescription'	=> 'platformDescription',
 			'PlatformURL'			=> 'platformUrl',
-		);
+		];
 		foreach( $map as $key => $value )
 			if( isset( $data[$value] ) )
 				$copy->$key	= $data[$value];
 
 		if( isset( $data['headquarter'] ) && is_array( $data['headquarter'] ) ){
-			$map	= array(
+			$map	= [
 				'AddressLine1'	=> 'address',
 				'City'			=> 'city',
 				'Region'		=> 'region',
 				'PostalCode'	=> 'postcode',
 				'Country'		=> 'country',
-			);
+			];
 			foreach( $map as $key => $value )
 				if( isset( $data['headquarter'][$value] ) )
 					$copy->HeadquartersAddress->$key	= $data['headquarter'][$value];
 		}
 
 		if( isset( $data['emails'] ) && is_array( $data['emails'] ) ){
-			$map	= array(
+			$map	= [
 				'AdminEmails'	=> 'admin',
 				'TechEmails'	=> 'tech',
 				'BillingEmails'	=> 'billing',
-			);
+			];
 			foreach( $map as $key => $value )
 				if( isset( $data['emails'][$value] ) )
 					$copy->$key	= explode( "\n", $data['emails'][$value] );

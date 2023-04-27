@@ -33,11 +33,11 @@ class View_Helper_Thumbnailer
 		}
 		$maxWidth	= is_null( $maxWidth ) ? $this->maxWidth : (int) $maxWidth;
 		$maxHeight	= is_null( $maxHeight ) ? $this->maxHeight : (int) $maxHeight;
-		$indices	= array(
+		$indices	= [
 			'imageId'	=> $imagePath,
 			'maxWidth'	=> $maxWidth,
 			'maxHeight'	=> $maxHeight,
-		);
+		];
 		if( !file_exists( $imagePath ) ){
 			$this->uncacheFile( $imagePath, $maxWidth, $maxHeight );
 			throw new RuntimeException( 'Image "'.$imagePath.'" is not existing' );
@@ -84,11 +84,11 @@ class View_Helper_Thumbnailer
 
 	public function uncacheFile( $imagePath )
 	{
-		$indices	= array(
+		$indices	= [
 			'imageId'	=> $imagePath,
 			'maxWidth'	=> $this->maxWidth,
 			'maxHeight'	=> $this->maxHeight,
-		);
+		];
 		return $this->model->removeByIndices( $indices );
 	}
 

@@ -1,15 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibrary;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 {
 	protected bool $useAvatar	= FALSE;
 	protected array $users		= [];
-	protected $modules;
+	protected LocalModuleLibrary $modules;
 
-	public function __construct( WebEnvironment $env )
+	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 		$this->modules		= $this->env->getModules();

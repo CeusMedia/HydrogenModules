@@ -17,14 +17,14 @@ $topics		= '';
 if( $groups ){
 	$list   = [];
 	foreach( $groups as $group ){
-		$checkbox	= HtmlTag::create( 'input', NULL, array(
+		$checkbox	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'name'		=> 'groups[]',
 			'value'		=> $group->newsletterGroupId,
 			'checked'	=> $group->type == 2 || $group->isChecked ? 'checked' : NULL,
 			'disabled'	=> $group->type == 2 ? 'disabled' : NULL,
 			'class'		=> 'bs4-form-check-input',
-		) );
+		] );
 		$label  = HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', ['class' => 'bs2-checkbox bs4-form-check'] );
 		$list[] = HtmlTag::create( 'li', $label );
 	}

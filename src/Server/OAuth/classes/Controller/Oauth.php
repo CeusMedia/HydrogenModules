@@ -77,20 +77,20 @@ class Controller_Oauth extends Controller
 /*						//  TODO #3: THIS WOULD BE NICE BUT IS NOT RFC-STYLE
 						//  - to not redirect to client agent with error message
 						//  - but show error message on login page at authorization server
-						$url	= './oauth/authorize?'.http_build_query( array(
+						$url	= './oauth/authorize?'.http_build_query( [
 							'client_id'		=> $clientId,
 							'response_type'	=> $responseType,
 							'redirect_uri'	=> $redirectUri,
 							'state'			=> $state,
-						) );
+						] );
 						$this->errorReport( 'Login failed.', $uri );*/
 					}
 					$scope	= trim( $this->request->get( 'scope' ) );
 					$code	= $this->generateAuthorizationCode( $applicationId, $user->userId, $redirectUri, $scope );
-					$url	= $redirectUri.'?'.http_build_query( array(
+					$url	= $redirectUri.'?'.http_build_query( [
 						'code'	=> $code,
 						'state'	=> $state,
-					) );
+					] );
 					$this->restart( $url, FALSE, 302, TRUE );
 				}
 				$model			= new Model_Oauth_Application( $this->env );
@@ -388,11 +388,11 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_request', 'Redirect URI is not matching redirect URI of authorization.' );
 
 		$token	= $this->generateAccessToken( $application->oauthApplicationId, $authCode->userId, $authCode->scope );	//  generate, store and get access token
-		$data	= array(
+		$data	= [
 			'access_token'	=> $token,
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeAccessToken,
-		);
+		];
 		if( $this->flagSendRefreshTokenOnAuthorizationCodeGrant ){
 			$refreshToken	= $this->generateRefreshToken( $application->oauthApplicationId );
 			$data['refresh_token']	= $refreshToken;
@@ -474,11 +474,11 @@ class Controller_Oauth extends Controller
 
 		$scope	= $this->request->get( 'scope' );
 		$token	= $this->generateAccessToken( $applicationId, $scope );
-		$data	= array(
+		$data	= [
 			'access_token'	=> $token,
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeAccessToken,
-		);
+		];
 		if( $this->flagSendRefreshTokenOnPasswordGrant )
 			$data['refresh_token']	= $this->generateRefreshToken( $applicationId, $scope );
 		$data['scope']		= $scope;																//  @todo implement scope filter
@@ -522,12 +522,12 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_request', 'Invalid refresh token.', NULL, 401 );			//  respond error
 
 		$token	= $this->generateAccessToken( $application->oauthApplicationId, $refresh->scope );	//  generate, store and get access token
-		$data	= array(
+		$data	= [
 			'access_token'	=> $token,
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeAccessToken,
 			'scope'			=> $refresh->scope,
-		);
+		];
 		if( $this->flagRefreshRefreshToken ){
 			$modelRefresh->removeByIndex( 'token', $refreshToken );									//  remove old refresh token
 			$refreshToken	= $this->generateRefreshToken( $applicationId, $refresh->scope );		//  generate new refresh token

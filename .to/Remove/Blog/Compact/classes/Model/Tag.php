@@ -6,17 +6,17 @@ class Model_Tag extends Model
 {
 	protected string $name		= 'tags';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'tagId',
 		'title',
 		'number'
-	);
+	];
 
 	protected string $primaryKey	= 'tagId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'title'
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 
@@ -31,7 +31,7 @@ class Model_Tag extends Model
 			foreach( $relations as $relation ){
 				if( $relation->tagId == $tagId )
 					continue;
-				$conditions	= array( 'articleId' => $relation->articleId, 'status' => 1 );
+				$conditions	= ['articleId' => $relation->articleId, 'status' => 1];
 				if( !$modelArticle->getByIndices( $conditions ) )
 					continue;
 				if( !isset( $list[$relation->tagId] ) )

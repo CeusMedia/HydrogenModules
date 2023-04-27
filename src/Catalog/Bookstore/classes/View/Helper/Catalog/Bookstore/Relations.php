@@ -5,14 +5,14 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Catalog_Bookstore_Relations
 {
-	protected $articleId		= 0;
 	protected Environment $env;
-	protected int $limit				= 20;
 	protected Logic_Catalog_Bookstore $logic;
+	protected string $articleId			= '0';
+	protected int $limit				= 20;
 	protected string $heading			= "Ähnliche Veröffentlichungen";
 	protected array $tags				= [];
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
@@ -31,7 +31,7 @@ class View_Helper_Catalog_Bookstore_Relations
 		if( !$total )
 			return '';
 
-		$helper				= new View_Helper_Catalog_Bookstore( $this->env );
+		$helper		= new View_Helper_Catalog_Bookstore( $this->env );
 
 		$list		= [];
 		foreach( $relatedArticles as $relation ){
@@ -42,9 +42,9 @@ class View_Helper_Catalog_Bookstore_Relations
 		    $image		= HtmlTag::create( 'div', $image, ['class' => 'related-articles-image-container'] );
 		    $title		= HtmlTag::create( 'div', HtmlTag::create( 'a', $title, ['href' => $url] ) );
 		    $sub		= HtmlTag::create( 'div', HtmlTag::create( 'small', $subtitle, ['class' => ''] ) );
-		    $list[]		=  HtmlTag::create( 'div', [$image, $title, $sub], array(
+		    $list[]		=  HtmlTag::create( 'div', [$image, $title, $sub], [
 				'class'	=> 'related-articles-list-item',
-			) );
+			] );
 		}
 
 		return '
@@ -62,7 +62,7 @@ class View_Helper_Catalog_Bookstore_Relations
 </div>';
 	}
 
-	public function setArticleId( $articleId ): self
+	public function setArticleId( string $articleId ): self
 	{
 		$this->tags			= [];
 		$this->articleId	= $articleId;

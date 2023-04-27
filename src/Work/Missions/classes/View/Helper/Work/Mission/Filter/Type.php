@@ -6,9 +6,9 @@ class View_Helper_Work_Mission_Filter_Type
 {
 	protected WebEnvironment $env;
 	protected array $words;
-	protected $modalRegistry		= NULL;
-	protected array $values			= [];
-	protected $selected				= NULL;
+	protected ?View_Helper_ModalRegistry $modalRegistry		= NULL;
+	protected array $values									= [];
+	protected array $selected								= [];
 
 	public function __construct( WebEnvironment $env )
 	{
@@ -16,13 +16,13 @@ class View_Helper_Work_Mission_Filter_Type
 		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
 	}
 
-	public function setModalRegistry( $modalRegistry ): self
+	public function setModalRegistry( View_Helper_ModalRegistry $modalRegistry ): self
 	{
 		$this->modalRegistry	= $modalRegistry;
 		return $this;
 	}
 
-	public function setValues( $all, $selected ): self
+	public function setValues( array $all, array $selected ): self
 	{
 		$this->values	= $all;
 		$this->selected	= $selected;

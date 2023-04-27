@@ -19,25 +19,25 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 				if( !isset( $list[$post->threadId] ) ){
 					$thread		= $this->modelThread->get( $post->threadId );
 					$topic		= $this->modelTopic->get( $thread->topicId );
-					$list[$post->threadId]	= (object) array(
+					$list[$post->threadId]	= (object) [
 						'topic'		=> $topic,
 						'thread'	=> $thread,
 						'posts'		=> []
-					);
+					];
 				}
 				$list[$post->threadId]->posts[$post->postId]	= $post;
 			}
 			$rows	= [];
 			foreach( $list as $thread ){
 				$posts		= HtmlTag::create( 'b', count( $thread->posts ).' '.( count( $thread->posts ) === 1 ? 'Beitrag' : 'Beiträge' ) );
-				$linkTopic	= HtmlTag::create( 'a', $thread->topic->title, array(
+				$linkTopic	= HtmlTag::create( 'a', $thread->topic->title, [
 					'href'		=> $this->env->url.'info/forum/topic/'.$thread->topic->topicId,
 					'class'		=> 'link-topic'
-				) );
-				$linkThread	= HtmlTag::create( 'a', $thread->thread->title, array(
+				] );
+				$linkThread	= HtmlTag::create( 'a', $thread->thread->title, [
 					'href'		=> $this->env->url.'info/forum/thread/'.$thread->thread->threadId,
 					'class'		=> 'link-thread'
-				) );
+				] );
 				$line		= '%1$s > %2$s: %3$s';
 				$line		= '%3$s in Kategorie %1$s in Thema %2$s';
 				$line		= sprintf( $line, $linkTopic, $linkThread, $posts );

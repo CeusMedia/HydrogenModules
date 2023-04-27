@@ -10,7 +10,7 @@ class Controller_Work_Billing_Reserve extends Controller
 	protected Logic_Billing $logic;
 	protected Model_Billing_Reserve $modelReserve;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$reserveId		= $this->modelReserve->add( $this->request->getAll() );
@@ -19,7 +19,7 @@ class Controller_Work_Billing_Reserve extends Controller
 		$this->addData( 'corporations', $this->logic->getCorporations() );
 	}
 
-	public function edit( $reserveId )
+	public function edit( string $reserveId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$this->modelReserve->edit( $reserveId, $this->request->getAll() );
@@ -29,7 +29,7 @@ class Controller_Work_Billing_Reserve extends Controller
 		$this->addData( 'corporations', $this->logic->getCorporations() );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$reserves	= $this->modelReserve->getAll();
 		$this->addData( 'reserves', $reserves );
@@ -40,7 +40,7 @@ class Controller_Work_Billing_Reserve extends Controller
 		$this->addData( 'corporations', $corporations );
 	}
 
-	public function remove( $reserveId )
+	public function remove( string $reserveId ): void
 	{
 		$reserve	= $this->modelReserve->get( $reserveId );
 		$this->modelReserve->remove( $reserveId );

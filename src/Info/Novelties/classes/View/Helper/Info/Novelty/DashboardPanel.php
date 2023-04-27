@@ -7,15 +7,15 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 {
-	protected $env;
-	protected $news		= [];
+	protected array $news		= [];
+	protected int $limit		= 10;
 
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function add( $item ): self
+	public function add( object $item ): self
 	{
 		$this->news[]	= $item;
 		return $this;
@@ -32,12 +32,12 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$model		= new Model_Novelty( $this->env );
 		$iconAck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 		foreach( $this->news as $item ){
-			$conditions	= array(
+			$conditions	= [
 				'userId'	=> $userId,
 				'type'		=> $item->type,
 				'entryId'	=> $item->id,
 				'timestamp'	=> $item->timestamp,
-			);
+			];
 			if( $model->count( $conditions ) )
 				continue;
 			$key	= $item->timestamp.'.'.microtime( TRUE );
@@ -47,21 +47,20 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 			$badgeUnit	= substr( $date, -1 );
 			$badgeClass	= $badgeUnit == 'm' ? 'important' : ( $badgeUnit == 'h' ? 'info' : '' );
 
-
-			$date		= HtmlTag::create( 'small', $date, array(
+			$date		= HtmlTag::create( 'small', $date, [
 				'class' => 'label label-'.$badgeClass,
 				'style'	=> 'font-weight: normal'
-			) );
-			$buttons	= array(
-				HtmlTag::create( 'button', $iconAck, array(
+			] );
+			$buttons	= [
+				HtmlTag::create( 'button', $iconAck, [
 					'class'				=> 'btn btn-mini',
 					'title'				=> 'ausblenden',
 					'data-type'			=> $item->type,
 					'data-id'			=> $item->id,
 					'data-timestamp'	=> $item->timestamp,
-				) ),
-			);
-			$type		= isset( $item->typeLabel ) ? $item->typeLabel : $item->type;
+				] ),
+			];
+			$type		= $item->typeLabel ?? $item->type;
 			$type		= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
 			$list[$key]	= HtmlTag::create( 'tr', array(
 				HtmlTag::create( 'td', $date, ['style' => 'text-align: right'] ),
@@ -73,9 +72,9 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		$list	= array_slice( $list, 0, $this->limit );
 		$colgroup	= HtmlElements::ColumnGroup( "45", "", "50" );
 		$tbody	= HtmlTag::create( 'tbody', $list );
-		$list	= HtmlTag::create( 'table', $colgroup.$tbody, array(
+		$list	= HtmlTag::create( 'table', $colgroup.$tbody, [
 			'class'		=> 'table not-table-striped table-condensed table-fixed',
-		) );
+		] );
 $script	= '
 <script>
 var InfoNoveltyDashboardPanel = {

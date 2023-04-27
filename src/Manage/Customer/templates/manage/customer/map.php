@@ -4,13 +4,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $panelMap	= '';
 
 if( $customer->latitude || $customer->longitude  ){
-	$map	= HtmlTag::create( 'div', '', array(
+	$map	= HtmlTag::create( 'div', '', [
 		'id'				=> 'map-customer',
 		'class'				=> 'border',
 		'data-latitude'		=> $customer->latitude,
 		'data-longitude'	=> $customer->longitude,
 		'data-marker-title'	=> $customer->title,
-	) );
+	] );
 	$panelMap	= '
 <!--<h4>Karte</h4>-->
 '.$map.'

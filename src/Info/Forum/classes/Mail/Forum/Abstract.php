@@ -1,14 +1,15 @@
 <?php
 abstract class Mail_Forum_Abstract extends Mail_Abstract
 {
-	protected $modelPost;
+	protected Model_Forum_Post $modelPost;
 
-	protected $modelThread;
+	protected Model_Forum_Thread $modelThread;
 
-	protected $modelTopic;
+	protected Model_Forum_Topic $modelTopic;
 
 	/**
 	 *	@todo			render text, too
+	 *	@throws	ReflectionException
 	 */
 	protected function generate(): self
 	{
@@ -19,4 +20,7 @@ abstract class Mail_Forum_Abstract extends Mail_Abstract
 		$this->setHtml( $this->renderHtmlBody() );
 		return $this;
 	}
+
+	abstract protected function renderHtmlBody(): string;
+
 }

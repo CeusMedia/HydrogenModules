@@ -1,9 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Tool_Calculator
 {
-	protected $id	= 'calc1';
+	protected Environment $env;
+	protected string $id	= 'calc1';
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}

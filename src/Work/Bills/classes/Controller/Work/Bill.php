@@ -102,9 +102,9 @@ class Controller_Work_Bill extends Controller
 			$session->set( 'filter_work_bill_status', [0, 1] );
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
 
-		$conditions	= array(
+		$conditions	= [
 			'userId'	=> $this->userId,
-		);
+		];
 		if( $filters->get( 'id' ) )
 			$conditions['billId']	= $filters->get( 'id' );
 		if( $filters->get( 'term' ) )
@@ -125,7 +125,7 @@ class Controller_Work_Bill extends Controller
 						$conditions['date'][]	= date( "Ymd", $start + ( $i * 24 * 60 * 60 ) );
 				}
 				else{
-					throw new InvalidArgumentException( '!!!' );									//  @todo kriss: handle invalid start/end date
+					throw new InvalidArgumentException( '!!!' );									//  @todo  handle invalid start/end date
 				}
 			}
 			else{

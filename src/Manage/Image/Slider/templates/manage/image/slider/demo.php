@@ -7,10 +7,10 @@ $helper		= new View_Helper_Image_Slider( $env );
 $helper->setBasePath( $basePath );
 $display	= $helper->render( $sliderId );
 
-$buttonBack	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBack'], array(
+$buttonBack	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBack'], [
 	'href'	=> './manage/image/slider/edit/'.$sliderId,
 	'class'	=> 'btn btn-small',
-) );
+] );
 
 $code	= join( "\n", array(
 	'$helper	= new View_Helper_Image_Slider( $env );',

@@ -60,10 +60,10 @@ $buttonReset	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-undo"></i> zurückse
 	'href'	=> './admin/payment/mangopay/event/retry/'.$event->eventId.'?page='.$page,
 	'class'	=> 'btn btn-primary',
 ] );
-$buttonClose	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-check"></i> schließen', array(
+$buttonClose	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-check"></i> schließen', [
 	'href'	=> './admin/payment/mangopay/event/close/'.$event->eventId.'?page='.$page,
 	'class'	=> 'btn btn-success',
-) );
+] );
 if( $event->status != Model_Mangopay_Event::STATUS_FAILED && $event->status != Model_Mangopay_Event::STATUS_HANDLED )
 	$buttonReset	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-undo"></i> zurücksetzen', [
 		'type'		=> 'button',

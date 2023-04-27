@@ -3,22 +3,24 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
-abstract class View_Helper_Panel_Mangopay{
+abstract class View_Helper_Panel_Mangopay
+{
+	protected Environment $env;
+	protected Dictionary $options;
+	protected array $data			= [];
 
-	protected $data			= [];
-	protected $env;
-	protected $options;
-
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 		$this->options	= new Dictionary();
 	}
 
-	public function __toString(){
+	public function __toString(): string
+	{
 		return $this->render();
 	}
 
-	static public function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 ){
+	public static function formatMoney( $money, $separator = "&nbsp;", $accuracy = 2 ){
 		$helper	= new View_Helper_Mangopay_Entity_Money( NULL );
 		$helper->setFormat( View_Helper_Mangopay_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helper->setNumberFormat( View_Helper_Mangopay_Entity_Money::NUMBER_FORMAT_COMMA );
@@ -26,33 +28,39 @@ abstract class View_Helper_Panel_Mangopay{
 		return $helper->render();
 	}
 
-	public function getOption( $key ){
+	public function getOption( $key )
+	{
 		$this->options->get( $key );
 	}
 
-	abstract public function render();
+	abstract public function render(): string;
 
-	static public function renderCardNumber( $number ){
+	public static function renderCardNumber( $number ): string
+	{
 		$helper	= new View_Helper_Mangopay_Entity_CardNumber( NULL );
 		return $helper->set( $number )->render();
 	}
 
-	static public function renderStatic( Environment $env, $data, $options = [] ){
+	public static function renderStatic( Environment $env, $data, $options = [] ): string
+	{
 		$helper	= new static( $env );
 		return $helper->setData( $data )->setOptions( $options )->render();
 	}
 
-	public function setData( $data ){
+	public function setData( $data ): self
+	{
 		$this->data		= $data;
 		return $this;
 	}
 
-	public function setOption( $key, $value ){
+	public function setOption( $key, $value ): self
+	{
 		$this->options->set( $key, $value );
 		return $this;
 	}
 
-	public function setOptions( $options = [] ){
+	public function setOptions( array $options = [] ): self
+	{
 		$this->options	= new Dictionary( $options );
 		return $this;
 	}

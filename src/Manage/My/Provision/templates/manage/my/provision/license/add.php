@@ -16,10 +16,10 @@ if( !$productId ){
 			$link		= HtmlTag::create( 'a', array(
 				HtmlTag::create( 'h5', $itemProduct->title ),
 				HtmlTag::create( 'div', $itemProduct->description ),
-			), array(
+			), [
 				'href'	=> './manage/my/provision/license/add/'.$itemProduct->productId,
 				'class'	=> 'btn btn-large'
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => 'list-products-item'] );
 		}
 		$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled list-products'] );
@@ -51,10 +51,10 @@ else if( !$productLicenseId ){
 			HtmlTag::create( 'h5', $itemProductLicense->title ),
 			HtmlTag::create( 'div', $itemProductLicense->description ),
 			$view->renderLicenseFacts( $itemProductLicense, ['users', 'duration', 'price'] ),
-		), array(
+		), [
 			'href'	=> './manage/my/provision/license/add/'.$productId.'/'.$itemProductLicense->productLicenseId,
 			'class'	=> 'btn btn-large'
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'list-licenses-item'] );
 	}
 	if( $list )
@@ -97,12 +97,12 @@ else{
 
 	$optPayment	= HtmlElements::Options( $words['paymentTypes'] );
 
-	$buttonOrder	= HtmlTag::create( 'button', $iconOrder.'&nbsp;'.$w->buttonOrder, array(
+	$buttonOrder	= HtmlTag::create( 'button', $iconOrder.'&nbsp;'.$w->buttonOrder, [
 		'type'		=> "submit",
 		'name'		=> "save",
 		'class'		=> "btn btn-primary not-btn-large",
 		'disabled'	=> $productId && $productLicenseId ? NULL : 'disabled',
-	) );
+	] );
 
 	$fieldPayment	= '';
 /*

@@ -6,20 +6,19 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_NewsList implements Countable
 {
-	protected $env;
-	protected $words;
-	protected $news		= [];
-	protected $limit	= 5;
+	protected Environment $env;
+	protected array $words;
+	protected array $news		= [];
+	protected int $limit		= 5;
 
-	public static $defaultAttributes	= array(
+	public static array $defaultAttributes	= [
 		'title'		=> NULL,
 		'timestamp'	=> NULL,
 		'module'	=> NULL,
 		'type'		=> NULL,
 		'url'		=> NULL,
 		'icon'		=> NULL,
-	);
-
+	];
 
 	public function __construct( Environment $env )
 	{
@@ -27,13 +26,13 @@ class View_Helper_NewsList implements Countable
 		$this->words	= $env->getLanguage()->getWords( 'info/newslist' );
 	}
 
-	public function add( $item ): self
+	public function add( object $item ): self
 	{
 		$this->news[]	= $item;
 		return $this;
 	}
 
-	public function collect( $resource = 'Info_NewsList', $event = 'collectNews', $options = [] ): int
+	public function collect( string $resource = 'Info_NewsList', string $event = 'collectNews', array $options = [] ): int
 	{
 		$this->env->getCaptain()->callHook( $resource, $event, $this, $options );
 		return $this->count();
@@ -81,9 +80,9 @@ class View_Helper_NewsList implements Countable
 			HtmlTag::create( 'th', $this->words['panel']['headerAge'], ['style' => 'text-align: right'] ),
 		) ) );
 		$tbody	= HtmlTag::create( 'tbody', $list );
-		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+		$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 			'class'		=> 'table table-striped table-fixed',
-		) );
+		] );
 		return $list;
 	}
 

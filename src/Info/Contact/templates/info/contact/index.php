@@ -15,13 +15,13 @@ if( $useNewsletter ){
 	if( isset( $newsletterTopics ) && count( $newsletterTopics ) ){
 		$list	= [];
 		foreach( $newsletterTopics as $topic ){
-			$checkbox	= HtmlTag::create( 'input', NULL, array(
+			$checkbox	= HtmlTag::create( 'input', NULL, [
 				'type'		=> 'checkbox',
 				'name'		=> 'topics[]',
 				'value'		=> $topic->newsletterGroupId,
 				'checked'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'checked' : NULL,
 				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
-			) );
+			] );
 			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$topic->title, ['class' => 'checkbox'] );
 			$list[]		= HtmlTag::create( 'li', $label );
 		}
@@ -35,14 +35,14 @@ if( $useNewsletter ){
 		<div class="row-fluid">
 			<div class="span12">
 				<label for="input_newsletter" class="checkbox">
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'				=> 'checkbox',
 						'name'				=> 'newsletter',
 						'id'				=> 'input_newsletter',
 						'class'				=> 'has-optionals',
 						'value'				=> 'yes',
 						'data-animation'	=> 'slide',
-					) ).'
+					] ).'
 					'.$w->labelNewsletter.'
 				</label>
 				'.$inputTopics.'
@@ -59,7 +59,7 @@ if( $useCaptcha ){
 	<div class="row-fluid">
 		<div class="span6">
 			<label for="input_captcha">'.$w->labelCaptcha.'&nbsp;<small class="muted">('.$w->labelCaptcha_suffix.')</small></label>
-			'.HtmlTag::create( 'input', NULL, array(
+			'.HtmlTag::create( 'input', NULL, [
 				'type'			=> 'text',
 				'name'			=> 'captcha',
 				'id'			=> 'input_captcha',
@@ -67,7 +67,7 @@ if( $useCaptcha ){
 				'maxlength'		=> '20',
 				'required'		=> 'required',
 				'value'			=> ''
-			) ).'
+			] ).'
 		</div>
 		<div class="span5 offset1">
 			[captcha length="'.$captchaLength.'" strength="'.$captchaStrength.'"]
@@ -139,13 +139,13 @@ $content	= $textTop.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_message" class="mandatory required">'.$w->labelMessage.'</label>
-					'.HtmlTag::create( 'textarea', htmlentities( $message, ENT_QUOTES, 'UTF-8' ), array(
+					'.HtmlTag::create( 'textarea', htmlentities( $message, ENT_QUOTES, 'UTF-8' ), [
 						'name'			=> 'message',
 						'id'			=> 'input_message',
 						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12',
 						'rows'			=> '10',
 						'required'		=> 'required',
-					) ).'
+					] ).'
 				</div>
 			</div>
 			'.$newsletter.'

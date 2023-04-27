@@ -14,14 +14,14 @@ $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
 $value		= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
-$editor		= HtmlTag::create( 'textarea', $value, array(
+$editor		= HtmlTag::create( 'textarea', $value, [
 	'name'		=> 'html',
 	'id'		=> 'input_html',
 	'rows'		=> '15',
-) );
+] );
 
 $html		= $template->html;
-$values		= array(
+$values		= [
 	'nr'				=> $newsletter->newsletterId,
 	'title'				=> $newsletter->heading,
 	'content'			=> $editor,
@@ -32,7 +32,7 @@ $values		= array(
 	'registerDate'		=> $words->preview['registerDate'],
 	'registerTime'		=> $words->preview['registerTime'],
 	'tracking'			=> '',
-);
+];
 foreach( $values as $key => $value )
 	$html	= str_replace( '[#'.$key.'#]', $value, $html );
 

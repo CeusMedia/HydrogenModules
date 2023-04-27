@@ -113,13 +113,13 @@ class Server extends WebSite
 	//	$data['requestHeaders']	= $request->headers->toArray();
 //		$this->messenger->noteNotice( print_m( \CeusMedia\Common\Net\HTTP\Header\Field::decodeQualifiedValues( getEnv( 'HTTP_ACCEPT' ) ), NULL, NULL, TRUE ) );
 
-		$mimeTypesAllowed	= array(
+		$mimeTypesAllowed	= [
 			'application/json',
 			'text/json',
 			'text/javascript',
 			'text/plain',
 			'text/html'
-		);
+		];
 		$mimeTypeDefault	= 'application/json;charset=utf8';
 		$mimeTypeSniffer	= new MimeTypeSniffer;
 		$mimeType			= $mimeTypeSniffer->getMimeType( $mimeTypesAllowed, $mimeTypeDefault );

@@ -7,17 +7,17 @@ $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 
 $w	= (object) $words['edit'];
 
-$attributesTextarea	= array(
+$attributesTextarea	= [
 	'style'	=> 'min-height: 400px; padding: 0.2em 0.3em;',
 	'name'	=> 'content',
 	'class'	=> 'span12 CodeMirror',
-);
-$attributesButton	= array(
+];
+$attributesButton	= [
 	'type'	=> 'submit',
 	'name'	=> 'do',
 	'value'	=> 'save',
 	'class'	=> 'button save btn btn-success',
-);
+];
 
 $optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );

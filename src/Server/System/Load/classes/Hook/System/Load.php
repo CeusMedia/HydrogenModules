@@ -34,12 +34,12 @@ class Hook_System_Load extends Hook
 
 	public static function onRegisterDashboardPanels( Environment $env, $context, $module, $data = [] )
 	{
-		$context->registerPanel( 'system-server-load', array(
+		$context->registerPanel( 'system-server-load', [
 			'url'		=> './system/load/ajaxRenderDashboardPanel',
 			'icon'		=> 'fa fa-fw fa-bar-chart',
 			'title'		=> 'System: Auslastung',
 			'heading'	=> 'System: Auslastung',
 			'refresh'	=> 10,
-		) );
+		] );
 	}
 }

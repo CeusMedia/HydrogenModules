@@ -46,12 +46,12 @@ class Mail_Newsletter extends Mail_Abstract
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.html' ) ){
 			$premailer	= new Premailer();
 			try{
-				$response	= $premailer->convertFromHtml( $html, array(
+				$response	= $premailer->convertFromHtml( $html, [
 					'preserve_styles'	=> FALSE,
 					'remove_ids'		=> TRUE,
 					'remove_classes'	=> TRUE,
 					'remove_comments'	=> TRUE,
-				) );
+				] );
 				$converted	= $premailer->getHtml();
 				$html		= $converted;
 			}

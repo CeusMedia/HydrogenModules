@@ -1,13 +1,21 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_Shop_Payment_Mangopay extends Job_Abstract
 {
-	protected $logicMangopay;
-	protected $logicShop;
-	protected $modelEvent;
-	protected $modelMangopayPayin;
-	protected $modelShopPayin;
-	protected $backends				= [];
+	protected Logic_Shop_Payment_Mangopay $logicMangopay;
+	protected Logic_Shop $logicShop;
+	protected Model_Mangopay_Event $modelEvent;
+	protected Model_Mangopay_Payin $modelMangopayPayin;
+	protected Model_Shop_Payment_Mangopay $modelShopPayin;
+	protected Dictionary $moduleConfig;
+	protected array $backends				= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function handle()
 	{
 		$this->handleFailedBankWirePayIns();
@@ -17,17 +25,18 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 	/**
 	 *	Register a payment backend.
 	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
+	 *	@param		string			$backend		...
+	 *	@param		string			$key			...
+	 *	@param		string			$title			...
+	 *	@param		string			$path			...
+	 *	@param		integer			$priority		...
+	 *	@param		string|NULL		$icon			...
+	 *	@param		array			$countries		...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
+	public function registerPaymentBackend( string $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] ): void
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -35,9 +44,13 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicMangopay		= new Logic_Shop_Payment_Mangopay( $this->env );
@@ -49,17 +62,21 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 
 		$captain	= $this->env->getCaptain();
 		$payload	= [];
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this );
+		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handleFailedBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= ['paymentId' => 'ASC'];
-		$indices	= array(
+		$indices	= [
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
-		);
+		];
 		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
@@ -79,10 +96,10 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 				$this->logicMangopay->updatePayment( $payIn );
 				$this->logicShop->setOrderStatus( $shopPayment->orderId, Model_Shop_Order::STATUS_NOT_PAYED );
 
-				$data		= array(
+				$data		= [
 					'orderId'			=> $shopPayment->orderId,
 					'paymentBackends'	=> $this->backends,
-				);
+				];
 				$logic->handleMail(
 					new Mail_Shop_Customer_NotPayed( $this->env, $data ),
 					$this->logicShop->getOrderCustomer( $order->orderId ),
@@ -97,14 +114,18 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handleSucceededBankWirePayIns()
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= ['paymentId' => 'ASC'];
-		$indices	= array(
+		$indices	= [
 			'status'	=> Model_Shop_Payment_Mangopay::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
-		);
+		];
 		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
@@ -129,10 +150,10 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 				if( $result ){
 					$this->logicMangopay->updatePayment( $payIn );
 					$this->logicShop->setOrderStatus( $shopPayment->orderId, Model_Shop_Order::STATUS_PAYED );
-					$data		= array(
+					$data		= [
 						'orderId'			=> $shopPayment->orderId,
 						'paymentBackends'	=> $this->backends,
-					);
+					];
 					$logic->handleMail(
 						new Mail_Shop_Customer_Payed( $this->env, $data ),
 						$this->logicShop->getOrderCustomer( $order->orderId ),

@@ -10,15 +10,15 @@ use CeusMedia\HydrogenFramework\View;
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück zur Liste', [
 	'href'		=> './admin/database/backup',
 	'class'		=> 'btn',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;Sicherung erstellen', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;Sicherung erstellen', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 
 return '
 <div class="content-panel">

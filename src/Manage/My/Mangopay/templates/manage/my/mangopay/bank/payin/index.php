@@ -9,10 +9,10 @@ $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconPrint		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-print'] );
 
-$wordsCurrencies	= array(
+$wordsCurrencies	= [
 	'EUR'		=> 'EUR',
 	'USD'		=> 'USD',
-);
+];
 
 $currencies	= [];
 foreach( $wallets as $item )
@@ -86,12 +86,12 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
 	'href'	=> $helperUrl->render(),
 	'class'	=> 'btn',
 ) );
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' Überweisung anmelden', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' Überweisung anmelden', [
 	'type'	=> 'submit',
 	'name'	=> "save",
 /*	'value'	=> "payin",*/
 	'class'	=> 'btn btn-primary',
-) );
+] );
 $panelAdd	= '
 <div class="content-panel">
 	<h3>Überweisung vom Bankkonto</h3>

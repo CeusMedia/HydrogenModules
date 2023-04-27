@@ -1,18 +1,23 @@
 <?php
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
-class Controller_Manage_Content_Style extends Controller{
-
-	protected $request;
-	protected $messenger;
+class Controller_Manage_Content_Style extends Controller
+{
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 	protected Logic_Frontend $frontend;
 	protected string $basePath;
 	protected string $pathCss;
 	protected string $theme;
 	protected array $files		= [];
 
-	public function index( $file = NULL ){
+	public function index( ?string $file = NULL ): void
+	{
 		if( strlen( trim( $file ) ) ){
 			if( !file_exists( $this->pathCss.$file ) ){
 				$this->messenger->noteError( 'Invalid file' );
@@ -20,10 +25,10 @@ class Controller_Manage_Content_Style extends Controller{
 			}
 			if( $this->request->has( 'save' ) ){
 				$content	= $this->request->get( 'content' );
-				File_Writer::save( $this->pathCss.$file, $content );
+				FileWriter::save( $this->pathCss.$file, $content );
 				$this->restart( $file, TRUE );
 			}
-			$this->addData( 'content', File_Reader::load( $this->pathCss.$file ) );
+			$this->addData( 'content', FileReader::load( $this->pathCss.$file ) );
 			$this->addData( 'file', $file );
 			$this->addData( 'readonly', !is_writable( $this->pathCss.$file ) );
 		}
@@ -32,28 +37,29 @@ class Controller_Manage_Content_Style extends Controller{
 		}
 	}
 
-	public function ajaxSaveContent(){
+	public function ajaxSaveContent(): void
+	{
 		$file		= $this->request->get( 'file' );
 		$content	= $this->request->get( 'content' );
 		$status		= 500;
-		$result		= array(
+		$result		= [
 			'status'	=> 'error',
 			'data'		=> 'File not existing'
-		);
+		];
 		if( file_exists( $this->pathCss.$file ) ){
 			try{
-				$result	= File_Writer::save( $this->pathCss.$file, $content );
+				$result	= FileWriter::save( $this->pathCss.$file, $content );
 				$status	= 200;
-				$result	= array(
+				$result	= [
 					'status'	=> 'data',
 					'data'		=> $result
-				);
+				];
 			}
 			catch( Exception $e ){
-				$result		= array(
+				$result		= [
 					'status'	=> 'error',
 					'data'		=> $e->getMessage()
-				);
+				];
 			}
 		}
 		$response	= $this->env->getResponse();
@@ -63,11 +69,14 @@ class Controller_Manage_Content_Style extends Controller{
 		$response->send();
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->basePath		= $this->frontend->getPath( 'themes' );
 		$this->theme		= $this->frontend->getConfigValue( 'layout.theme' );

@@ -28,12 +28,12 @@ class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_
 	{
 		$path		= 'images/paymentProviderLogo/'.$this->size.'/';
 		$path		.= strtolower( $this->provider ).'-1.png';
-		$image		= HtmlTag::create( 'img', NULL, array(
+		$image		= HtmlTag::create( 'img', NULL, [
 			'src'	=> $path,
-		) );
-		return HtmlTag::create( $this->nodeName, $image, array(
+		] );
+		return HtmlTag::create( $this->nodeName, $image, [
 			'class'	=> $this->nodeClass,
-		) );
+		] );
 	}
 
 	public function setNodeClass( $classNames )

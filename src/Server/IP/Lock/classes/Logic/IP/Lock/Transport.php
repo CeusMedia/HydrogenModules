@@ -37,16 +37,16 @@ class Logic_IP_Lock_Transport extends Logic
 					array( 'ipLockFilterId' )
 				);
 				$filterIds	= array_intersect( $reasonFiltersIds, $filterIds );
-				$filters	= $this->modelFilter->getAllByIndices( array(
+				$filters	= $this->modelFilter->getAllByIndices( [
 					'reasonId'			=> $reasonIds,
 					'ipLockFilterId'	=> $filterIds,
-				) );
+				] );
 			}
 		}
-		return (object) array(
+		return (object) [
 			'reasons' => $reasons,
 			'filters' => $filters,
-		);
+		];
 	}
 
 	/**

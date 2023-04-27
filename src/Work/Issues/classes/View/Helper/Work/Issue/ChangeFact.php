@@ -8,17 +8,18 @@ class View_Helper_Work_Issue_ChangeFact
 	const FORMAT_HTML		= 1;
 	const FORMAT_TEXT		= 2;
 
-	const FORMATS			= array(
+	const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
-	);
+	];
 
-	protected $env;
-	protected $format		= self::FORMAT_HTML;
-	protected $modelUser;
-	protected $modelIssue;
-	protected $modelNote;
-	protected $modelChange;
+	protected Environment $env;
+	protected Model_User $modelUser;
+	protected Model_Issue $modelIssue;
+	protected Model_Issue_Note $modelNote;
+	protected Model_Issue_Change $modelChange;
+	protected int $format		= self::FORMAT_HTML;
+	protected ?object $change	= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -32,7 +33,7 @@ class View_Helper_Work_Issue_ChangeFact
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
-			return $this->renderAsString();
+			return $this->renderAsText();
 		return $this->renderAsHtml();
 	}
 
@@ -145,7 +146,7 @@ class View_Helper_Work_Issue_ChangeFact
 			case 4:
 				$from	= $words['types'][$this->change->from];
 				$to		= $words['types'][$this->change->to];
-				$this->change	= $from." -> ".$to;
+				$change	= $from." -> ".$to;
 				break;
 			case 5:
 				$from	= $words['severities'][$this->change->from];

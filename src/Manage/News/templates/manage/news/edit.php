@@ -10,15 +10,15 @@ $w			= (object) $words['edit'];
 
 $optStatus	= HtmlElements::Options( $words['states'], $news->status );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, array(
+$buttonAdd		= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './manage/news',
 	'class'	=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
-) );
+] );
 $buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
 	'href'		=> './manage/news/remove/'.$newsId,
 	'class'		=> 'btn btn-small btn-danger',
@@ -57,11 +57,11 @@ return '
 			</div>
 			<!--/noShortcode-->
 			<br/>
-			'.HtmlTag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', [
 				$buttonAdd,
 				$buttonSave,
 				$buttonRemove,
-			) ), ['class' => 'buttonbar'] ).'
+			] ), ['class' => 'buttonbar'] ).'
 		</form>
 	</div>
 </div>';

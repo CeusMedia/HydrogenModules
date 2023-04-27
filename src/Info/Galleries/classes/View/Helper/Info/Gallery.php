@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
@@ -9,12 +10,17 @@ class View_Helper_Info_Gallery extends Abstraction
 	const SCOPE_GALLERY		= 0;
 	const SCOPE_IMAGE		= 1;
 
+	protected Dictionary $moduleConfig;
+	protected string $baseFilePath;
+	protected Model_Gallery $modelGallery;
+	protected Model_Gallery_Image $modelImage;
+
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$pathImages			= $env->getConfig()->get( 'path.images' );
-		$pathImages			= $pathImages ? $pathImages : 'images/';
+		$pathImages			= $pathImages ?: 'images/';
 		$this->baseFilePath	= $this->env->url.$pathImages.$this->moduleConfig->get( 'path' );
 		$this->modelGallery	= new Model_Gallery( $this->env );
 		$this->modelImage	= new Model_Gallery_Image( $this->env );
@@ -51,7 +57,11 @@ class View_Helper_Info_Gallery extends Abstraction
 
 	protected function getBasePath(): string
 	{
-		return Controller_Info_Gallery::$defaultPath;
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
+		$config			= $this->env->getConfig();
+		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathGalleries	= $this->moduleConfig->get( 'folder' );
+		return $pathImages.$pathGalleries;
 	}
 
 	protected function getGalleries(): array

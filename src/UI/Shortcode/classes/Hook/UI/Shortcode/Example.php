@@ -11,11 +11,11 @@ class Hook_UI_Shortcode_Example extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
-		$shortCodes		= array(
-			'example'	=> array(
+		$shortCodes		= [
+			'example'	=> [
 				'type'			=> 'default',
-			)
-		);
+			]
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -27,9 +27,9 @@ class Hook_UI_Shortcode_Example extends Hook
 //						$helper->setType( $attr['type'] );
 //						$replacement	= $helper->render();										//  get replacement content
 
-						$replacement	= HtmlTag::create( 'div', array(
+						$replacement	= HtmlTag::create( 'div', [
 							'This is an example.',
-						), ['class' => 'example-type-'.$attr['type']] );
+						], ['class' => 'example-type-'.$attr['type']] );
 						$processor->replaceNext( $shortCode, $replacement );
 					}
 				}

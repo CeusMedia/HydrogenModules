@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -6,6 +6,7 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
@@ -13,25 +14,27 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 class Controller_Info_File extends Controller
 {
 	/**	@var	Messenger										$messenger	*/
-	protected $messenger;
+	protected Messenger $messenger;
 
 	/**	@var	Model_Download_File								$modelFile			Database model of files */
-	protected $modelFile;
+	protected Model_Download_File $modelFile;
 
 	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
-	protected $modelFolder;
+	protected Model_Download_Folder $modelFolder;
 
 	/**	@var	Dictionary										$options			Module configuration object */
-	protected $options;
+	protected Dictionary $options;
 
 	/**	@var	string											$path				Base path to files */
-	protected $path;
+	protected string $path;
 
-	/**	@var	Dictionary										$request			Object to map request parameters */
-	protected $request;
+	/**	@var	HttpRequest										$request			Object to map request parameters */
+	protected HttpRequest $request;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= [];
+	protected array $rights		= [];
+
+	protected object $messages;
 
 	public function addFolder( $folderId = NULL )
 	{
@@ -39,7 +42,7 @@ class Controller_Info_File extends Controller
 		$folder		= trim( $this->request->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
-			$url	= ( $folderId ? $folderId : NULL).'?input_folder='.rawurlencode( $folder );
+			$url	= ( $folderId ?: NULL).'?input_folder='.rawurlencode( $folder );
 			$this->restart( $url, TRUE );
 		}
 		else if( file_exists( $this->path.$path.$folder ) ){
@@ -87,7 +90,7 @@ class Controller_Info_File extends Controller
 		}
 		$path	= getCwd().'/'.$this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
-			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
+			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
 		$mimeType	= mime_content_type( $path.$file->title );
@@ -110,7 +113,7 @@ class Controller_Info_File extends Controller
 		}
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
-			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administator!' );
+			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
 		$this->modelFile->edit( $fileId, [
@@ -367,7 +370,7 @@ class Controller_Info_File extends Controller
 				$helperError	= new View_Helper_UploadError( $this->env );
 				$helperError->setUpload( $logicUpload );
 				$message	= $helperError->render();
-				$this->messenger->noteError( $message ? $message : $e->getMessage() );
+				$this->messenger->noteError( $message ?: $e->getMessage() );
 			}
 		}
 		$this->restart( 'index/'.$folderId, TRUE );
@@ -447,7 +450,7 @@ class Controller_Info_File extends Controller
 		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
-	protected function countIn( $path, bool $recursive = FALSE )
+	protected function countIn( $path, bool $recursive = FALSE ): object
 	{
 		$files		= 0;
 		$folders	= 0;

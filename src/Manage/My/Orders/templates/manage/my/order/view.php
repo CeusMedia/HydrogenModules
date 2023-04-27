@@ -65,20 +65,20 @@ $panelData	= HtmlTag::create( 'div', array(
 /*  --  GRID  --  */
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$panelFacts,
-		), ['class' => 'span4'] ),
-		HtmlTag::create( 'div', array(
+		], ['class' => 'span4'] ),
+		HtmlTag::create( 'div', [
 			$panelDelivery,
-		), ['class' => 'span4'] ),
-		HtmlTag::create( 'div', array(
+		], ['class' => 'span4'] ),
+		HtmlTag::create( 'div', [
 			$panelBilling,
-		), ['class' => 'span4'] ),
+		], ['class' => 'span4'] ),
 	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$panelPositions,
-		), ['class' => 'span12'] ),
+		], ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(

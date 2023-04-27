@@ -65,12 +65,12 @@ if( $view->hasContentFile( 'html/app.brand.html' ) )
 
 
 /*  --  STATIC HEADER / FOOTER  --  */
-$data	= array(
+$data	= [
 	'words'		=> $words,
 	'navFooter'	=> $navFooter,
 	'navHeader'	=> $navHeader,
 	'navTop'	=> $navTop,
-);
+];
 $header		= '';
 $footer		= '';
 if( $view->hasContentFile( 'html/app.header.html' ) )

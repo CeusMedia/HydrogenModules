@@ -66,10 +66,10 @@ if( $projects ){
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd		= HtmlElements::LinkButton( './manage/project/add', $iconAdd.'&nbsp;'.$w->buttonAdd, 'btn btn-success not-btn-small' );
-$buttonAddSmall	= HtmlTag::create( 'a', $iconAdd, array(
+$buttonAddSmall	= HtmlTag::create( 'a', $iconAdd, [
 	'href'	=> './manage/project/add',
 	'class'	=> 'btn btn-success btn-mini',
-) );
+] );
 
 if( !$canAdd ){
 	$buttonAdd	= HtmlElements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-success btn-small disabled', NULL, TRUE );

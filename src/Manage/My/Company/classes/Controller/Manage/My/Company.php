@@ -1,21 +1,24 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_My_Company extends Controller
 {
-	protected $request;
-	protected $messenger;
-	protected $modelBranch;
-	protected $modelCompany;
-	protected $modelCompanyUser;
-	protected $modelUser;
-	protected $userId;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Model_Branch $modelBranch;
+	protected Model_Company $modelCompany;
+	protected Model_Company_User $modelCompanyUser;
+	protected Model_User $modelUser;
+	protected ?string $userId			= NULL;
+	protected array $companies;
 
-	public function edit( $companyId )
+	public function edit( string $companyId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
@@ -54,7 +57,7 @@ class Controller_Manage_My_Company extends Controller
 		$this->view->addData( 'company', $company );
 	}
 
-	public function index()
+	public function index(): void
 	{
 
 /*		if( !$this->companies ){
@@ -68,7 +71,7 @@ class Controller_Manage_My_Company extends Controller
 		$this->addData( 'companies', $this->companies );
 	}
 
-	public function uploadLogo( $companyId )
+	public function uploadLogo( string $companyId ): void
 	{
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
@@ -135,7 +138,7 @@ class Controller_Manage_My_Company extends Controller
 		return $this->companies[$companyId];
 	}
 
-	protected function getMyCompanies( $sortByColumn = 'companyId' )
+	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{
 		$list		= [];
 		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
@@ -147,9 +150,9 @@ class Controller_Manage_My_Company extends Controller
 		return $list;
 	}
 
-	protected function isMyCompany( $companyId )
+	protected function isMyCompany( string $companyId ): bool
 	{
 		$indices	= ['companyId' => $companyId, 'userId' => $this->userId];
-		return $this->modelCompanyUser->countByIndices( $indices );
+		return 0 !== $this->modelCompanyUser->countByIndices( $indices );
 	}
 }

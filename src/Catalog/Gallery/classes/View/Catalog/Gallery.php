@@ -73,10 +73,10 @@ class View_Catalog_Gallery extends View
 //				$count	= '<span class="badge">'.count( $item->images ).'</span>';
 				$label	= HtmlTag::create( 'div', $category->title, ['class' => "gallery-category-matrix-item-label autocut"] );
 				$url	= $this->logic->pathModule.'category/'.$category->galleryCategoryId;				//   @todo	implement auto-path
-				$attr	= array(
+				$attr	= [
 					'class'		=> "gallery-category-matrix-item",
 					'onclick'	=> 'document.location.href="'.$url.'"',
-				);
+				];
 				$src	= $pathImages.$category->image;
 				if( !$category->image && $category->images ){
 					$image	= $category->images[0];

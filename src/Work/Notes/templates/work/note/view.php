@@ -10,27 +10,27 @@ if( count( $note->links ) ){
 	foreach( $note->links as $item ){
 		$link	= HtmlTag::create( 'div',
 			HtmlTag::create( 'small',
-				HtmlTag::create( 'a', htmlentities( $item->url, ENT_QUOTES, 'UTF-8' ), array(
+				HtmlTag::create( 'a', htmlentities( $item->url, ENT_QUOTES, 'UTF-8' ), [
 					'href'		=> $item->url,
 					'target'	=> '_blank',
-				) )
+				] )
 			),
 			array( 'class' => 'autocut' )
 		);
 
 		$label	= HtmlTag::create( 'div',
-			HtmlTag::create( 'big', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+			HtmlTag::create( 'big', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), [
 				'class'	=> 'muted',
-			) ),
+			] ),
 			array( 'class' => 'autocut' )
 		);
 		if( $item->title ){
 			$label	= HtmlTag::create( 'div',
 				HtmlTag::create( 'big',
-					HtmlTag::create( 'a', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), array(
+					HtmlTag::create( 'a', htmlentities( $item->title, ENT_QUOTES, 'UTF-8' ), [
 						'href'		=> $item->url,
 						'target'	=> '_blank',
-					) )
+					] )
 				),
 				array( 'class' => 'autocut' )
 			);
@@ -43,9 +43,9 @@ if( count( $note->links ) ){
 	$table	= HtmlTag::create( 'table', [$thead], ['class' => 'table table-striped table-condensed table-fixed'] );
 	$panelLinks	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h3', 'Links' ),
-		HtmlTag::create( 'div', $table, array(
+		HtmlTag::create( 'div', $table, [
 			'class'	=> 'content-panel-inner'
-		) ),
+		] ),
 	), ['class' => 'content-panel content-panel-table'] );
 
 /*	$list	= [];

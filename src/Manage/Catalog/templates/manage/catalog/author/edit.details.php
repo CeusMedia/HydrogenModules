@@ -22,12 +22,12 @@ $image	= HtmlTag::create( 'img', NULL, ['src' => $image, 'class' => 'img-polaroi
 $buttonRemoveImage	= "";
 if( $author->image ){
 	$urlRemoveImage	= './manage/catalog/author/removeImage/'.$author->authorId;
-	$attributes		= array(
+	$attributes		= [
 		'title'		=> $w->buttonRemoveImage,
 		'type'		=> "button",
 		'class'		=> "btn btn-danger",
 		'onclick'	=> "document.location.href='".$urlRemoveImage."';"
-	);
+	];
 	$buttonRemoveImage	= HtmlTag::create( 'button', $iconRemove, $attributes );
 }
 

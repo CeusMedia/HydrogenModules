@@ -104,10 +104,10 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	{
 		$entity		= $template->entity;
 		$title		= $this->getNextTitle( $entity->title );
-		$files		= array(
+		$files		= [
 			'styles'	=> [],
 			'images'	=> []
-		);
+		];
 		foreach( array_keys( $files ) as $topic ){
 			foreach( $entity->files->$topic as $item ){
 				if( !file_exists( $item->filePath )){

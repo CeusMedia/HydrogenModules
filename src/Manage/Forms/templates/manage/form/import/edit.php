@@ -9,11 +9,11 @@ $iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['class' => 'btn btn-small', 'href' => './manage/form/import'] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'class' => 'btn btn-primary'] );
 
-$buttonTest	= HtmlTag::create( 'button', $iconTest, array(
+$buttonTest	= HtmlTag::create( 'button', $iconTest, [
 	'type'	=> 'button',
 	'id'	=> 'button-test-'.$rule->formImportRuleId,
 	'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
-), ['rule-id' => $rule->formImportRuleId] );
+], ['rule-id' => $rule->formImportRuleId] );
 
 
 $statuses	= [
@@ -78,7 +78,7 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 				</div>
 				<div class="span6">
 					<label for="input_options-'.$rule->formImportRuleId.'">Optionen</label>
-					<textarea name="rules" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->options, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="options" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->options, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">

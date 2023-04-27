@@ -286,11 +286,11 @@ class View_Helper_Catalog_Bookstore
 
 	public function renderDocumentLink( $document ): string
 	{
-		return HtmlTag::create( 'a', $document->title, array(
+		return HtmlTag::create( 'a', $document->title, [
 			'href'		=> 'file/bookstore/document/'.$document->url,
 			'class'		=> 'document',
 			'target'	=> '_blank',
-		) );
+		] );
 	}
 
 	public function renderPositionFromArticle( $article, string $language = 'de' ): string

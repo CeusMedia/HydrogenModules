@@ -3,7 +3,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 {
@@ -22,12 +22,17 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	protected bool $badgesColored		= TRUE;
 	protected array $missions			= [];
 
-	public function __construct( WebEnvironment $env )
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( Environment $env )
 	{
 		parent::__construct( $env );
 		$this->baseUrl		= $env->url;
 		$this->indicator	= new HtmlIndicator();
 		$this->logic		= Logic_Work_Mission::getInstance( $env );
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 		$this->projects		= [];
 		$modelProject		= new Model_Project( $this->env );
@@ -41,13 +46,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 			'edit'		=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
 			'view'		=> HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] ),
 		];
-	}
-
-	protected function renderBadgeDays( $days, $class = NULL ): string
-	{
-		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
-		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
-		return HtmlTag::create( 'span', $label, ['class' => $class] );
 	}
 
 	public function renderBadgeDaysOverdue( object $mission ): string
@@ -70,7 +68,9 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	{
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return '';																			//  return without content
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$end	= new DateTime( $mission->dayEnd );
 		if( $this->today < $start || $end <= $this->today )										//  starts in future or has already ended
 			return '';																			//  return without content
@@ -80,6 +80,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 
 	public function renderBadgeDaysUntil( object $mission ): string
 	{
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
 		if( $start <= $this->today )															//  mission has started in past
 			return '';																			//  return without content
@@ -255,11 +256,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		$buttonEdit	= $showActions ? $this->renderRowButtonEdit( $event ) : '';
 		$cells		= [];
 
-/*		$checkbox	= HtmlTag::create( 'input', '', array(
+/*		$checkbox	= HtmlTag::create( 'input', '', [
 			'type'	=> 'checkbox',
 			'name'	=> 'missionIds[]',
 			'value'	=> $event->missionId,
-		) );
+		] );
 		$cells[]	= HtmlTag::create( 'td', $checkbox );*/
 		if( $showPriority ){
 			$priority	= $this->words['priorities'][$event->priority];
@@ -362,5 +363,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		$this->badgesShowFuture	= $showFuture;
 		$this->badgesColored	= $colored;
 		return $this;
+	}
+
+	protected function renderBadgeDays( int $days, ?string $class = NULL ): string
+	{
+		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
+		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
+		return HtmlTag::create( 'span', $label, ['class' => $class] );
 	}
 }

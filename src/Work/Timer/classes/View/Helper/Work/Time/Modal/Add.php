@@ -3,11 +3,15 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 {
-	protected $module;
-	protected $moduleId;
-	protected $projectId	= NULL;
+	protected ?string $module		= NULL;
+	protected ?string $moduleId		= NULL;
+	protected ?string $projectId	= NULL;
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
@@ -71,8 +75,8 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 			'.$fieldRelation.'
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Titel</label>
-					<input type="text" name="title" id="input_title" class="span12" mandatory="mandatory"/>
+					<label for="input_title" class="mandatory required">Titel</label>
+					<input type="text" name="title" id="input_title" class="span12" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -105,19 +109,31 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 </form>';
 	}
 
-	public function setModule( $module ): self
+	/**
+	 * @param		string		$module
+	 * @return		self
+	 */
+	public function setModule( string $module ): self
 	{
 		$this->module		= $module;
 		return $this;
 	}
 
-	public function setModuleId( $moduleId ): self
+	/**
+	 * @param		string		$moduleId
+	 * @return		self
+	 */
+	public function setModuleId( string $moduleId ): self
 	{
 		$this->moduleId		= $moduleId;
 		return $this;
 	}
 
-	public function setProjectId( $projectId ): self
+	/**
+	 *	@param		string		$projectId
+	 *	@return		self
+	 */
+	public function setProjectId( string $projectId ): self
 	{
 		$this->projectId	= $projectId;
 		return $this;

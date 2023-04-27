@@ -1,16 +1,17 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Blog extends Controller
 {
-	protected $modelCategory;
-	protected $modelComment;
-	protected $modelPost;
-	protected $modelUser;
-	protected $messenger;
+	protected Model_Blog_Category $modelCategory;
+	protected Model_Blog_Comment $modelComment;
+	protected Model_Blog_Post $modelPost;
+	protected Model_User $modelUser;
+	protected MessengerResource $messenger;
 
-	public static function getUriPart( $label, $delimiter = "_" )
+	public static function getUriPart( string $label, string $delimiter = "_" ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
@@ -18,7 +19,7 @@ class Controller_Info_Blog extends Controller
 		return $label;
 	}
 
-	public function ajaxComment()
+	public function ajaxComment(): void
 	{
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
@@ -54,7 +55,7 @@ class Controller_Info_Blog extends Controller
 		}
 	}
 
-	public function comment( $postId )
+	public function comment( string $postId ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
@@ -77,10 +78,10 @@ class Controller_Info_Blog extends Controller
 			$this->messenger->noteSuccess( $words->successSaved );
 			$this->informAboutNewComment( $commentId );
 		}
-		$this->restart( View_Info_Blog::renderPostUrlStatic( $env, $post ) );
+		$this->restart( View_Info_Blog::renderPostUrlStatic( $this->env, $post ) );
 	}
 
-	public function index( $page = NULL )
+	public function index( $page = NULL ): void
 	{
 		$limit		= 5;
 		$offset		= (int) $page * $limit;
@@ -98,7 +99,7 @@ class Controller_Info_Blog extends Controller
 		$this->addData( 'page', $page );
 	}
 
-	public function post( $postId = NULL )
+	public function post( $postId = NULL ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
@@ -151,7 +152,7 @@ class Controller_Info_Blog extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkPost( $postId, bool $strict = FALSE )
+	protected function checkPost( string $postId, bool $strict = FALSE ): object
 	{
 		$post	= $this->modelPost->get( (int) $postId );
 		if( !$post ){
@@ -164,18 +165,19 @@ class Controller_Info_Blog extends Controller
 		return $post;
 	}
 
-	protected function informAboutNewComment( $commentId )
+	protected function informAboutNewComment( string $commentId ): void
 	{
 		if( !$this->moduleConfig->get( 'mail' ) )													//  do not send mails to participants
 			return;
-		$logic		= Logic_Mail::getInstance( $this->env );										//  get mailer logic
+		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
+		$logic		= Logic_Mail::getInstance( $this->env );										//  get mailer logic
 		$comment	= $this->modelComment->get( $commentId );
 		$post		= $this->checkPost( $comment->postId );
-		$data	= array(
+		$data	= [
 			'comment'	=> $comment,
 			'post'		=> $post,
-		);
+		];
 
 		$mail		= new Mail_Info_Blog_Comment( $this->env, $data );								//  generate mail to post author
 		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver
@@ -202,7 +204,7 @@ class Controller_Info_Blog extends Controller
 			$addresses[]	= $item->email;															//  note used email address
 			$data['myComment']	= $item;															//  decorate mail data by own former comment
 			$mail		= new Mail_Info_Blog_FollowUp( $this->env, $data );							//  generate mail
-			$receiver	= ['username' => $item->username, 'email' => $item->email];			//  receiver is former comment author
+			$receiver	= (object) ['username' => $item->username, 'email' => $item->email];		//  receiver is former comment author
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  enqueue mail
 		}
 	}

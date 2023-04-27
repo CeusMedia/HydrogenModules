@@ -1,13 +1,21 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_Shop_Payment_Stripe extends Job_Abstract
 {
-	protected $logicStripe;
-	protected $logicShop;
-	protected $modelEvent;
-	protected $modelStripePayin;
-	protected $modelShopPayin;
-	protected $backends				= [];
+	protected Logic_Shop_Payment_Stripe $logicStripe;
+	protected Logic_Shop $logicShop;
+	protected Model_Stripe_Event $modelEvent;
+	protected Model_Stripe_Payin $modelStripePayin;
+	protected Model_Shop_Payment_Stripe $modelShopPayin;
+	protected Dictionary $moduleConfig;
+	protected array $backends				= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function handle()
 	{
 		$this->handleFailedBankWirePayIns();
@@ -17,18 +25,18 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 	/**
 	 *	Register a payment backend.
 	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@param		array		$countries		...
+	 *	@param		string			$backend		...
+	 *	@param		string			$key			...
+	 *	@param		string			$title			...
+	 *	@param		string			$path			...
+	 *	@param		integer			$priority		...
+	 *	@param		string|NULL		$icon			...
+	 *	@param		array			$countries		...
 	 *	@return		void
 	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
+	public function registerPaymentBackend( string $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -36,9 +44,13 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'countries'	=> $countries,
-		);
+		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicStripe			= new Logic_Shop_Payment_Stripe( $this->env );
@@ -53,21 +65,25 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 	}
 
-	protected function handleFailedBankWirePayIns()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function handleFailedBankWirePayIns(): void
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= ['paymentId' => 'ASC'];
-		$indices	= array(
+		$indices	= [
 			'status'	=> Model_Shop_Payment_Stripe::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
-		);
+		];
 		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
 
 		$failedStripeBankWirePayments	= $this->modelStripePayin->getAll( array(
 			'status'		=> Model_Stripe_Payin::STATUS_FAILED,								//  only failed payins
-			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,							//  only bankwire payins
+			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,								//  only bankwire payins
 			'id'			=> array_keys( $openShopBankWirePayments ),							//  only for open shop payments
 //			'modifiedAt'	=> '> '.( time() - 60 ),
 		) );
@@ -80,10 +96,10 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 				$this->logicStripe->updatePayment( $payIn );
 				$this->logicShop->setOrderStatus( $shopPayment->orderId, Model_Shop_Order::STATUS_NOT_PAYED );
 
-				$data		= array(
+				$data		= [
 					'orderId'			=> $shopPayment->orderId,
 					'paymentBackends'	=> $this->backends,
-				);
+				];
 				$logic->handleMail(
 					new Mail_Shop_Customer_NotPayed( $this->env, $data ),
 					$this->logicShop->getOrderCustomer( $order->orderId ),
@@ -98,14 +114,18 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		}
 	}
 
-	protected function handleSucceededBankWirePayIns()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function handleSucceededBankWirePayIns(): void
 	{
 		$logic		= Logic_Mail::getInstance( $this->env );
 		$orders		= ['paymentId' => 'ASC'];
-		$indices	= array(
+		$indices	= [
 			'status'	=> Model_Shop_Payment_Stripe::STATUS_CREATED,
 		 	'object'	=> '%"BANK_WIRE"%',
-		);
+		];
 		$openShopBankWirePayments	= [];
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
@@ -124,16 +144,15 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 				$order	= $this->logicShop->getOrder( $shopPayment->orderId );
 				$result	= $this->logicStripe->transferOrderAmountToClientSeller(
 					$shopPayment->orderId,
-					$payIn,
-					TRUE
+					$payIn
 				);
 				if( $result ){
 					$this->logicStripe->updatePayment( $payIn );
 					$this->logicShop->setOrderStatus( $shopPayment->orderId, Model_Shop_Order::STATUS_PAYED );
-					$data		= array(
+					$data		= [
 						'orderId'			=> $shopPayment->orderId,
 						'paymentBackends'	=> $this->backends,
-					);
+					];
 					$logic->handleMail(
 						new Mail_Shop_Customer_Payed( $this->env, $data ),
 						$this->logicShop->getOrderCustomer( $order->orderId ),

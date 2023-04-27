@@ -73,14 +73,14 @@ class View_Manage_Gallery extends View
 			if( $this->env->getModules()->has( 'Gallery_Compact' ) )
 				$content	= View_Helper_Gallery::formatGalleryLinks( $this->env, $content );
 
-			$data	= array(
+			$data	= [
 				'title'			=> $gallery->label,
 				'description'	=> $content,
 				'guid'			=> $uri,
 				'link'			=> $uri,
 				'category'		=> 'Foto-Galerie',
 				'source'		=> $baseUrl.'gallery/feed',
-			);
+			];
 			if( $gallery->timestamp )
 				$data['pubDate']	= date( "r", (double) $gallery->timestamp );
 			$feed->addItem( $data );
@@ -180,7 +180,7 @@ class View_Manage_Gallery extends View
 
 	protected function __onInit(): void
 	{
-		$converters	= array(
+		$converters	= [
 			"formatText",
 			"formatLinks",
 			"formatImageSearch",
@@ -195,7 +195,7 @@ class View_Manage_Gallery extends View
 			"formatBreaks",
 			"formatCodeBlocks",
 			"formatLists",
-		);
+		];
 		foreach( $converters as $converter )
 			View_Helper_ContentConverter::register( "View_Helper_ContentConverter", $converter );
 

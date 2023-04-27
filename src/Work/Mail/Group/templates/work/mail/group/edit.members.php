@@ -23,14 +23,14 @@ $roleMap	= [];
 foreach( $roles as $role )
 	$roleMap[$role->mailGroupRoleId]	= $role->title;
 
-$statusClasses	= array(
+$statusClasses	= [
 	-3	=> 'label-inverse',
 	-2	=> 'label-inverse',
 	-1	=> 'label-inverse',
 	0	=> 'label-info',
 	1	=> 'label-warning',
 	2	=> 'label-success',
-);
+];
 
 //  --  MODAL: ADD  --  //
 
@@ -39,11 +39,11 @@ foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
 $optRoleId	= HtmlElements::Options( $optRoleId, $group->defaultRoleId );
 
-$optStatus		= HtmlElements::Options( array(
+$optStatus		= HtmlElements::Options( [
 	-1		=> 'deaktiviert',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-), $group->status );
+], $group->status );
 
 $body	= '
 <div class="row-fluid">
@@ -108,26 +108,26 @@ if( $members ){
 		$buttonEdit->setModalId( 'modal-edit-'.$member->mailGroupMemberId );
 		$buttonEdit->setLabel( $iconEdit );
 		$buttonEdit->setAttributes( ['class' => 'btn btn-mini'] );
-		$buttonActivate	= Html::create( 'a', $iconActivate, array(
+		$buttonActivate	= Html::create( 'a', $iconActivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/2',
 			'class'	=> 'btn btn-success btn-mini',
 			'title'	=> 'aktivieren',
-		) );
-		$buttonDeactivate	= Html::create( 'a', $iconDeactivate, array(
+		] );
+		$buttonDeactivate	= Html::create( 'a', $iconDeactivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-3',
 			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'deaktivieren',
-		) );
-		$buttonReject	= Html::create( 'a', $iconDeactivate, array(
+		] );
+		$buttonReject	= Html::create( 'a', $iconDeactivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
 			'class'	=> 'btn btn-inverse btn-mini',
 			'title'	=> 'ablehnen',
-		) );
-		$buttonRemove	= Html::create( 'a', $iconRemove, array(
+		] );
+		$buttonRemove	= Html::create( 'a', $iconRemove, [
 			'href'	=> './work/mail/group/removeMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId,
 			'class'	=> 'btn btn-danger btn-mini',
 			'title'	=> 'entfernen',
-		) );
+		] );
 		if( $member->status == Model_Mail_Group_Member::STATUS_REJECTED )
 			$buttons	= [$buttonEdit, $buttonActivate, $buttonRemove];
 		if( $member->status == Model_Mail_Group_Member::STATUS_ACTIVATED )
@@ -168,44 +168,44 @@ if( $members ){
 			Html::create( 'div', array(
 				Html::create( 'div', array(
 					Html::create( 'label', 'Name', ['for' => 'input_title'] ),
-					Html::create( 'input', NULL, array(
+					Html::create( 'input', NULL, [
 						'type'	=> 'text',
 						'id'	=> 'input_title',
 						'name'	=> 'title',
 						'class'	=> 'span12',
 						'value'	=> $member->title,
-					) ),
+					] ),
 				), ['class' => 'span8'] ),
 				Html::create( 'div', array(
 					Html::create( 'label', 'Rolle', ['for' => 'input_'] ),
-					Html::create( 'select', $optRoleId, array(
+					Html::create( 'select', $optRoleId, [
 						'id'	=> 'input_roleId',
 						'name'	=> 'roleId',
 						'class'	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span4'] ),
 			), ['class' => 'row-fluid'] ),
 			Html::create( 'div', array(
 				Html::create( 'div', array(
 					Html::create( 'label', 'E-Mail-Adresse', ['for' => 'input_address'] ),
-					Html::create( 'input', NULL, array(
+					Html::create( 'input', NULL, [
 						'type'	=> 'text',
 						'id'	=> 'input_address',
 						'name'	=> 'address',
 						'class'	=> 'span12',
 						'value'	=> $member->address,
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 		) ) );
 		$modals[]	= $modal;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '20%', '100px' );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( array(
+	$thead		= Html::create( 'thead', HtmlElements::TableHeads( [
 		'Name & E-Mail-Adresse',
 		'Rolle',
 		'',
-	) ) );
+	] ) );
 	$tbody		= Html::create( 'tbody', $list );
 	$list		= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed'] );
 }
@@ -214,12 +214,12 @@ return Html::create( 'div', array(
 	Html::create( 'h3', 'Mitglieder der Gruppe' ),
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'div', array(
+			Html::create( 'div', [
 				$list
-			), ['class' => 'span12'] ),
+			], ['class' => 'span12'] ),
 		), ['class' => 'row-fluid'] ),
-		Html::create( 'div', array(
+		Html::create( 'div', [
 			$modalMemberAddTrigger
-		), ['class' => 'buttonbar'] ),
+		], ['class' => 'buttonbar'] ),
 	), ['class' => 'content-panel-inner'] )
 ), ['class' => 'content-panel'] ).$modalMemberAdd.join( $modals );

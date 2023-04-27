@@ -5,12 +5,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
-$optStatus		= array(
+$optStatus		= [
 	-2		=> 'deaktiviert',
 	-1		=> 'versteckt',
 	0		=> 'in Arbeit',
 	1		=> 'aktiviert',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, 0 );
 
 $panelAdd		= '
@@ -21,13 +21,13 @@ $panelAdd		= '
 			<div class="row-fluid">
 				<div class="span10">
 					<label for="input_title">Titel</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_title",
 						'name'		=> "title",
 						'class'		=> "span12",
 						'required'	=> "required",
-					) ).'
+					] ).'
 				</div>
 				<div class="span2">
 					<label for="input_status">Zustand</label>

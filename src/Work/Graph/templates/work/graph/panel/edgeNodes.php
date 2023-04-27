@@ -5,12 +5,12 @@ $nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : $node->ID;
 
-$linkSource	= HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], array(
+$linkSource	= HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], [
 	'href'	=> './work/graph/node/'.$edge->fromNodeId
-) );
-$linkTarget	= HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], array(
+] );
+$linkTarget	= HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], [
 	'href'	=> './work/graph/node/'.$edge->toNodeId
-) );
+] );
 
 return '
 <div class="content-panel">

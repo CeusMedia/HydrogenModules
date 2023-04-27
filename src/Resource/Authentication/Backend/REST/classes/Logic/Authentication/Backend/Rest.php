@@ -15,10 +15,10 @@ class Logic_Authentication_Backend_Rest extends Logic
 
 	public function checkPassword( string $username, string $password )
 	{
-		$parameters	= array(
+		$parameters	= [
 			'username'	=> $username,
 			'password'	=> $password,
-		);
+		];
 		$result	= $this->client->post( 'authenticate', $parameters );
 		return $result;
 	}
@@ -47,10 +47,10 @@ class Logic_Authentication_Backend_Rest extends Logic
 	 */
 	public function confirm( $userId, string $token )
 	{
-		$parameters	= array(
+		$parameters	= [
 			'userId'	=> $userId,
 			'token'		=> $token,
-		);
+		];
 		$result	= $this->client->post( 'confirm', $parameters )->data;
 		return $result;
 	}
@@ -187,11 +187,11 @@ return NULL;
 				return 'billing:'.$responseBilling->data;
 			}
 		}
-		return array(
+		return [
 			'accountId'	=> $responseAccount->data,
 			'addressId'	=> $responseAddress->data,
 			'billingId'	=> $responseBilling->data,
-		);
+		];
 	}
 
 	public function setAuthenticatedUser( $user )

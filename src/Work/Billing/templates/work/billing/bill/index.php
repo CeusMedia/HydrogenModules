@@ -1,15 +1,22 @@
 <?php
+
+use CeusMedia\Bootstrap\PageControl as BootstrapPageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var object $bill */
+/** @var object[] $bills */
+/** @var int $page */
+/** @var int $pages */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $list	= HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] );
 
-$statuses	= array(
+$statuses	= [
 	0	=> 'in Arbeit',
 	1	=> 'gebucht',
-);
+];
 
 if( $bills ){
 	$list	= [];
@@ -33,14 +40,14 @@ if( $bills ){
 			HtmlTag::create( 'td', $status ),
 		), ['class' => $bill->status > 0 ? 'success' : 'warning'] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( array(
+	$colgroup	= HtmlElements::ColumnGroup( [
 		'150',
 		'',
 		'90',
 		'70',
 		'70',
 		'90',
-	) );
+	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'th', 'Nr' ),
 		HtmlTag::create( 'th', 'Bezug' ),
@@ -60,27 +67,27 @@ if( $bills ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rechnung', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rechnung', [
 	'href'	=> './work/billing/bill/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
-$optStatus	= array(
+$optStatus	= [
 	''	=> '- alle -',
 	'0'	=> 'in Arbeit',
 	'1'	=> 'gebucht',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optYear	= array(
+$optYear	= [
 	''	=> '- alle -',
-);
+];
 $optYear[date( "Y" )]	= date( "Y" );
 $optYear[date( "Y" )-1]	= date( "Y" )-1;
 $optYear[date( "Y" )-2]	= date( "Y" )-2;
 $optYear	= HtmlElements::Options( $optYear, $filterYear );
 
-$optMonth	= array(
+$optMonth	= [
 	''		=> '- alle -',
 	'01'	=> 'Januar',
 	'02'	=> 'Februar',
@@ -94,19 +101,19 @@ $optMonth	= array(
 	'10'	=> 'Oktober',
 	'11'	=> 'November',
 	'12'	=> 'Dezember',
-);
+];
 $optMonth	= HtmlElements::Options( $optMonth, $filterMonth );
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/billing/bill', $page, $pages );
+$pagination	= new BootstrapPageControl( './work/billing/bill', $page, $pages );
 
 $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 
-$buttonFilter	= HtmlTag::create( 'button', $iconFilter, array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-small btn-info',
 	'style'	=> 'display: none'
-) );
+] );
 
 return '
 <div class="content-panel">

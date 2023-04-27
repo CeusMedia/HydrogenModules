@@ -2,26 +2,40 @@
 class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 {
 	/**	@var	Logic_Catalog_Gallery				$logic */
-	protected $logic;
+	protected Logic_Catalog_Gallery $logic;
 
 	/**	@var	Model_Catalog_Gallery_Category		$modelCategory	Gallery logic instance */
-	protected $modelCategory;
+	protected Model_Catalog_Gallery_Category $modelCategory;
 
 	/**	@var	Model_Catalog_Gallery_Image			$modelImage		Gallery logic instance */
-	protected $modelImage;
+	protected Model_Catalog_Gallery_Image $modelImage;
 
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
-	protected $taxRate = 7;
+	protected int $taxRate = 7;
 
 	/**
-	 *	Checks existance of article and returns data object if found.
+	 *	Change stock quantity of article.
+	 *	No need to do anything here, since digital images are sold by right, not be quantity.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
+	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
+	 *	@return		integer						Article quantity in stock after change
+	 *	@throws		InvalidArgumentException	if not found
+	 */
+	public function changeQuantity( string $articleId, int $change ): int
+	{
+		return 1;
+	}
+
+	/**
+	 *	Checks existence of article and returns data object if found.
+	 *	@access		public
+	 *	@param		string		$articleId		ID of article
 	 *	@param		boolean		$strict			Flag: throw exception if not existing, otherwise return FALSE
 	 *	@return		object|FALSE				Bridged article data object if found, otherwise FALSE if strict mode is off
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE )
 	{
 		$article	= $this->modelImage->get( $articleId );
 		if( $article )
@@ -34,10 +48,11 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
-	 *	@return		string
+	 *	@param		string		$articleId
+	 *	@param		integer		$quantity
+	 *	@return		object
 	 */
-	public function get( $articleId, $quantity = 1 )
+	public function get( string $articleId, int $quantity = 1 ): object
 	{
 		return (object) array(
 			'id'		=> $articleId,
@@ -65,10 +80,10 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId )
+	public function getDescription( string $articleId ): string
 	{
 		$image		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $image->galleryCategoryId );
@@ -78,10 +93,10 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId )
+	public function getLink( string $articleId ): string
 	{
 		return $this->logic->pathModule.'image/'.$articleId;
 	}
@@ -89,12 +104,12 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, $absolute = FALSE )
+	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
 		$image		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $image->galleryCategoryId );
@@ -105,24 +120,24 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, $amount = 1 )
+	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
 		$image	= $this->check( $articleId );
-		return $image->price * $amount;
+		return (float) $image->price * $amount;
 	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, $amount = 1 )
+	public function getTax( string $articleId, int $amount = 1 ): float
 	{
 		$image	= $this->check( $articleId );
 		return $image->price * ( $this->taxRate / 100 ) * $amount;
@@ -131,19 +146,33 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId )
+	public function getTitle( string $articleId ): string
 	{
 		$image	= $this->check( $articleId );
-		return $image->title ? $image->title : $image->filename;
+		return $image->title ?: $image->filename;
+	}
+
+	/**
+	 *	...
+	 *	@access		public
+	 *	@param		string		$articleId
+	 *	@param		integer		$amount
+	 *	@return		float
+	 */
+	public function getWeight( string $articleId, int $amount = 1 ): float
+	{
+		$image	= $this->check( $articleId );
+		return (float) $image->weight;
 	}
 
 	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

@@ -29,12 +29,12 @@ $panelEdit	= '
 			</li>
 			<li class="column-clear">
 				<label for="input_active">
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "checkbox",
 						'name'		=> "active",
 						'id'		=> "input_active",
 						'checked'	=> $source->active == "yes" ? 'checked' : NULL,
-					) ).'&nbsp;'.$w->labelActive.'
+					] ).'&nbsp;'.$w->labelActive.'
 				</label>
 			</li>
 		</ul>

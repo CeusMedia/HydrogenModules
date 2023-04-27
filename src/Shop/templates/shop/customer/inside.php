@@ -9,10 +9,10 @@ $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', array(
+$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',
-) );
+] );
 
 if( !$addressDelivery ){
 	$address				= $user;

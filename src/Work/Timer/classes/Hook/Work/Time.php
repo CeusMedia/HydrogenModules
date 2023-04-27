@@ -1,90 +1,112 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Time extends Hook
 {
-	public static function onAuthBeforeLogout( Environment $env, $module, $context, $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onAuthBeforeLogout(): void
 	{
-		$data	= new Dictionary( $payload );
+		$data	= new Dictionary( $this->payload );
 		if( ( $userId = $data->get( 'userId' ) ) ){
-			$logicTimer	= Logic_Work_Timer::getInstance( $env );
-			$modelTimer	= new Model_Work_Timer( $env );
+			$modelTimer	= new Model_Work_Timer( $this->env );
 			$indices	= ['userId' => $userId, 'status' => 1];
 			$active		= $modelTimer->getByIndices( $indices );
 			if( $active ){
-				$logic	= Logic_Work_Timer::getInstance( $env );
+				$logic	= Logic_Work_Timer::getInstance( $this->env );
 				$logic->pause( $active->workTimerId );
 			}
 		}
 	}
 
-	public static function onDashboardRegisterDashboardPanels( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 */
+	public function onDashboardRegisterDashboardPanels(): void
 	{
-		if( !$env->getAcl()->has( 'ajax/work/time', 'renderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'ajax/work/time', 'renderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'work-timer-my', array(
+		$this->context->registerPanel( 'work-timer-my', [
 			'url'			=> 'ajax/work/time/renderDashboardPanel',
 			'title'			=> 'Aktivität: Meine',
 			'heading'		=> 'Meine letzte Aktivität',
 			'icon'			=> 'fa fa-fw fa-play',
 			'rank'			=> 10,
-		) );
-		$context->registerPanel( 'work-timer-others', array(
+		] );
+		$this->context->registerPanel( 'work-timer-others', [
 			'url'			=> 'work/time/ajaxRenderDashboardPanel',
 			'title'			=> 'Aktivität: Andere',
 			'heading'		=> 'Aktivitäten der Anderen',
 			'rank'			=> 20,
 			'refresh'		=> 10,
-		) );
+		] );
 	}
 
-	public static function onProjectRemove( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onProjectRemove(): void
 	{
-		$projectId	= $payload['projectId'];
-		$modelTimer	= new Model_Work_Timer( $env );
+		$projectId	= $this->payload['projectId'];
+		$modelTimer	= new Model_Work_Timer( $this->env );
 		$modelTimer->removeByIndex( 'projectId', $projectId );
 	}
 
-	public static function onEnvCallForModules( Environment $env, $context, $module, $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onEnvCallForModules(): void
 	{
-		$context	= new View_Helper_Work_Time_Timer( $env );
+		$context	= new View_Helper_Work_Time_Timer( $this->env );
 		$payload	= [];
-		$env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, $payload );
+		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, $payload );
 	}
 
-	public static function onWorkTimeRegisterTab( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 */
+	public function onWorkTimeRegisterTab(): void
 	{
-		$words	= (object) $env->getLanguage()->getWords( 'work/time' );						//  load words
-		$context->registerTab( '', $words->tabs['dashboard'], 0 );								//  register main tab
-//		$context->registerTab( 'archive', $words->tabs['archive'], 1 );							//  register main tab
-//		$context->registerTab( 'report', $words->tabs['report'], 2 );							//  register main tab
+		$words	= (object) $this->env->getLanguage()->getWords( 'work/time' );			//  load words
+		$this->context->registerTab( '', $words->tabs['dashboard'], 0 );						//  register main tab
+//		$this->context->registerTab( 'archive', $words->tabs['archive'], 1 );					//  register main tab
+//		$this->context->registerTab( 'report', $words->tabs['report'], 2 );						//  register main tab
 	}
 
-/*	static public function onRenderDashboardPanels( Environment $env, $context, $module, $payload )
+/*	public function onRenderDashboardPanels(): void
 	{
-		$helper	= new View_Helper_Work_Time_Dashboard_My( $env );
+		$helper	= new View_Helper_Work_Time_Dashboard_My( $this->env );
 		$context->registerPanel( 'work-timer-my', 'Letzte Aktivität', $helper->render(), '1col-fixed', 10 );
 
-		$helper	= new View_Helper_Work_Time_Dashboard_Others( $env );
+		$helper	= new View_Helper_Work_Time_Dashboard_Others( $this->env );
 		$context->registerPanel( 'work-timer-others', 'Aktivitäten Anderer', $helper->render(), '3col-flex', 10 );
 	}*/
 
-	public static function onWorkTimeRegisterAnalysisTab( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 */
+	public function onWorkTimeRegisterAnalysisTab(): void
 	{
-		$words	= (object) $env->getLanguage()->getWords( 'work/time' );							//  load words
-//		$context->registerTab( '', $words->tabs['dashboard'], 0 );									//  register main tab
-		$context->registerTab( 'analysis', $words->tabs['analysis'], 2 );							//  register main tab
-//		$context->registerTab( 'report', $words->tabs['report'], 2 );								//  register main tab
+		$words	= (object) $this->env->getLanguage()->getWords( 'work/time' );				//  load words
+//		$this->context->registerTab( '', $words->tabs['dashboard'], 0 );							//  register main tab
+		$this->context->registerTab( 'analysis', $words->tabs['analysis'], 2 );						//  register main tab
+//		$this->context->registerTab( 'report', $words->tabs['report'], 2 );							//  register main tab
 	}
 
-	public static function onWorkTimeRegisterArchiveTab( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 */
+	public function onWorkTimeRegisterArchiveTab(): void
 	{
-		$words	= (object) $env->getLanguage()->getWords( 'work/time' );							//  load words
-//		$context->registerTab( '', $words->tabs['dashboard'], 0 );									//  register main tab
-		$context->registerTab( 'archive', $words->tabs['archive'], 1 );								//  register main tab
-//		$context->registerTab( 'report', $words->tabs['report'], 2 );								//  register main tab
+		$words	= (object) $this->env->getLanguage()->getWords( 'work/time' );				//  load words
+//		$this->context->registerTab( '', $words->tabs['dashboard'], 0 );							//  register main tab
+		$this->context->registerTab( 'archive', $words->tabs['archive'], 1 );						//  register main tab
+//		$this->context->registerTab( 'report', $words->tabs['report'], 2 );							//  register main tab
 	}
 }

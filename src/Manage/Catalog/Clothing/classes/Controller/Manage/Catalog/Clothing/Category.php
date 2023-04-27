@@ -1,10 +1,16 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Clothing_Category extends Controller
 {
-	public function add()
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Model_Catalog_Clothing_Category $modelCategory;
+
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data				= $this->request->getAll();
@@ -15,7 +21,7 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 		}
 	}
 
-	public function edit( $categoryId )
+	public function edit( string $categoryId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
@@ -27,12 +33,12 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->addData( 'categories', $this->modelCategory->getAll() );
 	}
 
-	public function remove( $categoryId )
+	public function remove( string $categoryId ): void
 	{
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
 		$this->modelCategory->remove( $categoryId );
@@ -40,6 +46,10 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

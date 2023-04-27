@@ -1,26 +1,35 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class Controller_Info_Forum extends Controller
 {
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected SimpleCacheInterface $cache;
+
 	/**	@var	Model_Forum_Post		$modelPost */
-	protected $modelPost;
+	protected Model_Forum_Post $modelPost;
 
 	/**	@var	Model_Forum_Thread		$modelThread */
-	protected $modelThread;
+	protected Model_Forum_Thread $modelThread;
 
 	/**	@var	Model_Forum_Topic		$modelTopic */
-	protected $modelTopic;
+	protected Model_Forum_Topic $modelTopic;
 
 	/**	@var	array					$rights */
-	protected $rights;
+	protected array $rights;
 
 	/**	@var	Dictionary				$options */
-	protected $ptions;
+	protected Dictionary $options;
+	protected ?string $userId			= NULL;
+	protected ?array $userPosts			= NULL;
 
 	public function addPost( $threadId )
 	{
@@ -129,7 +138,7 @@ class Controller_Info_Forum extends Controller
 			foreach( $threads as $thread )
 				$threadIds[]	= $thread->threadId;
 			if( $threadIds )
-				$topic->posts	+= $this->modelPost->countByIndex( 'threadId', $threadIds );
+				$topic->posts	+= $this->modelPost->countByIndices( ['threadId' => $threadIds] );
 		}
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'topics', $topics );
@@ -163,10 +172,10 @@ class Controller_Info_Forum extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		$modelUser	= new Model_User( $this->env );
-		$indices	= array(
+		$indices	= [
 			'threadId'	=> $threadId,
 			'status'	=> [0, 1],
-		);
+		];
 		$posts	= $this->modelPost->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $posts as $nr => $post )
 			$posts[$nr]->author	= $modelUser->get( $post->authorId );
@@ -179,7 +188,7 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'userPosts', $this->userPosts );
 	}
 
-	public function topic( $topicId )
+	public function topic( string $topicId ): void
 	{
 		$topicId	= (int) $topicId;
 		$topic		= $this->modelTopic->get( $topicId );
@@ -202,7 +211,7 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'threads', $threads );
 	}
 
-	public function removePost( $postId )
+	public function removePost( string $postId ): void
 	{
 		$post		= $this->modelPost->get( $postId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -232,7 +241,7 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}
 
-	public function removeThread( $threadId )
+	public function removeThread( string $threadId ): void
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -246,7 +255,7 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'topic/'.$thread->topicId, TRUE );
 	}
 
-	public function removeTopic( $topicId )
+	public function removeTopic( string $topicId ): void
 	{
 		$topic		= $this->modelTopic->get( $topicId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -265,6 +274,11 @@ class Controller_Info_Forum extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -290,7 +304,7 @@ class Controller_Info_Forum extends Controller
 			mkdir( $path, 0770, TRUE );
 	}
 
-	protected function informThreadUsersAboutPost( $threadId, $postId = NULL )
+	protected function informThreadUsersAboutPost( string $threadId, ?string $postId = NULL )
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		if( !( $thread = $this->modelThread->get( $threadId ) ) )

@@ -19,10 +19,10 @@ class Hook_JS_jQuery_Equalize extends Hook
 			return;
 		if( !( $selector = $module->config['auto.selector']->value ) )
 			return;
-		$params	= json_encode( array(
+		$params	= json_encode( [
 			'equalize'	=> $module->config['auto.dimension']->value,
 			'reset'		=> $module->config['auto.reset']->value
-		) );
+		] );
 		$context->js->addScriptOnReady( 'jQuery("'.$selector.'").equalize('.$params.');' );
 	}
 }

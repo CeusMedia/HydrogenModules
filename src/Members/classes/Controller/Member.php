@@ -49,9 +49,9 @@ class Controller_Member extends Controller
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
 			) );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
-			$this->modelRelation->edit( $relation->userRelationId, array(
+			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> 2,
-			) );
+			] );
 			$this->messenger->noteSuccess( $words->successAccepted );
 		}
 		catch( Exception $e ){
@@ -90,17 +90,17 @@ class Controller_Member extends Controller
 		$users		= $this->logicMember->getUsersWithRelations( $this->userId, $userIds, $limit, $offset );
 		$total		= count( $userIds );
 
-		$incoming	= $this->modelRelation->getAllByIndices( array(
+		$incoming	= $this->modelRelation->getAllByIndices( [
 			'toUserId'	=> $this->userId,
 			'status'	=> 1,
-		) );
+		] );
 		foreach( $incoming as $relation )
 			$relation->user	= $this->modelUser->get( $relation->fromUserId );
 
-		$outgoing	= $this->modelRelation->getAllByIndices( array(
+		$outgoing	= $this->modelRelation->getAllByIndices( [
 			'fromUserId'	=> $this->userId,
 			'status'		=> 1,
-		) );
+		] );
 		foreach( $outgoing as $relation )
 			$relation->user	= $this->modelUser->get( $relation->toUserId );
 
@@ -131,9 +131,9 @@ class Controller_Member extends Controller
 			) );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 
-			$this->modelRelation->edit( $relation->userRelationId, array(
+			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> -1,
-			) );
+			] );
 			$this->messenger->noteSuccess( $words->successRejected );
 		}
 		catch( Exception $e ){
@@ -183,10 +183,10 @@ class Controller_Member extends Controller
 	public function request( $userId )
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$relation	= $this->modelRelation->getByIndices( array(
+		$relation	= $this->modelRelation->getByIndices( [
 			'fromUserId'	=> $this->userId,
 			'toUserId'		=> $userId,
-		) );
+		] );
 		if( $relation ){
 			if( $relation->status == 2 ){
 				$this->messenger->noteError( $words->errorAlreadyAccepted );

@@ -1,22 +1,25 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Shop_Shipping extends Controller
 {
+	protected HttpRequest $request;
+
 	/** @var		Model_Shop_Shipping_Grade		$modelGrade */
-	protected $modelGrade;
+	protected Model_Shop_Shipping_Grade $modelGrade;
 
 	/** @var		Model_Shop_Shipping_Zone		$modelZone */
-	protected $modelZone;
+	protected Model_Shop_Shipping_Zone $modelZone;
 
 	/** @var		Model_Shop_Shipping_Price		$modelPrice */
-	protected $modelPrice;
+	protected Model_Shop_Shipping_Price $modelPrice;
 
 	/** @var		Model_Shop_Shipping_Country		$modelCountry */
-	protected $modelCountry;
+	protected Model_Shop_Shipping_Country $modelCountry;
 
-	public function index()
+	public function index(): void
 	{
 		$countryMap		= $this->getWords( 'countries', 'address' );
 		$grades			= $this->modelGrade->getAll( [], ['fallback' => 'ASC', 'weight' => 'ASC'] );
@@ -43,7 +46,7 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->addData( 'countryMap', $countryMap );
 	}
 
-	public function addGrade()
+	public function addGrade(): void
 	{
 		$data		= ['title' => $this->request->get( 'title' )];
 		if( $this->request->get( 'fallback' ) )
@@ -53,16 +56,16 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$gradeId	= $this->modelGrade->add( $data );
 
 		foreach( $this->request->get( 'price' ) as $zoneId => $price )
-			$this->modelPrice->add( array(
+			$this->modelPrice->add( [
 				'gradeId'	=> $gradeId,
 				'zoneId'	=> $zoneId,
 				'price'		=> $price,
-			) );
+			] );
 
 		$this->restart( NULL, TRUE );
 	}
 
-	public function addZone()
+	public function addZone(): void
 	{
 		$zoneId	= $this->modelZone->add( array(
 			'title'	=> $this->request->get( 'title' ),
@@ -71,23 +74,23 @@ class Controller_Manage_Shop_Shipping extends Controller
 			$this->modelZone->edit( $zoneId, ['fallback' => 1] );
 		else{
 			foreach( $this->request->get( 'country' ) as $countryCode )
-			$this->modelCountry->add( array(
+			$this->modelCountry->add( [
 				'zoneId'		=> $zoneId,
 				'countryCode'	=> $countryCode,
-			) );
+			] );
 		}
 
 		foreach( $this->request->get( 'price' ) as $gradeId => $price )
-			$this->modelPrice->add( array(
+			$this->modelPrice->add( [
 				'gradeId'	=> $gradeId,
 				'zoneId'	=> $zoneId,
 				'price'		=> $price,
-			) );
+			] );
 
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setPrices()
+	public function setPrices(): void
 	{
 		$grades	= $this->modelGrade->getAll();
 		$zones	= $this->modelZone->getAll();
@@ -102,23 +105,23 @@ class Controller_Manage_Shop_Shipping extends Controller
 
 		foreach( $grades as $grade ){
 			foreach( $zones as $zone ){
-				$indices	= array(
+				$indices	= [
 					'gradeId'	=> $grade->gradeId,
 					'zoneId'	=> $zone->zoneId,
-				);
+				];
 				if( isset( $prices[$zone->zoneId][$grade->gradeId] ) ){
 					$price	= $prices[$zone->zoneId][$grade->gradeId];
 					$price	= str_replace( ',', '.', $price );
 					if( !isset( $priceMatrix[$zone->zoneId][$grade->gradeId] ) ){
-						$this->modelPrice->add( array_merge( $indices ), array(
+						$this->modelPrice->add( array_merge( $indices, [
 							'price'	=> $price,
-						) );
+						] ) );
 					}
 					else{
 						if( $priceMatrix[$zone->zoneId][$grade->gradeId] != $price ){
-							$this->modelPrice->editByIndices( $indices, array(
+							$this->modelPrice->editByIndices( $indices, [
 								'price'	=> $price,
-							) );
+							] );
 						}
 					}
 				}
@@ -127,14 +130,14 @@ class Controller_Manage_Shop_Shipping extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGrade( $gradeId )
+	public function removeGrade( string $gradeId ): void
 	{
 		$this->modelPrice->removeByIndex( 'gradeId', $gradeId );
 		$this->modelGrade->remove( $gradeId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeZone( $zoneId )
+	public function removeZone( string $zoneId ): void
 	{
 		$this->modelPrice->removeByIndex( 'zoneId', $zoneId );
 		$this->modelCountry->removeByIndex( 'zoneId', $zoneId );

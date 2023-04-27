@@ -23,10 +23,10 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 					break;
 			}
 		}
-		return HtmlTag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, [
 			'class'		=> 'nav',
 			'role'		=> 'navigation'
-		) );
+		] );
 	}
 
 	protected static function calculateMatches( $map, $current )
@@ -67,21 +67,21 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 			}
 		}
 		$caret		= HtmlTag::create( 'b', '', ['class' => 'caret'] );
-		$toggle		= HtmlTag::create( 'a', $caret.'&nbsp;&nbsp;'.$map->label, array(
+		$toggle		= HtmlTag::create( 'a', $caret.'&nbsp;&nbsp;'.$map->label, [
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
 			'role'			=> 'button',
 			'href'			=> '#',
 			'id'			=> 'drop-'.$nr,
-		) );
-		$menu	= HtmlTag::create( 'ul', $list, array(
+		] );
+		$menu	= HtmlTag::create( 'ul', $list, [
 			'class'				=> 'dropdown-menu',
 			'role'				=> 'menu',
 			'aria-labelledby'	=> 'drop-'.$nr
-		) );
-		return HtmlTag::create( 'li', $toggle.$menu, array(
+		] );
+		return HtmlTag::create( 'li', $toggle.$menu, [
 			'class'		=> $active ? 'dropdown active' : 'dropdown'
-		) );
+		] );
 	}
 
 	protected static function renderLabelWithIcon( $entry ): string
@@ -107,9 +107,9 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 			'href'	=> $entry->path,
 			'title'	=> !empty( $entry->desc ) ? $entry->desc : NULL,
 		) );
-		return HtmlTag::create( 'li', $link, array(
+		return HtmlTag::create( 'li', $link, [
 			'class'	=> $class,
 			'role'	=> 'presentation'
-		) );
+		] );
 	}
 }

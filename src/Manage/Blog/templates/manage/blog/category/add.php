@@ -18,16 +18,16 @@ $optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $
 $optStatus		= HtmlElements::Options( $words['states'], $category->status );
 
 
-$buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'		=> "./manage/blog",
 	'class'		=> "btn btn-small",
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'		=> "submit",
 	'name'		=> "save",
 	'value'		=> "1",
 	'class'		=> "btn btn-primary"
-) );
+] );
 
 $tabs	= $view->renderTabs( '/category' );
 

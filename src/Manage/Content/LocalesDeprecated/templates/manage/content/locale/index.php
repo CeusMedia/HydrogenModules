@@ -7,19 +7,19 @@ $panelAddFolder	= '';
 $panelAddFile	= '';
 
 if( $fileId && isset( $content ) ){
-	$attributesTextarea	= array(
+	$attributesTextarea	= [
 		'style'	=> 'width: 100%; height: 400px; font-size: 0.9em; padding: 0.5em 1em;',
 		'name'	=> 'content',
 		'id'	=> 'input_content',
 		'class'	=> 'max not-CodeMirror not-CodeMirror-auto',
-	);
-	$attributesButton	= array(
+	];
+	$attributesButton	= [
 		'type'	=> 'submit',
 		'name'	=> 'do',
 		'value'	=> 'save',
 		'id'	=> 'input_content',
 		'class'	=> 'button save btn btn-primary',
-	);
+	];
 	$textarea	= HtmlTag::create( 'textarea', htmlentities( $content, ENT_COMPAT, 'UTF-8' ), $attributesTextarea );
 	$buttonSave	= HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], $attributesButton );
 

@@ -5,32 +5,32 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
-$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', array(
+$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-small btn-info'
-) );
-$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
+] );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'href'	=> './manage/form/mail/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse'
-) );
+] );
 
 /*$optIdentifier	= array( '' => '- alle -');
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filterIdentifier );
 */
-$formatMap	= array(
+$formatMap	= [
 	Model_Form_Mail::FORMAT_HTML	=> 'HTML',
 	Model_Form_Mail::FORMAT_TEXT	=> 'Text',
-);
+];
 
 $optFormat	= array( '' => '- alle -');
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat	= HtmlElements::Options( $optFormat, $filters->get( 'format' ) );
 
-$roleTypeMap	= array(
+$roleTypeMap	= [
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
 	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
@@ -41,7 +41,7 @@ $roleTypeMap	= array(
 	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
-);
+];
 
 $optRoleType	= array( '' => '- egal -');
 foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )

@@ -11,12 +11,12 @@ foreach( $forms as $item )
 		$optForm[$item->formId]	= $item->title;
 $optForm		= HtmlElements::Options( $optForm, $filterFormId );
 
-$optStatus		= array(
+$optStatus		= [
 	''									=> '- alle -',
 	Model_Form_Fill::STATUS_NEW			=> 'unbestätigt',
 	Model_Form_Fill::STATUS_CONFIRMED	=> 'gültig',
 	Model_Form_Fill::STATUS_HANDLED		=> 'behandelt',
-);
+];
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
 return HtmlTag::create( 'div', array(
@@ -50,36 +50,36 @@ return HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Zustand', ['for' => 'input_status'] ),
-					HtmlTag::create( 'select', $optStatus, array(
+					HtmlTag::create( 'select', $optStatus, [
 						'name'		=> 'status',
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Formulare', ['for' => 'input_formId'] ),
-					HtmlTag::create( 'select', $optForm, array(
+					HtmlTag::create( 'select', $optForm, [
 						'name'		=> 'formId[]',
 						'id'		=> 'input_formId',
 						'class'		=> 'span12',
 						'multiple'	=> 'multiple',
 						'size'		=> 12,
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconFilter.'&nbsp;filtern', array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;filtern', [
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn btn-small btn-info',
-					) ),
-					HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', array(
+					] ),
+					HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 						'href'	=> './manage/form/fill/filter/reset',
 						'class'	=> 'btn btn-small btn-inverse',
-					) ),
+					] ),
 				), ['class' => 'btn-group'] ),
 			), ['class' => 'buttonbar'] ),
 		), ['action' => './manage/form/fill/filter', 'method' => 'post'] ),

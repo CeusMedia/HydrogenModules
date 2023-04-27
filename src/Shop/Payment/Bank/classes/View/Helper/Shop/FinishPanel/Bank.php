@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -13,13 +14,22 @@ class View_Helper_Shop_FinishPanel_Bank
 		self::OUTPUT_FORMAT_TEXT,
 	];
 
-	protected $env;
-	protected $modelPayment;
-	protected $modelOrder;
-	protected $payin;
-	protected $outputFormat			= self::OUTPUT_FORMAT_HTML;
-	protected $listClass			= 'dl-horizontal';
+	protected Environment $env;
+//	protected Model_Shop_Payment_Bank $modelPayment;
+	protected Model_Shop_Order $modelOrder;
 
+	protected Dictionary $config;
+//	protected $payin;
+	protected int $outputFormat			= self::OUTPUT_FORMAT_HTML;
+	protected string $listClass			= 'dl-horizontal';
+	protected string $heading;
+	protected ?object $order;
+	protected ?object $payment;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
@@ -35,6 +45,7 @@ class View_Helper_Shop_FinishPanel_Bank
 			case 'Bank:Transfer':
 				return $this->renderTransfer();
 		}
+		return '';
 	}
 
 
@@ -63,10 +74,10 @@ class View_Helper_Shop_FinishPanel_Bank
 
 	public function setPaymentId( $paymentId ): self
 	{
-		$this->payment	= $this->modelPayment->get( $paymentId );
+//		$this->payment	= $this->modelPayment->get( $paymentId );
 /*		if( strlen( $this->payment->object ) )
 			$this->payin	= json_decode( $this->payment->object );*/
-		$this->order	= $this->modelOrder->get( $this->payment->orderId );
+//		$this->order	= $this->modelOrder->get( $this->payment->orderId );
 		return $this;
 	}
 
@@ -74,7 +85,7 @@ class View_Helper_Shop_FinishPanel_Bank
 	{
 		$bank		= $this->config->getAll( 'bank.', TRUE );
 
-		$facts		= new View_Helper_Mail_Facts( $this->env );
+		$facts		= new View_Helper_Mail_Facts();
 		$facts->add( 'Methode', 'per Vorkasse' );
 		$facts->add( 'Bank', $bank->get( 'name' ) );
 		$facts->add( 'Inhaber', $bank->get( 'holder' ) );
@@ -82,17 +93,17 @@ class View_Helper_Shop_FinishPanel_Bank
 		$facts->add( 'BIC', HtmlTag::create( 'tt', $bank->get( 'bic' ) ) );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 
-		if( $this->outputFormat == SELF::OUTPUT_FORMAT_HTML )
+		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
 			return HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'h3', $this->heading ),
-					$facts->render( $this->listClass ),
+					$facts->setFormat( $facts::FORMAT_HTML )->setListClass( $this->listClass )->render(),
 				), ['class' => 'content-panel-inner'] ),
 			), ['class' => 'content-panel'] );
 
-		return PHP_EOL.join( PHP_EOL, array(
+		return PHP_EOL.join( PHP_EOL, [
 			View_Helper_Mail_Text::underscore( $this->heading ),
-			$facts->renderAsText(),
-		) ).PHP_EOL.PHP_EOL;
+			$facts->setFormat( $facts::FORMAT_TEXT )->render(),
+		] ).PHP_EOL.PHP_EOL;
 	}
 }

@@ -18,26 +18,26 @@ $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;'
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 $labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
 $listStyles		= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
-$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, array(
+$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, [
 	'type'			=> "button",
 	'class'			=> "btn btn-success btn-small",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-style-add",
-) );
+] );
 if( $isUsed )
-	$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, array(
+	$buttonAdd		= HtmlTag::create( 'button', $iconAdd.$w->buttonAdd, [
 		'type'			=> "button",
 		'class'			=> "btn btn-success btn-small",
 		'disabled'		=> 'disabled',
 
-	) );
+	] );
 if( $styles ){
 	foreach( $styles as $nr => $item ){
 		$label	= preg_replace( "@^([a-z]+://[^/]+/)@", '<small class="muted">\\1</small><br/>', $item );
-		$attributes		= array(
+		$attributes		= [
 			'href'		=> './work/newsletter/template/removeStyle/'.$templateId.'/'.$nr,
 			'class'		=> 'btn btn-mini btn-inverse'
-		);
+		];
 		$linkRemove			= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
 		if( $isUsed )
 			$linkRemove		= HtmlTag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, ['disabled' => 'disabled'] ) );
@@ -51,9 +51,9 @@ if( $styles ){
 	$tableHeads		= HtmlElements::TableHeads( ['Einträge', ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $styles );
-	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> "table table-condensed table-striped table-fixed table-striped"
-	) );
+	] );
 }
 $panelList	= '
 <div class="content-panel">
@@ -67,10 +67,10 @@ $panelList	= '
 </div>';
 
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= HtmlTag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info',

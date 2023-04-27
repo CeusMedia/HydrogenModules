@@ -36,23 +36,23 @@ return '
 								</div>
 								<div class="span2">
 									<label for="input_version">'.$w->labelVersion.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'version',
 										'id'		=> 'input_version',
 										'class'		=> 'span12',
 										'value'		=> 1,
-									) ).'
+									] ).'
 								</div>
 								<div class="span2">
 									<label for="input_license">'.$w->labelLicense.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'license',
 										'id'		=> 'input_license',
 										'class'		=> 'span12',
 										'value'		=> '',
-									) ).'
+									] ).'
 								</div>
 							</div>
 							<div class="row-fluid">
@@ -124,24 +124,24 @@ return '
 						</div>
 						<div class="span4">
 							<label for="input_imprint">'.$w->labelImprint.'</label>
-							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), array(
+							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), [
 								'name'		=> 'imprint',
 								'id'		=> 'input_imprint',
 								'class'		=> 'span12',
 								'rows'		=> 11,
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="buttonbar">
-						'.HtmlTag::create( 'a', $iconCancel.'zurück', array(
+						'.HtmlTag::create( 'a', $iconCancel.'zurück', [
 							'href'		=> './work/newsletter/template/'.$template->newsletterTemplateId,
 							'class'		=> 'btn',
-						) ).'
-						'.HtmlTag::create( 'button', $iconExport.'&nbsp;exportieren', array(
+						] ).'
+						'.HtmlTag::create( 'button', $iconExport.'&nbsp;exportieren', [
 							'type'		=> 'submit',
 							'name'		=> 'save',
 							'class'		=> 'btn btn-primary',
-						) ).'
+						] ).'
 					</div>
 				</form>
 			</div>

@@ -6,12 +6,19 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Dashboard_My extends Abstraction
 {
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
@@ -21,10 +28,10 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 		) );
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 		$fromAdd	= 'info/dashboard';
-		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', array(
+		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', [
 			'href'	=> './work/time/add?from='.$fromAdd,
 			'class'	=> 'btn btn-block btn-success',
-		) );
+		] );
 		if( !$hasTimers ){
 			$content	= '<div class="alert alert-info">Keine laufende oder pausierte Aktivität vorhanden.</div>'.$buttonAdd;
 		}
@@ -32,55 +39,55 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 			$timer		= $modelTimer->getAllByIndices( array(
 				'workerId'	=> $logicAuth->getCurrentUserId(),
 				'status'	=> [1, 2],
-			), array(
+			), [
 				'status'		=> 'ASC',
 				'modifiedAt'	=> 'DESC',
-			), [1, 0] )[0];
+			], [1, 0] )[0];
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 			$timePlanned	= View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned );
 			$from			= 'info/dashboard';
 
 			if( $timer->status == 1 ){
 				$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] );
-				$button		= HtmlTag::create( 'a', $icon, array(
+				$button		= HtmlTag::create( 'a', $icon, [
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-warning',
 					'title'	=> 'pausieren',
-				) );
-				$button		= HtmlTag::create( 'a', $icon.'&nbsp;pausieren', array(
+				] );
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;pausieren', [
 					'href'	=> './work/time/pause/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-warning',
-				) );
+				] );
 				$secondsNeeded	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );
 				$timeNeeded		= View_Helper_Work_Time::formatSeconds( $secondsNeeded );
-				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, array(
+				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, [
 					'id'			=>  "dashboard-timer",
 					'data-value'	=>  $secondsNeeded,
-				) );
+				] );
 			}
 			else{
 				$icon		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
-				$button		= HtmlTag::create( 'a', $icon, array(
+				$button		= HtmlTag::create( 'a', $icon, [
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-large btn-success',
 					'title'	=> 'starten',
-				) );
-				$button		= HtmlTag::create( 'a', $icon.'&nbsp;starten', array(
+				] );
+				$button		= HtmlTag::create( 'a', $icon.'&nbsp;starten', [
 					'href'	=> './work/time/start/'.$timer->workTimerId.'?from='.$from,
 					'class'	=> 'btn btn-block btn-success',
-				) );
+				] );
 				$timeNeeded		= View_Helper_Work_Time::formatSeconds( $timer->secondsNeeded );
-				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, array(
+				$timeNeeded		= HtmlTag::create( 'span', $timeNeeded, [
 					'data-value'	=>  $timer->secondsNeeded,
-				) );
+				] );
 			}
 
-			$linkTimer		= HtmlTag::create( 'a', $timer->title, array(
+			$linkTimer		= HtmlTag::create( 'a', $timer->title, [
 				'href'	=> './work/time/edit/'.$timer->workTimerId.'?from='.$from,
-			) );
-			$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
+			] );
+			$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 				'href'	=> './manage/project/view/'.$timer->project->projectId.'?from='.$from,
-			) );
+			] );
 			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
 				'href'	=> join( array(
 					$timer->relationLink,
@@ -115,14 +122,14 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 				<script>jQuery(document).ready(function(){WorkTimer.init("#dashboard-timer", "&nbsp;");});</script>';
 		}
 		return $content;
-		$panel	= HtmlTag::create( 'div', array(
+		$panel	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', 'aktuelle Aktivität' ),
-			HtmlTag::create( 'div', $content, array(
+			HtmlTag::create( 'div', $content, [
 				'class' => 'content-panel-inner'
-			) )
-		), array(
+			] )
+		], [
 			'class' => 'content-panel content-panel-info'
-		) );
+		] );
 		return $panel;
 	}
 }

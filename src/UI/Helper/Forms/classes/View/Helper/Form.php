@@ -7,14 +7,14 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Form extends Abstraction
 {
-	protected $env;
-	protected $blocks				= [];
-	protected $form;
-	protected $formId;
-	protected $modelBlock;
-	protected $modelForm;
-	protected $returnCode;
-	protected $mode					= '';
+	protected ?Environment $env;
+	protected array $blocks						= [];
+	protected ?object $form						= NULL;
+	protected ?string $formId					= NULL;
+	protected Model_Form_Block $modelBlock;
+	protected Model_Form $modelForm;
+	protected int $returnCode;
+	protected ?string $mode						= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -39,14 +39,14 @@ class View_Helper_Form extends Abstraction
 			$replace		= isset( $this->blocks[$identifier] ) ? $this->blocks[$identifier]->content : '';
 			$pattern		= '/'.preg_quote( '[block_'.$identifier.']' ).'/su';
 			if( $this->mode === 'extended' && strlen( trim( $replace ) ) ){
-				$replace	= HtmlTag::create( 'div', $replace, array(
+				$replace	= HtmlTag::create( 'div', $replace, [
 					'class'		=> 'form-view-block',
 					'id'		=> 'form-view-block-'.$this->formId.'-'.$counter,
-				), array(
+				], [
 					'identifier'	=> $identifier,
 					'block-id'		=> $this->blocks[$identifier]->blockId,
 					'title'			=> $this->blocks[$identifier]->title,
-				) );
+				] );
 			}
 			$content		= preg_replace( $pattern, $replace, $content, 1 );
 		}
@@ -85,7 +85,7 @@ class View_Helper_Form extends Abstraction
 		return $this;
 	}
 
-	public function setMode( string $mode ): self
+	public function setMode( ?string $mode ): self
 	{
 		if( in_array( $mode, [NULL, '', 'extended'] ) ){
 			$this->mode	= (string) $mode;
@@ -102,12 +102,12 @@ class View_Helper_Form extends Abstraction
 		if( substr_count( $form->content, '[block_row_button]' ) )
 			$button	= '';
 		return HtmlTag::create( 'form', array(
-			HtmlTag::create( 'input', NULL, array(
+			HtmlTag::create( 'input', NULL, [
 				'type'		=> 'hidden',
 				'name'		=> 'formId',
 				'id'		=> 'input_formId',
 				'value'		=> $this->formId,
-			) ),
+			] ),
 			$form->content,
 			$button,
 		), array(
@@ -127,38 +127,38 @@ class View_Helper_Form extends Abstraction
 		$messageSuccess	= '';
 		$blocks			= Dictionary::create( $this->blocks )->getAll( 'message_' );
 		if( $this->returnCode === 2 && isset( $blocks['result_confirmed'] ) )
-			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed']->content, array(
+			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed']->content, [
 				'class'	=> 'form-message-code',
-			) );
+			] );
 		else if( $this->returnCode === 3 && isset( $blocks['result_confirmed_already'] ) )
-			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed_already']->content, array(
+			$messageCode	=  HtmlTag::create( 'div', $blocks['result_confirmed_already']->content, [
 				'class'	=> 'form-message-code',
-			) );
+			] );
 		if( isset( $blocks['error'] ) ){
-			$messageError	= HtmlTag::create( 'div', $blocks['error']->content, array(
+			$messageError	= HtmlTag::create( 'div', $blocks['error']->content, [
 				'class'	=> 'form-message-error',
 				'style'	=> 'display: none',
-			) );
+			] );
 		}
 		if( isset( $blocks['success'] ) ){
-			$messageSuccess	= HtmlTag::create( 'div', $blocks['success']->content, array(
+			$messageSuccess	= HtmlTag::create( 'div', $blocks['success']->content, [
 				'class'	=> 'form-message-success',
 				'style'	=> 'display: none',
-			) );
+			] );
 		}
 		$form		= $this->modelForm->get( $this->formId );
 		if( $form->type == Model_Form::TYPE_CONFIRM ){
 			if( isset( $blocks['success_confirm'] ) ){
-				$messageSuccess	= HtmlTag::create( 'div', $blocks['success_confirm']->content, array(
+				$messageSuccess	= HtmlTag::create( 'div', $blocks['success_confirm']->content, [
 					'class'	=> 'form-message-success',
 					'style'	=> 'display: none',
-				) );
+				] );
 			}
 		}
-		return join( '', array(
+		return join( '', [
 			$messageCode,
 			$messageError,
 			$messageSuccess,
-		) );
+		] );
 	}
 }

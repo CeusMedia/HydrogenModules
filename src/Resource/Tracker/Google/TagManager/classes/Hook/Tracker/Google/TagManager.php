@@ -29,9 +29,9 @@ class Hook_Tracker_Google_TagManager extends Controller{
 	j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	'".$baseUrl."gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 	})(window,document,'script','dataLayer','".$config->get('ID')."');";
-		$script		= HtmlTag::create( 'script', $script, array(
+		$script		= HtmlTag::create( 'script', $script, [
 			'type'	=> 'text/javascript',
-		) );
+		] );
 		$context->addHead( $script, 1 );
 
 		$iframe		= HtmlTag::create( 'iframe', array(

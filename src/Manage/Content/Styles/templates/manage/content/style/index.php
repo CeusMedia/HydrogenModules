@@ -1,5 +1,7 @@
 <?php
 
+/** @var View_Manage_Content_Style $view */
+
 $panelFilter	= $view->loadTemplateFile( 'manage/content/style/index.filter.php' );
 $panelEditor	= $view->loadTemplateFile( 'manage/content/style/index.edit.php' );
 

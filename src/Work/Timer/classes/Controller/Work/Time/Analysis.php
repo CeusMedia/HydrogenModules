@@ -58,6 +58,10 @@ class Controller_Work_Time_Analysis extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function index()
 	{
 		$filterProjectIds	= $this->session->get( $this->filterPrefix.'projectIds' );
@@ -70,7 +74,7 @@ class Controller_Work_Time_Analysis extends Controller
 		$filterMonth		= $this->session->get( $this->filterPrefix.'month' );
 		$filterWeek			= $this->session->get( $this->filterPrefix.'week' );
 
-		$data		= [];
+		$data			= [];
 
 		$userMap		= Logic_Authentication::getInstance( $this->env )->getRelatedUsers( $this->userId );
 
@@ -103,11 +107,11 @@ class Controller_Work_Time_Analysis extends Controller
 				foreach( $users as $userId => $user ){
 					if( !array_key_exists( $userId, $userMap ) )
 						continue;
-					$conditions	= array(
+					$conditions	= [
 						'status'	=> 3,
 						'workerId'	=> $userId,
 						'projectId'	=> $filterProjectIds,
-					);
+					];
 					if( $timestampStart && $timestampEnd )
 						$conditions['modifiedAt']	= '>< '.$timestampStart.' & '.$timestampEnd;
 					$sums				= $this->sumTimers( $conditions );
@@ -117,10 +121,10 @@ class Controller_Work_Time_Analysis extends Controller
 						continue;
 					$data[$userId]		= $sums;
 				}
-				$data['@total']	= (object) array(
+				$data['@total']	= (object) [
 					'secondsPlanned'	=> $sumPlanned,
 					'secondsNeeded'		=> $sumNeeded,
-				);
+				];
 				$this->addData( 'projectsUsers', $users );
 			}
 		}
@@ -135,10 +139,10 @@ class Controller_Work_Time_Analysis extends Controller
 					if( !in_array( $project->status, [0, 1, 2] ) )
 						continue;
 
-					$conditions	= array(
+					$conditions	= [
 						'workerId'	=> $filterUserIds,
 						'projectId'	=> $projectId,
-					);
+					];
 					if( $timestampStart && $timestampEnd )
 						$conditions['modifiedAt']	= '>< '.$timestampStart.' & '.$timestampEnd;
 					$sums				= $this->sumTimers( $conditions );
@@ -146,10 +150,10 @@ class Controller_Work_Time_Analysis extends Controller
 					$sumNeeded			+= $sums->secondsNeeded;
 					$data[$projectId]	= $sums;
 				}
-				$data['@total']	= (object) array(
+				$data['@total']	= (object) [
 					'secondsPlanned'	=> $sumPlanned,
 					'secondsNeeded'		=> $sumNeeded,
-				);
+				];
 				$this->addData( 'usersProjects', $usersProjects );
 			}
 		}
@@ -173,6 +177,10 @@ class Controller_Work_Time_Analysis extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -211,10 +219,10 @@ class Controller_Work_Time_Analysis extends Controller
 			$sumPlanned	+= $timer->secondsPlanned;
 			$sumNeeded	+= $timer->secondsNeeded;
 		}
-		return (object) array(
+		return (object) [
 			'secondsPlanned'	=> $sumPlanned,
 			'secondsNeeded'		=> $sumNeeded,
 			'timers'			=> $timers,
-		);
+		];
 	}
 }

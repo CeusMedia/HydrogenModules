@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 class View_Helper_Module_Files{
 
 	protected $env;
-	protected $states	= array(
+	protected $states	= [
 		-3	=> 'missing',
 		-2	=> 'inaccessible',
 		-1	=> 'protected',
@@ -15,17 +15,17 @@ class View_Helper_Module_Files{
 		3	=> 'linked',
 		4	=> 'foreign',
 		5	=> 'refered',
-	);
+	];
 
 	public function __construct( $env ){
 		$this->setEnv( $env );
 	}
 
 	public function render( $files, $words, $options = [] ){
-		$options	= array_merge( array(
+		$options	= array_merge( [
 			'useCheckboxes'	=> TRUE,
 			'useActions'	=> TRUE,
-		), $options );
+		], $options );
 
 		if( !count( $files ) )
 			return;
@@ -64,11 +64,11 @@ class View_Helper_Module_Files{
 			if( $options['useActions'] )
 				$cells[]    = HtmlTag::create( 'td', join( " ", $actions ), ['class' => 'cell-actions'] );
 
-			$list[]	= HtmlTag::create( 'tr', $cells, array(
+			$list[]	= HtmlTag::create( 'tr', $cells, [
 				'class'	=> 'status-'.$this->states[$file->status],
 				'data-file-source'	=> $file->pathSource,
 				'data-file-local'	=> $file->pathLocal
-			) );
+			] );
 		}
 		$checkAll	= HtmlTag::create( 'input', NULL, array(
 			'type'			=> 'checkbox',

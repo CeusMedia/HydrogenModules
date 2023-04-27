@@ -1,12 +1,14 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Shop_Payment_Bank extends Controller
 {
 	/**	@var	Dictionary					$config			Module configuration dictionary */
-	protected Dictionary$config;
+	protected Dictionary $configShop;
 
 	/**	@var	Logic_Shop					$logicShop		Shop logic instance */
 	protected Logic_Shop $logicShop;
@@ -14,14 +16,14 @@ class Controller_Shop_Payment_Bank extends Controller
 	/**	@var	Dictionary					$session		Session resource */
 	protected Dictionary $session;
 
-	protected $request;
-	protected $messenger;
-	protected $orderId;
-	protected $order;
-	protected $localUserId;
-	protected $userId;
-	protected $wallet;
-	protected $backends			= [];
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected ?string $orderId;
+	protected ?object $order;
+	protected ?string $localUserId;
+	protected ?string $userId;
+	protected ?object $wallet;
+	protected array $backends			= [];
 
 	/**
 	 *	Entry point for payment.
@@ -45,7 +47,7 @@ class Controller_Shop_Payment_Bank extends Controller
 
 	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
 	{
-		$this->backends[]	= (object) array(
+		$this->backends[]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
@@ -53,9 +55,13 @@ class Controller_Shop_Payment_Bank extends Controller
 			'priority'	=> $priority,
 			'icon'		=> $icon,
 			'mode'		=> 'delayed',
-		);
+		];
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session			= $this->env->getSession();

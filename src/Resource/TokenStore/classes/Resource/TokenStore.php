@@ -109,7 +109,7 @@ class Resource_TokenStore
 			return $this->env->getRequest()->getFromSource( 'ip', 'GET' );							//  return this IP
 		if( getEnv( 'REMOTE_ADDR' ) == "::1" )														//  local request using IPv6
 			return '127.0.0.1';																		//  return local IPv4
-		return getEnv( 'REMOTE_ADDR' );																//  @todo	kriss: remove or replace by exception
+		return getEnv( 'REMOTE_ADDR' );																//  @todo	 remove or replace by exception
 	}
 
 	public function getToken( $credentials )

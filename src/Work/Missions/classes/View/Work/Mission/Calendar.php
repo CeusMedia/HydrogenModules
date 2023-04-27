@@ -76,6 +76,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( "t", strtotime( $showScope ) );
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
@@ -109,6 +110,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 					}
 				}
 				$date	= $showYear.'-'.$showMonth.'-'.$day;
+				/** @noinspection PhpUnhandledExceptionInspection */
 				$row[]	= $this->renderDay( $userId, new DateTime( $date ), $orders, $class );
 				$j++;
 			}
@@ -128,6 +130,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	{
 		$this->logic	= Logic_Work_Mission::getInstance( $this->env );
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 	}
 
@@ -136,7 +139,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
-		$monthDate		= new DateTime( $showScope );
+//		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( "t", strtotime( $showScope ) );
 		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
@@ -148,19 +151,20 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$row	= [];
 			$j		= 0;
 			$class	= '';
-			if( $i == 0 ){
-				for( $j=0; $j<$offsetStart; $j++ ){
+//			if( $i == 0 ){
+//				for( $j=0; $j<$offsetStart; $j++ ){
 //					$preDate	= clone $monthDate;
 //					$preDate	= $preDate->modify( "-".( $offsetStart - $j )." days" );
 //					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
-				}
-			}
+//				}
+//			}
 			while( $j < 7 ){
 				$day		= $i * 7 - $offsetStart + $j +1;
 				$showYear	= $year;
 				$showMonth	= $month;
 				if( $day <= $monthDays ){
 					$date	= $showYear.'-'.$showMonth.'-'.$day;
+					/** @noinspection PhpUnhandledExceptionInspection */
 					$row[]	= '<tr>'.$this->renderDay( $userId, new DateTime( $date ), $orders, $class ).'</tr>';
   				}
 /*
@@ -179,7 +183,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 			$rows[]	= join( $row );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
+//		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-small"] );
@@ -326,6 +330,7 @@ WorkMissionsList.loadCurrentListAndDayControls();
 	protected function renderOverdue( object $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container

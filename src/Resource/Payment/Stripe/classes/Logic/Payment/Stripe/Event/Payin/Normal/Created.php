@@ -7,11 +7,11 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stri
 			"status"		=> Model_Stripe_Payin::STATUS_CREATED,
 			"id"			=> $this->event->id,
 			"userId"		=> $payin->AuthorId,
-			"data"			=> json_encode( array(
+			"data"			=> json_encode( [
 				'created'	=> $payin,
 				'failed'	=> NULL,
 				'succeeded'	=> NULL,
-			) ),
+			] ),
 			"type"			=> Model_Stripe_Payin::getTypeId( $payin->PaymentType ),
 			"currency"		=> $payin->CreditedFunds->Currency,
 			"amount"		=> $payin->CreditedFunds->Amount / 100,

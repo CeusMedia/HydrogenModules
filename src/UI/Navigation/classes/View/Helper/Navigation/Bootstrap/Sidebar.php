@@ -24,7 +24,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 	}
 
 	/**
-	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
 	public function __toString()
 	{
@@ -87,14 +87,14 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 			$label	= $icon.'&nbsp;'.$this->logoTitle;
 		}
 		if( !$this->logoLink )
-			return HtmlTag::create( 'div', $label, array(
+			return HtmlTag::create( 'div', $label, [
 //				'id'	=> "logo",
 				'class'	=> 'brand'
-			) );
-		$link	= HtmlTag::create( 'a', $label, array(
+			] );
+		$link	= HtmlTag::create( 'a', $label, [
 			'href'	=> $this->logoLink,
 //			'class'	=> 'brand'
-		) );
+		] );
 		return HtmlTag::create( 'div', $link, ['class' => 'brand'] );
 	}
 

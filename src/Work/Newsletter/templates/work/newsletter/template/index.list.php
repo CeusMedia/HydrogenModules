@@ -12,18 +12,18 @@ use CeusMedia\HydrogenFramework\View;
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconInstall	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus-circle'] ).'&nbsp;';
 
-$statusIcons	= array(
+$statusIcons	= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'check',
 	2		=> 'globe',
-);
-$statusColors	= array(
+];
+$statusColors	= [
 	-1		=> "error",
 	0		=> "warning",
 	1		=> "success",
 	2		=> "info",
-);
+];
 
 $w			= (object) $words->index_list;
 
@@ -57,14 +57,14 @@ if( $templates ){
 	$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->linkAdd, array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->linkAdd, [
 	'href'	=> './work/newsletter/template/add',
 	'class'	=> 'btn not-btn-small btn-success'
-) );
-$buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, array(
+] );
+$buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, [
 	'href'	=> './work/newsletter/template/install',
 	'class'	=> 'btn not-btn-small'
-) );
+] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Template:maxItems', count( $templates ) + 1 ) ){
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
 		'type'		=> 'button',
@@ -82,12 +82,12 @@ return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', [
 				$list,
-			), ['class' => 'span12'] ),
+			], ['class' => 'span12'] ),
 		), ['class' => 'row-fluid'] ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			$buttonAdd,
-		), ['class' => 'buttonbar'] ),
+		], ['class' => 'buttonbar'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );

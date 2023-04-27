@@ -12,14 +12,14 @@ if( $articles ){
 	foreach( $articles as $article ){
 		$url	= './manage/catalog/bookstore/article/edit/'.$article->articleId;
 		$link	= HtmlTag::create( 'a', $article->title, ['href' => $url, 'title' => $article->volume] );
-		$buttonUp	= HtmlTag::create( 'a', $iconUp, array(
+		$buttonUp	= HtmlTag::create( 'a', $iconUp, [
 			'href'	=> './manage/catalog/bookstore/category/rankArticle/'.$category->categoryId.'/'.$article->articleId.'/up',
 			'class'	=> 'btn btn-mini',
-		) );
-		$buttonDown	= HtmlTag::create( 'a', $iconDown, array(
+		] );
+		$buttonDown	= HtmlTag::create( 'a', $iconDown, [
 			'href'	=> './manage/catalog/bookstore/category/rankArticle/'.$category->categoryId.'/'.$article->articleId.'/down',
 			'class'	=> 'btn btn-mini',
-		) );
+		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonUp, $buttonDown], ['class' => 'btn-group'] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $article->rank.'. '.$link, ['class' => 'autocut'] ),

@@ -14,8 +14,8 @@ use CeusMedia\HydrogenFramework\View;
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	Ceus Media 2015
  */
-class View_System_Load extends View{
-
+class View_System_Load extends View
+{
 	/**
 	 *	Prints HTML indicator for system load and quits execution.
 	 *	@access		public
@@ -35,12 +35,12 @@ class View_System_Load extends View{
 				);
 				$barValue	= max( 0, min( 100, $loads[0] / 1 * 100 ) );
 				$barStyle	= '';
-				$barStyles	= array(
+				$barStyles	= [
 					20 => 'info',
 					40 => 'success',
 					60 => 'warning',
 					80 => 'danger',
-				);
+				];
 				foreach( $barStyles as $edge => $style )
 					if( $barValue > $edge )
 						$barStyle	= $style;
@@ -111,15 +111,15 @@ class View_System_Load extends View{
 	 */
 	public function ajaxRenderIndicator()
 	{
-		$load		= $this->getData( 'load' );														//  get load registered by controller
-		$cpuCores	= $this->getData( 'cpuCores' );													//  get number of cpu cores from module config
-		$load		= 1 / ( 1 + $load / $cores );													//  calculate load relative to number of cores
-		$indicator	= new HtmlIndicator();														//  create instance of indicator renderer
-		print( $indicator->build( $load, 1 ) );														//  render and print indicator
+		$load		= $this->getData( 'load' );												//  get load registered by controller
+		$cpuCores	= $this->getData( 'cpuCores' );											//  get number of cpu cores from module config
+		$load		= 1 / ( 1 + $load / $cpuCores );												//  calculate load relative to number of cores
+		$indicator	= new HtmlIndicator();															//  create instance of indicator renderer
+		print( $indicator->build( $load, 1 ) );												//  render and print indicator
 		exit;																						//  and quit application
 	}
 
-	protected function renderTrend( $number, $unit, $accuracy = 0, $inverse = FALSE )
+	protected function renderTrend( float $number, string $unit, int $accuracy = 0, bool $inverse = FALSE ): string
 	{
 //		$prefix		= '&plus;';
 //		$style		= 'success';

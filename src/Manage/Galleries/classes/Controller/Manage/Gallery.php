@@ -1,12 +1,22 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Gallery extends Controller
 {
-	public function add()
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Logic_Frontend $frontend;
+	protected Model_Gallery $modelGallery;
+	protected Model_Gallery_Image $modelImage;
+	protected string $baseUri;
+
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
@@ -17,8 +27,8 @@ class Controller_Manage_Gallery extends Controller
 				$this->messenger->noteError(  $words->errorPathEmpty );
 				$this->restart( 'add?rank='.$data['rank'], TRUE );
 			}
-			Folder_Editor::createFolder( $this->getPath( (object) $data ), 0777 );
-			Folder_Editor::createFolder( $this->getPath( (object) $data, TRUE ), 0777 );
+			FolderEditor::createFolder( $this->getPath( (object) $data ), 0777 );
+			FolderEditor::createFolder( $this->getPath( (object) $data, TRUE ), 0777 );
 			$galleryId		= $this->modelGallery->add( $data );
 			$this->messenger->noteSuccess( $words->successGalleryAdded );
 			$this->restart( './manage/gallery/edit/'.$galleryId );
@@ -40,7 +50,7 @@ class Controller_Manage_Gallery extends Controller
 		$this->addData( 'gallery', $gallery );
 	}
 
-	public function addImage( $galleryId )
+	public function addImage( string $galleryId ): void
 	{
 		$gallery	= $this->getGallery( $galleryId );
 		$file		= $this->request->get( 'file' );
@@ -105,14 +115,14 @@ class Controller_Manage_Gallery extends Controller
 		$this->restart( 'edit/'.$galleryId, TRUE );
 	}
 
-	public function ajaxSetTab()
+	public function ajaxSetTab(): void
 	{
 		$session	= $this->env->getSession();
 		$session->set( 'module.manage_galleries.tab', (int) $this->request->get( 'tab' ) );
 		exit;
 	}
 
-	public function edit( $galleryId )
+	public function edit( string $galleryId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$gallery	= $this->getGallery( $galleryId );
@@ -174,9 +184,9 @@ class Controller_Manage_Gallery extends Controller
 			$this->modelGallery->remove( $image->galleryImageId );
 		}
 		if( file_exists( $this->getPath( $gallery, TRUE ) ) )
-			Folder_Editor::removeFolder( $this->getPath( $gallery, TRUE ) );
+			FolderEditor::removeFolder( $this->getPath( $gallery, TRUE ) );
 		if( file_exists( $this->getPath( $gallery ) ) )
-			Folder_Editor::removeFolder( $this->getPath( $gallery ) );
+			FolderEditor::removeFolder( $this->getPath( $gallery ) );
 		$this->modelGallery->remove( $galleryId );
 		$this->messenger->noteSuccess( $words->successGalleryRemoved );
 		$this->restart( NULL, TRUE );
@@ -195,6 +205,10 @@ class Controller_Manage_Gallery extends Controller
 		$this->restart( 'edit/'.$image->galleryId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelGallery	= new Model_Gallery( $this->env );
@@ -230,10 +244,10 @@ class Controller_Manage_Gallery extends Controller
 		}
 		else
 			$this->messenger->noteError( $words->errorGalleryIdInvalid );
-		return $this->restart( NULL, TRUE );
+		$this->restart( NULL, TRUE );
 	}
 
-	protected function getImage( $imageId )
+	protected function getImage( string $imageId ): ?object
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( strlen( trim( $imageId ) ) && (int) $imageId ){
@@ -243,10 +257,10 @@ class Controller_Manage_Gallery extends Controller
 		}
 		else
 			$this->messenger->noteError( $words->errorImageIdInvalid );
-		return $this->restart( NULL, TRUE );
+		$this->restart( NULL, TRUE );
 	}
 
-	protected function getPath( $gallery, $thumbs = FALSE )
+	protected function getPath( $gallery, bool $thumbs = FALSE ): string
 	{
 		if( is_int( $gallery ) || is_string( $gallery ) )
 			$gallery	= $this->getGallery( (int) $gallery );

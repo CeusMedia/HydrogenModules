@@ -7,13 +7,17 @@
  *		$result		= $resource->execute('\www\test.js', 'http://mysite.com', 'another-arg');
  *
  */
-class Resource_PhantomJS{
+class Resource_PhantomJS
+{
+	protected Environment $env;
 
 	/**	@var string Path to phantomjs binary */
-	protected $binaryPath	= 'bin/phantomjs';
+	protected string $binaryPath	= 'bin/phantomjs';
 
 	/**	@var integer Debug mode level (0 or 1) */
-	protected $debugLevel	= 0;
+	protected int $debugLevel		= 0;
+
+	protected ?string $script		= NULL;
 
 	/**
 	 *	Constructor.
@@ -22,7 +26,8 @@ class Resource_PhantomJS{
 	 *	@param		Environment		$env		Environment instance
 	 *	@return		void
 	 */
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 		$moduleConfig	= $env->getConfig()->getAll( 'module.tool_phantomjs.', TRUE );
 		$this->setBinaryPath( $moduleConfig->get( 'path.binary' ) );
@@ -36,9 +41,11 @@ class Resource_PhantomJS{
 	 *	PhantomJS command line arguments can be passed
 	 *	through as function arguments e.g.:
 	 *
-	 *     $command->execute('/path/to/my/script.js', 'arg1', 'arg2'[, ...])
+	 *     $result = Resource_PhantomJS::getInstance( $env )
+	 *               ->setScript('/path/to/my/script.js')
+	 *               ->execute('arg1', 'arg2'[, ...]);
 	 *
-	 *	The script tries to automatically decodde JSON
+	 *	The script tries to automatically decode JSON
 	 *	objects if the first character returned is a left
 	 *	curly brace ({).
 	 *
@@ -47,21 +54,26 @@ class Resource_PhantomJS{
 	 *	errors printed out to the shell. Don't use this mode
 	 *	in production.
 	 *
-	 *	@param		string		Script file
-	 *	@param		string		Arg, ...
-	 *	@return		bool/array	False of failure, JSON array on success
+	 *	@return		bool|array	False of failure, JSON array on success
 	 */
-	public function execute( $script ) {
+	public function execute()
+	{
+		if( NULL === $this->script )
+			throw new RuntimeException( 'No script to execute set' );
 
 		// Escape
 		$arguments	= func_get_args();
-		$command	= escapeshellcmd( $this->binaryPath." " . implode( ' ', $arguments ) );
-		if( $this->debug )
+		$command	= escapeshellcmd( implode( ' ', [
+			$this->binaryPath,
+			$this->script,
+			implode( ' ', $arguments )
+		] ) );
+		if( $this->debugLevel )
 			$command .= ' 2>&1';
 
 		// Execute
 		$result = shell_exec( $command );
-		if( $this->debug )
+		if( $this->debugLevel )
 			return $result;
 		if( $result === NULL )
 			return FALSE;
@@ -69,14 +81,19 @@ class Resource_PhantomJS{
 		// Return
 		if( substr( $result, 0, 1 ) !== '{' )					 // not JSON
 			return $result;
-		$json = json_decode( $result, $as_array = TRUE );
+		$json = json_decode( $result, TRUE );
 		if( $json === NULL )
 			return FALSE;
 		return $json;
 	}
 
-	static public function getInstance( $env ){
-		return new static( $env );
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 */
+	public static function getInstance( Environment $env ): self
+	{
+		return new self( $env );
 	}
 
 	/**
@@ -86,7 +103,8 @@ class Resource_PhantomJS{
 	 *	@param		string		$path		Path to phantomjs binary
 	 *	@return		self
 	 */
-	public function setBinaryPath( $path ){
+	public function setBinaryPath( string $path ): self
+	{
 		$this->binaryPath	= $path;
 		return $this;
 	}
@@ -98,8 +116,21 @@ class Resource_PhantomJS{
 	 *	@param		int			$level		Debug mode level
 	 *	@return		self
 	 */
-	public function setDebug( $level = 1 ){
-		$this->debug	= $level;
+	public function setDebug( int $level = 1 ): self
+	{
+		$this->debugLevel	= $level;
+		return $this;
+	}
+
+	/**
+	 *	JavaScript file to execute.
+	 *
+	 *	@param		string		$script		JavaScript file to execute
+	 *	@return		self
+	 */
+	public function setScript( string $script ): self
+	{
+		$this->script	= $script;
 		return $this;
 	}
 }

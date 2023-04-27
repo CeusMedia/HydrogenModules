@@ -3,14 +3,15 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 {
-	protected $baseUrl;
-	protected $facts				= [];
-	protected $labels;
-	protected $languageSection		= NULL;
-	protected $changedFactClassPos	= 'label label-success';
-	protected $changedFactClassNeg	= 'label label-important';
+	protected string $baseUrl;
+	protected array $facts					= [];
+	protected array $labels;
+	protected ?string $languageSection		= NULL;
+	protected string $changedFactClassPos	= 'label label-success';
+	protected string $changedFactClassNeg	= 'label label-important';
+	protected array $words;
 
-	protected function enlistFact( $key, $value, $class = NULL )
+	protected function enlistFact( string $key, string $value, $class = NULL ): void
 	{
 		$labelKey	= 'label'.ucfirst( $key );
 		if( !is_null( $class ) ){
@@ -20,20 +21,20 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 				$class	= $this->changedFactClassNeg;
 			$value	= HtmlTag::create( 'span', $value, ['class' => $class] );
 		}
-		$term		= HtmlTag::create( 'dt', $this->labels->$labelKey );
+		$term		= HtmlTag::create( 'dt', $this->labels[$labelKey] );
 		$definition	= HtmlTag::create( 'dd', $value );
-		$this->facts[$key]   =   $term.$definition;
+		$this->facts[$key]	= $term.$definition;
 	}
 
 	protected function generate(): self
 	{
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
-		$this->words			= (object) $this->getWords( 'work/mission', $this->languageSection );
-		$this->labels			= (object) $this->getWords( 'work/mission', 'add' );
+		$this->words			= $this->getWords( 'work/mission', $this->languageSection );
+		$this->labels			= $this->getWords( 'work/mission', 'add' );
 		return $this;
 	}
 
-	protected function renderUser( $user, $link = FALSE )
+	protected function renderUser( object $user, $link = FALSE ): string
 	{
 		if( !$user )
 			return '-';
@@ -53,33 +54,34 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $userLabel;
 	}
 
-	protected function renderUserAsText( $user )
+	protected function renderUserAsText( object $user ): string
 	{
 		if( !$user )
 			return '-';
 		$fullname	= '';
 		if( strlen( trim( $user->firstname ) ) && strlen( trim( $user->surname ) ) ){
 			$parts	= [];
-			if( strlen( trim( $user->firstname ) ) )
+			if( 0 !== strlen( trim( $user->firstname ) ) )
 				$parts[]	= trim( $user->firstname );
-			if( strlen( trim( $user->surname ) ) )
+			if( 0 !== strlen( trim( $user->surname ) ) )
 				$parts[]	= trim( $user->surname );
 			$fullname	= ' ('.join( ' ', $parts ).')';
 		}
 		return $user->username.$fullname;
 	}
 
-	protected function renderLinkedTitle( $mission )
+	protected function renderLinkedTitle( object $mission ): string
 	{
-		return HtmlTag::create( 'a', $mission->title, array(
+		return HtmlTag::create( 'a', $mission->title, [
 			'href'	=> './work/mission/view/'.$mission->missionId
-		) );
+		] );
 	}
 
-	protected function setSubjectFromMission( $mission )
+	protected function setSubjectFromMission( object $mission ): self
 	{
 		$subjectKey	= $mission->type ? 'subjectEvent' : 'subjectTask';
-		$subject	= sprintf( $this->words->$subjectKey, $mission->title );
+		$subject	= sprintf( $this->words[$subjectKey], $mission->title );
 		$this->setSubject( $subject );
+		return $this;
 	}
 }

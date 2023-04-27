@@ -1,22 +1,26 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 {
-	protected $projects		= [];
-	protected $tasks		= [];
-	protected $rowStyles	= array(
+	protected array $projects		= [];
+	protected array $tasks		= [];
+	protected array $rowStyles	= [
 		33 => 'warning',
 		66 => 'error',
-	);
+	];
 
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env		= $env;
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !count( $this->projects ) )
 //			throw new RuntimeException( 'No user projects set or available' );
 			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
@@ -42,12 +46,12 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				foreach( $this->rowStyles as $edge => $style )
 					if( $priority * 100 > $edge )
 						$rowStyle	= $style;
-				$labelProject	= HtmlTag::create( 'span', $project->title, array(
+				$labelProject	= HtmlTag::create( 'span', $project->title, [
 					'style'		=> 'font-size: smaller'
-				) );
-				$link			= HtmlTag::create( 'a', $task->title, array(
+				] );
+				$link			= HtmlTag::create( 'a', $task->title, [
 					'href'		=> './work/mission/view/'.$task->missionId,
-				) );
+				] );
 				$label	= $link/*.'<br/>'.$labelProject*/;
 				$key	= $priority.uniqid();
 				$daysBadge	= HtmlTag::create( 'span', $helperDaysBadge->render(), ['class' => 'pull-right'] );
@@ -58,31 +62,35 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				), ['class' => $rowStyle] );
 			};
 			krsort( $rows );
-			$colgroup	= HtmlElements::ColumnGroup( array(
+			$colgroup	= HtmlElements::ColumnGroup( [
 				'',
 				'50px',
-			) );
+			] );
 			$tbody		= HtmlTag::create( 'tbody', $rows );
-			$content	= HtmlTag::create( 'table', $colgroup.$tbody, array(
+			$content	= HtmlTag::create( 'table', $colgroup.$tbody, [
 				'class'	=> 'table table-condensed table-fixed'
-			) );
+			] );
 			if( $count > $showLimit ){
 				$content	.= HtmlTag::create( 'div', 'Und '.( $count - $showLimit ).' Weitere.', ['class' => 'alert alert-info'] );
 			}
 		}
-		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neue Aufgabe', array(
+		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neue Aufgabe', [
 			'href'	=> './work/mission/add?type=0',
 			'class'	=> 'btn btn-block btn-success',
-		) );
+		] );
 		$content	= $content.$buttonAdd;
 		return $content;
 	}
 
-	public function setProjects( $projects ){
+	public function setProjects( array $projects ): self
+	{
 		$this->projects	= $projects;
+		return $this;
 	}
 
-	public function setTasks( $tasks ){
+	public function setTasks( array $tasks ): self
+	{
 		$this->tasks	= $tasks;
+		return $this;
 	}
 }

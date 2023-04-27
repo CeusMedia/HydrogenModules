@@ -6,11 +6,11 @@ class Model_Test_Table extends Model
 {
 	protected string $name			= 'test_table';
 
-	protected array $columns		= array(
+	protected array $columns		= [
 		'testId',
 		'title',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'testId';
 

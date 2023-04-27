@@ -5,17 +5,17 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 {
-	public $classList			= 'nav nav-tabs';
-	public $classItem			= '';
-	public $classItemActive		= 'active';
-	public $classItemDisabled	= 'disabled';
-	public $classLink			= '';
-	public $classLinkActive		= '';
-	public $classLinkDisabled	= '';
+	public string $classList			= 'nav nav-tabs';
+	public string $classItem			= '';
+	public string $classItemActive		= 'active';
+	public string $classItemDisabled	= 'disabled';
+	public string $classLink			= '';
+	public string $classLinkActive		= '';
+	public string $classLinkDisabled	= '';
 
-	protected $tabs				= [];
+	protected array $tabs				= [];
 	protected $current			= 0;
-	protected $basePath			= '';
+	protected string $basePath			= '';
 
 	public function __construct( Environment $env, string $basePath = './' )
 	{
@@ -25,12 +25,12 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 
 	public function registerTab( string $url, string $label, int $priority = 5, bool $disabled = NULL ): self
 	{
-		$this->tabs[]	= (object) array(
+		$this->tabs[]	= (object) [
 			'url'		=> $url,
 			'label'		=> $label,
 			'priority'	=> $priority,
 			'disabled'	=> $disabled,
-		);
+		];
 		return $this;
 	}
 
@@ -45,8 +45,8 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 		foreach( $this->tabs as $nr => $tab ){														//  iterate registered tabs
 			$link	= [];
 			$item	= [];
-			$link['class']	= $this->classLink ? $this->classLink : NULL;
-			$item['class']	= $this->classItem ? $this->classItem : NULL;
+			$link['class']	= $this->classLink ?: NULL;
+			$item['class']	= $this->classItem ?: NULL;
 			$isActive	= $nr === $current || ( $tab->url === $current ) || !$nr && !$current;		//  is tab active ?
 			if( $tab->disabled ){																	//  if tab is disabled
 				$item['class']	.= $this->classItemDisabled ? ' '.$this->classItemDisabled : '';	//
@@ -67,10 +67,10 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 		}
 		ksort( $list );
 		if( count( $list ) > 1 )																	//  more than 1 tab
-			return HtmlTag::create( 'ul', $list, array(											//  return rendered tab list
+			return HtmlTag::create( 'ul', $list, [											//  return rendered tab list
 				'class'			=> $this->classList,
 				'data-toggle'	=> $tab->url[0] == '#' ? 'tab' : NULL,
-			) );
+			] );
 		return '';
 	}
 

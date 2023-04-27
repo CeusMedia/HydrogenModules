@@ -21,16 +21,18 @@ class Model_Module
 		self::TYPE_SOURCE,
 	];
 
-	protected $env;
+	protected Environment $env;
 
-	protected $cache;
+	protected array $cache;
 
-	protected $pathConfig;
+	protected string $pathConfig;
+
+	protected string $pathRepos;
 
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
-		$this->pathRepos	= $env->config->get( 'module.admin_modules.path' );
+		$this->pathRepos	= $env->getConfig()->get( 'module.admin_modules.path' );
 		$this->pathConfig	= 'config/modules/';
 		$this->cache		= [];
 	}
@@ -84,22 +86,21 @@ class Model_Module
 	{
 		$list	= [];
 		$index	= new RecursiveRegexFileIndex( $this->pathConfig, '/^\w+.xml$/' );
-		foreach( $index as $entry )
-		{
+		foreach( $index as $entry ){
 			$id	= preg_replace( '/\.xml$/i', '', $entry->getFilename() );
 			try{
 				$module	= $this->readXml( $entry->getPathname() );
+				$module->type	= self::TYPE_CUSTOM;
+				if( is_link( 'config/modules/'.$id.'.xml' ) ){
+					$module->type	= self::TYPE_LINK;
+				}
+				$module->id		= $id;
+				$module->versionInstalled	= $module->version;
+				$list[$id]		= $module;
 			}
 			catch( Exception $e ){
-				$this->env->messenger->noteFailure( 'XML of Module "'.$id.'" is broken.' );
+				$this->env->getMessenger()->noteFailure( 'XML of Module "'.$id.'" is broken.' );
 			}
-			$module->type	= self::TYPE_CUSTOM;
-			if( is_link( 'config/modules/'.$id.'.xml' ) ){
-				$module->type	= self::TYPE_LINK;
-			}
-			$module->id		= $id;
-			$module->versionInstalled	= $module->version;
-			$list[$id]		= $module;
 		}
 		ksort( $list );
 		return $list;
@@ -124,7 +125,7 @@ class Model_Module
 				$list[$id]	= $obj;
 			}
 			catch( Exception $e ){
-				$this->env->messenger->noteFailure( 'a: XML of Module "'.$id.'" is broken.' );
+				$this->env->getMessenger()->noteFailure( 'a: XML of Module "'.$id.'" is broken.' );
 			}
 		}
 		$this->cache	= $list;
@@ -147,7 +148,12 @@ class Model_Module
 	{
 	}
 
-	protected function readXml( string $fileName )
+	/**
+	 *	@param		string		$fileName
+	 *	@return		object
+	 *	@throws		Exception
+	 */
+	protected function readXml( string $fileName ): object
 	{
 		$xml	= XmlElementReader::readFile( $fileName );
 		$obj	= new stdClass();

@@ -1,30 +1,30 @@
 <?php
 class Controller_Work_Mission_Future extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.future.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.future.';
 
-	protected $defaultFilterValues	= array(
-		'states'		=> array(
+	protected array $defaultFilterValues	= [
+		'states'		=> [
 			Model_Mission::STATUS_NEW,
 			Model_Mission::STATUS_ACCEPTED,
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'dayStart',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{
@@ -32,13 +32,13 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 		$this->session->set( 'filter.work.mission.mode', 'future' );
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
-		$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo: kriss: calculation is incorrect
+		$this->logic->generalConditions['dayStart']	= '>= '.date( "Y-m-d", time() + 6 * 24 * 60 * 60 );				//  @todo:  calculation is incorrect
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId		= $this->session->get( 'auth_user_id' );
 
@@ -72,7 +72,7 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 //		exit;
 	}
 
-	public function index( $missionId = NULL )
+	public function index( $missionId = NULL ): void
 	{
 		if( strlen( trim( $missionId ) ) )
 			$this->restart( './work/mission/'.$missionId );

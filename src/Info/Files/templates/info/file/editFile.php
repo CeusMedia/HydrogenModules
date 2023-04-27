@@ -9,21 +9,21 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $optFolder	= HtmlElements::Options( $folders, $file->downloadFolderId );
 
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'		=> './info/file/index/'.$file->downloadFolderId,
 	'class'		=> 'btn',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 $buttonRemove	= '';
 if( in_array( 'remove', $rights ) )
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 		'href'		=> './info/file/remove/'.$file->downloadFileId,
 		'class'		=> 'btn btn-danger',
-	) );
+	] );
 
 $panelEdit	= HtmlTag::create( 'div', array(
 	HtmlTag::create( 'h3', 'Datei verändern <small class="muted">(umbenennen oder verschieben)</small>' ),
@@ -43,20 +43,20 @@ $panelEdit	= HtmlTag::create( 'div', array(
 				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_folderId'] ),
-					HtmlTag::create( 'select', $optFolder, array(
+					HtmlTag::create( 'select', $optFolder, [
 						'type'		=> 'text',
 						'name'		=> 'folderId',
 						'id'		=> 'input_folderId',
 						'class'		=> 'span12',
 						'required'	=> 'required',
-					) ),
+					] ),
 				), ['class' => 'span6'] ),
 			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', join( ' ', array(
+			HtmlTag::create( 'div', join( ' ', [
 				$buttonCancel,
 				$buttonSave,
 				$buttonRemove
-			) ), ['class' => 'buttonbar'] ),
+			] ), ['class' => 'buttonbar'] ),
 		), ['action' => './info/file/editFile/'.$file->downloadFileId, 'method' => 'post'] ),
 	), ['class' => 'content-panel-inner'] ),
 ), ['class' => 'content-panel'] );
@@ -67,7 +67,7 @@ return $textIndexTop.'
 <!--<h3>Dateien</h3>-->
 <div>'.View_Info_File::renderPosition( $env, $file->downloadFolderId, NULL ).'</div><br/>'
 .HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$panelEdit,
-	), ['class' => 'span9'] ),
+	], ['class' => 'span9'] ),
 ), ['class' => 'row-fluid'] );

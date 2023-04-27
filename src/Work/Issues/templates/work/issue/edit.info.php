@@ -31,10 +31,10 @@ if( $issue->managerId ){
 }
 
 if( empty( $issue->project ) ){
-	$issue->project	= (object) array(
+	$issue->project	= (object) [
 		'status'	=> '',
 		'title'		=> '<em><small class="muted">unbekannt</small></em>',
-	);
+	];
 }
 
 return '

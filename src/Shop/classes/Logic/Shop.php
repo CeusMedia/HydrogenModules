@@ -6,35 +6,35 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_Shop extends Logic
 {
 	/**	@var	Logic_ShopBridge			$bridge */
-	protected $bridge;
+	protected Logic_ShopBridge $bridge;
 
 	/**	@var	Model_Shop_Cart				$modelCart */
-	protected $modelCart;
+	protected Model_Shop_Cart $modelCart;
 
 	/**	@var	Model_User					$modelUser */
-	protected $modelUser;
+	protected Model_User $modelUser;
 
 	/**	@var	Model_Address				$modelAddress */
-	protected $modelAddress;
+	protected Model_Address $modelAddress;
 
 	/**	@var	Model_Shop_Order			$modelOrder */
-	protected $modelOrder;
+	protected Model_Shop_Order $modelOrder;
 
 	/**	@var	Model_Shop_Order_Position	$modelOrderPosition */
-	protected $modelOrderPosition;
+	protected Model_Shop_Order_Position $modelOrderPosition;
 
 	/** @var	Dictionary					$moduleConfig */
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 
 	/**	@var	Logic_Shop_Shipping|NULL	$shipping			Instance of shipping logic if module is installed */
-	protected $logicShipping;
+	protected ?Logic_Shop_Shipping $logicShipping;
 
-	protected $useShipping					= FALSE;
+	protected bool $useShipping				= FALSE;
 
 	/**
 	 * @deprecated	get Model_Shop_Order::priceTaxed instead
 	 */
-	public function calculateOrderTotalPrice( $orderId )
+	public function calculateOrderTotalPrice( string $orderId ): float
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -42,16 +42,16 @@ class Logic_Shop extends Logic
 		return $order->priceTaxed;
 	}
 
-	public function countArticleInCart( $bridgeId, $articleId )
+	public function countArticleInCart( string $bridgeId, string $articleId ): int
 	{
 		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) )
 			foreach( $positions as $position )
 				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId )
-					return $position->quantity;
+					return (int) $position->quantity;
 		return 0;
 	}
 
-	public function countArticlesInCart( bool $countEach = FALSE )
+	public function countArticlesInCart( bool $countEach = FALSE ): int
 	{
 		$number	= 0;
 		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) ){
@@ -63,30 +63,30 @@ class Logic_Shop extends Logic
 		return $number;
 	}
 
-	public function countOrders( array $conditions )
+	public function countOrders( array $conditions ): int
 	{
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getAccountCustomer( $userId )
+	public function getAccountCustomer( string $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( array(
+		$user->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$user->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		return $user;
 	}
 
-	public function getBillingAddressFromCart()
+	public function getBillingAddressFromCart(): ?object
 	{
 		$address		= NULL;
 		if( $this->modelCart->get( 'userId' ) ){
@@ -99,15 +99,15 @@ class Logic_Shop extends Logic
 		return $address;
 	}
 
-	public function getDeliveryAddressFromCart()
+	public function getDeliveryAddressFromCart(): ?object
 	{
 		$address		= NULL;
 		if( $this->modelCart->get( 'userId' ) ){
-			$address	= $this->modelAddress->getByIndices( array(
+			$address	= $this->modelAddress->getByIndices( [
 				'relationId'	=> $this->modelCart->get( 'userId' ),
 				'relationType'	=> 'user',
 				'type'			=> Model_Address::TYPE_DELIVERY,
-			) );
+			] );
 		}
 		return $address;
 	}
@@ -115,23 +115,23 @@ class Logic_Shop extends Logic
 	/**
 	 *	@deprecated
 	 */
-	public function getGuestCustomer( $customerId )
+	public function getGuestCustomer( string $customerId ): object
 	{
 		throw new RuntimeException( 'Method Logic_Shop::getGuestCustomer is deprecated' );
 		$model		= new Model_Shop_Customer( $this->env );
 		$customer	= $model->get( $customerId );
 		if( !$customer )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
-		$customer->addressBilling	= $this->modelAddress->getByIndices( array(
+		$customer->addressBilling	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_BILLING,
-		) );
-		$customer->addressDelivery	= $this->modelAddress->getByIndices( array(
+		] );
+		$customer->addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'customer',
 			'relationId'	=> $customerId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
-		) );
+		] );
 		if( $customer->addressDelivery ){
 			$customer->userId		= 0;
 			$customer->gender		= 0;
@@ -143,10 +143,12 @@ class Logic_Shop extends Logic
 		return $customer;
 	}
 
-	public function getOrder( $orderId, bool $extended = FALSE )
+	public function getOrder( string $orderId, bool $extended = FALSE ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
-		if( $order && $extended ){
+		if( !$order )
+			throw new RangeException( 'Invalid order ID: '.$orderId );
+		if( $extended ){
 			$order->customer	= $this->getOrderCustomer( $orderId );
 			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
 			$order->shipping	= $this->getOrderShipping( $orderId );
@@ -156,7 +158,7 @@ class Logic_Shop extends Logic
 		return $order;
 	}
 
-	public function getOrderCustomer( $orderId )
+	public function getOrderCustomer( string $orderId ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -169,12 +171,12 @@ class Logic_Shop extends Logic
 	/**
 	 *	@todo		to be implemented: use Model_Shop_Shipping_Option
 	 */
-	public function getOrderOptions( $orderId )
+	public function getOrderOptions( string $orderId ): object
 	{
 		return (object) [];
 	}
 
-	public function getOrderPosition( $positionId, bool $extended = FALSE )
+	public function getOrderPosition( string $positionId, bool $extended = FALSE ): ?object
 	{
 		$position	= $this->modelOrderPosition->get( $positionId );
 		if( $extended ){
@@ -184,7 +186,7 @@ class Logic_Shop extends Logic
 		return $position;
 	}
 
-	public function getOrderPositions( $orderId, $extended = FALSE )
+	public function getOrderPositions( string $orderId, bool $extended = FALSE ): array
 	{
 		$positions	= $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
 		if( $extended ){
@@ -196,7 +198,7 @@ class Logic_Shop extends Logic
 		return $positions;
 	}
 
-	public function getOrders( array $conditions = [], array $orders = [], array$limits = [] ): array
+	public function getOrders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}
@@ -204,7 +206,7 @@ class Logic_Shop extends Logic
 	/**
 	 *	@todo		make tax rate configurable - store rate on shipping price or service
 	 */
-	public function getOrderShipping( $orderId )
+	public function getOrderShipping( string $orderId ): object
 	{
 		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 		$taxRate		= 19;				//  @todo: make configurable
@@ -230,15 +232,15 @@ class Logic_Shop extends Logic
 				}
 			}
 		}
-		return (object) array(
+		return (object) [
 			'price'			=> $price,
 			'tax'			=> $tax,
 			'priceTaxed'	=> $priceTaxed,
 			'taxRate'		=> $taxRate,
-		);
+		];
 	}
 
-	public function getOrderTaxes( $orderId )
+	public function getOrderTaxes( string $orderId ): array
 	{
 		$taxes		= [];
 		$sum		= 0;
@@ -263,17 +265,17 @@ class Logic_Shop extends Logic
 	 */
 /*	public function getOpenSessionOrder( $sessionId )
 	{
-		$conditions	= array(
+		$conditions	= [
 			'sessionId'		=> $sessionId,
 			'status'		=> '< 2',
-		);
+		];
 		return $this->modelOrder->getAll( $conditions );
 	}*/
 
 	/**
 	 *	@deprecated
 	 */
-	public function getShipping( $strict = TRUE )
+	public function getShipping( bool $strict = TRUE )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -281,18 +283,18 @@ class Logic_Shop extends Logic
 			->message( 'getShipping is deprecated' );
 		if( !$this->useShipping && $strict )
 			throw new RuntimeException( "Shipping module is not installed" );
-		return $this->useShipping ? $this->useShipping : NULL;
+		return $this->useShipping ?: NULL;
 	}
 
 	/**
 	 *	Returns Shipping Zone ID of Country.
 	 *	@access		public
-	 *	@param		integer		 $countryId		ID of Country
+	 *	@param		string		 $countryId		ID of Country
 	 *	@return		integer|NULL
 	 *	@todo		rename to getShippingZoneOfCountryId and change behaviour
 	 *	@deprecated
 	 */
-	public function getShippingZoneId( $countryId )
+	public function getShippingZoneId( string $countryId )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -308,7 +310,7 @@ class Logic_Shop extends Logic
 	 *	@return		int
 	 *	@deprecated
 	 */
-	public function getShippingGradeIdByQuantity( $quantity )
+	public function getShippingGradeIdByQuantity( int $quantity )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -320,12 +322,12 @@ class Logic_Shop extends Logic
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		integer		$shippingZoneId 		ID of Shipping Zone
-	 *	@param		integer		$shippingGradeId 		ID of Shipping Grade
+	 *	@param		string		$shippingZoneId 		ID of Shipping Zone
+	 *	@param		string		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@deprecated
 	 */
-	public function getShippingPrice( $shippingZoneId, $shippingGradeId )
+	public function getShippingPrice( string $shippingZoneId, string $shippingGradeId )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -334,47 +336,44 @@ class Logic_Shop extends Logic
 		return $this->getShipping()->getPrice( $shippingZoneId, $shippingGradeId );
 	}
 
-	public function hasArticleInCart( $bridgeId, $articleId )
+	public function hasArticleInCart( string $bridgeId, string $articleId ): bool
 	{
 		return $this->countArticleInCart( $bridgeId, $articleId ) > 0;
 	}
 
-	public function setOrderPaymentId( $orderId, $paymentId )
+	public function setOrderPaymentId( string $orderId, string $paymentId ): bool
 	{
-		if( $orderId ){
-			return $this->modelOrder->edit( $orderId, array(
-				'paymentId'		=> $paymentId,
-				'modifiedAt'	=> time(),
-			) );
-		}
+		return (bool) $this->modelOrder->edit( $orderId, [
+			'paymentId'		=> $paymentId,
+			'modifiedAt'	=> time(),
+		] );
 	}
 
-	public function setOrderPaymentMethod( $orderId, $paymentMethod ){
-		if( $orderId ){
-			return $this->modelOrder->edit( $orderId, array(
-				'paymentMethod'	=> $paymentMethod,
-				'modifiedAt'	=> time(),
-			) );
-		}
+	public function setOrderPaymentMethod( string $orderId, string $paymentMethod ): bool
+	{
+		return (bool) $this->modelOrder->edit( $orderId, [
+			'paymentMethod'	=> $paymentMethod,
+			'modifiedAt'	=> time(),
+		] );
 	}
 
-	public function setOrderPositionStatus( $positionId, $status )
+	public function setOrderPositionStatus( string $positionId, $status ): bool
 	{
-		return $this->modelOrderPosition->edit( $positionId, array(
+		return (bool) $this->modelOrderPosition->edit( $positionId, [
 			'status'		=> (int) $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
-	public function setOrderUserId( $orderId, $userId )
+	public function setOrderUserId( string $orderId, string $userId ): bool
 	{
-		return $this->modelOrder->edit( $orderId, array(
+		return (bool) $this->modelOrder->edit( $orderId, [
 			'userId'		=> $userId,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
-	public function setOrderStatus( $orderId, $status )
+	public function setOrderStatus( string $orderId, $status ): bool
 	{
 		$order	= $this->getOrder( $orderId );
 		if( $status == Model_Shop_Order::STATUS_PAYED ){
@@ -387,10 +386,10 @@ class Logic_Shop extends Logic
 				}
 			}
 		}
-		return $this->modelOrder->edit( $orderId, array(
+		return (bool) $this->modelOrder->edit( $orderId, [
 			'status'		=> (int) $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
 	/**

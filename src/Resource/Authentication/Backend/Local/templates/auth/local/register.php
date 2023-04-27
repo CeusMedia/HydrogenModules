@@ -94,16 +94,16 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
 							HtmlTag::create( 'h5', 'Verknüpfung hergestellt' ),
-							HtmlTag::create( 'p', join( '<br/>', array(
+							HtmlTag::create( 'p', join( '<br/>', [
 								'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
 								'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
 								'',
-							) ) ),
+							] ) ),
 							HtmlTag::create( 'div', array(
-								HtmlTag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', array(
+								HtmlTag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', [
 									'href'	=> './auth/oauth2/unbind',
 									'class'	=> 'btn btn-small not-btn-inverse'
-								) ),
+								] ),
 							) ),
 						), ['class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
 						$icon,
@@ -117,9 +117,9 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
 			$field		=  array(
 				HtmlTag::create( 'label', 'Registrieren mit' ),
-				HtmlTag::create( 'div', HtmlTag::create( 'div', $buttons, array(
+				HtmlTag::create( 'div', HtmlTag::create( 'div', $buttons, [
 					'class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'
-				) ), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
+				] ), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
 			);
 		}
 		$fieldOauth2	= HtmlTag::create( 'div', array(

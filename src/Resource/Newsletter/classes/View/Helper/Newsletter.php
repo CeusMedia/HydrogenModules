@@ -85,8 +85,8 @@ class View_Helper_Newsletter
 	}
 
 	/**
-	 *	@todo		kriss: correct urls
-	 *	@todo		kriss: code doc
+	 *	@todo		 correct urls
+	 *	@todo		 code doc
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
 	 */
 	public function prepareReaderDataForLetter( $readerLetterId )

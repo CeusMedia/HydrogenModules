@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w			= (object) $words['login'];
-extract( $view->populateTexts( array( 'top', 'info', 'bottom' ), 'html/auth/login/' ) );
+extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/login/' ) );
 $formUrl	= './auth/login' . ( $from ? '?from='.rawurlencode( $from ) : '' );
 
 return '

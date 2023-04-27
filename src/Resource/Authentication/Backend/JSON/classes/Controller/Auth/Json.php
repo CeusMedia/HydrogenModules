@@ -1,21 +1,25 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Auth_Json extends Controller
 {
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $cookie;
-	protected $messenger;
-	protected $useCsrf;
+	protected Dictionary $config;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected HttpCookie $cookie;
+	protected MessengerResource $messenger;
+	protected Logic_Authentication_Backend_Json $logic;
+	protected bool $useCsrf;
 
 	public function index()
 	{
 		if( !$this->logic->isAuthenticated() )
-			return $this->redirect( 'auth/json', 'login' );										// @todo replace redirect
+			$this->restart( 'login', TRUE );
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
@@ -24,16 +28,17 @@ class Controller_Auth_Json extends Controller
 		if( $forwardPath && $forwardForce )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
 		if( $from )
-			return $this->restart( $from );
+			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		return $this->restart( NULL );
+		$this->restart();
 	}
 
-	public function login( $username = NULL )
+	public function login( ?string $username = NULL )
 	{
 		if( $this->logic->isAuthenticated() ){
-			if( $this->request->has( 'from' ) )
+			$from	= $this->request->get( 'from' );
+			if( $from )
 				$this->restart( $from );
 			$this->restart( NULL, TRUE );
 		}
@@ -52,12 +57,12 @@ class Controller_Auth_Json extends Controller
 			if( !trim( $password = $this->request->get( 'login_password' ) ) )
 				$this->messenger->noteError( $words->msgNoPassword );
 
-			$data	= array(
-				'filters'	=> array(
+			$data	= [
+				'filters'	=> [
 					'username'	=> $username,
 //					'password'	=> md5( $password )
-				)
-			);
+				]
+			];
 			$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
 			$user	= count( $result ) === 1 ? $result[0] : NULL;
 
@@ -106,7 +111,7 @@ class Controller_Auth_Json extends Controller
 //		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	public function logout( ?string $redirectController = NULL, ?string $redirectAction = NULL )
 	{
 		$words		= (object) $this->getWords( 'logout' );
 
@@ -158,7 +163,8 @@ class Controller_Auth_Json extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Json' );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_json.', TRUE );
-		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
+		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
+		$this->addData( 'useCsrf', $this->useCsrf );
 	}
 
 	/**
@@ -166,25 +172,25 @@ class Controller_Auth_Json extends Controller
 	 *	If newer password store is supported and old password has been found, migration will apply.
 	 *
 	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 *	@param		object		$user			User data object
+	 *	@param		string		$password		Password to check on login
+	 *	@todo		clean up if support for old passwort decays
+	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 */
-	protected function checkPasswordOnLogin( string $user, string $password ): bool
+	protected function checkPasswordOnLogin( object $user, string $password ): bool
 	{
-		$data	= array(
-			'filters'	=> array(
+		$data	= [
+			'filters'	=> [
 				'userId'	=> $user->userId,
 				'password'	=> md5( $password )
-			)
-		);
+			]
+		];
 		$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
 		return count( $result ) === 1;
 	}
 
 	/**
-	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
+	 *	@todo		rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	This method is deactivated because the currently only available JSON server auth controller (@App_Chat_Server) does not support relogin.
 	 */
 /*	protected function rememberUserInCookie( $userId, $password ){
@@ -198,7 +204,7 @@ class Controller_Auth_Json extends Controller
 	}*/
 
 	/**
-	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
+	 *	@todo		rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	Tries to relogin user if remembered in cookie.
 	 *	Retrieves user ID and password from cookie.
 	 *	Checks user, its password and access per role.

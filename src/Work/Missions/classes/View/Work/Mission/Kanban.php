@@ -5,6 +5,11 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Kanban extends View
 {
+	protected ?Logic_Work_Mission $logic	= NULL;
+	protected ?DateTime $today				= NULL;
+	protected ?array $words					= NULL;
+	protected array $projects				= [];
+
 	public function ajaxRenderIndex(): void
 	{
 		extract( $this->getData() );

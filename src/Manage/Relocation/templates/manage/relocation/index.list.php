@@ -25,16 +25,16 @@ if( $relocations ){
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$link	= HtmlTag::create( 'a', $relocation->title, ['href' => $uri] );
 		$usedAt		= $helper->convert( $relocation->usedAt, TRUE, $w->prefixTimePhraser, $w->suffixTimePhraser );
-		$buttonEdit	= HtmlTag::create( 'a', $iconEdit, array(
+		$buttonEdit	= HtmlTag::create( 'a', $iconEdit, [
 			'href'	=> $uri,
 			'class'	=> 'btn btn-small',
 			'title'	=> $w->buttonEdit,
-		) );
-		$buttonGo	= HtmlTag::create( 'a', $iconGo, array(
+		] );
+		$buttonGo	= HtmlTag::create( 'a', $iconGo, [
 			'href'	=> $relocation->url,
 			'class'	=> 'btn btn-small',
 			'title'	=> $w->buttonGo,
-		) );
+		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonEdit, $buttonGo], ['class' => 'btn-group'] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $relocation->relocationId ),
@@ -42,11 +42,11 @@ if( $relocations ){
 			HtmlTag::create( 'td', $relocation->views ),
 			HtmlTag::create( 'td', $usedAt ),
 			HtmlTag::create( 'td', $buttons ),
-		), array(
+		), [
 			'data-status'	=> $relocation->status,
 			'data-url'		=> $relocation->url,
 			'class'			=> $class
-		) );
+		] );
 	}
 	$columns	= HtmlElements::ColumnGroup( "50px", "", "80px", "120px", "100px" );
 	$heads	= HtmlElements::TableHeads( [$w->headId, $w->headTitle, $w->headViews, $w->headUsedAt, $w->headActions] );
@@ -55,10 +55,10 @@ if( $relocations ){
 	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', [
 	'href'	=> './manage/relocation/add',
 	'class'	=> 'btn btn-success'
-) );
+] );
 
 $abbrCount	= HtmlTag::create( 'abbr', $count, ['title' => $w->titleCount] );
 $abbrTotal	= HtmlTag::create( 'abbr', $total, ['title' => $w->titleTotal] );

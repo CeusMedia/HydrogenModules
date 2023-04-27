@@ -33,20 +33,20 @@ class Controller_Work_Time extends Controller
 			$secondsPlanned	= View_Helper_Work_Time::parseTime( $timePlanned );
 			$secondsNeeded	= View_Helper_Work_Time::parseTime( $timeNeeded );
 
-			$data		= array(
+			$data		= [
 				'projectId'			=> $projectId,
 				'module'			=> $module,
 				'moduleId'			=> $moduleId,
 				'userId'			=> $this->userId,
 				'workerId'			=> $this->request->get( 'workerId' ),
-				'title'				=> $this->request->get( 'title' ),
-				'description'		=> $this->request->get( 'description' ),
+				'title'				=> $title,
+				'description'		=> $desc,
 				'secondsPlanned'	=> $secondsPlanned,
 				'secondsNeeded'		=> $secondsNeeded,
 				'status'			=> 0,
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			);
+			];
 
 			$timerId	= $this->modelTimer->add( $data );
 			$this->messenger->noteSuccess( 'Timer saved.' );
@@ -78,10 +78,10 @@ class Controller_Work_Time extends Controller
 		else{
 			$count	= 0;
 			foreach( $timerIds as $timerId ){
-				$count		+= $this->modelTimer->edit( $timerId, array(
+				$count		+= $this->modelTimer->edit( $timerId, [
 					'module'	=> $module,
 					'moduleId'	=> $moduleId,
-				) );
+				] );
 			}
 			$this->messenger->noteSuccess( '%d Timer(s) assigned.', $count );
 		}
@@ -90,7 +90,12 @@ class Controller_Work_Time extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function edit( string $timerId )
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( !$timer ){
@@ -151,17 +156,16 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'timerId', $timerId );
 
-        $logicAuth      = Logic_Authentication::getInstance( $this->env );
-        $currentUserId  = $logicAuth->getCurrentUserId();
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$currentUserId	= $logicAuth->getCurrentUserId();
 		$projectUsers	= [];
 		if( $timer->projectId ){
-	        $logicProject   = Logic_Project::getInstance( $this->env );
+			$logicProject   = Logic_Project::getInstance( $this->env );
 			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, [], ['username' => 'ASC'] );
 			if( !$timer->workerId )
 				$timer->workerId	= $currentUserId;
 		}
 		$this->addData( 'projectUsers', $projectUsers );
-
 	}
 
 	public function filter()
@@ -191,10 +195,10 @@ class Controller_Work_Time extends Controller
 		if( $timer )
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
-		$conditions	= array(
+		$conditions	= [
 			'moduleId'	=> 0,
 			'userId'	=> $this->userId
-		);
+		];
 		$unrelatedTimers	= $this->modelTimer->getAll( $conditions );
 
 		$this->addData( 'userId', $this->userId );
@@ -261,6 +265,10 @@ class Controller_Work_Time extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

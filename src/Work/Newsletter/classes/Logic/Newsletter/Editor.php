@@ -113,12 +113,12 @@ return $html;
 
 	public function enqueue( $queueId, $readerId, $newsletterId, bool $allowDoubles = FALSE )
 	{
-		$indices	= array(
+		$indices	= [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterQueueId'		=> $queueId,
 			'newsletterId'			=> $newsletterId,
 			'status'				=> '>= 0'
-		);
+		];
 		if( !$allowDoubles && $this->modelReaderLetter->getByIndices( $indices ) )
 			return 0;
 		$data		= array(
@@ -136,9 +136,9 @@ return $html;
 		$modelMail	= new Model_Mail( $this->env );
 		$readers	= $this->getReadersOfGroup( $groupId );
 		foreach( $readers as $reader ){
-			$conditions	= array(
+			$conditions	= [
 				'newsletterReaderId'	=> $reader->newsletterReaderId,
-			);
+			];
 			$letters	= $this->getReaderLetters( $conditions );
 			foreach( $letters as $letter ){
 				if( $letter->mailId )
@@ -226,10 +226,10 @@ return $html;
 		$logicMail->appendRegisteredAttachments( $mail, $language );
 
 		$reader		= $this->getReader( $readerLetter->newsletterReaderId );
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $reader->firstname.' '.$reader->surname,
 			'email'		=> $reader->email,
-		);
+		];
 		$status	= $logicMail->handleMail( $mail, $receiver, $language );
 		$data		= array(
 			'status'	=> Model_Newsletter_Reader_Letter::STATUS_SENT,
@@ -245,17 +245,17 @@ return $html;
 			throw new RuntimeException( 'Module "Resource_Mail" is not installed' );
 		$logicMail		= Logic_Mail::getInstance( $this->env );
 
-		$mail			= new Mail_Newsletter( $this->env, array(
+		$mail			= new Mail_Newsletter( $this->env, [
 			'newsletterId'	=> $newsletterId,
 			'readerId'		=> $readerId,
-		) );
+		] );
 //		$logicMail->appendRegisteredAttachments( $mail, $language );
 
 		$reader		= $this->getReader( $readerId );
-		$receiver	= (object) array(
+		$receiver	= (object) [
 			'username'	=> $reader->firstname.' '.$reader->surname,
 			'email'		=> $reader->email,
-		);
+		];
 		return $logicMail->sendMail( $mail, $receiver );
 	}
 

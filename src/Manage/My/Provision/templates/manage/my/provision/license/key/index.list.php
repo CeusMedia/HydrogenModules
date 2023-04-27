@@ -13,12 +13,12 @@ $iconsStatus	= array(
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 
-$rowColors	= array(
+$rowColors	= [
 	0	=> '',
 	1	=> 'warning',
 	2	=> 'success',
 	3	=> 'info',
-);
+];
 
 $helper		= new View_Helper_Member( $this->env );
 
@@ -45,23 +45,23 @@ if( $userLicenseKeys ){
 		}
 		if( $userLicenseKey->status == 0 ){
 		}
-		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseId, array(
+		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseId, [
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseId,
-		) );
+		] );
 	$helper->setUser( $userLicenseKey->userLicense->userId );
 //	$helper->setMode( 'inline' );
 	$userName	= $helper->render();
 //		$userName	= HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, ['class' => 'muted'] );
 		$product	= $userLicenseKey->product->title;
 /*		if( $userLicenseKey->product->url )
-			$product	= HtmlTag::create( 'a', $product, array(
+			$product	= HtmlTag::create( 'a', $product, [
 				'href'		=> $userLicenseKey->product->url,
 				'target'	=> '_blank',
-			) );*/
+			] );*/
 
-		$licenseUid	= HtmlTag::create( 'a', $userLicenseKey->userLicense->uid, array(
+		$licenseUid	= HtmlTag::create( 'a', $userLicenseKey->userLicense->uid, [
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseId
-		) );
+		] );
 
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', 'Lizenznummer: '.$licenseUid.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Produkt: '.$product.'<br/>Besitzer: '.$userName ),
@@ -75,10 +75,10 @@ $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table'] );
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', [
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="content-panel">

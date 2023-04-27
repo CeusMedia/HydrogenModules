@@ -153,12 +153,12 @@ class Controller_Catalog extends Controller
 		$builder->addItemElement( 'g:gtin', TRUE );
 		$builder->addItemElement( 'g:image_link', FALSE );
 
-		$availabilities	= array(
+		$availabilities	= [
 			-2		=> "Nicht auf Lager",
 			-1		=> "Vorbestellt",
 			0		=> "Auf Lager",
 			1		=> "Bestellbar"
-		);
+		];
 
 		$conditions		= ['price' => '> 0', 'isn' => '> 0'/*, 'status' => array[0, 1]*/];
 		$orders			= ['createdAt' => 'DESC'];
@@ -423,9 +423,11 @@ class Controller_Catalog extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
-	public function tag( $tagId = NULL )
+	public function tag( string $tagId = NULL ): void
 	{
-		if( !$tagId || !( $tag = $this->logic->getArticleTag( $tagId ) ) )
+		if( !$tagId )
+			$this->restart( NULL, TRUE );
+		if( !( $tag = $this->logic->getArticleTag( $tagId ) ) )
 			$this->restart( NULL, TRUE );
 
 		$articles	= $this->logic->getArticlesFromTags( [$tag->tag] );

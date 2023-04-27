@@ -70,10 +70,10 @@ if( $threads ){
 		);
 		$rows[]	= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	}
-	$heads	= HtmlElements::TableHeads( array(
+	$heads	= HtmlElements::TableHeads( [
 		$words['topic']['headTitle'],
 		$words['topic']['headActions'],
-	) );
+	] );
 	$colgroup	= HtmlElements::ColumnGroup( '85%', '15%' );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );

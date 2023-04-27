@@ -35,33 +35,33 @@ class View_Helper_Work_Mission_List_DayControlsSmall extends View_Helper_Work_Mi
 			$buttons[]	= HtmlTag::create( 'li', $link );
 		}
 		$list		= HtmlTag::create( 'ul', $buttons, ['class' => 'nav nav-tabs'] );
-		$container	= HtmlTag::create( 'div', $list, ['class' => 'container'] );
-		return $container;
+
+		return HtmlTag::create( 'div', $list, ['class' => 'container'] );
 	}
 
-	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ): string
+	public function renderDayButtonLabel( $day, $number, $max/*, $template = '%1$s%2$s%3$s%4$s'*/ ): string
 	{
 		$then		= time() - $this->logic->timeOffset + ( $day * 24 * 60 * 60 );
 		$dayName	= $this->words['days-short'][date( "w", $then )];
-		$dayCount	= '<small class="muted">'.$number.'</small>';
+//		$dayCount	= '<small class="muted">'.$number.'</small>';
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
 		$indicator	= $this->renderDayLoadIndicator( $number, $max, !TRUE );
 		$label		= '<b>'.$dayName.'</b><br/><small>'.$dayDate.'</small><br/>'.$indicator;
 		return $label;
-		$number		= ' <div class="mission-number"><span class="badge">'.$number.'</span></div>';
 
+/*		$number		= ' <div class="mission-number"><span class="badge">'.$number.'</span></div>';
 		$dayDate	= date( "j.", $then );
 		$dayDate	.= '<small class="muted">'.date( "n.", $then ).'</small>';
 		$dayDate	= HtmlTag::create( 'div', $dayDate, ['class' => 'dayDate date'] );
 		$dayLabel	= $this->words['days'][date( "w", $then )];
 		$dayLabel	= HtmlTag::create( 'div', $dayLabel, ['class' => 'dayName'] );
-		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
+		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );*/
 	}
 
-	protected function renderDayLoadIndicator( $number, $max, $useInfo = FALSE ): string
+	protected function renderDayLoadIndicator( $number, int $max, bool $useInfo = FALSE ): string
 	{
-		$max		= $max < 18 ? 18 : $max;														//  max is atleast 18
+		$max		= max( $max, 18 );														//  max is atleast 18
 		$ratio		= $number / $max;
 		if( $useInfo ){
 			$width		= "100%";																	//  

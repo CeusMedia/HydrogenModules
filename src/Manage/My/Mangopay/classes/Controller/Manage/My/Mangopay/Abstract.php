@@ -1,18 +1,25 @@
 <?php
 
+use CeusMedia\Cache\SimpleCacheInterface;
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 {
-	protected $request;
-	protected $messenger;
-	protected $session;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $session;
 	protected Logic_Payment_Mangopay $logic;
 	protected Resource_Mangopay $mangopay;
 	protected string $userId;
+	protected SimpleCacheInterface $cache;
+
+	protected ?string $sessionPrefix	= NULL;
 
 	protected string $currency		= "EUR";
-	protected float $factorFees	= 0.1;
+	protected float $factorFees		= 0.1;
 
 	protected function __onInit(): void
 	{
@@ -38,7 +45,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		}
 	}
 
-	public function checkBankAccount( $bankAccountId, $strict = TRUE ){
+	public function checkBankAccount( string $bankAccountId, bool $strict = TRUE )
+	{
 		$item	= $this->logic->getBankAccount( $this->userId, $bankAccountId );
 		if( !$item->Active ){
 			if( !$strict )
@@ -48,7 +56,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		return $item;
 	}
 
-	public function checkIsOwnBankAccount( $bankAccountId, $strict = TRUE ){
+	public function checkIsOwnBankAccount( string $bankAccountId, bool $strict = TRUE )
+	{
 		$bankAccount	= $this->checkBankAccount( $bankAccountId, $strict );
 		if( !$bankAccount )
 			return FALSE;
@@ -61,7 +70,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		throw new DomainException( 'Access to this bank account is denied' );
 	}
 
-	protected function checkIsOwnCard( $cardId, $strict = TRUE, $fallback = [] ){
+	protected function checkIsOwnCard( string $cardId, bool $strict = TRUE, array $fallback = [] )
+	{
 		if( !is_array( $fallback ) || !count( $fallback ) )
 			$fallback	= [NULL, TRUE];
 		$card	= $this->checkCard( $cardId, $fallback );
@@ -69,7 +79,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		return $card;
 	}
 
-	protected function checkCard( $cardId, $fallback = [] ){
+	protected function checkCard( string $cardId, array $fallback = [] )
+	{
 		try{
 			if( !strlen( trim( $cardId ) ) )
 				throw new InvalidArgumentException( 'No card ID given' );
@@ -89,7 +100,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		$this->restart( $fallback[0], $fallback[1] );
 	}
 
-	protected function checkWallet( $userId, $walletId, $strict = TRUE ){
+	protected function checkWallet( string $userId, string $walletId, bool $strict = TRUE )
+	{
 		if( $strict )
 			return $this->logic->getUserWallet( $userId, $walletId );
 		try{
@@ -102,7 +114,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		}
 	}
 
-	protected function checkWalletIsOwn( $walletId, $strict = TRUE ){
+	protected function checkWalletIsOwn( string $walletId, bool $strict = TRUE )
+	{
 		$wallet		= $this->checkWallet( $this->userId, $walletId );
 		$wallets	= $this->logic->getUserWallets( $this->userId );
 		foreach( $wallets as $item )
@@ -113,7 +126,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		throw new DomainException( 'Access to this wallet is denied' );
 	}
 
-	protected function followBackLink( $sessionKey ){
+	protected function followBackLink( string $sessionKey )
+	{
 		$from	= $this->session->get( $this->sessionPrefix.$sessionKey );
 		if( !$from )
 			return;
@@ -121,7 +135,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		$this->restart( $from );
 	}
 
-	protected function handleMangopayResponseException( $e ){
+	protected function handleMangopayResponseException( $e )
+	{
 		ob_start();
 		print_r( $e->GetErrorDetails()->Errors );
 		$details	= ob_get_clean();
@@ -129,7 +144,8 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 		$this->messenger->noteFailure( $message, $e->getMessage(), $e->getCode(), $details );
 	}
 
-	protected function saveBackLink( $requestKey, $sessionKey, $override = FALSE ){
+	protected function saveBackLink( $requestKey, $sessionKey, $override = FALSE )
+	{
 		$from		= $this->request->get( $requestKey );
 		if( !$from )
 			return;

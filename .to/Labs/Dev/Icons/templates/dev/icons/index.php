@@ -9,7 +9,7 @@ $basePath	= '/var/www/';
 
 $selected	= $env->getRequest()->get( 'project' );
 
-$projects	= array(
+$projects	= [
 	'lib/cmIcons/tango/'						=> 'Tango',
 	'lib/cmIcons/famfamfam/mini/'				=> 'famfamfam mini',
 	'lib/cmIcons/famfamfam/silk/'				=> 'famfamfam silk',
@@ -19,7 +19,7 @@ $projects	= array(
 	'lib/cmIcons/dryicons/handy/'				=> 'dryicons handy',
 	'lib/cmIcons/dryicons/colorful-stickers/'	=> 'dryicons colorful-stickers',
 	'lib/cmIcons/sublink/SweetiePlus-v2/'		=> 'SweetiePlus',
-);
+];
 
 $list	= [];
 foreach( $projects as $path => $label ){

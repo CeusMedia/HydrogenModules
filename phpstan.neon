@@ -5,6 +5,8 @@ includes:
 parameters:
 	phpVersion: 70400
 	level: 0
+#	level: 1
+#	level: max
 	paths:
 		- src/Admin
 		- src/App

@@ -13,12 +13,12 @@ foreach( $sources as $sourceId => $source ){
 		$state		= $iconEnabled;
 		$urlRefresh	= './admin/module/source/refresh/'.$sourceId."?from=admin/module/source";
 		$button		= HtmlElements::LinkButton( $urlRefresh, $iconRefresh, 'button tiny' );
-		$button		= HtmlTag::create( 'a', $iconRefresh, array(
+		$button		= HtmlTag::create( 'a', $iconRefresh, [
 			'href'		=> $urlRefresh,
 			'class'		=> 'button tiny locklayer-auto',
 			'title'		=> 'Quelle neu einlesen',
 			'data-locklayer-label'	=> 'Lese Quelle neu ein ...',
-		) );
+		] );
 		$state		.= '&nbsp;'.$button;
 	}
 	$label	= $source->title;
@@ -37,12 +37,12 @@ ksort( $rows );
 
 $w			= (object) $words['index'];
 
-$buttonAdd	= HtmlTag::create( 'button', '<span>'.$w->buttonAdd.'</span>', array(
+$buttonAdd	= HtmlTag::create( 'button', '<span>'.$w->buttonAdd.'</span>', [
 	'type'					=> 'button',
 	'class'					=> 'button add locklayer-auto',
 	'onclick'				=> 'document.location.href = \'./admin/module/source/add\';',
 //	'data-locklayer-label'	=> '
-) );
+] );
 
 
 

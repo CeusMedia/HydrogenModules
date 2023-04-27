@@ -15,10 +15,10 @@ if( $articleDocuments ){
 		$idPrefix		= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT ).'_';
 		$urlRemove		= './manage/catalog/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
 		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="Dokument entfernen">'.$iconRemove.'</a>';
-		$link			= HtmlTag::create( 'a', $item->title, array(
+		$link			= HtmlTag::create( 'a', $item->title, [
 			'href'		=> $pathDocuments.$idPrefix.$item->url,
 			'target'	=> '_blank'
-		) );
+		] );
 		$listDocuments[]	= '<tr>
 	<td>'.$link.'</td>
 	<td><div class="pull-right">'.$buttonRemove.'</div></td>

@@ -1,10 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconNotice			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
-$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'';
+$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] );
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
@@ -24,10 +29,10 @@ if( $center ){
 				'href'		=> './index/view/'.$branch->branchId,
 				'onclick'	=> "clickItem($(this).parent(), true); return false;",
 			) );
-			$list[]	= HtmlTag::create( 'li', $link, array(
+			$list[]	= HtmlTag::create( 'li', $link, [
 				'data-longitude'	=> $branch->longitude,
 				'data-latitude'		=> $branch->latitude,
-			) );
+			] );
 		}
 	}
 	$list		= HtmlTag::create( 'ul', $list, ['class' => 'list-branches nav nav-pills nav-stacked'] );
@@ -49,30 +54,30 @@ if( $center ){
 			) );
 			$logo	= '';
 /*			if( $branch->company->logo ){
-				$logo	= HtmlTag::create( 'img', NULL, array(
+				$logo	= HtmlTag::create( 'img', NULL, [
 					'src'		=> 'images/companies/'.$branch->company->logo,
 					'width'		=> '64px',
 					'height'	=> '64px',
-				) );
+				] );
 			}*/
-			$heading	= HtmlTag::create( 'div', $link, array(
+			$heading	= HtmlTag::create( 'div', $link, [
 				'class'		=> 'accordion-heading'
-			) );
-			$buttonView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+			] );
+			$buttonView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
 				'class'	=> 'btn btn-info',
 				'href'	=> './index/view/'.$event->eventId
-			) );
-			$buttonView		= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', array(
+			] );
+			$buttonView		= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
 				'href'			=> './ajax/info/event/modalView/'.$event->eventId,
 				'data-toggle'	=> 'modal',
 				'data-target'	=> "#modal-event-view",
 				'class'			=> 'btn btn-info',
-			) );
+			] );
 
-			$buttonNote	= HtmlTag::create( 'a', $iconNote.'&nbsp;merken', array(
+			$buttonNote	= HtmlTag::create( 'a', $iconNote.'&nbsp;merken', [
 				'class'	=> 'btn btn-small',
 				'href'	=> './index/note/'.$event->eventId
-			) );
+			] );
 			$info	= '
 <div class="row-fluid">
 	<div class="" style="width: 80px; float: left">
@@ -91,22 +96,22 @@ if( $center ){
 	</div>
 </div>';
 
-			$content	= HtmlTag::create( 'div', $info, array(
+			$content	= HtmlTag::create( 'div', $info, [
 				'class'		=> 'accordion-inner',
-			) );
-			$body		= HtmlTag::create( 'div', $content, array(
+			] );
+			$body		= HtmlTag::create( 'div', $content, [
 				'id'		=> 'accordion-collapse-'.$event->eventId,
 				'class'		=> 'accordion-body collapse',
-			) );
-			$list[]	= HtmlTag::create( 'div', $heading.$body, array(
+			] );
+			$list[]	= HtmlTag::create( 'div', $heading.$body, [
 				'class'				=> 'accordion-group',
-			) );
+			] );
 		}
 	}
-	$list		= HtmlTag::create( 'div', $list, array(
+	$list		= HtmlTag::create( 'div', $list, [
 		'class'		=> 'list-branches accordion',
 		'id'		=> 'accordion1',
-	) );
+	] );
 
 	$helperMap	= new View_Helper_Map( $env );
 	$map		= $helperMap->render( $center->lat, $center->lon, NULL, NULL, 13 );

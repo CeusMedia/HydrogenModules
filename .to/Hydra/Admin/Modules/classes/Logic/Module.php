@@ -170,7 +170,7 @@ class Logic_Module extends Logic
 	public function getModuleFileMap( RemoteEnvironment $env, $module ): array
 	{
 		$map		= [];
-		$fileTypes	= array(
+		$fileTypes	= [
 			'classes'		=> 'class',
 			'files'			=> 'file',
 			'images'		=> 'image',
@@ -178,7 +178,7 @@ class Logic_Module extends Logic
 			'scripts'		=> 'script',
 			'styles'		=> 'style',
 			'templates'		=> 'template',
-		);
+		];
 		foreach( $fileTypes as $typeMember => $typeKey ){
 			foreach( $module->files->$typeMember as $file ){
 				$pathSource	= $this->getSourceFileTypePath( $typeKey, $file );
@@ -276,11 +276,11 @@ class Logic_Module extends Logic
 				'pathSource'	=> 'config/modules/',
 				'pathTarget'	=> '',
 			),
-			(object) array(
+			(object) [
 				'resources'		=> $module->files->classes,
 				'pathSource'	=> 'classes/',
 				'pathTarget'	=> 'classes/',
-			),
+			],
 			(object) array(
 				'resources'		=> $module->files->templates,
 				'pathSource'	=> $config->get( 'path.templates' ),
@@ -291,21 +291,21 @@ class Logic_Module extends Logic
 				'pathSource'	=> $config->get( 'path.locales' ),
 				'pathTarget'	=> 'locales/',
 			),
-			(object) array(
+			(object) [
 				'resources'		=> $module->files->styles,
 				'pathSource'	=> $pathTheme.'css/',
 				'pathTarget'	=> 'css/',
-			),
+			],
 			(object) array(
 				'resources'		=> $module->files->scripts,
 				'pathSource'	=> $config->get( 'path.scripts' ),
 				'pathTarget'	=> 'js/',
 			),
-			(object) array(
+			(object) [
 				'resources'		=> $module->files->files,
 				'pathSource'	=> '',
 				'pathTarget'	=> '',
-			),
+			],
 		);
 
 		/*  --  IMAGES NEED SPECIAL TREATMENT  --  */
@@ -470,11 +470,11 @@ class Logic_Module extends Logic
 	public function isInstalled( $moduleOrId ): bool
 	{
 		if( is_object( $moduleOrId ) )
-			return in_array( (int) $moduleOrId->type, array(
+			return in_array( (int) $moduleOrId->type, [
 				Model_Module::TYPE_CUSTOM,
 				Model_Module::TYPE_COPY,
 				Model_Module::TYPE_LINK
-			) );
+			] );
 		else if( $moduleOrId )
 			return $this->isInstalled( $this->getModule ( $moduleOrId ) );
 		return NULL;

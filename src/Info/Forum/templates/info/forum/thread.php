@@ -35,11 +35,11 @@ if( $posts ){
 
 		if( (int) $post->status === 0 ){
 			if( $userCanApprove )
-				$buttons[]	= HtmlTag::create( 'a', $iconApprove, array(
+				$buttons[]	= HtmlTag::create( 'a', $iconApprove, [
 					'href'	=> './info/forum/approvePost/'.$post->postId,
 					'class'	=> 'btn not-btn-small btn-success',
 					'title'	=> $words['thread']['buttonApprove']
-				) );
+				] );
 		}
 		if( $userCanEdit && $userCanChange && !$post->type ){
 			$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
@@ -86,10 +86,10 @@ if( $posts ){
 			HtmlTag::create( 'td', $content, ['class' => 'content'] ),
 			HtmlTag::create( 'td', $buttons ),
 		);
-		$rows[]	= HtmlTag::create( 'tr', $cells, array(
+		$rows[]	= HtmlTag::create( 'tr', $cells, [
 			'id'	=> 'post-'.$post->postId,
 			'class'	=> 'post-type-'.$post->type
-		) );
+		] );
 		$lastPostId	= $post->postId;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '20%', '65%', '15%' );

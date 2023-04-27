@@ -1,10 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Event extends Controller
 {
-	public function calendar()
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Model_Event_Address $modelAddress;
+	protected Model_Event $modelEvent;
+
+	public function calendar(): void
 	{
 		$location	= "04109 Leipzig";
 		$range		= 10;
@@ -24,7 +33,7 @@ class Controller_Info_Event extends Controller
 		$this->addData( 'events', $events );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$filters	= ['query', 'location', 'range'];
 		if( $reset ){
@@ -49,7 +58,7 @@ class Controller_Info_Event extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function modal()
+	public function modal(): void
 	{
 //		print_m( $this->request->getAll() );
 //		die;
@@ -62,13 +71,13 @@ class Controller_Info_Event extends Controller
 		}
 	}
 
-	public function index()
+	public function index(): void
 	{
 //		$this->restart( 'calendar', TRUE );
 		$this->restart( 'map', TRUE );
 	}
 
-	public function map()
+	public function map(): void
 	{
 		$location	= "04109 Leipzig";
 		$range		= 10;
@@ -98,14 +107,14 @@ class Controller_Info_Event extends Controller
 		$this->addData( 'center', $center );
 	}
 
-	public function setMonth( $year, $month )
+	public function setMonth( $year, $month ): void
 	{
 		$this->session->set( 'filter_info_event_year', $year );
 		$this->session->set( 'filter_info_event_month', $month );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $eventId )
+	public function view( $eventId ): void
 	{
 		$event	= $this->modelEvent->get( $eventId );
 		if( !$event ){
@@ -116,11 +125,12 @@ class Controller_Info_Event extends Controller
 		$this->addData( 'event', $event );
 	}
 
-	protected function __onInit(): void{
+	protected function __onInit(): void
+	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->modelAddress	= new Model_Address( $this->env );
+		$this->modelAddress	= new Model_Event_Address( $this->env );
 		$this->modelEvent	= new Model_Event( $this->env );
 
 		if( !$this->session->get( 'filter_info_event_year' ) )

@@ -4,14 +4,16 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 {
-	protected $factsChanges;
-	protected $labelsStates;
-	protected $note;
+	/** @var View_Helper_Mail_Facts|View_Helper_Work_Issue_ChangeFacts $factsChanges */
+	protected ?object $factsChanges					= NULL;
+	protected ?View_Helper_Work_Issue_ChangeNote $changeNote		= NULL;
+	protected array $labelsStates;
+	protected ?object $note											= NULL;
 
 	protected function generate(): self
 	{
 		$data	= $this->data;
-		$this->labelsStates		= (array) $this->getWords( 'work/issue', 'states' );
+		$this->labelsStates		= $this->getWords( 'work/issue', 'states' );
 		$this->prepareFacts( $data );
 
 		$issue	= $data['issue'];
@@ -26,7 +28,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		parent::prepareFacts( $data );
 		$issue	= $data['issue'];
 
-		$this->factsChanges	= new View_Helper_Mail_Facts( $this->env );
+		$this->factsChanges	= new View_Helper_Mail_Facts();
 		$this->note	= $this->modelIssueNote->getByIndex( 'issueId', $issue->issueId, ['issueNoteId' => 'DESC'] );
 		if( $this->note ){
 			$this->note->user	= $this->modelUser->get( $this->note->userId );
@@ -117,7 +119,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 '.View_Helper_Mail_Text::underscore( 'Änderungen' ).PHP_EOL.'
 '.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
 '.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
-'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.'';
+'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL;
 
 		$list	= [];
 		foreach( explode( PHP_EOL, $body ) as $nr => $line )

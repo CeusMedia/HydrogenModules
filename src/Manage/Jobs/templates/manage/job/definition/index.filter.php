@@ -32,55 +32,55 @@ $panelFilter	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', $words['filter']['labelStatus'], ['for' => 'input_status'] ),
-					HtmlTag::create( 'select', $optStatus, array(
+					HtmlTag::create( 'select', $optStatus, [
 						'name' 		=> 'status',
 						'id'		=> 'input_status',
 						'class' 	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', $words['filter']['labelMode'], ['for' => 'input_mode'] ),
-					HtmlTag::create( 'select', $optMode, array(
+					HtmlTag::create( 'select', $optMode, [
 						'name' 		=> 'mode',
 						'id'		=> 'input_mode',
 						'class' 	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', $words['filter']['labelClass'], ['for' => 'input_class'] ),
-					HtmlTag::create( 'select', $optClass, array(
+					HtmlTag::create( 'select', $optClass, [
 						'name' 		=> 'class',
 						'id'		=> 'input_class',
 						'class' 	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', $words['filter']['labelMethod'], ['for' => 'input_method'] ),
-					HtmlTag::create( 'select', $optMethod, array(
+					HtmlTag::create( 'select', $optMethod, [
 						'name' 		=> 'method',
 						'id'		=> 'input_method',
 						'class' 	=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], array(
+					HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$words['filter']['buttonFilter'], [
 						'type'	=> 'submit',
 						'name'	=> 'filter',
 						'class'	=> 'btn not-btn-small not-btn-primary btn-info',
-					) ),
+					] ),
 //					HtmlTag::create( 'a', $iconReset.'&nbsp;'.$words['filter']['buttonReset'], array(
-					HtmlTag::create( 'a', $iconReset, array(
+					HtmlTag::create( 'a', $iconReset, [
 						'href'	=> './manage/job/definition/filter/reset',
 						'class'	=> 'btn not-btn-small btn-inverse',
-					) ),
+					] ),
 				), ['class' => 'btn-group'] ),
 			), ['class' => 'buttonbar'] ),
 		), ['action' => './manage/job/definition/filter', 'method' => 'POST'] ),

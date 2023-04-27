@@ -42,14 +42,14 @@ foreach( $branches as $entry ){
 }
 $rows	= implode( "\n", $rows );
 
-$heads	= array(
+$heads	= [
 //	'<input type="checkbox" class="toggler"/>',
 	$w->headTitle,
 	$w->headCompany,
 	$w->headCreatedAt,
 	$w->headModifiedAt,
 	$w->headAction,
-);
+];
 $heads		= HtmlElements::TableHeads( $heads );
 $colgroup	= HtmlElements::ColumnGroup( '', '', '120px', '120px', '100px' );
 

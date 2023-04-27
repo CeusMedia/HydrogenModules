@@ -19,28 +19,28 @@ if( $useRemember )
 	$fieldRemember	= HTML::DivClass( "row-fluid",
 		HTML::DivClass( "span12", array(
 			HtmlTag::create( 'label', array(
-				HtmlTag::create( 'input', NULL, array(
+				HtmlTag::create( 'input', NULL, [
 					'type'		=> "checkbox",
 					'name'		=> "login_remember",
 					'id'		=> "input_login_remember",
 					'value'		=> "1",
 					'checked'	=> $login_remember ? 'checked' : NULL
-				) ),
-				HtmlTag::create( 'abbr', $w->labelRemember, array(
+				] ),
+				HtmlTag::create( 'abbr', $w->labelRemember, [
 					'title'		=> $w->labelRemember_title
-				) ),
+				] ),
 			), ['class' => "checkbox"] )
 		)
-	), array(
+	), [
 		'style'	=> $useRemember ? 'display: none' : NULL
-	) );
+	] );
 */
 
-$buttonLogin	= HtmlTag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, array(
+$buttonLogin	= HtmlTag::create( 'button',  $iconLogin.'&nbsp;'.$w->buttonLogin, [
 	'type'		=> "submit",
 	'name'		=> "doLogin",
 	'class'		=> "btn btn-primary btn-block",
-) );
+] );
 
 $buttonPassword	= "";
 
@@ -61,10 +61,10 @@ HTML::DivClass( "content-panel content-panel-form", array(
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
 				HTML::DivClass( "row-fluid",
 					HTML::DivClass( "span12", array(
-						HtmlTag::create( 'label', $w->labelUsername, array(
+						HtmlTag::create( 'label', $w->labelUsername, [
 							'for'	=> "input_login_username",
 							'class'	=> "mandatory"
-						) ),
+						] ),
 						HtmlTag::create( 'input', NULL, array(
 							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
 							'class'		=> 'span12 mandatory',
@@ -77,27 +77,27 @@ HTML::DivClass( "content-panel content-panel-form", array(
 				),
 				HTML::DivClass( "row-fluid",
 					HTML::DivClass( "span12", array(
-						HtmlTag::create( 'label', $w->labelPassword, array(
+						HtmlTag::create( 'label', $w->labelPassword, [
 							'for'	=> "input_login_password",
 							'class'	=> "mandatory"
-						) ),
-						HtmlTag::create( 'input', NULL, array(
+						] ),
+						HtmlTag::create( 'input', NULL, [
 							'value'		=> NULL,
 							'class'		=> 'span12 mandatory',
 							'type'		=> 'password',
 							'name'		=> 'login_password',
 							'id'		=> 'input_login_password',
 							'required'	=> 'required'
-						) )
+						] )
 					) )
 				),
 				$fieldRemember,
 				HTML::DivClass( "buttonbar", array(
-					HTML::DivClass( "btn_toolbar", array(
+					HTML::DivClass( "btn_toolbar", [
 						$buttonLogin,
 						$buttonRegister,
 						$buttonPassword,
-					) )
+					] )
 				) )
 			), array(
 				'action'	=> './auth/json/login' . ( $from ? '?from='.rawurlencode( $from ) : '' ),

@@ -7,10 +7,10 @@ class Controller_Work_Billing_Corporation_Reserve extends Controller
 {
 	protected Dictionary $request;
 	protected Dictionary $session;
-	protected string $filterPrefix;
 	protected Logic_Billing $logic;
+	protected string $filterPrefix;
 
-	public function filter( $corporationId, $reset = FALSE )
+	public function filter( string $corporationId, $reset = FALSE ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'year' );
@@ -23,7 +23,7 @@ class Controller_Work_Billing_Corporation_Reserve extends Controller
 		$this->restart( $corporationId, TRUE );
 	}
 
-	public function index( $corporationId )
+	public function index( string $corporationId ): void
 	{
 		$filterYear		= $this->session->get( $this->filterPrefix.'year' );
 		$filterMonth	= $this->session->get( $this->filterPrefix.'month' );
@@ -50,8 +50,8 @@ class Controller_Work_Billing_Corporation_Reserve extends Controller
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
-		$this->filterPrefix		= 'filter_work_billing_corportion_';
 		$this->logic			= new Logic_Billing( $this->env );
+		$this->filterPrefix		= 'filter_work_billing_corportion_';
 
 		if( !$this->session->has( $this->filterPrefix.'year' ) )
 			$this->session->set( $this->filterPrefix.'year', date( 'Y' ) );

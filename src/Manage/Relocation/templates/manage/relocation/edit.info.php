@@ -5,24 +5,24 @@ $w			= (object) $words['edit-info'];
 
 $links		= [];
 
-$linkTarget		= HtmlTag::create( 'a', $w->labelLinkTarget, array(
+$linkTarget		= HtmlTag::create( 'a', $w->labelLinkTarget, [
 	'href'		=> $relocation->url,
 	'target'	=> '_blank',
-) );
+] );
 $links[]	= HtmlTag::create( 'dd', $linkTarget );
 
-$linkService	= HtmlTag::create( 'a', $w->labelLinkService, array(
+$linkService	= HtmlTag::create( 'a', $w->labelLinkService, [
 	'href'		=> $this->env->url.'info/relocation/'.$relocation->relocationId,
 	'target'	=> '_blank',
-) );
+] );
 $links[]	= HtmlTag::create( 'dd', $linkService );
 
 
 if( $shortcut ){
-	$linkServiceShort	= HtmlTag::create( 'a', $w->labelLinkShortcut, array(
+	$linkServiceShort	= HtmlTag::create( 'a', $w->labelLinkShortcut, [
 		'href'		=> $this->env->url.$shortcut.'/'.$relocation->relocationId,
 		'target'	=> '_blank',
-	) );
+	] );
 	$links[]	= HtmlTag::create( 'dd', $linkServiceShort );
 }
 

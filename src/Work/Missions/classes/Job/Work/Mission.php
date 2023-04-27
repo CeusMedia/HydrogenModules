@@ -92,14 +92,14 @@ class Job_Work_Mission extends Job_Abstract
 			array( 'missionId' )
 		) ) );
 		if( $missionIds ){
-			$missionIds	= $modelMission->getAll( array(
-				'status'	=> array(
+			$missionIds	= $modelMission->getAll( [
+				'status'	=> [
 					Model_Mission::STATUS_ABORTED,
 					Model_Mission::STATUS_REJECTED,
 					Model_Mission::STATUS_FINISHED,
-				),
+				],
 				'missionId'	=> $missionIds,
-			), [], [], ['missionId'] );
+			], [], [], ['missionId'] );
 
 			if( $this->dryMode ){
 				$this->out( 'DRY RUN - no changes will be made.' );
@@ -159,10 +159,10 @@ class Job_Work_Mission extends Job_Abstract
 				if( $timer->module === 'Work_Missions' ){
 					$mission	= $modelMission->get( $timer->moduleId );
 					if( $mission ){
-						$modelWorkTimer->edit( $timer->workTimerId, array(
+						$modelWorkTimer->edit( $timer->workTimerId, [
 							'moduleId'	=> $mission->missionId,
 							'projectId'	=> $mission->projectId,
-						) );
+						] );
 						$countTimerMoved++;
 					}
 					else{
@@ -230,7 +230,7 @@ class Job_Work_Mission extends Job_Abstract
 		if( $user->userId != 4 )
 			return;
 		if( !strlen( trim( $user->email ) ) )													//  no mail address configured for user
-			return;																				//  @todo kriss: handle this exception state!
+			return;																				//  @todo  handle this exception state!
 		$config			= $this->env->getConfig();
 		$language		= $this->language;														//  @todo get user language instead of current language
 		if( $this->useSettings )

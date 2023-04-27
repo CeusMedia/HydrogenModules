@@ -23,12 +23,12 @@ class Controller_Manage_Workshop extends Controller
 		foreach( $this->model->getColumns() as $column )
 			if( !in_array( $column, ['workshopId', 'createdAt', 'modifiedAt'] ) )
 				$data[$column]	= NULL;
-		$defaults	= array(
+		$defaults	= [
 			'status'		=> 0,
 			'rank'			=> 3,
 			'imageAlignH'	=> 2,
 			'imageAlignV'	=> 2,
-		);
+		];
 		$given	= array_intersect_key( $this->request->getAll(), $data );
 		$this->addData( 'workshop', (object) array_merge( $data, $defaults, $given ) );
 	}

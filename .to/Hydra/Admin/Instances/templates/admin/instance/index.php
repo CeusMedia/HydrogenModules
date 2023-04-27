@@ -5,11 +5,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w	= (object) $words['index'];
 
 //	@todo		extract labels to locale
-$labelsStatusHttp	= array(
+$labelsStatusHttp	= [
 	'unchecked'		=> $words['availability']['unchecked'],
 	'online'		=> $words['availability']['online'],
 	'offline'		=> $words['availability']['offline']
-);
+];
 
 function formatUrl( $url ){
 	$parts	= parse_url( $url );
@@ -50,12 +50,12 @@ foreach( $instances as $instanceId => $instance ){
 		HtmlTag::create( 'td', "", ['class' => 'status-todos'] ),
 	);
 	$hasTodoTool	= isset( $instance->checkTodos ) && $instance->checkTodos ? "yes" : "no";
-	$attributes		= array(
+	$attributes		= [
 		'class'				=> $uriExists ? '' : 'error',
 		'data-check'		=> $hasTodoTool,
 		'data-url'			=> $url,
 		'data-url-todos'	=> $url.'tools/Todos/',
-	);
+	];
 	$rows[$instance->title]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 ksort( $rows );

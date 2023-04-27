@@ -4,6 +4,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Work_Mission_Filter
 {
+	protected WebEnvironment $env;
 	protected array $defaultFilterValues	= [];
 	protected array $words;
 	protected array $modals	= [];
@@ -18,7 +19,7 @@ class View_Helper_Work_Mission_Filter
 	}
 
 	/*  -- mission types  --  */
-	public function renderTypeFilter( $filteredTypes ): string
+	public function renderTypeFilter( array $filteredTypes ): string
 	{
 		$helper	= new View_Helper_Work_Mission_Filter_Type( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
@@ -27,7 +28,7 @@ class View_Helper_Work_Mission_Filter
 	}
 
 	/*  -- mission priorities  --  */
-	public function renderPriorityFilter( $filteredPriorities ): string
+	public function renderPriorityFilter( array $filteredPriorities ): string
 	{
 		$helper	= new View_Helper_Work_Mission_Filter_Priority( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
@@ -36,7 +37,7 @@ class View_Helper_Work_Mission_Filter
 	}
 
 	/*  -- mission states  --  */
-	public function renderStateFilter( $filteredStates ): string
+	public function renderStateFilter( array $filteredStates ): string
 	{
 		$helper	= new View_Helper_Work_Mission_Filter_Status( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
@@ -45,7 +46,7 @@ class View_Helper_Work_Mission_Filter
 	}
 
 	/*  -- mission projects  --  */
-	public function renderProjectFilter( $filteredProjects, $userProjects ): string
+	public function renderProjectFilter( array $filteredProjects, array $userProjects ): string
 	{
 		$helper	= new View_Helper_Work_Mission_Filter_Project( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
@@ -53,7 +54,7 @@ class View_Helper_Work_Mission_Filter
 		return $helper->render();
 	}
 
-	public function renderWorkerFilter( $filteredWorkers, $workers ): string
+	public function renderWorkerFilter( array $filteredWorkers, array $workers ): string
 	{
 		$helper	= new View_Helper_Work_Mission_Filter_Worker( $this->env );
 		$helper->setModalRegistry( $this->modalRegistry );
@@ -67,7 +68,7 @@ class View_Helper_Work_Mission_Filter
 	}
 
 	/*  -- query search  --  */
-	public function renderSearch( $filteredQuery ): string
+	public function renderSearch( ?string $filteredQuery = NULL ): string
 	{
 		$inputSearch	= HtmlTag::create( 'input', NULL, [
 			'type'			=> "text",

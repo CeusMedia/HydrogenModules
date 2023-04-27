@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Admin_Module extends Controller
 {
@@ -14,6 +15,7 @@ class Controller_Admin_Module extends Controller
 		self::INSTALL_TYPE_COPY,
 	];
 
+	protected Messenger $messenger;
 	/**
 	 *	@deprecated		replaced by module installer
 	 *	@todo			remove
@@ -21,9 +23,7 @@ class Controller_Admin_Module extends Controller
 	public function copy( string $moduleId )
 	{
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
-			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
-		else
-			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+			$this->env->getMessenger()->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
@@ -100,7 +100,7 @@ class Controller_Admin_Module extends Controller
 				@unlink( $fileName );
 		else if( $verbose ){
 			$list	= '<ul><li>'.join( '</li><li>', $listDone ).'</li></ul>';
-			$this->env->messenger->noteNotice( 'Installed: '.$list );
+			$this->messenger->noteNotice( 'Installed: '.$list );
 		}
 		return $state !== FALSE;
 	}
@@ -113,9 +113,9 @@ class Controller_Admin_Module extends Controller
 	public function link( string $moduleId )
 	{
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_LINK ) )
-			$this->env->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
+			$this->messenger->noteSuccess( 'Module "'.$moduleId.'" successfully linked.' );
 		else
-			$this->env->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
+			$this->messenger->noteError( 'Link to module "'.$moduleId.'" failed.' );
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
@@ -155,20 +155,20 @@ class Controller_Admin_Module extends Controller
 				$data	= ['prefix' => $config->get( 'database.prefix' )];
 				$sql	= "";
 				if( $driver && !empty( $module->sql['uninstall@'.$driver] ) )
-					$sql	= UI_Template::renderString( $module->sql['uninstall@'.$driver], $data );
+					$sql	= \CeusMedia\Common\UI\Template::renderString( $module->sql['uninstall@'.$driver], $data );
 				else if( !empty( $module->sql['uninstall@*'] ) )
-					$sql	= UI_Template::renderString( $module->sql['uninstall@*'], $data );
+					$sql	= \CeusMedia\Common\UI\Template::renderString( $module->sql['uninstall@*'], $data );
 				if( $sql )
 					$state = $this->executeSql( $sql );
 			}
 
 			if( $state )
-				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+				$this->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
 			else
-				$this->env->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
+				$this->messenger->noteSuccess(  'Module "'.$moduleId.'" successfully removed.' );
 #		}
 #		catch( Exception $e ){
-#			$this->env->messenger->noteError( 'Failed: '.$e->getMessage() );
+#			$this->messenger->noteError( 'Failed: '.$e->getMessage() );
 #		}
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
@@ -181,34 +181,41 @@ class Controller_Admin_Module extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function copyModuleFile( string $moduleId, string $fileIn, string $fileOut )
+	protected function __onInit(): void
+	{
+		parent::__onInit();
+		$this->messenger	= $this->env->getMessenger();
+	}
+
+	protected function copyModuleFile( string $moduleId, string $fileIn, string $fileOut ): bool
 	{
 		$pathModules	= $this->getModulesPath();
 		$fileIn			= $pathModules.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$pathNameIn		= realpath( $fileIn );
 		if( !$pathNameIn ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
 			return FALSE;
 		}
 		if( !file_exists( $pathNameIn ) ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
 			return FALSE;
 		}
 		if( !is_readable( $pathNameIn ) ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
 			return FALSE;
 		}
 		$pathOut	= dirname( $fileOut );
-		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
-			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+		self::createPath( $pathOut );
+		if( !is_dir( $pathOut ) ){
+			$this->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
 			return FALSE;
 		}
 		if( file_exists( $fileOut ) ){
-			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			$this->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
 			return FALSE;
 		}
 		if( !copy( $pathNameIn, $fileOut ) ){
-			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			$this->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
 			return FALSE;
 		}
 		return TRUE;
@@ -218,52 +225,51 @@ class Controller_Admin_Module extends Controller
 	 *	Creates a Path by creating all Path Steps.
 	 *	@access		protected
 	 *	@param		string		$path				Path to create
-	 *	@return		void
+	 *	@return		bool
 	 */
-	protected static function createPath( string $path )
+	protected static function createPath( string $path ): bool
 	{
 		$dirname	= dirname( $path );
 		if( file_exists( $path ) && is_dir( $path ) )
-			return;
+			return TRUE;
 		$hasParent	= file_exists( $dirname ) && is_dir( $dirname );
 		if( $dirname != "./" && !$hasParent )
 			self::createPath( $dirname );
 		return mkdir( $path, 02770, TRUE );
 	}
 
-	protected function executeSql( string $sql )
+	protected function executeSql( string $sql ): bool
 	{
-		$lines	= explode( "\n", trim( $sql ) );
-		$cmds	= [];
-		$buffer	= [];
+		$lines		= explode( "\n", trim( $sql ) );
+		$commands	= [];
+		$buffer		= [];
 		if( !$this->env->has( 'dbc' ) )
-			return;
-		$prefix	= $this->env->config->get( 'database.prefix' );
+			return FALSE;
+		$prefix	= $this->env->getConfig()->get( 'database.prefix' );
 		while( count( $lines ) ){
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
 				continue;
-			$buffer[]	= UI_Template::renderString( trim( $line ), ['prefix' => $prefix] );
+			$buffer[]	= \CeusMedia\Common\UI\Template::renderString( trim( $line ), ['prefix' => $prefix] );
 			if( preg_match( '/;$/', trim( $line ) ) )
 			{
-				$cmds[]	= join( "\n", $buffer );
+				$commands[]	= join( "\n", $buffer );
 				$buffer	= [];
 			}
 			if( !count( $lines ) && $buffer )
-				$cmds[]	= join( "\n", $buffer ).';';
+				$commands[]	= join( "\n", $buffer ).';';
 		}
 		$state	= NULL;
-		foreach( $cmds as $command ){
+		foreach( $commands as $command ){
 			error_log( nl2br( $command )."\n", 3, 'a.log' );
 			if( $state !== FALSE ){
 				try{
-					$this->env->dbc->exec( $command );
+					$this->env->getDatabase()->exec( $command );
 					$state	= TRUE;
 				}
-				catch( Exception $e )
-				{
+				catch( Exception $e ){
 					$state	= FALSE;
-					$this->env->messenger->noteFailure( $e->getMessage() );
+					$this->messenger->noteFailure( $e->getMessage() );
 				}
 			}
 		}
@@ -285,32 +291,32 @@ class Controller_Admin_Module extends Controller
 		$fileIn		= $path.str_replace( '_', '/', $moduleId ).'/'.$fileIn;
 		$pathNameIn	= realpath( $fileIn );
 		if( !$pathNameIn ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is missing.' );
 			return FALSE;
 		}
 		if( !file_exists( $pathNameIn ) ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not existing.' );
 			return FALSE;
 		}
 		if( !is_readable( $pathNameIn ) ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not readable.' );
 			return FALSE;
 		}
 		if( !is_executable( $pathNameIn ) ){
-			$this->env->messenger->noteFailure( 'Resource "'.$fileIn.'" is not executable.' );
+			$this->messenger->noteFailure( 'Resource "'.$fileIn.'" is not executable.' );
 			return FALSE;
 		}
 		$pathOut	= dirname( $fileOut );
 		if( !is_dir( $pathOut ) && !self::createPath( $pathOut ) ){
-			$this->env->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
+			$this->messenger->noteFailure( 'Path "'.$pathOut.'" is not creatable.' );
 			return FALSE;
 		}
 		if( file_exists( $fileOut ) ){
-			$this->env->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
+			$this->messenger->noteFailure( 'Target "'.$fileOut.'" is already existing.' );
 			return FALSE;
 		}
 		if( !symlink( $pathNameIn, $fileOut ) ){
-			$this->env->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
+			$this->messenger->noteFailure( 'Link for "'.$fileOut.'" failed.' );
 			return FALSE;
 		}
 		return TRUE;
@@ -321,9 +327,9 @@ class Controller_Admin_Module extends Controller
 		$fileName	= $path.$fileName;
 		if( file_exists( $fileName ) ){
 			if( @unlink( $fileName ) )
-				$this->env->messenger->noteSuccess( 'Removed "'.$fileName.'".' );
+				$this->messenger->noteSuccess( 'Removed "'.$fileName.'".' );
 			else
-				$this->env->messenger->noteFailure( 'Removal failed for "'.$fileName.'".' );
+				$this->messenger->noteFailure( 'Removal failed for "'.$fileName.'".' );
 		}
 	}
 }

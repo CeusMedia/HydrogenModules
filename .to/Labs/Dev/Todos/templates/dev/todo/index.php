@@ -2,13 +2,13 @@
 use CeusMedia\Common\UI\HTML\Indicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$count	= (object) array(
+$count	= (object) [
 	'sources'	=> 0,
 	'total'		=> 0,
 	'lines'		=> 0,
 	'found'		=> 0,
 	'todos'		=> 0
-);
+];
 foreach( $data as $source ){
 	$count->sources++;
 	$count->total += $source['data']['total'];

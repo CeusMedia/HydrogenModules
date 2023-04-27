@@ -41,70 +41,70 @@ $panelEdit	= HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
 						'value'		=> $workshop->title,
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span7'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Zustand', ['for' => 'input_status'] ),
-					HtmlTag::create( 'select', $optStatus, array(
+					HtmlTag::create( 'select', $optStatus, [
 						'name'		=> 'status',
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Rang', ['for' => 'input_rank'] ),
-					HtmlTag::create( 'select', $optRank, array(
+					HtmlTag::create( 'select', $optRank, [
 						'name'		=> 'rank',
 						'id'		=> 'input_rank',
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span2'] ),
 			), ['class' => 'row-fluid'] ),
 
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', '<acronym title="Inhalt der Detailansicht">Inhalt</acronym>', ['for' => 'input_description'] ),
-					HtmlTag::create( 'textarea', $workshop->description, array(
+					HtmlTag::create( 'textarea', $workshop->description, [
 						'name'		=> 'description',
 						'id'		=> 'input_description',
 						'class'		=> 'span12 '.$tinyMceAutoClass,
 						'rows'		=> '15',
-					), array(
+					], [
 						'tinymce-mode'	=> $tinyMceAutoMode,
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', '<acronym title="Kurzbeschreibung für Darstellung in der Übersicht, wird in Detailansicht nicht verwendet">Abstrakt</acronym>', ['for' => 'input_abstract'] ),
-					HtmlTag::create( 'textarea', $workshop->abstract, array(
+					HtmlTag::create( 'textarea', $workshop->abstract, [
 						'name'		=> 'abstract',
 						'id'		=> 'input_abstract',
 						'class'		=> 'span12 '.$tinyMceAutoClass,
 						'rows'		=> '3',
-					), array(
+					], [
 						'tinymce-mode'	=> 'minimal',
-					) ),
+					] ),
 				), ['class' => 'span12'] ),
 			), ['class' => 'row-fluid'] ),
 
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Bild', ['for' => 'input_image'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'image',
 						'id'		=> 'input_image',
 						'value'		=> $workshop->image,
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span7'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', '&nbsp;' ),
@@ -112,19 +112,19 @@ $panelEdit	= HtmlTag::create( 'div', array(
 				), ['class' => 'span1'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Horizontal', ['for' => 'input_imageAlignH'] ),
-					HtmlTag::create( 'select', $optImageAlignH, array(
+					HtmlTag::create( 'select', $optImageAlignH, [
 						'name'		=> 'imageAlignH',
 						'id'		=> 'input_imageAlignH',
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span2'] ),
 				HtmlTag::create( 'div', array(
 					HtmlTag::create( 'label', 'Vertikal', ['for' => 'input_imageAlignV'] ),
-					HtmlTag::create( 'select', $optImageAlignV, array(
+					HtmlTag::create( 'select', $optImageAlignV, [
 						'name'		=> 'imageAlignV',
 						'id'		=> 'input_imageAlignV',
 						'class'		=> 'span12',
-					) ),
+					] ),
 				), ['class' => 'span2'] ),
 			), ['class' => 'row-fluid'] ),
 

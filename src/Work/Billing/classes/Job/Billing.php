@@ -1,9 +1,9 @@
 <?php
 class Job_Billing extends Job_Abstract
 {
-	protected $logic;
+	protected Logic_Billing $logic;
 
-	public function bookExpenses()
+	public function bookExpenses(): void
 	{
 		$timestamp	= time();
 //		$timestamp	= strtotime( "2017-10-01" );
@@ -66,7 +66,7 @@ class Job_Billing extends Job_Abstract
 		$this->logic	= new Logic_Billing( $this->env );
 	}
 
-	protected function _bookExpense( $expense )
+	protected function _bookExpense( object $expense ): string
 	{
 		$title	= $expense->title;
 		if( preg_match( '/\[date\.Y\]/', $title ) )

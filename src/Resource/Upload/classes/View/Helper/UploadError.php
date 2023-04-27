@@ -6,19 +6,22 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_UploadError extends Abstraction
 {
-	protected $words;
+	protected array $words;
+	protected ?object $upload		= NULL;
 
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env			= $env;
 		$this->words		= $this->env->getLanguage()->getWords( 'resource/upload' );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->upload )
 			throw new RuntimeException( 'No upload object set, yet' );
 
 		if( !$this->upload->error )
-			return;
+			return '';
 
 		$messages	= $this->words['errors'];
 		if( !array_key_exists( $this->upload->error, $messages ) )
@@ -46,13 +49,19 @@ class View_Helper_UploadError extends Abstraction
 		return $message;
 	}
 
-	static public function renderStatic( Environment $env, Logic_Upload $upload ){
+	public static function renderStatic( Environment $env, Logic_Upload $upload ): string
+	{
 		$helper	= new self( $env );
 		$helper->setUpload( $upload );
 		return $helper->render();
 	}
 
-	public function setUpload( $upload ){
+	/**
+	 *	@param		Logic_Upload|object		$upload
+	 *	@return		self
+	 */
+	public function setUpload( $upload ): self
+	{
 		if( !is_object( $upload ) )
 			throw new InvalidArgumentException( 'No upload object given' );
 		if( $upload instanceof Logic_Upload )

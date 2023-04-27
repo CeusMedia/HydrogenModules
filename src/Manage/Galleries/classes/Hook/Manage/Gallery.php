@@ -31,11 +31,11 @@ class Hook_Manage_Gallery extends Hook
 		foreach( $modelGallery->getAll( $galleryConditions, $galleryOrders ) as $gallery ){
 			$imageConditions	= ['galleryId' => $gallery->galleryId];
 			foreach( $modelImage->getAll( $imageConditions, $imageOrders ) as $image ){
-				$list[]	= (object) array(
+				$list[]	= (object) [
 					'title' => $gallery->title.' / '.$image->filename,
 //					'value' => $pathImages.$gallery->path.'/'.$image->filename,
 					'value' => $virtualPathImages.$gallery->path.'/'.$image->filename,
-				);
+				];
 			}
 		}
 

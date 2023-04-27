@@ -1,8 +1,15 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var Dictionary $moduleConfig */
 
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'avatar' );
@@ -24,10 +31,10 @@ $buttonRemove	= '';
 if( $avatar ){
 	$imageAvatar	= View_Helper_UserAvatar::renderStatic( $env, $user, 256 );
 	$imageAvatar	= '<div class="thumbnail" style="max-width: 256px">'.$imageAvatar.'</div>';
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 		'href'	=> './manage/my/user/avatar/remove',
 		'class'	=> 'btn btn-inverse btn-small'
-	) );
+	] );
 }
 
 extract( $view->populateTexts( ['top', 'bottom', 'info.avatar', 'info.gravatar'], 'html/manage/my/user/avatar/', array(

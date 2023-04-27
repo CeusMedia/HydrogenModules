@@ -39,11 +39,11 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 
 	public function addLink( string $url, string $label, string $icon = NULL ): self
 	{
-		$this->links[]	= (object) array(
+		$this->links[]	= (object) [
 			'url'		=> $url,
 			'label'		=> $label,
 			'icon'		=> $icon,
-		);
+		];
 		return $this;
 	}
 

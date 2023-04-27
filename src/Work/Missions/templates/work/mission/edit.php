@@ -68,12 +68,12 @@ $iconCopy	= HtmlTag::create( 'i', '', ['class' => 'icon-plus-sign not-icon-white
 
 $checkInform	= '';
 if( count( $missionUsers ) > 1 ){
-	$checkInform	= HtmlTag::create( 'input', NULL, array(
+	$checkInform	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'name'		=> 'inform',
 		'value'		=> 1,
 		'checked'	=> 'checked',
-	) );
+	] );
 	$checkInform	= HtmlTag::create( 'label', $checkInform.'&nbsp;'.$w->labelInform, ['class' => 'checkbox'] );
 }
 
@@ -186,8 +186,8 @@ $panelEdit	= '
 				'.$checkInform.'
 				'.$buttonCancel.'
 				'.$buttonView.'
-<!--				'.HtmlTag::create( 'div', array(
-					), ['class' => 'btn-group'] ).'-->
+<!--				'.HtmlTag::create( 'div', [
+					], ['class' => 'btn-group'] ).'-->
 				'.$buttonSave.'
 	<!--			&nbsp;|&nbsp;
 				'.HtmlElements::LinkButton( './work/mission/setStatus/-2', '<i class="icon-remove icon-white"></i> '.$w->buttonCancel, 'btn btn-small btn-danger' ).'
@@ -216,12 +216,12 @@ $states	= join( $states );
 $priorities		= $words['priorities'];
 unset( $priorities[0] );
 foreach( $priorities as $priority => $label )
-	$priorities[$priority]	= HtmlTag::create( 'button', $label, array(
+	$priorities[$priority]	= HtmlTag::create( 'button', $label, [
 		'type'		=> 'button',
 		'onclick'	=> 'document.location.href=\'./work/mission/setPriority/'.$mission->missionId.'/'.$priority.'\';',
 		'disabled'	=> $mission->priority == $priority ? 'disabled' : NULL,
 		'class'		=> 'button',
-	) );
+	] );
 $priorities	= join( $priorities );
 
 $baseUrl	= $env->url;

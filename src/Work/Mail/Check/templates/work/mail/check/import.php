@@ -4,6 +4,10 @@ use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 /** @var Environment $env */
+/** @var string[] $columns */
+/** @var string|NULL $name */
+/** @var int|NULL $size */
+/** @var int|NULL $count */
 
 $tabs	= View_Work_Mail_Check::renderTabs( $env, 'import' );
 

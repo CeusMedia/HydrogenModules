@@ -58,9 +58,9 @@ function renderPositions( $positions ){
 	$positions	= HtmlTag::create( 'div', $positions, array( 'class' => 'nav-position', 'style' => 'margin-bottom: 0.8em') );
 	return $positions;
 }
-$positions  = array(
+$positions  = [
 	'Ansicht'	=> './admin/module/viewer/index/'.$module->id,
-);
+];
 
 /*  --  OPTIONS  --  */
 $options	= [];

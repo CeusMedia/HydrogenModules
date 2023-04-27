@@ -28,13 +28,13 @@ foreach( $notes['list'] as $note ){
 	$listTags	= [];
 	foreach( $note->tags as $tag ){
 		if( !in_array( $tag, $tags ) ){
-/*			$listTags[$tag->content]	= HtmlTag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+/*			$listTags[$tag->content]	= HtmlTag::create( 'a', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), [
 				'href'	=> './work/note/addSearchTag/'.$tag->tagId.'/'.$page,
 				'class'	=> 'list-item-tag-link',
-			) );*/
-			$listTags[$tag->content]	= HtmlTag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), array(
+			] );*/
+			$listTags[$tag->content]	= HtmlTag::create( 'span', htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' ), [
 				'class'	=> 'list-item-tag',
-			) );
+			] );
 		}
 		else
 			$listTags[$tag->content]	= htmlentities( $tag->content, ENT_QUOTES, 'UTF-8' );

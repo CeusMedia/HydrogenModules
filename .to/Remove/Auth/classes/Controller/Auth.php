@@ -46,7 +46,7 @@ class Controller_Auth extends Controller
 			foreach( $users as $user ){
 				$pak	= md5( 'pak:'.$user->userId.'/'.$user->username.'&'.$passwordSalt );
 				if( $code == $pak ){
-					$modelUser->edit( $user->userId, array( 'status' => 1 ) );
+					$modelUser->edit( $user->userId, ['status' => 1] );
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					$this->restart( './auth/login/'.$user->username );
 				}
@@ -166,7 +166,7 @@ class Controller_Auth extends Controller
 
 		$roleDefaultId	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 		$rolesAllowed	= [];
-		foreach( $modelRole->getAllByIndex( 'register', array( 64, 128 ) ) as $role )
+		foreach( $modelRole->getAllByIndex( 'register', [64, 128] ) as $role )
 				$rolesAllowed[]	= $role->roleId;
 
 		$input		= $this->request->getAllFromSource( 'POST', TRUE );

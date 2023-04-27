@@ -1,12 +1,25 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Clothing_Article extends Controller
 {
-	protected $sessionPrefix	= 'filter_manage_catalog_clothing_';
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected Logic_Frontend $frontend;
+	protected Logic_Localization $localization;
+	protected Model_Catalog_Clothing_Article $modelArticle;
+	protected Model_Catalog_Clothing_Category $modelCategory;
+	protected string $sessionPrefix	= 'filter_manage_catalog_clothing_';
+	protected array $languages;
+	protected string $defaultLanguage;
+	protected array $categoryMap;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
@@ -16,7 +29,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		}
 	}
 
-	public function edit( $articleId )
+	public function edit( string $articleId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
@@ -37,7 +50,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->sessionPrefix.'language' );
@@ -54,7 +67,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$filterCategoryId	= $this->session->get( $this->sessionPrefix.'categoryId' );
 		$filterSize			= $this->session->get( $this->sessionPrefix.'size' );
@@ -70,8 +83,8 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 
 		$total		= $this->modelArticle->count( $conditions );
 		$articles	= $this->modelArticle->getAll( $conditions, [], $limits );
-		foreach( $articles as $article )
-			$article	= $this->translateArticle( $article );
+		foreach( $articles as $nr => $article )
+			$articles[$nr]	= $this->translateArticle( $article );
 
 		$this->addData( 'articles', $articles );
 		$this->addData( 'categories', $this->modelCategory->getAll() );
@@ -82,7 +95,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->addData( 'filterSize', $filterSize );
 	}
 
-	public function remove( $articleId )
+	public function remove( string $articleId ): void
 	{
 		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
 		$this->modelArticle->remove( $articleId );
@@ -90,7 +103,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setImage( $articleId, $remove = NULL )
+	public function setImage( string $articleId, $remove = NULL ): void
 	{
 		$article	= $this->modelArticle->get( $articleId );
 		if( $remove ){
@@ -109,7 +122,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 				$logicUpload->checkSize( Logic_Upload::getMaxUploadSize() );
 				$logicUpload->checkVirus( TRUE );
 				$extension		= $logicUpload->getExtension();
-				$fileName		= $logicUpload->sanitizeFileName();
+//				$fileName		= $logicUpload->sanitizeFileName();
 				$fileName		= Logic_Upload::sanitizeFileNameStatic( $article->title );
 				if( $logicUpload->getError() ){
 					$helper	= new View_Helper_UploadError( $this->env );
@@ -129,12 +142,16 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 				}
 			}
 			catch( Exception $e ){
-				$messenger->noteFailure( $words->errorUploadFailed );
+				$this->messenger->noteFailure( $words->errorUploadFailed );
 			}
 		}
 		$this->restart( 'edit/'.$articleId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -170,7 +187,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$this->addData( 'path', $this->path );
 	}
 
-	protected function translateArticle( $article )
+	protected function translateArticle( object $article ): object
 	{
 		if( $this->session->get( $this->sessionPrefix.'language' ) === $this->defaultLanguage )
 			return $article;

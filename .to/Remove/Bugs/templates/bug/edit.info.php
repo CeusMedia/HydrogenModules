@@ -12,22 +12,22 @@ foreach( $changes as $change ){
 }
 
 foreach( $changers as $userId => $changer ){
-	$link	= HtmlTag::create( 'a', $changer->username, array( 'href' => './user/edit/'.$userId ) );
-	$roled	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$changer->roleId ) );
+	$link	= HtmlTag::create( 'a', $changer->username, ['href' => './user/edit/'.$userId] );
+	$roled	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$changer->roleId] );
 	$changers[$userId]	= HtmlTag::create( 'li', $roled );
 }
-$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), array( 'class' => 'list' ) ) : "-";
+$changers	= $changers ? HtmlTag::create( 'ul', join( $changers ), ['class' => 'list'] ) : "-";
 
 $reporter	= '-';
 if( $bug->reporterId ){
 	$reporter	= HtmlElements::Link( './user/edit/'.$bug->reporter->userId, $bug->reporter->username );
-	$reporter	= HtmlTag::create( 'span', $reporter, array( 'class' => 'role role'.$bug->reporter->roleId ) );
+	$reporter	= HtmlTag::create( 'span', $reporter, ['class' => 'role role'.$bug->reporter->roleId] );
 }
 
 $manager	= '-';
 if( $bug->managerId ){
 	$manager	= HtmlElements::Link( './user/edit/'.$bug->manager->userId, $bug->manager->username );
-	$manager	= HtmlTag::create( 'span', $manager, array( 'class' => 'role role'.$bug->manager->roleId ) );
+	$manager	= HtmlTag::create( 'span', $manager, ['class' => 'role role'.$bug->manager->roleId] );
 }
 
 return '

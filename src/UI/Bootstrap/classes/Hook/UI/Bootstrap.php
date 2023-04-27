@@ -18,10 +18,10 @@ class Hook_UI_Bootstrap extends Hook
 		if( !class_exists( '\CeusMedia\Bootstrap\Icon' ) ){
 			switch( $optionsMissing->get( 'library' ) ){
 				case 'note':
-					$env->getMessenger()->noteFailure( join( '<br/>', array(
+					$env->getMessenger()->noteFailure( join( '<br/>', [
 						'<strong>Bootstrap Code Library is not found.</strong>',
 						'Please install by: <code><tt>composer require ceus-media/bootstrap</tt></code>',
-					) ) );
+					] ) );
 					return;
 				case 'throw':
 				default:
@@ -34,10 +34,10 @@ class Hook_UI_Bootstrap extends Hook
 		if( !$modules->has( 'UI_Font_FontAwesome' ) ){
 			switch( $optionsMissing->get( 'fontawesome' ) ){
 				case 'note':
-					$env->getMessenger()->noteFailure( join( '<br/>', array(
+					$env->getMessenger()->noteFailure( join( '<br/>', [
 						'<strong>Module "UI:Font:FontAwesome" is not installed.</strong>',
 						'Please install by: <code><tt>hymn app-install UI_Font_FontAwesome</tt></code>',
-					) ) );
+					] ) );
 				case 'throw':
 				default:
 					$exception	= new RuntimeException( 'Module "UI:Font:FontAwesome" is not installed - please use hymn to install' );

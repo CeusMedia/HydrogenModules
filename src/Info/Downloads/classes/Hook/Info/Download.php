@@ -11,7 +11,7 @@ class Hook_Info_Download extends Hook
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
-			$context->add( (object) array(
+			$context->add( (object) [
 				'module'	=> 'Info_Downloads',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -19,7 +19,7 @@ class Hook_Info_Download extends Hook
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/download/download/'.$file->downloadFolderId,
-			) );
+			] );
 		}
 	}
 
@@ -29,7 +29,7 @@ class Hook_Info_Download extends Hook
 		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
-			$context->add( (object) array(
+			$context->add( (object) [
 				'module'	=> 'Info_Downloads',
 				'type'		=> 'file',
 				'typeLabel'	=> 'Datei',
@@ -37,7 +37,7 @@ class Hook_Info_Download extends Hook
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
 				'url'		=> './info/download/download/'.$file->downloadFolderId,
-			) );
+			] );
 		}
 	}
 }

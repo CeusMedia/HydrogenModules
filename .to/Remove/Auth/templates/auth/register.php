@@ -5,7 +5,7 @@ $optGender	= HtmlElements::Options( $words['gender'], $request->get( 'gender' ) 
 
 $w		= (object) $words['register'];
 $user	= (object) $request->getAll();
-$texts	= array( 'top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom' );
+$texts	= ['top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom'];
 extract( $view->populateTexts( $texts, 'html/auth/register.' ) );
 
 $formTerms	= '';

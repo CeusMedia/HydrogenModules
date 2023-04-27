@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 $w	= (object) $words['panel-search'];
 
 $panelSearch	= '

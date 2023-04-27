@@ -19,9 +19,9 @@ if( $backups ){
 	$list	= [];
 	foreach( $backups as $backup ){
 		if( is_string( $backup->comment ) ){
-			$backup->comment	= array(
+			$backup->comment	= [
 				'comment'		=> $backup->comment,
-			);
+			];
 		}
 		else if( is_null( $backup->comment ) ){
 			$backup->comment	= ['comment' => ''];
@@ -61,10 +61,10 @@ if( $backups ){
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Sicherung anlegen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Sicherung anlegen', [
 	'href'	=> './admin/database/backup/backup',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 return '
 <div class="content-panel">

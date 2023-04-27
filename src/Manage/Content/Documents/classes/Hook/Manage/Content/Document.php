@@ -24,10 +24,10 @@ class Hook_Manage_Content_Document extends Hook
 		if( file_exists( $pathFront ) && is_dir( $pathFront.$pathDocuments ) ){
 			$model			= new Model_Document( $env, $pathFront.$pathDocuments );
 			foreach( $model->index() as $nr => $entry ){
-				$list[$entry.$nr]	= (object) array(
+				$list[$entry.$nr]	= (object) [
 					'title'	=> /*$prefixes->document.*/$entry,
 					'value'	=> $pathDocuments.$entry,
-				);
+				];
 			}
 		}
 		ksort( $list );

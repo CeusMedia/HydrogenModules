@@ -6,7 +6,7 @@ class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigati
 	protected $hideOnDesktop	= FALSE;
 
 	/**
-	 *	@todo 		kriss: remove after abstract interface and abstract of Hydrogen view helper are updated
+	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
 	public function __toString()
 	{

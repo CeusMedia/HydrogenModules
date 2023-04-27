@@ -8,11 +8,11 @@ class Hook_UI_Image_Slider extends Hook
 	public static function onRenderContent( Environment $env, $context, $modules, array & $payload )
 	{
 		$processor		= $env->getLogic()->get( 'Shortcode' );
-		$shortCodes		= array(
-			'slider'	=> array(
+		$shortCodes		= [
+			'slider'	=> [
 				'id'		=> 0,
-			)
-		);
+			]
+		];
 
 		/** @todo remove this legacy support */
 		$pattern	= "/\[slider:([0-9]+)\]/sU";													//  old syntax

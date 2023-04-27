@@ -47,7 +47,7 @@ class Logic_Catalog extends Logic
 	protected string $pathAuthorImages;
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addArticle( $data )
 	{
@@ -59,7 +59,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addArticleCover( $articleId, $file )
 	{
@@ -100,7 +100,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addArticleDocument( $articleId, $file, $title )
 	{
@@ -121,32 +121,32 @@ class Logic_Catalog extends Logic
 		if( !move_uploaded_file( $file->tmp_name, $uri ) )
 			throw new RuntimeException( 'Storing uploaded file failed' );
 
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'type'			=> $extension,
 			'url'			=> $filename,
 			'title'			=> $title,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->cache->remove( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addArticleTag( $articleId, $tag )
 	{
-		$data	= array(
+		$data	= [
 			'articleId'	=> $articleId,
 			'tag'		=> $tag,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );												//
 		return $this->modelArticleTag->add( $data );
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addAuthor( $data )
 	{
@@ -156,7 +156,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addAuthorImage( $authorId, $file )
 	{
@@ -188,15 +188,15 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addAuthorToArticle( $articleId, $authorId, $role )
 	{
-		$data		= array(
+		$data		= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
 			'editor'	=> $role,
-		);
+		];
 		$relationId	= $this->modelArticleAuthor->add( $data );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -204,7 +204,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addCategory( $data )
 	{
@@ -214,17 +214,17 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function addCategoryToArticle( $articleId, $categoryId, $volume = NULL )
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
 			'volume'		=> $volume,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->add( $indices );
@@ -246,14 +246,14 @@ class Logic_Catalog extends Logic
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
-		$this->modelArticle->edit( $articleId, array(
+		$this->modelArticle->edit( $articleId, [
 			'quantity'	=> $article->quantity + $change
-		) );
+		] );
 		return $article->quantity + $change;
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function checkArticleId( $articleId, $throwException = FALSE )
 	{
@@ -265,7 +265,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function checkAuthorId( $authorId, $throwException = FALSE )
 	{
@@ -277,7 +277,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function checkCategoryId( $categoryId, $throwException = FALSE )
 	{
@@ -289,7 +289,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function countArticles( $conditions = [] )
 	{
@@ -318,7 +318,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function editArticle( $articleId, $data )
 	{
@@ -329,7 +329,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function editAuthor( $authorId, $data )
 	{
@@ -340,7 +340,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function editCategory( $categoryId, $data )
 	{
@@ -355,7 +355,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getArticle( $articleId )
 	{
@@ -368,8 +368,8 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function getArticles( $conditions = [], $orders = [], $limits = [] )
 	{
@@ -384,7 +384,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] )
 	{
@@ -400,7 +400,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE )
 	{
@@ -415,7 +415,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getArticlesFromAuthors( $authors, $returnIds = FALSE )
 	{
@@ -426,7 +426,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getArticleUri( $articleOrId )
 	{
@@ -440,7 +440,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache
+	 *	@todo		 use cache
 	 */
 	public function getAuthor( $authorId )
 	{
@@ -449,7 +449,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getAuthors( $conditions = [], $orders = [] )
 	{
@@ -482,7 +482,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getAuthorUri( $authorOrId, $absolute = FALSE )
 	{
@@ -499,7 +499,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: clean up
+	 *	@todo		 clean up
 	 */
 	public function getCategories( $conditions = [], $orders = [] )
 	{
@@ -515,7 +515,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getCategoriesOfArticle( $articleId )
 	{
@@ -534,7 +534,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getCategory( $categoryId )
 	{
@@ -547,9 +547,9 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: clean up
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 clean up
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function getCategoryArticles( $category, $orders = [], $limits = [] )
 	{
@@ -571,7 +571,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getCategoryOfArticle( $article )
 	{
@@ -589,7 +589,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getDocumentsOfArticle( $articleId )
 	{
@@ -602,8 +602,8 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
-	 *	@todo		kriss: use cache by storing tags in article cache file
+	 *	@todo		 code doc
+	 *	@todo		 use cache by storing tags in article cache file
 	 */
 	public function getTagsOfArticle( $articleId, $sort = FALSE )
 	{
@@ -617,7 +617,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function getUriPart( $label, $delimiter = "_" )
 	{
@@ -630,7 +630,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	Removes article with cover, documents, tags and relations to authors and categories.
 	 *	Caches will be removed.
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function removeArticle( $articleId )
 	{
@@ -648,9 +648,9 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 check if this method is used or deprecated
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function removeArticleCover( $articleId )
 	{
@@ -665,8 +665,8 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function removeArticleDocument( $documentId )
 	{
@@ -679,26 +679,26 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 check if this method is used or deprecated
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function removeArticleFromCategory( $articleId, $categoryId )
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'		=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
 	/**
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function removeArticleTag( $articleTagId )
 	{
@@ -710,7 +710,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function removeAuthor( $authorId )
 	{
@@ -723,16 +723,16 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function removeAuthorFromArticle( $articleId, $authorId )
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkAuthorId( $authorId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'authorId'	=> $authorId,
-		);
+		];
 		$result	= $this->modelArticleAuthor->removeByIndices( $indices );
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForAuthor( $authorId );													//
@@ -740,9 +740,9 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 check if this method is used or deprecated
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function removeAuthorImage( $authorId )
 	{
@@ -757,7 +757,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function removeCategory( $categoryId )
 	{
@@ -769,25 +769,25 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	public function removeCategoryFromArticle( $articleId, $categoryId )
 	{
 		$this->checkArticleId( $articleId );
 		$this->checkCategoryId( $categoryId );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'categoryId'	=> $categoryId,
-		);
+		];
 		$this->clearCacheForArticle( $articleId );													//
 		$this->clearCacheForCategory( $categoryId );												//
 		return $this->modelArticleCategory->removeByIndices( $indices );
 	}
 
 	/**
-	 *	@todo		kriss: check if this method is used or deprecated
-	 *	@todo		kriss: use cache if possible
-	 *	@todo		kriss: code doc
+	 *	@todo		 check if this method is used or deprecated
+	 *	@todo		 use cache if possible
+	 *	@todo		 code doc
 	 */
 	public function setArticleAuthorRole( $articleId, $authorId, $role )
 	{
@@ -803,7 +803,7 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		kriss: code doc
+	 *	@todo		 code doc
 	 */
 	protected function __onInit(): void
 	{

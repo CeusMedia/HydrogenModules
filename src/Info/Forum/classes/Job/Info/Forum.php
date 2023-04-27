@@ -49,10 +49,10 @@ class Job_Info_Forum extends Job_Abstract
 
 		if( $posts ){
 			foreach( $receivers as $receiver ){
-				$data	= array(
+				$data	= [
 					'posts'			=> $posts,
 					'user'			=> $receiver,
-				);
+				];
 				$mail	= new Mail_Forum_Daily( $this->env, $data );
 				if( $this->options->get( 'mail.sender' ) )
 					$mail->setSender( $this->options->get( 'mail.sender' ) );
@@ -63,7 +63,7 @@ class Job_Info_Forum extends Job_Abstract
 			$this->log( sprintf( 'Daily forum mail sent to '.count( $receivers ).' manager(s) in %d ms.', $time ) );
 		}
 		else
-			$this->log( sprintf( 'No daily forum mail sent.', $time ) );
+			$this->log( 'No daily forum mail sent.' );
 //		$this->unlock( 'info.forum.send' );
 	}
 

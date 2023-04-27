@@ -13,10 +13,10 @@ $mode	= "tabbed";
 $w	= (object) $words['edit-content'];
 
 if( $mode === "tabbed" ){
-	$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, array(
+	$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, [
 		'href'		=> $w->hintMarkdownLink,
 		'target'	=> '_blank',
-	) );
+	] );
 	$hintMarkdown	= HtmlTag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), ['class' => 'muted'] );
 	$panelContentTabbed	= '
 <div class="content-panel">
@@ -30,14 +30,14 @@ if( $mode === "tabbed" ){
 		<div class="tab-content">
 			<div class="tab-pane active" id="tab1">
 				<div id="mirror-container">
-					'.HtmlTag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ), array(
+					'.HtmlTag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'UTF-8' ), [
 						'id'		=> "input_content",
 						'name'		=> "content",
 						'rows'		=> "22",
 						'class'		=> "span12 -max -cmGrowText -cmClearInput",
 						'data-ace-flag-font-size'	=> "16",
 						'data-ace-option-show-gutter'	=> "false"
-					) ).'
+					] ).'
 					<p>
 						'.$hintMarkdown.'
 					</p>

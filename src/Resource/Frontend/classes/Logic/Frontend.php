@@ -3,23 +3,23 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
+use CeusMedia\HydrogenFramework\Logic;
 
 /**
  *	@todo		remove singleton to have several frontend logics for different environments
  */
 class Logic_Frontend extends Logic
 {
-	protected static $instance;
+	protected static ?Logic_Frontend $instance	= NULL;
 
 	protected Dictionary $config;
 	protected Environment $env;
-	protected array $installedModules	= [];
-	protected $path;
-	protected array $paths				= [];
-	protected array $defaultPaths		= array(
+	protected array $installedModules			= [];
+	protected array $paths						= [];
+	protected array $defaultPaths				= [
 		'config'	=> 'config/',
 		'modules'	=> 'config/modules/',
 		'contents'	=> 'contents/',
@@ -29,13 +29,25 @@ class Logic_Frontend extends Logic
 		'logs'		=> 'logs/',
 		'locales'	=> 'locales/',
 		'templates'	=> 'templates/',
-	);
-	protected $url;
+	];
+	protected ?string $path						= NULL;
+	protected ?string $url						= NULL;
+
+	/**
+	 * @param		Environment		$env
+	 * @return		self
+	 */
+	public static function getInstance( Environment $env ): self
+	{
+		if( NULL === self::$instance )
+			self::$instance	= new self( $env );
+		return self::$instance;
+	}
 
 	public function getAppConfigValue( string $key )
 	{
 		$values	= $this->getAppConfigValues( [$key] );
-		return array_pop( $values );
+		return end( $values );
 	}
 
 	public function getAppConfigValues( array $keys = [] ): array
@@ -60,21 +72,33 @@ class Logic_Frontend extends Logic
 		return trim( $this->getConfigValue( 'locale.default' ) );
 	}
 
+	/**
+	 *		@return		RemoteEnvironment
+	 *		@throws		EnvironmentException
+	 */
 	public function getEnv(): RemoteEnvironment
 	{
-		$env	= new RemoteEnvironment( array(
+		return new RemoteEnvironment( [
 			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
-		) );
-		return $env;
+		] );
 	}
 
-	static public function getInstance( Environment $env ): self
+	/**
+	 *	@param		Environment		$parentEnv
+	 *	@param		array			$options
+	 *	@return		RemoteEnvironment
+	 *	@throws		EnvironmentException
+	 */
+	public static function getRemoteEnv(Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
+		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
+		return new RemoteEnvironment( array_merge( $options, [
+			'configFile'	=> $path.'config/config.ini',
+			'pathApp' 		=> $path,
+			'parentEnv'		=> $parentEnv,
+		] ) );
 	}
 
 	public function getLanguages(): array
@@ -153,6 +177,10 @@ class Logic_Frontend extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		bool		$asDictionary
+	 *	@return		Dictionary|string[]
+	 */
 	public function getModules( bool $asDictionary = FALSE )
 	{
 		if( $asDictionary )
@@ -160,7 +188,7 @@ class Logic_Frontend extends Logic
 		return array_keys( $this->installedModules );
 	}
 
-	public function getPath( $key = NULL )
+	public function getPath( ?string $key = NULL ): string
 	{
 		if( !$key )
 			return $this->path;
@@ -169,42 +197,34 @@ class Logic_Frontend extends Logic
 		throw new OutOfBoundsException( 'Invalid path key: '.$key );
 	}
 
-	static public function getRemoteEnv(Environment $parentEnv, array $options = [] ): RemoteEnvironment
-	{
-		$path		= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
-		$env		= new RemoteEnvironment( array(
-			'configFile'	=> $path.'config/config.ini',
-			'pathApp' 		=> $path,
-			'parentEnv'		=> $parentEnv,
-		) );
-//		print_m( $env );die;
-		return $env;
-	}
-
 	/**
 	 *	Returns frontend URI.
 	 *	Alias for getUrl();
 	 *	@access		public
-	 *	@return		string		Frontend URL
+	 *	@return		string|NULL		Frontend URL
 	 *	@deprecated	use getUrl instead
 	 *	@todo		to be removed in 0.9
 	 */
-	public function getUri(){
+	public function getUri(): ?string
+	{
 		return $this->getUrl();
 	}
 
 	/**
 	 *	Returns frontend URL.
 	 *	@access		public
-	 *	@return		string		Frontend URL
+	 *	@return		string|NULL		Frontend URL
 	 */
-	public function getUrl(){
+	public function getUrl(): ?string
+	{
 		return $this->url;
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
 	protected function __onInit(): void
 	{
@@ -212,11 +232,12 @@ class Logic_Frontend extends Logic
 		$this->setPath( $moduleConfig->get( 'path' ) );
 	}
 
-	public function hasModule( $moduleId ){
+	public function hasModule( string $moduleId ): bool
+	{
 		return isset( $this->installedModules[$moduleId] );
 	}
 
-	public function setPath( $path )
+	public function setPath( string $path ): void
 	{
 		if( !file_exists( $path ) )
 			throw new DomainException( 'Invalid frontend path' );
@@ -228,7 +249,8 @@ class Logic_Frontend extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function detectConfig(){
+	protected function detectConfig(): void
+	{
 		$configFile		= $this->path.'config/config.ini';
 		if( !file_exists( $configFile ) )
 			throw new RuntimeException( 'No Hydrogen application found in: '.$this->path );
@@ -238,12 +260,13 @@ class Logic_Frontend extends Logic
 	}
 
 	/**
-	 *	Tries to resolves frontend URL.
+	 *	Tries to resolve frontend URL.
 	 *	@access		protected
 	 *	@return		void
 	 *	@throws		RuntimeException				if URL is not defined
 	 */
-	protected function detectBaseUrl(){
+	protected function detectBaseUrl(): void
+	{
 		if( $this->path === './' && $this->env->url )
 			$this->url		= $this->env->url;
 		else if( $this->getAppConfigValue( 'base.url' ) )
@@ -254,7 +277,8 @@ class Logic_Frontend extends Logic
 			throw new RuntimeException( 'Frontend URL could not been detected' );
 	}
 
-	protected function detectModules(){
+	protected function detectModules(): void
+	{
 		$this->installedModules	= [];
 		$index	= new DirectoryIterator( $this->getPath( 'modules' ) );
 		foreach( $index as $entry ){

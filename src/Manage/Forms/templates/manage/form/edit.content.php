@@ -20,11 +20,11 @@ return '
 				'.$navButtons['list'].'
 <!--				'./*$navButtons['prevBlocks'].*/'-->
 				'.$navButtons['prevView'].'
-				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
-				) ).'
+				] ).'
 				'.$navButtons['nextManager'].'
 			</div>
 		</form>

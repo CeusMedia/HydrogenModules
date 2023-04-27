@@ -64,9 +64,9 @@ $panelFilter	= '
 
 $rows	= [];
 foreach( $articles as $article ){
-	$link	= HtmlTag::create( 'a', $article->title, array(
+	$link	= HtmlTag::create( 'a', $article->title, [
 		'href'	=> './manage/catalog/clothing/article/edit/'.$article->articleId,
-	) );
+	] );
 	$image	= '';
 	if( $article->image ){
 		$image	= HtmlTag::create( 'div', NULL, array(
@@ -100,10 +100,10 @@ $thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neues Produkt', array(
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neues Produkt', [
 	'href'	=> './manage/catalog/clothing/article/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/catalog/clothing/article', $page, ceil( $total / $filterLimit ) );
 

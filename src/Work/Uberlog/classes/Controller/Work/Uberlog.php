@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Uberlog extends Controller
@@ -7,7 +8,7 @@ class Controller_Work_Uberlog extends Controller
 	/**	@var	Model_Log_Record		$model		Instance of log record model */
 	protected Model_Log_Record $modelRecord;
 
-	public function ajaxUpdateIndex()
+	public function ajaxUpdateIndex(): void
 	{
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
 		$filters	= ['logRecordId' => '> '.$lastId];
@@ -16,14 +17,15 @@ class Controller_Work_Uberlog extends Controller
 		exit;
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$records	= $this->listRecords();
 		$this->addData( 'records', $records );
 	}
 
-	public function record()
+	public function record(): void
 	{
+		/** @var Dictionary $request */
 		$request	= $this->env->getRequest();
 		$post		= $request->getAllFromSource( 'POST', TRUE );
 		$data		= $post->getAll();
@@ -42,7 +44,7 @@ class Controller_Work_Uberlog extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $recordId )
+	public function remove( string $recordId ): void
 	{
 		$request	= $this->env->getRequest();
 		$this->modelRecord->remove( $recordId );
@@ -52,7 +54,7 @@ class Controller_Work_Uberlog extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function testRecord( $type = 0 )
+	public function testRecord( $type = 0 ): void
 	{
 		$data		= array(
 			'category'	=> 'test',
@@ -69,7 +71,7 @@ class Controller_Work_Uberlog extends Controller
 
 	}
 
-	public function view()
+	public function view(): void
 	{
 	}
 
@@ -78,7 +80,7 @@ class Controller_Work_Uberlog extends Controller
 		$this->modelRecord	= new Model_Log_Record( $this->env );
 	}
 
-	protected function getCategoryId( $categoryName )
+	protected function getCategoryId( string $categoryName ): string
 	{
 		if( !strlen( trim( $categoryName ) ) )
 			return 0;
@@ -88,14 +90,14 @@ class Controller_Work_Uberlog extends Controller
 			$modelCategory->edit( $category->logCategoryId, array( 'loggedAt' => time() ) );
 			return $category->logCategoryId;
 		}
-		$data		= array(
+		$data		= [
 			'title'		=> $categoryName,
 			'createdAt'	=> time()
-		);
+		];
 		return $modelCategory->add( $data );
 	}
 
-	protected function getClientId( $clientName )
+	protected function getClientId( $clientName ): string
 	{
 		if( !strlen( trim( $clientName ) ) )
 			return 0;
@@ -105,14 +107,14 @@ class Controller_Work_Uberlog extends Controller
 			$modelClient->edit( $client->logClientId, array( 'loggedAt' => time() ) );
 			return $client->logClientId;
 		}
-		$data		= array(
+		$data		= [
 			'title'		=> $clientName,
 			'createdAt'	=> time()
-		);
+		];
 		return $modelClient->add( $data );
 	}
 
-	protected function getHostId( $hostName )
+	protected function getHostId( $hostName ): string
 	{
 		if( !strlen( trim( $hostName ) ) )
 			return 0;
@@ -122,14 +124,14 @@ class Controller_Work_Uberlog extends Controller
 			$modelHost->edit( $host->logHostId, array( 'loggedAt' => time() ) );
 			return $host->logHostId;
 		}
-		$data		= array(
-			'title'	=> $hostName,
+		$data		= [
+			'title'		=> $hostName,
 			'createdAt'	=> time()
-		);
+		];
 		return $modelHost->add( $data );
 	}
 
-	protected function getUserAgentId( $userAgent )
+	protected function getUserAgentId( $userAgent ): string
 	{
 		if( !strlen( trim( $userAgent ) ) )
 			return 0;
@@ -139,10 +141,10 @@ class Controller_Work_Uberlog extends Controller
 			$modelAgent->edit( $agent->logUserAgentId, array( 'loggedAt' => time() ) );
 			return $agent->logUserAgentId;
 		}
-		$data		= array(
-			'title'	=> $userAgent,
+		$data		= [
+			'title'		=> $userAgent,
 			'createdAt'	=> time()
-		);
+		];
 		return $modelAgent->add( $data );
 	}
 

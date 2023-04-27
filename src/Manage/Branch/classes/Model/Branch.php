@@ -44,13 +44,13 @@ class Model_Branch extends Model
 			$geocoder	= new Logic_Geocoder( $this->env );
 			$tags	= $geocoder->geocodeAddress( $branch->street, $branch->number, $branch->postcode, $branch->city, 'Deutschland' );
 			$coords	= $geocoder->convertRadianToCoords( $tags->longitude, $tags->latitude );
-			$data	= array(
+			$data	= [
 				'longitude'	=> $tags->longitude,
 				'latitude'	=> $tags->latitude,
 				'x'			=> $coords->x,
 				'y'			=> $coords->y,
 				'z'			=> $coords->z,
-			);
+			];
 			$this->edit( $branchId, $data );
 			return TRUE;
 		}

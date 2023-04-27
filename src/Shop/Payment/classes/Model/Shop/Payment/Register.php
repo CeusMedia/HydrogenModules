@@ -5,14 +5,14 @@ class Model_Shop_Payment_Register
 
 	public function add( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
 	{
-		$this->backends[$key]	= (object) array(
+		$this->backends[$key]	= (object) [
 			'backend'	=> $backend,
 			'key'		=> $key,
 			'title'		=> $title,
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
-		);
+		];
 		return $key;
 	}
 

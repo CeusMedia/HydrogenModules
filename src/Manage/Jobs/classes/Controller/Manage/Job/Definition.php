@@ -1,16 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Job_Definition extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $modelDefinition;
-	protected $modelRun;
-	protected $modelSchedule;
-	protected $logic;
-	protected $filterPrefix			= 'filter_manage_job_definition_';
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected Model_Job_Definition $modelDefinition;
+	protected Model_Job_Run $modelRun;
+	protected Model_Job_Schedule $modelSchedule;
+	protected Model_Job_Code $modelCode;
+	protected Logic_Job $logic;
+	protected string $filterPrefix			= 'filter_manage_job_definition_';
 
 	public function filter( $reset = NULL )
 	{
@@ -85,7 +88,7 @@ class Controller_Manage_Job_Definition extends Controller
 			$this->env->getMessenger()->noteError( 'Invalid Job Definition ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php5' );
+		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php' );
 		$definitionCode	= $this->modelCode->getClassMethodSourceCode( 'Job_'.$definition->className, $definition->methodName );
 		$runs	= $this->modelRun->getAllByIndex( 'jobDefinitionId', $jobDefinitionId, ['createdAt' => 'DESC'], [0, 10] );
 		$this->addData( 'definition', $definition );

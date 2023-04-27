@@ -35,10 +35,10 @@ class Logic_Database_Lock extends Logic
 
 	public function getLock( $subject, $entryId )
 	{
-		$lock	= $this->model->getByIndices( array(
+		$lock	= $this->model->getByIndices( [
 			'subject'	=> $subject,
 			'entryId'	=> $entryId,
-		) );
+		] );
 		if( !$lock )
 			throw new RuntimeException( 'Resource is not locked' );
 		return $lock;

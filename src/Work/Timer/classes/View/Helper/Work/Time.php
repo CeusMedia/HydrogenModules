@@ -1,19 +1,25 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 abstract class View_Helper_Work_Time extends Abstraction
 {
-	protected $session;
-	protected $userId;
-	protected $logicTimer;
-	protected $logicProject;
-	protected $modelMission;
-	protected $modelProject;
-	protected $modelTimer;
 	public $from;
 
+	protected Dictionary $session;
+	protected Logic_Work_Timer $logicTimer;
+	protected Logic_Project $logicProject;
+	protected Model_Mission $modelMission;
+	protected Model_Project $modelProject;
+	protected Model_Work_Timer $modelTimer;
+	protected ?string $userId			= NULL;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
@@ -29,7 +35,13 @@ abstract class View_Helper_Work_Time extends Abstraction
 			$this->from				= $this->env->getRequest()->get( 'from' );
 	}
 
-	static public function formatSeconds( $duration, string $space = ' ', bool $shorten = FALSE ): string
+	/**
+	 * @param		int|string	$duration
+	 * @param		string		$space
+	 * @param		bool		$shorten
+	 * @return		string
+	 */
+	public static function formatSeconds( $duration, string $space = ' ', bool $shorten = FALSE ): string
 	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
@@ -97,7 +109,16 @@ abstract class View_Helper_Work_Time extends Abstraction
 		return $this;
 	}
 
-	static public function sumTimersOfModuleId( Environment $env, string $moduleKey, $moduleId, array $statuses = [3], bool $formatAsTime = FALSE )
+	/**
+	 * @param		Environment		$env
+	 * @param		string			$moduleKey
+	 * @param		string			$moduleId
+	 * @param		array			$statuses
+	 * @param		bool			$formatAsTime
+	 * @return		int|string
+	 * @throws		ReflectionException
+	 */
+	public static function sumTimersOfModuleId( Environment $env, string $moduleKey, string $moduleId, array $statuses = [3], bool $formatAsTime = FALSE )
 	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );

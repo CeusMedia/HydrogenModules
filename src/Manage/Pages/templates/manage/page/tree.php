@@ -79,10 +79,10 @@ if( !empty( $pageId ) && isset( $page ) )
 else if( !empty( $parentId ) && isset( $page ) )
 	$urlAdd	.= "/".$parentId;
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', [
 	'href'		=> $urlAdd,
 	'class'		=> 'btn btn-small btn-success',
-) );
+] );
 
 $buttonSortable	= HtmlTag::create( 'button', $iconSortable, array(
 	'type'		=> 'button',

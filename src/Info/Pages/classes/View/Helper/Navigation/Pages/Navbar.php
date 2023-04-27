@@ -7,16 +7,16 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  */
 class View_Helper_Navigation_Pages_Navbar extends Abstraction
 {
-	protected $current;
-	protected $scopeId		= 0;
+	protected ?string $current		= NULL;
+	protected string $scopeId		= '0';
 
 	public function render(): string
 	{
 		$model		= new Model_Page( $this->env );
-		$indices	= array(
+		$indices	= [
 			'parentId'	=> 0,
 			'scope'		=> $this->scopeId,
-		);
+		];
 		$pages		= $model->getAllByIndices( $indices, ['rank' => 'ASC'] );
 		$list	= [];
 		foreach( $pages as $page ){
@@ -62,7 +62,7 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 		return $this;
 	}
 
-	public function setScopeId( $scopeId ): self
+	public function setScopeId( string $scopeId ): self
 	{
 		$this->scopeId		= $scopeId;
 		return $this;

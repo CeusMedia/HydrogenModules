@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $words	= (object) $words;
 $w		= (object) $words->index;
 
-$statusIcons		= array(
+$statusIcons		= [
 	-6		=> 'remove',
 	-5		=> 'arrow-left',
 	-4		=> 'remove',
@@ -19,7 +19,7 @@ $statusIcons		= array(
 	4		=> 'arrow-right',
 	5		=> 'arrow-right',
 	6		=> 'ok',
-);
+];
 
 
 $listOrders	= [];
@@ -48,13 +48,13 @@ foreach( $orders as $order ){
 	$listOrders[]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 $tableRows		= join( $listOrders );
-$tableHeads		= HtmlElements::TableHeads( array(
+$tableHeads		= HtmlElements::TableHeads( [
 	$w->columnId,
 	$w->columnCustomer,
 	$w->columnStatus,
 	$w->columnCreated,
 	$w->columnModified,
-) );
+] );
 $tableColumns	= HtmlElements::ColumnGroup( ['5%', '46%', '15%', '12%', '12%'] );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $tableRows );

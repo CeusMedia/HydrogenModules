@@ -64,11 +64,11 @@ $panelAdd	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'buttonbar',
 				HTML::DivClass( 'btn-toolbar',
 					HTML::LinkButton( './manage/company/branch', $iconCancel.'&nbsp;'.$w->buttonCancel, 'btn btn-small' ).
-					HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+					HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 						'type'	=> 'submit',
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary'
-					) )
+					] )
 				)
 			)
 		)

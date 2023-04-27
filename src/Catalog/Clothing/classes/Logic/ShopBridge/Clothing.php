@@ -7,27 +7,28 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**	@var	Model_Catalog_Clothing_Article		$modelArticle	Article model instance */
 	protected Model_Catalog_Clothing_Article $modelArticle;
 
+	protected ?Logic_Localization $localization;
+
 	/**	@var	integer								$taxRate		Tax rate, configured by module */
 	protected int $taxRate = 19;
 
 	protected string $pathImages;
 
-	protected ?Logic_Localization $localization;
-
-	public function getWeight( $articleId, int $amount = 1 )
+	public function getWeight( $articleId, int $amount = 1 ): float
 	{
 		// TODO: Implement getWeight() method.
+		return .0;
 	}
 
 	/**
 	 *	Change stock quantity of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function changeQuantity( $articleId, int $change )
+	public function changeQuantity( string $articleId, int $change ): int
 	{
 		$article	= $this->modelArticle->get( $articleId );
 //		if( !$article && $strict )
@@ -43,11 +44,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@return		object						Bridged article data object if found
+	 *	@param		string		$articleId		ID of article
+	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE )
 	{
 		$article	= $this->modelArticle->get( $articleId );
 		if( $article )
@@ -60,11 +61,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		object		$article
+	 *	@param		string		$articleId
 	 *	@param		integer		$quantity
 	 *	@return		object
 	 */
-	public function get( $articleId, int $quantity = 1 ): object
+	public function get( string $articleId, int $quantity = 1 ): object
 	{
 		$article	= $this->check( $articleId );
 		$data		= (object) [
@@ -102,10 +103,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId ): string
+	public function getDescription( string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		return $article->description;
@@ -114,10 +115,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId ): string
+	public function getLink( string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		return $this->pathImages.'products/'.$article->image;
@@ -126,12 +127,12 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, bool $absolute = FALSE ): string
+	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
 		$article		= $this->check( $articleId );
 		$category	= $this->modelCategory->get( $article->categoryId );
@@ -142,11 +143,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, int $amount = 1 ): float
+	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
 		$article	= $this->check( $articleId );
 		return $article->price * $amount;
@@ -155,11 +156,11 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, int $amount = 1 ): float
+	public function getTax( string $articleId, int $amount = 1 ): float
 	{
 		$article	= $this->check( $articleId );
 		return $article->price * ( $this->taxRate / 100 ) * $amount;
@@ -168,10 +169,10 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId ): string
+	public function getTitle( string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		return $article->title ?: $article->filename;

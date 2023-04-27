@@ -6,11 +6,11 @@ class Controller_Work_Billing_Person_Unbooked extends Controller
 {
 	protected Logic_Billing $logic;
 
-	public function index( $personId )
+	public function index( string $personId ): void
 	{
-		$unpayedBillShares	= $this->logic->getPersonBillShares( $personId, array(
+		$unpayedBillShares	= $this->logic->getPersonBillShares( $personId, [
 			'status' => Model_Billing_Bill_Share::STATUS_NEW
-		) );
+		] );
 		foreach( $unpayedBillShares as $unpayedBillShare )
 			$unpayedBillShare->bill	= $this->logic->getBill( $unpayedBillShare->billId );
 		$this->addData( 'unpayedBillShares', $unpayedBillShares );

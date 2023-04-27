@@ -56,7 +56,7 @@ class Controller_Blog extends Controller{
 					return;
 				}
 				$model	= new Model_ArticleAuthor( $this->env );
-				$model->add( array( 'articleId' => $articleId, 'userId' => $userId ) );
+				$model->add( ['articleId' => $articleId, 'userId' => $userId] );
 				$this->env->getMessenger()->noteSuccess( 'Der Artikel wurde gespeichert.' );
 				$this->restart( './blog/edit/'.$articleId );
 			}
@@ -66,7 +66,7 @@ class Controller_Blog extends Controller{
 	public function addAuthor( $articleId, $userId ){
 		$request		= $this->env->getRequest();
 		$modelRelation	= new Model_ArticleAuthor( $this->env );
-		$indices		= array( 'articleId' => $articleId, 'userId' => $userId );
+		$indices		= ['articleId' => $articleId, 'userId' => $userId];
 		if( !$modelRelation->getByIndices( $indices ) )
 			$modelRelation->add( $indices );
 		$this->restart( './blog/edit/'.$articleId );
@@ -90,10 +90,10 @@ class Controller_Blog extends Controller{
 			if( $tag ){
 				$tagId	= $tag->tagId;
 				$number	= $tag->number;
-				$indices	= array(
+				$indices	= [
 					'articleId'	=> $articleId,
 					'tagId'		=> $tagId,
-				);
+				];
 				if( $modelRelation->getByIndices( $indices ) )
 					$this->restart( './blog/edit/'.$articleId );
 			}
@@ -101,12 +101,12 @@ class Controller_Blog extends Controller{
 				$tagId	= $modelTag->add( array( 'title' => trim( $tagName ) ) );
 				$number	= 0;
 			}
-			$data	= array(
+			$data	= [
 				'articleId'	=> $articleId,
 				'tagId'		=> $tagId,
-			);
+			];
 			$modelRelation->add( $data );
-			$modelTag->edit( $tagId, array( 'number' => ++$number ) );
+			$modelTag->edit( $tagId, ['number' => ++$number] );
 		}
 		$this->restart( './blog/edit/'.$articleId );
 	}
@@ -120,10 +120,10 @@ class Controller_Blog extends Controller{
 
 		$states		= $this->env->getSession()->get( 'filter_blog_states' );
 		if( !$this->isEditor )
-			$states	= array( 1 );
+			$states	= [1];
 		else if( !$states )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 0, 1 ) );
-		$conditions	= array( 'status' => $states );
+			$this->env->getSession()->set( 'filter_blog_states', $states = [0, 1] );
+		$conditions	= ['status' => $states];
 
 		$article				= $this->model->get( $articleId );
 		$article->versions		= $this->model->getArticleVersions( $articleId );
@@ -132,7 +132,7 @@ class Controller_Blog extends Controller{
 			$version	= $article->version;
 
 		$data	= array(
-			'articles'	=> $this->model->getAll( $conditions, array( 'createdAt' => 'DESC' ) ),
+			'articles'	=> $this->model->getAll( $conditions, ['createdAt' => 'DESC'] ),
 			'article'	=> $article,
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
@@ -228,8 +228,8 @@ class Controller_Blog extends Controller{
 			}
 
 			$model	= new Model_ArticleAuthor( $this->env );
-			if( !$model->count( array( 'articleId' => $articleId, 'userId' => $userId ) ) )
-				$model->add( array( 'articleId' => $articleId, 'userId' => $userId ) );
+			if( !$model->count( ['articleId' => $articleId, 'userId' => $userId] ) )
+				$model->add( ['articleId' => $articleId, 'userId' => $userId] );
 
 
 			$this->restart( './blog/edit/'.$articleId );
@@ -240,7 +240,7 @@ class Controller_Blog extends Controller{
 			'article'	=> $this->model->get( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'authors'	=> $this->model->getArticleAuthors( $articleId ),
-			'editors'	=> $modelUser->getAll( array( 'status' => '> 0' ) ),
+			'editors'	=> $modelUser->getAll( ['status' => '> 0'] ),
 			'articleId'	=> rawurldecode( $articleId ),
 			'tags'		=> $this->model->getArticleTags( $articleId ),
 			'version'	=> $version,
@@ -259,8 +259,8 @@ class Controller_Blog extends Controller{
 		$limit		= ( (int) $limit > 0 ) ? (int) $limit : 10;
 
 		$conditions	= array( 'status' => 1, 'createdAt' => '<= '.time() );
-		$orders		= array( 'createdAt' => 'DESC' );
-		$articles	= $this->model->getAll( $conditions, $orders, array( 0, $limit ) );
+		$orders		= ['createdAt' => 'DESC'];
+		$articles	= $this->model->getAll( $conditions, $orders, [0, $limit] );
 		$this->addData( 'articles', $articles );
 		$this->addData( 'debug', (bool) $debug );
 	}
@@ -268,9 +268,9 @@ class Controller_Blog extends Controller{
 	protected function getFilteredStates(){
 		$states	= $this->env->getSession()->get( 'filter_blog_states' );
 		if( !is_array( $states ) )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+			$this->env->getSession()->set( 'filter_blog_states', $states = [1] );
 		if( !$this->isEditor /*|| !$states*/ )
-			$this->env->getSession()->set( 'filter_blog_states', $states = array( 1 ) );
+			$this->env->getSession()->set( 'filter_blog_states', $states = [1] );
 		return $states;
 	}
 
@@ -280,11 +280,11 @@ class Controller_Blog extends Controller{
 
 		$limit		= !is_null( $limit ) ? $limit : ( $perPage ? $perPage : 10 );
 		$offset		= $page * $limit;
-		$limits		= array( $offset, $limit );
-		$conditions	= array( 'status' => $states ? $states : -99 );
+		$limits		= [$offset, $limit];
+		$conditions	= ['status' => $states ? $states : -99];
 		if( !$this->isEditor )
 			$conditions['createdAt']	= '<=  '.time();
-		$orders		= array( 'createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/ );
+		$orders		= ['createdAt' => 'DESC'/*, 'articleId' => 'DESC'*/];
 		$articles	= $this->model->getAll( $conditions, $orders, $limits );
 
 		foreach( $articles as $nr => $article ){
@@ -312,21 +312,21 @@ class Controller_Blog extends Controller{
 
 	public function removeAuthor( $articleId, $userId ){
 		$model		= new Model_ArticleAuthor( $this->env );
-		$model->removeByIndices( array( 'articleId' => $articleId, 'userId' => $userId ) );
+		$model->removeByIndices( ['articleId' => $articleId, 'userId' => $userId] );
 		$this->restart( './blog/edit/'.$articleId );
 	}
 
 	public function removeTag( $articleId, $tagId ){
 		$model	= new Model_ArticleTag( $this->env );
-		$indices	= array(
+		$indices	= [
 			'articleId'	=> $articleId,
 			'tagId'		=> $tagId,
-		);
+		];
 		if( $model->removeByIndices( $indices ) ){
 			$model	= new Model_Tag( $this->env );
 			$tag	= $model->get( $tagId );
 			$number	= $tag->number--;
-			$model->edit( $articleId, array( 'number' => $number ) );
+			$model->edit( $articleId, ['number' => $number] );
 		}
 		$this->restart( './blog/edit/'.$articleId );
 	}
@@ -368,7 +368,7 @@ class Controller_Blog extends Controller{
 				if( !is_array( $store ) )
 					$session->remove( 'filter_blog_'.$name );
 				else{
-					$store	= array_diff( $store, array( $value ) );
+					$store	= array_diff( $store, [$value] );
 					$session->set( 'filter_blog_'.$name, $store );
 				}
 				break;
@@ -385,7 +385,7 @@ class Controller_Blog extends Controller{
 		$article	= $this->model->get( $articleId );
 		if( !$article )
 			$this->restart( './blog' );
-		$this->model->edit( $articleId, array( 'status' => $status ) );
+		$this->model->edit( $articleId, ['status' => $status] );
 		$this->env->getMessenger()->noteSuccess( 'Der Status wurde auf <cite>'.$words[$status].'</cite> gesetzt.' );
 		$this->restart( './blog/edit/'.$articleId );
 	}
@@ -414,12 +414,12 @@ class Controller_Blog extends Controller{
 			$articles[$nr]->authors	= $this->model->getArticleAuthors( $article->articleId );
 			$articles[$nr]->tags	= $this->model->getArticleTags( $article->articleId );
 		}
-		$this->setData( array(
+		$this->setData( [
 			'articles'	=> $articles,
 			'tag'		=> $tag,
 			'tagName'	=> $tagName,
 			'friends'	=> $relatedTags
-		) );
+		] );
 	}
 
 	public function thumb( $file ){

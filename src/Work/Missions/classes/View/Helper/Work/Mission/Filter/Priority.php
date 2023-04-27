@@ -1,4 +1,5 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -6,9 +7,9 @@ class View_Helper_Work_Mission_Filter_Priority
 {
 	protected WebEnvironment $env;
 	protected array $words;
-	protected $modalRegistry		= NULL;
-	protected array $values			= [];
-	protected $selected				= NULL;
+	protected ?View_Helper_ModalRegistry $modalRegistry		= NULL;
+	protected array $values									= [];
+	protected array $selected								= [];
 
 	public function __construct( WebEnvironment $env )
 	{
@@ -16,13 +17,13 @@ class View_Helper_Work_Mission_Filter_Priority
 		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
 	}
 
-	public function setModalRegistry( $modalRegistry ): self
+	public function setModalRegistry( View_Helper_ModalRegistry $modalRegistry ): self
 	{
 		$this->modalRegistry	= $modalRegistry;
 		return $this;
 	}
 
-	public function setValues( $all, $selected ): self
+	public function setValues( array $all, array $selected ): self
 	{
 		$this->values	= $all;
 		$this->selected	= $selected;
@@ -47,7 +48,7 @@ class View_Helper_Work_Mission_Filter_Priority
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$buttonIcon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation'] ).'&nbsp;';
-		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['priority'], ['class' => 'hidden-phone'] );;
+		$labelFilter	= HtmlTag::create( 'span', $this->words['filters']['priority'], ['class' => 'hidden-phone'] );
 		$buttonLabel	= $labelFilter.'&nbsp;<span class="caret"></span>';
 		$buttonClass	= 'dropdown-toggle btn '.( $changedPriorities ? "btn-info" : "" );
 		return HtmlTag::create( 'div', [

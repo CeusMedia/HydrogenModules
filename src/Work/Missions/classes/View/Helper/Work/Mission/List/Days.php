@@ -1,11 +1,10 @@
 <?php
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 {
-	protected $icons		= [];
-	protected $list			= [
+	protected array $icons		= [];
+	protected array $list			= [
 		0 => [],
 		1 => [],
 		2 => [],
@@ -32,7 +31,7 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 			if( !is_int( $day ) )
 				throw new InvalidArgumentException( 'Day must be of integer' );
 			if( $day < 0 || $day > 6 )
-				throw new OutOfRangeException( 'Day must be atleast 0 and atmost 6' );
+				throw new OutOfRangeException( 'Day must be at least 0 and at most 6' );
 			return count( $this->list[$day] );
 		}
 		$sum	= 0;
@@ -49,7 +48,7 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		return $this->list;
 	}
 
-	public function getNearestFallbackDay( $day )
+	public function getNearestFallbackDay( $day ): int
 	{
 		$left	= $right	= (int) $day;
 		while( $left >= 0 || $right <= 6 ){
@@ -78,6 +77,7 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 	public function setMissions( $missions ): self
 	{
 		foreach( $missions as $mission ){															//  iterate missions
+			/** @noinspection PhpUnhandledExceptionInspection */
 			$diff	= $this->today->diff( new DateTime( $mission->dayStart ) );						//  get difference to today
 			$days	= $diff->invert ? -1 * $diff->days : $diff->days;								//  calculate days left
 			$days	= max( min( $days , 6 ), 0 );													//  restrict to be within 0 and 6

@@ -8,9 +8,9 @@ $list	= '<em>Keine Workshops vorhanden.</em>';
 if( $workshops ){
 	$list	= [];
 	foreach( $workshops as $item ){
-		$link	= HtmlTag::create( 'a', $item->title, array(
+		$link	= HtmlTag::create( 'a', $item->title, [
 			'href'	=> './manage/workshop/edit/'.$item->workshopId,
-		) );
+		] );
 		$status		= $words['statuses'][$item->status];
 		$rank		= $words['ranks'][$item->rank];
 		$list[]	= HtmlTag::create( 'tr', array(

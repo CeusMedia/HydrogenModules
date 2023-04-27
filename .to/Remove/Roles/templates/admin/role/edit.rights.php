@@ -26,7 +26,7 @@ foreach( $actions as $controller => $class ){
 				break;
 		}
 		$label	= HtmlTag::create( 'label', $method->name, [] );
-		$list[]	= HtmlTag::create( 'li', $check.$label, array( 'class' => $class, 'id' => $id ) );
+		$list[]	= HtmlTag::create( 'li', $check.$label, ['class' => $class, 'id' => $id] );
 	}
 	$list	= HtmlTag::create( 'ul', join( $list ), [] );
 	$rows[]	= '<tr><td>'.$controller.'</td><td>'.$list.'</td></tr>';

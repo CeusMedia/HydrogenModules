@@ -4,17 +4,17 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_Url
 {
-	const MODE_UNKNONW		= 0;
+	const MODE_UNKNOWN		= 0;
 	const MODE_CATEGORY		= 1;
 	const MODE_PAGE			= 2;
 
-	protected $env;
-	protected $mode			= self::MODE_UNKNONW;
-	protected $category;
-	protected $page;
-	protected $baseUri		= './info/manual/';
-	protected $modelCategory;
-	protected $modelPage;
+	protected Environment $env;
+	protected Model_Manual_Page $modelPage;
+	protected Model_Manual_Category $modelCategory;
+	protected int $mode				= self::MODE_UNKNOWN;
+	protected ?object $category		= NULL;
+	protected ?object $page			= NULL;
+	protected string $baseUri		= './info/manual/';
 
 	public function __construct( Environment $env )
 	{
@@ -59,7 +59,7 @@ class View_Helper_Info_Manual_Url
 		return $this;
 	}
 
-	public function setMode( $mode ): self
+	public function setMode( int $mode ): self
 	{
 		if( !in_array( $mode, [self::MODE_CATEGORY, self::MODE_PAGE] ) )
 			throw new RangeException( 'Invalid mode given' );
@@ -83,8 +83,8 @@ class View_Helper_Info_Manual_Url
 		return $this;
 	}
 
-	public static function spawn( $env ): self
+	public static function spawn( Environment $env ): self
 	{
-		return new static( $env );
+		return new self( $env );
 	}
 }

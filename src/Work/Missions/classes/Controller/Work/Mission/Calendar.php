@@ -11,11 +11,11 @@
  */
 class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.calendar.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.calendar.';
 
-	protected $defaultFilterValues	= array(
+	protected array $defaultFilterValues	= [
 		'mode'		=> 'now',
-		'states'	=> array(
+		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
 			Model_Mission::STATUS_NEW,
@@ -23,22 +23,22 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY,
 			Model_Mission::STATUS_FINISHED
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{
@@ -49,26 +49,26 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 			$this->session->set( $this->filterKeyPrefix.'month', date( 'Y' ).'-'.date( 'n' ) );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
-		$this->setData( array(
+		$this->setData( [
 			'userId'	=> $this->userId,
 			'year'		=> $date[0],
 			'month'		=> $date[1],
-		) );
+		] );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId	= $this->getData( 'userId' );
 	}
 
-	protected function initDefaultFilters()
+	protected function initDefaultFilters(): void
 	{
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	public function index( $year = NULL, $month = NULL )
+	public function index( $year = NULL, $month = NULL ): void
 	{
 		$this->initFilters( $this->userId );
 		$this->assignFilters();
@@ -104,7 +104,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 */
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

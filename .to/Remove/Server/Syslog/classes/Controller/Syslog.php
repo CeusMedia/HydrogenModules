@@ -37,7 +37,7 @@ class Controller_Syslog extends Controller_Abstract
 		}
 		catch( Exception $e ){}
 		$user	= array( 'email' => $env->getConfig()->get( 'app.email.developer' ) );
-		$mail	= new Mail_Syslog_Exception( $env, array( 'exception' => $exception ) );
+		$mail	= new Mail_Syslog_Exception( $env, ['exception' => $exception] );
 		$mail->sendTo( (object) $user );
 	}
 
@@ -130,12 +130,12 @@ class Controller_Syslog extends Controller_Abstract
 			return -5;
 		try
 		{
-			$mail	= new Mail_Syslog( $this->env, array(
+			$mail	= new Mail_Syslog( $this->env, [
 				'body'		=> $body,
 				'prefix'	=> $prefix,
 				'subject'	=> $subject,
 				'sender'	=> $fromName ? $fromName.' <'.$fromAddress.'>' : $fromAddress,
-			) );
+			] );
 			$mail->sendToAddress( $receiver );
 			return 1;
 		}

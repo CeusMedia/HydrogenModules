@@ -63,12 +63,12 @@ class Model_OpenGeo{
 		foreach( $locations as $location ){
 			$key	= $location->postcode.' '.strtolower( $location->city );
 			if( empty( $list[$key] ) ){
-				$list[$key]	= (object) array(
+				$list[$key]	= (object) [
 					'city'	=> $location->city,
 					'zip'	=> $location->postcode,
 					'lat'	=> $location->latitude,
 					'lon'	=> $location->longitude,
-				);
+				];
 			}
 		}
 		ksort( $list );
@@ -90,12 +90,12 @@ class Model_OpenGeo{
 		foreach( $locations as $location ){
 			$key	= strtolower( $location->city);
 			if( empty( $list[$key] ) ){
-				$list[$key]	= (object) array(
+				$list[$key]	= (object) [
 					'city'	=> $location->city,
 					'zip'	=> $location->zip,
 					'lat'	=> $location->lat,
 					'lon'	=> $location->lon,
-				);
+				];
 			}
 		}
 		ksort( $list );

@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Billing_Bill extends View
 {
-	public static function renderTabs( Environment $env, $billId, $current = 0 ): string
+	public static function renderTabs( Environment $env, string $billId, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/billing/bill/' );
@@ -14,15 +14,15 @@ class View_Work_Billing_Bill extends View
 		return $tabs->renderTabs( $current );
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 

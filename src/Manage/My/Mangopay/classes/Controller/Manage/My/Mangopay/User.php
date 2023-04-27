@@ -1,9 +1,9 @@
 <?php
 class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay_Abstract
 {
-	protected $user;
+	protected object $user;
 
-	public function edit()
+	public function edit(): void
 	{
 		$user	= $this->user;
 		if( $this->request->has( 'save' ) ){
@@ -22,7 +22,7 @@ class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay_A
 		}
 	}
 
-	public function index()
+	public function index(): void
 	{
 		try{
 			$pagination	= $this->mangopay->getDefaultPagination();
@@ -48,7 +48,7 @@ class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay_A
 
 	}
 
-	public function view( $userId )
+	public function view( $userId ): void
 	{
 
 	}
@@ -56,7 +56,7 @@ class Controller_Manage_My_Mangopay_User extends Controller_Manage_My_Mangopay_A
 	protected function __onInit(): void
 	{
 		parent::__onInit();
-		$this->user	= $this->logic->getUser( $this->userId );
+		$this->user		= $this->logic->getUser( $this->userId );
 		$this->addData( 'user', $this->user );
 	}
 }

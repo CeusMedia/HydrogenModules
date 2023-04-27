@@ -9,9 +9,9 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 
 	public function activate( $filterId )
 	{
-		$this->model->edit( $filterId, array(
+		$this->model->edit( $filterId, [
 			'status'	=> Model_IP_Lock_Filter::STATUS_ENABLED,
-		) );
+		] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -32,9 +32,9 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 
 	public function deactivate( $filterId )
 	{
-		$this->model->edit( $filterId, array(
+		$this->model->edit( $filterId, [
 			'status'	=> Model_IP_Lock_Filter::STATUS_DISABLED,
-		) );
+		] );
 		$this->restart( NULL, TRUE );
 	}
 

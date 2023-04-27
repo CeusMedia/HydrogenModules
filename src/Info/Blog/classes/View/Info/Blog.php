@@ -41,9 +41,9 @@ class View_Info_Blog extends View
 	public static function renderCommentStatic( Environment $env, $comment ){
 		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
 		$content	= HtmlTag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
-		$html		= HtmlTag::create( 'div', $infobar.$content, array(
+		$html		= HtmlTag::create( 'div', $infobar.$content, [
 			'class'		=> 'list-comments-item'
-		) );
+		] );
 		return $html;
 	}
 
@@ -72,12 +72,12 @@ class View_Info_Blog extends View
 			return;
 		$content		= self::renderPostAbstractStatic( $env, $post, FALSE );				//  load nested page content
 		$heading		= HtmlTag::create( 'h3', $title );
-		$panelInner		= HtmlTag::create( 'div', $content, array(
+		$panelInner		= HtmlTag::create( 'div', $content, [
 			'class'		=> 'content-panel-inner moduleInfoBlog'
-		) );
-		return HtmlTag::create( 'div', $heading.$panelInner, array(
+		] );
+		return HtmlTag::create( 'div', $heading.$panelInner, [
 			'class'		=> 'content-panel content-panel-info'
-		) );
+		] );
 	}
 
 	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE )
@@ -93,17 +93,17 @@ class View_Info_Blog extends View
 		$words		= $view->getWords( 'index', 'info/blog' );
 		$env->getCaptain()->callHook( 'View', 'onRenderContent', $view, $payload );
 		$abstract	= $payload['content'];
-		$linkView	= HtmlTag::create( 'a', $words->linkMore, array(
+		$linkView	= HtmlTag::create( 'a', $words->linkMore, [
 			'href'	=> './info/blog/post/'.$post->postId,
-		) );
+		] );
 		$clearfloat	= HtmlTag::create( 'div', '', ['class' => 'clearfix'] );
 		$linkView	= HtmlTag::create( 'small', $linkView );
 		$infobar	= View_Info_Blog::renderPostInfoBarStatic( $env, $post );
-		$content	= array(
+		$content	= [
 			$title,
 			$abstract.'&nbsp;'.$linkView.$clearfloat,
 			$showInfoBar ? $infobar : '',
-		);
+		];
 		return HtmlTag::create( 'div', $content, ['class' => 'blog-post'] );
 	}
 

@@ -4,15 +4,19 @@ use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 
 abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 {
-	protected $indicator;
-	protected $labelsMonthNames;
-	protected $labelsWeekdays;
-	protected $labelsTypes;
-	protected $labelsStates;
-	protected $labelsPriorities;
-	protected $modelUser;
-	protected $salute;
+	protected Model_User $modelUser;
+	protected HtmlIndicator $indicator;
+	protected array $labelsMonthNames;
+	protected array $labelsWeekdays;
+	protected array $labelsTypes;
+	protected array $labelsStates;
+	protected array $labelsPriorities;
+	protected array $salutes;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		parent::__onInit();
@@ -26,11 +30,11 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 		$this->indicator		= new HtmlIndicator();
 		$this->modelUser		= new Model_User( $this->env );
 
-		$this->labelsMonthNames	= (array) $this->getWords( 'work/mission', 'months' );
-		$this->labelsWeekdays	= (array) $this->getWords( 'work/mission', 'days' );
-		$this->labelsTypes		= (array) $this->getWords( 'work/mission', 'types' );
-		$this->labelsStates		= (array) $this->getWords( 'work/mission', 'states' );
-		$this->labelsPriorities	= (array) $this->getWords( 'work/mission', 'priorities' );
-		$this->salutes			= (array) $this->getWords( 'work/mission', 'mail-salutes' );
+		$this->labelsMonthNames	= $this->getWords( 'work/mission', 'months' );
+		$this->labelsWeekdays	= $this->getWords( 'work/mission', 'days' );
+		$this->labelsTypes		= $this->getWords( 'work/mission', 'types' );
+		$this->labelsStates		= $this->getWords( 'work/mission', 'states' );
+		$this->labelsPriorities	= $this->getWords( 'work/mission', 'priorities' );
+		$this->salutes			= $this->getWords( 'work/mission', 'mail-salutes' );
 	}
 }

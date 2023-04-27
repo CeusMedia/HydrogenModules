@@ -40,13 +40,13 @@ class Controller_Test extends Controller
 		foreach( $models as $class => $result )
 			if( !$result )
 				$failed++;
-		$data	= array(
+		$data	= [
 			'core'			=> $core,
 			'controllers'	=> $controllers,
 			'models'		=> $models,
 			'total'			=> $total,
 			'failed'		=> $failed
-		);
+		];
 		return $data;
 	}
 

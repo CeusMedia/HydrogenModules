@@ -39,10 +39,10 @@ class Logic_UserPassword
 		if( $new->status != Model_User_Password::STATUS_NEW )
 			throw new OutOfRangeException( 'User password cannot be activated' );
 
-		$old	= $this->model->getByIndices( array(
+		$old	= $this->model->getByIndices( [
 			'userId'	=> $new->userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
-		) );
+		] );
 		if( $old ){
 			$this->model->edit( $old->userPasswordId, array(
 				'status'	=> Model_User_Password::STATUS_REVOKED,
@@ -75,10 +75,10 @@ class Logic_UserPassword
 	public function addPassword( $userId, string $password )
 	{
 		$salt	= $this->generateSalt();															//  generate password salt
-		$other	= $this->model->getByIndices( array(
+		$other	= $this->model->getByIndices( [
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
-		) );
+		] );
 		if( $other ){																				//  find other new password
 			$this->model->edit( $other->userPasswordId, array(										//  and revoke it
 				'status'	=> Model_User_Password::STATUS_REVOKED,
@@ -156,10 +156,10 @@ class Logic_UserPassword
 
 	public function getActivatableUserPassword( $userId, string $password )
 	{
-		$indices	= array(
+		$indices	= [
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
-		);
+		];
 		foreach( $this->model->getAllByIndices( $indices ) as $item )
 			if( $this->validatePassword( $item->salt.$password, $item->hash ) )
 				return $item;
@@ -188,10 +188,10 @@ class Logic_UserPassword
 	 */
 	public function hasUserPassword( $userId ): bool
 	{
-		$indices	= array(
+		$indices	= [
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
-		);
+		];
 		return (bool) $this->model->count( $indices );
 	}
 
@@ -229,10 +229,10 @@ class Logic_UserPassword
 	 */
 	public function validateUserPassword( $userId, string $password, bool $resetFails = TRUE ): bool
 	{
-		$item	= $this->model->getByIndices( array(
+		$item	= $this->model->getByIndices( [
 			'userId'	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
-		) );
+		] );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
 			if( $resetFails ){
 				$this->model->edit( $item->userPasswordId, array(

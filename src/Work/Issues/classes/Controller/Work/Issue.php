@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Controller;
  */
 class Controller_Work_Issue extends Controller
 {
-	protected $filters	= array(
+	protected array $filters	= [
 		'issueId',
 		'reporterId',
 		'managerId',
@@ -26,13 +26,13 @@ class Controller_Work_Issue extends Controller
 		'direction',
 		'limit',
 		'relation',
-	);
+	];
 
-	protected $logic;
-	protected $userProjects;
-	protected $userId;
+	protected Logic_Issue $logic;
+	protected array $userProjects;
+	protected ?string $userId;
 
-	public function add()
+	public function add(): void
 	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue/add' );
@@ -46,7 +46,7 @@ class Controller_Work_Issue extends Controller
 
 		if( $request->has( 'save' ) ){
 			$model		= new Model_Issue( $this->env );
-			$data		= array(
+			$data		= [
 				'reporterId'	=> $this->userId,
 				'managerId'		=> $managerId,
 				'projectId'		=> (int) $request->get( 'projectId' ),
@@ -58,7 +58,7 @@ class Controller_Work_Issue extends Controller
 				'title'			=> $request->get( 'title' ),
 				'content'		=> trim( $request->get( 'content' ) ),
 				'createdAt'		=> time(),
-			);
+			];
 			if( empty( $data['title'] ) )
 				$this->env->getMessenger()->noteError( 'Der Titel fehlt.' );
 			if( !$this->env->getMessenger()->gotError() ){
@@ -77,14 +77,14 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'projects', $this->userProjects );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId )
+	public function ajaxRenderDashboardPanel( $panelId ): string
 	{
 		return HtmlTag::create( 'div', '...' );
 	}
 
-	public function edit( $issueId )
+	public function edit( $issueId ): void
 	{
-		$request	= $this->env->request;
+		$request	= $this->env->getRequest();
 		$issue		= $this->checkIssue( $issueId );
 		if( $request->has( 'save' ) ){
 
@@ -112,15 +112,15 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
 	}
 
-	public function emerge( $issueId )
+	public function emerge( string $issueId ): void
 	{
-		$request	= $this->env->request;
+		$request	= $this->env->getRequest();
 		$modelIssue		= new Model_Issue( $this->env );
 		$modelNote		= new Model_Issue_Note( $this->env );
 		$issue			= $modelIssue->get( $issueId );
 		if( $request->has( 'save' ) ){
 			$this->logic->informAboutChange( $issueId, $this->userId );
-			$changeTypes	= array(
+			$changeTypes	= [
 				'reporterId'	=> Logic_Issue::CHANGE_REPORTER,
 				'managerId'		=> Logic_Issue::CHANGE_MANAGER,
 				'projectId'		=> Logic_Issue::CHANGE_PROJECT,
@@ -129,22 +129,22 @@ class Controller_Work_Issue extends Controller
 				'priority'		=> Logic_Issue::CHANGE_PRIORITY,
 				'status'		=> Logic_Issue::CHANGE_STATUS,
 				'progress'		=> Logic_Issue::CHANGE_PROGRESS,
-			);
-			$changes		= array(
+			];
+			$changes		= [
 				'modifiedAt'	=> time()
-			);
+			];
 			foreach( $changeTypes as $changeKey => $changeType ){
 				$value	= $request->get( $changeKey );
 				if( strlen( $value ) && $value != $issue->$changeKey )
 					$changes[$changeKey]	= $value;
 			}
 			if( count( $changes ) > 1 || $request->get( 'note') ){
-				$data	= array(
+				$data	= [
 					'issueId'	=> $issueId,
 					'userId'	=> $this->userId,
 					'note'		=> $request->get( 'note'),
 					'timestamp'	=> time(),
-				);
+				];
 				$noteId	= $modelNote->add( $data );
 				foreach( $changeTypes as $changeKey => $changeType ){
 					$value	= $request->get( $changeKey );
@@ -163,26 +163,26 @@ class Controller_Work_Issue extends Controller
 		$this->restart( './work/issue/edit/'.$issueId );
 	}
 
-	public function export( $limit = 10, $offset = 0 )
+	public function export( $limit = 10, $offset = 0 ): void
 	{
 		$request	= $this->env->getRequest();
 		if( !($filters	= $request->get( 'filters' ) ) )
-			$filters	= array(
+			$filters	= [
 				'type'		=> 0,
 				'status'	=> [1, 2, 3, 4, 5],
-			);
+			];
 		if( !($orders	= $request->get( 'orders' ) ) )
-			$orders	= array(
+			$orders	= [
 				'priority'	=> 'ASC',
 				'status'	=> 'ASC',
-			);
+			];
 		$modelIssue		= new Model_Issue( $this->env );
 		$issues		= $modelIssue->getAll( $filters, $orders, [$offset, $limit] );
 		print( json_encode( $issues ) );
 		exit;
 	}
 
-	public function filter( $mode = NULL, $modeValue = 0 )
+	public function filter( $mode = NULL, $modeValue = 0 ): void
 	{
 		$session	= $this->env->getSession();
 		switch( $mode )
@@ -206,7 +206,7 @@ class Controller_Work_Issue extends Controller
 		$this->restart( './work/issue' );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue' );
@@ -247,14 +247,14 @@ class Controller_Work_Issue extends Controller
 		$modelChange	= new Model_Issue_Change( $this->env );
 		$modelUser		= new Model_User( $this->env );
 
-		$numberTypes	= array(
+		$numberTypes	= [
 			0	=> $modelIssue->count( array_merge( $filters, ['type' => 0] ) ),
 			1	=> $modelIssue->count( array_merge( $filters, ['type' => 1] ) ),
 			2	=> $modelIssue->count( array_merge( $filters, ['type' => 2] ) ),
 			3	=> $modelIssue->count( array_merge( $filters, ['type' => 3] ) ),
-		);
+		];
 
-		$numberStates	= array(
+		$numberStates	= [
 			0	=> $modelIssue->count( array_merge( $filters, ['status'=> 0] ) ),
 			1	=> $modelIssue->count( array_merge( $filters, ['status' => 1] ) ),
 			2	=> $modelIssue->count( array_merge( $filters, ['status' => 2] ) ),
@@ -262,9 +262,9 @@ class Controller_Work_Issue extends Controller
 			4	=> $modelIssue->count( array_merge( $filters, ['status' => 4] ) ),
 			5	=> $modelIssue->count( array_merge( $filters, ['status' => 5] ) ),
 			6	=> $modelIssue->count( array_merge( $filters, ['status' => 6] ) ),
-		);
+		];
 
-		$numberPriorities	= array(
+		$numberPriorities	= [
 			0	=> $modelIssue->count( array_merge( $filters, ['priority' => 0] ) ),
 			1	=> $modelIssue->count( array_merge( $filters, ['priority' => 1] ) ),
 			2	=> $modelIssue->count( array_merge( $filters, ['priority' => 2] ) ),
@@ -272,7 +272,7 @@ class Controller_Work_Issue extends Controller
 			4	=> $modelIssue->count( array_merge( $filters, ['priority' => 4] ) ),
 			5	=> $modelIssue->count( array_merge( $filters, ['priority' => 5] ) ),
 			6	=> $modelIssue->count( array_merge( $filters, ['priority' => 6] ) ),
-		);
+		];
 
 		$numberProjects	= [];
 		foreach( $this->userProjects as $project ){
@@ -318,7 +318,7 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function search()
+	public function search(): void
 	{
 		$request	= $this->env->getRequest();
 		$terms		= explode( " ", trim( $request->get( 'term' ) ) );
@@ -349,10 +349,10 @@ class Controller_Work_Issue extends Controller
 	{
 		$this->logic		= new Logic_Issue( $this->env );
 		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
-		$this->userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );
+		$this->userProjects	= $this->logic->getUserProjects();
 	}
 
-	protected function checkIssue( $issueId, bool $strict = TRUE )
+	protected function checkIssue( string $issueId, bool $strict = TRUE )
 	{
 		$issue	= $this->logic->get( $issueId, TRUE );
 		$users	= $this->logic->getParticitatingUsers( $issueId );
@@ -366,7 +366,7 @@ class Controller_Work_Issue extends Controller
 		return NULL;
 	}
 
-	protected function noteChange( $issueId, $noteId, $type, $from, $to )
+	protected function noteChange( string $issueId, string $noteId, $type, $from, $to )
 	{
 		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
 	}

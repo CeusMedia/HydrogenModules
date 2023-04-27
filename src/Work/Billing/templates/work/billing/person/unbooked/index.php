@@ -1,14 +1,19 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $person */
+/** @var object[] $unpayedBillShares */
 
 $list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 if( $unpayedBillShares ){
 	$list	= [];
 	foreach( $unpayedBillShares as $unpayedBillShare ){
-		$link		= HtmlTag::create( 'a', $unpayedBillShare->bill->number, array(
+		$link		= HtmlTag::create( 'a', $unpayedBillShare->bill->number, [
 			'href'	=> './work/billing/bill/edit/'.$unpayedBillShare->bill->billId
-		) );
+		] );
 		$billTitle	= $unpayedBillShare->bill->title;
 		$amount		= number_format( $unpayedBillShare->amount, 2, ',', '.' ).'&nbsp;&euro;';
 		$list[]	= HtmlTag::create( 'tr', array(

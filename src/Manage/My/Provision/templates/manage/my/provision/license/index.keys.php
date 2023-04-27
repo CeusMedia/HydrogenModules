@@ -7,9 +7,9 @@ if( !$userLicensesWithNotAssignedKeys )
 
 $list	= [];
 foreach( $userLicensesWithNotAssignedKeys as $userLicense ){
-	$link	= HtmlTag::create( 'a', $userLicense->productLicense->title, array(
+	$link	= HtmlTag::create( 'a', $userLicense->productLicense->title, [
 		'href'	=> './manage/my/provision/license/view/'.$userLicense->userLicenseId
-	) );
+	] );
 	$label	= $link.'<br/>Produkt: '.$userLicense->product->title;
 	$list[]	= HtmlTag::create( 'tr', array(
 		HtmlTag::create( 'td', $label ),

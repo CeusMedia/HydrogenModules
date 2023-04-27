@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index.list'];
 
-$states	= 	array(
+$states	= 	[
 	'0'		=> '<br/><span class="alert alert-error">Noch keiner Person zugewiesen.</span>',
 	'1'		=> 'bereit',
 	'2'		=> 'aktuell aktiv',
 	'3'		=> 'abgelaufen',
-);
+];
 
 $iconsStatus	= array(
 	0	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),
@@ -20,12 +20,12 @@ $iconsStatus	= array(
 
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 
-$rowColors	= array(
+$rowColors	= [
 	0	=> '',
 	1	=> 'warning',
 	2	=> 'success',
 	3	=> 'info',
-);
+];
 if( $userLicenseKeys ){
 	$rank	= 0;
 	$list	= [];
@@ -49,16 +49,16 @@ if( $userLicenseKeys ){
 		}
 		if( $userLicenseKey->status == 0 ){
 		}
-		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseKeyId, array(
+		$link	= HtmlTag::create( 'a', $userLicenseKey->userLicenseKeyId, [
 			'href'	=> './manage/my/provision/license/view/'.$userLicenseKey->userLicenseKeyId,
-		) );
+		] );
 		$userName	= '---';//HtmlTag::create( 'small', $userLicense->user->firstname.' '.$userLicense->user->firstname, ['class' => 'muted'] );
 		$product	= $userLicenseKey->product->title;
 		if( $userLicenseKey->product->url )
-			$product	= HtmlTag::create( 'a', $product, array(
+			$product	= HtmlTag::create( 'a', $product, [
 				'href'		=> $userLicenseKey->product->url,
 				'target'	=> '_blank',
-			) );
+			] );
 		$rank++;
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link.'<br/>Nummer: '.$rank ),
@@ -72,10 +72,10 @@ $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table'] );
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', [
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
-) );
+] );
 
 $panelList		= '
 <div class="content-panel">

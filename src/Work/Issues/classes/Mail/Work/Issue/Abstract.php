@@ -4,14 +4,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 {
-	protected $words;
-	protected $factsAll;
-	protected $factsMain;
-	protected $logicProject;
-	protected $modelUser;
-	protected $modelIssue;
-	protected $modelIssueNote;
-	protected $modelIssueChange;
+	protected array $words;
+	protected ?View_Helper_Mail_Facts $factsAll		= NULL;
+	protected ?View_Helper_Mail_Facts $factsMain	= NULL;
+	protected Logic_Project $logicProject;
+	protected Model_User $modelUser;
+	protected Model_Issue $modelIssue;
+	protected Model_Issue_Note $modelIssueNote;
+	protected Model_Issue_Change $modelIssueChange;
 
 	/**
 	 *	This method is called after construction is done and right before generation takes place.
@@ -38,7 +38,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 	{
 		$issue		= $data['issue'];
 
-		$this->factsMain	= new View_Helper_Mail_Facts( $this->env );
+		$this->factsMain	= new View_Helper_Mail_Facts();
 		$this->factsMain->setLabels( $this->words['edit'] );
 		$this->factsMain->setListClass( 'facts-vertical' );
 		$this->factsMain->setTextLabelLength( 13 );
@@ -63,7 +63,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 			$issue->content.PHP_EOL
 		);
 
-		$this->factsAll	= new View_Helper_Mail_Facts( $this->env );
+		$this->factsAll	= new View_Helper_Mail_Facts();
 		$this->factsAll->setLabels( $this->words['edit'] );
 		$this->factsAll->setListClass( 'not-facts-vertical dl-horizontal' );
 		$this->factsAll->setTextLabelLength( 13 );
@@ -132,7 +132,6 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 			return $helper->render();
 		}
 		$link	= HtmlElements::Link( './member/view/'.$user->userId, $user->username );
-		$user	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$user->roleId] );
-		return $user;
+		return HtmlTag::create( 'span', $link, ['class' => 'role role'.$user->roleId] );
 	}
 }

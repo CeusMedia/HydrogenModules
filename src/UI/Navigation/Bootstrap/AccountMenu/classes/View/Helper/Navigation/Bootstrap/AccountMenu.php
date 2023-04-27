@@ -1,25 +1,26 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_AccountMenu
 {
-	public $guestLabel			= "Guest";
-	public $guestEmail			= "<em>(not logged in)</em>";
+	public string $guestLabel			= "Guest";
+	public string $guestEmail			= "<em>(not logged in)</em>";
 
-	protected $env;
-	protected $user;
-	protected $showAvatar		= TRUE;
-	protected $showEmail		= FALSE;
-	protected $showFullname		= TRUE;
-	protected $showUsername		= TRUE;
-	protected $linksInside		= [];
-	protected $linksOutside		= [];
-	protected $imageSize		= 32;
-	protected $menu;
+	protected Environment $env;
+	protected ?object $user				= NULL;
+	protected bool $showAvatar			= TRUE;
+	protected bool $showEmail			= FALSE;
+	protected bool $showFullname		= TRUE;
+	protected bool $showUsername		= TRUE;
+	protected array $linksInside		= [];
+	protected array $linksOutside		= [];
+	protected int $imageSize			= 32;
+	protected ?Model_Menu $menu			= NULL;
 	protected $scope;
-	protected $moduleConfig;
+	protected Dictionary $moduleConfig;
 
 	public function __construct( Environment $env )
 	{
@@ -37,11 +38,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	 */
 	public function addInsideLink( string $path, string $label, string $icon = NULL ): self
 	{
-		$this->linksInside[]	= (object)array(
+		$this->linksInside[]	= (object)[
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
-		);
+		];
 		return $this;
 	}
 
@@ -61,11 +62,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	 */
 	public function addOutsideLink( string $path, string $label, string $icon = NULL ): self
 	{
-		$this->linksOutside[]	= (object) array(
+		$this->linksOutside[]	= (object) [
 			'icon'		=> $icon,
 			'label'		=> $label,
 			'link'		=> $path,
-		);
+		];
 		return $this;
 	}
 
@@ -140,16 +141,16 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			$avatar,
 			$labels,
 			HtmlTag::create( 'div', '', ['class' => 'clearfix'] ),
-		), array(
+		), [
 			'id' 			=> 'drop-account',
 			'role'			=> 'button',
 			'class'			=> 'dropdown-toggle',
 			'data-toggle'	=> 'dropdown',
-		) );
-		return HtmlTag::create( 'div', [$trigger, $links], array(
+		] );
+		return HtmlTag::create( 'div', [$trigger, $links], [
 			'id' => 'account-menu',
 			'class' => 'dropdown '.$classMenu
-		) );
+		] );
 	}
 
 	protected function renderMenuLinks(): string
@@ -161,50 +162,52 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		foreach( $pages as $page ){
 			$class	= $page->active ? 'active' : NULL;
 //			$href	= $page->path == "index" ? './' : './'.$page->link;
-			$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), array(
+			$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), [
 				'role'		=> "menuitem",
 				'tabindex'	=> "-1",
 				'href'		=> $page->link,
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		return HtmlTag::create( 'ul', $list, array(
+		return HtmlTag::create( 'ul', $list, [
 			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
-		) );
+		] );
 	}
 
 	protected function renderSetLinks( array $links ): string
 	{
+		$list	= [];
 		foreach( $links as $link ){
 			if( is_object( $link ) ){
 				$icon	= "";
 				if( $link->icon )
 					$icon	= HtmlTag::create( 'i', "", ['class' => $link->icon] ).'&nbsp;';
-				$attributes	= array(
+				$attributes	= [
 					'role'		=> "menuitem",
 					'tabindex'	=> "-1",
 					'href'		=> $link->link,
-				);
+				];
 				$link	= HtmlTag::create( 'a', $icon.$link->label, $attributes );
 				$list[]	= HtmlTag::create( 'li', $link , ['role' => 'presentation'] );
 			}
 			else{
-				$attributes	= array(
+				$attributes	= [
 					'role'	=> "presentation",
 					'class'	=> "divider"
-				);
+				];
 				$list[]	= HtmlTag::create( 'li', "", $attributes );
 			}
 		}
-		$attributes	= array(
+		$attributes	= [
 			'class'				=> "dropdown-menu pull-right",
 			'role'				=> "menu",
 			'aria-labelledby'	=> "drop-account",
-		);
-		$links	= HtmlTag::create( 'ul', $list, $attributes );
-		return $links;
+		];
+		if( !$list )
+			return '';
+		return HtmlTag::create( 'ul', $list, $attributes );
 	}
 
 	public function setLinks( $menu, $scope ): self
@@ -214,6 +217,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		return $this;
 	}
 
+	/**
+	 *	@param		object|string $userObjectOrId
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function setUser( $userObjectOrId ): self
 	{
 		if( is_object( $userObjectOrId ) )
@@ -272,9 +280,9 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		if( !isset( $entry->icon ) )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
-			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
+//		if( !preg_match( "/^fa/", $entry->icon ) )
+//			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon	= HtmlTag::create( 'i', '', ['class' => $class] );
 		return $icon.'&nbsp;'.$entry->label;
-    }
+	}
 }

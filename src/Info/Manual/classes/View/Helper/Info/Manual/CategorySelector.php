@@ -6,9 +6,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_CategorySelector
 {
-	protected $env;									// \CeusMedia\HydrogenFramework\Environment
-	protected $categories		 = [];
-	protected $categoryId;
+	protected Environment $env;						// \CeusMedia\HydrogenFramework\Environment
+	protected array $categories			= [];
+	protected ?string $categoryId		= NULL;
 
 	/**
 	 *	Constructor.
@@ -27,9 +27,9 @@ class View_Helper_Info_Manual_CategorySelector
 
 		if( !$this->categories ){
 			$model	= new Model_Manual_Category( $this->env );
-			$this->categories	= $model->getAll( array(
+			$this->categories	= $model->getAll( [
 				'status'	=> '>= '.Model_Manual_Category::STATUS_NEW,
-			), ['rank' => 'ASC'] );
+			], ['rank' => 'ASC'] );
 		}
 		if( count( $this->categories ) === 1 )
 			return '';
@@ -38,11 +38,11 @@ class View_Helper_Info_Manual_CategorySelector
 			$options[$category->manualCategoryId]	= $category->title;
 		}
 		$options	= HtmlElements::Options( $options, $categoryId );
-		$select		= HtmlTag::create( 'select', $options, array(
+		$select		= HtmlTag::create( 'select', $options, [
 			'id'		=> 'select_category',
 			'class'		=> 'span12',
 //			'onchange'	=> 'document.location.href=\'./info/manual/category/'.$category->manualCategoryId.'\';',
-		) );
+		] );
 		return '
 			<div class="row-fluid">
 				<div class="span12">
@@ -53,13 +53,13 @@ class View_Helper_Info_Manual_CategorySelector
 			<script></script>';
 	}
 
-	public function setActiveCategoryId( $categoryId ): self
+	public function setActiveCategoryId( string $categoryId ): self
 	{
 		$this->categoryId	= $categoryId;
 		return $this;
 	}
 
-	public function setCategories( $categories ): self
+	public function setCategories( array $categories ): self
 	{
 		$this->categories	= $categories;
 		return $this;

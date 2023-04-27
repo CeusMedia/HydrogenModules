@@ -41,11 +41,11 @@ $optWorker		= HtmlElements::Options( $optWorker, $issue->managerId );
 
 /*
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-success btn-small btn-mini',
-) );
+] );
 */
 
 

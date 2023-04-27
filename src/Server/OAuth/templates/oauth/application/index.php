@@ -24,17 +24,17 @@ if( $applications ){
 		), array( 'class' => $trClasses[(int) $application->status]) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "30%", "40%", "15%", "15%" );
-	$theads		= HtmlElements::TableHeads( array(
+	$theads		= HtmlElements::TableHeads( [
 		"Applikation",
 		"Beschreibung",
 		"Zustand",
 		"erstellt / verändert"
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $theads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> 'table table-striped'
-	) );
+	] );
 }
 */
 
@@ -73,24 +73,24 @@ if( $applications ){
 		), ['class' => NULL] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
-	$theads		= HtmlElements::TableHeads( array(
+	$theads		= HtmlElements::TableHeads( [
 		'Applikation',
 		'Vertraulichkeit',
 		'Zustand',
 		'erstellt / verändert',
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $theads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
-	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> 'table table-striped'
-	) );
+	] );
 }
 
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' hinzufügen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
 	'class'	=> 'btn btn-primary btn-small',
 	'href'	=> './oauth/application/add',
-) );
+] );
 return '
 <h2 class="muted">OAuth-Server</h2>
 <div class="content-panel">

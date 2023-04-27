@@ -1,22 +1,27 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var object $corporation */
+/** @var object[] $payins */
 
 //$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Einzahlung', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Einzahlung', [
 	'href'			=> '#modal-add-payin',
 	'class'			=> 'btn btn-success',
 	'role'			=> 'button',
 	'data-toggle'	=> 'modal',
-) );
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', array(
+] );
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' buchen', [
 	'type'		=> 'submit',
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 	'disabled'	=> $corporation->balance < 1 ? 'disabled' : NULL,
-) );
+] );
 
 $helper	= new View_Work_Billing_Helper_Transactions( $env );
 $helper->setHeading( 'Einzahlungen' );

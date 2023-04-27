@@ -6,24 +6,24 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Dev_Todo extends Controller{
 	public function index(){
 		$exts		= ['php5', 'php', 'js', 'css'];
-		$sources	= array(
-			array(
+		$sources	= [
+			[
 				'path'	=> './',
 				'title'	=> 'self'
-			),
-			array(
+			],
+			[
 				'path'	=> '../../projects/Chat/client',
 				'title'	=> 'Chat::Client'
-			),
-			array(
+			],
+			[
 				'path'	=> '../../projects/Chat/admin',
 				'title'	=> 'Chat::Admin'
-			),
-			array(
+			],
+			[
 				'path'	=> '../../projects/Chat/server',
 				'title'	=> 'Chat::Server'
-			),
-		);
+			],
+		];
 		foreach( $sources as $nr => $source ){
 			$sources[$nr]['exts']	= empty( $source['exts'] ) ? $exts : $source['exts'];
 			$sources[$nr]['data']	= $this->check( $source['path'], $sources[$nr]['exts'] );

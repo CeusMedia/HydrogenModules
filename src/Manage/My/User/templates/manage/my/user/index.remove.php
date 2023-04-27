@@ -3,13 +3,13 @@
 if( !$env->getAcl()->has( 'manage/my/user', 'remove' ) )
 	return;
 
-extract( $view->populateTexts( array(
+extract( $view->populateTexts( [
 	'panel.remove.top',
 	'panel.remove.above',
 	'panel.remove.info',
 	'panel.remove.below',
 	'panel.remove.bottom',
-), 'html/manage/my/user/' ) );
+], 'html/manage/my/user/' ) );
 
 return '<div class="content-panel">
 	<h3>Konto entfernen</h3>

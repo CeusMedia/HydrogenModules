@@ -1,21 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_ModalTrigger
 {
-	protected $env;
+	protected WebEnvironment $env;
 
-	protected array $attributes	= [];
-	protected $id;
-	protected $label;
-	protected $modalId;
+	protected array $attributes		= [];
+	protected ?string $id			= NULL;
+	protected ?string $label		= NULL;
+	protected ?string $modalId		= NULL;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		object		$env			Instance of Hydrogen Environment
+	 *	@param		WebEnvironment		$env			Instance of Hydrogen Environment
 	 */
-	public function __construct( $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env		= $env;
 	}
@@ -76,7 +77,7 @@ class View_Helper_ModalTrigger
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setId( $id ): self
+	public function setId( string $id ): self
 	{
 		$this->id		= $id;
 		return $this;
@@ -89,7 +90,7 @@ class View_Helper_ModalTrigger
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setLabel( $label ): self
+	public function setLabel( string $label ): self
 	{
 		$this->label	= $label;
 		return $this;
@@ -102,7 +103,7 @@ class View_Helper_ModalTrigger
 	 *	@return		self
 	 *	@todo		code doc
 	 */
-	public function setModalId( $modalId ): self
+	public function setModalId( string $modalId ): self
 	{
 		$this->modalId	= $modalId;
 		return $this;

@@ -50,9 +50,9 @@ class Logic_Catalog_Bookstore extends Logic
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
 		if( !$article )
 			return FALSE;
-		$this->modelArticle->edit( $articleId, array(
+		$this->modelArticle->edit( $articleId, [
 			'quantity'	=> $article->quantity + $change
-		) );
+		] );
 		return $article->quantity + $change;
 	}
 
@@ -122,6 +122,7 @@ class Logic_Catalog_Bookstore extends Logic
 		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.article.'.$articleId ) ) )
 			return (object) $data;
 		$this->checkArticleId( $articleId, TRUE );
+		/** @var object $data */
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.bookstore.article.'.$articleId, $data );
 		return $data;
@@ -488,18 +489,16 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@access		public
 	 *	@param		string		$articleId			ID of Article
 	 *	@return		bool
-	 *	@throws		ReflectionException
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
 	 */
 	public function isFuture( string $articleId ): bool
 	{
-		$tc		= new TimeConverter();
-		$model	= new Model_Article( $this->env, $articleId );
-		$data	= $model->getData( true );
-		$format	= strpos( $data['publication'], "." ) ? 'date' : 'year';
-		$time	= $tc->convertToTimestamp( $data['publication'], $format );
+		$tc			= new TimeConverter();
+		$article	= $this->modelArticle->get( $articleId );
+		$format		= strpos( $article->publication, "." ) ? 'date' : 'year';
+		$time		= $tc->convertToTimestamp( $article->publication, $format );
 		return $time > time();
 	}
 

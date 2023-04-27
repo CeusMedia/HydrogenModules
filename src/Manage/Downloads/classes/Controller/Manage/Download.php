@@ -11,22 +11,26 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 class Controller_Manage_Download extends Controller
 {
 	/**	@var	Messenger										$messenger	*/
-	protected $messenger;
+	protected Messenger $messenger;
+
+	protected Logic_Frontend $frontend;
 
 	/**	@var	Model_Download_File								$modelFile			Database model of files */
-	protected $modelFile;
+	protected Model_Download_File $modelFile;
 
 	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
-	protected $modelFolder;
+	protected Model_Download_Folder $modelFolder;
 
 	/**	@var	Dictionary										$options			Module configuration object */
-	protected $options;
+	protected Dictionary $options;
 
 	/**	@var	string											$path				Base path to download files */
-	protected $path;
+	protected string $pathBase;
 
 	/**	@var	array											$rights				List of access rights of current user */
-	protected $rights		= [];
+	protected array $rights		= [];
+
+	protected object $messages;
 
 	public function addFolder( $folderId = NULL )
 	{
@@ -34,22 +38,22 @@ class Controller_Manage_Download extends Controller
 		$folder		= trim( $this->env->getRequest()->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
-			$url	= ( $folderId ? $folderId : NULL).'?input_folder='.rawurlencode( $folder );
+			$url	= ( $folderId ?: NULL ).'?input_folder='.rawurlencode( $folder );
 			$this->restart( $url, TRUE );
 		}
-		else if( file_exists( $this->path.$path.$folder ) ){
+		else if( file_exists( $this->pathBase.$path.$folder ) ){
 			$this->messenger->noteError( sprintf( 'Ein Eintrag <small>(ein Ordner oder eine Datei)</small> mit dem Namen "%s" existiert in diesem Ordner bereits.', $folder ) );
 			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
 		else{
-			FolderEditor::createFolder( $this->path.$path.$folder );
+			FolderEditor::createFolder( $this->pathBase.$path.$folder );
 			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
-			$newId	= $this->modelFolder->add( array(
+			$newId	= $this->modelFolder->add( [
 				'parentId'	=> (int) $folderId,
 				'rank'		=> $this->countFolders( $folderId ),
 				'title'		=> $folder,
 				'createdAt'	=> time(),
-			) );
+			] );
 			$this->updateNumber( $folderId, 'folder', 1 );
 			$this->restart( 'index/'.$folderId, TRUE );
 		}
@@ -113,7 +117,7 @@ class Controller_Manage_Download extends Controller
 		if( $folderId ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid folder ID: '.$folderId ) );
+				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -123,7 +127,7 @@ class Controller_Manage_Download extends Controller
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
 		$this->addData( 'folderId', $folderId );
-		$this->addData( 'pathBase', $this->path );
+		$this->addData( 'pathBase', $this->pathBase );
 		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'steps', $this->getStepsFromFolderId( $folderId ) );
@@ -132,7 +136,7 @@ class Controller_Manage_Download extends Controller
 	public function rankFolder( $folderId, $downwards = NULL )
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$direction	= (boolean) $downwards ? +1 : -1;
+		$direction	= (bool) $downwards ? +1 : -1;
 		if( !( $folder = $this->modelFolder->get( (int) $folderId ) ) )
 			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
 		else{
@@ -153,7 +157,7 @@ class Controller_Manage_Download extends Controller
 			$this->messenger->noteError( 'Invalid download file ID: '.$fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= $this->path;
+		$path	= $this->pathBase;
 		if( $file->downloadFolderId ){
 			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		}
@@ -169,7 +173,7 @@ class Controller_Manage_Download extends Controller
 		if( $folderId ){
 			$folder		= $this->modelFolder->get( $folderId );
 			if( !$folder ){
-				$this->messenger->noteError( sprintf( 'Invalid download folder ID: '.$folderId ) );
+				$this->messenger->noteError( sprintf( 'Invalid download folder ID: %s', $folderId ) );
 			}
 			else{
 				$hasSubfolders	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
@@ -190,8 +194,8 @@ class Controller_Manage_Download extends Controller
 
 	public function scan()
 	{
-		$statsImport	= (object) array( 'folders' => [], 'files' => [] );
-		$statsClean		= (object) array( 'folders' => [], 'files' => [] );
+		$statsImport	= (object) ['folders' => [], 'files' => []];
+		$statsClean		= (object) ['folders' => [], 'files' => []];
 		$this->scanRecursive( 0, '', $statsImport );
 		$this->cleanRecursive( 0, '', $statsClean );
 
@@ -201,7 +205,7 @@ class Controller_Manage_Download extends Controller
 			if( $addedSomething ){
 				$list	= [];
 				foreach( $statsImport->files as $file ){
-					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
+					$path	= HtmlTag::create( 'small', $file->pathBase, ['class' => "muted"] );
 					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
 				$list	= HtmlTag::create( 'ul', $list );
@@ -210,7 +214,7 @@ class Controller_Manage_Download extends Controller
 			if( $removedSomething ){
 				$list	= [];
 				foreach( $statsClean->files as $file ){
-					$path	= HtmlTag::create( 'small', $file->path, ['class' => "muted"] );
+					$path	= HtmlTag::create( 'small', $file->pathBase, ['class' => "muted"] );
 					$list[]	= HtmlTag::create( 'li', $path.$file->title );
 				}
 				$list	= HtmlTag::create( 'ul', $list );
@@ -252,7 +256,7 @@ class Controller_Manage_Download extends Controller
 				$helperError	= new View_Helper_UploadError( $this->env );
 				$helperError->setUpload( $logicUpload );
 				$message	= $helperError->render();
-				$this->messenger->noteError( $message ? $message : $e->getMessage() );
+				$this->messenger->noteError( $message ?: $e->getMessage() );
 			}
 		}
 		$this->restart( 'index/'.$folderId, TRUE );
@@ -274,66 +278,70 @@ class Controller_Manage_Download extends Controller
 		$this->addData( 'mimeType', mime_content_type( $path.$file->title ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->messenger	= $this->env->getMessenger();
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->rights		= $this->env->getAcl()->index( 'manage/downloads' );
-		$this->path			= $this->frontend->getModuleConfigValue( 'info_downloads', 'path' );
+		$this->pathBase		= $this->frontend->getModuleConfigValue( 'info_downloads', 'path' );
 		$this->modelFolder	= new Model_Download_Folder( $this->env );
 		$this->modelFile	= new Model_Download_File( $this->env );
 		$this->messages		= (object) $this->getWords( 'msg' );
 	}
 
-	protected function checkFolder( $folderId )
+	protected function checkFolder( string $folderId )
 	{
 		if( (int) $folderId > 0 ){
 			$folder		= $this->modelFolder->get( $folderId );
-			if( $folder && file_exists( $this->path.$folder->title ) )
+			if( $folder && file_exists( $this->pathBase.$folder->title ) )
 				return TRUE;
 			if( !$folder )
 				$this->messenger->noteError( 'Invalid folder with ID '.$folderId );
-			else if( file_exists( $this->path.$folder->title ) )
+			else if( file_exists( $this->pathBase.$folder->title ) )
 				$this->messenger->noteError( 'Folder %s is not existing', $folder->title );
 		}
 		else{
-			if( file_exists( $this->path ) )
+			if( file_exists( $this->pathBase ) )
 				return TRUE;
-			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
+			$this->messenger->noteError( 'Base folder %s is not existing', $this->pathBase );
 		}
 		return FALSE;
 	}
 
-	protected function cleanRecursive( $parentId, $path, $stats ){
+	protected function cleanRecursive( string $parentId, $path, $stats ){
 		$path		= $this->getPathFromFolderId( $parentId, FALSE );
 		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId] );
 		$files		= $this->modelFile->getAll( ['downloadFolderId' => $parentId] );
 		foreach( $folders as $folder ){
 			$this->cleanRecursive( $folder->downloadFolderId, $path.$folder->title.'/', $stats );
-			if( !file_exists( $this->path.$path.$folder->title ) ){
+			if( !file_exists( $this->pathBase.$path.$folder->title ) ){
 				$this->modelFolder->remove( $folder->downloadFolderId );
 				$stats->folders[]	= (object) ['title' => $folder->title, 'path' => $path];
 			}
 		}
 		foreach( $files as $file ){
-			if( !file_exists( $this->path.$path.$file->title ) ){
+			if( !file_exists( $this->pathBase.$path.$file->title ) ){
 				$this->modelFile->remove( $file->downloadFileId );
 				$stats->files[]	= (object) ['title' => $file->title, 'path' => $path];
 			}
 		}
 	}
 
-	protected function countFolders( $folderId )
+	protected function countFolders( string $folderId ): int
 	{
 		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
-	protected function countIn( $path, $recursive = FALSE )
+	protected function countIn( string $path, bool $recursive = FALSE ): array
 	{
 		$files		= 0;
 		$folders	= 0;
 		if( $recursive ){
-			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
+			$index		= RecursiveFolderLister::getMixedList( $this->pathBase.$path );
 			foreach( $index as $entry )
 //				if( !$entry->isDot() )
 					$entry->isDir() ? $folders++ : $files++;
@@ -344,7 +352,7 @@ class Controller_Manage_Download extends Controller
 		return ['folders' => $folders, 'files' => $files];
 	}
 
-	protected function getPathFromFolderId( $folderId, $withBasePath = FALSE )
+	protected function getPathFromFolderId( string $folderId, bool $withBasePath = FALSE ): string
 	{
 		$path	= '';
 		while( $folderId ){
@@ -354,10 +362,10 @@ class Controller_Manage_Download extends Controller
 			$path		= $folder->title.'/'.$path;
 			$folderId	= $folder->parentId;
 		}
-		return $withBasePath ? $this->path.$path : $path;
+		return $withBasePath ? $this->pathBase.$path : $path;
 	}
 
-	protected function getStepsFromFolderId( $folderId )
+	protected function getStepsFromFolderId( string $folderId ): array
 	{
 		$steps		= [];
 		while( $folderId ){
@@ -367,13 +375,12 @@ class Controller_Manage_Download extends Controller
 			$steps[$folder->downloadFolderId]	= $folder;
 			$folderId	= $folder->parentId;
 		}
-		$steps	= array_reverse( $steps );
-		return $steps;
+		return array_reverse( $steps );
 	}
 
 	protected function scanRecursive( $parentId, $path, $stats )
 	{
-		$index	= new DirectoryIterator( $this->path.$path );
+		$index	= new DirectoryIterator( $this->pathBase.$path );
 		foreach( $index as $entry ){
 			if( $entry->isDot() || substr( $entry->getFilename(), 0, 1 ) === '.' )
 				continue;
@@ -381,10 +388,10 @@ class Controller_Manage_Download extends Controller
 			$nrFiles	= $this->modelFile->count( ['downloadFolderId' => $parentId] );
 			$entryName	= $entry->getFilename();
 			if( $entry->isDir() ){
-				$data	= array(
+				$data	= [
 					'parentId'	=> $parentId,
 					'title'		=> $entryName
-				);
+				];
 				$folder	= $this->modelFolder->getByIndices( $data );
 				if( $folder )
 					$folderId	= $folder->downloadFolderId;
@@ -398,10 +405,10 @@ class Controller_Manage_Download extends Controller
 				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
 			}
 			else if( $entry->isFile() ){
-				$data		= array(
+				$data		= [
 					'downloadFolderId'	=> $parentId,
 					'title'				=> $entryName
-				);
+				];
 				if( !$this->modelFile->count( $data ) ){
 					$data['rank']		= $nrFiles++;
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );
@@ -413,7 +420,7 @@ class Controller_Manage_Download extends Controller
 		}
 	}
 
-	protected function updateNumber( $folderId, $type, $diff = 1 )
+	protected function updateNumber( string $folderId, string $type, $diff = 1 ): void
 	{
 		if( !in_array( $type, ['folder', 'file'] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );

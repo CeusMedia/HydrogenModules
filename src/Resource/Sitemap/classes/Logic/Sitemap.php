@@ -10,7 +10,7 @@ class Logic_Sitemap{
 	protected $config;
 	protected $env;
 	protected $links		= [];
-	protected $frequencies  = array(
+	protected $frequencies  = [
 		'always',
 		'hourly',
 		'daily',
@@ -18,17 +18,17 @@ class Logic_Sitemap{
 		'monthly',
 		'yearly',
 		'never'
-	);
+	];
 
 	protected $defaultFrequency	= 'yearly';
 	protected $defaultPriority	= 0.1;
 
-    public $providers	= array(
+    public $providers	= [
 //		'ask'		=> "http://submissions.ask.com/ping?sitemap=%s",
 		'bing'		=> "http://www.bing.com/ping?sitemap=%s",
 		'google'	=> "http://www.google.com/webmasters/tools/ping?sitemap=%s",
 		'moreover'	=> "http://api.moreover.com/ping?u=%s",
-    );
+    ];
 
 	protected function __construct( Environment $env ){
 		$this->env		= $env;

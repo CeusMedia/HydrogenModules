@@ -158,10 +158,10 @@ return '
 						'href'	=> './server/log/exception'.( $page ? '/'.$page : '' ),
 						'class'	=> 'btn',
 					) ).'
-					'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+					'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 						'href'	=> './server/log/exception/remove/'.$exception->exceptionId.'/'.$page,
 						'class'	=> 'btn btn-danger',
-					) ).'
+					] ).'
 				</div>
 			</div>
 		</div>

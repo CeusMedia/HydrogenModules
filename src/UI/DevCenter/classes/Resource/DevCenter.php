@@ -19,32 +19,32 @@ class Resource_DevCenter
 	protected function __construct( Environment $env )
 	{
 		$this->env		= $env;
-		$this->modules	= array(
-			'request'		=> array(
+		$this->modules	= [
+			'request'		=> [
 				'label'		=> "Request",
 				'resource'	=> $_REQUEST,
-			),
-			'session'		=> array(
+			],
+			'session'		=> [
 				'label'		=> "Session",
 				'resource'	=> $_SESSION,
-			),
-			'cookie'		=> array(
+			],
+			'cookie'		=> [
 				'label'		=> "Cookie",
 				'resource'	=> $_COOKIE,
-			),
-			'files'		=> array(
+			],
+			'files'		=> [
 				'label'		=> "Files",
 				'resource'	=> $_FILES,
-			),
-			'env'			=> array(
+			],
+			'env'			=> [
 				'label'		=> "Environment",
 				'resource'	=> $_ENV,
-			),
-			'server'		=> array(
+			],
+			'server'		=> [
 				'label'		=> "Server",
 				'resource'	=> $_SERVER,
-			),
-		);
+			],
+		];
 	}
 
 	protected function __clone()
@@ -53,11 +53,11 @@ class Resource_DevCenter
 
 	public function add( string $key, string $label, $value ): self
 	{
-		$this->resources[]	= (object) array(
+		$this->resources[]	= (object) [
 			'key'	=> $key,
 			'label'	=> $label,
 			'value'	=> $value,
-		);
+		];
 		return $this;
 	}
 

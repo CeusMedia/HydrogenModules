@@ -41,18 +41,18 @@ try{
 		$countUserPanels	= count( explode( ',', $dashboard->panels ) );
 		$maxUserBoards		= $moduleConfig->get( 'perUser.maxBoards' );
 		$maxUserPanels		= $moduleConfig->get( 'perUser.maxPanels' );
-		$buttonAddBoard		= HtmlTag::create( 'button', $iconAddBoard, array(
+		$buttonAddBoard		= HtmlTag::create( 'button', $iconAddBoard, [
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAdd',
 			'title'		=> $countUserBoards >= $maxUserBoards ? 'Maximum erreicht' : 'neues Dashboard',
 			'disabled'	=> $countUserBoards >= $maxUserBoards ? 'disabled' : NULL,
-		) );
-		$buttonAddPanel		= HtmlTag::create( 'button', $iconAddPanel, array(
+		] );
+		$buttonAddPanel		= HtmlTag::create( 'button', $iconAddPanel, [
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAddPanel',
 			'title'		=> $countUserPanels >= $maxUserPanels ? 'Maximum erreicht' : 'neues Panel im Dashboard',
 			'disabled'	=> $countUserPanels >= $maxUserPanels ? 'disabled' : NULL,
-		) );
+		] );
 		$buttonEditTitle	= HtmlTag::create( 'button', $iconEditTitle, array(
 			'type'				=> 'button',
 			'class'				=> 'btn btn-small button-rename-board',

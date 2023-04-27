@@ -4,23 +4,23 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconProcess  = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$optProcess = array(
+$optProcess = [
   'turn'  => 'drehen',
   'flip'  => 'spiegeln',
-);
+];
 $optProcess = HtmlElements::Options( $optProcess );
 
-$optTurnDegree  = array(
+$optTurnDegree  = [
   '90'  => '90°',
   '180'  => '180°',
   '270'  => '270°',
-);
+];
 $optTurnDegree = HtmlElements::Options( $optTurnDegree );
 
-$optTurnDirection  = array(
+$optTurnDirection  = [
   '1'   => 'nach rechts',
   '-1'  => 'nach links',
-);
+];
 $optTurnDirection = HtmlElements::Options( $optTurnDirection );
 
 $optFlipDirection = array(

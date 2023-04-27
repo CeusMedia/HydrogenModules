@@ -1,9 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay{
-
-	public function render(){
+class View_Helper_Panel_Mangopay_BankAccounts extends View_Helper_Panel_Mangopay
+{
+	public function render(): string
+	{
 		$list	= [];
 		foreach( $this->data as $bankAccount ){
 			$link	= HtmlTag::create( 'a', $bankAccount->Id, ['href' => './manage/my/mangopay/bank/view/'.$bankAccount->Id] );

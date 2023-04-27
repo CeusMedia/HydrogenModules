@@ -14,10 +14,10 @@ extract( $view->populateTexts( ['placeholders'], 'html/work/newsletter/template/
 
 //  --  PANEL: PREVIEW  --  //
 $urlPreview			= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
-$iframeText			= HtmlTag::create( 'iframe', '', array(
+$iframeText			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewText	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -44,14 +44,14 @@ $panelPreview	= '
 	</div>
 </div>';
 
-$textarea		= HtmlTag::create( 'textarea', $template->plain, array(
+$textarea		= HtmlTag::create( 'textarea', $template->plain, [
 	'name'		=> 'plain',
 	'id'		=> 'input_plain',
 	'class'		=> 'span12 CodeMirror-auto',
 	'rows'		=> 30,
 	'readonly'	=> $isUsed ? "readonly" : NULL,
 //	'disabled'	=> $isUsed ? "disabled" : NULL,
-) );
+] );
 
 $content	= $textTop.'
 <div class="row-fluid">

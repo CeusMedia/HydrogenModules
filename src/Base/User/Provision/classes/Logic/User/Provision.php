@@ -102,10 +102,10 @@ class Logic_User_Provision extends Logic
 		if( $result )
 			return FALSE;
 
-		$userLicenseKeys	= $this->modelUserKey->getAll( array(
+		$userLicenseKeys	= $this->modelUserKey->getAll( [
 			'productLicenseId'	=> $userLicense->productLicenseId,
 			'status'			=> Model_Provision_User_License_Key::STATUS_ASSIGNED,
-		) );
+		] );
 		foreach( $userLicenseKeys as $key )
 			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $key->userId );
 		return TRUE;
@@ -625,7 +625,7 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo 		kriss: finish implementation
+	 *	@todo 		 finish implementation
 	 */
 	public function setUserLicenseStatus( $userLicenseId, $status )
 	{
@@ -712,7 +712,7 @@ class Logic_User_Provision extends Logic
 		foreach( $usersRevoked as $userId => $key )													//  iterate user to inform about revokation
 			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $userId );				//  send mail to user of outdated user license key
 		foreach( $usersAssigned as $userId => $key )												//  iterate user to inform about assignment
-			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId );						//  send mail to user of next user license key
+			$this->sendMailOnRevokeUserLicenseKey( $key->userLicenseKeyId, $userId );				//  send mail to user of next user license key
 
 		return (object) [
 			'outdatedUserLicense'	=> $outdatedUserLicense,

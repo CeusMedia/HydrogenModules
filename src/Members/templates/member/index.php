@@ -26,10 +26,10 @@ $panelFilter	= '
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $helperPages	= new \CeusMedia\Bootstrap\PageControl( './member', $page, $pages );
 $pagination		= $helperPages->render();
-$buttonAdd		=HtmlTag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen', array(
+$buttonAdd		=HtmlTag::create( 'a', $iconAdd.'&nbsp;neuen Kontakt herstellen', [
 	'href'		=> './member/search',
 	'class'		=> 'btn btn-success',
-) );
+] );
 
 $table	= '<div><em><small class="muted">Keine gefunden.</small></em></div>';
 if( $users ){

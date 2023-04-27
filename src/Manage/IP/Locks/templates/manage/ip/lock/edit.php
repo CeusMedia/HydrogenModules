@@ -14,25 +14,25 @@ if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 	$helperTime	= new View_Helper_TimePhraser( $env );
 }
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'		=> './manage/ip/lock/',
 	'class'		=> 'btn btn-small',
-) );
+] );
 
-$buttonStatus	= HtmlTag::create( 'a', $iconLock.' aktivieren', array(
+$buttonStatus	= HtmlTag::create( 'a', $iconLock.' aktivieren', [
 	'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId,
 	'class'		=> 'btn btn-small btn-success',
-) );
+] );
 if( $lock->status > 0 ){
-	$buttonStatus	= HtmlTag::create( 'a', $iconUnlock.' deaktivieren', array(
+	$buttonStatus	= HtmlTag::create( 'a', $iconUnlock.' deaktivieren', [
 		'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId,
 		'class'		=> 'btn btn-small btn-inverse',
-	) );
+	] );
 }
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 	'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId,
 	'class'		=> 'btn btn-small btn-danger',
-) );
+] );
 
 $panelEdit	= '
 <div class="content-panel">

@@ -94,12 +94,12 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'url', 'Beschreibung' ).
-					HtmlTag::create( 'textarea', $branch->description, array(
+					HtmlTag::create( 'textarea', $branch->description, [
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',
 						'rows' => '10'
-					) )
+					] )
 				)
 			).
 			HTML::DivClass( 'buttonbar',

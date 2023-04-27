@@ -10,12 +10,12 @@ $labelMembers	= $group->members == 1 ? $group->members.' Mitglied' : $group->mem
 $description	= $group->description ? $group->description : '<em class="muted">Keine Beschreibung derzeit.</em>';
 $participation	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
 $address		= HtmlTag::create( 'kbd', $group->address );
-$facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', array(
+$facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', [
 	$labelMessages,
 	$labelMembers,
 	'Teilnahme: '.$participation,
 	'Adresse: '.$address,
-) );
+] );
 
 $termsOfUse		= $view->loadContentFile( 'html/info/mail/group/termsOfUse.html' );
 $privacyNotice	= $view->loadContentFile( 'html/info/mail/group/privacyNotice.html' );

@@ -1,17 +1,21 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Crypt\PasswordStrength;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Auth_Rest extends Controller
 {
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $cookie;
-	protected $messenger;
-	protected $useCsrf;
+	protected Dictionary $config;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected HttpCookie $cookie;
+	protected MessengerResource $messenger;
+	protected Logic_Authentication_Backend_Rest $logic;
+	protected bool $useCsrf				= FALSE;
 
 	public function ajaxUsernameExists()
 	{
@@ -43,7 +47,7 @@ class Controller_Auth_Rest extends Controller
 	public function index()
 	{
 		if( !$this->session->has( 'auth_user_id' ) )
-			return $this->redirect( 'auth/rest', 'login' );										// @todo replace redirect
+			$this->restart( 'login', TRUE );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
@@ -52,13 +56,13 @@ class Controller_Auth_Rest extends Controller
 		if( $forwardPath && $forwardForce )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
 		if( $from )
-			return $this->restart( $from );
+			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		return $this->restart( NULL );
+		$this->restart();
 	}
 
-	public function confirm( $userId, $token )
+	public function confirm( string $userId, string $token ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$result		= $this->logic->confirm( $userId, $token );
@@ -130,12 +134,12 @@ class Controller_Auth_Rest extends Controller
 				else if( $user->data == -30 )
 					$this->messenger->noteError( $words->msgInvalidPassword );
 			}
-/*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = array(
+/*					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $data = [
 						'backend'	=> 'rest',
 						'username'	=> $user ? $user->username : $username,
 		//				'password'	=> $password,															//  disabled for security
 						'userId'	=> $user ? $user->userId : 0,
-					) );*/
+					] );*/
 		}
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $this->request->get( 'from' ) );									//  forward redirect URL to form action
@@ -150,10 +154,11 @@ class Controller_Auth_Rest extends Controller
 		$words		= (object) $this->getWords( 'logout' );
 
 		if( $this->logic->isAuthenticated() ){
-			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+			$payload	= [
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
@@ -204,15 +209,15 @@ class Controller_Auth_Rest extends Controller
 				throw new InvalidArgumentException( 'Invalid response code' );
 			list( $level, $code )	= explode( ':', $result, 2 );
 			$message	= 'error-'.$level.$code;
-			$message	= isset( $words[$message] ) ? $words[$message] : $message;
+			$message	= $words[$message] ?? $message;
 			$this->messenger->noteError( $message );
-			$data		= array_merge( array(
+			$data		= array_merge( [
 				'business'			=> FALSE,
 				'billing_address'	=> FALSE,
-			), $data );
+			], $data );
 		}
 		if( !$data ){
-			$data	= array(
+			$data	= [
 				'firstname'			=> 'Hans',
 				'surname'			=> 'Testmann',
 				'username'			=> 'htestmann',
@@ -234,7 +239,7 @@ class Controller_Auth_Rest extends Controller
 				'billing_street'	=> 'Straße 2',
 				'billing_email'		=> 'testmann@aol.com',
 				'billing_phone'		=> '0123/9876543',
-			);
+			];
 		}
 
 		$this->addData( 'data', (object) $data );
@@ -242,11 +247,16 @@ class Controller_Auth_Rest extends Controller
 		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
-	public function registered(){
+	public function registered()
+	{
 		$lastRegistration	= $this->session->get( 'registered_account_id' );
 		return "YESSSSS!";
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -268,18 +278,18 @@ class Controller_Auth_Rest extends Controller
 	 *	If newer password store is supported and old password has been found, migration will apply.
 	 *
 	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 *	@param		object		$user			User data object
+	 *	@param		string		$password		Password to check on login
+	 *	@todo		clean up if support for old passwort decays
+	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 */
-	protected function checkPasswordOnLogin( $user, $password )
+	protected function checkPasswordOnLogin( object $user, string $password )
 	{
-		return $this->logic->checkPassword( $username, $password );
+		return $this->logic->checkPassword( $user->username, $password );
 	}
 
 	/**
-	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
+	 *	@todo		rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	This method is deactivated because the currently only available JSON server auth controller (@App_Chat_Server) does not support relogin.
 	 */
 /*	protected function rememberUserInCookie( $userId, $password ){
@@ -293,7 +303,7 @@ class Controller_Auth_Rest extends Controller
 	}*/
 
 	/**
-	 *	@todo    	rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
+	 *	@todo		rewrite this method! local use of model is not possible a the JSON server has no method to compare password hashes, yet.
 	 *	Tries to relogin user if remembered in cookie.
 	 *	Retrieves user ID and password from cookie.
 	 *	Checks user, its password and access per role.

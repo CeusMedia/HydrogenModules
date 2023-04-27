@@ -8,26 +8,26 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	protected int $taxRate = 19;
 
 	/** @todo implement */
-	public function changeQuantity( $articleId, $change ): int
+	public function changeQuantity( string $articleId, int $change ): int
 	{
 		return 0;
 	}
 
 	/** @todo implement */
-	public function getWeight( $articleId, int $amount = 1 )
+	public function getWeight( string $articleId, int $amount = 1 ): float
 	{
-		return 0;
+		return .0;
 	}
 
 	/**
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@param    	boolean		$strict			Flag: throw exception if article ID is invalid
-	 *	@return		object						Bridged article data object if found
+	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 */
-	public function check( $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE )
 	{
 		$article	= $this->logic->getProductLicense( $articleId );
 		if( !$article )
@@ -42,7 +42,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$quantity
 	 *	@return		object
 	 */
-	public function get( $articleId, int $quantity = 1 ): object
+	public function get( string $articleId, int $quantity = 1 ): object
 	{
 		return (object) [
 			'id'		=> $articleId,
@@ -71,10 +71,10 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getDescription( $articleId ): string
+	public function getDescription( string $articleId ): string
 	{
 		$productLicense		= $this->check( $articleId );
 		$descriptionLines	= explode( "\n", strip_tags ( $productLicense->description ) );
@@ -84,10 +84,10 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getLink( $articleId ): string
+	public function getLink( string $articleId ): string
 	{
 		$productLicense		= $this->check( $articleId );
 		return 'catalog/provision/license/view/'.$productLicense->productId.'/'.$articleId;
@@ -96,15 +96,15 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
-	public function getPicture( $articleId, bool $absolute = FALSE )
+	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
 		return '';
-		$productLicense		= $this->check( $articleId );
+//		$productLicense		= $this->check( $articleId );
 //		$category	= $this->modelCategory->get( $image->galleryCategoryId );
 //		$uri		= $this->logic->pathImages.'thumbnail/'.$category->path.'/'.$image->filename;
 //		return $absolute ? $this->env->url.ltrim( $uri, './' ) : $uri;
@@ -113,24 +113,24 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getPrice( $articleId, int $amount = 1 ): float
+	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
 		$productLicense		= $this->check( $articleId );
-		return $productLicense->price * $amount;
+		return (float) $productLicense->price * $amount;
 	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
 	 */
-	public function getTax( $articleId, int $amount = 1 )
+	public function getTax( string $articleId, int $amount = 1 ): float
 	{
 		$productLicense		= $this->check( $articleId );
 		return $productLicense->price * ( $this->taxRate / 100 ) * $amount;
@@ -139,10 +139,10 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$articleId
+	 *	@param		string		$articleId
 	 *	@return		string
 	 */
-	public function getTitle( $articleId ): string
+	public function getTitle( string $articleId ): string
 	{
 		$productLicense		= $this->check( $articleId );
 		return $productLicense->product->title.': '.$productLicense->title;

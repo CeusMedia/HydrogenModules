@@ -4,24 +4,30 @@ use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment;
 
-
 class View_Helper_Work_Time_Buttons
 {
-	protected array $buttons	= [];
 	protected Environment $env;
-	protected $from;
-	protected $size;
-	protected $userId;
-	protected $workerId;
 	protected Model_Work_Timer $modelTimer;
-	protected $timerId;
+	protected array $buttons					= [];
+	protected ?string $from						= NULL;
+	protected ?string $size						= NULL;
+	protected ?string $userId					= NULL;
+	protected ?string $workerId					= NULL;
+	protected ?string $timerId					= NULL;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
 		$this->modelTimer	= new Model_Work_Timer( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( !$this->userId )
@@ -41,69 +47,69 @@ class View_Helper_Work_Time_Buttons
 					$iconStart	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
 					$urlStart	= './work/time/start/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 1 && ( 0 && $userIsOwner || $userIsWorker ) )
-						$buttons[] 	= Html::create( 'a', $iconStart, array(
+						$buttons[] 	= Html::create( 'a', $iconStart, [
 							'href'		=> $urlStart,
 							'class'		=> 'btn btn-mini btn-success',
-						) );
+						] );
 					else
-						$buttons[] 	= Html::create( 'button', $iconStart, array(
+						$buttons[] 	= Html::create( 'button', $iconStart, [
 							'type'		=> 'button',
 							'class'		=> 'btn btn-mini btn-success',
 							'disabled'	=> 'disabled',
-						) );
+						] );
 					break;
 				case 'pause':
 					$iconPause	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pause'] );
 					$urlPause	= './work/time/pause/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 2 && ( 0 && $userIsOwner || $userIsWorker ) )
-						$buttons[]	= Html::create( 'a', $iconPause, array(
+						$buttons[]	= Html::create( 'a', $iconPause, [
 							'href'		=> $urlPause,
 							'class'		=> 'btn btn-mini btn-warning',
-						) );
+						] );
 					else
-						$buttons[]	= Html::create( 'button', $iconPause, array(
+						$buttons[]	= Html::create( 'button', $iconPause, [
 							'type'		=> 'button',
 							'class'		=> 'btn btn-mini btn-warning',
 							'disabled'	=> 'disabled',
-						) );
+						] );
 					break;
 				case 'stop':
 					$iconStop	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 					$urlStop	= './work/time/stop/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 3 && ( 0 && $userIsOwner || $userIsWorker ) )
-						$buttons[] 	= Html::create( 'a', $iconStop, array(
+						$buttons[] 	= Html::create( 'a', $iconStop, [
 							'href'		=> $urlStop,
 							'class'		=> 'btn btn-mini btn-danger',
-						) );
+						] );
 					else
-						$buttons[] 	= Html::create( 'button', $iconStop, array(
+						$buttons[] 	= Html::create( 'button', $iconStop, [
 							'type'		=> 'button',
 							'class'		=> 'btn btn-mini btn-danger',
 							'disabled'	=> 'disabled',
-						) );
+						] );
 					break;
 				case 'mission-view':
 					$iconView	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-eye-open'] );
 					$urlView	= './work/mission/view/'.$timer->missionId;
-					$buttons[] 	= Html::create( 'a', $iconView, array(
+					$buttons[] 	= Html::create( 'a', $iconView, [
 						'href'		=> $urlView,
 						'class'		=> 'btn btn-mini btn-info',
-					) );
+					] );
 					break;
 				case 'edit':
 					$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 					$urlEdit	= './work/time/edit/'.$timer->workTimerId.'?from='.$this->from;
 					if( $timer->status != 1 && ( $userIsOwner || $userIsWorker ) )
-						$buttons[] 	= Html::create( 'a', $iconEdit, array(
+						$buttons[] 	= Html::create( 'a', $iconEdit, [
 							'href'		=> $urlEdit,
 							'class'		=> 'btn btn-mini',
-						) );
+						] );
 					else
-						$buttons[] 	= Html::create( 'button', $iconEdit, array(
+						$buttons[] 	= Html::create( 'button', $iconEdit, [
 							'type'		=> 'button',
 							'class'		=> 'btn btn-mini',
 							'disabled'	=> 'disabled',
-					) );
+					] );
 					break;
 				case 'not-yet-message':
 					$iconMessage	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] );
@@ -124,10 +130,20 @@ class View_Helper_Work_Time_Buttons
 		return Html::create( 'div', $buttons, ['class' => 'btn-group'] ).join( $modals );
 	}
 
-	public static function renderStatic( Environment $env, $timerId, $userId, $buttons, $size, $from )
+	/**
+	 * @param		Environment		$env
+	 * @param		string			$timerId
+	 * @param		string			$userId
+	 * @param		array			$buttons
+	 * @param		string			$size
+	 * @param		string			$from
+	 * @return		string
+	 * @throws		ReflectionException
+	 */
+	public static function renderStatic( Environment $env, string $timerId, string $userId, array $buttons, string $size, string $from ): string
 	{
 		$helper	= new self( $env );
-		$helper->setTimerId( $userId );
+		$helper->setTimerId( $timerId );
 		$helper->setUserId( $userId );
 		$helper->setButtons( $buttons );
 		$helper->setSize( $size );
@@ -135,31 +151,51 @@ class View_Helper_Work_Time_Buttons
 		return $helper->render();
 	}
 
+	/**
+	 *	@param		array		$buttons
+	 *	@return		self
+	 */
 	public function setButtons( array $buttons = [] ): self
 	{
 		$this->buttons	= $buttons;
 		return $this;
 	}
 
-	public function setFrom( $from ): self
+	/**
+	 *	@param		string		$from
+	 *	@return		self
+	 */
+	public function setFrom( string $from ): self
 	{
 		$this->from	= $from;
 		return $this;
 	}
 
-	public function setSize( $size ): self
+	/**
+	 *	@param		string		$size
+	 *	@return		self
+	 */
+	public function setSize( string $size ): self
 	{
 		$this->size	= $size;
 		return $this;
 	}
 
-	public function setTimerId( $timerId ): self
+	/**
+	 *	@param		string		$timerId
+	 *	@return		self
+	 */
+	public function setTimerId( string $timerId ): self
 	{
 		$this->timerId	= $timerId;
 		return $this;
 	}
 
-	public function setUserId( $userId ): self
+	/**
+	 *	@param		string		$userId
+	 *	@return		self
+	 */
+	public function setUserId( string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;

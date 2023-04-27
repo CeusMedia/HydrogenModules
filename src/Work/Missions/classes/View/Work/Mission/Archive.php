@@ -26,19 +26,19 @@ class View_Work_Mission_Archive extends View
 			$listLarge		= '<div class="alert alert-warning"><em>'.$words['index']['messageNoEntries'].'</em></div>';
 		}
 
-		$data		= array(
-			'buttons'	=> array(
+		$data		= [
+			'buttons'	=> [
 				'large'	=> $buttonsLarge,
-			),
-			'lists'		=> array(
+			],
+			'lists'		=> [
 				'large'	=> $listLarge,
-			)
-		);
+			]
+		];
 		print( json_encode( $data ) );
 		exit;
 	}
 
-	public function index()
+	public function index(): string
 	{
 		$page			= $this->env->getPage();
 //		$monthsLong		= $this->env->getLanguage()->getWords( 'work/mission', 'months' );

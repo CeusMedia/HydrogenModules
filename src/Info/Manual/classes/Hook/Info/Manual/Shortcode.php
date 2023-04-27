@@ -12,11 +12,11 @@ class Hook_Info_Manual_Shortcode extends Hook
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $data->content );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
-		$shortCodes		= array(
-			'manual:page'	=> array(
+		$shortCodes		= [
+			'manual:page'	=> [
 				'id'		=> 0,
-			)
-		);
+			]
+		];
 
 		$modelPage		= new Model_Manual_Page( $env );
 		$modelCategory	= new Model_Manual_Category( $env );

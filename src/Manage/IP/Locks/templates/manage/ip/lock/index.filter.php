@@ -4,17 +4,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );
-$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' filtern', array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' filtern', [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
-) );
-$buttonReset	= HtmlTag::create( 'a', $iconReset.' zurücksetzen', array(
+] );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' zurücksetzen', [
 	'href'	=> './manage/ip/lock/order/reset',
 	'class'	=> 'btn btn-small btn-inverse',
-) );
+] );
 
-$optStatus = array(
+$optStatus = [
 	-10	=> 'deaktiviert',
 	-2	=> 'unlocked',
 	-1	=> '...',
@@ -22,19 +22,19 @@ $optStatus = array(
 	0	=> 'lock requested',
 	1	=> 'locked',
 	2	=> 'unlock requested',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
-$optSort	= array(
+$optSort	= [
 	'lockedAt'	=> 'Sperrung',
 	'IP'		=> 'IP',
-);
+];
 $optSort	= HtmlElements::Options( $optSort, $filterSort );
 
-$optOrder	= array(
+$optOrder	= [
 	'asc'	=> 'aufsteigend',
 	'desc'	=> 'absteigend',
-);
+];
 $optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 $panelFilter	= HTML::DivClass( 'content-panel',
@@ -66,10 +66,10 @@ $panelFilter	= HTML::DivClass( 'content-panel',
 				) )
 			),
 			HTML::DivClass( 'buttonbar',
-				HTML::DivClass( 'btn-toolbar', array(
+				HTML::DivClass( 'btn-toolbar', [
 					$buttonFilter,
 					$buttonReset
-				) )
+				] )
 			)
 		), ['action' => './manage/ip/lock/order', 'method' => 'post'] )
 	)

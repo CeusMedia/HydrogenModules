@@ -1,19 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay{
-
-	public function __construct( $env ){
+class View_Helper_Panel_Mangopay_Wallets extends View_Helper_Panel_Mangopay
+{
+	public function __construct( Environment $env )
+	{
 		parent::__construct( $env );
-		$this->setOptions( array(
+		$this->setOptions( [
 			'linkItem'	=> './manage/my/mangopay/wallet/view/%s',
 			'linkBack'	=> '',
 			'linkAdd'	=> '',
-		) );
+		] );
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		$rows		= [];
 		foreach( $this->data as $wallet ){
 			$link	= HtmlTag::create( 'a', $wallet->Id, ['href' => sprintf( $this->options->get( 'linkItem' ), $wallet->Id )] );

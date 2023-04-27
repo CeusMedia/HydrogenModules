@@ -3,12 +3,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'span';
-	protected $card;
-	protected $url;
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'span';
+	protected ?object $card			= NULL;
+	protected ?string $url			= NULL;
 
-	public function render(){
+	public function render(): string
+	{
 		$helperCardLogo		= new View_Helper_Mangopay_Entity_CardProviderLogo( $this->env );
 		$helperCardNumber	= new View_Helper_Mangopay_Entity_CardNumber( $this->env );
 		$helperCardLogo->setSize( View_Helper_Mangopay_Entity_CardProviderLogo::SIZE_SMALL );
@@ -16,11 +17,11 @@ class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 		$logo		= $helperCardLogo->setProvider( $this->card->CardProvider )->render();
 		$number		= $helperCardNumber->set( $this->card->Alias )->render();
 		$item		= $logo.$number;
-		$attributes	= array(
+		$attributes	= [
 			'class'		=> 'card-list-item-small',
-		);
+		];
 		if( $this->url ){
-			$url	= sprinf( $this->url, $this->card->id );
+			$url	= sprintf( $this->url, $this->card->id );
 			if( $this->nodeName == 'a' )
 				$attributes['href']	= $url;
 			else
@@ -29,22 +30,27 @@ class View_Helper_Mangopay_Entity_Card extends View_Helper_Mangopay_Abstract{
 		return HtmlTag::create( $this->nodeName, $item, $attributes );
 	}
 
-	public function set( $card ){
+	public function set( object $card ): self
+	{
 		$this->card	= $card;
 		return $this;
 	}
 
-	public function setNodeClass( $classNames ){
+	public function setNodeClass( string $classNames ): self
+	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName ){
+	public function setNodeName( string $nodeName ): self
+	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}
 
-	public function setUrl( $url ){
+	public function setUrl( string $url ): self
+	{
 		$this->url		= $url;
+		return $this;
 	}
 }

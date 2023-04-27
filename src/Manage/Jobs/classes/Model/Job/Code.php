@@ -1,9 +1,10 @@
 <?php
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\PhpParser\Parser\Regular as PhpParser;
 
 class Model_Job_Code
 {
-	protected $classes	= [];
+	protected array $classes	= [];
 
 	public function getClassesNames(): array
 	{
@@ -42,7 +43,7 @@ class Model_Job_Code
 		return $this->classes;
 	}
 
-	public function readAll( string $path ): object
+	public function readAll( string $path ): array
 	{
 		if( !( file_exists( $path ) && is_dir( $path ) ) )
 			throw new DomainException( 'Path is not existing' );
@@ -60,7 +61,13 @@ class Model_Job_Code
 	{
 		if( !( file_exists( $filePath ) && ( is_file( $filePath ) || is_link( $filePath ) ) ) )
 			throw new DomainException( 'File is not existing' );
-		$parser	= new CeusMedia\PhpParser\Parser\Regular();
+
+		return $this->readFileWithParser( $filePath );
+	}
+
+	protected function readFileWithParser( string $filePath ): object
+	{
+		$parser	= new PhpParser();
 		$file	= $parser->parseFile( $filePath, '' );
 		foreach( $file->getClasses() as $className => $class ){
 			$methods	= [];
@@ -86,7 +93,7 @@ class Model_Job_Code
 				}
 			}
 		}
-		return $this->classes[$className];
+		return reset( $this->classes );
 	}
 
 	protected function clearSourceCode( ?array $code ): ?array

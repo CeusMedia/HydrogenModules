@@ -59,24 +59,24 @@ foreach( $module->config as $item ){
 	) );
 //	ksort( $rows );
 }
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'class'		=> 'btn',
 	'href'		=> './admin/config',
-) );
-$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, array(
+] );
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 	'class'		=> 'btn',
 	'href'		=> './admin/config',
-) );
-$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, array(
+] );
+$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, [
 	'class'		=> 'btn btn-primary',
 	'href'		=> './admin/config/edit/'.$moduleId
-) );
+] );
 $buttonRestore	= '';
 if( isset( $versions[$moduleId] ) && $versions[$moduleId] ){
-	$buttonRestore	= HtmlTag::create( 'a', $iconRestore.'&nbsp;'.$w->buttonRestore.'&nbsp;<small>('.$versions[$moduleId].')</small>', array(
+	$buttonRestore	= HtmlTag::create( 'a', $iconRestore.'&nbsp;'.$w->buttonRestore.'&nbsp;<small>('.$versions[$moduleId].')</small>', [
 		'href'	=> './admin/config/restore/'.$moduleId,
 		'class'	=> 'btn btn-inverse btn-mini'
-	) );
+	] );
 }
 $cols	= HtmlElements::ColumnGroup( "24px", "37%", "80px", "" );
 $tbody	= HtmlTag::create( 'tbody', $rows );

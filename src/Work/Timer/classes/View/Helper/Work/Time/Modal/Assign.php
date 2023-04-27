@@ -6,18 +6,24 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Time_Modal_Assign extends Abstraction
 {
-	protected $from;
-	protected $module;
-	protected $moduleId;
-	protected $timers	= [];
-	protected $userId;
+	protected array $timers			= [];
+	protected ?string $userId		= NULL;
+	protected ?object $relation		= NULL;
+	protected ?string $from			= NULL;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function render()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function render(): string
 	{
 		$words		= $this->env->getLanguage()->getWords( 'work/time' );
 		$w			= (object) $words['assign'];
@@ -72,28 +78,45 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 ';
 	}
 
-	public function setFrom( $from ): self
+	/**
+	 *	@param		string		$from
+	 *	@return		self
+	 */
+	public function setFrom( string $from ): self
 	{
 		$this->from		= $from;
 		return $this;
 	}
 
-	public function setRelation( $module, $moduleId ): self
+	/**
+	 *	@param		string		$module
+	 *	@param		string		$moduleId
+	 *	@return		self
+	 */
+	public function setRelation( string $module, string $moduleId ): self
 	{
-		$this->relation	= (object) array(
+		$this->relation	= (object) [
 			'module'	=> $module,
 			'moduleId'	=> $moduleId,
-		);
+		];
 		return $this;
 	}
 
-	public function setTimers( $timers ): self
+	/**
+	 *	@param		array		$timers
+	 *	@return		self
+	 */
+	public function setTimers( array $timers ): self
 	{
 		$this->timers	= $timers;
 		return $this;
 	}
 
-	public function setUserId( $userId ): self
+	/**
+	 *	@param		string		$userId
+	 *	@return		self
+	 */
+	public function setUserId( string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;

@@ -37,11 +37,11 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, arr
 if( $from && preg_match( '/add$/', $from ) )
 	$buttonCancel	= "";
 
-$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary'
-) );
+] );
 
 $panelAdd		= '
 <div class="content-panel content-panel-form">

@@ -1,34 +1,23 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Import extends Controller
 {
-	protected $request;
-	protected $modelForm;
-	protected $modelRule;
-	protected $modelConnection;
-	protected $modelConnector;
-	protected $connectionMap	= [];
-	protected $formMap			= [];
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected Model_Form $modelForm;
+	protected Model_Form_Import_Rule $modelRule;
+	protected Model_Import_Connection $modelConnection;
+	protected Model_Import_Connector $modelConnector;
+	protected array $connectionMap		= [];
+	protected array $formMap			= [];
 
-	protected function __onInit(): void
-	{
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->modelForm		= new Model_Form( $this->env );
-		$this->modelRule		= new Model_Form_Import_Rule( $this->env );
-		$this->modelConnection	= new Model_Import_Connection( $this->env );
-		$this->modelConnector	= new Model_Import_Connector( $this->env );
-		foreach( $this->modelForm->getAll( [], ['title' => 'ASC'] ) as $form )
-			$this->formMap[$form->formId]	= $form;
-		foreach( $this->modelConnection->getAll( [], ['title' => 'ASC'] ) as $connection )
-			$this->connectionMap[$connection->importConnectionId] = $connection;
-	}
-
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$data		= [
@@ -89,10 +78,10 @@ class Controller_Manage_Form_Import extends Controller
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
 
-		$factory	= new ObjectFactory();
+		$factory		= new ObjectFactory();
 		$remoteResource	= $factory->create( $connector->className, [$this->env] );
 		$remoteResource->setConnection( $connection )->connect();
-		$folders	= $remoteResource->getFolders( TRUE );
+		$folders		= $remoteResource->getFolders( TRUE );
 
 //		if( strlen( trim( $this->request->get( 'moveTo' ) ) ) > 0 )
 //			if( !in_array( $this->request->get( 'moveTo' ), $folders ) )
@@ -119,7 +108,7 @@ class Controller_Manage_Form_Import extends Controller
 		$this->addData( 'connections', $this->connectionMap );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$rules	= $this->modelRule->getAll();
 		$this->addData( 'rules', $rules );
@@ -130,19 +119,39 @@ class Controller_Manage_Form_Import extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function checkIsPost( $strict = TRUE ){
-		if( $this->request->getMethod()->is( 'POST' ) )
-			return TRUE;
-		if( $strict )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
-		return FALSE;
+	/**
+	 *	@return	void
+	 *	@throws		ReflectionException
+	 */
+	protected function __onInit(): void
+	{
+		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
+		$this->modelForm		= new Model_Form( $this->env );
+		$this->modelRule		= new Model_Form_Import_Rule( $this->env );
+		$this->modelConnection	= new Model_Import_Connection( $this->env );
+		$this->modelConnector	= new Model_Import_Connector( $this->env );
+		foreach( $this->modelForm->getAll( [], ['title' => 'ASC'] ) as $form )
+			$this->formMap[$form->formId]	= $form;
+		foreach( $this->modelConnection->getAll( [], ['title' => 'ASC'] ) as $connection )
+			$this->connectionMap[$connection->importConnectionId] = $connection;
 	}
 
-	protected function checkImportRuleId( $importRuleId ){
+	protected function checkImportRuleId( string $importRuleId ): object
+	{
 		if( !$importRuleId )
 			throw new RuntimeException( 'No import rule ID given' );
 		if( !( $importRule = $this->modelRule->get( $importRuleId ) ) )
 			throw new DomainException( 'Invalid import rule ID given' );
 		return $importRule;
+	}
+
+	protected function checkIsPost( bool $strict = TRUE ): bool
+	{
+		if( $this->request->getMethod()->is( 'POST' ) )
+			return TRUE;
+		if( $strict )
+			throw new RuntimeException( 'Access denied: POST requests, only' );
+		return FALSE;
 	}
 }

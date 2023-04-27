@@ -43,14 +43,14 @@ if( $groups ){
 	$list	= [];
 	foreach( $groups as $group ){
 		$isRegisteredGroup	= array_key_exists( $group->newsletterGroupId, $reader->groups );
-		$checkbox	= HtmlTag::create( 'input', NULL, array(
+		$checkbox	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'value'		=> $group->newsletterGroupId,
 			'name'		=> 'groupIds[]',
 			'id'		=> 'input_groupIds_'.$group->newsletterGroupId,
 			'checked'	=> $isRegisteredGroup ? "checked" : NULL,
 			'class'		=> 'bs4-form-check-input',
-		) );
+		] );
 		$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;<span class="bs4-form-check-label">'.$group->title.'</span>', ['class' => 'checkbox'] );
 		$list[]	= HtmlTag::create( 'li', $label, ['class' => 'bs4-form-check'] );
 	}

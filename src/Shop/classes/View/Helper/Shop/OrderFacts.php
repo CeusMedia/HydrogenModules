@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_OrderFacts
@@ -24,14 +25,17 @@ class View_Helper_Shop_OrderFacts
 		self::OUTPUT_HTML,
 	];
 
-	protected $bridge;
-	protected $changeable;
-	protected $env;
-	protected $data;
-	protected $helperShop;
-	protected $paymentBackend;
-	protected $display				= self::DISPLAY_BROWSER;
-	protected $output				= self::OUTPUT_HTML;
+	protected Environment $env;
+	protected Dictionary $config;
+	protected Logic_ShopBridge $logicBridge;
+	protected Logic_Shop $logicShop;
+	protected View_Helper_Shop $helperShop;
+	protected int $display				= self::DISPLAY_BROWSER;
+	protected int $output				= self::OUTPUT_HTML;
+	protected array $words;
+	protected ?object $paymentBackend	= NULL;
+	protected ?object $order			= NULL;
+	protected array $facts				= [];
 
 	public function __construct( Environment $env )
 	{
@@ -45,39 +49,36 @@ class View_Helper_Shop_OrderFacts
 
 	public function render(): string
 	{
-		switch( $this->output ){
-			case self::OUTPUT_HTML:
-				return $this->renderAsHtml();
-			case self::OUTPUT_TEXT:
-				return $this->renderAsText();
-		}
+		if( self::OUTPUT_HTML === $this->output )
+			return $this->renderAsHtml();
+		return $this->renderAsText();
 	}
 
 	public function setData( $data ): self
 	{
-		$this->data	= (object) $data;
+//		$this->data	= (object) $data;
 		if( empty( $data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
-		$paymentBackend	= NULL;
+		$this->paymentBackend	= NULL;
 		foreach( $data['paymentBackends'] as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$this->paymentBackend	= $item;
-		$this->facts		= array(
+		$this->facts		= [
 			'date'		=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'time'		=> date( 'H:i:s', $this->order->modifiedAt ),
 			'price'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
 			'payment'	=> $this->paymentBackend->title,
 			'orderId'	=> $this->order->orderId,
-		);
+		];
 		return $this;
 	}
 
 	public function setDisplay( int $display ): self
 	{
-		if( !in_array( (int) $display, array( self::DISPLAY_BROWSER, self::DISPLAY_MAIL	) ) )
+		if( !in_array( $display, [self::DISPLAY_BROWSER, self::DISPLAY_MAIL], TRUE ) )
 			throw new InvalidArgumentException( 'Invalid display format' );
 		$this->display		= $display;
 		return $this;
@@ -86,9 +87,9 @@ class View_Helper_Shop_OrderFacts
 	public function setOutput( int $format ): self
 	{
 		$formats	= [self::OUTPUT_HTML, self::OUTPUT_TEXT];
-		if( !in_array( (int) $format, $formats ) )
+		if( !in_array( $format, $formats ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= (int) $format;
+		$this->output		= $format;
 		return $this;
 	}
 
@@ -98,28 +99,29 @@ class View_Helper_Shop_OrderFacts
 	{
 		$helperFacts	= new View_Helper_Mail_Facts();
 		$helperFacts->setLabels( $this->words['panel-facts'] );
-		$helperFacts->add( 'date', date( 'd.m.Y', $this->order->modifiedAt ) );
-		$helperFacts->add( 'time', date( 'H:i:s', $this->order->modifiedAt ) );
-		$helperFacts->add( 'price', $this->helperShop->formatPrice( $this->order->priceTaxed ) );
-		$helperFacts->add( 'payment', $this->paymentBackend->title );
-		$helperFacts->add( 'orderId', $this->order->orderId );
+		$facts	= array_merge( $this->facts, [
+			'price'		=> $this->helperShop->formatPrice( $this->order->priceTaxed ),
+		] );
+		foreach( $facts as $key => $value )
+			$helperFacts->add( $key, $value );
 		return $helperFacts->render();
 	}
 
 	protected function renderAsText(): string
 	{
-		$words			= (object) $this->words['panel-facts'];
+//		$words			= (object) $this->words['panel-facts'];
 		$helperText		= new View_Helper_Mail_Text();
 		$list			= [];
 		$list[]			= $helperText->line( "=", 78 );
 		$helperFacts	= new View_Helper_Mail_Facts();
 		$helperFacts->setLabels( $this->words['panel-facts'] );
-		$helperFacts->add( 'date', date( 'd.m.Y', $this->order->modifiedAt ) );
-		$helperFacts->add( 'time', date( 'H:i:s', $this->order->modifiedAt ) );
-		$helperFacts->add( 'price', $this->helperShop->formatPrice( $this->order->priceTaxed, TRUE, FALSE ) );
-		$helperFacts->add( 'payment', $this->paymentBackend->title );
-		$helperFacts->add( 'orderId', $this->order->orderId );
 		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT );
+		$facts	= array_merge( $this->facts, [
+			'price'		=> $this->helperShop->formatPrice( $this->order->priceTaxed, TRUE, FALSE ),
+		] );
+		foreach( $facts as $key => $value )
+			$helperFacts->add( $key, $value );
+
 		$list[]	= $helperFacts->render();
 		$list[]	= $helperText->line( "-", 78 );
 		return join( PHP_EOL, $list );

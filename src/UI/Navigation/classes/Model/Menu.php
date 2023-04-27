@@ -251,11 +251,11 @@ class Model_Menu
 	protected function readUserPagesFromDatabase()
 	{
 		$model		= new Model_Page( $this->env );
-		$scopes		= array(
+		$scopes		= [
 			0		=> 'main',
 			1		=> 'footer',
 			2		=> 'top',
-		);
+		];
 		$this->scopes		= array_values( $scopes );
 		$this->pages		= [];
 		$this->pageMap		= [];
@@ -263,13 +263,13 @@ class Model_Menu
 		$subpages			= [];
 		foreach( $scopes as $scopeId => $scope ){
 			$this->pages[$scope]	= [];
-			$pages		= $model->getAllByIndices( array(
+			$pages		= $model->getAllByIndices( [
 				'parentId'	=> 0,
 				'scope'		=> $scopeId,
 				'status'	=> '> 0',
-			), ['rank' => 'ASC'] );
+			], ['rank' => 'ASC'] );
 			foreach( $pages as $page ){
-				$item	= (object) array(
+				$item	= (object) [
 					'parent'	=> NULL,
 					'type'		=> 'item',
 					'scope'		=> $scope,
@@ -281,7 +281,7 @@ class Model_Menu
 //					'active'	=> $this->current == $page->identifier,
 					'active'	=> FALSE,
 					'icon'		=> @$page->icon,
-				);
+				];
 				if( $this->localization ){
 					$id	= 'page.'.$item->path.'-title';
 					$item->label	= $this->localization->translate( $id, $item->label );
@@ -289,15 +289,15 @@ class Model_Menu
 				if( $page->type == 1 ){
 					$item->type		= 'menu';
 					$item->items	= [];
-					$subpages		= $model->getAllByIndices( array(
+					$subpages		= $model->getAllByIndices( [
 						'parentId'	=> $page->pageId,
 						'scope'		=> 0,
 						'status'	=> '> 0',
-					), ['rank' => 'ASC'] );
+					], ['rank' => 'ASC'] );
 					foreach( $subpages as $subpage ){
 						if( $subpage->status < 1 )
 							continue;
-						$subitem	= (object) array(
+						$subitem	= (object) [
 //							'parent'	=> $item,
 							'parent'	=> $page->identifier,
 							'type'		=> 'item',
@@ -311,7 +311,7 @@ class Model_Menu
 							'active'	=> FALSE,
 							'icon'		=> @$subpage->icon,
 							'chapter'	=> $subpage->chapter ?? '',
-						);
+						];
 						if( $this->localization ){
 							$id	= 'page.'.$subitem->path.'-title';
 							$subitem->label	= $this->localization->translate( $id, $subitem->label );

@@ -5,7 +5,9 @@
  *	@copyright		2014 Ceus Media
  */
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	...
@@ -16,7 +18,12 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Oauth_Application extends Controller
 {
 	/**	@var		Model_Oauth_Application		$model		Application storage model */
-	protected $model;
+	protected Model_Oauth_Application $model;
+
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+
+	protected ?string $userId;
 
 	public function add()
 	{
@@ -24,7 +31,7 @@ class Controller_Oauth_Application extends Controller
 		if( $this->request->has( 'save' ) ){
 			$clientId		= $this->model->getNewClientId( $this->userId );
 			$clientSecret	= $this->model->getNewClientSecret( $clientId, $this->userId );
-			$data			= array(
+			$data			= [
 				'userId'		=> $this->userId,
 				'type'			=> $this->request->get( 'type' ),
 				'status'		=> 0,
@@ -35,7 +42,7 @@ class Controller_Oauth_Application extends Controller
 				'url'			=> $this->request->get( 'url' ),
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			);
+			];
 			$applicationId	= $this->model->add( $data );
 			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( 'edit/'.$applicationId, TRUE );
@@ -43,19 +50,24 @@ class Controller_Oauth_Application extends Controller
 		$this->addData( 'application', $this->request );
 	}
 
-	public function edit( $applicationId )
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function edit( string $applicationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
 		if( $this->request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'type'			=> $this->request->get( 'type' ),
 				'clientSecret'	=> $this->request->get( 'clientSecret' ),
 				'title'			=> $this->request->get( 'title' ),
 				'description'	=> $this->request->get( 'description' ),
 				'url'			=> $this->request->get( 'url' ),
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( strlen( trim( $this->request->get( 'status' ) ) ) )
 				$data['status']	= $this->request->get( 'status' );
 			$applicationId	= $this->model->edit( $applicationId, $data );
@@ -66,7 +78,7 @@ class Controller_Oauth_Application extends Controller
 	}
 
 	/**
-	 *	@todo 		kriss: think about the fullAccess code below - is it needed?
+	 *	@todo 		 think about the fullAccess code below - is it needed?
 	 */
 	public function index( $page = 0, $limit = 10 )
 	{
@@ -80,7 +92,12 @@ class Controller_Oauth_Application extends Controller
 		$this->addData( 'applications', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
-	public function view( $applicationId )
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function view( string $applicationId )
 	{
 		$this->checkAccess( $applicationId );
 		$this->addData( 'application', $this->model->get( $applicationId ) );
@@ -98,8 +115,16 @@ class Controller_Oauth_Application extends Controller
 		$this->addData( 'refreshTokens', $refreshTokens );
 	}
 
-	public function remove( $applicationId, $removeMode = NULL, $modeResourceId = NULL )
+	/**
+	 *	@param		string			$applicationId
+	 *	@param		string|NULL		$removeMode
+	 *	@param		string|NULL		$modeResourceId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function remove( string $applicationId, ?string $removeMode = NULL, ?string $modeResourceId = NULL )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
 		if( !empty( $removeMode ) ){
 			switch( $removeMode ){
@@ -128,7 +153,12 @@ class Controller_Oauth_Application extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function enable( $applicationId )
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function enable( string $applicationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
@@ -137,17 +167,26 @@ class Controller_Oauth_Application extends Controller
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}
 
-	public function disable( $applicationId )
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function disable( string $applicationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
-		$this->model->edit( $applicationId, array( 'status' => 0, 'modifiedAt' => time() ) );
+		$this->model->edit( $applicationId, ['status' => 0, 'modifiedAt' => time()] );
 		$this->messenger->noteSuccess( $words->successDisabled );
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Oauth_Application( $this->env );
@@ -156,7 +195,12 @@ class Controller_Oauth_Application extends Controller
 		$this->userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
 	}
 
-	protected function checkAccess( $applicationId )
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function checkAccess( string $applicationId )
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( !$this->isUserApplication( $applicationId ) ){
@@ -165,7 +209,12 @@ class Controller_Oauth_Application extends Controller
 		}
 	}
 
-	protected function isUserApplication( $applicationId ): bool
+	/**
+	 *	@param		string		$applicationId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	protected function isUserApplication( string $applicationId ): bool
 	{
 		if( Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
 			return TRUE;

@@ -15,9 +15,9 @@ $listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
 	$list	= [];
 	foreach( $withinForms as $item ){
-		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/edit/'.$item->formId,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	$listWithinForms	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
@@ -27,9 +27,9 @@ $listWithinBlocks	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinBlocks ){
 	$list	= [];
 	foreach( $withinBlocks as $item ){
-		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	$listWithinBlocks	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
@@ -44,9 +44,9 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 		$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
 		if( !$item )
 			continue;
-		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, array(
+		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/block/edit/'.$item->blockId,
-		) );
+		] );
 		$list[]	= HtmlTag::create( 'li', $link );
 	}
 	if( $list )

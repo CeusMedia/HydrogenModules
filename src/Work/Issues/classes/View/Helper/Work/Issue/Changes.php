@@ -5,8 +5,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_Changes
 {
-	protected $env;
-	protected $modelNote;
+	protected Environment $env;
+	protected Model_Issue_Note $modelNote;
+	protected ?object $issue		= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -29,14 +30,14 @@ class View_Helper_Work_Issue_Changes
 			$list[]		= HtmlTag::create( 'tr',
 				HtmlTag::create( 'td',
 					HtmlTag::create( 'div', array(
-						HtmlTag::create( 'div', $helperFacts->render(), array(
+						HtmlTag::create( 'div', $helperFacts->render(), [
 							'class'	=> 'span5',
 							'id'	=> 'issue-change-list-facts'
-						) ),
-						HtmlTag::create( 'div', $helperNote->render(), array(
+						] ),
+						HtmlTag::create( 'div', $helperNote->render(), [
 							'class'	=> 'span7',
 							'id'	=> 'issue-change-list-note'
-						) ),
+						] ),
 						'<br/>'
 					), ['class' => 'issue-note row-fluid'] )
 				)
@@ -47,7 +48,7 @@ class View_Helper_Work_Issue_Changes
 		return $table;
 	}
 
-	public function setIssue( $issue ): self
+	public function setIssue( object $issue ): self
 	{
 		$this->issue	= $issue;
 		return $this;

@@ -16,31 +16,31 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Work_Mission extends Logic
 {
-	static protected $instance;
+	static protected self $instance;
 
-	public $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
-	public $generalConditions	= [];
+	public int $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
+	public array $generalConditions	= [];
 
-	protected $modelMission;
-	protected $modelVersion;
-	protected $modelChange;
-	protected $modelDocument;
+	protected Model_Mission $modelMission;
+	protected Model_Mission_Version $modelVersion;
+	protected Model_Mission_Change $modelChange;
+	protected Model_Mission_Document $modelDocument;
 
 	/**
 	 *	Get singleton instance of logic.
 	 *	@static
 	 *	@access		public
 	 *	@param		Environment		$env		Environment object
-	 *	@return		object			Singleton instance of logic
+	 *	@return		self			Singleton instance of logic
 	 */
-	public static function getInstance( Environment $env )
+	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
-	public function getDate( $string )
+	public function getDate( string $string ): string
 	{
 		$day	= 24 * 60 * 60;
 		$now	= time();
@@ -63,7 +63,7 @@ class Logic_Work_Mission extends Logic
 					break;
 				case '+2':
 				case 'übermorgen':
-					$time	= $now + 1 * $day;
+					$time	= $now + 2 * $day;
 					break;
 				default:
 					$time	= strtotime( $string );
@@ -78,7 +78,7 @@ class Logic_Work_Mission extends Logic
 		return $model->getAllByIndex( 'missionId', $missionId, $orders );
 	}*/
 
-	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = [] )
+	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = [] ): array
 	{
 		$session	= $this->env->getSession();
 		$query		= $session->get( $sessionFilterKeyPrefix.'query' );
@@ -111,7 +111,7 @@ class Logic_Work_Mission extends Logic
 		return $conditions;
 	}
 
-	public function getUserProjects( $userId, $activeOnly = FALSE )
+	public function getUserProjects( string $userId, bool $activeOnly = FALSE ): array
 	{
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
@@ -124,25 +124,25 @@ class Logic_Work_Mission extends Logic
 		return $userProjects;																		//  return projects map
 	}
 
-	public function getUserMissions( $userId, $conditions = [], $orders = [], $limits = [] )
+	public function getUserMissions( string $userId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
-		$orders		= $orders ? $orders : ['dayStart' => 'ASC'];
+		$orders		= $orders ?: ['dayStart' => 'ASC'];
 
 		if( $this->hasFullAccess() )																//  user has full access
 			return $this->modelMission->getAll( $conditions, $orders, $limits );					//  return all missions matched by conditions
 
-		$havings	= array(																		//  additional conditions
-			'creatorId = '.(int) $userId,															//  user is creator
-			'modifierId = '.(int) $userId,															//  or user is last modifier
-			'workerId = '.(int) $userId,															//  or user is worker
-		);
+		$havings	= [																				//  additional conditions
+			'creatorId = "'.$userId.'"',															//  user is creator
+			'modifierId = "'.$userId.'"',															//  or user is last modifier
+			'workerId = "'.$userId.'"',																//  or user is worker
+		];
 		$userProjects	= array_keys( $this->getUserProjects( $userId, TRUE ) );					//  get user projects from model
 		$projectIds		= $userProjects;
 		if( !empty( $conditions['projectId'] ) ){													//  project(s) have been selected
 			if( !is_array( $conditions['projectId'] ) )
 				$conditions['projectId']	= (array) $conditions['projectId'];
-			$projectIds	= array_intersect( $conditions['projectId'], $userProjects );				//  intersect user projectes and selected projects
+			$projectIds	= array_intersect( $conditions['projectId'], $userProjects );				//  intersect user projects and selected projects
 		}
 		if( $projectIds )																			//  user has projects
 			$havings[]	= 'projectId IN ('.join( ',', $projectIds ).')';							//  add projects condition
@@ -154,8 +154,8 @@ class Logic_Work_Mission extends Logic
 		return $this->modelMission->getAll(															//  return missions matched by conditions
 			$conditions,
 			$orders,
-			is_array( $limits ) && $limits ? $limit : [],
-			array_diff( $this->modelMission->getColumns(), ['content'] ),					//  all columns except content
+			( is_array( $limits ) && $limits ) ? $limits : [],
+			array_diff( $this->modelMission->getColumns(), ['content'] ),							//  all columns except content
 			array( 'missionId' ),																	//  HAVING needs grouping
 			array( join( ' OR ', $havings ) )														//  combine havings with OR
 		);
@@ -163,13 +163,13 @@ class Logic_Work_Mission extends Logic
 
 	public function getVersion( $missionId, $version )
 	{
-		return $this->modelVersion->getByIndices( array(
+		return $this->modelVersion->getByIndices( [
 			'missionId'	=> $missionId,
 			'version'	=> $version,
-		) );
+		] );
 	}
 
-	public function getVersions( $missionId )
+	public function getVersions( $missionId ): array
 	{
 		$orders		= ['version' => 'ASC'];
 		$versions	= $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
@@ -183,13 +183,13 @@ class Logic_Work_Mission extends Logic
 	{
 		$model	= new Model_Mission_Change( $this->env );
 		if( !$model->count( ['missionId' => $missionId] ) ){
-			$model->add( array(
+			$model->add( [
 				'missionId'		=> $missionId,
 				'userId'		=> $currentUserId,
 				'type'			=> $type,
 				'data'			=> serialize( $data ),
 				'timestamp'		=> time()
-			), FALSE );
+			], FALSE );
 		}
 		else{
 			$mission	= (array) $this->modelMission->get( $missionId );
@@ -217,7 +217,7 @@ class Logic_Work_Mission extends Logic
 		) );
 	}
 
-	public function removeDocument( $documentId )
+	public function removeDocument( string $documentId ): bool
 	{
 		$document	= $this->modelDocument->get( $documentId );
 		if( !$document )
@@ -228,7 +228,11 @@ class Logic_Work_Mission extends Logic
 		return TRUE;
 	}
 
-	public function removeMission( $missionId )
+	/**
+	 * @param string $missionId
+	 * @return int
+	 */
+	public function removeMission( string $missionId ): int
 	{
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );
@@ -257,9 +261,11 @@ class Logic_Work_Mission extends Logic
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
-	protected function hasFullAccess()
+	protected function hasFullAccess(): bool
 	{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
 	}

@@ -20,13 +20,13 @@ if( $branch->longitude ){
 	$tags		= (object) $geocoder->getGeoTags( $query );
 	$panelMap	= HTML::DivClass( 'column-clear', '
 	<div style="border: 1px solid black; float: right; width: 100%; height: 520px">
-		'.HtmlTag::create( 'div', '', array(
+		'.HtmlTag::create( 'div', '', [
 			'id'	=> "map_canvas",
 			'style'	=> "width:100%; height:100%",
 			'data-longitude'	=> $branch->longitude,
 			'data-latitude'		=> $branch->latitude,
 			'data-marker-title'	=> 'Test'
-		) ).'
+		] ).'
 	</div>
 	' );
 }

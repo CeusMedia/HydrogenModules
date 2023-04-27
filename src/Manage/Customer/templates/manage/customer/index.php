@@ -27,11 +27,11 @@ if( $customers ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '60%', '10%', '30%' );
-	$heads		= HtmlElements::TableHeads( array(
+	$heads		= HtmlElements::TableHeads( [
 		'Kunde',
 		'Index',
 		'Graph',
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );

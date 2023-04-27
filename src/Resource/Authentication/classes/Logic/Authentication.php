@@ -113,9 +113,9 @@ class Logic_Authentication extends Logic
 			'path'		=> $path,
 			'label'		=> $label,
 			'module'	=> 'Resource_Authentication_Backend_'.$key,
-			'classes'	=> (object) array(
+			'classes'	=> (object) [
 				'logic'		=> NULL,
-			),
+			],
 		);
 		$this->backends[$key]	= $backend;
 		$classLogic		= 'Logic_Authentication_Backend_'.$key;

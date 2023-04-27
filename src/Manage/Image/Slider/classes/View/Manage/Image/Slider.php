@@ -28,11 +28,11 @@ class View_Manage_Image_Slider extends View
 
 	public function label( $section, $name, $options = [] )
 	{
-		$options	= array_merge( array(
+		$options	= array_merge( [
 			'titleElement'	=> 'abbr',
 			'titleClass'	=> NULL,
 			'suffixClass'	=> 'muted',
-		), $options );
+		], $options );
 		$words		= $this->getWords( $section );
 		$keyLabel	= 'label'.ucfirst( $name );
 		$keyTitle	= $keyLabel.'_title';
@@ -46,9 +46,9 @@ class View_Manage_Image_Slider extends View
 				'class'		=> $options['titleClass'],
 			) );
 		if( isset( $words->$keySuffix ) && strlen( trim( $words->$keySuffix) ) )
-			$label	.= '&nbsp;'.HtmlTag::create( 'small', trim( $words->$keySuffix ), array(
+			$label	.= '&nbsp;'.HtmlTag::create( 'small', trim( $words->$keySuffix ), [
 				'class'		=> $options['suffixClass'],
-			) );
+			] );
 		return $label;
 	}
 

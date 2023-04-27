@@ -21,9 +21,9 @@ if( $data->code == -1 ){
 	) );
 }
 if( $data->code == 0 ){
-	$content	= $view->loadContentFile( 'html/provision/status/none.html', array(
+	$content	= $view->loadContentFile( 'html/provision/status/none.html', [
 		'serverUrl'		=> $serverUrl.'manage/my/license/add/'.$productId,
-	) );
+	] );
 }
 
 return '

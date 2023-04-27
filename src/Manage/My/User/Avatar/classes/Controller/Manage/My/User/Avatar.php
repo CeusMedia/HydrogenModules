@@ -17,7 +17,7 @@ class Controller_Manage_My_User_Avatar extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function index()
+	public function index(): void
 	{
 		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
 		$model		= new Model_User( $this->env );
@@ -28,7 +28,7 @@ class Controller_Manage_My_User_Avatar extends Controller
 		$this->addData( 'avatar', $avatar );					//
 	}
 
-	public function remove()
+	public function remove(): void
 	{
 		$avatar		= $this->modelAvatar->getByIndex( 'userId', $this->userId );
 		@unlink( $this->pathImages.$this->userId.'_'.$avatar->filename );
@@ -38,7 +38,7 @@ class Controller_Manage_My_User_Avatar extends Controller
 		$this->restart( NULL, TRUE );																//  @todo: make another redirect possible
 	}
 
-	public function upload()
+	public function upload(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();

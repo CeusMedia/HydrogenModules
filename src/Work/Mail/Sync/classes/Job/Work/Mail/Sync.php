@@ -47,14 +47,14 @@ class Job_Work_Mail_Sync extends Job_Abstract
 
 	protected function executeMailboxSync( $sync )
 	{
-		$parameters	= array(
+		$parameters	= [
 			'--host1 '.$this->hostMap[$sync->sourceMailHostId]->ip,
 			'--host2 '.$this->hostMap[$sync->targetMailHostId]->ip,
 			'--user1 '.$sync->sourceUsername,
 			'--user2 '.$sync->targetUsername,
 			'--password1 "'.$sync->sourcePassword.'"',
 			'--password2 "'.$sync->targetPassword.'"',
-		);
+		];
 		if( $this->hostMap[$sync->sourceMailHostId]->ssl )
 			$parameters[]	= '--ssl1';
 		if( $this->hostMap[$sync->targetMailHostId]->ssl )
@@ -93,9 +93,9 @@ $this->out( 'Code: '.$code );
 				'output'		=> json_encode( $results ),
 				'statistics'	=> json_encode( $statistics ),
 			) );
-			$this->logic->editSync( $sync->mailSyncId, array(
+			$this->logic->editSync( $sync->mailSyncId, [
 				'status'		=> Model_Mail_Sync::STATUS_SYNCHED,
-			) );
+			] );
 			$this->out( "DONE!" );
 			foreach( $statistics as $key => $value )
 				$this->out( $key.':'.$value );
@@ -107,9 +107,9 @@ $this->out( 'Code: '.$code );
 				'output'		=> json_encode( $results ),
 				'statistics'	=> json_encode( [] ),
 			) );
-			$this->logic->editSync( $sync->mailSyncId, array(
+			$this->logic->editSync( $sync->mailSyncId, [
 				'status'		=> Model_Mail_Sync::STATUS_ERROR,
-			) );
+			] );
 			$this->out( "ERROR!" );
 			$this->out( $lastline );
 		}

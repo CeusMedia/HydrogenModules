@@ -240,11 +240,11 @@ class Job_Job_Schedule extends Job_Abstract
 			catch( \Exception $e ){
 			}
 		}
-		$this->results	= array(
+		$this->results	= [
 			'numberFound'	=> $numberFound,
 			'numberRan'		=> $numberRan,
 			'numberdone'	=> $numberDone,
-		);
+		];
 		return 1;
 	}
 

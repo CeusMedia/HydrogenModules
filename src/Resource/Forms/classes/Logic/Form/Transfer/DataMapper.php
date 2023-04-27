@@ -5,8 +5,6 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Form_Transfer_DataMapper extends Logic
 {
-	protected $env;
-
 	/**
 	 *	Applies transfer rules on form data and returns resulting output data.
 	 *
@@ -15,7 +13,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		object		$rules			Rule object to apply
 	 *	@return		array
 	 */
-	public function applyRulesToFormData( $formData, $rules ): array
+	public function applyRulesToFormData( array $formData, object $rules ): array
 	{
 		$input	= new Dictionary( $formData );
 		$output	= new Dictionary();
@@ -41,7 +39,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$input			Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 */
-	protected function applyCreations( $creations, $input, $output )
+	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output )
 	{
 		foreach( $creations as $fieldName => $parameters ){
 			$buffer	= '';
@@ -72,7 +70,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyFilters( $filters, $input, $output )
+	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output )
 	{
 		foreach( $filters as $fieldName => $parameters ){
 			if( !$input->has( $fieldName ) ){
@@ -123,7 +121,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 						$operation	= strtolower( $action->operation );
 						$value		= $action->value ?? $input->get( $fieldName );
 						$value		= $this->resolveOperation( $operation, $value, $input );
-						$target		= $action->to ?? fieldName;
+						$target		= $action->to ?? $fieldName;
 						NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
 					}
 				}
@@ -134,7 +132,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 					$operation	= strtolower( $action->operation ?? 'set' );
 					$value		= $action->value ?? $input->get( $fieldName );
 					$value		= $this->resolveOperation( $operation, $value, $input );
-					$target		= $action->to ?? fieldName;
+					$target		= $action->to ?? $fieldName;
 					NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
 				}
 			}
@@ -145,12 +143,12 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array			$filters	Map of filter rules
+	 *	@param		array			$searches	Map of database searches
 	 *	@param		Dictionary		$input		Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyDatabaseSearches( $searches, $input, $output )
+	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output )
 	{
 		foreach( $searches as $fieldName => $parameters ){
 			if( empty( $parameters->table ) )
@@ -187,7 +185,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	}
 
 	/**
-	 *	Applies translater rules.
+	 *	Applies translator rules.
 	 *
 	 *	@access		protected
 	 *	@param		array			$translates	Map of translate rules
@@ -195,7 +193,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyTranslation( $translates, $input, $output )
+	protected function applyTranslation( array $translates, Dictionary $input, Dictionary $output )
 	{
 		foreach( $translates as $fieldName => $map ){
 			if( $input->has( $fieldName ) ){
@@ -203,7 +201,6 @@ class Logic_Form_Transfer_DataMapper extends Logic
 				$translate	= new Dictionary( (array) $map );
 				if( $translate->has( $value ) ){
 					$input->set( $fieldName, $translate->get( $value ) );
-					continue;
 				}
 			}
 		}
@@ -213,12 +210,12 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array			$filters	Map of filter rules
+	 *	@param		array			$copies		Map of filter rules
 	 *	@param		Dictionary		$input		Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyCopies( $copies, $input, $output )
+	protected function applyCopies( array $copies, Dictionary $input, Dictionary $output )
 	{
 		foreach( $copies as $fieldName )
 			if( $input->has( $fieldName ) )
@@ -234,7 +231,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyMappings( $map, $input, $output )
+	protected function applyMappings( array $map, Dictionary $input, Dictionary $output )
 	{
 		foreach( $map as $inputFieldName => $outputFieldName )
 			if( $input->has( $inputFieldName ) )
@@ -250,7 +247,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applySets( $map, $input, $output )
+	protected function applySets( array $map, Dictionary $input, Dictionary $output )
 	{
 		foreach( $map as $name => $value ){
 			$output->set( $name, $this->resolveValue( $value, $input ) );
@@ -265,11 +262,11 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	No prefix found, return given value.
 	 *
 	 *	@access		public
-	 *	@param		string
+	 *	@param		string			$value
 	 *	@param		Dictionary		$input		Input data dictionary
-	 *	@return		string
+	 *	@return		string|NULL
 	 */
-	protected function resolveValue( $value, $input )
+	protected function resolveValue( string $value, Dictionary $input ): ?string
 	{
 		$prefix	= substr( $value, 0, 1 );
 		switch( $prefix ){
@@ -284,13 +281,14 @@ class Logic_Form_Transfer_DataMapper extends Logic
 
 	/**
 	 *	Resolves function and returns created value.
+	 *	Work in progress. Needs to be extendable.
 	 *
 	 *	@access		protected
 	 *	@param		string		$function		Function to execute
 	 *	@param		mixed		$arguments		Function arguments if configured
-	 *	@return		string|integer|NULL
+	 *	@return		string|NULL
 	 */
-	protected function resolveFunction( string $function, $arguments = '' )
+	protected function resolveFunction( string $function, $arguments = '' ): ?string
 	{
 		switch( $function ){
 			case 'datetime':
@@ -305,15 +303,15 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	}
 
 	/**
-	 *	Resolves configured opteration an returns operated value.
+	 *	Resolves configured operation and returns operated value.
 	 *
 	 *	@access		protected
 	 *	@param		string		$operation		...
 	 *	@param		string		$value			Input value, if needed
-	 *	@param		mixed		$input			Map of form input data
+	 *	@param		Dictionary	$input			Map of form input data
 	 *	@return		string|integer|NULL
 	 */
-	protected function resolveOperation( $operation, $value, $input )
+	protected function resolveOperation( string $operation, string $value, Dictionary $input )
 	{
 		switch( strtolower( $operation ) ){
 			case 'set':
@@ -328,6 +326,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 				return ( (int) $value ) - 1;
 			case 'remove':
 			case 'delete':
+			default:
 				return NULL;
 		}
 	}

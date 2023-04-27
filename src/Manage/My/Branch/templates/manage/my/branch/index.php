@@ -48,14 +48,14 @@ foreach( $branches as $entry )
 }
 $rows	= implode( "\n", $rows );
 
-$heads	= array(
+$heads	= [
 //	'<input type="checkbox" class="toggler"/>',
 	$words['index']['headTitle'],
 	$words['index']['headCompany'],
 	$words['index']['headCreatedAt'],
 	$words['index']['headModifiedAt'],
 //	$words['index']['headAction'],
-);
+];
 $heads		= HtmlElements::TableHeads( $heads );
 $colgroup	= HtmlElements::ColumnGroup( /*'3%', */'32%', '25%', '15%', '15%'/*, '10%'*/ );
 

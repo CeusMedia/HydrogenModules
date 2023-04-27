@@ -1,19 +1,22 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Graph extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
 
 	protected Model_Work_Graph $modelGraph;
 	protected Model_Work_Graph_Node $modelNode;
 	protected Model_Work_Graph_Edge $modelEdge;
 
-	public function addEdge( $graphId, $nodeId = NULL )
+	public function addEdge( $graphId, $nodeId = NULL ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -24,7 +27,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( $nodeId ? 'node/'.$nodeId : $graphId, TRUE );
 	}
 
-	public function addGraph()
+	public function addGraph(): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -35,7 +38,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function addNode( $graphId )
+	public function addNode( $graphId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -46,7 +49,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( 'node/'.$nodeId /*$graphId*/, TRUE );
 	}
 
-	public function editEdge( $edgeId, $nodeId = NULL )
+	public function editEdge( $edgeId, $nodeId = NULL ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -58,7 +61,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( $nodeId ? 'node/'.$nodeId : 'edge/'.$edgeId, TRUE );
 	}
 
-	public function editGraph( $graphId )
+	public function editGraph( $graphId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -69,7 +72,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function editNode( $nodeId )
+	public function editNode( $nodeId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
@@ -81,7 +84,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( 'node/'.$nodeId, TRUE );
 	}
 
-	public function index( $graphId = NULL)
+	public function index( $graphId = NULL): void
 	{
 		if( $graphId )
 			$this->selectGraph( $graphId );
@@ -93,7 +96,7 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'nodes', $this->modelNode->getAllByIndex( 'graphId', $graphId ) );
 	}
 
-	public function edge( $edgeId, $nodeId = NULL )
+	public function edge( $edgeId, $nodeId = NULL ): void
 	{
 		$edge	= $this->modelEdge->get( $edgeId );
 		$graph	= $this->modelGraph->get( $edge->graphId );
@@ -106,7 +109,7 @@ class Controller_Work_Graph extends Controller
 //		$this->addData( 'edges', $this->modelEdge->getAllByIndex( 'graphId', $edge->graphId ) );
 	}
 
-	public function node( $nodeId )
+	public function node( $nodeId ): void
 	{
 		$node	= $this->modelNode->get( $nodeId );
 		$graph	= $this->modelGraph->get( $node->graphId );
@@ -119,7 +122,7 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'edgesOut', $this->modelEdge->getAllByIndex( 'fromNodeId', $nodeId ) );
 	}
 
-	public function selectGraph( $graphId )
+	public function selectGraph( $graphId ): void
 	{
 		$graph	= $this->modelGraph->get( $graphId );
 		if( !$graph ){
@@ -131,7 +134,7 @@ class Controller_Work_Graph extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $graphId, $force = NULL )
+	public function view( $graphId, $force = NULL ): void
 	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( !$graph )
@@ -172,7 +175,7 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'graphs', $graphs );
 	}
 
-	protected function renderGraph( string $graphId )
+	protected function renderGraph( string $graphId ): void
 	{
 		$graph		= $this->modelGraph->get( $graphId );
 		$nodes		= $this->modelNode->getAllByIndex( 'graphId', $graphId );

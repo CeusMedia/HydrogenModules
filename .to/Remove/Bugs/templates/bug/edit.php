@@ -4,19 +4,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $types	= $words['types'];
 krsort( $types );
-$optType	= array( '' => '- alle -' );
+$optType	= ['' => '- alle -'];
 foreach( $types as $key => $value )
 	$optType[$key]	= $value;
 $optType['_selected']	= $bug->type;
 
 $severities	= $words['severities'];
 krsort( $severities );
-$optSeverity	= array( '' => '- alle -' );
+$optSeverity	= ['' => '- alle -'];
 foreach( $severities as $key => $value )
 	$optSeverity[$key]	= $value;
 $optSeverity['_selected']	= $bug->severity;
 
-$optStatus	= array( '' => '- alle -' );
+$optStatus	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus['_selected']	= $bug->status;
@@ -59,7 +59,7 @@ $main	= '
 				</li>
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-					'.HtmlTag::create( 'textarea', $bug->content, array( 'name' => 'content', 'rows' => 9 ) ).'
+					'.HtmlTag::create( 'textarea', $bug->content, ['name' => 'content', 'rows' => 9] ).'
 				</li>
 			</ul>
 			<div class="buttonbar">

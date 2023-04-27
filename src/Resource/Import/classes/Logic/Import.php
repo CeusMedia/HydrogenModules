@@ -5,9 +5,11 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Import extends Logic
 {
-	protected $modelConnection;
+	protected Model_Import_Connection $modelConnection;
 
-	protected $modelConnector;
+	protected Model_Import_Connector $modelConnector;
+
+	protected array $connections		= [];
 
 	public function getConnectionInstanceFromId( $connectionId )
 	{

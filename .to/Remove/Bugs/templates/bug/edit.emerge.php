@@ -55,7 +55,7 @@ return '
 			<ul class="input">
 				<li>
 					<label for="content">'.$words['edit']['labelContent'].'</label><br/>
-					'.HtmlTag::create( 'textarea', '', array( 'name' => 'note', 'rows' => 13 ) ).'
+					'.HtmlTag::create( 'textarea', '', ['name' => 'note', 'rows' => 13] ).'
 				</li>
 			</ul>
 		</div>

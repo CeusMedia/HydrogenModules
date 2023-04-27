@@ -28,10 +28,10 @@ class View_Catalog extends View
 					$url		= $helper->getArticleUri( $articleId, TRUE );
 					$title		= $helper->renderArticleLink( $article );
 					$urlTrimmed	= TextTrimmer::trimCentric( $url, 120 );
-					$link		= HtmlTag::create( 'a', $urlTrimmed, array(
+					$link		= HtmlTag::create( 'a', $urlTrimmed, [
 						'href'	=> $url,
 						'class'	=> 'search-result-link-path',
-					) );
+					] );
 					$resultDocument->html	= '
 					<div class="search-result">
 						<div><small class="muted">Katalog: Artikel:</small></div>

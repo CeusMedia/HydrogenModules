@@ -20,11 +20,11 @@ $iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'
 //  --  PANEL: READERS  --  //
 $w			= (object) $words['edit_readers'];
 
-$statusIcons	= array(
+$statusIcons	= [
 	-1		=> 'remove',
 	0		=> 'star',
 	1		=> 'check',
-);
+];
 
 $labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
 $listReaders	= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
@@ -38,10 +38,10 @@ if( $groupReaders ){
 		$label			= $iconStatus.'&nbsp;&lt;'.$reader->email.'&gt;';
 		$urlReader		= './work/newsletter/reader/edit/'.$reader->newsletterReaderId;
 		$urlRemove		= './work/newsletter/group/removeReader/'.$group->newsletterGroupId.'/'.$reader->newsletterReaderId;
-		$attributes		= array(
+		$attributes		= [
 			'href'		=> $urlRemove,
 			'class'		=> 'btn btn-mini btn-inverse',
-		);
+		];
 		$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
 		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 		$linkReader		= HtmlTag::create( 'a', $label, ['href' => $urlReader] );
@@ -54,9 +54,9 @@ if( $groupReaders ){
 	$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser'] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listReaders );
-	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, array(
+	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> 'table table-condensed table-striped table-fixed'
-	) );
+	] );
 }
 $panelReaders	= '
 <div class="content-panel">
@@ -72,19 +72,19 @@ $w			= (object) $words['edit'];
 $optStatus	= HtmlElements::Options( $words['states'], $group->status );
 $optType	= HtmlElements::Options( $words['types'], $group->type );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$w->buttonCancel, [
 	'href'		=> './work/newsletter/group',
 	'class'		=> 'btn btn-small',
-) );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
+] );
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 	'type'		=> 'submit',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'save',
-) );
-$buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, array(
+] );
+$buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, [
 	'href'		=> './work/newsletter/group/export/'.$groupId,
 	'class'		=> 'btn btn-small not-btn-info',
-) );
+] );
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
 	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, array(
@@ -99,16 +99,16 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
 	'onclick'	=> "if(!confirm('Wirklich?')) return false;",
 ) );
 if( !$groupReaders )
-	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
+	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 		'href'		=> './work/newsletter/group/remove/'.$groupId,
 		'class'		=> 'btn btn-danger btn-small',
 		'onclick'	=> "return false;",
 		'disabled'	=> 'disabled',
-	) );
-$buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, array(
+	] );
+$buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, [
 	'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
 	'class'		=> 'btn btn-success btn-small',
-) );
+] );
 
 $panelForm	= '
 <div class="content-panel">

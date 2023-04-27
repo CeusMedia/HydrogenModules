@@ -11,11 +11,11 @@
  */
 class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 {
-	protected $filterKeyPrefix	= 'filter.work.mission.kanban.';
+	protected string $filterKeyPrefix		= 'filter.work.mission.kanban.';
 
-	protected $defaultFilterValues	= array(
+	protected array $defaultFilterValues	= [
 		'mode'		=> 'now',
-		'states'	=> array(
+		'states'	=> [
 			Model_Mission::STATUS_ABORTED,
 			Model_Mission::STATUS_REJECTED,
 			Model_Mission::STATUS_NEW,
@@ -23,22 +23,22 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 			Model_Mission::STATUS_PROGRESS,
 			Model_Mission::STATUS_READY,
 			Model_Mission::STATUS_FINISHED
-		),
-		'priorities'	=> array(
+		],
+		'priorities'	=> [
 			Model_Mission::PRIORITY_NONE,
 			Model_Mission::PRIORITY_HIGHEST,
 			Model_Mission::PRIORITY_HIGH,
 			Model_Mission::PRIORITY_NORMAL,
 			Model_Mission::PRIORITY_LOW,
 			Model_Mission::PRIORITY_LOWEST
-		),
-		'types'			=> array(
+		],
+		'types'			=> [
 			Model_Mission::TYPE_TASK,
 			Model_Mission::TYPE_EVENT
-		),
+		],
 		'order'			=> 'priority',
 		'direction'		=> 'ASC',
-	);
+	];
 
 	protected function __onInit(): void
 	{
@@ -48,20 +48,20 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		$this->initFilters( $this->session->get( 'auth_user_id' ) );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
-		$this->setData( array(
+		$this->setData( [
 			'userId'	=> $this->session->get( 'auth_user_id' ),
 			'year'		=> $date[0],
 			'month'		=> $date[1],
-		) );
+		] );
 	}
 
-	public function ajaxRenderIndex()
+	public function ajaxRenderIndex(): void
 	{
 		$userId	= $this->getData( 'userId' );
 		$this->addData( 'users', $this->userMap );
 	}
 
-	public function ajaxSetMissionStatus()
+	public function ajaxSetMissionStatus(): void
 	{
 		$missionId	= $this->request->get( 'missionId' );
 		$status		= (int) $this->request->get( 'status' );
@@ -76,10 +76,10 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 				throw new InvalidArgumentException( 'Invalid mission ID given' );
 			$responseStatus	= FALSE;
 			if( $mission->status != $status ){
-				$data	= array(
+				$data	= [
 					'status'		=> $status,
 					'modifiedAt'	=> time(),
-				);
+				];
 //				if( $status === 1 )
 //					$data['workerId']	= $this->userId;
 				$this->model->edit( $missionId, $data );
@@ -87,10 +87,10 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 				$responseStatus		= TRUE;
 				$mission	= $this->model->get( $missionId );
 			}
-			print json_encode( array(
+			print json_encode( [
 				'status'	=> $responseStatus,
 				'item'		=> $mission,
-			) );
+			] );
 		}
 		catch( Exception $e ){
 			header( "HTTP/1.1 400 OK" );
@@ -99,19 +99,19 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		exit;
 	}
 
-	public function index( $year = NULL, $month = NULL )
+	public function index( $year = NULL, $month = NULL ): void
 	{
 		$this->assignFilters();
 	}
 
-	protected function initDefaultFilters()
+	protected function initDefaultFilters(): void
 	{
 		parent::initDefaultFilters();
 		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	protected function initFilters( $userId )
+	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';

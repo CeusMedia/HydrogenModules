@@ -21,23 +21,23 @@ $panelForm		= '
 	<h3>Style-Angaben für HTML-Format <small class="muted"></small></h3>
 	<div class="content-panel-inner">
 <!--		<label for="input_style">'.$words->edit->labelStyle.'</label>-->
-		'.HtmlTag::create( 'textarea', $value, array(
+		'.HtmlTag::create( 'textarea', $value, [
 			'name'		=> 'style',
 			'id'		=> 'input_style',
 			'class'		=> 'span12 CodeMirror-auto',
 			'rows'		=> 30,
 			'readonly'	=> $isUsed ? "readonly" : NULL,
 //			'disabled'	=> $isUsed ? "disabled" : NULL,
-		) ).'
+		] ).'
 		'.$buttons.'
 	</div>
 </div>';
 
 $urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= HtmlTag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info',

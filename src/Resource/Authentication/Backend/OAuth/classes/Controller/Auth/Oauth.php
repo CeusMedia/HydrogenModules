@@ -1,23 +1,27 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Auth_Oauth extends Controller
 {
-	protected $clientId;
-	protected $clientSecret;
-	protected $clientUri;
-	protected $providerUri;
-	protected $config;
-	protected $session;
-	protected $reqest;
-	protected $cookie;
-	protected $messenger;
-	protected $logic;
+	protected Dictionary $config;
+	protected HttpRequest $request;
+	protected Dictionary $session;
+	protected MessengerResource $messenger;
+	protected HttpCookie $cookie;
+	protected Logic_Authentication_Backend_Oauth $logic;
 
+	protected string $clientId;
+	protected string $clientSecret;
+	protected string $clientUri;
+	protected string $providerUri;
+	protected bool $useCsrf;
 
 /*	public function ajaxEmailExists(){
 		print( json_encode( NULL ) );
@@ -29,7 +33,11 @@ class Controller_Auth_Oauth extends Controller
 		exit;
 	}
 */
-	public function index()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index(): void
 	{
 //		if( $this->session->get( 'oauth_access_token' ) ){
 //		}
@@ -66,9 +74,9 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $response->error ) ){
 					$error	= $response->error;
 					if( !empty( $response->error_description ) )
-						$error	= HtmlTag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, [
 							'title' => $response->error_description
-						) );
+						] );
 					$this->messenger->noteError( $error );
 				}
 				else{
@@ -117,7 +125,11 @@ class Controller_Auth_Oauth extends Controller
 		}
 	}
 
-	public function login()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function login(): void
 	{
 		if( $this->logic->isAuthenticated() )
 			$this->redirectAfterLogin();
@@ -161,9 +173,9 @@ class Controller_Auth_Oauth extends Controller
 				if( !empty( $responseData->error ) ){
 					$error	= $responseData->error;
 					if( !empty( $responseData->error_description ) )
-						$error	= HtmlTag::create( 'abbr', $error, array(
+						$error	= HtmlTag::create( 'abbr', $error, [
 							'title' => $responseData->error_description
-						) );
+						] );
 					$this->messenger->noteError( $error );
 				}
 
@@ -196,7 +208,7 @@ class Controller_Auth_Oauth extends Controller
 						$data['roleId']	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 						$userId			= $modelUser->add( $data );
 						$this->session->set( 'auth_user_id', $userId );
-						$this->session->set( 'auth_role_id', $roleId );
+						$this->session->set( 'auth_role_id', $data['roleId'] );
 						$this->logic->setAuthenticatedUser( $user );
 						if( $this->request->get( 'login_remember' ) )
 							$this->rememberUserInCookie( $user );
@@ -214,7 +226,11 @@ class Controller_Auth_Oauth extends Controller
 		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function logout(): void
 	{
 		$this->session->remove( 'oauth_access_token' );
 		$this->session->remove( 'oauth_access_expires_in' );
@@ -224,10 +240,11 @@ class Controller_Auth_Oauth extends Controller
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		if( $this->logic->isAuthenticated() ){
-			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, array(
+			$payload	= [
 				'userId'	=> $this->session->get( 'auth_user_id' ),
 				'roleId'	=> $this->session->get( 'auth_role_id' ),
-			) );
+			];
+			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->session->remove( 'auth_user_id' );
 			$this->session->remove( 'auth_role_id' );
 			$this->clearCurrentUser();
@@ -246,6 +263,10 @@ class Controller_Auth_Oauth extends Controller
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -309,7 +330,7 @@ class Controller_Auth_Oauth extends Controller
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogout( ?string $controller = NULL, ?string $action = NULL )
 	{
 		if( $controller )																			//  a redirect contoller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
@@ -327,7 +348,11 @@ class Controller_Auth_Oauth extends Controller
 		$this->restart( NULL );																		//  fallback: go to index (empty path)
 	}
 
-	protected function refreshToken()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function refreshToken(): void
 	{
 		if( $this->session->get( 'oauth_access_token' ) ){
 			if( time() >= $this->session->get( 'oauth_access_expires_at' ) ){
@@ -351,9 +376,9 @@ class Controller_Auth_Oauth extends Controller
 					if( !empty( $response->error ) ){
 						$error	= $response->error;
 						if( !empty( $response->error_description ) )
-							$error	= HtmlTag::create( 'abbr', $error, array(
+							$error	= HtmlTag::create( 'abbr', $error, [
 								'title' => $response->error_description
-							) );
+							] );
 						$this->messenger->noteError( $error );
 						$this->logout();
 					}
@@ -385,6 +410,7 @@ class Controller_Auth_Oauth extends Controller
 	 *	Redirects to "from" if given.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function tryLoginByCookie()
 	{

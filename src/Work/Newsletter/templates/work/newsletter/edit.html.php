@@ -21,10 +21,10 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&n
 $iconExternal	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-external-link'] ).'&nbsp;';
 
 //  --  PANEL: PREVIEW  --  //
-$iframeHtml			= HtmlTag::create( 'iframe', '', array(
+$iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> './work/newsletter/preview/html/'.$newsletter->newsletterId,
 	'frameborder'	=> '0',
-) );
+] );
 $buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
@@ -58,11 +58,11 @@ if( $styles ){
 	$listStyles		= [];
 	foreach( $styles as $nr => $item ){
 //		$label			= preg_replace( "@^([a-z]+://[^/]+/)@", '<small class="muted">\\1</small>', $item );
-		$link			= HtmlTag::create( 'a', $iconExternal.$item, array(
+		$link			= HtmlTag::create( 'a', $iconExternal.$item, [
 			'href'		=> $item,
 			'target'	=> '_blank',
 			'class'		=> 'autocut',
-		) );
+		] );
 		$styles[$nr]	= HtmlTag::create( 'li', $link );
 	}
 	$listStyles		= HtmlTag::create( 'ul', $styles, ['class' => "unstyled"] );
@@ -84,11 +84,11 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, ar
 ) );
 
 
-$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'href'		=> './work/newsletter/preview/html/'.$newsletterId.'/1',
 	'target'	=> 'NewsletterPreview',
 	'class'		=> 'btn btn-info btn-small',
-) );
+] );
 
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
 	'type'			=> "button",
@@ -99,14 +99,14 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 ) );
 
 
-$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, array(
+$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/0',
 	'class'	=> 'btn not-btn-small',
-) );
-$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, array(
+] );
+$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/2',
 	'class'	=> 'btn not-btn-small',
-) );
+] );
 
 //  --  PANEL: FORM  --  //
 $w				= (object) $words->edit_html;

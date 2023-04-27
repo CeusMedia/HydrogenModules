@@ -5,9 +5,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_CategoryPageList
 {
-	protected $env;
-	protected $activePageId	= 0;
-	protected $pages		= [];
+	protected Environment $env;
+	protected string $activePageId	= '0';
+	protected array $pages			= [];
 
 	public function __construct( Environment $env )
 	{
@@ -33,19 +33,19 @@ class View_Helper_Info_Manual_CategoryPageList
 		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 	}
 
-	public function setActivePageId( $pageId ): self
+	public function setActivePageId( string $pageId ): self
 	{
 		$this->activePageId	= $pageId;
 		return $this;
 	}
 
-	public function setCategoryId( $categoryId ): self
+	public function setCategoryId( string $categoryId ): self
 	{
 		$model			= new Model_Manual_Page( $this->env );
-		$conditions		= array(
+		$conditions		= [
 			'status'			=> '>= '.Model_Manual_Page::STATUS_NEW,
 			'manualCategoryId'	=> $categoryId,
-		);
+		];
 		$orders			= ['rank' => 'ASC'];
 		$this->pages	= $model->getAll( $conditions, $orders );
 		return $this;

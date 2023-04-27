@@ -31,7 +31,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'row-fluid',
 						HTML::DivClass( 'span12', array(
 							HTML::Label( 'username', $w->labelUsernameNew, 'mandatory', $w->labelUsernameNew_title ),
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'			=> "text",
 								'name'			=> "username",
 								'id'			=> "input_username",
@@ -39,7 +39,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'value'			=> '',
 								'autocomplete'	=> "off"
-							) ),
+							] ),
 						) )
 					),
 				) ),
@@ -51,7 +51,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 					HTML::DivClass( 'span6', array(
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
-							HtmlTag::create( 'input', '', array(
+							HtmlTag::create( 'input', '', [
 								'type'			=> 'password',
 								'name'			=> 'password',
 								'id'			=> 'input_password',
@@ -59,7 +59,7 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'required'		=> 'required',
 								'autocomplete'	=> 'current-password',
 								'placeholder'	=> $w->labelPasswordCurrent,
-							) ).
+							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
 					) )

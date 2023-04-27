@@ -1,9 +1,17 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Provision_Product extends Controller
 {
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Logic_Catalog_Provision $logicProvision;
+	protected Model_Provision_Product $modelProduct;
+	protected Model_Provision_Product_License $modelLicense;
+
 	public function add()
 	{
 		if( $this->request->has( 'save' ) ){
@@ -42,10 +50,14 @@ class Controller_Manage_Catalog_Provision_Product extends Controller
 	{
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
-		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->request				= $this->env->getRequest();
+		$this->logicProvision		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->messenger			= $this->env->getMessenger();
 		$this->modelProduct			= new Model_Provision_Product( $this->env );
 		$this->modelLicense			= new Model_Provision_Product_License( $this->env );

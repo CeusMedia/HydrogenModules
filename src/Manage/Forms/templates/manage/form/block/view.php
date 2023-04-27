@@ -16,14 +16,14 @@ $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 	'href'	=> './manage/form/block',
 	'class'	=> 'btn',
-) );
-$buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', array(
+] );
+$buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', [
 	'href'	=> './manage/form/block/edit/'.$block->blockId,
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
 return HtmlTag::create( 'div', array(
 	HtmlTag::create( 'div', array(
@@ -34,10 +34,10 @@ return HtmlTag::create( 'div', array(
 		) ),
 	), [] ),
 	HtmlTag::create( 'br' ),
-	HtmlTag::create( 'form', $block->content, array(
+	HtmlTag::create( 'form', $block->content, [
 		'class'	=> 'cmforms',
 		'style' => 'border: 2px solid gray; padding: 2em;'
-	) ),
+	] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'hr' ),
 		join( ' ', [$buttonCancel, $buttonEdit] ),

@@ -10,7 +10,7 @@ class Controller_Work_Billing_Corporation extends Controller
 	protected Logic_Billing $logic;
 	protected Model_Billing_Corporation $modelCorporation;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$corporationId		= $this->modelCorporation->add( [
@@ -24,7 +24,7 @@ class Controller_Work_Billing_Corporation extends Controller
 		}
 	}
 
-	public function edit( $corporationId )
+	public function edit( string $corporationId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$this->modelCorporation->edit( $corporationId, [
@@ -37,7 +37,7 @@ class Controller_Work_Billing_Corporation extends Controller
 		$this->addData( 'corporation', $this->modelCorporation->get( $corporationId ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$corporations	= $this->modelCorporation->getAll();
 		$this->addData( 'corporations', $corporations );
@@ -45,9 +45,9 @@ class Controller_Work_Billing_Corporation extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->logic	= new Logic_Billing( $this->env );
 		$this->request	= $this->env->getRequest();
 		$this->session	= $this->env->getSession();
+		$this->logic	= new Logic_Billing( $this->env );
 		$this->modelCorporation	= new Model_Billing_Corporation( $this->env );
 	}
 }

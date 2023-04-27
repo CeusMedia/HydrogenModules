@@ -9,11 +9,19 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 {
-	static protected $modules	= [];
+	protected static array $modules		= [];
 
-	protected $missionId		= NULL;
+	protected ?string $moduleId			= NULL;
+	protected ?string $module			= NULL;
 
-	static public function decorateTimer( Environment $env, $timer, bool $strict = TRUE )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object		$timer
+	 *	@param		bool		$strict
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE )
 	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )
@@ -44,16 +52,24 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		}
 	}
 
-	static public function getRegisteredModules()
+	/**
+	 *	@return		array
+	 */
+	public static function getRegisteredModules(): array
 	{
 		return self::$modules;
 	}
 
-	public function registerModule( $module )
+	/**
+	 *	@param		object		$module
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
+	public function registerModule( object $module ): self
 	{
 		$arguments		= [$this->env];
 		$modelInstance	= ObjectFactory::createObject( $module->modelClass, $arguments );
-		self::$modules[$module->moduleId]	= (object) array(
+		self::$modules[$module->moduleId]	= (object) [
 			'id'			=> $module->moduleId,
 			'title'			=> $module->moduleId,
 			'modelClass'	=> $module->modelClass,
@@ -61,9 +77,14 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 			'model'			=> $modelInstance,
 			'link'			=> './'.$module->linkDetails,
 			'column'		=> 'title',
-		);
+		];
+		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		$conditions	= [];
@@ -78,14 +99,14 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 			return '';
 		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
-		$linkProject	= HtmlTag::create( 'a', $timer->project->title, array(
+		$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 			'href'	=> './manage/project/view/'.$timer->project->projectId,
 			'class'	=> 'autocut',
-		) );
-		$linkModule		= HtmlTag::create( 'a', $timer->relationTitle, array(
+		] );
+		$linkModule		= HtmlTag::create( 'a', $timer->relationTitle, [
 			'href'	=> $timer->relationLink,
 			'class'	=> 'autocut',
-		) );
+		] );
 		$secondsNeeded	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );
 		return '
 	<div class="not-well not-well-large well alert alert-info">
@@ -112,7 +133,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 	</div>
 	<style>
 .well .dl-horizontal {
-	margin: 0px;
+	margin: 0;
 	}
 .well .dl-horizontal dt {
 	width: 120px;
@@ -129,13 +150,21 @@ $(document).ready(function(){
 	</script>';
 	}
 
-	public function setModule( $module ): self
+	/**
+	 *	@param		string		$module
+	 *	@return		self
+	 */
+	public function setModule( string $module ): self
 	{
 		$this->module		= $module;
 		return $this;
 	}
 
-	public function setModuleId( $moduleId ): self
+	/**
+	 *	@param		string		$moduleId
+	 *	@return		self
+	 */
+	public function setModuleId( string $moduleId ): self
 	{
 		$this->moduleId	= $moduleId;
 		return $this;

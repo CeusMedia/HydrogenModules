@@ -59,12 +59,12 @@ class Hook_Manage_Project extends Hook
 		$modelRelation	= new Model_Project_User( $env );
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 
-		$lists	= (object) array( 'entities' => [], 'relations' => [] );
+		$lists	= (object) ['entities' => [], 'relations' => []];
 		foreach( $projects as $project ){
-			$modelRelation->removeByIndices( array(
+			$modelRelation->removeByIndices( [
 				'projectId'	=> $project->projectId,
 				'userId'	=> $data->userId
-			) );
+			] );
 			$lists->relations[]	= $project;
 			$users		= $logic->getProjectUsers( $project->projectId );
 			if( count( $users ) === 0 ){
@@ -101,13 +101,13 @@ class Hook_Manage_Project extends Hook
 		$projects		= $logic->getUserProjects( $data->userId, FALSE );
 		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] );
 
-		$lists	= (object) array( 'entities' => [], 'relations'	=> [] );
+		$lists	= (object) ['entities' => [], 'relations'	=> []];
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
-			$item		= (object) array(
+			$item		= (object) [
 				'id'		=> $data->linkable ? $project->projectId : NULL,
 				'label'		=> $icon.'&nbsp;'.$project->title,
-			);
+			];
 			if( count( $users ) === 1 && isset( $users[$data->userId] ) ){								//  no other users in project
 				$lists->entities[]	= $item;
 			}
@@ -177,14 +177,14 @@ class Hook_Manage_Project extends Hook
 			else{
 				$fullname	= '('.$user->firstname.' '.$user->surname.')';
 				$fullname	= HtmlTag::create( 'small', $fullname, ['class' => 'muted'] );
-				$link		= HtmlTag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, array(
+				$link		= HtmlTag::create( 'a', $iconUser.'&nbsp;'.$user->username.'&nbsp;'.$fullname, [
 					'href'	=> 'member/view/'.$user->userId,
-				) );
+				] );
 			}
-			$list[]		= (object) array(
+			$list[]		= (object) [
 				'id'		=> $data->linkable ? $user->userId : NULL,
 				'label'		=> $link,
-			);
+			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$data,																					//  hook content data

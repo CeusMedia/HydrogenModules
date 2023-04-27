@@ -103,12 +103,12 @@ $panelEdit	= HTML::Form( './manage/company/edit/'.$company->companyId, 'company_
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
 					HTML::Label( 'description', $w->labelDescription ).
-					HtmlTag::create( 'textarea', $company->description, array(
+					HtmlTag::create( 'textarea', $company->description, [
 						'name'	=> 'description',
 						'id'	=> 'input_description',
 						'class' => 'span12',
 						'rows' => '10'
-					) )
+					] )
 				)
 			).
 			HTML::Buttons(

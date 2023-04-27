@@ -12,10 +12,10 @@ use CeusMedia\HydrogenFramework\View;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$optStatus	= array(
+$optStatus	= [
 	0		=> 'deaktiviert',
 	1		=> 'aktiviert',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $role->status );
 
 $panelAdd	= '

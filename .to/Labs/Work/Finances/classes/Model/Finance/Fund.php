@@ -6,7 +6,7 @@ class Model_Finance_Fund extends Model
 {
 	protected string $name		= 'finance_funds';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'fundId',
 		'userId',
 		'type',
@@ -18,17 +18,17 @@ class Model_Finance_Fund extends Model
 		'title',
 		'createdAt',
 		'modifiedAt',
-	);
+	];
 
 	protected string $primaryKey	= 'fundId';
 
-	protected array $indices		= array(
+	protected array $indices		= [
 		'userId',
 		'type',
 		'scope',
 		'ISIN',
 		'currency',
-	);
+	];
 
 	protected int $fetchMode	= PDO::FETCH_OBJ;
 }

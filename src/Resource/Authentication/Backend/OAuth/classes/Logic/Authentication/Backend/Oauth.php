@@ -1,41 +1,46 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Oauth extends Logic
 {
-	protected $modelUser;
-	protected $modelRole;
-	protected $moduleConfig;
-	protected $providerUri;
+	protected Dictionary $config;
+	protected Dictionary $session;
+	protected Dictionary $moduleConfig;
+	protected Model_User $modelUser;
+	protected Model_Role $modelRole;
+	protected string $providerUri;
 
-	public function checkPassword( $userId, string $password ): bool
+	public function checkPassword( string $userId ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
-		if( !$this->modelUser->get( $userId ) )
+		$user	= $this->modelUser->get( $userId );
+		if( !$user )
 			return FALSE;
 
-		$authorization	= base64_encode( implode( ':', array(
+		$request		= $this->env->getRequest();
+		$authorization	= base64_encode( implode( ':', [
 			$this->moduleConfig->get( 'provider.client.ID' ),
 			$this->moduleConfig->get( 'provider.client.secret' ),
-		) ) );
-		$postData		= http_build_query( array(
+		] ) );
+		$postData		= http_build_query( [
 			'grant_type'	=> 'password',
 			'username'		=> $user->username,
 			'password'		=> $request->get( 'password' ),
 			'scope'			=> $request->get( 'scope' ),
-		) );
+		] );
 		$handle	= new NetCurl();
 		$handle->setUrl( $this->providerUri.'/token' );
 		$handle->setOption( CURLOPT_POST, TRUE );
 		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-		$handle->setOption( CURLOPT_HTTPHEADER, array(
+		$handle->setOption( CURLOPT_HTTPHEADER, [
 			'Authorization: Basic '.$authorization,
 			'Content-Type: application/x-www-form-urlencoded',
 			'Content-Length: '.strlen( $postData ),
-		) );
+		] );
 		$response	= $handle->exec();
 		$response	= json_decode( $response );
 		if( $response && $response->access_token )
@@ -43,12 +48,17 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return FALSE;
 	}
 
-	public function clearCurrentUser()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function clearCurrentUser(): void
 	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
 		$this->session->remove( 'auth_status_id' );
-		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
+		$payload	= [];
+		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
 	public function getCurrentRole( bool $strict = TRUE )
@@ -125,14 +135,14 @@ class Logic_Authentication_Backend_Oauth extends Logic
 	{
 	}
 
-	public function setAuthenticatedUser( $user )
+	public function setAuthenticatedUser( object $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user )
+	public function setIdentifiedUser( object $user ): self
 	{
 		$this->session->set( 'auth_user_id', $user->userId );
 		$this->session->set( 'auth_role_id', $user->roleId );
@@ -144,6 +154,10 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return $this;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();

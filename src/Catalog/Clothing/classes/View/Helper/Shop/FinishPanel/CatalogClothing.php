@@ -10,7 +10,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 	protected WebEnvironment $env;
 	protected Logic_Shop $logicShop;
 	protected Dictionary $options;
-	protected $orderId					= NULL;
+	protected ?string $orderId			= NULL;
 	protected ?object $address			= NULL;
 
 	public function __construct( WebEnvironment $env )
@@ -54,7 +54,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 		return $view->loadContentFile( 'html/catalog/clothing/finished.html', $data );
 	}
 
-	public function setOrderId( $orderId ): self
+	public function setOrderId( string $orderId ): self
 	{
 		$this->orderId	= $orderId;
 		$order			= $this->logicShop->getOrder( $orderId );

@@ -6,13 +6,13 @@ class Model_Finance_FundPrice extends Model
 {
 	protected string $name		= 'finance_fund_prices';
 
-	protected array $columns	= array(
+	protected array $columns	= [
 		'fundPriceId',
 		'fundId',
 		'pieces',
 		'price',
 		'timestamp',
-	);
+	];
 
 	protected string $primaryKey	= 'fundPriceId';
 

@@ -89,13 +89,14 @@ class View_Helper_Mail_Exception_Facts{
 					$helperPrevious->setTextLabelLength( 12 );
 					$helperPrevious->setException( $this->exception->getPrevious() );
 					$helperPrevious->setShowPrevious();
-					$helperFacts->add( 'previous', $helperPrevious->render(), $helperPrevious->renderAsText() );
+					$this->helper->add( 'previous', $helperPrevious->render(), $helperPrevious->renderAsText() );
 				}
 			}
 		}
 	}
 
-	public function render(){
+	public function render(): string
+	{
 		if( !$this->helper )
 			throw new RuntimeException( 'No exception set' );
 		return $this->helper->render();

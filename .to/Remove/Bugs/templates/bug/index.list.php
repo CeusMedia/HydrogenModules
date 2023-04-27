@@ -8,21 +8,21 @@ foreach( $bugs as $bug ){
 	$reporter	= '';
 	$manager	= '';
 	if( $bug->reporterId ){
-		$link		= HtmlTag::create( 'a', $users[$bug->reporterId]->username, array( 'href' => './user/edit/'.$bug->reporterId ) );
-		$reporter	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->reporterId]->roleId ) );
+		$link		= HtmlTag::create( 'a', $users[$bug->reporterId]->username, ['href' => './user/edit/'.$bug->reporterId] );
+		$reporter	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$users[$bug->reporterId]->roleId] );
 	}
 	if( $bug->managerId ){
-		$link		= HtmlTag::create( 'a', $users[$bug->managerId]->username, array( 'href' => './user/edit/'.$bug->managerId ) );
-		$manager	= HtmlTag::create( 'span', $link, array( 'class' => 'role role'.$users[$bug->managerId]->roleId ) );
+		$link		= HtmlTag::create( 'a', $users[$bug->managerId]->username, ['href' => './user/edit/'.$bug->managerId] );
+		$manager	= HtmlTag::create( 'span', $link, ['class' => 'role role'.$users[$bug->managerId]->roleId] );
 	}
 	$notes		= count( $bug->notes );
 	$changes	= count( $bug->changes );
 	$changes	= ( $notes || $changes ) ? ' mit '.$changes.' Veränderung(en) und '.$notes.' Notiz(en)' : '';
 	$link		= HtmlElements::Link( './bug/edit/'.$bug->bugId, $bug->title, 'bug-title' );
-	$type		= HtmlTag::create( 'span', $words['types'][$bug->type], array( 'class' => 'bug-type type-'.$bug->type ) );
-	$severity	= HtmlTag::create( 'span', $words['severities'][$bug->severity], array( 'class' => 'bug-severity severity-'.$bug->severity ) );
-	$priority	= HtmlTag::create( 'span', $words['priorities'][$bug->priority], array( 'class' => 'bug-priority priority-'.$bug->priority ) );
-	$status		= HtmlTag::create( 'span', $words['states'][$bug->status], array( 'class' => 'bug-status status-'.$bug->status ) );
+	$type		= HtmlTag::create( 'span', $words['types'][$bug->type], ['class' => 'bug-type type-'.$bug->type] );
+	$severity	= HtmlTag::create( 'span', $words['severities'][$bug->severity], ['class' => 'bug-severity severity-'.$bug->severity] );
+	$priority	= HtmlTag::create( 'span', $words['priorities'][$bug->priority], ['class' => 'bug-priority priority-'.$bug->priority] );
+	$status		= HtmlTag::create( 'span', $words['states'][$bug->status], ['class' => 'bug-status status-'.$bug->status] );
 	$progress	= $bug->progress ? HtmlTag::create( 'span', $bug->progress.'%', array( 'class' => 'bug-progress progress-'.( floor( $bug->progress / 25 ) * 25 ) ) ) : "-"; 
 	$createdAt	= date( 'd.m.Y H:i:s', $bug->createdAt );
 	$modifiedAt	= $bug->modifiedAt ? date( 'd.m.Y H:i:s', $bug->modifiedAt ) : "-";

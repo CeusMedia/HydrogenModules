@@ -2,44 +2,47 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $reserve */
+/** @var object[] $corporations */
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash-o'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
 	'href'	=> './work/billing/reserve',
 	'class'	=> 'btn btn',
-) );
+] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', array(
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
-) );
+] );
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 	'href'	=> './work/billing/reserve/remove/'.$reserve->reserveId,
 	'class'	=> 'btn btn-danger',
-) );
+] );
 
-$optStatus	= array(
+$optStatus	= [
 	0	=> 'inaktiv',
 	1	=> 'aktiv',
-);
+];
 $optStatus	= HtmlElements::Options( $optStatus, $reserve->status );
 
 
-$optCorporation	= array(
+$optCorporation	= [
 	'0'	=> '- Person per Anteil -',
-);
+];
 foreach( $corporations as $corporation )
 	$optCorporation[$corporation->corporationId]	= $corporation->title;
 $optCorporation	= HtmlElements::Options( $optCorporation, $reserve->corporationId );
 
-$optPersonalize	= array(
+$optPersonalize	= [
 	0	=> 'nein',
 	1	=> 'ja',
-);
+];
 $optPersonalize	= HtmlElements::Options( $optPersonalize, $reserve->personalize );
 
 return '

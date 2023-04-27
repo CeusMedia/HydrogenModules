@@ -13,9 +13,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $allUsers */
 /** @var array $data */
 
-$indicator	= new HtmlIndicator( array(
+$indicator	= new HtmlIndicator( [
 	'useColor'	=> FALSE,
-) );
+] );
 
 function renderTime( int $seconds ): string
 {
@@ -35,10 +35,10 @@ function renderTimers( Web $env, $timers ): string
 
 		$linkRelation	= '';
 		if( $timer->moduleId ){
-			$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), array(
+			$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), [
 				'href'		=> $timer->relationLink,
 				'class'		=> 'title autocut',
-			) );
+			] );
 			$linkRelation	= '<small><span class="muted">'.$timer->type.':</span> '.$linkRelation.'</small>';
 			$linkRelation	= HtmlTag::create( 'div', $linkRelation, ['class' => 'autocut'] );
 		}

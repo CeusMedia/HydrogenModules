@@ -48,7 +48,7 @@
 	<relations>
 		<needs type="module">Manage_My_User</needs>
 	</relations>
-	<hook type="resource" resource="MyUser" event="registerTabs">View_Manage_My_User_Avatar::___onRegisterTab</hook>
+	<hook type="resource" resource="MyUser" event="registerTabs">Hook_Manage_My_User_Avatar::onRegisterTab</hook>
 	<hook type="resource" resource="User" event="remove">Hook_Manage_My_User_Avatar::onUserRemove</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_avatars`;

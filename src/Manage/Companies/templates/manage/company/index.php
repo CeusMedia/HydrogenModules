@@ -43,14 +43,14 @@ foreach( $companies as $entry ){
 }
 $rows	= implode( "\n", $rows );
 
-$heads	= array(
+$heads	= [
 //	'<input type="checkbox" class="toggler"/>',
 	$words['index']['headTitle'],
 	$words['index']['headCity'],
 	$words['index']['headCreatedAt'],
 	$words['index']['headModifiedAt'],
 	$words['index']['headAction'],
-);
+];
 $heads		= HtmlElements::TableHeads( $heads );
 $colgroup	= HtmlElements::ColumnGroup( '42%', '20%', '15%', '15%', '5%' );
 $thead		= HtmlTag::create( 'thead', $heads );

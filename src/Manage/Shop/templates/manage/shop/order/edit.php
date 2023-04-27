@@ -8,102 +8,102 @@ $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= [new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
 
 $states	= array(
-	(object) array(
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [-5, -4, 3],
 		'to'		=> -6,
 		'label'		=> 'erstattet',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [4, 5, 6],
 		'to'		=> -5,
 		'label'		=> 'reklamiert',
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-left',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> FALSE,
 		'from'		=> [3],
 		'to'		=> -4,
 		'label'		=> 'nicht zugestellt',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [2],
 		'to'		=> -3,
 		'label'		=> 'nicht bezahlt',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [2],
 		'to'		=> -2,
 		'label'		=> 'storniert',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> FALSE,
 		'from'		=> [0],
 		'to'		=> -1,
 		'label'		=> 'abbrechen',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> FALSE,
 		'from'		=> [2],
 		'to'		=> 1,
 		'label'		=> 'nicht bezahlt',
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> FALSE,
 		'from'		=> [ -6, -2],
 		'to'		=> 2,
 		'label'		=> 'bestellt',
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [-3, 2],
 		'to'		=> 3,
 		'label'		=> 'bezahlt',
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> FALSE,
 		'from'		=> [-4, 3],
 		'to'		=> 4,
 		'label'		=> 'teilweise',
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [3, 4],
 		'to'		=> 5,
 		'label'		=> 'zugestellt',
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
-	),
-	(object) array(
+	],
+	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [5],
 		'to'		=> 6,
 		'label'		=> 'fertig!',
 		'class'		=> 'btn-success',
 		'icon'		=> 'ok',
-	),
+	],
 );
 
 foreach( $states as $status ){
@@ -215,12 +215,12 @@ foreach( $order->positions as $position ){
 	$rows[]			= HtmlTag::create( 'tr', $cells, $attributes );
 }
 
-$tableHeads		= HtmlElements::TableHeads( array(
+$tableHeads		= HtmlElements::TableHeads( [
 	$w->head_quantity,
 	$w->head_article,
 	$w->head_bridge,
 	$w->head_status,
-) );
+] );
 $tableColumns	= HtmlElements::ColumnGroup( ['60', '', '220', '180'] );
 $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $rows );

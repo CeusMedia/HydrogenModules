@@ -6,15 +6,16 @@ class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract{
 	protected $amount;
 	protected $min				= 0;
 	protected $max				= NULL;
-	protected $step				= '0.01';
+	protected string $step			= '0.01';
 
-	protected $id				= 'input_amount';
-	protected string $name				= 'amount';
-	protected $class			= 'span12';
-	protected $required			= 'required';
+	protected string $id			= 'input_amount';
+	protected string $name			= 'amount';
+	protected string $class			= 'span12';
+	protected string $required		= 'required';
 
-	public function render(){
-		return HtmlTag::create( 'input', NULL, array(
+	public function render(): string
+	{
+		return HtmlTag::create( 'input', NULL, [
 			'type'		=> 'number',
 			'step'		=> $this->step,
 			'min'		=> $this->min,
@@ -24,30 +25,35 @@ class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract{
 			'class'		=> $this->class,
 			'required'	=> $this->required,
 			'value'		=> htmlentities( $this->amount, ENT_QUOTES, 'UTF-8' ),
-		) );
+		] );
 	}
 
-	public function set( $amount ){
+	public function set( $amount ): self
+	{
 		$this->amount	= $amount;
 		return $this;
 	}
 
-	public function setClass( $class ){
+	public function setClass( $class ): self
+{
 		$this->class	= $class;
 		return $this;
 	}
 
-	public function setMax( $max ){
+	public function setMax( $max ): self
+{
 		$this->max		= $max;
 		return $this;
 	}
 
-	public function setMin( $min ){
+	public function setMin( $min ): self
+	{
 		$this->min		= $min;
 		return $this;
 	}
 
-	public function setName( $name ){
+	public function setName( $name ): self
+	{
 		$this->id		= 'input_'.$name;
 		$this->name		= $name;
 		return $this;

@@ -155,12 +155,12 @@ class Controller_Manage_My_Provision_License extends Controller
 
 				$receiver	= $this->logicProvision->getUser( $userId );
 				$owner		= $this->logicProvision->getUser( $userLicense->userId );
-				$mail		= new Mail_License_Key_Assigned( $this->env, array(
+				$mail		= new Mail_License_Key_Assigned( $this->env, [
 					'userLicense'		=> $userLicense,
 					'userLicenseKey'	=> $userLicenseKey,
 					'keyOwner'			=> $receiver,
 					'licenseOwner'		=> $owner,
-				) );
+				] );
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->handleMail( $mail, $receiver, $language );
 				$this->messenger->noteNotice( 'Der Benutzer wurde per Mail über den Lizenzschlüssel informiert.' );

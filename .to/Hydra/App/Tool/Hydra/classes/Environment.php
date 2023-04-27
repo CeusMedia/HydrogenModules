@@ -129,13 +129,13 @@ class Tool_Hydrogen_Setup_Environment extends WebEnvironment
 
 		try{
 			$modules	= array(
-				'Resource_Library_cmModules'	=> array(
+				'Resource_Library_cmModules'	=> [
 					'path'	=> CMF_PATH,
-				),
-				'Resource_Cache'			=> array(
+				],
+				'Resource_Cache'			=> [
 					'type'		=> 'Folder',
 					'resource'	=> 'tmp/cache/'
-				),
+				],
 				'Admin_Instances'			=> array(),
 				'Admin_Modules'				=> array(),
 				'Admin_Module_Sources'		=> array(),
@@ -270,10 +270,10 @@ class Tool_Hydrogen_Setup_Environment extends WebEnvironment
 			if( !preg_match( '/^\//', $pathApp ) )
 				$pathApp	= getEnv( 'DOCUMENT_ROOT' ).'/'.$pathApp;
 
-			$options	= array(
+			$options	= [
 				'configFile'	=> $pathApp.$pathConfig.$fileConfig,
 				'pathApp'		=> $pathApp
-			);
+			];
 			try{
 				$this->remote		= new RemoteEnvironment( $options );
 			}

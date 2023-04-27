@@ -13,16 +13,16 @@ foreach( $words['states'] as $key => $value )
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 
-$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, array(
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-info',
-) );
+] );
 
-$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, array(
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, [
 	'href'	=> './manage/news/filter/reset',
 	'class'	=> 'btn btn-inverse btn-small',
-) );
+] );
 
 
 return '
@@ -42,10 +42,10 @@ return '
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
-			'.HtmlTag::create( 'div', join( '&nbsp;', array(
+			'.HtmlTag::create( 'div', join( '&nbsp;', [
 				$buttonFilter,
 				$buttonReset,
-			) ), ['class' => 'buttonbar'] ).'
+			] ), ['class' => 'buttonbar'] ).'
 		</form>
 	</div>
 </div>';
