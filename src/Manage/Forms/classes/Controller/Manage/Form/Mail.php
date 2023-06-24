@@ -41,11 +41,12 @@ class Controller_Manage_Form_Mail extends Controller
 
 	public function filter( $reset = NULL ): void
 	{
+		$filters	= array_keys( $this->filters );
 		if( $reset ){
-			foreach( $this->filters as $filter )
+			foreach( $filters as $filter )
 				$this->session->remove( $this->filterPrefix.$filter );
 		}
-		foreach( $this->filters as $filter ){
+		foreach( $filters as $filter ){
 			if( $this->request->has( $filter ) ){
 				$value	= $this->request->get( $filter );
 				$this->session->set( $this->filterPrefix.$filter, $value );
@@ -57,7 +58,7 @@ class Controller_Manage_Form_Mail extends Controller
 	public function index( $page = 0 ): void
 	{
 		$filters		= new Dictionary( array_merge(
-			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
+			array_combine( $this->filters, array_fill( 0, count( $this->filters ), '' ) ),
 			$this->session->getAll( $this->filterPrefix )
 		) );
 

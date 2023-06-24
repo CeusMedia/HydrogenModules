@@ -93,20 +93,20 @@ class Controller_Manage_Form_Fill extends Controller
 
 	public function index( $page = NULL ): void
 	{
-		$filterFillId	= $this->session->get( 'manage_form_fill_fillId' );
-		$filterEmail	= $this->session->get( 'manage_form_fill_email' );
+		$filterFillId	= $this->session->get( 'manage_form_fill_fillId', '' );
+		$filterEmail	= $this->session->get( 'manage_form_fill_email', '' );
 		$filterFormId	= $this->session->get( 'manage_form_fill_formId', [] );
-		$filterStatus	= $this->session->get( 'manage_form_fill_status' );
+		$filterStatus	= $this->session->get( 'manage_form_fill_status', '' );
 
 		$conditions		= [];
-		if( strlen( trim( $filterFillId ) ) )
+		if( 0 !== strlen( trim( $filterFillId ) ) )
 			$conditions['fillId']	= $filterFillId;
-		if( strlen( trim( $filterEmail ) ) )
+		if( 0 !== strlen( trim( $filterEmail ) ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
 //		if( strlen( trim( $filterFormId ) ) )
-		if( count( array_filter( $filterFormId ) ) !== 0 )
+		if( 0 !== count( array_filter( $filterFormId ) ) )
 			$conditions['formId']	= array_filter( $filterFormId );
-		if( strlen( trim( $filterStatus ) ) )
+		if( 0 !== strlen( trim( $filterStatus ) ) )
 			$conditions['status']	= $filterStatus;
 
 		$limit		= 10;

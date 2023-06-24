@@ -68,7 +68,7 @@ class Controller_Manage_Form_Block extends Controller
 	{
 		$session		= $this->env->getSession();
 		$filters		= new Dictionary( array_merge(
-			array_combine( $this->filters, array_fill( 0, count( $this->filters ), NULL ) ),
+			array_combine( $this->filters, array_fill( 0, count( $this->filters ), '' ) ),
 			$session->getAll( $this->filterPrefix )
 		) );
 		$limit		= 15;
@@ -76,9 +76,9 @@ class Controller_Manage_Form_Block extends Controller
 
 		if( (int) $filters->get( 'blockId' ) )
 		 	$conditions['blockId']		= (int) $filters->get( 'blockId' );
-		if( strlen( trim( $filters->get( 'title' ) ) ) )
+		if( 0 !== strlen( trim( $filters->get( 'title', '' ) ) ) )
 		 	$conditions['title']		= '%'.$filters->get( 'title' ).'%';
-		if( strlen( trim( $filters->get( 'identifier' ) ) ) )
+		if( 0 !== strlen( trim( $filters->get( 'identifier', '' ) ) ) )
 		 	$conditions['identifier']	= '%'.$filters->get( 'identifier' ).'%';
 
 		$orders		= ['title' => 'ASC'];
