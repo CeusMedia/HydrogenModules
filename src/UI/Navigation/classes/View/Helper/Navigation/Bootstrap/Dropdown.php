@@ -84,7 +84,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 
 	public function renderLogo(): string
 	{
-		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
+		if( !( strlen( trim( $this->logoTitle ?? '' ) ) || strlen( trim( $this->logoIcon ?? '' ) ) ) )
 			return '';
 		$icon	= "";
 		if( $this->logoIcon ){

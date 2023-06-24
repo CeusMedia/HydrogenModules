@@ -30,8 +30,8 @@ class Hook_Server_Router extends Hook
 		foreach( $list as $route ){
 			$match	= $route->source === (string) $path;
 			if( $route->regex ){
-				$match			= preg_match( $route->source, $path );
-				$route->target	= preg_replace( $route->source, $route->target, $path );
+				$match			= preg_match( $route->source, $path ?? '' );
+				$route->target	= preg_replace( $route->source, $route->target, $path ?? '' );
 			}
 			if( $match ){
 				if( $route->methods && !in_array( $requestMethod, $route->methods ) )
@@ -90,7 +90,7 @@ class Hook_Server_Router extends Hook
 		);
 		foreach( $model->getAllByIndices( $indices ) as $route ){
 			$methods	= [];
-			if( strlen( trim( $route->methods ) ) ){
+			if( strlen( trim( $route->methods ?? '' ) ) ){
 				if( $route->methods !== '*' )
 					$methods	= preg_split( '/\s*,\s*/', trim( $route->methods ) );
 			}

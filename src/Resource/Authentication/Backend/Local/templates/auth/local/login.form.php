@@ -113,7 +113,7 @@ HTML::DivClass( 'content-panel content-panel-form', array(
 							] ),
 						) ),
 						HtmlTag::create( 'input', NULL, array(
-							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $login_username ?? '', ENT_QUOTES, 'UTF-8' ),
 							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
 							'type'		=> 'text',
 							'name'		=> 'login_username',

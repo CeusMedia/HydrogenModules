@@ -66,7 +66,7 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 
 	public function renderLogo(): string
 	{
-		if( 0 === strlen( trim( $this->logoTitle ) ) && 0 === strlen( trim( $this->logoIcon ) ) )
+		if( 0 === strlen( trim( $this->logoTitle ?? '' ) ) && 0 === strlen( trim( $this->logoIcon ?? '' ) ) )
 			return '';
 		$icon	= '';
 		if( $this->logoIcon ){

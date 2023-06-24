@@ -186,6 +186,7 @@ class Logic_Log_Exception extends Logic
 		if( $this->moduleConfig->get( 'file.active' ) ){
 			if( trim( $this->moduleConfig->get( 'file.name' ) ) ){
 				$msg	= time().":".base64_encode( serialize( $data ) );
+//				$msg	= (new DateTime())->format( 'Y-m-d H:i:s' ).": ".json_encode( $data, JSON_PRETTY_PRINT );
 				error_log( $msg.PHP_EOL, 3, $this->logFile );
 			}
 		}
