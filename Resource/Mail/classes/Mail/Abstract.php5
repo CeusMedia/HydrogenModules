@@ -642,7 +642,8 @@ abstract class Mail_Abstract
 			$this->mail->addRecipient( $email );
 		else
 			$this->mail->setReceiver( $email );
-		return $this->transport->send( $this->mail, TRUE );
+		$this->transport->send( $this->mail, TRUE );
+		return TRUE;
 	}
 
 	/**

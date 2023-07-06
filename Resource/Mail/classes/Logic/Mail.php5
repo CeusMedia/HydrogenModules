@@ -658,6 +658,11 @@ class Logic_Mail extends CMF_Hydrogen_Logic
 	 */
 	public function getQueuedMails( $conditions = [], array $orders = [], array $limits = [], array $columns = [] ): array
 	{
+		//  for performance
+		if( isset( $limits[0] ) && isset( $limits[1] ) && $limits[0] > 0 ){
+			$mailIds	= $this->modelQueue->getAll( $conditions, $orders, $limits, ['mailId'] );
+			return $this->modelQueue->getAll( ['mailId' => $mailIds], $orders );
+		}
 		return $this->modelQueue->getAll( $conditions, $orders, $limits, $columns );
 	}
 
