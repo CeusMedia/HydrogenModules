@@ -6,6 +6,7 @@ $pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page
 $iconAdd	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-plus' ) );
 $iconEdit	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-pencil' ) );
 $iconGo		= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-arrow-right' ) );
+$iconExport	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
 
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
@@ -57,6 +58,11 @@ $buttonAdd	= UI_HTML_Tag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
 	'class'	=> 'btn btn-success'
 ) );
 
+$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;exportieren', array(
+	'href'	=> './manage/relocation/export',
+	'class'	=> 'btn not-btn-info'
+) );
+
 $abbrCount	= UI_HTML_Tag::create( 'abbr', $count, array( 'title' => $w->titleCount ) );
 $abbrTotal	= UI_HTML_Tag::create( 'abbr', $total, array( 'title' => $w->titleTotal ) );
 
@@ -68,6 +74,7 @@ return '
 				<div class="btn-toolbar">
 					'.$pagination.'
 					'.$buttonAdd.'
+					'.$buttonExport.'
 				</div>
 			</div>
 		</div>
