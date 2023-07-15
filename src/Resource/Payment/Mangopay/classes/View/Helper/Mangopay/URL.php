@@ -20,7 +20,7 @@ class View_Helper_Mangopay_URL extends View_Helper_Mangopay_Abstract
 		return $instance->render();
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$param		= [];
 		foreach( $this->parameters as $key => $value )

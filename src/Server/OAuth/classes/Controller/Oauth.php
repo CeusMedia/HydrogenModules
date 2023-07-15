@@ -49,7 +49,7 @@ class Controller_Oauth extends Controller
 	 *	@todo		#2 implement grant type: implicit
 	 *	@todo		#3 make configurable: client agent (default, RFC) OR show login fail on authorization server (nicer)
 	 */
-	public function authorize()
+	public function authorize(): void
 	{
 #		if( $this->request->getMethod() !== "GET" )
 #			$this->errorRedirect( 'GET request required.', 'This request must use the GET method.' );
@@ -86,7 +86,7 @@ class Controller_Oauth extends Controller
 						$this->errorReport( 'Login failed.', $uri );*/
 					}
 					$scope	= trim( $this->request->get( 'scope' ) );
-					$code	= $this->generateAuthorizationCode( $applicationId, $user->userId, $redirectUri, $scope );
+					$code	= $this->generateAuthorizationCode( $applicationId, (string) $user->userId, $redirectUri, $scope );
 					$url	= $redirectUri.'?'.http_build_query( [
 						'code'	=> $code,
 						'state'	=> $state,
@@ -150,7 +150,7 @@ class Controller_Oauth extends Controller
 		$config			= $this->env->getConfig()->getAll( 'module.server_oauth.', TRUE );
 		$this->lifetimeAccessToken			= $config->get( 'lifetime.access' );
 		$this->lifetimeAuthorizationCode	= $config->get( 'lifetime.code' );
-		$this->lifetimeRefreshRefreshToken	= $config->get( 'lifetime.refresh' );
+		$this->lifetimeRefreshToken			= $config->get( 'lifetime.refresh' );
 		$this->cleanUp();
 	}
 
@@ -161,7 +161,7 @@ class Controller_Oauth extends Controller
 	 *	@return		void
 	 *	@todo		idea: return list of refreshed tokens/codes
 	 */
-	protected function cleanUp()
+	protected function cleanUp(): void
 	{
 		$modelCode			= new Model_Oauth_Code( $this->env );
 		$modelApplication	= new Model_Oauth_Application( $this->env );
@@ -186,7 +186,7 @@ class Controller_Oauth extends Controller
 	 *	@access		protected
 	 *	@return		object|NULL		Data object containing client ID and secret if detected, NULL otherwise
 	 */
-	protected function decodeBasicAuthentication()
+	protected function decodeBasicAuthentication(): ?object
 	{
 		$headers    = getallheaders();
 		if( !empty( $headers['Authorization'] ) ){
@@ -199,7 +199,7 @@ class Controller_Oauth extends Controller
 		return NULL;
 	}
 
-	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 )
+	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 ): void
 	{
 		$parameters		= ['error' => $message];
 		if( strlen( trim( $description ) ) )
@@ -217,10 +217,10 @@ class Controller_Oauth extends Controller
 	 *	Attention: URIs to redirect afterwards can only be within local application.
 	 *	@access		protected
 	 *	@param		string		$message		Error message to report
-	 *	@param		string		$uri			URI within local application to redirect to
+	 *	@param		?string		$uri			URI within local application to redirect to
 	 *	@return		void
 	 */
-	protected function errorReport( $message, $uri = NULL )
+	protected function errorReport( string $message, ?string $uri = NULL ): void
 	{
 		$this->env->getMessenger()->noteError( $message );
 		$this->restart( $uri, !$uri );
@@ -231,11 +231,12 @@ class Controller_Oauth extends Controller
 	 *	Sends content type header fo MIME type application/json.
 	 *	@access		protected
 	 *	@param		string		$message		Key of error message
-	 *	@param		string		$description	Description of error message (will be decoded to ASCII)
-	 *	@param		string		$uri			URI for further information
+	 *	@param		?string		$description	Description of error message (will be decoded to ASCII)
+	 *	@param		?string		$uri			URI for further information
+	 *	@param		int			$status			Default: 400
 	 *	@return		void
 	 */
-	protected function errorResponse( $message, $description = NULL, $uri = NULL, $status = 400 )
+	protected function errorResponse( string $message, ?string $description = NULL, ?string $uri = NULL, int $status = 400 ): void
 	{
 		$parameters	= ['error' => $message];
 		if( strlen( trim( $description ) ) )
@@ -260,12 +261,12 @@ class Controller_Oauth extends Controller
 	 *	Requested scopes will be stored and validated/filtered later.
 	 *	@access		public
 	 *	@param		integer		$applicationId		ID of registered application
-	 *	@param		integer		$userId				ID of authenticating user
+	 *	@param		string		$userId				ID of authenticating user
 	 *	@param		string		$redirectUri		URI to redirect to afterwards ()
-	 *	@param		string		$scope				List of scopes asked to access to
+	 *	@param		?string		$scope				List of scopes asked to access to
 	 *	@return		string		Authorization code to be delivered to redirect URI
 	 */
-	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ): string
+	protected function generateAuthorizationCode( $applicationId, $userId, string $redirectUri, ?string $scope = NULL ): string
 	{
 		$modelCode	= new Model_Oauth_Code( $this->env );
 		$code		= $modelCode->getNewCode( $applicationId, $scope );
@@ -288,13 +289,13 @@ class Controller_Oauth extends Controller
 	 *	@access		protected
 	 *	@param		integer		$applicationId		ID of registered application
 	 *	@param		integer		$userId				ID of authenticated user
-	 *	@param		string		$scope				List of scopes to grant access to
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
+	 *	@param		?string		$scope				List of scopes to grant access to
+	 *	@param		?string		$salt				Token hash salt (optional)
+	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
 	 */
-	protected function generateAccessToken( $applicationId, $userId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	protected function generateAccessToken( $applicationId, $userId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		$modelToken	= new Model_Oauth_AccessToken( $this->env );
 		$token		= $modelToken->getNewToken( $applicationId, $scope, $salt, $pepper );
@@ -315,13 +316,13 @@ class Controller_Oauth extends Controller
 	 *	Attention: Scopes MUST be validated/filtered by now.
 	 *	@access		protected
 	 *	@param		integer		$applicationId		ID of registered application
-	 *	@param		string		$scope				List of scopes to grant access to
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
+	 *	@param		?string		$scope				List of scopes to grant access to
+	 *	@param		?string		$salt				Token hash salt (optional)
+	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
 	 */
-	protected function generateRefreshToken( $applicationId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	protected function generateRefreshToken( $applicationId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		$modelRefresh	= new Model_Oauth_RefreshToken( $this->env );
 		$token			= $modelRefresh->getNewToken( $applicationId, $scope, $salt, $pepper );
@@ -351,7 +352,7 @@ class Controller_Oauth extends Controller
 	}
 
 
-	protected function tokenAuthorizationCode()
+	protected function tokenAuthorizationCode(): void
 	{
 		$modelCode			= new Model_Oauth_Code( $this->env );									//  connect storage of authorization codes
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
@@ -405,7 +406,7 @@ class Controller_Oauth extends Controller
 		$this->respondJsonData( $data );
 	}
 
-	protected function tokenClient()
+	protected function tokenClient(): void
 	{
 		if( !( $client = $this->decodeBasicAuthentication() ) )										//  no basic authentication found
 			$this->errorResponse( 'invalid_client', 'Missing client authentication header', NULL, 401 );

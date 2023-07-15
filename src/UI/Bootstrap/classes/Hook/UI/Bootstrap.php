@@ -64,8 +64,10 @@ class Hook_UI_Bootstrap extends Hook
 				\CeusMedia\Bootstrap\Base\Structure::$defaultBsVersion	= $versionBootstrap;
 				\CeusMedia\Bootstrap\Base\Element::$defaultBsVersion	= $versionBootstrap;
 			}
-			else
+			else{
+				/** @phpstan-ignore-next-line */
 				\CeusMedia\Bootstrap\Component::$bsVersion	= $versionBootstrap;
+			}
 
 			//  Bootstrap library (>=0.4.7) has support for Font Awesome 5
 			if( property_exists( '\CeusMedia\Bootstrap\Icon', 'defaultSet' ) ){
@@ -76,8 +78,10 @@ class Hook_UI_Bootstrap extends Hook
 					\CeusMedia\Bootstrap\Icon::$defaultStyle	= $configAwesome->get( 'v5.style' );
 			}
 			//  Bootstrap library is below 0.4.7
-			else if( property_exists( '\CeusMedia\Bootstrap\Icon', 'iconSet' ) )
+			else if( property_exists( '\CeusMedia\Bootstrap\Icon', 'iconSet' ) ){
+				/** @phpstan-ignore-next-line */
 				\CeusMedia\Bootstrap\Icon::$iconSet		= 'fontawesome'.$versionAwesomeMajor;
+			}
 
 		}
 	}

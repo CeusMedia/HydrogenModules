@@ -10,9 +10,13 @@ class Hook_UI_Layout_Footer extends Hook
 		$pattern	= "/^(.*)(\[footer\])(.*)$/sU";
 		if( preg_match( $pattern, $this->payload['content'] ) ){
 			$links	= [];
-			if( isset( $scopes->footer ) )
-				foreach( $scopes->footer as $page )
-					$links[$page->path]	= $page->label;
+			if( $this->env->hasModule( 'UI_Navigation' ) ){
+				$model	= new Model_Menu( $this->env );
+				$scopes	= (object) $model->getScopes();
+				if( isset( $scopes->footer ) )
+					foreach( $scopes->footer as $page )
+						$links[$page->path]	= $page->label;
+			}
 
 			$footer	= [['id' => 'timestamp', 'label' => 'Date & Time: <b>'.date( "d.m.Y H:i:s" ).'</b>']];
 			if( $this->env->getDatabase() )

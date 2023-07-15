@@ -7,6 +7,7 @@
  *	@copyright		2010 Ceus Media
  */
 
+use CeusMedia\Common\Exception\Serializable as SerializableException;
 use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -24,7 +25,7 @@ class Controller_Test extends Controller
 	 *	@access		public
 	 *	@return		array
 	 */
-	public function index()
+	public function index(): array
 	{
 		$core			= $this->syntaxCore();
 		$controllers	= $this->syntaxControllers();
@@ -50,7 +51,7 @@ class Controller_Test extends Controller
 		return $data;
 	}
 
-	public function syntaxController( $controller )
+	public function syntaxController( $controller ): ?bool
 	{
 		$filePath	= 'classes/Controller/'.ucfirst( $controller ).'.php';
 		if( !file_exists( $filePath ) )
@@ -58,7 +59,7 @@ class Controller_Test extends Controller
 		return self::checkSyntax( $filePath, $error );
 	}
 
-	public function syntaxControllers()
+	public function syntaxControllers(): array
 	{
 		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Controller' );
@@ -67,7 +68,7 @@ class Controller_Test extends Controller
 		return $list;
 	}
 
-	public function syntaxCore()
+	public function syntaxCore(): array
 	{
 		$list	= [];																			//  create empty list
 		$index	= $this->listFilesInFolder( 'classes' );											//  list all core classes
@@ -79,7 +80,7 @@ class Controller_Test extends Controller
 		return $list;
 	}
 
-	public function syntaxModel( $model )
+	public function syntaxModel( $model ): ?bool
 	{
 		$filePath	= 'classes/Model/'.ucfirst( $model ).'.php';
 		if( !file_exists( $filePath ) )
@@ -87,7 +88,7 @@ class Controller_Test extends Controller
 		return self::checkSyntax( $filePath, $error );
 	}
 
-	public function syntaxModels()
+	public function syntaxModels(): array
 	{
 		$list	= [];
 		$index	= $this->listFilesInFolder( 'classes/Model' );
@@ -105,7 +106,7 @@ class Controller_Test extends Controller
 	public function throwSerializableException( $message = NULL, $code = 0 )
 	{
 		$message	= strlen( $message ) ? $message : 'This is a test exception.';
-		throw new Exception_Serializable( $message, (int) $code );
+		throw new SerializableException( $message, (int) $code );
 	}
 
 	/**

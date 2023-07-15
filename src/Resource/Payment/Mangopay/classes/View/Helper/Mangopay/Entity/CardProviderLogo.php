@@ -5,26 +5,29 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Mangopay_Entity_CardProviderLogo extends View_Helper_Mangopay_Abstract
 {
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'div';
-	protected $provider		= 'Visa';
-	protected $size			= 'large';
+	public const SIZE_SMALL			= 'small';
+	public const SIZE_MEDIUM		= 'medium';
+	public const SIZE_LARGE			= 'large';
 
-	const SIZE_SMALL		= 'small';
-	const SIZE_MEDIUM		= 'medium';
-	const SIZE_LARGE		= 'large';
+	protected ?string $nodeClass	= NULL;
 
-	public static function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
+	protected string $nodeName		= 'div';
+
+	protected string $provider		= 'Visa';
+
+	protected string $size			= 'large';
+
+	public static function renderStatic( Environment $env, $number, ?string $nodeName = NULL, ?string $nodeClass = NULL )
 	{
 		$instance	= new View_Helper_Mangopay_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $number )->render();
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$path		= 'images/paymentProviderLogo/'.$this->size.'/';
 		$path		.= strtolower( $this->provider ).'-1.png';

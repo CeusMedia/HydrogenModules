@@ -104,13 +104,13 @@ class View_Helper_MetaTags
 				$ogNode->setTitle( $title );
 				$ogNode->setDescription( $description );
 				if( $ogData->get( 'audio') ){
-					$audio	= new \CeusMedia\OpenGraph\Audio( $ogData->get( 'audio' ) );
+					$audio	= new \CeusMedia\OpenGraph\Structure\Audio( $ogData->get( 'audio' ) );
 					if( $ogData->get( 'audio.type' ) )
 						$audio->setType( $ogData->get( 'audio.type' ) );
 					$ogNode->add( $audio );
 				}
 				if( $ogData->get( 'image') ){
-					$image	= new \CeusMedia\OpenGraph\Image( $ogData->get( 'image' ) );
+					$image	= new \CeusMedia\OpenGraph\Structure\Image( $ogData->get( 'image' ) );
 					if( $ogData->get( 'image.width' ) )
 						$image->setWidth( $ogData->get( 'image.width' ) );
 					if( $ogData->get( 'image.height' ) )
@@ -120,7 +120,7 @@ class View_Helper_MetaTags
 					$ogNode->add( $image );
 				}
 				if( $ogData->get( 'video') ){
-					$video	= new \CeusMedia\OpenGraph\Video( $ogData->get( 'video' ) );
+					$video	= new \CeusMedia\OpenGraph\Structure\Video( $ogData->get( 'video' ) );
 					if( $ogData->get( 'video.width' ) )
 						$video->setWidth( $ogData->get( 'video.width' ) );
 					if( $ogData->get( 'video.height' ) )

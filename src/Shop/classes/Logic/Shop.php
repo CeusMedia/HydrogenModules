@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Deprecation;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shop extends Logic

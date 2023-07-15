@@ -4,24 +4,27 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Localization extends Logic
 {
-	protected $language;
-	protected $languages;
+	protected Model_Localization $model;
+	protected string $default;
+	protected string $language;
+	protected array $languages;
 
-	public function getLanguage()
+	public function getLanguage(): string
 	{
 		return $this->language;
 	}
 
-	public function getLanguages()
+	public function getLanguages(): array
 	{
 		return $this->languages;
 	}
 
-	public function setLanguage( $language )
+	public function setLanguage( string $language ): self
 	{
 		if( !in_array( $language, $this->languages ) )
 			throw new RangeException( 'Invalid language: '.$language );
 		$this->language		= $language;
+		return $this;
 	}
 
 	public function translate( $id, $content, $translated = NULL )
@@ -45,11 +48,11 @@ class Logic_Localization extends Logic
 
 	protected function __onInit(): void
 	{
-		$this->model		= new  Model_Localization( $this->env );
+		$this->model		= new Model_Localization( $this->env );
 		$this->languages	= $this->env->getLanguage()->getLanguages();
-		$this->default		= $this->env->getLanguage();
+		$this->default		= $this->env->getLanguage()->getLanguage();
 		$this->setLanguage( $this->env->getLanguage()->getLanguage() );
-		if(  $this->env->getModules()->has( 'Resource_Frontend' ) ){
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$env				= $frontend->getRemoteEnv( $this->env );
 			$this->default		= $frontend->getDefaultLanguage();
