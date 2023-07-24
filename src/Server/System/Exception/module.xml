@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: System Exception</title>
+	<description><![CDATA[
+Handle exceptions on application level.
+
+Module to handle uncaught exceptions with redirect to an exception page.
+Is called by hook App::onException.
+Suggested for any web application if you do not have your own exception handling.
+]]></description>
+	<category>Server</category>
+	<version>0.3.7</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extract hook to class.</log>
+	<log version="0.2.2">Make handling mode configurable.</log>
+	<log version="0.3">Localize exception view.</log>
+	<log version="0.3.1">Add missing locale.</log>
+	<log version="0.3.2">Add english locale.</log>
+	<log version="0.3.3">Use general module main switch.</log>
+	<log version="0.3.4">Add backlink and HTML text blocks.</log>
+	<log version="0.3.5">Handle exceptions on Ajax requests.</log>
+	<log version="0.3.6">Improve view and its actions.</log>
+	<log version="0.3.7">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+<!--	<log version="0.3.x">Make facts configurable.</log>-->
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/System/Exception.php</class>
+		<class>Hook/System/Exception.php</class>
+		<class>View/System/Exception.php</class>
+		<template>system/exception/index.php</template>
+		<locale>de/html/system/exception/bottom.html</locale>
+		<locale>de/html/system/exception/top.html</locale>
+		<locale>de/server/system/exception.ini</locale>
+		<locale>en/html/system/exception/bottom.html</locale>
+		<locale>en/html/system/exception/top.html</locale>
+		<locale>en/server/system/exception.ini</locale>
+		<style source="common">module.server.system.exception.css</style>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="yes" type="string" name="mode" values="info,dev,strict" title="How to interpret unhandled exceptions (info: embed in info page, dev|strict|*: exit with exception page)">info</config>
+	<relations/>
+	<link access="public" path="system/exception/index"/>
+	<link access="public" path="system/exception/reset"/>
+	<link access="public" path="system/exception/test"/>
+	<hook type="resource" resource="App" event="onException">Hook_System_Exception::onAppException</hook>
+</module>

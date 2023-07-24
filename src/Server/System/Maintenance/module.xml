@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<module>
+	<title>Server: System: Maintenance</title>
+	<description>Simple way to close web application for customers for a period of time.</description>
+	<category>Server</category>
+	<version>0.2</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/System/Maintenance.php</class>
+		<class>Controller/System/Maintenance.php</class>
+<!--		<class>Job/System/Load.php</class>-->
+		<class>View/System/Maintenance.php</class>
+		<template>system/maintenance/index.php</template>
+		<locale>de/html/maintenance.html</locale>
+		<locale>en/html/maintenance.html</locale>
+<!--		<file>config/jobs/system.load.xml</file>-->
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules">Hook_System_Maintenance::onPageApplyModules</hook>
+	<hook type="resource" resource="App" event="dispatch">Hook_System_Maintenance::onAppDispatch</hook>
+</module>

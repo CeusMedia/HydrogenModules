@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: SEO</title>
+	<description><![CDATA[
+]]></description>
+	<category>User Interface</category>
+	<version>0.2.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Make lowercase configurable.</log>
+	<files>
+		<class>View/Helper/SEO/LinkTitle.php</class>
+	</files>
+	<config access="protected" type="boolean" name="lowerCase" title="Flag: lowercase by default">on</config>
+<!--	<hook type="event" resource="" event=""></hook>-->
+</module>

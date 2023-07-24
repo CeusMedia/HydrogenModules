@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Mail</title>
+	<description/>
+	<category>Administration</category>
+	<version>1.0</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
+	<log version="0.3">Finished migration to own module.</log>
+	<log version="0.3.1">Added auto detection of MIME types.</log>
+	<log version="0.3.2">Extracted all labels of attachment management to language file.</log>
+	<log version="0.3.3">Improved error handling of attachment management by more information.</log>
+	<log version="0.3.4">Secured error messages of attachment management.</log>
+	<log version="0.3.5">Extracted panels for add and upload.</log>
+	<log version="0.3.6">Made attachments related to languages.</log>
+	<log version="0.3.7">Implemented queued mail view prototype.</log>
+	<log version="0.3.8">Use time phraser module.</log>
+	<log version="0.4">Finished detail view of sent mails with HTML and text body.</log>
+	<log version="0.4.1">Start localization.</log>
+	<log version="0.4.2">Add HTML blocks.</log>
+	<log version="0.4.3">Add english locales.</log>
+	<log version="0.4.4">Use module UI:Helper:Input:File for file uploads.</log>
+	<log version="0.4.5">Integrate HTML blocks into templates.</log>
+	<log version="0.4.6">Apply module UI:CSS:Panel.</log>
+	<log version="0.4.7">Add panel to list available attachment files.</log>
+	<log version="0.4.8">Finish filter.</log>
+	<log version="0.5">Add tabs and separate views.</log>
+	<log version="0.5.1">Use module Resource:Upload.</log>
+	<log version="0.5.2">Use helper for Bootstap tabs.</log>
+	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
+	<log version="0.6.1">Add pagination.</log>
+	<log version="0.6.2">Add button to cancel unsent mail.</log>
+	<log version="0.6.3">Add filter for receiver address.</log>
+	<log version="0.6.4">Add file download and lock folder against browser access.</log>
+	<log version="0.6.5">Add button to resend sent mail.</log>
+	<log version="0.6.6">Add locales for mail facts.</log>
+	<log version="0.6.7">Add prototype of dashboard support.</log>
+	<log version="0.6.8">Use frontend logic only of module Resource:Frontend is installed.</log>
+	<log version="0.6.9">Tolerate lack of frontend mail classes.</log>
+	<log version="0.7">Upgrade support for new dasboard module.</log>
+	<log version="0.7.1">Remove support for old dasboard module.</log>
+	<log version="0.7.2">Support new mail model statuses.</log>
+	<log version="0.7.3">Support embedded images in HTML mail view.</log>
+	<log version="0.7.4">Support mail templates.</log>
+	<log version="0.7.5">Use mail logic to decode enqueued mails.</log>
+	<log version="0.7.6">Add management for embedded template images.</log>
+	<log version="0.7.7">Use Ace editor instead of CodeMirror in template editor.</log>
+	<log version="0.8">Use tabs and modal resource input helper.</log>
+	<log version="0.8.1">Apply changes in upload input helper.</log>
+	<log version="0.8.2">Improve template management.</log>
+	<log version="0.8.3">Add locales for mail facts.</log>
+	<log version="0.8.4">Add default contents for new templates.</log>
+	<log version="0.8.5">Add import and export for mail templates.</log>
+	<log version="0.8.6">Add template preview panels and make status changable.</log>
+	<log version="0.8.7">Extend mail queue filters by subject and date range.</log>
+	<log version="0.8.8">Improve template preview handling.</log>
+	<log version="0.8.9">Add removal of mails in queue.</log>
+	<log version="0.9">Adjust to changes in Resource:Mail and improve mail view.</log>
+	<log version="0.9.1">Add attachment view and download for mail queue.</log>
+	<log version="0.9.2">Improve support for mail libraries.</log>
+	<log version="0.9.3">Add template copy panel and refactor template export and import.</log>
+	<log version="0.9.4">Extend queued mail filter and view by used mail classes.</log>
+	<log version="0.9.5">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.9.6">Extract template import, export and AJAX handling into own classes.</log>
+	<log version="0.9.7">Use module UI:Helper:Pagination:PrevNext for mail templates.</log>
+	<log version="0.9.8">Extract hooks to own classes.</log>
+	<log version="0.9.9">Add bulk actions in queue index.</log>
+	<log version="1.0">Support attachment folders.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Mail/Attachment.php</class>
+		<class>Controller/Admin/Mail/Attachment/Folder.php</class>
+		<class>Controller/Admin/Mail/Queue.php</class>
+		<class>Controller/Admin/Mail/Template.php</class>
+		<class>Controller/Admin/Mail/Template/Export.php</class>
+		<class>Controller/Admin/Mail/Template/Import.php</class>
+		<class>Controller/Ajax/Admin/Mail/Template.php</class>
+		<class>Hook/Admin/Mail/Attachment.php</class>
+		<class>Hook/Admin/Mail/Queue.php</class>
+		<class>View/Admin/Mail/Attachment.php</class>
+		<class>View/Admin/Mail/Attachment/Folder.php</class>
+		<class>View/Admin/Mail/Queue.php</class>
+		<class>View/Admin/Mail/Template.php</class>
+		<template>admin/mail/attachment/add.php</template>
+		<template>admin/mail/attachment/index.php</template>
+		<template>admin/mail/attachment/index.files.php</template>
+		<template>admin/mail/attachment/index.filter.php</template>
+		<template>admin/mail/attachment/index.list.php</template>
+		<template>admin/mail/attachment/folder/index.php</template>
+		<template>admin/mail/attachment/folder/index.list.php</template>
+		<template>admin/mail/queue/enqueue.php</template>
+		<template>admin/mail/queue/index.php</template>
+		<template>admin/mail/queue/index.filter.php</template>
+		<template>admin/mail/queue/index.list.php</template>
+		<template>admin/mail/queue/view.php</template>
+		<template>admin/mail/queue/view.body.php</template>
+		<template>admin/mail/queue/view.facts.php</template>
+		<template>admin/mail/template/add.php</template>
+		<template>admin/mail/template/default.css</template>
+		<template>admin/mail/template/default.html</template>
+		<template>admin/mail/template/default.txt</template>
+		<template>admin/mail/template/edit.php</template>
+		<template>admin/mail/template/edit.facts.php</template>
+		<template>admin/mail/template/edit.images.php</template>
+		<template>admin/mail/template/edit.styles.php</template>
+		<template>admin/mail/template/index.php</template>
+		<locale>de/admin/mail/attachment.ini</locale>
+		<locale>de/admin/mail/attachment/folder.ini</locale>
+		<locale>de/admin/mail/queue.ini</locale>
+		<locale>de/admin/mail/template.ini</locale>
+		<locale>de/html/admin/mail/attachment/bottom.html</locale>
+		<locale>de/html/admin/mail/attachment/top.html</locale>
+		<locale>de/html/admin/mail/queue/bottom.html</locale>
+		<locale>de/html/admin/mail/queue/top.html</locale>
+		<locale>de/html/admin/mail/template/bottom.html</locale>
+		<locale>de/html/admin/mail/template/top.html</locale>
+		<locale>de/html/admin/mail/template/import/bottom.html</locale>
+		<locale>de/html/admin/mail/template/import/top.html</locale>
+		<locale>en/admin/mail/attachment.ini</locale>
+		<locale>en/admin/mail/queue.ini</locale>
+		<locale>en/admin/mail/template.ini</locale>
+		<locale>en/html/admin/mail/attachment/bottom.html</locale>
+		<locale>en/html/admin/mail/attachment/top.html</locale>
+		<locale>en/html/admin/mail/queue/bottom.html</locale>
+		<locale>en/html/admin/mail/queue/top.html</locale>
+		<locale>en/html/admin/mail/template/bottom.html</locale>
+		<locale>en/html/admin/mail/template/top.html</locale>
+		<locale>en/html/admin/mail/template/import/bottom.html</locale>
+		<locale>en/html/admin/mail/template/import/top.html</locale>
+		<style source="common">module.admin.mail.css</style>
+		<script>module.admin.mail.js</script>
+	</files>
+	<link access="acl" xml:lang="de" rank="87" path="admin/mail/queue">E-Mail-Queue</link>
+	<link access="acl" xml:lang="en" rank="87" path="admin/mail/queue">Email queue</link>
+	<link access="acl" xml:lang="de" rank="88" path="admin/mail/attachment">Email-Anh&#xE4;nge</link>
+	<link access="acl" xml:lang="en" rank="88" path="admin/mail/attachment">Email attachments</link>
+	<link access="acl" xml:lang="de" rank="89" path="admin/mail/template">E-Mail-Templates</link>
+	<link access="acl" xml:lang="en" rank="89" path="admin/mail/template">Email templates</link>
+	<todo>Implement attachment filters</todo>
+	<relations>
+		<needs type="module">JS_Ace</needs>
+		<needs type="module">Resource_Mail</needs>
+		<needs type="module">Resource_Upload</needs>
+		<needs type="module">UI_Bootstrap_Modal</needs>
+		<needs type="module">UI_Helper_Input_File</needs>
+		<needs type="module">UI_Helper_Input_Resource</needs>
+		<needs type="module">UI_Helper_Pagination_PrevNext</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+	</relations>
+	<hook type="resource" resource="AdminMailAttachment" event="registerTabs">Hook_Admin_Mail_Attachment::onRegisterTab</hook>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Admin_Mail_Queue::onRegisterDashboardPanels</hook>
+</module>

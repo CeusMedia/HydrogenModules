@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Module Installer</title>
+	<description><![CDATA[Install modules from module sources.
+
+Building on basic module administration, this module allows you to install modules from any defined module source. Installing a modules with needed but not installed related modules will install these needed modules as well.
+
+This module can be extended by:
+list>
+- Module Editor
+- Module Creator
+<list
+
+This module needs other modules to be installed:
+list>
+- Modules Editor (thus Modules, Module Sources, App Instances)
+<list
+]]></description>
+	<category>Administration</category>
+	<version>0.4.7</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Finished installation process with copying and linking.</log>
+	<log version="0.3.1">Adjusted database update handling.</log>
+	<log version="0.3.2">Added version log panel.</log>
+	<log version="0.3.3">Hide file without change by default and show by switch.</log>
+	<log version="0.3.4">Added new panel about local installation.</log>
+	<log version="0.3.5">Moved dev output of local and source module to bottom.</log>
+	<log version="0.3.6">Use module JS:CodeMirror to display database changes.</log>
+	<log version="0.3.7">Added screen for uninstallation.</log> 
+	<log version="0.3.8">Check file permissions before update and show problems.</log>
+	<log version="0.3.9">Fixed listing of refered sources.</log>
+	<log version="0.4">Rework SQL script collecting on install and update.</log>
+	<log version="0.4.1">Show configuration key titles on update.</log>
+	<log version="0.4.2">Added view helper for SQL scripts on install and update.</log>
+	<log version="0.4.3">Added view helper for files on install and update.</log>
+	<log version="0.4.4">Extracted styles from templates to new CSS file.</log>
+	<log version="0.4.5">Extracted scripts from templates to JS file.</log>
+	<log version="0.4.6">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4.7">Replace CDN resource.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Module/Installer.php</class>
+		<class>View/Admin/Module/Installer.php</class>
+		<class>View/Helper/Module/Files.php</class>
+		<class>View/Helper/Module/SqlScripts.php</class>
+		<locale>de/admin/module/installer.ini</locale>
+		<locale>en/admin/module/installer.ini</locale>
+		<template>admin/module/installer/index.php</template>
+		<template>admin/module/installer/uninstall.php</template>
+		<template>admin/module/installer/update.php</template>
+		<template>admin/module/installer/update.config.php</template>
+		<template>admin/module/installer/update.database.php</template>
+		<template>admin/module/installer/update.files.php</template>
+		<template>admin/module/installer/update.info.php</template>
+		<template>admin/module/installer/view.php</template>
+		<script>module.admin.module.installer.js</script>
+		<style source="theme" load="auto">php-diff.css</style>
+		<style source="theme" load="auto">module.admin.module.installer.css</style>
+	</files>
+	<relations>
+		<needs type="module">JS_CodeMirror</needs>
+	</relations>
+	<link xml:lang="de" path="admin/module/installer" access="acl" rank="37">Modulinstallation</link>
+	<link xml:lang="en" path="admin/module/installer" access="acl" rank="37">Module Installer</link>
+</module>

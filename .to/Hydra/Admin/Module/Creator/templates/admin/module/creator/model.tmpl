@@ -1,0 +1,30 @@
+<?php
+/**
+ *	Model.
+ */
+
+use CeusMedia\HydrogenFramework\Model;
+
+/**
+ *	Model.
+ *	@todo			implement
+ *	@todo			code documentation
+ */
+class Model_<%className%> extends Model
+{
+	/**	@var	$name		string		Table name without prefix of database connection */
+	protected string $name			= '';
+
+	/**	@var	$name		string		List of columns within table */
+	protected array $columns		= [];
+
+	/**	@var	$name		string		Name of column with primary key */
+	protected string $primaryKey	= '';
+
+	/**	@var	$name		string		List of columns which are a foreign key and/or indexed */
+	protected array $indices		= []
+
+	/**	@var	$fetchMode	interger	Fetch mode, see PDO documentation */
+	protected int $fetchMode	= PDO::FETCH_OBJ;
+}
+?>

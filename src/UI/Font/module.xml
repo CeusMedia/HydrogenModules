@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font</title>
+	<description><![CDATA[Support for fonts provided by Ceus Media Font Repository.]]></description>
+	<category>User Interface</category>
+	<version>0.2.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separated to Hydrogen module.</log>
+	<log version="0.2.1">Switch to HTTPS.</log>
+	<log version="0.2.2">Switch to Ceus Media CDN.</log>
+	<log version="0.2.3">Use general module main switch.</log>
+	<log version="0.2.4">Extract hook to own hook class.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/UI/Font.php</class>
+	</files>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="no" type="string" name="uri">https://cdn.ceusmedia.de/fonts/</config>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font::onPageApplyModules</hook>
+</module>

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: Companies</title>
+	<description>Management for company accounts.</description>
+	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies and Resource:Companies instead!</deprecation>
+	<version>0.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Updated templates.</log>
+	<log version="0.2.2">Use module UI:Helper:TimePhraser.</log>
+	<log version="0.3">End of life: Use Manage:Companies instead.</log>
+	<category>Management</category>
+<!--	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+-->	<files>
+		<class>Controller/Manage/Company.php</class>
+		<class>View/Manage/Company.php</class>
+		<class>Model/Company.php</class>
+		<template>manage/company/add.php</template>
+		<template>manage/company/edit.php</template>
+		<template>manage/company/index.php</template>
+		<locale>de/manage/company.ini</locale>
+	</files>
+	<relations>
+		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+	</relations>
+	<link path="manage/company" access="acl" xml:lang="de">Unternehmen</link>
+	<link path="manage/company" access="acl" xml:lang="en">Companies</link>
+<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>companies` (
+  `companyId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `sector` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `street` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `number` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fax` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`companyId`),
+  UNIQUE KEY `title` (`title`),
+  KEY `status` (`status`),
+  KEY `url` (`url`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>companies`;
+]]></sql>
+</module>

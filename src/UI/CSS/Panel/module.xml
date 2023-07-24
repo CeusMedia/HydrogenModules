@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: CSS: Panel</title>
+	<description><![CDATA[Simple panel style.]]></description>
+	<category>User Interface</category>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Removed deprecated style definitions.</log>
+	<log version="0.2.2">Support several styles.</log>
+	<log version="0.2.3">Add main module switch.</log>
+	<log version="0.2.4">Install style in common theme folder.</log>
+	<log version="0.2.5">Add fourth style and style template.</log>
+	<log version="0.2.6">Check all styles and cleanup.</log>
+	<log version="0.2.7">Add panel support for third style.</log>
+	<log version="0.2.8">Add fifth style and prototype of sixth.</log>
+	<log version="0.2.9">Remove overflow:hidden from CSS.</log>
+	<log version="0.3">Use general module main switch.</log>
+	<log version="0.3.1">Extract hook to own hook class.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Hook/UI/CSS/Panel.php</class>
+		<style source="common">layout.panels.css</style>
+	</files>
+	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<config protected="no" type="string" name="style" values="1,2,3,4,5,6">2</config>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_CSS_Panel::onPageApplyModules</hook>
+</module>

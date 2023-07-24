@@ -1,39 +1,50 @@
 <?php
-( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
+use CeusMedia\Common\FS\File\RecursiveNameFilter as RecursiveFileFinder;
+use CeusMedia\Common\Net\HTTP\Header\Field as HttpHeaderField;
+use CeusMedia\Common\Net\HTTP\Request\Receiver as HttpRequestReceiver;
+use CeusMedia\Common\Net\HTTP\Response as HttpResponse;
+use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
+use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader;
 
 error_reporting( E_ALL );
 ini_set( 'display_errors', 'On' );
+
+( include_once __DIR__.'/vendor/autoload.php' ) or die( 'Install packages using composer, first!' );
+
 new Modules();
 
 class Modules
 {
-	/**	@var	Net_HTTP_Request_Receiver	$request		HTTP request object */
-	protected $request;
+	/**	@var	HttpRequestReceiver		$request		HTTP request object */
+	protected HttpRequestReceiver $request;
 
-	/**	@var	Net_HTTP_Response			$response		HTTP response object */
-	protected $response;
+	/**	@var	HttpResponse			$response		HTTP response object */
+	protected HttpResponse $response;
 
 	public function __construct()
 	{
 		error_reporting( E_ALL );
-		$this->request	= new Net_HTTP_Request_Receiver();
-		$this->response	= new Net_HTTP_Response();
+		$this->request	= new HttpRequestReceiver();
+		$this->response	= new HttpResponse();
 		try{
 			if( !$this->dispatch() )
 				throw new InvalidArgumentException( 'No valid content type requested' );
-			$sender	= new Net_HTTP_Response_Sender( $this->response );
+			$sender	= new HttpResponseSender( $this->response );
 			$sender->send();
 		}
 		catch( Exception $e ){
-			die( UI_HTML_Exception_Page::render( $e ) );
+			die( HtmlExceptionPage::render( $e ) );
 		}
 	}
 
 	protected function dispatch(): bool
 	{
-		$accepts	= array( new Net_HTTP_Header_Field( 'accept', 'text/html;q=1' ) );
+		$accepts	= array( new HttpHeaderField( 'accept', 'text/html;q=1' ) );
 		if( $this->request->has( 'json' ) )
-			$accepts	= array( new Net_HTTP_Header_Field( 'accept', 'application/json' ) );
+			$accepts	= array( new HttpHeaderField( 'accept', 'application/json' ) );
 		else if( $this->request->hasHeader( 'accept' ) )
 			$accepts	= $this->request->getHeadersByName( 'accept' );
 
@@ -73,11 +84,11 @@ class Modules
 		foreach( $modules as $moduleName => $moduleData ){
 			$label	= $moduleData->title." ".$moduleData->version;
 			if( !empty( $moduleData->description ) )
-				$label	= UI_HTML_Elements::Acronym( $label, htmlentities( $moduleData->description, ENT_QUOTES, 'UTF-8' ) );
-			$list[]	= UI_HTML_Elements::ListItem( $label );
+				$label	= HtmlElements::Acronym( $label, htmlentities( $moduleData->description, ENT_QUOTES, 'UTF-8' ) );
+			$list[]	= HtmlElements::ListItem( $label );
 		}
-		$list		= UI_HTML_Elements::unorderedList( $list );
-		$page		= new UI_HTML_PageFrame();
+		$list		= HtmlElements::unorderedList( $list );
+		$page		= new HtmlPage();
 		$page->addStylesheet( 'https://cdn.ceusmedia.de/css/bootstrap.min.css' );
 		$page->addStylesheet( 'html.css' );
 		$page->addBody( '<div class="container"><div class="hero-unit"><h2>Hydrogen Modules</h2>Collection of open modules for <a href="https://github.com/CeusMedia/HydrogenFramework">Hydrogen Framework</a></h2></div>'.$list.'</div>' );
@@ -87,20 +98,20 @@ class Modules
 	protected function getModuleList( bool $full = FALSE ): array
 	{
 		$list	= [];
-		$index	= new FS_File_RecursiveNameFilter( './', 'module.xml' );
+		$index	= new RecursiveFileFinder( './src/', 'module.xml' );
 		foreach( $index as $entry ){
-			$id		= preg_replace( '@^./@', '', $entry->getPath() );
+			$id		= preg_replace( '@^./src/@', '', $entry->getPath() );
 			if( !preg_match( '@^[A-Z]@', $id ) )
 				continue;
 			$id		= str_replace( '/', '_', $id );
 			try{
-				$module	= CMF_Hydrogen_Environment_Resource_Module_Reader::load( $entry->getPathname(), $id );
+				$module	= Reader::load( $entry->getPathname(), $id );
 				if( !$full )
-					$module	= (object) array(
+					$module	= (object) [
 						'title'			=> $module->title,
 						'description'	=> $module->description,
 						'version'		=> $module->version,
-					);
+					];
 				$list[$id]	= $module;
 			}
 			catch( Exception $e ){

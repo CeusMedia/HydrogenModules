@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<module>
+	<title>Info: Novelties</title>
+	<description><![CDATA[Collects news from modules as dashboard panel.]]></description>
+	<category>Info</category>
+	<version>0.3.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Added relation to time phraser.</log>
+	<log version="0.3">Fork from Info:NewsList to Info:Novelties.</log>
+	<log version="0.3.1">Add dashboard panel and hook.</log>
+	<log version="0.3.2">Improve code style.</log>
+	<log version="0.3.3">Extract hook to own class and remove obsolete controller and view classes.</log>
+<!--	<log version="0.3.4">Extract locales.</log>-->
+<!--	<log version="0.3.5">Extract JavaScript.</log>-->
+	<files>
+		<class>Controller/Ajax/Info/Novelty.php</class>
+		<class>Hook/Info/Novelties.php</class>
+		<class>Model/Novelty.php</class>
+		<class>View/Helper/Info/Novelty/DashboardPanel.php</class>
+	</files>
+	<relations>
+		<needs type="module">Work_Timer</needs>
+	</relations>
+	<link access="acl" path="ajax/dismiss"/>
+	<link access="acl" path="ajax/renderDashboardPanel"/>
+	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Info_Novelty::onRegisterDashboardPanels</hook>
+	<sql on="install" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>novelties`;
+CREATE TABLE `<%?prefix%>novelties` (
+  `noveltyId` int(11) UNSIGNED NOT NULL,
+  `userId` int(11) UNSIGNED NOT NULL,
+  `entryId` int(11) UNSIGNED NOT NULL,
+  `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>novelties`;
+]]></sql>
+</module>

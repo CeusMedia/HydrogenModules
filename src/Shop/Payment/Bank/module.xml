@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<module>
+	<title>Shop: Payment: Bank</title>
+	<description><![CDATA[Integrates regular delayed bank transfer into shop.
+]]></description>
+	<category>Shop</category>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add service panel for shop order finish.</log>
+	<log version="0.2.2">Add payment block for customer order mails.</log>
+	<log version="0.2.3">Add module main switch.</log>
+	<log version="0.2.4">Update to support Shop version 0.8.</log>
+	<log version="0.2.5">Add bank images.</log>
+	<log version="0.2.6">Support payment backend mode (delayed|instant).</log>
+	<log version="0.3">Use shop user instead of shop customer.</log>
+	<log version="0.3.1">Improve code style.</log>
+
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Shop/Payment/Bank.php</class>
+		<class>Hook/Shop/Payment/Bank.php</class>
+		<class>View/Shop/Payment/Bank.php</class>
+		<class>View/Helper/Shop/FinishPanel/Bank.php</class>
+		<locale>de/mail/shop/customer/ordered/bank/perTransfer.html</locale>
+		<locale>de/mail/shop/customer/ordered/bank/perTransfer.txt</locale>
+		<locale>de/shop/payment/bank.ini</locale>
+		<image>paymentProviderLogo/xlarge/bank-1.png</image>
+		<image>paymentProviderLogo/large/bank-1.png</image>
+		<image>paymentProviderLogo/medium/bank-1.png</image>
+		<image>paymentProviderLogo/small/bank-1.png</image>
+		<image>paymentProviderLogo/bank-1.xcf</image>
+<!--		<class>Job/Shop/Payment/Bank.php</class>-->
+<!--		<class>Logic/Shop/Payment/Bank.php</class>-->
+<!--		<class>Model/Shop/Payment/Bank.php</class>-->
+<!--		<template>shop/payment/bank/transfer.php</template>-->
+<!--		<script>Module.Shop.Payment.Bank.js</script>-->
+<!--		<style>module.shop.payment.bank.css</style>-->
+<!--		<file>config/jobs/shop.payment.bank.xml</file>-->
+	</files>
+	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
+	<config protected="no" type="string" mandatory="yes" name="bank.name" title="Bank name company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.holder" title="Holder of company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.iban" title="IBAN of company bank account"></config>
+	<config protected="no" type="string" mandatory="yes" name="bank.bic" title="BIC of company bank account"></config>
+	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<relations>
+<!--		<implements type="module">Shop_Payment</implements>-->
+<!--		<needs type="module">Shop_Payment</needs>-->
+<!--		<needs type="module">Resource_Payment_Bank</needs>-->
+	</relations>
+	<link access="public" path="shop/payment/bank/perBill"/>
+	<link access="public" path="shop/payment/bank/perTransfer"/>
+	<hook type="resource" resource="ShopPayment" event="registerPaymentBackend">Hook_Shop_Payment_Bank::onRegisterShopPaymentBackends</hook>
+	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_Payment_Bank::onRenderServicePanels</hook>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+]]></sql>
+</module>

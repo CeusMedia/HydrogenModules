@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: HTML</title>
+	<description><![CDATA[
+]]></description>
+	<category>User Interface</category>
+	<version>0.3.6</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Separation from cmClasses UI_HTML_Elements.</log>
+	<log version="0.3.1">More components.</log>
+	<log version="0.3.2">Set attributes "required" automatically if class contains "mandatory" or "required".</log>
+	<log version="0.3.3">Order methods.</log>
+	<log version="0.3.4">Add general tag methods and make use of it.</log>
+	<log version="0.3.5">Extract hook to own hook class.</log>
+	<log version="0.3.6">Support PHP 8 (Match is reserved now).</log>
+	<files>
+		<class>Hook/UI/Helper/HTML.php</class>
+		<class>View/Helper/HTML.php</class>
+	</files>
+	<relations/>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Helper_HTML::onPageApplyModules</hook>
+</module>

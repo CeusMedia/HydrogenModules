@@ -1,0 +1,52 @@
+<?php
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+$w			= (object) $words['add'];
+
+$optCurrency	= HtmlElements::Options( $words['currencies'], $account->currency );
+
+$optBankId	= [];
+foreach( $banks as $bank )
+	$optBankId[$bank->bankId]	= $bank->title;
+$optBankId	= HtmlElements::Options( $optBankId, $account->bankId );
+
+$optType	= [0 => 'manuell / statisch', 1 => 'automatisch / dynamisch'];
+$optType	= HtmlElements::Options( $optType, $account->type );
+
+return '
+<form action="./work/finance/bank/account/add" method="post">
+	<fieldset>
+		<legend>'.$w->legend.'</legend>
+		<ul class="input">
+			<li class="column-left-20">
+				<label for="input_bankId">'.$w->labelBankId.'</label><br/>
+				<select name="bankId" id="input_bankId" class="max">'.$optBankId.'</select>
+			</li>
+			<li class="column-left-30">
+				<label for="input_title">'.$w->labelTitle.'</label><br/>
+				<input type="text" name="title" id="input_title" class="max" value="'.$account->title.'"/>
+			</li>
+			<li class="column-left-25">
+				<label for="input_type">'.$w->labelType.'</label><br/>
+				<select type="text" name="type" id="input_type" class="max">'.$optType.'</select/>
+			</li>
+			<li class="column-left-25">
+				<label for="input_accountKey">'.$w->labelAccountKey.'</label><br/>
+				<input type="text" name="accountKey" id="input_accountKey" class="max" value="'.$account->accountKey.'"/>
+			</li>
+			<li class="column-clear column-left-10">
+				<label for="input_value">'.$w->labelValue.'</label><br/>
+				<input type="text" name="value" id="input_value" class="max" value="'.$account->value.'"/>
+			</li>
+			<li class="column-left-10">
+				<label for="input_currency">'.$w->labelCurrency.'</label><br/>
+				<select type="text" name="currency" id="input_currency" class="max">'.$optCurrency.'</select/>
+			</li>
+		</ul>
+		<div class="buttonbar">
+			'.HtmlElements::LinkButton( './work/finance/bank', $w->buttonToTop, 'button icon cancel top up' ).'
+			'.HtmlElements::LinkButton( './work/finance/bank/account', $w->buttonCancel, 'button icon cancel' ).'
+			'.HtmlElements::Button( 'add', $w->buttonAdd, 'button icon add' ).'
+		</div>
+	</fieldset>
+</form>';

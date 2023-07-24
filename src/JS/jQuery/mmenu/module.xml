@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: mmenu</title>
+	<description><![CDATA[jQuery plugin for mobile navigation.]]></description>
+	<category>JavaScript</category>
+	<version>7.0.5-p1</version>
+	<log version="5.5.3-p1">Moved theme from custom to common.</log>
+	<log version="7.0.5">Support version 7.0.5.</log>
+	<log version="7.0.5-p1">Extract hook to own hook class.</log>
+	<author site="http://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
+	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
+	<url>http://mmenu.frebsite.nl/</url>
+	<license version="5" source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
+	<license version="7" source="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
+	<files>
+		<class>Hook/JS/jQuery/Mmenu.php</class>
+		<script>mmenu/5.5.3/jquery.mmenu.dragclose.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.currentitem.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.sectionindexer.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.dragopen.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.backbutton.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.offcanvas.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.navbars.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.searchfield.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.counters.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.dividers.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.iconpanels.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.autoheight.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.toggles.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.fixedelements.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.min.all.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.min.js</script>
+		<script>mmenu/5.5.3/jquery.mmenu.oncanvas.min.js</script>
+		<script>mmenu/7.0.5/jquery.mmenu.min.js</script>
+		<script>mmenu/7.0.5/jquery.mmenu.all.min.js</script>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.leftsubpanels.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.panelshadow.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.offcanvas.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.counters.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.dragopen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.searchfield.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.sectionindexer.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.navbars.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.toggles.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.iconpanels.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.dividers.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.autoheight.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.oncanvas.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.all.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.fullscreen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.iconbar.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.tileview.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.pageshadow.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.widescreen.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.effects.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.multiline.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.pagedim.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.themes.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.positioning.css</style>
+		<style source="common">mmenu/5.5.3/jquery.mmenu.borderstyle.css</style>
+		<style source="common">mmenu/7.0.5/jquery.mmenu.min.css</style>
+		<style source="common">mmenu/7.0.5/jquery.mmenu.all.min.css</style>
+		<file>licenses/jQuery.mmenu.license.txt</file>
+	</files>
+	<config protected="yes" type="boolean" name="auto">yes</config>
+	<config protected="yes" type="string" name="auto.selector">.mmenu-auto</config>
+	<config protected="yes" type="string" name="load" values="all,core">all</config>
+	<config protected="yes" type="string" name="load.addons"/>
+	<config protected="yes" type="string" name="load.extensions"/>
+	<config protected="yes" type="string" name="version" values="5.5.3,7.0.5">7.0.5</config>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Mmenu::onPageApplyModules</hook>
+</module>

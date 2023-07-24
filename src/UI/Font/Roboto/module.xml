@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Font: Roboto</title>
+	<description><![CDATA[Integration of typeface "Roboto".
+
+Always set font-family to "Roboto".
+Use font-weight and font-style to switch fonts.
+
+### Roboto
+list>
+- 200: Thin, Thin Italic
+- 300: Light, Light Italic
+- 400: Regular, Italic
+- 500: Medium, Medium Italic
+- 700: Bold, Bold Italic
+- 900: Black, Black Italic
+<list
+
+### Condensed
+list>
+- 300: Light, Light Italic
+- 400: Regular, Italic
+- 700: Bold, Bold Italic
+<list
+]]></description>
+	<category>User Interface</category>
+	<version>0.2.3</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Use general module main switch.</log>
+	<log version="0.2.2">Extract hook to own hook class.</log>
+	<log version="0.2.3">Adjust to new font css.</log>
+	<author site="https://plus.google.com/110879635926653430880/about">Christian Robertson</author>
+	<license source="http://www.fontsquirrel.com/license/roboto">Apache License v2</license>
+	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
+	<files>
+		<class>Hook/UI/Font/Roboto.php</class>
+	</files>
+	<relations>
+		<needs type="module">UI_Font</needs>
+	</relations>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Font_Roboto::onPageApplyModules</hook>
+</module>

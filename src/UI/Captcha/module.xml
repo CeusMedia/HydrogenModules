@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Captcha</title>
+	<description><![CDATA[CAPTCHA.]]></description>
+	<category>User Interface</category>
+	<version>0.3.1</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add public link to image generator.</log>
+	<log version="0.2.2">Add empty style file.</log>
+	<log version="0.2.3">Make length, strength, width and height configurable.</log>
+	<log version="0.2.4">Adjust to new shortcode handling.</log>
+	<log version="0.3">Add Google reCaptcha.</log>
+	<log version="0.3.1">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Captcha.php</class>
+		<class>View/Captcha.php</class>
+		<class>Hook/Captcha.php</class>
+		<class>View/Helper/Captcha.php</class>
+		<template>captcha/test.php</template>
+<!--		<script load="auto">module.ui.captcha.js</script>-->
+		<style load="auto">module.ui.captcha.css</style>
+		<file>themes/common/font/tahoma.ttf</file>
+	</files>
+	<config protected="yes" type="boolean" name="active">yes</config>
+	<config protected="yes" type="string" name="mode" values="default,recaptcha">default</config>
+	<config protected="yes" type="string" mandatory="mode:default" name="default.path">./</config>
+	<config protected="yes" type="integer" mandatory="mode:default" name="default.width">100</config>
+	<config protected="yes" type="integer" mandatory="mode:default" name="default.height">40</config>
+	<config protected="yes" type="integer" mandatory="mode:default" name="default.length">4</config>
+	<config protected="yes" type="string" mandatory="mode:default" name="default.strength" values="soft,hard">soft</config>
+	<config protected="yes" type="string" mandatory="mode:recaptcha" name="recaptcha.key"></config>
+	<config protected="yes" type="string" mandatory="mode:recaptcha" name="recaptcha.secret"></config>
+	<relations/>
+	<link access="public" path="captcha/image"/>
+	<hook type="resource" resource="View" event="onRenderContent">Hook_Captcha::onViewRenderContent</hook>
+</module>

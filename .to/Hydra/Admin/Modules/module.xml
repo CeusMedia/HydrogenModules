@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<module>
+	<title>Admin: Modules</title>
+	<description><![CDATA[Basic administration of modules.
+After providing support for module handling, this module allows you to
+- browser available modules
+- view details of available modules
+- <strike>install module to local instance</strike>
+- <strike>uninstall module form local</strike>
+This module can be extended by:
+- Module Installer
+- Module Editor
+- Module Creator
+This module needs other modules to be installed:
+- Module Sources
+- App Instances
+]]></description>
+	<category>Administration</category>
+	<version>0.4.4</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Adding features.</log>
+	<log version="0.3.1">Adjusted database update handling.</log>
+	<log version="0.3.2">Imnproved instant module filter.</log>
+	<log version="0.3.3">Switches graph orientation.</log>
+	<log version="0.3.4">Added helper for module details.</log>
+	<log version="0.3.5">Added switch to run SQL commands during installation or uninstallation.</log>
+	<log version="0.3.6">Added scope to filter modules in viewer index.</log>
+	<log version="0.3.7">Moved templates for details panel.</log>
+	<log version="0.3.8">Extended details by list of instances using this module.</log>
+	<log version="0.4">Rework SQL script collecting on install and update.</log>
+	<log version="0.4.1">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4.2">Replace CDN resource.</log>
+	<log version="0.4.3">Start migrating module for using outside of Hydra.</log>
+	<log version="0.4.4">Add instance selector view helper.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Admin/Module.php</class>
+		<class>Controller/Admin/Module/Viewer.php</class>
+		<class>Model/Module.php</class>
+		<class>View/Admin/Module.php</class>
+		<class>View/Admin/Module/Viewer.php</class>
+		<class>View/Helper/InstanceSelector.php</class>
+		<class>View/Helper/Module.php</class>
+		<class>View/Helper/Module/CodeViewer.php</class>
+		<class>View/Helper/Module/Details.php</class>
+		<class>Logic/Module.php</class>
+		<class>Logic/Module/Relation.php</class>
+		<locale>de/admin/module.ini</locale>
+		<locale>de/admin/module/viewer.ini</locale>
+		<locale>en/admin/module.ini</locale>
+		<locale>en/admin/module/viewer.ini</locale>
+		<template>admin/module/index.filter.php</template>
+		<template>admin/module/index.php</template>
+		<template>admin/module/details/config.php</template>
+		<template>admin/module/details/database.php</template>
+		<template>admin/module/details/instances.php</template>
+		<template>admin/module/details/relations.php</template>
+		<template>admin/module/details/resources.php</template>
+		<template>admin/module/viewer/general.php</template>
+		<template>admin/module/viewer/index.php</template>
+		<template>admin/module/viewer/view.php</template>
+		<script source="local" load="auto">UI.InstantFilter.js</script>
+		<script source="local" load="auto">site.admin.module.js</script>
+		<style source="theme" load="auto">site.admin.module.css</style>
+		<image source="theme">clearSearch.png</image>
+		<image source="theme">search-magnifier.gif</image>
+	</files>
+	<relations>
+		<needs type="module">UI_Helper_Content</needs>
+<!--		<needs type="module">Admin_Instances</needs>-->
+	</relations>
+	<link xml:lang="de" path="admin/module" access="acl" rank="35">Module</link>
+	<link xml:lang="de" path="admin/module/viewer" access="acl" rank="35">Moduleansicht</link>
+	<link xml:lang="en" path="admin/module" access="acl" rank="36">Modules</link>
+	<link xml:lang="en" path="admin/module/viewer" access="acl" rank="36">Module Viewer</link>
+</module>

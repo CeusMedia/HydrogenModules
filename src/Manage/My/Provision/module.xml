@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<module>
+	<title>Manage: My: Provision</title>
+	<description><![CDATA[]]></description>
+	<category>Management</category>
+	<version>0.4.1</version>
+	<log version="0.1">Experimental prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Prepare view to add a license.</log>
+	<log version="0.2.2">Extract locales.</log>
+	<log version="0.2.3">Split license and key views.</log>
+	<log version="0.3">Use shop module for license orders.</log>
+	<log version="0.3.1">Add tabs.</log>
+	<log version="0.3.2">Add access to links (controller actions) for all users.</log>
+	<log version="0.3.3">Implement reviving of unfinished license orders.</log>
+	<log version="0.3.4">Apply module UI:Font:FontAwesome.</log>
+	<log version="0.3.5">Add position bar.</log>
+	<log version="0.4">Derived from module Manage:My:License.</log>
+	<log version="0.4.1">Update to support Shop version 0.8.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<files>
+		<class>Controller/Manage/My/Provision/License.php</class>
+		<class>Controller/Manage/My/Provision/License/Key.php</class>
+		<class>View/Manage/My/Provision/License.php</class>
+		<class>View/Manage/My/Provision/License/Key.php</class>
+		<template>manage/my/provision/license/add.php</template>
+		<template>manage/my/provision/license/assign.php</template>
+		<template>manage/my/provision/license/index.php</template>
+		<template>manage/my/provision/license/index.filter.php</template>
+		<template>manage/my/provision/license/index.keys.php</template>
+		<template>manage/my/provision/license/index.list.php</template>
+		<template>manage/my/provision/license/view.php</template>
+		<template>manage/my/provision/license/view.facts.php</template>
+		<template>manage/my/provision/license/view.keys.php</template>
+		<template>manage/my/provision/license/key/index.filter.php</template>
+		<template>manage/my/provision/license/key/index.list.php</template>
+		<template>manage/my/provision/license/key/index.php</template>
+		<locale>de/manage/my/provision/license.ini</locale>
+		<locale>de/manage/my/provision/license/key.ini</locale>
+		<locale>en/manage/my/provision/license.ini</locale>
+		<locale>en/manage/my/provision/license/key.ini</locale>
+		<style>module.manage.my.provision.css</style>
+	</files>
+	<link access="acl" path="manage/my/provision/license/add"/>
+	<link access="acl" path="manage/my/provision/license/assign"/>
+	<link access="acl" path="manage/my/provision/license/cancel"/>
+	<link access="acl" path="manage/my/provision/license/filter"/>
+	<link access="acl" path="manage/my/provision/license/index"/>
+	<link access="acl" path="manage/my/provision/license/view"/>
+	<link access="acl" path="manage/my/provision/license/ajaxGetUsers"/>
+	<link access="acl" path="manage/my/provision/license/key/filter"/>
+	<link access="acl" path="manage/my/provision/license/key/index"/>
+	<relations>
+		<needs type="module">Manage_User_Provision</needs>
+		<needs type="module">Shop</needs>
+	</relations>
+	<hook type="resource" resource="ManageMyLicense" event="registerTabs">View_Manage_My_License::___onRegisterTab</hook>
+</module>

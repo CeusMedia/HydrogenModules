@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<module>
+	<title>JS: jQuery: Select2</title>
+	<description><![CDATA[Replacement for select inputs]]></description>
+	<version>4.0.12</version>
+	<log version="4.0.12">Module creation.</log>
+	<category>JavaScript</category>
+	<author site="https://kevin-brown.com/">Kevin Brown</author>
+	<url>https://select2.org/</url>
+	<license source="https://github.com/select2/select2/blob/master/LICENSE.md">MIT</license>
+	<files>
+		<class>Hook/JS/jQuery/Select2.php</class>
+	</files>
+	<config protected="yes" type="string" name="version" values="3.5.4,4.0.12">4.0.12</config>
+	<config protected="yes" type="boolean" name="load.minified">yes</config>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_jQuery_Select2::onPageApplyModules</hook>
+</module>
