@@ -74,10 +74,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		$conditions		= ['status' => [0, 1, 2, 3]];
 		$orders			= ['dayStart' => 'ASC'];
 		$missions		= $this->getUserMissions($conditions, $orders);
-
 		$helper = new View_Helper_Work_Mission_Export_Ical();
 		$helper->setEnv( $this->env );
-		$helper->setMissions($missions);
+		$helper->setMissions( $missions );
 		return $helper->render();
 	}
 
