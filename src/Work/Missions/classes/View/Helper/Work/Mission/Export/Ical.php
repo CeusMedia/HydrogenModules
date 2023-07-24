@@ -1,7 +1,7 @@
 <?php
-use CeusMedia\HydrogenFramework\View\Helper\Abstraction as ViewHelper
+use CeusMedia\Common\FS\File\ICal\Builder as IcalBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
-use CeusMedia\Common\FS\File\ICal\Builder as IcalBuilder
+use CeusMedia\HydrogenFramework\View\Helper\Abstraction as ViewHelper;
 
 class View_Helper_Work_Mission_Export_Ical extends ViewHelper
 {
