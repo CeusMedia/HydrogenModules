@@ -74,6 +74,65 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'shortcut', $this->shortcut );
 	}
 
+
+	public function export( $page = 0 )
+	{
+		$conditions		= [];
+		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
+		$filterStatus	= $this->session->get( $this->filterSessionPrefix.'status' );
+		$filterTitle	= $this->session->get( $this->filterSessionPrefix.'title' );
+		$filterOrderCol	= $this->session->get( $this->filterSessionPrefix.'orderColumn' );
+		$filterOrderDir	= $this->session->get( $this->filterSessionPrefix.'orderDirection' );
+		if( $filterId )
+			$conditions['relocationId']	= $filterId;
+		else{
+			if( $filterStatus )
+				$conditions['status']	= $filterStatus;
+			if( $filterTitle )
+				$conditions['title']	= '%'.$filterTitle.'%';
+		}
+
+		$orders			= [];
+		$allowedColumns	= array( 'relocationId', 'title', 'views', 'usedAt' );
+		if( !in_array( $filterOrderCol, $allowedColumns ) )
+			$filterOrderCol	= 'relocationId';
+		if( !in_array( $filterOrderDir, array( 'asc', 'desc' ) ) )
+			$filterOrderDir	= 'asc';
+		$orders[$filterOrderCol]	= $filterOrderDir;
+
+		$data	= $this->model->getAll( $conditions, $orders );
+		$states	= $this->getWords( 'states' );
+		$keys	= ['relocationId' => 'ID', 'status' => 'Zustand', 'views' => 'Klicks', 'usedAt' => 'zuletzt', 'title' => 'Titel', 'url' => 'Zieladresse'];
+		$lines  = [join( ';', $keys )];
+		$helper	= new View_Helper_TimePhraser( $this->env );
+		foreach( $data as $line ){
+			$row	= [];
+			foreach( array_keys( $keys ) as $key ){
+				$value	= $line->$key;
+				switch( $key ){
+					case 'status':
+						$value	= $states[$value];
+						break;
+					case 'usedAt':
+						$value	= date( 'Y-m-d', $value );
+						break;
+//					case 'usedAt':
+//						$value	= $helper->convert( $value, FALSE, 'vor' );
+//						break;
+				}
+				$row[]	= '"'.addslashes( $value ).'"';
+			}
+			$lines[]    = join( ';', $row );
+		}
+		$csv	= join( "\r\n", $lines );
+
+		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
+		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
+
+		$this->redirect( NULL, TRUE );
+	}
+
+
 	public function filter( $reset = NULL )
 	{
 		$filterKeys	= ['id', 'status', 'title', 'orderColumn', 'orderDirection'];
