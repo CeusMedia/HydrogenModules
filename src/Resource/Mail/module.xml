@@ -32,7 +32,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 
 ]]></description>
 	<category>Resource</category>
-	<version>1.0.4</version>
+	<version>1.0.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -101,6 +101,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 	<log version="1.0.2">Extract migration jobs to own class.</log>
 	<log version="1.0.3">Mail table can be skipped on dump but dumped by job.</log>
 	<log version="1.0.4">Add job to regenerate mail objects from raw.</log>
+	<log version="1.0.5">Increase performance on queue pagination.</log>
 <!--	<log version="1.1">Code style review and strict type hinting.</log>-->
 <!--	<log version="1.2">Support pausing mails.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
