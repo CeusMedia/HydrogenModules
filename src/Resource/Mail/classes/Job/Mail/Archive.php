@@ -96,9 +96,28 @@ class Job_Mail_Archive extends Job_Abstract
 		$this->out( 'Removed '.$nrMails.' old mails.' );
 	}
 
+	/**
+	 *	Exports mails to SQL file.
+	 * 	Support limit and order (--limit 100 --order="mailId DESC").
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
 	public function dump()
 	{
-		$path		= $this->parameters->get( '--to', './' );
+		$path	= $this->parameters->get( '--to', './' );
+		$limit	= $this->parameters->get( '--limit' );
+		$order	= $this->parameters->get( '--order' );
+
+		$where	= [];
+		if( NULL !== $limit || NULL !== $order ){
+			$where[]    = 1;
+			if( NULL !== $order )
+				$where[]	= 'ORDER BY '.$order;
+			if( NULL !== $limit )
+				$where[]	= 'LIMIT '.max( 1, abs( $limit ) );
+		}
+		$params		= $where ? ' --where="'.addslashes( join( ' ', $where ) ).'"' : '';
 
 		$filename	= "dump_".date( "Y-m-d_H:i:s" )."_mails.sql";
 		$pathname	= $path.$filename;
@@ -108,14 +127,15 @@ class Job_Mail_Archive extends Job_Abstract
 		$prefix		= $dba->get( 'prefix' );
 		$tables		= $prefix.'mails';
 
-		$command	= call_user_func_array( "sprintf", [										//  call sprintf with arguments list
-			"mysqldump -h%s -P%s -u%s -p%s %s %s > %s",												//  command to replace within
+		$command	= call_user_func_array( "sprintf", [											//  call sprintf with arguments list
+			"mysqldump -h%s -P%s -u%s -p%s %s %s %s > %s",											//  command to replace within
 			escapeshellarg( $dba->get( 'host' ) ),													//  configured host name as escaped shell arg
 			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),					//  configured port as escaped shell arg
 			escapeshellarg( $dba->get( 'username' ) ),												//  configured username as escaped shell arg
 			escapeshellarg( $dba->get( 'password' ) ),												//  configured password as escaped shell arg
 			escapeshellarg( $dba->get( 'name' ) ),													//  configured database name as escaped shell arg
 			$tables,																				//  collected found tables
+			$params,																				//  aditional parameters, like --where (buil from --order or --limit) 
 			escapeshellarg( $pathname ),															//  dump output filename
 		] );
 		$resultCode		= 0;
