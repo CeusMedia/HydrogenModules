@@ -145,7 +145,7 @@ class View_Admin_Mail_Queue extends View
 			$value	= $icon.'&nbsp;'.$link;
 		}
 		else{
-			if( !strlen( $value ) )
+			if( NULL === $value || 0 === strlen( $value ) )
 				return '';
 		}
 		$label	= $words['view-facts']['label'.ucfirst( $key )];
