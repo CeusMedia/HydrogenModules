@@ -7,8 +7,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var Dictionary $config */
+
+
+/** @var WebEnvironment $env */
 /** @var View $view */
+/** @var Dictionary $config */
 /** @var array $words */
 /** @var Dictionary $user */
 
@@ -16,8 +19,13 @@ $w				= (object) $words['register'];
 
 $moduleConfig	= $config->getAll( 'module.resource_users.', TRUE );
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconRegister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconCancel	= HTML::Icon( 'arrow-left' );
+$iconSend	= HTML::Icon( 'ok', TRUE );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+	$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+}
+
 $optGender		= HtmlElements::Options( $words['gender'], $user->get( 'gender' ) );
 
 $texts	= ['top', 'info', 'info.company', 'info.user', 'info.conditions', 'bottom'];

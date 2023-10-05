@@ -1,5 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<array<string,string>> $words */
+/** @var ?bool $useOauth2 */
+/** @var ?bool $useRemember */
+/** @var ?bool $useRegister */
+/** @var ?bool $useCsrf */
+/** @var ?string $from */
 
 $w				= (object) $words['login'];
 
@@ -14,7 +25,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 }
 
 $fieldOauth2	= '';
-if( $useOauth2 ){
+if( $useOauth2 ?? FALSE ){
 	$iconUnbind			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
@@ -33,7 +44,7 @@ if( $useOauth2 ){
 }
 
 $fieldRemember	= '';
-if( $useRemember )
+if( $useRemember ?? FALSE )
 	$fieldRemember	= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row',
 		HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', array(
 			HtmlTag::create( 'label', array(

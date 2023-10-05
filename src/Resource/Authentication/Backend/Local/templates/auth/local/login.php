@@ -7,6 +7,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var object $server */
+/** @var ?string $from */
 
 $panelLogin	= $view->loadTemplateFile( 'auth/local/login.form.php' );
 
