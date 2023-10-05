@@ -56,7 +56,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [
 						'name'			=> 'password_email',
 						'id'			=> 'input_password_email',
 						'class'			=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
-						'value'			=> htmlentities( $password_email, ENT_QUOTES, 'UTF-8' ),
+						'value'			=> htmlentities( $password_email ?? '', ENT_QUOTES, 'UTF-8' ),
 						'autocomplete'	=> 'email',
 					] )
 				] )

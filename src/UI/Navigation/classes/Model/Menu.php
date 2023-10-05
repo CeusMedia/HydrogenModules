@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Acl\Abstraction as AclAbstr
 class Model_Menu
 {
 	protected AclAbstraction $acl;
-	protected ?string $current						= NULL;
+	protected ?object $current						= NULL;
 	protected Environment $env;
 	protected string $language;						//  @todo rename to current language or user language
 	protected ?Logic_Localization $localization		= NULL;

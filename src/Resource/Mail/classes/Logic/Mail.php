@@ -14,6 +14,7 @@ use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
 use CeusMedia\Mail\Renderer as MailMessageRendererV1;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 
 /**
@@ -41,6 +42,7 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	@return		int
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function abortMailsWithTooManyAttempts(): int
 	{
@@ -61,7 +63,7 @@ class Logic_Mail extends Logic
 	 *	@return		void
 	 *	@throws		IoException
 	 */
-	public function appendRegisteredAttachments( Mail_Abstract $mail, string $language )
+	public function appendRegisteredAttachments( Mail_Abstract $mail, string $language ): void
 	{
 		$class			= get_class( $mail );
 		$indices		= ['className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language];
@@ -83,14 +85,14 @@ class Logic_Mail extends Logic
 	}
 
 	/**
-	 *	@param		array		$userIds
-	 *	@param		array		$roleIds
+	 *	@param		array|string	$userIds
+	 *	@param		array|string	$roleIds
 	 *	@return		array
-	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@deprecated
 	 *	@todo		find usage and move to module or remove, reason: uncool hard binding to user/role models
 	 */
-	public function collectConfiguredReceivers( $userIds, array $roleIds = [] ): array
+	public function collectConfiguredReceivers( array|string $userIds, array|string $roleIds = [] ): array
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return [];
@@ -398,6 +400,7 @@ class Logic_Mail extends Logic
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
 	 *	@return		object|NULL		Model entity object of detected mail template
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		see code doc
 	 */
 	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
@@ -467,9 +470,9 @@ class Logic_Mail extends Logic
 			else
 				throw new RuntimeException( 'Detection failed since no raw source is available' );
 			$mail->compression	= Model_Mail::COMPRESSION_BASE64;
-			if( substr( $source, 0, 2 ) === "BZ" )										//  BZIP compression detected
+			if( str_starts_with( $source, "BZ" ) )										//  BZIP compression detected
 				$mail->compression	= Model_Mail::COMPRESSION_BZIP;
-			else if( substr( $source, 0, 2 ) === "GZ" )								//  GZIP compression detected
+			else if( str_starts_with( $source, "GZ" ) )									//  GZIP compression detected
 				$mail->compression	=  Model_Mail::COMPRESSION_GZIP;
 		}
 		return $mail->compression;
@@ -484,12 +487,11 @@ class Logic_Mail extends Logic
 	 *	@param		string|NULL		$senderId		Optional: ID of sending user
 	 *	@return		string							ID of queued mail
 	 *	@throws		InvalidArgumentException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
-	public function enqueueMail( Mail_Abstract $mail, string $language, $receiver, ?string $senderId = NULL ): string
+	public function enqueueMail( Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): string
 	{
-		if( is_array( $receiver ) )
-			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
@@ -636,7 +638,7 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException				if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
 	 *	@throws		RuntimeException				if given no parser is available for mail object
 	 */
-	public function getMailParts( $mail ): array
+	public function getMailParts( object|string $mail ): array
 	{
 		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
@@ -706,6 +708,8 @@ class Logic_Mail extends Logic
 	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		boolean			TRUE if success
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function handleMail( Mail_Abstract $mail, object $receiver, string $language, bool $forceSendNow = NULL ): bool
 	{
@@ -719,10 +723,11 @@ class Logic_Mail extends Logic
 	 *	@access		public
 	 *	@param		string			$mailId			ID of mail to remove
 	 *	@return		boolean
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function removeMail( string $mailId ): bool
 	{
-		return (bool) $this->modelQueue->remove( $mailId );
+		return $this->modelQueue->remove( $mailId );
 	}
 
 	/**
@@ -731,11 +736,11 @@ class Logic_Mail extends Logic
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@return		boolean			TRUE if success
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function sendMail( Mail_Abstract $mail, $receiver )
+	public function sendMail( Mail_Abstract $mail, int|object $receiver ): bool
 	{
-		if( is_array( $receiver ) )
-			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
@@ -754,6 +759,7 @@ class Logic_Mail extends Logic
 	 *	@param		boolean		$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		boolean
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use logging on exception (=sending mail failed)
 	 */
 	public function sendQueuedMail( string $mailId, bool $forceResent = FALSE ): bool
@@ -805,10 +811,11 @@ class Logic_Mail extends Logic
 	 *	@return 	boolean
 	 *	@throws		DomainException			if given status is invalid
 	 *	@throws		DomainException			if transition to new status is not allowed
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function setMailStatus( $mail, $status ): bool
+	public function setMailStatus( Mail_Abstract|int $mail, int $status ): bool
 	{
-		$status			= (int) $status;
 		$mail			= $this->getMailFromObjectOrId( $mail );
 		$mail->status	= (int) $mail->status;
 		$modelStatuses	= ObjectConstants::staticGetAll( 'Model_Mail', 'STATUS_' );
@@ -847,7 +854,7 @@ class Logic_Mail extends Logic
 	 *	Alias of decompressMailObject.
 	 *	@todo		check if needed or remove
 	 */
-	public function decompressObjectInMail( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
+	public function decompressObjectInMail( object $mail, bool $unserialize = TRUE, bool $force = FALSE ): void
 	{
 		$this->decompressMailObject( $mail, $unserialize, $force );
 	}

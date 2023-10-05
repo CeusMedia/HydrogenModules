@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+<?php /** @noinspection PhpNoReturnAttributeCanBeAddedInspection */
+
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Crypt\PasswordStrength;
@@ -9,6 +11,7 @@ use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibraryResource;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Auth_Local extends Controller
 {
@@ -27,7 +30,7 @@ class Controller_Auth_Local extends Controller
 	protected ?Logic_Limiter $limiter			= NULL;
 	protected Logic_Authentication_Backend_Local $logic;
 
-	public function ajaxUsernameExists()
+	public function ajaxUsernameExists(): void
 	{
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
@@ -39,7 +42,7 @@ class Controller_Auth_Local extends Controller
 		exit;
 	}
 
-	public function ajaxEmailExists()
+	public function ajaxEmailExists(): void
 	{
 		$email	= trim( $this->request->get( 'email' ) );
 		$result		= FALSE;
@@ -51,7 +54,7 @@ class Controller_Auth_Local extends Controller
 		exit;
 	}
 
-	public function ajaxPasswordStrength()
+	public function ajaxPasswordStrength(): void
 	{
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;
@@ -63,12 +66,13 @@ class Controller_Auth_Local extends Controller
 	}
 
 	/**
- 	 *	@todo		send mail to user after confirmation with user data
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@todo		send mail to user after confirmation with user data
 	 */
-	public function confirm( $code = NULL )
+	public function confirm( $code = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
-		$code		= $code ? $code : $this->request->get( 'confirm_code' );											//  get code from POST reqeuest if not given by GET
+		$code		= $code ?: $this->request->get( 'confirm_code' );												//  get code from POST reqeuest if not given by GET
 		$from		= $this->request->get( 'from'  );
 		$from		= str_replace( "index/index", "", $from );
 
@@ -103,10 +107,10 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'from', $from );									//  forward redirect URL to form action
 	}
 
-	public function index()
+	public function index(): void
 	{
 		if( !$this->session->has( 'auth_user_id' ) )
-			return $this->redirect( 'auth', 'login' );											// @todo replace redirect
+			$this->restart( 'auth/login' );
 
 		$from			= $this->request->get( 'from' );
 		$forwardPath	= $this->moduleConfig->get( 'login.forward.path' );
@@ -115,16 +119,18 @@ class Controller_Auth_Local extends Controller
 		if( $forwardPath && $forwardForce )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
 		if( $from )
-			return $this->restart( $from );
+			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		return $this->restart( NULL );
+		$this->restart();
 	}
 
 	/**
-	 *	@todo implement username parameter to be used (not the case right now)
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@todo		implement username parameter to be used (not the case right now)
 	 */
-	public function login( $username = NULL )
+	public function login( $username = NULL ): void
 	{
 		if( $this->session->has( 'auth_user_id' ) )
 			$this->redirectAfterLogin();
@@ -183,7 +189,14 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'useRemember', $useRememberByConfig && $useRememberByLimit );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	/**
+	 *	@param		?string		$redirectController
+	 *	@param		?string		$redirectAction
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function logout( ?string $redirectController = NULL, ?string $redirectAction = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'logout' );
 		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
@@ -211,7 +224,7 @@ class Controller_Auth_Local extends Controller
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
-	public function password()
+	public function password(): void
 	{
 		$words			= (object) $this->getWords( 'password' );
 		$modelUser		= new Model_User( $this->env );
@@ -270,7 +283,7 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'password_email', $this->request->get( 'password_email' ) );
 	}
 
-	public function register()
+	public function register(): void
 	{
 		$words		= (object) $this->getWords( 'register' );
 		if( !$this->moduleConfigAuth->get( 'register' ) || !$this->moduleConfig->get( 'register' ) ){
@@ -303,7 +316,7 @@ class Controller_Auth_Local extends Controller
 		if( !$roleDefault ){
 			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
 			$from	= $this->request->get( 'from' );
-			$this->restart( $from ? $from : NULL, !$from );
+			$this->restart( $from ?: NULL, !$from );
 		}
 		$roleId		= $roleDefault->roleId;															//  use default register role if none given
 		if( $this->request->has( 'roleId' ) && trim( $input->get( 'roleId' ) ) ){
@@ -340,8 +353,8 @@ class Controller_Auth_Local extends Controller
 				$this->messenger->noteError( $words->msgNoFirstname );
 			if( $needsSurname && empty( $input['surname'] ) )
 				$this->messenger->noteError( $words->msgNoSurname );
-			if( $needsTac &&  empty( $input['accept_tac'] ) )
-				$this->messenger->noteError( $words->msgTermsNotAccepted  );
+			if( $needsTac && empty( $input['accept_tac'] ) )
+				$this->messenger->noteError( $words->msgTermsNotAccepted );
 
 			if( $this->messenger->gotError() - $errors == 0 ){
 				$data	= [
@@ -366,7 +379,6 @@ class Controller_Auth_Local extends Controller
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
 					$data['password']	= '';
 				}
-
 
 				$this->env->getDatabase()->beginTransaction();
 				$from		= $this->request->get( 'from' );
@@ -439,6 +451,10 @@ class Controller_Auth_Local extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -472,7 +488,13 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'useOauth2', $this->useOauth2 );
 	}
 
-	protected function authenticateUserByCredentials( string $username, string $password )
+	/**
+	 *	@param		string		$username
+	 *	@param		string		$password
+	 *	@return		int
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function authenticateUserByCredentials( string $username, string $password ): int
 	{
 		$words		= (object) $this->getWords( 'login' );
 		if( !strlen( $username ) ){
@@ -496,9 +518,9 @@ class Controller_Auth_Local extends Controller
 		$hookData	= [
 			'status'	=> NULL,
 			'backend'	=> 'local',
-			'username'	=> $user ? $user->username : $username,
+			'username'	=> $user->username,
 //			'password'	=> $password,															//  disabled for security
-			'userId'	=> $user ? $user->userId : 0,
+			'userId'	=> $user->userId,
 		];
 		$this->callHook( 'Auth', 'checkBeforeLogin', $this, $hookData );
 		if( $hookData['status'] === FALSE )
@@ -533,7 +555,7 @@ class Controller_Auth_Local extends Controller
 			$this->messenger->noteError( $words->msgInvalidPassword );
 			return 0;
 		}
-		return $user->userId;
+		return (int) $user->userId;
 	}
 
 	/**
@@ -541,12 +563,13 @@ class Controller_Auth_Local extends Controller
 	 *	If newer password store is supported and old password has been found, migration will apply.
 	 *
 	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
-	 *	@todo   	clean up if support for old passwort decays
-	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 *	@param		object		$user		User data object
+	 *	@param		string		$password	Password to check on login
+	 *	@return		bool
+	 *	@todo		clean up if support for old passwort decays
+	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 */
-	protected function checkPasswordOnLogin( $user, string $password )
+	protected function checkPasswordOnLogin( object $user, string $password ): bool
 	{
 		$words				= (object) $this->getWords( 'login' );
 		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
@@ -588,12 +611,14 @@ class Controller_Auth_Local extends Controller
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogin( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect contoller has been argumented
+		if( '' !== ( $controller ?? '' ) )																//  a redirect controller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
 		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
@@ -613,17 +638,19 @@ class Controller_Auth_Local extends Controller
 	 *	Dispatch next route after logout, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Go to index (empty path)
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogout( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect contoller has been argumented
+		if( '' !== ( $controller ?? '' ) )																//  a redirect controller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
 //		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
@@ -636,10 +663,10 @@ class Controller_Auth_Local extends Controller
 			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
 		if( $forwardPath )																			//  fallback: forward path given
 			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
-		$this->restart( NULL );																		//  fallback: go to index (empty path)
+		$this->restart();																				//  fallback: go to index (empty path)
 	}
 
-	protected function rememberUserInCookie( $user )
+	protected function rememberUserInCookie( object $user ): void
 	{
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
@@ -651,15 +678,16 @@ class Controller_Auth_Local extends Controller
 	}
 
 	/**
-	 *	Tries to relogin user if remembered in cookie.
+	 *	Tries to re-login user if remembered in cookie.
 	 *	Retrieves user ID and password from cookie.
 	 *	Checks user, its password and access per role.
 	 *	Stores user ID and role ID in session on success.
 	 *	Redirects to "from" if given.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	protected function tryLoginByCookie()
+	protected function tryLoginByCookie(): void
 	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
