@@ -467,6 +467,7 @@ class Controller_Auth_Local extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->modules		= $this->env->getModules();
 		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
 
 		$this->useOauth2	= FALSE;																//  assume that OAuth2 is not installed or registers as login tab
