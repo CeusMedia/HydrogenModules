@@ -3,13 +3,13 @@
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Info_Novelties extends Hook
+class Hook_Info_Novelty extends Hook
 {
-	public static function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
+	public function onRegisterDashboardPanels(): void
 	{
-		if( !$env->getAcl()->has( 'info/novelty', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'info/novelty', 'ajaxRenderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'info-novelty', [
+		$this->context->registerPanel( 'info-novelty', [
 			'title'			=> 'Neuigkeiten',
 			'heading'		=> 'Neuigkeiten',
 			'url'			=> './info/novelty/ajax/renderDashboardPanel',
