@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Logic_Member
 {
-	protected static Logic_Member $instance;
+	protected static ?Logic_Member $instance		= NULL;
 
 	protected Environment $env;
 	protected MessengerResource $messenger;

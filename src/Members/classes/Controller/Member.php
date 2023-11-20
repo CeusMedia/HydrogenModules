@@ -8,30 +8,11 @@ class Controller_Member extends Controller
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $modelUser;
-	protected $modelRelation;
-	protected $userId;
-	protected $logicMember;
-	protected $logicMail;
-
-	public static function ___onGetRelatedUsers( Environment $env, $context, $module, $payload )
-	{
-		$modelUser	= new Model_User( $env );
-		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );
-		$list		= [];
-		if( $userIds ){
-			$relatedUsers	= $modelUser->getAll( ['userId' => $userIds], ['username' => 'ASC'] );
-			foreach( $relatedUsers as $relatedUser )
-				$list[$relatedUser->userId]	= $relatedUser;
-		}
-		$words	= $env->getLanguage()->getWords( 'member' );
-		$payload->list[]	= (object) array(
-			'module'		=> 'Members',
-			'label'			=> $words['hook-getRelatedUsers']['label'],
-			'count'			=> count( $list ),
-			'list'			=> $list,
-		);
-	}
+	protected Model_User $modelUser;
+	protected Model_User_Relation $modelRelation;
+	protected ?string $userId;
+	protected Logic_Member $logicMember;
+	protected Logic_Mail $logicMail;
 
 	public function accept( $userRelationId )
 	{
