@@ -732,7 +732,7 @@ class Controller_Work_Mission extends Controller
 		$dayStart	= $this->request->get( 'dayStart' );
 		$dayEnd		= $this->request->get( 'dayEnd' );
 		if( $this->request->get( 'type' ) == 0 ){
-			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork' ) );
+			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork', '' ) );
 			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
 		}
 		$format		= $this->request->get( 'format' ) ? $this->request->get( 'format' ) : $this->contentFormat;
@@ -947,7 +947,7 @@ class Controller_Work_Mission extends Controller
 	 */
 	public function index( string $missionId = NULL ): void
 	{
-		if( trim( $missionId ) )
+		if( trim( $missionId ?? '' ) )
 			$this->restart( 'view/'.$missionId, TRUE );
 
 		$this->initFilters( $this->userId );
@@ -1103,7 +1103,9 @@ class Controller_Work_Mission extends Controller
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
 		if( $this->env->getRequest()->isAjax() ){
-			$this->redirect( 'work/mission/ajaxRenderIndex' );								//  @todo replace redirect but keep AJAX request in mind
+			$this->restart( 'ajaxRenderIndex', TRUE );
+//			$this->ajaxRenderIndex();
+//			$this->redirect( 'work/mission/ajaxRenderIndex' );								//  @todo replace redirect but keep AJAX request in mind
 //			header( 'Content-Type: application/json' );
 //			print( json_encode( TRUE ) );
 //			exit;

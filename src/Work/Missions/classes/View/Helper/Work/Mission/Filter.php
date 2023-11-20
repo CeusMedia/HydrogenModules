@@ -75,7 +75,7 @@ class View_Helper_Work_Mission_Filter
 			'name'			=> "query",
 			'id'			=> "filter_query",
 			'class'			=> 'span2 '.( $filteredQuery ? 'changed' : '' ),
-			'value'			=> htmlentities( $filteredQuery, ENT_QUOTES, 'UTF-8' ),
+			'value'			=> htmlentities( $filteredQuery ?? '', ENT_QUOTES, 'UTF-8' ),
 			'placeholder'	=> $this->words['index']['labelQuery'],
 		] );
 

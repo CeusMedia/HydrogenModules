@@ -8,7 +8,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	protected array $orders			= ['createdAt' => 'ASC'];
 	protected ?string $ownerId		= NULL;
 	protected ?string $workerId		= NULL;
-	protected ?string $status		= NULL;
+	protected array $status			= [];
 	protected ?string $projectId	= NULL;
 	protected ?string $module		= NULL;
 	protected ?string $moduleId		= NULL;

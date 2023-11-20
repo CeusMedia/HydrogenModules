@@ -81,7 +81,7 @@ class Logic_Work_Mission extends Logic
 	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = [] ): array
 	{
 		$session	= $this->env->getSession();
-		$query		= $session->get( $sessionFilterKeyPrefix.'query' );
+		$query		= $session->get( $sessionFilterKeyPrefix.'query', '' );
 		$types		= $session->get( $sessionFilterKeyPrefix.'types' );
 		$priorities	= $session->get( $sessionFilterKeyPrefix.'priorities' );
 		$states		= $session->get( $sessionFilterKeyPrefix.'states' );

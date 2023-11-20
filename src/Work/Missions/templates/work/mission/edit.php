@@ -29,7 +29,7 @@ $optType		= HtmlElements::Options( $words['types'], $mission->type );
 
 $optPriority	= [];
 foreach( $priorities as $key => $value )
-	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
+	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, FALSE, 'mission priority'.$key );
 $optPriority	= join( $optPriority/*, $mission->priority*/ );
 
 $optStatus		= [];
@@ -38,7 +38,7 @@ unset( $wordsStatus[-3] );
 unset( $wordsStatus[-2] );
 unset( $wordsStatus[4] );
 foreach( $wordsStatus as $key => $value )
-	$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+	$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, FALSE, 'mission status'.$key );
 $optStatus	= join( $optStatus/*, $mission->status*/ );
 
 $optWorker	= [];
@@ -174,11 +174,11 @@ $panelEdit	= '
 <!--			<div class="row-fluid">
 				<div class="span5 -column-left-40">
 					<label for="input_location">'.$w->labelLocation.'</label>
-					<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="location" id="input_location" class="span12 -max cmClearInput" value="'.htmlentities( $mission->location ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span7 -column-left-40">
 					<label for="input_reference">'.$w->labelReference.'</label>
-					<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="reference" id="input_reference" class="span12 -max cmClearInput" value="'.htmlentities( $mission->reference ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>-->
 			'.$fieldContent.'

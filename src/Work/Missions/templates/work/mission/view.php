@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
 /** @var View $view */
-/** @var array $words */
+/** @var array<string,array<string,string|int>> $words */
 /** @var object $mission */
 
-$w	= (object) $words['view'];
+//$w	= (object) $words['view'];
 
 $this->env->getPage()->js->addScriptOnReady('WorkMissionsViewer.init('.$mission->missionId.')');
 

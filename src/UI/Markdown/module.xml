@@ -29,7 +29,7 @@
 		<class>View/Helper/Markdown.php</class>
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch of module">yes</config>
-	<config protected="yes" type="string" name="renderer" title="Default Markdown renderer library" values="CommonMark,Parsedown,MichelF,MichelF_Extra,Cebe,Cebe_Extra,Cebe_GitHub,Ciconia,Ciconia_GitHub,Markdown_Extended">Ciconia</config>
+	<config protected="yes" type="string" name="renderer" title="Default Markdown renderer library" values="CommonMark,Parsedown,MichelF,MichelF_Extra,Cebe,Cebe_Extra,Cebe_GitHub,Ciconia,Ciconia_GitHub,Markdown_Extended">CommonMark</config>
 	<link access="public" rank="99" path="ajax/helper/markdown/render"/>
 	<relations/>
 	<hook type="resource" resource="View" event="onRenderContent">Hook_UI_Markdown::onRenderContent</hook>
