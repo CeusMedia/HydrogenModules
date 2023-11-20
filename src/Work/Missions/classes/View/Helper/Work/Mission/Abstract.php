@@ -76,7 +76,7 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 			$avatar	= new View_Helper_UserAvatar( $this->env );
 			$avatar->setUser( $worker );
 			$avatar->setSize( 20 );
-			$avatar->useGravatar( $this->env->getConfig()->get( 'module.manage_my_user_avatar.use.gravatar' ) );
+			$avatar->useGravatar( (bool) $this->env->getConfig()->get( 'module.manage_my_user_avatar.use.gravatar' ) );
 			$avatar	= $avatar->render();
 		}
 		else if( $this->modules->has( 'UI_Helper_Gravatar' ) ){

@@ -16,7 +16,7 @@ $helperAvatar	= NULL;
 if( $env->getModules()->has( 'Manage_My_User_Avatar' ) ){									//  use user avatar helper module
 	$helperAvatar			= new View_Helper_UserAvatar( $env );							//  create helper
 	$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );				//  get module config
-	$helperAvatar->useGravatar( $moduleConfig->get( 'use.gravatar' ) );						//  use gravatar as fallback
+	$helperAvatar->useGravatar( (bool) $moduleConfig->get( 'use.gravatar' ) );			//  use gravatar as fallback
 	$helperAvatar->setUser( $user );														//  set user data
 	$helperAvatar->setSize( 256 );															//  set image size
 //	$avatar	= $helperAvatar->render();														//  render avatar

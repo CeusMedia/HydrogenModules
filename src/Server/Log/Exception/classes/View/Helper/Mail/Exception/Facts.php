@@ -1,13 +1,16 @@
 <?php
 
+use CeusMedia\Common\Exception\IO as IoException;
+use CeusMedia\Common\Exception\Logic as LogicException;
+use CeusMedia\Common\Exception\SQL as SqlException;
 use CeusMedia\HydrogenFramework\Environment as Environment;
 
 class View_Helper_Mail_Exception_Facts
 {
-	protected $env;
-	protected $exception;
-	protected $helper;
-	protected $showPrevious			= FALSE;
+	protected Environment $env;
+	protected ?Throwable $exception			= NULL;
+	protected View_Helper_Mail_Facts $helper;
+	protected bool $showPrevious			= FALSE;
 
 	/**
 	 *	Constructor.
@@ -15,18 +18,19 @@ class View_Helper_Mail_Exception_Facts
 	 *	@param		Environment		$env		Environment object
 	 *	@return		void
 	 */
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
+		$this->helper	= new View_Helper_Mail_Facts();
 	}
 
 	/**
 	 *	Sets exception to render.
 	 *	@access		public
-	 *	@param		Exception	$exception		Exception
+	 *	@param		Throwable		$exception		Exception
 	 *	@return		self
 	 */
-	public function setException( Exception $exception )
+	public function setException( Throwable $exception ): self
 	{
 		$this->exception	= $exception;
 		$this->prepare();
@@ -40,7 +44,7 @@ class View_Helper_Mail_Exception_Facts
 	 *	@see		http://developer.mimer.com/documentation/html_92/Mimer_SQL_Mobile_DocSet/App_Return_Codes2.html
 	 *	@see		http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.sqls.doc/sqls520.htm
 	 */
-	protected function getMeaningOfSQLSTATE( $SQLSTATE )
+	protected function getMeaningOfSQLSTATE( $SQLSTATE ): string
 	{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
@@ -51,10 +55,9 @@ class View_Helper_Mail_Exception_Facts
 		return 'unknown';
 	}
 
-	protected function prepare()
+	protected function prepare(): void
 	{
 		$words			= $this->env->getLanguage()->getWords( 'server/log/exception' );
-		$this->helper	= new View_Helper_Mail_Facts( $this->env );
 		$this->helper->setLabels( $words['facts'] );
 		$this->helper->setTextLabelLength( 12 );
 		$this->helper->add( 'message', htmlentities( $this->exception->getMessage(), ENT_COMPAT, 'UTF-8' ) );
@@ -62,14 +65,14 @@ class View_Helper_Mail_Exception_Facts
 
 		$list	= [];
 
-		if( $this->exception instanceof Exception_SQL && $this->exception->getSQLSTATE() ){
+		if( $this->exception instanceof SqlException && $this->exception->getSQLSTATE() ){
 			$meaning	= self::getMeaningOfSQLSTATE( $this->exception->getSQLSTATE() );
 			$this->helper->add( 'sql', $this->exception->getSQLSTATE().': '.$meaning );
 		}
-		if( $this->exception instanceof Exception_IO  ){
+		if( $this->exception instanceof IoException ){
 			$this->helper->add( 'io', $this->exception->getResource() );
 		}
-		if( $this->exception instanceof Exception_Logic ){
+		if( $this->exception instanceof LogicException ){
 			$this->helper->add( 'logic', $this->exception->getSubject() );
 		}
 		$this->helper->add( 'class', get_class( $this->exception ) );
@@ -88,29 +91,26 @@ class View_Helper_Mail_Exception_Facts
 
 		if( $this->showPrevious ){
 			if( method_exists( $this->exception, 'getPrevious' ) ){
-			 	if( $this->exception->getPrevious() ){
+				$previous	= $this->exception->getPrevious();
+			 	if( NULL !== $previous ){
 					$helperPrevious	= new View_Helper_Mail_Exception_Facts( $this->env );
-					$helperPrevious->setTextLabelLength( 12 );
-					$helperPrevious->setException( $this->exception->getPrevious() );
+//					$helperPrevious->setTextLabelLength( 12 );
+					$helperPrevious->setException( $previous );
 					$helperPrevious->setShowPrevious();
-					$helperFacts->add( 'previous', $helperPrevious->render(), $helperPrevious->renderAsText() );
+					$this->helper->add( 'previous', $helperPrevious->render(), $helperPrevious->renderAsText() );
 				}
 			}
 		}
 	}
 
-	public function render()
+	public function render(): string
 	{
-		if( !$this->helper )
-			throw new RuntimeException( 'No exception set' );
-		return $this->helper->render();
+		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render();
 	}
 
-	public function renderAsText()
+	public function renderAsText(): string
 	{
-		if( !$this->helper )
-			throw new RuntimeException( 'No exception set' );
-		return $this->helper->renderAsText();
+		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
 	}
 
 	/**
@@ -119,7 +119,7 @@ class View_Helper_Mail_Exception_Facts
 	 *	@param		boolean			$show			Flag: show previous exceptions
 	 *	@return		self
 	 */
-	public function setShowPrevious( $show = TRUE )
+	public function setShowPrevious( $show = TRUE ): self
 	{
 		$this->showPrevious	= (bool) $show;
 		return $this;
@@ -132,11 +132,11 @@ class View_Helper_Mail_Exception_Facts
 	 *	@param		string		$fileName		File Name to clear
 	 *	@return		string
 	 */
-	static protected function trimRootPath( $fileName )
+	static protected function trimRootPath( string $fileName ): string
 	{
-		$rootPath	= isset( $_SERVER['DOCUMENT_ROOT'] ) ? $_SERVER['DOCUMENT_ROOT'] : "";
+		$rootPath	= $_SERVER['DOCUMENT_ROOT'] ?? "";
 		if( !$rootPath || !$fileName )
-			return;
+			return '';
 		$fileName	= str_replace( '\\', "/", $fileName );
 		$cut		= substr( $fileName, 0, strlen( $rootPath ) );
 		if( $cut == $rootPath )

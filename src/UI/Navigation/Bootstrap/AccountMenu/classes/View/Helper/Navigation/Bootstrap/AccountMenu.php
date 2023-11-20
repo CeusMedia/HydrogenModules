@@ -107,7 +107,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 			if( $this->env->getModules()->has( 'Manage_My_User_Avatar' ) ){							//  use user avatar helper module
 				$helper			= new View_Helper_UserAvatar( $this->env );							//  create helper
 				$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );			//  get module config
-				$helper->useGravatar( $moduleConfig->get( 'use.gravatar' ) );						//  use gravatar as fallback
+				$helper->useGravatar( (bool) $moduleConfig->get( 'use.gravatar' ) );				//  use gravatar as fallback
 				$helper->setUser( $this->user );													//  set user data
 				$helper->setSize( $this->imageSize );												//  set image size
 				$avatar	= $helper->render();														//  render avatar

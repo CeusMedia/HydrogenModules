@@ -19,7 +19,7 @@ class View_Helper_UserAvatar
 		$this->env			= $env;
 		$this->modelAvatar	= new Model_User_Avatar( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_my_user_avatar.', TRUE );
-		$this->useGravatar( $this->moduleConfig->get( 'fallback.gravatar' ) );
+		$this->useGravatar( (bool) $this->moduleConfig->get( 'fallback.gravatar', '' ) );
 	}
 
 	public function get()

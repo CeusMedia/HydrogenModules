@@ -7,7 +7,7 @@ class Logic_Work_Timer
 {
 	protected Environment $env;
 	protected Dictionary $session;
-	protected static Logic_Work_Timer $instance;
+	protected static ?Logic_Work_Timer $instance	= NULL;
 	protected Model_Work_Timer $modelTimer;
 	protected ?string $userId;
 
