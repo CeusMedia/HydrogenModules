@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Work_Mission extends Logic
 {
-	static protected self $instance;
+	protected static ?self $instance	= NULL;
 
 	public int $timeOffset			= 0; # nerd mode: 4 hours night shift: 14400;
 	public array $generalConditions	= [];

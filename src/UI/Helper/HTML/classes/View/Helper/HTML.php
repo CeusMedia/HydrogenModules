@@ -152,7 +152,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			'type'		=> 'text',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
-			'value'		=> htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ),
+			'value'		=> htmlspecialchars( $value ?? '', ENT_COMPAT, 'UTF-8' ),
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 		);
