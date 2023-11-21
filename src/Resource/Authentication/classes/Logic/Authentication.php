@@ -64,7 +64,7 @@ class Logic_Authentication extends Logic
 	 */
 	public function getRelatedUsers( $userId, bool $groupByModules = FALSE ): array
 	{
-		$payload	= (object) ['userId' => $userId, 'list' => []];
+		$payload	= ['userId' => $userId, 'list' => []];
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
 		if( $groupByModules )
 			return $payload->list;

@@ -6,22 +6,22 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_Project extends Hook
 {
-	static public function onGetRelatedUsers( Environment $env, $context, $module, $data )
+	static public function onGetRelatedUsers( Environment $env, $context, $module, array & $payload = [] ): void
 	{
 		$modelUser			= new Model_User( $env );
 		$modelProjectUser	= new Model_Project_User( $env );
 		$projectIds			= [];
 		$userIds			= [-1];
-		$myProjects			= $modelProjectUser->getAll( ['userId' => $data->userId] );
+		$myProjects			= $modelProjectUser->getAll( ['userId' => $payload['userId']] );
 		foreach( $myProjects as $relation )
 			$projectIds[]   = $relation->projectId;
 		if( !$projectIds )
 			return;
 		$logic				= Logic_Project::getInstance( $env );
 		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), ['status' => '> 0'] );
-//		unset( $users[$data->userId] );
+//		unset( $users[$payload['userId']] );
 		$words				= $env->getLanguage()->getWords( 'manage/project' );
-		$data->list[]		= (object) array(
+		$payload['list'][]		= (object) array(
 			'module'		=> 'Manage_Projects',
 			'label'			=> $words['hook-getRelatedUsers']['label'],
 			'count'			=> count( $users ),
@@ -29,27 +29,26 @@ class Hook_Manage_Project extends Hook
 		);
 	}
 
-	static public function onUpdate( Environment $env, $context, $module, $data = [] )
+	static public function onUpdate( Environment $env, $context, $module, array $payload = [] ): void
 	{
-		if( empty( $data['projectId'] ) )
+		if( empty( $payload['projectId'] ) )
 			throw new InvalidArgumentException( 'Missing project ID' );
 		$model	= new Model_Project( $env );
-		$model->edit( $data['projectId'], array( 'modifiedAt' => time() ) );
+		$model->edit( $payload['projectId'], array( 'modifiedAt' => time() ) );
 	}
 
-	static public function onProjectRemove( Environment $env, $context, $module, $data )
+	static public function onProjectRemove( Environment $env, $context, $module, array & $payload = [] ): void
 	{
-		$projectId	= $data['projectId'];
+		$projectId	= $payload['projectId'];
 		$modelProject	= new Model_Project( $env );
 		$modelUsers		= new Model_Project_User( $env );
 		$modelUsers->removeByIndices( ['projectId' => $projectId] );
 		$modelProject->remove( $projectId );
 	}
 
-	static public function onUserRemove( Environment $env, $context, $module, $data )
+	static public function onUserRemove( Environment $env, $context, $module, array & $payload = [] ): void
 	{
-		$data	= (object) $data;
-		if( empty( $data->userId ) ){
+		if( empty( $payload['userId'] ) ){
 			$message	= 'Hook "Project::onUserRemove" is missing user ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
@@ -57,13 +56,13 @@ class Hook_Manage_Project extends Hook
 
 		$logic			= Logic_Project::getInstance( $env );
 		$modelRelation	= new Model_Project_User( $env );
-		$projects		= $logic->getUserProjects( $data->userId, FALSE );
+		$projects		= $logic->getUserProjects( $payload['userId'], FALSE );
 
 		$lists	= (object) ['entities' => [], 'relations' => []];
 		foreach( $projects as $project ){
 			$modelRelation->removeByIndices( [
 				'projectId'	=> $project->projectId,
-				'userId'	=> $data->userId
+				'userId'	=> $payload['userId']
 			] );
 			$lists->relations[]	= $project;
 			$users		= $logic->getProjectUsers( $project->projectId );
@@ -77,8 +76,8 @@ class Hook_Manage_Project extends Hook
 				$modelProject->remove( $project->projectId );
 			}
 		}
-		if( isset( $data->counts ) )
-			$data->counts['Manage_Project']	= (object) array(
+		if( isset( $payload['counts'] ) )
+			$payload['counts']['Manage_Project']	= (object) array(
 				'entities'	=> count( $lists->entities ),
 				'relations'	=> count( $lists->relations ),
 			);
@@ -88,27 +87,26 @@ class Hook_Manage_Project extends Hook
 			$env->getMessenger()->noteSuccess( 'Removed %d project relations.', count( $lists->relations ) );
 */	}
 
-	static public function onListUserRelations( Environment $env, $context, $module, $data )
+	static public function onListUserRelations( Environment $env, $context, $module, array & $payload = [] ): void
 	{
-		$data	= (object) $data;
-		if( empty( $data->userId ) ){
+		if( empty( $payload['userId'] ) ){
 			$message	= 'Hook "Project::onListRelations" is missing user ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$logic			= Logic_Project::getInstance( $env );
 		$words			= $env->getLanguage()->getWords( 'manage/project' );
-		$projects		= $logic->getUserProjects( $data->userId, FALSE );
+		$projects		= $logic->getUserProjects( $payload['userId'], FALSE );
 		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cube'] );
 
 		$lists	= (object) ['entities' => [], 'relations'	=> []];
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
 			$item		= (object) [
-				'id'		=> $data->linkable ? $project->projectId : NULL,
+				'id'		=> $payload['linkable'] ? $project->projectId : NULL,
 				'label'		=> $icon.'&nbsp;'.$project->title,
 			];
-			if( count( $users ) === 1 && isset( $users[$data->userId] ) ){								//  no other users in project
+			if( count( $users ) === 1 && isset( $users[$payload['userId']] ) ){								//  no other users in project
 				$lists->entities[]	= $item;
 			}
 			else{
@@ -117,7 +115,7 @@ class Hook_Manage_Project extends Hook
 		}
 		if( $lists->entities )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$data,																					//  hook content data
+				$payload,																					//  hook content data
 				$module,																				//  module called by hook
 				'entity',																				//  relation type: entity or relation
 				$lists->entities,																					//  list of related items
@@ -127,7 +125,7 @@ class Hook_Manage_Project extends Hook
 			);
 		if( $lists->relations )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$data,																					//  hook content data
+				$payload,																					//  hook content data
 				$module,																				//  module called by hook
 				'relation',																				//  relation type: entity or relation
 				$lists->relations,																		//  list of related items
@@ -137,9 +135,9 @@ class Hook_Manage_Project extends Hook
 			);
 	}
 
-	static public function onListRelations( Environment $env, $context, $module, $data )
+	static public function onListRelations( Environment $env, $context, $module, array & $payload = [] ): void
 	{
-		if( empty( $data->projectId ) ){
+		if( empty( $payload['projectId'] ) ){
 			$message	= 'Hook "Project::onListRelations" is missing project ID in data';
 			$env->getMessenger()->noteFailure( $message );
 			return;
@@ -147,22 +145,22 @@ class Hook_Manage_Project extends Hook
 		$modelProject	= new Model_Project( $env );
 		$words			= $env->getLanguage()->getWords( 'manage/project' );
 
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+		if( !( $project = $modelProject->get( $payload['projectId'] ) ) ){
 			$message	= 'Hook "Work_Missions::onListProjectRelations": Invalid project ID.';
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$payload['activeOnly']	= isset( $payload['activeOnly'] ) ? $payload['activeOnly'] : FALSE;
+		$payload['linkable']	= isset( $payload['linkable'] ) ? $payload['linkable'] : FALSE;
 
 		$modelUser			= new Model_User( $env );
 
 		$conditions		= [];
-		if( $data->activeOnly )
+		if( $payload['activeOnly'] )
 			$conditions['status']	= 1;
 
 		$logic			= Logic_Project::getInstance( $env );
-		$projectUsers	= $logic->getProjectUsers( $data->projectId, $conditions, ['username' => 'ASC'] );
+		$projectUsers	= $logic->getProjectUsers( $payload['projectId'], $conditions, ['username' => 'ASC'] );
 
 		$list				= [];
 		$iconUser			= HtmlTag::create( 'i', '', ['class' => 'not_icon-user fa fa-fw fa-user'] );
@@ -182,12 +180,12 @@ class Hook_Manage_Project extends Hook
 				] );
 			}
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? $user->userId : NULL,
+				'id'		=> $payload['linkable'] ? $user->userId : NULL,
 				'label'		=> $link,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$payload,																					//  hook content data
 			$module,																				//  module called by hook
 			'relation',																				//  relation type: entity or relation
 			$list,																					//  list of related items
