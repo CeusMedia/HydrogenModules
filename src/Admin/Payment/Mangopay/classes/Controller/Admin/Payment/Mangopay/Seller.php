@@ -17,7 +17,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 	protected Logic_Payment_Mangopay $mangopay;
 	protected Dictionary $moduleConfig;
 
-	public function index()
+	public function index(): void
 	{
 		$sellerUserId = $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );
 		if( $sellerUserId ){
@@ -39,7 +39,7 @@ class Controller_Admin_Payment_Mangopay_Seller extends Controller_Admin_Payment_
 		$this->addData( 'sellerUser', $user );
 	}
 
-	public function bank()
+	public function bank(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$sellerUserId	= $this->mangopay->getUserIdFromLocalUserId( 0, FALSE );

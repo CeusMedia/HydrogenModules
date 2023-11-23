@@ -63,7 +63,6 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'title'				=> $this->request->get( 'title' ),
 				'status'			=> $this->request->get( 'status' ),
 				'price'				=> $this->request->get( 'price' ),
-				'rank'				=> $this->request->get( 'rank' ),
 				'type'				=> $this->request->get( 'type' ),
 				'rank'				=> $this->request->get( 'rank' ),
 				'galleryCategoryId'	=> $categoryId,

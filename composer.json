@@ -36,7 +36,7 @@
     },
     "require-dev": {
         "ceus-media/bootstrap": "^0.6 | 0.6.x-dev",
-        "ceus-media/hydrogen-source-indexer": "^0.2 | 0.2.x-dev",
+        "ceus-media/hydrogen-source-indexer": "^0.3 | 0.3.x-dev",
         "ceus-media/mail": "^2.6 | 2.6.x-dev",
         "ceus-media/markdown": "*",
         "ceus-media/open-graph": "*",

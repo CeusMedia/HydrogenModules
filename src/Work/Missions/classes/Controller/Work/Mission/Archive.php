@@ -63,7 +63,7 @@ class Controller_Work_Mission_Archive extends Controller_Work_Mission
 
 	public function index( string $missionId = NULL ): void
 	{
-		if( strlen( trim( $missionId ) ) )
+		if( strlen( trim( $missionId ?? '' ) ) )
 			$this->restart( './work/mission/'.$missionId );
 		$this->initFilters( $this->userId );
 		$this->assignFilters();

@@ -3,7 +3,7 @@
     "title": "Hydrogen Modules",
     "url": "https:\/\/github.com\/CeusMedia\/HydrogenModules",
     "description": "Collection of public (free and open) modules for <a href=\"https:\/\/github.com\/CeusMedia\/HydrogenFramework\">Hydrogen Framework<\/a>",
-    "date": "2023-05-26",
+    "date": "2023-11-23",
     "modules": {
         "Admin_App": {
             "id": "Admin_App",
@@ -11423,7 +11423,7 @@
                         "source": null
                     },
                     {
-                        "file": "Hook\/Info\/Novelties.php",
+                        "file": "Hook\/Info\/Novelty.php",
                         "load": null,
                         "level": null,
                         "source": null
@@ -30842,7 +30842,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.3.3",
+            "version": "0.3.4",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -30899,6 +30899,10 @@
                 {
                     "note": "Extend filter by order and show last use date in list.",
                     "version": "0.3.3"
+                },
+                {
+                    "note": "Add CSV export.",
+                    "version": "0.3.4"
                 }
             ],
             "deprecation": null,
@@ -32791,7 +32795,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "0.4.4",
+            "version": "0.4.5",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -32856,6 +32860,10 @@
                 {
                     "note": "Use new mail template support.",
                     "version": "0.4.4"
+                },
+                {
+                    "note": "Extract hook to own class.",
+                    "version": "0.4.5"
                 }
             ],
             "deprecation": null,
@@ -32887,6 +32895,12 @@
                 "classes": [
                     {
                         "file": "Controller\/Member.php",
+                        "load": null,
+                        "level": null,
+                        "source": null
+                    },
+                    {
+                        "file": "Hook\/Member.php",
                         "load": null,
                         "level": null,
                         "source": null
@@ -33145,7 +33159,7 @@
                     "getRelatedUsers": [
                         {
                             "level": 5,
-                            "hook": "Controller_Member::___onGetRelatedUsers"
+                            "hook": "Hook_Member::onGetRelatedUsers"
                         }
                     ]
                 }
@@ -36796,7 +36810,7 @@
             "frameworks": {
                 "Hydrogen": ">0.8"
             },
-            "version": "0.4.1",
+            "version": "0.4.2",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -36829,6 +36843,10 @@
                 {
                     "note": "Support PHP 8.",
                     "version": "0.4.1"
+                },
+                {
+                    "note": "Split connection from resource to prepare connection pool.",
+                    "version": "0.4.2"
                 }
             ],
             "deprecation": null,
@@ -36866,6 +36884,12 @@
                     },
                     {
                         "file": "Resource\/Database.php",
+                        "load": null,
+                        "level": null,
+                        "source": null
+                    },
+                    {
+                        "file": "Resource\/Database\/Connection.php",
                         "load": null,
                         "level": null,
                         "source": null
@@ -39463,7 +39487,7 @@
             "frameworks": {
                 "Hydrogen": "<0.9"
             },
-            "version": "1.0.4",
+            "version": "1.0.5",
             "versionLog": [
                 {
                     "note": "Initial prototype.",
@@ -39736,6 +39760,10 @@
                 {
                     "note": "Add job to regenerate mail objects from raw.",
                     "version": "1.0.4"
+                },
+                {
+                    "note": "Increase performance on queue pagination.",
+                    "version": "1.0.5"
                 }
             ],
             "deprecation": null,
@@ -60542,7 +60570,7 @@
                 },
                 "renderer": {
                     "key": "renderer",
-                    "value": "Ciconia",
+                    "value": "CommonMark",
                     "type": "string",
                     "values": [
                         "CommonMark",

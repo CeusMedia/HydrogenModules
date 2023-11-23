@@ -1,25 +1,27 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
+use Psr\SimpleCache\CacheInterface;
 
 class Logic_Catalog_Gallery
 {
-	/**	@var	string							$pathImages */
-	public $cache;
+	/**	@var	CacheInterface							$pathImages */
+	public CacheInterface $cache;
 
-	protected $env;
+	protected Environment $env;
 
 	/**	@var	Model_Catalog_Gallery_Category	$modelCategory */
-	protected $modelCategory;
+	protected Model_Catalog_Gallery_Category $modelCategory;
 	/**	@var	Model_Catalog_Gallery_Image		$modelCategory */
-	protected $modelImage;
-
+	protected Model_Catalog_Gallery_Image $modelImage;
+	protected Dictionary $moduleConfig;
 	/**	@var	string							$pathImages */
-	public $pathImages;
+	public string $pathImages;
 	/**	@var	string							$pathImport */
-	public $pathImport;
+	public string $pathImport;
 	/**	@var	string							$pathModule */
-	public $pathModule;
+	public string $pathModule;
 
 	/**
 	 *	Constructor.
@@ -50,7 +52,7 @@ class Logic_Catalog_Gallery
 		$this->pathImport	= $basePath.$this->moduleConfig->get( 'path.import' );
 	}
 
-	public function countCategoryImages( $categoryId )
+	public function countCategoryImages( $categoryId ): ?int
 	{
 		return count( $this->getCategoryImages( $categoryId ) );
 	}

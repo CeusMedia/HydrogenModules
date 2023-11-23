@@ -1,10 +1,18 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Provision_Product_License extends Controller
 {
-	public function add( $productId = NULL )
+	protected ?MessengerResource $messenger;
+	protected Request $request;
+	protected Model_Provision_Product_License $modelLicense;
+	protected Model_Provision_Product $modelProduct;
+	protected Logic_Catalog_Provision $logicProvision;
+
+	public function add( $productId = NULL ): void
 	{
 		if( !$productId ){
 			$this->messenger->noteError( "Please select a product,first!" );
@@ -29,7 +37,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 		$this->addData( 'product', $this->logicProvision->getProduct( $productId ) );
 	}
 
-	public function edit( $licenseId  )
+	public function edit( $licenseId  ): void
 	{
 		$license	= $this->modelLicense->get( $licenseId );
 		if( !$license ){
@@ -49,7 +57,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 		$this->addData( 'licenses', $this->modelLicense->getAll() );
 	}
 
-	public function index( $productId = NULL )
+	public function index( $productId = NULL ): void
 	{
 		if( !$productId ){
 			$this->messenger->noteError( "Please select a product,first!" );

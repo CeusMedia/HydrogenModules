@@ -5,6 +5,8 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Bookmark extends Controller
 {
+	protected Model_Bookmark $model;
+
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );

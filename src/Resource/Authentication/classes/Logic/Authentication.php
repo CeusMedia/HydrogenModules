@@ -67,11 +67,11 @@ class Logic_Authentication extends Logic
 		$payload	= ['userId' => $userId, 'list' => []];
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
 		if( $groupByModules )
-			return $payload->list;
+			return $payload['list'];
 
 		$list		= [];
 		$map		= [];
-		foreach( $payload->list as $group ){
+		foreach( $payload['list'] as $group ){
 			if( $group->count )
 				foreach( $group->list as $user )
 					$list[$user->username]	= $user;
