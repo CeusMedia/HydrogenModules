@@ -48,7 +48,7 @@
     },
     "suggest": {
         "ext-rrd": "*"
-    }
+    },
     "autoload-dev": {
         "classmap": ["src/"]
     },
