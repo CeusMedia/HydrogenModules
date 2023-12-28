@@ -46,14 +46,14 @@ if( !empty( $classRouter ) )										//  an alternative router class has been s
 	WebEnvironment::$classRouter	= $classRouter;					//  set alternative router class in environment
 
 try{
-	Loader::registerNew(										//  register autoloader for project classes
-		isset( $classExt ) ? $classExt : "php,php5",						//  realize project class extension
-		isset( $classPrefix ) ? $classPrefix : NULL,				//  realize project class prefix
-		isset( $classPath ) ? $classPath : "classes/"				//  realize project class path
-	);
-	$app	= new WebSiteApp();				//  create default website application instance
+	Loader::create()												//  create autoloader for project classes
+		->setExtensions( $classExt ?? 'php,php5' )					//  realize project class extension
+		->setPrefix( $classPrefix ?? NULL )							//  realize project class prefix
+		->setPath( $classPath ?? 'classes/' )						//  realize project class path
+		->register();												//  and activate
+	$app	= new WebSiteApp();										//  create default website application instance
 	$app->run();													//  and run it
 }
 catch( Exception $e ){												//  an uncaught exception happened
-	HtmlExceptionPage::display( $e );							//  display report page with call stack
+	HtmlExceptionPage::display( $e );								//  display report page with call stack
 }
