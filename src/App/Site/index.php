@@ -33,7 +33,7 @@ if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
 
 try{
 //	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
-	Loader::registerNew( 'php', NULL, $pathClasses );		//  register autoloader for project classes
+	Loader::create()->setPath( $pathClasses )->register();	//  register autoloader for project classes
 	$app	= new WebSiteApplication();						//  create default website application instance
 	$app->run();											//  and run it
 }
