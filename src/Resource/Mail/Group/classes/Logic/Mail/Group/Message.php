@@ -91,7 +91,7 @@ class Logic_Mail_Group_Message extends Logic
 				$message->object	= 'BZIP2:'.bzcompress( serialize( $object ) );
 			else if( $compression === "gzip" )
 				$message->object	= 'GZIP:'.gzdeflate( serialize( $object ) );
-			$this->modelMessage->edit( $message->mailGroupMessageId, ['object' => $message->object] );
+			$this->modelMessage->edit( $message->mailGroupMessageId, ['object' => $message->object], FALSE );
 			return $object;
 		}
 
