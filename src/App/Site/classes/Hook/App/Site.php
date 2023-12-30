@@ -136,7 +136,7 @@ class Hook_App_Site extends Hook
 	{
 		$config = $this->env->getConfig();													//  shortcut configuration
 		if( !$config->get( 'app.revision' ) ){											//  no revision set in base app configuration
-			$version	= $config->get( 'module.app_site.version' );					//  get version from module App:Site
+			$version	= $config->get( 'module.app_site.version', '' );				//  get version from module App:Site
 			if( version_compare( $version, 0 ) === 1 ){								//  a version (greater than 0) has been set
 				$this->context->css->primer->setRevision( $version );						//  set version as revision on primer CSS collector
 				$this->context->css->theme->setRevision( $version );						//  set version as revision on theme CSS collector
