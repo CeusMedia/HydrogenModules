@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\HydrogenFramework\Environment;
 
