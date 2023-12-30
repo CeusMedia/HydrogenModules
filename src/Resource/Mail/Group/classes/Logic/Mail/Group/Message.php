@@ -81,6 +81,20 @@ class Logic_Mail_Group_Message extends Logic
 		else
 			throw new InvalidArgumentException( 'No valid message object or ID given' );
 
+		if( '' === ( $message->object ?? '' ) ){
+			$parser		= new \CeusMedia\Mail\Message\Parser();
+			$rawMail	= $this->getMessageRawMail( $message );
+			$object		= $parser->parse( $rawMail );
+
+			$compression	= "bzip2";
+			if( $compression === "bzip2" )
+				$message->object	= 'BZIP2:'.bzcompress( serialize( $object ) );
+			else if( $compression === "gzip" )
+				$message->object	= 'GZIP:'.gzdeflate( serialize( $object ) );
+			$this->modelMessage->edit( $message->mailGroupMessageId, ['object' => $message->object] );
+			return $object;
+		}
+
 		$object	= explode( ":", $message->object, 2 );
 		if( $object[0] === "BZIP2" )
 			return unserialize( bzdecompress( $object[1] ) );
