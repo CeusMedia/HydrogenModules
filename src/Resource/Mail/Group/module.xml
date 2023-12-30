@@ -116,7 +116,7 @@
 	<hook type="resource" resource="MailGroupAction" event="confirmAfterJoin">Hook_Resource_Mail_Group::onConfirmAfterJoin</hook>
 	<hook type="resource" resource="MailGroupAction" event="deactivateAfterLeaving">Hook_Resource_Mail_Group::onDeactivateAfterLeaving</hook>
 	<job id="Mail.Group.handle">Mail_Group::handle</job>
-	<job id="Mail.Group.test">>Mail_Group::test</job>
+	<job id="Mail.Group.test">Mail_Group::test</job>
 	<job id="Mail.Group.Members.activate">Mail_Group::activateConfirmedMembers</job>
 	<job id="Mail.Group.Members.inform">Mail_Group::informMembersAboutNewMember</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
