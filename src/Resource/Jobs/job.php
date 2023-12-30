@@ -60,7 +60,7 @@ class JobScriptHelper
 	protected $pathClasses		= 'classes/';
 	protected $verbose			= FALSE;
 
-	public function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext )
+	public function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext = NULL )
 	{
 		if( error_reporting() === 0 )											// error was suppressed with the @-operator
 			return FALSE;

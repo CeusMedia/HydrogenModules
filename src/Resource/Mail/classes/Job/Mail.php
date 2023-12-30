@@ -22,18 +22,13 @@ class Job_Mail extends Job_Abstract
 	 */
 	public function test()
 	{
-		$receiver	= $this->parameters->get( '--to' );
+		$receiver	= $this->parameters->get( '--to', '' );
 		$modes		= preg_split( '/\s*,\s*/s', $this->parameters->get( '--mode', 'direct' ) );
 
 		$testDirectly	= in_array( 'direct', $modes );
 		$testWithQueue	= in_array( 'queue', $modes );
 
-		if( strlen( $receiver ) && !filter_var( $receiver, FILTER_VALIDATE_EMAIL ) ){
-			$this->out( 'ERROR: Given email address is not valid.' );
-			return;
-		}
-
-		if( !strlen( $receiver ) ){
+		if( 0 === strlen( $receiver ) ){
 			$appConfig	= $this->env->getConfig()->getAll( 'app.', TRUE );
 			if( !$appConfig->get( 'admin.email' ) ){
 				$this->out( 'SKIP: No admin mail address defined in config - please set app.admin.email in config.ini!' );
@@ -42,9 +37,12 @@ class Job_Mail extends Job_Abstract
 			$receiver		= $appConfig->get( 'admin.email' );
 		}
 
+		if( !filter_var( $receiver, FILTER_VALIDATE_EMAIL ) ){
+			$this->out( 'ERROR: Given email address is not valid.' );
+			return;
+		}
+
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-
-
 
 		$data	= array(
 			'verbose'	=> $this->verbose,

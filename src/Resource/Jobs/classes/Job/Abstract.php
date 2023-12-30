@@ -185,7 +185,7 @@ class Job_Abstract
 	 */
 	protected function setJobModuleId( ?string $jobModuleId ): self
 	{
-		$this->jobModuleId		= strlen( trim( $jobModuleId ) ) ? $jobModuleId : NULL;
+		$this->jobModuleId		= strlen( trim( $jobModuleId ?? '' ) ) ? $jobModuleId : NULL;
 		$this->versionModule	= NULL;
 		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
 			$module	= $this->env->getModules()->get( $this->jobModuleId );
