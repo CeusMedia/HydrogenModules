@@ -121,6 +121,16 @@ class Job_Job extends Job_Abstract
 	public function terminateDiscontinuedRuns()
 	{
 		$list	= $this->logic->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
+
+		$this->results	= [
+			'count'		=> count( $list ),
+			'runs'		=> array_values( $list ),
+		];
+		$this->log( json_encode( array_merge( [
+			'timestamp' => time(),
+			'datetime'  => date( "Y-m-d H:i:s" ),
+		], $this->results ) ) );
+
 		$this->out( 'Terminated '.count( $list ).' job run(s).' );
 	}
 
