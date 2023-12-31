@@ -114,6 +114,17 @@ class Job_Job extends Job_Abstract
 	}
 
 	/**
+	 *	Closes job runs where process id is not existing, anymore.
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function terminateDiscontinuedRuns()
+	{
+		$list	= $this->logic->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
+		$this->out( 'Terminated '.count( $list ).' job run(s).' );
+	}
+
+	/**
 	 *	@todo		implement
 	 */
 	public function updateStats()

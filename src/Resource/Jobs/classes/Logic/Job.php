@@ -305,7 +305,7 @@ class Logic_Job extends Logic
 	public function runPreparedJob( int $jobRunId )
 	{
 		$jobRun	= $this->getPreparedJobRun( $jobRunId, ['definition'] );
-		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
+		if( Model_Job_Run::STATUS_PREPARED !== (int) $jobRun->status )
 			throw new RuntimeException( 'Job run is not in prepared state' );
 		if( $jobRun->definition && !$jobRun->processId ){
 			try{
@@ -325,23 +325,23 @@ class Logic_Job extends Logic
 	public function quitJobRun( int $jobRunId, int $status, $messageData = [] )
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
-		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING )
-			throw new RuntimeException( 'Job is not running' );
-		if( !in_array( $status, Model_Job_Run::STATUS_TRANSITIONS[$jobRun->status] ) )
-			throw new \DomainException( 'Transition to given status is not allowed' );
+		if( Model_Job_Run::STATUS_RUNNING !== (int) $jobRun->status )
+			throw new RuntimeException( 'Job (id: '.$jobRun->jobDefinitionId.') is not running (status: '.$jobRun->status.')' );
+		if( !in_array( $status, Model_Job_Run::STATUS_TRANSITIONS[$jobRun->status], TRUE ) )
+			throw new DomainException( 'Transition to given status is not allowed' );
 		$dataRun	= [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 			'finishedAt'	=> time(),
 			'message'		=> json_encode( $messageData ),
 		];
-		if( $status === Model_Job_Run::STATUS_TERMINATED )
+		if( Model_Job_Run::STATUS_TERMINATED === $status )
 			if( $this->isActiveProcessId( (int) $jobRun->processId ) )
 				$this->killJobRunProcess( (int) $jobRun->processId );
 		$this->modelRun->edit( $jobRun->jobRunId, $dataRun );
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$dataDefinition	= [];
-		if( in_array( $status, Model_Job_Run::STATUSES_NEGATIVE ) )
+		if( in_array( $status, Model_Job_Run::STATUSES_NEGATIVE, TRUE ) )
 			$dataDefinition['fails']	= $jobDefinition->fails + 1;
 		if( $dataDefinition )
 			$this->modelDefinition->edit( $jobRun->jobDefinitionId, $dataDefinition );
@@ -349,7 +349,7 @@ class Logic_Job extends Logic
 
 	public function startJobRun( object $jobRun, $commands = [], array $parameters = [] ): int
 	{
-		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED )
+		if( Model_Job_Run::STATUS_PREPARED !== (int) $jobRun->status )
 			throw new RuntimeException( 'Job run is not in prepared state' );
 		$this->modelRun->edit( $jobRun->jobRunId, [
 			'status'		=> Model_Job_Run::STATUS_RUNNING,
@@ -543,7 +543,8 @@ class Logic_Job extends Logic
 		$preparableJobStatuses	= [Model_Job_Definition::STATUS_ENABLED];
 		if( !in_array( (int) $jobDefinition->status, $preparableJobStatuses, TRUE ) )
 			return FALSE;
-		$this->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
+
+//		$this->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
 		if( $this->hasRunningExclusiveJob() )
 			return FALSE;
 
@@ -612,7 +613,7 @@ class Logic_Job extends Logic
 
 /*		if( is_int( $mode ) ){
 			if( !in_array( $mode, Model_Job_Run::REPORT_MODES ) )
-				throw new \RangeException( 'Invalid job run report mode given' );
+				throw new RangeException( 'Invalid job run report mode given' );
 			$reportMode		= $mode;
 		}*/
 
