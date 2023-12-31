@@ -138,7 +138,7 @@ class Job_Abstract
 	 */
 	protected function log( string $message ): self
 	{
-		$this->manager->log( $this->getLogPrefix().$message );
+//		$this->manager->log( $this->getLogPrefix().$message );
 		return $this;
 	}
 
