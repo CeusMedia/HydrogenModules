@@ -44,7 +44,7 @@ $panelFilter	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12', array(
 					HtmlTag::create( 'label', 'IP-Adresse', ['for' => 'input_ip'] ),
-					HtmlTag::create( 'input', NULL, ['type' => 'text', 'name' => 'ip', 'id' => 'input_id', 'class' => 'span12', 'value' => htmlentities( $filterIp, ENT_QUOTES, 'UTF-8' )] ),
+					HtmlTag::create( 'input', NULL, ['type' => 'text', 'name' => 'ip', 'id' => 'input_id', 'class' => 'span12', 'value' => htmlentities( $filterIp ?? '', ENT_QUOTES, 'UTF-8' )] ),
 				) )
 			),
 			HTML::DivClass( 'row-fluid',
