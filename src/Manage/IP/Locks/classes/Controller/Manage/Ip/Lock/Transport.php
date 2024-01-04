@@ -27,7 +27,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		if( !$this->request->getMethod()->isPost() )
 			$this->restart( NULL, TRUE );
 
-		$fileName	= $this->request->get( 'filename' );
+		$fileName	= $this->request->get( 'filename', '' );
 		$reasonIds	= $this->request->get( 'reasonIds' );
 		$filterIds	= $this->request->get( 'filterIds' );
 
@@ -49,7 +49,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 	public function import()
 	{
 		$request	= $this->env->getRequest();
-		print_m( $this->env->getRequest()->getAll() );
+//		print_m( $this->env->getRequest()->getAll() );
 
 		$upload	= new Logic_Upload( $this->env );
 		try{
@@ -62,17 +62,8 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 				throw new RuntimeException( 'Datei muss Daten im JSON-Format beinhalten.' );
 			if( !$upload->getError() ){
 				$data	= json_decode( $upload->getContent(), FALSE );
-				$type	= $request->get( 'type' );
-				switch( $type ){
-					case 'fresh':
-						$this->logicTransport->importFresh( $data );
-						break;
-					case 'merge':
-						$this->logicTransport->importWithMerge( $data );
-						break;
-					default:
-						throw new RangeException( 'Invalid import type: '.$type );
-				}
+				$reset	= 'fresh' === $request->get( 'type', 'merge' );
+				$this->logicTransport->import( $data, $reset );
 			}
 		}
 		catch( Exception $e ){
