@@ -4,7 +4,7 @@
 	<description><![CDATA[Integrates regular delayed bank transfer into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.3.1</version>
+	<version>0.4.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add service panel for shop order finish.</log>
@@ -15,6 +15,7 @@
 	<log version="0.2.6">Support payment backend mode (delayed|instant).</log>
 	<log version="0.3">Use shop user instead of shop customer.</log>
 	<log version="0.3.1">Improve code style.</log>
+	<log version="0.4.0">Refactor payment registration.</log>
 
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

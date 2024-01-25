@@ -31,7 +31,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 	/**	@var	Logic_Payment_Stripe		$provider		Payment provider logic instance */
 	protected Logic_Payment_Stripe $provider;
 
-	protected array $backends			= [];
+	protected Model_Shop_Payment_Register $backends;
 	protected string $orderId;
 	protected object $order;
 	protected ?string $localUserId		= NULL;
@@ -202,19 +202,6 @@ class Controller_Shop_Payment_Stripe extends Controller
 		}
 	}
 
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'mode'		=> 'instant',
-		];
-	}
-
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
@@ -232,9 +219,11 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->modelCart		= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->addData( 'paymentBackends', $this->backends );
+		$this->backends	= $payload['register'];
+		$this->addData( 'paymentBackends', $payload['register'] );
 		$this->addData( 'configShop', $this->configShop );
 
 		$this->order	= $this->getOrderFromCartInSession();

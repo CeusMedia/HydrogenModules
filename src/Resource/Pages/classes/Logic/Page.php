@@ -226,7 +226,7 @@ class Logic_Page extends Logic
 	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE )
 	{
 		$request	= $this->env->getRequest();
-		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
+		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		try{
 			$page	= $this->getPageFromPath( $pagePath, $withParents, TRUE );						// try to get page by called page path

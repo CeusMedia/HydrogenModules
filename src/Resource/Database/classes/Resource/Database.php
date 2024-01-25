@@ -137,9 +137,9 @@ class Resource_Database
 			),
 			$dba->username,
 			$dba->password,
-			$this->realizeDriverOptions()
+			$this->realizeDriverOptions(),
+			$this->options,
 		);
-		$dbc->setOptions( $this->options->getAll( 'access.', TRUE ) );
 		if( 'instant' === $dbc->getMode() )
 			$dbc->tryToConnect();
 

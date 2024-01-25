@@ -36,7 +36,7 @@ class View_Helper_Shop_CartPositions
 	protected array $words;
 	protected bool $changeable		= TRUE;
 	protected ?string $forwardPath	= NULL;
-	protected object $deliveryAddress;
+	protected ?object $deliveryAddress	= NULL;
 	protected array $positions;
 	protected int $display				= self::DISPLAY_BROWSER;
 	protected int $output				= self::OUTPUT_HTML;

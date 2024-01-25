@@ -10,7 +10,7 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 	protected Model_Mangopay_Payin $modelMangopayPayin;
 	protected Model_Shop_Payment_Mangopay $modelShopPayin;
 	protected Dictionary $moduleConfig;
-	protected array $backends				= [];
+	protected Model_Shop_Payment_Register $backends;
 
 	/**
 	 *	@return		void
@@ -20,31 +20,6 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 	{
 		$this->handleFailedBankWirePayIns();
 		$this->handleSucceededBankWirePayIns();
-	}
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string			$backend		...
-	 *	@param		string			$key			...
-	 *	@param		string			$title			...
-	 *	@param		string			$path			...
-	 *	@param		integer			$priority		...
-	 *	@param		string|NULL		$icon			...
-	 *	@param		array			$countries		...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( string $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] ): void
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		];
 	}
 
 	/**
@@ -61,8 +36,9 @@ class Job_Shop_Payment_Mangopay extends Job_Abstract
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
+		$this->backends	= $payload['register'];
 	}
 
 	/**

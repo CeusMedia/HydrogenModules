@@ -13,8 +13,8 @@ class Controller_Shop_Customer extends Controller
 	protected Dictionary $moduleConfig;
 	protected object $words;
 
-	/**	@var	array					$backends			List of available payment backends */
-	protected array $backends			= [];
+	/**	@var	Model_Shop_Payment_Register					$backends			List of available payment backends */
+	protected Model_Shop_Payment_Register $backends;
 
 	/**	@var	float					$cartTotal			Total price of cart */
 	protected float $cartTotal			= .0;
@@ -190,31 +190,6 @@ class Controller_Shop_Customer extends Controller
 		}
 	}
 
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		];
-	}
-
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
@@ -235,9 +210,10 @@ class Controller_Shop_Customer extends Controller
 		}
 
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->addData( 'paymentBackends', $this->backends );
+		$this->backends	= $payload['register'];
+		$this->addData( 'paymentBackends', $payload['register'] );
 
 		if( $this->modelCart->get( 'positions' ) ){
 			foreach( $this->modelCart->get( 'positions' ) as $position ){

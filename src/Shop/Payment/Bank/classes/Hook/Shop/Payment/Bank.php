@@ -16,14 +16,17 @@ class Hook_Shop_Payment_Bank extends Hook
 	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object$module, array & $payload )
+	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object $module, array & $payload )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
 		$descs		= (object) $words['payment-method-descriptions'];
+		/** @var Model_Shop_Payment_Register $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_Register( $env );
+
 		if( $methods->get( 'Transfer' ) ){
-			$context->registerPaymentBackend(
+			$register->add(
 				'Bank',									//  backend class name
 				'Bank:Transfer',						//  payment method key
 				$labels->transfer,						//  payment method label
@@ -42,6 +45,29 @@ class Hook_Shop_Payment_Bank extends Hook
 				'bank-1.png'							//  icon
 			);
 		}
+
+		$payload['register']	= $register;
+
+/*		if( $methods->get( 'Transfer' ) ){
+			$context->registerPaymentBackend(
+				'Bank',									//  backend class name
+				'Bank:Transfer',						//  payment method key
+				$labels->transfer,						//  payment method label
+				'bank/perTransfer',						//  shop URL
+				$methods->get( 'Transfer' ),			//  priority
+				'bank-1.png'							//  icon
+			);
+		}
+		if( $methods->get( 'Bill' ) ){
+			$context->registerPaymentBackend(
+				'Bank',									//  backend class name
+				'Bank:Bill',							//  payment method key
+				$labels->bill,							//  payment method label
+				'bank/perBill',							//  shop URL
+				$methods->get( 'Bill' ),				//  priority
+				'bank-1.png'							//  icon
+			);
+		}*/
 	}
 
 	/**
@@ -56,11 +82,11 @@ class Hook_Shop_Payment_Bank extends Hook
 	 */
 	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
 		$order	= $model->get( $payload['orderId'] );
-		foreach( $payload['paymentBackends'] as $backend ){
+		foreach( $payload['paymentBackends']->getAll() as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){

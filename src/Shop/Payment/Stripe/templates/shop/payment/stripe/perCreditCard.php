@@ -1,12 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Model_Shop_Payment_Register $paymentBackends */
+
 $w				= (object) $words['checkout'];
 
 $iconSubmit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-if( count( $paymentBackends ) > 1 )
+if( count( $paymentBackends->getAll() ) > 1 )
 	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 if( $w->linkCreditCard )
@@ -62,7 +64,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	</div>
 </div><script>
 jQuery(document).ready(function(){
-	if('.count( $paymentBackends ).'){
+	if('.count( $paymentBackends->getAll() ).'){
 		jQuery("#card-submit").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});

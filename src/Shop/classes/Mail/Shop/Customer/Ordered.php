@@ -70,7 +70,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_HTML );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends'] as $item )
+		foreach( $this->data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
@@ -116,7 +116,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends'] as $item )
+		foreach( $this->data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 

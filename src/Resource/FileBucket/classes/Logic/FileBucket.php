@@ -19,13 +19,12 @@ class Logic_FileBucket extends Logic
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit()
 	{
 		$this->model		= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
-		switch( strtoupper( $this->moduleConfig->get( 'hash' ) ) ){
+		switch( strtoupper( $this->moduleConfig->get( 'hash', '' ) ) ){
 			case 'UUID':
 				$this->setHashFunction( self::HASH_UUID );
 				break;

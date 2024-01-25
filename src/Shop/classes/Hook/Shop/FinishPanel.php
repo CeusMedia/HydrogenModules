@@ -18,7 +18,7 @@ class Hook_Shop_FinishPanel extends Hook
 	 */
 	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );

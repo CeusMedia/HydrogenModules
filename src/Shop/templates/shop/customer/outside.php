@@ -1,13 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array $words */
+
 $wLogin		= (object) $words['customer-login'];
 $wRegister	= (object) $words['customer-register'];
 $wGuest		= (object) $words['customer-guest'];
 
 $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
-	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
+	$helper				= new View_Helper_Oauth_ProviderButtons( $env );
 	if( $helper->count() ){
 		$iconUnbind		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 		$helper->setDropdownLabel( 'weitere' );
@@ -34,7 +37,7 @@ return '<div class="row-fluid">
 				<form action="./auth/local/login?from=shop/customer" method="post">
 					'.$fieldOauth2.'
 					<label for="input_login_username">'.$wLogin->labelUsername.'</label>
-					<input type="text" name="login_username" id="input_login_username" class="span10" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="login_username" id="input_login_username" class="span10" value="'.htmlentities( $username ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 					<label for="input_login_password">'.$wLogin->labelPassword.'</label>
 					<input type="password" name="login_password" id="input_login_password" class="span10"/>
 					<div class="buttonbar">

@@ -426,7 +426,7 @@ class Logic_Catalog_Bookstore extends Logic
 		$uri		= 'catalog/bookstore';
 		if( $category->categoryId ){
 			$labelKey	= 'label_'.$language;
-			$keywords	= $this->getUriPart( $category->$labelKey );
+			$keywords	= $this->getUriPart( $category->$labelKey ?? '' );
 			$uri		.= '/category/'.$category->categoryId.'-'.$keywords;
 		}
 		return $absolute ? $this->env->url.$uri : './'.$uri;

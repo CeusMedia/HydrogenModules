@@ -21,8 +21,10 @@ class Hook_Shop_Payment_Paypal extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_paypal.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/paypal' );
 		$labels		= (object) $words['payment-methods'];
+		/** @var Model_Shop_Payment_Register $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_Register( $env );
 		if( $methods->get( 'Express' ) ){
-			$context->registerPaymentBackend(
+			$register->add(
 				'Paypal',									//  backend class name
 				'PayPal:Express',							//  payment method key
 				$labels->express,							//  payment method label
@@ -31,6 +33,17 @@ class Hook_Shop_Payment_Paypal extends Hook
 				'paypal-2.png'								//  icon
 			);
 		}
+		$payload['register']	= $register;
+/*		if( $methods->get( 'Express' ) ){
+			$context->registerPaymentBackend(
+				'Paypal',									//  backend class name
+				'PayPal:Express',							//  payment method key
+				$labels->express,							//  payment method label
+				'paypal/authorize',							//  shop URL
+	 			$methods->get( 'Express' ),					//  priority
+				'paypal-2.png'								//  icon
+			);
+		}*/
 	}
 
 	/**
@@ -45,11 +58,11 @@ class Hook_Shop_Payment_Paypal extends Hook
 	 */
 	static public function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
 		$order	= $model->get( $payload['orderId'] );
-		foreach( $payload['paymentBackends'] as $backend ){
+		foreach( $payload['paymentBackends']->getAll() as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){

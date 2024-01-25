@@ -150,21 +150,29 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 */
 	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output )
 	{
+		/**
+		 * @var string $fieldName
+		 * @var object $parameters
+		 */
 		foreach( $searches as $fieldName => $parameters ){
 			if( empty( $parameters->table ) )
 				continue;
 			if( is_scalar( $parameters->table ) )
 				$parameters->table	= [$parameters->table];
 			$tables		= implode( ', ', $parameters->table );
+			if( empty( $parameters->column ) )
+				throw new RuntimeException( 'DB: No table column defined for target field "'.$fieldName.'"' );
 			if( empty( $parameters->index ) )
 				throw new RuntimeException( 'DB: No index defined for target field "'.$fieldName.'"' );
 
-			$indices	= [1];
+			$indices	= [];
 			foreach( $parameters->index as $indexColumn => $indexSource ){
 				$indexValue	= $this->resolveValue( $indexSource, $input );
 				if( $indexValue === NULL ){
-					if( !isset( $parameters->onEmpty ) )
-						throw new RuntimeException( 'DB: No data available for "'.$indexSource.'", used as index source for target field "'.$fieldName.'" on table(s) '.$tables );
+					if( !isset( $parameters->onEmpty ) ){
+						$msg	= 'DB: No data available for "%s", used as index source for target field "%s" on table %s';
+						throw new RuntimeException( sprintf( $msg, $indexSource, $fieldName, $tables ) );
+					}
 					$indexValue = $parameters->onEmpty;
 				}
 				$indices[]	= $indexColumn.' = "'.$indexValue.'"';
@@ -173,8 +181,11 @@ class Logic_Form_Transfer_DataMapper extends Logic
 			$dbc	= $this->env->getDatabase();
 			$result	= $dbc->query( $query )->fetch( PDO::FETCH_OBJ );
 			if( empty( $result ) ){
-				if( !isset( $parameters->onEmpty ) )
-					throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'" from table(s) '.$tables );
+				if( !isset( $parameters->onEmpty ) ){
+					$message		= 'DB: Failed to get "%s" by looking for column "%s" in table "%s" having %s';
+					$indexString	= join( ' and ', $indices );
+					throw new RuntimeException( sprintf( $message, $fieldName, $parameters->column, $tables, $indexString ) );
+				}
 				$result = (object) [ 'value' => $parameters->onEmpty ];
 			}
 			if( !empty( $parameters->to ) && in_array( $parameters->to, ['input', 'request'], TRUE ) )

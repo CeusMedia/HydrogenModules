@@ -1,9 +1,9 @@
 <?php
-class Model_Shop_Payment_Register
+class Model_Shop_Payment_Register implements Iterator
 {
-	protected $backends	= [];
+	protected array $backends	= [];
 
-	public function add( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
+	public function add( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL )
 	{
 		$this->backends[$key]	= (object) [
 			'backend'	=> $backend,

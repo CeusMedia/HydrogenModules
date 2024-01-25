@@ -9,6 +9,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array $words */
 /** @var object $address $w */
+/** @var Model_Shop_Payment_Register $paymentBackends */
+
 
 $w				= (object) $words['checkout'];
 
@@ -26,11 +28,11 @@ $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 extract( $view->populateTexts( ['top', 'bottom', 'checkout.top', 'checkout.bottom'], 'html/shop/' ) );
 
 $buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-if( count( $paymentBackends ) > 1 && $cartTotal > 0 )
+if( count( $paymentBackends->getAll() ) > 1 && $cartTotal > 0 )
 	$buttonPrev	= new LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 $buttonNext	= new SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
-if( !$paymentBackends || $cartTotal == 0 )
+if( !$paymentBackends->getAll() || $cartTotal == 0 )
 	$buttonNext	= new SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
 $tabContent	= HtmlTag::create( 'div', array(
@@ -70,7 +72,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	</div>
 </div><script>
 jQuery(document).ready(function(){
-	if('.( count( $paymentBackends ) && $cartTotal > 0 ).'){
+	if('.( count( $paymentBackends->getAll() ) && $cartTotal > 0 ).'){
 		jQuery("#form-shop-checkout button[type=submit]").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});

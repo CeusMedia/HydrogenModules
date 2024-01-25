@@ -26,7 +26,7 @@ class Controller_Info_Newsletter extends Controller
 	 */
 	public static function __onRenderServicePanels( Environment $env, object $context, $module, array & $payload = [] )
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );

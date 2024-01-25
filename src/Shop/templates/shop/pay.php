@@ -1,9 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Model_Shop_Payment_Register $paymentBackends */
 
 $list	= [];
-foreach( $paymentBackends as $paymentBackend ){
+foreach( $paymentBackends->getAll() as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->icon )
 		$icon	= HtmlTag::create( 'i', '', ['class' => $paymentBackend->icon] ).'&nbsp;';

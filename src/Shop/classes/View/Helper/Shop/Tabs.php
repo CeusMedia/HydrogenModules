@@ -8,7 +8,7 @@ class View_Helper_Shop_Tabs
 {
 	protected Environment $env;
 	protected array $words;
-	protected array $backends;
+	protected Model_Shop_Payment_Register $backends;
 	protected float $cartTotal			= .0;
 	protected $content;
 	protected ?string $current			= NULL;
@@ -45,7 +45,7 @@ class View_Helper_Shop_Tabs
 				unset( $disabled[array_search( 'shop-conditions', $disabled )] );
 				if( $modelCart->get( 'acceptRules' ) ){
 					unset( $disabled[array_search( 'shop-payment', $disabled )] );
-					if( $modelCart->get( 'paymentMethod' ) || !count( $this->backends ) )
+					if( $modelCart->get( 'paymentMethod' ) || !count( $this->backends->getAll() ) )
 						unset( $disabled[array_search( 'shop-checkout', $disabled )] );
 				}
 			}
@@ -82,7 +82,7 @@ class View_Helper_Shop_Tabs
 			$iconConditions.$tabLabels->conditions,
 			$this->current === 'shop-conditions' ? $this->content : ''
 		);
-		if( count( $this->backends ) > 1 && $this->cartTotal > 0 )
+		if( count( $this->backends->getAll() ) > 1 && $this->cartTotal > 0 )
 			$tabs->add(
 				'shop-payment',
 				'./shop/payment',
@@ -127,7 +127,7 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setPaymentBackends( array $backends ): self
+	public function setPaymentBackends( Model_Shop_Payment_Register $backends ): self
 	{
 		$this->backends	= $backends;
 		return $this;

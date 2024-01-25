@@ -21,7 +21,7 @@ class Hook_Info_Page extends Hook
 		/** @var Logic_Page $logic */
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 
-		$path		= trim( $request->get( '__path' ), '/' );										//  get requested path
+		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
 		$pagePath	= strlen( $path ) ? $path : 'index';											//  ensure page path is not empty
 		$page		= $logic->getPageFromRequest( TRUE, FALSE );
 		if( !$page )																				//  no page found for called page path

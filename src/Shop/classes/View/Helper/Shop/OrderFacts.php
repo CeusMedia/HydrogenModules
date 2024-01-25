@@ -63,7 +63,7 @@ class View_Helper_Shop_OrderFacts
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
 		$this->paymentBackend	= NULL;
-		foreach( $data['paymentBackends'] as $item )
+		foreach( $data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$this->paymentBackend	= $item;
 		$this->facts		= [

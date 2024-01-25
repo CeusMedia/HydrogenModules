@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+
 $w		= (object) $words['cart'];
 
 $tablePositions	= '<p><em class="muted">'.$w->empty.'</em></p>';
@@ -9,7 +11,8 @@ $buttonbar		= '';
 if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
-	$helperCart->setDeliveryAddress( $address );
+	if( is_object( $address ) )
+		$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
 	$buttonbar		= HtmlTag::create( 'div', array(

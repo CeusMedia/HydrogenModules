@@ -5,12 +5,14 @@ use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Model_Shop_Payment_Register $paymentBackends */
+
 $w		= (object) $words['payment'];
 
 //print_m($cart->getAll());
 
 $list	= [];
-foreach( $paymentBackends as $paymentBackend ){
+foreach( $paymentBackends->getAll() as $paymentBackend ){
 	$icon	= '';
 	if( $paymentBackend->countries && !in_array( $billingAddress->country, $paymentBackend->countries ) )
 		continue;

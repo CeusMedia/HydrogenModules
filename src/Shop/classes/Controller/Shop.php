@@ -29,7 +29,7 @@ class Controller_Shop extends Controller
 
 	protected array $words;
 
-	protected array $backends			= [];
+	protected Model_Shop_Payment_Register $backends;
 
 	protected array $servicePanels		= [];
 
@@ -159,11 +159,11 @@ class Controller_Shop extends Controller
 			if( !$orderId )
 				$orderId	= $this->modelCart->saveOrder();
 			$order		= $this->logic->getOrder( $orderId, TRUE );
-			if( $order->price && $this->backends ){
-				if( count( $this->backends ) === 1 )
-					$order->paymentMethod	= $this->backends[0]->key;
+			if( $order->price && 0 !== count( $this->backends->getAll() ) ){
+				if( count( $this->backends->getAll() ) === 1 )
+					$order->paymentMethod	= $this->backends->getAll()[0]->key;
 				if( $order->paymentMethod ){
-					foreach( $this->backends as $backend ){
+					foreach( $this->backends->getAll() as $backend ){
 						if( $backend->key === $order->paymentMethod ){
 //							$this->logic->setOrderPaymentMethod( $orderId, $backend->key );
 							$this->restart( 'payment/'.$backend->path, TRUE );
@@ -264,8 +264,8 @@ class Controller_Shop extends Controller
 
 	public function payment(): void
 	{
-		if( $this->cartTotal == 0 || count( $this->backends ) === 1 ){
-			$paymentBackend		= $this->backends[0];
+		if( $this->cartTotal == 0 || count( $this->backends->getAll() ) === 1 ){
+			$paymentBackend		= $this->backends->getAll()[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
 //		$orderId	= $this->modelCart->get( 'orderId' );
@@ -320,30 +320,6 @@ class Controller_Shop extends Controller
 		$this->addData( 'customer', $customer );
 		$this->addData( 'address', $address );
 	}*/
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] ): void
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		];
-	}
 
 	public function registerServicePanel( $key, $content, $priority ): void
 	{
@@ -418,9 +394,10 @@ class Controller_Shop extends Controller
 
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->addData( 'paymentBackends', $this->backends );
+		$this->backends	= $payload['register'];
+		$this->addData( 'paymentBackends', $payload['register'] );
 		$this->addData( 'cart', $this->modelCart );
 		if( $this->modelCart->get( 'positions' ) )
 			foreach( $this->modelCart->get( 'positions' ) as $position )

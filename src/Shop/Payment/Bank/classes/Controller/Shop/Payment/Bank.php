@@ -23,7 +23,7 @@ class Controller_Shop_Payment_Bank extends Controller
 	protected ?string $localUserId;
 	protected ?string $userId;
 	protected ?object $wallet;
-	protected array $backends			= [];
+	protected Model_Shop_Payment_Register $backends;
 
 	/**
 	 *	Entry point for payment.
@@ -45,19 +45,6 @@ class Controller_Shop_Payment_Bank extends Controller
 		$this->restart( 'shop/finish' );
 	}
 
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL )
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'mode'		=> 'delayed',
-		];
-	}
-
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
@@ -72,9 +59,11 @@ class Controller_Shop_Payment_Bank extends Controller
 		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->addData( 'paymentBackends', $this->backends );
+		$this->backends	= $payload['register'];
+		$this->addData( 'paymentBackends', $payload['register'] );
 		$this->addData( 'configShop', $this->configShop );
 
 		$modelCart			= new Model_Shop_Cart( $this->env );
