@@ -62,10 +62,11 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<config protected="yes" mandatory="no" type="string" name="option.header.image"/>
 	<config protected="yes" mandatory="no" type="string" name="option.payflow.color.background"/>
 	<config protected="yes" mandatory="yes" type="boolean" name="option.instantPay">0</config>
-	<config protected="yes" mandatory="yes" type="integer" name="method.Express" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
+	<config protected="yes" mandatory="yes" type="integer" name="method.Express.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
+	<config protected="yes" mandatory="yes" type="integer" name="method.Express.costs" title="Transfer costs">2%</config>
 <!--	<config type="string" protected="yes" mandatory="yes" name="forward.on.success">shop/finish</config>-->
 	<relations>
-		<needs type="module">Shop</needs>
+		<needs type="module">Shop_Payment</needs>
 	</relations>
 	<link access="public" path="shop/payment/paypal/index"/>
 	<link access="public" path="shop/payment/paypal/authorize"/>

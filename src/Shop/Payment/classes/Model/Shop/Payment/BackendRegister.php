@@ -3,7 +3,7 @@ class Model_Shop_Payment_BackendRegister
 {
 	protected array $backends	= [];
 
-	public function add( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL )
+	public function add( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL ): object
 	{
 		$this->backends[$key]	= (object) [
 			'backend'	=> $backend,
@@ -12,8 +12,10 @@ class Model_Shop_Payment_BackendRegister
 			'path'		=> $path,
 			'priority'	=> $priority,
 			'icon'		=> $icon,
+			'countries'	=> [],
+			'costs'		=> 0,
 		];
-		return $key;
+		return $this->backends[$key];
 	}
 
 	public function get( string $key, bool $strict = TRUE )

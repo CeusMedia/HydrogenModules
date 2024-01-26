@@ -48,9 +48,7 @@
 	<config protected="no" type="string" mandatory="yes" name="bank.bic" title="BIC of company bank account"></config>
 	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
 	<relations>
-<!--		<implements type="module">Shop_Payment</implements>-->
-<!--		<needs type="module">Shop_Payment</needs>-->
-<!--		<needs type="module">Resource_Payment_Bank</needs>-->
+		<needs type="module">Shop_Payment</needs>
 	</relations>
 	<link access="public" path="shop/payment/bank/perBill"/>
 	<link access="public" path="shop/payment/bank/perTransfer"/>

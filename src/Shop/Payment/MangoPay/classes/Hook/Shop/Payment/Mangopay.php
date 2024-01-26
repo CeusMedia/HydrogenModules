@@ -13,75 +13,48 @@ class Hook_Shop_Payment_Mangopay extends Hook
 	 *	@param		Environment		$env			Environment instance
 	 *	@param		object			$context		Hook context object
 	 *	@param		object			$module			Module object
-	 *	@param		object			$payload		Data object of hook arguments
+	 *	@param		array			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload )
+	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_mangopay.method.', TRUE );
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
-		if( $methods->get( 'CreditCardWeb' ) ){
-			$register->add(
-				'Mangopay',														//  backend class name
+		if( $methods->get( 'CreditCardWeb.priority', 0 ) ){
+			$backend	= $register->add(
+				'Mangopay',													//  backend class name
 				'MangopayCCW',													//  payment method key
 				'Kreditkarte',													//  payment method label
 				'mangopay/perCreditCard',										//  shop URL
-	 			$methods->get( 'CreditCardWeb' ),								//  priority
+	 			$methods->get( 'CreditCardWeb.priority' ),						//  priority
 				'fa fa-fw fa-credit-card'										//  icon
 			);
+			$backend->costs	= $methods->get( 'CreditCardWeb.costs', 0 );
 		}
-		if( $methods->get( 'BankWire' ) ){
-			$register->add(
-				'Mangopay',														//  backend class name
+		if( $methods->get( 'BankWire.priority', 0 ) ){
+			$backend	= $register->add(
+				'Mangopay',													//  backend class name
 				'MangopayBW',													//  payment method key
-				'Vorkasse',														//  payment method label
-				'mangopay/perBankWire',											//  shop URL
-	 			$methods->get( 'BankWire' ),									//  priority
+				'Vorkasse',													//  payment method label
+				'mangopay/perBankWire',										//  shop URL
+	 			$methods->get( 'BankWire.priority' ),							//  priority
 				'fa fa-fw fa-pencil-square-o'									//  icon
 			);
+			$backend->costs	= $methods->get( 'BankWire.costs', 0 );
 		}
-		if( $methods->get( 'BankWireWeb' ) ){
-			$register->add(
-				'Mangopay',														//  backend class name
+		if( $methods->get( 'BankWireWeb.priority', 0 ) ){
+			$backend	= $register->add(
+				'Mangopay',													//  backend class name
 				'MangopayBWW',													//  payment method key
 				'Sofortüberweisung',											//  payment method label
 				'mangopay/perDirectDebit',										//  shop URL
-	 			$methods->get( 'BankWireWeb' ),									//  priority
+	 			$methods->get( 'BankWireWeb.priority' ),						//  priority
 				'fa fa-fw fa-bank'												//  icon
 			);
+			$backend->costs	= $methods->get( 'BankWireWeb.costs', 0 );
 		}
 		$payload['register']	= $register;
-/*		if( $methods->get( 'CreditCardWeb' ) ){
-			$context->registerPaymentBackend(
-				'Mangopay',														//  backend class name
-				'MangopayCCW',													//  payment method key
-				'Kreditkarte',													//  payment method label
-				'mangopay/perCreditCard',										//  shop URL
-	 			$methods->get( 'CreditCardWeb' ),								//  priority
-				'fa fa-fw fa-credit-card'										//  icon
-			);
-		}
-		if( $methods->get( 'BankWire' ) ){
-			$context->registerPaymentBackend(
-				'Mangopay',														//  backend class name
-				'MangopayBW',													//  payment method key
-				'Vorkasse',														//  payment method label
-				'mangopay/perBankWire',											//  shop URL
-	 			$methods->get( 'BankWire' ),									//  priority
-				'fa fa-fw fa-pencil-square-o'									//  icon
-			);
-		}
-		if( $methods->get( 'BankWireWeb' ) ){
-			$context->registerPaymentBackend(
-				'Mangopay',														//  backend class name
-				'MangopayBWW',													//  payment method key
-				'Sofortüberweisung',											//  payment method label
-				'mangopay/perDirectDebit',										//  shop URL
-	 			$methods->get( 'BankWireWeb' ),									//  priority
-				'fa fa-fw fa-bank'												//  icon
-			);
-		}*/
 	}
 
 	/**
@@ -91,10 +64,10 @@ class Hook_Shop_Payment_Mangopay extends Hook
 	 *	@param		Environment		$env			Environment instance
 	 *	@param		object			$context		Hook context object
 	 *	@param		object			$module			Module object
-	 *	@param		object			$payload		Data object of hook arguments
+	 *	@param		array			$payload		Data object of hook arguments
 	 *	@return		void
 	 */
-	public static function onRenderServicePanels( Environment $env, $context, $module, $payload )
+	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$data	= (object) $payload;
 		if( empty( $data->orderId ) || empty( $data->paymentBackends ) )

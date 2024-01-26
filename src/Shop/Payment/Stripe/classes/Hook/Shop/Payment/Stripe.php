@@ -23,77 +23,46 @@ class Hook_Shop_Payment_Stripe extends Hook
 		$labels		= (object) $words['payment-methods'];
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
-		if( $methods->get( 'Card' ) ){
-			$register->add(
+
+		if( $methods->get( 'Card.priority', 0 ) ){
+			$backend	= $register->add(
 				'Stripe',								//  backend class name
 				'Stripe:Card',							//  payment method key
 				$labels->card,							//  payment method label
 				'stripe/perCreditCard',					//  shop URL
-	 			$methods->get( 'Card' ),				//  priority
+	 			$methods->get( 'Card.priority' ),		//  priority
 				'creditcard-1.png'						//  icon
 //				'fa fa-fw fa-credit-card'				//  icon
 			);
+			$backend->costs	= $methods->get( 'Card.costs', 0 );
 		}
-		if( $methods->get( 'Sofort' ) ){
-			$register->add(
+		if( $methods->get( 'Sofort.priority', 0 ) ){
+			$backend	= $register->add(
 				'Stripe',								//  backend class name
 				'Stripe:Sofort',						//  payment method key
 				$labels->sofort,						//  payment method label
 				'stripe/perSofort',						//  shop URL
-				$methods->get( 'Sofort' ),				//  priority
-				'klarna-2.png',							//  icon
+				$methods->get( 'Sofort.priority' ),		//  priority
+				'klarna-2.png'							//  icon
 //					'fa fa-fw fa-bank'						//  icon
-				['countries' => ['AT', 'BE', 'DE', 'IT', 'NL', 'ES']]
 			);
+			$backend->countries	= ['AT', 'BE', 'DE', 'IT', 'NL', 'ES'];
+			$backend->costs	= $methods->get( 'Sofort.costs', 0 );
 		}
-		if( $methods->get( 'Giropay' ) ){
-			$register->add(
+		if( $methods->get( 'Giropay.priority', 0 ) ){
+			$backend	= $register->add(
 				'Stripe',								//  backend class name
 				'Stripe:Giropay',						//  payment method key
 				$labels->giropay,						//  payment method label
 				'stripe/perGiropay',					//  shop URL
-	 			$methods->get( 'Giropay' ),				//  priority
-				'giropay.png',							//  icon
+	 			$methods->get( 'Giropay.priority' ),		//  priority
+				'giropay.png'							//  icon
 //				'fa fa-fw fa-bank'						//  icon
-				['countries' => ['DE']]
 			);
+			$backend->countries	= ['DE'];
+			$backend->costs	= $methods->get( 'Giropay.costs', 0 );
 		}
 		$payload['register']	= $register;
-/*		if( $methods->get( 'Card' ) ){
-			$context->registerPaymentBackend(
-				'Stripe',								//  backend class name
-				'Stripe:Card',							//  payment method key
-				$labels->card,							//  payment method label
-				'stripe/perCreditCard',					//  shop URL
-	 			$methods->get( 'Card' ),				//  priority
-				'creditcard-1.png'						//  icon
-//				'fa fa-fw fa-credit-card'				//  icon
-			);
-		}
-		if( $methods->get( 'Sofort' ) ){
-			$context->registerPaymentBackend(
-				'Stripe',								//  backend class name
-				'Stripe:Sofort',						//  payment method key
-				$labels->sofort,						//  payment method label
-				'stripe/perSofort',						//  shop URL
-				$methods->get( 'Sofort' ),				//  priority
-				'klarna-2.png',							//  icon
-//					'fa fa-fw fa-bank'						//  icon
-				array( 'AT', 'BE', 'DE', 'IT', 'NL', 'ES' )
-			);
-		}
-		if( $methods->get( 'Giropay' ) ){
-			$context->registerPaymentBackend(
-				'Stripe',								//  backend class name
-				'Stripe:Giropay',						//  payment method key
-				$labels->giropay,						//  payment method label
-				'stripe/perGiropay',					//  shop URL
-	 			$methods->get( 'Giropay' ),				//  priority
-				'giropay.png',							//  icon
-//				'fa fa-fw fa-bank'						//  icon
-				array( 'DE' )
-			);
-		}*/
 	}
 
 	/**

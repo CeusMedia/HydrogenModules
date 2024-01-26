@@ -23,15 +23,17 @@ class Hook_Shop_Payment_Paypal extends Hook
 		$labels		= (object) $words['payment-methods'];
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
-		if( $methods->get( 'Express' ) ){
-			$register->add(
+		$priority	= $methods->get( 'Express.priority', 0 );
+		if( 0 !== $priority ){
+			$backend	= $register->add(
 				'Paypal',									//  backend class name
 				'PayPal:Express',							//  payment method key
 				$labels->express,							//  payment method label
 				'paypal/authorize',							//  shop URL
-	 			$methods->get( 'Express' ),					//  priority
+				$priority,									//  priority
 				'paypal-2.png'								//  icon
 			);
+			$backend->costs	= $methods->get( 'Express.costs', 0 );
 		}
 		$payload['register']	= $register;
 /*		if( $methods->get( 'Express' ) ){

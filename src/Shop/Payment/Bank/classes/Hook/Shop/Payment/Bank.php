@@ -25,25 +25,27 @@ class Hook_Shop_Payment_Bank extends Hook
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 
-		if( $methods->get( 'Transfer' ) ){
-			$register->add(
+		if( $methods->get( 'Transfer.priority' ) ){
+			$backend	= $register->add(
 				'Bank',									//  backend class name
 				'Bank:Transfer',						//  payment method key
 				$labels->transfer,						//  payment method label
 				'bank/perTransfer',						//  shop URL
-				$methods->get( 'Transfer' ),			//  priority
+				$methods->get( 'Transfer.priority' ),	//  priority
 				'bank-1.png'							//  icon
 			);
+			$backend->costs	= $methods->get( 'Transfer.costs', 0 );
 		}
-		if( $methods->get( 'Bill' ) ){
-			$context->registerPaymentBackend(
+		if( $methods->get( 'Bill.priority' ) ){
+			$backend	= $register->add(
 				'Bank',									//  backend class name
 				'Bank:Bill',							//  payment method key
 				$labels->bill,							//  payment method label
 				'bank/perBill',							//  shop URL
-				$methods->get( 'Bill' ),				//  priority
+				$methods->get( 'Bill.priority' ),		//  priority
 				'bank-1.png'							//  icon
 			);
+			$backend->costs	= $methods->get( 'Bill.costs', 0 );
 		}
 
 		$payload['register']	= $register;
