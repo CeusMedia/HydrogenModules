@@ -29,7 +29,7 @@ class Controller_Shop extends Controller
 
 	protected array $words;
 
-	protected Model_Shop_Payment_Register $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 
 	protected array $servicePanels		= [];
 
@@ -394,7 +394,7 @@ class Controller_Shop extends Controller
 
 		$this->addData( 'options', $this->options );
 		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->backends	= $payload['register'];
 		$this->addData( 'paymentBackends', $payload['register'] );

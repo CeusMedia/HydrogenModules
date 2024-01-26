@@ -19,8 +19,8 @@ class Hook_Shop_Payment_Mangopay extends Hook
 	public static function onRegisterShopPaymentBackends( Environment $env, $context, $module, $payload )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_mangopay.method.', TRUE );
-		/** @var Model_Shop_Payment_Register $register */
-		$register	= $payload['register'] ?? new Model_Shop_Payment_Register( $env );
+		/** @var Model_Shop_Payment_BackendRegister $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 		if( $methods->get( 'CreditCardWeb' ) ){
 			$register->add(
 				'Mangopay',														//  backend class name

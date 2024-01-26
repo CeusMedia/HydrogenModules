@@ -1,5 +1,5 @@
 <?php
-class Model_Shop_Payment_Register implements Iterator
+class Model_Shop_Payment_BackendRegister
 {
 	protected array $backends	= [];
 

@@ -22,8 +22,8 @@ class Hook_Shop_Payment_Bank extends Hook
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
 		$descs		= (object) $words['payment-method-descriptions'];
-		/** @var Model_Shop_Payment_Register $register */
-		$register	= $payload['register'] ?? new Model_Shop_Payment_Register( $env );
+		/** @var Model_Shop_Payment_BackendRegister $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 
 		if( $methods->get( 'Transfer' ) ){
 			$register->add(

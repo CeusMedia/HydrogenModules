@@ -13,8 +13,8 @@ class Controller_Shop_Customer extends Controller
 	protected Dictionary $moduleConfig;
 	protected object $words;
 
-	/**	@var	Model_Shop_Payment_Register					$backends			List of available payment backends */
-	protected Model_Shop_Payment_Register $backends;
+	/**	@var	Model_Shop_Payment_BackendRegister					$backends			List of available payment backends */
+	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**	@var	float					$cartTotal			Total price of cart */
 	protected float $cartTotal			= .0;
@@ -210,7 +210,7 @@ class Controller_Shop_Customer extends Controller
 		}
 
 		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->backends	= $payload['register'];
 		$this->addData( 'paymentBackends', $payload['register'] );

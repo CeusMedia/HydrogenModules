@@ -8,7 +8,7 @@ class View_Helper_Shop_Tabs
 {
 	protected Environment $env;
 	protected array $words;
-	protected Model_Shop_Payment_Register $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 	protected float $cartTotal			= .0;
 	protected $content;
 	protected ?string $current			= NULL;
@@ -127,7 +127,7 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setPaymentBackends( Model_Shop_Payment_Register $backends ): self
+	public function setPaymentBackends(Model_Shop_Payment_BackendRegister $backends ): self
 	{
 		$this->backends	= $backends;
 		return $this;

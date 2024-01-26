@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/** @var Model_Shop_Payment_Register $paymentBackends */
+/** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 
 $w				= (object) $words['checkout'];
 

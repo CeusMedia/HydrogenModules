@@ -35,7 +35,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.6.6">Renamed mail classes.</log>
 	<log version="0.6.7">Decrease article stock quantity if order has been payed.</log>
 	<log version="0.6.8">Add mail for not payed orders.</log>
-	<log version="0.7">Support reponsive design in cart and checkout.</log>
+	<log version="0.7">Support responsive design in cart and checkout.</log>
 	<log version="0.7.1">Improve locales.</log>
 	<log version="0.7.2">Add english mail locales.</log>
 	<log version="0.7.3">Add helper for order facts, used in mails.</log>

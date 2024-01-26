@@ -21,8 +21,8 @@ class Hook_Shop_Payment_Stripe extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
 		$labels		= (object) $words['payment-methods'];
-		/** @var Model_Shop_Payment_Register $register */
-		$register	= $payload['register'] ?? new Model_Shop_Payment_Register( $env );
+		/** @var Model_Shop_Payment_BackendRegister $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 		if( $methods->get( 'Card' ) ){
 			$register->add(
 				'Stripe',								//  backend class name

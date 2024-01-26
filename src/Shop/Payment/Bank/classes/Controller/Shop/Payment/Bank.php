@@ -23,7 +23,7 @@ class Controller_Shop_Payment_Bank extends Controller
 	protected ?string $localUserId;
 	protected ?string $userId;
 	protected ?object $wallet;
-	protected Model_Shop_Payment_Register $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**
 	 *	Entry point for payment.
@@ -59,7 +59,7 @@ class Controller_Shop_Payment_Bank extends Controller
 		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->backends	= $payload['register'];

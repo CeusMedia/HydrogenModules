@@ -31,7 +31,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 	/**	@var	Logic_Payment_Stripe		$provider		Payment provider logic instance */
 	protected Logic_Payment_Stripe $provider;
 
-	protected Model_Shop_Payment_Register $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 	protected string $orderId;
 	protected object $order;
 	protected ?string $localUserId		= NULL;
@@ -219,7 +219,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->modelCart		= new Model_Shop_Cart( $this->env );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->backends	= $payload['register'];

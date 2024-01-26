@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array $words */
 /** @var object $address $w */
-/** @var Model_Shop_Payment_Register $paymentBackends */
+/** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 
 
 $w				= (object) $words['checkout'];

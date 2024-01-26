@@ -10,7 +10,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 	protected Model_Stripe_Payin $modelStripePayin;
 	protected Model_Shop_Payment_Stripe $modelShopPayin;
 	protected Dictionary $moduleConfig;
-	protected Model_Shop_Payment_Register $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**
 	 *	@return		void
@@ -36,7 +36,7 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		$this->moduleConfig			= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_Register( $this->env )];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
 		$this->backends	= $payload['register'];
 	}

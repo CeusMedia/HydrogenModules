@@ -19,7 +19,10 @@
 <!--	<log version="0.3.9">End of life.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+	<class>Model/Shop/Payment/BackendRegister.php</class>
+	</files>
 <!--	<hook type="resource" resource="Page" event="applyModules"><![CDATA[]]></hook>-->
 	<relations>
 <!--		<extends type="module">Shop</extends>-->
