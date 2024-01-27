@@ -33,12 +33,18 @@
 		<class>View/Shop/Payment/Mangopay.php</class>
 		<locale>de/shop/payment/mangopay.ini</locale>
 	</files>
+	<config protected="yes" type="boolean" name="method.BankWire.active">no</config>
+	<config protected="yes" type="boolean" name="method.BankWire.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.BankWire.fee.formula" title="Fixed amount or formula"></config>
 	<config protected="yes" type="integer" name="method.BankWire.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
-	<config protected="yes" type="integer" name="method.BankWire.costs" title="Transfer costs">0</config>
+	<config protected="yes" type="boolean" name="method.BankWireWeb.active">no</config>
+	<config protected="yes" type="boolean" name="method.BankWireWeb.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.BankWireWeb.fee.formula" title="Fixed amount or formula"></config>
 	<config protected="yes" type="integer" name="method.BankWireWeb.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
-	<config protected="yes" type="integer" name="method.BankWireWeb.costs" title="Transfer costs">0</config>
+	<config protected="yes" type="boolean" name="method.CreditCardWeb.active">no</config>
+	<config protected="yes" type="boolean" name="method.CreditCardWeb.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.CreditCardWeb.fee.formula" title="Fixed amount or formula"></config>
 	<config protected="yes" type="integer" name="method.CreditCardWeb.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">2</config>
-	<config protected="yes" type="integer" name="method.CreditCardWeb.costs" title="Transfer costs">0</config>
 	<relations>
 		<needs type="module">Shop_Payment</needs>
 		<needs type="module">Resource_Payment_Mangopay</needs>

@@ -27,9 +27,13 @@ class Logic_Shop extends Logic
 	/** @var	Dictionary					$moduleConfig */
 	protected Dictionary $moduleConfig;
 
-	/**	@var	Logic_Shop_Shipping|NULL	$shipping			Instance of shipping logic if module is installed */
+	/**	@var	Logic_Shop_Shipping|NULL	$logicShipping			Instance of shipping logic if module is installed */
 	protected ?Logic_Shop_Shipping $logicShipping;
 
+	/**	@var	Logic_Shop_Payment|NULL		$logicPayment			Instance of payment logic if module is installed */
+	protected ?Logic_Shop_Payment $logicPayment;
+
+	protected bool $usePayment				= FALSE;
 	protected bool $useShipping				= FALSE;
 
 	/**
@@ -113,6 +117,16 @@ class Logic_Shop extends Logic
 		return $address;
 	}
 
+	public function getPaymentFeesFromCart()
+	{
+		if( !$this->usePayment )
+			return NULL;
+
+		$backend	= $this->modelCart->get( 'paymentMethod' );
+		$address	= $this->getDeliveryAddressFromCart();
+		return $this->logicPayment->getPrice( $this->modelCart->getTotal(), $backend, $address->country );
+	}
+
 	/**
 	 *	@deprecated
 	 */
@@ -154,6 +168,7 @@ class Logic_Shop extends Logic
 			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
 			$order->shipping	= $this->getOrderShipping( $orderId );
 			$order->options		= $this->getOrderOptions( $orderId );
+			$order->payment		= $this->getOrderPaymentFees( $orderId );
 			$order->taxes		= $this->getOrderTaxes( $orderId );
 		}
 		return $order;
@@ -210,35 +225,81 @@ class Logic_Shop extends Logic
 	public function getOrderShipping( string $orderId ): object
 	{
 		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
-		$taxRate		= 19;				//  @todo: make configurable
-		$price			= 0;
-		$priceTaxed		= 0;
-		$tax			= 0;
-		if( $this->useShipping ){
-			$customer		= $this->getOrderCustomer( $orderId );
-			if( $customer && $customer->addressDelivery ){
-				$weight			= 0;
-				$positions		= $this->getOrderPositions( $orderId, TRUE );
-				foreach( $positions as $position )
-					$weight	+= $position->article->weight->all;
-				$price	= $this->logicShipping->getPriceFromCountryCodeAndWeight(
-					$customer->addressDelivery->country,
-					$weight
-				);
-				$tax			= $price * ( $taxRate / 100 );
-				$priceTaxed		+= $tax;
-				if( $taxIncluded ){
-					$priceTaxed	= $price;
-					$price		-= $tax;
-				}
+		$facts			= (object) [
+			'price'			=> .0,
+			'tax'			=> .0,
+			'priceTaxed'	=> .0,
+			'taxRate'		=> 19,				//  @todo: make configurable
+		];
+		if( !$this->useShipping )
+			return $facts;
+
+		$customer		= $this->getOrderCustomer( $orderId );
+		if( $customer && $customer->addressDelivery ){
+			$weight			= 0;
+			$positions		= $this->getOrderPositions( $orderId, TRUE );
+			foreach( $positions as $position )
+				$weight	+= $position->article->weight->all;
+			$facts->price	= $this->logicShipping->getPriceFromCountryCodeAndWeight(
+				$customer->addressDelivery->country,
+				$weight
+			);
+			$facts->tax			= $facts->price * ( $facts->taxRate / 100 );
+			$facts->priceTaxed	= $facts->price + $facts->tax;
+			if( $taxIncluded ){
+				$facts->priceTaxed	= $facts->price;
+				$facts->price		-= $facts->tax;
 			}
 		}
-		return (object) [
-			'price'			=> $price,
-			'tax'			=> $tax,
-			'priceTaxed'	=> $priceTaxed,
-			'taxRate'		=> $taxRate,
+		return $facts;
+	}
+
+	/**
+	 *	@todo		make tax rate configurable - store rate on shipping price or service
+	 */
+	public function getOrderPaymentFees( string $orderId ): object
+	{
+		$facts			= (object) [
+			'price'			=> .0,
+			'tax'			=> .0,
+			'priceTaxed'	=> .0,
+			'taxRate'		=> 19,				//  @todo: make configurable
 		];
+		if( !$this->usePayment )
+			return $facts;
+
+		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
+
+		$order	= $this->getOrder( $orderId );
+
+		$price		= .0;
+		$priceTaxed	= .0;
+		$tax		= .0;
+
+		$positions	= $this->getOrderPositions( $orderId, TRUE );
+		foreach( $positions as $position ){
+			$price		+= $position->article->price->all;
+			$priceTaxed	+= $position->article->price->all + $position->article->tax->all;
+			$tax		+= $position->article->tax->all;
+		}
+
+		if( $this->useShipping ){
+			$shipping	= $this->getOrderShipping( $orderId );
+			$price		+= $shipping->price;
+			$priceTaxed	+= $shipping->priceTaxed;
+			$tax		+= $shipping->tax;
+		}
+
+		$backend	= $this->getOrder( $orderId )->paymentMethod;
+		$facts->price		= $this->logicPayment->getPrice( $priceTaxed, $backend, 'DE' );
+		$facts->tax			= $facts->price * ( $facts->taxRate / 100 );
+		$facts->priceTaxed	= $facts->price + $facts->tax;
+		if( $taxIncluded ){
+			$facts->priceTaxed	= $facts->price;
+			$facts->price		-= $facts->tax;
+		}
+
+		return $facts;
 	}
 
 	public function getOrderTaxes( string $orderId ): array
@@ -252,11 +313,24 @@ class Logic_Shop extends Logic
 			$taxes[$position->article->tax->rate]	+= $position->article->tax->all;
 			$sum	+= $position->article->tax->all;
 		}
-		$shipping	= $this->getOrderShipping( $orderId );
-		if( !isset( $taxes[$shipping->taxRate] ) )
-			$taxes[$shipping->taxRate]	= 0;
-		$taxes[$shipping->taxRate]	+= $shipping->tax;
-		$sum	+= $shipping->tax;
+
+		if( $this->useShipping ){
+			$shipping	= $this->getOrderShipping( $orderId );
+			if( !isset( $taxes[$shipping->taxRate] ) )
+				$taxes[$shipping->taxRate]	= 0;
+			$taxes[$shipping->taxRate]	+= $shipping->tax;
+			$sum	+= $shipping->tax;
+
+		}
+
+		if( $this->usePayment ){
+			$payment	= $this->getOrderPaymentFees( $orderId );
+			if( !isset( $taxes[$payment->taxRate] ) )
+				$taxes[$payment->taxRate]	= 0;
+			$taxes[$payment->taxRate]	+= $payment->tax;
+			$sum		+= $payment->tax;
+		}
+
 		$taxes['total']	= $sum;
 		return $taxes;
 	}
@@ -419,6 +493,10 @@ class Logic_Shop extends Logic
 		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
 			$this->useShipping		= TRUE;
 			$this->logicShipping	= new Logic_Shop_Shipping( $this->env );
+		}
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$this->usePayment		= TRUE;
+			$this->logicPayment		= new Logic_Shop_Payment( $this->env );
 		}
 	}
 }

@@ -21,39 +21,59 @@ class Hook_Shop_Payment_Mangopay extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_mangopay.method.', TRUE );
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
-		if( $methods->get( 'CreditCardWeb.priority', 0 ) ){
-			$backend	= $register->add(
-				'Mangopay',													//  backend class name
-				'MangopayCCW',													//  payment method key
-				'Kreditkarte',													//  payment method label
-				'mangopay/perCreditCard',										//  shop URL
-	 			$methods->get( 'CreditCardWeb.priority' ),						//  priority
-				'fa fa-fw fa-credit-card'										//  icon
-			);
-			$backend->costs	= $methods->get( 'CreditCardWeb.costs', 0 );
+
+
+		if( $methods->get( 'CreditCardWeb.active', FALSE ) ){
+			$priority	= $methods->get( 'CreditCardWeb.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'CreditCardWeb.', TRUE );
+				$register->add( [
+					'backend'		=> 'Mangopay',								//  backend class name
+					'key'			=> 'MangopayCCW',							//  payment method key
+					'path'			=> 'mangopay/perCreditCard',				//  shop URL
+					'icon'			=> 'fa fa-fw fa-credit-card',				//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> 'Kreditkarte',							//  payment method label
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
-		if( $methods->get( 'BankWire.priority', 0 ) ){
-			$backend	= $register->add(
-				'Mangopay',													//  backend class name
-				'MangopayBW',													//  payment method key
-				'Vorkasse',													//  payment method label
-				'mangopay/perBankWire',										//  shop URL
-	 			$methods->get( 'BankWire.priority' ),							//  priority
-				'fa fa-fw fa-pencil-square-o'									//  icon
-			);
-			$backend->costs	= $methods->get( 'BankWire.costs', 0 );
+
+		if( $methods->get( 'BankWire.active', FALSE ) ){
+			$priority	= $methods->get( 'BankWire.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'BankWire.', TRUE );
+				$register->add( [
+					'backend'		=> 'Mangopay',								//  backend class name
+					'key'			=> 'MangopayBW',							//  payment method key
+					'path'			=> 'mangopay/perBankWire',					//  shop URL
+					'icon'			=> 'fa fa-fw fa-pencil-square-o',			//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> 'Vorkasse',								//  payment method label
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
-		if( $methods->get( 'BankWireWeb.priority', 0 ) ){
-			$backend	= $register->add(
-				'Mangopay',													//  backend class name
-				'MangopayBWW',													//  payment method key
-				'Sofortüberweisung',											//  payment method label
-				'mangopay/perDirectDebit',										//  shop URL
-	 			$methods->get( 'BankWireWeb.priority' ),						//  priority
-				'fa fa-fw fa-bank'												//  icon
-			);
-			$backend->costs	= $methods->get( 'BankWireWeb.costs', 0 );
+
+		if( $methods->get( 'BankWireWeb.active', FALSE ) ){
+			$priority	= $methods->get( 'BankWireWeb.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'BankWireWeb.', TRUE );
+				$register->add( [
+					'backend'		=> 'Mangopay',								//  backend class name
+					'key'			=> 'MangopayBWW',							//  payment method key
+					'path'			=> 'mangopay/perDirectDebit',				//  shop URL
+					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> 'Sofortüberweisung',						//  payment method label
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
+
 		$payload['register']	= $register;
 	}
 

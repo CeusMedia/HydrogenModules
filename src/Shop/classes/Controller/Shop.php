@@ -163,12 +163,10 @@ class Controller_Shop extends Controller
 				if( count( $this->backends->getAll() ) === 1 )
 					$order->paymentMethod	= $this->backends->getAll()[0]->key;
 				if( $order->paymentMethod ){
-					foreach( $this->backends->getAll() as $backend ){
-						if( $backend->key === $order->paymentMethod ){
-//							$this->logic->setOrderPaymentMethod( $orderId, $backend->key );
-							$this->restart( 'payment/'.$backend->path, TRUE );
-						}
-					}
+					$backend	= $this->backends->get( $order->paymentMethod, FALSE );
+					if( NULL === $backend || !$backend->active )
+						$this->restart( 'payment', TRUE );
+					$this->restart( 'payment/'.$backend->path, TRUE );
 				}
 			}
 			else{
@@ -229,8 +227,25 @@ class Controller_Shop extends Controller
 		}
 
 		$this->addData( 'charges', $this->calculateCharges() );
+		$this->addData( 'paymentFees', $this->calculatePaymentFees() );
 //		$this->addData( 'order', $order );
 		$this->addData( 'cart', $this->modelCart );
+	}
+
+	protected function calculatePaymentFees()
+	{
+		/** @var Model_Shop_Cart $cart */
+		$cart	= $this->getData( 'cart' );
+		$priceCart		= 1;
+		$priceShipping	= $this->getData( 'charges' );
+		$paymentMethod	= $this->getData( 'paymentMethod', '' );
+
+		foreach( $this->backends->getAll() as $backend ){
+			if( $backend->key === $paymentMethod ){
+				$pricePayment	= $backend->costs;
+			}
+		}
+		return $pricePayment;
 	}
 
 	public function finish(): void
@@ -268,10 +283,21 @@ class Controller_Shop extends Controller
 			$paymentBackend		= $this->backends->getAll()[0];
 			$this->restart( 'setPaymentBackend/'.$paymentBackend->key, TRUE );
 		}
-//		$orderId	= $this->modelCart->get( 'orderId' );
-		$this->addData( 'cart', $this->modelCart );
+		$address	= $this->logic->getBillingAddressFromCart();
 
-		$this->addData( 'billingAddress', $this->logic->getBillingAddressFromCart() );
+		$price	= $this->cartTotal + $this->logic->getS( )->price;
+
+		$logicPayment	= new Logic_Shop_Payment( $this->env );
+		$logicPayment->setBackends( $this->backends );
+		$backendPrices	= [];
+		foreach( $this->backends->getAll() as $backend ){
+			$backendPrices[$backend->key]	= NULL;
+			if( $backend->feeExclusive )
+				$backendPrices[$backend->key]	= $logicPayment->getPrice( $price, $backend, $address->country );
+		}
+		$this->addData( 'cart', $this->modelCart );
+		$this->addData( 'billingAddress', $address );
+		$this->addData( 'backendPrices', $backendPrices );
 	}
 
 /*	public function register(): void
@@ -393,11 +419,12 @@ class Controller_Shop extends Controller
 		$this->options		= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
 
 		$this->addData( 'options', $this->options );
-		$captain	= $this->env->getCaptain();
-		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
-		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->backends	= $payload['register'];
-		$this->addData( 'paymentBackends', $payload['register'] );
+
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$logicPayment	= new Logic_Shop_Payment( $this->env );
+			$logicPayment->collectBackends();
+			$this->addData( 'paymentBackends', $logicPayment->getBackends() );
+		}
 		$this->addData( 'cart', $this->modelCart );
 		if( $this->modelCart->get( 'positions' ) )
 			foreach( $this->modelCart->get( 'positions' ) as $position )

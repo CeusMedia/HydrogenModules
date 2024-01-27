@@ -1,7 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Environment $env */
+/** @var View $view */
 /** @var array $words */
+/** @var object $address $w */
+/** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var Model_Shop_Cart $cart */
 
 $w		= (object) $words['cart'];
 
@@ -11,6 +16,7 @@ $buttonbar		= '';
 if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
+	$helperCart->setPaymentBackend( $cart->get( 'paymentMethod' ) );
 	if( is_object( $address ) )
 		$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );

@@ -41,6 +41,7 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}
 		$this->helperCart->setPositions( $this->order->positions );
+		$this->helperCart->setPaymentBackend( $this->order->paymentMethod );
 
 		$wordsMail	= (object) $this->words['mail-manager-ordered'];
 		$subject	= str_replace( "%date%", date( 'd.m.Y' ), $wordsMail->subject );

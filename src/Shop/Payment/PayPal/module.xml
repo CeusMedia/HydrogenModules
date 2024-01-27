@@ -62,8 +62,10 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 	<config protected="yes" mandatory="no" type="string" name="option.header.image"/>
 	<config protected="yes" mandatory="no" type="string" name="option.payflow.color.background"/>
 	<config protected="yes" mandatory="yes" type="boolean" name="option.instantPay">0</config>
-	<config protected="yes" mandatory="yes" type="integer" name="method.Express.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
-	<config protected="yes" mandatory="yes" type="integer" name="method.Express.costs" title="Transfer costs">2%</config>
+	<config protected="yes" type="boolean" name="method.Express.active">yes</config>
+	<config protected="yes" type="integer" name="method.Express.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
+	<config protected="yes" type="boolean" name="method.Express.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Express.fee.formula" title="Fixed amount or formula">2.99% + 0.39</config>
 <!--	<config type="string" protected="yes" mandatory="yes" name="forward.on.success">shop/finish</config>-->
 	<relations>
 		<needs type="module">Shop_Payment</needs>

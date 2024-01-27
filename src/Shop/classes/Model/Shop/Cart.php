@@ -103,6 +103,17 @@ class Model_Shop_Cart
 		}
 	}
 
+	public function getTotal(): float
+	{
+		$total	= .0;
+		foreach( $this->data->get( 'positions', [] ) as $position ){
+			$total	+= $position->article->price->all;
+			if( !$this->taxIncluded )
+				$total	+= $position->article->tax->all;
+		}
+		return $total;
+	}
+
 	public function releaseOrder()
 	{
 		if( $this->data->get( 'orderId' ) )
@@ -189,22 +200,15 @@ class Model_Shop_Cart
 
 		foreach( $this->data->get( 'positions' ) as $item ){
 			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
-			$article	= $source->get( $item->articleId, $item->quantity );
-			$price		= $article->price->one;
-			$priceTaxed	= $article->price->one + $article->tax->one;
-			if( $this->taxIncluded ){														//  tax already is included
-				$price		-= $article->tax->one;											//  reduce by tax added by default
-				$priceTaxed	-= $article->tax->one;											//  reduce by tax added by default
-			}
 			$positionId	= $this->modelPosition->add( [
 				'orderId'		=> $orderId,
 				'bridgeId'		=> $item->bridgeId,
 				'articleId'		=> $item->articleId,
-				'status'		=> 0,
+				'status'		=> Model_Shop_Order_Position::STATUS_NEW,
 				'quantity'		=> $item->quantity,
 //				'currency'		=> $article->currency,
-				'price'			=> $price,
-				'priceTaxed'	=> $priceTaxed,
+				'price'			=> 0,
+				'priceTaxed'	=> 0,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			] );
@@ -268,7 +272,7 @@ class Model_Shop_Cart
 					'orderId'		=> $orderId,
 					'bridgeId'		=> $item->bridgeId,
 					'articleId'		=> $item->articleId,
-					'status'		=> 0,
+					'status'		=> Model_Shop_Order_Position::STATUS_NEW,
 //					'userId'		=> 0,
 //					'size'			=> 0,
 					'quantity'		=> $item->quantity,
@@ -293,8 +297,9 @@ class Model_Shop_Cart
 	{
 		$price			= 0;
 		$priceTaxed		= 0;
-		$logicShop		= Logic_Shop::getInstance( $this->env );
+		$logicShop		= new Logic_Shop( $this->env );
 		$order			= $logicShop->getOrder( $orderId, TRUE );
+
 		foreach( $order->positions as $position ){
 			$price		+= $position->article->price->all;
 			$priceTaxed	+= $position->article->price->all + $position->article->tax->all;
@@ -305,9 +310,18 @@ class Model_Shop_Cart
 		}
 
 		//  --  SHIPPING  --  //
-		$shipping	= $logicShop->getOrderShipping( $orderId );
-		$price		+= $shipping->price;
-		$priceTaxed	+= $shipping->priceTaxed;
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$shipping	= $logicShop->getOrderShipping( $orderId );
+			$price		+= $shipping->price;
+			$priceTaxed	+= $shipping->priceTaxed;
+		}
+
+		//  --  PAYMENT  --  //
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$payment	= $logicShop->getOrderPaymentFees( $orderId );
+			$price		+= $payment->price;
+			$priceTaxed	+= $payment->priceTaxed;
+		}
 
 		//  --  OPTIONS  --  //
 		// @todo implement!

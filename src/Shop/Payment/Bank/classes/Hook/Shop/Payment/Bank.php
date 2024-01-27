@@ -25,51 +25,45 @@ class Hook_Shop_Payment_Bank extends Hook
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 
-		if( $methods->get( 'Transfer.priority' ) ){
-			$backend	= $register->add(
-				'Bank',									//  backend class name
-				'Bank:Transfer',						//  payment method key
-				$labels->transfer,						//  payment method label
-				'bank/perTransfer',						//  shop URL
-				$methods->get( 'Transfer.priority' ),	//  priority
-				'bank-1.png'							//  icon
-			);
-			$backend->costs	= $methods->get( 'Transfer.costs', 0 );
+		if( $methods->get( 'Transfer.active', FALSE ) ){
+			$priority	= $methods->get( 'Transfer.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Transfer.', TRUE );
+				$register->add( [
+					'backend'		=> 'Bank',									//  backend class name
+					'key'			=> 'Bank:Transfer',							//  payment method key
+					'path'			=> 'bank/perTransfer',						//  shop URL
+					'icon'			=> 'bank-1.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->transfer,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
-		if( $methods->get( 'Bill.priority' ) ){
-			$backend	= $register->add(
-				'Bank',									//  backend class name
-				'Bank:Bill',							//  payment method key
-				$labels->bill,							//  payment method label
-				'bank/perBill',							//  shop URL
-				$methods->get( 'Bill.priority' ),		//  priority
-				'bank-1.png'							//  icon
-			);
-			$backend->costs	= $methods->get( 'Bill.costs', 0 );
+
+		if( $methods->get( 'Bill.active', FALSE ) ){
+			$priority	= $methods->get( 'Bill.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Bill.', TRUE );
+				$register->add( [
+					'backend'		=> 'Bank',									//  backend class name
+					'key'			=> 'Bank:Bill',								//  payment method key
+					'path'			=> 'bank/perBill',							//  shop URL
+					'icon'			=> 'bank-1.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->bill,							//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
 
 		$payload['register']	= $register;
-
-/*		if( $methods->get( 'Transfer' ) ){
-			$context->registerPaymentBackend(
-				'Bank',									//  backend class name
-				'Bank:Transfer',						//  payment method key
-				$labels->transfer,						//  payment method label
-				'bank/perTransfer',						//  shop URL
-				$methods->get( 'Transfer' ),			//  priority
-				'bank-1.png'							//  icon
-			);
-		}
-		if( $methods->get( 'Bill' ) ){
-			$context->registerPaymentBackend(
-				'Bank',									//  backend class name
-				'Bank:Bill',							//  payment method key
-				$labels->bill,							//  payment method label
-				'bank/perBill',							//  shop URL
-				$methods->get( 'Bill' ),				//  priority
-				'bank-1.png'							//  icon
-			);
-		}*/
 	}
 
 	/**

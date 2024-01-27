@@ -1,19 +1,60 @@
 <?php
-class Model_Shop_Payment_BackendRegister
+class Model_Shop_Payment_BackendRegister implements Countable
 {
+	/**	@var		array		$backends */
 	protected array $backends	= [];
 
-	public function add( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL ): object
+	/**
+	 *	@param		array		$map
+	 *	@return		string
+	 */
+	public function add( array $map ): string
+	{
+		$object	= (object) array_merge( [
+			'backend'		=> '',
+			'key'			=> '',
+			'title'			=> '',
+			'description'	=> '',
+			'path'			=> '',
+			'priority'		=> 0,
+			'icon'			=> '',
+			'feeExclusive'	=> FALSE,
+			'feeFormula'	=> '',
+			'countries'		=> [],
+		], $map );
+		$id		= $object->key ?? 'unknown';
+		if( array_key_exists( $id, $this->backends ) )
+			throw new RuntimeException( 'Backend with key "'.$id.'" already registered' );
+		$this->backends[$id]	= $object;
+		return $id;
+	}
+
+	public function count(): int
+	{
+		return count( $this->backends );
+	}
+	/**
+	 * @param $backend
+	 * @param string $key
+	 * @param string $title
+	 * @param string $path
+	 * @param int $priority
+	 * @param string|null $icon
+	 * @return object
+	 * @deprecated use ::add instead
+	 */
+	public function create( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL ): object
 	{
 		$this->backends[$key]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> [],
-			'costs'		=> 0,
+			'backend'		=> $backend,
+			'key'			=> $key,
+			'title'			=> $title,
+			'path'			=> $path,
+			'priority'		=> $priority,
+			'icon'			=> $icon,
+			'countries'		=> [],
+			'feeExclusive'	=> FALSE,
+			'feeFormula'	=> '',
 		];
 		return $this->backends[$key];
 	}

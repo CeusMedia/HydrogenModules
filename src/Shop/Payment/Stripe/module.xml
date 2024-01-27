@@ -35,12 +35,18 @@
 		<locale>de/html/shop/payment/stripe/perCreditCard/top.html</locale>
 	</files>
 	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
+	<config protected="yes" type="boolean" name="method.Card.active">yes</config>
 	<config protected="yes" type="integer" name="method.Card.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
-	<config protected="yes" type="integer" name="method.Card.costs" title="Transfer costs">0</config>
+	<config protected="yes" type="boolean" name="method.Card.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Card.fee.formula" title="Fixed amount or formula">1.5% + 0.25</config>
+	<config protected="yes" type="boolean" name="method.Giropay.active">yes</config>
 	<config protected="yes" type="integer" name="method.Giropay.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
-	<config protected="yes" type="integer" name="method.Giropay.costs" title="Transfer costs">0</config>
+	<config protected="yes" type="boolean" name="method.Giropay.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Giropay.fee.formula" title="Fixed amount or formula">0.35</config>
+	<config protected="yes" type="boolean" name="method.Sofort.active">yes</config>
 	<config protected="yes" type="integer" name="method.Sofort.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">2</config>
-	<config protected="yes" type="integer" name="method.Sofort.costs" title="Transfer costs">0</config>
+	<config protected="yes" type="boolean" name="method.Sofort.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Sofort.fee.formula" title="Fixed amount or formula">1.4% + 0.25</config>
 	<relations>
 		<needs type="module">Shop_Payment</needs>
 		<needs type="module">Resource_Payment_Stripe</needs>

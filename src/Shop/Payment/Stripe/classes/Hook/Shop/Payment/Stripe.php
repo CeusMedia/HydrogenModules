@@ -21,47 +21,69 @@ class Hook_Shop_Payment_Stripe extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/stripe' );
 		$labels		= (object) $words['payment-methods'];
+		$descs		= (object) $words['payment-method-descriptions'];
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 
-		if( $methods->get( 'Card.priority', 0 ) ){
-			$backend	= $register->add(
-				'Stripe',								//  backend class name
-				'Stripe:Card',							//  payment method key
-				$labels->card,							//  payment method label
-				'stripe/perCreditCard',					//  shop URL
-	 			$methods->get( 'Card.priority' ),		//  priority
-				'creditcard-1.png'						//  icon
-//				'fa fa-fw fa-credit-card'				//  icon
-			);
-			$backend->costs	= $methods->get( 'Card.costs', 0 );
+		if( $methods->get( 'Card.active', FALSE ) ){
+			$priority	= $methods->get( 'Card.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Card.', TRUE );
+				$register->add( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Card',							//  payment method key
+					'path'			=> 'stripe/perCreditCard',					//  shop URL
+					'icon'			=> 'creditcard-1.png',						//  icon
+//					'icon'			=> 'fa fa-fw fa-credit-card'				//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->card,							//  payment method label
+					'description'	=> $descs->card ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
-		if( $methods->get( 'Sofort.priority', 0 ) ){
-			$backend	= $register->add(
-				'Stripe',								//  backend class name
-				'Stripe:Sofort',						//  payment method key
-				$labels->sofort,						//  payment method label
-				'stripe/perSofort',						//  shop URL
-				$methods->get( 'Sofort.priority' ),		//  priority
-				'klarna-2.png'							//  icon
-//					'fa fa-fw fa-bank'						//  icon
-			);
-			$backend->countries	= ['AT', 'BE', 'DE', 'IT', 'NL', 'ES'];
-			$backend->costs	= $methods->get( 'Sofort.costs', 0 );
+
+		if( $methods->get( 'Sofort.active', FALSE ) ){
+			$priority	= $methods->get( 'Sofort.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Sofort.', TRUE );
+				$register->add( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Sofort',							//  payment method key
+					'path'			=> 'stripe/perSofort',						//  shop URL
+					'icon'			=> 'klarna-2.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->sofort,							//  payment method label
+					'description'	=> $descs->sofort ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+					'countries'		=> ['AT', 'BE', 'DE', 'IT', 'NL', 'ES'],
+				] );
+			}
 		}
-		if( $methods->get( 'Giropay.priority', 0 ) ){
-			$backend	= $register->add(
-				'Stripe',								//  backend class name
-				'Stripe:Giropay',						//  payment method key
-				$labels->giropay,						//  payment method label
-				'stripe/perGiropay',					//  shop URL
-	 			$methods->get( 'Giropay.priority' ),		//  priority
-				'giropay.png'							//  icon
-//				'fa fa-fw fa-bank'						//  icon
-			);
-			$backend->countries	= ['DE'];
-			$backend->costs	= $methods->get( 'Giropay.costs', 0 );
+
+		if( $methods->get( 'Giropay.active', FALSE ) ){
+			$priority	= $methods->get( 'Giropay.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Giropay.', TRUE );
+				$register->add( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Giropay',						//  payment method key
+					'path'			=> 'stripe/perGiropay',						//  shop URL
+					'icon'			=> 'giropay.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->giropay,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+					'countries'		=> ['DE'],
+				] );
+			}
 		}
+
 		$payload['register']	= $register;
 	}
 

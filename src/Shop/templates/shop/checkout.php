@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $words */
 /** @var object $address $w */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var Model_Shop_Cart $cart */
 
 
 $w				= (object) $words['checkout'];
@@ -17,6 +18,7 @@ $w				= (object) $words['checkout'];
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $cart->get( 'positions' ) );
+$helperCart->setPaymentBackend( $paymentBackends->get( $cart->get( 'paymentMethod' ) ) );
 $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );

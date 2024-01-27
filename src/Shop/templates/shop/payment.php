@@ -5,7 +5,14 @@ use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Environment $env */
+/** @var View_Shop $view */
+/** @var Model_Shop_Cart $cart */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var ?object $billingAddress */
+/** @var float $cartTotal */
+/** @var array $words */
+/** @var array $backendPrices */
 
 $w		= (object) $words['payment'];
 
@@ -22,11 +29,24 @@ foreach( $paymentBackends->getAll() as $paymentBackend ){
 		if( preg_match( '/\.(png|jpe?g?)$/i', $paymentBackend->icon ) )
 			$icon	= HtmlTag::create( 'img', NULL, ['src' => $path.$paymentBackend->icon] );
 	}
-	$link	= HtmlTag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title, array(
+	$fees	= $backendPrices[$paymentBackend->key];
+	$costs  = '';
+	if( NULL !== $fees ){
+		$fees  = number_format( $fees, 2, ',', '.' );
+		$costs  = '<br/>'.HtmlTag::create( 'small', 'Gebühr: '.$fees.'€', [] );
+	}
+
+	$desc	= '';
+	if( '' !== ( $paymentBackend->description ?? '' ) ){
+		$desc	= '<br/>'.HtmlTag::create( 'small', $paymentBackend->description, [] );
+	}
+
+
+	$link	= HtmlTag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title.$desc.$costs, [
 		'href'	=> './shop/setPaymentBackend/'.$paymentBackend->key,
 		'class' => ' '.( $cart->get( 'paymentMethod' ) === $paymentBackend->key ? 'current' : '' ),
 //		'style' => 'display: inline-block; float: left; padding: 0.5em',
-	) );
+	] );
 	$key	= $paymentBackend->priority.'.'.uniqid();
 	$list[$key]	= HtmlTag::create( 'li', $link, ['class' => 'payment-method-list-item'] );
 }

@@ -45,6 +45,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 
 		$helperCart			= new View_Helper_Shop_CartPositions( $this->env );
 		$helperCart->setPositions( $this->logicShop->getOrderPositions( $this->orderId ) );
+		$helperCart->setPaymentBackend( $order->paymentMethod );
 		$helperCart->setChangeable( FALSE );
 		$cartDesktop	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'hidden-phone'] );
 		$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
