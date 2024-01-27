@@ -21,7 +21,7 @@ class Hook_Shop_Payment_Bank extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
-		$descs		= (object) $words['payment-method-descriptions'];
+		$descs		= (object) ( $words['payment-method-descriptions'] ?? [] );
 		/** @var Model_Shop_Payment_BackendRegister $register */
 		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
 

@@ -1,7 +1,6 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
@@ -45,7 +44,7 @@ class Controller_Shop extends Controller
 	 *	@param		string		$articleId			ID of article to remove from cart
 	 *	@return		void
 	 */
-	public function addArticle( string $bridgeId, string $articleId, int $quantity = 1 )
+	public function addArticle( string $bridgeId, string $articleId, int $quantity = 1 ): void
 	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
@@ -77,7 +76,7 @@ class Controller_Shop extends Controller
 		$this->restart( $forwardTo ?: 'shop/cart' );
 	}
 
-	public function cart()
+	public function cart(): void
 	{
 /*		$this->addData( 'order', $this->session->get( 'shop_order' ) );
 		$this->addData( 'customer', $this->session->get( 'shop_order_customer' ) );
@@ -94,14 +93,14 @@ class Controller_Shop extends Controller
 	}
 
 	/**
-	 *	@param		$bridgeId
-	 *	@param		$articleId
-	 *	@param		$quantity
-	 *	@param		$operation
+	 *	@param		string $bridgeId
+	 *	@param		string $articleId
+	 *	@param		integer			$quantity
+	 *	@param		string|NULL		$operation
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function changePositionQuantity( $bridgeId, $articleId, int $quantity, ?string $operation = NULL )
+	public function changePositionQuantity( string $bridgeId, string $articleId, int $quantity, ?string $operation = NULL ): void
 	{
 		$bridgeId		= (int) $bridgeId;
 		$articleId		= (int) $articleId;
@@ -232,20 +231,15 @@ class Controller_Shop extends Controller
 		$this->addData( 'cart', $this->modelCart );
 	}
 
-	protected function calculatePaymentFees()
+	protected function calculatePaymentFees(): float
 	{
-		/** @var Model_Shop_Cart $cart */
-		$cart	= $this->getData( 'cart' );
-		$priceCart		= 1;
-		$priceShipping	= $this->getData( 'charges' );
-		$paymentMethod	= $this->getData( 'paymentMethod', '' );
+		if( !$this->env->getModules()->has( 'Shop_Payment') )
+			return .0;
 
-		foreach( $this->backends->getAll() as $backend ){
-			if( $backend->key === $paymentMethod ){
-				$pricePayment	= $backend->costs;
-			}
-		}
-		return $pricePayment;
+		$logic	= new Logic_Shop_Payment( $this->env );
+		$logic->setBackends( $this->backends );
+		$backend	= $this->getData( 'paymentMethod', '' );
+		return $logic->getPrice( $this->cartTotal, $backend, 'DE' );
 	}
 
 	public function finish(): void
@@ -285,7 +279,16 @@ class Controller_Shop extends Controller
 		}
 		$address	= $this->logic->getBillingAddressFromCart();
 
-		$price	= $this->cartTotal + $this->logic->getS( )->price;
+		$priceShipping	= .0;
+		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+			$weight	= 0;
+			foreach( $this->modelCart->get( 'positions', TRUE ) as $position )
+				$weight	+= $position->article->weight->all;
+			$logicShipping	= new Logic_Shop_Shipping( $this->env );
+			$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight( $this->logic->getDeliveryAddressFromCart()->country, $weight );
+		}
+
+		$price	= $this->cartTotal + $priceShipping;
 
 		$logicPayment	= new Logic_Shop_Payment( $this->env );
 		$logicPayment->setBackends( $this->backends );
@@ -423,7 +426,8 @@ class Controller_Shop extends Controller
 		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
 			$logicPayment	= new Logic_Shop_Payment( $this->env );
 			$logicPayment->collectBackends();
-			$this->addData( 'paymentBackends', $logicPayment->getBackends() );
+			$this->backends	= $logicPayment->getBackends();
+			$this->addData( 'paymentBackends', $this->backends );
 		}
 		$this->addData( 'cart', $this->modelCart );
 		if( $this->modelCart->get( 'positions' ) )
@@ -486,6 +490,10 @@ class Controller_Shop extends Controller
 		$logic->handleMail( $mail, (object) ['email' => $email], $language );
 	}
 
+	/**
+	 * @deprecated not used anymore
+	 * @todo delete
+	 */
 	protected function submitOrder(): void
 	{
 //		$this->acceptRules();
