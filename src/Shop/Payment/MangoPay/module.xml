@@ -2,6 +2,8 @@
 <module>
 	<title>Shop: Payment: MangoPay</title>
 	<description><![CDATA[Integrates MangoPay into shop.
+
+	Prices: https://mangopay.com/pricing
 ]]></description>
 	<category>Shop</category>
 	<version>0.4.0</version>

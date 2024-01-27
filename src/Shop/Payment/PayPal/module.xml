@@ -12,6 +12,8 @@ merchant.username: sdk-three_api1.sdk.com
 merchant.password: QFZCWN5HZM8VBG7Q
 merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 <code
+
+Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 ]]></description>
 	<category>Shop</category>
 	<version>0.5.1</version>
