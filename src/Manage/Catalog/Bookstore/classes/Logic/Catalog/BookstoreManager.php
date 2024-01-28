@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 /**
  *	@todo	extract classes Logic_Upload and CeusMedia\Common\Alg\UnitParser
  */
-class Logic_Catalog_Bookstore extends Logic
+class Logic_Catalog_BookstoreManager extends Logic
 {
 	/**	@var	SimpleCacheInterface						$cache */
 	protected SimpleCacheInterface $cache;
@@ -908,7 +908,7 @@ class Logic_Catalog_Bookstore extends Logic
 		$this->pathAuthorImages		= $basePath.$this->moduleConfig->get( 'path.authors' );
 
 		$cacheKey	= 'catalog.bookstore.count.categories.articles';
-		if( NULL === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey, NULL ) ) ){
+		if( [] === ( $this->countArticlesInCategories = $this->cache->get( $cacheKey, [] ) ) ){
 			$list	= [];
 			foreach( $this->getCategories() as $category )
 				$list[$category->categoryId]	= $this->countArticlesInCategory( $category->categoryId, TRUE );

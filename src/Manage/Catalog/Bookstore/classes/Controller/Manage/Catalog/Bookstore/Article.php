@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 class Controller_Manage_Catalog_Bookstore_Article extends Controller
 {
 	protected Logic_Frontend $frontend;
-	protected Logic_Catalog_Bookstore $logic;
+	protected Logic_Catalog_BookstoreManager $logic;
 	protected MessengerResource $messenger;
 	protected Dictionary $request;
 	protected Dictionary $session;
@@ -31,7 +31,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	{
 		$cache		= $env->getCache();
 		if( 1 || !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.articles' ) ) ){
-			$logic		= new Logic_Catalog_Bookstore( $env );
+			$logic		= new Logic_Catalog_BookstoreManager( $env );
 			$frontend	= Logic_Frontend::getInstance( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
 			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
@@ -69,7 +69,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$cache		= $env->getCache();
-		$logic		= new Logic_Catalog_Bookstore( $env );
+		$logic		= new Logic_Catalog_BookstoreManager( $env );
 		$frontend	= Logic_Frontend::getInstance( $env );
 		$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 
@@ -393,7 +393,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
-		$this->logic			= new Logic_Catalog_Bookstore( $this->env );
+		$this->logic			= new Logic_Catalog_BookstoreManager( $this->env );
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 		$this->sessionPrefix	= 'module.manage_catalog_bookstore_article.filter.';

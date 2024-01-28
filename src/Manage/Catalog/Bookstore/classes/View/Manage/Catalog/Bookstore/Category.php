@@ -24,7 +24,7 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 		}*/
 
 		$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree start' );
-		$logic		= new Logic_Catalog_Bookstore( $this->env );
+		$logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$listMain	= [];
 		foreach( $categories as $nr => $category ){
 			if( (int) $category->parentId !== 0 )

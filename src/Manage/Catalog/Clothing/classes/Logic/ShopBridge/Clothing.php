@@ -1,8 +1,8 @@
 <?php
 class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 {
-//	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instance */
-//	protected Logic_Catalog_Gallery $logic;
+//	/**	@var	Logic_Catalog_GalleryManager				$logic			Gallery logic instance */
+//	protected Logic_Catalog_GalleryManager $logic;
 
 	/**	@var	Model_Catalog_Clothing_Article		$modelArticle	Article model instance */
 	protected Model_Catalog_Clothing_Article $modelArticle;
@@ -179,7 +179,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 */
 	protected function __onInit(): void
 	{
-//		$this->logic			= new Logic_Catalog_Gallery( $this->env );
+//		$this->logic			= new Logic_Catalog_GalleryManager( $this->env );
 		$this->modelArticle		= new Model_Catalog_Clothing_Article( $this->env );
 		$this->modelCategory	= new Model_Catalog_Clothing_Category( $this->env );
 //		$this->taxRate			= $this->env->getConfig()->get( 'module.catalog_clothing.tax.rate' );

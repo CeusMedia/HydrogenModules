@@ -7,7 +7,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	/**	@var	Logic_Frontend				$frontend */
 	protected Logic_Frontend $frontend;
 
-	/**	@var	Logic_Catalog_Bookstore		$logic		Bookstore logic instance */
+	/**	@var	Logic_Catalog_BookstoreManager		$logic		Bookstore logic instance */
 	protected Logic_Catalog_Bookstore $logic;
 
 	/**	@var	Dictionary					$moduleConfig */

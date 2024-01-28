@@ -25,7 +25,7 @@
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Manage/Catalog/Gallery.php</class>
-		<class>Logic/Catalog/Gallery.php</class>
+		<class>Logic/Catalog/GalleryManager.php</class>
 		<class>Logic/ShopBridge/CatalogGallery.php</class>
 		<class>Model/Catalog/Gallery/Category.php</class>
 		<class>Model/Catalog/Gallery/Image.php</class>

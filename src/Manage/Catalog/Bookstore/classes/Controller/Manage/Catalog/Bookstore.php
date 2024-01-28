@@ -6,8 +6,8 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Manage_Catalog_Bookstore extends Controller
 {
-	/**	@var		Logic_Catalog_Bookstore		$logic */
-	protected Logic_Catalog_Bookstore $logic;
+	/**	@var		Logic_Catalog_BookstoreManager		$logic */
+	protected Logic_Catalog_BookstoreManager $logic;
 	protected MessengerResource $messenger;
 	protected Dictionary $request;
 	protected Dictionary $session;
@@ -18,7 +18,7 @@ class Controller_Manage_Catalog_Bookstore extends Controller
 
 	protected function __onInit(): void
 	{
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();

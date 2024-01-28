@@ -10,7 +10,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 	protected Dictionary $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
-	protected Logic_Catalog_Bookstore $logic;
+	protected Logic_Catalog_BookstoreManager $logic;
 
 	public function ajaxGetNextRank( string $categoryId ): void
 	{
@@ -63,7 +63,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 	{
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.catalog.bookstore.categories' ) ) ){
-			$logic		= new Logic_Catalog_Bookstore( $env );
+			$logic		= new Logic_Catalog_BookstoreManager( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 			$language	= $env->getLanguage()->getLanguage();
 			$conditions	= ['visible' => '> 0', 'parentId' => 0];

@@ -59,7 +59,7 @@
 		<class>Model/Catalog/Bookstore/Article/Document.php</class>
 		<class>Model/Catalog/Bookstore/Article/Tag.php</class>
 		<class>Logic/Catalog/Bookstore.php</class>
-		<class>Logic/ShopBridge/Bookstore.php</class>
+		<class>Logic/ShopBridge/BookstoreManager.php</class>
 		<class>View/Manage/Catalog/Bookstore.php</class>
 		<class>View/Manage/Catalog/Bookstore/Article.php</class>
 		<class>View/Manage/Catalog/Bookstore/Author.php</class>

@@ -1,8 +1,8 @@
 <?php
 class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 {
-	/**	@var	Logic_Catalog_Gallery				$logic */
-	protected Logic_Catalog_Gallery $logic;
+	/**	@var	Logic_Catalog_GalleryManager				$logic */
+	protected Logic_Catalog_GalleryManager $logic;
 
 	/**	@var	Model_Catalog_Gallery_Category		$modelCategory	Gallery logic instance */
 	protected Model_Catalog_Gallery_Category $modelCategory;
@@ -176,7 +176,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 */
 	protected function __onInit(): void
 	{
-		$this->logic			= new Logic_Catalog_Gallery( $this->env );
+		$this->logic			= new Logic_Catalog_GalleryManager( $this->env );
 		$this->modelImage		= new Model_Catalog_Gallery_Image( $this->env );
 		$this->modelCategory	= new Model_Catalog_Gallery_Category( $this->env );
 		$this->taxRate			= $this->env->getConfig()->get( 'module.catalog_gallery.tax.rate' );

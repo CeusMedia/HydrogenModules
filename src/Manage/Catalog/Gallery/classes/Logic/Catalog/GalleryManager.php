@@ -4,7 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use Psr\SimpleCache\CacheInterface;
 
-class Logic_Catalog_Gallery
+class Logic_Catalog_GalleryManager
 {
 	/**	@var	CacheInterface							$pathImages */
 	public CacheInterface $cache;

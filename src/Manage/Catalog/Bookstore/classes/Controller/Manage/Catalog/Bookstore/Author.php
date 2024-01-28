@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 class Controller_Manage_Catalog_Bookstore_Author extends Controller
 {
 	protected Logic_Frontend $frontend;
-	protected Logic_Catalog_Bookstore $logic;
+	protected Logic_Catalog_BookstoreManager $logic;
 	protected MessengerResource $messenger;
 	protected Dictionary $request;
 	protected Dictionary $session;
@@ -17,7 +17,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 	{
 		$cache		= $env->getCache();
 		if( !( $list = $cache->get( 'catalog.tinymce.images.catalog.bookstore.authors' ) ) ){
-			$logic		= new Logic_Catalog_Bookstore( $env );
+			$logic		= new Logic_Catalog_BookstoreManager( $env );
 			$frontend	= Logic_Frontend::getInstance( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );				//  focus module configuration
 			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
@@ -48,7 +48,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 	{
 		$cache		= $env->getCache();
 		if( !( $authors = $cache->get( 'catalog.tinymce.links.catalog.bookstore.authors' ) ) ){
-			$logic		= new Logic_Catalog_Bookstore( $env );
+			$logic		= new Logic_Catalog_BookstoreManager( $env );
 			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
 			foreach( $authors as $nr => $item ){
@@ -143,7 +143,7 @@ class Controller_Manage_Catalog_Bookstore_Author extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 		$this->addData( 'frontend', $this->frontend );

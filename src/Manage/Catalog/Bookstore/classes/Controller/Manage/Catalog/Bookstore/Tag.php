@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 {
 	protected Logic_Frontend $frontend;
-	protected Logic_Catalog_Bookstore $logic;
+	protected Logic_Catalog_BookstoreManager $logic;
 	protected MessengerResource $messenger;
 	protected Dictionary $request;
 	protected Dictionary $session;
