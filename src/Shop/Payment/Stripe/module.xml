@@ -38,11 +38,11 @@
 	</files>
 	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
 	<config protected="yes" type="boolean" name="method.Card.active">yes</config>
-	<config protected="yes" type="integer" name="method.Card.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
+	<config protected="yes" type="integer" name="method.Card.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">3</config>
 	<config protected="yes" type="boolean" name="method.Card.fee.exclusive" title="Fee comes on top">yes</config>
 	<config protected="yes" type="string" name="method.Card.fee.formula" title="Fixed amount or formula">1.5% + 0.25</config>
 	<config protected="yes" type="boolean" name="method.Giropay.active">yes</config>
-	<config protected="yes" type="integer" name="method.Giropay.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
+	<config protected="yes" type="integer" name="method.Giropay.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">5</config>
 	<config protected="yes" type="boolean" name="method.Giropay.fee.exclusive" title="Fee comes on top">yes</config>
 	<config protected="yes" type="string" name="method.Giropay.fee.formula" title="Fixed amount or formula">0.35</config>
 	<config protected="yes" type="boolean" name="method.Sofort.active">yes</config>

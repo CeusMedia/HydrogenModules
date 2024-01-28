@@ -47,9 +47,13 @@
 	<config protected="no" type="string" mandatory="yes" name="bank.iban" title="IBAN of company bank account"></config>
 	<config protected="no" type="string" mandatory="yes" name="bank.bic" title="BIC of company bank account"></config>
 	<config protected="yes" type="boolean" name="method.Transfer.active">yes</config>
-	<config protected="yes" type="integer" name="method.Transfer.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<config protected="yes" type="integer" name="method.Transfer.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
 	<config protected="yes" type="boolean" name="method.Transfer.fee.exclusive" title="Fee comes on top">yes</config>
 	<config protected="yes" type="string" name="method.Transfer.fee.formula" title="Fixed amount or formula">0</config>
+	<config protected="yes" type="boolean" name="method.Bill.active">yes</config>
+	<config protected="yes" type="integer" name="method.Bill.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<config protected="yes" type="boolean" name="method.Bill.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Bill.fee.formula" title="Fixed amount or formula">0</config>
 	<relations>
 		<needs type="module">Shop_Payment</needs>
 	</relations>

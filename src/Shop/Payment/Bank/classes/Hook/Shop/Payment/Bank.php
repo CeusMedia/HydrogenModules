@@ -52,7 +52,7 @@ class Hook_Shop_Payment_Bank extends Hook
 					'backend'		=> 'Bank',									//  backend class name
 					'key'			=> 'Bank:Bill',								//  payment method key
 					'path'			=> 'bank/perBill',							//  shop URL
-					'icon'			=> 'bank-1.png',							//  icon
+					'icon'			=> 'bank-bill.png',							//  icon
 //					'icon'			=> 'fa fa-fw fa-bank',						//  icon
 					'priority'		=> $priority,								//  priority
 					'label'			=> $labels->bill,							//  payment method label

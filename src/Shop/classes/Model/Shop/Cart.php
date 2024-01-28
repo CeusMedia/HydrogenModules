@@ -60,6 +60,11 @@ class Model_Shop_Cart
 
 	}
 
+	public function clear(): void
+	{
+		$this->createEmpty();
+	}
+
 	public function get( string $key )
 	{
 		return $this->data->get( $key );
@@ -166,7 +171,7 @@ class Model_Shop_Cart
 
 	/*  --  PROTECTED  --  */
 
-	protected function createEmpty()
+	protected function createEmpty(): void
 	{
 		$this->data	= new Dictionary( [
 			'orderStatus'		=> Model_Shop_Order::STATUS_NEW,

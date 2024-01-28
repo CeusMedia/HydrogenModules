@@ -101,7 +101,7 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
-	public function setPaymentBackend( object|string $backend ): self
+	public function setPaymentBackend( object|string|NULL $backend ): self
 	{
 		$this->paymentBackend	= $backend;
 		return $this;
@@ -352,7 +352,7 @@ class View_Helper_Shop_CartPositions
 			$logicPayment	= new Logic_Shop_Payment( $this->env );
 			if( NULL !== $this->paymentsBackends )
 				$logicPayment->setBackends( $this->paymentsBackends );
-			if( $this->deliveryAddress ){
+			if( $this->paymentBackend && $this->deliveryAddress ){
 				$pricePayment	= $logicPayment->getPrice(
 					$totalPrice + $priceShipping,
 					$this->paymentBackend,
