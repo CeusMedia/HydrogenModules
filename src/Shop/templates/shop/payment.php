@@ -30,19 +30,28 @@ foreach( $paymentBackends->getAll() as $paymentBackend ){
 			$icon	= HtmlTag::create( 'img', NULL, ['src' => $path.$paymentBackend->icon] );
 	}
 	$fees	= $backendPrices[$paymentBackend->key];
+
 	$costs  = '';
 	if( NULL !== $fees ){
 		$fees  = number_format( $fees, 2, ',', '.' );
-		$costs  = '<br/>'.HtmlTag::create( 'small', 'Gebühr: '.$fees.'€', [] );
+		$costs  = HtmlTag::create( 'div', 'Gebühr: '.$fees.'€', ['class' => 'item-fees'] );
 	}
 
-	$desc	= '';
+	$desc   = '';
 	if( '' !== ( $paymentBackend->description ?? '' ) ){
-		$desc	= '<br/>'.HtmlTag::create( 'small', $paymentBackend->description, [] );
+		$desc   = HtmlTag::create( 'div', $paymentBackend->description, ['class' => 'item-desc'] );
 	}
 
+	$cont   = HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', $icon, ['class' => 'item-icon'] ),
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', $paymentBackend->label, ['class' => 'item-title'] ),
+			$desc,
+			$costs,
+		], ['class' => 'item-data'] ),
+	], ['class' => 'item', 'style' => 'display: flex; width: 100%'] );
 
-	$link	= HtmlTag::create( 'a', $icon.'&nbsp;&nbsp;'.$paymentBackend->title.$desc.$costs, [
+	$link	= HtmlTag::create( 'a', $cont, [
 		'href'	=> './shop/setPaymentBackend/'.$paymentBackend->key,
 		'class' => ' '.( $cart->get( 'paymentMethod' ) === $paymentBackend->key ? 'current' : '' ),
 //		'style' => 'display: inline-block; float: left; padding: 0.5em',

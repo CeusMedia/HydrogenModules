@@ -239,6 +239,8 @@ class Controller_Shop extends Controller
 		$logic	= new Logic_Shop_Payment( $this->env );
 		$logic->setBackends( $this->backends );
 		$backend	= $this->getData( 'paymentMethod', '' );
+		if( '' === $backend )
+			return .0;
 		return $logic->getPrice( $this->cartTotal, $backend, 'DE' );
 	}
 

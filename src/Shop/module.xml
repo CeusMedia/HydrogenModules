@@ -60,6 +60,7 @@ For payment you need to install a payment module.]]></description>
 	<files>
 		<class>Controller/Shop.php</class>
 		<class>Controller/Shop/Customer.php</class>
+		<class>Hook/Shop.php</class>
 		<class>Hook/Shop/FinishPanel.php</class>
 		<class>Job/Shop.php</class>
 		<class>Logic/Shop.php</class>
@@ -170,6 +171,7 @@ For payment you need to install a payment module.]]></description>
 		<supports type="module">Shop_Shipping</supports>
 	</relations>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::onRenderServicePanels</hook>
+	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Shop::onLogout</hook>
 	<job id="Shop.OldCustomers.cleanup" mode="dev,test,live">Shop::cleanupOldCustomers</job>
 	<job id="Shop.OldCustomers.cleanupTestOrders" mode="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
 	<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" mode="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>

@@ -291,7 +291,7 @@ class Controller_Shop_Customer extends Controller
 				'modifiedAt'	=> time(),
 			] );
 			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
-			$logicAuth->setIdentifiedUser( $this->modelUser->get( $userId ) );
+			$logicAuth->setAuthenticatedUser( $this->modelUser->get( $userId ) );
 			$this->modelCart->set( 'userId', $userId );
 		}
 		$addressDelivery	= $this->modelAddress->getByIndices( [

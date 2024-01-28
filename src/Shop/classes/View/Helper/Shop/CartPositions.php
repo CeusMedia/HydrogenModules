@@ -39,7 +39,7 @@ class View_Helper_Shop_CartPositions
 	protected ?object $deliveryAddress	= NULL;
 	protected array $positions;
 	protected ?Model_Shop_Payment_BackendRegister $paymentsBackends	= NULL;
-	protected ?string $paymentBackend;
+	protected object|string|NULL $paymentBackend;
 	protected int $display				= self::DISPLAY_BROWSER;
 	protected int $output				= self::OUTPUT_HTML;
 
@@ -101,7 +101,7 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
-	public function setPaymentBackend( string $backend ): self
+	public function setPaymentBackend( object|string $backend ): self
 	{
 		$this->paymentBackend	= $backend;
 		return $this;
@@ -358,12 +358,13 @@ class View_Helper_Shop_CartPositions
 					$this->paymentBackend,
 					$this->deliveryAddress->country
 				);
-				$rows[]	= HtmlTag::create( 'tr', [
-					HtmlTag::create( 'td', '&nbsp;' ),
-					HtmlTag::create( 'td', $words->labelPayment, ['class' => 'autocut'] ),
-					HtmlTag::create( 'td', '&nbsp;', ['class' => 'column-cart-quantity'] ),
-					HtmlTag::create( 'td', $this->formatPrice( $pricePayment ), ['class' => 'price'] )
-				] );
+				if( NULL !== $pricePayment && 0 == $pricePayment )
+					$rows[]	= HtmlTag::create( 'tr', [
+						HtmlTag::create( 'td', '&nbsp;' ),
+						HtmlTag::create( 'td', $words->labelPayment, ['class' => 'autocut'] ),
+						HtmlTag::create( 'td', '&nbsp;', ['class' => 'column-cart-quantity'] ),
+						HtmlTag::create( 'td', $this->formatPrice( $pricePayment ), ['class' => 'price'] )
+					] );
 			}
 		}
 

@@ -10,6 +10,10 @@ class Controller_Manage_My_Order extends Controller
 
 	public function index( $page = 0 ): void
 	{
+		if( !$this->logicAuth->isAuthenticated() ){
+			$this->env->getMessenger()->noteError( 'Access denied.' );
+			$this->restart();
+		}
 		$limit		= 10;
 		$conditions	= array( 'userId' => $this->logicAuth->getCurrentUserId() );
 		$orders		= ['orderId' => 'DESC'];
