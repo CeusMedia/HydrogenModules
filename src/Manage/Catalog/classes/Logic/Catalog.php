@@ -4,6 +4,7 @@ use CeusMedia\Cache\SimpleCacheInterface;
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 /**
  *	@todo	extract classes Logic_Upload and CeusMedia\Common\Alg\UnitParser
@@ -265,9 +266,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkAuthorId( $authorId, $throwException = FALSE )
+	public function checkAuthorId( $authorId, $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -277,9 +279,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkCategoryId( $categoryId, $throwException = FALSE )
+	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;
@@ -291,7 +294,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function countArticles( $conditions = [] )
+	public function countArticles( $conditions = [] ): int
 	{
 		return $this->modelArticle->count( $conditions );
 	}
@@ -300,11 +303,11 @@ class Logic_Catalog extends Logic
 	 *	Returns number of articles within a category or its sub categories, if enabled.
 	 *	Uses cache 'catalog.count.categories.articles' in recursive mode.
 	 *	@access		public
-	 *	@param 		integer		$categoryId		ID of category to count articles for
+	 *	@param 		string		$categoryId		ID of category to count articles for
 	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
 	 *	@return		integer						Number of found articles in category
 	 */
-	public function countArticlesInCategory( $categoryId, $recursive = FALSE )
+	public function countArticlesInCategory( string $categoryId, bool $recursive = FALSE ): int
 	{
 		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
 			return $this->countArticlesInCategories[$categoryId];
@@ -318,9 +321,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editArticle( $articleId, $data )
+	public function editArticle( string $articleId, array $data ): void
 	{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
@@ -329,9 +333,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editAuthor( $authorId, $data )
+	public function editAuthor( string $authorId, array $data ): void
 	{
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();																//
@@ -340,9 +345,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editCategory( $categoryId, $data )
+	public function editCategory( string $categoryId, array $data ): void
 	{
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
@@ -355,9 +361,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getArticle( $articleId )
+	public function getArticle( $articleId ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
@@ -371,7 +378,7 @@ class Logic_Catalog extends Logic
 	 *	@todo		 use cache if possible
 	 *	@todo		 code doc
 	 */
-	public function getArticles( $conditions = [], $orders = [], $limits = [] )
+	public function getArticles( $conditions = [], $orders = [], $limits = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$conditions, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
@@ -386,7 +393,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] )
+	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] ): array
 	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= [];
@@ -395,14 +402,13 @@ class Logic_Catalog extends Logic
 		if( !$articles )
 			return [];
 		$conditions	= ['articleId' => $articleIds];
-		$articles	= $this->getArticles( $conditions, $orders, $limits );
-		return $articles;
+		return $this->getArticles( $conditions, $orders, $limits );
 	}
 
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE )
+	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE ): array
 	{
 		$model		= new Model_Catalog_Article_Author( $this->env );
 		$articles	= $model->getAll( ['authorId' => array_values( $authorIds )] );
@@ -417,7 +423,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthors( $authors, $returnIds = FALSE )
+	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ): array
 	{
 		$authorIds	= [];
 		foreach( $authors as $author )
@@ -428,10 +434,10 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticleUri( $articleOrId )
+	public function getArticleUri( object|string $articleOrId ): string
 	{
 		$article	= $articleOrId;
-		if( is_int( $articleOrId ) )
+		if( is_string( $articleOrId ) )
 			$article	= $this->getArticle( $articleOrId );
 		if( !is_object( $article ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
@@ -536,7 +542,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getCategory( $categoryId )
+	public function getCategory( string $categoryId )
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.category.'.$categoryId ) ) )
 			return $data;

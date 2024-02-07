@@ -6,6 +6,7 @@ use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Catalog extends Controller
 {
@@ -201,10 +202,14 @@ class Controller_Catalog extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function order(): void
 	{
 		$request	= $this->env->getRequest();
-		$articleId	= (int) $request->get( 'articleId' );
+		$articleId	= $request->get( 'articleId' );
 		$article	= $this->logic->getArticle( $articleId );
 		$forwardUrl	= urlencode( $this->logic->getArticleUri( $articleId ) );
 		$quantity	= (int) preg_replace( "/[^0-9-]/", "", $request->get( 'quantity' ) );

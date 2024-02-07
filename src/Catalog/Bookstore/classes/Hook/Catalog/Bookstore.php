@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Hook;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Hook_Catalog_Bookstore extends Hook
 {
@@ -17,10 +18,11 @@ class Hook_Catalog_Bookstore extends Hook
 
 		if( preg_match( $pattern, $this->payload['content'] ) ){
 			$code		= preg_replace( $pattern, "\\2", $this->payload['content'] );
-			$code		= preg_replace( '/(\r|\n|\t)/', " ", $code );
+			$code		= preg_replace( '/([\r\n\t])/', " ", $code );
 			$code		= preg_replace( '/( ){2,}/', " ", $code );
 			$code		= trim( $code );
 			try{
+				/** @noinspection PhpMethodParametersCountMismatchInspection */
 				$node		= new XmlElement( '<'.substr( $code, 1, -1 ).'/>' );
 				$attr		= array_merge( $defaultAttr, $node->getAttributes() );
 				if( $attr['articleId'] )
@@ -31,14 +33,14 @@ class Hook_Catalog_Bookstore extends Hook
 				}
 				if( $attr['heading'] )
 					$helper->setHeading( $attr['heading'] );
-				$subcontent		= $helper->render();
-				$subcontent		.= '<script>jQuery(document).ready(function(){ModuleCatalogBookstoreRelatedArticlesSlider.init(260)});</script>';
+				$content		= $helper->render();
+				$content		.= '<script>jQuery(document).ready(function(){ModuleCatalogBookstoreRelatedArticlesSlider.init(260)});</script>';
 			}
-			catch( Exception $e ){
+			catch( Exception ){
 				$this->env->getMessenger()->noteFailure( 'Short code failed: '.$code );
-				$subcontent	= '';
+				$content	= '';
 			}
-			$replacement	= "\\1".$subcontent."\\4";												//  insert content of nested page...
+			$replacement	= "\\1".$content."\\4";																		//  insert content of nested page...
 			$this->payload['content']	= preg_replace( $pattern, $replacement, $this->payload['content'] );			//  ...into page content
 		}
 	}
@@ -48,6 +50,10 @@ class Hook_Catalog_Bookstore extends Hook
 		$this->context->content	= View_Helper_Catalog_Bookstore::applyLinks( $this->env, $this->context->content );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function onRenderSearchResults(): void
 	{
 		$helper			= new View_Helper_Catalog_Bookstore( $this->env );
@@ -56,7 +62,7 @@ class Hook_Catalog_Bookstore extends Hook
 		$modelCategory	= new Model_Catalog_Bookstore_Category( $this->env );
 		$words			= $this->env->getLanguage()->getWords( 'search' );
 		$categories		= (object) $words['result-categories'];
-		foreach( $this->payload['documents'] as $nrDocument => $resultDocument  ){
+		foreach( $this->payload['documents'] as $resultDocument  ){
 			if( !preg_match( "@^catalog/bookstore/@", $resultDocument->path ) )
 				continue;
 
@@ -114,9 +120,12 @@ class Hook_Catalog_Bookstore extends Hook
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function onRegisterSitemapLinks(): void
 	{
-		$baseUrl	= $this->env->url.'catalog/bookstore/';
 		$logic		= new Logic_Catalog_Bookstore( $this->env );
 		$language	= $this->env->getLanguage()->getLanguage();
 

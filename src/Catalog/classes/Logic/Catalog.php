@@ -3,6 +3,7 @@
 use CeusMedia\Cache\AbstractAdapter as AbstractCacheAdapter;
 use CeusMedia\Common\Alg\Time\Converter as TimeConverter;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Logic_Catalog extends Logic
 {
@@ -37,8 +38,9 @@ class Logic_Catalog extends Logic
 	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
 	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
+	 *	@throws		SimpleCacheInvalidArgumentException	if not found
 	 */
-	public function changeQuantity( string $articleId, int $change, bool $strict = TRUE )
+	public function changeQuantity( string $articleId, int $change, bool $strict = TRUE ): int|FALSE
 	{
 		$article	= $this->modelArticle->get( $articleId );
 		if( !$article && $strict )
@@ -53,6 +55,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
 	{
@@ -65,6 +68,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
 	{
@@ -77,6 +81,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
 	{
@@ -111,6 +116,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticle( string $articleId ): object
 	{
@@ -124,6 +130,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleCoverUrl( $articleOrId, bool $thumbnail = FALSE, bool $absolute = FALSE ): ?string
 	{
@@ -145,6 +152,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleTag( $articleTagId ): ?object
 	{
@@ -243,11 +251,12 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getArticleUri( $articleOrId, bool $absolute = FALSE ): string
+	public function getArticleUri( object|string $articleOrId, bool $absolute = FALSE ): string
 	{
 		$article	= $articleOrId;
-		if( is_int( $articleOrId ) )
+		if( is_string( $articleOrId ) )
 			$article	= $this->getArticle( $articleOrId );
 		if( !is_object( $article ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
@@ -258,6 +267,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		use cache
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthor( string $authorId ): ?object
 	{
@@ -281,6 +291,7 @@ class Logic_Catalog extends Logic
 	 *	@access		public
 	 *	@param		string		$articleId			Article ID
 	 *	@return		array
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorsOfArticle( string $articleId ): array
 	{
@@ -300,6 +311,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): string
 	{
@@ -333,12 +345,12 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoriesOfArticle( string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
-		$categoryIds	= [];
 		$relations		= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );
 		foreach( $relations as $relation ){
 			$category	= $this->modelCategory->get( $relation->categoryId );
@@ -354,6 +366,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategory( string $categoryId ): object
 	{
@@ -369,6 +382,7 @@ class Logic_Catalog extends Logic
 	 *	@todo		clean up
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryArticles( object $category, array $orders = [], array $limits = [] ): array
 	{
@@ -378,7 +392,6 @@ class Logic_Catalog extends Logic
 		$conditions	= ['categoryId' => $category->categoryId];
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= [];
-		$volumes	= [];
 
 		foreach( $relations as $relation ){
 			$article			= $this->getArticle( $relation->articleId );
@@ -391,6 +404,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryOfArticle( $articleId ): object
 	{
@@ -403,11 +417,12 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getCategoryUri( $categoryOrId, string $language = 'en', bool $absolute = FALSE ): string
+	public function getCategoryUri( object|string $categoryOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
 		$category	= $categoryOrId;
-		if( is_int( $categoryOrId ) )
+		if( is_string( $categoryOrId ) )
 			$category	= $this->getCategory( $categoryOrId );
 		$uri		= 'catalog';
 		if( $category->categoryId ){
@@ -443,6 +458,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTagUri( $tagOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
@@ -471,13 +487,14 @@ class Logic_Catalog extends Logic
 /*  -------------------------------------------------  */
 
 	/**
-	 *	Indicates whether an Article is to be releases in future.
+	 *	Indicates whether an Article is to be releases in the future.
 	 *	@access		public
 	 *	@param		string		$articleId			ID of Article
 	 *	@return		bool
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function isFuture( string $articleId ): bool
 	{

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 {
@@ -15,6 +16,12 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	public float $taxPercent;
 	public float $taxIncluded;
 
+	/**
+	 *	@param		string		$articleId
+	 *	@param		int			$change
+	 *	@return		int
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function changeQuantity( string $articleId, int $change ): int
 	{
 		return $this->logic->changeQuantity( $articleId, $change );
@@ -26,8 +33,9 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string			$articleId		ID of article
 	 *	@return		object|FALSE	Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function check( string $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE ): object|FALSE
 	{
 		if( isset( $this->cache[$articleId] ) )
 			return $this->cache[$articleId];
@@ -47,6 +55,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$quantity		Amount of articles
 	 *	@return		object
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( string $articleId, int $quantity = 1 ): object
 	{
@@ -87,6 +96,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getDescription( string $articleId ): string
 	{
@@ -101,6 +111,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getLink( string $articleId ): string
 	{
@@ -113,6 +124,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@param		boolean		$absolute
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
@@ -133,6 +145,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
@@ -146,6 +159,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTax( string $articleId, int $amount = 1 ): float
 	{
@@ -162,6 +176,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTitle( string $articleId ): string
 	{
@@ -174,6 +189,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get weight for
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getWeight( string $articleId, int $amount = 1 ): float
 	{

@@ -3,6 +3,7 @@
 use CeusMedia\Common\Alg\Time\Converter as TimeConverter;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 /**
  *	@todo			remove LUV context, replace by methods of module "Resource::Frontend"
@@ -42,8 +43,9 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
 	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function changeQuantity( string $articleId, int $change, bool $strict = TRUE )
+	public function changeQuantity( string $articleId, int $change, bool $strict = TRUE ): int|FALSE
 	{
 		$article	= $this->modelArticle->get( $articleId );
 		if( !$article && $strict )
@@ -58,6 +60,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
 	{
@@ -69,6 +72,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
@@ -81,6 +85,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
@@ -102,6 +107,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function countArticlesInCategory( string $categoryId, bool $recursive = FALSE ): int
 	{
@@ -115,6 +121,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticle( string $articleId ): object
@@ -129,6 +136,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticleCoverUrl( $articleOrId, string $size = 'm', bool $absolute = FALSE, bool $urlEncoded = FALSE ): ?string
@@ -149,13 +157,14 @@ class Logic_Catalog_Bookstore extends Logic
 		if( !$bucketFile )
 			return NULL;
 		if( $urlEncoded )
-			$uri	= rawurlencode( $path );
+			$path	= rawurlencode( $path );
 		return $absolute ? $this->env->url.'file/'.$path : './file/'.$path;
 	}
 
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleTag( string $articleTagId ): ?object
 	{
@@ -253,6 +262,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticleUri( $articleOrId, bool $absolute = FALSE ): string
@@ -271,6 +281,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use cache
 	 */
 	public function getAuthor( string $authorId ): ?object
@@ -295,6 +306,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@access		public
 	 *	@param		string		$articleId			Article ID
 	 *	@return		array
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorsOfArticle( string $articleId ): array
 	{
@@ -314,6 +326,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorUri( $authorOrId, bool $absolute = FALSE ): string
 	{
@@ -346,13 +359,13 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getCategoriesOfArticle( string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
-		$categoryIds	= [];
 		$relations		= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );
 		foreach( $relations as $relation ){
 			$category	= $this->modelCategory->get( $relation->categoryId );
@@ -367,6 +380,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getCategory( string $categoryId ): object
@@ -383,6 +397,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@todo		clean up
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryArticles( object $category, array $orders = [], array $limits = [] ): array
 	{
@@ -392,7 +407,6 @@ class Logic_Catalog_Bookstore extends Logic
 		$conditions	= ['categoryId' => $category->categoryId];
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= [];
-		$volumes	= [];
 
 		foreach( $relations as $relation ){
 			$article			= $this->getArticle( $relation->articleId );
@@ -405,6 +419,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryOfArticle( $articleId ): object
 	{
@@ -417,6 +432,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryUri( $categoryOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
@@ -457,6 +473,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTagUri( $tagOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
@@ -485,13 +502,14 @@ class Logic_Catalog_Bookstore extends Logic
 /*  -------------------------------------------------  */
 
 	/**
-	 *	Indicates whether an Article is to be releases in future.
+	 *	Indicates whether an Article is to be releases in the future.
 	 *	@access		public
 	 *	@param		string		$articleId			ID of Article
 	 *	@return		bool
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function isFuture( string $articleId ): bool
 	{
@@ -505,7 +523,6 @@ class Logic_Catalog_Bookstore extends Logic
 	/*  --  PROTECTED  --  */
 
 	/**
-	 *	@throws		ReflectionException
 	 *	@todo		code doc
 	 */
 	protected function __onInit(): void

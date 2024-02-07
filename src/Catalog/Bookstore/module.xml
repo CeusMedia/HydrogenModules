@@ -3,7 +3,7 @@
 	<title>Catalog: Bookstore</title>
 	<description/>
 	<category>Catalog</category>
-	<version>0.8</version>
+	<version>0.8.1</version>
 	<log version="0.4.6">Responsive Design for category index.</log>
 	<log version="0.4.7">Support for search engine module.</log>
 	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
@@ -33,6 +33,7 @@
 	<log version="0.7.8">Add categories to sitemap / search index.</log>
 	<log version="0.7.9">Extract hooks to own class.</log>
 	<log version="0.8">Migration to support CeusMedia:* 0.9.x.</log>
+	<log version="0.8.1">Migration to support CeusMedia:* 1.0.x.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

@@ -5,6 +5,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Helper_Catalog
 {
@@ -27,11 +28,25 @@ class View_Helper_Catalog
 		$this->cache	= $this->env->getCache();
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object			$context
+	 *	@param		object			$module
+	 *	@param		array			$payload
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public static function ___onRenderNewsItem( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		$context->content	= self::applyLinks( $env, $context->content );
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string			$content
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public static function applyLinks( Environment $env, string $content/*&$item*/ ): string
 	{
 //		$content	= $item->content;
@@ -52,9 +67,9 @@ class View_Helper_Catalog
 		while( preg_match( $patternArticle, $content ) ){
 			$matches		= [];
 			preg_match( $patternArticle, $content, $matches );
-			$url		= $logic->getArticleUri( (int) $matches[1] );
+			$url		= $logic->getArticleUri( $matches[1] );
 			if( !isset( $matches[2] ) )
-				$matches[2]	= $logic->getArticle( (int) $matches[1] )->title;
+				$matches[2]	= $logic->getArticle( $matches[1] )->title;
 			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
 			$content	= preg_replace( $patternArticle, $link, $content, 1 );
 		}
@@ -62,9 +77,9 @@ class View_Helper_Catalog
 		while( preg_match( $patternCategory, $content ) ){
 			$matches		= [];
 			preg_match( $patternCategory, $content, $matches );
-			$url		= $logic->getCategoryUri( (int) $matches[1] );
+			$url		= $logic->getCategoryUri( $matches[1] );
 			if( !isset( $matches[2] ) )
-				$matches[2]	= $logic->getCategory( (int) $matches[1] )->label_de;
+				$matches[2]	= $logic->getCategory( $matches[1] )->label_de;
 			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
 			$content	= preg_replace( $patternCategory, $link, $content, 1 );
 		}
@@ -85,25 +100,45 @@ class View_Helper_Catalog
 		$price  = (float) $price;
 		ob_start();
 		$price  = sprintf( "%01.2f", $price );
-		$price  = str_replace( ".", $separator, $price );
-		return $price;
+		return str_replace( ".", $separator, $price );
 	}
 
-	public function getArticleUri( $articleId, bool $absolute = FALSE ): string
+	/**
+	 *	@param		string		$articleId
+	 *	@param		bool		$absolute
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function getArticleUri( string $articleId, bool $absolute = FALSE ): string
 	{
-		return $this->logic->getArticleUri( (int) $articleId, $absolute );
+		return $this->logic->getArticleUri( $articleId, $absolute );
 	}
 
-	public function getCategoryUri( $categoryOrId ): string
+	/**
+	 *	@param		object|string		$categoryOrId
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function getCategoryUri( object|string $categoryOrId ): string
 	{
 		return $this->logic->getCategoryUri( $categoryOrId );
 	}
 
-	public function getTagUri( $tagOrId ): string
+	/**
+	 *	@param		object|string		$tagOrId
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function getTagUri( object|string $tagOrId ): string
 	{
 		return $this->logic->getTagUri( $tagOrId );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@return		array
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function prepareArticleData( object $article ): array
 	{
 		$config		= $this->env->getConfig();
@@ -159,6 +194,7 @@ class View_Helper_Catalog
 	 *	@param		object		$article			Data object of article
 	 *	@param		string		$labelNoPicture		Title of placeholder image
 	 *	@return		string		Rendered HTML tag of article cover image (or placeholder).
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderArticleImage( object $article, string $labelNoPicture = '' ): string
 	{
@@ -169,13 +205,23 @@ class View_Helper_Catalog
 		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderArticleLink( object $article ): string
 	{
-		$title		= View_Helper_Text::applyFormat( $article->title );
-		$url		= $this->logic->getArticleUri( (int) $article->articleId, $article );
+		$title	= View_Helper_Text::applyFormat( $article->title );
+		$url	= $this->logic->getArticleUri( $article->articleId, $article );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderArticleListItem( object $article ): string
 	{
 		$data	= $this->prepareArticleData( $article );
@@ -183,6 +229,12 @@ class View_Helper_Catalog
 		return $view->loadTemplateFile( 'catalog/article/item.php', $data );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@param		string		$labelNoPicture
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderArticleThumbnail( object $article, string $labelNoPicture = '' ): string
 	{
 		if( strlen( $uri = $this->logic->getArticleCoverUrl( $article, TRUE/*, TRUE*/ ) ) ){
@@ -195,6 +247,11 @@ class View_Helper_Catalog
 		return HtmlElements::Image( $pathImages."no_picture.png", $labelNoPicture );
 	}
 
+	/**
+	 *	@param		object		$author
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderAuthorLink( object $author ): string
 	{
 		$name	= $author->lastname;
@@ -209,6 +266,12 @@ class View_Helper_Catalog
 		return HtmlTag::create( 'a', $name, ['href' => $url] );
 	}
 
+	/**
+	 *	@param		object			$category
+	 *	@param		string|NULL		$heading
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderCategory( object $category, ?string $heading = NULL ): string
 	{
 		if( is_string( $heading ) )
@@ -231,6 +294,11 @@ class View_Helper_Catalog
 		return $heading.$descriptions.$articles;
 	}
 
+	/**
+	 *	@param		object		$category
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderCategoryArticleList( object $category ): string
 	{
 		$cacheKey	= 'catalog.html.categoryArticleList.'.$category->categoryId;
@@ -245,6 +313,12 @@ class View_Helper_Catalog
 		return $list;
 	}
 
+	/**
+	 *	@param		object		$category
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderCategoryLink( object $category, string $language = 'de' ): string
 	{
 		$labelKey	= 'label_'.$language;
@@ -253,6 +327,12 @@ class View_Helper_Catalog
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderCategoryList( array $data, string $language = 'de' ): string
 	{
 		$list	= [];
@@ -283,12 +363,23 @@ class View_Helper_Catalog
 		return HtmlTag::create( 'a', $document->title, $attributes );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderPositionFromArticle( object $article, string $language = 'de' ): string
 	{
 		$helper	= new View_Helper_Catalog_Position( $this->env );
 		return $helper->renderFromArticle( $article );
 	}
 
+	/**
+	 *	@param		string|NULL		$category
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderPositionFromCategory( ?string $category = NULL ): string
 	{
 		$helper	= new View_Helper_Catalog_Position( $this->env );

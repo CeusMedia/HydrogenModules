@@ -56,10 +56,10 @@ class Controller_Manage_Catalog_Article extends Controller
 	 *	...
 	 *	@static
 	 *	@access		public
-	 *	@param		object		$env
+	 *	@param		Environment		$env
 	 *	@param		object		$context
 	 *	@param		unknown		$module
-	 *	@param		unknown		$arguments
+	 *	@param		array		$arguments
 	 *	@return		void
 	 *	@todo		 code doc
 	 */

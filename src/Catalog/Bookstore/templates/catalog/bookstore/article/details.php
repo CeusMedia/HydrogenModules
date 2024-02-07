@@ -157,9 +157,9 @@ return '
 	'.$definitions.'
 </div>
 <script>
-var ViewHelperText = {
+let ViewHelperText = {
 	toggleLongText: function(toggler){
-		var parent = $(toggler).parent().parent();
+		let parent = $(toggler).parent().parent();
 //console.log(parent);
 		$("div.text_more", parent).toggle();
 		$("div.text_less", parent).toggle();

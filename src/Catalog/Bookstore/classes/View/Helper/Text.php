@@ -20,11 +20,11 @@ class View_Helper_Text
 	{
 		$content	= preg_replace( "@\[article:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;article_id,\\1'>\\2</a>", $content );
 		$content	= preg_replace( "@\[category:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;categoryId,\\1'>\\2</a>", $content );
-		$content	= preg_replace( "@\[link:(http://)?([^\|]+)\|([^\]]+)\]@i", "<a href='http://\\2' rel='nofollow'>\\3</a>", $content );
+		$content	= preg_replace( "@\[link:(http://)?([^\|]+)\|([^\]]+)\]@i", "<a href='https://\\2' rel='nofollow'>\\3</a>", $content );
 		return $content;
 	}
 
-	public static function applyExpandable( string $text, $length = 0, $labelMore = FALSE, $labelLess = FALSE )
+	public static function applyExpandable( string $text, int $length = 0, ?string $labelMore = NULL, ?string $labelLess = NULL )
 	{
 		if( $length && strlen( $text ) > $length ){
 			$count	= -1;

@@ -1,11 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/**
- *	Template for Univerlag Frontend.
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- */
-
 /** @var Environment $env */
 /** @var array $words */
 /** @var object $article */

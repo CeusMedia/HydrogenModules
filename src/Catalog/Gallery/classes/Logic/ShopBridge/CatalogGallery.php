@@ -1,4 +1,7 @@
 <?php
+
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
+
 class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 {
 	/**	@var	Logic_Catalog_Gallery				$logic			Gallery logic instance */
@@ -38,8 +41,9 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function check( string $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE ): object|FALSE
 	{
 		$article	= $this->modelImage->get( $articleId );
 		if( $article )
@@ -55,6 +59,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId
 	 *	@param		integer		$quantity
 	 *	@return		object
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( string $articleId, int $quantity = 1 ): object
 	{
@@ -92,6 +97,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getDescription( string $articleId ): string
 	{
@@ -118,6 +124,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		boolean		$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPicture( string $articleId, bool $absolute = FALSE ): string
 	{
@@ -133,6 +140,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPrice( string $articleId, int $amount = 1 ): float
 	{
@@ -146,6 +154,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId
 	 *	@param		integer		$amount
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTax( string $articleId, int $amount = 1 ): float
 	{
@@ -158,6 +167,7 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTitle( string $articleId ): string
 	{
@@ -181,7 +191,6 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	Constructor.
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

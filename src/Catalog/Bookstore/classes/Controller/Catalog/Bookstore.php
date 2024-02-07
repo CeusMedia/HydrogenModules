@@ -11,6 +11,7 @@ use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Catalog_Bookstore extends Controller
 {
@@ -68,7 +69,7 @@ class Controller_Catalog_Bookstore extends Controller
 				$this->addData( 'relatedArticles', $relatedArticles );
 			}
 		}
-		catch( Throwable $e ){
+		catch( Throwable ){
 			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
 			$this->restart( NULL, TRUE );
 		}
@@ -78,6 +79,11 @@ class Controller_Catalog_Bookstore extends Controller
 	{
 	}
 
+	/**
+	 *	@param		string		$authorId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function author( string $authorId ): void
 	{
 //		$authorId	= preg_replace( "/-[a-z0-9_-]*$/", "", $authorId );
@@ -95,6 +101,10 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function categories(): void
 	{
 		$cache	= $this->env->getCache();
@@ -102,9 +112,9 @@ class Controller_Catalog_Bookstore extends Controller
 			$orders		= ['rank' => 'ASC'];
 			$conditions	= ['parentId' => 0, 'visible' => 1];
 			$categories	= $this->logic->getCategories( $conditions, $orders );
-			foreach( $categories as $nr => $category ){
+			foreach( $categories as $category ){
 				$conditions	= ['parentId' => $category->categoryId, 'visible' => 1];
-				$categories[$nr]->categories	= $this->logic->getCategories( $conditions, $orders );
+				$category->categories	= $this->logic->getCategories( $conditions, $orders );
 			}
 			$cache->set( 'catalog.bookstore.categories', $categories );
 		}
@@ -113,6 +123,11 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'categories', $categories );
 	}
 
+	/**
+	 *	@param		string		$categoryId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function category( string $categoryId ): void
 	{
 		$category	= $this->logic->getCategory( $categoryId );
@@ -138,6 +153,8 @@ class Controller_Catalog_Bookstore extends Controller
 	 *	@todo		 rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
 	 *	@todo		 extract labels
 	 *	@todo		 BONUS: draft resolution for Google categories and implement solution for hooked modules
+	 *	@throws		DOMException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function feed(): void
 	{
@@ -213,6 +230,10 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function order(): void
 	{
 		$request	= $this->env->getRequest();
@@ -228,6 +249,12 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->restart( $url );
 	}
 
+	/**
+	 *	@param		string|NULL		$categoryId
+	 *	@return		void
+	 *	@throws		DOMException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function rss( ?string $categoryId = NULL ): void
 	{
 		/** @var Dictionary $options */
@@ -298,7 +325,12 @@ class Controller_Catalog_Bookstore extends Controller
 		exit;
 	}
 
-	public function search( $page = 0 ): void
+	/**
+	 *	@param		integer		$page
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function search( int $page = 0 ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -436,6 +468,11 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
+	/**
+	 *	@param		string|NULL $tagId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function tag( string $tagId = NULL ): void
 	{
 		if( !$tagId )
@@ -450,6 +487,10 @@ class Controller_Catalog_Bookstore extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog_Bookstore( $this->env );

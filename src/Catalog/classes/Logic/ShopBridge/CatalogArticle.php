@@ -1,4 +1,7 @@
 <?php
+
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
+
 class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 {
 	/**	@var	Logic_Catalog		$logic */
@@ -8,6 +11,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	public float $taxPercent;
 	public float $taxIncluded;
 
+	/**
+	 *	@param		string		$articleId
+	 *	@param		int			$change
+	 *	@return		int
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function changeQuantity( string $articleId, int $change ): int
 	{
 		return $this->logic->changeQuantity( $articleId, $change );
@@ -19,8 +28,9 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		string		$articleId		ID of article
 	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function check( string $articleId, bool $strict = TRUE )
+	public function check( string $articleId, bool $strict = TRUE ): object|FALSE
 	{
 		$article	= $this->logic->getArticle( $articleId );
 		if( $article )
@@ -36,6 +46,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@param		integer		$quantity		Amount of articles
 	 *	@return		object
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( $articleId, int $quantity = 1 ): object
 	{
@@ -76,6 +87,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getDescription( $articleId ): string
 	{
@@ -88,12 +100,13 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns link to article description.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		string		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getLink( $articleId ): string
+	public function getLink( string $articleId ): string
 	{
-		return $this->logic->getArticleUri( (int) $articleId );
+		return $this->logic->getArticleUri( $articleId );
 	}
 
 	/**
@@ -102,6 +115,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@param		boolean		$absolute
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPicture( $articleId, bool $absolute = FALSE ): string
 	{
@@ -121,6 +135,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get price for
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPrice( $articleId, int $amount = 1 ): float
 	{
@@ -134,6 +149,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get tax for
 	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTax( $articleId, int $amount = 1 ): float
 	{
@@ -149,6 +165,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		integer		$articleId		ID of article
 	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTitle( $articleId ): string
 	{
@@ -160,7 +177,8 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		string		$articleId		ID of article
 	 *	@param		integer		$amount			Amount to articles to get weight for
-	 *	@return		integer
+	 *	@return		float
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getWeight( string $articleId, int $amount = 1 ): float
 	{
