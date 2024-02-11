@@ -1,5 +1,9 @@
 <?php
 
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+
 $panelFilter	= $view->loadTemplateFile( 'manage/project/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/project/index.list.php' );
 

@@ -1,6 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $project */
+/** @var array<object> $projectUsers */
+/** @var bool $canEdit */
+/** @var bool $canRemove */
+/** @var bool $isDefault */
 
 //print_m( $project );die;
 
@@ -33,7 +43,7 @@ if( isset( $projectCompanies ) ){
 	$optCompany	= [];
 	foreach( $projectCompanies as $company )
 		$optCompany[$company->companyId]	= $company->title;
-	$optCompany	= HtmlElements::Options( $optCompany, $projectId );
+	$optCompany	= HtmlElements::Options( $optCompany, $project->projectId );
 }
 
 $optCreatorId	= [];
@@ -83,6 +93,8 @@ $buttonDefault	= HtmlTag::create( 'a', $iconDefault.'&nbsp;'.$w->buttonDefault, 
 	'disabled'	=> $isDefault ? 'disabled' : NULL,
 ] );
 
+/** @noinspection HtmlDeprecatedTag */
+/** @noinspection XmlDeprecatedElement */
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>

@@ -18,7 +18,12 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 		return $this;
 	}
 
-	protected function collectFacts( $project ): View_Helper_Mail_Facts
+	/**
+	 *	@param		object		$project
+	 *	@return		View_Helper_Mail_Facts
+	 *	@throws		ReflectionException
+	 */
+	protected function collectFacts( object $project ): View_Helper_Mail_Facts
 	{
 		$view		= new View( $this->env );
 		$logic		= Logic_Project::getInstance( $this->env );

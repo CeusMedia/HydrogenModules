@@ -33,7 +33,7 @@ class Model_Project extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function getUserProjects( $userId, array $conditions = [], array $orders = [] ): array
+	public function getUserProjects( string $userId, array $conditions = [], array $orders = [] ): array
 	{
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
@@ -46,7 +46,7 @@ class Model_Project extends Model
 		if( !$projectIds )
 			return [];
 		$conditions['projectId']	= $projectIds;
-		$orders		= $orders ? $orders : ['title' => 'ASC'];
+		$orders		= $orders ?: ['title' => 'ASC'];
 		$projects	= [];
 		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
 			$project->isDefault = $defaultProject == $project->projectId;
@@ -65,7 +65,7 @@ class Model_Project extends Model
 		if( !$userIds )
 			return [];
 		$conditions['userId']	= $userIds;
-		$orders		= $orders ? $orders : [/*'roleId' => 'ASC', */'username' => 'ASC'];
+		$orders		= $orders ?: [/*'roleId' => 'ASC', */'username' => 'ASC'];
 		$users		= [];
 		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
 			unset( $user->password );

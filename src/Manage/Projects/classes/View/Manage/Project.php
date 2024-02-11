@@ -2,17 +2,29 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Project extends View{
+class View_Manage_Project extends View
+{
+	public function add()
+	{
+	}
 
-	public function add(){}
+	public function edit()
+	{
+	}
 
-	public function edit(){}
+	public function index()
+	{
+	}
 
-	public function index(){}
+	public function remove()
+	{
+	}
 
-	public function remove(){}
+	public function setDefault()
+	{
+	}
 
-	public function setDefault(){}
-
-	public function view(){}
+	public function view()
+	{
+	}
 }

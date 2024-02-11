@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var array<object> $users */
+
 $w			= (object) $words['filter'];
 
 $isFiltered	= count( $filterStatus ) || count( $filterPriority ) || count( $filterUser ) || $filterId || $filterQuery;

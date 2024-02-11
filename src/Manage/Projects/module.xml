@@ -2,12 +2,12 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
 	<log version="0.3">Refactored filter, index and forms.</log>
-	<log version="0.3.1">Added support for code mirros.</log>
+	<log version="0.3.1">Added support for code mirrors.</log>
 	<log version="0.3.2">Adjusted CSS definitions.</log>
 	<log version="0.3.3">Added hook to update project modification timestamp.</log>
 	<log version="0.3.4">Added priority attribute and filter.</log>
@@ -17,7 +17,7 @@
 	<log version="0.3.8">Let user create a project if none available, yet.</log>
 	<log version="0.3.9">Add second add button in list.</log>
 	<log version="0.4">Add relation to module UI:Helper:TimePhraser.</log>
-	<log version="0.4.1">Aovid removal of last project user.</log>
+	<log version="0.4.1">Avoid removal of last project user.</log>
 	<log version="0.4.2">Extracted more locales from templates.</log>
 	<log version="0.4.3">Improved code syntax of controller and templates.</log>
 	<log version="0.4.4">Check project membership in controller.</log>
@@ -39,7 +39,7 @@
 	<log version="0.6.3">Add new logic method getProjectsUsers.</log>
 	<log version="0.6.4">Improve performance by using less database requests.</log>
 	<log version="0.6.5">Rework support for hook Project::onListRelations.</log>
-	<log version="0.6.6">Make project creator changable.</log>
+	<log version="0.6.6">Make project creator changeable.</log>
 	<log version="0.6.7">Support hook Project::onRemove.</log>
 	<log version="0.6.8">Redesign projects table.</log>
 	<log version="0.6.9">Use new mail template support.</log>
@@ -47,10 +47,11 @@
 	<log version="0.7.1">Extract hooks from controller to own hook class.</log>
 	<log version="0.7.2">Migrate logic class to extend new framework logic class.</log>
 	<log version="0.7.3">Upgrade classes.</log>
+	<log version="0.7.4">Code update.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Project.php</class>
 		<class>Hook/Manage/Project.php</class>

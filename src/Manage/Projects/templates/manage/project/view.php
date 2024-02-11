@@ -3,6 +3,12 @@
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var object $project */
 
 $helperIndicator	= new HtmlIndicator();
 $helperTime			= new View_Helper_TimePhraser( $env );
@@ -16,7 +22,8 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
 }
 
-function renderUserBlock( Environment $env, $user ){
+function renderUserBlock( Environment $env, object $user ): string
+{
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );
@@ -30,7 +37,8 @@ function renderUserBlock( Environment $env, $user ){
 	return HtmlTag::create( 'div', $link.$sub );
 }
 
-function renderUserInline( Environment $env, $user ){
+function renderUserInline( Environment $env, object $user ): string
+{
 	if( $env->getModules()->has( 'Members' ) ){
 		$helper	= new View_Helper_Member( $env );
 		$helper->setUser( $user );

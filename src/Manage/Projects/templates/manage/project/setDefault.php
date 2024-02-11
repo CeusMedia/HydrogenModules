@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
 
+/** @var View $view */
+/** @var array $words */
+/** @var array $projects */
+/** @var ?string $from */
 
 $optProjectId	= [];
 foreach( $projects as $project )
