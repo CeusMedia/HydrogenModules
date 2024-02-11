@@ -16,6 +16,10 @@ class Controller_Admin_Mail_Attachment extends Controller
 	protected Logic_Mail $logicMail;
 	protected Logic_Upload $logicUpload;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -69,13 +73,13 @@ class Controller_Admin_Mail_Attachment extends Controller
 //		$this->restart( NULL, TRUE );
 	}
 
-	public function download( $fileName )
+	public function download( string $fileName ): void
 	{
 		$fileName	= urldecode( $fileName );
 		HttpDownload::sendFile( $this->attachmentPath.$fileName, $fileName );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$session	= $this->env->getSession();
 		$prefix		= 'filter_admin_mail_attachment_';
@@ -100,15 +104,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function getMimeTypeOfFile( $filePath )
-	{
-		if( !file_exists( $this->attachmentPath.$filePath ) )
-			throw new RuntimeException( 'File "'.$filePath.'" is not existing is attachments folder.' );
-		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
-		return finfo_file( $info, $this->attachmentPath.$filePath );
-	}
-
-	public function index( $page = NULL )
+	public function index( $page = NULL ): void
 	{
 		$session	= $this->env->getSession();
 		$prefix		= 'filter_admin_mail_attachment_';
@@ -121,13 +117,13 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->addData( 'filterDirection', $filterDirection = $session->get( $prefix.'direction' ) );
 
 		$conditions	= [];
-		if( strlen( trim( $filterStatus ) ) )
+		if( strlen( trim( $filterStatus ?? '' ) ) )
 			$conditions['status']		= $filterStatus;
-		if( strlen( trim( $filterClass ) ) )
+		if( strlen( trim( $filterClass ?? '' ) ) )
 			$conditions['className']	= $filterClass;
-		if( strlen( trim( $filterFile ) ) )
+		if( strlen( trim( $filterFile ?? '' ) ) )
 			$conditions['filename']		= $filterFile;
-		if( strlen( trim( $filterLanguage ) ) )
+		if( strlen( trim( $filterLanguage ?? '' ) ) )
 			$conditions['language']		= $filterLanguage;
 
 		$orders	= [];
@@ -142,14 +138,20 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->addData( 'attachments', $this->model->getAll( $conditions, $orders, $limits ) );
 	}
 
-	public function setStatus( $attachmentId, $status )
+	/**
+	 *	@param		string		$attachmentId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( string $attachmentId, $status ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
 			$this->messenger->noteError( $words->errorIdInvalid );
 		else{
-			$this->model->edit( $attachmentId, array( 'status' => (int) $status ) );
+			$this->model->edit( $attachmentId, ['status' => (int) $status] );
 			$this->messenger->noteSuccess(
 				(int) $status ? $words->successEnabled : $words->successDisabled,
 				htmlentities( $attachment->filename, ENT_QUOTES, 'UTF-8' ),
@@ -159,7 +161,12 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function unregister( $attachmentId )
+	/**
+	 *	@param		string		$attachmentId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unregister( string $attachmentId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$attachment	= $this->model->get( $attachmentId );
@@ -185,6 +192,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
 		$pathApp			= '';
@@ -203,6 +211,21 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->addData( 'languages', $this->languages );
 	}
 
+	/**
+	 *	@param		string		$filePath
+	 *	@return		bool|string
+	 */
+	protected function getMimeTypeOfFile( string $filePath ): bool|string
+	{
+		if( !file_exists( $this->attachmentPath.$filePath ) )
+			throw new RuntimeException( 'File "'.$filePath.'" is not existing is attachments folder.' );
+		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
+		return finfo_file( $info, $this->attachmentPath.$filePath );
+	}
+
+	/**
+	 *	@return		array<string,object>
+	 */
 	protected function listFiles(): array
 	{
 		$list	= [];

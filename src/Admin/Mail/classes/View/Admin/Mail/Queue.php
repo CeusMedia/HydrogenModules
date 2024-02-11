@@ -127,7 +127,7 @@ class View_Admin_Mail_Queue extends View
 			$value	= preg_replace( '/_/', ':', $value );
 			$value	= HtmlTag::create( 'abbr', $value, ['title' => $original] );
 		}
-		else if( preg_match( '/At$/', $key ) ){
+		else if( str_ends_with( $key, 'At' ) ){
 			if( !( (int) $value ) )
 				return '';
 			$helper	= new View_Helper_TimePhraser( $this->env );
@@ -135,11 +135,11 @@ class View_Admin_Mail_Queue extends View
 			$phrase	= $helper->convert( $value, TRUE, 'vor ' );
 			$value	= $phrase.'&nbsp;<small class="muted">('.$date.')</small>';
 		}
-		else if( preg_match( '/Id$/', $key ) ){
+		else if( str_ends_with( $key, 'Id' ) ){
 			if( (int) $value === 0 )
 				return '';
 		}
-		else if( preg_match( '/Address/', $key ) && strlen( $value ) ){
+		else if( str_contains( $key, 'Address' ) && strlen( $value ) ){
 			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-envelope'] );
 			$link	= HtmlTag::create( 'a', $value, ['href' => 'mailto:'.$value] );
 			$value	= $icon.'&nbsp;'.$link;

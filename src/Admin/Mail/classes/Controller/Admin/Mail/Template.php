@@ -13,6 +13,10 @@ class Controller_Admin_Mail_Template extends Controller
 	protected string $appPath;
 	protected string $appUrl;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -52,7 +56,12 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'template', $data );
 	}
 
-	public function copy( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function copy( string $templateId ): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$title	= trim( $this->request->get( 'title' ) );
@@ -80,11 +89,11 @@ class Controller_Admin_Mail_Template extends Controller
 	}
 
 	/**
-	 *	@param		$templateId
+	 *	@param		string $templateId
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( $templateId ): void
+	public function edit( string $templateId ): void
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
@@ -153,7 +162,6 @@ class Controller_Admin_Mail_Template extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
@@ -168,7 +176,7 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'moduleTemplateId', $moduleTemplateId );
 	}
 
-	public function preview( $templateId, $mode = NULL )
+	public function preview( string $templateId, $mode = NULL ): void
 	{
 		try{
 			$template	= $this->checkTemplate( $templateId );
@@ -208,7 +216,12 @@ class Controller_Admin_Mail_Template extends Controller
 		exit;
 	}
 
-	public function remove( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( string $templateId ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $template->status == Model_Mail_Template::STATUS_ACTIVE ){
@@ -220,7 +233,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeImage( $templateId, $pathBase64 ): void
+	/**
+	 *	@param		string 		$templateId
+	 *	@param		string		$pathBase64
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeImage( string $templateId, string $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$images		= json_decode( $template->images, TRUE );
@@ -234,7 +253,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function removeStyle( $templateId, $pathBase64 ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@param		string		$pathBase64
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeStyle( string $templateId, string $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$styles		= json_decode( $template->styles, TRUE );
@@ -248,7 +273,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function setStatus( $templateId, $status ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( string $templateId, $status ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $status == Model_Mail_Template::STATUS_ACTIVE ){
@@ -274,11 +305,11 @@ class Controller_Admin_Mail_Template extends Controller
 	}
 
 	/**
-	 *	@param		$templateId
+	 *	@param		string		$templateId
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function test( $templateId ): void
+	public function test( string $templateId ): void
 	{
 		$email		= trim( $this->request->get( 'email' ) );
 		if( !strlen( trim( $email ) ) ){
@@ -320,9 +351,10 @@ class Controller_Admin_Mail_Template extends Controller
 	/**
 	 *	@param		string		$templateId
 	 *	@param		bool		$strict
-	 *	@return		object|false
+	 *	@return		object|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	protected function checkTemplate( string $templateId, bool $strict = TRUE ): object|FALSE
 	{
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )

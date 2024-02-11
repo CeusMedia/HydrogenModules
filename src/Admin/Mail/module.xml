@@ -3,11 +3,11 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>1.0</version>
+	<version>1.0.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
-	<log version="0.3.1">Added auto detection of MIME types.</log>
+	<log version="0.3.1">Added auto-detection of MIME types.</log>
 	<log version="0.3.2">Extracted all labels of attachment management to language file.</log>
 	<log version="0.3.3">Improved error handling of attachment management by more information.</log>
 	<log version="0.3.4">Secured error messages of attachment management.</log>
@@ -26,7 +26,7 @@
 	<log version="0.4.8">Finish filter.</log>
 	<log version="0.5">Add tabs and separate views.</log>
 	<log version="0.5.1">Use module Resource:Upload.</log>
-	<log version="0.5.2">Use helper for Bootstap tabs.</log>
+	<log version="0.5.2">Use helper for Bootstrap tabs.</log>
 	<log version="0.6">Ready to use CeusMedia/Mail from GitHub.</log>
 	<log version="0.6.1">Add pagination.</log>
 	<log version="0.6.2">Add button to cancel unsent mail.</log>
@@ -37,8 +37,8 @@
 	<log version="0.6.7">Add prototype of dashboard support.</log>
 	<log version="0.6.8">Use frontend logic only of module Resource:Frontend is installed.</log>
 	<log version="0.6.9">Tolerate lack of frontend mail classes.</log>
-	<log version="0.7">Upgrade support for new dasboard module.</log>
-	<log version="0.7.1">Remove support for old dasboard module.</log>
+	<log version="0.7">Upgrade support for new dashboard module.</log>
+	<log version="0.7.1">Remove support for old dashboard module.</log>
 	<log version="0.7.2">Support new mail model statuses.</log>
 	<log version="0.7.3">Support embedded images in HTML mail view.</log>
 	<log version="0.7.4">Support mail templates.</log>
@@ -51,7 +51,7 @@
 	<log version="0.8.3">Add locales for mail facts.</log>
 	<log version="0.8.4">Add default contents for new templates.</log>
 	<log version="0.8.5">Add import and export for mail templates.</log>
-	<log version="0.8.6">Add template preview panels and make status changable.</log>
+	<log version="0.8.6">Add template preview panels and make status changeable.</log>
 	<log version="0.8.7">Extend mail queue filters by subject and date range.</log>
 	<log version="0.8.8">Improve template preview handling.</log>
 	<log version="0.8.9">Add removal of mails in queue.</log>
@@ -66,9 +66,10 @@
 	<log version="0.9.8">Extract hooks to own classes.</log>
 	<log version="0.9.9">Add bulk actions in queue index.</log>
 	<log version="1.0">Support attachment folders.</log>
+	<log version="1.0.1">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Admin/Mail/Attachment.php</class>
 		<class>Controller/Admin/Mail/Attachment/Folder.php</class>

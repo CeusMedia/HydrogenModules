@@ -6,7 +6,15 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 {
 	protected Model_Mail_Template $modelTemplate;
 
-	public function render( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 *	@throws		\CeusMedia\Common\Exception\Data\Ambiguous
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function render( string $templateId ): void
 	{
 		$this->checkTemplate( $templateId );
 		$mail		= new Mail_Test( $this->env, ['mailTemplateId' => $templateId] );
@@ -15,7 +23,13 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 		$this->respondData( ['html' => $helper->render()] );
 	}
 
-	public function saveCss( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function saveCss( string $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$this->modelTemplate->edit( $templateId, [
@@ -25,7 +39,13 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 		$this->respondData( TRUE );
 	}
 
-	public function saveHtml( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function saveHtml( string $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$this->modelTemplate->edit( $templateId, [
@@ -35,7 +55,13 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 		$this->respondData( TRUE );
 	}
 
-	public function savePlain( $templateId ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function savePlain( string $templateId ): void
 	{
 		$content	= $this->env->getRequest()->get( 'content' );
 		$this->modelTemplate->edit( $templateId, [
@@ -54,7 +80,6 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -65,8 +90,9 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@param		string		$templateId
 	 *	@param		bool		$strict
 	 *	@return		object|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	protected function checkTemplate( string $templateId, bool $strict = TRUE ): object|FALSE
 	{
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
