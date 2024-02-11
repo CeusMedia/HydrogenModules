@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Web $env */
 /** @var View $view */
 /** @var array<array<string,string>> $words */
+/** @var object $timer */
 
 //$helper	= new View_Helper_Work_Time_Timer( $env );
 //print_m( $helper->getRegisteredModules() );die;

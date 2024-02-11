@@ -1,5 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var array $words */
+/** @var View $view */
+/** @var object $project */
+/** @var array $projects */
+/** @var array $relatedTags */
+/** @var object $note */
+/** @var object $project */
 
 $w		= (object) $words['edit'];
 
@@ -10,7 +19,7 @@ $iconAdd	= '<i class="fa fa-fw fa-plus"></i>';
 $iconRemove	= '<i class="fa fa-fw fa-remove"></i>';
 
 //  --  TAG MANAGEMENT  --  //
-$listTags	= "";
+$listTags	= '';
 if( $note->tags ){
 	$list	= [];
 	foreach( $note->tags as $tag ){

@@ -10,6 +10,7 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{

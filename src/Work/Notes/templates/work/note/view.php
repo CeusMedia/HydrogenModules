@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var View $view */
+/** @var object $note */
 
 $helper		= new View_Helper_TimePhraser( $this->env );
 
@@ -39,7 +46,7 @@ if( count( $note->links ) ){
 			HtmlTag::create( 'td', $label.$link, ['class' => 'autocut'] )
 		) );
 	}
-	$thead	= HtmlTag::create( 'thead', $rows, [] );
+	$thead	= HtmlTag::create( 'thead', $rows );
 	$table	= HtmlTag::create( 'table', [$thead], ['class' => 'table table-striped table-condensed table-fixed'] );
 	$panelLinks	= HtmlTag::create( 'div', array(
 		HtmlTag::create( 'h3', 'Links' ),
@@ -85,27 +92,25 @@ if( count( $note->tags ) ){
 }
 
 #$converter	= new View_Helper_ContentConverter();
-switch( $note->format ){
-	case 'markdown':
-		$content	= HtmlTag::create( 'div', $note->content, ['id' => 'content-format-markdown', 'style' => "display: none"] );
-		break;
-	case 'plaintext':
-		$content	= nl2br( $note->content );
-		break;
-	case 'content':
-	default:
-		$content	= View_Helper_ContentConverter::render( $env, $note->content );
-}
+$content = match( $note->format ){
+	'markdown'	=> HtmlTag::create( 'div', $note->content, [
+		'id'		=> 'content-format-markdown',
+		'style'		=> "display: none"
+	]),
+	'plaintext'	=> nl2br( $note->content ),
+	default		=> View_Helper_ContentConverter::render( $env, $note->content ),
+};
 
-function getShortHash( $noteId ){
+function getShortHash( string $noteId ): string
+{
 	$hash	= base64_encode( $noteId );
-	$hash	= str_replace( '=', '', $hash );
-	return $hash;
+	return str_replace( '=', '', $hash );
 }
 
 $shortHash	= getShortHash( $note->noteId );
 #$config->set( 'app.base.url', 'kb.ceusmedia.de/');
-$shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
+#$shortUrl	= $config->get( 'app.base.url' ).'?'.$shortHash;
+$shortUrl	= $env->getBaseUrl().'?'.$shortHash;
 
 
 $panelInfo	= '
@@ -157,9 +162,9 @@ return '
 </div>
 <script>
 $(document).ready(function(){
-	var markdown = $("#content-format-markdown");
+	let markdown = $("#content-format-markdown");
 	if(markdown.length){
-		var converter = new Markdown.Converter();
+		let converter = new Markdown.Converter();
 		markdown.html(converter.makeHtml(markdown.html())).show();
 	}
 });

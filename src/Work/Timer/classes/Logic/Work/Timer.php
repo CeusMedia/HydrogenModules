@@ -14,6 +14,7 @@ class Logic_Work_Timer
 	/**
 	 *	@param		string		$timerId
 	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( string $timerId ): ?object
 	{
@@ -21,12 +22,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		array|string	$conditions
-	 *	@param		array			$orders
-	 *	@param		array			$limits
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
 	 *	@return		array
 	 */
-	public function index( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function index( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelTimer->getAll( $conditions, $orders, $limits );
 	}
@@ -34,7 +35,6 @@ class Logic_Work_Timer
 	/**
 	 *	@param		Environment		$env
 	 *	@return		static
-	 *	@throws		ReflectionException
 	 */
 	public static function getInstance( Environment $env ): self
 	{
@@ -47,6 +47,7 @@ class Logic_Work_Timer
 	 *	@param		string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function pause( string $timerId ): void
 	{
@@ -66,6 +67,7 @@ class Logic_Work_Timer
 	 *	@param		string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function start( string $timerId ): void
 	{
@@ -87,6 +89,7 @@ class Logic_Work_Timer
 	 *	@param		string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function stop( string $timerId ): void
 	{
@@ -132,7 +135,6 @@ class Logic_Work_Timer
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	protected function __construct( Environment $env )
 	{
@@ -146,6 +148,7 @@ class Logic_Work_Timer
 	 *	@param		string		$timerId
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkTimerId( string $timerId, bool $strict = TRUE ): ?object
 	{

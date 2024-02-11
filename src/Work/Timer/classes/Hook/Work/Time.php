@@ -48,7 +48,7 @@ class Hook_Work_Time extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onProjectRemove(): void
 	{

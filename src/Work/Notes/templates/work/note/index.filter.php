@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var array $words */
+/** @var View $view */
+/** @var object $project */
+/** @var array $projects */
 
 $w		= (object) $words['filter'];
 

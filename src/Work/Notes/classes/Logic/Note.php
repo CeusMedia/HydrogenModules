@@ -18,6 +18,14 @@ class Logic_Note extends Logic
 	protected array $userNoteIds	= [];
 	protected array $userProjects	= [];
 
+	/**
+	 * @param string $linkId
+	 * @param string $noteId
+	 * @param string|null $title
+	 * @param bool $strict
+	 * @return string
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addLinkToNote( string $linkId, string $noteId, ?string $title = NULL, bool $strict = TRUE ): string
 	{
 		$conditions	= ['noteId' => $noteId, 'linkId' => $linkId, 'title' => $title];
@@ -36,6 +44,14 @@ class Logic_Note extends Logic
 		return $this->modelNoteLink->add( $data );
 	}
 
+	/**
+	 * @param string $tagId
+	 * @param string $noteId
+	 * @param int $status
+	 * @param bool $strict
+	 * @return string
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addTagToNote( string $tagId, string $noteId, int $status = Model_Note_Tag::STATUS_NORMAL, bool $strict = TRUE ): string
 	{
 		$indices	= [
@@ -71,17 +87,22 @@ class Logic_Note extends Logic
 		return $this->modelNoteTag->add( $data );
 	}
 
-	public function ignoreTagOnNote( string $tagId, string $noteId, bool $strict = TRUE ): string
-	{
-		return $this->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_DISABLED, $strict );
-	}
-
+	/**
+	 * @param $noteId
+	 * @return void
+	 */
 	public function countNoteView( $noteId ): void
 	{
 		$query	= 'UPDATE '.$this->prefix.'notes SET numberViews=numberViews+1 WHERE noteId='.(int)$noteId;
 		$this->env->getDatabase()->query( $query );
 	}
 
+	/**
+	 * @param string $url
+	 * @param bool $strict
+	 * @return string
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function createLink( string $url, bool $strict = TRUE ): string
 	{
 		$existingLink		= $this->modelLink->getByIndex( 'url', $url );
@@ -93,6 +114,12 @@ class Logic_Note extends Logic
 		return $this->modelLink->add( array( 'url' => $url, 'createdAt' => time() ) );
 	}
 
+	/**
+	 * @param string $content
+	 * @param bool $strict
+	 * @return string
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function createTag( string $content, bool $strict = TRUE ): string
 	{
 		$existingTag		= $this->modelTag->getByIndex( 'content', $content );
@@ -104,6 +131,11 @@ class Logic_Note extends Logic
 		return $this->modelTag->add( array( 'content' => $content, 'createdAt' => time() ) );
 	}
 
+	/**
+	 * @param $noteId
+	 * @return object|null
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getNoteData( $noteId ): ?object
 	{
 		$note		= $this->modelNote->get( $noteId );
@@ -169,6 +201,11 @@ class Logic_Note extends Logic
 		return $noteIds;
 	}
 
+	/**
+	 * @param string $noteId
+	 * @return array
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getRelatedTags( string $noteId ): array
 	{
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
@@ -214,6 +251,10 @@ class Logic_Note extends Logic
 		return $relatedTagIds;
 	}
 
+	/**
+	 * @param string $noteId
+	 * @return array
+	 */
 	public function getRelatedNoteIds( string $noteId ): array
 	{
 		$relatedNoteIds	= [];
@@ -254,6 +295,12 @@ class Logic_Note extends Logic
 		return $noteIds;
 	}
 */
+
+	/**
+	 * @param array $noteIds
+	 * @param array $skipTagIds
+	 * @return array
+	 */
 	public function getRankedTagIdsFromNoteIds( array $noteIds, array $skipTagIds = [] ): array
 	{
 		$tagIds		= [];
@@ -275,7 +322,7 @@ class Logic_Note extends Logic
 	/**
 	 *	@todo finish implementation or remove
 	 */
-	public function getRelatedTagsFromTags( array $tagIds = [] )
+	public function getRelatedTagsFromTags( array $tagIds = [] ): void
 	{
 		if( !is_array( $tagIds ) )
 			throw new InvalidArgumentException( 'Tag list must be an array' );
@@ -283,6 +330,13 @@ class Logic_Note extends Logic
 			throw new InvalidArgumentException( 'Tag list cannot be empty' );
 	}
 
+	/**
+	 * @param array $conditions
+	 * @param array $orders
+	 * @param array $limits
+	 * @return array
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getTopNotes( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$clock		= new Clock();
@@ -308,11 +362,18 @@ class Logic_Note extends Logic
 		];
 	}
 
+	/**
+	 * @param int $limit
+	 * @param int $offset
+	 * @param string|null $projectId
+	 * @param array $notTagIds
+	 * @return array
+	 */
 	public function getTopTags( int $limit = 10, int $offset = 0, ?string $projectId = NULL, array $notTagIds = [] ): array
 	{
 		$tags		= [];
 		if( $notTagIds ){
-			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds, !TRUE );
+			$noteIds	= $this->getNoteIdsFromTagIds( $notTagIds );
 			if( $this->userId && $this->userProjects )
 				$noteIds	= array_intersect( $noteIds, $this->userNoteIds );
 			if( $noteIds ){
@@ -320,8 +381,8 @@ class Logic_Note extends Logic
 				if( $tagIds ){
 					$tags		= $this->modelTag->getAllByIndices( ['tagId' => array_keys( $tagIds )] );
 					$tags		= array_slice( $tags, $offset, $limit, TRUE );
-					foreach( $tags as $nr => $tag )
-						$tags[$nr]->relations	= $tagIds[$tag->tagId];
+					foreach( $tags as $tag )
+						$tag->relations	= $tagIds[$tag->tagId];
 				}
 			}
 			return $tags;
@@ -342,7 +403,7 @@ class Logic_Note extends Logic
 		$tagIds		= array_slice( $tagIds, $offset, $limit, TRUE );
 		if( $tagIds ){
 			$tags		= $this->modelTag->getAllByIndices( ['tagId' => array_keys( $tagIds )] );
-			foreach( $tags as $nr => $tag ){
+			foreach( $tags as $tag ){
 				$tag->relations	= $tagIds[$tag->tagId];
 				$tagIds[$tag->tagId]	= $tag;
 			}
@@ -350,7 +411,24 @@ class Logic_Note extends Logic
 		return array_values( $tagIds );
 	}
 
-	public function populateNote( object $note ): object
+	/**
+	 * @param string $tagId
+	 * @param string $noteId
+	 * @param bool $strict
+	 * @return string
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function ignoreTagOnNote( string $tagId, string $noteId, bool $strict = TRUE ): string
+	{
+		return $this->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_DISABLED, $strict );
+	}
+
+	/**
+	 * @param object $note
+	 * @return object
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function populateNote(object $note ): object
 	{
 		$note->links	= [];
 		$note->tags		= [];
@@ -373,6 +451,11 @@ class Logic_Note extends Logic
 		return $note;
 	}
 
+	/**
+	 * @param string $noteId
+	 * @return bool
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeNote( string $noteId ): bool
 	{
 		$relatedTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );					//  get tag relations
@@ -390,6 +473,11 @@ class Logic_Note extends Logic
 		return $this->modelNote->remove( $noteId );														//  remote note
 	}
 
+	/**
+	 * @param string $noteLinkId
+	 * @return bool
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeNoteLink( string $noteLinkId ): bool
 	{
 		if( !$this->modelNoteLink->get( $noteLinkId ) )
@@ -398,6 +486,12 @@ class Logic_Note extends Logic
 		return TRUE;
 	}
 
+	/**
+	 * @param string $linkId
+	 * @param string $noteId
+	 * @return bool
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeLinkFromNote( string $linkId, string $noteId ): bool
 	{
 		$indices		= ['noteId' => $noteId, 'linkId' => $linkId];						//  focus on note and link
@@ -408,6 +502,12 @@ class Logic_Note extends Logic
 		return FALSE;
 	}
 
+	/**
+	 * @param string $tagId
+	 * @param string $noteId
+	 * @return bool
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeTagFromNote( string $tagId, string $noteId ): bool
 	{
 		$indices		= ['noteId' => $noteId, 'tagId' => $tagId];							//  focus on note and tag
@@ -419,8 +519,9 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 *	@todo		use of GREATEST only works for MySQL - improve this!
-	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 * @see        http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
+	 * @todo        use of GREATEST only works for MySQL - improve this!
 	 */
 	public function searchNotes( string $query, array $conditions, array $orders = [], array $limits = [] ): array
 	{
@@ -437,7 +538,7 @@ class Logic_Note extends Logic
 		foreach( $conditions as $column => $value ){
 			if( is_array( $value ) )
 				$cond[]	= "n.".$column.' IN ('.join( ',', $value ).')';
-			else if( preg_match( '/^%/', $value ) )
+			else if( str_starts_with( $value, '%' ) )
 				$cond[]	= "n.".$column." LIKE '".$value."'";
 			else if( preg_match( $pattern, $value ) ){
 				$matches	= [];
@@ -495,7 +596,14 @@ ORDER BY
 		];
 	}
 
-	public function setContext( string $userId, string $roleId, string $projectId ): self
+	/**
+	 * @param string $userId
+	 * @param string $roleId
+	 * @param string $projectId
+	 * @return $this
+	 * @throws ReflectionException
+	 */
+	public function setContext(string $userId, string $roleId, string $projectId ): self
 	{
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;
@@ -529,10 +637,18 @@ ORDER BY
 		$this->prefix			= $this->env->getDatabase()->getPrefix();
 	}
 
+	/**
+	 * @param array $conditions
+	 * @return array
+	 * @throws DomainException if no resource is registered by given key
+	 */
 	protected function sharpenConditions( array $conditions ): array
 	{
-		if( $this->env->has( 'acl' ) )
-			if( $this->env->get( 'acl' )->hasFullAccess( $this->roleId ) )
+		/** @noinspection PhpUnhandledExceptionInspection */
+		$acl	= $this->env->get( 'acl', FALSE );
+		if( NULL !== $acl )
+			/** @noinspection PhpUnhandledExceptionInspection */
+			if( $acl->hasFullAccess( $this->roleId ) )
 				return $conditions;
 
 //		if( !array_key_exists( 'userId', $conditions ) || $conditions['userId'] != $this->userId )

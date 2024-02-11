@@ -28,7 +28,7 @@ class Controller_Work_Time_Archive extends Controller
 		$this->addData( 'projectMap', $this->projectMap );
 	}*/
 
-	public function edit( $timerId )
+	public function edit( string $timerId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
@@ -38,7 +38,7 @@ class Controller_Work_Time_Archive extends Controller
 		$this->addData( 'projectMap', $this->projectMap );
 	}
 
-	public function filter()
+	public function filter(): void
 	{
 		$this->session->set( 'filter_work_timer_activity', trim( $this->request->get( 'activity' ) ) );
 		$this->session->set( 'filter_work_timer_projectId', $this->request->get( 'projectId' ) );
@@ -92,6 +92,7 @@ class Controller_Work_Time_Archive extends Controller
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
 //		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );

@@ -3,10 +3,10 @@
 	<title>Work: Timer</title>
 	<description><![CDATA[Time tracking extension for Work:Missions.]]></description>
 	<category>Work</category>
-	<version>0.6.5</version>
+	<version>0.6.6</version>
 	<log version="0.1">Initial prototype of module.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
-	<log version="0.2.2">Remove releation to Resource_Library_cmModules.</log>
+	<log version="0.2.2">Remove relation to Resource_Library_cmModules.</log>
 	<log version="0.3">Finish basic idea.</log>
 	<log version="0.3.1">Move filter and list to archive.</log>
 	<log version="0.3.2">Add tabs.</log>
@@ -32,8 +32,8 @@
 	<log version="0.5.3">Support hook Dashboard::renderPanels.</log>
 	<log version="0.5.4">Load script str_pad automatically.</log>
 	<log version="0.5.5">Add dashboard panels.</log>
-	<log version="0.5.6">Upgrade support for new dasboard module.</log>
-	<log version="0.5.7">Remove support for old dasboard module.</log>
+	<log version="0.5.6">Upgrade support for new dashboard module.</log>
+	<log version="0.5.7">Remove support for old dashboard module.</log>
 	<log version="0.5.8">Extract template parts to own template files.</log>
 	<log version="0.5.9">Add modal to assign unrelated timers.</log>
 	<log version="0.6">Upgrade short list.</log>
@@ -42,6 +42,7 @@
 	<log version="0.6.3">Extract hooks to own class.</log>
 	<log version="0.6.4">Improve code style.</log>
 	<log version="0.6.5">Extract AJAX actions to own controller class.</log>
+	<log version="0.6.6">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

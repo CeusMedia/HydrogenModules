@@ -17,7 +17,12 @@ class Controller_Work_Time extends Controller
 	protected array $projectMap;
 	protected array $modules			= [];
 
-	public function add()
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time/add' );
@@ -66,7 +71,11 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'workers', $this->logicProject->getCoworkers( $this->userId ) );
 	}
 
-	public function assign()
+	/**
+	 * @return void
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function assign(): void
 	{
 		$module		= $this->request->get( 'module' );
 		$moduleId	= $this->request->get( 'moduleId' );
@@ -94,8 +103,9 @@ class Controller_Work_Time extends Controller
 	 *	@param		string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( string $timerId )
+	public function edit( string $timerId ): void
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( !$timer ){
@@ -168,7 +178,7 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'projectUsers', $projectUsers );
 	}
 
-	public function filter()
+	public function filter(): void
 	{
 		$this->session->set( 'filter_work_timer_activityId', $this->request->get( 'activityId' ) );
 		$this->session->set( 'filter_work_timer_projectId', $this->request->get( 'projectId' ) );
@@ -176,7 +186,13 @@ class Controller_Work_Time extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = 10, $page = 0 )
+	/**
+	 * @param $limit
+	 * @param $page
+	 * @return void
+	 * @throws ReflectionException
+	 */
+	public function index( $limit = 10, $page = 0 ): void
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time' );
@@ -212,7 +228,7 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'unrelatedTimers', $unrelatedTimers );
 	}
 
-	public function pause( $timerId )
+	public function pause( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->pause( $timerId );
@@ -226,12 +242,12 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
-	public function remove( $timerId )
+	public function remove( string $timerId ): void
 	{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function start( $timerId )
+	public function start( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->start( $timerId );
@@ -245,7 +261,7 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
-	public function stop( $timerId )
+	public function stop( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->stop( $timerId );
@@ -276,6 +292,7 @@ class Controller_Work_Time extends Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 //		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

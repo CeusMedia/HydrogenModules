@@ -16,7 +16,7 @@ class Controller_Work_Time_Analysis extends Controller
 	protected array $projectMap;
 	protected string $filterPrefix		= 'filter_work_timer_analysis_';
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$setFilters	= $this->session->getAll( $this->filterPrefix );
@@ -62,7 +62,7 @@ class Controller_Work_Time_Analysis extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function index()
+	public function index(): void
 	{
 		$filterProjectIds	= $this->session->get( $this->filterPrefix.'projectIds' );
 		$filterUserIds		= $this->session->get( $this->filterPrefix.'userIds' );
@@ -189,6 +189,7 @@ class Controller_Work_Time_Analysis extends Controller
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->projectMap		= $this->logicProject->getUserProjects( $this->userId, TRUE );
 //		$this->addData( 'filterProjectId', $this->session->get( 'filter_work_timer_projectId' ) );

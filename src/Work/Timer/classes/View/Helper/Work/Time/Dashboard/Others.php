@@ -24,18 +24,18 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
 		$coworkers		= $logicProject->getCoworkers( $logicAuth->getCurrentUserId() );
-		$hasTimers		= $modelTimer->count( array(
+		$hasTimers		= $modelTimer->count( [
 			'workerId'	=> array_keys( $coworkers ),
 			'status'	=> [1],
-		) );
+		] );
 		if( !$hasTimers ){
 			$content	= '<div class="alert alert-info">Keine laufenden Aktivitäten vorhanden.</div>';
 		}
 		else{
-			$timers		= $modelTimer->getAllByIndices( array(
+			$timers		= $modelTimer->getAllByIndices( [
 				'workerId'	=> array_keys( $coworkers ),
 				'status'	=> [1],
-			), [
+			], [
 				'modifiedAt'	=> 'DESC',
 			], [10, 0] );
 			$rows	= [];
@@ -52,14 +52,14 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 				$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 					'href'	=> './manage/project/view/'.$timer->project->projectId.'?from='.$from,
 				] );
-				$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
-					'href'	=> join( array(
+				$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, [
+					'href'	=> join( [
 						$timer->relationLink,
 						substr_count( $timer->relationLink, '?' ) ? '&' : '?',
 						'from='.$from
-					) ),
-				) );
-				$rows	= HtmlTag::create( 'tr', array(
+					] ),
+				] );
+				$rows	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', '
 						<div class="autocut">'.$timer->title.'</div>
 						<div class="autocut">
@@ -71,8 +71,8 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 							<span>'.$timeNeeded.'</span> <small class="not-muted">(geplant: <span>'.$timePlanned.'</span>)</small>
 						</div>
 					',
-					array( 'class' => NULL ) ),
-				) );
+					['class' => NULL] ),
+				] );
 			}
 			$tbody	= HtmlTag::create( 'tbody', $rows );
 			$table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed table-fixed'] );

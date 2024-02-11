@@ -21,7 +21,6 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 
 	/**
 	 *	@return		string
-	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{

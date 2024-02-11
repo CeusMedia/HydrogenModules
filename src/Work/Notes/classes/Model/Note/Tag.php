@@ -4,17 +4,17 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Note_Tag extends Model
 {
-	const STATUS_DISABLED		= -1;
-	const STATUS_NORMAL			= 0;
+	const STATUS_DISABLED			= -1;
+	const STATUS_NORMAL				= 0;
 
-	const STATUSES				= [
+	const STATUSES					= [
 		self::STATUS_DISABLED,
 		self::STATUS_NORMAL,
 	];
 
-	protected string $name		= 'note_tags';
+	protected string $name			= 'note_tags';
 
-	protected array $columns	= [
+	protected array $columns		= [
 		'noteTagId',
 		'noteId',
 		'status',

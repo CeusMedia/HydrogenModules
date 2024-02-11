@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 abstract class View_Helper_Work_Time extends Abstraction
 {
-	public $from;
+	public string $from;
 
 	protected Dictionary $session;
 	protected Logic_Work_Timer $logicTimer;
@@ -18,7 +18,6 @@ abstract class View_Helper_Work_Time extends Abstraction
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -26,11 +25,12 @@ abstract class View_Helper_Work_Time extends Abstraction
 		$this->session			= $this->env->getSession();
 		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );
-		$this->from				= $this->env->getRequest()->get( '__path' );
+		$this->from				= $this->env->getRequest()->get( '__path', '' );
 		if( $this->env->getRequest()->has( 'from' ) )
 			$this->from				= $this->env->getRequest()->get( 'from' );
 	}
@@ -116,9 +116,8 @@ abstract class View_Helper_Work_Time extends Abstraction
 	 * @param		array			$statuses
 	 * @param		bool			$formatAsTime
 	 * @return		int|string
-	 * @throws		ReflectionException
 	 */
-	public static function sumTimersOfModuleId( Environment $env, string $moduleKey, string $moduleId, array $statuses = [3], bool $formatAsTime = FALSE )
+	public static function sumTimersOfModuleId( Environment $env, string $moduleKey, string $moduleId, array $statuses = [3], bool $formatAsTime = FALSE ): int|string
 	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );

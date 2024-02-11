@@ -6,6 +6,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Note extends Hook
 {
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 */
 	public function onProjectRemove(): void
 	{
 		$data		= (object) $this->payload;
@@ -17,6 +21,10 @@ class Hook_Work_Note extends Hook
 		}
 	}
 
+	/**
+	 * @return void
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onListProjectRelations(): void
 	{
 		$data		= (object) $this->payload;
@@ -71,6 +79,10 @@ class Hook_Work_Note extends Hook
 		);
 	}
 
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 */
 	public function onUserRemove(): void
 	{
 		$data		= (object) $this->payload;
@@ -84,6 +96,9 @@ class Hook_Work_Note extends Hook
 			$data->counts['Work_Notes']	= (object) ['entities' => count( $notes )];
 	}
 
+	/**
+	 * @return void
+	 */
 	public function onListUserRelations(): void
 	{
 		$data		= (object) $this->payload;

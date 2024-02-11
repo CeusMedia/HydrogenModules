@@ -15,7 +15,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 
 	/**
 	 *	@return		string
-	 *	@throws		Exception
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -32,7 +33,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		if( $this->moduleId )
 			$conditions['moduleId']	= $this->moduleId;
 
-		$total		= $this->modelTimer->count( $conditions );
+//		$total		= $this->modelTimer->count( $conditions );
 		$timers		= $this->modelTimer->getAll( $conditions, $this->orders, $this->limits );
 		if( !$timers )
 			return '';
@@ -173,7 +174,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	/**
 	 *	@param		object		$timer
 	 *	@return		string
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderButtons( object $timer ): string
 	{

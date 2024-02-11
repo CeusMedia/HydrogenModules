@@ -4,7 +4,13 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Work_Time extends AjaxController
 {
-	public function renderDashboardPanel( string $panelId )
+	/**
+	 * @param string $panelId
+	 * @return void
+	 * @throws JsonException
+	 * @throws ReflectionException
+	 */
+	public function renderDashboardPanel( string $panelId ): void
 	{
 		switch( $panelId ){
 			case 'work-timer-my':
