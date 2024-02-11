@@ -36,6 +36,10 @@ class View_Auth_Local extends View
 		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Registration.init();');
 	}
 
+	/**
+	 *	@return		bool|NULL
+	 *	@throws		ReflectionException
+	 */
 	public function renderRegisterFormExtensions(): ?bool
 	{
 		$payload	= [];

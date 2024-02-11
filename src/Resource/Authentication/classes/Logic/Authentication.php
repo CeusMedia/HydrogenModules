@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication extends Logic
@@ -8,9 +9,9 @@ class Logic_Authentication extends Logic
 	const STATUS_IDENTIFIED		= 1;
 	const STATUS_AUTHENTICATED	= 2;
 
-	protected $backend;
+	protected ?Logic $backend	= NULL;
 	protected array $backends	= [];
-	protected $session;
+	protected Dictionary $session;
 
 	public function checkPassword( $userId, string $password )
 	{
@@ -57,21 +58,23 @@ class Logic_Authentication extends Logic
 	 *	For advanced uses, a list of reporting modules and their collected user relations can be returned instead.
 	 *
 	 *	@access		public
-	 *	@param		integer		$userId			ID of user to get related users for
+	 *	@param		string		$userId			ID of user to get related users for
 	 *	@param		boolean		$groupByModules	Flag: group related users by reporting modules
 	 *	@return		array		Map of related users or list of reporting modules with related users
 	 *	@triggers	Resource:User::getRelatedUsers
+	 *	@throws		ReflectionException
 	 */
-	public function getRelatedUsers( $userId, bool $groupByModules = FALSE ): array
+	public function getRelatedUsers( string $userId, bool $groupByModules = FALSE ): array
 	{
 		$payload	= ['userId' => $userId, 'list' => []];
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
+
 		if( $groupByModules )
 			return $payload['list'];
 
 		$list		= [];
 		$map		= [];
-		foreach( $payload['list'] as $group ){
+		foreach( $payload['list'] ?? [] as $group ){
 			if( $group->count )
 				foreach( $group->list as $user )
 					$list[$user->username]	= $user;
@@ -131,6 +134,11 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$key
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function setBackend( string $key ): self
 	{
 		if( !array_key_exists( $key, $this->backends ) )
@@ -149,6 +157,10 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();

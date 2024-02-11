@@ -1,6 +1,14 @@
 <?php
+
+use CeusMedia\Common\Exception\IO as IoException;
+
 class Mail_Auth_Local_Register extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		IoException
+	 */
 	protected function generate(): self
 	{
 		$data		= $this->data;

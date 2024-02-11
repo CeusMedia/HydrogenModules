@@ -1,6 +1,6 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Helper_Auth_Local_Panel_Login implements Renderable

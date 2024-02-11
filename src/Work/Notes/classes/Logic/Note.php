@@ -603,7 +603,7 @@ ORDER BY
 	 * @return $this
 	 * @throws ReflectionException
 	 */
-	public function setContext(string $userId, string $roleId, string $projectId ): self
+	public function setContext( string $userId, string $roleId, string $projectId ): self
 	{
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;

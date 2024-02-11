@@ -265,7 +265,7 @@ class Controller_Manage_Project extends Controller
 			$modelMission	= new Model_Mission( $this->env );
 
 		$filterId			= $this->session->get( 'filter_manage_project_id' );
-		$filterQuery		= $this->session->get( 'filter_manage_project_query' );
+		$filterQuery		= $this->session->get( 'filter_manage_project_query', '' );
 		$filterStatus		= $this->session->get( 'filter_manage_project_status' );
 		$filterPriority		= $this->session->get( 'filter_manage_project_priority' );
 		$filterUser			= $this->session->get( 'filter_manage_project_user' );
@@ -290,7 +290,7 @@ class Controller_Manage_Project extends Controller
 		if( (int) $filterId > 0 )
 			$conditions['projectId']	= [$filterId];
 		else{
-			if( strlen( trim( $filterQuery ) ) ){
+			if( 0 !== strlen( trim( $filterQuery ) ) ){
 				$projectIds		= [];
 				$filters	= [
 					"title LIKE '%".$filterQuery."%'",

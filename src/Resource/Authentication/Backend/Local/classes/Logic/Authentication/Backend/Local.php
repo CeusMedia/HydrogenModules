@@ -1,12 +1,13 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Local extends Logic
 {
-	protected $modelUser;
-	protected $modelRole;
-	protected $session;
+	protected Model_User $modelUser;
+	protected Model_Role $modelRole;
+	protected Dictionary $session;
 
 	/**
 	 *	@todo		remove support for old user password
@@ -40,7 +41,11 @@ class Logic_Authentication_Backend_Local extends Logic
 		return FALSE;
 	}
 
-	public function clearCurrentUser()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function clearCurrentUser(): void
 	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
@@ -48,7 +53,12 @@ class Logic_Authentication_Backend_Local extends Logic
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -61,7 +71,11 @@ class Logic_Authentication_Backend_Local extends Logic
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	/**
+	 * @param		bool	$strict
+	 * @return		string|NULL
+	 */
+	public function getCurrentRoleId( bool $strict = TRUE ): ?string
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -71,7 +85,13 @@ class Logic_Authentication_Backend_Local extends Logic
 		return $this->session->get( 'auth_role_id' );
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	/**
+	 *	@param		bool		$strict
+	 *	@param		bool		$withRole
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
@@ -115,6 +135,10 @@ class Logic_Authentication_Backend_Local extends Logic
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
+	/**
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function noteUserActivity(): self
 	{
 		if( $this->isAuthenticated() && $userId = $this->getCurrentUserId( FALSE ) ){				//  get ID of current user (or zero)
@@ -123,14 +147,14 @@ class Logic_Authentication_Backend_Local extends Logic
 		return $this;
 	}
 
-	public function setAuthenticatedUser( $user ): self
+	public function setAuthenticatedUser( object $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ): self
+	public function setIdentifiedUser( object $user ): self
 	{
 		$this->session->set( 'auth_backend', 'Local' );
 		$this->session->set( 'auth_user_id', $user->userId );

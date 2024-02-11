@@ -23,7 +23,7 @@ class Controller_Manage_User extends Controller
 
 	protected array $countries;
 
-	protected $filters	= [
+	protected array $filters	= [
 		'username',
 		'roomId',
 		'roleId',
@@ -35,12 +35,22 @@ class Controller_Manage_User extends Controller
 		'limit'
 	];
 
-	public function accept( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function accept( string $userId ): void
 	{
 		$this->setStatus( $userId, Model_User::STATUS_ACTIVE );
 	}
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
@@ -88,7 +98,7 @@ class Controller_Manage_User extends Controller
 				$messenger->noteError( $words->msgNoSurname );
 
 			if( !$messenger->gotError() ){
-				$data	= array(
+				$data	= [
 					'roleId'		=> $input['roleId'],
 					'companyId'		=> (int) $input->get( 'companyId' ),
 					'roomId'		=> 0,
@@ -108,7 +118,7 @@ class Controller_Manage_User extends Controller
 					'fax'			=> $input['fax'],
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
-				);
+				];
 				if( strlen( $data['country'] ) > 2 ){
 					$countries			= array_flip( $this->countries );
 					$data['country']	= $countries[$data['country']];
@@ -139,17 +149,32 @@ class Controller_Manage_User extends Controller
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
 	}
 
-	public function ban( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function ban( string $userId ): void
 	{
 		$this->setStatus( $userId, Model_User::STATUS_BANNED );
 	}
 
-	public function disable( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function disable( string $userId ): void
 	{
 		$this->setStatus( $userId, Model_User::STATUS_DISABLED );
 	}
 
-	public function edit( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( string $userId ): void
 	{
 /*		$acl		= $this->env->getAcl();
 		$modules	= $this->env->getModules();
@@ -185,7 +210,7 @@ class Controller_Manage_User extends Controller
 
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
-		$email		= strtolower( trim( $input->get( 'email' ) ) );
+		$email		= strtolower( trim( $input->get( 'email', '' ) ) );
 
 		if( $request->getMethod()->isPost() ){
 			if( empty( $username ) ){																//  no username given
@@ -284,7 +309,12 @@ class Controller_Manage_User extends Controller
 		$this->addData( 'passwords', $passwords );
 	}
 
-	public function password( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function password( string $userId ): void
 	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
@@ -348,7 +378,7 @@ class Controller_Manage_User extends Controller
 		$this->restart( 'edit/'.$userId, TRUE );
 	}
 
-	public function filter( $mode = NULL )
+	public function filter( $mode = NULL ): void
 	{
 		$session	= $this->env->getSession();
 		switch( $mode )
@@ -370,11 +400,11 @@ class Controller_Manage_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL )
+	public function index( $page = NULL ): void
 	{
 		$session	= $this->env->getSession();
-		$limit		= abs( $session->get( 'filter-user-limit' ) );
-		$limit		= $limit ? $limit : 15;
+		$limit		= abs( $session->get( 'filter-user-limit', 0 ) );
+		$limit		= 0 !== $limit ?: 15;
 		$page		= max( 0, (int) $page );
 
 		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
@@ -382,11 +412,11 @@ class Controller_Manage_User extends Controller
 
 //		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
 //		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
-		$offset		= !is_null( $page ) ? abs( $page * $limit ) : 0;						//  get offset from request or reset
+		$offset		= $page * $limit;						//  get offset from request or reset
 
 		$filters	= [];																//  prepare filters map
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
-			if( preg_match( '/^filter-user-/', $key ) ){									//  if setting is users filter
+			if( str_starts_with( $key, 'filter-user-' ) ){									//  if setting is users filter
 				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
 				if( !in_array( $column, ['order', 'direction', 'limit'] ) ){			// 	filter is within list of allowed filters
 					if( $column === 'username' )											//  filter is username
@@ -435,7 +465,12 @@ class Controller_Manage_User extends Controller
 		$this->restart( './manage/user/edit/'.(int) $userId );
 	}*/
 
-	public function remove( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( string $userId ): void
 	{
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
@@ -467,7 +502,13 @@ class Controller_Manage_User extends Controller
 		] );
 	}
 
-	protected function setStatus( string $userId, int $status )
+	/**
+	 *	@param		string		$userId
+	 *	@param		int			$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function setStatus( string $userId, int $status ): void
 	{
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $userId );

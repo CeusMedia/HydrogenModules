@@ -24,7 +24,7 @@ class Controller_Work_Note extends Controller
 
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$post	= $this->request->getAllFromSource( 'POST', TRUE );
-			$data	= array(
+			$data	= [
 				'userId'		=> $this->session->get( 'auth_user_id' ),
 				'projectId'		=> $post->get( 'note_projectId' ),
 				'status'		=> '0',
@@ -35,7 +35,7 @@ class Controller_Work_Note extends Controller
 				'numberViews'	=> 0,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( !strlen( trim( $data['title'] ) ) )
 				$this->messenger->noteError( $words->msgNoTitle );
 #			if( !strlen( trim( $data['content'] ) ) )
@@ -432,9 +432,9 @@ class Controller_Work_Note extends Controller
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Note::getInstance( $this->env );
 		$this->logic->setContext(
-			$this->session->get( 'auth_user_id' ),
-			$this->session->get( 'auth_role_id' ),
-			$this->session->get( 'filter_notes_projectId' )
+			$this->session->get( 'auth_user_id', '0' ),
+			$this->session->get( 'auth_role_id', '0' ),
+			$this->session->get( 'filter_notes_projectId', '' )
 		);
 		$this->addData( 'logicNote', $this->logic );
 	}
