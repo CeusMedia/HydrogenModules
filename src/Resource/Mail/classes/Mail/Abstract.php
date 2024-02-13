@@ -494,7 +494,7 @@ abstract class Mail_Abstract
 		];
 		$contentFull	= $template->html;
 		foreach( $replacements as $key => $value )
-		 	$contentFull	= str_replace( '[#'.$key.'#]', $value, $contentFull );
+		 	$contentFull	= str_replace( '[#'.$key.'#]', $value ?? '', $contentFull );
 
 		if( $template->images ){
 			if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
@@ -576,7 +576,7 @@ abstract class Mail_Abstract
 		];
 		$contentFull	= $template->plain;
 		foreach( $replacements as $key => $value )
-		 	$contentFull	= str_replace( '[#'.$key.'#]', $value, $contentFull );
+		 	$contentFull	= str_replace( '[#'.$key.'#]', $value ?? '', $contentFull );
 		return $contentFull;
 	}
 

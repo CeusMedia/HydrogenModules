@@ -186,7 +186,7 @@ class Controller_Admin_Mail_Template extends Controller
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 				$env	= Logic_Frontend::getRemoteEnv( $this->env );
 			$mail		= new Mail_Test( $env, ['forceTemplateId' => $templateId] );
-			switch( strtolower( $mode ) ){
+			switch( strtolower( $mode ?? 'auto' ) ){
 				case 'html':
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );
 					$helper->setMailObjectInstance( $mail );
@@ -203,6 +203,7 @@ class Controller_Admin_Mail_Template extends Controller
 						] ),
 					] ) );
 					break;
+				case 'auto':
 				default:
 					if( strlen( trim( $template->html ) ) )
 						$this->preview( $templateId, 'html' );
