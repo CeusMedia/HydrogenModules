@@ -16,11 +16,11 @@ use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
  */
 class View_Helper_Mail_Text
 {
-	static protected $encoding	= "UTF-8";
+	static protected string $encoding	= "UTF-8";
 
 	/**
 	 *	Extends a one line string with whitespace from right (or left) to a maximum length.
-	 *	With multi-byte support.
+	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
 	 *	@param		string		$text			One line string to extend
@@ -28,23 +28,23 @@ class View_Helper_Mail_Text
 	 *	@param		boolean		$fromLeft		Flag: extend from left (= float right)
 	 *	@return		string		Extended one line string
 	 */
-	static public function extend( $text, $toLength, $fromLeft = FALSE )
+	static public function extend( string $text, int $toLength, bool $fromLeft = FALSE ): string
 	{
-		return TextExtender::extend( $text, $toLength, $fromLeft, ' ' );
+		return TextExtender::extend( $text, $toLength, $fromLeft );
 	}
 
 	/**
 	 *	Extends a one line string with whitespace from left and right to a maximum length.
-	 *	With multi-byte support.
+	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
 	 *	@param		string		$text			One line string to extend
 	 *	@param		integer		$toLength		Maximum string length
 	 *	@return		string		Extended one line string
 	 */
-	static public function extendCentric( $text, $toLength )
+	static public function extendCentric( string $text, int $toLength ): string
 	{
-		return TextExtender::extendCentric( $text, $toLength, ' ' );
+		return TextExtender::extendCentric( $text, $toLength );
 	}
 
 	/**
@@ -54,19 +54,18 @@ class View_Helper_Mail_Text
 	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
-	 *	@param		string		$text			One line string to extend
-	 *	@param		integer		$toLength		Maximum string length
-	 *	@param		integer		$float			Mode: left(1), right(0), center(2)
-	 *	@param		boolean		$trimCentric	Flag: trim text centric
-	 *	@return		string		Fitted one line string
+	 *	@param		string			$text			One line string to extend
+	 *	@param		integer			$toLength		Maximum string length
+	 *	@param		integer|string	$float			Mode: left(1), right(0), center(2)
+	 *	@param		boolean			$trimCentric	Flag: trim text centric
+	 *	@return		string			Fitted one line string
 	 */
-	static public function fit( $text, $toLength, $float = 1, $trimCentric = TRUE )
+	static public function fit( string $text, int $toLength, int|string $float = 1, bool $trimCentric = TRUE ): string
 	{
-		$toLength	= (int) $toLength;
 		$text		= self::trim( trim( $text ), $toLength, $trimCentric ? 2 : 0 );
 		if( in_array( (string) $float, ["2", 'center', 'centric'] ) )
-			return self::extendTextCentric( $text, $toLength );
-		$floatRight	= $float === FALSE || $float === 0 || $float === 'right';
+			return self::extendCentric( $text, $toLength );
+		$floatRight	= $float === 0 || $float === 'right';
 		return self::extend( $text, $toLength, $floatRight );
 	}
 
@@ -75,34 +74,29 @@ class View_Helper_Mail_Text
 	 *	Wraps each line to an optionally given maximum line length before.
 	 *	@static
 	 *	@access		public
-	 *	@param		string		$text			One or multi line text to extend
-	 *	@param		integer		$toLength		Maximum line length
-	 *	@param		integer		$float			Mode: left(1), right(0), center(2)
-	 *	@param		boolean		$trimCentric	Flag: trim text centric
+	 *	@param		string			$text				One or multi line text to extend
+	 *	@param		integer			$indentLength		Length of indention
+	 *	@param		integer|NULL	$lineLength			Limit line length and wrap, default: no
 	 *	@return		string
 	 */
-	static public function indent( $text, $indentLength, $lineLength = NULL )
+	static public function indent( string $text, int $indentLength, ?int $lineLength = NULL ): string
 	{
 		if( $lineLength )
 			$text	= wordwrap( $text, $lineLength );
 		$lines	= explode( "\n", $text );
 		$indent	= str_repeat( " ", $indentLength );
-		$text	= implode( "\n".$indent, $lines );
-		return $text;
+		return implode( "\n".$indent, $lines );
 	}
 
 	/**
-	 *	Indents all other lines of a multi line string.
-	 *	Wraps each line to an optionally given maximum line length before.
+	 *	Draws a line.
 	 *	@static
 	 *	@access		public
-	 *	@param		string		$text			One or multi line text to extend
-	 *	@param		integer		$toLength		Maximum line length
-	 *	@param		integer		$float			Mode: left(1), right(0), center(2)
-	 *	@param		boolean		$trimCentric	Flag: trim text centric
+	 *	@param		string		$sign			Line drawing character
+	 *	@param		integer		$lineLength		Line length
 	 *	@return		string
 	 */
-	static public function line( $sign = "-", $lineLength = 76 )
+	static public function line( string $sign = '-', int $lineLength = 76 ): string
 	{
 		$steps	= floor( $lineLength / mb_strlen( $sign ) );
 		return str_repeat( $sign, $steps );
@@ -113,17 +107,16 @@ class View_Helper_Mail_Text
 	 *	With multibyte support.
 	 *	@static
 	 *	@access		public
-	 *	@param		string		$text			One line string to extend
-	 *	@param		integer		$toLength		Maximum string length
-	 *	@param		integer		$float			Mode: left(1), right(0), center(2)
-	 *	@param		boolean		$trimCentric	Flag: trim text centric
+	 *	@param		string			$text			One line string to extend
+	 *	@param		integer			$length			Maximum string length
+	 *	@param		integer|string	$mode			Mode: left(1), right(0), center(2)
 	 *	@return		string
 	 */
-	static public function trim( $text, $length, $mode = 2 )
+	static public function trim( string $text, int $length, int|string $mode = 2 ): string
 	{
 		if( $mode === 2 || $mode === 'center' || $mode === 'centric' )
 			return TextTrimmer::trimCentric( $text, $length );
-		return TextTrimmer::trim( $text, $length, $mode );
+		return TextTrimmer::trim( $text, $length, in_array( $mode, [1, 'left'] ) );
 	}
 
 	/**
@@ -135,7 +128,7 @@ class View_Helper_Mail_Text
 	 *	@param		integer		$maxLength		Maximum string length
 	 *	@return		string		Last line of text underscored
 	 */
-	static public function underscore( $text, $withString = '-', $maxLength = 76 )
+	static public function underscore( string $text, string $withString = '-', int $maxLength = 76 ): string
 	{
 		$parts	= explode( "\n", $text );
 		$text	= array_pop( $parts );

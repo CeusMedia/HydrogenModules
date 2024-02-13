@@ -1,10 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
-use CeusMedia\Common\Exception\Data\Ambiguous as AmbiguousDataException;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\Mail\Renderer as MailRendererV1;
-use CeusMedia\Mail\Message\Renderer as MailRendererV2;
+use CeusMedia\Mail\Message\Renderer as MailRenderer;
 
 class View_Helper_Mail_View_Source
 {
@@ -12,42 +9,33 @@ class View_Helper_Mail_View_Source
 	protected ?Mail_Abstract $mailObject		= NULL;
 	protected Logic_Mail $logicMail;
 	protected int $mode							= 0;
-	protected int $libraries;
 
 	const MODE_NORMAL		= 0;
 	const MODE_CONDENSED	= 1;
 
+	/**
+	 *	@param		Environment $env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= $env->getLogic()->get( 'Mail' );
-		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 	}
 
 	/**
-	 * @return string
-	 * @throws AmbiguousDataException
-	 * @throws ReflectionException
+	 *	@return		string
+	 *	@throws		RangeException
 	 */
 	public function render(): string
 	{
 		if( !$this->mailObject )
 			throw new RuntimeException( 'No mail object set' );
 
-		$usedLibrary	= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this->mailObject );
-		if( !( $this->libraries & $usedLibrary ) ){
-			$libraryKey	= ObjectConstants::staticGetKeyByValue( 'Logic_Mail', $usedLibrary );
-			return '- used mail library ('.$libraryKey.') is not supported anymore or yet -';
-		}
 		$message	= $this->mailObject->mail;
 
-		$code	= '';
-		if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V1 )									//  mail uses library CeusMedia/Mail version 1
-			$code	= MailRendererV1::render( $message );									//  @todo find better way: currently only parts content displayed but no headers
-		else if( $usedLibrary == Logic_Mail::LIBRARY_MAIL_V2 )								//  mail uses library CeusMedia/Mail version 1
-			$code	= MailRendererV2::render( $message );									//  @todo find better way: currently only parts content displayed but no headers
-		else
-			throw new RangeException( 'No source renderer for mail object available' );
+		$code		= MailRenderer::render( $message );			//  @todo find better way: currently only parts content displayed but no headers
 
 		switch( $this->mode ){
 			case self::MODE_CONDENSED:
@@ -61,22 +49,34 @@ class View_Helper_Mail_View_Source
 		return $code;
 	}
 
-	public function setMail( $mailObjectOrId ): self
+	/**
+	 *	@param		object|string		$mailObjectOrId
+	 *	@return		self
+	 */
+	public function setMail( object|string $mailObjectOrId ): self
 	{
-		if( is_int( $mailObjectOrId ) )
+		if( is_string( $mailObjectOrId ) )
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
-			throw new InvalidArgumentException( 'Argument must be integer or object' );
+			throw new InvalidArgumentException( 'Argument must be string or object' );
 		$this->setMailObjectInstance( $mailObjectOrId->object->instance );
 		return $this;
 	}
 
+	/**
+	 *	@param		Mail_Abstract		$mail
+	 *	@return		self
+	 */
 	public function setMailObjectInstance( Mail_Abstract $mail ): self
 	{
 		$this->mailObject	= $mail;
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$mode
+	 *	@return		self
+	 */
 	public function setMode( int $mode ): self
 	{
 		if( !in_array( $mode, [self::MODE_NORMAL, self::MODE_CONDENSED] ) )
@@ -85,13 +85,17 @@ class View_Helper_Mail_View_Source
 		return $this;
 	}
 
-	protected function shortenMailCode( $code )
+	/**
+	 *	@param		string		$code
+	 *	@return		string
+	 */
+	protected function shortenMailCode( string $code ): string
 	{
 		$status	= 0;
 		$list	= [];
-		foreach( explode( PHP_EOL, $code ) as $nr => $line ){
+		foreach( explode( PHP_EOL, $code ) as $line ){
 			$isEmpty	= !strlen( trim( $line ) );
-			$isBased	= preg_match( '/^[\S]{74,80}$/', trim( $line ) );
+			$isBased	= preg_match( '/^\S{74,80}$/', trim( $line ) );
 			if( !$isEmpty && !$isBased ){
 				if( $status === 3 ){
 					$status	= 0;

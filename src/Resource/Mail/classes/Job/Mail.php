@@ -19,8 +19,9 @@ class Job_Mail extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public function test()
+	public function test(): void
 	{
 		$receiver	= $this->parameters->get( '--to', '' );
 		$modes		= preg_split( '/\s*,\s*/s', $this->parameters->get( '--mode', 'direct' ) );
@@ -103,17 +104,17 @@ class Job_Mail extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
-	protected function getMailContentAsHtml()
+	protected function getMailContentAsHtml(): string
 	{
 		return 'Test-Mail '.date( 'y-m-d / H:i' );
 	}
 
-	protected function getMailContentAsText()
+	protected function getMailContentAsText(): string
 	{
 		return 'Test-Mail '.date( 'y-m-d / H:i' );
 	}
 
-	protected function getMailSubject()
+	protected function getMailSubject(): string
 	{
 		$subject		= 'Test-Mail '.date( 'y-m-d / H:i' );
 		$subjectConfig	= $this->env->getConfig()->getAll( 'module.resource_mail.subject.', TRUE );

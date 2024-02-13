@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
+use CeusMedia\Mail\Address as Address;
 use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Transport\Local as LocalMailTransport;
 use CeusMedia\Mail\Transport\SMTP as SmtpMailTransport;
@@ -170,31 +171,10 @@ abstract class Mail_Abstract
 
 	/**
 	 *	@return			array
-	 *	@noinspection	PhpUndefinedNamespaceInspection
-	 *	@noinspection	PhpUndefinedClassInspection
 	 */
 	public function getAttachments(): array
 	{
-		$list			= [];
-		$libraries		= $this->logicMail->detectAvailableMailLibraries();
-		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
-
-		if( !$library || !( $libraries & $library ) )
-			throw new RuntimeException( 'Mail was created by a mail library which is not supported' );
-
-		foreach( $this->mail->getParts() as $part ){
-			switch( $library ){
-				case Logic_Mail::LIBRARY_MAIL_V1:
-					if( $part instanceof CeusMedia\Mail\Part\Attachment )
-						$list[]	= $part;
-					break;
-				case Logic_Mail::LIBRARY_MAIL_V2:
-					if( $part->isAttachment() )
-						$list[]	= $part;
-					break;
-			}
-		}
-		return $list;
+		return $this->mail->getParts( TRUE, FALSE, FALSE );
 	}
 
 	/**
@@ -225,12 +205,16 @@ abstract class Mail_Abstract
 		return $this->mail->getSubject();
 	}
 
-	public function getTemplateId(): int
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getTemplateId(): string
 	{
-		$template	= $this->getTemplateToUse( 0, TRUE, FALSE );
+		$template	= $this->getTemplateToUse( '0', TRUE, FALSE );
 		if( $template )
 			return $template->mailTemplateId;
-		return 0;
+		return '0';
 	}
 
 	/**
@@ -277,7 +261,7 @@ abstract class Mail_Abstract
 	 *	@param		object|array		$user		User model object
 	 *	@return		boolean		TRUE if success
 	 */
-	public function sendTo( $user ): bool
+	public function sendTo( object|array $user ): bool
 	{
 		if( is_array( $user ) )
 			$user	= (object) $user;
@@ -292,7 +276,7 @@ abstract class Mail_Abstract
 	 *	@access		public
 	 *	@param		string		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendToUser( string $userId ): bool
 	{
@@ -317,7 +301,7 @@ abstract class Mail_Abstract
 	 *	@param		string		$sender		Mail address of sender
 	 *	@return		self
 	 */
-	public function setSender( $sender ): self
+	public function setSender( string $sender ): self
 	{
 		$this->mail->setSender( $sender );
 		return $this;
@@ -388,13 +372,13 @@ abstract class Mail_Abstract
 	 *	Adds HTML body part to mail. Alias for setHtml.
 	 *	@access		protected
 	 *	@param		string		$html		HTML mail body to add to mail
-	 *	@return		void
+	 *	@return		self
 	 *	@see		http://wiki.apache.org/spamassassin/Rules/BASE64_LENGTH_78_79
 	 *	@deprecated	use setHtml instead
 	 *	@todo		to be removed
 	 *	@throws		Exception
 	 */
-	protected function addHtmlBody( string $html )
+	protected function addHtmlBody( string $html ): self
 	{
 		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
@@ -402,13 +386,14 @@ abstract class Mail_Abstract
 			->setExceptionVersion( '0.9' )
 			->message( 'Abstract_Mail::addHtmlBody is deprecated, use ::setHtml instead' );
 		$this->setHtml( $html );
+		return $this;
 	}
 
 	/**
 	 *	Adds plain text body part to mail. Alias for setText.
 	 *	@access		protected
 	 *	@param		string		$text		Plain text mail body to add to mail
-	 *	@return		void
+	 *	@return		self
 	 *	@deprecated	use setText instead
 	 *	@todo		to be removed
 	 *	@throws		Exception
@@ -483,13 +468,13 @@ abstract class Mail_Abstract
 	}
 
 	/**
-	 *	@param		string			$content
-	 *	@param		string|int		$templateId
+	 *	@param		string		$content
+	 *	@param		string		$templateId
 	 *	@return		string
 	 *	@throws		IoException
 	 *	@throws		Exception
 	 */
-	protected function applyTemplateToHtml( string $content, $templateId = NULL ): string
+	protected function applyTemplateToHtml( string $content, string $templateId = '0' ): string
 	{
 		$messenger	= $this->env->getMessenger();
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
@@ -515,7 +500,7 @@ abstract class Mail_Abstract
 			if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
 				$template->images	= json_encode( explode( ",", $template->images ) );
 			foreach( json_decode( $template->images, TRUE ) as $nr => $image ){
-				if( preg_match( '/^http/', $image ) )
+				if( str_starts_with( $image, 'http' ) )
 					throw new Exception( 'Not implemented yet' );
 				else{
 					if( !file_exists( $this->env->uri.$image ) ){
@@ -536,12 +521,12 @@ abstract class Mail_Abstract
 			if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]/", $template->styles ) )
 				$template->styles	= json_encode( explode( ",", $template->styles ) );
 			foreach( json_decode( $template->styles, TRUE ) as $style ){
-				if( preg_match( '/^http/', $style ) ){
+				if( str_starts_with( $style, 'http' ) ){
 					try{
 						$content = NetReader::readUrl( $style );
 					}
 					catch( Exception $e ){
-						$messenger->noteError( 'Loading mail style from "'.$style.'" failed.' );
+						$messenger->noteError( 'Loading mail style from "'.$style.'" failed: '.$e->getMessage() );
 						continue;
 					}
 				}
@@ -568,11 +553,12 @@ abstract class Mail_Abstract
 	 *	Applies detected mail template to generated mail content, if available.
 	 *
 	 *	@access		protected
-	 *	@param		string		$content		...
-	 *	@param		integer		$templateId		ID of template to use in favor of defaults (must be usable)
+	 *	@param		string			$content		...
+	 *	@param		string|NULL		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyTemplateToText( string $content, $templateId = NULL ): string
+	protected function applyTemplateToText( string $content, string $templateId = NULL ): string
 	{
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
@@ -635,12 +621,13 @@ abstract class Mail_Abstract
 	 *	- default mail template ID of mail resource module
 	 *	The first of these templates being usable will be stored and returned.
 	 *	@access		public
-	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
+	 *	@param		string			$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
 	 *	@return		object|NULL		Model entity object of detected mail template
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
+	protected function getTemplateToUse( string $preferredTemplateId = '0', bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
 	{
 		if( $this->templateId )
 			if( ( $template = $this->modelTemplate->get( $this->templateId ) ) )
@@ -670,16 +657,13 @@ abstract class Mail_Abstract
 	 *	ATTENTION: You SHOULD NOT use this method unless you REALLY NEED to.
 	 *	Please use one of these methods instead: sendToUser(int $userId), sendTo(obj $user)
 	 *	@access		protected
-	 *	@param		string		$email		Target email address
-	 *	@return		boolean		TRUE if success
+	 *	@param		Address|string		$email		Target email address
+	 *	@return		boolean				TRUE if success
 	 *	@todo		Notwendigkeit dieser Methode prüfen.
 	 */
-	protected function sendToAddress( $email )
+	protected function sendToAddress( Address|string $email ): bool
 	{
-		if( $this->mail instanceof \CeusMedia\Mail\Message )
-			$this->mail->addRecipient( $email );
-		else
-			$this->mail->setReceiver( $email );
+		$this->mail->addRecipient( $email );
 		$this->transport->send( $this->mail, TRUE );
 		return TRUE;
 	}
@@ -690,11 +674,11 @@ abstract class Mail_Abstract
 	 *	Stores given (generated) and rendered contents.
 	 *	@access		protected
 	 *	@param		string		$content	HTML mail body to set
-	 *	@param		integer		$templateId		ID of mail template to use in favour
+	 *	@param		string		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 *	@throws		IoException
 	 */
-	protected function setHtml( string $content, $templateId = 0 ): self
+	protected function setHtml( string $content, string $templateId = '0' ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
@@ -730,10 +714,10 @@ abstract class Mail_Abstract
 	 *	Needed for preview and testing.
 	 *	Set to 0 to return to detection mode.
 	 *	@access		protected
-	 *	@param		integer		$templateId		Forced template ID
+	 *	@param		string		$templateId		Forced template ID
 	 *	@return 	self
 	 */
-	protected function setTemplateId( $templateId )
+	protected function setTemplateId( string $templateId ): self
 	{
 		$this->templateId	= $templateId;
 		return $this;
@@ -745,10 +729,11 @@ abstract class Mail_Abstract
 	 *	Stores given (generated) and rendered contents.
 	 *	@access		protected
 	 *	@param		string		$content		Plain text mail body to set
-	 *	@param		integer		$templateId		ID of mail template to use in favour
+	 *	@param		string		$templateId		ID of mail template to use in favour
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setText( string $content, $templateId = 0 ): self
+	protected function setText( string $content, string $templateId = '0' ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];

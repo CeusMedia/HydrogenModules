@@ -27,25 +27,25 @@ class Model_Mail_Template extends Model
 	protected string $name			= 'mail_templates';
 
 	protected array $columns		= [
-		"mailTemplateId",
-		"status",
-		"language",
-		"title",
-		"plain",
-		"html",
-		"css",
-		"styles",
-		"images",
-		"createdAt",
-		"modifiedAt",
+		'mailTemplateId',
+		'status',
+		'language',
+		'title',
+		'plain',
+		'html',
+		'css',
+		'styles',
+		'images',
+		'createdAt',
+		'modifiedAt',
 	];
 
 	protected string $primaryKey	= 'mailTemplateId';
 
 	protected array $indices		= [
-		"status",
-		"language",
-		"title",
+		'status',
+		'language',
+		'title',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;

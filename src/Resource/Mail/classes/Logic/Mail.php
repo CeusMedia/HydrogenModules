@@ -202,7 +202,7 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException			if no object instance is available
 	 *	@throws		RuntimeException			if no object serial is available
 	 */
-	public function compressMailObject( object $mail, bool $serialize = TRUE )
+	public function compressMailObject( object $mail, bool $serialize = TRUE ): void
 	{
 		if( $serialize ){
 			if( empty( $mail->object->instance ) )
@@ -229,7 +229,7 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException			if no compressed raw column content is available
 	 *	@throws		RuntimeException			if deserialization fails
 	 */
-	public function decompressMailObject( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
+	public function decompressMailObject( object $mail, bool $unserialize = TRUE, bool $force = FALSE ): void
 	{
 		if( is_object( $mail->object ) && $unserialize && !is_null( $mail->object->instance ) && !$force )
 			return;
@@ -558,7 +558,8 @@ class Logic_Mail extends Logic
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
-	 *	@throws		RuntimeException				if unserialize mail serial fails
+	 *	@throws		RuntimeException				if deserialize mail serial fails
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getMail( string $mailId ): object
 	{
@@ -593,7 +594,7 @@ class Logic_Mail extends Logic
 		}
 		$regexExt		= "/\.php5?$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new RecursiveRegexFileIndex( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new RecursiveRegexFileIndex( $pathClasses, "/\.php5?$/", $regexClass );	//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
 			$content	= FileReader::load( $file->getPathname() );								//  get content of class file
 			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
@@ -614,7 +615,7 @@ class Logic_Mail extends Logic
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
 	 */
-	public function getMailHeaders( $mail ): array
+	public function getMailHeaders( Mail_Abstract|string $mail ): array
 	{
 		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );

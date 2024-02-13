@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\Exception\IO as IoException;
+
 class Mail_Example extends Mail_Abstract
 {
 	/**
@@ -8,8 +11,10 @@ class Mail_Example extends Mail_Abstract
 	 *	the mail object will receive the rendered contents as new mail parts and
 	 *	generated and rendered contents will be stored in mail class as contents.
 	 *	@access		protected
-	 *	@param		array		$data		Map of body template data
 	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		IoException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generate(): self
 	{

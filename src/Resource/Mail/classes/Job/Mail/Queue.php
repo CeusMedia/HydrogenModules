@@ -1,11 +1,14 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_Mail_Queue extends Job_Abstract
 {
-	protected $logic;
-	protected $options;
+	protected Logic_Mail $logic;
+	protected Dictionary $options;
 //	protected $greylistingDelay	= 900;
 
-	public function countQueuedMails()
+	public function countQueuedMails(): void
 	{
 		$conditions		= ['status' => [Model_Mail::STATUS_NEW]];
 		$countNew		= $this->logic->countQueue( $conditions );
@@ -14,11 +17,15 @@ class Job_Mail_Queue extends Job_Abstract
 		$this->out( sprintf( "%d mails to send, %d mail to retry.", $countNew, $countRetry ) );
 	}
 
-	public function sendQueuedMails()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendQueuedMails(): void
 	{
 		$sleep		= (float) $this->options->get( 'queue.job.sleep' );
 		$limit		= (integer) $this->options->get( 'queue.job.limit' );
-		set_time_limit( ( $timeLimit = ( 5 + $sleep ) * $limit + 10 ) );
+		set_time_limit( ( 5 + $sleep ) * $limit + 10 );
 
 		if( !$this->dryMode )
 			$this->logic->abortMailsWithTooManyAttempts();
@@ -61,20 +68,25 @@ class Job_Mail_Queue extends Job_Abstract
 				}
 			}
 		}
-		$this->results	= array(
+		$this->results	= [
 			'count'		=> $count,
 			'failed'	=> count( $listFailed ),
 			'sent'		=> count( $listSent ),
 			'ids'		=> $listSent,
-		);
-		$this->log( json_encode( array_merge( array(
+		];
+		$this->log( json_encode( array_merge( [
 			'timestamp'	=> time(),
 			'datetime'	=> date( "Y-m-d H:i:s" ),
-		), $this->results ) ) );
+		], $this->results ) ) );
 	}
 
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 	}

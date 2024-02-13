@@ -44,8 +44,9 @@ class Job_Mail_Migration extends Job_Abstract
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function migrate()
+	public function migrate(): void
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
@@ -111,6 +112,7 @@ class Job_Mail_Migration extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		array		List of errors, mail ID => error message + stack trace
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function regenerate(): array
 	{
@@ -163,7 +165,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->_loadMailClasses();
 	}
 
-	protected function logMigration( $mail, $message )
+	protected function logMigration( $mail, $message ): void
 	{
 		$fileName	= 'job.resource_mail.archive.migration.log';
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
@@ -248,6 +250,11 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->logMigration( $mail, 'Changed: '.implode( ', ', $changeList ) );
 	}
 
+	/**
+	 *	@param		object		$mail
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	private function _migrateCompression( object $mail ): bool
 	{
 		if( !isset( $mail->compression ) )
@@ -365,6 +372,7 @@ class Job_Mail_Migration extends Job_Abstract
 	 *	Detects mail sender from mail object to note to database.
 	 *	@param		object		$mail		Mail object
 	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	private function _migrateSenderAddress( object $mail ): bool
 	{
@@ -383,14 +391,14 @@ class Job_Mail_Migration extends Job_Abstract
 	/**
 	 *	Converts old style and image lists to new JSON
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	private function _migrateMailTemplates()
+	private function _migrateMailTemplates(): void
 	{
 		$model		= new Model_Mail_Template( $this->env );
 		foreach( $model->getAll() as $template ){
 			if( strlen( trim( $template->styles ) ) ){
-				if( substr( $template->styles, 0, 2 ) !== '["' ){
+				if( !str_starts_with( $template->styles, '["' ) ){
 					$list	= [$template->styles];
 					if( strpos( $template->styles, ',' ) )
 						$list	= explode( ',', $template->styles );
@@ -398,7 +406,7 @@ class Job_Mail_Migration extends Job_Abstract
 				}
 			}
 			if( strlen( trim( $template->images ) ) ){
-				if( substr( $template->images, 0, 2 ) !== '["' ){
+				if( !str_starts_with( $template->images, '["' ) ){
 					$list	= [$template->images];
 					if( strpos( $template->images, ',' ) )
 						$list	= explode( ',', $template->images );
@@ -413,7 +421,7 @@ class Job_Mail_Migration extends Job_Abstract
 	 *	@param		bool		$force
 	 *	@return		void
 	 */
-	private function _saveRaw( object $mail, bool $force = FALSE )
+	private function _saveRaw( object $mail, bool $force = FALSE ): void
 	{
 		if( !in_array( 'raw', $this->model->getColumns() ) )
 			return;

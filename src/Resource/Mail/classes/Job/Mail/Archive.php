@@ -55,8 +55,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function clean()
+	public function clean(): void
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
@@ -103,7 +104,7 @@ class Job_Mail_Archive extends Job_Abstract
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function dump()
+	public function dump(): void
 	{
 		$path	= $this->parameters->get( '--to', './' );
 		$limit	= $this->parameters->get( '--limit' );
@@ -135,7 +136,7 @@ class Job_Mail_Archive extends Job_Abstract
 			escapeshellarg( $dba->get( 'password' ) ),												//  configured password as escaped shell arg
 			escapeshellarg( $dba->get( 'name' ) ),													//  configured database name as escaped shell arg
 			$tables,																				//  collected found tables
-			$params,																				//  aditional parameters, like --where (buil from --order or --limit) 
+			$params,																				//  additional parameters, like --where (buil from --order or --limit)
 			escapeshellarg( $pathname ),															//  dump output filename
 		] );
 		$resultCode		= 0;
@@ -175,8 +176,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function regenerate()
+	public function regenerate(): void
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
@@ -231,8 +233,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *			- default: empty, meaning all mail classes
 	 *
 	 *	@todo	test
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeAttachments()
+	public function removeAttachments(): void
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
@@ -314,7 +317,8 @@ class Job_Mail_Archive extends Job_Abstract
 			}
 			catch( Exception $e ){
 				$this->showProgress( ++$results->mails, count( $mailIds ), 'E' );
-				$fails[$mail->mailId]	= $e->getMessage();
+				if( isset( $mail ) )
+					$fails[$mail->mailId]	= $e->getMessage();
 			}
 		}
 		if( $mailIds )
@@ -335,8 +339,9 @@ class Job_Mail_Archive extends Job_Abstract
 	/**
 	 *	Work in progress!
 	 *	Store raw mails in shard folders.
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function shard()
+	public function shard(): void
 	{
 		$path		= 'contents/mails/';
 		$indexFile	= $path.'index.json';
@@ -428,6 +433,7 @@ class Job_Mail_Archive extends Job_Abstract
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Mail( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
 		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$this->_loadMailClasses();
@@ -440,7 +446,7 @@ class Job_Mail_Archive extends Job_Abstract
 		return $matches[1].$matches[2].$this->prefixPlaceholder.$matches[4].$matches[5];
 	}
 
-	protected function _loadMailClasses()
+	protected function _loadMailClasses(): void
 	{
 		$loadedClasses	= [];
 		$mailClassPaths	= ['./', 'admin/'];

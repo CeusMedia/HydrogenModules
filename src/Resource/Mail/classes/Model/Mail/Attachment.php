@@ -23,24 +23,24 @@ class Model_Mail_Attachment extends Model
 	protected string $name			= 'mail_attachments';
 
 	protected array $columns		= [
-		"mailAttachmentId",
-		"status",
-		"language",
-		"className",
-		"filename",
-		"mimeType",
-		"countAttached",
-		"createdAt",
+		'mailAttachmentId',
+		'status',
+		'language',
+		'className',
+		'filename',
+		'mimeType',
+		'countAttached',
+		'createdAt',
 	];
 
 	protected string $primaryKey	= 'mailAttachmentId';
 
 	protected array $indices		= [
-		"status",
-		"language",
-		"className",
-		"filename",
-		"mimeType",
+		'status',
+		'language',
+		'className',
+		'filename',
+		'mimeType',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
