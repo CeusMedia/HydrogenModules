@@ -73,6 +73,7 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
 	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function import( object $data, bool $resetAllBefore = FALSE ): object
 	{
@@ -114,6 +115,7 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
 	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importFromJson( string $json, bool $resetAllBefore = FALSE ): object
 	{
@@ -131,6 +133,7 @@ class Logic_IP_Lock_Transport extends Logic
 	 *	@param		boolean		$resetAllBefore		Flag: clear locks, filters and reasons beforehand
 	 *	@return		object		Data object containing number of affected reasons and filters
 	 *	@throws		RuntimeException	if import transaction failed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importFromJsonFile( string $jsonFile, bool $resetAllBefore = FALSE ): object
 	{
@@ -148,9 +151,15 @@ class Logic_IP_Lock_Transport extends Logic
 		$this->modelFilter	= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason	= new Model_IP_Lock_Reason( $this->env );
 		$this->modelLock	= new Model_IP_Lock( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicLock	= $this->env->getLogic()->get( 'ipLock' );
 	}
 
+	/**
+	 *	@param		object		$data
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function importByMerge( object $data ): object
 	{
 		$countReasons	= 0;
@@ -180,7 +189,7 @@ class Logic_IP_Lock_Transport extends Logic
 				$countReasons++;
 			}
 		}
-		foreach( $filterIdMap as $filterImportId => $filter ){
+		foreach( $filterIdMap as $filter ){
 			$existingFilter	= $this->modelFilter->getByIndices( [
 				'method'	=> $filter->method,
 				'pattern'	=> $filter->pattern,
