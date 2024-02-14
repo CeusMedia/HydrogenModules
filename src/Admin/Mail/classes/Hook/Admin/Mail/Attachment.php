@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Admin_Mail_Attachment extends Hook

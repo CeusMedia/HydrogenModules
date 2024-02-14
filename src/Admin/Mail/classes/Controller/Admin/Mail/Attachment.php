@@ -104,7 +104,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ): void
+	public function index( int $page = 0 ): void
 	{
 		$session	= $this->env->getSession();
 		$prefix		= 'filter_admin_mail_attachment_';
@@ -130,10 +130,10 @@ class Controller_Admin_Mail_Attachment extends Controller
 		if( $filterOrder && $filterDirection )
 			$orders	= [$filterOrder, $filterDirection];
 		$limit	= max( (int) $filterLimit, 10 );
-		$limits	= array( (int) $page * $limit, $limit );
+		$limits	= array( $page * $limit, $limit );
 
 		$this->addData( 'limit', $limit );
-		$this->addData( 'page', (int) $page );
+		$this->addData( 'page', $page );
 		$this->addData( 'total', $this->model->count( $conditions ) );
 		$this->addData( 'attachments', $this->model->getAll( $conditions, $orders, $limits ) );
 	}

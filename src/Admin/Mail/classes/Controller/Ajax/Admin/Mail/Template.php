@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Exception\Data\Ambiguous as DataAmbiguousException;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Admin_Mail_Template extends AjaxController
@@ -11,7 +12,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@return		void
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
-	 *	@throws		\CeusMedia\Common\Exception\Data\Ambiguous
+	 *	@throws		DataAmbiguousException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render( string $templateId ): void
@@ -71,7 +72,12 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 		$this->respondData( TRUE );
 	}
 
-	public function setTab( $tabId ): void
+	/**
+	 *	@param		string		$tabId
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function setTab( string $tabId ): void
 	{
 		if( strlen( trim( $tabId ) ) && $tabId != 'undefined' )
 			$this->env->getSession()->set( 'admin-mail-template-edit-tab', $tabId );

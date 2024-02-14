@@ -19,15 +19,22 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	 *	@access		public
 	 *	@param		WebEnvironment		$env			Application Environment Object
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
 		$this->request				= $this->env->getRequest();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		if( $this->request->getMethod()->isPost() ){

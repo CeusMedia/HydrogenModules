@@ -176,7 +176,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'moduleTemplateId', $moduleTemplateId );
 	}
 
-	public function preview( string $templateId, $mode = NULL ): void
+	/**
+	 *	@param		string		$templateId
+	 *	@param		string|NULL	$mode
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function preview( string $templateId, ?string $mode = NULL ): void
 	{
 		try{
 			$template	= $this->checkTemplate( $templateId );
@@ -328,7 +334,6 @@ class Controller_Admin_Mail_Template extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -346,7 +351,6 @@ class Controller_Admin_Mail_Template extends Controller
 		}
 		$this->addData( 'appPath', $this->appPath );
 		$this->addData( 'appUrl', $this->appUrl );
-		$logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	/**

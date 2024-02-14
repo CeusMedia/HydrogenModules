@@ -17,11 +17,13 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@access		public
 	 *	@param		WebEnvironment	$env			Application Environment Object
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
 	}
 
@@ -65,8 +67,9 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@param		string		$templateId
 	 *	@param		bool		$strict
 	 *	@return		object|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	protected function checkTemplate( string $templateId, bool $strict = TRUE ): object|FALSE
 	{
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
@@ -81,6 +84,8 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@access		protected
 	 *	@param		string		$templateId		ID of mail template
 	 *	@return		string
+	 *	@throws		RangeException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generateJson( string $templateId ): string
 	{
