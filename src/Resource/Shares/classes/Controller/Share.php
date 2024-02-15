@@ -1,16 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
-class Controller_Share extends Controller{
-
-	protected $request;
-	protected $session;
-	protected $messenger;
+class Controller_Share extends Controller
+{
+	protected Request $request;
+	protected Dictionary $session;
+	protected Messenger $messenger;
 	protected Logic_Share $logic;
 
-	public function index( $uuid ){
+	public function index( string $uuid ): void
+	{
 		if( $this->request->getMethod()->isPost() ){
 			$captcha	= $this->request->get( 'captcha' );
 			if( $captcha !== $this->session->get( 'captcha' ) ){
@@ -49,7 +53,9 @@ class Controller_Share extends Controller{
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Share::getInstance( $this->env );
 	}
 }

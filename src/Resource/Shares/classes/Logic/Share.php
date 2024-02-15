@@ -9,6 +9,15 @@ class Logic_Share extends Logic
 
 	protected Model_Share $modelShare;
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$relationId
+	 *	@param		string		$path
+	 *	@param		$access
+	 *	@param		$validity
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function create( string $moduleId, string $relationId, string $path, $access, $validity ): object
 	{
 		if( $this->get( $moduleId, $relationId ) )
@@ -29,7 +38,12 @@ class Logic_Share extends Logic
 		return $this->modelShare->get( $shareId );
 	}
 
-	public function get( $moduleId, $relationId )
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$relationId
+	 *	@return		object|NULL
+	 */
+	public function get( string $moduleId, string $relationId ): ?object
 	{
 		$indices	= [
 			'moduleId'		=> $moduleId,
@@ -44,7 +58,12 @@ class Logic_Share extends Logic
 		return $share;
 	}
 
-	public function has( $moduleId, $relationId ): bool
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$relationId
+	 *	@return		bool
+	 */
+	public function has( string $moduleId, string $relationId ): bool
 	{
 		$indices	= [
 			'moduleId'		=> $moduleId,
@@ -53,6 +72,10 @@ class Logic_Share extends Logic
 		return (bool) $this->modelShare->getByIndices( $indices );
 	}
 
+	/**
+	 *	@param		string		$uuid
+	 *	@return		object|NULL
+	 */
 	public function getByUuid( string $uuid ): ?object
 	{
 		$share	= $this->modelShare->getByIndex( 'uuid', $uuid );
@@ -64,6 +87,13 @@ class Logic_Share extends Logic
 		return $share;
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$relationId
+	 *	@param		string		$path
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function changePath( string $moduleId, string $relationId, string $path ): void
 	{
 		$share	= $this->get( $moduleId, $relationId );
@@ -71,6 +101,12 @@ class Logic_Share extends Logic
 			$this->modelShare->edit( $share->shareId, ['path' => $path] );
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$relationId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $moduleId, string $relationId ): bool
 	{
 		$share	= $this->get( $moduleId, $relationId );
@@ -83,6 +119,7 @@ class Logic_Share extends Logic
 	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
 		$this->modelShare		= new Model_Share( $this->env );
 	}
