@@ -25,7 +25,7 @@ class Job_Stripe_Event extends Job_Abstract
 		}
 	}
 
-	public function count()
+	public function count(): void
 	{
 		$model	= new Model_Stripe_Event( $this->env );
 		$count	= $model->countByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED );

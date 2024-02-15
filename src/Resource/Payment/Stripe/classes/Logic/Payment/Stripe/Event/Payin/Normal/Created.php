@@ -1,9 +1,10 @@
 <?php
-class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stripe_Event_Payin_Normal{
-
-	public function handle(){
+class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stripe_Event_Payin_Normal
+{
+	public function handle()
+	{
 		$payin		= $this->entity;
-		$data		= array(
+		$data		= [
 			"status"		=> Model_Stripe_Payin::STATUS_CREATED,
 			"id"			=> $this->event->id,
 			"userId"		=> $payin->AuthorId,
@@ -18,7 +19,7 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stri
 //			"fees"			=> $payin->Fees->Amount / 100,
 			"createdAt"		=> $this->event->triggeredAt,
 			"modifiedAt"	=> $this->event->triggeredAt,
-		);
+		];
 		$payinId		= $this->modelPayin->add( $data );
 		$this->uncache( 'wallet_'.$payin->CreditedWalletId.'_transactions' );
 
@@ -26,12 +27,12 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stri
 		$data->status	= Model_Stripe_Payin::getStatusLabel( $data->status );
 		$data->type		= Model_Stripe_Payin::getTypeLabel( $data->type );
 		unset( $data->data );
-		$mailData	= array(
+		$mailData	= [
 			'payin'			=> $payin,
 			'data'			=> $data,
 			'user'			=> $this->logicStripe->getUser( $payin->AuthorId ),
 			'event'			=> $this->event,
-		);
+		];
 		$receiver	= ['email' => 'dev@ceusmedia.de'];
 		$this->sendMail( 'Stripe_Event_Payin', $mailData, $receiver, 'de' );
 		return time();

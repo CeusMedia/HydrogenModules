@@ -1,13 +1,19 @@
 <?php
-class Resource_Stripe{
 
-	protected $api;
- 	static protected $instance;
+use CeusMedia\HydrogenFramework\Environment;
+use Stripe\Stripe;
 
-	protected function __construct( $env ){
+class Resource_Stripe
+{
+	protected Environment $env;
+	protected static self $instance;
+//	protected $api;
+
+	protected function __construct( Environment $env )
+	{
 		$this->env	= $env;
 		$config		= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
-		\Stripe\Stripe::setApiKey( $config->get( 'api.key.secret' ) );
+		Stripe::setApiKey( $config->get( 'api.key.secret' ) );
 
 
 //		$this->defaultPagination	= new \Stripe\Pagination();
@@ -22,7 +28,8 @@ class Resource_Stripe{
 		$this->api->setLogger($logger);*/
 	}
 
-	static public function getInstance( $env ){
+	public static function getInstance( Environment $env ): self
+	{
 		if( !self::$instance ){
 			self::$instance	= new Resource_Stripe( $env );
 		}

@@ -1,7 +1,8 @@
 <?php
-class Logic_Payment_Stripe_Event_Payin_Normal_Succeeded extends Logic_Payment_Stripe_Event_Payin_Normal{
-
-	public function handle(){
+class Logic_Payment_Stripe_Event_Payin_Normal_Succeeded extends Logic_Payment_Stripe_Event_Payin_Normal
+{
+	public function handle()
+	{
 		$indices	= [
 			'status' 	=> Model_Stripe_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,

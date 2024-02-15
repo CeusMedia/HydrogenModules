@@ -1,7 +1,8 @@
 <?php
-class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Stripe_Event_Payin_Normal{
-
-	public function handle(){
+class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Stripe_Event_Payin_Normal
+{
+	public function handle()
+	{
 		$indices	= [
 			'status' 	=> Model_Stripe_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
@@ -23,12 +24,12 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Strip
 		$data->status	= Model_Stripe_Payin::getStatusLabel( $data->status );
 		$data->type		= Model_Stripe_Payin::getTypeLabel( $data->type );
 		unset( $data->data );
-		$mailData	= array(
+		$mailData	= [
 			'payin'			=> $payin,
 			'data'			=> $data,
 			'user'			=> $this->logicStripe->getUser( $payin->AuthorId ),
 			'event'			=> $this->event,
-		);
+		];
 		$receiver	= ['email' => 'dev@ceusmedia.de'];
 		$this->sendMail( 'Stripe_Event_Payin', $mailData, $receiver, 'de' );
 		return time();

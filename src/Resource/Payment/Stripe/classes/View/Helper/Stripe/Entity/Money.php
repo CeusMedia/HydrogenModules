@@ -1,8 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract
+{
 	const FORMAT_AMOUNT_CURRENCY		= '%1$s%3$s';
 	const FORMAT_AMOUNT_SPACE_CURRENCY	= '%1$s%2$s%3$s';
 	const FORMAT_CURRENCY_AMOUNT		= '%3$s%1$s';

@@ -1,15 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract
+{
+	protected ?object $card			= NULL;
 	protected ?string $nodeClass	= NULL;
 	protected string $nodeName		= 'span';
-	protected object $card;
 	protected ?string $url			= NULL;
 
 	public function render(): string
 	{
+		if( NULL === $this->card )
+			throw new RuntimeException( 'No card object set' );
 		$helperCardLogo		= new View_Helper_Stripe_Entity_CardProviderLogo( $this->env );
 		$helperCardNumber	= new View_Helper_Stripe_Entity_CardNumber( $this->env );
 		$helperCardLogo->setSize( View_Helper_Stripe_Entity_CardProviderLogo::SIZE_SMALL );

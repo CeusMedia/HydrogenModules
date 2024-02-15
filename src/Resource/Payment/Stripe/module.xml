@@ -9,11 +9,12 @@ Cronjobs:
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Start to move common functionality to logic class.</log>
 	<log version="0.2.2">Replace job file by module configuration.</log>
+	<log version="0.2.3">Code update.</log>
 <!--	<log version="0.2.2">Move module to Resource:Payment:Stripe.</log>
 	<log version="0.2.3">Add entity view helpers.</log>
 	<log version="0.2.4">Add credit card number validation.</log>

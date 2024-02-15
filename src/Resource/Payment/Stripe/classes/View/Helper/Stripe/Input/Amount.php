@@ -1,8 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract
+{
 	protected $amount;
 	protected $min				= 0;
 	protected $max				= NULL;

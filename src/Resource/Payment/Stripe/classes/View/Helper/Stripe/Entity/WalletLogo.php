@@ -5,26 +5,26 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 {
-	protected $nodeClass	= NULL;
-	protected $nodeName		= 'div';
+	protected ?string $nodeClass	= NULL;
+	protected string $nodeName		= 'div';
 	protected $wallet;
-	protected $size			= 'large';
+	protected string $size			= 'large';
 
 	const SIZE_SMALL		= 'fa-1x';
 	const SIZE_MEDIUM		= 'fa-2x';
 	const SIZE_LARGE		= 'fa-4x';
 
-	public static function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL )
+	public static function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ): string
 	{
 		$instance	= new View_Helper_Stripe_Entity_CardNumber( $env );
 		if( $nodeName !== NULL )
-			$this->setNodeName( $nodeName );
+			$instance->setNodeName( $nodeName );
 		if( $nodeClass !== NULL )
-			$this->setNodeClass( $nodeClass );
+			$instance->setNodeClass( $nodeClass );
 		return $instance->set( $number )->render();
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$icon	= 'fa-money';
 		switch( $this->wallet->Currency ){
@@ -45,25 +45,25 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 		] );
 	}
 
-	public function setNodeClass( $classNames )
+	public function setNodeClass( string $classNames ): self
 	{
 		$this->nodeClass	= $classNames;
 		return $this;
 	}
 
-	public function setNodeName( $nodeName )
+	public function setNodeName( string $nodeName ): self
 	{
 		$this->nodeName	= $nodeName;
 		return $this;
 	}
 
-	public function setSize( $size )
+	public function setSize( string $size ): self
 	{
 		$this->size	= $size;
 		return $this;
 	}
 
-	public function setWallet( $wallet )
+	public function setWallet( $wallet ): self
 	{
 		$this->wallet	= $wallet;
 		return $this;

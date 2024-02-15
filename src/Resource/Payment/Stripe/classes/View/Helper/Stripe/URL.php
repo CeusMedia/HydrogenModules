@@ -1,16 +1,18 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 {
+	protected Dictionary $request;
 	protected $url;
-	protected $backwardTo			= TRUE;
-	protected $forwardTo			= TRUE;
-	protected $from					= TRUE;
-	protected $parameters			= [];
+	protected bool $backwardTo			= TRUE;
+	protected bool $forwardTo			= TRUE;
+	protected bool $from				= TRUE;
+	protected array $parameters			= [];
 
-	public static function renderStatic( Environment $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE )
+	public static function renderStatic( Environment $env, $url, $forwardTo = TRUE, $backwardTo = TRUE, $from = TRUE ): string
 	{
 		$instance	= new self( $env );
 		$instance->set( $url );
@@ -20,7 +22,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $instance->render();
 	}
 
-	public function render()
+	public function render(): string
 	{
 		$param		= [];
 		foreach( $this->parameters as $key => $value )
@@ -32,13 +34,13 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $this->url.$param;
 	}
 
-	public function set( $url )
+	public function set( $url ): self
 	{
 		$this->url	= $url;
 		return $this;
 	}
 
-	public function setBackwardTo( $path = NULL )
+	public function setBackwardTo( $path = NULL ): self
 	{
 		if( $path === TRUE )
 			$path	= $this->env->getRequest()->get( 'backwardTo' );
@@ -46,7 +48,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $this;
 	}
 
-	public function setForwardTo( $path = NULL )
+	public function setForwardTo( $path = NULL ): self
 	{
 		if( $path === TRUE )
 			$path	= $this->env->getRequest()->get( 'forwardTo' );
@@ -54,7 +56,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $this;
 	}
 
-	public function setFrom( $path = NULL )
+	public function setFrom( $path = NULL ): self
 	{
 		if( $path === TRUE )
 			$path	= $this->env->getRequest()->get( 'from' );
@@ -62,7 +64,7 @@ class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 		return $this;
 	}
 
-	public function setParameter( $key, $value, $override = FALSE, $strict = TRUE )
+	public function setParameter( string $key, $value, bool $override = FALSE, bool $strict = TRUE ): self
 	{
 		if( !strlen( trim( $key ) ) )
 			throw new \DomainException( 'Parameter key cannot be empty' );

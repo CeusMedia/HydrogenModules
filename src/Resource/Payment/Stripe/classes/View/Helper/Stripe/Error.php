@@ -2,9 +2,8 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Stripe_Error
+class View_Helper_Stripe_Error extends View_Helper_Stripe_Abstract
 {
-	protected Environment $env;
 	protected int $code;
 	protected array $map		= [];
 	protected int $mode			= 1;
@@ -13,24 +12,9 @@ class View_Helper_Stripe_Error
 	const MODE_PLAIN		= 0;
 	const MODE_HTML			= 1;
 
-	public function __construct( Environment $env )
-	{
-		$this->env		= $env;
-		$this->words	= $this->env->getLanguage()->getWords( 'resource/payment/stripe/error' );
-		foreach( $this->words as $section => $pairs ){
-			foreach( $pairs as $key => $label ){
-				$this->map[$key]	= (object) [
-					'section'	=> $section,
-					'label'		=> $label,
-				];
-			}
-		}
-//		print_m( $this->map );die;
-	}
-
 	public function render(): string
 	{
-		if( $this->code === 0 )
+		if( 0 === $this->code )
 			return '';
 		$message	= $this->map[$this->code]->label;
 		switch( $this->mode ){
@@ -55,5 +39,19 @@ class View_Helper_Stripe_Error
 	{
 		$this->mode		= $mode;
 		return $this;
+	}
+
+	protected function __onInit(): void
+	{
+		$this->words	= $this->env->getLanguage()->getWords( 'resource/payment/stripe/error' );
+		foreach( $this->words as $section => $pairs ){
+			foreach( $pairs as $key => $label ){
+				$this->map[$key]	= (object) [
+					'section'	=> $section,
+					'label'		=> $label,
+				];
+			}
+		}
+//		print_m( $this->map );die;
 	}
 }

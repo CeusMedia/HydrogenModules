@@ -1,14 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract
+{
 	protected ?string $nodeClass	= NULL;
 	protected string $nodeName		= 'span';
-	protected object $wallet;
+	protected ?object $wallet		= NULL;
 
 	public function render(): string
 	{
+		if( NULL === $this->wallet )
+			throw new RuntimeException( 'No wallet object set' );
 		$helper		= new View_Helper_Stripe_Entity_Money( $this->env );
 		$helper->setFormat( View_Helper_Stripe_Entity_Money::FORMAT_AMOUNT_SPACE_CURRENCY );
 		$helper->setNumberFormat( View_Helper_Stripe_Entity_Money::NUMBER_FORMAT_COMMA );
