@@ -102,7 +102,7 @@ class Model_User extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function migrate()
+	public function migrate(): void
 	{
 		$dbc		= $this->env->getDatabase();
 

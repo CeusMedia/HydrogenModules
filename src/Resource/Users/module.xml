@@ -7,8 +7,8 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.1</version>
-	<log version="0.1">Initital prototype.</log>
+	<version>0.4.2</version>
+	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
 	<log version="0.2.2">Changed ACL right key for controllers.</log>
@@ -25,9 +25,10 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3.6">Update code style.</log>
 	<log version="0.4">Support user tokens backed by user passwords.</log>
 	<log version="0.4.1">Extend user tokens by scope.</log>
+	<log version="0.4.2">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Hook/Resource/User.php</class>
 		<class>Model/Role.php</class>
