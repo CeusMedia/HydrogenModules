@@ -1,8 +1,19 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Shop_Payment_BackendRegister implements Countable
 {
-	/**	@var		array		$backends */
-	protected array $backends	= [];
+	/**	@var		array			$backends */
+	protected array $backends		= [];
+
+	/**	@var		Environment		$env */
+	protected Environment $env;
+
+	public function __construct( Environment $env )
+	{
+		$this->env	= $env;
+	}
 
 	/**
 	 *	@param		array		$map

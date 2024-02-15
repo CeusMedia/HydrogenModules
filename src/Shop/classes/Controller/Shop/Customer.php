@@ -41,6 +41,8 @@ class Controller_Shop_Customer extends Controller
 	 *	@param		integer		$type			...
 	 *	@param		boolean		$remove			Flag: remove address and return
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function address( string $addressId, $type = NULL, bool $remove = NULL ): void
 	{
@@ -118,7 +120,7 @@ class Controller_Shop_Customer extends Controller
 				$data->set( 'country', $country );
 				$addressId	= $this->modelAddress->add( $data->getAll() );
 			}
-			if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+			if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_GUEST ){
 				if( $type === Model_Address::TYPE_BILLING ){
 					$address	= $this->modelAddress->get( $addressId );
 					$this->modelUser->edit( $relationId, [
@@ -154,8 +156,10 @@ class Controller_Shop_Customer extends Controller
 	 *	@access		public
 	 *	@param		string		$mode		Optional: Customer mode to set (account|guest)
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( $mode = NULL )
+	public function index( $mode = NULL ): void
 	{
 		if( $mode === 'account' && $this->useAuth )
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT;
@@ -164,7 +168,7 @@ class Controller_Shop_Customer extends Controller
 		else if( $mode === 'reset' )
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_UNKNOWN;
 		if( is_int( $mode ) ){
-			$logicShop	= new Logic_Shop( $this->env );
+//			$logicShop	= new Logic_Shop( $this->env );
 			$this->modelCart->set( 'customerMode', (int) $mode );
 			$this->restart( NULL, TRUE );
 		}
@@ -206,6 +210,7 @@ class Controller_Shop_Customer extends Controller
 
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuth		= TRUE;
+			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 			$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 		}
 
@@ -229,8 +234,10 @@ class Controller_Shop_Customer extends Controller
 	 *	Handle customer having a user account.
 	 *	@access		protected
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function handleAccount()
+	protected function handleAccount(): void
 	{
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$userId		= 0;
@@ -273,8 +280,10 @@ class Controller_Shop_Customer extends Controller
 	 *	Handle customer having a guest account.
 	 *	@access		protected
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function handleGuest()
+	protected function handleGuest(): void
 	{
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->addData( 'mode', Model_Shop_Cart::CUSTOMER_MODE_GUEST );

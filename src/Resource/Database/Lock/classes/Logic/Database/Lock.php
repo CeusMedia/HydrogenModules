@@ -5,46 +5,27 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Database_Lock extends Logic
 {
-	protected $model;
+	protected Model_Lock $model;
+	protected string $userId;
 
-	/**
-	 *	@deprecated		use hook class instead
-	 *	@todo			remove after all installations are updated
-	 */
-	public static function ___onAutoModuleLockRelease( Environment $env, $context/*, $module, $data = []*/ )
-	{
-		$request	= $env->getRequest();
-		if( $request->isAjax() )
-			return FALSE;
-//		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
-		$payload	= array(
-			'userId'		=> $env->getSession()->get( 'auth_user_id' ),
-			'request'		=> $request,
-			'controller'	=> $request->get( '__controller' ),
-			'action'		=> $request->get( '__action' ),
-			'uri'			=> getEnv( 'REQUEST_URI' ),
-		);
-		return $env->getModules()->callHookWithPayload( 'Database_Lock', 'checkRelease', $context, $payload );
-	}
-
-	public static function release( Environment $env, $subject, $entryId = NULL )
+	public static function release( Environment $env, $subject, $entryId = NULL ): void
 	{
 		$lock	= new self( $env );
 		$lock->unlock( $subject, $entryId );
 	}
 
-	public function getLock( $subject, $entryId )
+	public function getLock( string $subject, string $entryId ): ?object
 	{
 		$lock	= $this->model->getByIndices( [
 			'subject'	=> $subject,
 			'entryId'	=> $entryId,
 		] );
-		if( !$lock )
+		if( NULL === $lock )
 			throw new RuntimeException( 'Resource is not locked' );
 		return $lock;
 	}
 
-	public function getLockUser( $subject, $entryId )
+	public function getLockUser( string $subject, string $entryId ): object
 	{
 		$lockUserId	= $this->getLockUserId( $subject, $entryId );
 		$modelUser	= new Model_User( $this->env );
@@ -54,23 +35,23 @@ class Logic_Database_Lock extends Logic
 		return $lockUser;
 	}
 
-	public function getLockUserId( $subject, $entryId )
+	public function getLockUserId( string $subject, string $entryId ): string
 	{
 		$lock	= $this->getLock( $subject, $entryId );
 		return $lock->userId;
 	}
 
-	public function getUserLocks( $userId )
+	public function getUserLocks( string $userId ): array
 	{
 		return $this->model->getAllByIndex( 'userId', $userId );
 	}
 
-	public function getSubjectLocks( $subject )
+	public function getSubjectLocks( string $subject ): array
 	{
 		return $this->model->getAllByIndex( 'subject', $subject );
 	}
 
-	public function isLocked( $subject, $entryId, $userId = NULL )
+	public function isLocked( string $subject, string $entryId, ?string $userId = NULL ): bool
 	{
 		$indices	= ['subject' => $subject];
 		if( $entryId )
@@ -80,39 +61,39 @@ class Logic_Database_Lock extends Logic
 		return (bool) $this->model->countByIndices( $indices );
 	}
 
-	public function isLockedByMe( $subject, $entryId )
+	public function isLockedByMe( string $subject, string $entryId ): bool
 	{
 		return $this->isLocked( $subject, $entryId, $this->userId );
 	}
 
-	public function isLockedByOther( $subject, $entryId )
+	public function isLockedByOther( string $subject, string $entryId ): bool
 	{
 		return $this->isLocked( $subject, $entryId, '!= '.$this->userId );
 	}
 
-	public function lock( $subject, $entryId, $userId )
+	public function lock( string $subject, string $entryId, string $userId ): ?bool
 	{
 		if( $this->isLocked( $subject, $entryId, $userId ) )
 			return NULL;
 		if( $this->isLocked( $subject, $entryId, '!= '.$userId ) )
 			return FALSE;
-		$this->model->add( array(
+		$this->model->add( [
 			'userId'	=> (int) $userId,
 			'subject'	=> $subject,
 			'entryId'	=> (int) $entryId,
 			'timestamp'	=> time(),
-		) );
+		] );
 		return TRUE;
 	}
 
-	public function lockByMe( $subject, $entryId )
+	public function lockByMe( string $subject, string $entryId ): ?bool
 	{
 		return $this->lock( $subject, $entryId, $this->userId );
 	}
 
-	public function unlock( $subject, $entryId = 0, $userId = NULL )
+	public function unlock( string $subject, string $entryId = '0', ?string $userId = NULL ): bool
 	{
-		$userId		= $userId !== NULL ? (int) $userId : $this->userId;				//  insert current userId of none given
+		$userId		= $userId ?? $this->userId;									//  insert current userId of none given
 		if( !$this->isLocked( $subject, $entryId, $userId ) )
 			return FALSE;
 		$indices	= ['subject' => $subject];
@@ -126,6 +107,6 @@ class Logic_Database_Lock extends Logic
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );
-		$this->userId	= (int) $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 }

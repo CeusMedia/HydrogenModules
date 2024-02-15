@@ -4,13 +4,13 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
 
 class Logic_Shop_Payment_Mangopay extends Logic
 {
-	protected $logicMangopay;
-	protected $logicShop;
-	protected $modelPayin;
-	protected $modelPayment;
+	protected Logic_Payment_Mangopay $logicMangopay;
+	protected Logic_Shop $logicShop;
+	protected Model_Mangopay_Payin $modelPayin;
+	protected Model_Shop_Payment_Mangopay $modelPayment;
 	protected $session;
 
-	public function notePayment( $payIn, $mangopayUserId, $orderId )
+	public function notePayment( $payIn, $mangopayUserId, $orderId ): string
 	{
 		$paymentId	= $this->modelPayment->add( array(
 			'orderId'		=> $orderId,
@@ -19,7 +19,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 			'object'		=> json_encode( $payIn ),
 			'status'		=> 0,
 			'createdAt'		=> time(),
-			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
 		) );
 		$this->logicShop->setOrderPaymentId( $orderId, $paymentId );
 		$this->session->set( 'shop_payment_mangopay_id', $paymentId );
@@ -27,7 +27,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		return $paymentId;
 	}
 
-	public function updatePayment( $payIn )
+	public function updatePayment( $payIn ): int
 	{
 		$payment	= $this->modelPayment->getByIndex( 'payInId', $payIn->Id );
 		if( !$payment )
@@ -45,7 +45,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		) );
 	}
 
-	public function transferOrderAmountToClientSeller( $orderId, $payIn, bool $strict = TRUE )
+	public function transferOrderAmountToClientSeller( string $orderId, object $payIn, bool $strict = TRUE ): ?bool
 	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
@@ -92,10 +92,10 @@ class Logic_Shop_Payment_Mangopay extends Logic
 
 	protected function __onInit(): void
 	{
-		$this->logicMangopay	= new Logic_Payment_Mangopay( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
-		$this->modelPayins		= new Model_Mangopay_Payin( $this->env );
+		$this->logicMangopay	= new Logic_Payment_Mangopay( $this->env );
 		$this->modelPayment		= new Model_Shop_Payment_Mangopay( $this->env );
+		$this->modelPayin		= new Model_Mangopay_Payin( $this->env );
 		$this->session			= $this->env->getSession();
 	}
 
