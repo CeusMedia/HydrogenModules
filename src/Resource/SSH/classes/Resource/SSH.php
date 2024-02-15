@@ -1,4 +1,10 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use phpseclib\Crypt\RSA as RsaCrypt;
+use phpseclib\Net\SCP as ScpConnection;
+use phpseclib\Net\SSH2 as Ssh2Connection;
+
 /**
  */
 class Resource_SSH
@@ -6,23 +12,23 @@ class Resource_SSH
 	const MODE_LAZY				= 0;
 	const MODE_STRAIGHT 		= 1;
 
-	protected $connection;
-	protected $env;
-	protected $host;
-	protected $mode;
-	protected $path;
-	protected $port;
-	protected $privateKey;
-	protected $username;
-	protected $scp;
-	protected $status			= 0;
+	protected ?Ssh2Connection $connection	= NULL;
+	protected Environment $env;
+	protected string $host;
+	protected int $mode;
+	protected string $path;
+	protected int $port;
+	protected string $privateKey;
+	protected string $username;
+	protected ?ScpConnection $scp	= NULL;
+	protected int $status			= 0;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
 
-	public function connect( $host, $username, $privateKey, $port = 22, $mode = self::MODE_LAZY )
+	public function connect( string $host, string $username, string $privateKey, int $port = 22, int $mode = self::MODE_LAZY ): void
 	{
 		$this->host			= $host;
 		$this->port			= $port;
@@ -30,40 +36,22 @@ class Resource_SSH
 		$this->privateKey	= $privateKey;
 		$this->mode			= $mode;
 		if( $mode === self::MODE_STRAIGHT )
-			$this->_connect();
+			$this->openConnection();
 	}
 
-	protected function _connect( $forceReconnect = FALSE )
+	public function pwd(): string
 	{
-		if( $this->connection && !$forceReconnect )
-			return;
-		$key = new \phpseclib\Crypt\RSA();
-		if( substr( $this->privateKey, 0, 10 ) === '-----BEGIN' )
-			$key->loadKey( $this->privateKey );
-		else if( file_exists( $this->privateKey ) )
-			$key->loadKey( file_get_contents( $this->privateKey ) );
-		else
-			throw Exception( 'Neither valid key string nor key file given' );
-
-		$connection = new \phpseclib\Net\SSH2( $this->host, $this->port );
-		if( !$connection->login( $this->username, $key ) )
-			throw RuntimeException( sprintf( 'Login as %s failed', $this->username ) );
-		$this->connection	= $connection;
+		return $this->exec( 'pwd' );
 	}
 
-	public function pwd()
-	{
-		return $this->_exec( 'pwd' );
-	}
-
-	public function index( $path = './', $pattern = NULL )
+	public function index( string $path = './', $pattern = NULL ): array
 	{
 		$options	= [];
 		$options[]	= 'a';																//  show all files/folders
 		$options[]	= 'h';																//  show hidden files/folders
 		$options	= count( $options ) ? '-'.join( $options ) : '';					//  collect command options
 		$command	= sprintf( 'ls %s %s', $options, $this->path.$path );				//  render shell command
-		$list		= explode( PHP_EOL, trim( $this->_exec( $command ) ) );				//  execute command and split resulting lines
+		$list		= explode( PHP_EOL, trim( $this->exec( $command ) ) );				//  execute command and split resulting lines
 		foreach( $list as $nr => $item )												//  iterate resulting lines
 			if( in_array( $item, ['.', '..'] ) )									//  if line is current or parent folder
 				unset( $list[$nr] );													//  remove from resulting lines
@@ -78,48 +66,78 @@ class Resource_SSH
 		return array_values( $list );
 	}
 
-	public function has( $path )
+	public function has( string $path )
 	{
-		$this->_connect();
+		$this->openConnection();
 		$command	= sprintf( 'test -e %s', $this->path.$path.' && echo 1' );			//  render shell command
 		return $this->connection->exec( $command );
 	}
 
-	public function get( $path )
+	public function get( string $path )
 	{
-		$this->_initScp();
+		$this->initScp();
 		return $this->scp->get( $this->path.$path );
 	}
 
-	public function remove( $path )
+	public function remove( string $path )
 	{
-		$this->_connect();
+		$this->openConnection();
 		$command	= sprintf( 'rm -R %s', $this->path.$path.' && echo 1' );
 		return $this->connection->exec( $command );
 	}
 
-	public function set( $path, $content )
+	public function set( string $path, string $content )
 	{
-		$this->_initScp();
+		$this->initScp();
 		return $this->scp->put( $this->path.$path, $content );
 	}
 
-	public function setPath( $path )
+	public function setPath( string $path ): self
 	{
 		$this->path	= rtrim( trim( $path ), '/' ).'/';
+		return $this;
 	}
 
-	protected function _exec( $command )
+	protected function exec( string $command )
 	{
-		$this->_connect();
+		$this->openConnection();
 		return $this->connection->exec( $command );
 	}
 
-	protected function _initScp()
+	/**
+	 *	@return		void
+	 *	@throws		InvalidArgumentException	if no key string or file is given
+	 *	@throws		RuntimeException			if login failed
+	 */
+	protected function initScp(): void
 	{
 		if( $this->scp )
 			return;
-		$this->_connect();
-		$this->scp	= new \phpseclib\Net\SCP( $this->connection );
+		$this->openConnection();
+		$this->scp	= new ScpConnection( $this->connection );
+	}
+
+	/**
+	 *	@param		bool		$forceReconnect
+	 *	@return		void
+	 *	@throws		InvalidArgumentException	if no key string or file is given
+	 *	@throws		RuntimeException			if login failed
+	 */
+	protected function openConnection( bool $forceReconnect = FALSE ): void
+	{
+		if( $this->connection && !$forceReconnect )
+			return;
+		$key = new RsaCrypt();
+		if( str_starts_with( $this->privateKey, '-----BEGIN' ) )
+			$key->loadKey( $this->privateKey );
+		else if( file_exists( $this->privateKey ) )
+			$key->loadKey( file_get_contents( $this->privateKey ) );
+		else
+			throw new InvalidArgumentException( 'Neither valid key string nor key file given' );
+
+		$connection = new Ssh2Connection( $this->host, $this->port );
+		if( !$connection->login( $this->username, $key ) )
+			throw new RuntimeException( sprintf( 'Login as %s failed', $this->username ) );
+		$this->connection	= $connection;
 	}
 }
