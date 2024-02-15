@@ -12,22 +12,22 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_EventQueue extends Logic
 {
-	protected $model;
-	protected $scope;
-	protected $origin;
-	protected $userId		= 0;
+	protected Model_Event $model;
+	protected string $scope			= '';
+	protected string $origin		= '';
+	protected string $userId		= '0';
 
 	/**
 	 *	Adds a new event.
 	 *	@access		public
-	 *	@param		string		$identifier		Identifier of event
-	 *	@param		mixed		$data			Data for event handling
-	 *	@param		string		$origin			...
-	 *	@return		string		ID of new event
+	 *	@param		string			$identifier		Identifier of event
+	 *	@param		mixed			$data			Data for event handling
+	 *	@param		string|NULL		$origin			...
+	 *	@return		string			ID of new event
 	 */
-	public function add( $identifier, $data = [], $origin = NULL ): int
+	public function add( string $identifier, $data, ?string $origin = NULL ): int
 	{
-		return $this->model->add([
+		return $this->model->add( [
 			'userId'		=> $this->userId,
 			'status'		=> Model_Event::STATUS_NEW,
 			'scope'			=> $this->scope,
@@ -36,7 +36,7 @@ class Logic_EventQueue extends Logic
 			'data'			=> json_encode( $data ),
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		]);
+		] );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		array		$conditions		Map of conditions to match with
 	 *	@return		integer
 	 */
-	public function count( $conditions ): int
+	public function count( array $conditions ): int
 	{
 		if( !$this->scope && !array_key_exists( 'scope', $conditions ) )
 			$conditions['scope']	= $this->scope;
@@ -59,7 +59,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		string		$eventId		ID of event to return
 	 *	@return		object|NULL	Data object of event
 	 */
-	public function get( $eventId ): int
+	public function get( string $eventId ): object|NULL
 	{
 		return $this->model->get( $eventId );
 	}
@@ -71,7 +71,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		array		$conditions		Map of conditions to match with
 	 *	@return		array
 	 */
-	public function getByConditions( $conditions ): array
+	public function getByConditions( array $conditions ): array
 	{
 		if( !$this->scope && !array_key_exists( 'scope', $conditions ) )
 			$conditions['scope']	= $this->scope;
@@ -85,7 +85,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsNew( $eventId, $result = NULL ): self
+	public function markAsNew( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_NEW, $result );
 	}
@@ -97,7 +97,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsIgnored( $eventId, $result = NULL ): self
+	public function markAsIgnored( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_IGNORED, $result );
 	}
@@ -109,7 +109,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsRevoked( $eventId, $result = NULL ): self
+	public function markAsRevoked( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_REVOKED, $result );
 	}
@@ -121,7 +121,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsInRunning( $eventId, $result = NULL ): self
+	public function markAsInRunning( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_RUNNING, $result );
 	}
@@ -133,7 +133,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsFailed( $eventId, $result = NULL ): self
+	public function markAsFailed( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_FAILED, $result );
 	}
@@ -145,7 +145,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed		$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsSucceeded( $eventId, $result = NULL ): self
+	public function markAsSucceeded( string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_SUCCEEDED, $result );
 	}
@@ -156,7 +156,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		string		$scope			Scope to set
 	 *	@return		self
 	 */
-	public function setScope( $scope ): self
+	public function setScope( string $scope ): self
 	{
 		$this->scope	= $scope;
 		return $this;
@@ -169,9 +169,12 @@ class Logic_EventQueue extends Logic
 		$this->model	= new Model_Event( $this->env );
 	}
 
-	protected function setStatus( $eventId, $status, $result = NULL ): self
+	protected function setStatus( string $eventId, $status, $result = NULL ): self
 	{
-		$event		= $this->checkEvent( $eventId );
+		$event		= $this->get( $eventId );
+		if( NULL === $event )
+			throw new DomainException( 'Invalid event ID' );
+
 		$possibleStatuses	= Model_Event::STATUSES_TRANSITIONS[$event->status];
 		if( !in_array( (int) $status, $possibleStatuses, TRUE ) )
 			throw new RangeException( 'Invalid status transition' );
@@ -180,8 +183,7 @@ class Logic_EventQueue extends Logic
 			'result'		=> json_encode( $result ),
 			'modifiedAt'	=> time(),
 		];
-		$this->modelEvent->edit( $eventId, $data );
+		$this->model->edit( $eventId, $data );
 		return $this;
 	}
-
 }

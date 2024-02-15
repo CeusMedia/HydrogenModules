@@ -1,11 +1,14 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_EventQueue extends Job_Abstract
 {
-	protected $logic;
-	protected $model;
-	protected $options;
+	protected Logic_Job $logic;
+	protected Model_Event $model;
+	protected Dictionary $options;
 
-	public function count()
+	public function count(): void
 	{
 		$conditions	= [
 			'status'	=> Model_Event::STATUS_NEW,
@@ -21,25 +24,25 @@ class Job_EventQueue extends Job_Abstract
 		$this->out( 'No unhandled events found' );
 	}
 
-	public function handle()
+	public function handle(): void
 	{
 		$conditions	= ['status' => Model_Event::STATUS_NEW];
 		$captain	= $this->env->getCaptain();
 		$events		= $this->model->getAll( $conditions, ['createdAt' => 'ASC'] );
+		$results	= (object) [
+			'nrSucceeded'	=> 0,
+			'nrFailed'		=> 0,
+			'nrIgnored'		=> 0,
+			'succeeded'		=> [],
+			'failed'		=> [],
+			'ignored'		=> [],
+		];
 		foreach( $events as $event ){
 			$this->out( '- '.date( 'Y-m-d H:i', $event->createdAt ).': '.$event->identifier );
 			$this->model->edit( $event->eventId, [
 				'status'		=> Model_Event::STATUS_RUNNING,
 				'modifiedAt'	=> time(),
 			] );
-			$results	= (object) [
-				'nrSucceeded'	=> 0,
-				'nrFailed'		=> 0,
-				'nrIgnored'		=> 0,
-				'succeeded'		=> [],
-				'failed'		=> [],
-				'ignored'		=> [],
-			];
 			try{
 				$data	= [
 					'status'		=> Model_Event::STATUS_IGNORED,
@@ -84,6 +87,7 @@ class Job_EventQueue extends Job_Abstract
 	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_eventqueue.', TRUE );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
 		$this->model	= new Model_Event( $this->env );
 	}
