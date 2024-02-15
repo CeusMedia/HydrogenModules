@@ -14,7 +14,7 @@ class Resource_REST_Client
 	protected Environment $env;
 	protected Dictionary $session;
 	protected Dictionary $moduleConfig;
-	protected $cache;
+	protected ?object $cache			= NULL;
 	protected RestClient $client;
 	protected bool $enabled	= TRUE;
 
@@ -29,9 +29,9 @@ class Resource_REST_Client
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_rest_client.', TRUE );
-		$this->__initClient();
-		$this->__initLogging();
-		$this->__initCache();
+		$this->initClient();
+		$this->initLogging();
+		$this->initCache();
 	}
 
 	/**
@@ -64,7 +64,7 @@ class Resource_REST_Client
 	public function disableCache(): void
 	{
 		$this->enabled = FALSE;
-		$this->__initCache();
+		$this->initCache();
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Resource_REST_Client
 	public function enableCache(): void
 	{
 		$this->enabled = TRUE;
-		$this->__initCache();
+		$this->initCache();
 	}
 
 	/**
@@ -91,7 +91,7 @@ class Resource_REST_Client
 	public function getCacheKey( string $path ): string
 	{
 		return str_replace( "/", ".", $path );
-		return md5( $path );
+//		return md5( $path );
 	}
 
 	/**
@@ -174,17 +174,17 @@ class Resource_REST_Client
 	}
 
 	/**
-	 *  @deprecated use module configuration instead
-     *  @todo       to be removed
-     */
+	 *	@deprecated		use module configuration instead
+	 *	@todo			to be removed
+	 */
 	public function useCache( bool $status = TRUE ): void
 	{
 		$this->enabled = $status;
 		$this->moduleConfig->set( 'cache.enabled', $status );
-		$this->__initCache();
+		$this->initCache();
 	}
 
-	protected function __initClient(): void
+	protected function initClient(): void
 	{
 		$options		= $this->moduleConfig->getAll( 'server.', TRUE );
 		$curlOptions	= array(
@@ -196,7 +196,7 @@ class Resource_REST_Client
 		$this->client->setBasicAuth( $options->get( 'username' ), $options->get( 'password' ) );
 	}
 
-	protected function __initLogging(): void
+	protected function initLogging(): void
 	{
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
 		$options	= $this->moduleConfig->getAll( 'log.', TRUE );
@@ -214,7 +214,7 @@ class Resource_REST_Client
 		}
 	}
 
-	protected function __initCache(): void
+	protected function initCache(): void
 	{
 		$config		= $this->moduleConfig->getAll( 'cache.', TRUE );
 		if( !$this->moduleConfig->get( 'cache.enabled' ) )
