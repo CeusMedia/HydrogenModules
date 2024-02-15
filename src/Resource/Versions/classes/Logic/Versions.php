@@ -1,42 +1,74 @@
 <?php
-class Logic_Versions{
 
-	protected $env;
-	static protected $instance;
-	protected $model;
-	protected $userId;
+use CeusMedia\HydrogenFramework\Environment;
+class Logic_Versions
+{
+	protected static self $instance;
 
-	protected function __construct( $env ){
-		$this->env	= $env;
+	protected Environment $env;
+	protected Model_Version $model;
+	protected ?string $userId			= NULL;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
+	protected function __construct( Environment $env )
+	{
+		$this->env		= $env;
 		$this->model	= new Model_Version( $env );
 		$this->detectUserId();
 	}
 
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
-	public function add( $module, $id, $content, $authorId = NULL ){
-		$data		= array(
-			'userId'	=> $authorId ? $authorId : $this->userId,
+	/**
+	 *	@param		string			$module
+	 *	@param		string			$id
+	 *	@param		string			$content
+	 *	@param		string|NULL		$authorId
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add( string $module, string $id, string $content, ?string $authorId = NULL ): string
+	{
+		$data		= [
+			'userId'	=> $authorId ?: $this->userId,
 			'module'	=> $module,
 			'id'		=> $id,
 			'version'	=> $this->getNextVersionNr( $module, $id ),
 			'timestamp'	=> time(),
-		);
+		];
 		$versionId	= $this->model->add( $data );
 		$data		= ['content' => $content];
 		$this->model->edit( $versionId, $data, FALSE );
+		return $versionId;
 	}
 
-	public function detectUserId(){
+	/**
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	public function detectUserId(): bool
+	{
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
-			$logic			= Logic_Auth::getInstance( $this->env );
+			$logic			= Logic_Authentication::getInstance( $this->env );
 			$this->userId	= $logic->getCurrentUserId();
 			return TRUE;
 		}
 		return FALSE;
 	}
 
-	public function get( $module, $id, $version = NULL ){
+	/**
+	 *	@param		string			$module
+	 *	@param		string			$id
+	 *	@param		string|NULL		$version
+	 *	@return		object|NULL
+	 */
+	public function get( string $module, string $id, ?string $version = NULL ): ?object
+	{
 		if( !is_null( $version ) ){
 			$conditions = [
 				'module'	=> $module,
@@ -52,7 +84,16 @@ class Logic_Versions{
 		return $this->model->getByIndices( $conditions, ['version' => 'DESC'] );
 	}
 
-	public function getAll( $module, $id, $conditions = [], $orders = [], $limits = [] ){
+	/**
+	 *	@param		string		$module
+	 *	@param		string		$id
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
+	public function getAll( string $module, string $id, array $conditions = [], array $orders = [], array $limits = [] ): array
+	{
 		$indices	= [
 			'module'	=> $module,
 			'id'		=> $id,
@@ -63,17 +104,35 @@ class Logic_Versions{
 		return $this->model->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getById( $versionId ){
+	/**
+	 *	@param		string		$versionId
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getById( string $versionId ): ?object
+	{
 		return $this->model->get( $versionId );
 	}
 
-	static public function getInstance( $env ){
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
+	public static function getInstance( Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
 
-	protected function getNextVersionNr( $module, $id ){
+	/**
+	 *	@param		string		$module
+	 *	@param		string		$id
+	 *	@return		int
+	 */
+	protected function getNextVersionNr( string $module, string $id ): int
+	{
 		$latest		= $this->model->getByIndices( [
 			'module'	=> $module,
 			'id'		=> $id,
@@ -83,21 +142,42 @@ class Logic_Versions{
 		return 0;
 	}
 
-	public function has( $module, $id, $version = NULL ){
+	/**
+	 *	@param		string		$module
+	 *	@param		string		$id
+	 *	@param		?string		$version
+	 *	@return		bool
+	 */
+	public function has( string $module, string $id, ?string $version = NULL ): bool
+	{
 		if( !is_null( $version ) )
 			return (bool) $this->get( $module, $id, $version );
-		return count( $this->getAll( $module, $id ) ) > 0;
+		return 0 !== count( $this->getAll( $module, $id ) );
 	}
 
-	public function hasById( $versionId ){
+	/**
+	 *	@param		string		$versionId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function hasById( string $versionId ): bool
+	{
 		return (bool) $this->getById( $versionId );
 	}
 
-	public function remove( $module, $id, $version ){
+	/**
+	 *	@param		string		$module
+	 *	@param		string		$id
+	 *	@param		string		$version
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( string $module, string $id, string $version ): bool
+	{
 		$entry	= $this->get( $module, $id, $version );
 		if( !$entry )
 			return FALSE;
-		$this->model->remove( $entry->versionId );
+		return $this->model->remove( $entry->versionId );
 	}
 
 /*	public function set( $versionId, $content, $data ){
