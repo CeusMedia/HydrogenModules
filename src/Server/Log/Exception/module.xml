@@ -12,7 +12,7 @@ list>
 - can send mails to one or more mail receivers
 <list
 
-**Invokation:**
+**Invocation:**
 code>
 ...
 catch( Exception $e ){
@@ -83,7 +83,7 @@ Please think about using the hook instead.
 	<config protected="yes" type="boolean" name="mail.active" title="Enable sending mails">yes</config>
 	<config protected="yes" type="string" name="mail.receivers" title="Mail receiver address[es] (comma separated)"></config>
 	<relations>
-		<needs type="module">Resource_Mail</needs>
+		<supports type="module">Resource_Mail</supports>
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
