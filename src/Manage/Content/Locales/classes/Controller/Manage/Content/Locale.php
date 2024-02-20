@@ -44,7 +44,7 @@ class Controller_Manage_Content_Locale extends Controller
 
 	public static string $filterPrefix	= 'filter_manage_content_locale_';
 
-	public function ajaxSaveContent()
+	public function ajaxSaveContent(): void
 	{
 		$this->checkAjaxRequest();
 		if( !( $this->language && $this->file ) )
@@ -55,7 +55,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->handleJsonResponse( 'success', TRUE );
 	}
 
-	public function edit( $folder, $language, $file )
+	public function edit( string $folder, string $language, string $file ): void
 	{
 		$this->setFolder( $folder );
 		$this->setLanguage( $language );
@@ -114,7 +114,7 @@ class Controller_Manage_Content_Locale extends Controller
 		}
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( static::$filterPrefix.'folder' );
@@ -142,20 +142,17 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $folder = NULL, $language = NULL )
+	public function index( ?string $folder = NULL, ?string $language = NULL ): void
 	{
-		if( $folder && $language ){
+		if( NULL !== $folder ){
 			$this->setFolder( $folder );
-			$this->setLanguage( $language );
-			$this->restart( NULL, TRUE );
-		}
-		if( $folder ){
-			$this->setFolder( $folder );
+			if( NULL !== $language )
+				$this->setLanguage( $language );
 			$this->restart( NULL, TRUE );
 		}
 	}
 
-	public function setEditor()
+	public function setEditor(): void
 	{
 		$editor		= $this->request->get( 'editor' );
 		$ext		= $this->request->get( 'ext' );
@@ -234,7 +231,7 @@ class Controller_Manage_Content_Locale extends Controller
 		return implode( "\n", $lines );
 	}*/
 
-	protected function getLanguages()
+	protected function getLanguages(): array
 	{
 		$index	= new FolderLister( $this->basePath );
 		foreach( $index->getList() as $folder )
@@ -243,7 +240,7 @@ class Controller_Manage_Content_Locale extends Controller
 		return $languages;
 	}
 
-	protected function indexFiles()
+	protected function indexFiles(): void
 	{
 		$list		= [];
 		foreach( static::$folders as $folderKey => $folderPath ){
@@ -253,25 +250,25 @@ class Controller_Manage_Content_Locale extends Controller
 			if( file_exists( $path.$folderPath ) ){
 				$index	= RecursiveFolderLister::getFileList( $path.$folderPath );
 				foreach( $index as $item ){
-					if( substr( $item->getFilename(), -1 ) !== "~" ){
+					if( !str_ends_with( $item->getFilename(), '~' ) ){
 						$pathName	= substr( $item->getPathname(), strlen( $path ) );
 						if( $this->folder === 'locale' ){
-							if( substr( $pathName, 0, 5 ) === 'html/' )
+							if( str_starts_with( $pathName, 'html/' ) )
 								continue;
-							if( substr( $pathName, 0, 5 ) === 'mail/' )
+							if( str_starts_with( $pathName, 'mail/' ) )
 								continue;
 						}
 						$content	= FileReader::load( $item->getPathname() );
 						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
 						$pathName	= substr( $pathName, strlen( $folderPath ) );
 						$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
-						$list[$root.'_'.$pathName]	= (object) array(
+						$list[$root.'_'.$pathName]	= (object) [
 							'pathName'	=> $pathName,
 							'fileName'	=> $item->getFilename(),
 							'baseName'	=> pathinfo( $item->getFilename(), PATHINFO_FILENAME ),
 							'extension'	=> pathinfo( $item->getFilename(), PATHINFO_EXTENSION ),
 							'size'		=> strlen( trim( $content ) ),
-						);
+						];
 					}
 				}
 			}
