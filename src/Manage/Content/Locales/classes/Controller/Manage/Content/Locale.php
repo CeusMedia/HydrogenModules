@@ -106,7 +106,7 @@ class Controller_Manage_Content_Locale extends Controller
 			$ext	= strtolower( pathinfo( $this->file, PATHINFO_EXTENSION ) );
 			$editor	= $this->session->get( static::$filterPrefix.'editor_'.$ext );
 			$editor	= $editor ?: $this->session->get( static::$filterPrefix.'editor' );
-			$editor	= $editor ?: array_shift( $editor );
+			$editor	= $editor ?: array_shift( $editors );
 			$editor	= $editor ?: 'Plain';
 			$this->addData( 'editor', $editor );
 			$this->addData( 'editorByExt', $this->session->get( static::$filterPrefix.'editor_'.$ext ) );
