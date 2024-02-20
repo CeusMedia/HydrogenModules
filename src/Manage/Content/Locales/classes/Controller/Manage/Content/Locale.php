@@ -33,7 +33,7 @@ class Controller_Manage_Content_Locale extends Controller
 	protected string $basePath;
 	protected string $folderPathFull;
 	protected Model_Provision_Product_License $modelLicense;
-	protected ?string $folder			= NULL;
+	protected ?string $folder		= NULL;
 	protected ?string $file			= NULL;
 
 	public static array $folders	= [
@@ -277,7 +277,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->addData( 'files', $list );
 	}
 
-	protected function setFile( string $file ): ?bool
+	protected function setFile( ?string $file ): ?bool
 	{
 		if( $this->file === $file )
 			return NULL;
@@ -304,7 +304,7 @@ class Controller_Manage_Content_Locale extends Controller
 			throw new RuntimeException( 'Invalid folder' );
 		$this->session->set( static::$filterPrefix.'folder', $this->folder = $folder );
 		$this->addData( 'folder', $this->folder );
-		$this->setFile( NULL );
+		$this->setFile( '' );
 		return TRUE;
 	}
 
