@@ -76,8 +76,8 @@ abstract class Mail_Abstract
 		self::CONTENT_TYPE_TEXT_RENDERED	=> '',
 	];
 
-	/** @var		integer					$templateId		ID of template to force to use on rendering of mail contents */
-	protected int $templateId				= 0;
+	/** @var		int|string				$templateId		ID of template to force to use on rendering of mail contents */
+	protected int|string $templateId		= 0;
 
 	/** @var		string					$encodingHtml	Default encoding for HTML */
 	protected string $encodingHtml			= 'quoted-printable';
@@ -469,12 +469,12 @@ abstract class Mail_Abstract
 
 	/**
 	 *	@param		string		$content
-	 *	@param		string		$templateId
+	 *	@param		int|string		$templateId
 	 *	@return		string
 	 *	@throws		IoException
 	 *	@throws		Exception
 	 */
-	protected function applyTemplateToHtml( string $content, string $templateId = '0' ): string
+	protected function applyTemplateToHtml( string $content, int|string $templateId = '0' ): string
 	{
 		$messenger	= $this->env->getMessenger();
 		$libraries	= $this->logicMail->detectAvailableMailLibraries();
@@ -554,11 +554,11 @@ abstract class Mail_Abstract
 	 *
 	 *	@access		protected
 	 *	@param		string			$content		...
-	 *	@param		string|NULL		$templateId		ID of template to use in favor of defaults (must be usable)
+	 *	@param		int|string|NULL		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyTemplateToText( string $content, string $templateId = NULL ): string
+	protected function applyTemplateToText( string $content, int|string $templateId = NULL ): string
 	{
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
@@ -674,11 +674,11 @@ abstract class Mail_Abstract
 	 *	Stores given (generated) and rendered contents.
 	 *	@access		protected
 	 *	@param		string		$content	HTML mail body to set
-	 *	@param		string		$templateId		ID of mail template to use in favour
+	 *	@param		int|string		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 *	@throws		IoException
 	 */
-	protected function setHtml( string $content, string $templateId = '0' ): self
+	protected function setHtml( string $content, int|string $templateId = '0' ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
@@ -714,10 +714,10 @@ abstract class Mail_Abstract
 	 *	Needed for preview and testing.
 	 *	Set to 0 to return to detection mode.
 	 *	@access		protected
-	 *	@param		string		$templateId		Forced template ID
+	 *	@param		int|string		$templateId		Forced template ID
 	 *	@return 	self
 	 */
-	protected function setTemplateId( string $templateId ): self
+	protected function setTemplateId( int|string $templateId ): self
 	{
 		$this->templateId	= $templateId;
 		return $this;
@@ -729,11 +729,11 @@ abstract class Mail_Abstract
 	 *	Stores given (generated) and rendered contents.
 	 *	@access		protected
 	 *	@param		string		$content		Plain text mail body to set
-	 *	@param		string		$templateId		ID of mail template to use in favour
+	 *	@param		int|string		$templateId		ID of mail template to use in favour
 	 *	@return		self
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setText( string $content, string $templateId = '0' ): self
+	protected function setText( string $content, int|string $templateId = '0' ): self
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];

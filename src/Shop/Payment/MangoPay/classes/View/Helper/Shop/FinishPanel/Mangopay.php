@@ -38,15 +38,12 @@ class View_Helper_Shop_FinishPanel_Mangopay
 	{
 		if( !$this->payment )
 			throw new RuntimeException( 'No payment selected' );
-		switch( $this->order->paymentMethod ){
-			case 'MangopayBW':
-				return $this->renderBankWire();
-			case 'MangopayBWW':
-				return $this->renderBankWireWeb();
-			case 'MangopayCCW':
-				return $this->renderCreditCardWeb();
-		}
-		return '';
+		return match( $this->order->paymentMethod ){
+			'MangopayBW'	=> $this->renderBankWire(),
+			'MangopayBWW'	=> $this->renderBankWireWeb(),
+			'MangopayCCW'	=> $this->renderCreditCardWeb(),
+			default			=> '',
+		};
 	}
 
 	public function setListClass( string $class ): self
@@ -55,7 +52,7 @@ class View_Helper_Shop_FinishPanel_Mangopay
 		return $this;
 	}
 
-	public function setOrderId( string $orderId ): self
+	public function setOrderId( int|string $orderId ): self
 	{
 		$this->order	= $this->modelOrder->get( $orderId );
 		if( $this->order->paymentId > 0 ){
@@ -72,7 +69,7 @@ class View_Helper_Shop_FinishPanel_Mangopay
 		return $this;
 	}
 
-	public function setPaymentId( string $paymentId ): self
+	public function setPaymentId( int|string $paymentId ): self
 	{
 		$this->payment	= $this->modelPayment->get( $paymentId );
 		if( strlen( $this->payment->object ) )

@@ -34,7 +34,7 @@ class Job_Info_Files extends Job_Abstract
 		$this->out( 'Migrated '.$count.' files.' );
 	}
 
-	protected function migrateFilesInFolderByFolderId( string $folderId, string $path, int $level = 0 ): int
+	protected function migrateFilesInFolderByFolderId( int|string $folderId, string $path, int $level = 0 ): int
 	{
 		$count	= 0;
 		$files	= $this->modelFile->getAllByIndex( 'downloadFolderId', $folderId );

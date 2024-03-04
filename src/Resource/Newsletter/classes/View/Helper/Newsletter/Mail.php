@@ -78,10 +78,10 @@ class View_Helper_Newsletter_Mail
 	}
 
 	/**
-	 *	@param		string		$readerId
+	 *	@param		int|string		$readerId
 	 *	@return		self
 	 */
-	public function setReaderId( string $readerId ): self
+	public function setReaderId( int|string $readerId ): self
 	{
 		$this->logic->checkReaderId( $readerId );
 		$this->reader	= $this->logic->getReader( $readerId );
@@ -89,10 +89,10 @@ class View_Helper_Newsletter_Mail
 	}
 
 	/**
-	 *	@param		string		$templateId
+	 *	@param		int|string		$templateId
 	 *	@return		self
 	 */
-	public function setTemplateId( string $templateId ): self
+	public function setTemplateId( int|string $templateId ): self
 	{
 		$this->logic->checkTemplateId( $templateId, TRUE );
 		$this->template	= $this->logic->getTemplate( $templateId );

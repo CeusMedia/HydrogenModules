@@ -314,7 +314,7 @@ class Controller_Manage_Form_Fill extends Controller
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
-	protected function checkId( string $fillId, bool $strict = TRUE )
+	protected function checkId( int|string $fillId, bool $strict = TRUE )
 	{
 		return $this->logicFill->get( $fillId, $strict );
 	}

@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 class View_Helper_Navigation_Pages_Navbar extends Abstraction
 {
 	protected ?string $current		= NULL;
-	protected string $scopeId		= '0';
+	protected int|string $scopeId		= '0';
 
 	public function render(): string
 	{
@@ -62,7 +62,7 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 		return $this;
 	}
 
-	public function setScopeId( string $scopeId ): self
+	public function setScopeId( int|string $scopeId ): self
 	{
 		$this->scopeId		= $scopeId;
 		return $this;

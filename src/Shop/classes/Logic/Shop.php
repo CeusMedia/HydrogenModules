@@ -39,7 +39,7 @@ class Logic_Shop extends Logic
 	/**
 	 * @deprecated	get Model_Shop_Order::priceTaxed instead
 	 */
-	public function calculateOrderTotalPrice( string $orderId ): float
+	public function calculateOrderTotalPrice( int|string $orderId ): float
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -47,7 +47,7 @@ class Logic_Shop extends Logic
 		return $order->priceTaxed;
 	}
 
-	public function countArticleInCart( string $bridgeId, string $articleId ): int
+	public function countArticleInCart( int|string $bridgeId, int|string $articleId ): int
 	{
 		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) )
 			foreach( $positions as $position )
@@ -73,7 +73,7 @@ class Logic_Shop extends Logic
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getAccountCustomer( string $userId ): object
+	public function getAccountCustomer( int|string $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -117,7 +117,7 @@ class Logic_Shop extends Logic
 		return $address;
 	}
 
-	public function getPaymentFeesFromCart()
+	public function getPaymentFeesFromCart(): ?float
 	{
 		if( !$this->usePayment )
 			return NULL;
@@ -130,7 +130,7 @@ class Logic_Shop extends Logic
 	/**
 	 *	@deprecated
 	 */
-	public function getGuestCustomer( string $customerId ): object
+	public function getGuestCustomer( int|string $customerId ): object
 	{
 		throw new RuntimeException( 'Method Logic_Shop::getGuestCustomer is deprecated' );
 		$model		= new Model_Shop_Customer( $this->env );
@@ -158,7 +158,7 @@ class Logic_Shop extends Logic
 		return $customer;
 	}
 
-	public function getOrder( string $orderId, bool $extended = FALSE ): object
+	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -174,7 +174,7 @@ class Logic_Shop extends Logic
 		return $order;
 	}
 
-	public function getOrderCustomer( string $orderId ): object
+	public function getOrderCustomer( int|string $orderId ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -192,7 +192,7 @@ class Logic_Shop extends Logic
 		return (object) [];
 	}
 
-	public function getOrderPosition( string $positionId, bool $extended = FALSE ): ?object
+	public function getOrderPosition( int|string $positionId, bool $extended = FALSE ): ?object
 	{
 		$position	= $this->modelOrderPosition->get( $positionId );
 		if( $extended ){
@@ -202,7 +202,7 @@ class Logic_Shop extends Logic
 		return $position;
 	}
 
-	public function getOrderPositions( string $orderId, bool $extended = FALSE ): array
+	public function getOrderPositions( int|string $orderId, bool $extended = FALSE ): array
 	{
 		$positions	= $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
 		if( $extended ){
@@ -222,7 +222,7 @@ class Logic_Shop extends Logic
 	/**
 	 *	@todo		make tax rate configurable - store rate on shipping price or service
 	 */
-	public function getOrderShipping( string $orderId ): object
+	public function getOrderShipping( int|string $orderId ): object
 	{
 		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 		$facts			= (object) [
@@ -257,7 +257,7 @@ class Logic_Shop extends Logic
 	/**
 	 *	@todo		make tax rate configurable - store rate on shipping price or service
 	 */
-	public function getOrderPaymentFees( string $orderId ): object
+	public function getOrderPaymentFees( int|string $orderId ): object
 	{
 		$facts			= (object) [
 			'price'			=> .0,
@@ -302,7 +302,7 @@ class Logic_Shop extends Logic
 		return $facts;
 	}
 
-	public function getOrderTaxes( string $orderId ): array
+	public function getOrderTaxes( int|string $orderId ): array
 	{
 		$taxes		= [];
 		$sum		= 0;
@@ -364,12 +364,12 @@ class Logic_Shop extends Logic
 	/**
 	 *	Returns Shipping Zone ID of Country.
 	 *	@access		public
-	 *	@param		string		 $countryId		ID of Country
+	 *	@param		int|string		 $countryId		ID of Country
 	 *	@return		integer|NULL
 	 *	@todo		rename to getShippingZoneOfCountryId and change behaviour
 	 *	@deprecated
 	 */
-	public function getShippingZoneId( string $countryId )
+	public function getShippingZoneId( int|string $countryId )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -397,12 +397,12 @@ class Logic_Shop extends Logic
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		string		$shippingZoneId 		ID of Shipping Zone
-	 *	@param		string		$shippingGradeId 		ID of Shipping Grade
+	 *	@param		int|string		$shippingZoneId 		ID of Shipping Zone
+	 *	@param		int|string		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@deprecated
 	 */
-	public function getShippingPrice( string $shippingZoneId, string $shippingGradeId )
+	public function getShippingPrice( int|string $shippingZoneId, int|string $shippingGradeId )
 	{
 		Deprecation::getInstance()
 			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
@@ -411,12 +411,12 @@ class Logic_Shop extends Logic
 		return $this->getShipping()->getPrice( $shippingZoneId, $shippingGradeId );
 	}
 
-	public function hasArticleInCart( string $bridgeId, string $articleId ): bool
+	public function hasArticleInCart( int|string $bridgeId, int|string $articleId ): bool
 	{
 		return $this->countArticleInCart( $bridgeId, $articleId ) > 0;
 	}
 
-	public function setOrderPaymentId( string $orderId, string $paymentId ): bool
+	public function setOrderPaymentId( int|string $orderId, int|string $paymentId ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
 			'paymentId'		=> $paymentId,
@@ -424,7 +424,7 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderPaymentMethod( string $orderId, string $paymentMethod ): bool
+	public function setOrderPaymentMethod( int|string $orderId, string $paymentMethod ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
 			'paymentMethod'	=> $paymentMethod,
@@ -432,7 +432,7 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderPositionStatus( string $positionId, $status ): bool
+	public function setOrderPositionStatus( int|string $positionId, $status ): bool
 	{
 		return (bool) $this->modelOrderPosition->edit( $positionId, [
 			'status'		=> (int) $status,
@@ -440,7 +440,7 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderUserId( string $orderId, string $userId ): bool
+	public function setOrderUserId( int|string $orderId, int|string $userId ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
 			'userId'		=> $userId,
@@ -448,7 +448,7 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderStatus( string $orderId, $status ): bool
+	public function setOrderStatus( int|string $orderId, $status ): bool
 	{
 		$order	= $this->getOrder( $orderId );
 		if( $status == Model_Shop_Order::STATUS_PAYED ){

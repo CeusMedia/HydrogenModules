@@ -9,14 +9,14 @@ class Logic_Work_Timer
 	protected Dictionary $session;
 	protected static ?Logic_Work_Timer $instance	= NULL;
 	protected Model_Work_Timer $modelTimer;
-	protected ?string $userId;
+	protected int|string|NULL $userId;
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( string $timerId ): ?object
+	public function get( int|string $timerId ): ?object
 	{
 		return $this->checkTimerId( $timerId );
 	}
@@ -44,12 +44,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function pause( string $timerId ): void
+	public function pause( int|string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status != 2 ){
@@ -64,12 +64,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function start( string $timerId ): void
+	public function start( int|string $timerId ): void
 	{
 		$timer		= $this->checkTimerId( $timerId );
 		if( $timer->status != 1 ){
@@ -86,12 +86,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function stop( string $timerId ): void
+	public function stop( int|string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status == 1 )
@@ -145,12 +145,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTimerId( string $timerId, bool $strict = TRUE ): ?object
+	protected function checkTimerId( int|string $timerId, bool $strict = TRUE ): ?object
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( $timer )

@@ -8,13 +8,13 @@ class Logic_Database_Lock extends Logic
 	protected Model_Lock $model;
 	protected string $userId;
 
-	public static function release( Environment $env, $subject, $entryId = NULL ): void
+	public static function release( Environment $env, $subject, int|string|NULL $entryId = NULL ): void
 	{
 		$lock	= new self( $env );
 		$lock->unlock( $subject, $entryId );
 	}
 
-	public function getLock( string $subject, string $entryId ): ?object
+	public function getLock( string $subject, int|string $entryId ): ?object
 	{
 		$lock	= $this->model->getByIndices( [
 			'subject'	=> $subject,
@@ -25,7 +25,7 @@ class Logic_Database_Lock extends Logic
 		return $lock;
 	}
 
-	public function getLockUser( string $subject, string $entryId ): object
+	public function getLockUser( string $subject, int|string $entryId ): object
 	{
 		$lockUserId	= $this->getLockUserId( $subject, $entryId );
 		$modelUser	= new Model_User( $this->env );
@@ -35,13 +35,13 @@ class Logic_Database_Lock extends Logic
 		return $lockUser;
 	}
 
-	public function getLockUserId( string $subject, string $entryId ): string
+	public function getLockUserId( int|string $subject, int|string $entryId ): string
 	{
 		$lock	= $this->getLock( $subject, $entryId );
 		return $lock->userId;
 	}
 
-	public function getUserLocks( string $userId ): array
+	public function getUserLocks( int|string $userId ): array
 	{
 		return $this->model->getAllByIndex( 'userId', $userId );
 	}
@@ -51,7 +51,7 @@ class Logic_Database_Lock extends Logic
 		return $this->model->getAllByIndex( 'subject', $subject );
 	}
 
-	public function isLocked( string $subject, string $entryId, ?string $userId = NULL ): bool
+	public function isLocked( string $subject, int|string $entryId, int|string|NULL $userId = NULL ): bool
 	{
 		$indices	= ['subject' => $subject];
 		if( $entryId )
@@ -61,17 +61,17 @@ class Logic_Database_Lock extends Logic
 		return (bool) $this->model->countByIndices( $indices );
 	}
 
-	public function isLockedByMe( string $subject, string $entryId ): bool
+	public function isLockedByMe( string $subject, int|string $entryId ): bool
 	{
 		return $this->isLocked( $subject, $entryId, $this->userId );
 	}
 
-	public function isLockedByOther( string $subject, string $entryId ): bool
+	public function isLockedByOther( string $subject, int|string $entryId ): bool
 	{
 		return $this->isLocked( $subject, $entryId, '!= '.$this->userId );
 	}
 
-	public function lock( string $subject, string $entryId, string $userId ): ?bool
+	public function lock( string $subject, int|string $entryId, int|string $userId ): ?bool
 	{
 		if( $this->isLocked( $subject, $entryId, $userId ) )
 			return NULL;
@@ -86,12 +86,12 @@ class Logic_Database_Lock extends Logic
 		return TRUE;
 	}
 
-	public function lockByMe( string $subject, string $entryId ): ?bool
+	public function lockByMe( string $subject, int|string $entryId ): ?bool
 	{
 		return $this->lock( $subject, $entryId, $this->userId );
 	}
 
-	public function unlock( string $subject, string $entryId = '0', ?string $userId = NULL ): bool
+	public function unlock( string $subject, int|string $entryId = '0', int|string|NULL $userId = NULL ): bool
 	{
 		$userId		= $userId ?? $this->userId;									//  insert current userId of none given
 		if( !$this->isLocked( $subject, $entryId, $userId ) )

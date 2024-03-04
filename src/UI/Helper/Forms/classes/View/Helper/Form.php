@@ -10,7 +10,7 @@ class View_Helper_Form extends Abstraction
 	protected ?Environment $env;
 	protected array $blocks						= [];
 	protected ?object $form						= NULL;
-	protected ?string $formId					= NULL;
+	protected int|string|NULL $formId			= NULL;
 	protected Model_Form_Block $modelBlock;
 	protected Model_Form $modelForm;
 	protected int $returnCode;
@@ -75,7 +75,7 @@ class View_Helper_Form extends Abstraction
 		return $helper->setId( $formId )->render();
 	}
 
-	public function setId( string $formId ): self
+	public function setId( int|string $formId ): self
 	{
 		$form	= $this->modelForm->get( $formId );
 		if( !$form )

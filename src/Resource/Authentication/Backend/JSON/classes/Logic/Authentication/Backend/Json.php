@@ -93,7 +93,7 @@ class Logic_Authentication_Backend_Json extends Logic
 		return 0 !== strlen( trim( $this->session->get( 'auth_user_id', '' ) ) );
 	}
 
-	public function isCurrentUserId( string $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}

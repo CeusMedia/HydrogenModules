@@ -132,7 +132,7 @@ class Controller_Manage_Form_Mail extends Controller
 		$this->modelMail	= new Model_Form_Mail( $this->env );
 	}
 
-	protected function checkId( string $mailId ): object
+	protected function checkId( int|string $mailId ): object
 	{
 		if( !$mailId )
 			throw new RuntimeException( 'No mail ID given' );

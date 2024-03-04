@@ -450,7 +450,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->session->set( $this->filterPrefix.'limit', 10 );
 	}
 
-	protected function checkNewsletterId( string $newsletterId ): void
+	protected function checkNewsletterId( int|string $newsletterId ): void
 	{
 		if( !$this->logic->checkNewsletterId( $newsletterId ) ){
 			$words		= (object) $this->getWords( 'edit' );

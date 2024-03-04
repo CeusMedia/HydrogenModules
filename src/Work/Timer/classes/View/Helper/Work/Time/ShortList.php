@@ -6,8 +6,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	protected array $buttons		= ['start', 'pause', 'stop'];
 	protected array $limits			= [0, 20];
 	protected array $orders			= ['createdAt' => 'ASC'];
-	protected ?string $ownerId		= NULL;
-	protected ?string $workerId		= NULL;
+	protected int|string|NULL $ownerId		= NULL;
+	protected int|string|NULL $workerId		= NULL;
 	protected array $status			= [];
 	protected ?string $projectId	= NULL;
 	protected ?string $module		= NULL;
@@ -134,20 +134,20 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	}
 
 	/**
-	 *	@param		string		$userId
+	 *	@param		int|string		$userId
 	 *	@return		self
 	 */
-	public function setOwnerId( string $userId ): self
+	public function setOwnerId( int|string $userId ): self
 	{
 		$this->ownerId	= $userId;
 		return $this;
 	}
 
 	/**
-	 *	@param		string		$projectId
+	 *	@param		int|string		$projectId
 	 *	@return		self
 	 */
-	public function setProjectId( string $projectId ): self
+	public function setProjectId( int|string $projectId ): self
 	{
 		$this->projectId	= $projectId;
 		return $this;
@@ -160,10 +160,10 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	}
 
 	/**
-	 *	@param		string		$userId
+	 *	@param		int|string		$userId
 	 *	@return		self
 	 */
-	public function setWorkerId( string $userId ): self
+	public function setWorkerId( int|string $userId ): self
 	{
 		$this->workerId	= $userId;
 		return $this;

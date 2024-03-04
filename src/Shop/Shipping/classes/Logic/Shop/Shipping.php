@@ -80,13 +80,13 @@ class Logic_Shop_Shipping extends Logic
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		string		$zoneId 		ID of Shipping Zone
-	 *	@param		string		$gradeId 		ID of Shipping Grade
+	 *	@param		int|string		$zoneId 		ID of Shipping Zone
+	 *	@param		int|string		$gradeId 		ID of Shipping Grade
 	 *	@return		string|NULL
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getPrice( string $zoneId, string $gradeId ): ?string
+	public function getPrice( int|string $zoneId, int|string $gradeId ): ?string
 	{
 		$indices	= ['zoneId' => $zoneId, 'gradeId' => $gradeId];
 		$data		= $this->modelPrice->getByIndices( $indices );
@@ -97,12 +97,12 @@ class Logic_Shop_Shipping extends Logic
 
 	/**
 	 *	Alias for getShippingZoneId.
-	 *	@param		string		$countryId
+	 *	@param		int|string		$countryId
 	 *	@return		string|NULL
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getZoneId( string $countryId ): ?string
+	public function getZoneId( int|string $countryId ): ?string
 	{
 		$data	= $this->modelZone->getByIndex( 'countryId', $countryId );
 		if( $data )

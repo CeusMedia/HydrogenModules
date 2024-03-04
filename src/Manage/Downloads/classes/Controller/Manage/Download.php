@@ -352,7 +352,7 @@ class Controller_Manage_Download extends Controller
 		return ['folders' => $folders, 'files' => $files];
 	}
 
-	protected function getPathFromFolderId( string $folderId, bool $withBasePath = FALSE ): string
+	protected function getPathFromFolderId( int|string $folderId, bool $withBasePath = FALSE ): string
 	{
 		$path	= '';
 		while( $folderId ){
@@ -365,7 +365,7 @@ class Controller_Manage_Download extends Controller
 		return $withBasePath ? $this->pathBase.$path : $path;
 	}
 
-	protected function getStepsFromFolderId( string $folderId ): array
+	protected function getStepsFromFolderId( int|string $folderId ): array
 	{
 		$steps		= [];
 		while( $folderId ){

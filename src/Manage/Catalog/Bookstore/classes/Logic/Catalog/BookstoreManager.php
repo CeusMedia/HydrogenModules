@@ -190,9 +190,9 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
+	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelArticle->has( (int) $articleId ) )
+		if( $this->modelArticle->has( $articleId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid article ID '.$articleId );
@@ -202,9 +202,9 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
+	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelAuthor->has( (int) $authorId ) )
+		if( $this->modelAuthor->has( $authorId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid author ID '.$authorId );
@@ -214,9 +214,9 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
+	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelCategory->has( (int) $categoryId ) )
+		if( $this->modelCategory->has( $categoryId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid category ID '.$categoryId );

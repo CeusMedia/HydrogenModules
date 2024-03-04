@@ -103,7 +103,7 @@ class Logic_Payment_Stripe extends Logic
 		return $item;
 	}
 
-	public function setUserIdForLocalUserId( string $userId, string $localUserId )
+	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -126,7 +126,7 @@ class Logic_Payment_Stripe extends Logic
 		}
 	}
 
-	public function getUserIdFromLocalUserId( string $localUserId, bool $strict = TRUE )
+	public function getUserIdFromLocalUserId( int|string $localUserId, bool $strict = TRUE )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [

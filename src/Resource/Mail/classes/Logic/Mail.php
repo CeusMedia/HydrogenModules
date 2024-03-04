@@ -337,10 +337,10 @@ class Logic_Mail extends Logic
 	 *	Tries to detect mail library used for mail by its ID.
 	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
 	 *	@access		public
-	 *	@param		string		$mailId		ID of mail to get used library for
+	 *	@param		int|string		$mailId		ID of mail to get used library for
 	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
 	 */
-	public function detectMailLibraryFromMailId( string $mailId ): int
+	public function detectMailLibraryFromMailId( int|string $mailId ): int
 	{
 		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
 	}
@@ -553,15 +553,15 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns saved mail as uncompressed object by mail ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of queued mail
+	 *	@param		int|string		$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if deserialize mail serial fails
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getMail( string $mailId ): object
+	public function getMail( int|string $mailId ): object
 	{
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
@@ -632,14 +632,14 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns mail parts.
 	 *	@access		public
-	 *	@param		object|string		$mail		Mail object or ID
+	 *	@param		object|int|string	$mail		Mail object or ID
 	 *	@return		array							List of mail part objects
 	 *	@throws		InvalidArgumentException		if given argument is neither integer nor object
 	 *	@throws		Exception						if given mail object is not uncompressed and unserialized (use getMail)
 	 *	@throws		RuntimeException				if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
 	 *	@throws		RuntimeException				if given no parser is available for mail object
 	 */
-	public function getMailParts( object|string $mail ): array
+	public function getMailParts( object|int|string $mail ): array
 	{
 		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
@@ -652,11 +652,11 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns queued mail object of mail ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of queued mail
+	 *	@param		int|string		$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 */
-	public function getQueuedMail( string $mailId ): object
+	public function getQueuedMail( int|string $mailId ): object
 	{
 		return $this->getMail( $mailId );
 	}
@@ -722,11 +722,11 @@ class Logic_Mail extends Logic
 	/**
 	 *	Remove mail by its ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of mail to remove
+	 *	@param		int|string			$mailId			ID of mail to remove
 	 *	@return		boolean
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function removeMail( string $mailId ): bool
+	public function removeMail( int|string $mailId ): bool
 	{
 		return $this->modelQueue->remove( $mailId );
 	}
@@ -756,14 +756,14 @@ class Logic_Mail extends Logic
 	/**
 	 *	Send prepared mail right now.
 	 *	@access		public
-	 *	@param		string		$mailId
+	 *	@param		int|string		$mailId
 	 *	@param		boolean		$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		boolean
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use logging on exception (=sending mail failed)
 	 */
-	public function sendQueuedMail( string $mailId, bool $forceResent = FALSE ): bool
+	public function sendQueuedMail( int|string $mailId, bool $forceResent = FALSE ): bool
 	{
 		$mail		= $this->getMail( $mailId );
 		$this->decompressMailObject( $mail );
@@ -807,7 +807,7 @@ class Logic_Mail extends Logic
 	 *	Set mail status.
 	 *	New status will be validated against allowed status transitions.
 	 *	@access		public
-	 *	@param		Mail_Abstract|integer	$mail		Mail object or ID
+	 *	@param		Mail_Abstract|int|string	$mail		Mail object or ID
 	 *	@param		integer					$status		Status to set, will be validated against allowed status transitions
 	 *	@return 	boolean
 	 *	@throws		DomainException			if given status is invalid
@@ -815,7 +815,7 @@ class Logic_Mail extends Logic
 	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function setMailStatus( Mail_Abstract|int $mail, int $status ): bool
+	public function setMailStatus( Mail_Abstract|int|string $mail, int $status ): bool
 	{
 		$mail			= $this->getMailFromObjectOrId( $mail );
 		$mail->status	= (int) $mail->status;
@@ -837,11 +837,10 @@ class Logic_Mail extends Logic
 	 *	Enable or disable use of queue or return current state.
 	 *	Returns current state of no new state is given.
 	 *	@access		public
-	 *	@return		void
 	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
 	 *	@return		boolean|NULL	Current state if no new state is given
 	 */
-	public function useQueue( ?bool $toggle = NULL )
+	public function useQueue( ?bool $toggle = NULL ): bool|NULL
 	{
 		if( $toggle === NULL )
 			return $this->options->get( 'queue.enabled' );
@@ -887,7 +886,7 @@ class Logic_Mail extends Logic
 		}
 	}
 
-	protected function getMailFromObjectOrId( $mailObjectOrId ): object
+	protected function getMailFromObjectOrId( object|int|string $mailObjectOrId ): object
 	{
 		if( is_object( $mailObjectOrId ) )
 			return $mailObjectOrId;

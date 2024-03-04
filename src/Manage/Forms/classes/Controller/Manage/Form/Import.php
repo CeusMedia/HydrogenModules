@@ -137,7 +137,7 @@ class Controller_Manage_Form_Import extends Controller
 			$this->connectionMap[$connection->importConnectionId] = $connection;
 	}
 
-	protected function checkImportRuleId( string $importRuleId ): object
+	protected function checkImportRuleId( int|string $importRuleId ): object
 	{
 		if( !$importRuleId )
 			throw new RuntimeException( 'No import rule ID given' );

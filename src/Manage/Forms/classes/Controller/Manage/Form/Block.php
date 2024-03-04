@@ -132,31 +132,31 @@ class Controller_Manage_Form_Block extends Controller
 			array( 'content'	=> '%[block_'.$oldIdentifier.']%' )
 		);
 		foreach( $forms as $form ){
-			$this->modelForm->edit( $form->formId, array(
+			$this->modelForm->edit( $form->formId, [
 				'content'	=> preg_replace(
 					'/\[block_'.preg_quote( $oldIdentifier, '/' ).'\]/',
 					'[block_'.$newIdentifier.']',
 					$form->content
 				),
-			) );
+			] );
 		}
 		foreach( $blocks as $block ){
-			$this->modelBlock->edit( $block->blockId, array(
+			$this->modelBlock->edit( $block->blockId, [
 				'content'	=> preg_replace(
 					'/\[block_'.preg_quote( $oldIdentifier, '/' ).'\]/',
 					'[block_'.$newIdentifier.']',
 					$block->content
 				),
-			) );
+			] );
 		}
-		return array(
+		return [
 			'forms'		=> count( $forms ),
 			'blocks'	=> count( $blocks ),
 			'total'		=> count( $forms ) + count( $blocks ),
-		);
+		];
 	}
 
-	protected function checkId( string $blockId, bool $strict = TRUE )
+	protected function checkId( int|string $blockId, bool $strict = TRUE ): object|FALSE
 	{
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );

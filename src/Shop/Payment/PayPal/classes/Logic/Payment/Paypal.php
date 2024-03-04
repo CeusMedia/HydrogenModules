@@ -32,7 +32,7 @@ class Logic_Payment_PayPal
 		$this->config	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 	}
 
-	public function finishPayment( string $paymentId ): bool
+	public function finishPayment( int|string $paymentId ): bool
 	{
 		$payment	= $this->getPayment( $paymentId );
 		if( !$payment->payerId )
@@ -64,13 +64,13 @@ class Logic_Payment_PayPal
 		}
 	}
 
-	public function getPayerId( string $paymentId ): string
+	public function getPayerId( int|string $paymentId ): string
 	{
 		$payment	= $this->getPayment( $paymentId );
 		return $payment->payerId;
 	}
 
-	public function getPayment( string $paymentId ): object
+	public function getPayment( int|string $paymentId ): object
 	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
@@ -86,13 +86,13 @@ class Logic_Payment_PayPal
 		return $payment;
 	}
 
-	public function getStatus( string $paymentId ): int
+	public function getStatus( int|string $paymentId ): int
 	{
 		$payment	= $this->getPayment( $paymentId );
 		return (int) $payment->status;
 	}
 
-	public function getToken( string $paymentId ): string
+	public function getToken( int|string $paymentId ): string
 	{
 		$payment	= $this->model->get( $paymentId );
 		if( !$payment )
@@ -100,7 +100,7 @@ class Logic_Payment_PayPal
 		return $payment->token;
 	}
 
-	public function requestPayerDetails( string $paymentId ): void
+	public function requestPayerDetails( int|string $paymentId ): void
 	{
 		$payment	= $this->getPayment( $paymentId );
 		$data	= [
@@ -138,7 +138,7 @@ class Logic_Payment_PayPal
 	 *	@param		string|NULL		$subject
 	 *	@return		string			Payment ID
 	 */
-	public function requestToken( string $orderId, float $amount, ?string $subject = NULL ): string
+	public function requestToken( int|string $orderId, float $amount, ?string $subject = NULL ): string
 	{
 		$language		= $this->env->getLanguage();
 		$titleCart		= $language->getWords( 'shop/payment/paypal' )['cart']['title'];

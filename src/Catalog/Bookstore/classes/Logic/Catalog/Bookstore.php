@@ -62,7 +62,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@todo		code doc
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkArticleId( string $articleId, bool $throwException = FALSE ): bool
+	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelArticle->has( (int) $articleId ) )
 			return TRUE;
@@ -75,7 +75,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
-	public function checkAuthorId( string $authorId, bool $throwException = FALSE ): bool
+	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -88,7 +88,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
-	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
+	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( (int) $categoryId ) )
 			return TRUE;

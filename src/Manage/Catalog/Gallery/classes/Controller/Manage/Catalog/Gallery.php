@@ -330,7 +330,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkCategoryId( string $categoryId )
+	protected function checkCategoryId( int|string $categoryId )
 	{
 		$category	= $this->modelCategory->get( $categoryId );
 		if( $category )
@@ -340,7 +340,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function checkImageId( string $imageId )
+	protected function checkImageId( int|string $imageId )
 	{
 		$image	= $this->modelImage->get( $imageId );
 		if( $image )

@@ -16,7 +16,7 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@todo   		rework, send mails
 	 */
-	public function addUserLicense( $userId, $productLicenseId, bool $assignFirst = FALSE ): string
+	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		$data		= [
@@ -55,13 +55,13 @@ class Logic_Catalog_Provision extends Logic
 	 *	- user license is active
 	 *	- another user license key for product is prepared
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
+	 *	@param		int|string		$userId			User ID
+	 *	@param		int|string		$productId		Product ID
 	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
+	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId )
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -128,15 +128,15 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
+	 *	@param		int|string		$userId			User ID
+	 *	@param		int|string		$productId		Product ID
 	 *	@return		integer						User license key ID
 	 *	@throws		RangeException				if given user ID is invalid
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
+	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId )
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -155,7 +155,7 @@ class Logic_Catalog_Provision extends Logic
 		return 0;
 	}
 
-	public function getProduct( $productId )
+	public function getProduct( int|string $productId ): object
 	{
 		$product	= $this->modelProduct->get( $productId );
 		if( !$product )
@@ -163,7 +163,7 @@ class Logic_Catalog_Provision extends Logic
 		return $product;
 	}
 
-	public function getProductLicense( $productLicenseId = 0 )
+	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		if( !$productLicense )
@@ -172,7 +172,7 @@ class Logic_Catalog_Provision extends Logic
 		return $productLicense;
 	}
 
-	public function getProductLicenses( $productId, $status = NULL )
+	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
 		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
@@ -184,7 +184,7 @@ class Logic_Catalog_Provision extends Logic
 		return $productLicenses;
 	}
 
-	public function getProductUri( $productOrId, bool $absolute = FALSE )
+	public function getProductUri( int|string $productOrId, bool $absolute = FALSE ): string
 	{
 		$product	= $productOrId;
 		if( is_int( $productOrId ) )
@@ -198,7 +198,7 @@ class Logic_Catalog_Provision extends Logic
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getProductLicenseUri( $productLicenseOrId, bool $absolute = FALSE )
+	public function getProductLicenseUri( int|string $productLicenseOrId, bool $absolute = FALSE ): string
 	{
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) )
@@ -213,7 +213,7 @@ class Logic_Catalog_Provision extends Logic
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getUserLicensesFromUser( $userId, $productId = NULL )
+	public function getUserLicensesFromUser( int|string $userId, int|string|NULL $productId = NULL ): array
 	{
 		$indices		= ['userId' => $userId];
 		if( $productId )
@@ -252,7 +252,9 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );

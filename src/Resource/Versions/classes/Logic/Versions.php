@@ -105,11 +105,11 @@ class Logic_Versions
 	}
 
 	/**
-	 *	@param		string		$versionId
+	 *	@param		int|string		$versionId
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getById( string $versionId ): ?object
+	public function getById( int|string $versionId ): ?object
 	{
 		return $this->model->get( $versionId );
 	}
@@ -156,11 +156,11 @@ class Logic_Versions
 	}
 
 	/**
-	 *	@param		string		$versionId
+	 *	@param		int|string		$versionId
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function hasById( string $versionId ): bool
+	public function hasById( int|string $versionId ): bool
 	{
 		return (bool) $this->getById( $versionId );
 	}

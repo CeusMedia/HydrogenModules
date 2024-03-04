@@ -9,9 +9,9 @@ class View_Helper_Info_Manual_PageTree
 	protected Model_Manual_Page $modelPage;
 	protected array $pages						= [];
 	protected array $openParents				= [];
-	protected ?string $activePageId				= NULL;
-	protected ?string $parentPageId				= NULL;
-	protected ?string $categoryId				= NULL;
+	protected int|string|NULL $activePageId				= NULL;
+	protected int|string|NULL $parentPageId				= NULL;
+	protected int|string|NULL $categoryId				= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -86,7 +86,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 	}
 
 
-	public function setActivePageId( string $pageId ): self
+	public function setActivePageId( int|string $pageId ): self
 	{
 		$this->activePageId	= $pageId;
 		$this->openParents	= [];
@@ -99,7 +99,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 		return $this;
 	}
 
-	public function setCategoryId( string $categoryId ): self
+	public function setCategoryId( int|string $categoryId ): self
 	{
 		$this->categoryId	= $categoryId;
 		return $this;
@@ -115,7 +115,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 		return $this;
 	}
 
-	public function setParentPage( string $pageId ): self
+	public function setParentPage( int|string $pageId ): self
 	{
 		$this->parentPageId		= $pageId;
 		return $this;

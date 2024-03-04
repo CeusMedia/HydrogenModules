@@ -15,7 +15,7 @@ class View_Helper_TinyMce_FileBrowser
 	protected int $sourceMode			= 0;
 	protected string $cssClassPrefix		= 'list';
 	protected string $baseUrl;
-	protected string $topicId;
+	protected int|string|NULL $topicId	= NULL;
 	protected array $topics;
 	protected string $path;
 
@@ -79,7 +79,7 @@ class View_Helper_TinyMce_FileBrowser
 		return $this;
 	}
 
-	public function setTopicId( string $topicId ): self
+	public function setTopicId( int|string $topicId ): self
 	{
 		$this->topicId	= $topicId;
 		return $this;

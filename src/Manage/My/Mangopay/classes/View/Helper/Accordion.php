@@ -6,7 +6,7 @@ class View_Helper_Accordion
 	protected array $parts			= [];
 	protected array $open			= [];
 	protected bool $singleOpen		= FALSE;
-	protected ?string $id			= NULL;
+	protected int|string|NULL $id	= NULL;
 
 	public function __construct( string $id )
 	{
@@ -22,27 +22,6 @@ class View_Helper_Accordion
 			'class'		=> $class,
 		];
 		return $this;
-	}
-
-	public function setSingleOpen( bool $openOnlyOneAtATime ): self
-	{
-		$this->singleOpen	= $openOnlyOneAtATime;
-		return $this;
-	}
-
-	public function setId( string $id ): self
-	{
-		$this->id	= $id;
-		return $this;
-	}
-
-	public function setOpen( $ids ): self
-	{
-		if( !is_array( $ids ) )
-			$ids	= [$ids];
-		if( $this->singleOpen )
-			$ids	= array_slice( $ids, 0, 1 );
-		$this->open	= $ids;
 	}
 
 	public function render(): string
@@ -67,5 +46,27 @@ class View_Helper_Accordion
 			'class'		=> 'accordion',
 			'id'		=> $this->id,
 		] );
+	}
+
+	public function setId( int|string $id ): self
+	{
+		$this->id	= $id;
+		return $this;
+	}
+
+	public function setOpen( $ids ): self
+	{
+		if( !is_array( $ids ) )
+			$ids	= [$ids];
+		if( $this->singleOpen )
+			$ids	= array_slice( $ids, 0, 1 );
+		$this->open	= $ids;
+		return $this;
+	}
+
+	public function setSingleOpen( bool $openOnlyOneAtATime ): self
+	{
+		$this->singleOpen	= $openOnlyOneAtATime;
+		return $this;
 	}
 }

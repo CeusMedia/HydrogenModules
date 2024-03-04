@@ -9,7 +9,7 @@ class View_Helper_Info_Contact_Form_Modal
 {
 	protected Environment $env;
 	protected Dictionary $moduleConfig;
-	protected ?string $id				= NULL;
+	protected int|string|NULL $id		= NULL;
 	protected ?string $subject			= NULL;
 	protected ?string $heading			= NULL;
 	protected ?string $type				= NULL;
@@ -176,7 +176,7 @@ class View_Helper_Info_Contact_Form_Modal
 	}
 
 	//  --  SETTERS  --  //
-	public function setId( string $id ): self
+	public function setId( int|string $id ): self
 	{
 		$this->id		= $id;
 		return $this;

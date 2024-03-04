@@ -198,11 +198,11 @@ class Controller_Manage_Page_Ajax extends AjaxController
 	}
 
 	/**
-	 *	@param		string		$pageId
+	 *	@param		int|string		$pageId
 	 *	@param		bool		$strict
 	 *	@return		object|FALSE
 	 */
-	protected function checkPageId( string $pageId, bool $strict = FALSE )
+	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): object|FALSE
 	{
 		if( !$pageId ){
 			if( $strict )

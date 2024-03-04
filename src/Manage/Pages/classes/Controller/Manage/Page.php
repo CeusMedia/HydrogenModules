@@ -489,7 +489,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
 	}
 
-	protected function checkPageId( string $pageId, bool $strict = FALSE ): object
+	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): object
 	{
 		if( !$pageId ){
 			if( $strict )

@@ -136,7 +136,7 @@ class Logic_UserToken extends Logic
 		return $user->userId;
 	}
 
-	protected function revokeByTokenId( string $tokenId ): bool
+	protected function revokeByTokenId( int|string $tokenId ): bool
 	{
 		return (bool) $this->modelToken->edit( $tokenId, [
 			'status'	=> Model_User_Token::STATUS_REVOKED,

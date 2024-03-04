@@ -282,9 +282,9 @@ class Logic_Catalog extends Logic
 	 *	@todo		code doc
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkCategoryId( string $categoryId, bool $throwException = FALSE ): bool
+	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelCategory->has( (int) $categoryId ) )
+		if( $this->modelCategory->has( $categoryId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid category ID '.$categoryId );

@@ -11,9 +11,9 @@ class View_Helper_Work_Time_Buttons
 	protected array $buttons					= [];
 	protected ?string $from						= NULL;
 	protected ?string $size						= NULL;
-	protected ?string $userId					= NULL;
-	protected ?string $workerId					= NULL;
-	protected ?string $timerId					= NULL;
+	protected int|string|NULL $userId			= NULL;
+	protected int|string|NULL $workerId			= NULL;
+	protected int|string|NULL $timerId			= NULL;
 
 	/**
 	 *	@param		Environment		$env
@@ -132,15 +132,15 @@ class View_Helper_Work_Time_Buttons
 
 	/**
 	 *	@param		Environment		$env
-	 *	@param		string			$timerId
-	 *	@param		string			$userId
+	 *	@param		int|string		$timerId
+	 *	@param		int|string		$userId
 	 *	@param		array			$buttons
 	 *	@param		string			$size
 	 *	@param		string			$from
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public static function renderStatic( Environment $env, string $timerId, string $userId, array $buttons, string $size, string $from ): string
+	public static function renderStatic( Environment $env, int|string $timerId, int|string $userId, array $buttons, string $size, string $from ): string
 	{
 		$helper	= new self( $env );
 		$helper->setTimerId( $timerId );
@@ -182,20 +182,20 @@ class View_Helper_Work_Time_Buttons
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		self
 	 */
-	public function setTimerId( string $timerId ): self
+	public function setTimerId( int|string $timerId ): self
 	{
 		$this->timerId	= $timerId;
 		return $this;
 	}
 
 	/**
-	 *	@param		string		$userId
+	 *	@param		int|string		$userId
 	 *	@return		self
 	 */
-	public function setUserId( string $userId ): self
+	public function setUserId( int|string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;

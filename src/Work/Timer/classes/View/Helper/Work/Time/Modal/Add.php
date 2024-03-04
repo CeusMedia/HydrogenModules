@@ -5,7 +5,7 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 {
 	protected ?string $module		= NULL;
 	protected ?string $moduleId		= NULL;
-	protected ?string $projectId	= NULL;
+	protected int|string|NULL $projectId	= NULL;
 
 	/**
 	 *	@return		string
@@ -131,10 +131,10 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 	}
 
 	/**
-	 *	@param		string		$projectId
+	 *	@param		int|string		$projectId
 	 *	@return		self
 	 */
-	public function setProjectId( string $projectId ): self
+	public function setProjectId( int|string $projectId ): self
 	{
 		$this->projectId	= $projectId;
 		return $this;

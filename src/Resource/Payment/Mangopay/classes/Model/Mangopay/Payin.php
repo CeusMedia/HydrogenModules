@@ -56,65 +56,47 @@ class Model_Mangopay_Payin extends Model
 
 	public static function getStatusId( string $status ): int
 	{
-		switch( $status ){
-			case 'CREATED':
-				return self::STATUS_CREATED;
-			case 'FAILED':
-				return self::STATUS_FAILED;
-			case 'SUCCEEDED':
-				return self::STATUS_SUCCEEDED;
-		}
-		return self::STATUS_UNKNOWN;
+		return match( $status ){
+			'CREATED'	=> self::STATUS_CREATED,
+			'FAILED'	=> self::STATUS_FAILED,
+			'SUCCEEDED'	=> self::STATUS_SUCCEEDED,
+			default		=> self::STATUS_UNKNOWN,
+		};
 	}
 
 	public static function getStatusLabel( int $status ): string
 	{
-		switch( $status ){
-			case self::STATUS_CREATED:
-				return 'CREATED';
-			case self::STATUS_FAILED:
-				return 'FAILED';
-			case self::STATUS_SUCCEEDED:
-				return 'SUCCEEDED';
-		}
-		return 'UNKNOWN';
+		return match( $status ){
+			self::STATUS_CREATED	=> 'CREATED',
+			self::STATUS_FAILED		=> 'FAILED',
+			self::STATUS_SUCCEEDED	=> 'SUCCEEDED',
+			default					=> 'UNKNOWN',
+		};
 	}
 
 	public static function getTypeId( string $type ): int
 	{
-		switch( $type ){
-			case 'CARD':
-				return self::TYPE_CARD;
-			case 'PREAUTHORIZED':
-				return self::TYPE_PREAUTHORIZED;
-			case 'BANK_WIRE':
-				return self::TYPE_BANK_WIRE;
-			case 'DIRECT_DEBIT':
-				return self::TYPE_DIRECT_DEBIT;
-			case 'DIRECT_DEBIT_DIRECT':
-				return self::TYPE_DIRECT_DEBIT_DIRECT;
-			case 'PAYPAL':
-				return self::TYPE_PAYPAL;
-		}
-		return self::TYPE_UNKNOWN;
+		return match( $type ){
+			'CARD'					=> self::TYPE_CARD,
+			'PREAUTHORIZED'			=> self::TYPE_PREAUTHORIZED,
+			'BANK_WIRE'				=> self::TYPE_BANK_WIRE,
+			'DIRECT_DEBIT'			=> self::TYPE_DIRECT_DEBIT,
+			'DIRECT_DEBIT_DIRECT'	=> self::TYPE_DIRECT_DEBIT_DIRECT,
+			'PAYPAL'				=> self::TYPE_PAYPAL,
+			default					=> self::TYPE_UNKNOWN,
+		};
 	}
 
 	public static function getTypeLabel( int $type ): string
 	{
-		switch( $type ){
-			case self::TYPE_CARD:
-				return 'CARD';
-			case self::TYPE_PREAUTHORIZED:
-				return 'PREAUTHORIZED';
-			case self::TYPE_BANK_WIRE:
-				return 'BANK_WIRE';
-			case self::TYPE_DIRECT_DEBIT:
-				return 'DIRECT_DEBIT';
-			case self::TYPE_DIRECT_DEBIT_DIRECT:
-				return 'DIRECT_DEBIT_DIRECT';
-			case self::TYPE_PAYPAL:
-				return 'PAYPAL';
-		}
-		return 'UNKNOWN';
+		return match( $type ){
+			self::TYPE_CARD					=> 'CARD',
+			self::TYPE_PREAUTHORIZED		=> 'PREAUTHORIZED',
+			self::TYPE_BANK_WIRE			=> 'BANK_WIRE',
+			self::TYPE_DIRECT_DEBIT			=> 'DIRECT_DEBIT',
+			self::TYPE_DIRECT_DEBIT_DIRECT	=> 'DIRECT_DEBIT_DIRECT',
+			self::TYPE_PAYPAL				=> 'PAYPAL',
+			default							=> 'UNKNOWN',
+		};
 	}
 }
