@@ -23,9 +23,9 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
 	 *	@param		int|string		$articleId		ID of article
-	 *	@param		boolean		$strict			Flag: throw exception if article ID is invalid
-	 *	@return		object						Bridged article data object if found
-	 *	@throws		InvalidArgumentException	if not found
+	 *	@param		boolean			$strict			Flag: throw exception if article ID is invalid
+	 *	@return		object							Bridged article data object if found
+	 *	@throws		InvalidArgumentException		if not found
 	 */
 	public function check( int|string $articleId, bool $strict = TRUE ): object
 	{
@@ -39,7 +39,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	...
 	 *	@access		public
 	 *	@param		int|string		$articleId
-	 *	@param		integer		$quantity
+	 *	@param		integer			$quantity
 	 *	@return		object
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
@@ -97,7 +97,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	...
 	 *	@access		public
 	 *	@param		int|string		$articleId
-	 *	@param		boolean		$absolute
+	 *	@param		boolean			$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
 	 */
@@ -114,7 +114,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	...
 	 *	@access		public
 	 *	@param		int|string		$articleId
-	 *	@param		integer		$amount
+	 *	@param		integer			$amount
 	 *	@return		float
 	 */
 	public function getPrice( int|string $articleId, int $amount = 1 ): float
@@ -127,7 +127,7 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	...
 	 *	@access		public
 	 *	@param		int|string		$articleId
-	 *	@param		integer		$amount
+	 *	@param		integer			$amount
 	 *	@return		float
 	 */
 	public function getTax( int|string $articleId, int $amount = 1 ): float

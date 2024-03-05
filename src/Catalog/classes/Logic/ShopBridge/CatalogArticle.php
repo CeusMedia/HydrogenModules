@@ -12,12 +12,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	public float $taxIncluded;
 
 	/**
-	 *	@param		string		$articleId
+	 *	@param		int|string		$articleId
 	 *	@param		int			$change
 	 *	@return		int
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function changeQuantity( string $articleId, int $change ): int
+	public function changeQuantity( int|string $articleId, int $change ): int
 	{
 		return $this->logic->changeQuantity( $articleId, $change );
 	}
@@ -25,12 +25,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Checks existence of article and returns data object if found.
 	 *	@access		public
-	 *	@param		string		$articleId		ID of article
+	 *	@param		int|string		$articleId		ID of article
 	 *	@return		object|FALSE				Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function check( string $articleId, bool $strict = TRUE ): object|FALSE
+	public function check( int|string $articleId, bool $strict = TRUE ): object|FALSE
 	{
 		$article	= $this->logic->getArticle( $articleId );
 		if( $article )
@@ -43,12 +43,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns complete information set of article available via shop bridge.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@param		integer		$quantity		Amount of articles
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$quantity		Amount of articles
 	 *	@return		object
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function get( $articleId, int $quantity = 1 ): object
+	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
 		return (object) [
 			'id'		=> $articleId,
@@ -85,11 +85,11 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns short description of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		int|string		$articleId		ID of article
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getDescription( $articleId ): string
+	public function getDescription( int|string $articleId ): string
 	{
 		$article	= $this->check( $articleId );
 		$words		= $this->env->getLanguage()->getWords( 'catalog' );
@@ -100,11 +100,11 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns link to article description.
 	 *	@access		public
-	 *	@param		string		$articleId		ID of article
+	 *	@param		int|string		$articleId		ID of article
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getLink( string $articleId ): string
+	public function getLink( int|string $articleId ): string
 	{
 		return $this->logic->getArticleUri( $articleId );
 	}
@@ -112,12 +112,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns URL of article picture, if existing.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@param		boolean		$absolute
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		boolean			$absolute
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getPicture( $articleId, bool $absolute = FALSE ): string
+	public function getPicture( int|string $articleId, bool $absolute = FALSE ): string
 	{
 		$uri		= $this->env->getConfig()->get( 'path.images' )."no_picture.png";
 		$article	= $this->logic->getArticle( $articleId );
@@ -132,12 +132,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns price of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@param		integer		$amount			Amount to articles to get price for
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$amount			Amount to articles to get price for
 	 *	@return		float
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getPrice( $articleId, int $amount = 1 ): float
+	public function getPrice( int|string $articleId, int $amount = 1 ): float
 	{
 		$amount		= abs( $amount );
 		return $this->check( $articleId )->price * $amount;
@@ -146,12 +146,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns tax of article (one or many).
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@param		integer		$amount			Amount to articles to get tax for
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$amount			Amount to articles to get tax for
 	 *	@return		float
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getTax( $articleId, int $amount = 1 ): float
+	public function getTax( int|string $articleId, int $amount = 1 ): float
 	{
 		$amount		= abs( $amount );												//  sanitize amount
 		$price		= $this->check( $articleId )->price;									//  get price of article
@@ -163,11 +163,11 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns title of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
+	 *	@param		int|string		$articleId		ID of article
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getTitle( $articleId ): string
+	public function getTitle( int|string $articleId ): string
 	{
 		return $this->check( $articleId )->title;
 	}
@@ -175,12 +175,12 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	/**
 	 *	Returns weight of article (one or many).
 	 *	@access		public
-	 *	@param		string		$articleId		ID of article
-	 *	@param		integer		$amount			Amount to articles to get weight for
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$amount			Amount to articles to get weight for
 	 *	@return		float
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getWeight( string $articleId, int $amount = 1 ): float
+	public function getWeight( int|string $articleId, int $amount = 1 ): float
 	{
 		return (float) ( $this->check( $articleId )->weight * $amount );
 	}

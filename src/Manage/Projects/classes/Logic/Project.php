@@ -9,11 +9,11 @@ class Logic_Project extends Logic
 	protected Model_User $modelUser;
 
 	/**
-	 *	@param		string		$projectId
+	 *	@param		int|string		$projectId
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( string $projectId ): ?object
+	public function get( int|string $projectId ): ?object
 	{
 		return $this->getProject( $projectId );
 	}
@@ -24,15 +24,15 @@ class Logic_Project extends Logic
 	 *	Returned map will not contain the user itself.
 	 *
 	 *	@access		public
-	 *	@param		string			$userId			User ID to get coworkers for
-	 *	@param		string|NULL		$projectId		Project ID to get coworkers of
-	 *	@param		boolean			$includeSelf	Flag: include or remove given user ID
-	 *	@return		array			Map of related users
+	 *	@param		int|string			$userId			User ID to get coworkers for
+	 *	@param		int|string|NULL		$projectId		Project ID to get coworkers of
+	 *	@param		boolean				$includeSelf	Flag: include or remove given user ID
+	 *	@return		array				Map of related users
 	 *	@throws		RuntimeException			if user is neither in project nor has full access
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCoworkers( string $userId, ?string $projectId = NULL, bool $includeSelf = FALSE ): array
+	public function getCoworkers( int|string $userId, int|string|NULL $projectId = NULL, bool $includeSelf = FALSE ): array
 	{
 		if( $projectId ){
 			$users	= $this->getProjectUsers( $projectId );
@@ -49,7 +49,7 @@ class Logic_Project extends Logic
 		return $users;
 	}
 
-	public function getDefaultProject( string $userId )
+	public function getDefaultProject( int|string $userId )
 	{
 		$relation	= $this->modelProjectUser->getByIndices( [
 			'userId'	=> $userId,
@@ -59,11 +59,11 @@ class Logic_Project extends Logic
 	}
 
 	/**
-	 *	@param		string		$projectId
+	 *	@param		int|string		$projectId
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getProject( string $projectId ): ?object
+	public function getProject( int|string $projectId ): ?object
 	{
 		return $this->modelProject->get( $projectId );
 	}
@@ -89,12 +89,12 @@ class Logic_Project extends Logic
 	/**
 	 *	Returns list of users assigned to a project.
 	 *	@access		public
-	 *	@param		string		$projectId		Project ID
-	 *	@param		array		$conditions		Map of conditions for users to follow
-	 *	@param		array		$orders			Map how to order users, defaults to 'username ASC'
-	 *	@return		array		Map of users assigned to project
+	 *	@param		int|string		$projectId		Project ID
+	 *	@param		array			$conditions		Map of conditions for users to follow
+	 *	@param		array			$orders			Map how to order users, defaults to 'username ASC'
+	 *	@return		array			Map of users assigned to project
 	 */
-	public function getProjectUsers( string $projectId, array $conditions = [], array $orders = [] ): array
+	public function getProjectUsers( int|string $projectId, array $conditions = [], array $orders = [] ): array
 	{
 		return $this->modelProject->getProjectUsers( $projectId, $conditions, $orders );
 	}
@@ -115,13 +115,13 @@ class Logic_Project extends Logic
 	/**
 	 *	Returns projects where a user (by its ID) is assigned to.
 	 *	@access		public
-	 *	@param		string		$userId			User ID
-	 *	@param		boolean		$activeOnly		Flag: List only active projects
-	 *	@param		array		$conditions		Map of conditions for projects to follow
-	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
-	 *	@return		array		List of projects of user
+	 *	@param		int|string		$userId			User ID
+	 *	@param		boolean			$activeOnly		Flag: List only active projects
+	 *	@param		array			$conditions		Map of conditions for projects to follow
+	 *	@param		array			$orders			Map how to order projects, defaults to 'title ASC'
+	 *	@return		array			List of projects of user
 	 */
-	public function getUserProjects( string $userId, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
+	public function getUserProjects( int|string $userId, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
 	{
 		$orders			= $orders ?: ['title' => 'ASC'];											//  sanitize project orders
 		$userProjects	= [];																		//  create empty project map
@@ -142,13 +142,13 @@ class Logic_Project extends Logic
 	/**
 	 *	Returns projects where users (by their ID) are assigned to.
 	 *	@access		public
-	 *	@param		array		$userIds		List of user IDs
-	 *	@param		boolean		$activeOnly		Flag: List only active projects
-	 *	@param		array		$conditions		Map of conditions for projects to follow
-	 *	@param		array		$orders			Map how to order projects, defaults to 'title ASC'
-	 *	@return		array		List of projects of user
+	 *	@param		int|string		$userIds		List of user IDs
+	 *	@param		boolean			$activeOnly		Flag: List only active projects
+	 *	@param		array			$conditions		Map of conditions for projects to follow
+	 *	@param		array			$orders			Map how to order projects, defaults to 'title ASC'
+	 *	@return		array			List of projects of user
 	 */
-	public function getUsersProjects( array $userIds, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
+	public function getUsersProjects( int|string $userIds, bool $activeOnly = FALSE, array $conditions = [], array $orders = [] ): array
 	{
 		$orders			= $orders ?: ['title' => 'ASC'];											//  sanitize project orders
 		$userProjects	= [];																		//  create empty project map
@@ -167,13 +167,13 @@ class Logic_Project extends Logic
 	}
 
 	/**
-	 *	@param		string		$projectId
-	 *	@param		string		$userId
-	 *	@param		bool		$informOthers
+	 *	@param		int|string		$projectId
+	 *	@param		int|string		$userId
+	 *	@param		bool			$informOthers
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeProjectUser( string $projectId, string $userId, bool $informOthers = TRUE ): void
+	public function removeProjectUser( int|string $projectId, int|string $userId, bool $informOthers = TRUE ): void
 	{
 		try{
 			$this->modelProjectUser->removeByIndices( [
@@ -202,11 +202,11 @@ class Logic_Project extends Logic
 	}
 
 	/**
-	 *	@param		string		$userId
-	 *	@param		string		$projectId
+	 *	@param		int|string		$userId
+	 *	@param		int|string		$projectId
 	 *	@return		int
 	 */
-	public function setDefaultProject( string $userId, string $projectId ): int
+	public function setDefaultProject( int|string $userId, int|string $projectId ): int
 	{
 		$this->modelProjectUser->editByIndices( [
 			'userId'		=> $userId,

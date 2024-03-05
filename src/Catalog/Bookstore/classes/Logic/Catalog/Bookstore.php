@@ -10,7 +10,7 @@ use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentExcept
  */
 class Logic_Catalog_Bookstore extends Logic
 {
-	/**	@var	CacheInterface						$cache */
+	/**	@var	CacheInterface								$cache */
 	protected CacheInterface $cache;
 
 	/**	@var	Model_Catalog_Bookstore_Article				$modelArticle */
@@ -40,7 +40,7 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	Change stock quantity of article.
 	 *	@access		public
 	 *	@param		string		$articleId		ID of article
-	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
+	 *	@param		integer		$change			Negative value on paid order, positive value on restock.
 	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
 	 *	@throws		SimpleCacheInvalidArgumentException

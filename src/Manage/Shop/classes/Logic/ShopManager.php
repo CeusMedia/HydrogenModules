@@ -16,8 +16,8 @@ class Logic_ShopManager extends Logic
 	/**	@var		Model_Shop_Order_Position	$modelOrderPosition */
 	protected Model_Shop_Order_Position $modelOrderPosition;
 
-	/**	@var		Logic_Shop_Shipping			$shipping			Shipping logic if module is installed */
-	protected Logic_Shop_Shipping $shipping;
+	/**	@var		?Logic_Shop_Shipping			$shipping			Shipping logic if module is installed */
+	protected ?Logic_Shop_Shipping $shipping	= NULL;
 
 	/**
 	 *	Returns number of orders for given conditions.
@@ -30,7 +30,7 @@ class Logic_ShopManager extends Logic
 		return $this->modelOrder->count( $conditions );
 	}
 
-	public function getOrderCustomer( $orderId )
+	public function getOrderCustomer( int|string $orderId ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
@@ -42,7 +42,7 @@ class Logic_ShopManager extends Logic
 		throw new Exception( 'No user or customer assigned to order' );
 	}
 
-	public function getAccountCustomer( $userId )
+	public function getAccountCustomer( int|string $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -63,7 +63,7 @@ class Logic_ShopManager extends Logic
 	/**
 	 *	@deprecated
 	 */
-	public function getGuestCustomer( $customerId )
+	public function getGuestCustomer( int|string $customerId ): object
 	{
 //		throw new RuntimeException( 'Method Logic_ShopManager::getGuestCustomer is deprecated' );
 		$model	= new Model_Shop_Customer( $this->env );
@@ -83,12 +83,12 @@ class Logic_ShopManager extends Logic
 		return $user;
 	}
 
-	public function getCustomers( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getCustomers( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return [];//$this->modelCustomer->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getOrder( $orderId, bool $extended = FALSE )
+	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( $order && $extended ){
@@ -98,22 +98,22 @@ class Logic_ShopManager extends Logic
 		return $order;
 	}
 
-	public function getOrders( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getOrders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelOrder->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getOrderPositions( $orderId ): array
+	public function getOrderPositions( int|string $orderId ): array
 	{
 		return $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
 	}
 
-	public function getOrderPosition( $positionId )
+	public function getOrderPosition( int|string $positionId ): ?object
 	{
 		return $this->modelOrderPosition->get( $positionId );
 	}
 
-	public function getOpenSessionOrder( $sessionId ): array
+	public function getOpenSessionOrder( string $sessionId ): array
 	{
 		$conditions	= [
 			'session_id'		=> $sessionId,
@@ -122,7 +122,7 @@ class Logic_ShopManager extends Logic
 		return $this->modelOrder->getAll( $conditions );
 	}
 
-	public function getShipping( bool $strict = TRUE )
+	public function getShipping( bool $strict = TRUE ): ?Logic_Shop_Shipping
 	{
 		if( !$this->shipping && $strict )
 			throw new RuntimeException( 'Shipping module is not installed' );
@@ -137,43 +137,43 @@ class Logic_ShopManager extends Logic
 	 */
 	public function getShippingGradeIdByQuantity( int $quantity ): int
 	{
-		return $this->getShipping()->getShippingGradeIdByQuantity( $quantity );
+		return $this->getShipping()?->getGradeID( $quantity );
 	}
 
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		integer		$shippingZoneId 		ID of Shipping Zone
-	 *	@param		integer		$shippingGradeId 		ID of Shipping Grade
+	 *	@param		int|string		$shippingZoneId 		ID of Shipping Zone
+	 *	@param		int|string		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 */
-	public function getShippingPrice( $shippingZoneId, $shippingGradeId )
+	public function getShippingPrice( int|string $shippingZoneId, int|string $shippingGradeId ): string
 	{
-		return $this->getShipping()->getShippingPrice( $shippingZoneId, $shippingGradeId );
+		return $this->getShipping()->getPrice( $shippingZoneId, $shippingGradeId );
 	}
 
 	/**
 	 *	Returns Shipping Zone ID of Country.
 	 *	@access		public
-	 *	@param		integer		 $countryId		ID of Country
+	 *	@param		int|string		 $countryId		ID of Country
 	 *	@return		integer|NULL
 	 *	@todo		rename to getShippingZoneOfCountryId and change behaviour
 	 */
-	public function getShippingZoneId( $countryId )
+	public function getShippingZoneId( int|string $countryId ): ?int
 	{
-		return $this->getShipping()->getShippingZoneId( $countryId );
+		return $this->getShipping()->getZoneId( $countryId );
 	}
 
 	/**
 	 *	Change order position status.
 	 *	@access		public
-	 *	@param		integer|string	$orderId		Order position ID
-	 *	@param		integer|string	$status			Status to set
-	 *	@return		integer			1: order changed, 0: nothing changed
+	 *	@param		integer|string		$positionId		Order position ID
+	 *	@param		integer|string		$status			Status to set
+	 *	@return		integer				1: order changed, 0: nothing changed
 	 */
-	public function setOrderPositionStatus( $positionId, $status )
+	public function setOrderPositionStatus( int|string $positionId, int|string $status ): int
 	{
-		return $this->modelOrderPosition->edit( $positionId, array( 'status' => (int) $status ) );
+		return $this->modelOrderPosition->edit( $positionId, ['status' => $status] );
 	}
 
 	/**
@@ -183,18 +183,18 @@ class Logic_ShopManager extends Logic
 	 *	@param		integer|string	$status			Status to set
 	 *	@return		integer			1: order changed, 0: nothing changed
 	 */
-	public function setOrderStatus( $orderId, $status )
+	public function setOrderStatus( int|string $orderId, int|string $status ): int
 	{
-		return $this->modelOrder->edit( $orderId, array( 'status' => (int) $status ) );
+		return $this->modelOrder->edit( $orderId, ['status' => $status] );
 	}
 
 	/**
 	 *	Set shipping logic instance.
 	 *	@access		public
-	 *	@param		Logic		$logic		Logic instance to set
+	 *	@param		Logic_Shop_Shipping		$logic		Logic instance to set
 	 *	@return		self
 	 */
-	public function setShipping(Logic $logic ): self
+	public function setShipping( Logic_Shop_Shipping $logic ): self
 	{
 		$this->shipping	= $logic;
 		return $this;
@@ -207,6 +207,6 @@ class Logic_ShopManager extends Logic
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
 		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
 		if( !$this->env->hasModules( 'Shop_Shipping' ) )
-			$this->shipping	= new Logic_Shop_Shipping( $env );
+			$this->setShipping( new Logic_Shop_Shipping( $this->env ) );
 	}
 }

@@ -13,7 +13,7 @@ class Logic_Catalog extends Logic
 {
 
 	/**	@var	SimpleCacheInterface				$cache */
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	/**	@var	Logic_Frontend						$frontend */
 	protected Logic_Frontend $frontend;

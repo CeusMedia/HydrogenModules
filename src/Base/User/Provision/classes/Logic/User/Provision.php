@@ -18,7 +18,7 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	Activate user license and send mails to user license key users.
 	 *	@access		protected
-	 *	@param		int|string			$userLicenseId		User license ID
+	 *	@param		int|string		$userLicenseId		User license ID
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about activation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about assigment
 	 *	@return		boolean
@@ -192,13 +192,14 @@ class Logic_User_Provision extends Logic
 	 *	- user license is active
 	 *	- another user license key for product is prepared
 	 *	@access		public
-	 *	@param		int|string		$userId			User ID
-	 *	@param		int|string		$productId		Product ID
-	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
+	 *	@param		int|string			$userId			User ID
+	 *	@param		int|string			$productId		Product ID
+	 *	@return		integer|FALSE|NULL	ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId )
+	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )

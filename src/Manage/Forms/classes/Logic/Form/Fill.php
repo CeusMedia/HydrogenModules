@@ -17,7 +17,7 @@ class Logic_Form_Fill extends Logic
 
 	protected array $transferTargetMap	= [];
 
-	public function applyTransfers( $fillId ): array
+	public function applyTransfers( int|string $fillId ): array
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
@@ -35,7 +35,7 @@ class Logic_Form_Fill extends Logic
 		$parser		= new JsonParser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
-		$transfers	= [];
+		$transfers		= [];
 		$transferData	= [];
 		foreach( $rules as $rule ){
 			$target = $this->modelTransferTarget->get( $rule->formTransferTargetId );
@@ -43,7 +43,7 @@ class Logic_Form_Fill extends Logic
 				continue;
 
 			$transferData	= $formData;
-			$transfer	= (object) [
+			$transfer		= (object) [
 				'status'	=> 'none',
 				'rule'		=> $rule,
 				'target'	=> $target,
@@ -55,7 +55,7 @@ class Logic_Form_Fill extends Logic
 			if( !strlen( trim( $rule->rules ) ) )
 				continue;
 			$transfer->data	= [];
-			$reportData	= array(
+			$reportData	= [
 				'formId'				=> $transfer->rule->formId,
 				'formTransferRuleId'	=> $transfer->rule->formTransferRuleId,
 				'formTransferTargetId'	=> $transfer->target->formTransferTargetId,
@@ -63,7 +63,7 @@ class Logic_Form_Fill extends Logic
 				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKNOWN,
 				'data'					=> json_encode( $transferData ),
 				'createdAt'				=> time(),
-			);
+			];
 			try{
 				$ruleSet				= $parser->parse( $rule->rules, FALSE );
 				$transfer->status		= 'parsed';
@@ -108,7 +108,7 @@ class Logic_Form_Fill extends Logic
 		return $transfers;
 	}
 
-	public function checkId( $fillId, bool $strict = TRUE )
+	public function checkId( int|string $fillId, bool $strict = TRUE ): ?object
 	{
 		$fill	= $this->modelFill->get( $fillId );
 		if( !$fill ){
@@ -119,7 +119,7 @@ class Logic_Form_Fill extends Logic
 		return $fill;
 	}
 
-	public function get( $fillId, bool $strict = TRUE )
+	public function get( int|string $fillId, bool $strict = TRUE ): ?object
 	{
 		$fillId	= (int) $fillId;
 		if( !$fillId ){
@@ -183,7 +183,7 @@ class Logic_Form_Fill extends Logic
 		return join( "\r\n", $lines );
 	}
 
-	public function sendConfirmMail( $fillId )
+	public function sendConfirmMail( int|string $fillId ): bool
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
@@ -214,7 +214,7 @@ class Logic_Form_Fill extends Logic
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
-	public function sendCustomerResultMail( $fillId )
+	public function sendCustomerResultMail( int|string $fillId ): ?bool
 	{
 		$fill	= $this->checkId( $fillId );
 		if( !$fill->email )
@@ -282,12 +282,12 @@ class Logic_Form_Fill extends Logic
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
 		$subject	= $formMail->subject ? $formMail->subject : 'Anfrage erhalten';
-		$mail		= new Mail_Form_Customer_Result( $this->env, array(
+		$mail		= new Mail_Form_Customer_Result( $this->env, [
 			'fill'				=> $fill,
 			'form'				=> $form,
 			'mail'				=> $formMail,
 			'mailTemplateId'	=> $configResource->get( 'template' ),
-		) );
+		] );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -295,7 +295,7 @@ class Logic_Form_Fill extends Logic
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
-	public function sendManagerErrorMail( $formId, $data )
+	public function sendManagerErrorMail( int|string $formId, $data ): void
 	{
 		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
 		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
@@ -316,7 +316,7 @@ class Logic_Form_Fill extends Logic
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
-	public function sendManagerResultMails( $fillId )
+	public function sendManagerResultMails( int|string $fillId ): ?int
 	{
 		$fill		= $this->get( $fillId );
 		$form		= $this->modelForm->get( $fill->formId );
@@ -381,6 +381,7 @@ class Logic_Form_Fill extends Logic
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail			= $this->env->getLogic()->get( 'Mail' );
 		$this->modelForm			= $this->getModel( 'Form' );
 		$this->modelFill			= $this->getModel( 'FormFill' );

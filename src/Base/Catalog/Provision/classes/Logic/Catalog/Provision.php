@@ -14,7 +14,7 @@ class Logic_Catalog_Provision extends Logic
 	protected Model_User $modelUser;
 
 	/**
-	 *	@todo   		rework, send mails
+	 *	@todo		rework, send mails
 	 */
 	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
@@ -61,7 +61,7 @@ class Logic_Catalog_Provision extends Logic
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId )
+	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -102,7 +102,7 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@todo   		rework
 	 */
-	public function getDurationInSeconds( $duration )
+	public function getDurationInSeconds( $duration ): float|int
 	{
 		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
@@ -136,7 +136,7 @@ class Logic_Catalog_Provision extends Logic
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId )
+	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )

@@ -19,7 +19,7 @@ class Logic_Database_Backup extends Logic
 	 *	@param		bool		$strict
 	 *	@return		object|FALSE
 	 */
-	public function check( string $id, bool $strict = TRUE )
+	public function check( string $id, bool $strict = TRUE ): object|FALSE
 	{
 		if( array_key_exists( $id, $this->dumps ) )
 			return $this->dumps[$id];
@@ -135,7 +135,7 @@ class Logic_Database_Backup extends Logic
 		}
 	}
 
-	public function storeDataInComment( $id, $data )
+	public function storeDataInComment( $id, $data ): void
 	{
 		$dump	= $this->check( $id );
 		if( !array_key_exists( $id, $this->comments ) )

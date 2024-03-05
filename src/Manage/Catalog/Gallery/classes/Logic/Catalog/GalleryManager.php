@@ -52,12 +52,12 @@ class Logic_Catalog_GalleryManager
 		$this->pathImport	= $basePath.$this->moduleConfig->get( 'path.import' );
 	}
 
-	public function countCategoryImages( $categoryId ): ?int
+	public function countCategoryImages( int|string $categoryId ): ?int
 	{
 		return count( $this->getCategoryImages( $categoryId ) );
 	}
 
-	public function getCategory( $categoryId )
+	public function getCategory( int|string $categoryId ): ?object
 	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId;
 		$category	= $this->cache->get( $cacheKey );
@@ -69,7 +69,7 @@ class Logic_Catalog_GalleryManager
 		return $category;
 	}
 
-	public function getCategoryImages( $categoryId )
+	public function getCategoryImages( int|string $categoryId ): array
 	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId.'.images';
 		$images		= $this->cache->get( $cacheKey );
@@ -83,7 +83,7 @@ class Logic_Catalog_GalleryManager
 		return $images;
 	}
 
-	public function getCategories()
+	public function getCategories(): array
 	{
 		$cacheKey	= 'catalog.gallery.categories';
 		$categories	= $this->cache->get( $cacheKey );
@@ -96,7 +96,7 @@ class Logic_Catalog_GalleryManager
 		return $categories;
 	}
 
-	public function getImage( $imageId )
+	public function getImage( $imageId ): ?object
 	{
 		$cacheKey	= 'catalog.gallery.image.'.$imageId;
 		$image		= $this->cache->get( $cacheKey );
