@@ -25,11 +25,13 @@ class Logic_Shop_Shipping extends Logic
 	 *	@param		int		 $quantity		Quantity to ge Shipping Grade for
 	 *	@return		int
 	 *	@todo		remove method and its calls
+	 *	@deprecated
 	 */
-	public function getGradeID( $quantity )
+	public function getGradeID( int $quantity )
 	{
 		$model	= new Model_Shop_Shipping_Grade( $this->env );
-		return array_shift( $model->getAll( $conditions, array ('quantity' => 'DESC' ) ) );
+		$grades	= $model->getAll( [], ['quantity' => 'DESC'] );
+		return array_shift( $grades );
 	}
 
 	/**
@@ -39,6 +41,7 @@ class Logic_Shop_Shipping extends Logic
 	 *	@param		int		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@todo		remove method and its calls
+	 *	@deprecated
 	 */
 	public function getPrice( $shippingZoneId, $shippingGradeId )
 	{

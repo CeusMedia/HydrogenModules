@@ -39,7 +39,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$input			Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 */
-	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output )
+	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $creations as $fieldName => $parameters ){
 			$buffer	= '';
@@ -70,7 +70,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output )
+	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $filters as $fieldName => $parameters ){
 			if( !$input->has( $fieldName ) ){
@@ -148,7 +148,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output )
+	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output ): void
 	{
 		/**
 		 * @var string $fieldName
@@ -204,7 +204,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyTranslation( array $translates, Dictionary $input, Dictionary $output )
+	protected function applyTranslation( array $translates, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $translates as $fieldName => $map ){
 			if( $input->has( $fieldName ) ){
@@ -226,7 +226,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyCopies( array $copies, Dictionary $input, Dictionary $output )
+	protected function applyCopies( array $copies, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $copies as $fieldName )
 			if( $input->has( $fieldName ) )
@@ -242,7 +242,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyMappings( array $map, Dictionary $input, Dictionary $output )
+	protected function applyMappings( array $map, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $map as $inputFieldName => $outputFieldName )
 			if( $input->has( $inputFieldName ) )
@@ -258,7 +258,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applySets( array $map, Dictionary $input, Dictionary $output )
+	protected function applySets( array $map, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $map as $name => $value ){
 			$output->set( $name, $this->resolveValue( $value, $input ) );
@@ -280,14 +280,11 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	protected function resolveValue( string $value, Dictionary $input ): ?string
 	{
 		$prefix	= substr( $value, 0, 1 );
-		switch( $prefix ){
-			case '!':
-				return $this->resolveFunction( substr( $value, 1 ) );
-			case '@':
-				return $input->get( substr( $value, 1 ) );
-			default:
-				return $value;
-		}
+		return match( $prefix ){
+			'!'		=> $this->resolveFunction( substr( $value, 1 ) ),
+			'@'		=> $input->get( substr( $value, 1 ) ),
+			default	=> $value,
+		};
 	}
 
 	/**
@@ -301,16 +298,12 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 */
 	protected function resolveFunction( string $function, $arguments = '' ): ?string
 	{
-		switch( $function ){
-			case 'datetime':
-				return date( 'Y-m-d H:i:s' );
-			case 'date':
-				return date( 'Y-m-d' );
-			case 'time':
-				return date( 'H:i:s' );
-			default:
-				return NULL;
-		}
+		return match( $function ){
+			'datetime'	=> date( 'Y-m-d H:i:s' ),
+			'date'		=> date( 'Y-m-d' ),
+			'time'		=> date( 'H:i:s' ),
+			default		=> NULL,
+		};
 	}
 
 	/**
@@ -322,23 +315,13 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary	$input			Map of form input data
 	 *	@return		string|integer|NULL
 	 */
-	protected function resolveOperation( string $operation, string $value, Dictionary $input )
+	protected function resolveOperation( string $operation, string $value, Dictionary $input ): string|int|NULL
 	{
-		switch( strtolower( $operation ) ){
-			case 'set':
-				return $this->resolveValue( $value, $input );
-			case 'inc':
-			case 'increment':
-			case '++':
-				return ( (int) $value ) + 1;
-			case 'dec':
-			case 'decrement':
-			case '--':
-				return ( (int) $value ) - 1;
-			case 'remove':
-			case 'delete':
-			default:
-				return NULL;
-		}
+		return match( strtolower( $operation ) ){
+			'set'						=> $this->resolveValue( $value, $input ),
+			'inc', 'increment', '++'	=> ( (int) $value ) + 1,
+			'dec', 'decrement', '--'	=> ( (int) $value ) - 1,
+			default						=> NULL,
+		};
 	}
 }

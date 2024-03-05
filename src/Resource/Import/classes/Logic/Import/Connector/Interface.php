@@ -5,9 +5,9 @@ interface Logic_Import_Connector_Interface
 
 	public function disconnect();
 
-	public function setConnection( $connection );
+	public function setConnection( object $connection );
 
-	public function setConnectionId( $connectionId );
+	public function setConnectionId( int|string $connectionId );
 
 	public function getFolders( bool $recursive = FALSE ): array;
 }

@@ -91,7 +91,7 @@ class Logic_Frontend extends Logic
 	 *	@return		RemoteEnvironment
 	 *	@throws		EnvironmentException
 	 */
-	public static function getRemoteEnv(Environment $parentEnv, array $options = [] ): RemoteEnvironment
+	public static function getRemoteEnv( Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
 		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
 		return new RemoteEnvironment( array_merge( $options, [
@@ -141,11 +141,11 @@ class Logic_Frontend extends Logic
 			//               - not OOP
 			$lines	= explode( "\n", FileReader::load( $fileName ) );
 			foreach( $lines as $nr => $line ){
-				if( preg_match( '@<config @', $line ) ){
+				if( str_contains( $line, '<config ' ) ){
 					$key	= preg_replace( '@^.+name="(.+)".+$@U', '\\1', $line );
 					if( !$key || ( $keys && !in_array( $key, $keys ) ) )
 						continue;
-					if( preg_match( '@/>$@', $line ) ){
+					if( str_ends_with( $line, '/>' ) ){
 						$list[$key]	= NULL;
 						continue;
 					}
@@ -181,7 +181,7 @@ class Logic_Frontend extends Logic
 	 *	@param		bool		$asDictionary
 	 *	@return		Dictionary|string[]
 	 */
-	public function getModules( bool $asDictionary = FALSE )
+	public function getModules( bool $asDictionary = FALSE ): array|Dictionary
 	{
 		if( $asDictionary )
 			return new Dictionary( $this->installedModules );

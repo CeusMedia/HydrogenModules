@@ -3,7 +3,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Authentication_Backend_Local extends Logic
+class Logic_Authentication_Backend_Local extends Logic implements Logic_Authentication_BackendInterface
 {
 	protected Model_User $modelUser;
 	protected Model_Role $modelRole;
@@ -12,7 +12,7 @@ class Logic_Authentication_Backend_Local extends Logic
 	/**
 	 *	@todo		remove support for old user password
 	 */
-	public function checkPassword( $userId, string $password ): bool
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		$hasUsersModule		= $this->env->getModules()->has( 'Resource_Users' );
 		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) && $hasUsersModule ){
@@ -130,7 +130,7 @@ class Logic_Authentication_Backend_Local extends Logic
 		return (int) $this->session->get( 'auth_user_id' ) > 0;
 	}
 
-	public function isCurrentUserId( $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}

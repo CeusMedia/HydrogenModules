@@ -4,7 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Authentication_Backend_Oauth extends Logic
+class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authentication_BackendInterface
 {
 	protected Dictionary $config;
 	protected Dictionary $session;
@@ -13,7 +13,14 @@ class Logic_Authentication_Backend_Oauth extends Logic
 	protected Model_Role $modelRole;
 	protected string $providerUri;
 
-	public function checkPassword( string $userId ): bool
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		string			$password
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@todos		implement passwort argument, currently using request inputs, should be password + scope arguments
+	 */
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
@@ -61,7 +68,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
@@ -74,7 +81,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -84,7 +91,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return $this->session->get( 'auth_role_id');
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
@@ -100,7 +107,7 @@ class Logic_Authentication_Backend_Oauth extends Logic
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	public function getCurrentUserId( bool $strict = TRUE ): int|string
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -131,8 +138,9 @@ class Logic_Authentication_Backend_Oauth extends Logic
 	/**
 	 *	@todo		implement if possible
 	 */
-	public function noteUserActivity()
+	public function noteUserActivity(): Logic_Authentication_BackendInterface
 	{
+		return $this;
 	}
 
 	public function setAuthenticatedUser( object $user ): self

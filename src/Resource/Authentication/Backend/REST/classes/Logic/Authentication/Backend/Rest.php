@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Rest extends Logic
@@ -29,7 +30,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 		return $this->client->post( 'username/check', $parameters )->data;
 	}
 
-	public function clearCurrentUser()
+	public function clearCurrentUser(): void
 	{
 		$this->session->remove( 'auth_user_id' );
 		$this->session->remove( 'auth_role_id' );
@@ -45,7 +46,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 	/**
  	 *	@todo		send mail to user after confirmation with user data
 	 */
-	public function confirm( $userId, string $token )
+	public function confirm( int|string $userId, string $token )
 	{
 		$parameters	= [
 			'userId'	=> $userId,
@@ -55,7 +56,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 		return $result;
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	public function getCurrentRole( bool $strict = TRUE ): int|string|NULL
 	{
 return NULL;
 		$roleId	= $this->getCurrentRoleId( $strict );
@@ -69,8 +70,9 @@ return NULL;
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
+return NULL;
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -81,7 +83,6 @@ return NULL;
 
 	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
 	{
-return NULL;
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
 			$user	= $this->client->post( 'user/get', [$userId] );
@@ -118,7 +119,7 @@ return NULL;
 		return (bool) $this->session->get( 'auth_user_id' );
 	}
 
-	public function isCurrentUserId( $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
@@ -133,7 +134,7 @@ return NULL;
 	/**
  	 *	@todo		send mail to user with confirmation link
 	 */
-	public function register( $postData )
+	public function register( Dictionary $postData ): array|string
 	{
 		$data	= array(
 			'username'		=> $postData->get( 'username' ),
@@ -194,14 +195,14 @@ return NULL;
 		];
 	}
 
-	public function setAuthenticatedUser( $user )
+	public function setAuthenticatedUser( object $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user )
+	public function setIdentifiedUser( object $user ): self
 	{
 		$this->session->set( 'auth_backend', 'Rest' );
 		$this->session->set( 'auth_user_id', $user->data->userId );

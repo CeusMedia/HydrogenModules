@@ -13,7 +13,7 @@ class Logic_Authentication extends Logic
 	protected array $backends	= [];
 	protected Dictionary $session;
 
-	public function checkPassword( $userId, string $password )
+	public function checkPassword( int|string $userId, string $password )
 	{
 		return $this->backend->checkPassword( $userId, $password );
 	}
@@ -58,13 +58,13 @@ class Logic_Authentication extends Logic
 	 *	For advanced uses, a list of reporting modules and their collected user relations can be returned instead.
 	 *
 	 *	@access		public
-	 *	@param		string		$userId			ID of user to get related users for
-	 *	@param		boolean		$groupByModules	Flag: group related users by reporting modules
-	 *	@return		array		Map of related users or list of reporting modules with related users
+	 *	@param		int|string		$userId			ID of user to get related users for
+	 *	@param		boolean			$groupByModules	Flag: group related users by reporting modules
+	 *	@return		array			Map of related users or list of reporting modules with related users
 	 *	@triggers	Resource:User::getRelatedUsers
 	 *	@throws		ReflectionException
 	 */
-	public function getRelatedUsers( string $userId, bool $groupByModules = FALSE ): array
+	public function getRelatedUsers( int|string $userId, bool $groupByModules = FALSE ): array
 	{
 		$payload	= ['userId' => $userId, 'list' => []];
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
@@ -97,7 +97,7 @@ class Logic_Authentication extends Logic
 		return $this->backend->isAuthenticated();
 	}
 
-	public function isCurrentUserId( $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
 	}

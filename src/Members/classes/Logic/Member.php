@@ -25,7 +25,7 @@ class Logic_Member
 		return self::$instance;
 	}
 
-	public function getRelatedUserIds( string $userId, $status = NULL ): array
+	public function getRelatedUserIds( int|string $userId, $status = NULL ): array
 	{
 		$userIds	= [];
 		$relations	= $this->modelRelation->getAllByIndices( [
@@ -69,7 +69,7 @@ class Logic_Member
 		return $userIds;
 	}
 
-	public function getUserRelation( string $currentUserId, string $relatedUserId, $status = NULL ): ?object
+	public function getUserRelation( int|string $currentUserId, int|string $relatedUserId, $status = NULL ): ?object
 	{
 		$conditions	= [
 			'fromUserId'	=> $currentUserId,
@@ -96,7 +96,7 @@ class Logic_Member
 		return NULL;
 	}
 
-	public function getUsersWithRelations( string $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
+	public function getUsersWithRelations( int|string $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
 	{
 		$key	= array_search( $currentUserId, $userIds );
 		if ( $key !== FALSE )
@@ -117,7 +117,6 @@ class Logic_Member
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	protected function __construct( Environment $env )
 	{

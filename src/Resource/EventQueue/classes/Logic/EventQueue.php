@@ -23,9 +23,9 @@ class Logic_EventQueue extends Logic
 	 *	@param		string			$identifier		Identifier of event
 	 *	@param		mixed			$data			Data for event handling
 	 *	@param		string|NULL		$origin			...
-	 *	@return		string			ID of new event
+	 *	@return		int|string			ID of new event
 	 */
-	public function add( string $identifier, $data, ?string $origin = NULL ): int
+	public function add( string $identifier, $data, ?string $origin = NULL ): int|string
 	{
 		return $this->model->add( [
 			'userId'		=> $this->userId,
@@ -46,7 +46,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		array		$conditions		Map of conditions to match with
 	 *	@return		integer
 	 */
-	public function count( array $conditions ): int
+	public function count( array $conditions = [] ): int
 	{
 		if( !$this->scope && !array_key_exists( 'scope', $conditions ) )
 			$conditions['scope']	= $this->scope;
@@ -56,10 +56,10 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Return event by given ID.
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to return
+	 *	@param		int|string		$eventId		ID of event to return
 	 *	@return		object|NULL	Data object of event
 	 */
-	public function get( string $eventId ): object|NULL
+	public function get( int|string $eventId ): object|NULL
 	{
 		return $this->model->get( $eventId );
 	}
@@ -71,7 +71,7 @@ class Logic_EventQueue extends Logic
 	 *	@param		array		$conditions		Map of conditions to match with
 	 *	@return		array
 	 */
-	public function getByConditions( array $conditions ): array
+	public function getByConditions( array $conditions = [] ): array
 	{
 		if( !$this->scope && !array_key_exists( 'scope', $conditions ) )
 			$conditions['scope']	= $this->scope;
@@ -81,11 +81,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "new".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as new
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as new
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsNew( string $eventId, $result = NULL ): self
+	public function markAsNew( int|string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_NEW, $result );
 	}
@@ -93,11 +93,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "ignored".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as ignored
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as ignored
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsIgnored( string $eventId, $result = NULL ): self
+	public function markAsIgnored( int|string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_IGNORED, $result );
 	}
@@ -105,11 +105,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "revoked".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as revoked
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as revoked
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsRevoked( string $eventId, $result = NULL ): self
+	public function markAsRevoked( int|string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_REVOKED, $result );
 	}
@@ -117,11 +117,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "running".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as running
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as running
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsInRunning( string $eventId, $result = NULL ): self
+	public function markAsInRunning( int|string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_RUNNING, $result );
 	}
@@ -129,11 +129,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "failed".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as failed
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as failed
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsFailed( string $eventId, $result = NULL ): self
+	public function markAsFailed( int|string	 $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_FAILED, $result );
 	}
@@ -141,11 +141,11 @@ class Logic_EventQueue extends Logic
 	/**
 	 *	Sets event status to "succeeded".
 	 *	@access		public
-	 *	@param		string		$eventId		ID of event to mark as succeeded
-	 *	@param		mixed		$result			Results to store
+	 *	@param		int|string		$eventId		ID of event to mark as succeeded
+	 *	@param		mixed			$result			Results to store
 	 *	@return		self
 	 */
-	public function markAsSucceeded( string $eventId, $result = NULL ): self
+	public function markAsSucceeded( int|string $eventId, $result = NULL ): self
 	{
 		return $this->setStatus( $eventId, Model_Event::STATUS_SUCCEEDED, $result );
 	}
@@ -169,7 +169,7 @@ class Logic_EventQueue extends Logic
 		$this->model	= new Model_Event( $this->env );
 	}
 
-	protected function setStatus( string $eventId, $status, $result = NULL ): self
+	protected function setStatus( int|string $eventId, $status, $result = NULL ): self
 	{
 		$event		= $this->get( $eventId );
 		if( NULL === $event )

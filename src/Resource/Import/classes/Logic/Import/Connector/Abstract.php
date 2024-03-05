@@ -6,7 +6,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 {
 	protected Model_Import_Connection $modelConnection;
 
-	protected $connection;
+	protected ?object $connection	= NULL;
 
 	protected array $options		= [];
 
@@ -18,24 +18,24 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	abstract public function getFolders( bool $recursive = FALSE ): array;
 
-	public function getConnection()
+	public function getConnection(): ?object
 	{
 		return $this->connection;
 	}
 
-	public function setConnection( $connection  ): self
+	public function setConnection( object $connection  ): self
 	{
 		$this->connection	= $connection;
 		return $this;
 	}
 
-	public function setConnectionId( $connectionId  ): self
+	public function setConnectionId( int|string $connectionId  ): self
 	{
 		$this->connection	= $this->modelConnection->get( $connectionId );
 		return $this;
 	}
 
-	public function setOptions( $options ): self
+	public function setOptions( array $options ): self
 	{
 		$this->options	= $options;
 		return $this;

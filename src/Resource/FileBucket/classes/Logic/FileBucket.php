@@ -20,7 +20,7 @@ class Logic_FileBucket extends Logic
 	/**
 	 *	@return		void
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
@@ -68,7 +68,7 @@ class Logic_FileBucket extends Logic
 		return $this->model->add( $data );
 	}
 
-	public function get( string $fileId ): ?object
+	public function get( int|string $fileId ): ?object
 	{
 		return $this->model->get( $fileId );
 	}
@@ -143,15 +143,15 @@ class Logic_FileBucket extends Logic
 	}
 
 	/**
-	 *	@param		string		$fileId
-	 *	@param		int			$maxWidth
-	 *	@param		int			$maxHeight
-	 *	@param		mixed		$quality
+	 *	@param		int|string		$fileId
+	 *	@param		int				$maxWidth
+	 *	@param		int				$maxHeight
+	 *	@param		mixed			$quality
 	 *	@return		bool
 	 *	@throws		InvalidArgumentException	if file is not an image
 	 *	@throws		Exception					if image could not been created
 	 */
-	public function limitImageSize( string $fileId, int $maxWidth, int $maxHeight, $quality = NULL ): bool
+	public function limitImageSize( int|string $fileId, int $maxWidth, int $maxHeight, $quality = NULL ): bool
 	{
 		$file		= $this->get( $fileId );
 		if( !in_array( $file->mimeType, ['image/png', 'image/gif', 'image/jpeg'] ) )
@@ -168,7 +168,7 @@ class Logic_FileBucket extends Logic
 		return TRUE;
 	}
 
-	public function noteView( string $fileId )
+	public function noteView( int|string $fileId ): void
 	{
 		if( $file = $this->get( $fileId ) )
 			$this->model->edit( $fileId, [
@@ -178,14 +178,14 @@ class Logic_FileBucket extends Logic
 	}
 
 	/**
-	 *	@param		string			$fileId
+	 *	@param		int|string		$fileId
 	 *	@param		string			$sourceFilePath
 	 *	@param		string|NULL		$mimeType
 	 *	@return		string
 	 *	@throws		DomainException
 	 *	@throws		RuntimeException
 	 */
-	public function replace( string $fileId, string $sourceFilePath, ?string $mimeType = NULL ): string
+	public function replace( int|string $fileId, string $sourceFilePath, ?string $mimeType = NULL ): string
 	{
 		$file	= $this->get( $fileId );
 		if( !$file )
@@ -200,12 +200,12 @@ class Logic_FileBucket extends Logic
 		return $this->add( $sourceFilePath, $uriPath, $mimeType, $file->moduleId );
 	}
 
-	public function rename( $fileId, string $name ): bool
+	public function rename( int|string $fileId, string $name ): bool
 	{
 		return 1 === $this->model->edit( $fileId, ['fileName' => $name] );
 	}
 
-	public function remove( string $fileId ): bool
+	public function remove( int|string $fileId ): bool
 	{
 		$file	= $this->get( $fileId );
 		if( !$file )

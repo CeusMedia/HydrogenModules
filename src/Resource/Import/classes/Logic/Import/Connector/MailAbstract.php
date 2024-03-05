@@ -31,7 +31,7 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 		return $this;
 	}
 
-	public function disconnect()
+	public function disconnect(): void
 	{
 		if( !$this->connection || !$this->mailbox )
 			throw new RuntimeException( 'No connection set') ;
