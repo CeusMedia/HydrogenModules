@@ -50,7 +50,7 @@ class Logic_Shop_Payment extends Logic
 		return $price;
 	}
 
-	public function getBackends( $autoload = TRUE ): ?Model_Shop_Payment_BackendRegister
+	public function getBackends( bool $autoload = TRUE ): ?Model_Shop_Payment_BackendRegister
 	{
 		if( 0 === $this->backends->count() && $autoload )
 			$this->collectBackends();

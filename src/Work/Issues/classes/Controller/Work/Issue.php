@@ -109,7 +109,7 @@ class Controller_Work_Issue extends Controller
 //		$this->logic->informAboutChange( $issueId, $this->userId );
 		$this->addData( 'issue', $this->logic->get( $issueId, TRUE ) );
 		$this->addData( 'projects', $this->userProjects );
-		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
+		$this->addData( 'users', $this->logic->getParticipatingUsers( $issueId ) );
 	}
 
 	public function emerge( string $issueId ): void
@@ -355,7 +355,7 @@ class Controller_Work_Issue extends Controller
 	protected function checkIssue( string $issueId, bool $strict = TRUE )
 	{
 		$issue	= $this->logic->get( $issueId, TRUE );
-		$users	= $this->logic->getParticitatingUsers( $issueId );
+		$users	= $this->logic->getParticipatingUsers( $issueId );
 		if( $issue && $users ){
 			$logicAuth	= Logic_Authentication::getInstance( $this->env );
 			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )

@@ -1,19 +1,18 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Image_Slider
 {
-	public $config;
-	public $slides;
-	public $options;
+	protected Environment $env;
 
-	protected $env;
-	protected $modelSlider;
-	protected $modelSlide;
-	protected $basePath;
-	protected $selectorPrefix		= 'imageSlider-';
+	protected Dictionary $config;
+	protected Model_Image_Slider $modelSlider;
+	protected Model_Image_Slide $modelSlide;
+	protected string $basePath;
+	protected string $selectorPrefix		= 'imageSlider-';
 
 	/**
 	 *	Constructor.
@@ -39,11 +38,11 @@ class View_Helper_Image_Slider
 	/**
 	 *	Returns rendered HTML for specified slider.
 	 *	@access		public
-	 *	@param		integer		$sliderId		ID of slider to render
+	 *	@param		int|string		$sliderId		ID of slider to render
 	 *	@return		string
 	 *	@todo		reactivate scaling after fixing it
 	 */
-	public function render( $sliderId ): string
+	public function render( int|string $sliderId ): string
 	{
 		$slider		= $this->modelSlider->get( $sliderId );
 		if( !$slider )
@@ -84,7 +83,7 @@ class View_Helper_Image_Slider
 		return HtmlTag::create( 'div', $images, $attr );
 	}
 
-	public static function renderStatic( Environment $env, $sliderId ): string
+	public static function renderStatic( Environment $env, int|string $sliderId ): string
 	{
 		$instance	= new self( $env );
 		return $instance->render( $sliderId );
@@ -118,7 +117,7 @@ class View_Helper_Image_Slider
 
 	//  --  PROTECTED  --  //
 
-	protected function renderButtons( $slider ): string
+	protected function renderButtons( object $slider ): string
 	{
 		if( !$slider->showButtons || count( $slider->slides ) < 2 )
 			return '';
@@ -133,7 +132,7 @@ class View_Helper_Image_Slider
 		return $buttonPrev.$buttonNext;
 	}
 
-	protected function renderDots( $slider ): string
+	protected function renderDots( object $slider ): string
 	{
 		if( !$slider->showDots || count( $slider->slides ) < 2 )
 			return '';
@@ -159,7 +158,7 @@ class View_Helper_Image_Slider
 		return HtmlTag::create( 'div', join( $dots ), $attr );
 	}
 
-	protected function renderSlides( $slider ): string
+	protected function renderSlides( object $slider ): string
 	{
 		$list		= [];
 		$number		= 0;

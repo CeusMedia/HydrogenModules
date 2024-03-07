@@ -327,7 +327,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'tr', join( $cells ), $attributes );
 	}
 
-	public function renderRows( $day, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions, $typeOnly = NULL ): string
+	public function renderRows( $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE, $typeOnly = NULL ): string
 	{
 		$list	= [];
 		foreach( $this->missions as $nr => $mission ){

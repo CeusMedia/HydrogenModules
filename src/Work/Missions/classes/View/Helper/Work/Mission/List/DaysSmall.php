@@ -98,7 +98,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, "success" );
 	}
 */
-	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ): string
+	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$this->missions	= $this->list[$day];
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
@@ -333,7 +333,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'table', $colgroup.$tbody, $attributes );
 	}
 
-	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ): string
+	public function renderRows( $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE, $typeOnly = NULL ): string
 	{
 		if( !count( $this->missions ) )
 			return '';

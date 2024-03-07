@@ -13,7 +13,7 @@ class View_Helper_ModalRegistry extends Abstraction
 		$this->env	= $env;
 	}
 
-	public function register( string $key, object $modal )
+	public function register( string $key, object $modal ): void
 	{
 		if( array_key_exists( $key, $this->modals ) )
 			throw new RangeException( 'Modal with key "'.$key.'" already registered' );

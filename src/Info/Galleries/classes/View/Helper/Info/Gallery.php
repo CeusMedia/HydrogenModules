@@ -73,7 +73,7 @@ class View_Helper_Info_Gallery extends Abstraction
 		return $galleries;
 	}
 
-	protected function getGalleryImages( $galleryId ): array
+	protected function getGalleryImages( int|string $galleryId ): array
 	{
 		$configSort		= $this->moduleConfig->getAll( 'gallery.order.', TRUE );
 		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];

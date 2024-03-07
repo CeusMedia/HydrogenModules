@@ -101,7 +101,7 @@ class View_Helper_Work_Mission_Filter
 		return $buttonSearchReset;
 	}
 
-	public function renderViewTypeSwitch( $mode ): string
+	public function renderViewTypeSwitch( string $mode ): string
 	{
 		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
@@ -132,8 +132,8 @@ class View_Helper_Work_Mission_Filter
 			}
 			$icon		= $iconClass ? HtmlTag::create( 'i', '', ['class' => $iconClass] ).'&nbsp;' : '';
 			$link		= HtmlTag::create( 'a', $icon.$typeLabel, ['href' => './work/mission/'.$typeKey] );
-			$class		= in_array( $mode, $currentModes ) ? 'active' : NULL;
-			$current	= in_array( $mode, $currentModes ) ? $typeLabel : $current;
+			$class		= in_array( $mode, $currentModes, TRUE ) ? 'active' : NULL;
+			$current	= in_array( $mode, $currentModes, TRUE ) ? $typeLabel : $current;
 			$items[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
 
@@ -145,9 +145,9 @@ class View_Helper_Work_Mission_Filter
 		], ['class' => 'btn-group'] );
 	}
 
-	public function renderViewModeSwitch( $mode ): string
+	public function renderViewModeSwitch( string $mode ): string
 	{
-		if( !in_array( $mode, ['archive', 'now', 'future'] ) )
+		if( !in_array( $mode, ['archive', 'now', 'future'], TRUE ) )
 			return '';
 		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
@@ -194,7 +194,7 @@ class View_Helper_Work_Mission_Filter
 		return $this;
 	}
 
-	public function setWords( $words ): self
+	public function setWords( array $words ): self
 	{
 		$this->words	= $words;
 		return $this;

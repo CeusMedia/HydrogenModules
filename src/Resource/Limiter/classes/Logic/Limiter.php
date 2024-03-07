@@ -11,20 +11,24 @@ class Logic_Limiter
 	const OPERATION_BOOLEAN				= 0;
 	const OPERATION_COMPARE_NUMBER		= 1;
 
-	static protected $instance;
+	protected static self $instance;
 
-	protected $env;
+	protected Environment $env;
 
-	protected $rules;
+	protected Dictionary $rules;
 
-	public static function getInstance( $env )
+	protected bool $enabled;
+
+	protected Dictionary $moduleConfig;
+
+	public static function getInstance( $env ): self
 	{
 		if( !self::$instance )
 			self::$instance		= new self( $env );
 		return self::$instance;
 	}
 
-	public function allows( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	public function allows( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER )
 	{
 		if( !$this->rules->has( $key ) )
 			return TRUE;
@@ -38,7 +42,7 @@ class Logic_Limiter
 		}
 	}
 
-	public function denies( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	public function denies( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER ): bool
 	{
 		if( !$this->rules->has( $key ) )
 			return FALSE;
@@ -46,7 +50,7 @@ class Logic_Limiter
 	}
 
 
-	public function get( $key )
+	public function get( string $key )
 	{
 		return $this->rules->get( $key );
 	}
@@ -55,34 +59,34 @@ class Logic_Limiter
 	 *	Returns all rules of limiter as an array.
 	 *	Using a filter prefix, all rules with keys starting with prefix are returned.
 	 *	Attention: A given prefix will be cut from rule keys.
-	 *	By default an array is returned. Alternatively another dictionary can be returned.
+	 *	By default, an array is returned. Alternatively another dictionary can be returned.
 	 *	@access		public
-	 *	@param		string		$prefix			Prefix to filter keys, e.g. "mail." for all rules starting with "mail."
-	 *	@param		boolean		$asDictionary	Flag: return list as dictionary object instead of an array
-	 *	@param		boolean		$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivy
-	 *	@return		array|Dictionary	Map or dictionary object containing all or filtered rules
+	 *	@param		string|NULL		$prefix			Prefix to filter keys, e.g. "mail." for all rules starting with "mail."
+	 *	@param		boolean			$asDictionary	Flag: return list as dictionary object instead of an array
+	 *	@param		boolean			$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivity
+	 *	@return		array|Dictionary				Map or dictionary object containing all or filtered rules
 	 */
-	public function getAll( $prefix = NULL, $asDictionary = FALSE, $caseSensitive = TRUE )
+	public function getAll( ?string $prefix = NULL, bool $asDictionary = FALSE, bool $caseSensitive = TRUE ): array|Dictionary
 	{
 		return $this->rules->getAll( $prefix, $asDictionary, $caseSensitive );
 	}
 
-	public function getRules()
+	public function getRules(): Dictionary
 	{
 		return $this->rules;
 	}
 
-	public function has( $key )
+	public function has( $key ): bool
 	{
 		return $this->rules->has( $key );
 	}
 
-	public function index()
+	public function index(): array
 	{
 		return $this->rules->getAll();
 	}
 
-	public function set( $key, $value )
+	public function set( $key, $value ): ?bool
 	{
 		if( !$this->enabled )
 			return NULL;

@@ -77,10 +77,10 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		] );
 $script	= '
 <script>
-var InfoNoveltyDashboardPanel = {
+let InfoNoveltyDashboardPanel = {
 	init: function(){
 		jQuery("#dashboard-panel-info-novelty button.btn").on("click", function(){
-			var that = jQuery(this);
+			let that = jQuery(this);
 			that.parent().parent().fadeOut();
 			jQuery.ajax({
 				url:  "./info/novelty/ajax/dismiss/",

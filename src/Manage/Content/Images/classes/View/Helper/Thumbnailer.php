@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
@@ -8,6 +9,12 @@ use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
 class View_Helper_Thumbnailer
 {
+	protected Environment $env;
+	protected Dictionary $config;
+	protected Model_Image_Thumbnail $model;
+	protected int $maxWidth;
+	protected int $maxHeight;
+
 	public function __construct( Environment $env, $maxWidth = 120, $maxHeight = 80 )
 	{
 		$this->env			= $env;
@@ -23,7 +30,7 @@ class View_Helper_Thumbnailer
 		}
 	}
 
-	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL )
+	public function get( $imagePath, ?int $maxWidth = NULL, ?int $maxHeight = NULL )
 	{
 		$extension	= pathinfo( $imagePath, PATHINFO_EXTENSION );
 		if( strtolower( $extension ) === "svg" ){
@@ -31,8 +38,8 @@ class View_Helper_Thumbnailer
 			$content	= file_get_contents( $imagePath );
 			return 'data:'.$mime.';base64,'.base64_encode( $content );
 		}
-		$maxWidth	= is_null( $maxWidth ) ? $this->maxWidth : (int) $maxWidth;
-		$maxHeight	= is_null( $maxHeight ) ? $this->maxHeight : (int) $maxHeight;
+		$maxWidth	= $maxWidth ?? $this->maxWidth;
+		$maxHeight	= $maxHeight ?? $this->maxHeight;
 		$indices	= [
 			'imageId'	=> $imagePath,
 			'maxWidth'	=> $maxWidth,
@@ -77,12 +84,12 @@ class View_Helper_Thumbnailer
 			$this->cache->remove( $id );
 	}
 
-	public function uncacheFolder( $folderPath )
+	public function uncacheFolder( $folderPath ): int
 	{
-		return (int) $this->model->removeByIndex( 'imageId', $folderPath.'%' );
+		return $this->model->removeByIndex( 'imageId', $folderPath.'%' );
 	}
 
-	public function uncacheFile( $imagePath )
+	public function uncacheFile( $imagePath ): int
 	{
 		$indices	= [
 			'imageId'	=> $imagePath,
@@ -92,7 +99,7 @@ class View_Helper_Thumbnailer
 		return $this->model->removeByIndices( $indices );
 	}
 
-	public function flushCache()
+	public function flushCache(): int
 	{
 //		return $this->model->truncate();
 		return $this->model->removeByIndex( 'imageThumbnailId', '> 0' );

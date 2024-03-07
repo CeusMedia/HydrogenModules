@@ -65,9 +65,9 @@ class Logic_Newsletter extends Logic
 	 *	Indicates whether a given newsletter ID is valid.
 	 *	@access		public
 	 *	@param		int|string		$newsletterId		ID of newsletter to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter is not exising and $throwException is TRUE
 	 */
 	public function checkNewsletterId( int|string $newsletterId, bool $throwException = FALSE ): bool
 	{
@@ -99,9 +99,9 @@ class Logic_Newsletter extends Logic
 	 *	Indicates whether a given newsletter reader ID is valid.
 	 *	@access		public
 	 *	@param		int|string		$readerId			ID of newsletter reader to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter reader is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
 	 */
 	public function checkReaderId( int|string $readerId, bool $throwException = FALSE ): bool
 	{
@@ -116,9 +116,9 @@ class Logic_Newsletter extends Logic
 	 *	Indicates whether a given newsletter template ID is valid.
 	 *	@access		public
 	 *	@param		int|string		$templateId			ID of newsletter template to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter template is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter template is not exising and $throwException is TRUE
 	 */
 	public function checkTemplateId( int|string $templateId, bool $throwException = FALSE ): bool
 	{
@@ -341,10 +341,10 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Returns template data object for template ID.
 	 *	@access		public
-	 *	@param		string		$templateId		ID of template to get data object for
-	 *	@param		boolean		$strict			Strict mode: throw exception if checks fail
-	 *	@return		object						Data object of template
-	 *	@throws		InvalidArgumentException	if template ID is invalid
+	 *	@param		int|string		$templateId		ID of template to get data object for
+	 *	@param		boolean			$strict			Strict mode: throw exception if checks fail
+	 *	@return		object							Data object of template
+	 *	@throws		InvalidArgumentException		if template ID is invalid
 	 */
 	public function getTemplate( int|string $templateId, bool $strict = TRUE ): object
 	{

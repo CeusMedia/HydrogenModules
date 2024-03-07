@@ -10,7 +10,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 	protected Model_Shop_Payment_Mangopay $modelPayment;
 	protected $session;
 
-	public function notePayment( $payIn, $mangopayUserId, $orderId ): string
+	public function notePayment( object $payIn, int|string $mangopayUserId, int|string $orderId ): string
 	{
 		$paymentId	= $this->modelPayment->add( array(
 			'orderId'		=> $orderId,
@@ -27,7 +27,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		return $paymentId;
 	}
 
-	public function updatePayment( $payIn ): int
+	public function updatePayment( int|string $payIn ): int
 	{
 		$payment	= $this->modelPayment->getByIndex( 'payInId', $payIn->Id );
 		if( !$payment )
@@ -45,7 +45,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		) );
 	}
 
-	public function transferOrderAmountToClientSeller( string $orderId, object $payIn, bool $strict = TRUE ): ?bool
+	public function transferOrderAmountToClientSeller( int|string $orderId, object $payIn, bool $strict = TRUE ): ?bool
 	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
@@ -99,7 +99,7 @@ class Logic_Shop_Payment_Mangopay extends Logic
 		$this->session			= $this->env->getSession();
 	}
 
-	protected function getWalletForOrder( $mangopayUserId, $orderCurrency )
+	protected function getWalletForOrder( int|string $mangopayUserId, $orderCurrency )
 	{
 		$wallets		= $this->logicMangopay->getUserWalletsByCurrency( $mangopayUserId, $orderCurrency );
 		if( !$wallets )

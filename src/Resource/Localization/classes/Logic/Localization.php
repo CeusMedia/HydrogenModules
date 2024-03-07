@@ -27,7 +27,7 @@ class Logic_Localization extends Logic
 		return $this;
 	}
 
-	public function translate( $id, $content, $translated = NULL )
+	public function translate( string $id, string $content, ?string $translated = NULL )
 	{
 		$this->env->getLog()->log("debug", "trying to translate $id to $this->language", $this);
 		$indices		= ['language' => $this->language, 'id' => $id];

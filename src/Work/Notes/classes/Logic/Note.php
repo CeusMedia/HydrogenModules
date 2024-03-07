@@ -19,14 +19,14 @@ class Logic_Note extends Logic
 	protected array $userProjects	= [];
 
 	/**
-	 * @param string $linkId
-	 * @param string $noteId
-	 * @param string|null $title
-	 * @param bool $strict
-	 * @return string
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$linkId
+	 *	@param		int|string		$noteId
+	 *	@param		string|NULL		$title
+	 *	@param		bool			$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addLinkToNote( string $linkId, string $noteId, ?string $title = NULL, bool $strict = TRUE ): string
+	public function addLinkToNote( int|string $linkId, int|string $noteId, ?string $title = NULL, bool $strict = TRUE ): string
 	{
 		$conditions	= ['noteId' => $noteId, 'linkId' => $linkId, 'title' => $title];
 		$relation	= $this->modelNoteLink->getAll( $conditions );
@@ -45,14 +45,14 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $tagId
-	 * @param string $noteId
-	 * @param int $status
-	 * @param bool $strict
-	 * @return string
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$tagId
+	 *	@param		int|string		$noteId
+	 *	@param		int				$status
+	 *	@param		bool			$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addTagToNote( string $tagId, string $noteId, int $status = Model_Note_Tag::STATUS_NORMAL, bool $strict = TRUE ): string
+	public function addTagToNote( int|string $tagId, int|string $noteId, int $status = Model_Note_Tag::STATUS_NORMAL, bool $strict = TRUE ): string
 	{
 		$indices	= [
 			'noteId'	=> $noteId,
@@ -88,20 +88,20 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param $noteId
-	 * @return void
+	 *	@param		int|string		$noteId
+	 *	@return		void
 	 */
-	public function countNoteView( $noteId ): void
+	public function countNoteView( int|string $noteId ): void
 	{
 		$query	= 'UPDATE '.$this->prefix.'notes SET numberViews=numberViews+1 WHERE noteId='.(int)$noteId;
 		$this->env->getDatabase()->query( $query );
 	}
 
 	/**
-	 * @param string $url
-	 * @param bool $strict
-	 * @return string
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		string		$url
+	 *	@param		bool		$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createLink( string $url, bool $strict = TRUE ): string
 	{
@@ -115,10 +115,10 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $content
-	 * @param bool $strict
-	 * @return string
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		string		$content
+	 *	@param		bool		$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createTag( string $content, bool $strict = TRUE ): string
 	{
@@ -132,11 +132,11 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param $noteId
-	 * @return object|null
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		object|null
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getNoteData( $noteId ): ?object
+	public function getNoteData( int|string $noteId ): ?object
 	{
 		$note		= $this->modelNote->get( $noteId );
 		if( !$note )
@@ -202,11 +202,11 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return array
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getRelatedTags( string $noteId ): array
+	public function getRelatedTags( int|string $noteId ): array
 	{
 		$relatedNoteIds	= $this->getRelatedNoteIds( $noteId );
 
@@ -252,10 +252,10 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return array
+	 *	@param		int|string		$noteId
+	 *	@return		array
 	 */
-	public function getRelatedNoteIds( string $noteId ): array
+	public function getRelatedNoteIds( int|string $noteId ): array
 	{
 		$relatedNoteIds	= [];
 		$indices	= [
@@ -297,9 +297,9 @@ class Logic_Note extends Logic
 */
 
 	/**
-	 * @param array $noteIds
-	 * @param array $skipTagIds
-	 * @return array
+	 *	@param		array		$noteIds
+	 *	@param		array		$skipTagIds
+	 *	@return		array
 	 */
 	public function getRankedTagIdsFromNoteIds( array $noteIds, array $skipTagIds = [] ): array
 	{
@@ -363,13 +363,13 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param int $limit
-	 * @param int $offset
-	 * @param string|null $projectId
-	 * @param array $notTagIds
-	 * @return array
+	 *	@param		int					$limit
+	 *	@param		int					$offset
+	 *	@param		int|string|NULL		$projectId
+	 *	@param		array				$notTagIds
+	 *	@return		array
 	 */
-	public function getTopTags( int $limit = 10, int $offset = 0, ?string $projectId = NULL, array $notTagIds = [] ): array
+	public function getTopTags( int $limit = 10, int $offset = 0, int|string|NULL $projectId = NULL, array $notTagIds = [] ): array
 	{
 		$tags		= [];
 		if( $notTagIds ){
@@ -412,23 +412,23 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $tagId
-	 * @param string $noteId
-	 * @param bool $strict
-	 * @return string
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$tagId
+	 *	@param		int|string		$noteId
+	 *	@param		bool			$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function ignoreTagOnNote( string $tagId, string $noteId, bool $strict = TRUE ): string
+	public function ignoreTagOnNote( int|string $tagId, int|string $noteId, bool $strict = TRUE ): string
 	{
 		return $this->addTagToNote( $tagId, $noteId, Model_Note_Tag::STATUS_DISABLED, $strict );
 	}
 
 	/**
-	 * @param object $note
-	 * @return object
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		object		$note
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function populateNote(object $note ): object
+	public function populateNote( object $note ): object
 	{
 		$note->links	= [];
 		$note->tags		= [];
@@ -452,11 +452,11 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeNote( string $noteId ): bool
+	public function removeNote( int|string $noteId ): bool
 	{
 		$relatedTags	= $this->modelNoteTag->getAllByIndex( 'noteId', $noteId );					//  get tag relations
 		foreach( $relatedTags as $relatedTag ){														//  iterate tag relations
@@ -474,11 +474,11 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $noteLinkId
-	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteLinkId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeNoteLink( string $noteLinkId ): bool
+	public function removeNoteLink( int|string $noteLinkId ): bool
 	{
 		if( !$this->modelNoteLink->get( $noteLinkId ) )
 			return FALSE;
@@ -487,12 +487,12 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $linkId
-	 * @param string $noteId
-	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$linkId
+	 *	@param		int|string		$noteId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeLinkFromNote( string $linkId, string $noteId ): bool
+	public function removeLinkFromNote( int|string $linkId, int|string $noteId ): bool
 	{
 		$indices		= ['noteId' => $noteId, 'linkId' => $linkId];						//  focus on note and link
 		$this->modelNoteLink->removeByIndices( $indices );											//  remove note link relation
@@ -503,12 +503,12 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param string $tagId
-	 * @param string $noteId
-	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$tagId
+	 *	@param		int|string		$noteId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeTagFromNote( string $tagId, string $noteId ): bool
+	public function removeTagFromNote( int|string $tagId, int|string $noteId ): bool
 	{
 		$indices		= ['noteId' => $noteId, 'tagId' => $tagId];							//  focus on note and tag
 		$this->modelNoteTag->removeByIndices( $indices );											//  remove note tag relation
@@ -519,9 +519,9 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
-	 * @see        http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
-	 * @todo        use of GREATEST only works for MySQL - improve this!
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
+	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 */
 	public function searchNotes( string $query, array $conditions, array $orders = [], array $limits = [] ): array
 	{
@@ -584,7 +584,7 @@ ORDER BY
 //xmp( $query );die;
 		$clock		= new Clock();
 		$result		= $this->env->getDatabase()->query( $query );
-		$notes	= $result->fetchAll( PDO::FETCH_OBJ );
+		$notes		= $result->fetchAll( PDO::FETCH_OBJ );
 		$number		= count( $notes );
 		$notes	= array_slice( $notes, $limits[0], $limits[1] );
 		foreach( $notes as $nr => $note )
@@ -597,13 +597,13 @@ ORDER BY
 	}
 
 	/**
-	 * @param string $userId
-	 * @param string $roleId
-	 * @param string $projectId
-	 * @return $this
-	 * @throws ReflectionException
+	 *	@param		int|string		$userId
+	 *	@param		int|string		$roleId
+	 *	@param		int|string		$projectId
+	 *	@return		self
+	 *	@throws		ReflectionException
 	 */
-	public function setContext( string $userId, string $roleId, string $projectId ): self
+	public function setContext( int|string $userId, int|string $roleId, int|string $projectId ): self
 	{
 		$this->userId			= $userId;
 		$this->roleId			= $roleId;

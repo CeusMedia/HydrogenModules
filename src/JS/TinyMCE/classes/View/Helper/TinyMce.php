@@ -4,6 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class View_Helper_TinyMce extends Abstraction
 {
@@ -14,12 +15,12 @@ class View_Helper_TinyMce extends Abstraction
 	protected static bool $loaded	= FALSE;
 
 	/**	@var	Dictionary		$config			Module configuration */
-	protected $config;
+	protected Dictionary $config;
 
 	/**	@var 	string			$pathFront		Path to frontend application */
-	protected $pathFront;
+	protected string $pathFront;
 
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	/**
 	 *	Constructor.

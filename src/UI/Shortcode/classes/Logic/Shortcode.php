@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shortcode extends Logic
@@ -20,10 +21,10 @@ class Logic_Shortcode extends Logic
 		self::PARSE_STATUS_FINAL,
 	];
 
-	protected $content;
-	protected $ignoredBlocks		= [];
-	protected $moduleConfig;
-	protected $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
+	protected ?string $content			= NULL;
+	protected array $ignoredBlocks		= [];
+	protected Dictionary $moduleConfig;
+	protected string $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
 
 	public function find( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' )
 	{
@@ -100,7 +101,7 @@ class Logic_Shortcode extends Logic
 	 *	Will blind ignorable blocks.
 	 *	@access		public
 	 *	@param		string			$content		Content to process on
-	 *	@return		void
+	 *	@return		self
 	 */
 	public function setContent( string $content ): self
 	{

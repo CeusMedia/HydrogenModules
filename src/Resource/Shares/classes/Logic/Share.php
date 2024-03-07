@@ -125,11 +125,11 @@ class Logic_Share extends Logic
 	}
 
 	/**
-	 *	@param		string		$shareId
-	 *	@param		string		$url
+	 *	@param		int|string		$shareId
+	 *	@param		string			$url
 	 *	@return		string
 	 */
-	protected function generateQrCode( string $shareId, string $url ): string
+	protected function generateQrCode( int|string $shareId, string $url ): string
 	{
 		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
 		$renderer	= new \BaconQrCode\Renderer\Image\Png();

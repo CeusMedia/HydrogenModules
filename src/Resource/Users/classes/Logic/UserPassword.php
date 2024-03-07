@@ -26,13 +26,13 @@ class Logic_UserPassword
 	 *	To inform user about password change, an E-Mail could to be sent afterward.
 	 *
 	 *	@access		public
-	 *	@param		string		$userPasswordId		ID of new user password entry
+	 *	@param		int|string		$userPasswordId		ID of new user password entry
 	 *	@return		boolean
 	 *	@throws		OutOfRangeException		if given user password ID is not existing
 	 *	@throws		OutOfRangeException		if new password already has been activated, decayed or revoked
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function activatePassword( string $userPasswordId ): bool
+	public function activatePassword( int|string $userPasswordId ): bool
 	{
 		$new		= $this->model->get( $userPasswordId );
 		if( !$new )
@@ -45,15 +45,15 @@ class Logic_UserPassword
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		] );
 		if( $old ){
-			$this->model->edit( $old->userPasswordId, array(
+			$this->model->edit( $old->userPasswordId, [
 				'status'	=> Model_User_Password::STATUS_REVOKED,
 				'revokedAt'	=> time(),
-			) );
+			] );
 		}
-		$this->model->edit( $userPasswordId, array(
+		$this->model->edit( $userPasswordId, [
 			'status'		=> Model_User_Password::STATUS_ACTIVE,
 			'activatedAt'	=> time(),
-		) );
+		] );
 		return TRUE;
 	}
 
@@ -69,12 +69,11 @@ class Logic_UserPassword
 	 *	If salting passwords is enabled, a salt will be generated and stored with the password.
 	 *
 	 *	@access		public
-	 *	@param		string		$userId			ID of user to add password for
-	 *	@param		string		$password		The new password to set.
-	 *	@return		string		$userPasswordId
+	 *	@param		int|string		$userId			ID of user to add password for
+	 *	@param		string			$password		The new password to set.
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addPassword( string $userId, string $password ): string
+	public function addPassword( int|string $userId, string $password ): string
 	{
 		$salt	= $this->generateSalt();															//  generate password salt
 		$other	= $this->model->getByIndices( [
@@ -156,7 +155,7 @@ class Logic_UserPassword
 		return password_hash( $password, $algo, $options );
 	}
 
-	public function getActivatableUserPassword( string $userId, string $password ): ?object
+	public function getActivatableUserPassword( int|string $userId, string $password ): ?object
 	{
 		$indices	= [
 			'userId'	=> $userId,
@@ -186,10 +185,10 @@ class Logic_UserPassword
 	 *	Indicates whether an active password has been set for user.
 	 *
 	 *	@access		public
-	 *	@param		string		$userId		ID of user to check for password
+	 *	@param		int|string		$userId		ID of user to check for password
 	 *	@return		boolean
 	 */
-	public function hasUserPassword( string $userId ): bool
+	public function hasUserPassword( int|string $userId ): bool
 	{
 		$indices	= [
 			'userId'	=> $userId,
@@ -199,12 +198,12 @@ class Logic_UserPassword
 	}
 
 	/**
-	 *	@param		string		$userId
-	 *	@param		string		$password
+	 *	@param		int|string		$userId
+	 *	@param		string			$password
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function migrateOldUserPassword( string $userId, string $password ): void
+	public function migrateOldUserPassword( int|string $userId, string $password ): void
 	{
 		if( !$this->hasUserPassword( $userId ) ){
 			$userPasswordId		= $this->addPassword( $userId, $password );
@@ -215,7 +214,7 @@ class Logic_UserPassword
 	}
 
 	/**
-	 *	Indicates whether a given passwords matches with a hash of encrypted password.
+	 *	Indicates whether a given passwords is matching with a hash of encrypted password.
 	 *	ATTENTION: You need to prepend salt to password if encrypted password has been salted!
 	 *	@access		public
 	 *	@param		string		$password	Password (prefixed by salt)
@@ -231,13 +230,13 @@ class Logic_UserPassword
 	 *	Indicates whether a given user password is active.
 	 *
 	 *	@access		public
-	 *	@param		string		$userId		ID of user to check for password
-	 *	@param		string		$password	Password to check for user
-	 *	@param		boolean		$resetFails	Flag: reset fail counter on success, default: yes
+	 *	@param		int|string		$userId			ID of user to check for password
+	 *	@param		string			$password		Password to check for user
+	 *	@param		boolean			$resetFails		Flag: reset fail counter on success, default: yes
 	 *	@return		boolean
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function validateUserPassword( string $userId, string $password, bool $resetFails = TRUE ): bool
+	public function validateUserPassword( int|string $userId, string $password, bool $resetFails = TRUE ): bool
 	{
 		$item	= $this->model->getByIndices( [
 			'userId'	=> $userId,
@@ -286,7 +285,7 @@ class Logic_UserPassword
 	 *	Will do nothing is salting is disabled or salt hash length is 0 or lower.
 	 *
 	 *	Default salt generation algorithm is defined in module configuration.
-	 *	At the moment, md5 over microtime will be used for hash generation.
+	 *	At the moment, md5 over micro-time will be used for hash generation.
 	 *	So maximum salt hash length is 32.
 	 *	Default length of salt is defined in module configuration.
 	 *

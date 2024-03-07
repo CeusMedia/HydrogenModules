@@ -69,10 +69,10 @@ class Logic_Issue extends Logic
 	 *	Returns map of all users participating on an issue.
 	 *	This includes project members, note authors, change authors and former assigned users.
 	 *	@access		public
-	 *	@param		string		$issueId		ID of issue to get participating users for
+	 *	@param		int|string		$issueId		ID of issue to get participating users for
 	 *	@return		array		Map of ordered participating users by ID
 	 */
-	public function getParticitatingUsers( string $issueId ): array
+	public function getParticipatingUsers( int|string $issueId ): array
 	{
 		$issue		= $this->get( $issueId, TRUE );
 		$userIds	= [];																		//  prepare empty list of user IDs
@@ -117,7 +117,7 @@ class Logic_Issue extends Logic
 	 *	@access		public
 	 *	@todo		support conditions ot orders
 	 */
-	public function getProjectUsers( string $projectId ): array
+	public function getProjectUsers( int|string $projectId ): array
 	{
 		return $this->logicProject->getProjectUsers( $projectId );
 	}
@@ -132,9 +132,9 @@ class Logic_Issue extends Logic
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
-	public function informAboutNew( string $issueId, string $currentUserId ): array
+	public function informAboutNew( int|string $issueId, int|string $currentUserId ): array
 	{
-		$users		= $this->getParticitatingUsers( $issueId );
+		$users		= $this->getParticipatingUsers( $issueId );
 		$issue		= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
 			$issue->reporter	= $users[$issue->reporterId];
@@ -159,9 +159,9 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
-	public function informAboutChange( string $issueId, string $currentUserId ): array
+	public function informAboutChange( int|string $issueId, int|string $currentUserId ): array
 	{
-		$users				= $this->getParticitatingUsers( $issueId );
+		$users				= $this->getParticipatingUsers( $issueId );
 		$issue				= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
 			$issue->reporter	= $users[$issue->reporterId];
@@ -186,7 +186,7 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
-	public function noteChange( string $issueId, string $noteId, $type, $from, $to ): string
+	public function noteChange( int|string $issueId, int|string $noteId, $type, $from, $to ): string
 	{
 		$data	= [
 			'issueId'	=> $issueId,
@@ -200,7 +200,7 @@ class Logic_Issue extends Logic
 		return $this->modelIssueChange->add( $data );
 	}
 
-	public function remove( string $issueId ): bool
+	public function remove( int|string $issueId ): bool
 	{
 		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
 		$this->modelIssueChange->removeByIndex( 'issueId', $issueId );
@@ -211,6 +211,7 @@ class Logic_Issue extends Logic
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );										//  get model of users
 		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues

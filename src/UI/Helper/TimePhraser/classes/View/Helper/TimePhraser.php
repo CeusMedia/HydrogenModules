@@ -5,18 +5,18 @@ use CeusMedia\HydrogenFramework\View\Helper\Timestamp;
 
 class View_Helper_TimePhraser
 {
-	const MODE_HINT		= 1;
-	const MODE_BREAK	= 2;
+	public const MODE_HINT		= 1;
+	public const MODE_BREAK		= 2;
 
-	const MODES			= [
+	public const MODES			= [
 		self::MODE_HINT,
 		self::MODE_BREAK,
 	];
 
-	protected $env;
-	protected $asHtml			= TRUE;
-	protected $template			='%s';
-	protected $mode				= self::MODE_HINT;
+	protected Environment $env;
+	protected bool $asHtml			= TRUE;
+	protected string $template			='%s';
+	protected int $mode				= self::MODE_HINT;
 	protected $timestamp;
 
 	public function __construct( Environment $env )
@@ -29,9 +29,9 @@ class View_Helper_TimePhraser
 		return $this->render();
 	}
 
-	public function convert( $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL ): string
+	public function convert( float|int|string $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL ): string
 	{
-		$helper	= new Timestamp( $timestamp );
+		$helper	= new Timestamp( (int) $timestamp );
 
 		switch( $this->mode ){
 			case self::MODE_BREAK:
@@ -43,7 +43,7 @@ class View_Helper_TimePhraser
 			case self::MODE_HINT:
 			default:
 				$phrase	= $helper->toPhrase( $this->env, $asHtml, 'timephraser', 'phrases-time' );
-				if( (int) $timestamp ){
+				if( 0 !== ( (int) $timestamp ) ){
 					if( $this->template )
 						$phrase	= sprintf( $this->template, $phrase );
 					$phrase	= $prefix ? $prefix.' '.$phrase : $phrase;
@@ -54,7 +54,7 @@ class View_Helper_TimePhraser
 		return $phrase;
 	}
 
-	public static function convertStatic( Environment $env, $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL )
+	public static function convertStatic( Environment $env, float|int|string $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL ): string
 	{
 		$helper	= new self( $env );
 		return $helper->convert( $timestamp, $asHtml, $prefix, $suffix );

@@ -5,21 +5,21 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 {
-	protected $env;					//  remove after using newer framework base helper class
-	protected $modelClass;
-	protected $modelObject;
-	protected $labelColumn			= 'title';
-	protected $orderColumn;
-	protected $currentId			= NULL;
-	protected $useIcons				= TRUE;
-	protected $useIndex				= FALSE;
-	protected $urlTemplate;
-	protected $buttonSize			= self::BUTTON_SIZE_SMALL;
-	protected $buttonState			= self::BUTTON_STATE_DEFAULT;
-	protected $indexUrl;
-	protected $indexLabel;
-	protected $nextEntry			= FALSE;
-	protected $previousEntry		= FALSE;
+	protected Environment $env;					//  remove after using newer framework base helper class
+	protected ?string $modelClass			= NULL;
+	protected ?string $modelObject			= NULL;
+	protected string $labelColumn			= 'title';
+	protected ?string $orderColumn			= NULL;
+	protected int|string|NULL $currentId	= NULL;
+	protected bool $useIcons				= TRUE;
+	protected bool $useIndex				= FALSE;
+	protected ?string $urlTemplate			= NULL;
+	protected string $buttonSize			= self::BUTTON_SIZE_SMALL;
+	protected string $buttonState			= self::BUTTON_STATE_DEFAULT;
+	protected ?string $indexUrl				= NULL;
+	protected ?string $indexLabel			= NULL;
+	protected ?object $nextEntry			= NULL;
+	protected ?object $previousEntry		= NULL;
 
 	const BUTTON_SIZE_DEFAULT		= '';
 	const BUTTON_SIZE_SMALL			= 'small';
@@ -96,7 +96,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		return $this;
 	}
 
-	public function setCurrentId( int $currentId ): self
+	public function setCurrentId( int|string $currentId ): self
 	{
 		$this->currentId	= $currentId;
 		return $this;
@@ -171,11 +171,11 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 
 	//  --  PROTECTED  --  //
 
-	protected function getNext()
+	protected function getNext(): ?object
 	{
-		if( $this->nextEntry !== FALSE )
+		if( NULL !== $this->nextEntry )
 			return $this->nextEntry;
-		if( !$this->modelObject )
+		if( NULL === $this->modelObject )
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
 		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
@@ -192,11 +192,11 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		return $found ? $found[0] : NULL;
 	}
 
-	protected function getPrevious()
+	protected function getPrevious(): ?object
 	{
-		if( $this->previousEntry !== FALSE )
+		if( NULL !== $this->previousEntry )
 			return $this->previousEntry;
-		if( !$this->modelObject )
+		if( NULL === $this->modelObject )
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
 		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
@@ -231,9 +231,9 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	{
 		if( !$this->useIndex )
 			return '';
-		if( !$this->indexUrl )
+		if( NULL === $this->indexUrl )
 			throw new RuntimeException( 'No index URL set' );
-		$label	= $this->indexLabel ? $this->indexLabel : '';
+		$label	= $this->indexLabel ?: '';
 		if( $this->useIcons ){
 			$iconIndex	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 			$label		= strlen( $label ) ? $iconIndex.'&nbsp;'.$label : $iconIndex;
@@ -288,7 +288,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 				return FALSE;
 			throw new RuntimeException( 'No index URL set' );
 		}
-		if( !$this->modelObject && !$this->modelClass ){
+		if( NULL === $this->modelObject && NULL === $this->modelClass ){
 			if( !$strict )
 				return FALSE;
 			throw new RuntimeException( 'Neither model class nor object set' );

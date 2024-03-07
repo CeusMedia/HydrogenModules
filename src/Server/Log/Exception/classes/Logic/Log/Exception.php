@@ -14,7 +14,7 @@ class Logic_Log_Exception extends Logic
 
 	protected string $pathLogs;
 
-	public function check( $id, bool $strict = TRUE )
+	public function check( int|string $id, bool $strict = TRUE ): ?object
 	{
 		$exception	= $this->model->get( $id );
 		if( $exception )
@@ -24,7 +24,7 @@ class Logic_Log_Exception extends Logic
 		return NULL;
 	}
 
-	public function collectData( Exception $exception )
+	public function collectData( Exception $exception ): object
 	{
 		try{
 			@serialize( $exception );
@@ -175,13 +175,13 @@ class Logic_Log_Exception extends Logic
 		return $this->model->add( $data, FALSE );
 	}
 
-	public function log( Exception $exception )
+	public function log( Exception $exception ): ?bool
 	{
 		$payload	= ['exception' => $exception];
-		$this->captain->callHook( 'Env', 'logException', $this->env, $payload );
+		return $this->captain->callHook( 'Env', 'logException', $this->env, $payload );
 	}
 
-	public function saveCollectedDataToLogFile( $data )
+	public function saveCollectedDataToLogFile( $data ): void
 	{
 		if( $this->moduleConfig->get( 'file.active' ) ){
 			if( trim( $this->moduleConfig->get( 'file.name' ) ) ){

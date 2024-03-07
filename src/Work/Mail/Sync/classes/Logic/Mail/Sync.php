@@ -4,25 +4,25 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Mail_Sync extends Logic
 {
-	protected $modelHost;
-	protected $modelRun;
-	protected $modelSync;
+	protected Model_Mail_Sync_Host $modelHost;
+	protected Model_Mail_Sync_Run $modelRun;
+	protected Model_Mail_Sync $modelSync;
 
-	public function addSync( array $data )
+	public function addSync( array $data ): string
 	{
 		$data['createdAt']	= time();
 		$data['modifiedAt']	= time();
 		return $this->modelSync->add( $data );
 	}
 
-	public function addSyncHost( array $data )
+	public function addSyncHost( array $data ): string
 	{
 		$data['createdAt']	= time();
 		$data['modifiedAt']	= time();
 		return $this->modelHost->add( $data );
 	}
 
-	public function addSyncRun( $syncId )
+	public function addSyncRun( int|string $syncId ): string
 	{
 		$data	= array(
 			'mailSyncId'	=> $syncId,
@@ -32,35 +32,35 @@ class Logic_Mail_Sync extends Logic
 		return $this->modelRun->add( $data );
 	}
 
-	public function editSync( $id, array $data )
+	public function editSync( int|string $id, array $data ): int
 	{
 		$data['modifiedAt']	= time();
 		return $this->modelSync->edit( $id, $data );
 	}
 
-	public function getSync( $id )
+	public function getSync( int|string $id ): object
 	{
 		return $this->modelSync->get( $id );
 	}
 
-	public function editSyncHost( $id, array $data )
+	public function editSyncHost( int|string $id, array $data ): int
 	{
 		$data['modifiedAt']	= time();
 		return $this->modelHost->edit( $id, $data );
 	}
 
-	public function editSyncRun( $id, array $data )
+	public function editSyncRun( int|string $id, array $data ): int
 	{
 		$data['modifiedAt']	= time();
 		return $this->modelRun->edit( $id, $data );
 	}
 
-	public function getSyncHost( $id )
+	public function getSyncHost( int|string $id ): object
 	{
 		return $this->modelHost->get( $id );
 	}
 
-	public function getSyncRun( $id )
+	public function getSyncRun( int|string $id ): object
 	{
 		return $this->modelRun->get( $id );
 	}

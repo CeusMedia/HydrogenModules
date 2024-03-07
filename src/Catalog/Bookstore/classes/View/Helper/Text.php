@@ -24,7 +24,7 @@ class View_Helper_Text
 		return $content;
 	}
 
-	public static function applyExpandable( string $text, int $length = 0, ?string $labelMore = NULL, ?string $labelLess = NULL )
+	public static function applyExpandable( string $text, int $length = 0, ?string $labelMore = NULL, ?string $labelLess = NULL ): string
 	{
 		if( $length && strlen( $text ) > $length ){
 			$count	= -1;

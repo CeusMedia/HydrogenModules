@@ -61,7 +61,7 @@ class Logic_Billing
 		] );
 	}
 
-	public function addBillExpense( string $billId, $status, $amount, ?string $title = NULL ): void
+	public function addBillExpense( int|string $billId, $status, $amount, ?string $title = NULL ): void
 	{
 		$this->modelBillExpense->add( [
 			'billId'	=> $billId,
@@ -74,7 +74,7 @@ class Logic_Billing
 		$this->_updateBillAssignedAmount( $billId );
 	}
 
-	public function addBillReserve( string $billId, string $reserveId ): void
+	public function addBillReserve( int|string $billId, int|string $reserveId ): void
 	{
 		$reserve	= $this->getReserve( $reserveId );
 		$this->modelBillReserve->add( [
@@ -92,7 +92,7 @@ class Logic_Billing
 		$this->_updateBillAssignedAmount( $billId );
 	}
 
-	public function addBillCorporationShare( string $billId, string $corporationId, $amount = 0, $percent = 0 ): string
+	public function addBillCorporationShare( int|string $billId, int|string $corporationId, $amount = 0, $percent = 0 ): string
 	{
 		$bill		= $this->getBill( $billId );
 		$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
@@ -113,7 +113,7 @@ class Logic_Billing
 		return $shareId;
 	}
 
-	public function addBillPersonShare( string $billId, string $personId, $amount = 0, $percent = 0 ): string
+	public function addBillPersonShare( int|string $billId, int|string $personId, $amount = 0, $percent = 0 ): string
 	{
 		$bill		= $this->getBill( $billId );
 		$amountLeft	= $this->_getBillAmountAfterExpensesAndReserves( $billId );
@@ -134,7 +134,7 @@ class Logic_Billing
 		return $shareId;
 	}
 
-	public function addCorporationExpense( string $corporationId, $amount, string $title, $date ): string
+	public function addCorporationExpense( int|string $corporationId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -148,7 +148,7 @@ class Logic_Billing
 		);
 	}
 
-	public function addCorporationPayin( string $corporationId, $amount, string $title, $date ): string
+	public function addCorporationPayin( int|string $corporationId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -162,7 +162,7 @@ class Logic_Billing
 		);
 	}
 
-	public function addCorporationPayout( string $corporationId, $amount, string $title, $date ): string
+	public function addCorporationPayout( int|string $corporationId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -176,7 +176,7 @@ class Logic_Billing
 		);
 	}
 
-	public function addExpense( string $title, $amount, $corporationId = 0, $personId = 0, $frequency = 0, $dayOfMonth = 0 ): string
+	public function addExpense( string $title, $amount, int|string $corporationId = 0, int|string $personId = 0, $frequency = 0, $dayOfMonth = 0 ): string
 	{
 		return $this->modelExpense->add( [
 			'corporationId'	=> $corporationId,
@@ -198,7 +198,7 @@ class Logic_Billing
 		] );
 	}
 
-	public function addPersonExpense( string $personId, $amount, string $title, $date ): string
+	public function addPersonExpense( int|string $personId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -212,7 +212,7 @@ class Logic_Billing
 		);
 	}
 
-	public function addPersonPayin( string $personId, $amount, string $title, $date ): string
+	public function addPersonPayin( int|string $personId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -226,7 +226,7 @@ class Logic_Billing
 		);
 	}
 
-	public function addPersonPayout( string $personId, $amount, string $title, $date ): string
+	public function addPersonPayout( int|string $personId, $amount, string $title, $date ): string
 	{
 		return $this->addTransaction(
 			$amount,
@@ -250,7 +250,7 @@ class Logic_Billing
 		] );
 	}
 
-	public function closeBill( string $billId ): void
+	public function closeBill( int|string $billId ): void
 	{
 		$this->env->getDatabase()->beginTransaction();
 		try{
@@ -352,7 +352,7 @@ class Logic_Billing
 		return $this->modelBill->count( $conditions );
 	}
 
-	public function editBill( string $billId, array $data ): void
+	public function editBill( int|string $billId, array $data ): void
 	{
 		$this->modelBill->edit( $billId, $data );
 		$this->_updateBillReserves( $billId );
@@ -360,26 +360,26 @@ class Logic_Billing
 		$this->_updateBillAssignedAmount( $billId );
 	}
 
-	public function editCorporation( string $corporationId, array $data ): void
+	public function editCorporation( int|string $corporationId, array $data ): void
 	{
 		if( isset( $data['balance'] ) )
 			unset( $data['balance'] );
 		$this->modelCorporation->edit( $corporationId, $data );
 	}
 
-	public function editPerson( string $personId, array $data ): void
+	public function editPerson( int|string $personId, array $data ): void
 	{
 		if( isset( $data['balance'] ) )
 			unset( $data['balance'] );
 		$this->modelPerson->edit( $personId, $data );
 	}
 
-	public function editReserve( string $reserveId, array $data ): void
+	public function editReserve( int|string $reserveId, array $data ): void
 	{
 		$this->modelReserve->edit( $reserveId, $data );
 	}
 
-	public function getBill( string $billId ): object
+	public function getBill( int|string $billId ): object
 	{
 		return $this->modelBill->get( $billId );
 	}
@@ -389,7 +389,7 @@ class Logic_Billing
 		return $this->modelBill->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getBillCorporationTransactions( string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getBillCorporationTransactions( int|string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'toType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -399,17 +399,17 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getBillExpense( string $expenseId ): object
+	public function getBillExpense( int|string $expenseId ): object
 	{
 		return $this->modelBillExpense->get( $expenseId );
 	}
 
-	public function getBillExpenses( string $billId ): array
+	public function getBillExpenses( int|string $billId ): array
 	{
 		return $this->modelBillExpense->getAll( ['billId' => $billId], ['billExpenseId' => 'ASC'] );
 	}
 
-	public function getBillPersonTransactions( string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getBillPersonTransactions( int|string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'toType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -419,7 +419,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getBillReserve( string $billReserveId ): object
+	public function getBillReserve( int|string $billReserveId ): object
 	{
 		$relation	= $this->modelBillReserve->get( $billReserveId );
 		if( $relation )
@@ -427,7 +427,7 @@ class Logic_Billing
 		return $relation;
 	}
 
-	public function getBillReserves( string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getBillReserves( int|string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( ['billId' => $billId], $conditions );
 		$orders		= $orders ?: ['billReserveId' => 'ASC'];
@@ -437,19 +437,19 @@ class Logic_Billing
 		return $relations;
 	}
 
-	public function getBillShare( string $shareId ): object
+	public function getBillShare( int|string $shareId ): object
 	{
 		return $this->modelBillShare->get( $shareId );
 	}
 
-	public function getBillShares( string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getBillShares( int|string $billId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( ['billId' => $billId], $conditions );
 		$orders		= $orders ?: ['billShareId' => 'ASC'];
 		return $this->modelBillShare->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporation( string $corporationId ): object
+	public function getCorporation( int|string $corporationId ): object
 	{
 		return $this->modelCorporation->get( $corporationId );
 	}
@@ -459,7 +459,7 @@ class Logic_Billing
 		return $this->modelCorporation->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationExpenses( string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getCorporationExpenses( int|string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -474,7 +474,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationPayins( string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getCorporationPayins( int|string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_PAYIN,
@@ -485,7 +485,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationPayouts( string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getCorporationPayouts( int|string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_CORPORATION,
@@ -496,7 +496,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getCorporationReserves( string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getCorporationReserves( int|string $corporationId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions		= array_merge( $conditions, [
 			'fromType'	=> [
@@ -510,7 +510,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getExpense( string $expenseId ): object
+	public function getExpense( int|string $expenseId ): object
 	{
 		return $this->modelExpense->get( $expenseId );
 	}
@@ -520,19 +520,19 @@ class Logic_Billing
 		return $this->modelExpense->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPerson( string $personId ): object
+	public function getPerson( int|string $personId ): object
 	{
 		return $this->modelPerson->get( $personId );
 	}
 
-	public function getPersonBillShares( string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getPersonBillShares( int|string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( ['personId' => $personId], $conditions );
 		$orders		= $orders ?: ['billShareId' => 'ASC'];
 		return $this->modelBillShare->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonExpenses( string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getPersonExpenses( int|string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -547,7 +547,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonReserves( string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getPersonReserves( int|string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> [
@@ -561,7 +561,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonPayins( string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getPersonPayins( int|string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_PAYIN,
@@ -572,7 +572,7 @@ class Logic_Billing
 		return $this->modelTransaction->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getPersonPayouts( string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getPersonPayouts( int|string $personId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $conditions, [
 			'fromType'	=> Model_Billing_Transaction::TYPE_PERSON,
@@ -588,7 +588,7 @@ class Logic_Billing
 		return $this->modelPerson->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getReserve( string $reserveId ): object
+	public function getReserve( int|string $reserveId ): object
 	{
 		return $this->modelReserve->get( $reserveId );
 	}
@@ -645,7 +645,7 @@ class Logic_Billing
 		}
 	}
 
-	public function removeBillExpense( string $billExpenseId ): void
+	public function removeBillExpense( int|string $billExpenseId ): void
 	{
 		$billExpense	= $this->modelBillExpense->get( $billExpenseId );
 		$this->modelBillExpense->remove( $billExpenseId );
@@ -654,14 +654,14 @@ class Logic_Billing
 		$this->_updateBillAssignedAmount( $billExpense->billId );
 	}
 
-	public function removeBillShare( string $billShareId ): void
+	public function removeBillShare( int|string $billShareId ): void
 	{
 		$billShare	= $this->modelBillShare->get( $billShareId );
 		$this->modelBillShare->remove( $billShareId );
 		$this->_updateBillAssignedAmount( $billShare->billId );
 	}
 
-	public function removeBillReserve( string $billReserveId ): void
+	public function removeBillReserve( int|string $billReserveId ): void
 	{
 		$billReserve	= $this->modelBillReserve->get( $billReserveId );
 		$this->modelBillReserve->remove( $billReserveId );
@@ -670,7 +670,7 @@ class Logic_Billing
 		$this->_updateBillAssignedAmount( $billReserve->billId );
 	}
 
-	public function revertTransaction( string $transactionId ): void
+	public function revertTransaction( int|string $transactionId ): void
 	{
 		$transaction	= $this->modelTransaction->get( $transactionId );
 		if( !$transaction )
@@ -713,7 +713,7 @@ class Logic_Billing
 		}
 	}
 
-	public function _updateBillAssignedAmount( string $billId ): void
+	public function _updateBillAssignedAmount( int|string $billId ): void
 	{
 		$bill		= $this->getBill( $billId );
 		$amount		= $this->_getBillAmountAfterExpensesAndReserves( $billId );
@@ -727,7 +727,7 @@ class Logic_Billing
 		] );
 	}
 
-	public function _updateBillReserves( string $billId ): void
+	public function _updateBillReserves( int|string $billId ): void
 	{
 		$bill		= $this->getBill( $billId );
 		$amount		= $bill->amountNetto;
@@ -755,7 +755,7 @@ class Logic_Billing
 		}
 	}
 
-	public function _updateBillShares( string $billId ): void
+	public function _updateBillShares( int|string $billId ): void
 	{
 		$bill		= $this->getBill( $billId );
 		$amount		= $this->_getBillAmountAfterExpensesAndReserves( $billId );
@@ -784,7 +784,7 @@ class Logic_Billing
 		$this->modelTransaction				= new Model_Billing_Transaction( $this->env );
 	}
 
-	protected function _getBillAmountAfterExpensesAndReserves( string $billId ): float
+	protected function _getBillAmountAfterExpensesAndReserves( int|string $billId ): float
 	{
 		$bill		= $this->getBill( $billId );
 		$amount		= (float) $bill->amountNetto;

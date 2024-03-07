@@ -1,7 +1,7 @@
 <?php
 abstract class Logic_Payment_Mangopay_Event_Payin extends Logic_Payment_Mangopay_Event
 {
-	protected $modelPayin;
+	protected Model_Mangopay_Payin $modelPayin;
 
 	protected function __onInit(): void
 	{

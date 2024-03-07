@@ -8,9 +8,9 @@ class Logic_Payment_Mangopay extends Logic
 	protected $cache;
 	protected $provider;
 	protected $skipCacheOnNextRequest;
-	protected $baseUrl;
+	protected string $baseUrl;
 
-	public static $typeCurrencies	= [
+	public static array $typeCurrencies	= [
 		'CB_VISA_MASTERCARD'	=> [],
 		'MAESTRO'				=> ['EUR'],
 		'DINERS'				=> ['EUR'],
@@ -23,7 +23,7 @@ class Logic_Payment_Mangopay extends Logic
 		'BANKWIRE'				=> [],
 	];
 
-	public function deactivateBankAccount( $userId, $bankAccountId )
+	public function deactivateBankAccount( int|string $userId, int|string $bankAccountId ): void
 	{
 		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 		$bankAccount->Active = FALSE;
@@ -68,12 +68,12 @@ class Logic_Payment_Mangopay extends Logic
 		}
 	}
 
-	public function checkUser( $userId )
+	public function checkUser( int|string $userId )
 	{
 		return $this->getUser( $userId );
 	}
 
-	public function createAddress( $street, $postcode, $city, $country, $region = NULL )
+	public function createAddress( string $street, $postcode, string $city, string $country, ?string $region = NULL ): \MangoPay\Address
 	{
 		$address = new \MangoPay\Address();
 		$address->AddressLine1	= $street;
@@ -85,7 +85,7 @@ class Logic_Payment_Mangopay extends Logic
 		return $address;
 	}
 
-	public function createBankAccount( $userId, $iban, $bic, $title, $address = NULL )
+	public function createBankAccount( int|string $userId, string $iban, string $bic, string $title, $address = NULL )
 	{
 		$user	= $this->getUser( $userId );
 		$bankAccount = new \MangoPay\BankAccount();
@@ -105,7 +105,7 @@ class Logic_Payment_Mangopay extends Logic
 		return $item;
 	}
 
-	public function createMandate( $bankAccountId, $returnUrl )
+	public function createMandate( int|string $bankAccountId, $returnUrl )
 	{
 		$mandate 	= new \MangoPay\Mandate();
 		$mandate->BankAccountId	= $bankAccountId;
@@ -114,7 +114,7 @@ class Logic_Payment_Mangopay extends Logic
 		return $this->provider->Mandates->Create( $mandate );
 	}
 
-	public function getUserMandates( $userId )
+	public function getUserMandates( int|string $userId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId.'_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -125,7 +125,7 @@ class Logic_Payment_Mangopay extends Logic
 		return $items;
 	}
 
-	public function getBankAccountMandates( $userId, $bankAccountId )
+	public function getBankAccountMandates( int|string $userId, int|string $bankAccountId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId.'_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -151,7 +151,7 @@ print_m( $items );
 	/**
 	 *	@todo		finish implementation, not working right now
 	 */
-	public function createPayInFromBankAccount( $userId, $walletId, $bankAccountId, $currency, $amount )
+	public function createPayInFromBankAccount( int|string $userId, int|string $walletId, int|string $bankAccountId, $currency, $amount )
 	{
 //		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
@@ -184,7 +184,7 @@ print_m( $items );
 	/**
 	 *	@todo		test (not tested since no mandates allowed, yet)
 	 */
-	public function createPayInFromBankAccountViaDirectDebit( $userId, $mandateId, $currency, $amount )
+	public function createPayInFromBankAccountViaDirectDebit( int|string $userId, $mandateId, $currency, $amount )
 	{
 		$payIn	= new \MangoPay\PayIn();
 		$payIn->AuthorId			= $userId;
@@ -208,7 +208,7 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createPayInFromCard( $userId, $walletId, $cardId, $amount, $secureModeReturnUrl )
+	public function createPayInFromCard( int|string $userId, int|string $walletId, int|string $cardId, $amount, $secureModeReturnUrl )
 	{
 		$card	= $this->getCardById( $cardId );
 
@@ -239,7 +239,7 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createBankPayInViaWeb( $type, $userId, $walletId, $currency, $amount, $returnUrl )
+	public function createBankPayInViaWeb( $type, int|string $userId, int|string $walletId, $currency, $amount, $returnUrl )
 	{
 		$user	= $this->checkUser( $userId );
 		$payIn	= new \MangoPay\PayIn();
@@ -259,7 +259,7 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createCardPayInViaWeb( $userId, $walletId, $cardType, $currency, $amount, $returnUrl )
+	public function createCardPayInViaWeb( int|string $userId, int|string $walletId, $cardType, $currency, $amount, $returnUrl )
 	{
 		$user	= $this->checkUser( $userId );
 		$payIn	= new \MangoPay\PayIn();
@@ -281,7 +281,7 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
-	public function createLegalUserFromLocalUser( $localUserId, $companyData, $representativeData )
+	public function createLegalUserFromLocalUser( int|string $localUserId, $companyData, $representativeData ): void
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
@@ -351,7 +351,7 @@ print_m( $items );
 		return $this->provider->Users->Create( $user );
 	}
 
-	public function updateLegalUser( $userId, $data )
+	public function updateLegalUser( int|string $userId, $data )
 	{
 		$user	= $this->getUser( $userId );
 		$user->LegalPersonType	= $data['company']['type'];
@@ -381,7 +381,7 @@ print_m( $items );
 		return $this->provider->Users->Update( $user );
 	}
 
-	public function createNaturalUserFromLocalUser( $localUserId )
+	public function createNaturalUserFromLocalUser( int|string $localUserId )
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
@@ -394,17 +394,17 @@ print_m( $items );
 
 		$user	= new \MangoPay\UserNatural();
 		$user->PersonType			= "NATURAL";
-		$user->FirstName				= $user->firstname;
+		$user->FirstName			= $user->firstname;
 		$user->LastName				= $user->surname;
 		$user->Birthday				= 0;
 		$user->Nationality			= $user->country;
 		$user->CountryOfResidence	= $user->country;
-		$user->Email					= $user->email;
-		$user->Address 				= new \MangoPay\Address();
+		$user->Email				= $user->email;
+		$user->Address 					= new \MangoPay\Address();
 		$user->Address->AddressLine1	= $user->street.' '.$user->number;
 		$user->Address->City			= $user->city;
-		$user->Address->PostalCode	= $user->postcode;
-		$user->Address->Country		= $user->country;
+		$user->Address->PostalCode		= $user->postcode;
+		$user->Address->Country			= $user->country;
 		if( $address ){
 			$user->Address->AddressLine1	= $address->street;
 			$user->Address->City			= $address->city;
@@ -416,7 +416,7 @@ print_m( $items );
 		return $user;
 	}
 
-	public function createUserWallet( $userId, $currency )
+	public function createUserWallet( int|string $userId, $currency )
 	{
 		$wallet		= new \MangoPay\Wallet();
 		$wallet->Currency		= $currency;
@@ -425,17 +425,17 @@ print_m( $items );
 		return $this->provider->Wallets->Create( $wallet );
 	}
 
-	public function getBankAccount( $userId, $bankAccountId )
+	public function getBankAccount( int|string $userId, $bankAccountId )
 	{
 		return $this->getUserBankAccount( $userId, $bankAccountId );
 	}
 
-	public function getBankAccounts( $userId )
+	public function getBankAccounts( int|string $userId )
 	{
 		return $this->getUserBankAccounts( $userId );
 	}
 
-	public function getCardById( $cardId )
+	public function getCardById( int|string $cardId )
 	{
 		$cacheKey	= 'mangopay_card_'.$cardId;
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -486,7 +486,7 @@ print_m( $items );
 		return $factory->call( $this, $method, [$resourceId] );
 	}
 
-	public function getHook( $hookId )
+	public function getHook( int|string $hookId )
 	{
 		$cacheKey	= 'mangopay_hook_'.$hookId;
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -509,22 +509,22 @@ print_m( $items );
 		return $items;
 	}
 
-	public function getPayin( $payInId )
+	public function getPayin( int|string $payInId )
 	{
 		return $this->provider->PayIns->Get( $payInId );
 	}
 
-	public function getPayout( $payOutId )
+	public function getPayout( int|string $payOutId )
 	{
 		return $this->provider->PayOuts->Get( $payOutId );
 	}
 
-	public function getTransfer( $transferId )
+	public function getTransfer( int|string $transferId )
 	{
 		return $this->provider->Transfers->Get( $transferId );
 	}
 
-	public function getUser( $userId )
+	public function getUser( int|string $userId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -535,7 +535,7 @@ print_m( $items );
 		return $item;
 	}
 
-	public function getUserBankAccount( $userId, $bankAccountId )
+	public function getUserBankAccount( int|string $userId, int|string $bankAccountId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccount_'.$bankAccountId;
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -546,7 +546,7 @@ print_m( $items );
 		return $item;
 	}
 
-	public function getUserBankAccounts( $userId )
+	public function getUserBankAccounts( int|string $userId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccounts';
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -560,7 +560,7 @@ print_m( $items );
 		return $items;
 	}
 
-	public function getUserCards( $userId, $conditions = [], $orders = [], $limits = [] )
+	public function getUserCards( int|string $userId, array $conditions = [], array $orders = [], array $limits = [] )
 	{
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
@@ -579,7 +579,7 @@ print_m( $items );
 		return $items;
 	}
 
-	public function getUserWallet( $userId, $walletId )
+	public function getUserWallet( int|string $userId, int|string $walletId )
 	{
 		$cacheKey	= 'mangopay_user_'.$userId.'_wallet_'.$walletId;
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -595,7 +595,7 @@ print_m( $items );
 		return $this->provider->Clients->GetWallets();
 	}
 
-	public function getUserWallets( $userId, $orders = [], $limits = [] )
+	public function getUserWallets( int|string $userId, $orders = [], $limits = [] )
 	{
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
@@ -608,7 +608,7 @@ print_m( $items );
 		return $this->provider->Users->GetWallets( $userId, $pagination, $sorting );
 	}
 
-	public function getUserWalletsByCurrency( $userId, $currency, $force = FALSE )
+	public function getUserWalletsByCurrency( int|string $userId, $currency, bool $force = FALSE )
 	{
 		$pagination	= new \MangoPay\Pagination();
 		$sorting	= new \MangoPay\Sorting();
@@ -626,7 +626,7 @@ print_m( $items );
 		return $list;
 	}
 
-	public function setUserIdForLocalUserId( $userId, $localUserId )
+	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId ): void
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -649,7 +649,7 @@ print_m( $items );
 		}
 	}
 
-	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE )
+	public function getUserIdFromLocalUserId( int|string $localUserId, bool $strict = TRUE )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -666,7 +666,7 @@ print_m( $items );
 	/**
 	 *	@todo		extend cache key by filters
 	 */
-	public function getWalletTransactions( $walletId, $orders = [], $limits = [] )
+	public function getWalletTransactions( int|string $walletId, array $orders = [], array $limits = [] )
 	{
 		$cacheKey	= 'mangopay_wallet_'.$walletId.'_transactions';
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -681,7 +681,7 @@ print_m( $items );
 		return $items;
 	}
 
-	public function hasPaymentAccount( $localUserId )
+	public function hasPaymentAccount( int|string $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->countByIndices( [
@@ -698,7 +698,7 @@ print_m( $items );
 		return $this->provider->Clients->UploadLogo( $ClientLogoUpload );
 	}
 
-	public function setHook( $id, $eventType, $path, $status = NULL, $tag = NULL )
+	public function setHook( int|string $id, $eventType, $path, $status = NULL, $tag = NULL )
 	{
 		if( $id > 0 ){
 			$hook			= $this->provider->Hooks->Get( $id );
@@ -726,7 +726,7 @@ print_m( $items );
 		$this->skipCacheOnNextRequest	= (bool) $skip;
 	}
 
-	public function transfer( $sourceUserId, $targetUserId, $sourceWalletId, $targetWalletId, $currency, $amount, $fees, $tag = NULL )
+	public function transfer( int|string $sourceUserId, int|string $targetUserId, int|string $sourceWalletId, int|string $targetWalletId, $currency, $amount, $fees, $tag = NULL )
 	{
 		$transfer = new \MangoPay\Transfer();
 		$transfer->Tag = $tag;
@@ -799,7 +799,7 @@ print_m( $items );
 		return $this->provider->Users->Update( $user );
 	}
 
-	public function updateUserWallet( $userId, $walletId, $description, $tag = NULL )
+	public function updateUserWallet( int|string $userId, int|string$walletId, $description, $tag = NULL )
 	{
 		$wallet		= $this->getUserWallet( $userId, $walletId );
 		$wallet->Description = $description;
@@ -821,7 +821,7 @@ print_m( $items );
 	/**
 	 *	@link	https://stackoverflow.com/a/174772
 	 */
-	public static function validateCardNumber( $number, $provider )
+	public static function validateCardNumber( $number, $provider ): ?bool
 	{
 		return TRUE;
 		$providerPatterns = array(
@@ -850,13 +850,13 @@ print_m( $items );
 
 	/**
 	 *	Removes cache key of next API request if skipping next request is enabled.
-	 *	Disables skipping next request afterwards.
+	 *	Disables skipping next request afterward.
 	 *	To be called right before the next API request.
 	 *	@access		protected
 	 *	@param		string			$cacheKey			Cache key of entity to possible uncache
 	 *	@return		void
 	 */
-	protected function applyPossibleCacheSkip( $cacheKey )
+	protected function applyPossibleCacheSkip( string $cacheKey ): void
 	{
 		if( $this->skipCacheOnNextRequest ){
 			$this->cache->remove( $cacheKey );
@@ -864,7 +864,7 @@ print_m( $items );
 		}
 	}
 
-	protected function checkIsOwnCard( $cardId )
+	protected function checkIsOwnCard( int|string $cardId )
 	{
 		$card	= $this->checkCard( $cardId );
 	//	@todo check card against user cards

@@ -3,8 +3,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 {
-	protected ?string $galleryId		= NULL;
-	protected ?object $gallery			= NULL;
+	protected int|string|NULL $galleryId	= NULL;
+	protected ?object $gallery				= NULL;
 
 	public function render(): string
 	{
@@ -30,7 +30,7 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 		return HtmlTag::create( 'ul', $list, ['class' => 'thumbnails equalize-auto'] );
 	}
 
-	public function setGallery( string $galleryId ): self
+	public function setGallery( int|string $galleryId ): self
 	{
 		$this->galleryId	= $galleryId;
 		$this->gallery		= $this->modelGallery->get( $galleryId );

@@ -82,7 +82,7 @@ class Logic_Upload
 	 *	@param		boolean			$noteError			Flag: note negative result as upload error
 	 *	@return		boolean
 	 */
-	public function checkMimeType( $allowedMimeTypes, bool $noteError = FALSE ): bool
+	public function checkMimeType( string|array $allowedMimeTypes, bool $noteError = FALSE ): bool
 	{
 		if( $this->upload->error )
 			return FALSE;
@@ -210,13 +210,13 @@ class Logic_Upload
 	/**
 	 *	Returns maximum supported file size of uploads in bytes.
 	 *	Gets the minimum of PHP limits 'upload_max_filesize', 'post_max_size' and 'memory_limit'.
-	 *	Take take other given limits into judgement, eg. ['myLimit' => '4MB'].
+	 *	Take other given limits into judgement, e.g. ['myLimit' => '4MB'].
 	 *	Uses CeusMedia\Common\Alg\UnitParser to convert limit strings like "4M" to integer.
 	 *	Uses CeusMedia\Common\Alg\UnitParser to convert own given limits with units to integer.
 	 *
 	 *	@static
 	 *	@access		public
-	 *	@param		array			$otherLimits		Map of other given limits
+	 *	@param		array		$otherLimits		Map of other given limits
 	 *	@return		integer
 	 */
 	static function getMaxUploadSize( array $otherLimits = [] ): int

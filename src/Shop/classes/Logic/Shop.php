@@ -187,7 +187,7 @@ class Logic_Shop extends Logic
 	/**
 	 *	@todo		to be implemented: use Model_Shop_Shipping_Option
 	 */
-	public function getOrderOptions( string $orderId ): object
+	public function getOrderOptions( int|string $orderId ): object
 	{
 		return (object) [];
 	}

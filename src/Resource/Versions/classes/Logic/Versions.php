@@ -7,7 +7,7 @@ class Logic_Versions
 
 	protected Environment $env;
 	protected Model_Version $model;
-	protected ?string $userId			= NULL;
+	protected int|string|NULL $userId			= NULL;
 
 	/**
 	 *	@param		Environment		$env
@@ -25,14 +25,14 @@ class Logic_Versions
 	}
 
 	/**
-	 *	@param		string			$module
-	 *	@param		string			$id
-	 *	@param		string			$content
-	 *	@param		string|NULL		$authorId
+	 *	@param		string				$module
+	 *	@param		string				$id
+	 *	@param		string				$content
+	 *	@param		int|string|NULL		$authorId
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function add( string $module, string $id, string $content, ?string $authorId = NULL ): string
+	public function add( string $module, string $id, string $content, int|string|NULL $authorId = NULL ): string
 	{
 		$data		= [
 			'userId'	=> $authorId ?: $this->userId,

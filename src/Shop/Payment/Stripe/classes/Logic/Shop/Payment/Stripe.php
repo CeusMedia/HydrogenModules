@@ -44,7 +44,7 @@ class Logic_Shop_Payment_Stripe extends Logic
 		] );
 	}
 
-	public function transferOrderAmountToClientSeller( string $orderId, $payIn, bool $strict = TRUE )
+	public function transferOrderAmountToClientSeller( int|string $orderId, $payIn, bool $strict = TRUE )
 	{
 		$order		= $this->logicShop->getOrder( $orderId );
 		if( !$order )
@@ -104,5 +104,6 @@ class Logic_Shop_Payment_Stripe extends Logic
 		if( !$wallets )
 			$wallets	= [$this->logicStripe->createUserWallet( $stripeUserId, $orderCurrency )];
 		$wallet	= $wallets[0];
+		return $wallet;
 	}
 }

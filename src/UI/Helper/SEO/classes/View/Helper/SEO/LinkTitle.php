@@ -20,23 +20,23 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  */
 class View_Helper_SEO_LinkTitle extends Abstraction
 {
-	const MODE_TITLE		= 1;
-	const MODE_OBJECT		= 2;
-	const MODE_MODEL		= 3;
+	public const MODE_TITLE		= 1;
+	public const MODE_OBJECT	= 2;
+	public const MODE_MODEL		= 3;
 
-	protected $column		= 'title';
+	protected string $column	= 'title';
 
-	protected $id			= 0;
+	protected int|string $id	= 0;
 
-	protected $lowerCase	= FALSE;
+	protected bool $lowerCase	= FALSE;
 
-	protected $mode			= self::MODE_TITLE;
+	protected int $mode			= self::MODE_TITLE;
 
-	protected $object;
+	protected ?object $object	= NULL;
 
-	protected $title;
+	protected ?string $title	= NULL;
 
-	protected $model;
+	protected ?object $model	= NULL;
 
 	/**
 	 *	Constructor.
@@ -82,17 +82,17 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	{
 		switch( $this->mode ){
 			case self::MODE_MODEL:
-				if( !$this->model )
+				if( NULL === $this->model )
 					throw new RuntimeException( 'No model set' );
 				if( !$this->id )
 					throw new RuntimeException( 'No ID set' );
 				$item	= $this->model->get( $this->id );
-				if( !$item )
+				if( NULL === $item )
 					throw new RuntimeException( 'No item for given ID' );
 				$title	= $item->$this->column;
 				break;
 			case self::MODE_OBJECT:
-				if( !$this->object )
+				if( NULL === $this->object )
 					throw new RuntimeException( 'No object set' );
 				$title	= $this->object->{$this->column};
 				break;
@@ -108,10 +108,10 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	 *	Set object ID for getting object from model on render.
 	 *	Sets helper mode to MODE_MODEL.
 	 *	@access		public
-	 *	@param		integer		$id		Object ID to get object on render
+	 *	@param		int|string		$id		Object ID to get object on render
 	 *	@return		self
 	 */
-	public function setId( string $id ): self
+	public function setId( int|string $id ): self
 	{
 		$this->id		= $id;
 		$this->setMode( self::MODE_MODEL );
@@ -125,7 +125,7 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	 *	@param		object		$object		Object to get title from on render
 	 *	@return		self
 	 */
-	public function setObject( $object ): self
+	public function setObject( object $object ): self
 	{
 		$this->object	= $object;
 		$this->setMode( self::MODE_OBJECT );
@@ -152,7 +152,7 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	 *	@param		object		$model		Model instance for getting object b given ID
 	 *	@return		self
 	 */
-	public function setModel( string $model ): self
+	public function setModel( object $model ): self
 	{
 		$this->model	= $model;
 		$this->setMode( self::MODE_MODEL );
@@ -188,7 +188,7 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	}
 
 	/**
-	 *	Enable or disable convertion to lower case on render.
+	 *	Enable or disable conversion to lower case on render.
 	 *	@access		public
 	 *	@param		boolean		$lowerCase	Flag: convert to lower case on render
 	 *	@return		self
@@ -207,7 +207,7 @@ class View_Helper_SEO_LinkTitle extends Abstraction
 	 *	@return		string
 	 *	@see		https://blog.ueffing.net/post/2016/03/14/string-seo-optimieren-creating-seo-friendly-url/
 	 */
-	protected function convertForUrl( $string = '' )
+	protected function convertForUrl( string $string = '' ): string
 	{
 		$string	= str_replace(
 			array( 'Ä', 'Ö', 'Ü', 'ä', 'ö', 'ü', 'ß'),

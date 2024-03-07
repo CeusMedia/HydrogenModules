@@ -15,9 +15,9 @@ class Logic_Mail_Group_Message extends Logic
 	protected $modelAction;
 	protected $modelUser;
 	protected $logicMail;*/
-	protected $transports		= [];
+	protected array $transports		= [];
 
-	public function addFromRawMail( $groupId, $rawMail )
+	public function addFromRawMail( int|string $groupId, $rawMail )
 	{
 		$parser		= new \CeusMedia\Mail\Message\Parser();
 		$message	= $parser->parse( $rawMail );
@@ -54,7 +54,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $this->modelMessage->add( $data, FALSE );
 	}
 
-	public function checkId( $messageId, $strict = TRUE )
+	public function checkId( int|string $messageId, bool $strict = TRUE )
 	{
 		$message	= $this->modelMessage->get( $messageId );
 		if( $message )
@@ -69,10 +69,10 @@ class Logic_Mail_Group_Message extends Logic
 	/**
 	 *	...s
 	 *	@access		public
-	 *	@param		integer|object	$messageOrMessageId		Message object or Message ID
-	 *	@return		object			Mail message object
+	 *	@param		object|int|string	$messageOrMessageId		Message object or Message ID
+	 *	@return		object				Mail message object
 	 */
-	public function getMessageObject( $messageOrMessageId )
+	public function getMessageObject( object|int|string $messageOrMessageId ): object
 	{
 		if( is_int( $messageOrMessageId ) )
 			$message	= $this->modelMessage->get( $messageOrMessageId );
@@ -103,7 +103,7 @@ class Logic_Mail_Group_Message extends Logic
 		return unserialize( $object[1] );
 	}
 
-	public function getMessageRawMail( $messageOrMessageId )
+	public function getMessageRawMail( object|int|string $messageOrMessageId )
 	{
 //		trigger_error( "Oh! I thought this method is not used anymore.", E_USER_ERROR );
 		if( is_object( $messageOrMessageId ) )
@@ -121,7 +121,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $raw[1];
 	}
 
-/*	public function handleNewMails( $groupId = 0 ){
+/*	public function handleNewMails( int|string $groupId = 0 ){
 		trigger_error( "NOT YET IMPLEMENTED.", E_USER_NOTICE );
 		$groupIds	= array_keys( $this->getGroups() );
 		$groupIds	= $groupId > 0 ? [$groupId] : $groupIds;
@@ -143,7 +143,7 @@ class Logic_Mail_Group_Message extends Logic
 		}
 	}*/
 
-	public function handleImportedGroupMessages( $groupId, $dry = FALSE )
+	public function handleImportedGroupMessages( int|string $groupId,  bool $dry = FALSE ): object
 	{
 		$senderMemberStatusesToReject	= [
 			Model_Mail_Group_Member::STATUS_DEACTIVATED,
@@ -223,7 +223,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $results;
 	}
 
-	public function handleStalledGroupMessages( $groupId, $dry = FALSE )
+	public function handleStalledGroupMessages( int|string $groupId, bool $dry = FALSE ): object
 	{
 		$group		= $this->logicGroup->checkGroupId( $groupId );
 
@@ -261,7 +261,7 @@ class Logic_Mail_Group_Message extends Logic
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
 	}
 
-	protected function forwardMessage( $message, bool $dryMode = FALSE )
+	protected function forwardMessage( object $message, bool $dryMode = FALSE ): array
 	{
 		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
 		$allowedMessageStatuses	= [
@@ -280,7 +280,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $mails;
 	}
 
-	protected function forwardMessageToMember( $messageObjectOrId, $memberObjectOrId, bool $dry = FALSE )
+	protected function forwardMessageToMember( object|int|string $messageObjectOrId, object|int|string $memberObjectOrId, bool $dry = FALSE )
 	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
@@ -342,7 +342,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $forwardMail;
 	}
 
-	protected function getMailGroupLogic()
+	protected function getMailGroupLogic(): object
 	{
 		return $this->env->getLogic()->get( 'mailGroupMessage' );
 	}
@@ -363,7 +363,7 @@ class Logic_Mail_Group_Message extends Logic
 		return $this->transports[$groupId];
 	}
 
-	protected function rejectMessage( $messageObjectOrId )
+	protected function rejectMessage( object|int|string $messageObjectOrId ): void
 	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
@@ -380,7 +380,7 @@ class Logic_Mail_Group_Message extends Logic
 		//	... @todo send mail to sender
 	}
 
-	protected function stallMessage( $messageObjectOrId )
+	protected function stallMessage( object|int|string $messageObjectOrId ): void
 	{
 		if( is_object( $messageObjectOrId ) )
 			$message	= $messageObjectOrId;
@@ -399,7 +399,7 @@ class Logic_Mail_Group_Message extends Logic
 
 	//  --  PRIVATE METHODS  --  //
 
-	private function setMessageStatus( $messageId, $status, $method = NULL )
+	private function setMessageStatus( int|string $messageId, $status, $method = NULL ): void
 	{
 		$message	= $this->checkId( $messageId );
 		$data		= array(
@@ -413,6 +413,5 @@ class Logic_Mail_Group_Message extends Logic
 			'method'	=> $method,
 		];
 		$this->env->getCaptain()->callHook( 'MailGroupMessage', 'change', $this, $payload );
-		return $result;
 	}
 }

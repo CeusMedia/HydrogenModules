@@ -32,9 +32,9 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 
 	protected function renderTime( $timestamp ): string
 	{
-		$hours	= date( 'H', $timestamp );
-		$mins	= '<sup><small>'.date( 'i', $timestamp ).'</small></sup>';
-		return $hours.$mins;
+		$hours		= date( 'H', $timestamp );
+		$minutes	= '<sup><small>'.date( 'i', $timestamp ).'</small></sup>';
+		return $hours.$minutes;
 	}
 
 	protected function renderUser( $user ): string
@@ -59,11 +59,11 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 	 *	@deprecated use renderUser instead
 	 *	@todo		to be removed
 	 */
-	protected function renderUserWithAvatar( $userId, int $width = 160 ): string
+	protected function renderUserWithAvatar( int|string $userId, int $width = 160 ): string
 	{
 		$modelUser	= new Model_User( $this->env );
 		if( !array_key_exists( (int) $userId, $this->users ) )
-			$this->users[(int) $userId] = $modelUser->get( (int) $userId );
+			$this->users[(int) $userId] = $modelUser->get( $userId );
 		if( !$this->users[(int) $userId] )
 			return "UNKNOWN";
 		$worker	= $this->users[(int) $userId];

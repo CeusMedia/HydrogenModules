@@ -33,7 +33,7 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 
 	//  --  PROTECTED  --  //
 
-	protected function renderGalleryImage( string $galleryId ): string
+	protected function renderGalleryImage( int|string $galleryId ): string
 	{
 		$gallery		= $this->modelGallery->get( $galleryId );
 		$images			= $this->getGalleryImages( $galleryId );

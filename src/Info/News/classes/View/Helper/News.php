@@ -20,14 +20,14 @@ class View_Helper_News
 		$model		= new Model_News( $this->env );
 		$words		= $this->env->getLanguage()->getWords( 'info/news' );
 		$news		= $model->getAllByIndices(
-			array( 'status' => 1 ),
-			array( 'newsId' => 'DESC' )
+			['status' => 1],
+			['newsId' => 'DESC']
 		);
 		$list	= [];
 		foreach( $news as $item ){
-			if( $item->startsAt && (int)time() < (int)$item->startsAt )
+			if( $item->startsAt && (int)time() < (int) $item->startsAt )
 				continue;
-			if( $item->endsAt && (int)time() > (int)$item->endsAt )
+			if( $item->endsAt && (int)time() > (int) $item->endsAt )
 				continue;
 			$list[]	= $item;
 		}

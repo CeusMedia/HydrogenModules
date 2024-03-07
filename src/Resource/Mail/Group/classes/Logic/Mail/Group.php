@@ -44,13 +44,13 @@ class Logic_Mail_Group extends Logic
 		return $groupId;
 	}
 
-	public function addGroupMember( $groupId, $address, $title )
+	public function addGroupMember( int|string $groupId, string $address, string $title )
 	{
 		$group	= $this->checkGroupId( $groupId );
 		$member	= $this->getGroupMemberByAddress( $groupId, $address, FALSE, FALSE );
 		if( $member )
 			return $member->mailGroupMemberId;
-		$groupMemberId	= $this->modelMember->add( [
+		return $this->modelMember->add( [
 			'mailGroupId'	=> $groupId,
 			'roleId'		=> $group->defaultRoleId,
 			'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
@@ -59,10 +59,9 @@ class Logic_Mail_Group extends Logic
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
 		] );
-		return $groupMemberId;
 	}
 
-/*	public function addGroupMember( $groupId, $memberId )
+/*	public function addGroupMember( int|string $groupId, int|string $memberId )
 	{
 		$group	= $this->checkGroupId( $groupId );
 		if( $this->isGroupMember( $groupId, $memberId ) )
@@ -80,7 +79,7 @@ class Logic_Mail_Group extends Logic
 		return $groupMemberId;
 	}*/
 
-	public function autojoinMemberByMessage( $groupId, $message )
+	public function autojoinMemberByMessage( int|string $groupId, $message )
 	{
 		$allowedGroupStatuses	= [
 			Model_Mail_Group::STATUS_ACTIVATED,
@@ -133,13 +132,13 @@ class Logic_Mail_Group extends Logic
 	 *	Check mail group by ID.
 	 *	Alias for checkGroupId.
 	 *	@access		public
-	 *	@param		integer			$groupId		...
+	 *	@param		int|string		$groupId		...
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
-	 *	@return		object			Group model object if existing
+	 *	@return		?object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 *	@todo 		make this the main implementation after extraction of this large logic to sub logic classes.
 	 */
-	public function checkId( $groupId, bool $strict = TRUE )
+	public function checkId( int|string $groupId, bool $strict = TRUE ): ?object
 	{
 		return $this->checkGroupId( $groupId, $strict );
 	}
@@ -147,12 +146,12 @@ class Logic_Mail_Group extends Logic
 	/**
 	 *	Check mail group by ID.
 	 *	@access		public
-	 *	@param		integer			$groupId		...
+	 *	@param		int|string		$groupId		...
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
-	 *	@return		object			Group model object if existing
+	 *	@return		?object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 */
-	public function checkGroupId( $groupId, bool $strict = TRUE )
+	public function checkGroupId( int|string $groupId, bool $strict = TRUE ): ?object
 	{
 		$group	= $this->modelGroup->get( $groupId );
 		if( $group )
@@ -162,7 +161,7 @@ class Logic_Mail_Group extends Logic
 		return NULL;
 	}
 
-	public function checkMemberId( $memberId, bool $strict = TRUE )
+	public function checkMemberId( int|string $memberId, bool $strict = TRUE ): ?object
 	{
 		$member	= $this->modelMember->get( $memberId );
 		if( $member )
@@ -172,7 +171,7 @@ class Logic_Mail_Group extends Logic
 		return NULL;
 	}
 
-	public function checkServerId( $serverId, bool $strict = TRUE )
+	public function checkServerId( int|string $serverId, bool $strict = TRUE ): ?object
 	{
 		$server	= $this->modelServer->get( $serverId );
 		if( $server )
@@ -182,7 +181,7 @@ class Logic_Mail_Group extends Logic
 		return NULL;
 	}
 
-	public function countGroupMembers( $groupId, bool $activeOnly = FALSE )
+	public function countGroupMembers( int|string $groupId, bool $activeOnly = FALSE ): int
 	{
 		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
@@ -190,7 +189,7 @@ class Logic_Mail_Group extends Logic
 		return $this->modelMember->count( $indices );
 	}
 
-	public function countGroupMessages( $groupId, bool $forwardedOnly = FALSE )
+	public function countGroupMessages( int|string $groupId, bool $forwardedOnly = FALSE ): int
 	{
 		$indices	= ['mailGroupId' => $groupId];
 		if( $forwardedOnly )
@@ -203,7 +202,7 @@ class Logic_Mail_Group extends Logic
 		return $this->getGroups( TRUE );
 	}
 
-	public function getGroup( $groupId, bool $activeOnly = FALSE, bool $strict = TRUE )
+	public function getGroup( int|string $groupId, bool $activeOnly = FALSE, bool $strict = TRUE ): ?object
 	{
 		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
@@ -232,7 +231,7 @@ class Logic_Mail_Group extends Logic
 		return $list;
 	}
 
-	public function getGroupMember( $memberId, bool $activeOnly = FALSE )
+	public function getGroupMember( int|string $memberId, bool $activeOnly = FALSE )
 	{
 		$indices	= ['mailGroupMemberId' => $memberId];
 		if( $activeOnly )
@@ -240,7 +239,7 @@ class Logic_Mail_Group extends Logic
 		return $this->modelMember->getByIndices( $indices );
 	}
 
-	public function getGroupMembers( $groupId, bool $activeOnly = FALSE ): array
+	public function getGroupMembers( int|string $groupId, bool $activeOnly = FALSE ): array
 	{
 		$indices	= ['mailGroupId' => $groupId];
 		if( $activeOnly )
@@ -248,7 +247,7 @@ class Logic_Mail_Group extends Logic
 		return $this->modelMember->getAllByIndices( $indices );
 	}
 
-	public function getGroupMemberByAddress( $groupId, $address, bool $activeOnly = FALSE, bool $strict = TRUE )
+	public function getGroupMemberByAddress( int|string $groupId, string $address, bool $activeOnly = FALSE, bool $strict = TRUE ): ?object
 	{
 		$indices	= ['mailGroupId' => $groupId, 'address' => $address];
 		if( $activeOnly )
@@ -262,7 +261,7 @@ class Logic_Mail_Group extends Logic
 		throw new RangeException( sprintf( $msg, $address, $group->title ) );
 	}
 
-	public function getMailGroupFromAddress( $address, bool $activeOnly = FALSE, bool $strict = TRUE )
+	public function getMailGroupFromAddress( string $address, bool $activeOnly = FALSE, bool $strict = TRUE ): ?object
 	{
 		$indices	= ['address' => $address];
 		if( $activeOnly )
@@ -294,13 +293,13 @@ class Logic_Mail_Group extends Logic
 
 	/**
 	 *	Reads mailbox to find unseen mails and imports them with status STATUS_NEW.
-	 *	Imported messages need to be handled afterwards by handleImportedGroupMessages.
+	 *	Imported messages need to be handled afterward by handleImportedGroupMessages.
 	 *	@access		public
-	 *	@param		integer		$groupId		Group ID
-	 *	@param		boolean		$dry			Flag: Dry mode (default: no)
-	 *	@return		object		--list of resulting message ids or import error--
+	 *	@param		int|string		$groupId		Group ID
+	 *	@param		boolean			$dry			Flag: Dry mode (default: no)
+	 *	@return		object			--list of resulting message ids or import error--
 	 */
-	public function importGroupMails( $groupId, bool $dry = FALSE ): object
+	public function importGroupMails( int|string$groupId, bool $dry = FALSE ): object
 	{
 		$results	= (object) [
 			'mailsImported'	=> [],
@@ -326,7 +325,7 @@ class Logic_Mail_Group extends Logic
 		return $results;
 	}
 
-	public function isGroupMember( $groupId, $memberId ): bool
+	public function isGroupMember( int|string $groupId, int|string $memberId ): bool
 	{
 		return (bool) $this->modelMember->count( [
 			'mailGroupMemberId'		=> $memberId,
@@ -334,7 +333,7 @@ class Logic_Mail_Group extends Logic
 		] );
 	}
 
-	public function isGroupMemberAddress( $groupId, $address ): bool
+	public function isGroupMemberAddress( int|string $groupId, string $address ): bool
 	{
 		return (bool) $this->modelMember->count( [
 			'mailGroupId'		=> $groupId,
@@ -342,7 +341,7 @@ class Logic_Mail_Group extends Logic
 		] );
 	}
 
-	public function registerMemberAction( $action, $groupId, $memberId, $message ): object
+	public function registerMemberAction( string $action, int|string $groupId, int|string $memberId, string $message ): object
 	{
 		$actionId	= $this->modelAction->add( [
 			'mailGroupId'		=> $groupId,
@@ -357,37 +356,37 @@ class Logic_Mail_Group extends Logic
 		return $this->modelAction->get( $actionId );
 	}
 
-	public function setGroupBounce( $groupId, $bounce )
+	public function setGroupBounce( int|string $groupId, $bounce ): void
 	{
 		$data		= ['bounce' => $bounce];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setGroupStatus( $groupId, $status )
+	public function setGroupStatus( int|string $groupId, $status ): void
 	{
 		$data		= ['status' => $status];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setGroupTitle( $groupId, $title )
+	public function setGroupTitle( int|string $groupId, $title ): void
 	{
 		$data		= ['title' => $title];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setGroupType( $groupId, $type )
+	public function setGroupType( int|string $groupId, $type ): void
 	{
 		$data		= ['type' => $type];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setGroupVisibility( $groupId, $visibility )
+	public function setGroupVisibility( int|string $groupId, $visibility ): void
 	{
 		$data		= ['visibility' => $visibility];
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setMemberStatus( $groupId, $memberId, $status )
+	public function setMemberStatus( int|string $groupId, $memberId, $status ): bool
 	{
 		$member	= $this->checkMemberId( $memberId );
 		if( (int) $member->status === (int) $status )
@@ -411,7 +410,7 @@ class Logic_Mail_Group extends Logic
 		return TRUE;
 	}
 
-	public function testGestMail( $groupId, $limit = 1 )
+	public function testGestMail( int|string $groupId, $limit = 1 ): void
 	{
 		return;
 	}
@@ -431,6 +430,7 @@ class Logic_Mail_Group extends Logic
 		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
 		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
@@ -439,7 +439,7 @@ class Logic_Mail_Group extends Logic
 	 *	@see		https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/mail-mail-accounts.39181/
 	 *	@todo		finish impl (find a way to execute command as root), run checks beforehand
 	 */
-	protected function createGroupMailAccountUsingPlesk( $groupId )
+	protected function createGroupMailAccountUsingPlesk( int|string $groupId ): void
 	{
 		$group			= $this->checkGroupId( $groupId );
 		if( $group->status !== Model_Mail_Group::STATUS_NEW )
@@ -459,7 +459,7 @@ class Logic_Mail_Group extends Logic
 		$this->modelGroup->edit( $groupId, ['status' => Model_Mail_Group::STATUS_EXISTING] );
 	}
 
-	protected function getMailbox( $groupId ): PhpImapMailbox
+	protected function getMailbox( int|string $groupId ): PhpImapMailbox
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$server		= $this->modelServer->get( $group->mailGroupServerId );
@@ -480,7 +480,7 @@ class Logic_Mail_Group extends Logic
 		return $mailbox;
 	}
 
-	protected function setMemberStatusToActivated( $group, $member )
+	protected function setMemberStatusToActivated( $group, $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -519,7 +519,7 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberActivated', $this, $payload );
 	}
 
-	protected function setMemberStatusToDeactivated( $group, $member )
+	protected function setMemberStatusToDeactivated( $group, $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -543,7 +543,7 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberDeactivated', $this, $payload );
 	}
 
-	protected function setMemberStatusToRejected( $group, $member )
+	protected function setMemberStatusToRejected( $group, $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -560,7 +560,7 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberRejected', $this, $payload );
 	}
 
-	protected function updateGroup( $groupId, $data, $method = NULL )
+	protected function updateGroup( int|string $groupId, array $data, $method = NULL )
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$this->modelGroup->edit( $groupId, $data );

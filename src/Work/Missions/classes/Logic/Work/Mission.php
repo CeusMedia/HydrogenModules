@@ -52,23 +52,12 @@ class Logic_Work_Mission extends Logic
 			$time	= $sign == '+' ? $now + $number * $day : $now - $number * $day;
 		}
 		else{
-			switch( $string ){
-				case '':
-				case 'heute':
-					$time	= $now;
-					break;
-				case '+1':
-				case 'morgen':
-					$time	= $now + 1 * $day;
-					break;
-				case '+2':
-				case 'übermorgen':
-					$time	= $now + 2 * $day;
-					break;
-				default:
-					$time	= strtotime( $string );
-					break;
-			}
+			$time = match( $string ){
+				'', 'heute'			=> $now,
+				'+1', 'morgen'		=> $now + 1 * $day,
+				'+2', 'übermorgen'	=> $now + 2 * $day,
+				default				=> strtotime($string),
+			};
 		}
 		return date( "Y-m-d", $time );
 	}
@@ -78,7 +67,7 @@ class Logic_Work_Mission extends Logic
 		return $model->getAllByIndex( 'missionId', $missionId, $orders );
 	}*/
 
-	public function getFilterConditions( $sessionFilterKeyPrefix, $additionalConditions = [] ): array
+	public function getFilterConditions( string $sessionFilterKeyPrefix, array $additionalConditions = [] ): array
 	{
 		$session	= $this->env->getSession();
 		$query		= $session->get( $sessionFilterKeyPrefix.'query', '' );
@@ -111,7 +100,7 @@ class Logic_Work_Mission extends Logic
 		return $conditions;
 	}
 
-	public function getUserProjects( string $userId, bool $activeOnly = FALSE ): array
+	public function getUserProjects( int|string $userId, bool $activeOnly = FALSE ): array
 	{
 		$modelProject	= new Model_Project( $this->env );											//  create projects model
 		if( !$this->hasFullAccess() ){																//  normal access
@@ -124,7 +113,7 @@ class Logic_Work_Mission extends Logic
 		return $userProjects;																		//  return projects map
 	}
 
-	public function getUserMissions( string $userId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getUserMissions( int|string $userId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$conditions	= array_merge( $this->generalConditions, $conditions );
 		$orders		= $orders ?: ['dayStart' => 'ASC'];
@@ -161,7 +150,7 @@ class Logic_Work_Mission extends Logic
 		);
 	}
 
-	public function getVersion( $missionId, $version )
+	public function getVersion( int|string $missionId, $version ): object
 	{
 		return $this->modelVersion->getByIndices( [
 			'missionId'	=> $missionId,
@@ -169,7 +158,7 @@ class Logic_Work_Mission extends Logic
 		] );
 	}
 
-	public function getVersions( $missionId ): array
+	public function getVersions( int|string $missionId ): array
 	{
 		$orders		= ['version' => 'ASC'];
 		$versions	= $this->modelVersion->getAllByIndex( 'missionId', $missionId, $orders );
@@ -179,7 +168,7 @@ class Logic_Work_Mission extends Logic
 		return $versions;
 	}
 
-	public function noteChange( $type, $missionId, $data, $currentUserId )
+	public function noteChange( $type, int|string $missionId, $data, int|string $currentUserId ): void
 	{
 		$model	= new Model_Mission_Change( $this->env );
 		if( !$model->count( ['missionId' => $missionId] ) ){
@@ -202,7 +191,7 @@ class Logic_Work_Mission extends Logic
 		}
 	}
 
-	public function noteVersion( $missionId, $userId, $content )
+	public function noteVersion( int|string $missionId, int|string $userId, string $content ): bool|string
 	{
 		$modelVersion	= new Model_Mission_Version( $this->env );
 		$latest	= $modelVersion->getByIndex( 'missionId', $missionId, ['version' => 'DESC'] );
@@ -217,7 +206,7 @@ class Logic_Work_Mission extends Logic
 		) );
 	}
 
-	public function removeDocument( string $documentId ): bool
+	public function removeDocument( int|string $documentId ): bool
 	{
 		$document	= $this->modelDocument->get( $documentId );
 		if( !$document )
@@ -229,10 +218,10 @@ class Logic_Work_Mission extends Logic
 	}
 
 	/**
-	 * @param string $missionId
-	 * @return int
+	 *	@param		int|string $missionId
+	 *	@return		int
 	 */
-	public function removeMission( string $missionId ): int
+	public function removeMission( int|string $missionId ): int
 	{
 		$this->modelChange->removeByIndex( 'missionId', $missionId );
 		$this->modelVersion->removeByIndex( 'missionId', $missionId );

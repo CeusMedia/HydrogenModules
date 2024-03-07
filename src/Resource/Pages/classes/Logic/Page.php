@@ -21,7 +21,7 @@ class Logic_Page extends Logic
 	protected $app				= 'self';
 	protected $model			= [];
 
-	public function updateFullpath( $pageId, string $parentPath = NULL )
+	public function updateFullpath( int|string $pageId, string $parentPath = NULL ): void
 	{
 		$model	= $this->getPageModel();
 		$page	= $model->get( $pageId );
@@ -37,7 +37,7 @@ class Logic_Page extends Logic
 			'fullpath'		=> $parentPath.$page->identifier,
 			'modifiedAt'	=> time(),
 		) );
-		if( (int) $page->type === Model_Page::TYPE_BRANCH )
+		if( Model_Page::TYPE_BRANCH === (int) $page->type )
 			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
 				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );
 	}
@@ -70,7 +70,7 @@ class Logic_Page extends Logic
 		return $list;
 	}
 
-	public function getChildren( $pageId, bool $activeOnly = TRUE ): array
+	public function getChildren( int|string $pageId, bool $activeOnly = TRUE ): array
 	{
 		$page	= $this->getPageModel()->get( $pageId );
 		if( !$page )
@@ -89,7 +89,7 @@ class Logic_Page extends Logic
 	 *	@throws		InvalidArgumentException	if given path is not a string or empty
 	 *	@throws		RangeException				if no page object found for by fullpath in strict mode
 	 */
-	public function getComponentFromPath( $path, $strict = TRUE )
+	public function getComponentFromPath( string $path, bool $strict = TRUE )
 	{
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
@@ -108,7 +108,7 @@ class Logic_Page extends Logic
 	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function getPage( $pageId, bool $strict = TRUE  )
+	public function getPage( int|string $pageId, bool $strict = TRUE  )
 	{
 		if( !preg_match( '/^[0-9]+$/', $pageId ) )
 			throw new RangeException( 'Given page is not an ID' );
@@ -165,7 +165,7 @@ class Logic_Page extends Logic
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 */
-	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE )
+	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE ): ?object
 	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
@@ -188,15 +188,15 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	Tries to resolves URI path and returns found page.
+	 *	Tries to resolve URI path and returns found page.
 	 *	@access		public
 	 *	@param		string		$path			Path to find page for
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
-	 *	@return		object						Data object of found page or NULL if nothing found
+	 *	@return		?object						Data object of found page or NULL if nothing found
 	 *	@throws		RangeException				if path is not resolvable
 	 *	@throws		RangeException				if path parent part is not resolvable
 	 */
-	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE )
+	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE ): ?object
 	{
 		$path		= trim( $path, '/' );
 		try{
@@ -216,14 +216,14 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	Tries to resolves URI path from current request and returns found page.
+	 *	Tries to resolve URI path from current request and returns found page.
 	 *	@access		public
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
 	 *	@param		boolean		$strict			Flag: throw exception on failure
 	 *	@return		object|null					Data object of found page or NULL if nothing found
 	 *	@throws		RuntimeException			if path is not resolvable
 	 */
-	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE )
+	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE ): ?object
 	{
 		$request	= $this->env->getRequest();
 		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
@@ -240,7 +240,7 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	Indicates wheter a page exists for an URI path or a page ID .
+	 *	Indicates whether a page exists for a URI path or a page ID .
 	 *	@access		public
 	 *	@param		string		$pathOrId		Path or ID to find page for
 	 *	@return		boolean
@@ -261,7 +261,7 @@ class Logic_Page extends Logic
 		return $this->getPageModel()->count( $indices );
 	}
 
-	public function isAccessible( $page ): bool
+	public function isAccessible( object $page ): bool
 	{
 		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
@@ -323,7 +323,7 @@ class Logic_Page extends Logic
 	 *	@throws		RangeException				if path is not resolvable and strict mode is on
 	 *	@todo		remove strategies absolute_backward and relative_forward since both are buggy
 	 */
-	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE )
+	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE ): ?object
 	{
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
@@ -344,7 +344,7 @@ class Logic_Page extends Logic
 		 *	Found page:
 		 *	 - can be, of course, at every level - parent ID does not matter.
 		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
-		 *	 - must be visible or atleast hidden
+		 *	 - must be visible or at least hidden
 		 */
 		for( $i=count( $parts ); $i>0; $i-- ){														//  backward resolution
 			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
@@ -368,7 +368,7 @@ class Logic_Page extends Logic
 		 *	Found page:
 		 *	 - must be in root, so having no parent
 		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
-		 *	 - must be visible or atleast hidden
+		 *	 - must be visible or at least hidden
 		 *	Problem: Does not work for pages in deeper levels
 		 */
 		for( $i=count( $parts ); $i>0; $i-- ){														//  absolute and backward resolution
@@ -391,7 +391,7 @@ class Logic_Page extends Logic
 		 *	Iterates pages recursive by parents starting from top while each path part matches a page identifier.
 		 *	Returns deepest found page, that
 		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
-		 *	 - must be visible or atleast hidden
+		 *	 - must be visible or at least hidden
 		 *
 		 *	Problem: Does not work if page identifier contains a slash, eg. is like abc/def
 		 */

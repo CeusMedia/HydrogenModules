@@ -39,12 +39,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		bool		$strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		bool			$strict
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function cancel( string $ipLockId, bool $strict = TRUE ): bool
+	public function cancel( int|string $ipLockId, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status == Model_IP_Lock::STATUS_CANCELLED )
@@ -58,11 +58,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
+	 *	@param		int|string		$ipLockId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function countView( string $ipLockId ): void
+	public function countView( int|string $ipLockId ): void
 	{
 		$lock	= $this->get( $ipLockId );
 		$this->modelLock->edit( $ipLockId, [
@@ -72,12 +72,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
+	 *	@param		int|string		$ipLockId
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( string $ipLockId, bool $strict = TRUE ): object|NULL
+	public function get( int|string $ipLockId, bool $strict = TRUE ): object|NULL
 	{
 		$lock	= $this->modelLock->get( $ipLockId );
 		if( !$lock ){
@@ -160,12 +160,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		bool		$strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		bool			$strict
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function lock( string $ipLockId, bool $strict = TRUE ): bool
+	public function lock( int|string $ipLockId, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		$states	= [
@@ -180,12 +180,12 @@ class Logic_IP_Lock extends Logic
 
 	/**
 	 *	@param		string			$ip
-	 *	@param		string|NULL		$reasonId
+	 *	@param		int|string|NULL		$reasonId
 	 *	@param		object|NULL		$filter
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function lockIp( string $ip, ?string $reasonId = NULL, ?object $filter = NULL ): string
+	public function lockIp( string $ip, int|string|NULL $reasonId = NULL, ?object $filter = NULL ): string
 	{
 		$lock	= $this->getByIp( $ip, FALSE );
 		if( !$lock ){
@@ -208,12 +208,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		bool		$strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		bool			$strict
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function remove( string $ipLockId, bool $strict = TRUE ): bool
+	public function remove( int|string $ipLockId, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		return $this->modelLock->remove( $lock->ipLockId );
@@ -230,12 +230,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		bool		$strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		bool			$strict
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function requestUnlock( string $ipLockId, bool $strict = TRUE ): bool
+	public function requestUnlock( int|string $ipLockId, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( $lock->status != Model_IP_Lock::STATUS_LOCKED )
@@ -245,13 +245,13 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		int			$status
-	 *	@param		bool		$strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		int				$status
+	 *	@param		bool			$strict
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setStatus( string $ipLockId, int $status, bool $strict = TRUE ): bool
+	public function setStatus( int|string $ipLockId, int $status, bool $strict = TRUE ): bool
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		$data	= ['status' => $status];
@@ -265,12 +265,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		object|string $ipLockIdOrIp
+	 *	@param		string $ipLockIdOrIp
 	 *	@param		bool $strict
 	 *	@return		bool|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function unlockIfOverdue( object|string $ipLockIdOrIp, bool $strict = TRUE ): ?bool
+	public function unlockIfOverdue( $ipLockIdOrIp, bool $strict = TRUE ): ?bool
 	{
 		if( is_string( $ipLockIdOrIp ) )
 			$lock	= $this->get( $ipLockIdOrIp, $strict );
@@ -286,12 +286,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		string		$ipLockId
-	 *	@param		bool $strict
+	 *	@param		int|string		$ipLockId
+	 *	@param		bool			$strict
 	 *	@return		bool|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function unlock( string $ipLockId, bool $strict = TRUE ): bool|NULL
+	public function unlock( int|string $ipLockId, bool $strict = TRUE ): bool|NULL
 	{
 		$lock	= $this->get( $ipLockId, $strict );
 		if( !$lock )

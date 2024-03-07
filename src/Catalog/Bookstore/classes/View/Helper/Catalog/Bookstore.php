@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Helper_Catalog_Bookstore
@@ -17,7 +18,7 @@ class View_Helper_Catalog_Bookstore
 	/**	@var	Logic_Catalog_Bookstore		$logic */
 	protected Logic_Catalog_Bookstore $logic;
 
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	public function __construct( Environment $env )
 	{
@@ -89,23 +90,23 @@ class View_Helper_Catalog_Bookstore
 	}
 
 	/**
-	 *	@param		string		$articleId
-	 *	@param		bool		$absolute
+	 *	@param		int|string		$articleId
+	 *	@param		bool			$absolute
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getArticleUri( string $articleId, bool $absolute = FALSE ): string
+	public function getArticleUri( int|string $articleId, bool $absolute = FALSE ): string
 	{
 		return $this->logic->getArticleUri( (int) $articleId, $absolute );
 	}
 
 	/**
-	 *	@param		string		$authorId
-	 *	@param		bool		$absolute
+	 *	@param		int|string		$authorId
+	 *	@param		bool			$absolute
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getAuthorUri( string $authorId, bool $absolute = FALSE ): string
+	public function getAuthorUri( int|string $authorId, bool $absolute = FALSE ): string
 	{
 		return $this->logic->getAuthorUri( (int) $authorId, $absolute );
 	}

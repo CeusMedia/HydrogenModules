@@ -2,6 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var string $basePath */
+/** @var array $words */
+/** @var array $sliders */
+
 $iconDurationShow		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconDurationTransition	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-h'] );
 $iconSlides				= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-image'] );
@@ -89,13 +95,15 @@ return $textTop.'
 	</div>
 </div>';
 
-class View_Helper_NumberCommons{
-
-	static function getDivider( $numbers ){
+class View_Helper_NumberCommons
+{
+	public static function getDivider( array $numbers )
+	{
 		return array_reduce( array_unique( $numbers ), 'static::_gcd_rec' );
 	}
 
-	static function getPrecision( $numbers, $maxPrecision = 3 ){
+	public static function getPrecision( array $numbers, $maxPrecision = 3 ): int
+	{
 		if( !count( $numbers ) || $maxPrecision < 1 )
 			return 0;
 		$gcd	= static::getDivider( array_unique( $numbers ) );
@@ -103,7 +111,8 @@ class View_Helper_NumberCommons{
 		return ( $maxPrecision - min( $zeros, $maxPrecision ) );
 	}
 
-	protected static function _count_trailing_zeros( $number ){
+	protected static function _count_trailing_zeros( int|float $number ): int
+	{
 		$zeros	= 0;
 		while( $number >= 10 && $number % 10 === 0 )
 			$zeros	+= (int)(bool)( $number /= 10 );
@@ -115,13 +124,14 @@ class View_Helper_NumberCommons{
 	}
 }
 
-class View_Helper_Image_Slider_Duration{
-
+class View_Helper_Image_Slider_Duration
+{
 	const MAX_PRECISION			= 3;
 
-	protected $precision		= 0;
+	protected int $precision		= 0;
 
-	function getSlidersPrecision( $sliders, $maxPrecision = self::MAX_PRECISION ){
+	function getSlidersPrecision( $sliders, $maxPrecision = self::MAX_PRECISION ): int
+	{
 		$times	= [];
 		foreach( $sliders as $slider ){
 			$times[]	= $slider->durationShow;
@@ -130,17 +140,20 @@ class View_Helper_Image_Slider_Duration{
 		return View_Helper_NumberCommons::getPrecision( $times, $maxPrecision );
 	}
 
-	function formatDuration( $msecs, $precision = NULL, $sepDecimal = '.', $sepThousand = ',' ){
-		$precision	= is_null( $precision ) ? $this->precision : 0;
-		return number_format( $msecs / pow( 10, 3 ), $precision, $sepDecimal, $sepThousand );
+	function formatDuration( int|float $msecs, ?int $precision = NULL, $sepDecimal = '.', $sepThousand = ',' ): string
+	{
+		$precision	= $precision ?? $this->precision;
+		return number_format( (float) $msecs / pow( 10, 3 ), $precision, $sepDecimal, $sepThousand );
 	}
 
-	public function setPrecision( $precision ){
+	public function setPrecision( int $precision ): self
+	{
 		$this->precision	= $precision;
 		return $this;
 	}
 
-	public function setPrecisionBySliders( $sliders, $maxPrecision = self::MAX_PRECISION ){
+	public function setPrecisionBySliders( $sliders, $maxPrecision = self::MAX_PRECISION ): self
+	{
 		return $this->setPrecision( $this->getSlidersPrecision( $sliders, $maxPrecision ) );
 	}
 }

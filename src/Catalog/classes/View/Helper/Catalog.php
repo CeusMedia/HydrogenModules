@@ -104,32 +104,32 @@ class View_Helper_Catalog
 	}
 
 	/**
-	 *	@param		string		$articleId
-	 *	@param		bool		$absolute
+	 *	@param		int|string		$articleId
+	 *	@param		bool			$absolute
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getArticleUri( string $articleId, bool $absolute = FALSE ): string
+	public function getArticleUri( int|string $articleId, bool $absolute = FALSE ): string
 	{
 		return $this->logic->getArticleUri( $articleId, $absolute );
 	}
 
 	/**
-	 *	@param		object|string		$categoryOrId
+	 *	@param		object|int|string		$categoryOrId
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getCategoryUri( object|string $categoryOrId ): string
+	public function getCategoryUri( object|int|string $categoryOrId ): string
 	{
 		return $this->logic->getCategoryUri( $categoryOrId );
 	}
 
 	/**
-	 *	@param		object|string		$tagOrId
+	 *	@param		object|int|string		$tagOrId
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getTagUri( object|string $tagOrId ): string
+	public function getTagUri( object|int|string $tagOrId ): string
 	{
 		return $this->logic->getTagUri( $tagOrId );
 	}
