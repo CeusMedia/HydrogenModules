@@ -139,40 +139,9 @@ class Controller_Auth_Local extends Controller
 
 		$this->tryLoginByCookie();
 
-		$words		= (object) $this->getWords( 'login' );
-		$username	= trim( $this->request->get( 'login_username' ) );
-		$password	= trim( $this->request->get( 'login_password' ) );
+		$this->tryLoginByPostRequest();
+
 		$from		= $this->request->get( 'from' );
-
-		if( $this->request->getMethod()->isPost() && $this->request->has( 'doLogin' ) ) {
-			if( $this->useCsrf ){
-				$controller	= new Controller_Csrf( $this->env );
-				$controller->checkToken();
-			}
-			try{
-				$userId	= $this->authenticateUserByCredentials( $username, $password );
-				if( !$userId ){
-					if( $from )
-						$this->restart( $from.'?login='.$username );
-					$this->restart( 'login?username='.$username, TRUE );
-				}
-				$modelUser	= new Model_User( $this->env );
-				$modelUser->edit( $userId, ['loggedAt' => time()] );
-				$this->messenger->noteSuccess( $words->msgSuccess );
-
-				$user	= $modelUser->get( $userId );
-				$this->session->set( 'auth_user_id', $user->userId );
-				$this->session->set( 'auth_role_id', $user->roleId );
-				$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
-				$logicAuth->setAuthenticatedUser( $user, $password );
-				if( $this->request->get( 'login_remember' ) )
-					$this->rememberUserInCookie( $user );
-				$this->redirectAfterLogin();
-			}
-			catch( Exception $e ){
-				$this->messenger->noteFailure( $e->getMessage() );
-			}
-		}
 
 //		$this->cookie->remove( 'auth_remember' );
 		$this->addData( 'from', $from );													//  forward redirect URL to form action
@@ -286,153 +255,14 @@ class Controller_Auth_Local extends Controller
 	public function register(): void
 	{
 		$words		= (object) $this->getWords( 'register' );
+
 		if( !$this->moduleConfigAuth->get( 'register' ) || !$this->moduleConfig->get( 'register' ) ){
 			$this->messenger->noteError( $words->msgRegistrationClosed );
 			$this->restart( $this->request->get( 'from' ) );
 		}
 
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
+		$this->registerByPostRequest();
 
-		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
-		$rolesAllowed	= [];
-		foreach( $modelRole->getAllByIndex( 'register', [64, 128] ) as $role )
-			$rolesAllowed[]	= $role->roleId;
-
-		$input			= $this->request->getAllFromSource( 'POST', TRUE );
-		$options		= $this->moduleConfigUsers;
-
-		$nameMinLength	= $options->get( 'name.length.min' );
-		$nameMaxLength	= $options->get( 'name.length.max' );
-		$nameRegExp		= $options->get( 'name.preg' );
-		$pwdMinLength	= $options->get( 'password.length.min' );
-		$needsEmail		= $options->get( 'email.mandatory' );
-		$needsFirstname	= $options->get( 'firstname.mandatory' );
-		$needsSurname	= $options->get( 'surname.mandatory' );
-		$needsTac		= $options->get( 'tac.mandatory' );
-		$status			= (int) $options->get( 'status.register' );
-		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
-
-		if( !$roleDefault ){
-			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
-			$from	= $this->request->get( 'from' );
-			$this->restart( $from ?: NULL, !$from );
-		}
-		$roleId		= $roleDefault->roleId;															//  use default register role if none given
-		if( $this->request->has( 'roleId' ) && trim( $input->get( 'roleId' ) ) ){
-			if( in_array( (int) $this->request->get( 'roleId' ), $rolesAllowed ) ){
-				$roleId		= $input->get( 'roleId' );
-			}
-		}
-
-		$username	= $input->get( 'username' );
-		$password	= $input->get( 'password' );
-		$email		= $input->get( 'email' );
-
-		$errors	= $this->messenger->gotError();
-		if( $this->request->has( 'save' ) ){
-			$result	= $this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
-			if( !in_array( $roleId, $rolesAllowed ) )
-				$this->messenger->noteError( $words->msgRoleInvalid );
-			if( empty( $username ) )
-				$this->messenger->noteError( $words->msgNoUsername );
-			else if( $modelUser->countByIndex( 'username', $username ) )
-				$this->messenger->noteError( $words->msgUsernameExisting, $username );
-			else if( $nameRegExp )
-				if( !Predicates::isPreg( $username, $nameRegExp ) )
-					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
-			if( empty( $password ) )
-				$this->messenger->noteError( $words->msgNoPassword );
-			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
-			if( $needsEmail && empty( $email ) )
-				$this->messenger->noteError( $words->msgNoEmail);
-			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
-				$this->messenger->noteError( $words->msgEmailExisting, $email );
-			if( $needsFirstname && empty( $input['firstname'] ) )
-				$this->messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $input['surname'] ) )
-				$this->messenger->noteError( $words->msgNoSurname );
-			if( $needsTac && empty( $input['accept_tac'] ) )
-				$this->messenger->noteError( $words->msgTermsNotAccepted );
-
-			if( $this->messenger->gotError() - $errors == 0 ){
-				$data	= [
-					'roleId'		=> $roleId,
-					'status'		=> $status,
-					'email'			=> $email,
-					'username'		=> $username,
-					'password'		=> md5( $password.$passwordPepper ),							//  @todo  remove if old user password support decays
-					'gender'		=> $input['gender'],
-					'salutation'	=> $input['salutation'],
-					'firstname'		=> $input['firstname'],
-					'surname'		=> $input['surname'],
-					'country'		=> $input['country'],
-					'postcode'		=> $input['postcode'],
-					'city'			=> $input['city'],
-					'street'		=> $input['street'],
-					'phone'			=> $input['phone'],
-					'fax'			=> $input['fax'],
-					'createdAt'		=> time(),
-				];
-
-				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
-					$data['password']	= '';
-				}
-
-				$this->env->getDatabase()->beginTransaction();
-				$from		= $this->request->get( 'from' );
-				$forward	= './auth/local/login'.( $from ? '?from='.$from : '' );
-				try{
-					$userId		= $modelUser->add( $data );
-					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
-						$logic	= Logic_UserPassword::getInstance( $this->env );
-						$userPasswordId	= $logic->addPassword( $userId, $password );
-						$logic->activatePassword( $userPasswordId );
-					}
-
-					if( !$status ){
-						$data				= $input->getAll();
-						$data['from']		= $from;
-						$data['pak']		= md5( 'pak:'.$userId.'/'.$username.'&'.$passwordPepper );
-
-						$language	= $this->env->getLanguage()->getLanguage();
-						$user		= $modelUser->get( $userId );
-						$mail		= new Mail_Auth_Local_Register( $this->env, $data );
-						$logic		= Logic_Mail::getInstance( $this->env );
-						$logic->appendRegisteredAttachments( $mail, $language );
-						$mailId		= $logic->enqueueMail( $mail, $language, $user );
-						$logic->sendQueuedMail( $mailId );
-						$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
-						if( $this->session->get( 'auth_register_oauth_user_id' ) ){
-							$modelOauthUser	= new Model_Oauth_User( $this->env );
-							$modelOauthUser->add( [
-								'oauthProviderId'	=> $this->session->get( 'auth_register_oauth_provider_id' ),
-								'oauthId'			=> $this->session->get( 'auth_register_oauth_user_id' ),
-								'localUserId'		=> $userId,
-								'timestamp'			=> time(),
-							] );
-							$this->session->remove( 'auth_register_oauth_provider_id' );
-							$this->session->remove( 'auth_register_oauth_provider' );
-							$this->session->remove( 'auth_register_oauth_user_id' );
-							$this->session->remove( 'auth_register_oauth_data' );
-						}
-					}
-					$this->env->getDatabase()->commit();
-					$this->messenger->noteSuccess( $words->msgSuccess );
-					if( !$status )
-						$this->messenger->noteNotice( $words->msgNoticeConfirm );
-					$this->restart( $forward );
-				}
-				catch( Exception $e ){
-//					$this->messenger->noteFailure( $words->msgSendingMailFailed );
-					$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
-					$payload	= ['exception' => $e];
-					$this->callHook( 'Env', 'logException', $this, $payload );
-				}
-				$this->env->getDatabase()->rollBack();
-			}
-		}
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
 			$fields	= ['username', 'email', 'gender', 'firstname', 'surname', 'street', 'postcode', 'city', 'phone'];
 			foreach( $fields as $field )
@@ -567,7 +397,7 @@ class Controller_Auth_Local extends Controller
 	 *	@param		object		$user		User data object
 	 *	@param		string		$password	Password to check on login
 	 *	@return		bool
-	 *	@todo		clean up if support for old passwort decays
+	 *	@todo		clean up if support for old password decays
 	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 */
 	protected function checkPasswordOnLogin( object $user, string $password ): bool
@@ -607,7 +437,7 @@ class Controller_Auth_Local extends Controller
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
-	 *	3. Request paramter 'from'
+	 *	3. Request parameter 'from'
 	 *	4. Forward path of this auth module
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
@@ -667,6 +497,202 @@ class Controller_Auth_Local extends Controller
 		$this->restart();																				//  fallback: go to index (empty path)
 	}
 
+	protected function evaluateRoleIdOnRegister(): int
+	{
+		$modelRole	= new Model_Role( $this->env );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+		$words		= (object) $this->getWords( 'register' );
+
+		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
+		if( !$roleDefault ){
+			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
+			$from	= $this->request->get( 'from' );
+			$this->restart( $from ?: NULL, !$from );
+		}
+
+		$rolesAllowed	= [];
+		foreach( $modelRole->getAllByIndex( 'register', [64, 128] ) as $role )
+			$rolesAllowed[]	= $role->roleId;
+		$roleId		= $roleDefault->roleId;															//  use default register role if none given
+
+		if( 0 !== strlen( trim( $input->get( 'roleId', '' ) ) ) )
+			if( in_array( (int) $input->get( 'roleId' ), $rolesAllowed ) )
+				$roleId		= $input->get( 'roleId' );
+		if( !in_array( $roleId, $rolesAllowed ) ){
+			$this->messenger->noteError( $words->msgRoleInvalid );
+			$this->restart( 'register', TRUE );
+		}
+		return $roleId;
+	}
+
+	protected function evaluateInputOnRegister(): Dictionary|FALSE
+	{
+		$modelUser	= new Model_User( $this->env );
+		$words		= (object) $this->getWords( 'register' );
+		$options	= $this->moduleConfigUsers;
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+
+		$input->set( 'roleId', $this->evaluateRoleIdOnRegister() );
+
+		$nameMinLength	= $options->get( 'name.length.min' );
+		$nameMaxLength	= $options->get( 'name.length.max' );
+		$nameRegExp		= $options->get( 'name.preg' );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		$needsEmail		= $options->get( 'email.mandatory' );
+		$needsFirstname	= $options->get( 'firstname.mandatory' );
+		$needsSurname	= $options->get( 'surname.mandatory' );
+		$needsTac		= $options->get( 'tac.mandatory' );
+
+		$input->set( 'username', trim( $input->get( 'username', '' ) ) );
+		$input->set( 'password', trim( $input->get( 'password' ) ) );
+		$input->set( 'email', trim( $input->get( 'email' ) ) );
+		$input->set( 'firstname', trim( $input->get( 'firstname', '' ) ) );
+		$input->set( 'surname', trim( $input->get( 'surname' ) ) );
+
+		$result	= $this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
+		if( '' === $input->get( 'username' ) ){
+			$this->messenger->noteError( $words->msgNoUsername );
+			return FALSE;
+		}
+		if( $modelUser->countByIndex( 'username', $input->get( 'username' ) ) ){
+			$this->messenger->noteError( $words->msgUsernameExisting, $input->get( 'username' ) );
+			return FALSE;
+		}
+		if( $nameRegExp && !Predicates::isPreg( $input->get( 'username' ), $nameRegExp ) ){
+			$this->messenger->noteError( $words->msgUsernameInvalid, $input->get( 'username' ), $nameRegExp );
+			return FALSE;
+		}
+		if( '' === $input->get( 'password' ) ){
+			$this->messenger->noteError( $words->msgNoPassword );
+			return FALSE;
+		}
+		if( $pwdMinLength && strlen( $input->get( 'password' ) ) < $pwdMinLength ){
+			$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+			return FALSE;
+		}
+		if( $needsEmail && '' === $input->get( 'email' ) ){
+			$this->messenger->noteError( $words->msgNoEmail);
+			return FALSE;
+		}
+		if( '' !== $input->get( 'email' ) && $modelUser->countByIndex( 'email', $input->get( 'email' ) ) ){
+			$this->messenger->noteError( $words->msgEmailExisting, $input->get( 'email' ) );
+			return FALSE;
+		}
+		if( $needsFirstname && '' === $input->get( 'firstname' ) ){
+			$this->messenger->noteError( $words->msgNoFirstname );
+			return FALSE;
+		}
+		if( $needsSurname && '' === $input->get( 'surname' ) ){
+			$this->messenger->noteError( $words->msgNoSurname );
+			return FALSE;
+		}
+		if( $needsTac && empty( $input['accept_tac'] ) ){
+			$this->messenger->noteError( $words->msgTermsNotAccepted );
+			return FALSE;
+		}
+		return $input;
+	}
+
+	protected function sendRegisterMail( Dictionary $input, int $userId, int $status, ?string $from ): void
+	{
+		if( Model_User::STATUS_UNCONFIRMED === $status )
+			return;
+		$modelUser	= new Model_User( $this->env );
+		$options	= $this->moduleConfigUsers;
+		$status			= (int) $options->get( 'status.register' );
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
+
+		$data				= $input->getAll();
+		$data['from']		= $from;
+		$data['pak']		= md5( 'pak:'.$userId.'/'.$input->get( 'username' ).'&'.$passwordPepper );
+
+		$language	= $this->env->getLanguage()->getLanguage();
+		$user		= $modelUser->get( $userId );
+		$mail		= new Mail_Auth_Local_Register( $this->env, $data );
+		$logic		= Logic_Mail::getInstance( $this->env );
+		$logic->appendRegisteredAttachments( $mail, $language );
+		$mailId		= $logic->enqueueMail( $mail, $language, $user );
+		$logic->sendQueuedMail( $mailId );
+	}
+
+	protected function linkCreatedAccountToOAuth( $userId ): void
+	{
+		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
+			$modelOauthUser	= new Model_Oauth_User( $this->env );
+			$modelOauthUser->add( [
+				'oauthProviderId'	=> $this->session->get( 'auth_register_oauth_provider_id' ),
+				'oauthId'			=> $this->session->get( 'auth_register_oauth_user_id' ),
+				'localUserId'		=> $userId,
+				'timestamp'			=> time(),
+			] );
+			$this->session->remove( 'auth_register_oauth_provider_id' );
+			$this->session->remove( 'auth_register_oauth_provider' );
+			$this->session->remove( 'auth_register_oauth_user_id' );
+			$this->session->remove( 'auth_register_oauth_data' );
+		}
+	}
+	protected function registerByPostRequest(): void
+	{
+		if( !$this->request->isPost() || !$this->request->has( 'save' ) )
+			return;
+
+		$modelUser	= new Model_User( $this->env );
+		$words		= (object) $this->getWords( 'register' );
+		$options	= $this->moduleConfigUsers;
+
+		$input		= $this->evaluateInputOnRegister();
+		if( FALSE === $input )
+			return;
+
+		$status			= (int) $options->get( 'status.register' );
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
+		$data	= [
+			'roleId'		=> $input->get( 'roleId' ),
+			'status'		=> $status,
+			'email'			=> $input->get( 'email' ),
+			'username'		=> $input->get( 'username' ),
+			'password'		=> '',
+			'gender'		=> $input->get( 'gender' ),
+			'salutation'	=> $input->get( 'salutation' ),
+			'firstname'		=> $input->get( 'firstname' ),
+			'surname'		=> $input->get( 'surname' ),
+			'country'		=> $input->get( 'country' ),
+			'postcode'		=> $input->get( 'postcode' ),
+			'city'			=> $input->get( 'city' ),
+			'street'		=> $input->get( 'street' ),
+			'phone'			=> $input->get( 'phone' ),
+			'fax'			=> $input->get( 'fax' ),
+			'createdAt'		=> time(),
+		];
+
+		$this->env->getDatabase()->beginTransaction();
+		$from		= $this->request->get( 'from' );
+		$forward	= './auth/local/login'.( $from ? '?from='.$from : '' );
+		try{
+			$userId		= $modelUser->add( $data );
+			$logic	= Logic_UserPassword::getInstance( $this->env );
+			$userPasswordId	= $logic->addPassword( $userId, $input->get( 'password' ) );
+			$logic->activatePassword( $userPasswordId );
+
+			$this->sendRegisterMail( $input, $userId, $status, $from );
+			$this->linkCreatedAccountToOAuth( $userId );
+
+			$this->env->getDatabase()->commit();
+			$this->messenger->noteSuccess( $words->msgSuccess );
+			if( !$status )
+				$this->messenger->noteNotice( $words->msgNoticeConfirm );
+			$forward	= './auth/local/confirm'.( $from ? '?from='.$from : '' );
+			$this->restart( $forward );
+		}
+		catch( Exception $e ){
+//			$this->messenger->noteFailure( $words->msgSendingMailFailed );
+			$this->messenger->noteFailure( 'Fehler aufgetreten: '.$e->getMessage() );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
+		}
+		$this->env->getDatabase()->rollBack();
+	}
+
 	protected function rememberUserInCookie( object $user ): void
 	{
 		$expires	= strtotime( "+2 years" ) - time();
@@ -699,10 +725,10 @@ class Controller_Auth_Local extends Controller
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )								//  for PHP 5.5.0+
+					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )				//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, ['loggedAt' => time()] );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );
@@ -712,6 +738,47 @@ class Controller_Auth_Local extends Controller
 					}
 				}
 			}
+		}
+	}
+
+	protected function tryLoginByPostRequest(): void
+	{
+		$words		= (object) $this->getWords( 'login' );
+		$username	= trim( $this->request->get( 'login_username', '' ) );
+		$password	= trim( $this->request->get( 'login_password', '' ) );
+		$from		= trim( $this->request->get( 'from', '' ) );
+
+		if( !$this->request->getMethod()->isPost() || !$this->request->has( 'doLogin' ) )
+			return;
+		if( 0 === strlen( $username ) || 0 === strlen( $password ) )
+			return;
+
+		if( $this->useCsrf ){
+			$controller	= new Controller_Csrf( $this->env );
+			$controller->checkToken();
+		}
+		try{
+			$userId	= $this->authenticateUserByCredentials( $username, $password );
+			if( 0 === $userId ){
+				if( 0 !== strlen( $from ) )
+					$this->restart( $from.'?login='.$username );
+				$this->restart( 'login?username='.$username, TRUE );
+			}
+			$modelUser	= new Model_User( $this->env );
+			$modelUser->edit( $userId, ['loggedAt' => time()] );
+			$this->messenger->noteSuccess( $words->msgSuccess );
+
+			$user	= $modelUser->get( $userId );
+			$this->session->set( 'auth_user_id', $user->userId );
+			$this->session->set( 'auth_role_id', $user->roleId );
+			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
+			$logicAuth->setAuthenticatedUser( $user, $password );
+			if( $this->request->get( 'login_remember' ) )
+				$this->rememberUserInCookie( $user );
+			$this->redirectAfterLogin();
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $e->getMessage() );
 		}
 	}
 }
