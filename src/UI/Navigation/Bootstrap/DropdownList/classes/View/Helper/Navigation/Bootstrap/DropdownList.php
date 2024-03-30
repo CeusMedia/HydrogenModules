@@ -7,7 +7,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 
 	public static function render( $map, $current ): string
 	{
-		$current	= self::calculateMatches( $map, $current ? $current : 'index' );
+		$current	= self::calculateMatches( $map, $current ?: 'index' );
 		$list		= [];
 		foreach( $map as $nr => $entry ){
 			$entry	= (object) $entry;

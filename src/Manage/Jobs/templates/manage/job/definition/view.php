@@ -16,7 +16,7 @@ if( $runs ){
 			$output		= $message->type ?? '<em class="muted">unknonwn</em>';
 		}
 
-		$title	= $item->title ? $item->title : $definition->identifier;
+		$title	= $item->title ?: $definition->identifier;
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 			HtmlTag::create( 'td', '<a href="./manage/job/run/view/'.$item->jobRunId.'">'.$title.'</a>' ),

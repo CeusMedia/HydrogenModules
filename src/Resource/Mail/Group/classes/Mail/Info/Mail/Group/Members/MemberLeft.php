@@ -11,7 +11,7 @@ class Mail_Info_Mail_Group_Members_MemberLeft extends Mail_Abstract
 		$sender->setName( $data['group']->title );
 		$this->setSender( $sender );
 
-		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
+		$member	= $data['member']->title ?: $data['member']->address;
 		$this->setSubject( 'Mitglied '.$member.' hat die Gruppe "'.$data['group']->title.'" verlassen' );
 
 		$data['appTitle']	= $wordsMain['main']['title'];

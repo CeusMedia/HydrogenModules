@@ -174,7 +174,7 @@ class Controller_Catalog extends Controller
 				"description"		=> $article->description,
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"			=> join( ', ', $categories ),
-				"pubDate"			=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"			=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"				=> $this->env->url.'catalog/article/'.$article->articleId ,
 				"g:id"				=> $article->articleId,
 				"g:price"			=> number_format( $price, 2, '.', '' ).' EUR',
@@ -275,7 +275,7 @@ class Controller_Catalog extends Controller
 				"description"	=> $article->description,
 				"link"			=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"		=> join( ', ', $categories ),
-				"pubDate"		=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"		=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"			=> $this->env->url.'catalog/article/'.$article->articleId ,
 				"source"		=> $this->env->url.'catalog/rss',
 			];

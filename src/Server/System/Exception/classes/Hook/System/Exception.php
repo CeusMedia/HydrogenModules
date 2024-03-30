@@ -45,7 +45,7 @@ class Hook_System_Exception extends Hook
 		}
 
 		$options	= $env->getConfig()->getAll( 'module.server_system_exception.', TRUE );
-		$mode		= $options->get( 'mode' ) ? $options->get( 'mode' ) : 'info';
+		$mode		= $options->get( 'mode' ) ?: 'info';
 		switch( $mode ){
 			case 'info':
 				$env->getSession()->set( 'exception', serialize( (object) array(

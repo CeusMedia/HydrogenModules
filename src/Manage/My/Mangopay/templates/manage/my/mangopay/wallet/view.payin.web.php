@@ -6,7 +6,7 @@ $optCardType	= HtmlElements::Options( $wordsCards );
 $iconBack		= HtmlTag::create( 'i', '', ['class' => "fa fa-arrow-left"] );
 $iconNext		= HtmlTag::create( 'i', '', ['class' => "fa fa-arrow-right"] );
 
-$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/wallet' );
+$linkBack	= './'.( $backwardTo ?: 'manage/my/mangopay/wallet' );
 $buttonCancel	= '<a href="'.$linkBack.'" class="btn">'.$iconBack.' zurück</a>';
 
 return '

@@ -59,7 +59,7 @@ class View_Helper_Info_Gallery extends Abstraction
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$config			= $this->env->getConfig();
-		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathImages		= $config->get( 'path.images' ) ?: 'images/';
 		$pathGalleries	= $this->moduleConfig->get( 'folder' );
 		return $pathImages.$pathGalleries;
 	}

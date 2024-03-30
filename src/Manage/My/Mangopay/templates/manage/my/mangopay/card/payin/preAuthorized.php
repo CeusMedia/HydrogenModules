@@ -28,7 +28,7 @@ else if( count( $wallets ) > 1 ){
 			<select id="input_walletId" name="walletId" class="span12">'.$optWallet.'</select>';
 }
 
-$linkBack	= $from ? $from : './manage/my/mangopay/card/'.$cardId;
+$linkBack	= $from ?: './manage/my/mangopay/card/'.$cardId;
 
 $panelPayIn	= '<div class="content-panel">
 	<h3>'.$iconCard.' Von Kreditkarte einzahlen <small class="muted">(mit vorheriger Reservierung)</small></h3>

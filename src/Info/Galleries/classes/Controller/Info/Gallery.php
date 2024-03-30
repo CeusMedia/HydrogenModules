@@ -54,7 +54,7 @@ class Controller_Info_Gallery extends Controller
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$config			= $this->env->getConfig();
-		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathImages		= $config->get( 'path.images' ) ?: 'images/';
 		$pathGalleries	= $this->moduleConfig->get( 'folder' );
 		$this->addData( 'baseUriPath', $this->path );
 		$this->addData( 'baseFilePath', $this->baseFilePath = $pathImages.$pathGalleries );

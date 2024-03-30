@@ -281,7 +281,7 @@ class Logic_Form_Fill extends Logic
 			$sender->setName( $configResource->get( 'sender.name' ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
-		$subject	= $formMail->subject ? $formMail->subject : 'Anfrage erhalten';
+		$subject	= $formMail->subject ?: 'Anfrage erhalten';
 		$mail		= new Mail_Form_Customer_Result( $this->env, [
 			'fill'				=> $fill,
 			'form'				=> $form,

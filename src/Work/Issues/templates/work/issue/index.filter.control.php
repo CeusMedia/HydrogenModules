@@ -23,7 +23,7 @@ function numerizeWords( $words, $numbers = [] ){
 $session	= $env->getSession();
 
 $title		= $session->get( 'filter-issue-title' );
-$limit		= $session->get( 'filter-issue-limit' ) ? $session->get( 'filter-issue-limit' ) : 10;
+$limit		= $session->get( 'filter-issue-limit' ) ?: 10;
 $issueId	= $session->get( 'filter-issue-issueId' );
 $order		= $session->get( 'filter-issue-order' );
 $direction	= 'DESC';#$session->get( 'filter-issue-direction' );

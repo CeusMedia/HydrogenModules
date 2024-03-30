@@ -47,7 +47,7 @@ class Controller_Manage_My_Mangopay_Wallet_Payin extends Controller_Manage_My_Ma
 
 	public function card( $walletId, $amount = NULL ): void
 	{
-		$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
+		$walletId	= $walletId ?: $this->request->get( 'walletId' );
 		$wallet		= $this->checkWalletIsOwn( $walletId );
 		if( $this->request->has( 'transactionId' ) ){
 			$result = $this->mangopay->PayIns->Get( $this->request->get( 'transactionId' ) );

@@ -9,8 +9,8 @@ class View_Helper_HTML
 
 class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 {
-	const BR = '<br/>';
-	const HR = '<hr/>';
+	public const BR = '<br/>';
+	public const HR = '<hr/>';
 
 	public static string $prefixIdInput	= 'input_';
 	public static string $prefixIdForm	= 'form_';

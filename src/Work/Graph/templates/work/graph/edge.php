@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $nodeIndex	= [];
 foreach( $nodes as $node )
-	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : '<tt><em>'.$node->ID.'</em></tt>';
+	$nodeIndex[$node->nodeId]	= $node->label ?: '<tt><em>'.$node->ID.'</em></tt>';
 
 $label	= $nodeIndex[$edge->fromNodeId].'&nbsp;&rarr;&nbsp;'.$nodeIndex[$edge->toNodeId];
 if( $edge->label )

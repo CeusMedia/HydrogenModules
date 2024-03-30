@@ -107,7 +107,7 @@ class Controller_Manage_Job_Definition extends Controller
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		) );
-		$this->restart( $from ? $from : NULL, !$from );
+		$this->restart( $from ?: NULL, !$from );
 	}
 
 	//  --  PROTECTED  --  //

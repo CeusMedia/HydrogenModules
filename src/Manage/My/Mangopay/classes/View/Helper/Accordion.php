@@ -28,7 +28,7 @@ class View_Helper_Accordion
 	{
 		$groups		= [];
 		foreach( $this->parts as $part ){
-			$class		= 'accordion-toggle '.( $part->class ? $part->class : '' );
+			$class		= 'accordion-toggle '.( $part->class ?: '' );
 			$link		= HtmlTag::create( 'a', $part->title, [
 				'href'			=> $_SERVER['REQUEST_URI'].'#'.$part->id,
 				'class'			=> $class,

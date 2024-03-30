@@ -125,7 +125,7 @@ class View_Work_Billing_Helper_Transactions
 				}
 
 				$title	= $this->transformRelationToTitle( $transaction );
-				$title	= $title ? $title : $transaction->title;
+				$title	= $title ?: $transaction->title;
 
 				$year	= HtmlTag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), ['class' => 'muted'] );
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;

@@ -8,22 +8,22 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_CartPositions
 {
-	const DISPLAY_UNKNOWN			= 0;
-	const DISPLAY_BROWSER			= 1;
-	const DISPLAY_MAIL				= 2;
+	public const DISPLAY_UNKNOWN		= 0;
+	public const DISPLAY_BROWSER		= 1;
+	public const DISPLAY_MAIL			= 2;
 
-	const DISPLAYS					= [
+	public const DISPLAYS				= [
 		self::DISPLAY_UNKNOWN,
 		self::DISPLAY_BROWSER,
 		self::DISPLAY_MAIL,
 	];
 
-	const OUTPUT_UNKNOWN			= 0;
-	const OUTPUT_TEXT				= 1;
-	const OUTPUT_HTML				= 2;
-	const OUTPUT_HTML_LIST			= 3;
+	public const OUTPUT_UNKNOWN			= 0;
+	public const OUTPUT_TEXT			= 1;
+	public const OUTPUT_HTML			= 2;
+	public const OUTPUT_HTML_LIST		= 3;
 
-	const OUTPUTS					= [
+	public const OUTPUTS				= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,
@@ -34,8 +34,8 @@ class View_Helper_Shop_CartPositions
 	protected Logic_ShopBridge $bridge;
 	protected Dictionary $config;
 	protected array $words;
-	protected bool $changeable		= TRUE;
-	protected ?string $forwardPath	= NULL;
+	protected bool $changeable			= TRUE;
+	protected ?string $forwardPath		= NULL;
 	protected ?object $deliveryAddress	= NULL;
 	protected array $positions;
 	protected ?Model_Shop_Payment_BackendRegister $paymentsBackends	= NULL;

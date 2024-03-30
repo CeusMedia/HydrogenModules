@@ -64,7 +64,7 @@ if( count( $transferTargets ) ){
 	$tabs->add( 'formTransfer', '#', 'Datenweitergabe', $panelFormTransfer );
 }
 
-$tabs->setActive( $activeTab ? $activeTab : 'facts' );
+$tabs->setActive( $activeTab ?: 'facts' );
 
 return '
 <h2><a href="./manage/form" class="muted">Formular:</a> '.$form->title.'</h2>'.$tabs->render().'

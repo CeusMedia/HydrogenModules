@@ -57,7 +57,7 @@ $from		= isset( $from ) ? $from : '';
 
 $linkBack	= '';
 if( $backwardTo/* || count( $cards ) > 1*/ ){
-	$linkBack	= $backwardTo ? $backwardTo : './manage/my/mangopay/card';
+	$linkBack	= $backwardTo ?: './manage/my/mangopay/card';
 	$linkBack	= HtmlTag::create( 'a', $iconCancel.' abbrechen', ['href' => $linkBack, 'class' => "btn"] );
 }
 

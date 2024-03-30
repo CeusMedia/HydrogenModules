@@ -9,8 +9,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'thread.top', 'thread.bottom'], 'html/info/forum/' ) );
-$textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
-$textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
+$textTop	= $textThreadTop ?: $textIndexTop;
+$textBottom	= $textThreadBottom ?: $textIndexBottom;
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconApprove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );

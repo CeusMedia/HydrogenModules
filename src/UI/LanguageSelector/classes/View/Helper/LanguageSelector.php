@@ -31,7 +31,7 @@ class View_Helper_LanguageSelector extends Abstraction
 		$this->mode				= (int) ( $this->env->getConfig()->get( 'module.ui_languageselector.mode' ) !== "select" );
 //		$this->dropdownAlign	= $this->env->getConfig()->get( 'module.ui_languageselector.mode.dropdown.align' );
 		$path					= $this->env->getRequest()->get( '__path' );			//  @todo use path key from App or Env
-		$this->path				= rtrim( $path ? $path : "./", "/" )."/";
+		$this->path				= rtrim( $path ?: "./", "/" )."/";
 	}
 
 	public function getMode(): int

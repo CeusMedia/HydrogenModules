@@ -69,7 +69,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$fees		= $this->moduleConfig->getAll( 'fees.payin.' );
 		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
-			$walletId		= $walletId ? $walletId : $this->request->get( 'walletId' );
+			$walletId		= $walletId ?: $this->request->get( 'walletId' );
 			$wallet			= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
 			$createdPayIn	= $this->logic->createPayInFromCard(
 				$this->userId,
@@ -99,7 +99,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$card	= $this->checkIsOwnCard( $cardId, FALSE, array( '') );
 		$this->saveBackLink( 'from', 'from', TRUE );
 		if( $this->request->has( 'save' ) ){
-			$walletId	= $walletId ? $walletId : $this->request->get( 'walletId' );
+			$walletId	= $walletId ?: $this->request->get( 'walletId' );
 			$wallet		= $this->checkWalletIsOwn( $walletId );
 			$amount		= round ( $this->request->get( 'amount' ) * 100 );
 

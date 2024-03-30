@@ -1,6 +1,6 @@
 <?php
 
-$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
+$linkBack	= './'.( $backwardTo ?: 'manage/my/mangopay/card' );
 
 $buttonDeactivate	= '<a href="./manage/my/mangopay/card/deactivate/'.$cardId.'" class="btn btn-small btn-danger"><b class="fa fa-remove"></b> entfernen</a>';
 

@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $nodeIndex	= [];
 foreach( $nodes as $node )
-	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : $node->ID;
+	$nodeIndex[$node->nodeId]	= $node->label ?: $node->ID;
 
 $linkSource	= HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], [
 	'href'	=> './work/graph/node/'.$edge->fromNodeId

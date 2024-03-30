@@ -38,8 +38,8 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				$project			= $this->projects[$task->projectId];
 				$daysLeft			= ( strtotime( $task->dayEnd ) - strtotime( date( 'Y-m-d' ) ) ) / ( 24 * 3600 );
 				$daysLeft			= max( 1, min( 6, $daysLeft ) );
-				$priorityTask		= $task->priority ? $task->priority : 6;
-				$priorityProject	= $project->priority ? $project->priority : 6;
+				$priorityTask		= $task->priority ?: 6;
+				$priorityProject	= $project->priority ?: 6;
 				$priority			= 3 / ( $priorityTask + $priorityProject + $daysLeft );
 				$rowStyle	= '';
 				$helperDaysBadge->setMission( $task );

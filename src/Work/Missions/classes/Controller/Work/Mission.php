@@ -162,7 +162,7 @@ class Controller_Work_Mission extends Controller
 		$status		= $this->request->get( 'status' );
 		$dayStart	= !$this->request->get( 'type' ) ? $this->request->get( 'dayWork' ) : $this->request->get( 'dayStart' );
 		$dayEnd		= !$this->request->get( 'type' ) ? $this->request->get( 'dayDue' ) : $this->request->get( 'dayEnd' );
-		$format		= $this->request->get( 'format' ) ? $this->request->get( 'format' ) : $this->contentFormat;
+		$format		= $this->request->get( 'format' ) ?: $this->contentFormat;
 
 		if( $this->request->has( 'add' ) ){
 			if( !$title )
@@ -735,7 +735,7 @@ class Controller_Work_Mission extends Controller
 			$dayStart	= $this->logic->getDate( $this->request->get( 'dayWork', '' ) );
 			$dayEnd		= $this->request->get( 'dayDue' ) ? $this->logic->getDate( $this->request->get( 'dayDue' ) ) : NULL;
 		}
-		$format		= $this->request->get( 'format' ) ? $this->request->get( 'format' ) : $this->contentFormat;
+		$format		= $this->request->get( 'format' ) ?: $this->contentFormat;
 
 		if( $this->request->get( 'edit' ) ){
 			if( !$title )

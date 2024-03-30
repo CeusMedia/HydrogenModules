@@ -49,7 +49,7 @@ class View_Helper_JsonServerResponseCodeHandler extends Abstraction
 		catch( Exception $e ){}
 		try{
 			$words		= $this->env->getLanguage()->getWords( 'main' );
-			$identifier	= $identifier ? $identifier : self::$labelUnknownIdentifier;
+			$identifier	= $identifier ?: self::$labelUnknownIdentifier;
 			if( !empty( $words['messages'] ) ){
 				$messages	= $words['messages'];
 				if( isset( $messages['notice'.$code] ) )

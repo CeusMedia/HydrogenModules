@@ -221,7 +221,7 @@ class Resource_REST_Client
 			return;
 		if( !class_exists( '\CeusMedia\Cache\Factory' ) )
 			throw new RuntimeException( 'Cache library "CeusMedia/Cache" is not installed' );
-		$type		= $config->get( 'type' ) ? $config->get( 'type' ) : 'NOOP';
+		$type		= $config->get( 'type' ) ?: 'NOOP';
 		$resource	= $config->get( 'resource' );
 		$context	= $config->get( 'context' );
 		$expiration	= $config->get( 'expiration' );

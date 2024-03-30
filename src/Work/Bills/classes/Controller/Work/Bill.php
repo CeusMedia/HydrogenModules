@@ -156,7 +156,7 @@ class Controller_Work_Bill extends Controller
 	{
 		$from	= $this->env->getRequest()->get( 'from' );
 		$this->model->edit( $billId, ['status' => $status] );
-		$this->restart( $from ? $from : './work/bill' );
+		$this->restart( $from ?: './work/bill' );
 	}
 
 	public function remove()

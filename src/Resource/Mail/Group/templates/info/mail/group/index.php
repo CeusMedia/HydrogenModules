@@ -12,7 +12,7 @@ if( $groups ){
 	foreach( $groups as $group ){
 		$labelMessages	= $group->messages == 1 ? $group->messages.' Nachricht' : $group->messages.' Nachrichten';
 		$labelMembers	= $group->members == 1 ? $group->members.' Mitglied' : $group->members.' Mitglieder';
-		$description	= $group->description ? $group->description : '<em class="muted">Keine Beschreibung derzeit.</em>';
+		$description	= $group->description ?: '<em class="muted">Keine Beschreibung derzeit.</em>';
 		$participation	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
 		$address		= HtmlTag::create( 'kbd', $group->address );
 		$facts			= HtmlTag::create( 'small', join( '&nbsp;&nbsp;|&nbsp;&nbsp;', [

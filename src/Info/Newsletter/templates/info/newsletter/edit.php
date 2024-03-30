@@ -11,7 +11,7 @@ $panelReader	= '
 	<dt>Vor- und Nachname</dt>
 	<dd>'.$reader->firstname.' '.$reader->surname.'</dd>
 	<dt>Institution</dt>
-	<dd>'.( $reader->institution ? $reader->institution : '-' ).'</dd>
+	<dd>'.( $reader->institution ?: '-' ).'</dd>
 	<dt>Registriert am/um</dt>
 	<dd>'.date( 'd.m.Y H:i', $reader->registeredAt ).'</dd>
 	<dt>active</dt>

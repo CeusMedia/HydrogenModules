@@ -67,7 +67,7 @@ $optStatus  = join( $optStatus );
 
 $optGender	= HtmlElements::Options( $words['gender'], $user->gender );
 
-$buttonList			= HtmlElements::LinkButton( $from ? $from : './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
+$buttonList			= HtmlElements::LinkButton( $from ?: './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
 $buttonSave			= HtmlElements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
 $buttonRemove		= '';

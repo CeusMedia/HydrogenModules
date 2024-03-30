@@ -196,14 +196,14 @@ class Controller_Work_Graph extends Controller
 		$lines[]	= $indent.'rankdir="'.$graph->rankdir.'"';
 		foreach( $nodes as $node ){
 			$attr	= [];
-			$attr['shape']		= $node->shape ? $node->shape : $graph->nodeShape;
-			$attr['style']		= $node->style ? $node->style : $graph->nodeStyle;
-			$attr['color']		= $node->color ? $node->color : $graph->nodeColor;
-			$attr['fillcolor']	= $node->fillcolor ? $node->fillcolor : $graph->nodeFillcolor;
-			$attr['fontsize']	= $node->fontsize ? $node->fontsize : $graph->nodeFontsize;
-			$attr['width']		= $node->width ? $node->width : $graph->nodeWidth;
-			$attr['height']		= $node->height ? $node->height : $graph->nodeHeight;
-			$attr['label']		= $node->label ? $node->label : $node->ID;
+			$attr['shape']		= $node->shape ?: $graph->nodeShape;
+			$attr['style']		= $node->style ?: $graph->nodeStyle;
+			$attr['color']		= $node->color ?: $graph->nodeColor;
+			$attr['fillcolor']	= $node->fillcolor ?: $graph->nodeFillcolor;
+			$attr['fontsize']	= $node->fontsize ?: $graph->nodeFontsize;
+			$attr['width']		= $node->width ?: $graph->nodeWidth;
+			$attr['height']		= $node->height ?: $graph->nodeHeight;
+			$attr['label']		= $node->label ?: $node->ID;
 			foreach( $attr as $key => $value )
 				$attr[$key]	= $key.'="'.$value.'"';
 			$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
@@ -212,11 +212,11 @@ class Controller_Work_Graph extends Controller
 		$lines[]	= '';
 		foreach( $edges as $edge ){
 			$attr		= [];
-			$attr['arrowhead']	= $edge->arrowhead ? $edge->arrowhead : $graph->edgeArrowhead;
-			$attr['arrowsize']	= $edge->arrowsize ? $edge->arrowsize : $graph->edgeArrowsize;
-			$attr['color']		= $edge->color ? $edge->color : $graph->edgeColor;
-			$attr['fontcolor']	= $edge->fontcolor ? $edge->fontcolor : $graph->edgeFontcolor;
-			$attr['fontsize']	= $edge->fontsize ? $edge->fontsize : $graph->edgeFontsize;
+			$attr['arrowhead']	= $edge->arrowhead ?: $graph->edgeArrowhead;
+			$attr['arrowsize']	= $edge->arrowsize ?: $graph->edgeArrowsize;
+			$attr['color']		= $edge->color ?: $graph->edgeColor;
+			$attr['fontcolor']	= $edge->fontcolor ?: $graph->edgeFontcolor;
+			$attr['fontsize']	= $edge->fontsize ?: $graph->edgeFontsize;
 			$attr['label']		= $edge->label;
 			foreach( $attr as $key => $value )
 				$attr[$key]	= $key.'="'.$value.'"';

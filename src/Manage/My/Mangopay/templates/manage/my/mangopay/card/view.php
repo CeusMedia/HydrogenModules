@@ -8,7 +8,7 @@ if( 0 && !$card->Active ){
 	$buttonPayOut	= '<button type="button" class="btn btn-small" disabled="disabled"><b class="fa fa-sign-out"></b> Auszahlung</button>';
 }
 
-$linkBack	= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
+$linkBack	= './'.( $backwardTo ?: 'manage/my/mangopay/card' );
 
 $helperCardNumber	= new View_Helper_Mangopay_Entity_CardNumber( $env );
 

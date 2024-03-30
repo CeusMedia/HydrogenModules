@@ -48,7 +48,7 @@ if( $syncs ){
 	foreach( $syncs as $sync ){
 		foreach( $hosts as $host )
 			if( $host->mailSyncHostId == $sync->sourceMailHostId ){
-				$sourceHost	= $host->host ? $host->host : $host->ip;
+				$sourceHost	= $host->host ?: $host->ip;
 				break;
 			}
 		foreach( $hosts as $host )

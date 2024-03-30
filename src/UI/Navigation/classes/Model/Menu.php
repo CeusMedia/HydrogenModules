@@ -97,7 +97,7 @@ class Model_Menu
 	{
 		if( isset( $_REQUEST[self::$pathRequestKey] ) && $path === NULL )
 			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
-		$path		= $path ? $path : 'index';
+		$path		= $path ?: 'index';
 		$matches	= [];																		//  empty array to regular matching
 		$selected	= [];																		//  list of possibly selected links
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map

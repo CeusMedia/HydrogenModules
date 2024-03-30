@@ -12,7 +12,7 @@ $optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 
 $optStatus		= HtmlElements::Options( $words['states'], 0 );
 
-$image->price	= $image->price ? $image->price : $category->price;
+$image->price	= $image->price ?: $category->price;
 
 $iconFolder		= '<i class="icon-folder-open icon-white"></i>';
 

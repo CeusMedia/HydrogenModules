@@ -104,10 +104,10 @@ $part2	= '
 
 if( $cardType ){
 	$helperUrl	= new \View_Helper_Mangopay_URL( $env );
-	$helperUrl->set( $backwardTo ? $backwardTo : 'manage/my/mangopay/card/registration' );
-	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
-	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
-	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
+	$helperUrl->set( $backwardTo ?: 'manage/my/mangopay/card/registration' );
+	$helperUrl->setBackwardTo( $backwardTo ?: NULL );
+	$helperUrl->setForwardTo( $forwardTo ?: NULL );
+	$helperUrl->setFrom( $from ?? NULL );
 	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
 	$buttonSave		= HtmlTag::create( 'button', '<b class="fa fa-check"></b> registrieren', [
 		'type'		=> "submit",
@@ -137,10 +137,10 @@ if( $cardType ){
 }
 else{
 	$helperUrl	= new \View_Helper_Mangopay_URL( $env );
-	$helperUrl->set( $backwardTo ? $backwardTo : 'manage/my/mangopay/card' );
-	$helperUrl->setBackwardTo( $backwardTo ? $backwardTo : NULL );
-	$helperUrl->setForwardTo( $forwardTo ? $forwardTo : NULL );
-	$helperUrl->setFrom( isset( $from ) ? $from : NULL );
+	$helperUrl->set( $backwardTo ?: 'manage/my/mangopay/card' );
+	$helperUrl->setBackwardTo( $backwardTo ?: NULL );
+	$helperUrl->setForwardTo( $forwardTo ?: NULL );
+	$helperUrl->setFrom( $from ?? NULL );
 	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', array( 'href' => $helperUrl->render(), 'class' => 'btn' ) );
 	$form	= '
 		<form action="./manage/my/mangopay/card/registration" method="post">

@@ -13,7 +13,7 @@ class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mang
 	public function index( $bankAccountId, $walletId = NULL, $amount = NULL )
 	{
 		$bankAccount	= $this->checkIsOwnBankAccount( $bankAccountId );
-		$walletId = $walletId ? $walletId : $this->request->get( 'walletId' );
+		$walletId = $walletId ?: $this->request->get( 'walletId' );
 		if( $walletId ){
 			$wallet	= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );
 			$this->addData( 'currency', $wallet->Currency );

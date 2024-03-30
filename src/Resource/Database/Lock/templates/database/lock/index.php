@@ -15,7 +15,7 @@ if( count( $locks ) > 0 ){
 			'href'		=> './database/lock/unlock/'.$lock->lockId,
 			'class'		=> 'btn btn-mini btn-danger'
 		] );
-		$moduleTitle	= $lock->module ? $lock->module : '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
+		$moduleTitle	= $lock->module ?: '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
 		$list[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $lock->user->username, ['class' => 'lock-user'] ),
 			HtmlTag::create( 'td', $moduleTitle, ['class' => 'lock-module'] ),

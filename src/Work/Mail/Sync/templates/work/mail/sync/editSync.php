@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $hostMap	= [];
 foreach( $hosts as $host )
-	$hostMap[$host->mailSyncHostId]	= $host->host ? $host->host : $host->ip;
+	$hostMap[$host->mailSyncHostId]	= $host->host ?: $host->ip;
 
 $optHost1	= HtmlElements::Options( $hostMap, $sync->sourceMailHostId );
 $optHost2	= HtmlElements::Options( $hostMap, $sync->targetMailHostId );

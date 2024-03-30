@@ -7,8 +7,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/forum/' ) );
-$textTop	= $textIndexTop	? $textIndexTop : '';
-$textBottom	= $textIndexBottom	? $textIndexBottom : '';
+$textTop	= $textIndexTop ?: '';
+$textBottom	= $textIndexBottom ?: '';
 
 $helper		= new View_Helper_TimePhraser( $env );
 $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-up'] );

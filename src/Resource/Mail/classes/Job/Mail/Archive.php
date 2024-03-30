@@ -131,7 +131,7 @@ class Job_Mail_Archive extends Job_Abstract
 		$command	= call_user_func_array( "sprintf", [											//  call sprintf with arguments list
 			"mysqldump -h%s -P%s -u%s -p%s %s %s %s > %s",											//  command to replace within
 			escapeshellarg( $dba->get( 'host' ) ),													//  configured host name as escaped shell arg
-			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),					//  configured port as escaped shell arg
+			escapeshellarg( $dba->get( 'port' ) ?: 3306  ),					//  configured port as escaped shell arg
 			escapeshellarg( $dba->get( 'username' ) ),												//  configured username as escaped shell arg
 			escapeshellarg( $dba->get( 'password' ) ),												//  configured password as escaped shell arg
 			escapeshellarg( $dba->get( 'name' ) ),													//  configured database name as escaped shell arg

@@ -42,7 +42,7 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 				$sum		+= $position->quantity * (float) $article->price;
 				$tax		+= round( $position->quantity * (float) $article->price * 1.07, 2 );
 				$data		= array(
-					'bridgeId'		=> $position->bridgeId ? $position->bridgeId : 1,
+					'bridgeId'		=> $position->bridgeId ?: 1,
 					'price'			=> $position->quantity * (float) $article->price,
 					'priceTaxed'	=> round( $position->quantity * (float) $article->price * 1.07, 2 )
 				);

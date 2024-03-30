@@ -29,8 +29,8 @@ class View_Helper_Navigation
 
 	public function render( string $scope = 'main', string $class = NULL, string $style = NULL ): string
 	{
-		$class		= $class ? $class : $this->moduleConfig->get( 'render.desktop.class' );
-		$style		= $style ? $style : $this->moduleConfig->get( 'render.desktop.style' );
+		$class		= $class ?: $this->moduleConfig->get( 'render.desktop.class' );
+		$style		= $style ?: $this->moduleConfig->get( 'render.desktop.style' );
 		$argments	= [$this->env, $this->menu];
 		if( !class_exists( $class ) )
 			throw new RuntimeException( 'Navigation class "'.$class.'" is not existing' );

@@ -24,7 +24,7 @@ $runReportChannelLabels	= $wordsGeneral['job-run-report-channels'];
 //  --  PANEL FACTS: JOB  -- //
 $helperAttribute->setObject( $run );
 $facts	= [];
-$facts['Title']				= $run->title ? $run->title : $definition->identifier;
+$facts['Title']				= $run->title ?: $definition->identifier;
 $facts['Run ID']			= $run->jobRunId;
 $facts['Process ID']		= $run->processId;
 $facts['Type']				= $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render();

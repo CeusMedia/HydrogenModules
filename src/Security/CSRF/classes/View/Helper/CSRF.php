@@ -18,7 +18,7 @@ class View_Helper_CSRF
 	 */
 	public function render( $formName = NULL )
 	{
-		$formName	= $formName ? $formName : $this->formName;
+		$formName	= $formName ?: $this->formName;
 		if( !$formName )
 			throw new RuntimeException( 'No form name set' );
 //		$token	= $this->env->getLogic()->get( 'CSRF' )->getToken( $formName );

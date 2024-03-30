@@ -10,7 +10,7 @@ $optGraph	= HtmlElements::Options( $optGraph );
 
 $optNode	= [];
 foreach( $nodes as $node )
-	$optNode[$node->nodeId]	= $node->label ? $node->label : $node->ID;
+	$optNode[$node->nodeId]	= $node->label ?: $node->ID;
 $optFromNode	= HtmlElements::Options( $optNode, $nodeId );
 $optToNode		= HtmlElements::Options( $optNode, $nodeId );
 

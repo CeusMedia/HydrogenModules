@@ -47,7 +47,7 @@ $role		= $modelRole->get( $user->roleId );
 $data	= print_m( $user, NULL, NULL, TRUE );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
-	'href'		=> $from ? $from : './member/search',
+	'href'		=> $from ?: './member/search',
 	'class'		=> 'btn btn-small',
 ] );
 

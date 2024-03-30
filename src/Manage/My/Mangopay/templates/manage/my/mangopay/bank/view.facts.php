@@ -8,7 +8,7 @@ $iconPayout		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-out'] );
 
 $buttonPayIn	= '<a href="./manage/my/mangopay/bank/payin/'.$bankAccountId.'" class="btn">'.$iconPayin.' Einzahlung</a>';
 $buttonPayOut	= '<a href="./manage/my/mangopay/bank/payOut/'.$bankAccountId.'" class="btn">'.$iconPayout.' Auszahlung</a>';
-$linkBack		= './'.( $backwardTo ? $backwardTo : 'manage/my/mangopay/bank' );
+$linkBack		= './'.( $backwardTo ?: 'manage/my/mangopay/bank' );
 
 $inputAddressLine2	= '';
 if( strlen( trim( $bankAccount->OwnerAddress->AddressLine2 ) ) ){

@@ -8,7 +8,7 @@ if( $nodes ){
 	$listNodes		= [];
 	foreach( $nodes as $node ){
 		$class		= $nodeId == $node->nodeId ? 'active' : NULL;
-		$label			= $node->label ? $node->label : $node->ID;
+		$label			= $node->label ?: $node->ID;
 		$link			= HtmlTag::create( 'a', $label, [
 			'href'	=> './work/graph/node/'.$node->nodeId
 		] );

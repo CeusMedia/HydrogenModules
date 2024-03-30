@@ -181,7 +181,7 @@ class Controller_Manage_Catalog_Article extends Controller
 
 	public function addTag( $articleId, $tag = NULL )
 	{
-		$tag	= $tag ? $tag : $this->request->get( 'tag' );
+		$tag	= $tag ?: $this->request->get( 'tag' );
 		$this->logic->addArticleTag( $articleId, $tag );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}

@@ -71,7 +71,7 @@ if( $filters ){
 		if( $filter->appliedAt && $helperTime )
 			$appliedAt	= 'vor '.$helperTime->convert( $filter->appliedAt, TRUE );
 
-		$method		= $filter->method ? $filter->method : '<span class="muted">alle</span>';
+		$method		= $filter->method ?: '<span class="muted">alle</span>';
 		$lockStatus	= $lockStates[$filter->lockStatus];
 		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
 		$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );

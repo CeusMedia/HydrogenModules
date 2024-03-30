@@ -26,7 +26,7 @@ class View_Helper_Image_Slider
 		$this->modelSlide	= new Model_Image_Slide( $env );
 
 		$config	= $this->env->getConfig();
-		$path	= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$path	= $config->get( 'path.images' ) ?: 'images/';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend	= Logic_Frontend::getInstance( $this->env );
 			$path		= $frontend->getPath( 'images' );

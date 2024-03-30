@@ -15,7 +15,7 @@ if( $branch->images ){
 		$urlImage		= 'images/branches/'.$image->filename;
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
 		$img			= new Image( $urlImage );
-		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
+		$title			= $image->title ?: '<small class="muted"><em>Kein Titel.</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',
 				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), [

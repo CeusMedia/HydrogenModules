@@ -8,8 +8,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'topic.top', 'topic.bottom'], 'html/info/forum/' ) );
-$textTop	= $textTopicTop	? $textTopicTop: $textIndexTop;
-$textBottom	= $textTopicBottom ? $textTopicBottom : $textIndexBottom;
+$textTop	= $textTopicTop ?: $textIndexTop;
+$textBottom	= $textTopicBottom ?: $textIndexBottom;
 
 $helper		= new View_Helper_TimePhraser( $env );
 $iconSticky	= HtmlTag::create( 'i', '', ['class' => 'icon-exclamation-sign not-icon-white'] );

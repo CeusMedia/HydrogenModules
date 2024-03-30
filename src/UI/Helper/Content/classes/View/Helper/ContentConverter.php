@@ -30,7 +30,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
 			$code		= trim( $matches[3][$i] );
-			$attributes	= ['class' => $type ? $type : 'code'];
+			$attributes	= ['class' => $type ?: 'code'];
 			$new		= HtmlTag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
@@ -213,13 +213,13 @@ class View_Helper_ContentConverter
 		$matches	= [];
 		preg_match_all( $pattern, $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
-			$type		= $matches[2][$i] ? $matches[2][$i] : 'u';
+			$type		= $matches[2][$i] ?: 'u';
 			$class		= $matches[3][$i];
 			$lines		= explode( "\n", trim( $matches[4][$i] ) );
 			foreach( $lines as $nr => $line )
 				$lines[$nr]	= preg_replace( '/^- /', '<li>', trim( $lines[$nr] ) ).'</li>';
 			$lines	= implode( "\n", $lines );
-			$attributes	= array( 'class' => $class ? $class : 'list');
+			$attributes	= array( 'class' => $class ?: 'list');
 			$new		= HtmlTag::create( $type.'l', $lines, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}

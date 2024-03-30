@@ -178,7 +178,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		if( NULL === $this->modelObject )
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
-		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
+		$orderColumn	= $this->orderColumn ?: $primaryKey;
 		$conditions		= [$primaryKey => '> '.$this->currentId];
 		if( $this->orderColumn && $this->orderColumn != $primaryKey ){
 			$current	= $this->modelObject->get( $this->currentId );
@@ -199,7 +199,7 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 		if( NULL === $this->modelObject )
 			$this->modelObject	= new $this->modelClass( $this->env );
 		$primaryKey		= $this->modelObject->getPrimaryKey();
-		$orderColumn	= $this->orderColumn ? $this->orderColumn : $primaryKey;
+		$orderColumn	= $this->orderColumn ?: $primaryKey;
 		$conditions		= [$primaryKey => '< '.$this->currentId];
 		if( $this->orderColumn && $this->orderColumn != $primaryKey ){
 			$current	= $this->modelObject->get( $this->currentId );
