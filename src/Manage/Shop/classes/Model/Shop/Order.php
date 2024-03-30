@@ -16,19 +16,19 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_Order extends Model
 {
-	const STATUS_REFUNDED			= -6;
-	const STATUS_COMPLAINED			= -5;
-	const STATUS_NOT_DELIVERED		= -4;
-	const STATUS_NOT_PAYED			= -3;
-	const STATUS_REVERSED			= -2;
-	const STATUS_CANCELLED			= -1;
-	const STATUS_NEW				= 0;
-	const STATUS_AUTHENTICATED		= 1;
-	const STATUS_ORDERED			= 2;
-	const STATUS_PAYED				= 3;
-	const STATUS_PARTLY_DELIVERED	= 4;
-	const STATUS_DELIVERED			= 5;
-	const STATUS_COMPLETED			= 6;
+	public const STATUS_REFUNDED			= -6;
+	public const STATUS_COMPLAINED			= -5;
+	public const STATUS_NOT_DELIVERED		= -4;
+	public const STATUS_NOT_PAYED			= -3;
+	public const STATUS_REVERSED			= -2;
+	public const STATUS_CANCELLED			= -1;
+	public const STATUS_NEW					= 0;
+	public const STATUS_AUTHENTICATED		= 1;
+	public const STATUS_ORDERED				= 2;
+	public const STATUS_PAYED				= 3;
+	public const STATUS_PARTLY_DELIVERED	= 4;
+	public const STATUS_DELIVERED			= 5;
+	public const STATUS_COMPLETED			= 6;
 
 	protected string $name			= 'shop_orders';
 

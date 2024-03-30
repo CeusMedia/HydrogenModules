@@ -12,11 +12,11 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group_Action extends Model
 {
-	const STATUS_FAILED				= -1;
-	const STATUS_REGISTERED			= 0;
-	const STATUS_HANDLED			= 1;
+	public const STATUS_FAILED		= -1;
+	public const STATUS_REGISTERED	= 0;
+	public const STATUS_HANDLED		= 1;
 
-	const STATUSES					= [
+	public const STATUSES			= [
 		self::STATUS_FAILED,
 		self::STATUS_REGISTERED,
 		self::STATUS_HANDLED,

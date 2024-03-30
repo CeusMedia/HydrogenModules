@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_FinishPanel_Mangopay
 {
-	const OUTPUT_FORMAT_HTML		= 1;
-	const OUTPUT_FORMAT_TEXT		= 2;
+	public const OUTPUT_FORMAT_HTML		= 1;
+	public const OUTPUT_FORMAT_TEXT		= 2;
 
-	const OUTPUT_FORMATS			= [
+	public const OUTPUT_FORMATS			= [
 		self::OUTPUT_FORMAT_HTML,
 		self::OUTPUT_FORMAT_TEXT,
 	];

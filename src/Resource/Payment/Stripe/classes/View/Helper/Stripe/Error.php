@@ -9,8 +9,8 @@ class View_Helper_Stripe_Error extends View_Helper_Stripe_Abstract
 	protected int $mode			= 1;
 	protected array $words;
 
-	const MODE_PLAIN		= 0;
-	const MODE_HTML			= 1;
+	public const MODE_PLAIN		= 0;
+	public const MODE_HTML		= 1;
 
 	public function render(): string
 	{

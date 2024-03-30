@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_Url
 {
-	const MODE_UNKNOWN		= 0;
-	const MODE_CATEGORY		= 1;
-	const MODE_PAGE			= 2;
+	public const MODE_UNKNOWN		= 0;
+	public const MODE_CATEGORY		= 1;
+	public const MODE_PAGE			= 2;
 
 	protected Environment $env;
 	protected Model_Manual_Page $modelPage;

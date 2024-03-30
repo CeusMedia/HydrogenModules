@@ -14,13 +14,13 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Newsletter_Template extends Model
 {
-	const STATUS_DELETED 	= -2;
-	const STATUS_REJECTED	= -1;
-	const STATUS_WORK		= 0;
-	const STATUS_READY		= 1;
-	const STATUS_USED		= 2;
+	public const STATUS_DELETED 	= -2;
+	public const STATUS_REJECTED	= -1;
+	public const STATUS_WORK		= 0;
+	public const STATUS_READY		= 1;
+	public const STATUS_USED		= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_DELETED,
 		self::STATUS_REJECTED,
 		self::STATUS_WORK,

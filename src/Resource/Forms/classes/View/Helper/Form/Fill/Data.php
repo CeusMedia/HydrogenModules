@@ -8,8 +8,8 @@ class View_Helper_Form_Fill_Data
 	protected $form;
 	protected $mode;
 
-	const MODE_NORMAL		= 0;
-	const MODE_EXTENDED		= 1;
+	public const MODE_NORMAL		= 0;
+	public const MODE_EXTENDED		= 1;
 
 	public function __construct( $env )
 	{

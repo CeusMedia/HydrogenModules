@@ -9,8 +9,8 @@ use phpseclib\Net\SSH2 as Ssh2Connection;
  */
 class Resource_SSH
 {
-	const MODE_LAZY				= 0;
-	const MODE_STRAIGHT 		= 1;
+	public const MODE_LAZY			= 0;
+	public const MODE_STRAIGHT 		= 1;
 
 	protected ?Ssh2Connection $connection	= NULL;
 	protected Environment $env;

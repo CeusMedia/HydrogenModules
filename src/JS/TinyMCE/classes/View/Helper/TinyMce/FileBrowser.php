@@ -13,17 +13,17 @@ class View_Helper_TinyMce_FileBrowser
 	protected View_Helper_TimePhraser $timePhraser;
 	protected int $displayMode			= 0;
 	protected int $sourceMode			= 0;
-	protected string $cssClassPrefix		= 'list';
+	protected string $cssClassPrefix	= 'list';
 	protected string $baseUrl;
 	protected int|string|NULL $topicId	= NULL;
 	protected array $topics;
 	protected string $path;
 
-	const DISPLAY_MODE_LIST			= 0;
-	const DISPLAY_MODE_GRID			= 1;
+	public const DISPLAY_MODE_LIST		= 0;
+	public const DISPLAY_MODE_GRID		= 1;
 
-	const SOURCE_MODE_IMAGE			= 0;
-	const SOURCE_MODE_LINK			= 1;
+	public const SOURCE_MODE_IMAGE		= 0;
+	public const SOURCE_MODE_LINK		= 1;
 
 	public function __construct( WebEnvironment $env )
 	{

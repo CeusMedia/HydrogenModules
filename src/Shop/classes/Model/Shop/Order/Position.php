@@ -16,11 +16,11 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_Order_Position extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_ORDERED	= 1;
-	const STATUS_DELIVERED	= 2;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ORDERED		= 1;
+	public const STATUS_DELIVERED	= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_ORDERED,
 		self::STATUS_DELIVERED,

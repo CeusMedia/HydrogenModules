@@ -24,10 +24,10 @@ use CeusMedia\TemplateEngine\Template;
  */
 abstract class Mail_Abstract
 {
-	const CONTENT_TYPE_HTML_GENERATED		= 'htmlGenerated';
-	const CONTENT_TYPE_HTML_RENDERED		= 'htmlRendered';
-	const CONTENT_TYPE_TEXT_GENERATED		= 'textGenerated';
-	const CONTENT_TYPE_TEXT_RENDERED		= 'textRendered';
+	public const CONTENT_TYPE_HTML_GENERATED	= 'htmlGenerated';
+	public const CONTENT_TYPE_HTML_RENDERED		= 'htmlRendered';
+	public const CONTENT_TYPE_TEXT_GENERATED	= 'textGenerated';
+	public const CONTENT_TYPE_TEXT_RENDERED		= 'textRendered';
 
 	/**	@var		MailMessage				$mail			Mail object, build on construction */
 	public MailMessage $mail;

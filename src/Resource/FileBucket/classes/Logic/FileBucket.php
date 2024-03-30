@@ -9,8 +9,8 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_FileBucket extends Logic
 {
-	const HASH_MD5			= 0;
-	const HASH_UUID			= 1;
+	public const HASH_MD5			= 0;
+	public const HASH_UUID			= 1;
 
 	protected string $filePath;
 	protected int $hashFunction	= 0;

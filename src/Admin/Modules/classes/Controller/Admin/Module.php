@@ -5,11 +5,11 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Admin_Module extends Controller
 {
-	const INSTALL_TYPE_UNKNOWN	= 0;
-	const INSTALL_TYPE_LINK		= 1;
-	const INSTALL_TYPE_COPY		= 2;
+	public const INSTALL_TYPE_UNKNOWN	= 0;
+	public const INSTALL_TYPE_LINK		= 1;
+	public const INSTALL_TYPE_COPY		= 2;
 
-	const INSTALL_TYPES			= [
+	public const INSTALL_TYPES			= [
 		self::INSTALL_TYPE_UNKNOWN,
 		self::INSTALL_TYPE_LINK,
 		self::INSTALL_TYPE_COPY,

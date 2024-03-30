@@ -8,10 +8,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Job
 {
-	const FORMAT_AUTO		= 0;
-	const FORMAT_XML		= 1;
-	const FORMAT_JSON		= 2;
-	const FORMAT_MODULE		= 3;
+	public const FORMAT_AUTO		= 0;
+	public const FORMAT_XML			= 1;
+	public const FORMAT_JSON		= 2;
+	public const FORMAT_MODULE		= 3;
 
 	protected Environment $env;
 	protected string $pathJobs		= 'config/jobs/';

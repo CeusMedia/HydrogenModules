@@ -14,13 +14,13 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Newsletter_Queue extends Model
 {
-	const STATUS_REJECTED	= -2;
-	const STATUS_CANCELLED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_RUNNING	= 1;
-	const STATUS_DONE		= 2;
+	public const STATUS_REJECTED	= -2;
+	public const STATUS_CANCELLED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_RUNNING		= 1;
+	public const STATUS_DONE		= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_REJECTED,
 		self::STATUS_CANCELLED,
 		self::STATUS_NEW,

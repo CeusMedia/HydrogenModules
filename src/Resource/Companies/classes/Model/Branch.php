@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Branch extends Model
 {
-	const STATUS_INACTIVE	= -2;
-	const STATUS_REJECTED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_CHANGED	= 1;
-	const STATUS_ACTIVE		= 2;
+	public const STATUS_INACTIVE	= -2;
+	public const STATUS_REJECTED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_CHANGED		= 1;
+	public const STATUS_ACTIVE		= 2;
 
 	protected int $radiusEarth  	= 6371;
 

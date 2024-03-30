@@ -19,8 +19,8 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	protected $moduleConfig;
 	protected $captcha;
 
-	CONST FORMAT_IMAGE		= 0;
-	CONST FORMAT_RAW		= 1;
+	public CONST FORMAT_IMAGE		= 0;
+	public CONST FORMAT_RAW			= 1;
 
 	public function __construct( Environment $env )
 	{

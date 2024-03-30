@@ -16,9 +16,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Shop_Order_Position extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_ORDERED	= 1;
-	const STATUS_DELIVERED	= 2;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ORDERED		= 1;
+	public const STATUS_DELIVERED	= 2;
 
 	protected string $name			= 'shop_order_positions';
 

@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Provision_User_License extends Model
 {
-	const STATUS_DEACTIVATED	= -2;
-	const STATUS_REVOKED		= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_ACTIVE			= 1;
-	const STATUS_EXPIRED		= 2;
+	public const STATUS_DEACTIVATED	= -2;
+	public const STATUS_REVOKED		= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
+	public const STATUS_EXPIRED		= 2;
 
 	protected string $name			= 'user_provision_licenses';
 

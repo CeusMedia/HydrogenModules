@@ -12,10 +12,10 @@ class View_Helper_Mail_Facts
 	protected string $listClass				= 'dl-horizontal';
 	protected int $textLabelLength			= 23;
 
-	const FORMAT_HTML				= 0;
-	const FORMAT_TEXT				= 1;
+	public const FORMAT_HTML				= 0;
+	public const FORMAT_TEXT				= 1;
 
-	const FORMATS					= [
+	public const FORMATS					= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];

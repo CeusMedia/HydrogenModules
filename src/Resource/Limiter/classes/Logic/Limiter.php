@@ -8,8 +8,8 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Logic_Limiter
 {
-	const OPERATION_BOOLEAN				= 0;
-	const OPERATION_COMPARE_NUMBER		= 1;
+	public const OPERATION_BOOLEAN				= 0;
+	public const OPERATION_COMPARE_NUMBER		= 1;
 
 	protected static self $instance;
 

@@ -6,11 +6,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_AddressView
 {
-	const OUTPUT_UNKNOWN		= 0;
-	const OUTPUT_TEXT			= 1;
-	const OUTPUT_HTML			= 2;
+	public const OUTPUT_UNKNOWN		= 0;
+	public const OUTPUT_TEXT		= 1;
+	public const OUTPUT_HTML		= 2;
 
-	const OUTPUTS				= [
+	public const OUTPUTS			= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,

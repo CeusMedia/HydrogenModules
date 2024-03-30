@@ -16,24 +16,24 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Job_Schedule extends Model
 {
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
-	const STATUS_PAUSED		= 2;
+	public const STATUS_DISABLED		= 0;
+	public const STATUS_ENABLED			= 1;
+	public const STATUS_PAUSED			= 2;
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
 		self::STATUS_PAUSED,
 	];
 
-	const REPORT_MODE_NEVER		= 0;
-	const REPORT_MODE_ALWAYS	= 1;
-	const REPORT_MODE_CHANGE	= 2;
-	const REPORT_MODE_FAIL		= 3;
-	const REPORT_MODE_DONE		= 4;
-	const REPORT_MODE_SUCCESS	= 5;
+	public const REPORT_MODE_NEVER		= 0;
+	public const REPORT_MODE_ALWAYS		= 1;
+	public const REPORT_MODE_CHANGE		= 2;
+	public const REPORT_MODE_FAIL		= 3;
+	public const REPORT_MODE_DONE		= 4;
+	public const REPORT_MODE_SUCCESS	= 5;
 
-	const REPORT_MODES			= [
+	public const REPORT_MODES			= [
 		self::REPORT_MODE_NEVER,
 		self::REPORT_MODE_ALWAYS,
 		self::REPORT_MODE_CHANGE,
@@ -42,22 +42,22 @@ class Model_Job_Schedule extends Model
 		self::REPORT_MODE_SUCCESS,
 	];
 
-	const REPORT_CHANNEL_NONE	= 0;
-	const REPORT_CHANNEL_MAIL	= 1;
-	const REPORT_CHANNEL_XMPP	= 2;
+	public const REPORT_CHANNEL_NONE	= 0;
+	public const REPORT_CHANNEL_MAIL	= 1;
+	public const REPORT_CHANNEL_XMPP	= 2;
 
-	const REPORT_CHANNELS		= [
+	public const REPORT_CHANNELS		= [
 		self::REPORT_CHANNEL_NONE,
 		self::REPORT_CHANNEL_MAIL,
 		self::REPORT_CHANNEL_XMPP,
 	];
 
-	const TYPE_UNKNOWN		= 0;
-	const TYPE_CRON			= 1;
-	const TYPE_INTERVAL		= 2;
-	const TYPE_DATETIME		= 3;
+	public const TYPE_UNKNOWN			= 0;
+	public const TYPE_CRON				= 1;
+	public const TYPE_INTERVAL			= 2;
+	public const TYPE_DATETIME			= 3;
 
-	const TYPES				= [
+	public const TYPES					= [
 		self::TYPE_CRON,
 		self::TYPE_INTERVAL,
 		self::TYPE_DATETIME,

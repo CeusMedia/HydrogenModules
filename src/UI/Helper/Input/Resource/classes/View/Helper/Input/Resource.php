@@ -45,9 +45,9 @@ class View_Helper_Input_Resource
 
 class View_Helper_Input_ResourceTrigger
 {
-	const MODE_IMAGE			= 'image';
-	const MODE_STYLE			= 'style';
-	const MODE_DOCUMENT			= 'document';
+	public const MODE_IMAGE			= 'image';
+	public const MODE_STYLE			= 'style';
+	public const MODE_DOCUMENT		= 'document';
 
 	protected Environment $env;
 	protected ?string $modalId		= NULL;

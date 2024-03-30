@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Stripe_Event extends Model
 {
-	const STATUS_RECEIVED		= 0;
-	const STATUS_FAILED			= 1;
-	const STATUS_HANDLED		= 2;
-	const STATUS_CLOSED			= 3;
+	public const STATUS_RECEIVED	= 0;
+	public const STATUS_FAILED		= 1;
+	public const STATUS_HANDLED		= 2;
+	public const STATUS_CLOSED		= 3;
 
 	protected string $name			= 'stripe_events';
 

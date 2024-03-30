@@ -12,8 +12,8 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Newsletter_Mail
 {
-	const MODE_PLAIN		= 0;
-	const MODE_HTML			= 1;
+	public const MODE_PLAIN			= 0;
+	public const MODE_HTML			= 1;
 
 	protected Environment $env;
 	protected Logic_Newsletter $logic;

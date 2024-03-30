@@ -10,19 +10,19 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Issue extends Logic
 {
-	const CHANGE_UNKNOWN		= 0;
-	const CHANGE_REPORTER		= 1;
-	const CHANGE_MANAGER		= 2;
-	const CHANGE_PROJECT		= 3;
-	const CHANGE_TYPE			= 4;
-	const CHANGE_SEVERITY		= 5;
-	const CHANGE_PRIORITY		= 6;
-	const CHANGE_STATUS			= 7;
-	const CHANGE_PROGRESS		= 8;
-	const CHANGE_DETAILS		= 9;
-	const CHANGE_NOTE			= 10;
-	const CHANGE_ATTACHMENT		= 11;
-	const CHANGE_PATCH			= 12;
+	public const CHANGE_UNKNOWN			= 0;
+	public const CHANGE_REPORTER		= 1;
+	public const CHANGE_MANAGER			= 2;
+	public const CHANGE_PROJECT			= 3;
+	public const CHANGE_TYPE			= 4;
+	public const CHANGE_SEVERITY		= 5;
+	public const CHANGE_PRIORITY		= 6;
+	public const CHANGE_STATUS			= 7;
+	public const CHANGE_PROGRESS		= 8;
+	public const CHANGE_DETAILS			= 9;
+	public const CHANGE_NOTE			= 10;
+	public const CHANGE_ATTACHMENT		= 11;
+	public const CHANGE_PATCH			= 12;
 
 	protected Logic_Project $logicProject;
 	protected Model_User $modelUser;

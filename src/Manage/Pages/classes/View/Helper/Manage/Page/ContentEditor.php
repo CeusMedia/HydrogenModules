@@ -1,18 +1,18 @@
 <?php
 class View_Helper_Manage_Page_ContentEditor
 {
-	const STATUS_INIT				= 0;
-	const STATUS_CONFIGURED			= 1;
-	const STATUS_COLLECTED			= 2;
+	public const STATUS_INIT		= 0;
+	public const STATUS_CONFIGURED	= 1;
+	public const STATUS_COLLECTED	= 2;
 
 	protected $env;
 	protected $defaultEditorKey;
 	protected $currentEditorKey;
 	protected $forcedEditorKey;
 	protected $bestEditorKey;
-	protected $status				= 0;
+	protected int $status				= 0;
 	protected $format;
-	protected $editors				= [];
+	protected array $editors			= [];
 	protected $type;
 
 	public function __construct( $env )

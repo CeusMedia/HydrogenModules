@@ -21,31 +21,31 @@ class View_Helper_Pagination_PrevNext/* extends CMF_Hydrogen_View_Helper*/
 	protected ?object $nextEntry			= NULL;
 	protected ?object $previousEntry		= NULL;
 
-	const BUTTON_SIZE_DEFAULT		= '';
-	const BUTTON_SIZE_SMALL			= 'small';
-	const BUTTON_SIZE_MINI			= 'mini';
-	const BUTTON_SIZE_LARGE			= 'large';
+	public const BUTTON_SIZE_DEFAULT		= '';
+	public const BUTTON_SIZE_SMALL			= 'small';
+	public const BUTTON_SIZE_MINI			= 'mini';
+	public const BUTTON_SIZE_LARGE			= 'large';
 
-	const BUTTON_SIZES				= [
+	public const BUTTON_SIZES				= [
 		self::BUTTON_SIZE_DEFAULT,
 		self::BUTTON_SIZE_SMALL,
 		self::BUTTON_SIZE_MINI,
 		self::BUTTON_SIZE_LARGE,
 	];
 
-	const BUTTON_STATE_DEFAULT		= '';
-	const BUTTON_STATE_PRIMARY		= 'primary';
-	const BUTTON_STATE_SECONDARY	= 'secondary';
-	const BUTTON_STATE_SUCCESS		= 'success';
-	const BUTTON_STATE_DANGER		= 'danger';
-	const BUTTON_STATE_WARNING		= 'warning';
-	const BUTTON_STATE_INFO			= 'info';
-	const BUTTON_STATE_INVERSE		= 'inverse';
-	const BUTTON_STATE_LIGHT		= 'light';
-	const BUTTON_STATE_DARK			= 'dark';
-	const BUTTON_STATE_LINK			= 'link';
+	public const BUTTON_STATE_DEFAULT		= '';
+	public const BUTTON_STATE_PRIMARY		= 'primary';
+	public const BUTTON_STATE_SECONDARY		= 'secondary';
+	public const BUTTON_STATE_SUCCESS		= 'success';
+	public const BUTTON_STATE_DANGER		= 'danger';
+	public const BUTTON_STATE_WARNING		= 'warning';
+	public const BUTTON_STATE_INFO			= 'info';
+	public const BUTTON_STATE_INVERSE		= 'inverse';
+	public const BUTTON_STATE_LIGHT			= 'light';
+	public const BUTTON_STATE_DARK			= 'dark';
+	public const BUTTON_STATE_LINK			= 'link';
 
-	const BUTTON_STATES				= [
+	public const BUTTON_STATES				= [
 		self::BUTTON_STATE_DEFAULT,
 		self::BUTTON_STATE_PRIMARY,
 		self::BUTTON_STATE_SECONDARY,

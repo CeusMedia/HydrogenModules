@@ -14,12 +14,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Import_Connection extends Model
 {
-	const AUTH_TYPE_NONE	= 0;
-	const AUTH_TYPE_LOGIN	= 1;
-	const AUTH_TYPE_KEY		= 2;
+	public const AUTH_TYPE_NONE		= 0;
+	public const AUTH_TYPE_LOGIN	= 1;
+	public const AUTH_TYPE_KEY		= 2;
 
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
 	protected string $name			= 'import_connections';
 

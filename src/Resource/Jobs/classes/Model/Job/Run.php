@@ -16,17 +16,17 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Job_Run extends Model
 {
-	const ARCHIVED_NO			= 0;
-	const ARCHIVED_YES			= 1;
+	public const ARCHIVED_NO			= 0;
+	public const ARCHIVED_YES			= 1;
 
-	const REPORT_MODE_NEVER		= 0;
-	const REPORT_MODE_ALWAYS	= 1;
-	const REPORT_MODE_CHANGE	= 2;
-	const REPORT_MODE_FAIL		= 3;
-	const REPORT_MODE_DONE		= 4;
-	const REPORT_MODE_SUCCESS	= 5;
+	public const REPORT_MODE_NEVER		= 0;
+	public const REPORT_MODE_ALWAYS		= 1;
+	public const REPORT_MODE_CHANGE		= 2;
+	public const REPORT_MODE_FAIL		= 3;
+	public const REPORT_MODE_DONE		= 4;
+	public const REPORT_MODE_SUCCESS	= 5;
 
-	const REPORT_MODES			= [
+	public const REPORT_MODES			= [
 		self::REPORT_MODE_NEVER,
 		self::REPORT_MODE_ALWAYS,
 		self::REPORT_MODE_CHANGE,
@@ -35,48 +35,48 @@ class Model_Job_Run extends Model
 		self::REPORT_MODE_SUCCESS,
 	];
 
-	const REPORT_CHANNEL_NONE	= 0;
-	const REPORT_CHANNEL_MAIL	= 1;
-	const REPORT_CHANNEL_XMPP	= 2;
+	public const REPORT_CHANNEL_NONE	= 0;
+	public const REPORT_CHANNEL_MAIL	= 1;
+	public const REPORT_CHANNEL_XMPP	= 2;
 
-	const REPORT_CHANNELS		= [
+	public const REPORT_CHANNELS		= [
 		self::REPORT_CHANNEL_NONE,
 		self::REPORT_CHANNEL_MAIL,
 		self::REPORT_CHANNEL_XMPP,
 	];
 
-	const STATUS_TERMINATED		= -3;
-	const STATUS_FAILED			= -2;
-	const STATUS_ABORTED		= -1;
-	const STATUS_PREPARED		= 0;
-	const STATUS_RUNNING		= 1;
-	const STATUS_DONE			= 2;
-	const STATUS_SUCCESS		= 3;
+	public const STATUS_TERMINATED		= -3;
+	public const STATUS_FAILED			= -2;
+	public const STATUS_ABORTED			= -1;
+	public const STATUS_PREPARED		= 0;
+	public const STATUS_RUNNING			= 1;
+	public const STATUS_DONE			= 2;
+	public const STATUS_SUCCESS			= 3;
 
-	const STATUS_TRANSITIONS	= [
-		self::STATUS_TERMINATED		=> [
+	public const STATUS_TRANSITIONS		= [
+		self::STATUS_TERMINATED			=> [
 			self::STATUS_PREPARED,
 		],
-		self::STATUS_FAILED			=> [
+		self::STATUS_FAILED				=> [
 		],
-		self::STATUS_ABORTED		=> [
+		self::STATUS_ABORTED			=> [
 			self::STATUS_PREPARED,
 		],
-		self::STATUS_PREPARED		=> [
+		self::STATUS_PREPARED			=> [
 			self::STATUS_RUNNING,
 		],
-		self::STATUS_RUNNING		=> [
+		self::STATUS_RUNNING			=> [
 			self::STATUS_TERMINATED,
 			self::STATUS_FAILED,
 			self::STATUS_DONE,
 			self::STATUS_SUCCESS,
 		],
-		self::STATUS_DONE			=> [
+		self::STATUS_DONE				=> [
 			self::STATUS_SUCCESS,
 		],
 	];
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
@@ -86,18 +86,18 @@ class Model_Job_Run extends Model
 		self::STATUS_SUCCESS,
 	];
 
-	const STATUSES_NEGATIVE		= [
+	public const STATUSES_NEGATIVE		= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
 	];
 
-	const STATUSES_POSITIVE		= [
+	public const STATUSES_POSITIVE		= [
 		self::STATUS_DONE,
 		self::STATUS_SUCCESS,
 	];
 
-	const STATUSES_ARCHIVABLE	= [
+	public const STATUSES_ARCHIVABLE	= [
 		self::STATUS_TERMINATED,
 		self::STATUS_FAILED,
 		self::STATUS_ABORTED,
@@ -105,10 +105,10 @@ class Model_Job_Run extends Model
 		self::STATUS_SUCCESS,
 	];
 
-	const TYPE_MANUALLY			= 0;
-	const TYPE_SCHEDULED		= 1;
+	public const TYPE_MANUALLY			= 0;
+	public const TYPE_SCHEDULED			= 1;
 
-	const TYPES					= [
+	public const TYPES					= [
 		self::TYPE_MANUALLY,
 		self::TYPE_SCHEDULED,
 	];

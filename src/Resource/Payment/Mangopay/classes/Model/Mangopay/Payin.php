@@ -4,18 +4,18 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Mangopay_Payin extends Model
 {
-	const STATUS_UNKNOWN		= 0;
-	const STATUS_CREATED		= 1;
-	const STATUS_FAILED			= 2;
-	const STATUS_SUCCEEDED		= 3;
+	public const STATUS_UNKNOWN				= 0;
+	public const STATUS_CREATED				= 1;
+	public const STATUS_FAILED				= 2;
+	public const STATUS_SUCCEEDED			= 3;
 
-	const TYPE_UNKNOWN				= 0;
-	const TYPE_CARD					= 1;
-	const TYPE_PREAUTHORIZED		= 2;
-	const TYPE_BANK_WIRE			= 3;
-	const TYPE_DIRECT_DEBIT			= 4;
-	const TYPE_DIRECT_DEBIT_DIRECT	= 5;
-	const TYPE_PAYPAL				= 6;
+	public const TYPE_UNKNOWN				= 0;
+	public const TYPE_CARD					= 1;
+	public const TYPE_PREAUTHORIZED			= 2;
+	public const TYPE_BANK_WIRE				= 3;
+	public const TYPE_DIRECT_DEBIT			= 4;
+	public const TYPE_DIRECT_DEBIT_DIRECT	= 5;
+	public const TYPE_PAYPAL				= 6;
 
 	protected string $name			= 'mangopay_payins';
 

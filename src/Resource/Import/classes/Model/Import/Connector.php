@@ -14,15 +14,15 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Import_Connector extends Model
 {
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
-	const FEATURE_INDEX		= 1;
-	const FEATURE_READ		= 2;
-	const FEATURE_RENAME	= 4;
-	const FEATURE_MOVE		= 8;
-	const FEATURE_DELETE	= 16;
-	const FEATURE_CREATE	= 32;
+	public const FEATURE_INDEX		= 1;
+	public const FEATURE_READ		= 2;
+	public const FEATURE_RENAME		= 4;
+	public const FEATURE_MOVE		= 8;
+	public const FEATURE_DELETE		= 16;
+	public const FEATURE_CREATE		= 32;
 
 	protected string $name			= 'import_connectors';
 

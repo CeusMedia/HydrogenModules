@@ -10,9 +10,9 @@ class View_Helper_Stripe_Entity_WalletLogo extends View_Helper_Stripe_Abstract
 	protected $wallet;
 	protected string $size			= 'large';
 
-	const SIZE_SMALL		= 'fa-1x';
-	const SIZE_MEDIUM		= 'fa-2x';
-	const SIZE_LARGE		= 'fa-4x';
+	public const SIZE_SMALL			= 'fa-1x';
+	public const SIZE_MEDIUM		= 'fa-2x';
+	public const SIZE_LARGE			= 'fa-4x';
 
 	public static function renderStatic( Environment $env, $number, $nodeName = NULL, $nodeClass = NULL ): string
 	{

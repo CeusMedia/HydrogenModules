@@ -12,15 +12,15 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group_Member extends Model
 {
-	const STATUS_ARCHIVED			= -9;
-	const STATUS_DEACTIVATED		= -3;
-	const STATUS_REJECTED			= -2;
-	const STATUS_UNREGISTERED		= -1;
-	const STATUS_REGISTERED			= 0;
-	const STATUS_CONFIRMED			= 1;
-	const STATUS_ACTIVATED			= 2;
+	public const STATUS_ARCHIVED		= -9;
+	public const STATUS_DEACTIVATED		= -3;
+	public const STATUS_REJECTED		= -2;
+	public const STATUS_UNREGISTERED	= -1;
+	public const STATUS_REGISTERED		= 0;
+	public const STATUS_CONFIRMED		= 1;
+	public const STATUS_ACTIVATED		= 2;
 
-	const STATUSES					= [
+	public const STATUSES				= [
 		self::STATUS_ARCHIVED,
 		self::STATUS_DEACTIVATED,
 		self::STATUS_REJECTED,

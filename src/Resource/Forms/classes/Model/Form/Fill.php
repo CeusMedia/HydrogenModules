@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Fill extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_CONFIRMED	= 1;
-	const STATUS_HANDLED	= 2;
+	public const STATUS_NEW			= 0;
+	public const STATUS_CONFIRMED	= 1;
+	public const STATUS_HANDLED		= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_CONFIRMED,
 		self::STATUS_HANDLED,

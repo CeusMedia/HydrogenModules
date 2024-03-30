@@ -12,14 +12,14 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Event extends Model
 {
-	const STATUS_NEW				= 0;
-	const STATUS_REVOKED			= 1;
-	const STATUS_IGNORED			= 2;
-	const STATUS_RUNNING			= 3;
-	const STATUS_FAILED				= 4;
-	const STATUS_SUCCEEDED			= 5;
+	public const STATUS_NEW				= 0;
+	public const STATUS_REVOKED			= 1;
+	public const STATUS_IGNORED			= 2;
+	public const STATUS_RUNNING			= 3;
+	public const STATUS_FAILED			= 4;
+	public const STATUS_SUCCEEDED		= 5;
 
-	const STATUSES					= [
+	public const STATUSES				= [
 		self::STATUS_NEW,
 		self::STATUS_REVOKED,
 		self::STATUS_IGNORED,
@@ -28,19 +28,19 @@ class Model_Event extends Model
 		self::STATUS_SUCCEEDED,
 	];
 
-	const STATUSES_TRANSITIONS		= [
-		self::STATUS_NEW	=> [
+	public const STATUSES_TRANSITIONS	= [
+		self::STATUS_NEW				=> [
 			self::STATUS_REVOKED,
 			self::STATUS_IGNORED,
 			self::STATUS_RUNNING,
 		],
-		self::STATUS_REVOKED		=> [
+		self::STATUS_REVOKED			=> [
 			self::STATUS_NEW,
 		],
-		self::STATUS_IGNORED		=> [
+		self::STATUS_IGNORED			=> [
 			self::STATUS_NEW,
 		],
-		self::STATUS_RUNNING		=> [
+		self::STATUS_RUNNING			=> [
 			self::STATUS_FAILED,
 			self::STATUS_SUCCEEDED,
 		]

@@ -18,9 +18,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Log_Exception extends Model
 {
-	const STATUS_NONE		= 0;
-	const STATUS_HANDLED	= 1;
-	const STATUS_MARKED		= 2;
+	public const STATUS_NONE		= 0;
+	public const STATUS_HANDLED		= 1;
+	public const STATUS_MARKED		= 2;
 
 	protected string $name			= 'log_exceptions';
 

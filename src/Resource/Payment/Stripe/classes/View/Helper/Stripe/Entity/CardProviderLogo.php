@@ -10,9 +10,9 @@ class View_Helper_Stripe_Entity_CardProviderLogo extends View_Helper_Stripe_Abst
 	protected string$provider		= 'Visa';
 	protected string$size			= 'large';
 
-	const SIZE_SMALL		= 'small';
-	const SIZE_MEDIUM		= 'medium';
-	const SIZE_LARGE		= 'large';
+	public const SIZE_SMALL			= 'small';
+	public const SIZE_MEDIUM		= 'medium';
+	public const SIZE_LARGE			= 'large';
 
 	public function render(): string
 	{

@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Note_Tag extends Model
 {
-	const STATUS_DISABLED			= -1;
-	const STATUS_NORMAL				= 0;
+	public const STATUS_DISABLED	= -1;
+	public const STATUS_NORMAL		= 0;
 
-	const STATUSES					= [
+	public const STATUSES			= [
 		self::STATUS_DISABLED,
 		self::STATUS_NORMAL,
 	];

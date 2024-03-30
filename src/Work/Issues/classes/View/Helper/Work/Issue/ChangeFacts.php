@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_ChangeFacts
 {
-	const FORMAT_HTML		= 1;
-	const FORMAT_TEXT		= 2;
-	const FORMATS			= [
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_TEXT		= 2;
+	public const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];

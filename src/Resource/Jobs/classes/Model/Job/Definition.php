@@ -16,14 +16,14 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Job_Definition extends Model
 {
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
-	const STATUS_DEPRECATED	= 2;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
+	public const STATUS_DEPRECATED	= 2;
 
-	const MODE_UNDEFINED	= 0;
-	const MODE_SINGLE		= 1;
-	const MODE_MULTIPLE		= 2;
-	const MODE_EXCLUSIVE	= 3;
+	public const MODE_UNDEFINED		= 0;
+	public const MODE_SINGLE		= 1;
+	public const MODE_MULTIPLE		= 2;
+	public const MODE_EXCLUSIVE		= 3;
 
 	protected string $name			= 'job_definitions';
 

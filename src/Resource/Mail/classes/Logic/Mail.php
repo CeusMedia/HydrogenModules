@@ -23,10 +23,10 @@ use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentExcept
  */
 class Logic_Mail extends Logic
 {
-	const LIBRARY_UNKNOWN		= 0;
-	const LIBRARY_COMMON		= 1;
-	const LIBRARY_MAIL_V1		= 2;
-	const LIBRARY_MAIL_V2		= 4;
+	public const LIBRARY_UNKNOWN		= 0;
+	public const LIBRARY_COMMON			= 1;
+	public const LIBRARY_MAIL_V1		= 2;
+	public const LIBRARY_MAIL_V2		= 4;
 
 	protected int $libraries			= 0;
 

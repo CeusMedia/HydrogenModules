@@ -14,12 +14,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Newsletter_Reader extends Model
 {
-	const STATUS_DEACTIVATED	= -2;
-	const STATUS_UNREGISTERED	= -1;
-	const STATUS_REGISTERED		= 0;
-	const STATUS_CONFIRMED		= 1;
+	public const STATUS_DEACTIVATED		= -2;
+	public const STATUS_UNREGISTERED	= -1;
+	public const STATUS_REGISTERED		= 0;
+	public const STATUS_CONFIRMED		= 1;
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_DEACTIVATED,
 		self::STATUS_UNREGISTERED,
 		self::STATUS_REGISTERED,

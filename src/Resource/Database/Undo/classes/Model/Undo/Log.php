@@ -18,10 +18,10 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Undo_Log extends Model
 {
-	const MODE_UNKNOWN	= 0;
-	const MODE_INSERT	= 1;
-	const MODE_UPDATE	= 2;
-	const MODE_DELETE	= 3;
+	public const MODE_UNKNOWN	= 0;
+	public const MODE_INSERT	= 1;
+	public const MODE_UPDATE	= 2;
+	public const MODE_DELETE	= 3;
 
 	protected string $name		= 'undo_log';
 

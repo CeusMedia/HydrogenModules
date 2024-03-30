@@ -16,23 +16,23 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail extends Model
 {
-	const STATUS_ABORTED		= -3;
-	const STATUS_FAILED			= -2;
-	const STATUS_RETRY			= -1;
-//	const STATUS_PAUSED			= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_SENDING		= 1;
-	const STATUS_SENT			= 2;
-	const STATUS_RECEIVED		= 3;
-	const STATUS_OPENED			= 4;
-	const STATUS_REPLIED		= 5;
-	const STATUS_ARCHIVED		= 6;
+	public const STATUS_ABORTED			= -3;
+	public const STATUS_FAILED			= -2;
+	public const STATUS_RETRY			= -1;
+//	public const STATUS_PAUSED			= -1;
+	public const STATUS_NEW				= 0;
+	public const STATUS_SENDING			= 1;
+	public const STATUS_SENT			= 2;
+	public const STATUS_RECEIVED		= 3;
+	public const STATUS_OPENED			= 4;
+	public const STATUS_REPLIED			= 5;
+	public const STATUS_ARCHIVED		= 6;
 
-	const COMPRESSION_UNKNOWN	= 0;
-	const COMPRESSION_NONE		= 1;
-	const COMPRESSION_BASE64	= 2;
-	const COMPRESSION_GZIP		= 3;
-	const COMPRESSION_BZIP		= 4;
+	public const COMPRESSION_UNKNOWN	= 0;
+	public const COMPRESSION_NONE		= 1;
+	public const COMPRESSION_BASE64		= 2;
+	public const COMPRESSION_GZIP		= 3;
+	public const COMPRESSION_BZIP		= 4;
 
 	public static array $transitions	= [
 		self::STATUS_ABORTED	=> [

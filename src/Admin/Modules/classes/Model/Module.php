@@ -7,13 +7,13 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Module
 {
-	const TYPE_UNKNOWN	= 0;
-	const TYPE_CUSTOM	= 1;
-	const TYPE_COPY		= 2;
-	const TYPE_LINK		= 3;
-	const TYPE_SOURCE	= 4;
+	public const TYPE_UNKNOWN	= 0;
+	public const TYPE_CUSTOM	= 1;
+	public const TYPE_COPY		= 2;
+	public const TYPE_LINK		= 3;
+	public const TYPE_SOURCE	= 4;
 
-	const TYPES			= [
+	public const TYPES			= [
 		self::TYPE_UNKNOWN,
 		self::TYPE_CUSTOM,
 		self::TYPE_COPY,

@@ -4,14 +4,14 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Mail_Sync extends Model
 {
-	const STATUS_ERROR			= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_ACTIVE			= 1;
-	const STATUS_SYNCHING		= 2;
-	const STATUS_SYNCHED		= 3;
-	const STATUS_CLOSED			= 4;
+	public const STATUS_ERROR		= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
+	public const STATUS_SYNCHING	= 2;
+	public const STATUS_SYNCHED		= 3;
+	public const STATUS_CLOSED		= 4;
 
-	const STATUSES				= [
+	public const STATUSES			= [
 		self::STATUS_ERROR,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,

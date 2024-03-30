@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Address extends Model
 {
-	const TYPE_LOCATION		= 1;
-	const TYPE_BILLING		= 2;
-	const TYPE_DELIVERY		= 4;
+	public const TYPE_LOCATION		= 1;
+	public const TYPE_BILLING		= 2;
+	public const TYPE_DELIVERY		= 4;
 
 	protected string $name			= 'addresses';
 

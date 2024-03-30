@@ -4,12 +4,12 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Fill_Transfer extends Model
 {
-	const STATUS_UNKNOWN	= 0;
-	const STATUS_SUCCESS	= 1;
-	const STATUS_ERROR		= 2;
-	const STATUS_EXCEPTION	= 3;
+	public const STATUS_UNKNOWN		= 0;
+	public const STATUS_SUCCESS		= 1;
+	public const STATUS_ERROR		= 2;
+	public const STATUS_EXCEPTION	= 3;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_UNKNOWN,
 		self::STATUS_SUCCESS,
 		self::STATUS_ERROR,

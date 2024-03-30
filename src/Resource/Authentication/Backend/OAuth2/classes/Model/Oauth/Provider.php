@@ -18,11 +18,11 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Oauth_Provider extends Model
 {
-	const STATUS_INACTIVE		= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_ACTIVE			= 1;
+	public const STATUS_INACTIVE	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
 
-	const STATUSES				= [
+	public const STATUSES			= [
 		self::STATUS_INACTIVE,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,

@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Transfer_Target extends Model
 {
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
 	];

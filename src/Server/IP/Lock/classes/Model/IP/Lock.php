@@ -4,13 +4,13 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_IP_Lock extends Model
 {
-	const STATUS_UNLOCKED		= -2;
-	const STATUS_CANCELLED		= -1;
-	const STATUS_REQUEST_LOCK	= 0;
-	const STATUS_LOCKED			= 1;
-	const STATUS_REQUEST_UNLOCK	= 2;
+	public const STATUS_UNLOCKED		= -2;
+	public const STATUS_CANCELLED		= -1;
+	public const STATUS_REQUEST_LOCK	= 0;
+	public const STATUS_LOCKED			= 1;
+	public const STATUS_REQUEST_UNLOCK	= 2;
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_UNLOCKED,
 		self::STATUS_CANCELLED,
 		self::STATUS_REQUEST_LOCK,

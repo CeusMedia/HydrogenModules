@@ -18,12 +18,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Bookmark extends Model
 {
-	const STATUS_REMOVED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_ACTIVE		= 1;
-	const STATUS_ARCHIVED	= 2;
+	public const STATUS_REMOVED		= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
+	public const STATUS_ARCHIVED	= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_REMOVED,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,

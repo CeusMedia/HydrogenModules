@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Gallery extends Abstraction
 {
-	const SCOPE_GALLERY		= 0;
-	const SCOPE_IMAGE		= 1;
+	public const SCOPE_GALLERY		= 0;
+	public const SCOPE_IMAGE		= 1;
 
 	protected Dictionary $moduleConfig;
 	protected string $baseFilePath;

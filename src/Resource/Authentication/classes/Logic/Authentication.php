@@ -5,12 +5,12 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication extends Logic
 {
-	const STATUS_UNKNOWN		= 0;
-	const STATUS_IDENTIFIED		= 1;
-	const STATUS_AUTHENTICATED	= 2;
+	public const STATUS_UNKNOWN			= 0;
+	public const STATUS_IDENTIFIED		= 1;
+	public const STATUS_AUTHENTICATED	= 2;
 
-	protected ?Logic $backend	= NULL;
-	protected array $backends	= [];
+	protected ?Logic $backend			= NULL;
+	protected array $backends			= [];
 	protected Dictionary $session;
 
 	public function checkPassword( int|string $userId, string $password )

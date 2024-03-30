@@ -18,20 +18,20 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Oauth_Application extends Model
 {
-	const STATUS_REMOVED		= -1;
-	const STATUS_DISABLED		= 0;
-	const STATUS_ENABLED		= 1;
+	public const STATUS_REMOVED		= -1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
-	const STATUSES				= [
+	public const STATUSES			= [
 		self::STATUS_REMOVED,
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
 	];
 
-	const TYPE_PUBLIC			= 0;
-	const TYPE_CONFIDENTIAL		= 1;
+	public const TYPE_PUBLIC		= 0;
+	public const TYPE_CONFIDENTIAL	= 1;
 
-	const TYPES					= [
+	public const TYPES				= [
 		self::TYPE_PUBLIC,
 		self::TYPE_CONFIDENTIAL,
 	];

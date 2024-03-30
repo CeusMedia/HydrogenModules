@@ -12,12 +12,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_User_Password extends Model
 {
-	const STATUS_REVOKED	= -2;
-	const STATUS_OUTDATED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_ACTIVE		= 1;
+	public const STATUS_REVOKED		= -2;
+	public const STATUS_OUTDATED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_REVOKED,
 		self::STATUS_OUTDATED,
 		self::STATUS_NEW,

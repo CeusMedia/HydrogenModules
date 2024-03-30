@@ -5,14 +5,14 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shortcode extends Logic
 {
-	const PARSE_STATUS_START					= 0;
-	const PARSE_STATUS_READ_CODE				= 1;
-	const PARSE_STATUS_READ_ATTR_KEY			= 2;
-	const PARSE_STATUS_READ_ATTR_VALUE_QUOTE	= 3;
-	const PARSE_STATUS_READ_ATTR_VALUE			= 4;
-	const PARSE_STATUS_FINAL					= 5;
+	public const PARSE_STATUS_START					= 0;
+	public const PARSE_STATUS_READ_CODE				= 1;
+	public const PARSE_STATUS_READ_ATTR_KEY			= 2;
+	public const PARSE_STATUS_READ_ATTR_VALUE_QUOTE	= 3;
+	public const PARSE_STATUS_READ_ATTR_VALUE		= 4;
+	public const PARSE_STATUS_FINAL					= 5;
 
-	const PARSE_STATUSES						= [
+	public const PARSE_STATUSES						= [
 		self::PARSE_STATUS_START,
 		self::PARSE_STATUS_READ_CODE,
 		self::PARSE_STATUS_READ_ATTR_KEY,

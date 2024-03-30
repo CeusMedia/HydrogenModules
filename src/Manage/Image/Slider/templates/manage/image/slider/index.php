@@ -126,7 +126,7 @@ class View_Helper_NumberCommons
 
 class View_Helper_Image_Slider_Duration
 {
-	const MAX_PRECISION			= 3;
+	public const MAX_PRECISION		= 3;
 
 	protected int $precision		= 0;
 

@@ -5,13 +5,13 @@ use CeusMedia\Mail\Message\Renderer as MailRenderer;
 
 class View_Helper_Mail_View_Source
 {
-	protected Environment $env;
-	protected ?Mail_Abstract $mailObject		= NULL;
-	protected Logic_Mail $logicMail;
-	protected int $mode							= 0;
+	public const MODE_NORMAL				= 0;
+	public const MODE_CONDENSED				= 1;
 
-	const MODE_NORMAL		= 0;
-	const MODE_CONDENSED	= 1;
+	protected Environment $env;
+	protected ?Mail_Abstract $mailObject	= NULL;
+	protected Logic_Mail $logicMail;
+	protected int $mode						= 0;
 
 	/**
 	 *	@param		Environment $env

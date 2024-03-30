@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Shop_Payment_Stripe extends Model
 {
-	const STATUS_CREATED	= 0;
-	const STATUS_FAILED		= 1;
-	const STATUS_SUCCEEDED	= 2;
+	public const STATUS_CREATED		= 0;
+	public const STATUS_FAILED		= 1;
+	public const STATUS_SUCCEEDED	= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_CREATED,
 		self::STATUS_FAILED,
 		self::STATUS_SUCCEEDED,

@@ -10,8 +10,8 @@ class View_Helper_Mangopay_Error
 	protected int $mode			= 1;
 	protected array $words;
 
-	const MODE_PLAIN		= 0;
-	const MODE_HTML			= 1;
+	public const MODE_PLAIN		= 0;
+	public const MODE_HTML		= 1;
 
 	public function __construct( Environment $env )
 	{

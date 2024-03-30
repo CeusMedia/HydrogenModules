@@ -5,11 +5,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Shop_Cart
 {
-	const CUSTOMER_MODE_UNKNOWN		= 0;
-	const CUSTOMER_MODE_GUEST		= 1;
-	const CUSTOMER_MODE_ACCOUNT		= 2;
+	public const CUSTOMER_MODE_UNKNOWN	= 0;
+	public const CUSTOMER_MODE_GUEST	= 1;
+	public const CUSTOMER_MODE_ACCOUNT	= 2;
 
-	const CUSTOMER_MODES			= [
+	public const CUSTOMER_MODES			= [
 		self::CUSTOMER_MODE_UNKNOWN,
 		self::CUSTOMER_MODE_GUEST,
 		self::CUSTOMER_MODE_ACCOUNT,

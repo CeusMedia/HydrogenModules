@@ -12,10 +12,10 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Attachment extends Model
 {
-	const STATUS_INACTIVE	= 0;
-	const STATUS_ACTIVE		= 1;
+	public const STATUS_INACTIVE	= 0;
+	public const STATUS_ACTIVE		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_INACTIVE,
 		self::STATUS_ACTIVE,
 	];

@@ -12,12 +12,12 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group_Message extends Model
 {
-	const STATUS_REJECTED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_STALLED	= 1;
-	const STATUS_FORWARDED	= 2;
+	public const STATUS_REJECTED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_STALLED		= 1;
+	public const STATUS_FORWARDED	= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_REJECTED,
 		self::STATUS_NEW,
 		self::STATUS_STALLED,

@@ -33,10 +33,10 @@ use CeusMedia\Database\PDO\Connection as DatabasePdoConnection;
  */
 class Resource_Database_Connection extends DatabasePdoConnection
 {
-	const STATUS_LOST			= -1;
-	const STATUS_UNKNOWN		= 0;
-	const STATUS_PREPARED		= 1;
-	const STATUS_CONNECTED		= 2;
+	public const STATUS_LOST		= -1;
+	public const STATUS_UNKNOWN		= 0;
+	public const STATUS_PREPARED	= 1;
+	public const STATUS_CONNECTED	= 2;
 
 	/**	@var	Dictionary		$options	Module configuration options */
 	protected Dictionary $options;

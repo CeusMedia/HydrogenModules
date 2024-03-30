@@ -4,24 +4,24 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Manual_Category extends Model
 {
-	const FORMAT_TEXT		= 0;
-	const FORMAT_HTML		= 1;
-	const FORMAT_MARKDOWN	= 2;
+	public const FORMAT_TEXT		= 0;
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_MARKDOWN	= 2;
 
-	const FORMATS			= [
+	public const FORMATS			= [
 		self::FORMAT_TEXT,
 		self::FORMAT_HTML,
 		self::FORMAT_MARKDOWN,
 	];
 
-	const STATUS_ARCHIVED	= -9;
-	const STATUS_OUTDATED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_CHANGED	= 1;
-	const STATUS_ACTIVE		= 2;
-	const STATUS_LOCKED		= 3;
+	public const STATUS_ARCHIVED	= -9;
+	public const STATUS_OUTDATED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_CHANGED		= 1;
+	public const STATUS_ACTIVE		= 2;
+	public const STATUS_LOCKED		= 3;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_ARCHIVED,
 		self::STATUS_OUTDATED,
 		self::STATUS_NEW,
