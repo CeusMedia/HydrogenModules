@@ -54,11 +54,19 @@
         "classmap": ["src/", "test/"]
     },
     "scripts": {
+        "dev:all": [
+            "@dev:install",
+            "@dev:test-syntax",
+            "@dev:phpstan",
+            "@dev:rector",
+            "@dev:index-serial",
+            "@dev:index-json"
+        ],
         "dev:install": "composer install --quiet",
         "dev:update": "composer update",
         "incomplete:dev:create-docs": [
             "@dev:install",
-            "XDEBUG_MODE=off php vendor/ceus-media/doc-creator/doc-creator.php --config-file=doc-creator.xml"
+            "XDEBUG_MODE=off php vendor/ceus-media/doc-creator/doc-creator.php --config-file=tool/config/doc-creator.xml"
         ],
         "dev:index-json": [
             "@dev:install",
@@ -78,23 +86,23 @@
         ],
         "dev:phpstan": [
             "@dev:install",
-            "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration phpstan.neon"
+            "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration=tool/config/phpstan.neon"
         ],
         "dev:phpstan-clear": [
             "@dev:install",
-            "XDEBUG_MODE=off vendor/bin/phpstan clear-result-cache --verbose"
+            "XDEBUG_MODE=off vendor/bin/phpstan clear-result-cache --configuration=tool/config/phpstan.neon --verbose"
         ],
         "dev:phpstan-save": [
             "@dev:install",
-            "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration phpstan.neon --generate-baseline phpstan-baseline.neon"
+            "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration=tool/config/phpstan.neon --generate-baseline=tool/config/phpstan-baseline.neon"
         ],
         "dev:rector": [
             "@dev:install",
-            "XDEBUG_MODE=off vendor/bin/rector process --config=rector.php --dry-run"
+            "XDEBUG_MODE=off vendor/bin/rector process --config=tool/rector.php --dry-run"
         ],
         "dev:rector-fix": [
             "@dev:install",
-            "XDEBUG_MODE=off vendor/bin/rector process --config=rector.php"
+            "XDEBUG_MODE=off vendor/bin/rector process --config=tool/rector.php"
         ],
         "dev:test-syntax": [
             "@dev:install",

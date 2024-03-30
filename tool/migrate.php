@@ -5,25 +5,25 @@ use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\RegexFilter as RegexFolderFilter;
 
-require_once 'vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 Tool::$verbose	= TRUE;
 Tool::$dry		= TRUE;
-Tool::$pathOld	= 'test/src/';
-Tool::$pathNew	= 'test/';
+Tool::$pathOld	= '../test/src/';
+Tool::$pathNew	= '../test/';
 Tool::main( $argv );
 
 class Tool
 {
-	public static $pathOld	= '';
+	public static string $pathOld	= '../';
 
-	public static $pathNew	= 'src/';
+	public static string $pathNew	= '../src/';
 
-	public static $verbose	= FALSE;
+	public static bool $verbose		= FALSE;
 
-	public static $dry		= TRUE;
+	public static bool $dry			= TRUE;
 
-	public static function main( $argv )
+	public static function main( $argv ): void
 	{
 		$scriptName	= basename( __FILE__ );
 		$arguments	= array_values( array_diff( $argv, [$scriptName, './'.$scriptName] ) );
@@ -41,7 +41,7 @@ class Tool
 		self::dispatch( $action );
 	}
 
-	protected static function dispatch( string $action )
+	protected static function dispatch( string $action ): void
 	{
 		switch( $action ){
 			case 'OldStructure::testSyntax':
@@ -76,15 +76,15 @@ class Tool
 
 class Tool_OldStructure
 {
-	public static $pathOld	= '';
+	public static string $pathOld	= '../';
 
-	public static $pathNew	= 'src/';
+	public static string $pathNew	= '../src/';
 
-	public static $verbose	= FALSE;
+	public static bool $verbose		= FALSE;
 
-	public static $dry		= FALSE;
+	public static bool $dry			= FALSE;
 
-	public static function testSyntax()
+	public static function testSyntax(): void
 	{
 		$files		= Tool_Utilities::scanFolder( '.' );
 		$phpFiles	= [];
@@ -112,7 +112,7 @@ class Tool_OldStructure
 	}
 
 
-	public static function findFilesWhichNeedWork()
+	public static function findFilesWhichNeedWork(): void
 	{
 		$files	= Tool_Utilities::scanFolder( '.' );
 		$i		= 0;
@@ -120,7 +120,7 @@ class Tool_OldStructure
 		foreach( $files as $filePathAbsolute => $filePathShort ){
 			if( preg_match( '/\.php5?$/', $filePathShort ) ){
 				$content	= trim( FS_File_Reader::load( $filePathAbsolute ) );
-				if( substr( $content, -2 ) === '?>' )
+				if( str_ends_with( $content, '?>' ) )
 					$list[]	= $filePathShort;
 			}
 		}
@@ -129,7 +129,7 @@ class Tool_OldStructure
 		}
 	}
 
-	public static function copyToNewStructure()
+	public static function copyToNewStructure(): void
 	{
 		FolderEditor::createFolder( self::$pathNew );
 		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
@@ -152,15 +152,15 @@ class Tool_OldStructure
 }
 class Tool_NewStructure
 {
-	public static $pathOld	= '';
+	public static string $pathOld	= '../';
 
-	public static $pathNew	= 'src/';
+	public static string $pathNew	= '../src/';
 
-	public static $verbose	= FALSE;
+	public static bool $verbose		= FALSE;
 
-	public static $dry		= FALSE;
+	public static bool $dry			= FALSE;
 
-	public static function removePhpVersionInClassFileName()
+	public static function removePhpVersionInClassFileName(): void
 	{
 		$files	= Tool_Utilities::scanFolder( self::$pathNew );
 		$list	= [];
@@ -175,7 +175,7 @@ class Tool_NewStructure
 		echo "renamed ".count( $list )." file".PHP_EOL;
 	}
 
-	public static function createLinksToOldStructure( bool $verbose = FALSE )
+	public static function createLinksToOldStructure( bool $verbose = FALSE ): void
 	{
 		$folders	= new RegexFolderFilter( '.', '@^[A-Z]@', FALSE, TRUE, FALSE );
 		foreach( $folders as $folder ){
@@ -221,11 +221,11 @@ class Tool_Utilities
 		$index	= new DirectoryIterator( $path );
 		foreach( $index as $item ){
 			$fileName	= $item->getFilename();
-			if( $item->isDot() || substr( $fileName, 0, 1 ) === '.' )
+			if( $item->isDot() || str_starts_with( $fileName, '.' ) )
 				continue;
-			if( preg_match( '@^test@', $fileName ) )
+			if( str_starts_with( $fileName, 'test' ) )
 				continue;
-			if( $item->isDir() && !preg_match( '/vendor/', $fileName ) )
+			if( $item->isDir() && !str_contains( $fileName, 'vendor' ) )
 				$list	= array_merge( $list, self::scanFolder( $path.'/'.$fileName, $baseFolderToRemove ) );
 			else
 				$list[$item->getPathname()]	= preg_replace( '@^'.preg_quote( $baseFolderToRemove, '@' ).'/@', '', $path.'/'.$fileName );
