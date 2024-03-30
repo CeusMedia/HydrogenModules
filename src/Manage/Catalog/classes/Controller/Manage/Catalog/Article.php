@@ -441,7 +441,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		}
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
-		$offset		= isset( $filter['offset'] ) ? $filter['offset'] : 0;
+		$offset		= $filter['offset'] ?? 0;
 		$articles	= $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 		return $articles;
 	}

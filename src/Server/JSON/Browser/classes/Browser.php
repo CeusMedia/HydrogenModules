@@ -72,9 +72,9 @@ class Browser
 			'post'			=> $request->get( 'post' ),
 			'response'		=> (object) array(
 				'json'		=> $body,
-				'data'		=> isset( $response->data ) ? $response->data : '',
-				'debug'		=> isset( $response->debug ) ? $response->debug : '',
-				'exception'	=> isset( $response->exception ) ? $response->exception : '',
+				'data'		=> $response->data ?? '',
+				'debug'		=> $response->debug ?? '',
+				'exception'	=> $response->exception ?? '',
 			),
 			'json'			=> (object) [
 				'raw'		=> $body,

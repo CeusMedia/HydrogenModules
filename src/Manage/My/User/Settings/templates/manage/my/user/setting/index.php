@@ -18,7 +18,7 @@ if( isset( $modules ) && count( $modules ) ){
 	$panels		= [];
 	foreach( $modules as $module ){
 		$moduleWords	= $view->getModuleWords( $module );
-		$key			= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->id;
+		$key			= $moduleWords['title'] ?? $module->id;
 		$panel			= $view->renderModuleSettings( $module, $settings, $moduleWords, $from );
 		$panel ? $panels[$key]	= $panel : NULL;
 	}

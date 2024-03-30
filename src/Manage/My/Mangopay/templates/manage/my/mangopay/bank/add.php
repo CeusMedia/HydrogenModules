@@ -25,9 +25,9 @@ $panelAdd	= '
 	<h3><i class="fa fa-fw fa-bank"></i> Neues Bankkonto</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/bank/add" method="post">
-			<input type="hidden" name="forwardTo" value="'.( isset( $forwardTo ) ? $forwardTo : '' ).'"/>
-			<input type="hidden" name="backwardTo" value="'.( isset( $backwardTo ) ? $backwardTo : '' ).'"/>
-			<input type="hidden" name="from" value="'.( isset( $from ) ? $from : '' ).'"/>
+			<input type="hidden" name="forwardTo" value="'.( $forwardTo ?? '' ).'"/>
+			<input type="hidden" name="backwardTo" value="'.( $backwardTo ?? '' ).'"/>
+			<input type="hidden" name="from" value="'.( $from ?? '' ).'"/>
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_title">Bezeichnung <small class="muted"></small></label>

@@ -35,7 +35,7 @@ if( isset( $errorDisplay ) )										//  ...
 	ini_set( 'display_errors', $errorDisplay );						//  ...
 
 
-$path	= isset( $pathLibraries ) ? $pathLibraries : "";			//  realize library path
+$path	= $pathLibraries ?? "";			//  realize library path
 require_once $path.'cmClasses/'.$versionCMC.'/autoload.php5';		//  load cmClasses
 require_once $path.'cmFrameworks/'.$versionCMF.'/autoload.php5';	//  load cmFrameworks
 require_once $path.'cmModules/'.$versionCMM.'/autoload.php5';		//  load cmModules

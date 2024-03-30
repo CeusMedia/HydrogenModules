@@ -166,7 +166,7 @@ class View_Manage_My_User_Setting extends View{
 		}
 
 		if( $list ){
-			$moduleLabel	= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->title;
+			$moduleLabel	= $moduleWords['title'] ?? $module->title;
 
 			if( $rows )
 				$rows[]		= '<br/>';

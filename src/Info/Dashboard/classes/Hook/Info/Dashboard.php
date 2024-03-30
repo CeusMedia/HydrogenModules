@@ -18,8 +18,8 @@ class Hook_Info_Dashboard extends Hook
 		$logic	= Logic_Info_Dashboard::getInstance( $env );
 		$dashboards = $logic->getUserDashboards( $data->userId );
 
-		$activeOnly		= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$activeOnly		= $data->activeOnly ?? FALSE;
+		$linkable		= $data->linkable ?? FALSE;
 		$list			= [];
 		$icon			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th', 'title' => 'Dashboard'] );
 		$words			= $env->getLanguage()->getWords( 'info/dashboard' );

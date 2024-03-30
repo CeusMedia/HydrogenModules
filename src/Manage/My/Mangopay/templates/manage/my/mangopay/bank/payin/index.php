@@ -22,7 +22,7 @@ foreach( $wallets as $item )
 $optCurrency	= [];
 foreach( $currencies as $key => $label )
 	$optCurrency[$key]	= $label;
-$optCurrency	= HtmlElements::Options( $optCurrency, isset( $currency ) ? $currency : NULL );
+$optCurrency	= HtmlElements::Options( $optCurrency, $currency ?? NULL );
 
 $inputCurrency	= HtmlTag::create( 'select', $optCurrency, array(
 	'id'		=> 'input_currency',
@@ -97,9 +97,9 @@ $panelAdd	= '
 	<h3>Überweisung vom Bankkonto</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/bank/payin/'.$bankAccountId.'" method="post">
-			<input type="hidden" name="forwardTo" value="'.( isset( $forwardTo ) ? $forwardTo : '' ).'"/>
-			<input type="hidden" name="backwardTo" value="'.( isset( $backwardTo ) ? $backwardTo : '' ).'"/>
-			<input type="hidden" name="from" value="'.( isset( $from ) ? $from : '' ).'"/>
+			<input type="hidden" name="forwardTo" value="'.( $forwardTo ?? '' ).'"/>
+			<input type="hidden" name="backwardTo" value="'.( $backwardTo ?? '' ).'"/>
+			<input type="hidden" name="from" value="'.( $from ?? '' ).'"/>
 			<div class="row-fluid">
 				<div class="span12">
 					'.$fieldMoney.'

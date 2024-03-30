@@ -368,7 +368,7 @@ class Model_Menu
 				foreach( $module->links as $link ){
 					if( $link->language && $link->language != $this->language )
 						continue;
-					$link->scope	= isset( $link->scope ) ? $link->scope : 'main';
+					$link->scope	= $link->scope ?? 'main';
 					if( $link->scope !== $scope )
 						continue;
 					if( $link->access == 'none' )

@@ -37,7 +37,7 @@ class View_Helper_Form_Fill_Data
 //print_m( $inputs );die;
 		foreach( $inputs as $name => $input ){
 			$value	= $input['value'];
-			$text	= isset( $input['text'] ) ? $input['text'] : '';
+			$text	= $input['text'] ?? '';
 
 			if( $input['type'] == 'date' && strlen( $value ) )
 				$value	= date( 'd.m.Y', strtotime( $value ) );

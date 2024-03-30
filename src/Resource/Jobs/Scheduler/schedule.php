@@ -35,5 +35,5 @@ if( isset( $configFile ) )											//  an alternative config file is set
 	ConsoleEnvironment::$configFile   = $configFile;				//  set config file
 
 $m	= new \Scheduler();												//  start maintainer
-$m->loadJobs( isset( $mode ) ? $mode : NULL );						//  load jobs for configured or called mode
+$m->loadJobs( $mode ?? NULL );						//  load jobs for configured or called mode
 $m->run( $loop, $verbose );											//  run maintainer to handle jobs

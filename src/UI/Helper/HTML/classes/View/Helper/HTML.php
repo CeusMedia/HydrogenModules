@@ -236,7 +236,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 	public static function Select( string $name, $options, string $class = NULL, bool $readonly = NULL, string $onChange = NULL ): string
 	{
 		if( is_array( $options ) ){
-			$selected	= isset( $options['_selected'] ) ? $options['_selected'] : NULL;
+			$selected	= $options['_selected'] ?? NULL;
 			$options	= self::Options( $options, $selected );
 		}
 		if( preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )

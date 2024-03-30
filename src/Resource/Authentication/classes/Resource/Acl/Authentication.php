@@ -48,18 +48,14 @@ class Resource_Acl_Authentication extends Abstraction
 			if( $controller === NULL )
 				return $this->controllerActions;
 			$controller	= strtolower( str_replace( '/', '_', $controller ) );
-			if( isset( $this->controllerActions[$controller] ) )
-				return $this->controllerActions[$controller];
-			return [];
+			return $this->controllerActions[$controller] ?? [];
 		}
 		else{
 			$rights	= $this->getRights( $roleId );
 			if( $controller === NULL )
 				return $rights;
 			$controller	= strtolower( str_replace( '/', '_', $controller ) );
-			if( isset( $rights[$controller] ) )
-				return $rights[$controller];
-			return [];
+			return $rights[$controller] ?? [];
 		}
 	}
 

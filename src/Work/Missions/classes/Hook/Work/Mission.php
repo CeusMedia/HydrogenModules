@@ -71,7 +71,7 @@ class Hook_Work_Mission extends Hook
 	static public function onProjectRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
-		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
+		$data->informOthers	= $data->informOthers ?? FALSE;
 		if( empty( $data->projectId ) ){
 			$message	= 'Hook "Work_Missions::onProjectRemove" is missing project ID in data.';
 			$env->getMessenger()->noteFailure( $message );
@@ -105,8 +105,8 @@ class Hook_Work_Mission extends Hook
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$data->activeOnly	= $data->activeOnly ?? FALSE;
+		$data->linkable		= $data->linkable ?? FALSE;
 
 		$modelMission	= new Model_Mission( $env );
 		$words			= $env->getLanguage()->getWords( 'work/mission' );
@@ -168,8 +168,8 @@ class Hook_Work_Mission extends Hook
 
 		if( empty( $projectIds ) )
 			return;
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$data->activeOnly	= $data->activeOnly ?? FALSE;
+		$data->linkable		= $data->linkable ?? FALSE;
 		$list			= [];
 		$modelMission	= new Model_Mission( $env );
 		$indices		= ['projectId' => $projectIds];
@@ -209,7 +209,7 @@ class Hook_Work_Mission extends Hook
 	static public function onUserRemove( Environment $env, $context, $module, $payload = [] )
 	{
 		$data				= (object) $payload;
-		$data->informOthers	= isset( $data->informOthers ) ? $data->informOthers : FALSE;
+		$data->informOthers	= $data->informOthers ?? FALSE;
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Work_Missions::onUserRemove" is missing user ID in data.';
 			$env->getMessenger()->noteFailure( $message );

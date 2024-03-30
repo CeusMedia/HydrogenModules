@@ -58,7 +58,7 @@ class Controller_Info_Dashboard extends Controller
 				$panelId	= trim( $panelId );
 				if( in_array( $panelId, $this->panels ) )
 					continue;
-				$position	= isset( $positions[$panelId] ) ? $positions[$panelId] : NULL;
+				$position	= $positions[$panelId] ?? NULL;
 				try{
 					$this->logic->addPanelToUserDashboard( $this->userId, $panelId, $position );
 					$count++;

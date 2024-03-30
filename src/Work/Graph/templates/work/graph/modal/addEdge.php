@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$nodeId	= isset( $nodeId ) ? $nodeId : NULL;
+$nodeId	= $nodeId ?? NULL;
 
 $optGraph	= [];
 foreach( $graphs as $graph )

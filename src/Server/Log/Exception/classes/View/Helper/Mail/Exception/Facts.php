@@ -50,9 +50,7 @@ class View_Helper_Mail_Exception_Facts
 		$class2	= substr( $SQLSTATE, 2, 3 );
 
 		$words		= $this->env->getLanguage()->getWords( 'server/log/exception/sqlstate' );
-		if( isset( $words[$class1][$class2] ) )
-			return $words[$class1][$class2];
-		return 'unknown';
+		return $words[$class1][$class2] ?? 'unknown';
 	}
 
 	protected function prepare(): void

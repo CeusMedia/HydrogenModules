@@ -30,7 +30,7 @@ class View_Helper_Mail_Facts
 	public function add( string $keyOrLabel, string $valueAsHtml, ?string $valueAsText = NULL, $direction = NULL ): self
 	{
 		$key	= $label	= $keyOrLabel;
-		$valueAsText	= $valueAsText !== NULL ? $valueAsText : strip_tags( $valueAsHtml );
+		$valueAsText	= $valueAsText ?? strip_tags( $valueAsHtml );
 		if( !empty( $this->labels[$key] ) )
 			$label	= $this->labels[$key];
 		if( !empty( $this->labels['label'.ucFirst( $key )] ) )

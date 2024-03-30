@@ -175,7 +175,7 @@ class Logic_Form_Fill extends Logic
 		foreach( $data as $line ){
 			$row	= [];
 			foreach( $keys as $key ){
-				$value	= isset( $line[$key] ) ? $line[$key] : '';
+				$value	= $line[$key] ?? '';
 				$row[]	= '"'.addslashes( $value ).'"';
 			}
 			$lines[]	= join( ';', $row );

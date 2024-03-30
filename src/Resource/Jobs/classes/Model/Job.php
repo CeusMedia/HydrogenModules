@@ -125,7 +125,7 @@ class Model_Job
 			$job->id		= $jobId;
 			$job->source	= 'json';
 			$job->mode		= is_string( $job->mode ) ? explode( ",", $job->mode ) : $job->mode;
-			$job->multiple	= isset( $job->multiple ) ? $job->multiple : FALSE;
+			$job->multiple	= $job->multiple ?? FALSE;
 			$job->interval	= isset( $job->interval ) ? $job->inteval : NULL;
 			if( $modes && !array_intersect( $job->mode, $modes ) )
 				continue;

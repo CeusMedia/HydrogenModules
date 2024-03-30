@@ -51,9 +51,9 @@ else if( count( $wallets ) > 1 ){
 			<select id="input_walletId" name="walletId" class="span12">'.$optWallet.'</select>';
 }
 
-$backwardTo	= isset( $backwardTo ) ? $backwardTo : '';
-$forwardTo	= isset( $forwardTo ) ? $forwardTo : '';
-$from		= isset( $from ) ? $from : '';
+$backwardTo	= $backwardTo ?? '';
+$forwardTo	= $forwardTo ?? '';
+$from		= $from ?? '';
 
 $linkBack	= '';
 if( $backwardTo/* || count( $cards ) > 1*/ ){
@@ -68,9 +68,9 @@ $panelPayIn	= '<div class="content-panel">
 	<h3>'.$iconCard.' Von Kreditkarte einzahlen</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/mangopay/card/payin/'.$cardId.'" method="post">
-			<input type="hidden" name="forwardTo" value="'.( isset( $forwardTo ) ? $forwardTo : '' ).'"/>
-			<input type="hidden" name="backwardTo" value="'.( isset( $backwardTo ) ? $backwardTo : '' ).'"/>
-			<input type="hidden" name="from" value="'.( isset( $from ) ? $from : '' ).'"/>
+			<input type="hidden" name="forwardTo" value="'.( $forwardTo ?? '' ).'"/>
+			<input type="hidden" name="backwardTo" value="'.( $backwardTo ?? '' ).'"/>
+			<input type="hidden" name="from" value="'.( $from ?? '' ).'"/>
 			<input type="hidden" name="walletId" value="'.$walletId.'"/>
 			<div class="row-fluid">
 				<div class="span8">

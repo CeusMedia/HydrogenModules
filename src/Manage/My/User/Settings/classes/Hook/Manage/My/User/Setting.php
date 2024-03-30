@@ -80,8 +80,8 @@ class Hook_Manage_My_User_Setting extends Hook
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/my/user/setting' );
 
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$data->activeOnly	= $data->activeOnly ?? FALSE;
+		$data->linkable		= $data->linkable ?? FALSE;
 
 		$list		= [];
 		$model		= new Model_User_Setting( $env );

@@ -39,7 +39,7 @@ else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdate
 	$path		= $env->getRequest()->get( '__path' );
 	$helperNav	= new View_Helper_Navigation();
 	$helperNav->setEnv( $env );
-	$helperNav->setCurrent( $path ? $path : 'index' );
+	$helperNav->setCurrent( $path ?: 'index' );
 	$navMain	= $helperNav->render();
 }
 
