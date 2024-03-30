@@ -107,7 +107,11 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|null
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )

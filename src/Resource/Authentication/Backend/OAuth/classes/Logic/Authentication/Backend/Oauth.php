@@ -68,6 +68,11 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
+	/**
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
@@ -91,6 +96,12 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 		return $this->session->get( 'auth_role_id');
 	}
 
+	/**
+	 *	@param		bool		$strict
+	 *	@param		bool		$withRole
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
@@ -107,7 +118,11 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE ): int|string
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -164,7 +179,6 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

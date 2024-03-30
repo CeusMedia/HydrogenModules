@@ -3,15 +3,20 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Authentication_Backend_Json extends Logic
+class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentication_BackendInterface
 {
 	protected Dictionary $session;
 
-	public function checkPassword( string $username, string $password ): bool
+	/**
+	 *	@param		int|string		$userId			In this case, it is the username
+	 *	@param		string			$password
+	 *	@return		bool
+	 */
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		$data	= [
 			'filters'	=> [
-				'username'	=> $username,
+				'username'	=> $userId,
 				'password'	=> md5( $password )
 			]
 		];
@@ -31,6 +36,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
+	/**
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
@@ -44,7 +54,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE ): ?string
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -54,7 +68,12 @@ class Logic_Authentication_Backend_Json extends Logic
 		return $this->env->getSession()->get( 'auth_role_id');
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	/**
+	 *	@param		bool		$strict
+	 *	@param		bool		$withRole
+	 *	@return		object|NULL
+	 */
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
@@ -70,7 +89,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -120,7 +143,8 @@ class Logic_Authentication_Backend_Json extends Logic
 	/**
 	 *	@todo		implement if possible
 	 */
-	protected function noteUserActivity()
+	public function noteUserActivity(): self
 	{
+		return $this;
 	}
 }

@@ -1,26 +1,31 @@
 <?php
+
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+
 /**
  *	@todo		apply module config main switch
  */
 class Job_Cache extends Job_Abstract
 {
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
-	public function countObjects()
+	public function countObjects(): void
 	{
-		$number		= 0;
-		$cache		= $this->env->getCache();
-		foreach( $this->cache->index() as $entry )
+//		$number		= 0;
+//		$cache		= $this->env->getCache();
+		$number		= count( array_diff( $this->cache->index(), ['.htaccess'] ) );
+/*		foreach( $this->cache->index() as $entry )
 			if( $entry !== '.htaccess' )
-				$number	+= 1;
+				$number	+= 1;*/
 		$this->out( sprintf( 'Found %s objects in cache.', $number ) );
 	}
 
-	public function clearObjects()
+	public function clearObjects(): void
 	{
-		foreach( $this->cache->index() as $entry )
+		$this->cache->clear();
+/*		foreach( $this->cache->index() as $entry )
 			if( $entry !== '.htaccess' )
-				$this->cache->remove( $entry );
+				$this->cache->delete( $entry );*/
 		$this->out( 'All cache objects removed.' );
 	}
 
