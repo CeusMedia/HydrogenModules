@@ -16,7 +16,7 @@ $buttonbar		= '';
 if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
-	$helperCart->setPaymentBackend( $cart->get( 'paymentMethod', '' ) );
+	$helperCart->setPaymentBackend( $cart->get( 'paymentMethod' ) );
 	if( is_object( $address ) )
 		$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );

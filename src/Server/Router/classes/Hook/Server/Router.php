@@ -103,7 +103,7 @@ class Hook_Server_Router extends Hook
 	protected static function readRoutesFromXml( Environment $env ): array
 	{
 		$list		= [];
-		$fileName	= self::getRouteXmlFilePath( $env );
+		$fileName	= self::getRouteXmlFilePath();
 		if( !file_exists( $fileName ) )
 			return $list;
 

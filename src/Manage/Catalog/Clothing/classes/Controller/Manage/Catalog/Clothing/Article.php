@@ -105,6 +105,7 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 
 	public function setImage( string $articleId, $remove = NULL ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$article	= $this->modelArticle->get( $articleId );
 		if( $remove ){
 			unlink( $this->path.$article->image );

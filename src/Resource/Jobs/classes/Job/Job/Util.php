@@ -16,7 +16,7 @@ class Job_Job_Util extends Job_Abstract
 	 *	@return		string		Current date time in requested format
 	 *	@todo		use environment date after framework update, see below
 	 */
-	public function getDate()
+	public function getDate(): string
 	{
 		$format	= 'r';
 		if( $this->parameters->get( '-f' ) && !$this->parameters->get( '--format' ) )
@@ -38,7 +38,7 @@ class Job_Job_Util extends Job_Abstract
 		$this->out( $this->results );
 	}
 
-	public function getExtensionVersion()
+	public function getExtensionVersion(): void
 	{
 		if( !( $extensions	= $this->commands ) ){
 			$this->out( 'No extension(s) given' );

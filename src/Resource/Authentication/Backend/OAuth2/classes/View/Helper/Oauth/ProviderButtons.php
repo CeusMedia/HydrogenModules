@@ -1,20 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Oauth_ProviderButtons
 {
-	protected $env;
-	protected $from;
-	protected $linkPath			= './auth/local/login';
-	protected $dropdownLabel	= 'more';
+	protected Environment $env;
+	protected Model_Oauth_Provider $modelProvider;
+	protected string $from				= '';
+	protected string $linkPath			= './auth/local/login';
+	protected string $dropdownLabel		= 'more';
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
 	}
 
-	public function count()
+	public function count(): int
 	{
 		$conditions	= ['status' => Model_Oauth_Provider::STATUS_ACTIVE];
 		return $this->modelProvider->count( $conditions );

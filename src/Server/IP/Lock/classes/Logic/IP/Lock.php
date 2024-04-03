@@ -29,9 +29,10 @@ class Logic_IP_Lock extends Logic
 			if( !preg_match( $filter->pattern, $uri ) )
 				continue;
 			$ipLockId	= $this->lockIp( $ip, $filter->reasonId, $filter );
-			if( $filter->lockStatus != Model_IP_Lock_Filter::STATUS_LOCKED ){
-				$this->setStatus( $ipLockId, $filter->lockStatus );
-			}
+
+//			if( $filter->lockStatus != Model_IP_Lock_Filter::STATUS_LOCKED )
+//				$this->setStatus( $ipLockId, $filter->lockStatus );
+
 			$this->modelFilter->edit( $filter->ipLockFilterId, array( 'appliedAt' => time() ) );
 			return TRUE;
 		}

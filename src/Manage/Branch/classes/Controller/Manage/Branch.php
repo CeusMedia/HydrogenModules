@@ -126,7 +126,8 @@ class Controller_Manage_Branch extends Controller
 		$data			= $model->get( $branchId );
 		if( !$data ){
 			$messenger->noteError( 'Invalid ID: '.$branchId );
-			return $this->restart( NULL, TRUE );
+			$this->restart( NULL, TRUE );
+			return;
 		}
 		$model->remove( $branchId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );

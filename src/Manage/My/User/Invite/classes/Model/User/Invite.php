@@ -56,7 +56,7 @@ class Model_User_Invite extends Model
 		$split	= min( $split, $length );															//  split length cannot be longer than length
 		$split	= max( $split, 0 );																	//  split cannot by negative
 
-		$pos	= rand( 0, count( $code ) - $length - 1 );
+		$pos	= random_int( 0, count( $code ) - $length - 1 );
 		$code	= substr( $code, $pos, $length );
 		$code	= strtoupper( $code );
 		if( $split !== 0 && $split !== $length )													//  valid split length is set

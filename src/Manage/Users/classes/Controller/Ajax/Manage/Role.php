@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Ajax_Manage_Role extends AjaxController
 {

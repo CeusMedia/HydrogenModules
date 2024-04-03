@@ -1,4 +1,7 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php
+/** @noinspection PhpUndefinedClassInspection */
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -43,7 +46,6 @@ class Job_Mail_Migration extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function migrate(): void
@@ -165,7 +167,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->_loadMailClasses();
 	}
 
-	protected function logMigration( $mail, $message ): void
+	protected function logMigration( object $mail, string $message ): void
 	{
 		$fileName	= 'job.resource_mail.archive.migration.log';
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
@@ -212,10 +214,10 @@ class Job_Mail_Migration extends Job_Abstract
 
 	/**
 	 *	Loads PHP class files directly from mail class folder to allow deserialization.
-	 *	@return		array
+	 *	@return        void
 	 *	@throws		ReflectionException
 	 */
-	private function _loadMailClasses(): array
+	private function _loadMailClasses(): void
 	{
 		$loadedClasses	= [];
 		$mailClassPaths	= ['./', 'admin/'];
@@ -234,7 +236,6 @@ class Job_Mail_Migration extends Job_Abstract
 				}
 			}
 		}
-		return $loadedClasses;
 	}
 
 	private function logChangesMadeToMailObject( object $mail, array $changes ): void

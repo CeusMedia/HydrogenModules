@@ -2,7 +2,7 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  *	@version		$Id$
  */
 class Controller_Oauth_Application extends Controller

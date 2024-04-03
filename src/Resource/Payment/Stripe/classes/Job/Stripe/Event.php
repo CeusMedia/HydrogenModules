@@ -54,7 +54,7 @@ class Job_Stripe_Event extends Job_Abstract
 		}
 		else {
 			$buffer		= new OutputBuffer();
-			$logicKey	= CamelCase::convert( 'Payment Stripe Event '.$key, TRUE, TRUE );
+			$logicKey	= CamelCase::convert( 'Payment Stripe Event '.$key, TRUE );
 //			try{
 			$logicEvent	= $this->env->logic->get( $logicKey );
 			$logicEvent->setEvent( $event )->handle();

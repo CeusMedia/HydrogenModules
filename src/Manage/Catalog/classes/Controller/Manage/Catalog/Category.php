@@ -5,7 +5,12 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Catalog_Category extends Controller
 {
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	protected $request;
+	protected $session;
+	protected $logic;
+	protected $messenger;
+
+	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] ): void
 	{
 		$cache		= $env->getCache();
 		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
@@ -36,7 +41,7 @@ class Controller_Manage_Catalog_Category extends Controller
 		) ) );
 	}
 
-	public function add( $parentId = NULL )
+	public function add( $parentId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -63,7 +68,7 @@ class Controller_Manage_Catalog_Category extends Controller
 		exit;
 	}
 
-	public function edit( $categoryId )
+	public function edit( $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -86,12 +91,12 @@ class Controller_Manage_Catalog_Category extends Controller
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function remove( $categoryId )
+	public function remove( $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -112,8 +117,8 @@ class Controller_Manage_Catalog_Category extends Controller
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
 		$this->logic		= new Logic_Catalog( $this->env );
-		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
 	}

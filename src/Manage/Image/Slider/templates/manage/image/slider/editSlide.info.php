@@ -4,6 +4,13 @@ use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $slider */
+/** @var object $slide */
+/** @var string $basePath */
+
 $w	= (object) $words['editSlide.info'];
 
 $slideFilePath	= $basePath.$slider->path.$slide->source;

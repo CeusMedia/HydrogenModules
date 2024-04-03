@@ -110,7 +110,7 @@ class Controller_Admin_Config extends Controller
 					if( preg_match( '/password/', $key ) && !strlen( $value ) )
 						continue;
 					if( substr_count( $key, "|" ) ){
-						list( $partModuleId, $partKey ) = explode( "|", $key );
+						[$partModuleId, $partKey] = explode( "|", $key );
 						$partKey	= preg_replace( "/([a-z0-9])_(\S)/", "\\1.\\2", $partKey );
 						if( !isset( $list[$partModuleId] ) )
 							$list[$partModuleId]	= [];

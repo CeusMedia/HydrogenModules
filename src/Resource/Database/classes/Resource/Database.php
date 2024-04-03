@@ -19,7 +19,7 @@
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2021 Christian Würker
+ *	@copyright		2011-2024 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 

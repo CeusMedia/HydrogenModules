@@ -67,7 +67,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$image		= $this->request->get( 'image' );
 		try{
 			$upload		= new Logic_Upload( $this->env );
-			$upload->setUpload( image );										//  @todo handle upload errors before
+			$upload->setUpload( \IMAGE );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
 				$this->messenger->noteError( 'Das ist kein Bild.' );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration

@@ -115,7 +115,7 @@ class Logic_Log_Exception extends Logic
 
 	public function importLogFileItem( string $line )
 	{
-		list($timestamp, $dataEncoded)	= explode( ":", $line );
+		[$timestamp, $dataEncoded]	= explode( ":", $line );
 		$data	= base64_decode( $dataEncoded );
 		$object	= @unserialize( $data );
 		if( !is_object( $object ) )

@@ -2,6 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $slider */
+/** @var string $basePath */
+
 $w		= (object) $words['edit.slides'];
 
 $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil not-icon-white'] );

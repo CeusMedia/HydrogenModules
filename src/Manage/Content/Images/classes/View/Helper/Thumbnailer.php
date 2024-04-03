@@ -46,7 +46,7 @@ class View_Helper_Thumbnailer
 			'maxHeight'	=> $maxHeight,
 		];
 		if( !file_exists( $imagePath ) ){
-			$this->uncacheFile( $imagePath, $maxWidth, $maxHeight );
+			$this->uncacheFile( $imagePath );
 			throw new RuntimeException( 'Image "'.$imagePath.'" is not existing' );
 		}
 		if( ( $thumb = $this->model->getByIndices( $indices ) ) )
@@ -75,7 +75,7 @@ class View_Helper_Thumbnailer
 		$ids	= $this->cache->index();
 		foreach( RecursiveFolderLister::getFileList( $pathImages ) as $entry ){
 			foreach( $ids as $nr => $id ){
-				if( strpos( $id, $entry->getPathname() ) !== FALSE )
+				if( strpos( $id, (string) $entry->getPathname() ) !== FALSE )
 					unset( $ids[$nr] );
 			}
 

@@ -36,7 +36,7 @@ class View_Helper_Gravatar
 	{
 		if( !$this->user )
 			throw new RuntimeException( "No user set" );
-		$attributes['src']		= $this->getImageUrl( $this->user->email, $this->size, $this->rating );
+		$attributes['src']		= $this->getImageUrl();
 		$attributes['width']	= $this->size;
 		$attributes['height']	= $this->size;
 		return HtmlTag::create( 'img', NULL, $attributes );

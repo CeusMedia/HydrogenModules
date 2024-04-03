@@ -2,7 +2,7 @@
 /**
  *	Content View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014 Ceus Media
+ *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /**
  *	Content View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014 Ceus Media
+ *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Manage_Content_Locale extends View
 {

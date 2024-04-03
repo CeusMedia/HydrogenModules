@@ -207,7 +207,7 @@ class Controller_Auth_Rest extends Controller
 			}
 			if( !preg_match( '/^[a-z]+:-[0-9]+$/i', $result ) )
 				throw new InvalidArgumentException( 'Invalid response code' );
-			list( $level, $code )	= explode( ':', $result, 2 );
+			[$level, $code]	= explode( ':', $result, 2 );
 			$message	= 'error-'.$level.$code;
 			$message	= $words[$message] ?? $message;
 			$this->messenger->noteError( $message );

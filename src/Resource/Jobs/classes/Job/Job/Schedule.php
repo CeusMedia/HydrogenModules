@@ -12,11 +12,11 @@ class Job_Job_Schedule extends Job_Abstract
 {
 //	protected $pathLocks	= 'config/locks/';
 //	protected $pathJobs		= 'config/jobs/';
-//	protected $logic;
+	protected Logic_Job $logic;
 
 	/**
 	 *	Archive old job runs.
-	 *	Job runs to be archived can be filtered by minimum age and job idenfier(s).
+	 *	Job runs to be archived can be filtered by minimum age and job identifier(s).
 	 *	Supports dry mode.
 	 *
 	 *	Parameters:
@@ -41,9 +41,9 @@ class Job_Job_Schedule extends Job_Abstract
 	 *			- optional, default: 0
 	 *
 	 *	@access		public
-	 *	@return		void
+	 *	@return		int
 	 */
-	public function archive()
+	public function archive(): int
 	{
 		$modelRun			= new Model_Job_Run( $this->env );
 
@@ -67,7 +67,7 @@ class Job_Job_Schedule extends Job_Abstract
 				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
 			foreach( explode( ',', $identifierParam ) as $identifier ){
 				if( !array_key_exists( $identifier, $jobDefinitionMap ) )
-					throw new \InvalidArgumentException( 'Invalid job identifier: '.$identifier );
+					throw new InvalidArgumentException( 'Invalid job identifier: '.$identifier );
 				$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
 			}
 			$conditions['jobDefinitionId']	= $jobDefinitionIds;
@@ -81,7 +81,7 @@ class Job_Job_Schedule extends Job_Abstract
 			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
-					throw new \InvalidArgumentException( 'Invalid job run status: '.$statusKey );
+					throw new InvalidArgumentException( 'Invalid job run status: '.$statusKey );
 				$statuses[]	= $statusMap[$statusKey];
 			}
 			$conditions['status']	= $statuses;
@@ -98,7 +98,7 @@ class Job_Job_Schedule extends Job_Abstract
 			$this->showProgress( $counter = 0, $nrJobs );
 			$database	= $this->env->getDatabase();
 			$database->beginTransaction();
-			foreach( $runIds as $nr => $runId ){
+			foreach( $runIds as $runId ){
 				if( !$this->dryMode )
 					$this->logic->archiveJobRun( $runId );
 				$this->showProgress( ++$counter, $nrJobs );
@@ -112,7 +112,7 @@ class Job_Job_Schedule extends Job_Abstract
 
 	/**
 	 *	Remove old job runs.
-	 *	Job runs to be removed can be filtered by minimum age and job idenfier(s).
+	 *	Job runs to be removed can be filtered by minimum age and job identifier(s).
 	 *	Supports dry mode.
 	 *
 	 *	Parameters:
@@ -164,7 +164,7 @@ class Job_Job_Schedule extends Job_Abstract
 				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
 			foreach( explode( ',', $identifierParam ) as $identifier ){
 				if( !array_key_exists( $identifier, $jobDefinitionMap ) )
-					throw new \InvalidArgumentException( 'Invalid job identifier: '.$identifier );
+					throw new InvalidArgumentException( 'Invalid job identifier: '.$identifier );
 				$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
 			}
 			$conditions['jobDefinitionId']	= $jobDefinitionIds;
@@ -178,7 +178,7 @@ class Job_Job_Schedule extends Job_Abstract
 			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
 			foreach( explode( ',', $statusParam ) as $statusKey ){
 				if( !array_key_exists( $statusKey, $statusMap ) )
-					throw new \InvalidArgumentException( 'Invalid job run status: '.$statusKey );
+					throw new InvalidArgumentException( 'Invalid job run status: '.$statusKey );
 				$statuses[]	= $statusMap[$statusKey];
 			}
 			$conditions['status']	= $statuses;
@@ -195,7 +195,7 @@ class Job_Job_Schedule extends Job_Abstract
 			$this->showProgress( $counter = 0, $nrJobs );
 			$database	= $this->env->getDatabase();
 			$database->beginTransaction();
-			foreach( $runIds as $nr => $runId ){
+			foreach( $runIds as $runId ){
 				if( !$this->dryMode )
 					$this->logic->removeJobRun( $runId );
 				$this->showProgress( ++$counter, $nrJobs );
@@ -207,7 +207,7 @@ class Job_Job_Schedule extends Job_Abstract
 		return $nrJobs ? 2 : 1;
 	}
 
-	public function run()
+	public function run(): int
 	{
 		$preparedJobs	= $this->logic->prepareScheduledJobs();
 		$numberFound	= count( $preparedJobs );
@@ -237,13 +237,13 @@ class Job_Job_Schedule extends Job_Abstract
 				if( $result === 1 )
 					$numberDone++;
 			}
-			catch( \Exception $e ){
+			catch( Exception $e ){
 			}
 		}
 		$this->results	= [
 			'numberFound'	=> $numberFound,
 			'numberRan'		=> $numberRan,
-			'numberdone'	=> $numberDone,
+			'numberDone'	=> $numberDone,
 		];
 		return 1;
 	}
@@ -252,6 +252,7 @@ class Job_Job_Schedule extends Job_Abstract
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
 /*		$this->skipJobs	= array(
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,

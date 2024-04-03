@@ -140,7 +140,7 @@ class View_Work_Mission extends View
 	{
 		if( !strlen( $time ) )
 			return '-';
-		list( $hours, $minutes ) = explode( ':', $time );
+		[$hours, $minutes] = explode( ':', $time );
 		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),

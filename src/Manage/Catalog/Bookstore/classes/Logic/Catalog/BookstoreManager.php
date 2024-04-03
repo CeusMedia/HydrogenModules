@@ -328,7 +328,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
-		$this->clearCacheForArticle( $articleId, TRUE );
+		$this->clearCacheForArticle( $articleId );
 	}
 
 	/**

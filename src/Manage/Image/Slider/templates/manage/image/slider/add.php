@@ -1,6 +1,12 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Dictionary $data */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
@@ -15,7 +21,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSav
 	'class'	=> 'btn btn-primary',
 ] );
 
-$optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status', NULL ) );
+$optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status' ) );
 $optEasing		= HtmlElements::Options( $words['optEasing'], $data->get( 'easing' ) );
 $optAnimation	= HtmlElements::Options( $words['optAnimation'], $data->get( 'animation' ) );
 $optShowButtons	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'showButtons' ) );

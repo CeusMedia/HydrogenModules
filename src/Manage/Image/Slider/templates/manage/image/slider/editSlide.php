@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $slide */
+
 $w		= (object) $words['editSlide'];
 
 $optStatus	= $words['states'];

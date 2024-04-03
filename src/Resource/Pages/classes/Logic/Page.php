@@ -4,7 +4,7 @@
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Logic;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Logic;
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Logic_Page extends Logic
 {
@@ -428,7 +428,7 @@ class Logic_Page extends Logic
 			$frontend	= Logic_Frontend::getInstance( $this->env );
 			$envManaged	= $frontend->getEnv();
 		}
-		$source	= $envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+		$source	= $envManaged->getModules()->get( 'UI_Navigation' )->config['menu.source']->value;
 		if( $source === 'Database' )
 			$this->model[$this->app]	= new Model_Page( $envManaged );
 		else if( $source === 'Config' )

@@ -1,5 +1,18 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var Dictionary $moduleConfig */
+/** @var array $words */
+/** @var array<object> $categories */
+/** @var string $categoryId */
+/** @var object{price: float, type: string, title: string, rank: int} $entity */
+/** @var object $category */
 
 $w		= (object) $words['addImage'];
 
@@ -12,7 +25,7 @@ $optCategory	= HtmlElements::Options( $optCategory, $categoryId );
 
 $optStatus		= HtmlElements::Options( $words['states'], 0 );
 
-$image->price	= $image->price ?: $category->price;
+$entity->price	= $entity->price ?: $category->price;
 
 $iconFolder		= '<i class="icon-folder-open icon-white"></i>';
 
@@ -28,7 +41,7 @@ $panelAdd	= '
 				</div>
 				<div class="span2">
 					<label for="input_rank">'.$w->labelRank.'</label>
-					<input type="text" name="rank" id="input_rank" class="span12" value="'.$image->rank.'"/>
+					<input type="text" name="rank" id="input_rank" class="span12" value="'.$entity->rank.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -40,17 +53,17 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_title">'.$w->labelTitle.'</label>
-					<textarea name="title" id="input_title" class="span12" rows="4">'.$image->title.'</textarea>
+					<textarea name="title" id="input_title" class="span12" rows="4">'.$entity->title.'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span3">
 					<label for="input_price"><abbr title="'.$w->labelPrice_title.'">'.$w->labelPrice.'</abbr> <small class="muted">'.$w->labelPrice_suffix.'</small></label>
-					<input type="text" name="price" id="input_price" class="span12" value="'.$image->price.'"/>
+					<input type="text" name="price" id="input_price" class="span12" value="'.$entity->price.'"/>
 				</div>
 <!--				<div class="span3">
 					<label for="input_type">Type</label>
-					<input type="text" name="type" id="input_type" class="span12" value="'.$image->type.'"/>
+					<input type="text" name="type" id="input_type" class="span12" value="'.$entity->type.'"/>
 				</div>-->
 				<div class="span3">
 					<label for="input_status">'.$w->labelStatus.'</label>

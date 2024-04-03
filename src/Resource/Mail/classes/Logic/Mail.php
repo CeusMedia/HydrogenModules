@@ -1,5 +1,8 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php
+/** @noinspection PhpUndefinedClassInspection */
 /** @noinspection PhpMultipleClassDeclarationsInspection */
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
@@ -12,6 +15,7 @@ use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
 use CeusMedia\Mail\Renderer as MailMessageRendererV1;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
@@ -644,7 +648,7 @@ class Logic_Mail extends Logic
 		$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->object->instance ) );
-		if( $mail->object->instance->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
+		if( $mail->object->instance->mail instanceof MailMessage)							//  modern mail message with parsed body parts
 			return $mail->object->instance->mail->getParts( TRUE );
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available
 	}
@@ -838,13 +842,14 @@ class Logic_Mail extends Logic
 	 *	Returns current state of no new state is given.
 	 *	@access		public
 	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
-	 *	@return		boolean|NULL	Current state if no new state is given
+	 *	@return		boolean|self	Current state if no new state is given
 	 */
-	public function useQueue( ?bool $toggle = NULL ): bool|NULL
+	public function useQueue( ?bool $toggle = NULL ): bool|self
 	{
-		if( $toggle === NULL )
+		if( NULL === $toggle )
 			return $this->options->get( 'queue.enabled' );
-		$this->options->set( 'queue.enabled', (bool) $toggle );
+		$this->options->set( 'queue.enabled', $toggle );
+		return $this;
 	}
 
 	//  --  STATIC PUBLIC  --  //

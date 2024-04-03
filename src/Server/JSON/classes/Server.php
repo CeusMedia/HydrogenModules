@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Writer as FileWriter;
@@ -19,7 +19,7 @@ use CeusMedia\HydrogenFramework\Application\Web\Site as WebSite;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Server extends WebSite
 {

@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var string $basePath */
+/** @var string $sliderId */
+
 $iconBack	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 
 $helper		= new View_Helper_Image_Slider( $env );

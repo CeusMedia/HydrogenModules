@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Oauth_Application extends Model
 {
@@ -68,7 +68,7 @@ class Model_Oauth_Application extends Model
 	public function getNewClientId( ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
-			$pos	= round( rand(0, 1) * 20 );
+			$pos	= round( random_int(0, 1) * 20 );
 			$id		= substr( md5( $salt.'_'.microtime( TRUE ).'_'.$pepper ), $pos, 12 );
 		} while( $this->getByIndex( 'clientId', $id ) );
 		return $id;

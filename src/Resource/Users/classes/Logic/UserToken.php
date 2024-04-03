@@ -33,7 +33,7 @@ class Logic_UserToken extends Logic
 			'createdAt'	=> time(),
 		] );
 
-		$this->revokeByUserId( $userId, $tokenId, $scope );
+		$this->revokeByUserId( $userId, $tokenId );
 
 		return $token;
 	}

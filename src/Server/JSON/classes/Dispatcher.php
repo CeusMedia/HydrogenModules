@@ -20,7 +20,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010-2013 Ceus Media
+ *	@copyright		2010-2013-2024 Ceus Media (https://ceusmedia.de/)
  *	@since			0.1
  */
 
@@ -34,7 +34,7 @@ use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010-2013 Ceus Media
+ *	@copyright		2010-2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Dispatcher extends GeneralDispatcher
 {

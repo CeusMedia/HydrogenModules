@@ -120,7 +120,7 @@ class Model_Job
 	public function readJobsFromJsonFile( string $pathName, $modes = [] ): array
 	{
 		$jobs			= [];
-		$json	= JsonFileReader::load( $pathName, FALSE );
+		$json	= JsonFileReader::load( $pathName );
 		foreach( $json as $jobId => $job ){
 			$job->id		= $jobId;
 			$job->source	= 'json';
@@ -141,11 +141,11 @@ class Model_Job
 		$jobs	= [];
 		$xml	= XmlElementReader::readFile( $pathName );
 		foreach( $xml->job as $job ){
-			$jobObj				= new \stdClass();
+			$jobObj				= new stdClass();
 			$jobObj->id			= $job->getAttribute( 'id' );
 			$jobObj->source		= 'xml';
 			$jobObj->mode		= ['dev'];
-			$jobObj->multiple	= $job->hasAttribute( 'multiple' ) ? TRUE : FALSE;
+			$jobObj->multiple	= $job->hasAttribute( 'multiple' );
 			$jobObj->deprecated	= NULL;
 			foreach( $job->children() as $nodeName => $node ){
 				$value	= (string) $node;
@@ -198,7 +198,7 @@ class Model_Job
 	protected function readJobsFromModules( $modes = [] ): array
 	{
 		$jobs	= [];
-		foreach( $this->env->getModules()->getAll() as $moduleId => $module )
+		foreach( $this->env->getModules()->getAll() as $module )
 			foreach( $module->jobs as $job )
 				$jobs[$job->id]	= $job;
 		return $jobs;

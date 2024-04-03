@@ -99,7 +99,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		foreach( $this->modelImage->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
 		$data['rank']	= max( $number, $lastRank + 1, (int) $this->request->get( 'rank' ) );
-		$this->addData( 'image', (object) $data );
+		$this->addData( 'entity', (object) $data );
 		$this->addData( 'categoryId', $categoryId );
 		$this->addData( 'category', $category );
 	}

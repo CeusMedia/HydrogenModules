@@ -5,24 +5,27 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_Content_Document extends Hook
 {
-	public static function onRegisterHints( Environment $env, $context, $module, $arguments = NULL ){
-		$words	= $env->getLanguage()->getWords( 'manage/content/document' );
+	public function onRegisterHints(): void
+	{
+		if( !class_exists( 'View_Helper_Hint' ) )
+			return;
+		$words	= $this->env->getLanguage()->getWords( 'manage/content/document' );
 		View_Helper_Hint::registerHints( $words['hints'], 'Manage_Content_Documents' );
 	}
 
-	public static function onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
+	public function onTinyMCE_getLinkList(): void
 	{
-		$frontend		= $env->getLogic()->get( 'Frontend' );
-		$moduleConfig	= $env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
+		$frontend		= $this->env->getLogic()->get( 'Frontend' );
+		$moduleConfig	= $this->env->getConfig()->getAll( "module.manage_content_documents.", TRUE );
 		$pathFront		= $frontend->getPath();
 		$pathDocuments	= $moduleConfig->get( 'path.documents' );
 
-		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
+		$words			= $this->env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
 
 		$list			= [];
 		if( file_exists( $pathFront ) && is_dir( $pathFront.$pathDocuments ) ){
-			$model			= new Model_Document( $env, $pathFront.$pathDocuments );
+			$model			= new Model_Document( $this->env, $pathFront.$pathDocuments );
 			foreach( $model->index() as $nr => $entry ){
 				$list[$entry.$nr]	= (object) [
 					'title'	=> /*$prefixes->document.*/$entry,
@@ -36,7 +39,7 @@ class Hook_Manage_Content_Document extends Hook
 			'menu'	=> array_values( $list ),
 		) );
 
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
+//		$this->context->list	= array_merge( $context->list, array_values( $list ) );
+		$this->context->list	= array_merge( $this->context->list, $list );
 	}
 }

@@ -44,7 +44,7 @@ $panelUsers	= '
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
 		'.$listUsers.'
-		'.HTML::Buttons( HTML::LinkButton( './manage/my/user/add/'.$company->companyId, $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary', NULL, TRUE ) ).'
+		'.HTML::Buttons( HTML::LinkButton( './manage/my/user/add/'.$company->companyId, $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary' ) ).'
 	</div>
 </div>';
 

@@ -23,7 +23,7 @@ class Hook_UI_MailEncryption extends Hook
 		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+\@\S+)".*>(.+)</a>(.*)$@siU';					//  pattern to match mail shortcode
 		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail links in content
 			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
-			list( $partName, $partHost )	= explode( '@', $matches[2][0] );						//  extract mail parts
+			[$partName, $partHost]	= explode( '@', $matches[2][0] );						//  extract mail parts
 			$replacement	= HtmlTag::create( 'span', $matches[3][0], array(					//  build replacement ...
 				'class'			=> 'encrypted-mail',												//  ... set identifier class for JS decryption
 				'data-name'		=> $partName,														//  ... set name part

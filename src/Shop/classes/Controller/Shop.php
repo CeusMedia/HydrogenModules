@@ -284,7 +284,7 @@ class Controller_Shop extends Controller
 		$priceShipping	= .0;
 		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
 			$weight	= 0;
-			foreach( $this->modelCart->get( 'positions', TRUE ) as $position )
+			foreach( $this->modelCart->get( 'positions' ) as $position )
 				$weight	+= $position->article->weight->all;
 			$logicShipping	= new Logic_Shop_Shipping( $this->env );
 			$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight( $this->logic->getDeliveryAddressFromCart()->country, $weight );

@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var array<object> $locks */
+
 $w		= (object) $words['index'];
 
 //$table		= '<div class="info empty"><em><small>'.$w->noEntries.'</small></em></div>';

@@ -1,10 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class Model_Module_Page
 {
-	protected $acl;
-	protected $env;
-	protected $useAcl;
-	protected $baseItem		= [
+	protected Environment $env;
+//	protected $acl;
+	protected bool $useAcl;
+	protected array $baseItem		= [
 		'parentId'		=> 0,
 		'status'		=> 0,
 		'type'			=> 0,
@@ -21,16 +24,17 @@ class Model_Module_Page
 		'createdAt'		=> 0,
 		'modifiedAt'	=> 0,
 	];
-	protected $scopes		= [
+	protected array $scopes		= [
 		0	=> 'main',
 	];
-	protected $types		= [
+	protected array $types		= [
 		0	=> 'page',
 		1	=> 'menu',
 		2	=> 'module'
 	];
+	protected array $pages;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->useAcl	= $this->env->getModules()->has( 'Resource_Users' );
@@ -38,16 +42,15 @@ class Model_Module_Page
 		$this->loadPages();
 	}
 
-	public function edit( $pageId, $data = [] )
+	public function edit( string $pageId, $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function get( $pageId )
+	public function get( string $pageId )
 	{
-		$pageId	= (int) $pageId;
 		foreach( $this->pages as $page )
-			if( $page->pageId === $pageId )
+			if( (string) $page->pageId === $pageId )
 				return $page;
 		return NULL;
 	}
@@ -97,7 +100,7 @@ class Model_Module_Page
 
 	//  --  PROTECTED  --  //
 
-	protected function loadPages()
+	protected function loadPages(): void
 	{
 		$pageId		= 0;
 		$pages		= [];
@@ -118,10 +121,9 @@ class Model_Module_Page
 					$rank		.= "_".str_pad( $pageId, 2, "0", STR_PAD_LEFT );
 					$controller	= str_replace( '/', '_', ucwords( $link->path, '/' ) );
 
-					$item		= (object) array_merge( $this->baseItem, array(
+					$item		= (object) array_merge( $this->baseItem, [
 						'pageId'		=> $pageId,
 						'moduleId'		=> $module->id,
-						'parentId'		=> 0,
 						'type'			=> (int) array_search( 'module', $this->types ),
 						'scope'			=> $link->scope,
 						'status'		=> 1,
@@ -137,7 +139,7 @@ class Model_Module_Page
 						'language'		=> $link->language,
 						'rank'			=> $link->rank,
 						'active'		=> FALSE,
-					) );
+					] );
 					$pages[$rank]	= $item;
 				}
 			}

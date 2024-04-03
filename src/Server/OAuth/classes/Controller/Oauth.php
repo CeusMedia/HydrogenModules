@@ -3,7 +3,7 @@
  *	Controller for OAuth server.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Controller for OAuth server.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  *	@todo			code doc
  *	@todo			todos within code
  *	@todo			add response headers: "Cache-Control: no-store", "Pragma: no-cache"
@@ -192,7 +192,7 @@ class Controller_Oauth extends Controller
 		if( !empty( $headers['Authorization'] ) ){
 			if( preg_match( "/^Basic /", $headers['Authorization'] ) ){
 				$code	= preg_replace( "/^Basic /", "", $headers['Authorization'] );
-				list( $clientId, $clientSecret ) = explode( ":", base64_decode( $code ) );
+				[$clientId, $clientSecret] = explode( ":", base64_decode( $code ) );
 				return (object) ['clientId' => $clientId, 'clientSecret' => $clientSecret];
 			}
 		}

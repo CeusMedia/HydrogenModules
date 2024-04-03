@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -20,7 +20,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Locale extends Controller
 {

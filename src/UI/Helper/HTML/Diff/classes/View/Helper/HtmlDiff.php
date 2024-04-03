@@ -5,11 +5,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_HtmlDiff
 {
-	protected $env;
+	protected ?Environment $env	= NULL;
 
-	protected $html1;
+	protected ?string $html1	= NULL;
 
-	protected $html2;
+	protected ?string $html2	= NULL;
 
 	public function __construct( Environment $env = NULL, string $html1 = NULL, string $html2 = NULL )
 	{
@@ -19,7 +19,7 @@ class View_Helper_HtmlDiff
 			$this->setContents( $html1, $html2 );
 	}
 
-/*	public funtion __toString(){
+/*	public function __toString(){
 		return $this->render();
 	}
 */
@@ -57,15 +57,15 @@ class View_Helper_HtmlDiff
 
 class HtmlDiff {
 
-	private $content;
-	private $oldText;
-	private $newText;
-	private $oldWords = [];
-	private $newWords = [];
+	private string $content;
+	private string $oldText;
+	private string $newText;
+	private array $oldWords = [];
+	private array $newWords = [];
 	private $wordIndices;
-	private $encoding;
-	private $specialCaseOpeningTags = ["/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i'];
-	private $specialCaseClosingTags = ["</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>'];
+	private string $encoding;
+	private array $specialCaseOpeningTags = ["/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i'];
+	private array $specialCaseClosingTags = ["</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>'];
 
 	public function __construct( $oldText, $newText, $encoding = 'UTF-8' ) {
 		$this->oldText = $this->purifyHtml( trim( $oldText ) );
@@ -86,7 +86,8 @@ class HtmlDiff {
 		return $this->content;
 	}
 
-	private function getStringBetween( $str, $start, $end ) {
+	private function getStringBetween( string $str, string $start, string $end ): string
+	{
 		$expStr = explode( $start, $str, 2 );
 		if( count( $expStr ) > 1 ) {
 			$expStr = explode( $end, $expStr[ 1 ] );
@@ -98,18 +99,20 @@ class HtmlDiff {
 		return '';
 	}
 
-	private function purifyHtml( $html, $tags = null ) {
+	private function purifyHtml( string $html, $tags = null ): string
+	{
 		if( class_exists( 'Tidy' ) && false ) {
 			$config = ['output-xhtml'   => true, 'indent' => false];
 			$tidy = new tidy;
 			$tidy->parseString( $html, $config, 'utf8' );
-			$html = ( string )$tidy;
-			return $this->getStringBetween( $html, '<body>' );
+			$html = (string) $tidy;
+			return $this->getStringBetween( $html, '<body>', '</body>' );
 		}
 		return $html;
 	}
 
-	public function build() {
+	public function build(): string
+	{
 		$this->SplitInputsToWords();
 		$this->IndexNewWords();
 		$operations = $this->Operations();
@@ -119,7 +122,8 @@ class HtmlDiff {
 		return $this->content;
 	}
 
-	private function IndexNewWords() {
+	private function IndexNewWords():void
+	{
 		$this->wordIndices = [];
 		foreach( $this->newWords as $i => $word ) {
 			if( $this->IsTag( $word ) ) {
@@ -133,12 +137,14 @@ class HtmlDiff {
 		}
 	}
 
-	private function SplitInputsToWords() {
+	private function SplitInputsToWords(): void
+	{
 		$this->oldWords = $this->ConvertHtmlToListOfWords( $this->Explode( $this->oldText ) );
 		$this->newWords = $this->ConvertHtmlToListOfWords( $this->Explode( $this->newText ) );
 	}
 
-	private function ConvertHtmlToListOfWords( $characterString ) {
+	private function ConvertHtmlToListOfWords( $characterString ): array
+	{
 		$mode = 'character';
 		$current_word = '';
 		$words = [];
@@ -208,15 +214,18 @@ class HtmlDiff {
 		return $words;
 	}
 
-	private function IsStartOfTag( $val ) {
+	private function IsStartOfTag( $val ): bool
+	{
 		return $val == "<";
 	}
 
-	private function IsEndOfTag( $val ) {
+	private function IsEndOfTag( $val ): bool
+	{
 		return $val == ">";
 	}
 
-	private function IsWhiteSpace( $value ) {
+	private function IsWhiteSpace( $value ): bool
+	{
 		return !preg_match( '[^\s]', $value );
 	}
 

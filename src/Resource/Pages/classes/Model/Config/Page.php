@@ -7,7 +7,9 @@ class Model_Config_Page
 {
 	protected Environment $env;
 	protected string $filePath;
+	protected object|array $fileData;
 	protected array $pages;
+	protected array $scopes;
 	protected array $baseItem	= [
 		'parentId'		=> 0,
 		'status'		=> 0,
@@ -43,7 +45,7 @@ class Model_Config_Page
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function get( $pageId )
+	public function get( string $pageId ): ?object
 	{
 		$pageId	= (int) $pageId;
 		foreach( $this->pages as $page )
@@ -125,7 +127,7 @@ class Model_Config_Page
 
 	//  --  PROTECTED  --  //
 
-	protected function loadPages()
+	protected function loadPages(): void
 	{
 		$this->fileData	= JsonFileReader::load( $this->filePath, TRUE );
 		$this->scopes	= array_keys( (array) $this->fileData );

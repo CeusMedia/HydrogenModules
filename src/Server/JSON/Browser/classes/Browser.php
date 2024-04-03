@@ -9,12 +9,13 @@ use CeusMedia\HydrogenFramework\View;
  */
 class Browser
 {
-	protected $env;
+	protected Environment $env;
+	protected float $time1;
 
 	public function __construct( Environment $env )
 	{
-		$this->env	= $env;
-		$this->time1	= $this->env->getClock()->stop( 3, 1 );
+		$this->env		= $env;
+		$this->time1	= $this->env->getRuntime()->get( 3, 1 );
 	}
 
 	public function render( $body, $headers = [] )

@@ -173,7 +173,7 @@ class View_Helper_Catalog
 		if( $article->digestion )
 			$info[]	= $article->digestion;
 		if( $article->price )
-			$info[]	= str_replace( ".", ",", $this->formatPrice( $article->price ) ).$words['price_suffix'];
+			$info[]	= str_replace( ".", ",", static::formatPrice( $article->price ) ).$words['price_suffix'];
 		$item['info']	= implode( ", ", $info );
 		$labelISN	= $article->series ? $words['issn'] : $words['isbn'];
 		if( isset( $article->branches ) )

@@ -106,6 +106,6 @@ die( $e->getMessage() );
 	{
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
-		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );
+		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance );
 	}
 }

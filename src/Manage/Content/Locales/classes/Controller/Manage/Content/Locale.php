@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -21,7 +21,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Content_Locale extends Controller
 {

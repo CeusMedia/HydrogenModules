@@ -1,11 +1,24 @@
 <?php
-class Resource_Mangopay{
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
-	protected $api;
- 	static protected $instance;
+use CeusMedia\HydrogenFramework\Environment;
+use MangoPay\MangoPayApi;
+use MangoPay\Pagination;
+use MangoPay\Sorting;
 
-	protected function __construct( $env ){
-		$this->api	= new \MangoPay\MangoPayApi();
+class Resource_Mangopay
+{
+	protected static ?self $instance	= NULL;
+
+	protected MangoPayApi $api;
+	protected Environment $env;
+	protected Pagination$defaultPagination;
+	protected Sorting $defaultSorting;
+
+	protected function __construct( Environment $env )
+	{
+		$this->api	= new MangoPayApi();
 		$this->env	= $env;
 		$config		= $this->env->getConfig()->getAll( 'module.resource_payment_mangopay.', TRUE );
 		$config->set( 'log.target', 'mangopay.log' );
@@ -15,8 +28,8 @@ class Resource_Mangopay{
 		$this->api->Config->ClientId		= $config->get( 'client.id' );
 		$this->api->Config->ClientPassword	= $config->get( 'client.password' );
 		$this->api->Config->TemporaryFolder	= sys_get_temp_dir();
-		$this->defaultPagination	= new \MangoPay\Pagination();
-		$this->defaultSorting		= new \MangoPay\Sorting();
+		$this->defaultPagination	= new Pagination();
+		$this->defaultSorting		= new Sorting();
 		$this->defaultSorting->AddField( 'CreationDate', 'DESC' );
 
 		$logger		= new \Monolog\Logger('sample-logger');
@@ -27,22 +40,25 @@ class Resource_Mangopay{
 		$this->api->setLogger($logger);
 	}
 
-	public function __get( $name ){
+	public function __get( $name )
+	{
 		return $this->api->$name;
 	}
 
-	static public function getInstance( $env ){
-		if( !self::$instance ){
+	public static function getInstance( Environment $env ): self
+	{
+		if( !self::$instance )
 			self::$instance	= new Resource_Mangopay( $env );
-		}
 		return self::$instance;
 	}
 
-	public function getDefaultPagination(){
+	public function getDefaultPagination(): Pagination
+	{
 		return clone( $this->defaultPagination );
 	}
 
-	public function getDefaultSorting(){
+	public function getDefaultSorting(): Sorting
+	{
 		return clone( $this->defaultSorting );
 	}
 }

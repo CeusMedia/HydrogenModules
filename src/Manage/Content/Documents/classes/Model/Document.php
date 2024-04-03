@@ -4,7 +4,7 @@
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Document
 {

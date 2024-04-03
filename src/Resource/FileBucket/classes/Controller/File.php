@@ -6,7 +6,7 @@ class Controller_File extends Controller
 {
 	protected Logic_FileBucket $logic;
 
-	public function clean()
+	public function clean(): void
 	{
 		$index	= new DirectoryIterator( $this->logic->getPath() );
 		foreach( $index as $entry ){
@@ -21,7 +21,7 @@ class Controller_File extends Controller
 		$this->restart();
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $args4 = NULL, $arg5 = NULL, $arg6 = NULL, $arg7 = NULL, $arg8 = NULL )
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $args4 = NULL, $arg5 = NULL, $arg6 = NULL, $arg7 = NULL, $arg8 = NULL ): void
 	{
 		$uriPath	= implode( "/", func_get_args() );
 		$file		= $this->logic->getByPath( $uriPath );

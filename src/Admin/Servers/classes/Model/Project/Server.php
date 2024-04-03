@@ -2,7 +2,7 @@
 /**
  *	Model to relate projects onto servers.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
+ *	@copyright		2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\Model;
 /**
  *	Model to relate projects onto servers.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
+ *	@copyright		2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Project_Server extends Model
 {

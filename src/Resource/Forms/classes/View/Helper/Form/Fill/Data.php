@@ -1,22 +1,23 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-
+use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Form_Fill_Data
 {
-	protected $fill;
-	protected $form;
-	protected $mode;
+	protected Environment $env;
+	protected object $fill;
+	protected string $form;
+	protected int $mode;
 
 	public const MODE_NORMAL		= 0;
 	public const MODE_EXTENDED		= 1;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
 
-	public function render()
+	public function render(): string
 	{
 		if( !$this->fill )
 			throw new DomainException( 'No fill given' );
@@ -67,13 +68,14 @@ class View_Helper_Form_Fill_Data
 		if( $listInfo ){
 			$dataInfo	= HtmlTag::create( 'div', array(
 				HtmlTag::create( 'h3', 'Angaben' ),
-				$this->renderTable( $listInfo, TRUE ),
+				$this->renderTable( $listInfo ),
 			) );
 		}
 		return $dataInfo;
 	}
 
-	protected function renderTable( $rows ){
+	protected function renderTable( $rows ): string
+	{
 		$list	= [];
 		foreach( $rows as $row ){
 			$text	= '';
@@ -90,16 +92,21 @@ class View_Helper_Form_Fill_Data
 		), ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
 	}
 
-	public function setFill( $fill ){
+	public function setFill( object $fill ): self
+	{
 		$this->fill		= $fill;
-	}
+		return $this;	}
 
-	public function setForm( $form ){
+	public function setForm( string $form ): self
+	{
 		$this->form		= $form;
+		return $this;
 	}
 
-	public function setMode( $mode ){
+	public function setMode( int $mode ): self
+	{
 		$this->mode = $mode;
+		return $this;
 	}
 }
 

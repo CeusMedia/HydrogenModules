@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\HydrogenFramework\Environment;
 use phpseclib\Crypt\RSA as RsaCrypt;

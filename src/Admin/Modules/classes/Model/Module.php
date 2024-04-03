@@ -40,7 +40,7 @@ class Model_Module
 	public function getAll(): array
 	{
 		$globalModules	= $this->getAvailable();
-		$localModules	= $this->getInstalled( $globalModules );
+		$localModules	= $this->getInstalled();
 		$list			= $globalModules;
 		foreach( $localModules as $moduleId => $module ){
 			if( !array_key_exists( $moduleId, $list ) )
@@ -136,7 +136,7 @@ class Model_Module
 	public function getNotInstalled(): array
 	{
 		$globalModules	= $this->getAvailable();
-		$localModules	= $this->getInstalled( $globalModules );
+		$localModules	= $this->getInstalled();
 		return array_diff_key( $globalModules, $localModules );
 	}
 

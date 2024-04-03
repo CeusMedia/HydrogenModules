@@ -9,7 +9,7 @@ class View_Manage_Image_Slider extends View
 	{
 	}
 
-	public function demo()
+	public function demo(): void
 	{
 		$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
 	}

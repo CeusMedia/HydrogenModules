@@ -1,21 +1,25 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 class View_Helper_Manage_Page_ContentEditor
 {
 	public const STATUS_INIT		= 0;
 	public const STATUS_CONFIGURED	= 1;
 	public const STATUS_COLLECTED	= 2;
 
-	protected $env;
-	protected $defaultEditorKey;
-	protected $currentEditorKey;
-	protected $forcedEditorKey;
-	protected $bestEditorKey;
+	protected Environment $env;
+	protected ?string $defaultEditorKey	= NULL;
+	protected ?string $currentEditorKey	= NULL;
+	protected ?string $forcedEditorKey	= NULL;
+	protected ?string $bestEditorKey	= NULL;
 	protected int $status				= 0;
-	protected $format;
+	protected ?string $format			= NULL;
 	protected array $editors			= [];
-	protected $type;
+	protected ?string $type				= NULL;
+	protected ?string $labelTemplate	= NULL;
 
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 	}
@@ -32,6 +36,7 @@ class View_Helper_Manage_Page_ContentEditor
 
 	public function render(): string
 	{
+		return '';
 	}
 
 	public function setCurrentEditor( string $key ): self

@@ -1,10 +1,17 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 /**
  *	@todo		apply module config main switch
  */
 class Job_Provision extends Job_Abstract
 {
-	public function clearCache()
+	protected $cache;
+	protected Dictionary $options;
+	protected $modules;
+
+	public function clearCache(): void
 	{
 		if( $this->cache )
 			$this->cache->flush( 'Provision.userLicenseKey' );

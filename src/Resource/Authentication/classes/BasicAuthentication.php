@@ -8,6 +8,9 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class BasicAuthentication
 {
+	protected Environment $env;
+	protected string $realm;
+
 	public function __construct( Environment $env, string $realm )
 	{
 		$this->env		= $env;

@@ -18,10 +18,19 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	public float $taxPercent;
 	public float $taxIncluded;
 
-/*	public function changeQuantity( string $articleId, int $change ): int
+	/**
+	 *	Change stock quantity of article.
+	 *	No need to do anything here, since digital images are sold by right, not be quantity.
+	 *	@access		public
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$change			Negative value on paid order, positive value on restock.
+	 *	@return		integer							Article quantity in stock after change
+	 *	@throws		InvalidArgumentException		if not found
+	 */
+	public function changeQuantity( int|string $articleId, int $change ): int
 	{
-		return $this->logic->changeQuantity( $articleId, $change );
-	}*/
+		return 1;
+	}
 
 	/**
 	 *	Checks existence of article and returns data object if found.

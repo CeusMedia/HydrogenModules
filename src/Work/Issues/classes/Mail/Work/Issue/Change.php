@@ -18,8 +18,8 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 
 		$issue	= $data['issue'];
 		$this->setSubject( 'Problemreport #'.$issue->issueId.': ['.$this->labelsStates[$issue->status].'] '.$issue->title );
-		$this->setHtml( $this->renderHtmlBody( $data ) );
-		$this->setText( $this->renderTextBody( $data ) );
+		$this->setHtml( $this->renderHtmlBody() );
+		$this->setText( $this->renderTextBody() );
 		return $this;
 	}
 

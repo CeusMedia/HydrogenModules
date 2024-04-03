@@ -1,17 +1,20 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_Relocation extends Controller
 {
-	protected $model;
-	protected $messenger;
-	protected $request;
-	protected $session;
-	protected $filterSessionPrefix		= 'filter-manage-relocation-';
-	protected $shortcut;
+	protected Model_Relocation $model;
+	protected Messenger $messenger;
+	protected Dictionary $request;
+	protected Dictionary $session;
+	protected string $filterSessionPrefix		= 'filter-manage-relocation-';
+	protected ?string $shortcut					= NULL;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -40,7 +43,7 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'relocation', $data );
 	}
 
-	public function edit( $relocationId )
+	public function edit( string $relocationId ): void
 	{
 		$relocation	= $this->checkRelocation( $relocationId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -75,7 +78,7 @@ class Controller_Manage_Relocation extends Controller
 	}
 
 
-	public function export( $page = 0 )
+	public function export( $page = 0 ): void
 	{
 		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
@@ -127,13 +130,13 @@ class Controller_Manage_Relocation extends Controller
 		$csv	= join( "\r\n", $lines );
 
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
-		Net_HTTP_Download::sendString( $csv, $fileName, TRUE );
+		HttpDownload::sendString( $csv, $fileName, TRUE );
 
 		$this->redirect( NULL, TRUE );
 	}
 
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$filterKeys	= ['id', 'status', 'title', 'orderColumn', 'orderDirection'];
 		foreach( $filterKeys as $key ){
@@ -145,7 +148,7 @@ class Controller_Manage_Relocation extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
@@ -185,15 +188,16 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'filterOrderDirection', $filterOrderDir );
 	}
 
-	public function setStatus( $relocationId, $status )
+	public function setStatus( string $relocationId, $status ): void
 	{
 		$relocation	= $this->checkRelocation( $relocationId );
 		$this->model->edit( $relocationId, array( 'status' => (int) $status ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function remove( $relocationId )
+	public function remove( string $relocationId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$relocation	= $this->checkRelocation( $relocationId );
 		$this->model->remove( $relocationId );
 		$this->messenger->noteSuccess( $words->successRemoved, $relocation->title );
@@ -214,7 +218,7 @@ class Controller_Manage_Relocation extends Controller
 			$this->shortcut		= preg_replace( "/^[^a-z]+([a-z]+)[^a-z]+$/", "\\1", $moduleConfig['shortcut.source'] );
 	}
 
-	protected function checkRelocation( $relocationId )
+	protected function checkRelocation( string $relocationId ): object
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relocation	= $this->model->get( $relocationId );

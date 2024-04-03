@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 /**
 DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;

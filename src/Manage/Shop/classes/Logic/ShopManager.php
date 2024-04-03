@@ -206,7 +206,7 @@ class Logic_ShopManager extends Logic
 		$this->modelAddress			= new Model_Address( $this->env );
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
 		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
-		if( !$this->env->hasModules( 'Shop_Shipping' ) )
+		if( !$this->env->hasModules() )
 			$this->setShipping( new Logic_Shop_Shipping( $this->env ) );
 	}
 }

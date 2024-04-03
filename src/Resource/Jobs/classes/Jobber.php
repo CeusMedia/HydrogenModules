@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Jobber extends ConsoleApplication
 {
@@ -33,11 +33,12 @@ class Jobber extends ConsoleApplication
 	{
 		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
-		$format				=
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
+
 		$this->logic		= $this->env->getLogic()->get( 'Job' );
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->pathJobs		= 'config/jobs/';
-		$this->modelJob		= new \Model_Job( $this->env );
+		$this->modelJob		= new Model_Job( $this->env );
 		$this->modelJob->setFormat( Model_Job::FORMAT_XML );
 //		$this->modelJob->setFormat( Model_Job::FORMAT_MODULE );
 //		$this->modelLock	= new \Model_Job_Lock( $this->env );
@@ -104,9 +105,9 @@ class Jobber extends ConsoleApplication
 				return $this->runJobManually( $job );
 			}
 		}
-		$this->out( '' );
+		$this->out();
 		$this->out( 'Usage: ./job.php [job]' );
-		$this->out( '' );
+		$this->out();
 		$this->out( 'List of available jobs:' );
 		$availableJobs	= $this->logic->getDefinitions( [], ['identifier' => 'ASC'] );
 		foreach( $availableJobs as $availableJob )
@@ -131,7 +132,7 @@ class Jobber extends ConsoleApplication
 		return FALSE;
 	}
 
-	protected function out( string $message = '' )
+	protected function out( string $message = '' ): void
 	{
 		print( $message.PHP_EOL );
 	}
@@ -147,7 +148,7 @@ class Jobber extends ConsoleApplication
 		if( !empty( $parameters['--report-mode'] ) ){
 			$modes	= $jobRunConstants->getAll( 'REPORT_MODE_' );
 			if( !array_key_exists( strtoupper( $parameters['--report-mode'] ), $modes ) )
-				throw new \RangeException( 'Invalid job report mode given' );
+				throw new RangeException( 'Invalid job report mode given' );
 			$reportMode	= $modes[strtoupper( $parameters['--report-mode'] )];
 		}
 		if( !empty( $parameters['--report-receivers'] ) )
@@ -155,7 +156,7 @@ class Jobber extends ConsoleApplication
 		if( !empty( $parameters['--report-channel'] ) ){
 			$channels	= $jobRunConstants->getAll( 'REPORT_CHANNEL_' );
 			if( !array_key_exists( strtoupper( $parameters['--report-channel'] ), $channels ) )
-				throw new \RangeException( 'Invalid job report channel given' );
+				throw new RangeException( 'Invalid job report channel given' );
 			$reportChannel	= $channels[strtoupper( $parameters['--report-channel'] )];
 		}
 		if( $reportMode && $reportReceivers && !$reportChannel )
@@ -185,8 +186,8 @@ class Jobber extends ConsoleApplication
 		try{
 			$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 		}
-		catch( \Exception $e ){
-			$cwd	= dirname( __FILE__ ).'/';
+		catch( Exception $e ){
+			$cwd	= __DIR__.'/';
 			$cwd	= getCwd().'/';
 			$p		= $e->getPrevious() ?: $e;
 			print( 'Error:     '.get_class( $p ).' thrown and not caught'.PHP_EOL );

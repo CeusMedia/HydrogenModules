@@ -86,7 +86,7 @@ class Logic_Catalog extends Logic
 		$imageHeight	= $this->moduleConfig->get( 'article.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'article.image.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$creator->thumbizeByLimit( $imageWidth, $imageHeight );
 
 		/*  --  CREATE THUMBNAIL IMAGE  --  */
 		$uriThumb		= $this->pathArticleCovers.$id."__".$imagename;
@@ -94,7 +94,7 @@ class Logic_Catalog extends Logic
 		$thumbHeight	= $this->moduleConfig->get( 'article.image.thumb.maxHeight' );
 		$thumbQuality	= $this->moduleConfig->get( 'article.image.thumb.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriThumb );
-		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
+		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight );
 
 		$this->editArticle( $articleId, ['cover' => $imagename] );
 		$this->cache->remove( 'catalog.tinymce.images.articles' );
@@ -183,7 +183,7 @@ class Logic_Catalog extends Logic
 		$imageHeight	= $this->moduleConfig->get( 'author.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$creator->thumbizeByLimit( $imageWidth, $imageHeight );
 		$this->clearCacheForAuthor( $authorId );
 		$this->editAuthor( $authorId, ['image' => $imagename] );
 	}
@@ -494,7 +494,7 @@ class Logic_Catalog extends Logic
 	{
 		$author = $authorOrId;
 		if( is_int( $authorOrId ) )
-			$author	= $this->getAuthor( $authorOrId, TRUE );
+			$author	= $this->getAuthor( $authorOrId );
 		else if( !is_object( $author ) )
 			throw new InvalidArgumentException( 'Given author data is invalid' );
 		$name	= $author->lastname;

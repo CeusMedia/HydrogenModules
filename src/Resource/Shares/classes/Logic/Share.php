@@ -1,5 +1,9 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
+use BaconQrCode\Renderer\Image\Png as QrCodePngImage;
+use BaconQrCode\Writer as QrCodeWriter;
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Logic;
 
@@ -132,10 +136,10 @@ class Logic_Share extends Logic
 	protected function generateQrCode( int|string $shareId, string $url ): string
 	{
 		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
-		$renderer	= new \BaconQrCode\Renderer\Image\Png();
+		$renderer	= new QrCodePngImage();
 		$renderer->setHeight( 32 );
 		$renderer->setWidth( 32 );
-		$writer		= new \BaconQrCode\Writer( $renderer );
+		$writer		= new QrCodeWriter( $renderer );
 		$writer->writeFile( $url, $fileName );
 		$file	= $this->logicFileBucket->add( $fileName, 'share-qr-'.$shareId, 'image/png', 'Shares' );
 		unlink( $fileName );

@@ -7,26 +7,26 @@ use CeusMedia\HydrogenFramework\Environment;
 class Job_Abstract
 {
 	/**	@var	Environment				$env			Environment object */
-	protected $env;
+	protected Environment $env;
 
-	protected $logFile;
+	protected string $logFile;
 
-	/**	@var	string					$jobClass		Class name of inheriting job */
-	protected $jobClass;
+	/**	@var	?string					$jobClass		Class name of inheriting job */
+	protected ?string $jobClass			= NULL;
 
-	/**	@var	string					$jobMethod		Method name of job task */
-	protected $jobMethod;
+	/**	@var	?string					$jobMethod		Method name of job task */
+	protected ?string $jobMethod		= NULL;
 
-	/**	@var	string					$jobModuleId	Module ID of inheriting job */
-	protected $jobModuleId;
+	/**	@var	?string					$jobModuleId	Module ID of inheriting job */
+	protected ?string $jobModuleId		= NULL;
 
-	protected $commands			= [];
-	protected $dryMode			= FALSE;
-	protected $verbose			= FALSE;
-	protected $parameters;
+	protected array $commands			= [];
+	protected bool $dryMode			= FALSE;
+	protected bool $verbose			= FALSE;
+	protected Dictionary $parameters;
 
-	protected $versionModule;
-	protected $progress;
+	protected ?string $versionModule	= NULL;
+	protected ?ProgressOutput $progress	= NULL;
 
 	protected $results;
 
@@ -66,7 +66,7 @@ class Job_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		array		$command		...
+	 *	@param		array		$commands		...
 	 *	@param		array		$parameters		...
 	 *	@return		self
 	 */
@@ -74,8 +74,8 @@ class Job_Abstract
 	{
 		$this->commands		= array_diff( $commands, ['dry', 'verbose'] );
 		$this->parameters	= new Dictionary( $parameters );
-		$this->dryMode		= in_array( 'dry', (array) $commands );
-		$this->verbose		= in_array( 'verbose', (array) $commands );
+		$this->dryMode		= in_array( 'dry', $commands );
+		$this->verbose		= in_array( 'verbose', $commands );
 		return $this;
 	}
 
@@ -84,7 +84,7 @@ class Job_Abstract
 	 *	@access		public
 	 *	@param		string		$className		Class name of inheriting job
 	 *	@param		string		$jobName		Method name of job task
-	 *	@param		string		$moduleId		Module ID of inheriting job
+	 *	@param		?string		$moduleId		Module ID of inheriting job
 	 *	@return		self
 	 */
 	public function noteJob( string $className, string $jobName, string $moduleId = NULL ): self
@@ -97,7 +97,7 @@ class Job_Abstract
 
 	/**
 	 *	@access		public
-	 *	@param		string		$message		Message to be displayed
+	 *	@param		?string		$message		Message to be displayed
 	 *	@return		self
 	 *	@todo		make protected
 	 */
@@ -148,7 +148,8 @@ class Job_Abstract
 	 *	@param		string		$message		Error message to log
 	 *	@return		self
 	 */
-	protected function logError( $message ){
+	protected function logError( string $message ): self
+	{
 		$this->manager->logError( $this->getLogPrefix().$message );
 		return $this;
 	}
@@ -180,7 +181,7 @@ class Job_Abstract
 	/**
 	*	Set module of inheriting job for information output or logging.
 	 *	@access		protected
-	 *	@param		string		$jobModuleId	Module ID of inheriting job
+	 *	@param		?string		$jobModuleId	Module ID of inheriting job
 	 *	@return		self
 	 */
 	protected function setJobModuleId( ?string $jobModuleId ): self
@@ -205,36 +206,29 @@ class Job_Abstract
 	 */
 	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): self
 	{
-		if( class_exists( ProgressOutput::class ) ){
-			if( $count === 0 ){
-				$this->progress	= new ProgressOutput();
-				$this->progress->setTotal( $total )->start();
-			}
-			else if( $count === $total ){
-				if( $this->progress ){
-					$this->progress->update( $count );
-					$this->progress->finish();
-				}
-			}
-			else{
-				if( !$this->progress ){
-					$this->progress	= new ProgressOutput();
-					$this->progress->setTotal( $total );
-					$this->progress->start();
-				}
+		if( $count === 0 ){
+			$this->progress	= new ProgressOutput();
+			$this->progress->setTotal( $total )->start();
+		}
+		else if( $count === $total ){
+			if( $this->progress ){
 				$this->progress->update( $count );
+				$this->progress->finish();
 			}
-
-		} else {
-			echo $sign;
-			if( $count % $length === 0 )
-				echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+		}
+		else{
+			if( !$this->progress ){
+				$this->progress	= new ProgressOutput();
+				$this->progress->setTotal( $total );
+				$this->progress->start();
+			}
+			$this->progress->update( $count );
 		}
 		return $this;
 	}
 
 	/**
-	 *	Display caucht error messages.
+	 *	Display caught error messages.
 	 *	@access		protected
 	 *	@param		string		$taskName		Name of task producing errors
 	 *	@param		array		$errors			List of error messages to show
@@ -242,7 +236,7 @@ class Job_Abstract
 	 */
 	protected function showErrors( string $taskName, array $errors ): self
 	{
-		if( is_array( $errors ) && count( $errors ) ){
+		if( 0 !== count( $errors ) ){
 			$this->out( 'Errors on '.$taskName.':' );
 			foreach( $errors as $mailId => $message )
 				$this->out( '- '.$mailId.': '.$message );

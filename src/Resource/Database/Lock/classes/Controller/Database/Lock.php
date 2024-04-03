@@ -3,43 +3,12 @@
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Database_Lock extends Controller
 {
-	protected $model;
+	protected Model_Lock $model;
 
-	/**
-	 *	@deprecated		use hook class instead
-	 *	@todo			remove after all installations are updated
-	 */
-	static public function ___onAuthLogout( Environment $env, $context, $module, $data = [] )
-	{
-		$model		= new Model_Lock( $env );
-		$model->removeByIndices( [
-			'userId'	=> $data['userId'],
-		] );
-	}
-
-	/**
-	 *	@deprecated		use hook class instead
-	 *	@todo			remove after all installations are updated
-	 */
-	static public function ___onRegisterDashboardPanels( Environment $env, $context, $module, $data )
-	{
-		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
-			return;
-		$context->registerPanel( 'resource-database-locks', [
-			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
-			'title'			=> 'Datenbank-Sperren',
-			'heading'		=> 'Datenbank-Sperren',
-			'icon'			=> 'fa fa-fw fa-lock',
-			'rank'			=> 90,
-			'refresh'		=> 10,
-		] );
-	}
-
-	public function ajaxRenderDashboardPanel( $panelId )
+	public function ajaxRenderDashboardPanel( string $panelId ): void
 	{
 		$modelUser	= new Model_User( $this->env );
 		$locks		= $this->model->getAll();
@@ -48,7 +17,7 @@ class Controller_Database_Lock extends Controller
 		$this->addData( 'locks', $locks );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$modules	= $this->env->getModules();
 		$model		= new Model_User( $this->env );
@@ -63,7 +32,7 @@ class Controller_Database_Lock extends Controller
 		$this->addData( 'locks', $locks );
 	}
 
-	public function unlock( $lockId )
+	public function unlock( string $lockId ): void
 	{
 		$lock	= $this->model->get( $lockId );
 		if( !$lock )
@@ -78,7 +47,7 @@ class Controller_Database_Lock extends Controller
 		$this->model	= new Model_Lock( $this->env );
 	}
 
-	protected function getEntryTitle( $lock )
+	protected function getEntryTitle( object $lock ): string
 	{
 		$title	= '<em><small class="muted">unbekannt</small></em>';
 		$uri	= NULL;

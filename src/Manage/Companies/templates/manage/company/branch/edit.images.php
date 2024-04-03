@@ -4,6 +4,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
+/** @var array $words */
+/** @var Logic_Frontend $frontend */
+/** @var object $branch */
+
 $w	= (object) $words['edit-images'];
 
 $iconCancel	= HTML::Icon( 'arrow-left' );

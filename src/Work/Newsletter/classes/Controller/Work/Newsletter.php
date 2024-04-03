@@ -398,7 +398,7 @@ class Controller_Work_Newsletter extends Controller
 			$newsletter	= $this->logic->getNewsletter( $letter->newsletterId );
 			try{
 				$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
-				$data		= $helper->prepareReaderDataForLetter( $readerLetterId, TRUE );
+				$data		= $helper->prepareReaderDataForLetter( $readerLetterId );
 				$mail		= $helper->renderNewsletterHtml( $letter->newsletterId, $letter->newsletterReaderId, $data );
 				print( $mail );
 				die;

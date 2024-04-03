@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Loader;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 
 $timezone		= "Europe/Berlin";										//  default time zone

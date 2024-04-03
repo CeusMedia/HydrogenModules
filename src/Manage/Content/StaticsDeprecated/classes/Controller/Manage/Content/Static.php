@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content.Statics
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -20,13 +20,13 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content.Statics
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Content_Static extends Controller
 {
-	protected $path;
+	protected string $path;
 
-	public function add()
+	public function add(): void
 	{
 		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
@@ -60,7 +60,7 @@ class Controller_Manage_Content_Static extends Controller
 		$this->restart( './manage/content/static' );
 	}
 
-	public function addFolder()
+	public function addFolder(): void
 	{
 		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
@@ -89,7 +89,7 @@ class Controller_Manage_Content_Static extends Controller
 		$this->restart( './manage/content/static' );
 	}
 
-	public function edit( $fileHash = NULL )
+	public function edit( $fileHash = NULL ): void
 	{
 		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
@@ -136,17 +136,12 @@ class Controller_Manage_Content_Static extends Controller
 					if( file_exists( $newFileUri ) )
 						$messenger->noteError( $words->msgFileExisting, $newName, $newPath );
 					else{
-						try{
-							$editor->rename( $newFileUri );
-							$filePath	= $newPath.$newName;
-							$fileHash	= base64_encode( $filePath );
-							$fileUri	= $this->path.$filePath;
+						$editor->rename( $newFileUri );
+						$filePath	= $newPath.$newName;
+						$fileHash	= base64_encode( $filePath );
+						$fileUri	= $this->path.$filePath;
 #							$messenger->noteFailure( $words->msgSuccessRenamed, $name, $path, $e->getMessage() );
-							$this->restart( './manage/content/static/edit/'.$fileHash );
-						}
-						catch( Exception $e ){
-							$messenger->noteFailure( $words->msgRenameError, $name, $path, $e->getMessage() );
-						}
+						$this->restart( './manage/content/static/edit/'.$fileHash );
 					}
 				}
 
@@ -162,14 +157,14 @@ class Controller_Manage_Content_Static extends Controller
 		$this->loadFileTree();
 	}
 
-	public function index()
+	public function index(): void
 	{
 #		$request	= $this->env->getRequest();
 #		$this->addData( 'filename', $request->get( 'key' ) );
 		$this->loadFileTree();
 	}
 
-	public function remove( $fileHash )
+	public function remove( string $fileHash ): void
 	{
 		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
@@ -215,7 +210,7 @@ class Controller_Manage_Content_Static extends Controller
 		$this->addData( 'paths', $paths );
 	}
 
-	protected function convertLeadingTabsToSpaces( $content )
+	protected function convertLeadingTabsToSpaces( string $content ): string
 	{
 		$lines	= explode( "\n", $content );
 		foreach( $lines as $nr => $line )
@@ -224,7 +219,7 @@ class Controller_Manage_Content_Static extends Controller
 		return implode( "\n", $lines );
 	}
 
-	protected function convertLeadingSpacesToTabs( $content )
+	protected function convertLeadingSpacesToTabs( string $content ): string
 	{
 		$lines	= explode( "\n", $content );
 		foreach( $lines as $nr => $line )
@@ -233,7 +228,7 @@ class Controller_Manage_Content_Static extends Controller
 		return implode( "\n", $lines );
 	}
 
-	protected function loadFileTree()
+	protected function loadFileTree(): void
 	{
 		$files	= new RecursiveRegexFileIndex( $this->path, '/\.html$/' );
 		$this->addData( 'files', $files );

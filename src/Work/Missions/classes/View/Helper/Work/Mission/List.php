@@ -172,8 +172,8 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
-		$list0		= $this->renderDayListOfTasks( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
-		$list1		= $this->renderDayListOfEvents( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
+		$list0		= $this->renderDayListOfTasks( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense );
+		$list1		= $this->renderDayListOfEvents( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense );
 		if( !strlen( $list0.$list1 ) )
 			return '';
 		return HtmlTag::create( 'div', $list1.$list0, ['class' => "table-day", 'id' => 'table-'.$day] );

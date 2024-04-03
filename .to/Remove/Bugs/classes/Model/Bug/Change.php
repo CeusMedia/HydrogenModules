@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
+ *	@copyright		2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@category		cmApps
  *	@package		Chat.Server.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012 Ceus Media
+ *	@copyright		2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Bug_Change extends Model
 {

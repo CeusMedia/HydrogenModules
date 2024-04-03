@@ -64,9 +64,9 @@ class Job_User_Provision extends Job_Abstract
 			$followUps	= 0;
 			foreach( $keys as $key )
 				$followUps	+= (int) isset( $key->nextKey );
-			$this->out( 'Provision.expire: Disabled '.count( $keys ).' license(s).', TRUE );
+			$this->out( 'Provision.expire: Disabled '.count( $keys ).' license(s).' );
 			if( $followUps )
-				$this->out( 'Provision: Enabled '.$followUps.' license(s) afterwards.', TRUE );
+				$this->out( 'Provision: Enabled '.$followUps.' license(s) afterwards.' );
 		}
 	}
 }

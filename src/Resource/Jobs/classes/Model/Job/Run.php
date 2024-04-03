@@ -3,7 +3,7 @@
  *	Job Run Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	Job Run Model.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Job_Run extends Model
 {

@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -31,7 +33,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 	protected ?string $userId;
 	protected ?object $wallet;
 
-	public function index( $transactionId = NULL )
+	public function index( $transactionId = NULL ): void
 	{
 		if( !( $transactionId = $this->request->get( 'transactionId' ) ) ){
 			$this->restart( 'shop/payment' );
@@ -65,7 +67,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 	}
 
 
-	public function perBankWire()
+	public function perBankWire(): void
 	{
 		$returnUrl		= $this->env->url.'shop/checkout';
 		try{
@@ -89,7 +91,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perDirectDebit()
+	public function perDirectDebit(): void
 	{
 		$returnUrl		= $this->env->url.'shop/payment/mangopay';
 		try{
@@ -114,7 +116,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perCreditCard()
+	public function perCreditCard(): void
 	{
 /*		if( $this->request->has( 'transactionId' ) ){
 			$result = $this->provider->getPayin( $this->request->get( 'transactionId' ) );
@@ -200,7 +202,7 @@ class Controller_Shop_Payment_Mangopay extends Controller
 		$this->addData( 'paymentBackends', $this->backends );*/
 	}
 
-	protected function handleMangopayResponseException( $e )
+	protected function handleMangopayResponseException( $e ): void
 	{
 		ob_start();
 		print_r( $e->GetErrorDetails()->Errors );

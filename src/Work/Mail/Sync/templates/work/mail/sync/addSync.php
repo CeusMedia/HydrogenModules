@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<object> $hosts */
+
 $hostMap	= [];
 foreach( $hosts as $host )
 	$hostMap[$host->mailSyncHostId]	= $host->host ?: $host->ip;

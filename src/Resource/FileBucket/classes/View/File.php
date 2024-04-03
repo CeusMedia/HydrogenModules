@@ -12,7 +12,7 @@ class View_File extends View
 	 *	@return		void
 	 *	@throws		DOMException
 	 */
-	public function index()
+	public function index(): void
 	{
 		$file	= $this->getData( 'file' );
 		$path	= $this->getData( 'sourcePath' );
@@ -28,7 +28,7 @@ class View_File extends View
 
 	//  --  PROTECTED  --  //
 
-	protected function negotiateContentOnHit( string $path, object $file, array $mimeTypes = [] )
+	protected function negotiateContentOnHit( string $path, object $file, array $mimeTypes = [] ): void
 	{
 		$this->env->getConfig()->get( 'path.contents' );
 		$sourceFilePath	= $path.$file->hash;
@@ -74,7 +74,7 @@ class View_File extends View
 	 *	@return		void
 	 *	@throws		DOMException
 	 */
-	protected function negotiateContentOnMiss( array $mimeTypes )
+	protected function negotiateContentOnMiss( array $mimeTypes ): void
 	{
 		$response	= $this->env->getResponse();
 		$response->setStatus( 404, TRUE );
@@ -85,18 +85,18 @@ class View_File extends View
 				case 'text/html':
 					$content	= '<h1>Error 404: Not found</h1><p>The requested resource is not available.</p>';
 					$response->setBody( $content );
-					$response->send( NULL, TRUE, TRUE );
+					break;
 				case 'text/plain':
 				case '*/*':
 					$response->setBody( 'Error 404: Not found' );
-					$response->send( NULL, TRUE, TRUE );
+					break;
 				case 'application/xml':
 					$node	= new XmlNode( 'response', 'Not found', [
 						'type'	=> 'error',
 						'code'	=> 404,
 					] );
 					$response->setBody( XmlBuilder::build( $node ) );
-					$response->send( NULL, TRUE, TRUE );
+					break;
 				case 'application/json':
 				case 'text/json':
 					$data	= [
@@ -105,9 +105,8 @@ class View_File extends View
 						'code'		=> 404,
 					];
 					$response->setBody( json_encode( $data ) );
-					$response->send( NULL, TRUE, TRUE );
 			}
 		}
-		$response->send( NULL, TRUE, TRUE );
+		$response->send();
 	}
 }

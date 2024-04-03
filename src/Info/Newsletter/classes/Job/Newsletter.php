@@ -73,7 +73,7 @@ class Job_Newsletter extends Job_Abstract
 			$this->out( '' );
 			$this->out( 'Migration::recoverReaderLetterQueueIds' );
 		}
-		$results	= $this->recoverReaderLetterQueueIds( $verbose );
+		$results	= $this->recoverReaderLetterQueueIds();
 		if( $verbose && ( 1 || $results->letters ) )
 			$this->out( vsprintf( "Migrated %d letters into %d queues.", [
 				$results->letters,

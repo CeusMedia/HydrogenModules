@@ -84,7 +84,7 @@ class Controller_Info_Event extends Controller
 
 		$events		= [];
 		$center		= NULL;
-		if( $location && $range ){
+		if( 0 && $range ){
 			$geocoder	= new Logic_Geocoder( $this->env );
 			try{
 				$parts		= preg_split( "/\s+/", $location );

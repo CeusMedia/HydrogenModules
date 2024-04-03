@@ -73,7 +73,7 @@ class View_Helper_Mail_Exception_Facts
 		if( $this->exception instanceof LogicException ){
 			$this->helper->add( 'logic', $this->exception->getSubject() );
 		}
-		$this->helper->add( 'class', get_class( $this->exception ) );
+		$this->helper->add( 'class', $this->exception !== null ? get_class( $this->exception ) : self::class );
 
 		$root		= realpath( $this->env->uri );
 		$pathName	= ltrim( $this->exception->getFile(), $root );

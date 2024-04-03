@@ -4,6 +4,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\RequestReceiver;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\Loader;
 use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 
 /*  --  CONFIG  --  */
@@ -45,29 +46,29 @@ $helper->run();
 
 class JobScriptHelper
 {
-	protected $configFile		= "config/config.ini";							//  config file
-	protected $errorHandling	= [
+	protected string $configFile		= "config/config.ini";							//  config file
+	protected array $errorHandling	= [
 		'report'	=> E_ALL,
 		'display'	=> TRUE,
 		'catch'		=> TRUE,
 	];
-	protected $modes			= [
+	protected array $modes			= [
 		'live',
 		'test',
 		'dev',
 	];
-	protected $mode;
-	protected $pathClasses		= 'classes/';
-	protected $verbose			= FALSE;
+	protected string $mode;
+	protected string $pathClasses		= 'classes/';
+	protected bool $verbose			= FALSE;
 
-	public function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext = NULL )
+	public function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext = NULL ): bool
 	{
 		if( error_reporting() === 0 )											// error was suppressed with the @-operator
 			return FALSE;
-		throw new \ErrorException( $errstr, 0, $errno, $errfile, $errline );
+		throw new ErrorException( $errstr, 0, $errno, $errfile, $errline );
 	}
 
-	public function run()
+	public function run(): void
 	{
 		$this->changeDirIntoApp()
 			->setupEnvironment()
@@ -110,7 +111,7 @@ class JobScriptHelper
 
 	public function setVerbose( bool $verbose = TRUE ): self
 	{
-		$this->verbose		= (bool) $verbose;
+		$this->verbose		= $verbose;
 		return $this;
 	}
 
@@ -125,9 +126,9 @@ class JobScriptHelper
 				print( 'Changing into application directory...'.PHP_EOL );
 			}
 			if( !chdir( $path ) )
-				throw new \RuntimeException( 'Could not change into application directory ('.$path.')' );
+				throw new RuntimeException( 'Could not change into application directory ('.$path.')' );
 			if( !file_exists( getCwd().'/job.php' ) )
-				throw new \RuntimeException( 'Change into application directory ('.$path.') failed' );
+				throw new RuntimeException( 'Change into application directory ('.$path.') failed' );
 		}
 		return $this;
 	}
@@ -152,7 +153,7 @@ class JobScriptHelper
 		if( isset( $_SERVER['PWD'] ) ){
 			if( isset( $_SERVER['PHP_SELF'] ) ){
 				$scriptFilename	= $_SERVER['SCRIPT_FILENAME'];
-				if( substr( $scriptFilename, 0, 1 ) === '/' )
+				if( str_starts_with( $scriptFilename, '/' ) )
 					return dirname( $scriptFilename ).'/';
 				$dir	= preg_replace( '@^\./$@', '', dirname( $_SERVER['PHP_SELF'] ).'/' );
 				if( !strlen( trim( $dir ) ) )
@@ -166,13 +167,13 @@ class JobScriptHelper
 		throw new RuntimeException( 'Could not determine working directory' );
 	}
 
-	protected function runJobApp()
+	protected function runJobApp(): void
 	{
 //		try{
-			$jobber	= new \Jobber();											//  start job handler
+			$jobber	= new Jobber();											//  start job handler
 			$jobber->setMode( $this->mode );
 //			$jobber->loadJobs( $this->modes, FALSE );							//  load jobs configured in XML or JSON files, allowing JSON to override
-			$result	= $jobber->run( $this->request );							//  execute found jobs
+			$result	= $jobber->run();							//  execute found jobs
 			$code	= ( $result === 1 || $result === TRUE ) ? 0 : -1 * $result;
 			exit( $code );
 //		}
@@ -205,7 +206,7 @@ class JobScriptHelper
 //		$test	= $request->has( '--test' ) || $request->has( '-t' );			//
 
 		if( class_exists( '\Environment_Console' ) )							//  an individual console environment class is available
-			\Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
+			Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
 		if( isset( $configFile ) && strlen( trim( $configFile ) ) )				//  an alternative config file is set
 			ConsoleEnvironment::$configFile	= $configFile;						//  set alternative config file
 		return $this;

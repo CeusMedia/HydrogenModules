@@ -1,4 +1,6 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
@@ -14,9 +16,9 @@ class Resource_REST_Client
 	protected Environment $env;
 	protected Dictionary $session;
 	protected Dictionary $moduleConfig;
-	protected ?object $cache			= NULL;
 	protected RestClient $client;
-	protected bool $enabled	= TRUE;
+	protected ?object $cache			= NULL;
+	protected bool $enabled				= TRUE;
 
 	/**
 	 *	Constructor.
@@ -35,17 +37,7 @@ class Resource_REST_Client
 	}
 
 	/**
-	 *	Clear cache completely with in context.
-	 *	@access		public
-	 *	@return		void
-	 */
-	public function clear(): void
-	{
-		$this->client->flush();
-	}
-
-	/**
-	 *	Remove cache content.
+	 *	Remove entity.
 	 *	@access		public
 	 *	@param		string		$path		Resource path
 	 *	@param		array		$data		GET parameters
@@ -54,7 +46,7 @@ class Resource_REST_Client
 	public function delete( string $path, array $data = [] )
 	{
 		$this->invalidateCachePathRecursive( $path );
-		return $this->client->delete( $path, $data );
+		return $this->client->delete( $path );
 	}
 
 	/**
@@ -196,6 +188,25 @@ class Resource_REST_Client
 		$this->client->setBasicAuth( $options->get( 'username' ), $options->get( 'password' ) );
 	}
 
+	protected function initCache(): void
+	{
+		$config		= $this->moduleConfig->getAll( 'cache.', TRUE );
+		if( !$this->moduleConfig->get( 'cache.enabled' ) )
+			return;
+		if( !class_exists( '\CeusMedia\Cache\Factory' ) )
+			throw new RuntimeException( 'Cache library "CeusMedia/Cache" is not installed' );
+		$type		= $config->get( 'type' ) ?: 'NOOP';
+		$resource	= $config->get( 'resource' );
+		$context	= $config->get( 'context' );
+		$expiration	= $config->get( 'expiration' );
+
+		/*		$type		= 'Session';
+				$resource	= md5( getCwd() );
+				$context	= 'cache.';*/
+
+		$this->cache	= CacheFactory::createStorage( $type, $resource, $context );
+	}
+
 	protected function initLogging(): void
 	{
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
@@ -212,24 +223,5 @@ class Resource_REST_Client
 				FolderEditor::createFolder( $filePath );
 			$this->client->setLogErrors( $filePath );
 		}
-	}
-
-	protected function initCache(): void
-	{
-		$config		= $this->moduleConfig->getAll( 'cache.', TRUE );
-		if( !$this->moduleConfig->get( 'cache.enabled' ) )
-			return;
-		if( !class_exists( '\CeusMedia\Cache\Factory' ) )
-			throw new RuntimeException( 'Cache library "CeusMedia/Cache" is not installed' );
-		$type		= $config->get( 'type' ) ?: 'NOOP';
-		$resource	= $config->get( 'resource' );
-		$context	= $config->get( 'context' );
-		$expiration	= $config->get( 'expiration' );
-
-/*		$type		= 'Session';
-		$resource	= md5( getCwd() );
-		$context	= 'cache.';*/
-
-		$this->cache	= CacheFactory::createStorage( $type, $resource, $context );
 	}
 }

@@ -39,7 +39,7 @@ class View_Helper_DevCenter
 			$tabs->add( $id, $resource->label, $data );
 		}
 		$current	= $this->session->get( 'DevCenterTab' );
-		$tabs		= $tabs->render( $current, $label, $url );
+		$tabs		= $tabs->render();
 		$content	= HtmlTag::create( 'div', $tabs, ['id' => "DevCenterContent"] );		//
 		$handleTop	= HtmlTag::create( 'div', "====", ['id' => 'DevCenterHandleTop'] );	//
 

@@ -16,7 +16,7 @@ class Job_Job extends Job_Abstract
 	 *	@deprecated		Conversion from XML file to JSON file not needed anymore, since new solution is migration to module XML file + database import by jobs module
 	 *	@todo			use parts of this code to implement automatic migration to module XML file
 	 */
-	public function convertJobConfigToJson()
+	public function convertJobConfigToJson(): void
 	{
 		$model		= new Model_Job( $this->env );
 		$modes		= [];																		//  no specific modes
@@ -47,7 +47,7 @@ class Job_Job extends Job_Abstract
 			}
 			$fileName	= preg_replace( '@\.[^.]+$@', '', $file->getFilename() );
 			$default	= str_replace( ' ', '_', ucwords( str_replace( '.', ' ', $fileName ) ) );
-			$moduleId	= Question::askStatic( 'Module ID', 'string', $default, NULL, FALSE );
+			$moduleId	= Question::askStatic( 'Module ID', 'string', $default, [], FALSE );
 			$moduleJobs->moduleId	= $moduleId;
 			$targetFile	= $this->pathJobs.$moduleId.'.json';
 			$this->out( 'Writing job JSON: '.$targetFile );
@@ -62,7 +62,7 @@ class Job_Job extends Job_Abstract
 	 *	@param		array		$mode		List of environment modes to filter jobs by (currently not implemented)
 	 *	@todo		add old mode (= environment type [dev,test,live])
 	 */
-	public function index( array $mode = [] )
+	public function index( array $mode = [] ): int
 	{
 		$conditions	= [];
 //		if( $mode )
@@ -81,7 +81,7 @@ class Job_Job extends Job_Abstract
 	 *	@param		array		$jobIdentifiers		List of job identifiers
 	 *	@todo		add old mode (= environment type [dev,test,live])
 	 */
-	public function info( array $jobIdentifiers = [] )
+	public function info( array $jobIdentifiers = [] ): void
 	{
 		if( !count( $jobIdentifiers ) ){
 			$this->out( 'No job identifier(s) given' );
@@ -109,7 +109,7 @@ class Job_Job extends Job_Abstract
 			if( !empty( $job->deprecated ) )
 				$data['Deprecated']	= $job->deprecated;
 			foreach( $data as $label => $value )
-				$this->out( str_pad( '- '.$label.':', 15, ' ', STR_PAD_RIGHT ).$value );
+				$this->out( str_pad( '- '.$label.':', 15 ).$value );
 		}
 	}
 
@@ -118,7 +118,7 @@ class Job_Job extends Job_Abstract
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function terminateDiscontinuedRuns()
+	public function terminateDiscontinuedRuns(): void
 	{
 		$list	= $this->logic->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
 
@@ -137,21 +137,20 @@ class Job_Job extends Job_Abstract
 	/**
 	 *	@todo		implement
 	 */
-	public function updateStats()
+	public function updateStats(): void
 	{
-		$modelStats	= new Model_Job_Statistic( $this->env );
+//		$modelStats	= new Model_Job_Statistic( $this->env );
 		$modelRun	= new Model_Job_Run( $this->env );
 
 		$now	= new DateTime();
 
-
-		$lastUpdate	= $modelStats->getByIndices( [
+/*		$lastUpdate	= $modelStats->getByIndices( [
 			'span'
 		] );
 		if( $lastUpdate ){
 
 		}
-		else{
+		else{*/
 			$firstRun	= $modelRun->getAll(
 				[],
 				['jobRunId' => 'ASC'],
@@ -162,12 +161,13 @@ class Job_Job extends Job_Abstract
 				$nextDate	= new DateTimeImmutable();
 				$nextDate->setTimestamp( $firstRun[0] );
 			}
-		}
+//		}
 	}
 
 	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
 	}
 }

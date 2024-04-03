@@ -126,7 +126,7 @@ class Hook_Manage_Project extends Hook
 				'id'		=> $this->payload['linkable'] ? $project->projectId : NULL,
 				'label'		=> $icon.'&nbsp;'.$project->title,
 			];
-			if( count( $users ) === 1 && isset( $users[$payload['userId']] ) ){								//  no other users in project
+			if( count( $users ) === 1 && isset( $users[$this->payload['userId']] ) ){								//  no other users in project
 				$lists->entities[]	= $item;
 			}
 			else{

@@ -60,7 +60,9 @@ class Controller_Admin_Mail_Queue extends Controller
 					$attachments[$key]	= $part;
 			}
 			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
+				/** @noinspection PhpUndefinedClassInspection */
 				$isAttachment	= $part instanceof MailV1Attachment;
+				/** @noinspection PhpUndefinedClassInspection */
 				$isInlineImage	= $part instanceof MailV1InlineImage;
 				if( $isAttachment || $isInlineImage )
 					$attachments[$key]	= $part;

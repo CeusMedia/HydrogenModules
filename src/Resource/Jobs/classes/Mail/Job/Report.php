@@ -58,7 +58,7 @@ class Mail_Job_Report extends Mail_Abstract
 
 	}
 
-	protected function renderText(): self
+	protected function renderText(): string
 	{
 		return json_encode( $this->data, JSON_PRETTY_PRINT );
 	}

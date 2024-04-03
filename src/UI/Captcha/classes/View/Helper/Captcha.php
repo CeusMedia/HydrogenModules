@@ -7,17 +7,17 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 {
-	protected $background	= [255, 255, 255];
-	protected $height		= 55;
-	protected $fontSize		= 16;
-	protected $format		= 'image';
-	protected $mode			= 'default';
-	protected $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
+	protected array $background		= [255, 255, 255];
+	protected int $height			= 55;
+	protected int|float $fontSize	= 16;
+	protected string $format		= 'image';
+	protected string $mode			= 'default';
+	protected string $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
 
-	protected $env;
+	protected Environment $env;
 	protected $session;
 	protected $moduleConfig;
-	protected $captcha;
+	protected ImageCaptcha $captcha;
 
 	public CONST FORMAT_IMAGE		= 0;
 	public CONST FORMAT_RAW			= 1;
@@ -37,11 +37,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
 			$request	= new HttpPost();
 			$url		= 'https://www.google.com/recaptcha/api/siteverify';
-			$response	= json_decode( $request->send( $url, array(
-				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),
-				'secret'		=> $moduleConfig->get( 'recaptcha.secret' ),
-				'remoteip'	=> getEnv( 'REMOTE_ADDR' ),
-			) ) );
+			$response	= json_decode( $request->send( $url ) );
 			return $response->success;
 		}
 		return $env->getSession()->get( 'captcha' ) == $word;

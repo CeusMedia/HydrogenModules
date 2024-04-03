@@ -24,7 +24,7 @@ class Hook_Helper_Input_Resource extends Hook
 		];
 		foreach( $pathsDefinedInModules as $path => $definition )
 			if( ( $module	= $modules->get( $definition[0], TRUE, FALSE ) ) )
-				$$path	= $module->config[$definition[1]]->value;
+				${$path}	= $module->config[$definition[1]]->value;
 
 		$modePaths	= [
 			'image'		=> [$pathImages, $pathThemes],

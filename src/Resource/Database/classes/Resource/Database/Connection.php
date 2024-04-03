@@ -18,7 +18,7 @@
  *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2021 Christian Würker
+ *	@copyright		2011-2024 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
@@ -118,7 +118,7 @@ class Resource_Database_Connection extends DatabasePdoConnection
 	 *	Tries to connect database if not connected yet (lazy mode).
 	 *	@access		public
 	 *	@param		string		$query			SQL statement to query
-	 *	@param		integer		$fetchMode		... (default: 2)
+	 *	@param		?integer		$fetchMode		... (default: 2)
 	 *	@param		mixed		$fetchModeArgs	Arguments of custom class constructor when the mode parameter is set to PDO::FETCH_CLASS.
 	 *	@return		PDOStatement				PDO statement containing fetchable results
 	 */

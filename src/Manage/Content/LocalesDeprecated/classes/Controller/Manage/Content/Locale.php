@@ -2,7 +2,7 @@
 /**
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014 Ceus Media
+ *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -12,13 +12,13 @@ use CeusMedia\HydrogenFramework\Controller;
 /**
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014 Ceus Media
+ *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Content_Locale extends Controller
 {
-	protected $frontend;
-	protected $languages	= [];
-	protected $types		= [
+	protected Logic_Frontend $frontend;
+	protected array $languages	= [];
+	protected array $types		= [
 		'language'	=> [
 			'folder'		=> '',
 			'extensions'	=> 'ini'
@@ -32,8 +32,9 @@ class Controller_Manage_Content_Locale extends Controller
 			'extensions'	=> 'html,txt'
 		],
 	];
+	protected string $basePath;
 
-	public function ajaxSaveContent()
+	public function ajaxSaveContent(): void
 	{
 		$request	= $this->env->getRequest();
 		$language	= $request->get( 'language' );
@@ -53,7 +54,7 @@ class Controller_Manage_Content_Locale extends Controller
 		exit;
 	}
 
-	public function edit( $language, $type, $fileId )
+	public function edit( $language, $type, $fileId ): void
 	{
 		$request	= $this->env->getRequest();
 		$filePath	= base64_decode( $fileId );
@@ -76,7 +77,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->restart( './manage/content/locale/'.$language.'/'.$type.'/'.$fileId );
 	}
 
-	public function index( $language = NULL, $type = NULL, $fileId = NULL )
+	public function index( $language = NULL, $type = NULL, $fileId = NULL ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();

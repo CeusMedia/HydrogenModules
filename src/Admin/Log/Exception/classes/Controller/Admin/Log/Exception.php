@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -17,7 +17,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Admin_Log_Exception extends Controller
 {

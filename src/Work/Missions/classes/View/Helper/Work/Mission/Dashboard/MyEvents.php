@@ -78,7 +78,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 	{
 		if( !strlen( trim( $time ) ) )
 			return '-';
-		list( $hours, $minutes ) = explode( ':', $time );
+		[$hours, $minutes] = explode( ':', $time );
 		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),

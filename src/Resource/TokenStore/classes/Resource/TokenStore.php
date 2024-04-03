@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  *	@version		$Id: TokenStore.php 2676 2012-04-02 15:40:34Z christian.wuerker $
  */
 
@@ -17,7 +17,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  *	@version		$Id: TokenStore.php 2676 2012-04-02 15:40:34Z christian.wuerker $
  *	@todo			problem: several clients behind same IP will have same token
  *	@todo			concept: binding token to unique client id and unique client instance id

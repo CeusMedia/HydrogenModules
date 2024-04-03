@@ -1,5 +1,8 @@
 <?php
 
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
+
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\FS\File\Reader as FileReader;

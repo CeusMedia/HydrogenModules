@@ -76,6 +76,14 @@
       <path value="$PROJECT_DIR$/vendor/phpstan/phpstan" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/template-engine" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/bootstrap" />
+      <path value="$PROJECT_DIR$/vendor/ceus-media/rest" />
+      <path value="$PROJECT_DIR$/vendor/ceus-media/router" />
+      <path value="$PROJECT_DIR$/vendor/mangopay/php-sdk-v2" />
+      <path value="$PROJECT_DIR$/vendor/stripe/stripe-php" />
+      <path value="$PROJECT_DIR$/vendor/phpseclib/phpseclib" />
+      <path value="$PROJECT_DIR$/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/vendor/sentry/sentry" />
+      <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
@@ -85,7 +93,7 @@
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">
-    <option name="config" value="$PROJECT_DIR$/phpstan.neon" />
+    <option name="config" value="$PROJECT_DIR$/tool/config/phpstan.neon" />
     <option name="transferred" value="true" />
   </component>
   <component name="PhpUnit">

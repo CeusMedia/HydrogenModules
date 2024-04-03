@@ -1,10 +1,13 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Stripe\Source;
 
 class Controller_Shop_Payment_Stripe extends Controller
 {
@@ -39,7 +42,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 	protected ?object $wallet			= NULL;
 	protected ?object $buyerData		= NULL;
 
-	public function index()
+	public function index(): void
 	{
 		if( !( $sourceId = $this->request->get( 'source' ) ) )
 			$this->restart( 'shop/payment' );
@@ -47,7 +50,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->messenger->noteError( 'Invalid payment source ID' );
 			$this->restart( 'shop/payment' );
 		}
-		$source	= \Stripe\Source::retrieve( $sourceId );
+		$source	= Source::retrieve( $sourceId );
 		if( isset( $source->redirect->status ) ){
 			switch( $source->redirect->status ){
 				case 'succeeded':
@@ -64,7 +67,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		print_m( $source );die;
 	}
 
-	public function perBankWire()
+	public function perBankWire(): void
 	{
 		throw new Exception( 'Not implemented' );
 		$returnUrl		= $this->env->url.'shop/checkout';
@@ -89,7 +92,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perCreditCard( $arg0 = NULL, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL )
+	public function perCreditCard( $arg0 = NULL, $arg1 = NULL, $arg2 = NULL, $arg3 = NULL ): void
 	{
 		if( $this->request->get( 'stripeToken' ) ){
 			try{
@@ -115,7 +118,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->addData( 'order', $this->logicShop->getOrder( $this->orderId ) );
 	}
 
-	public function perDirectDebit()
+	public function perDirectDebit(): void
 	{
 		throw new Exception( 'Not implemented yet' );
 		$returnUrl		= $this->env->url.'shop/payment/stripe';
@@ -141,12 +144,12 @@ class Controller_Shop_Payment_Stripe extends Controller
 		throw new Exception( 'No implemented' );
 	}
 
-	public function perGiropay()
+	public function perGiropay(): void
 	{
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
 		try{
-			$source	= \Stripe\Source::create( [
+			$source	= Source::create( [
 				'type'		=> 'giropay',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),
@@ -170,12 +173,12 @@ class Controller_Shop_Payment_Stripe extends Controller
 		}
 	}
 
-	public function perSofort()
+	public function perSofort(): void
 	{
 		if( $this->request->has( 'source' ) )
 			$this->restart( 'shop/payment/stripe?source='.$this->request->get( 'source' ) );
 		try{
-			$source	= \Stripe\Source::create( [
+			$source	= Source::create( [
 				'type'		=> 'sofort',
 				'amount'	=> round( $this->order->priceTaxed * 100 ),
 				'currency'	=> strtolower( $this->order->currency ),

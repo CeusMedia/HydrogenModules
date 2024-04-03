@@ -53,7 +53,7 @@ class View_Info_Blog extends View
 		$post	= NULL;
 		if( $modeOrId === "random" ){
 			$number	= $model->countByIndex( 'status', 1 );
-			$index	= rand( 1, $number ) - 1;
+			$index	= random_int( 1, $number ) - 1;
 			$orders	= ['postId' => 'DESC'];
 			$limits	= [1, $index];
 			$posts	= $model->getAll( ['status' => 1], $orders, $limits );

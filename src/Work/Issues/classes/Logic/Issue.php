@@ -145,7 +145,7 @@ class Logic_Issue extends Logic
 		if( count( $users ) ){
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
-				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$userProjects		= $this->getUserProjects();
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
@@ -172,7 +172,7 @@ class Logic_Issue extends Logic
 		if( count( $users ) ){
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
-				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$userProjects		= $this->getUserProjects();
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){

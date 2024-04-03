@@ -6,7 +6,8 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Database_Lock extends View{
 
-	public function ajaxRenderDashboardPanel(){
+	public function ajaxRenderDashboardPanel(): string
+	{
 		$context	= new View_Helper_Work_Time_Timer( $this->env );
 		$payload	= [];
 		$this->env->getCaptain()->callHook( 'Work_Timer', 'registerModule', $context, $payload );
@@ -17,7 +18,6 @@ class View_Database_Lock extends View{
 		if( $locks ){
 			$rows	= [];
 			foreach( $locks as $lock ){
-
 				$module	= $modules[$lock->subject];
 				$entry	= $module->model->get( $lock->entryId );
 				if( !$entry )
@@ -44,7 +44,8 @@ class View_Database_Lock extends View{
 		return $content;
 	}
 
-	public function index(){
+	public function index(): void
+	{
 		$this->setPageTitle();
 	}
 }

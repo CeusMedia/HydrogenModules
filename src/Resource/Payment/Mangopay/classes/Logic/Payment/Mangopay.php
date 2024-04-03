@@ -1,7 +1,30 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 use CeusMedia\Common\Alg\Obj\MethodFactory;
 use CeusMedia\HydrogenFramework\Logic;
+use MangoPay\Address;
+use MangoPay\BankAccount;
+use MangoPay\BankAccountDetailsIBAN;
+use MangoPay\ClientLogoUpload;
+use MangoPay\FilterTransactions;
+use MangoPay\Hook;
+use MangoPay\Mandate;
+use MangoPay\Money;
+use MangoPay\Pagination;
+use MangoPay\PayIn;
+use MangoPay\PayInExecutionDetailsDirect;
+use MangoPay\PayInExecutionDetailsWeb;
+use MangoPay\PayInPaymentDetailsBankWire;
+use MangoPay\PayInPaymentDetailsCard;
+use MangoPay\PayInPaymentDetailsDirectDebit;
+use MangoPay\PayInPaymentDetailsDirectDebitDirect;
+use MangoPay\Sorting;
+use MangoPay\Transfer;
+use MangoPay\UserLegal;
+use MangoPay\UserNatural;
+use MangoPay\Wallet;
 
 class Logic_Payment_Mangopay extends Logic
 {
@@ -35,7 +58,7 @@ class Logic_Payment_Mangopay extends Logic
 	/**
 	 *	@todo		implement type
 	 */
-	public function calculateFeesForPayIn( $price, $currency, $type )
+	public function calculateFeesForPayIn( $price, $currency, $type ): float|int
 	{
 		switch( $type ){
 			case 'CB_VISA_MASTERCARD':
@@ -73,9 +96,9 @@ class Logic_Payment_Mangopay extends Logic
 		return $this->getUser( $userId );
 	}
 
-	public function createAddress( string $street, $postcode, string $city, string $country, ?string $region = NULL ): \MangoPay\Address
+	public function createAddress( string $street, $postcode, string $city, string $country, ?string $region = NULL ): Address
 	{
-		$address = new \MangoPay\Address();
+		$address = new Address();
 		$address->AddressLine1	= $street;
 		$address->PostalCode	= $postcode;
 		$address->City			= $city;
@@ -88,17 +111,17 @@ class Logic_Payment_Mangopay extends Logic
 	public function createBankAccount( int|string $userId, string $iban, string $bic, string $title, $address = NULL )
 	{
 		$user	= $this->getUser( $userId );
-		$bankAccount = new \MangoPay\BankAccount();
+		$bankAccount = new BankAccount();
 		$bankAccount->Type			= "IBAN";
-		$bankAccount->Details		= new \MangoPay\BankAccountDetailsIBAN();
+		$bankAccount->Details		= new BankAccountDetailsIBAN();
 		$bankAccount->Details->IBAN	= trim( str_replace( ' ', '', $iban ) );
 		$bankAccount->Details->BIC	= trim( $bic );
 		$bankAccount->OwnerName		= $title;
 		if( $address )
 			$bankAccount->OwnerAddress	= $address;
-		else if( $user instanceof \MangoPay\UserNatural )
+		else if( $user instanceof UserNatural )
 			$bankAccount->OwnerAddress	= $user->Address;
-		else if( $user instanceof \MangoPay\UserLegal )
+		else if( $user instanceof UserLegal )
 			$bankAccount->OwnerAddress	= $user->LegalRepresentativeAddress;
 		$item	= $this->provider->Users->CreateBankAccount( $userId, $bankAccount );
 		$this->uncache( 'user_'.$userId.'_bankaccounts' );
@@ -107,7 +130,7 @@ class Logic_Payment_Mangopay extends Logic
 
 	public function createMandate( int|string $bankAccountId, $returnUrl )
 	{
-		$mandate 	= new \MangoPay\Mandate();
+		$mandate 	= new Mandate();
 		$mandate->BankAccountId	= $bankAccountId;
 		$mandate->Culture		= "EN";
 		$mandate->ReturnUrl		= $returnUrl;
@@ -155,11 +178,11 @@ print_m( $items );
 	{
 //		$bankAccount	= $this->getBankAccount( $userId, $bankAccountId );
 
-		$payIn		= new \MangoPay\PayIn();
+		$payIn		= new PayIn();
 		$payIn->AuthorId			= $userId;
 		$payIn->CreditedWalletId	= $walletId;
-		$payIn->DebitedFunds		= new \MangoPay\Money();
-		$payIn->Fees				= new \MangoPay\Money();
+		$payIn->DebitedFunds		= new Money();
+		$payIn->Fees				= new Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
 		$payIn->Fees->Currency	= $currency;
@@ -168,14 +191,14 @@ print_m( $items );
 		$payIn->DebitedFunds->Currency	= $currency;
 
 		// payment type as BANKWIRE
-		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsBankWire();
+		$payIn->PaymentDetails = new PayInPaymentDetailsBankWire();
 		$payIn->PaymentDetails->DeclaredDebitedFunds	= $payIn->DebitedFunds;
 		$payIn->PaymentDetails->DeclaredFees			= $payIn->Fees;
 /*		$payIn->PaymentDetails->BankAccount				= $bankAccount;
 		$payIn->PaymentDetails->WireReference			= "BankWire PayIn 1";
 */
 		// execution type as DIRECT
-		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+		$payIn->ExecutionDetails	= new PayInExecutionDetailsDirect();
 
 		// create Pay-In
 		return $this->provider->PayIns->Create( $payIn );
@@ -186,11 +209,11 @@ print_m( $items );
 	 */
 	public function createPayInFromBankAccountViaDirectDebit( int|string $userId, $mandateId, $currency, $amount )
 	{
-		$payIn	= new \MangoPay\PayIn();
+		$payIn	= new PayIn();
 		$payIn->AuthorId			= $userId;
 		$payIn->CreditedWalletId	= $walletId;
-		$payIn->DebitedFunds		= new \MangoPay\Money();
-		$payIn->Fees				= new \MangoPay\Money();
+		$payIn->DebitedFunds		= new Money();
+		$payIn->Fees				= new Money();
 
 		$payIn->Fees->Amount	= $this->calculateFeesForPayIn( $amount );
 		$payIn->Fees->Currency	= $currency;
@@ -198,11 +221,11 @@ print_m( $items );
 		$payIn->DebitedFunds->Amount	= $amount + $this->calculateFeesForPayIn( $amount );
 		$payIn->DebitedFunds->Currency	= $currency;
 
-		$payIn->PaymentDetails	= new \MangoPay\PayInPaymentDetailsDirectDebitDirect();
+		$payIn->PaymentDetails	= new PayInPaymentDetailsDirectDebitDirect();
 		$payIn->PaymentDetails->MandateId	=
 
 		// execution type as DIRECT
-		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+		$payIn->ExecutionDetails	= new PayInExecutionDetailsDirect();
 
 		// create Pay-In
 		return $this->provider->PayIns->Create( $payIn );
@@ -212,11 +235,11 @@ print_m( $items );
 	{
 		$card	= $this->getCardById( $cardId );
 
-		$payIn		= new \MangoPay\PayIn();
+		$payIn		= new PayIn();
 		$payIn->AuthorId			= $userId;
 		$payIn->CreditedWalletId	= $walletId;
-		$payIn->DebitedFunds		= new \MangoPay\Money();
-		$payIn->Fees				= new \MangoPay\Money();
+		$payIn->DebitedFunds		= new Money();
+		$payIn->Fees				= new Money();
 
 	//	$amount	= $this->checkAmount( $amount, $this->currency );								//  @todo handle amount format and sanity
 
@@ -227,12 +250,12 @@ print_m( $items );
 		$payIn->DebitedFunds->Currency	= $card->Currency;
 
 		// payment type as CARD
-		$payIn->PaymentDetails = new \MangoPay\PayInPaymentDetailsCard();
+		$payIn->PaymentDetails = new PayInPaymentDetailsCard();
 		$payIn->PaymentDetails->CardType	= $card->CardType;
 		$payIn->PaymentDetails->CardId		= $card->Id;
 
 		// execution type as DIRECT
-		$payIn->ExecutionDetails	= new \MangoPay\PayInExecutionDetailsDirect();
+		$payIn->ExecutionDetails	= new PayInExecutionDetailsDirect();
 		$payIn->ExecutionDetails->SecureModeReturnURL = $secureModeReturnUrl;
 
 		// create Pay-In
@@ -242,18 +265,18 @@ print_m( $items );
 	public function createBankPayInViaWeb( $type, int|string $userId, int|string $walletId, $currency, $amount, $returnUrl )
 	{
 		$user	= $this->checkUser( $userId );
-		$payIn	= new \MangoPay\PayIn();
+		$payIn	= new PayIn();
 		$payIn->CreditedWalletId	= $walletId;
 		$payIn->AuthorId			= $userId;
-		$payIn->PaymentDetails		= new \MangoPay\PayInPaymentDetailsDirectDebit();
+		$payIn->PaymentDetails		= new PayInPaymentDetailsDirectDebit();
 		$payIn->DirectDebitType		= $type;
-		$payIn->PaymentDetails->DebitedFunds			= new \MangoPay\Money();
+		$payIn->PaymentDetails->DebitedFunds			= new Money();
 		$payIn->PaymentDetails->DebitedFunds->Amount	= $amount;
 		$payIn->PaymentDetails->DebitedFunds->Currency	= $currency;
-		$payIn->PaymentDetails->Fees					= new \MangoPay\Money();
+		$payIn->PaymentDetails->Fees					= new Money();
 		$payIn->PaymentDetails->Fees->Amount			= 0;
 		$payIn->PaymentDetails->Fees->Currency			= $currency;
-		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
+		$payIn->ExecutionDetails			= new PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
 		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
 		return $this->provider->PayIns->Create( $payIn );
@@ -262,20 +285,20 @@ print_m( $items );
 	public function createCardPayInViaWeb( int|string $userId, int|string $walletId, $cardType, $currency, $amount, $returnUrl )
 	{
 		$user	= $this->checkUser( $userId );
-		$payIn	= new \MangoPay\PayIn();
+		$payIn	= new PayIn();
 		$payIn->CreditedWalletId			= $walletId;
 		$payIn->AuthorId					= $userId;
 		$payIn->PaymentType					= "CARD";
 		$payIn->ExecutionType				= "WEB";
-		$payIn->PaymentDetails				= new \MangoPay\PayInPaymentDetailsCard();
+		$payIn->PaymentDetails				= new PayInPaymentDetailsCard();
 		$payIn->PaymentDetails->CardType	= $cardType;
-		$payIn->DebitedFunds				= new \MangoPay\Money();
+		$payIn->DebitedFunds				= new Money();
 		$payIn->DebitedFunds->Currency		= strtoupper( $currency );
 		$payIn->DebitedFunds->Amount		= $amount;
-		$payIn->Fees						= new \MangoPay\Money();
+		$payIn->Fees						= new Money();
 		$payIn->Fees->Currency				= strtoupper( $currency );
 		$payIn->Fees->Amount				= 0;
-		$payIn->ExecutionDetails			= new \MangoPay\PayInExecutionDetailsWeb();
+		$payIn->ExecutionDetails			= new PayInExecutionDetailsWeb();
 		$payIn->ExecutionDetails->ReturnURL	= $returnUrl;
 		$payIn->ExecutionDetails->Culture	= strtoupper( $user->Nationality );
 		return $this->provider->PayIns->Create( $payIn );
@@ -292,7 +315,7 @@ print_m( $items );
 			'type'			=> Model_Address::TYPE_BILLING,
 		] );
 
-		$user = new \MangoPay\UserLegal();
+		$user = new UserLegal();
 		$user->LegalPersonType	= "BUSINESS";
 		$user->Name				= $companyData['name'];
 //		$user->Tag				= NULL;
@@ -305,13 +328,13 @@ print_m( $items );
 		$user->LegalRepresentativeFirstName				= $representativeData['firstname'];
 		$user->LegalRepresentativeLastName				= $representativeData['lastname'];
 		if( $address ){
-			$user->LegalRepresentativeAddress = new \MangoPay\Address();
+			$user->LegalRepresentativeAddress = new Address();
 			$user->LegalRepresentativeAddress->AddressLine1	= $address->street;
 			$user->LegalRepresentativeAddress->City			= $address->city;
 			$user->LegalRepresentativeAddress->Region		= $address->region;
 			$user->LegalRepresentativeAddress->PostalCode	= $address->postcode;
 			$user->LegalRepresentativeAddress->Country		= $address->country;
-			$user->HeadquartersAddress = new \MangoPay\Address();
+			$user->HeadquartersAddress = new Address();
 			$user->HeadquartersAddress->AddressLine1	= $address->street;
 			$user->HeadquartersAddress->City			= $address->city;
 			$user->HeadquartersAddress->Region			= $address->region;
@@ -323,7 +346,7 @@ print_m( $items );
 
 	public function createLegalUser( $data )
 	{
-		$user = new \MangoPay\UserLegal();
+		$user = new UserLegal();
 		$user->LegalPersonType	= $data['company']['type'];
 		$user->Name				= $data['company']['name'];
 		$user->Email			= $data['company']['email'];
@@ -335,13 +358,13 @@ print_m( $items );
 		$user->LegalRepresentativeEmail					= $data['representative']['email'];
 		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
 		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
-		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress = new Address();
 		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
 		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
 		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
 		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
 		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
-		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress = new Address();
 		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
 		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
 		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
@@ -365,13 +388,13 @@ print_m( $items );
 		$user->LegalRepresentativeEmail					= $data['representative']['email'];
 		$user->LegalRepresentativeFirstName				= $data['representative']['firstname'];
 		$user->LegalRepresentativeLastName				= $data['representative']['surname'];
-		$user->LegalRepresentativeAddress = new \MangoPay\Address();
+		$user->LegalRepresentativeAddress = new Address();
 		$user->LegalRepresentativeAddress->AddressLine1	= $data['representative']['address'];
 		$user->LegalRepresentativeAddress->City			= $data['representative']['city'];
 		$user->LegalRepresentativeAddress->Region		= $data['representative']['region'];
 		$user->LegalRepresentativeAddress->PostalCode	= $data['representative']['postcode'];
 		$user->LegalRepresentativeAddress->Country		= $data['representative']['country'];
-		$user->HeadquartersAddress = new \MangoPay\Address();
+		$user->HeadquartersAddress = new Address();
 		$user->HeadquartersAddress->AddressLine1	= $data['headquarter']['address'];
 		$user->HeadquartersAddress->City			= $data['headquarter']['city'];
 		$user->HeadquartersAddress->Region			= $data['headquarter']['region'];
@@ -392,7 +415,7 @@ print_m( $items );
 			'type'			=> Model_Address::TYPE_BILLING,
 		] );
 
-		$user	= new \MangoPay\UserNatural();
+		$user	= new UserNatural();
 		$user->PersonType			= "NATURAL";
 		$user->FirstName			= $user->firstname;
 		$user->LastName				= $user->surname;
@@ -400,7 +423,7 @@ print_m( $items );
 		$user->Nationality			= $user->country;
 		$user->CountryOfResidence	= $user->country;
 		$user->Email				= $user->email;
-		$user->Address 					= new \MangoPay\Address();
+		$user->Address 					= new Address();
 		$user->Address->AddressLine1	= $user->street.' '.$user->number;
 		$user->Address->City			= $user->city;
 		$user->Address->PostalCode		= $user->postcode;
@@ -418,7 +441,7 @@ print_m( $items );
 
 	public function createUserWallet( int|string $userId, $currency )
 	{
-		$wallet		= new \MangoPay\Wallet();
+		$wallet		= new Wallet();
 		$wallet->Currency		= $currency;
 		$wallet->Owners			= [$userId];
 		$wallet->Description	= $currency.' Wallet';
@@ -483,7 +506,7 @@ print_m( $items );
 		if( $force )
 			$this->skipCacheOnNextRequest( TRUE );
 		$factory	= new MethodFactory();
-		return $factory->call( $this, $method, [$resourceId] );
+		return $factory->call( $this, $method );
 	}
 
 	public function getHook( int|string $hookId )
@@ -551,8 +574,8 @@ print_m( $items );
 		$cacheKey	= 'mangopay_user_'.$userId.'_bankaccounts';
 		$this->applyPossibleCacheSkip( $cacheKey );
 		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
-			$pagination	= new \MangoPay\Pagination();
-			$sorting	= new \MangoPay\Sorting();
+			$pagination	= new Pagination();
+			$sorting	= new Sorting();
 			$sorting->AddField( 'CreationDate', 'DESC' );
 			$items		= $this->provider->Users->GetBankAccounts( $userId, $pagination, $sorting );
 			$this->cache->set( $cacheKey, $items );
@@ -562,8 +585,8 @@ print_m( $items );
 
 	public function getUserCards( int|string $userId, array $conditions = [], array $orders = [], array $limits = [] )
 	{
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
+		$pagination	= new Pagination();
+		$sorting	= new Sorting();
 		if( !$orders )
 			$sorting->AddField( 'CreationDate', 'DESC' );
 		else{
@@ -597,8 +620,8 @@ print_m( $items );
 
 	public function getUserWallets( int|string $userId, $orders = [], $limits = [] )
 	{
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
+		$pagination	= new Pagination();
+		$sorting	= new Sorting();
 		if( !$orders )
 			$sorting->AddField( 'CreationDate', 'DESC' );
 		else{
@@ -610,8 +633,8 @@ print_m( $items );
 
 	public function getUserWalletsByCurrency( int|string $userId, $currency, bool $force = FALSE )
 	{
-		$pagination	= new \MangoPay\Pagination();
-		$sorting	= new \MangoPay\Sorting();
+		$pagination	= new Pagination();
+		$sorting	= new Sorting();
 		$sorting->AddField( 'CreationDate', 'DESC' );
 		$all	= $this->provider->Users->GetWallets( $userId, $pagination, $sorting );
 		$list	= [];
@@ -674,7 +697,7 @@ print_m( $items );
 			$pagination	= $this->provider->getDefaultPagination();
 			$sorting	= $this->provider->getDefaultSorting();
 	//		$sorting->AddField( 'CreationDate', 'ASC' );
-			$filter		= new \MangoPay\FilterTransactions();
+			$filter		= new FilterTransactions();
 			$items		= $this->provider->Wallets->GetTransactions( $walletId, $pagination, $filter, $sorting );
 			$this->cache->set( $cacheKey, $items );
 		}
@@ -693,7 +716,7 @@ print_m( $items );
 
 	public function setClientLogo( $imageContentBase64 )
 	{
-		$ClientLogoUpload = new \MangoPay\ClientLogoUpload();
+		$ClientLogoUpload = new ClientLogoUpload();
 		$ClientLogoUpload->File = $imageContentBase64;
 		return $this->provider->Clients->UploadLogo( $ClientLogoUpload );
 	}
@@ -712,7 +735,7 @@ print_m( $items );
 			return $this->provider->Hooks->Update( $hook );
 		}
 		else{
-			$hook				= new \MangoPay\Hook;
+			$hook				= new Hook;
 			$hook->EventType	= $eventType;
 			$hook->Url			= $this->baseUrl.trim( $path );
 			if( $tag !== NULL )
@@ -728,14 +751,14 @@ print_m( $items );
 
 	public function transfer( int|string $sourceUserId, int|string $targetUserId, int|string $sourceWalletId, int|string $targetWalletId, $currency, $amount, $fees, $tag = NULL )
 	{
-		$transfer = new \MangoPay\Transfer();
+		$transfer = new Transfer();
 		$transfer->Tag = $tag;
 		$transfer->AuthorId = $sourceUserId;
 		$transfer->CreditedUserId = $targetUserId;
-		$transfer->DebitedFunds = new \MangoPay\Money();
+		$transfer->DebitedFunds = new Money();
 		$transfer->DebitedFunds->Currency = $currency;
 		$transfer->DebitedFunds->Amount = $amount;
-		$transfer->Fees = new \MangoPay\Money();
+		$transfer->Fees = new Money();
 		$transfer->Fees->Currency = $currency;
 		$transfer->Fees->Amount = $fees;
 		$transfer->DebitedWalletId = $sourceWalletId;

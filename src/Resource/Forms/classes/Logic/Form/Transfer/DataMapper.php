@@ -108,7 +108,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 					break;
 				case 'contains':
 				case '~=':
-					$truth	= strpos( $inputValue, $condition->match ) !== FALSE;
+					$truth	= strpos( $inputValue, (string) $condition->match ) !== FALSE;
 					break;
 				case 'regex':
 					$truth	= preg_match( $condition->match, $inputValue );

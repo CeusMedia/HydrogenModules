@@ -23,7 +23,7 @@ class View_Work_Graph extends View
 		foreach( $facts as $fact ){
 			if( !isset( $fact[2] ) )
 				$fact[2]	= NULL;
-			list( $label, $value, $default )	= $fact;
+			[$label, $value, $default]	= $fact;
 			if( !( $default === NULL || strlen( $default ) === 0 ) )
 				$default	= HtmlTag::create( 'small', '('.$default.')', ['class' => 'muted'] );
 

@@ -2,6 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $slider */
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $iconUpload		= HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
