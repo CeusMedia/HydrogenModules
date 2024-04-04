@@ -3,7 +3,7 @@
 	<title>Work: Bills</title>
 	<description><![CDATA[Extensible customer database management.]]></description>
 	<category>Management</category>
-	<version>0.2.11</version>
+	<version>0.2.12</version>
 	<log version="0.2.4">Added support for tabs.</log>
 	<log version="0.2.5">Added calendar support.</log>
 	<log version="0.2.6">Added more lists.</log>
@@ -12,13 +12,15 @@
 	<log version="0.2.9">Updated filters, lists and marked panels.</log>
 	<log version="0.2.10">Extended filters by ID and search term (applies on title only).</log>
 	<log version="0.2.11">Updated list data for template of seconds tab (graph).</log>
+	<log version="0.2.12">Extract hook to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Bill.php</class>
-		<class>View/Work/Bill.php</class>
 		<class>Model/Bill.php</class>
+		<class>Hook/Work/Bill.php</class>
+		<class>View/Work/Bill.php</class>
 		<template>work/bill/add.php</template>
 		<template>work/bill/edit.php</template>
 		<template>work/bill/index.php</template>
@@ -33,7 +35,7 @@
 	</relations>
 	<link xml:lang="de" access="inside" path="work/bill" rank="37">Rechnungen</link>
 	<link xml:lang="en" access="inside" path="work/bill" rank="37">Bills</link>
-	<hook type="resource" resource="Work:Bills" event="registerTabs">View_Work_Bill::___onRegisterTab</hook>
+	<hook type="resource" resource="Work:Bills" event="registerTabs">Hook_Work_Bill::onRegisterTab</hook>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>bills`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>bills` (

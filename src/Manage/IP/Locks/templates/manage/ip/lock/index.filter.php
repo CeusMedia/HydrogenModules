@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );
 $buttonFilter	= HtmlTag::create( 'button', $iconFilter.' filtern', [

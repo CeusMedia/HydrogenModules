@@ -6,8 +6,12 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_Ip_Lock_Transport extends Controller
 {
 	protected $request;
+	protected Logic_IP_Lock_Transport $logicTransport;
+	protected Model_IP_Lock_Filter $modelFilter;
+	protected Model_IP_Lock_Reason $modelReason;
 
-	public function index()
+
+	public function index(): void
 	{
 		$reasons	= $this->modelReason->getAll( [], ['title' => 'ASC'] );
 		$filters	= $this->modelFilter->getAll( [], ['title' => 'ASC'] );
@@ -22,7 +26,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		$this->addData( 'filters', $filters );
 	}
 
-	public function export()
+	public function export(): void
 	{
 		if( !$this->request->getMethod()->isPost() )
 			$this->restart( NULL, TRUE );
@@ -43,10 +47,10 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		if( !preg_match( '/\.\S+$/', $fileName ) )
 			$fileName	.= '.json';
 
-		HttpDownload::sendString( $json, $fileName, TRUE );
+		HttpDownload::sendString( $json, $fileName );
 	}
 
-	public function import()
+	public function import(): void
 	{
 		$request	= $this->env->getRequest();
 //		print_m( $this->env->getRequest()->getAll() );
@@ -77,6 +81,7 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicTransport	= Logic_IP_Lock_Transport::getInstance( $this->env );
 
 //		$logicPool				= $this->env->getLogic();

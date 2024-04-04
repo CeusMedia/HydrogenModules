@@ -38,7 +38,7 @@ try{
 	$app->run();											//  and run it
 }
 catch( Exception $e ){										//  an uncaught exception happened
-	class_exists( '\\SentrySdk' ) && Sentry\captureException( $e );
+	class_exists( '\\SentrySdk' ) && \Sentry\captureException( $e );
 	http_response_code(500);
 	(include_once 'templates/error.php') or ExceptionPage::display( $e );
 }

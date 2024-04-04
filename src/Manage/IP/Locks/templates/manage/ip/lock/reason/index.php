@@ -106,5 +106,5 @@ $panelList	= HTML::DivClass( 'content-panel',
 	)
 );
 
-$tabs	= View_Manage_Ip_Lock::renderTabs( $env, 'reason' );
+$tabs	= View_Manage_IP_Lock::renderTabs( $env, 'reason' );
 return $tabs.$panelList;

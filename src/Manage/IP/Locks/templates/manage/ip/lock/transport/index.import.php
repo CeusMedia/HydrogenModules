@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+
 $iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-upload'] );
 
 $upload	= new View_Helper_Input_File( $env );

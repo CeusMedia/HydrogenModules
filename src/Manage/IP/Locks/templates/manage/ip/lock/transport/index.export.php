@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<object> $reasons */
+/** @var object $filters */
+
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-download'] );
 
 $listReasons	= [];

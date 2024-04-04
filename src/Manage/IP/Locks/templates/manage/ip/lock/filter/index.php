@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object $filters */
+
 $states	= [
 	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
 	0	=> 'inaktiv',
@@ -123,5 +126,5 @@ $panelList	= HTML::DivClass( 'content-panel',
 	)
 );
 
-$tabs	= View_Manage_Ip_Lock::renderTabs( $env, 'filter' );
+$tabs	= View_Manage_IP_Lock::renderTabs( $env, 'filter' );
 return $tabs.$panelList;

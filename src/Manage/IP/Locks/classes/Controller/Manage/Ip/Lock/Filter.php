@@ -1,13 +1,15 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_IP_Lock_Filter extends Controller
 {
-	protected $logic;
-	protected $messenger;
+	protected Messenger $messenger;
+	protected Model_IP_Lock_Filter $model;
+	protected Logic_IP_Lock $logic;
 
-	public function activate( $filterId )
+	public function activate( string $filterId ): void
 	{
 		$this->model->edit( $filterId, [
 			'status'	=> Model_IP_Lock_Filter::STATUS_ENABLED,
@@ -15,7 +17,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
@@ -30,7 +32,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
-	public function deactivate( $filterId )
+	public function deactivate( string $filterId ): void
 	{
 		$this->model->edit( $filterId, [
 			'status'	=> Model_IP_Lock_Filter::STATUS_DISABLED,
@@ -38,13 +40,13 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $filterId )
+	public function edit( string $filterId ): void
 	{
 		$request	= $this->env->getRequest();
 		$filter		= $this->model->get( $filterId );
 		if( !$filter ){
-			$this->messenger->notError( 'Invalid filter ID.' );
-			$this->restart( NULL, FALSE );
+			$this->messenger->noteError( 'Invalid filter ID.' );
+			$this->restart();
 		}
 		if( $request->has( 'save' ) ){
 			$data		= $request->getAll();
@@ -58,26 +60,26 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$conditions	= [];
 		$orders		= [];
 		$limits		= [];
 		$model		= new Model_IP_Lock_Reason( $this->env );
 		$filters	= $this->model->getAll( $conditions, $orders, $limits );
-		foreach( $filters as $nr => $filter ){
+		foreach( $filters as $filter ){
 			$filter->reason	= $model->get( $filter->reasonId );
 		}
 		$this->addData( 'filters', $filters );
 	}
 
-	public function remove( $filterId )
+	public function remove( string $filterId ): void
 	{
-		$request	= $this->env->getRequest();
+//		$request	= $this->env->getRequest();
 		$filter		= $this->model->get( $filterId );
 		if( !$filter ){
-			$this->messenger->notError( 'Invalid filter ID.' );
-			$this->restart( NULL, FALSE );
+			$this->messenger->noteError( 'Invalid filter ID.' );
+			$this->restart();
 		}
 		$locks		= $this->logic->getAll( ['filterId' => $filterId] );
 		foreach( $locks as $lock )
@@ -89,6 +91,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Filter( $this->env );

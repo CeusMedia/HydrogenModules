@@ -3,7 +3,7 @@
 	<title>Manage: IP Locks</title>
 	<description><![CDATA[]]></description>
 	<category>Management</category>
-	<version>0.3.9</version>
+	<version>0.4.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen Module.</log>
 	<log version="0.2.1">Added tabs and reason management.</log>
@@ -22,7 +22,8 @@
 	<log version="0.3.6">Extend export settings by reasons.</log>
 	<log version="0.3.7">Extend export settings by filters.</log>
 	<log version="0.3.8">Migrate to support CeusMedia::Common 0.8.5.</log>
-	<log version="0.3.9">English Localization added</log>
+	<log version="0.3.9">English Localization added.</log>
+	<log version="0.4.0">Code update for PHP 8.1.</log>
 <!--	<log version="0.3.x">Added whitelist management.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

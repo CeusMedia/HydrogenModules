@@ -1,14 +1,15 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_IP_Lock extends Controller
 {
-	protected $logic;
-	protected $messenger;
-	protected $filterSessionPrefix	= 'filter_manage_ip_lock_';
+	protected Logic_IP_Lock $logic;
+	protected Messenger $messenger;
+	protected string $filterSessionPrefix	= 'filter_manage_ip_lock_';
 
-	public function add()
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->get( 'ip' ) && $request->get( 'reasonId' ) ){
@@ -23,7 +24,7 @@ class Controller_Manage_IP_Lock extends Controller
 		}
 	}
 
-	public function cancel( $ipLockId )
+	public function cancel( string $ipLockId ): void
 	{
 		if( $this->logic->cancel( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP lock cancelled.' );
@@ -32,7 +33,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $ipLockId )
+	public function edit( string $ipLockId ): void
 	{
 		$lock	= $this->logic->get( $ipLockId, FALSE );
 		if( !$lock ){
@@ -44,7 +45,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->addData( 'lock', $lock );
 	}
 
-	public function index( $limit = 15, $page = 0 )
+	public function index( $limit = 15, $page = 0 ): void
 	{
 		$session	= $this->env->getSession();
 		$conditions	= [
@@ -80,7 +81,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->addData( 'count', count( $locks ) );
 	}
 
-	public function lock( $ipLockId )
+	public function lock( string $ipLockId ): void
 	{
 		if( $this->logic->lock( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP locked.' );
@@ -89,7 +90,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function order( $reset = NULL )
+	public function order( $reset = NULL ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -109,7 +110,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function unlock( $ipLockId )
+	public function unlock( string $ipLockId ): void
 	{
 		if( $this->logic->unlock( $ipLockId ) )
 			$this->messenger->noteSuccess( 'IP unlocked.' );
@@ -120,6 +121,7 @@ class Controller_Manage_IP_Lock extends Controller
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 	}

@@ -1,5 +1,15 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var View_Work_Bill $view */
+/** @var array $bills */
+/** @var array $words */
+/** @var Dictionary $filters */
+/** @var int $total */
+/** @var int $page */
 
 /*$model	= new Model_Bill( $this->env );
 $year	= date( 'Y' );

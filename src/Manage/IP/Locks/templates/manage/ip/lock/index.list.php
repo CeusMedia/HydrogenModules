@@ -1,6 +1,15 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $locks */
+/** @var int $total */
+/** @var int $count */
+/** @var int $limit */
+/** @var int $page */
 
 $states	= [
 	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
@@ -121,7 +130,8 @@ $buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
 ] );
 
 
-function renderListNumbers( $page, $limit, $count, $total ){
+function renderListNumbers( $page, $limit, $count, $total ): string
+{
 	$label	= $count;
 	if( $total > $limit ){
 		$spanTotal	= '<span class="list-number-total">'.$total.'</span>';
@@ -141,7 +151,7 @@ $uri			= './manage/ip/lock/'.$limit;
 //$helperPages	= new View_Helper_Pagination( $env, $total, $limit, $page, $count );
 //$pagination		= $helperPages->render( $uri, $total, $limit, $page, FALSE );
 //$listNumbers	= $helperPages->renderListNumbers( $total, $limit, $page, $count );
-$helperPages	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/ip/lock/15', $page, ceil( $total / 15 ) );
+$helperPages	= new PageControl( './manage/ip/lock/15', $page, ceil( $total / 15 ) );
 $pagination		= $helperPages->render();
 $listNumbers	= renderListNumbers( $page, $limit, $count, $total );
 

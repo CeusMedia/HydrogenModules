@@ -29,7 +29,7 @@ class Controller_Work_Bookmark extends Controller
 					'createdAt'		=> time(),
 				];
 				$pageDocument	= new \PHPHtmlParser\Dom;
-				$pageDocument->load( $pageHtml );
+				$pageDocument->loadStr( $pageHtml );
 
 				$pageTitle = $pageDocument->find( 'title' );
 				if( $pageTitle->count() ){
@@ -41,8 +41,6 @@ class Controller_Work_Bookmark extends Controller
 					if( strtolower( $meta->getAttribute( 'name' ) ) === 'description' )
 						$data['pageDescription']	= $meta->getAttribute( 'content' );
 				}
-
-
 
 				$data['createdAt']	= time();
 				$bookmarkId  = $this->model->add( $data );
@@ -65,7 +63,7 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
-	public function comment( $bookmarkId )
+	public function comment( string $bookmarkId ): void
 	{
 		$this->check( $bookmarkId );
 		if( $this->request->has( 'save' ) ){
@@ -81,7 +79,7 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
-	public function edit( $bookmarkId )
+	public function edit( string $bookmarkId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
@@ -92,7 +90,7 @@ class Controller_Work_Bookmark extends Controller
 		$this->addData( 'bookmark', $this->model->get( $bookmarkId ) );
 	}
 
-	public function filter( $reset = FALSE )
+	public function filter( $reset = FALSE ): void
 	{
 		if( $reset ){
 			foreach( array_keys( $this->session->getAll( 'filter_work_bookmark_' ) ) as $key )
@@ -105,7 +103,7 @@ class Controller_Work_Bookmark extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( $page = 0 ): void
 	{
 		$filterQuery	= $this->session->get( 'filter_work_bookmark_query' );
 		$conditions		= [
@@ -136,7 +134,7 @@ class Controller_Work_Bookmark extends Controller
 		$this->addData( 'filterLimit', $this->session->get( 'filter_work_bookmark_limit' ) );
 	}
 
-	public function view( $bookmarkId )
+	public function view( string $bookmarkId ): void
 	{
 		$this->addData( 'bookmark', $this->check( $bookmarkId ) );
 		$this->addData( 'comments', $this->modelComment->getAll( [
@@ -147,7 +145,7 @@ class Controller_Work_Bookmark extends Controller
 		], ['title' => 'ASC'] ) );
 	}
 
-	public function visit( $bookmarkId )
+	public function visit( string $bookmarkId ): void
 	{
 		$bookmark	= $this->check( $bookmarkId );
 		$this->model->edit( $bookmarkId, [
@@ -158,7 +156,7 @@ class Controller_Work_Bookmark extends Controller
 		exit;
 	}
 
-	public function addTag( $bookmarkId )
+	public function addTag( string $bookmarkId ): void
 	{
 		$bookmark	= $this->check( $bookmarkId );
 		if( $this->request->has( 'save' ) ){
@@ -186,7 +184,7 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
-	protected function check( $bookmarkId )
+	protected function check( string $bookmarkId ): object
 	{
 		$bookmark	= $this->model->get( $bookmarkId );
 		if( !$bookmark )

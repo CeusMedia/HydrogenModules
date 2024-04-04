@@ -1,5 +1,11 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Dictionary $filters */
+/** @var array $words */
 
 $optType		= /*array( '' => '- alle -' ) + */$words['types'];
 $optType		= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );

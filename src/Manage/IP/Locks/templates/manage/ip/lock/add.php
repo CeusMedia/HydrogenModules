@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $reasons */
+
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
@@ -24,7 +27,7 @@ $reasonMap	= [];
 foreach( $reasons as $reason )
 	$reasonMap[$reason->ipLockReasonId]	= $reason;
 
-$tabs   = View_Manage_Ip_Lock::renderTabs( $env );
+$tabs   = View_Manage_IP_Lock::renderTabs( $env );
 
 return $tabs.HTML::DivClass( 'row-fluid', '
 <script>

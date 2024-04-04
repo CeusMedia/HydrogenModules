@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array $words */
+/** @var object $bill */
+
 $optType	= $words['types'];
 $optType	= HtmlElements::Options( $optType, $bill->type );
 

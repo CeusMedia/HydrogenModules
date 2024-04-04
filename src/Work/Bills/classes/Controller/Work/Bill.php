@@ -8,7 +8,7 @@ class Controller_Work_Bill extends Controller
 
 	protected ?string $userId		= NULL;
 
-	public function add()
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
@@ -29,7 +29,7 @@ class Controller_Work_Bill extends Controller
 		}
 	}
 
-	public function edit( $billId )
+	public function edit( string $billId ): void
 	{
 		$request	= $this->env->getRequest();
 		$bill	= $this->model->get( $billId );
@@ -55,7 +55,7 @@ class Controller_Work_Bill extends Controller
 		$this->addData( 'bill', $bill );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
@@ -85,7 +85,7 @@ class Controller_Work_Bill extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL )
+	public function index( $page = NULL ): void
 	{
 		$session	= $this->env->getSession();
 		$filters	= $session->getAll( 'filter_work_bill_', TRUE );
@@ -147,12 +147,12 @@ class Controller_Work_Bill extends Controller
 		$this->addData( 'filters', $session->getAll( 'filter_work_bill_', TRUE ) );
 	}
 
-	public function graph()
+	public function graph(): void
 	{
 		$this->addData( 'userId', $this->userId );
 	}
 
-	public function setStatus( $billId, $status )
+	public function setStatus( string $billId, $status ): void
 	{
 		$from	= $this->env->getRequest()->get( 'from' );
 		$this->model->edit( $billId, ['status' => $status] );

@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array $words */
+
 $optType	= $words['types'];
 $optType	= HtmlElements::Options( $optType );
 

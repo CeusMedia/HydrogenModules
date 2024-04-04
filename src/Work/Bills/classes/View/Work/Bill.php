@@ -28,14 +28,7 @@ class View_Work_Bill extends View
 	{
 	}
 
-	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
-	{
-		$words	= (object) $env->getLanguage()->getWords( 'work/bill' );							//  load words
-		$context->registerTab( '', $words->tabs['list'], 0 );										//  register main tab
-		$context->registerTab( 'graph', $words->tabs['graph'], 5 );										//  register graph tab
-	}
-
-	public static function renderTabs( Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './work/bill/' );
@@ -43,7 +36,7 @@ class View_Work_Bill extends View
 		return $tabs->renderTabs( $current );
 	}
 
-	public function renderPrice( $price, $type, $suffix = NULL )
+	public function renderPrice( $price, $type, $suffix = NULL ): string
 	{
 		$price	= number_format( $price, 2, ',', '' ).$suffix;
 		if( $type )
@@ -53,7 +46,7 @@ class View_Work_Bill extends View
 		return $price;
 	}
 
-	public function renderTable( $bills, $path = NULL, $colored = TRUE )
+	public function renderTable( array $bills, $path = NULL, bool $colored = TRUE ): string
 	{
 		$words		= $this->getWords();
 		$table		= '<div><em class="muted">Keine Einträge vorhanden.</em></div><br/>';

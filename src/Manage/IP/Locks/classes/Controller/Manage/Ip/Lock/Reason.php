@@ -1,13 +1,15 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_IP_Lock_Reason extends Controller
 {
-	protected $logic;
-	protected $messenger;
+	protected Logic_IP_Lock $logic;
+	protected Messenger $messenger;
+	protected Model_IP_Lock_Reason $model;
 
-	public function activate( $reasonId )
+	public function activate( string $reasonId ): void
 	{
 		$this->model->edit( $reasonId, [
 			'status' => Model_IP_Lock_Reason::STATUS_ENABLED
@@ -15,7 +17,7 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add()
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
@@ -28,7 +30,7 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->setData( $request->getAll() );
 	}
 
-	public function deactivate( $reasonId )
+	public function deactivate( string $reasonId ): void
 	{
 		$this->model->edit( $reasonId, [
 			'status' => Model_IP_Lock_Reason::STATUS_DISABLED
@@ -36,13 +38,13 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $reasonId )
+	public function edit( string $reasonId ): void
 	{
 		$request	= $this->env->getRequest();
 		$reason		= $this->model->get( $reasonId );
 		if( !$reason ){
-			$this->messenger->notError( 'Invalid reason ID.' );
-			$this->restart( NULL, FALSE );
+			$this->messenger->noteError( 'Invalid reason ID.' );
+			$this->restart();
 		}
 		if( $request->has( 'save' ) ){
 			$data		= $request->getAll();
@@ -55,26 +57,26 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->addData( 'reason', $reason );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$conditions	= [];
 		$orders		= [];
 		$limits		= [];
 		$reasons	= $this->model->getAll( $conditions, $orders, $limits );
-		$model		= new Model_IP_Lock_Filter( $this->env );
-		foreach( $reasons as $nr => $reason ){
+//		$model		= new Model_IP_Lock_Filter( $this->env );
+		foreach( $reasons as $reason ){
 			$reason->filters	= $this->logic->getFiltersOfReason( $reason->reasonId );
 		}
 		$this->addData( 'reasons', $reasons );
 	}
 
-	public function remove( $reasonId )
+	public function remove( string $reasonId ): void
 	{
-		$request	= $this->env->getRequest();
+//		$request	= $this->env->getRequest();
 		$reason		= $this->model->get( $reasonId );
 		if( !$reason ){
 			$this->messenger->noteError( 'Invalid reason ID.' );
-			$this->restart( NULL, FALSE );
+			$this->restart();
 		}
 		$this->model->remove( $reasonId );
 		$this->messenger->noteSuccess( 'Reason removed.' );
@@ -83,6 +85,7 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Reason( $this->env );
