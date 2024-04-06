@@ -17,10 +17,11 @@ class Hook_Resource_JSON_Client extends Hook
 
 		/** @var Environment $env */
 		$env		= $this->context;
-		$client		= new Resource_JSON_Client( $env );
-		$this->context->set( 'jsonServerClient', $client );
 		$config		= $env->getConfig();
 		$session	= $env->getSession();
+
+		$client		= new Resource_JSON_Client( $env );
+		$this->context->set( $config->get( 'module.resource_json_client.envKey' ), $client );
 		try{
 			$token		= $session->get( 'token' );
 			if( $token && !$client->postData( 'auth', 'validateToken' ) )

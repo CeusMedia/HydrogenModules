@@ -63,10 +63,10 @@
     "scripts": {
         "dev:all": [
             "@dev:test-syntax",
-            "@dev:phpstan",
-            "@dev:rector",
             "@dev:index-serial",
-            "@dev:index-json"
+            "@dev:index-json",
+            "@dev:phpstan",
+            "@dev:rector"
         ],
         "dev:install": "composer install --quiet",
         "dev:update": "composer update",

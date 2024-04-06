@@ -3,7 +3,7 @@
 	<title>Resource: JSON Client</title>
 	<description><![CDATA[Access to a JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.4.0</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype in project Client:Chat.</log>
 	<log version="0.2">Separation into this module.</log>
 	<log version="0.2.1">Added response code handler.</log>
@@ -12,6 +12,8 @@
 	<log version="0.3">Use hook for automatic initialization and configuration.</log>
 	<log version="0.3.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="0.4.0">Import from old chat related module Resource_Server_Json.</log>
+	<log version="0.4.1">Extract hook to own class.</log>
+	<log version="0.4.2">Import JSON server ACL class from framework.</log>
 <!--	<log version="0.4.x">Allow multiple instances.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -20,12 +22,13 @@
 		<class>Hook/Resource/JSON/Client.php</class>
 		<class>View/Helper/Resource/JSON/Client/ResponseCodeHandler.php</class>
 	</files>
-	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::Hydrogen::Resource:Server:JSON</config>
+	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::Hydrogen::Resource:JSON:Client</config>
+	<config protected="yes" mandatory="yes" type="string" name="envKey">jsonServerClient</config>
 	<config protected="no" mandatory="no" type="string" name="auth.username" title="Username for HTTP Basic Auth"></config>
 	<config protected="no" mandatory="no" type="string" name="auth.password" title="Password for HTTP Basic Auth"></config>
 	<config protected="no" mandatory="no" type="string" name="auth.secret" title="Commonly known secret for token access"></config>
 	<config protected="yes" mandatory="no" type="boolean" name="log" title="Enable request log"></config>
 	<config protected="yes" mandatory="no" type="string" name="log.file" title="Filename of server request log">server.json.log</config>
 	<config protected="no" mandatory="yes" type="string" name="uri" title="URL of JSON server"></config>
-	<hook type="resource" resource="Env" event="init">Resource_Server_Json::___onEnvInit</hook>
+	<hook type="resource" resource="Env" event="init">Hook_Resource_JSON_Client::onEnvInit</hook>
 </module>
