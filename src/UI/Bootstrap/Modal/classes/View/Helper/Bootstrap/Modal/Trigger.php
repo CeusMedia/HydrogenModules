@@ -3,18 +3,21 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class View_Helper_Bootstrap_Modal_Trigger
 {
-	protected $env;
-	protected $attributes	= [];
-	protected $id;
-	protected $label;
-	protected $modalId;
+	protected Environment $env;
+	protected array $attributes		= [];
+	protected ?string $id			= NULL;
+	protected ?string $label		= NULL;
+	protected ?string $modalId		= NULL;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		object		$env			Instance of Hydrogen Environment
+	 *	@param		Environment		$env			Instance of Hydrogen Environment
 	 */
 	public function __construct( Environment $env )
 	{
@@ -38,9 +41,9 @@ class View_Helper_Bootstrap_Modal_Trigger
 	 */
 	public function render(): string
 	{
-		if( !$this->label )
+		if( NULL === $this->label )
 			throw new RuntimeException( 'No label set' );
-		if( !$this->modalId )
+		if( NULL === $this->modalId )
 			throw new RuntimeException( 'No modal ID set' );
 		$attributes	= [
 			'id'			=> $this->id,

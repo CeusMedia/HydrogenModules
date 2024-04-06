@@ -1,11 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
-use CeusMedia\HydrogenFramework\View\Helper\Navigation\SingleList;
 
 class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 {
-	protected $current	= "";
+	protected string $current	= '';
 
 	public function render( $scope = 0 ): string
 	{
@@ -19,7 +18,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 				$linkMap[strtolower( str_replace( '_', '/', $page->module ) )]	= $page->identifier;
 			else
 				$linkMap[$page->identifier]	= $page->identifier;
-		$current	= SingleList::getCurrentKey( $linkMap, $this->current );
+		$current	= self::calculateMatches( $linkMap, $this->current );
 		if( array_key_exists( $current, $linkMap ) )
 			$current	= $linkMap[$current];
 
@@ -65,5 +64,18 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 	{
 		$this->current		= $path;
 		return $this;
+	}
+
+	protected static function calculateMatches( $map, $current ): int|string|NULL
+	{
+		foreach( $map as $entry ){
+			if( $entry->type === "menu" )
+				self::calculateMatches( $entry->links, $current );
+			else if( $entry->type === "link" )
+				self::$matches[$entry->path]	= levenshtein( $current, $entry->path );
+		}
+		asort( self::$matches );
+		$matches	= array_keys( self::$matches );
+		return array_shift( $matches );
 	}
 }

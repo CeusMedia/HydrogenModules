@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentication_BackendInterface
 {
 	protected Dictionary $session;
+	protected Resource_Server_Json $client;
 
 	/**
 	 *	@param		int|string		$userId			In this case, it is the username
@@ -20,7 +21,7 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 				'password'	=> md5( $password )
 			]
 		];
-		$result = $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+		$result = $this->client->postData( 'user', 'index', NULL, $data );
 		return count( $result ) === 1;
 	}
 
@@ -45,7 +46,7 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->env->getServer()->postData( 'role', 'get', [$roleId] );
+			$role	= $this->client->postData( 'role', 'get', [$roleId] );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -77,10 +78,10 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
-			$user	= $this->env->getServer()->postData( 'user', 'get', [$userId] );
+			$user	= $this->client->postData( 'user', 'get', [$userId] );
 			if( $user ){
 				if( $withRole )
-					$user->role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
+					$user->role	= $this->client->postData( 'role', 'get', [$user->roleId] );
 				return $user;
 			}
 		}
@@ -146,5 +147,19 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 	public function noteUserActivity(): self
 	{
 		return $this;
+	}
+
+	protected function __onInit(): void
+	{
+		$client		= $this->env->get( 'jsonServerClient' );
+		if( !$client instanceof Resource_Server_Json ){
+			if( class_exists( NotSupportedExtension::class ) )
+				throw NotSupportedExtension::create()
+					->setMessage( 'Sorry, support for Resource_Server_Json only, atm' )
+					->setSuggestion( 'You can fix this! This is open source software ;-)' );
+			throw new RuntimeException( 'Sorry, support for Resource_Server_Json only, atm - you can fix this: it is open source ;-)' );
+		}
+		$this->client		= $client;
+		$this->session		= $this->env->getSession();
 	}
 }

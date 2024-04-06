@@ -37,16 +37,16 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@copyright		2010-2012 Christian Würker
  *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
-class Resource_Server_Json
+class Resource_JSON_Client
 {
 	protected Environment $env;
-	protected $serverUri;
+	protected string $serverUri;
 	protected array $curlOptions		= [
 		'ALL'	=> [],
 		'GET'	=> [],
 		'POST'	=> []
 	];
-	protected string $userAgent			= 'CMF:Hydrogen/1.0';
+	protected string $userAgent			= 'CeusMedia:Hydrogen/1.0';
 	protected string $clientIp;
 
 	/**
@@ -59,7 +59,7 @@ class Resource_Server_Json
 	{
 		$this->env	= $env;
 		$config		= $env->getConfig();
-		$module		= new Dictionary( $config->getAll( 'module.resource_server_json.', TRUE ) );
+		$module		= new Dictionary( $config->getAll( 'module.resource_json_client.', TRUE ) );
 
 		$this->serverUri	= $module->get( 'uri' );
 		if( empty( $this->serverUri ) )
@@ -84,41 +84,6 @@ class Resource_Server_Json
 	}
 
 	/**
-	 *	@todo			make environment resource key configurable
-	 *	@todo			allow multiple instances
-	 *	@todo			localization of messages
-	 *	@todo			allow other auth methods than 'shared secret'
-	 */
-	public static function ___onEnvInit( Environment $env, $context, $module, array $data = [] )
-	{
-		$server		= new Resource_Server_Json( $context );
-		$context->set( 'jsonServerClient', $server );
-		$config		= $context->getConfig();
-		$session	= $context->getSession();
-		try{
-			$token		= $session->get( 'token' );
-			if( $token && !$server->postData( 'auth', 'validateToken' ) )
-				$session->set( 'token', $token = NULL );
-			if( !$token ) {																				//  client has no token yet
-				$session->set( 'ip', getEnv( 'REMOTE_ADDR' ) );											//  store ip address in session
-				$data	= array(
-					'credentials'	=> array(															//  prepare POST data
-						'secret'	=> $config->get( 'module.resource_server_json.auth.secret' ),		//  with known secret
-					)
-				);
-				$token	= $server->postData( 'auth', 'getToken', NULL, $data );							//  request token from server using POST request
-				$session->set( 'token', $token );														//  store token in session
-			}
-		}
-		catch( Exception $e ){
-			$message	= "Der Server ist momentan nicht erreichbar.";
-			$env->getMessenger()->noteFailure( $message );
-			return;
-		}
-
-	}
-
-	/**
 	 *	Returns set CURL option by its key.
 	 *	@access		public
 	 *	@param		string		$key		CURL option key
@@ -128,7 +93,7 @@ class Resource_Server_Json
 	 *	@throws		InvalidArgumentException if method is invalid
 	 *	@throws		InvalidArgumentException if key is not existing and strict mode
 	 */
-	public function getCurlOption( string $key, string $method = 'ALL', bool $strict = FALSE )
+	public function getCurlOption( string $key, string $method = 'ALL', bool $strict = FALSE ): mixed
 	{
 		$method	= strtoupper( $method );
 		if( !array_key_exists( $method, $this->curlOptions ) )
@@ -150,7 +115,7 @@ class Resource_Server_Json
 
 	public function getData( string $controller, ?string $action = NULL, array $arguments = [], array $parameters = [], array $curlOptions = [] )
 	{
-		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters = [] );
+		$url	= $this->buildServerGetUrl( $controller, $action, $arguments, $parameters );
 		return	$this->getDataFromUrl( $url, $curlOptions );
 	}
 
@@ -169,8 +134,8 @@ class Resource_Server_Json
 
 		$statusCode	= $reader->getCurlInfo( NetCURL::INFO_HTTP_CODE );
 		$logPath	= $this->env->getConfig()->get( 'path.logs' );
-		$logEnabled	= $this->env->getConfig()->get( 'module.resource_server_json.log' );
-		$logFile	= $this->env->getConfig()->get( 'module.resource_server_json.log.file' );
+		$logEnabled	= $this->env->getConfig()->get( 'module.resource_json_client.log' );
+		$logFile	= $this->env->getConfig()->get( 'module.resource_json_client.log.file' );
 		if( $logEnabled && $logFile )
 			error_log( time()." GET (".$statusCode."): ".$json."\n", 3, $logPath.$logFile );
 		$response	= $this->handleResponse( $json, $url, $statusCode );
@@ -197,8 +162,8 @@ class Resource_Server_Json
 		if( $this->env->getSession()->get( 'ip' ) )
 			$data['ip']	= $this->env->getSession()->get( 'ip' );
 		foreach( $data as $key => $value )															//  cURL hack (file upload identifier)
-			if( is_string( $value ) && substr( $value, 0, 1 ) == "@" )					//  leading @ in field values
-				$data[$key]	= "\\".$value;															//  need to be escaped
+			if( is_string( $value ) && str_starts_with( $value, "@" ) )								//  leading @ in field values ...
+				$data[$key]	= "\\".$value;															//  ... need to be escaped
 
 		$reader		= new HttpReader();
 		$headers	= ['Accept-Encoding: gzip, deflate'];
@@ -211,8 +176,8 @@ class Resource_Server_Json
 
 		$statusCode	= $reader->getCurlInfo( NetCURL::INFO_HTTP_CODE );
 		$logPath	= $this->env->getConfig()->get( 'path.logs' );
-		$logEnabled	= $this->env->getConfig()->get( 'module.resource_server_json.log' );
-		$logFile	= $this->env->getConfig()->get( 'module.resource_server_json.log.file' );
+		$logEnabled	= $this->env->getConfig()->get( 'module.resource_json_client.log' );
+		$logFile	= $this->env->getConfig()->get( 'module.resource_json_client.log.file' );
 		if( $logEnabled && $logFile )
 			error_log( time()." POST (".$statusCode."): ".$json."\n", 3, $logPath.$logFile );
 		$response	= $this->handleResponse( $json, $url, $statusCode );

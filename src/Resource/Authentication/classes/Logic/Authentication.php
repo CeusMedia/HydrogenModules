@@ -9,11 +9,11 @@ class Logic_Authentication extends Logic
 	public const STATUS_IDENTIFIED		= 1;
 	public const STATUS_AUTHENTICATED	= 2;
 
-	protected ?Logic $backend			= NULL;
-	protected array $backends			= [];
 	protected Dictionary $session;
+	protected ?Logic_Authentication_BackendInterface $backend	= NULL;
+	protected array $backends			= [];
 
-	public function checkPassword( int|string $userId, string $password )
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		return $this->backend->checkPassword( $userId, $password );
 	}
@@ -29,22 +29,26 @@ class Logic_Authentication extends Logic
 		return $this->backends;
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		return $this->backend->getCurrentRole( $strict );
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		return $this->backend->getCurrentRoleId( $strict );
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		return $this->backend->getCurrentUser( $strict, $withRole );
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		return $this->backend->getCurrentUserId( $strict );
 	}

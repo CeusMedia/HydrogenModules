@@ -1,12 +1,13 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\MissingExtension as NotSupportedExtension;
 use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Authentication_Backend_Rest extends Logic
+class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentication_BackendInterface
 {
-	protected $client;
-	protected $session;
+	protected ?Resource_REST_Client $client;
+	protected Dictionary $session;
 
 	public function checkEmail( string $email )
 	{
@@ -14,7 +15,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 		return $this->client->post( 'email/check', $parameters )->data;
 	}
 
-	public function checkPassword( string $username, string $password )
+	public function checkPassword( int|string $username, string $password ): bool
 	{
 		$parameters	= [
 			'username'	=> $username,
@@ -56,7 +57,7 @@ class Logic_Authentication_Backend_Rest extends Logic
 		return $result;
 	}
 
-	public function getCurrentRole( bool $strict = TRUE ): int|string|NULL
+	public function getCurrentRole( bool $strict = TRUE ): NULL|object
 	{
 return NULL;
 		$roleId	= $this->getCurrentRoleId( $strict );
@@ -81,7 +82,7 @@ return NULL;
 		return $this->session->get( 'auth_role_id');
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
@@ -96,7 +97,7 @@ return NULL;
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|null
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -127,8 +128,9 @@ return NULL;
 	/**
 	 *	@todo		implement if possible, for example by using available REST resource
 	 */
-	public function noteUserActivity()
+	public function noteUserActivity(): self
 	{
+		return $this;
 	}
 
 	/**
@@ -170,6 +172,7 @@ return NULL;
 			return 'address:'.$responseAddress->data;
 		}
 
+		$responseBilling	= NULL;
 		if( $postData->get( 'billing_address' ) ){
 			$data	= array(
 				'account_id'	=> $accountId,
@@ -191,7 +194,7 @@ return NULL;
 		return [
 			'accountId'	=> $responseAccount->data,
 			'addressId'	=> $responseAddress->data,
-			'billingId'	=> $responseBilling->data,
+			'billingId'	=> $responseBilling ? $responseBilling->data : NULL,
 		];
 	}
 
@@ -218,7 +221,15 @@ return NULL;
 
 	protected function __onInit(): void
 	{
-		$this->client		= $this->env->get( 'restClient' );
+		$client		= $this->env->get( 'restClient' );
+		if( !$client instanceof Resource_REST_Client ){
+			if( class_exists( NotSupportedExtension::class ) )
+				throw NotSupportedExtension::create()
+					->setMessage( 'Sorry, support for Resource_REST_Client only, atm' )
+					->setSuggestion( 'You can fix this! This is open source software ;-)' );
+			throw new RuntimeException( 'Sorry, support for Resource_REST_Client only, atm - you can fix this: it is open source ;-)' );
+		}
+		$this->client		= $client;
 		$this->session		= $this->env->getSession();
 	}
 }

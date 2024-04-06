@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <module>
-	<title>Resource: JSON Server</title>
-	<deprecation>Use Resource:JSON:Client instead.</deprecation>
-	<description><![CDATA[Access to JSON Server.]]></description>
+	<title>Resource: JSON Client</title>
+	<description><![CDATA[Access to a JSON Server.]]></description>
 	<category>Resource</category>
-	<version>0.3.2</version>
+	<version>0.4.0</version>
 	<log version="0.1">Initial prototype in project Client:Chat.</log>
 	<log version="0.2">Separation into this module.</log>
 	<log version="0.2.1">Added response code handler.</log>
@@ -12,13 +11,14 @@
 	<log version="0.2.3">Updated configuration by mandatory and title.</log>
 	<log version="0.3">Use hook for automatic initialization and configuration.</log>
 	<log version="0.3.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
-	<log version="0.3.2">EOL: Use Resource:JSON:Client instead.</log>
-<!--	<log version="0.3.x">Allow multiple instances.</log>-->
+	<log version="0.4.0">Import from old chat related module Resource_Server_Json.</log>
+<!--	<log version="0.4.x">Allow multiple instances.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>Resource/Server/Json.php</class>
-		<class>View/Helper/JsonServerResponseCodeHandler.php</class>
+		<class>Resource/JSON/Client.php</class>
+		<class>Hook/Resource/JSON/Client.php</class>
+		<class>View/Helper/Resource/JSON/Client/ResponseCodeHandler.php</class>
 	</files>
 	<config protected="no" mandatory="yes" type="string" name="userAgent">CeusMedia::Hydrogen::Resource:Server:JSON</config>
 	<config protected="no" mandatory="no" type="string" name="auth.username" title="Username for HTTP Basic Auth"></config>

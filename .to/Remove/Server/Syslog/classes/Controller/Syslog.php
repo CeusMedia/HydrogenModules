@@ -10,7 +10,7 @@
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
 /**
  *	System Log Controller.
@@ -22,7 +22,7 @@ use CeusMedia\HydrogenFramework\Environment;
 class Controller_Syslog extends Controller_Abstract
 {
 	/**	@var		Environment		$env		Environment instance */
-	protected $env;
+	protected Environment $env;
 
 	public static function ___onLogException( Environment $env, $context, $module, $data = [] )
 	{
@@ -136,7 +136,7 @@ class Controller_Syslog extends Controller_Abstract
 				'subject'	=> $subject,
 				'sender'	=> $fromName ? $fromName.' <'.$fromAddress.'>' : $fromAddress,
 			] );
-			$mail->sendToAddress( $receiver );
+			$mail->sendTo( (object) ['email' => $receiver] );
 			return 1;
 		}
 		catch( Exception $e ){

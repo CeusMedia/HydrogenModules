@@ -46,6 +46,7 @@ $helper->run();
 
 class JobScriptHelper
 {
+	protected Dictionary $request;
 	protected string $configFile		= "config/config.ini";							//  config file
 	protected array $errorHandling	= [
 		'report'	=> E_ALL,
@@ -61,6 +62,11 @@ class JobScriptHelper
 	protected string $pathClasses		= 'classes/';
 	protected bool $verbose			= FALSE;
 
+	public function __construct()
+	{
+		$this->changeDirIntoApp()->setupEnvironment();
+	}
+
 	public function handleError( $errno, $errstr, $errfile, $errline, ?array $errcontext = NULL ): bool
 	{
 		if( error_reporting() === 0 )											// error was suppressed with the @-operator
@@ -70,9 +76,8 @@ class JobScriptHelper
 
 	public function run(): void
 	{
-		$this->changeDirIntoApp()
-			->setupEnvironment()
-			->setupErrorHandling()												//  override error handling after request analysis
+		$this
+			->setupErrorHandling()								//  override error handling after request analysis
 			->detectAppMode()
 			->runJobApp();
 	}

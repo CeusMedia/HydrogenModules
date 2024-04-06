@@ -10,7 +10,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<log version="0.1">Initial fork from module Auth:JSON.</log>
 	<log version="0.2">Add hook call Auth::onBeforeLogin.</log>
 	<log version="0.2.1">Add method to note latest user activity (not implemented yet).</log>
@@ -23,6 +23,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.3.1">Improve code style.</log>
 	<log version="0.3.2">Extract AJAX actions to own class.</log>
 	<log version="0.3.3">Upgrade to changes in authentication core.</log>
+	<log version="0.3.4">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -55,6 +56,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<config protected="no" type="boolean" name="register">no</config>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">Resource_JSON_Client</needs>
 		<needs type="module">UI_Helper_HTML</needs>
 		<supports type="module">Security_CSRF</supports>
 	</relations>

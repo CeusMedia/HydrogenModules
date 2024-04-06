@@ -35,8 +35,7 @@ class Hook_Provision extends Hook
 						$language	= $this->env->getLanguage();
 						$words		= (object) $language->getWords( 'provision' );
 						$this->env->getMessenger()->noteNotice( $words->onAppDispatch['noticeAccessDenied'] );
-						$controller	= new Controller_Provision( $this->env, FALSE );
-						$controller->restart( 'provision/status' );
+						self::restart( $this->env, 'provision/status' );
 
 /*						$env->getRequest()->set( '__controller', 'provision' );
 						$env->getRequest()->set( '__action', 'status' );
@@ -61,9 +60,10 @@ class Hook_Provision extends Hook
 	 */
 	public function onAuthAfterConfirm(): void
 	{
-		$data			= (array) ( $this->getPayload() ?? [] );
+		$data			= $this->getPayload() ?? [];
 		$moduleConfig	= self::getModuleConfig( $this->env, 'Resource_Provision' );
-		$resource		= new Resource_Provision_Client( $this->env );
+		$productId		= $moduleConfig->get( 'productId' );
+
 		if( !$moduleConfig->get( 'active' ) )
 			return;
 		if( $moduleConfig->get( 'mode' ) === "OAuth" )
@@ -73,8 +73,8 @@ class Hook_Provision extends Hook
 		if( !$registerLicense || empty( $data['userId'] ) )
 			return;
 
-		$productId		= $moduleConfig->get( 'productId' );
-		$licenses		= $resource->getProductLicenses( $productId );
+		$resource	= new Resource_Provision_Client( $this->env );
+		$licenses	= $resource->getProductLicenses( $productId );
 		foreach( $licenses as $license ){
 			if( $license->productLicenseId != $registerLicense )
 				continue;
@@ -112,7 +112,7 @@ return;
 //		$moduleConfig	= self::getModuleConfig( $env, 'Resource_Provision' );
 //		if( !$moduleConfig->get( 'active' ) )
 //			return;
-		$data			= (array) ( $this->getPayload() ?? [] );
+		$data			= $this->getPayload() ?? [];
 		$resource		= new Resource_Provision_Client( $this->env );
 		if( !empty( $data['userId'] ) ){
 			try{

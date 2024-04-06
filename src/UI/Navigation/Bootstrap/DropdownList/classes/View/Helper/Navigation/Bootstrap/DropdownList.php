@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Navigation_Bootstrap_DropdownList
 {
-	protected static $matches	= [];
+	protected static array $matches	= [];
 
 	public static function render( $map, $current ): string
 	{
@@ -29,7 +29,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 		] );
 	}
 
-	protected static function calculateMatches( $map, $current )
+	protected static function calculateMatches( $map, $current ): int|string|NULL
 	{
 		foreach( $map as $entry ){
 			if( $entry->type === "menu" )

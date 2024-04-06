@@ -3,6 +3,9 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class View_Helper_Panel
 {
 	protected static array $defaultAttributes		= [];

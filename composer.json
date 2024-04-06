@@ -62,7 +62,6 @@
     },
     "scripts": {
         "dev:all": [
-            "@dev:install",
             "@dev:test-syntax",
             "@dev:phpstan",
             "@dev:rector",
