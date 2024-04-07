@@ -17,15 +17,27 @@ class Model_Shop_Cart
 
 	protected Environment $env;
 	protected Dictionary $session;
-	/**	@var	Logic_ShopBridge		$brige */
+
+	/**	@var	Logic_ShopBridge			$brige */
 	protected Logic_ShopBridge $bridge;
+
+	/**	@var	Model_Shop_Order			$modelOrder */
 	protected Model_Shop_Order $modelOrder;
+
+	/**	@var	Model_Shop_Order_Position	$modelPosition */
 	protected Model_Shop_Order_Position $modelPosition;
+
+
+	/**	@var	Dictionary					$data */
 	protected Dictionary $data;
+
+	/**	@var	bool						$taxIncluded */
 	protected bool $taxIncluded;
+
 	protected string $defaultCurrency;
 
 	protected array $ignoreOnUpdate		= [
+		'orderId',
 		'customerMode',
 		'price',
 		'priceTaxed',
@@ -33,7 +45,7 @@ class Model_Shop_Cart
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -45,19 +57,17 @@ class Model_Shop_Cart
 		$this->taxIncluded		= $env->getConfig()->get( 'module.shop.tax.included' );
 		$this->defaultCurrency	= $env->getConfig()->get( 'module.shop.price.currency' );
 
-		$data	= $this->session->get( 'shop_cart' );
-		if( !is_array( $data ) ){
+		if( !$this->session->has( 'shop_cart' ) )
 			$this->createEmpty();
-		}
-		else{
-			$this->data	= new Dictionary( $data );
-		}
-		if( $this->data->get( 'orderId' ) )
-			$this->loadOrder();
+
+		//  get cart data from session, may be empty
+		$this->data	= new Dictionary( $this->session->get( 'shop_cart' ) );
+
+		//  extend cart by database data, if saved before
+		$this->loadOrder();
 
 		if( !is_array( $this->data->get( 'positions' ) ) )
 			$this->set( 'positions', [] );
-
 	}
 
 	public function clear(): void
@@ -80,32 +90,39 @@ class Model_Shop_Cart
 		return $this->data->has( $key );
 	}
 
-	public function loadOrder( $orderId = NULL )
+	/**
+	 *	Extend cart data by order data from database, if already materialized before.
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function loadOrder(): void
 	{
-		$orderId	= $orderId ?: $this->data->get( 'orderId' );
-		if( $orderId ){
-			$order	= $this->modelOrder->get( $orderId );
-			if( $order ){
-				$this->data->set( 'userId', $order->userId );
-				$this->data->set( 'orderStatus', $order->status );
-				$this->data->set( 'paymentMethod', $order->paymentMethod );
-//				$this->data->set( 'options', $order->options );
-				$this->data->set( 'price', $order->price );
-				$this->data->set( 'priceTaxed', $order->priceTaxed );
-				$positions	= [];
-				foreach( $this->modelPosition->getAllByIndex( 'orderId', $orderId ) as $item ){
-					$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
-					$article	= $source->get( $item->articleId, $item->quantity );
-					$positions[$item->articleId]	= (object) [
-						'bridgeId'		=> $item->bridgeId,
-						'articleId'		=> $item->articleId,
-						'quantity'		=> $item->quantity,
-						'article'		=> $article,
-					];
-				}
-				$this->data->set( 'positions', $positions );
-			}
+		$orderId	= $this->data->get( 'orderId' );
+		if( NULL === $orderId )
+			return;
+
+		$order	= $this->modelOrder->get( $orderId );
+		if( NULL === $order )
+			return;
+
+		$this->data->set( 'userId', $order->userId );
+		$this->data->set( 'orderStatus', $order->status );
+		$this->data->set( 'paymentMethod', $order->paymentMethod );
+//		$this->data->set( 'options', $order->options );
+		$this->data->set( 'price', $order->price );
+		$this->data->set( 'priceTaxed', $order->priceTaxed );
+		$positions	= [];
+		foreach( $this->modelPosition->getAllByIndex( 'orderId', $orderId ) as $item ){
+			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
+			$article	= $source->get( $item->articleId, $item->quantity );
+			$positions[$item->articleId]	= (object) [
+				'bridgeId'		=> $item->bridgeId,
+				'articleId'		=> $item->articleId,
+				'quantity'		=> $item->quantity,
+				'article'		=> $article,
+			];
 		}
+		$this->data->set( 'positions', $positions );
 	}
 
 	public function getTotal(): float
@@ -119,7 +136,7 @@ class Model_Shop_Cart
 		return $total;
 	}
 
-	public function releaseOrder()
+	public function releaseOrder(): void
 	{
 		if( $this->data->get( 'orderId' ) )
 			$this->createEmpty();
@@ -128,7 +145,7 @@ class Model_Shop_Cart
 	/**
 	 *	@param		string		$key
 	 *	@return		bool
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $key ): bool
 	{
@@ -143,14 +160,14 @@ class Model_Shop_Cart
 	 *	Saves cart from session to order in database.
 	 *	@access		public
 	 *	@return		string		Order ID
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function saveOrder(): string
 	{
 		$orderId	= $this->data->get( 'orderId' );
-		if( $orderId && $this->modelOrder->get( $orderId ) ){
+		if( NULL !== $orderId && $this->modelOrder->has( $orderId ) )
 			return $this->updateOrder( $orderId );
-		}
+
 		return $this->createOrder();
 	}
 
@@ -158,12 +175,12 @@ class Model_Shop_Cart
 	 *	@param		string		$key
 	 *	@param		mixed		$value
 	 *	@return		bool
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function set( string $key, $value ): bool
 	{
 		$this->data->set( $key, $value );
-		if( $this->data->get( 'orderId' ) )
+		if( $this->data->has( 'orderId' ) )
 			if( !in_array( $key, $this->ignoreOnUpdate ) )
 				$this->saveOrder();
 		return $this->session->set( 'shop_cart', $this->data->getAll() );
@@ -188,7 +205,7 @@ class Model_Shop_Cart
 
 	/**
 	 *	@return		string
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function createOrder(): string
 	{
@@ -204,7 +221,7 @@ class Model_Shop_Cart
 		] );
 
 		foreach( $this->data->get( 'positions' ) as $item ){
-			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
+//			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
 			$positionId	= $this->modelPosition->add( [
 				'orderId'		=> $orderId,
 				'bridgeId'		=> $item->bridgeId,
@@ -226,7 +243,7 @@ class Model_Shop_Cart
 	/**
 	 *	@param		string		$orderId
 	 *	@return		string
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function updateOrder( string $orderId ): string
 	{
@@ -296,7 +313,7 @@ class Model_Shop_Cart
 	/**
 	 *	@param		string		$orderId
 	 *	@return		bool
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function updateOrderPrices( string $orderId ): bool
 	{

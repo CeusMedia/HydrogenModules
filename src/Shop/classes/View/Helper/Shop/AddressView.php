@@ -62,11 +62,16 @@ class View_Helper_Shop_AddressView
 		return $content;
 	}
 
-	public function setAddress( $addressOrId ): self
+	/**
+	 *	@param		object|int|string		$addressOrId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setAddress( object|int|string $addressOrId ): self
 	{
 		if( is_object( $addressOrId ) )
 			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
+		else if( preg_match( '/^[0-9]+$/', (string) $addressOrId ) )
 			$this->address	= $this->model->get( $addressOrId );
 		if( !$this->address )
 			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
@@ -94,7 +99,7 @@ class View_Helper_Shop_AddressView
 
 	protected function renderAsHtml(): string
 	{
-		$w		= (object) $this->words['view'];
+//		$w		= (object) $this->words['view'];
 		$d		= new Dictionary( (array) $this->address );
 //		print_m( $d->getAll() );die;
 		$list	= [];

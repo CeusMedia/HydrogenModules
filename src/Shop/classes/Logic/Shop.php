@@ -1,7 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Deprecation;
+use CeusMedia\Common\Exception\Deprecation as DeprecationException;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shop extends Logic
@@ -37,7 +37,8 @@ class Logic_Shop extends Logic
 	protected bool $useShipping				= FALSE;
 
 	/**
-	 * @deprecated	get Model_Shop_Order::priceTaxed instead
+	 *	@deprecated	get Model_Shop_Order::priceTaxed instead
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function calculateOrderTotalPrice( int|string $orderId ): float
 	{
@@ -73,6 +74,11 @@ class Logic_Shop extends Logic
 		return $this->modelOrder->count( $conditions );
 	}
 
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getAccountCustomer( int|string $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
@@ -95,11 +101,11 @@ class Logic_Shop extends Logic
 	{
 		$address		= NULL;
 		if( $this->modelCart->get( 'userId' ) ){
-			$address	= $this->modelAddress->getByIndices( array(
+			$address	= $this->modelAddress->getByIndices( [
 				'relationId'	=> $this->modelCart->get( 'userId' ),
 				'relationType'	=> 'user',
 				'type'			=> Model_Address::TYPE_BILLING,
-			) );
+			] );
 		}
 		return $address;
 	}
@@ -129,11 +135,12 @@ class Logic_Shop extends Logic
 
 	/**
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
 	public function getGuestCustomer( int|string $customerId ): object
 	{
-		throw new RuntimeException( 'Method Logic_Shop::getGuestCustomer is deprecated' );
-		$model		= new Model_Shop_Customer( $this->env );
+		throw new DeprecationException( 'Method Logic_Shop::getGuestCustomer is deprecated' );
+/*		$model		= new Model_Shop_Customer( $this->env );
 		$customer	= $model->get( $customerId );
 		if( !$customer )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );
@@ -155,16 +162,22 @@ class Logic_Shop extends Logic
 			$customer->surname		= $customer->addressDelivery->surname;
 			$customer->username		= $customer->addressDelivery->firstname.' '.$customer->addressDelivery->surname;
 		}
-		return $customer;
+		return $customer;*/
 	}
 
+	/**
+	 *	@param		int|string	$orderId
+	 *	@param		bool		$extended
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
 	{
 		$order	= $this->modelOrder->get( $orderId );
 		if( !$order )
 			throw new RangeException( 'Invalid order ID: '.$orderId );
 		if( $extended ){
-			$order->customer	= $this->getOrderCustomer( $orderId );
+			$order->customer	= $this->getOrderCustomer( $order );
 			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
 			$order->shipping	= $this->getOrderShipping( $orderId );
 			$order->options		= $this->getOrderOptions( $orderId );
@@ -174,24 +187,42 @@ class Logic_Shop extends Logic
 		return $order;
 	}
 
-	public function getOrderCustomer( int|string $orderId ): object
+	/**
+	 *	@param		object|int|string		$orderObjectOrId
+	 *	@return		object					Customer account data object
+	 *	@throws		RangeException			if no order found for given order ID
+	 *	@throws		RuntimeException		if order has no user assigned
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getOrderCustomer( object|int|string $orderObjectOrId ): object
 	{
-		$order	= $this->modelOrder->get( $orderId );
-		if( !$order )
-			throw new RangeException( 'Invalid order ID: '.$orderId );
+		$order	= $orderObjectOrId;
+		if( !is_object( $order ) ){
+			$order	= $this->modelOrder->get( $orderObjectOrId );
+			if( NULL === $order )
+				throw new RangeException( 'Invalid order ID: '.$orderObjectOrId );
+		}
+
 		if( !$order->userId )
-			throw new Exception( 'No user assigned to order' );
+			throw new RuntimeException( 'No user assigned to order' );
 		return $this->getAccountCustomer( $order->userId );
 	}
 
 	/**
 	 *	@todo		to be implemented: use Model_Shop_Shipping_Option
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
 	public function getOrderOptions( int|string $orderId ): object
 	{
 		return (object) [];
 	}
 
+	/**
+	 *	@param		int|string		$positionId
+	 *	@param		bool			$extended
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getOrderPosition( int|string $positionId, bool $extended = FALSE ): ?object
 	{
 		$position	= $this->modelOrderPosition->get( $positionId );
@@ -220,7 +251,7 @@ class Logic_Shop extends Logic
 	}
 
 	/**
-	 *	@todo		make tax rate configurable - store rate on shipping price or service
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getOrderShipping( int|string $orderId ): object
 	{
@@ -229,7 +260,7 @@ class Logic_Shop extends Logic
 			'price'			=> .0,
 			'tax'			=> .0,
 			'priceTaxed'	=> .0,
-			'taxRate'		=> 19,				//  @todo: make configurable
+			'taxRate'		=> $this->env->getConfig()->get( 'module.shop.tax.percent', 19 ),
 		];
 		if( !$this->useShipping )
 			return $facts;
@@ -255,7 +286,7 @@ class Logic_Shop extends Logic
 	}
 
 	/**
-	 *	@todo		make tax rate configurable - store rate on shipping price or service
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getOrderPaymentFees( int|string $orderId ): object
 	{
@@ -263,31 +294,31 @@ class Logic_Shop extends Logic
 			'price'			=> .0,
 			'tax'			=> .0,
 			'priceTaxed'	=> .0,
-			'taxRate'		=> 19,				//  @todo: make configurable
+			'taxRate'		=> $this->env->getConfig()->get( 'module.shop.tax.percent', 19 ),
 		];
 		if( !$this->usePayment )
 			return $facts;
 
 		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
 
-		$order	= $this->getOrder( $orderId );
+	//	$order	= $this->getOrder( $orderId );
 
-		$price		= .0;
+//		$price		= .0;
 		$priceTaxed	= .0;
-		$tax		= .0;
+//		$tax		= .0;
 
 		$positions	= $this->getOrderPositions( $orderId, TRUE );
 		foreach( $positions as $position ){
-			$price		+= $position->article->price->all;
+//			$price		+= $position->article->price->all;
 			$priceTaxed	+= $position->article->price->all + $position->article->tax->all;
-			$tax		+= $position->article->tax->all;
+//			$tax		+= $position->article->tax->all;
 		}
 
 		if( $this->useShipping ){
 			$shipping	= $this->getOrderShipping( $orderId );
-			$price		+= $shipping->price;
+//			$price		+= $shipping->price;
 			$priceTaxed	+= $shipping->priceTaxed;
-			$tax		+= $shipping->tax;
+//			$tax		+= $shipping->tax;
 		}
 
 		$backend	= $this->getOrder( $orderId )->paymentMethod;
@@ -302,6 +333,12 @@ class Logic_Shop extends Logic
 		return $facts;
 	}
 
+	/**
+	 *	Sums up calculates taxes for cart positions, shipping costs and payment costs.
+	 *	@param		int|string		$orderId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getOrderTaxes( int|string $orderId ): array
 	{
 		$taxes		= [];
@@ -349,16 +386,11 @@ class Logic_Shop extends Logic
 
 	/**
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
-	public function getShipping( bool $strict = TRUE )
+	public function getShipping( bool $strict = TRUE ): ?bool
 	{
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'getShipping is deprecated' );
-		if( !$this->useShipping && $strict )
-			throw new RuntimeException( "Shipping module is not installed" );
-		return $this->useShipping ?: NULL;
+		throw new DeprecationException( 'Method Logic_Shop::getShipping is deprecated' );
 	}
 
 	/**
@@ -368,14 +400,11 @@ class Logic_Shop extends Logic
 	 *	@return		integer|NULL
 	 *	@todo		rename to getShippingZoneOfCountryId and change behaviour
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
-	public function getShippingZoneId( int|string $countryId )
+	public function getShippingZoneId( int|string $countryId ): ?int
 	{
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'getShippingZoneId is deprecated' );
-		return $this->getShipping()->getZoneId( $countryId );
+		throw new DeprecationException( 'Method Logic_Shop::getShippingZoneId is deprecated' );
 	}
 
 	/**
@@ -384,14 +413,11 @@ class Logic_Shop extends Logic
 	 *	@param		integer		 $quantity		Quantity to ge Shipping Grade for
 	 *	@return		int
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
-	public function getShippingGradeIdByQuantity( int $quantity )
+	public function getShippingGradeIdByQuantity( int $quantity ): int
 	{
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'getShippingGradeIdByQuantity is deprecated' );
-		return $this->getShipping()->getGradeID( $shippingZoneId, $shippingGradeId );
+		throw new DeprecationException( 'Method Logic_Shop::getShippingGradeIdByQuantity is deprecated' );
 	}
 
 	/**
@@ -401,14 +427,11 @@ class Logic_Shop extends Logic
 	 *	@param		int|string		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
-	public function getShippingPrice( int|string $shippingZoneId, int|string $shippingGradeId )
+	public function getShippingPrice( int|string $shippingZoneId, int|string $shippingGradeId ): string
 	{
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'getShippingPrice is deprecated' );
-		return $this->getShipping()->getPrice( $shippingZoneId, $shippingGradeId );
+		throw new DeprecationException( 'Method Logic_Shop::getShippingPrice is deprecated' );
 	}
 
 	public function hasArticleInCart( int|string $bridgeId, int|string $articleId ): bool
@@ -416,6 +439,12 @@ class Logic_Shop extends Logic
 		return $this->countArticleInCart( $bridgeId, $articleId ) > 0;
 	}
 
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		int|string		$paymentId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setOrderPaymentId( int|string $orderId, int|string $paymentId ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
@@ -424,6 +453,12 @@ class Logic_Shop extends Logic
 		] );
 	}
 
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		string			$paymentMethod
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setOrderPaymentMethod( int|string $orderId, string $paymentMethod ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
@@ -432,14 +467,26 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderPositionStatus( int|string $positionId, $status ): bool
+	/**
+	 *	@param		int|string		$positionId
+	 *	@param		int				$status
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setOrderPositionStatus( int|string $positionId, int $status ): bool
 	{
 		return (bool) $this->modelOrderPosition->edit( $positionId, [
-			'status'		=> (int) $status,
+			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		] );
 	}
 
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		int|string		$userId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setOrderUserId( int|string $orderId, int|string $userId ): bool
 	{
 		return (bool) $this->modelOrder->edit( $orderId, [
@@ -448,7 +495,13 @@ class Logic_Shop extends Logic
 		] );
 	}
 
-	public function setOrderStatus( int|string $orderId, $status ): bool
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		int				$status
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setOrderStatus( int|string $orderId, int $status ): bool
 	{
 		$order	= $this->getOrder( $orderId );
 		if( $status == Model_Shop_Order::STATUS_PAYED ){
@@ -462,25 +515,24 @@ class Logic_Shop extends Logic
 			}
 		}
 		return (bool) $this->modelOrder->edit( $orderId, [
-			'status'		=> (int) $status,
+			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		] );
 	}
 
 	/**
 	 *	@deprecated
+	 *	@noinspection PhpUnusedParameterInspection
 	 */
 	public function setShipping( $logic )
 	{
-		Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Shop' )->version )
-			->setExceptionVersion( '0.8.3' )
-			->message( 'setShipping is deprecated' );
-		if( !( $logic instanceof Logic) )
-			throw new RuntimeException( 'Invalid logic object (must extend Logic)' );
-		$this->logicShipping		= $logic;
+		throw new DeprecationException( 'Method Logic_Shop::setShipping is deprecated' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->bridge				= new Logic_ShopBridge( $this->env );

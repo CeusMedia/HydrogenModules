@@ -26,7 +26,6 @@ class Logic_ShopBridge
 	 *	@access		public
 	 *	@param		Environment		$env	Environment
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{

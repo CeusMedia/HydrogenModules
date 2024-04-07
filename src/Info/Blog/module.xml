@@ -15,7 +15,7 @@
 	<log version="0.3.4">Improve post URLs.</log>
 	<log version="0.3.5">Add category column in post model.</log>
 	<log version="0.3.6">Require module Resource:Users for author resolution.</log>
-	<log version="0.3.7">Support hook View::onRenderContent by abtract blog post panel.</log>
+	<log version="0.3.7">Support hook View::onRenderContent by abstract blog post panel.</log>
 	<log version="0.3.8">Reset locales.</log>
 	<log version="0.3.9">Extract messages to locales.</log>
 	<log version="0.4">Extend models by columns for parents, likes, dislikes and more timestamps.</log>

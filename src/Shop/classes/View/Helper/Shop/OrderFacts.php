@@ -54,7 +54,12 @@ class View_Helper_Shop_OrderFacts
 		return $this->renderAsText();
 	}
 
-	public function setData( $data ): self
+	/**
+	 *	@param		array		$data
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setData( array $data ): self
 	{
 //		$this->data	= (object) $data;
 		if( empty( $data['orderId'] ) )

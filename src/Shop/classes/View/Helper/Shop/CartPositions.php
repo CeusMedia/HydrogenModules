@@ -55,15 +55,11 @@ class View_Helper_Shop_CartPositions
 	{
 		if( !$this->positions )
 			return '';
-		switch( $this->output ){
-			case self::OUTPUT_HTML:
-				return $this->renderAsHtml();
-			case self::OUTPUT_HTML_LIST:
-				return $this->renderAsHtmlList();
-			case self::OUTPUT_TEXT:
-			default:
-				return $this->renderAsText();
-		}
+		return match( $this->output ){
+			self::OUTPUT_HTML		=> $this->renderAsHtml(),
+			self::OUTPUT_HTML_LIST	=> $this->renderAsHtmlList(),
+			default					=> $this->renderAsText(),
+		};
 	}
 
 	public function setChangeable( bool $isChangeable = TRUE ): self
@@ -116,11 +112,11 @@ class View_Helper_Shop_CartPositions
 	public function setPositions( array $positions ): self
 	{
 		$this->positions		= $positions;
-		foreach( $positions as $nr => $position ){
+		foreach( $positions as $position ){
 			if( !isset( $position->article ) ){
 				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );
 				$article	= $source->get( $position->articleId, $position->quantity );
-				$positions[$nr]->article	= $article;
+				$position->article	= $article;
 			}
 		}
 		return $this;
@@ -144,7 +140,7 @@ class View_Helper_Shop_CartPositions
 		$totalWeight	= 0;
 		$taxes			= [];
 		$allSingle		= TRUE;
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->positions as $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
 
@@ -269,7 +265,7 @@ class View_Helper_Shop_CartPositions
 		$totalWeight	= 0;
 		$taxes			= [];
 		$allSingle		= TRUE;
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->positions as $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
 //print_m( $position );die;

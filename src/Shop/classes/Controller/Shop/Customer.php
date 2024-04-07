@@ -48,7 +48,7 @@ class Controller_Shop_Customer extends Controller
 	{
 		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
-		$countries		= $this->env->getLanguage()->getWords( 'countries' );
+//		$countries		= $this->env->getLanguage()->getWords( 'countries' );
 		$relationType	= 'user';
 		$relationId		= $this->modelCart->get( 'userId' );
 		if( !$relationId )
@@ -197,6 +197,7 @@ class Controller_Shop_Customer extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -234,7 +235,6 @@ class Controller_Shop_Customer extends Controller
 	 *	Handle customer having a user account.
 	 *	@access		protected
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleAccount(): void
@@ -285,7 +285,7 @@ class Controller_Shop_Customer extends Controller
 	 */
 	protected function handleGuest(): void
 	{
-		$countries	= $this->env->getLanguage()->getWords( 'countries' );
+	//	$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->addData( 'mode', Model_Shop_Cart::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
 

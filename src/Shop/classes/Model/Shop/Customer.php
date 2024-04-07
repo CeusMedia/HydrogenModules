@@ -1,27 +1,25 @@
 <?php
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@since			20.1.2005
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 class Model_Shop_Customer extends Model
 {
 	protected string $name			= 'shop_customers';
 
 	protected array $columns		= [
-		"customerId",
+		'customerId',
 	];
 
 	protected string $primaryKey	= 'customerId';

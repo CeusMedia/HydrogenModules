@@ -29,12 +29,12 @@ class View_Shop extends View
 	{
 	}
 
-	public function rules()
+	public function rules(): string
 	{
 		return $this->loadContent( 'shop', 'rules' );
 	}
 
-	public function service()
+	public function service(): void
 	{
 		$panelPayment	= '';
 		if( ( $orderId = $this->getData( 'orderId' ) ) ){

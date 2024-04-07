@@ -10,7 +10,7 @@ class View_Helper_Shop_Tabs
 	protected array $words;
 	protected Model_Shop_Payment_BackendRegister $backends;
 	protected float $cartTotal			= .0;
-	protected $content;
+	protected string $content			= '';
 	protected ?string $current			= NULL;
 	protected bool $whiteIcons			= FALSE;
 
@@ -20,11 +20,19 @@ class View_Helper_Shop_Tabs
 		$this->words	= $this->env->getLanguage()->getWords( 'shop' );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function __toString(): string
 	{
 		return $this->render();
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		$tabs		= new BootstrapTabsNav( "tabs-cart" );
@@ -60,7 +68,6 @@ class View_Helper_Shop_Tabs
 		$iconCheckout		= HtmlTag::create( 'i', '', ['title' => $tabLabels->checkout, 'class' => 'fa fa-fw fa-check'] );
 		$iconService		= HtmlTag::create( 'i', '', ['title' => $tabLabels->service, 'class' => 'fa fa-fw fa-star'] );
 
-		$tabLabels			= (object) $this->words['tabs'];
 		foreach( $tabLabels as $key => $value )
 			$tabLabels->$key	= HtmlTag::create( 'span', '&nbsp;'.$value.'&nbsp;', ['class' => 'hidden-phone'] );
 
@@ -115,7 +122,7 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setContent( $content ): self
+	public function setContent( string $content ): self
 	{
 		$this->content	= $content;
 		return $this;

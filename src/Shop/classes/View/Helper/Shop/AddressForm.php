@@ -119,7 +119,7 @@ jQuery(document).ready(function(){
 		jQuery(this).typeahead({
 			source: '.json_encode( array_values( $this->words['countries'] ) ).',
 			items: 4
-		});
+		})
 	});
 });
 </script>';

@@ -1,18 +1,18 @@
 <?php
 /**
  *	Data Model of Orders.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Orders.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 class Model_Shop_Order extends Model
 {
@@ -33,32 +33,32 @@ class Model_Shop_Order extends Model
 	protected string $name			= 'shop_orders';
 
 	protected array $columns		= [
-		"orderId",
-		"sessionId",
-		"customerId",
-		"userId",
-//		"customerMode",
-		"options",
-		"paymentMethod",
-		"paymentId",
-		"status",
-		"currency",
-		"price",
-		"priceTaxed",
-		"createdAt",
-		"modifiedAt",
+		'orderId',
+		'sessionId',
+		'customerId',
+		'userId',
+//		'customerMode',
+		'options',
+		'paymentMethod',
+		'paymentId',
+		'status',
+		'currency',
+		'price',
+		'priceTaxed',
+		'createdAt',
+		'modifiedAt',
 	];
 
 	protected string $primaryKey	= 'orderId';
 
 	protected array $indices		= [
-		"sessionId",
-		"customerId",
-		"userId",
-		"paymentMethod",
-		"paymentId",
-		"status",
-		"currency"
+		'sessionId',
+		'customerId',
+		'userId',
+		'paymentMethod',
+		'paymentId',
+		'status',
+		'currency'
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;

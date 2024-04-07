@@ -31,6 +31,11 @@ class Mail_Shop_Customer_Payed extends Mail_Abstract
 		$this->view	= new View( $env );
 	}
 
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		if( empty( $this->data['orderId'] ) )

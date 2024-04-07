@@ -37,6 +37,8 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 	 *	@return		self
 	 *	@throws		RangeException
 	 *	@throws		InvalidArgumentException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generate(): self
 	{
