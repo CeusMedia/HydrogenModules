@@ -43,10 +43,10 @@ class Job_Auth_Oauth2 extends Job_Abstract
 		}
 	}
 
-	protected function migrateScopes()
+	protected function migrateScopes(): void
 	{
 		$module	= $this->env->getModules()->get( 'Resource_Authentication_Backend_OAuth2' );
-		$versionInstalled	= $module->versionInstalled;
+		$versionInstalled	= $module->version->installed;
 		remark( 'versionInstalled: '.$versionInstalled );
 //		if( version_compare( $versionInstalled, ..., '>' ) ){
 //			if( version_compare( $versionInstalled, ..., '<=' ) ){

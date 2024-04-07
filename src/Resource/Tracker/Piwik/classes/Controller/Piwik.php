@@ -45,7 +45,7 @@ class Controller_Piwik extends Controller{
 	static public function ___onPageApplyModules( Environment $env, object $context, $module, array & $payload ){
 		$config	= $env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );				//  get module configuration as array map
 		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
-			->setVersion( $env->getModules()->get( 'Resource_Tracker_Piwik' )->version )
+			->setVersion( $env->getModules()->get( 'Resource_Tracker_Piwik' )->version->current )
 			->setErrorVersion( '0.4.2' )
 			->setExceptionVersion( '0.4.2' )
 			->message( 'Module Resource:Tracker:Piwik is deprecated, use Resource:Tracker:Matomo instead' );

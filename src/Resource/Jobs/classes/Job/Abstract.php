@@ -190,7 +190,7 @@ class Job_Abstract
 		$this->versionModule	= NULL;
 		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
 			$module	= $this->env->getModules()->get( $this->jobModuleId );
-			$this->versionModule	= $module->versionInstalled;
+			$this->versionModule	= $module->version->installed;
 		}
 		return $this;
 	}

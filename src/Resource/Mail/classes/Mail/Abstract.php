@@ -381,7 +381,7 @@ abstract class Mail_Abstract
 	protected function addHtmlBody( string $html ): self
 	{
 		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
+			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version->current )
 			->setErrorVersion( '0.8.9' )
 			->setExceptionVersion( '0.9' )
 			->message( 'Abstract_Mail::addHtmlBody is deprecated, use ::setHtml instead' );
@@ -401,7 +401,7 @@ abstract class Mail_Abstract
 	protected function addTextBody( string $text ): self
 	{
 		\CeusMedia\HydrogenFramework\Deprecation::getInstance()
-			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version )
+			->setVersion( $this->env->getModules()->get( 'Resource_Mail' )->version->current )
 			->setErrorVersion( '0.8.9' )
 			->setExceptionVersion( '0.9' )
 			->message( 'Abstract_Mail::addTextBody is deprecated, use ::setText instead' );

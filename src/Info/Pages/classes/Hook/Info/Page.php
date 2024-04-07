@@ -228,7 +228,7 @@ class Hook_Info_Page extends Hook
 		$matches	= [];
 		while( preg_match( $pattern, $this->payload['content'], $matches ) ){
 			\CeusMedia\HydrogenFramework\Deprecation::getInstance()
-				->setVersion( $this->env->getModules()->get( 'Info_Pages' )->version )
+				->setVersion( $this->env->getModules()->get( 'Info_Pages' )->version->current )
 				->setErrorVersion( '0.7.7' )
 				->setExceptionVersion( '0.9' )
 				->message( 'Page inclusion should use shortcode with id or nr attribute (having: page:'.$matches[3].')' );
