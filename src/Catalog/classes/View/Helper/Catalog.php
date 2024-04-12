@@ -303,7 +303,7 @@ class View_Helper_Catalog
 	{
 		$cacheKey	= 'catalog.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
-			$orders		= array( 'ABS(volume)' => 'DESC', 'articleId' => 'DESC' );
+			$orders		= ['ABS(volume)' => 'DESC', 'articleId' => 'DESC'];
 			$articles	= $this->logic->getCategoryArticles( $category, $orders );
 			$list	= [];
 			foreach( $articles as $article )

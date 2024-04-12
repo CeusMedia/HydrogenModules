@@ -53,14 +53,14 @@ class Controller_Admin_Mail_Attachment extends Controller
 				foreach( $languages as $language ){
 					if( 0 === strlen( trim( $language ) ) )
 						continue;
-					$data	= array(
+					$data	= [
 						'status'	=> (int) (bool) $this->request->get( 'status' ),
 						'language'	=> $language,
 						'className'	=> $class,
 						'filename'	=> $file,
 						'mimeType'	=> $files[$file]->mimeType,
 						'createdAt'	=> time(),
-					);
+					];
 					$this->model->add( $data );
 				}
 				$this->messenger->noteSuccess(
@@ -130,7 +130,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		if( $filterOrder && $filterDirection )
 			$orders	= [$filterOrder, $filterDirection];
 		$limit	= max( (int) $filterLimit, 10 );
-		$limits	= array( $page * $limit, $limit );
+		$limits	= [$page * $limit, $limit];
 
 		$this->addData( 'limit', $limit );
 		$this->addData( 'page', $page );

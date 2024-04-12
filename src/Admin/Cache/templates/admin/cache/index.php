@@ -20,12 +20,12 @@ foreach( $list as $item ){
 	$buttonRemove	= '<button type="button" class="btn btn-mini btn-danger btn-cache-remove"><i class="icon-remove icon-white" title="'.$wf->buttonRemove.'"></i>&nbsp;</button>';
 	$value	= trim( print_m( $item->value, NULL, NULL, TRUE ) );
 	$value	= preg_replace( "/^<br\/>(.*)<br\/>$/s", "\\1", $value );
-	$cells			= array(
+	$cells	= [
 		HtmlTag::create( 'td', $item->key ),
 		HtmlTag::create( 'td', '<em>'.$item->type.'</em>' ),
 		HtmlTag::create( 'td', $value ),
 		HtmlTag::create( 'td', $buttonRemove ),
-	);
+	];
 	$rows[]	= HtmlTag::create( 'tr', $cells, ["data-key" => $item->key] );
 }
 

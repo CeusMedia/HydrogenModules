@@ -27,22 +27,13 @@ class Hook_App_Site extends Hook
 			$hint		= sprintf( ' Please use "%s" instead!', trim( $this->payload['instead'] ) );
 		if( isset( $this->payload['message'] ) && strlen( trim( $this->payload['message'] ) ) )
 			$note		= sprintf( ' Note: %s', trim( $this->payload['message'] ) );
-		switch( $this->payload['type'] ){
-			case 'class':
-				$msg	= 'Class "%s" is deprecated';
-				break;
-			case 'class_inheritance':
-				$msg	= 'Class "%s" is extending an deprecated class';
-				break;
-			case 'method':
-				$msg	= 'Method "%s" is deprecated';
-				break;
-			case 'hook':
-				$msg	= 'Hook "%s" is deprecated';
-				break;
-			default:
-				$msg	= 'Deprecation detected on using "%s"';
-		}
+		$msg	= match( $this->payload['type'] ){
+			'class'				=> 'Class "%s" is deprecated',
+			'class_inheritance'	=> 'Class "%s" is extending an deprecated class',
+			'method'			=> 'Method "%s" is deprecated',
+			'hook'				=> 'Hook "%s" is deprecated',
+			default				=> 'Deprecation detected on using "%s"',
+		};
 		$msg		= sprintf( $msg.'%s.%s%s', $entity, $version, $hint, $note );
 		$msg		= date( 'c' ).' '.$msg."\n";
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
@@ -191,10 +182,10 @@ class Hook_App_Site extends Hook
 			if( !$list )
 				continue;
 			ksort( $list);
-			$list   = array( (object) [
+			$list   = [(object) [
 				'title'	=> "Theme: ".ucFirst( $theme ),//$prefixes->image,
 				'menu'	=> array_values( $list ),
-			] );
+			]];
 			$this->context->list	= array_merge( $this->context->list, $list );
 		}
 	}

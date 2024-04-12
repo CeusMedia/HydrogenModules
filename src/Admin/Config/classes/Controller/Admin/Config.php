@@ -30,7 +30,7 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'versions', $versions );
 	}*/
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'filter_admin_config_category' );
@@ -46,7 +46,7 @@ class Controller_Admin_Config extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$filterCategory	= $this->session->get( 'filter_admin_config_category' );
 		$filterModuleId	= $this->session->get( 'filter_admin_config_moduleId' );
@@ -91,7 +91,7 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'modules', $foundModules );
 	}
 
-	public function edit( $moduleId = NULL )
+	public function edit( $moduleId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();

@@ -195,7 +195,7 @@ class Controller_Catalog_Bookstore extends Controller
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
 			$price	= (float) str_replace( ",", ".", $article->price );
-			$item	= array(
+			$item	= [
 				"title"				=> TextTrimmer::trim( $article->title, 150 ),
 				"description"		=> TextTrimmer::trim( $article->description, 5000 ),
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
@@ -208,7 +208,7 @@ class Controller_Catalog_Bookstore extends Controller
 				"g:condition"		=> 'neu',
 				"g:availability"	=> $availabilities[(int) $article->status],
 				"g:gtin"			=> $article->isn
-			);
+			];
 			if( $article->status == -1 )
 				$item['g:availability_date']	= date( "r", strtotime( $article->publication ) );
 			if( $article->cover )
@@ -264,14 +264,14 @@ class Controller_Catalog_Bookstore extends Controller
 		$words		= (object) $this->getWords( 'rss' );
 		$helper		= new View_Helper_Catalog_Bookstore( $this->env );
 		$rss		= new RssBuilder();
-		$data		= array(
+		$data		= [
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,
 			'description'	=> $words->description,
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
-		);
+		];
 		if( $options->get( 'image.url' ) ){
 			$data['imageUrl']	= $options->get( 'image.url' );
 			if( $options->get( 'image.link' ) )

@@ -16,8 +16,8 @@ class Hook_Info_Contact extends Hook
 		$words			= $env->getLanguage()->getWords( 'info/contact' );
 		$allowedTypes	= $moduleConfig->getAll( 'modal.show.type.' );
 
-		$shortCodes		= array(
-			'contact:form'		=> array(
+		$shortCodes		= [
+			'contact:form'		=> [
 				'button-class'	=> 'btn',
 				'button-label'	=> $words['modal-form']['trigger'],
 				'heading'		=> $words['modal-form']['heading'],
@@ -26,8 +26,8 @@ class Hook_Info_Contact extends Hook
 				'types'			=> join( ',', array_keys( $allowedTypes ) ),
 				'type'			=> $moduleConfig->get( 'modal.default.type' ),
 				'subject'		=> '',
-			)
-		);
+			]
+		];
 		$processor->setContent( $payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )

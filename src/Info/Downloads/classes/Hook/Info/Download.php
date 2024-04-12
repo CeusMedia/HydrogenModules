@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Download extends Hook
 {
-	public static function onCollectNovelties( Environment $env, $context, $module, $payload = [] )
+	public static function onCollectNovelties( Environment $env, $context, $module, $payload = [] ): void
 	{
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) [
@@ -23,10 +23,10 @@ class Hook_Info_Download extends Hook
 		}
 	}
 
-	public static function onPageCollectNews( Environment $env, $context, $module, $payload = [] )
+	public static function onPageCollectNews( Environment $env, $context, $module, $payload = [] ): void
 	{
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) [

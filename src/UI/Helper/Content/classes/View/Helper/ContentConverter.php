@@ -190,7 +190,7 @@ class View_Helper_ContentConverter
 
 	public static function formatText( Environment $env, string $content ): string
 	{
-		$converters	= array(
+		$converters	= [
 			"/####(.+)####\r?\n/U"	=> "<h5>\\1</h5>\n",
 			"/###(.+)###\r?\n/U"	=> "<h4>\\1</h4>\n",
 			"/##(.+)##\r?\n/U"		=> "<h3>\\1</h3>\n",
@@ -201,7 +201,7 @@ class View_Helper_ContentConverter
 			"/>>(.+)<</U"			=> "<small>\\1</small>",
 			"/<<(.+)>>/U"			=> "<big>\\1</big>",
 			"/--(.+)--/U"			=> "<strike>\\1</strike>",
-		);
+		];
 		foreach( $converters as $key => $value )
 			$content	= preg_replace( $key, $value, $content );
 		return $content;

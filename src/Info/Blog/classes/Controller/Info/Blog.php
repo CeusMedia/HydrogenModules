@@ -33,21 +33,21 @@ class Controller_Info_Blog extends Controller
 			if( !strlen( trim( $request->get( 'content' ) ) ) )
 				throw new InvalidArgumentException( 'Missing content' );
 			$post		= $this->checkPost( $request->get( 'postId' ), TRUE );
-			$data		= array(
+			$data		= [
 				'postId'	=> $post->postId,
 				'language'	=> $language->getLanguage(),
 				'username'	=> $request->get( 'username' ),
 				'email'		=> $request->get( 'email' ),
 				'content'	=> $request->get( 'content' ),
 				'createdAt'	=> time(),
-			);
+			];
 			$commentId	= $this->modelComment->add( $data );
 //			$this->informAboutNewComment( $commentId );
 			$comment	= $this->modelComment->get( $commentId );
-			$data	= array(
+			$data		= [
 				'comment'	=> $comment,
 				'html'		=> $this->view->renderComment( $comment ),
-			);
+			];
 			$this->handleJsonResponse( 'data', $data );
 		}
 		catch( Exception $e ){
@@ -64,7 +64,7 @@ class Controller_Info_Blog extends Controller
 		$language	= $this->env->getLanguage();
 
 		if( $request->has( 'save' ) ){
-			$data		= array(
+			$data		= [
 				'postId'	=> $post->postId,
 				'language'	=> $language->getLanguage(),
 				'title'		=> $request->get( 'title' ),
@@ -72,7 +72,7 @@ class Controller_Info_Blog extends Controller
 				'email'		=> $request->get( 'email' ),
 				'content'	=> $request->get( 'content' ),
 				'createdAt'	=> time(),
-			);
+			];
 			$commentId	= $this->modelComment->add( $data );
 			$words		= (object )$this->getWords( 'msg' );
 			$this->messenger->noteSuccess( $words->successSaved );

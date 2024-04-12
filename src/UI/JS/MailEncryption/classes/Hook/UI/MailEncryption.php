@@ -21,7 +21,7 @@ class Hook_UI_MailEncryption extends Hook
 			return;
 		$matches		= [];
 		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+\@\S+)".*>(.+)</a>(.*)$@siU';					//  pattern to match mail shortcode
-		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail links in content
+		while( preg_match( $pattern, $payload['content'] ) ){										//  while mail links in content
 			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
 			[$partName, $partHost]	= explode( '@', $matches[2][0] );						//  extract mail parts
 			$replacement	= HtmlTag::create( 'span', $matches[3][0], array(					//  build replacement ...
@@ -34,8 +34,8 @@ class Hook_UI_MailEncryption extends Hook
 		}
 
 		$pattern	= '@^(.*)(\[\[mailto:(.+)\@(.*)(\|(.+))?\]\])(.*)$@siU';						//  pattern to match mail shortcode
-		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail shortcodes in content
-			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
+		while( preg_match( $pattern, $payload['content'] ) ){										//  while mail shortcodes in content
+			preg_match_all( $pattern, $payload['content'], $matches );							//  get all match parts
 			$label			= $matches[3][0].'@'.$matches[4][0];									//  glue label from name and host part
 			if( !empty( $matches[6][0] ) )															//  a link label has been set
 				$label	= $matches[6][0];															//  replace glued label by set label

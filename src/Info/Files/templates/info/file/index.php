@@ -3,6 +3,15 @@
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $rights */
+/** @var array $folders */
+/** @var array $files */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
@@ -57,10 +66,10 @@ foreach( $files as $item ){
 	}
 	$actions		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 //	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells			= array(
+	$cells			= [
 		HtmlTag::create( 'td', $label/*$link*/, ['class' => 'file'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row			= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	$rows['files'][$item->title]		= $row;
 }
@@ -120,10 +129,10 @@ foreach( $folders as $item ){
 	}
 	$actions	= HtmlTag::create( 'div', join( $buttons ), ['class' => 'btn-group pull-right'] );
 //	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells		= array(
+	$cells		= [
 		HtmlTag::create( 'td', $label, ['class' => 'folder'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row	= HtmlTag::create( 'tr', $cells, ['class' => 'info folder'] );
 	$rows['folders'][$item->title]	= $row;
 }

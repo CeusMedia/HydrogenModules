@@ -42,15 +42,15 @@ class View_Helper_Info_Contact_Form_Modal
 				'value'		=> htmlentities( $this->subject, ENT_QUOTES, 'utf-8' ),
 			] ),
 		];
-		$fieldType	= array(
+		$fieldType	= [
 			Html::create( 'label', $w->labelType, ['for' => 'input_type'] ),
 			Html::create( 'select', $optType, [
 				'name'		=> 'type',
 				'id'		=> 'input_type',
 				'class'		=> 'span12 has-optionals',
 			] ),
-		);
-		$fieldBody	= array(
+		];
+		$fieldBody	= [
 			Html::create( 'label', $w->labelBodyQuestion, ['for' => 'input_body', 'class' => 'mandatory required optional type type-question' ] ),
 			Html::create( 'label', $w->labelBodyRequest, ['for' => 'input_body', 'class' => 'mandatory required optional type type-request' ] ),
 			Html::create( 'label', $w->labelBodyProblem, ['for' => 'input_body', 'class' => 'mandatory required optional type type-problem' ] ),
@@ -61,8 +61,8 @@ class View_Helper_Info_Contact_Form_Modal
 				'rows'		=> 4,
 				'required'	=> 'required',
 			] ),
-		);
-		$fieldEmail	= array(
+		];
+		$fieldEmail	= [
 			Html::create( 'label', $w->labelEmail, ['for' => 'input_email', 'class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -71,8 +71,8 @@ class View_Helper_Info_Contact_Form_Modal
 				'class'		=> 'span12',
 				'required'	=> 'required',
 			] ),
-		);
-		$fieldPhone	= array(
+		];
+		$fieldPhone	= [
 			Html::create( 'label', $w->labelPhone, ['for' => 'input_phone', 'class' => ''] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
@@ -80,7 +80,7 @@ class View_Helper_Info_Contact_Form_Modal
 				'id'		=> 'input_phone',
 				'class'		=> 'span12',
 			] ),
-		);
+		];
 		$fieldPerson	= [
 			Html::create( 'label', $w->labelPerson, ['for' => 'input_person', 'class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [

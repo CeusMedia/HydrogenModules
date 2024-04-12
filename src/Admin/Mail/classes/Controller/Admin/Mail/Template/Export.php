@@ -102,10 +102,10 @@ class Controller_Admin_Mail_Template_Export extends Controller
 					$this->messenger->noteError( 'File is missing: '.$item );
 					continue;
 				}
-				$files[$topic][]	= array(
+				$files[$topic][]	= [
 					'filePath'	=> $item,
 					'content'	=> base64_encode( FileReader::load( $item ) ),
-				);
+				];
 			}
 		}
 

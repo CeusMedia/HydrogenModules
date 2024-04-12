@@ -14,7 +14,7 @@ class View_Info_Blog extends View
 	{
 	}
 
-	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload = [] )
+	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload = [] ): void
 	{
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
 		while( preg_match( $pattern, $payload['content'] ) ){
@@ -25,20 +25,23 @@ class View_Info_Blog extends View
 		}
 	}
 
-	public static function renderCommentInfoBarStatic( Environment $env, $comment ){
-		$facts	= array(
+	public static function renderCommentInfoBarStatic( Environment $env, $comment ): string
+	{
+		$facts	= [
 			'Autor: '	=> $comment->username,
 			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
-		);
+		];
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
 		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-comment-info'] );
 	}
 
-	public function renderComment( $comment ){
+	public function renderComment( $comment ): string
+	{
 		return self::renderCommentStatic( $this->env, $comment );
 	}
 
-	public static function renderCommentStatic( Environment $env, $comment ){
+	public static function renderCommentStatic( Environment $env, $comment ): string
+	{
 		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
 		$content	= HtmlTag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
 		$html		= HtmlTag::create( 'div', $infobar.$content, [
@@ -47,7 +50,8 @@ class View_Info_Blog extends View
 		return $html;
 	}
 
-	public static function renderPostAbstractPanelStatic( Environment $env, $modeOrId ){
+	public static function renderPostAbstractPanelStatic( Environment $env, $modeOrId ): string
+	{
 		$words 	= $env->getLanguage()->getWords( 'info/blog' );
 		$model	= new Model_Blog_Post( $env );
 		$post	= NULL;
@@ -61,7 +65,7 @@ class View_Info_Blog extends View
 			$title	= $words['panelTitles']['typeRandom'];
 		}
 		else if( in_array( $modeOrId, ["latest", "0"] ) ){
-			$post	= $model->getByIndex( 'status', 1, [], [], ['postId' => 'DESC'] );
+			$post	= $model->getByIndex( 'status', 1, [], ['postId' => 'DESC'] );
 			$title	= $words['panelTitles']['typeLatest'];
 		}
 		else if( $modeOrId ){
@@ -69,7 +73,7 @@ class View_Info_Blog extends View
 			$title	= $words['panelTitles']['typeDefault'];
 		}
 		if( !$post )
-			return;
+			return '';
 		$content		= self::renderPostAbstractStatic( $env, $post, FALSE );				//  load nested page content
 		$heading		= HtmlTag::create( 'h3', $title );
 		$panelInner		= HtmlTag::create( 'div', $content, [
@@ -80,7 +84,7 @@ class View_Info_Blog extends View
 		] );
 	}
 
-	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE )
+	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE ): string
 	{
 		$title		= HtmlTag::create( 'h4', $post->title );
 		$url		= View_Info_Blog::renderPostUrlStatic( $env, $post );
@@ -107,7 +111,7 @@ class View_Info_Blog extends View
 		return HtmlTag::create( 'div', $content, ['class' => 'blog-post'] );
 	}
 
-	public static function renderPostInfoBarStatic( Environment $env, $post )
+	public static function renderPostInfoBarStatic( Environment $env, $post ): string
 	{
 		if( !isset( $post->author ) ){
 			$modelUser		= new Model_User( $env );
@@ -116,24 +120,25 @@ class View_Info_Blog extends View
 		$authorName	= $post->author->username;
 		if( isset( $post->author->firstname ) && isset( $post->author->surname ) )
 			$authorName	= $post->author->firstname.' '.$post->author->surname;
-		$facts	= array(
+		$facts	= [
 			'Autor: '	=> $authorName,
 			'Datum: '	=> date( 'd.m.Y H:i', $post->createdAt ),
 			'Gelesen: '	=> $post->nrViews.' mal',
 //			'Kommentare: '	=> count( $post->comments ),
-		);
+		];
 
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
 		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-post-info hidden-phone'] );
 	}
 
-	public static function renderPostUrlStatic( Environment $env, $post )
+	public static function renderPostUrlStatic( Environment $env, $post ): string
 	{
 		$title	= Controller_Info_Blog::getUriPart( $post->title );
 		return './info/blog/post/'.$post->postId.'-'.$title;
 	}
 
-	protected static function renderFactsStatic( Environment $env, $facts, $listClass = 'dl-horizontal' ){
+	protected static function renderFactsStatic( Environment $env, $facts, $listClass = 'dl-horizontal' ): string
+	{
 		$list	= [];
 		foreach( $facts as $label => $value ){
 			$list[]	= HtmlTag::create( 'dt', $label ).HtmlTag::create( 'dd', $value );

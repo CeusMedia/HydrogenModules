@@ -8,7 +8,7 @@ class Hook_Info_File extends Hook
 	static public function onCollectNovelties( Environment $env, $context, $module, $payload = [] )
 	{
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [
@@ -27,7 +27,7 @@ class Hook_Info_File extends Hook
 	static public function onPageCollectNews( Environment $env, $context, $module, $payload = [] )
 	{
 		$model		= new Model_Download_File( $env );
-		$conditions	= array( 'uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 ) );
+		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $model->getAll( $conditions, ['uploadedAt' => 'DESC'] );
 		foreach( $files as $file ){
 			$context->add( (object) array_merge( View_Helper_NewsList::$defaultAttributes, [

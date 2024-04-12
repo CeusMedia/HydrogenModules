@@ -169,7 +169,7 @@ class Controller_Catalog extends Controller
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
 			$price	= (float) str_replace( ",", ".", $article->price );
-			$item	= array(
+			$item	= [
 				"title"				=> $article->title,
 				"description"		=> $article->description,
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
@@ -182,7 +182,7 @@ class Controller_Catalog extends Controller
 				"g:condition"		=> 'neu',
 				"g:availability"	=> $availabilities[(int) $article->status],
 				"g:gtin"			=> $article->isn
-			);
+			];
 			if( $article->cover )
 				$item['g:image_link']	= $this->logic->getArticleCoverUrl( $article, FALSE, TRUE );
 			$builder->addItem( $item );

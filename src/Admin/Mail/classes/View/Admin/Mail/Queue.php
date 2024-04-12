@@ -26,10 +26,10 @@ class View_Admin_Mail_Queue extends View
 		foreach( $statuses as $statusKey => $statusLabel ){
 			$data[$statusKey]	= [];
 			foreach( $ranges as $rangeKey => $rangeLabel ){
-				$conditions	= array(
+				$conditions	= [
 					'status'		=> $statusKey,
 					'enqueuedAt'	=> '>= '.( time() - $rangeKey * 24 * 3600 ),
-				);
+				];
 				$data[$statusKey][$rangeKey]	= $model->count( $conditions );
 			}
 		}
