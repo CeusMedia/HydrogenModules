@@ -26,10 +26,11 @@ class Controller_Manage_Form_Fill extends Controller
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
 			throw new DomainException( 'Invalid fill given' );
-		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
-			if( $fill->referer )
+			if( $fill->referer ){
+				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 				$this->restart( $fill->referer.$urlGlue.'rc=3', FALSE, NULL, TRUE );
+			}
 			throw new DomainException( 'Fill already confirmed' );
 		}
 		$this->modelFill->edit( $fillId, [
@@ -39,6 +40,14 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->logicFill->sendCustomerResultMail( $fillId );
 		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
+
+		$form	= $this->modelForm->get( $fill->formId );
+		if( $form->forwardOnSuccess ){
+			$urlGlue	= preg_match( '/\?/', $fill->forwardOnSuccess ) ? '&' : '?';
+			$this->restart( $fill->forwardOnSuccess.$urlGlue.'rc=2', FALSE, NULL, TRUE );
+		}
+
+		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->referer )
 			$this->restart( $fill->referer.$urlGlue.'rc=2', FALSE, NULL, TRUE );
 		$this->restart( 'confirmed/'.$fillId, TRUE );
@@ -307,7 +316,9 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail			= Logic_Mail::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicFill			= $this->getLogic( 'formFill' );
 
 		foreach( $this->modelTransferTarget->getAll() as $target )

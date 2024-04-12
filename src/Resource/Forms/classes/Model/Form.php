@@ -20,6 +20,7 @@ class Model_Form extends Model
 		'title',
 		'receivers',
 		'content',
+		'forwardOnSuccess',
 		'timestamp',
 	];
 

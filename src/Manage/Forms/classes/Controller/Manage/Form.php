@@ -48,7 +48,7 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mails', $mails );
 	}
 
-	public function addRule( string $formId, $formType )
+	public function addRule( string $formId, $formType ): void
 	{
 		$data		= [];
 		for( $i=0; $i<3; $i++ ){
@@ -95,7 +95,7 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function confirm()
+	public function confirm(): string
 	{
 		$fillId		= $this->request->get( 'fillId' );
 		$fill		= $this->modelFill->get( $fillId );

@@ -27,12 +27,12 @@
 
 ## Transfers
 
-Received form data can be transfered to other targets. For example to an API of a online-served CRM tool.
+Received form data can be transferred to other targets. For example to an API of an online-served CRM tool.
 You can add one or more transfers to every form.
 
 ### Target
 
-A target is a data consuming service to which data can be sent using an local binding to this target.
+A target is a data consuming service to which data can be sent using a local binding to this target.
 So, for every target to be used an individual client implementation matching the consuming service interface needs to be installed.
 
 Some targets may have a sandbox environment for testing next to the productional environment.

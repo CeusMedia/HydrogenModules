@@ -106,6 +106,12 @@ return '
 					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
 				</div>
 			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_forwardOnSuccess">... <small class="muted">(...)</small></label>
+					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12" value="'.htmlentities( $form->forwardOnSuccess ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
 			<div class="buttonbar">
 				'.$navButtons['list'].'
 				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
