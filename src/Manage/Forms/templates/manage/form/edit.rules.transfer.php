@@ -2,16 +2,22 @@
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconTest	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
-$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $transferRules */
+/** @var array<string,object> $transferTargets */
+/** @var object $form */
+/** @var array<string,string|HtmlTag> $navButtons */
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+
+$listRules	= HtmlTag::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 if( $transferRules ){
 	$listRules	= [];
 	$modals		= [];
@@ -19,7 +25,7 @@ if( $transferRules ){
 		$ruleId		= $rule->formTransferRuleId;
 		$target		= $transferTargets[$rule->formTransferTargetId];
 
-		$buttonTest	= Html::create( 'button', $iconTest, [
+		$buttonTest	= HtmlTag::create( 'button', $iconTest, [
 			'type'	=> 'button',
 			'id'	=> 'button-test-'.$ruleId,
 			'class'	=> 'btn not-btn-info not-btn-small btn-mini button-test-rules',
@@ -59,22 +65,22 @@ if( $transferRules ){
 		$modalTrigger->setAttributes( ['class' => 'btn not-btn-primary btn-small'] );
 
 
-		$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', [
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 			'href'	=> './manage/form/removeTransferRule/'.$form->formId.'/'.$rule->formTransferRuleId,
 			'class'	=> 'btn btn-inverse btn-small',
 		] );
-		$buttons		= Html::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
-		$listRules[]	= Html::create( 'tr', array(
-			Html::create( 'td', $rule->title ),
-			Html::create( 'td', $target->title ),
-			Html::create( 'td', $buttons ),
+		$buttons		= HtmlTag::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
+		$listRules[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $rule->title ),
+			HtmlTag::create( 'td', $target->title ),
+			HtmlTag::create( 'td', $buttons ),
 		) );
 		$modals[]		= $modal;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '25%', '20%'] );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Bezeichnung', 'Transfer-Ziel'] ) );
-	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] ).join( $modals );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Bezeichnung', 'Transfer-Ziel'] ) );
+	$tbody		= HtmlTag::create( 'tbody', $listRules );
+	$listRules	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] ).join( $modals );
 }
 
 $optTransferTarget	= [];
@@ -92,7 +98,7 @@ $modal->setBody( '
 <div class="row-fluid">
 	<div class="span8">
 		<label for="input_title" class="mandatory required">Bezeichnung des Transfers</label>
-		<input type="text" name="title" id="input_title" class="span12" required="required"></input>
+		<input type="text" name="title" id="input_title" class="span12" required="required"/>
 	</div>
 	<div class="span4">
 		<label for="input_formTransferTargetId" class="mandatory required">Transfer-Ziel</label>
@@ -111,71 +117,8 @@ $modalTrigger->setId( 'rule-transfer-add-trigger' );
 $modalTrigger->setModalId( 'rule-transfer-add' )->setLabel( $iconAdd.'&nbsp;neuer Transfer' );
 $modalTrigger->setAttributes( ['class' => 'btn btn-primary'] );
 
-$script		= '
-<script>
-var FormsTransferRuleTest = {
-	init: function(){
-		jQuery(".button-test-rules").bind("click", function(){
-			var button = jQuery(this);
-			var ruleId = button.data("rule-id");
-			var modal = jQuery("#rule-transfer-edit-"+ruleId);
-			var rules = modal.find("#input_rules-"+ruleId).val();
-			FormsTransferRuleTest.updateTransferRulesTestTrigger(ruleId, rules);
-		});
-	},
-	testTransferRules: function(ruleId, rules, callback){
-		jQuery.ajax({
-			url: "./manage/form/ajaxTestTransferRules",
-			method: "POST",
-			dataType: "json",
-			data: {
-				ruleId: ruleId,
-				rules: rules
-			},
-			success: callback
-		});
-	},
-	updateTransferRulesTestTrigger: function(ruleId, rules){
-		var callback = function(json){
-			var button = jQuery("#button-test-"+ruleId);
-			button.prop("title", null);
-			button.removeClass("btn-info btn-success btn-danger")
-			if(json.status !== "empty"){
-				if(json.status === "exception" || json.status === "error"){
-					button.addClass("btn-danger");
-					button.prop("title", json.message);
-				}
-				else if(json.status === "success" || json.status === "parsed"){
-					button.addClass("btn-success");
-				}
-			}
-			button.blur();
-		}
-		FormsTransferRuleTest.testTransferRules(ruleId, rules, callback);
-	}
-}
-jQuery(document).ready(function(){
-	FormsTransferRuleTest.init();
-});
-</script>';
+$env->getPage()->js->addScriptOnReady('FormsTransferRuleTest.init()');
 
-
-$style	= '
-<style>
-span.indicator-transfer-rules-test {
-	display: inline-block;
-	width: 24px;
-	height: 24px;
-	border: 1px solid gray;
-	border-radius: 0.3em;
-	}
-span.indicator-transfer-rules-test.test-success {
-	background-color: green;
-	}
-span.indicator-transfer-rules-test.test-fail {
-	background-color: green;
-	}
-</style>';
 return '
 <div class="row-fluid">
 	<div class="span12">
@@ -191,4 +134,4 @@ return '
 			</div>
 		</div>
 	</div>
-</div>'.$modal->render().$script.$style;
+</div>'.$modal->render();

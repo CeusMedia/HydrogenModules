@@ -252,39 +252,6 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
-	public function ajaxTestTransferRules(): void
-	{
-		$this->checkIsPost();
-		$ruleId	= $this->request->get( 'ruleId' );
-		$this->checkTransferRuleId( $ruleId );
-		$rules	= $this->request->get( 'rules' );
-
-		$response	= [
-			'userId'	=> $this->session->get( 'auth_user_id' ),
-			'ruleId'	=> $ruleId,
-			'rules'		=> $rules,
-			'status'	=> 'empty',
-			'message'	=> NULL,
-		];
-
-		if( strlen( trim( $rules ) ) ){
-			$parser	= new JsonParser;
-			try{
-				$parser->parse( $rules, FALSE );
-				$response['status']	= 'parsed';
-			}
-			catch( RuntimeException $e ){
-				$response['status']		= 'exception';
-				$response['message']	= $e->getMessage();
-			}
-		}
-
-		print( json_encode( $response ) );
-		exit;
-
-//		$this->respond( $rules );
-	}
-
 	public function remove( string $formId ): void
 	{
 		$this->checkId( $formId );
@@ -316,7 +283,7 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
-	public function view( string $formId, ?string $mode = NULL )
+	public function view( string $formId, ?string $mode = NULL ): void
 	{
 		$this->checkId( (int) $formId );
 		$this->addData( 'formId', $formId );

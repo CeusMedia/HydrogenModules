@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object $block */
+
 $modelBlock	= new Model_Form_Block( $env );
 
 $blocks		= $modelBlock->getAll( [], ['title' => 'ASC'] );
@@ -25,21 +28,21 @@ $buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', [
 	'class'	=> 'btn btn-primary',
 ] );
 
-return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'h2', '<span class="muted">Block:</span> '.$block->title ),
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 			HtmlTag::create( 'span', 'Shortcode: ' ),
 			HtmlTag::create( 'tt', '[block_'.$block->identifier.']' ),
-		) ),
-	), [] ),
+		] ),
+	] ),
 	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'form', $block->content, [
 		'class'	=> 'cmforms',
 		'style' => 'border: 2px solid gray; padding: 2em;'
 	] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'hr' ),
 		join( ' ', [$buttonCancel, $buttonEdit] ),
-	), [] ),
-), [] );
+	] ),
+] );

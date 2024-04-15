@@ -1,7 +1,10 @@
 <?php
 class Mail_Form_Manager_Error extends Mail_Form_Abstract
 {
-	/* @todo use block of mail */
+	/**
+	 *	@return		self
+	 *	@todo		use block of mail
+	 */
 	public function generate(): self
 	{
 		$errorMsg	= $this->data['error'];

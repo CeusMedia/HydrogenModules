@@ -30,28 +30,45 @@ class View_Helper_Form_Fill_Person
 		$this->env		= $env;
 	}
 
+	/**
+	 *	@param		array<string>		$fields
+	 *	@return		self
+	 */
 	public function addFields( array $fields ): self
 	{
 		$this->fields	= array_merge( $this->fields, $fields );
 		return $this;
 	}
 
+	/**
+	 *	@return		array<string>
+	 */
 	public function getFields(): array
 	{
 		return $this->fields;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function getHeading(): string
 	{
 		return $this->heading;
 	}
 
+	/**
+	 *	@param		array<string>		$fields
+	 *	@return		self
+	 */
 	public function removeFields( array $fields ): self
 	{
 		$this->fields	= array_diff( $this->fields, $fields );
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( !$this->fill )
@@ -91,7 +108,42 @@ class View_Helper_Form_Fill_Person
 		return $dataPerson;
 	}
 
-	protected function renderFacts( $facts, $horizontal = FALSE ): string
+	/**
+	 *	@param		array<string>		$fields
+	 *	@return		self
+	 */
+	public function setFields( array $fields ): self
+	{
+		$this->fields	= $fields;
+		return $this;
+	}
+
+	/**
+	 *	@param		object		$fill
+	 *	@return		self
+	 */
+	public function setFill( object $fill ): self
+	{
+		$this->fill		= $fill;
+		return $this;
+	}
+
+	/**
+	 *	@param		object		$form
+	 *	@return		self
+	 */
+	public function setForm( object $form ): self
+	{
+		$this->form		= $form;
+		return $this;
+	}
+
+	/**
+	 *	@param		array<string,string>	$facts
+	 *	@param		bool					$horizontal
+	 *	@return		string
+	 */
+	protected function renderFacts( array $facts, bool $horizontal = FALSE ): string
 	{
 		$list	= [];
 		foreach( $facts as $label => $value ){
@@ -103,6 +155,10 @@ class View_Helper_Form_Fill_Person
 		return '';
 	}
 
+	/**
+	 *	@param		array<object>	$rows
+	 *	@return		string
+	 */
 	protected function renderTable( array $rows ): string
 	{
 		$list	= [];
@@ -116,23 +172,5 @@ class View_Helper_Form_Fill_Person
 			HtmlElements::ColumnGroup( ['50%', '50%'] ),
 			HtmlTag::create( 'tbody', $list ),
 		], ['class' => 'table table-striped table-fixed table-bordered table-condensed'] );
-	}
-
-	public function setFields( array $fields ): self
-	{
-		$this->fields	= $fields;
-		return $this;
-	}
-
-	public function setFill( object $fill ): self
-	{
-		$this->fill		= $fill;
-		return $this;
-	}
-
-	public function setForm( object $form ): self
-	{
-		$this->form		= $form;
-		return $this;
 	}
 }

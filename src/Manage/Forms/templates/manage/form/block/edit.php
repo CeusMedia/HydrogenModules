@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object $block */
+/** @var array<object> $withinForms */
+/** @var array<object> $withinBlocks */
+
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
@@ -52,6 +57,9 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 	if( $list )
 		$listBlocksWithin	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
+
+$env->getPage()->js->addScriptOnReady('FormEditor.applyAceEditor("#input_content");');
+
 return '
 <h2><span class="muted">Block:</span> '.$block->title.'</h2>
 <div class="content-panel">
@@ -106,9 +114,4 @@ return '
 		</div>
 	</div>
 </div>
-<script>
-jQuery(document).ready(function(){
-	FormEditor.applyAceEditor("#input_content");
-});
-</script>
 ';

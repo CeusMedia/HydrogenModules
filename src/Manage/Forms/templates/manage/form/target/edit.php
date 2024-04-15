@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $target */
+/** @var array<object> $fails List of failed fills */
+
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 

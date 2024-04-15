@@ -38,6 +38,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		array			$creations		List of creation rules
 	 *	@param		Dictionary		$input			Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
+	 *	@return		void
 	 */
 	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output ): void
 	{
@@ -65,13 +66,17 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array			$filters	Map of filter rules
+	 *	@param		array<object>	$filters	Map of filter rules
 	 *	@param		Dictionary		$input		Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
 	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output ): void
 	{
+		/**
+		 * @var string $fieldName
+		 * @var object{condition: string, onEmpty: string, action: ?string, operation: ?string, else: ?string} $parameters
+		 */
 		foreach( $filters as $fieldName => $parameters ){
 			if( !$input->has( $fieldName ) ){
 				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "skip" )
@@ -108,7 +113,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 					break;
 				case 'contains':
 				case '~=':
-					$truth	= strpos( $inputValue, (string) $condition->match ) !== FALSE;
+					$truth	= str_contains( $inputValue, (string) $condition->match );
 					break;
 				case 'regex':
 					$truth	= preg_match( $condition->match, $inputValue );

@@ -2,6 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var ?string $filterType */
+/** @var ?string $filterStatus */
+/** @var ?string $filterCustomerMailId */
+/** @var ?string $filterManagerMailId */
+/** @var ?string $filterFormId */
+/** @var ?string $filterTitle */
+/** @var array $mailsCustomer */
+/** @var array $mailsManager */
+
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 

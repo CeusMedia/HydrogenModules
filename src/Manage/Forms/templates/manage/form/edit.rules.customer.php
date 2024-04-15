@@ -1,13 +1,19 @@
 <?php
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+/** @var object $form */
+/** @var array<string,string> $mailsCustomer */
+/** @var array<object> $rulesCustomer */
+/** @var array<string,string|HtmlTag> $navButtons */
+
+
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
 $optMailCustomer	= [];
 //if( count( $mailsCustomer ) != 1 )
@@ -16,14 +22,14 @@ foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
 $optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailId );
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
+$listRules	= HtmlTag::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 if( $rulesCustomer ){
 	$listRules	= [];
 	foreach( $rulesCustomer as $rule ){
 		$mail	= '<em>unbekannt</em>';
 		foreach( $mailsCustomer as $item ){
 			if( $item->mailId == $rule->mailId ){
-				$mail	= Html::create( 'a', $iconMail.'&nbsp;'.$item->title, [
+				$mail	= HtmlTag::create( 'a', $iconMail.'&nbsp;'.$item->title, [
 					'href'	=> './manage/form/mail/edit/'.$item->mailId,
 				] );
 			}
@@ -31,23 +37,23 @@ if( $rulesCustomer ){
 
 		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item )
-			$list[]	= Html::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
-		$list	= Html::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
+			$list[]	= HtmlTag::create( 'li', $item->keyLabel.' => '.$item->valueLabel );
+		$list	= HtmlTag::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
-		$buttonRemove	= Html::create( 'a', $iconRemove, [
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
 		] );
-		$listRules[]	= Html::create( 'tr', array(
-			Html::create( 'td', $list ),
-			Html::create( 'td', $mail ),
-			Html::create( 'td', $buttonRemove ),
+		$listRules[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $list ),
+			HtmlTag::create( 'td', $mail ),
+			HtmlTag::create( 'td', $buttonRemove ),
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '35%', '60px'] );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'E-Mail'] ) );
-	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'E-Mail'] ) );
+	$tbody		= HtmlTag::create( 'tbody', $listRules );
+	$listRules	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $modal	= new BootstrapModalDialog( 'rule-customer-add' );

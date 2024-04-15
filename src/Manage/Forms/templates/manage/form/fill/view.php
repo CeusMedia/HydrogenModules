@@ -79,7 +79,7 @@ if( $fillTransfers ){
 		if( $fillTransfer->data ){
 			$formData		= json_decode( $fillTransfer->data, TRUE );
 			$modalId		= 'transfer-report-'.$fillTransfer->formFillTransferId;
-			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules, FALSE );
+			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules );
 			try{
 				$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
 			}
@@ -127,7 +127,7 @@ if( $fillTransfers ){
 				HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed'] ),
 			] ),
 		], ['class' => 'content-panel-inner'] ),
-	], ['class' => 'content-panel'] ).join( $modals );;
+	], ['class' => 'content-panel'] ).join( $modals );
 }
 
 //  --  BUTTONS  --  //

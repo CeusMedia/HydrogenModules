@@ -5,18 +5,19 @@ use CeusMedia\HydrogenFramework\Hook;
 class Hook_Form extends Hook
 {
 	/**
-	 *	...
+	 *	Injects forms for shortcodes.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onViewRenderContent(): void
 	{
-		$processor		= new Logic_Shortcode( $this->env );
+		$processor	= new Logic_Shortcode( $this->env );
 		$processor->setContent( $this->payload['content'] );
-//		$words			= $env->getLanguage()->getWords( 'info/news' );
-		$shortCodes		= [
-			'form'		=> [
-				'id'		=> 0,
+//		$words		= $env->getLanguage()->getWords( 'info/news' );
+		$shortCodes	= [
+			'form'	=> [
+				'id'	=> 0,
 			]
 		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
@@ -26,7 +27,7 @@ class Hook_Form extends Hook
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
 					$helper->setId( $attr['id'] );
-					$replacement	= $helper->render();											//  get newslist content
+					$replacement	= $helper->render();
 					$processor->replaceNext(
 						$shortCode,
 						$replacement

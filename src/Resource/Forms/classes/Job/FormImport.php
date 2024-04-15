@@ -15,6 +15,12 @@ class Job_FormImport extends Job_Abstract
 	protected JsonParser $jsonParser;
 	protected Logic_Form_Transfer_DataMapper $dataMapper;
 
+	/**
+	 *	@param		array<string>		$arguments
+	 *	@return		array<string>
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function import( array $arguments = [] ): array
 	{
 //		Encoding::$decodeStrategy = Encoding::DECODE_STRATEGY_ICONV_TOLERANT;
@@ -63,7 +69,11 @@ class Job_FormImport extends Job_Abstract
 		return $errors;
 	}
 
-	public function test()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function test(): void
 	{
 		$importRules	= $this->getActiveFormImportRules();
 		foreach( $importRules as $importRule ){
@@ -73,7 +83,7 @@ class Job_FormImport extends Job_Abstract
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options ) );
 
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
-			$clock				= new Clock();
+//			$clock				= new Clock();
 			$results			= $connectionInstance->find( $searchCriteria, [], [0, 10] );
 			echo "The current read timeout is " . imap_timeout(IMAP_READTIMEOUT) . "\n";
 //			$connectionInstance->disconnect();
@@ -85,7 +95,6 @@ class Job_FormImport extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -100,30 +109,33 @@ class Job_FormImport extends Job_Abstract
 		$this->dataMapper			= new Logic_Form_Transfer_DataMapper( $this->env );
 	}
 
+	/**
+	 * @return array<object>
+	 */
 	protected function getActiveFormImportRules(): array
 	{
-		$rules		= [];
 		$forms		= $this->modelForm->getAllByIndex( 'status', Model_Form::STATUS_ACTIVATED );
-		if( count( $forms ) !== 0 ){
-			$formMap	= [];
-			foreach( $forms as $form )
-				$formMap[$form->formId]	= $form;
-			$conditions		= [
-				'formId'	=> array_keys( $formMap ),
-				'status'	=> [
-					Model_Form_Import_Rule::STATUS_TEST,
-					Model_Form_Import_Rule::STATUS_ACTIVE,
-				],
-			];
-			$orders		= [
-				'importConnectionId'	=> 'ASC',
-				'formId'				=> 'ASC',
-			];
-			$limits		= [];
-			$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
-			foreach( $rules as $rule )
-				$rule->form = $formMap[$rule->formId];
-		}
+		if( 0 === count( $forms ) )
+			return [];
+
+		$formMap	= [];
+		foreach( $forms as $form )
+			$formMap[$form->formId]	= $form;
+		$conditions		= [
+			'formId'	=> array_keys( $formMap ),
+			'status'	=> [
+				Model_Form_Import_Rule::STATUS_TEST,
+				Model_Form_Import_Rule::STATUS_ACTIVE,
+			],
+		];
+		$orders		= [
+			'importConnectionId'	=> 'ASC',
+			'formId'				=> 'ASC',
+		];
+		$limits		= [];
+		$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
+		foreach( $rules as $rule )
+			$rule->form = $formMap[$rule->formId];
 		return $rules;
 	}
 
@@ -140,7 +152,7 @@ class Job_FormImport extends Job_Abstract
 	protected function importData( object $importRule, object $ruleSet, array $importData, bool $verbose, bool $dryMode ): int
 	{
 		if( !count( $importData ) )
-			throw new Exception( 'No import data given.' );
+			throw new RuntimeException( 'No import data given.' );
 
 		if( $verbose ){
 			remark( 'Import Data:' );
@@ -182,7 +194,12 @@ class Job_FormImport extends Job_Abstract
 		return $fillId;
 	}
 
-	protected function translateFormDataToFillData( array $formData, $ruleSet ): array
+	/**
+	 *	@param		array		$formData
+	 *	@param		object		$ruleSet
+	 *	@return		array<string,array>
+	 */
+	protected function translateFormDataToFillData( array $formData, object $ruleSet ): array
 	{
 		$fillLabels			= (array) $ruleSet->label;
 		$fillTypes			= (array) $ruleSet->type;
@@ -190,11 +207,13 @@ class Job_FormImport extends Job_Abstract
 
 		//  get value labels for base and topic from database (school_bases, school_courses)
 		foreach( $formData as $key => $value ){
-			if( in_array( $key, ['base', 'topic'] ) ){
-				if( $key === 'base' )
-					$model	= new Model_School_Base( $this->env );
-				else if( $key === 'topic' )
-					$model	= new Model_School_Course( $this->env );
+			if( !in_array( $key, ['base', 'topic'], TRUE ) )
+				continue;
+			if( $key === 'base' )
+				$model	= new Model_School_Base( $this->env );
+			else if( $key === 'topic' )
+				$model	= new Model_School_Course( $this->env );
+			if( isset( $model ) ){
 				$entry	= $model->getByIndex( 'identifier', $value );
 				if( $entry )
 					$fillValueLabels[$key.'-'.$value]	= $entry->title;
@@ -218,7 +237,12 @@ class Job_FormImport extends Job_Abstract
 		return $fillData;
 	}
 
-	protected function translateImportDataToFormData( array $importData, $ruleSet ): array
+	/**
+	 *	@param		array		$importData
+	 *	@param		object		$ruleSet
+	 *	@return		array<string,string>
+	 */
+	protected function translateImportDataToFormData( array $importData, object $ruleSet ): array
 	{
 		$formData	= $this->dataMapper->applyRulesToFormData( $importData, $ruleSet );
 		$formData['createdAt']	= time();

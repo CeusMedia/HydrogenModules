@@ -2,6 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $mails */
+/** @var int $page */
+/** @var int $pages */
+
 $modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 

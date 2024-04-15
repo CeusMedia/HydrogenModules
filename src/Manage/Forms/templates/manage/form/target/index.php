@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object $target */
+/** @var array<object> $targets List of transfer targets */
+
 $table	= HtmlTag::create( 'div', 'Keine Transferziele definiert. <a href="./manage/form/target/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );
 
 $statuses	= [

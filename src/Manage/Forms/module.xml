@@ -3,7 +3,7 @@
 	<title>Manage: Forms</title>
 	<description format="markdown"><![CDATA[Form handling.
 
-Forms can be build of nested HTML blocks.
+Forms can be built of nested HTML blocks.
 The form itself can be inserted by a shortcode:
 
 ````
@@ -14,7 +14,7 @@ The form action will save the entered data and send mails according to rules.
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.9</version>
+	<version>0.6.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -35,15 +35,18 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.5.2">Add transfer target management.</log>
 	<log version="0.5.3">Extract logic from controller to own class.</log>
 	<log version="0.5.4">Add import rule management.</log>
-	<log version="0.5.5">Show fill referers in form view.</log>
+	<log version="0.5.5">Show fill referrers in form view.</log>
 	<log version="0.5.6">Support attachment rules.</log>
-	<log version="0.5.7">Support multipe forms in fill filter, list and export.</log>
+	<log version="0.5.7">Support multiple forms in fill filter, list and export.</log>
 	<log version="0.5.8">Show applied transfers in fill list.</log>
 	<log version="0.5.9">List latest unhandled transfer fails.</log>
+	<log version="0.6.0">Code update and extract rule check to own AJAX controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Manage/Form.php</class>
+		<class>Controller/Ajax/Manage/Form/Import.php</class>
 		<class>Controller/Manage/Form.php</class>
 		<class>Controller/Manage/Form/Block.php</class>
 		<class>Controller/Manage/Form/Fill.php</class>
@@ -116,5 +119,6 @@ The form action will save the entered data and send mails according to rules.
 	<link access="public" path="manage/form/view"/>
 	<link access="public" path="manage/form/fill/receive"/>
 	<link access="public" path="manage/form/fill/confirm"/>
-	<link access="acl" path="manage/form/import/ajaxTestRules"/>
+	<link access="acl" path="ajax/manage/form/import/testImportRules"/>
+	<link access="acl" path="ajax/manage/form/import/testRules"/>
 </module>

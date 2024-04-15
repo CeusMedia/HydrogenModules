@@ -76,9 +76,7 @@ class Controller_Manage_Form_Fill extends Controller
 			$csv		= $this->logicFill->renderToCsv( $type, $ids );
 
 		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
-		HttpDownload::sendString( $csv, $fileName, TRUE );
-//		xmp( $csv );
-//		die;
+		HttpDownload::sendString( $csv, $fileName );
 	}
 
 	public function filter( $reset = NULL ): void
@@ -206,12 +204,12 @@ class Controller_Manage_Form_Fill extends Controller
 			if( $captcha ){
 				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
 					header( 'Content-Type: application/json' );
-					print( json_encode( array( 'status' => 'captcha', 'data' => array(
+					print( json_encode( ['status' => 'captcha', 'data' => [
 						'captcha'	=> $captcha,
 						'real'		=> $this->env->getSession()->get( 'captcha' ),
 						'formId'	=> $formId,
 						'formType'	=> @$form->type,
-					) ) ) );
+					] ] ) );
 					exit;
 				}
 			}
@@ -222,7 +220,7 @@ class Controller_Manage_Form_Fill extends Controller
 			if( $form->type == Model_Form::TYPE_CONFIRM )
 				$status	= Model_Form_Fill::STATUS_NEW;
 
-			foreach( $data['inputs'] as $index => $input )
+			foreach( $data['inputs'] as $input )
 				$input['value']	= strip_tags( $input['value'] );
 
 			$data		= [
@@ -325,7 +323,7 @@ class Controller_Manage_Form_Fill extends Controller
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
-	protected function checkId( int|string $fillId, bool $strict = TRUE )
+	protected function checkId( int|string $fillId, bool $strict = TRUE ): object
 	{
 		return $this->logicFill->get( $fillId, $strict );
 	}

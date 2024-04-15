@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
@@ -39,40 +38,13 @@ class Controller_Manage_Form_Import extends Controller
 		$this->addData( 'connections', $this->connectionMap );
 	}
 
-	public function ajaxTestRules()
-	{
-		$this->checkIsPost();
-		$ruleId	= $this->request->get( 'ruleId' );
-		$this->checkImportRuleId( $ruleId );
-		$rules	= $this->request->get( 'rules' );
-
-		$response	= [
-			'userId'	=> $this->session->get( 'auth_user_id' ),
-			'ruleId'	=> $ruleId,
-			'rules'		=> $rules,
-			'status'	=> 'empty',
-			'message'	=> NULL,
-		];
-
-		if( strlen( trim( $rules ) ) ){
-			$parser	= new JsonParser;
-			try{
-				$ruleSet	= $parser->parse( $rules, FALSE );
-				$response['status']	= 'parsed';
-			}
-			catch( RuntimeException $e ){
-				$response['status']		= 'exception';
-				$response['message']	= $e->getMessage();
-			}
-		}
-
-		print( json_encode( $response ) );
-		exit;
-
-		$this->respondData( $response );
-	}
-
-	public function edit( $ruleId )
+	/**
+	 *	@param		int|string		$ruleId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $ruleId ): void
 	{
 		$rule		= $this->modelRule->get( $ruleId );
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
@@ -121,7 +93,6 @@ class Controller_Manage_Form_Import extends Controller
 
 	/**
 	 *	@return	void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -137,6 +108,12 @@ class Controller_Manage_Form_Import extends Controller
 			$this->connectionMap[$connection->importConnectionId] = $connection;
 	}
 
+	/**
+	 *	@param 		int|string		$importRuleId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@deprecated	moved to AJAX controller
+	 */
 	protected function checkImportRuleId( int|string $importRuleId ): object
 	{
 		if( !$importRuleId )

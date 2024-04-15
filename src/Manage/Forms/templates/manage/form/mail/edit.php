@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object{mailId: string, roleType: int, identifier: string, format: int, subject: string, title: string, content: string} $mail */
+
 $modelForm	= new Model_Form( $env );
 $modelMail	= new Model_Form_Mail( $env );
 

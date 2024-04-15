@@ -1,7 +1,25 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\Tabs;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-function renderNavButton( $formId, $tabId, $label, $dir ){
+/** @var object $form */
+/** @var array<object> $transferTargets */
+/** @var array<object> $rulesCustomer */
+/** @var array<object> $rulesManager */
+/** @var array<object> $rulesAttachment */
+/** @var int|string|NULL $activeTab */
+/** @var array<string,string|HtmlTag> $navButtons */
+
+/**
+ *	@param		int|string 		$formId
+ *	@param		?string			$tabId
+ *	@param		?string			$label
+ *	@param		string			$dir			One of {prev, next}
+ *	@return		string
+ */
+function renderNavButton( int|string $formId, ?string $tabId, ?string $label, string $dir ): string
+{
 	$iconClass	= 'fa fa-fw fa-arrow-'.( $dir === 'prev' ? 'left' : 'right' );
 	$icon		= HtmlTag::create( 'i', '', ['class' => $iconClass] );
 	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, [
@@ -11,7 +29,7 @@ function renderNavButton( $formId, $tabId, $label, $dir ){
 }
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
-$navButtons	= array(
+$navButtons	= [
 	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 		'href'		=> './manage/form',
 		'class'		=> 'btn',
@@ -35,7 +53,7 @@ $navButtons	= array(
 
 
 	'nextFills'			=> renderNavButton( $form->formId, 'fills', 'Einträge', 'next' ),
-);
+];
 
 $panelFacts				= $this->loadTemplateFile( 'manage/form/edit.facts.php', ['navButtons' => $navButtons] );
 $panelView				= $this->loadTemplateFile( 'manage/form/edit.view.php', ['navButtons' => $navButtons] );
@@ -49,7 +67,7 @@ $countRulesManager		= count( $rulesManager ) ? ' <small class="muted">('.count( 
 $countRulesCustomer		= count( $rulesCustomer ) ? ' <small class="muted">('.count( $rulesCustomer ).')</small>' : '';
 $countRulesAttachment	= count( $rulesAttachment ) ? ' <small class="muted">('.count( $rulesAttachment ).')</small>' : '';
 
-$tabs	= new \CeusMedia\Bootstrap\Nav\Tabs( 'tabs-form' );
+$tabs	= new Tabs( 'tabs-form' );
 $tabs->add( 'facts', '#', 'Fakten', $panelFacts );
 $tabs->add( 'view', '#', 'Ansicht', $panelView );
 //$tabs->add( 'blocks', '#', 'Blöcke', $panelBlocksWithin );
@@ -70,7 +88,8 @@ return '
 <h2><a href="./manage/form" class="muted">Formular:</a> '.$form->title.'</h2>'.$tabs->render().'
 <script>
 jQuery(document).ready(function(){
-	RuleManager.init('.$form->formId.');
+	let formId = '.$form->formId.';
+	RuleManager.init(formId);
 	RuleManager.loadFormView();
 	FormEditor.initTabs();
 	FormEditor.applyAceEditor("#input_content");

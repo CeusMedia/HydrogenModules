@@ -1,6 +1,15 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $fills */
+/** @var array<object> $transferTargets */
+/** @var int $page */
+/** @var int $pages */
 
 $modelForm	= new Model_Form( $env );
 $modelFill	= new Model_Form_Fill( $env );
@@ -91,8 +100,8 @@ if( !empty( $filterFormId ) && 0 !== count( array_filter( $filterFormId ) ) )
 
 $pagination	= '';
 if( $pages > 1 ){
-	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
-	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/fill/', $page, $pages );
+	Icon::$defaultSet	= 'fontawesome';
+	$pagination	= new PageControl( './manage/form/fill/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
 $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$buttonExport, $pagination] ), ['class' => 'buttonbar'] );

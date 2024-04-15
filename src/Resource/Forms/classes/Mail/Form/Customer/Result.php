@@ -1,6 +1,10 @@
 <?php
 class Mail_Form_Customer_Result extends Mail_Form_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function generate(): self
 	{
 		$form	= $this->data['form'];

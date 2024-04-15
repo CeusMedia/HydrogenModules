@@ -5,6 +5,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Dictionary $filters */
+/** @var array<string> $identifiers */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );

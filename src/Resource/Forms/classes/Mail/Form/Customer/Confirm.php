@@ -1,6 +1,10 @@
 <?php
 class Mail_Form_Customer_Confirm extends Mail_Form_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function generate(): self
 	{
 		$form	= $this->data['form'];
@@ -15,7 +19,7 @@ class Mail_Form_Customer_Confirm extends Mail_Form_Abstract
 		$linkConfirm	= $this->env->getConfig()->get( 'app.base.url' ).'manage/form/fill/confirm/'.$fill->fillId;
 		$content		= str_replace( "[form_title]", $form->title, $content );
 		$content		= str_replace( "[link_confirm]", $linkConfirm, $content );
-		if( $mail->format == Model_Form_Mail::FORMAT_HTML ){
+		if( Model_Form_Mail::FORMAT_HTML == $mail->format ){
 			$content	= $this->applyFillData( $content, $fill );
 			$content	= $this->applyHelpers( $content, $fill, $form );
 			$this->setHtml( $content );

@@ -1,6 +1,13 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $mails List of form mails */
+/** @var int $page */
+/** @var int $pages */
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
@@ -64,7 +71,7 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Formular-E-Mail', [
 	'class'	=> 'btn btn-success'
 ] );
 
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/mail', $page, $pages );
+$pagination	= new PageControl( './manage/form/mail', $page, $pages );
 
 return '
 <div class="content-panel">

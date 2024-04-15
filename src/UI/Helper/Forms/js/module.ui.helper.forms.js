@@ -1,10 +1,12 @@
+// noinspection JSUnresolvedFunction,JSUnresolvedVariable
+
 /**
  * Ceus Media Forms
- * Wordpress plugin for external forms.
+ * WordPress plugin for external forms.
  * Author		Christian Würker <christian.wuerker@ceusmedia.de>
- * Version		1.1
+ * Version		1.3
  */
-var Forms = {
+let Forms = {
 	mode: 'live',
 	status: 0,
 	urlServer: null,
@@ -16,15 +18,16 @@ var Forms = {
 		if( Forms.mode === 'dev' )
 			Forms.initCollapsableRows(formId);
 		FormOptionals.init("#"+formId);
+		FormsResponseHandler.init(formId);
 	},
 
 	collectFormData: function(form){
-		var data = {};
+		let data = {};
 		form.find(':input:visible').each(function(){
 			if(this.nodeName === "BUTTON")
 				return;
-			var node = jQuery(this);
-			var item = {
+			let node = jQuery(this);
+			let item = {
 				id: this.id,
 				type: this.nodeName.toLowerCase(),
 				name: this.name,
@@ -33,42 +36,43 @@ var Forms = {
 				valueLabel: null,
 				text: null,
 			};
-			var relatedText = form.find('#input_'+this.name+'-text');
-			var relatedLabel = jQuery("label[for='input_"+item.name+"']");
+			let relatedText = form.find('#input_'+this.name+'-text');
+			let relatedLabel = jQuery("label[for='input_"+item.name+"']");
 			if(relatedText.size())
 				item.text = relatedText.get(0).innerText;
 			if(relatedLabel.size())
 				item.label = relatedLabel.get(0).innerText;
 
-			if(this.nodeName === "SELECT"){
+			if('SELECT' === this.nodeName){
 				item.type = "select";
-				var value = node.val();
-				var options = node.children('option');
+				let i;
+				let value = node.val();
+				let options = node.children('option');
 				for(i=0; i<options.size(); i++){
-					if(options.eq(i).val() == value){
+					if(options.eq(i).val() === value){
 						item.valueLabel = options.eq(i).html();
 						break;
 					}
 				}
 			}
-			if(this.nodeName === "INPUT"){
-				var inputType = node.attr('type');
+			if('INPUT' === this.nodeName){
+				let inputType = node.attr('type');
 				item.type = 'text';
 
-				if(inputType === "date"){
-					item.type = "date";
+				if('date' === inputType){
+					item.type = 'date';
 				}
-				else if(inputType === "checkbox"){
-					item.type = "checkbox";
+				else if('checkbox' === inputType){
+					item.type = 'checkbox';
 					item.value = node.is(":checked") ? 'ja' : 'nein';
 					item.valueLabel = node.is(":checked") ? 'ja' : 'nein';
 				}
-				else if(inputType === "radio"){
-					if(typeof data[this.name] !== "undefined"){
+				else if('radio' === inputType){
+					if('undefined' !== typeof data[this.name]){
 						item = data[this.name];
 					}
 					else{
-						item.type = "radio";
+						item.type = 'radio';
 						item.id = 'input_'+this.name;
 //						item.value = '['+this.name+']';
 						item.valueLabel	= "";
@@ -78,7 +82,7 @@ var Forms = {
 					if(node.is(":checked")){
 						item.value = this.value;
 						item.valueLabel	= node.parent().get(0).innerText;
-						var radioSpan = jQuery("span#input_"+this.name+"-"+this.value);
+						let radioSpan = jQuery("span#input_"+this.name+"-"+this.value);
 						if(radioSpan.size())
 							item.valueLabel	= radioSpan.get(0).innerText;
 					}
@@ -89,48 +93,20 @@ var Forms = {
 		return data;
 	},
 
-	handleResponse: function(response){
-//		console.log(response);
-//		var form = jQuery("#form-"+response.data.formId);
-		var form = jQuery(this.form);
-		if(response.status == "ok"){
-			form.slideUp(500, function(){
-				form.parent().find(".form-message-error").slideUp(150);
-				form.parent().find(".form-message-success").slideDown(500);
-			});
-		}
-		else if(response.status == "captcha"){
-			form.find("#input_captcha").val('');
-			alert( 'Der Sicherheitscode ist nicht richtig.' );
-			form.find(':input').removeProp('disabled');
-		}
-		else if(response.status == "error"){
-			form.parent().find(".form-message-error-title").html(response.data.error);
-			form.slideUp(500, function(){
-				form.parent().find(".form-message-success").slideUp(150);
-				form.parent().find(".form-message-error").slideDown(500);
-			});
-/*			form.css({opacity: 1});
-//			form.find(':input').prop('disabled', false);
-			form.find('button').each(function(){
-				jQuery(this).removeProp('disabled');
-			});*/
-		}
-	},
 
 	init: function(urlServer, devMode, formId){
-		if(typeof devMode !== "undefined")
+		if('undefined' !== typeof devMode)
 			Forms.mode = devMode ? 'dev' : 'live';
-		Forms.urlServer = urlServer.replace(/\/*$/, '') + '/';
+		Forms.urlServer = urlServer;
 		Forms.status = 1;
 
 		//  COLLECT URL REQUEST PARAMETERS
 		if(!Object.keys(Forms.parameters).length){
-			var parameter;
-			var parameters = decodeURIComponent(window.location.search.substring(1)).split('&');
-			for( i=0; i<parameters.length; i++){
+			let i, parameter;
+			let parameters = decodeURIComponent(window.location.search.substring(1)).split('&');
+			for(i=0; i<parameters.length; i++){
 				parameter = parameters[i].split('=');
-				parameter[1] = typeof parameter[1] === "undefined" ? true : parameter[1];
+				parameter[1] = 'undefined' === typeof parameter[1] ? true : parameter[1];
 				Forms.parameters[parameter[0]] = parameter[1];
 			}
 		}
@@ -145,8 +121,8 @@ var Forms = {
 
 	prefillData: function(formId){
 		jQuery("#"+formId+" :input").each(function(){
-			if(this.nodeName == "INPUT" || this.nodeName == "SELECT"){
-				if(typeof Forms.parameters[this.name] !== "undefined"){
+			if('INPUT' === this.nodeName || 'SELECT' === this.nodeName){
+				if('undefined' !== typeof Forms.parameters[this.name]){
 					jQuery(this).val(Forms.parameters[this.name]);
 				}
 			}
@@ -154,24 +130,24 @@ var Forms = {
 	},
 
 	sendForm: function (elem){
-		if(Forms.status != 1){
+		if(Forms.status !== 1){
 			alert('Das Formular wurde nicht initiiert.');
 			return false;
 		}
 		try{
-			var form = jQuery(elem);
+			let form = jQuery(elem);
 			form.css({opacity: 1});
-/*			form.find('button').each(function(){jQuery(this).prop('disabled', 'disabled')});*/
+			/*			form.find('button').each(function(){jQuery(this).prop('disabled', 'disabled')});*/
 			Forms.validateFormData(form);
 			if(Forms.errors.length){
 				alert('Das Formular wurde nicht korrekt ausgefüllt.' );
 //				console.log(Forms.errors);
 			}
 			else{
-				var data = Forms.collectFormData(form);
+				let data = Forms.collectFormData(form);
 //				console.log(data);
 				jQuery.ajax({
-					url: Forms.urlServer+'manage/form/fill/receive',
+					url: Forms.urlServer+'/manage/form/fill/receive',
 					method: 'POST',
 					data: {formId: form.data('id'), inputs: data},
 					dataType: 'json',
@@ -179,7 +155,7 @@ var Forms = {
 					xhrFields: {
 						withCredentials: true
 					},
-					success: Forms.handleResponse,
+					success: FormsResponseHandler.handle,
 					error: function(a,b){
 						console.log(a);
 						console.log(b);
@@ -196,19 +172,63 @@ var Forms = {
 
 	validateFormData: function(form){
 		Forms.errors	= [];
-		form.find(':input').each(function(){
-			if(this.nodeName === "BUTTON")
+		form.find(':input[required]:visible').each(function(){
+			if('BUTTON' === this.nodeName)
 				return;
-			var input = jQuery(this);
-			if(input.attr('required')){
-				if(!input.val().length){
-					Forms.errors.push({
-						id: this.id,
-						rule: 'required',
-					});
-					return;
-				}
+			let input = jQuery(this);
+			if(!input.val().length){
+				Forms.errors.push({
+					id: this.id,
+					rule: 'required',
+				});
 			}
+		});
+	}
+};
+
+let FormsResponseHandler = {
+	form: null,
+	init: function(form){
+		FormsResponseHandler.form = form;
+	},
+	handle: function(response){
+//		var form = jQuery("#form-"+response.data.formId);
+		let form = jQuery(this.form);
+		switch(response.status){
+			case 'ok':
+				FormsResponseHandler.handleOk(response, form);
+				break;
+			case 'captcha':
+				FormsResponseHandler.handleCaptcha(response, form);
+				break;
+			case 'error':
+				FormsResponseHandler.handleError(response, form);
+				break;
+		}
+	},
+
+	handleCaptcha: function(response, form){
+		form.find("#input_captcha").val('');
+		alert( 'Der Sicherheitscode ist nicht richtig.' );
+		form.find(':input').removeProp('disabled');
+	},
+
+	handleError: function(response, form){
+		form.parent().find(".form-message-error-title").html(response.data.error);
+		form.slideUp(500, function(){
+			form.parent().find(".form-message-success").slideUp(150);
+			form.parent().find(".form-message-error").slideDown(500);
+		});
+		/*		form.css({opacity: 1});
+				form.find('button').each(function(){
+					jQuery(this).removeProp('disabled');
+				});*/
+	},
+
+	handleOk: function(response, form){
+		form.slideUp(500, function(){
+			form.parent().find(".form-message-error").slideUp(150);
+			form.parent().find(".form-message-success").slideDown(500);
 		});
 	}
 };

@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<object> $blocks */
+/** @var int $page */
+/** @var int $pages */
+
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );

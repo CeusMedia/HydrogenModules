@@ -1,6 +1,16 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var array $transferTargets */
+/** @var array $forms */
+/** @var int $page */
+/** @var int $pages */
 
 //print_m( $transferTargets );die;
 
@@ -126,8 +136,8 @@ $linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neues Formular', [
 
 $pagination	= '';
 if( $pages > 1 ){
-	\CeusMedia\Bootstrap\Icon::$defaultSet	= 'fontawesome';
-	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/', $page, $pages );
+	Icon::$defaultSet	= 'fontawesome';
+	$pagination	= new PageControl( './manage/form/', $page, $pages );
 	$pagination->patternUrl	= '%s';
 }
 $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$linkAdd, $pagination] ), ['class' => 'buttonbar'] );

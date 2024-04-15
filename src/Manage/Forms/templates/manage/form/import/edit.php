@@ -2,6 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var object $rule */
+/** @var array<object> $connections */
+/** @var array<object> $forms */
+/** @var array<string,string> $folders */
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
@@ -100,71 +106,5 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 	</div>
 </div>';
 
-
-$script		= '
-<script>
-var FormsImportRuleTest = {
-	init: function(){
-		jQuery(".button-test-rules").bind("click", function(){
-			var button = jQuery(this);
-			var ruleId = button.data("rule-id");
-			var modal = jQuery("#rule-import-edit-"+ruleId);
-			var rules = modal.find("#input_rules-"+ruleId).val();
-			FormsImportRuleTest.updateImportRulesTestTrigger(ruleId, rules);
-		});
-	},
-	testImportRules: function(ruleId, rules, callback){
-		jQuery.ajax({
-			url: "./manage/form/import/ajaxTestRules",
-			method: "POST",
-			dataType: "json",
-			data: {
-				ruleId: ruleId,
-				rules: rules
-			},
-			success: callback
-		});
-	},
-	updateImportRulesTestTrigger: function(ruleId, rules){
-		var callback = function(json){
-			var button = jQuery("#button-test-"+ruleId);
-			button.prop("title", null);
-			button.removeClass("btn-info btn-success btn-danger")
-			if(json.status !== "empty"){
-				if(json.status === "exception" || json.status === "error"){
-					button.addClass("btn-danger");
-					button.prop("title", json.message);
-				}
-				else if(json.status === "success" || json.status === "parsed"){
-					button.addClass("btn-success");
-				}
-			}
-			button.blur();
-		}
-		FormsImportRuleTest.testImportRules(ruleId, rules, callback);
-	}
-}
-jQuery(document).ready(function(){
-	FormsImportRuleTest.init();
-});
-</script>';
-
-
-$style	= '
-<style>
-span.indicator-import-rules-test {
-	display: inline-block;
-	width: 24px;
-	height: 24px;
-	border: 1px solid gray;
-	border-radius: 0.3em;
-	}
-span.indicator-import-rules-test.test-success {
-	background-color: green;
-	}
-span.indicator-import-rules-test.test-fail {
-	background-color: green;
-	}
-</style>';
-
-return $form.$script.$style;
+$js	= $env->getPage()->js->addScriptOnReady('FormsImportRuleTest.init();');
+return $form;

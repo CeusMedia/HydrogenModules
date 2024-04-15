@@ -2,44 +2,49 @@
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconAdd	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconEdit	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconTest	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
-$iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+/** @var object $form */
+/** @var array $files */
+/** @var array $rulesAttachment */
+/** @var array<string,string|HtmlTag> $navButtons */
 
-$listRules	= Html::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+
+$listRules	= HtmlTag::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 
 if( $rulesAttachment ){
 	$listRules	= [];
 	foreach( $rulesAttachment as $rule ){
 		$list	= [];
 		foreach( json_decode( $rule->rules ) as $item ){
-			$keyLabel	= Html::create( 'acronym', $item->keyLabel, ['title' => 'Interner Schlüssel: '.$item->key] );
-			$valueLabel	= Html::create( 'acronym', $item->valueLabel, ['title' => 'Interner Schlüssel: '.$item->value] );
-			$list[]	= Html::create( 'li', $keyLabel.' => '.$valueLabel );
+			$keyLabel	= HtmlTag::create( 'acronym', $item->keyLabel, ['title' => 'Interner Schlüssel: '.$item->key] );
+			$valueLabel	= HtmlTag::create( 'acronym', $item->valueLabel, ['title' => 'Interner Schlüssel: '.$item->value] );
+			$list[]	= HtmlTag::create( 'li', $keyLabel.' => '.$valueLabel );
 		}
-		$list	= Html::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
+		$list	= HtmlTag::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
 		$file	= $rule->filePath;
 
-		$buttonRemove	= Html::create( 'a', $iconRemove, [
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
 		] );
-		$listRules[]	= Html::create( 'tr', array(
-			Html::create( 'td', $list ),
-			Html::create( 'td', $file ),
-			Html::create( 'td', $buttonRemove ),
+		$listRules[]	= HtmlTag::create( 'tr', array(
+			HtmlTag::create( 'td', $list ),
+			HtmlTag::create( 'td', $file ),
+			HtmlTag::create( 'td', $buttonRemove ),
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '30%', '60px'] );
-	$thead		= Html::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'Datei'] ) );
-	$tbody		= Html::create( 'tbody', $listRules );
-	$listRules	= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'Datei'] ) );
+	$tbody		= HtmlTag::create( 'tbody', $listRules );
+	$listRules	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $optFile	= [];

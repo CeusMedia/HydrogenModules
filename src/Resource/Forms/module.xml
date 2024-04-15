@@ -16,7 +16,7 @@
 	<log version="0.3.7">Support form import rules.</log>
 	<log version="0.3.8">Support attachment rules.</log>
 	<log version="0.3.9">Add first report job about failed transfers.</log>
-	<log version="0.4.0">...</log>
+	<log version="0.4.0">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

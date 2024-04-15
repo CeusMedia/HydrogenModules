@@ -4,6 +4,13 @@ use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var object $form */
+/** @var array<object> $mailsCustomer */
+/** @var array<object> $mailsManager */
+/** @var bool $hasFills */
+/** @var array<string,string|HtmlTag> $navButtons */
+
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
