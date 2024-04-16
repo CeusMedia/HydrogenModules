@@ -18,35 +18,59 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	abstract public function getFolders( bool $recursive = FALSE ): array;
 
+	/**
+	 *	@return		object|NULL
+	 */
 	public function getConnection(): ?object
 	{
 		return $this->connection;
 	}
 
+	/**
+	 *	@param		object		$connection
+	 *	@return		self
+	 */
 	public function setConnection( object $connection  ): self
 	{
 		$this->connection	= $connection;
 		return $this;
 	}
 
+	/**
+	 *	@param		int|string		$connectionId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setConnectionId( int|string $connectionId  ): self
 	{
 		$this->connection	= $this->modelConnection->get( $connectionId );
 		return $this;
 	}
 
-	public function setOptions( array $options ): self
-	{
-		$this->options	= $options;
-		return $this;
-	}
-
+	/**
+	 *	@param		int		$limit
+	 *	@return		self
+	 */
 	public function setLimit( int $limit ): self
 	{
 		$this->limit	= $limit;
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$options
+	 *	@return		self
+	 */
+	public function setOptions( array $options ): self
+	{
+		$this->options	= $options;
+		return $this;
+	}
+
+	/**
+	 *	@param		int		$offset
+	 *	@return		self
+	 */
 	public function setOffset( int $offset ): self
 	{
 		$this->offset	= $offset;
@@ -55,12 +79,23 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 	}
 
-	protected function getEmptySourceItem( string $id, string $type, $conditions, array $orders, array $limit ): object
+	/**
+	 *	@param		string		$id
+	 *	@param		string		$type
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limit
+	 *	@return		object{source: object{id: string, type: string, search: object{conditions: array, orders: array, limit: array}}, data: array}
+	 */
+	protected function getEmptySourceItem( string $id, string $type, array $conditions, array $orders, array $limit ): object
 	{
 		return (object) [
 			'source'	=> (object) [

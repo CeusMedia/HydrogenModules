@@ -239,11 +239,15 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'canRemove', $this->env->getAcl()->has( 'manage_project', 'remove' ) );
 		$this->addData( 'isDefault', $isDefault );
 		if( $this->useCompanies ){
-			$modelCompany			= new Model_Company( $this->env );
-			$modelProjectCompany	= new Model_Project_Company( $this->env );
-			$this->addData( 'companies', $modelCompany->getAll() );				//   @todo: order!
-			$conditions		= ['projectId' => $project->projectId];
-			$this->addData( 'projectCompanies', $modelProjectCompany->get( $conditions ) );	//   @todo: order!
+			if( class_exists( 'Model_Company' ) ){
+				$modelCompany			= new Model_Company( $this->env );
+				$this->addData( 'companies', $modelCompany->getAll() );				//   @todo: order!
+			}
+			if( class_exists( 'Model_Project_Company' ) ){
+				$modelProjectCompany	= new Model_Project_Company( $this->env );
+				$conditions		= ['projectId' => $project->projectId];
+				$this->addData( 'projectCompanies', $modelProjectCompany->get( $conditions ) );	//   @todo: order!
+			}
 		}
 		if( $this->useCustomers ){
 			$modelCustomer	= new Model_Customer( $this->env );

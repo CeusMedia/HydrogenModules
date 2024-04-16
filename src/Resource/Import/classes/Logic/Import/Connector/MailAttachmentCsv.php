@@ -1,8 +1,16 @@
 <?php
 use CeusMedia\Common\FS\File\CSV\Reader as CsvFileReader;
+use CeusMedia\Mail\Message\Part\Attachment as MessagePartAttachment;
 
 class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_MailAbstract implements Logic_Import_Connector_Interface
 {
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limit
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 */
 	public function find( array $conditions, array $orders = [], array $limit = [] ): array
 	{
 		$list		= [];
@@ -51,7 +59,12 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 		return $clone;
 	}
 
-	protected function readAttachmentFromMessagePart( object $part ): ?array
+	/**
+	 *	@param		MessagePartAttachment		$part
+	 *	@return		array|NULL
+	 *	@throws		ReflectionException
+	 */
+	protected function readAttachmentFromMessagePart( MessagePartAttachment $part ): ?array
 	{
 		$tempFile	= tempnam( sys_get_temp_dir(), 'import' );
 		file_put_contents( $tempFile, $part->getContent() );

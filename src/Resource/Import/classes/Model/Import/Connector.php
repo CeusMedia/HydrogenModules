@@ -2,7 +2,7 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2021 Ceus Media
+ *	@copyright		2021-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\Model;
 /**
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2021 Ceus Media
+ *	@copyright		2021-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Import_Connector extends Model
 {

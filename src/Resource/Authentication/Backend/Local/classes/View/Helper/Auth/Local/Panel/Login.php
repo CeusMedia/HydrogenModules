@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\Renderable;
 use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 use CeusMedia\HydrogenFramework\View;
 
