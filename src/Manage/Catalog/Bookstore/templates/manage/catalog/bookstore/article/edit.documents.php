@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
+/** @var Logic_Frontend $frontend */
 /** @var View $view */
 /** @var array $words */
 /** @var array $articleDocuments */

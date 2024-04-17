@@ -1,10 +1,22 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var array<object> $tags */
+/** @var array<object> $articles */
+/** @var string $filterSearch */
+/** @var integer $limit */
+/** @var integer $page */
+/** @var integer $total */
 
 $w			= (object) $words['index.filter'];
 
-$helperPages    = new \CeusMedia\Bootstrap\PageControl( './manage/catalog/bookstore/tag/'.$limit, $page, ceil( $total / $limit ) );
-$pagination     = $helperPages->render();
+$helperPages	= new PageControl( './manage/catalog/bookstore/tag/'.$limit, $page, ceil( $total / $limit ) );
+$pagination		= $helperPages->render();
 
 $rows	= [];
 foreach( $tags as $tag ){

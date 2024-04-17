@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var array<object> $categories */
 
 $w	= (object) $words['index'];
 

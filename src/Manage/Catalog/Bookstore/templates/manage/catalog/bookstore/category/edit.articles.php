@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var array<object> $articles */
+/** @var object $category */
+
 $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
 $iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
 

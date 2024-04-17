@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var object $author */
 
 $w			= (object) $words['add'];
 

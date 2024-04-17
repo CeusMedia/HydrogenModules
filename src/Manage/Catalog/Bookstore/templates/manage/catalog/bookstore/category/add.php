@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var array<object> $categories */
+/** @var object $category */
 
 $w	= (object) $words['add'];
 

@@ -1,34 +1,14 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
-
-use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
-
-class Controller_Manage_Catalog_Bookstore_Category extends Controller
+<?php
+class Controller_Manage_Catalog_Bookstore_Category extends Controller_Manage_Catalog_Bookstore
 {
-	protected Dictionary $request;
-	protected Dictionary $session;
-	protected MessengerResource $messenger;
 	protected Logic_Catalog_BookstoreManager $logic;
-
-	public function ajaxGetNextRank( string $categoryId ): void
-	{
-		$nextRank			= 0;
-		$categoryArticles	= $this->logic->getCategoryArticles( $categoryId, ['rank' => 'DESC'] );
-		if( $categoryArticles )
-			$nextRank	= $categoryArticles[0]->rank + 1;
-		header( 'Content-Type: application/json' );
-		print( json_encode( $nextRank ) );
-		exit;
-	}
 
 	/**
 	 *	@param		string		$categoryId
 	 *	@param		string		$articleId
 	 *	@param		string		$direction
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function rankArticle( string $categoryId, string $articleId, string $direction ): void
 	{
@@ -59,38 +39,6 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->restart( './manage/catalog/bookstore/category/edit/'.$categoryId );
 	}
 
-	public static function ___onTinyMCE_getLinkList( Environment $env, object $context, object $module, array & $payload )
-	{
-		$cache		= $env->getCache();
-		if( !( $categories = $cache->get( 'catalog.tinymce.links.catalog.bookstore.categories' ) ) ){
-			$logic		= new Logic_Catalog_BookstoreManager( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-			$language	= $env->getLanguage()->getLanguage();
-			$conditions	= ['visible' => '> 0', 'parentId' => 0];
-			$categories	= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
-			foreach( $categories as $nr1 => $item ){
-				$conditions	= ['visible' => '> 0', 'parentId' => $item->categoryId];
-				$subs		= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
-				foreach( $subs as $nr2 => $sub ){
-					$subs[$nr2] = (object) [
-						'title'	=> $sub->{"label_".$language},
-						'value'	=> 'catalog/bookstore/category/'.$item->categoryId,
-					];
-				}
-				$categories[$nr1] = (object) array(
-					'title'	=> $item->{"label_".$language},
-					'menu'	=> array_values( $subs ),
-				);
-			}
-			$cache->set( 'catalog.tinymce.links.catalog.bookstore.categories', $categories );
-		}
-		$words	= $env->getLanguage()->getWords( 'manage/catalog/bookstore' );
-		$context->list  = array_merge( $context->list, [(object) [					//  extend global collection by submenu with list of items
-			'title'	=> $words['tinymce-menu-links']['categories'],					//  label of submenu @todo extract
-			'menu'	=> array_values( $categories ),									//  items of submenu
-		]] );
-	}
-
 	public function add( ?string $parentId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -110,12 +58,6 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$category['parentId']	= (int) $parentId;
 		$this->addData( 'category', (object) $category );
 		$this->addData( 'categories', $this->logic->getCategories( [], ['rank' => 'ASC'] ) );
-	}
-
-	public function ajaxSetTab( string $tabKey ): void
-	{
-		$this->session->set( 'manage.catalog.bookstore.category.tab', $tabKey );
-		exit;
 	}
 
 	public function edit( string $categoryId ): void
@@ -141,12 +83,12 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category, ['rank' => 'ASC'] ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function remove( $categoryId )
+	public function remove( string $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -161,15 +103,5 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller
 		$this->logic->removeCategory( $categoryId );
 		$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $category->label_de, ENT_QUOTES, 'UTF-8' ) );
 		$this->restart( ( $category->parentId ? 'edit/'.$category->parentId : NULL ), TRUE );
-	}
-
-	protected function __onInit(): void
-	{
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init start' );
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
-		$this->session		= $this->env->getSession();
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Bookstore_Category::init done' );
 	}
 }

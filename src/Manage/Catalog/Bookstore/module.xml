@@ -3,7 +3,7 @@
 	<title>Manage: Catalog: Bookstore</title>
 	<description><![CDATA[Bookstore Catalog Management.]]></description>
 	<category>Management</category>
-	<version>0.7.5</version>
+	<version>0.7.8</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -42,15 +42,25 @@
 	<log version="0.7.3">Extend tabs by badges of counted entities.</log>
 	<log version="0.7.4">Improve management views.</log>
 	<log version="0.7.5">Extend article editor by weight.</log>
+	<log version="0.7.6">Extract AJAX methods to own controller classes.</log>
+	<log version="0.7.7">Extract hooks to own classes.</log>
+	<log version="0.7.8">Code update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Manage/Catalog/Bookstore/Article.php</class>
+		<class>Controller/Ajax/Manage/Catalog/Bookstore/Author.php</class>
+		<class>Controller/Ajax/Manage/Catalog/Bookstore/Category.php</class>
+		<class>Controller/Ajax/Manage/Catalog/Bookstore/Tag.php</class>
 		<class>Controller/Manage/Catalog/Bookstore.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Article.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Author.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Category.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Tag.php</class>
+		<class>Hook/Manage/Catalog/Bookstore/Article.php</class>
+		<class>Hook/Manage/Catalog/Bookstore/Author.php</class>
+		<class>Hook/Manage/Catalog/Bookstore/Category.php</class>
 		<class>Model/Catalog/Bookstore/Article.php</class>
 		<class>Model/Catalog/Bookstore/Author.php</class>
 		<class>Model/Catalog/Bookstore/Category.php</class>
@@ -128,9 +138,9 @@
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
 	</relations>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Bookstore_Article::___onTinyMCE_getImageList</hook>
-	<hook type="resource" resource="TinyMCE" event="getImageList">Controller_Manage_Catalog_Bookstore_Author::___onTinyMCE_getImageList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Article::___onTinyMCE_getLinkList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Author::___onTinyMCE_getLinkList</hook>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Catalog_Bookstore_Category::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_Manage_Catalog_Bookstore_Article::onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getImageList">Hook_Manage_Catalog_Bookstore_Author::onTinyMCE_getImageList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Catalog_Bookstore_Article::onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Catalog_Bookstore_Author::onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Catalog_Bookstore_Category::onTinyMCE_getLinkList</hook>
 </module>

@@ -1,15 +1,20 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+/** @var array<object> $articles */
 
 $w	= (object) $words['edit'];
 
 $tabsMain	= $this->renderMainTabs();
 
-$tabs       = [];
-$panes      = array(
+$tabs		= [];
+$panes		= [
 	'details'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/category/edit.details.php', ['w' => $w] ),
 	'articles'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/category/edit.articles.php', ['w' => $w] ),
-);
+];
 
 $current	= $this->env->getSession()->get( 'manage.catalog.bookstore.category.tab' );
 if( !$current )

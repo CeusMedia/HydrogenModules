@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var Logic_Frontend $frontend */
+/** @var array $words */
+/** @var array<object> $authors */
+/** @var object $author */
+/** @var array<object> $articles */
 
 $w			= (object) $words['edit'];
 
@@ -97,7 +105,7 @@ return '
 			<div class="buttonbar">
 <!--				<a class="btn btn-small" href="./manage/catalog/bookstore/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
 				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<a href="'.$frontend->getUri().'catalog/bookstore/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
+				<a href="'.$frontend->getUrl().'catalog/bookstore/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 				'.$buttonRemove.'
 			</div>
 		</form>

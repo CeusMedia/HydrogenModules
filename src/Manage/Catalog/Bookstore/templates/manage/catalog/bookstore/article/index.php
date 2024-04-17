@@ -1,4 +1,9 @@
 <?php
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+
 $w			= (object) $words['index'];
 
 $tabs		= $this->renderMainTabs();

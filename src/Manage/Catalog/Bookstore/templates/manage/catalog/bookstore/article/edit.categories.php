@@ -138,7 +138,7 @@ $panelAdd	= '
 jQuery("#input_categoryId").on("change", function(){
 	let value = jQuery("#input_categoryId").val();
 	jQuery.ajax({
-		url: "./manage/catalog/bookstore/category/ajaxGetNextRank/"+value,
+		url: "./ajax/manage/catalog/bookstore/category/getNextRank/"+value,
 		method: "post",
 		dataType: "json",
 		success: function(json){

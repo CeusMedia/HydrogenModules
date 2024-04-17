@@ -1,4 +1,9 @@
 <?php
+
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+
 $tabs		= $this->renderMainTabs();
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/bookstore/author/list.php' );

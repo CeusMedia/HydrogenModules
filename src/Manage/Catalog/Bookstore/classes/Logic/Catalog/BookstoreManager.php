@@ -48,6 +48,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addArticle( array $data ): string
 	{
@@ -59,6 +60,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addArticleDocument( int|string $articleId, string $sourceFile, string $title, string $mimeType ): string
 	{
@@ -69,7 +71,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 		$logicBucket	= new Logic_FileBucket( $this->env );
 		$logicBucket->setHashFunction( Logic_FileBucket::HASH_UUID );
-		$options		= $this->moduleConfig->getAll( 'article.document.', TRUE );
+//		$options		= $this->moduleConfig->getAll( 'article.document.', TRUE );
 		$extension		= pathinfo( $sourceFile, PATHINFO_EXTENSION );
 		$article		= $this->getArticle( $articleId );
 		$fileName		= Logic_Upload::sanitizeFileNameStatic( $article->title.' - '.$title.'.'.$extension );
@@ -83,12 +85,13 @@ class Logic_Catalog_BookstoreManager extends Logic
 			'title'		=> $title,
 		];
 		$this->clearCacheForArticle( $articleId );													//
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addArticleTag( int|string $articleId, string $tag ): string
 	{
@@ -102,6 +105,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addAuthor( array $data ): string
 	{
@@ -112,6 +116,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addAuthorImage( int|string $authorId, string $sourceFile, string $mimeType ): void
 	{
@@ -144,6 +149,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addAuthorToArticle( int|string $articleId, int|string $authorId, $role ): string
 	{
@@ -160,6 +166,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/** 
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addCategory( array $data ): string
 	{
@@ -170,6 +177,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addCategoryToArticle( int|string $articleId, int|string $categoryId, ?string $volume = NULL ): string
 	{
@@ -189,6 +197,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
@@ -201,6 +210,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
 	{
@@ -213,6 +223,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
@@ -230,20 +241,21 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@access		public
 	 *	@param		int|string		$articleId			ID of article to clear cache files for
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function clearCacheForArticle( int|string $articleId ): void
 	{
-		$article	= $this->modelArticle->get( $articleId );										//  get article
-		$this->cache->remove( 'catalog.bookstore.article.'.$articleId );										//  remove article cache
-		$this->cache->remove( 'catalog.bookstore.article.author.'.$articleId );								//  remove article author cache
+	//	$article	= $this->modelArticle->get( $articleId );										//  get article
+		$this->cache->delete( 'catalog.bookstore.article.'.$articleId );										//  remove article cache
+		$this->cache->delete( 'catalog.bookstore.article.author.'.$articleId );								//  remove article author cache
 		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
 		foreach( $categories as $category ){														//  iterate assigned categories
 			$categoryId	= $category->categoryId;													//  get category ID of related category
 			$this->clearCacheForCategory( $categoryId );
 		}
-		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.articles' );
-		$this->cache->remove( 'tinymce.links' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.links.articles' );
+		$this->cache->delete( 'tinymce.links' );
 	}
 
 	/**
@@ -252,6 +264,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@access		public
 	 *	@param		int|string		$authorId			ID of author
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function clearCacheForAuthor( int|string $authorId ): void
 	{
@@ -259,10 +272,10 @@ class Logic_Catalog_BookstoreManager extends Logic
 		foreach( $relations as $relation ){															//  iterate article relations
 			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
 		}
-		$this->cache->remove( 'catalog.bookstore.search.authors' );
-		$this->cache->remove( 'catalog.bookstore.tinymce.images.authors' );
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.authors' );
-		$this->cache->remove( 'tinymce.links' );
+		$this->cache->delete( 'catalog.bookstore.search.authors' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.images.authors' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.links.authors' );
+		$this->cache->delete( 'tinymce.links' );
 	}
 
 	/**
@@ -271,24 +284,25 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@access		public
 	 *	@param		int|string		$categoryId			ID of category
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function clearCacheForCategory( int|string $categoryId ): void
 	{
 		while( $categoryId ){																		//  loop while category ID exists
 			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
 			if( $category ){																		//  category exists
-				$this->cache->remove( 'catalog.bookstore.category.'.$categoryId );					//  remove category cache
-				$this->cache->remove( 'catalog.bookstore.html.categoryArticleList.'.$categoryId );	//  remove category view cache
+				$this->cache->delete( 'catalog.bookstore.category.'.$categoryId );					//  remove category cache
+				$this->cache->delete( 'catalog.bookstore.html.categoryArticleList.'.$categoryId );	//  remove category view cache
 				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
 			}
 			else																					//  category is not existing
 				$categoryId	= 0;																	//  no further loops
 		}
-		$this->cache->remove( 'catalog.bookstore.categories' );
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.categories' );
-		$this->cache->remove( 'catalog.bookstore.count.categories.articles' );
-//		$this->cache->remove( 'admin.categories.list.html' );
-		$this->cache->remove( 'tinymce.links' );
+		$this->cache->delete( 'catalog.bookstore.categories' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.links.categories' );
+		$this->cache->delete( 'catalog.bookstore.count.categories.articles' );
+//		$this->cache->delete( 'admin.categories.list.html' );
+		$this->cache->delete( 'tinymce.links' );
 	}
 
 	/**
@@ -322,6 +336,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editArticle( int|string $articleId, array $data ): void
 	{
@@ -333,6 +348,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editAuthor( int|string $authorId, array $data ): void
 	{
@@ -344,6 +360,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editCategory( int|string $categoryId, array $data ): void
 	{
@@ -359,6 +376,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getArticle( int|string $articleId, bool $strict = TRUE ): object
 	{
@@ -389,17 +407,15 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function getArticlesFromAuthor( object $author, array $orders = [], array $limits = [] ): array
+	public function getArticlesFromAuthor( int|string|object $authorIdOrObject, array $orders = [], array $limits = [] ): array
 	{
-		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
-		$articleIds	= [];
-		foreach( $articles as $article )
-			$articleIds[]	= $article->articleId;
+		$authorId = is_object( $authorIdOrObject ) ? $authorIdOrObject->authorId : $authorIdOrObject;
+		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $authorId );
+		$articleIds	= array_map( static fn( object $article ) => $article->articleId, $articles );
 		if( !$articles )
 			return [];
 		$conditions	= ['articleId' => $articleIds];
-		$articles	= $this->getArticles( $conditions, $orders, $limits );
-		return $articles;
+		return $this->getArticles( $conditions, $orders, $limits );
 	}
 
 	/**
@@ -430,6 +446,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getArticleUri( object|int|string $articleOrId ): string
 	{
@@ -444,6 +461,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		use cache
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAuthor( int|string $authorId ): object
 	{
@@ -452,6 +470,9 @@ class Logic_Catalog_BookstoreManager extends Logic
 	}
 
 	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array
 	 *	@todo		code doc
 	 */
 	public function getAuthors( array $conditions = [], array $orders = [] ): array
@@ -467,6 +488,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@access		public
 	 *	@param		int|string		$articleId			Article ID
 	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAuthorsOfArticle( int|string $articleId ): array
 	{
@@ -486,6 +508,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAuthorUri( object|int|string $authorOrId, bool $absolute = FALSE ): string
 	{
@@ -502,6 +525,9 @@ class Logic_Catalog_BookstoreManager extends Logic
 	}
 
 	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array
 	 *	@todo		clean up
 	 */
 	public function getCategories( array $conditions = [], array $orders = [] ): array
@@ -519,12 +545,13 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCategoriesOfArticle( int|string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
 		$list			= [];
-		$categoryIds	= [];
+//		$categoryIds	= [];
 		$relations		= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );
 		foreach( $relations as $relation ){
 			$category	= $this->modelCategory->get( $relation->categoryId );
@@ -550,6 +577,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCategory( int|string $categoryId ): object
 	{
@@ -565,18 +593,22 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@todo		clean up
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCategoryArticles( object $category, array $orders = [], array $limits = [] ): array
+	public function getCategoryArticles( int|string|object $categoryIdOrObject, array $orders = [], array $limits = [] ): array
 	{
+		$categoryId	= $categoryIdOrObject;
+		if( is_object( $categoryIdOrObject ) )
+			$categoryId	= $categoryIdOrObject->categoryId;
+
+		$orders		= array_merge( $orders, ['rank' => 'ASC'] );
 #		$cacheKey	= md5( json_encode( [$category->categoryId, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.bookstore.category.articles.'.$cacheKey ) ) )
 #			return $data;
-		$conditions	= ['categoryId' => $category];
-		if( is_object( $category ) )
-			$conditions	= ['categoryId' => $category->categoryId];
+		$conditions	= ['categoryId' => $categoryId];
 		$relations	= $this->modelArticleCategory->getAll( $conditions, $orders, $limits );
 		$articles	= [];
-		$volumes	= [];
+//		$volumes	= [];
 
 		foreach( $relations as $relation ){
 			$article			= $this->getArticle( $relation->articleId );
@@ -591,17 +623,24 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCategoryOfArticle( object $article ): object
 	{
 		$relation			= $this->modelArticleCategory->getByIndex( 'articleId', $article->articleId );
-		$category			= $this->modelCategory->get( $relation->categoryId );
+//		$category			= $this->modelCategory->get( $relation->categoryId );
 		$category			= $this->getCategory( $relation->categoryId );							//  @todo use this line for caching and remove line above
 		$category->volume	= $relation->volume;
 		$article->volume	= $relation->volume;
 		return $category;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getDocuments( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelArticleDocument->getAll( $conditions, $orders, $limits );
@@ -615,6 +654,12 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return $this->modelArticleDocument->getAllByIndex( 'articleId', $articleId );
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getTags( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelArticleTag->getAll( $conditions, $orders, $limits );
@@ -650,6 +695,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	Removes article with cover, documents, tags and relations to authors and categories.
 	 *	Caches will be removed.
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeArticle( int|string $articleId ): void
 	{
@@ -670,6 +716,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeArticleCover( int|string $articleId ): void
 	{
@@ -690,6 +737,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeArticleDocument( int|string $documentId ): bool
 	{
@@ -700,7 +748,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 		if( $file = $logicBucket->getByPath( $prefix.$document->url, $moduleId ) )
 			$logicBucket->remove( $file->fileId );
 		$this->clearCacheForArticle( $document->articleId );
-		$this->cache->remove( 'catalog.bookstore.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
 	}
 
@@ -708,6 +756,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeArticleFromCategory( int|string $articleId, int|string $categoryId ): int
 	{
@@ -725,6 +774,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeArticleTag( int|string $articleTagId ): ?bool
 	{
@@ -737,8 +787,8 @@ class Logic_Catalog_BookstoreManager extends Logic
 	}
 
 	/**
-	 *	@throws		ReflectionException
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeAuthor( int|string $authorId ): void
 	{
@@ -753,6 +803,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeAuthorFromArticle( int|string $articleId, int|string $authorId ): int
 	{
@@ -772,6 +823,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeAuthorImage( int|string $authorId ): void
 	{
@@ -787,6 +839,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeCategory( int|string $categoryId ): bool
 	{
@@ -799,6 +852,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeCategoryFromArticle( int|string $articleId, int|string $categoryId ): int
 	{
@@ -817,6 +871,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setArticleAuthorRole( int|string $articleId, int|string $authorId, $role ): void
 	{
@@ -833,6 +888,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setArticleCover( int|string $articleId, string $sourceFile, string $mimeType ): void
 	{
@@ -878,12 +934,12 @@ class Logic_Catalog_BookstoreManager extends Logic
 		$image->save( $sourceFile );
 		$logicBucket->add( $sourceFile, 'bookstore/article/s/'.$title, $mimeType, 'catalog_bookstore' );
 		$this->editArticle( $articleId, ['cover' => $title] );
-		$this->cache->remove( 'catalog.bookstore.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.bookstore.tinymce.images.articles' );
 	}
 
 	/**
-	 *	@throws		ReflectionException
 	 *	@todo		code doc
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
