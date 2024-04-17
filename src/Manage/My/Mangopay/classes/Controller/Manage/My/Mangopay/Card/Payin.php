@@ -46,7 +46,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 		$wallet		= $this->checkWalletIsOwn( $walletId, 'redirectUrl' );						//  @todo handle invalid walled
 		$cardId		= $payIn->PaymentDetails->CardId;
 
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
+		$this->cache->delete( 'user_'.$this->userId.'_transactions' );
 		$this->session->remove( 'payInId' );
 
 		if( $payIn->Status === \MangoPay\PayInStatus::Failed ){
@@ -54,7 +54,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			$this->restart( 'payin/'.$cardId, TRUE );
 		}
 		else if( $payIn->Status === \MangoPay\PayInStatus::Succeeded ){
-			$this->cache->remove( 'user_'.$this->userId.'_wallets' );
+			$this->cache->delete( 'user_'.$this->userId.'_wallets' );
 			$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
 			$this->followBackLink( 'payin_from' );
 			$this->restart( 'manage/my/mangopay/card/view/'.$cardId );
@@ -223,8 +223,8 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			header( 'Location: '.$payIn->ExecutionDetails->SecureModeRedirectURL );
 			exit;
 		}
-		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
+		$this->cache->delete( 'user_'.$this->userId.'_wallets' );
+		$this->cache->delete( 'user_'.$this->userId.'_transactions' );
 		$this->messenger->noteSuccess( 'Payed <strong>%s</strong> into Wallet <strong>%s</strong>.', $price, $wallet->Description );
 		$this->followBackLink( 'payin_from' );
 		$this->restart( '..', TRUE );

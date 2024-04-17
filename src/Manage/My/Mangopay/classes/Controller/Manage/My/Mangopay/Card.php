@@ -18,7 +18,7 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 		$card->Active	= FALSE;
 		$this->mangopay->Cards->Update( $card );
 		$this->messenger->noteSuccess( 'Card has been removed' );
-		$this->cache->remove( 'user_'.$this->userId.'_cards' );
+		$this->cache->delete( 'user_'.$this->userId.'_cards' );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -72,8 +72,8 @@ class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_A
 
 		$wallets	= $this->logic->getUserWalletsByCurrency( $this->userId, $card->Currency, TRUE );
 
-		$this->cache->remove( 'user_'.$this->userId.'_wallets' );
-		$this->cache->remove( 'user_'.$this->userId.'_transactions' );
+		$this->cache->delete( 'user_'.$this->userId.'_wallets' );
+		$this->cache->delete( 'user_'.$this->userId.'_transactions' );
 	}
 
 	public function view( $cardId ): void

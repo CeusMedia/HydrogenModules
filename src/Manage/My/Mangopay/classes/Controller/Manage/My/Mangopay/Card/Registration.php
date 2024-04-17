@@ -97,7 +97,7 @@ class Controller_Manage_My_Mangopay_Card_Registration extends Controller_Manage_
 			$this->logic->uncache( 'user_'.$this->userId.'_cards' );
 			$this->env->getMessenger()->noteSuccess( 'Credit Card has been created.' );
 			$cacheKey	= 'user_'.$this->userId.'_cards';
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 			if( ( $forwardTo = $this->request->get( 'forwardTo' ) ) )
 				$this->restart( $forwardTo );
 			if( ( $backwardTo = $this->request->get( 'backwardTo' ) ) )

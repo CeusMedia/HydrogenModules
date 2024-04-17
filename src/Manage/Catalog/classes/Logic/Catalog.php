@@ -54,8 +54,8 @@ class Logic_Catalog extends Logic
 	{
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.links.articles' );
 		return $articleId;
 	}
 
@@ -97,7 +97,7 @@ class Logic_Catalog extends Logic
 		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight );
 
 		$this->editArticle( $articleId, ['cover' => $imagename] );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Logic_Catalog extends Logic
 			'title'			=> $title,
 		];
 		$this->clearCacheForArticle( $articleId );													//
-		$this->cache->remove( 'catalog.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
 
@@ -680,7 +680,7 @@ class Logic_Catalog extends Logic
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
 		$this->clearCacheForArticle( $document->articleId );
-		$this->cache->remove( 'catalog.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
 	}
 
@@ -854,15 +854,15 @@ class Logic_Catalog extends Logic
 	protected function clearCacheForArticle( $articleId )
 	{
 		$article	= $this->modelArticle->get( $articleId );										//  get article
-		$this->cache->remove( 'catalog.article.'.$articleId );										//  remove article cache
-		$this->cache->remove( 'catalog.article.author.'.$articleId );								//  remove article author cache
+		$this->cache->delete( 'catalog.article.'.$articleId );										//  remove article cache
+		$this->cache->delete( 'catalog.article.author.'.$articleId );								//  remove article author cache
 		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
 		foreach( $categories as $category ){														//  iterate assigned categories
 			$categoryId	= $category->categoryId;													//  get category ID of related category
 			$this->clearCacheForCategory( $categoryId );
 		}
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
@@ -878,9 +878,9 @@ class Logic_Catalog extends Logic
 		foreach( $relations as $relation ){															//  iterate article relations
 			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
 		}
-		$this->cache->remove( 'catalog.search.authors' );
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
-		$this->cache->remove( 'catalog.tinymce.links.authors' );
+		$this->cache->delete( 'catalog.search.authors' );
+		$this->cache->delete( 'catalog.tinymce.images.authors' );
+		$this->cache->delete( 'catalog.tinymce.links.authors' );
 	}
 
 	/**
@@ -895,15 +895,15 @@ class Logic_Catalog extends Logic
 		while( $categoryId ){																		//  loop while category ID exists
 			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
 			if( $category ){																		//  category exists
-				$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
-				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
+				$this->cache->delete( 'catalog.category.'.$categoryId );							//  remove category cache
+				$this->cache->delete( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
 				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
 			}
 			else																					//  category is not existing
 				$categoryId	= 0;																	//  no further loops
 		}
-		$this->cache->remove( 'catalog.categories' );
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
-		$this->cache->remove( 'catalog.count.categories.articles' );
+		$this->cache->delete( 'catalog.categories' );
+		$this->cache->delete( 'catalog.tinymce.links.categories' );
+		$this->cache->delete( 'catalog.count.categories.articles' );
 	}
 }

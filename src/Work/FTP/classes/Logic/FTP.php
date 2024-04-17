@@ -80,7 +80,7 @@ class Logic_FTP
 
 	public function uncache( string $path )
 	{
-		return $this->cache->remove( $this->cachePrefix.'path_'.$path );
+		return $this->cache->delete( $this->cachePrefix.'path_'.$path );
 	}
 
 	protected function checkConnection(): void

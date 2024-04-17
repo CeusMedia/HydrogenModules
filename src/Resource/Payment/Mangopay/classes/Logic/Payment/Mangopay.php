@@ -769,7 +769,7 @@ print_m( $items );
 
 	public function uncache( $key )
 	{
-		$this->cache->remove( 'mangopay_'.$key );
+		$this->cache->delete( 'mangopay_'.$key );
 	}
 
 	public function updateClient( $data )
@@ -837,7 +837,7 @@ print_m( $items );
 	public function updateUserBankAccount( $userId, $bankAccountId, $tag ){
 		$bankAccount	= $this->getUserBankAccount( $userId, $bankAccountId );
 		$bankAccount->Tag = $tag;
-		$this->cache->remove( 'user_'.$user->Id );
+		$this->cache->delete( 'user_'.$user->Id );
 		return $this->provider->Users->UpdateBankAccount( $userId, $bankAccount );
 	}*/
 
@@ -882,7 +882,7 @@ print_m( $items );
 	protected function applyPossibleCacheSkip( string $cacheKey ): void
 	{
 		if( $this->skipCacheOnNextRequest ){
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 			$this->skipCacheOnNextRequest	= FALSE;
 		}
 	}

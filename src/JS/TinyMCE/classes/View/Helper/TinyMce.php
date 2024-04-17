@@ -88,7 +88,7 @@ class View_Helper_TinyMce extends Abstraction
 		$cacheKey	= 'tinymce.images';
 		if( $refresh ){
 			$this->listImages	= [];
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 		}
 		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= [];
@@ -113,7 +113,7 @@ class View_Helper_TinyMce extends Abstraction
 		$cacheKey	= 'tinymce.links';
 		if( $refresh || 1 ){
 			$this->listLinks	= [];
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 		}
 		if( !( $this->listLinks = $this->cache->get( $cacheKey ) ) ){
 			$this->list	= [];

@@ -117,7 +117,7 @@ class Resource_REST_Client
 		$parts	= explode( "/", $path );
 		while( $parts ){
 			$cacheKey	= $this->getCacheKey( implode( "/", $parts ) );
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 			array_pop( $parts );
 		}
 	}

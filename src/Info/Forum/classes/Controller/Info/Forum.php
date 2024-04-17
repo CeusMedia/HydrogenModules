@@ -83,7 +83,7 @@ class Controller_Info_Forum extends Controller
 		$this->messenger->noteSuccess( $words->successPostAdded, $postId );
 		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
 		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
-		$this->cache->remove( 'info.forum.userPosts' );
+		$this->cache->delete( 'info.forum.userPosts' );
 		$this->informThreadUsersAboutPost( $threadId, $postId );
 		$this->restart( 'thread/'.$threadId.'#post-'.$postId, TRUE );
 	}
@@ -236,7 +236,7 @@ class Controller_Info_Forum extends Controller
 			if( $post->type == 1 ){
 				@unlink( "contents/forum/".$post->content );
 			}
-			$this->cache->remove( 'info.forum.userPosts' );
+			$this->cache->delete( 'info.forum.userPosts' );
 		}
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}

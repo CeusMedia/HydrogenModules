@@ -81,7 +81,7 @@ class View_Helper_Thumbnailer
 
 		}
 		foreach( $ids as $id )
-			$this->cache->remove( $id );
+			$this->cache->delete( $id );
 	}
 
 	public function uncacheFolder( $folderPath ): int

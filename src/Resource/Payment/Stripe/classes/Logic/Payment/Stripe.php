@@ -150,7 +150,7 @@ class Logic_Payment_Stripe extends Logic
 
 	public function uncache( string $key )
 	{
-		return $this->cache->remove( 'stripe_'.$key );
+		return $this->cache->delete( 'stripe_'.$key );
 	}
 
 	public function updateCustomer( $user )
@@ -184,7 +184,7 @@ class Logic_Payment_Stripe extends Logic
 	protected function applyPossibleCacheSkip( string $cacheKey ): void
 	{
 		if( $this->skipCacheOnNextRequest ){
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 			$this->skipCacheOnNextRequest	= FALSE;
 		}
 	}
