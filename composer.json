@@ -68,8 +68,8 @@
             "@dev:phpstan",
             "@dev:rector"
         ],
-        "dev:install": "composer install --quiet",
-        "dev:update": "composer update",
+        "dev:install": "composer install --quiet --ignore-platform-reqs",
+        "dev:update": "composer update --quiet --ignore-platform-reqs",
         "incomplete:dev:create-docs": [
             "@dev:install",
             "XDEBUG_MODE=off php vendor/ceus-media/doc-creator/doc-creator.php --config-file=tool/config/doc-creator.xml"
