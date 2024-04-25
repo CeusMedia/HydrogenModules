@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
@@ -29,13 +30,13 @@ class Controller_Admin_Log_Exception extends Controller
 
 	protected Dictionary $moduleConfig;
 
-	protected Dictionary $request;
+	protected Request $request;
 
 	protected Dictionary $session;
 
 	protected string $filterPrefix		= 'filter_admin_log_exception_';
 
-	public function bulk()
+	public function bulk(): void
 	{
 		$action	= $this->request->get( 'type' );
 		$from	= $this->request->get( 'from' );
@@ -52,7 +53,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( $from, !$from );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
@@ -70,7 +71,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0, $limit = 0 )
+	public function index( $page = 0, $limit = 0 ): void
 	{
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
@@ -124,20 +125,20 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'exceptionTypes', $types );
 	}
 
-	public function remove( $id )
+	public function remove( $id ): void
 	{
 		$this->model->remove( $id );
 		$page	= $this->session->get( $this->filterPrefix.'page' );
 		$this->restart( $page ?: NULL, TRUE );
 	}
 
-	public function setInstance( $instanceKey )
+	public function setInstance( $instanceKey ): void
 	{
 		$this->session->set( $this->filterPrefix.'instance', $instanceKey );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $id )
+	public function view( string $id ): void
 	{
 		$exception	= $this->model->get( $id );
 		if( !$exception ){

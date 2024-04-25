@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 use JetBrains\PhpStorm\NoReturn;
@@ -11,7 +12,7 @@ class Controller_Auth extends Controller
 	public static string $moduleId	= 'Resource_Authentication';
 
 	protected Dictionary $config;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected HttpCookie $cookie;
 	protected Messenger $messenger;

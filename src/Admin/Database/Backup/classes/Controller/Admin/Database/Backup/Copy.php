@@ -1,19 +1,20 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Database_Backup_Copy extends Controller
 {
 	protected Dictionary $config;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected Logic_Database_Backup $logicBackup;
 	protected Logic_Database_Backup_Copy $logicCopy;
 
-	public function activate( $backupId )
+	public function activate( string $backupId ): void
 	{
 		$backup		= $this->checkBackupId( $backupId );
 		$copyPrefix	= $backup->comment['copyPrefix'] ?? '';
@@ -31,7 +32,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 	 *	@access		public
 	 *	@dodo		...
 	 */
-	public function create( $backupId )
+	public function create( string $backupId ): void
 	{
 		$backup		= $this->checkBackupId( $backupId );
 		if( !empty( $backup->comment['copyPrefix'] ) ){
@@ -60,7 +61,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$this->restart( 'admin/database/backup/view/'.$backupId );
 	}
 
-	public function deactivate( $backupId )
+	public function deactivate( string $backupId ): void
 	{
 		$database	= $this->env->getDatabase();
 		$backup		= $this->checkBackupId( $backupId );
@@ -84,7 +85,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$this->restart( 'admin/database/backup/view/'.$backupId );
 	}
 
-	public function drop( $backupId )
+	public function drop( string $backupId ): void
 	{
 		$backup		= $this->checkBackupId( $backupId );
 		$database	= $this->env->getDatabase();
@@ -123,7 +124,7 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 
 	//  --  PROTECTED  --  //
 
-	protected function checkBackupId( $backupId )
+	protected function checkBackupId( string $backupId )
 	{
 		$backup	= $this->logicBackup->check( $backupId, FALSE );
 		if( FALSE !== $backup )
@@ -143,7 +144,9 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicCopy	= Logic_Database_Backup_Copy::getInstance( $this->env );
 
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );

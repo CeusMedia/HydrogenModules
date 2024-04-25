@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
@@ -8,7 +9,7 @@ class Controller_Admin_Payment_Mangopay_Hook extends Controller
 {
 	public static bool $verbose	= TRUE;
 
-	protected Dictionary $request;
+	protected Request $request;
 	protected MessengerResource $messenger;
 	protected Logic_Payment_Mangopay $mangopay;
 	protected Model_Mangopay_Event $model;

@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -11,7 +12,7 @@ use CeusMedia\Mail\Message\Parser as MailParser;
 
 class Controller_Work_Mail_Group_Message extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected Logic_Mail_Group $logicGroup;

@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
@@ -10,7 +11,7 @@ class Controller_Manage_My_User_Invite extends Controller
 
 	/**	@var	Model_User_Invite		$model		Instance of user invite model */
 	protected Model_User_Invite $model;
-	protected Dictionary $request;
+	protected Request $request;
 
 	public function cancel( string $userInviteId ): void
 	{

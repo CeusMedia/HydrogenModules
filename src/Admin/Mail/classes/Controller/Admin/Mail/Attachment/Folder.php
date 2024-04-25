@@ -8,13 +8,14 @@ use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Model_Mail_Attachment $model;
 	protected string $basePath;
 	protected MessengerResource $messenger;

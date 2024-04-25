@@ -1,7 +1,8 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
+use JetBrains\PhpStorm\NoReturn;
 
 class Controller_Work_Uberlog extends Controller
 {
@@ -23,9 +24,9 @@ class Controller_Work_Uberlog extends Controller
 		$this->addData( 'records', $records );
 	}
 
-	public function record(): void
+	#[NoReturn] public function record(): void
 	{
-		/** @var Dictionary $request */
+		/** @var Request $request */
 		$request	= $this->env->getRequest();
 		$post		= $request->getAllFromSource( 'POST', TRUE );
 		$data		= $post->getAll();

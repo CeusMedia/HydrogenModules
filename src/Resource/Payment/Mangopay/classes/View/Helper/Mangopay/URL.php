@@ -2,12 +2,12 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\ADT\URL;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Mangopay_URL extends View_Helper_Mangopay_Abstract
 {
-	protected HttpRequest|Dictionary $request;
+	protected HttpRequest $request;
 	protected URL|string|NULL $url	= NULL;
 	protected array $parameters		= [];
 

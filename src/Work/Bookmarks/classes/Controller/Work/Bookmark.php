@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\Net\Reader as NetReader;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
@@ -9,13 +10,13 @@ class Controller_Work_Bookmark extends Controller
 {
 	protected bool $useAuthentication	= FALSE;
 	protected ?string $userId			= NULL;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected Model_Bookmark $model;
 	protected Model_Bookmark_Comment $modelComment;
 	protected Model_Bookmark_Tag $modelTag;
 
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			try{

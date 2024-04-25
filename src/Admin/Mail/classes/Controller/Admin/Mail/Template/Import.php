@@ -4,6 +4,7 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File;
 use CeusMedia\Common\FS\Folder;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -11,7 +12,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 class Controller_Admin_Mail_Template_Import extends Controller
 {
 	protected MessengerResource $messenger;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Model_Mail_Template $modelTemplate;
 
 	/**

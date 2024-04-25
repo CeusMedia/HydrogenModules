@@ -1,11 +1,11 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_URL extends View_Helper_Stripe_Abstract
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected $url;
 	protected bool $backwardTo			= TRUE;
 	protected bool $forwardTo			= TRUE;

@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\Common\XML\ElementReader as XmlReader;
@@ -9,7 +10,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Route extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Logic_Frontend $frontend;
 	protected string $fileName;
 	protected Model_Route $model;

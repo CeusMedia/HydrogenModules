@@ -4,6 +4,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\RequestReceiver;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\Loader;
 use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 
@@ -46,7 +47,7 @@ $helper->run();
 
 class JobScriptHelper
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected string $configFile		= "config/config.ini";							//  config file
 	protected array $errorHandling	= [
 		'report'	=> E_ALL,
@@ -204,7 +205,9 @@ class JobScriptHelper
 		Loader::create( 'php', $this->pathClasses )->register();				//  register autoloader for project classes
 
 		$request	= new RequestReceiver();									//
-		$this->request	= new Dictionary( $request->getAll() );					//
+		$this->request	= new Request();
+        foreach( $request->getAll() as $key => $value )
+            $this->request->set( $key, $value );					//
 
 		if( $request->has( '--verbose' ) || $request->has( '-v' ) )				//
 			$this->setVerbose( TRUE );

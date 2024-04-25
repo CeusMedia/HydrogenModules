@@ -1,13 +1,14 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Manage_My_Provision_License_Key extends Controller
 {
 	protected Messenger $messenger;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected Logic_Authentication $logicAuth;
 	protected Logic_User_Provision $logicProvision;

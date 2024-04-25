@@ -3,12 +3,13 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Attachment extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Model_Mail_Attachment $model;
 	protected string $attachmentPath;
 	protected MessengerResource $messenger;

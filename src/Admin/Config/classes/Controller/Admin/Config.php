@@ -4,13 +4,14 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\HTML\Exception\View as HtmlExceptionView;
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Config extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 
 	/*	public function direct()
