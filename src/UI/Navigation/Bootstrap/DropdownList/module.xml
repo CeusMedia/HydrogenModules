@@ -14,7 +14,7 @@ There is no support for pages yet.This will come in version 0.3.
 	<log version="0.2.1">Support FontAwesome icons.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>View/Helper/Navigation/Bootstrap/DropdownList.php</class>
 	</files>

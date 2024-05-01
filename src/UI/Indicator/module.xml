@@ -13,7 +13,7 @@ Since version 0.3 the style blends in with Bootstrap (by losing the shade).
 	<log version="0.3.1">Set default bar color if not using calculated color.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<script load="auto">UI.Indicator.js</script>
 		<style source="theme" load="auto">indicator.css</style>
