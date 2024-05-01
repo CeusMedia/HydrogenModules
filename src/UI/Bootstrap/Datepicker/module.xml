@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap: Datepicker</title>
 	<description><![CDATA[Datepicker for Bootstrap.
 
-A datepicker for bootstrap forked from [Stefan Petre's](http://eyecon.ro/).
+A datepicker for bootstrap forked from [Stefan Petre's](https://eyecon.ro/).
 Improvements by [GitHub: eternicode](https://github.com/eternicode).
 
 code>
@@ -22,10 +22,11 @@ or whatever is configured to be the automatic selector (auto.selector).
 ]]></description>
 	<category>User Interface</category>
 	<version>1.5.1</version>
-	<author site="http://eyecon.ro">Stefan Petre</author>
+	<author site="https://eyecon.ro">Stefan Petre</author>
 	<author site="https://github.com/eternicode">Andrew Rowls</author>
-	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
+	<license source="https://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
 	<files>
+		<class>Hook/UI/Bootstrap/Datepicker.php</class>
 		<style>bootstrap-datepicker3.css</style>
 		<style>bootstrap-datepicker3.min.css</style>
 		<style>bootstrap-datepicker3.standalone.css</style>
@@ -110,36 +111,5 @@ or whatever is configured to be the automatic selector (auto.selector).
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$config		= $env->getConfig()->getAll( 'module.ui_bootstrap_datepicker.', TRUE );
-if( $config->get( 'active' ) ){
-	$page		= $env->getPage();
-	$minified	= $config->get( 'minified' );
-	$pathJs		= $this->config->get( 'path.scripts' );
-	$pathCss	= $this->config->get( 'path.themes' ).'/'.$this->config->get( 'theme.custom' ).'/css/';
-	$bsVersion	= 2;
-
-	if( $minified ){
-		$css	= $bsVersion > 2 ? 'bootstrap-datepicker3.min.css' : 'bootstrap-datepicker.min.css';
-		$page->css->theme->addUrl( $pathCss.$css );
-		$page->js->addUrl( $pathJs.'bootstrap-datepicker.min.js' );
-	}
-	else{
-		$css	= $bsVersion > 2 ? 'bootstrap-datepicker3.css' : 'bootstrap-datepicker.css';
-		$page->css->theme->addUrl( $pathCss.$css );
-		$page->js->addUrl( $pathJs.'bootstrap-datepicker.js' );
-	}
-
-	$language	= $env->getLanguage()->getLanguage();
-	if( $language != "en" ){
-		$page->js->addUrl( $pathJs.'locales/bootstrap-datepicker.'.$language.'.min.js' );
-	}
-	$context->addBodyClass( 'uses-bootstrap-datepicker' );
-
-	if( $config->get( 'auto' ) ){
-		$script	= 'jQuery("'.$config->get( 'auto.selector' ).'").datepicker({language: "'.$language.'"});';
-		$page->js->addScriptOnReady( $script );
-	}
-}
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Bootstrap_Datepicker::onPageApplyModules</hook>
 </module>
