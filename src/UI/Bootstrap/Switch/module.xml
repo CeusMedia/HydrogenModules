@@ -4,21 +4,15 @@
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
 	<version>3.3.4</version>
-	<author site="http://www.larentis.eu">Mattia Larentis</author>
-	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
+	<author site="https://www.larentis.eu">Mattia Larentis</author>
+	<license source="https://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
 	<files>
+		<class>Hook/UI/Bootstrap/Switch.php</class>
 		<style source="common" load="auto">bootstrap-switch.min.css</style>
 		<script load="auto">bootstrap-switch.min.js</script>
 	</files>
 	<relations>
 		<needs type="module">UI_Bootstrap</needs>
 	</relations>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-$script	= '
-$(":input[type=checkbox].shiftbox").bootstrapSwitch();
-$(":input[type=checkbox].shiftbox").bind("change",function(e){
-	console.log($(this).attr("id")+": "+$(this).is(":checked"))
-});';
-$context->addScriptOnReady( $script );
-]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Bootstrap_Switch::onPageApplyModules</hook>
 </module>
