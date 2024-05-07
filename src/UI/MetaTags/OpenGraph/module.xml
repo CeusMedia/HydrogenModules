@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: MetaTags: OpenGraph</title>
 	<description><![CDATA[Enables basic support for Open Graph.]]></description>

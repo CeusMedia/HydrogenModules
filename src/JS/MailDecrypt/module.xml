@@ -19,10 +19,8 @@ code:html><span class="encrypted-mail" data-name="john" data-host="example.net">
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Hook/JS/MailDecrypt.php</class>
 		<script load="auto">MailDecrypt.js</script>
 	</files>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-		$script		= 'MailDecrypt();';
-		$context->js->addScriptOnReady( $script, 8 );
-	]]></hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_JS_MailDecrypt::onPageApplyModules</hook>
 </module>

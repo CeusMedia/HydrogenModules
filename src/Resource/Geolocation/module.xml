@@ -38,6 +38,6 @@ Otherwise please install the geo database dump fitting to your needs on your own
 		<sql>postcodes.sql.gz</sql>
 	</files>
 	<relations/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	]]></hook>
+<!--	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>-->
 </module>
