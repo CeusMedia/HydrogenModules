@@ -22,14 +22,14 @@
 	<config protected="yes" type="boolean" name="engine.PHPTAL" mandatory="yes" title="PHPTAL Template Engine">no</config>
 	<config protected="yes" type="boolean" name="engine.Smarty" mandatory="yes" title="Smarty Template Engine">no</config>
 	<config protected="yes" type="boolean" name="engine.STE" mandatory="yes" title="Simple Template Engine by Ceus Media">yes</config>
-	<config protected="yes" type="string" name="engine.STE.filter.Code">code</config>
-	<config protected="yes" type="string" name="engine.STE.filter.Strip">strip</config>
-	<config protected="yes" type="boolean" name="engine.STE.plugin.Comments">yes</config>
-	<config protected="yes" type="boolean" name="engine.STE.plugin.Files">no</config>
-	<config protected="yes" type="boolean" name="engine.STE.plugin.Includes">no</config>
-	<config protected="yes" type="boolean" name="engine.STE.plugin.Optionals">no</config>
-	<config protected="yes" type="boolean" name="engine.STE.plugin.Tidy">no</config>
 	<config protected="yes" type="boolean" name="engine.Twig" mandatory="yes" title="Twig Template Engine">no</config>
+	<config protected="yes" type="string" name="options.STE.filter.Code">code</config>
+	<config protected="yes" type="string" name="options.STE.filter.Strip">strip</config>
+	<config protected="yes" type="boolean" name="options.STE.plugin.Comments">yes</config>
+	<config protected="yes" type="boolean" name="options.STE.plugin.Files">no</config>
+	<config protected="yes" type="boolean" name="options.STE.plugin.Includes">no</config>
+	<config protected="yes" type="boolean" name="options.STE.plugin.Optionals">no</config>
+	<config protected="yes" type="boolean" name="options.STE.plugin.Tidy">no</config>
 	<relations>
 		<needs type="package">ceus-media/template-abstraction</needs>
 	</relations>

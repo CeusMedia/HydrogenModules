@@ -1,11 +1,11 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\View;
 use CeusMedia\HydrogenFramework\Hook;
-use CeusMedia\TemplateAbstraction\Engine;
+use CeusMedia\TemplateAbstraction\Engine as TemplateEngine;
 use CeusMedia\TemplateAbstraction\Environment as TemplateAbstractionEnvironment;
-use CeusMedia\TemplateAbstraction\Factory;
+use CeusMedia\TemplateAbstraction\Factory as TemplateEngineFactory;
+use CeusMedia\TemplateEngine\Template as SimpleTemplateEngineTemplate;
 
 class Hook_UI_TEA extends Hook
 {
@@ -24,14 +24,11 @@ class Hook_UI_TEA extends Hook
 
 	public function onEnvInit(): void
 	{
-		/** @var \CeusMedia\HydrogenFramework\Environment $context */
-		$context		= $this->context;
+		if( !class_exists( '\CeusMedia\TemplateAbstraction\Factory' ) )
+			throw new RuntimeException( 'Template Engine Abstraction (ceus-media/template-abstraction) is not available' );
+
 		$config			= $this->env->getConfig();
 		$moduleConfig	= $config->getAll( 'module.ui_tea.', TRUE );
-
-		if( !class_exists( '\CeusMedia\TemplateAbstraction\Factory' ) )								//  check cmModules integration
-			throw new RuntimeException( 'Template Engine Abstraction (TEA) is not available' );
-
 		$environment	= new TemplateAbstractionEnvironment();
 
 		/**
@@ -40,74 +37,37 @@ class Hook_UI_TEA extends Hook
 		 */
 		foreach( $moduleConfig->getAll( 'engine.', TRUE ) as $key => $value )
 			if( 'PHP' !== $key && array_key_exists( $key, $this->adapters ) )
-				$environment->registerEngine( new Engine( $key, $this->adapters[$key], $value ) );
-		$this->configureSimpleTemplateEngine( $environment );
+				$environment->registerEngine( new TemplateEngine( $key, $this->adapters[$key], $value ) );
+		$this->configureSimpleTemplateEngine( $environment, $moduleConfig );
 		$this->configureDefaultTemplateEngine( $environment, $moduleConfig );
 
 		$pathTemplates	= $config->get( 'path.templates', 'templates/' );
 		if( !str_starts_with( $pathTemplates, '/' ) )
 			$pathTemplates	= $this->env->path.$pathTemplates;
 
-		$tea	= new Factory( $environment );										//  create a template factory
+		$tea	= new TemplateEngineFactory( $environment );						//  create a template factory
 		$tea->setTemplatePath( $pathTemplates );									//  set template to app root since templates AND content files are possible
 		$tea->setCachePath( $moduleConfig->get( 'pathCache' ) );				//  set path to template cache
 		$tea->setCompilePath( $moduleConfig->get( 'pathCacheCompiled' ) );		//  set path to compiled template cache
 
-		$context->set( 'tea', $tea );
+		$this->context->set( 'tea', $tea );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function onViewRealizeTemplate(): void
 	{
-		/** @var View $context */
-		$context	= $this->context;
+		/** @var TemplateEngineFactory $tea */
+		$tea		= $this->env->get( 'tea' );
 		$payload	= $this->getPayload();
-
-		/** @var Factory $tea */
-		$tea		= $this->env->tea;
-		$template	= $tea->getTemplate( $payload['filePath'], $payload['data'] );
+		$template	= $tea->getTemplate( $payload['filePath'], $payload['data'] ?? [] );
 		$payload['content']	= $template->render();
 		$this->setPayload( $payload );
 	}
 
-	private function configureSimpleTemplateEngine( TemplateAbstractionEnvironment $environment ): void
-	{
-		$messenger		= $this->env->getMessenger();
-		$engineConfig	= $this->env->getConfig()->getAll( 'module.ui_tea.engine.ste.', TRUE );
-
-		//  --  STE: CONFIGURE PLUGINS & FILTERS  --  //
-//		$messenger->noteNotice( 'TEA: STE init' );
-		if( !$environment->hasEngine( 'STE' ) )
-			return;
-
-		$engine	= $environment->getEngine( 'STE' );
-		if( Engine::STATUS_DISABLED === $engine->getStatus() )
-			return;
-
-		$regexPlugin	= "/^plugin\.([a-z0-9]+)$/i";			//  regular expression to detect STE plugin
-		$regexFilter	= "/^filter.([a-z0-9]+)$/i";			//  regular expression to detect STE filter
-		foreach( $engineConfig as $pair ){											//  iterate module configuration pairs
-			if( !$pair->value )														//  if pair value is not positive
-				continue;															//  skip (for performance)
-			if( preg_match( $regexPlugin, $pair->key ) ){							//  configuration pair for STE plugin found
-				$plugin	= preg_replace( $regexPlugin, '\\1', $pair->key );			//  extract plugin name
-				$class	= 'CeusMedia\\TemplateEngine\\Plugin\\'.ucfirst( $plugin );				//  anticipate plugin class name
-				if( !class_exists( $class ) ){													//  plugin class is NOT loadable
-					$messenger->noteFailure( 'TEA: STE Plugin <cite>'.$plugin.'</cite> is missing class <code>'.$class.'<code>' );
-					continue;
-				}
-				CeusMedia\TemplateEngine\Template::addPlugin( new $class );						//  register plugin globally on STE & skip to next pair
-			}
-			else if( preg_match( $regexFilter, $pair->key ) ){									//  configuration pair for active STE filter found
-				$filter	= preg_replace( $regexFilter, '\\1', $pair->key );			//  extract filter name
-				$class	= 'CeusMedia\\TemplateEngine\\Filter\\'.ucfirst( $filter );				//  anticipate filter class name
-				if( !class_exists( $class ) ){								//  filter class is loadable
-					$messenger->noteFailure( 'TEA: STE Filter <cite>'.$filter.'</cite> is missing class <code>'.$class.'<code>' );
-					continue;
-				}
-				CeusMedia\TemplateEngine\Template::addFilter( new $class );					//  register filter globally on STE & skip to next pair
-			}
-		}
-	}
+	//  --  PRIVATE  --  //
 
 	/**
 	 *	@param		TemplateAbstractionEnvironment	$environment
@@ -122,5 +82,47 @@ class Hook_UI_TEA extends Hook
 		if( !$moduleConfig->get( 'engine.'.$defaultEngineKey, FALSE ) )
 			throw new RuntimeException( 'Template Engine "'.$defaultEngineKey.'" cannot be default, since it is not enabled' );
 		$environment->setDefaultEngineKey( $moduleConfig->get( 'defaultsForTemplates' ) );
+	}
+
+	/**
+	 * Simple Template Engine: configure plugins and filters
+	 * @param TemplateAbstractionEnvironment $environment
+	 * @param Dictionary $moduleConfig
+	 * @return void
+	 */
+	private function configureSimpleTemplateEngine( TemplateAbstractionEnvironment $environment, Dictionary $moduleConfig ): void
+	{
+		if( !$environment->hasEngine( 'STE' ) )
+			return;
+		if( TemplateEngine::STATUS_DISABLED === $environment->getEngine( 'STE' )->getStatus() )
+			return;
+
+		$messenger		= $this->env->getMessenger();
+		$regexPlugin	= "/^plugin\.([a-z0-9]+)$/i";											//  regular expression to detect STE plugin
+		$regexFilter	= "/^filter.([a-z0-9]+)$/i";											//  regular expression to detect STE filter
+		foreach( $moduleConfig->getAll( 'options.STE.', TRUE ) as $pair ){		//  iterate module configuration pairs
+			if( !$pair->value )																	//  if pair value is not positive
+				continue;																		//  skip (for performance)
+			if( preg_match( $regexPlugin, $pair->key ) ){										//  configuration pair for STE plugin found
+				$plugin	= preg_replace( $regexPlugin, '\\1', $pair->key );			//  extract plugin name
+				$class	= 'CeusMedia\\TemplateEngine\\Plugin\\'.ucfirst( $plugin );				//  anticipate plugin class name
+				if( !class_exists( $class ) ){													//  plugin class is NOT loadable
+					$message	= 'TEA: STE Plugin "%s" is missing class %s';
+					$messenger->noteFailure( sprintf( $message, $plugin, $class ) );
+					continue;
+				}
+				SimpleTemplateEngineTemplate::addPlugin( new $class );						//  register plugin globally on STE & skip to next pair
+			}
+			else if( preg_match( $regexFilter, $pair->key ) ){									//  configuration pair for active STE filter found
+				$filter	= preg_replace( $regexFilter, '\\1', $pair->key );			//  extract filter name
+				$class	= 'CeusMedia\\TemplateEngine\\Filter\\'.ucfirst( $filter );				//  anticipate filter class name
+				if( !class_exists( $class ) ){													//  filter class is loadable
+					$message	= 'TEA: STE Filter "%s" is missing class %s';
+					$messenger->noteFailure( sprintf( $message, $filter, $class ) );
+					continue;
+				}
+				SimpleTemplateEngineTemplate::addFilter( new $class );						//  register filter globally on STE & skip to next pair
+			}
+		}
 	}
 }

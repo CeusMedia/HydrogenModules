@@ -36,6 +36,7 @@ parameters:
 	scanDirectories:
 		- ../../vendor/ceus-media/common
 		- ../../vendor/ceus-media/hydrogen-framework
-	checkMissingIterableValueType: false
 	treatPhpDocTypesAsCertain: false
-							
+	ignoreErrors:
+		-
+			identifier: missingType.iterableValue
