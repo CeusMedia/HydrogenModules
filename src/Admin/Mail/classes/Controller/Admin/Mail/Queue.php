@@ -7,10 +7,8 @@ use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
-use CeusMedia\Mail\Part\Attachment as MailV1Attachment;
-use CeusMedia\Mail\Part\InlineImage as MailV1InlineImage;
-use CeusMedia\Mail\Message\Part\Attachment as MailV2Attachment;
-use CeusMedia\Mail\Message\Part\InlineImage as MailV2InlineImage;
+use CeusMedia\Mail\Message\Part\Attachment as MailAttachment;
+use CeusMedia\Mail\Message\Part\InlineImage as MailInlineImage;
 
 class Controller_Admin_Mail_Queue extends Controller
 {
@@ -54,20 +52,10 @@ class Controller_Admin_Mail_Queue extends Controller
 		$mailObjectParts	= $mail->object->instance->mail->getParts();
 		$attachments		= [];
 		foreach( $mailObjectParts as $key => $part ){
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				$isAttachment	= $part instanceof MailV2Attachment;
-				$isInlineImage	= $part instanceof MailV2InlineImage;
-				if( $isAttachment || $isInlineImage )
-					$attachments[$key]	= $part;
-			}
-			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				/** @noinspection PhpUndefinedClassInspection */
-				$isAttachment	= $part instanceof MailV1Attachment;
-				/** @noinspection PhpUndefinedClassInspection */
-				$isInlineImage	= $part instanceof MailV1InlineImage;
-				if( $isAttachment || $isInlineImage )
-					$attachments[$key]	= $part;
-			}
+			$isAttachment	= $part instanceof MailAttachment;
+			$isInlineImage	= $part instanceof MailInlineImage;
+			if( $isAttachment || $isInlineImage )
+				$attachments[$key]	= $part;
 		}
 
 		if( !array_key_exists( $attachmentNr, $attachments ) ){

@@ -11,7 +11,7 @@ class Logic_Limiter
 	public const OPERATION_BOOLEAN				= 0;
 	public const OPERATION_COMPARE_NUMBER		= 1;
 
-	protected static self $instance;
+	protected static ?self $instance			= NULL;
 
 	protected Environment $env;
 
@@ -23,7 +23,7 @@ class Logic_Limiter
 
 	public static function getInstance( $env ): self
 	{
-		if( !self::$instance )
+		if( NULL === self::$instance )
 			self::$instance		= new self( $env );
 		return self::$instance;
 	}

@@ -17,7 +17,7 @@ class View_Manage_Blog extends View
 	{
 	}
 
-	public function renderTabs( $current = NULL )
+	public function renderTabs( $current = NULL ): string
 	{
 		$tabs	= [
 			''				=> 'Blog-Einträge',
