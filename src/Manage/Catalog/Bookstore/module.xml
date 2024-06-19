@@ -52,7 +52,7 @@
 		<class>Controller/Ajax/Manage/Catalog/Bookstore/Article.php</class>
 		<class>Controller/Ajax/Manage/Catalog/Bookstore/Author.php</class>
 		<class>Controller/Ajax/Manage/Catalog/Bookstore/Category.php</class>
-		<class>Controller/Ajax/Manage/Catalog/Bookstore/Tag.php</class>
+<!--		<class>Controller/Ajax/Manage/Catalog/Bookstore/Tag.php</class>-->
 		<class>Controller/Manage/Catalog/Bookstore.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Article.php</class>
 		<class>Controller/Manage/Catalog/Bookstore/Author.php</class>
