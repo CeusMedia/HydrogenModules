@@ -1,15 +1,14 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Helper_Input_Resource extends Hook
 {
-	public static function onPageInitModules( Environment $env, $module, $context, $payload )
+	public function onPageInitModules(): void
 	{
-		$config		= $env->getConfig();
-		$page		= $env->getPage();
-		$modules	= $env->getModules();
+		$config		= $this->env->getConfig();
+		$page		= $this->env->getPage();
+		$modules	= $this->env->getModules();
 
 		$pathContent	= $config->get( 'path.contents' );
 		$pathImages		= $config->get( 'path.images' );
@@ -36,10 +35,10 @@ class Hook_Helper_Input_Resource extends Hook
 		foreach( $modePaths as $key => $paths ){
 			if( !count( $paths ) )
 				continue;
-			$scripts[]	= vsprintf( 'HelperInputResource.modePaths.%s = %s;', array(
+			$scripts[]	= vsprintf( 'HelperInputResource.modePaths.%s = %s;', [
 				$key,
 				json_encode( $paths ),
-			) );
+			] );
 		}
 		$page->js->addScriptOnReady( join( PHP_EOL, $scripts ) );
 	}

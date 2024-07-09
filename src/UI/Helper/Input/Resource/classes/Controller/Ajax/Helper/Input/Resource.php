@@ -4,15 +4,21 @@ use CeusMedia\Common\FS\File\RecursiveIterator as RecursiveFileIterator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 
 class Controller_Ajax_Helper_Input_Resource extends AjaxController
 {
-	protected $extensions	= [
+	protected array $extensions	= [
 		'image'	=> ['png', 'gif', 'jpg', 'jpeg', 'jpe', 'svg'],
 		'style'	=> ['css', 'scss', 'less'],
 	];
 
-	public function render()
+	/**
+	 *	@return		void
+	 *	@throws		EnvironmentException
+	 *	@throws		JsonException
+	 */
+	public function render(): void
 	{
 		$paths		= (array) $this->env->getRequest()->get( 'paths' );
 		$mode		= $this->env->getRequest()->get( 'mode' );
@@ -51,19 +57,19 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 				if( !in_array( $ext, $extensions ) )
 					continue;
 				$key		= strtolower( $relativePath );
-				$sublist[$key]	= HtmlTag::create( 'li', array(
+				$sublist[$key]	= HtmlTag::create( 'li', [
 					self::renderThumbnail( $env, $mode, $path, $relativePath ),
-					HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', [
 						HtmlTag::create( 'span', $fileName ),
 						'<br/>',
 						HtmlTag::create( 'small', $filePath, ['class' => 'muted'] ),
-					), [
+					], [
 						'class' => 'source-list-label',
 					] )
-				), array(
+				], [
 					'class'		=> 'source-list-item',
 					'onclick'	=> 'HelperInputResource.setSourceItem(this)',
- 				), [
+				], [
 					'source-path'	=> $path.$relativePath,
  					'modal-id'		=> $modalId,
 					'input-id'		=> $inputId
@@ -82,14 +88,21 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 		$this->respondData( ['html' => $html] );
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string			$mode
+	 *	@param		string			$path
+	 *	@param		string			$relativePath
+	 *	@return		string
+	 */
 	protected static function renderThumbnail( Environment $env, string $mode, string $path, string $relativePath ): string
 	{
 		switch( $mode ){
 			case 'image':
-				$div	= HtmlTag::create( 'div', '&nbsp;', array(
+				$div	= HtmlTag::create( 'div', '&nbsp;', [
 					'class'	=> 'source-list-image',
 					'style'	=> 'background-image: url('.$env->getBaseUrl().$path.$relativePath.');',
-				) );
+				] );
 				try{
 					if( class_exists( 'View_Helper_Thumbnailer' ) ){
 						$helper	= new View_Helper_Thumbnailer( $env, 36, 36 );
@@ -105,11 +118,9 @@ class Controller_Ajax_Helper_Input_Resource extends AjaxController
 				return $div;
 			case 'style':
 			default:
-				return HtmlTag::create( 'div', array(
+				return HtmlTag::create( 'div', [
 					HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-2x fa-file-code-o'] )
-				), [
-					'class'	=> 'source-list-image',
-				] );
+				], ['class' => 'source-list-image'] );
 		}
 	}
 }
