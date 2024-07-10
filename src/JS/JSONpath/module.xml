@@ -25,7 +25,7 @@
 	<version>2011-10-19</version>
 	<source url="http://goessner.net/articles/JsonPath/">goessner.net</source>
 	<author site="http://goessner.net/"><![CDATA[Stefan Gössner]]></author>
-	<license source="http://creativecommons.org/licenses/by/2.5/">CC BY 2.5</license>
+	<license source="https://creativecommons.org/licenses/by/2.5/">CC BY 2.5</license>
 	<files>
 		<script source="local">jsonpath-0.8.5.js</script>
 		<script source="local" load="auto">jsonpath-0.8.5.min.js</script>

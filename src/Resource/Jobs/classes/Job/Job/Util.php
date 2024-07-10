@@ -9,7 +9,7 @@ class Job_Job_Util extends Job_Abstract
 	/**
 	 *	Returns current date time depending on format parameter.
 	 *	Uses parameter --format (-f), default: 'r' (RFC 2822).
-	 *	Supports all date formats (http://php.net/manual/de/function.date.php).
+	 *	Supports all date formats (https://php.net/manual/de/function.date.php).
 	 *	Supports format constants, like DATE_W3C.
 	 *	Removes milliseconds (.v) below PHP version 7.
 	 *	@access		public

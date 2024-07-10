@@ -19,6 +19,20 @@ class Logic_UserPassword
 	protected string $maxAgeBeforeDecay;
 
 	/**
+	 *	Get singleton instance of this logic class.
+	 *	@static
+	 *	@access		public
+	 *	@param  	Environment		$env		Environment object
+	 *	@return		self			Singleton instance of this logic class
+	 */
+	public static function getInstance( Environment $env ): self
+	{
+		if( !isset( self::$instance ) )
+			self::$instance	= new self( $env );
+		return self::$instance;
+	}
+
+	/**
 	 *	Activates a new password.
 	 *	If there is a currently active password, it will be revoked.
 	 *	If there are other new passwords, they will be revoked.
@@ -147,7 +161,7 @@ class Logic_UserPassword
 	 *	@param		string			$password		Password to encrypt (prefixed by salt)
 	 *	@param		integer|string	$algo			Encryption algorithm to use (default: PASSWORD_BCRYPT)
 	 *	@return		string			Hash of encrypted (salted) password
-	 *	@see		http://php.net/manual/en/password.constants.php
+	 *	@see		https://php.net/manual/en/password.constants.php
 	 */
 	public function encryptPassword( string $password, string|int $algo = PASSWORD_BCRYPT ): string
 	{
@@ -165,20 +179,6 @@ class Logic_UserPassword
 			if( $this->validatePassword( $item->salt.$password, $item->hash ) )
 				return $item;
 		return NULL;
-	}
-
-	/**
-	 *	Get singleton instance of this logic class.
-	 *	@static
-	 *	@access		public
-	 *	@param  	Environment		$env		Environment object
-	 *	@return		self			Singleton instance of this logic class
-	 */
-	public static function getInstance( Environment $env ): self
-	{
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
 	}
 
 	/**

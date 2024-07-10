@@ -51,7 +51,7 @@ class View_Helper_Work_Issue_ChangeNote
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
 
 		$noteText	= '<em><small class="muted">Kein Kommentar.</small></em>';
-		if( trim( $this->note->note ) ){
+		if( trim( $this->note->note ?? '' ) ){
 			if( $this->env->getModules()->has( 'UI_Markdown' ) )
 				$noteText	= View_Helper_Markdown::transformStatic( $this->env, $this->note->note );
 			else if( $this->env->getModules()->has( 'UI_Helper_Content' ) )

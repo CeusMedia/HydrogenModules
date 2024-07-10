@@ -4,7 +4,7 @@
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012-2024 Ceus Media <https://ceusmedia.de/>
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -19,7 +19,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2012-2024 Ceus Media <https://ceusmedia.de/>
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 class View_Helper_FriendLister extends Abstraction
 {

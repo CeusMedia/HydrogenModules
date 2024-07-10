@@ -1,9 +1,21 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
 
 //  --  FILTER  --  //
-function numerizeWords( $words, $numbers = [] ){
+
+/**
+ *	Append quantity (found in numbers by key) to key label.
+ *	@param		array		$words
+ *	@param		array		$numbers
+ *	@return		array
+ */
+function quantifyWords( array $words, array $numbers = [] ): array
+{
 	foreach( $words as $key => $label ){
 		if( !strlen( $key ) ){
 			$number	= ' ('.array_sum( $numbers ).')';
@@ -20,12 +32,21 @@ function numerizeWords( $words, $numbers = [] ){
 	}
 	return $words;
 }
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $numberTypes */
+/** @var array $numberPriorities */
+/** @var array $numberStates */
+/** @var array $numberProjects */
+
 $session	= $env->getSession();
 
 $title		= $session->get( 'filter-issue-title' );
 $limit		= $session->get( 'filter-issue-limit' ) ?: 10;
 $issueId	= $session->get( 'filter-issue-issueId' );
-$order		= $session->get( 'filter-issue-order' );
+$order		= $session->get( 'filter-issue-order', '' );
 $direction	= 'DESC';#$session->get( 'filter-issue-direction' );
 
 
@@ -42,10 +63,10 @@ foreach( $words['indexFilterDirections'] as $key => $label ){
 }
 $optDirection	= join( $optDirection );
 
-$words['types']			= numerizeWords( ['' => '- alle -'] + $words['types'], $numberTypes );
-$words['severities']	= numerizeWords( ['' => '- alle -'] + $words['severities'], [] );
-$words['priorities']	= numerizeWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
-$words['states']		= numerizeWords( ['' => '- alle -'] + $words['states'], $numberStates );
+$words['types']			= quantifyWords( ['' => '- alle -'] + $words['types'], $numberTypes );
+$words['severities']	= quantifyWords( ['' => '- alle -'] + $words['severities'] );
+$words['priorities']	= quantifyWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
+$words['states']		= quantifyWords( ['' => '- alle -'] + $words['states'], $numberStates );
 
 $optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
@@ -81,11 +102,12 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 );
 if( !empty( $projects ) ){
 	$optProject	= [];
+	/** @var object $project */
 	foreach( $projects as $project )
 //		if( $numberProjects[$project->projectId] > 0 )
 			$optProject[$project->projectId]	= $project->title;
 
-	$optProject		= numerizeWords( ['' => '- alle -'] + $optProject, $numberProjects );
+	$optProject		= quantifyWords( ['' => '- alle -'] + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
 	$filters[]	= HTML::DivClass( 'row-fluid', array(

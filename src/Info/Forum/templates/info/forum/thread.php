@@ -58,7 +58,7 @@ if( $posts ){
 		}
 		$user	= '-';
 		if( $post->author ){
-			$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
+			$gravatar	= 'https://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
 			$gravatar	= HtmlTag::create( 'img', NULL, ['src' => $gravatar, 'class' => 'avatar'] );
 			$nrPosts	= HtmlTag::create( 'small', ' ('.$userPosts[$post->author->userId].')', ['class' => 'muted'] );
 			$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), ['class' => 'muted'] );

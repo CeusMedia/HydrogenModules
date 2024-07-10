@@ -11,7 +11,7 @@
 	<company site="http://www.besite.nl/" email="">BeSite B.V.</company>
 	<url>http://mmenu.frebsite.nl/</url>
 	<license version="5" source="http://en.wikipedia.org/wiki/MIT_License">MIT</license>
-	<license version="7" source="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
+	<license version="7" source="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
 	<files>
 		<class>Hook/JS/jQuery/Mmenu.php</class>
 		<script>mmenu/5.5.3/jquery.mmenu.dragclose.min.js</script>

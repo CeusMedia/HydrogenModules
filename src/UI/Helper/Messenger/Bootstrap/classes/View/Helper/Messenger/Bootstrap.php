@@ -6,9 +6,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Messenger_Bootstrap
 {
-	protected $env;
+	protected Environment $env;
 
-	protected $classes	= [
+	protected array $classes	= [
 		'0'	=> 'messenger messenger-failure alert alert-danger bs4-alert-dark',
 		'1'	=> 'messenger messenger-error alert alert-danger',
 		'2'	=> 'messenger messenger-notice alert alert-info',
@@ -20,6 +20,11 @@ class View_Helper_Messenger_Bootstrap
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@param		?string		$timeFormat
+	 *	@param		bool		$linkResources
+	 *	@return		string
+	 */
 	public function render( string $timeFormat = NULL, bool $linkResources = FALSE ): string
 	{
 		$messages	= $this->env->getMessenger()->getMessages();
@@ -45,19 +50,19 @@ class View_Helper_Messenger_Bootstrap
 			}
 			$buttonDismiss	= '';
 			if( $this->env->getModules()->has( 'UI_JS_Messenger' ) ){
-				$buttonClose	= HtmlTag::create( 'button', "&times;", array(
+				$buttonClose	= HtmlTag::create( 'button', "&times;", [
 					'type'		=> 'button',
 					'onclick'	=> 'UI.Messenger.discardMessage($(this).parent());',
 					'class'		=> 'close',
-				) );
+				] );
 				$message		= $buttonClose.$message;
 			}
 			else{
-				$buttonClose	= HtmlTag::create( 'button', "&times;", array(
+				$buttonClose	= HtmlTag::create( 'button', "&times;", [
 					'type'		=> 'button',
 					'onclick'	=> '$(this).parent().slideUp();',
 					'class'		=> 'close',
-				) );
+				] );
 				$message		= $buttonClose.$message;
 			}
 			$list[] 	= HtmlTag::create( 'div', $message, ['class' => $class] );
@@ -66,6 +71,12 @@ class View_Helper_Messenger_Bootstrap
 		return HtmlTag::create( 'div', $list, ['class' => 'messenger-messages messenger-bootstrap'] );
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		?string			$timeFormat
+	 *	@param		bool			$linkResources
+	 *	@return		string
+	 */
 	public static function renderStatic( Environment $env, string $timeFormat = NULL, bool $linkResources = FALSE ): string
 	{
 		if( !$env->getMessenger()->getMessages() )

@@ -35,7 +35,7 @@ class View_Sitemap extends View
 	protected function renderXml( array $links, $options )
 	{
 		$root	= new XmlNode( 'urlset' );
-		$root->setAttribute( 'xmlns', "http://www.sitemaps.org/schemas/sitemap/0.9" );
+		$root->setAttribute( 'xmlns', "https://www.sitemaps.org/schemas/sitemap/0.9" );
 		foreach( $links as $link ){
 			$child	= new XmlNode( 'url' );
 			$child->addChild( new XmlNode( 'loc', $link->location ) );
