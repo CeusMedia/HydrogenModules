@@ -129,6 +129,11 @@ class Job_Shop extends Job_Abstract
 
 	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = [], array $parameters = [] ): void
 	{
+		if( !class_exists( 'Model_Shop_Migrant' ) ){
+			$this->out( 'No migrant model class found (Model_Shop_Migrant)' );
+			return;
+		}
+
 		$this->loadConfig();
 		if( !isset( $this->data->migrants ) ){
 			$this->out( 'No migrants configuration found in '.$this->configFileOldCustomers );

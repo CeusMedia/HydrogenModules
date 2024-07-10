@@ -1,12 +1,16 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Address as MailAddress;
+use CeusMedia\Mail\Message as MailMessage;
+use CeusMedia\Mail\Message\Parser as MailMessageParser;
+use CeusMedia\Mail\Transport\SMTP;
 
 class Logic_Mail_Group_Message extends Logic
 {
-	protected $logicGroup;
-	protected $modelMember;
-	protected $modelMessage;
+	protected Logic_Mail_Group $logicGroup;
+	protected Model_Mail_Group_Member $modelMember;
+	protected Model_Mail_Group_Message $modelMessage;
 
 /*
 	protected $modelGroup;
@@ -17,9 +21,16 @@ class Logic_Mail_Group_Message extends Logic
 	protected $logicMail;*/
 	protected array $transports		= [];
 
-	public function addFromRawMail( int|string $groupId, $rawMail )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		string			$rawMail
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addFromRawMail( int|string $groupId, string $rawMail ): string
 	{
-		$parser		= new \CeusMedia\Mail\Message\Parser();
+		$parser		= new MailMessageParser();
 		$message	= $parser->parse( $rawMail );
 		$headers	= $message->getHeaders();
 		$member		= $this->modelMember->getByIndices( array(
@@ -54,7 +65,13 @@ class Logic_Mail_Group_Message extends Logic
 		return $this->modelMessage->add( $data, FALSE );
 	}
 
-	public function checkId( int|string $messageId, bool $strict = TRUE )
+	/**
+	 *	@param		int|string		$messageId
+	 *	@param		bool			$strict
+	 *	@return		?object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function checkId( int|string $messageId, bool $strict = TRUE ): ?object
 	{
 		$message	= $this->modelMessage->get( $messageId );
 		if( $message )
@@ -67,10 +84,10 @@ class Logic_Mail_Group_Message extends Logic
 	//  --  PUBLIC METHODS  --  //
 
 	/**
-	 *	...s
-	 *	@access		public
 	 *	@param		object|int|string	$messageOrMessageId		Message object or Message ID
 	 *	@return		object				Mail message object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getMessageObject( object|int|string $messageOrMessageId ): object
 	{
@@ -82,7 +99,7 @@ class Logic_Mail_Group_Message extends Logic
 			throw new InvalidArgumentException( 'No valid message object or ID given' );
 
 		if( '' === ( $message->object ?? '' ) ){
-			$parser		= new \CeusMedia\Mail\Message\Parser();
+			$parser		= new MailMessageParser();
 			$rawMail	= $this->getMessageRawMail( $message );
 			$object		= $parser->parse( $rawMail );
 
@@ -103,14 +120,19 @@ class Logic_Mail_Group_Message extends Logic
 		return unserialize( $object[1] );
 	}
 
-	public function getMessageRawMail( object|int|string $messageOrMessageId )
+	/**
+	 *	@param		object|int|string		$messageOrMessageId
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getMessageRawMail( object|int|string $messageOrMessageId ): string
 	{
 //		trigger_error( "Oh! I thought this method is not used anymore.", E_USER_ERROR );
 		if( is_object( $messageOrMessageId ) )
 			$message	= $messageOrMessageId;
 		else if( is_int( $messageOrMessageId ) )
 			$message	= $this->modelMessage->get( $messageOrMessageId );
-		if( !$message || !isset( $message->object ) )
+		if( !isset( $message ) || !isset( $message->object ) )
 			throw new InvalidArgumentException( 'Given message is invalid' );
 
 		$raw	= explode( ":", $message->raw, 2 );
@@ -143,6 +165,13 @@ class Logic_Mail_Group_Message extends Logic
 		}
 	}*/
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$dry
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function handleImportedGroupMessages( int|string $groupId,  bool $dry = FALSE ): object
 	{
 		$senderMemberStatusesToReject	= [
@@ -175,7 +204,7 @@ class Logic_Mail_Group_Message extends Logic
 				$sender	= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );
 				if( !$this->logicGroup->isGroupMember( $groupId, $sender->mailGroupMemberId ) ){
 					if( (int) $group->type === Model_Mail_Group::TYPE_AUTOJOIN ){
-						$this->logicGroup->addGroupMember( $message->mailGroupMemberId, $sender->mailGroupMemberId );
+						$this->logicGroup->addGroupMember( $message->mailGroupMemberId, $sender->mailGroupMemberId, '' );
 					}
 					else{
 
@@ -223,6 +252,13 @@ class Logic_Mail_Group_Message extends Logic
 		return $results;
 	}
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$dry
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function handleStalledGroupMessages( int|string $groupId, bool $dry = FALSE ): object
 	{
 		$group		= $this->logicGroup->checkGroupId( $groupId );
@@ -261,9 +297,16 @@ class Logic_Mail_Group_Message extends Logic
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );*/
 	}
 
+	/**
+	 *	@param		object		$message
+	 *	@param		bool		$dryMode
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function forwardMessage( object $message, bool $dryMode = FALSE ): array
 	{
-		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE, TRUE );
+		$group	= $this->logicGroup->getGroup( $message->mailGroupId, TRUE );
 		$allowedMessageStatuses	= [
 			Model_Mail_Group_Message::STATUS_NEW,
 			Model_Mail_Group_Message::STATUS_STALLED,
@@ -280,6 +323,14 @@ class Logic_Mail_Group_Message extends Logic
 		return $mails;
 	}
 
+	/**
+	 *	@param		object|int|string	$messageObjectOrId
+	 *	@param		object|int|string	$memberObjectOrId
+	 *	@param		bool				$dry
+	 *	@return		MailMessage|void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function forwardMessageToMember( object|int|string $messageObjectOrId, object|int|string $memberObjectOrId, bool $dry = FALSE )
 	{
 		if( is_object( $messageObjectOrId ) )
@@ -292,7 +343,7 @@ class Logic_Mail_Group_Message extends Logic
 		if( is_object( $memberObjectOrId ) )
 			$member	= $memberObjectOrId;
 		else if( is_int( $memberObjectOrId ) )
-			$member	= $this->checkMemberId( $memberObjectOrId );
+			$member	= $this->logicGroup->checkMemberId( $memberObjectOrId );
 		else
 			throw new InvalidArgumentException( 'No valid member object or ID given' );
 
@@ -305,10 +356,12 @@ class Logic_Mail_Group_Message extends Logic
 		$senderMember		= $this->logicGroup->getGroupMember( $message->mailGroupMemberId );
 		if( !$senderMember )
 			throw new RuntimeException( 'Message sender is not valid' );
-		$senderAddress	= new \CeusMedia\Mail\Address( $senderMember->address, $senderMember->title );
+		$senderAddress	= new MailAddress( $senderMember->address );
+		if( '' !== ( $senderMember->title ?? '' ) )
+			$senderAddress->setName( $senderMember->title );
 
 		$mailObject		= $this->getMessageObject( (int) $message->mailGroupMessageId );
-		$forwardMail	= new \CeusMedia\Mail\Message();
+		$forwardMail	= new MailMessage();
 		foreach( $mailObject->getParts( TRUE ) as $part ){
 			$part->setEncoding( 'base64' );
 			if( strlen( trim( $part->getContent() ) ) )
@@ -321,14 +374,16 @@ class Logic_Mail_Group_Message extends Logic
 		}
 
 		$forwardMail->setSender( $senderAddress );
-		$forwardMail->addReplyTo( new \CeusMedia\Mail\Address( $group->address ) );
+		$forwardMail->addReplyTo( new MailAddress( $group->address ) );
 		$forwardMail->setSubject( $mailObject->getSubject() );
 		$forwardMail->addHeaderPair( 'Precedence', 'list' );
 		$forwardMail->addHeaderPair( 'List-Post', '<mailto:'.$group->address.'>' );
 		$forwardMail->addHeaderPair( 'Reply-To', $group->address );
 		if( !empty( $group->bounce ) )
 			$message->addHeaderPair( 'Errors-To', $group->bounce );
-		$recipient	= new \CeusMedia\Mail\Address( $member->address, $member->title );
+		$recipient	= new MailAddress( $member->address );
+		if( '' !== ( $member->title ?? '' ) )
+			$recipient->setName( $member->title );
 		$forwardMail->addRecipient( $recipient );
 //		remark( '    Send to: '.$recipient->get() );
 		if( !$dry ){
@@ -342,6 +397,10 @@ class Logic_Mail_Group_Message extends Logic
 		return $forwardMail;
 	}
 
+	/**
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 */
 	protected function getMailGroupLogic(): object
 	{
 		return $this->env->getLogic()->get( 'mailGroupMessage' );
@@ -353,7 +412,7 @@ class Logic_Mail_Group_Message extends Logic
 		if( !array_key_exists( $groupId, $this->transports ) ){
 			$group	= $this->logicGroup->checkGroupId( $groupId );
 			$server	= $this->logicGroup->checkServerId( $group->mailGroupServerId );
-			$this->transports[$groupId]  = new \CeusMedia\Mail\Transport\SMTP(
+			$this->transports[$groupId]  = new SMTP(
 				$server->smtpHost,
 				(int) $server->smtpPort,
 				$group->address,
@@ -363,6 +422,12 @@ class Logic_Mail_Group_Message extends Logic
 		return $this->transports[$groupId];
 	}
 
+	/**
+	 *	@param		object|int|string		$messageObjectOrId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function rejectMessage( object|int|string $messageObjectOrId ): void
 	{
 		if( is_object( $messageObjectOrId ) )
@@ -380,6 +445,12 @@ class Logic_Mail_Group_Message extends Logic
 		//	... @todo send mail to sender
 	}
 
+	/**
+	 *	@param		object|int|string		$messageObjectOrId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function stallMessage( object|int|string $messageObjectOrId ): void
 	{
 		if( is_object( $messageObjectOrId ) )
@@ -399,14 +470,22 @@ class Logic_Mail_Group_Message extends Logic
 
 	//  --  PRIVATE METHODS  --  //
 
-	private function setMessageStatus( int|string $messageId, $status, $method = NULL ): void
+	/**
+	 *	@param		int|string		$messageId
+	 *	@param		int				$status
+	 *	@param		?string			$method
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	private function setMessageStatus( int|string $messageId, int $status, ?string $method = NULL ): void
 	{
 		$message	= $this->checkId( $messageId );
-		$data		= array(
+		$data		= [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		);
-		$result		= $this->modelMessage->edit( $messageId, $data );
+		];
+		$this->modelMessage->edit( $messageId, $data );
 		$payload	= [
 			'before'	=> $message,
 			'changes'	=> $data,

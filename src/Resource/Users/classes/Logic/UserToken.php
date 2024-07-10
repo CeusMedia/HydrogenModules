@@ -3,16 +3,14 @@
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\HydrogenFramework\Logic;
 
+/**
+ * @todo check if deprecated, seems to be not used, right? if so, remove class
+ */
 class Logic_UserToken extends Logic
 {
 	protected Model_User $modelUser;
 	protected Model_User_Password $modelPassword;
 	protected Model_User_Token $modelToken;
-
-	public function authenticate()
-	{
-		return $this->get();
-	}
 
 	public function get( string $username, string $password, ?string $scope = NULL ): string
 	{

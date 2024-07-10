@@ -424,7 +424,7 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
 		$data	= [
-			'access_token'	=> $this->generateAccessToken( $applicationId ),
+			'access_token'	=> $this->generateAccessToken( $applicationId, 0 ),
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeRefreshToken,
 		];

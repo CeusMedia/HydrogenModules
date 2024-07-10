@@ -6,6 +6,8 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 {
 	protected string $current	= '';
 
+	protected static array $matches	= [];
+
 	public function render( $scope = 0 ): string
 	{
 		$model		= new Model_Page( $this->env );

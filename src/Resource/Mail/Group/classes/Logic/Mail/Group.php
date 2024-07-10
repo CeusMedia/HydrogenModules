@@ -79,7 +79,14 @@ class Logic_Mail_Group extends Logic
 		return $groupMemberId;
 	}*/
 
-	public function autojoinMemberByMessage( int|string $groupId, $message )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		$message
+	 *	@return		int|string		Mail group member ID
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function autojoinMemberByMessage( int|string $groupId, $message ): int|string
 	{
 		$allowedGroupStatuses	= [
 			Model_Mail_Group::STATUS_ACTIVATED,
@@ -121,7 +128,7 @@ class Logic_Mail_Group extends Logic
 			'email'		=> $senderMember->address,
 		];
 		$this->logicMail->handleMail(
-			new Mail_Info_Mail_Group_Autojoined( $this->env, $mailData ),
+			new Mail_Info_Mail_Group_Member_Autojoined( $this->env, $mailData ),
 			$receiver,
 			$this->env->getLanguage()->getLanguage()
 		);
@@ -231,7 +238,12 @@ class Logic_Mail_Group extends Logic
 		return $list;
 	}
 
-	public function getGroupMember( int|string $memberId, bool $activeOnly = FALSE )
+	/**
+	 *	@param		int|string		$memberId
+	 *	@param		bool			$activeOnly
+	 *	@return		?object
+	 */
+	public function getGroupMember( int|string $memberId, bool $activeOnly = FALSE ): ?object
 	{
 		$indices	= ['mailGroupMemberId' => $memberId];
 		if( $activeOnly )

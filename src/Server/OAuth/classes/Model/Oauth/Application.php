@@ -79,7 +79,7 @@ class Model_Oauth_Application extends Model
 		return hash( "sha256", $salt.'_'.microtime( TRUE ).'_'.$pepper );
 	}
 
-	public function remove( string $id ): bool
+	public function remove( int|string $id ): bool
 	{
 		$modelAccess	= new Model_Oauth_AccessToken( $this->env );
 		$modelCode		= new Model_Oauth_Code( $this->env );

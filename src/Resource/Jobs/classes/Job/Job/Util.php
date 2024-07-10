@@ -36,6 +36,7 @@ class Job_Job_Util extends Job_Abstract
 		$this->results	= date_create()->format( $format );						//  @todo replace by line below after framework update
 //		$this->results	= $this->env->date->now->format( $format );
 		$this->out( $this->results );
+		return $this->results;
 	}
 
 	public function getExtensionVersion(): void
