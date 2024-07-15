@@ -10,6 +10,10 @@ class Controller_Manage_Import extends Controller
 	protected Model_Import_Connector $modelConnector;
 	protected array $connectorMap		= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -33,6 +37,11 @@ class Controller_Manage_Import extends Controller
 		}
 	}
 
+	/**
+	 * @param		string		$connectionId
+	 * @return		void
+	 * @throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $connectionId ): void
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -66,7 +75,6 @@ class Controller_Manage_Import extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

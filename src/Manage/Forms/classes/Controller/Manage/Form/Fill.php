@@ -22,6 +22,11 @@ class Controller_Manage_Form_Fill extends Controller
 
 	protected array $transferTargetMap	= [];
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function confirm( string $fillId ): void
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
@@ -98,6 +103,87 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$importRuleId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function import( int|string $importRuleId ): void
+	{
+		$verbose	= FALSE;
+		$dryMode	= TRUE;
+
+		$response	= $this->env->getResponse();
+		$response->setHeader( 'Content-type', 'text/plain' );
+		$response->setStatus( 200 );
+		$response->setBody( 'OK' );
+
+		if( 0 === (int) $importRuleId ){
+			$response->setStatus( 400 );
+			$response->setBody( 'No import rule ID given' );
+			$response->send();
+		}
+
+		if( !$this->request->getMethod()->isPut() ){
+			$response->setStatus( 405 );
+			$response->setBody( 'Access denied: PUT requests, only' );
+			$response->send();
+		}
+
+		if( 'application/json' !== $this->request->getHeader( 'Content-Type' )->getValue() ){
+			$response->setStatus( 406 );
+			$response->setBody( 'Invalid content type: application/json, only' );
+			$response->send();
+		}
+		try{
+			/** @var ?object $importRule */
+			$importRule	= $this->modelRule->get( $importRuleId );
+			if( NULL === $importRule )
+				throw new RuntimeException( 'Access denied: Invalid ID given' );
+
+			$errors			= [];
+			$logicImport	= new Logic_Import( $this->env );
+			$connection		= $logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
+	//		$connection->setOptions( $this->jsonParser->parse( $importRule->options ) );
+			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
+	//		$clock				= new Clock();
+			$results			= $connection->find( $searchCriteria, [], [0, 10] );
+
+			$logicImport	= new Logic_Import( $this->env );
+			foreach( $results as $result ){
+				foreach( $result->data as $dataSet ){
+					foreach( $dataSet as $data ){
+						try{
+							$logicImport->importData( $importRule, $data, $verbose, $dryMode );
+						}
+						catch( Exception $e ){
+							$errors[]	= $e->getMessage();
+							$this->env->getLog()->logException( $e );
+						}
+					}
+				}
+			}
+
+			if( 0 !== count( $errors ) ){
+				$list	= PHP_EOL.'- '.implode( PHP_EOL.'- ', $errors );
+				$response->setStatus( 500 );
+				$response->setBody( 'There were '.count( $errors ).' errors: '.$list );
+				$response->send();
+			}
+
+		}
+		catch( Exception $e ){
+			$response->setStatus( 500 );
+			$response->setBody( 'Error: '.$e->getMessage() );
+			$response->send();
+		}
+
+		$response->send();
+	}
+
+
+
 	public function index( $page = NULL ): void
 	{
 		$filterFillId	= $this->session->get( 'manage_form_fill_fillId', '' );
@@ -147,6 +233,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->addData( 'filterStatus', $filterStatus );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function markAsConfirmed( string $fillId ): void
 	{
 		$this->checkId( $fillId );
@@ -159,6 +250,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function markAsHandled( string $fillId ): void
 	{
 		$this->checkId( $fillId );
@@ -169,6 +265,12 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
+	/**
+	 *	Receive form data from external application.
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function receive(): void
 	{
 		error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
@@ -265,6 +367,11 @@ class Controller_Manage_Form_Fill extends Controller
 		exit;
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $fillId ): void
 	{
 		$page		= (int) $this->request->get( 'page' );
@@ -284,6 +391,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $fillId ): void
 	{
 		$fill	= $this->checkId( $fillId );

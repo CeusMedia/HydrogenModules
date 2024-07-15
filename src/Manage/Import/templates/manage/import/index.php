@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
