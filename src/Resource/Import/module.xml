@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <module>
-	<title>Import</title>
+	<title>Resource: Import</title>
 	<subtitle>Provider for import connections.</subtitle>
 	<description><![CDATA[]]></description>
 	<category>Resource</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Add mailbox as first connector.</log>
@@ -12,11 +12,13 @@
 	<log version="0.2.3">Add disconnect to interface and connectors.</log>
 	<log version="0.2.4">Support folder index on connections.</log>
 	<log version="0.2.5">Adjust to changes in accessing mailboxes.</log>
+	<log version="0.2.6">Add import connector adapter to use HTTP requests.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Logic/Import.php</class>
 		<class>Logic/Import/Connector/Abstract.php</class>
+		<class>Logic/Import/Connector/Controller.php</class>
 		<class>Logic/Import/Connector/Interface.php</class>
 <!--		<class>Logic/Import/Connector/Mailbox.php</class>-->
 		<class>Logic/Import/Connector/MailAbstract.php</class>
