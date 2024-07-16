@@ -120,9 +120,9 @@ class Resource_Database_Connection extends DatabasePdoConnection
 	 *	@param		string		$query			SQL statement to query
 	 *	@param		?integer		$fetchMode		... (default: 2)
 	 *	@param		mixed		$fetchModeArgs	Arguments of custom class constructor when the mode parameter is set to PDO::FETCH_CLASS.
-	 *	@return		PDOStatement				PDO statement containing fetchable results
+	 *	@return		PDOStatement|FALSE				PDO statement containing fetch-able results
 	 */
-	public function query( string $query,  ?int $fetchMode = null, mixed ...$fetchModeArgs ): PDOStatement
+	public function query( string $query,  ?int $fetchMode = null, mixed ...$fetchModeArgs ): PDOStatement|FALSE
 	{
 		if( self::STATUS_UNKNOWN === $this->status )
 			throw new RuntimeException( 'No connection options set' );
