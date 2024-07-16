@@ -10,7 +10,7 @@ class View_Helper_Form_Fill_Data
 
 	protected Environment $env;
 	protected object $fill;
-	protected string $form;
+	protected object $form;
 	protected int $mode;
 	protected array $fields			= [
 		'gender',
@@ -97,10 +97,10 @@ class View_Helper_Form_Fill_Data
 		return $this;	}
 
 	/**
-	 *	@param		string		$form
+	 *	@param		object		$form
 	 *	@return		self
 	 */
-	public function setForm( string $form ): self
+	public function setForm( object $form ): self
 	{
 		$this->form		= $form;
 		return $this;

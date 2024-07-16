@@ -3,7 +3,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var array<object> $mails */
+/** @var array<object> $mailsCustomer */
+/** @var array<object> $mailsManager */
 /** @var int $page */
 /** @var int $pages */
 
@@ -26,10 +27,15 @@ $types		= [
 ];
 $optType	= HtmlElements::Options( $types );
 
-$optDelivery	= ['' => '- keine -'];
-foreach( $mails as $item )
-	$optDelivery[$item->identifier] = $item->title;
-		$optDelivery	= HtmlElements::Options( $optDelivery );
+$optMailCustomer	= ['' => '- keine -'];
+foreach( $mailsCustomer as $item )
+	$optMailCustomer[$item->mailId]	= $item->title;
+$optMailCustomer	= HtmlElements::Options( $optMailCustomer );
+
+$optMailManager		= ['' => '- keine -'];
+foreach( $mailsManager as $item )
+	$optMailManager[$item->mailId]	= $item->title;
+$optMailManager		= HtmlElements::Options( $optMailManager );
 
 return '
 <h2><span class="muted">Formular:</span> Neu</h2>
@@ -55,13 +61,25 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span8">
+				<div class="span12">
 					<label for="input_receivers">Empfänger <small class="muted">(mit Komma getrennt)</small></label>
 					<input type="text" name="receivers" id="input_receivers" class="span12"/>
 				</div>
-				<div class="span4">
-					<label for="input_delivery">Ergebnis-Email an Kunden</label>
-					<select name="delivery" id="input_delivery" class="span12">'.$optDelivery.'</select>
+			</div>
+			<div class="row-fluid">
+				<div class="span6">
+					<label for="input_customerMailId">Ergebnis-Email an Kunden <small class="muted">(=Absender)</small></label>
+					<select name="customerMailId" id="input_customerMailId" class="span12">'.$optMailCustomer.'</select>
+				</div>
+				<div class="span6">
+					<label for="input_managerMailId">Ergebnis-Email an Manager <small class="muted">(=Empfänger)</small></label>
+					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_forwardOnSuccess">URL-Weiterleitung bei Erfolg<!-- <small class="muted">(...)</small>--></label>
+					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12"/>
 				</div>
 			</div>
 			<div class="row-fluid" style="margin-bottom: 1em">

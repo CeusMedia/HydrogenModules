@@ -43,9 +43,8 @@ class Controller_Manage_Form extends Controller
 			$this->restart( 'edit/'.$formId, TRUE );
 		}
 
-		$orders		= ['identifier' => 'customer_result_%'];
-		$mails		= $this->modelMail->getAll( $orders, ['title' => 'ASC'] );
-		$this->addData( 'mails', $mails );
+		$this->addData( 'mailsCustomer', $this->getAvailableCustomerMails() );
+		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
 	public function addRule( string $formId, $formType ): void

@@ -41,12 +41,11 @@ class Controller_Manage_Form_Mail extends Controller
 
 	public function filter( $reset = NULL ): void
 	{
-		$filters	= array_keys( $this->filters );
 		if( $reset ){
-			foreach( $filters as $filter )
+			foreach( $this->filters as $filter )
 				$this->session->remove( $this->filterPrefix.$filter );
 		}
-		foreach( $filters as $filter ){
+		foreach( $this->filters as $filter ){
 			if( $this->request->has( $filter ) ){
 				$value	= $this->request->get( $filter );
 				$this->session->set( $this->filterPrefix.$filter, $value );

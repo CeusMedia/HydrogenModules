@@ -74,28 +74,28 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_rules-'.$rule->formImportRuleId.'">Regeln <small class="muted">(im JSON-Format) '.$buttonTest.'</small></label>
-					<textarea name="rules" id="input_rules-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="25" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->rules, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="rules" id="input_rules-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="25" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->rules ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_searchCriteria">Suchkriterien <small class="muted">(im IMAP-Format)</small></label>
-					<textarea name="searchCriteria" id="input_searchCriteria" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->searchCriteria, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="searchCriteria" id="input_searchCriteria" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->searchCriteria ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 				<div class="span6">
 					<label for="input_options-'.$rule->formImportRuleId.'">Optionen</label>
-					<textarea name="options" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->options, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="options" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->options ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_renameTo">anschließend verschieben nach</label>
-<!--					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo, ENT_QUOTES, 'UTF-8' ).'"/>-->
+<!--					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo ?? '', ENT_QUOTES, 'UTF-8' ).'"/>-->
 					<select name="moveTo" id="input_moveTo" class="span12">'.$optMoveTo.'</select>
 				</div>
 				<div class="span4">
 					<label for="input_renameTo"><strike class="muted">anschließend umbenennen zu</strike></label>
-					<input type="text" name="renameTo" id="input_renameTo" class="span12" disabled="disabled" value="'.htmlentities( $rule->renameTo, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="renameTo" id="input_renameTo" class="span12" disabled="disabled" value="'.htmlentities( $rule->renameTo ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="buttonbar">

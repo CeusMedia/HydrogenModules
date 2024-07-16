@@ -17,7 +17,7 @@ class Controller_System_Exception extends Controller
 			if( $session->has( 'exceptionUrl' ) ){
 				$this->addData( 'exceptionUrl', $session->get( 'exceptionUrl' ) );
 			}
-			if( isset( $exception->code ) ){
+			if( isset( $exception->code ) && is_int( $exception->code ) ){
 				if( HttpStatus::isCode( $exception->code ) ){
 					HttpStatus::sendHeader( $exception->code );					//  send HTTP status code header
 					$this->env->getResponse()->setStatus( $exception->code );			//  indicate HTTP status 500 - internal server error

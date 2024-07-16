@@ -3,7 +3,7 @@
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\HydrogenFramework\Controller\Ajax as Controller;
 
-class View_Ajax_Manage_Form extends Controller
+class Controller_Ajax_Manage_Form extends Controller
 {
 	/**
 	 *	@return		void
