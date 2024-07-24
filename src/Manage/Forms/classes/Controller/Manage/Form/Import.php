@@ -22,6 +22,7 @@ class Controller_Manage_Form_Import extends Controller
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
+				'status'				=> $this->request->get( 'status' ),
 				'title'					=> $this->request->get( 'title' ),
 				'searchCriteria'		=> $this->request->get( 'searchCriteria' ),
 				'options'				=> $this->request->get( 'options' ),
@@ -47,6 +48,11 @@ class Controller_Manage_Form_Import extends Controller
 	public function edit( int|string $ruleId ): void
 	{
 		$rule		= $this->modelRule->get( $ruleId );
+		if( NULL === $rule ){
+			$this->env->getMessenger()->noteError( 'Invalid Rule ID' );
+			$this->restart( NULL, TRUE );
+		}
+
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
 
@@ -63,6 +69,7 @@ class Controller_Manage_Form_Import extends Controller
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
+				'status'				=> $this->request->get( 'status' ),
 				'title'					=> $this->request->get( 'title' ),
 				'searchCriteria'		=> $this->request->get( 'searchCriteria' ),
 				'options'				=> $this->request->get( 'options' ),
