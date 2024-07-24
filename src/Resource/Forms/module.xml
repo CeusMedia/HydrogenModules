@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
 
 DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
-  `formImportRuleId` int(10) UNSIGNED NOT NULL,
+  `formImportRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `importConnectionId` int(10) UNSIGNED NOT NULL,
   `formId` int(10) UNSIGNED NOT NULL,
   `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:test, 2:active, 3:paused, 4:disabled',
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>form_fill_transfers` (
 <sql type="mysql" on="update" version="0.3.7"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>form_import_rules` (
-  `formImportRuleId` int(10) UNSIGNED NOT NULL,
+  `formImportRuleId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `importConnectionId` int(10) UNSIGNED NOT NULL,
   `formId` int(10) UNSIGNED NOT NULL,
   `status` tinyint(1) UNSIGNED DEFAULT '0' COMMENT '0:new, 1:test, 2:active, 3:paused, 4:disabled',

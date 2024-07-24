@@ -19,13 +19,13 @@ class Logic_Form_Transfer_DataMapper extends Logic
 		$output	= new Dictionary();
 
 		$this->applySets( (array) $rules->set ?? [], $input, $output );
-		$this->applyTranslation( (array) $rules->translate ?? [], $input, $output );
-		$this->applyFilters( (array) $rules->filter ?? [], $input, $output );
-		$this->applyDatabaseSearches( (array) $rules->db ?? [], $input, $output );
+		$this->applyTranslation( (array) ( $rules->translate ?? [] ), $input, $output );
+		$this->applyFilters( (array) ( $rules->filter ?? [] ), $input, $output );
+		$this->applyDatabaseSearches( (array) ( $rules->db ?? [] ), $input, $output );
 
-		$this->applyCreations( (array) $rules->create ?? [], $input, $output );
-		$this->applyCopies( (array) $rules->copy ?? [], $input, $output );
-		$this->applyMappings( (array) $rules->map ?? [], $input, $output );
+		$this->applyCreations( (array) ( $rules->create ?? [] ), $input, $output );
+		$this->applyCopies( (array) ( $rules->copy ?? [] ), $input, $output );
+		$this->applyMappings( (array) ( $rules->map ?? [] ), $input, $output );
 
 		return $output->getAll();
 	}

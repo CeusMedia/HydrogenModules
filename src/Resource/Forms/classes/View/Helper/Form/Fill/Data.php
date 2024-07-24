@@ -11,7 +11,7 @@ class View_Helper_Form_Fill_Data
 	protected Environment $env;
 	protected object $fill;
 	protected object $form;
-	protected int $mode;
+	protected int $mode				= 0;
 	protected array $fields			= [
 		'gender',
 		'firstname',
