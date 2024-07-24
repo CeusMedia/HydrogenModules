@@ -44,6 +44,12 @@ class Controller_Manage_Import extends Controller
 	 */
 	public function edit( string $connectionId ): void
 	{
+		$connection	= $this->modelConnection->get( $connectionId );
+		if( NULL === $connection ){
+			$this->env->getMessenger()->noteError( 'Invalid Connection ID' );
+			$this->restart( NULL, TRUE );
+		}
+
 		if( $this->request->getMethod()->isPost() ){
 			$this->modelConnection->edit( $connectionId, [
 				'importConnectorId'	=> $this->request->get( 'importConnectorId' ),
