@@ -17,6 +17,12 @@ class Model_Import_Connector extends Model
 	public const STATUS_DISABLED	= 0;
 	public const STATUS_ENABLED		= 1;
 
+	public const TYPE_UNKNOWN		= 0;
+	public const TYPE_PULL_ASYNC	= 1;
+	public const TYPE_PULL_SYNC		= 2;
+	public const TYPE_PUSH_POST		= 3;
+	public const TYPE_PUSH_PUT		= 4;
+
 	public const FEATURE_INDEX		= 1;
 	public const FEATURE_READ		= 2;
 	public const FEATURE_RENAME		= 4;
@@ -30,10 +36,11 @@ class Model_Import_Connector extends Model
 		'importConnectorId',
 		'creatorId',
 		'status',
-		'className',
 		'type',
+		'className',
 		'title',
 		'description',
+		'mimeTypes',
 		'createdAt',
 		'modifiedAt',
 	];

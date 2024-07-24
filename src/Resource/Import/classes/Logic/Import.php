@@ -27,19 +27,20 @@ class Logic_Import extends Logic
 
 	/**
 	 *	@param		int|string		$connectionId
+	 *	@param		?object			$connector			Connector data object, optional, if already available
 	 *	@return		Logic_Import_Connector_Interface
 	 *	@throws		RangeException			if connection ID is invalid
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getConnectionInstanceFromId( int|string $connectionId ): Logic_Import_Connector_Interface
+	public function getConnectionInstanceFromId( int|string $connectionId, ?object $connector = NULL ): Logic_Import_Connector_Interface
 	{
 		if( !isset( $this->connections[$connectionId] ) ){
 			/** @var object $connection */
 			$connection	= $this->modelConnection->get( $connectionId );
 			if( !$connection )
 				throw new RangeException( 'Invalid connection ID' );
-			$connector	= $this->modelConnector->get( $connection->importConnectorId  );
+			$connector	= $connector ?? $this->modelConnector->get( $connection->importConnectorId  );
 			if( (int) $connector->status !== Model_Import_Connector::STATUS_ENABLED )
 				throw new NotEnabledException( 'Connector "'.$connector->title.'" is not enabled' );
 
@@ -52,6 +53,19 @@ class Logic_Import extends Logic
 	}
 
 	/**
+	 *	@param		int|string		$connectionId
+	 *	@return		?object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getConnectorFromConnectionId( int|string $connectionId ): ?object
+	{
+		$connection	= $this->modelConnection->get( $connectionId );
+		if( !$connection )
+			throw new RangeException( 'Invalid connection ID' );
+		return $this->modelConnector->get( $connection->importConnectorId  );
+	}
+
+	/**
 	 *	...
 	 *	@param		object		$importRule			Data object of form input rule
 	 *	@param		array		$importData			Data from connected import source
@@ -60,6 +74,7 @@ class Logic_Import extends Logic
 	 *	@return		integer		Fill ID
 	 *	@throws		RuntimeException				if not data given
 	 *	@throws		RuntimeException				if parsing JSON of rule failed
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importData( object $importRule, array $importData, bool $verbose, bool $dryMode ): int
@@ -119,38 +134,33 @@ class Logic_Import extends Logic
 		$this->modelFill		= new Model_Form_Fill( $this->env );
 		$this->jsonParser		= new JsonParser;
 		$this->dataMapper		= new Logic_Form_Transfer_DataMapper( $this->env );
-
 	}
 
 	/**
 	 *	@param		array		$formData
 	 *	@param		object		$ruleSet
 	 *	@return		array<string,array>
+	 *	@throws		ReflectionException
 	 */
 	protected function translateFormDataToFillData( array $formData, object $ruleSet ): array
 	{
-		$fillLabels			= (array) $ruleSet->label;
-		$fillTypes			= (array) $ruleSet->type;
-		$fillValueLabels	= (array) $ruleSet->valueLabel ?? [];
+		$payload	= [
+			'formData'			=> $formData,
+			'fillLabels'		=> (array) $ruleSet->label,
+			'fillTypes'			=> (array) $ruleSet->type,
+			'fillValueLabels'	=> (array) $ruleSet->valueLabel ?? [],
+		];
+		$this->env->getCaptain()->callHook( 'Import', 'translateFormFillData', $this, $payload );
 
-		//  get value labels for base and topic from database (school_bases, school_courses)
-		foreach( $formData as $key => $value ){
-			if( !in_array( $key, ['base', 'topic'], TRUE ) )
-				continue;
-			if( $key === 'base' )
-				$model	= new Model_School_Base( $this->env );
-			else if( $key === 'topic' )
-				$model	= new Model_School_Course( $this->env );
-			if( isset( $model ) ){
-				$entry	= $model->getByIndex( 'identifier', $value );
-				if( $entry )
-					$fillValueLabels[$key.'-'.$value]	= $entry->title;
-			}
-		}
+		/** @var array<string,string> $fillLabels */
+		/** @var array<string,string> $fillTypes */
+		/** @var array<string,string> $fillValueLabels */
+		extract( $payload );
 
+		$skip		= ['createdAt'];
 		$fillData	= [];
 		foreach( $formData as $key => $value ){
-			if( in_array( $key, ['createdAt'], TRUE ) )
+			if( in_array( $key, $skip, TRUE ) )
 				continue;
 			$value	= strip_tags( $value );
 			$fillData[$key]	= [

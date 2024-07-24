@@ -17,15 +17,15 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 	public function connect(): self
 	{
 		if( !$this->connection )
-			throw new RuntimeException( 'No connection set') ;
+			throw new RuntimeException( 'No connection set' );
 		if( !$this->connection->hostName )
-			die( 'Error: No mail host defined.' );
+			throw new RuntimeException( 'No mail host defined' );
 //		if( !$this->connection->hostPath )
 //			die( 'Error: No mailbox address defined.' );
 		if( !$this->connection->authUsername )
-			die( 'Error: No mailbox user name defined.' );
+			throw new RuntimeException( 'No mailbox user name defined' );
 		if( !$this->connection->authPassword )
-			die( 'Error: No mailbox user password defined.' );
+			throw new RuntimeException( 'No mailbox user password defined' );
 		$this->resource	= new Connection(
 			$this->connection->hostName,
 			$this->connection->authUsername,
