@@ -1,14 +1,14 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Fill extends Controller
 {
 	protected HttpRequest $request;
-	protected Dictionary $session;
+	protected HttpSession $session;
 	protected Logic_Mail $logicMail;
 	protected Logic_Form_Fill $logicFill;
 
@@ -19,16 +19,25 @@ class Controller_Manage_Form_Fill extends Controller
 	protected Model_Form_Fill_Transfer $modelFillTransfer;
 
 	protected array $transferTargetMap	= [];
+	protected string $sessionFilterPrefix	= 'manage_form_fill_';
+	protected array $filters				= [
+		'fillId',
+		'email',
+		'formId',
+		'status',
+	];
 
 	/**
 	 *	@param		string		$fillId
 	 *	@return		void
+	 *	@throws		DomainException		if given fill ID is invalid
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function confirm( string $fillId ): void
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
-			throw new DomainException( 'Invalid fill given' );
+			throw new DomainException( 'Invalid fill ID given' );
 		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
 			if( $fill->referer ){
 				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
@@ -56,6 +65,12 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function testResultMails( string $fillId ): void
 	{
 		$this->logicFill->sendCustomerResultMail( $fillId );
@@ -64,49 +79,66 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function testTransfer( string $fillId ): void
 	{
 		print_m( $this->logicFill->applyTransfers( $fillId ) );
 		exit;
 	}
 
-	public function export( $format, $type, $ids, $status = NULL ): void
+	/**
+	 *	@param		string			$format		Data format, currently no used, since only CSV is supported
+	 *	@param		string			$type		Type of ID (form|fill)
+	 *	@param		string			$ids		Comma separated list of fill or form IDs or empty string
+	 *	@param		int|string|NULL	$status
+	 *	@return		void
+	 *	@throws		DomainException			if type is not (form|fill)
+	 *	@throws		JsonException			if decoding JSON of fill data failed
+	 */
+	public function export( string $format, string $type, string $ids, int|string|NULL $status = NULL ): void
 	{
 		$ids		= explode( ',', $ids );
-		if( $status !== NULL )
-			$csv		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
-		else
-			$csv		= $this->logicFill->renderToCsv( $type, $ids );
-
-		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
-		HttpDownload::sendString( $csv, $fileName );
+		$basename	= 'Export_'.date( 'Y-m-d_H:i:s' );
+		switch( $format ){
+			case 'csv':
+			default:
+				$fileName	= $basename.'.csv';
+				if( $status !== NULL )
+					$data		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
+				else
+					$data		= $this->logicFill->renderToCsv( $type, $ids );
+		}
+		HttpDownload::sendString( $data, $fileName );
 	}
 
 	public function filter( $reset = NULL ): void
 	{
-		if( $reset ){
-			$this->session->remove( 'manage_form_fill_fillId' );
-			$this->session->remove( 'manage_form_fill_email' );
-			$this->session->remove( 'manage_form_fill_formId' );
-			$this->session->remove( 'manage_form_fill_status' );
-		}
-		if( $this->request->has( 'fillId' ) )
-			$this->session->set( 'manage_form_fill_fillId', $this->request->get( 'fillId' ) );
-		if( $this->request->has( 'email' ) )
-			$this->session->set( 'manage_form_fill_email', $this->request->get( 'email' ) );
-		if( $this->request->has( 'formId' ) )
-			$this->session->set( 'manage_form_fill_formId', $this->request->get( 'formId' ) );
-		if( $this->request->has( 'status' ) )
-			$this->session->set( 'manage_form_fill_status', $this->request->get( 'status' ) );
+		if( $reset )
+			foreach( $this->filters as $filter )
+				$this->session->remove( $this->sessionFilterPrefix.$filter );
+
+		foreach( $this->filters as $filter )
+			if( $this->request->has( $filter ) )
+				$this->session->set( $this->sessionFilterPrefix.$filter, $this->request->get( $filter ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ): void
+	/**
+	 *	@param		integer		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0 ): void
 	{
-		$filterFillId	= $this->session->get( 'manage_form_fill_fillId', '' );
-		$filterEmail	= $this->session->get( 'manage_form_fill_email', '' );
-		$filterFormId	= $this->session->get( 'manage_form_fill_formId', [] );
-		$filterStatus	= $this->session->get( 'manage_form_fill_status', '' );
+		$filterFillId	= $this->session->get( $this->sessionFilterPrefix.'fillId', '' );
+		$filterEmail	= $this->session->get( $this->sessionFilterPrefix.'email', '' );
+		$filterFormId	= $this->session->get( $this->sessionFilterPrefix.'formId', [] );
+		$filterStatus	= $this->session->get( $this->sessionFilterPrefix.'status', '' );
 
 		$conditions		= [];
 		if( 0 !== strlen( trim( $filterFillId ) ) )
@@ -121,7 +153,6 @@ class Controller_Manage_Form_Fill extends Controller
 
 		$limit		= 10;
 		$pages		= ceil( $this->modelFill->count( $conditions ) / $limit );
-		$page		= (int) $page;
 		if( $page >= $pages )
 			$page	= 0;
 		$orders		= ['fillId' => 'DESC'];
@@ -131,6 +162,7 @@ class Controller_Manage_Form_Fill extends Controller
 
 		foreach( $fills as $fill ){
 			$fill->transfers	= $this->modelFillTransfer->getAllByIndex( 'fillId', $fill->fillId );
+			$fill->form			= $this->modelForm->get( $fill->formId );
 		}
 
 		$transferTargetMap  = [];
@@ -153,6 +185,7 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		string		$fillId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsConfirmed( string $fillId ): void
@@ -185,6 +218,7 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		string		$fillId
 	 *	@return		void
+	 *	@throws		DomainException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $fillId ): void
@@ -199,6 +233,12 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( $page ? '/'.$page : '', TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function resendManagerMails( string $fillId ): void
 	{
 		$this->logicFill->sendManagerResultMails( $fillId );
@@ -248,6 +288,14 @@ class Controller_Manage_Form_Fill extends Controller
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@param		bool			$strict
+	 *	@return		object
+	 *	@throws		RuntimeException	if no ID given
+	 *	@throws		DomainException		if invalid ID given
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function checkId( int|string $fillId, bool $strict = TRUE ): object
 	{
 		return $this->logicFill->get( $fillId, $strict );

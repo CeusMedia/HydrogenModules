@@ -5,8 +5,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object $form */
-/** @var array $files */
-/** @var array $rulesAttachment */
+/** @var array<object{fileName: string, filePath: string, mimeType: string|FALSE}> $files */
+/** @var array<object> $rulesAttachment */
 /** @var array<string,string|HtmlTag> $navButtons */
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
@@ -29,17 +29,15 @@ if( $rulesAttachment ){
 		}
 		$list	= HtmlTag::create( 'ul', $list, ['style' => 'margin-bottom: 0'] );
 
-		$file	= $rule->filePath;
-
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
 		] );
-		$listRules[]	= HtmlTag::create( 'tr', array(
+		$listRules[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $list ),
-			HtmlTag::create( 'td', $file ),
+			HtmlTag::create( 'td', $rule->filePath ),
 			HtmlTag::create( 'td', $buttonRemove ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '30%', '60px'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'Datei'] ) );

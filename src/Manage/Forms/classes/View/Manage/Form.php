@@ -29,12 +29,13 @@ class View_Manage_Form extends View
 	}
 
 	/**
-	 * This view is meant to delivery a final view of the form for requests from OUTSIDE.
-	 * Uses form view helper to render form content.
-	 * Stops app flow by directly printing the form content with exit.
-	 * @return void
+	 *	This view is meant to delivery a final view of the form for requests from OUTSIDE.
+	 *	Uses form view helper to render form content.
+	 *	Stops app flow by directly printing the form content with exit.
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function view(): void
+	public function view(): never
 	{
 		$formId	= $this->getData( 'formId' );
 		$mode	= $this->getData( 'mode', '' );

@@ -3,6 +3,7 @@
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\Response as HttpResponse;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class Controller_Manage_Form_Fill_Import extends Controller
 {
@@ -18,6 +19,16 @@ class Controller_Manage_Form_Fill_Import extends Controller
 		Model_Import_Connector::TYPE_PUSH_POST,
 		Model_Import_Connector::TYPE_PUSH_PUT
 	];
+
+	/**
+	 *	Constructor, disables automatic view instance.
+	 *	@param		WebEnvironment		$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( WebEnvironment $env )
+	{
+		parent::__construct( $env, FALSE );
+	}
 
 	/**
 	 *	@param		int|string		$importRuleId

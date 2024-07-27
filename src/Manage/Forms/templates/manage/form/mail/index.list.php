@@ -3,8 +3,9 @@
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Environment $env */
 /** @var array<object> $mails List of form mails */
 /** @var int $page */
 /** @var int $pages */

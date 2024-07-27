@@ -4,10 +4,18 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Form_Fill extends View
 {
+	/**
+	 * Will automatically load template manage/form/fill/index and return to app flow.
+	 * @return void
+	 */
 	public function index(): void
 	{
 	}
 
+	/**
+	 * Will automatically load template manage/form/fill/view and return to app flow.
+	 * @return void
+	 */
 	public function view(): void
 	{
 	}

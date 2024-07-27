@@ -1,7 +1,6 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -33,6 +32,10 @@ class Controller_Manage_Form extends Controller
 
 	protected array $transferTargetMap		= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -47,7 +50,13 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
-	public function addRule( string $formId, $formType ): void
+	/**
+	 *	@param		string		$formId
+	 *	@param		int|string	$formType
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addRule( string $formId, int|string $formType ): void
 	{
 		$data		= [];
 		for( $i=0; $i<3; $i++ ){
@@ -62,7 +71,7 @@ class Controller_Manage_Form extends Controller
 		}
 		$this->modelRule->add( [
 			'formId'		=> $formId,
-			'type'			=> $formType,
+			'type'			=> (int) $formType,
 			'rules'			=> json_encode( $data ),
 			'mailAddresses'	=> $this->request->get( 'mailAddresses' ) ?? '',
 			'mailId'		=> $this->request->get( 'mailId' ),
@@ -71,6 +80,11 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addTransferRule( string $formId ): void
 	{
 		$this->checkIsPost();
@@ -94,6 +108,10 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function confirm(): string
 	{
 		$fillId		= $this->request->get( 'fillId' );
@@ -109,6 +127,7 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $formId ): void
 	{
@@ -153,8 +172,8 @@ class Controller_Manage_Form extends Controller
 		$parameterBlacklist	= ['gclid', 'fclid'];
 		$references	= $this->modelFill->getDistinct( 'referer', ['formId' => $formId], ['referer' => 'ASC'] );
 		$list		= [];
-		foreach( array_filter( $references ) as $nr => $reference ){
-			if( preg_match( '@&preview=true@', $reference ) )
+		foreach( array_filter( $references ) as $reference ){
+			if( str_contains( $reference, '&preview=true' ) )
 				continue;
 
 			$url = new Url( $reference );
@@ -169,6 +188,12 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'references', array_unique( $list ) );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@param		string		$transferRuleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function editTransferRule( string $formId, string $transferRuleId ): void
 	{
 		$this->checkIsPost();
@@ -201,6 +226,10 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
 	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
@@ -215,7 +244,11 @@ class Controller_Manage_Form extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	/**
+	 *	@param		integer		$page
+	 *	@return		void
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$limit		= 15;
 		$conditions	= [];
@@ -251,6 +284,11 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mailsManager', $this->getAvailableManagerMails() );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $formId ): void
 	{
 		$this->checkId( $formId );
@@ -258,12 +296,24 @@ class Controller_Manage_Form extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@param		string		$ruleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeRule( string $formId, string $ruleId ): void
 	{
 		$this->modelRule->remove( $ruleId );
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@param		string		$transferRuleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeTransferRule( string $formId, string $transferRuleId ): void
 	{
 		$this->checkTransferRuleId( $transferRuleId );
@@ -271,6 +321,11 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@param		string		$tabId
+	 *	@return		void
+	 */
 	public function setTab( string $formId, string $tabId ): void
 	{
 		$this->session->set( 'manage_forms_tab', $tabId );
@@ -282,6 +337,11 @@ class Controller_Manage_Form extends Controller
 		$this->restart( 'edit/'.$formId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$formId
+	 *	@param		?string		$mode
+	 *	@return		void
+	 */
 	public function view( string $formId, ?string $mode = NULL ): void
 	{
 		$this->checkId( (int) $formId );
@@ -296,7 +356,6 @@ class Controller_Manage_Form extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -324,7 +383,13 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'files', $this->listFiles() );
 	}
 
-	protected function checkId( $formId, bool $strict = TRUE )
+	/**
+	 *	@param		string		$formId
+	 *	@param		bool		$strict
+	 *	@return		?object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkId( string $formId, bool $strict = TRUE ): ?object
 	{
 		if( !$formId )
 			throw new RuntimeException( 'No form ID given' );
@@ -332,9 +397,16 @@ class Controller_Manage_Form extends Controller
 			return $form;
 		if( $strict )
 			throw new DomainException( 'Invalid form ID given' );
-		return FALSE;
+		return NULL;
 	}
 
+	/**
+	 *	Checks whether the current request is done via POST.
+	 *	Throws exception in strict mode.
+	 *	@param		bool		$strict		Flag: throw exception if not POST and strict mode (default)
+	 *	@return		bool
+	 *	@throws		RuntimeException		if request method is not POST and strict mode is enabled
+	 */
 	protected function checkIsPost( bool $strict = TRUE ): bool
 	{
 		if( $this->request->getMethod()->is( 'POST' ) )
@@ -344,7 +416,12 @@ class Controller_Manage_Form extends Controller
 		return FALSE;
 	}
 
-	protected function checkTransferRuleId( $transferRuleId )
+	/**
+	 *	@param		int|string		$transferRuleId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkTransferRuleId( int|string $transferRuleId ): object
 	{
 		if( !$transferRuleId )
 			throw new RuntimeException( 'No transfer rule ID given' );
@@ -390,11 +467,10 @@ class Controller_Manage_Form extends Controller
 	}
 
 	/**
-	 *	@param		$content
-	 *	@return		array
-	 *	@throws		ReflectionException
+	 *	@param		string		$content
+	 *	@return		array<string,object>
 	 */
-	protected function getBlocksFromFormContent( $content ): array
+	protected function getBlocksFromFormContent( string $content ): array
 	{
 		$modelBlock	= new Model_Form_Block( $this->env );
 		$list		= [];
@@ -412,14 +488,23 @@ class Controller_Manage_Form extends Controller
 		return $list;
 	}
 
-	protected function getMimeTypeOfFile( string $fileName )
+	/**
+	 *	Tries to identify the MIME-type of a file in attachments folder.
+	 *	@param		string		$fileName
+	 *	@return		string|FALSE
+	 *	@throws		RuntimeException		if file is not existing in attachments folder
+	 */
+	protected function getMimeTypeOfFile( string $fileName ): string|FALSE
 	{
 		if( !file_exists( $this->basePath.$fileName ) )
-			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
+			throw new RuntimeException( 'File "'.$fileName.'" is not existing in attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
 		return finfo_file( $info, $this->basePath.$fileName );
 	}
 
+	/**
+	 * @return object{fileName: string, filePath: string, mimeType: string|FALSE}[]
+	 */
 	protected function listFiles(): array
 	{
 		$list	= [];
@@ -433,6 +518,6 @@ class Controller_Manage_Form extends Controller
 			];
 		}
 		ksort( $list );
-		return $list;
+		return array_values( $list );
 	}
 }

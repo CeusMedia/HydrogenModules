@@ -6,14 +6,21 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_Form_Block extends Controller
 {
 	protected Model_Form $modelForm;
+
 	protected Model_Form_Block $modelBlock;
+
 	protected string $filterPrefix		= 'filter_manage_form_block_';
+
 	protected array $filters			= [
 		'blockId',
 		'title',
 		'identifier',
 	];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->env->getRequest()->has( 'save' ) ){
@@ -23,6 +30,11 @@ class Controller_Manage_Form_Block extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$blockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $blockId ): void
 	{
 		$block	= $this->checkId( $blockId );
@@ -38,15 +50,19 @@ class Controller_Manage_Form_Block extends Controller
 		$this->addData( 'block', $block );
 
 		$this->addData( 'withinForms', $this->modelForm->getAll(
-			array( 'content'	=> '%[block_'.$block->identifier.']%' ) ,
-			array( 'title'		=> 'ASC' )
+			['content'	=> '%[block_'.$block->identifier.']%'] ,
+			['title'		=> 'ASC']
 		) );
 		$this->addData( 'withinBlocks', $this->modelBlock->getAll(
-			array( 'content'	=> '%[block_'.$block->identifier.']%' ) ,
-			array( 'title'		=> 'ASC' )
+			['content'	=> '%[block_'.$block->identifier.']%'] ,
+			['title'		=> 'ASC']
 		) );
 	}
 
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
 	public function filter( $reset = NULL ): void
 	{
 		$request	= $this->env->getRequest();
@@ -64,7 +80,11 @@ class Controller_Manage_Form_Block extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ): void
+	/**
+	 *	@param		integer		$page
+	 *	@return		void
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$session		= $this->env->getSession();
 		$filters		= new Dictionary( array_merge(
@@ -95,20 +115,30 @@ class Controller_Manage_Form_Block extends Controller
 		$this->addData( 'filters', $filters );
 
 		$identifiers	= $this->modelBlock->getAll(
-			array(),
-			array( 'identifier' => 'ASC' ),
-			array(),
-			array( 'identifier' )
+			[],
+			['identifier' => 'ASC'],
+			[],
+			['identifier']
 		);
 		$this->addData( 'identifiers', $identifiers );
 	}
 
+	/**
+	 *	@param		string		$blockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $blockId ): void
 	{
 		$block	= $this->checkId( $blockId );
 		$this->addData( 'block', $block );
 	}
 
+	/**
+	 *	@param		string		$blockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $blockId ): void
 	{
 		$this->checkId( $blockId );
@@ -117,20 +147,26 @@ class Controller_Manage_Form_Block extends Controller
 	}
 
 	/*  --  PROTECTED  --  */
+
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 	}
 
+	/**
+	 *	@param		string		$oldIdentifier
+	 *	@param		string		$newIdentifier
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function applyChangedIdentifier( string $oldIdentifier, string $newIdentifier ): array
 	{
-		$forms	= $this->modelForm->getAll(
-			array( 'content'	=> '%[block_'.$oldIdentifier.']%' )
-		);
-		$blocks	= $this->modelBlock->getAll(
-			array( 'content'	=> '%[block_'.$oldIdentifier.']%' )
-		);
+		$forms	= $this->modelForm->getAll( ['content'	=> '%[block_'.$oldIdentifier.']%'] );
+		$blocks	= $this->modelBlock->getAll( ['content'	=> '%[block_'.$oldIdentifier.']%'] );
 		foreach( $forms as $form ){
 			$this->modelForm->edit( $form->formId, [
 				'content'	=> preg_replace(
@@ -156,6 +192,12 @@ class Controller_Manage_Form_Block extends Controller
 		];
 	}
 
+	/**
+	 *	@param		int|string		$blockId
+	 *	@param		bool			$strict
+	 *	@return		object|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function checkId( int|string $blockId, bool $strict = TRUE ): object|FALSE
 	{
 		if( !$blockId )
@@ -167,11 +209,5 @@ class Controller_Manage_Form_Block extends Controller
 		if( $strict )
 			throw new DomainException( 'Invalid block ID given' );
 		return FALSE;
-	}
-
-	protected function checkIsPost(): void
-	{
-		if( !$this->env->getRequest()->getMethod()->isPost() )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
 	}
 }

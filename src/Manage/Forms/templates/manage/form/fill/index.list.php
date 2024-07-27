@@ -8,6 +8,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
 /** @var array<object> $fills */
 /** @var array<object> $transferTargets */
+/** @var ?string $filterStatus */
 /** @var int $page */
 /** @var int $pages */
 
@@ -50,8 +51,7 @@ foreach( $fills as $fill ){
 	$linkForm	= './manage/form/edit/'.$fill->formId.( $page ? '?page='.$page : '' );
 	$linkView	= './manage/form/fill/view/'.$fill->fillId.( $page ? '?page='.$page : '' );
 	$title		= HtmlTag::create( 'a', $name.$email, ['href' => $linkView] );
-	$form		= $modelForm->get( $fill->formId );
-	$form		= HtmlTag::create( 'a', $form->title, ['href' => $linkForm] );
+	$form		= HtmlTag::create( 'a', $fill->form->title, ['href' => $linkForm] );
 
 	$transfers	= '';
 	if( count( $fill->transfers ) ){

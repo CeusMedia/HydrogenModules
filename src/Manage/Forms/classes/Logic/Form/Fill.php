@@ -1,8 +1,10 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Address as MailAddress;
 
 class Logic_Form_Fill extends Logic
 {
@@ -17,6 +19,12 @@ class Logic_Form_Fill extends Logic
 
 	protected array $transferTargetMap	= [];
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function applyTransfers( int|string $fillId ): array
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
@@ -30,13 +38,12 @@ class Logic_Form_Fill extends Logic
 		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters ){
 			$formData[$fieldName]	= $fieldParameters->value;
 		}
-		$form		= $this->modelForm->get( $fill->formId );
+//		$form		= $this->modelForm->get( $fill->formId );
 
 		$parser		= new JsonParser;
 		$mapper		= new Logic_Form_Transfer_DataMapper( $this->env );
 
 		$transfers		= [];
-		$transferData	= [];
 		foreach( $rules as $rule ){
 			$target = $this->modelTransferTarget->get( $rule->formTransferTargetId );
 			if( $target->status < Model_Form_Transfer_Target::STATUS_ENABLED )
@@ -65,7 +72,7 @@ class Logic_Form_Fill extends Logic
 				'createdAt'				=> time(),
 			];
 			try{
-				$ruleSet				= $parser->parse( $rule->rules, FALSE );
+				$ruleSet				= $parser->parse( $rule->rules );
 				$transfer->status		= 'parsed';
 				$transferData			= $mapper->applyRulesToFormData( $formData, $ruleSet );
 				$transfer->data			= $transferData;
@@ -78,7 +85,7 @@ class Logic_Form_Fill extends Logic
 				$reportData['status']	= (int) $transfer->result->status;
 				switch( (int) $transfer->result->status ){
 					case Model_Form_Fill_Transfer::STATUS_SUCCESS:
-						$transfer->status		= 'transfered';
+						$transfer->status		= 'transferred';
 						break;
 					case Model_Form_Fill_Transfer::STATUS_ERROR:
 						$transfer->status		= 'error';
@@ -108,6 +115,12 @@ class Logic_Form_Fill extends Logic
 		return $transfers;
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@param		bool			$strict
+	 *	@return		?object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function checkId( int|string $fillId, bool $strict = TRUE ): ?object
 	{
 		$fill	= $this->modelFill->get( $fillId );
@@ -119,6 +132,14 @@ class Logic_Form_Fill extends Logic
 		return $fill;
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@param		bool			$strict
+	 *	@return		?object
+	 *	@throws		RuntimeException	if no ID given
+	 *	@throws		DomainException		if invalid ID given
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function get( int|string $fillId, bool $strict = TRUE ): ?object
 	{
 		$fillId	= (int) $fillId;
@@ -142,6 +163,8 @@ class Logic_Form_Fill extends Logic
 	 *	@param		array		$ids		ID list of fill or form of fills
 	 *	@param		int|NULL	$status		...
 	 *	@return		string
+	 *	@throws		DomainException			if type is not (form|fill)
+	 *	@throws		JsonException			if decoding JSON of fill data failed
 	 */
 	public function renderToCsv( string $type, array $ids, int $status = NULL ): string
 	{
@@ -156,7 +179,7 @@ class Logic_Form_Fill extends Logic
 			$indices['status']	= $status;
 		$fills	= $this->modelFill->getAllByIndices( $indices );
 		foreach( $fills as $fill ){
-			$fill->data	= json_decode( $fill->data );
+			$fill->data	= json_decode( $fill->data, FALSE, 512, JSON_THROW_ON_ERROR );
 			$row		= [
 				'dateCreated'	=> date( 'Y-m-d H:i:s', $fill->createdAt ),
 				'dateConfirmed'	=> $fill->modifiedAt ? date( 'Y-m-d H:i:s', $fill->modifiedAt ) : '',
@@ -183,6 +206,12 @@ class Logic_Form_Fill extends Logic
 		return join( "\r\n", $lines );
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendConfirmMail( int|string $fillId ): bool
 	{
 		if( !( $fill = $this->modelFill->get( $fillId ) ) )
@@ -195,17 +224,15 @@ class Logic_Form_Fill extends Logic
 			throw new RuntimeException( 'No confirmation mail defined' );
 
 		//  -  SEND MAIL  --  //
-		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
-		if( $configResource->get( 'sender.name' ) )
-			$sender->setName( $configResource->get( 'sender.name' ) );
+		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
-		$data		= array(
+		$data		= [
 			'fill'				=> $fill,
 			'form'				=> $form,
-			'mailTemplateId'	=> $configResource->get( 'template' ),
-		);
+			'mailTemplateId'	=> $config->get( 'template' ),
+		];
 		$mail		= new Mail_Form_Customer_Confirm( $this->env, $data );
 		$mail->setSubject( $formMail->subject );
 		$mail->setSender( $sender );
@@ -214,6 +241,12 @@ class Logic_Form_Fill extends Logic
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@return		?bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendCustomerResultMail( int|string $fillId ): ?bool
 	{
 		$fill	= $this->checkId( $fillId );
@@ -226,11 +259,11 @@ class Logic_Form_Fill extends Logic
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
 		] );
-		foreach( $rulesets as $rulesetNr => $ruleset ){
+		foreach( $rulesets as $ruleset ){
 			$ruleset->rules	= json_decode( $ruleset->rules );
 			if( count( $ruleset->rules ) ){
 				$valid	= TRUE;
-				foreach( $ruleset->rules as $ruleNr => $rule ){
+				foreach( $ruleset->rules as $rule ){
 					if( !isset( $data[$rule->key] ) )
 						$valid = FALSE;
 					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
@@ -255,11 +288,11 @@ class Logic_Form_Fill extends Logic
 		] );
 //print_m( $rulesets );
 
-		foreach( $rulesets as $rulesetNr => $ruleset ){
+		foreach( $rulesets as $ruleset ){
 			$ruleset->rules	= json_decode( $ruleset->rules );
 			if( count( $ruleset->rules ) ){
 				$valid	= TRUE;
-				foreach( $ruleset->rules as $ruleNr => $rule ){
+				foreach( $ruleset->rules as $rule ){
 					if( !isset( $data[$rule->key] ) )
 						$valid = FALSE;
 					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
@@ -275,10 +308,8 @@ class Logic_Form_Fill extends Logic
 //die;
 
 		//  -  SEND MAIL  --  //
-		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
-		if( $configResource->get( 'sender.name' ) )
-			$sender->setName( $configResource->get( 'sender.name' ) );
+		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
 		$subject	= $formMail->subject ?: 'Anfrage erhalten';
@@ -286,7 +317,7 @@ class Logic_Form_Fill extends Logic
 			'fill'				=> $fill,
 			'form'				=> $form,
 			'mail'				=> $formMail,
-			'mailTemplateId'	=> $configResource->get( 'template' ),
+			'mailTemplateId'	=> $config->get( 'template' ),
 		] );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
@@ -295,27 +326,38 @@ class Logic_Form_Fill extends Logic
 		return $this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
+	/**
+	 *	@param		int|string		$formId
+	 *	@param		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendManagerErrorMail( int|string $formId, $data ): void
 	{
-		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
-		if( $configResource->get( 'sender.name' ) )
-			$sender->setName( $configResource->get( 'sender.name' ) );
+		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
 
 		$form		= $this->modelForm->get( $formId );
 		$subject	= 'Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
-		$mail		= new Mail_Form_Manager_Error( $this->env, array(
+		$mail		= new Mail_Form_Manager_Error( $this->env, [
 			'form'				=> $form,
 			'data'				=> $data,
-			'mailTemplateId'	=> $configResource->get( 'template' ),
-		) );
+			'mailTemplateId'	=> $config->get( 'template' ),
+		] );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
-		$receiver	= (object) ['email' => $configResource->get( 'sender.address' )];
+		$receiver	= (object) ['email' => $config->get( 'sender.address' )];
 		$this->logicMail->handleMail( $mail, $receiver, $language );
 	}
 
+	/**
+	 *	@param		int|string		$fillId
+	 *	@return		?int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendManagerResultMails( int|string $fillId ): ?int
 	{
 		$fill		= $this->get( $fillId );
@@ -357,18 +399,18 @@ class Logic_Form_Fill extends Logic
 
 		//  -  SEND MAIL  --  //
 		$subject		= $form->title.' ('.date( 'd.m.Y' ).')';
-		$configResource	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
-		$sender			= $this->createMailAddress( $configResource->get( 'sender.address' ) );
-		if( $configResource->get( 'sender.name' ) )
-			$sender->setName( $configResource->get( 'sender.name' ) );
+
+		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
+		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
+
 		if( isset( $form->senderAddress ) && $form->senderAddress )
 			$sender		= $form->senderAddress;
 
-		$mail		= new Mail_Form_Manager_Filled( $this->env, array(
+		$mail		= new Mail_Form_Manager_Filled( $this->env, [
 			'form'				=> $form,
 			'fill'				=> $fill,
-			'mailTemplateId'	=> $configResource->get( 'template' ),
-		) );
+			'mailTemplateId'	=> $config->get( 'template' ),
+		] );
 		$mail->setSubject( $subject );
 		$mail->setSender( $sender );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -379,6 +421,10 @@ class Logic_Form_Fill extends Logic
 		return count( $receivers );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
@@ -395,10 +441,17 @@ class Logic_Form_Fill extends Logic
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
-	protected function createMailAddress( string $address )
+	/**
+	 *	@param		?Dictionary		$config		Module config node containing sender mail address and (optionally) name
+	 *	@return		MailAddress
+	 */
+	protected function createSenderMailAddress( ?Dictionary $config = NULL ): MailAddress
 	{
-		if( class_exists( '\CeusMedia\Mail\Participant' ) )
-			return new \CeusMedia\Mail\Participant( $address );
-		return new \CeusMedia\Mail\Address( $address );
+		if( NULL === $config )
+			$config	= $this->env->getConfig()->getAll( 'module.resource_forms.mail.sender.', TRUE );
+		$sender	= new MailAddress( $config->get( 'address' ) );
+		if( $config->get( 'name' ) )
+			$sender->setName( $config->get( 'name' ) );
+		return $sender;
 	}
 }

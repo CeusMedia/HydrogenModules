@@ -8,17 +8,28 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_Form_Import extends Controller
 {
 	protected HttpRequest $request;
+
 	protected Dictionary $session;
+
 	protected Model_Form $modelForm;
+
 	protected Model_Form_Import_Rule $modelRule;
+
 	protected Model_Import_Connection $modelConnection;
+
 	protected Model_Import_Connector $modelConnector;
+
 	protected array $connectionMap		= [];
+
 	protected array $formMap			= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
-		if( $this->request->getMethod()->isPost() ){
+		if( $this->checkIsPost( FALSE ) ){
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
@@ -65,7 +76,7 @@ class Controller_Manage_Form_Import extends Controller
 //			if( !in_array( $this->request->get( 'moveTo' ), $folders ) )
 //				throw new InvalidArgumentException( 'Invalid folder' );
 
-		if( $this->request->getMethod()->isPost() ){
+		if( $this->checkIsPost( FALSE ) ){
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
@@ -87,6 +98,9 @@ class Controller_Manage_Form_Import extends Controller
 		$this->addData( 'connections', $this->connectionMap );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
 		$rules	= $this->modelRule->getAll();
@@ -116,20 +130,12 @@ class Controller_Manage_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param 		int|string		$importRuleId
-	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 *	@deprecated	moved to AJAX controller
+	 *	Checks whether the current request is done via POST.
+	 *	Throws exception in strict mode.
+	 *	@param		bool		$strict		Flag: throw exception if not POST and strict mode (default)
+	 *	@return		bool
+	 *	@throws		RuntimeException		if request method is not POST and strict mode is enabled
 	 */
-	protected function checkImportRuleId( int|string $importRuleId ): object
-	{
-		if( !$importRuleId )
-			throw new RuntimeException( 'No import rule ID given' );
-		if( !( $importRule = $this->modelRule->get( $importRuleId ) ) )
-			throw new DomainException( 'Invalid import rule ID given' );
-		return $importRule;
-	}
-
 	protected function checkIsPost( bool $strict = TRUE ): bool
 	{
 		if( $this->request->getMethod()->is( 'POST' ) )

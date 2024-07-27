@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class Controller_Manage_Form_Fill extends Controller
 {
@@ -12,6 +13,16 @@ class Controller_Manage_Form_Fill extends Controller
 	protected Model_Form $modelForm;
 
 	protected Model_Form_Fill $modelFill;
+
+	/**
+	 *	Constructor, disables automatic view instance.
+	 *	@param		WebEnvironment		$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( WebEnvironment $env )
+	{
+		parent::__construct( $env, FALSE );
+	}
 
 	/**
 	 *	Receive form data from external application.
@@ -130,6 +141,12 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->logicFill	= $this->getLogic( 'formFill' );
 	}
 
+	/**
+	 *	Checks whether the current request is done via AJAX.
+	 *	Throws exception in strict mode.
+	 *	@param		bool		$strict		Flag: throw exception if not AJAX and strict mode (default)
+	 *	@return		bool
+	 */
 	protected function checkIsAjax( bool $strict = TRUE ): bool
 	{
 		if( $this->request->isAjax() )
@@ -139,6 +156,13 @@ class Controller_Manage_Form_Fill extends Controller
 		return FALSE;
 	}
 
+	/**
+	 *	Checks whether the current request is done via POST.
+	 *	Throws exception in strict mode.
+	 *	@param		bool		$strict		Flag: throw exception if not POST and strict mode (default)
+	 *	@return		bool
+	 *	@throws		RuntimeException		if request method is not POST and strict mode is enabled
+	 */
 	protected function checkIsPost( bool $strict = TRUE ): bool
 	{
 		if( $this->request->getMethod()->isPost() )
