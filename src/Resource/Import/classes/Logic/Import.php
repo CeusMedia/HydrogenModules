@@ -7,6 +7,7 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Import extends Logic
 {
+	/** @var Logic_Form_Fill $logicFill */
 	protected Logic_Form_Fill $logicFill;
 
 	/** @var Model_Import_Connection $modelConnection  */
@@ -24,6 +25,33 @@ class Logic_Import extends Logic
 	protected JsonParser $jsonParser;
 
 	protected Logic_Form_Transfer_DataMapper $dataMapper;
+
+	/**
+	 *	@param		int|string		$connectionId
+	 *	@return		?object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getConnection( int|string $connectionId ): ?object
+	{
+		return $this->modelConnection->get( $connectionId );
+	}
+
+	/**
+	 *	Tries to find exactly one connection by API key.
+	 *	Will only look at enabled connections.
+	 *	@param		string		$apiKey
+	 *	@return		?object
+	 */
+	public function getConnectionFromApiKey( string $apiKey ): ?object
+	{
+		$connections	= $this->modelConnection->getAllByIndices( [
+			'authType'	=> Model_Import_Connection::AUTH_TYPE_KEY,
+			'status'	=> Model_Import_Connection::STATUS_ENABLED,
+			'authKey'	=> $apiKey,
+		] );
+		return ( 1 === count( $connections ) ) ? current( $connections ) : NULL;
+
+	}
 
 	/**
 	 *	@param		int|string		$connectionId
