@@ -191,7 +191,7 @@ class Logic_Upload
 		if( $this->upload->error === 4 )
 			throw new RuntimeException( 'No image uploaded' );
 		if( $this->upload->error )
-			throw new Exception( 'Upload failed beforehand' );
+			throw new RuntimeException( 'Upload failed beforehand' );
 		return $this->upload->name;
 	}
 
