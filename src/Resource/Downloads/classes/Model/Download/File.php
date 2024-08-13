@@ -1,8 +1,6 @@
 <?php
 /**
- *	Forum Thread Topic Model.
- *	@category		...
- *	@package		...
+ *	Model for storing downloadable files.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
@@ -10,9 +8,7 @@
 use CeusMedia\HydrogenFramework\Model;
 
 /**
- *	Forum Thread Topic Model.
- *	@category		...
- *	@package		...
+ *	Model for storing downloadable files.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */

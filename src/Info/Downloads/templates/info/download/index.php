@@ -19,6 +19,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array $steps */
 /** @var string $pathBase */
 /** @var string $folderPath */
+/** @var int|string $folderId */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
