@@ -1,8 +1,25 @@
 <?php
 
+use CeusMedia\Bootstrap\Button;
+use CeusMedia\Bootstrap\Button\Group as ButtonGroup;
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array<object> $folders */
+/** @var array<object> $files */
+/** @var array<int|string,string> $words */
+/** @var array<string> $rights */
+/** @var array<int,object> $steps */
+/** @var string $pathBase */
+/** @var string $folderPath */
+/** @var int|string $folderId */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
@@ -141,20 +158,20 @@ if( in_array( 'scan', $rights ) )
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : [''];
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', !$folderPath );
-$buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './manage/download/index', $iconHome );
+$iconHome	= new Icon( 'home', !$folderPath );
+$buttonHome	= new LinkButton( './manage/download/index', $iconHome );
 if( !$folderPath )
-	$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
+	$buttonHome	= new Button( $iconHome, 'btn-inverse', NULL, TRUE );
 $buttons	= [$buttonHome];
 foreach( $steps as $nr => $stepFolder ){
 	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 	$url		= './manage/download/index/'.$stepFolder->downloadFolderId;
-	$icon		= new \CeusMedia\Bootstrap\Icon( 'folder-open', $isCurrent );
+	$icon		= new Icon( 'folder-open', $isCurrent );
 	$class		= $isCurrent ? 'btn-inverse' : NULL;
-	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
+	$buttons[]	= new LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 }
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position	= new ButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/download/' ) );

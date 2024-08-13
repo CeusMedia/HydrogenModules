@@ -1,20 +1,43 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var array<string> $rights */
+/** @var array<int|string,string> $words */
+/** @var int|string $folderId */
+
 if( !in_array( 'addFolder', $rights ) )
 	return '';
-return '
-<div class="content-panel">
-	<h4>'.$words['addFolder']['heading'].'</h4>
-	<div class="content-panel-inner">
-		<form action="./manage/download/addFolder/'.$folderId.'" method="post">
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_folder">'.$words['addFolder']['labelFolder'].'</label>
-					<input type="text" name="folder" id="input_folder" required="required" value="'.$request->get( 'input_folder' ).'"/>
-				</div>
-			</div>
-			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> '.$words['addFolder']['buttonSave'].'</button>
-			</div>
-		</form>
-	</div>
-</div>';
+
+$iconAdd	= HtmlTag::create( 'i', NULL, ['class' => 'icon-plus icon-white'] );
+
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'h4', $words['addFolder']['heading'] ),
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', [
+						$words['addFolder']['labelFolder']
+					], ['for' => 'input_folder'] ),
+					HtmlTag::create( 'input', NULL, [
+						'type'		=> 'text',
+						'name'		=> 'folder',
+						'id'		=> 'input_folder',
+						'required'	=> 'required',
+						'value'		=> $request->get( 'input_folder' )
+					] ),
+				], ['class' => 'span12'] )
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'button', [
+					$iconAdd.' '.$words['addFolder']['buttonSave'],
+				], [
+					'type'	=> 'submit',
+					'name'	=> 'save',
+					'class'	=> 'btn btn-small btn-success',
+					] )
+			], ['class' => 'buttonbar'] )
+		], ['action' => './manage/download/addFolder/'.$folderId, 'method' => 'post'] )
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );

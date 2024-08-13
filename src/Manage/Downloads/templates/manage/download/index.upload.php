@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var array<string> $rights */
+/** @var array<int|string,string> $words */
+/** @var int|string $folderId */
 
 if( !in_array( 'upload', $rights ) )
 	return '';
