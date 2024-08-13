@@ -2,6 +2,12 @@
 
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var array $rights */
+/** @var int|string $folderId */
 
 if( !in_array( 'upload', $rights ) )
 	return '';
@@ -18,24 +24,31 @@ $helper->setRequired( TRUE );
 
 $maxSize	= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
 
-return '
-<div class="content-panel">
-	<h4>'.$w->heading.'</h4>
-	<div class="content-panel-inner">
-		<form action="./info/file/upload/'.$folderId.'" method="post" enctype="multipart/form-data">
-			<div class="row-fluid">
-				<div class="span12">
-					<small><em class="muted">'.sprintf( $w->hintMaxSize, $maxSize ).'</em></small>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					'.$helper->render().'
-				</div>
-			</div>
-			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-success">'.$iconSave.' '.$w->buttonSave.'</button>
-			</div>
-		</form>
-	</div>
-</div>';
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'h4', $w->heading ),
+	HtmlTag::create( 'div',  [
+		HtmlTag::create( 'form', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'small', [
+						HtmlTag::create( 'em', sprintf( $w->hintMaxSize, $maxSize ), ['class' => 'muted'] ),
+					] ),
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
+					'type'		=> 'submit',
+					'name'		=> 'save',
+					'class'		=> 'btn btn-small btn-success'
+				] )
+			], ['class' => 'buttonbar'] )
+		], [
+			'action'	=> './info/file/upload/'.$folderId,
+			'method'	=> 'post',
+			'enctype'	=> 'multipart/form-data'
+		] ),
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

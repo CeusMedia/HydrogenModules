@@ -1,12 +1,20 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $folders */
+/** @var object $file */
+/** @var array $rights */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$optFolder	= HtmlElements::Options( $folders, $file->downloadFolderId );
+$optFolder	= HtmlElements::Options( $folders, $file ? $file->downloadFolderId : '' );
 
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
@@ -25,23 +33,23 @@ if( in_array( 'remove', $rights ) )
 		'class'		=> 'btn btn-danger',
 	] );
 
-$panelEdit	= HtmlTag::create( 'div', array(
+$panelEdit	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Datei verändern <small class="muted">(umbenennen oder verschieben)</small>' ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Dateiname', ['for' => 'input_title'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
 						'class'		=> 'span12',
 						'value'		=> htmlentities( $file->title, ENT_QUOTES, 'UTF-8' ),
 						'required'	=> 'required',
-					) ),
-				), ['class' => 'span6'] ),
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span6'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_folderId'] ),
 					HtmlTag::create( 'select', $optFolder, [
 						'type'		=> 'text',
@@ -50,24 +58,25 @@ $panelEdit	= HtmlTag::create( 'div', array(
 						'class'		=> 'span12',
 						'required'	=> 'required',
 					] ),
-				), ['class' => 'span6'] ),
-			), ['class' => 'row-fluid'] ),
+				], ['class' => 'span6'] ),
+			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', [
 				$buttonCancel,
 				$buttonSave,
 				$buttonRemove
 			] ), ['class' => 'buttonbar'] ),
-		), ['action' => './info/file/editFile/'.$file->downloadFileId, 'method' => 'post'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+		], ['action' => './info/file/editFile/'.$file->downloadFileId, 'method' => 'post'] ),
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' ) );
 
-return $textIndexTop.'
-<!--<h3>Dateien</h3>-->
-<div>'.View_Info_File::renderPosition( $env, $file->downloadFolderId, NULL ).'</div><br/>'
-.HtmlTag::create( 'div', array(
+return join( [
+	$textIndexTop,
+//	'<!--<h3>Dateien</h3>-->',
+	HtmlTag::create( 'div', View_Info_File::renderPosition( $env, $file->downloadFolderId, NULL ) ),
+	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'div', [
-		$panelEdit,
-	], ['class' => 'span9'] ),
-), ['class' => 'row-fluid'] );
+		HtmlTag::create( 'div', $panelEdit, ['class' => 'span9'] ),
+	], ['class' => 'row-fluid'] )
+] );

@@ -65,8 +65,7 @@ class View_Info_File extends View
 			$steps[$folder->downloadFolderId]	= $folder;
 			$folderId	= $folder->parentId;
 		}
-		$steps	= array_reverse( $steps );
-		return $steps;
+		return array_reverse( $steps );
 	}
 
 	protected static function getPathFromFolderId( Environment $env, $folderId ): string

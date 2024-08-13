@@ -12,6 +12,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $rights */
 /** @var array $folders */
 /** @var array $files */
+/** @var int|string|NULL $folderId */
+/** @var object|NULL $folder */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
@@ -168,8 +170,7 @@ if( !$search && $folderId && $folder->downloadFolderId > 0 ){
 }
 
 $panels		= [];
-if( 1 )
-	$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
+$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
 if( !in_array( 'upload', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.info.php' );
 if( in_array( 'upload', $rights ) )
@@ -181,16 +182,17 @@ if( in_array( 'scan', $rights ) )
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' ) );
 
-return $textIndexTop.'
-<!--<h3>Dateien</h3>-->
-<div>'.View_Info_File::renderPosition( $env, $folderId, $search ).'</div><br/>
-<div class="row-fluid">
-	<div class="span9">
-		'.$panelList.'
-			'.$linkUp.'
-	</div>
-	<div class="span3">
-		'.join( /*'<hr/>', */$panels ).'
-	</div>
-</div>
-'.$textIndexBottom;
+return join( [
+	$textIndexTop,
+//	'<!--<h3>Dateien</h3>-->',
+	HtmlTag::create( 'div', View_Info_File::renderPosition( $env, $folderId, $search ) ),
+	HtmlTag::create( 'br' ),
+	HtmlTag::create( 'div', [], [
+		HtmlTag::create( 'div', [], [
+			$panelList,
+			$linkUp,
+		], ['class' => 'span9'] ),
+		HtmlTag::create( 'div', [], join( /*'<hr/>', */$panels ), ['class' => 'span3'] ),
+	], ['class' => 'row-fluid'] ),
+	$textIndexBottom,
+] );
