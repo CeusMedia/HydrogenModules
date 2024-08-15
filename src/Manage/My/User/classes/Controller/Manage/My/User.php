@@ -20,6 +20,8 @@ class Controller_Manage_My_User extends Controller
 	protected string $userId;
 
 	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
 	public function edit(): void
@@ -76,7 +78,8 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
+	 *	@todo		Redesign: Send mail with confirmation before applying new mail address
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function email(): void
 	{
@@ -113,6 +116,10 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -147,6 +154,7 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function password(): void
 	{
@@ -193,6 +201,11 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( './manage/my/user' );
 	}
 
+	/**
+	 *	@param		$confirmed
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( $confirmed = NULL ): void
 	{
 		$this->addData( 'userId', $this->userId );
@@ -221,7 +234,8 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@todo   	Redesign: Send mail with confirmation before applying new username
+	 *	@todo		Redesign: Send mail with confirmation before applying new username
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function username(): void
 	{
@@ -232,7 +246,7 @@ class Controller_Manage_My_User extends Controller
 		$user		= $this->modelUser->get( $this->userId );
 		$username	= trim( $this->request->get( 'username' ) );
 
-		if( !strlen( $username ) ){
+		if( 0 === strlen( $username ) ){
 			$this->messenger->noteError( $words->msgUsernameMissing );
 			$this->restart( NULL, TRUE );
 		}
@@ -254,6 +268,11 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -265,7 +284,7 @@ class Controller_Manage_My_User extends Controller
 		$msg	= (object) $this->getWords( 'msg' );
 		if( !$this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->messenger->noteFailure( $msg->failureNoAuthentication );
-			$this->restart( NULL );
+			$this->restart();
 		}
 		if( !$this->logicAuth->isAuthenticated() ){
 //			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
@@ -274,11 +293,16 @@ class Controller_Manage_My_User extends Controller
 		$this->userId = $this->logicAuth->getCurrentUserId();
 		if( !$this->modelUser->get( $this->userId ) ){
 			$this->messenger->noteError( $msg->errorInvalidUser );
-			$this->restart( NULL );
+			$this->restart();
 		}
 	}
 
-	protected function checkConfirmationPassword( $from = NULL )
+	/**
+	 *	@param		$from
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkConfirmationPassword( $from = NULL ): void
 	{
 		$msg		= (object) $this->getWords( 'msg' );
 		$password	= trim( $this->request->get( 'password' ) );
@@ -305,6 +329,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@param   	string		$password	Password to check on login
 	 *	@todo   	clean up if support for old passwort decays
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPassword( object $user, string $password ): bool
 	{

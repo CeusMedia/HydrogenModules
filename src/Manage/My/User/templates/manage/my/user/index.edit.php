@@ -1,6 +1,16 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $user */
+/** @var array<string,string> $countries */
+/** @var bool $mandatoryFirstname */
+/** @var bool $mandatorySurname */
+/** @var bool $mandatoryAddress */
 
 $w		= (object) $words['edit'];
 

@@ -1,5 +1,11 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $user */
 
 $helper		= new View_Helper_TimePhraser( $env );
 
