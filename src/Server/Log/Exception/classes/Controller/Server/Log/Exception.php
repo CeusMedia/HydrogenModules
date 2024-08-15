@@ -22,6 +22,11 @@ class Controller_Server_Log_Exception extends Controller
 	protected Logic_Log_Exception $logic;
 	protected string $filterPrefix		= 'filter_server_system_';
 
+	/**
+	 *	@param		int		$page
+	 *	@param		int		$limit
+	 *	@return		void
+	 */
 	public function index( int $page = 0, int $limit = 20 ): void
 	{
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? $page : 0;
@@ -45,6 +50,12 @@ class Controller_Server_Log_Exception extends Controller
 		$this->addData( 'limit', $limit );
 	}
 
+	/**
+	 *	@param		string		$message
+	 *	@param		int			$code
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function logTestException( string $message, int $code = 0 ): void
 	{
 		$exception	= new Exception( $message, $code );
@@ -68,6 +79,11 @@ class Controller_Server_Log_Exception extends Controller
 		$this->restart( $page, TRUE );
 	}
 
+	/**
+	 *	@param		string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $id ): void
 	{
 		$exception	= $this->check( $id, FALSE );
@@ -79,7 +95,8 @@ class Controller_Server_Log_Exception extends Controller
 	/*  --  PROTECTED  --  */
 
 	/**
-	 * @throws ReflectionException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -89,6 +106,12 @@ class Controller_Server_Log_Exception extends Controller
 		$this->logic->importFromLogFile();
 	}
 
+	/**
+	 *	@param		string		$id
+	 *	@param		bool		$strict
+	 *	@return		object|array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function check( string $id, bool $strict = TRUE ): object|array
 	{
 		$exception	= $this->logic->check( $id, $strict );

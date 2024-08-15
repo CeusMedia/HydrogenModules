@@ -47,6 +47,8 @@ $date		= date( 'Y.m.d', $entity->createdAt );
 $time		= date( 'H:i:s', $entity->createdAt );
 
 $facts	= [];
+/** @noinspection XmlDeprecatedElement */
+/** @noinspection HtmlDeprecatedTag */
 $facts['message']	= '<big><strong>'.$entity->message.'</strong></big>';
 if( (int) $entity->code != 0 )
 	$facts['code']	= $entity->code;
@@ -72,18 +74,18 @@ if( in_array( CommonLogicException::class, $classes ) ){
 	/**
 	 *	Resolves SQLSTATE Code and returns its Meaning.
 	 *	@access		public
-	 *	@param		$env
-	 *	@param		$SQLSTATE
+	 *	@param		Environment	$env
+	 *	@param		string		$SQLSTATE
 	 *	@return		string
 	 *	@see		http://developer.mimer.com/documentation/html_92/Mimer_SQL_Mobile_DocSet/App_Return_Codes2.html
 	 *	@see		http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.sqls.doc/sqls520.htm
 	 */
-	function getMeaningOfSQLSTATE( $env, $SQLSTATE ): string
+	function getMeaningOfSQLSTATE( Environment $env, string $SQLSTATE ): string
 	{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
 
-		$words		= $env->getLanguage()->getWords( 'server/log/exception/sqlstate' );
+		$words	= $env->getLanguage()->getWords( 'server/log/exception/sqlstate' );
 		return $words[$class1][$class2] ?? 'unknown';
 	}
 
@@ -115,16 +117,16 @@ $topicRequest	= '';
 if( !empty( $entity->request ) ){
 	$request	= unserialize( $entity->request );
 
-	if( $request instanceof HttpRequest){
+	if( $request instanceof HttpRequest ){
 		$rows	= [];
 		foreach( $request->getHeaders()->getFields() as $field ){
 			$value	= $field->getValue();
 			if( $field->getName() === 'cookie' )
 				$value	= str_replace( '; ', '<br/>', $value );
-			$rows[]	= HtmlTag::create( 'tr', array(
+			$rows[]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'th', $field->getName() ),
 				HtmlTag::create( 'td', $value ),
-			) );
+			] );
 		}
 		$headers		= HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( '20%', '' ),
@@ -163,30 +165,29 @@ if( !empty( $entity->env ) ){
 	'.$dumpEnv;
 }
 
-return '
-<div class="row-fluid">
-	<div class="span12">
-		<div class="content-panel">
-			<h3>Exception</h3>
-			<div class="content-panel-inner">
-				'.$listFacts.'
-				<hr/>
-				'.$topicTrace.'
-				'.$topicEnv.'
-				'.$topicRequest.'
-				'.$topicSession.'
-				<div class="buttonbar">
-					'.HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonCancel, array(
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'h3', 'Exception' ),
+			HtmlTag::create( 'div', [
+				$listFacts,
+				'<hr/>',
+				$topicTrace,
+				$topicEnv,
+				$topicRequest,
+				$topicSession,
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonCancel, [
 						'href'	=> './server/log/exception'.( $page ? '/'.$page : '' ),
 						'class'	=> 'btn',
-					) ).'
-					'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
+					] ),
+					HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 						'href'	=> './server/log/exception/remove/'.$entity->exceptionId.'/'.$page,
 						'class'	=> 'btn btn-danger',
-					] ).'
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-';
+					] ),
+				], ['class' => 'buttonbar'] ),
+			], ['class' => 'content-panel-inner'] )
+		], ['class' => 'content-panel'] )
+	], ['class' => 'span12'] )
+], ['class' => 'row-fluid'] );
+

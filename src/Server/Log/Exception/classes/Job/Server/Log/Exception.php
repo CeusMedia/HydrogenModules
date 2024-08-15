@@ -1,7 +1,11 @@
 <?php
 class Job_Server_Log_Exception extends Job_Abstract
 {
-	public function import()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function import(): void
 	{
 		$logic		= $this->env->getLogic()->get( 'logException');
 		$count		= $logic->importFromLogFile();

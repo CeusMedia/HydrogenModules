@@ -37,14 +37,56 @@ class View_Helper_Mail_Exception_Facts
 		return $this;
 	}
 
+	public function render(): string
+	{
+		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render();
+	}
+
+	public function renderAsText(): string
+	{
+		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
+	}
+
+	/**
+	 *	Set whether previous exception should be included in view.
+	 *	@access		public
+	 *	@param		boolean			$show			Flag: show previous exceptions
+	 *	@return		self
+	 */
+	public function setShowPrevious( bool $show = TRUE ): self
+	{
+		$this->showPrevious	= $show;
+		return $this;
+	}
+
+	/**
+	 *	Removes Document Root in File Names.
+	 *	@access		protected
+	 *	@static
+	 *	@param		string		$fileName		File Name to clear
+	 *	@return		string
+	 */
+	protected static function trimRootPath( string $fileName ): string
+	{
+		$rootPath	= $_SERVER['DOCUMENT_ROOT'] ?? "";
+		if( !$rootPath || !$fileName )
+			return '';
+		$fileName	= str_replace( '\\', "/", $fileName );
+		$cut		= substr( $fileName, 0, strlen( $rootPath ) );
+		if( $cut == $rootPath )
+			$fileName	= substr( $fileName, strlen( $rootPath ) );
+		return $fileName;
+	}
+
 	/**
 	 *	Resolves SQLSTATE Code and returns its Meaning.
 	 *	@access		protected
+	 *	@param		string		$SQLSTATE
 	 *	@return		string
 	 *	@see		http://developer.mimer.com/documentation/html_92/Mimer_SQL_Mobile_DocSet/App_Return_Codes2.html
 	 *	@see		http://publib.boulder.ibm.com/infocenter/idshelp/v10/index.jsp?topic=/com.ibm.sqls.doc/sqls520.htm
 	 */
-	protected function getMeaningOfSQLSTATE( $SQLSTATE ): string
+	protected function getMeaningOfSQLSTATE( string $SQLSTATE ): string
 	{
 		$class1	= substr( $SQLSTATE, 0, 2 );
 		$class2	= substr( $SQLSTATE, 2, 3 );
@@ -53,6 +95,9 @@ class View_Helper_Mail_Exception_Facts
 		return $words[$class1][$class2] ?? 'unknown';
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function prepare(): void
 	{
 		$words			= $this->env->getLanguage()->getWords( 'server/log/exception' );
@@ -60,8 +105,6 @@ class View_Helper_Mail_Exception_Facts
 		$this->helper->setTextLabelLength( 12 );
 		$this->helper->add( 'message', htmlentities( $this->exception->getMessage(), ENT_COMPAT, 'UTF-8' ) );
 		$this->helper->add( 'code', htmlentities( $this->exception->getCode(), ENT_COMPAT, 'UTF-8' ) );
-
-		$list	= [];
 
 		if( $this->exception instanceof SqlException && $this->exception->getSQLSTATE() ){
 			$meaning	= self::getMeaningOfSQLSTATE( $this->exception->getSQLSTATE() );
@@ -90,7 +133,7 @@ class View_Helper_Mail_Exception_Facts
 		if( $this->showPrevious ){
 			if( method_exists( $this->exception, 'getPrevious' ) ){
 				$previous	= $this->exception->getPrevious();
-			 	if( NULL !== $previous ){
+				if( NULL !== $previous ){
 					$helperPrevious	= new View_Helper_Mail_Exception_Facts( $this->env );
 //					$helperPrevious->setTextLabelLength( 12 );
 					$helperPrevious->setException( $previous );
@@ -99,46 +142,5 @@ class View_Helper_Mail_Exception_Facts
 				}
 			}
 		}
-	}
-
-	public function render(): string
-	{
-		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render();
-	}
-
-	public function renderAsText(): string
-	{
-		return $this->helper->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render();
-	}
-
-	/**
-	 *	Set whether previous exception should be included in view.
-	 *	@access		public
-	 *	@param		boolean			$show			Flag: show previous exceptions
-	 *	@return		self
-	 */
-	public function setShowPrevious( $show = TRUE ): self
-	{
-		$this->showPrevious	= (bool) $show;
-		return $this;
-	}
-
-	/**
-	 *	Removes Document Root in File Names.
-	 *	@access		protected
-	 *	@static
-	 *	@param		string		$fileName		File Name to clear
-	 *	@return		string
-	 */
-	static protected function trimRootPath( string $fileName ): string
-	{
-		$rootPath	= $_SERVER['DOCUMENT_ROOT'] ?? "";
-		if( !$rootPath || !$fileName )
-			return '';
-		$fileName	= str_replace( '\\', "/", $fileName );
-		$cut		= substr( $fileName, 0, strlen( $rootPath ) );
-		if( $cut == $rootPath )
-			$fileName	= substr( $fileName, strlen( $rootPath ) );
-		return $fileName;
 	}
 }

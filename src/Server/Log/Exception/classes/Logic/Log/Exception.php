@@ -14,6 +14,12 @@ class Logic_Log_Exception extends Logic
 
 	protected string $pathLogs;
 
+	/**
+	 *	@param		int|string		$id
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function check( int|string $id, bool $strict = TRUE ): ?object
 	{
 		$exception	= $this->model->get( $id );
@@ -24,6 +30,10 @@ class Logic_Log_Exception extends Logic
 		return NULL;
 	}
 
+	/**
+	 *	@param		Exception		$exception
+	 *	@return		object
+	 */
 	public function collectData( Exception $exception ): object
 	{
 		try{
@@ -35,7 +45,7 @@ class Logic_Log_Exception extends Logic
 				'timestamp'		=> time(),
 			];
 		}
-		catch( Exception $_e ){
+		catch( Exception ){
 			$content	= (object) [
 				'message'		=> $exception->getMessage(),
 				'code'			=> $exception->getCode(),
@@ -54,7 +64,7 @@ class Logic_Log_Exception extends Logic
 		];
 		try{
 			$content->request			= $this->env->getRequest();
-		} catch (Exception $e ){}
+		} catch( Exception ){}
 		try{
 			$sessionData	= $this->env->getSession()->getAll();
 			if( isset( $sessionData['exception'] ) )
@@ -64,7 +74,7 @@ class Logic_Log_Exception extends Logic
 			if( isset( $sessionData['exceptionUrl'] ) )
 				unset( $sessionData['exceptionUrl'] );
 			$content->session			= $sessionData;
-		} catch (Exception $e ){}
+		} catch( Exception ){}
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
 		$content->previous			= $exception->getPrevious();
 		$content->class				= get_class( $exception );
@@ -89,6 +99,11 @@ class Logic_Log_Exception extends Logic
 		return $content;
 	}
 
+	/**
+	 *	@param		int		$limit
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function importFromLogFile( int $limit = 200 ): int
 	{
 		$count		= 0;
@@ -100,7 +115,7 @@ class Logic_Log_Exception extends Logic
 					try{
 						$this->importLogFileItem( $line );
 					}
-					catch( Exception $e ){}
+					catch( Exception ){}
 					$count++;
 				}
 			}
@@ -113,7 +128,12 @@ class Logic_Log_Exception extends Logic
 		return $count;
 	}
 
-	public function importLogFileItem( string $line )
+	/**
+	 *	@param		string		$line
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function importLogFileItem( string $line ): string
 	{
 		[$timestamp, $dataEncoded]	= explode( ":", $line );
 		$data	= base64_decode( $dataEncoded );
@@ -168,19 +188,28 @@ class Logic_Log_Exception extends Logic
 		$data['env']	= '';
 		if( !empty( $object->env ) )
 			$data['env']	= serialize( $object->env );
-		if( !empty( $object->request ) )
+		if( property_exists( $object, 'request' ) && !empty( $object->request ) )
 			$data['request']	= serialize( $object->request );
-		if( !empty( $object->session ) )
-		$data['session']	= serialize( $object->session );
+		if( property_exists( $object, 'session' ) && !empty( $object->session ) )
+			$data['session']	= serialize( $object->session );
 		return $this->model->add( $data, FALSE );
 	}
 
+	/**
+	 *	@param		Exception		$exception
+	 *	@return		bool|NULL
+	 *	@throws		ReflectionException
+	 */
 	public function log( Exception $exception ): ?bool
 	{
 		$payload	= ['exception' => $exception];
 		return $this->captain->callHook( 'Env', 'logException', $this->env, $payload );
 	}
 
+	/**
+	 *	@param		$data
+	 *	@return		void
+	 */
 	public function saveCollectedDataToLogFile( $data ): void
 	{
 		if( $this->moduleConfig->get( 'file.active' ) ){
@@ -192,6 +221,11 @@ class Logic_Log_Exception extends Logic
 		}
 	}
 
+	/**
+	 *	@param		$data
+	 *	@return		FALSE|void
+	 *	@todo		implement
+	 */
 	public function sendCollectedDataAsMail( $data )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
@@ -199,12 +233,17 @@ class Logic_Log_Exception extends Logic
 		die( 'Not implemented, yet.' );
 	}
 
+	/**
+	 *	@param		Exception		$exception
+	 *	@return		FALSE|void
+	 *	@throws		ReflectionException
+	 */
 	public function sendExceptionAsMail( Exception $exception )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
 		$hasReceivers	= trim( $this->moduleConfig->get( 'mail.receivers' ) );
-		$hasMailModule	= $this->env->getModules()->has( 'Resource_Mail', TRUE );
+		$hasMailModule	= $this->env->getModules()->has( 'Resource_Mail' );
 		$hasBaseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		if( !( $hasReceivers && $hasMailModule && $hasBaseUrl ) )
 			return FALSE;
@@ -220,6 +259,9 @@ class Logic_Log_Exception extends Logic
 		}
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Log_Exception( $this->env );
@@ -228,7 +270,7 @@ class Logic_Log_Exception extends Logic
 		if( $this->env->getModules()->has( 'Frontend' ) ){
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$this->pathLogs		= $frontend->getPath( 'logs' );
-			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
+			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );
 			$this->moduleConfig	= new Dictionary( $moduleConfig );
 		}
 		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
