@@ -10,7 +10,6 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
@@ -36,6 +35,10 @@ class Controller_Admin_Log_Exception extends Controller
 
 	protected string $filterPrefix		= 'filter_admin_log_exception_';
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function bulk(): void
 	{
 		$action	= $this->request->get( 'type' );
@@ -71,7 +74,13 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0, $limit = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@param		int		$limit
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0, int $limit = 0 ): void
 	{
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
@@ -101,7 +110,7 @@ class Controller_Admin_Log_Exception extends Controller
 		if( strlen( trim( $filterType ) ) )
 			$conditions['type']	= $filterType;
 
-		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
+		$page	= preg_match( "/^[0-9]+$/", $page ) ? $page : 0;
 		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
 		$count	= $this->model->count( $conditions );
 		$pages	= ceil( $count / $limit );
@@ -125,7 +134,12 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'exceptionTypes', $types );
 	}
 
-	public function remove( $id ): void
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $id ): void
 	{
 		$this->model->remove( $id );
 		$page	= $this->session->get( $this->filterPrefix.'page' );
@@ -138,8 +152,14 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( string $id ): void
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $id ): void
 	{
+		/** @var ?object $exception */
 		$exception	= $this->model->get( $id );
 		if( !$exception ){
 			$this->messenger->noteError( 'Invalid exception number.' );
@@ -167,7 +187,6 @@ class Controller_Admin_Log_Exception extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -175,12 +194,12 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
-		$this->logic			= $this->env->getLogic()->get( 'logException' );
+		$this->logic			= new Logic_Log_Exception( $this->env );
 		$this->model			= new Model_Log_Exception( $this->env );
 
 		$instances	= ['this' => (object) ['title' => 'Diese Instanz']];
-		$path		= $this->env->getConfig()->get( 'path.logs' );
-		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
+//		$path		= $this->env->getConfig()->get( 'path.logs' );
+//		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 
 /*
 		$instanceKey	= $this->session->get( $this->filterPrefix.'instance' );

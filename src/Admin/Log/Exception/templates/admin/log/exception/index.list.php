@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Net\HTTP\Method as HttpMethod;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -10,8 +10,13 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Web $env */
 /** @var View $view */
+
 /** @var array<array<string,string>> $words */
 /** @var object $instances */
+/** @var array<object> $exceptions */
+/** @var int $page */
+/** @var int $total */
+/** @var int $limit */
 
 $w	= (object) $words['index.list'];
 
@@ -21,7 +26,7 @@ $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
 $iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
 
-$from		= 'admin/log/exception'.($page ? '/'.$page : '' );
+$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
 
 $selectInstance	= '';
 if( count( $instances ) > 1 ){
@@ -70,7 +75,7 @@ if( $exceptions ){
 
 		$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path' ), ENT_QUOTES, 'utf-8' ).'</small>';
 		$method			= 'CLI';
-		if( preg_match( '/Web/', $exceptionEnv['class'] ) && $exceptionRequest instanceof HttpRequest ){
+		if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
 			try{
 				$method	= $exceptionRequest->getMethod();
 			}
@@ -137,7 +142,7 @@ if( $exceptions ){
 	}
 }
 
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
+$pagination	= new PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 return '
