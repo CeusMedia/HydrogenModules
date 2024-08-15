@@ -34,7 +34,7 @@ class View_Helper_HtmlDiff
 		return HtmlTag::create( 'div', $diff->getDifference(), ['class' => 'htmldiff'] );
 	}
 
-	static public function renderStatic( Environment $env, string $html1, string $html2 )
+	public static function renderStatic( Environment $env, string $html1, string $html2 ): string
 	{
 		$helper	= new View_Helper_HtmlDiff( $env );
 		$helper->setContents( $html1, $html2 );
@@ -55,43 +55,47 @@ class View_Helper_HtmlDiff
 	}
 }
 
-class HtmlDiff {
-
+class HtmlDiff
+{
 	private string $content;
 	private string $oldText;
 	private string $newText;
 	private array $oldWords = [];
 	private array $newWords = [];
-	private $wordIndices;
+	private array $wordIndices = [];
 	private string $encoding;
 	private array $specialCaseOpeningTags = ["/<strong[^>]*/i", "/<b[^>]*/i", "/<i[^>]*/i", "/<big[^>]*/i", "/<small[^>]*/i", "/<u[^>]*/i", "/<sub[^>]*/i", "/<sup[^>]*/i", "/<strike[^>]*/i", "/<s[^>]*/i", '/<p[^>]*/i'];
 	private array $specialCaseClosingTags = ["</strong>", "</b>", "</i>", "</big>", "</small>", "</u>", "</sub>", "</sup>", "</strike>", "</s>", '</p>'];
 
-	public function __construct( $oldText, $newText, $encoding = 'UTF-8' ) {
+	public function __construct( string $oldText, string $newText, string $encoding = 'UTF-8' )
+	{
 		$this->oldText = $this->purifyHtml( trim( $oldText ) );
 		$this->newText = $this->purifyHtml( trim( $newText ) );
 		$this->encoding = $encoding;
 		$this->content = '';
 	}
 
-	public function getOldHtml() {
+	public function getOldHtml(): string
+	{
 		return $this->oldText;
 	}
 
-	public function getNewHtml() {
+	public function getNewHtml(): string
+	{
 		return $this->newText;
 	}
 
-	public function getDifference() {
+	public function getDifference(): string
+	{
 		return $this->content;
 	}
 
 	private function getStringBetween( string $str, string $start, string $end ): string
 	{
 		$expStr = explode( $start, $str, 2 );
-		if( count( $expStr ) > 1 ) {
+		if( count( $expStr ) > 1 ){
 			$expStr = explode( $end, $expStr[ 1 ] );
-			if( count( $expStr ) > 1 ) {
+			if( count( $expStr ) > 1 ){
 				array_pop( $expStr );
 				return implode( $end, $expStr );
 			}
@@ -101,7 +105,7 @@ class HtmlDiff {
 
 	private function purifyHtml( string $html, $tags = null ): string
 	{
-		if( class_exists( 'Tidy' ) && false ) {
+		if( class_exists( 'Tidy' ) && false ){
 			$config = ['output-xhtml'   => true, 'indent' => false];
 			$tidy = new tidy;
 			$tidy->parseString( $html, $config, 'utf8' );
@@ -113,23 +117,23 @@ class HtmlDiff {
 
 	public function build(): string
 	{
-		$this->SplitInputsToWords();
-		$this->IndexNewWords();
-		$operations = $this->Operations();
-		foreach( $operations as $item ) {
-			$this->PerformOperation( $item );
+		$this->splitInputsToWords();
+		$this->indexNewWords();
+		$operations = $this->operations();
+		foreach( $operations as $item ){
+			$this->performOperation( $item );
 		}
 		return $this->content;
 	}
 
-	private function IndexNewWords():void
+	private function indexNewWords(): void
 	{
 		$this->wordIndices = [];
-		foreach( $this->newWords as $i => $word ) {
-			if( $this->IsTag( $word ) ) {
-				$word = $this->StripTagAttributes( $word );
+		foreach( $this->newWords as $i => $word ){
+			if( $this->isTag( $word ) ){
+				$word = $this->stripTagAttributes( $word );
 			}
-			if( isset( $this->wordIndices[ $word ] ) ) {
+			if( isset( $this->wordIndices[ $word ] ) ){
 				$this->wordIndices[ $word ][] = $i;
 			} else {
 				$this->wordIndices[ $word ] = [$i];
@@ -137,34 +141,34 @@ class HtmlDiff {
 		}
 	}
 
-	private function SplitInputsToWords(): void
+	private function splitInputsToWords(): void
 	{
-		$this->oldWords = $this->ConvertHtmlToListOfWords( $this->Explode( $this->oldText ) );
-		$this->newWords = $this->ConvertHtmlToListOfWords( $this->Explode( $this->newText ) );
+		$this->oldWords = $this->convertHtmlToListOfWords( $this->explode( $this->oldText ) );
+		$this->newWords = $this->convertHtmlToListOfWords( $this->explode( $this->newText ) );
 	}
 
-	private function ConvertHtmlToListOfWords( $characterString ): array
+	private function convertHtmlToListOfWords( array $characterString ): array
 	{
 		$mode = 'character';
 		$current_word = '';
 		$words = [];
-		foreach( $characterString as $character ) {
-			switch ( $mode ) {
+		foreach( $characterString as $character ){
+			switch( $mode ){
 				case 'character':
-					if( $this->IsStartOfTag( $character ) ) {
-						if( $current_word != '' ) {
+					if( $this->isStartOfTag( $character ) ){
+						if( $current_word != '' ){
 							$words[] = $current_word;
 						}
-						$current_word = "<";
+						$current_word = '<';
 						$mode = 'tag';
-					} else if( preg_match( "[^\s]", $character ) > 0 ) {
-						if( $current_word != '' ) {
+					} else if( preg_match( "[^\s]", $character ) > 0 ){
+						if( $current_word != '' ){
 							$words[] = $current_word;
 						}
 						$current_word = $character;
 						$mode = 'whitespace';
 					} else {
-						if( ctype_alnum( $character ) && ( strlen($current_word) == 0 || ctype_alnum( $current_word ) ) ) {
+						if( ctype_alnum( $character ) && ( strlen($current_word) == 0 || ctype_alnum( $current_word ) ) ){
 							$current_word .= $character;
 						} else {
 							$words[] = $current_word;
@@ -173,12 +177,12 @@ class HtmlDiff {
 					}
 					break;
 				case 'tag' :
-					if( $this->IsEndOfTag( $character ) ) {
-						$current_word .= ">";
+					if( $this->isEndOfTag( $character ) ){
+						$current_word .= '>';
 						$words[] = $current_word;
-						$current_word = "";
+						$current_word = '';
 
-						if( !preg_match('[^\s]', $character ) ) {
+						if( !preg_match('[^\s]', $character ) ){
 							$mode = 'whitespace';
 						} else {
 							$mode = 'character';
@@ -188,16 +192,16 @@ class HtmlDiff {
 					}
 					break;
 				case 'whitespace':
-					if( $this->IsStartOfTag( $character ) ) {
-						if( $current_word != '' ) {
+					if( $this->isStartOfTag( $character ) ){
+						if( '' !== $current_word ){
 							$words[] = $current_word;
 						}
-						$current_word = "<";
+						$current_word = '<';
 						$mode = 'tag';
-					} else if( preg_match( "[^\s]", $character ) ) {
+					} else if( preg_match( "[^\s]", $character ) ){
 						$current_word .= $character;
 					} else {
-						if( $current_word != '' ) {
+						if( $current_word != '' ){
 							$words[] = $current_word;
 						}
 						$current_word = $character;
@@ -208,172 +212,182 @@ class HtmlDiff {
 					break;
 			}
 		}
-		if( $current_word != '' ) {
+		if( '' !== $current_word ){
 			$words[] = $current_word;
 		}
 		return $words;
 	}
 
-	private function IsStartOfTag( $val ): bool
+	private function isStartOfTag( string $val ): bool
 	{
-		return $val == "<";
+		return '<' === $val;
 	}
 
-	private function IsEndOfTag( $val ): bool
+	private function isEndOfTag( string $val ): bool
 	{
-		return $val == ">";
+		return '>' === $val;
 	}
 
-	private function IsWhiteSpace( $value ): bool
+	private function isWhiteSpace( string $value ): bool
 	{
 		return !preg_match( '[^\s]', $value );
 	}
 
-	private function Explode( $value ) {
+	private function explode( string $value ): array|bool
+	{
 		// as suggested by @onassar
 		return preg_split( '//u', $value );
 	}
 
-	private function PerformOperation( $operation ) {
-		switch( $operation->Action ) {
+	private function performOperation( DiffOperation $operation ): void
+	{
+		switch( $operation->action ){
 			case 'equal' :
-				$this->ProcessEqualOperation( $operation );
+				$this->processEqualOperation( $operation );
 				break;
 			case 'delete' :
-				$this->ProcessDeleteOperation( $operation, "diffdel" );
+				$this->processDeleteOperation( $operation, 'diffdel' );
 				break;
 			case 'insert' :
-				$this->ProcessInsertOperation( $operation, "diffins");
+				$this->processInsertOperation( $operation, 'diffins' );
 				break;
 			case 'replace':
-				$this->ProcessReplaceOperation( $operation );
+				$this->processReplaceOperation( $operation );
 				break;
 			default:
 				break;
 		}
 	}
 
-	private function ProcessReplaceOperation( $operation ) {
-		$this->ProcessDeleteOperation( $operation, "diffmod" );
-		$this->ProcessInsertOperation( $operation, "diffmod" );
+	private function processReplaceOperation( DiffOperation $operation ): void
+	{
+		$this->processDeleteOperation( $operation, 'diffmod' );
+		$this->processInsertOperation( $operation, 'diffmod' );
 	}
 
-	private function ProcessInsertOperation( $operation, $cssClass ) {
+	private function processInsertOperation( DiffOperation $operation, string $cssClass ): void
+	{
 		$text = [];
-		foreach( $this->newWords as $pos => $s ) {
-			if( $pos >= $operation->StartInNew && $pos < $operation->EndInNew ) {
+		foreach( $this->newWords as $pos => $s ){
+			if( $pos >= $operation->startInNew && $pos < $operation->endInNew ){
 				$text[] = $s;
 			}
 		}
-		$this->InsertTag( "ins", $cssClass, $text );
+		$this->insertTag( 'ins', $cssClass, $text );
 	}
 
-	private function ProcessDeleteOperation( $operation, $cssClass ) {
+	private function processDeleteOperation( DiffOperation $operation, string $cssClass ): void
+	{
 		$text = [];
-		foreach( $this->oldWords as $pos => $s ) {
-			if( $pos >= $operation->StartInOld && $pos < $operation->EndInOld ) {
+		foreach( $this->oldWords as $pos => $s ){
+			if( $pos >= $operation->startInOld && $pos < $operation->endInOld ){
 				$text[] = $s;
 			}
 		}
-		$this->InsertTag( "del", $cssClass, $text );
+		$this->insertTag( 'del', $cssClass, $text );
 	}
 
-	private function ProcessEqualOperation( $operation ) {
+	private function processEqualOperation( DiffOperation $operation ): void
+	{
 		$result = [];
-		foreach( $this->newWords as $pos => $s ) {
-			if( $pos >= $operation->StartInNew && $pos < $operation->EndInNew ) {
+		foreach( $this->newWords as $pos => $s ){
+			if( $pos >= $operation->startInNew && $pos < $operation->endInNew ){
 				$result[] = $s;
 			}
 		}
-		$this->content .= implode( "", $result );
+		$this->content .= implode( '', $result );
 	}
 
-	private function InsertTag( $tag, $cssClass, &$words ) {
-		while( true ) {
-			if( count( $words ) == 0 ) {
+	private function insertTag( string $tag, string $cssClass, array &$words ): void
+	{
+		while( true ){
+			if( 0 === count( $words ) ){
 				break;
 			}
 
-			$nonTags = $this->ExtractConsecutiveWords( $words, 'noTag' );
+			$nonTags = $this->extractConsecutiveWords( $words, 'noTag' );
 
 			$specialCaseTagInjection = '';
 			$specialCaseTagInjectionIsBefore = false;
 
-			if( count( $nonTags ) != 0 ) {
-				$text = $this->WrapText( implode( "", $nonTags ), $tag, $cssClass );
+			if( count( $nonTags ) != 0 ){
+				$text = $this->wrapText( implode( '', $nonTags ), $tag, $cssClass );
 				$this->content .= $text;
 			} else {
 				$firstOrDefault = false;
-				foreach( $this->specialCaseOpeningTags as $x ) {
-					if( preg_match( $x, $words[ 0 ] ) ) {
+				foreach( $this->specialCaseOpeningTags as $x ){
+					if( preg_match( $x, $words[ 0 ] ) ){
 						$firstOrDefault = $x;
 						break;
 					}
 				}
-				if( $firstOrDefault ) {
+				if( $firstOrDefault ){
 					$specialCaseTagInjection = '<ins class="mod">';
-					if( $tag == "del" ) {
+					if( 'del' === $tag ){
 						unset( $words[ 0 ] );
 					}
-				} else if( array_search( $words[ 0 ], $this->specialCaseClosingTags ) !== false ) {
-					$specialCaseTagInjection = "</ins>";
+				} else if( in_array( $words[0], $this->specialCaseClosingTags ) ){
+					$specialCaseTagInjection = '</ins>';
 					$specialCaseTagInjectionIsBefore = true;
-					if( $tag == "del" ) {
+					if( 'del' === $tag ){
 						unset( $words[ 0 ] );
 					}
 				}
 			}
-			if( count( $words ) == 0 && count( $specialCaseTagInjection ) == 0 ) {
+			if( 0 === count( $words ) && 0 === strlen( $specialCaseTagInjection ) ){
 				break;
 			}
-			if( $specialCaseTagInjectionIsBefore ) {
-				$this->content .= $specialCaseTagInjection . implode( "", $this->ExtractConsecutiveWords( $words, 'tag' ) );
+			if( $specialCaseTagInjectionIsBefore ){
+				$this->content .= $specialCaseTagInjection . implode( '', $this->extractConsecutiveWords( $words, 'tag' ) );
 			} else {
-				$workTag = $this->ExtractConsecutiveWords( $words, 'tag' );
-		                if( isset($workTag[0]) && $this->IsOpeningTag( $workTag[ 0 ] ) && !$this->IsClosingTag( $workTag[ 0 ] ) ) {
-		                    if( strpos( $workTag[ 0 ], 'class=' ) ) {
-		                        $workTag[ 0 ] = str_replace( 'class="', 'class="diffmod ', $workTag[ 0 ] );
-		                        $workTag[ 0 ] = str_replace( "class='", 'class="diffmod ', $workTag[ 0 ] );
-		                    } else {
-		                        $workTag[ 0 ] = str_replace( ">", ' class="diffmod">', $workTag[ 0 ] );
-		                    }
-		                }
-		                $this->content .= implode( "", $workTag ) . $specialCaseTagInjection;
+				$workTag = $this->extractConsecutiveWords( $words, 'tag' );
+				if( isset($workTag[0]) && $this->isOpeningTag( $workTag[ 0 ] ) && !$this->isClosingTag( $workTag[ 0 ] ) ){
+					if( strpos( $workTag[ 0 ], 'class=' ) ){
+						$workTag[ 0 ] = str_replace( 'class="', 'class="diffmod ', $workTag[ 0 ] );
+						$workTag[ 0 ] = str_replace( "class='", 'class="diffmod ', $workTag[ 0 ] );
+					} else {
+						$workTag[ 0 ] = str_replace( ">", ' class="diffmod">', $workTag[ 0 ] );
+					}
+				}
+				$this->content .= implode( "", $workTag ) . $specialCaseTagInjection;
 			}
 		}
 	}
 
-	private function checkCondition( $word, $condition ) {
-		return $condition == 'tag' ? $this->IsTag( $word ) : !$this->IsTag( $word );
+	private function checkCondition( string $word, string $condition ): bool
+	{
+		return 'tag' === $condition ? $this->isTag( $word ) : !$this->isTag( $word );
 	}
 
-	private function WrapText( $text, $tagName, $cssClass ) {
+	private function wrapText( string $text, string $tagName, string $cssClass ): string
+	{
 		return sprintf( '<%1$s class="%2$s">%3$s</%1$s>', $tagName, $cssClass, $text );
 	}
 
-	private function ExtractConsecutiveWords( &$words, $condition ) {
+	private function extractConsecutiveWords( array &$words, string $condition ): array
+	{
 		$indexOfFirstTag = null;
-		foreach( $words as $i => $word ) {
-			if( !$this->checkCondition( $word, $condition ) ) {
+		foreach( $words as $i => $word ){
+			if( !$this->checkCondition( $word, $condition ) ){
 				$indexOfFirstTag = $i;
 				break;
 			}
 		}
-		if( $indexOfFirstTag !== null ) {
+		if( NULL !== $indexOfFirstTag ){
 			$items = [];
-			foreach( $words as $pos => $s ) {
-				if( $pos >= 0 && $pos < $indexOfFirstTag ) {
+			foreach( $words as $pos => $s ){
+				if( $pos >= 0 && $pos < $indexOfFirstTag ){
 					$items[] = $s;
 				}
 			}
-			if( $indexOfFirstTag > 0 ) {
+			if( $indexOfFirstTag > 0 ){
 				array_splice( $words, 0, $indexOfFirstTag );
 			}
 			return $items;
 		} else {
 			$items = [];
-			foreach( $words as $pos => $s ) {
-				if( $pos >= 0 && $pos <= count( $words ) ) {
+			foreach( $words as $pos => $s ){
+				if( $pos >= 0 && $pos <= count( $words ) ){
 					$items[] = $s;
 				}
 			}
@@ -382,99 +396,110 @@ class HtmlDiff {
 		}
 	}
 
-	private function IsTag( $item ) {
-		return $this->IsOpeningTag( $item ) || $this->IsClosingTag( $item );
+	private function isTag( string $item ): bool
+	{
+		return $this->isOpeningTag( $item ) || $this->isClosingTag( $item );
 	}
 
-	private function IsOpeningTag( $item ) {
+	private function isOpeningTag( string $item ): bool|int
+	{
 		return preg_match( "#<[^>]+>\\s*#iU", $item );
 	}
 
-	private function IsClosingTag( $item ) {
+	private function isClosingTag( string $item ): bool|int
+	{
 		return preg_match( "#</[^>]+>\\s*#iU", $item );
 	}
 
-	private function Operations() {
+	/**
+	 * @return DiffOperation[]
+	 */
+	private function operations(): array
+	{
 		$positionInOld = 0;
 		$positionInNew = 0;
 		$operations = [];
-		$matches = $this->MatchingBlocks();
+		$matches = $this->matchingBlocks();
 		$matches[] = new DiffMatch( count( $this->oldWords ), count( $this->newWords ), 0 );
-		foreach(  $matches as $i => $match ) {
-			$matchStartsAtCurrentPositionInOld = ( $positionInOld == $match->StartInOld );
-			$matchStartsAtCurrentPositionInNew = ( $positionInNew == $match->StartInNew );
+		foreach( $matches as $match ){
+			$matchStartsAtCurrentPositionInOld = ( $positionInOld == $match->startInOld );
+			$matchStartsAtCurrentPositionInNew = ( $positionInNew == $match->startInNew );
 			$action = 'none';
 
-			if( $matchStartsAtCurrentPositionInOld == false && $matchStartsAtCurrentPositionInNew == false ) {
+			if( !$matchStartsAtCurrentPositionInOld && !$matchStartsAtCurrentPositionInNew ){
 				$action = 'replace';
-			} else if( $matchStartsAtCurrentPositionInOld == true && $matchStartsAtCurrentPositionInNew == false ) {
+			} else if( $matchStartsAtCurrentPositionInOld && !$matchStartsAtCurrentPositionInNew ){
 				$action = 'insert';
-			} else if( $matchStartsAtCurrentPositionInOld == false && $matchStartsAtCurrentPositionInNew == true ) {
+			} else if( !$matchStartsAtCurrentPositionInOld && $matchStartsAtCurrentPositionInNew ){
 				$action = 'delete';
 			} else { // This occurs if the first few words are the same in both versions
 				$action = 'none';
 			}
-			if( $action != 'none' ) {
-				$operations[] = new DiffOperation( $action, $positionInOld, $match->StartInOld, $positionInNew, $match->StartInNew );
+			if( $action != 'none' ){
+				$operations[] = new DiffOperation( $action, $positionInOld, $match->startInOld, $positionInNew, $match->startInNew );
 			}
-			if( count( $match ) != 0 ) {
-				$operations[] = new DiffOperation( 'equal', $match->StartInOld, $match->EndInOld(), $match->StartInNew, $match->EndInNew() );
+			if( 0 !== count( $match ) ){
+				$operations[] = new DiffOperation( 'equal', $match->startInOld, $match->endInOld(), $match->startInNew, $match->endInNew() );
 			}
-			$positionInOld = $match->EndInOld();
-			$positionInNew = $match->EndInNew();
+			$positionInOld = $match->endInOld();
+			$positionInNew = $match->endInNew();
 		}
 		return $operations;
 	}
 
-	private function MatchingBlocks() {
+	private function matchingBlocks(): array
+	{
 		$matchingBlocks = [];
-		$this->FindMatchingBlocks( 0, count( $this->oldWords ), 0, count( $this->newWords ), $matchingBlocks );
+		$this->findMatchingBlocks( 0, count( $this->oldWords ), 0, count( $this->newWords ), $matchingBlocks );
 		return $matchingBlocks;
 	}
 
-	private function FindMatchingBlocks( $startInOld, $endInOld, $startInNew, $endInNew, &$matchingBlocks ) {
-		$match = $this->FindMatch( $startInOld, $endInOld, $startInNew, $endInNew );
-		if( $match !== null ) {
-			if( $startInOld < $match->StartInOld && $startInNew < $match->StartInNew ) {
-				$this->FindMatchingBlocks( $startInOld, $match->StartInOld, $startInNew, $match->StartInNew, $matchingBlocks );
+	private function findMatchingBlocks( int $startInOld, int $endInOld, int $startInNew, int $endInNew, array &$matchingBlocks ): void
+	{
+		$match = $this->findMatch( $startInOld, $endInOld, $startInNew, $endInNew );
+		if( $match !== null ){
+			if( $startInOld < $match->startInOld && $startInNew < $match->startInNew ){
+				$this->findMatchingBlocks( $startInOld, $match->startInOld, $startInNew, $match->startInNew, $matchingBlocks );
 			}
 			$matchingBlocks[] = $match;
-			if( $match->EndInOld() < $endInOld && $match->EndInNew() < $endInNew ) {
-				$this->FindMatchingBlocks( $match->EndInOld(), $endInOld, $match->EndInNew(), $endInNew, $matchingBlocks );
+			if( $match->endInOld() < $endInOld && $match->endInNew() < $endInNew ){
+				$this->findMatchingBlocks( $match->endInOld(), $endInOld, $match->endInNew(), $endInNew, $matchingBlocks );
 			}
 		}
 	}
 
-	private function StripTagAttributes( $word ) {
+	private function stripTagAttributes( string $word ): string
+	{
 		$word = explode( ' ', trim( $word, '<>' ) );
 		return '<' . $word[ 0 ] . '>';
 	}
 
-	private function FindMatch( $startInOld, $endInOld, $startInNew, $endInNew ) {
+	private function findMatch( int $startInOld, int $endInOld, int $startInNew, int $endInNew ): ?DiffMatch
+	{
 		$bestMatchInOld = $startInOld;
 		$bestMatchInNew = $startInNew;
 		$bestMatchSize = 0;
 		$matchLengthAt = [];
-		for( $indexInOld = $startInOld; $indexInOld < $endInOld; $indexInOld++ ) {
+		for( $indexInOld = $startInOld; $indexInOld < $endInOld; $indexInOld++ ){
 			$newMatchLengthAt = [];
 			$index = $this->oldWords[ $indexInOld ];
-			if( $this->IsTag( $index ) ) {
-				$index = $this->StripTagAttributes( $index );
+			if( $this->isTag( $index ) ){
+				$index = $this->stripTagAttributes( $index );
 			}
-			if( !isset( $this->wordIndices[ $index ] ) ) {
+			if( !isset( $this->wordIndices[ $index ] ) ){
 				$matchLengthAt = $newMatchLengthAt;
 				continue;
 			}
-			foreach( $this->wordIndices[ $index ] as $indexInNew ) {
-				if( $indexInNew < $startInNew ) {
+			foreach( $this->wordIndices[ $index ] as $indexInNew ){
+				if( $indexInNew < $startInNew ){
 					continue;
 				}
-				if( $indexInNew >= $endInNew ) {
+				if( $indexInNew >= $endInNew ){
 					break;
 				}
 				$newMatchLength = ( $matchLengthAt[ $indexInNew - 1 ] ?? 0 ) + 1;
 				$newMatchLengthAt[ $indexInNew ] = $newMatchLength;
-				if( $newMatchLength > $bestMatchSize ) {
+				if( $newMatchLength > $bestMatchSize ){
 					$bestMatchInOld = $indexInOld - $newMatchLength + 1;
 					$bestMatchInNew = $indexInNew - $newMatchLength + 1;
 					$bestMatchSize = $newMatchLength;
@@ -486,40 +511,44 @@ class HtmlDiff {
 	}
 }
 
-class DiffMatch {
+class DiffMatch
+{
+	public int $startInOld;
+	public int $startInNew;
+	public int $size;
 
-	public $StartInOld;
-	public $StartInNew;
-	public $Size;
-
-	public function __construct( $startInOld, $startInNew, $size ) {
-		$this->StartInOld = $startInOld;
-		$this->StartInNew = $startInNew;
-		$this->Size = $size;
+	public function __construct( int $startInOld, int $startInNew, int $size )
+	{
+		$this->startInOld = $startInOld;
+		$this->startInNew = $startInNew;
+		$this->size = $size;
 	}
 
-	public function EndInOld() {
-		return $this->StartInOld + $this->Size;
+	public function endInOld(): int
+	{
+		return $this->startInOld + $this->size;
 	}
 
-	public function EndInNew() {
-		return $this->StartInNew + $this->Size;
+	public function endInNew(): int
+	{
+		return $this->startInNew + $this->size;
 	}
 }
 
-class DiffOperation {
+class DiffOperation
+{
+	public string $action;
+	public int $startInOld;
+	public int $endInOld;
+	public int $startInNew;
+	public int $endInNew;
 
-	public $Action;
-	public $StartInOld;
-	public $EndInOld;
-	public $StartInNew;
-	public $EndInNew;
-
-	public function __construct( $action, $startInOld, $endInOld, $startInNew, $endInNew ) {
-		$this->Action = $action;
-		$this->StartInOld = $startInOld;
-		$this->EndInOld = $endInOld;
-		$this->StartInNew = $startInNew;
-		$this->EndInNew = $endInNew;
+	public function __construct( string $action, int $startInOld, int $endInOld, int $startInNew, int $endInNew )
+	{
+		$this->action		= $action;
+		$this->startInOld	= $startInOld;
+		$this->endInOld		= $endInOld;
+		$this->startInNew	= $startInNew;
+		$this->endInNew		= $endInNew;
 	}
 }
