@@ -16,10 +16,17 @@ use CeusMedia\HydrogenFramework\View;
 class View_Oauth extends View
 {
 	/**
-	 *
+	 *	@return		void
 	 *	@todo		implement scope listing ON TOP OF login
 	 */
-	public function authorize(){}
+	public function authorize(): void
+	{
+	}
 
-	public function index(){}
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
+	{
+	}
 }

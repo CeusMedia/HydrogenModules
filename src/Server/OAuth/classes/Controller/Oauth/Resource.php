@@ -6,7 +6,8 @@
  */
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment as Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /**
  *	...
@@ -17,14 +18,25 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Controller_Oauth_Resource extends Controller
 {
-	static protected $resources	= [];
+	protected static array $resources	= [];
 
-	public function __construct( Environment $env, $setupView = TRUE )
+	public static function registerResource( Environment $env, string $path, string $class, string $method, ?string $scope = NULL ): void
+	{
+		self::$resources[]	= (object) [
+			'env'		=> $env,
+			'path'		=> $path,
+			'class'		=> $class,
+			'method'	=> $method,
+			'scope'		=> $scope,
+		];
+	}
+
+	public function __construct( WebEnvironment $env, $setupView = TRUE )
 	{
 		parent::__construct( $env, FALSE );
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL )
+	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ): void
 	{
 		$path	= '/'.implode( func_get_args() );
 		$get	= $this->env->getRequest()->getAllFromSource( 'GET', TRUE );
@@ -34,17 +46,6 @@ class Controller_Oauth_Resource extends Controller
 
 		//	@todo	finish implementation
 		//this->addData( 'resources', self::$resource );
-	}
-
-	public static function registerResource( Environment $env, $path, $class, $method, $scope = NULL )
-	{
-		self::$resources[]	= (object) [
-			'env'		=> $env,
-			'path'		=> $path,
-			'class'		=> $class,
-			'method'	=> $method,
-			'scope'		=> $scope,
-		];
 	}
 
 	protected function __onInit(): void

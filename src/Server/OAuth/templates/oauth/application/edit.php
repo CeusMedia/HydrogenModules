@@ -2,6 +2,11 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $application */
+/** @var int|string $applicationId */
+/** @var bool $isEditor */
+/** @var array<string,array<string|int,string>> $words */
+
 $optType	= HtmlElements::Options( $words['types'], $application->type );
 $optStatus	= HtmlElements::Options( $words['states'], $application->status );
 
@@ -16,7 +21,7 @@ $buttonDisable	= HtmlTag::create( 'a', $iconDisable.' deaktivieren', ['href' => 
 
 $isEditor		= TRUE;
 
-if( $isEditor && (int) $application->status === 0 )
+if( $isEditor && 0 === (int) $application->status )
 	$buttonEnable	= HtmlTag::create( 'a', $iconEnable.' aktivieren', [
 		'href'		=> "./oauth/application/enable/".$applicationId,
 		'class'		=> "btn btn-default btn-small"

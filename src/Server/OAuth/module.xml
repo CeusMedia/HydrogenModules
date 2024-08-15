@@ -6,13 +6,13 @@
 This module cannot be used standalone.
 Please install inside an application or use module App:Server.
 
-At the moment thee resource service is not implemented.
+At the moment, the resource service is not implemented.
 
 Authorization is implemented fully (except implicit grant) according to
-RFC 6749 (http://tools.ietf.org/html/rfc6749).
+RFC 6749 (https://tools.ietf.org/html/rfc6749).
 
 ]]></description>
-	<version>0.2.7</version>
+	<version>0.3.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated application management.</log>
@@ -22,6 +22,7 @@ RFC 6749 (http://tools.ietf.org/html/rfc6749).
 	<log version="0.2.5">Improve templates.</log>
 	<log version="0.2.6">Add basic resource controller.</log>
 	<log version="0.2.7">Improve code style.</log>
+	<log version="0.3.0">Migration to PHP 8.</log>
 	<category>Server</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

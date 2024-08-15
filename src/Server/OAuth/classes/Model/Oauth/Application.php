@@ -8,11 +8,10 @@
  */
 
 use CeusMedia\HydrogenFramework\Model;
+//use Random\RandomException;
 
 /**
  *	OAuth Code Model.
- *	@category		cmFrameworks.Hydrogen.Module
- *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
@@ -65,6 +64,12 @@ class Model_Oauth_Application extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
+	/**
+	 *	@param		string|NULL		$salt
+	 *	@param		string|NULL		$pepper
+	 *	@return		string
+	 *	@throws		RandomException
+	 */
 	public function getNewClientId( ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
@@ -74,11 +79,21 @@ class Model_Oauth_Application extends Model
 		return $id;
 	}
 
+	/**
+	 *	@param		string|NULL		$salt
+	 *	@param		string|NULL		$pepper
+	 *	@return		string
+	 */
 	public function getNewClientSecret( ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		return hash( "sha256", $salt.'_'.microtime( TRUE ).'_'.$pepper );
 	}
 
+	/**
+	 *	@param		int|string		$id
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( int|string $id ): bool
 	{
 		$modelAccess	= new Model_Oauth_AccessToken( $this->env );

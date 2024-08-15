@@ -1,16 +1,21 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class Controller_Resource extends Controller
 {
-	public function __construct( Environment $env, $setupView = TRUE )
+	public function __construct( WebEnvironment $env, $setupView = TRUE )
 	{
 		parent::__construct( $env, FALSE );
 	}
 
-	public function me()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function me(): void
 	{
 		$this->checkToken();
 		$this->checkPostRequest();
@@ -34,11 +39,16 @@ class Controller_Resource extends Controller
 		] );
 	}
 
-	public function user( $username )
+	/**
+	 *	@param		string		$username
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function user( string $username ): void
 	{
 		$this->checkToken();
 //		$this->checkPostRequest();
-		$request	= $this->env->getRequest();
 		$model		= new Model_User( $this->env );
 		$user		= $model->getByIndex( 'username', $username );
 		if( !$user ){
@@ -60,11 +70,16 @@ class Controller_Resource extends Controller
 		] );
 	}
 
-	public function userId( $userId )
+	/**
+	 *	@param		int|string $userId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function userId( int|string $userId ): void
 	{
 		$this->checkToken();
 		$this->checkPostRequest();
-		$request	= $this->env->getRequest();
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $userId );
 		if( !$user ){
@@ -88,10 +103,14 @@ class Controller_Resource extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		TRUE|void
+	 *	@throws		JsonException
+	 */
 	protected function checkPostRequest()
 	{
 		$request	= $this->env->getRequest();
-		if( strtoupper( $request->getMethod() ) === "POST" )
+		if( $request->getMethod()->isPost() )
 			return TRUE;
 		$this->handleJsonErrorResponse( [
 			'message'		=> 'invalid_request_method',
@@ -99,7 +118,11 @@ class Controller_Resource extends Controller
 		] );
 	}
 
-	protected function checkToken()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	protected function checkToken(): void
 	{
 		$request	= $this->env->getRequest();
 		$token		= $request->get( 'access_token' );
@@ -126,10 +149,13 @@ class Controller_Resource extends Controller
 			] );
 	}
 
+	/**
+	 *	@return		array
+	 */
 	protected function getPostData(): array
 	{
 		$data	= [];
-		$body	= $this->env->getRequest()->getBody();
+		$body	= $this->env->getRequest()->getRawPostData();
 		if( strlen( trim( $body ) ) ){
 			if( function_exists( 'mb_parse_str' ) )
 				mb_parse_str( $body, $data );
@@ -141,7 +167,7 @@ class Controller_Resource extends Controller
 
 	protected function isWriteAction(): bool
 	{
-		return strlen( trim( $this->env->getRequest()->getBody() ) ) > 0;
+		return strlen( trim( $this->env->getRequest()->getRawPostData() ) ) > 0;
 	}
 
 	protected function hasWriteAccess( $userId, $resource ): bool

@@ -40,13 +40,13 @@ class Model_Oauth_RefreshToken extends Model
 	/**
 	 *	Returns generated unique token.
 	 *	@access		public
-	 *	@param		integer			$applicationId		ID of application to get token for
+	 *	@param		int|string		$applicationId		ID of application to get token for
 	 *	@param		string			$scope				List of scopes to get token for (optional)
 	 *	@param		string|NULL		$salt				Token hash salt (optional)
 	 *	@param		string|NULL		$pepper				Token hash pepper (optional)
 	 *	@return		string			Token (32 characters)
 	 */
-	public function getNewToken( $applicationId, string $scope = '', ?string $salt = NULL, ?string $pepper = NULL ): string
+	public function getNewToken( int|string $applicationId, string $scope = '', ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		do{
 			$key	= $applicationId.'_'.$scope.'_'.$salt.'_'.microtime( TRUE ).'_'.$pepper;
