@@ -3,7 +3,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Loader as ClassLoader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
-use CeusMedia\Common\Net\HTTP\Request;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
@@ -12,8 +12,8 @@ use CeusMedia\Mail\Message\Part\InlineImage as MailInlineImage;
 
 class Controller_Admin_Mail_Queue extends Controller
 {
-	/** @var Request $request */
-	protected Request $request;
+	/** @var HttpRequest $request */
+	protected HttpRequest $request;
 
 	protected Dictionary $session;
 	protected MessengerResource $messenger;

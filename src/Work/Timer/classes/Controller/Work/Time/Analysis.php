@@ -80,26 +80,26 @@ class Controller_Work_Time_Analysis extends Controller
 
 		$timestampStart	= 0;
 		$timestampEnd	= 0;
-		if( $filterDuration === "duration" ){
+		if( 'duration' === $filterDuration ){
 			if( $filterDurationFrom && $filterDurationTo ){
 				$timestampStart	= strtotime( min( $filterDurationFrom, $filterDurationTo ) );
 				$timestampEnd	= strtotime( min( $filterDurationFrom, $filterDurationTo ) ) + 24 * 3600;
 			}
 		}
-		else if( $filterDuration === "year" ){
+		else if( 'year' === $filterDuration ){
 			$timestampStart	= strtotime( $filterYear.'-01-01' );
 			$timestampEnd	= strtotime( $filterYear.'-12-31' );
 		}
-		else if( $filterDuration === "month" ){
+		else if( 'month' === $filterDuration ){
 			$lastDayInMonth	= date("t", strtotime( $filterYear.'-'.$filterMonth.'-01' ) );
 			$timestampStart	= strtotime( $filterYear.'-'.$filterMonth.'-01' );
 			$timestampEnd	= strtotime( $filterYear.'-'.$filterMonth.'-'.$lastDayInMonth );
 		}
-		else if( $filterDuration === "week" ){
+		else if( 'week' === $filterDuration ){
 			$timestampStart	= strtotime( sprintf( '%dW%02d', $filterYear, $filterWeek ) );
 			$timestampEnd	= $timestampStart + 7 * 24 * 3600 - 1;
 		}
-		if( $filterMode === 'projects' ){
+		if( 'projects' === $filterMode ){
 			if( $filterProjectIds ){
 				$sumPlanned	= 0;
 				$sumNeeded	= 0;
@@ -128,7 +128,7 @@ class Controller_Work_Time_Analysis extends Controller
 				$this->addData( 'projectsUsers', $users );
 			}
 		}
-		else if( $filterMode === 'users' ){
+		else if( 'users' === $filterMode ){
 			if( $filterUserIds ){
 				$sumPlanned	= 0;
 				$sumNeeded	= 0;

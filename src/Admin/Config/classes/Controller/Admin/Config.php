@@ -108,7 +108,7 @@ class Controller_Admin_Config extends Controller
 			if( $request->has( 'save' ) ){
 				$list	= [];
 				foreach( $request->getAll() as $key => $value ){
-					if( preg_match( '/password/', $key ) && !strlen( $value ) )
+					if( str_contains( $key, 'password' ) && !strlen( $value ) )
 						continue;
 					if( substr_count( $key, "|" ) ){
 						[$partModuleId, $partKey] = explode( "|", $key );
@@ -141,7 +141,8 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'moduleId', $moduleId );
 	}
 
-	public function restore( $moduleId ){
+	public function restore( string $moduleId ): void
+	{
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $fileName ) ){
 			$file	= new FileBackup( $fileName );
@@ -159,7 +160,7 @@ class Controller_Admin_Config extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $moduleId )
+	public function view( string $moduleId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$modules	= $this->env->getModules()->getAll();

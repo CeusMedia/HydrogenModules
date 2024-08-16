@@ -1,6 +1,11 @@
 <?php
 class Mail_Provision_Customer_License_Activated extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -25,11 +30,21 @@ class Mail_Provision_Customer_License_Activated extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderHtml( array $data = [] ): string
 	{
 		return $this->view->loadContentFile( 'mail/provision/customer/license/activated.html', $data );
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderText( array $data = [] ): string
 	{
 		return $this->view->loadContentFile( 'mail/provision/customer/license/activated.txt', $data );

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -13,8 +14,6 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string[] $files */
 
 $w	= (object) $words['index.files'];
-
-use CeusMedia\Bootstrap\Icon;
 
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-down'] );

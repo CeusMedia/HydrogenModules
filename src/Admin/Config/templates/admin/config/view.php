@@ -34,8 +34,8 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 $rows	= [];
 foreach( $module->config as $item ){
-	$isNumeric		= in_array( $item->type, ["integer", "float"] ) || preg_match( "/^[0-9\.]+$/", $item->value );
-	if( preg_match( '/password/', $item->key ) )
+	$isNumeric		= in_array( $item->type, ['integer', 'float'] ) || preg_match( "/^[0-9\.]+$/", $item->value );
+	if( str_contains( $item->key, 'password' ) )
 		$value	= HtmlTag::create( 'em', 'versteckt', array( 'class' => 'muted') );
 	else if( $item->type === "boolean" )
 		$value	= $item->value ? 'yes' : 'no';

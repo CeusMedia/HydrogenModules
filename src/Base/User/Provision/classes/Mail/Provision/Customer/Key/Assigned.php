@@ -1,6 +1,11 @@
 <?php
 class Mail_Provision_Customer_Key_Assigned extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -26,6 +31,11 @@ class Mail_Provision_Customer_Key_Assigned extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderHtml( array $data = [] ): string
 	{
 /*		$helperFacts	= new View_Helper_Mail_Facts( $this->env );
@@ -33,6 +43,11 @@ class Mail_Provision_Customer_Key_Assigned extends Mail_Abstract
 		return $this->view->loadContentFile( 'mail/provision/customer/key/assigned.html', $data );
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderText( array $data = [] ): string
 	{
 /*		$helperFacts	= new View_Helper_Mail_Facts( $this->env );

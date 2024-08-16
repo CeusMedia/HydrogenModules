@@ -1,18 +1,21 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Net\HTTP\Request;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Project extends Controller
 {
-	protected Request $request;
+	protected HttpRequest $request;
 	protected MessengerResource $messenger;
 	protected Model_Project $modelProject;
 	protected Model_Project_Version $modelVersion;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$words			= $this->env->getLanguage()->getWords( 'admin/project' );
 
@@ -45,7 +48,12 @@ class Controller_Admin_Project extends Controller
 		$this->view->addData( 'status', $status );
 	}
 
-	public function addVersion( $projectId ): void
+	/**
+	 *	@param		int|string		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addVersion( int|string $projectId ): void
 	{
 		$words			= (object) $this->getWords( 'addVersion' );
 		$data	= [
@@ -61,14 +69,19 @@ class Controller_Admin_Project extends Controller
 		$this->restart( './admin/project/edit/'.$projectId );
 	}
 
-	public function ajaxGetVersions( $projectId ): void
+	public function ajaxGetVersions( int|string $projectId ): never
 	{
 		$versions		= $this->modelVersion->getAllByIndex( 'projectId', $projectId );
 		print( json_encode( $versions ) );
 		exit;
 	}
 
-	public function edit( string $projectId ): void
+	/**
+	 *	@param		int|string		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $projectId ): void
 	{
 		$words			= (object) $this->getWords( 'edit' );
 		$project		= $this->modelProject->get( $projectId );
@@ -122,7 +135,12 @@ class Controller_Admin_Project extends Controller
 		$this->view->addData( 'projects', $projects );
 	}
 
-	public function remove( string $projectId ): void
+	/**
+	 *	@param		int|string		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $projectId ): void
 	{
 		$words			= (object) $this->getWords( 'remove' );
 
@@ -139,7 +157,12 @@ class Controller_Admin_Project extends Controller
 		$this->restart( './admin/project' );
 	}
 
-	public function removeVersion( string $versionId ): void
+	/**
+	 *	@param		int|string		$versionId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeVersion( int|string $versionId ): void
 	{
 		$version		= $this->modelVersion->get( $versionId );
 		if( $version )
@@ -149,7 +172,6 @@ class Controller_Admin_Project extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

@@ -20,6 +20,7 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 	 */
 	public function render(): string
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
 		$hasTimers		= $modelTimer->count( array(
@@ -36,10 +37,10 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 			$content	= '<div class="alert alert-info">Keine laufende oder pausierte Aktivität vorhanden.</div>'.$buttonAdd;
 		}
 		else{
-			$timer		= $modelTimer->getAllByIndices( array(
+			$timer		= $modelTimer->getAllByIndices( [
 				'workerId'	=> $logicAuth->getCurrentUserId(),
 				'status'	=> [1, 2],
-			), [
+			], [
 				'status'		=> 'ASC',
 				'modifiedAt'	=> 'DESC',
 			], [1, 0] )[0];
@@ -88,13 +89,13 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 			$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 				'href'	=> './manage/project/view/'.$timer->project->projectId.'?from='.$from,
 			] );
-			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, array(
-				'href'	=> join( array(
+			$linkRelation	= HtmlTag::create( 'a', $timer->relationTitle, [
+				'href'	=> join( [
 					$timer->relationLink,
 					substr_count( $timer->relationLink, '?' ) ? '&' : '?',
 					'from='.$from
-				) ),
-			) );
+				] ),
+			] );
 			$content	= '
 				<div class="row-fluid">
 					<div class="span12">

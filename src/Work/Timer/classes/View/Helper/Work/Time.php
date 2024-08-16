@@ -18,6 +18,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 
 	/**
 	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -41,7 +42,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 	 * @param		bool		$shorten
 	 * @return		string
 	 */
-	public static function formatSeconds( $duration, string $space = ' ', bool $shorten = FALSE ): string
+	public static function formatSeconds( int|string $duration, string $space = ' ', bool $shorten = FALSE ): string
 	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
@@ -69,7 +70,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 		return ltrim( $duration, $space );
 	}
 
-	static public function parseTime( $time ): int
+	public static function parseTime( $time ): int
 	{
 		$regexWeeks	= '@([0-9]+)w\s*@';
 		$regexDays	= '@([0-9]+)d\s*@';

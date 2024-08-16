@@ -10,7 +10,7 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function onPageApplyModules()
+	public function onPageApplyModules(): void
 	{
 		$database		= $this->env->getDatabase();
 		$copyPrefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
@@ -34,7 +34,7 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 	 *	@access		public
 	 *	@return		void
 	 */
-	public function onPageBuild()
+	public function onPageBuild(): void
 	{
 		$defaultDbName	= (string) $this->env->getConfig()->get( 'module.resource_database.access.name' );
 		$defaultPrefix	= (string) $this->env->getConfig()->get( 'module.resource_database.access.prefix' );

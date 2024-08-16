@@ -17,10 +17,13 @@ class View_Helper_Work_Time_Dashboard_Others extends Abstraction
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		/** @var Logic_Project $logicProject */
 		$logicProject	= Logic_Project::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
 		$coworkers		= $logicProject->getCoworkers( $logicAuth->getCurrentUserId() );

@@ -166,10 +166,12 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'timerId', $timerId );
 
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
 		$projectUsers	= [];
 		if( $timer->projectId ){
+			/** @var Logic_Project $logicProject */
 			$logicProject   = Logic_Project::getInstance( $this->env );
 			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, [], ['username' => 'ASC'] );
 			if( !$timer->workerId )
@@ -187,12 +189,12 @@ class Controller_Work_Time extends Controller
 	}
 
 	/**
-	 * @param $limit
-	 * @param $page
-	 * @return void
-	 * @throws ReflectionException
+	 *	@param		int		$limit
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public function index( $limit = 10, $page = 0 ): void
+	public function index( int $limit = 10, int $page = 0 ): void
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time' );
@@ -228,6 +230,11 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'unrelatedTimers', $unrelatedTimers );
 	}
 
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function pause( string $timerId ): void
 	{
 		try{
@@ -242,11 +249,20 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 */
 	public function remove( string $timerId ): void
 	{
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function start( string $timerId ): void
 	{
 		try{
@@ -261,6 +277,11 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function stop( string $timerId ): void
 	{
 		try{

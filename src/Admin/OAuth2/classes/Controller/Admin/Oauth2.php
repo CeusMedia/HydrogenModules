@@ -14,13 +14,17 @@ class Controller_Admin_Oauth2 extends Controller
 	protected Model_Oauth_ProviderDefault $modelProviderDefault;
 	protected array $providersIndex				= [];
 	protected array $providersAvailable			= [];
-	protected string $filterPrefix					= 'filter_admin_oauth2_';
+	protected string $filterPrefix				= 'filter_admin_oauth2_';
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data	= $this->request->getAll();
-			$data['status']	= Model_Oauth_Provider::STATUS_NEW;
+			$data['status']		= Model_Oauth_Provider::STATUS_NEW;
 			$data['createdAt']	= time();
 			$data['modifiedAt']	= time();
 			$providerKey = str_replace( '__', '/', $this->request->get( 'providerKey' ) );
@@ -66,7 +70,12 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->addData( 'providers', $this->modelProvider->getAll() );
 	}
 
-	public function edit( $providerId )
+	/**
+	 *	@param		int|string		$providerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $providerId ): void
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
@@ -84,7 +93,7 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->addData( 'provider', $provider );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$filters	= $this->session->getAll( $this->filterPrefix );
@@ -100,7 +109,10 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$conditions	= [];
 		$orders		= ['rank' => 'ASC'];
@@ -110,7 +122,12 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->addData( 'providers', $providers );
 	}
 
-	public function remove( $providerId )
+	/**
+	 *	@param		int|string		$providerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $providerId ): void
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
@@ -125,7 +142,13 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setStatus( $providerId, $status )
+	/**
+	 *	@param		int|string		$providerId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( int|string $providerId, $status ): void
 	{
 		$provider	= $this->modelProvider->get( $providerId );
 		if( !$provider ){
@@ -147,7 +170,7 @@ class Controller_Admin_Oauth2 extends Controller
 		$this->providersIndex		= [];
 		$this->providersAvailable	= [];
 		foreach( $this->modelProviderDefault->getAll() as $provider ){
-			$provider->exists = class_exists( $provider->class );
+			$provider->exists	= class_exists( $provider->class );
 			$this->providersIndex[$provider->class]	= $provider;
 		}
 		foreach( $this->providersIndex as $provider ){

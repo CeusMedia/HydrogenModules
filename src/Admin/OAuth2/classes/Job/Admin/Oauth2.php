@@ -6,7 +6,7 @@ class Job_Auth_Oauth2 extends Job_Abstract
 	protected array $providersIndex				= [];
 	protected array $providersAvailable			= [];
 
-	public function migrate()
+	public function migrate(): void
 	{
 		$this->migrateScopes();
 	}
@@ -43,6 +43,10 @@ class Job_Auth_Oauth2 extends Job_Abstract
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function migrateScopes(): void
 	{
 		$module	= $this->env->getModules()->get( 'Resource_Authentication_Backend_OAuth2' );

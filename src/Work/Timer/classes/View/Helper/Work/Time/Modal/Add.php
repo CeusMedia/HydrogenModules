@@ -14,7 +14,9 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 	 */
 	public function render(): string
 	{
+		/** @var Logic_Project $logicProject */
 		$logicProject	= Logic_Project::getInstance( $this->env );
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
 

@@ -167,15 +167,15 @@ class Controller_Manage_My_User extends Controller
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
 		$data				= $this->request->getAllFromSource( 'POST', TRUE );
-		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'POST' ) );
-		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'POST' ) );
-		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'POST' ) );
+		$passwordOld		= $data->get( 'passwordOld', '' );
+		$passwordNew		= $data->get( 'passwordNew', '' );
+		$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
 
-		if( !strlen( $passwordOld ) )
+		if( '' === $passwordOld )
 			$this->messenger->noteError( $words->msgPasswordOldMissing );
-		else if( !strlen( $passwordNew ) )
+		else if( '' === $passwordNew )
 			$this->messenger->noteError( $words->msgPasswordNewMissing );
-		else if( !strlen( $passwordConfirm ) )
+		else if( '' === $passwordConfirm )
 			$this->messenger->noteError( $words->msgPasswordConfirmMissing );
 		else if( $passwordOld === $passwordNew )
 			$this->messenger->noteError( $words->msgPasswordNewSame );
@@ -246,7 +246,7 @@ class Controller_Manage_My_User extends Controller
 		$user		= $this->modelUser->get( $this->userId );
 		$username	= trim( $this->request->get( 'username' ) );
 
-		if( 0 === strlen( $username ) ){
+		if( '' === $username ){
 			$this->messenger->noteError( $words->msgUsernameMissing );
 			$this->restart( NULL, TRUE );
 		}

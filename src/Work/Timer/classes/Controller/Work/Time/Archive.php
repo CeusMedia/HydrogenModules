@@ -46,7 +46,7 @@ class Controller_Work_Time_Archive extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = 10, $page = 0 )
+	public function index( int $limit = 10, int $page = 0 ): void
 	{
 		$filterQuery		= $this->session->get( 'filter_work_timer_activity' );
 		$filterProjectId	= $this->session->get( 'filter_work_timer_projectId' );

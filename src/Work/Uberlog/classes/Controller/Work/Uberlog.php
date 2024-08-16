@@ -2,14 +2,13 @@
 
 use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
-use JetBrains\PhpStorm\NoReturn;
 
 class Controller_Work_Uberlog extends Controller
 {
 	/**	@var	Model_Log_Record		$model		Instance of log record model */
 	protected Model_Log_Record $modelRecord;
 
-	public function ajaxUpdateIndex(): void
+	public function ajaxUpdateIndex(): never
 	{
 		$lastId	= $this->env->getRequest()->get( 'lastId' );
 		$filters	= ['logRecordId' => '> '.$lastId];
@@ -24,7 +23,11 @@ class Controller_Work_Uberlog extends Controller
 		$this->addData( 'records', $records );
 	}
 
-	#[NoReturn] public function record(): void
+	/**
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function record(): never
 	{
 		/** @var Request $request */
 		$request	= $this->env->getRequest();
@@ -45,6 +48,11 @@ class Controller_Work_Uberlog extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$recordId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $recordId ): void
 	{
 		$request	= $this->env->getRequest();
@@ -81,6 +89,11 @@ class Controller_Work_Uberlog extends Controller
 		$this->modelRecord	= new Model_Log_Record( $this->env );
 	}
 
+	/**
+	 *	@param		string		$categoryName
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getCategoryId( string $categoryName ): string
 	{
 		if( !strlen( trim( $categoryName ) ) )
@@ -98,7 +111,12 @@ class Controller_Work_Uberlog extends Controller
 		return $modelCategory->add( $data );
 	}
 
-	protected function getClientId( $clientName ): string
+	/**
+	 *	@param		string		$clientName
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getClientId( string $clientName ): string
 	{
 		if( !strlen( trim( $clientName ) ) )
 			return 0;
@@ -115,7 +133,12 @@ class Controller_Work_Uberlog extends Controller
 		return $modelClient->add( $data );
 	}
 
-	protected function getHostId( $hostName ): string
+	/**
+	 *	@param		string		$hostName
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getHostId( string $hostName ): string
 	{
 		if( !strlen( trim( $hostName ) ) )
 			return 0;
@@ -132,7 +155,12 @@ class Controller_Work_Uberlog extends Controller
 		return $modelHost->add( $data );
 	}
 
-	protected function getUserAgentId( $userAgent ): string
+	/**
+	 *	@param		string		$userAgent
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getUserAgentId( string $userAgent ): string
 	{
 		if( !strlen( trim( $userAgent ) ) )
 			return 0;
@@ -149,6 +177,11 @@ class Controller_Work_Uberlog extends Controller
 		return $modelAgent->add( $data );
 	}
 
+	/**
+	 *	@param		array		$filters
+	 *	@param		array		$orders
+	 *	@return		array
+	 */
 	protected function listRecords( array $filters = [], array $orders = [] ): array
 	{
 		$orders				= $orders ?: ['logRecordId' => 'DESC'];

@@ -34,19 +34,20 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@param		string		$templateId		ID of template to export
 	 *	@param		string		$output			Type of output (download|print)
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( string $templateId, string $output = 'download' )
+	public function index( string $templateId, string $output = 'download' ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();										//  preserve whitespace in title as hyphen
 		$json		= $this->generateJson( $templateId );
-		$fileName	= vsprintf( '%s%s%s%s', array(
+		$fileName	= vsprintf( '%s%s%s%s', [
 			'MailTemplate_',													//  file name prefix @todo make configurable
 			preg_replace( '/[: "\']/', '', $titleKey ),							//  template title as file ID (stripped invalid characters)
 			'_'.date( 'Y-m-d' ),
 			'.json',															//  file extension @todo make configurable
-		) );
+		] );
 		switch( $output ){
 			case 'print':
 			case 'dev':

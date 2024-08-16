@@ -1,8 +1,7 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
-use CeusMedia\Common\Net\HTTP\Request;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
 use CeusMedia\Common\XML\ElementReader as XmlReader;
@@ -10,7 +9,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Route extends Controller
 {
-	protected Request $request;
+	protected HttpRequest $request;
 	protected Logic_Frontend $frontend;
 	protected string $fileName;
 	protected Model_Route $model;
@@ -18,7 +17,12 @@ class Controller_Admin_Route extends Controller
 	protected array $routes					= [];
 	protected array $routeMapBySource		= [];
 
-	public function activate( string $id ): void
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function activate( int|string $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':
@@ -34,6 +38,10 @@ class Controller_Admin_Route extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -65,7 +73,12 @@ class Controller_Admin_Route extends Controller
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function deactivate( $id ): void
+	/**
+	 *	@param		int|string $id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function deactivate( int|string $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':
@@ -81,7 +94,12 @@ class Controller_Admin_Route extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $id ): void
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $id ): void
 	{
 		if( !array_key_exists( $id, $this->routes ) )
 			$this->restart( NULL, TRUE );
@@ -115,7 +133,12 @@ class Controller_Admin_Route extends Controller
 	{
 	}
 
-	public function remove( $id ): void
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $id ): void
 	{
 		switch( $this->source ){
 			case 'Database':

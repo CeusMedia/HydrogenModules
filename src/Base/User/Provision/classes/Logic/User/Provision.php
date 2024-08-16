@@ -22,6 +22,8 @@ class Logic_User_Provision extends Logic
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about activation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about assigment
 	 *	@return		boolean
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activateUserLicense( int|string $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
 	{
@@ -60,6 +62,8 @@ class Logic_User_Provision extends Logic
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about revokation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about revokation
 	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function revokeUserLicense( int|string $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
 	{
@@ -112,7 +116,8 @@ class Logic_User_Provision extends Logic
 	}*/
 
 	/**
-	 *	@todo   		rework, send mails
+	 *	@todo		rework, send mails
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
@@ -146,9 +151,11 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo		doc
+	 *	@param		int|string		$userLicenseKeyId
+	 *	@param		int|string		$userId
 	 *	@return		bool
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setUserOfUserLicenseKey( int|string $userLicenseKeyId, int|string $userId = 0 ): bool
 	{
@@ -239,8 +246,9 @@ class Logic_User_Provision extends Logic
 	 *	@todo		implement and document
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload )
+	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( !isset( $payload['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
@@ -259,6 +267,11 @@ class Logic_User_Provision extends Logic
 		}
 	}
 
+	/**
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function handleOutdatedUserLicenses(): array
 	{
 		$results	= [];
@@ -274,12 +287,15 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@deprecated  	use handleOutdatedUserLicenses instead
 	 *	@todo   		remove, after job has been updated
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function handleExpiredKeys(): array
 	{
 		return $this->handleOutdatedUserLicenses();
 		$dbc		= $this->env->getDatabase();
 		$language	= $this->env->getLanguage()->getLanguage();
+		/** @var Logic_Mail $logicMail */
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$list		= [];
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
@@ -331,7 +347,7 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		rework
 	 */
-	public function getDurationInSeconds( $duration )
+	public function getDurationInSeconds( $duration ): float|int
 	{
 		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
@@ -364,8 +380,9 @@ class Logic_User_Provision extends Logic
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId )
+	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
@@ -396,6 +413,11 @@ class Logic_User_Provision extends Logic
 		return $this->modelUserKey->getAllByIndices( $indices );
 	}
 
+	/**
+	 *	@param		int|string		$productId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getProduct( int|string $productId ): object
 	{
 		$product	= $this->modelProduct->get( $productId );
@@ -404,7 +426,12 @@ class Logic_User_Provision extends Logic
 		return $product;
 	}
 
-	public function getProductLicense( int|string $productLicenseId = 0 )
+	/**
+	 *	@param		int|string		$productLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		if( !$productLicense )
@@ -413,7 +440,13 @@ class Logic_User_Provision extends Logic
 		return $productLicense;
 	}
 
-	public function getProductLicenses( int|string $productId, $status = NULL )
+	/**
+	 *	@param		int|string		$productId
+	 *	@param		$status
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
 		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
@@ -434,6 +467,11 @@ class Logic_User_Provision extends Logic
 		return $this->modelProduct->getAll( $indices, $orders );
 	}
 
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUser( int|string $userId ): object
 	{
 		$user	= $this->modelUser->get( $userId );
@@ -443,6 +481,11 @@ class Logic_User_Provision extends Logic
 		return $user;
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUserLicense( int|string $userLicenseId ): object
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
@@ -455,6 +498,11 @@ class Logic_User_Provision extends Logic
 		return $clone;
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUserLicenseOwner( int|string $userLicenseId ): object
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
@@ -464,6 +512,11 @@ class Logic_User_Provision extends Logic
 		return $user;
 	}
 
+	/**
+	 *	@param		int|string $userLicenseKeyId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUserLicenseKey( int|string $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->modelUserKey->get( $userLicenseKeyId );
@@ -472,6 +525,11 @@ class Logic_User_Provision extends Logic
 		return $userLicenseKey;
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseKeyId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUserLicenseKeyOwner( int|string $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
@@ -485,6 +543,12 @@ class Logic_User_Provision extends Logic
 	{
 	}*/
 
+	/**
+	 *	@param		int|string			$userId
+	 *	@param		int|string|NULL		$productId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getUserLicensesFromUser( int|string $userId, int|string $productId = NULL ): array
 	{
 		$indices		= ['userId' => $userId];
@@ -499,6 +563,12 @@ class Logic_User_Provision extends Logic
 		return $userLicenses;
 	}
 
+	/**
+	 *	@param		int|string			$userId
+	 *	@param		int|string|NULL		$projectId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getNotAssignedUserLicenseKeysFromUser( int|string $userId, int|string|NULL $projectId = NULL ): array
 	{
 		$list		= [];
@@ -511,26 +581,41 @@ class Logic_User_Provision extends Logic
 		return $list;
 	}
 
-	public function getNotAssignedUserLicenseKeysFromUserLicense( int|string $userLicenseId )
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getNotAssignedUserLicenseKeysFromUserLicense( int|string $userLicenseId ): array
 	{
 		$license	= $this->getUserLicense( $userLicenseId );
 		$indices	= ['userLicenseId' => $userLicenseId, 'userId' => 0];
 		$orders		= ['userLicenseId' => 'ASC'] ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
+		return $this->modelUserKey->getAll( $indices, $orders );
 	}
 
-	public function getUserLicenseKeys( int|string $userLicenseId, bool $assignedOnly = FALSE )
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@param		bool			$assignedOnly
+	 *	@return		array
+	 */
+	public function getUserLicenseKeys( int|string $userLicenseId, bool $assignedOnly = FALSE ): array
 	{
 		$indices	= ['userLicenseId' => $userLicenseId];
 		if( $assignedOnly )
 			$indices['status']	= Model_Provision_User_License_Key::STATUS_ASSIGNED;
 		$orders		= ['userLicenseKeyId' => 'ASC'] ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
+		return $this->modelUserKey->getAll( $indices, $orders );
 	}
 
-	public function getUserLicenseKeysFromUser( int|string $userId, bool $activeOnly = NULL, $productId = NULL )
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		bool|NULL		$activeOnly
+	 *	@param		int|string|NULL	$productId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicenseKeysFromUser( int|string $userId, bool $activeOnly = NULL, int|string|NULL $productId = NULL ): array
 	{
 		$indices	= [
 			'userId'	=> $userId,
@@ -553,26 +638,56 @@ class Logic_User_Provision extends Logic
 		return $keys;
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendMailOnActivatedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendMailOnDeactivatedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Deactivated' );
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendMailOnExpiredUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Expired' );
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendMailOnReplacedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Replaced' );
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function sendMailOnRevokedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Revoked' );
@@ -585,6 +700,7 @@ class Logic_User_Provision extends Logic
 	 *	@return		boolean
 	 *	@todo   	user language
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendMailOnAssignUserLicenseKey( int|string $userLicenseKeyId ): bool
 	{
@@ -609,6 +725,7 @@ class Logic_User_Provision extends Logic
 	 *	@return		boolean
 	 *	@todo   	user language
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendMailOnRevokeUserLicenseKey( int|string $userLicenseKeyId, int|string $oldUserId ): bool
 	{
@@ -626,9 +743,13 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo 		 finish implementation
+	 *	@todo 		finish implementation
+	 *	@param		int|string		$userLicenseId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setUserLicenseStatus( int|string $userLicenseId, $status )
+	public function setUserLicenseStatus( int|string $userLicenseId, $status ): void
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
 
@@ -652,7 +773,9 @@ class Logic_User_Provision extends Logic
 	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );
@@ -661,6 +784,12 @@ class Logic_User_Provision extends Logic
 		$this->modelUser		= new Model_User( $this->env );
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function handleOutdatedUserLicense( int|string $userLicenseId ): object
 	{
 		$outdatedUserLicense		= $this->getUserLicense( $userLicenseId );
@@ -723,6 +852,13 @@ class Logic_User_Provision extends Logic
 		];
 	}
 
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@param		$change
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function sendMailOnUserLicenseChange( int|string $userLicenseId, $change ): bool
 	{
 		$changes	= ['Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked'];

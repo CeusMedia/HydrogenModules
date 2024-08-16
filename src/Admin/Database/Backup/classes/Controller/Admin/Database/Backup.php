@@ -14,7 +14,7 @@ class Controller_Admin_Database_Backup extends Controller
 	protected MessengerResource $messenger;
 	protected Logic_Database_Backup $logicBackup;
 
-	public function backup()
+	public function backup(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			try{
@@ -30,18 +30,23 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->addData( 'path', $this->path );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'backups', $this->logicBackup->index() );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
-	public function download( $id )
+	/**
+	 *	@param		string		$id
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function download( string $id ): void
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
-		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
 			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
 			$this->restart( 'view/'.$id, TRUE );
 		}
@@ -49,7 +54,7 @@ class Controller_Admin_Database_Backup extends Controller
 		HttpDownload::sendFile( $backup->pathname, $backup->filename );
 	}
 
-	public function remove( $id )
+	public function remove( string $id ): void
 	{
 		$backup	= $this->check( $id );
 		$this->logicBackup->remove( $id );
@@ -57,11 +62,11 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function restore( $id )
+	public function restore( string $id ): void
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
-		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
 			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
 			$this->restart( 'view/'.$id, TRUE );
 		}
@@ -76,7 +81,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->restart( 'view/'.$id, TRUE );
 	}
 
-	public function view( $id )
+	public function view( string $id ): void
 	{
 		$backup		= $this->check( $id );
 		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );

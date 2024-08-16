@@ -53,7 +53,7 @@ class Model_Oauth_ProviderDefault
 
 	/*  --  PROTECTED  --  */
 
-	protected function read()
+	protected function read(): void
 	{
 		$reader				= new JsonFileReader( $this->filePath );
 		$this->providers	= [];
