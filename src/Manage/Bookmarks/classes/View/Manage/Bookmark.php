@@ -5,19 +5,19 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Bookmark extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	protected function renderList( $bookmarkId = NULL )
+	protected function renderList( $bookmarkId = NULL ): string
 	{
 		$list	= '<div><small class="muted"><em>Keine vorhanden.</em></small></div>';
 		if( ( $bookmarks = $this->getData( 'bookmarks' ) ) ){

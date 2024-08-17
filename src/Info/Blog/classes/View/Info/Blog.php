@@ -2,29 +2,11 @@
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Captain as CaptainResource;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Info_Blog extends View
 {
-	public function index()
-	{
-	}
-
-	public function post()
-	{
-	}
-
-	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload = [] ): void
-	{
-		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
-		while( preg_match( $pattern, $payload['content'] ) ){
-			$id				= trim( preg_replace( $pattern, "\\3", $payload['content'] ) );
-			$content		= View_Info_Blog::renderPostAbstractPanelStatic( $env, $id );
-			$replacement	= "\\1".$content."\\4";													//  insert content of nested page...
-			$payload['content']	= preg_replace( $pattern, $replacement, $payload['content'] );				//  ...into page content
-		}
-	}
-
 	public static function renderCommentInfoBarStatic( Environment $env, $comment ): string
 	{
 		$facts	= [
@@ -35,21 +17,20 @@ class View_Info_Blog extends View
 		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-comment-info'] );
 	}
 
-	public function renderComment( $comment ): string
+	public static function renderCommentStatic( Environment $env, object $comment ): string
 	{
-		return self::renderCommentStatic( $this->env, $comment );
+		return HtmlTag::create( 'div', [
+			self::renderCommentInfoBarStatic( $env, $comment ),
+			HtmlTag::create( 'blockquote', nl2br( trim( $comment->content ) ) ),
+		], ['class' => 'list-comments-item'] );
 	}
 
-	public static function renderCommentStatic( Environment $env, $comment ): string
-	{
-		$infobar	= self::renderCommentInfoBarStatic( $env, $comment );
-		$content	= HtmlTag::create( 'blockquote', nl2br( trim( $comment->content ) ) );
-		$html		= HtmlTag::create( 'div', $infobar.$content, [
-			'class'		=> 'list-comments-item'
-		] );
-		return $html;
-	}
-
+	/**
+	 *	@param		Environment $env
+	 *	@param		$modeOrId
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public static function renderPostAbstractPanelStatic( Environment $env, $modeOrId ): string
 	{
 		$words 	= $env->getLanguage()->getWords( 'info/blog' );
@@ -64,7 +45,7 @@ class View_Info_Blog extends View
 			$post	= $posts[0];
 			$title	= $words['panelTitles']['typeRandom'];
 		}
-		else if( in_array( $modeOrId, ["latest", "0"] ) ){
+		else if( in_array( $modeOrId, ['latest', '0'] ) ){
 			$post	= $model->getByIndex( 'status', 1, [], ['postId' => 'DESC'] );
 			$title	= $words['panelTitles']['typeLatest'];
 		}
@@ -84,7 +65,15 @@ class View_Info_Blog extends View
 		] );
 	}
 
-	public static function renderPostAbstractStatic( Environment $env, $post, $showInfoBar = TRUE ): string
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object			$post
+	 *	@param		bool			$showInfoBar
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public static function renderPostAbstractStatic( Environment $env, object $post, bool $showInfoBar = TRUE ): string
 	{
 		$title		= HtmlTag::create( 'h4', $post->title );
 		$url		= View_Info_Blog::renderPostUrlStatic( $env, $post );
@@ -111,7 +100,13 @@ class View_Info_Blog extends View
 		return HtmlTag::create( 'div', $content, ['class' => 'blog-post'] );
 	}
 
-	public static function renderPostInfoBarStatic( Environment $env, $post ): string
+	/**
+	 *	@param		Environment		$env
+	 *	@param		object			$post
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public static function renderPostInfoBarStatic( Environment $env, object $post ): string
 	{
 		if( !isset( $post->author ) ){
 			$modelUser		= new Model_User( $env );
@@ -131,13 +126,27 @@ class View_Info_Blog extends View
 		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-post-info hidden-phone'] );
 	}
 
-	public static function renderPostUrlStatic( Environment $env, $post ): string
+	public static function renderPostUrlStatic( Environment $env, object $post ): string
 	{
 		$title	= Controller_Info_Blog::getUriPart( $post->title );
 		return './info/blog/post/'.$post->postId.'-'.$title;
 	}
 
-	protected static function renderFactsStatic( Environment $env, $facts, $listClass = 'dl-horizontal' ): string
+	public function index(): void
+	{
+	}
+
+	public function post(): void
+	{
+		$this->env->getPage()->js->addModuleFile( 'module.info.blog.js', CaptainResource::LEVEL_BOTTOM );
+	}
+
+	public function renderComment( object $comment ): string
+	{
+		return self::renderCommentStatic( $this->env, $comment );
+	}
+
+	protected static function renderFactsStatic( Environment $env, array $facts, string $listClass = 'dl-horizontal' ): string
 	{
 		$list	= [];
 		foreach( $facts as $label => $value ){

@@ -3,20 +3,25 @@
 use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Customer extends Controller
 {
-	protected $messenger;
-	protected $modelCustomer;
-	protected $modelRating;
+	protected MessengerResource $messenger;
+	protected Model_Customer $modelCustomer;
+	protected Model_Customer_Rating $modelRating;
 
-	public static function ___registerHints( Environment $env, $context, $module, $arguments = NULL )
+	public static function ___registerHints( Environment $env, $context, $module, $arguments = NULL ): void
 	{
 		if( class_exists( 'View_Helper_Hint' ) )
 			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
 	}
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
@@ -35,7 +40,12 @@ class Controller_Manage_Customer extends Controller
 		$this->addData( 'customer', (object) $customer );
 	}
 
-	public function edit( $customerId )
+	/**
+	 *	@param		int|string		$customerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $customerId ): void
 	{
 		$request	= $this->env->getRequest();
 		$customer	= $this->modelCustomer->get( $customerId );
@@ -62,24 +72,28 @@ class Controller_Manage_Customer extends Controller
 		$this->addData( 'customer', $customer );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$customers		=  $this->modelCustomer->getAll();
-		if( $this->modelRating )
-			foreach( $customers as $nr => $customer ){
-				$order		= ['timestamp' => 'DESC'];
-				$limit		= [0, 1];
-				$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
-				if( $rating ){
-					$rating	= array_pop( $rating );
-					$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
-				}
-				$customer->rating	= $rating;
+		foreach( $customers as $customer ){
+			$order		= ['timestamp' => 'DESC'];
+			$limit		= [0, 1];
+			$rating		= $this->modelRating->getAllByIndex( 'customerId', $customer->customerId, $order, $limit );
+			if( $rating ){
+				$rating	= array_pop( $rating );
+				$rating->index		= $this->modelRating->calculateCustomerIndex( $rating );
 			}
+			$customer->rating	= $rating;
+		}
 		$this->addData( 'customers', $customers );
 	}
 
-	public function map( $customerId )
+	/**
+	 *	@param		int|string		$customerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function map( int|string $customerId ): void
 	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
@@ -90,7 +104,12 @@ class Controller_Manage_Customer extends Controller
 		$this->addData( 'customer', $customer );
 	}
 
-	public function rate( $customerId )
+	/**
+	 *	@param		int|string		$customerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function rate( int|string $customerId ): void
 	{
 		$request		= $this->env->getRequest();
 
@@ -101,7 +120,7 @@ class Controller_Manage_Customer extends Controller
 		}
 
 		if( $request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'affability'	=> $request->get( 'affability' ) >= 1 ? min( 5, $request->get( 'affability' ) ) : 0,
 				'guidability'	=> $request->get( 'guidability' ) >= 1 ? min( 5, $request->get( 'guidability' ) ) : 0,
 				'growthRate'	=> $request->get( 'growthRate' ) >= 1 ? min( 5, $request->get( 'growthRate' ) ) : 0,
@@ -111,7 +130,7 @@ class Controller_Manage_Customer extends Controller
 				'uptightness'	=> $request->get( 'uptightness' ) >= 1 ? min( 5, $request->get( 'uptightness' ) ) : 0,
 				'customerId'	=> $customerId,
 				'timestamp'		=> time()
-			);
+			];
 			$this->modelRating->add( $data );
 			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
 			$this->restart( NULL, TRUE );
@@ -121,7 +140,12 @@ class Controller_Manage_Customer extends Controller
 		$this->addData( 'customerId', $customerId );
 	}
 
-	public function resolveGeocode( $customerId )
+	/**
+	 *	@param		int|string		$customerId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function resolveGeocode( int|string $customerId ): bool
 	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){

@@ -1,19 +1,25 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Blog_Category extends Controller
 {
-	protected $messenger;
+	protected MessengerResource $messenger;
 	protected Model_Blog_Category $modelCategory;
 	protected Model_Blog_Comment $modelComment;
 	protected Model_Blog_Post $modelPost;
 	protected Model_User $modelUser;
 	protected Dictionary $moduleConfig;
-	protected $request;
+	protected HttpRequest $request;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		if( $this->request->get( 'save' ) ){
 			$data	= [
@@ -33,7 +39,12 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'category', (object) $data );
 	}
 
-	public function edit( $categoryId )
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $categoryId ): void
 	{
 		$category	= $this->checkCategory( $categoryId );
 		if( $this->request->get( 'save' ) ){
@@ -50,7 +61,11 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'category', $category );
 	}
 
-	public function index( $categoryId = NULL )
+	/**
+	 *	@param		int|string|NULL		$categoryId
+	 *	@return		void
+	 */
+	public function index( int|string|NULL $categoryId = NULL ): void
 	{
 		if( $categoryId )
 			$this->restart( 'edit/'.$categoryId, TRUE );
@@ -81,7 +96,13 @@ class Controller_Manage_Blog_Category extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkCategory( $categoryId, $strict = FALSE )
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@param		bool			$strict
+	 *	@return		object|
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkCategory( int|string $categoryId, bool $strict = FALSE ): object
 	{
 		$category	= $this->modelCategory->get( (int) $categoryId );
 		if( !$category ){

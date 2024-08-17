@@ -6,6 +6,7 @@ class Controller_Ajax_Admin_Cache extends AjaxController
 {
 	/**
 	 *	@return		void
+	 *	@throws		JsonException
 	 */
 	public function remove(): void
 	{

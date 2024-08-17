@@ -1,6 +1,14 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var array<object> $posts */
 
 $w		= (object) $words['index'];
 
@@ -28,9 +36,8 @@ if( $posts ){
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
-\CeusMedia\Bootstrap\Icon::$defaultSet	= 'FontAwesome';
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( "./manage/blog/", $page ?? 1, $pages ?? 0 );
-
+Icon::$defaultSet	= 'FontAwesome';
+$pagination	= new PageControl( "./manage/blog/", $page ?? 1, $pages ?? 0 );
 
 return '
 <div class="content-panel content-panel-list">

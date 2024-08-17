@@ -34,7 +34,7 @@ class View_Admin_Config extends View
 				'class'	=> $class,
 			] );
 		}
-		else if( $item->type === "boolean" ){
+		else if( 'boolean' === $item->type ){
 			$inputYes	= HtmlTag::create( 'input', NULL, [
 				'name'		=> $moduleId.'|'.$item->key,
 				'type'		=> 'radio',

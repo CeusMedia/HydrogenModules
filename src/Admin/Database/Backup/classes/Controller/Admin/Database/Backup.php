@@ -44,6 +44,7 @@ class Controller_Admin_Database_Backup extends Controller
 	 */
 	public function download( string $id ): void
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
@@ -62,8 +63,14 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$id
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function restore( string $id ): void
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
 		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
@@ -89,6 +96,10 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -97,6 +108,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
 
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
 
 		if( !$this->env->getModules()->has( 'Resource_Database' ) ){

@@ -1,58 +1,42 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Blog extends Controller
 {
-	protected $messenger;
+	protected MessengerResource $messenger;
 	protected Model_Blog_Category $modelCategory;
 	protected Model_Blog_Comment $modelComment;
 	protected Model_Blog_Post $modelPost;
 	protected Model_User $modelUser;
 	protected Dictionary $moduleConfig;
-	protected $request;
-	protected $session;
+	protected HttpRequest $request;
+	protected PartitionSession $session;
 
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, array & $payload )
-	{
-		$frontend		= Logic_Frontend::getInstance( $env );
-		if( !$frontend->hasModule( 'Info_Blog' ) )
-			return;
-
-		$words		= $env->getLanguage()->getWords( 'manage/blog' );
-		$model		= new Model_Blog_Post( $env );
-		$list		= [];
-		$conditions	= ['status' => 1];
-		$orders		= ['createdAt' => 'DESC'];
-		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
-			$list[$post->postId]	= (object) array(
-				'title'	=> str_replace( '/', '-', $post->title ),
-				'type'	=> 'link:page',
-				'value'	=> './info/blog/post/'.$post->postId.'-'.self::getUriPart( $post->title )
-			);
-		}
-		if( $list ){
-			$list	= array( (object) array(
-				'title'	=> $words['tinyMCE']['prefix'],
-				'menu'	=> array_values( $list ),
-			) );
-	//		$context->list	= array_merge( $context->list, array_values( $list ) );
-			$context->list	= array_merge( $context->list, $list );
-		}
-	}
-
-	public static function getUriPart( $label, $delimiter = "_" )
+	/**
+	 *	@param		string		$label
+	 *	@param		string		$delimiter
+	 *	@return		string
+	 */
+	public static function getUriPart( string $label, string $delimiter = '_' ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
+		return preg_replace( "/ +/", $delimiter, $label );
 	}
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$language		= $this->env->getLanguage();
 		if( $this->request->has( 'save' ) ){
@@ -63,7 +47,7 @@ class Controller_Manage_Blog extends Controller
 			else if( !trim( strip_tags( $this->request->get( 'abstract' ) ) ) )
 				$this->messenger->noteError( 'Post abstract is missing.' );
 			else{
-				$data		= array(
+				$data		= [
 					'authorId'		=> $this->request->get( 'authorId' ),
 					'categoryId'	=> (int) $this->request->get( 'categoryId' ),
 					'status'		=> $this->request->get( 'status' ),
@@ -72,7 +56,7 @@ class Controller_Manage_Blog extends Controller
 					'content'		=> $this->request->get( 'content' ),
 					'abstract'		=> $this->request->get( 'abstract' ),
 					'createdAt'		=> time(),
-				);
+				];
 				$postId	= $this->modelPost->add( $data, FALSE );
 				$this->messenger->noteSuccess( 'Der neue Eintrag wurde gespeichert.' );
 				$this->messenger->noteNotice( 'Bitte überarbeite jetzt deinen Eintrag!<br/>Wenn du fertig bist, kannst du den Eintrag mit dem Status "öffentlich" sichtbar machen.' );
@@ -90,25 +74,32 @@ class Controller_Manage_Blog extends Controller
 			$data['language']	= $language->getLanguage();
 		$data['status']		= 0;
 
-		$categories			= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
-		$users				= $this->modelUser->getAll( ['status' => '> 0'] );
+		$categories		= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
+		$users			= $this->modelUser->getAll( ['status' => '> 0'] );
 		$this->addData( 'post', (object) $data );
 		$this->addData( 'users', $users );
 		$this->addData( 'categories', $categories );
 	}
 
-	public function addComment( $postId )
+	/**
+	 *	@param		int|string		$postId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addComment( int|string $postId ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post		= $this->checkPost( $postId );
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$user		= $logicAuth->getCurrentUser();
-		print_m( $user );die;
+//		print_m( $user );die;
 		$language	= $this->env->getLanguage();
 
 		if( $this->request->has( 'save' ) ){
-			$data		= array(
+			$data		= [
 				'postId'	=> $post->postId,
 				'language'	=> $language->getLanguage(),
 				'title'		=> $this->request->get( 'title' ),
@@ -116,7 +107,7 @@ class Controller_Manage_Blog extends Controller
 				'email'		=> $this->request->get( 'email' ),
 				'content'	=> $this->request->get( 'content' ),
 				'createdAt'	=> time(),
-			);
+			];
 			$commentId	= $this->modelComment->add( $data );
 			$this->messenger->noteSuccess( 'Your comment has been added.' );
 //			$this->informAboutNewComment( $commentId );
@@ -124,14 +115,19 @@ class Controller_Manage_Blog extends Controller
 		$this->restart( 'post/'.$post->postId, TRUE );
 	}
 
-	public function edit( $postId = NULL )
+	/**
+	 *	@param		int|string|NULL		$postId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string|NULL $postId = NULL ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post			= $this->checkPost( $postId );
 
 		if( $this->request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'authorId'		=> $this->request->get( 'authorId' ),
 				'categoryId'	=> $this->request->get( 'categoryId' ),
 				'status'		=> $this->request->get( 'status' ),
@@ -140,17 +136,17 @@ class Controller_Manage_Blog extends Controller
 				'content'		=> $this->request->get( 'content' ),
 				'abstract'		=> $this->request->get( 'abstract' ),
 				'modifiedAt'	=> time(),
-			);
+			];
 			$this->modelPost->edit( $post->postId, $data, FALSE );
 			$this->messenger->noteSuccess( 'Der Eintrag wurde gespeichert.' );
 			$this->restart( 'edit/'.$post->postId, TRUE );
 		}
 
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
-		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
+		$post->comments	= $this->modelComment->getAllByIndices( [									//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
 			'status'	=> '>= 0'																	//  ... and visible
-		) );
+		] );
 		$categories		= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
 		$users			= $this->modelUser->getAll( ['status' => '> 0'] );
 
@@ -159,7 +155,7 @@ class Controller_Manage_Blog extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'filter_manage_blog_status' );
@@ -170,7 +166,12 @@ class Controller_Manage_Blog extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL )
+	/**
+	 *	@param		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( $page = NULL ): void
 	{
 		$filterStatus		= $this->session->get( 'filter_manage_blog_status' );
 		$filterCategoryId	= $this->session->get( 'filter_manage_blog_categoryId' );
@@ -198,7 +199,6 @@ class Controller_Manage_Blog extends Controller
 		$this->addData( 'page', $page );
 		$this->addData( 'pages', ceil( $total / $limit ) );
 		$this->addData( 'categories', $this->modelCategory->getAll() );
-
 	}
 
 	protected function __onInit(): void
@@ -218,7 +218,13 @@ class Controller_Manage_Blog extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkPost( $postId, $strict = FALSE )
+	/**
+	 *	@param		int|string		$postId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkPost( int|string $postId, bool $strict = FALSE ): ?object
 	{
 		$post	= $this->modelPost->get( (int) $postId );
 		if( !$post ){

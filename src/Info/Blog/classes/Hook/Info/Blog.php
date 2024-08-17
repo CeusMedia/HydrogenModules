@@ -5,15 +5,16 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Blog extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, array & $payload )
+	public function onViewRenderContent(): void
 	{
-		$data		= (object) $payload;
+		$content	= $this->payload['content'];
 		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
-		while( preg_match( $pattern, $data->content ) ){
-			$id				= trim( preg_replace( $pattern, "\\3", $data->content ) );
-			$content		= View_Info_Blog::renderPostAbstractPanelStatic( $env, $id );
+		while( preg_match( $pattern, $content ) ){
+			$id				= trim( preg_replace( $pattern, "\\3", $content ) );
+			$content		= View_Info_Blog::renderPostAbstractPanelStatic( $this->env, $id );
 			$replacement	= "\\1".$content."\\4";													//  insert content of nested page...
-			$data->content	= preg_replace( $pattern, $replacement, $data->content );				//  ...into page content
+			$content		= preg_replace( $pattern, $replacement, $content );						//  ...into page content
 		}
+		$this->payload['content']	= $content;
 	}
 }

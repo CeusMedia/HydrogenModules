@@ -37,7 +37,7 @@ class Controller_Admin_Mail_Queue extends Controller
 	 *	@todo		export locales
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function attachment( string $mailId, int $attachmentNr, $deliveryMode = NULL ): void
+	public function attachment( string $mailId, int $attachmentNr, $deliveryMode = NULL ): never
 	{
 		$libraries			= $this->logic->detectAvailableMailLibraries();
 		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';

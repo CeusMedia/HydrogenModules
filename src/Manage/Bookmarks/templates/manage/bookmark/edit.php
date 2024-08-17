@@ -1,5 +1,10 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var object $bookmark */
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );

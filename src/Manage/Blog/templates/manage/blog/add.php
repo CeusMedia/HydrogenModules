@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Blog $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $post */
+/** @var array<object> $categories */
+/** @var array<object> $users */
 
 $w			= (object) $words['add'];
 

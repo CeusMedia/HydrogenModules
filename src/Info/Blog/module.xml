@@ -3,7 +3,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -22,12 +22,14 @@
 	<log version="0.4.1">Remove comment title column.</log>
 	<log version="0.4.2">Improve code style.</log>
 	<log version="0.4.3">Extract hook to own class.</log>
+	<log version="0.4.4">Extract Ajax actions to own controller class.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Blog.php</class>
+		<class>Controller/Ajax/Info/Blog.php</class>
 		<class>Model/Blog/Category.php</class>
 		<class>Model/Blog/Comment.php</class>
 		<class>Model/Blog/Post.php</class>
@@ -48,6 +50,7 @@
 		<locale>de/mail/info/blog/comment.txt</locale>
 		<locale>de/mail/info/blog/followup.html</locale>
 		<locale>de/mail/info/blog/followup.txt</locale>
+		<script load="auto">module.info.blog.js</script>
 		<style load="auto">module.info.blog.css</style>
 	</files>
 	<config protected="yes" mandatory="yes" type="boolean" name="comments">1</config>
@@ -58,8 +61,8 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Users</needs>
 	</relations>
-	<link access="acl" path="info/forum" xml:lang="de" rank="51">Blog</link>
-	<link access="acl" path="info/forum" xml:lang="en" rank="51">Blog</link>
+	<link access="acl" path="info/blog" xml:lang="de" rank="51">Blog</link>
+	<link access="acl" path="info/blog" xml:lang="en" rank="51">Blog</link>
 <!--	<hook type="resource" resource="Sitemap" event="registerLinks">Controller_Info_Forum::___onRegisterSitemapLinks</hook>
 	<hook type="resource" resource="Page" event="collectNews">Controller_Info_Forum::___onPageCollectNews</hook>-->
 	<hook type="resource" resource="View" event="onRenderContent">Hook_Info_Blog::onViewRenderContent</hook>

@@ -3,6 +3,9 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var array<object> $customers */
+
 $w			= (object) $words['index'];
 
 $table		= '<div class="muted"><em><small>'.$w->empty.'</small></em></div><br/>';
@@ -44,4 +47,3 @@ return '
 '.$table.'
 <br/>
 '.$buttonAdd;
-?>

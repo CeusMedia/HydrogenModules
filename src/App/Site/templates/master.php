@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;

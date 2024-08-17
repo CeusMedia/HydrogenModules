@@ -15,47 +15,16 @@ class Controller_Info_Blog extends Controller
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label	= preg_replace( "/ +/", $delimiter, $label );
-		return $label;
+		return  preg_replace( "/ +/", $delimiter, $label );
 	}
 
-	public function ajaxComment(): void
-	{
-		$request	= $this->env->getRequest();
-		$language	= $this->env->getLanguage();
-//		$this->checkAjaxRequest();
-
-		try{
-			if( !strlen( trim( $request->get( 'postId' ) ) ) )
-				throw new InvalidArgumentException( 'Missing post ID' );
-			if( !strlen( trim( $request->get( 'username' ) ) ) )
-				throw new InvalidArgumentException( 'Missing username' );
-			if( !strlen( trim( $request->get( 'content' ) ) ) )
-				throw new InvalidArgumentException( 'Missing content' );
-			$post		= $this->checkPost( $request->get( 'postId' ), TRUE );
-			$data		= [
-				'postId'	=> $post->postId,
-				'language'	=> $language->getLanguage(),
-				'username'	=> $request->get( 'username' ),
-				'email'		=> $request->get( 'email' ),
-				'content'	=> $request->get( 'content' ),
-				'createdAt'	=> time(),
-			];
-			$commentId	= $this->modelComment->add( $data );
-//			$this->informAboutNewComment( $commentId );
-			$comment	= $this->modelComment->get( $commentId );
-			$data		= [
-				'comment'	=> $comment,
-				'html'		=> $this->view->renderComment( $comment ),
-			];
-			$this->handleJsonResponse( 'data', $data );
-		}
-		catch( Exception $e ){
-			$this->handleJsonErrorResponse( $e->getMessage(), 406 );
-		}
-	}
-
-	public function comment( string $postId ): void
+	/**
+	 *	@param		int|string		$postId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function comment( int|string $postId ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
@@ -99,21 +68,26 @@ class Controller_Info_Blog extends Controller
 		$this->addData( 'page', $page );
 	}
 
-	public function post( $postId = NULL ): void
+	/**
+	 *	@param		int|string|NULL		$postId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function post( int|string|NULL $postId = NULL ): void
 	{
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$postId			= (int) preg_replace( '/^([0-9]+)-?.*$/', '\\1', $postId );
 		$post			= $this->checkPost( $postId );
-		$this->modelPost->edit( $postId, array(														//  save in post
+		$this->modelPost->edit( $postId, [															//  save in post
 			'nrViews'	=> $post->nrViews + 1,														//  ... increased views
 			'viewedAt'	=> time(),																	//  ... last view timestamp
-		) );
+		] );
 		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
-		$post->comments	= $this->modelComment->getAllByIndices( array(								//  collect post comments
+		$post->comments	= $this->modelComment->getAllByIndices( [									//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
 			'status'	=> '>= 0'																	//  ... and visible
-		) );
+		] );
 		$this->addData( 'post', $post );															//  assign post data to template
 
 		$indices	= ['status' => 1];
@@ -131,7 +105,6 @@ class Controller_Info_Blog extends Controller
 		}
 		$this->addData( 'prevPost', $lastPost );
 		$this->addData( 'nextPost', $nextPost );
-
 	}
 
 	protected function __onInit(): void
@@ -152,7 +125,13 @@ class Controller_Info_Blog extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkPost( string $postId, bool $strict = FALSE ): object
+	/**
+	 *	@param		int|string		$postId
+	 *	@param		bool			$strict
+	 *	@return		object
+	 *	@throws	\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkPost( int|string $postId, bool $strict = FALSE ): object
 	{
 		$post	= $this->modelPost->get( (int) $postId );
 		if( !$post ){
@@ -165,12 +144,19 @@ class Controller_Info_Blog extends Controller
 		return $post;
 	}
 
+	/**
+	 *	@param		string $commentId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function informAboutNewComment( string $commentId ): void
 	{
-		if( !$this->moduleConfig->get( 'mail' ) )													//  do not send mails to participants
+		if( !$this->moduleConfig->get( 'mail' ) )												//  do not send mails to participants
 			return;
 		$request	= $this->env->getRequest();
 		$language	= $this->env->getLanguage();
+		/** @var Logic_Mail $logic */
 		$logic		= Logic_Mail::getInstance( $this->env );										//  get mailer logic
 		$comment	= $this->modelComment->get( $commentId );
 		$post		= $this->checkPost( $comment->postId );
@@ -184,11 +170,11 @@ class Controller_Info_Blog extends Controller
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= [];
-		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];						//  get all visible post comments
+		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];								//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
-			if( $item->email == $request->get( 'email' ) )											//  comment by current comment author
+			if( $item->email == $request->get( 'email' ) )										//  comment by current comment author
 				continue;																			//  no need to inform
 			if( $item->authorId == $post->authorId )												//  comment by original author
 				continue;																			//  already has been informed

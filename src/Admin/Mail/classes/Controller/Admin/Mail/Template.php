@@ -315,6 +315,7 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		string		$templateId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function test( string $templateId ): void
 	{
@@ -323,6 +324,7 @@ class Controller_Admin_Mail_Template extends Controller
 			$this->messenger->noteError( 'Keine E-Mail-Adresse angegeben.' );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
+		/** @var Logic_Mail $logicMail */
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$mail		= $logicMail->createMail( 'Test', ['mailTemplateId' => $templateId] );
 		$logicMail->sendMail( $mail, (object) ['email' => $email] );

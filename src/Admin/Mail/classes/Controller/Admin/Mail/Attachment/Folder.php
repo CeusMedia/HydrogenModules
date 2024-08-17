@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\Folder;
@@ -99,7 +98,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 			try{
 				FolderEditor::removeFolder( $this->basePath.$filePath );
 			}
-			catch( Exception $e ){
+			catch( Exception ){
 				$this->messenger->noteFailure(
 					$words->failureRemoveFailed,
 					htmlentities( $filePath, ENT_QUOTES, 'UTF-8' )
@@ -162,7 +161,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 					if( $path )
 						$this->restart( 'index/'.base64_encode( $path ), TRUE );
 				}
-				catch( Exception $e ){
+				catch( Exception ){
 					$this->messenger->noteFailure( $words->failureUploadFailed );
 				}
 			}

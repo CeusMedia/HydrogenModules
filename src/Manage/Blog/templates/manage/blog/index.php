@@ -1,5 +1,7 @@
 <?php
 
+/** @var View_Manage_Blog $view */
+
 $panelFilter	= $view->loadTemplateFile( 'manage/blog/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/blog/index.list.php' );
 
