@@ -3,8 +3,9 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use View_Manage_Image_Slider as View;
 
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var View $view */
 /** @var array<string,array<string,string>> $words */
 /** @var Dictionary $data */
 

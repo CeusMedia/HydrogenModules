@@ -3,9 +3,11 @@
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use View_Manage_Image_Slider as View;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var Web $env */
+/** @var View $view */
 /** @var array<string,array<string,string>> $words */
 /** @var object $slider */
 /** @var object $slide */

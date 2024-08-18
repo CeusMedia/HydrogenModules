@@ -1,9 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use View_Manage_Image_Slider as View;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var Web $env */
+/** @var View $view */
 /** @var array<string,array<string,string>> $words */
 /** @var object $slider */
 

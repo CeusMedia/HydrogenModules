@@ -1,9 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use View_Manage_Image_Slider as View;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var Web $env */
+/** @var View $view */
 /** @var string $basePath */
 /** @var array $words */
 /** @var array $sliders */
@@ -25,7 +27,10 @@ if( $sliders ){
 	foreach( $sliders as $slider ){
 		$cover	= '';
 		if( $slider->slides )
-			$cover	= HtmlTag::create( 'img', NULL, ['src' => $basePath.$slider->path.$slider->slides[0]->source, 'style' => 'max-width: 96px; max-height: 64px'] );
+			$cover	= HtmlTag::create( 'img', NULL, [
+				'src'	=> $basePath.$slider->path.$slider->slides[0]->source,
+				'style'	=> 'max-width: 96px; max-height: 64px'
+			] );
 		$link	= HtmlTag::create( 'a', $slider->title, ['href' => './manage/image/slider/edit/'.$slider->sliderId] );
 		$createdAt	= date( 'd.m.Y', $slider->createdAt ).' <small>'.date( 'H:i:s', $slider->createdAt ).'</small>';
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
@@ -34,29 +39,29 @@ if( $sliders ){
 		$iconFormat	= $iconFormatLandscape;
 		if( $slider->width < $slider->height )
 			$iconFormat	= $iconFormatPortrait;
-		$dimensions	= join( '<br/>', array(
+		$dimensions	= join( '<br/>', [
 			$iconSlides.' '.count( $slider->slides ).' Slides',
 			$iconFormat.' '.$slider->width.'&times;'.$slider->height.'px',
-		) );
+		] );
 		$transition	= join( ', ', [
 			'Animation: '.$words['optAnimation'][$slider->animation],
 			'Übergang: '.$words['optEasing'][$slider->easing],
 		] );
-		$durations	= join( '<br/>', array(
+		$durations	= join( '<br/>', [
 			$iconDurationShow.' '.$helperDuration->formatDuration( $slider->durationShow ).'s',
 			HtmlTag::create( 'acronym', $iconDurationTransition.' '.$helperDuration->formatDuration( $slider->durationSlide ).'s', ['title' => $transition] ),
-		) );
+		] );
 		$views		= join( '<br/>', [
 			$iconViews.' '.$slider->views,
 			$iconAge.' '.$createdAt,
 		] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $cover, ['class' => 'image-slider-cover', 'style' => 'text-align: center'] ),
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$slider->path.'</small>', ['class' => 'image-slider-title'] ),
 			HtmlTag::create( 'td', $dimensions, ['class' => 'image-slider-dimensions'] ),
 			HtmlTag::create( 'td', $durations, ['class' => 'image-slider-times'] ),
 			HtmlTag::create( 'td', $views, ['class' => 'image-slider-views-since'] ),
-		), ['class' => $rowClass, 'style' => 'height: 70px'] );
+		], ['class' => $rowClass, 'style' => 'height: 70px'] );
 	}
 	$heads	= [
 		'Cover',
@@ -119,7 +124,8 @@ class View_Helper_NumberCommons
 		return $zeros;
 	}
 
-	protected static function _gcd_rec( $a, $b ){
+	protected static function _gcd_rec( $a, $b )
+	{
 		return $b ? static::_gcd_rec( $b, $a % $b ) : $a;
 	}
 }
@@ -130,7 +136,7 @@ class View_Helper_Image_Slider_Duration
 
 	protected int $precision		= 0;
 
-	function getSlidersPrecision( $sliders, $maxPrecision = self::MAX_PRECISION ): int
+	function getSlidersPrecision( array $sliders, int $maxPrecision = self::MAX_PRECISION ): int
 	{
 		$times	= [];
 		foreach( $sliders as $slider ){
@@ -140,7 +146,7 @@ class View_Helper_Image_Slider_Duration
 		return View_Helper_NumberCommons::getPrecision( $times, $maxPrecision );
 	}
 
-	function formatDuration( int|float $msecs, ?int $precision = NULL, $sepDecimal = '.', $sepThousand = ',' ): string
+	function formatDuration( int|float $msecs, ?int $precision = NULL, string $sepDecimal = '.', string $sepThousand = ',' ): string
 	{
 		$precision	= $precision ?? $this->precision;
 		return number_format( (float) $msecs / pow( 10, 3 ), $precision, $sepDecimal, $sepThousand );
@@ -152,7 +158,7 @@ class View_Helper_Image_Slider_Duration
 		return $this;
 	}
 
-	public function setPrecisionBySliders( $sliders, $maxPrecision = self::MAX_PRECISION ): self
+	public function setPrecisionBySliders( array $sliders, int $maxPrecision = self::MAX_PRECISION ): self
 	{
 		return $this->setPrecision( $this->getSlidersPrecision( $sliders, $maxPrecision ) );
 	}
