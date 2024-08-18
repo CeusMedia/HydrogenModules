@@ -1,10 +1,15 @@
 <?php
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\PhpParser\Parser\Regular as PhpParser;
 
 class Model_Job_Code
 {
 	protected array $classes	= [];
+
+	public function __construct( Environment $env )
+	{
+	}
 
 	public function getClassesNames(): array
 	{

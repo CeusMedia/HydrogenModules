@@ -1,5 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use View_Manage_Job_Run as View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array $wordsGeneral */
+/** @var array $words */
+/** @var array<object> $definitions */
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'run' );
 

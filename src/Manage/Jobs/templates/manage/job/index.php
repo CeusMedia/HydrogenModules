@@ -1,4 +1,8 @@
 <?php
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
 
 $tabs	= View_Manage_Job::renderTabs( $env );
 

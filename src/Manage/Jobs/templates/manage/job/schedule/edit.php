@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $wordsGeneral */
+/** @var array $words */
+/** @var array<object> $definitions */
+/** @var array $definitionMap */
+/** @var object $item */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -40,12 +48,12 @@ switch( (int) $item->type){
 		break;
 }
 
-$optFormat			= array(
+$optFormat			= [
 	'cron-month'	=> 'Cron: Monatstage',
 	'cron-week'		=> 'Cron: Wochentage',
 	'interval'		=> 'Intervall',
 	'datetime'		=> 'Datum (einmalig)'
-);
+];
 $optFormat			= HtmlElements::Options( $optFormat, $format );
 
 $optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );

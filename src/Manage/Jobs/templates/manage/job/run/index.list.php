@@ -1,13 +1,20 @@
 <?php
 
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\Alg\Time\Duration;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
+/** @var array $wordsGeneral */
 /** @var array $words */
 /** @var object[] $definitions */
 /** @var object[] $runs */
+/** @var int $page */
+/** @var int $limit */
+/** @var int $total */
+/** @var ?string $filterLimit */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -133,7 +140,7 @@ if( $runs ){
 	$table		= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table table-striped table-condensed'] );
 
 	/*  --  PAGINATION  --  */
-	$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
+	$pagination	= new PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
 	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttunbar'] );
 }
 $panelList	= HtmlTag::create( 'div', array(

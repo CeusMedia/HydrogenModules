@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Job_Run extends View
 {
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function view()
+	public function view(): void
 	{
 	}
 

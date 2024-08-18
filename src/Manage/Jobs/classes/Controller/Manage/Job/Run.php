@@ -1,18 +1,26 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Job_Run extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $modelDefinition;
-	protected $modelRun;
-	protected $modelSchedule;
-	protected $logic;
-	protected $filterPrefix			= 'filter_manage_job_run_';
+	protected HttpRequest $request;
+	protected PartitionSession $session;
+	protected Model_Job_Definition $modelDefinition;
+	protected Model_Job_Run $modelRun;
+	protected Model_Job_Code $modelCode;
+	protected Model_Job_Schedule $modelSchedule;
+	protected Logic_Job $logic;
+	protected string $filterPrefix			= 'filter_manage_job_run_';
 
-	public function abort( $jobRunId )
+	/**
+	 *	@param		int|string		$jobRunId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function abort( int|string $jobRunId ): void
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED ){
@@ -23,23 +31,23 @@ class Controller_Manage_Job_Run extends Controller
 			$this->env->getMessenger()->noteError( sprintf( $msg, $title ) );
 		}
 		else{
-			$this->modelRun->edit( $jobRunId, array(
+			$this->modelRun->edit( $jobRunId, [
 				'status'		=> Model_Job_Run::STATUS_ABORTED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		$from	= $this->request->get( 'from' );
 		$this->restart( $from, !$from );
 	}
 
-	public function archive( $jobRunId )
+	public function archive( int|string $jobRunId ): void
 	{
 		$this->logic->archiveJobRun( $jobRunId );
 		$from	= $this->request->get( 'from' );
 		$this->restart( $from, !$from );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		$filters	= [
 			'limit',
@@ -65,7 +73,7 @@ die;*/
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( int $page = 0 ): void
 	{
 		$definitionMap	= [];
 		$definitions	= $this->modelDefinition->getAll( [], ['identifier' => 'ASC'] );
@@ -84,9 +92,9 @@ die;*/
 		if( $filterStatus === Model_Job_Run::STATUSES )
 			$filterStatus	= [];
 
-		$conditions	= array(
+		$conditions	= [
 			'archived'	=> (int) $filterArchived,
-		);
+		];
 		if( is_array( $filterStatus ) && count( $filterStatus ) )
 			$conditions['status']		= $filterStatus;
 		if( strlen( $filterType ) && in_array( $filterType, Model_Job_Run::TYPES ) )
@@ -135,7 +143,7 @@ die;*/
 		$this->addData( 'page', $page );
 	}
 
-	public function remove( $jobRunId )
+	public function remove( int|string $jobRunId ): void
 	{
 		try{
 			$this->logic->removeJobRun( $jobRunId );
@@ -147,7 +155,12 @@ die;*/
 		$this->restart( $from, !$from );
 	}
 
-	public function terminate( $jobRunId )
+	/**
+	 *	@param		int|string		$jobRunId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function terminate( int|string $jobRunId ): void
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING ){
@@ -158,17 +171,22 @@ die;*/
 			$this->env->getMessenger()->noteError( sprintf( $msg, $title ) );
 		}
 		else{
-			$this->modelRun->edit( $jobRunId, array(
+			$this->modelRun->edit( $jobRunId, [
 				'status'		=> Model_Job_Run::STATUS_TERMINATED,
 				'modifiedAt'	=> time(),
 				'finishedAt'	=> time(),
-			) );
+			] );
 		}
 		$from	= $this->request->get( 'from' );
 		$this->restart( $from, !$from );
 	}
 
-	public function view( $jobRunId )
+	/**
+	 *	@param		int|string		$jobRunId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $jobRunId ): void
 	{
 		$jobRun			= $this->modelRun->get( $jobRunId );
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
@@ -184,6 +202,10 @@ die;*/
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -192,6 +214,7 @@ die;*/
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->modelCode		= new Model_Job_Code( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 		$this->addData( 'wordsGeneral', $this->env->getLanguage()->getWords( 'manage/job' ) );
 	}

@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use Lorisleiva\CronTranslator\CronTranslator;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var array<object> $scheduledJobs */
 
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
@@ -63,7 +69,7 @@ if( $scheduledJobs ){
 
 		$expression	= $item->expression;
 		if( (int) $item->type === Model_Job_Schedule::TYPE_CRON )
-			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => \Lorisleiva\CronTranslator\CronTranslator::translate( $expression )] );
+			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => CronTranslator::translate( $expression )] );
 
 
 		$rows[]	= HtmlTag::create( 'tr', array(

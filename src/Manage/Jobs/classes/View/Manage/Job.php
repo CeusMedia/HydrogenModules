@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Job extends View
 {
-	public function index()
+	public function index(): void
 	{
 	}
 
@@ -14,7 +14,7 @@ class View_Manage_Job extends View
 		return preg_replace( '@'.preg_quote( $env->uri, '@' ).'@', '', $string );
 	}
 
-	public static function renderTabs( Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './manage/job/' );

@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Job_Definition $view */
+/** @var array<object> $runs */
+/** @var object $definition */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -13,7 +19,7 @@ if( $runs ){
 		$output		= '<em class="muted">none</em>';
 		if( $item->status != Model_Job_Run::STATUS_PREPARED && $item->message ){
 			$message	= json_decode( $item->message );
-			$output		= $message->type ?? '<em class="muted">unknonwn</em>';
+			$output		= $message->type ?? '<em class="muted">unknown</em>';
 		}
 
 		$title	= $item->title ?: $definition->identifier;

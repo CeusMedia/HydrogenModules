@@ -15,7 +15,7 @@ class Controller_Manage_Job_Definition extends Controller
 	protected Logic_Job $logic;
 	protected string $filterPrefix			= 'filter_manage_job_definition_';
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'limit' );
@@ -32,7 +32,7 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( int $page = 0 ): void
 	{
 		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' ) ?? 10;
 		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
@@ -81,7 +81,12 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->addData( 'page', $page );
 	}
 
-	public function view( $jobDefinitionId )
+	/**
+	 *	@param		int|string		$jobDefinitionId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $jobDefinitionId ): void
 	{
 		$definition	= $this->modelDefinition->get( $jobDefinitionId );
 		if( !$definition ){
@@ -100,18 +105,28 @@ class Controller_Manage_Job_Definition extends Controller
 //		die;
 	}
 
-	public function setStatus( $jobDefinitionId, $status )
+	/**
+	 *	@param		int|string		$jobDefinitionId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( int|string $jobDefinitionId, $status ): void
 	{
 		$from	= $this->request->get( 'from' );
-		$this->modelDefinition->edit( $jobDefinitionId, array(
+		$this->modelDefinition->edit( $jobDefinitionId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( $from ?: NULL, !$from );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -120,6 +135,7 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->modelCode		= new Model_Job_Code( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 		$this->addData( 'wordsGeneral', $this->env->getLanguage()->getWords( 'manage/job' ) );
 	}

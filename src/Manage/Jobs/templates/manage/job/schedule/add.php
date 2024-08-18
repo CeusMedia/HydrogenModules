@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $wordsGeneral */
+/** @var array $words */
+/** @var array $definitionMap */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -25,12 +31,12 @@ foreach( $definitionMap as $definitionId => $definition )
 $optDefinition	= HtmlElements::Options( $optDefinition );
 
 
-$optFormat			= array(
+$optFormat			= [
 	'cron-month'	=> 'Cron: Monatstage',
 	'cron-week'		=> 'Cron: Wochentage',
 	'interval'		=> 'Intervall',
 	'datetime'		=> 'Datum (einmalig)'
-);
+];
 $optFormat			= HtmlElements::Options( $optFormat );
 
 $optMinuteOfHour	= array_merge( $words['options-minuteOfHour'], ['value' => 'genau:', 'range' => 'Bereich:', 'values' => 'mehrere:'] );
@@ -572,10 +578,10 @@ $tabs		= View_Manage_Job::renderTabs( $env, 'schedule' );
 
 $env->getPage()->js->addScriptOnReady( $script );
 
-return $tabs.HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $words['add']['heading'] ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
 			HtmlTag::create( 'input', NULL, [
 				'type'	=> 'hidden',
 				'value'	=> '',
@@ -598,6 +604,6 @@ return $tabs.HtmlTag::create( 'div', array(
 			HtmlTag::create( 'div', [
 				$buttons,
 			], ['class' => 'buttonbar'] ),
-		), ['action' => './manage/job/schedule/add', 'method' => 'post', 'id' => 'formManageJobScheduleAdd'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+		], ['action' => './manage/job/schedule/add', 'method' => 'post', 'id' => 'formManageJobScheduleAdd'] ),
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

@@ -2,9 +2,10 @@
 
 use CeusMedia\Common\Alg\Time\Duration;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
+/** @var array $wordsGeneral */
 /** @var array $words */
 /** @var object $definition */
 /** @var object $run */
