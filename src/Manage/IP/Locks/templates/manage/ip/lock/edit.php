@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
 /** @var object $lock */
 
 $data	= print_m( $lock, NULL, NULL, TRUE );

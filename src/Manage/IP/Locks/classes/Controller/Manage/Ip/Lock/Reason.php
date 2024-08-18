@@ -9,6 +9,11 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	protected Messenger $messenger;
 	protected Model_IP_Lock_Reason $model;
 
+	/**
+	 *	@param		string		$reasonId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function activate( string $reasonId ): void
 	{
 		$this->model->edit( $reasonId, [
@@ -17,6 +22,10 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$request	= $this->env->getRequest();
@@ -30,6 +39,11 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->setData( $request->getAll() );
 	}
 
+	/**
+	 *	@param		string		$reasonId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function deactivate( string $reasonId ): void
 	{
 		$this->model->edit( $reasonId, [
@@ -38,6 +52,11 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$reasonId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $reasonId ): void
 	{
 		$request	= $this->env->getRequest();
@@ -57,6 +76,9 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->addData( 'reason', $reason );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
 		$conditions	= [];
@@ -70,6 +92,11 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->addData( 'reasons', $reasons );
 	}
 
+	/**
+	 *	@param		string		$reasonId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $reasonId ): void
 	{
 //		$request	= $this->env->getRequest();
@@ -83,6 +110,10 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

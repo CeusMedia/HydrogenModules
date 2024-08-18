@@ -3,8 +3,9 @@
 use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var Environment $env */
+/** @var Web $env */
 /** @var array $reasons */
 
 $states	= [

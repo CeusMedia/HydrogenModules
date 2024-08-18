@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
 /** @var object $filters */
 
 $states	= [
@@ -105,7 +106,7 @@ if( $filters ){
 		'Anwendung',
 		'Aktion',
 	];
-	$colgroup	= HtmlElements::ColumnGroup( "80px", "", "", "90px", "120px", "110px", "80px" );
+	$colgroup	= HtmlElements::ColumnGroup( '80px', '', '', '90px', '120px', '110px', '80px' );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );

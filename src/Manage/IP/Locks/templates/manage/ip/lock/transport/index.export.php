@@ -8,8 +8,8 @@ $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-download'] );
 
 $listReasons	= [];
 foreach( $reasons as $reason ){
-	$listReasons[]	= HtmlTag::create( 'li', array(
-		HtmlTag::create( 'label', array(
+	$listReasons[]	= HtmlTag::create( 'li', [
+		HtmlTag::create( 'label', [
 			HtmlTag::create( 'input', NULL, [
 				'type'				=> 'checkbox',
 				'name'				=> 'reasonIds[]',
@@ -19,13 +19,13 @@ foreach( $reasons as $reason ){
 				'class'				=> 'has-optionals',
 				'data-animation'	=> 'slide',
 			] ),
-			HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', [
 				$reason->title,
 				' ',
 				HtmlTag::create( 'small', '('.count( $reason->filters ).')', ['class' => 'muted'] ),
-			), ['title' => $reason->description] ),
-		), ['class' => 'checkbox'] ),
-	) );
+			], ['title' => $reason->description] ),
+		], ['class' => 'checkbox'] ),
+	] );
 }
 $listReasons	= HtmlTag::create( 'ul', $listReasons, [
 	'class'		=> 'unstyled',
@@ -34,8 +34,8 @@ $listReasons	= HtmlTag::create( 'ul', $listReasons, [
 
 $listFilters	= [];
 foreach( $filters as $filter ){
-	$listFilters[]	= HtmlTag::create( 'li', array(
-		HtmlTag::create( 'label', array(
+	$listFilters[]	= HtmlTag::create( 'li', [
+		HtmlTag::create( 'label', [
 			HtmlTag::create( 'input', NULL, [
 				'type'		=> 'checkbox',
 				'name'		=> 'filterIds[]',
@@ -44,34 +44,34 @@ foreach( $filters as $filter ){
 				'checked'	=> 'checked',
 			] ),
 			HtmlTag::create( 'div', $filter->title ),
-		), ['class' => 'checkbox'] ),
-	), ['class' => 'optional reasonIds-'.$filter->reasonId.' reasonIds-'.$filter->reasonId.'-true'] );
+		], ['class' => 'checkbox'] ),
+	], ['class' => 'optional reasonIds-'.$filter->reasonId.' reasonIds-'.$filter->reasonId.'-true'] );
 }
 $listFilters	= HtmlTag::create( 'ul', $listFilters, [
 	'class'		=> 'unstyled',
 	'style'		=> 'padding-left: 1.5em;',
 ] );
 
-$panelExport	= HtmlTag::create( 'div', array(
+$panelExport	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Export' ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
 			HtmlTag::create( 'input', NULL, [
 				'type'	=> 'hidden',
 				'name'	=> 'not-filters',
 				'value'	=> 'all',
 			] ),
-			HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', join( '<br/>', [
 					'Bestehende Gründe und Regeln werden in eine JSON-Datei gespeichert.',
 					'Aktuelle Sperren werden dabei nicht exportiert.',
 					'Die JSON-Datei kann zur Archivierung abgelegt oder in einer anderen Applikation importiert werden.'
 				 ] ) ),
-			), ['class' => 'alert alert-success'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+			], ['class' => 'alert alert-success'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h4', 'Gründe' ),
-					HtmlTag::create( 'label', array(
+					HtmlTag::create( 'label', [
 						HtmlTag::create( 'input', NULL, [
 							'type'				=> 'checkbox',
 							'name'				=> 'reasons',
@@ -82,11 +82,11 @@ $panelExport	= HtmlTag::create( 'div', array(
 							'data-animation'	=> 'slide',
 						] ),
 						HtmlTag::create( 'div', 'alle Gründe' ),
-					), ['class' => 'checkbox'] ),
-					HtmlTag::create( 'div', array(
+					], ['class' => 'checkbox'] ),
+					HtmlTag::create( 'div', [
 						$listReasons,
 						HtmlTag::create( 'h4', 'Filter' ),
-						HtmlTag::create( 'label', array(
+						HtmlTag::create( 'label', [
 							HtmlTag::create( 'input', NULL, [
 								'type'				=> 'checkbox',
 								'name'				=> 'filters',
@@ -97,39 +97,39 @@ $panelExport	= HtmlTag::create( 'div', array(
 								'data-animation'	=> 'slide',
 							] ),
 							HtmlTag::create( 'div', 'alle Filter' ),
-						), ['class' => 'checkbox'] ),
+						], ['class' => 'checkbox'] ),
 						HtmlTag::create( 'div', [
 							$listFilters,
 						], ['class' => 'optional filters filters-false', 'style' => 'display: none'] ),
 
-					), ['class' => 'optional reasons reasons-false', 'style' => 'display: none'] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
+					], ['class' => 'optional reasons reasons-false', 'style' => 'display: none'] ),
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'br' ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Dateiname', ['for' => 'input_filename'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'filename',
 						'id'		=> 'input_filename',
 						'value'		=> 'Lock_Filters_'.date( 'Y-m-d' ),
 						'class'		=> 'span12',
-					) ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary'
 				] )
-			), ['class' => 'buttonbar'] ),
-		), [
+			], ['class' => 'buttonbar'] ),
+		], [
 			'action'	=> './manage/ip/lock/transport/export',
 			'method'	=> 'post',
 		] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 return $panelExport;

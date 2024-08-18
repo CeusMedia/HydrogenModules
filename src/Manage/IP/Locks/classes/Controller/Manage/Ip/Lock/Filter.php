@@ -9,6 +9,11 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	protected Model_IP_Lock_Filter $model;
 	protected Logic_IP_Lock $logic;
 
+	/**
+	 *	@param		string		$filterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function activate( string $filterId ): void
 	{
 		$this->model->edit( $filterId, [
@@ -17,6 +22,10 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$request	= $this->env->getRequest();
@@ -32,6 +41,11 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
+	/**
+	 *	@param		string		$filterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function deactivate( string $filterId ): void
 	{
 		$this->model->edit( $filterId, [
@@ -40,6 +54,11 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$filterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $filterId ): void
 	{
 		$request	= $this->env->getRequest();
@@ -60,6 +79,10 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->addData( 'reasons', $model->getAll() );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$conditions	= [];
@@ -73,6 +96,11 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->addData( 'filters', $filters );
 	}
 
+	/**
+	 *	@param		string		$filterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $filterId ): void
 	{
 //		$request	= $this->env->getRequest();
@@ -89,6 +117,10 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

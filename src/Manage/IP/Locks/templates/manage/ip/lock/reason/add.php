@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );

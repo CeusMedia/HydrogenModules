@@ -1,7 +1,9 @@
 <?php
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+use CeusMedia\HydrogenFramework\Environment\Web;
+
+/** @var Web $env */
+/** @var View_Manage_IP_Lock $view */
 
 $panelExport	= $view->loadTemplateFile( 'manage/ip/lock/transport/index.export.php' );
 $panelImport	= $view->loadTemplateFile( 'manage/ip/lock/transport/index.import.php' );

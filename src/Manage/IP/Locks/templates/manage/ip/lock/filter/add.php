@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
 /** @var array<object> $reasons */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
@@ -81,10 +82,10 @@ $panelAdd	= '
 	</div>
 </div>
 <script>
-var ipLockReasons = '.json_encode( $reasonMap).';
+let ipLockReasons = '.json_encode( $reasonMap).';
 
 function onUpdateReasonDisplay(event){
-	var id = parseInt($(this).val(), 10);
+	let id = parseInt($(this).val(), 10);
 	$("#input_duration").val(ipLockReasons[id].duration);
 }
 

@@ -1,8 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
+/** @var ?string $filterStatus */
+/** @var ?string $filterSort */
+/** @var ?string $filterOrder */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );

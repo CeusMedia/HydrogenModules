@@ -9,6 +9,10 @@ class Controller_Manage_IP_Lock extends Controller
 	protected Messenger $messenger;
 	protected string $filterSessionPrefix	= 'filter_manage_ip_lock_';
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$request	= $this->env->getRequest();
@@ -24,6 +28,11 @@ class Controller_Manage_IP_Lock extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$ipLockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function cancel( string $ipLockId ): void
 	{
 		if( $this->logic->cancel( $ipLockId ) )
@@ -33,6 +42,11 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$ipLockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $ipLockId ): void
 	{
 		$lock	= $this->logic->get( $ipLockId, FALSE );
@@ -45,7 +59,13 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->addData( 'lock', $lock );
 	}
 
-	public function index( $limit = 15, $page = 0 ): void
+	/**
+	 *	@param		int		$limit
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $limit = 15, int $page = 0 ): void
 	{
 		$session	= $this->env->getSession();
 		$conditions	= [
@@ -81,6 +101,11 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->addData( 'count', count( $locks ) );
 	}
 
+	/**
+	 *	@param		string		$ipLockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function lock( string $ipLockId ): void
 	{
 		if( $this->logic->lock( $ipLockId ) )
@@ -90,6 +115,10 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
 	public function order( $reset = NULL ): void
 	{
 		$request	= $this->env->getRequest();
@@ -110,6 +139,11 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$ipLockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function unlock( string $ipLockId ): void
 	{
 		if( $this->logic->unlock( $ipLockId ) )
@@ -119,6 +153,10 @@ class Controller_Manage_IP_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

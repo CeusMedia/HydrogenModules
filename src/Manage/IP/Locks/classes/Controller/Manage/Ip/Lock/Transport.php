@@ -1,16 +1,19 @@
 <?php
 
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Ip_Lock_Transport extends Controller
 {
-	protected $request;
+	protected HttpRequest $request;
 	protected Logic_IP_Lock_Transport $logicTransport;
 	protected Model_IP_Lock_Filter $modelFilter;
 	protected Model_IP_Lock_Reason $modelReason;
 
-
+	/**
+	 *		@return		void
+	 */
 	public function index(): void
 	{
 		$reasons	= $this->modelReason->getAll( [], ['title' => 'ASC'] );
@@ -50,6 +53,10 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		HttpDownload::sendString( $json, $fileName );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function import(): void
 	{
 		$request	= $this->env->getRequest();
@@ -76,6 +83,10 @@ class Controller_Manage_Ip_Lock_Transport extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

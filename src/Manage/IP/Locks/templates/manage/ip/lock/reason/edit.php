@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var Web $env */
 /** @var object $reason */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
@@ -104,7 +105,7 @@ $panelEdit	= '
 </div>';
 
 $heading	= '<h2>IP-Sperren</h2>';
-$tabs		= View_Manage_Ip_Lock::renderTabs( $env, 'reason' );
+$tabs		= View_Manage_IP_Lock::renderTabs( $env, 'reason' );
 return /*$heading.*/$tabs.HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		$panelEdit
@@ -113,5 +114,4 @@ return /*$heading.*/$tabs.HTML::DivClass( 'row-fluid',
         $panelFilters
 	)
 ).
-HTML::DivClass( 'row-fluid', ''
-);
+HTML::DivClass( 'row-fluid', '' );
