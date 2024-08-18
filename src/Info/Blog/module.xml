@@ -50,7 +50,7 @@
 		<locale>de/mail/info/blog/comment.txt</locale>
 		<locale>de/mail/info/blog/followup.html</locale>
 		<locale>de/mail/info/blog/followup.txt</locale>
-		<script load="auto">module.info.blog.js</script>
+		<script>module.info.blog.js</script>
 		<style load="auto">module.info.blog.css</style>
 	</files>
 	<config protected="yes" mandatory="yes" type="boolean" name="comments">1</config>
