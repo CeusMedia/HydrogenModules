@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage extends Controller
 {
-	public function index()
+	public function index(): void
 	{
 		$config		= $this->env->getConfig();
 		if( $config->get( 'module.manage_index.forward' ) )
