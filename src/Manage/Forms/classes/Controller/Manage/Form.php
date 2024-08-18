@@ -126,7 +126,6 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		string		$formId
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $formId ): void
@@ -341,6 +340,7 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		?string		$mode
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $formId, ?string $mode = NULL ): void
 	{

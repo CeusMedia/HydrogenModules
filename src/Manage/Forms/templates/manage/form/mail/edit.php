@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var object{mailId: string, roleType: int, identifier: string, format: int, subject: string, title: string, content: string} $mail */
 
 $modelForm	= new Model_Form( $env );
@@ -92,11 +93,11 @@ return '
 				<a href="./manage/form/mail" class="btn">'.$iconList.' zur Liste</a>
 				<a href="./manage/form/mail/view/'.$mail->mailId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'		=> './manage/form/mail/remove/'.$mail->mailId,
 					'class'		=> 'btn btn-danger',
 					'onclick'	=> 'return confirm("Wirklich ?");',
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>

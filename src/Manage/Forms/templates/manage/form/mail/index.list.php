@@ -3,9 +3,9 @@
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var array<object> $mails List of form mails */
 /** @var int $page */
 /** @var int $pages */
@@ -45,7 +45,7 @@ foreach( $mails as $mail ){
 	] );
 	$linkEdit	= HtmlTag::create( 'a', $mail->title, ['href' => './manage/form/mail/edit/'.$mail->mailId] );
 	$nrForms	= $modelForm->countByIndex( 'customerMailId', $mail->mailId ) + $modelForm->countByIndex( 'managerMailId', $mail->mailId );
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'small', $mail->mailId ), ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', $linkEdit, ['class' => 'autocut'] ),
 /*		HtmlTag::create( 'td', '<small><tt>'.$mail->identifier.'</tt></small>' ),*/
@@ -53,17 +53,17 @@ foreach( $mails as $mail ){
 		HtmlTag::create( 'td', $formats[$mail->format] ),
 		HtmlTag::create( 'td', $nrForms, ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', $linkView ),
-	) );
+	] );
 }
 $colgroup	= HtmlElements::ColumnGroup( '40px', '', /*'30%',*/ '140px', '70px', '40px', '100px' );
-$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 	HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
 	HtmlTag::create( 'th', 'Titel' ),
 /*	HtmlTag::create( 'th', 'Shortcode' ),*/
 	HtmlTag::create( 'th', 'Nutzung' ),
 	HtmlTag::create( 'th', 'Format' ),
 	HtmlTag::create( 'th', HtmlTag::create( 'abbr', $iconForm, ['title' => 'Formulare'] ), ['style' => 'text-align: right'] ),
-) ) );
+] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 

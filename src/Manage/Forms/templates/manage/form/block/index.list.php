@@ -17,19 +17,19 @@ foreach( $blocks as $block ){
 		'class'	=> 'btn btn-mini btn-info',
 	] );
 	$linkEdit	= HtmlTag::create( 'a', $block->title, ['href' => './manage/form/block/edit/'.$block->blockId] );
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'small', $block->blockId ), ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', $linkEdit, ['class' => 'autocut'] ),
 		HtmlTag::create( 'td', '<small><tt style="letter-spacing: -0.5px">'.$block->identifier.'</tt></small>', ['class' => 'autocut'] ),
 		HtmlTag::create( 'td', $linkView ),
-	) );
+	] );
 }
 $colgroup	= HtmlElements::ColumnGroup( '40px', '', '35%', '100px' );
-$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 	HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
 	HtmlTag::create( 'th', 'Titel' ),
 	HtmlTag::create( 'th', 'Shortcode' ),
-) ) );
+] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 

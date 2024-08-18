@@ -20,7 +20,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'class'	=> 'btn btn-small btn-inverse'
 ] );
 
-$optIdentifier	= array( '' => '- alle -' );
+$optIdentifier	= ['' => '- alle -'];
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filters->get( 'identifier' ) );

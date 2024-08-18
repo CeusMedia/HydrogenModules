@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var object $target */
 /** @var array<object> $targets List of transfer targets */
 

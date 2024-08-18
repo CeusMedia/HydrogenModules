@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var array<object> $rules List of import sources */
 
 $table	= HtmlTag::create( 'div', 'Keine Importregeln definiert. <a href="./manage/form/import/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );

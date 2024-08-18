@@ -4,9 +4,9 @@ use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var array $fillTransfers */
 /** @var object $fill */
 /** @var object $form */

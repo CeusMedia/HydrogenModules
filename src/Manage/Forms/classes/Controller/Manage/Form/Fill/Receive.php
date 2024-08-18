@@ -4,7 +4,7 @@ use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class Controller_Manage_Form_Fill extends Controller
+class Controller_Manage_Form_Fill_Receive extends Controller
 {
 	protected HttpRequest $request;
 

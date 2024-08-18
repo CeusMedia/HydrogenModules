@@ -44,11 +44,11 @@ if( $rulesCustomer ){
 			'href'	=> './manage/form/removeRule/'.$form->formId.'/'.$rule->formRuleId,
 			'class'	=> 'btn btn-danger btn-small',
 		] );
-		$listRules[]	= HtmlTag::create( 'tr', array(
+		$listRules[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $list ),
 			HtmlTag::create( 'td', $mail ),
 			HtmlTag::create( 'td', $buttonRemove ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '35%', '60px'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Regeln', 'E-Mail'] ) );

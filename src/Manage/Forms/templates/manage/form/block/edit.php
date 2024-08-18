@@ -1,7 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var object $block */
 /** @var array<object> $withinForms */
 /** @var array<object> $withinBlocks */
@@ -85,12 +86,12 @@ return '
 				<a href="./manage/form/block" class="btn">'.$iconList.' zur Liste</a>
 				<a href="./manage/form/block/view/'.$block->blockId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'		=> ( $withinForms || $withinBlocks ) ? NULL : './manage/form/block/remove/'.$block->blockId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> ( $withinForms || $withinBlocks ) ? 'disabled' : NULL,
 					'onclick'	=> 'return confirm("Wirklich ?");',
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>

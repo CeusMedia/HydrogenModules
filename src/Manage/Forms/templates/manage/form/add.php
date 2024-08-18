@@ -1,8 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var array<object> $mailsCustomer */
 /** @var array<object> $mailsManager */
 /** @var int $page */

@@ -81,11 +81,11 @@ class Controller_Manage_Form_Fill extends Controller
 
 	/**
 	 *	@param		string		$fillId
-	 *	@return		void
+	 *	@return		never
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function testTransfer( string $fillId ): void
+	public function testTransfer( string $fillId ): never
 	{
 		print_m( $this->logicFill->applyTransfers( $fillId ) );
 		exit;

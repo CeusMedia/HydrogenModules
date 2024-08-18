@@ -5,24 +5,24 @@ use CeusMedia\HydrogenFramework\View;
 class View_Manage_Form extends View
 {
 	/**
-	 * Will automatically load template manage/form/add and return to app flow.
-	 * @return void
+	 *	Will automatically load template manage/form/add and return to app flow.
+	 *	@return		void
 	 */
 	public function add(): void
 	{
 	}
 
 	/**
-	 * Will automatically load template manage/form/edit and return to app flow.
-	 * @return void
+	 *	Will automatically load template manage/form/edit and return to app flow.
+	 *	@return		void
 	 */
 	public function edit(): void
 	{
 	}
 
 	/**
-	 * Will automatically load template manage/form/index and return to app flow.
-	 * @return void
+	 *	Will automatically load template manage/form/index and return to app flow.
+	 *	@return		void
 	 */
 	public function index(): void
 	{

@@ -19,7 +19,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'class'	=> 'btn btn-small btn-inverse'
 ] );
 
-/*$optIdentifier	= array( '' => '- alle -');
+/*$optIdentifier	= ['' => '- alle -'];
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filterIdentifier );
@@ -29,7 +29,7 @@ $formatMap	= [
 	Model_Form_Mail::FORMAT_TEXT	=> 'Text',
 ];
 
-$optFormat	= array( '' => '- alle -');
+$optFormat	= ['' => '- alle -'];
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat	= HtmlElements::Options( $optFormat, $filters->get( 'format' ) );
@@ -47,7 +47,7 @@ $roleTypeMap	= [
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
 ];
 
-$optRoleType	= array( '' => '- egal -');
+$optRoleType	= ['' => '- egal -'];
 foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )
 	$optRoleType[$roleTypeKey]	= $roleTypeLabel;
 $optRoleType	= HtmlElements::Options( $optRoleType, $filters->get( 'roleType' ) );

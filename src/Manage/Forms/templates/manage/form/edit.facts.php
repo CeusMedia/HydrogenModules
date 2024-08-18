@@ -125,12 +125,12 @@ return '
 					'class'		=> 'btn btn-primary',
 				] ).'
 				'.$navButtons['nextView'].'
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'		=> './manage/form/remove/'.$form->formId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> $hasFills ? 'disabled' : NULL,
 					'onclick'	=> "return confirm('Wirklich ?');",
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>

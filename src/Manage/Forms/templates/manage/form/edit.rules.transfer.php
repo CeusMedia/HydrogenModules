@@ -3,8 +3,9 @@ use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var WebEnvironment $env */
 /** @var array<object> $transferRules */
 /** @var array<string,object> $transferTargets */
 /** @var object $form */
@@ -70,11 +71,11 @@ if( $transferRules ){
 			'class'	=> 'btn btn-inverse btn-small',
 		] );
 		$buttons		= HtmlTag::create( 'div', [$modalTrigger, $buttonRemove], ['class' => 'btn-group'] );
-		$listRules[]	= HtmlTag::create( 'tr', array(
+		$listRules[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $rule->title ),
 			HtmlTag::create( 'td', $target->title ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 		$modals[]		= $modal;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '25%', '20%'] );
