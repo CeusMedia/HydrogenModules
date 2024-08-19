@@ -11,7 +11,7 @@ class Logic_Shop_Payment_Stripe extends Logic
 	protected Model_Shop_Payment_Stripe $modelPayment;
 	protected Dictionary $session;
 
-	public function notePayment( $source, $stripeUserId, $orderId )
+	public function notePayment( $source, $stripeUserId, $orderId ): string
 	{
 		$paymentId	= $this->modelPayment->add( [
 			'orderId'		=> $orderId,

@@ -36,7 +36,6 @@ class View_Helper_Shop_FinishPanel_Stripe
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -61,12 +60,21 @@ class View_Helper_Shop_FinishPanel_Stripe
 		return '';
 	}
 
+	/**
+	 *	@param		string		$class
+	 *	@return		self
+	 */
 	public function setListClass( string $class ): self
 	{
 		$this->listClass	= $class;
 		return $this;
 	}
 
+	/**
+	 *	@param		int|string		$orderId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setOrderId( int|string $orderId ): self
 	{
 		$this->order	= $this->modelOrder->get( $orderId );
@@ -78,12 +86,21 @@ class View_Helper_Shop_FinishPanel_Stripe
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$format
+	 *	@return		self
+	 */
 	public function setOutputFormat( string $format ): self
 	{
 		$this->outputFormat	= $format;
 		return $this;
 	}
 
+	/**
+	 *	@param		int|string		$paymentId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setPaymentId( int|string $paymentId ): self
 	{
 		$this->payment	= $this->modelPayment->get( $paymentId );
@@ -93,6 +110,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderCreditCard(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();
@@ -114,6 +134,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		] ).PHP_EOL.PHP_EOL;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderGiropay(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();
@@ -135,6 +158,9 @@ class View_Helper_Shop_FinishPanel_Stripe
 		] ).PHP_EOL.PHP_EOL;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderSofort(): string
 	{
 		$facts		= new View_Helper_Mail_Facts();

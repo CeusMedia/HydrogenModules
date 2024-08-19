@@ -104,9 +104,6 @@ class Controller_Shop_Payment_Stripe extends Controller
 				$this->messenger->noteSuccess( 'Die Bezahlung wurde erfolgreich durchgeführt.' );
 				$this->restart( 'shop/finish' );
 			}
-			catch( Stripe\Libraries\ResponseException $e ){
-				$this->handleStripeResponseException( $e );
-			}
 			catch( Exception $e ){
 				HtmlExceptionPage::display( $e );
 				exit;
@@ -196,7 +193,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
 		}
-		catch( Stripe\Libraries\ResponseException $e ){
+		catch( \Stripe\Libraries\ResponseException $e ){
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
