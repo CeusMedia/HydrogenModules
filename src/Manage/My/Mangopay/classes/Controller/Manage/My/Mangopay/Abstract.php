@@ -16,10 +16,10 @@ abstract class Controller_Manage_My_Mangopay_Abstract extends Controller
 	protected string $userId;
 	protected SimpleCacheInterface $cache;
 
-	protected ?string $sessionPrefix	= NULL;
+	protected string $sessionPrefix		= '';
 
-	protected string $currency		= "EUR";
-	protected float $factorFees		= 0.1;
+	protected string $currency			= 'EUR';
+	protected float $factorFees			= 0.1;
 
 	protected function __onInit(): void
 	{

@@ -8,7 +8,6 @@ use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 class Controller_Manage_My_Mangopay_Bank_Payin extends Controller_Manage_My_Mangopay_Abstract
 {
 	protected array $words;
-	protected string $sessionPrefix;
 
 	public function index( $bankAccountId, $walletId = NULL, $amount = NULL )
 	{

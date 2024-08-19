@@ -18,7 +18,12 @@ class Controller_Manage_My_Company extends Controller
 	protected ?string $userId			= NULL;
 	protected array $companies;
 
-	public function edit( string $companyId ): void
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $companyId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
@@ -71,7 +76,12 @@ class Controller_Manage_My_Company extends Controller
 		$this->addData( 'companies', $this->companies );
 	}
 
-	public function uploadLogo( string $companyId ): void
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function uploadLogo( int|string $companyId ): void
 	{
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
@@ -112,6 +122,10 @@ class Controller_Manage_My_Company extends Controller
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -124,7 +138,11 @@ class Controller_Manage_My_Company extends Controller
 		$this->companies		= $this->getMyCompanies();
 	}
 
-	protected function checkCompany( $companyId )
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		object
+	 */
+	protected function checkCompany( int|string $companyId ): object
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		if( !array_key_exists( $companyId, $this->companies ) ){
@@ -138,6 +156,11 @@ class Controller_Manage_My_Company extends Controller
 		return $this->companies[$companyId];
 	}
 
+	/**
+	 *	@param		string		$sortByColumn
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{
 		$list		= [];
@@ -150,7 +173,11 @@ class Controller_Manage_My_Company extends Controller
 		return $list;
 	}
 
-	protected function isMyCompany( string $companyId ): bool
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		bool
+	 */
+	protected function isMyCompany( int|string $companyId ): bool
 	{
 		$indices	= ['companyId' => $companyId, 'userId' => $this->userId];
 		return 0 !== $this->modelCompanyUser->countByIndices( $indices );

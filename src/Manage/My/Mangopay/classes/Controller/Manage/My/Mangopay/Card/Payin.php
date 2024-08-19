@@ -103,7 +103,7 @@ class Controller_Manage_My_Mangopay_Card_Payin extends Controller_Manage_My_Mang
 			$wallet		= $this->checkWalletIsOwn( $walletId );
 			$amount		= round ( $this->request->get( 'amount' ) * 100 );
 
-			$helperUrl	= new \View_Helper_Mangopay_URL( $this->env );
+			$helperUrl	= new View_Helper_Mangopay_URL( $this->env );
 			$helperUrl->set( 'manage/my/mangopay/card/payin/handlePreAuthorizedSecureMode/'.$cardId.'/'.$walletId );
 			$helperUrl->setBackwardTo( TRUE )->setForwardTo( TRUE )->setFrom( TRUE );
 

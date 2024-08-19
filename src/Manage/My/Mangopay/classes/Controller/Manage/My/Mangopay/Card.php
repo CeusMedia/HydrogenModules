@@ -5,7 +5,6 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 class Controller_Manage_My_Mangopay_Card extends Controller_Manage_My_Mangopay_Abstract
 {
 	protected array $words;
-	protected string $sessionPrefix;
 
 	public function add(): void
 	{

@@ -2,7 +2,6 @@
 class Controller_Manage_My_Mangopay_Bank extends Controller_Manage_My_Mangopay_Abstract
 {
 	protected array $words;
-	protected string $sessionPrefix;
 
 	public function add()
 	{

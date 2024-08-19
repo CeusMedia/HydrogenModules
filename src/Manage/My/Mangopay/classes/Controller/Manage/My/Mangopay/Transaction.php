@@ -1,6 +1,6 @@
 <?php
-class Controller_Manage_My_Mangopay_Transaction extends Controller_Manage_My_Mangopay{
-
+class Controller_Manage_My_Mangopay_Transaction extends Controller_Manage_My_Mangopay
+{
     public function filter( $reset = NULL ): void
 	{
 		$sessionPrefix	= 'filter_manage_my_mangopay_transaction_';

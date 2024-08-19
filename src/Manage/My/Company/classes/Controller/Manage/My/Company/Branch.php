@@ -1,22 +1,23 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_Company_Branch extends Controller
 {
-	protected $userId;
+	protected int|string $userId;
 	protected $messenger;
-	protected $request;
-	protected $modelBranch;
-	protected $modelBranchImage;
-	protected $modelCompany;
-	protected $modelCompanyUser;
-	protected $modelUser;
-	protected $branches;
-	protected $companies;
+	protected HttpRequest $request;
+	protected Model_Branch $modelBranch;
+	protected Model_Branch_Image $modelBranchImage;
+	protected Model_Company $modelCompany;
+	protected Model_Company_User $modelCompanyUser;
+	protected Model_User $modelUser;
+	protected array $branches;
+	protected array $companies;
 	protected $user;
 
-	public function add( $companyId = NULL )
+	public function add( int|string|NULL $companyId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAllFromSource( 'POST' );
@@ -61,13 +62,13 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->view->addData( 'companies', $this->companies );
 	}
 
-	public function addImage( $branchId )
+	public function addImage( int|string $branchId ): void
 	{
 		$this->checkBranch( $branchId );
 		$image		= $this->request->get( 'image' );
 		try{
 			$upload		= new Logic_Upload( $this->env );
-			$upload->setUpload( \IMAGE );										//  @todo handle upload errors before
+			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
 				$this->messenger->noteError( 'Das ist kein Bild.' );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration
@@ -104,7 +105,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}*/
 
-	public function edit( $branchId )
+	public function edit( int|string $branchId ): void
 	{
 		$words			= (object) $this->getWords( 'msg' );
 		$branch			= $this->checkBranch( $branchId );
@@ -144,7 +145,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 	}
 
 
-	public function index()
+	public function index(): void
 	{
 		$words		= (object) $this->getWords( 'index' );
 		$branches	= $this->getMyBranches( 'title' );
@@ -157,7 +158,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@todo		check ownership of branch
 	 */
-	public function removeImage( $branchId, $imageId )
+	public function removeImage( int|string $branchId, int|string $imageId ): void
 	{
 		$model			= new Model_Branch_Image( $this->env );
 		$words			= (object) $this->getWords( 'msg' );
@@ -190,7 +191,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->branches			= $this->getMyBranches();
 	}
 
-	protected function checkBranch( $branchId )
+	protected function checkBranch( int|string $branchId )
 	{
 		if( !$this->modelBranch->get( $branchId ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -204,7 +205,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $this->branches[$branchId];
 	}
 
-	protected function checkCurrentUser()
+	protected function checkCurrentUser(): object
 	{
 		$user		= $this->modelUser->get( $this->userId );
 		if( !$user )
@@ -212,7 +213,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $user;
 	}
 
-	protected function getMyBranches( $sortByColumn = 'branchId' ): array
+	protected function getMyBranches( string $sortByColumn = 'branchId' ): array
 	{
 		$list		= [];
 		foreach( $this->getMyCompanies() as $company ){
@@ -226,7 +227,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $list;
 	}
 
-	protected function getMyCompanies( $sortByColumn = 'companyId' ): array
+	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{
 		$list		= [];
 		$relations	= $this->modelCompanyUser->getAllByIndex( 'userId', $this->userId );
@@ -237,12 +238,12 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $list;
 	}
 
-	protected function isMyBranch( $branchId ): bool
+	protected function isMyBranch( int|string $branchId ): bool
 	{
 		return array_key_exists( $branchId, $this->branches );
 	}
 
-	protected function isMyCompany( $companyId ): bool
+	protected function isMyCompany( int|string $companyId ): bool
 	{
 		return array_key_exists( $companyId, $this->companies );
 	}
