@@ -64,7 +64,7 @@ class Scheduler extends ConsoleAbstraction
 				if( $modes && !in_array( $job->mode, $modes ) )
 					continue;
 				if( array_key_exists( $jobObj->id, $map->jobs ) )
-					throw new \DomainException( 'Duplicate job ID "'.$jobObj->id.'"' );
+					throw new DomainException( 'Duplicate job ID "'.$jobObj->id.'"' );
 #				foreach( $job->data as $date )
 #					$jobObj->data[$date->getAttribute( 'key' )]	= (string) $job;
 				$map->jobs[$jobObj->id] = $jobObj;
@@ -82,7 +82,12 @@ class Scheduler extends ConsoleAbstraction
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_scheduler.', TRUE );
 	}
 
-	public function loadJobs( $mode = NULL )
+	/**
+	 *	@param		$mode
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function loadJobs( $mode = NULL ): void
 	{
 		if( $mode === NULL )
 			$mode	= $this->moduleConfig->get( 'mode' );

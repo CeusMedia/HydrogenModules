@@ -4,6 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Job_Report extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$data	= $this->data;

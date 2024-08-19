@@ -31,7 +31,7 @@ class Jobber extends ConsoleApplication
 
 	public function __construct( Environment $env = NULL )
 	{
-		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
+		parent::__construct( $env );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 
@@ -91,6 +91,8 @@ class Jobber extends ConsoleApplication
 	/**
 	 *	Executes possible job call.
 	 *	@return		integer
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function run(): int
 	{
@@ -137,6 +139,12 @@ class Jobber extends ConsoleApplication
 		print( $message.PHP_EOL );
 	}
 
+	/**
+	 *	@param		object		$job
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function runJobManually( object $job ): int
 	{
 		$commands			= $this->env->getRequest()->get( 'commands' );
@@ -187,7 +195,7 @@ class Jobber extends ConsoleApplication
 			$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 		}
 		catch( Exception $e ){
-			$cwd	= __DIR__.'/';
+//			$cwd	= __DIR__.'/';
 			$cwd	= getCwd().'/';
 			$p		= $e->getPrevious() ?: $e;
 			print( 'Error:     '.get_class( $p ).' thrown and not caught'.PHP_EOL );
