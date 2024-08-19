@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -36,6 +37,10 @@ class Model_Newsletter_Theme
 
 	protected string $themePath;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string			$themePath
+	 */
 	public function __construct( Environment $env, string $themePath )
 	{
 		$this->env			= $env;
@@ -46,9 +51,9 @@ class Model_Newsletter_Theme
 	 *	@param		string		$templateId
 	 *	@param		array		$data
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function createFromTemplate( string $templateId, array $data )
+	public function createFromTemplate( string $templateId, array $data ): void
 	{
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
 		$template		= $modelTemplate->get( $templateId );
@@ -154,7 +159,7 @@ class Model_Newsletter_Theme
 		return $data;
 	}
 
-	protected function getFromFolderXml( string $theme )
+	protected function getFromFolderXml( string $theme ): XmlElement
 	{
 		$xml	= XmlElementReader::readFile( $this->themePath.$theme.'/template.xml' );
 		foreach( $xml->author as $author ){

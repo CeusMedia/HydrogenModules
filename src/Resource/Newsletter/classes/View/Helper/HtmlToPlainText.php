@@ -14,9 +14,9 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class View_Helper_HtmlToPlainText
 {
-	protected $env;
+	protected Environment $env;
 
-	protected $html;
+	protected string $html			= '';
 
 	public function __construct( Environment $env )
 	{
@@ -75,11 +75,11 @@ class View_Helper_HtmlToPlainText
 			$nodeType	= $node->nodeType;
 			$prefix		= '';
 			$suffix		= '';
-			if( $node->nodeType === XML_TEXT_NODE ){
+			if( XML_TEXT_NODE === $node->nodeType ){
 				if( !$node->isWhitespaceInElementContent() )
 					$text	.= wordwrap( trim( $node->textContent, "\t\r\n" ) );
 			}
-			else if( $node->nodeType === XML_ELEMENT_NODE ){
+			else if( XML_ELEMENT_NODE === $node->nodeType ){
 				if( self::isBlockElement( $node ) ){
 					if( !$cleared )
 						$prefix	= PHP_EOL;
@@ -93,10 +93,10 @@ class View_Helper_HtmlToPlainText
 						$prefix		.= PHP_EOL;
 						$suffix		.= self::underline( $node, '-' );
 					}
-					else if( $nodeName == "hr" ){
+					else if( 'hr' === $nodeName ){
 						$prefix		.= str_repeat( '-', 78 );
 					}
-					else if( $nodeName == "li" ){
+					else if( 'li' === $nodeName ){
 						$prefix		.= '- ';
 					}
 					else if( in_array( $nodeName, ["p"] ) ){
@@ -107,7 +107,7 @@ class View_Helper_HtmlToPlainText
 				}
 				else{
 					$cleared	= FALSE;
-					if( $nodeName == "a" ){
+					if( 'a' === $nodeName ){
 						$suffix		= ' ('.$node->getAttribute( 'href' ).')';
 					}
 					else if( in_array( $nodeName, ["b", "strong"] ) ){
@@ -135,8 +135,8 @@ class View_Helper_HtmlToPlainText
 	protected static function isBlockElement( DOMNode $node ): bool
 	{
 		$elements	= array_merge(
-			array( 'div', 'p', 'ul', 'li', 'hr', 'blockquote', 'pre', 'xmp' ),
-			array( 'h1', 'h2', 'h3', 'h4', 'h5' )
+			['div', 'p', 'ul', 'li', 'hr', 'blockquote', 'pre', 'xmp'],
+			['h1', 'h2', 'h3', 'h4', 'h5']
 		);
 		return in_array( $node->nodeName, $elements );
 	}
@@ -146,6 +146,11 @@ class View_Helper_HtmlToPlainText
 		return !self::isBlockElement( $node );
 	}
 
+	/**
+	 *	@param		DOMNode		$node
+	 *	@param		string		$character
+	 *	@return		string
+	 */
 	protected static function underline( DOMNode $node, string $character = '-' ): string
 	{
 		return str_repeat( $character, strlen( $node->textContent ) ).PHP_EOL;

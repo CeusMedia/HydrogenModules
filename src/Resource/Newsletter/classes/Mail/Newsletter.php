@@ -4,6 +4,11 @@ use CeusMedia\Common\Net\API\Premailer as Premailer;
 
 class Mail_Newsletter extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$data	= $this->data;
