@@ -44,11 +44,11 @@ class Resource_Oauth
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 //		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-		$handle->setOption( CURLOPT_HTTPHEADER, array(
+		$handle->setOption( CURLOPT_HTTPHEADER, [
 			'Authorization: Bearer '.$this->getToken(),
 //			'Content-Type: application/x-www-form-urlencoded',
 //			'Content-Length: '.strlen( $postData ),
-		) );
+		] );
 		$response	= $handle->exec();
 		$httpCode	= $handle->getInfo( 'http_code' );
 		if( $httpCode < 200 || $httpCode >= 300 )
@@ -59,7 +59,12 @@ class Resource_Oauth
 		return $response->data;
 	}
 
-	public function write( string $resourcePath, array $postData = [] )
+	/**
+	 *	@param		string		$resourcePath
+	 *	@param		array		$postData
+	 *	@return		mixed
+	 */
+	public function write( string $resourcePath, array $postData = [] ): mixed
 	{
 		if( !trim( $resourcePath ) && ltrim( $resourcePath, '/' ) )
 			throw new InvalidArgumentException( 'Missing resource path to request' );

@@ -49,12 +49,15 @@
         "rector/rector": "*",
         "squizlabs/php_codesniffer": "*",
         "mangopay/php-sdk-v2": "*",
-        "stripe/stripe-php": "^13.16",
-        "phpseclib/phpseclib": "*",
+        "stripe/stripe-php": "^15.8@beta",
+        "phpseclib/phpseclib": "^2.0",
         "sentry/sentry": "*",
         "monolog/monolog": "3.x-dev",
         "paquettg/php-html-parser": "dev-master",
-        "twig/twig": "3.x-dev"
+        "twig/twig": "3.x-dev",
+        "bacon/bacon-qr-code": "^1.0",
+        "php-imap/php-imap": "^4.0",
+        "dragonmantank/cron-expression": "3.x-dev"
     },
     "suggest": {
         "ext-rrd": "*"

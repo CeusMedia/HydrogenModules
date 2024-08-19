@@ -23,6 +23,7 @@ class Hook_Resource_Mail extends Hook
 
 		$linkable		= $this->payload['linkable'] ?? FALSE;
 		$activeOnly		= $this->payload['activeOnly'] ?? FALSE;
+		/** @var Logic_Authentication $auth */
 		$auth			= Logic_Authentication::getInstance( $this->env );
 		$linkController	= NULL;
 		$linkAction		= NULL;

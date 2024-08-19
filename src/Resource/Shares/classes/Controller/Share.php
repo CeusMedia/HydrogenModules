@@ -29,7 +29,7 @@ class Controller_Share extends Controller
 			$this->restart( 'file/'.$share->path );
 		}
 		$captcha	= new ImageCaptcha();
-		$captcha->useUnique		= TRUE;
+		$captcha->unique		= TRUE;
 		$captcha->useDigits		= TRUE;
 		$captcha->useLarges		= FALSE;
 		$captcha->useSmalls		= TRUE;
@@ -50,6 +50,10 @@ class Controller_Share extends Controller
 		$this->addData( 'uuid', $uuid );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();

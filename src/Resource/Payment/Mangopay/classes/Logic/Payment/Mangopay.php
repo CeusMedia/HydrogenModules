@@ -2,6 +2,7 @@
 /** @noinspection PhpUndefinedNamespaceInspection */
 /** @noinspection PhpUndefinedClassInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\MethodFactory;
 use CeusMedia\HydrogenFramework\Logic;
 use MangoPay\Address;
@@ -25,13 +26,15 @@ use MangoPay\Transfer;
 use MangoPay\UserLegal;
 use MangoPay\UserNatural;
 use MangoPay\Wallet;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class Logic_Payment_Mangopay extends Logic
 {
-	protected $cache;
-	protected $provider;
-	protected $skipCacheOnNextRequest;
+	protected SimpleCacheInterface $cache;
+	protected Resource_Mangopay $provider;
+	protected bool $skipCacheOnNextRequest	= FALSE;
 	protected string $baseUrl;
+	protected Dictionary $moduleConfig;
 
 	public static array $typeCurrencies	= [
 		'CB_VISA_MASTERCARD'	=> [],
@@ -160,7 +163,11 @@ print_m( $items );
 		return $items;
 	}
 
-	public function getMandates()
+	/**
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getMandates(): array
 	{
 		$cacheKey	= 'mangopay_mandates';
 		$this->applyPossibleCacheSkip( $cacheKey );
@@ -304,6 +311,13 @@ print_m( $items );
 		return $this->provider->PayIns->Create( $payIn );
 	}
 
+	/**
+	 *	@param		int|string		$localUserId
+	 *	@param		$companyData
+	 *	@param		$representativeData
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function createLegalUserFromLocalUser( int|string $localUserId, $companyData, $representativeData ): void
 	{
 		$modelUser		= new Model_User( $this->env );
@@ -480,23 +494,32 @@ print_m( $items );
 	}
 
 	/**
-	 *	@todo			implement
+	 *	@param		int|string|NULL		$userId
+	 *	@return		string
+	 *	@todo		implement
 	 */
-	public function getDefaultCurrency( $userId = NULL )
+	public function getDefaultCurrency( int|string|NULL $userId = NULL ): string
 	{
 		$currency	= 'EUR';
-		if( $userId ){
-
-		}
+/*		if( $userId ){
+		}*/
+		return $currency;
 	}
 
-	public function getEventResource( $eventType, $resourceId, $force = FALSE )
+	/**
+	 *	@param string $eventType
+	 *	@param $resourceId
+	 *	@param bool $force
+	 *	@return mixed
+	 *	@throws ReflectionException
+	 */
+	public function getEventResource( string $eventType, $resourceId, bool $force = FALSE )
 	{
-		if( preg_match( '@^PAYIN_NORMAL_@', $eventType ) )
+		if( str_starts_with( $eventType, 'PAYIN_NORMAL_' ) )
 			$method	= 'getPayin';
-		else if( preg_match( '@^PAYOUT_NORMAL_@', $eventType ) )
+		else if( str_starts_with( $eventType, 'PAYOUT_NORMAL_' ) )
 			$method	= 'getPayout';
-		else if( preg_match( '@^TRANSFER_NORMAL_@', $eventType ) )
+		else if( str_starts_with( $eventType, 'TRANSFER_NORMAL_' ) )
 			$method	= 'getTransfer';
 		else
 			throw new RuntimeException( 'No implementation found for event type '.$eventType );

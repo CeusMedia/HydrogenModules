@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
 /**
  *	PhantomJS Command Runner.
  *
@@ -56,7 +59,7 @@ class Resource_PhantomJS
 	 *
 	 *	@return		bool|array	False of failure, JSON array on success
 	 */
-	public function execute()
+	public function execute(): bool|array
 	{
 		if( NULL === $this->script )
 			throw new RuntimeException( 'No script to execute set' );
@@ -79,7 +82,7 @@ class Resource_PhantomJS
 			return FALSE;
 
 		// Return
-		if( substr( $result, 0, 1 ) !== '{' )					 // not JSON
+		if( !str_starts_with( $result, '{' ) )					 // not JSON
 			return $result;
 		$json = json_decode( $result, TRUE );
 		if( $json === NULL )

@@ -40,12 +40,12 @@ class Model_Config_Page
 		$this->loadPages();
 	}
 
-	public function edit( $pageId, $data = [] )
+	public function edit( int|string $pageId, array $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function get( string $pageId ): ?object
+	public function get( int|string $pageId ): ?object
 	{
 		$pageId	= (int) $pageId;
 		foreach( $this->pages as $page )
@@ -61,7 +61,7 @@ class Model_Config_Page
 
 	public function getColumns(): array
 	{
-		return $columns	= [
+		return [
 			'pageId',
 			'parentId',
 			'type',
@@ -86,7 +86,12 @@ class Model_Config_Page
 		];
 	}
 
-	public function getByIndices( array $indices = [], array $orders = [] )
+	/**
+	 *	@param		array		$indices
+	 *	@param		array		$orders
+	 *	@return		object|FALSE
+	 */
+	public function getByIndices( array $indices = [], array $orders = [] ): object|FALSE
 	{
 		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
@@ -115,7 +120,7 @@ class Model_Config_Page
 					unset( $data[$nr] );
 			}
 		}
-		if( count( $limits ) === 2 )
+		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return $data;
 	}
