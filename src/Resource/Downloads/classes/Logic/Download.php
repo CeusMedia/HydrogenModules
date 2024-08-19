@@ -521,4 +521,10 @@ class Logic_Download extends Logic
 			$folderId	= $folder->parentId;
 		}
 	}
+
+	protected function __onInit(): void
+	{
+		$this->modelFile	= new Model_Download_File( $this->env );
+		$this->modelFolder	= new Model_Download_Folder( $this->env );
+	}
 }

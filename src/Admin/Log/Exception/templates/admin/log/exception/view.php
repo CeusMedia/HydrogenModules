@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $server */
 /** @var object $exception */
 /** @var int $page */
-/** @var Environment $exceptionEnv */
+/** @var array $exceptionEnv */
 /** @var Dictionary $exceptionRequest */
 /** @var Dictionary $exceptionSession */
 /** @var ?object $user */
@@ -65,8 +65,7 @@ return '
 	</div>
 </div>';
 
-
-function renderFactsSection( Environment $env, object $exception, Environment $exceptionEnv, Dictionary $exceptionRequest ): string
+function renderFactsSection( Environment $env, object $exception, array $exceptionEnv, $exceptionRequest ): string
 {
 //	$file		= preg_replace( "/^".preg_quote( realpath( $env->uri ), '/' )."/", './', $exception->file );
 	$file		= preg_replace( "/^".preg_quote( $env->uri, '/' )."/", './', $exception->file );

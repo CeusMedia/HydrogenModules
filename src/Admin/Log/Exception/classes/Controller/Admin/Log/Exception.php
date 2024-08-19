@@ -178,7 +178,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$this->addData( 'exception', $exception );
 		$this->addData( 'exceptionEnv', $exceptionEnv );
-		$this->addData( 'exceptionRequest', $exceptionRequest );
+		$this->addData( 'exceptionRequest', $exceptionRequest->g );
 		$this->addData( 'exceptionSession', $exceptionSession );
 		$this->addData( 'user', $user );
 

@@ -1,5 +1,6 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Input_ResourceTrigger
 {
@@ -7,7 +8,7 @@ class View_Helper_Input_ResourceTrigger
 	public const MODE_STYLE			= 'style';
 	public const MODE_DOCUMENT		= 'document';
 
-	protected Environment $env;
+	protected WebEnvironment $env;
 	protected ?string $modalId		= NULL;
 	protected string $mode			= 'image';
 	protected ?string $inputId		= NULL;
@@ -16,9 +17,9 @@ class View_Helper_Input_ResourceTrigger
 	protected array $paths			= [];
 
 	/**
-	 *	@param		Environment		$env
+	 *	@param		WebEnvironment		$env
 	 */
-	public function __construct( Environment $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env		= $env;
 	}

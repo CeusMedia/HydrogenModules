@@ -187,12 +187,12 @@ return join( [
 //	'<!--<h3>Dateien</h3>-->',
 	HtmlTag::create( 'div', View_Info_File::renderPosition( $env, $folderId, $search ) ),
 	HtmlTag::create( 'br' ),
-	HtmlTag::create( 'div', [], [
-		HtmlTag::create( 'div', [], [
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
 			$panelList,
 			$linkUp,
 		], ['class' => 'span9'] ),
-		HtmlTag::create( 'div', [], join( /*'<hr/>', */$panels ), ['class' => 'span3'] ),
+		HtmlTag::create( 'div', join( /*'<hr/>', */$panels ), ['class' => 'span3'] ),
 	], ['class' => 'row-fluid'] ),
 	$textIndexBottom,
 ] );

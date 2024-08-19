@@ -35,8 +35,8 @@ if( $total ){
 			HtmlTag::create( 'td', $labelUser, ['class' => 'cell-user'] ),
 			HtmlTag::create( 'td', $labelRole, ['class' => 'cell-role'] ),
 			HtmlTag::create( 'td', $labelStatus, ['class' => 'cell-status'] ),
-			HtmlTag::create( 'td', $phraser->convert( $user->createdAt, TRUE ), ['class' => 'cell-created'] ),
-			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt, TRUE ), ['class' => 'cell-logged'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->createdAt ?? '', TRUE ), ['class' => 'cell-created'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt ?? '', TRUE ), ['class' => 'cell-logged'] ),
 		), [
 			'data-user-role'	=> $user->roleId,
 			'data-user-status'	=> $user->status,
