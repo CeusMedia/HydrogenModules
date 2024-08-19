@@ -15,6 +15,7 @@ class Hook_Resource_Limiter extends Hook
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function onPageApplyModules(): void
 	{

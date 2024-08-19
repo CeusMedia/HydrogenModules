@@ -21,27 +21,41 @@ class Logic_Limiter
 
 	protected Dictionary $moduleConfig;
 
-	public static function getInstance( $env ): self
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 */
+	public static function getInstance( Environment $env ): self
 	{
 		if( NULL === self::$instance )
 			self::$instance		= new self( $env );
 		return self::$instance;
 	}
 
-	public function allows( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER )
+	/**
+	 *	@param		string		$key
+	 *	@param		$value
+	 *	@param		int			$operation
+	 *	@return		bool
+	 */
+	public function allows( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER ): bool
 	{
 		if( !$this->rules->has( $key ) )
 			return TRUE;
 		if( $value === NULL )
 			$operation	= self::OPERATION_BOOLEAN;
-		switch( $operation ){
-			case self::OPERATION_BOOLEAN:
-				return (bool) $this->rules->get( $key );
-			case self::OPERATION_COMPARE_NUMBER:
-				return $this->rules->get( $key ) >= $value;
-		}
+		return match( $operation ){
+			self::OPERATION_BOOLEAN		=> (bool) $this->rules->get( $key ),
+			default						=> $this->rules->get( $key ) >= $value,
+		};
 	}
 
+	/**
+	 *	@param		string		$key
+	 *	@param		$value
+	 *	@param		int			$operation
+	 *	@return		bool
+	 */
 	public function denies( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER ): bool
 	{
 		if( !$this->rules->has( $key ) )
@@ -49,8 +63,11 @@ class Logic_Limiter
 		return !$this->allows( $key, $value, $operation );
 	}
 
-
-	public function get( string $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		mixed
+	 */
+	public function get( string $key ): mixed
 	{
 		return $this->rules->get( $key );
 	}
@@ -71,22 +88,37 @@ class Logic_Limiter
 		return $this->rules->getAll( $prefix, $asDictionary, $caseSensitive );
 	}
 
+	/**
+	 *	@return		Dictionary
+	 */
 	public function getRules(): Dictionary
 	{
 		return $this->rules;
 	}
 
-	public function has( $key ): bool
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 */
+	public function has( string $key ): bool
 	{
 		return $this->rules->has( $key );
 	}
 
+	/**
+	 *	@return		array
+	 */
 	public function index(): array
 	{
 		return $this->rules->getAll();
 	}
 
-	public function set( $key, $value ): ?bool
+	/**
+	 *	@param		string		$key
+	 *	@param		mixed		$value
+	 *	@return		bool|NULL
+	 */
+	public function set( string $key, mixed $value ): ?bool
 	{
 		if( !$this->enabled )
 			return NULL;
