@@ -1,6 +1,5 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Stripe_Error extends View_Helper_Stripe_Abstract
 {

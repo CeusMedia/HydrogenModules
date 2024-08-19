@@ -7,8 +7,8 @@ class View_Helper_Stripe_Entity_CardProviderLogo extends View_Helper_Stripe_Abst
 {
 	protected ?string $nodeClass	= NULL;
 	protected string $nodeName		= 'div';
-	protected string$provider		= 'Visa';
-	protected string$size			= 'large';
+	protected string $provider		= 'Visa';
+	protected string $size			= 'large';
 
 	public const SIZE_SMALL			= 'small';
 	public const SIZE_MEDIUM		= 'medium';

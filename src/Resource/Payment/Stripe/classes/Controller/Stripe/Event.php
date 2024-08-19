@@ -16,6 +16,10 @@ class Controller_Stripe_Event extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function receive(): void
 	{
 		$response	= $this->env->getResponse();
@@ -63,6 +67,10 @@ class Controller_Stripe_Event extends Controller
 		exit;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -87,11 +95,11 @@ class Controller_Stripe_Event extends Controller
 
 	protected function verify( string $eventType, $resourceId ): bool
 	{
-		if( preg_match( '@_CREATED$@', $eventType ) )
+		if( str_ends_with( $eventType, '_CREATED' ) )
 			$status	= 'CREATED';
-		else if( preg_match( '@_FAILED$@', $eventType ) )
+		else if( str_ends_with( $eventType, '_FAILED' ) )
 			$status	= 'FAILED';
-		else if( preg_match( '@_SUCCEEDED$@', $eventType ) )
+		else if( str_ends_with( $eventType, '_SUCCEEDED' ) )
 			$status	= 'SUCCEEDED';
 		else return TRUE;														//  no handleable and verifiable event found
 		$entity	= $this->stripe->getEventResource( $eventType, $resourceId );

@@ -1,7 +1,15 @@
 <?php
+
+use Stripe\Exception\ApiErrorException as StripeApiErrorException;
+
 class Logic_Payment_Stripe_Event_Payin_Normal_Created extends Logic_Payment_Stripe_Event_Payin_Normal
 {
-	public function handle()
+	/**
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		StripeApiErrorException
+	 */
+	public function handle(): int
 	{
 		$payin		= $this->entity;
 		$data		= [

@@ -11,7 +11,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 
 	abstract public function handle();
 
-	public function setEvent( $event )
+	public function setEvent( $event ): self
 	{
 		$this->event	= $event;
 		$this->entity	= $this->logicStripe->getEventResource( $event->type, $event->id );
@@ -42,7 +42,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 		return $logic->sendMail( $mail, $receiver );
 	}
 
-	protected function uncache( string $key )
+	protected function uncache( string $key ): void
 	{
 		$this->env->getCache()->remove( 'stripe_'.$key );
 	}

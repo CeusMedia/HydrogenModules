@@ -4,6 +4,8 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Stripe\Exception\ApiErrorException as StripeApiErrorException;
 use Stripe\Stripe as Stripe;
 use Stripe\Charge as StripeCharge;
 use Stripe\Customer as StripeCustomer;
@@ -11,12 +13,12 @@ use Stripe\Customer as StripeCustomer;
 class Logic_Payment_Stripe extends Logic
 {
 	protected Dictionary $moduleConfig;
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 	protected Resource_Stripe $provider;
 	protected bool $skipCacheOnNextRequest;
 	protected ?string $baseUrl			= '';
 
-	public function checkUser( string $userId )
+	public function checkUser( string $userId ): StripeCustomer
 	{
 		return $this->getUser( $userId );
 	}
@@ -70,7 +72,7 @@ class Logic_Payment_Stripe extends Logic
 		//  ...
 	}
 
-	public function createCustomerFromLocalUser( $localUserId )
+	public function createCustomerFromLocalUser( $localUserId ): StripeCustomer
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelAddress	= new Model_Address( $this->env );
@@ -94,11 +96,19 @@ class Logic_Payment_Stripe extends Logic
 		}
 	}
 
-	public function getUser( string $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		StripeCustomer
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		StripeApiErrorException
+	 */
+	public function getUser( string $userId ): StripeCustomer
 	{
 		$cacheKey	= 'stripe_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
-		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
+		/** @var ?Customer $item */
+		$item		= $item = $this->cache->get( $cacheKey );
+		if( is_null( $item ) ){
 			$item	= StripeCustomer::retrieve( $userId );
 			$this->cache->set( $cacheKey, $item );
 		}
@@ -148,12 +158,17 @@ class Logic_Payment_Stripe extends Logic
 		return $this;
 	}
 
-	public function uncache( string $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function uncache( string $key ): bool
 	{
 		return $this->cache->delete( 'stripe_'.$key );
 	}
 
-	public function updateCustomer( $user )
+	public function updateCustomer( StripeCustomer $user )
 	{
 		throw new Exception( 'Not implemented yet' );
 		$this->uncache( 'user_'.$user->Id );

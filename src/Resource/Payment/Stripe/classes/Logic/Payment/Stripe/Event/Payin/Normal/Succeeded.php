@@ -1,7 +1,15 @@
 <?php
+
+use Stripe\Exception\ApiErrorException as StripeApiErrorException;
+
 class Logic_Payment_Stripe_Event_Payin_Normal_Succeeded extends Logic_Payment_Stripe_Event_Payin_Normal
 {
-	public function handle()
+	/**
+	 *	@return		bool|int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		StripeApiErrorException
+	 */
+	public function handle(): bool|int
 	{
 		$indices	= [
 			'status' 	=> Model_Stripe_Payin::STATUS_CREATED,

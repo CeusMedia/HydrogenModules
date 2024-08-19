@@ -4,6 +4,11 @@ use CeusMedia\Common\UI\OutputBuffer;
 
 class Mail_Stripe_Event_Payin extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$this->setSubject( 'Event: '. $this->data['event']->type );

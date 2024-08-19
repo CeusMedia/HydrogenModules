@@ -7,7 +7,11 @@ class Job_Stripe_Event extends Job_Abstract
 {
 	protected Model_Stripe_Event $modelEvent;
 
-	public function handle()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function handle(): void
 	{
 		$orders	= ['eventId' => 'ASC'];
 		$events	= $this->modelEvent->getAllByIndex( 'status', Model_Stripe_Event::STATUS_RECEIVED, $orders );
@@ -37,6 +41,12 @@ class Job_Stripe_Event extends Job_Abstract
 		$this->modelEvent	= new Model_Stripe_Event( $this->env );
 	}
 
+	/**
+	 *	@param		string		$eventId
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function handleEvent( string $eventId ): int
 	{
 		$event	= $this->modelEvent->get( $eventId );
@@ -56,7 +66,7 @@ class Job_Stripe_Event extends Job_Abstract
 			$buffer		= new OutputBuffer();
 			$logicKey	= CamelCase::convert( 'Payment Stripe Event '.$key, TRUE );
 //			try{
-			$logicEvent	= $this->env->logic->get( $logicKey );
+			$logicEvent	= $this->env->getLogic()->get( $logicKey );
 			$logicEvent->setEvent( $event )->handle();
 			$status		= Model_Stripe_Event::STATUS_CLOSED;
 /*			}

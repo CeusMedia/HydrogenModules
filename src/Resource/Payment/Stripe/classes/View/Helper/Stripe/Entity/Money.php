@@ -32,10 +32,10 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract
 		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
-	public function set( \Stripe\Money $money, ?int $accuracy = NULL ): self
+	public function set( int $amount, string $currency, ?int $accuracy = NULL ): self
 	{
-		$this->setAmount( $money->Amount );
-		$this->setCurrency( $money->Currency );
+		$this->setAmount( $amount );
+		$this->setCurrency( $currency );
 		if( $accuracy !== NULL )
 			$this->setAccuracy( $accuracy );
 		return $this;
