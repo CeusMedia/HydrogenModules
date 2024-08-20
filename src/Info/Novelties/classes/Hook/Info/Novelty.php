@@ -5,6 +5,9 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Novelty extends Hook
 {
+	/**
+	 *	@return		void
+	 */
 	public function onRegisterDashboardPanels(): void
 	{
 		if( !$this->env->getAcl()->has( 'info/novelty', 'ajaxRenderDashboardPanel' ) )

@@ -25,12 +25,18 @@ class View_Helper_TinyMce_FileBrowser
 	public const SOURCE_MODE_IMAGE		= 0;
 	public const SOURCE_MODE_LINK		= 1;
 
+	/**
+	 *	@param		WebEnvironment		$env
+	 */
 	public function __construct( WebEnvironment $env )
 	{
 		$this->env	= $env;
 		$this->__onInit();
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		$buffer		= new OutputBuffer();
@@ -66,6 +72,10 @@ class View_Helper_TinyMce_FileBrowser
 		exit;
 	}
 
+	/**
+	 *	@param		int		$displayMode
+	 *	@return		self
+	 */
 	public function setDisplayMode( int $displayMode ): self
 	{
 		$this->displayMode		= $displayMode;
@@ -73,30 +83,49 @@ class View_Helper_TinyMce_FileBrowser
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$sourceMode
+	 *	@return		self
+	 */
 	public function setSourceMode( int $sourceMode ): self
 	{
 		$this->sourceMode	= $sourceMode;
 		return $this;
 	}
 
+	/**
+	 *	@param		int|string		$topicId
+	 *	@return		self
+	 */
 	public function setTopicId( int|string $topicId ): self
 	{
 		$this->topicId	= $topicId;
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$topics
+	 *	@return		self
+	 */
 	public function setTopics( array $topics ): self
 	{
 		$this->topics	= $topics;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$path
+	 *	@return		self
+	 */
 	public function setPath( string $path ): self
 	{
 		$this->path		= $path;
 		return $this;
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->thumbnailer	= new View_Helper_Thumbnailer( $this->env, 128, 128 );
@@ -106,6 +135,11 @@ class View_Helper_TinyMce_FileBrowser
 		$this->timePhraser	= new View_Helper_TimePhraser( $this->env );
 	}
 
+	/**
+	 *	@param		array		$items
+	 *	@param		string		$path
+	 *	@return		array
+	 */
 	protected function filterFoldersByPath( array $items, string $path ): array
 	{
 		$list	= [];
@@ -138,7 +172,7 @@ class View_Helper_TinyMce_FileBrowser
 					continue;
 			}
 			else{
-				if( preg_match( "@/@", $item->title ) )
+				if( str_contains( $item->title, '/' ) )
 					continue;
 			}
 			$list[]	= $item;
@@ -167,7 +201,13 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
-	protected function renderItemException( $itemUri, $itemLabel, $exception ): string
+	/**
+	 *	@param		string		$itemUri
+	 *	@param		string		$itemLabel
+	 *	@param		Throwable	$exception
+	 *	@return string
+	 */
+	protected function renderItemException( string $itemUri, string $itemLabel, Throwable $exception ): string
 	{
 		return HtmlTag::create( 'li', $exception->getMessage(), [
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
@@ -175,7 +215,15 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
-	protected function renderImageItem( string $path, string $filePath, $size = NULL, string $icon = 'image' ): string
+	/**
+	 *	@param		string		$path
+	 *	@param		string		$filePath
+	 *	@param		?string		$size
+	 *	@param		string		$icon
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	protected function renderImageItem( string $path, string $filePath, ?string $size = NULL, string $icon = 'image' ): string
 	{
 		$labelParts	= explode( "/", $filePath );
 		$label	= $labelParts[count( $labelParts ) - 1];
@@ -203,42 +251,45 @@ class View_Helper_TinyMce_FileBrowser
 				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
 			], ['class' => 'dl-inline'] );
 		}
-		catch( Exception $e ){
-			$facts		= HtmlTag::create( 'dl', array(
+		catch( Exception ){
+			$facts		= HtmlTag::create( 'dl', [
 				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
 				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
-			), ['class' => 'dl-inline'] );
+			], ['class' => 'dl-inline'] );
 		}
 		$facts		= HtmlTag::create( 'small', $facts, ['class' => 'muted'] );
 
 		try{
 			$data		= $this->thumbnailer->get( $remoteFilePath, 128, 128 );
-			$thumbnail	= HtmlTag::create( 'div', NULL, array(
+			$thumbnail	= HtmlTag::create( 'div', NULL, [
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
 				'style'			=> 'background-image: url('.$data.')',
 				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUrl().$path,
 				'data-type'		=> 'image',
 				'data-label'	=> $filePath,
-			) );
+			] );
 		}
-		catch( Exception $e ){
-			$thumbnail			= HtmlTag::create( 'div', NULL, array(
+		catch( Exception ){
+			$thumbnail			= HtmlTag::create( 'div', NULL, [
 				'class'			=> $this->cssClassPrefix.'-item-icon trigger-submit',
 				'data-url'		=> Logic_Frontend::getInstance( $this->env )->getUrl().$path,
 				'data-type'		=> 'image',
 				'data-label'	=> $filePath,
-			) );
+			] );
 		}
 
 		$label	= HtmlTag::create( 'div', $labelParts[count( $labelParts ) - 1].'<br/>'.$facts, [
 			'class'	=> $this->cssClassPrefix.'-item-label autocut',
 		] );
-		return HtmlTag::create( 'li', $thumbnail.$label, array(
+		return HtmlTag::create( 'li', $thumbnail.$label, [
 			'class' 	=> $this->cssClassPrefix.'-item '.$this->cssClassPrefix.'-item-file',
-			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUri().$path,
-		) );
+			'data-url'	=> Logic_Frontend::getInstance( $this->env )->getUrl().$path,
+		] );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderImageMode(): string
 	{
 		if( !isset( $this->topics[$this->topicId] ) )
@@ -271,14 +322,20 @@ class View_Helper_TinyMce_FileBrowser
 			}
 		}
 		$listItems		= HtmlTag::create( 'ul', $list, ['class' => $this->cssClassPrefix.' unstyled'] );
-		$listItems		= HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 //			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
 			HtmlTag::create( 'div', $listItems, ['id' => 'container-list-items'] )
-		) );
-		return $listItems;
+		] );
 	}
 
-	protected function renderLinkItem( string $path, string $filePath, $size = NULL, string $icon = 'link' ): string
+	/**
+	 *	@param		string		$path
+	 *	@param		string		$filePath
+	 *	@param		?string		$size
+	 *	@param		string		$icon
+	 *	@return		string
+	 */
+	protected function renderLinkItem( string $path, string $filePath, ?string $size = NULL, string $icon = 'link' ): string
 	{
 		$fullpath	= preg_replace( '/^\.\//', '', $path );
 		if( !preg_match( '/^https?:\/\//', $fullpath ) )
@@ -302,6 +359,10 @@ class View_Helper_TinyMce_FileBrowser
 		] );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	protected function renderLinkMode(): string
 	{
 		if( !isset( $this->topics[$this->topicId] ) )
@@ -328,27 +389,29 @@ class View_Helper_TinyMce_FileBrowser
 			if( isset( $link->type ) && $link->type === 'image' )
 				$list[]		= $this->renderImageItem( $link->value, $link->title );
 			else{
-				$icon		= 'link';
-				if( $link->type === 'link:gallery' )
+				if( 'link:gallery' === $link->type )
 					$icon	= 'camera';
-				if( $link->type === 'link:bookmark' )
+				else if( 'link:bookmark' === $link->type )
 					$icon	= 'bookmark';
-				if( $link->type === 'unknown' )
+				else if( 'unknown' === $link->type )
 					$icon	= 'link';
+				else
+					$icon		= 'link';
 				if( isset( $link->value ) )
 					$list[]		= $this->renderLinkItem( $link->value, $link->title, NULL, $icon );
 			}
 		}
 
 		$listItems		= HtmlTag::create( 'ul', $list, ['class' => $this->cssClassPrefix.' unstyled'] );
-		$listItems		= HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', array(
 //			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
 			HtmlTag::create( 'div', $listItems, ['id' => 'container-list-items'] )
 		) );
-
-		return $listItems;
 	}
 
+	/**
+	 * @return string
+	 */
 	protected function renderTopBar(): string
 	{
 		$mode		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'image' : 'link';
@@ -389,6 +452,9 @@ class View_Helper_TinyMce_FileBrowser
 			), ['class' => 'buttons'] );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderTopicList(): string
 	{
 		$list	= [];

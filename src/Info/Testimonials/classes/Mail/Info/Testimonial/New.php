@@ -1,6 +1,11 @@
 <?php
 class Mail_Info_Testimonial_New extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$data			= $this->data;

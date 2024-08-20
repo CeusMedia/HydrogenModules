@@ -1,16 +1,15 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class View_Helper_TinyMce extends Abstraction
 {
-	public array $list		= [];
-	public array $listImages	= [];
-	public array $listLinks	= [];
+	public array $list				= [];
+	public array $listImages		= [];
+	public array $listLinks			= [];
 
 	protected static bool $loaded	= FALSE;
 
@@ -35,13 +34,17 @@ class View_Helper_TinyMce extends Abstraction
 		$this->cache		= $this->env->getCache();
 	}
 
-	public static function load( Environment $env ): void
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		void
+	 */
+	public static function load( WebEnvironment $env ): void
 	{
 		if( self::$loaded )
 			return;
 
 		$page		= $env->getPage();
-		$language	= $env->getLanguage()->getLanguage();
+		$language	= self::getLanguage( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
 
@@ -54,34 +57,34 @@ class View_Helper_TinyMce extends Abstraction
 		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
 		$page->js->addUrl( $pathLocal.'TinyMCE.FileBrowser.js' );
 
-		$languages	= self::getLanguage( $env );
-		if( !$config->get( 'CDN' ) && $language !== "en" )
+		if( !$config->get( 'CDN' ) && 'en' !== $language )
 			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
 
 		self::$loaded	= TRUE;
 	}
 
-	public static function getLanguage( Environment $env ): string
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		string
+	 */
+	public static function getLanguage( WebEnvironment $env ): string
 	{
 		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$languages	= explode( ",", $config->get( 'languages' ) );
 		if( $config->get( 'CDN' ) )
 			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
-		if( $language !== "en" && !in_array( $language, $languages ) )
-			$language = "en";
+		if( 'en' !== $language && !in_array( $language, $languages ) )
+			$language = 'en';
 		return $language;
-	}
-
-	protected function __compare( object $a, object $b ): int
-	{
-		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 
 	/**
 	 *	...
 	 *	@access		public
 	 *	@return		array		List of images
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getImageList( bool $refresh = FALSE ): array
 	{
@@ -104,9 +107,10 @@ class View_Helper_TinyMce extends Abstraction
 	}
 
 	/**
-	 *	...
 	 *	@access		public
 	 *	@return		array		List of links
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLinkList( bool $refresh = FALSE ): array
 	{
@@ -126,6 +130,11 @@ class View_Helper_TinyMce extends Abstraction
 		return $this->listLinks;
 	}
 
+	/**
+	 *	@param		string		$html
+	 *	@param		array		$options
+	 *	@return		string
+	 */
 	public static function tidyHtml( string $html, array $options = [] ): string
 	{
 		if( function_exists( 'tidy_repair_string' ) ){
@@ -141,5 +150,15 @@ class View_Helper_TinyMce extends Abstraction
 			$html	= str_replace( "    ", "\t", $html );
 		}
 		return $html;
+	}
+
+	/**
+	 *	@param		object		$a
+	 *	@param		object		$b
+	 *	@return		int
+	 */
+	protected function __compare( object $a, object $b ): int
+	{
+		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 }

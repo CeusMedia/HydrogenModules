@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 use CeusMedia\HydrogenFramework\Environment\Web;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -8,6 +9,8 @@ class Hook_Info_Page extends Hook
 	/**
 	 *	@return		bool|NULL
 	 *	@throws		ReflectionException
+	 *	@throws		EnvironmentException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onAppDispatch(): ?bool
 	{
@@ -38,24 +41,24 @@ class Hook_Info_Page extends Hook
 				break;
 			case Model_Page::TYPE_CONTENT:
 				$request->set( '__redirected', TRUE );												//  note redirection for access check
-				static::redirect( $env, 'info/page', 'index', [$pagePath] );		//  redirect to page controller and quit hook
+				static::redirect( $env, 'info/page', 'index', [$pagePath] );			//  redirect to page controller and quit hook
 				return TRUE;
 			case Model_Page::TYPE_BRANCH:
 				if( !( $children = $logic->getChildren( $page->pageId ) ) )							//  identified branch page has children
 					throw new RangeException( 'Page branch '.$page->title.' has no pages' );
-				if( (int) $children[0]->status === Model_Page::STATUS_DISABLED )					//  child page is disabled
+				if( Model_Page::STATUS_DISABLED === (int) $children[0]->status )					//  child page is disabled
 					throw new RangeException( 'Page branch '.$page->title.' has no active pages' );
-				static::restart( $env, $page->identifier.'/'.$children[0]->identifier );			//  redirect to child page and exit hook
+				static::restart( $env, $page->identifier.'/'.$children[0]->identifier );		//  redirect to child page and exit hook
 				return TRUE;
 			case Model_Page::TYPE_MODULE:
 				if( !$page->controller )															//  but no module controller has been selected
 					throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
 				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
-				if( substr( $pagePath, 0, strlen( $controllerName ) ) === $controllerName )			//  module has been addressed by page link
+				if( str_starts_with( $pagePath, $controllerName ) )									//  module has been addressed by page link
 					return TRUE;																	//  let the general dispatcher do the job
 				$page->arguments	= $page->arguments ?? [];
 				$action				= $page->action ?: 'index';										//  default action is 'index'
-				if( count( $page->arguments ) > 1 && count( $page->arguments ) !== 1 ){				//  but there are path arguments
+				if( count( $page->arguments ) > 1 ){												//  but there are path arguments
 					$classMethods	= get_class_methods( 'Controller_'.$page->controller );			//  get methods of module controller class
 					if( in_array( $page->arguments[0], $classMethods ) )							//  first argument seems to be a controller method
 						$action	= array_shift( $page->arguments );							//  set first argument as action and remove it from argument list
@@ -68,12 +71,19 @@ class Hook_Info_Page extends Hook
 		return FALSE;																				//  continue ongoing dispatching
 	}
 
-	public function onAppGetMasterTemplate()
+	/**
+	 *	@return		string|NULL
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onAppGetMasterTemplate(): ?string
 	{
-		$page	= $this->env->getLogic()->get( 'page' )->getPageFromRequest( TRUE, FALSE );
+		/** @var Logic_Page $logic */
+		$logic	= $this->env->getLogic()->get( 'page' );
+		$page	= $logic->getPageFromRequest( TRUE, FALSE );
 		if( $page ){
 			$parents	= $page->parents;
-			while( $page->template === 'inherit' && $parents )
+			while( 'inherit' === $page->template && $parents )
 				$page	= array_shift( $parents );
 			$template		= $page->template;
 			$valuesToSkip	= ['', 'default', 'inherit', 'theme'];
@@ -85,14 +95,18 @@ class Hook_Info_Page extends Hook
 		return NULL;
 	}
 
+	/**
+	 *	@return		FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onControllerDetectPath()
 	{
 		$modelPage			= new Model_Page( $this->env );
-		$controllerPages	= $modelPage->getAllByIndices( array(
+		$controllerPages	= $modelPage->getAllByIndices( [
 			'status'		=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],				//  hidden or visible, only (not disabled)
 			'type'			=> Model_Page::TYPE_MODULE,												//  type 'module', only
 			'controller'	=> $this->payload['controllerName'],
-		) );
+		] );
 		if( $controllerPages ){
 			$pages				= [];
 			foreach( $controllerPages as $page ){
@@ -112,7 +126,10 @@ class Hook_Info_Page extends Hook
 		return FALSE;
 	}
 
-	public function onEnvConstructEnd()
+	/**
+	 *	@return		void
+	 */
+	public function onEnvConstructEnd(): void
 	{
 		if( !$this->env->getModules()->has( 'Resource_Authentication' ) )
 			return;
@@ -125,30 +142,30 @@ class Hook_Info_Page extends Hook
 			'inside'	=> [],
 			'outside'	=> []
 		];
-		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );						//  get all module based pages
+		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );							//  get all module based pages
 		foreach( $pages as $page ){																	//  iterate pages
 			$className	= 'Controller_'.$page->controller;											//  page delivers unprefixed controller class name
 			if( !class_exists( $className ) )														//  controller class is not existing
 				continue;																			//  skip this page
 			$path		= strtolower( $page->controller );											//  derive path from shortened controller class name
 			$reflection = new ReflectionClass( $className );										//  reflect controller class
-			foreach( $reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method ){			//  iterate reflected public methods
-				if( $method->isStatic() || substr( $method->name, 0, 1 ) === '_' )					//  static or protected method
+			foreach( $reflection->getMethods( ReflectionMethod::IS_PUBLIC ) as $method ){		//  iterate reflected public methods
+				if( $method->isStatic() || str_starts_with( $method->name, '_' ) )					//  static or protected method
 					continue;																		//  skip this method
-				if( $method->class !== $reflection->getName() )										//  inherited method
+				if( $reflection->getName() !== $method->class )										//  inherited method
 					continue;																		//  skip this method
-				if( strtolower( substr( $method->name, 0, 4 ) ) === 'ajax' )						//  ajax method
+				if( str_starts_with( strtolower( $method->name ), 'ajax' ) )						//  ajax method
 					continue;																		//  skip this method
 				if( array_key_exists( $page->access, $paths ) )										//  valid page visibility
 					$paths[$page->access][] = $path.'_'.$method->name;								//  append page path to path index
 			}
 		}
-		$acl->setPublicLinks( $paths['public'], 'append' );											//  append collected public paths to ACL
-		$acl->setPublicInsideLinks( $paths['inside'], 'append' );									//  append collected inside paths to ACL
-		$acl->setPublicOutsideLinks( $paths['outside'], 'append' );									//  append collected outside paths to ACL
+		$acl->setPublicLinks( $paths['public'], 'append' );									//  append collected public paths to ACL
+		$acl->setPublicInsideLinks( $paths['inside'], 'append' );								//  append collected inside paths to ACL
+		$acl->setPublicOutsideLinks( $paths['outside'], 'append' );							//  append collected outside paths to ACL
 	}
 
-	public function onRegisterSitemapLinks()
+	public function onRegisterSitemapLinks(): void
 	{
 		try{
 			$moduleConfig	= $this->env->getConfig()->getAll( 'module.info_pages.', TRUE );		//  get configuration of module
@@ -157,23 +174,23 @@ class Hook_Info_Page extends Hook
 				$orders		= ['scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC'];	//  collect latest changed pages first
 				for( $scopeId = 0; $scopeId < 10; $scopeId++ ){
 					$model		= new Model_Page( $this->env );										//  get model of pages
-					$indices	= array(															//  focus on ...
+					$indices	= [																	//  focus on ...
 						'status'	=> Model_Page::STATUS_VISIBLE,									//  ... visible pages ...
 						'parentId'	=> 0,															//  ... in top level ...
 						'scope'		=> $scopeId,													//  ... of scoped navigation
 						'access'	=> ['public', 'outside'],										//  ... accessible by everyone
-					);
+					];
 					$pages		= $model->getAllByIndices( $indices, $orders );						//  get all active top level pages
 					foreach( $pages as $page ){														//  iterate found pages
 						if( (int) $page->type === Model_Page::TYPE_BRANCH ){						//  page is a branch only (without content)
-							$indices	= array(													//  focus on ...
+							$indices	= [															//  focus on ...
 								'status'	=> [Model_Page::STATUS_VISIBLE],						//  ... visible pages ...
-								'parentId'	=> $page->pageId,										//  ... on sub level
+								'parentId'	=> $page->pageId,										//  ... on sublevel
 								'access'	=> ['public', 'outside'],								//  ... accessible by everyone
-							);
-							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sub level pages of top level page
+							];
+							$subpages	= $model->getAllByIndices( $indices, $orders );				//  get all active sublevel pages of top level page
 							foreach( $subpages as $subpage ){										//  iterate found pages
-								$url		= $this->env->url.$page->identifier.'/'.$subpage->identifier;	//  build absolute URI of sub level page
+								$url		= $this->env->url.$page->identifier.'/'.$subpage->identifier;	//  build absolute URI of sublevel page
 								if( in_array( $url, $urls ) )
 									continue;
 								$urls[]		= $url;
@@ -206,8 +223,9 @@ class Hook_Info_Page extends Hook
 	 *	@todo		log errors
 	 *	@todo		localize error messages
 	 *	@todo		remove old code
+	 *	@throws		ReflectionException
 	 */
-	public function onRenderContent()
+	public function onRenderContent(): void
 	{
 		//  OLD CODE
 		$this->applyStrategy1();
@@ -221,7 +239,7 @@ class Hook_Info_Page extends Hook
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	protected function applyStrategy1()
+	protected function applyStrategy1(): void
 	{
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
 		$logic		= $this->env->getLogic()->get( 'page' );
@@ -253,7 +271,7 @@ class Hook_Info_Page extends Hook
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	protected function applyStrategy2()
+	protected function applyStrategy2(): void
 	{
 		$logic = $this->env->getLogic()->get('page');
 		if( !$this->env->getModules()->has( 'UI_Shortcode' ) )
@@ -268,8 +286,8 @@ class Hook_Info_Page extends Hook
 				'ignore'	=> FALSE,
 			]
 		];
-		$words	= $this->env->getLanguage()->getWords( 'info/pages' );
-		$msgs	= (object) $words['hook-dispatch'];
+		$words		= $this->env->getLanguage()->getWords( 'info/pages' );
+		$messages	= (object) $words['hook-dispatch'];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -281,7 +299,7 @@ class Hook_Info_Page extends Hook
 					}
 					if( (int) $attr['nr'] ){														//  page is defined by number
 						if( !( $page = $logic->getPage( $attr['nr'] ) ) ){							//  no page found by number
-							$message	= $msgs->errorInvalidId;									//  get error message
+							$message	= $messages->errorInvalidId;								//  get error message
 							$this->env->getMessenger()->noteFailure( $message, $attr['nr'] );		//  note failure in UI
 							$processor->removeNext( $shortCode );									//  remove erroneous shortcode
 							continue;																//  skip to next appearance
@@ -293,7 +311,7 @@ class Hook_Info_Page extends Hook
 						continue;																	//  skip to next appearance
 					}
 					if( !( $page = $logic->getComponentFromPath( $pagePath, FALSE ) ) ){			//  no page of type component found by full path
-						$message	= $msgs->errorInvalidPath;										//  get error message
+						$message	= $messages->errorInvalidPath;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
@@ -309,13 +327,13 @@ class Hook_Info_Page extends Hook
 						}
 					}
 					if( (int) $page->status == Model_Page::STATUS_DISABLED ){
-						$message	= $msgs->errorPageDisabled;										//  get error message
+						$message	= $messages->errorPageDisabled;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
 					if( (int) $page->type === Model_Page::TYPE_BRANCH ){
-						$message	= $msgs->errorPageIsBranch;										//  get error message
+						$message	= $messages->errorPageIsBranch;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
@@ -334,7 +352,11 @@ class Hook_Info_Page extends Hook
 		$this->payload['content']	= $processor->getContent();
 	}
 
-	public function onRenderSearchResults()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onRenderSearchResults(): void
 	{
 		$logic		= $this->env->getLogic()->get( 'page' );
 		$options	= $this->env->getConfig()->getAll( 'module.info_pages.', TRUE );

@@ -4,16 +4,24 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Workshop extends Controller
 {
-	protected $model;
+	protected Model_Workshop $model;
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$conditions	= ['status' => [1, 2] ];
 		$orders		= ['status' => 'ASC', 'rank' => 'ASC'];
 		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 
-	public function view( $id )
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $id ): void
 	{
 		$id	= (int) $id;
 		$workshop	= $this->model->get( $id );

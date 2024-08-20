@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Info_Workshop $view */
+/** @var object $workshop */
+/** @var string $pathImages */
+
 $imageAlignH	= [
 	Model_Workshop::IMAGE_ALIGN_H_AUTO		=> 'auto',
 	Model_Workshop::IMAGE_ALIGN_H_LEFT		=> 'left',

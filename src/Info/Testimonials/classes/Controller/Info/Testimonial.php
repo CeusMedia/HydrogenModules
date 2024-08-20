@@ -1,14 +1,21 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Testimonial extends Controller
 {
-	protected $request;
-	protected $messenger;
-	protected $model;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Model_Testimonial $model;
 
-	public function addComment()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addComment(): void
 	{
 		if( $this->request->get( 'save' ) ){
 			$language	= $this->env->getLanguage();
@@ -16,6 +23,7 @@ class Controller_Info_Testimonial extends Controller
 			$data['timestamp']	= time();
 			$testimonialId	= $this->model->add( $data );
 
+			/** @var Logic_Mail $logic */
 			$logic		= Logic_Mail::getInstance( $this->env );									//  get mailer logic
 			$data		= ['entry' => $this->model->get( $testimonialId )];					//  prepare mail data
 			$mail		= new Mail_Info_Testimonial_New( $this->env, $data );						//  generate mail to post author

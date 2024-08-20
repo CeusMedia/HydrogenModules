@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Info_Testimonial $view */
+/** @var array<object> $testimonials */
+
 $list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
 if( $testimonials ){
 	$list	= [];
@@ -117,9 +120,9 @@ return $textTop.'
 
 <script>
 function showComment(id){
-	var item = $("#testimonial-"+id);
-	var content = $("<div></div>");
-console.log(item.data());
+	let item = $("#testimonial-"+id);
+	let content = $("<div></div>");
+//console.log(item.data());
 	content.append($("<h4></h4>").append(item.data("heading")));
 	content.append($("<div></div>").html(item.data("content")));
 	$("#modal-comment-view .myModalLabel").html("Kundenmeinung von "+item.data("author"));

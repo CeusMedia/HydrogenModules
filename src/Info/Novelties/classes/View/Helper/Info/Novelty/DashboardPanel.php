@@ -10,17 +10,28 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 	protected array $news		= [];
 	protected int $limit		= 10;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@param		object		$item
+	 *	@return		self
+	 */
 	public function add( object $item ): self
 	{
 		$this->news[]	= $item;
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		$options	= [];
@@ -28,7 +39,9 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		if( !$this->news )
 			return '';
 		$list	= [];
-		$userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		/** @var Logic_Authentication $logicAuth */
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
+		$userId		= $logicAuth->getCurrentUserId();
 		$model		= new Model_Novelty( $this->env );
 		$iconAck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 		foreach( $this->news as $item ){
@@ -62,11 +75,11 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 			];
 			$type		= $item->typeLabel ?? $item->type;
 			$type		= HtmlTag::create( 'small', $type, ['class' => 'muted'] );
-			$list[$key]	= HtmlTag::create( 'tr', array(
+			$list[$key]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', $date, ['style' => 'text-align: right'] ),
 				HtmlTag::create( 'td', $type.'&nbsp;'.$link, ['class' => 'autocut'] ),
 				HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
-			) );
+			] );
 			krsort( $list );
 		}
 		$list	= array_slice( $list, 0, $this->limit );
