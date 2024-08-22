@@ -5,7 +5,12 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_My_Branch extends Controller
 {
-	public function activate( string $branchId ): void
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function activate( int|string $branchId ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -16,6 +21,10 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( './manage/my/branch' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$request		= $this->env->getRequest();
@@ -59,7 +68,12 @@ class Controller_Manage_My_Branch extends Controller
 		$this->view->addData( 'branch', $data );
 	}
 
-	public function addImage( $branchId ): void
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addImage( int|string $branchId ): void
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
@@ -93,12 +107,12 @@ class Controller_Manage_My_Branch extends Controller
 		$imagePath	= './images/branches/';
 		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
 			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
-		$data	= array(
+		$data	= [
 			'branchId'		=> $branchId,
 			'filename'		=> $imageName,
 			'title'			=> $request->get( 'image_title' ),
 			'uploadedAt'	=> time()
-		);
+		];
 		$model->add( $data );
 		$messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
 		$this->restart( './manage/my/branch/edit/'.$branchId );
@@ -119,9 +133,13 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}*/
 
-	public function deactivate( $branchId ): void
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function deactivate( int|string $branchId ): void
 	{
-		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );
 		$model->edit( $branchId, ['status' => -1] );
@@ -130,7 +148,12 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $branchId ): void
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $branchId ): void
 	{
 		$config			= $this->env->getConfig();
 		$request		= $this->env->getRequest();
@@ -179,30 +202,47 @@ class Controller_Manage_My_Branch extends Controller
 		$this->view->addData( 'coupons', $coupons );
 	}
 
-	protected function getCurrentUser( $redirect = 'auth/logout' )
+	/**
+	 *	@param		string		$redirect
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getCurrentUser( string $redirect = 'auth/logout' ): object
 	{
 		$modelUser	= new Model_User( $this->env );
 		$userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
 		$user		= $modelUser->get( $userId );
 		if( !$user )
-			return $this->breakOnFailure( 'userIdInvalid', $redirect );
+			$this->breakOnFailure( 'userIdInvalid', $redirect );
 		return $user;
 	}
 
-	protected function getMyCompany()
+	/**
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getMyCompany(): ?object
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Company( $this->env );
 		return $model->get( $user->companyId );
 	}
 
-	protected function getMyBranches()
+	/**
+	 *	@return		array<object>
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getMyBranches(): array
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Branch( $this->env );
 		return $model->getAllByIndex( 'companyId', $user->companyId );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$config			= $this->env->getConfig();
@@ -237,6 +277,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@todo		check ownership of branch
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeImage( $branchId, $imageId ): void
 	{
@@ -262,7 +303,7 @@ class Controller_Manage_My_Branch extends Controller
 		$this->env->getPage()->js->addUrl( "https://maps.google.com/maps/api/js?sensor=false" );
 	}
 
-	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' )
+	protected function breakOnFailure( $messageKey, $redirect = 'manage/my' ): void
 	{
 		$this->env->getLanguage()->load( 'manage/my' );
 		$words		= (object) $this->getWords( 'msg', 'manage/my' );
@@ -270,7 +311,12 @@ class Controller_Manage_My_Branch extends Controller
 		$this->restart( $redirect );
 	}
 
-	protected function isMyBranch( $branchId )
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function isMyBranch( int|string $branchId ): bool
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Branch( $this->env );
@@ -278,7 +324,12 @@ class Controller_Manage_My_Branch extends Controller
 		return (bool) $model->count( $conditions );
 	}
 
-	protected function isMyCompany( $companyId )
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function isMyCompany( int|string $companyId ): bool
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Company( $this->env );
@@ -286,7 +337,12 @@ class Controller_Manage_My_Branch extends Controller
 		return (bool) $model->count( $conditions );
 	}
 
-	protected function isMyCoupon( $couponId )
+	/**
+	 *	@param		int|string		$couponId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function isMyCoupon( int|string $couponId ): bool
 	{
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Coupon( $this->env );

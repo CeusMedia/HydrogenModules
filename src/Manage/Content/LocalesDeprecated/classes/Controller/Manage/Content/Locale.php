@@ -67,7 +67,7 @@ class Controller_Manage_Content_Locale extends Controller
 					$content	= $request->get( 'content' );
 					$editor		= new FileEditor( $pathName );
 					$editor->writeString( $content );
-					$this->env->getMessenger()->noteSuccess( $words->successFileSaved, $fileName );
+					$this->env->getMessenger()->noteSuccess( $words->successFileSaved, $filePath );
 				}
 				catch( Exception $e ){
 					$this->env->getMessenger()->noteError( $words->errorException, $e->getMessage() );

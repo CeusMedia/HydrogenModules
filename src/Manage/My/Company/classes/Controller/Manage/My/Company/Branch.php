@@ -2,11 +2,12 @@
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_My_Company_Branch extends Controller
 {
 	protected int|string $userId;
-	protected $messenger;
+	protected MessengerResource $messenger;
 	protected HttpRequest $request;
 	protected Model_Branch $modelBranch;
 	protected Model_Branch_Image $modelBranchImage;
@@ -15,8 +16,13 @@ class Controller_Manage_My_Company_Branch extends Controller
 	protected Model_User $modelUser;
 	protected array $branches;
 	protected array $companies;
-	protected $user;
+	protected object $user;
 
+	/**
+	 *	@param		int|string|NULL		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add( int|string|NULL $companyId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -25,7 +31,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 		if( $this->request->get( 'save' ) ){
 			if( empty( $data['title'] ) )
 				$this->messenger->noteError( $words->errorTitleMissing );
-			else if( $model->getAll( ['title' => $data['title']] ) )
+			else if( $this->modelBranch->getAll( ['title' => $data['title']] ) )
 				$this->messenger->noteError( $words->errorTitleExisting, $data['title'] );
 			if( empty( $data['companyId'] ) )
 				$this->messenger->noteError( $words->errorCompanyMissing );
@@ -62,6 +68,11 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->view->addData( 'companies', $this->companies );
 	}
 
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addImage( int|string $branchId ): void
 	{
 		$this->checkBranch( $branchId );
@@ -105,6 +116,11 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->restart( NULL, TRUE );
 	}*/
 
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( int|string $branchId ): void
 	{
 		$words			= (object) $this->getWords( 'msg' );
@@ -144,7 +160,10 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->view->addData( 'companies', $this->companies );
 	}
 
-
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$words		= (object) $this->getWords( 'index' );
@@ -157,6 +176,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 
 	/**
 	 *	@todo		check ownership of branch
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeImage( int|string $branchId, int|string $imageId ): void
 	{
@@ -176,6 +196,10 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
@@ -191,7 +215,12 @@ class Controller_Manage_My_Company_Branch extends Controller
 		$this->branches			= $this->getMyBranches();
 	}
 
-	protected function checkBranch( int|string $branchId )
+	/**
+	 *	@param		int|string		$branchId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkBranch( int|string $branchId ): object
 	{
 		if( !$this->modelBranch->get( $branchId ) ){
 			$words	= (object) $this->getWords( 'msg' );
@@ -205,6 +234,10 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $this->branches[$branchId];
 	}
 
+	/**
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function checkCurrentUser(): object
 	{
 		$user		= $this->modelUser->get( $this->userId );
@@ -213,6 +246,11 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $user;
 	}
 
+	/**
+	 *	@param		string		$sortByColumn
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getMyBranches( string $sortByColumn = 'branchId' ): array
 	{
 		$list		= [];
@@ -227,6 +265,11 @@ class Controller_Manage_My_Company_Branch extends Controller
 		return $list;
 	}
 
+	/**
+	 *	@param		string		$sortByColumn
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{
 		$list		= [];

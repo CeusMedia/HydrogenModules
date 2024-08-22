@@ -57,7 +57,8 @@
         "twig/twig": "3.x-dev",
         "bacon/bacon-qr-code": "^1.0",
         "php-imap/php-imap": "^4.0",
-        "dragonmantank/cron-expression": "3.x-dev"
+        "dragonmantank/cron-expression": "3.x-dev",
+        "ceus-media/php-parser": "dev-master"
     },
     "suggest": {
         "ext-rrd": "*"
