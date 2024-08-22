@@ -1,15 +1,28 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Manage_Relocation $view */
+/** @var array<object> $relocations */
+/** @var int $page */
+/** @var int $total */
+/** @var int $limit */
+/** @var int $count */
+
 $w			= (object) $words['index-list'];
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
+$pagination	= new PageControl( './manage/relocation', $page, ceil( $count / $limit ) );
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconGo		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
-$iconExport	= UI_HTML_Tag::create( 'i', '', array( 'class' => 'fa fa-fw fa-download' ) );
+$iconExport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 
 $table	= '<div class="muted"><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 
@@ -22,7 +35,6 @@ if( $relocations ){
 			$class	= "success";
 		else if( $relocation->status < 0 )
 			$class	= "error";
-		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$uri	= "./manage/relocation/edit/".$relocation->relocationId;
 		$link	= HtmlTag::create( 'a', $relocation->title, ['href' => $uri] );
 		$usedAt		= $helper->convert( $relocation->usedAt, TRUE, $w->prefixTimePhraser, $w->suffixTimePhraser );
@@ -61,10 +73,10 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', [
 	'class'	=> 'btn btn-success'
 ] );
 
-$buttonExport	= UI_HTML_Tag::create( 'a', $iconExport.'&nbsp;exportieren', array(
+$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;exportieren', [
 	'href'	=> './manage/relocation/export',
 	'class'	=> 'btn not-btn-info'
-) );
+] );
 
 $abbrCount	= HtmlTag::create( 'abbr', $count, ['title' => $w->titleCount] );
 $abbrTotal	= HtmlTag::create( 'abbr', $total, ['title' => $w->titleTotal] );

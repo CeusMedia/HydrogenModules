@@ -15,6 +15,10 @@ class Controller_Manage_Relocation extends Controller
 	protected string $filterSessionPrefix		= 'filter-manage-relocation-';
 	protected ?string $shortcut					= NULL;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -28,12 +32,12 @@ class Controller_Manage_Relocation extends Controller
 				$this->messenger->noteError( $words->errorUrlAlreadyExists, $url );
 			}
 			else{
-				$relocationId	= $this->model->add( array(
+				$relocationId	= $this->model->add( [
 					'status'	=> $this->request->get( 'status' ),
 					'title'		=> $title,
 					'url'		=> $url,
 					'createdAt'	=> time(),
-					) );
+				] );
 				$this->messenger->noteSuccess( $words->successAdded, $title );
 				$this->restart( 'edit/'.$relocationId, TRUE );
 			}
@@ -44,6 +48,11 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'relocation', $data );
 	}
 
+	/**
+	 *	@param		string		$relocationId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $relocationId ): void
 	{
 		$relocation	= $this->checkRelocation( $relocationId );
@@ -59,11 +68,11 @@ class Controller_Manage_Relocation extends Controller
 				$this->messenger->noteError( $words->errorUrlAlreadyExists, $url );
 			}
 			else{
-				$this->model->edit( $relocationId, array(
+				$this->model->edit( $relocationId, [
 					'status'	=> $this->request->get( 'status' ),
 					'title'		=> $title,
 					'url'		=> $url,
-				) );
+				] );
 				$this->messenger->noteSuccess( $words->successEdited, $title );
 				$this->restart( NULL, TRUE );
 			}
@@ -78,8 +87,11 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'shortcut', $this->shortcut );
 	}
 
-
-	public function export( $page = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 */
+	public function export( int $page = 0 ): void
 	{
 		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
@@ -97,16 +109,23 @@ class Controller_Manage_Relocation extends Controller
 		}
 
 		$orders			= [];
-		$allowedColumns	= array( 'relocationId', 'title', 'views', 'usedAt' );
+		$allowedColumns	= ['relocationId', 'title', 'views', 'usedAt'];
 		if( !in_array( $filterOrderCol, $allowedColumns ) )
 			$filterOrderCol	= 'relocationId';
-		if( !in_array( $filterOrderDir, array( 'asc', 'desc' ) ) )
+		if( !in_array( $filterOrderDir, ['asc', 'desc'] ) )
 			$filterOrderDir	= 'asc';
 		$orders[$filterOrderCol]	= $filterOrderDir;
 
 		$data	= $this->model->getAll( $conditions, $orders );
 		$states	= $this->getWords( 'states' );
-		$keys	= ['relocationId' => 'ID', 'status' => 'Zustand', 'views' => 'Klicks', 'usedAt' => 'zuletzt', 'title' => 'Titel', 'url' => 'Zieladresse'];
+		$keys	= [
+			'relocationId'	=> 'ID',
+			'status'		=> 'Zustand',
+			'views'			=> 'Klicks',
+			'usedAt'		=> 'zuletzt',
+			'title'			=> 'Titel',
+			'url'			=> 'Zieladresse'
+		];
 		$lines  = [join( ';', $keys )];
 		$helper	= new View_Helper_TimePhraser( $this->env );
 		foreach( $data as $line ){
@@ -126,7 +145,7 @@ class Controller_Manage_Relocation extends Controller
 				}
 				$row[]	= '"'.addslashes( $value ).'"';
 			}
-			$lines[]    = join( ';', $row );
+			$lines[]	= join( ';', $row );
 		}
 		$csv	= join( "\r\n", $lines );
 
@@ -136,7 +155,10 @@ class Controller_Manage_Relocation extends Controller
 		$this->redirect( NULL, TRUE );
 	}
 
-
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
 	public function filter( $reset = NULL ): void
 	{
 		$filterKeys	= ['id', 'status', 'title', 'orderColumn', 'orderDirection'];
@@ -149,7 +171,11 @@ class Controller_Manage_Relocation extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$conditions		= [];
 		$filterId		= $this->session->get( $this->filterSessionPrefix.'id' );
@@ -189,13 +215,24 @@ class Controller_Manage_Relocation extends Controller
 		$this->addData( 'filterOrderDirection', $filterOrderDir );
 	}
 
+	/**
+	 *	@param		string		$relocationId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setStatus( string $relocationId, $status ): void
 	{
 		$relocation	= $this->checkRelocation( $relocationId );
-		$this->model->edit( $relocationId, array( 'status' => (int) $status ) );
+		$this->model->edit( $relocationId, ['status' => (int) $status] );
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$relocationId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $relocationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -205,6 +242,9 @@ class Controller_Manage_Relocation extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Relocation( $this->env );
@@ -219,6 +259,11 @@ class Controller_Manage_Relocation extends Controller
 			$this->shortcut		= preg_replace( "/^[^a-z]+([a-z]+)[^a-z]+$/", "\\1", $moduleConfig['shortcut.source'] );
 	}
 
+	/**
+	 *	@param		string		$relocationId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function checkRelocation( string $relocationId ): object
 	{
 		$words		= (object) $this->getWords( 'msg' );
