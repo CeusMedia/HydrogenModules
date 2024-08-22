@@ -135,7 +135,7 @@ class Logic_Mail extends Logic
 	 *	@param		integer		$compression	Compression to apply
 	 *	@return		string
 	 */
-	public function compressString( string $string, int $compression ): string
+	public function compressString( string $string, int $compression = Model_Mail::COMPRESSION_NONE ): string
 	{
 		switch( $compression ){
 			case Model_Mail::COMPRESSION_BZIP:
@@ -342,7 +342,8 @@ class Logic_Mail extends Logic
 	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
 	 *	@access		public
 	 *	@param		int|string		$mailId		ID of mail to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
+	 *	@return		integer			ID of used library using Logic_Mail::LIBRARY_*
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function detectMailLibraryFromMailId( int|string $mailId ): int
 	{
@@ -420,7 +421,7 @@ class Logic_Mail extends Logic
 				$frontend				= $this->env->getLogic()->get( 'Frontend' );
 				$defaultFromFrontend	= $frontend->getModuleConfigValue( 'Resource_Mail', 'template' );
 			}
-			catch( Exception $e ){}
+			catch( Exception ){}
 		}
 
 		//  collect template defaults and overrides
@@ -511,11 +512,11 @@ class Logic_Mail extends Logic
 		else if( $this->libraries & self::LIBRARY_COMMON )
 			$senderAddress	= $mail->mail->getSender()->address;
 
-		$incompleteMailDataObject	= (object) array(
+		$incompleteMailDataObject	= (object) [
 			'compression'	=> $this->getRecommendedCompression(),
 			'object'		=> (object) ['instance' => $mail],
 			'raw'			=> NULL,
-		);
+		];
 
 		$this->compressMailObject( $incompleteMailDataObject, TRUE );
 
@@ -598,10 +599,10 @@ class Logic_Mail extends Logic
 		}
 		$regexExt		= "/\.php5?$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new RecursiveRegexFileIndex( $pathClasses, "/\.php5?$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new RecursiveRegexFileIndex( $pathClasses, $regexExt, $regexClass );		//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
-			$content	= FileReader::load( $file->getPathname() );								//  get content of class file
-			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
+			$content	= FileReader::load( $file->getPathname() );									//  get content of class file
+			preg_match_all( $regexClass, $content, $matches );									//  apply regular expression of mail class to content
 			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
 				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key
 				$list[$path]	= $matches[1][0];													//  enqueue mail class name by list key
@@ -618,15 +619,15 @@ class Logic_Mail extends Logic
 	 *	@return		array					Map of headers
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getMailHeaders( Mail_Abstract|string $mail ): array
 	{
-		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );
 		if( !is_object( $mail->object ) )
 			$this->decompressMailObject( $mail );
 		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
-			throw new Exception( 'Mail object is not extending Mail_Abstract' );
+			throw new RuntimeException( 'Mail object is not extending Mail_Abstract' );
 		$list		= [];
 		foreach( $mail->object->instance->mail->getHeaders()->getFields() as $headerField )
 			$list[$headerField->getName()]	= $headerField->getValue();
@@ -659,6 +660,7 @@ class Logic_Mail extends Logic
 	 *	@param		int|string		$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getQueuedMail( int|string $mailId ): object
 	{
@@ -831,10 +833,10 @@ class Logic_Mail extends Logic
 			return FALSE;
 		if( !in_array( $status, Model_Mail::$transitions[$mail->status] ) )
 			throw new DomainException( 'Transition from status '.$statusMap[$mail->status].' to '.$statusMap[$status]. ' is not allowed' );
-		return (bool) $this->modelQueue->edit( $mail->mailId, array(
+		return (bool) $this->modelQueue->edit( $mail->mailId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
 	/**
@@ -891,6 +893,11 @@ class Logic_Mail extends Logic
 		}
 	}
 
+	/**
+	 *	@param		object|int|string		$mailObjectOrId
+	 *	@return		object
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	protected function getMailFromObjectOrId( object|int|string $mailObjectOrId ): object
 	{
 		if( is_object( $mailObjectOrId ) )

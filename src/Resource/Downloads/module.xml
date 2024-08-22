@@ -54,6 +54,9 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
   KEY `title` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
+    <sql on="install" type="mysql" version="1.0"><![CDATA[
+ALTER TABLE `<%?prefix%>download_folders` CHANGE COLUMN `type` `type` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0;
+]]></sql>
     <sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
 DROP TABLE IF EXISTS `<%?prefix%>download_files`;

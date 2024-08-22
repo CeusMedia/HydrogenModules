@@ -11,6 +11,21 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 if( !in_array( 'addFolder', $rights ) )
 	return '';
 
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$inputFolder	= HtmlTag::create( 'input', NULL, [
+	'type'		=> 'text',
+	'name'		=> 'folder',
+	'id'		=> 'input_folder',
+	'required'	=> 'required',
+	'value'		=> htmlentities( $env->getRequest()->get( 'input_folder', '' ), HTML_ENTITIES, 'UTF-8' ),
+] );
+
+$buttonSave		= HtmlTag::create( 'button', $iconAdd.' '.$words['addFolder']['buttonSave'], [
+	'type'		=> 'submit',
+	'name'		=> 'save',
+	'class'		=> 'btn btn-small btn-success'
+] );
+
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h4', $words['addFolder']['heading'] ),
 	HtmlTag::create( 'div', [
@@ -18,23 +33,11 @@ return HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', $words['addFolder']['labelFolder'], ['for' => 'input_folder'] ),
-					HtmlTag::create( 'input', NULL, [
-						'type'		=> 'text',
-						'name'		=> 'folder',
-						'id'		=> 'input_folder',
-						'required'	=> 'required',
-						'value'		=> htmlentities( $env->getRequest()->get( 'input_folder', '' ), HTML_ENTITIES, 'UTF-8' ),
-					] ),
+					$inputFolder,
 				], ['class' => 'span12'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', [
-					HtmlTag::create( 'i', NULL, ['class' => 'icon-plus icon-white'] ).' '.$words['addFolder']['buttonSave'],
-				], [
-					'type'		=> 'submit',
-					'name'		=> 'save',
-					'class'		=> 'btn btn-small btn-success'
-				] ),
+				$buttonSave,
 			], ['class' => 'buttonbar'] ),
 		], [
 			'action'	=> './info/file/addFolder/'.$folderId,

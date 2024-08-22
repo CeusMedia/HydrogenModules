@@ -16,8 +16,24 @@ $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 unset( $folders[$folder->downloadFolderId] );
-$folders	= array_merge( [0	=> ''], $folders );
+$folders	= array_merge( [0 => ''], $folders );
 $optFolder	= HtmlElements::Options( $folders, $folder->parentId );
+
+$inputTitle		= HtmlTag::create( 'input', NULL, [
+	'type'		=> 'text',
+	'name'		=> 'title',
+	'id'		=> 'input_title',
+	'class'		=> 'span12',
+	'value'		=> htmlentities( $folder->title, ENT_QUOTES, 'UTF-8' ),
+	'required'	=> 'required',
+] );
+$selectFolder	= HtmlTag::create( 'select', $optFolder, [
+	'type'		=> 'text',
+	'name'		=> 'parentId',
+	'id'		=> 'input_parentId',
+	'class'		=> 'span12',
+	//		'required'	=> 'required',
+] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
 	'href'		=> './info/file/index/'.$folder->parentId,
@@ -42,24 +58,11 @@ $panelEdit	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Ordnername', ['for' => 'input_title'] ),
-					HtmlTag::create( 'input', NULL, [
-						'type'		=> 'text',
-						'name'		=> 'title',
-						'id'		=> 'input_title',
-						'class'		=> 'span12',
-						'value'		=> htmlentities( $folder->title, ENT_QUOTES, 'UTF-8' ),
-						'required'	=> 'required',
-					] ),
+					$inputTitle,
 				], ['class' => 'span6'] ),
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_parentId'] ),
-					HtmlTag::create( 'select', $optFolder, [
-						'type'		=> 'text',
-						'name'		=> 'parentId',
-						'id'		=> 'input_parentId',
-						'class'		=> 'span12',
-				 //		'required'	=> 'required',
-					] ),
+					$selectFolder,
 				], ['class' => 'span6'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', [

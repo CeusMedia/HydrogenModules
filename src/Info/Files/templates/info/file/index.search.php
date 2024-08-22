@@ -10,24 +10,26 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $env->getPage()->js->addScriptOnReady( 'jQuery("#input_search").focus();' );
 
+$iconSearch		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
+$inputSearch	= HtmlTag::create( 'input', NULL, [
+	'type'	=> 'search',
+	'name'	=> 'search',
+	'id'	=> 'input_search',
+	'value'	=> htmlentities( $search ?? '', ENT_QUOTES, 'UTF-8' ),
+] );
+$buttonSearch	= HtmlTag::create( 'button', $iconSearch.' '.$words['search']['buttonSave'], [
+	'type'		=> 'submit',
+	'name'		=> 'doSearch',
+	'class'		=> 'btn btn-small',
+] );
+
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h4', $words['search']['heading'] ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'label', $words['search']['labelQuery'], ['for' => 'input_search'] ),
-			HtmlTag::create( 'input', NULL, [
-				'type'	=> 'search',
-				'name'	=> 'search',
-				'id'	=> 'input_search',
-				'value'	=> htmlentities( $search ?? '', ENT_QUOTES, 'UTF-8' ),
-			] ),
-			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', '<i class="fa fa-fw fa-search"></i> '.$words['search']['buttonSave'], [
-					'type'		=> 'submit',
-					'name'		=> 'doSearch',
-					'class'		=> 'btn btn-small',
-				] ),
-			], ['class' => 'buttonbar'] ),
+			$inputSearch,
+			HtmlTag::create( 'div', $buttonSearch, ['class' => 'buttonbar'] ),
 		], [
 			'action'	=> './info/file'.( $folderId ? '/'.$folderId : '' ),
 			'method'	=> 'get',

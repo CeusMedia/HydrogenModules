@@ -24,6 +24,12 @@ $helper->setRequired( TRUE );
 
 $maxSize	= UnitFormater::formatBytes( Logic_Upload::getMaxUploadSize() );
 
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
+	'type'		=> 'submit',
+	'name'		=> 'save',
+	'class'		=> 'btn btn-small btn-success'
+] );
+
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h4', $w->heading ),
 	HtmlTag::create( 'div',  [
@@ -38,13 +44,7 @@ return HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
 			], ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
-					'type'		=> 'submit',
-					'name'		=> 'save',
-					'class'		=> 'btn btn-small btn-success'
-				] )
-			], ['class' => 'buttonbar'] )
+			HtmlTag::create( 'div', $buttonSave, ['class' => 'buttonbar'] )
 		], [
 			'action'	=> './info/file/upload/'.$folderId,
 			'method'	=> 'post',
