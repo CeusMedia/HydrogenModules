@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data Model of ....
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Event extends Model
+class Model_Queue_Event extends Model
 {
 	public const STATUS_NEW				= 0;
 	public const STATUS_REVOKED			= 1;
@@ -75,7 +75,7 @@ class Model_Event extends Model
 	];
 
 	/** @var	string		$name */
-	protected string $name			= 'events';
+	protected string $name			= 'queue_events';
 
 	/** @var	string		$primaryKey */
 	protected string $primaryKey	= 'eventId';

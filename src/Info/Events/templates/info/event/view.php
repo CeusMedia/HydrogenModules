@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $event */
+/** @var ?string $from */
+
 $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 
 $facts	= [];
@@ -40,7 +43,7 @@ return	'
 </div>
 <script>
 jQuery(document).ready(function(){
-	var map = Module_UI_Map.loadMap("map-address-'.$event->eventId.'");
+	let map = Module_UI_Map.loadMap("map-address-'.$event->eventId.'");
 	Module_UI_Map.addMarker(map, '.$event->address->latitude.', '.$event->address->longitude.');
 });
 </script>

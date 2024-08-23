@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var array<object> $events */
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -38,7 +39,7 @@ if( $center ){
 	$list		= HtmlTag::create( 'ul', $list, ['class' => 'list-branches nav nav-pills nav-stacked'] );
 */
 	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
-	if( $events ){
+	if( [] !== $events ){
 		$list	= [];
 		foreach( $events as $nr => $event ){
 			$link	= HtmlTag::create( 'a', $iconMarker.'&nbsp;'.$event->title, array(

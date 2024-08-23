@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_EventQueue extends Logic
 {
-	protected Model_Event $model;
+	protected Model_Queue_Event $model;
 	protected string $scope			= '';
 	protected string $origin		= '';
 	protected string $userId		= '0';
@@ -23,13 +23,14 @@ class Logic_EventQueue extends Logic
 	 *	@param		string			$identifier		Identifier of event
 	 *	@param		mixed			$data			Data for event handling
 	 *	@param		string|NULL		$origin			...
-	 *	@return		int|string			ID of new event
+	 *	@return		int|string		ID of new event
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function add( string $identifier, $data, ?string $origin = NULL ): int|string
+	public function add( string $identifier, mixed $data, ?string $origin = NULL ): int|string
 	{
 		return $this->model->add( [
 			'userId'		=> $this->userId,
-			'status'		=> Model_Event::STATUS_NEW,
+			'status'		=> Model_Queue_Event::STATUS_NEW,
 			'scope'			=> $this->scope,
 			'identifier'	=> $identifier,
 			'origin'		=> $origin,
@@ -58,6 +59,7 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to return
 	 *	@return		object|NULL	Data object of event
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $eventId ): object|NULL
 	{
@@ -84,10 +86,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as new
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsNew( int|string $eventId, $result = NULL ): self
+	public function markAsNew( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_NEW, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_NEW, $result );
 	}
 
 	/**
@@ -96,10 +99,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as ignored
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsIgnored( int|string $eventId, $result = NULL ): self
+	public function markAsIgnored( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_IGNORED, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_IGNORED, $result );
 	}
 
 	/**
@@ -108,10 +112,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as revoked
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsRevoked( int|string $eventId, $result = NULL ): self
+	public function markAsRevoked( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_REVOKED, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_REVOKED, $result );
 	}
 
 	/**
@@ -120,10 +125,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as running
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsInRunning( int|string $eventId, $result = NULL ): self
+	public function markAsInRunning( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_RUNNING, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_RUNNING, $result );
 	}
 
 	/**
@@ -132,10 +138,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as failed
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsFailed( int|string	 $eventId, $result = NULL ): self
+	public function markAsFailed( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_FAILED, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_FAILED, $result );
 	}
 
 	/**
@@ -144,10 +151,11 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as succeeded
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsSucceeded( int|string $eventId, $result = NULL ): self
+	public function markAsSucceeded( int|string $eventId, mixed $result = NULL ): self
 	{
-		return $this->setStatus( $eventId, Model_Event::STATUS_SUCCEEDED, $result );
+		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_SUCCEEDED, $result );
 	}
 
 	/**
@@ -164,19 +172,29 @@ class Logic_EventQueue extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
-		$this->model	= new Model_Event( $this->env );
+		$this->model	= new Model_Queue_Event( $this->env );
 	}
 
-	protected function setStatus( int|string $eventId, $status, $result = NULL ): self
+	/**
+	 *	@param		int|string		$eventId
+	 *	@param		int				$status
+	 *	@param		mixed			$result
+	 *	@return		self
+	 *	@throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function setStatus( int|string $eventId, int $status, mixed $result = NULL ): self
 	{
 		$event		= $this->get( $eventId );
 		if( NULL === $event )
 			throw new DomainException( 'Invalid event ID' );
 
-		$possibleStatuses	= Model_Event::STATUSES_TRANSITIONS[$event->status];
-		if( !in_array( (int) $status, $possibleStatuses, TRUE ) )
+		$possibleStatuses	= Model_Queue_Event::STATUSES_TRANSITIONS[$event->status];
+		if( !in_array( $status, $possibleStatuses, TRUE ) )
 			throw new RangeException( 'Invalid status transition' );
 		$data	= [
 			'status'		=> $status,
