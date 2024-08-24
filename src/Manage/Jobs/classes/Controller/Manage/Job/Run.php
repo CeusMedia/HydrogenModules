@@ -24,7 +24,7 @@ class Controller_Manage_Job_Run extends Controller
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED ){
-			$msg	= 'Der Job konnte nicht mehr verhindert werden.';
+			$msg	= 'Der Job "%s" konnte nicht mehr verhindert werden.';
 			$title	= $jobRun->title;
 			if( !$title )
 				$title	= $this->modelDefinition->get( $jobRun->jobDefinitionId, 'identifier' );

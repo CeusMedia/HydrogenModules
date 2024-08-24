@@ -4,9 +4,14 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Gallery extends Controller
 {
-	protected $path;
+	protected string $path;
 
-	public function add( $folder = NULL )
+	/**
+	 *	@param		string|NULL		$folder
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add( ?string $folder = NULL ): void
 	{
 		$this->addData( 'folder', $folder );
 		$request	= $this->env->getRequest();
@@ -22,18 +27,30 @@ class Controller_Manage_Gallery extends Controller
 			);
 			$galleryId	= $model->add( $data, FALSE );
 			$this->env->getMessenger()->noteSuccess( 'Gallery "'.$title.'" imported.' );
+			$this->restart( 'edit/'.$galleryId, TRUE );
 		}
 	}
 
-	public function index( $galleryId = NULL )
+	/**
+	 *	@param		int|string|NULL		$galleryId
+	 *	@return		void
+	 */
+	public function index( int|string|NULL $galleryId = NULL )
 	{
 	}
 
-	public function edit( $galleryId )
+	/**
+	 *	@param		int|string		$galleryId
+	 *	@return		void
+	 */
+	public function edit( int|string $galleryId )
 	{
 
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$config		= $this->env->getConfig();

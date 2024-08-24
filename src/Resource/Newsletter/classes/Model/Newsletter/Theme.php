@@ -112,6 +112,11 @@ class Model_Newsletter_Theme
 		return $this->getFromFolder( $theme );
 	}
 
+	/**
+	 * @return array
+	 * @throws UnexpectedValueException if the path cannot be opened.
+	 * @throws RuntimeException if the path is an empty string.
+	 */
 	public function getAll(): array
 	{
 		$themes	= [];
@@ -138,10 +143,14 @@ class Model_Newsletter_Theme
 		throw new RangeException( 'Theme meta file "'.$theme.'" is not existing' );
 	}
 
-	public function getFromId( $id )
+	/**
+	 *	@param		int|string		$id
+	 *	@return		object|NULL
+	 */
+	public function getFromId( int|string $id ): ?object
 	{
 		$themes	= $this->getAll();
-		return $themes[$id];
+		return $themes[$id] ?? NULL;
 	}
 
 	//  --  PROTECTED  --  //
@@ -168,21 +177,21 @@ class Model_Newsletter_Theme
 					$author->setAttribute( $attributeName, $attributeDefault );
 		}
 		if( !$xml->copyright )
-			$xml->addChild( 'copyright', NULL );
+			$xml->addChild( 'copyright' );
 		foreach( $this->attributesCopyright as $attributeName => $attributeDefault )
 			if( !$xml->copyright->hasAttribute( $attributeName ) )
 				$xml->copyright->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->description )
-			$xml->addChild( 'description', NULL );
+			$xml->addChild( 'description' );
 		foreach( $this->attributesDescription as $attributeName => $attributeDefault )
 			if( !$xml->description->hasAttribute( $attributeName ) )
 				$xml->description->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->createdAt )
-			$xml->addChild( 'created', NULL );
+			$xml->addChild( 'created' );
 		if( !$xml->modifiedAt )
-			$xml->addChild( 'modified', NULL );
+			$xml->addChild( 'modified' );
 		foreach( $this->attributesTimestamp as $attributeName => $attributeDefault )
 			if( !$xml->created->hasAttribute( $attributeName ) )
 				$xml->created->setAttribute( $attributeName, $attributeDefault );
@@ -191,7 +200,7 @@ class Model_Newsletter_Theme
 				$xml->modified->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->license )
-			$xml->addChild( 'license', NULL );
+			$xml->addChild( 'license' );
 		foreach( $this->attributesLicense as $attributeName => $attributeDefault )
 			if( !$xml->license->hasAttribute( $attributeName ) )
 				$xml->license->setAttribute( $attributeName, $attributeDefault );

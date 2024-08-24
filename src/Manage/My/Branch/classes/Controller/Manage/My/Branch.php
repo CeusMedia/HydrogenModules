@@ -193,13 +193,6 @@ class Controller_Manage_My_Branch extends Controller
 			$branch->company	= $modelCompany->get( $branch->companyId );
 		}
 		$this->view->addData( 'branch', $branch	);
-
-		$coupons	= [];
-		if( $this->env->getModules()->has( 'Model_Coupon' ) ){
-			$modelCoupon	= new Model_Coupon( $this->env );
-			$coupons		= $modelCoupon->getAllByIndex( 'branchId', $branchId );
-		}
-		$this->view->addData( 'coupons', $coupons );
 	}
 
 	/**
@@ -334,19 +327,6 @@ class Controller_Manage_My_Branch extends Controller
 		$user		= $this->getCurrentUser();
 		$model		= new Model_Company( $this->env );
 		$conditions	= ['companyId' => $user->companyId, 'companyId' => $companyId];
-		return (bool) $model->count( $conditions );
-	}
-
-	/**
-	 *	@param		int|string		$couponId
-	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	protected function isMyCoupon( int|string $couponId ): bool
-	{
-		$user		= $this->getCurrentUser();
-		$model		= new Model_Coupon( $this->env );
-		$conditions	= ['companyId' => $user->companyId, 'couponId' => $couponId];
 		return (bool) $model->count( $conditions );
 	}
 }

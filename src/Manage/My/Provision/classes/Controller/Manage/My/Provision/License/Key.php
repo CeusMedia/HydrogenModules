@@ -13,7 +13,13 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 	protected Logic_Authentication $logicAuth;
 	protected Logic_User_Provision $logicProvision;
 	protected string $filterPrefix		= 'filter_manage_my_provision_license_key_';
+	protected int|string|NULL $userId	= NULL;
+	protected array $products;
 
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
 	public function filter( $reset = NULL ): void
 	{
 		$filters	= ['productId'];
@@ -26,6 +32,10 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$productId			= $this->session->get( $this->filterPrefix.'productId' );
@@ -34,6 +44,11 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 		$this->addData( 'userLicenseKeys', $userLicenseKeys );
 	}
 
+	/**
+	 *	@param		string		$userLicenseKeyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $userLicenseKeyId ): void
 	{
 		$userLicenseKey		= $this->logicProvision->getUserLicenseKey( $userLicenseKeyId );
@@ -45,6 +60,10 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 		$this->addData( 'userLicense', $userLicense );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

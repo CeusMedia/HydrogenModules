@@ -4,8 +4,8 @@ includes:
 	
 parameters:
 	phpVersion: 80100
-	level: 0
-#	level: 1
+#	level: 0
+	level: 1
 #	level: max
 	paths:
 		- ../../src/Admin

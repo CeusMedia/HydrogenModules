@@ -2,6 +2,10 @@
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var string $folder */
 
 $buttonCancel	= HtmlElements::LinkButton( './gallery/'.$folder, 'zurück', 'button cancel' );
 $buttonAdd	= HtmlElements::Button( 'add', 'hinzufügen', 'button add' );

@@ -1,4 +1,9 @@
 <?php
+
+/** @var View_Manage_My_Branch $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $branch */
+
 $w		= (object) $words['add'];
 
 $text	= $view->populateTexts( ['top', 'info', 'bottom'], 'html/manage/my/branch.add.' );

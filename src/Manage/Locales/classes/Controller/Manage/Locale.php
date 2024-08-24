@@ -145,7 +145,7 @@ class Controller_Manage_Locale extends Controller
 							$this->restart( './manage/locale/edit/'.$fileHash );
 						}
 						catch( Exception $e ){
-							$messenger->noteFailure( $words->msgRenameError, $name, $path, $e->getMessage() );
+							$messenger->noteFailure( $words->msgRenameError, $filePath, $e->getMessage() );
 						}
 					}
 				}

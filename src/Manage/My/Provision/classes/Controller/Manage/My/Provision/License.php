@@ -1,21 +1,32 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_My_Provision_License extends Controller
 {
-	protected string $filterPrefix		= 'filter_manage_my_license_';
-	protected $request;
-	protected $session;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected PartitionSession $session;
+	protected MessengerResource $messenger;
 	protected Logic_User_Provision $logicProvision;
 	protected Logic_Authentication $logicAuth;
 	protected Logic_Member $logicMember;
 	protected Logic_Mail $logicMail;
-	protected ?string $userId		= NULL;
-	protected array $products		= [];
+	protected string $filterPrefix		= 'filter_manage_my_license_';
+	protected ?string $userId			= NULL;
+	protected array $products			= [];
 
-	public function add( $productId = NULL, $productLicenseId = NULL, $stage = 0 ){
+	/**
+	 *	@param		int|string|NULL		$productId
+	 *	@param		int|string|NULL		$productLicenseId
+	 *	@param		int					$stage
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add( int|string|NULL $productId = NULL, int|string|NULL $productLicenseId = NULL, int $stage = 0 ): void
+	{
 		$words	= (object) $this->getWords( 'msg' );
 
 		if( count( $this->products ) === 1 )
@@ -80,7 +91,12 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->addData( 'productLicenseId', $productLicenseId );
 	}
 
-	public function ajaxGetUsers(){
+	/**
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function ajaxGetUsers(): never
+	{
 		$query		= $this->request->get( 'query' );
 		$list		= [];
 		if( $query ){
@@ -92,32 +108,38 @@ class Controller_Manage_My_Provision_License extends Controller
 				$helper->setMode( "large" );
 				$helper->setUser( $userId );
 				$user	= $this->logicProvision->getUser( $userId );
-				$list[]	= (object) array(
+				$list[]	= (object) [
 					'user'	=> $user,
 					'html'	=> $helper->render(),
 					'image'	=> $helper->renderImage(),
-				);
+				];
 			}
 		}
-		$data	= array(
+		$data	= [
 			'status'	=> 'success',
-			'data'		=> array(
+			'data'		=> [
 				'query'		=> $query,
 				'count'		=> count( $list ),
 				'list'		=> $list
-			)
-		);
+			]
+		];
 		print json_encode( $data );
 		exit;
 	}
 
-	public function deactivate( $userLicenseId ){
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function deactivate( int|string $userLicenseId ): void
+	{
 		$userLicense	= $this->logicProvision->getUserLicense( $userLicenseId );
 		if( !$userLicense )
 			$this->messenger->noteError( 'Diese Lizenz existiert nicht.' );
 		else if( $userLicense->userId != $this->userId )
 			$this->messenger->noteError( 'Diese Lizenz wurde nicht von Ihnen bestellt.' );
-		else if( $userLicense->status != Model_User_License::STATUS_ACTIVE )
+		else if( Model_Provision_User_License::STATUS_ACTIVE != $userLicense->status )
 			$this->messenger->noteError( 'Diese Lizenz kann nicht abgebrochen werden, da sie derzeit nicht aktiv ist.' );
 		else {
 			$this->logicProvision->removeDesertedUserLicense( $userLicenseId );
@@ -126,7 +148,14 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function assign( $userLicenseKeyId ){
+	/**
+	 *	@param		int|string		$userLicenseKeyId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function assign( int|string $userLicenseKeyId ): void
+	{
 		$userLicenseKey		= $this->logicProvision->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense		= $this->logicProvision->getUserLicense( $userLicenseKey->userLicenseId );
 		$product			= $this->logicProvision->getProduct( $userLicense->productId );
@@ -155,7 +184,7 @@ class Controller_Manage_My_Provision_License extends Controller
 
 				$receiver	= $this->logicProvision->getUser( $userId );
 				$owner		= $this->logicProvision->getUser( $userLicense->userId );
-				$mail		= new Mail_License_Key_Assigned( $this->env, [
+				$mail		= new Mail_Provision_Customer_Key_Assigned( $this->env, [
 					'userLicense'		=> $userLicense,
 					'userLicenseKey'	=> $userLicenseKey,
 					'keyOwner'			=> $receiver,
@@ -172,7 +201,13 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->addData( 'product', $product );
 	}
 
-	public function cancel( $userLicenseId ){
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function cancel( int|string $userLicenseId ): void
+	{
 		$userLicense	= $this->logicProvision->getUserLicense( $userLicenseId );
 		if( !$userLicense )
 			$this->messenger->noteError( 'Diese Lizenz existiert nicht.' );
@@ -187,7 +222,8 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL ): void
+	{
 		$filters	= ['productId'];
 		if( $reset ){
 			foreach( $filters as $filter )
@@ -198,7 +234,8 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	public function index(): void
+	{
 		$productId		= $this->session->get( $this->filterPrefix.'productId' );
 		$userLicenses	= $this->logicProvision->getUserLicensesFromUser( $this->userId, $productId );
 //		$userLicenseKeys	= $this->logicProvision->getUserLicenseKeysFromUser( $this->userId );
@@ -228,8 +265,9 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->logicProvision->setUserLicenseStatus( $userLicenseId, 1 );
 	}
 */
-	public function view( $userLicenseId ){
-//		$userLicenseKey		= $this->logiclogicProvisionAccounting->getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId );
+	public function view( int|string $userLicenseId ): void
+	{
+//		$userLicenseKey		= $this->logicProvisionAccounting->getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId );
 		$userLicense		= $this->logicProvision->getUserLicense( $userLicenseId );
 		$userLicense->keys	= $this->logicProvision->getUserLicenseKeys( $userLicenseId );
 		foreach( $userLicense->keys as $key )
@@ -252,9 +290,12 @@ class Controller_Manage_My_Provision_License extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProvision	= Logic_User_Provision::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->logicMember		= Logic_Member::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 
 		if( !$this->logicAuth->isAuthenticated() )

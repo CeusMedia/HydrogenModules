@@ -1,20 +1,17 @@
 <?php
 
-//use CeusMedia\Common\ADT\Collection\Dictionary;
-//use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\Common\UI\Image\Exif as ImageExif;
 use CeusMedia\Common\UI\Image\Rotator as ImageRotator;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
-use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Gallery extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 /*
-	public function feed()
+	public function feed(): void
 	{
 		$words		= $this->getWords( 'feed' );
 		$galleries	= $this->getData( 'galleries' );
@@ -95,7 +92,12 @@ class View_Manage_Gallery extends View
 		exit;
 	}
 */
-	public function index()
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index(): void
 	{
 		$config	= $this->env->getConfig()->getAll( 'module.gallery_compact.' );
 		extract( $this->getData() );
@@ -168,8 +170,9 @@ class View_Manage_Gallery extends View
 	 *	Display EXIF Data of Image.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public function info()
+	public function info(): void
 	{
 		$keys	= ['info.top', 'info.bottom', 'info.info'];
 		$path	= 'html/gallery/';
