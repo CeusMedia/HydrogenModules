@@ -8,6 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var object $words */
 /** @var array $templates */
+/** @var ?Logic_Limiter $limiter */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconInstall	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus-circle'] ).'&nbsp;';

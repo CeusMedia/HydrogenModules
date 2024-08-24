@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $tabbedLinks */
 /** @var object $newsletter */
 /** @var string $newsletterId */
+/** @var View_Work_Newsletter $view */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 

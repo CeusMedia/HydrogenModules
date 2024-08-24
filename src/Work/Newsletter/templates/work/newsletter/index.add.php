@@ -10,6 +10,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var object $words */
 /** @var object $newsletter */
+/** @var array<object> $addTemplates */
+/** @var array<object> $addNewsletters */
 
 $w	= (object) $words->add;
 
@@ -71,8 +73,8 @@ $formAdd	= '
 <script>
 jQuery(document).ready(function(){
 	jQuery("#modal-add #input_title").on("change keyup", function(){
-		var subject = jQuery("#modal-add #input_subject");
-		var title = jQuery("#modal-add #input_title");
+		let subject = jQuery("#modal-add #input_subject");
+		let title = jQuery("#modal-add #input_title");
 		subject.val(title.val());
 	});
 });

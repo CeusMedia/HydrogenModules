@@ -7,6 +7,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var array<object> $groups */
+/** @var int $totalGroups */
+/** @var ?Logic_Limiter $limiter */
 
 $w		= (object) $words['index'];
 

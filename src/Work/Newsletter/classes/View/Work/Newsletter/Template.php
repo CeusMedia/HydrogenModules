@@ -1,14 +1,14 @@
 <?php
 class View_Work_Newsletter_Template extends View_Work_Newsletter
 {
-	public function add()
+	public function add(): void
 	{
 		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->add			= (object) $words->add;
 		$this->addData( 'words', $words );
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->edit		= (object) $words->edit;
@@ -18,11 +18,11 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 		$this->addData( 'words', $words );
 	}
 
-	public function export()
+	public function export(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$words			= (object) $this->getWords( NULL, 'work/newsletter/template' );
 		$words->index	= (object) $words->index;

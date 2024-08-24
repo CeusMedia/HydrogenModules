@@ -11,6 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $template */
 /** @var string $templateId */
 /** @var bool $isUsed */
+/** @var array<string> $styles */
 
 //  --  PANEL: SOURCE LIST  --  //
 $w				= (object) $words->styles;
@@ -42,10 +43,10 @@ if( $styles ){
 		if( $isUsed )
 			$linkRemove		= HtmlTag::create( 'button', $iconRemove.$w->buttonRemove, array_merge( $attributes, ['disabled' => 'disabled'] ) );
 		$linkRemove			= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
-		$styles[$nr]	= HtmlTag::create( 'tr', array(
+		$styles[$nr]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label, ['class' => ''] ),
 			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		) );
+		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "120px" );
 	$tableHeads		= HtmlElements::TableHeads( ['Einträge', ''] );
@@ -71,13 +72,13 @@ $iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreview	= '
 <div class="content-panel">
 	<h4>

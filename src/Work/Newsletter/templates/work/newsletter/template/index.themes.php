@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Template $view */
 /** @var object $words */
 /** @var array $themes */
 

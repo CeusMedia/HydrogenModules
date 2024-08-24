@@ -3,6 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Newsletter_Add extends Mail_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$words		= (object) $this->getWords( 'work/newsletter/reader', 'mail-add' );
@@ -15,12 +20,16 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderHtmlBody(): string
 	{
 		$data		= $this->data;
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$groups	= [];
 		foreach( $data['groups'] as $item )
@@ -36,12 +45,16 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 		return $this->view->loadContentFile( 'mail/work/newsletter/add.html', $data );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderTextBody(): string
 	{
 		$data		= $this->data;
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$groups	= [];
 		foreach( $data['groups'] as $item )

@@ -7,7 +7,11 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var object $reader */
+/** @var array<object> $groups */
 /** @var bool $tabbedLinks */
+/** @var int $totalReaders */
+/** @var ?Logic_Limiter $limiter */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 

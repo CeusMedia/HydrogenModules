@@ -2,12 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
+/** @var View_Work_Newsletter_Group $view */
+/** @var View_Work_Newsletter_Group $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
+/** @var array<object> $groupReaders */
+/** @var object $group */
+/** @var int|string $groupId */
+/** @var ?Logic_Limiter $limiter */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 

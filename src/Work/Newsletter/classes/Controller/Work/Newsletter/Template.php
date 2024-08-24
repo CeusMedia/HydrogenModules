@@ -1,6 +1,8 @@
 <?php
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -14,17 +16,22 @@ class Controller_Work_Newsletter_Template extends Controller
 	protected Logic_Newsletter_Editor $logic;
 
 	/**	@var	Messenger					$messenger */
-	protected $messenger;
+	protected Messenger $messenger;
 
-	/**	@var	object						$request */
-	protected $request;
+	/**	@var	HttpRequest					$request */
+	protected HttpRequest $request;
 
-	/**	@var	object						$session */
-	protected $session;
+	/**	@var	PartitionSession			$session */
+	protected PartitionSession $session;
 
 	protected ?Logic_Limiter $limiter		= NULL;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$pathDefaults	= 'html/work/newsletter/template/';
 		$words			= (object) $this->getWords( 'add' );
@@ -83,7 +90,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->addData( 'totalTemplates', $totalTemplates );
 	}
 
-	public function addStyle( $templateId, $url = NULL )
+	public function addStyle( int $templateId, $url = NULL ): void
 	{
 		$url	= strlen( trim( $url ) ) ? $url : $this->request->get( 'style_url' );				//
 		$this->logic->addTemplateStyle( $templateId, $url );
@@ -94,11 +101,12 @@ class Controller_Work_Newsletter_Template extends Controller
 	 *	Displays template style.
 	 *	This method is used to insert template style into TinyMCE editors.
 	 *	@access		public
-	 *	@param		integer		$templateId		ID of template
-	 *	@param		boolean		$inEditor		Flag: set additional style for TinyMCE editor
-	 *	@return		void
+	 *	@param		int|string		$templateId		ID of template
+	 *	@param		boolean			$inEditor		Flag: set additional style for TinyMCE editor
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function ajaxGetStyle( $templateId, $inEditor = FALSE )
+	public function ajaxGetStyle( int|string $templateId, bool $inEditor = FALSE ): never
 	{
 		$template	= $this->logic->getTemplate( $templateId );
 		header( 'Content-Type: text/css' );
@@ -110,7 +118,12 @@ class Controller_Work_Newsletter_Template extends Controller
 		exit;
 	}
 
-	public function edit( $templateId )
+	/**
+	 *	@param		int|string		$templateId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $templateId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkTemplateId( $templateId ) ){
@@ -139,7 +152,12 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->addData( 'format', $format );
 	}
 
-	public function export( $templateId )
+	/**
+	 *	@param		int|string		$templateId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function export( int|string $templateId ): void
 	{
 		$words		= (object) $this->getWords( 'export' );
 		if( !$this->logic->checkTemplateId( $templateId ) ){
@@ -155,7 +173,10 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->addData( 'template', $this->logic->getTemplate( $templateId ) );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$conditions		= [];
 		$orders			= ['title' => 'ASC'];
@@ -165,13 +186,16 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->addData( 'themes', $model->getAll() );
 	}
 
-	public function installTheme( $themeId )
+	/**
+	 *	@param		string		$themeId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function installTheme( string $themeId ): void
 	{
-		try{
-			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
-			$theme	= $model->getFromId( $themeId );
-		}
-		catch( Exception $e ){
+		$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
+		$theme	= $model->getFromId( $themeId );
+		if( NULL === $theme ){
 			$this->messenger->noteError( 'Invalid theme ID' );
 			$this->restart( NULL, TRUE );
 		}
@@ -180,7 +204,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		if( $theme->imprint )
 			$imprint	= $theme->imprint;
 
-		$data	= array(
+		$data	= [
 			'creatorId'		=> $this->env->getSession()->get( 'auth_user_id' ),
 			'themeId'		=> $themeId,
 			'status'		=> 0,
@@ -201,7 +225,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			'html'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.html' ),
 			'plain'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.txt' ),
 			'style'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.css' ),
-		);
+		];
 		$templateId	= $this->logic->addTemplate( $data );
 		if( isset( $theme->styles ) && is_array( $theme->styles ) )
 			foreach( $theme->styles as $styleUrl )
@@ -211,7 +235,14 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function preview( $format, $templateId, $simulateOffline = FALSE )
+	/**
+	 *	@param		string			$format
+	 *	@param		int|string		$templateId
+	 *	@param		bool			$simulateOffline
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function preview( string $format, int|string $templateId, bool $simulateOffline = FALSE ): void
 	{
 		try{
 			$words		= (object) $this->getWords( 'preview' );
@@ -257,20 +288,20 @@ class Controller_Work_Newsletter_Template extends Controller
 		exit;
 	}
 
-	public function previewTheme( $theme )
+	public function previewTheme( string $themeId ): void
 	{
 		try{
 			$path	= 'contents/themes/';
 			$model	= new Model_Newsletter_Theme( $this->env, $path );
-			$theme	= $model->get( $theme );
+			$theme	= $model->get( $themeId );
 
 			$css	= FileReader::load( $path.$theme->id.'/template.css' );
 			$html	= FileReader::load( $path.$theme->id.'/template.html' );
 
 			$view		= new View( $this->env );
 			$imprint	= $view->loadContentFile( 'html/work/newsletter/template/imprint.txt' );
-			$imprint	= preg_replace( "/(https?:\/\/(([^\s]+))\/?)/", '<a href="\\1">\\2</a>', $imprint );
-			$imprint	= preg_replace( "/([^\s]+@[^\s]+)/", '<a href="mailto:\\1">\\1</a>', $imprint );
+			$imprint	= preg_replace( "/(https?:\/\/(\S+)\/?)/", '<a href="\\1">\\2</a>', $imprint );
+			$imprint	= preg_replace( "/(\S+@\S+)/", '<a href="mailto:\\1">\\1</a>', $imprint );
 			$imprint	= preg_replace( "/\n/", "<br/>", $imprint );
 			$html		= str_replace( "[#imprint#]", $imprint, $html );
 			$words		= $this->getWords( 'preview' );
@@ -295,7 +326,11 @@ class Controller_Work_Newsletter_Template extends Controller
 		}
 	}
 
-	public function remove( $templateId )
+	/**
+	 *	@param		int|string		$templateId
+	 *	@return		void
+	 */
+	public function remove( int|string $templateId ): void
 	{
 		$this->logic->removeTemplate( $templateId );
 		$words	= (object) $this->getWords( 'remove' );
@@ -303,26 +338,31 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->restart( './work/newsletter/template' );
 	}
 
-	public function removeStyle( $templateId, $index )
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		$index
+	 *	@return		void
+	 */
+	public function removeStyle( int|string $templateId, $index ): void
 	{
 		$this->logic->removeTemplateStyle( $templateId, $index );
 		$this->restart( './work/newsletter/template/edit/'.$templateId );
 	}
 
-	public function setContentTab( $templateId, $tabKey )
+	public function setContentTab( int|string $templateId, $tabKey ): void
 	{
 		$this->session->set( 'work.newsletter.template.content.tab', $tabKey );
 		$this->restart( './work/newsletter/template/edit/'.$templateId );
 	}
 
-	public function viewTheme( $themeId )
+	public function viewTheme( string $themeId ): void
 	{
 		try{
 			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
 			$this->addData( 'theme', $model->getFromId( $themeId ) );
 			$this->addData( 'themePath', 'contents/themes/' );
 		}
-		catch( Exception $e ){
+		catch( Exception ){
 			$this->messenger->noteError( 'Invalid theme ID' );
 			$this->restart( NULL, TRUE );
 		}

@@ -7,6 +7,13 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var array<object> $groups */
+/** @var ?string $filterStatus */
+/** @var ?string $filterGroupId */
+/** @var ?string $filterEmail */
+/** @var ?string $filterFirstname */
+/** @var ?string $filterSurname */
+/** @var ?string $filterLimit */
 
 if( isset( $totalReaders ) && is_array( $totalReaders ) && count( $totalReaders ) < 3 )
 	return "";

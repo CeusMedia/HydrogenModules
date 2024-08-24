@@ -6,14 +6,16 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Template $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
 /** @var object $template */
 /** @var string $templateId */
+/** @var string $format */
 
 $tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
 
-$isUsed	= FALSE;
+$isUsed			= FALSE;
 $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.content.tab' );
 $tabs			= $words->tabs;
 $tabsContent	= $this->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
@@ -74,25 +76,16 @@ $buttons		= HtmlTag::create( 'div', join( ' ', [
 //	$buttonCopy,
 ] ), ['class' => 'buttonbar'] );
 
-switch( $currentTab ){
-	case 0:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.details.php', ['buttons' => $buttons] );
-		break;
-	case 1:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.html.php', ['buttons' => $buttons] );
-		break;
-	case 2:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.text.php', ['buttons' => $buttons] );
-		break;
-	case 3:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.style.php', ['buttons' => $buttons] );
-		break;
-	case 4:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.styles.php', ['buttons' => $buttons] );
-		break;
-	default:
-		throw new InvalidArgumentException( 'Invalid tab: '.$currentTab );
-}
+$pathTemplates	= 'work/newsletter/template/';
+
+$content = match( $currentTab ){
+	0		=> $view->loadTemplateFile( $pathTemplates.'edit.details.php', ['buttons' => $buttons] ),
+	1		=> $view->loadTemplateFile( $pathTemplates.'edit.html.php', ['buttons' => $buttons] ),
+	2		=> $view->loadTemplateFile( $pathTemplates.'edit.text.php', ['buttons' => $buttons] ),
+	3		=> $view->loadTemplateFile( $pathTemplates.'edit.style.php', ['buttons' => $buttons] ),
+	4		=> $view->loadTemplateFile( $pathTemplates.'edit.styles.php', ['buttons' => $buttons] ),
+	default	=> throw new InvalidArgumentException('Invalid tab: ' . $currentTab),
+};
 $tabsContent	.= HtmlTag::create( 'div', $content, ['tab-content'] );
 
 $modalPreview	= '

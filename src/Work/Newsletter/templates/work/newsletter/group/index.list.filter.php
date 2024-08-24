@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var ?string $filterStatus */
+/** @var ?string $filterQuery */
 
 if( isset( $groups ) && is_array( $groups ) && count( $groups ) < 3 )
 	return "";

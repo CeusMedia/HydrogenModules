@@ -1,19 +1,26 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Newsletter_Group extends Controller
 {
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
-	protected $logic;
-	protected $session;
-	protected $request;
-	protected $messenger;
+	protected Logic_Newsletter_Editor $logic;
+	protected PartitionSession $session;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
-	protected $limiter;
+	protected ?Logic_Limiter $limiter			= NULL;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->has( 'save' ) ){
@@ -53,7 +60,12 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->addData( 'totalGroups', $totalGroups );
 	}
 
-	public function edit( $groupId )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $groupId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkGroupId( $groupId ) ){
@@ -73,7 +85,11 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->addData( 'groupReaders', $readers );
 	}
 
-	public function export( $groupId )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		never
+	 */
+	public function export( int|string $groupId ): never
 	{
 		$conditions	= ['status' => '1'];
 		$orders		= ['firstname' => 'ASC', 'surname' => 'ASC'];
@@ -86,7 +102,11 @@ class Controller_Work_Newsletter_Group extends Controller
 		exit;
 	}
 
-	public function filter( $reset = NULL )
+	/**
+	 *	@param		$reset
+	 *	@return		void
+	 */
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'filter_work_newsletter_group_query' );
@@ -103,7 +123,10 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$orders		= ['title' => 'ASC'];
 
@@ -127,7 +150,11 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->addData( 'totalGroups', $model->count() );
 	}
 
-	public function remove( $groupId )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		void
+	 */
+	public function remove( int|string $groupId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$this->logic->removeGroup( $groupId );
@@ -135,7 +162,13 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->restart( NULL,  TRUE );
 	}
 
-	public function removeReader( $groupId, $readerId )
+	/**
+	 *	@param		int|string			$groupId
+	 *	@param		int|string|NULL		$readerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeReader( int|string $groupId, int|string|NULL $readerId = NULL ): void
 	{
 		$readerId	= is_null( $readerId ) ? $this->request->get( 'readerId' ) : $readerId;
 		$this->logic->removeReaderFromGroup( $readerId, $groupId );

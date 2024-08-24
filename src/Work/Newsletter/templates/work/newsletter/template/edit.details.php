@@ -27,7 +27,7 @@ if( $newsletters ){
 	$listNewsletters	= [];
 	foreach( $newsletters as $newsletter ){
 		$link	= HtmlTag::create( 'a', $newsletter->title, ['href' => './work/newsletter/edit/'.$newsletter->newsletterId] );
-		$listNewsletters[]	= HtmlTag::create( 'li', $link, [] );
+		$listNewsletters[]	= HtmlTag::create( 'li', $link );
 	}
 	$listNewsletters	= HtmlTag::create( 'ul', $listNewsletters, ['class' => 'unstyled nav nav-pills nav-stacked'] );
 }

@@ -28,7 +28,11 @@ return '
 				'.$helper->render().'
 			</div>
 		 	<div class="span6" style="text-align: center">
-				<img src="'.$themePath.$theme->folder.'/template.png" style="max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray"/>
+				'.HtmlTag::create( 'img', NULL, [
+					'src'	=> $themePath.$theme->folder.'/template.png',
+					'style'	=> 'max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray',
+					'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+				] ).'
 			</div>
 		</div>
 		<div class="buttonbar">

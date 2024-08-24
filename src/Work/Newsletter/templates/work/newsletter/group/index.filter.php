@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var ?string $filterStatus */
+/** @var ?string $filterQuery */
 
 $optStatus		= ['' => 'alle'];
 foreach( $words['states'] as $key => $label )

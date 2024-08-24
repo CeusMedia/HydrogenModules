@@ -26,13 +26,13 @@ return '
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_title">'.$w->labelTitle.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'name'		=> 'title',
 										'type'		=> 'text',
 										'id'		=> 'input_title',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 								<div class="span2">
 									<label for="input_version">'.$w->labelVersion.'</label>
@@ -58,67 +58,67 @@ return '
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_senderName">'.$w->labelSenderName.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'senderName',
 										'id'		=> 'input_senderName',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->senderName, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 								<div class="span6">
 									<label for="input_senderAddress">'.$w->labelSenderAddress.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'senderAddress',
 										'id'		=> 'input_senderAddress',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->senderAddress, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 							</div>
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_authorName">'.$w->labelAuthorName.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'authorName',
 										'id'		=> 'input_authorName',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->authorName, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 								<div class="span6">
 									<label for="input_authorEmail">'.$w->labelAuthorEmail.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'authorEmail',
 										'id'		=> 'input_authorEmail',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->authorEmail, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 							</div>
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_authorCompany">'.$w->labelAuthorCompany.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'authorCompany',
 										'id'		=> 'input_authorCompany',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->authorCompany, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 								<div class="span6">
 									<label for="input_authorUrl">'.$w->labelAuthorUrl.'</label>
-									'.HtmlTag::create( 'input', NULL, array(
+									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'authorUrl',
 										'id'		=> 'input_authorUrl',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->authorUrl, ENT_QUOTES, 'UTF-8' ),
-									) ).'
+									] ).'
 								</div>
 							</div>
 						</div>

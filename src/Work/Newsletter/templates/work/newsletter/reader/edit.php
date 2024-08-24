@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Reader $this */
 /** @var object $words */
 /** @var object $reader */
 /** @var bool $tabbedLinks */
@@ -202,7 +203,7 @@ return $textTop.'
 				<div class="content-panel-inner">
 					'.$listGroups.'
 					<div class="row-fluid" '.$hideGroupAdd.'>
-						<hr style="margin: -3px 0px 6px 0px"/>
+						<hr style="margin: -3px 0 6px 0"/>
 						<form action="./work/newsletter/reader/addGroup/'.$reader->newsletterReaderId.'" method="post">
 							<div class="span9">
 								<select name="groupId" class="span12">'.$optGroup.'</select>

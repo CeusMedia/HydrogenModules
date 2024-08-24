@@ -78,11 +78,11 @@ foreach( $queues as $queue ){
 	$percent	= round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ).'%';
 
 	$list[]	= HtmlTag::create( 'tr', array(
-		HtmlTag::create( 'td', $queue->newsletterQueueId, [] ),
-		HtmlTag::create( 'td', $queue->countLetters, [] ),
-		HtmlTag::create( 'td', $words->queueStates[$queue->status], [] ),
-		HtmlTag::create( 'td', $percent, [] ),
-		HtmlTag::create( 'td', $bar->render(), [] ),
+		HtmlTag::create( 'td', $queue->newsletterQueueId, ['class' => ''] ),
+		HtmlTag::create( 'td', $queue->countLetters, ['class' => ''] ),
+		HtmlTag::create( 'td', $words->queueStates[$queue->status], ['class' => ''] ),
+		HtmlTag::create( 'td', $percent, ['class' => ''] ),
+		HtmlTag::create( 'td', $bar->render(), ['class' => ''] ),
 		HtmlTag::create( 'td', $creator ),
 		HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $queue->createdAt, TRUE ) ),
 //		HtmlTag::create( 'td', $buttons, [] ),
@@ -115,9 +115,13 @@ $panelList	= '
 
 return $panelList;
 
-$labelLetterButtonSend		= '<i class="icon-envelope icon-white"></i> '.$words->edit->buttonQueueSend;
-$labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edit->buttonQueueCancel;
-$labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
+$iconSend	= HtmlTag::create( 'i', '', ['class' => 'icon-envelope icon-white'] );
+$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
+$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
+
+$labelLetterButtonSend		= $iconSend.' '.$words->edit->buttonQueueSend;
+$labelLetterButtonRemove	= $iconRemove.' '.$words->edit->buttonQueueCancel;
+$labelLetterButtonView		= $iconView.' '.$words->edit->buttonQueueView;
 $table						= '<em><small class="muted">Keine offenen Vorgänge vorhanden.</small></em>';
 if( $letterQueue ){
 	$rows		= [];
@@ -140,7 +144,7 @@ if( $letterQueue ){
 	}
 	$columns	= HtmlElements::ColumnGroup( "35%", "25%", "15%", "25%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';
-	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
+	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';
 }
 

@@ -82,9 +82,9 @@ return '
 	google.load("visualization", "1", {packages:["corechart"]});
 	google.setOnLoadCallback(drawChart);
 	function drawChart() {
-		var data = google.visualization.arrayToDataTable('.json_encode( $list ).');
-		var options = {};
-		var chart = new google.visualization.LineChart(document.getElementById("chart_div"));
+		let data = google.visualization.arrayToDataTable('.json_encode( $list ).');
+		let options = {};
+		let chart = new google.visualization.LineChart(document.getElementById("chart_div"));
 		chart.draw(data, options);
 	}
 </script>';

@@ -3,12 +3,22 @@ use CeusMedia\Common\Net\API\Premailer;
 
 class Logic_Newsletter_Editor extends Logic_Newsletter
 {
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addGroup( array $data ): string
 	{
 		$data['createdAt']	= time();
 		return $this->modelGroup->add( $data );
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addNewsletter( array $data ): string
 	{
 		$data['creatorId']	= 0;
@@ -16,12 +26,23 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		return $this->modelNewsletter->add( $data, FALSE );
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addTemplate( array $data ): string
 	{
 		$data['createdAt']	= time();
 		return $this->modelTemplate->add( $data, FALSE );
 	}
 
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		string			$url
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addTemplateStyle( int|string $templateId, string $url ): void
 	{
 		if( !strlen( trim( $url ) ) )
@@ -32,7 +53,13 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		$this->setTemplateAttributeList( $templateId, 'styles', $styles );
 	}
 
-	public function convertHtmlToText( string $html, int $wrap = 65 )
+	/**
+	 *	@param		string		$html
+	 *	@param		int			$wrap
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function convertHtmlToText( string $html, int $wrap = 65 ): string
 	{
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.plain' ) ){
 			$premailer	= new Premailer();
@@ -42,7 +69,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		if( class_exists( 'View_Helper_HtmlToPlainText' ) ){
 			return View_Helper_HtmlToPlainText::convert( $html );
 		}
-		$replacements	= array(
+		$replacements	= [
 			"/\n\s+/"								=> "\n",							//  remove leading whitespace
 			"/<a.+href=\"(.+)\"*>(.+)<\/a>/U"		=> "\\2 (\\1)",
 			"/<img.+\/?>(\r?\n)*/U"					=> "",								//  remove images
@@ -63,7 +90,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 			"/<(p|div|span)(\s+.+)?><\/(p|div|span)>/U"	=> "",
 			"/<p>(\r?\n)?/"							=> "",
 			"/<\/p>(\r?\n)?/"						=> "\n\n",
-		);
+		];
 		$html		= html_entity_decode( $html );
 		foreach( $replacements as $regex => $replacement )
 			$html	= preg_replace( $regex, $replacement, $html );
@@ -72,17 +99,28 @@ return $html;
 		return strip_tags( $html );
 	}
 
-	public function createQueue( int|string $newsletterId, int|string|NULL $creatorId = NULL )
+	/**
+	 *	@param		int|string			$newsletterId
+	 *	@param		int|string|NULL		$creatorId
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function createQueue( int|string $newsletterId, int|string|NULL $creatorId = NULL ): string
 	{
-		return $this->modelQueue->add( array(
+		return $this->modelQueue->add( [
 			'newsletterId'	=> $newsletterId,
 			'creatorId'		=> (int) $creatorId,
 			'status'		=> Model_Newsletter_Queue::STATUS_NEW,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function dequeue( int|string $readerLetterId ): bool
 	{
 		$letter	= $this->getReaderLetter( $readerLetterId );
@@ -91,6 +129,12 @@ return $html;
 		return $this->modelReaderLetter->remove( $readerLetterId );
 	}
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		array			$data
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function editGroup( int|string $groupId, array $data ): void
 	{
 		$this->checkGroupId( $groupId, TRUE );
@@ -98,12 +142,24 @@ return $html;
 		$this->modelGroup->edit( $groupId, $data );
 	}
 
+	/**
+	 *	@param		int|string		$letterId
+	 *	@param		array			$data
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function editReaderLetter( int|string $letterId, array $data ): void
 	{
 		$this->checkReaderLetterId( $letterId, TRUE );
 		$this->modelReaderLetter->edit( $letterId, $data );
 	}
 
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		array			$data
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function editTemplate( int|string $templateId, array $data ): void
 	{
 		$this->checkTemplateId( $templateId, TRUE );
@@ -111,6 +167,14 @@ return $html;
 		$this->modelTemplate->edit( $templateId, $data, FALSE );
 	}
 
+	/**
+	 *	@param		int|string		$queueId
+	 *	@param		int|string		$readerId
+	 *	@param		int|string		$newsletterId
+	 *	@param		bool			$allowDoubles
+	 *	@return		int|string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function enqueue( int|string $queueId, int|string $readerId, int|string $newsletterId, bool $allowDoubles = FALSE ): int|string
 	{
 		$indices	= [
@@ -121,16 +185,21 @@ return $html;
 		];
 		if( !$allowDoubles && $this->modelReaderLetter->getByIndices( $indices ) )
 			return 0;
-		$data		= array(
+		$data		= [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterQueueId'		=> $queueId,
 			'newsletterId'			=> $newsletterId,
 			'status'				=> 0,
 			'enqueuedAt'			=> time()
-		);
+		];
 		return $this->modelReaderLetter->add( $data );
 	}
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeGroup( int|string $groupId ): bool
 	{
 		$modelMail	= new Model_Mail( $this->env );
@@ -152,6 +221,11 @@ return $html;
 		return $this->modelGroup->remove( $groupId );
 	}
 
+	/**
+	 *	@param		int|string		$readerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeReader( int|string $readerId ): void
 	{
 		$this->checkReaderId( $readerId );
@@ -173,6 +247,8 @@ return $html;
 	 *	@param		int|string		$newsletterId		ID of newsletter to remove
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter ID is not valid
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeNewsletter( int|string $newsletterId ): bool
 	{
@@ -191,6 +267,11 @@ return $html;
 		return $this->modelNewsletter->remove( $newsletterId );									//  remove newsletter itself
 	}
 
+	/**
+	 * @param int|string $templateId
+	 * @return bool
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeTemplate( int|string $templateId ): bool
 	{
 		$this->checkTemplateId( $templateId, TRUE );
@@ -200,6 +281,12 @@ return $html;
 		return $this->modelTemplate->remove( $templateId );
 	}
 
+	/**
+	 * @param int|string $templateId
+	 * @param $index
+	 * @return void
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeTemplateStyle( int|string $templateId, $index ): void
 	{
 		$this->checkTemplateId( $templateId, TRUE );
@@ -239,10 +326,18 @@ return $html;
 		return $status;
 	}*/
 
-	public function sendTestLetter( int|string $newsletterId, int|string $readerId )
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@param		int|string		$readerId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendTestLetter( int|string $newsletterId, int|string $readerId ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Mail' ) )
 			throw new RuntimeException( 'Module "Resource_Mail" is not installed' );
+		/** @var Logic_Mail $logicMail */
 		$logicMail		= Logic_Mail::getInstance( $this->env );
 
 		$mail			= new Mail_Newsletter( $this->env, [
@@ -259,17 +354,30 @@ return $html;
 		return $logicMail->sendMail( $mail, $receiver );
 	}
 
-	public function setTemplateStatus( int|string $templateId, $status )
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		$status
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setTemplateStatus( int|string $templateId, $status ): bool
 	{
 		$template	= $this->getTemplate( $templateId );
 		if( $template->status == $status )
-			return;
-		return $this->modelTemplate->edit( $templateId, array(
+			return FALSE;
+		return (bool) $this->modelTemplate->edit( $templateId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		string			$columnKey
+	 *	@param		array			$list
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setTemplateAttributeList( int|string $templateId, string $columnKey, array $list ): int
 	{
 		$this->checkTemplateId( $templateId, TRUE );
