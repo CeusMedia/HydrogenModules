@@ -12,6 +12,10 @@ class View_Helper_Work_Mission_Calendar
 	protected DateTime $today;
 	protected array $words;
 
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@throws		Exception
+	 */
 	public function __construct( WebEnvironment $env )
 	{
 		$this->env		= $env;
@@ -21,16 +25,24 @@ class View_Helper_Work_Mission_Calendar
 		$this->words	= $this->env->getLanguage()->load( 'work/mission' );
 	}
 
-	public function render( $userId, $year, $month ): string
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		int|string		$year
+	 *	@param		int|string		$month
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	public function render( int|string $userId, int|string $year, int|string $month ): string
 	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, '0', STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( 't', strtotime( $showScope ) );
 		$offsetStart	= date( 'w', strtotime( $showScope ) ) - 1;
 		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
-		$weeks			= ceil( ( $monthDays + $offsetStart ) / 7 );
+		$weeks			= ceil( ( (int) $monthDays + $offsetStart ) / 7 );
 		$orders			= ['priority' => 'ASC'];
 
 		$rows			= [];
@@ -76,7 +88,6 @@ class View_Helper_Work_Mission_Calendar
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
 			$row	= [];
-			$j		= 0;
 			$class	= '';
 			if( $i == 0 ){
 				for( $j=0; $j<$offsetStart; $j++ ){
@@ -85,6 +96,7 @@ class View_Helper_Work_Mission_Calendar
 //					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
 				}
 			}
+			$j		= 0;
 			while( $j < 7 ){
 				$day		= $i * 7 - $offsetStart + $j +1;
 				$showYear	= $year;
@@ -147,7 +159,12 @@ $(document).ready(function(){
 		return $table;
 	}
 
-	protected function renderControls( $year, $month ): string
+	/**
+	 *	@param		int|string		$year
+	 *	@param		int|string		$month
+	 *	@return		string
+	 */
+	protected function renderControls( int|string $year, int|string $month ): string
 	{
 		$isNow		= $year	=== date( 'Y' ) && $month === date( 'm' );
 		$btnControlPrev	= HtmlTag::create( 'button', '&laquo;', [
@@ -198,12 +215,25 @@ $(document).ready(function(){
 	</div>';
 	}
 
-	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ): string
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		DateTime		$date
+	 *	@param		array			$orders
+	 *	@param		string|NULL		$cellClass
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	protected function renderDay( int|string $userId, DateTime $date, array $orders = [], ?string $cellClass = NULL ): string
 	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
 		$isToday	= $diff->days == 0;
-		$conditions	= ['dayStart' => $date->format( 'Y-m-d' ), 'status' => [0, 1, 2, 3]];
+		$conditions	= ['dayStart' => $date->format( 'Y-m-d' ), 'status' => [
+			Model_Mission::STATUS_NEW,
+			Model_Mission::STATUS_ACCEPTED,
+			Model_Mission::STATUS_PROGRESS,
+			Model_Mission::STATUS_READY
+		]];
 		$missions	= $this->logic->getUserMissions( $userId, $conditions, $orders );
 		$list		= [];
 		foreach( $missions as $mission ){
@@ -242,13 +272,18 @@ $(document).ready(function(){
 		] );
 	}
 
-	protected function renderLabel( $year, $month ): string
+	/**
+	 *	@param		int|string		$year
+	 *	@param		int|string		$month
+	 *	@return		string
+	 */
+	protected function renderLabel( int|string $year, int|string $month ): string
 	{
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
 		return '<span id="mission-calendar-control-label">
-	<span class="month-label">'.$this->words['months'][(int) $month].'</span>
+	<span class="month-label">'.$this->words['months'][$month].'</span>
 	<span class="year-label">'.$year.'</span>
 </span>';
 	}
@@ -258,10 +293,12 @@ $(document).ready(function(){
 	 *	@access		public
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@throws		Exception
 	 */
 	public function renderOverdue( object $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
 			return HtmlTag::create( 'div', $diff->days, ['class' => 'overdue'] );		//  render overdue container

@@ -4,40 +4,6 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Archive extends View
 {
-	public function ajaxRenderIndex()
-	{
-		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
-		extract( $this->getData() );
-
-		if( $missions ){
-			$helperButtons	= new View_Helper_Work_Mission_List_Pagination( $this->env );
-			$helperList		= new View_Helper_Work_Mission_List( $this->env );
-
-			$helperList->setMissions( $this->getData( 'missions' ) );
-			$helperList->setWords( $words );
-//			$helperList->setOrder( 0, 'dayStart', 'ASC' );
-			$helperList->setBadges( TRUE, TRUE, FALSE );
-
-			$listLarge		= $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE, FALSE );
-			$buttonsLarge	= $helperButtons->render( $total, $limit, $page );
-		}
-		else{
-			$buttonsLarge	= "";
-			$listLarge		= '<div class="alert alert-warning"><em>'.$words['index']['messageNoEntries'].'</em></div>';
-		}
-
-		$data		= [
-			'buttons'	=> [
-				'large'	=> $buttonsLarge,
-			],
-			'lists'		=> [
-				'large'	=> $listLarge,
-			]
-		];
-		print( json_encode( $data ) );
-		exit;
-	}
-
 	public function index(): string
 	{
 		$page			= $this->env->getPage();
@@ -78,9 +44,5 @@ $(document).ready(function(){
 });
 </script>
 ';
-	}
-
-	protected function __onInit(): void
-	{
 	}
 }

@@ -3,11 +3,17 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Resource\Page;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction as AbstractHelper;
 
 class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 {
-	public function render( $data )
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function render( array $data ): string
 	{
 		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
@@ -38,7 +44,7 @@ class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 		$events		= $w->textNoEvents;
 
 		if( count( $data['events'] ) ){
-			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['events'], $words );
+			$helper		= new View_Helper_Work_Mission_List( $this->env );
 			$rows		= $helper->renderRows( 0 );
 			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
 			$attributes	= ['class' => 'table-mail table-mail-events'];
@@ -62,6 +68,7 @@ class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 <div class="text-salute">'.$salute.'</div>
 <div class="text-signature">'.$w->textSignature.'</div>';
 
+		/** @var Page $page */
 		$page	= clone $this->env->getPage();
 		$page->addPrimerStyle( 'layout.css' );
 		$page->addThemeStyle( 'layout.css' );

@@ -66,39 +66,6 @@ class View_Helper_Modal
 		return $modal;
 	}
 
-	protected function renderFooter(): string
-	{
-		$buttonClose	= HtmlTag::create( 'button', 'Schließen', [
-			'class'			=> 'btn',
-			'data-dismiss'	=> 'modal',
-			'aria-hidden'	=> 'true',
-		] );
-		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', [
-			'class'		=> 'btn btn-primary',
-			'type'		=> 'submit',
-		] );
-		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], [
-			'class'	=> 'modal-footer',
-		] );
-		return $footer;
-	}
-
-	protected function renderHeader(): string
-	{
-		$buttonClose	= HtmlTag::create( 'button', '×', [
-			'type'			=> "button",
-			'class'			=> "close",
-			'data-dismiss'	=> "modal",
-			'aria-hidden'	=> "true",
-		] );
-		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
-		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], [
-			'class'	=> 'modal-header',
-		] );
-		return $header;
-	}
-
 	/**
 	 *	Sets additional modal attributes.
 	 *	Set values for id, role, tabindex, aria-hidden will be ignored.
@@ -176,5 +143,38 @@ class View_Helper_Modal
 	{
 		$this->id		= $id;
 		return $this;
+	}
+
+	//  --  PROTECTED  --  //
+
+	protected function renderFooter(): string
+	{
+		$buttonClose	= HtmlTag::create( 'button', 'Schließen', [
+			'class'			=> 'btn',
+			'data-dismiss'	=> 'modal',
+			'aria-hidden'	=> 'true',
+		] );
+		$buttonSubmit	= HtmlTag::create( 'button', 'Weiter', [
+			'class'		=> 'btn btn-primary',
+			'type'		=> 'submit',
+		] );
+		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
+		return HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], [
+			'class'	=> 'modal-footer',
+		] );
+	}
+
+	protected function renderHeader(): string
+	{
+		$buttonClose	= HtmlTag::create( 'button', '×', [
+			'type'			=> "button",
+			'class'			=> "close",
+			'data-dismiss'	=> "modal",
+			'aria-hidden'	=> "true",
+		] );
+		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
+		return HtmlTag::create( 'div', [$buttonClose, $heading], [
+			'class'	=> 'modal-header',
+		] );
 	}
 }

@@ -40,35 +40,7 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 		'direction'		=> 'ASC',
 	];
 
-	protected function __onInit(): void
-	{
-		parent::__onInit();
-
-		$this->session->set( 'filter.work.mission.mode', 'calendar' );
-		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
-			$this->session->set( $this->filterKeyPrefix.'month', date( 'Y' ).'-'.date( 'n' ) );
-
-		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
-		$this->setData( [
-			'userId'	=> $this->userId,
-			'year'		=> $date[0],
-			'month'		=> $date[1],
-		] );
-	}
-
-	public function ajaxRenderIndex(): void
-	{
-		$userId	= $this->getData( 'userId' );
-	}
-
-	protected function initDefaultFilters(): void
-	{
-		parent::initDefaultFilters();
-		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
-			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
-	}
-
-	public function index( $year = NULL, $month = NULL ): void
+	public function index( int|string|NULL $year = NULL, int|string|NULL $month = NULL ): void
 	{
 		$this->initFilters( $this->userId );
 		$this->assignFilters();
@@ -104,9 +76,40 @@ class Controller_Work_Mission_Calendar extends Controller_Work_Mission
 */
 	}
 
-	protected function initFilters( string $userId ): void
+/*	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';
+	}*/
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function __onInit(): void
+	{
+		parent::__onInit();
+
+		$this->session->set( 'filter.work.mission.mode', 'calendar' );
+		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
+			$this->session->set( $this->filterKeyPrefix.'month', date( 'Y' ).'-'.date( 'n' ) );
+
+		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
+		$this->setData( [
+			'userId'	=> $this->userId,
+			'year'		=> $date[0],
+			'month'		=> $date[1],
+		] );
+	}
+
+	/**
+	 *	@return		void
+	 */
+	protected function initDefaultFilters(): void
+	{
+		parent::initDefaultFilters();
+		if( !$this->session->get( $this->filterKeyPrefix.'month' ) )
+			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 }

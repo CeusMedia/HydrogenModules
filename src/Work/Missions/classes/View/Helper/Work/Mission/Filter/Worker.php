@@ -1,36 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_Filter_Worker
+class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Filter_AbstractFilter
 {
-	protected WebEnvironment $env;
-	protected array $words;
-	protected ?View_Helper_ModalRegistry $modalRegistry		= NULL;
-	protected array $values									= [];
-	protected array $selected								= [];
-	protected ?string $userId								= NULL;
-
-	public function __construct( WebEnvironment $env )
-	{
-		$this->env		= $env;
-		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
-	}
-
-	public function setModalRegistry( View_Helper_ModalRegistry $modalRegistry ): self
-	{
-		$this->modalRegistry	= $modalRegistry;
-		return $this;
-	}
-
-	public function setValues( array $all, array $selected ): self
-	{
-		$this->values	= $all;
-		$this->selected	= $selected;
-		return $this;
-	}
+	protected ?string $userId		= NULL;
 
 	public function render(): string
 	{
@@ -115,8 +89,7 @@ class View_Helper_Work_Mission_Filter_Worker
 		$modal->setHeading( 'Filter: Bearbeiter' );
 		$modal->setBody( $table );
 		$modal->setFade( FALSE );
-		if( NULL !== $this->modalRegistry )
-			$this->modalRegistry->register( 'workMissionFilterWorkers', $modal );
+		$this->modalRegistry?->register( 'workMissionFilterWorkers', $modal );
 
 		$buttonIcon		= '';
 		if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
@@ -132,5 +105,10 @@ class View_Helper_Work_Mission_Filter_Worker
 		$modalTrigger->setLabel( $buttonIcon.$buttonLabel );
 		$modalTrigger->setAttributes( $buttonAttr );
 		return $modalTrigger->render();
+	}
+
+	protected function __onInit(): void
+	{
+		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
 	}
 }

@@ -10,6 +10,10 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	protected ?object $mission				= NULL;
 	protected bool $badgesColored			= TRUE;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		Exception
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -18,6 +22,10 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 	}
 
+	/**
+	 *	@param		int		$days
+	 *	@return		int
+	 */
 	protected function formatDays( int $days ): int
 	{
 		if( $days > 365.25 )
@@ -29,13 +37,23 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $days;
 	}
 
-	protected function renderBadgeDays( int $days, $class = NULL ): string
+	/**
+	 *	@param		int			$days
+	 *	@param		?string		$class
+	 *	@return		string
+	 */
+	protected function renderBadgeDays( int $days, ?string $class = NULL ): string
 	{
 		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
 		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
 		return HtmlTag::create( 'span', $label, ['class' => $class] );
 	}
 
+	/**
+	 *	@param		object		$mission
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	public function renderBadgeDaysOverdue( object $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
@@ -52,6 +70,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	 *	@access		public
 	 *	@param		object		$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@throws		Exception
 	 */
 	public function renderBadgeDaysStill( object $mission ): string
 	{
@@ -67,6 +86,11 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $this->today->diff( $end )->days, $class );
 	}
 
+	/**
+	 *	@param		object		$mission
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	public function renderBadgeDaysUntil( object $mission ): string
 	{
 		/** @noinspection PhpUnhandledExceptionInspection */
@@ -77,6 +101,10 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, $class );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	public function render(): string
 	{
 		$todayStart	= strtotime( date( 'Y-m-d', time() ) );

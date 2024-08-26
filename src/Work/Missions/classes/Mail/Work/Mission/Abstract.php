@@ -15,7 +15,6 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

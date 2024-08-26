@@ -6,10 +6,13 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 {
+	protected LocalModuleLibrary $modules;
 	protected bool $useAvatar	= FALSE;
 	protected array $users		= [];
-	protected LocalModuleLibrary $modules;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
@@ -19,7 +22,11 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 		$this->useAvatar	= $useAvatar || $useGravatar;
 	}
 
-	protected function formatDays( $days ): string
+	/**
+	 *	@param		int		$days
+	 *	@return		string
+	 */
+	protected function formatDays( int $days ): string
 	{
 		if( $days > 365.25 )
 			return floor( $days / 365.25 )."y";
@@ -30,14 +37,22 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 		return $days;
 	}
 
-	protected function renderTime( $timestamp ): string
+	/**
+	 *	@param		int			$timestamp
+	 *	@return		string
+	 */
+	protected function renderTime( int $timestamp ): string
 	{
 		$hours		= date( 'H', $timestamp );
 		$minutes	= '<sup><small>'.date( 'i', $timestamp ).'</small></sup>';
 		return $hours.$minutes;
 	}
 
-	protected function renderUser( $user ): string
+	/**
+	 *	@param		object		$user
+	 *	@return		string
+	 */
+	protected function renderUser( object $user ): string
 	{
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$helper	= new View_Helper_Member( $this->env );
@@ -58,6 +73,7 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 	/**
 	 *	@deprecated use renderUser instead
 	 *	@todo		to be removed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderUserWithAvatar( int|string $userId, int $width = 160 ): string
 	{

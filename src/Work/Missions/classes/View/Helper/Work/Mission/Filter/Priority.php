@@ -1,35 +1,9 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-class View_Helper_Work_Mission_Filter_Priority
+class View_Helper_Work_Mission_Filter_Priority extends View_Helper_Work_Mission_Filter_AbstractFilter
 {
-	protected WebEnvironment $env;
-	protected array $words;
-	protected ?View_Helper_ModalRegistry $modalRegistry		= NULL;
-	protected array $values									= [];
-	protected array $selected								= [];
-
-	public function __construct( WebEnvironment $env )
-	{
-		$this->env		= $env;
-		$this->words	= $this->env->getLanguage()->getWords( 'work/mission' );
-	}
-
-	public function setModalRegistry( View_Helper_ModalRegistry $modalRegistry ): self
-	{
-		$this->modalRegistry	= $modalRegistry;
-		return $this;
-	}
-
-	public function setValues( array $all, array $selected ): self
-	{
-		$this->values	= $all;
-		$this->selected	= $selected;
-		return $this;
-	}
-
 	public function render(): string
 	{
 		$changedPriorities	= array_diff( $this->values, $this->selected );

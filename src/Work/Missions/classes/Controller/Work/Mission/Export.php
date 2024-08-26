@@ -7,7 +7,11 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 {
 	protected ?string $pathLogs		= NULL;
 
-	public function ical()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function ical(): void
 	{
 		$method		= $this->request->getMethod();
 		$logFile	= $this->pathLogs.'work.mission.ical.method.log';
@@ -55,13 +59,18 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		exit;
 	}
 
-	public function index( string $missionId = NULL ): void
+	public function index( int|string|NULL $missionId = NULL ): void
 	{
 		$this->restart( './work/mission/help/sync' );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		parent::__onInit();
@@ -69,6 +78,9 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 //		$this->logPrefix	= 'work.mission.ical.export.log';
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function exportAsIcal(): string
 	{
 		$conditions		= ['status' => [0, 1, 2, 3]];
@@ -80,6 +92,12 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		return $helper->render();
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	protected function getUserMissions( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$userProjects	= $this->logic->getUserProjects( $this->userId, TRUE );							//  get user projects from model
@@ -87,7 +105,12 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		return $this->model->getAll( $conditions, $orders, $limits );	//  return missions matched by conditions
 	}
 
-	protected function importFromIcal( string $ical )
+	/**
+	 *	@param		string		$ical
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function importFromIcal( string $ical ): void
 	{
 /*		if( !$ical && file_exists( "test.ical" ) )
 			$ical	= file_get_contents( "test.ical" );
@@ -160,7 +183,13 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 		}
 	}
 
-	protected function remapCalendarItem( $item, array $projects, string $defaultProjectId ): array
+	/**
+	 *	@param		array		$item
+	 *	@param		array		$projects
+	 *	@param		string		$defaultProjectId
+	 *	@return		array
+	 */
+	protected function remapCalendarItem( array $item, array $projects, string $defaultProjectId ): array
 	{
 		$data	= [];
 		foreach( $item as $attribute => $content ){
@@ -189,13 +218,13 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 					break;
 				case 'status':
 					if( $content == 'CANCELLED' )
-						$data['status']	= -1;
+						$data['status']	= Model_Mission::STATUS_REJECTED;
 					else if( $content == 'IN-PROCESS' )
-						$data['status']	= 2;
+						$data['status']	= Model_Mission::STATUS_PROGRESS;
 //					else if( $content == 'NEEDS-ACTION' )
-//						$data['status']	= 2;
+//						$data['status']	= Model_Mission::STATUS_PROGRESS;
 					elseif( $content == 'COMPLETED' )
-						$data['status']	= 4;
+						$data['status']	= Model_Mission::STATUS_FINISHED;
 					break;
 				case 'summary':
 					$data['title']	= $content;

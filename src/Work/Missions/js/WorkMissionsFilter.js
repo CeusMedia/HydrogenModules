@@ -63,10 +63,10 @@ var WorkMissionsFilter = {
 			});
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			$.ajax({																//  store action using AJAX
-				url: "./work/mission/setFilter/"+filterName+"/"+id+"/1/1",			//  URL to reset all any only set this value
+				url: "./ajax/work/mission/setFilter/"+filterName+"/"+id+"/1/1",		//  URL to reset all any only set this value
 				dataType: "json",
-				success: function(json){											//  on response
-					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				success: function(json){										//  on response
+					WorkMissionsList.renderDayListDayControls(json.data);			//  render day lists and controls
 				},
 				error: function(a,b){
 					console.log(b);
@@ -81,10 +81,10 @@ var WorkMissionsFilter = {
 			});
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			$.ajax({																//  store action using AJAX
-				url: "./work/mission/setFilter/"+filterName,						//  URL to reset changed filter to force all
+				url: "./ajax/work/mission/setFilter/"+filterName,					//  URL to reset changed filter to force all
 				dataType: "json",
-				success: function(json){											//  on response
-					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				success: function(json){										//  on response
+					WorkMissionsList.renderDayListDayControls(json.data);			//  render day lists and controls
 				},
 				error: function(a,b){
 					console.log(b);
@@ -96,13 +96,13 @@ var WorkMissionsFilter = {
 			WorkMissionsList.blendOut(250);
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			//  store changed filter
-			var value = event.target.checked ? 1 : 0;								//  get check status as integer
+			var value = event.target.checked ? 1 : 0;						//  get check status as integer
 			var id = event.target.value;											//  get ID of filter to set
 			$.ajax({																//  store action using AJAX
-				url: "./work/mission/setFilter/"+filterName+"/"+id+"/"+value,		//  URL to set changed filter
+				url: "./ajax/work/mission/setFilter/"+filterName+"/"+id+"/"+value,	//  URL to set changed filter
 				dataType: "json",
-				success: function(json){											//  on response
-					WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				success: function(json){										//  on response
+					WorkMissionsList.renderDayListDayControls(json.data);			//  render day lists and controls
 				},
 				error: function(a,b){
 					console.log(b);

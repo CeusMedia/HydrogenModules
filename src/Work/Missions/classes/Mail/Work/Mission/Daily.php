@@ -1,28 +1,42 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
+//use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 {
+
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$this->setSubject( $w->subject );
 		$this->addBodyClass( 'job-work-mission-mail-daily' );
-		return $this->setHtml( $this->renderBody() );
+		$this->setHtml( $this->renderHtmlMailBody() );
+//		$this->setText( $this->renderTextMailBody() );
+		return $this;
 	}
 
-	public function renderBody(): string
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderHtmlMailBody(): string
 	{
 		$data			= $this->data;
-		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
+//		$baseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		$w				= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$monthNames		= $this->getWords( 'work/mission', 'months' );
 		$weekdays		= $this->getWords( 'work/mission', 'days' );
 		$salutes		= $this->getWords( 'work/mission', 'mail-salutes' );
 		$salute			= $salutes ? $salutes[array_rand( $salutes )] : "";
-		$indicator		= new HtmlIndicator();
+//		$indicator		= new HtmlIndicator();
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 
 		$words			= $this->getWords( 'work/mission' );

@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 {
 	protected array $icons		= [];
-	protected array $list			= [
+	protected array $list		= [
 		0 => [],
 		1 => [],
 		2 => [],
@@ -14,6 +14,10 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		6 => [],
 	];
 
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@throws		Exception
+	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env );
@@ -25,7 +29,11 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		);*/
 	}
 
-	public function countMissions( $day = NULL ): int
+	/**
+	 *	@param		int|NULL		$day
+	 *	@return		int
+	 */
+	public function countMissions( ?int $day = NULL ): int
 	{
 		if( $day !== NULL ){
 			if( !is_int( $day ) )
@@ -41,16 +49,24 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		return $sum;
 	}
 
-	public function getDayMissions( $day = NULL )
+	/**
+	 *	@param		int|null		$day
+	 *	@return		array
+	 */
+	public function getDayMissions( ?int $day = NULL ): array
 	{
 		if( is_int( $day ) && $day >= 0 && $day	< 7 )
 			return $this->list[$day];
 		return $this->list;
 	}
 
-	public function getNearestFallbackDay( $day ): int
+	/**
+	 *	@param		int		$day
+	 *	@return		int
+	 */
+	public function getNearestFallbackDay( int $day ): int
 	{
-		$left	= $right	= (int) $day;
+		$left	= $right	= $day;
 		while( $left >= 0 || $right <= 6 ){
 			if( --$left >= 0 && count( $this->list[$left] ) )
 				return $left;
@@ -60,6 +76,10 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		return -1;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		$list	= [];
@@ -68,19 +88,34 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 		return join( $list );
 	}
 
+	/**
+	 *	@param		$tense
+	 *	@param		$day
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$this->missions	= $this->list[$day];
 		return parent::renderDayList( $tense, $day, $showStatus, $showPriority, $showDate, $showActions );
 	}
 
-	public function setMissions( $missions ): self
+	/**
+	 *	@param		array<object>		$missions
+	 *	@return		self
+	 *	@throws		Exception
+	 */
+	public function setMissions( array $missions ): self
 	{
 		foreach( $missions as $mission ){															//  iterate missions
 			/** @noinspection PhpUnhandledExceptionInspection */
 			$diff	= $this->today->diff( new DateTime( $mission->dayStart ) );						//  get difference to today
 			$days	= $diff->invert ? -1 * $diff->days : $diff->days;								//  calculate days left
-			$days	= max( min( $days , 6 ), 0 );													//  restrict to be within 0 and 6
+			$days	= max( min( $days , 6 ), 0 );									//  restrict to be within 0 and 6
 			$this->list[$days][]	= $mission;														//  assign mission to day list
 		}
 		return $this;

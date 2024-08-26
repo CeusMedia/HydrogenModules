@@ -8,11 +8,19 @@ class View_Helper_ModalRegistry extends Abstraction
 	/** @var object[] $modals */
 	protected array $modals	= [];
 
+	/**
+	 *	@param		WebEnvironment		$env
+	 */
 	public function __construct( WebEnvironment $env )
 	{
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@param		string		$key
+	 *	@param		object		$modal
+	 *	@return		void
+	 */
 	public function register( string $key, object $modal ): void
 	{
 		if( array_key_exists( $key, $this->modals ) )
@@ -20,6 +28,9 @@ class View_Helper_ModalRegistry extends Abstraction
 		$this->modals[$key]	= $modal;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		$list	= [];

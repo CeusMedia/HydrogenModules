@@ -40,6 +40,21 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		'direction'		=> 'ASC',
 	];
 
+	/**
+	 *	@param		int|string|NULL		$year
+	 *	@param		int|string|NULL		$month
+	 *	@return		void
+	 */
+	public function index( int|string|NULL $year = NULL, int|string|NULL $month = NULL ): void
+	{
+		$this->assignFilters();
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		parent::__onInit();
@@ -55,55 +70,9 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		] );
 	}
 
-	public function ajaxRenderIndex(): void
-	{
-		$userId	= $this->getData( 'userId' );
-		$this->addData( 'users', $this->userMap );
-	}
-
-	public function ajaxSetMissionStatus(): void
-	{
-		$missionId	= $this->request->get( 'missionId' );
-		$status		= (int) $this->request->get( 'status' );
-
-		try{
-			if( !$missionId )
-				throw new InvalidArgumentException( 'Mission ID is missing' );
-			if( !in_array( $status, [0, 1, 2, 3] ) )
-				throw new InvalidArgumentException( 'Invalid status given' );
-			$mission	= $this->model->get( $missionId );
-			if( !$mission )
-				throw new InvalidArgumentException( 'Invalid mission ID given' );
-			$responseStatus	= FALSE;
-			if( $mission->status != $status ){
-				$data	= [
-					'status'		=> $status,
-					'modifiedAt'	=> time(),
-				];
-//				if( $status === 1 )
-//					$data['workerId']	= $this->userId;
-				$this->model->edit( $missionId, $data );
-				$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
-				$responseStatus		= TRUE;
-				$mission	= $this->model->get( $missionId );
-			}
-			print json_encode( [
-				'status'	=> $responseStatus,
-				'item'		=> $mission,
-			] );
-		}
-		catch( Exception $e ){
-			header( "HTTP/1.1 400 OK" );
-			print( json_encode( $e->getMessage() ) );
-		}
-		exit;
-	}
-
-	public function index( $year = NULL, $month = NULL ): void
-	{
-		$this->assignFilters();
-	}
-
+	/**
+	 *	@return		void
+	 */
 	protected function initDefaultFilters(): void
 	{
 		parent::initDefaultFilters();
@@ -111,9 +80,9 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 			$this->session->set( $this->filterKeyPrefix.'month', date( "Y" )."-".date( "n" ) );
 	}
 
-	protected function initFilters( string $userId ): void
+/*	protected function initFilters( string $userId ): void
 	{
 		parent::initFilters( $userId );
 //		$this->logic->generalConditions['...'] = '...';
-	}
+	}*/
 }

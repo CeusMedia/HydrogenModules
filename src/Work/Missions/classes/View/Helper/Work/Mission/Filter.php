@@ -103,10 +103,10 @@ class View_Helper_Work_Mission_Filter
 
 	public function renderViewTypeSwitch( string $mode ): string
 	{
-		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
+//		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
 
-		$wordsViewTypes	= (object) $this->words['viewTypes'];
+//		$wordsViewTypes	= (object) $this->words['viewTypes'];
 
 		$current	= '';
 		$hasFontAwesome	= $this->env->getModules()->has( 'UI_Font_FontAwesome' );
@@ -149,10 +149,10 @@ class View_Helper_Work_Mission_Filter
 	{
 		if( !in_array( $mode, ['archive', 'now', 'future'], TRUE ) )
 			return '';
-		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
+//		$caret	= HtmlTag::create( 'span', '', ['class' => 'caret'] );
 		$items	= [];
 
-		$wordsViewTypes	= (object) $this->words['modeTypes'];
+//		$wordsViewTypes	= (object) $this->words['modeTypes'];
 
 		$current	= '';
 		$hasFontAwesome	= $this->env->getModules()->has( 'UI_Font_FontAwesome' );

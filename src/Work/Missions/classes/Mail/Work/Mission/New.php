@@ -6,27 +6,41 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	protected ?string $languageSection				= 'mail-new';
 	protected ?View_Helper_Mail_Facts $helperFacts	= NULL;
 
-	public function generate(): self
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): self
 	{
 		parent::generate();
-		$data			= $this->data;
+		$data	= $this->data;
 		$this->setSubjectFromMission( $data['mission'] );
 		$this->prepareFacts( $data );
 		$this->addBodyClass( 'job-work-mission-mail-new' );
-		$this->setHtml( $this->renderHtml() );
-		$this->setText( $this->renderText() );
+		$this->setHtml( $this->renderHtmlMailBody() );
+		$this->setText( $this->renderTextMailBody() );
 		return $this;
 	}
 
-	public function prepareFacts( array $data ): void
+	/**
+	 *	@param		array		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function prepareFacts( array $data ): void
 	{
 		$mission	= $data['mission'];
 		$this->helperFacts	= new View_Helper_Mail_Facts();
-		$this->helperFacts->setLabels( (array) $this->labels );
+		$this->helperFacts->setLabels( $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 
 		$this->helperFacts->add( 'type', $this->labelsTypes[$mission->type], $this->labelsTypes[$mission->type] );
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
+			/** @var Logic_Project $logicProject */
 			$logicProject	= Logic_Project::getInstance( $this->env );
 			$project		= $logicProject->getProject( $mission->projectId );
 			$link			= HtmlTag::create( 'a', $project->title, ['href' => './manage/project/view/'.$project->projectId] );
@@ -72,10 +86,15 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 			$this->helperFacts->add( 'reference', $mission->reference );
 	}
 
-	public function renderHtml(): string
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderHtmlMailBody(): string
 	{
 		$data			= $this->data;
-		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
+//		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
 		$url			= $this->baseUrl.'work/mission/'.$mission->missionId;
@@ -83,7 +102,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 		$dateFull		= $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth;
 
-		$content		= HtmlTag::create( 'em', $this->words->emptyContent, ['class' => 'muted'] );
+		$content		= HtmlTag::create( 'em', $this->words['emptyContent'], ['class' => 'muted'] );
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 
@@ -111,17 +130,22 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		return $this->view->loadContentFile( 'mail/work/mission/new.html', $data );
 	}
 
-	public function renderText(): string
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderTextMailBody(): string
 	{
 		$data			= $this->data;
-		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
+//		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
 		$modifier		= $this->modelUser->get( $mission->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 
-		$content		= $this->words->emptyContent;
+		$content		= $this->words['emptyContent'];
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= strip_tags( $mission->content );
 

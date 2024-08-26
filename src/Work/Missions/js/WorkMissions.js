@@ -63,10 +63,10 @@ var WorkMissions = {
 		WorkMissionsList.blendOut(150);
 		if(permanent)
 			$.ajax({
-				url: "./work/mission/ajaxSelectDay/"+day,
+				url: "./ajax/work/mission/selectDay/"+day,
 				dataType: "json",
 				success: function(json){
-					WorkMissionsList.renderDayListDayControls(json);
+					WorkMissionsList.renderDayListDayControls(json.data);
 //					WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
 				}
 			});

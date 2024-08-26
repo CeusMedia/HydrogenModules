@@ -34,7 +34,12 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $this;
 	}
 
-	protected function renderUser( object $user, $link = FALSE ): string
+	/**
+	 *	@param		object		$user
+	 *	@param		bool		$link
+	 *	@return		string
+	 */
+	protected function renderUser( object $user, bool $link = FALSE ): string
 	{
 		if( !$user )
 			return '-';
@@ -54,6 +59,10 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $userLabel;
 	}
 
+	/**
+	 *	@param		object		$user
+	 *	@return		string
+	 */
 	protected function renderUserAsText( object $user ): string
 	{
 		if( !$user )
@@ -70,12 +79,22 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $user->username.$fullname;
 	}
 
+	/**
+	 *	@param		object		$mission
+	 *	@return		string
+	 */
 	protected function renderLinkedTitle( object $mission ): string
 	{
 		return HtmlTag::create( 'a', $mission->title, [
 			'href'	=> './work/mission/view/'.$mission->missionId
 		] );
 	}
+
+	/**
+	 *	@param		object		$mission
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 
 	protected function setSubjectFromMission( object $mission ): self
 	{

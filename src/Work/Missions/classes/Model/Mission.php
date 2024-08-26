@@ -54,7 +54,7 @@ class Model_Mission extends Model
 	];
 
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected string $name				= "missions";
+	protected string $name				= 'missions';
 
 	/**	@var	array		$columns	List of columns within table */
 	protected array $columns			= [
@@ -82,7 +82,7 @@ class Model_Mission extends Model
 	];
 
 	/**	@var	string		$primaryKey		Name of column with primary key */
-	protected string $primaryKey			= "missionId";
+	protected string $primaryKey			= 'missionId';
 
 	/**	@var	array		$name			List of columns which are a foreign key and/or indexed */
 	protected array $indices				= [
