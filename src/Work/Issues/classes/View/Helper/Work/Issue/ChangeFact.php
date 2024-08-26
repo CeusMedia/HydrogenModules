@@ -21,6 +21,9 @@ class View_Helper_Work_Issue_ChangeFact
 	protected int $format		= self::FORMAT_HTML;
 	protected ?object $change	= NULL;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
@@ -30,6 +33,11 @@ class View_Helper_Work_Issue_ChangeFact
 		$this->modelChange	= new Model_Issue_Change( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
@@ -37,12 +45,20 @@ class View_Helper_Work_Issue_ChangeFact
 		return $this->renderAsHtml();
 	}
 
-	public function setChange( $change ): self
+	/**
+	 *	@param		object		$change
+	 *	@return		self
+	 */
+	public function setChange( object $change ): self
 	{
 		$this->change	= $change;
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
@@ -51,6 +67,11 @@ class View_Helper_Work_Issue_ChangeFact
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function renderAsHtml(): string
 	{
 		if( !$this->change )
@@ -74,6 +95,7 @@ class View_Helper_Work_Issue_ChangeFact
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
+				/** @var Logic_Project $logic */
 				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
@@ -114,6 +136,11 @@ class View_Helper_Work_Issue_ChangeFact
 		return HtmlTag::create( 'dd', $change );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function renderAsText(): string
 	{
 		if( !$this->change )
@@ -134,6 +161,7 @@ class View_Helper_Work_Issue_ChangeFact
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
+				/** @var Logic_Project $logic */
 				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= 'unbekannt';
 				$to		= 'unbekannt';

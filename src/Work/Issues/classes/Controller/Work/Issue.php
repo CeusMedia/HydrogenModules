@@ -32,11 +32,16 @@ class Controller_Work_Issue extends Controller
 	protected array $userProjects;
 	protected ?string $userId;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue/add' );
-		$request	= $this->env->request;
+		$request	= $this->env->getRequest();
 		$managerId	= (int) $request->get( 'managerId' );
 		// @todo activate after getDefaultProjectManager is implemented
 /*		if( !$managerId ){
@@ -72,17 +77,22 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'type', $request->get( 'type' ) );
 		$this->addData( 'priority', $request->get( 'priority' ) );
 		$this->addData( 'projectId', $request->get( 'projectId' ) );
-		$this->addData( 'title', $request->get( 'title' ) );
-		$this->addData( 'content', $request->get( 'content' ) );
+		$this->addData( 'title', $request->get( 'title', '' ) );
+		$this->addData( 'content', $request->get( 'content', '' ) );
 		$this->addData( 'projects', $this->userProjects );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ): string
+	public function ajaxRenderDashboardPanel( int|string $panelId ): string
 	{
 		return HtmlTag::create( 'div', '...' );
 	}
 
-	public function edit( $issueId ): void
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $issueId ): void
 	{
 		$request	= $this->env->getRequest();
 		$issue		= $this->checkIssue( $issueId );
@@ -90,7 +100,7 @@ class Controller_Work_Issue extends Controller
 
 //			$this->logic->informAboutChange( 50, $this->userId );
 
-			$data		= array(
+			$data		= [
 //				'projectId'		=> (int) $request->get( 'projectId' ),
 //				'type'			=> (int) $request->get( 'type' ),
 //				'severity'		=> (int) $request->get( 'severity' ),
@@ -100,7 +110,7 @@ class Controller_Work_Issue extends Controller
 				'title'			=> trim( $request->get( 'title' ) ),
 				'content'		=> trim( $request->get( 'content' ) ),
 				'modifiedAt'	=> time()
-			);
+			];
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
 //			$this->logic->informAboutChange( $issueId, $this->userId );
@@ -112,7 +122,13 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'users', $this->logic->getParticipatingUsers( $issueId ) );
 	}
 
-	public function emerge( string $issueId ): void
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function emerge( int|string $issueId ): void
 	{
 		$request	= $this->env->getRequest();
 		$modelIssue		= new Model_Issue( $this->env );
@@ -163,7 +179,12 @@ class Controller_Work_Issue extends Controller
 		$this->restart( './work/issue/edit/'.$issueId );
 	}
 
-	public function export( $limit = 10, $offset = 0 ): void
+	/**
+	 *	@param		int		$limit
+	 *	@param		int		$offset
+	 *	@return		never
+	 */
+	public function export( int $limit = 10, int $offset = 0 ): never
 	{
 		$request	= $this->env->getRequest();
 		if( !($filters	= $request->get( 'filters' ) ) )
@@ -283,14 +304,14 @@ class Controller_Work_Issue extends Controller
 
 		$userIds	= [];
 		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, $limit] );
-		foreach( $issues as $nr => $issue ){
-			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
-			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
+		foreach( $issues as $issue ){
+			$issue->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
+			$issue->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
 			$userIds[]	= $issue->reporterId;
 			$userIds[]	= $issue->managerId;
-			foreach( $issues[$nr]->notes as $note )
+			foreach( $issue->notes as $note )
 				$userIds[]	= $note->userId;
-			foreach( $issues[$nr]->changes as $change )
+			foreach( $issue->changes as $change )
 				$userIds[]	= $change->userId;
 		}
 
@@ -352,11 +373,12 @@ class Controller_Work_Issue extends Controller
 		$this->userProjects	= $this->logic->getUserProjects();
 	}
 
-	protected function checkIssue( string $issueId, bool $strict = TRUE )
+	protected function checkIssue( int|string $issueId, bool $strict = TRUE ): ?object
 	{
 		$issue	= $this->logic->get( $issueId, TRUE );
 		$users	= $this->logic->getParticipatingUsers( $issueId );
 		if( $issue && $users ){
+			/** @var Logic_Authentication $logicAuth */
 			$logicAuth	= Logic_Authentication::getInstance( $this->env );
 			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )
 				return $issue;
@@ -366,7 +388,7 @@ class Controller_Work_Issue extends Controller
 		return NULL;
 	}
 
-	protected function noteChange( string $issueId, string $noteId, $type, $from, $to )
+	protected function noteChange( int|string $issueId, int|string $noteId, $type, $from, $to ): string
 	{
 		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
 	}

@@ -3,7 +3,6 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 
 //  --  FILTER  --  //
@@ -34,7 +33,7 @@ function quantifyWords( array $words, array $numbers = [] ): array
 }
 
 /** @var Environment $env */
-/** @var View $view */
+/** @var View_Work_Issue $view */
 /** @var array $words */
 /** @var array $numberTypes */
 /** @var array $numberPriorities */

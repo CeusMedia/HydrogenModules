@@ -2,6 +2,11 @@
 
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Work_Issue $view */
 
 /**
  *	@see		ImageMapster

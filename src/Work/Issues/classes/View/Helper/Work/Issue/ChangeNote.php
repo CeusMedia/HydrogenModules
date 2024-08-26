@@ -17,11 +17,17 @@ class View_Helper_Work_Issue_ChangeNote
 	protected ?object $note		= NULL;
 	protected int $format		= self::FORMAT_HTML;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
@@ -29,12 +35,20 @@ class View_Helper_Work_Issue_ChangeNote
 		return $this->renderAsHtml();
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
 		return $this;
 	}
 
+	/**
+	 *	@param		object		$note
+	 *	@return		self
+	 */
 	public function setNote( object $note ): self
 	{
 		$this->note	= $note;
@@ -43,6 +57,9 @@ class View_Helper_Work_Issue_ChangeNote
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsHtml(): string
 	{
 		if( !$this->note )
@@ -59,10 +76,12 @@ class View_Helper_Work_Issue_ChangeNote
 			else
 				$noteText	= nl2br( $this->note->note );
 		}
-		$note	= HtmlTag::create( 'tt', $noteText, ['class' => 'issue-change-list-note-content'] );
-		return $note;
+		return HtmlTag::create( 'tt', $noteText, ['class' => 'issue-change-list-note-content'] );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsText(): string
 	{
 		if( !$this->note )

@@ -38,7 +38,6 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -52,7 +51,6 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function onListUserRelations(): void
 	{
@@ -72,11 +70,11 @@ class Hook_Work_Issue extends Hook
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
-		$icons			= array(
+		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
+		];
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
 		foreach( $reportedIssues as $issue ){
@@ -106,6 +104,7 @@ class Hook_Work_Issue extends Hook
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
@@ -115,6 +114,7 @@ class Hook_Work_Issue extends Hook
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
+		/** @var Logic_Issue $logic */
 		$logic			= Logic_Issue::getInstance( $this->env );
 		$modelIssue		= new Model_Issue( $this->env );
 		$modelChange	= new Model_Issue_Change( $this->env );
@@ -147,7 +147,7 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onListProjectRelations(): void
 	{
@@ -157,7 +157,7 @@ class Hook_Work_Issue extends Hook
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( !( $project = $modelProject->get( $payload->projectId ) ) ){
+		if( !$modelProject->has( $payload->projectId ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
@@ -173,11 +173,11 @@ class Hook_Work_Issue extends Hook
 			$indices['status']	= $statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
-		$icons			= array(
+		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
+		];
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
 			$icon		= $icons[$issue->type];

@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var object $issue $issue */
+
 $changers	= [];
 foreach( $issue->notes as $note )
 	foreach( $note->changes as $change )

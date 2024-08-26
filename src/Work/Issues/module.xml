@@ -15,8 +15,8 @@
 	<log version="0.3.1">Support hook Project::onListRelations.</log>
 	<log version="0.3.2">Support hook Project::onRemove.</log>
 	<log version="0.3.3">Support hook Dashboard::renderPanels.</log>
-	<log version="0.3.4">Upgrade support for new dasboard module.</log>
-	<log version="0.3.5">Remove support for old dasboard module.</log>
+	<log version="0.3.4">Upgrade support for new dashboard module.</log>
+	<log version="0.3.5">Remove support for old dashboard module.</log>
 	<log version="0.3.6">Split note change view into several view helpers.</log>
 	<log version="0.3.7">Send mail on every issue change.</log>
 	<log version="0.3.8">Send mail on every new issue.</log>
@@ -24,7 +24,7 @@
 	<log version="0.4.1">Adjust behaviour of filters.</log>
 	<log version="0.4.2">Add abstract mail class.</log>
 	<log version="0.4.3">Rewrite mail components to support HTML and plain text.</log>
-	<log version="0.4.4">Separate disploy of change facts and note.</log>
+	<log version="0.4.4">Separate display of change facts and note.</log>
 	<log version="0.4.5">Extract hooks to own hook class.</log>
 	<log version="0.4.6">Add hooks to list and remove user related entities.</log>
 	<log version="0.4.7">Update code style.</log>

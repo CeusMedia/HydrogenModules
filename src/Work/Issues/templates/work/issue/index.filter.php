@@ -1,17 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
 
 //  --  FILTER  --  //
 
-$session	= $this->env->getSession();
+$session	= $env->getSession();
 
 //$script	= '$(document).ready(function(){});';
 //$this->env->page->js->addScript( $script );
 
-$title		= $this->env->getSession()->get( 'filter-issue-title' );
-$limit		= $this->env->getSession()->get( 'filter-issue-limit' );
-$issueId	= $this->env->getSession()->get( 'filter-issue-issueId' );
+$title		= $env->getSession()->get( 'filter-issue-title' );
+$limit		= $env->getSession()->get( 'filter-issue-limit' );
+$issueId	= $env->getSession()->get( 'filter-issue-issueId' );
 
 $optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label )

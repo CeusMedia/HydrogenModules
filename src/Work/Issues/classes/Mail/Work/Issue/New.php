@@ -4,6 +4,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 {
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$data	= $this->data;
@@ -18,6 +23,9 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderHtmlBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -54,6 +62,9 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 		return $body;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderTextBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -76,7 +87,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 '.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL;
 
 		$list	= [];
-		foreach( explode( PHP_EOL, $body ) as $nr => $line )
+		foreach( explode( PHP_EOL, $body ) as $line )
 			$list[]	= View_Helper_Mail_Text::indent( $line, 0, 76 );
 		return join( PHP_EOL, $list );
 	}

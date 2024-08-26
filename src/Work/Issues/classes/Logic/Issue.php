@@ -37,6 +37,7 @@ class Logic_Issue extends Logic
 	 *	@param		boolean		$extended		Flag: extend issue by project, notes and changes
 	 *	@return		object		Issue data object
 	 *	@throws		OutOfRangeException			if issue ID is not valid
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( string $issueId, bool $extended = FALSE ): object
 	{
@@ -71,6 +72,7 @@ class Logic_Issue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$issueId		ID of issue to get participating users for
 	 *	@return		array		Map of ordered participating users by ID
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getParticipatingUsers( int|string $issueId ): array
 	{
@@ -132,6 +134,13 @@ class Logic_Issue extends Logic
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$currentUserId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function informAboutNew( int|string $issueId, int|string $currentUserId ): array
 	{
 		$users		= $this->getParticipatingUsers( $issueId );
@@ -143,6 +152,7 @@ class Logic_Issue extends Logic
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
+			/** @var Logic_Mail $logicMail */
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
 				$userProjects		= $this->getUserProjects();
@@ -159,10 +169,17 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$currentUserId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function informAboutChange( int|string $issueId, int|string $currentUserId ): array
 	{
-		$users				= $this->getParticipatingUsers( $issueId );
-		$issue				= $this->get( $issueId, TRUE );
+		$users		= $this->getParticipatingUsers( $issueId );
+		$issue		= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
 			$issue->reporter	= $users[$issue->reporterId];
 		if( $issue->managerId )
@@ -170,6 +187,7 @@ class Logic_Issue extends Logic
 		if( isset( $users[$currentUserId] ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
+			/** @var Logic_Mail $logicMail */
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
 				$userProjects		= $this->getUserProjects();
@@ -186,6 +204,15 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$noteId
+	 *	@param		$type
+	 *	@param		$from
+	 *	@param		$to
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function noteChange( int|string $issueId, int|string $noteId, $type, $from, $to ): string
 	{
 		$data	= [
@@ -200,6 +227,11 @@ class Logic_Issue extends Logic
 		return $this->modelIssueChange->add( $data );
 	}
 
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( int|string $issueId ): bool
 	{
 		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
@@ -209,6 +241,10 @@ class Logic_Issue extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

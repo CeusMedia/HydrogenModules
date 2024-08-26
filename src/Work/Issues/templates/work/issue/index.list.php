@@ -1,6 +1,17 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Work_Issue $view */
+/** @var object[] $issues */
+/** @var int $page */
+/** @var int $total */
+/** @var int $number */
 
 $helper	= new View_Helper_TimePhraser( $env );
 
@@ -39,7 +50,7 @@ foreach( $issues as $issue ){
 </tr>';
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/issue', $page, ceil( $number / 10 ) );
+$pagination	= new PageControl( './work/issue', $page, ceil( $number / 10 ) );
 $pagination	= $pagination->render();
 
 return '

@@ -4,12 +4,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 {
-	/** @var View_Helper_Mail_Facts|View_Helper_Work_Issue_ChangeFacts $factsChanges */
-	protected ?object $factsChanges					= NULL;
+	/** @var View_Helper_Mail_Facts|View_Helper_Work_Issue_ChangeFacts|NULL $factsChanges */
+	protected View_Helper_Mail_Facts|View_Helper_Work_Issue_ChangeFacts|NULL $factsChanges		= NULL;
 	protected ?View_Helper_Work_Issue_ChangeNote $changeNote		= NULL;
 	protected array $labelsStates;
 	protected ?object $note											= NULL;
 
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): self
 	{
 		$data	= $this->data;
@@ -23,7 +28,13 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		return $this;
 	}
 
-	protected function prepareFacts( array $data )
+	/**
+	 *	@param		array		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function prepareFacts( array $data ): void
 	{
 		parent::prepareFacts( $data );
 		$issue	= $data['issue'];
@@ -39,6 +50,9 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		}
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderHtmlBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -96,6 +110,9 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		return $body;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderTextBody(): string
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

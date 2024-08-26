@@ -13,30 +13,33 @@ class View_Work_Issue extends View
 
 	public function ajaxRenderDashboardPanel(): string
 	{
+		/** @var Logic_Project $logicProject */
 		$logicProject	= Logic_Project::getInstance( $this->env );
-		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		/** @var Logic_Authentication $logicAuth */
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$currentUserId	= $logicAuth->getCurrentUserId();
 		$modelIssue		= new Model_Issue( $this->env );
 		$userProjects	= $logicProject->getUserProjects( $currentUserId, TRUE );
 		if( !$userProjects )
 			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
-		$issues	= $modelIssue->getAll( array(
+		$issues	= $modelIssue->getAll( [
 			'status'	=> [0, 1, 2, 3],
 		 	'projectId'	=> array_keys( $userProjects ),
-		), ['type' => 'ASC', 'priority' => 'ASC']/*, [0, 20]*/ );
+		], ['type' => 'ASC', 'priority' => 'ASC']/*, [0, 20]*/ );
 		$rows	= [];
-		$icons			= array(
+		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
+		];
 		foreach( $issues as $issue ) {
 			$icon	= $icons[$issue->type];
 			$link	= HtmlTag::create( 'a', $icon.'&nbsp;'.$issue->title, [
 				'href'	=> './work/issue/edit/'.$issue->issueId
 			] );
-			$rows[]	= HtmlTag::create( 'tr', array(
+			$rows[]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
-			) );
+			] );
 		}
 		$table	= HtmlTag::create( 'table', $rows, ['class' => 'table table-condensed table-fixed'] );
 		return HtmlTag::create( 'div', $table );
@@ -50,6 +53,13 @@ class View_Work_Issue extends View
 	{
 	}
 
+	/**
+	 *	@param		array		$options
+	 *	@param		$key
+	 *	@param		$values
+	 *	@param		string		$class
+	 *	@return		string
+	 */
 	public function renderOptions( array $options, $key, $values, string $class = '' ): string
 	{
 		$list		= [];
