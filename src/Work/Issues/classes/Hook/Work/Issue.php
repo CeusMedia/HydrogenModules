@@ -54,19 +54,18 @@ class Hook_Work_Issue extends Hook
 	 */
 	public function onListUserRelations(): void
 	{
-		$payload	= (object) $this->payload;
-		if( empty( $payload->userId ) ){
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Work_Issues::onListUserRelations" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$modelIssue		= new Model_Issue( $this->env );
 
-		$activeOnly		= $payload->activeOnly ?? FALSE;
-		$linkable		= $payload->linkable ?? FALSE;
+		$activeOnly		= $this->payload['activeOnly'] ?? FALSE;
+		$linkable		= $this->payload['linkable'] ?? FALSE;
 		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
-		$indices		= ['reporterId' => $payload->userId];
+		$indices		= ['reporterId' => $this->payload['userId']];
 		if( $activeOnly )
 			$indices['status']	= $statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
@@ -85,12 +84,12 @@ class Hook_Work_Issue extends Hook
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $payload->linkable ? $issue->issueId : NULL,
+				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$payload,																				//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items
@@ -152,24 +151,24 @@ class Hook_Work_Issue extends Hook
 	public function onListProjectRelations(): void
 	{
 		$modelProject	= new Model_Project( $this->env );
-		if( empty( $payload->projectId ) ){
+		if( empty( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations" is missing project ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( !$modelProject->has( $payload->projectId ) ){
+		if( !$modelProject->has( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$payload->activeOnly	= $payload->activeOnly ?? FALSE;
-		$payload->linkable		= $payload->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 		$language		= $this->env->getLanguage();
 		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
 		$modelIssue		= new Model_Issue( $this->env );
-		$indices		= ['projectId' => $payload->projectId];
-		if( $payload->activeOnly )
+		$indices		= ['projectId' => $this->payload['projectId']];
+		if( $this->payload['activeOnly'] )
 			$indices['status']	= $statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
@@ -187,12 +186,12 @@ class Hook_Work_Issue extends Hook
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $payload->linkable ? $issue->issueId : NULL,
+				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$payload,																				//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items

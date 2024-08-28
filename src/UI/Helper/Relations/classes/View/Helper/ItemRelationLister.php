@@ -37,12 +37,12 @@ class View_Helper_ItemRelationLister
 		];
 	}
 
-	public static function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL ): void
+	public static function enqueueRelations( array & $data, Environment\Resource\Module\Definition|NULL $module, string $type, array $items, $label, $controller = NULL, $action = NULL ): void
 	{
-		if( !isset( $data->list ) )
-			$data->list	= [];
+		if( !isset( $data['list'] ) )
+			$data['list']	= [];
 		if( count( $items ) ){
-			$data->list[]	= (object) [
+			$data['list'][]	= (object) [
 				'module'		=> (object) [
 					'id'		=> $module->id,
 					'label'		=> $module->title,

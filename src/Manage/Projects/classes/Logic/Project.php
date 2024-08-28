@@ -38,6 +38,8 @@ class Logic_Project extends Logic
 	 */
 	public function getCoworkers( int|string $userId, int|string|NULL $projectId = NULL, bool $includeSelf = FALSE ): array
 	{
+		if( 0 == (int) $userId )
+			return [];
 		if( $projectId ){
 			$users	= $this->getProjectUsers( $projectId );
 			if( !isset( $users[$userId] ) && !$this->hasFullAccess() )

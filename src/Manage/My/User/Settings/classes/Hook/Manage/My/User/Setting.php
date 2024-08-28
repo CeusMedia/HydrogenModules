@@ -70,38 +70,38 @@ class Hook_Manage_My_User_Setting extends Hook
 	 *	@return		void
 	 *	@todo		active, once config key can be translated labels @see View_Manage_My_User_Setting::getModuleWords
 	 */
-	static public function onListUserRelations( Environment $env, $context, $module, $data )
+	public function onListUserRelations()
 	{
 		return;
-		if( empty( $data->userId ) ){
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Manage_My_User_Setting::onListUserRelations" is missing user ID in data.';
-			$env->getMessenger()->noteFailure( $message );
+			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/my/user/setting' );
 
-		$data->activeOnly	= $data->activeOnly ?? FALSE;
-		$data->linkable		= $data->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 
 		$list		= [];
-		$model		= new Model_User_Setting( $env );
-		$settings	= $model->getAllByIndex( 'userId', $data->userId );
+		$model		= new Model_User_Setting( $this->env );
+		$settings	= $model->getAllByIndex( 'userId', $this->payload['userId'] );
 		foreach( $settings as $setting ){
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? '#'.$setting->key : NULL,
+				'id'		=> $this->payload['linkable'] ? '#'.$setting->key : NULL,
 				'label'		=> $setting->moduleId.' :: '.$setting->key,
 			];
 		}
 
 		if( $list )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$data,																			//  hook content data
+				$this->payload,															//  hook content data
 				$module,																		//  module called by hook
-				'entity',																		//  relation type: entity or relation
+				'entity',																	//  relation type: entity or relation
 				$list,																			//  list of related items
 				$words['helper-relations']['heading'],											//  label of type of related items
-				'Manage_My_User_Setting',														//  controller of entity
-				'edit'																			//  action to view or edit entity
+				'Manage_My_User_Setting',												//  controller of entity
+				'edit'																	//  action to view or edit entity
 			);
 	}
 }

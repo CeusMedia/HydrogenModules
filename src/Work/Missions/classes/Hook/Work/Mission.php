@@ -48,8 +48,7 @@ class Hook_Work_Mission extends Hook
 
 	public function onDatabaseLockReleaseCheck()
 	{
-		$data	= (object) $this->payload;
-		$controllerAction	= $data->controller.'/'.$data->action;
+		$controllerAction	= $this->payload['controller'].'/'.$this->payload['action'];
 		$skipActions		= [
 			'work/mission/export/ical',
 			'work/mission/addDocument',
@@ -61,14 +60,14 @@ class Hook_Work_Mission extends Hook
 		];
 		if( in_array( $controllerAction, $skipActions ) )
 			return FALSE;
-		if( !$data->userId )
+		if( !$this->payload['userId'] )
 			return FALSE;
 		$logicLock	= new Logic_Database_Lock( $this->env );
-		$locks		= $logicLock->getUserLocks( $data->userId );
+		$locks		= $logicLock->getUserLocks( $this->payload['userId'] );
 		foreach( $locks as $lock ){
 			if( 'Work_Missions' === $lock->subject ){
-//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $data->request->get( '__path') )."\n", 3, "unlock.log" );
-				$logicLock->unlock( $lock->subject, $lock->entryId, $data->userId );
+//				error_log( time().": Missions:onDatabaseLockReleaseCheck: ".json_encode( $this->payload['request']->get( '__path') )."\n", 3, "unlock.log" );
+				$logicLock->unlock( $lock->subject, $lock->entryId, $this->payload['userId'] );
 			}
 		}
 	}
@@ -79,22 +78,21 @@ class Hook_Work_Mission extends Hook
 	 */
 	public function onProjectRemove(): void
 	{
-		$data	= (object) $this->payload;
-		$data->informOthers	= $data->informOthers ?? FALSE;
-		if( empty( $data->projectId ) ){
+		$this->payload['informOthers']	= $this->payload['informOthers'] ?? FALSE;
+		if( empty( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Missions::onProjectRemove" is missing project ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$modelProject	= new Model_Project( $this->env );
-		if( NULL === $modelProject->get( $data->projectId ) ){
+		if( NULL === $modelProject->get( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Missions::onProjectRemove": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$logicMission	= Logic_Work_Mission::getInstance( $this->env );
 		$modelMission	= new Model_Mission( $this->env );
-		$missions		= $modelMission->getAllByIndex( 'projectId', $data->projectId );
+		$missions		= $modelMission->getAllByIndex( 'projectId', $this->payload['projectId'] );
 		foreach( $missions as $mission ){
 			$logicMission->removeMission( $mission->missionId );
 		}
@@ -106,27 +104,26 @@ class Hook_Work_Mission extends Hook
 	 */
 	public function onListProjectRelations(): void
 	{
-		$data			= (object) $this->payload;
 		$modelProject	= new Model_Project( $this->env );
-		if( empty( $data->projectId ) ){
+		if( empty( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Missions::onListProjectRelations" is missing project ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( NULL === $modelProject->get( $data->projectId ) ){
+		if( NULL === $modelProject->get( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Missions::onListProjectRelations": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$data->activeOnly	= $data->activeOnly ?? FALSE;
-		$data->linkable		= $data->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 
 		$modelMission	= new Model_Mission( $this->env );
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 
 		$list			= [];
-		$indices		= ['projectId' => $data->projectId];
-		if( $data->activeOnly )
+		$indices		= ['projectId' => $this->payload['projectId']];
+		if( $this->payload['activeOnly'] )
 			$indices['status']	= self::$statusesActive;
 		$orders			= ['type' => 'DESC', 'title' => 'ASC'];
 		$missions		= $modelMission->getAllByIndices( $indices, $orders );	//  ...
@@ -143,12 +140,12 @@ class Hook_Work_Mission extends Hook
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? $mission->missionId : NULL,
+				'id'		=> $this->payload['linkable'] ? $mission->missionId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items
@@ -164,8 +161,7 @@ class Hook_Work_Mission extends Hook
 	 */
 	public function onListUserRelations(): void
 	{
-		$data		= (object) $this->payload;
-		if( empty( $data->userId ) ){
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Work_Missions::onListUserRelations" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
@@ -175,22 +171,22 @@ class Hook_Work_Mission extends Hook
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 
 		$projectIds		= [];
-		$projects		= $logic->getUserProjects( $data->userId, FALSE );
+		$projects		= $logic->getUserProjects( $this->payload['userId'], FALSE );
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
-			if( count( $users ) !== 1 || !isset( $users[$data->userId] ) )						//  other users in project
+			if( count( $users ) !== 1 || !isset( $users[$this->payload['userId']] ) )						//  other users in project
 				continue;
 			$projectIds[]	= $project->projectId;
 		}
 
 		if( empty( $projectIds ) )
 			return;
-		$data->activeOnly	= $data->activeOnly ?? FALSE;
-		$data->linkable		= $data->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 		$list			= [];
 		$modelMission	= new Model_Mission( $this->env );
 		$indices		= ['projectId' => $projectIds];
-		if( $data->activeOnly )
+		if( $this->payload['activeOnly'] )
 			$indices['status']	= self::$statusesActive;
 		$orders			= ['type' => 'DESC', 'title' => 'ASC'];
 
@@ -207,13 +203,13 @@ class Hook_Work_Mission extends Hook
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? $mission->missionId : NULL,
+				'id'		=> $this->payload['linkable'] ? $mission->missionId : NULL,
 				'label'		=> $label,
 			];
 		}
 		if( $list )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$data,																			//  hook content data
+				$this->payload,															//  hook content data
 				$this->module,																	//  module called by hook
 				'entity',																	//  relation type: entity or relation
 				$list,																			//  list of related items
@@ -230,9 +226,8 @@ class Hook_Work_Mission extends Hook
 	 */
 	public function onUserRemove(): void
 	{
-		$data				= (object) $this->payload;
-		$data->informOthers	= $data->informOthers ?? FALSE;
-		if( empty( $data->userId ) ){
+		$this->payload['informOthers']	= $this->payload['informOthers'] ?? FALSE;
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Work_Missions::onUserRemove" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
@@ -245,15 +240,15 @@ class Hook_Work_Mission extends Hook
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 		$lists			= (object) ['entities' => [], 'relations' => []];
 
-		$modelFilter->removeByIndex( 'userId', $data->userId );
+		$modelFilter->removeByIndex( 'userId', $this->payload['userId'] );
 
 		$nrMissionsRemoved	= 0;
 		$nrMissionsChanged	= 0;
-		$projects		= $logicProject->getUserProjects( $data->userId, FALSE );
+		$projects		= $logicProject->getUserProjects( $this->payload['userId'], FALSE );
 		foreach( $projects as $project ){
 			$users		= $logicProject->getProjectUsers( $project->projectId );
 			$missions	= $modelMission->getAllByIndex( 'projectId', $project->projectId );
-			if( 1 === count( $users ) && isset( $users[$data->userId] ) ){						//  no other users in project
+			if( 1 === count( $users ) && isset( $users[$this->payload['userId']] ) ){						//  no other users in project
 				foreach( $missions as $mission ){
 					$logicMission->removeMission( $mission->missionId );
 					$nrMissionsRemoved++;
@@ -262,7 +257,7 @@ class Hook_Work_Mission extends Hook
 			}
 			$nextUserId	= 0;
 			foreach( $users as $itemUser ){
-				if( $itemUser->userId != $data->userId ){
+				if( $itemUser->userId != $this->payload['userId'] ){
 					$nextUserId	= $itemUser->userId;
 					break;
 				}
@@ -275,17 +270,17 @@ class Hook_Work_Mission extends Hook
 					Model_Mission::STATUS_READY,
 					Model_Mission::STATUS_FINISHED,
 				];
-				if( $mission->creatorId == $data->userId )
+				if( $mission->creatorId == $this->payload['userId'] )
 					$mission->creatorId		= $nextUserId;
-				if( $mission->workerId == $data->userId )
+				if( $mission->workerId == $this->payload['userId'] )
 					$mission->workerId		= $mission->creatorId;
-				if( $mission->modifierId == $data->userId )
+				if( $mission->modifierId == $this->payload['userId'] )
 					$mission->modifierId	= 0;
 				if( $old != $mission ){
 					$nrMissionsChanged++;
 					$modelMission->edit( $mission->missionId, (array) $mission );
-					if( $data->informOthers && in_array( $mission->status, $listProgressingMissionStatues ) )
-						$logicMission->noteChange( 'update', $mission->missionId, $old, $data->userId );
+					if( $this->payload['informOthers'] && in_array( $mission->status, $listProgressingMissionStatues ) )
+						$logicMission->noteChange( 'update', $mission->missionId, $old, $this->payload['userId'] );
 				}
 			}
 		}
@@ -293,8 +288,8 @@ class Hook_Work_Mission extends Hook
 			$this->env->getMessenger()->noteSuccess( 'Removed %d missions.', $nrMissionsRemoved );
 		if( $nrMissionsChanged )
 			$this->env->getMessenger()->noteSuccess( 'Reassigned %d missions.', $nrMissionsChanged );
-		if( isset( $data->counts ) )
-			$data->counts['Work_Missions']	= (object) [
+		if( isset( $this->payload['counts'] ) )
+			$this->payload['counts']['Work_Missions']	= (object) [
 				'entities'		=> $nrMissionsRemoved,
 				'relations'		=> $nrMissionsChanged,
 			];
