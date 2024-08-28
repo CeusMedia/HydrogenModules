@@ -88,7 +88,7 @@ class View_Helper_LanguageSelector extends Abstraction
 				] );
 				$payload	= ["label" => $link, "language" => $entry];
 				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $payload );
-				$link		= $payload['label'];
+				$link		= str_replace( '<%?OPTIONALICON%>', '', $payload['label'] );
 				$list[]		= HtmlTag::create( 'li', $link );
 			}
 		}
@@ -99,7 +99,7 @@ class View_Helper_LanguageSelector extends Abstraction
 		$label			= '<%?OPTIONALICON%>'.$this->words['selector']['label'];
 		$payload 		= ["label" => $label, "language" => $this->language->GetLanguage()];
 		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $payload );
-		$label			= $payload['label'];
+		$label			= str_replace( '<%?OPTIONALICON%>', '', $payload['label'] );
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
 		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );

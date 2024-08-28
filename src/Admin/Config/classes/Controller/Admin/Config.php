@@ -13,6 +13,7 @@ class Controller_Admin_Config extends Controller
 {
 	protected Request $request;
 	protected Dictionary $session;
+	protected string $filterPrefix	= 'filter_admin_config_';
 
 	/*	public function direct()
 	{
@@ -34,23 +35,26 @@ class Controller_Admin_Config extends Controller
 	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
-			$this->session->remove( 'filter_admin_config_category' );
-			$this->session->remove( 'filter_admin_config_moduleId' );
-			$this->session->remove( 'filter_admin_config_query' );
+			$this->session->remove( $this->filterPrefix.'category' );
+			$this->session->remove( $this->filterPrefix.'moduleId' );
+			$this->session->remove( $this->filterPrefix.'query' );
 		}
+		if( $this->request->has( 'query' ) )
+			$this->session->set( $this->filterPrefix.'query', trim( $this->request->get( 'query', '' ) ) );
 		if( $this->request->has( 'category' ) )
-			$this->session->set( 'filter_admin_config_category', trim( $this->request->get( 'category' ) ) );
+			$this->session->set( $this->filterPrefix.'category', trim( $this->request->get( 'category', '' ) ) );
 		if( $this->request->has( 'moduleId' ) )
-			$this->session->set( 'filter_admin_config_moduleId', trim( $this->request->get( 'moduleId' ) ) );
-		if( !$this->session->get( 'filter_admin_config_category' ) )
-			$this->session->remove( 'filter_admin_config_moduleId' );
+			$this->session->set( $this->filterPrefix.'moduleId', trim( $this->request->get( 'moduleId', '' ) ) );
+		if( !$this->session->get( $this->filterPrefix.'category' ) )
+			$this->session->remove( $this->filterPrefix.'moduleId' );
 		$this->restart( NULL, TRUE );
 	}
 
 	public function index(): void
 	{
-		$filterCategory	= $this->session->get( 'filter_admin_config_category' );
-		$filterModuleId	= $this->session->get( 'filter_admin_config_moduleId' );
+		$filterCategory	= $this->session->get( $this->filterPrefix.'category' );
+		$filterQuery	= $this->session->get( $this->filterPrefix.'query' );
+		$filterModuleId	= $this->session->get( $this->filterPrefix.'moduleId' );
 
 		$foundModules	= $this->env->getModules()->getAll();
 		$categories		= [];
@@ -70,11 +74,19 @@ class Controller_Admin_Config extends Controller
 					if( $filterCategory === $module->category )
 						$modules[$moduleId]	= $module;
 			$filteredModules	= $foundModules	= $modules;
-			if( !$filterModuleId && count( $foundModules ) === 1 ){
-				$module	= array_slice( array_keys( $foundModules ), 0, 1 );
-				$this->restart( 'filter?moduleId='.$module[0], TRUE );
-			}
 		}
+		if( $filterQuery ){
+			$modules		= [];
+			foreach( $foundModules as $moduleId => $module )
+				if( str_contains( $module->title.' '.$module->description, $filterQuery ) )
+					$modules[$moduleId]	= $module;
+			$filteredModules	= $foundModules	= $modules;
+		}
+		if( !$filterModuleId && count( $foundModules ) === 1 ){
+			$module	= array_slice( array_keys( $foundModules ), 0, 1 );
+			$this->restart( 'filter?moduleId='.$module[0], TRUE );
+		}
+
 		if( $filterModuleId ){
 			if( !array_key_exists( $filterModuleId, $foundModules ) )
 				$this->restart( 'filter?moduleId=', TRUE );
@@ -85,8 +97,8 @@ class Controller_Admin_Config extends Controller
 			$foundModules	= $modules;
 		}
 
-		$this->addData( 'filterCategory', $this->session->get( 'filter_admin_config_category' ) );
-		$this->addData( 'filterModuleId', $this->session->get( 'filter_admin_config_moduleId' ) );
+		$this->addData( 'filterCategory', $this->session->get( $this->filterPrefix.'category' ) );
+		$this->addData( 'filterModuleId', $this->session->get( $this->filterPrefix.'moduleId' ) );
 		$this->addData( 'categories', $categories );
 		$this->addData( 'filteredModules', $filteredModules );
 		$this->addData( 'modules', $foundModules );

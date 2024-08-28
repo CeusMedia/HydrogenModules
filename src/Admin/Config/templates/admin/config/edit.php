@@ -47,7 +47,7 @@ foreach( $module->config as $item ){
 		HtmlTag::create( 'td', $protection, ['class' => 'cell-protection'] ),
 		HtmlTag::create( 'td', $key, ['class' => 'cell-key autocut'] ),
 		HtmlTag::create( 'td', $type, ['class' => 'cell-type'] ),
-		HtmlTag::create( 'td', $input, ['class' => 'cell-value'] ),
+		HtmlTag::create( 'td', $input, ['class' => 'cell-value autocut'] ),
 	] );
 //	ksort( $rows );
 }
