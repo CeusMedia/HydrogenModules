@@ -8,6 +8,11 @@ class Logic_Project extends Logic
 	protected Model_Project_User $modelProjectUser;
 	protected Model_User $modelUser;
 
+	public function countProjects(array $conditions = [] ): int
+	{
+		return $this->modelProject->count( $conditions );
+	}
+
 	/**
 	 *	@param		int|string		$projectId
 	 *	@return		object|NULL
@@ -30,7 +35,6 @@ class Logic_Project extends Logic
 	 *	@return		array				Map of related users
 	 *	@throws		RuntimeException			if user is neither in project nor has full access
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCoworkers( int|string $userId, int|string|NULL $projectId = NULL, bool $includeSelf = FALSE ): array
 	{
@@ -167,6 +171,45 @@ class Logic_Project extends Logic
 	}
 
 	/**
+	 *	@param		object				$project
+	 *	@param		int|string|NULL		$excludeUserId
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informMembersAboutChange( object $project, int|string|NULL $excludeUserId = 0 ): int
+	{
+		$mailClassName	= Mail_Manage_Project_Changed::class;
+		return $this->sendMailToMembersByClassName( $mailClassName, $project, $excludeUserId );
+	}
+
+	/**
+	 *	@param		object				$project
+	 *	@param		int|string|NULL		$excludeUserId
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informMembersAboutMembers( object $project, int|string|NULL $excludeUserId = 0 ): int
+	{
+		$mailClassName	= Mail_Manage_Project_Members::class;
+		return $this->sendMailToMembersByClassName( $mailClassName, $project, $excludeUserId );
+	}
+
+	/**
+	 *	@param		object				$project
+	 *	@param		int|string|NULL		$excludeUserId
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informMembersAboutRemoval( object $project, int|string|NULL $excludeUserId = 0 ): int
+	{
+		$mailClassName	= Mail_Manage_Project_Removed::class;
+		return $this->sendMailToMembersByClassName( $mailClassName, $project, $excludeUserId ?? 0 );
+	}
+
+	/**
 	 *	@param		int|string		$projectId
 	 *	@param		int|string		$userId
 	 *	@param		bool			$informOthers
@@ -236,5 +279,31 @@ class Logic_Project extends Logic
 	protected function hasFullAccess(): bool
 	{
 		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
+	}
+
+	/**
+	 *	@param		string			$mailClassName
+	 *	@param		object			$project
+	 *	@param		int|string		$excludeUserId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function sendMailToMembersByClassName( string $mailClassName, object $project, int|string $excludeUserId ): bool
+	{
+		if( !$this->env->getModules()->has( 'Resource_Mail' ) )
+			return 0;
+		$language		= $this->env->getLanguage();											//  get language support
+		$counter	= 0;
+		foreach( $this->getProjectUsers( $project->projectId ) as $member ){					//  iterate project users
+			if( $member->userId == $excludeUserId )												//  project user is current user
+				continue;																		//  skip
+			$data	= ['project' => $project, 'user' => $member];
+			$mail	= new $mailClassName( $this->env, $data, FALSE );
+			/** @var Logic_Mail $logicMail */
+			$logicMail	= Logic_Mail::getInstance( $this->env );
+			$counter	+= (int) $logicMail->handleMail( $mail, $member, $language->getLanguage() );
+		}
+		return $counter;
 	}
 }

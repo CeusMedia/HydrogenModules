@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.7.4</version>
+	<version>0.7.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -48,6 +48,7 @@
 	<log version="0.7.2">Migrate logic class to extend new framework logic class.</log>
 	<log version="0.7.3">Upgrade classes.</log>
 	<log version="0.7.4">Code update.</log>
+	<log version="0.7.5">Add english locales.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -77,10 +78,13 @@
 		<locale>de/manage/project.ini</locale>
 		<locale>de/html/manage/project/remove.panel.top.html</locale>
 		<locale>de/html/manage/project/remove.right.html</locale>
+		<locale>en/manage/project.ini</locale>
+		<locale>en/html/manage/project/remove.panel.top.html</locale>
+		<locale>en/html/manage/project/remove.right.html</locale>
 		<style load="auto">site.manage.project.css</style>
 	</files>
 	<relations>
-		<needs type="module">Resource_Database</needs>
+		<needs type="module">Resource_Users</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_Relations</needs>
 		<supports type="module">Work_Missions</supports>
