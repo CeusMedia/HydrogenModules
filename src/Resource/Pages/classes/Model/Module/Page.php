@@ -65,6 +65,12 @@ class Model_Module_Page
 		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
 
+	/**
+	 *	@param		array		$indices
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
 		$indices['title']	= '!= ""';

@@ -36,10 +36,10 @@ if( $projects ){
 		$link		= HtmlTag::create( 'a', $label, ['href' => $url] );
 		$users		= [];
 		foreach( $project->users as $projectUser ){
-			if( $projectUser->userId === $project->creatorId )
+			if( $projectUser?->userId === $project->creatorId )
 				$users[]	= HtmlTag::create( 'u', $projectUser->username );
 			else
-				$users[]	= $projectUser->username;
+				$users[]	= $projectUser?->username;
 		}
 
 //		$desc	= explode( "\n", trim( strip_tags( $project->description ) ) );
