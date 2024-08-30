@@ -2,6 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Page $view */
+/** @var array<string,array<string,string>> $words */
+/** @var string $path */
+/** @var object $page */
+/** @var array<string> $controllers */
+/** @var bool $useAuth */
+/** @var array<int|string,string> $parentMap */
+/** @var array<string,string> $masterTemplates */
+/** @var ?int $scope */
+
 $w				= (object) $words['add'];
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );

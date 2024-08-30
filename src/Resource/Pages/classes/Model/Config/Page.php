@@ -155,7 +155,7 @@ class Model_Config_Page
 		return $data;
 	}
 
-	public function remove()
+	public function remove( int|string $pageId )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}

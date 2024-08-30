@@ -5,28 +5,41 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Page extends Controller
 {
 	public static string $moduleId		= 'Manage_Pages';
 
-	protected $model;
-	protected $request;
-	protected $messenger;
-	protected $session;
-	protected $words;
+	protected Model_Page|Model_Config_Page|Model_Module_Page $model;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected PartitionSession $session;
 	protected Logic_Frontend $frontend;
+	protected array $words;
 	protected string $patternIdentifier	= '@[^a-z0-9_/-]@';
 	protected string $sessionPrefix		= 'filter_manage_pages_';
 
 	protected string $appFocus			= 'self';
 	protected Dictionary $appSession;
 	protected array $appLanguages;
-	protected $envManaged;
-	protected $defaultLanguage;
+	protected Environment $envManaged;
+	protected string $defaultLanguage;
+//	protected bool $isRemoteFrontend	= FALSE;
 
-	public function add( $parentId = 0 )
+	/**
+	 *	@param		int|string		$parentId
+	 *	@return		void
+	 *	@throws		Environment\Exception
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add( int|string $parentId = 0 ): void
 	{
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
@@ -74,11 +87,17 @@ class Controller_Manage_Page extends Controller
 			'createdAt'		=> time(),
 		];
 
-		$path		= $this->frontend ? $this->frontend->getUrl() : $this->env->url;
-		if( $parentId && $parent->type && $parent->type == 1 )
+		if( 'self' !== $this->appFocus ){
+			$path		= $this->frontend->getUrl();
+			$moduleIds	= $this->frontend->getModules();
+		}
+		else{
+			$path		= $this->env->url;
+			$moduleIds	= array_keys( $this->env->getModules()->getAll() );
+		}
+		if( $parentId && isset( $parent->type ) && Model_Page::TYPE_BRANCH === (int) $parent->type )
 			$path	.= $parent->identifier.'/';
 
-		$moduleIds	= $this->frontend ? $this->frontend->getModules() : array_keys( $this->env->getModules() );
 
 		$this->addData( 'path', $path );
 		$this->addData( 'page', $page );
@@ -98,7 +117,12 @@ ModuleManagePages.PageEditor.init();
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	public function copy( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function copy( int|string $pageId ): void
 	{
 		if( !$pageId )
 			throw new OutOfRangeException( 'No page ID given' );
@@ -110,7 +134,15 @@ ModuleManagePages.PageEditor.init();
 		$this->redirect( 'manage/page', 'add' );
 	}
 
-	public function edit( $pageId, $version = NULL )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@param		string|NULL		$version
+	 *	@return		void
+	 *	@throws		Environment\Exception
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $pageId, ?string $version = NULL ): void
 	{
 		$source			= $this->getData( 'source' );
 		$isFromConfig	= $source == 'Config';
@@ -153,23 +185,19 @@ ModuleManagePages.PageEditor.init();
 				$this->request->set( 'page_identifier', $identifier );
 			}
 
-			$indices		= array(
+			$indices		= [
 				'scope'			=> $scope,
 				'parentId'		=> $this->request->get( 'page_parentId' ),
 				'pageId'		=> '!= '.$pageId,
 				'identifier'	=> $this->request->get( 'page_identifier' )
-			);
+			];
 			if( $this->model->getByIndices( $indices ) ){
-				if( $this->request->get( 'page_parentId' ) ){
+				if( $this->request->get( 'page_parentId' ) )
 					$message	= $words->errorIdentifierInParentTaken;
-					$identifier	= $this->request->get( 'page_identifier' );
-					$this->messenger->noteError( $message, $identifier );
-				}
-				else{
+				else
 					$message	= $words->errorIdentifierTaken;
-					$identifier	= $this->request->get( 'page_identifier' );
-					$this->messenger->noteError( $message, $identifier );
-				}
+				$identifier	= $this->request->get( 'page_identifier' );
+				$this->messenger->noteError( $message, $identifier );
 			}
 			else{
 //				if( $this->env->getModules()->has( 'Resource_Localization' ) ){							//  localization module is installed
@@ -192,8 +220,8 @@ ModuleManagePages.PageEditor.init();
 						$logic		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
 						$versions	= $logic->getAll( 'Info_Pages', $pageId );
 						$found		= FALSE;														//  init indicator if current page content is a version
-						foreach( $versions as $version )											//  iterate all page versions
-							if( $version->content === $page->content )								//  page content is a version
+						foreach( $versions as $_version )											//  iterate all page versions
+							if( $_version->content === $page->content )								//  page content is a version
 								$found = TRUE;														//  note this
 						if( !$found )																//  page content is not a version
 							$logic->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
@@ -238,25 +266,14 @@ ModuleManagePages.PageEditor.init();
 		}
 
 		$path		= $this->envManaged->getBaseUrl();
-		$versions	= [];
 		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', $page->scope );
 		if( $page->parentId ){
 			$parent	= $this->model->get( (int) $page->parentId );
 			if( $isFromDatabase && $parent )
 				$path	.= $parent->identifier.'/';
 		}
-		if( $this->env->getModules()->has( 'Resource_Versions' ) ){
-			$logic		= Logic_Versions::getInstance( $this->env );
-			$orders		= ['version' => 'DESC'];
-			$limits		= [0, 10];
-			$versions	= $logic->getAll( 'Info_Pages', $pageId, [], $orders, $limits );
-			if( !is_null( $version ) ){
-				$entry	= $logic->get( 'Info_Pages', $pageId, $version );
-				if( $entry )
-					$page->content	= $entry->content;
-			}
-		}
-		$editor	= $this->appSession->get( 'editor.'.strtolower( $page->format ) ) ?: current( array_keys( $editors ) );
+		$versions	= $this->getPageVersions( $page, $version );
+		$editor		= $this->appSession->get( 'editor.'.strtolower( $page->format ) ) ?: current( array_keys( $editors ) );
 
 		$this->addData( 'current', $pageId );
 		$this->addData( 'pageId', $pageId );
@@ -325,7 +342,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'metaBlacklist', $blacklist );
 	}
 
-	public function getJsImageList()
+	public function getJsImageList(): never
 	{
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
@@ -345,7 +362,12 @@ ModuleManagePages.PageEditor.init();
 		exit;
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index(): void
 	{
 //$this->messenger->noteNotice( 'App: '.$this->appFocus.' - Filter: '.json_encode( $this->appSession->getAll() ) );
 		$this->preparePageTree();
@@ -355,7 +377,13 @@ ModuleManagePages.PageEditor.init();
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
-	public function remove( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $pageId ): void
 	{
 		$page		= $this->checkPageId( $pageId );
 		$this->model->remove( $pageId );
@@ -364,36 +392,40 @@ ModuleManagePages.PageEditor.init();
 	}
 
 
-	public function setApp( $app )
+	public function setApp( string $app ): void
 	{
 		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
 		if( $app !== $currentApp )
-			$this->session->set( $this->sessionPrefix.'app', (string) $app );
+			$this->session->set( $this->sessionPrefix.'app', $app );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setLanguage( $language )
+	public function setLanguage( string $language ): void
 	{
-		$this->session->set( $this->sessionPrefix.$this->appFocus.'.language', (string) $language );
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.language', $language );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setScope( $scope )
+	public function setScope( int $scope ): void
 	{
-		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', (int) $scope );
+		$this->session->set( $this->sessionPrefix.$this->appFocus.'.scope', $scope );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function setSource( $source )
+	public function setSource( string $source ): void
 	{
 		$currentSource	= $this->session->get( $this->sessionPrefix.'source' );
 		if( $source !== $currentSource )
-			$this->session->set( $this->sessionPrefix.$this->appFocus.'.source', (string) $source );
+			$this->session->set( $this->sessionPrefix.$this->appFocus.'.source', $source );
 		$this->restart( NULL, TRUE );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		EnvironmentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -402,78 +434,8 @@ ModuleManagePages.PageEditor.init();
 		$this->session			= $this->env->getSession();
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
 
-		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
-		$this->envManaged		= $this->env;
-		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
-//		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
-		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
-
-		$apps	= [];
-
-		if( realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri ) ){				//  frontend is different from self
-			$apps			= [
-				'self'		=> 'Administration',
-				'frontend'	=> 'Webseite',
-			];
-			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
-			if( !array_key_exists( $this->appFocus, $apps ) )
-				$this->appFocus	= current( array_keys( $apps ) );
-//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
-//				$this->session->remove( $this->sessionPrefix.'language' );
-
-			if( $this->appFocus === 'frontend' ){
-				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
-					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
-					$this->session->set( $this->sessionPrefix.'app', 'self' );
-					$this->restart();
-				}
-				$this->envManaged	= $this->frontend->getEnv();
-				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
-				$this->appLanguages	= $this->frontend->getLanguages();
-	//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-	//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
-				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
-			}
-		}
-		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
-			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
-
-		$managesModules		= $this->envManaged->getModules( TRUE );
-		$possibleSources	= [];
-		if( $managesModules->has( 'Resource_Pages' ) )
-			$possibleSources[]	= 'Database';
-		if( file_exists( $this->envManaged->uri.'config/pages.json' ) )
-			$possibleSources[]	= 'Config';
-		$possibleSources[]	= 'Modules';
-		if( $possibleSources !== $this->appSession->get( 'sources' ) )
-			$this->appSession->set( 'sources', $possibleSources );
-		$this->addData( 'sources', $possibleSources );
-
-		$defaultSource	= reset( $possibleSources );
-		if( $managesModules->has( 'UI_Navigation' ) ){
-			$module			= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' );
-			$defaultSource	= $module->config['menu.source']->value;
-			$this->addData( 'sources', [$defaultSource] );
-		}
-		$source		= $this->appSession->get( 'source', $defaultSource );
-		if( !in_array( $source, $possibleSources ) )
-			$source	= $defaultSource;
-		if( $source !== $this->appSession->get( 'source' ) )
-			$this->appSession->set( 'source', $source );
-		$this->addData( 'source', $source );
-
-		//  connect to model of source
-		switch( $source ){
-			case 'Database':
-				$this->model	= new Model_Page( $this->envManaged );
-				break;
-			case 'Config':
-				$this->model	= new Model_Config_Page( $this->envManaged );
-				break;
-			case 'Modules':
-				$this->model	= new Model_Module_Page( $this->envManaged );
-				break;
-		}
+		$apps	= $this->detectManagedApp();
+		$source	= $this->detectSource();
 
 //		$this->env->getLog()->log("debug","default language during init: ".print_r($this->defaultLanguage,true),$this);
 		if( $this->defaultLanguage )
@@ -489,6 +451,95 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'useAuth', $this->envManaged->hasModule( 'Resource_Authentication' ) );
 	}
 
+	/**
+	 *	@return		array|string[]
+	 *	@throws		EnvironmentException
+	 */
+	protected function detectManagedApp(): array
+	{
+		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+		$this->envManaged		= $this->env;
+		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
+//		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
+		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
+
+		$apps	= [];
+
+//		$this->isRemoteFrontend	= realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri );
+
+		if( 'self' !== $this->appFocus ){				//  frontend is different from self
+			$apps			= [
+				'self'		=> 'Administration',
+				'frontend'	=> 'Webseite',
+			];
+			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
+			if( !array_key_exists( $this->appFocus, $apps ) )
+				$this->appFocus	= current( array_keys( $apps ) );
+//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
+//				$this->session->remove( $this->sessionPrefix.'language' );
+
+			if( 'frontend' === $this->appFocus ){
+				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
+					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
+					$this->session->set( $this->sessionPrefix.'app', 'self' );
+					$this->restart();
+				}
+				$this->envManaged	= $this->frontend->getEnv();
+				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
+				$this->appLanguages	= $this->frontend->getLanguages();
+				//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
+				//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
+			}
+		}
+		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
+			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
+		return $apps;
+	}
+
+	protected function detectSource(): string
+	{
+		$managesModules		= $this->envManaged->getModules();
+		$possibleSources	= [];
+		if( $managesModules->has( 'Resource_Pages' ) )
+			$possibleSources[]	= 'Database';
+		if( file_exists( $this->envManaged->uri.'config/pages.json' ) )
+			$possibleSources[]	= 'Config';
+		$possibleSources[]	= 'Modules';
+		if( $possibleSources !== $this->appSession->get( 'sources' ) )
+			$this->appSession->set( 'sources', $possibleSources );
+		$this->addData( 'sources', $possibleSources );
+
+		$defaultSource	= reset( $possibleSources );
+		if( $managesModules->has( 'UI_Navigation' ) ){
+			$module			= $this->envManaged->getModules()->get( 'UI_Navigation' );
+			$defaultSource	= $module->config['menu.source']->value;
+			$this->addData( 'sources', [$defaultSource] );
+		}
+		$source		= $this->appSession->get( 'source', $defaultSource );
+		if( !in_array( $source, $possibleSources ) )
+			$source	= $defaultSource;
+		if( $source !== $this->appSession->get( 'source' ) )
+			$this->appSession->set( 'source', $source );
+		$this->addData( 'source', $source );
+
+		//  connect to model of source
+		$this->model	= match( $source ){
+			'Database'	=> new Model_Page($this->envManaged),
+			'Config'	=> new Model_Config_Page($this->envManaged),
+			'Modules'	=> new Model_Module_Page($this->envManaged),
+			default		=> throw new RangeException('Unsupported source: '.$source ),
+		};
+		return $source;
+	}
+
+	/**
+	 *	@param		int|string		$pageId
+	 *	@param		bool			$strict
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): object
 	{
 		if( !$pageId ){
@@ -526,14 +577,14 @@ ModuleManagePages.PageEditor.init();
 	protected function getFrontendControllers(): array
 	{
 		$controllers	= [];
-		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
-		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
-		$pathModules	= $pathModules ?: $pathConfig.'modules/';
-		foreach( $this->envManaged->getModules()->getAll() as $moduleId => $module ){
+//		$pathConfig		= $this->envManaged->getConfig()->get( 'path.config' );
+//		$pathModules	= $this->envManaged->getConfig()->get( 'path.modules' );
+//		$pathModules	= $pathModules ?: $pathConfig.'modules/';
+		foreach( $this->envManaged->getModules()->getAll() as $module ){
 			if( empty( $module->files->classes ) )
 				continue;
 			foreach( $module->files->classes as $moduleFile )
-				if( preg_match( "/^Controller/", $moduleFile->file ) ){
+				if( str_starts_with( $moduleFile->file, 'Controller' ) ){
 					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $moduleFile->file );
 					$controllers[]	= str_replace( "/", "_", $name );
 				}
@@ -541,7 +592,36 @@ ModuleManagePages.PageEditor.init();
 		return array_unique( $controllers );
 	}
 
-	protected function preparePageTree( ?string $currentPageId = NULL ): void
+	/**
+	 *	@param		object		$page
+	 *	@param		int|NULL	$version
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 */
+	protected function getPageVersions( object $page, ?int $version = NULL ): array
+	{
+		$versions	= [];
+		if( $this->env->getModules()->has( 'Resource_Versions' ) ){
+			$logic		= Logic_Versions::getInstance( $this->env );
+			$orders		= ['version' => 'DESC'];
+			$limits		= [0, 10];
+			$versions	= $logic->getAll( 'Info_Pages', $page->pageId, [], $orders, $limits );
+			if( NULL !== $version ){
+				$entry	= $logic->get( 'Info_Pages', $page->pageId, $version );
+				if( $entry )
+					$page->content	= $entry->content;
+			}
+		}
+		return $versions;
+	}
+
+	/**
+	 *	@param		int|string|NULL		$currentPageId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function preparePageTree( int|string|NULL $currentPageId = NULL ): void
 	{
 		$scope		= (int) $this->appSession->get( 'scope' );
 		$indices	= [
@@ -559,7 +639,7 @@ ModuleManagePages.PageEditor.init();
 			$indices		= ['parentId' => $item->pageId];
 			$item->subpages	= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
 			foreach( $item->subpages as $nr => $subitem )
-				$subitem	= $this->translatePage( $subitem );
+				$item->subpages[$nr]	= $this->translatePage( $subitem );
 			$tree[]		= $item;
 		}
 		$this->addData( 'tree', $tree );
@@ -569,6 +649,8 @@ ModuleManagePages.PageEditor.init();
 	/**
 	 *	@param		object		$page
 	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function translatePage( object $page ): object
 	{

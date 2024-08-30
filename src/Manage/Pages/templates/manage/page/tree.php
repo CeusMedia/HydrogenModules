@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Page $view */
 /** @var array $words */
-
 /** @var array $apps */
 /** @var array $sources */
 /** @var array $languages */
-
+/** @var string $app */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSortable	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-v'] );

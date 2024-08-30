@@ -5,9 +5,10 @@ use CeusMedia\Common\Alg\Text\TermExtractor as TextTermExtractor;
 use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
 use CeusMedia\Common\FS\File\Collection\Editor as ListFileEditor;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 
-class Controller_Manage_Page_Ajax extends AjaxController
+class Controller_Ajax_Manage_Page extends AjaxController
 {
 	protected string $sessionPrefix		= 'filter_manage_pages_';
 	protected object $model;
@@ -17,7 +18,6 @@ class Controller_Manage_Page_Ajax extends AjaxController
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	protected function __onInit(): void
@@ -28,7 +28,7 @@ class Controller_Manage_Page_Ajax extends AjaxController
 
 		$this->envManaged	= $this->env;
 
-		if( $this->appFocus === 'frontend' ){
+		if( 'frontend' === $this->appFocus ){
 			$this->frontend		= Logic_Frontend::getInstance( $this->env );
 			$this->envManaged	= $this->frontend->getEnv();
 		}

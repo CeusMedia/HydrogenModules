@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string,array<string,string>> $words */
+/** @var object $page */
+/** @var array $versions */
+/** @var ?string $version */
+/** @var array $editors */
+/** @var ?string $editor */
+
 $w				= (object) $words['edit'];
 
 if( $page->type == Model_Page::TYPE_MODULE )
