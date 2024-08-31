@@ -18,18 +18,18 @@ use CeusMedia\HydrogenFramework\View;
  */
 class View_Manage_User extends View
 {
-	public function index()
+	public function index(): void
 	{
 		$words		=$this->env->getLanguage()->getWords( 'manage/user' );
 		$this->setData( $words['status'], 'states' );
 		$this->setData( $words['activity'], 'activities' );
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 

@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user, role and access administration.]]></description>
 	<category>Management</category>
-	<version>0.7.8</version>
+	<version>0.8.0</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
@@ -30,6 +30,7 @@
 	<log version="0.7.6">Extract JavaScript to own file.</log>
 	<log version="0.7.7">Extract AJAX controller actions.</log>
 	<log version="0.7.8">Separate password panel in user editor.</log>
+	<log version="0.8.0">Migration to PHP 8 and strict types.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Role $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $role */
+
 $optAccess	= [];
 foreach( $words['type-access'] as $key => $label ){
 	$selected	= $key == $role->get( 'access' );

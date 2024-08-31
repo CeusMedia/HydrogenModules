@@ -18,7 +18,7 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
  */
 class Controller_Ajax_Manage_User extends AjaxController
 {
-	public static $moduleId		= 'Manage_Users';
+	public static string $moduleId		= 'Manage_Users';
 
 	protected function __onInit(): void
 	{

@@ -18,14 +18,14 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
  */
 class Controller_Ajax_Manage_Role extends AjaxController
 {
-	protected $modelRole;
-	protected $modelRoleRight;
+	protected Model_Role $modelRole;
+	protected Model_Role_Right $modelRoleRight;
 
 	/**
 	 *	Change role right by toggling.
 	 *	@access		public
 	 */
-	public function changeRight()
+	public function changeRight(): void
 	{
 		$roleId		= (int) $this->request->get( 'roleId' );
 		$controller	= trim( $this->request->get( 'controller' ) );

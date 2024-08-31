@@ -1,8 +1,19 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
+//use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var object $user */
+/** @var bool $needsEmail */
+/** @var bool $needsFirstname */
+/** @var bool $needsSurname */
+/** @var ?string $from */
 
 $w				= (object) $words['edit'];
 //$helperAge		= new View_Helper_TimePhraser( $env );
@@ -30,7 +41,7 @@ $script		= '
 		$("form :input#password").pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: '.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",
@@ -73,7 +84,7 @@ $buttonSave			= HtmlElements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonS
 $buttonRemove		= '';
 if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
 	$buttonRemove		= HtmlElements::LinkButton(
-		'./manage/user/remove/'.$userId,
+		'./manage/user/remove/'.$user->userId,
 		$iconRemove.'&nbsp;'.$w->buttonRemove,
 		'btn btn-mini btn-danger',
 		$w->buttonRemoveConfirm
@@ -92,7 +103,7 @@ $panelEdit	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+		<form name="editUser" action="./manage/user/edit/'.$user->userId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 <!--			<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">-->

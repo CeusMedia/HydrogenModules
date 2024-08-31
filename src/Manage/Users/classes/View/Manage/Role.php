@@ -22,11 +22,11 @@ class View_Manage_Role extends View
 	{
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 		$roleId	= $this->getData( 'roleId' );
 		$this->env->getPage()->runScript( 'ModuleManageUsers.setRoleId('.$roleId.').init()' );

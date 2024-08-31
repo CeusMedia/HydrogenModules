@@ -1,5 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var array<object> $projects */
+/** @var object $user */
 
 $w			= (object) $words['editInfo'];
 

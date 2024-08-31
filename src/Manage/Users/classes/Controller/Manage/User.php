@@ -182,7 +182,6 @@ class Controller_Manage_User extends Controller
 		if( !$canEdit && $modules->has( 'Members' ) )
 			$this->restart( './member/view/'.$userId );*/
 
-		$config		= $this->env->getConfig();
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
@@ -248,7 +247,7 @@ class Controller_Manage_User extends Controller
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 
-			$data	= array(
+			$data	= [
 				'roleId'		=> $input['roleId'],
 //				'status'		=> $input['status'],
 				'username'		=> $username,
@@ -264,7 +263,7 @@ class Controller_Manage_User extends Controller
 				'phone'			=> $input['phone'],
 				'fax'			=> $input['fax'],
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( !empty( $password ) ){
 				$data['password']	= md5( $passwordSalt.$password );
 
@@ -291,7 +290,6 @@ class Controller_Manage_User extends Controller
 		$user->country	= $this->countries[$user->country];
 		$user->role		= $modelRole->get( $user->roleId );
 
-		$config		= $this->env->getConfig();
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
 		$this->addData( 'from', $request->get( 'from' ) );

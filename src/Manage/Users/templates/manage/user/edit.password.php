@@ -10,9 +10,10 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var int $userId */
 /** @var int $pwdMinLength */
 /** @var int $pwdMinStrength */
+/** @var bool $atLeastOne */
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
-$env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
+$env->getPage()->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
 
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['editPassword'];
@@ -37,7 +38,7 @@ $(document).ready(function(){
 		inputPassword.pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: false,//'.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",
@@ -51,7 +52,7 @@ $(document).ready(function(){
 		inputConfirm.bind("input", matchPasswords);
 	}
 });';
-$env->page->js->addScript( $script );
+$env->getPage()->js->addScript( $script );
 
 $atLeastOne		= TRUE;
 $history		= '';

@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Role $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $role */
+/** @var int $userCount */
+/** @var array $controllerActions */
 
 $w			= (object) $words['editRights'];
 
@@ -14,7 +22,7 @@ asort( $usedModules );
 
 $list	= [];
 foreach( $usedModules as $usedModule ){
-	$result	= renderModuleControllers( $acl, $roleId, $usedModule, $controllerActions, $words );
+	$result	= renderModuleControllers( $acl, $role->roleId, $usedModule, $controllerActions, $words );
 	$list[] = $result->list;
 }
 
@@ -41,7 +49,8 @@ return '
 	</div>
 </div>';
 
-function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, $words ){
+function renderModuleControllers( $acl, int|string $roleId, $moduleId, array $controllerActions, array $words ): object
+{
 	$list		= [];
 	$rows		= [];
 	$changable	= FALSE;
@@ -75,32 +84,32 @@ function renderModuleControllers( $acl, $roleId, $moduleId, $controllerActions, 
 		$labelModule		= HtmlTag::create( 'small', '<br/>Modul: '.$module, ['class' => 'muted label-module', 'style' => 0/*$showAll*/ ? NULL : 'display: none'] );
 		$labelController	= HtmlTag::create( 'small', '<br/>Controller: '.$controller->name, ['class' => 'muted label-controller', 'style' => 0/*$showAll*/ ? NULL : 'display: none'] );
 
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $labelPath/*.$labelController/*.$labelModule*/, ['class' => 'column-controller autocut'] ),
 			HtmlTag::create( 'td', $actions, ['class' => 'column-actions'] ),
-		), ['style' => $actionToggles->changable || 0/*$showAll*/ ? NULL : 'display: none'] );
+		], ['style' => $actionToggles->changable || 0/*$showAll*/ ? NULL : 'display: none'] );
 	}
 	if( $rows ){
-		$rows	= HtmlTag::create( 'table', array(
+		$rows	= HtmlTag::create( 'table', [
 			HtmlElements::ColumnGroup( '300px', '' ),
 			HtmlTag::create( 'tbody', $rows ),
-		), ['class' => 'table table-fixed table-condensed'] );
-		$list[]	= HtmlTag::create( 'li', $iconModule.$module.$rows,  array(
+		], ['class' => 'table table-fixed table-condensed'] );
+		$list[]	= HtmlTag::create( 'li', $iconModule.$module.$rows, [
 			'class'	=> 'acl-module '.( $changable ? 'changable' : '' ),
 			'style' => $changable || 0/*$showAll*/ ? NULL : 'display: none'
-		) );
+		] );
 	}
 	return (object) ['list' => $list, 'changable' => $changable];
 }
 
-function renderControllerActions( $acl, $roleId, $controller, $words ){
+function renderControllerActions( $acl, int|string $roleId, object $controller, array $words ): object
+{
 	$list		= [];
 	$changableAtAll	= FALSE;
 	foreach( $controller->methods as $action => $method ){
 //print_m( $modules[$controller->module->id] );die;
 		$access	= $acl->hasRight( $roleId, $controller->name, $action );
 		$check	= "";
-		$for	= NULL;
 		$title	= $words['type-right'][$access];
 		$id		= 'input-role-right-'.$roleId.'-'.$controller->name.'-'.$action;
 		$changable	= FALSE;
@@ -110,11 +119,11 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 				break;
 			case 0:									//  not allowed
 				$class	= "red changable";
-				$changable	= true;
+				$changable	= TRUE;
 				break;
 			case 1:									//  allowed by role right
 				$class	= "green changable";
-				$changable	= true;
+				$changable	= TRUE;
 				break;
 			case 2:									//  full access
 			case 3:									//  public
@@ -126,7 +135,7 @@ function renderControllerActions( $acl, $roleId, $controller, $words ){
 				$class	= "red";
 				break;
 		}
-		$label	= HtmlTag::create( 'span', $method->name, [] );
+		$label	= HtmlTag::create( 'span', $method->name );
 		$list[]	= HtmlTag::create( 'li', $check.$label, [
 			'class'	=> 'action '.$class,
 			'id'	=> $changable ? $id : NULL,

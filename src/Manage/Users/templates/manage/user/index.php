@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_User $view */
+
 $filter	= $view->loadTemplateFile( 'manage/user/index.filter.php' );
 $list	= $view->loadTemplateFile( 'manage/user/index.list.php' );
 

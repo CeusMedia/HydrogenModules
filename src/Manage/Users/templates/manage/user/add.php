@@ -2,6 +2,13 @@
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var object $user */
 
 $w				= (object) $words['add'];
 
@@ -28,7 +35,7 @@ $script	= '
 		$("#input_password").pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: '.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",
