@@ -1,6 +1,14 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var array<string,array<string,string>> $words */
+/** @var object $news */
+/** @var int $pageNr */
+/** @var int $limit */
+/** @var int $total */
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
@@ -51,7 +59,7 @@ $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd
 	'class'	=> 'btn btn-small btn-success',
 ] );
 
-$pagination     = new \CeusMedia\Bootstrap\Nav\PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
+$pagination		= new PageControl( './manage/news', $pageNr, ceil( $total / $limit ) );
 
 return '
 <div class="content-panel">

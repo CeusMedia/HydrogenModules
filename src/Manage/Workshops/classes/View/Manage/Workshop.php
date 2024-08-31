@@ -4,13 +4,16 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Workshop extends View
 {
-	public function add(){
+	public function add(): void
+	{
 	}
 
-	public function edit(){
+	public function edit(): void
+	{
 	}
 
-	public function index(){
+	public function index(): void
+	{
 	}
 
 	protected function __onInit(): void

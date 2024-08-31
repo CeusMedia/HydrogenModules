@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var string $filePath */
+
 $files	= $this->getData( 'files' );
 $path	= $this->getData( 'pathLocale' );
 

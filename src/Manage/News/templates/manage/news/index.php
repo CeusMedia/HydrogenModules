@@ -1,5 +1,7 @@
 <?php
 
+/** @var View_Manage_News $view */
+
 $panelFilter	= $view->loadTemplateFile( 'manage/news/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/news/index.list.php' );
 

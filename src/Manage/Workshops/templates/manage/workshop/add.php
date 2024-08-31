@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );

@@ -2,6 +2,14 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var string $content */
+/** @var string $fileHash */
+/** @var string $filePath */
+/** @var string $fileName */
+/** @var string $pathName */
+/** @var array<string> $paths */
+
 $panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
 $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 

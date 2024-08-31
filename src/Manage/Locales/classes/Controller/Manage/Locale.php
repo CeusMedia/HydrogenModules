@@ -28,7 +28,6 @@ class Controller_Manage_Locale extends Controller
 
 	public function add(): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
@@ -62,7 +61,6 @@ class Controller_Manage_Locale extends Controller
 
 	public function addFolder(): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'addFolder' );
@@ -91,7 +89,6 @@ class Controller_Manage_Locale extends Controller
 
 	public function edit( ?string $fileHash = NULL ): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
@@ -174,7 +171,6 @@ class Controller_Manage_Locale extends Controller
 
 	public function remove( string $fileHash ): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
 

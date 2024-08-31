@@ -40,6 +40,11 @@ class Controller_Manage_Job_Run extends Controller
 		$this->restart( $from, !$from );
 	}
 
+	/**
+	 *	@param		int|string		$jobRunId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function archive( int|string $jobRunId ): void
 	{
 		$this->logic->archiveJobRun( $jobRunId );
@@ -143,6 +148,11 @@ die;*/
 		$this->addData( 'page', $page );
 	}
 
+	/**
+	 *	@param		int|string		$jobRunId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( int|string $jobRunId ): void
 	{
 		try{

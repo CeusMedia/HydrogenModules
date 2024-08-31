@@ -1,15 +1,23 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Workshop extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected PartitionSession $session;
+	protected MessengerResource $messenger;
 	protected Model_Workshop $model;
 
-	public function add(){
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
+	{
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$data	= array_merge( $this->request->getAll(), array(
 				'createdAt'		=> time(),
@@ -33,7 +41,13 @@ class Controller_Manage_Workshop extends Controller
 		$this->addData( 'workshop', (object) array_merge( $data, $defaults, $given ) );
 	}
 
-	public function edit( $workshopId ){
+	/**
+	 *	@param		int|string		$workshopId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $workshopId ): void
+	{
 		$workshop	= $this->model->get( $workshopId );
 		if( !$workshop ){
 			$this->messenger->noteError( 'Invalid workshop ID.' );
@@ -47,13 +61,20 @@ class Controller_Manage_Workshop extends Controller
 		$this->addData( 'workshop', $workshop );
 	}
 
-	public function index(){
+	public function index(): void
+	{
 		$conditions	= [];
 		$orders		= ['status' => 'ASC', 'rank' => 'ASC'];
 		$this->addData( 'workshops', $this->model->getAll( $conditions, $orders ) );
 	}
 
-	public function remove( $workshopId ){
+	/**
+	 *	@param		int|string		$workshopId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $workshopId ): void
+	{
 		$workshop	= $this->model->get( $workshopId );
 		if( !$workshop ){
 			$this->messenger->noteError( 'Invalid workshop ID.' );

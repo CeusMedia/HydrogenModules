@@ -1,16 +1,24 @@
 <?php
 
 use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Manage_News extends View{
 
-	public function add(){}
+	public function add(): void
+	{
+	}
 
-	public function edit(){}
+	public function edit(): void
+	{
+	}
 
-	public function index(){}
+	public function index(): void
+	{
+	}
 
-	static public function getEditorClass( $env ){
+	public static function getEditorClass( Environment $env ): string
+	{
 		$messenger		= $env->getMessenger();
 		$modulesConfig	= $env->getConfig()->getAll( 'module.', TRUE );
 		$editorClass	= $modulesConfig->get( 'js_tinymce.auto.selector' );

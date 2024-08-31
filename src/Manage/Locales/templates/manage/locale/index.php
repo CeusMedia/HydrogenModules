@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string> $paths */
+/** @var array<string,array<string,string>> $words */
+
 $panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
 $panelList		= $this->loadTemplate( 'manage/locale', 'list' );
 
