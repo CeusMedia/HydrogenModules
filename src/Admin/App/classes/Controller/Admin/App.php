@@ -128,7 +128,7 @@ class Controller_Admin_App extends Controller
 	 *	@param		object		$upload
 	 *	@return		string|FALSE|NULL
 	 */
-	protected function uploadImage( object $upload ): ?string
+	protected function uploadImage( object $upload ): string|FALSE|NULL
 	{
 		if( $upload->error === 4 )
 			return NULL;

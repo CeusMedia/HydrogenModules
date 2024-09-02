@@ -201,10 +201,9 @@ class Controller_Admin_Log_Exception extends Controller
 //		$path		= $this->env->getConfig()->get( 'path.logs' );
 //		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 
-/*
 		$instanceKey	= $this->session->get( $this->filterPrefix.'instance' );
 		$instanceKey 	= !in_array( $instanceKey, ['this', 'remote'] ) ? 'this' : $instanceKey;
-
+/*
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$instances['remote']	= (object) ['title' => 'entfernte Instanz'];
 			if( $instanceKey === 'remote' ){
@@ -215,6 +214,6 @@ class Controller_Admin_Log_Exception extends Controller
 		}*/
 
 		$this->addData( 'instances', $instances );
-//		$this->addData( 'currentInstance', $instanceKey );
+		$this->addData( 'currentInstance', $instanceKey );
 	}
 }

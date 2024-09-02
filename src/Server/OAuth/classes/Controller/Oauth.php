@@ -513,23 +513,20 @@ class Controller_Oauth extends Controller
 	{
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		$modelRefresh		= new Model_Oauth_RefreshToken( $this->env );
-		if( !strlen( trim( $refreshToken = $this->request->get( 'refresh_token' ) ) ) )				//  if authorization code is not in request
-			$this->errorResponse( 'invalid_request', 'Missing refresh token.' );					//  respond error
+		$refreshToken		= $this->request->get( 'refresh_token' );
+		if( 0 === strlen( trim( $refreshToken ) ) )														//  if authorization code is not in request
+			$this->errorResponse( 'invalid_request', 'Missing refresh token.' );		//  respond error
 
-		if( ( $client = $this->decodeBasicAuthentication() ) ){										//  try to find basic authentication
-			$clientId		= $client->clientId;													//  get client ID from basic authentication
-			$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
-		}
-		else																						//  try to find client authorization in POST data
+		$client = $this->decodeBasicAuthentication();									//  try to find basic authentication
+		if( NULL === $client )
 			$this->errorResponse( 'invalid_client', 'Missing basic authentication.', NULL, 401 );
-//			if( !strlen( trim( $clientId = $this->request->get( 'client_id' ) ) ) )					//  if client ID is not in request
-//				$this->errorResponse( 'invalid_client', 'Missing client ID.' );						//  respond error
-//			if( !strlen( trim( $clientSecret = $this->request->get( 'client_secret' ) ) ) )			//
-//				$this->errorResponse( 'invalid_client', 'Missing client secret or basic authentication.' );
-//		}
+
+		$clientId		= $client->clientId;													//  get client ID from basic authentication
+		$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
 
 		/*  --  VALIDATION OF CLIENT ID  --  */
-		if( !( $applicationId = $this->getApplicationIdFromClientId( $clientId ) ) )				//  no application found for client ID
+		$applicationId	= $this->getApplicationIdFromClientId( $clientId );
+		if( NULL === $applicationId )				//  no application found for client ID
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */

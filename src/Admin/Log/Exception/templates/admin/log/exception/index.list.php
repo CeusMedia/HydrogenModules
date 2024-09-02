@@ -17,6 +17,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $page */
 /** @var int $total */
 /** @var int $limit */
+/** @var ?string $currentInstance */
 
 $w	= (object) $words['index.list'];
 

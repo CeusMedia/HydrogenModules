@@ -64,7 +64,10 @@
         "ext-rrd": "*"
     },
     "autoload-dev": {
-        "classmap": ["src/", "test/"]
+        "classmap": ["src/", "test/"],
+        "psr-4": {
+            "CeusMedia\\HydrogenFrameworkIntegrationTest\\": "test/Integration/"
+        }
     },
     "scripts": {
         "dev:all": [
@@ -111,6 +114,9 @@
         "dev:phpunit": [
             "@dev:install",
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite units"
+        ],
+        "dev:phpunit-integration": [
+            "php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite integration"
         ],
         "dev:rector": [
             "@dev:install",

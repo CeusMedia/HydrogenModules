@@ -31,9 +31,9 @@ class Controller_Oauth_Resource extends Controller
 		];
 	}
 
-	public function __construct( WebEnvironment $env, $setupView = TRUE )
+	public function __construct( WebEnvironment $env, bool $setupView = TRUE )
 	{
-		parent::__construct( $env, FALSE );
+		parent::__construct( $env, !$setupView );
 	}
 
 	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL, $arg4 = NULL, $arg5 = NULL ): void

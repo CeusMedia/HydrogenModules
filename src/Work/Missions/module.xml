@@ -240,6 +240,7 @@ code>
 	<config protected="user" type="boolean" name="mail.changes">yes</config>
 	<link xml:lang="de" access="acl" path="work/mission" rank="41">Aufgaben</link>
 	<link xml:lang="en" access="acl" path="work/mission" rank="41">Missions</link>
+	<link access="inside" path="ajax/work/mission/changeDay"/>
 	<link access="inside" path="ajax/work/mission/getProjectUsers"/>
 	<link access="inside" path="ajax/work/mission/renderContent"/>
 	<link access="inside" path="ajax/work/mission/renderDashboardPanel"/>

@@ -15,6 +15,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var ?string $filterType */
 /** @var ?string $filterDateStart */
 /** @var ?string $filterDateEnd */
+/** @var ?string $currentInstance */
 
 $w				= (object) $words['index.filter'];
 
@@ -36,16 +37,28 @@ if( count( $instances ) > 1 ){
 	] );
 }
 
-
+$rowType	= '';
 if( $exceptionTypes ){
 	$optType	= ['' => '- alle-'];
 	foreach( $exceptionTypes as $type )
 		$optType[$type]	= $type;
 	$optType	= HtmlElements::Options( $optType, $filterType );
+	$labelType	= HtmlTag::create( 'label', $w->labelType, ['for' => 'input_type'] );
+	$inputType	= HtmlTag::create( 'select', $optType, [
+		'name'		=> 'type',
+		'id'		=> 'input_type',
+		'class'		=> 'span12'
+	] );
+	$rowType	= HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
+			$labelType,
+			$inputType,
+		], ['class' => 'span12'] ),
+	], ['class' => 'row-fluid'] );
 }
 
-$buttonFilter   = HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );
-$buttonReset    = HtmlTag::create( 'a', $iconReset.' '.$w->buttonReset, ['class' => 'btn btn-small', 'href' => './admin/log/exception/filter/true'] );
+$buttonFilter	= HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, ['type' => 'submit', 'class' => 'btn btn-primary'] );
+$buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$w->buttonReset, ['class' => 'btn btn-small', 'href' => './admin/log/exception/filter/true'] );
 
 return '
 <div class="content-panel">
@@ -62,12 +75,7 @@ return '
 					<input type="text" name="message" id="input_message" class="span12" value="'.htmlentities( $filterMessage ?? '', ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_type">'.$w->labelType.'</label>
-					<select name="type" id="input_type" class="span12">'.$optType.'</select>
-				</div>
-			</div>
+			'.$rowType.'
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_dateStart">'.$w->labelDateStart.'</label>

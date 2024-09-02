@@ -57,10 +57,10 @@ class View_Helper_UploadError extends Abstraction
 	}
 
 	/**
-	 *	@param		Logic_Upload|object		$upload
+	 *	@param		Logic_Upload|stdClass		$upload
 	 *	@return		self
 	 */
-	public function setUpload( $upload ): self
+	public function setUpload( Logic_Upload|stdClass $upload ): self
 	{
 		if( !is_object( $upload ) )
 			throw new InvalidArgumentException( 'No upload object given' );

@@ -37,6 +37,58 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	protected array $words			= [];
 
 	/**
+	 *	Moves a mission by several days or to a given date.
+	 *	Receives date or day difference using POST.
+	 *	A day difference can be formatted like +2 or -2.
+	 *	Moving a task mission will only affect start date but end date will remain unchanged.
+	 *	Moving an event mission will affect start and end date.
+	 *	If called using AJAX list rendering is triggered.
+	 *	@access		public
+	 *	@param		int|string		$missionId		ID of mission to move in time
+	 *	@return		void
+	 *	@todo		enable this feature for AJAX called EXCEPT gid list
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function changeDay( int|string $missionId ): void
+	{
+		$date		= trim( $this->request->get( 'date' ) );
+		$mission	= $this->model->get( $missionId );
+		$data		= [
+			'modifierId'	=> $this->userId,
+			'modifiedAt'	=> time(),
+		];
+		$change		= "";
+
+		if( preg_match( "/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]+$/", $date ) ){
+			$date	= strtotime( $date );
+			$diff	= ( $date - strtotime( $mission->dayStart ) ) / ( 24 * 3600 );
+			$sign	= $diff >= 0 ? "+" : "-";
+			$number	= round( abs( $diff ) );
+			$change	= $sign." ".$number."day";
+		}
+		else if( preg_match( "/^[+-][0-9]+$/", $date ) ){
+			$sign	= substr( $date, 0, 1 );					//  extract direction to move
+			$number	= substr( $date, 1 );						//  extract number of days to move
+			$change	= $sign." ".$number."day";
+		}
+		if( $change ){
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$date	= new DateTime( $mission->dayStart );
+			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
+			if( $mission->dayEnd ){													//  mission has a duration
+				if( Model_Mission::TYPE_EVENT === (int) $mission->type ){											//  mission is an event, not a task
+					/** @noinspection PhpUnhandledExceptionInspection */
+					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ...
+					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );  //  ... store new moved end date
+				}
+			}
+			$this->model->edit( $missionId, $data );
+			$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
+		}
+		$this->renderIndex();
+	}
+
+	/**
 	 *	@todo			check if this method is needed anymore
 	 *	@throws		JsonException
 	 */
@@ -140,7 +192,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	{
 		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode && $mode !== 'now' )
-			$this->restart( 'ajax/work/mission/'.$mode.'/renderIndex' );
+			$this->env->restart( 'ajax/work/mission/'.$mode.'/renderIndex' );
 //			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
 		else{
 			$words		= $this->getWords();
@@ -294,15 +346,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		}
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
-		if( $this->env->getRequest()->isAjax() ){
-			$this->restart( 'ajax/work/mission/renderIndex', FALSE );
-//			$this->ajaxRenderIndex();
-//			$this->redirect( 'ajax/work/mission/renderIndex' );								//  @todo replace redirect but keep AJAX request in mind
-//			header( 'Content-Type: application/json' );
-//			print( json_encode( TRUE ) );
-//			exit;
-		}
-		$this->restart( NULL, TRUE );
+		$this->env->restart( 'ajax/work/mission/renderIndex' );
 	}
 
 	//  --  PROTECTED  --  //

@@ -271,12 +271,11 @@ class Controller_Work_Mission extends Controller
 	 *	@access		public
 	 *	@param		int|string		$missionId		ID of mission to move in time
 	 *	@return		void
-	 *	@todo		enable this feature for AJAX called EXCEPT gid list
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function changeDay( int|string $missionId ): void
 	{
-		$date		= trim( $this->request->get( 'date' ) );
+		$date		= trim( $this->request->get( 'date', '' ) );
 		$mission	= $this->model->get( $missionId );
 		$data		= [
 			'modifierId'	=> $this->userId,
@@ -301,7 +300,7 @@ class Controller_Work_Mission extends Controller
 			$date	= new DateTime( $mission->dayStart );
 			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
 			if( $mission->dayEnd ){													//  mission has a duration
-				if( $mission->type == 1 ){											//  mission is an event, not a task
+				if(  Model_Mission::TYPE_EVENT === (int) $mission->type ){							//  mission is an event, not a task
 					/** @noinspection PhpUnhandledExceptionInspection */
 					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ...
 					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );  //  ... store new moved end date
@@ -310,8 +309,6 @@ class Controller_Work_Mission extends Controller
 			$this->model->edit( $missionId, $data );
 			$this->logic->noteChange( 'update', $missionId, $mission, $this->userId );
 		}
-		if( $this->request->isAjax() )
-			$this->ajaxRenderIndex();
 		$this->restart( NULL, TRUE );
 	}
 
@@ -758,7 +755,7 @@ class Controller_Work_Mission extends Controller
 			default:
 				throw new InvalidArgumentException( 'Invalid mail type' );
 		}
-		print( $content );
+		print( $content ?? 'no type set' );
 		exit;
 	}
 

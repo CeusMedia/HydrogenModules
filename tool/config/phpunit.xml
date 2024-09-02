@@ -11,6 +11,9 @@
         <testsuite name="units">
             <directory>../../test</directory>
         </testsuite>
+        <testsuite name="integration">
+            <directory>../../test/Integration</directory>
+        </testsuite>
     </testsuites>
     <logging>
 <!--        <log type="json" target="doc/test/logfile.json"/>-->

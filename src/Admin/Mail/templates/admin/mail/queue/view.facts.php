@@ -1,9 +1,8 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\View;
 
-/** @var View $view */
+/** @var View_Admin_Mail_Queue $view */
 /** @var array<array<string,string>> $words */
 /** @var object $mail */
 /** @var int $page */

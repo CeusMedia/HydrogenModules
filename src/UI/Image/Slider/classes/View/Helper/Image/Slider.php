@@ -196,7 +196,8 @@ class View_Helper_Image_Slider
 		$list	= join( $list );
 		$label	= "";
 		if( $slider->showTitle ){
-			$title	= $slider->slides[0]->title;
+			$slide	= $slider->slides[0];
+			$title	= $slide->title;
 			if( $slide->link && strlen( trim( $slide->link ) ) )
 				$title	= HtmlTag::create( 'a', $title, ['href' => $slide->link] );
 			$attr	= ['class' => $this->selectorPrefix.'label'];

@@ -146,7 +146,7 @@ class Controller_Admin_Config extends Controller
 			$file		= new FileBackup( $fileName );
 			$version	= $file->getVersion();
 			$version	= is_int( $version ) ? $version + 1 : 0;
-			$versions	= $version;
+			$versions[]	= $version;
 			$this->addData( 'module', $module );
 			$this->addData( 'versions', $versions );
 		}
@@ -187,7 +187,7 @@ class Controller_Admin_Config extends Controller
 		$file		= new FileBackup( $fileName );
 		$version	= $file->getVersion();
 		$version	= is_int( $version ) ? $version + 1 : 0;
-		$versions	= $version;
+		$versions[]	= $version;
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'versions', $versions );
@@ -215,9 +215,9 @@ class Controller_Admin_Config extends Controller
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
-		$xml		= FileReader::load( $fileName );
-		$tree		= new XmlElement( $xml );
 		try{
+			$xml		= FileReader::load( $fileName );
+			$tree		= new XmlElement( $xml );
 			foreach( $tree->config as $node ){
 				$type	= $node->getAttribute( 'type' );
 				$value	= $node->getValue();

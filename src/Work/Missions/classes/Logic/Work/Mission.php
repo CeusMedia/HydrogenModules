@@ -5,7 +5,6 @@
  *	@package		Work.Missions
  */
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Logic;
 
 /**
@@ -25,20 +24,6 @@ class Logic_Work_Mission extends Logic
 	protected Model_Mission_Version $modelVersion;
 	protected Model_Mission_Change $modelChange;
 	protected Model_Mission_Document $modelDocument;
-
-	/**
-	 *	Get singleton instance of logic.
-	 *	@static
-	 *	@access		public
-	 *	@param		Environment		$env		Environment object
-	 *	@return		self			Singleton instance of logic
-	 */
-	public static function getInstance( Environment $env ): self
-	{
-		if( !self::$instance )
-			self::$instance	= new self( $env );
-		return self::$instance;
-	}
 
 	/**
 	 *	@param		string		$string

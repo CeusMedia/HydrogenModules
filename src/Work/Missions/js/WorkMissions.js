@@ -49,7 +49,7 @@ var WorkMissions = {
 	moveMissionStartDate: function(missionId, date){
 		WorkMissionsList.blendOut(150);
 		$.ajax({
-			url: './work/mission/changeDay/'+missionId,
+			url: './ajax/work/mission/changeDay/'+missionId,
 			data: {date: date},
 			dataType: "json",
 			success: function(json){
