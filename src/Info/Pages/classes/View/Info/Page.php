@@ -24,7 +24,7 @@ class View_Info_Page extends View
 		foreach( $object->parents as $parent )														//  iterate superior pages
 			$page->setTitle( $parent->title, -1, ' '.$separator.' ' );				//  append parent page title
 		$page->setTitle( $object->title, -1, ' '.$separator.' ' );					//  append current page title
-		if( '' !== trim( $object->content ) ){														//  page has HTML content
+		if( '' === trim( $object->content ) ){														//  page has HTML content
 			$words	= $this->getWords( 'index', 'info/pages' );
 			$this->env->getMessenger()->noteNotice( $words->msgEmptyContent );
 			if( $this->hasContentFile( 'info/page/empty.html' ) )

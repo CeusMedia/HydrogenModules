@@ -20,13 +20,13 @@ class Hook_Info_Gallery extends Hook
 				default:
 					$helper		= new View_Helper_Info_Gallery_List( $env );
 					$p2			= ['controllerName' => 'Info_Gallery'];
-					$path		= $env->getCaptain() ->callHook(
+					$env->getCaptain() ->callHook(
 						'Controller',
 						'onDetectPath',
 						$context,
 						$p2
 					);
-					$helper->setBaseUriPath( $path ?: 'info/gallery' );
+					$helper->setBaseUriPath( $p2['fullath'] ?: 'info/gallery' );
 			}
 			$payload['content']	= preg_replace(
 				$pattern,
