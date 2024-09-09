@@ -17,6 +17,10 @@ require_once 'jpgraph/3.0.7/src/jpgraph.php';
 require_once 'jpgraph/3.0.7/src/jpgraph_pie.php';
 require_once 'jpgraph/3.0.7/src/jpgraph_pie3d.php';
 
+/**
+ * Todo: Upgrade to use amenadiel/jpgraph:^4 (https://github.com/HuasoFoundries/jpgraph)
+ */
+
 $data	= [
 	'status'	=> [],
 	'priority'	=> [],
@@ -45,9 +49,14 @@ foreach( $words['types'] as $key => $value ){
 	);
 }
 
-$graphStatus	= $view->buildGraph( $data, $words, 'status' );
-$graphPriority	= $view->buildGraph( $data, $words, 'priority' );
-$graphType		= $view->buildGraph( $data, $words, 'type' );
+$helperGraph	= new View_Helper_Work_Issue_Graph( $env );
+$helperGraph->setData( $data );
+$helperGraph->setWords( $words );
+
+
+$graphStatus	= $helperGraph->setType( 'status' )->render();
+$graphPriority	= $helperGraph->setType( 'priority' )->render();
+$graphType		= $helperGraph->setType( 'type' )->render();
 
 $indicator	= new HtmlIndicator();
 $ind1		= $indicator->build( 5, 10 );

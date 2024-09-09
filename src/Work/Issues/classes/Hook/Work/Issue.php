@@ -5,6 +5,15 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Issue extends Hook
 {
+	protected array $statusesActive	= [
+		Model_Issue::STATUS_NEW,
+		Model_Issue::STATUS_ASSIGNED,
+		Model_Issue::STATUS_ACCEPTED,
+		Model_Issue::STATUS_PROGRESSING,
+		Model_Issue::STATUS_READY,
+		Model_Issue::STATUS_REOPENED
+	];
+
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
@@ -38,6 +47,7 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -63,11 +73,10 @@ class Hook_Work_Issue extends Hook
 
 		$activeOnly		= $this->payload['activeOnly'] ?? FALSE;
 		$linkable		= $this->payload['linkable'] ?? FALSE;
-		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
 		$indices		= ['reporterId' => $this->payload['userId']];
 		if( $activeOnly )
-			$indices['status']	= $statusesActive;
+			$indices['status']	= $this->statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
@@ -78,7 +87,7 @@ class Hook_Work_Issue extends Hook
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
 		foreach( $reportedIssues as $issue ){
 			$icon		= $icons[$issue->type];
-			$isOpen		= in_array( $issue->status, $statusesActive );
+			$isOpen		= in_array( $issue->status, $this->statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
@@ -164,12 +173,12 @@ class Hook_Work_Issue extends Hook
 		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
 		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 		$language		= $this->env->getLanguage();
-		$statusesActive	= [0, 1, 2, 3, 4, 5];
+
 		$list			= [];
 		$modelIssue		= new Model_Issue( $this->env );
 		$indices		= ['projectId' => $this->payload['projectId']];
 		if( $this->payload['activeOnly'] )
-			$indices['status']	= $statusesActive;
+			$indices['status']	= $this->statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= [
@@ -180,7 +189,7 @@ class Hook_Work_Issue extends Hook
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
 			$icon		= $icons[$issue->type];
-			$isOpen		= in_array( $issue->status, $statusesActive );
+			$isOpen		= in_array( $issue->status, $this->statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );

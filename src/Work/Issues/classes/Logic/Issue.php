@@ -70,8 +70,8 @@ class Logic_Issue extends Logic
 	 *	Returns map of all users participating on an issue.
 	 *	This includes project members, note authors, change authors and former assigned users.
 	 *	@access		public
-	 *	@param		int|string		$issueId		ID of issue to get participating users for
-	 *	@return		array		Map of ordered participating users by ID
+	 *	@param		int|string			$issueId		ID of issue to get participating users for
+	 *	@return		array<object>		Map of ordered participating users by ID
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getParticipatingUsers( int|string $issueId ): array
@@ -80,16 +80,19 @@ class Logic_Issue extends Logic
 		$userIds	= [];																		//  prepare empty list of user IDs
 		$usersProject	= $this->getProjectUsers( $issue->projectId );								//  get users of issue project
 		foreach( $usersProject as $user )															//  iterate users of issue project
-			$userIds[]	= (int) $user->userId;														//  note user ID
-		$userIds[]	= (int) $issue->reporterId;														//  note user ID of issue reporter
-		$userIds[]	= (int) $issue->managerId;														//  note user ID of issue manager
+			$userIds[]	= (string) $user->userId;														//  note user ID
+		$userIds[]	= (string) $issue->reporterId;														//  note user ID of issue reporter
+		$userIds[]	= (string) $issue->managerId;														//  note user ID of issue manager
 		foreach( $issue->notes as $note ){															//  iterate issue notes
-			$userIds[]	= (int) $note->userId;														//  note user ID of note author
+			$userIds[]	= (string) $note->userId;														//  note user ID of note author
 			foreach( $note->changes as $change ){													//  iterate issue changes
-				$userIds[]	= (int) $change->userId;												//  note user ID of change author
-				if( in_array( $change->type, [1, 2] ) ){										//  issue reporter or manager has been changed
-					$userIds[]	= (int) $change->from;												//  note user ID of old reporter or manager
-					$userIds[]	= (int) $change->to;												//  note user ID of new reporter or manager
+				$userIds[]	= (string) $change->userId;												//  note user ID of change author
+				if( in_array( $change->type, [														//  issue reporter or manager has been changed
+					Model_Issue_Change::TYPE_REPORTER,
+					Model_Issue_Change::TYPE_MANAGER
+				] ) ){
+					$userIds[]	= (string) $change->from;												//  note user ID of old reporter or manager
+					$userIds[]	= (string) $change->to;												//  note user ID of new reporter or manager
 				}
 			}
 		}
@@ -130,7 +133,7 @@ class Logic_Issue extends Logic
 	 */
 	public function getUserProjects(): array
 	{
-		$userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
@@ -149,8 +152,10 @@ class Logic_Issue extends Logic
 			$issue->reporter	= $users[$issue->reporterId];
 		if( $issue->managerId )
 			$issue->manager		= $users[$issue->managerId];
-		if( isset( $users[$currentUserId] ) )
+
+		if( array_key_exists( (string) $currentUserId, $users ) )
 			unset( $users[$currentUserId] );
+
 		if( count( $users ) ){
 			/** @var Logic_Mail $logicMail */
 			$logicMail		= Logic_Mail::getInstance( $this->env );
@@ -184,7 +189,7 @@ class Logic_Issue extends Logic
 			$issue->reporter	= $users[$issue->reporterId];
 		if( $issue->managerId )
 			$issue->manager		= $users[$issue->managerId];
-		if( isset( $users[$currentUserId] ) )
+		if( array_key_exists( (string) $currentUserId, $users ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
 			/** @var Logic_Mail $logicMail */
@@ -217,7 +222,7 @@ class Logic_Issue extends Logic
 	{
 		$data	= [
 			'issueId'	=> $issueId,
-			'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
+			'userId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentUserId(),
 			'noteId'	=> $noteId,
 			'type'		=> $type,
 			'from'		=> $from,

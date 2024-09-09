@@ -61,7 +61,7 @@ $(document).ready(function(){
 					type: "post",
 					dataType: "json",
 					success: function(response){
-						Issues.renderIssues($("#list-similar tbody"), response);
+						Issues.renderIssues($("#list-similar tbody"), response.data);
 					}
 				});
 	//
