@@ -88,17 +88,17 @@ class Controller_Admin_Server extends Controller
 			}
 		}
 		$modelProject			= new Model_Project( $this->env );
-		$modelProjectVersion	= new Model_Project_Version( $this->env );
+//		$modelProjectVersion	= new Model_Project_Version( $this->env );
 		$this->addData( 'server', $this->modelServer->get( $serverId ) );
 		$this->addData( 'projects', $modelProject->getAll() );
 		$relations	= [];
-		foreach( $this->modelServerProject->getAllByIndex( 'serverId', $serverId ) as $relation ){
+/*		foreach( $this->modelServerProject->getAllByIndex( 'serverId', $serverId ) as $relation ){
 			if( $relation->projectVersionId ){
 				$relation->projectVersion	= $modelProjectVersion->get( $relation->projectVersionId );
 				$relation->project			= $modelProject->get( $relation->projectVersion->projectId );
 			}
 			$relations[]	= $relation;
-		}
+		}*/
 		$this->env->getLanguage()->load( 'admin/project' );
 		$this->addData( 'wordsProjectVersionStates', $this->getWords( 'version-states', 'admin/project' ) );
 		$this->addData( 'serverProjects', $relations );
