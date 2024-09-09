@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_BootstrapResponsive
 {
-	protected $env;
-	protected $menu;
-	protected $linksToSkip	= [];
-	protected $scope		= 'main';
-	protected $position		= 'static';
+	protected Environment $env;
+	protected Model_Menu $menu;
+	protected array $linksToSkip	= [];
+	protected string $scope			= 'main';
+	protected string $position		= 'static';
 	protected $helperAccountMenu;
-	protected $logoTitle;
-	protected $logoLink;
-	protected $logoIcon;
+	protected ?string $logoTitle	= NULL;
+	protected ?string $logoLink	= NULL;
+	protected ?string $logoIcon	= NULL;
 
 	public function __construct( Environment $env )
 	{

@@ -12,7 +12,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 	protected string $scope			= 'main';
 	protected ?string $logoTitle	= NULL;
 	protected ?string $logoLink		= NULL;
-	protected ?string $logoIcon		= NULL ;
+	protected ?string $logoIcon		= NULL;
 	protected ?string $style		= NULL;
 	protected ?object $helperAccountMenu	= NULL;
 

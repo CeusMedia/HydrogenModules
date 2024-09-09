@@ -3,12 +3,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar
 {
-	protected $hideOnDesktop	= FALSE;
+	protected bool $hideOnDesktop	= FALSE;
 
 	/**
 	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->render();
 	}

@@ -1,15 +1,17 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 {
-	protected $divider			= '&nbsp;/&nbsp;';
-	protected $hasPageSupport	= FALSE;
-	protected $moduleConfig;
-	protected $moduleId			= "UI_Navigation_Bootstrap_Position";
-	protected $labelHome		= "Home";
+	protected string $divider			= '&nbsp;/&nbsp;';
+	protected bool $hasPageSupport		= FALSE;
+	protected Dictionary $moduleConfig;
+	protected string $moduleId			= 'UI_Navigation_Bootstrap_Position';
+	protected string $labelHome			= 'Home';
 
 	public function __construct( Environment $env )
 	{
@@ -41,15 +43,15 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 				if( $page->path === $currentPage->path ){
 					$item->current = TRUE;
 				}
-				if( $page->type === "menu" ){
+				if( 'menu' === $page->type ){
 				}
-				else if( $page->type === "item" ){
+				else if( 'item' === $page->type ){
 					if( !$item->current )
 						$item->link = './'.$page->path;
 				}
 				array_unshift( $itemList, $item );
-				$parts	= explode( "/", $path );
-				$path	= implode( "/", array_slice( $parts, 0, count( $parts ) - 1 ) );
+				$parts	= explode( '/', $path );
+				$path	= implode( '/', array_slice( $parts, 0, count( $parts ) - 1 ) );
 			}
 			array_unshift( $itemList, (object) [
 				'label'		=> $this->labelHome,
@@ -71,7 +73,7 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 				$label	= HtmlTag::create( 'a', $label, ['href' => $entry->link] );
 			$barList[]	= HtmlTag::create( 'span', $label, [
 				'class'	=> 'position-bar-path-list-item',
-			'href'	=> '#',
+				'href'	=> '#',
 			] );
 		}
 		$divider	= HtmlTag::create( 'span', $this->divider, ['class' => 'position-bar-path-divider'] );

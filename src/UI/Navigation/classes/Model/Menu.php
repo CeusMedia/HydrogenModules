@@ -46,7 +46,7 @@ class Model_Menu
 		$this->readUserPages();
 	}
 
-	public function getCurrent()
+	public function getCurrent(): ?object
 	{
 		return $this->current;
 	}

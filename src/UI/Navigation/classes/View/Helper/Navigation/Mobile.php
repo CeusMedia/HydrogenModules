@@ -5,13 +5,13 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Mobile
 {
-	protected $env;
-	protected $menu;
-	protected $inverse			= FALSE;
-	protected $linksToSkip		= [];
-	protected $scope			= 'main';
+	protected Environment $env;
+	protected ?Model_Menu $menu		= NULL;
+	protected bool $inverse			= FALSE;
+	protected array $linksToSkip	= [];
+	protected string $scope			= 'main';
 
-	public function __construct( Environment $env, Model_Menu $menu )
+	public function __construct( Environment $env, ?Model_Menu $menu = NULL )
 	{
 		$this->env		= $env;
 		if( NULL !== $menu )
@@ -47,13 +47,13 @@ class View_Helper_Navigation_Mobile
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= $page->active ? 'Selected' : NULL;
-				$href	= $page->path == "index" ? './' : './'.$page->link;
+				$href	= $page->path == 'index' ? './' : './'.$page->link;
 				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href] );
 				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 		}
-		$list	= HtmlTag::create( 'ul', $list, ["class" => 'mm-listview'] );
-		return HtmlTag::create( 'div', $list, ['id' => "menu", 'class' => "mm-hidden"] );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'mm-listview'] );
+		return HtmlTag::create( 'div', $list, ['id' => 'menu', 'class' => 'mm-hidden'] );
 	}
 
 	public function setInverse( bool $boolean = NULL ): self
@@ -85,7 +85,7 @@ class View_Helper_Navigation_Mobile
 		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) ) )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
+		if( !str_starts_with( trim( $entry->icon ), 'fa'))
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		return $icon.'&nbsp;'.$entry->label;

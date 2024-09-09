@@ -1,18 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 
 class View_Helper_Navigation
 {
-	protected $env;
-	protected $menu;
-	protected $moduleConfig;
-	protected $inverse			= FALSE;
-	protected $linksToSkip		= [];
-	protected $logoTitle;
-	protected $logoLink;
-	protected $logoIcon;
+	protected Environment $env;
+	protected Model_Menu $menu;
+	protected Dictionary $moduleConfig;
+	protected bool $inverse				= FALSE;
+	protected array $linksToSkip		= [];
+	protected ?string $logoTitle		= NULL;
+	protected ?string $logoLink			= NULL;
+	protected ?string $logoIcon			= NULL;
 	protected $helperAccount;
 
 	public function __construct( Environment $env )

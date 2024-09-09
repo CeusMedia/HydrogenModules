@@ -1,12 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Index
 {
-	protected $env;
-	protected $menu;
-	protected $scope			= 'main';
-	protected $linksToSkip		= [];
+	protected Environment $env;
+	protected Model_Menu $menu;
+	protected string $scope				= 'main';
+	protected array $linksToSkip		= [];
 
 	/**
 	 *	Constructor.
@@ -14,7 +15,7 @@ class View_Helper_Navigation_Index
 	 *	@param		Environment			$env		Environment instance
 	 *	@throws		RuntimeException	if module UI_Navigation is not installed
 	 */
-	public function __construct( $env )
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 		if( !$this->env->getModules()->has( 'UI_Navigation' ) )
@@ -58,8 +59,6 @@ class View_Helper_Navigation_Index
 	 */
 	public function setLinksToSkip( array $linksToSkip ): self
 	{
-		if( !is_array( $linksToSkip ) )
-			throw new InvalidArgumentException( 'Must be an array' );
 		$this->linksToSkip	= $linksToSkip;
 		return $this;
 	}
@@ -86,7 +85,7 @@ class View_Helper_Navigation_Index
 	 *	@return		string
 	 *	@todo		add page type check
 	 */
-	protected function renderItem( $page ): string
+	protected function renderItem( object $page ): string
 	{
 //		if( $page->type !== '...' )
 //			return;
@@ -106,7 +105,7 @@ class View_Helper_Navigation_Index
 	 *	@return		string		List item containing heading of menu page, if page is of type menu
 	 *	@todo		add page type check
 	 */
-	protected function renderTopicHeadingItem( $page ): string
+	protected function renderTopicHeadingItem( object $page ): string
 	{
 //		if( $page->type !== 'menu' )
 //			return;

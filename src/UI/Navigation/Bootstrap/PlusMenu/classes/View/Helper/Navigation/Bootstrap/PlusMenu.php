@@ -1,23 +1,23 @@
 <?php
 
 use CeusMedia\Bootstrap\Dropdown\Menu as DropdownMenu;
-use CeusMedia\Bootstrap\Dropdown\Trigger as DropdownTrigger;
 use CeusMedia\Bootstrap\Button\Group as Dropdown;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 {
-	protected $class		= 'plus-menu';
-	protected $buttonClass	= '';
-	protected $buttonIcon	= 'fa fa-fw fa-plus';
-	protected $links		= [];
-	protected $alignRight	= FALSE;
-	protected $alignBottom	= FALSE;
+	protected string $class			= 'plus-menu';
+	protected string $buttonClass	= '';
+	protected string $buttonIcon	= 'fa fa-fw fa-plus';
+	protected array $links			= [];
+	protected bool $alignRight		= FALSE;
+	protected bool $alignBottom		= FALSE;
 
-	protected $moduleKey	= 'ui_navigation_bootstrap_plusmenu';
-	protected $moduleConfig;
+	protected string $moduleKey	= 'ui_navigation_bootstrap_plusmenu';
+	protected Dictionary $moduleConfig;
 
 	protected $menu;
 	protected $scope;
@@ -74,8 +74,7 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 		$group		= (new Dropdown())->add( $button )->add( $dropdown );
 		if( $this->alignBottom )
 			$group->addClass( 'dropup' );
-		$container	= HtmlTag::create( 'div', $group, ['class' => $this->class] );
-		return (string) $container;
+		return HtmlTag::create( 'div', $group, ['class' => $this->class] );
 	}
 
 	public function setAlignRight( bool $alignRight ): self

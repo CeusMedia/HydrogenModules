@@ -218,15 +218,14 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	}
 
 	/**
-	 *	@param		object|string $userObjectOrId
+	 *	@param		object|string|int		$userObjectOrId
 	 *	@return		self
-	 *	@throws		ReflectionException
 	 */
-	public function setUser( $userObjectOrId ): self
+	public function setUser( object|string|int $userObjectOrId ): self
 	{
 		if( is_object( $userObjectOrId ) )
 			$this->user	= $userObjectOrId;
-		else if( is_int( $userObjectOrId ) ){
+		else if( is_int( $userObjectOrId ) || is_string( $userObjectOrId ) ){
 			$model	= new Model_User( $this->env );
 			$this->user	= $model->get( $userObjectOrId );
 		}

@@ -88,7 +88,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 	{
 		if( !isset( $entry->icon ) )
 			return $entry->label;
-		if( preg_match( '/^fa /', $entry->icon ) )
+		if( str_starts_with( $entry->icon, 'fa ' ) )
 			$icon	= HtmlTag::create( 'i', '', ['class' => $entry->icon] );
 		else
 			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-'.$entry->icon] );

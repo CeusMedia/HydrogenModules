@@ -34,16 +34,15 @@ class Logic_Shortcode extends Logic
 		$allow	= preg_split( '/, */', $this->moduleConfig->get( 'allow' ) );
 		$deny	= preg_split( '/, */', $this->moduleConfig->get( 'deny' ) );
 		if( $mode === "deny" && !in_array( $shortCode, $allow ) )
-			return;
+			return FALSE;
 		if( $mode === "allow" && in_array( $shortCode, $deny ) )
-			return;
+			return FALSE;
 
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		if( preg_match( $pattern, $this->content ) ){
 			$code		= preg_replace( $pattern, "\\2", $this->content );
 			$shortcode	= (object) $this->parse( $code );
-			$attr		= array_merge( $defaultAttributes, $shortcode->attributes );
-			return $attr;
+			return array_merge( $defaultAttributes, $shortcode->attributes );
 		}
 		return FALSE;
 	}
