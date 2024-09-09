@@ -43,7 +43,7 @@ class View_Helper_Navigation_Bootstrap_Position extends Abstraction
 				if( $page->path === $currentPage->path ){
 					$item->current = TRUE;
 				}
-				if( 'menu' === $page->type ){
+				else if( 'menu' === $page->type ){
 				}
 				else if( 'item' === $page->type ){
 					if( !$item->current )

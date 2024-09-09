@@ -10,6 +10,8 @@ class Controller_Ajax_Auth extends AjaxController
 	 */
 	public function isAuthenticated(): void
 	{
+		$logic	= Logic_Authentication::getInstance( $this->env );
+		$logic->getCurrentUserId( FALSE );
 		$this->respondData( ['result' => $this->session->has( 'auth_user_id' )] );
 	}
 
@@ -19,6 +21,6 @@ class Controller_Ajax_Auth extends AjaxController
 	 */
 	public function refreshSession(): void
 	{
-		$this->ajaxIsAuthenticated();
+		$this->isAuthenticated();
 	}
 }
