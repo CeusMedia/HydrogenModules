@@ -16,75 +16,111 @@ class Controller_Work_Graph extends Controller
 	protected Model_Work_Graph_Node $modelNode;
 	protected Model_Work_Graph_Edge $modelEdge;
 
-	public function addEdge( $graphId, $nodeId = NULL ): void
+	/**
+	 *	@param		int|string			$graphId
+	 *	@param		int|string|NULL		$nodeId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addEdge( int|string $graphId, int|string|NULL $nodeId = NULL ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$edgeId	= $this->modelEdge->add( $data );
-		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+		$this->modelGraph->edit( $graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $nodeId ? 'node/'.$nodeId : $graphId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addGraph(): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$data['createdAt']	= time();
 		$graphId	= $this->modelGraph->add( $data );
 		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function addNode( $graphId ): void
+	/**
+	 *	@param		int|string		$graphId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addNode( int|string $graphId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$nodeId	= $this->modelNode->add( $data );
-		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+		$this->modelGraph->edit( $graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( 'node/'.$nodeId /*$graphId*/, TRUE );
 	}
 
-	public function editEdge( $edgeId, $nodeId = NULL ): void
+	/**
+	 *	@param		int|string			$edgeId
+	 *	@param		int|string|NULL		$nodeId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editEdge( int|string $edgeId, int|string|NULL $nodeId = NULL ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$this->modelEdge->edit( $edgeId, $data );
 		$edge	= $this->modelEdge->get( $edgeId );
-		$this->modelGraph->edit( $edge->graphId, array( 'modifiedAt' => time() ) );
+		$this->modelGraph->edit( $edge->graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $edge->graphId, TRUE );
 		$this->restart( $nodeId ? 'node/'.$nodeId : 'edge/'.$edgeId, TRUE );
 	}
 
-	public function editGraph( $graphId ): void
+	/**
+	 *	@param		int|string		$graphId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editGraph( int|string $graphId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$this->modelGraph->edit( $graphId, $data );
-		$this->modelGraph->edit( $graphId, array( 'modifiedAt' => time() ) );
+		$this->modelGraph->edit( $graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $graphId, TRUE );
 		$this->restart( $graphId, TRUE );
 	}
 
-	public function editNode( $nodeId ): void
+	/**
+	 *	@param		int|string		$nodeId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editNode( int|string $nodeId ): void
 	{
 		$data	= $this->request->getAll();
 		foreach( $data as $key => $value )
-			$data[$key]	= $value !== "" ? $value : NULL;
+			$data[$key]	= $value !== '' ? $value : NULL;
 		$this->modelNode->edit( $nodeId, $data );
 		$node	= $this->modelNode->get( $nodeId );
-		$this->modelGraph->edit( $node->graphId, array( 'modifiedAt' => time() ) );
+		$this->modelGraph->edit( $node->graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $node->graphId, TRUE );
 		$this->restart( 'node/'.$nodeId, TRUE );
 	}
 
-	public function index( $graphId = NULL): void
+	/**
+	 *	@param		int|string|NULL		$graphId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int|string|NULL $graphId = NULL ): void
 	{
 		if( $graphId )
 			$this->selectGraph( $graphId );
@@ -96,7 +132,13 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'nodes', $this->modelNode->getAllByIndex( 'graphId', $graphId ) );
 	}
 
-	public function edge( $edgeId, $nodeId = NULL ): void
+	/**
+	 *	@param		int|string			$edgeId
+	 *	@param		int|string|NULL		$nodeId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edge( int|string $edgeId, int|string|NULL $nodeId = NULL ): void
 	{
 		$edge	= $this->modelEdge->get( $edgeId );
 		$graph	= $this->modelGraph->get( $edge->graphId );
@@ -109,7 +151,12 @@ class Controller_Work_Graph extends Controller
 //		$this->addData( 'edges', $this->modelEdge->getAllByIndex( 'graphId', $edge->graphId ) );
 	}
 
-	public function node( $nodeId ): void
+	/**
+	 *	@param		int|string		$nodeId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function node( int|string $nodeId ): void
 	{
 		$node	= $this->modelNode->get( $nodeId );
 		$graph	= $this->modelGraph->get( $node->graphId );
@@ -122,7 +169,12 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'edgesOut', $this->modelEdge->getAllByIndex( 'fromNodeId', $nodeId ) );
 	}
 
-	public function selectGraph( $graphId ): void
+	/**
+	 *	@param		int|string		$graphId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function selectGraph( int|string $graphId ): void
 	{
 		$graph	= $this->modelGraph->get( $graphId );
 		if( !$graph ){
@@ -134,7 +186,13 @@ class Controller_Work_Graph extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $graphId, $force = NULL ): void
+	/**
+	 *	@param		int|string		$graphId
+	 *	@param		bool|NULL		$force
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $graphId, ?bool $force = NULL ): void
 	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( !$graph )
@@ -145,12 +203,18 @@ class Controller_Work_Graph extends Controller
 			$this->renderGraphImage( $graphId, $force );
 			$graph		= $this->modelGraph->get( $graphId );
 		}
-		header( "Content-Type: image/png" );
-		header( "Content-Length: ".strlen( $graph->image ) );
+		header( 'Content-Type: image/png' );
+		header( 'Content-Length: '.strlen( $graph->image ) );
 		print( $graph->image );
 		exit;
 	}
 
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -175,6 +239,11 @@ class Controller_Work_Graph extends Controller
 		$this->addData( 'graphs', $graphs );
 	}
 
+	/**
+	 *	@param		string		$graphId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function renderGraph( string $graphId ): void
 	{
 		$graph		= $this->modelGraph->get( $graphId );
@@ -206,7 +275,7 @@ class Controller_Work_Graph extends Controller
 			$attr['label']		= $node->label ?: $node->ID;
 			foreach( $attr as $key => $value )
 				$attr[$key]	= $key.'="'.$value.'"';
-			$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
+			$attr	= $attr ? ' ['.join( ' ', $attr ).']' : '';
 			$lines[]	= $indent.$node->ID.$attr;
 		}
 		$lines[]	= '';
@@ -220,17 +289,23 @@ class Controller_Work_Graph extends Controller
 			$attr['label']		= $edge->label;
 			foreach( $attr as $key => $value )
 				$attr[$key]	= $key.'="'.$value.'"';
-			$attr	= $attr ? ' ['.join( " ", $attr ).']' : '';
+			$attr	= $attr ? ' ['.join( ' ', $attr ).']' : '';
 			$trans	= $nodeIndex[$edge->fromNodeId].'->'.$nodeIndex[$edge->toNodeId];
 			$lines[]	= $indent.$trans.$attr;
 		}
 		$lines[]	= '}';
-		$this->modelGraph->edit( $graphId, array(
+		$this->modelGraph->edit( $graphId, [
 			'dot'	=> join( "\n", $lines ),
-		), FALSE );
+		], FALSE );
 	}
 
-	protected function renderGraphImage( string $graphId, bool $force = NULL )
+	/**
+	 *	@param		string			$graphId
+	 *	@param		bool|NULL		$force
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderGraphImage( string $graphId, ?bool $force = NULL ): void
 	{
 		$graph		= $this->modelGraph->get( $graphId );
 		if( !$graph )
@@ -242,16 +317,16 @@ class Controller_Work_Graph extends Controller
 				$this->renderGraph( $graphId );
 				$graph		= $this->modelGraph->get( $graphId );
 			}
-			$graphFile	= "graph_".$graph->graphId;
-			FileWriter::save( $graphFile.".dot", $graph->dot );
-			$command	= "dot -Tpng ".$graphFile.".dot > ".$graphFile.".png";
+			$graphFile	= 'graph_'.$graph->graphId;
+			FileWriter::save( $graphFile.'.dot', $graph->dot );
+			$command	= 'dot -Tpng '.$graphFile.'.dot > '.$graphFile.'.png';
 			exec( $command );
-			$this->modelGraph->edit( $graphId, array(
-				'image'			=> file_get_contents( $graphFile.".png" ),
+			$this->modelGraph->edit( $graphId, [
+				'image'			=> file_get_contents( $graphFile.'.png' ),
 				'renderedAt'	=> time(),
-			), FALSE );
-			unlink( $graphFile.".dot" );
-			unlink( $graphFile.".png" );
+			], FALSE );
+			unlink( $graphFile.'.dot' );
+			unlink( $graphFile.'.png' );
 		}
 	}
 

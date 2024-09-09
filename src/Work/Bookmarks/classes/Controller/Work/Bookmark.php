@@ -16,6 +16,10 @@ class Controller_Work_Bookmark extends Controller
 	protected Model_Bookmark_Comment $modelComment;
 	protected Model_Bookmark_Tag $modelTag;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -64,6 +68,11 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function comment( string $bookmarkId ): void
 	{
 		$this->check( $bookmarkId );
@@ -75,11 +84,16 @@ class Controller_Work_Bookmark extends Controller
 				'content'		=> trim( $this->request->get( 'comment' ) ),
 				'createdAt'		=> time(),
 			];
-			$newId  = $this->modelComment->add( $data );
+			$newId	= $this->modelComment->add( $data );
 			$this->restart( './view/'.$bookmarkId, TRUE );
 		}
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $bookmarkId ): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -104,7 +118,12 @@ class Controller_Work_Bookmark extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$filterQuery	= $this->session->get( 'filter_work_bookmark_query' );
 		$conditions		= [
@@ -135,6 +154,11 @@ class Controller_Work_Bookmark extends Controller
 		$this->addData( 'filterLimit', $this->session->get( 'filter_work_bookmark_limit' ) );
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $bookmarkId ): void
 	{
 		$this->addData( 'bookmark', $this->check( $bookmarkId ) );
@@ -146,6 +170,11 @@ class Controller_Work_Bookmark extends Controller
 		], ['title' => 'ASC'] ) );
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function visit( string $bookmarkId ): void
 	{
 		$bookmark	= $this->check( $bookmarkId );
@@ -157,6 +186,11 @@ class Controller_Work_Bookmark extends Controller
 		exit;
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addTag( string $bookmarkId ): void
 	{
 		$bookmark	= $this->check( $bookmarkId );
@@ -172,6 +206,10 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -185,6 +223,11 @@ class Controller_Work_Bookmark extends Controller
 		}
 	}
 
+	/**
+	 *	@param		string		$bookmarkId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function check( string $bookmarkId ): object
 	{
 		$bookmark	= $this->model->get( $bookmarkId );
