@@ -154,7 +154,8 @@ class Controller_Manage_Customer extends Controller
 		}
 		try{
 			$address	= $customer->city.', '.$customer->street.' '.$customer->nr;
-			$geocoder	= new GoogleMapsGeocoder();
+			$apiKey		= $this->env->getModules()->get( 'UI_Map' )->config['apiKey']->value;
+			$geocoder	= new GoogleMapsGeocoder( $apiKey );
 			$tags		= $geocoder->getGeoTags( $address );
 			$this->modelCustomer->edit( $customerId, $tags );
 		}

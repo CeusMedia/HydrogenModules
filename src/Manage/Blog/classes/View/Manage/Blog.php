@@ -25,7 +25,7 @@ class View_Manage_Blog extends View
 		];
 		$list	= [];
 		$badge	= '';
-		if( $this->hasData( 'course' ) && $this->hasData( 'courses' ) ){
+/*		if( $this->hasData( 'course' ) && $this->hasData( 'courses' ) ){
 			$course	= $this->getData( 'course' );
 			foreach( $this->getData( 'courses' ) as $item ){
 				if( $course->courseId == $item->courseId && count( $item->newComments ) ){
@@ -33,7 +33,7 @@ class View_Manage_Blog extends View
 					$tabs['/comment']	.= '&nbsp;&nbsp;'.$badge;
 				}
 			}
-		}
+		}*/
 		foreach( $tabs as $key => $value ){
 			$attributes	= ['href' => './manage/blog'.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );

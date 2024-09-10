@@ -1,30 +1,24 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_Gallery extends Hook
 {
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onTinyMCE_getImageList( Environment $env, $context, $module, $payload = [] )
+	public function onTinyMCE_getImageList(): void
 	{
-		$moduleConfig		= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
-		$frontend			= Logic_Frontend::getInstance( $env );
+		$moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
+		$frontend			= Logic_Frontend::getInstance( $this->env );
 		$remotePathImages	= $frontend->getPath( 'images' ).( trim( $moduleConfig->get( 'image.path' ) ) );
 		$virtualPathImages	= substr( $remotePathImages, strlen( $frontend->getPath() ) );
-		$words				= $env->getLanguage()->getWords( 'js/tinymce' );
+		$words				= $this->env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes			= (object) $words['link-prefixes'];
 		$list				= [];
 
-		$modelGallery		= new Model_Gallery( $env );
-		$modelImage			= new Model_Gallery_Image( $env );
+		$modelGallery		= new Model_Gallery( $this->env );
+		$modelImage			= new Model_Gallery_Image( $this->env );
 		$galleryConditions	= ['status' => [-1, 0, 1]];
 		$galleryOrders		= ['title' => 'ASC'];
 		$imageOrders		= ['filename' => 'ASC'];
@@ -43,28 +37,23 @@ class Hook_Manage_Gallery extends Hook
 			'title'	=> "Galerie-Bild:",//$prefixes->image,
 			'menu'	=> array_values( $list ),
 		) );
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
+//		$this->context->list	= array_merge( $this->context->list, array_values( $list ) );
+		$this->context->list	= array_merge( $this->context->list, $list );
 	}
 
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onTinyMCE_getLinkList( Environment $env, $context, $module, $payload = [] )
+	public function onTinyMCE_getLinkList(): void
 	{
-		$moduleConfig	= $env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
-		$frontend		= Logic_Frontend::getInstance( $env );
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_galleries.', TRUE );
+		$frontend		= Logic_Frontend::getInstance( $this->env );
 		$pathFrontend	= $frontend->getPath();
-		$words			= $env->getLanguage()->getWords( 'js/tinymce' );
+		$words			= $this->env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
 		$list			= [];
 
-		$modelGallery	= new Model_Gallery( $env );
+		$modelGallery	= new Model_Gallery( $this->env );
 		$galleries	= $modelGallery->getAll( ['status' => 1], ['title' => 'ASC'] );
 		foreach( $galleries as $gallery ){
 			$title 		= View_Manage_Gallery::urlencodeTitle( $gallery->title );
@@ -79,22 +68,17 @@ class Hook_Manage_Gallery extends Hook
 			'title'	=> "Galerie:",//$prefixes->image,
 			'menu'	=> array_values( $list ),
 		) );
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
+//		$this->context->list	= array_merge( $this->context->list, array_values( $list ) );
+		$this->context->list	= array_merge( $this->context->list, $list );
 	}
 
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 *	@todo		add hook to module config
 	 */
-	public static function ___registerHints( Environment $env, $context, $module, $payload = NULL )
+	public function ___registerHints(): void
 	{
 		if( class_exists( 'View_Helper_Hint' ) )
-			View_Helper_Hint::registerHintsFromModuleHook( $env, $module );
+			View_Helper_Hint::registerHintsFromModuleHook( $this->env, $this->module );
 	}
 }

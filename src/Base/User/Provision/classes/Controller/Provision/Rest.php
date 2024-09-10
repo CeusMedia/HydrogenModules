@@ -3,6 +3,9 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
+/**
+ * @todo refactor to use Ajax or Api controller
+ */
 class Controller_Provision_Rest extends Controller
 {
 	protected Logic_User_Provision $logic;
@@ -177,8 +180,8 @@ class Controller_Provision_Rest extends Controller
 	public function test(): void
 	{
 		$data	= [
-			'products' => $this->getProducts(),
-			'licenses' => $this->getLicenses( 1 ),
+			'products' => $this->logic->getProducts( 1 ),
+			'licenses' => $this->logic->getProductLicenses( 1, 2 ),
 		];
 		$this->handleJsonResponse( 'data', $data );
 	}

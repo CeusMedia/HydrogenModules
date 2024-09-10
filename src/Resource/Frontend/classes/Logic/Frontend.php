@@ -11,6 +11,7 @@ use CeusMedia\HydrogenFramework\Logic;
 /**
  *	@todo		remove singleton to have several frontend logics for different environments
  */
+/** @phpstan-consistent-constructor */
 class Logic_Frontend extends Logic
 {
 	protected static ?Logic_Frontend $instance	= NULL;
@@ -35,12 +36,12 @@ class Logic_Frontend extends Logic
 
 	/**
 	 * @param		Environment		$env
-	 * @return		self
+	 * @return		static
 	 */
-	public static function getInstance( Environment $env ): self
+	public static function getInstance( Environment $env ): static
 	{
 		if( NULL === self::$instance )
-			self::$instance	= new self( $env );
+			self::$instance	= new static( $env );
 		return self::$instance;
 	}
 

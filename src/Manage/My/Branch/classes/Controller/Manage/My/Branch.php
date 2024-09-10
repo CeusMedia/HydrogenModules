@@ -325,8 +325,8 @@ class Controller_Manage_My_Branch extends Controller
 	protected function isMyCompany( int|string $companyId ): bool
 	{
 		$user		= $this->getCurrentUser();
-		$model		= new Model_Company( $this->env );
-		$conditions	= ['companyId' => $user->companyId, 'companyId' => $companyId];
+		$model		= new Model_Company_User( $this->env );
+		$conditions	= ['companyId' => $companyId, 'userId' => $user->userId];
 		return (bool) $model->count( $conditions );
 	}
 }

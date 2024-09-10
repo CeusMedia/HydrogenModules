@@ -3,24 +3,25 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
+/** @phpstan-consistent-constructor */
 class View_Helper_Bootstrap_Modal
 {
-	protected $env;
-	protected $attributes			= [];
-	protected $body;
-	protected $fade					= TRUE;
-	protected $heading;
-	protected $id;
-	protected $formAction;
-	protected $labelButtonCancel	= "Schließen";
-	protected $labelButtonSubmit	= "Weiter";
-	protected $bsVersion;
-	protected $isBs4;
+	protected Environment $env;
+	protected string $id;
+	protected array $attributes			= [];
+	protected string $body				= '';
+	protected bool $fade				= TRUE;
+	protected string $heading			= '';
+	protected ?string $formAction		= NULL;
+	protected string $labelButtonCancel	= "Schließen";
+	protected string $labelButtonSubmit	= "Weiter";
+	protected string $bsVersion;
+	protected bool $isBs4;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		object		$env			Instance of Hydrogen Environment
+	 *	@param		Environment		$env			Instance of Hydrogen Environment
 	 */
 	public function __construct( Environment $env )
 	{
@@ -34,7 +35,7 @@ class View_Helper_Bootstrap_Modal
 		return $this->render();
 	}
 
-	public static function create( Environment $env ): self
+	public static function create( Environment $env ): static
 	{
 		return new static( $env );
 	}
@@ -208,10 +209,9 @@ class View_Helper_Bootstrap_Modal
 			'type'		=> 'submit',
 		] );
 		$buttonSubmit	= $this->formAction ? $buttonSubmit : '';
-		$footer		= HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], [
+		return HtmlTag::create( 'div', [$buttonClose, $buttonSubmit], [
 			'class'	=> 'modal-footer',
 		] );
-		return $footer;
 	}
 
 	protected function renderHeader(): string
@@ -223,9 +223,8 @@ class View_Helper_Bootstrap_Modal
 			'aria-hidden'	=> "true",
 		] );
 		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
-		$header		= HtmlTag::create( 'div', [$buttonClose, $heading], [
+		return HtmlTag::create( 'div', [$buttonClose, $heading], [
 			'class'	=> 'modal-header',
 		] );
-		return $header;
 	}
 }
