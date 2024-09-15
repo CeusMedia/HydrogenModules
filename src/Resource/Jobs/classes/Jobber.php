@@ -20,13 +20,13 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Jobber extends ConsoleApplication
 {
-	protected array $jobs	= [];
 	protected Logic_Job $logic;
 	protected Model_Job $modelJob;
 //	protected Model_Job_Lock $modelLock;
-	protected $mode;
+	protected array $jobs					= [];
 	protected string $pathJobs;
 	protected ?string $pathLogs;
+	protected ?string $mode					= NULL;
 	protected ?object $runningJob			= NULL;
 
 	public function __construct( Environment $env = NULL )
@@ -53,19 +53,32 @@ class Jobber extends ConsoleApplication
 		}
 	}*/
 
+	/**
+	 *	@param		array		$modes
+	 *	@param		bool		$strict
+	 *	@return		self
+	 */
 	public function loadJobs( array $modes, bool $strict = TRUE ): self
 	{
 		$this->modelJob->load( $modes, $strict );
 		return $this;
 	}
 
-	public function getJobs( $conditions = [] ): array
+	/**
+	 *	@param		array		$conditions
+	 *	@return		array
+	 */
+	public function getJobs( array $conditions = [] ): array
 	{
 		if( $this->mode && !isset( $conditions['mode'] ) )
 			$conditions['mode']	= $this->mode;
 		return $this->modelJob->getAll( $conditions );
 	}
 
+	/**
+	 *	@param		string		$message
+	 *	@return		self
+	 */
 	public function log( string $message ): self
 	{
 		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
@@ -73,6 +86,10 @@ class Jobber extends ConsoleApplication
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$message
+	 *	@return		self
+	 */
 	public function logError( string $message ): self
 	{
 		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
@@ -81,6 +98,10 @@ class Jobber extends ConsoleApplication
 		return $this;
 	}
 
+	/**
+	 *	@param		Throwable		$t
+	 *	@return		self
+	 */
 	public function logException( Throwable $t ): self
 	{
 		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
@@ -117,13 +138,21 @@ class Jobber extends ConsoleApplication
 		return 0;
 	}
 
-	public function setMode( $mode ): self
+	/**
+	 *	@param		string		$mode
+	 *	@return		self
+	 */
+	public function setMode( string $mode ): self
 	{
 		$this->mode	= $mode;
 		return $this;
 	}
 
 	/*  --  PROTECTED  --  */
+
+	/**
+	 *	@return		false|mixed|null
+	 */
 	protected function getJobIdFromRequest()
 	{
 		if( $this->env->getRequest()->get( 0 ) )
@@ -209,12 +238,6 @@ class Jobber extends ConsoleApplication
 		}
 
 		$this->runningJob	= NULL;
-		if( is_integer( $result ) ){
-			return $result;
-		if( strlen( trim( $result ) ) )																//  handle old return strings @deprecated
-			foreach( explode( "\n", trim( $result ) ) as $line )									//  handle each result line
-				$this->log( $line );																//  by logging
-		}
-		return 1;																					//  quit with positive status
+		return $result;
 	}
 }
