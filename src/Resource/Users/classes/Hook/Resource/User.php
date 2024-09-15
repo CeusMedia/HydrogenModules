@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Resource_User extends Hook
@@ -9,6 +8,7 @@ class Hook_Resource_User extends Hook
 	 *	...
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{

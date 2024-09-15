@@ -109,7 +109,7 @@ class Logic_Upload
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if given size is not an integer larger than 0
 	 */
-	public function checkSize( $maxSize, bool $noteError = FALSE ): bool
+	public function checkSize( int|string $maxSize, bool $noteError = FALSE ): bool
 	{
 		if( $this->upload->error )
 			return FALSE;
@@ -129,7 +129,7 @@ class Logic_Upload
 	/**
 	 *	@todo	implement using clamav
 	 */
-	public function checkVirus( bool $noteError = FALSE )
+	public function checkVirus( bool $noteError = FALSE ): object|bool
 	{
 		try{
 			if( $this->upload->error )
@@ -171,7 +171,7 @@ class Logic_Upload
 	 */
 	public function getExtension( bool $lowAndSimple = FALSE ): string
 	{
-		if( $this->upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $this->upload->error )
 			throw new RuntimeException( 'No image uploaded' );
 		$extension	= pathinfo( $this->upload->name, PATHINFO_EXTENSION );
 		if( $lowAndSimple ){
@@ -188,7 +188,7 @@ class Logic_Upload
 
 	public function getFileName()
 	{
-		if( $this->upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $this->upload->error )
 			throw new RuntimeException( 'No image uploaded' );
 		if( $this->upload->error )
 			throw new RuntimeException( 'Upload failed beforehand' );
@@ -197,7 +197,7 @@ class Logic_Upload
 
 	public function getFileSize()
 	{
-		if( $this->upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $this->upload->error )
 			throw new RuntimeException( 'No image uploaded' );
 		return $this->upload->size;
 	}
@@ -238,14 +238,14 @@ class Logic_Upload
 	 */
 	public function getMimeType(): string
 	{
-		if( $this->upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $this->upload->error )
 			throw new RuntimeException( 'No file uploaded' );
 		return $this->upload->type;
 	}
 
 	public function sanitizeFileName(): string
 	{
-		if( $this->upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $this->upload->error )
 			throw new RuntimeException( 'No file uploaded' );
 		return $this->upload->name = self::sanitizeFileNameStatic( $this->upload->name );
 	}
@@ -344,7 +344,7 @@ class Logic_Upload
 	 *	@throws		InvalidArgumentException			if given upload data is neither array nor object
 	 *	@throws		InvalidArgumentException			if given upload data is missing error property
 	 */
-	public function setUpload( $uploadData, $maxSize = 0, array $allowedExtensions = [] ): void
+	public function setUpload( array|object $uploadData, int|string $maxSize = 0, array $allowedExtensions = [] ): void
 	{
 		if( is_array( $uploadData ) )
 			$uploadData	= (object) $uploadData;
@@ -357,7 +357,8 @@ class Logic_Upload
 		$this->upload->allowedExtensions	= $allowedExtensions;
 		$this->upload->allowedSize			= UnitParser::parse( trim( (string) $maxSize ) );
 
-		$maxSize ? $this->checkSize( $maxSize, TRUE ) : NULL;
+		if( $maxSize )
+			$this->checkSize( $maxSize, TRUE );
 		$allowedExtensions ? $this->checkExtension( $allowedExtensions, TRUE ) : NULL;
 		$this->sanitizeFileName();
 	}

@@ -31,8 +31,6 @@ use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	Resource to communicate with chat server.
- *	@category		cmFrameworks
- *	@package		Hydrogen.Environment.Resource.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Christian Würker
  *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3

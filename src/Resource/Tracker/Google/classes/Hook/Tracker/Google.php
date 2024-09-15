@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Tracker_Google extends Hook
@@ -9,15 +8,11 @@ class Hook_Tracker_Google extends Hook
 	 *	Loads connector Google tracking, if enabled and available.
 	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		public			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public function onPageApplyModules(): void
 	{
-		$config		= $env->getConfig()->getAll( 'module.resource_tracker_google.', TRUE );		//  get module configuration as dictionary
+		$config		= $this->env->getConfig()->getAll( 'module.resource_tracker_google.', TRUE );		//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'option.trackingID' ) )					//  Google tracking is disabled or ID is not set
 			return;
 		$script	= '
@@ -28,8 +23,8 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga("create", settings.Resource_Tracker_Google.option_trackingID, "auto");
 ga("set", "anonymizeIp", settings.Resource_Tracker_Google.option_anonymizeIP);
 ga("send", "pageview");';
-		$context->runScript( $script, 9 );
+		$this->context->runScript( $script, 9 );
 
-//		$context->addBody( $noscript );															//  append noscript tag to body
+//		$this->context->addBody( $noscript );															//  append noscript tag to body
 	}
 }

@@ -12,6 +12,13 @@ class Logic_UserToken extends Logic
 	protected Model_User_Password $modelPassword;
 	protected Model_User_Token $modelToken;
 
+	/**
+	 *	@param		string		$username
+	 *	@param		string		$password
+	 *	@param		?string		$scope
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function get( string $username, string $password, ?string $scope = NULL ): string
 	{
 		//  check username
@@ -36,11 +43,18 @@ class Logic_UserToken extends Logic
 		return $token;
 	}
 
+	/**
+	 *	@param		string		$token
+	 *	@param		?string		$username
+	 *	@param		?string		$scope
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function validate( string $token, ?string $username, ?string $scope = NULL ): bool
 	{
 		$indices	= [
 			'scope'		=> (string) $scope,
-			'token'		=> (string) $token,
+			'token'		=> $token,
 			'status'	=> Model_User_Token::STATUS_ACTIVE,
 		];
 		if( strlen( trim( $username ) ) > 0 )
@@ -54,12 +68,23 @@ class Logic_UserToken extends Logic
 		return TRUE;
 	}
 
+	/**
+	 *	@param		string		$token
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function revokeByToken( string $token ): bool
 	{
 		return $this->revokeByTokenId( $token );
 	}
 
-	public function revokeByUserId( $userId, string $except = NULL ): bool
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		string|NULL		$except
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function revokeByUserId( int|string $userId, string $except = NULL ): bool
 	{
 		$indices	= [
 			'userId'		=> $userId,
@@ -76,6 +101,11 @@ class Logic_UserToken extends Logic
 		return count( $tokens ) > 0;
 	}
 
+	/**
+	 *	@param		string		$scope
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function revokeByScope( string $scope ): bool
 	{
 		$indices	= [
@@ -91,6 +121,11 @@ class Logic_UserToken extends Logic
 		return count( $tokens ) > 0;
 	}
 
+	/**
+	 *	@param		string		$username
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function revokeByUsername( string $username ): bool
 	{
 		$userId	= $this->getUserIdFromUsername( $username );
@@ -99,7 +134,11 @@ class Logic_UserToken extends Logic
 
 	//  --  PROTECTED  --  //
 
-	protected function getToken( $token )
+	/**
+	 *	@param		string		$token
+	 *	@return		object
+	 */
+	protected function getToken( string $token ): object
 	{
 		if( strlen( trim( $token ) ) === 0 )
 			throw new InvalidArgumentException( 'No token given' );
@@ -111,7 +150,6 @@ class Logic_UserToken extends Logic
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -120,10 +158,14 @@ class Logic_UserToken extends Logic
 		$this->modelToken		= new Model_User_Token( $this->env );
 	}
 
+	/**
+	 *	@param		string		$username
+	 *	@return		string
+	 */
 	protected function getUserIdFromUsername( string $username ): string
 	{
 		//  validate input
-		if( strlen( trim( $username ) ) === 0 )
+		if( 0 === strlen( trim( $username ) ) )
 			throw new InvalidArgumentException( 'No username given' );
 
 		//  check username
@@ -134,6 +176,11 @@ class Logic_UserToken extends Logic
 		return $user->userId;
 	}
 
+	/**
+	 *	@param		int|string		$tokenId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function revokeByTokenId( int|string $tokenId ): bool
 	{
 		return (bool) $this->modelToken->edit( $tokenId, [
@@ -142,9 +189,15 @@ class Logic_UserToken extends Logic
 		] );
 	}
 
+	/**
+	 *	@param		string		$userId
+	 *	@param		string		$password
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function validateUserPassword( string $userId, string $password ): bool
 	{
-		if( strlen( trim( $password ) ) === 0 )
+		if( 0 === strlen( trim( $password ) ) )
 			throw new InvalidArgumentException( 'No password given' );
 		$item	= $this->modelPassword->getByIndices( [
 			'userId' 	=> $userId,

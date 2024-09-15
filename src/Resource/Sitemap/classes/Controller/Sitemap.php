@@ -2,9 +2,15 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Sitemap extends Controller{
-
-	public function index( $forceFormat = NULL ){
+class Controller_Sitemap extends Controller
+{
+	/**
+	 *	@param		?string		$forceFormat
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index( ?string $forceFormat = NULL ): void
+	{
 		$logic		= Logic_Sitemap::getInstance( $this->env );
 		$options	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
 		$this->env->getModules()->callHook( 'Sitemap', 'registerLinks', $logic );
@@ -28,23 +34,26 @@ class Controller_Sitemap extends Controller{
 		$this->addData( 'format', $format );
 	}
 
-	public function submit(){
+	public function submit(): never
+	{
 		$logic	= Logic_Sitemap::getInstance( $this->env );
 		$logic->submitToProviders();
 		exit;
 	}
 
-	protected function negotiateContentType( $headerFieldValue, $contentTypes ){
+	protected function negotiateContentType( $headerFieldValue, $contentTypes )
+	{
 		$list	= [];
 		$values	= $this->getQualifiedValues( $headerFieldValue );
 		foreach( $values as $mimeType => $quality ){
 			if( in_array( $mimeType, $contentTypes ) )
 				$list[]	= $mimeType;
 		}
-		return  array_shift( $list );
+		return array_shift( $list );
 	}
 
-	protected function getQualifiedValues( $headerFieldValue ){
+	protected function getQualifiedValues( $headerFieldValue ): array
+	{
 		$list	= [];
 		$values	= preg_split( '/, */', $headerFieldValue );
 		foreach( $values as $value ){
