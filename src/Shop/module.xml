@@ -133,7 +133,7 @@ For payment or shipping you need to install another module.]]></description>
 		<template>shop/customer/outside.php</template>
 		<template>shop/payment.php</template>
 		<template>shop/service.php</template>
-		<style sourc="theme" load="auto">module.shop.css</style>
+		<style source="theme" load="auto">module.shop.css</style>
 		<file>contents/attachments/Widerrufsformular.odt</file>
 		<file>contents/attachments/Widerrufsformular.pdf</file>
 		<file>contents/attachments/Widerrufsformular.txt</file>

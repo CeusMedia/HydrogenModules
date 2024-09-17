@@ -10,8 +10,8 @@
 	<license source="https://github.com/jashkenas/underscore/blob/master/LICENSE">Open Source</license>
 	<files>
 		<class>Hook/JS/Underscore.php</class>
-		<script load="auto" top="yes">underscore-1.5.2-min.js</script>
-		<script top="yes">underscore-1.5.2.js</script>
+		<script load="auto" level="top">underscore-1.5.2-min.js</script>
+		<script level="top">underscore-1.5.2.js</script>
 	</files>
 	<hook type="resource" resource="Page" event="applyModules">Hook_JS_Underscore::onPageApplyModules</hook>
 </module>

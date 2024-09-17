@@ -8,7 +8,7 @@
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Fixed load order.</log>
 	<files>
-		<style source="primer" load="auto" top="yes">reset.css</style>
-		<style source="primer" load="auto" top="yes">typography.css</style>
+		<style source="primer" load="auto" level="top">reset.css</style>
+		<style source="primer" load="auto" level="top">typography.css</style>
 	</files>
 </module>

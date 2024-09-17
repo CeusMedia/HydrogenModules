@@ -5,7 +5,7 @@
 	<category>JavaScript</category>
 	<version>2.6.2</version>
 	<files>
-		<script load="auto" top="yes">modernizr-2.6.2.min.js</script>
+		<script load="auto" level="top">modernizr-2.6.2.min.js</script>
 		<script>modernizr-2.6.2.js</script>
 	</files>
 </module>

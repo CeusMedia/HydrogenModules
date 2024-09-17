@@ -14,7 +14,7 @@
 	<files>
 		<class>Hook/Shop/Special.php</class>
 		<class>Model/Shop/Special.php</class>
-		<style sourc="theme">module.shop.specials.css</style>
+		<style source="theme">module.shop.specials.css</style>
 	</files>
 	<relations>
 		<needs type="module">Shop</needs>

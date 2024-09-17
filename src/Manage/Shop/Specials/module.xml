@@ -17,7 +17,7 @@
 		<template>manage/shop/special/add.php</template>
 		<template>manage/shop/special/edit.php</template>
 		<template>manage/shop/special/index.php</template>
-		<style sourc="theme">module.manage.shop.specials.css</style>
+		<style source="theme">module.manage.shop.specials.css</style>
 	</files>
 	<relations>
 		<needs type="module">Manage_Shop</needs>
