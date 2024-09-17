@@ -189,7 +189,7 @@ class Controller_Api_Form_Import extends Controller
 			$importRule	= $this->modelRule->get( $importRuleId );
 			if( NULL === $importRule )
 				$this->respondError( 404, 'Access denied: Invalid ID given' );
-			$connection	= $this->logic->getConnectorFromConnectionId( $importRule->importConnectionId );
+			$connection	= $this->logic->getConnection( $importRule->importConnectionId );
 			$this->checkAuthentication( $connection );
 		}
 		return $importRule;

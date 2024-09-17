@@ -8,7 +8,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	protected ?object $connection	= NULL;
 
-	protected array $options		= [];
+	protected ?object $options		= NULL;
 
 	protected int $limit			= 0;
 
@@ -58,10 +58,10 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 	}
 
 	/**
-	 *	@param		array		$options
+	 *	@param		object		$options
 	 *	@return		self
 	 */
-	public function setOptions( array $options ): self
+	public function setOptions( object $options ): self
 	{
 		$this->options	= $options;
 		return $this;

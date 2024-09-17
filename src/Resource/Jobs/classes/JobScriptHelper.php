@@ -226,8 +226,8 @@ class JobScriptHelper
 
 		if( class_exists( '\Environment_Console' ) )						//  an individual console environment class is available
 			Jobber::$classEnvironment	= '\Environment_Console';				//  set individual console environment class
-		if( isset( $configFile ) && strlen( trim( $configFile ) ) )				//  an alternative config file is set
-			ConsoleEnvironment::$configFile	= $configFile;						//  set alternative config file
+		if( isset( $this->configFile ) && strlen( trim( $this->configFile ) ) )	//  an alternative config file is set
+			ConsoleEnvironment::$configFile	= $this->configFile;				//  set alternative config file
 		return $this;
 	}
 

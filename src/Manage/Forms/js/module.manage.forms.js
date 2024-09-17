@@ -298,12 +298,12 @@ let FormsImportRuleTest = {
 			let button = jQuery("#button-test-"+ruleId);
 			button.prop("title", null);
 			button.removeClass("btn-info btn-success btn-danger")
-			if(json.status !== "empty"){
-				if(json.status === "exception" || json.status === "error"){
+			if(json.status === 'data' && json.data.status !== "empty"){
+				if(json.data.status === "exception" || json.data.status === "error"){
 					button.addClass("btn-danger");
-					button.prop("title", json.message);
+					button.prop("title", json.data.message);
 				}
-				else if(json.status === "success" || json.status === "parsed"){
+				else if(json.data.status === "success" || json.data.status === "parsed"){
 					button.addClass("btn-success");
 				}
 			}
