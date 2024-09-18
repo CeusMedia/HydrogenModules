@@ -1,49 +1,48 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Gallery extends Hook
 {
-	public static function onViewRenderContent( Environment $env, object $context, $module, array & $payload )
+	public function onViewRenderContent(): void
 	{
-		if( !preg_match( "/(\[gallery:([0-9]+)\])|(\[galleries\])/sU", $payload['content'] ) )
+		if( !preg_match( "/(\[gallery:([0-9]+)\])|(\[galleries\])/sU", $this->payload['content'] ) )
 			return;
 
 		$pattern	= "/^(.*)(\[galleries\])(.*)$/sU";
-		if( preg_match( $pattern, $payload['content'] ) ){
-			$moduleConfig	= $env->getConfig()->getAll( 'module.info_galleries.', TRUE );
+		if( preg_match( $pattern, $this->payload['content'] ) ){
+			$moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 			switch( strtolower( trim( $moduleConfig->get( 'index.mode' ) ) ) ){
 				case 'matrix':
-					$helper		= new View_Helper_Info_Gallery_Matrix( $env );
+					$helper		= new View_Helper_Info_Gallery_Matrix( $this->env );
 					break;
 				default:
-					$helper		= new View_Helper_Info_Gallery_List( $env );
+					$helper		= new View_Helper_Info_Gallery_List( $this->env );
 					$p2			= ['controllerName' => 'Info_Gallery'];
-					$env->getCaptain() ->callHook(
+					$this->env->getCaptain() ->callHook(
 						'Controller',
 						'onDetectPath',
-						$context,
+						$this->context,
 						$p2
 					);
 					$helper->setBaseUriPath( $p2['fullath'] ?: 'info/gallery' );
 			}
-			$payload['content']	= preg_replace(
+			$this->payload['content']	= preg_replace(
 				$pattern,
 				"\\1".$helper->render()."\\3",
-				$payload['content']
+				$this->payload['content']
 			);
 		}
 
 		$pattern	= "/^(.*)(\[gallery:([0-9]+)\])(.*)$/sU";
-		while( preg_match( $pattern, $payload['content'] ) ){
-			$galleryId	= (int) preg_replace( $pattern, "\\3", $payload['content'] );
-			$helper		= new View_Helper_Info_Gallery_Images( $env );
+		while( preg_match( $pattern, $this->payload['content'] ) ){
+			$galleryId	= (int) preg_replace( $pattern, "\\3", $this->payload['content'] );
+			$helper		= new View_Helper_Info_Gallery_Images( $this->env );
 			$helper->setGallery( $galleryId );
-			$payload['content']	= preg_replace(
+			$this->payload['content']	= preg_replace(
 				$pattern,
 				"\\1".$helper->render()."\\4",
-				$payload['content']
+				$this->payload['content']
 			);
 		}
 	}

@@ -1,4 +1,13 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var array<string,array<string,string>> $words */
+/** @var Environment $env */
+/** @var View_Info_Gallery $view */
+/** @var string $indexMode */
+/** @var string $baseUriPath */
+
 $w			= (object) $words['index'];
 
 if( $indexMode === "matrix" )

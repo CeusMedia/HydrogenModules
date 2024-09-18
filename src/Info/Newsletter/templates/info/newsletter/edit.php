@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var object $reader */
+
 $status	= $words['reader-states'][$reader->status];
 
 $panelReader	= '

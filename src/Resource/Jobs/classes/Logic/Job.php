@@ -380,14 +380,17 @@ class Logic_Job extends Logic
 	 *	@param		int|string		$jobRunId
 	 *	@param		int				$status
 	 *	@param		array			$messageData
-	 *	@return		void
+	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function quitJobRun( int|string $jobRunId, int $status, array $messageData = [] ): void
+	public function quitJobRun( int|string $jobRunId, int $status, array $messageData = [] ): bool
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
-		if( Model_Job_Run::STATUS_RUNNING !== (int) $jobRun->status )
+		if( Model_Job_Run::STATUS_RUNNING !== (int) $jobRun->status ){
+			if( $status === Model_Job_Run::STATUS_TERMINATED )
+				return FALSE;
 			throw new RuntimeException( 'Job (id: '.$jobRun->jobDefinitionId.') is not running (status: '.$jobRun->status.')' );
+		}
 		if( !in_array( $status, Model_Job_Run::STATUS_TRANSITIONS[$jobRun->status], TRUE ) )
 			throw new DomainException( 'Transition to given status is not allowed' );
 		$dataRun	= [
@@ -406,6 +409,7 @@ class Logic_Job extends Logic
 			$dataDefinition['fails']	= $jobDefinition->fails + 1;
 		if( $dataDefinition )
 			$this->modelDefinition->edit( $jobRun->jobDefinitionId, $dataDefinition );
+		return TRUE;
 	}
 
 	/**

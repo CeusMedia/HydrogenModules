@@ -1,62 +1,22 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 class Controller_Info_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter	$logic */
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
-
-	/**
-	 *	...
-	 *	@static
-	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		array			$payload	Map of hook arguments
-	 *	@return		void
-	 *	@todo		finish implementation, extract to hook class and register in module config
-	 */
-	public static function __onRenderServicePanels( Environment $env, object $context, $module, array & $payload = [] )
-	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
-			return;
-		$view		= new View( $env );
-//		$modelOrder	= new Model_Shop_Order( $env );
-//		$order		= $modelOrder->get( $payload['orderId'] );
-
-		$path	= 'html/info/newsletter/';
-		$files	= [
-			1	=> 'finishTop.html',
-			3	=> 'finishAbove.html',
-			5	=> 'finish.html',
-			7	=> 'finishBelow.html',
-			9	=> 'finishBottom.html',
-		];
-		foreach( $files as $priority => $file ){
-			if( $view->hasContentFile( $path.$file ) ){
-				$content	= $view->loadContentFile( $path.$file );
-				$context->registerServicePanel( 'Newsletter:'.$priority, $content, $priority );
-			}
-		}
+	protected Logic_Newsletter $logic;
+	protected Environment\Resource\Messenger $messenger;
+	protected Request $request;
+	protected PartitionSession $session;
 
 
 
-		$localeFile	= 'html/info/newsletter/finishPanel.html';
-		if( $view->hasContentFile( $localeFile ) ){
-			$content	= $view->loadContentFile( $localeFile );
-			$context->registerServicePanel( 'Newsletter', $content, 8 );
-		}
-	}
-
-	public function confirm( $readerId, $key = NULL )
+	public function confirm( $readerId, $key = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$reader		= $this->logic->getReader( $readerId );

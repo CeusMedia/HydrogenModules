@@ -1,5 +1,18 @@
 <?php
+
+use CeusMedia\Common\ADT\URL;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var array<string,array<string,string>> $words */
+/** @var Environment $env */
+/** @var View_Info_Gallery $view */
+/** @var string $indexMode */
+/** @var string $baseUriPath */
+/** @var object $gallery */
+/** @var ?URL $referer */
+/** @var ?object $prevGallery */
+/** @var ?object $nextGallery */
 
 $w			= (object) $words['view'];
 
@@ -8,7 +21,7 @@ $helper		= new View_Helper_Info_Gallery_Images( $env );
 $helper->setGallery( $gallery->galleryId );
 $list		= $helper->render();
 
-$description	= '';;
+$description	= '';
 if( strlen( trim( $gallery->description ) ) )
 	$description	= HtmlTag::create( 'p', $view->renderContent( $gallery->description ) );
 
