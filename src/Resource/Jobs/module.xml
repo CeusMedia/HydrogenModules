@@ -79,7 +79,7 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Jobber.php</class>
-		<class>JobScriptHandler.php</class>
+		<class>JobScriptHelper.php</class>
 		<class>Job/Abstract.php</class>
 		<class>Job/Job.php</class>
 		<class>Job/Job/Lock.php</class>
