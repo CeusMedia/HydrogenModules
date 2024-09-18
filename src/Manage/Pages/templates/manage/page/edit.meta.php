@@ -69,11 +69,11 @@ return '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_page_description">'.$wMeta->labelDescription.'</label>
-						<textarea class="span12" rows="4" name="page_description" id="input_page_description">'.htmlentities( $page->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<textarea class="span12" rows="4" name="page_description" id="input_page_description">'.htmlentities( $page->description ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 					</div>
 					<div class="span6">
 						<label for="input_page_description">'.$wMeta->labelDefaultDescription.'</label>
-						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['description'], ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['description'] ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							<button type="button" class="btn btn-mini" id="btn-copy-description">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
 							<button type="button" class="btn btn-mini" disabled="disabled">save</button>
@@ -83,7 +83,7 @@ return '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_page_keywords">'.$wMeta->labelKeywords.'</label>
-						<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords, ENT_QUOTES, 'UTF-8' ).'</textarea>
+						<textarea class="span12" rows="6" name="page_keywords" id="input_page_keywords">'.htmlentities( $page->keywords ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							'.$buttonSuggest.'
 							'.$buttonBlacklist.'

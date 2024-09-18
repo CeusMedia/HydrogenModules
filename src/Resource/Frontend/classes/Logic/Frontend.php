@@ -80,7 +80,7 @@ class Logic_Frontend extends Logic
 	public function getEnv(): RemoteEnvironment
 	{
 		return new RemoteEnvironment( [
-			'configFile'	=> $this->path.'config/config.ini',
+//			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
 		] );
@@ -96,7 +96,7 @@ class Logic_Frontend extends Logic
 	{
 		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
 		return new RemoteEnvironment( array_merge( $options, [
-			'configFile'	=> $path.'config/config.ini',
+//			'configFile'	=> $path.'config/config.ini',
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
 		] ) );

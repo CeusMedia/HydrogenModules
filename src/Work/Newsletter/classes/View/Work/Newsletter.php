@@ -37,12 +37,11 @@ class View_Work_Newsletter extends View
 	{
 		$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'work/newsletter' );
-		$current	= strtolower( $this->env->getRequest()->get( 'controller' ) );
 		$list		= [];
 		foreach( $tabs as $key => $value ){
 			$attributes	= ['href'	=> './'.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );
-			$attributes	= ['class'	=> $key === $current ? 'active' : NULL];
+			$attributes	= ['class'	=> $key === $currentTab ? 'active' : NULL];
 			$list[]	= HtmlTag::create( 'li', $link, $attributes );
 		}
 		return HtmlTag::create( 'ul', $list, ['class' => "nav nav-tabs"] );

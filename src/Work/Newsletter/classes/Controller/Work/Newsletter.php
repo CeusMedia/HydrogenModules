@@ -143,9 +143,9 @@ class Controller_Work_Newsletter extends Controller
 		}
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
-		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
+		$templates		= $this->logic->getTemplates( ['status' => '>= '.Model_Newsletter_Template::STATUS_READY], ['title' => 'ASC'] );
 		$groups			= [];
-		foreach( $this->logic->getGroups( ['status' => 1], ['title' => 'ASC'] ) as $group ){
+		foreach( $this->logic->getGroups( ['status' => Model_Newsletter_Group::STATUS_USABLE], ['title' => 'ASC'] ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;
 		}

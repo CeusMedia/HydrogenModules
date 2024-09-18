@@ -395,8 +395,10 @@ ModuleManagePages.PageEditor.init();
 	public function setApp( string $app ): void
 	{
 		$currentApp	= $this->session->get( $this->sessionPrefix.'app' );
-		if( $app !== $currentApp )
+		if( $app !== $currentApp ){
 			$this->session->set( $this->sessionPrefix.'app', $app );
+			$this->session->remove( $this->sessionPrefix.'language' );
+		}
 		$this->restart( NULL, TRUE );
 	}
 
@@ -457,26 +459,30 @@ ModuleManagePages.PageEditor.init();
 	 */
 	protected function detectManagedApp(): array
 	{
+		$this->appFocus			= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
 		$this->appSession		= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
 		$this->envManaged		= $this->env;
 		$this->appLanguages		= $this->env->getLanguage()->getLanguages();
 //		$this->env->getLog()->log("debug","found languages in env:".print_r($this->env->getLanguage()->getLanguages(),true),$this);
 		$this->defaultLanguage	= current( array_values( $this->env->getLanguage()->getLanguages() ) );
 
-		$apps	= [];
+		if( !$this->env->getModules()->has( 'Resource_Frontend' ) )
+			return [];
+		$frontendConfig	= $this->env->getModules()->get( 'Resource_Frontend' )->getConfigAsDictionary();
+		if( in_array( $frontendConfig->get( 'path' ), ['', './'] ) )
+			return [];
 
 //		$this->isRemoteFrontend	= realpath( $this->frontend->getPath() ) !== realpath( $this->env->uri );
+		$apps			= [
+			'self'		=> 'Administration',
+			'frontend'	=> 'Webseite',
+		];
 
 		if( 'self' !== $this->appFocus ){				//  frontend is different from self
-			$apps			= [
-				'self'		=> 'Administration',
-				'frontend'	=> 'Webseite',
-			];
-			$this->appFocus	= $this->session->get( $this->sessionPrefix.'app', $this->appFocus );
-			if( !array_key_exists( $this->appFocus, $apps ) )
+			if( !array_key_exists( $this->appFocus, $apps ) ){
 				$this->appFocus	= current( array_keys( $apps ) );
-//			if( $this->appFocus !== $this->session->get( $this->sessionPrefix.'app' ) )
-//				$this->session->remove( $this->sessionPrefix.'language' );
+				$this->setApp( current( array_keys( $apps ) ) );
+			}
 
 			if( 'frontend' === $this->appFocus ){
 				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
@@ -492,8 +498,6 @@ ModuleManagePages.PageEditor.init();
 				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
 			}
 		}
-		if( $this->session->get( $this->sessionPrefix.'app' ) !== $this->appFocus )
-			$this->session->set( $this->sessionPrefix.'app', $this->appFocus );
 		return $apps;
 	}
 
