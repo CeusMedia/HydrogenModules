@@ -85,7 +85,7 @@ return '
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_dateStart">'.$wf->labelDateStart.'</label>
-						<input type="date" name="dateStart" id="input_dateStart" class="span12" value="'.htmlentities( $filters->get( 'dateStart', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="date" name="dateStart" id="input_dateStart" class="span12" value="'.htmlentities( $filters->get( 'dateStart', '' ) ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -101,7 +101,7 @@ return '
 					</div>
 					<div class="span6">
 						<label for="input_timeEnd">'.$wf->labelTimeEnd.'</label>
-						<input type="time" name="timeEnd" id="input_timeEnd" class="span12" value="'.htmlentities( $filters->get( 'timeEnd', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="time" name="timeEnd" id="input_timeEnd" class="span12" value="'.htmlentities( $filters->get( 'timeEnd', '' ) ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>-->
 				<div class="row-fluid">

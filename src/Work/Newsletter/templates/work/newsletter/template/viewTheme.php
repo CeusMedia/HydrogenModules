@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
-/** @var object $theme */
+/** @var ?Entity_Newsletter_Theme $theme */
 /** @var string $themePath */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );

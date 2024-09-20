@@ -4,7 +4,7 @@
 /*  --  CONFIG  --  */
 /*  --  change these (default) settings if needed  --  */
 /*
-$configFile		= "config/config.ini";											//  set an alternative config file
+$configFile		= "config.ini";											//  set an alternative config file
 $pathClasses	= 'classes/';
 $verbose		= FALSE;
 $modes			= [
@@ -28,6 +28,7 @@ $errorHandling	= [
 file_exists( 'vendor' ) or die( 'Please install first, using composer!' );
 require_once 'vendor/autoload.php';
 #require_once 'vendor/ceus-media/common/src/compat8.php';
+require_once 'classes/JobScriptHelper.php';
 
 
 /*  --  JOB SCRIPT  --  */

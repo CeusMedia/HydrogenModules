@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 class JobScriptHelper
 {
 	protected Request $request;
-	protected string $configFile	= "config/config.ini";							//  config file
+	protected string $configFile	= "config.ini";							//  config file
 	protected array $errorHandling	= [
 		'report'	=> E_ALL,
 		'display'	=> TRUE,

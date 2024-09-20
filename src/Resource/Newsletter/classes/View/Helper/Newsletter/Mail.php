@@ -288,7 +288,7 @@ class View_Helper_Newsletter_Mail
 	 */
 	protected function renderImprint( bool $asHtml = FALSE ): string
 	{
-		$content	= $this->template->imprint;
+		$content	= $this->template->imprint ?? '';
 		if( $asHtml ){
 			$content	= preg_replace( "/\n/", "<br/>", $content );
 			$content	= preg_replace( "/(https?:\/\/((\S+))\/?)/", '<a href="\\1">\\2</a>', $content );

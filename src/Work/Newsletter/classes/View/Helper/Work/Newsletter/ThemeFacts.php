@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Work_Newsletter_ThemeFacts
 {
 	protected array $attributes	= [];
-	protected ?object $data		= NULL;
+	protected ?Entity_Newsletter_Theme $data		= NULL;
 	protected Environment $env;
 
 	public function __construct( Environment $env )
@@ -59,7 +59,7 @@ class View_Helper_Work_Newsletter_ThemeFacts
 		return $this;
 	}
 
-	public function setThemeData( object $data ): self
+	public function setThemeData( Entity_Newsletter_Theme $data ): self
 	{
 		$this->data	= $data;
 		return $this;

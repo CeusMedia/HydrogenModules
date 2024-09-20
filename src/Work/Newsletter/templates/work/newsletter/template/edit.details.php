@@ -208,7 +208,7 @@ $panelEdit		= '
 							'name'		=> "senderAddress",
 							'id'		=> "input_senderAddress",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->senderAddress, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->senderAddress ?? '', ENT_QUOTES, 'UTF-8' ),
 							'required'	=> 'required',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
@@ -221,7 +221,7 @@ $panelEdit		= '
 							'name'		=> "senderName",
 							'id'		=> "input_senderName",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->senderName, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->senderName ?? '', ENT_QUOTES, 'UTF-8' ),
 							'required'	=> 'required',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
@@ -252,19 +252,19 @@ $panelEdit		= '
 							'name'		=> "authorName",
 							'id'		=> "input_authorName",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->authorName, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->authorName ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						) ).'
 					</div>
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorEmail.'</label>
+						<label for="input_authorName">'.$w->labelAuthorEmail ?? ''.'</label>
 						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorEmail",
 							'id'		=> "input_authorEmail",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->authorEmail, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->authorEmail ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						) ).'
@@ -272,25 +272,25 @@ $panelEdit		= '
 				</div>
 				<div class="row-fluid">
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorCompany.'</label>
+						<label for="input_authorName">'.$w->labelAuthorCompany ?? ''.'</label>
 						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorCompany",
 							'id'		=> "input_authorCompany",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->authorCompany, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->authorCompany ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						) ).'
 					</div>
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorUrl.'</label>
+						<label for="input_authorName">'.$w->labelAuthorUrl ?? ''.'</label>
 						'.HtmlTag::create( 'input', NULL, array(
 							'type'		=> "text",
 							'name'		=> "authorUrl",
 							'id'		=> "input_authorUrl",
 							'class'		=> "span12",
-							'value'		=> htmlentities( $template->authorUrl, ENT_QUOTES, 'UTF-8' ),
+							'value'		=> htmlentities( $template->authorUrl ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						) ).'
@@ -299,7 +299,7 @@ $panelEdit		= '
 			</div>
 			<div class="span4">
 				<label for="input_imprint">'.$words->edit->labelImprint.'</label>
-				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), [
+				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint ?? '', ENT_QUOTES, 'UTF-8' ), [
 					'name'		=> 'imprint',
 					'id'		=> 'input_imprint',
 					'class'		=> 'span12',

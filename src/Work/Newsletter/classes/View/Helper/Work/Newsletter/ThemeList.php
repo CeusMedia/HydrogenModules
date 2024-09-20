@@ -17,7 +17,7 @@ class View_Helper_Work_Newsletter_ThemeList
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.theme.', TRUE );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.themes.', TRUE );
 		$this->themePath	= $this->moduleConfig->get( 'path' );
 		$this->themePath	= 'contents/themes/';
 	}
@@ -67,7 +67,7 @@ class View_Helper_Work_Newsletter_ThemeList
 			'.HtmlTag::create( 'img', NULL, [
 				'src'	=> $this->themePath.$theme->folder.'/template.png',
 				'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
-				'alt'	=> htmlentities( $theme->name, ENT_QUOTES, 'UTF-8' ),
+				'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
 			], ['class' => 'img-polaroid'] ).'
 		</a>
 		<h4><a href="./work/newsletter/template/viewTheme/'.$theme->id.'">'.$theme->title.'</a></h4>
