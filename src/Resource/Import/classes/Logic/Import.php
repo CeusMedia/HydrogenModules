@@ -126,13 +126,19 @@ class Logic_Import extends Logic
 			print_m( $fillData );
 		}
 
+		$agent  = '';
+		if( '' !== ( $formData['agent'] ?? '' ) )
+			$agent  = $formData['agent'];
+		else if( '' !== ( getEnv( 'HTTP_USER_AGENT' ) ?? '' ) )
+			$agent  = strip_tags( getEnv( 'HTTP_USER_AGENT' ) );
+
 		$data		= [
 			'formId'		=> $importRule->formId,
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'email'			=> $formData['email'] ?? '',
 			'data'			=> json_encode( $fillData ),
 			'referer'		=> '',//getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
-			'agent'			=> '',//strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
+			'agent'			=> $agent,
 			'createdAt'		=> $formData['createdAt'] ?? time(),
 			'modifiedAt'	=> time(),
 		];
