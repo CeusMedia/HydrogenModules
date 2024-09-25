@@ -1,8 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
+/** @var Environment $env */
 /** @var array $words */
+/** @var Entity_Mission $mission */
+/** @var Entity_Mission_Document[] $documents */
 
 $w			= (object) @$words['view-documents'];
 

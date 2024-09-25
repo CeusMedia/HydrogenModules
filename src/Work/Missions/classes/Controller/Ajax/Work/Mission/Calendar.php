@@ -9,6 +9,11 @@ class Controller_Ajax_Work_Mission_Calendar extends Controller_Ajax_Work_Mission
 	protected string $year;
 	protected string $month;
 
+	/**
+	 *	@return		void
+	 *	@throws		DateMalformedStringException
+	 *	@throws		JsonException
+	 */
 	public function renderIndex(): void
 	{
 		$script	= '<script>
@@ -46,7 +51,14 @@ $(document).ready(function(){
 		$this->month	= $date[1];
 	}
 
-	protected function renderCalendarLarge( $userId, $year, $month ): string
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		string			$year
+	 *	@param		string			$month
+	 *	@return		string
+	 *	@throws		DateMalformedStringException
+	 */
+	protected function renderCalendarLarge( int|string $userId, string $year, string $month ): string
 	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
@@ -97,11 +109,17 @@ $(document).ready(function(){
 		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
-		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
-		return $tableLarge;
+		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
 	}
 
-	protected function renderCalendarSmall( $userId, $year, $month ): string
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		string			$year
+	 *	@param		string			$month
+	 *	@return		string
+	 *	@throws		DateMalformedStringException
+	 */
+	protected function renderCalendarSmall( int|string $userId, string $year, string $month ): string
 	{
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
@@ -231,7 +249,15 @@ $(document).ready(function(){
 	</div>';
 	}
 
-	protected function renderDay( $userId, DateTime $date, $orders, $cellClass = NULL ): string
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		DateTime		$date
+	 *	@param		array			$orders
+	 *	@param		?string			$cellClass
+	 *	@return		string
+	 *	@throws		DateMalformedStringException
+	 */
+	protected function renderDay( int|string $userId, DateTime $date, array $orders, ?string $cellClass = NULL ): string
 	{
 		$diff		= $this->today->diff( $date );
 		$isPast		= $diff->invert;
@@ -290,16 +316,17 @@ $(document).ready(function(){
 	/**
 	 *	Render overdue container.
 	 *	@access		protected
-	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@param		Entity_Mission		$mission		Mission data object
+	 *	@return		string				DIV container with number of overdue days or empty string
+	 *	@throws		DateMalformedStringException
 	 */
-	protected function renderOverdue( object $mission ): string
+	protected function renderOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );		//  render overdue container
+			return HtmlTag::create( 'div', $diff->days, ['class' => "overdue"] );				//  render overdue container
 		return '';
 	}
 }

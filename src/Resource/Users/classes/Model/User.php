@@ -100,7 +100,10 @@ class Model_User extends Model
 		'country',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	string		$className		Entity class to use */
+	protected string $className				= 'Entity_User';
 
 	public function migrate(): void
 	{

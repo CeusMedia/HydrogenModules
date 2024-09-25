@@ -113,7 +113,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		$users	= $model->getProjectUsers( (int) $projectId );
 		if( array_key_exists( $this->userId, $users ) || $this->logic->hasFullAccess() ){
 			foreach( $users as $user )
-				$list[$user->username]    = $user;
+				$list[$user->username]	= $user;
 		}
 		ksort( $list );
 		$this->respondData( array_values( $list ) );

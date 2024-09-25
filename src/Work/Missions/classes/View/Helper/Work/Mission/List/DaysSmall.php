@@ -28,11 +28,11 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	}
 
 	/**
-	 *	@param		object		$mission
+	 *	@param		Entity_Mission	$mission
 	 *	@param		$days
 	 *	@return		string
 	 */
-	public function renderRowButtons( object $mission, $days ): string
+	public function renderRowButtons( Entity_Mission $mission, $days ): string
 	{
 		$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
 		$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
@@ -77,12 +77,12 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 	}
 
 	/**
-	 *	@param		object		$mission
-	 *	@param		bool		$edit
-	 *	@param		bool		$showIcon
+	 *	@param		Entity_Mission	$mission
+	 *	@param		bool			$edit
+	 *	@param		bool			$showIcon
 	 *	@return		string
 	 */
-	public function renderRowLabel( object $mission, bool $edit = TRUE, bool $showIcon = TRUE ): string
+	public function renderRowLabel( Entity_Mission $mission, bool $edit = TRUE, bool $showIcon = TRUE ): string
 	{
 		$label		= TextTrimmer::trimCentric( $mission->title, $this->titleLength );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );

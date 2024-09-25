@@ -15,7 +15,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 	{
 		$method		= $this->request->getMethod();
 		$logFile	= $this->pathLogs.'work.mission.ical.method.log';
-		$logMessage	= date( "Y-m-d H:i:s" ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
+		$logMessage	= date( 'Y-m-d H:i:s' ).' ['.$method.'] '.getEnv( 'HTTP_USER_AGENT' )."\n";
 		error_log( $logMessage, 3, $logFile );
 		if( !$this->userId ){
 			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
@@ -36,23 +36,23 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 						HttpDownload::sendString( $ical , $fileName );					//  deliver downloadable file
 					}
 					else{
-//						$mimeType	= "text/calendar";
-						$mimeType	= "text/plain;charset=utf-8";
-						header( "Content-type: ".$mimeType );
-						header( "Last-Modified: ".date( 'r' ) );
+//						$mimeType	= 'text/calendar';
+						$mimeType	= 'text/plain;charset=utf-8';
+						header( 'Content-type: '.$mimeType );
+						header( 'Last-Modified: '.date( 'r' ) );
 						print( $ical );
 					}
 			}
 		}
 		catch( Exception $e ){
-			$lines	= array(
-				str_repeat( "-", 78 ),
-				"Date: ".date( "Y-m-d H:i:s" ),
-				"Request: ".$method." ".$this->request->get( '__path' ),
-				"Error: ".$e->getMessage(),
-				"Agent: ".getEnv( 'HTTP_USER_AGENT' ),
-			);
-			$logFile	= $this->pathLogs."work.missions.ical.error.log";
+			$lines	= [
+				str_repeat( '-', 78 ),
+				'Date: '.date( 'Y-m-d H:i:s' ),
+				'Request: '.$method.' '.$this->request->get( '__path' ),
+				'Error: '.$e->getMessage(),
+				'Agent: '.getEnv( 'HTTP_USER_AGENT' ),
+			];
+			$logFile	= $this->pathLogs.'work.missions.ical.error.log';
 			$logMessage	= join( "\n", $lines )."\n";
 			error_log( $logMessage, 3, $logFile );
 		}
@@ -96,7 +96,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		Entity_Mission[]
 	 */
 	protected function getUserMissions( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -112,8 +112,8 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 	 */
 	protected function importFromIcal( string $ical ): void
 	{
-/*		if( !$ical && file_exists( "test.ical" ) )
-			$ical	= file_get_contents( "test.ical" );
+/*		if( !$ical && file_exists( 'test.ical' ) )
+			$ical	= file_get_contents( 'test.ical' );
 */		$projects	= [];
 		$defaultProjectId	= 0;
 		foreach( $this->logic->getUserProjects( $this->userId, TRUE ) as $project ){
@@ -128,7 +128,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			$missions[md5( $mission->missionId ).'@'.$this->env->host]	= $mission;
 
 		$parser	= new IcalFileParser();
-		$tree	= $parser->parse( "test", $ical );
+		$tree	= $parser->parse( 'test', $ical );
 		$nodes	= $tree->getChildren();
 		$root	= @array_pop( $nodes );
 		foreach( $root->getChildren() as $node ){										//  iterate ical nodes
@@ -152,7 +152,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 						$this->model->edit( $mission['missionId'], $changes );			//  save changes to database
 //						$projectUsers	=
 //						foreach( $projectUsers as $projectUser ){
-							touch("update-".$this->userId);
+							touch('update-'.$this->userId);
 //						}
 					}
 				}
@@ -162,7 +162,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 					$item['workerId']	= $this->userId;
 					$item['status']		= 0;
 					$this->model->add( $item );
-					touch("update-".$this->userId);
+					touch('update-'.$this->userId);
 				}
 			}
 			else{																		//  no changes in this mission
@@ -173,13 +173,13 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			}
 		}
 		if( count( $missions ) === 1 ){													//  one mission has been removed
-			$mission	= array_pop( $missions );										//  get this mission
-			$this->model->edit( $mission->missionId, array(								//  save mission
+			$mission	= array_pop( $missions );								//  get this mission
+			$this->model->edit( $mission->missionId, [									//  save mission
 				'modifierId'	=> $this->userId,										//  ... to be changed by User
 				'modifiedAt'	=> time(),												//  ... at a time
-				'status' => -2,															//  ... and set status to 'removed'
-			) );
-			touch("update-".$this->userId);
+				'status'		=> -2,													//  ... and set status to 'removed'
+			] );
+			touch('update-'.$this->userId);
 		}
 	}
 
@@ -196,20 +196,20 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 			switch( $attribute ){
 				case 'dtstart':
 					$timestamp	= strtotime( $content );
-					$data['dayStart']	= date( "Y-m-d", $timestamp );
-					$data['timeStart']	= date( "H:i", $timestamp );
+					$data['dayStart']	= date( 'Y-m-d', $timestamp );
+					$data['timeStart']	= date( 'H:i', $timestamp );
 					break;
 				case 'dtend':
 					$timestamp	= strtotime( $content );
-					$data['dayEnd']		= date( "Y-m-d", $timestamp );
-					$data['timeEnd']	= date( "H:i", $timestamp );
+					$data['dayEnd']		= date( 'Y-m-d', $timestamp );
+					$data['timeEnd']	= date( 'H:i', $timestamp );
 					break;
 				case 'due':
-					$data['dayStart']	= date( "Y-m-d", strtotime( $content ) );
+					$data['dayStart']	= date( 'Y-m-d', strtotime( $content ) );
 					break;
 				case 'categories':
 					$data['projectId']	= $defaultProjectId;
-					foreach( explode( ",", $content ) as $category ){
+					foreach( explode( ',', $content ) as $category ){
 						if( array_key_exists( $category, $projects ) ){
 							$data['projectId']	= $projects[$category];
 							break;
@@ -239,7 +239,7 @@ class Controller_Work_Mission_Export extends Controller_Work_Mission
 					$data['modifiedAt']	= (string) strtotime( $content );
 					break;
 				case 'type':
-					$data['type']	= (string) ( $content === "vevent" ? 1 : 0 );
+					$data['type']	= (string) ( 'vevent' === $content ? 1 : 0 );
 					break;
 				case 'uid':
 				case 'location':

@@ -7,7 +7,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 {
 	protected Logic_Work_Mission $logic;
 	protected DateTime $today;
-	protected ?object $mission				= NULL;
+	protected ?Entity_Mission $mission		= NULL;
 	protected bool $badgesColored			= TRUE;
 
 	/**
@@ -50,11 +50,11 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	}
 
 	/**
-	 *	@param		object		$mission
+	 *	@param		Entity_Mission	$mission
 	 *	@return		string
 	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysOverdue( object $mission ): string
+	public function renderBadgeDaysOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		/** @noinspection PhpUnhandledExceptionInspection */
@@ -68,11 +68,11 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	/**
 	 *	Render overdue container.
 	 *	@access		public
-	 *	@param		object		$mission		Mission data object
+	 *	@param		Entity_Mission	$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
 	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysStill( object $mission ): string
+	public function renderBadgeDaysStill( Entity_Mission $mission ): string
 	{
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return '';																			//  return without content
@@ -87,11 +87,11 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	}
 
 	/**
-	 *	@param		object		$mission
+	 *	@param		Entity_Mission	$mission
 	 *	@return		string
 	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysUntil( object $mission ): string
+	public function renderBadgeDaysUntil( Entity_Mission $mission ): string
 	{
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
@@ -122,7 +122,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $iconToday, 'important' );
 	}
 
-	public function setMission( object $mission ): self
+	public function setMission( Entity_Mission $mission ): self
 	{
 		$this->mission	= $mission;
 		return $this;

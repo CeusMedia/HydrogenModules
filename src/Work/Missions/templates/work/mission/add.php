@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var View $view */
 /** @var array $words */
-/** @var object $mission */
+/** @var Entity_Mission $mission */
 /** @var object[] $users */
 /** @var object[] $userProjects */
 
@@ -16,13 +16,13 @@ $optType		= HtmlElements::Options( $words['types'], $mission->type );
 
 $optPriority	= [];
 foreach( $words['priorities'] as $key => $value )
-	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, NULL, 'mission priority'.$key );
+	$optPriority[]	= HtmlElements::Option( (string) $key, $value, $mission->priority == $key, FALSE, 'mission priority'.$key );
 $optPriority	= join( $optPriority );
 
 $optStatus	= [];
 foreach( $words['states'] as $key => $value )
 	if( $key >= 0 && $key <= 3 )
-		$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, NULL, 'mission status'.$key );
+		$optStatus[]	= HtmlElements::Option( (string) $key, $value, $mission->status == $key, FALSE, 'mission status'.$key );
 $optStatus	= join( $optStatus );
 
 $optWorker	= [];
@@ -148,7 +148,7 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 					<h3>Inhalt</h3>
 					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 					<p>
-						<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+						<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
 					</p>
 				</div>
 			</div>
@@ -178,7 +178,7 @@ if( strtoupper( $format ) === "MARKDOWN" ){
 					<div id="mirror-container">
 						<textarea id="input_content" name="content" rows="22" class="span12 -max -cmGrowText -cmClearInput">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
 						<p>
-							<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+							<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
 						</p>
 					</div>
 				</div>

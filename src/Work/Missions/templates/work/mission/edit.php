@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
-/** @var object $mission */
+/** @var Entity_Mission $mission */
 /** @var array $missionUsers */
 /** @var array<object> $users */
 /** @var array<object> $userProjects */

@@ -64,7 +64,7 @@ class Logic_Authentication extends Logic
 	 *	@access		public
 	 *	@param		int|string		$userId			ID of user to get related users for
 	 *	@param		boolean			$groupByModules	Flag: group related users by reporting modules
-	 *	@return		array			Map of related users or list of reporting modules with related users
+	 *	@return		array<int|string,Entity_User>			Map of related users or list of reporting modules with related users
 	 *	@triggers	Resource:User::getRelatedUsers
 	 *	@throws		ReflectionException
 	 */
@@ -80,6 +80,7 @@ class Logic_Authentication extends Logic
 		$map		= [];
 		foreach( $payload['list'] ?? [] as $group ){
 			if( $group->count )
+				/** @var Entity_User $user */
 				foreach( $group->list as $user )
 					$list[$user->username]	= $user;
 		}

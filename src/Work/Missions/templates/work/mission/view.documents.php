@@ -8,8 +8,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
-/** @var object $mission */
-/** @var object[] $documents */
+/** @var Entity_Mission $mission */
+/** @var Entity_Mission_Document[] $documents */
 
 $w			= (object) @$words['view-documents'];
 $phraser	= new View_Helper_TimePhraser( $env );

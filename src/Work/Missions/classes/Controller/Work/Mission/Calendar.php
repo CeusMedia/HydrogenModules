@@ -5,7 +5,6 @@
  */
 /**
  *	Controller.
- *	@version		$Id$
  *	@todo			implement
  *	@todo			code documentation
  */

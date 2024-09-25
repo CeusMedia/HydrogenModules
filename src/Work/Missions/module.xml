@@ -8,7 +8,7 @@ code>
 */5 * * * * cd /path/to/office && ./job.php work-mission-mail-changes
 <code
 ]]></description>
-	<version>0.9.69</version>
+	<version>0.9.70</version>
 	<log version="0.8.23">Split JavaScript classes to separate files and allow lazy loading to increase performance.</log>
 	<log version="0.8.24">Enable split markdown editor for article content while adding a mission.</log>
 	<log version="0.8.25">Introduced filter model.</log>
@@ -116,6 +116,7 @@ code>
 	<log version="0.9.67">Code update: PHP 7.4.</log>
 	<log version="0.9.68">Extract ICal export to view helper.</log>
 	<log version="0.9.69">Refactored AJAX routes.</log>
+	<log version="0.9.70">Add model entities.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -131,6 +132,11 @@ code>
 		<class>Controller/Work/Mission/Export.php</class>
 		<class>Controller/Work/Mission/Future.php</class>
 		<class>Controller/Work/Mission/Kanban.php</class>
+		<class>Entity/Mission.php</class>
+		<class>Entity/Mission/Change.php</class>
+		<class>Entity/Mission/Document.php</class>
+		<class>Entity/Mission/Filter.php</class>
+		<class>Entity/Mission/Version.php</class>
 		<class>Hook/Work/Mission.php</class>
 		<class>Model/Mission.php</class>
 		<class>Model/Mission/Change.php</class>

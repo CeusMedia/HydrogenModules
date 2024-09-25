@@ -291,11 +291,11 @@ $(document).ready(function(){
 	/**
 	 *	Render overdue container.
 	 *	@access		public
-	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@param		Entity_Mission	$mission		Mission data object
+	 *	@return		string			DIV container with number of overdue days or empty string
 	 *	@throws		Exception
 	 */
-	public function renderOverdue( object $mission ): string
+	public function renderOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		/** @noinspection PhpUnhandledExceptionInspection */

@@ -41,6 +41,7 @@ class Controller_Work_Mission extends Controller
 	protected Logic_Project $logicProject;
 	protected Model_Mission $model;
 	protected array $userProjects;
+	/** @var array<int|string,Entity_User> $userMap */
 	protected array $userMap;
 	protected bool $isEditor;
 	protected bool $isViewer;
@@ -183,6 +184,7 @@ class Controller_Work_Mission extends Controller
 		$path		= 'contents/documents/missions/';
 		if( !file_exists( $path ) )
 			mkdir( $path, 0777, TRUE );
+		/** @var Entity_Mission_Document $document */
 		$document	= $model->getByIndices( [
 			'missionId'	=> $missionId,
 			'filename'	=> $upload->name,
@@ -271,11 +273,13 @@ class Controller_Work_Mission extends Controller
 	 *	@access		public
 	 *	@param		int|string		$missionId		ID of mission to move in time
 	 *	@return		void
+	 *	@throws		DateMalformedStringException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function changeDay( int|string $missionId ): void
 	{
 		$date		= trim( $this->request->get( 'date', '' ) );
+		/** @var Entity_Mission $mission */
 		$mission	= $this->model->get( $missionId );
 		$data		= [
 			'modifierId'	=> $this->userId,
@@ -321,6 +325,7 @@ class Controller_Work_Mission extends Controller
 	{
 		$this->checkIsEditor( $missionId );
 		$words		= (object) $this->getWords( 'edit' );
+		/** @var Entity_Mission $mission */
 		$mission	= $this->model->get( $missionId );
 		$minutes	= ceil( View_Work_Mission::parseTime( $this->request->get( 'timeRequired' ) ) / 60 );
 		$this->model->edit( $missionId, [														//  store in database
@@ -335,7 +340,7 @@ class Controller_Work_Mission extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function convertToIssue( int|string $missionId )
+	public function convertToIssue( int|string $missionId ): never
 	{
 		die( "Not implemented yet" );
 	}
@@ -350,6 +355,7 @@ class Controller_Work_Mission extends Controller
 	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
+		/** @var Entity_Mission $mission */
 		$mission		= $this->model->get( $missionId );
 
 //print_m( $mission );die;
@@ -407,6 +413,7 @@ class Controller_Work_Mission extends Controller
 	{
 		$this->checkIsEditor( $missionId );
 		$words			= (object) $this->getWords( 'edit' );
+		/** @var Entity_Mission $mission */
 		$mission		= $this->model->get( $missionId );
 		if( !$mission )
 			$this->messenger->noteError( $words->msgInvalidId );
@@ -521,6 +528,7 @@ class Controller_Work_Mission extends Controller
 
 		$model		= new Model_Mission_Document( $this->env );
 		$orders		= ['modifiedAt' => 'DESC', 'createdAt' => 'DESC'];
+		/** @var Entity_Mission_Document[] $documents */
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
@@ -732,6 +740,7 @@ class Controller_Work_Mission extends Controller
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),							//  present and past (overdue)
 				];
 				$order	= ['priority' => 'ASC'];
+				/** @var Entity_Mission[] $tasks */
 				$tasks	= $this->model->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered tasks ordered by priority
 
 				//  --  EVENTS  --  //
@@ -741,6 +750,7 @@ class Controller_Work_Mission extends Controller
 					'dayStart'	=> "<= ".date( "Y-m-d", time() ),							//  starting today
 				];
 				$order	= ['timeStart' => 'ASC'];
+				/** @var Entity_Mission $events */
 				$events	= $this->model->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered events ordered by start time
 
 				if( $events || $tasks ){															//  user has tasks or events
@@ -786,6 +796,7 @@ class Controller_Work_Mission extends Controller
 	 */
 	public function testMailUpdate( int|string $missionId, ?bool $asText = NULL ): never
 	{
+		/** @var Entity_Mission $missionOld */
 		$missionOld		= $this->model->get( $missionId );
 		$missionNew		= clone( $missionOld );
 
@@ -825,6 +836,7 @@ class Controller_Work_Mission extends Controller
 	{
 		$words		= (object) $this->getWords( 'edit' );
 
+		/** @var Entity_Mission $mission */
 		$mission	= $this->model->get( $missionId );
 		if( !$mission ){
 			$this->messenger->noteError( $words->msgInvalidId );
@@ -875,6 +887,7 @@ class Controller_Work_Mission extends Controller
 
 		$model		= new Model_Mission_Document( $this->env );
 		$orders		= ['modifiedAt' => 'DESC', 'createdAt' => 'DESC'];
+		/** @var Entity_Mission_Document[] $documents */
 		$documents	= $model->getAllByIndex( 'missionId', $missionId, $orders );
 		$this->addData( 'documents', $documents );
 		$this->env->getPage()->setTitle( $mission->title, 'prepend' );
@@ -906,10 +919,8 @@ class Controller_Work_Mission extends Controller
 		$this->acl			= $this->env->getAcl();
 
 		$this->model		= new Model_Mission( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->logic		= Logic_Work_Mission::getInstance( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
@@ -928,7 +939,6 @@ class Controller_Work_Mission extends Controller
 //		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->userMap		= $this->logicProject->getCoworkers( $this->userId, NULL, TRUE );
 

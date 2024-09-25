@@ -80,27 +80,27 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		object		$mission
-	 *	@return		string
-	 */
-	protected function renderLinkedTitle( object $mission ): string
-	{
-		return HtmlTag::create( 'a', $mission->title, [
-			'href'	=> './work/mission/view/'.$mission->missionId
-		] );
-	}
-
-	/**
-	 *	@param		object		$mission
+	 *	@param		Entity_Mission	$mission
 	 *	@return		self
 	 *	@throws		ReflectionException
 	 */
 
-	protected function setSubjectFromMission( object $mission ): self
+	protected function setSubjectFromMission( Entity_Mission $mission ): self
 	{
 		$subjectKey	= $mission->type ? 'subjectEvent' : 'subjectTask';
 		$subject	= sprintf( $this->words[$subjectKey], $mission->title );
 		$this->setSubject( $subject );
 		return $this;
+	}
+
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		string
+	 */
+	protected function renderLinkedTitle( Entity_Mission $mission ): string
+	{
+		return HtmlTag::create( 'a', $mission->title, [
+			'href'	=> './work/mission/view/'.$mission->missionId
+		] );
 	}
 }

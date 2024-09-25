@@ -48,7 +48,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		];
 	}
 
-	public function renderBadgeDaysOverdue( object $mission ): string
+	public function renderBadgeDaysOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		/** @noinspection PhpUnhandledExceptionInspection */
@@ -62,11 +62,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	/**
 	 *	Render overdue container.
 	 *	@access		public
-	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@param		Entity_Mission	$mission		Mission data object
+	 *	@return		string			DIV container with number of overdue days or empty string
 	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysStill( object $mission ): string
+	public function renderBadgeDaysStill( Entity_Mission $mission ): string
 	{
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return '';																			//  return without content
@@ -81,11 +81,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		object		$mission
+	 *	@param		Entity_Mission	$mission
 	 *	@return		string
 	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysUntil( object $mission ): string
+	public function renderBadgeDaysUntil( Entity_Mission $mission ): string
 	{
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
@@ -216,7 +216,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'div', $list1.$list0, ['class' => "table-day", 'id' => 'table-'.$day] );
 	}
 
-	public function renderRowButtonEdit( object $mission ): string
+	public function renderRowButtonEdit( Entity_Mission $mission ): string
 	{
 		if( !$this->isEditor )
 			return '';
@@ -227,7 +227,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		] );
 	}
 
-	public function renderRowButtons( object $mission, $days ): string
+	public function renderRowButtons( Entity_Mission $mission, $days ): string
 	{
 		$buttonToggle	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-caret-down'] ), [
 			'type'				=> 'button',
@@ -254,7 +254,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'div', [$buttonToggle.$dropdown], ['class' => 'btn-group pull-right'] );
 	}
 
-	public function renderRowLabel( object $mission, bool $edit = TRUE ): string
+	public function renderRowLabel( Entity_Mission $mission, bool $edit = TRUE ): string
 	{
 //		$label		= TextTrimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );

@@ -1,7 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
+/** @var Environment $env  */
 /** @var array $words */
+/** @var Entity_Mission $mission */
+/** @var bool $useTimer */
+/** @var array $openTimers */
 
 $w	= (object) $words['edit-panel-close'];
 

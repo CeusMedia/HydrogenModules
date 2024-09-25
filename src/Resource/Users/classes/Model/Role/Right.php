@@ -7,7 +7,7 @@
 use CeusMedia\HydrogenFramework\Model;
 
 /**
- *	Role Model.
+ *	Role Right Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Role_Right extends Model
@@ -30,7 +30,10 @@ class Model_Role_Right extends Model
 		'action',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	string		$className		Entity class to use */
+	protected string $className				= 'Entity_Role_Right';
 
 	public static function maxifyController( string $controller ): string
 	{

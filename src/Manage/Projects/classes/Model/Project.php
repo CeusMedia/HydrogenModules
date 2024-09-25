@@ -55,7 +55,13 @@ class Model_Project extends Model
 		return $projects;
 	}
 
-	public function getProjectUsers( $projectId, array $conditions = [], array $orders = [] ): array
+	/**
+	 *	@param		int|string	$projectId
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array<int|string,Entity_User>
+	 */
+	public function getProjectUsers( int|string $projectId, array $conditions = [], array $orders = [] ): array
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
@@ -67,6 +73,7 @@ class Model_Project extends Model
 		$conditions['userId']	= $userIds;
 		$orders		= $orders ?: [/*'roleId' => 'ASC', */'username' => 'ASC'];
 		$users		= [];
+		/** @var Entity_User $user */
 		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
 			unset( $user->password );
 			$users[$user->userId]	= $user;
