@@ -196,7 +196,7 @@ class Controller_Oauth extends Controller
 	 */
 	protected function decodeBasicAuthentication(): ?object
 	{
-		$headers    = getallheaders();
+		$headers	= getallheaders();
 		if( !empty( $headers['Authorization'] ) ){
 			if( str_starts_with( $headers['Authorization'], 'Basic ' ) ){
 				$code	= preg_replace( "/^Basic /", "", $headers['Authorization'] );
@@ -460,7 +460,8 @@ class Controller_Oauth extends Controller
 		if( !strlen( trim( $password = $this->request->get( 'password' ) ) ) )						//  if password is not in request
 			$this->errorResponse( 'invalid_request', 'Missing password.' );							//  respond error
 
-		if( ( $client = $this->decodeBasicAuthentication() ) ){										//  try to find basic authentication
+		$client = $this->decodeBasicAuthentication();												//  try to find basic authentication
+		if( NULL !== $client ){
 			$clientId		= $client->clientId;													//  get client ID from basic authentication
 			$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
 		}
@@ -484,11 +485,13 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'unauthorized_client', 'Invalid grant type for this client.' );
 
 		$modelUser	= new Model_User( $this->env );
-		if( !( $user = $modelUser->getByIndex( 'username', $username ) ) )
+		/** @var ?Entity_User $user */
+		$user = $modelUser->getByIndex( 'username', $username );
+		if( NULL === $user )
 			$this->errorResponse( 'invalid_client', 'Invalid user', NULL, 401 );
 
 		$logic	= Logic_UserPassword::getInstance( $this->env );
-		if( !$logic->validateUserPassword( $user->userId, $password ) )
+		if( !$logic->validateUserPassword( $user, $password ) )
 			$this->errorResponse( 'invalid_client', 'Invalid password', NULL, 401 );
 
 		$scope	= $this->request->get( 'scope' );

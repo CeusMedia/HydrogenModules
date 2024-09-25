@@ -1,6 +1,6 @@
 <?php
 /**
- *	Role Model.
+ *	Role Right Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 

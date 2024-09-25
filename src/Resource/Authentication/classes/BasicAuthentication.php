@@ -32,11 +32,12 @@ class BasicAuthentication
 
 		if( strlen( $username ) ){
 			$model		= new Model_User( $this->env );
+			/** @var Entity_User $user */
 			$user		= $model->getByIndex( 'username', $username );
 			if( $user ){
 				if( class_exists( 'Logic_UserPassword' ) ){
 					$logic	= Logic_UserPassword::getInstance( $this->env );
-					if( $logic->validateUserPassword( $user->userId, $password ) )
+					if( $logic->validateUserPassword( $user, $password ) )
 						return $user->userId;
 				}
 				if( $user->password == md5( $password ) )

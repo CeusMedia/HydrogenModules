@@ -40,20 +40,22 @@ class Logic_UserPassword
 	 *	To inform user about password change, an E-Mail could to be sent afterward.
 	 *
 	 *	@access		public
-	 *	@param		int|string		$userPasswordId		ID of new user password entry
+	 *	@param		Entity_User_Password	$userPassword		ID of new user password entry
 	 *	@return		boolean
 	 *	@throws		OutOfRangeException		if given user password ID is not existing
 	 *	@throws		OutOfRangeException		if new password already has been activated, decayed or revoked
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function activatePassword( int|string $userPasswordId ): bool
+	public function activatePassword( Entity_User_Password $userPassword ): bool
 	{
-		$new		= $this->model->get( $userPasswordId );
+		/** @var Entity_User_Password $new */
+		$new		= $this->model->get( $userPassword->userPasswordId );
 		if( !$new )
 			throw new OutOfRangeException( 'Invalid user password ID' );
 		if( $new->status != Model_User_Password::STATUS_NEW )
 			throw new OutOfRangeException( 'User password cannot be activated' );
 
+		/** @var ?Entity_User_Password $old */
 		$old	= $this->model->getByIndices( [
 			'userId'	=> $new->userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
@@ -64,7 +66,7 @@ class Logic_UserPassword
 				'revokedAt'	=> time(),
 			] );
 		}
-		$this->model->edit( $userPasswordId, [
+		$this->model->edit( $userPassword->userPasswordId, [
 			'status'		=> Model_User_Password::STATUS_ACTIVE,
 			'activatedAt'	=> time(),
 		] );
@@ -83,32 +85,36 @@ class Logic_UserPassword
 	 *	If salting passwords is enabled, a salt will be generated and stored with the password.
 	 *
 	 *	@access		public
-	 *	@param		int|string		$userId			ID of user to add password for
+	 *	@param		Entity_User		$user			ID of user to add password for
 	 *	@param		string			$password		The new password to set.
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addPassword( int|string $userId, string $password ): string
+	public function addPassword( Entity_User $user, string $password ): Entity_User_Password
 	{
 		$salt	= $this->generateSalt();															//  generate password salt
+		/** @var ?Entity_User_Password $other */
 		$other	= $this->model->getByIndices( [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
 		] );
 		if( $other ){																				//  find other new password
-			$this->model->edit( $other->userPasswordId, [										//  and revoke it
+			$this->model->edit( $other->userPasswordId, [											//  and revoke it
 				'status'	=> Model_User_Password::STATUS_REVOKED,
 				'revokedAt' => time()
 			] );
 		}
 		$data	= [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
 			'algo'		=> PASSWORD_BCRYPT,
 			'salt'		=> $salt,
 			'hash'		=> $this->encryptPassword( $salt.$password, PASSWORD_BCRYPT ),
 			'createdAt'	=> time(),
 		];
-		return $this->model->add( $data );												//  add new password and return user password ID
+		$userPasswordId	= $this->model->add( $data );												//  add new password
+		/** @var Entity_User_Password $userPassword */
+		$userPassword	= $this->model->get( $userPasswordId );
+		return $userPassword;																		//  return user password
 	}
 
 	/**
@@ -127,6 +133,7 @@ class Logic_UserPassword
 	{
 		$count	= 0;
 		if( $this->maxAgeBeforeDecay ){
+			/** @var Entity_User_Password $item */
 			foreach( $this->model->getAllByIndex( 'status', Model_User_Password::STATUS_NEW ) as $item ){
 				if( time() - $item->createdAt > $this->maxAgeBeforeDecay ){
 					$data	= [
@@ -169,12 +176,13 @@ class Logic_UserPassword
 		return password_hash( $password, $algo, $options );
 	}
 
-	public function getActivatableUserPassword( int|string $userId, string $password ): ?object
+	public function getActivatableUserPassword( Entity_User $user, string $password ): ?Entity_User_Password
 	{
 		$indices	= [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Password::STATUS_NEW,
 		];
+		/** @var Entity_User_Password $item */
 		foreach( $this->model->getAllByIndices( $indices ) as $item )
 			if( $this->validatePassword( $item->salt.$password, $item->hash ) )
 				return $item;
@@ -185,32 +193,32 @@ class Logic_UserPassword
 	 *	Indicates whether an active password has been set for user.
 	 *
 	 *	@access		public
-	 *	@param		int|string		$userId		ID of user to check for password
+	 *	@param		Entity_User		$user		ID of user to check for password
 	 *	@return		boolean
 	 */
-	public function hasUserPassword( int|string $userId ): bool
+	public function hasUserPassword( Entity_User $user ): bool
 	{
 		$indices	= [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		];
 		return (bool) $this->model->count( $indices );
 	}
 
 	/**
-	 *	@param		int|string		$userId
+	 *	@param		Entity_User		$user
 	 *	@param		string			$password
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function migrateOldUserPassword( int|string $userId, string $password ): void
+	public function migrateOldUserPassword( Entity_User $user, string $password ): void
 	{
-		if( !$this->hasUserPassword( $userId ) ){
-			$userPasswordId		= $this->addPassword( $userId, $password );
-			$this->activatePassword( $userPasswordId );
+		if( !$this->hasUserPassword( $user ) ){
+			$userPassword	= $this->addPassword( $user, $password );
+			$this->activatePassword( $userPassword );
 		}
 		$model	= new Model_User( $this->env );
-		$model->edit( $userId, ['password' => ''] );
+		$model->edit( $user->userId, ['password' => ''] );
 	}
 
 	/**
@@ -230,24 +238,25 @@ class Logic_UserPassword
 	 *	Indicates whether a given user password is active.
 	 *
 	 *	@access		public
-	 *	@param		int|string		$userId			ID of user to check for password
+	 *	@param		Entity_User		$user			ID of user to check for password
 	 *	@param		string			$password		Password to check for user
 	 *	@param		boolean			$resetFails		Flag: reset fail counter on success, default: yes
 	 *	@return		boolean
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function validateUserPassword( int|string $userId, string $password, bool $resetFails = TRUE ): bool
+	public function validateUserPassword( Entity_User $user, string $password, bool $resetFails = TRUE ): bool
 	{
+		/** @var Entity_User_Password $item */
 		$item	= $this->model->getByIndices( [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		] );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
 			if( $resetFails ){
-				$this->model->edit( $item->userPasswordId, array(
+				$this->model->edit( $item->userPasswordId, [
 					'usedAt'	=> time(),
 					'failsLast'	=> 0
-				) );
+				] );
 			}
 			return TRUE;
 		}

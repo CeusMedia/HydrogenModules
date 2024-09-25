@@ -159,6 +159,7 @@ class Controller_Manage_My_User extends Controller
 	public function password(): void
 	{
 		$words		= (object) $this->getWords( 'password' );
+		/** @var Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -190,8 +191,8 @@ class Controller_Manage_My_User extends Controller
 		else{
 			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
 				$logic			= Logic_UserPassword::getInstance( $this->env );
-				$userPasswordId	= $logic->addPassword( $user->userId, $passwordNew );
-				$logic->activatePassword( $userPasswordId );
+				$userPassword	= $logic->addPassword( $user, $passwordNew );
+				$logic->activatePassword( $userPassword );
 			}
 			else{
 				$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );

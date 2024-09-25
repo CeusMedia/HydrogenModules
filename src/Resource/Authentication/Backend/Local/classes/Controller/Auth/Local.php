@@ -66,10 +66,11 @@ class Controller_Auth_Local extends Controller
 	}
 
 	/**
+	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		send mail to user after confirmation with user data
 	 */
-	public function confirm( $code = NULL ): void
+	public function confirm( ?string $code = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$code		= $code ?: $this->request->get( 'confirm_code' );												//  get code from POST reqeuest if not given by GET
@@ -90,7 +91,7 @@ class Controller_Auth_Local extends Controller
 						'roleId'	=> $user->roleId,
 						'from'		=> $from,
 					];
-					$result	= $this->callHook( 'Auth', 'afterConfirm', $this, $payload );
+					$this->callHook( 'Auth', 'afterConfirm', $this, $payload );
 					if( 1 ){
 						$this->messenger->noteSuccess( $words->msgSuccessAutoLogin );
 						$this->session->set( 'auth_user_id', $user->userId );
@@ -193,6 +194,11 @@ class Controller_Auth_Local extends Controller
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function password(): void
 	{
 		$words			= (object) $this->getWords( 'password' );
@@ -206,7 +212,9 @@ class Controller_Auth_Local extends Controller
 				$this->messenger->noteError( $words->msgNoEmail );
 				$this->restart( 'password', TRUE );
 			}
-			if( !( $user = $modelUser->getByIndex( 'email', $email ) ) ){
+			/** @var Entity_User $user */
+			$user	= $modelUser->getByIndex( 'email', $email );
+			if( NULL === $user ){
 				$this->messenger->noteError( $words->msgInvalidEmail );
 			}
 			else{
@@ -229,7 +237,7 @@ class Controller_Auth_Local extends Controller
 					$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
 					if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
 						$logic	= Logic_UserPassword::getInstance( $this->env );
-						$userPasswordId	= $logic->addPassword( $user->userId, $password );
+						$logic->addPassword( $user, $password );
 					}
 					else{																			//  @todo  remove whole block if old user password support decays
 						$crypt		= md5( $password.$passwordPepper );
@@ -252,6 +260,10 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'password_email', $this->request->get( 'password_email' ) );
 	}
 
+	/**
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function register(): void
 	{
 		$words		= (object) $this->getWords( 'register' );
@@ -263,6 +275,7 @@ class Controller_Auth_Local extends Controller
 
 		$this->registerByPostRequest();
 
+		$input	= new Dictionary();
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
 			$fields	= ['username', 'email', 'gender', 'firstname', 'surname', 'street', 'postcode', 'city', 'phone'];
 			foreach( $fields as $field )
@@ -271,7 +284,7 @@ class Controller_Auth_Local extends Controller
 		}
 		foreach( $input as $key => $value )
 			$input[$key]	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
-		if( !$input->get( 'country' ) && $this->env->getLanguage()->getLanguage() == 'de' )
+		if( !$input->get( 'country' ) && 'de' === $this->env->getLanguage()->getLanguage() )
 			$input->set( 'country', 'DE' );
 
 		$this->addData( 'user', $input );
@@ -322,29 +335,33 @@ class Controller_Auth_Local extends Controller
 	/**
 	 *	@param		string		$username
 	 *	@param		string		$password
-	 *	@return		int
+	 *	@return		?Entity_User
+	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	protected function authenticateUserByCredentials( string $username, string $password ): int
+	protected function authenticateUserByCredentials( string $username, string $password ): ?Entity_User
 	{
 		$words		= (object) $this->getWords( 'login' );
 		if( !strlen( $username ) ){
 			$this->messenger->noteError( $words->msgNoUsername );
-			return 0;
+			return NULL;
 		}
 		if( !trim( $password ) ){
 			$this->messenger->noteError( $words->msgNoPassword );
-			return 0;
+			return NULL;
 		}
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
+		$user		= NULL;
 		foreach( ['username', 'email'] as $column ){
-			if( ( $user = $modelUser->getByIndex( $column, $username ) ) )
+			/** @var Entity_User $user */
+			$user	= $modelUser->getByIndex( $column, $username );
+			if( NULL !== $user )
 				break;
 		}
 		if( !$user ){
 			$this->messenger->noteError( $words->msgInvalidUser );
-			return 0;
+			return NULL;
 		}
 		$hookData	= [
 			'status'	=> NULL,
@@ -355,12 +372,12 @@ class Controller_Auth_Local extends Controller
 		];
 		$this->callHook( 'Auth', 'checkBeforeLogin', $this, $hookData );
 		if( $hookData['status'] === FALSE )
-			return 0;
+			return NULL;
 
 		$role	= $modelRole->get( $user->roleId );
 		if( !$role->access ){
 			$this->messenger->noteError( $words->msgRoleLocked, $role->title );
-			return 0;
+			return NULL;
 		}
 
 /*		// @deprecated	use role column "access" instead
@@ -379,14 +396,14 @@ class Controller_Auth_Local extends Controller
 		foreach( $insufficientUserStatuses as $status => $message ){
 			if( (int) $user->status === $status ){
 				$this->messenger->noteError( $message );
-				return 0;
+				return NULL;
 			}
 		}
 		if( !$this->checkPasswordOnLogin( $user, $password ) ){						//  validate password
 			$this->messenger->noteError( $words->msgInvalidPassword );
-			return 0;
+			return NULL;
 		}
-		return (int) $user->userId;
+		return $user;
 	}
 
 	/**
@@ -394,25 +411,26 @@ class Controller_Auth_Local extends Controller
 	 *	If newer password store is supported and old password has been found, migration will apply.
 	 *
 	 *	@access		protected
-	 *	@param		object		$user		User data object
-	 *	@param		string		$password	Password to check on login
+	 *	@param		Entity_User		$user		User data object
+	 *	@param		string			$password	Password to check on login
 	 *	@return		bool
 	 *	@todo		clean up if support for old password decays
 	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	protected function checkPasswordOnLogin( object $user, string $password ): bool
+	protected function checkPasswordOnLogin( Entity_User $user, string $password ): bool
 	{
 		$words				= (object) $this->getWords( 'login' );
 		$isMinimumVersion	= $this->env->getPhp()->version->isAtLeast( '5.5.0' );
 		if( $isMinimumVersion && class_exists( 'Logic_UserPassword' ) ){							//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
-			$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
-			if( $logic->hasUserPassword( $user->userId ) ){											//  @todo  remove line if old user password support decays
-				if( $logic->validateUserPassword( $user->userId, $password ) )
+			$newPassword	= $logic->getActivatableUserPassword( $user, $password );
+			if( $logic->hasUserPassword( $user ) ){											//  @todo  remove line if old user password support decays
+				if( $logic->validateUserPassword( $user, $password ) )
 					return TRUE;
-				$newPassword	= $logic->getActivatableUserPassword( $user->userId, $password );
-				if( $newPassword ){
-					$logic->activatePassword( $newPassword->userPasswordId );
+				$newPassword	= $logic->getActivatableUserPassword( $user, $password );
+				if( NULL !== $newPassword ){
+					$logic->activatePassword( $newPassword );
 					$this->messenger->noteNotice( $words->msgNoticePasswordChanged );
 					return TRUE;
 				}
@@ -420,7 +438,7 @@ class Controller_Auth_Local extends Controller
 			else{																					//  @todo  remove whole block if old user password support decays
 				$pepper		= $this->moduleConfigUsers->get( 'password.pepper' );
 				if( $user->password === md5( $password.$pepper ) ){
-					$logic->migrateOldUserPassword( $user->userId, $password );
+					$logic->migrateOldUserPassword( $user, $password );
 					return TRUE;
 				}
 			}
@@ -525,6 +543,9 @@ class Controller_Auth_Local extends Controller
 		return $roleId;
 	}
 
+	/**
+	 *	@throws		ReflectionException
+	 */
 	protected function evaluateInputOnRegister(): Dictionary|FALSE
 	{
 		$modelUser	= new Model_User( $this->env );
@@ -549,7 +570,7 @@ class Controller_Auth_Local extends Controller
 		$input->set( 'firstname', trim( $input->get( 'firstname', '' ) ) );
 		$input->set( 'surname', trim( $input->get( 'surname' ) ) );
 
-		$result	= $this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
+		$this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
 		if( '' === $input->get( 'username' ) ){
 			$this->messenger->noteError( $words->msgNoUsername );
 			return FALSE;
@@ -593,7 +614,11 @@ class Controller_Auth_Local extends Controller
 		return $input;
 	}
 
-	protected function sendRegisterMail( Dictionary $input, int $userId, int $status, ?string $from ): void
+	/**
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function sendRegisterMail(Dictionary $input, int $userId, int $status, ?string $from ): void
 	{
 		if( Model_User::STATUS_UNCONFIRMED === $status )
 			return;
@@ -607,6 +632,7 @@ class Controller_Auth_Local extends Controller
 		$data['pak']		= md5( 'pak:'.$userId.'/'.$input->get( 'username' ).'&'.$passwordPepper );
 
 		$language	= $this->env->getLanguage()->getLanguage();
+		/** @var Entity_User $user */
 		$user		= $modelUser->get( $userId );
 		$mail		= new Mail_Auth_Local_Register( $this->env, $data );
 		$logic		= Logic_Mail::getInstance( $this->env );
@@ -615,7 +641,10 @@ class Controller_Auth_Local extends Controller
 		$logic->sendQueuedMail( $mailId );
 	}
 
-	protected function linkCreatedAccountToOAuth( $userId ): void
+	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function linkCreatedAccountToOAuth($userId ): void
 	{
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
 			$modelOauthUser	= new Model_Oauth_User( $this->env );
@@ -631,9 +660,15 @@ class Controller_Auth_Local extends Controller
 			$this->session->remove( 'auth_register_oauth_data' );
 		}
 	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	protected function registerByPostRequest(): void
 	{
-		if( !$this->request->isPost() || !$this->request->has( 'save' ) )
+		if( !$this->request->getMethod()->isPost() || !$this->request->has( 'save' ) )
 			return;
 
 		$modelUser	= new Model_User( $this->env );
@@ -670,9 +705,11 @@ class Controller_Auth_Local extends Controller
 		$forward	= './auth/local/login'.( $from ? '?from='.$from : '' );
 		try{
 			$userId		= $modelUser->add( $data );
+			/** @var Entity_User $user */
+			$user		= $modelUser->get( $userId );
 			$logic	= Logic_UserPassword::getInstance( $this->env );
-			$userPasswordId	= $logic->addPassword( $userId, $input->get( 'password' ) );
-			$logic->activatePassword( $userPasswordId );
+			$userPassword	= $logic->addPassword( $user, $input->get( 'password' ) );
+			$logic->activatePassword( $userPassword );
 
 			$this->sendRegisterMail( $input, $userId, $status, $from );
 			$this->linkCreatedAccountToOAuth( $userId );
@@ -693,7 +730,7 @@ class Controller_Auth_Local extends Controller
 		$this->env->getDatabase()->rollBack();
 	}
 
-	protected function rememberUserInCookie( object $user ): void
+	protected function rememberUserInCookie( Entity_User $user ): void
 	{
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
@@ -721,7 +758,10 @@ class Controller_Auth_Local extends Controller
 			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
 			$modelUser	= new Model_User( $this->env );												//  get user model
 			$modelRole	= new Model_Role( $this->env );												//  get role model
-			if( $userId && $password && ( $user = $modelUser->get( $userId ) ) ){					//  user is existing and password is given
+			/** @var Entity_User $user */
+			$user		= $modelUser->get( $userId );												//  user is existing and password is given
+			if( $userId && $password && NULL !== $user ){
+				/** @var Entity_Role $role */
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
 				if( $role && $role->access ){														//  role exists and allows login
 					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
@@ -741,6 +781,11 @@ class Controller_Auth_Local extends Controller
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	protected function tryLoginByPostRequest(): void
 	{
 		$words		= (object) $this->getWords( 'login' );
@@ -758,17 +803,19 @@ class Controller_Auth_Local extends Controller
 			$controller->checkToken();
 		}
 		try{
-			$userId	= $this->authenticateUserByCredentials( $username, $password );
-			if( 0 === $userId ){
+			/** @var ?Entity_User $user */
+			$user	= $this->authenticateUserByCredentials( $username, $password );
+			if( NULL === $user ){
 				if( 0 !== strlen( $from ) )
 					$this->restart( $from.'?login='.$username );
 				$this->restart( 'login?username='.$username, TRUE );
 			}
 			$modelUser	= new Model_User( $this->env );
-			$modelUser->edit( $userId, ['loggedAt' => time()] );
+			$modelUser->edit( $user->userId, ['loggedAt' => time()] );
 			$this->messenger->noteSuccess( $words->msgSuccess );
 
-			$user	= $modelUser->get( $userId );
+			/** @var Entity_User $user */
+			$user	= $modelUser->get( $user->userId );
 			$this->session->set( 'auth_user_id', $user->userId );
 			$this->session->set( 'auth_role_id', $user->roleId );
 			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );

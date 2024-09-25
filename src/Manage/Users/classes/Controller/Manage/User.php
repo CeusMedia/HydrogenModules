@@ -123,14 +123,16 @@ class Controller_Manage_User extends Controller
 					$countries			= array_flip( $this->countries );
 					$data['country']	= $countries[$data['country']];
 				}
-				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove whole block if old user password support decays
+				if( class_exists( 'Logic_UserPassword' ) )											//  @todo  remove whole block if old user password support decays
 					$data['password'] = '';
-				}
+
 				$userId		= $modelUser->add( $data );
+				/** @var Entity_User $user */
+				$user		= $modelUser->get( $userId );
 				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
 					$logic			= Logic_UserPassword::getInstance( $this->env );
-					$userPasswordId	= $logic->addPassword( $userId, $password );
-					$logic->activatePassword( $userPasswordId );
+					$userPassword	= $logic->addPassword( $user, $password );
+					$logic->activatePassword( $userPassword );
 				}
 				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( NULL, TRUE );
@@ -189,7 +191,9 @@ class Controller_Manage_User extends Controller
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
-		if( !$modelUser->get( $userId ) ){
+		/** @var Entity_User $user */
+		$user		= $modelUser->get( $userId );
+		if( NULL === $user ){
 			$messenger->noteError( 'Invalid user ID' );
 			$this->restart( NULL, TRUE );
 		}
@@ -272,8 +276,8 @@ class Controller_Manage_User extends Controller
 				}
 				if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
 					$logic			= Logic_UserPassword::getInstance( $this->env );
-					$userPasswordId	= $logic->addPassword( $userId, $password );
-					$logic->activatePassword( $userPasswordId );
+					$userPassword	= $logic->addPassword( $user, $password );
+					$logic->activatePassword( $userPassword );
 				}
 			}
 			if( strlen( $data['country'] ) > 2 ){
@@ -284,7 +288,8 @@ class Controller_Manage_User extends Controller
 			$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
-		$user			= $modelUser->get( $userId );
+		/** @var Entity_User $user */
+		$user	= $modelUser->get( $userId );
 		if( empty( $user->country ) )
 			$user->country	= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$user->country	= $this->countries[$user->country];
@@ -327,6 +332,7 @@ class Controller_Manage_User extends Controller
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
+		/** @var Entity_User $user */
 		$user		= $modelUser->get( $userId );
 		if( !$user ){
 			$messenger->noteError( 'Invalid user ID' );
@@ -350,7 +356,7 @@ class Controller_Manage_User extends Controller
 		}
 
 		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
-		if( $logicPassword->validateUserPassword( $userId, $passwordNew, FALSE ) ){
+		if( $logicPassword->validateUserPassword( $user, $passwordNew, FALSE ) ){
 			$messenger->noteError( $words->msgPasswordNewSame );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
@@ -370,8 +376,8 @@ class Controller_Manage_User extends Controller
 			$this->restart( 'edit/'.$userId, TRUE );
 		}*/
 
-		$userPasswordId	= $logicPassword->addPassword( $userId, $passwordNew );
-		$logicPassword->activatePassword( $userPasswordId );
+		$userPassword	= $logicPassword->addPassword( $user, $passwordNew );
+		$logicPassword->activatePassword( $userPassword );
 		$messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( 'edit/'.$userId, TRUE );
 	}

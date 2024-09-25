@@ -15,8 +15,12 @@ class Hook_Resource_User extends Hook
 		if( !empty( $this->payload['userId'] ) ){
 			$modelUser		= new Model_User( $this->env );
 			$modelPassword	= new Model_User_Password( $this->env );
+			$modelGroupUser	= new Model_Group_User( $this->env );
+
 			$modelPassword->removeByIndex( 'userId', $this->payload['userId'] );
+			$modelGroupUser->removeByIndex( 'userId', $this->payload['userId'] );
 			$modelUser->remove( $this->payload['userId'] );
+
 			if( isset( $this->payload['counts'] ) )
 				$this->payload['counts']['Resource_Users']	= (object) ['entities' => 1];
 		}

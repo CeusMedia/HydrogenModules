@@ -1,5 +1,6 @@
 <?php
 
+/** @property Entity_Role $role */
 class Entity_User
 {
 	public int|string $userId;

@@ -22,23 +22,23 @@ class Logic_UserToken extends Logic
 	public function get( string $username, string $password, ?string $scope = NULL ): string
 	{
 		//  check username
-		$userId	= $this->getUserIdFromUsername( $username );
+		$user	= $this->getUserFromUsername( $username );
 
 		//  check password
-		if( !$this->validateUserPassword( $userId, $password ) )
+		if( !$this->validateUserPassword( $user->userId, $password ) )
 			throw new RangeException( 'Invalid password' );
 
 		//  create new token
 		$token		= ID::uuid();
 		$tokenId	= $this->modelToken->add( [
-			'userId'	=> $userId,
+			'userId'	=> $user->userId,
 			'status'	=> Model_User_Token::STATUS_ACTIVE,
 			'token'		=> $token,
 			'scope'		=> (string) $scope,
 			'createdAt'	=> time(),
 		] );
 
-		$this->revokeByUserId( $userId, $tokenId );
+		$this->revokeByUserId( $user->userId, $tokenId );
 
 		return $token;
 	}
@@ -60,22 +60,13 @@ class Logic_UserToken extends Logic
 		if( strlen( trim( $username ) ) > 0 )
 			$indices['userId']	= $this->getUserIdFromUsername( $username );
 
+		/** @var Entity_User_Token $item */
 		$item		= $this->modelToken->getByIndices( $indices );
 		if( !$item )
 			return FALSE;
 
 		$this->modelToken->edit( $item->userTokenId, ['usedAt' => time()] );
 		return TRUE;
-	}
-
-	/**
-	 *	@param		string		$token
-	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	public function revokeByToken( string $token ): bool
-	{
-		return $this->revokeByTokenId( $token );
 	}
 
 	/**
@@ -95,9 +86,11 @@ class Logic_UserToken extends Logic
 		];
 		if( strlen( trim( $except ) ) > 0 )
 			$indices['userTokenId']	= '!= '.$except;
+
+		/** @var Entity_User_Token[] $tokens */
 		$tokens	= $this->modelToken->getAllByIndices( $indices );
 		foreach( $tokens as $token )
-			$this->revokeByTokenId( $token->userTokenId );
+			$this->revokeByToken( $token );
 		return count( $tokens ) > 0;
 	}
 
@@ -115,9 +108,10 @@ class Logic_UserToken extends Logic
 				Model_User_Token::STATUS_ACTIVE
 			],
 		];
+		/** @var Entity_User_Token[] $tokens */
 		$tokens	= $this->modelToken->getAllByIndices( $indices );
 		foreach( $tokens as $token )
-			$this->revokeByTokenId( $token->userTokenId );
+			$this->revokeByToken( $token );
 		return count( $tokens ) > 0;
 	}
 
@@ -136,12 +130,13 @@ class Logic_UserToken extends Logic
 
 	/**
 	 *	@param		string		$token
-	 *	@return		object
+	 *	@return		Entity_User_Token
 	 */
-	protected function getToken( string $token ): object
+	protected function getToken( string $token ): Entity_User_Token
 	{
 		if( strlen( trim( $token ) ) === 0 )
 			throw new InvalidArgumentException( 'No token given' );
+		/** @var Entity_User_Token $token */
 		$token	= $this->modelToken->getByIndex( 'token', $token );
 		if( !$token )
 			throw new RangeException( 'Invalid token' );
@@ -156,6 +151,25 @@ class Logic_UserToken extends Logic
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelPassword	= new Model_User_Password( $this->env );
 		$this->modelToken		= new Model_User_Token( $this->env );
+	}
+
+	/**
+	 *	@param		string		$username
+	 *	@return		Entity_User
+	 */
+	protected function getUserFromUsername( string $username ): Entity_User
+	{
+		//  validate input
+		if( 0 === strlen( trim( $username ) ) )
+			throw new InvalidArgumentException( 'No username given' );
+
+		//  check username
+		/** @var Entity_User $user */
+		$user	= $this->modelUser->getByIndex( 'username', $username );
+		if( !$user )
+			throw new DomainException( 'Invalid username' );
+
+		return $user;
 	}
 
 	/**
@@ -176,6 +190,18 @@ class Logic_UserToken extends Logic
 		return $user->userId;
 	}
 
+	/**
+	 *	@param		Entity_User_Token		$token
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function revokeByToken( Entity_User_Token $token ): bool
+	{
+		return (bool) $this->modelToken->edit( $token->userTokenId, [
+			'status'	=> Model_User_Token::STATUS_REVOKED,
+			'revokedAt'	=> time(),
+		] );
+	}
 	/**
 	 *	@param		int|string		$tokenId
 	 *	@return		bool
