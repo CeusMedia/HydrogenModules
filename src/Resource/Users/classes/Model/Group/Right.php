@@ -34,4 +34,15 @@ class Model_Group_Right extends Model
 
 	/** @var	string		$className		Entity class to use */
 	protected string $className				= 'Entity_Group_Right';
+
+
+	public static function maximizeController( string $controller ): string
+	{
+		return str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $controller ) ) );
+	}
+
+	public static function minimizeController(string $controller ): string
+	{
+		return str_replace( ['-', '/'], '_', strtolower( $controller ) );
+	}
 }

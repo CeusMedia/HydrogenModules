@@ -1,6 +1,6 @@
 <?php
 /**
- *	Role Controller.
+ *	Group Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
@@ -17,17 +17,17 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as Module
 use Resource_Disclosure as Disclosure;
 
 /**
- *	Role Controller.
+ *	Group Controller.
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
-class Controller_Manage_Role extends Controller
+class Controller_Manage_Group extends Controller
 {
 	protected HttpRequest $request;
-	protected Model_Role $modelRole;
-	protected Model_Role_Right $modelRoleRight;
+	protected Model_Group $modelGroup;
+	protected Model_Group_Right $modelGroupRight;
 	protected Model_User $modelUser;
 	protected MessengerResource $messenger;
 	protected LanguageResource $language;
@@ -38,76 +38,76 @@ class Controller_Manage_Role extends Controller
 	 */
 	public function add(): void
 	{
-		$words	= $this->language->getWords( 'manage/role' );
+		$words	= $this->language->getWords( 'manage/group' );
 		if( $this->request->getMethod()->isPost() ){
 			$data		= $this->request->getAllFromSource( 'POST', TRUE );
 			$title		= $data->get( 'title' );
 
 			if( $title ){
-				if( !$this->modelRole->getByIndex( 'title', $data->get( 'title' ) ) ){
-					$roleId		= $this->modelRole->add( array_merge( $data->getAll(), array(
+				if( !$this->modelGroup->getByIndex( 'title', $data->get( 'title' ) ) ){
+					$groupId		= $this->modelGroup->add( array_merge( $data->getAll(), array(
 						'createdAt'		=> time(),
 						'modifiedAt'	=> time(),
 					) ) );
-					if( $roleId )
+					if( $groupId )
 						$this->restart( NULL, TRUE );
 				}
 				else
-					$this->messenger->noteError( 'role_title_existing' );
+					$this->messenger->noteError( 'group_title_existing' );
 			}
 			else
-				$this->messenger->noteError( 'role_title_missing' );
+				$this->messenger->noteError( 'group_title_missing' );
 		}
 
 		$postDataArray	= $this->request->getAllFromSource( 'POST' );
-		$this->addData( 'role', new Dictionary( $postDataArray ) );
+		$this->addData( 'group', new Dictionary( $postDataArray ) );
 		$this->addData( 'words', $words );
 	}
 
 	/**
-	 *	@param		int|string		$roleId
+	 *	@param		int|string		$groupId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addRight( int|string $roleId ): void
+	public function addRight( int|string $groupId ): void
 	{
-		$words		= $this->language->getWords( 'manage/role' );
+		$words		= $this->language->getWords( 'manage/group' );
 		if( $this->request->getMethod()->isPost() ){
 			$controller	= $this->request->getFromSource( 'controller', 'POST' );
 			$action		= $this->request->getFromSource( 'action', 'POST' );
 			$data		= array(
-				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minimizeController( $controller ),
+				'groupId'		=> $groupId,
+				'controller'	=> Model_Group_Right::minimizeController( $controller ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
 			);
-			$this->modelRoleRight->add( $data );
+			$this->modelGroupRight->add( $data );
 		}
-		$this->restart( 'edit/'.$roleId, TRUE );
+		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
 	/**
-	 *	@param		int|string		$roleId
+	 *	@param		int|string		$groupId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( int|string $roleId ): void
+	public function edit( int|string $groupId ): void
 	{
-		$words		= $this->language->getWords( 'manage/role' );
-		$role		= $this->modelRole->get( $roleId );
+		$words		= $this->language->getWords( 'manage/group' );
+		$group		= $this->modelGroup->get( $groupId );
 
 		if( $this->request->getMethod()->isPost() ){
 			$data	= $this->request->getAllFromSource( 'POST' );
-			$this->modelRole->edit( $roleId, $data );
+			$this->modelGroup->edit( $groupId, $data );
 			$this->restart( NULL, TRUE );
 		}
 		$orders		= ['controller' => 'ASC', 'action' => 'ASC'];
-		$this->addData( 'rights', $this->modelRoleRight->getAllByIndex( 'roleId', $roleId, $orders ) );
+		$this->addData( 'rights', $this->modelGroupRight->getAllByIndex( 'groupId', $groupId, $orders ) );
 
-		$this->addData( 'roleId', $roleId );
-		$this->addData( 'role', $role );
+		$this->addData( 'groupId', $groupId );
+		$this->addData( 'group', $group );
 		$this->addData( 'words', $words );
-		$this->addData( 'userCount', $this->modelUser->countByIndex( 'roleId', $roleId ) );
+		$this->addData( 'userCount', $this->modelUser->countByIndex( 'groupId', $groupId ) );
 
 		$disclosure	= new Disclosure( $this->env );
 		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];
@@ -130,62 +130,62 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );
-		$this->addData( 'roleId', $roleId );
+		$this->addData( 'groupId', $groupId );
 	}
 
 	public function index(): void
 	{
-		$roles	= $this->modelRole->getAll();
-		foreach( $roles as $role ){
-			$role->users	= $this->modelUser->getAllByIndex( 'roleId', $role->roleId );
+		$groups	= $this->modelGroup->getAll();
+		foreach( $groups as $group ){
+			$group->users	= $this->modelUser->getAllByIndex( 'groupId', $group->groupId );
 		}
-		$this->addData( 'roles', $roles );
-		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_role', 'add' ) );
-		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'manage_role', 'edit' ) );
+		$this->addData( 'groups', $groups );
+		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_group', 'add' ) );
+		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'manage_group', 'edit' ) );
 	}
 
 	/**
-	 *	@param		int|string		$roleId
+	 *	@param		int|string		$groupId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function remove( int|string $roleId ): void
+	public function remove( int|string $groupId ): void
 	{
-		$words		= $this->language->getWords( 'manage/role' );
-		$role		= $this->modelRole->get( $roleId );
+		$words		= $this->language->getWords( 'manage/group' );
+		$group		= $this->modelGroup->get( $groupId );
 
-		if( $this->modelUser->getByIndex( 'roleId', $roleId ) ){
-			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
-			$this->restart( 'edit/'.$roleId, TRUE );
+		if( $this->modelUser->getByIndex( 'groupId', $groupId ) ){
+			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $group->title );
+			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 
-		$result		= $this->modelRole->remove( $roleId );
+		$result		= $this->modelGroup->remove( $groupId );
 		if( $result ){
-			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
+			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $group->title );
 			$this->restart( NULL, TRUE );
 		}
 		else{
-			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
-			$this->restart( 'edit/'.$roleId, TRUE );
+			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $group->title );
+			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 	}
 
 	/**
-	 *	@param		int|string		$roleId
+	 *	@param		int|string		$groupId
 	 *	@param		string			$controller
 	 *	@param		string			$action
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeRight( int|string $roleId, string $controller, string $action ): void
+	public function removeRight( int|string $groupId, string $controller, string $action ): void
 	{
 		$indices	= array(
-			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minimizeController( $controller ),
+			'groupId'		=> $groupId,
+			'controller'	=> Model_Group_Right::minimizeController( $controller ),
 			'action'		=> $action
 		);
-		$this->modelRoleRight->removeByIndices( $indices );
-		$this->restart( 'edit/'.$roleId, TRUE );
+		$this->modelGroupRight->removeByIndices( $indices );
+		$this->restart( 'edit/'.$groupId, TRUE );
 	}
 
 	//  --  PROTECTED  --  //
@@ -196,9 +196,9 @@ class Controller_Manage_Role extends Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->language			= $this->env->getLanguage();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelRole		= $this->getModel( 'Role' );
+		$this->modelGroup		= $this->getModel( 'Group' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
+		$this->modelGroupRight	= $this->getModel( 'Group_Right' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelUser		= $this->getModel( 'User' );
 		$this->addData( 'modules', $this->env->getModules()->getAll() );

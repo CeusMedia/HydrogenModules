@@ -3,7 +3,7 @@
 	<title><![CDATA[Manage: Users & Roles]]></title>
 	<description><![CDATA[Basic user, role and access administration.]]></description>
 	<category>Management</category>
-	<version>0.8.0</version>
+	<version>0.8.1</version>
 	<log version="0.5.2">Split user edit template into parts.</log>
 	<log version="0.5.3">Extend username filter by wildmark support (* only).</log>
 	<log version="0.5.4">Decorated panels.</log>
@@ -31,24 +31,34 @@
 	<log version="0.7.7">Extract AJAX controller actions.</log>
 	<log version="0.7.8">Separate password panel in user editor.</log>
 	<log version="0.8.0">Migration to PHP 8 and strict types.</log>
+	<log version="0.8.1">Add groups.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Manage/Group.php</class>
 		<class>Controller/Ajax/Manage/Role.php</class>
 		<class>Controller/Ajax/Manage/User.php</class>
+		<class>Controller/Manage/Group.php</class>
 		<class>Controller/Manage/Role.php</class>
 		<class>Controller/Manage/User.php</class>
+		<class>View/Manage/Group.php</class>
 		<class>View/Manage/Role.php</class>
 		<class>View/Manage/User.php</class>
+		<locale>de/manage/group.ini</locale>
 		<locale>de/manage/role.ini</locale>
 		<locale>de/manage/user.ini</locale>
+		<locale>de/html/manage/group/index.bottom.html</locale>
+		<locale>de/html/manage/group/index.top.html</locale>
 		<locale>de/html/manage/role/index.bottom.html</locale>
 		<locale>de/html/manage/role/index.top.html</locale>
 		<locale>de/html/manage/user/index.bottom.html</locale>
 		<locale>de/html/manage/user/index.top.html</locale>
+		<locale>en/manage/group.ini</locale>
 		<locale>en/manage/role.ini</locale>
 		<locale>en/manage/user.ini</locale>
+		<locale>en/html/manage/group/index.bottom.html</locale>
+		<locale>en/html/manage/group/index.top.html</locale>
 		<locale>en/html/manage/role/index.bottom.html</locale>
 		<locale>en/html/manage/role/index.top.html</locale>
 		<locale>en/html/manage/user/index.bottom.html</locale>
@@ -66,6 +76,10 @@
 		<template>manage/role/edit.php</template>
 		<template>manage/role/edit.rights.php</template>
 		<template>manage/role/index.php</template>
+		<template>manage/group/add.php</template>
+		<template>manage/group/edit.php</template>
+		<template>manage/group/edit.rights.php</template>
+		<template>manage/group/index.php</template>
 		<style>module.manage.users.css</style>
 		<script>module.manage.users.js</script>
 	</files>
@@ -74,7 +88,9 @@
 		<needs type="module">UI_Helper_TimePhraser</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
-	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>
+	<link xml:lang="de" access="acl" path="manage/group" rank="65">Gruppen</link>
 	<link xml:lang="de" access="acl" path="manage/role" rank="70">Rollen</link>
+	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>
+	<link xml:lang="en" access="acl" path="manage/user" rank="65">Groups</link>
 	<link xml:lang="en" access="acl" path="manage/role" rank="70">Roles</link>
 </module>

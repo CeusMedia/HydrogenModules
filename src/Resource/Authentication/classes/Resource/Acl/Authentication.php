@@ -74,7 +74,7 @@ class Resource_Acl_Authentication extends Abstraction
 			return -2;
 		$data	= array(
 			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minifyController( $controller ),
+			'controller'	=> Model_Role_Right::minimizeController( $controller ),
 			'action'		=> $action,
 			'timestamp'		=> time()
 		);
