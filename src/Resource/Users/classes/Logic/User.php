@@ -94,6 +94,8 @@ class Logic_User extends Logic
 	public function getUserGroups( Entity_User $user ): array
 	{
 		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $user->userId, [], [], ['groupId'] );
+		if( [] === $groupIds )
+			return [];
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
 	}
 

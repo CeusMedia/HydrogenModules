@@ -4,7 +4,7 @@ class Entity_User_Password
 {
 	public int|string $userPasswordId;
 	public int|string $userId;
-	public int $algo;
+	public string $algo;
 	public int $status				= Model_User_Password::STATUS_NEW;
 	public string $salt;
 	public string $hash;

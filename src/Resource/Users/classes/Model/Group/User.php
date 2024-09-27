@@ -25,7 +25,7 @@ class Model_Group_User extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected string $name			= 'groups_user';
+	protected string $name			= 'group_users';
 
 	protected array $columns		= [
 		'groupUserId',

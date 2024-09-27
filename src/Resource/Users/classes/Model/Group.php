@@ -44,6 +44,7 @@ class Model_Group extends Model
 		'leaderId',
 		'companyId',
 		'status',
+		'type',
 		'email',
 		'title',
 		'description',
@@ -58,7 +59,9 @@ class Model_Group extends Model
 		'leaderId',
 		'companyId',
 		'status',
+		'type',
 		'email',
+		'title',
 	];
 
 	protected int $fetchMode				= PDO::FETCH_CLASS;

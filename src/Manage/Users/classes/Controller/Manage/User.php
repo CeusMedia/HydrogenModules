@@ -70,8 +70,12 @@ class Controller_Manage_User extends Controller
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
 		$user		= new Entity_User();
 		$columns	= $modelUser->getColumns();
-		foreach( $columns as $column )
-			$user->$column	= htmlentities( $input[$column], ENT_COMPAT, 'UTF-8' );
+		foreach( $columns as $column ){
+			$value  = $input[$column] ?? '';
+			if( in_array( $column, ['status', 'gender'] ) )
+				$value  = (int) $value;
+			$user->$column	= htmlentities( $value, ENT_COMPAT, 'UTF-8' );
+		}
 
 		$this->addData( 'user', $user );
 		$this->addData( 'roles', $modelRole->getAll() );
