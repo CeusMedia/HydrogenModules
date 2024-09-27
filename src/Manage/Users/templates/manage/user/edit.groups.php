@@ -31,21 +31,30 @@ foreach( $groups as $group ){
 }
 $optAdditionalGroups	= HtmlElements::Options( $list );
 
-$buttonAdd	= '[_toBeImplemented_]';
+$buttonAdd	= HtmlTag::create( 'button', $w->buttonAdd, [
+	'type'	=> 'submit',
+	'name'	=> 'save',
+	'class'	=> 'btn btn-success',
+] );
 
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		join( $assignedGroupList ),
 		HtmlTag::create( 'hr' ),
-		HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'select', $optAdditionalGroups, [
-					'name'	=> 'group',
-					'class'	=> '',
-				] ),
-			], ['class' => 'span6'] ),
-			HtmlTag::create( 'div', $buttonAdd, ['class' => 'span2'] ),
-		], ['class' => 'row-fluid'] ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'select', $optAdditionalGroups, [
+						'name'	=> 'group',
+						'class'	=> '',
+					] ),
+				], ['class' => 'span6'] ),
+				HtmlTag::create( 'div', $buttonAdd, ['class' => 'span2'] ),
+			], ['class' => 'row-fluid'] ),
+		], [
+			'action'	=> 'manage/user/addUserToGroup/'.$user->userId,
+			'method'	=> 'POST',
+		] ),
 	], ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel'] );
