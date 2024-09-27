@@ -24,11 +24,13 @@ class Hook_JS_jQuery extends Hook
 			$this->context->addJavaScript( $pathJs.'jquery-'.$version.'.js' );
 
 		if( $this->module->config['migrate']->value ){
-			$debug	= $this->module->config['migrate.debug']->value;
+			$migration	= '3.0.1';
+			$debug		= $this->module->config['migrate.debug']->value;
+			if( version_compare( $version, '3.5.0', '>=' ) )
+				$migration	= '3.5.0';
 			if( $debug === "off" || $debug === "auto" && $minified )
-				$this->context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.min.js' );
-			else
-				$this->context->addJavaScript( $pathJs.'jquery-migrate-3.0.1.js' );
+				$migration	.= '.min';
+			$this->context->addJavaScript( $pathJs.'jquery-migrate-'.$migration.'.js' );
 		}
 		$this->context->addBodyClass( 'uses-jQuery' );
 	}
