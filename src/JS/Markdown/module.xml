@@ -3,7 +3,7 @@
 	<title>JS: Markdown</title>
 	<description><![CDATA[Dynamic Markdown processor based on [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown] to create HTML in browser.
 
-This module uses parts of code based on pagedown - a [wiki:http://de.wikipedia.org/wiki/JavaScript|JavaScript] [wiki:http://de.wikipedia.org/wiki/Markdown|Markdown] implementation used by [link:http://stackoverflow.com/|Stack Overflow].
+This module uses parts of code based on pagedown - a [wiki:https://de.wikipedia.org/wiki/JavaScript|JavaScript] [wiki:https://de.wikipedia.org/wiki/Markdown|Markdown] implementation used by [link:https://stackoverflow.com/|Stack Overflow].
 The Markdown converter **HAS NOT** been implemented, but extended and integrated by [link:http:/ceusmedia.de/|Ceus Media].
 So, this is a modified version of parts of [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown].
 

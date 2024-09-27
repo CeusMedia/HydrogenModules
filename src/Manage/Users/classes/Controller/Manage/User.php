@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -18,7 +18,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_User extends Controller
 {
@@ -30,6 +30,7 @@ class Controller_Manage_User extends Controller
 	protected Logic_User $logic;
 
 	protected array $countries;
+	protected Dictionary $moduleConfig;
 
 	protected array $filters	= [
 		'username',
@@ -55,104 +56,25 @@ class Controller_Manage_User extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
-		$words		= (object) $this->getWords( 'add' );
-		$input		= $this->request->getAllFromSource( 'POST', TRUE );
-		$modelUser	= $this->getModel( 'User' );
-		$modelRole	= $this->getModel( 'Role' );
-
-		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-	//	$nameMinLength	= $options->get( 'name.length.min' );
-	//	$nameMaxLength	= $options->get( 'name.length.max' );
-		$nameRegExp		= $options->get( 'name.preg' );
-		$pwdMinLength	= $options->get( 'password.length.min' );
-		$needsEmail		= $options->get( 'email.mandatory' );
-		$needsFirstname	= $options->get( 'firstname.mandatory' );
-		$needsSurname	= $options->get( 'surname.mandatory' );
-	//	$needsTac		= $options->get( 'tac.mandatory' );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );									//  string to salt password with
-
-		$username		= $input->get( 'username' );
-		$password		= $input->get( 'password' );
-		$email			= strtolower( trim( $input->get( 'email' ) ) );
-
 		if( $this->request->getMethod()->isPost() ){
-			if( empty( $username ) )																//  no username given
-				$this->messenger->noteError( $words->msgNoUsername );
-			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
-				$this->messenger->noteError( $words->msgUsernameExisting, $username );
-			else if( $nameRegExp )
-				if( !Predicates::isPreg( $username, $nameRegExp ) )
-					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
-			if( empty( $password ) )
-				$this->messenger->noteError( $words->msgNoPassword );
-			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
-			if( $needsEmail && empty( $email ) )
-				$this->messenger->noteError( $words->msgNoEmail );
-			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
-				$this->messenger->noteError( $words->msgEmailExisting, $email );
-
-			if( $needsFirstname && empty( $input['firstname'] ) )
-				$this->messenger->noteError( $words->msgNoFirstname );
-			if( $needsSurname && empty( $input['surname'] ) )
-				$this->messenger->noteError( $words->msgNoSurname );
-
-			if( !$this->messenger->gotError() ){
-				$data	= [
-					'roleId'		=> $input['roleId'],
-					'companyId'		=> (int) $input->get( 'companyId' ),
-					'roomId'		=> 0,
-					'status'		=> $input['status'],
-					'username'		=> $username,
-					'password'		=> md5( $passwordSalt.$password ),
-					'email'			=> $email,
-					'gender'		=> $input['gender'],
-					'salutation'	=> $input['salutation'],
-					'firstname'		=> $input['firstname'],
-					'surname'		=> $input['surname'],
-					'postcode'		=> $input['postcode'],
-					'city'			=> $input['city'],
-					'street'		=> $input['street'],
-					'country'		=> $input['country'],
-					'phone'			=> $input['phone'],
-					'fax'			=> $input['fax'],
-					'createdAt'		=> time(),
-					'modifiedAt'	=> time(),
-				];
-				if( strlen( $data['country'] ) > 2 ){
-					$countries			= array_flip( $this->countries );
-					$data['country']	= $countries[$data['country']];
-				}
-				if( class_exists( 'Logic_UserPassword' ) )											//  @todo  remove whole block if old user password support decays
-					$data['password'] = '';
-
-				$userId		= $modelUser->add( $data );
-				/** @var Entity_User $user */
-				$user		= $modelUser->get( $userId );
-				if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
-					$logic			= Logic_UserPassword::getInstance( $this->env );
-					$userPassword	= $logic->addPassword( $user, $password );
-					$logic->activatePassword( $userPassword );
-				}
-				$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
-				$this->restart( NULL, TRUE );
-			}
+			$this->handleAddAction();
+			$this->restart( NULL, TRUE );
 		}
+
+		$modelUser	= new Model_User( $this->env );
+		$modelRole	= new Model_Role( $this->env );
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
-		$user		= (object) [];
+		$user		= new Entity_User();
 		$columns	= $modelUser->getColumns();
 		foreach( $columns as $column )
 			$user->$column	= htmlentities( $input[$column], ENT_COMPAT, 'UTF-8' );
 
 		$this->addData( 'user', $user );
 		$this->addData( 'roles', $modelRole->getAll() );
-		$this->addData( 'pwdMinLength', (int) $this->config->get( 'user.password.length.min' ) );
-		$this->addData( 'pwdMinStrength', (int) $this->config->get( 'user.password.strength.min' ) );
 	}
 
 	/**
@@ -220,116 +142,23 @@ class Controller_Manage_User extends Controller
 	 */
 	public function edit( string $userId ): void
 	{
-/*		$acl		= $this->env->getAcl();
-		$modules	= $this->env->getModules();
-		$canEdit	= $acl->has( 'manage/user', 'edit' );
-		if( !$canEdit && $modules->has( 'Members' ) )
-			$this->restart( './member/view/'.$userId );*/
-
-		$words		= (object) $this->getWords( 'edit' );
-		$input		= $this->request->getAllFromSource( 'POST', TRUE );
-		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
 		/** @var Entity_User $user */
-		$user	= $this->logic->checkId( $userId, TRUE, Logic_User::EXTEND_GROUPS | Logic_User::EXTEND_ROLE );
+		$user	= $this->logic->checkId( $userId, Logic_User::EXTEND_GROUPS | Logic_User::EXTEND_ROLE );
 		if( NULL === $user ){
 			$this->messenger->noteError( 'Invalid user ID' );
 			$this->restart( NULL, TRUE );
 		}
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-	//	$nameMinLength	= $options->get( 'name.length.min' );
-	//	$nameMaxLength	= $options->get( 'name.length.max' );
-	//	$nameRegExp		= $options->get( 'name.preg' );
 		$pwdMinLength	= $options->get( 'password.length.min' );
 		$pwdMinStrength	= $options->get( 'password.strength.min' );
-		$needsEmail		= $options->get( 'email.mandatory' );
-		$needsFirstname	= $options->get( 'firstname.mandatory' );
-		$needsSurname	= $options->get( 'surname.mandatory' );
-	//	$needsTac		= $options->get( 'tac.mandatory' );
-	//	$status			= (int) $options->get( 'status.register' );
-		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
-
-		$username	= $input->get( 'username' );
-		$password	= $input->get( 'password' );
-		$email		= strtolower( trim( $input->get( 'email', '' ) ) );
 
 		if( $this->request->getMethod()->isPost() ){
-			if( empty( $username ) ){																//  no username given
-				$this->messenger->noteError( $words->msgNoUsername );
-				$this->restart( 'edit/'.$userId, TRUE );
-			}
-			if( $modelUser->countByIndex( 'username', $username ) ){
-				$foundUser	= $modelUser->getByIndex( 'username', $username );
-				if( $foundUser->userId != $userId ){													//  username is already used
-					$this->messenger->noteError( $words->msgUsernameExisting, $username );
-					$this->restart( 'edit/'.$userId, TRUE );
-				}
-			}
-			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength ){
-				$this->messenger->noteError( $words->msgPasswordTooShort );
-				$this->restart( 'edit/'.$userId, TRUE );
-			}
-			if( $needsEmail && empty( $email ) ){
-				$this->messenger->noteError( $words->msgNoEmail );
-				$this->restart( 'edit/'.$userId, TRUE );
-			}
-			if( !empty( $email ) ){
-				$foundUser	= $modelUser->getByIndex( 'email', $email );
-				if( $foundUser && $foundUser->userId != $userId ){
-					$this->messenger->noteError( $words->msgEmailExisting, $email );
-					$this->restart( 'edit/'.$userId, TRUE );
-				}
-			}
-			if( $needsFirstname && empty( $input['firstname'] ) ){
-				$this->messenger->noteError( $words->msgNoFirstname );
-				$this->restart( 'edit/'.$userId, TRUE );
-			}
-			if( $needsSurname && empty( $input['surname'] ) ){
-				$this->messenger->noteError( $words->msgNoSurname );
-				$this->restart( 'edit/'.$userId, TRUE );
-			}
-
-			$data	= [
-				'roleId'		=> $input['roleId'],
-//				'status'		=> $input['status'],
-				'username'		=> $username,
-				'email'			=> strtolower( $email ),
-				'gender'		=> $input['gender'],
-				'salutation'	=> $input['salutation'],
-				'firstname'		=> $input['firstname'],
-				'surname'		=> $input['surname'],
-				'country'		=> $input['country'],
-				'postcode'		=> $input['postcode'],
-				'city'			=> $input['city'],
-				'street'		=> $input['street'],
-				'phone'			=> $input['phone'],
-				'fax'			=> $input['fax'],
-				'modifiedAt'	=> time(),
-			];
-			if( !empty( $password ) ){
-				$data['password']	= md5( $passwordSalt.$password );
-
-				if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove whole block if old user password support decays
-					unset( $data['password'] );
-				}
-				if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
-					$logic			= Logic_UserPassword::getInstance( $this->env );
-					$userPassword	= $logic->addPassword( $user, $password );
-					$logic->activatePassword( $userPassword );
-				}
-			}
-			if( strlen( $data['country'] ) > 2 ){
-				$countries			= array_flip( $this->countries );
-				$data['country']	= $countries[$data['country']];
-			}
-			$modelUser->edit( $userId, $data );
-			$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
-			$this->restart( 'edit/'.$userId, TRUE );
+			$this->handleEditAction( $user );
 		}
-		/** @var Entity_User $user */
-		$user	= $modelUser->get( $userId );
+
 		if( empty( $user->country ) )
 			$user->country	= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$user->country	= $this->countries[$user->country];
@@ -498,7 +327,7 @@ class Controller_Manage_User extends Controller
 
 /*	public function logout( $userId ) {
 		$server		= $this->env->getServer();
-		$user		= $server->getdata( 'user', 'get', array( (int) $userId ) );
+		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
 		$code		= $server->postData( 'auth', 'logout', array( (int) $userId ) );
 		$this->handleErrorCode( $code, $user->username );
 		$this->restart( './manage/user/edit/'.(int) $userId );
@@ -528,21 +357,208 @@ class Controller_Manage_User extends Controller
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
-
-		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( [
-			'nameMinLength'		=> $options->get( 'name.length.min' ),
-			'nameMaxLength'		=> $options->get( 'name.length.max' ),
-			'pwdMinLength'		=> $options->get( 'password.length.min' ),
-			'pwdMinStrength'	=> $options->get( 'password.strength.min' ),
-			'needsEmail'		=> $options->get( 'email.mandatory' ),
-			'needsFirstname'	=> $options->get( 'firstname.mandatory' ),
-			'needsSurname'		=> $options->get( 'surname.mandatory' ),
-			'needsTac'			=> $options->get( 'tac.mandatory' ),
+			'nameMinLength'		=> $this->moduleConfig->get( 'name.length.min' ),
+			'nameMaxLength'		=> $this->moduleConfig->get( 'name.length.max' ),
+			'pwdMinLength'		=> $this->moduleConfig->get( 'password.length.min' ),
+			'pwdMinStrength'	=> $this->moduleConfig->get( 'password.strength.min' ),
+			'needsEmail'		=> $this->moduleConfig->get( 'email.mandatory' ),
+			'needsFirstname'	=> $this->moduleConfig->get( 'firstname.mandatory' ),
+			'needsSurname'		=> $this->moduleConfig->get( 'surname.mandatory' ),
+			'needsTac'			=> $this->moduleConfig->get( 'tac.mandatory' ),
 			'countries'			=> $this->countries,
 		] );
 		$this->logic	= new Logic_User( $this->env );
+	}
+
+	/**
+	 *	@return		?Entity_User
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleAddAction(): ?Entity_User
+	{
+		$words		= (object) $this->getWords( 'add' );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+		$modelUser	= new Model_User( $this->env );
+
+	//	$nameMinLength	= $this->moduleConfig->get( 'name.length.min' );
+	//	$nameMaxLength	= $this->moduleConfig->get( 'name.length.max' );
+		$nameRegExp		= $this->moduleConfig->get( 'name.preg' );
+		$pwdMinLength	= $this->moduleConfig->get( 'password.length.min' );
+		$needsEmail		= $this->moduleConfig->get( 'email.mandatory' );
+		$needsFirstname	= $this->moduleConfig->get( 'firstname.mandatory' );
+		$needsSurname	= $this->moduleConfig->get( 'surname.mandatory' );
+	//	$needsTac		= $this->moduleConfig->get( 'tac.mandatory' );
+		$passwordSalt	= trim( $this->moduleConfig->get( 'password.salt' ) );									//  string to salt password with
+
+		$username		= $input->get( 'username' );
+		$password		= $input->get( 'password' );
+		$email			= strtolower( trim( $input->get( 'email' ) ) );
+
+		if( empty( $username ) )																//  no username given
+			$this->messenger->noteError( $words->msgNoUsername );
+		else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
+			$this->messenger->noteError( $words->msgUsernameExisting, $username );
+		else if( $nameRegExp )
+			if( !Predicates::isPreg( $username, $nameRegExp ) )
+				$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
+		if( empty( $password ) )
+			$this->messenger->noteError( $words->msgNoPassword );
+		else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
+			$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+		if( $needsEmail && empty( $email ) )
+			$this->messenger->noteError( $words->msgNoEmail );
+		else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
+			$this->messenger->noteError( $words->msgEmailExisting, $email );
+
+		if( $needsFirstname && empty( $input['firstname'] ) )
+			$this->messenger->noteError( $words->msgNoFirstname );
+		if( $needsSurname && empty( $input['surname'] ) )
+			$this->messenger->noteError( $words->msgNoSurname );
+
+		if( $this->messenger->gotError() )
+			return NULL;
+		$data	= [
+			'roleId'		=> $input['roleId'],
+			'companyId'		=> (int) $input->get( 'companyId' ),
+			'roomId'		=> 0,
+			'status'		=> $input['status'],
+			'username'		=> $username,
+			'password'		=> md5( $passwordSalt.$password ),
+			'email'			=> $email,
+			'gender'		=> $input['gender'],
+			'salutation'	=> $input['salutation'],
+			'firstname'		=> $input['firstname'],
+			'surname'		=> $input['surname'],
+			'postcode'		=> $input['postcode'],
+			'city'			=> $input['city'],
+			'street'		=> $input['street'],
+			'country'		=> $input['country'],
+			'phone'			=> $input['phone'],
+			'fax'			=> $input['fax'],
+			'createdAt'		=> time(),
+			'modifiedAt'	=> time(),
+		];
+		if( strlen( $data['country'] ) > 2 ){
+			$countries			= array_flip( $this->countries );
+			$data['country']	= $countries[$data['country']];
+		}
+		if( class_exists( 'Logic_UserPassword' ) )											//  @todo  remove whole block if old user password support decays
+			$data['password'] = '';
+
+		$userId		= $modelUser->add( $data );
+		/** @var Entity_User $user */
+		$user		= $modelUser->get( $userId );
+		if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
+			$logic			= Logic_UserPassword::getInstance( $this->env );
+			$userPassword	= $logic->addPassword( $user, $password );
+			$logic->activatePassword( $userPassword );
+		}
+		$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+		return $user;
+	}
+
+	/**
+	 *	@param		Entity_User		$user
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleEditAction( Entity_User $user ): void
+	{
+		$words		= (object) $this->getWords( 'edit' );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+		$modelUser	= new Model_User( $this->env );
+
+	//	$nameMinLength	= $this->moduleConfig->get( 'name.length.min' );
+	//	$nameMaxLength	= $this->moduleConfig->get( 'name.length.max' );
+	//	$nameRegExp		= $this->moduleConfig->get( 'name.preg' );
+		$pwdMinLength	= $this->moduleConfig->get( 'password.length.min' );
+	//	$pwdMinStrength	= $this->moduleConfig->get( 'password.strength.min' );
+		$needsEmail		= $this->moduleConfig->get( 'email.mandatory' );
+		$needsFirstname	= $this->moduleConfig->get( 'firstname.mandatory' );
+		$needsSurname	= $this->moduleConfig->get( 'surname.mandatory' );
+		//	$needsTac		= $options->get( 'tac.mandatory' );
+		//	$status			= (int) $this->moduleConfig->get( 'status.register' );
+		$passwordSalt	= trim( $this->moduleConfig->get( 'password.salt' ) );						//  string to salt password with
+
+		$username	= $input->get( 'username' );
+		$password	= $input->get( 'password' );
+		$email		= strtolower( trim( $input->get( 'email', '' ) ) );
+
+		if( empty( $username ) ){																//  no username given
+			$this->messenger->noteError( $words->msgNoUsername );
+			$this->restart( 'edit/'.$user->userId, TRUE );
+		}
+		if( $modelUser->countByIndex( 'username', $username ) ){
+			$foundUser	= $modelUser->getByIndex( 'username', $username );
+			if( $foundUser->userId != $user->userId ){													//  username is already used
+				$this->messenger->noteError( $words->msgUsernameExisting, $username );
+				$this->restart( 'edit/'.$user->userId, TRUE );
+			}
+		}
+		if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength ){
+			$this->messenger->noteError( $words->msgPasswordTooShort );
+			$this->restart( 'edit/'.$user->userId, TRUE );
+		}
+		if( $needsEmail && empty( $email ) ){
+			$this->messenger->noteError( $words->msgNoEmail );
+			$this->restart( 'edit/'.$user->userId, TRUE );
+		}
+		if( !empty( $email ) ){
+			/** @var Entity_User $foundUser */
+			$foundUser	= $modelUser->getByIndex( 'email', $email );
+			if( $foundUser && $foundUser->userId != $user->userId ){
+				$this->messenger->noteError( $words->msgEmailExisting, $email );
+				$this->restart( 'edit/'.$user->userId, TRUE );
+			}
+		}
+		if( $needsFirstname && empty( $input['firstname'] ) ){
+			$this->messenger->noteError( $words->msgNoFirstname );
+			$this->restart( 'edit/'.$user->userId, TRUE );
+		}
+		if( $needsSurname && empty( $input['surname'] ) ){
+			$this->messenger->noteError( $words->msgNoSurname );
+			$this->restart( 'edit/'.$user->userId, TRUE );
+		}
+
+		$data	= [
+			'roleId'		=> $input['roleId'],
+//				'status'		=> $input['status'],
+			'username'		=> $username,
+			'email'			=> strtolower( $email ),
+			'gender'		=> $input['gender'],
+			'salutation'	=> $input['salutation'],
+			'firstname'		=> $input['firstname'],
+			'surname'		=> $input['surname'],
+			'country'		=> $input['country'],
+			'postcode'		=> $input['postcode'],
+			'city'			=> $input['city'],
+			'street'		=> $input['street'],
+			'phone'			=> $input['phone'],
+			'fax'			=> $input['fax'],
+			'modifiedAt'	=> time(),
+		];
+		if( !empty( $password ) ){
+			$data['password']	= md5( $passwordSalt.$password );
+
+			if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove whole block if old user password support decays
+				unset( $data['password'] );
+			}
+			if( class_exists( 'Logic_UserPassword' ) ){										//  @todo  remove line if old user password support decays
+				$logic			= Logic_UserPassword::getInstance( $this->env );
+				$userPassword	= $logic->addPassword( $user, $password );
+				$logic->activatePassword( $userPassword );
+			}
+		}
+		if( strlen( $data['country'] ) > 2 ){
+			$countries			= array_flip( $this->countries );
+			$data['country']	= $countries[$data['country']];
+		}
+		$modelUser->edit( $user->userId, $data );
+		$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+		$this->restart( 'edit/'.$user->userId, TRUE );
 	}
 
 	/**

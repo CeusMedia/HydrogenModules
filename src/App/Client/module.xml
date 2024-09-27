@@ -11,7 +11,7 @@
 	<relations/>
 	<config name="app.name">MyAppClient</config>
 	<config name="app.version">0.1</config>
-	<config name="app.base.url">http://example.org/myApp/</config>
+	<config name="app.base.url">https://example.org/myApp/</config>
 	<config name="path.cache">logs/</config>
 	<config name="path.css.lib">/lib/cmStyles/</config>
 	<config name="path.js">javascripts/</config>

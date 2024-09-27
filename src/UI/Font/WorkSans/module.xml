@@ -8,8 +8,8 @@
 	<log version="0.2">Separated to Hydrogen module.</log>
 	<log version="0.3.1">Use general module main switch.</log>
 	<log version="0.3.2">Extract hook to own hook class.</log>
-	<author site="http://weiweihuanghuang.github.io/Work-Sans/">Wei Huang</author>
-	<license source="http://www.fontsquirrel.com/license/work-sans">SIL Open Font License v1.10</license>
+	<author site="https://weiweihuanghuang.github.io/Work-Sans/">Wei Huang</author>
+	<license source="https://www.fontsquirrel.com/license/work-sans">SIL Open Font License v1.10</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
 		<class>Hook/UI/Font/WorkSans.php</class>

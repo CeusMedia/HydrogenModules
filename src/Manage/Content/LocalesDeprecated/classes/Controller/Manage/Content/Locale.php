@@ -2,7 +2,7 @@
 /**
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Controller;
 /**
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Content_Locale extends Controller
 {

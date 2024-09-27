@@ -49,11 +49,11 @@
 	<config protected="yes" type="integer" name="image.quality">90</config>
 	<config protected="yes" type="string" name="latest.regex">/^[0-9]{4}-[0-9]{2}-[0-9]{2} /</config>
 	<config protected="yes" type="boolean" name="latest.reverse">yes</config>
-	<config protected="no" type="string" name="license.path">http://creativecommons.org/licenses/by-nc-sa/3.0/</config>
-	<config protected="no" type="string" name="license.image">http://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
+	<config protected="no" type="string" name="license.path">https://creativecommons.org/licenses/by-nc-sa/3.0/</config>
+	<config protected="no" type="string" name="license.image">https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png</config>
 	<config protected="no" type="string" name="license.label">Creative Commons Namensnennung-Nicht-kommerziell-Weitergabe unter gleichen Bedingungen 3.0 Unported Lizenz</config>
 	<config protected="no" type="string" name="license.work.creator">kriss</config>
-	<config protected="no" type="string" name="license.work.url">http://example.org/gallery/</config>
+	<config protected="no" type="string" name="license.work.url">https://example.org/gallery/</config>
 	<config protected="no" type="string" name="license.work.title"></config>
 	<config protected="yes" type="string" name="path">gallery/</config>
 	<config protected="yes" type="integer" name="thumb.width">126</config>

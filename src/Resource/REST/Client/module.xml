@@ -32,7 +32,7 @@
 	<config protected="yes" type="string" mandatory="no" name="log.errors"></config>
 	<config protected="yes" type="string" mandatory="no" name="log.requests"></config>
 	<config protected="yes" type="string" mandatory="yes" name="server.format" values="JSON,PHP,WDDX,XML">XML</config>
-	<config protected="yes" type="string" mandatory="yes" name="server.URL">http://example.com/REST/</config>
+	<config protected="yes" type="string" mandatory="yes" name="server.URL">https://example.com/REST/</config>
 	<config protected="yes" type="string" mandatory="no" name="server.username"></config>
 	<config protected="yes" type="string" mandatory="no" name="server.password"></config>
 	<config protected="yes" type="boolean" mandatory="no" name="verifyHost">yes</config>

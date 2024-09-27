@@ -9,7 +9,7 @@
 	<log version="5.11.3">Support local installation of version 4.7.0.</log>
 	<company site="https://fontawesome.com">fontawesome.com</company>
 	<author twitter="@davegandy">Dave Gandy</author>
-	<license source="http://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
+	<license source="https://fontawesome.com/license">Font Awesome Free / Font Awesome Pro</license>
 	<files>
 		<class>Hook/UI/Font/FontAwesome.php</class>
 		<style source="common">FontAwesome/4.7.0/font-awesome.css</style>

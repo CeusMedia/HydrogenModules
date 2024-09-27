@@ -6,7 +6,7 @@
 The default Hydrogen page components for collecting JavaScripts and Stylesheets already are capable to combine and compress collected resources.
 This module configures and enables this compression.
 
-Uses [link:http://www.crockford.com/javascript/jsmin.html|JSMin] by [link:http://www.crockford.com/|Douglas Crockford].
+Uses [link:https://www.crockford.com/javascript/jsmin.html|JSMin] by [link:https://www.crockford.com/|Douglas Crockford].
 ]]></description>
 	<category>User Interface</category>
 	<version>0.4.4</version>

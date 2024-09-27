@@ -4,10 +4,10 @@
 	<description><![CDATA[Module for authentication against OAuth provider.
 
 Official providers:
-http://oauth2-client.thephpleague.com/providers/league/
+https://oauth2-client.thephpleague.com/providers/league/
 
 Third-party providers:
-http://oauth2-client.thephpleague.com/providers/thirdparty/
+https://oauth2-client.thephpleague.com/providers/thirdparty/
 
 Popular provider packages:
 list>

@@ -58,7 +58,7 @@
 	<link xml:lang="en" access="acl" path="work/finance/bank">Banks</link>
 	<link xml:lang="en" access="acl" path="work/finance/bank/account">Accounts</link>
 	<link xml:lang="en" access="acl" path="work/finance/fund">Funds</link>
-	<config type="string" name="urlView">http://www.fondsweb.de/</config>
+	<config type="string" name="urlView">https://www.fondsweb.de/</config>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>finance_banks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>finance_banks` (

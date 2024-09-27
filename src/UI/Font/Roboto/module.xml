@@ -31,7 +31,7 @@ list>
 	<log version="0.2.2">Extract hook to own hook class.</log>
 	<log version="0.2.3">Adjust to new font css.</log>
 	<author site="https://plus.google.com/110879635926653430880/about">Christian Robertson</author>
-	<license source="http://www.fontsquirrel.com/license/roboto">Apache License v2</license>
+	<license source="https://www.fontsquirrel.com/license/roboto">Apache License v2</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
 		<class>Hook/UI/Font/Roboto.php</class>

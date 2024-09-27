@@ -81,7 +81,7 @@
 	<config type="string" name="feed.managingEditor" title="Email address for person responsible for editorial content."></config>
 	<config type="string" name="feed.webMaster" title="Email address for person responsible for technical issues relating to channel."></config>
 	<config type="string" name="feed.generator" title="A string indicating the program used to generate the channel."></config>
-	<config type="string" name="feed.docs" title="A URL that points to the documentation for the format used in the RSS file.">http://blogs.law.harvard.edu/tech/rss</config>
+	<config type="string" name="feed.docs" title="A URL that points to the documentation for the format used in the RSS file.">https://blogs.law.harvard.edu/tech/rss</config>
 	<config type="integer" name="feed.ttl" title="A number of minutes that indicates how long a channel can be cached before refreshing from the source.">60</config>
 	<config type="string" name="feed.skipHours" title="An XML element that contains up to 24 hour-sub-elements whose value is a number between 0 and 23"></config>
 	<config type="string" name="feed.skipDays" title="An XML element that contains up to seven day-sub-elements whose value is Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday."></config>

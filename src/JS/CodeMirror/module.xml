@@ -4,9 +4,9 @@
 	<description><![CDATA[Component that provides a code editor in the browser.]]></description>
 	<version>5.53.2</version>
 	<category>JavaScript</category>
-	<company site="http://codemirror.net/">codemirror.net</company>
+	<company site="https://codemirror.net/">codemirror.net</company>
 	<author email="marijnh@gmail.com">marijnh@gmail.com</author>
-	<license source="http://codemirror.net/LICENSE">MIT-style</license>
+	<license source="https://codemirror.net/LICENSE">MIT-style</license>
 	<files>
 		<class>Hook/JS/CodeMirror.php</class>
 		<script>module.js.codemirror.js</script>
