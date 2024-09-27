@@ -210,6 +210,11 @@ return $textIndexTop.'
 				'.$panelPassword.'
 			</div>
 			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
+				'.$panelGroups.'
+			</div>
+		</div>
+		<div class="bs2-row-fluid bs3-row bs4-row">
+			<div class="bs2-span12 bs3-col-md-12 bs4-col-md-12">
 				'.$panelRights.'
 			</div>
 		</div>
