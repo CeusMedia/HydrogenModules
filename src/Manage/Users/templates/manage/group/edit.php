@@ -51,10 +51,10 @@ $panelEdit	= '
 					'.HtmlElements::Button( 'saveGroup', $iconSave.' '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, $iconRemove.' '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
-					&nbsp;&nbsp;|&nbsp;&nbsp;
+<!--					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, $iconAdd.' '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
 					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, $iconSearch.' '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
-				</div>
+-->				</div>
 			</div>
 		</form>
 	</div>

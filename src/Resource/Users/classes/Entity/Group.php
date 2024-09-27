@@ -1,6 +1,5 @@
 <?php
 
-/** @property Entity_User[] $users */
 class Entity_Group
 {
 	public int|string $groupId;
@@ -13,4 +12,7 @@ class Entity_Group
 	public ?string $email				= NULL;
 	public string $createdAt;
 	public ?string $modifiedAt			= NULL;
+
+	/** @var Entity_User[] $users */
+	public array $users					= [];
 }

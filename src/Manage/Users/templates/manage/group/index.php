@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var View_Manage_Group $view */
 /** @var array<string,array<string|int,string|int>> $words */
-/** @var array<object> $groups */
+/** @var array<Entity_Group> $groups */
 /** @var bool $hasRightToAdd */
 /** @var bool $hasRightToEdit */
 
