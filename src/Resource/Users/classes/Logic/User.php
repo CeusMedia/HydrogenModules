@@ -43,6 +43,7 @@ class Logic_User extends Logic
 		return $this->modelGroupUser->add( [
 			'userId'	=> $user->userId,
 			'groupId'	=> $group->groupId,
+			'status'	=> Model_Group::STATUS_ENABLED,
 			'timestamp'	=> time(),
 		] );
 	}
@@ -92,7 +93,7 @@ class Logic_User extends Logic
 	 */
 	public function getUserGroups( Entity_User $user ): array
 	{
-		$groupIds	= $this->modelGroupUser->getByIndex( 'userId', $user->userId, [], ['groupId'] );
+		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $user->userId, [], [], ['groupId'] );
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
 	}
 
