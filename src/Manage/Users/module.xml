@@ -91,6 +91,6 @@
 	<link xml:lang="de" access="acl" path="manage/group" rank="65">Gruppen</link>
 	<link xml:lang="de" access="acl" path="manage/role" rank="70">Rollen</link>
 	<link xml:lang="en" access="acl" path="manage/user" rank="60">Users</link>
-	<link xml:lang="en" access="acl" path="manage/user" rank="65">Groups</link>
+	<link xml:lang="en" access="acl" path="manage/group" rank="65">Groups</link>
 	<link xml:lang="en" access="acl" path="manage/role" rank="70">Roles</link>
 </module>

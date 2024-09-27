@@ -4,15 +4,24 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_User extends Logic
 {
+	const EXTEND_NOTHING	= 0;
+	const EXTEND_ROLE		= 1;
+	const EXTEND_GROUPS		= 2;
+	const EXTEND_RIGHTS		= 4;
+	const EXTEND_AVATAR		= 8;
+	const EXTEND_SETTINGS	= 16;
+
 	protected Model_User $modelUser;
 	protected Model_Group $modelGroup;
 	protected Model_Group_User $modelGroupUser;
+	protected Model_Role $modelRole;
 
 	protected function __onInit(): void
 	{
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelGroup		= new Model_Group( $this->env );
 		$this->modelGroupUser	= new Model_Group_User( $this->env );
+		$this->modelRole		= new Model_Role( $this->env );
 	}
 
 	/**
@@ -39,13 +48,40 @@ class Logic_User extends Logic
 	}
 
 	/**
-	 * @param	int|string|Entity_User		$user
+	 *	Checks user ID for existence and returns user entity with optional extensions.
+	 *	Throws exception on invalid ID.
+	 *	@param		int|string		$userId
+	 *	@param		int				$extend
+	 *	@param		bool			$strict		Flag: throw exception if not existing, default: yes
+	 *	@return		Entity_User|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@todo		implement other extend modes, like avatar and settings
+	 */
+	public function checkId( int|string $userId, int $extend = self::EXTEND_NOTHING, bool $strict = TRUE ): ?Entity_User
+	{
+		/** @var ?Entity_User $user */
+		$user	= $this->modelUser->get( $userId );
+		if( NULL === $user ){
+			if( $strict )
+				throw new DomainException( 'Invalid user ID' );
+			return NULL;
+		}
+		if( self::EXTEND_NOTHING !== $extend ){
+			if( $extend & self::EXTEND_ROLE )
+				$user->role	= $this->modelRole->get( $userId );
+			if( $extend & self::EXTEND_GROUPS )
+				$user->groups	= $this->getUserGroups( $user );
+		}
+		return $user;
+	}
+
+	/**
+	 * @param	Entity_User		$user
 	 * @return	Entity_Group[]
 	 */
-	public function getUserGroups( int|string|Entity_User $user ): array
+	public function getUserGroups( Entity_User $user ): array
 	{
-		$userId		= is_object( $user ) ? $user->userId : $user;
-		$groupIds	= $this->modelGroupUser->getByIndex( 'userId', $userId, [], ['groupId'] );
+		$groupIds	= $this->modelGroupUser->getByIndex( 'userId', $user->userId, [], ['groupId'] );
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
 	}
 

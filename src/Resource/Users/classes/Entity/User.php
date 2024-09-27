@@ -1,6 +1,9 @@
 <?php
 
 /** @property Entity_Role $role */
+/** @property Entity_Group[] $groups */
+/** @property ?object $avatar */
+/** @property ?array $settings */
 class Entity_User
 {
 	public int|string $userId;
@@ -13,9 +16,9 @@ class Entity_User
 	public string $username;
 	public string $password;																					//  @todo remove after old user password support decayed
 	public int $gender				= Model_User::GENDER_UNKNOWN;
-	public string $salutation;
-	public string $firstname;
-	public string $surname;
+	public ?string $salutation		= NULL;
+	public ?string $firstname		= NULL;
+	public ?string $surname			= NULL;
 	public ?string $country			= NULL;
 	public ?string $postcode		= NULL;
 	public ?string $city			= NULL;

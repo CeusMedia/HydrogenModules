@@ -27,6 +27,7 @@ class Controller_Manage_Group extends Controller
 {
 	protected HttpRequest $request;
 	protected Model_Group $modelGroup;
+	protected Model_Group_User $modelGroupUser;
 	protected Model_Group_Right $modelGroupRight;
 	protected Model_User $modelUser;
 	protected MessengerResource $messenger;
@@ -136,8 +137,10 @@ class Controller_Manage_Group extends Controller
 	public function index(): void
 	{
 		$groups	= $this->modelGroup->getAll();
+		/** @var Entity_Group $group */
 		foreach( $groups as $group ){
-			$group->users	= $this->modelUser->getAllByIndex( 'groupId', $group->groupId );
+			$userIds		= $this->modelGroupUser->getAllByIndex( 'groupId', $group->id, [], [], ['userId'] );
+			$group->users	= $this->modelUser->getAllByIndex( 'userId', $userIds );
 		}
 		$this->addData( 'groups', $groups );
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_group', 'add' ) );
