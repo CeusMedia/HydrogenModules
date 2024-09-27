@@ -1,7 +1,5 @@
 <?php
 
-/** @property Entity_Role $role */
-/** @property Entity_Group[] $groups */
 /** @property ?object $avatar */
 /** @property ?array $settings */
 class Entity_User
@@ -30,4 +28,9 @@ class Entity_User
 	public ?string $modifiedAt		= NULL;
 	public ?string $loggedAt		= NULL;
 	public ?string $activeAt		= NULL;
+
+	public ?Entity_Role $role		= NULL;
+
+	/** @var Entity_Group[] $groups  */
+	public array $groups			= array();
 }

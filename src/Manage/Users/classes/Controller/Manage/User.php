@@ -7,8 +7,11 @@
  *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Validation\Predicates;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
  *	User Controller.
@@ -20,6 +23,11 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_User extends Controller
 {
 	public static string $moduleId		= 'Manage_Users';
+
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Dictionary $config;
+	protected Logic_User $logic;
 
 	protected array $countries;
 
@@ -52,52 +60,49 @@ class Controller_Manage_User extends Controller
 	 */
 	public function add(): void
 	{
-		$config		= $this->env->getConfig();
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
-		$input		= $request->getAllFromSource( 'POST', TRUE );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
 		$modelUser	= $this->getModel( 'User' );
 		$modelRole	= $this->getModel( 'Role' );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$nameMinLength	= $options->get( 'name.length.min' );
-		$nameMaxLength	= $options->get( 'name.length.max' );
+	//	$nameMinLength	= $options->get( 'name.length.min' );
+	//	$nameMaxLength	= $options->get( 'name.length.max' );
 		$nameRegExp		= $options->get( 'name.preg' );
 		$pwdMinLength	= $options->get( 'password.length.min' );
 		$needsEmail		= $options->get( 'email.mandatory' );
 		$needsFirstname	= $options->get( 'firstname.mandatory' );
 		$needsSurname	= $options->get( 'surname.mandatory' );
-		$needsTac		= $options->get( 'tac.mandatory' );
+	//	$needsTac		= $options->get( 'tac.mandatory' );
 		$passwordSalt	= trim( $options->get( 'password.salt' ) );									//  string to salt password with
 
 		$username		= $input->get( 'username' );
 		$password		= $input->get( 'password' );
 		$email			= strtolower( trim( $input->get( 'email' ) ) );
 
-		if( $request->getMethod()->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			if( empty( $username ) )																//  no username given
-				$messenger->noteError( $words->msgNoUsername );
+				$this->messenger->noteError( $words->msgNoUsername );
 			else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
-				$messenger->noteError( $words->msgUsernameExisting, $username );
+				$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			else if( $nameRegExp )
 				if( !Predicates::isPreg( $username, $nameRegExp ) )
-					$messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
+					$this->messenger->noteError( $words->msgUsernameInvalid, $username, $nameRegExp );
 			if( empty( $password ) )
-				$messenger->noteError( $words->msgNoPassword );
+				$this->messenger->noteError( $words->msgNoPassword );
 			else if( $pwdMinLength && strlen( $password ) < $pwdMinLength )
-				$messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+				$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
 			if( $needsEmail && empty( $email ) )
-				$messenger->noteError( $words->msgNoEmail );
+				$this->messenger->noteError( $words->msgNoEmail );
 			else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
-				$messenger->noteError( $words->msgEmailExisting, $email );
+				$this->messenger->noteError( $words->msgEmailExisting, $email );
 
 			if( $needsFirstname && empty( $input['firstname'] ) )
-				$messenger->noteError( $words->msgNoFirstname );
+				$this->messenger->noteError( $words->msgNoFirstname );
 			if( $needsSurname && empty( $input['surname'] ) )
-				$messenger->noteError( $words->msgNoSurname );
+				$this->messenger->noteError( $words->msgNoSurname );
 
-			if( !$messenger->gotError() ){
+			if( !$this->messenger->gotError() ){
 				$data	= [
 					'roleId'		=> $input['roleId'],
 					'companyId'		=> (int) $input->get( 'companyId' ),
@@ -134,7 +139,7 @@ class Controller_Manage_User extends Controller
 					$userPassword	= $logic->addPassword( $user, $password );
 					$logic->activatePassword( $userPassword );
 				}
-				$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+				$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -144,13 +149,18 @@ class Controller_Manage_User extends Controller
 		foreach( $columns as $column )
 			$user->$column	= htmlentities( $input[$column], ENT_COMPAT, 'UTF-8' );
 
-		$config		= $this->env->getConfig();
 		$this->addData( 'user', $user );
 		$this->addData( 'roles', $modelRole->getAll() );
-		$this->addData( 'pwdMinLength', (int) $config->get( 'user.password.length.min' ) );
-		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
+		$this->addData( 'pwdMinLength', (int) $this->config->get( 'user.password.length.min' ) );
+		$this->addData( 'pwdMinStrength', (int) $this->config->get( 'user.password.strength.min' ) );
 	}
 
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addToGroup( int|string $userId ): void
 	{
 		$groupId	= $this->env->getRequest()->get( 'groupId' );
@@ -164,6 +174,13 @@ class Controller_Manage_User extends Controller
 		$this->restart( 'edit/'.$userId, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		int|string		$groupId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeFromGroup( int|string $userId, int|string $groupId ): void
 	{
 		$logicUser	= new Logic_User( $this->env );
@@ -209,70 +226,68 @@ class Controller_Manage_User extends Controller
 		if( !$canEdit && $modules->has( 'Members' ) )
 			$this->restart( './member/view/'.$userId );*/
 
-		$request	= $this->env->getRequest();
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
-		$input		= $request->getAllFromSource( 'POST', TRUE );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
 
 		/** @var Entity_User $user */
-		$user		= $modelUser->get( $userId );
+		$user	= $this->logic->checkId( $userId, TRUE, Logic_User::EXTEND_GROUPS | Logic_User::EXTEND_ROLE );
 		if( NULL === $user ){
-			$messenger->noteError( 'Invalid user ID' );
+			$this->messenger->noteError( 'Invalid user ID' );
 			$this->restart( NULL, TRUE );
 		}
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$nameMinLength	= $options->get( 'name.length.min' );
-		$nameMaxLength	= $options->get( 'name.length.max' );
-		$nameRegExp		= $options->get( 'name.preg' );
+	//	$nameMinLength	= $options->get( 'name.length.min' );
+	//	$nameMaxLength	= $options->get( 'name.length.max' );
+	//	$nameRegExp		= $options->get( 'name.preg' );
 		$pwdMinLength	= $options->get( 'password.length.min' );
 		$pwdMinStrength	= $options->get( 'password.strength.min' );
 		$needsEmail		= $options->get( 'email.mandatory' );
 		$needsFirstname	= $options->get( 'firstname.mandatory' );
 		$needsSurname	= $options->get( 'surname.mandatory' );
-		$needsTac		= $options->get( 'tac.mandatory' );
-		$status			= (int) $options->get( 'status.register' );
+	//	$needsTac		= $options->get( 'tac.mandatory' );
+	//	$status			= (int) $options->get( 'status.register' );
 		$passwordSalt	= trim( $options->get( 'password.salt' ) );						//  string to salt password with
 
 		$username	= $input->get( 'username' );
 		$password	= $input->get( 'password' );
 		$email		= strtolower( trim( $input->get( 'email', '' ) ) );
 
-		if( $request->getMethod()->isPost() ){
+		if( $this->request->getMethod()->isPost() ){
 			if( empty( $username ) ){																//  no username given
-				$messenger->noteError( $words->msgNoUsername );
+				$this->messenger->noteError( $words->msgNoUsername );
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 			if( $modelUser->countByIndex( 'username', $username ) ){
 				$foundUser	= $modelUser->getByIndex( 'username', $username );
 				if( $foundUser->userId != $userId ){													//  username is already used
-					$messenger->noteError( $words->msgUsernameExisting, $username );
+					$this->messenger->noteError( $words->msgUsernameExisting, $username );
 					$this->restart( 'edit/'.$userId, TRUE );
 				}
 			}
 			if( !empty( $password ) && $pwdMinLength && strlen( $password ) < $pwdMinLength ){
-				$messenger->noteError( $words->msgPasswordTooShort );
+				$this->messenger->noteError( $words->msgPasswordTooShort );
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 			if( $needsEmail && empty( $email ) ){
-				$messenger->noteError( $words->msgNoEmail );
+				$this->messenger->noteError( $words->msgNoEmail );
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 			if( !empty( $email ) ){
 				$foundUser	= $modelUser->getByIndex( 'email', $email );
 				if( $foundUser && $foundUser->userId != $userId ){
-					$messenger->noteError( $words->msgEmailExisting, $email );
+					$this->messenger->noteError( $words->msgEmailExisting, $email );
 					$this->restart( 'edit/'.$userId, TRUE );
 				}
 			}
 			if( $needsFirstname && empty( $input['firstname'] ) ){
-				$messenger->noteError( $words->msgNoFirstname );
+				$this->messenger->noteError( $words->msgNoFirstname );
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 			if( $needsSurname && empty( $input['surname'] ) ){
-				$messenger->noteError( $words->msgNoSurname );
+				$this->messenger->noteError( $words->msgNoSurname );
 				$this->restart( 'edit/'.$userId, TRUE );
 			}
 
@@ -310,7 +325,7 @@ class Controller_Manage_User extends Controller
 				$data['country']	= $countries[$data['country']];
 			}
 			$modelUser->edit( $userId, $data );
-			$messenger->noteSuccess( $words->msgSuccess, $input['username'] );
+			$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 		/** @var Entity_User $user */
@@ -322,7 +337,7 @@ class Controller_Manage_User extends Controller
 
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
-		$this->addData( 'from', $request->get( 'from' ) );
+		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'roles', $modelRole->getAll() );
 		$this->addData( 'pwdMinLength', $pwdMinLength );
 		$this->addData( 'pwdMinStrength', $pwdMinStrength );
@@ -335,6 +350,8 @@ class Controller_Manage_User extends Controller
 		$modelPassword	= new Model_User_Password( $this->env );
 		$passwords		= $modelPassword->getAll( ['userId' => $userId] );
 		$this->addData( 'passwords', $passwords );
+
+		$this->addData( 'groups', $this->logic->getGroups( [], ['title' => 'ASC'] ) );
 	}
 
 	/**
@@ -344,52 +361,46 @@ class Controller_Manage_User extends Controller
 	 */
 	public function password( string $userId ): void
 	{
-		$config			= $this->env->getConfig();
-		$request		= $this->env->getRequest();
-		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'editPassword' );
-		$input			= $request->getAllFromSource( 'POST', TRUE );
-		$modelUser		= new Model_User( $this->env );
-		$modelRole		= new Model_Role( $this->env );
+		$input			= $this->request->getAllFromSource( 'POST', TRUE );
 
-		if( !$request->getMethod()->isPost() ){
-			$messenger->noteError( 'Access denied' );
+		if( !$this->request->getMethod()->isPost() ){
+			$this->messenger->noteError( 'Access denied' );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
-		/** @var Entity_User $user */
-		$user		= $modelUser->get( $userId );
-		if( !$user ){
-			$messenger->noteError( 'Invalid user ID' );
+		$user		= $this->logic->checkId( $userId );
+		if( NULL === $user ){
+			$this->messenger->noteError( 'Invalid user ID' );
 			$this->restart( NULL, TRUE );
 		}
 
 		$passwordNew	= $input->get( 'passwordNew' );
 		if( strlen( trim( $passwordNew ) ) === 0 ){
-			$messenger->noteError( $words->msgPasswordNewMissing );
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
 		$passwordConfirm	= $input->get( 'passwordConfirm' );
 		if( strlen( trim( $passwordConfirm ) ) === 0 ){
-			$messenger->noteError( $words->msgPasswordNewMissing );
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 		if( $passwordNew !== $passwordConfirm ){
-			$messenger->noteError( $words->msgPasswordConfirmMismatch );
+			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
 		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
 		if( $logicPassword->validateUserPassword( $user, $passwordNew, FALSE ) ){
-			$messenger->noteError( $words->msgPasswordNewSame );
+			$this->messenger->noteError( $words->msgPasswordNewSame );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
-		$options		= $config->getAll( 'module.resource_users.', TRUE );
+		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
 		$pwdMinLength	= $options->get( 'password.length.min' );
 		if( $pwdMinLength > 0 && strlen( $passwordNew ) < $pwdMinLength ){
-			$messenger->noteError( $words->msgPasswordNewTooShort );
+			$this->messenger->noteError( $words->msgPasswordNewTooShort );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
@@ -397,13 +408,13 @@ class Controller_Manage_User extends Controller
 /*		$pwdMinStrength	= $options->get( 'password.strength.min' );
 		$pwdStrength	= todoDoTheMathHere();
 		if( $pwdMinStrength > 0 && $pwdStrength < $pwdMinStrength ){
-			$messenger->noteError( $words->msgPasswordTooWeak );
+			$this->messenger->noteError( $words->msgPasswordTooWeak );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}*/
 
 		$userPassword	= $logicPassword->addPassword( $user, $passwordNew );
 		$logicPassword->activatePassword( $userPassword );
-		$messenger->noteSuccess( $words->msgSuccess, $user->username );
+		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( 'edit/'.$userId, TRUE );
 	}
 
@@ -417,10 +428,9 @@ class Controller_Manage_User extends Controller
 					$session->remove( 'filter-user-'.$filter );
 				break;
 			default:
-				$request	= $this->env->getRequest();
 				foreach( $this->filters as $filter )
 				{
-					$value	= $request->get( $filter );
+					$value	= $this->request->get( $filter );
 					$session->remove( 'filter-user-'.$filter );
 					if( strlen( $value ) )
 						$session->set( 'filter-user-'.$filter, $value );
@@ -436,7 +446,7 @@ class Controller_Manage_User extends Controller
 		$limit		= 0 !== $limit ?: 15;
 		$page		= max( 0, (int) $page );
 
-		if( !$this->env->getAcl()->has( 'manage/user', 'index' ) )
+		if( !$this->env->getAcl()->has( 'manage/user' ) )
 			$this->restart();
 
 //		$limit		= !is_null( $limit ) ? $limit : $session->get( 'filter-user-limit' );	//  get limit from request or session
@@ -459,10 +469,10 @@ class Controller_Manage_User extends Controller
 		$dir	= $session->get( 'filter-user-direction' );
 		if( $order && $dir )
 			$orders	= [$order => $dir];
-		$data	= [
+/*		$data	= [
 			'filters'	=> $filters,
 			'orders'	=> $orders
-		];
+		];*/
 
 		$modelUser	= new Model_User( $this->env );
 		$modelRole	= new Model_Role( $this->env );
@@ -501,21 +511,24 @@ class Controller_Manage_User extends Controller
 	 */
 	public function remove( string $userId ): void
 	{
-		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
 		$model		= new Model_User( $this->env );
 		$user		= $model->get( $userId );
 		if( !$user ){
-			$messenger->noteError( $words->msgInvalidUserId );
+			$this->messenger->noteError( $words->msgInvalidUserId );
 			$this->restart( NULL, TRUE );
 		}
 		$model->remove( $userId );
-		$messenger->noteSuccess( $words->msgSuccess, $user->username );
+		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( NULL, TRUE );
 	}
 
 	protected function __onInit(): void
 	{
+		$this->config		= $this->env->getConfig();
+		$this->request		= $this->env->getRequest();
+		$this->messenger	= $this->env->getMessenger();
+
 		$options			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( [
@@ -529,6 +542,7 @@ class Controller_Manage_User extends Controller
 			'needsTac'			=> $options->get( 'tac.mandatory' ),
 			'countries'			=> $this->countries,
 		] );
+		$this->logic	= new Logic_User( $this->env );
 	}
 
 	/**

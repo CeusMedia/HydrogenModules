@@ -6,7 +6,6 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Entity_User $user */
 /** @var Entity_Group[] $groups */
-/** @var Entity_Group[] $relations */
 /** @var array<string,array<string,string>> $words */
 
 $w	= (object) $words['editGroups'];
@@ -14,7 +13,7 @@ $w	= (object) $words['editGroups'];
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $assignedGroupList	= [];
-foreach( $relations as $group ){
+foreach( $user->groups as $group ){
 	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 		'href'	=> 'manage/user/removeGroup/'.$user->userId.'/'.$group->groupId,
 		'class' => 'btn btn-danger btn-small',
@@ -27,7 +26,7 @@ foreach( $relations as $group ){
 
 $list	= [];
 foreach( $groups as $group ){
-	if( !in_array( $group, $relations, TRUE ) )
+	if( !in_array( $group, $user->groups, TRUE ) )
 		$list[$group->groupId] = $group->title;
 }
 $optAdditionalGroups	= HtmlElements::Options( $list );

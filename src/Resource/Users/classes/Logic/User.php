@@ -76,6 +76,17 @@ class Logic_User extends Logic
 	}
 
 	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		Entity_Group[]
+	 */
+	public function getGroups( array $conditions = [], array $orders = [], array $limits = [] ): array
+	{
+		return $this->modelGroup->getAll( $conditions, $orders, $limits );
+	}
+
+	/**
 	 * @param	Entity_User		$user
 	 * @return	Entity_Group[]
 	 */
