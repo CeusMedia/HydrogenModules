@@ -146,7 +146,7 @@ $panelEdit	= '
 						'name'		=> "firstname",
 						'id'		=> "input_firstname",
 						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsFirstname ? 'mandatory' : '' ),
-						'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
+						'value'		=> htmlentities( $user->firstname ?? '', ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsFirstname ? "required" : NULL
 					) ).'
 				</div>
@@ -157,7 +157,7 @@ $panelEdit	= '
 						'name'		=> "surname",
 						'id'		=> "input_surname",
 						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsSurname ? 'mandatory' : '' ),
-						'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
+						'value'		=> htmlentities( $user->surname ?? '', ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsSurname ? "required" : NULL
 					) ).'
 				</div>
@@ -192,6 +192,7 @@ $panelEdit	= '
 	</div>
 </div>';
 
+$panelGroups	= $this->loadTemplateFile( 'manage/user/edit.groups.php' );
 $panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
 $panelPassword	= $this->loadTemplateFile( 'manage/user/edit.password.php' );
 $panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );

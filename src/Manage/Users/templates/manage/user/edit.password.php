@@ -98,10 +98,10 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		HtmlTag::create( 'thead', $heads ),
 		HtmlTag::create( 'tbody', $rows )
 	], ['class' => 'table table-condensed table-fixed table-bordered'] );
-	$history	= HTML::DivClass( 'collapsable-block', [
+	$history	= HtmlTag::create( 'div', [
 //		HtmlTag::create( 'h4', 'Historie', ['class' => 'collapsable-block-trigger'] ),
-		HTML::DivClass( 'collapsable-block-content', $table ),
-	] );
+		HtmlTag::create( 'div', $table, ['class' => 'collapsable-block-content'] ),
+	], ['class' => 'collapsable-block'] );
 }
 
 $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [

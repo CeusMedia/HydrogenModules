@@ -151,6 +151,31 @@ class Controller_Manage_User extends Controller
 		$this->addData( 'pwdMinStrength', (int) $config->get( 'user.password.strength.min' ) );
 	}
 
+	public function addToGroup( int|string $userId ): void
+	{
+		$groupId	= $this->env->getRequest()->get( 'groupId' );
+		$logicUser	= new Logic_User( $this->env );
+		/** @var Model_Group $modelGroup */
+		$modelGroup	= $this->getModel( 'Group' );
+
+		/** @var Entity_Group $group */
+		$group		= $modelGroup->get( $groupId );
+		$logicUser->addUserToGroup( $logicUser->checkId( $userId ), $group );
+		$this->restart( 'edit/'.$userId, TRUE );
+	}
+
+	public function removeFromGroup( int|string $userId, int|string $groupId ): void
+	{
+		$logicUser	= new Logic_User( $this->env );
+		/** @var Model_Group $modelGroup */
+		$modelGroup	= $this->getModel( 'Group' );
+
+		/** @var Entity_Group $group */
+		$group		= $modelGroup->get( $groupId );
+		$logicUser->removeUserFromGroup( $logicUser->checkId( $userId ), $group );
+		$this->restart( 'edit/'.$userId, TRUE );
+	}
+
 	/**
 	 *	@param		string		$userId
 	 *	@return		void

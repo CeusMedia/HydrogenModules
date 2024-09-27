@@ -63,8 +63,17 @@
 		<locale>en/html/manage/role/index.top.html</locale>
 		<locale>en/html/manage/user/index.bottom.html</locale>
 		<locale>en/html/manage/user/index.top.html</locale>
+		<template>manage/group/add.php</template>
+		<template>manage/group/edit.php</template>
+		<template>manage/group/edit.rights.php</template>
+		<template>manage/group/index.php</template>
+		<template>manage/role/add.php</template>
+		<template>manage/role/edit.php</template>
+		<template>manage/role/edit.rights.php</template>
+		<template>manage/role/index.php</template>
 		<template>manage/user/add.php</template>
 		<template>manage/user/edit.php</template>
+		<template>manage/user/edit.groups.php</template>
 		<template>manage/user/edit.info.php</template>
 		<template>manage/user/edit.password.php</template>
 		<template>manage/user/edit.rights.php</template>
@@ -72,20 +81,14 @@
 		<template>manage/user/index.php</template>
 		<template>manage/user/index.filter.php</template>
 		<template>manage/user/index.list.php</template>
-		<template>manage/role/add.php</template>
-		<template>manage/role/edit.php</template>
-		<template>manage/role/edit.rights.php</template>
-		<template>manage/role/index.php</template>
-		<template>manage/group/add.php</template>
-		<template>manage/group/edit.php</template>
-		<template>manage/group/edit.rights.php</template>
-		<template>manage/group/index.php</template>
 		<style>module.manage.users.css</style>
 		<script>module.manage.users.js</script>
 	</files>
 	<relations>
 		<needs type="module">Resource_Users</needs>
+		<needs type="module">Resource_Disclosure</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
+		<needs type="module">UI_Helper_HTML</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
 	<link xml:lang="de" access="acl" path="manage/group" rank="65">Gruppen</link>
