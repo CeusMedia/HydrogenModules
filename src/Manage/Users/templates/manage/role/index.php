@@ -48,11 +48,10 @@ $table	= HtmlTag::create( 'table', [
 
 $panelFilter	= '';
 
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
+
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
-		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, [
 		'href'	=> './manage/role/add',
 		'class'	=> 'btn btn-success'

@@ -45,6 +45,8 @@ class Model_Group extends Model
 		'companyId',
 		'status',
 		'email',
+		'title',
+		'description',
 		'createdAt',
 		'modifiedAt',
 	];

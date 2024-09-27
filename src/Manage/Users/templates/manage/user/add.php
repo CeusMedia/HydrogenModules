@@ -12,14 +12,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $w				= (object) $words['add'];
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
-$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
-	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-}
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $roleMap	= [];
 foreach( $roles as $role )

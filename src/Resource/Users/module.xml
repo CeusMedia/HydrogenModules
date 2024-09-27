@@ -34,6 +34,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Hook/Resource/User.php</class>
 		<class>Entity/Group.php</class>
 		<class>Entity/Group/Right.php</class>
+		<class>Entity/Group/User.php</class>
 		<class>Entity/Role.php</class>
 		<class>Entity/Role/Right.php</class>
 		<class>Entity/User.php</class>
@@ -41,6 +42,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Entity/User/Token.php</class>
 		<class>Model/Group.php</class>
 		<class>Model/Group/Right.php</class>
+		<class>Model/Group/User.php</class>
 		<class>Model/Role.php</class>
 		<class>Model/Role/Right.php</class>
 		<class>Model/User.php</class>

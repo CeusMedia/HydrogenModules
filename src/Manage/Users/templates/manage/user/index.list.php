@@ -67,12 +67,10 @@ if( $total ){
 else
 	$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
 
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 		'href'	=> './manage/user/add',
 		'class'	=> 'btn btn-success'

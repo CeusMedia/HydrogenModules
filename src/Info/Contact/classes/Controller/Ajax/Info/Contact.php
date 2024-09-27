@@ -19,7 +19,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 		$message	= '';
 		$data		= NULL;
 		if( !$this->request->getMethod()->isPost() )
-			$this->respondError( 'Access granted for POST requests, only.' );
+			$this->respondError( 0, 'Access granted for POST requests, only.' );
 		else{
 			$message	= "";
 			try{
@@ -31,7 +31,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 			}
 			catch( Exception $e ){
 				$this->env->getLog()->logException( $e );
-				$this->respondError( 'Access granted for POST requests, only.' );
+				$this->respondError( 0, 'Access granted for POST requests, only.' );
 			}
 		}
 	}

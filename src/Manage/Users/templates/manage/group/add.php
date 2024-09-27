@@ -1,10 +1,12 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var View_Manage_Group $view */
 /** @var array<string,array<string|int,string|int>> $words */
-/** @var object $group */
+/** @var Dictionary $group */
 
 $optType	= [];
 foreach( $words['types'] as $key => $label ){
@@ -17,6 +19,8 @@ $optType	= join( $optType );
 
 extract( $view->populateTexts( ['add.top', 'add.bottom', 'add.right'], 'html/manage/group/' ) );
 
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">
@@ -26,7 +30,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="title">'.$words['add']['labelTitle'].'</label>
-					'.HtmlElements::Input( 'title', $role->get( 'title' ), 'span12' ).'
+					'.HtmlElements::Input( 'title', $group->get( 'title' ), 'span12' ).'
 				</div>
 				<div class="span3">
 					<label for="type">'.$words['add']['labelType'].'</label>
@@ -36,13 +40,13 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span">
 					<label for="description">'.$words['add']['labelDescription'].'</label>
-					'.HtmlTag::create( 'textarea', $role->get( 'description' ), ['class' => 'span12', 'name' => 'description', 'rows' => 4] ).'
+					'.HtmlTag::create( 'textarea', $group->get( 'description', '' ), ['class' => 'span12', 'name' => 'description', 'rows' => 4] ).'
 				</div>
 			</div>
 			<div class="buttonbar">
 				<div class="btn-toolbar">
-					'.HtmlElements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'], 'btn btn-small' ).'
-					'.HtmlElements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['add']['buttonSave'], 'btn btn-primary' ).'
+					'.HtmlElements::LinkButton( './manage/group', $iconCancel.' '.$words['add']['buttonCancel'], 'btn btn-small' ).'
+					'.HtmlElements::Button( 'saveGroup',$iconSave.' '. $words['add']['buttonSave'], 'btn btn-primary' ).'
 				</div>
 			</div>
 		</form>

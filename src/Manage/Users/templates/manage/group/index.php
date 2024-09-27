@@ -26,9 +26,9 @@ foreach( $groups as $nr => $group ){
 		$labelGroup	= HtmlTag::create( 'a', $labelGroup, ['href' => './manage/group/edit/'.$group->groupId] );
 	}
 	$labelGroup		= HtmlTag::create( 'span', $labelGroup, ['class' => 'group-'.$group->groupId] );
-	if( strlen( $group->description ) )
+	if( '' !== ( $group->description ?? '' ) )
 		$labelGroup	.= '<br/><blockquote>'.nl2br( $group->description ).'</blockquote>';
-	$labelCount		= HtmlTag::create( 'span', count( $group->users ), ['class' => 'group count'] );
+	$labelCount		= HtmlTag::create( 'span', count( $group->users ?? [] ), ['class' => 'group count'] );
 	$labelAccess	= HtmlTag::create( 'span', $words['types'][$group->type], ['class' => 'group-type type'.$group->type] );
 
 	$rows[]	= HtmlTag::create( 'tr', [
@@ -46,11 +46,10 @@ $table	= HtmlTag::create( 'table', [
 
 $panelFilter	= '';
 
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
+
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
-		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, [
 		'href'	=> './manage/group/add',
 		'class'	=> 'btn btn-success'

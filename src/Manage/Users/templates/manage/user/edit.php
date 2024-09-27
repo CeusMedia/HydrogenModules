@@ -18,18 +18,11 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 $w				= (object) $words['edit'];
 //$helperAge		= new View_Helper_TimePhraser( $env );
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
-$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'icon-search'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
-	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-	$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-	$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
-}
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
 
 /*
  *	@deprecated		not used. nice feature but no styling done.

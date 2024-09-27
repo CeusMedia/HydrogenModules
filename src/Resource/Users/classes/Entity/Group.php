@@ -9,6 +9,7 @@ class Entity_Group
 	public int|string $companyId;
 	public int $status					= Model_Group::STATUS_NEW;
 	public string $title;
+	public ?string $description;
 	public ?string $email				= NULL;
 	public string $createdAt;
 	public ?string $modifiedAt			= NULL;

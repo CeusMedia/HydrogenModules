@@ -2,9 +2,9 @@
 use CeusMedia\Common\ADT\Constant as Constants;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env  */
+/** @var WebEnvironment $env  */
 /** @var array $words */
 /** @var object[] $passwords */
 /** @var int $userId */
@@ -53,6 +53,8 @@ $(document).ready(function(){
 	}
 });';
 $env->getPage()->js->addScript( $script );
+
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $atLeastOne		= TRUE;
 $history		= '';
@@ -143,7 +145,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [
 //			HTML::BR,
 //			$history,
 			HTML::DivClass( 'buttonbar', [
-				HtmlElements::Button( 'savePassword', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+				HtmlElements::Button( 'savePassword', $iconSave.' '.$w->buttonSave, 'btn btn-primary' )
 			] ),
 		], ['autocomplete' => 'off'] )
 	)

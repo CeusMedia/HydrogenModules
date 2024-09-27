@@ -88,6 +88,35 @@ Please think about using the hook instead.
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
+	<sql on="update" type="mysql" version="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
+  `exceptionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` int(11) NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `line` int(11) NOT NULL,
+  `trace` text COLLATE utf8_unicode_ci NOT NULL,
+  `previous` text COLLATE utf8_unicode_ci,
+  `sqlCode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `resource` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `env` text COLLATE utf8_unicode_ci NOT NULL,
+  `request` text COLLATE utf8_unicode_ci,
+  `session` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`exceptionId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `code` (`code`),
+  KEY `file` (`file`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 	<sql on="update" type="mysql" version="0.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (

@@ -69,7 +69,7 @@ return '
 							<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
 							<div class="input-prepend">
 								<span class="add-on"><small>'.$path.'</small></span>
-								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" required="required" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'"/>
+								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" required="required" value="'.htmlentities( $page->identifier ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 							</div>
 						</div>
 					</div>

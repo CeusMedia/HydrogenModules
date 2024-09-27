@@ -76,12 +76,12 @@ class Controller_Manage_Group extends Controller
 		if( $this->request->getMethod()->isPost() ){
 			$controller	= $this->request->getFromSource( 'controller', 'POST' );
 			$action		= $this->request->getFromSource( 'action', 'POST' );
-			$data		= array(
+			$data		= [
 				'groupId'		=> $groupId,
 				'controller'	=> Model_Group_Right::minimizeController( $controller ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
-			);
+			];
 			$this->modelGroupRight->add( $data );
 		}
 		$this->restart( 'edit/'.$groupId, TRUE );
@@ -139,8 +139,9 @@ class Controller_Manage_Group extends Controller
 		$groups	= $this->modelGroup->getAll();
 		/** @var Entity_Group $group */
 		foreach( $groups as $group ){
-			$userIds		= $this->modelGroupUser->getAllByIndex( 'groupId', $group->id, [], [], ['userId'] );
-			$group->users	= $this->modelUser->getAllByIndex( 'userId', $userIds );
+			$userIds		= $this->modelGroupUser->getAllByIndex( 'groupId', $group->groupId, [], [], ['userId'] );
+			if( [] !== $userIds )
+				$group->users	= $this->modelUser->getAllByIndex( 'userId', $userIds );
 		}
 		$this->addData( 'groups', $groups );
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_group', 'add' ) );
@@ -200,6 +201,8 @@ class Controller_Manage_Group extends Controller
 		$this->language			= $this->env->getLanguage();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelGroup		= $this->getModel( 'Group' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
+		$this->modelGroupUser	= $this->getModel( 'Group_User' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelGroupRight	= $this->getModel( 'Group_Right' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

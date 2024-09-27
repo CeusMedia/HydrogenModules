@@ -31,7 +31,7 @@ class Controller_Api_Form_Import extends Controller
 			$this->respondData( 'OK' );
 		}
 		catch( Exception $e ){
-			$this->respondError( 'Error: '.$e->getMessage(), 0, 500 );
+			$this->respondError( 0, 'Error: '.$e->getMessage(), 500 );
 		}
 	}
 

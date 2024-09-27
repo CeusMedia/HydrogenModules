@@ -17,6 +17,12 @@ foreach( $words['types'] as $key => $label ){
 }
 $optType	= join( $optType );
 
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconSearch		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-magnifying-class'] );
+
 $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$words['edit']['heading'].'</h3>
@@ -41,13 +47,13 @@ $panelEdit	= '
 			</div>
 			<div class="buttonbar">
 				<div class="btn-toolbar">
-					'.HtmlElements::LinkButton( './manage/group', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
-					'.HtmlElements::Button( 'saveGroup', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
+					'.HtmlElements::LinkButton( './manage/group', $iconCancel.' '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
+					'.HtmlElements::Button( 'saveGroup', $iconSave.' '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, '<i class="icon-remove icon-white"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
+					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, $iconRemove.' '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, '<i class="icon-plus icon-white"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
-					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, '<i class="icon-search"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, $iconAdd.' '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, $iconSearch.' '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
 				</div>
 			</div>
 		</form>
