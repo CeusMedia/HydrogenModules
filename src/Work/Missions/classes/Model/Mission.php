@@ -100,6 +100,6 @@ class Model_Mission extends Model
 	/**	@var	integer		$fetchMode		Fetch mode, see PDO documentation */
 	protected int $fetchMode				= PDO::FETCH_CLASS;
 
-	/** @var	string		$className		Entity class to use */
-	protected string $className				= 'Entity_Mission';
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Mission';
 }

@@ -44,7 +44,7 @@ list>
 		<class>View/Piwik.php</class>
 		<template>piwik/index.php</template>
 		<locale>de/html/piwik/index.html</locale>
-		<script deprecated="reintegrated in helper">piwik.js</script>
+		<script>piwik.js</script>
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>

@@ -48,6 +48,6 @@ class Model_User_Token extends Model
 
 	protected int $fetchMode				= PDO::FETCH_CLASS;
 
-	/** @var	string		$className		Entity class to use */
-	protected string $className				= 'Entity_User_Token';
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_User_Token';
 }

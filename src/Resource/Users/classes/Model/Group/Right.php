@@ -32,8 +32,8 @@ class Model_Group_Right extends Model
 
 	protected int $fetchMode				= PDO::FETCH_CLASS;
 
-	/** @var	string		$className		Entity class to use */
-	protected string $className				= 'Entity_Group_Right';
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Group_Right';
 
 
 	public static function maximizeController( string $controller ): string

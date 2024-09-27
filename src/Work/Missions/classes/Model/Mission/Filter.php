@@ -33,6 +33,6 @@ class Model_Mission_Filter extends Model
 	/**	@var	integer		$fetchMode	Fetch mode, see PDO documentation */
 	protected int $fetchMode				= PDO::FETCH_CLASS;
 
-	/** @var	string		$className		Entity class to use */
-	protected string $className				= 'Entity_Mission_Filter';
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Mission_Filter';
 }
