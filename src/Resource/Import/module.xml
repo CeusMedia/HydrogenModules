@@ -50,6 +50,7 @@
 		  KEY `importConnectorId` (`importConnectorId`),
 		  KEY `creatorId` (`creatorId`),
 		  KEY `status` (`status`),
+		  KEY `authKey` (`authKey`),
 		  KEY `hostName` (`hostName`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

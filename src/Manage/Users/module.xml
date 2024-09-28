@@ -45,6 +45,7 @@
 		<class>View/Manage/Group.php</class>
 		<class>View/Manage/Role.php</class>
 		<class>View/Manage/User.php</class>
+		<class>View/Modal/Manage/Group/Add.php</class>
 		<locale>de/manage/group.ini</locale>
 		<locale>de/manage/role.ini</locale>
 		<locale>de/manage/user.ini</locale>

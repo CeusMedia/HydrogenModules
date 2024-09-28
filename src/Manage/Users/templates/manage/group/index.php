@@ -15,8 +15,8 @@ $wf		= (object) $words['index'];
 $heads	= [
 	$wf->headTitle,
 	$wf->headUsers,
-	$wf->headAccess,
-	$wf->headRegister
+	$wf->headType,
+//	$wf->headCreated
 ];
 
 $rows	= [];
@@ -56,6 +56,14 @@ if( $hasRightToAdd ){
 	] );
 }
 
+
+$modal	= new View_Modal_Manage_Group_Add( $this->env );
+$modal->setTypes( $words['types'] );
+$modal->setId( 'modal-manage-group-add' );
+$buttonAdd	= new \CeusMedia\Bootstrap\Modal\Trigger( $this->env );
+$buttonAdd->setModalId( 'modal-manage-group-add' );
+$buttonAdd->setLabel( $words['index']['buttonAdd'] );
+
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/group/' ) );
 
 return $textIndexTop.'
@@ -76,11 +84,11 @@ table tr td blockquote {
 					'.$table.'
 					<div class="buttonbar">
 						<div class="btn-toolbar">
-							'.$buttonAdd.'
+							'.$buttonAdd->render().'
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>'.$textIndexBottom;
+</div>'.$textIndexBottom.$modal->render();

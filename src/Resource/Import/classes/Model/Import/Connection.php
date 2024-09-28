@@ -50,6 +50,7 @@ class Model_Import_Connection extends Model
 		'hostName',
 		'hostPort',
 		'authType',
+		'authKey',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
