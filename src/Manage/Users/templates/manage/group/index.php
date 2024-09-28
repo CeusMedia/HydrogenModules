@@ -56,13 +56,10 @@ if( $hasRightToAdd ){
 	] );
 }
 
-
-$modal	= new View_Modal_Manage_Group_Add( $this->env );
-$modal->setTypes( $words['types'] );
-$modal->setId( 'modal-manage-group-add' );
-$buttonAdd	= new \CeusMedia\Bootstrap\Modal\Trigger( $this->env );
-$buttonAdd->setModalId( 'modal-manage-group-add' );
-$buttonAdd->setLabel( $words['index']['buttonAdd'] );
+$modalAdd	= new View_Modal_Manage_Group_Add( $this->env );
+$modalAdd->setTypes( $words['types'] );
+$modalAdd->setId( 'modal-manage-group-add' );
+$buttonAdd	= $modalAdd->trigger->render();
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/group/' ) );
 

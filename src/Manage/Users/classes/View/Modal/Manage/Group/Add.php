@@ -5,12 +5,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Modal_Manage_Group_Add
+class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
 {
-	protected Environment $env;
-	protected Dictionary $moduleConfig;
-	protected int|string|NULL $id		= NULL;
-	protected ?string $heading			= NULL;
+	public View_Helper_Bootstrap_Modal_Trigger $trigger;
+
 	protected ?string $title			= NULL;
 	protected ?string $type				= NULL;
 	protected array $types				= [];
@@ -18,16 +16,20 @@ class View_Modal_Manage_Group_Add
 
 	public function __construct( Environment $env )
 	{
+		parent::__construct( $env );
 		$this->env			= $env;
-		$this->moduleConfig	= $env->getConfig()->getAll( 'module.manage_users.', TRUE );
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'manage/group' );
+
+		$w	= (object) $this->moduleWords['add'];
+		$this->setButtonLabelSubmit( $w->buttonSave );
+		$this->setButtonLabelCancel( $w->buttonCancel );
+		$this->trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
+		$this->trigger->setModalId( $this->id );
+		$this->trigger->setLabel( $w->buttonAdd );
 	}
 
-	public function render(): string
+	protected function renderBody(): string
 	{
-		if( !$this->id )
-			throw new RuntimeException( 'No ID set' );
-
 		$w			= (object) $this->moduleWords['add'];
 		$optType	= $this->renderTypeOptions();
 
@@ -60,39 +62,30 @@ class View_Modal_Manage_Group_Add
 			] ),
 		];
 
-		$form	= Html::create( 'div', [
+		return Html::create( 'div', [
 			Html::create( 'div', [
-				Html::create( 'div', $fieldTitle, ['class' => 'span10 offset1'] ),
+				Html::create( 'div', $fieldTitle, ['class' => 'span8 offset1'] ),
+				Html::create( 'div', $fieldType, ['class' => 'span2 offset0'] ),
 			], ['class' => 'row-fluid'] ),
 			Html::create( 'div', [
-				Html::create( 'div', $fieldType, ['class' => 'span10 offset1'] ),
 			], ['class' => 'row-fluid'] ),
 			Html::create( 'div', [
 				Html::create( 'div', $fieldDescription, ['class' => 'span10 offset1'] ),
 			], ['class' => 'row-fluid'] ),
 		] );
+	}
 
-		$iconCancel	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-		$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-		$modal	= new BootstrapModalDialog( $this->id );
-//		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
-		$modal->setFormAction( './manage/group/add' );
-//		$modal->setFormSubmit( 'ModuleGroupModal.validate(this)' );
-		$modal->setHeading( $this->heading ?: $this->moduleWords['modal-group-add']['heading'] );
-		$modal->setBody( $form );
-		$modal->setFade( !FALSE );
-		$modal->setAttributes( ['class' => 'modal-manage-group-add'] );
-		$modal->setSubmitButtonLabel( $iconSave.'&nbsp;'.$w->buttonSave );
-		$modal->setSubmitButtonClass( 'btn btn-primary not-btn-large' );
-		$modal->setCloseButtonLabel( $iconCancel.'&nbsp;'.$w->buttonCancel );
-		$modal->setCloseButtonClass( 'btn btn-small' );
-		return $modal->render();
+	public function render(): string
+	{
+		$this->body	= $this->renderBody();
+		return parent::render();
 	}
 
 	//  --  SETTERS  --  //
 	public function setId( int|string $id ): self
 	{
 		$this->id		= $id;
+		$this->trigger->setModalId( $id );
 		return $this;
 	}
 

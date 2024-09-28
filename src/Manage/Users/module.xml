@@ -88,6 +88,7 @@
 	<relations>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Resource_Disclosure</needs>
+		<needs type="module">UI_Bootstrap_Modal</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
 		<needs type="module">UI_Helper_HTML</needs>
 	</relations>
