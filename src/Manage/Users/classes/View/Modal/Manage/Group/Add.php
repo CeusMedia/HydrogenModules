@@ -1,8 +1,6 @@
 <?php
-use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
@@ -17,15 +15,19 @@ class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
 	public function __construct( Environment $env )
 	{
 		parent::__construct( $env );
-		$this->env			= $env;
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'manage/group' );
 
+		$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+		$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+
 		$w	= (object) $this->moduleWords['add'];
-		$this->setButtonLabelSubmit( $w->buttonSave );
-		$this->setButtonLabelCancel( $w->buttonCancel );
+		$this->setHeading( $w->heading );
+		$this->setFormAction( 'manage/group/add' );
+		$this->setButtonLabelSubmit( $iconSave.'&nbsp;'.$w->buttonSave );
+		$this->setButtonLabelCancel( $iconCancel.'&nbsp;'.$w->buttonCancel );
 		$this->trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 		$this->trigger->setModalId( $this->id );
-		$this->trigger->setLabel( $w->buttonAdd );
+		$this->trigger->setLabel( $this->moduleWords['index']['buttonAdd'] );
 	}
 
 	protected function renderBody(): string
@@ -34,43 +36,43 @@ class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
 		$optType	= $this->renderTypeOptions();
 
 		$fieldTitle	= [
-			Html::create( 'label', $w->labelTitle, ['for' => 'input_title', 'class' => 'mandatory required'] ),
-			Html::create( 'input', NULL, [
+			HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title', 'class' => 'mandatory required'] ),
+			HtmlTag::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',
 				'id'		=> 'input_title',
 				'class'		=> 'span12',
 				'required'	=> 'required',
-				'value'		=> htmlentities( $this->title, ENT_QUOTES, 'utf-8' ),
+				'value'		=> htmlentities( $this->title ?? '', ENT_QUOTES, 'utf-8' ),
 			] ),
 		];
 		$fieldType	= [
-			Html::create( 'label', $w->labelType, ['for' => 'input_type'] ),
-			Html::create( 'select', $optType, [
+			HtmlTag::create( 'label', $w->labelType, ['for' => 'input_type'] ),
+			HtmlTag::create( 'select', $optType, [
 				'name'		=> 'type',
 				'id'		=> 'input_type',
 				'class'		=> 'span12 has-optionals',
 			] ),
 		];
 		$fieldDescription	= [
-			Html::create( 'textarea', NULL, [
+			HtmlTag::create( 'textarea', NULL, [
 				'name'		=> 'description',
 				'id'		=> 'input_description',
 				'class'		=> 'span12',
 				'rows'		=> 4,
-				'required'	=> 'required',
+//				'required'	=> 'required',
 			] ),
 		];
 
-		return Html::create( 'div', [
-			Html::create( 'div', [
-				Html::create( 'div', $fieldTitle, ['class' => 'span8 offset1'] ),
-				Html::create( 'div', $fieldType, ['class' => 'span2 offset0'] ),
+		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', $fieldTitle, ['class' => 'span8'] ),
+				HtmlTag::create( 'div', $fieldType, ['class' => 'span4'] ),
 			], ['class' => 'row-fluid'] ),
-			Html::create( 'div', [
+			HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
-			Html::create( 'div', [
-				Html::create( 'div', $fieldDescription, ['class' => 'span10 offset1'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', $fieldDescription, ['class' => 'span12 '] ),
 			], ['class' => 'row-fluid'] ),
 		] );
 	}

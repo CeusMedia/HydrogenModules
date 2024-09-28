@@ -59,7 +59,11 @@ if( $hasRightToAdd ){
 $modalAdd	= new View_Modal_Manage_Group_Add( $this->env );
 $modalAdd->setTypes( $words['types'] );
 $modalAdd->setId( 'modal-manage-group-add' );
-$buttonAdd	= $modalAdd->trigger->render();
+
+$buttonAdd	= $modalAdd->trigger
+	->setAttributes( ['class' => 'btn btn-success'] )
+	->setLabel( $iconAdd.'&nbsp;'.$wf->buttonAdd  )
+	->render();
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/group/' ) );
 
@@ -81,11 +85,11 @@ table tr td blockquote {
 					'.$table.'
 					<div class="buttonbar">
 						<div class="btn-toolbar">
-							'.$buttonAdd->render().'
+							'.$buttonAdd.'
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>'.$textIndexBottom.$modal->render();
+</div>'.$textIndexBottom.$modalAdd->render();

@@ -35,6 +35,13 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+		<needs type="module">Resource_Disclosure</needs>
+		<needs type="module">UI_Bootstrap_Modal</needs>
+		<needs type="module">UI_Helper_HTML</needs>
+		<needs type="module">UI_Helper_TimePhraser</needs>
+	</relations>
 	<files>
 		<class>Controller/Ajax/Manage/Group.php</class>
 		<class>Controller/Ajax/Manage/Role.php</class>
@@ -85,13 +92,6 @@
 		<style>module.manage.users.css</style>
 		<script>module.manage.users.js</script>
 	</files>
-	<relations>
-		<needs type="module">Resource_Users</needs>
-		<needs type="module">Resource_Disclosure</needs>
-		<needs type="module">UI_Bootstrap_Modal</needs>
-		<needs type="module">UI_Helper_TimePhraser</needs>
-		<needs type="module">UI_Helper_HTML</needs>
-	</relations>
 	<link xml:lang="de" access="acl" path="manage/user" rank="60">Benutzer</link>
 	<link xml:lang="de" access="acl" path="manage/group" rank="65">Gruppen</link>
 	<link xml:lang="de" access="acl" path="manage/role" rank="70">Rollen</link>
