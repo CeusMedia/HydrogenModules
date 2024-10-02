@@ -3,7 +3,7 @@
 	<title>Manage: Content: Styles</title>
 	<description><![CDATA[Simple Editor for CSS style files.]]></description>
 	<category>Management</category>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">JavaScript magic.</log>
@@ -11,9 +11,11 @@
 	<log version="0.2.3">Finish AJAX save.</log>
 	<log version="0.2.4">Support Ace editor.</log>
 	<log version="0.3">Import from protected module repository.</log>
+	<log version="0.3.1">Migrate AJAX save to own controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Ajax/Manage/Content/Style.php</class>
 		<class>Controller/Manage/Content/Style.php</class>
 		<class>View/Manage/Content/Style.php</class>
 		<template>manage/content/style/index.php</template>
@@ -30,7 +32,7 @@
 	</files>
 	<link xml:lang="de" access="acl" rank="66" path="manage/content/style">Style-Definitionen</link>
 	<link xml:lang="en" access="acl" rank="66" path="manage/content/style">Style Definitions</link>
-	<link access="acl" path="manage/content/style/ajaxSaveContent"/>
+	<link access="acl" path="ajax/manage/content/style/saveContent"/>
 	<relations>
 		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">Resource_Frontend</needs>

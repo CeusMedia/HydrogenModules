@@ -37,38 +37,6 @@ class Controller_Manage_Content_Style extends Controller
 		}
 	}
 
-	public function ajaxSaveContent(): void
-	{
-		$file		= $this->request->get( 'file' );
-		$content	= $this->request->get( 'content' );
-		$status		= 500;
-		$result		= [
-			'status'	=> 'error',
-			'data'		=> 'File not existing'
-		];
-		if( file_exists( $this->pathCss.$file ) ){
-			try{
-				$result	= FileWriter::save( $this->pathCss.$file, $content );
-				$status	= 200;
-				$result	= [
-					'status'	=> 'data',
-					'data'		=> $result
-				];
-			}
-			catch( Exception $e ){
-				$result		= [
-					'status'	=> 'error',
-					'data'		=> $e->getMessage()
-				];
-			}
-		}
-		$response	= $this->env->getResponse();
-		$response->setStatus( $status );
-		$response->addHeaderPair( 'Content-Type', 'application/json' );
-		$response->setBody( json_encode( $result ) );
-		$response->send();
-	}
-
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
