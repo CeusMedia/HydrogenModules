@@ -1,4 +1,4 @@
-var InfoDashboard = {
+let InfoDashboard = {
 	init: function(){
 		if(jQuery(".thumbnails.sortable>li").length > 1){
 			/* @see http://api.jqueryui.com/sortable/ */
@@ -20,7 +20,7 @@ var InfoDashboard = {
 					placeholder.height(ui.helper.height()-3);
 				},*/
 				stop: function(event, ui) {
-					var list = [];
+					let list = [];
 					$("ul.thumbnails>li").each(function(){
 						list.push($(this).data("panel-id"))
 					});
@@ -46,8 +46,8 @@ var InfoDashboard = {
 			return false;
 		});
 		jQuery(".button-rename-board").on("click", function(){
-			var title = prompt('Neuen Titel', jQuery(this).data('title'));
-			var dashboardId = jQuery(this).data('dashboard-id');
+			let title = prompt('Neuen Titel', jQuery(this).data('title'));
+			let dashboardId = jQuery(this).data('dashboard-id');
 			if(title)
 				InfoDashboard.rename(dashboardId, title);
 		});
@@ -65,5 +65,23 @@ var InfoDashboard = {
 	},
 	select: function(dashboardId){
 		document.location = "./info/dashboard/select/"+dashboardId;
+	},
+	loadPanel: function(panelId, panelUrl) {
+		let panelContainer	= jQuery("#dashboard-panel-" + panelId + " .dashboard-panel-container");
+		jQuery.ajax({
+			url: "./" + panelUrl + "/" + panelId,
+//			mimeType: "application/json",		// @todo enable after panels of all other modules have migrated, to enforce/await JSON response
+			context: panelContainer,
+			success: function(json) {
+				if(json.data)
+					this.html(json.data);
+				else
+					this.html(json);
+			},
+			error: function(request, message, error){
+				let alert = '<div class="alert-error">' + message + '</div>';
+				this.html(alert);
+			}
+		});
 	}
 };

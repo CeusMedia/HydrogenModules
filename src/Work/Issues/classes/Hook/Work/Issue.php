@@ -37,7 +37,7 @@ class Hook_Work_Issue extends Hook
 		if( !$this->env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$this->context->registerPanel( 'work-issues', [
-			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
+			'url'			=> 'ajax/work/issue/renderDashboardPanel',
 			'title'			=> 'offene Probleme',
 			'heading'		=> 'offene Probleme',
 			'icon'			=> 'fa fa-fw fa-exclamation',

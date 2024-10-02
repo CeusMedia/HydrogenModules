@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Dashboard extends Abstraction
@@ -10,7 +10,7 @@ class View_Helper_Info_Dashboard extends Abstraction
 	protected ?object $dashboard	= NULL;
 	protected array $panels			= [];
 
-	public function __construct( Environment $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env	= $env;
 	}
@@ -60,8 +60,9 @@ class View_Helper_Info_Dashboard extends Abstraction
 				'data-panel-id'	=> $panel->id,
 				'id'			=> 'dashboard-panel-'.$panel->id,
 			) );
-			$script	= 'jQuery("#dashboard-panel-'.$panel->id.' .dashboard-panel-container").load("./'.$panel->url.'/'.$panel->id.'");';
-			$this->env->getPage()->js->addScript( $script );
+//			$script	= 'jQuery("#dashboard-panel-'.$panel->id.' .dashboard-panel-container").load("./'.$panel->url.'/'.$panel->id.'");';
+			$script	= 'InfoDashboard.loadPanel("'.$panel->id.'","'.$panel->url.'");';
+			$this->env->getPage()->js->addScriptOnReady( $script );
 			if( $panel->refresh > 0 ){
 				$script	= 'window.setInterval(function(){'.$script.'}, '.( $panel->refresh * 1000 ).');';
 				$this->env->getPage()->js->addScriptOnReady( $script );
