@@ -3,7 +3,7 @@
 	<title>Manage: Content: Locales</title>
 	<description><![CDATA[Editor for HTML, mail and locale files.]]></description>
 	<category>Management</category>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<log version="0.3.2">Fixed bug in edit action.</log>
 	<log version="0.3.3">Disable onRenderContent hook in editor.</log>
 	<log version="0.3.4">Improve file list.</log>
@@ -29,9 +29,11 @@
 	<log version="0.6.2">Support Ace editor with auto-save.</log>
 	<log version="0.6.3">Rename from Manage:Content to Manage:Content:Locales.</log>
 	<log version="0.6.4">Code update.</log>
+	<log version="0.6.5">Migrate AJAX save to own controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Ajax/Manage/Content/Locale.php</class>
 		<class>Controller/Manage/Content/Locale.php</class>
 		<class>View/Helper/Manage/Content/Locale/List.php</class>
 		<class>View/Manage/Content/Locale.php</class>
@@ -49,7 +51,7 @@
 	</files>
 	<link xml:lang="de" access="acl" rank="65" path="manage/content/locale">Sprachinhalte</link>
 	<link xml:lang="en" access="acl" rank="65" path="manage/content/locale">Localization</link>
-	<link access="acl" path="manage/content/locale/ajaxSaveContent"/>
+	<link access="acl" path="ajax/manage/content/locale/saveContent"/>
 	<relations>
 		<supports type="module">JS_Ace</supports>
 		<supports type="module">JS_CodeMirror</supports>

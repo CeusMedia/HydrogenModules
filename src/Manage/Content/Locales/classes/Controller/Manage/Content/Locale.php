@@ -44,17 +44,6 @@ class Controller_Manage_Content_Locale extends Controller
 
 	public static string $filterPrefix	= 'filter_manage_content_locale_';
 
-	public function ajaxSaveContent(): void
-	{
-		$this->checkAjaxRequest();
-		if( !( $this->language && $this->file ) )
-			return;
-		$content	= $this->request->get( 'content' );
-		$editor		= new FileEditor( $this->folderPathFull.$this->file );
-		$editor->writeString( $content );
-		$this->handleJsonResponse( 'success', TRUE );
-	}
-
 	public function edit( string $folder, string $language, string $file ): void
 	{
 		$this->setFolder( $folder );
@@ -173,7 +162,7 @@ class Controller_Manage_Content_Locale extends Controller
 		) ), TRUE );
 	}
 
-	protected function	__onInit(): void
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
