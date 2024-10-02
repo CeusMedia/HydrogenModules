@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Database_Locks
+class View_Helper_Database_Dashboard_Locks
 {
 	protected Environment $env;
 

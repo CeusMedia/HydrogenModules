@@ -15,7 +15,7 @@ class Hook_Database_Lock extends Hook
 
 	public function onRegisterDashboardPanels(): void
 	{
-		if( !$this->env->getAcl()->has( 'database/lock', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'ajax/database/lock', 'renderDashboardPanel' ) )
 			return;
 		$this->context->registerPanel( 'resource-database-locks', [
 			'url'			=> 'ajax/database/lock/renderDashboardPanel',

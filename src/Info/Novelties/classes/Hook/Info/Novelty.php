@@ -10,12 +10,12 @@ class Hook_Info_Novelty extends Hook
 	 */
 	public function onRegisterDashboardPanels(): void
 	{
-		if( !$this->env->getAcl()->has( 'info/novelty', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'ajax/info/novelty', 'renderDashboardPanel' ) )
 			return;
 		$this->context->registerPanel( 'info-novelty', [
 			'title'			=> 'Neuigkeiten',
 			'heading'		=> 'Neuigkeiten',
-			'url'			=> './info/novelty/ajax/renderDashboardPanel',
+			'url'			=> './ajax/info/novelty/renderDashboardPanel',
 			'rank'			=> 0,
 			'refresh'		=> 10,
 		] );

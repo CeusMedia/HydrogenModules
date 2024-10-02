@@ -364,10 +364,8 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		$this->acl			= $this->env->getAcl();
 
 		$this->model		= new Model_Mission( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->logic		= Logic_Work_Mission::getInstance( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 
 		$this->isEditor		= $this->acl->has( 'work/mission', 'edit' );
@@ -386,7 +384,6 @@ class Controller_Ajax_Work_Mission extends AjaxController
 //		if( !$this->userId || !$this->isViewer )
 //			$this->restart( NULL, FALSE, 401 );
 
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject	= Logic_Project::getInstance( $this->env );
 		$this->userMap		= $this->logicProject->getCoworkers( $this->userId, NULL, TRUE );
 

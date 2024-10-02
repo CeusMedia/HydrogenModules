@@ -115,7 +115,7 @@ class Logic_Project extends Logic
 	 */
 	public function getProjectsUsers( array $projectIds, array $conditions = [], array $orders = [] ): array
 	{
-		return $this->modelProject->getProjectUsers( $projectIds, $conditions, $orders );
+		return $this->modelProject->getProjectsUsers( $projectIds, $conditions, $orders );
 	}
 
 	/**

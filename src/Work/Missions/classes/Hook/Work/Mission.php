@@ -333,6 +333,8 @@ class Hook_Work_Mission extends Hook
 	 */
 	public function onRegisterDashboardPanels(): void
 	{
+		if( !$this->env->getAcl()->has( 'ajax/work/mission', 'renderDashboardPanel' ) )
+			return;
 		$this->context->registerPanel( 'work-mission-my-today', [
 			'url'		=> 'ajax/work/mission/renderDashboardPanel',
 			'title'		=> 'Heute & Termine',
