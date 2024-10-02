@@ -118,7 +118,7 @@ $panelInfo	= '
 			<h3>Informationen</h3>
 			<div class="content-panel-inner">
 		<!--		<a href="./?'.$shortHash.'">Kurzlink</a><br/>
-				'.HtmlElements::Input( NULL, $shortUrl, 'max', TRUE ).'-->
+				'.HtmlElements::Input( 'shortUrl', $shortUrl, 'max', TRUE ).'-->
 				<dl class="dl-horizontal">
 					<dt>erstellt</dt>
 					<dd>vor '.$helper->convert( $note->createdAt, TRUE ).'</dd>

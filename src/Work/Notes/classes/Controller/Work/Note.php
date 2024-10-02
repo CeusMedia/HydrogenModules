@@ -282,7 +282,7 @@ class Controller_Work_Note extends Controller
 		$query				= $this->session->get( 'filter_notes_term');
 		$filterOrder		= $this->session->get( 'filter_notes_order' );
 		$filterDirection	= $this->session->get( 'filter_notes_direction' );
-		$filterLimit		= $this->session->get( 'filter_notes_limit' );
+		$filterLimit		= (int) $this->session->get( 'filter_notes_limit' );
 		$filterAuthor		= $this->session->get( 'filter_notes_author' );
 		$filterPublic		= $this->session->get( 'filter_notes_public' );
 		$filterProjectId	= $this->session->get( 'filter_notes_projectId' );

@@ -39,7 +39,7 @@ foreach( $issues as $issue ){
 //	$createdAt	= date( 'd.m.Y H:i:s', $issue->createdAt );
 	$createdAt	= $helper->convert( $issue->createdAt, TRUE, 'vor' );
 //	$modifiedAt	= $issue->modifiedAt ? date( 'd.m.Y H:i:s', $issue->modifiedAt ) : "-";
-	$modifiedAt	= $helper->convert( $issue->modifiedAt, TRUE, 'vor' );
+	$modifiedAt	= $helper->convert( $issue->modifiedAt ?? 0, TRUE, 'vor' );
 	$rows[]	= '
 <tr>
 	<td>'.$link.'<br/>'.$changes.'</td>

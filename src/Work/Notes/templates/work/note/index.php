@@ -3,11 +3,14 @@
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
+/** @var WebEnvironment $env */
 /** @var array $words */
 /** @var View $view */
 /** @var object $project */
+/** @var array $notes $w */
 
 $w		= (object) $words['index'];
 
@@ -15,7 +18,7 @@ $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $iconTag	= HtmlTag::create( 'i', '', ['class' => 'icon-tag'] );
 
 
-$tags	= $env->session->get( 'filter_notes_tags' );
+$tags	= $env->getSession()->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= [];
 

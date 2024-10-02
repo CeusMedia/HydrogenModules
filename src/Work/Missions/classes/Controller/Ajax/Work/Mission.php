@@ -175,7 +175,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 					break;
 			}
 			$helper->setProjects( $this->projects );
-			return $this->respond( $helper->render() );
+			return $this->respondData( $helper->render() );
 		}
 		catch( Exception $e ){
 			return $this->respondException( $e );
@@ -426,7 +426,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	protected function getWords( ?string $topic = NULL )
 	{
 		$words	= $this->env->getLanguage()->getWords( 'work/mission' );
-		if( '' === ( $topic ?? '' ) )
+		if( '' !== ( $topic ?? '' ) )
 			return $words['topic'];
 		return $words;
 	}

@@ -45,8 +45,8 @@ span.high.term-3 {
 /*  --  site.notes.css  --  */
 /*  --  NOTE: ARTICLES  --  */
 ul.results {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	list-style: none;
 	}
 ul.results li.note {
@@ -58,7 +58,7 @@ ul.results li.note {
 	}
 
 ul.results a.link {
-	margin: 0px 4px;
+	margin: 0 4px;
 	font-size: 0.8em;
 	color: #005F00;
 	text-decoration: none;
@@ -77,12 +77,12 @@ ul.results li.note .note-title a {
 	line-height: 1.5em;
 	}
 ul.results li.note:last-child {
-	border-bottom: 0px;
+	border-bottom: 0;
 	}
 ul.results li.note div.info-inline {
 	clear: both;
 	height: 18px;
-	margin-top: 0px;
+	margin-top: 0;
 	}
 
 	
@@ -93,25 +93,25 @@ ul.results li.note div.info-inline {
 /*  --  list.tags.css  --  */
 /*  --  TAGS  --  */
 ul.tags-list {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	list-style: none;
 	}
 ul.tags-list li.tag {
 	float: left;
-	margin: 0px 3px 2px 0px;
-	padding: 0px;
+	margin: 0 3px 2px 0;
+	padding: 0;
 	background-color: #DDD;
 	border: 1px solid #AAA;
 	border-radius: 4px;
 	}
 ul.tags-list li.tag:last-child {
-	padding: 0px;
+	padding: 0;
 	}
 ul.tags-list li.tag.clickable {
 	margin: 2px 5px 5px 2px;
 	background-image: url(../img/background_button_gradient_1.png);
-	background-position: 0px 0px;
+	background-position: 0 0;
 	border-color: #CCCCCC #999999 #999999 #CCCCCC;
 	cursor: pointer;
 	overflow: hidden;
@@ -120,14 +120,14 @@ ul.tags-list li.tag span {
 	display: block;
 	min-height: 18px;
 	padding: 1px 10px 1px 22px;
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue.png);
 	background-position: 3px 3px;
 	background-repeat: no-repeat;
 	outline: none;
 /*	font-size: 1.1em;
 	font-weight: bold;
 */	}
-ul.tags-list li.tag span small{
+ul.tags-list li.tag span small {
 	font-weight: normal;
 	font-size: 0.9em;
 	font-style: italic;
@@ -136,16 +136,16 @@ ul.tags-list li.tag span small{
 
 ul.tags-list li.tag.add span,
 ul.tags-list li.tag.action-add:hover span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue_add.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue_add.png);
 	}
 ul.tags-list li.tag.remove span,
 ul.tags-list li.tag.action-remove:hover span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue_delete.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue_delete.png);
 	}
 
 
 ul.tags-list-inline {
-	margin: 0px;
+	margin: 0;
 	}
 ul.tags-list-inline li {
 	float: left;
@@ -161,13 +161,13 @@ ul.tags-list-inline li button.tag span {
 	min-height: 18px;
 	padding: 1px 6px 1px 22px;
 	background-position: 3px 2px;
-	text-shadow: 0px 1px solid white;
+	text-shadow: 0 1px solid white;
 	}	
 button.tag-add span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue_add.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue_add.png);
 	}
 button.tag-remove span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue_delete.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue_delete.png);
 	}
 	
 
@@ -188,13 +188,13 @@ li.note span.date {
 	padding-left: 20px;
 	height: 18px;
 	background-repeat: no-repeat;
-	background-position: 0px 2px;
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/date.png);
+	background-position: 0 2px;
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/date.png);
 	}
 span.indicator.rating {
 	position: absolute;
 	top: 30px;
-	right: 0px;
+	right: 0;
 	height: 10px;
 	}
 	
@@ -204,25 +204,25 @@ span.indicator.rating {
 /*  --  list.links.css  --  */
 /*  --  LINKS  --  */
 ul.links-list {
-	margin: 0px;
-	padding: 0px;
+	margin: 0;
+	padding: 0;
 	list-style: none;
 	}
 ul.links-list li.link {
 	float: left;
-	margin: 0px 3px 2px 0px;
-	padding: 0px;
+	margin: 0 3px 2px 0;
+	padding: 0;
 	background-color: #DDD;
 	border: 1px solid #AAA;
 	border-radius: 4px;
 	}
 ul.links-list li.link:last-child {
-	padding: 0px;
+	padding: 0;
 	}
 ul.links-list li.link.clickable {
 	margin: 2px 5px 5px 2px;
 	background-image: url(../img/nav_logo13.png);
-	background-position: 0px -192px;
+	background-position: 0 -192px;
 	border-color: #CCCCCC #999999 #999999 #CCCCCC;
 	cursor: pointer;
 	overflow: hidden;
@@ -231,7 +231,7 @@ ul.links-list li.link span {
 	display: block;
 	min-height: 18px;
 	padding: 1px 10px 1px 22px;
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/link.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/link.png);
 	background-position: 2px 2px;
 	background-repeat: no-repeat;
 	font-size: 1em;
@@ -251,11 +251,11 @@ ul.links-list li.link span.titled {
 	
 ul.links-list li.link.add span,
 ul.links-list li.link.action-add:hover span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/link_add.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/link_add.png);
 	}
 ul.links-list li.link.remove span,
 ul.links-list li.link.action-remove:hover span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/link_delete.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/link_delete.png);
 	}
 
 
@@ -272,15 +272,15 @@ ul.results li.note ul.tags-list {
 
 a.nav-button span {
 	background-repeat: no-repeat;
-	background-position: 0px 2px;
+	background-position: 0 2px;
 	padding-left: 22px;
 	padding-right: 5px;
 	}
 a.nav-button.search span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/magnifier.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/magnifier.png);
 	}
 a.nav-button.add span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/comment_add.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/comment_add.png);
 	}
 
 
@@ -295,22 +295,22 @@ li.item-tag-extended button {
 	}
 li.item-tag-extended .item-tag-label {
 	font-weight: bold;
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue.png);
 	background-repeat: no-repeat;
-	background-position: 0px 2px;
+	background-position: 0 2px;
 	padding-left: 22px;
 	padding-right: 5px;
 	}
 li.item-tag-extended .item-tag-tray {
 	position: absolute;
-	right: 0px;
+	right: 0;
 	top: 1px;
 	}
 li.item-tag-extended .item-tag-tray .number-indicator {
 	float: left;
 	display: block;
-	margin: 4px 1em 1px 0em;
-	padding: 0px 6px 0px 6px;
+	margin: 4px 1em 1px 0;
+	padding: 0 6px 0 6px;
 	background-color: #999;
 	border-radius: 10px;
 	color: rgba(255, 255, 255, 1);
@@ -332,22 +332,22 @@ li.item-link-extended button {
 	}
 li.item-link-extended .item-link-label {
 	font-weight: bold;
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/world.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/world.png);
 	background-repeat: no-repeat;
-	background-position: 0px 2px;
+	background-position: 0 2px;
 	padding-left: 22px;
 	padding-right: 5px;
 	}
 li.item-link-extended .item-link-tray {
 	position: absolute;
-	right: 0px;
+	right: 0;
 	top: 1px;
 	}
 li.item-link-extended .item-link-tray .number-indicator {
 	float: left;
 	display: block;
-	margin: 4px 1em 1px 0em;
-	padding: 0px 6px 0px 6px;
+	margin: 4px 1em 1px 0;
+	padding: 0 6px 0 6px;
 	background-color: #999;
 	border-radius: 10px;
 	color: rgba(255, 255, 255, 1);
@@ -366,18 +366,18 @@ li.item-link-extended .item-link-tray .number-indicator {
 	}
 
 legend.tag {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/tag_blue.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/tag_blue.png);
 	}
 
 legend.link {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/link.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/link.png);
 	}
 
 legend.note {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/comment.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/comment.png);
 	}
 legend.note-edit {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/comment_edit.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/comment_edit.png);
 	}
 
 .note-view-content p {
@@ -385,9 +385,9 @@ legend.note-edit {
 	}
 
 .item-tag-tray button.tag-add span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/magnifier_zoom_in.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/magnifier_zoom_in.png);
 	}
 .item-tag-tray button.tag-remove span {
-	background-image: url(https://cdn.ceusmedia.de/img/famfamfam/silk/magnifier_zoom_out.png);
+	background-image: url(https://cdn.ceusmedia.de/icons/famfamfam/silk/magnifier_zoom_out.png);
 	}
 

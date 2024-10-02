@@ -195,6 +195,8 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	{
 		if( !$timer->moduleId )
 			return '';
+		if( '' === ( $timer->relationLink ?? '' ) || '' === ( $timer->relationTitle ?? '' ) )
+			return '';
 		$labelType		= HtmlTag::create( 'span', $timer->type.':', [
 			'class' => 'muted',
 		] );

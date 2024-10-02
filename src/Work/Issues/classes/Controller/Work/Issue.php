@@ -271,7 +271,7 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'numberProjects', $numberProjects );
 
 		$userIds	= [];
-		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, $limit] );
+		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, (int) $limit] );
 		foreach( $issues as $issue ){
 			$issue->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
 			$issue->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );

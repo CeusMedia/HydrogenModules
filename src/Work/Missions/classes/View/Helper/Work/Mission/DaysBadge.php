@@ -24,16 +24,16 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 
 	/**
 	 *	@param		int		$days
-	 *	@return		int
+	 *	@return		string
 	 */
-	protected function formatDays( int $days ): int
+	protected function formatDays( int $days ): string
 	{
 		if( $days > 365.25 )
-			return (int) floor( $days / 365.25 )."y";
+			return floor( $days / 365.25 )."y";
 		if( $days > 30.42 )
-			return (int) floor( $days / 30.42 )."m";
+			return floor( $days / 30.42 )."m";
 		if( $days > 7 )
-			return (int) floor( $days / 7 )."w";
+			return floor( $days / 7 )."w";
 		return $days;
 	}
 

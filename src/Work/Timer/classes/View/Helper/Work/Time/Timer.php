@@ -21,7 +21,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE )
+	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE ): void
 	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )
