@@ -2,7 +2,7 @@
 <module>
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module activity switch.</log>
@@ -13,13 +13,16 @@
 	<log version="0.3.4">Extract hooks to own class.</log>
 	<log version="0.3.5">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="0.3.6">Improve code style.</log>
+	<log version="0.3.7">Extract dashboard panel to view helper and ajax controller.</log>
 	<category>Resource</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/ajax/Database/Lock.php</class>
 		<class>Controller/Database/Lock.php</class>
 		<class>Hook/Database/Lock.php</class>
 		<class>View/Database/Lock.php</class>
+		<class>View/Helper/Database/Dashboard/Locks.php</class>
 		<class>Model/Lock.php</class>
 		<class>Logic/Database/Lock.php</class>
 		<template>database/lock/index.php</template>
@@ -32,7 +35,7 @@
 	<link access="acl" path="database/lock" rank="85" xml:lang="de">Sperren</link>
 	<link access="acl" path="database/lock" rank="85" xml:lang="en">Locks</link>
 	<link access="acl" path="database/lock/unlock"/>
-	<link access="acl" path="database/lock/ajaxRenderDashboardPanel"/>
+	<link access="acl" path="ajax/database/lock/renderDashboardPanel"/>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Database_Lock::onAutoModuleLockRelease</hook>
 	<hook type="resource" resource="Dashboard" event="registerPanels">Hook_Database_Lock::onRegisterDashboardPanels</hook>
 	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Database_Lock::onAuthLogout</hook>

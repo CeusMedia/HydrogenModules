@@ -18,7 +18,7 @@ class Hook_Database_Lock extends Hook
 		if( !$this->env->getAcl()->has( 'database/lock', 'ajaxRenderDashboardPanel' ) )
 			return;
 		$this->context->registerPanel( 'resource-database-locks', [
-			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
+			'url'			=> 'ajax/database/lock/renderDashboardPanel',
 			'title'			=> 'Datenbank-Sperren',
 			'heading'		=> 'Datenbank-Sperren',
 			'icon'			=> 'fa fa-fw fa-lock',
