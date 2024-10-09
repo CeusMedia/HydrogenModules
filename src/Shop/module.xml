@@ -61,6 +61,7 @@ For payment or shipping you need to install another module.]]></description>
 	<files>
 		<class>Controller/Shop.php</class>
 		<class>Controller/Shop/Customer.php</class>
+		<class>Entity/Shop/Customer.php</class>
 		<class>Hook/Shop.php</class>
 		<class>Hook/Shop/FinishPanel.php</class>
 		<class>Job/Shop.php</class>

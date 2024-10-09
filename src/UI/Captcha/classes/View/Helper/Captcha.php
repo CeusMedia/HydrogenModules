@@ -125,18 +125,18 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		unlink( $filePath );
 		if( $this->format === self::FORMAT_RAW )
 			return $image;
-		return HtmlTag::create( 'img', NULL, array(
+		return HtmlTag::create( 'img', NULL, [
 			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image ),
 			'class'	=> 'captcha-image',
-		) );
+		] );
 	}
 
 	protected function renderRecaptcha(): string
 	{
 		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
-		return HtmlTag::create( 'div', '', array(
+		return HtmlTag::create( 'div', '', [
 			'class'					=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
-		) );
+		] );
 	}
 }

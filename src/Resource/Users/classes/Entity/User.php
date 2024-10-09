@@ -2,13 +2,15 @@
 
 /** @property ?object $avatar */
 /** @property ?array $settings */
+/** @property ?Entity_Address $addressDelivery */
+/** @property ?Entity_Address $addressBilling */
 class Entity_User
 {
 	public int|string $userId;
-	public int|string $accountId;
-	public int|string $roleId;
-	public int|string $roomId;
-	public int|string $companyId;
+	public int|string $accountId	= 0;
+	public int|string $roleId		= 0;
+	public int|string $roomId		= 0;
+	public int|string $companyId	= 0;
 	public int $status				= Model_User::STATUS_UNCONFIRMED;
 	public string $email;
 	public string $username;

@@ -28,7 +28,7 @@ class View_Manage_Group extends View
 
 	public function edit(): void
 	{
-		$roleId	= $this->getData( 'groupId' );
+		$groupId	= $this->getData( 'groupId' );
 		$this->env->getPage()->runScript( 'ModuleManageUsers.setGroupId('.$groupId.').init()' );
 	}
 

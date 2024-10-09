@@ -49,6 +49,7 @@ class Controller_Manage_My_Company extends Controller
 				$this->restart( 'edit/'.$companyId, TRUE );
 			}
 		}
+		/** @var ?Entity_User $user */
 		$user				= $this->modelUser->get( $this->userId );
 		$modelRole			= new Model_Role( $this->env );
 		$user->role			= $modelRole->get( $user->roleId );

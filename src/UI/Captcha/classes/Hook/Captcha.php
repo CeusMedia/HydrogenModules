@@ -17,15 +17,15 @@ class Hook_Captcha extends Hook
 
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
-		$shortCodes		= array(
-			'captcha'	=> array(
+		$shortCodes		= [
+			'captcha'	=> [
 				'mode'		=> $config->get( 'mode' ),
 				'length'	=> $length,
 				'strength'	=> $strength,
 				'width'		=> $width,
 				'height'	=> $height,
-			)
-		);
+			]
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

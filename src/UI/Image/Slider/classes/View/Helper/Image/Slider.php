@@ -74,12 +74,12 @@ class View_Helper_Image_Slider
 		$images		= $this->renderSlides( $slider );
 		$images		.= $this->renderButtons( $slider );
 		$images		.= $this->renderDots( $slider );
-		$attr		= array(
+		$attr		= [
 			'id'			=> $this->selectorPrefix.$sliderId,
 			'class'			=> $this->selectorPrefix.'container',
 			'style'			=> 'width: '.$slider->width.'px; height: '.$slider->height.'px',
 			'data-ratio'	=> round( $slider->height / $slider->width, 8 )
-		);
+		];
 		return HtmlTag::create( 'div', $images, $attr );
 	}
 

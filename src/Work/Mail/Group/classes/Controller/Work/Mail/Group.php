@@ -52,6 +52,7 @@ class Controller_Work_Mail_Group extends Controller
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
+		/** @var array<Entity_User> $users */
 		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
 		$roles		= $this->modelRole->getAll( [], ['rank' => 'ASC'] );
@@ -142,6 +143,7 @@ class Controller_Work_Mail_Group extends Controller
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
 		$this->addData( 'group', $group );
+		/** @var array<Entity_User> $users */
 		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
 		$members	= $this->modelMember->getAll( ['mailGroupId' => $groupId], ['title' => 'ASC'] );

@@ -68,26 +68,26 @@ class Hook_UI_Font_FontAwesome extends Hook
 		$urlTemplateCss	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
 		$urlTemplateJs	= 'https://%s.fontawesome.com/releases/v%s/js/%s.js';
 		if( $config->get( 'v5.mode' ) === 'css+font' ){
-			$env->getPage()->addHead( HtmlTag::create( 'link', NULL, array(
-				'href'			=> vsprintf( $urlTemplateCss, array(
+			$env->getPage()->addHead( HtmlTag::create( 'link', NULL, [
+				'href'			=> vsprintf( $urlTemplateCss, [
 					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
 					$config->get( 'version' ),
 					$style,
-				) ),
+				] ),
 				'rel'			=> 'stylesheet',
 				'crossorigin'	=> 'anonymous',
-			) ) );
+			] ) );
 		}
 		if( $config->get( 'v5.mode' ) === 'js+svg' ){
-			$env->getPage()->addHead( HtmlTag::create( 'script', '', array(
-				'src'			=> vsprintf( $urlTemplateJs, array(
+			$env->getPage()->addHead( HtmlTag::create( 'script', '', [
+				'src'			=> vsprintf( $urlTemplateJs, [
 					$config->get( 'v5.license' ) === 'pro' ? 'pro' : 'use',
 					$config->get( 'version' ),
 					$style,
-				) ),
+				] ),
 				'defer'			=> 'defer',
 				'crossorigin'	=> 'anonymous',
-			) ) );
+			] ) );
 		}
 	}
 }

@@ -266,6 +266,7 @@ class Controller_Work_Mail_Check extends Controller
 	{
 		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		foreach( $groups as $group ){
+			/** @var array<Entity_Address> $addresses */
 			$addresses	= $this->modelAddress->getAll( ['mailGroupId' => $group->mailGroupId] );
 			$group->numbers	= (object) [
 				'total'		=> count( $addresses ),

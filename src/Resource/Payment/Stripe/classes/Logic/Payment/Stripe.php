@@ -75,14 +75,14 @@ class Logic_Payment_Stripe extends Logic
 	public function createCustomerFromLocalUser( $localUserId ): StripeCustomer
 	{
 		$modelUser		= new Model_User( $this->env );
-		$modelAddress	= new Model_Address( $this->env );
-		$user			= $modelUser->get( $localUserId );
-		$user	= StripeCustomer::create( [
+		/** @var ?Entity_User $user */
+		$user		= $modelUser->get( $localUserId );
+		$customer	= StripeCustomer::create( [
 			'email'			=> $user->email,
 			'description'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')',
 		] );
-		$this->setUserIdForLocalUserId( $user->id, $localUserId );
-		return $user;
+		$this->setUserIdForLocalUserId( $customer->id, $localUserId );
+		return $customer;
 	}
 
 	/**

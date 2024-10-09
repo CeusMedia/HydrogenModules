@@ -178,7 +178,7 @@ class Model_Menu
 					continue;
 				if( isset( $page->{"label@".$this->language} ) )
 					$page->label	= $page->{"label@".$this->language};
-				$item	= (object) array(
+				$item	= (object) [
 					'parent'	=> NULL,
 					'type'		=> 'item',
 					'scope'		=> $scope,
@@ -190,7 +190,7 @@ class Model_Menu
 //					'active'	=> $this->current == $page->path,
 					'active'	=> FALSE,
 					'icon'		=> $page->icon ?? NULL,
-				);
+				];
 				$subpages	= [];
 				if( isset( $page->pages ) ){
 					$item->type		= 'menu';
@@ -215,7 +215,7 @@ class Model_Menu
 							continue;
 						if( isset( $subpage->{"label@".$this->language} ) )
 							$subpage->label	= $subpage->{"label@".$this->language};
-						$subitem	= (object) array(
+						$subitem	= (object) [
 							'parent'	=> $item->path,
 							'type'		=> 'item',
 							'scope'		=> $scope,
@@ -228,7 +228,7 @@ class Model_Menu
 							'active'	=> FALSE,
 							'icon'		=> $subpage->icon ?? NULL,
 							'chapter'	=> $subpage->chapter ?? '',
-						);
+						];
 						$subpages[]	= $subitem;
 					}
 				}
@@ -393,7 +393,7 @@ class Model_Menu
 					$rank	= strlen( $link->rank ) ? $link->rank : 50;
 					$rank	= str_pad( $rank, 3, "0", STR_PAD_LEFT );
 					$rank	.= "_".str_pad( count( $this->pages[$scope] ), 2, "0", STR_PAD_LEFT );
-					$item	= (object) array(
+					$item	= (object) [
 						'parent'	=> NULL,
 						'type'		=> 'item',
 						'scope'		=> $scope,
@@ -404,7 +404,7 @@ class Model_Menu
 						'rank'		=> $link->rank,
 //						'active'	=> $this->current == $link->path,
 						'active'	=> FALSE,
-					);
+					];
 					$this->pages[$scope][$rank]	= $item;
 					$this->pageMap[$link->path]	= $item;
 				}

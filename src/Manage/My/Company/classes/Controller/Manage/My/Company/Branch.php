@@ -240,6 +240,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 	 */
 	protected function checkCurrentUser(): object
 	{
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		if( !$user )
 			$this->restart();

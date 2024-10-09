@@ -44,6 +44,7 @@ class Logic_ShopManager extends Logic
 
 	public function getAccountCustomer( int|string $userId ): object
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
@@ -67,6 +68,7 @@ class Logic_ShopManager extends Logic
 	{
 //		throw new RuntimeException( 'Method Logic_ShopManager::getGuestCustomer is deprecated' );
 		$model	= new Model_Shop_Customer( $this->env );
+		/** @var Entity_Shop_Customer $user */
 		$user	= $model->get( $customerId );
 		if( !$user )
 			throw new RangeException( 'Invalid customer ID: '.$customerId );

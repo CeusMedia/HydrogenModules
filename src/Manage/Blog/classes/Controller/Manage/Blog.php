@@ -75,6 +75,7 @@ class Controller_Manage_Blog extends Controller
 		$data['status']		= 0;
 
 		$categories		= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
+		/** @var array<Entity_User> $users */
 		$users			= $this->modelUser->getAll( ['status' => '> 0'] );
 		$this->addData( 'post', (object) $data );
 		$this->addData( 'users', $users );
@@ -148,6 +149,7 @@ class Controller_Manage_Blog extends Controller
 			'status'	=> '>= 0'																	//  ... and visible
 		] );
 		$categories		= $this->modelCategory->getAllByIndices( ['status' => '>= 0'] );		//
+		/** @var array<Entity_User> $users */
 		$users			= $this->modelUser->getAll( ['status' => '> 0'] );
 
 		$this->addData( 'post', $post );															//  assign post data to template

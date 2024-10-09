@@ -218,6 +218,7 @@ class Controller_Member extends Controller
 				if( ( $key = array_search( $userId, $userIds ) ) !== FALSE )
 					unset( $userIds[$key] );
 			if( $userIds ){
+				/** @var array<Entity_User> $users */
 				$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
 				foreach( $users as $user )
 					$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
@@ -227,9 +228,10 @@ class Controller_Member extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function view( $userId )
+	public function view( int|string $userId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
+		/** @var ?Entity_User $user */
 		$user = $this->modelUser->get( $userId );
 		if( !$user ){
 			$this->messenger->noteError( $words->errorUserIdInvalid );

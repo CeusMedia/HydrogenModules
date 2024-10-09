@@ -118,6 +118,7 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( $words->msgInvalidProject );
 		}
 		else if( (int) $userId > 0 ){
+			/** @var ?Entity_User $user */
 			$user		= $this->modelUser->get( $userId );
 			if( !$user ){
 				$this->messenger->noteError( $words->msgInvalidUser );
@@ -442,6 +443,7 @@ class Controller_Manage_Project extends Controller
 		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );	//  get project user relations
 		$user			= NULL;
 		foreach( $relations as $relation ){														//  iterate relations
+			/** @var ?Entity_User $relatedUser */
 			$relatedUser	= $this->modelUser->get( $relation->userId );						//  get user from relation
 			$numberUsers	+= ( $relatedUser && $relatedUser->status > 0 ) ? 1 : 0;			//  count only existing and active users
 			if( $relatedUser->userId === $userId )

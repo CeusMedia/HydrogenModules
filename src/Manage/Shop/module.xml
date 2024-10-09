@@ -37,6 +37,7 @@
 		<class>Controller/Manage/Shop/Order.php</class>
 		<class>Controller/Manage/Shop/Report.php</class>
 		<class>Controller/Manage/Shop/Shipping.php</class>
+		<class>Entity/Shop/Customer.php</class>
 		<class>Logic/ShopManager.php</class>
 		<class>Logic/Shop/Shipping.php</class>
 		<class>Model/Shop/Customer.php</class>

@@ -133,7 +133,7 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
-	public function setAuthenticatedUser( $user ): self
+	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->backend->setAuthenticatedUser( $user );
 		return $this;
@@ -156,7 +156,7 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ): self
+	public function setIdentifiedUser( Entity_User $user ): self
 	{
 		$this->backend->setIdentifiedUser( $user );
 		return $this;

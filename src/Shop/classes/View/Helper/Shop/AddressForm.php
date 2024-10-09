@@ -6,13 +6,12 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Shop_AddressForm
 {
 	protected Environment $env;
-	protected Model_Address $model;
 	protected array $words;
 	protected string $defaultCountryCode	= 'DE';
-	protected ?object $address				= NULL;
+	protected ?Entity_Address $address				= NULL;
 	protected ?string $heading				= NULL;
 	protected ?string $textTop				= NULL;
-	protected $type							= 0;
+	protected int $type						= Model_Address::TYPE_LOCATION;
 
 	public function __construct( Environment $env )
 	{
@@ -125,14 +124,9 @@ jQuery(document).ready(function(){
 </script>';
 	}
 
-	public function setAddress( $addressOrId ): self
+	public function setAddress( Entity_Address $address ): self
 	{
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		$this->address	= $address;
 		return $this;
 	}
 

@@ -17,25 +17,25 @@ class Hook_UI_CookieWarning extends Hook
 				$words		= $env->getLanguage()->getWords( 'cookiewarning' );
 				$text		= $words['warning']['label'];
 				$buttons	= [];
-				$buttons[]	= HtmlTag::create( 'button', $words['warning']['buttonAccept'], array(
+				$buttons[]	= HtmlTag::create( 'button', $words['warning']['buttonAccept'], [
 					'class'		=> 'btn btn-mini not-btn-primary',
 					'onclick'	=> 'acceptCookies();',
-				) );
+				] );
 				if( $options->get( 'readMorePagePath' ) ){
-					$buttons[]	= HtmlTag::create( 'a', $words['warning']['buttonReadMore'], array(
+					$buttons[]	= HtmlTag::create( 'a', $words['warning']['buttonReadMore'], [
 						'href'	=> './'.$options->get( 'readMorePagePath' ),
 						'class'	=> 'btn btn-mini btn-info',
-					) );
+					] );
 				}
 				$buttons	= join( '&nbsp;', $buttons );
 				$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 				$content	= HtmlTag::create( 'div', $text.' &nbsp;&nbsp;'.$buttons, [
 					'id'	=> 'cookie-warning-inner'
 				] );
-				$bar		= HtmlTag::create( 'div', $content, array(
+				$bar		= HtmlTag::create( 'div', $content, [
 					'class'	=> $options->get( 'absolute' ) ? 'absolute '.$options->get( 'absolute.position' ) : 'static',
 					'id'	=> 'cookie-warning',
-				) );
+				] );
 				$script		= 'function acceptCookies(){Cookies.set("acceptCookies",true); $("#cookie-warning").slideUp()};';
 				$env->getPage()->js->addScript( $script );
 				$payload['content']	= $bar.$payload['content'];

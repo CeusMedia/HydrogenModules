@@ -82,12 +82,12 @@ class View_Helper_Work_Issue_ChangeFact
 			case 2:
 				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
-				if( $this->change->from && $this->modelUser->get( $this->change->from ) ){
+				if( $this->change->from && $this->modelUser->has( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
 					$from	= HtmlTag::create( 'a', $from, ['href' => './user/view/'.$this->change->from] );
 					$from	= HtmlTag::create( 'span', $from, ['class' => 'issue-user'] );
 				}
-				if( $this->change->to && $this->modelUser->get( $this->change->to ) ){
+				if( $this->change->to && $this->modelUser->has( $this->change->to ) ){
 					$to		= $this->modelUser->get( $this->change->to )->username;
 					$to		= HtmlTag::create( 'a', $to, ['href' => './user/view/'.$this->change->from] );
 					$to		= HtmlTag::create( 'span', $to, ['class' => 'issue-user'] );
@@ -152,10 +152,10 @@ class View_Helper_Work_Issue_ChangeFact
 			case 2:
 				$from	= 'unbekannt';
 				$to		= 'unbekannt';
-				if( $this->change->from && $this->modelUser->get( $this->change->from ) ){
+				if( $this->change->from && $this->modelUser->has( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
 				}
-				if( $this->change->to && $this->modelUser->get( $this->change->to ) ){
+				if( $this->change->to && $this->modelUser->has( $this->change->to ) ){
 					$to		= $this->modelUser->get( $this->change->to )->username;
 				}
 				$change	= $from." -> ".$to;

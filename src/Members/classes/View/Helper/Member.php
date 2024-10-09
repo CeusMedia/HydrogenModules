@@ -7,7 +7,7 @@ class View_Helper_Member
 {
 	protected Environment $env;
 	protected bool $useGravatar		= TRUE;
-	protected ?object $user			= NULL;
+	protected ?Entity_User $user	= NULL;
 	protected ?string $url			= NULL;
 	protected string $mode			= 'inline';
 	protected Model_User $modelUser;

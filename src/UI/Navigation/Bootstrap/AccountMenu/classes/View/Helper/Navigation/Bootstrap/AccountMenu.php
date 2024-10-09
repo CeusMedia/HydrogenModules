@@ -137,11 +137,11 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 		else
 			$labels		= "";
 
-		$trigger		= HtmlTag::create( 'div', array(
+		$trigger		= HtmlTag::create( 'div', [
 			$avatar,
 			$labels,
 			HtmlTag::create( 'div', '', ['class' => 'clearfix'] ),
-		), [
+		], [
 			'id' 			=> 'drop-account',
 			'role'			=> 'button',
 			'class'			=> 'dropdown-toggle',

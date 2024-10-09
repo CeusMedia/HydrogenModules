@@ -122,7 +122,7 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
-	public function setAuthenticatedUser( object $user ): self
+	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );

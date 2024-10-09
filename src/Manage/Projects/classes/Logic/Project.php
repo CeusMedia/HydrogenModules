@@ -230,6 +230,7 @@ class Logic_Project extends Logic
 				$language		= $this->env->getLanguage();
 				foreach( $this->getProjectUsers( $projectId ) as $member ){
 					if( $member->userId !== $userId ){
+						/** @var ?Entity_User $user */
 						$user	= $this->modelUser->get( $member->userId );
 						$data	= array(
 							'project'	=> $this->getProject( $projectId ),

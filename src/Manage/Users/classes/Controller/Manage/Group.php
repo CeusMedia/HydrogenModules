@@ -158,18 +158,17 @@ class Controller_Manage_Group extends Controller
 		$words		= $this->language->getWords( 'manage/group' );
 		$group		= $this->modelGroup->get( $groupId );
 
-		if( $this->modelUser->getByIndex( 'groupId', $groupId ) ){
-			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $group->title );
+		if( $this->modelGroupUser->hasByIndex( 'groupId', $groupId ) ){
+			$this->messenger->noteError( $words['remove']['msgError-1'], $group->title );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 
-		$result		= $this->modelGroup->remove( $groupId );
-		if( $result ){
+		if( $this->modelGroup->remove( $groupId ) ){
 			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $group->title );
 			$this->restart( NULL, TRUE );
 		}
 		else{
-			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $group->title );
+			$this->messenger->noteNotice( $words['remove']['msgError-0'], $group->title );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 	}
@@ -199,14 +198,10 @@ class Controller_Manage_Group extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->language			= $this->env->getLanguage();
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelGroup		= $this->getModel( 'Group' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelGroupUser	= $this->getModel( 'Group_User' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelGroupRight	= $this->getModel( 'Group_Right' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelUser		= $this->getModel( 'User' );
+		$this->modelGroup		= new Model_Group( $this->env );
+		$this->modelGroupUser	= new Model_Group_User( $this->env );
+		$this->modelGroupRight	= new Model_Group_Right( $this->env );
+		$this->modelUser		= new Model_User( $this->env );
 		$this->addData( 'modules', $this->env->getModules()->getAll() );
 	}
 

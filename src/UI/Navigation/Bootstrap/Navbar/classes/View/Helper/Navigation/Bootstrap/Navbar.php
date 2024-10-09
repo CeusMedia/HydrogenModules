@@ -60,17 +60,19 @@ class View_Helper_Navigation_Bootstrap_Navbar extends Abstraction
 		if( $this->hideOnMobileDevice )
 			$classes[]	= 'visible-desktop';
 		if( $classes )
-			$content	= HtmlTag::create( 'div', $content, array( 'class' => $classes) );
+			$content	= HtmlTag::create( 'div', $content, ['class' => $classes] );
 		return $content;
 	}
 
 	public function renderLogo(): string
 	{
-		if( 0 === strlen( trim( $this->logoTitle ?? '' ) ) && 0 === strlen( trim( $this->logoIcon ?? '' ) ) )
+		$logoTitle	= trim( $this->logoTitle ?? '' );
+		$logoIcon	= trim( $this->logoIcon ?? '' );
+		if( '' === $logoTitle && '' === $logoIcon )
 			return '';
 		$icon	= '';
-		if( $this->logoIcon ){
-			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
+		if( '' !== $logoIcon ){
+			$icon	= $this->inverse ? $logoIcon.' icon-white' : $logoIcon;
 			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 		}
 		$label	= $icon.$this->logoTitle;

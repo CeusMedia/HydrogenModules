@@ -40,7 +40,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 				if( !$page->items )
 					continue;
 				$title		= $this->renderLabelWithIcon( $page );
-				$list[]		= HtmlTag::create( 'li', $title, array( 'class' => 'bs4-nav-link nav-header'	) );
+				$list[]		= HtmlTag::create( 'li', $title, ['class' => 'bs4-nav-link nav-header'] );
 
 				foreach( $page->items as $subpage ){
 					$class		= 'bs4-nav-item nav-list-sub-item '.( $subpage->active ? 'active' : NULL );

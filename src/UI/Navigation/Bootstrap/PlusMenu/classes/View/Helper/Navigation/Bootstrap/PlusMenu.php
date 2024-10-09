@@ -67,11 +67,12 @@ class View_Helper_Navigation_Bootstrap_PlusMenu extends Abstraction
 		if( $this->buttonClass )
 			$buttonClasses[]	= $this->buttonClass;
 		$iconPlus	= HtmlTag::create( 'i', '', ['class' => $this->buttonIcon] );
-		$button		= HtmlTag::create( 'button', $iconPlus, array(
+		$button		= HtmlTag::create( 'button', $iconPlus, [
 			'class'			=> join( ' ', $buttonClasses ),
 			'data-toggle'	=> 'dropdown',
-		) );
-		$group		= (new Dropdown())->add( $button )->add( $dropdown );
+		] );
+
+		$group		= Dropdown::create()->add( $button )->add( $dropdown );
 		if( $this->alignBottom )
 			$group->addClass( 'dropup' );
 		return HtmlTag::create( 'div', $group, ['class' => $this->class] );

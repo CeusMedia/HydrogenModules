@@ -84,11 +84,13 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 
 	public function renderLogo(): string
 	{
-		if( !( strlen( trim( $this->logoTitle ?? '' ) ) || strlen( trim( $this->logoIcon ?? '' ) ) ) )
+		$logoTitle	= trim( $this->logoTitle ?? '' );
+		$logoIcon	= trim( $this->logoIcon ?? '' );
+		if( '' === $logoTitle && '' === $logoIcon )
 			return '';
 		$icon	= '';
-		if( $this->logoIcon ){
-			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
+		if( '' !== $logoIcon ){
+			$icon	= $this->inverse ? $logoIcon.' icon-white' : $logoIcon;
 			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 		}
 		$label	= $icon.'&nbsp;'.$this->logoTitle;

@@ -47,6 +47,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 			$this->helperFacts->add( 'projectId', $link, $project->title );
 		}
 		if( (int) $mission->workerId ){
+			/** @var ?Entity_User $worker */
 			$worker		= $this->modelUser->get( $mission->workerId );
 			$this->helperFacts->add( 'worker', $this->renderUser( $worker ), $this->renderUserAsText( $worker ) );
 		}
@@ -141,6 +142,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 //		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
+		/** @var ?Entity_User $modifier */
 		$modifier		= $this->modelUser->get( $mission->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];

@@ -69,6 +69,7 @@ class Controller_Shop_Customer extends Controller
 			$country	= $data->get( 'country' );
 		if( $this->request->has( 'save' ) ){
 			if( $addressId > 0 ){
+				/** @var ?Entity_Address $address */
 				$address	= $this->modelAddress->getByIndices( [
 					'addressId'		=> $addressId,
 	 				'relationId'	=> $relationId,
@@ -122,6 +123,7 @@ class Controller_Shop_Customer extends Controller
 			}
 			if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_GUEST ){
 				if( $type === Model_Address::TYPE_BILLING ){
+					/** @var ?Entity_Address $address */
 					$address	= $this->modelAddress->get( $addressId );
 					$this->modelUser->edit( $relationId, [
 						'firstname'	=> $address->firstname,
@@ -143,6 +145,7 @@ class Controller_Shop_Customer extends Controller
 			$this->messenger->noteError( 'No address ID given.' );
 			$this->restart( NULL, TRUE );
 		}
+		/** @var ?Entity_Address $address */
 		$address	= $this->modelAddress->get( $addressId );
 		if( !$address ){
 			$this->messenger->noteError( 'Invalid address ID given.' );
@@ -246,12 +249,15 @@ class Controller_Shop_Customer extends Controller
 			if( $userId ){
 				if( !$this->modelCart->get( 'userId' ) )
 					$this->modelCart->set( 'userId', $userId );
+				/** @var ?Entity_User $user */
 				$user		= $this->modelUser->get( $userId );
+				/** @var ?Entity_Address $addressDelivery */
 				$addressDelivery	= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
 					'type'			=> Model_Address::TYPE_DELIVERY,
 				] );
+				/** @var ?Entity_Address $addressBilling */
 				$addressBilling		= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
@@ -303,11 +309,13 @@ class Controller_Shop_Customer extends Controller
 			$logicAuth->setAuthenticatedUser( $this->modelUser->get( $userId ) );
 			$this->modelCart->set( 'userId', $userId );
 		}
+		/** @var ?Entity_Address $addressDelivery */
 		$addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
 		] );
+		/** @var ?Entity_Address $addressBilling */
 		$addressBilling		= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,

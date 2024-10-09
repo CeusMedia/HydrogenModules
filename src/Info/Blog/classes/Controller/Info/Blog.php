@@ -166,6 +166,7 @@ class Controller_Info_Blog extends Controller
 		];
 
 		$mail		= new Mail_Info_Blog_Comment( $this->env, $data );								//  generate mail to post author
+		/** @var ?Entity_User $postAuthor */
 		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
@@ -179,6 +180,7 @@ class Controller_Info_Blog extends Controller
 			if( $item->authorId == $post->authorId )												//  comment by original author
 				continue;																			//  already has been informed
 			if( $item->authorId ){																	//  comment by authenticated user
+				/** @var ?Entity_User $commentAuthor */
 				$commentAuthor	= $this->modelUser->get( $item->authorId );							//  get comment user
 				if( $commentAuthor->status < 0 )													//  user is not active (anymore)
 					continue;																		//  skip

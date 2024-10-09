@@ -100,6 +100,7 @@ class Logic_Issue extends Logic
 		$users		= [];																			//  prepare empty result map
 		$conditions	= ['userId' => array_unique( $userIds )];										//  reduce to unique user IDs
 		$orders		= ['username' => 'ASC'];														//  order by username
+		/** @var ?Entity_User $user */
 		foreach( $this->modelUser->getAll( $conditions, $orders ) as $user ){						//  iterate found users
 			$users[$user->userId]	= $user;														//  note user by its ID
 			$user->isInProject	= FALSE;															//  set project assignment to false default

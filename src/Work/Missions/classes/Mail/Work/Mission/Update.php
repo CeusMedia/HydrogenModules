@@ -225,10 +225,12 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	protected function handleChangedWorker( object $old, object $new ): void
 	{
 		if( $old->workerId ){
+			/** @var ?Entity_User $workerOld */
 			$workerOld	= $this->modelUser->get( $old->workerId );
 			$workerHtml	= $this->renderUser( $workerOld, TRUE );
 			$workerText	= $this->renderUserAsText( $workerOld );
 			if( $new->workerId && (int) $old->workerId !== (int) $new->workerId ){
+				/** @var ?Entity_User $workerNew */
 				$workerNew	= $this->modelUser->get( $new->workerId );
 				$workerHtml	= $workerHtml.' &rarr; '.$this->renderUser( $workerNew, TRUE );
 				$workerText	= $workerText.' -> '.$this->renderUserAsText( $workerNew );
@@ -342,6 +344,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
+		/** @var ?Entity_User $modifier */
 		$modifier		= $this->modelUser->get( $new->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];

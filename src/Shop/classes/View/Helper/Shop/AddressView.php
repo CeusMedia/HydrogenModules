@@ -19,9 +19,9 @@ class View_Helper_Shop_AddressView
 	protected Environment $env;
 	protected Model_Address $model;
 	protected array $words;
-	protected int $output			= self::OUTPUT_HTML;
-	protected ?object $address		= NULL;
-	protected ?string $textTop		= NULL;			//  unused atm
+	protected int $output				= self::OUTPUT_HTML;
+	protected ?Entity_Address $address	= NULL;
+	protected ?string $textTop			= NULL;			//  unused atm
 
 	public function __construct( Environment $env )
 	{
@@ -49,7 +49,7 @@ class View_Helper_Shop_AddressView
 	public function render(): string
 	{
 		$content	= '';
-		if( $this->address ){
+		if( NULL !== $this->address ){
 			switch( $this->output ){
 				case self::OUTPUT_HTML:
 					$content	= $this->renderAsHtml();
@@ -63,18 +63,12 @@ class View_Helper_Shop_AddressView
 	}
 
 	/**
-	 *	@param		object|int|string		$addressOrId
+	 *	@param		Entity_Address		$address
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setAddress( object|int|string $addressOrId ): self
+	public function setAddress( Entity_Address $address ): self
 	{
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', (string) $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		$this->address	= $address;
 		return $this;
 	}
 

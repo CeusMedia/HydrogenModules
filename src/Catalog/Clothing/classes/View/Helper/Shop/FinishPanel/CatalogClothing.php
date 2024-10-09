@@ -33,6 +33,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 
 		$order			= $this->logicShop->getOrder( $this->orderId );
 		$modelAddress	= new Model_Address( $this->env );
+		/** @var ?Entity_Address $address */
 		$address		= $modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $order->userId,

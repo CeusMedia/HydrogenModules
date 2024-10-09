@@ -12,6 +12,6 @@ interface Logic_Authentication_BackendInterface
 	public function isIdentified(): bool;
 	public function isCurrentUserId( int|string $userId): bool;
 	public function noteUserActivity(): self;
-	public function setAuthenticatedUser( object $user ): self;
-	public function setIdentifiedUser( object $user ): self;
+	public function setAuthenticatedUser( Entity_User $user ): self;
+	public function setIdentifiedUser( Entity_User $user ): self;
 }

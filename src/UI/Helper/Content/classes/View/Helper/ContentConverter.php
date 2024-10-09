@@ -219,7 +219,7 @@ class View_Helper_ContentConverter
 			foreach( $lines as $nr => $line )
 				$lines[$nr]	= preg_replace( '/^- /', '<li>', trim( $lines[$nr] ) ).'</li>';
 			$lines	= implode( "\n", $lines );
-			$attributes	= array( 'class' => $class ?: 'list');
+			$attributes	= ['class' => $class ?: 'list'];
 			$new		= HtmlTag::create( $type.'l', $lines, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}

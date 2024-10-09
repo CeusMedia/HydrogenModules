@@ -24,6 +24,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			return FALSE;
@@ -106,6 +107,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
+			/** @var ?Entity_User $user */
 			$user	= $this->modelUser->get( $userId );
 			if( $user ){
 				if( $withRole )

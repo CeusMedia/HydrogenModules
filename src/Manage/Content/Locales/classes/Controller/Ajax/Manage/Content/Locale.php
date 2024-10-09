@@ -12,7 +12,7 @@ use CeusMedia\Common\Net\HTTP\PartitionSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
-class Controller_Manage_Content_Locale extends AjaxController
+class Controller_Ajax_Manage_Content_Locale extends AjaxController
 {
 	protected HttpRequest $request;
 	protected PartitionSession $session;

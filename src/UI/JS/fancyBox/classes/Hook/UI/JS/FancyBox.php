@@ -29,10 +29,10 @@ class Hook_UI_JS_FancyBox extends Hook
 				unset( $options['button.'.$button] );
 				$enabled ? ( $options['buttons'][] = $button ) : NULL;
 			}
-			$script		= vsprintf( 'jQuery(".%s").fancybox(%s);', array(
+			$script		= vsprintf( 'jQuery(".%s").fancybox(%s);', [
 				$config->get( 'auto.class' ),
-				json_encode( $options ),
-			) );
+				json_encode( $options, JSON_THROW_ON_ERROR ),
+			] );
 			$context->js->addScriptOnReady( $script );
 		}
 	}

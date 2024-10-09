@@ -39,7 +39,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function Checkbox( string $name, $value, bool $checked = FALSE, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes	= array(
+		$attributes	= [
 			'type'		=> 'checkbox',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
@@ -47,7 +47,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			'class'		=> $class,
 			'checked'	=> $checked ? 'checked' : NULL,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
@@ -143,14 +143,14 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function Input( string $name, $value, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes	= array(
+		$attributes	= [
 			'type'		=> 'text',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
 			'value'		=> htmlspecialchars( $value ?? '', ENT_COMPAT, 'UTF-8' ),
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		if( preg_match( "/(mandatory|required)/", $class ) )
 			$attributes['required']	= 'required';
 		return self::Tag( 'input', NULL, $attributes );
@@ -237,14 +237,14 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 		}
 		if( preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )
 			$onChange	= "document.getElementById('".self::$prefixIdForm.$onChange."').submit();";
-		$attributes	= array(
+		$attributes	= [
 			'id'		=> str_replace( '[]', '', self::$prefixIdInput.$name ),
 			'name'		=> $name,
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
 			'multiple'	=> str_ends_with( trim( $name ), '[]' ) ? 'multiple' : NULL,
 			'onchange'	=> $onChange,
-		);
+		];
 		return HTML::Tag( 'select', $options, $attributes );
 	}
 

@@ -65,6 +65,7 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -141,6 +142,7 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );

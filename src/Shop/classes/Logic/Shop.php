@@ -81,6 +81,7 @@ class Logic_Shop extends Logic
 	 */
 	public function getAccountCustomer( int|string $userId ): object
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new RangeException( 'No customer found for user ID '.$userId );
@@ -97,10 +98,11 @@ class Logic_Shop extends Logic
 		return $user;
 	}
 
-	public function getBillingAddressFromCart(): ?object
+	public function getBillingAddressFromCart(): ?Entity_Address
 	{
 		$address		= NULL;
 		if( $this->modelCart->get( 'userId' ) ){
+			/** @var ?Entity_Address $address */
 			$address	= $this->modelAddress->getByIndices( [
 				'relationId'	=> $this->modelCart->get( 'userId' ),
 				'relationType'	=> 'user',
@@ -110,10 +112,11 @@ class Logic_Shop extends Logic
 		return $address;
 	}
 
-	public function getDeliveryAddressFromCart(): ?object
+	public function getDeliveryAddressFromCart(): ?Entity_Address
 	{
 		$address		= NULL;
 		if( $this->modelCart->get( 'userId' ) ){
+			/** @var ?Entity_Address $address */
 			$address	= $this->modelAddress->getByIndices( [
 				'relationId'	=> $this->modelCart->get( 'userId' ),
 				'relationType'	=> 'user',

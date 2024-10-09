@@ -81,6 +81,7 @@ class Job_Work_Mission extends Job_Abstract
 	public function mailDaily(): void
 	{
 		$count			= 0;
+		/** @var array<Entity_User> $activeUsers */
 		$activeUsers	= $this->modelUser->getAll( ['status' => '> 0'] );						//  get all active users
 		foreach( $activeUsers as $user ){														//  iterate found users
 			if( $this->sendDailyMailOfUser( $user ) )											//  try to send daily mail

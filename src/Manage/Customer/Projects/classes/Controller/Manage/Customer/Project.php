@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_Customer_Project extends Controller
 {
 	protected $messenger;
-	protected $modelCustomer;
-	protected $logic;
+	protected Model_Customer_Project $modelCustomer;
+	protected Logic_CustomerProject $logic;
 
-	public function add( $customerId )
+	public function add( int|string $customerId ): void
 	{
 		$request	= $this->env->getRequest();
 		$projectId	= $request->get( 'projectId' );

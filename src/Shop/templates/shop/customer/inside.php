@@ -3,6 +3,13 @@
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var ?Entity_Address $addressDelivery */
+/** @var ?Entity_Address $addressBilling */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_User $user */
 
 $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
@@ -15,11 +22,19 @@ $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
 ] );
 
 if( !$addressDelivery ){
-	$address				= $user;
+	$address				= new Entity_Address();
+	$address->type			= Model_Address::TYPE_DELIVERY;
+	$address->relationId	= $user->userId;
+	$address->firstname		= $user->firstname;
+	$address->surname		= $user->surname;
+	$address->country		= $user->country;
+	$address->city			= $user->city;
+	$address->postcode		= $user->postcode;
 	$address->street		= $user->street;
+	$address->email			= $user->email;
+	$address->phone			= $user->phone;
 	$address->institution	= '';
 	$address->region		= '';//$user->region;
-	$address->country		= $user->country;
 
 	$helper		= new View_Helper_Shop_AddressForm( $env );
 	$helper->setAddress( $address );

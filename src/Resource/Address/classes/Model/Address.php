@@ -50,5 +50,7 @@ class Model_Address extends Model
 		'longitude',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Address::class;
 }

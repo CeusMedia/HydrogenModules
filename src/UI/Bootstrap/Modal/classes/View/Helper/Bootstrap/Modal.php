@@ -52,14 +52,14 @@ class View_Helper_Bootstrap_Modal
 		] );
 		$footer		= $this->renderFooter();
 		$header		= $this->renderHeader();
-		$attributes	= array(
+		$attributes	= [
 			'id'				=> $this->id,
 			'class'				=> 'modal hide'.( $this->fade ? ' fade' : '' ),
 			'tabindex'			=> '-1',
 			'role'				=> 'dialog',
 			'aria-hidden'		=> 'true',
 			'aria-labelledby'	=> 'myModalLabel',
-		);
+		];
 		foreach( $this->attributes as $key => $value ){
 			switch( strtolower( $key ) ){
 				case 'id':
@@ -76,9 +76,9 @@ class View_Helper_Bootstrap_Modal
 		}
 		$content	= [$header, $body, $footer];
 		if( $this->isBs4 ){
-			$content	= HtmlTag::create( 'div', array(
+			$content	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', $content, ['class' => 'modal-content'] ),
-			), [
+			], [
 				'class'	=> 'modal-dialog',
 				'role'	=> 'document',
 			] );

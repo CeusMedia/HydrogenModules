@@ -29,6 +29,7 @@ class Controller_Manage_My_User extends Controller
 		$this->checkConfirmationPassword();
 
 		$words		= (object) $this->getWords( 'edit' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -87,6 +88,7 @@ class Controller_Manage_My_User extends Controller
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'email' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$email		= trim( $this->request->get( 'email' ) );
 
@@ -130,6 +132,7 @@ class Controller_Manage_My_User extends Controller
 			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
 			$this->restart( './' );
 		}
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$user->role	= $modelRole->get( $user->roleId );
 		if( class_exists( 'Model_Company' ) ){
@@ -159,7 +162,7 @@ class Controller_Manage_My_User extends Controller
 	public function password(): void
 	{
 		$words		= (object) $this->getWords( 'password' );
-		/** @var Entity_User $user */
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -244,6 +247,7 @@ class Controller_Manage_My_User extends Controller
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'username' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$username	= trim( $this->request->get( 'username' ) );
 
@@ -260,7 +264,7 @@ class Controller_Manage_My_User extends Controller
 			'userId'	=> '!= '.$this->userId,
 //			'status'	=> '>= -1',																//  disabled for integrity
 		];
-		if( $this->modelUser->getByIndices( $indices ) ){
+		if( $this->modelUser->hasByIndices( $indices ) ){
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			$this->restart( NULL, TRUE );
 		}
@@ -292,7 +296,7 @@ class Controller_Manage_My_User extends Controller
 			$this->restart( 'auth/login' );
 		}
 		$this->userId = $this->logicAuth->getCurrentUserId();
-		if( !$this->modelUser->get( $this->userId ) ){
+		if( !$this->modelUser->has( $this->userId ) ){
 			$this->messenger->noteError( $msg->errorInvalidUser );
 			$this->restart();
 		}

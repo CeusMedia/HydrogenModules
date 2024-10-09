@@ -103,10 +103,10 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 			$class	= 'active';
 		}
 		$label		= self::renderLabelWithIcon( $entry );
-		$link		= HtmlTag::create( 'a', $label, array(
+		$link		= HtmlTag::create( 'a', $label, [
 			'href'	=> $entry->path,
 			'title'	=> !empty( $entry->desc ) ? $entry->desc : NULL,
-		) );
+		] );
 		return HtmlTag::create( 'li', $link, [
 			'class'	=> $class,
 			'role'	=> 'presentation'

@@ -32,12 +32,12 @@ class View_Helper_DevProfiler
 
 			$about		= round( $width / 5 ) * 5;
 			$classes	= ['task-line', 'about-'.$about];
-			$cells		= array(
+			$cells		= [
 				'<td class="task-title">'.$task->label.'</td>',
 				'<td class="task-measure">'.round( $task->timeMicro / $timeTotal * 100 ).'%</td>',
 				'<td class="task-measure">'.self::formatTime( $task->timeMicro ).'s</td>',
 				'<td><div class="task-line">'.$bar.'</div></td>'
-			);
+			];
 			$list[]		= '<tr class="'.join( ' ', $classes ).'">'.join( $cells ).'</tr>';
 			$current	= $task->totalMicro;
 		}

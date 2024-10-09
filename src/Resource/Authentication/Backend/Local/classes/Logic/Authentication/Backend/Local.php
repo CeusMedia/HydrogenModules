@@ -95,6 +95,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
+			/** @var ?Entity_User $user */
 			$user	= $this->modelUser->get( $userId );
 			if( $user ){
 				if( $withRole )
@@ -151,7 +152,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 		return $this;
 	}
 
-	public function setAuthenticatedUser( object $user ): self
+	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );

@@ -26,5 +26,7 @@ class Model_Shop_Customer extends Model
 
 	protected array $indices		= [];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Address::class;
 }

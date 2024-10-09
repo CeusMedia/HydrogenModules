@@ -38,11 +38,11 @@ class Hook_UI_ContextHelp extends Hook
 			$dom->loadFromFile( $filePath );
 			$sections	= $dom->find( 'div.context-help' );
 			foreach( $sections as $section ){
-				$list[]	= array(
+				$list[]	= [
 					$section->getAttribute('id'),
 					$section->getAttribute('data-selector'),
 					$section->innerHtml
-				);
+				];
 			}
 			if( $list ){
 				$script	= 'ContextHelp.loadHelp('.json_encode( $list ).');';

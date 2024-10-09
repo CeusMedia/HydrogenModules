@@ -154,7 +154,7 @@ class Controller_Manage_Role extends Controller
 		$words		= $this->language->getWords( 'manage/role' );
 		$role		= $this->modelRole->get( $roleId );
 
-		if( $this->modelUser->getByIndex( 'roleId', $roleId ) ){
+		if( $this->modelUser->hasByIndex( 'roleId', $roleId ) ){
 			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
 			$this->restart( 'edit/'.$roleId, TRUE );
 		}
