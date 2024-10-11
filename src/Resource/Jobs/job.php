@@ -25,10 +25,10 @@ $errorHandling	= [
 	'catch'		=> TRUE,
 ];
 
-file_exists( 'vendor' ) or die( 'Please install first, using composer!' );
-require_once 'vendor/autoload.php';
-#require_once 'vendor/ceus-media/common/src/compat8.php';
-require_once 'classes/JobScriptHelper.php';
+file_exists( __DIR__.'/vendor' ) or die( 'Please install first, using composer!' );
+require_once __DIR__.'/vendor/autoload.php';
+#require_once __DIR__.'/vendor/ceus-media/common/src/compat8.php';
+require_once __DIR__.'/classes/JobScriptHelper.php';
 
 
 /*  --  JOB SCRIPT  --  */

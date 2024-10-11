@@ -47,7 +47,8 @@ class Job_Job_Test extends Job_Abstract
 	}
 
 	/**
-	 *	Prints given parameters.
+	 *	Waits for n second.
+	 *	Takes first argument as number of seconds, defaults to 1.
 	 *	@access		public
 	 *	@return		void
 	 */
@@ -55,8 +56,8 @@ class Job_Job_Test extends Job_Abstract
 	{
 //		throw new Exception( 'Test Exception' );
 		$seconds	= 1;
-		if( $this->commands )
-			$seconds	= (int) current( $this->commands );
+		if( [] !== $this->commands )
+			$seconds	= max( 1, (int) current( $this->commands ) );
 		$this->out( 'Waiting for '.$seconds.' seconds ...' );
 		sleep( $seconds );
 	}

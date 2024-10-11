@@ -8,6 +8,16 @@ use CeusMedia\HydrogenFramework\Environment\Console as ConsoleEnvironment;
 
 class JobScriptHelper
 {
+	const MODE_DEV		= 'dev';
+	const MODE_TEST		= 'test';
+	const MODE_LIVE		= 'live';
+
+	const MODES			= [
+		self::MODE_DEV,
+		self::MODE_TEST,
+		self::MODE_LIVE,
+	];
+
 	protected Request $request;
 	protected string $configFile	= "config.ini";							//  config file
 	protected array $errorHandling	= [
@@ -15,12 +25,8 @@ class JobScriptHelper
 		'display'	=> TRUE,
 		'catch'		=> TRUE,
 	];
-	protected array $modes			= [
-		'live',
-		'test',
-		'dev',
-	];
-	protected string $mode;
+	protected array $modes			= self::MODES;
+	protected string $mode			= self::MODE_DEV;
 	protected string $pathClasses	= 'classes/';
 	protected bool $verbose			= FALSE;
 

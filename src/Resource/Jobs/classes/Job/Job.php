@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
+use CeusMedia\Common\Alg\Obj\MethodDocBlockInspector;
 use CeusMedia\Common\CLI\Question;
 use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
 use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
@@ -96,20 +97,40 @@ class Job_Job extends Job_Abstract
 			if( count( $jobIdentifiers ) !== 1 )
 				$this->out( 'Job: '.$jobIdentifier );
 			$constants	= new ObjectConstant( 'Model_Job_Definition' );
+
 			$data	= [
 				'Method'		=> 'Job_'.$job->className.' >> '.$job->methodName,
 				'Mode'			=> strtolower( $constants->getKeyByValue( (int) $job->mode, 'MODE_' ) ),
 				'Status'		=> strtolower( $constants->getKeyByValue( (int) $job->status, 'STATUS_' ) ),
 			];
-			$arguments	= json_decode( $job->arguments );
-			if( $arguments )
-				$data['Arguments']	= print_m( $arguments, NULL, NULL, TRUE );
+
+			if( '' !== ( $job->arguments ?? '' ) ){
+				$arguments	= json_decode( $job->arguments );
+				if( [] !== $arguments ){
+					$data['Arguments']	= print_m( $arguments, NULL, NULL, TRUE );
+				}
+			}
+
+
+
 //			if( $job->interval )
 //				$data['Interval']	= $job->interval;
 			if( !empty( $job->deprecated ) )
 				$data['Deprecated']	= $job->deprecated;
 			foreach( $data as $label => $value )
 				$this->out( str_pad( '- '.$label.':', 15 ).$value );
+
+			try{
+				$lines	= MethodDocBlockInspector::get( 'Job_'.$job->className, $job->methodName );
+				if( 0 !== count( $lines ) ){
+					$this->out();
+					foreach( $lines as $line )
+						$this->out( $line );
+				}
+			}
+			catch( ReflectionException $e ){
+				$this->out( 'Error: Class method is not existing' );
+			}
 		}
 	}
 

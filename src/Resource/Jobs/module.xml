@@ -22,7 +22,11 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 Having set execution permissions to job.php, you can run the job like this:
 code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 
-<b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
+For example, to wait for 1 second, run:
+code:shell>./job.php Job.Test.wait 1<code
+
+You can get information about each job with:
+code:shell>./job.php Job.info JOB_ID<code
 ]]></description>
 	<category>Resource</category>
 	<version>0.8.6</version>
