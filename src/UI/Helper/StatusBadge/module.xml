@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<module>
+	<title>UI: Helper: StatusBadge</title>
+	<description><![CDATA[Renders Bootstrap badge for entity status information.
+
+Example:
+code>
+$helper	= View_Helper_StatusBadge::create();
+	->setStatusMap( [
+		StatusBadge::STATUS_POSITIVE	=> 1,
+		StatusBadge::STATUS_NEGATIVE	=> 0,
+	] )
+	->setLabelMap( [
+		StatusBadge::STATUS_POSITIVE	=> 'good',
+		StatusBadge::STATUS_NEGATIVE	=> 'bad',
+	] );
+$badge	= $helper->setStatus( 1 )->render();
+<code
+]]></description>
+	<category>User Interface</category>
+	<version>0.2.0</version>
+	<log version="0.1">Initial prototype.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<files>
+		<class>View/Helper/StatusBadge.php</class>
+	</files>
+	<relations>
+		<needs type="module">UI_Bootstrap</needs>
+	</relations>
+</module>
