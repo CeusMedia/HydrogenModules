@@ -1,13 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace CeusMedia\HydrogenModules;
-
 use CeusMedia\Bootstrap\Badge;
 use CeusMedia\Common\Renderable;
-use RangeException;
-use RuntimeException;
-use Stringable;
 
 class View_Helper_StatusBadge implements Renderable, Stringable
 {
