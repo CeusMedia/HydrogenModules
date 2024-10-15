@@ -11,13 +11,29 @@ class View_Helper_StatusBadge implements Renderable, Stringable
 	const STATUS_NEGATIVE	= 2;
 	const STATUS_TRANS		= 3;
 
+	const TYPE_BADGE		= 1;
+	const TYPE_LABEL		= 2;
+	const TYPES				= [
+		self::TYPE_BADGE,
+		self::TYPE_LABEL,
+	];
+
 	protected ?int $status	= NULL;
+	protected int $type		= self::TYPE_BADGE;
 
 	protected array $colorMap	= [
-		self::STATUS_NEUTRAL	=> Badge::CLASS_INFO,
-		self::STATUS_POSITIVE	=> Badge::CLASS_SUCCESS,
-		self::STATUS_NEGATIVE	=> Badge::CLASS_IMPORTANT,
-		self::STATUS_TRANS		=> Badge::CLASS_WARNING,
+		self::TYPE_BADGE	=> [
+			self::STATUS_NEUTRAL	=> Badge::CLASS_INFO,
+			self::STATUS_POSITIVE	=> Badge::CLASS_SUCCESS,
+			self::STATUS_NEGATIVE	=> Badge::CLASS_IMPORTANT,
+			self::STATUS_TRANS		=> Badge::CLASS_WARNING,
+		],
+		self::TYPE_LABEL	=> [
+			self::STATUS_NEUTRAL	=> Badge::CLASS_INFO,
+			self::STATUS_POSITIVE	=> Badge::CLASS_SUCCESS,
+			self::STATUS_NEGATIVE	=> Badge::CLASS_IMPORTANT,
+			self::STATUS_TRANS		=> Badge::CLASS_WARNING,
+		]
 	];
 
 	protected array $statusMap;
@@ -80,7 +96,8 @@ class View_Helper_StatusBadge implements Renderable, Stringable
 		if( !array_key_exists( $this->status, $map ) )
 			throw new RangeException( 'No status mapping available for this status' );
 		$innerStatus	= $map[$this->status];
-		$colorClass		= $this->colorMap[$innerStatus];
+		$colorClass		= $this->colorMap[$this->type][$innerStatus];
+		$colorClass		= ( self::TYPE_BADGE === $this->type ? 'badge ' : 'label ' ).$colorClass;
 
 		if( !array_key_exists( $innerStatus, $this->labelMap ) )
 			throw new RangeException( 'No label mapping available for this status' );
@@ -117,11 +134,17 @@ class View_Helper_StatusBadge implements Renderable, Stringable
 	}
 
 	/**
+	 *	Sets your status, which will be translated into internal status, label and color during rendering.
 	 *	@param		int		$status
 	 *	@return		self
+	 *	@throws		RangeException	if given status is not within status map (if map is already set)
 	 */
 	public function setStatus( int $status ): self
 	{
+		if( [] !== $this->statusMap ){
+			if( !in_array( $status, $this->statusMap ) )
+				throw new RangeException( 'Invalid status: '.$status );
+		}
 		$clone	= clone( $this );
 		$clone->status	= $status;
 		return $clone;
@@ -140,6 +163,21 @@ class View_Helper_StatusBadge implements Renderable, Stringable
 			self::STATUS_NEUTRAL	=> $map[self::STATUS_NEUTRAL] ?? NULL,
 			self::STATUS_TRANS		=> $map[self::STATUS_TRANS] ?? NULL,
 		];
+		return $this;
+	}
+
+	/**
+	 *	Set render type, either TYPE_BADGE or TYPE_LABEL.
+	 *	Will decide which Bootstrap style is to be used during rendering.
+	 *	@param		int		$type
+	 *	@return		self
+	 *	@throws		RangeException	if given type is neither TYPE_BADGE nor TYPE_LABEL
+	 */
+	public function setType( int $type ): self
+	{
+		if( !in_array( $type, self::TYPES, TRUE ) )
+			throw new RangeException( 'Invalid type: '.$type );
+		$this->type		= $type;
 		return $this;
 	}
 }

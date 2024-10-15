@@ -6,6 +6,7 @@ class Controller_Manage_Form_Target extends Controller
 {
 	protected Model_Form_Transfer_Target $modelTarget;
 	protected Model_Form_Fill_Transfer $modelTransfer;
+	protected Model_Form_Transfer_Rule $modelRule;
 
 	/**
 	 *	@return		void
@@ -63,9 +64,10 @@ class Controller_Manage_Form_Target extends Controller
 	{
 		$targets	= $this->modelTarget->getAll( [], ['title' => 'ASC'] );
 		foreach( $targets as $target ){
-			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, ['createdAt' => 'DESC'], ['createdAt'] );
+			$target->rules		= $this->modelRule->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->transfers	= $this->modelTransfer->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->fails		= count( $this->getLatestUnhandledFailedTransfers( $target->formTransferTargetId ) );
+			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, ['createdAt' => 'DESC'], ['createdAt'] );
 		}
 		$this->addData( 'targets', $targets );
 	}
@@ -90,6 +92,7 @@ class Controller_Manage_Form_Target extends Controller
 	{
 		$this->modelTarget		= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransfer	= new Model_Form_Fill_Transfer( $this->env );
+		$this->modelRule		= new Model_Form_Transfer_Rule( $this->env );
 	}
 
 	/**

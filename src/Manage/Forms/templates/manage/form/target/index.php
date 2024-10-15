@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 $table	= HtmlTag::create( 'div', 'Keine Transferziele definiert. <a href="./manage/form/target/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );
 
 $statusHelper	= View_Helper_StatusBadge::create()
+	->setType( View_Helper_StatusBadge::TYPE_LABEL )
 	->setStatusMap( [
 		View_Helper_StatusBadge::STATUS_POSITIVE	=> 1,
 		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 0,

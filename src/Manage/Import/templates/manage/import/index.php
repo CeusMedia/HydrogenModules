@@ -15,11 +15,14 @@ $table		= HtmlTag::create( 'div', 'No connections found.', array ('class' => 'hi
 //print_m( $connectorMap );
 
 $statusHelper	= View_Helper_StatusBadge::create()
+	->setType( View_Helper_StatusBadge::TYPE_LABEL )
 	->setStatusMap( [
 		View_Helper_StatusBadge::STATUS_POSITIVE	=> 1,
 		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 0,
 	] )
 	->setLabelMap( [
+//		View_Helper_StatusBadge::STATUS_POSITIVE	=> \CeusMedia\Bootstrap\Icon::create( 'toggle-on' ).'&nbsp;aktiviert',
+//		View_Helper_StatusBadge::STATUS_NEGATIVE	=> \CeusMedia\Bootstrap\Icon::create( 'toggle-off' ).'&nbsp;deaktiviert',
 		View_Helper_StatusBadge::STATUS_POSITIVE	=> 'aktiviert',
 		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'deaktiviert',
 	] );
@@ -47,7 +50,7 @@ if( count( $connections ) > 0 ){
 	$thead	= HtmlElements::TableHeads( ['ID', 'Titel', 'Zustand', 'Zugang', 'Connector', 'erstellt', 'verändert'] );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 
-	$colgroup	= HtmlElements::ColumnGroup( ['5%', '', '8%', '10%', '20%', '15%', '15%'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['4%', '', '8%', '10%', '25%', '12%', '12%'] );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 }
 
@@ -71,6 +74,7 @@ $panelConnectorList	= '';
 if( [] !== $connectorMap ){
 	$rows	= [];
 /*	$statusHelper	= View_Helper_StatusBadge::create()
+		->setType( View_Helper_StatusBadge::TYPE_LABEL )
 		->setStatusMap( [
 			View_Helper_StatusBadge::STATUS_POSITIVE	=> 1,
 			View_Helper_StatusBadge::STATUS_NEGATIVE	=> 0,
@@ -80,6 +84,7 @@ if( [] !== $connectorMap ){
 			View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'deaktiviert',
 		] );*/
 	$types	= [
+		0	=> 'unbekannt',
 		1	=> 'Pull: asynchron',
 		2	=> 'Pull: synchron',
 		3	=> 'Push: POST',
@@ -94,24 +99,23 @@ if( [] !== $connectorMap ){
 		}
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $connector->importConnectorId ),
-			HtmlTag::create( 'td', $title ),
+			HtmlTag::create( 'td', $title.'<br/><small class="muted">'.$connector->className.'</small>' ),
 			HtmlTag::create( 'td', $statusHelper->setStatus( $connector->status ) ),
 			HtmlTag::create( 'td', $types[$connector->type] ),
 			HtmlTag::create( 'td', $connector->mimeTypes ),
-			HtmlTag::create( 'td', $connector->className ),
+//			HtmlTag::create( 'td', $connector->className ),
 			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->createdAt, TRUE, 'vor' ) ),
 			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->modifiedAt, TRUE, 'vor' ) ),
 		] );
 	}
-	$colgroup	= HtmlElements::ColumnGroup( ['5%', '', '8%', '10%', '20%', '15%', '15%'] );
-	$thead		= HtmlElements::TableHeads( ['ID', 'Titel', 'Zustand', 'Zugang', 'Connector', 'erstellt', 'verändert'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['4%', '', '8%', '10%', '14%'/*, '26%'*/, '12%', '12%'] );
+	$thead		= HtmlElements::TableHeads( ['ID', 'Titel / Klasse', 'Zustand', 'Zugang', 'MIME-Type'/*, 'Connector'*/, 'erstellt', 'verändert'] );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 	$panelConnectorList	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h3', 'Importverbindungen' ),
+		HtmlTag::create( 'h3', 'Connectors' ),
 		HtmlTag::create( 'div', [
 			$table,
-			HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] ),
 		], ['class' => 'content-panel-inner'] ),
 	], ['class' => 'content-panel'] );;
 }
