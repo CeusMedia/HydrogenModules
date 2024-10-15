@@ -14,7 +14,7 @@ The form action will save the entered data and send mails according to rules.
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -45,6 +45,7 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.6.2">Extract receive controller.</log>
 	<log version="0.6.3">Improve code strictness and documentation.</log>
 	<log version="0.6.4">Migrate import controller to new API controller.</log>
+	<log version="0.6.5">Move Logic_Form_Fill mostly to Resource:Forms.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -60,7 +61,7 @@ The form action will save the entered data and send mails according to rules.
 		<class>Controller/Manage/Form/Import.php</class>
 		<class>Controller/Manage/Form/Mail.php</class>
 		<class>Controller/Manage/Form/Target.php</class>
-		<class>Logic/Form/Fill.php</class>
+		<class>Logic/Form/FillManager.php</class>
 		<class>View/Manage/Form.php</class>
 		<class>View/Manage/Form/Block.php</class>
 		<class>View/Manage/Form/Fill.php</class>
@@ -112,6 +113,7 @@ The form action will save the entered data and send mails according to rules.
 		<needs type="module">JS_Ace</needs>
 		<needs type="module">Resource_Forms</needs>
 		<needs type="module">UI_Helper_Forms</needs>
+		<needs type="module">UI_Helper_StatusBadge</needs>
 	</relations>
 	<link xml:lang="de" access="acl" rank="45" path="manage/form">Formulare</link>
 	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</link>

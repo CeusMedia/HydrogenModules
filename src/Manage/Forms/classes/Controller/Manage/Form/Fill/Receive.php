@@ -8,7 +8,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 {
 	protected HttpRequest $request;
 
-	protected Logic_Form_Fill $logicFill;
+	protected Logic_Form_FillManager $logicFill;
 
 	protected Model_Form $modelForm;
 
@@ -137,8 +137,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->logicFill	= $this->getLogic( 'formFill' );
+		$this->logicFill	= new Logic_Form_FillManager( $this->env );
 	}
 
 	/**

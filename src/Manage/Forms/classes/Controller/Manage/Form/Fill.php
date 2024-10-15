@@ -10,7 +10,7 @@ class Controller_Manage_Form_Fill extends Controller
 	protected HttpRequest $request;
 	protected HttpSession $session;
 	protected Logic_Mail $logicMail;
-	protected Logic_Form_Fill $logicFill;
+	protected Logic_Form_FillManager $logicFill;
 
 	protected Model_Form $modelForm;
 	protected Model_Form_Fill $modelFill;
@@ -279,10 +279,8 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail			= Logic_Mail::getInstance( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->logicFill			= $this->getLogic( 'formFill' );
+		$this->logicFill			= new Logic_Form_FillManager( $this->env );
 
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
