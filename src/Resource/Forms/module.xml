@@ -3,7 +3,7 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.4.1</version>
+	<version>0.4.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -17,7 +17,8 @@
 	<log version="0.3.8">Support attachment rules.</log>
 	<log version="0.3.9">Add first report job about failed transfers.</log>
 	<log version="0.4.0">Code update.</log>
-	<log version="0.4.1">Add transfer target interface and result entity.</log>
+	<log version="0.4.1">Add transfer target interface and request/result entities.</log>
+	<log version="0.4.2">Import Logic_Form_Fill from Manage:Forms.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -25,7 +26,9 @@
 		<class>Job/FormImport.php</class>
 		<class>Job/FormReport.php</class>
 <!--		<class>Logic/Form.php</class>-->
+		<class>Entity/Form/Fill/Transfer/Quest.php</class>
 		<class>Entity/Form/Fill/Transfer/Result.php</class>
+		<class>Logic/Form/Fill.php</class>
 		<class>Logic/Form/Transfer/DataMapper.php</class>
 		<class>Logic/Form/Transfer/Target/Interface.php</class>
 		<class>Mail/Form/Abstract.php</class>
@@ -54,7 +57,8 @@
 		<needs type="module">Resource_Import</needs>
 	</relations>
 	<job id="Form.Import.import">FormImport::import</job>
-	<job id="Form.Report.Transfer.failed">FormReport::reportFailedTranfers</job>
+	<job id="Form.Import.test">FormImport::test</job>
+	<job id="Form.Report.Transfer.failed">FormReport::reportFailedTransfers</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>form_blocks`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>form_blocks` (
