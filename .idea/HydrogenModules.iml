@@ -90,7 +90,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/bacon/bacon-qr-code" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dragonmantank/cron-expression" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/php-imap/php-imap" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/amenadiel/jpgraph" />
     </content>

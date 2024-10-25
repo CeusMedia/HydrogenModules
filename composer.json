@@ -36,12 +36,12 @@
     "require-dev": {
         "ceus-media/bootstrap": "^0.6 | 0.6.x-dev",
         "ceus-media/hydrogen-source-indexer": "^0.3 | 0.3.x-dev",
-        "ceus-media/mail": "^2.6 | 2.6.x-dev",
+        "ceus-media/mail": "2.7.0 | 2.7.x-dev",
         "ceus-media/markdown": "^0.2 | 0.2.x-dev",
         "ceus-media/open-graph": "*",
+        "ceus-media/php-parser": "^0.4 | 0.4.x-dev",
         "ceus-media/template-abstraction": "^0.5 | 0.5.x-dev",
         "ceus-media/rest": "^0.4 | 0.4.x-dev",
-        "ceus-media/php-parser": "dev-master",
         "phpunit/phpunit": "^9.5 | ^10.4",
         "phpstan/phpstan": "^1",
         "phpstan/phpstan-strict-rules": "^1",
@@ -65,14 +65,20 @@
         "ext-rrd": "*"
     },
     "autoload-dev": {
-        "classmap": ["src/"]
+        "classmap": ["src/"],
+        "psr-4": {
+            "CeusMedia\\HydrogenModulesTest\\": ["test/"],
+            "CeusMedia\\HydrogenModulesIntegrationTest\\": ["test/Integration"]
+        }
+
     },
     "scripts": {
         "dev:all": [
             "@dev:test-syntax",
+            "@dev:phpstan",
+            "@dev:phpunit",
             "@dev:index-serial",
             "@dev:index-json",
-            "@dev:phpstan",
             "@dev:rector"
         ],
         "dev:install": "composer install --quiet --ignore-platform-reqs",
