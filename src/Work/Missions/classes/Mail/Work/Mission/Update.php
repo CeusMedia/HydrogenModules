@@ -15,7 +15,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		parent::generate();
 		$this->setSubjectFromMission( $this->data['missionBefore'] );

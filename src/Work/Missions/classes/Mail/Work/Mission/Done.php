@@ -7,7 +7,7 @@ class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 
 	//  --  PROTECTED  --  //
 
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-change' );
 

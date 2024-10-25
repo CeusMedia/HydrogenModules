@@ -26,7 +26,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		$this->facts[$key]	= $term.$definition;
 	}
 
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->words			= $this->getWords( 'work/mission', $this->languageSection );

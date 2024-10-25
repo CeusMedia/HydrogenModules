@@ -33,7 +33,7 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );

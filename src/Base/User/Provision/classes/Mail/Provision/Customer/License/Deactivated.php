@@ -2,11 +2,11 @@
 class Mail_Provision_Customer_License_Deactivated extends Mail_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'user/provision' );

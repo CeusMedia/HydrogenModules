@@ -6,7 +6,7 @@ class Mail_Info_Testimonial_New extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data			= $this->data;
 		$config			= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );

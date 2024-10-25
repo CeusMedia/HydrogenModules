@@ -9,7 +9,7 @@ class Mail_Auth_Local_Register extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		IoException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

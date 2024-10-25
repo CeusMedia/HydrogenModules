@@ -100,7 +100,7 @@ class Logic_Work_Mission extends Logic
 	 *	@param		array			$additionalConditions
 	 *	@param		int				$limit
 	 *	@param		int				$offset
-	 *	@return		array
+	 *	@return		array<Entity_Mission>
 	 */
 	public function getFilteredUserMissions( int|string $userId, string $filterKeyPrefix, array $additionalConditions = [], int $limit = 0, int $offset = 0 ): array
 	{
@@ -140,11 +140,12 @@ class Logic_Work_Mission extends Logic
 	}
 
 	/**
+	 *	Returns found mission entities related to a user.
 	 *	@param		int|string		$userId
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
 	 *	@param		array			$limits
-	 *	@return		array
+	 *	@return		array<Entity_Mission>
 	 */
 	public function getUserMissions( int|string $userId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -177,7 +178,7 @@ class Logic_Work_Mission extends Logic
 			$conditions,
 			$orders,
 			( is_array( $limits ) && $limits ) ? $limits : [],
-			array_diff( $this->modelMission->getColumns(), ['content'] ),							//  all columns except content
+			[],																						//  all columns except content
 			array( 'missionId' ),																	//  HAVING needs grouping
 			array( join( ' OR ', $havings ) )												//  combine havings with OR
 		);

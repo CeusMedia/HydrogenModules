@@ -24,7 +24,7 @@ class Mail_Log_Exception extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );

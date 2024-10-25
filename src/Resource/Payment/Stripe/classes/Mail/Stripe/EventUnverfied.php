@@ -10,7 +10,7 @@ class Mail_Stripe_EventUnverified extends Mail_Abstract
 	 *	@return		self
 	 *	@throws		ReflectionException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= new Dictionary( $this->data );
 		$buffer		= new OutputBuffer();

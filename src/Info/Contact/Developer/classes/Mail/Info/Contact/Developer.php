@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Contact_Developer extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );

@@ -15,7 +15,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data	= $this->data;
 		$this->labelsStates		= $this->getWords( 'work/issue', 'states' );

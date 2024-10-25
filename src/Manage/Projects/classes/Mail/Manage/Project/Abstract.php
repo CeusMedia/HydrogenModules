@@ -1,11 +1,10 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\View;
 
 abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 //		$this->addThemeStyle( $modules->has( 'UI_Bootstrap' ) ? 'bootstrap.min.css' : 'mail.min.css' );
 /*		if( $this->env->getModules()->has( 'UI_CSS_Panel' ) ){
@@ -25,7 +24,6 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 	 */
 	protected function collectFacts( object $project ): View_Helper_Mail_Facts
 	{
-		$view		= new View( $this->env );
 		$logic		= Logic_Project::getInstance( $this->env );
 		$words		= $this->getWords( 'manage/project' );
 		$members	= $logic->getProjectUsers( $project->projectId );
@@ -35,7 +33,14 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 
 		//  --  FACTS: TITLE, DESCRIPTION & LINK  --  //
 		$helperFacts->add( 'title', $project->title );
-		$helperFacts->add( 'description', $view->renderContent( $project->description ), $project->description );
+
+		$payload	= [
+			'content'	=> $project->description,
+			'type'		=> 'HTML'
+		];
+		$this->env->getCaptain()->callHook( 'View', 'onRenderContent', $this, $payload );
+		$helperFacts->add( 'description', $payload['content'], $project->description );
+
 		if( $project->url )
 			$helperFacts->add( 'url', HtmlTag::create( 'a', $project->url, [
 				'href'		=> $project->url,
@@ -67,8 +72,8 @@ abstract class Mail_Manage_Project_Abstract extends Mail_Abstract
 		$helperFacts->add( 'priority', $labelPriority.' '.$smallPriority );
 
 		$direction		= NULL;
-		$direction		= in_array( $project->status, [3] ) ? 1 : $direction;
-		$direction		= $project->status < 0 ? -1 : $direction;
+		$direction		= in_array( $project->status, [Model_Project::STATUS_CLOSED], TRUE ) ? 1 : $direction;
+		$direction		= $project->status < Model_Project::STATUS_PLANING ? -1 : $direction;
 		$smallStatus	= HtmlTag::create( 'small', '('.$project->status.')', ['class' => 'muted'] );
 		$labelStatus	= $words['states'][$project->status];
 		$textStatus		= $labelStatus.' ('.$project->status.')';

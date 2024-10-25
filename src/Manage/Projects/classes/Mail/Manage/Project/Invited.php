@@ -6,11 +6,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 class Mail_Manage_Project_Invited extends Mail_Manage_Project_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		IoException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		parent::generate();
 		$baseUrl	= $this->env->url;

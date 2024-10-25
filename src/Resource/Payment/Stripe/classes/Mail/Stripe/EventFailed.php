@@ -11,7 +11,7 @@ class Mail_Stripe_EventFailed extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= new Dictionary( $this->data );
 		$buffer		= new OutputBuffer();

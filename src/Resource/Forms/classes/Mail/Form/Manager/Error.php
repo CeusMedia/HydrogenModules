@@ -5,7 +5,7 @@ class Mail_Form_Manager_Error extends Mail_Form_Abstract
 	 *	@return		self
 	 *	@todo		use block of mail
 	 */
-	public function generate(): self
+	public function generate(): static
 	{
 		$errorMsg	= $this->data['error'];
 		$formData	= $this->data['data'];

@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Blog_FollowUp extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'info/blog' );

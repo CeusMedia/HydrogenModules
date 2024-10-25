@@ -29,5 +29,5 @@ class Entity_Mission
 	public string $format;
 	public ?string $reference			= NULL;
 	public string $createdAt;
-	public string $modifiedAt;
+	public ?string $modifiedAt			= NULL;
 }

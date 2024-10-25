@@ -16,7 +16,7 @@ class Mail_Example extends Mail_Abstract
 	 *	@throws		IoException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$wordsMain		= $this->getWords( 'main' );												//  main words of application
 		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!

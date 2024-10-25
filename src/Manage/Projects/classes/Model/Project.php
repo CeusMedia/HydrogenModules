@@ -6,6 +6,22 @@ class Model_Project extends Model
 {
 //	const STATES_ACTIVE		= [];
 
+	const STATUS_CANCELLED	= -2;
+	const STATUS_PAUSED		= -1;
+	const STATUS_PLANING	= 0;
+	const STATUS_PROGRESS	= 1;
+	const STATUS_PRODUCTION	= 2;
+	const STATUS_CLOSED		= 3;
+
+	const STATUSES		= [
+		self::STATUS_CANCELLED,
+		self::STATUS_PAUSED,
+		self::STATUS_PLANING,
+		self::STATUS_PROGRESS,
+		self::STATUS_PRODUCTION,
+		self::STATUS_CLOSED,
+	];
+
 	protected string $name			= 'projects';
 
 	protected array $columns		= [

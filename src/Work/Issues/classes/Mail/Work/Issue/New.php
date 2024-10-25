@@ -9,7 +9,7 @@ class Mail_Work_Issue_New extends Mail_Work_Issue_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data	= $this->data;
 		$this->prepareFacts( $data );

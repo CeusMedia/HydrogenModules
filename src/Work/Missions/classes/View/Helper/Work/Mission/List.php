@@ -20,6 +20,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	protected bool $badgesShowPast		= TRUE;
 	protected bool $badgesShowFuture	= TRUE;
 	protected bool $badgesColored		= TRUE;
+	/** @var array<Entity_Mission> $missions */
 	protected array $missions			= [];
 
 	/**
@@ -331,7 +332,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		object		$task
+	 *	@param		Entity_Mission	$task
 	 *	@param		$days
 	 *	@param		bool		$showStatus
 	 *	@param		bool		$showPriority
@@ -341,7 +342,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		Exception
 	 */
-	public function renderRowOfTask( object $task, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
+	public function renderRowOfTask( Entity_Mission $task, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
 	{
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $task, FALSE );
@@ -413,7 +414,7 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		array		$missions
+	 *	@param		array<Entity_Mission>		$missions
 	 *	@return		self
 	 */
 	public function setMissions( array $missions ): self

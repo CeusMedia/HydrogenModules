@@ -6,8 +6,6 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days
 {
-	protected array $missions		= [];
-
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$this->missions	= $this->list[$day];

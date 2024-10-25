@@ -11,7 +11,7 @@ class Mail_Test extends Mail_Abstract
 	 *	@throws		IoException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function generate(): self
+	public function generate(): static
 	{
 		if( isset( $this->data['verbose'] ) && is_bool( $this->data['verbose'] ) )
 			$this->transport->setVerbose( $this->data['verbose'] );

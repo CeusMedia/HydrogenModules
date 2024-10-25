@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Mail_Group_Activated extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

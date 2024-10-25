@@ -5,7 +5,7 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract
 	 *	@return		self
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function generate(): self
+	public function generate(): static
 	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];

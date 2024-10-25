@@ -9,7 +9,7 @@ class Mail_Newsletter extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data	= $this->data;
 		$logic	= new Logic_Newsletter( $this->env );

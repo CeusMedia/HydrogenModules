@@ -9,7 +9,7 @@ class Mail_Stripe_Event_Payin extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$this->setSubject( 'Event: '. $this->data['event']->type );
 		$this->setHtml( $this->renderHtml() );

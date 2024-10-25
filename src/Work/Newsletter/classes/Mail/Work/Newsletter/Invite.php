@@ -8,7 +8,7 @@ class Mail_Work_Newsletter_Invite extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$words		= (object) $this->getWords( 'work/newsletter/reader', 'mail-invite' );
 		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );

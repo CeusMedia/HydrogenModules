@@ -13,7 +13,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		parent::generate();
 		$data	= $this->data;

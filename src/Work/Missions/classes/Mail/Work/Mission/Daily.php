@@ -13,7 +13,7 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-daily' );
 		$this->setSubject( $w->subject );

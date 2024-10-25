@@ -1,7 +1,7 @@
 <?php
 class Mail_Member_Accept extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

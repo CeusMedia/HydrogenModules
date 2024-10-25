@@ -9,7 +9,7 @@ class Mail_Job_Report extends Mail_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data	= $this->data;
 //		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );

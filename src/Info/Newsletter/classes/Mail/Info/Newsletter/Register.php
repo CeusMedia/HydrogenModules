@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Newsletter_Register extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$words		= (object) $this->getWords( 'info/newsletter', 'register' );
 		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );

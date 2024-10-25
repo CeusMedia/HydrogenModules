@@ -5,7 +5,7 @@ class Mail_Form_Manager_Filled extends Mail_Form_Abstract
 	 *	@return		self
 	 *	@todo		use block of mail
 	 */
-	public function generate(): self
+	public function generate(): static
 	{
 		$form	= $this->data['form'];
 		$fill	= $this->data['fill'];
