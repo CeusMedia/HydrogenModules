@@ -36,13 +36,13 @@ foreach( $templates as $template ){
 	switch( $template->status ){
 		case Model_Mail_Template::STATUS_NEW:
 		case Model_Mail_Template::STATUS_IMPORTED:
-			$badgeClass	= 'badge badge-warning';
+			$badgeClass	= 'label label-warning';
 			break;
 		case Model_Mail_Template::STATUS_USABLE:
-			$badgeClass	= 'badge badge-info';
+			$badgeClass	= 'label label-info';
 			break;
 		case Model_Mail_Template::STATUS_ACTIVE:
-			$badgeClass	= 'badge badge-success';
+			$badgeClass	= 'label label-success';
 			break;
 	}
 	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], ['class' => $badgeClass] );

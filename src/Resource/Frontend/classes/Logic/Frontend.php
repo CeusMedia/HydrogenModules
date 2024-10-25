@@ -34,17 +34,6 @@ class Logic_Frontend extends Logic
 	protected ?string $path						= NULL;
 	protected ?string $url						= NULL;
 
-	/**
-	 * @param		Environment		$env
-	 * @return		static
-	 */
-	public static function getInstance( Environment $env ): static
-	{
-		if( NULL === self::$instance )
-			self::$instance	= new static( $env );
-		return self::$instance;
-	}
-
 	public function getAppConfigValue( string $key )
 	{
 		$values	= $this->getAppConfigValues( [$key] );
@@ -80,7 +69,7 @@ class Logic_Frontend extends Logic
 	public function getEnv(): RemoteEnvironment
 	{
 		return new RemoteEnvironment( [
-//			'configFile'	=> $this->path.'config/config.ini',
+			'configFile'	=> $this->path.'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
 		] );
@@ -96,7 +85,7 @@ class Logic_Frontend extends Logic
 	{
 		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
 		return new RemoteEnvironment( array_merge( $options, [
-//			'configFile'	=> $path.'config/config.ini',
+			'configFile'	=> $path.'config/config.ini',
 			'pathApp' 		=> $path,
 			'parentEnv'		=> $parentEnv,
 		] ) );

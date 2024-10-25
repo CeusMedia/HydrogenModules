@@ -75,10 +75,11 @@
     "scripts": {
         "dev:all": [
             "@dev:test-syntax",
-            "@dev:phpstan",
             "@dev:phpunit",
             "@dev:index-serial",
             "@dev:index-json",
+            "@dev:index-html",
+            "@dev:phpstan",
             "@dev:rector"
         ],
         "dev:install": "composer install --quiet --ignore-platform-reqs",
