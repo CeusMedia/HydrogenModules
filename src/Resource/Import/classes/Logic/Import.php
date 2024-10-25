@@ -103,6 +103,7 @@ class Logic_Import extends Logic
 	 *	@throws		RuntimeException				if not data given
 	 *	@throws		RuntimeException				if parsing JSON of rule failed
 	 *	@throws		ReflectionException
+	 *	@throws		JsonException					if encoding sent data as JSON failed
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importData( object $importRule, array $importData, bool $verbose, bool $dryMode ): int
@@ -136,7 +137,7 @@ class Logic_Import extends Logic
 			'formId'		=> $importRule->formId,
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'email'			=> $formData['email'] ?? '',
-			'data'			=> json_encode( $fillData ),
+			'data'			=> json_encode( $fillData, JSON_THROW_ON_ERROR ),
 			'referer'		=> '',//getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
 			'agent'			=> $agent,
 			'createdAt'		=> $formData['createdAt'] ?? time(),
