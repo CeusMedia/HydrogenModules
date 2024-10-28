@@ -31,14 +31,14 @@ if( $bills ){
 			$dateBooked	= date( 'd.m.', strtotime( $bill->dateBooked ) ).$year;
 		}
 		$status	= HtmlTag::create( 'small', $statuses[$bill->status] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $number ),
 			HtmlTag::create( 'td', $title, ['class' => 'cell-title autocut'] ),
 			HtmlTag::create( 'td', number_format( $bill->amountNetto, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', number_format( $bill->taxRate, 2, ',', '.' ).'%', ['class' => 'cell-number cell-bill-tax'] ),
 			HtmlTag::create( 'td', $dateBooked, ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $status ),
-		), ['class' => $bill->status > 0 ? 'success' : 'warning'] );
+		], ['class' => $bill->status > 0 ? 'success' : 'warning'] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'150',
@@ -48,21 +48,21 @@ if( $bills ){
 		'70',
 		'90',
 	] );
-	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Nr' ),
 		HtmlTag::create( 'th', 'Bezug' ),
 		HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', '<small>MwSt</small>', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', '<small>gebucht</small>', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', '<small>Zustand</small>' ),
-	) ) );
-	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', array(
+	] ) );
+	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', 'Gesamt', ['colspan' => 2] ),
 		HtmlTag::create( 'td', number_format( $totalAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', '' ),
 		HtmlTag::create( 'td', '' ),
 		HtmlTag::create( 'td', '' ),
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }

@@ -2,14 +2,18 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<object> $hosts */
+/** @var array<object> $syncs */
+
 $table	= '<div class="alert alert-info">Keine.</div>';
 if( $hosts ){
 	$list	= [];
 	foreach( $hosts as $host ){
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $host->host ),
 			HtmlTag::create( 'td', $host->ip ),
-		) );
+		] );
 	}
 	$table	= HtmlTag::create( 'table', $list, ['class' => 'table table-fixed'] );
 }
@@ -61,12 +65,12 @@ if( $syncs ){
 		$statusLabel	= $statusLabels[$sync->status];
 		if( $sync->status == Model_Mail_Sync::STATUS_ERROR )
 			$statusLabel	= HtmlTag::create( 'acronym', $statusLabel, ['title' => $sync->run->message] );
-		$status	= HtmlTag::create( 'div', array(
+		$status	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', $statusLabel, [
 				'class'	=> 'bar',
 				'style'	=> 'width: 100%',
 			] )
-		), [
+		], [
 			'class'	=> 'progress '.$statusClasses[$sync->status],
 		] );
 
@@ -101,10 +105,10 @@ if( $syncs ){
 			$buttons[$nr]	= HtmlTag::create( 'li', $button );
 
 		if( $buttons ){
-			$buttons	= HtmlTag::create( 'div', array(
+			$buttons	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'a', '<i class="fa fa-fw fa-cog"></i>', ['class' => 'btn btn-large dropdown-toggle', 'data-toggle' => "dropdown"] ),
 				HtmlTag::create( 'ul', $buttons, ['class' => 'dropdown-menu pull-right'] )
-			), ['class' => 'btn-group'] );
+			], ['class' => 'btn-group'] );
 		}
 		else{
 			$buttons	= '';
@@ -118,14 +122,14 @@ if( $syncs ){
 					$messages	+= (int) $statistics['Messages transferred'];
 			}
 		}
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $sync->sourceUsername.'<br/><small class="muted">'.$sourceHost.'</small>'  ),
 			HtmlTag::create( 'td', $sync->targetUsername.'<br/><small class="muted">'.$targetHost.'</small>'  ),
 			HtmlTag::create( 'td', $status.'<br/><small class="muted">'.$helperTimestamp->convert( $sync->modifiedAt, TRUE, 'vor' ).'</small>' ),
 			HtmlTag::create( 'td', HtmlTag::create( 'span', count( $sync->runs ), ['class' => 'badge '.( count( $sync->runs ) ? 'badge-info' : '' )] ) ),
 			HtmlTag::create( 'td', HtmlTag::create( 'span', $messages, ['class' => 'badge '.( $messages ? 'badge-success' : '' )] ) ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 	}
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Quelle',

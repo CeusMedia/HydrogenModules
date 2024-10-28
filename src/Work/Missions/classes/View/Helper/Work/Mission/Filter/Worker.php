@@ -73,10 +73,10 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonUser, $buttonAll], ['class' => 'btn-group'] );
 		$colgroup	= HtmlElements::ColumnGroup( "", "160px" );
-		$tableHeads	= HtmlTag::create( 'tr', array(
+		$tableHeads	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'th', "Bearbeiter" ),
 			HtmlTag::create( 'th', $buttons, ['style' => 'text-align: right'] )
-		) );
+		] );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
 		$tbody		= HtmlTag::create( 'tbody', $list );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [

@@ -435,10 +435,10 @@ class Controller_Work_Newsletter extends Controller
 		foreach( $readerIds as $readerId )
 			$this->logic->sendTestLetter( $newsletterId, $readerId );
 		$this->messenger->noteSuccess( $w->msgSuccess, count( $readerIds ) );
-/*		$this->logic->editNewsletter( $newsletterId, array(										//  update newsletter
+/*		$this->logic->editNewsletter( $newsletterId, [										//  update newsletter
 			'status' 	=> Model_Newsletter_Template::STATUS_READY,								//  ... by setting to READY
 			'modifiedAt' => time()																//  ... and not change time
-		) );*/
+		] );*/
 		$this->restart( 'edit/'.$newsletterId.'?askForReady', TRUE );
 //		$this->restart( 'setContentTab/'.$newsletterId.'/4', TRUE );
 	}

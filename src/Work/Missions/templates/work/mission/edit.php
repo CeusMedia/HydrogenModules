@@ -204,12 +204,12 @@ $panelEdit	= '
 $states	= $words['states'];
 unset( $states[0] );
 foreach( $states as $status => $label )
-	$states[$status]	= HtmlTag::create( 'button', $label, array(
+	$states[$status]	= HtmlTag::create( 'button', $label, [
 		'type'		=> 'button',
 		'onclick'	=> 'document.location.href=\'./work/mission/setStatus/'.$mission->missionId.'/'.urlencode( $status ).'\';',
 		'disabled'	=> $mission->status == $status ? 'disabled' : NULL,
 		'class'		=> 'button',
-	) );
+	] );
 $states	= join( $states );
 
 //  --  PRIORITIES  --  //

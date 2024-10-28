@@ -90,13 +90,13 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'relation', $words['indexFilter']['labelRelation'] ).
-		HtmlTag::create( 'select', $optRelation, array(
+		HtmlTag::create( 'select', $optRelation, [
 			'id'		=> 'input_relation',
 			'name'		=> 'relation',
 			'class'		=> 'span12',
 //			'size'		=> 3,
 			'onchange'	=> 'this.form.submit()'
-		) )
+		] )
 	)
 );
 if( !empty( $projects ) ){
@@ -109,58 +109,58 @@ if( !empty( $projects ) ){
 	$optProject		= quantifyWords( ['' => '- alle -'] + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
-	$filters[]	= HTML::DivClass( 'row-fluid', array(
+	$filters[]	= HTML::DivClass( 'row-fluid', [
 		HTML::DivClass( 'span12',
 			HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).
-			HtmlTag::create( 'select', $optProject, array(
+			HtmlTag::create( 'select', $optProject, [
 				'id'		=> 'input_projectId',
 				'name'		=> 'projectId',
 				'class'		=> 'span12',
 				'onchange'	=> 'this.form.submit()',
-			) ) )
-		)
+			] ) )
+		]
 	);
 }
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'status', $words['indexFilter']['labelStatus'] ).
 	//	HTML::Select( 'status[]', $optStatus, 'span12 -max rows-8', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optStatus, array(
+		HtmlTag::create( 'select', $optStatus, [
 			'id'		=> 'input_status',
 			'name'		=> 'status[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 8,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'type', $words['indexFilter']['labelType'] ).
 	//	HTML::Select( 'type[]', $optType, '-max span12 rows-4', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optType, array(
+		HtmlTag::create( 'select', $optType, [
 			'id'		=> 'input_type',
 			'name'		=> 'type[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 4,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'priority', $words['indexFilter']['labelPriority'] ).
 	//	HTML::Select( 'priority[]', $optPriority, '-max span12 rows-7', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optPriority, array(
+		HtmlTag::create( 'select', $optPriority, [
 			'id'		=> 'input_priority',
 			'name'		=> 'priority[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 7,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',

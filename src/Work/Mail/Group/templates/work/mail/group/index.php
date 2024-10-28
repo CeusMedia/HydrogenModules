@@ -31,13 +31,13 @@ if( count( $groups ) ){
 	foreach( $groups as $group ){
 		$label	= HtmlTag::create( 'a', $group->title, ['href' => './work/mail/group/edit/'.$group->mailGroupId] );
 		$status	= HtmlTag::create( 'span', $words['group-statuses'][$group->status], ['class' => 'label '.$statusClasses[$group->status]] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $group->address ),
 			HtmlTag::create( 'td', $status ),
 			HtmlTag::create( 'td', count( $group->members ) ),
 			HtmlTag::create( 'td', $helperTimestamp->convert( $group->createdAt, TRUE, 'vor' ) ),
-		) );
+		] );
 	}
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Titel',

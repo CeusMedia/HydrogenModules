@@ -58,13 +58,13 @@ if( $expenses ){
 			] );
 		}
 		$amount		= (float) $expense->amount ? number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $frequencies[$expense->frequency] ),
 			HtmlTag::create( 'td', $from, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $to, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
-		), ['class' => $expense->status ? 'success' : 'warning'] );
+		], ['class' => $expense->status ? 'success' : 'warning'] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'',

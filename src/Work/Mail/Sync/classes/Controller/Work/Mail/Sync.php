@@ -73,7 +73,7 @@ class Controller_Work_Mail_Sync extends Controller
 			if( $this->request->get( 'samePassword' ) )
 				$targetPassword	= $sourcePassword;
 
-			$this->logic->editSync( $id, array(
+			$this->logic->editSync( $id, [
 				'sourceMailHostId'	=> $this->request->get( 'sourceMailHostId' ),
 				'targetMailHostId'	=> $this->request->get( 'targetMailHostId' ),
 				'resync'			=> $this->request->get( 'resync' ),
@@ -83,7 +83,7 @@ class Controller_Work_Mail_Sync extends Controller
 				'targetPassword'	=> $targetPassword,
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'hosts', $this->logic->getSyncHosts() );
@@ -107,10 +107,10 @@ class Controller_Work_Mail_Sync extends Controller
 	}
 
 	public function setSyncStatus( $id, $status ){
-		$this->logic->editSync( $id, array(
+		$this->logic->editSync( $id, [
 			'status'		=> (int) $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->restart( NULL, TRUE );
 	}
 

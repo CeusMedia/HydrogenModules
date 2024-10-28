@@ -21,27 +21,27 @@ if( $persons ){
 			$payout	+= $item->amount;
 		$totalPayout	+= $payout;
 		$totalBalance	+= $person->balance;
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link, array ('class' => 'autocut' ) ),
 			HtmlTag::create( 'td', number_format( $payout, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', number_format( $person->balance, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'',
 		'120',
 		'100',
 	] );
-	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Person' ),
 		HtmlTag::create( 'th', 'Auszahlungen' ),
 		HtmlTag::create( 'th', 'Balance', ['class' => 'cell-number'] ),
-	) ) );
-	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', array(
+	] ) );
+	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Gesamt' ),
 		HtmlTag::create( 'th', number_format( $totalPayout, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', number_format( $totalBalance, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }

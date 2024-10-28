@@ -22,22 +22,22 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 	public function render(): string
 	{
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
-		$today			= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		$today			= HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'small', HtmlTag::create( 'abbr', 'KW', ['title' => "Kalenderwoche"] ) ),
 				HtmlTag::create( 'br' ),
 				HtmlTag::create( 'span', (int) date( 'W' ), [
 					'style' => 'font-size: 2em;'
 				] ),
-			), ['style' => 'text-align: center; float: right; width: 50px'] ),
-			HtmlTag::create( 'div', array(
+			], ['style' => 'text-align: center; float: right; width: 50px'] ),
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'span', $words['days'][date( 'w' )], ['style' => 'font-size: 1.8em'] ),
 				HtmlTag::create( 'br' ),
 				HtmlTag::create( 'span', date( 'd' ).'. '.$words['months'][date( 'n' )].' '.date( 'Y' ), [
 					'style' => 'font-size: 1.1em'
 				] ),
-			), ['style' => 'text-align: center'] ),
-		) );
+			], ['style' => 'text-align: center'] ),
+		] );
 		$content	= HtmlTag::create( 'div', 'Keine Termine.', ['class' => 'alert alert-info'] );
 		if( $this->events ){
 			$rows	= [];
@@ -51,11 +51,11 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 					'style'		=> 'font-size: larger'
 				] );
 				$label	= $link.'<br/>'.$labelProject;
-				$rows[]	= HtmlTag::create( 'tr', array(
+				$rows[]	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $this->renderNiceTime( $event->timeStart ).'<br/><small class="muted">'.$this->renderNiceTime( $event->timeEnd ).'</small>' ),
 					HtmlTag::create( 'td', $label, ['class' => 'autocut'] ),
 //							HtmlTag::create( 'td', '#'.$event->priority ),
-				) );
+				] );
 			}
 			$colgroup	= HtmlElements::ColumnGroup( [
 				'50px',

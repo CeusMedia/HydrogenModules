@@ -28,13 +28,13 @@ if( $billExpenses ){
 		] );
 		if( $bill->status == Model_Billing_Bill::STATUS_BOOKED )
 			$buttonRemove	= '';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small>Ausgabe</small>' ),
 			HtmlTag::create( 'td', $expense->title ),
 			HtmlTag::create( 'td', '-', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', number_format( $expense->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
-		) );
+		] );
 		$leftAmount	-= (float) $expense->amount;
 	}
 }
@@ -46,13 +46,13 @@ if( $billReserves ){
 		] );
 		if( $billReserve->status == Model_Billing_Bill_Reserve::STATUS_BOOKED )
 			$buttonRemove	= '';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small>Rücklage</small>' ),
 			HtmlTag::create( 'td', $billReserve->reserve->title ),
 			HtmlTag::create( 'td', (float) $billReserve->percent ? number_format( $billReserve->percent, 2, ',', '.' ).'&nbsp;%' : '-', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', number_format( $billReserve->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
-		) );
+		] );
 		$leftAmount	-= (float) $billReserve->amount;
 	}
 }
@@ -68,13 +68,13 @@ if( $billShares ){
 			$buttonRemove	= '';
 
 		$label	= (int) $billShare->personId > 0 ? $billShare->person->firstname.' '.$billShare->person->surname : $billShare->corporation->title;
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small>Anteil</small>' ),
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', (float) $billShare->percent ? number_format( $billShare->percent, 2, ',', '.' ).'&nbsp;%' : '-', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', number_format( $billShare->amount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $buttonRemove, ['class' => 'cell-actions'] ),
-		) );
+		] );
 		$sharedAmount	+= (float) $billShare->amount;
 	}
 }
@@ -96,12 +96,12 @@ if( $bill->status != Model_Billing_Bill::STATUS_BOOKED ){
 		$labelMissing	= HtmlTag::create( 'strong', number_format( $missingAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'text-success'] );
 	}
 
-	$list[]	= HtmlTag::create( 'tr', array(
+	$list[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', '<strong>Noch zu verteilen</strong>', ['colspan' => '2'] ),
 		HtmlTag::create( 'td', $labelPercent, ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', $labelMissing, ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', '' ),
-	) );
+	] );
 }
 
 
