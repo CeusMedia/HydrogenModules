@@ -38,7 +38,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 		if( $postId && $content ){
 			$post	= $this->modelPost->get( (int) $postId );
 			if( $post->content !== $content )
-				$this->modelPost->edit( (int) $postId, array( 'content' => $content, 'modifiedAt' => time() ) );
+				$this->modelPost->edit( (int) $postId, ['content' => $content, 'modifiedAt' => time()] );
 		}
 		exit;
 	}

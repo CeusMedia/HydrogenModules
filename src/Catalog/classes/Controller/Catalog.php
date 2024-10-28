@@ -138,14 +138,14 @@ class Controller_Catalog extends Controller
 		$helper		= new View_Helper_Catalog( $this->env );
 
 		$builder	= new RssGoogleBaseBuilder();
-		$builder->setChannelData( array(
+		$builder->setChannelData( [
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,
 			'description'	=> $words->description,
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
-		) );
+		] );
 
 		$builder->addItemElement( 'g:price', TRUE );
 		$builder->addItemElement( 'g:condition', TRUE );

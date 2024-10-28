@@ -23,10 +23,10 @@ class Hook_Manage_Blog extends Hook
 			];
 		}
 		if( $list ){
-			$list	= array( (object) [
+			$list	= [(object) [
 				'title'	=> $words['tinyMCE']['prefix'],
 				'menu'	=> array_values( $list ),
-			] );
+			]];
 			//		$context->list	= array_merge( $context->list, array_values( $list ) );
 			$this->context->list	= array_merge( $this->context->list, $list );
 		}

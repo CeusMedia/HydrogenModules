@@ -26,10 +26,10 @@ class Hook_Manage_Catalog_Bookstore_Category extends Hook
 						'value'	=> 'catalog/bookstore/category/'.$item->categoryId,
 					];
 				}
-				$categories[$nr1] = (object) array(
+				$categories[$nr1] = (object) [
 					'title'	=> $item->{"label_".$language},
 					'menu'	=> array_values( $subs ),
-				);
+				];
 			}
 			$cache->set( 'catalog.tinymce.links.catalog.bookstore.categories', $categories );
 		}

@@ -20,13 +20,13 @@ $iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreview	= '
 <div class="content-panel">
 	<h4>

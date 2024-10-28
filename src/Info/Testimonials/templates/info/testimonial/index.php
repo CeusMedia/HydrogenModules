@@ -9,24 +9,24 @@ if( $testimonials ){
 	$list	= [];
 	foreach( $testimonials as $entry ){
 		$author	= $entry->username.',&nbsp;'.date( 'd.m.Y', $entry->timestamp );
-		$quote	= HtmlTag::create( 'blockquote', array(
-			HtmlTag::create( 'a', "&bdquo;".$entry->abstract."&ldquo;", array(
+		$quote	= HtmlTag::create( 'blockquote', [
+			HtmlTag::create( 'a', "&bdquo;".$entry->abstract."&ldquo;", [
 				'class' 		=> 'testimonial-abstract',
 				'href'			=> '#modal-comment-view',
 				'role'			=> "button",
 				'data-toggle'	=> "modal",
 				'onclick'		=> 'showComment('.$entry->testimonialId.')'
-			) ),
+			] ),
 			HtmlTag::create( 'small', $author, ['class' => 'testimonial-author'] ),
-		), ['class' => 'course-comment'] );
+		], ['class' => 'course-comment'] );
 		$comment	= HtmlTag::create( 'div', $quote, ['class' => 'testimonial'] );
-		$list[]	= HtmlTag::create( 'div', $comment, array(
+		$list[]	= HtmlTag::create( 'div', $comment, [
 			'class'			=> 'row-fluid course-item',
 			'id'			=> 'testimonial-'.$entry->testimonialId,
 			'data-author'	=> addslashes( $entry->username ),
 			'data-heading'	=> addslashes( $entry->title ),
 			'data-content'	=> addslashes( nl2br( $entry->description ) ),
-		) );
+		] );
 	}
 	$list	= HtmlTag::create( 'div', $list, ['class' => 'testimonial-list'] );
 }
@@ -35,13 +35,13 @@ extract( $view->populateTexts( ['top', 'bottom', 'list.top', 'list.bottom', 'for
 
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
-$button 	= HtmlTag::create( 'a', 'Kommentar abgeben', array(
+$button 	= HtmlTag::create( 'a', 'Kommentar abgeben', [
 	'href'			=> '#modal-comment-add',
 	'class'			=> 'btn',
 	'onclick'		=> 'selectCourse(0);',
 	'role'			=> "button",
 	'data-toggle'	=> "modal",
-) );
+] );
 
 return $textTop.'
 <!--<h3>Kundenmeinungen</h3>-->

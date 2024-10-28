@@ -16,13 +16,13 @@ class Controller_Work_FTP extends Controller
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'host'		=> $request->get( 'ftp_host' ),
 				'port'		=> $request->get( 'ftp_port' ),
 				'path'		=> $request->get( 'ftp_path' ),
 				'username'	=> $request->get( 'ftp_username' ),
 				'password'	=> $request->get( 'ftp_password' ),
-			);
+			];
 			$this->session->set( 'module_work_ftp_access', $data );
 			$this->connect();
 			$this->restart( NULL, TRUE );

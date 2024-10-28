@@ -19,11 +19,11 @@ if( $companies ){
 		] );
 		$createdAt	= $timeHelper->convert( $company->createdAt, TRUE );
 		$modifiedAt	= $company->modifiedAt ? $timeHelper->convert( $company->modifiedAt ) : "-";
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $createdAt ),
 			HtmlTag::create( 'td', $modifiedAt ),
-		) );
+		] );
 	}
 	$heads	= [
 	//	'<input type="checkbox" class="toggler"/>',

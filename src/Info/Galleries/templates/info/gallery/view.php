@@ -28,22 +28,22 @@ if( strlen( trim( $gallery->description ) ) )
 $linkNext	= '';
 $linkPrev	= '';
 
-$linkIndex	= HtmlTag::create( 'a', $w->buttonIndex, array(
+$linkIndex	= HtmlTag::create( 'a', $w->buttonIndex, [
 	'href'	=> !empty( $referer ) ? $referer->get() : $baseUriPath,
 	'class'	=> 'btn',
-) );
+] );
 
 if( $prevGallery ){
 	$label		= HtmlTag::create( 'span', $w->buttonPrev, ['class' => 'muted'] );
-	$linkPrev	= $label.HtmlTag::create( 'a', $prevGallery->title, array(
+	$linkPrev	= $label.HtmlTag::create( 'a', $prevGallery->title, [
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $prevGallery, $baseUriPath )
-	) );
+	] );
 }
 if( $nextGallery ){
 	$label		= HtmlTag::create( 'span', $w->buttonNext, ['class' => 'muted'] );
-	$linkNext	= $label.HtmlTag::create( 'a', $nextGallery->title, array(
+	$linkNext	= $label.HtmlTag::create( 'a', $nextGallery->title, [
 		'href'	=> View_Helper_Info_Gallery::getGalleryUrl( $nextGallery, $baseUriPath )
-	) );
+	] );
 }
 
 extract( $view->populateTexts( ['view.top', 'view.bottom'], 'html/info/gallery/' ) );

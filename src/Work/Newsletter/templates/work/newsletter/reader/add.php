@@ -28,12 +28,12 @@ $optGender	= HtmlElements::Options( $words->gender, $reader->gender );
 
 $listGroups	= [];
 foreach( $groups as $group ){
-	$checkbox	= HtmlTag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'	=> 'checkbox',
 		'name'	=> 'groupIds[]',
 		'value'	=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $selectedGroups ) ? 'checked' : NULL,
-	) );
+	] );
 	$label	= $checkbox.'&nbsp;'.$group->title;
 	$listGroups[]	= HtmlTag::create( 'label', $label, ['class' => 'checkbox'] );
 }

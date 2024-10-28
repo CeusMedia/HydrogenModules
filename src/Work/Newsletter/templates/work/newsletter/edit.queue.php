@@ -77,7 +77,7 @@ foreach( $queues as $queue ){
 
 	$percent	= round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ).'%';
 
-	$list[]	= HtmlTag::create( 'tr', array(
+	$list[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $queue->newsletterQueueId, ['class' => ''] ),
 		HtmlTag::create( 'td', $queue->countLetters, ['class' => ''] ),
 		HtmlTag::create( 'td', $words->queueStates[$queue->status], ['class' => ''] ),
@@ -86,7 +86,7 @@ foreach( $queues as $queue ){
 		HtmlTag::create( 'td', $creator ),
 		HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $queue->createdAt, TRUE ) ),
 //		HtmlTag::create( 'td', $buttons, [] ),
-	) );
+	] );
 }
 $columnGroup	= HtmlElements::columnGroup( ['100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/] );
 $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [

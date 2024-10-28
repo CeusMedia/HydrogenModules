@@ -22,10 +22,10 @@ class Controller_Manage_Bookmark extends Controller
 				'value'	=> $link->url,
 			];
 		}
-		$list	= array( (object) array(
+		$list	= [(object) [
 			'title'	=> $prefixes->bookmark,
 			'menu'	=> array_values( $list ),
-		) );
+		] ];
 //		$context->list	= array_merge( $context->list, array_values( $list ) );
 		$context->list	= array_merge( $context->list, $list );
 	}
@@ -39,10 +39,10 @@ class Controller_Manage_Bookmark extends Controller
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$messenger	= $this->env->getMessenger();
-			$data	= array(
+			$data	= [
 				'url'	=> $request->get( 'url' ),
 				'title'	=> $request->get( 'title' ),
-			);
+			];
 			if( !strlen( trim( $data['url'] ) ) )
 				$messenger->noteError( 'Die Adresse fehlt.' );
 			else if( !preg_match( "/^(ht|f)tps?:\/\//", $data['url'] ) )
@@ -72,10 +72,10 @@ class Controller_Manage_Bookmark extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'url'	=> $request->get( 'url' ),
 				'title'	=> $request->get( 'title' ),
-			);
+			];
 			if( !strlen( trim( $data['url'] ) ) )
 				$messenger->noteError( 'Die Adresse fehlt.' );
 			else if( !preg_match( "/^(http|https|ftp):\/\//", $data['url'] ) )

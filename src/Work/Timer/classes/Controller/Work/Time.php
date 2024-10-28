@@ -150,9 +150,9 @@ class Controller_Work_Time extends Controller
 					else if( $newStatus === 3 )														//  to stop
 						$this->logicTimer->stop( $timerId );										//  handle change by logic (calculate times)
 					else if( $newStatus === 0 )														//  to new
-						$this->modelTimer->edit( $timerId, array(									//  edit timer by resetting
+						$this->modelTimer->edit( $timerId, [										//  edit timer by resetting
 							'secondsNeeded'	=> 0,													//  needed time to 0
-						) );
+						] );
 				}
 			}
 			$this->messenger->noteSuccess( 'Timer saved.' );
@@ -205,10 +205,10 @@ class Controller_Work_Time extends Controller
 		foreach( $timers as $timer ){
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 		}
-		$conditions	= array(
+		$conditions	= [
 			'userId'	=> (int) $this->userId,
 			'status'	=> 1,
-		);
+		];
 		$timer		= $this->modelTimer->getByIndices( $conditions );
 		if( $timer )
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );

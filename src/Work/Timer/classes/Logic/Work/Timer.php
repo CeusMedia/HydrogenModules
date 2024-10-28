@@ -79,7 +79,7 @@ class Logic_Work_Timer
 			] );
 			if( $active )
 				$this->pause( $active->workTimerId );
-			$this->modelTimer->edit( $timerId, array( 'status' => 1, 'modifiedAt' => time() ) );
+			$this->modelTimer->edit( $timerId, ['status' => 1, 'modifiedAt' => time()] );
 			$payload	= ['timer' => $this->checkTimerId( $timerId )];
 			$this->env->getCaptain()->callHook( 'Work_Timer', 'onStartTimer', $this, $payload );
 		}

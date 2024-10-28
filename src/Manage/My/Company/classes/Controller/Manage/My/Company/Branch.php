@@ -89,12 +89,12 @@ class Controller_Manage_My_Company_Branch extends Controller
 				$imageName	= $branchId.'_'.md5( time() ).'.'.$extension;
 				$imagePath	= './images/branches/';								//  @todo to configuration + mkdir path
 				$upload->saveTo( $imagePath.$imageName );
-				$data	= array(
+				$data	= [
 					'branchId'		=> $branchId,
 					'filename'		=> $imageName,
 					'title'			=> $this->request->get( 'image_title' ),
 					'uploadedAt'	=> time()
-				);
+				];
 				$this->modelBranchImage->add( $data );
 				$this->messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
 			}

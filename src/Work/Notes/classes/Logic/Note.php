@@ -111,7 +111,7 @@ class Logic_Note extends Logic
 				throw new InvalidArgumentException( 'link already existing' );
 			return $existingLink->linkId;
 		}
-		return $this->modelLink->add( array( 'url' => $url, 'createdAt' => time() ) );
+		return $this->modelLink->add( ['url' => $url, 'createdAt' => time()] );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class Logic_Note extends Logic
 				throw new InvalidArgumentException( 'tag already existing' );
 			return $existingTag->tagId;
 		}
-		return $this->modelTag->add( array( 'content' => $content, 'createdAt' => time() ) );
+		return $this->modelTag->add( ['content' => $content, 'createdAt' => time()] );
 	}
 
 	/**

@@ -157,14 +157,14 @@ class Controller_Work_Note extends Controller
 		}
 
 		if( $this->request->has( 'save' ) ){
-			$data		= array(
+			$data		= [
 				'projectId'		=> $this->request->get( 'note_projectId' ),
 				'title'			=> $this->request->get( 'note_title' ),
 				'content'		=> $this->request->get( 'note_content' ),
 				'public'		=> (int) $this->request->get( 'note_public' ),
 				'format'		=> $this->request->get( 'note_format' ),
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( !strlen( trim( $data['title'] ) ) )
 				$this->messenger->noteError( $words->msgNoTitle );
 			if( !$this->messenger->gotError() ){

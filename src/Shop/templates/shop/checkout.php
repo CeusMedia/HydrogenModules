@@ -37,28 +37,28 @@ $buttonNext	= new SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-ri
 if( !$paymentBackends->getAll() || $cartTotal == 0 )
 	$buttonNext	= new SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
-$tabContent	= HtmlTag::create( 'div', array(
+$tabContent	= HtmlTag::create( 'div', [
 	$textCheckoutTop,
-	HtmlTag::create( 'form', array(
+	HtmlTag::create( 'form', [
 		HtmlTag::create( 'h4', $words['panel-cart']['heading'] ),
 		$tablePositions,
-		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'h4', $words['panel-customer']['heading'] ),
 				$helperAddress->setAddress( $customer->addressDelivery ),
-			), ['class' => 'span6'] ),
-			HtmlTag::create( 'div', array(
+			], ['class' => 'span6'] ),
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'h4', $words['panel-billing']['heading'] ),
 				$helperAddress->setAddress( $customer->addressBilling ),
-			), ['class' => 'span6'] ),
-		), ['class' => 'row-fluid'] ),
+			], ['class' => 'span6'] ),
+		], ['class' => 'row-fluid'] ),
 		$textCheckoutBottom,
 		HtmlTag::create( 'div', [
 			$buttonPrev, ' ',
 			$buttonNext,
 		], ['class' => 'buttonbar well well-small'] ),
-	), ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
-) );
+	], ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
+] );
 
 $w				= (object) $words['modal-loading-payment'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">

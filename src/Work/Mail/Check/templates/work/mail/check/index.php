@@ -22,19 +22,19 @@ foreach( $addresses as $address ){
 	$timestamp	= $address->checkedAt ?: $address->createdAt;
 	$time		= HtmlTag::create( 'small', date( "H:i:s", $timestamp ), ['class' => 'muted'] );
 	$date		= date( "Y-m-d", $timestamp );
-	$buttonTestEnabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', array(
+	$buttonTestEnabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', [
 		'class'		=> 'btn btn-mini btn-primary',
 		'onclick'	=> 'startTest(this)',
 		'href'		=> './work/mail/check/check?addressId='.$address->mailAddressId.'&from=./work/mail/check/'.$page
-	) );
+	] );
 	$buttonTestDisabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', [
 		'class'		=> 'btn btn-mini btn-primary disabled',
 	] );
-	$buttonEditEnabled	= HtmlTag::create( 'a', $iconEdit, array(
+	$buttonEditEnabled	= HtmlTag::create( 'a', $iconEdit, [
 		'class'		=> 'btn btn-mini',
 		'title'		=> 'bearbeiten',
 		'onclick'	=> 'editAddress('.$address->mailAddressId.', \''.htmlentities( $address->address, ENT_QUOTES, 'UTF-8' ).'\')'
-	) );
+	] );
 	$buttonEditDisabled	= HtmlTag::create( 'a', $iconEdit, [
 		'class'		=> 'btn btn-mini disabled',
 		'title'		=> 'bearbeiten',
@@ -79,12 +79,12 @@ foreach( $addresses as $address ){
 	}
 	$status		.= '&nbsp;'.$buttonInfo;
 	$buttons	= HtmlTag::create( 'div', [$buttonEdit, $buttonTest, $buttonRemove], ['class' => 'btn-group'] );
-	$rows[]		= HtmlTag::create( 'tr', array(
+	$rows[]		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $address->address, ['class' => 'cell-address-title'] ),
 		HtmlTag::create( 'td', $status, ['class' => 'cell-address-status'] ),
 		HtmlTag::create( 'td', $date.' '.$time, ['class' => 'cell-address-datetime'] ),
 		HtmlTag::create( 'td', $buttons ),
-	), [
+	], [
 		'class'		=> 'mail-check-address-status-'.$address->status,
 		'data-id'	=> $address->mailAddressId
 	] );
@@ -148,14 +148,14 @@ foreach( $groups as $group )
 	$optGroup[$group->mailGroupId]	= $group->title.' ('.$countByGroup[$group->mailGroupId].')';
 $optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
-$statuses	= array(
+$statuses	= [
 	''	=> '- alle -',
 	-2	=> 'nicht erreichbar ('.$countByStatus[-2].')',
 	-1	=> 'abgelehnt ('.$countByStatus[-1].')',
 	0	=> 'ungetestet ('.$countByStatus[0].')',
 	1	=> 'wird getestet ('.$countByStatus[1].')',
 	2	=> 'erreichbar ('.$countByStatus[2].')',
-);
+];
 
 $optStatus	= [];
 foreach( $statuses as $key => $label )

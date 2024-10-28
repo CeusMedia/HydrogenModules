@@ -69,7 +69,7 @@ if( $template->images ){
 			HtmlTag::create( 'td', $image ),
 			HtmlTag::create( 'td', '<strong><kbd>image'.( $nr + 1).'</kbd></strong>' ),
 			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
-			HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right') ),
+			HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
 		], ['class' => $rowClass] );
 	}
 	$listImages	= HtmlTag::create( 'table', [

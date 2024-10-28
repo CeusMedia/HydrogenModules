@@ -21,9 +21,9 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 		$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
-	$buttonbar		= HtmlTag::create( 'div', array(
+	$buttonbar		= HtmlTag::create( 'div', [
 		new \CeusMedia\Bootstrap\Button\Link( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
-	), ['class' => 'buttonbar well well-small'] );
+	], ['class' => 'buttonbar well well-small'] );
 }
 
 $tabContent	= '

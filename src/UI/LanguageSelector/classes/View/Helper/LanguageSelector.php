@@ -79,9 +79,9 @@ class View_Helper_LanguageSelector extends Abstraction
 		$list	= [];
 		foreach( $this->languages as $entry ){
 			if( isset( $this->labels[$entry] ) ){
-				$icon	= HtmlTag::create( 'i', '', array(
+				$icon	= HtmlTag::create( 'i', '', [
 					'class'	=> ( $entry == $this->current ) ? 'icon-ok' : 'icon-empty',
-				) );
+				] );
 				$link	= HtmlTag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], [
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
@@ -102,7 +102,7 @@ class View_Helper_LanguageSelector extends Abstraction
 		$label			= str_replace( '<%?OPTIONALICON%>', '', $payload['label'] );
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
-		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
+		$flagimg		= HtmlTag::create( 'img' , '', ['src' => $flagimgpath , 'style' =>'height:1em'] );
 		$flagimg		.= '&nbsp;'
 */
 		$caret			= HtmlTag::create( 'span', '', ['class' => 'caret'] );

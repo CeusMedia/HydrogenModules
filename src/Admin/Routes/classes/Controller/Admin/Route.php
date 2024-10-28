@@ -177,7 +177,7 @@ class Controller_Admin_Route extends Controller
 					$xml	= XmlReader::readFile( $this->fileName );
 					foreach( $xml as $route ){
 						$id	= md5( (string) $route->source );
-						$this->routes[$id]	= (object) array(
+						$this->routes[$id]	= (object) [
 							'routeId'		=> $id,
 							'source'		=> (string) $route->source,
 							'target'		=> (string) $route->target,
@@ -185,7 +185,7 @@ class Controller_Admin_Route extends Controller
 							'code'			=> (int) $route->getAttribute( 'code' ),
 							'regex'			=> (bool) $route->getAttribute( 'regex' ),
 							'title'			=> '',
-						);
+						];
 						if( $route->hasAttribute( 'title' ) )
 							$this->routes[$id]->title	= (string) $route->getAttribute( 'title' );
 					}

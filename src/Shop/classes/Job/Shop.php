@@ -64,7 +64,7 @@ class Job_Shop extends Job_Abstract
 			$this->out( 'Shop job configuration is already existing in '.$this->configFileOldCustomers );
 			return;
 		}
-		$data	= array(
+		$data	= [
 			'testOrders'	=> [
 				'template'	=> [
 					'country'				=> 'Deutschland',
@@ -123,7 +123,7 @@ class Job_Shop extends Job_Abstract
 					'useSymbols'	=> FALSE
 				]
 			]
-		);
+		];
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
 	}
 
@@ -190,7 +190,7 @@ class Job_Shop extends Job_Abstract
 				$data->customer->number		= preg_replace( $regExp, '\\2',$data->customer->address );
 				$data->customer->address	= preg_replace( $regExp, '\\1', $data->customer->address );
 			}
-			$data	= array(
+			$data	= [
 				'customerId'	=> $data->customer->customerId,
 				'orderId'		=> $data->order->orderId,
 				'firstname'		=> str_replace( '"', '', trim( $data->customer->firstname ) ),
@@ -204,12 +204,9 @@ class Job_Shop extends Job_Abstract
 				'phone'			=> str_replace( '"', '', trim( $data->customer->phone ) ),
 				'orderDate'		=> date( 'Y-m-d H:i:s', (int) $data->order->createdAt ),
 				'hash'			=> $captcha->generateWord(),
-			);
+			];
 			$migrantId	= $modelMigrant->add( $data );
-			$migrants[]	= array_merge(
-				array('shopMigrantId' => $migrantId ),
-				$data
-			);
+			$migrants[]	= array_merge( ['shopMigrantId' => $migrantId], $data );
 			$this->showProgress( ++$count, $total );
 		}
 		$this->out();

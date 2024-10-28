@@ -56,7 +56,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			}
 		}
 		$templates		= $this->logic->getTemplates( [], ['title' => 'ASC'] );
-		$template		= (object) array(
+		$template		= (object) [
 			'title'			=> $this->request->get( 'title' ),
 			'templateId'	=> (int) $this->request->get( 'templateId' ),
 			'style'			=> $this->view->loadContentFile( $pathDefaults.'default.css' ),
@@ -65,7 +65,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			'imprint'		=> $this->view->loadContentFile( $pathDefaults.'imprint.txt' ),
 			'senderAddress'	=> '',
 			'senderName'	=> '',
-		);
+		];
 		if( $copyTemplateId ){
 			$template	= $this->logic->getTemplate( $copyTemplateId );
 			$template->templateId	= (int) $this->request->get( 'templateId' );
@@ -247,7 +247,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		try{
 			$words		= (object) $this->getWords( 'preview' );
 			$template	= $this->logic->getTemplate( $templateId );
-			$data		= array(
+			$data		= [
 				'title'				=> sprintf( $words->title, $template->title ),
 				'content'			=> wordwrap( $words->content ),
 				'salutation'		=> $words->salutation,
@@ -259,7 +259,7 @@ class Controller_Work_Newsletter_Template extends Controller
 				'linkUnregister'	=> "javascript:alert('".$words->alertDisabledInPreview."')",
 				'linkView'			=> "javascript:alert('".$words->alertDisabledInPreview."')",
 				'preview'			=> TRUE,
-			);
+			];
 			if( strtolower( $format ) == 'text' ){
 				$data['linkUnregister']	= '['.$words->alertDisabledInPreview.']';
 				$data['linkView']		= '['.$words->alertDisabledInPreview.']';

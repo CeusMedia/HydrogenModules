@@ -12,10 +12,10 @@ $list	= '<div class="alert alert-info">Keine Backups vorhanden.</div>';
 if( $backups ){
 	$rows	= [];
 	foreach( $backups as $backup ){
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $backup->backupId ),
 			HtmlTag::create( 'td', $backup->createdAt ),
-		) );
+		] );
 	}
 	$thead	= HtmlTag::create( 'thead', '' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );

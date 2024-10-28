@@ -45,12 +45,12 @@ class Controller_Admin_Database_Backup_Copy extends Controller
 		$dbName			= $copyDbName ?: $defaultDbName;
 		try{
 			$this->logicBackup->load( $backupId, $copyDbName, $copyPrefix );
-			$this->logicBackup->storeDataInComment( $backupId, array(
+			$this->logicBackup->storeDataInComment( $backupId, [
 				'copyBackupId'	=> $backupId,
 				'copyDatabase'	=> $dbName,
 				'copyPrefix'	=> $copyPrefix,
 				'copyTimestamp'	=> time(),
-			) );
+			] );
 			$this->messenger->noteSuccess( 'Die Kopie der Sicherung wurde installiert.' );
 		}
 		catch( Exception $e ){

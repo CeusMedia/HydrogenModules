@@ -35,7 +35,7 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 		else{
 			$modelTimer	= new Model_Work_Timer( $this->env );
 
-			$conditions	= array( 'moduleId' => 0);
+			$conditions	= ['moduleId' => 0];
 			if( $this->userId )
 				$conditions['userId']	= $this->userId;
 			$orders		= ['title' => 'ASC'];

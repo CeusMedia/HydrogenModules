@@ -81,8 +81,8 @@ class Controller_Info_Forum extends Controller
 
 		$postId	= $this->modelPost->add( $data, FALSE );
 		$this->messenger->noteSuccess( $words->successPostAdded, $postId );
-		$this->modelThread->edit( $threadId, array( 'modifiedAt' => time() ) );
-		$this->modelTopic->edit( $thread->topicId, array( 'modifiedAt' => time() ) );
+		$this->modelThread->edit( $threadId, ['modifiedAt' => time()] );
+		$this->modelTopic->edit( $thread->topicId, ['modifiedAt' => time()] );
 		$this->cache->delete( 'info.forum.userPosts' );
 		$this->informThreadUsersAboutPost( $threadId, $postId );
 		$this->restart( 'thread/'.$threadId.'#post-'.$postId, TRUE );
@@ -327,7 +327,7 @@ class Controller_Info_Forum extends Controller
 				continue;
 			if( $author->userId == $post->authorId )
 				continue;
-			$data		= array(
+			$data		= [
 				'user'		=> $author,
 				'config'	=> $config,
 				'options'	=> $this->options,
@@ -337,7 +337,7 @@ class Controller_Info_Forum extends Controller
 				'post'		=> $post,
 				'posts'		=> $posts,
 				'authors'	=> $authors,
-			);
+			];
 			$mail	= new Mail_Forum_Answer( $this->env, $data );
 			if( $this->options->get( 'mail.sender' ) )
 				$mail->setSender( $this->options->get( 'mail.sender' ) );

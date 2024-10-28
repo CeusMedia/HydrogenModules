@@ -381,10 +381,10 @@ class Logic_Page extends Logic
 	{
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
-		$indices	= array(																		//  basic indices to find page
+		$indices	= [																		//  basic indices to find page
 			'type'		=> [Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE],				//  ... being of page type content or module
 			'status'	=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],			//  ... being visible or hidden, but not disabled
-		);
+		];
 		$dispatcher	= [
 			'type'		=> 'module',
 			'module'	=> 'Resource_Page',
@@ -401,9 +401,9 @@ class Logic_Page extends Logic
 		 *	 - must be visible or at least hidden
 		 */
 		for( $i=count( $parts ); $i>0; $i-- ){														//  backward resolution
-			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+			$candidate	= $model->getByIndices( array_merge( $indices, [							//  try to find page ...
 				'fullpath'		=> join( '/', array_slice( $parts, 0, $i ) ),						//  ... having this full path
-			) ) );
+			] ) );
 			if( $candidate ){																		//  page found
 				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
 				$candidate->dispatcher	= (object) array_merge( $dispatcher, [
@@ -426,10 +426,10 @@ class Logic_Page extends Logic
 		 *	Problem: Does not work for pages in deeper levels
 		 */
 		for( $i=count( $parts ); $i>0; $i-- ){														//  absolute and backward resolution
-			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+			$candidate	= $model->getByIndices( array_merge( $indices, [							//  try to find page ...
 				'parentId'		=> 0,																//  ... with no parent --> absolute
 				'identifier'	=> join( '/', array_slice( $parts, 0, $i ) ),						//  ... having this sub path
-			) ) );
+			] ) );
 			if( $candidate ){																		//  page found
 				$candidate->arguments	= array_slice( $parts, $i );								//  set cut path parts as action arguments
 				$candidate->dispatcher	= (object) array_merge( $dispatcher, [
@@ -451,11 +451,11 @@ class Logic_Page extends Logic
 		 */
 		$lastPage	= NULL;
 		while( count( $parts ) ){																	//  relative and forward resolution
-			$part		= array_shift( $parts );													//  take next path part
-			$candidate	= $model->getByIndices( array_merge( $indices, array(						//  try to find page ...
+			$part		= array_shift( $parts );												//  take next path part
+			$candidate	= $model->getByIndices( array_merge( $indices, [							//  try to find page ...
 				'parentId'		=> $parentPageId,
 				'identifier'	=> $part,
-			) ) );
+			] ) );
 			if( !$candidate )
 				break;
 			$candidate->arguments	= $parts;

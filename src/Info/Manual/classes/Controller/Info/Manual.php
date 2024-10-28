@@ -53,7 +53,7 @@ class Controller_Info_Manual extends Controller
 			if( !strlen( trim( $title ) ) )
 				$this->messenger->noteError( $words->msgErrorFilenameMissing );
 			else{
-				$pageId	= $this->modelPage->add( array(
+				$pageId	= $this->modelPage->add( [
 					'manualCategoryId'	=> $categoryId,
 					'parentId'			=> $parentId,
 					'creatorId'			=> (int) $this->userId,
@@ -65,7 +65,7 @@ class Controller_Info_Manual extends Controller
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				), FALSE );
+				], FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 				$this->restartToPage( $this->modelPage->get( $pageId ) );
 			}
@@ -97,7 +97,7 @@ class Controller_Info_Manual extends Controller
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
 		if( !$pages ){
 //			throw new RuntimeException( 'No page found in category' );
-			$pageId	= $this->modelPage->add( array(
+			$pageId	= $this->modelPage->add( [
 				'manualCategoryId'	=> $category->manualCategoryId,
 				'creatorId'			=> (int) $this->userId,
 				'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -108,7 +108,7 @@ class Controller_Info_Manual extends Controller
 				'content'			=> "## Start Page ##\nNo content, yet.",
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			) );
+			] );
 			$this->restartToPage( (int) $pageId );
 		}
 		$firstPage	= current( $pages );
@@ -130,21 +130,21 @@ class Controller_Info_Manual extends Controller
 //				$this->messenger->noteNotice( $words->msgNoChanges );
 //				$this->restartToPage( $page );
 //			}
-			$this->modelVersion->add( array(
+			$this->modelVersion->add( [
 				'userId'	=> $this->userId,
 				'objectId'	=> $page->manualPageId,
 				'type'		=> Model_Manual_Version::TYPE_PAGE,
 				'version'	=> $page->version,
 				'object'	=> serialize( $page ),
 				'timestamp'	=> time(),
-			), FALSE );
+			], FALSE );
 
-			$data	= array(
+			$data	= [
 				'title'			=> $title,
 				'content'		=> $content,
 				'version'		=> $page->version + 1,
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( strlen( trim( $parentId ) ) )
 				$data['parentId']	= $parentId;
 			$this->modelPage->edit( $page->manualPageId, $data, FALSE );
@@ -180,7 +180,7 @@ class Controller_Info_Manual extends Controller
 				if( file_exists( $this->docPath.$fileName ) ){
 					$content	= FileReader::load( $this->docPath.$fileName );
 					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
-					$newPages[]	= $this->modelPage->add( array(
+					$newPages[]	= $this->modelPage->add( [
 						'manualCategoryId'	=> $categoryId,
 						'creatorId'			=> (int) $this->userId,
 						'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -191,14 +191,14 @@ class Controller_Info_Manual extends Controller
 						'content'			=> $content,
 						'createdAt'			=> time(),
 						'modifiedAt'		=> time(),
-					) );
+					] );
 					@unlink( $this->docPath.$fileName );
 				}
 			}
-			$message	= vsprintf( 'Imported %d pages into category "%s".', array(
+			$message	= vsprintf( 'Imported %d pages into category "%s".', [
 				count( $newPages ),
 				$category->title,
-			) );
+			] );
 			$this->messenger->noteSuccess( $message );
 			$this->restart( 'import', TRUE );
 		}
@@ -208,7 +208,7 @@ class Controller_Info_Manual extends Controller
 				$content	= FileReader::load( $this->docPath.$fileName );
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
-				$this->modelPage->add( array(
+				$this->modelPage->add( [
 					'manualCategoryId'	=> $categoryId,
 					'creatorId'			=> (int) $this->userId,
 					'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -219,7 +219,7 @@ class Controller_Info_Manual extends Controller
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				) );
+				] );
 				@unlink( $this->docPath.$fileName );
 				$this->restart( 'import', TRUE );
 			}
@@ -410,7 +410,7 @@ class Controller_Info_Manual extends Controller
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$this->categories[$category->manualCategoryId]	= $category;
 		if( !$this->categories ){
-			$this->modelCategory->add( array(
+			$this->modelCategory->add( [
 				'creatorId'		=> (int) $this->userId,
 				'status'		=> Model_Manual_Category::STATUS_NEW,
 				'format'		=> Model_Manual_Category::FORMAT_TEXT,
@@ -420,7 +420,7 @@ class Controller_Info_Manual extends Controller
 				'content'		=> '',
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$sessionKeyCategoryId	= 'filter_info_manual_categoryId';

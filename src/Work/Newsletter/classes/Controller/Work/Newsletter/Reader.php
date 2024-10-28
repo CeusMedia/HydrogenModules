@@ -68,10 +68,10 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$mail	= new Mail_Work_Newsletter_Invite( $this->env, $data );
 					if( $status === Model_Newsletter_Reader::STATUS_CONFIRMED )
 						$mail	= new Mail_Work_Newsletter_Add( $this->env, $data );
-					$receiver	= (object) array(
+					$receiver	= (object) [
 						'username'	=> $this->request->get( 'firstname' ).' '.$this->request->get( 'surname' ),
 						'email'		=> $this->request->get( 'email' ),
-					);
+					];
 					$language		= $this->env->getLanguage()->getLanguage();
 					/** @var Logic_Mail $logicMail */
 					$logicMail		= Logic_Mail::getInstance( $this->env );

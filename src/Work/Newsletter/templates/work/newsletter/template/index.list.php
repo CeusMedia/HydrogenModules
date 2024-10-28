@@ -67,28 +67,28 @@ $buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, [
 	'class'	=> 'btn not-btn-small'
 ] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Template:maxItems', count( $templates ) + 1 ) ){
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'type'		=> 'button',
 		'class'		=> 'btn not-btn-small btn-success disabled',
 		'onclick'	=> 'alert("Weitere Templates sind in dieser Demo-Installation nicht möglich.")',
-	) );
-	$buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, array(
+	] );
+	$buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, [
 		'type'		=> 'button',
 		'class'		=> 'btn not-btn-small disabled',
 		'onclick'	=> 'alert("Weitere Templates sind in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 }
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
 				$list,
 			], ['class' => 'span12'] ),
-		), ['class' => 'row-fluid'] ),
+		], ['class' => 'row-fluid'] ),
 		HtmlTag::create( 'div', [
 			$buttonAdd,
 		], ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

@@ -68,10 +68,10 @@ class Controller_Info_Newsletter extends Controller
 		$words		= (object) $this->getWords( 'index' );
 		if( $this->request->has( 'save' ) ){
 			$language			= $this->env->getLanguage()->getLanguage();
-			$readersFoundByMail	= $this->logic->getReaders( array(
+			$readersFoundByMail	= $this->logic->getReaders( [
 				'email'		=> trim( $this->request->get( 'email' ) ),
 				'status'	=> [0, 1],
-			) );
+			] );
 			if( !strlen( trim( $this->request->get( 'email' ) ) ) )
 				$this->messenger->noteError( $words->msgErrorNoEmail );
 			else if( !strlen( trim( $this->request->get( 'firstname' ) ) ) )
@@ -91,10 +91,10 @@ class Controller_Info_Newsletter extends Controller
 				if( $this->request->get( 'groups' ) )
 					foreach( $this->request->get( 'groups' ) as $groupId )						//  iterate selected groups
 						$this->logic->addReaderToGroup( $readerId, $groupId );					//  add reader to group
-				$conditions	= array(															//  get active automatic groups
+				$conditions	= [																	//  get active automatic groups
 					'status'	=> Model_Newsletter_Group::STATUS_USABLE,						//  status: active
 					'type'		=> Model_Newsletter_Group::TYPE_AUTOMATIC,
-				);
+				];
 				foreach( $this->logic->getGroups( $conditions ) as $group )						//  iterate found groups
 					$this->logic->addReaderToGroup( $readerId, $group->newsletterGroupId );		//  add reader to group
 
@@ -118,13 +118,13 @@ class Controller_Info_Newsletter extends Controller
 
 		$requestedGroups	= $this->request->get( 'groups' );
 		$requestedGroups	= is_array( $requestedGroups ) ? $requestedGroups : [];
-		$groups	= $this->logic->getGroups( array(
+		$groups	= $this->logic->getGroups( [
 			'status'	=> Model_Newsletter_Group::STATUS_USABLE,								//  status: active
-			'type'		=> array(																//  type: default or automatic
+			'type'		=> [																	//  type: default or automatic
 				Model_Newsletter_Group::TYPE_DEFAULT,
 				Model_Newsletter_Group::TYPE_AUTOMATIC,
-			),
-		), ['title' => 'ASC'] );
+			],
+		], ['title' => 'ASC'] );
 		foreach( $groups as $group )
 			$group->isChecked	= in_array( $group->newsletterGroupId, $requestedGroups );
 		$this->addData( 'groups', $groups );
@@ -238,11 +238,11 @@ class Controller_Info_Newsletter extends Controller
 			$helper->setReaderLetterId( $readerLetterId );
 			$helper->setReaderId( $letter->newsletterReaderId );
 //			$helper->setNewsletterId( $letter->newsletterId );
-			$helper->setData( array(
+			$helper->setData( [
 				'readerLetterId'	=> $readerLetterId,
 				'newsletterId'		=> $letter->newsletterId,
 				'preview'			=> $this->request->has( 'dry' ),
-			) );
+			] );
 			print( $helper->render() );
 			exit;
 		}

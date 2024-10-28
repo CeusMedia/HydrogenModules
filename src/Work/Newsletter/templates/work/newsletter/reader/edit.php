@@ -48,10 +48,10 @@ if( $readerGroups ){
 		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
 		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, ['href' => $urlGroup] );
 
-		$listGroups[]	= HtmlTag::create( 'tr', array(
+		$listGroups[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $linkGroup, ['class' => ''] ),
 			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		) );
+		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
 	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Gruppen', ''] );

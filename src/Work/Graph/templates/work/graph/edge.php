@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Work_Graph $view */
+/** @var array<object> $nodes */
+/** @var object $edge */
+/** @var object $graph */
+
 $nodeIndex	= [];
 foreach( $nodes as $node )
 	$nodeIndex[$node->nodeId]	= $node->label ?: '<tt><em>'.$node->ID.'</em></tt>';
@@ -11,16 +16,16 @@ if( $edge->label )
 
 $description	= strlen( trim( $graph->description ) ) ? trim( $graph->description )."\n\n" : '';
 
-$factsEdge		= array(
-	array( 'Source Node', HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], ['href' => './work/graph/node/'.$edge->fromNodeId] ), NULL ),
-	array( 'TargetNode', HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], ['href' => './work/graph/node/'.$edge->toNodeId] ), NULL ),
-	array( 'Title', $edge->label, NULL ),
-	array( 'Arrow Head', $edge->arrowhead, NULL ),
-	array( 'Arrow Size', $edge->arrowsize, NULL ),
-	array( 'Color', $edge->color, NULL ),
-	array( 'Font Color', $edge->fontcolor, NULL ),
-	array( 'Font Size', $edge->fontsize, NULL ),
-);
+$factsEdge		= [
+	['Source Node', HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], ['href' => './work/graph/node/'.$edge->fromNodeId] ), NULL],
+	['TargetNode', HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], ['href' => './work/graph/node/'.$edge->toNodeId] ), NULL],
+	['Title', $edge->label, NULL],
+	['Arrow Head', $edge->arrowhead, NULL],
+	['Arrow Size', $edge->arrowsize, NULL],
+	['Color', $edge->color, NULL],
+	['Font Color', $edge->fontcolor, NULL],
+	['Font Size', $edge->fontsize, NULL],
+];
 
 return '
 <div class="row-fluid">

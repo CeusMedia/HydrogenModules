@@ -256,10 +256,10 @@ return $html;
 		$modelMail	= new Model_Mail( $this->env );												//  get mail model
 		$payload	= ['newsletterId'	=> $newsletterId];
 		$this->env->getCaptain()->callHook( 'Newsletter', 'removeNewsletter', $this, $payload );
-		$mailIds	= $this->modelReaderLetter->getAllByIndices( array(							//  get reader letters
+		$mailIds	= $this->modelReaderLetter->getAllByIndices( [								//  get reader letters
 			'newsletterId'	=> $newsletterId,													//  ... of newsletter
 			'mailId'		=> '> 0',															//  ... having a mail ID
-		), [], [], ['mailId'] );																//  ... returning mail IDs, only
+		], [], [], ['mailId'] );																//  ... returning mail IDs, only
 		if( $mailIds )
 			$modelMail->removeByIndex( 'mailId', $mailIds );									//  remove mails by IDs
 		$this->modelReaderLetter->removeByIndex( 'newsletterId', $newsletterId );				//  remove reader letters of newsletter

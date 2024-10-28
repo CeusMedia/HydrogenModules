@@ -34,5 +34,5 @@ class Entity_User
 	public ?Entity_Role $role		= NULL;
 
 	/** @var Entity_Group[] $groups  */
-	public array $groups			= array();
+	public array $groups			= [];
 }

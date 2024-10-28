@@ -24,11 +24,11 @@ if( $posts ){
 	$list	= [];
 	foreach( $posts as $post ){
 		$link	= HtmlTag::create( 'a', $post->title, ['href' => './manage/blog/edit/'.$post->postId] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $words['states'][$post->status] ),
 			HtmlTag::create( 'td', $post->category ? $post->category->title : '' ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "15%", "20%" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headStatus, $w->headCategory] ) );

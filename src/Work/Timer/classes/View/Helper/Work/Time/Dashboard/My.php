@@ -23,10 +23,10 @@ class View_Helper_Work_Time_Dashboard_My extends Abstraction
 		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$modelTimer		= new Model_Work_Timer( $this->env );
-		$hasTimers		= $modelTimer->count( array(
+		$hasTimers		= $modelTimer->count( [
 			'workerId'	=> $logicAuth->getCurrentUserId(),
 			'status'	=> [1, 2],
-		) );
+		] );
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 		$fromAdd	= 'info/dashboard';
 		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;jetzt Zeit erfassen', [

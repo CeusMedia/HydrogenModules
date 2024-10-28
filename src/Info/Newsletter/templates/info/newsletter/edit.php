@@ -31,12 +31,12 @@ foreach( $subscriptions as $subscription )
 
 $list	= [];
 foreach( $groups as $group ){
-	$checkbox	= HtmlTag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'name'		=> 'groups[]',
 		'value'		=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $readerGroups ) ? 'checked' : NULL
-	) );
+	] );
 	$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$group->title, ['class' => 'checkbox'] );
 	$list[]	= HtmlTag::create( 'li', $label );
 }

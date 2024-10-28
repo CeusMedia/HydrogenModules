@@ -55,13 +55,13 @@ $panelEdit	= '
 						<div class="span12">
 							<label for="input_content">'.$words['edit']['labelContent'].'</label>
 							<!--noShortcode-->
-							'.HtmlTag::create( 'textarea', $content, array(
+							'.HtmlTag::create( 'textarea', $content, [
 								'class'		=> "span12 CodeMirror-auto ace-auto",
 								'name'		=> "content",
 								'id'		=> "input_content",
 								'rows'		=> $moduleConfig->get( 'editor.rows' ),
 								'data-ace-option-max-lines'	=> 20,
-							) ).'
+							] ).'
 <!--							<textarea class="span12 CodeMirror-auto ace-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>-->
 							<!--/noShortcode-->
 						</div>

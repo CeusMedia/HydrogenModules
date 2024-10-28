@@ -32,32 +32,32 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, [
 	'class'		=> "btn btn-small",
 	'href'		=> "./work/newsletter/template/index",
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'type'			=> "submit",
 	'class'			=> "btn btn-primary".( $isUsed ? ' disabled' : '' ),
 	'name'			=> "save",
 	'readonly'		=> $isUsed ? 'readonly' : NULL,
 	'onmousedown'	=> $isUsed ? "alert('".$words->edit->buttonSaveDisabled."');" : NULL,
-) );
-$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, array(
+] );
+$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, [
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-preview",
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("./work/newsletter/template/preview/'.$format.'/'.$templateId.'");'
-) );
+] );
 /*
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'class'		=> "btn btn-info",
 	'href'		=> './work/newsletter/template/preview/'.$format.'/'.$templateId.'/1',
 	'target'	=> "NewsletterTemplatePreview",
 ] );*/
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
 	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
-) );
+] );
 $buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
 	'class'		=> "btn btn-success btn-small",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId

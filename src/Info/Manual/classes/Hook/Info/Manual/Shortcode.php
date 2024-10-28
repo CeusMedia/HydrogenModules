@@ -32,20 +32,20 @@ class Hook_Info_Manual_Shortcode extends Hook
 						$category		= $modelCategory->get( (int) $attr['id'] );
 						if( $category ){
 							$helperUrl->setCategory( $category );
-							$replacement	= HtmlTag::create( 'a', $category->title, array(
+							$replacement	= HtmlTag::create( 'a', $category->title, [
 								'href' 		=> $helperUrl->render(),
 								'class'		=> 'link-manual-category',
-							) );
+							] );
 						}
 					}
 					if( $shortCode === 'manual:page' ){
 						$page		= $modelPage->get( (int) $attr['id'] );
 						if( $page ){
 							$helperUrl->setPage( $page );
-							$replacement	= HtmlTag::create( 'a', $page->title, array(
+							$replacement	= HtmlTag::create( 'a', $page->title, [
 								'href' 		=> $helperUrl->render(),
 								'class'		=> 'link-manual-page',
-							) );
+							] );
 						}
 					}
 				}

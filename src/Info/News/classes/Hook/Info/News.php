@@ -35,10 +35,10 @@ class Hook_Info_News extends Hook
 									'h'.$attr['panel-heading-level'],
 									$attr['panel-heading']
 								);
-							$replacement	= HtmlTag::create( 'div', array(
+							$replacement	= HtmlTag::create( 'div', [
 								$heading,
 								HtmlTag::create( 'div', $replacement, ['class' => 'content-panel-inner'] ),
-							), ['class' => 'content-panel'] );
+							], ['class' => 'content-panel'] );
 						}
 					}
 					$processor->replaceNext(

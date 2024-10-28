@@ -18,10 +18,10 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? TextTrimmer::trim( $parts[1], 100 ) : '';
 			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= HtmlTag::create( 'img', NULL, array(
+			$image		= HtmlTag::create( 'img', NULL, [
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
-			) );
+			] );
 			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		else{

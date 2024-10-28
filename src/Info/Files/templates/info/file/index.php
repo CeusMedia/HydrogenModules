@@ -97,11 +97,11 @@ foreach( $folders as $item ){
 		'title'	=> $w->buttonOpenFolder
 	] );
 	if( 0 && in_array( 'ajaxRenameFolder', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoFile.changeFolderName('.$item->downloadFolderId.', \''.$item->title.'\')',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonRename,
-		) );
+		] );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
 		$buttons[]	= HtmlTag::create( 'a', $iconUp, [
@@ -145,10 +145,10 @@ $rows	= $rows['folders'] + $rows['files'];
 $table	= '<br/><div class="alert alert-info"><em class="not-muted">'.$w->empty.'</em></div>';
 if( $rows ){
 	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
-	$heads		= HtmlTag::create( 'tr', array(
+	$heads		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', $search ? $w->headFiles : $w->headFilesAndFolders ),
 		HtmlTag::create( 'th', $w->headActions, ['class' => 'pull-right'] ),
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped not-table-condensed'] );

@@ -13,7 +13,7 @@ class Job_Newsletter extends Job_Abstract
 		$modelMail	= new Model_Mail( $this->env );
 		$age		= $this->parameters->get( '--age', '1Y' ) ;
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> [
 				Model_Mail::STATUS_ABORTED,														//  status: -3
 				Model_Mail::STATUS_FAILED,														//  status: -2
@@ -24,7 +24,7 @@ class Job_Newsletter extends Job_Abstract
 			],
 			'mailClass'		=> 'Mail_Newsletter',
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 		$orders		= ['mailId' => 'ASC'];
 		$limits		= [];
 		$mails		= $modelMail->getAll( $conditions, $orders, $limits );
@@ -229,11 +229,11 @@ class Job_Newsletter extends Job_Abstract
 		}
 		if( $verbose && $newsletters )
 			$this->out();
-		return (object) array(
+		return (object) [
 			'newsletters'	=> count( $entries ),
 			'letters'		=> $countLetters,
 			'recovered'		=> $countRecovered,
-		);
+		];
 	}
 
 	protected function recoverReaderLetterQueueIds()
@@ -269,9 +269,9 @@ class Job_Newsletter extends Job_Abstract
 				] );
 			}
 		}
-		return (object) array(
+		return (object) [
 			'queues'		=> count( $newsletterIds ),
 			'letters'		=> count( $letters ),
-		);
+		];
 	}
 }

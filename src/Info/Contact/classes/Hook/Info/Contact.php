@@ -61,10 +61,10 @@ class Hook_Info_Contact extends Hook
 					);
 					if( $isFirst ){
 						$view		= new View( $env );
-						$blocks		= (object) array(
+						$blocks		= (object) [
 							'success'	=> $view->loadContentFile( 'html/info/contact/form/success.html' ),
 							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),
-						);
+						];
 						$script	= 'ModuleInfoContactForm.setResultBlocks('.json_encode( $blocks ).');';
 						$env->getPage()->js->addScriptOnReady($script);
 						$isFirst = FALSE;

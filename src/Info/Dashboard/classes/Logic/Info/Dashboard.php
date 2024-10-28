@@ -28,14 +28,14 @@ class Logic_Info_Dashboard extends Logic
 			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : [];
 		if( !is_array( $panels ) )
 			throw new InvalidArgumentException( 'Panels list must be array or string' );
-		$dashboardId	= $this->model->add( array(
+		$dashboardId	= $this->model->add( [
 			'userId'		=> $userId,
 			'title'			=> $title,
 			'description'	=> $description,
 			'panels'		=> join( ',', $panels ),
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( count( $this->getUserDashboards( $userId ) ) === 1 || $select )
 			$this->setUserDashboard( $userId, $dashboardId );
 		return $dashboardId;
@@ -66,10 +66,10 @@ class Logic_Info_Dashboard extends Logic
 				array_push( $panels, $panelId );
 				break;
 		}
-		return (bool) $this->model->edit( $dashboard->dashboardId, array(
+		return (bool) $this->model->edit( $dashboard->dashboardId, [
 			'panels'		=> implode( ',', $panels ),
 			'modifiedAt'	=> time()
-		) );
+		] );
 	}
 
 	/**
@@ -184,10 +184,10 @@ class Logic_Info_Dashboard extends Logic
 		$panelsString	= join( ',', $panels );
 		if( $dashboard->panels === $panelsString )
 			return FALSE;
-		return (bool) $this->model->edit( $dashboard->dashboardId, array(
+		return (bool) $this->model->edit( $dashboard->dashboardId, [
 			'panels'		=> $panelsString,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
 	/**

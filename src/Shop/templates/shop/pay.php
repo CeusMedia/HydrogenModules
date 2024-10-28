@@ -15,7 +15,7 @@ foreach( $paymentBackends->getAll() as $paymentBackend ){
 	$list[$key]	= HtmlTag::create( 'li', $link, ['class' => 'payment-method-list-item'] );
 }
 ksort( $list );
-$list	= HtmlTag::create( 'ul', $list, array( 'class' => 'unstyled payment-method-list') );
+$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled payment-method-list'] );
 
 $tabContent	= '
 <h3>Bezahlmethode</h3>

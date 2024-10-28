@@ -122,13 +122,13 @@ class Controller_Info_Contact extends Controller
 							}
 							$fullname	= trim( $this->request->get( 'fullname' ) );
 							$parts		= preg_split( '/\s+/', $fullname.' ', 2 );
-							$path		= $path.'?'.http_build_query( array(
+							$path		= $path.'?'.http_build_query( [
 								'fullname'		=> $fullname,
 								'firstname'		=> trim( $parts[0] ),
 								'surname'		=> trim( $parts[1] ),
 								'email'			=> $this->request->get( 'email' ),
 								'groups'		=> $this->request->get( 'topics' ),
-							), '', '&' );
+							], '', '&' );
 							$this->restart( $path, FALSE );
 						}
 					}

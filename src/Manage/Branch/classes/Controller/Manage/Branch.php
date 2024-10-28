@@ -55,12 +55,12 @@ class Controller_Manage_Branch extends Controller
 		FolderEditor::createFolder( $imagePath, 0777 );
 		if( !@move_uploaded_file( $image['tmp_name'], $imagePath.$imageName ) )
 			throw new RuntimeException( 'Bilddatei konnte nicht im Pfad "'.$imagePath.'" gespeichert werden.' );
-		$data	= array(
+		$data	= [
 			'branchId'		=> $branchId,
 			'filename'		=> $imageName,
 			'title'			=> $request->get( 'image_title' ),
 			'uploadedAt'	=> time()
-		);
+		];
 		$model->add( $data );
 		$messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
 		$this->restart( 'edit/'.$branchId, TRUE );
@@ -116,10 +116,11 @@ class Controller_Manage_Branch extends Controller
 		$this->view->addData( 'branch', $data );
 
 		$model		= new Model_Company( $this->env );
-		$this->view->setData( array( 'companies' => $model->getAll() ) );
+		$this->view->setData( ['companies' => $model->getAll()] );
 		}
 
-	public function delete( $branchId ){
+	public function delete( $branchId )
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Branch( $this->env );

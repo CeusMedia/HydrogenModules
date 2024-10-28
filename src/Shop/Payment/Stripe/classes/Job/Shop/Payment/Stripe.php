@@ -57,12 +57,12 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
 
-		$failedStripeBankWirePayments	= $this->modelStripePayin->getAll( array(
+		$failedStripeBankWirePayments	= $this->modelStripePayin->getAll( [
 			'status'		=> Model_Stripe_Payin::STATUS_FAILED,								//  only failed payins
 			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,								//  only bankwire payins
 			'id'			=> array_keys( $openShopBankWirePayments ),							//  only for open shop payments
 //			'modifiedAt'	=> '> '.( time() - 60 ),
-		) );
+		] );
 		foreach( $failedStripeBankWirePayments as $payment ){
 			$shopPayment	= $openShopBankWirePayments[$payment->id];
 			$payIn			= json_decode( $payment->data );
@@ -106,12 +106,12 @@ class Job_Shop_Payment_Stripe extends Job_Abstract
 		foreach( $this->modelShopPayin->getAll( $indices, $orders ) as $payment )
 			$openShopBankWirePayments[$payment->payInId]	= $payment;
 
-		$succeededStripeBankWirePayments	= $this->modelStripePayin->getAll( array(
+		$succeededStripeBankWirePayments	= $this->modelStripePayin->getAll( [
 			'status'		=> Model_Stripe_Payin::STATUS_SUCCEEDED,							//  only succeeded payins
 			'type'			=> Model_Stripe_Payin::TYPE_BANK_WIRE,							//  only bankwire payins
 			'id'			=> array_keys( $openShopBankWirePayments ),							//  only for open shop payments
 //			'modifiedAt'	=> '> '.( time() - 60 ),
-		) );
+		] );
 		foreach( $succeededStripeBankWirePayments as $payment ){
 			$shopPayment	= $openShopBankWirePayments[$payment->id];
 			$payIn			= json_decode( $payment->data );

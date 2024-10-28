@@ -14,11 +14,11 @@ $dateFuture	= date( 'Ymd', time() + $daysFuture * 24 * 60 * 60 );
 
 
 /*  --  OPEN BILLS: PAST  --  */
-$conditions	= array(
+$conditions	= [
 	'userId'	=> $userId,
 	'date'		=> '<'.date( 'Ymd' ),
 	'status'	=> 0
-);
+];
 $sum	= 0;
 $openBills	= $model->getAll( $conditions );
 foreach( $openBills as $nr => $bill )
@@ -27,11 +27,11 @@ $listOpenPast	= $view->renderTable( $openBills, './work/bill/graph', FALSE );
 
 
 /*  --  OPEN BILLS: FUTURE  --  */
-$openFutureBills	= $model->getAll( array(
+$openFutureBills	= $model->getAll( [
 	'userId'	=> $userId,
 	'date'		=> '>'.date( 'Ymd' ),
 	'status'	=> 0
-), ['date' => 'ASC'] );
+], ['date' => 'ASC'] );
 
 foreach( $openFutureBills as $nr => $bill )
 	if( $bill->date > $dateFuture )

@@ -155,7 +155,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 			$sublist	= '';
 			$link		= './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title );
 			$children	= $this->renderPageTree( $entry->children );
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'text'			=> $entry->title,
 				'href'			=> $link,
 				'selectable'	=> false,
@@ -167,7 +167,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 //				'data'			=> ['pageId' => $entry->manualPageId],				//  not working with this version of bootstrap-treeview
 //				'tags'			=> ['pageId:'.$entry->manualPageId],					//  not working with this version of bootstrap-treeview
 				'nodes'			=> $children ?: NULL,
-			);
+			];
 		}
 		return $list;
 
@@ -176,9 +176,9 @@ InfoManual.UI.Tree.init("#page-tree");';
 			$sublist	= '';
 			if( $entry->children )
 				$sublist	= $this->renderPageTree( $entry->children );
-			$link	= HtmlTag::create( 'a', $entry->title, array(
+			$link	= HtmlTag::create( 'a', $entry->title, [
 				'href'	=> './info/manual/page/'.$entry->manualPageId.'-'.$this->urlencode( $entry->title )
-			) );
+			] );
 			$class	= 'autocut '.( $this->activePageId == $entry->manualPageId ? 'active' : '' );
 			$list[]	= HtmlTag::create( 'li', $link.$sublist, ['class' => $class] );
 		}

@@ -22,8 +22,8 @@ $list	= '<em>Momentan werden keine Workshops angeboten.</em>';
 if( $workshops ){
 	$list	= [];
 	foreach( $workshops as $workshop ){
-		$list[]	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		$list[]	= HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', '&nbsp;', [
 					'class'	=> 'workshop-item-image',
 				], [
@@ -31,14 +31,14 @@ if( $workshops ){
 					'alignH'	=> $imageAlignH[$workshop->imageAlignH],
 					'alignV'	=> $imageAlignV[$workshop->imageAlignV],
 				] ),
-			), ['class' => 'workshop-item-image-container'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+			], ['class' => 'workshop-item-image-container'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', $workshop->title, ['class' => 'workshop-item-title'] ),
 					HtmlTag::create( 'div', $workshop->abstract, ['class' => 'workshop-item-abstract'] ),
-				) ),
-			), ['class' => 'workshop-item-facts-container'] ),
-		), [
+				] ),
+			], ['class' => 'workshop-item-facts-container'] ),
+		], [
 			'class'	=> 'workshop-item',
 		], [
 			'url'		=> './info/workshop/view/'.$workshop->workshopId,

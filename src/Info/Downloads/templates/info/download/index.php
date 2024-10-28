@@ -89,11 +89,11 @@ foreach( $folders as $folder ){
 		'title'	=> $words['index']['buttonOpenFolder']
 	] );
 	if( in_array( 'ajaxRenameFolder', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'ModuleInfoDownloads.changeFolderName('.$folder->downloadFolderId.', \''.$folder->title.'\')',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonRename'],
-		) );
+		] );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
 		$buttons[]	= HtmlTag::create( 'a', $iconUp, [

@@ -1,23 +1,28 @@
 <?php
 
+/** @var View_Work_Graph $view */
+/** @var object $graph */
+/** @var object $node */
+
+
 $label	= $node->ID;
 if( $node->label )
 	$label	= $node->label.'&nbsp;<small class="muted">('.$label.')</small>';
 
 $description	= strlen( trim( $node->description ) ) ? trim( $node->description )."\n" : '';
 
-$facts	= array(
-	array( 'ID', $node->ID, NULL ),
-	array( 'Label', $node->label, NULL ),
-	array( 'Shape', $node->shape, $graph->nodeShape ),
-	array( 'Style', $node->style, $graph->nodeStyle ),
-	array( 'Color', $node->color, $graph->nodeColor ),
-	array( 'Fill Color', $node->fillcolor, $graph->nodeFillcolor ),
-	array( 'Width', $node->width, $graph->nodeWidth ),
-	array( 'Height', $node->height, $graph->nodeHeight ),
-	array( 'Font Size', $node->fontsize, $graph->nodeFontsize ),
-	array( 'Font Color', $node->fontcolor, $graph->nodeFontcolor ),
-);
+$facts	= [
+	['ID', $node->ID, NULL],
+	['Label', $node->label, NULL],
+	['Shape', $node->shape, $graph->nodeShape],
+	['Style', $node->style, $graph->nodeStyle],
+	['Color', $node->color, $graph->nodeColor],
+	['Fill Color', $node->fillcolor, $graph->nodeFillcolor],
+	['Width', $node->width, $graph->nodeWidth],
+	['Height', $node->height, $graph->nodeHeight],
+	['Font Size', $node->fontsize, $graph->nodeFontsize],
+	['Font Color', $node->fontcolor, $graph->nodeFontcolor],
+];
 
 return '
 <div class="row-fluid">

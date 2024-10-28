@@ -99,10 +99,10 @@ class Logic_User_Provision extends Logic
 			throw new RangeException( 'Invalid user license ID.' );
 		if( $userLicense->status !== Model_Provision_User_License::STATUS_ACTIVE )
 			throw new RuntimeException( 'User license cannot be revoked.' );
- 		$result		= $this->modelUserLicense->edit( $userLicenseId, array(
+ 		$result		= $this->modelUserLicense->edit( $userLicenseId, [
 			'status'		=> Model_Provision_User_License::STATUS_EXPIRED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( $result )
 			return FALSE;
 

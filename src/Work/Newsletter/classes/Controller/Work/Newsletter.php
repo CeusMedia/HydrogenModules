@@ -27,10 +27,10 @@ class Controller_Work_Newsletter extends Controller
 	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() ){
-			$data	= array(
+			$data	= [
 				'creatorId'				=> $this->session->get( 'auth_user_id' ),
 				'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
-			);
+			];
 			if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
 				$data	= (array) $this->logic->getNewsletter( $newsletterId );
 				unset( $data['status'] );
@@ -246,7 +246,10 @@ class Controller_Work_Newsletter extends Controller
 			$this->logic->enqueue( $queueId, $readerId, $newsletterId, TRUE ) ? $numberSent++ : $numberSkipped++;	//
 		if( $numberSent ){
 			$this->messenger->noteSuccess( $words->msgSuccess, $numberSent );
-			$this->logic->editNewsletter( $newsletterId, array( 'status' => Model_Newsletter::STATUS_SENT, 'sentAt' => time() ) );
+			$this->logic->editNewsletter( $newsletterId, [
+				'status'	=> Model_Newsletter::STATUS_SENT,
+				'sentAt'	=> time()
+			] );
 			$this->logic->setTemplateStatus( $newsletter->newsletterTemplateId, Model_Newsletter_Template::STATUS_USED );
 		}
 		if( $numberSkipped )
@@ -409,7 +412,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( 'Invalid status.', $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
-		$this->logic->editNewsletter( $newsletterId, array( 'status' => (int) $status ) );
+		$this->logic->editNewsletter( $newsletterId, ['status' => (int) $status] );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$urlForwardTo	= $this->request->get( 'forwardTo' );
 		$this->restart( $urlForwardTo ?: 'edit/'.$newsletterId, TRUE );

@@ -218,10 +218,10 @@ class Logic_Catalog_Provision extends Logic
 			$product	= $this->getProductLicense( $productOrId );
 		if( !is_object( $product ) )
 			throw new InvalidArgumentException( 'Given product data is invalid (neither product object nor valid product ID)' );
-		$uri	= vsprintf( 'catalog/provision/product/%1$d-%2$s', array(
+		$uri	= vsprintf( 'catalog/provision/product/%1$d-%2$s', [
 			$product->productId,
 			$this->getUriPart( $product->title ),
-		) );
+		] );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
@@ -238,11 +238,11 @@ class Logic_Catalog_Provision extends Logic
 			$productLicense	= $this->getProductLicense( $productLicenseOrId );
 		if( !is_object( $productLicense ) )
 			throw new InvalidArgumentException( 'Given product license data is invalid (neither product license object nor valid product license ID)' );
-		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', array(
+		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', [
 			$productLicense->productId,
 			$productLicense->productLicenseId,
 			$this->getUriPart( $productLicense->title ),
-		) );
+		] );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 

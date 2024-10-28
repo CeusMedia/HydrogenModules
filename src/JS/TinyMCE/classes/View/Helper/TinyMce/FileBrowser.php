@@ -403,10 +403,10 @@ class View_Helper_TinyMce_FileBrowser
 		}
 
 		$listItems		= HtmlTag::create( 'ul', $list, ['class' => $this->cssClassPrefix.' unstyled'] );
-		return HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 //			HtmlTag::create( 'h4', '-' ),//$pathLabel ),
 			HtmlTag::create( 'div', $listItems, ['id' => 'container-list-items'] )
-		) );
+		] );
 	}
 
 	/**
@@ -425,10 +425,10 @@ class View_Helper_TinyMce_FileBrowser
 			if( $nr == count( $parts ) - 1 )
 				break;
 			$way[]	= $part;
-			$pathLabel[]	= HtmlTag::create( 'a', $part, array(
+			$pathLabel[]	= HtmlTag::create( 'a', $part, [
 				'class'		=> 'trigger-folder',
 				'data-url'	=> './manage/tinyMce/setPath/image/'.$this->topicId.'/'.base64_encode( join( '/', $way ) ),
-			) );
+			] );
 		}
 		$pathLabel[]	= $part;
 		$pathLabel		= join( ' / ', $pathLabel );
@@ -438,18 +438,18 @@ class View_Helper_TinyMce_FileBrowser
 		$mode			= '<b><small>Modus:</small></b> '.$modeLabel;
 
 		return HtmlTag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, ['class' => 'position autocut'] ).
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', array(
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', [
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_LIST,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
-					) ),
-					HtmlTag::create( 'a', $iconGrid.'&nbsp;Kacheln', array(
+					] ),
+					HtmlTag::create( 'a', $iconGrid.'&nbsp;Kacheln', [
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_GRID,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
-					) ),
-				), ['class' => 'btn-group'] )
-			), ['class' => 'buttons'] );
+					] ),
+				], ['class' => 'btn-group'] )
+			], ['class' => 'buttons'] );
 	}
 
 	/**

@@ -39,21 +39,21 @@ if( count( $note->links ) ){
 						'target'	=> '_blank',
 					] )
 				),
-				array( 'class' => 'autocut' )
+				['class' => 'autocut']
 			);
 		}
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label.$link, ['class' => 'autocut'] )
-		) );
+		] );
 	}
 	$thead	= HtmlTag::create( 'thead', $rows );
 	$table	= HtmlTag::create( 'table', [$thead], ['class' => 'table table-striped table-condensed table-fixed'] );
-	$panelLinks	= HtmlTag::create( 'div', array(
+	$panelLinks	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'h3', 'Links' ),
 		HtmlTag::create( 'div', $table, [
 			'class'	=> 'content-panel-inner'
 		] ),
-	), ['class' => 'content-panel content-panel-table'] );
+	], ['class' => 'content-panel content-panel-table'] );
 
 /*	$list	= [];
 	foreach( $note->links as $item ){

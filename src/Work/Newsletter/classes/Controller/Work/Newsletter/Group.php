@@ -41,10 +41,10 @@ class Controller_Work_Newsletter_Group extends Controller
 			}
 			$this->restart( './work/newsletter/group/edit/'.$groupId );
 		}
-		$group	= (object) array(
+		$group	= (object) [
 			'title'		=> $this->request->get( 'title' ),
 			'type'		=> $this->request->get( 'type' ),
-		);
+		];
 		$this->addData( 'group', $group );
 		$groups	= $this->logic->getGroups( ['type' => [0, 2]], ['title' => 'ASC'] );
 		foreach( $groups as $group )

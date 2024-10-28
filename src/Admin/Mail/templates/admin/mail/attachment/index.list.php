@@ -56,12 +56,12 @@ if( count( $attachments ) ){
 		$status		= HtmlTag::create( 'span', $status->icon.' '.$status->label,  ['class' => $status->class] );
 		$date		= date( "d.m.Y", $attachment->createdAt );
 		$time		= date( "H:i", $attachment->createdAt );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $attachment->className.'<br/>'.$status ),
 			HtmlTag::create( 'td', $date.' <small class="muted">'.$time.'</small>' ),
 			HtmlTag::create( 'td', HtmlTag::create( 'div', [$buttonStatus, $buttonRemove], ['class' => 'btn-group']) ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "", "140px", "80px" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [

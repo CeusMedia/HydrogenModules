@@ -324,7 +324,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller_Manage_Cata
 				case 'author':
 					if( 0 !== strlen( trim( $filterValue ) ) ){
 						$filterValue	= str_replace( ' ', '', $filterValue );
-						$find			= array( 'CONCAT(firstname, lastname)' => '%'.str_replace( " ", "%", $filterValue ).'%' );
+						$find			= ['CONCAT(firstname, lastname)' => '%'.str_replace( " ", "%", $filterValue ).'%'];
 						$authors		= $this->logic->getAuthors( $find );
 					if( $authors ){
 							$articles	= $this->logic->getArticlesFromAuthors( $authors, TRUE );

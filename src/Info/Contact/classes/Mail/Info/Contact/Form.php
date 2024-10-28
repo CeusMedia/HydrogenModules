@@ -7,7 +7,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
 		$data		= $this->data;
 
-		$do			= (object) array(
+		$do			= (object) [
 			'email'		=> strip_tags( @$data['email'] ),
 			'phone'		=> strip_tags( @$data['phone'] ),
 			'type'		=> (int) strip_tags( @$data['type'] ),
@@ -18,7 +18,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'city'		=> strip_tags( @$data['city'] ),
 			'postcode'	=> strip_tags( @$data['postcode'] ),
 			'body'		=> strip_tags( @$data['body'] ),
-		);
+		];
 
 		$type			= current( $words['form-types'] );
 		if( !empty( $do->type ) ){
@@ -43,7 +43,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$salutation		= $salutations[array_rand($salutations)];
 		$valueAddress	= $do->street ? $do->street.', '.$do->postcode.' '.$do->city : '';
 
-		$this->setHtml( $this->view->loadContentFile( 'mail/info/contact/form.html', array(
+		$this->setHtml( $this->view->loadContentFile( 'mail/info/contact/form.html', [
 			'salutation'	=> $salutation,
 			'email'			=> htmlentities( $do->email, ENT_QUOTES, 'UTF-8' ),
 			'type'			=> $words['form-types'][$do->type],
@@ -52,7 +52,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> htmlentities( $do->company, ENT_QUOTES, 'UTF-8' ),
 			'address'		=> htmlentities( $valueAddress, ENT_QUOTES, 'UTF-8' ),
 			'body'			=> nl2br( htmlentities( $do->body, ENT_QUOTES, 'UTF-8' ) ),
-		) ) );
+		] ) );
 		$this->setText( $this->view->loadContentFile( 'mail/info/contact/form.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,

@@ -38,13 +38,13 @@ $iframeHtml		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreviewHtml	= '
 <div id="newsletter-preview" class="half-size">
 	<div id="newsletter-preview-container">
@@ -60,13 +60,13 @@ $iframeText		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreviewText	= '
 <div id="newsletter-preview" class="half-size">
 	<div id="newsletter-preview-container">
@@ -142,12 +142,12 @@ $panelCopy		= '
 </div>';
 
 /*  --  PANEL: REMOVE  --  */
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
 	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
-) );
+] );
 
 $panelRemove	= '';
 if( isset( $newsletters ) && !count( $newsletters ) )
@@ -203,7 +203,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_senderAddress" class="mandatory">'.$words->edit->labelSenderAddress.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "senderAddress",
 							'id'		=> "input_senderAddress",
@@ -212,11 +212,11 @@ $panelEdit		= '
 							'required'	=> 'required',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 					<div class="span6">
 						<label for="input_senderName" class="mandatory">'.$words->edit->labelSenderName.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "senderName",
 							'id'		=> "input_senderName",
@@ -225,7 +225,7 @@ $panelEdit		= '
 							'required'	=> 'required',
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -247,7 +247,7 @@ $panelEdit		= '
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorName.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorName",
 							'id'		=> "input_authorName",
@@ -255,11 +255,11 @@ $panelEdit		= '
 							'value'		=> htmlentities( $template->authorName ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorEmail ?? ''.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorEmail",
 							'id'		=> "input_authorEmail",
@@ -267,13 +267,13 @@ $panelEdit		= '
 							'value'		=> htmlentities( $template->authorEmail ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorCompany ?? ''.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorCompany",
 							'id'		=> "input_authorCompany",
@@ -281,11 +281,11 @@ $panelEdit		= '
 							'value'		=> htmlentities( $template->authorCompany ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 					<div class="span6">
 						<label for="input_authorName">'.$w->labelAuthorUrl ?? ''.'</label>
-						'.HtmlTag::create( 'input', NULL, array(
+						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorUrl",
 							'id'		=> "input_authorUrl",
@@ -293,7 +293,7 @@ $panelEdit		= '
 							'value'		=> htmlentities( $template->authorUrl ?? '', ENT_QUOTES, 'UTF-8' ),
 							'readonly'	=> $isUsed ? 'readonly' : NULL,
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						) ).'
+						] ).'
 					</div>
 				</div>
 			</div>

@@ -99,13 +99,13 @@ class Controller_Info_Dashboard extends Controller
 				$this->addData( 'dashboards', $this->logic->getUserDashboards( $this->userId ) );
 			}
 			else{
-				$this->addData( 'dashboard', (object) array(
+				$this->addData( 'dashboard', (object) [
 					'dashboardId'	=> 0,
 					'title'			=> '',
 					'description'	=> '',
 					'panels'		=> $this->moduleConfig->get( 'panels' ),
 					'isCurrent'		=> TRUE,
-				) );
+				] );
 				$this->addData( 'dashboards', [] );
 			}
 		}
@@ -171,10 +171,10 @@ class Controller_Info_Dashboard extends Controller
 
 			$panel		= $this->panels[$panelId];
 			unset( $panels[array_search( $panelId, $panels )] );
-			$this->model->edit( $dashboard->dashboardId, array(
+			$this->model->edit( $dashboard->dashboardId, [
 				'panels'		=> implode( ',', $panels ),
 				'modifiedAt'	=> time()
-			) );
+			] );
 			$this->messenger->noteSuccess( $this->messages->successPanelRemoved, $panel->title );
 			$this->restart( NULL, TRUE );
 		}

@@ -52,12 +52,12 @@ $form		= '
 $script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
 $env->page->js->addScriptOnReady( $script );
 
-$panel	= HtmlTag::create( 'div', array(
+$panel	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$form,
 	], ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+], ['class' => 'content-panel'] );
 
 $w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">

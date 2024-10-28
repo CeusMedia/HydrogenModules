@@ -65,12 +65,12 @@ class Controller_Work_Uberlog extends Controller
 
 	public function testRecord( $type = 0 ): void
 	{
-		$data		= array(
+		$data		= [
 			'category'	=> 'test',
 			'message'	=> 'Test',
 			'timestamp'	=> time(),
 			'type'		=> $type,
-		);
+		];
 		$response	= $this->env->get( 'uberlog' )->report( $data );
 		$this->restart( NULL, TRUE );
 
@@ -101,7 +101,7 @@ class Controller_Work_Uberlog extends Controller
 		$modelCategory	= new Model_Log_Category( $this->env );
 		$category		= $modelCategory->getByIndex( 'title', $categoryName );
 		if( $category ){
-			$modelCategory->edit( $category->logCategoryId, array( 'loggedAt' => time() ) );
+			$modelCategory->edit( $category->logCategoryId, ['loggedAt' => time()] );
 			return $category->logCategoryId;
 		}
 		$data		= [
@@ -123,7 +123,7 @@ class Controller_Work_Uberlog extends Controller
 		$modelClient	= new Model_Log_Client( $this->env );
 		$client			= $modelClient->getByIndex( 'title', $clientName );
 		if( $client ){
-			$modelClient->edit( $client->logClientId, array( 'loggedAt' => time() ) );
+			$modelClient->edit( $client->logClientId, ['loggedAt' => time()] );
 			return $client->logClientId;
 		}
 		$data		= [
@@ -145,7 +145,7 @@ class Controller_Work_Uberlog extends Controller
 		$modelHost	= new Model_Log_Host( $this->env );
 		$host		= $modelHost->getByIndex( 'title', $hostName );
 		if( $host ){
-			$modelHost->edit( $host->logHostId, array( 'loggedAt' => time() ) );
+			$modelHost->edit( $host->logHostId, ['loggedAt' => time()] );
 			return $host->logHostId;
 		}
 		$data		= [
@@ -167,7 +167,7 @@ class Controller_Work_Uberlog extends Controller
 		$modelAgent	= new Model_Log_UserAgent( $this->env );
 		$agent		= $modelAgent->getByIndex( 'title', $userAgent );
 		if( $agent ){
-			$modelAgent->edit( $agent->logUserAgentId, array( 'loggedAt' => time() ) );
+			$modelAgent->edit( $agent->logUserAgentId, ['loggedAt' => time()] );
 			return $agent->logUserAgentId;
 		}
 		$data		= [

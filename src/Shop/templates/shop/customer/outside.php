@@ -16,15 +16,15 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 		$helper->setDropdownLabel( 'weitere' );
 		$helper->setLinkPath( './auth/oauth2/login/' );
 		$helper->setFrom( 'shop/customer' );
-		$fieldOauth2	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		$fieldOauth2	= HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'label', 'Anmelden mit' ),
-				HtmlTag::create( 'div', array(
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
-				), ['class' => 'row-fluid'] ),
+				], ['class' => 'row-fluid'] ),
 				HtmlTag::create( 'hr', NULL ),
-			), ['class' => 'span12'] ),
-		), ['class' => 'row-fluid'] );
+			], ['class' => 'span12'] ),
+		], ['class' => 'row-fluid'] );
 	}
 }
 

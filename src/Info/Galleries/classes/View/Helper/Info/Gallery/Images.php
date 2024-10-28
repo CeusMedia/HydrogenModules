@@ -11,12 +11,12 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 		$list	= [];
 		$images	= $this->getGalleryImages( $this->galleryId );
 		foreach( $images as $image ){
-			$thumb	= HtmlTag::create( 'img', NULL, array(
+			$thumb	= HtmlTag::create( 'img', NULL, [
 				'src'	=> $this->baseFilePath.$this->gallery->path.'/thumbs/'.rawurlencode( $image->filename ),
 				'class'	=> $this->moduleConfig->get( 'gallery.thumb.class'),
 				'alt'	=> htmlspecialchars( $image->title, ENT_QUOTES, 'UTF-8' ),
-			) );
-			$link	= HtmlTag::create( 'a', $thumb, array(
+			] );
+			$link	= HtmlTag::create( 'a', $thumb, [
 				'href'			=> $this->baseFilePath.$this->gallery->path.'/'.rawurlencode( $image->filename ),
 				'class'			=> $this->getThumbnailLinkClass( View_Helper_Info_Gallery::SCOPE_IMAGE ),
 				'rel'			=> 'gallery-'.$this->galleryId,
@@ -24,7 +24,7 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 				'data-fancybox'	=> 'gallery',
 				'data-type'		=> 'image',
 				'data-caption'	=> htmlspecialchars( $image->title, ENT_QUOTES, 'UTF-8' ),
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'li', $link );
 		}
 		return HtmlTag::create( 'ul', $list, ['class' => 'thumbnails equalize-auto'] );

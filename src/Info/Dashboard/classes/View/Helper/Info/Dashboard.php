@@ -34,32 +34,32 @@ class View_Helper_Info_Dashboard extends Abstraction
 			$icon		= '';
 			if( $panel->icon )
 				$icon	= HtmlTag::create( 'i', '', ['class' => $panel->icon] ).'&nbsp;';
-			$handle		= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'a', $iconRemove, array(
+			$handle		= HtmlTag::create( 'div', [
+				HtmlTag::create( 'a', $iconRemove, [
 					'class'		=> 'btn btn-mini btn-inverse handle-icon',
 					'href'		=> './info/dashboard/removePanel/'.$panel->id,
 					'onclick'	=> 'if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;',
 					'title'		=> $w->buttonRemove,
-				) ),
+				] ),
 /*				HtmlTag::create( 'a', $iconMove, [
 					'class'		=> 'btn btn-mini handle-icon handle-button-move',
 				] ),*/
 				HtmlTag::create( 'h4', $icon.$panel->heading ),
-			), ['class' => 'dashboard-panel-handle'] );
+			], ['class' => 'dashboard-panel-handle'] );
 			$container	= HtmlTag::create( 'div', '', [
 				'class'	=> 'dashboard-panel-container',
 				'id'	=> NULL,
 			] );
 
-			$list[]	= HtmlTag::create( 'li', array(
+			$list[]	= HtmlTag::create( 'li', [
 				HtmlTag::create( 'div', $handle.$container, [
 					'class'		=> 'thumbnail',
 				] )
-			), array(
+			], [
 				'class'			=> 'dashboard-panel span'.( 12 * $panel->cols / $this->columns ),
 				'data-panel-id'	=> $panel->id,
 				'id'			=> 'dashboard-panel-'.$panel->id,
-			) );
+			] );
 //			$script	= 'jQuery("#dashboard-panel-'.$panel->id.' .dashboard-panel-container").load("./'.$panel->url.'/'.$panel->id.'");';
 			$script	= 'InfoDashboard.loadPanel("'.$panel->id.'","'.$panel->url.'");';
 			$this->env->getPage()->js->addScriptOnReady( $script );

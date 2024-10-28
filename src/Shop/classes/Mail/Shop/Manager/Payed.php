@@ -73,7 +73,7 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 
 		$helperShop	= new View_Helper_Shop( $this->env );
 
-		$body	= $this->view->loadContentFile( 'mail/shop/manager/payed.html', array(
+		$body	= $this->view->loadContentFile( 'mail/shop/manager/payed.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'orderStatus'		=> $this->words['statuses-order'][$this->order->status],
@@ -89,7 +89,7 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
-		) );
+		] );
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );

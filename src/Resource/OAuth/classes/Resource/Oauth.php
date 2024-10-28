@@ -74,11 +74,11 @@ class Resource_Oauth
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-		$handle->setOption( CURLOPT_HTTPHEADER, array(
+		$handle->setOption( CURLOPT_HTTPHEADER, [
 			'Authorization: Bearer '.$this->getToken(),
 			'Content-Type: application/x-www-form-urlencoded',
 			'Content-Length: '.strlen( $postData ),
-		) );
+		] );
 		$response	= $handle->exec();
 		$httpCode	= $handle->getInfo( 'http_code' );
 		if( $httpCode < 200 || $httpCode >= 300 )

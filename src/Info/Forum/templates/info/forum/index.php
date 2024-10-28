@@ -6,6 +6,9 @@ use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Info_Forum $view */
+/** @var array<object> $topics */
+
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/forum/' ) );
 $textTop	= $textIndexTop ?: '';
 $textBottom	= $textIndexBottom ?: '';
@@ -32,11 +35,11 @@ foreach( $topics as $topic ){
 		] );
 	}
 	if( in_array( 'ajaxRenameTopic', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoForum.changeTopicName('.$topic->topicId.', \''.$topic->title.'\')',
-			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonRename'],
-		) );
+			'class'		=> 'btn not-btn-small',
+			'title'		=> $words['index']['buttonRename'],
+		] );
 	}
 	if( in_array( 'removeTopic', $rights ) ){
 		$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
@@ -51,10 +54,10 @@ foreach( $topics as $topic ){
 	$modifiedAt	= $helper->convert( $topic->createdAt, TRUE );
 	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Letzter Beitrag: vor '.$modifiedAt;
 	$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
-	$cells		= array(
-		HtmlTag::create( 'td', $label, array( 'class' => 'topic-label') ),
+	$cells		= [
+		HtmlTag::create( 'td', $label, ['class' => 'topic-label'] ),
 		HtmlTag::create( 'td', $buttons ),
-	);
+	];
 	$rows[]	= HtmlTag::create( 'tr', $cells );
 }
 $heads	= HtmlElements::TableHeads( [

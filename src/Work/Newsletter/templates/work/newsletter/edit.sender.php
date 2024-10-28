@@ -22,12 +22,12 @@ foreach( $groups as $group ){
 	if( (int) $group->status !== 1 )
 		continue;
 	$disabled	= '';
-	$checkbox	= HtmlTag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'checked'	=> in_array( $group->newsletterGroupId, $groupIds ) ? 'checked' : NULL,
 		'name'		=> 'groupIds[]',
 		'value'		=> $group->newsletterGroupId,
-	) );
+	] );
 	$title		= $checkbox.'&nbsp;'.$group->title.' ('.count( $group->readers ).')';
 	$label		= HtmlTag::create( 'label', $title, ['class' => 'checkbox'] );
 	$list[]		= $label;

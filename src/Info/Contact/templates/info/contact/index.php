@@ -26,10 +26,10 @@ if( $useNewsletter ){
 			$list[]		= HtmlTag::create( 'li', $label );
 		}
 		$listTopics		= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
-		$inputTopics	= HtmlTag::create( 'blockquote', array(
+		$inputTopics	= HtmlTag::create( 'blockquote', [
 			HtmlTag::create( 'label', $w->labelNewsletterTopics ),
 			$listTopics,
-		), ['class' => 'optional newsletter newsletter-true'] );
+		], ['class' => 'optional newsletter newsletter-true'] );
 	}
 	$newsletter     = '
 		<div class="row-fluid">
@@ -99,7 +99,7 @@ $content	= $textTop.'
 			<div class="row-fluid">
 				<div class="span5">
 					<label for="input_fullname" class="mandatory required">'.$w->labelFullName.'</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'			=> 'text',
 						'name'			=> 'fullname',
 						'id'			=> 'input_fullname',
@@ -107,11 +107,11 @@ $content	= $textTop.'
 						'maxlength'		=> '40',
 						'required'		=> 'required',
 						'value'			=> htmlentities( $fullname, ENT_QUOTES, 'UTF-8' ),
-					) ).'
+					] ).'
 				</div>
 				<div class="span7">
 					<label for="input_email" class="mandatory required">'.$w->labelEmail.'</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'			=> 'text',
 						'name'			=> 'email',
 						'id'			=> 'input_email',
@@ -119,13 +119,13 @@ $content	= $textTop.'
 						'maxlength'		=> '100',
 						'required'		=> 'required',
 						'value'			=> htmlentities( $email, ENT_QUOTES, 'UTF-8' ),
-					) ).'
+					] ).'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_subject" class="mandatory required">'.$w->labelSubject.'</label>
-					'.HtmlTag::create( 'input', NULL, array(
+					'.HtmlTag::create( 'input', NULL, [
 						'type'			=> 'text',
 						'name'			=> 'subject',
 						'id'			=> 'input_subject',
@@ -133,7 +133,7 @@ $content	= $textTop.'
 						'maxlength'		=> '100',
 						'required'		=> 'required',
 						'value'			=> htmlentities( $subject, ENT_QUOTES, 'UTF-8' ),
-					) ).'
+					] ).'
 				</div>
 			</div>
 			<div class="row-fluid">

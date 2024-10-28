@@ -49,10 +49,10 @@ if( $groupReaders ){
 		$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
 		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 		$linkReader		= HtmlTag::create( 'a', $label, ['href' => $urlReader] );
-		$listReaders[]	= HtmlTag::create( 'tr', array(
+		$listReaders[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $linkReader.' '.$name, ['class' => ''] ),
 			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		) );
+		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( '', '120px' );
 	$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser'] );
@@ -91,17 +91,17 @@ $buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, [
 ] );
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
-	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, array(
+	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small not-btn-info disabled',
 		'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 	'href'		=> './work/newsletter/group/remove/'.$groupId,
 	'class'		=> 'btn btn-danger btn-small',
 	'onclick'	=> "if(!confirm('Wirklich?')) return false;",
-) );
+] );
 if( !$groupReaders )
 	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 		'href'		=> './work/newsletter/group/remove/'.$groupId,

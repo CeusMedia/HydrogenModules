@@ -88,13 +88,13 @@ class View_Work_Bill extends View
 				$class	= 'bill-type-'.$bill->type;
 				if( $colored )
 					$class	.= ' '.( $bill->status ? 'success' : 'warning' );
-				$rows[]	= HtmlTag::create( 'tr', array(
+				$rows[]	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $link, ['class' => 'title'] ),
 					HtmlTag::create( 'td', $price ),
 					HtmlTag::create( 'td', $words['states'][$bill->status] ),
 					HtmlTag::create( 'td', $date ),
 					HtmlTag::create( 'td', $action ),
-				), ['class' => $class] );
+				], ['class' => $class] );
 			}
 			$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 				'Title',

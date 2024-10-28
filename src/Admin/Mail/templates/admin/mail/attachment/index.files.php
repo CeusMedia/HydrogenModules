@@ -33,14 +33,14 @@ if( $files ){
 			'title'		=> 'Datei herunterladen',
 		) );
 		$label	= HtmlTag::create( 'big', $file->fileName );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './admin/mail/attachment/remove/'.urlencode( $file->fileName ),
 			'class'		=> 'btn btn-small btn-danger',
-		) );
-		$buttonDownload	= HtmlTag::create( 'a', $iconDownload, array(
+		] );
+		$buttonDownload	= HtmlTag::create( 'a', $iconDownload, [
 			'href'		=> './admin/mail/attachment/download/'.urlencode( $file->fileName ),
 			'class'		=> 'btn btn-small',
-		) );
+		] );
 
 		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
 		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $path.$file->fileName ) ) );
@@ -48,10 +48,10 @@ if( $files ){
 
 		$buttons	= [$buttonDownload, $buttonRemove];
 		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label.'<br/>'.$info ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
 	$thead	= HtmlTag::create( 'thead', '' );

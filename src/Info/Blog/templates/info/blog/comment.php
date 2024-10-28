@@ -25,11 +25,11 @@ $buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 ] );
 
 if( $moduleConfig->get( 'comments.ajax' ) )
-	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 		'type'		=> 'button',
 		'onclick'	=> 'Blog.comment()',
 		'class'		=> 'btn btn-primary',
-	) );
+	] );
 
 return '
 <div class="content-panel content-panel-form">

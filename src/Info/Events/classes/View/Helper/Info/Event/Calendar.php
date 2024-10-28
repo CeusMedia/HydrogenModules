@@ -168,14 +168,14 @@ $(document).ready(function(){
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat weiter',
 		] );
-		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  array(
+		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  [
 			'href'		=> './info/event/setMonth/'.date( 'Y' ).'/'.date( 'm' ),
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'title'		=> 'aktueller Monat',
 			'disabled'	=> $isNow ? 'disabled' : NULL,
-		) );
+		] );
 
-		$label      = $this->renderLabel( $this->year, $this->month );
+		$label		= $this->renderLabel( $this->year, $this->month );
 
 		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
 			'href'		=> './info/event/export/ical',
@@ -242,10 +242,10 @@ $(document).ready(function(){
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
-		return HtmlTag::create( 'span', array(
+		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'span', $this->words['months'][$month], ['class' => "month-label"] ),
 			HtmlTag::create( 'span', $year, ['class' => "year-label"] ),
-		), ['id' => 'mission-calendar-control-label'] );
+		], ['id' => 'mission-calendar-control-label'] );
 	}
 
 	public function setEvents( array $events ): self

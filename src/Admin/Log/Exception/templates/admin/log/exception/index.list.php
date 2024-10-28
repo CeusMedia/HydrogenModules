@@ -35,11 +35,11 @@ if( count( $instances ) > 1 ){
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
 	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
-	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
+	$selectInstance	= HtmlTag::create( 'select', $optInstance, [
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
 		'style'		=> 'width: 100%',
-	) );
+	] );
 
 }
 
@@ -57,7 +57,7 @@ if( $exceptions ){
 		$date	= date( 'Y.m.d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
 
-		$buttons	= HtmlTag::create( 'div', array(
+		$buttons	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn not-btn-mini btn-small not-btn-info',
 				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
@@ -66,7 +66,7 @@ if( $exceptions ){
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
 			] ),
-		), ['class' => 'btn-group'] );
+		], ['class' => 'btn-group'] );
 
 		$checkbox		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
@@ -95,7 +95,7 @@ if( $exceptions ){
 			] );
 		}
 
-		$list[]			= HtmlTag::create( 'tr', array(
+		$list[]			= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $checkbox ),
 			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
@@ -104,7 +104,7 @@ if( $exceptions ){
 			HtmlTag::create( 'td', $icons ),
 			HtmlTag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 	}
 
 

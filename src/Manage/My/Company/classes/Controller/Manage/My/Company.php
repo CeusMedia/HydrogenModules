@@ -107,10 +107,10 @@ class Controller_Manage_My_Company extends Controller
 				$processor->crop( $offsetX, $offsetY, $size, $size );
 				$processor->scaleDownToLimit( 512, 512 );
 				$image->save();
-				$data	= array(
+				$data	= [
 					'logo'			=> $imageName,
 					'modifiedAt'	=> time()
-				);
+				];
 				if( $company->logo )
 					unlink( $imagePath.$company->logo );
 				$this->modelCompany->edit( $companyId, $data );

@@ -52,7 +52,7 @@ if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){
 		$link	= $helper->renderDocumentLink( $document );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'document') );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'document'] );
 	}
 	$a->documents	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled documents documentList'] );
 }

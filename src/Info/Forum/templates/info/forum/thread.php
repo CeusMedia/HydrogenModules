@@ -42,19 +42,19 @@ if( $posts ){
 				] );
 		}
 		if( $userCanEdit && $userCanChange && !$post->type ){
-			$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 				'onclick'	=> 'InfoForum.preparePostEditor('.$post->postId.')',
 				'class'		=> 'btn not-btn-small',
 				'title'		=> $words['thread']['buttonEdit']
-			) );
+			] );
 		}
 		if( $userCanRemove && $userCanChange ){
-			$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
+			$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 				'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;',
 				'href'		=> './info/forum/removePost/'.$post->postId,
 				'class'		=> 'btn not-btn-small btn-danger',
 				'title'		=> $words['thread']['buttonRemove']
-			) );
+			] );
 		}
 		$user	= '-';
 		if( $post->author ){
@@ -71,21 +71,21 @@ if( $posts ){
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? TextTrimmer::trim( $parts[1], 100 ) : '';
 			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= HtmlTag::create( 'img', NULL, array(
+			$image		= HtmlTag::create( 'img', NULL, [
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
-			) );
+			] );
 			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
 			$content		.= HtmlTag::create( 'div', $modifiedAt, ['class' => 'modified muted'] );
 		}
-		$cells	= array(
+		$cells	= [
 			HtmlTag::create( 'td', $user ),
 			HtmlTag::create( 'td', $content, ['class' => 'content'] ),
 			HtmlTag::create( 'td', $buttons ),
-		);
+		];
 		$rows[]	= HtmlTag::create( 'tr', $cells, [
 			'id'	=> 'post-'.$post->postId,
 			'class'	=> 'post-type-'.$post->type
@@ -111,11 +111,11 @@ $iconHome	= new BootstrapIcon( 'home' );
 $iconFolder	= new BootstrapIcon( 'folder-open' );
 $iconFile	= new BootstrapIcon( 'file', TRUE );
 $url		= './info/forum/';
-$buttons	= array(
+$buttons	= [
 	new BootstrapLinkButton( $url, $iconHome ),
 	new BootstrapLinkButton( $url.'topic/'.$topic->topicId, $topic->title, NULL, $iconFolder ),
 	new BootstrapButton( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
-);
+];
 $position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 

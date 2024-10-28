@@ -178,7 +178,7 @@ class Model_Config_Page
 				else if( !empty( $page['controller'] ) )
 					$type	= 2;
 
-				$pageItem	= (object) array_merge( $this->baseItem, array(
+				$pageItem	= (object) array_merge( $this->baseItem, [
 					'pageId'		=> $pageId,
 					'parentId'		=> 0,
 					'status'		=> 1,			//@todo realize
@@ -194,7 +194,7 @@ class Model_Config_Page
 					'description'	=> !empty( $page['desc'] ) ? $page['desc'] : '',
 					'icon'			=> !empty( $page['icon'] ) ? $page['icon'] : '',
 					'template'		=> !empty( $page['template'] ) ? $page['template'] : '',
-				) );
+				] );
 
 				$this->pages[$pageItem->pageId]	= $pageItem;
 				$this->fileData[$scope][$pageNr]['pageId']	= $pageItem->pageId;
@@ -208,7 +208,7 @@ class Model_Config_Page
 						else if( !empty( $subpage['controller'] ) )
 							$type	= 2;
 
-						$subpageItem	= (object) array_merge( $this->baseItem, array(
+						$subpageItem	= (object) array_merge( $this->baseItem, [
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
 							'status'		=> 1,			//@todo realize
@@ -224,7 +224,7 @@ class Model_Config_Page
 							'description'	=> !empty( $subpage['desc'] ) ? $subpage['desc'] : '',
 							'icon'			=> !empty( $subpage['icon'] ) ? $subpage['icon'] : '',
 							'template'		=> !empty( $subpage['template'] ) ? $subpage['template'] : '',
-						) );
+						] );
 						$this->pages[$subpageItem->pageId]	= $subpageItem;
 						$this->fileData[$scope][$pageNr]['pageId']	= $pageItem->pageId;
 					}

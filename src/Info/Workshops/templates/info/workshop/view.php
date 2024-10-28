@@ -30,14 +30,14 @@ if( $workshop->image ){
 	] );
 }
 $facts		= HtmlTag::create( 'div', $workshop->description ).'<br/>';
-$panel		= HtmlTag::create( 'div', array(
+$panel		= HtmlTag::create( 'div', [
 	$heading,
 	$image,
 	$facts,
 	HtmlTag::create( 'div', [
 		$buttonCancel
 	], ['class' => 'buttonbar'] ),
-), ['class' => 'workshop-view'] );
+], ['class' => 'workshop-view'] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/info/workshop/view/' ) );
 

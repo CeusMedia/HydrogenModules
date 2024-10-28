@@ -55,9 +55,9 @@ class View_Work_Newsletter extends View
 			$number++;
 			$attributes	= ['href'	=> './work/newsletter/'.$baseUrl.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );
-			$attributes	= array(
+			$attributes	= [
 				'class'	=> (int) $key === $current ? 'active' : NULL
-			);
+			];
 			if( in_array( $number, $disabled ) ){
 				$link	= HtmlTag::create( 'a', $value );
 				$attributes['class']	.= ' disabled';

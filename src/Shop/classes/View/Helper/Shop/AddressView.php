@@ -100,12 +100,12 @@ class View_Helper_Shop_AddressView
 		if( trim( $d->get( 'institution' ) ) )
 			$list[]	= $this->renderRow( 'institution', $this->escape( $d->get( 'institution' ) ) );
 		$list[]	= $this->renderRow( 'name', $this->escape( $d->get( 'firstname' ).' '.$d->get( 'surname' ) ) );
-		$list[]	= $this->renderRow( 'address', join( '<br/>', array(
+		$list[]	= $this->renderRow( 'address', join( '<br/>', [
 			$this->escape( $d->get( 'street' ) ),
 			$this->escape( $d->get( 'postcode' ).' '.$d->get( 'city' ) ),
 			$this->getCountryLabel( $d->get( 'country' ) ),
 			$this->escape( $d->get( 'region' ) ),
-		) ) );
+		] ) );
 		$list[]	= $this->renderRow( 'email', $this->escape( $d->get( 'email' ) ) );
 		if( trim( $d->get( 'phone' ) ) )
 			$list[]	= $this->renderRow( 'phone', $this->escape( $d->get( 'phone' ) ) );
@@ -122,12 +122,12 @@ class View_Helper_Shop_AddressView
 		if( trim( $d->get( 'institution' ) ) )
 			$helperFacts->add( 'institution', '', $d->get( 'institution' ) );
 		$helperFacts->add( 'name', '', $d->get( 'firstname' ).' '.$d->get( 'surname' ) );
-		$helperFacts->add( 'address', '', join( "\n", array(
+		$helperFacts->add( 'address', '', join( "\n", [
 			$d->get( 'street' ),
 			$d->get( 'postcode' ).' '.$d->get( 'city' ),
 			$this->getCountryLabel( $d->get( 'country' ) ),
 			$d->get( 'region' ),
-		) ) );
+		] ) );
 		$helperFacts->add( 'email', '', $d->get( 'email' ) );
 		if( trim( $d->get( 'phone' ) ) )
 			$helperFacts->add( 'phone', '', $d->get( 'phone' ) );
