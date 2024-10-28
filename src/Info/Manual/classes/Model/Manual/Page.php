@@ -2,6 +2,9 @@
 
 use CeusMedia\HydrogenFramework\Model;
 
+/**
+ * @property Entity_Manual_Category $category
+ */
 class Model_Manual_Page extends Model
 {
 	public const FORMAT_TEXT		= 0;
@@ -58,5 +61,7 @@ class Model_Manual_Page extends Model
 		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Manual_Page';
 }

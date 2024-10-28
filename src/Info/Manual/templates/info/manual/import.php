@@ -4,6 +4,11 @@ use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Environment $env */
+/** @var array<Entity_Manual_Category> $categories */
+/** @var array<string> $files */
+/** @var int|string $categoryId */
+
 $rows		= [];
 foreach( $files as $fileName ){
 	$buttonImport	= HtmlTag::create( 'a', 'import', [

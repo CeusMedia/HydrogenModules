@@ -67,11 +67,12 @@ class View_Helper_Info_Manual_Url
 		return $this;
 	}
 
-	public function setPage( object|int|string $pageOrId ): self
+	public function setPage( Entity_Manual_Page|int|string $pageOrId ): self
 	{
 		if( is_object( $pageOrId ) )
 			$page	= $pageOrId;
 		else if( is_int( $pageOrId ) || is_string( $pageOrId ) ){
+			/** @var Entity_Manual_Page $page */
 			$page	= $this->modelPage->get( $pageOrId );
 			if( !$page )
 				throw new RangeException( 'Invalid page ID given' );

@@ -1,6 +1,17 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array<Entity_Manual_Category> $categories */
+/** @var int|string $categoryId */
+/** @var Dictionary $moduleConfig */
+/** @var array<string,array<string,string>> $words */
+/** @var array<string> $rights */
+/** @var array<string> $folders */
 
 /*
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
@@ -11,15 +22,15 @@ $helperNav	= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 */
 
-$helperCategory = new View_Helper_Info_Manual_CategorySelector( $env );
+$helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
 $helperCategory->setActiveCategoryId( $categoryId );
 
-$helperNav  = new View_Helper_Info_Manual_CategoryPageList( $env );
+$helperNav		= new View_Helper_Info_Manual_CategoryPageList( $env );
 $helperNav->setCategoryId( $categoryId );
 //$helperNav->setActivePageId( $pageId );
 
-$helperNav  = new View_Helper_Info_Manual_PageTree( $env );
+$helperNav		= new View_Helper_Info_Manual_PageTree( $env );
 $helperNav->setCategoryId( $categoryId );
 //$helperNav->setActivePageId( $pageId );
 
@@ -36,13 +47,13 @@ if( $files ){
 	$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 }
 */
-$optParentId    = ['' => '- ohne -'];
+$optParentId	= ['' => '- ohne -'];
 foreach( $folders as $folder )
-    $optParentId[$folder->manualPageId] = $folder->title;
-$optParentId    = HtmlElements::Options( $optParentId );
+	$optParentId[$folder->manualPageId] = $folder->title;
+$optParentId	= HtmlElements::Options( $optParentId );
 
-$buttonAdd		= "";
-$buttonReload	= "";
+$buttonAdd		= '';
+$buttonReload	= '';
 if( $moduleConfig->get( 'editor' ) ){
 	$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 	$iconReload		= HtmlTag::create( 'i', '', ['class' => 'icon-refresh'] );

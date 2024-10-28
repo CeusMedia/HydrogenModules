@@ -1,15 +1,18 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Manual_Shortcode extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onViewRenderContent(): void
 	{
-		$data			= (object) $payload;
-		$processor		= new Logic_Shortcode( $env );
+		$data			= (object) $this->payload;
+		$processor		= new Logic_Shortcode( $this->env );
 		$processor->setContent( $data->content );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
 		$shortCodes		= [
@@ -18,17 +21,16 @@ class Hook_Info_Manual_Shortcode extends Hook
 			]
 		];
 
-		$modelPage		= new Model_Manual_Page( $env );
-		$modelCategory	= new Model_Manual_Category( $env );
-
-		$helperUrl		= new View_Helper_Info_Manual_Url( $env );
+		$modelPage		= new Model_Manual_Page( $this->env );
+		$modelCategory	= new Model_Manual_Category( $this->env );
+		$helperUrl		= new View_Helper_Info_Manual_Url( $this->env );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
 			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				$replacement	= '';
 				try{
-					if( $shortCode === 'manual:category' ){
+					if( 'manual:category' === $shortCode ){
 						$category		= $modelCategory->get( (int) $attr['id'] );
 						if( $category ){
 							$helperUrl->setCategory( $category );
@@ -38,7 +40,7 @@ class Hook_Info_Manual_Shortcode extends Hook
 							] );
 						}
 					}
-					if( $shortCode === 'manual:page' ){
+					if( 'manual:page' === $shortCode ){
 						$page		= $modelPage->get( (int) $attr['id'] );
 						if( $page ){
 							$helperUrl->setPage( $page );
@@ -50,7 +52,7 @@ class Hook_Info_Manual_Shortcode extends Hook
 					}
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$this->env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
 				}
 				$processor->replaceNext(
 					$shortCode,
