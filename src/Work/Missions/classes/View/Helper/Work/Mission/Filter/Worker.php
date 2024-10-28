@@ -75,7 +75,7 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 		$colgroup	= HtmlElements::ColumnGroup( "", "160px" );
 		$tableHeads	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'th', "Bearbeiter" ),
-			HtmlTag::create( 'th', $buttons, array( 'style' => 'text-align: right') )
+			HtmlTag::create( 'th', $buttons, ['style' => 'text-align: right'] )
 		) );
 		$thead		= HtmlTag::create( 'thead', $tableHeads );
 		$tbody		= HtmlTag::create( 'tbody', $list );

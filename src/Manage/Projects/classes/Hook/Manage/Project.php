@@ -41,7 +41,7 @@ class Hook_Manage_Project extends Hook
 		if( empty( $this->payload['projectId'] ) )
 			throw new InvalidArgumentException( 'Missing project ID' );
 		$model	= new Model_Project( $this->env );
-		$model->edit( $this->payload['projectId'], array( 'modifiedAt' => time() ) );
+		$model->edit( $this->payload['projectId'], ['modifiedAt' => time()] );
 	}
 
 	/**

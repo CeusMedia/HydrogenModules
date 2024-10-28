@@ -38,7 +38,7 @@ class View_Helper_Work_Mission_Export_Ical extends ViewHelper
 					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
 					$node	= new XmlNode( 'VTODO' );
 					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					$node->addChild( new XmlNode( 'DUE', $date, array( 'VALUE' => 'DATE' ) ) );
+					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
 					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
 					break;
 				case 1:

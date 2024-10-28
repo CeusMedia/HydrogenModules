@@ -46,10 +46,10 @@ class Controller_Manage_Catalog_Article extends Controller
 			}
 			$cache->set( 'catalog.tinymce.images.articles', $list );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
 			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
 			'menu'	=> array_values( $list ),									//  items of submenu
-		) ) );
+		]] );
 	}
 
 	/**
@@ -84,10 +84,10 @@ class Controller_Manage_Catalog_Article extends Controller
 			}
 			$cache->set( 'catalog.tinymce.links.articles', $articles );
 		}
-		$context->list	= array_merge( $context->list, array( (object) array(
+		$context->list	= array_merge( $context->list, [(object) [
 			'title'	=> 'Veröffentlichungen:',
 			'menu'	=> array_values( $articles ),
-		) ) );
+		]] );
 
 		if( !( $documents = $cache->get( 'catalog.tinymce.links.documents' ) ) ){
 			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
@@ -102,10 +102,10 @@ class Controller_Manage_Catalog_Article extends Controller
 			}
 			$cache->set( 'catalog.tinymce.links.documents', $documents );
 		}
-		$context->list	= array_merge( $context->list, array( (object) array(
+		$context->list	= array_merge( $context->list, [(object) [
 			'title'	=> 'Dokuments:',
 			'menu'	=> array_values( $documents ),
-		) ) );
+		]] );
 	}
 
 	public function add()

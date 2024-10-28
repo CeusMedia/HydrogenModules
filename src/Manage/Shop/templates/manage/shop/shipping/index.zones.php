@@ -42,7 +42,7 @@ $listCountries	= Html::create( 'ul', $listCountries, ['class' => 'unstyled'] );
 $modalBody	= array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
+			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',

@@ -134,7 +134,7 @@ class Controller_Manage_Company_Branch extends Controller
 					'uploadedAt'	=> time()
 				);
 				$this->modelImage->add( $data );
-//				$this->modelBranch->edit( $branchId, array( 'modifiedAt' => time() ) );
+//				$this->modelBranch->edit( $branchId, ['modifiedAt' => time()] );
 				$this->messenger->noteSuccess( 'Das Bild wurde hochgeladen und gespeichert.' );
 			}
 		}

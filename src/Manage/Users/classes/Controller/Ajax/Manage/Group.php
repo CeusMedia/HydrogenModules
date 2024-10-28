@@ -49,7 +49,7 @@ class Controller_Ajax_Manage_Group extends AjaxController
 		if( $right )
 			$this->modelGroupRight->remove( $right->groupRightId );
 		else{
-			$data	= array_merge( $indices, array( 'timestamp' => time() ) );
+			$data	= array_merge( $indices, ['timestamp' => time()] );
 			$this->modelGroupRight->add( $data );
 		}
 		$right	= $this->modelGroupRight->getByIndices( $indices );

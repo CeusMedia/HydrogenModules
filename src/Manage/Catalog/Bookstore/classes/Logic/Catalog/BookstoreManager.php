@@ -880,7 +880,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 		$indices	= ['articleId' => $articleId, 'authorId' => $authorId];
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
 		if( $relation ){
-			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
+			$this->modelArticleAuthor->edit( $relation->articleAuthorId, ['editor' => (int) $role] );
 			$this->clearCacheForArticle( $articleId );
 			$this->clearCacheForAuthor( $authorId );
 		}

@@ -36,10 +36,10 @@ class Controller_Manage_Catalog_Author extends Controller
 			}
 			$cache->set( 'catalog.tinymce.images.authors', $list );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, [(object) [			//  extend global collection by submenu with list of items
 			'title'	=> 'Autoren:',												//  label of submenu @todo extract
 			'menu'	=> array_values( $list ),								//  items of submenu
-		) ) );
+		]] );
 	}
 
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
@@ -56,10 +56,10 @@ class Controller_Manage_Catalog_Author extends Controller
 			}
 			$cache->set( 'catalog.tinymce.links.authors', $authors );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(	//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
 			'title'	=> 'Autoren:',												//  label of submenu @todo extract
 			'menu'	=> array_values( $authors ),								//  items of submenu
-		) ) );
+		]] );
 	}
 
 	public function add()

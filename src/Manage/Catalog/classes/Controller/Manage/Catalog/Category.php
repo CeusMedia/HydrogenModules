@@ -35,10 +35,10 @@ class Controller_Manage_Catalog_Category extends Controller
 			}
 			$cache->set( 'catalog.tinymce.links.categories', $categories );
 		}
-		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
+		$context->list  = array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
 			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
 			'menu'	=> array_values( $categories ),									//  items of submenu
-		) ) );
+		]] );
 	}
 
 	public function add( $parentId = NULL ): void

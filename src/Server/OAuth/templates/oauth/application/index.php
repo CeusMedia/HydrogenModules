@@ -25,7 +25,7 @@ if( $applications ){
 			HtmlTag::create( 'td', $link.'<br/>'.$clientId ),
 			HtmlTag::create( 'td', $type.'<br/>'.$status ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), array( 'class' => $trClasses[(int) $application->status]) );
+		), ['class' => $trClasses[(int) $application->status]] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "30%", "40%", "15%", "15%" );
 	$theads		= HtmlElements::TableHeads( [

@@ -172,7 +172,7 @@ class Controller_Oauth_Application extends Controller
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
-		$this->model->edit( $applicationId, array( 'status' => 1, 'modifiedAt' => time() ) );
+		$this->model->edit( $applicationId, ['status' => 1, 'modifiedAt' => time()] );
 		$this->messenger->noteSuccess( $words->successEnabled );
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}

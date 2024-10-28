@@ -188,8 +188,8 @@ $form		= HtmlTag::create( 'div', array(
 		), ['class' => 'span2'] ),
 	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'div', array( '<hr/>',
-		), ['class' => 'span12'] ),
+		HtmlTag::create( 'div', ['<hr/>',
+		], ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(
@@ -558,8 +558,8 @@ $form		= HtmlTag::create( 'div', array(
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid optional format format-datetime'] ),
 	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'div', array( '<hr/>',
-		), ['class' => 'span12'] ),
+		HtmlTag::create( 'div', ['<hr/>',
+		], ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'div', array(

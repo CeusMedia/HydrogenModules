@@ -33,7 +33,7 @@ class Logic_IP_Lock extends Logic
 //			if( $filter->lockStatus != Model_IP_Lock_Filter::STATUS_LOCKED )
 //				$this->setStatus( $ipLockId, $filter->lockStatus );
 
-			$this->modelFilter->edit( $filter->ipLockFilterId, array( 'appliedAt' => time() ) );
+			$this->modelFilter->edit( $filter->ipLockFilterId, ['appliedAt' => time()] );
 			return TRUE;
 		}
 		return FALSE;
@@ -260,7 +260,7 @@ class Logic_IP_Lock extends Logic
 			$data['unlockedAt']	= time();
 		else if( $status == Model_IP_Lock::STATUS_LOCKED ){
 			$data['lockedAt']	= time();
-			$this->modelReason->edit( $lock->reasonId, array( 'appliedAt' => time() ) );			//  note reason apply time
+			$this->modelReason->edit( $lock->reasonId, ['appliedAt' => time()] );			//  note reason apply time
 		}
 		return (bool) $this->modelLock->edit( $ipLockId, $data );
 	}

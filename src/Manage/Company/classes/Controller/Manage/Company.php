@@ -13,7 +13,7 @@ class Controller_Manage_Company extends Controller
 	{
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => 1, 'modifiedAt' => time() ) );
+		$model->edit( $companyId, ['status' => 1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
 		$this->restart( NULL, TRUE );
@@ -28,7 +28,7 @@ class Controller_Manage_Company extends Controller
 	{
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => -1, 'modifiedAt' => time() ) );
+		$model->edit( $companyId, ['status' => -1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
 		$this->restart( NULL, TRUE );

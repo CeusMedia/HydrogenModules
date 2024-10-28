@@ -187,7 +187,7 @@ class Controller_Auth_Oauth extends Controller
 					$this->session->set( 'oauth_access_expires_at', $expiresAt );
 					$this->session->set( 'oauth_refresh_token', $responseData->refresh_token );
 					$this->session->set( 'oauth_scope', $responseData->scope );
-	//				$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
+	//				$modelUser->edit( $user->userId, ['loggedAt' => time() ) );
 	//				$this->messenger->noteSuccess( $words->msgSuccess );
 
 					$modelUser	= new Model_User( $this->env );
@@ -426,7 +426,7 @@ class Controller_Auth_Oauth extends Controller
 					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );

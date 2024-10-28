@@ -181,7 +181,7 @@ class Controller_Auth extends Controller
 					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set

@@ -77,6 +77,6 @@ class Model_User_Invite extends Model
 		if( $status < -2 || $status > 2 )
 			throw new RangeException( 'Status must be within -2 and 2' );
 		$model	= new Model_User_Invite( $this->env );
-		return $model->edit( $userInviteId, array( 'status' => $status, 'modifiedAt' => time() ) );	//  set new status and note timestamp
+		return $model->edit( $userInviteId, ['status' => $status, 'modifiedAt' => time()] );	//  set new status and note timestamp
 	}
 }

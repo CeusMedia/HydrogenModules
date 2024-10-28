@@ -49,7 +49,7 @@ class Controller_Ajax_Manage_Role extends AjaxController
 		if( $right )
 			$this->modelRoleRight->remove( $right->roleRightId );
 		else{
-			$data	= array_merge( $indices, array( 'timestamp' => time() ) );
+			$data	= array_merge( $indices, ['timestamp' => time()] );
 			$this->modelRoleRight->add( $data );
 		}
 		$right	= $this->modelRoleRight->getByIndices( $indices );

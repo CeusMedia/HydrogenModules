@@ -331,8 +331,8 @@ class Controller_Manage_User extends Controller
 
 /*	public function logout( $userId ) {
 		$server		= $this->env->getServer();
-		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
-		$code		= $server->postData( 'auth', 'logout', array( (int) $userId ) );
+		$user		= $server->getData( 'user', 'get', [(int) $userId] );
+		$code		= $server->postData( 'auth', 'logout', [(int) $userId] );
 		$this->handleErrorCode( $code, $user->username );
 		$this->restart( './manage/user/edit/'.(int) $userId );
 	}*/
@@ -583,8 +583,8 @@ class Controller_Manage_User extends Controller
 			throw new RangeException( 'Invalid status transition' );
 		$model->edit( $userId, ['status' => $status, 'modifiedAt' => time()] );
 /*		$server		= $this->env->getServer();
-		$user		= $server->getData( 'user', 'get', array( (int) $userId ) );
-		$code		= $server->postData( 'user', 'setStatus', array( (int) $userId, $status ) );
+		$user		= $server->getData( 'user', 'get', [(int) $userId] );
+		$code		= $server->postData( 'user', 'setStatus', [(int) $userId, $status] );
 		$this->handleErrorCode( $code, $user->username );
 */		$this->restart( 'edit/'.$userId, TRUE );
 	}

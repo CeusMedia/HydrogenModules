@@ -147,7 +147,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	public function noteUserActivity(): self
 	{
 		if( $this->isAuthenticated() && $userId = $this->getCurrentUserId( FALSE ) ){				//  get ID of current user (or zero)
-			$this->modelUser->edit( $userId, array( 'activeAt' => time() ) );
+			$this->modelUser->edit( $userId, ['activeAt' => time()] );
 		}
 		return $this;
 	}

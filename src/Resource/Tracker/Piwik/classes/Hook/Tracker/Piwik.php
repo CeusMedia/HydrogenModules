@@ -67,18 +67,18 @@ initPiwik(' . json_encode($config->getAll()) . ');';
 	 */
 	public function onPageBuild(): void
 	{
-		$config = $this->env->getConfig()->getAll('module.resource_tracker_piwik.', TRUE);                //  get module configuration as dictionary
-		if (!$config->get('active') || !($id = $config->get('ID')))                            //  piwik tracking is disabled or ID is not set
+		$config	= $this->env->getConfig()->getAll( 'module.resource_tracker_piwik.', TRUE );			//  get module configuration as dictionary
+		if( !$config->get( 'active' ) || !( $id = $config->get( 'ID' ) ) )									//  Piwik tracking is disabled or ID is not set
 			return;
-		if (!($uri = $config->get('URI')))                                                        //  URI to piwik is not defined
+		if( !( $uri = $config->get( 'URI' ) ) )																	//  URI to Piwik is not defined
 			return;
-		$noscript = HtmlTag::create('noscript', HtmlTag::create('p',                    //  create noscript HTML tag
-			HtmlTag::create('img', NULL, array(                                                //  create tracking image
-				'src' => rtrim($uri, " /") . '/piwik.php?idsite=' . $id,                            //
-				'style' => 'border: 0',                                                                //  no borders
-				'alt' => ''                                                                        //  atleast empty alternative text for XHTML validity
-			))
-		));
-		$this->context->addBody($noscript);                                                                //  append noscript tag to body
+		$noscript	= HtmlTag::create( 'noscript', HtmlTag::create( 'p',									//  create noscript HTML tag
+			HtmlTag::create( 'img', NULL, [																//  create tracking image
+				'src'	=> rtrim( $uri, " /" ).'/piwik.php?idsite='.$id,										//
+				'style'	=> 'border: 0',																					//  no borders
+				'alt'	=> ''																							//  at least empty alternative text for XHTML validity
+			] )
+		) );
+		$this->context->addBody( $noscript );																			//  append noscript tag to body
 	}
 }
