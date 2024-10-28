@@ -10,10 +10,10 @@ if( $users ){
 			'href'	=> './member/view/'.$user->userId,
 		] );
 		$relation	= $user->relation ? 'yes' : 'no';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $relation ),
-		) );
+		] );
 	}
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped'] );

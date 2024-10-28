@@ -10,10 +10,10 @@ $words		= $env->getLanguage()->getWords( 'server/system/exception' );
 
 $buttonTryAgain	= '';
 if( !empty( $exceptionUrl ) ){
-	$buttonTryAgain	= HtmlTag::create( 'a', $iconReload.' '.$words['index']['buttonRetry'], array(
+	$buttonTryAgain	= HtmlTag::create( 'a', $iconReload.' '.$words['index']['buttonRetry'], [
 		'href'	=> $exceptionUrl->get( TRUE ),
 		'class'	=> 'btn',
-	) );
+	] );
 }
 
 $buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset'], [
@@ -42,12 +42,12 @@ if( $showFacts ){
 		}
 	}
 	$facts	= HtmlTag::create( 'dl', $facts, ['class' => 'dl-horizontal'] );
-	$buttonMore	= HtmlTag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], array(
+	$buttonMore	= HtmlTag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], [
 		'type'		=> 'button',
 		'id'		=> 'exception-facts-trigger',
 		'onclick'	=> 'showExceptionFacts();',
 		'class'		=> 'btn btn-mini',
-	) );
+	] );
 	$panelFacts		= '
 	<hr/>
 	<div id="exception-facts" style="display: none">

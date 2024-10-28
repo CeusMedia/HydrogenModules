@@ -21,11 +21,11 @@ if( $applications ){
 		$type		= $words['types'][$application->type];
 		$status		= $words['states'][$application->status];
 		$trClass	= 
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/>'.$clientId ),
 			HtmlTag::create( 'td', $type.'<br/>'.$status ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), ['class' => $trClasses[(int) $application->status]] );
+		], ['class' => $trClasses[(int) $application->status]] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "30%", "40%", "15%", "15%" );
 	$theads		= HtmlElements::TableHeads( [
@@ -69,12 +69,12 @@ if( $applications ){
 
 		$statusLabel	= $words['states'][$application->status];
 		$statusIcon		= $iconsStatus[$application->status];
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$application->url.'</small>' ),
 			HtmlTag::create( 'td', $typeIcon.' '.$typeLabel ),
 			HtmlTag::create( 'td', $statusIcon.' '.$statusLabel ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), ['class' => NULL] );
+		], ['class' => NULL] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
 	$heads		= HtmlElements::TableHeads( [

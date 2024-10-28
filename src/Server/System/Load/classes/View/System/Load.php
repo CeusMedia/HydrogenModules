@@ -60,10 +60,10 @@ class View_System_Load extends View
 						</div>
 					</div>';
 
-				$contentGraph	= HtmlTag::create( 'div', HtmlTag::create( 'div', '', array(
-						'class'	=> 'bar',
-						'style'	=> 'width: '.round( $barValue, 2 ).'%;',
-					) ), ['class' => 'progress progress-'.$barStyle] );
+				$contentGraph	= HtmlTag::create( 'div', HtmlTag::create( 'div', '', [
+					'class'	=> 'bar',
+					'style'	=> 'width: '.round( $barValue, 2 ).'%;',
+				] ), ['class' => 'progress progress-'.$barStyle] );
 
 				$contentTrends	= '
 				<table class="table table-condensed table-fixed" style="margin: 0;" data-style="border: 1px solid rgba(127, 127, 127, 0.25)">

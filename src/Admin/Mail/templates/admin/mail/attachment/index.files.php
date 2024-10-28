@@ -28,10 +28,10 @@ $list	= '<div class="alert alert-error">'.$w->noEntries.'</div>';
 if( $files ){
 	$list	= [];
 	foreach( $files as $file ){
-		$link	= HtmlTag::create( 'a', $file->fileName, array(
+		$link	= HtmlTag::create( 'a', $file->fileName, [
 			'href'		=> './admin/mail/attachment/download/'.urlencode( $file->fileName ),
 			'title'		=> 'Datei herunterladen',
-		) );
+		] );
 		$label	= HtmlTag::create( 'big', $file->fileName );
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './admin/mail/attachment/remove/'.urlencode( $file->fileName ),

@@ -25,10 +25,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Accept( $this->env, array(
+			$mail		= new Mail_Member_Accept( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> 2,
@@ -106,10 +106,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Reject( $this->env, array(
+			$mail		= new Mail_Member_Reject( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 
 			$this->modelRelation->edit( $relation->userRelationId, [
@@ -142,10 +142,10 @@ class Controller_Member extends Controller
 				$toUserId	= $relation->fromUserId;
 
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Revoke( $this->env, array(
+			$mail		= new Mail_Member_Revoke( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $toUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $toUserId, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
 			$this->messenger->noteSuccess( $words->successReleased );
@@ -180,10 +180,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Request( $this->env, array(
+			$mail		= new Mail_Member_Request( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $userId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $userId, $language );
 			$data	= array(
 				'fromUserId'	=> $this->userId,

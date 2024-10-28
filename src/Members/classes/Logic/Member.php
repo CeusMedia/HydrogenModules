@@ -59,11 +59,11 @@ class Logic_Member
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
 
-		$query		= vsprintf( "SELECT %s FROM %s HAVING %s", array(
+		$query		= vsprintf( "SELECT %s FROM %s HAVING %s", [
 			"userId, CONCAT(firstname, ' ', surname) AS fullname",
 			$prefix.'users',
 			"fullname LIKE '%".$query."%'",
-		) );
+		] );
 		foreach( $dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $user )
 			$userIds[]	= $user->userId;
 		$userIds	= array_unique( $userIds );

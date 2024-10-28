@@ -26,10 +26,10 @@ if( !empty( $accessTokens ) ){
 	$listAccessTokens	= [];
 	foreach( $accessTokens as $token ){
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' revoke', ['href' => './oauth/application/remove/'.$token->oauthApplicationId.'/access/'.$token->oauthAccessTokenId, 'class' => 'btn btn-mini btn-danger'] );
-		$listAccessTokens[]	= HtmlTag::create( 'tr', array(
+		$listAccessTokens[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $token->token ),
 			HtmlTag::create( 'td', $buttonRemove ),
-		) );
+		] );
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $listAccessTokens );
@@ -44,10 +44,10 @@ if( !empty( $refreshTokens ) ){
 			'href'		=> './oauth/application/remove/'.$token->oauthApplicationId.'/refresh/'.$token->oauthRefreshTokenId,
 			'class'		=> 'btn btn-mini btn-danger'
 		] );
-		$listRefreshTokens[]	= HtmlTag::create( 'tr', array(
+		$listRefreshTokens[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $token->token ),
 /*			HtmlTag::create( 'td', $buttonRemove ),*/
-		) );
+		] );
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( array( ) ) );
 	$tbody		= HtmlTag::create( 'tbody', $listRefreshTokens );
