@@ -29,12 +29,12 @@ class Hook_Tracker_Google_TagManager extends Hook
 		] );
 		$this->context->addHead( $script, 1 );
 
-		$iframe		= HtmlTag::create( 'iframe', array(
+		$iframe		= HtmlTag::create( 'iframe', [
 			'src'		=> $baseUrl.'ns.html?id='.$config->get( 'ID' ),
 			'height'	=> 0,
 			'width'		=> 0,
 			'style'		=> 'display:none;visibility:hidden'
-		) );
+		] );
 		$this->context->addBody( HtmlTag::create( 'noscript', $iframe ) );							//  prepend noscript tag to body
 	}
 }

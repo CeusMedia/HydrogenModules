@@ -7,8 +7,6 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-
-
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var Dictionary $config */
@@ -97,27 +95,27 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 					'style'		=> 'text-align: center; font-size: 2em; padding-top: 0.75em;'
 				] );
 			}
-			$field		= HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'div', array(
-						HtmlTag::create( 'div', array(
+			$field		= HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
 							HtmlTag::create( 'h5', 'Verknüpfung hergestellt' ),
 							HtmlTag::create( 'p', join( '<br/>', [
 								'Ihr Benutzerkonto wird mit <strong>'.$assignedProvider->title.'</strong> verknüft sein. Sie können sich dann schneller einloggen.',
 								'Einige Felder der Registrierung wurden nun bereits mit Vorschlägen gefüllt.',
 								'',
 							] ) ),
-							HtmlTag::create( 'div', array(
+							HtmlTag::create( 'div', [
 								HtmlTag::create( 'a', $iconUnbind.'&nbsp;Verknüpfung aufheben', [
 									'href'	=> './auth/oauth2/unbind',
 									'class'	=> 'btn btn-small not-btn-inverse'
 								] ),
-							) ),
-						), ['class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
+							] ),
+						], ['class' => $icon ? 'bs2-span8 bs3-col-md-8 bs4-col-md-8' : 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
 						$icon,
-					), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
-				) ),
-			), ['class' => 'alert alert-success'] );
+					], ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
+				] ),
+			], ['class' => 'alert alert-success'] );
 		}
 		else{
 			$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
@@ -130,12 +128,12 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 				] ), ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),
 			);
 		}
-		$fieldOauth2	= HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		$fieldOauth2	= HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				$field,
 				HtmlTag::create( 'hr' ),
-			), ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
-		), ['class' => 'bs2-row-fluid bs3-row bs4-row'] );
+			], ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
+		], ['class' => 'bs2-row-fluid bs3-row bs4-row'] );
 	}
 }
 
@@ -293,10 +291,10 @@ $buttonSave	= HtmlTag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, [
 $formExtensions	= $view->renderRegisterFormExtensions();
 
 $formUrl	= "./auth/local/register".( $from ? '?from='.$from : '' );
-$panelUser	= HTML::DivClass( 'content-panel', array(
+$panelUser	= HTML::DivClass( 'content-panel', [
 	HTML::H3( $w->heading ),
-	HTML::DivClass( 'content-panel-inner', array(
-		HTML::Form( $formUrl, "form_auth_register_user", array(
+	HTML::DivClass( 'content-panel-inner', [
+		HTML::Form( $formUrl, "form_auth_register_user", [
 			$fieldOauth2,
 			HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', [
 				$fieldUsername,
@@ -323,9 +321,9 @@ $panelUser	= HTML::DivClass( 'content-panel', array(
 				$buttonCancel,
 				$buttonSave,
 			] ) )
-		) )
-	) )
-) );
+		] )
+	] )
+] );
 
 $textTop	= $textTop ? HTML::DivClass( "auth-register-text-top", $textTop ) : '';
 $textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBottom ) : '';

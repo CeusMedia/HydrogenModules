@@ -19,13 +19,13 @@ if( count( $locks ) > 0 ){
 			'class'		=> 'btn btn-mini btn-danger'
 		] );
 		$moduleTitle	= $lock->module ?: '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $lock->user->username, ['class' => 'lock-user'] ),
 			HtmlTag::create( 'td', $moduleTitle, ['class' => 'lock-module'] ),
 			HtmlTag::create( 'td', $lock->title, ['class' => 'lock-title'] ),
 			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $lock->timestamp ), ['class' => 'lock-date'] ),
 			HtmlTag::create( 'td', $buttonRemove, ['class' => 'lock-actions'] ),
-		) );
+		] );
 	}
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [

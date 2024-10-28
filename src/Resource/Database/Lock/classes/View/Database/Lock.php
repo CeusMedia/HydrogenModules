@@ -32,10 +32,10 @@ class View_Database_Lock extends View{
 				$time		= ceil( ( time() - $lock->timestamp ) / 60 ) * 60;
 				$time		= View_Helper_Work_Time::formatSeconds( $time);
 				$username	= HtmlTag::create( 'small', $lock->user->username );
-				$rows[]	= HtmlTag::create( 'tr', array(
+				$rows[]	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $username.'<br/>'.$link, ['class' => 'autocut'] ),
 					HtmlTag::create( 'td', $time, ['style' => 'text-align: right'] ),
-				) );
+				] );
 			}
 			$colgroup	= HtmlElements::ColumnGroup( ["", "100px"] );
 			$tbody		= HtmlTag::create( 'tbody', $rows );

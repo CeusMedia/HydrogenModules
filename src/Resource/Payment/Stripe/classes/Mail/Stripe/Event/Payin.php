@@ -19,14 +19,14 @@ class Mail_Stripe_Event_Payin extends Mail_Abstract
 
 	protected function renderHtml(): string
 	{
-		return HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', 'PayIn' ),
 			print_m( $this->data['payin'], NULL, NULL, TRUE, 'html' ),
 			HtmlTag::create( 'h4', 'User' ),
 			print_m( $this->data['user'], NULL, NULL, TRUE, 'html' ),
 			HtmlTag::create( 'h4', 'Model Payin Data' ),
 			print_m( $this->data['data'], NULL, NULL, TRUE, 'html' ),
-		) );
+		] );
 	}
 
 	protected function renderText(): string

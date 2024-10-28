@@ -144,17 +144,17 @@ return NULL;
 			'phone'			=> $postData->get( 'phone' ),
 		);
 		if( $postData->get( 'business' ) ){
-			$data	= array_merge( $data, array(
+			$data	= array_merge( $data, [
 				'company'	=> $postData->get( 'company' ),
 				'tax_id'	=> $postData->get( 'tax_id' ),
-			) );
+			] );
 		}
 		$responseAccount	= $this->client->post( 'account', $data );
 		if( $responseAccount->data < 1 )
 			return 'account:'.$responseAccount->data;
 
 		$accountId	= $responseAccount->data;
-		$data	= array(
+		$data		= [
 			'account_id'	=> $accountId,
 			'type'			=> 0,
 			'country'		=> $postData->get( 'country' ),
@@ -164,7 +164,7 @@ return NULL;
 			'street'		=> $postData->get( 'street' ),
 			'email'			=> $postData->get( 'email' ),
 			'phone'			=> $postData->get( 'phone' ),
-		);
+		];
 		$url		= sprintf( 'account/%d/address', $accountId );
 		$responseAddress	= $this->client->post( $url, $data );
 
@@ -174,7 +174,7 @@ return NULL;
 
 		$responseBilling	= NULL;
 		if( $postData->get( 'billing_address' ) ){
-			$data	= array(
+			$data	= [
 				'account_id'	=> $accountId,
 				'type'			=> 1,
 				'country'		=> $postData->get( 'billing_country' ),
@@ -184,7 +184,7 @@ return NULL;
 				'street'		=> $postData->get( 'billing_street' ),
 				'phone'			=> $postData->get( 'billing_phone' ),
 				'email'			=> $postData->get( 'billing_email' ),
-			);
+			];
 			$url				= sprintf( 'account/%d/address', $accountId );
 			$responseBilling	= $this->client->post( $url, $data );
 			if( $responseBilling->data < 1 ){

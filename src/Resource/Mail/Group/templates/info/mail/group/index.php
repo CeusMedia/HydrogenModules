@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<object> $groups */
+
 $iconJoin		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-in'] );
 $iconRegister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-bell-o'] );
 $iconUnregister	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-sign-out'] );
@@ -36,10 +38,10 @@ if( $groups ){
 			'class'	=> 'btn not-btn-small btn-inverse',
 		] );
 		$type	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $title.'<br/>'.$subtitle.$facts ),
 			HtmlTag::create( 'td', join( ' ', $buttons ), ['style' => 'text-align: right'] ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '240px'] );
 	$tbody	= HtmlTag::create(' tbody', $list );
@@ -55,12 +57,12 @@ if( $filterPages > 1 ){
 }
 
 
-$panelList	= HtmlTag::create( 'div', array(
+$panelList	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Gruppen' ),
 	HtmlTag::create( 'div', [
 		$list,
 		$buttonbar,
 	], ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+], ['class' => 'content-panel'] );
 
 return $panelList;

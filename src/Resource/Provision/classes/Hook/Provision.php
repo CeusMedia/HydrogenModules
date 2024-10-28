@@ -155,11 +155,11 @@ return;
 				'name'	=> 'license',
 				'value'	=> $license->productLicenseId,
 			] );
-			$content	= implode( '<br/>', array(
+			$content	= implode( '<br/>', [
 				$license->title,
 				HtmlTag::create( 'small', $license->price.' / '.$license->duration ),
 				$check,
-			) );
+			] );
 			$label	= HtmlTag::create( 'label', $content, [
 				'class'	=> 'btn btn-large',
 				'style'	=> 'text-align: center',

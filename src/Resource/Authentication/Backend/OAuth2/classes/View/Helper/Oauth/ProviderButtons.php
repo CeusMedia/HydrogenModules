@@ -34,32 +34,32 @@ class View_Helper_Oauth_ProviderButtons
 			$icon	= '';
 			if( $provider->icon )
 				$icon	= HtmlTag::create( 'i', '', ['class' => $provider->icon] ).'&nbsp;';
-			$label	=  HtmlTag::create( 'a', $icon.$provider->title, array(
+			$label	=  HtmlTag::create( 'a', $icon.$provider->title, [
 				'href'		=> $this->linkPath.$provider->oauthProviderId.$from,
 				'class'		=> 'btn not-btn-info oauth2-provider',
 				'onclick'	=> "jQuery('#modalLoadingOauth2').modal();",
-			) );
+			] );
 			if( $provider->rank < 10)
 				$buttons[]	= $label;
 			else{
-				$dropdown[]	= HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', $icon.$provider->title, array(
+				$dropdown[]	= HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', $icon.$provider->title, [
 						'href'		=> $this->linkPath.$provider->oauthProviderId.$from,
 						'class'		=> 'oauth2-provider',
 						'onclick'	=> "jQuery('#modalLoadingOauth2').modal();",
-					) )
-				) );
+					] )
+				] );
 			}
 		}
 		if( $dropdown ){
-			$buttons[]	= HtmlTag::create( 'div', array(
+			$buttons[]	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'a', $this->dropdownLabel.' <span class="caret"></span>', [
 					'href'			=> $this->linkPath.$provider->oauthProviderId.$from,
 					'class'			=> 'btn dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				] ),
 				HtmlTag::create( 'ul', $dropdown, ['class' => 'dropdown-menu'] ),
-			), ['class' => 'btn-group'] );
+			], ['class' => 'btn-group'] );
 		}
 		$modal		= $this->renderModal();
 		$buttons	= HtmlTag::create( 'div', join( ' ', $buttons ), ['class' => 'oauth2-provider-buttons'] );

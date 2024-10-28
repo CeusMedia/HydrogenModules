@@ -64,11 +64,11 @@ class Controller_Auth_Oauth extends Controller
 				$handle->setUrl( $this->providerUri.'/token' );
 				$handle->setOption( CURLOPT_POST, TRUE );
 				$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-				$handle->setOption( CURLOPT_HTTPHEADER, array(
+				$handle->setOption( CURLOPT_HTTPHEADER, [
 					'Authorization: Basic '.$authorization,
 					'Content-Type: application/x-www-form-urlencoded',
 					'Content-Length: '.strlen( $postData ),
-				) );
+				] );
 				$response	= $handle->exec();
 				$response	= json_decode( $response );
 				if( !empty( $response->error ) ){
@@ -161,11 +161,11 @@ class Controller_Auth_Oauth extends Controller
 			$handle->setUrl( $this->providerUri.'/token' );
 			$handle->setOption( CURLOPT_POST, TRUE );
 			$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-			$handle->setOption( CURLOPT_HTTPHEADER, array(
+			$handle->setOption( CURLOPT_HTTPHEADER, [
 				'Authorization: Basic '.$authorization,
 				'Content-Type: application/x-www-form-urlencoded',
 				'Content-Length: '.strlen( $postData ),
-			) );
+			] );
 			$response	= $handle->exec();
 			$responseData	= json_decode( $response );
 
@@ -366,11 +366,11 @@ class Controller_Auth_Oauth extends Controller
 					$handle->setUrl( $this->providerUri.'/token' );
 					$handle->setOption( CURLOPT_POST, TRUE );
 					$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-					$handle->setOption( CURLOPT_HTTPHEADER, array(
+					$handle->setOption( CURLOPT_HTTPHEADER, [
 						'Authorization: Basic '.$authorization,
 						'Content-Type: application/x-www-form-urlencoded',
 						'Content-Length: '.strlen( $postData ),
-					) );
+					] );
 					$response	= $handle->exec();
 					$response	= json_decode( $response );
 					if( !empty( $response->error ) ){

@@ -40,19 +40,19 @@ class Controller_Info_Mail_Group extends Controller
 				$payload
 			);
 			if( $result )
-				$this->modelAction->edit( $action->mailGroupActionId, array(
+				$this->modelAction->edit( $action->mailGroupActionId, [
 					'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 					'modifiedAt'	=> time(),
-				) );
+				] );
 			if( is_string( $result ) )
 				$this->restart( $result );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
-			$this->modelAction->edit( $action->mailGroupActionId, array(
+			$this->modelAction->edit( $action->mailGroupActionId, [
 				'status'		=> Model_Mail_Group_Action::STATUS_FAILED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -144,12 +144,12 @@ class Controller_Info_Mail_Group extends Controller
 					else if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
 						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
-						$this->modelMember->edit( $memberId, array(
+						$this->modelMember->edit( $memberId, [
 							'roleId'		=> $group->defaultRoleId,
 							'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
 							'title'			=> strlen( $name ) ? $name : NULL,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 						$registered	= TRUE;
 					}
 				}

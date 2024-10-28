@@ -56,10 +56,10 @@ class Hook_Resource_Mail_Group extends Hook
 		}
 
 		if( in_array( $group->type, [Model_Mail_Group::TYPE_INVITE, Model_Mail_Group::TYPE_AUTOJOIN] ) ){
-			$modelMember->edit( $action->mailGroupMemberId, array(
+			$modelMember->edit( $action->mailGroupMemberId, [
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt und freigegeben. Sie können jetzt E-Mails an die Gruppe schicken.' );
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
@@ -96,10 +96,10 @@ class Hook_Resource_Mail_Group extends Hook
 		}
 
 		if( $group->type == Model_Mail_Group::TYPE_JOIN ){
-			$modelMember->edit( $action->mailGroupMemberId, array(
+			$modelMember->edit( $action->mailGroupMemberId, [
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Sie können jetzt mit der Gruppe kommunizieren.' );
 
 			$manager	= $modelUser->get( $group->managerId );
@@ -136,10 +136,10 @@ class Hook_Resource_Mail_Group extends Hook
 			return TRUE;
 		}
 		else if( $group->type == Model_Mail_Group::TYPE_REGISTER ){
-			$modelMember->edit( $action->mailGroupMemberId, array(
+			$modelMember->edit( $action->mailGroupMemberId, [
 				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Die Freigabe durch den Verwalter steht noch aus.' );
 
 			$manager	= $modelUser->get( $group->managerId );
@@ -171,10 +171,10 @@ class Hook_Resource_Mail_Group extends Hook
 		$action			= $data['action'];
 		$group			= $modelGroup->get( $action->mailGroupId );
 
-		$modelMember->edit( $action->mailGroupMemberId, array(
+		$modelMember->edit( $action->mailGroupMemberId, [
 			'status'		=> Model_Mail_Group_Member::STATUS_UNREGISTERED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->env->getMessenger()->noteSuccess( 'Ihr Austritt ist nun vollständig. Sie erhalten ab jetzt keine weiteren E-Mails von der Gruppe.' );
 
 		$manager	= $modelUser->get( $group->managerId );

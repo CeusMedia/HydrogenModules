@@ -154,10 +154,10 @@ class Logic_UserPassword
 			throw new OutOfRangeException( 'Invalid user password ID' );
 		if( $password->status != Model_User_Password::STATUS_NEW )
 			throw new OutOfRangeException( 'User password cannot be decayed' );
-		return (bool) $this->model->edit( $userPasswordId, array(
+		return (bool) $this->model->edit( $userPasswordId, [
 			'status'	=> Model_User_Password::STATUS_OUTDATED,
 			'revokedAt'	=> time(),
-		) );
+		] );
 	}
 */
 	/**

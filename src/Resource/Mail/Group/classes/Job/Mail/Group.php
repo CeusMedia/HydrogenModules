@@ -27,10 +27,10 @@ class Job_Mail_Group extends Job_Abstract
 				$this->out( 'Mail Group: '.$group->title );
 			foreach( $members as $member ){
 				if( !$this->dryMode )
-					$modelMember->edit( $member->mailGroupMemberId, array(
+					$modelMember->edit( $member->mailGroupMemberId, [
 						'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 						'modifiedAt'	=> time(),
-					) );
+					] );
 
 				$action	= $modelAction->getByIndices( [
 					'action'			=> 'activateAfterConfirm',
@@ -70,10 +70,10 @@ class Job_Mail_Group extends Job_Abstract
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){
 						$this->logicMail->handleMail( $mail, $receiver, $language );
-						$modelAction->edit( $action->mailGroupActionId, array(
+						$modelAction->edit( $action->mailGroupActionId, [
 							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 					}
 				}
 				$this->out( '- Member "'.$member->title.'" <'.$member->address.'> activated' );
@@ -135,10 +135,10 @@ class Job_Mail_Group extends Job_Abstract
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){
 						$this->logicMail->handleMail( $mail, $receiver, $language );
-						$modelAction->edit( $action->mailGroupActionId, array(
+						$modelAction->edit( $action->mailGroupActionId, [
 							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 					}
 				}
 			}

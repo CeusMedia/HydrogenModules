@@ -162,9 +162,9 @@ class Logic_FileBucket extends Logic
 		$processor	= new ImageProcessing( $image );
 		$processor->scaleDownToLimit( $maxWidth, $maxHeight, $quality );
 		$image->save();
-		$this->model->edit( $fileId, array(
+		$this->model->edit( $fileId, [
 			'fileSize' => filesize( $this->getPath().$file->hash )
-		) );
+		] );
 		return TRUE;
 	}
 

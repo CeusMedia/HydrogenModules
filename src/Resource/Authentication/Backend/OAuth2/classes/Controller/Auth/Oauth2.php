@@ -428,9 +428,9 @@ class Controller_Auth_Oauth2 extends Controller
 		try{
 			$currentProviderId	= $this->session->get( 'oauth2_providerId' );
 			$providerObject		= $this->getProviderObject( $currentProviderId );
-			$newToken			= $providerObject->getAccessToken( 'refresh_token', array(
+			$newToken			= $providerObject->getAccessToken( 'refresh_token', [
 				'refresh_token'	=> $token->getRefreshToken(),
-			) );
+			] );
 			$this->session->set( 'oauth2_token', $newToken );
 			return TRUE;
 		}

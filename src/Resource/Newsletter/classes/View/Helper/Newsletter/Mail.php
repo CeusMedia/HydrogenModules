@@ -263,9 +263,9 @@ class View_Helper_Newsletter_Mail
 			$script	= 'document.getElementById("browser-link").remove();';							//  script to remove browser link in browser view
 			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );		//  add script to HTML page
 			if( isset( $data['linkTracking'] ) && $data['linkTracking'] ){							//  tracking link is defined
-				$data['tracking']	= HtmlTag::create( 'img', NULL, array(						//  create tracking pixel image
+				$data['tracking']	= HtmlTag::create( 'img', NULL, [						//  create tracking pixel image
 					'src' => $data['linkTracking']													//  ... pointing to tracking URL
-				) );
+				] );
 			}
 		}
 
