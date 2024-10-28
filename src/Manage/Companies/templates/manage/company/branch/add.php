@@ -15,14 +15,14 @@ $panelAdd	= HTML::DivClass( 'content-panel',
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span6',
 					HTML::Label( 'title', $w->labelTitle, 'mandatory' ).
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
 						'value'		=> htmlentities( $branch->title, ENT_QUOTES, 'UTF-8' ),
 						'class'		=> 'span12 mandatory',
 						'required'	=> 'required',
-					) )
+					] )
 				).
 				HTML::DivClass( 'span6',
 					HTML::Label( 'companyId', $w->labelCompany ).

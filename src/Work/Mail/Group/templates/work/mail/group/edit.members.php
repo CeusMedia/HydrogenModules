@@ -147,11 +147,11 @@ if( $members ){
 		$address	= Html::create( 'span', $member->address, ['class' => 'muted'] );
 		$name		= Html::create( 'small', $member->title, ['class' => ''] );
 		$status		= Html::create( 'span', $words['member-statuses'][$member->status], ['class' => 'label '.$statusClasses[$member->status]] );
-		$list[]	= Html::create( 'tr', array(
+		$list[]	= Html::create( 'tr', [
 			Html::create( 'td', $name.'<br/>'.$address, [] ),
 			Html::create( 'td', $roleMap[$member->roleId].'<br/>'.$status, [] ),
 			Html::create( 'td', $buttons, ['style' => 'text-align: right'] ),
-		) );
+		] );
 
 		$optRoleId	= [];
 		foreach( $roles as $role )
@@ -164,9 +164,9 @@ if( $members ){
 		$modal->setFormAction( './work/mail/group/editMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId );
 		$modal->setSubmitButtonLabel( $iconSave.' speichern' );
 		$modal->setCloseButtonLabel( $iconCancel.' abbrechen' );
-		$modal->setBody( Html::create( 'div', array(
-			Html::create( 'div', array(
-				Html::create( 'div', array(
+		$modal->setBody( Html::create( 'div', [
+			Html::create( 'div', [
+				Html::create( 'div', [
 					Html::create( 'label', 'Name', ['for' => 'input_title'] ),
 					Html::create( 'input', NULL, [
 						'type'	=> 'text',
@@ -175,18 +175,18 @@ if( $members ){
 						'class'	=> 'span12',
 						'value'	=> $member->title,
 					] ),
-				), ['class' => 'span8'] ),
-				Html::create( 'div', array(
+				], ['class' => 'span8'] ),
+				Html::create( 'div', [
 					Html::create( 'label', 'Rolle', ['for' => 'input_'] ),
 					Html::create( 'select', $optRoleId, [
 						'id'	=> 'input_roleId',
 						'name'	=> 'roleId',
 						'class'	=> 'span12',
 					] ),
-				), ['class' => 'span4'] ),
-			), ['class' => 'row-fluid'] ),
-			Html::create( 'div', array(
-				Html::create( 'div', array(
+				], ['class' => 'span4'] ),
+			], ['class' => 'row-fluid'] ),
+			Html::create( 'div', [
+				Html::create( 'div', [
 					Html::create( 'label', 'E-Mail-Adresse', ['for' => 'input_address'] ),
 					Html::create( 'input', NULL, [
 						'type'	=> 'text',
@@ -195,9 +195,9 @@ if( $members ){
 						'class'	=> 'span12',
 						'value'	=> $member->address,
 					] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-		) ) );
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+		] ) );
 		$modals[]	= $modal;
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '20%', '100px' );
@@ -210,16 +210,16 @@ if( $members ){
 	$list		= Html::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
-return Html::create( 'div', array(
+return Html::create( 'div', [
 	Html::create( 'h3', 'Mitglieder der Gruppe' ),
-	Html::create( 'div', array(
-		Html::create( 'div', array(
+	Html::create( 'div', [
+		Html::create( 'div', [
 			Html::create( 'div', [
 				$list
 			], ['class' => 'span12'] ),
-		), ['class' => 'row-fluid'] ),
+		], ['class' => 'row-fluid'] ),
 		Html::create( 'div', [
 			$modalMemberAddTrigger
 		], ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] ).$modalMemberAdd.join( $modals );
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] ).$modalMemberAdd.join( $modals );

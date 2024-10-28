@@ -38,12 +38,12 @@ if( $author->image ){
 	$buttonRemoveImage	= HtmlTag::create( 'button', $iconRemove, $attributes );
 }
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/catalog/bookstore/author/remove/'.$author->authorId,
 	'disabled'	=> $articles ? 'disabled' : NULL,
 	'class'		=> "btn btn-small btn-danger",
 	'onclick'	=> "if(!confirm('Wirklich?')) return false",
-) );
+] );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'image' );

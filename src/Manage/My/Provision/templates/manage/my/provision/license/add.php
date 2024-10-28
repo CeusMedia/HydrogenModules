@@ -13,10 +13,10 @@ if( !$productId ){
 	if( $products ){
 		$list	= [];
 		foreach( $products as $itemProduct ){
-			$link		= HtmlTag::create( 'a', array(
+			$link		= HtmlTag::create( 'a', [
 				HtmlTag::create( 'h5', $itemProduct->title ),
 				HtmlTag::create( 'div', $itemProduct->description ),
-			), [
+			], [
 				'href'	=> './manage/my/provision/license/add/'.$itemProduct->productId,
 				'class'	=> 'btn btn-large'
 			] );
@@ -47,11 +47,11 @@ else if( !$productLicenseId ){
 	foreach( $productLicenses as $itemProductLicense ){
 		if( $itemProductLicense->productId != $productId )
 			continue;
-		$link		= HtmlTag::create( 'a', array(
+		$link		= HtmlTag::create( 'a', [
 			HtmlTag::create( 'h5', $itemProductLicense->title ),
 			HtmlTag::create( 'div', $itemProductLicense->description ),
 			$view->renderLicenseFacts( $itemProductLicense, ['users', 'duration', 'price'] ),
-		), [
+		], [
 			'href'	=> './manage/my/provision/license/add/'.$productId.'/'.$itemProductLicense->productLicenseId,
 			'class'	=> 'btn btn-large'
 		] );

@@ -42,11 +42,11 @@ if( $documents ){
 			'target'	=> '_blank',
 			'class'		=> NULL,
 		] );
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label, ['class' => 'cell-document-title'] ),
 			HtmlTag::create( 'td', $modifiedAt, ['class' => 'cell-document-createdAt'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'cell-document-actions'] ),
-		) );
+		] );
 	}
 
 	$colgroup	= HtmlElements::ColumnGroup( '*', '140px', '100px' );

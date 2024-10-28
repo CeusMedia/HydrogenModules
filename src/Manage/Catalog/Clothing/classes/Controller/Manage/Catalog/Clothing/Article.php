@@ -109,10 +109,10 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		$article	= $this->modelArticle->get( $articleId );
 		if( $remove ){
 			unlink( $this->path.$article->image );
-			$this->modelArticle->edit( $article->articleId, array(
+			$this->modelArticle->edit( $article->articleId, [
 				'image'			=> NULL,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->restart( 'edit/'.$articleId, TRUE );
 		}
 		if( $this->request->get( 'upload' ) ){
@@ -135,10 +135,10 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 						unlink( $this->path.$article->image );
 					$fileName	= $article->articleId.'-'.$fileName.'.'.$extension;
 					$logicUpload->saveTo( $this->path.$fileName );
-					$this->modelArticle->edit( $article->articleId, array(
+					$this->modelArticle->edit( $article->articleId, [
 						'image'			=> $fileName,
 						'modifiedAt'	=> time(),
-					) );
+					] );
 //					$this->messenger->noteSuccess( $words->successDocumentUploaded, $logicUpload->getFileName() );
 				}
 			}

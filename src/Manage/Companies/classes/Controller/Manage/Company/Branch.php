@@ -38,10 +38,10 @@ class Controller_Manage_Company_Branch extends Controller
 
 	public function activate( $branchId )
 	{
-		$this->modelBranch->edit( $branchId, array(
+		$this->modelBranch->edit( $branchId, [
 			'status'		=> 2,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$branch		= $this->modelBranch->get( $branchId );
 		$this->messenger->noteSuccess( 'Filiale "%s" aktiviert.', $branch->title );
 		$this->restart( './manage/company/branch/edit/'.$branchId );
@@ -49,10 +49,10 @@ class Controller_Manage_Company_Branch extends Controller
 
 	public function deactivate( $branchId )
 	{
-		$this->modelBranch->edit( $branchId, array(
+		$this->modelBranch->edit( $branchId, [
 			'status'		=> -2,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$branch		= $this->modelBranch->get( $branchId );
 		$this->messenger->noteSuccess( 'Filiale "%s" deaktiviert.', $branch->title );
 		$this->restart( './manage/company/branch/edit/'.$branchId );
@@ -60,10 +60,10 @@ class Controller_Manage_Company_Branch extends Controller
 
 	public function reject( $branchId )
 	{
-		$this->modelBranch->edit( $branchId, array(
+		$this->modelBranch->edit( $branchId, [
 			'status'		=> -1,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$branch		= $this->modelBranch->get( $branchId );
 		$this->messenger->noteSuccess( 'Filiale "%s" deaktiviert.', $branch->title );
 		$this->restart( './manage/company/branch' );

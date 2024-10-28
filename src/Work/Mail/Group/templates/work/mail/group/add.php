@@ -41,26 +41,26 @@ foreach( $servers as $server )
 	$optServerId[$server->mailGroupServerId]	= $server->title;
 $optServerId		= HtmlElements::Options( $optServerId, @$data->mailGroupServerId );
 
-$panelAdd	= HtmlTag::create( 'div', array(
+$panelAdd	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Neue E-Mail-Gruppe' ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Title', [
 						'for'	=> 'input_title',
 						'class'	=> 'mandatory',
 					] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
 						'class'		=> 'span12',
 						'required'	=> 'required',
 						'value'		=> htmlentities( @$data->title, ENT_QUOTES, 'UTF-8' ),
-					) ),
-				), ['class' => 'span7'] ),
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span7'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Server', [
 						'for'	=> 'input_mailGroupServerId',
 					] ),
@@ -69,24 +69,24 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_mailGroupServerId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span5'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span5'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'E-Mail-Adresse', [
 						'for'	=> 'input_address',
 						'class'	=> 'mandatory',
 					] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'email',
 						'name'		=> 'address',
 						'id'		=> 'input_address',
 						'class'		=> 'span12',
 						'required'	=> 'required',
 						'value'		=> htmlentities( @$data->address, ENT_QUOTES, 'UTF-8' ),
-					) ),
-				), ['class' => 'span5'] ),
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span5'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Passwort', [
 						'for'	=> 'input_password',
 						'class'	=> 'mandatory',
@@ -97,8 +97,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_password',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span3'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span3'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Zustand', [
 						'for'	=> 'input_status',
 					] ),
@@ -107,10 +107,10 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span4'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span4'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Administrator', [
 						'for'	=> 'input_managerId',
 						'class'	=> 'mandatory',
@@ -120,8 +120,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_managerId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span6'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span6'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Standard-Rolle', [
 						'for'	=> 'input_roleId',
 						'class'	=> 'mandatory',
@@ -131,10 +131,10 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_roleId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span6'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span6'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Beitritt', [
 						'for'	=> 'input_type',
 						'class'	=> 'mandatory',
@@ -144,8 +144,8 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_type',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span7'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span7'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Sichtbarkeit', [
 						'for'	=> 'input_visibility',
 						'class'	=> 'mandatory',
@@ -155,10 +155,10 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'id'		=> 'input_visibility',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span5'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span5'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Beschreibung der Gruppe', [
 						'for'	=> 'input_description',
 					] ),
@@ -168,9 +168,9 @@ $panelAdd	= HtmlTag::create( 'div', array(
 						'rows'	=> 6,
 						'class'	=> 'span12',
 					] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', join( ' ', array(
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', join( ' ', [
 				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', [
 					'href'	=> './work/mail/group',
 					'class'	=> 'btn',
@@ -179,14 +179,14 @@ $panelAdd	= HtmlTag::create( 'div', array(
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
-				] ) ),
+				] )],
 			), ['class' => 'buttonbar'] ),
-		), [
+		], [
 			'action'	=> './work/mail/group/add',
 			'method'	=> 'post'
 		] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env );
 $layout	= HtmlTag::create( 'div', [

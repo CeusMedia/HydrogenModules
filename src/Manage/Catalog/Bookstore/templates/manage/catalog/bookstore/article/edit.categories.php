@@ -45,11 +45,11 @@ if( $articleCategories ){
 			<div style="font-size: 0.9em; font-weight: lighter"><span class="muted">Band:</span> '.$labelVolume.' | <span class="muted">Rang:</span> '.$item->rank.'</div>
 			';
 		}
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './manage/catalog/bookstore/article/removeCategory/'.$article->articleId.'/'.$item->categoryId,
 			'class'		=> 'btn btn-mini btn-danger',
 			'onclick'	=> 'if(!confirm(\'Wirklich ?\'))return false;',
-		) );
+		] );
 		$listCategories[]	= '<tr>
 		<td>'.$label.'</td>
 		<td><div class="pull-right">'.$buttonRemove.'</div></td>

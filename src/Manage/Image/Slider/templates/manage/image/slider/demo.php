@@ -20,10 +20,10 @@ $buttonBack	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBac
 	'class'	=> 'btn btn-small',
 ] );
 
-$code	= join( "\n", array(
+$code	= join( "\n", [
 	'$helper	= new View_Helper_Image_Slider( $env );',
 	'$slider	= $helper->render( '.$sliderId.' );',
-) );
+] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 
