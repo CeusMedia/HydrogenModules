@@ -46,30 +46,30 @@ $optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 $panelFilter	= HTML::DivClass( 'content-panel',
 	HtmlTag::create( 'h3', 'Filter' ).
 	HTML::DivClass( 'content-panel-inner',
-		HtmlTag::create( 'form', array(
+		HtmlTag::create( 'form', [
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span12', array(
+				HTML::DivClass( 'span12', [
 					HtmlTag::create( 'label', 'IP-Adresse', ['for' => 'input_ip'] ),
 					HtmlTag::create( 'input', NULL, ['type' => 'text', 'name' => 'ip', 'id' => 'input_id', 'class' => 'span12', 'value' => htmlentities( $filterIp ?? '', ENT_QUOTES, 'UTF-8' )] ),
-				) )
+				] )
 			),
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span12', array(
+				HTML::DivClass( 'span12', [
 					HtmlTag::create( 'label', 'Status', ['for' => 'input_status'] ),
 					HtmlTag::create( 'select', $optStatus, ['name' => 'status', 'id' => 'input_status', 'class' => 'span12'] ),
-				) )
+				] )
 			),
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span12', array(
+				HTML::DivClass( 'span12', [
 					HtmlTag::create( 'label', 'Sortierung', ['for' => 'input_sort'] ),
 					HtmlTag::create( 'select', $optSort, ['name' => 'sort', 'id' => 'input_sort', 'class' => 'span12'] ),
-				) )
+				] )
 			),
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span12', array(
+				HTML::DivClass( 'span12', [
 					HtmlTag::create( 'label', 'Richtung', ['for' => 'input_order'] ),
 					HtmlTag::create( 'select', $optOrder, ['name' => 'order', 'id' => 'input_order', 'class' => 'span12'] ),
-				) )
+				] )
 			),
 			HTML::DivClass( 'buttonbar',
 				HTML::DivClass( 'btn-toolbar', [
@@ -77,7 +77,7 @@ $panelFilter	= HTML::DivClass( 'content-panel',
 					$buttonReset
 				] )
 			)
-		), ['action' => './manage/ip/lock/order', 'method' => 'post'] )
+		], ['action' => './manage/ip/lock/order', 'method' => 'post'] )
 	)
 );
 return $panelFilter;

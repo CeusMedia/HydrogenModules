@@ -73,9 +73,9 @@ class Controller_Ajax_Manage_Page extends AjaxController
 				if( $keywords ){
 					$reduced	= array_diff( $keywords, $blacklist );
 					if( count( $reduced ) !== count( $keywords ) ){
-						$this->model->edit( $page->pageId, array(
+						$this->model->edit( $page->pageId, [
 							'keywords'	=> join( ', ', $reduced )
-						) );
+						] );
 					}
 				}
 			}
@@ -117,20 +117,20 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			/*	@todo remove this old string-based solution soon */
 			if( preg_match( '/[a-z]/', $pageId ) ){
 				if( $page = $this->model->getByIndex( 'identifier', $pageId ) ){
-					$this->model->edit( $page->pageId, array(
+					$this->model->edit( $page->pageId, [
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
-					), FALSE );
+					], FALSE );
 					$result	= ['pageId' => $pageId, 'content' => $content];
 					$result	= ['status' => TRUE];
 				}
 			}
 			else if( $pageId ){
 				if( $page = $this->model->get( (int) $pageId ) ){
-					$this->model->edit( $page->pageId, array(
+					$this->model->edit( $page->pageId, [
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
-					), FALSE );
+					], FALSE );
 					$result	= ['status' => TRUE];
 				}
 			}

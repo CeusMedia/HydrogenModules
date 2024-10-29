@@ -84,12 +84,12 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', [
 	'class'		=> 'btn btn-small btn-success',
 ] );
 
-$buttonSortable	= HtmlTag::create( 'button', $iconSortable, array(
+$buttonSortable	= HtmlTag::create( 'button', $iconSortable, [
 	'type'		=> 'button',
 	'id'		=> 'toggle-sortable',
 	'onclick'	=> 'ModuleManagePages.PageEditor.toggleSortable()',
 	'class'		=> 'btn btn-small',
-) );
+] );
 
 $currentId	= !empty( $pageId ) ? $pageId : $parentId;
 $listPages	= $view->renderTree( $tree, $currentId );

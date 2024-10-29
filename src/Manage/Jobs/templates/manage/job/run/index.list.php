@@ -71,43 +71,43 @@ if( $runs ){
 
 		$buttonArchive	= '';
 		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) && !$item->archived ){
-			$buttonArchive	= HtmlTag::create( 'a', $iconArchive, array(
+			$buttonArchive	= HtmlTag::create( 'a', $iconArchive, [
 				'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-inverse',
 				'title'	=> 'archivieren',
-			) );
+			] );
 		}
 		$buttonAbort	= '';
 		if( (int) $item->status === Model_Job_Run::STATUS_PREPARED ){
-			$buttonAbort	= HtmlTag::create( 'a', $iconAbort, array(
+			$buttonAbort	= HtmlTag::create( 'a', $iconAbort, [
 				'href'	=> './manage/job/run/abort/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'verhindern',
-			) );
+			] );
 		}
 		$buttonTerminate	= '';
 		if( (int) $item->status === Model_Job_Run::STATUS_RUNNING ){
-			$buttonTerminate	= HtmlTag::create( 'a', $iconTerminate, array(
+			$buttonTerminate	= HtmlTag::create( 'a', $iconTerminate, [
 				'href'	=> './manage/job/run/terminate/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'abbrechen',
-			) );
+			] );
 		}
 		$buttonRemove	= '';
 		if( in_array( (int) $item->status, Model_Job_Run::STATUSES_ARCHIVABLE ) ){
-			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, array(
+			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 				'href'	=> './manage/job/run/remove/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
 				'title'	=> 'entfernen',
-			) );
+			] );
 		}
 
 
-		$link		= HtmlTag::create( 'a', $title, array(
+		$link		= HtmlTag::create( 'a', $title, [
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
-		) );
+		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove], ['class' => 'btn-group'] );
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 //			HtmlTag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
 			HtmlTag::create( 'td', $link ),
@@ -118,7 +118,7 @@ if( $runs ){
 //			HtmlTag::create( 'td', $item->finishedAt ? $helperTime->setTimestamp( $item->finishedAt )->render() : '-' ),
 			HtmlTag::create( 'td', $duration ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 	}
 
 	$columns	= [
@@ -143,11 +143,11 @@ if( $runs ){
 	$pagination	= new PageControl( './manage/job/run', $page, ceil( $total / $filterLimit ) );
 	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttunbar'] );
 }
-$panelList	= HtmlTag::create( 'div', array(
+$panelList	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
 	HtmlTag::create( 'div', [
 		$table,
 	], ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+], ['class' => 'content-panel'] );
 
 return $panelList;

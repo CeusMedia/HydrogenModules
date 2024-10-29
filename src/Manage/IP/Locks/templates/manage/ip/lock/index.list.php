@@ -100,14 +100,14 @@ if( $locks ){
 		if( $lock->reason->status < 1 )
 			$rowClass	= 'info';
 
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link, ['class' => 'lock-ip'] ),
 			HtmlTag::create( 'td', $states[$lock->status], ['class' => 'lock-status'] ),
 			HtmlTag::create( 'td', $lockedAt, ['class' => 'lock-lockedAt'] ),
 			HtmlTag::create( 'td', $unlockAt, ['class' => 'lock-unlockAt'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-reason-title'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		), ['class' => $rowClass] );
+		], ['class' => $rowClass] );
 	}
 	$heads	= [
 		'IP-Adresse',

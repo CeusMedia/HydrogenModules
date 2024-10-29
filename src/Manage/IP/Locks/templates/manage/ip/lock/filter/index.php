@@ -87,7 +87,7 @@ if( $filters ){
 			$rowClass	= 'info';
 
 		$reason	= HtmlTag::create( 'div', $filter->reason->title, ['class' => 'autocut'] );
-		$list[]		= HtmlTag::create( 'tr', array(
+		$list[]		= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $method, ['class' => 'lock-filter-method'] ),
 			HtmlTag::create( 'td', $title, ['class' => 'lock-filter-title'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-filter-reason'] ),
@@ -95,7 +95,7 @@ if( $filters ){
 			HtmlTag::create( 'td', $states[$filter->status], ['class' => 'lock-filter-status'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-filter-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		), ['class' => $rowClass] );
+		], ['class' => $rowClass] );
 	}
 	$heads	= [
 		'Methode',

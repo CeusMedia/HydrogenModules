@@ -85,17 +85,17 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 ] );
 
 
-$panelFactsJob	= HtmlTag::create( 'div', array(
+$panelFactsJob	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h4', 'Job Run Facts' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] ),
 		HtmlTag::create( 'div', join( ' ', [
 			$buttonCancel,
 			$buttonArchive,
 			$buttonRemove,
 		] ), ['class' => 'buttonbar'] )
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
 
 function formatNumber( $number ): string
 {
@@ -130,12 +130,12 @@ foreach( $facts as $factKey => $factValue ){
 	$list[]	= HtmlTag::create( 'dt', $factKey );
 	$list[]	= HtmlTag::create( 'dd', $factValue );
 }
-$panelFactsDefinition	= HtmlTag::create( 'div', array(
+$panelFactsDefinition	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h4', 'Job Definition Facts' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] ),
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
 
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'run' );
@@ -162,29 +162,29 @@ if( in_array( $run->status, [Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS
 				</div>';
 				break;
 		}
-		$panelMessage	= HtmlTag::create( 'div', array(
+		$panelMessage	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', 'Job Run' ),
 			HtmlTag::create( 'div', [
 				$output
 			], ['class' => 'content-panel-inner'] )
-		), ['class' => 'content-panel'] );
+		], ['class' => 'content-panel'] );
 	}
 }
 
 
-return $tabs.HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
 		$panelFactsJob,
 	], ['class' => 'span6'] ),
 	HtmlTag::create( 'div', [
 		$panelFactsDefinition
 	], ['class' => 'span6'] ),
-), ['class' => 'row-fluid'] ).
-HtmlTag::create( 'div', array(
+], ['class' => 'row-fluid'] ).
+HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
 		$panelMessage
 	], ['class' => 'span12'] ),
-), ['class' => 'row-fluid'] ).'<style>
+], ['class' => 'row-fluid'] ).'<style>
 .dl-horizontal dt {
 	width: 120px;
 	}

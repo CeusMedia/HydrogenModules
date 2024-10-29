@@ -45,10 +45,10 @@ class View_Manage_Page extends View
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
 					$link	= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'autocut'] );
-					$sublist[]	= HtmlTag::create( 'li', $link, array(
+					$sublist[]	= HtmlTag::create( 'li', $link, [
 						'class'			=> join( ' ', $classes ),
 						'data-page-id'	=> $subitem->pageId,
-					) );
+					] );
 				}
 				if( $sublist )
 					$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'nav nav-pills nav-stacked'] );
@@ -65,10 +65,10 @@ class View_Manage_Page extends View
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
 			$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
-			$list[]	= HtmlTag::create( 'li', $link.$sublist, array(
+			$list[]	= HtmlTag::create( 'li', $link.$sublist, [
 				'class'			=> join( ' ', $classes ),
 				'data-page-id'	=> $item->pageId,
-			) );
+			] );
 		}
 		if( $list )
 			return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );

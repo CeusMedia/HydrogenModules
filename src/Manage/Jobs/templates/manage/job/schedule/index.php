@@ -72,14 +72,14 @@ if( $scheduledJobs ){
 			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => CronTranslator::translate( $expression )] );
 
 
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $item->definition->identifier, ['class' => ''] ),
 			HtmlTag::create( 'td', $type, ['class' => ''] ),
 			HtmlTag::create( 'td', HtmlTag::create( 'tt', $expression ), ['class' => ''] ),
 			HtmlTag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', ['class' => ''] ),
 			HtmlTag::create( 'td', $status, ['class' => ''] ),
 			HtmlTag::create( 'td', $buttons, ['class' => ''] ),
-		) );
+		] );
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', ''] ) );
@@ -89,14 +89,14 @@ if( $scheduledJobs ){
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'schedule' );
 
-return $tabs.HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', [
 			$buttonAdd,
 		], ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );
