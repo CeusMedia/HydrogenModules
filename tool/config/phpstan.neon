@@ -1,6 +1,6 @@
 includes:
 #	- ../../vendor/phpstan/phpstan-strict-rules/rules.neon
-#	- phpstan-baseline.neon
+	- phpstan-baseline.neon
 	
 parameters:
 	phpVersion: 80100
@@ -37,6 +37,3 @@ parameters:
 		- ../../vendor/ceus-media/common
 		- ../../vendor/ceus-media/hydrogen-framework
 	treatPhpDocTypesAsCertain: false
-	ignoreErrors:
-		-
-			identifier: missingType.iterableValue

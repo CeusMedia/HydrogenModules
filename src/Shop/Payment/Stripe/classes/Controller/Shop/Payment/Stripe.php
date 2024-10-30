@@ -7,6 +7,7 @@ use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Source;
 
 class Controller_Shop_Payment_Stripe extends Controller
@@ -161,7 +162,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
 		}
-		catch( Stripe\Libraries\ResponseException $e ){
+		catch( Stripe\Exception\ApiErrorException $e ){
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){
@@ -193,7 +194,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 			$this->logicPayment->notePayment( $source, $this->userId, $this->orderId );
 			$this->relocate( $source->redirect->url );
 		}
-		catch( \Stripe\Libraries\ResponseException $e ){
+		catch( ApiErrorException $e ){
 			$this->handleStripeResponseException( $e );
 		}
 		catch( Exception $e ){

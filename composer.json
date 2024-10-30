@@ -121,7 +121,7 @@
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite units"
         ],
         "dev:phpunit-integration": [
-            "php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite integration"
+            "XDEBUG_MODE=coverage php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite integration"
         ],
         "dev:rector": [
             "@dev:install",

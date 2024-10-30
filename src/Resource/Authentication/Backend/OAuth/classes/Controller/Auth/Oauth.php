@@ -110,8 +110,8 @@ class Controller_Auth_Oauth extends Controller
 							$this->session->set( 'auth_user_id', $userId );
 							$this->session->set( 'auth_role_id', $data->roleId );
 							$this->logic->setAuthenticatedUser( $modelUser->get( $userId ) );
-							if( $this->request->get( 'login_remember' ) )
-								$this->rememberUserInCookie( $user );
+//							if( $this->request->get( 'login_remember' ) )
+//								$this->rememberUserInCookie( $user );
 						}
 					}
 /*					$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
@@ -196,8 +196,8 @@ class Controller_Auth_Oauth extends Controller
 						$this->session->set( 'auth_user_id', $user->userId );
 						$this->session->set( 'auth_role_id', $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+//						if( $this->request->get( 'login_remember' ) )
+//							$this->rememberUserInCookie( $user );
 					}
 					else{																			//  register new user
 						$modelRole		= new Model_Role( $this->env );
@@ -210,8 +210,8 @@ class Controller_Auth_Oauth extends Controller
 						$this->session->set( 'auth_user_id', $userId );
 						$this->session->set( 'auth_role_id', $data['roleId'] );
 						$this->logic->setAuthenticatedUser( $user );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+//						if( $this->request->get( 'login_remember' ) )
+//							$this->rememberUserInCookie( $user );
 					}
 					$this->redirectAfterLogin();
 				}
@@ -247,7 +247,8 @@ class Controller_Auth_Oauth extends Controller
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->session->remove( 'auth_user_id' );
 			$this->session->remove( 'auth_role_id' );
-			$this->clearCurrentUser();
+			$this->logic->clearCurrentUser();
+
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
 			}
@@ -260,6 +261,8 @@ class Controller_Auth_Oauth extends Controller
 //			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 //				session_destroy();																	//  completely destroy session
 		}
+		$redirectController	= NULL;
+		$redirectAction		= NULL;
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 

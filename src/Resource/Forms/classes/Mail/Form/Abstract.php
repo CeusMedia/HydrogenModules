@@ -8,9 +8,9 @@ abstract class Mail_Form_Abstract extends Mail_Abstract
 	 *	@param		string		$subject		Subject to set on mail
 	 *	@param		boolean		$usePrefix		For compatibility only, no function
 	 *	@param		boolean		$useTemplate	For compatibility only, no function
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): self
+	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): static
 	{
 		$this->mail->setSubject( $subject );
 		return $this;

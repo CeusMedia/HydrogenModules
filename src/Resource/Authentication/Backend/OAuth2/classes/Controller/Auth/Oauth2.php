@@ -119,8 +119,8 @@ class Controller_Auth_Oauth2 extends Controller
 					$this->session->set( 'auth_user_id', $user->userId );
 					$this->session->set( 'auth_role_id', $user->roleId );
 					$this->logic->setAuthenticatedUser( $user );
-					if( $this->request->get( 'login_remember' ) )
-						$this->rememberUserInCookie( $user );
+//					if( $this->request->get( 'login_remember' ) )
+//						$this->rememberUserInCookie( $user );
 					if( $from = $this->session->get( 'oauth2_from' ) ){
 						$this->session->remove( 'oauth2_from' );
 						$this->restart( $from );
