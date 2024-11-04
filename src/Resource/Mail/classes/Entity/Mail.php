@@ -1,12 +1,5 @@
 <?php
 
-/**
- * @property int|NULL $usedLibrary
- * @property string|NULL $objectInflated
- * @property Mail_Abstract|NULL $objectInstance
- * @property string|NULL $objectSerial
- * @property string|NULL $rawInflated
- */
 class Entity_Mail
 {
 	public int|string|NULL $mailId		= NULL;
@@ -27,6 +20,11 @@ class Entity_Mail
 	public int $enqueuedAt;
 	public int|NULL $attemptedAt		= NULL;
 	public int|NULL $sentAt				= NULL;
+
+	public int|NULL $usedLibrary				= NULL;
+	public Mail_Abstract|NULL $objectInstance	= NULL;
+	public string|NULL $objectSerial			= NULL;
+	public string|NULL $rawInflated				= NULL;
 
 	public static function createFromArray( array $array ): Entity_Mail
 	{

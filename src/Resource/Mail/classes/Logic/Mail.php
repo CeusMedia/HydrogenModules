@@ -215,7 +215,7 @@ class Logic_Mail extends Logic
 		}
 		if( empty( $mail->objectSerial ) )
 			throw new RuntimeException( 'Mail object has not been serialized or decompressed before, no mail object serial available' );
-		$mail->objectInflated	= $this->compressString( $mail->objectSerial, $mail->compression );
+		$mail->object	= $this->compressString( $mail->objectSerial, $mail->compression );
 	}
 
 	/**
@@ -240,9 +240,9 @@ class Logic_Mail extends Logic
 
 		if( empty( $mail->object ) )
 			throw new RuntimeException( 'No raw (compressed) mail object serial available' );
-		if( empty( $mail->objectInflated ) || $force ){
+		if( empty( $mail->objectSerial ) || $force ){
 			$method					= $this->detectUsedMailCompression( $mail, $force );
-			$mail->objectInflated	= $this->decompressString( $mail->object, $method );
+			$mail->objectSerial	= $this->decompressString( $mail->object, $method );
 		}
 		$noInstanceYet	= empty( $mail->objectInstance );
 		if( ( $noInstanceYet && $unserialize ) || ( $force && $unserialize ) ){
