@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array<array<string,string>> $words */
 /** @var Dictionary $filters */
-/** @var object[] $mails */
+/** @var array<Entity_Mail> $mails */
 /** @var string[] $mailClasses */
 /** @var int|NULL $page */
 /** @var int|NULL $total */
@@ -48,6 +48,7 @@ $dropdown	= '';
 $table		= HtmlTag::create( 'em', $wl->noEntries, ['class' => 'muted'] );
 if( $mails ){
 	$rows	= [];
+	/** @var Entity_Mail $mail */
 	foreach( $mails as $mail ){
 		$logic->decompressMailObject( $mail );
 /*		$timestamp	= $mail->enqueuedAt;
@@ -92,7 +93,7 @@ if( $mails ){
 
 
 		$features	= [];
-		if( $mail->object->instance->mail->hasAttachments() )
+		if( $mail->objectInstance->mail->hasAttachments() )
 			$features[]	= $iconAttachment;
 		$features	= join( '', $features );
 

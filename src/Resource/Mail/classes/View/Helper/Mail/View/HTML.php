@@ -41,16 +41,16 @@ class View_Helper_Mail_View_HTML
 	}
 
 	/**
-	 *	@param		object|string		$mailObjectOrId
+	 *	@param		Entity_Mail|string		$mailObjectOrId
 	 *	@return		self
 	 */
-	public function setMail( object|string $mailObjectOrId ): self
+	public function setMail( Entity_Mail|string $mailObjectOrId ): self
 	{
 		if( is_string( $mailObjectOrId ) )
 			$mailObjectOrId	= $this->logicMail->getMail( $mailObjectOrId );
 		if( !is_object( $mailObjectOrId ) )
 			throw new InvalidArgumentException( 'Argument must be string or object' );
-		$this->setMailObjectInstance( $mailObjectOrId->object->instance );
+		$this->setMailObjectInstance( $mailObjectOrId->objectInstance );
 		return $this;
 	}
 

@@ -1,13 +1,20 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+
 class Job_Newsletter extends Job_Abstract
 {
-	protected $config;
-	protected $logic;
-	protected $language;
-	protected $options;
-	protected $words;
+	protected Dictionary $config;
+	protected Logic_Newsletter $logic;
+	protected Language $language;
+	protected Dictionary $options;
+	protected object $words;
 
-	public function clean()
+	/**
+	 * @todo refactor for scalability: read mail ids first and mail objects in loop
+	 */
+	public function clean(): void
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$modelMail	= new Model_Mail( $this->env );
@@ -27,6 +34,7 @@ class Job_Newsletter extends Job_Abstract
 		];
 		$orders		= ['mailId' => 'ASC'];
 		$limits		= [];
+		/** @var array<Entity_Mail> $mails */
 		$mails		= $modelMail->getAll( $conditions, $orders, $limits );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );

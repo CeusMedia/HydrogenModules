@@ -15,7 +15,7 @@ use CeusMedia\Mail\Part\InlineImage as MailV1InlineImagePart;
 use CeusMedia\Mail\Part\Text as MailV1TextPart;
 
 /** @var Environment $env */
-/** @var object $mail */
+/** @var Entity_Mail $mail */
 /** @var int $libraries */
 /** @var array<array<string,string>> $words */
 
@@ -202,7 +202,7 @@ else{
 		}
 
 		$helperSource	= new View_Helper_Mail_View_Source( $env );
-		$helperSource->setMailObjectInstance( $mail->object->instance );
+		$helperSource->setMailObjectInstance( $mail->objectInstance );
 		$helperSource->setMode( View_Helper_Mail_View_Source::MODE_CONDENSED );
 		$headingSource	= HtmlTag::create( 'h4', 'Source' );
 		$valueSource	= htmlentities( $helperSource->render(), ENT_QUOTES, 'UTF-8' );

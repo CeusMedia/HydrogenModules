@@ -92,9 +92,10 @@ class View_Admin_Mail_Queue extends View
 	public function html(): void
 	{
 		try{
+			/** @var Entity_Mail $mail */
 			$mail	= $this->getData( 'mail' );
 			$helper	= new View_Helper_Mail_View_HTML( $this->env );
-			$helper->setMailObjectInstance( $mail->object->instance );
+			$helper->setMailObjectInstance( $mail->objectInstance );
 			print( $helper->render() );
 		}
 		catch( Exception $e ){

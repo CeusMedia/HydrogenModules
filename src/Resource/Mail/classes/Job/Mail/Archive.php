@@ -126,7 +126,6 @@ class Job_Mail_Archive extends Job_Abstract
 		$filename	= "dump_".date( "Y-m-d_H:i:s" )."_mails.sql";
 		$pathname	= $path.$filename;
 
-		$dbc		= $this->env->getDatabase();
 		$dba		= $this->env->getConfig()->getAll( 'module.resource_database.access.', TRUE );
 		$prefix		= $dba->get( 'prefix' );
 		$tables		= $prefix.'mails';
@@ -272,47 +271,48 @@ class Job_Mail_Archive extends Job_Abstract
 		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, [], ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			try{
+				/** @var Entity_Mail $mail */
 				$mail			= $this->model->get( $mailId );
 				$this->logicMail->decompressMailObject( $mail );
-				$sizeBefore		= strlen( $mail->object->raw );
+				$sizeBefore		= strlen( $mail->object );
 				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-					$parts		= $mail->object->instance->mail->getParts();
+					$parts		= $mail->objectInstance->mail->getParts();
 					foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
 						if( $part->isAttachment() ){
-							$mail->object->instance->mail->removePart( $nr );
+							$mail->objectInstance->mail->removePart( $nr );
 							$this->logicMail->compressMailObject( $mail );
 							$renderer	= new \CeusMedia\Mail\Message\Renderer();
-							$raw		= $renderer->render( $mail->object->instance->mail );
+							$raw		= $renderer->render( $mail->objectInstance->mail );
 							if( !$this->dryMode ){
 								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object->raw,
+									'object'	=> $mail->object,
 									'raw'		=> $this->logicMail->compressString( $raw ),
 								], FALSE );
 							}
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object->raw );
+							$results->sizeAfter		+= strlen( $mail->object );
 						}
 					}
 				}
 				else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-					$parts		= $mail->object->instance->mail->getParts();
+					$parts		= $mail->objectInstance->mail->getParts();
 					foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
 						if( $part instanceof \CeusMedia\Mail\Part\Attachment ){
-							$mail->object->instance->mail->removePart( $nr );
+							$mail->objectInstance->mail->removePart( $nr );
 							$this->logicMail->compressMailObject( $mail );
-							$raw	= \CeusMedia\Mail\Renderer::render( $mail->object->instance->mail );
+							$raw	= \CeusMedia\Mail\Renderer::render( $mail->objectInstance->mail );
 							if( !$this->dryMode ){
 								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object->raw,
+									'object'	=> $mail->object,
 									'raw'		=> $this->logicMail->compressString( $raw ),
 								], FALSE );
 							}
 							$results->attachments++;
 							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object->raw );
+							$results->sizeAfter		+= strlen( $mail->object );
 						}
 					}
 				}
@@ -371,6 +371,7 @@ class Job_Mail_Archive extends Job_Abstract
 				$this->showProgress( $count, count( $mailIds ), '.' );
 				continue;
 			}
+			/** @var Entity_Mail $mail */
 			$mail	= $this->model->get( $mailId );
 			$this->logicMail->decompressMailObject( $mail );
 			$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
@@ -390,7 +391,7 @@ class Job_Mail_Archive extends Job_Abstract
 				$this->showProgress( $count, count( $mailIds ), '+' );
 			}
 			else{
-				$object	= $mail->object->instance;
+				$object	= $mail->objectInstance;
 				$class	= get_class( $object->mail );
 				if( $class !== 'CeusMedia\\Mail\\Message' ){
 					$fails[]	= 'Mail #'.$mailId.': Unsupported mail class: '.$class;

@@ -123,5 +123,7 @@ class Model_Mail extends Model
 		'sentAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Mail';
 }

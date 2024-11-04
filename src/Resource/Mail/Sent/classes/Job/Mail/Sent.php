@@ -91,17 +91,23 @@ class Job_Mail_Sent extends Job_Abstract
 		$database	= $this->env->getDatabase();
 		$database->beginTransaction();
 		$nrMailsTransferred	= 0;
+		/** @var int $nr */
+		/** @var int|string $mailId */
 		foreach( $mailIds as $nr => $mailId ){
-//			/** @var Entity_Mail $mail */
-			/** @var object{raw: object, object: object{instance: Message}} $mail */
-			$mail		= $this->logicMail->getMail( $mailId );
-			$message	= $mail->object->instance;
-
-			if( $upload->storeMessage( $message ) ){
-				$this->logicMail->removeMail( $mailId );
+			/** @var Entity_Mail $mail */
+			$mail	= $this->model->get( $mailId );
+			if( '' !== trim( $mail->raw ?? '' ) ){							//  use existing stored raw message
+				$this->logicMail->decompressMailRaw( $mail );						//  ... but decompress it ...
+				$done	= $upload->storeRawMessage( $mail->rawInflated );			//  ... before upload to IMAP folder
+			}
+			else{																	//  no raw message available
+				$mail	= $this->logicMail->getMail( $mailId );						//  load mail with decompression
+				$done	= $upload->storeMessage( $mail->objectInstance->mail );		//  upload mail message
+			}
+			if( $done ){
+				$this->logicMail->removeMail( $mailId );							//  remove original mail from database
 				$nrMailsTransferred++;
 			}
-
 			$this->showProgress( $nr + 1, $nrMails );
 		}
 		$database->commit();

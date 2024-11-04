@@ -61,6 +61,7 @@ class Hook_Resource_Mail extends Hook
 			$indices['status']	= $statusesActive;
 		$list		= [];
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
+		/** @var object{mailId: int, status: int, 'subject: string, enqueuedAt: int} $mail */
 		foreach( $mails as $mail )
 			$list[]		= (object) [
 				'id'		=> $linkable ? $mail->mailId : NULL,
@@ -83,6 +84,7 @@ class Hook_Resource_Mail extends Hook
 		$list		= [];
 
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
+		/** @var object{mailId: int, status: int, 'subject: string, enqueuedAt: int} $mail */
 		foreach( $mails as $mail )
 			$list[]		= (object) [
 				'id'		=> $linkable ? $mail->mailId : NULL,
@@ -116,11 +118,13 @@ class Hook_Resource_Mail extends Hook
 		$fields		= ['mailId'];
 
 		$indices	= ['senderId' => $data->userId];
+		/** @var array<object{mailId: int}> $mailsSent */
 		$mailsSent	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mailsSent as $mailId )
 			$modelMail->remove( $mailId );
 
 		$indices	= ['receiverId' => $data->userId];
+		/** @var array<object{mailId: int}> $mailsReceived */
 		$mailsReceived	= $modelMail->getAll( $indices, $orders, [], $fields );
 		foreach( $mailsReceived as $mailId )
 			$modelMail->remove( $mailId );

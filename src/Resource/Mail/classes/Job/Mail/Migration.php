@@ -60,6 +60,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
 		foreach( $mailIds as $mailId ){
+			/** @var Entity_Mail $mail */
 			$mail		= $this->model->get( $mailId );
 			$mailClone	= clone( $mail );
 			try{
@@ -70,11 +71,6 @@ class Job_Mail_Migration extends Job_Abstract
 				$this->_migrateMailObject( $mailClone );
 				$this->_migrateSenderAddress( $mailClone );
 				$this->_saveRaw( $mailClone );
-				if( is_object( $mailClone->object ) )
-					$mailClone->object	= $mailClone->object->raw;
-				if( is_object( $mailClone->raw ) )
-					$mailClone->raw	= $mailClone->raw->raw;
-
 				$changes	= $this->collectChangesMadeToMailObject( $mail, $mailClone );
 				if( $changes ){
 					$this->logChangesMadeToMailObject( $mail, $changes );
@@ -167,7 +163,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->_loadMailClasses();
 	}
 
-	protected function logMigration( object $mail, string $message ): void
+	protected function logMigration( Entity_Mail $mail, string $message ): void
 	{
 		$fileName	= 'job.resource_mail.archive.migration.log';
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
@@ -177,7 +173,7 @@ class Job_Mail_Migration extends Job_Abstract
 
 	//  --  PRIVATE  --  //
 
-	private function collectChangesMadeToMailObject( object $original, object $clone ): array
+	private function collectChangesMadeToMailObject( Entity_Mail $original, Entity_Mail $clone ): array
 	{
 		$changes	= [];
 		foreach( $clone as $key => $value ){
@@ -197,13 +193,13 @@ class Job_Mail_Migration extends Job_Abstract
 	}
 
 	/**
-	 *	@param		object		$mail		Database row object with populated mail object
+	 *	@param		Entity_Mail		$mail		Database row object with populated mail object
 	 *	@return		bool
 	 */
-	private function _detectMailClass( object $mail ): bool
+	private function _detectMailClass( Entity_Mail $mail ): bool
 	{
 		$this->logicMail->decompressMailObject( $mail, FALSE );
-		$serial			= $mail->object->serial;
+		$serial			= $mail->objectSerial;
 		$serialStart	= substr( $serial, 0, 80 );
 		$mailClass		= preg_replace( '/^O:[0-9]+:"([^"]+)":.+$/U', '\\1', $serialStart );
 		if( $mail->mailClass == $mailClass )
@@ -238,7 +234,7 @@ class Job_Mail_Migration extends Job_Abstract
 		}
 	}
 
-	private function logChangesMadeToMailObject( object $mail, array $changes ): void
+	private function logChangesMadeToMailObject( Entity_Mail $mail, array $changes ): void
 	{
 		$changeList	= [];
 		foreach( $changes as $key => $values ){
@@ -272,10 +268,10 @@ class Job_Mail_Migration extends Job_Abstract
 	}
 
 	/**
-	 *	@param		object		$mail		Database row object with populated mail object
+	 *	@param		Entity_Mail		$mail		Database row object with populated mail object
 	 *	@return		bool
 	 */
-	private function _migrateMailClass( object $mail ): bool
+	private function _migrateMailClass( Entity_Mail $mail ): bool
 	{
 		$classMigrations	= [
 			'Mail_Auth_Password'		=> 'Mail_Auth_Local_Password',
@@ -291,7 +287,7 @@ class Job_Mail_Migration extends Job_Abstract
 		$newerClass	= $classMigrations[$mail->mailClass];
 		$find		= 'O:'.strlen( $mail->mailClass ).':"'.$mail->mailClass.'":';
 		$replace	= 'O:'.strlen( $newerClass ).':"'.$newerClass.'":';
-		$serial		= str_replace( $find, $replace, $mail->object->serial );
+		$serial		= str_replace( $find, $replace, $mail->objectSerial );
 		$this->logicMail->compressMailObject( $mail );
 		$mail->mailClass	= $newerClass;
 		$this->logMigration( $mail, 'Migrated mail class names' );
@@ -299,11 +295,11 @@ class Job_Mail_Migration extends Job_Abstract
 	}
 
 	/**
-	 *	@param		object		$mail		Mail object
+	 *	@param		Entity_Mail		$mail		Mail object
 	 *	@return		bool
 	 *	@throws		ReflectionException
 	 */
-	private function _migrateMailObject( object $mail ): bool
+	private function _migrateMailObject( Entity_Mail $mail ): bool
 	{
 		$this->logicMail->decompressMailObject( $mail );
 		$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
@@ -321,7 +317,7 @@ class Job_Mail_Migration extends Job_Abstract
 					if( !empty( $mail->raw ) && is_string( $mail->raw ) && strlen( $mail->raw ) ){
 						$raw	= $this->logicMail->decompressString( $mail->raw, $mail->compression );
 						$parser	= new MailMessageParserV2();
-						$mail->object->instance->mail	= $parser->parse( $raw );
+						$mail->objectInstance->mail	= $parser->parse( $raw );
 						$this->logicMail->compressMailObject( $mail, TRUE );
 						$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Mail v1 to v2' );
 						return TRUE;
@@ -332,7 +328,7 @@ class Job_Mail_Migration extends Job_Abstract
 		//  currently using Net_Mail from CeusMedia/Common
 		else if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
 			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){	// @todo finish support for v2, see todo below
-				$oldInstance	= $mail->object->instance;
+				$oldInstance	= $mail->objectInstance;
 				$newInstance	= new MailMessageV2();
 				$newInstance->setSubject( $oldInstance->mail->getSubject() );
 				$sender	= $mail->senderAddress;
@@ -361,7 +357,7 @@ class Job_Mail_Migration extends Job_Abstract
 //					$newInstance->...
 					$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Common::Net_Mail to CeusMedia/Mail v2' );
 				}
-				$mail->object->instance->mail	= $newInstance;
+				$mail->objectInstance->mail	= $newInstance;
 				$this->logicMail->compressMailObject( $mail, TRUE );
 				return TRUE;
 			}
@@ -371,16 +367,16 @@ class Job_Mail_Migration extends Job_Abstract
 
 	/**
 	 *	Detects mail sender from mail object to note to database.
-	 *	@param		object		$mail		Mail object
+	 *	@param		Entity_Mail		$mail		Mail object
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	private function _migrateSenderAddress( object $mail ): bool
+	private function _migrateSenderAddress( Entity_Mail $mail ): bool
 	{
 		if( 0 !== strlen( trim( $mail->senderAddress ?? '' ) ) )
 			return FALSE;
 		$this->logicMail->decompressMailObject( $mail );
-		$mailInstance	= $mail->object->instance->mail;
+		$mailInstance	= $mail->objectInstance->mail;
 		if( !method_exists( $mailInstance, 'getSender' ) )
 			return FALSE;
 		$this->model->edit( $mail->mailId, [
@@ -418,11 +414,11 @@ class Job_Mail_Migration extends Job_Abstract
 	}
 
 	/**
-	 *	@param		object		$mail
-	 *	@param		bool		$force
+	 *	@param		Entity_Mail		$mail
+	 *	@param		bool			$force
 	 *	@return		void
 	 */
-	private function _saveRaw( object $mail, bool $force = FALSE ): void
+	private function _saveRaw( Entity_Mail $mail, bool $force = FALSE ): void
 	{
 		if( !in_array( 'raw', $this->model->getColumns() ) )
 			return;
@@ -431,21 +427,21 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->logicMail->decompressMailObject( $mail );
 		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
 			/** @var MailMessageV2 $libraryObject */
-			$libraryObject	= $mail->object->instance->mail;
+			$libraryObject	= $mail->objectInstance->mail;
 			$raw = MailMessageRendererV2::render( $libraryObject );
 			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
 			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v2' );
 		}
 		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
 			/** @var MailMessageV1 $libraryObject */
-			$libraryObject	= $mail->object->instance->mail;
+			$libraryObject	= $mail->objectInstance->mail;
 			/** @noinspection PhpUndefinedClassInspection */
 			$raw = MailMessageRendererV1::render( $libraryObject );
 			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
 			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v1' );
 		}
 		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$libraryObject	= $mail->object->instance->mail;
+			$libraryObject	= $mail->objectInstance->mail;
 			$rawLines	= [];
 			foreach( $libraryObject->getHeaders()->getFields() as $header )
 				$rawLines[]	= $header->toString();

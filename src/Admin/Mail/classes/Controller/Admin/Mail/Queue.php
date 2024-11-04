@@ -49,7 +49,7 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
 
-		$mailObjectParts	= $mail->object->instance->mail->getParts();
+		$mailObjectParts	= $mail->objectInstance->mail->getParts();
 		$attachments		= [];
 		foreach( $mailObjectParts as $key => $part ){
 			$isAttachment	= $part instanceof MailAttachment;
