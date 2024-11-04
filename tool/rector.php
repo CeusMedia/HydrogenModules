@@ -56,7 +56,7 @@ return static function (RectorConfig $rectorConfig): void {
 		// Set 7.1
 //		CountOnNullRector::class,
 		// Set 7.3
-		JsonThrowOnErrorRector::class,
+//		JsonThrowOnErrorRector::class,
 		IsCountableRector::class,
 		RegexDashEscapeRector::class,
 	];
