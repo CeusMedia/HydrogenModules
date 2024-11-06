@@ -48,5 +48,7 @@ class Model_Mail_Template extends Model
 		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Mail_Template';
 }

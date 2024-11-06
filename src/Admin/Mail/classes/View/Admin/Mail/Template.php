@@ -7,6 +7,7 @@ class View_Admin_Mail_Template extends View
 {
 	public function add(): void
 	{
+		/** @var Entity_Mail_Template $template */
 		$template	= $this->getData( 'template' );
 		$defaults	= [
 			'plain'	=> 'default.txt',

@@ -399,6 +399,7 @@ abstract class Mail_Abstract
 	 *	@access		protected
 	 *	@param		string		$text		Plain text mail body to add to mail
 	 *	@return		static
+	 *	@return		static
 	 *	@deprecated	use setText instead
 	 *	@todo		to be removed
 	 *	@throws		Exception

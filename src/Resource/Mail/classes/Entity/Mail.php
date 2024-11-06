@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @property array $parts
+ */
 class Entity_Mail
 {
 	public int|string|NULL $mailId		= NULL;
@@ -26,9 +29,9 @@ class Entity_Mail
 	public string|NULL $objectSerial			= NULL;
 	public string|NULL $rawInflated				= NULL;
 
-	public static function createFromArray( array $array ): Entity_Mail
+	public static function createFromArray( array $array ): self
 	{
-		$obj = new Entity_Mail();
+		$obj = new self();
 		foreach( $array as $key => $value )
 			$obj->{$key}	= $value;
 		return $obj;

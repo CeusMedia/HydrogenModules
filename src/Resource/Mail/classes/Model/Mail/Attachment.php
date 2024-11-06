@@ -43,5 +43,7 @@ class Model_Mail_Attachment extends Model
 		'mimeType',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Mail_Attachment';
 }

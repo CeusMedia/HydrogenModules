@@ -139,14 +139,15 @@ class Controller_Admin_Mail_Attachment extends Controller
 	}
 
 	/**
-	 *	@param		string		$attachmentId
+	 *	@param		int|string		$attachmentId		Attachment ID
 	 *	@param		$status
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setStatus( string $attachmentId, $status ): void
+	public function setStatus( int|string $attachmentId, $status ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
+		/** @var Entity_Mail_Attachment $attachment */
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
 			$this->messenger->noteError( $words->errorIdInvalid );
@@ -162,13 +163,14 @@ class Controller_Admin_Mail_Attachment extends Controller
 	}
 
 	/**
-	 *	@param		string		$attachmentId
+	 *	@param		int|string		$attachmentId		Attachment ID
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function unregister( string $attachmentId ): void
+	public function unregister( int|string $attachmentId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
+		/** @var Entity_Mail_Attachment $attachment */
 		$attachment	= $this->model->get( $attachmentId );
 		if( !$attachment )
 			$this->messenger->noteError( $words->errorIdInvalid );
@@ -192,7 +194,6 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
 		$pathApp			= '';

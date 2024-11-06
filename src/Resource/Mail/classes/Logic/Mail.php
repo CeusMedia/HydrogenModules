@@ -34,7 +34,7 @@ class Logic_Mail extends Logic
 
 	protected int $libraries			= 0;
 
-	/** @var array<int,object> $detectedTemplates */
+	/** @var array<int,Entity_Mail_Template> $detectedTemplates */
 	protected array $detectedTemplates	= [];
 
 	protected Dictionary $options;
@@ -71,6 +71,7 @@ class Logic_Mail extends Logic
 	{
 		$class			= get_class( $mail );
 		$indices		= ['className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language];
+		/** @var array<Entity_Mail_Attachment> $attachments */
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
 			$fileName	= $this->pathAttachments.$attachment->filename;
@@ -386,11 +387,11 @@ class Logic_Mail extends Logic
 	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
-	 *	@return		object|NULL		Model entity object of detected mail template
+	 *	@return		Entity_Mail_Template|NULL				Model entity object of detected mail template
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		see code doc
 	 */
-	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
+	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?Entity_Mail_Template
 	{
 		if( array_key_exists( $preferredTemplateId, $this->detectedTemplates ) )
 			return $this->detectedTemplates[$preferredTemplateId];
@@ -435,6 +436,7 @@ class Logic_Mail extends Logic
 
 		//  get the best template and store for later
 		$detectedTemplateId	= array_pop( $templateIds );
+		/** @var Entity_Mail_Template $template */
 		$template			= $this->modelTemplate->get( $detectedTemplateId );
 		$this->detectedTemplates[$detectedTemplateId]	= $template;
 		return $template;

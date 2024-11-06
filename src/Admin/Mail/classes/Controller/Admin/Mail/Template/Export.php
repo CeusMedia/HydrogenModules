@@ -31,12 +31,12 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	Export mail template as JSON.
 	 *	Will provide file download by default.
 	 *	@access		public
-	 *	@param		string		$templateId		ID of template to export
-	 *	@param		string		$output			Type of output (download|print)
+	 *	@param		int|string		$templateId		ID of template to export
+	 *	@param		string			$output			Type of output (download|print)
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( string $templateId, string $output = 'download' ): void
+	public function index( int|string $templateId, string $output = 'download' ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$title		= new String_( $template->title );
@@ -65,13 +65,14 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	//  --  PROTECTED  --  //
 
 	/**
-	 *	@param		string		$templateId
-	 *	@param		bool		$strict
-	 *	@return		object|FALSE
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		bool			$strict
+	 *	@return		Entity_Mail_Template|FALSE
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE ): object|FALSE
+	protected function checkTemplate( int|string $templateId, bool $strict = TRUE ): Entity_Mail_Template|FALSE
 	{
+		/** @var Entity_Mail_Template $template */
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
 			return $template;
@@ -83,12 +84,12 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	/**
 	 *	Generate JSON representing mail template.
 	 *	@access		protected
-	 *	@param		string		$templateId		ID of mail template
+	 *	@param		int|string		$templateId		ID of mail template
 	 *	@return		string
 	 *	@throws		RangeException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateJson( string $templateId ): string
+	protected function generateJson( int|string $templateId ): string
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$files		= ['styles' => [], 'images' => []];
