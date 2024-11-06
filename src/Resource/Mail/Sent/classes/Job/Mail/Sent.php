@@ -5,11 +5,10 @@
 
 use CeusMedia\Mail\Mailbox\Connection as MailboxConnection;
 use CeusMedia\Mail\Mailbox\Upload as MailboxUpload;
-use CeusMedia\Mail\Message;
 
 class Job_Mail_Sent extends Job_Abstract
 {
-	protected Model_Mail $model;
+	protected Model_Mail $modelMail;
 
 	protected Logic_Mail $logicMail;
 
@@ -56,7 +55,7 @@ class Job_Mail_Sent extends Job_Abstract
 		$age		= strtoupper( $this->parameters->get( '--age', '1Y' ) );
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
 
-		$class		= $this->parameters->get( '--class', NULL );
+		$class		= $this->parameters->get( '--class' );
 		if( NULL !== $class ){
 			$class	= preg_split( '/\s*,\s*/', $class );
 			foreach( $class as $nr => $mailClassName )
@@ -78,7 +77,7 @@ class Job_Mail_Sent extends Job_Abstract
 			return;
 		}
 
-		$config		= $this->env->getModules()->get( 'Resource_Sent' )->getConfigAsDictionary();
+		$config		= $this->env->getModules()->get( 'Resource_Mail_Sent' )->getConfigAsDictionary();
 
 		/** @var object{hostname: string, username: string, password: string, secure: bool, folder: string} $connect */
 		$connect	= (object) $config->getAll( 'connect.' );
@@ -95,7 +94,7 @@ class Job_Mail_Sent extends Job_Abstract
 		/** @var int|string $mailId */
 		foreach( $mailIds as $nr => $mailId ){
 			/** @var Entity_Mail $mail */
-			$mail	= $this->model->get( $mailId );
+			$mail	= $this->modelMail->get( $mailId );
 			if( '' !== trim( $mail->raw ?? '' ) ){							//  use existing stored raw message
 				$this->logicMail->decompressMailRaw( $mail );						//  ... but decompress it ...
 				$done	= $upload->storeRawMessage( $mail->rawInflated );			//  ... before upload to IMAP folder
@@ -123,5 +122,6 @@ class Job_Mail_Sent extends Job_Abstract
 	protected function __onInit(): void
 	{
 		$this->logicMail	= new Logic_Mail( $this->env );
+		$this->modelMail	= new Model_Mail( $this->env );
 	}
 }

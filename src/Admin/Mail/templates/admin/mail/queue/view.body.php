@@ -35,7 +35,7 @@ $list	= [
 $message	= '';
 if( !$mail->object )
 	$message	= 'No mail object available.';
-else if( !is_object( $mail->object ) )
+else if( !is_object( $mail->objectInstance ) )
 	$message	= 'Mail object could not by parsed.';
 else if( !isset( $mail->parts ) )
 	$message	= 'Mail parts not provided';
