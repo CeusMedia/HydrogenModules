@@ -11,8 +11,9 @@ class Hook_Server_Log_Exception extends Hook
 	public function onEnvLogException(): bool
 	{
 		$data	= $this->getPayload();
-		if( is_object( $data ) && $data instanceof Exception )
+		if( is_object( $data ) && $data instanceof Throwable )
 			$data	= ['exception' => $data];
+
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		if( !is_object( $data['exception'] ) )

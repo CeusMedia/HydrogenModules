@@ -1,6 +1,10 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var View_System_Exception $view */
 
 $iconMore	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] );
 $iconReload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
@@ -23,25 +27,23 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/system/exception' ) );
 
-$showFacts	= 1 && !empty( $exception );
-
 $panelFacts	= '';
-if( $showFacts ){
+if( !empty( $exception ) ){
 	$facts	= [];
 	foreach( $words['facts'] as $key => $label ){
 		if( property_exists( $exception, $key ) ){
-			if( $key === "code" && (int) $exception->code === 0 )
+			if( 'code' === $key && 0 === (int) $exception->code )
 				continue;
-			if( $key === "trace" )
+			if( 'trace' === $key )
 				continue;
-			if( $key === "file" )
+			if( 'file' === $key )
 				$exception->file	= HtmlTag::create( 'small', $exception->file );
 	//			$exception->trace	= HtmlTag::create( 'kbd', nl2br( $exception->trace ) );
 			$facts[]	= HtmlTag::create( 'dt', $label, ['class' => 'fact-'.$key] );
 			$facts[]	= HtmlTag::create( 'dd', $exception->{$key}, ['class' => 'fact-'.$key] );
 		}
 	}
-	$facts	= HtmlTag::create( 'dl', $facts, ['class' => 'dl-horizontal'] );
+
 	$buttonMore	= HtmlTag::create( 'button', $iconMore.' '.$words['index-facts']['buttonShow'], [
 		'type'		=> 'button',
 		'id'		=> 'exception-facts-trigger',
@@ -52,7 +54,7 @@ if( $showFacts ){
 	<hr/>
 	<div id="exception-facts" style="display: none">
 		<h4>'.$words['index-facts']['heading'].'</h4>
-		'.$facts.'
+		'.HtmlTag::create( 'dl', $facts, ['class' => 'dl-horizontal'] ).'
 		<h4>'.$words['index-facts']['trace'].'</h4>
 		'.HtmlTag::create( 'kbd', nl2br( $exception->trace ), ['style' => 'font-size: 10px; letter-spacing: -0.25px; line-height: 12px;'] ).'
 	</div>
