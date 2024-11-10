@@ -242,12 +242,17 @@ class Logic_Mail extends Logic
 		if( empty( $mail->object ) )
 			throw new RuntimeException( 'No raw (compressed) mail object serial available' );
 		if( empty( $mail->objectSerial ) || $force ){
-			$method					= $this->detectUsedMailCompression( $mail, $force );
+			$method				= $this->detectUsedMailCompression( $mail, $force );
 			$mail->objectSerial	= $this->decompressString( $mail->object, $method );
 		}
 		$noInstanceYet	= empty( $mail->objectInstance );
 		if( ( $noInstanceYet && $unserialize ) || ( $force && $unserialize ) ){
-			$creation		= unserialize( $mail->objectSerial );
+			try{
+				$creation		= unserialize( $mail->objectSerial );
+			}
+			catch( Throwable $t ){
+				throw new RuntimeException( 'Deserialization failed: '.$t->getMessage(), 0, $t );
+			}
 			if( !$creation )
 				throw new RuntimeException( 'Deserialization failed' );
 			$mail->objectInstance	= $creation;
@@ -476,7 +481,6 @@ class Logic_Mail extends Logic
 	 *	@return		string							ID of queued mail
 	 *	@throws		InvalidArgumentException
 	 *	@throws		SimpleCacheInvalidArgumentException
-	 *	@throws		ReflectionException
 	 */
 	public function enqueueMail( Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): string
 	{
@@ -739,12 +743,13 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use logging on exception (=sending mail failed)
+	 *	@throws		ReflectionException
 	 */
 	public function sendQueuedMail( int|string $mailId, bool $forceResent = FALSE ): bool
 	{
 		$mail		= $this->getMail( $mailId );
 		$this->decompressMailObject( $mail );
-		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
+		if( $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new RuntimeException( 'Mail already has been sent' );
 		$mail->objectInstance->setEnv( $this->env );
 		$mail->objectInstance->initTransport();
@@ -837,6 +842,10 @@ class Logic_Mail extends Logic
 		$this->decompressMailObject( $mail, $unserialize, $force );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
