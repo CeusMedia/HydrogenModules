@@ -27,8 +27,10 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.' '.$words['index']['buttonReset
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/system/exception' ) );
 
+$showFacts	= 1 && !empty( $exception ) && ( $env->isInDevMode() || $env->isInTestMode() );
+
 $panelFacts	= '';
-if( !empty( $exception ) ){
+if( $showFacts ){
 	$facts	= [];
 	foreach( $words['facts'] as $key => $label ){
 		if( property_exists( $exception, $key ) ){

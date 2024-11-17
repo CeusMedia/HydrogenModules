@@ -51,7 +51,7 @@ else if( $editor === "Ace" ){
 	$script	= '
 		ModuleAceAutoSave.applyToEditor(
 			jQuery("#input_content").data("ace-editor-instance"),
-			"./manage/content/locale/ajaxSaveContent"
+			"./ajax/manage/content/locale/saveContent"
 		);';
 	$env->getPage()->js->addScriptOnReady( $script, 9 );
 }

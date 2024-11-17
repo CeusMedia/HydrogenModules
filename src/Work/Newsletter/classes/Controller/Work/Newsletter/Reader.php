@@ -11,7 +11,7 @@ use CeusMedia\Mail\Address\Collection\Parser as MailAddressCollectionParser;
 
 class Controller_Work_Newsletter_Reader extends Controller
 {
-	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
+	/**	@var	Logic_Newsletter_Editor		$logic		Instance of newsletter editor logic */
 	protected Logic_Newsletter_Editor $logic;
 	protected Dictionary $session;
 	protected HttpRequest $request;
@@ -73,7 +73,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 						'email'		=> $this->request->get( 'email' ),
 					];
 					$language		= $this->env->getLanguage()->getLanguage();
-					/** @var Logic_Mail $logicMail */
 					$logicMail		= Logic_Mail::getInstance( $this->env );
 					$logicMail->appendRegisteredAttachments( $mail, $language );
 					$logicMail->handleMail( $mail, $receiver, $language );
@@ -254,7 +253,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 							$value	= join( ',', $list );
 						}
 						else
-							$value	= $reader->$header;
+							$value	= $reader->$header ?? '';
 
 						if( $toBeQuoted !== NULL )
 							$value	= $toBeQuoted ? '"'.$value.'"' : $value;
@@ -350,7 +349,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ): void
+	/**
+	 *	@param		?int		$page
+	 *	@return		void
+	 */
+	public function index( ?int $page = NULL ): void
 	{
 		if( is_null( $page ) ){
 			$page	= 0;
@@ -368,7 +371,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$filterFirstname	= $this->session->get( $this->filterPrefix.'firstname' );
 		$filterSurname		= $this->session->get( $this->filterPrefix.'surname' );
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
-		$filterLimit		= $this->session->get( $this->filterPrefix.'limit' );
+		$filterLimit		= (int) $this->session->get( $this->filterPrefix.'limit' );
 		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		$conditions	= [];
 		if( strlen( $filterStatus ) )
@@ -417,6 +420,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'totalReaders', $total );
 	}
 
+	/**
+	 *	@param		int|string		$readerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( int|string $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
@@ -444,6 +452,9 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );

@@ -166,7 +166,7 @@ class Controller_Info_Mail_Group extends Controller
 				$receiver	= (object) ['email' => $member->address];
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->appendRegisteredAttachments( $mail, $language );
-				$this->logicMail->sendMail( $mail, $receiver, $language );
+				$this->logicMail->sendMail( $mail, $receiver );
 				$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
 				$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
 			}

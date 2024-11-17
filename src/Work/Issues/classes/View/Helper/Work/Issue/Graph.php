@@ -87,7 +87,7 @@ class View_Helper_Work_Issue_Graph
 		$graph->Add( $p1 );
 		$uri	= $config->get( 'path.images' ).'graph_'.$this->type.'.png';
 		$graph->Stroke( $uri );
-		$map	= $graph->GetHTMLImageMap( 'graph-'.$this->type, 0, 50 );
+		$map	= $graph->GetHTMLImageMap( 'graph-'.$this->type );
 		$image	= "<img src='./".$uri."?".time()."' ISMAP USEMAP='#graph-".$this->type."' border='0'>";
 
 		if( !( empty( $graphConfig['cropX'] ) && empty( $graphConfig['cropY'] ) ) ){

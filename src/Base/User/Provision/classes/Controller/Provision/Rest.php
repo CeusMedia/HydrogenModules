@@ -47,7 +47,13 @@ class Controller_Provision_Rest extends Controller
 		$this->handleJsonErrorResponse( $products );							//  return with error
 	}
 
-	public function handleJsonErrorResponse( $message, $code = 0 ): void
+	/**
+	 *	@param		mixed			$message
+	 *	@param		int|NULL		$code
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function handleJsonErrorResponse( mixed $message, ?int $code = 0 ): void
 	{
 		$this->handleJsonResponse( 'error', [
 			'message'	=> $message,
@@ -56,16 +62,17 @@ class Controller_Provision_Rest extends Controller
 	}
 
 	/**
-	 *	@todo 		finish implementation (exception log)
+	 *	@param		Throwable		$throwable
+	 *	@todo		finish implementation (exception log)
 	 *	@throws		JsonException
 	 */
-	public function handleJsonExceptionResponse( Exception $exception ): void
+	public function handleJsonExceptionResponse( Throwable $throwable ): void
 	{
 		$this->handleJsonResponse( 'exception', [
-			'message'	=> $exception->getMessage(),
-			'code'		=> $exception->getCode(),
-			'file'		=> $exception->getFile(),
-			'line'		=> $exception->getLine(),
+			'message'	=> $throwable->getMessage(),
+			'code'		=> $throwable->getCode(),
+			'file'		=> $throwable->getFile(),
+			'line'		=> $throwable->getLine(),
 		] );
 	}
 

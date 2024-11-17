@@ -59,6 +59,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 				if( empty( $template->type ) || $template->type !== 'mail-template' )
 					throw new InvalidArgumentException( 'Uploaded file does not contain a template' );
 
+				/** @var array $data */
 				if( !empty( $template->version ) && $template->version == 2 )
 					$data	= $this->getDataFromExportV2( $template );
 				else if( empty( $template->entity ) )
