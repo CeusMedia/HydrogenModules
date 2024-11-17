@@ -1,8 +1,6 @@
 <?php
 (include_once 'vendor/autoload.php') or die( 'Install packages using composer, first!' );
 
-require_once 'vendor/ceus-media/common/src/compat8.php';
-
 use CeusMedia\Common\Loader;
 use CeusMedia\Common\UI\HTML\Exception\Page as ExceptionPage;
 use CeusMedia\HydrogenFramework\Application\Web\Site as WebSiteApplication;
@@ -32,13 +30,12 @@ if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
 	date_default_timezone_set( $defaultTimezone );			//  set alternative time zone
 
 try{
-//	require_once "vendor/ceus-media/common/compat.php";		//  load compatibility layer
 	Loader::create()->setPath( $pathClasses )->register();	//  register autoloader for project classes
 	$app	= new WebSiteApplication();						//  create default website application instance
 	$app->run();											//  and run it
 }
-catch( Exception $e ){										//  an uncaught exception happened
+catch( Throwable $e ){										//  an uncaught exception happened
 	class_exists( '\\SentrySdk' ) && \Sentry\captureException( $e );
-	http_response_code(500);
+	http_response_code( 500 );
 	(include_once 'templates/error.php') or ExceptionPage::display( $e );
 }
