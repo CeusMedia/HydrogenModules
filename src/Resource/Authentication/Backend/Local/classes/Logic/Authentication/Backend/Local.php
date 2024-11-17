@@ -5,28 +5,35 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Local extends Logic implements Logic_Authentication_BackendInterface
 {
+	protected Logic_User $logicUser;
 	protected Model_User $modelUser;
 	protected Model_Role $modelRole;
 	protected Dictionary $session;
 
 	/**
+	 *	@param		int|string		$userId
+	 *	@param		string			$password
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		remove support for old user password
 	 */
 	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		$hasUsersModule		= $this->env->getModules()->has( 'Resource_Users' );
 		if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) && $hasUsersModule ){
-			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+			/** @var Entity_User $user */
+			$user	= $this->modelUser->get( $userId );
+			if( NULL !== $user && class_exists( 'Logic_UserPassword' ) ){					//  @todo  remove line if old user password support decays
 				$logic	= Logic_UserPassword::getInstance( $this->env );
-				if( $logic->hasUserPassword( $userId ) ){											//  @todo  remove line if old user password support decays
-					return $logic->validateUserPassword( $userId, $password );
+				if( $logic->hasUserPassword( $user ) ){											//  @todo  remove line if old user password support decays
+					return $logic->validateUserPassword( $user, $password );
 				}
 				else{																				//  @todo  remove whole block if old user password support decays
 					$salt		= $this->env->getConfig()->get( 'module.resource_users.password.salt' );
 					$crypt		= md5( $salt.$password );
 					$conditions	= ['userId' => $userId, 'password' => $crypt];
 					if( $this->modelUser->count( $conditions ) === 1 ){
-						$logic->migrateOldUserPassword( $userId, $password );
+						$logic->migrateOldUserPassword( $user, $password );
 						return TRUE;
 					}
 				}
@@ -62,8 +69,9 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
+			/** @var ?Entity_Role $role */
 			$role	= $this->modelRole->get( $roleId );
-			if( $role )
+			if( NULL !== $role )
 				return $role;
 			if( $strict )
 				throw new RuntimeException( 'No valid role identified' );
@@ -93,16 +101,14 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 */
 	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
-		$userId	= $this->getCurrentUserId( $strict );
+		$userId	= $this->getCurrentUserId( FALSE );
 		if( $userId ){
-			/** @var ?Entity_User $user */
-			$user	= $this->modelUser->get( $userId );
-			if( $user ){
-				if( $withRole )
-					$user->role	= $this->modelRole->get( $user->roleId );
+			$extensions	= Logic_User::EXTEND_ROLE | Logic_User::EXTEND_GROUPS;
+			$user		= $this->logicUser->checkId( $userId, $extensions, FALSE );
+			if( NULL !== $user )
 				return $user;
-			}
 		}
+
 		if( $strict )
 			throw new RuntimeException( 'No valid user identified' );
 		return NULL;
@@ -171,6 +177,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
+		$this->logicUser	= new Logic_User( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
 		$this->modelRole	= new Model_Role( $this->env );
 	}

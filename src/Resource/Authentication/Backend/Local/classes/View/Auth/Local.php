@@ -4,8 +4,6 @@ use CeusMedia\HydrogenFramework\View;
 
 /**
  *	Authentication View.
- *	@category		cmApps
- *	@package		Chat.Admin.View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */

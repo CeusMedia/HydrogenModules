@@ -5,9 +5,10 @@ use CeusMedia\Common\Exception\IO as IoException;
 class Mail_Auth_Local_Register extends Mail_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		IoException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generate(): static
 	{

@@ -8,9 +8,8 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		ReflectionException
 	 */
-	public function usernameExists()
+	public function usernameExists(): void
 	{
 		$username	= trim( $this->request->get( 'username' ) );
 		$result		= FALSE;
@@ -24,9 +23,8 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		ReflectionException
 	 */
-	public function emailExists()
+	public function emailExists(): void
 	{
 		$email		= trim( $this->request->get( 'email' ) );
 		$result		= FALSE;
@@ -41,7 +39,7 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	 *	@return		void
 	 *	@throws		JsonException
 	 */
-	public function passwordStrength()
+	public function passwordStrength(): void
 	{
 		$password	= trim( $this->request->get( 'password' ) );
 		$result		= 0;

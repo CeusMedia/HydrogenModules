@@ -7,6 +7,7 @@ class Controller_Ajax_Auth extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function isAuthenticated(): void
 	{
