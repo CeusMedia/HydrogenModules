@@ -92,6 +92,7 @@ if( $readerLetters ){
 		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, ['class' => 'autocut'] );
 	}
 	$listLetters	= HtmlTag::create( 'ul', $listLetters, ['class' => 'unstyled'] );
+	$listLetters	= HtmlTag::create( 'div', $listLetters, ['id' => 'reader-newsletter-list'] );
 	if( $stats->sent > 0 ){
 		$list	= [];
 		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );

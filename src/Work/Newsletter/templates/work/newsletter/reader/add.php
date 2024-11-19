@@ -64,11 +64,11 @@ return $textTop.'
 						<div class="row-fluid">
 							<div class="span6">
 								<label for="input_email" class="mandatory">'.$words->add->labelEmail.'</label>
-								<input type="text" name="email" id="input_email" class="span12" value="'.htmlentities( $reader->email, ENT_QUOTES, 'UTF-8' ).'" required/>
+								<input type="text" name="email" id="input_email" class="span12" value="'.htmlentities( $reader->email ?? '', ENT_QUOTES, 'UTF-8' ).'" required/>
 							</div>
 							<div class="span6">
 								<label for="input_institution">'.$words->add->labelInstitution.'</label>
-								<input type="text" name="institution" id="input_institution" class="span12" value="'.htmlentities( $reader->institution, ENT_QUOTES, 'UTF-8' ).'"/>
+								<input type="text" name="institution" id="input_institution" class="span12" value="'.htmlentities( $reader->institution ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 							</div>
 						</div>
 						<div class="row-fluid">
@@ -78,15 +78,15 @@ return $textTop.'
 							</div>
 							<div class="span2">
 								<label for="input_prefix">'.$words->add->labelPrefix.'</label>
-								<input type="text" name="prefix" id="input_prefix" class="span12" value="'.htmlentities( $reader->prefix, ENT_QUOTES, 'UTF-8' ).'"/>
+								<input type="text" name="prefix" id="input_prefix" class="span12" value="'.htmlentities( $reader->prefix ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 							</div>
 							<div class="span4">
 								<label for="input_firstname" class="mandatory">'.$words->add->labelFirstname.'</label>
-								<input type="text" name="firstname" id="input_firstname" class="span12" value="'.htmlentities( $reader->firstname, ENT_QUOTES, 'UTF-8' ).'" required/>
+								<input type="text" name="firstname" id="input_firstname" class="span12" value="'.htmlentities( $reader->firstname ?? '', ENT_QUOTES, 'UTF-8' ).'" required/>
 							</div>
 							<div class="span4">
 								<label for="input_surname" class="mandatory">'.$words->add->labelSurname.'</label>
-								<input type="text" name="surname" id="input_surname" class="span12" value="'.htmlentities( $reader->surname, ENT_QUOTES, 'UTF-8' ).'" required/>
+								<input type="text" name="surname" id="input_surname" class="span12" value="'.htmlentities( $reader->surname ?? '', ENT_QUOTES, 'UTF-8' ).'" required/>
 							</div>
 						</div>
 						<div class="row-fluid">

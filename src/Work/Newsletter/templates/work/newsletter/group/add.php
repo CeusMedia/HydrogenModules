@@ -36,7 +36,7 @@ $panelAdd	= '
 					<div class="row-fluid">
 						<div class="span8">
 							<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
-							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $group->title, ENT_QUOTES, 'UTF-8' ).'"  required="required"/>
+							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $group->title ?? '', ENT_QUOTES, 'UTF-8' ).'"  required="required"/>
 						</div>
 						<div class="span4">
 							<label for="input_type">'.$w->labelType.'</label>

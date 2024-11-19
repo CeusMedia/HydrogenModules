@@ -141,12 +141,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( int|string  $readerId ): void
+	public function edit( int|string $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkReaderId( $readerId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $readerId );
-			$this->restart( './work/newsletter/readerIndex' );
+			$this->restart( './work/newsletter/reader' );
 		}
 		if( $this->request->has( 'save' ) ){
 			$this->logic->editReader( $readerId, $this->request->getAll() );
@@ -155,10 +155,9 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 		$this->addData( 'readerId', $readerId );
 		$this->addData( 'reader', $this->logic->getReader( $readerId ) );
-
 		$this->addData( 'groups', $this->logic->getGroups( [], ['title' => 'ASC'] ) );
-		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId,  [], ['title' => 'ASC'] ) );
-		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  ['status' => '>= 1'], ['title' => 'ASC'] ) );
+		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId, [], ['title' => 'ASC'] ) );
+		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId, ['status' => '>= 1'], ['title' => 'ASC'] ) );
 	}
 
 	/**
