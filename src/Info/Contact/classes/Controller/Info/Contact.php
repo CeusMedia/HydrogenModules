@@ -1,18 +1,24 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Contact extends Controller
 {
-	protected $request;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 
 	protected ?string $useCaptcha	= NULL;
 	protected bool $useCsrf;
 	protected bool $useHoneypot;
 	protected bool $useNewsletter;
 
-	public function ajaxForm()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function ajaxForm(): void
 	{
 		$message	= '';
 		$data		= NULL;
@@ -48,7 +54,12 @@ class Controller_Info_Contact extends Controller
 		exit;
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index(): void
 	{
 		$words			= (object) $this->getWords( 'index' );
 
@@ -113,7 +124,7 @@ class Controller_Info_Contact extends Controller
 						if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
 							$path	= 'info/newsletter';
 							if( $this->env->getModules()->has( 'Info_Pages' ) ){
-								$logicPage	= $this->env->getLogic()->page;
+								$logicPage	= Logic_Page::getInstance( $this->env );
 								$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
 								if( !$page )
 									$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
@@ -129,7 +140,7 @@ class Controller_Info_Contact extends Controller
 								'email'			=> $this->request->get( 'email' ),
 								'groups'		=> $this->request->get( 'topics' ),
 							], '', '&' );
-							$this->restart( $path, FALSE );
+							$this->restart( $path );
 						}
 					}
 					$this->restart( NULL, TRUE );
@@ -148,9 +159,8 @@ class Controller_Info_Contact extends Controller
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
 			$model	= new Model_Page( $this->env );
 			$page	= $model->getByIndex( 'controller', 'Info_Contact' );
-			if( isset( $page->fullpath ) && !empty( $page->fullpath ) ){
+			if( !empty( $page->fullpath ) )
 			    $path	= "./".$page->fullpath;
-			}
 			else{
 			    $path	= "./".$page->identifier;
 				if( $page->parentId ){
@@ -176,15 +186,15 @@ class Controller_Info_Contact extends Controller
 			$this->addData( 'newsletterTopics', $topics );
 		}
 
-		if( $this->useCaptcha === "default" ){
+		if( 'default' === $this->useCaptcha ){
 			$this->addData( 'captchaLength', $this->moduleConfig->get( 'captcha.length' ) );
 			$this->addData( 'captchaStrength', $this->moduleConfig->get( 'captcha.strength' ) );
 		}
 		$this->addData( 'formPath', $path );
-		$this->addData( 'fullname', $this->request->get( 'fullname' ) );
-		$this->addData( 'email', $this->request->get( 'email' ) );
-		$this->addData( 'subject', $this->request->get( 'subject' ) );
-		$this->addData( 'message', $this->request->get( 'message' ) );
+		$this->addData( 'fullname', $this->request->get( 'fullname', '' ) );
+		$this->addData( 'email', $this->request->get( 'email', '' ) );
+		$this->addData( 'subject', $this->request->get( 'subject', '' ) );
+		$this->addData( 'message', $this->request->get( 'message', '' ) );
 	}
 
 	protected function __onInit(): void

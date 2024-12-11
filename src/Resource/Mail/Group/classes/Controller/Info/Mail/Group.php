@@ -19,6 +19,12 @@ class Controller_Info_Mail_Group extends Controller
 	protected string $filterPrefix		= 'filter_info_mail_group_';
 	protected int $defaultLimit		= 10;
 
+	/**
+	 *	@param		string		$actionId
+	 *	@param		string		$hash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function completeMemberAction( string $actionId, string $hash ): void
 	{
 		$indices	= ['mailGroupActionId' => $actionId, 'uuid' => $hash];
@@ -33,7 +39,7 @@ class Controller_Info_Mail_Group extends Controller
 		}
 		try{
 			$payload	= ['action' => $action];
-			$result	= $this->env->getModules()->callHookWithPayload(
+			$result		= $this->env->getModules()->callHookWithPayload(
 				'MailGroupAction',
 				$action->action,
 				$this,
@@ -198,10 +204,10 @@ class Controller_Info_Mail_Group extends Controller
 	public function leave( ?string $groupId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
-			$address	= trim( $this->request->get( 'address' ) );
-			$email		= trim( $this->request->get( 'email' ) );
-			$name		= trim( $this->request->get( 'name' ) );
-			$greeting	= trim( $this->request->get( 'message' ) );
+			$address	= trim( $this->request->get( 'address', '' ) );
+			$email		= trim( $this->request->get( 'email', '' ) );
+			$name		= trim( $this->request->get( 'name', '' ) );
+			$greeting	= trim( $this->request->get( 'message', '' ) );
 			$registered	= FALSE;
 
 			if( $groupId )
@@ -271,7 +277,6 @@ class Controller_Info_Mail_Group extends Controller
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Mail_Group( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->modelGroup	= new Model_Mail_Group( $this->env );
 		$this->modelMember	= new Model_Mail_Group_Member( $this->env );

@@ -23,7 +23,7 @@ class View_Sitemap extends View
 				$list[]	= HtmlTag::create( 'li', $link );
 			}
 			$list	= HtmlTag::create( 'ul', $list );
-			extract( $this->populateTexts( ['top', 'bottom'], 'html/sitemap/' ) );
+			[$textTop, $textBottom] = array_values( $this->populateTexts( ['top', 'bottom'], 'html/sitemap/' ) );
 			return $textTop.$list.$textBottom;
 		}
 		$sitemap	= $this->renderXml( $links, $options );

@@ -23,7 +23,6 @@ class Hook_Resource_Mail extends Hook
 
 		$linkable		= $this->payload['linkable'] ?? FALSE;
 		$activeOnly		= $this->payload['activeOnly'] ?? FALSE;
-		/** @var Logic_Authentication $auth */
 		$auth			= Logic_Authentication::getInstance( $this->env );
 		$linkController	= NULL;
 		$linkAction		= NULL;
@@ -103,10 +102,12 @@ class Hook_Resource_Mail extends Hook
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
+		$data	= $this->getPayload();
 		if( empty( $data->userId ) ){
 			$message	= 'Hook "Hook_Info_Mail::onUserRemove" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );

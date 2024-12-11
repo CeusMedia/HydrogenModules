@@ -139,6 +139,7 @@ class Logic_Upload
 			copy( realpath( $this->upload->tmp_name ), $copy );
 			$scanner	= new Resource_ClamScan();
 			$result		= $scanner->scanFile( $copy );
+			unlink( $copy );
 		}
 		catch( Exception $e ){
 			$result		= (object) array(
@@ -147,7 +148,6 @@ class Logic_Upload
 				'message'	=> $e->getMessage(),
 			);
 		}
-		unlink( $copy );
 		$result->file	= $this->upload->name;
 		if( !$result->clean && $noteError )
 			$this->upload->error	= 14;

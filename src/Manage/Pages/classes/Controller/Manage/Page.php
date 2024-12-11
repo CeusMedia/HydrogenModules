@@ -347,6 +347,7 @@ ModuleManagePages.PageEditor.init();
 		$pathFront	= $this->frontend->getPath();
 		$pathImages	= $this->frontend->getPath( 'images' );
 		$index	= new RecursiveRegexFileIndex( $pathFront.$pathImages, "/\.jpg$/i" );
+		$list	= [];
 		foreach( $index as $item ){
 			$parts	= explode( "/", $item->getPathname() );
 			$file	= array_pop( $parts );

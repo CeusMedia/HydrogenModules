@@ -399,6 +399,7 @@ class Job_Mail_Archive extends Job_Abstract
 					continue;
 				}
 				try{
+					$raw	= NULL;
 					if( !count( $object->mail->getParts( FALSE ) ) ){
 						if( ( $page = $object->getPage() ) )
 						$object->mail->addHtml( $page->build() );
@@ -411,8 +412,10 @@ class Job_Mail_Archive extends Job_Abstract
 					}
 					if( !file_exists( $path.$shard ) )
 						FolderEditor::createFolder( $path.$shard );
-					FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
-					FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
+					if( NULL !== $raw ){
+						FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
+						FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
+					}
 					$index[$mailId]	= ['uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip'];
 					$this->showProgress( $count, count( $mailIds ), '+' );
 				}

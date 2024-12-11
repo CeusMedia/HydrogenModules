@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array $words */
+
 $w		= (object) $words['index'];
 
 $iconSave	= '<i class="icon-envelope icon-white"></i>';
