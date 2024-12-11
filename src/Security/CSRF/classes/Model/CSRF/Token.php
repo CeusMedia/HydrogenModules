@@ -35,5 +35,7 @@ class Model_CSRF_Token extends Model
 		"timestamp",
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_CSRF_Token';
 }

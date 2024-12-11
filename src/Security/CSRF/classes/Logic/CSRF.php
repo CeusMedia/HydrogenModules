@@ -41,8 +41,8 @@ class Logic_CSRF extends Logic
 		self::CHECK_IP_MISMATCH,
 	];
 
-	/**	@var		string|NULL				$ip */
-	protected ?string $ip;
+	/**	@var		string					$ip */
+	protected string $ip;
 
 	/**	@var		Model_CSRF_Token		$model */
 	protected Model_CSRF_Token $model;
@@ -56,25 +56,28 @@ class Logic_CSRF extends Logic
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function __onInit()
+	protected function __onInit(): void
 	{
 		$this->model		= new Model_CSRF_Token( $this->env );
 		$this->sessionId	= $this->env->getSession()->getSessionId();
-		$this->ip			= getEnv( 'REMOTE_ADDR' );
+		$this->ip			= getEnv( 'REMOTE_ADDR' ) ?: '';
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
 		$this->cancelOutdatedTokens();
+		$this->removeOldTokens();
 	}
 
 	/**
 	 *	@param		string		$formName
 	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getToken( string $formName ): string
 	{
-		$this->cancelOldTokens( $formName );
+		$this->cancelOldTokensOfForm( $formName );
 		$token		= md5( $this->ip.$this->sessionId.$formName.microtime( TRUE ) );
-		$tokenId	= $this->model->add( [
+		$this->model->add( [
 			'status'	=> self::STATUS_OPEN,
 			'sessionId'	=> $this->sessionId,
 			'ip'		=> $this->ip,
@@ -89,6 +92,7 @@ class Logic_CSRF extends Logic
 	 *	@param		string		$formName
 	 *	@param		string		$token
 	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function verifyToken( string $formName, string $token ): int
 	{
@@ -96,14 +100,15 @@ class Logic_CSRF extends Logic
 			return self::CHECK_FORM_NAME_MISSING;
 		if( !strlen( trim( $token ) ) )
 			return self::CHECK_TOKEN_MISSING;
+		/** @var Entity_CSTF_Token $entry */
 		$entry  = $this->model->getByIndex( 'token', $token );
 		if( !$entry )
 			return self::CHECK_TOKEN_INVALID;
-		if( $entry->status == self::STATUS_USED )
+		if( self::STATUS_USED === $entry->status )
 			return self::CHECK_TOKEN_USED;
-		if( $entry->status == self::STATUS_NOT_USED )
+		if( self::STATUS_NOT_USED === $entry->status )
 			return self::CHECK_TOKEN_REPLACED;
-		if( $entry->status == self::STATUS_OUTDATED )
+		if( self::STATUS_OUTDATED === $entry->status )
 			return self::CHECK_TOKEN_OUTDATED;
 		if( $entry->sessionId !== $this->sessionId )
 			return self::CHECK_SESSION_MISMATCH;
@@ -115,38 +120,44 @@ class Logic_CSRF extends Logic
 
 	/**
 	 *	@return		int|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function cancelOutdatedTokens(): ?int
 	{
+		/** @var Entity_CSTF_Token[] $outdatedTokens */
 		$outdatedTokens	= $this->model->getAll( [
 			'status'	=> self::STATUS_OPEN,
 			'timestamp'	=> '< '.( time() - $this->moduleConfig->get( 'duration' ) ),
 		] );
 		foreach( $outdatedTokens as $token ){
-			$this->model->edit( $token->tokenId, [
-				'status'	=> self::STATUS_OUTDATED
-			] );
+			$this->model->edit( $token->tokenId, ['status' => self::STATUS_OUTDATED] );
 		}
 		return count( $outdatedTokens );
 	}
 
 	/**
 	 *	@param		string		$formName
-	 *	@return		int|NULL
+	 *	@return		int
 	 */
-	protected function cancelOldTokens( string $formName ): ?int
+	protected function cancelOldTokensOfForm( string $formName ): int
 	{
-		$tokens  = $this->model->getAllByIndices( [
+		return $this->model->editByIndices( [
 			'status'	=> self::STATUS_OPEN,
 			'sessionId'	=> $this->sessionId,
 			'ip'		=> $this->ip,
 			'formName'	=> $formName,
+		], ['status' => self::STATUS_NOT_USED] );
+	}
+
+	/**
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeOldTokens(): int
+	{
+		return $this->model->removeByIndices( [
+			'status'	=> [self::STATUS_USED, self::STATUS_NOT_USED, self::STATUS_OUTDATED],
+			'timestamp'	=> '< '.( time() - $this->moduleConfig->get( 'duration' ) ),
 		] );
-		foreach( $tokens as $token ){
-			$this->model->edit( $token->tokenId, [
-				'status'	=> self::STATUS_NOT_USED
-			] );
-		}
-		return count( $tokens );
 	}
 }
