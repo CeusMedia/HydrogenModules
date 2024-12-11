@@ -1,6 +1,6 @@
 <?php
 
-class Entity_CSTF_Token
+class Entity_CSRF_Token
 {
 	public int|string $tokenId	= 0;
 	public int $status			= Logic_CSRF::STATUS_OPEN;
