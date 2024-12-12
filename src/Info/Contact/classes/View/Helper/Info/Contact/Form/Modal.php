@@ -16,6 +16,9 @@ class View_Helper_Info_Contact_Form_Modal
 	protected array $types				= [];
 	protected array $moduleWords;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
@@ -23,6 +26,9 @@ class View_Helper_Info_Contact_Form_Modal
 		$this->moduleWords	= $this->env->getLanguage()->getWords( 'info/contact' );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( !$this->id )
@@ -107,6 +113,9 @@ class View_Helper_Info_Contact_Form_Modal
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderForm(): string
 	{
 		$w			= (object) $this->moduleWords['modal-form'];

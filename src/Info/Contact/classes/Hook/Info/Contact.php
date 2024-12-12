@@ -1,19 +1,25 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 use CeusMedia\HydrogenFramework\View;
 
 class Hook_Info_Contact extends Hook
 {
-	static public function onRenderContent( Environment $env, object $context, $module, array & $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onRenderContent(): void
 	{
-		if( !$env->getModules()->has( 'UI_Shortcode' ) )
+		/** @var WebEnvironment $env */
+		$env	= $this->env;
+		if( !$this->env->getModules()->has( 'UI_Shortcode' ) )
 			return;
 
-		$processor		= new Logic_Shortcode( $env );
-		$moduleConfig	= $env->getConfig()->getAll( 'modules.info_contact.', TRUE );
-		$words			= $env->getLanguage()->getWords( 'info/contact' );
+		$processor		= Logic_Shortcode::getInstance( $this->env );
+		$moduleConfig	= $this->env->getConfig()->getAll( 'modules.info_contact.', TRUE );
+		$words			= $this->env->getLanguage()->getWords( 'info/contact' );
 		$allowedTypes	= $moduleConfig->getAll( 'modal.show.type.' );
 
 		$shortCodes		= [
@@ -28,26 +34,34 @@ class Hook_Info_Contact extends Hook
 				'subject'		=> '',
 			]
 		];
-		$processor->setContent( $payload['content'] );
+		$processor->setContent( $this->payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
 			$isFirst		= TRUE;
-			$helperModal	= new View_Helper_Info_Contact_Form_Modal( $env );
+			$helperModal	= new View_Helper_Info_Contact_Form_Modal( $this->env );
 			$helperTrigger	= new View_Helper_Info_Contact_Form_Trigger();
-			while( ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
+			while( FALSE !== ( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
 				try{
-					if( substr( $attr['button-class'], 0, 4 ) === 'btn-' )
+					if( str_starts_with( $attr['button-class'], 'btn-' ) )
 						$attr['button-class']	= 'btn '.$attr['button-class'];
-					if( substr( $attr['icon-class'], 0, 3 ) === 'fa-' )
-						$attr['icon-class']	= 'fa fa-fw '.$attr['icon-class'];
+					if( str_starts_with( $attr['icon-class'], 'fa-' ) )
+						$attr['icon-class']		= 'fa fa-fw '.$attr['icon-class'];
+
+					$types	= [];
+					if( '' !== trim( $attr['types'] ?? '' ) )
+						$types	= preg_split( '/\s*,\s*/', trim( $attr['types'] ) );
+
+					$type	= NULL;
+					if( '' !== trim( $attr['type'] ?? '' ) )
+						$type	= trim( $attr['type'] );
 
 					$modalId	= 'modal-'.uniqid();
 					$helperModal->setId( $modalId );
 					$helperModal->setHeading( $attr['heading'] );
 					$helperModal->setSubject( trim( $attr['subject'] ) );
-					$helperModal->setTypes( strlen( trim( $attr['types'] ) ) ? preg_split( '/\s*,\s*/', trim( $attr['types'] ) ) : [] );
-					$helperModal->setType( strlen( trim( $attr['type'] ) ) ? trim( $attr['type'] ) : NULL );
+					$helperModal->setTypes( $types );
+					$helperModal->setType( $type );
 		//			$helperModal->setFrom( $env->getRequest()->get( '__path' ) );
 					$helperTrigger->setmodalId( $modalId );
 					$helperTrigger->setClass( $attr['button-class'] );
@@ -66,16 +80,17 @@ class Hook_Info_Contact extends Hook
 							'error'		=> $view->loadContentFile( 'html/info/contact/form/error.html' ),
 						];
 						$script	= 'ModuleInfoContactForm.setResultBlocks('.json_encode( $blocks ).');';
-						$env->getPage()->js->addScriptOnReady($script);
+						$env->getPage()->js->addScriptOnReady( $script );
 						$isFirst = FALSE;
 					}
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$shortCode );
+					$this->env->getLog()->logException( $e );
+					$this->env->getMessenger()->noteFailure( 'Short code "'.$shortCode.'" failed: '.$e->getMessage() );
 					break;
 				}
 			}
 		}
-		$payload['content']	= $processor->getContent();
+		$this->payload['content']	= $processor->getContent();
 	}
 }

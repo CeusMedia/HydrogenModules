@@ -1,6 +1,11 @@
 <?php
 class Mail_Info_Contact extends Mail_Abstract
 {
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): static
 	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_contact.', TRUE );
