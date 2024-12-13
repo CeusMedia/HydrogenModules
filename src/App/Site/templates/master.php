@@ -1,10 +1,12 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
+/** @var Messenger $messenger */
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var string $content */
@@ -12,11 +14,6 @@ use CeusMedia\HydrogenFramework\View;
 $page	= $env->getPage();
 
 $navbarFixed	= TRUE;
-$navMain		= '';
-$navHeader		= '';
-$navTop			= '';
-$navFooter		= '';
-
 
 /*  --  LANGUAGE SELECTOR  --  */
 $languageSelector	= '';
@@ -26,21 +23,13 @@ if( $env->getModules()->has( 'UI_LanguageSelector' ) ){
 }
 
 /*  --  NAVIGATION  --  */
-/** @todo refactor this to using an event, module UI_Navigation should attach with a hook, remove all code here */
-if( $env->getModules()->has( 'UI_Navigation' ) ){
-	$helper		= new View_Helper_Navigation( $env );
-	$navMain	= $helper->render();
-	$navHeader	= $helper->render( 'header' );
-	$navTop		= $helper->render( 'top' );
-	$navFooter	= $helper->render( 'footer' );
-}
-else if( class_exists( 'View_Helper_Navigation' ) ){							//  fallback: outdated local renderer
-	$path		= $env->getRequest()->get( '__path' );
-	$helperNav	= new View_Helper_Navigation();
-	$helperNav->setEnv( $env );
-	$helperNav->setCurrent( $path ?: 'index' );
-	$navMain	= $helperNav->render();
-}
+$menus	= [
+	'navMain'	=> '',
+	'navHeader'	=> '',
+	'navTop'	=> '',
+	'navFooter'	=> '',
+];
+$env->getCaptain()->callHook('Navigation', 'renderMenus', $this, $menus);
 
 /*  --  USER MESSAGES  --  */
 if( $env->getModules()->has( 'UI_Helper_Messenger_Bootstrap' ) )
@@ -66,9 +55,9 @@ if( $view->hasContentFile( 'html/app.brand.html' ) )
 /*  --  STATIC HEADER / FOOTER  --  */
 $data	= [
 	'words'		=> $words,
-	'navFooter'	=> $navFooter,
-	'navHeader'	=> $navHeader,
-	'navTop'	=> $navTop,
+	'navFooter'	=> $menus['navFooter'],
+	'navHeader'	=> $menus['navHeader'],
+	'navTop'	=> $menus['navTop'],
 ];
 $header		= '';
 $footer		= '';
@@ -85,7 +74,7 @@ $body	= '
 		<div class="navbar-inner">
 			<div class="container">
 				'.$brand.'
-				'.$navMain.'
+				'.$menus['navMain'].'
 				'.$languageSelector.'
 			</div>
 		</div>
@@ -115,5 +104,6 @@ $body	= '
 
 ';
 
-$page->addBody( $header.$body.$footer );
-return $page->build();
+return $page
+	->addBody( $header.$body.$footer )
+	->build();

@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\JQuery as JQuery;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\Common\UI\Template as Template;
+use CeusMedia\TemplateEngine\Template as Template;
 
 //  --  Basic HTML Page Setup  --  //
 
