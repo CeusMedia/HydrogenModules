@@ -51,7 +51,6 @@ if( $exceptions ){
 //print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
 
 		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
 		$date	= date( 'Y.m.d', $exception->createdAt );

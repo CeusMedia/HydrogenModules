@@ -1,5 +1,5 @@
 if(typeof UI === "undefined")													//  no UI object defined yet
-	let UI = {};																//  define empty UI object
+	var UI = {};																//  define empty UI object
 if(typeof UI.Image === "undefined")												//  no UI image object defined yet
 	UI.Image = {};																//  define empty UI image object
 UI.Image.Slider = {
