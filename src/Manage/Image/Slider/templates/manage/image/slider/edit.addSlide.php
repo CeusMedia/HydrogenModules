@@ -7,7 +7,7 @@ use View_Manage_Image_Slider as View;
 /** @var Web $env */
 /** @var View $view */
 /** @var array<string,array<string,string>> $words */
-/** @var object $slider */
+/** @var Entity_Image_Slider $slider */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $iconUpload		= HtmlTag::create( 'i', '', ['class' => 'icon-folder-open icon-white'] );
@@ -23,7 +23,7 @@ $minHeight	= ceil( $slider->height / 2 );
 $wordsSlide	= (object) $words['edit.addSlide'];
 
 $optPositionX	= HtmlElements::Options( $words['slide-position-x'], 'center' );
-$optPositionY	= HtmlElements::Options( $words['slide-position-x'], 'center' );
+$optPositionY	= HtmlElements::Options( $words['slide-position-y'], 'center' );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'image' );

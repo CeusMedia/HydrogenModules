@@ -8,7 +8,7 @@ use View_Manage_Image_Slider as View;
 /** @var View $view */
 /** @var string $basePath */
 /** @var array $words */
-/** @var array $sliders */
+/** @var array<Entity_Image_Slider> $sliders */
 
 $iconDurationShow		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconDurationTransition	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-h'] );

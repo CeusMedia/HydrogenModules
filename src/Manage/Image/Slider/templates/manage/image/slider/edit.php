@@ -7,7 +7,7 @@ use View_Manage_Image_Slider as View;
 /** @var Web $env */
 /** @var View $view */
 /** @var array<string,array<string,string>> $words */
-/** @var object $slider */
+/** @var Entity_Image_Slider $slider */
 
 $w				= (object) $words['edit'];
 
