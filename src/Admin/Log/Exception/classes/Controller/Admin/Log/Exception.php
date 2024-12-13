@@ -88,15 +88,15 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$limit	= $limit ?: $this->session->get( $this->filterPrefix.'limit', 10 );
 
-		$filterMessage		= $this->session->get( $this->filterPrefix.'message' );
-		$filterType			= $this->session->get( $this->filterPrefix.'type' );
-		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart' );
-		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd' );
+		$filterMessage		= $this->session->get( $this->filterPrefix.'message', '' );
+		$filterType			= $this->session->get( $this->filterPrefix.'type', '' );
+		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart', '' );
+		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd', '' );
 
 		$conditions		= [];
-		if( strlen( trim( $filterMessage ) ) )
-			$conditions['message']	= '%'.$filterMessage.'%';
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterMessage ) )
+			$conditions['message']	= '%'.trim( $filterMessage ).'%';
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
 		if( $filterDateStart && $filterDateEnd )
 			$conditions['createdAt']	= '>< '.strtotime( $filterDateStart ).' & '.( strtotime( $filterDateEnd ) + 24 * 3600 - 1);
@@ -105,9 +105,9 @@ class Controller_Admin_Log_Exception extends Controller
 		else if( $filterDateEnd )
 			$conditions['createdAt']	= '<= '.( strtotime( $filterDateEnd ) + 24 * 36000 - 1);
 
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
 
 		$page	= preg_match( "/^[0-9]+$/", $page ) ? $page : 0;
@@ -146,7 +146,11 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( $page ?: NULL, TRUE );
 	}
 
-	public function setInstance( $instanceKey ): void
+	/**
+	 *	@param		?string $instanceKey
+	 *	@return		void
+	 */
+	public function setInstance( ?string $instanceKey ): void
 	{
 		$this->session->set( $this->filterPrefix.'instance', $instanceKey );
 		$this->restart( NULL, TRUE );
@@ -155,6 +159,7 @@ class Controller_Admin_Log_Exception extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $id ): void
@@ -178,15 +183,15 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$this->addData( 'exception', $exception );
 		$this->addData( 'exceptionEnv', $exceptionEnv );
-		$this->addData( 'exceptionRequest', $exceptionRequest->g );
+		$this->addData( 'exceptionRequest', $exceptionRequest );
 		$this->addData( 'exceptionSession', $exceptionSession );
 		$this->addData( 'user', $user );
-
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
