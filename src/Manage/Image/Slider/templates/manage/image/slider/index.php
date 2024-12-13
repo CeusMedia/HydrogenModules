@@ -104,7 +104,7 @@ class View_Helper_NumberCommons
 {
 	public static function getDivider( array $numbers )
 	{
-		return array_reduce( array_unique( $numbers ), 'static::_gcd_rec' );
+		return array_reduce( array_unique( $numbers ), [self::class, '_gcd_rec'] );
 	}
 
 	public static function getPrecision( array $numbers, $maxPrecision = 3 ): int
