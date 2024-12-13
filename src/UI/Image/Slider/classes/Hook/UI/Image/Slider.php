@@ -1,25 +1,28 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Image_Slider extends Hook
 {
-	public static function onRenderContent( Environment $env, $context, $modules, array & $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onRenderContent(): void
 	{
-		$processor		= $env->getLogic()->get( 'Shortcode' );
-		$shortCodes		= [
-			'slider'	=> [
-				'id'		=> 0,
-			]
-		];
+		/** @var WebEnvironment $env */
+		$env		= $this->env;
+		$processor	= $env->getLogic()->get( 'Shortcode' );
+		$shortCodes	= ['slider'	=> ['id' => 0]];
 
 		/** @todo remove this legacy support */
 		$pattern	= "/\[slider:([0-9]+)\]/sU";													//  old syntax
-		if( preg_match( $pattern, $payload['content'] ) )												//  found instance of old syntax
-			$payload['content']	= preg_replace( $pattern, '[slider id="\\1"]', $payload['content'] );	//  replace by new syntax
+		if( preg_match( $pattern, $this->payload['content'] ) )												//  found instance of old syntax
+			$this->payload['content']	= preg_replace( $pattern, '[slider id="\\1"]', $this->payload['content'] );	//  replace by new syntax
 
-		$processor->setContent( $payload['content'] );
+		$processor->setContent( $this->payload['content'] );
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
@@ -37,6 +40,6 @@ class Hook_UI_Image_Slider extends Hook
 				}
 			}
 		}
-		$payload['content']	= $processor->getContent();
+		$this->payload['content']	= $processor->getContent();
 	}
 }

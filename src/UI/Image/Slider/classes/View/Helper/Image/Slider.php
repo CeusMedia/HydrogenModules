@@ -2,11 +2,11 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 class View_Helper_Image_Slider
 {
-	protected Environment $env;
+	protected WebEnvironment $env;
 
 	protected Dictionary $config;
 	protected Model_Image_Slider $modelSlider;
@@ -15,11 +15,25 @@ class View_Helper_Image_Slider
 	protected string $selectorPrefix		= 'imageSlider-';
 
 	/**
+	 *	@param		WebEnvironment $env
+	 *	@param		int|string $sliderId
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public static function renderStatic( WebEnvironment $env, int|string $sliderId ): string
+	{
+		$instance	= new self( $env );
+		return $instance->render( $sliderId );
+	}
+
+	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		Environment		$env			Environment object
+	 *	@param		WebEnvironment		$env			Environment object
+	 *	@throws		ReflectionException
 	 */
-	public function __construct( Environment $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env			= $env;
 		$this->modelSlider	= new Model_Image_Slider( $env );
@@ -40,12 +54,14 @@ class View_Helper_Image_Slider
 	 *	@access		public
 	 *	@param		int|string		$sliderId		ID of slider to render
 	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		reactivate scaling after fixing it
 	 */
 	public function render( int|string $sliderId ): string
 	{
+		/** @var ?Entity_Image_Slider $slider */
 		$slider		= $this->modelSlider->get( $sliderId );
-		if( !$slider )
+		if( NULL === $slider )
 			throw new InvalidArgumentException( 'Invalid slider ID: '.$sliderId );
 		$this->modelSlider->edit( $sliderId, ['views' => $slider->views + 1] );
 		$conditions	= [
@@ -83,12 +99,6 @@ class View_Helper_Image_Slider
 		return HtmlTag::create( 'div', $images, $attr );
 	}
 
-	public static function renderStatic( Environment $env, int|string $sliderId ): string
-	{
-		$instance	= new self( $env );
-		return $instance->render( $sliderId );
-	}
-
 	/**
 	 *	Set absolute base path to all slider images.
 	 *	@access		public
@@ -117,7 +127,7 @@ class View_Helper_Image_Slider
 
 	//  --  PROTECTED  --  //
 
-	protected function renderButtons( object $slider ): string
+	protected function renderButtons( Entity_Image_Slider $slider ): string
 	{
 		if( !$slider->showButtons || count( $slider->slides ) < 2 )
 			return '';
@@ -132,7 +142,7 @@ class View_Helper_Image_Slider
 		return $buttonPrev.$buttonNext;
 	}
 
-	protected function renderDots( object $slider ): string
+	protected function renderDots( Entity_Image_Slider $slider ): string
 	{
 		if( !$slider->showDots || count( $slider->slides ) < 2 )
 			return '';
@@ -158,43 +168,51 @@ class View_Helper_Image_Slider
 		return HtmlTag::create( 'div', join( $dots ), $attr );
 	}
 
-	protected function renderSlides( object $slider ): string
+	/**
+	 *	@param		Entity_Image_Slider		$slider
+	 *	@param		Entity_Image_Slide		$slide
+	 *	@param		int			$number
+	 *	@return		string
+	 */
+	protected function renderSlide( Entity_Image_Slider $slider, Entity_Image_Slide $slide, int $number ): string
+	{
+		$imageFile	= $this->basePath.$slider->path.$slide->source;
+		$attr	= ['src' => $imageFile];
+		if( $slide->title ){
+			$attr['title']		= $slide->title;
+			$attr['alt']		= $slide->title;
+			$attr['data-link']	= $slide->link;
+		}
+
+		$image	= HtmlTag::create( 'img', NULL, $attr );
+		if( $slide->link && '' !== trim( $slide->link ) )
+			$image	= HtmlTag::create( 'a', $image, [
+				'href'	=> $slide->link,
+				'title'	=> $slide->title
+			] );
+
+		$content	= "";
+		if( '' !== trim( $slide->content ?? '' ) )
+			$content	= HtmlTag::create( 'div', $slide->content, [
+				'class'	=> $this->selectorPrefix.'slide-content'
+			] );
+		return HtmlTag::create( 'div', $image.$content, [
+			'id'	=> $slider->sliderId.'-slide-'.$number,
+			'class'	=> $this->selectorPrefix.'slide',
+		] );
+	}
+
+	/**
+	 *	@param		Entity_Image_Slider		$slider
+	 *	@return		string
+	 */
+	protected function renderSlides( Entity_Image_Slider $slider ): string
 	{
 		$list		= [];
-		$number		= 0;
-		$width		= $slider->width;
-		$height		= $slider->height;
-		foreach( $slider->slides as $slide ){
-			$imageFile	= $this->basePath.$slider->path.$slide->source;
-			$attr	= ['src' => $imageFile];
-			if( $slide->title ){
-				$attr['title']		= $slide->title;
-				$attr['alt']		= $slide->title;
-				$attr['data-link']	= $slide->link;
-			}
-			$image	= HtmlTag::create( 'img', NULL, $attr );
-			if( $slide->link && strlen( trim( $slide->link ) ) ){
-				$attr	= [
-					'href'	=> $slide->link,
-					'title'	=> $slide->title
-				];
-				$image	= HtmlTag::create( 'a', $image, $attr );
-			}
-			$attr	= [
-				'id'	=> $slider->sliderId.'-slide-'.$number,
-				'class'	=> $this->selectorPrefix.'slide',
-			];
-			$content	= "";
-			if( trim( $slide->content ) )
-				$content	= HtmlTag::create( 'div', $slide->content, [
-					'class'	=> $this->selectorPrefix.'slide-content'
-				] );
-			$item	= HtmlTag::create( 'div', $image.$content, $attr );
-			$list[]	= $item;
-			$number	+= 1;
-		}
+		foreach( $slider->slides as $slide )
+			$list[]	= $this->renderSlide( $slider, $slide, count( $list ) );
+
 		$list	= join( $list );
-		$label	= "";
 		if( $slider->showTitle ){
 			$slide	= $slider->slides[0];
 			$title	= $slide->title;
