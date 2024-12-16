@@ -8,7 +8,7 @@ class Hook_Info_Contact extends Hook
 {
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		Exception
 	 */
 	public function onRenderContent(): void
 	{
@@ -17,7 +17,7 @@ class Hook_Info_Contact extends Hook
 		if( !$this->env->getModules()->has( 'UI_Shortcode' ) )
 			return;
 
-		$processor		= Logic_Shortcode::getInstance( $this->env );
+		$processor		= new Logic_Shortcode( $this->env );
 		$moduleConfig	= $this->env->getConfig()->getAll( 'modules.info_contact.', TRUE );
 		$words			= $this->env->getLanguage()->getWords( 'info/contact' );
 		$allowedTypes	= $moduleConfig->getAll( 'modal.show.type.' );

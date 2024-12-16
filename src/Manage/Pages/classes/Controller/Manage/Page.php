@@ -427,6 +427,7 @@ ModuleManagePages.PageEditor.init();
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	protected function __onInit(): void
@@ -502,6 +503,10 @@ ModuleManagePages.PageEditor.init();
 		return $apps;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function detectSource(): string
 	{
 		$managesModules		= $this->envManaged->getModules();
@@ -563,6 +568,9 @@ ModuleManagePages.PageEditor.init();
 		return $this->translatePage( $page );
 	}
 
+	/**
+	 *	@return		array
+	 */
 	protected function collectMasterTemplates(): array
 	{
 		$masterTemplates		= $this->getWords( 'templates' );
@@ -579,6 +587,9 @@ ModuleManagePages.PageEditor.init();
 		return $masterTemplates;
 	}
 
+	/**
+	 *	@return		array
+	 */
 	protected function getFrontendControllers(): array
 	{
 		$controllers	= [];

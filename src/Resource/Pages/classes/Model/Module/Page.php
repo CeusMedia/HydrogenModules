@@ -32,6 +32,8 @@ class Model_Module_Page
 		1	=> 'menu',
 		2	=> 'module'
 	];
+
+	/** @var array<object> $pages */
 	protected array $pages;
 
 	public function __construct( Environment $env )
@@ -42,12 +44,16 @@ class Model_Module_Page
 		$this->loadPages();
 	}
 
-	public function edit( string $pageId, $data = [] )
+	public function edit( string $pageId, array $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
-	public function get( string $pageId )
+	/**
+	 *	@param		string		$pageId
+	 *	@return		?object
+	 */
+	public function get( string $pageId ): ?object
 	{
 		foreach( $this->pages as $page )
 			if( (string) $page->pageId === $pageId )
@@ -55,12 +61,20 @@ class Model_Module_Page
 		return NULL;
 	}
 
+	/**
+	 *	@return object[]
+	 */
 	public function getAll(): array
 	{
 		return $this->pages;
 	}
 
-	public function getByIndices( array $indices = [], array $orders = [] )
+	/**
+	 *	@param		array		$indices
+	 *	@param		array		$orders
+	 *	@return		?object
+	 */
+	public function getByIndices( array $indices = [], array $orders = [] ): ?object
 	{
 		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
@@ -106,6 +120,9 @@ class Model_Module_Page
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function loadPages(): void
 	{
 		$pageId		= 0;

@@ -27,6 +27,7 @@ class Logic_Page extends Logic
 	 *	@param		string|NULL		$parentPath
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function updateFullpath( int|string $pageId, string $parentPath = NULL ): void
@@ -56,9 +57,10 @@ class Logic_Page extends Logic
 	 *	@param		object		$page		Page data object to set list of parent pages to
 	 *	@return		array		List of parent pages, added to given page object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
-	public function decoratePathWithParents( object & $page ): array
+	public function decoratePathWithParents( object $page ): array
 	{
 		$model		= $this->getPageModel();
 		$current	= $page;
@@ -85,6 +87,7 @@ class Logic_Page extends Logic
 	 *	@param		bool			$activeOnly
 	 *	@return		array
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function getChildren( int|string $pageId, bool $activeOnly = TRUE ): array
@@ -105,6 +108,7 @@ class Logic_Page extends Logic
 	 *	@return		object|NULL					Page data object if available or NULL of strict is disabled
 	 *	@throws		InvalidArgumentException	if given path is not a string or empty
 	 *	@throws		RangeException				if no page object found for by fullpath in strict mode
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function getComponentFromPath( string $path, bool $strict = TRUE ): ?object
@@ -126,6 +130,7 @@ class Logic_Page extends Logic
 	/**
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function getPage( int|string $pageId, bool $strict = TRUE  )
@@ -227,7 +232,7 @@ class Logic_Page extends Logic
 	{
 		$path		= trim( $path, '/' );
 		try{
-			$page	= $this->getPageFromPathRecursive( $path, 0, TRUE );
+			$page	= $this->getPageFromPathRecursive( $path );
 			if( $withParents ){
 				$this->decoratePathWithParents( $page );
 				foreach( $page->parents as $nr => $parent )
@@ -257,7 +262,7 @@ class Logic_Page extends Logic
 		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
 		$pagePath	= strlen( trim( $path ) ) ? trim( $path ) : 'index';							//  ensure page path is not empty
 		try{
-			return $this->getPageFromPath( $pagePath, $withParents, TRUE );						// try to get page by called page path
+			return $this->getPageFromPath( $pagePath, $withParents );						// try to get page by called page path
 		}
 		catch( Exception $e ){
 			if( $strict )
@@ -271,9 +276,10 @@ class Logic_Page extends Logic
 	 *	@access		public
 	 *	@param		int|string		$pathOrId		Path or ID to find page for
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException	if no or empty path is given, call atleast with path 'index'
+	 *	@throws		InvalidArgumentException	if no or empty path is given, call at least with path 'index'
 	 *	@todo		move "by path" to method hasPageByPath and make pathOrId to pageId
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function hasPage( int|string $pathOrId ): bool
@@ -286,6 +292,7 @@ class Logic_Page extends Logic
 	/**
 	 *	@param		bool		$visible
 	 *	@return		bool
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	public function hasPages( bool $visible = TRUE ): bool
@@ -344,6 +351,7 @@ class Logic_Page extends Logic
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	protected function __onInit(): void
@@ -375,6 +383,7 @@ class Logic_Page extends Logic
 	 *	@return		object|NULL					Data object of found page or NULL if nothing found and not in strict mode
 	 *	@throws		RangeException				if path is not resolvable and strict mode is on
 	 *	@todo		remove strategies absolute_backward and relative_forward since both are buggy
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE ): ?object
@@ -416,9 +425,9 @@ class Logic_Page extends Logic
 		/**
 		 *	Strategy: absolute_backward
 		 *
-		 *	Tries to find page by identifier, also supporting identifier to contain slashs.
+		 *	Tries to find page by identifier, also supporting identifier to contain slashes.
 		 *	This is a fix for strategy relative_forward.
-		 *	Reduces requested path backwards until matching a identifier.
+		 *	Reduces requested path backwards until matching an identifier.
 		 *	Found page:
 		 *	 - must be in root, so having no parent
 		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
@@ -447,7 +456,7 @@ class Logic_Page extends Logic
 		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
 		 *	 - must be visible or at least hidden
 		 *
-		 *	Problem: Does not work if page identifier contains a slash, eg. is like abc/def
+		 *	Problem: Does not work if page identifier contains a slash, e.g. is like abc/def
 		 */
 		$lastPage	= NULL;
 		while( count( $parts ) ){																	//  relative and forward resolution
@@ -475,6 +484,7 @@ class Logic_Page extends Logic
 
 	/**
 	 *	@return		Model_Config_Page|Model_Module_Page|Model_Page
+	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
 	protected function getPageModel(): Model_Page|Model_Module_Page|Model_Config_Page

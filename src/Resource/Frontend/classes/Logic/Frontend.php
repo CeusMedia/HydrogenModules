@@ -69,7 +69,7 @@ class Logic_Frontend extends Logic
 	public function getEnv(): RemoteEnvironment
 	{
 		return new RemoteEnvironment( [
-			'configFile'	=> $this->path.'config/config.ini',
+			'configFile'	=> 'config/config.ini',
 			'pathApp' 		=> $this->path,
 			'parentEnv'		=> $this->env,
 		] );
