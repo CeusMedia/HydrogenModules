@@ -3,6 +3,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<string,array<string,string>> $words */
 /** @var object $reader */
+/** @var array $subscriptions */
+/** @var array $groups */
+/** @var int|string $readerId */
+/** @var int|string $letterId */
 
 $status	= $words['reader-states'][$reader->status];
 

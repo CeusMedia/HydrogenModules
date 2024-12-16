@@ -12,6 +12,10 @@ class Job_Newsletter extends Job_Abstract
 	protected object $words;
 
 	/**
+	 * @throws ReflectionException
+	 * @throws DateMalformedIntervalStringException
+	 * @throws DateInvalidOperationException
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 * @todo refactor for scalability: read mail ids first and mail objects in loop
 	 */
 	public function clean(): void
@@ -54,7 +58,11 @@ class Job_Newsletter extends Job_Abstract
 		}
 	}
 
-	public function count()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function count(): void
 	{
 		$words		= (object) $this->words->send;													//  get words or like date formats
 
@@ -75,7 +83,13 @@ class Job_Newsletter extends Job_Abstract
 		$this->out( sprintf( '%d mails in newsletter %d queues.', $total, count( $queues ) ) );
 	}
 
-	public function migrate( $verbose = FALSE )
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function migrate( bool $verbose = FALSE ): void
 	{
 		if( $verbose ){
 			$this->out( '' );
@@ -101,7 +115,13 @@ class Job_Newsletter extends Job_Abstract
 			] ) );
 	}
 
-	public function send( $verbose = FALSE )
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function send( bool $verbose = FALSE ): void
 	{
 		$words		= (object) $this->words->send;												//  get words or like date formats
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
@@ -143,9 +163,13 @@ class Job_Newsletter extends Job_Abstract
 				$logicMail->appendRegisteredAttachments( $mail, $language );
 				if( $verbose )
 					$this->out( sprintf( 'Sending mail to %s ...', $letter->reader->email ) );
-				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
-				if( is_int( $mailId ) )
-					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+
+//				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
+//				if( is_int( $mailId ) )
+//					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+
+				$mailId	= $logicMail->enqueueMail( $mail, $language, $receiver );
+				$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 
 				$this->logic->setReaderLetterStatus(
 					$letter->newsletterReaderLetterId,
@@ -178,6 +202,9 @@ class Job_Newsletter extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
@@ -187,7 +214,13 @@ class Job_Newsletter extends Job_Abstract
 		$this->words		= (object) $this->language->getWords( 'info/newsletter' );				//  get module words
 	}
 
-	protected function recoverReaderLetterMailIds( bool $verbose = FALSE )
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function recoverReaderLetterMailIds( bool $verbose = FALSE ): object
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$countLetters	= 0;
@@ -244,7 +277,12 @@ class Job_Newsletter extends Job_Abstract
 		];
 	}
 
-	protected function recoverReaderLetterQueueIds()
+	/**
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function recoverReaderLetterQueueIds(): object
 	{
 		$modelQueue		= new Model_Newsletter_Queue( $this->env );
 		$modelLetter	= new Model_Newsletter_Reader_Letter( $this->env );

@@ -14,9 +14,13 @@ class Controller_Info_Newsletter extends Controller
 	protected Request $request;
 	protected PartitionSession $session;
 
-
-
-	public function confirm( $readerId, $key = NULL ): void
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		?string			$key
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function confirm( int|string $readerId, ?string $key = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$reader		= $this->logic->getReader( $readerId );
@@ -63,7 +67,13 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'readerId', $readerId );
 	}*/
 
-	public function index( $arg1 = NULL )
+	/**
+	 *	@param		$arg1
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( $arg1 = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'index' );
 		if( $this->request->has( 'save' ) ){
@@ -137,7 +147,12 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'latest', $latest );
 	}
 
-	public function preview( $newsletterId = NULL )
+	/**
+	 *	@param		int|string|NULL		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function preview( int|string|NULL $newsletterId = NULL ): void
 	{
 		if( !$newsletterId ){
 			$newsletters	= $this->logic->getNewsletters( ['status' => '>= 1'], ['newsletterId' => 'DESC'] );
@@ -162,7 +177,13 @@ class Controller_Info_Newsletter extends Controller
 		exit;
 	}
 
-	public function unregister( $emailHash = NULL, $readerLetterId = NULL )
+	/**
+	 *	@param		?string				$emailHash
+	 *	@param		int|string|NULL		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unregister( ?string $emailHash = NULL, int|string|NULL $readerLetterId = NULL ): void
 	{
 		$email		= trim( $emailHash ? base64_decode( $emailHash ) : $this->request->get( 'email' ) );
 		$words		= (object) $this->getWords( 'unregister' );
@@ -213,7 +234,12 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'reader', $reader );
 	}
 
-	public function track( $letterId )
+	/**
+	 *	@param		int|string		$letterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function track( int|string $letterId ): void
 	{
 		$pixelGIF	= "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 		if( !$this->request->has( 'dry' ) ){
@@ -229,11 +255,16 @@ class Controller_Info_Newsletter extends Controller
 		exit;
 	}
 
-	public function view( $readerLetterId )
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $readerLetterId ): void
 	{
 		try{
 			$letter		= $this->logic->getReaderLetter( $readerLetterId );
-			$helper		= new View_Helper_Newsletter_Mail( $this->env );;
+			$helper		= new View_Helper_Newsletter_Mail( $this->env );
 			$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
 			$helper->setReaderLetterId( $readerLetterId );
 			$helper->setReaderId( $letter->newsletterReaderId );
@@ -256,6 +287,9 @@ class Controller_Info_Newsletter extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter( $this->env );

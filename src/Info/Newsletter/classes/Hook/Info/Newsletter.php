@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 use CeusMedia\HydrogenFramework\View;
 
@@ -10,12 +11,16 @@ class Hook_Info_Newsletter extends Hook
 	 *	@access		public
 	 *	@return		void
 	 *	@todo		finish implementation, extract to hook class and register in module config
+	 *	@throws		ReflectionException
 	 */
-	public function __onRenderServicePanels(): void
+	public function onShopRenderServicePanels(): void
 	{
+		/** @var WebEnvironment $env */
+		$env	= $this->env;
+
 		if( empty( $this->payload['orderId'] ) || empty( $this->payload['paymentBackends']->getAll() ) )
 			return;
-		$view		= new View( $this->env );
+		$view		= new View( $env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 

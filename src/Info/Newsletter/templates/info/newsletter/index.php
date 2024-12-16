@@ -113,4 +113,4 @@ $panelRegister = '
 	</div>
 </div>';
 
-return $textIndexTop.$panelLatest.$textIndexBottom;
+return $textIndexTop.$panelRegister.$panelLatest.$textIndexBottom;

@@ -1,6 +1,11 @@
 <?php
 class Mail_Info_Newsletter_Register extends Mail_Abstract
 {
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function generate(): static
 	{
 		$words		= (object) $this->getWords( 'info/newsletter', 'register' );
@@ -12,6 +17,10 @@ class Mail_Info_Newsletter_Register extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderTextBody(): string
 	{
 		$data				= $this->data;

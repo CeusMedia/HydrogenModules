@@ -4,30 +4,48 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Info_Newsletter extends View
 {
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$script	= 'Module_Info_Newletter_Form.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		$this->env->getPage()->js->addModuleFile( 'module.info.newsletter.js' );
 	}
 
-	public function view()
+	/**
+	 *	@return		void
+	 */
+	public function view(): void
 	{
 	}
 
-	public function register()
+	/**
+	 *	@return		void
+	 */
+	public function register(): void
 	{
 	}
 
-	public function unregister()
+	/**
+	 *	@return		void
+	 */
+	public function unregister(): void
 	{
 	}
 
-	public function edit()
+	/**
+	 *	@return		void
+	 */
+	public function edit(): void
 	{
 	}
 
-	public function preview()
+	/**
+	 *	@return		void
+	 */
+	public function preview(): void
 	{
 	}
 }
