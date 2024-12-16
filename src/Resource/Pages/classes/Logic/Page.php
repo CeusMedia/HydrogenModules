@@ -19,37 +19,8 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
  */
 class Logic_Page extends Logic
 {
-	protected string $app				= 'self';
+	protected string $app			= 'self';
 	protected array $model			= [];
-
-	/**
-	 *	@param		int|string		$pageId
-	 *	@param		string|NULL		$parentPath
-	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 *	@throws		ReflectionException
-	 *	@throws		EnvironmentException
-	 */
-	public function updateFullpath( int|string $pageId, string $parentPath = NULL ): void
-	{
-		$model	= $this->getPageModel();
-		$page	= $model->get( $pageId );
-		if( !$parentPath ){
-			$parentPath	= '';
-			$parent	= $page;
-			while( $parent->parentId ){
-				$parent	= $model->get( $page->parentId );
-				$parentPath	= $parent->identifier.'/'.$parentPath;
-			}
-		}
-		$model->edit( $pageId, [
-			'fullpath'		=> $parentPath.$page->identifier,
-			'modifiedAt'	=> time(),
-		] );
-		if( Model_Page::TYPE_BRANCH === (int) $page->type )
-			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
-				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );
-	}
 
 	/**
 	 *	Decorates page with its parent pages by adding a list of parent pages to the given page object.
@@ -346,6 +317,35 @@ class Logic_Page extends Logic
 		return $page;
 	}
 
+	/**
+	 *	@param		int|string		$pageId
+	 *	@param		string|NULL		$parentPath
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
+	 *	@throws		EnvironmentException
+	 */
+	public function updateFullpath( int|string $pageId, string $parentPath = NULL ): void
+	{
+		$model	= $this->getPageModel();
+		$page	= $model->get( $pageId );
+		if( !$parentPath ){
+			$parentPath	= '';
+			$parent	= $page;
+			while( $parent->parentId ){
+				$parent	= $model->get( $page->parentId );
+				$parentPath	= $parent->identifier.'/'.$parentPath;
+			}
+		}
+		$model->edit( $pageId, [
+			'fullpath'		=> $parentPath.$page->identifier,
+			'modifiedAt'	=> time(),
+		] );
+		if( Model_Page::TYPE_BRANCH === (int) $page->type )
+			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
+				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );
+	}
+
 	//  --  PROTECTED  --  //
 
 	/**
@@ -357,17 +357,17 @@ class Logic_Page extends Logic
 	protected function __onInit(): void
 	{
 		$moduleNav	= $this->env->getModules()->get( 'UI_Navigation', TRUE, FALSE );
-		if( $moduleNav && $moduleNav->config['menu.source']->value === 'Database' ){
-			$model	= $this->getPageModel();
-			foreach( $model->getAllByIndex( 'fullpath', '' ) as $page ){
-				$way	= '';
-				$parent	= $page;
-				while( $parent->parentId ){
-					$parent	= $model->get( $page->parentId );
-					$way	.= $parent->identifier.'/';
-				}
-				$model->edit( $page->pageId, ['fullpath' => $way.$page->identifier] );
+		if( !$moduleNav || 'Database' !== $moduleNav->config['menu.source']->value )
+			return;
+		$model	= $this->getPageModel();
+		foreach( $model->getAllByIndex( 'fullpath', '' ) as $page ){
+			$way	= '';
+			$parent	= $page;
+			while( $parent->parentId ){
+				$parent	= $model->get( $page->parentId );
+				$way	.= $parent->identifier.'/';
 			}
+			$model->edit( $page->pageId, ['fullpath' => $way.$page->identifier] );
 		}
 	}
 
