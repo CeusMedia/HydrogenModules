@@ -9,14 +9,9 @@ use CeusMedia\Mail\Message\Part\Attachment as MailV2AttachmentPart;
 use CeusMedia\Mail\Message\Part\HTML as MailV2HtmlPart;
 use CeusMedia\Mail\Message\Part\InlineImage as MailV2InlineImagePart;
 use CeusMedia\Mail\Message\Part\Text as MailV2TextPart;
-use CeusMedia\Mail\Part\Attachment as MailV1AttachmentPart;
-use CeusMedia\Mail\Part\HTML as MailV1HtmlPart;
-use CeusMedia\Mail\Part\InlineImage as MailV1InlineImagePart;
-use CeusMedia\Mail\Part\Text as MailV1TextPart;
 
 /** @var Environment $env */
 /** @var Entity_Mail $mail */
-/** @var int $libraries */
 /** @var array<array<string,string>> $words */
 
 //$iconDownload		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
@@ -47,60 +42,29 @@ else{
 		$attachments	= [];
 		$images			= [];
 
-		if( $libraries & $mail->usedLibrary ){
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				foreach( $mail->parts as $key => $part ){
-					if( $part instanceof MailV2HtmlPart )
-						$html	= TRUE;//$part->getContent();
-					else if( $part instanceof MailV2TextPart )
-						$text	= $part->getContent();
-					else if( $part instanceof MailV2AttachmentPart )
-						$attachments[]	= (object) [
-							'partKey'	=> $key,
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'fileATime'	=> $part->getFileATime(),
-							'fileCTime'	=> $part->getFileCTime(),
-							'fileMTime'	=> $part->getFileMTime(),
-							'mimeType'	=> $part->getMimeType(),
-						];
-					else if( $part instanceof MailV2InlineImagePart )
-						$images[]	= (object) [
-							'partKey'	=> $key,
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'fileMTime'	=> $part->getFileMTime(),
-							'mimeType'	=> $part->getMimeType(),
-						];
-				}
-			}
-			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				foreach( $mail->parts as $key => $part ){
-	//				$this->env->getMessenger()->noteNotice( 'LIBRARY_MAIL1: '.get_class( $part ) );
-					if( $part instanceof MailV1HtmlPart )
-						$html	= TRUE;//$part->getContent();
-					else if( $part instanceof MailV1TextPart )
-						$text	= $part->getContent();
-					else if( $part instanceof MailV1AttachmentPart )
-						$attachments[]	= (object) [
-							'partKey'	=> $key,
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'fileATime'	=> $part->getFileATime(),
-							'fileCTime'	=> $part->getFileCTime(),
-							'fileMTime'	=> $part->getFileMTime(),
-							'mimeType'	=> $part->getMimeType(),
-						];
-					else if( $part instanceof MailV1InlineImagePart )
-						$images[]	= (object) [
-							'partKey'	=> $key,
-							'fileName'	=> $part->getFileName(),
-							'fileSize'	=> $part->getFileSize(),
-							'fileMTime'	=> $part->getFileMTime(),
-							'mimeType'	=> $part->getMimeType(),
-						];
-				}
-			}
+		foreach( $mail->parts as $key => $part ){
+			if( $part instanceof MailV2HtmlPart )
+				$html	= TRUE;//$part->getContent();
+			else if( $part instanceof MailV2TextPart )
+				$text	= $part->getContent();
+			else if( $part instanceof MailV2AttachmentPart )
+				$attachments[]	= (object) [
+					'partKey'	=> $key,
+					'fileName'	=> $part->getFileName(),
+					'fileSize'	=> $part->getFileSize(),
+					'fileATime'	=> $part->getFileATime(),
+					'fileCTime'	=> $part->getFileCTime(),
+					'fileMTime'	=> $part->getFileMTime(),
+					'mimeType'	=> $part->getMimeType(),
+				];
+			else if( $part instanceof MailV2InlineImagePart )
+				$images[]	= (object) [
+					'partKey'	=> $key,
+					'fileName'	=> $part->getFileName(),
+					'fileSize'	=> $part->getFileSize(),
+					'fileMTime'	=> $part->getFileMTime(),
+					'mimeType'	=> $part->getMimeType(),
+				];
 		}
 
 		$parts	= [];

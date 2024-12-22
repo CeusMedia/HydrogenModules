@@ -40,15 +40,8 @@ class Controller_Admin_Mail_Queue extends Controller
 	 */
 	public function attachment( int|string $mailId, int $attachmentNr, $deliveryMode = NULL ): never
 	{
-		$libraries			= $this->logic->detectAvailableMailLibraries();
 		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';
 		$mail				= $this->logic->getMail( $mailId );
-		$this->logic->detectMailLibraryFromMail( $mail );
-		if( !( $libraries & $mail->usedLibrary ) ){
-			$message	= 'Die beim Versand benutzte Bibliothek wird nicht mehr unterstützt.';
-			$this->env->getMessenger()->noteError( $message );
-			$this->restart( 'view/'.$mailId, TRUE );
-		}
 
 		/** @var array<Part> $mailObjectParts */
 		$mailObjectParts	= $mail->objectInstance->mail->getParts();
@@ -355,10 +348,8 @@ class Controller_Admin_Mail_Queue extends Controller
 		try{
 			$mail			= $this->logic->getMail( $mailId );
 			$mail->parts	= $this->logic->getMailParts( $mail );
-			$this->logic->detectMailLibraryFromMail( $mail );
 
 			$this->addData( 'mail', $mail );
-			$this->addData( 'libraries', $this->logic->detectAvailableMailLibraries() );
 			$this->addData( 'page', $this->request->get( 'page' ) );
 		}
 		catch( Exception $e ){
