@@ -24,7 +24,6 @@ class Entity_Mail
 	public int|NULL $attemptedAt		= NULL;
 	public int|NULL $sentAt				= NULL;
 
-	public int|NULL $usedLibrary				= NULL;
 	public Mail_Abstract|NULL $objectInstance	= NULL;
 	public string|NULL $objectSerial			= NULL;
 	public string|NULL $rawInflated				= NULL;

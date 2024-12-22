@@ -20,8 +20,6 @@ class Job_Mail_Migration extends Job_Abstract
 
 	protected Model_Mail $model;
 
-	protected int $libraries;
-
 	/** @var array<int> $statusesHandledMails */
 	protected array $statusesHandledMails	= [
 		Model_Mail::STATUS_ABORTED,																//  status: -3
@@ -68,7 +66,6 @@ class Job_Mail_Migration extends Job_Abstract
 				$this->logicMail->detectUsedMailCompression( $mailClone );
 				$this->_detectMailClass( $mailClone );
 				$this->_migrateMailClass( $mailClone );
-				$this->_migrateMailObject( $mailClone );
 				$this->_migrateSenderAddress( $mailClone );
 				$this->_saveRaw( $mailClone );
 				$changes	= $this->collectChangesMadeToMailObject( $mail, $mailClone );
@@ -159,7 +156,6 @@ class Job_Mail_Migration extends Job_Abstract
 		$this->model		= new Model_Mail( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
-		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 
@@ -295,77 +291,6 @@ class Job_Mail_Migration extends Job_Abstract
 	}
 
 	/**
-	 *	@param		Entity_Mail		$mail		Mail object
-	 *	@return		bool
-	 *	@throws		ReflectionException
-	 */
-	private function _migrateMailObject( Entity_Mail $mail ): bool
-	{
-		$this->logicMail->decompressMailObject( $mail );
-		$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
-
-		//  currently using CeusMedia/Mail version 2
-		//  nothing to do here, placed for later
-		if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-			return FALSE;
-		}
-
-		//  currently using CeusMedia/Mail version 1
-		else if( $usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-			if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-				if( in_array( 'raw', $this->model->getColumns() ) ){
-					if( !empty( $mail->raw ) && is_string( $mail->raw ) && strlen( $mail->raw ) ){
-						$raw	= $this->logicMail->decompressString( $mail->raw, $mail->compression );
-						$parser	= new MailMessageParserV2();
-						$mail->objectInstance->mail	= $parser->parse( $raw );
-						$this->logicMail->compressMailObject( $mail, TRUE );
-						$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Mail v1 to v2' );
-						return TRUE;
-					}
-				}
-			}
-		}
-		//  currently using Net_Mail from CeusMedia/Common
-		else if( $usedLibrary === Logic_Mail::LIBRARY_COMMON ){
-			if( $this->libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){	// @todo finish support for v2, see todo below
-				$oldInstance	= $mail->objectInstance;
-				$newInstance	= new MailMessageV2();
-				$newInstance->setSubject( $oldInstance->mail->getSubject() );
-				$sender	= $mail->senderAddress;
-				if( $oldInstance->mail->getSender() )
-					$sender	= $oldInstance->mail->getSender();
-				$newInstance->setSender( $sender );
-
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-					$receiver	= new MailAddressV1();
- 					$receiver->setAddress( $mail->receiverAddress );
-					if( $mail->receiverName )
-						$receiver->setName( $mail->receiverName );
-					$newInstance->addRecipient( $receiver );
-					$parts	= MailMessageParserV1::parseBody( $oldInstance->mail->getBody() );
-					foreach( $parts as $part )
-						$newInstance->addPart( $part );
-					$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Common::Net_Mail to CeusMedia/Mail v1' );
-				}
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-					$receiver	= new MailAddressV2();
- 					$receiver->set( $mail->receiverAddress );
-					if( $mail->receiverName )
-						$receiver->setName( $mail->receiverName );
-					$newInstance->addRecipient( $receiver );
-// @todo find a way to get Net_Mail::parts and import in new CeusMedia\Mail\Message instance
-//					$newInstance->...
-					$this->logMigration( $mail, 'Migrated mail object from CeusMedia/Common::Net_Mail to CeusMedia/Mail v2' );
-				}
-				$mail->objectInstance->mail	= $newInstance;
-				$this->logicMail->compressMailObject( $mail, TRUE );
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-
-	/**
 	 *	Detects mail sender from mail object to note to database.
 	 *	@param		Entity_Mail		$mail		Mail object
 	 *	@return		bool
@@ -425,32 +350,8 @@ class Job_Mail_Migration extends Job_Abstract
 		if( !empty( $mail->raw ) && !$force )
 			return;
 		$this->logicMail->decompressMailObject( $mail );
-		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-			/** @var MailMessageV2 $libraryObject */
-			$libraryObject	= $mail->objectInstance->mail;
-			$raw = MailMessageRendererV2::render( $libraryObject );
-			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
-			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v2' );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-			/** @var MailMessageV1 $libraryObject */
-			$libraryObject	= $mail->objectInstance->mail;
-			/** @noinspection PhpUndefinedClassInspection */
-			$raw = MailMessageRendererV1::render( $libraryObject );
-			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
-			$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v1' );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$libraryObject	= $mail->objectInstance->mail;
-			$rawLines	= [];
-			foreach( $libraryObject->getHeaders()->getFields() as $header )
-				$rawLines[]	= $header->toString();
-			$rawLines[]	= '';
-			$rawLines[]	= $libraryObject->getBody();
-			/** @noinspection PhpUndefinedClassInspection */
-			$raw		= implode( Net_Mail::$delimiter, $rawLines );
-			$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
-			$this->logMigration( $mail, 'Saved raw using CeusMedia/Common::Net_Mail' );
-		}
+		$raw = MailMessageRendererV2::render( $mail->objectInstance->mail );
+		$mail->raw	= $this->logicMail->compressString( $raw, $mail->compression );
+		$this->logMigration( $mail, 'Saved raw using CeusMedia/Mail v2' );
 	}
 }

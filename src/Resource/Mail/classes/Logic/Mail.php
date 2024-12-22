@@ -17,9 +17,7 @@ use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
-use CeusMedia\Mail\Renderer as MailMessageRendererV1;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
-
 
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
@@ -31,8 +29,6 @@ class Logic_Mail extends Logic
 	public const LIBRARY_COMMON			= 1;
 	public const LIBRARY_MAIL_V1		= 2;
 	public const LIBRARY_MAIL_V2		= 4;
-
-	protected int $libraries			= 0;
 
 	/** @var array<int,Entity_Mail_Template> $detectedTemplates */
 	protected array $detectedTemplates	= [];
@@ -93,6 +89,7 @@ class Logic_Mail extends Logic
 	 *	@param		array|string	$userIds
 	 *	@param		array|string	$roleIds
 	 *	@return		array
+	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@deprecated
 	 *	@todo		find usage and move to module or remove, reason: uncool hard binding to user/role models
@@ -236,7 +233,7 @@ class Logic_Mail extends Logic
 	 */
 	public function decompressMailObject( Entity_Mail $mail, bool $unserialize = TRUE, bool $force = FALSE ): void
 	{
-		if( is_object( $mail->objectInstance ) && $unserialize && !is_null( $mail->objectInstance ) && !$force )
+		if( is_object( $mail->objectInstance ) && $unserialize && !$force )
 			return;
 
 		if( empty( $mail->object ) )
@@ -249,13 +246,22 @@ class Logic_Mail extends Logic
 		if( ( $noInstanceYet && $unserialize ) || ( $force && $unserialize ) ){
 			try{
 				$creation		= unserialize( $mail->objectSerial );
+				$mail->objectInstance	= $creation;
 			}
-			catch( Throwable $t ){
-				throw new RuntimeException( 'Deserialization failed: '.$t->getMessage(), 0, $t );
+			catch( Throwable ){
+				try{
+					$this->decompressMailRaw( $mail );
+					$class	= new ReflectionClass( $mail->mailClass );
+					$mail->objectInstance	= $class->newInstanceWithoutConstructor();
+					$mail->objectInstance->mail	= CeusMedia\Mail\Message\Parser::getInstance()->parse( $mail->rawInflated );
+					$this->compressMailObject( $mail );
+				}
+				catch( Throwable $t ){
+					throw new RuntimeException( 'Deserialization failed: '.$t->getMessage(), 0, $t );
+				}
 			}
-			if( !$creation )
+			if( !$mail->objectInstance )
 				throw new RuntimeException( 'Deserialization failed' );
-			$mail->objectInstance	= $creation;
 		}
 	}
 
@@ -308,77 +314,6 @@ class Logic_Mail extends Logic
 			default:
 				return $string;
 		}
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@return		integer			Flags of available mail library constants
-	 */
-	public function detectAvailableMailLibraries(): int
-	{
-		$libraries	= static::LIBRARY_UNKNOWN;
-		if( class_exists( 'CeusMedia\Mail\Part\HTML' ) )
-			$libraries	|= static::LIBRARY_MAIL_V1;
-		if( class_exists( 'CeusMedia\Mail\Message\Part\HTML' ) )
-			$libraries	|= static::LIBRARY_MAIL_V2;
-		return $libraries;
-	}
-
-	/**
-	 *	Tries to detect mail library used for mail by its ID.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		int|string		$mailId		ID of mail to get used library for
-	 *	@return		integer			ID of used library using Logic_Mail::LIBRARY_*
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
-	public function detectMailLibraryFromMailId( int|string $mailId ): int
-	{
-		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
-	}
-
-	/**
-	 *	Tries to detect mail library used for mail data object.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		Entity_Mail		$mail		Mail data object from database to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
-	 */
-	public function detectMailLibraryFromMail( Entity_Mail $mail ): int
-	{
-		if( !is_object( $mail ) )
-			throw new InvalidArgumentException( 'No mail object given' );
-		if( empty( $mail->usedLibrary ) ){
-			if( is_string( $mail->object ) )
-				$this->decompressMailObject( $mail );
-			$mail->usedLibrary	= $this->detectMailLibraryFromMailObjectInstance( $mail->objectInstance );
-		}
-		return $mail->usedLibrary;
-	}
-
-	/**
-	 *	Tries to detect mail library used for unpacked mail object.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		object		$mailObject		Mail data object from database to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
-	 */
-	public function detectMailLibraryFromMailObjectInstance( object $mailObject ): int
-	{
-		if( is_a( $mailObject, 'Mail_Abstract' ) ){
-			if( is_a( $mailObject->mail, 'Net_Mail' ) )
-				return Logic_Mail::LIBRARY_COMMON;
-			if( is_a( $mailObject->mail, 'CeusMedia\Mail\Message' ) ){
-				$agent		= $mailObject->mail->getUserAgent();
-//				$this->env->getMessenger()->noteNotice( 'Agent: '.$agent );die;
-				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/2.', '/' ).'/', $agent ) )
-					return Logic_Mail::LIBRARY_MAIL_V2;
-//				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/1.', '/' ).'/', $agent ) )
-				return Logic_Mail::LIBRARY_MAIL_V1;
-			}
-		}
-		return Logic_Mail::LIBRARY_UNKNOWN;
 	}
 
 	/**
@@ -481,6 +416,7 @@ class Logic_Mail extends Logic
 	 *	@return		string							ID of queued mail
 	 *	@throws		InvalidArgumentException
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function enqueueMail( Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): string
 	{
@@ -493,12 +429,6 @@ class Logic_Mail extends Logic
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
-		$senderAddress	= '';
-		if( $this->libraries & self::LIBRARY_MAIL_V1 || $this->libraries & self::LIBRARY_MAIL_V2 )
-			$senderAddress	= $mail->mail->getSender()->getAddress();
-		else if( $this->libraries & self::LIBRARY_COMMON )
-			$senderAddress	= $mail->mail->getSender()->address;
-
 		$incompleteMailDataObject	= Entity_Mail::createFromArray( [
 			'compression'		=> $this->getRecommendedCompression(),
 			'object'			=> NULL,
@@ -506,14 +436,14 @@ class Logic_Mail extends Logic
 			'raw'				=> NULL,
 		] );
 
-		$this->compressMailObject( $incompleteMailDataObject, TRUE );
+		$this->compressMailObject( $incompleteMailDataObject );
 		$this->regenerateRaw( $incompleteMailDataObject );
 
 		$data		= [
 			'templateId'		=> $mail->getTemplateId(),
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $senderAddress,
+			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
 			'receiverId'		=> $receiver->userId ?? 0,
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> $receiver->username ?? NULL,
@@ -625,7 +555,7 @@ class Logic_Mail extends Logic
 		if( !is_a( $mail->objectInstance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->objectInstance ) );
 		if( $mail->objectInstance->mail instanceof MailMessage)							//  modern mail message with parsed body parts
-			return $mail->objectInstance->mail->getParts( TRUE );
+			return $mail->objectInstance->mail->getParts();
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available
 	}
 
@@ -849,7 +779,6 @@ class Logic_Mail extends Logic
 	protected function __onInit(): void
 	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->libraries		= $this->detectAvailableMailLibraries();
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
@@ -908,19 +837,7 @@ class Logic_Mail extends Logic
 	 */
 	protected function regenerateRaw( Entity_Mail $mail ): void
 	{
-		$raw			= '';
-		$libraryObject	= $mail->objectInstance->mail;
-		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-			$raw	= MailMessageRendererV2::render( $libraryObject );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-			$raw	= MailMessageRendererV1::render( $libraryObject );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$raw		= implode( "\r\n", array_merge( array_map( static function( $field ){
-				return $field->toString();
-			}, $libraryObject->getHeaders()->getFields()), ['', $libraryObject->getBody()] ) );
-		}
+		$raw		= MailMessageRendererV2::render( $mail->objectInstance->mail );
 		$mail->raw	= $this->compressString( $raw, $mail->compression );
 	}
 

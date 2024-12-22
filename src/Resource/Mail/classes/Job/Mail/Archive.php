@@ -16,9 +16,6 @@ class Job_Mail_Archive extends Job_Abstract
 
 	protected Logic_Mail $logicMail;
 
-	/** @var	int		$libraries		Bitmask of supported mail libraries */
-	protected int $libraries;
-
 	protected array $statusesHandledMails	= [
 		Model_Mail::STATUS_ABORTED,																//  status: -3
 		Model_Mail::STATUS_FAILED,																//  status: -2
@@ -275,45 +272,23 @@ class Job_Mail_Archive extends Job_Abstract
 				$mail			= $this->model->get( $mailId );
 				$this->logicMail->decompressMailObject( $mail );
 				$sizeBefore		= strlen( $mail->object );
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-					$parts		= $mail->objectInstance->mail->getParts();
-					foreach( $parts as $nr => $part ){
+				$parts			= $mail->objectInstance->mail->getParts();
+				foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
-						if( $part->isAttachment() ){
-							$mail->objectInstance->mail->removePart( $nr );
-							$this->logicMail->compressMailObject( $mail );
-							$renderer	= new \CeusMedia\Mail\Message\Renderer();
-							$raw		= $renderer->render( $mail->objectInstance->mail );
-							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object,
-									'raw'		=> $this->logicMail->compressString( $raw ),
-								], FALSE );
-							}
-							$results->attachments++;
-							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object );
+					if( $part->isAttachment() ){
+						$mail->objectInstance->mail->removePart( $nr );
+						$this->logicMail->compressMailObject( $mail );
+						$renderer	= new \CeusMedia\Mail\Message\Renderer();
+						$raw		= $renderer->render( $mail->objectInstance->mail );
+						if( !$this->dryMode ){
+							$this->model->edit( $mail->mailId, [
+								'object'	=> $mail->object,
+								'raw'		=> $this->logicMail->compressString( $raw ),
+							], FALSE );
 						}
-					}
-				}
-				else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-					$parts		= $mail->objectInstance->mail->getParts();
-					foreach( $parts as $nr => $part ){
-//						$this->out( "Part: ".get_class( $part ) );
-						if( $part instanceof \CeusMedia\Mail\Part\Attachment ){
-							$mail->objectInstance->mail->removePart( $nr );
-							$this->logicMail->compressMailObject( $mail );
-							$raw	= \CeusMedia\Mail\Renderer::render( $mail->objectInstance->mail );
-							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object,
-									'raw'		=> $this->logicMail->compressString( $raw ),
-								], FALSE );
-							}
-							$results->attachments++;
-							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object );
-						}
+						$results->attachments++;
+						$results->sizeBefore	+= $sizeBefore;
+						$results->sizeAfter		+= strlen( $mail->object );
 					}
 				}
 				$this->showProgress( ++$results->mails, count( $mailIds ) );
@@ -374,12 +349,6 @@ class Job_Mail_Archive extends Job_Abstract
 			/** @var Entity_Mail $mail */
 			$mail	= $this->model->get( $mailId );
 			$this->logicMail->decompressMailObject( $mail );
-			$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
-			if( !( $this->libraries & $usedLibrary ) ){
-				$fails[]	= 'Mail #'.$mailId.': Mail library mismatch: '.$usedLibrary;
-				$this->showProgress( $count, count( $mailIds ), 'E' );
-				continue;
-			}
 			$uuid		= ID::uuid();
 			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
 			if( !empty( $mail->raw ) ){
@@ -404,18 +373,11 @@ class Job_Mail_Archive extends Job_Abstract
 						if( ( $page = $object->getPage() ) )
 						$object->mail->addHtml( $page->build() );
 					}
-					if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-						$raw		= CeusMedia\Mail\Renderer::render( $object->mail );
-					}
-					else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-						$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
-					}
+					$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
 					if( !file_exists( $path.$shard ) )
 						FolderEditor::createFolder( $path.$shard );
-					if( NULL !== $raw ){
-						FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
-						FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
-					}
+					FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
+					FileWriter::save( $path.$shard.$uuid.'.raw.bz2', bzcompress( $raw ) );
 					$index[$mailId]	= ['uuid' => $uuid, 'shard' => $shard, 'format' => 'bzip'];
 					$this->showProgress( $count, count( $mailIds ), '+' );
 				}
@@ -442,7 +404,6 @@ class Job_Mail_Archive extends Job_Abstract
 		$this->model		= new Model_Mail( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
-		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 

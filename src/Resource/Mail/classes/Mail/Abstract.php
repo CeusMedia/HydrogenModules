@@ -152,21 +152,7 @@ abstract class Mail_Abstract
 	 */
 	public function addAttachment( string $filePath, ?string $mimeType = NULL, ?string $encoding = NULL, ?string $fileName = NULL ): static
 	{
-		$libraries		= $this->logicMail->detectAvailableMailLibraries();
-		$library		= $this->logicMail->detectMailLibraryFromMailObjectInstance( $this );
-
-		if( !$library || !( $libraries & $library ) )
-			throw new RuntimeException( 'Mail was created by a mail library which is not supported' );
-
-		switch( $library ){
-			case Logic_Mail::LIBRARY_MAIL_V1:
-				/** @noinspection PhpUndefinedMethodInspection */
-				$this->mail->addFile( $filePath, $mimeType, $encoding, $fileName );
-				break;
-			case Logic_Mail::LIBRARY_MAIL_V2:
-				$this->mail->addAttachment( $filePath, $mimeType, $encoding, $fileName );
-				break;
-		}
+		$this->mail->addAttachment( $filePath, $mimeType, $encoding, $fileName );
 		return $this;
 	}
 
@@ -226,22 +212,16 @@ abstract class Mail_Abstract
 	public function initTransport( bool $verbose = FALSE ): static
 	{
 		if( empty( $this->logicMail ) )
-			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
-		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
-				if( $libraries & ( Logic_Mail::LIBRARY_MAIL_V1 | Logic_Mail::LIBRARY_MAIL_V2 ) ){
-					$this->transport	= SmtpMailTransport::getInstance(
-						$options->get( 'hostname' ),
-						$options->get( 'port' ),
-						$options->get( 'username' ),
-						$options->get( 'password' )
-					);
-				}
-				else
-					throw new RuntimeException( 'No supported mail library available' );
+				$this->transport	= SmtpMailTransport::getInstance(
+					$options->get( 'hostname' ),
+					$options->get( 'port' ),
+					$options->get( 'username' ),
+					$options->get( 'password' )
+				);
 				$this->transport->setSecure( $options->get( 'secure' ) );
 				$this->transport->setVerbose( $verbose );
 				break;
@@ -484,7 +464,6 @@ abstract class Mail_Abstract
 	protected function applyTemplateToHtml( string $content, int|string $templateId = '0' ): string
 	{
 		$messenger	= $this->env->getMessenger();
-		$libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
@@ -516,11 +495,7 @@ abstract class Mail_Abstract
 						continue;
 					}
 				}
-				if( $libraries & Logic_Mail::LIBRARY_MAIL_V1 )
-					/** @noinspection PhpUndefinedMethodInspection */
-					$this->mail->addHtmlImage( 'image'.( $nr + 1), $this->env->uri.$image );
-				else if( $libraries & Logic_Mail::LIBRARY_MAIL_V2 )
-					$this->mail->addInlineImage( 'image'.( $nr + 1), $this->env->uri.$image, NULL, 'base64' );
+				$this->mail->addInlineImage( 'image'.( $nr + 1), $this->env->uri.$image, NULL, 'base64' );
 			}
 		}
 
