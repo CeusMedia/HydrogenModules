@@ -2,7 +2,7 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Ip_Lock_Reason extends View
+class View_Manage_IP_Lock_Reason extends View
 {
 	public function add(): void
 	{
