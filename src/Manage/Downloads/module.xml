@@ -3,13 +3,14 @@
 	<title>Manage: Downloads</title>
 	<description><![CDATA[Management for frontend module Info:Downloads.]]></description>
 	<category>Management</category>
-	<version>0.4.0</version>
+	<version>0.4.1</version>
 	<log version="0.3.4">Cloned from module Info:Files.</log>
 	<log version="0.3.5">Use module Resource:Upload.</log>
 	<log version="0.3.6">Replace CDN resource.</log>
 	<log version="0.3.7">Migration to PHP 8.</log>
 	<log version="0.3.8">Strict types.</log>
 	<log version="0.4.0">Extracted logic and models to new Module Resource:Downloads.</log>
+	<log version="0.4.1">Extract AJAX actions to own controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
