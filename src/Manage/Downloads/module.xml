@@ -14,10 +14,12 @@
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Ajax/Manage/Download.php</class>
 		<class>Controller/Manage/Download.php</class>
-		<class>View/Manage/Download.php</class>
+		<class>Logic/Download/File.php</class>
 		<class>Model/Download/File.php</class>
 		<class>Model/Download/Folder.php</class>
+		<class>View/Manage/Download.php</class>
 		<locale>de/manage/download.ini</locale>
 		<locale>de/html/manage/download/index.bottom.html</locale>
 		<locale>de/html/manage/download/index.top.html</locale>

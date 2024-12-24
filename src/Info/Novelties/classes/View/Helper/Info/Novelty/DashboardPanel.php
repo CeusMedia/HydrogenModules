@@ -39,7 +39,6 @@ class View_Helper_Info_Novelty_DashboardPanel extends Abstraction
 		if( !$this->news )
 			return '';
 		$list	= [];
-		/** @var Logic_Authentication $logicAuth */
 		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$userId		= $logicAuth->getCurrentUserId();
 		$model		= new Model_Novelty( $this->env );
@@ -96,7 +95,7 @@ let InfoNoveltyDashboardPanel = {
 			let that = jQuery(this);
 			that.parent().parent().fadeOut();
 			jQuery.ajax({
-				url:  "./info/novelty/ajax/dismiss/",
+				url:  "./ajax/info/novelty/dismiss/",
 				data: jQuery(this).data(),
 				method: "POST",
 				dataType: "json",

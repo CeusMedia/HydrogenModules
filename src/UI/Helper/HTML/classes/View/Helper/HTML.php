@@ -235,7 +235,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			$selected	= $options['_selected'] ?? NULL;
 			$options	= self::Options( $options, $selected );
 		}
-		if( preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )
+		if( NULL !== $onChange && preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )
 			$onChange	= "document.getElementById('".self::$prefixIdForm.$onChange."').submit();";
 		$attributes	= [
 			'id'		=> str_replace( '[]', '', self::$prefixIdInput.$name ),

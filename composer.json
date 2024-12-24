@@ -70,7 +70,6 @@
             "CeusMedia\\HydrogenModulesTest\\": ["test/"],
             "CeusMedia\\HydrogenModulesIntegrationTest\\": ["test/Integration"]
         }
-
     },
     "scripts": {
         "dev:all": [

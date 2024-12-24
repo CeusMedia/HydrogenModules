@@ -12,7 +12,6 @@ class Controller_Ajax_Info_Novelty extends AjaxController
 	 */
 	public function dismiss(): void
 	{
-		/** @var Logic_Authentication $logicAuth */
 		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$userId		= $logicAuth->getCurrentUserId();
 		$model		= new Model_Novelty( $this->env );
@@ -30,6 +29,7 @@ class Controller_Ajax_Info_Novelty extends AjaxController
 	 *	@param		int|string		$panelId
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function renderDashboardPanel( int|string $panelId ): void
 	{

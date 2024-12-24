@@ -45,6 +45,7 @@
 		<class>Controller/Ajax/Info/Contact.php</class>
 		<class>Controller/Info/Contact.php</class>
 		<class>Hook/Info/Contact.php</class>
+		<class>Logic/Info/Contact.php</class>
 		<class>Mail/Info/Contact.php</class>
 		<class>Mail/Info/Contact/Form.php</class>
 		<class>View/Helper/Info/Contact/Form/Modal.php</class>
