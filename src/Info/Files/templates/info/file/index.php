@@ -96,7 +96,7 @@ foreach( $folders as $item ){
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $w->buttonOpenFolder
 	] );
-	if( 0 && in_array( 'ajaxRenameFolder', $rights ) ){
+	if( 0 && $env->getAcl()->has( 'ajax/info/files', 'renameFolder' ) ){
 		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoFile.changeFolderName('.$item->downloadFolderId.', \''.$item->title.'\')',
 			'class'	=> 'btn not-btn-small',

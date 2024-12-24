@@ -53,20 +53,6 @@ class Controller_Info_File extends Controller
 	}
 
 	/**
-	 *	@return		never
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	public function ajaxRenameFolder(): never
-	{
-		$folderId	= $this->request->get( 'folderId' );
-		$title		= $this->request->get( 'name' );
-
-		$this->logic->renameFolder( $folderId, $title );
-		print( json_encode( $this->logic->getFolder( $folderId ) ) );
-		exit;
-	}
-
-	/**
 	 *	@param		int|string		$fileId
 	 *	@return		never
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
