@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
+/** @var Dictionary $moduleConfig */
 /** @var View_Manage_User $view */
 /** @var array<string,array<string|int,string|int>> $words */
 /** @var array<object> $roles */

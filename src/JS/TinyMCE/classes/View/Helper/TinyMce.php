@@ -16,8 +16,8 @@ class View_Helper_TinyMce extends Abstraction
 	/**	@var	Dictionary		$config			Module configuration */
 	protected Dictionary $config;
 
-	/**	@var 	string			$pathFront		Path to frontend application */
-	protected string $pathFront;
+//	/**	@var 	string			$pathFront		Path to frontend application */
+//	protected string $pathFront;
 
 	protected SimpleCacheInterface $cache;
 
@@ -30,7 +30,7 @@ class View_Helper_TinyMce extends Abstraction
 	public function __construct( WebEnvironment $env ){
 		$this->setEnv( $env );
 		$this->config		= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$this->pathFront	= $this->config->get( 'path' );
+//		$this->pathFront	= $this->config->get( 'path' );
 		$this->cache		= $this->env->getCache();
 	}
 
@@ -93,12 +93,13 @@ class View_Helper_TinyMce extends Abstraction
 			$this->listImages	= [];
 			$this->cache->delete( $cacheKey );
 		}
-		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
+		if( $this->cache->has( $cacheKey ) )
+			$this->listImages	= $this->cache->get( $cacheKey );
+		else{
 			$this->list	= [];
-			if( ( $modules = $this->env->getModules() ) ){	 										//  get module handler resource if existing
-				$payload	= ['hidePrefix' => FALSE];
-				$modules->callHookWithPayload( 'TinyMCE', 'getImageList', $this, $payload );	//  call related module event hooks
-			}
+			$modules	= $this->env->getModules();
+			$payload	= ['hidePrefix' => FALSE];
+			$modules->callHookWithPayload( 'TinyMCE', 'getImageList', $this, $payload );	//  call related module event hooks
 			$this->listImages	= $this->list;
 			usort( $this->listImages, [$this, "__compare"] );
 			$this->cache->set( $cacheKey, $this->listImages );
@@ -119,7 +120,9 @@ class View_Helper_TinyMce extends Abstraction
 			$this->listLinks	= [];
 			$this->cache->delete( $cacheKey );
 		}
-		if( !( $this->listLinks = $this->cache->get( $cacheKey ) ) ){
+		if( $this->cache->has( $cacheKey ) )
+			$this->listLinks	= $this->cache->get( $cacheKey );
+		else{
 			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks

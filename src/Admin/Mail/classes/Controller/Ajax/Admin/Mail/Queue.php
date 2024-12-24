@@ -20,11 +20,12 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 	];
 
 	/**
+	 *	@param		?string		$panelId
 	 *	@return		int
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
 	 */
-	public function renderDashboardPanel(): int
+	public function renderDashboardPanel( string $panelId = NULL ): int
 	{
 		$model	= new Model_Mail( $this->env );
 

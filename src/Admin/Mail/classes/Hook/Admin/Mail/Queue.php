@@ -7,7 +7,7 @@ class Hook_Admin_Mail_Queue extends Hook
 	/**
 	 *	@return		void
 	 */
-	public function onRegisterDashboardPanels(): void
+	public function onRegisterDashboardPanels( ): void
 	{
 		if( !$this->env->getAcl()->has( 'ajax/admin/mail/queue', 'renderDashboardPanel' ) )
 			return;

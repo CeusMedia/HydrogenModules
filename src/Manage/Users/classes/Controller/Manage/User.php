@@ -364,6 +364,7 @@ class Controller_Manage_User extends Controller
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->setData( [
+			'moduleConfig'		=> $this->moduleConfig,
 			'nameMinLength'		=> $this->moduleConfig->get( 'name.length.min' ),
 			'nameMaxLength'		=> $this->moduleConfig->get( 'name.length.max' ),
 			'pwdMinLength'		=> $this->moduleConfig->get( 'password.length.min' ),
@@ -379,6 +380,7 @@ class Controller_Manage_User extends Controller
 
 	/**
 	 *	@return		?Entity_User
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleAddAction(): ?Entity_User
@@ -467,6 +469,7 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		Entity_User		$user
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleEditAction( Entity_User $user ): void
@@ -569,6 +572,7 @@ class Controller_Manage_User extends Controller
 	 *	@param		string		$userId
 	 *	@param		int			$status
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setStatus( string $userId, int $status ): void

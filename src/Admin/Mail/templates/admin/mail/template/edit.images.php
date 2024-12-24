@@ -110,11 +110,11 @@ return '
 			<div class="content-panel-inner">
 				<form action="./admin/mail/template/edit/'.$template->mailTemplateId.'" method="post" class="not-form-changes-auto">
 					<div class="row-fluid">
-						<div class="span9">
+						<div class="span8">
 							<label for="input_template_image">'.$words['edit-image-add']['labelPath'].'</label>
 							<input type="text" name="template_image" id="input_template_image" class="span12" required="required"/>
 						</div>
-						<div class="span3">
+						<div class="span4">
 							<label>&nbsp;</label>
 							<div class="btn-group">
 								'.$trigger.'

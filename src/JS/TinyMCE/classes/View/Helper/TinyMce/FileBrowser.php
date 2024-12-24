@@ -434,10 +434,10 @@ class View_Helper_TinyMce_FileBrowser
 		$pathLabel		= join( ' / ', $pathLabel );
 		$position		= '<b><small>Position:</small></b> '.$pathLabel;
 
-		$modeLabel		= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
-		$mode			= '<b><small>Modus:</small></b> '.$modeLabel;
+		$sourceModeLabel	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
+		$sourceMode			= '<b><small>Modus:</small></b> '.$sourceModeLabel;
 
-		return HtmlTag::create( 'div', $mode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, ['class' => 'position autocut'] ).
+		return HtmlTag::create( 'div', $sourceMode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, ['class' => 'position autocut'] ).
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', [

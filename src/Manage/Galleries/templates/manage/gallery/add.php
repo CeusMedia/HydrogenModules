@@ -33,11 +33,11 @@ return $textTop.'
 						</div>
 						<div class="span5">
 							<label for="input_title">'.$words['addGallery']['labelTitle'].'</label>
-							<input type="text" name="title" id="input_title" class="span12" maxlength="120" value="'.htmlentities( $gallery->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+							<input type="text" name="title" id="input_title" class="span12" maxlength="120" value="'.htmlentities( $gallery->title ?? '', ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 						</div>
 						<div class="span4">
 							<label for="input_path"><abbr title="'.$words['addGallery']['labelPathHint'].'">'.$words['addGallery']['labelPath'].'</abbr></label>
-							<input type="text" name="path" id="input_path" class="span12" maxlength="60" value="'.htmlentities( $gallery->path, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+							<input type="text" name="path" id="input_path" class="span12" maxlength="60" value="'.htmlentities( $gallery->path ?? '', ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 						</div>
 						<div class="span2">
 							<label for="input_status">'.$words['addGallery']['labelStatus'].'</label>
@@ -47,7 +47,7 @@ return $textTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label>'.$words['addGallery']['labelDescription'].'</label>
-							<textarea name="description" class="span12 TinyMCE" rows="6" data-tinymce-mode="minimal">'.htmlentities( $gallery->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+							<textarea name="description" class="span12 TinyMCE" rows="6" data-tinymce-mode="minimal">'.htmlentities( $gallery->description ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 					<button type="button" class="btn btn-small" onclick="document.location.href=\'./manage/gallery\';"><i class="icon-arrow-left"></i> '.$words['addGallery']['buttonCancel'].'</button>

@@ -47,7 +47,7 @@ return '
 			<div class="row-fluid">
 				<div class="span7">
 					<label for="input_title">Titel</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $category->title, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $category->title ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span3">
 					<label for="input_status">'.$w->labelStatus.'</label>
@@ -61,7 +61,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_content">'.$w->labelContent.'</label>
-					<textarea name="content" id="input_content" class="span12 TinyMCE" data-tinymce-mode="minimal" rows="10">'.htmlentities( $category->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="content" id="input_content" class="span12 TinyMCE" data-tinymce-mode="minimal" rows="10">'.htmlentities( $category->content ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 					<br/>
 				</div>
 			</div>

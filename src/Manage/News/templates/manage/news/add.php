@@ -36,7 +36,7 @@ return '
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_title" class="mandatory required">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $news->title, ENT_QUOTES, 'UTF-8' ).'" required/>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $news->title ?? '', ENT_QUOTES, 'UTF-8' ).'" required/>
 				</div>
 				<div class="span2">
 					<label for="input_status">'.$w->labelStatus.'</label>
@@ -53,7 +53,7 @@ return '
 			</div>
 			<div class="row-fluid">
 				<label for="input_content" class="mandatory required">'.$w->labelContent.'</label>
-				<textarea name="content" id="input_content" class="span12 '.$editorClass.'" data-tinymce-mode="minimal" rows="12">'.htmlentities( $news->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea name="content" id="input_content" class="span12 '.$editorClass.'" data-tinymce-mode="minimal" rows="12">'.htmlentities( $news->content ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 			</div>
 			<br/>
 			'.HtmlTag::create( 'div', join( '&nbsp;', [

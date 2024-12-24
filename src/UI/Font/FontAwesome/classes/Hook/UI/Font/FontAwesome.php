@@ -1,68 +1,41 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Font_FontAwesome extends Hook
 {
 	/**
 	 *	...
-	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $module, $context, array & $payload )
+	public function onPageApplyModules(): void
 	{
-		$config	= $env->getConfig();
+		if( !$this->env instanceof WebEnvironment )
+			return;
+
+		$config	= $this->env->getConfig();
 		$mc		= $config->getAll( 'module.ui_font_fontawesome.', TRUE );
 		if( !$config->get( 'module.ui_font.active' ) )
 			return;
 		if( !$config->get( 'module.ui_font_fontawesome.active' ) )
 			return;
 
-		if( version_compare( $mc->get( 'version' ), 5 ) < 0 ){
-			$url	= $config->get( 'module.ui_font.uri' ).'FontAwesome/font-awesome.min.css';
-			if( $mc->get( 'version' ) === '4.7.0' ){
-				if( $mc->get( 'v4.cdn' ) ){
-					$url	= 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
-					$env->getPage()->css->theme->addUrl( $url );
-				}
-				else{
-					$url	= 'FontAwesome/4.7.0/font-awesome.min.css';
-					$env->getPage()->css->common->addUrl( $url );
-				}
-			}
-			$env->getPage()->addBodyClass( 'uses-FontAwesome' );
-			return;
-		}
+		$page	= $this->env->getPage();
+		$page->addBodyClass( 'uses-FontAwesome' );
 
-		$license	= $mc->get( 'v5.license' );
-		$styles		= $mc->getAll( 'v5.'.$license.'.', TRUE );
-		if( $styles->get( 'all' ) )
-			self::addV5CdnResource( $env, 'all' );
-		else{
-			if( $styles->get( 'solid' ) )
-				self::addV5CdnResource( $env, 'solid' );
-			if( $styles->get( 'regular' ) )
-				self::addV5CdnResource( $env, 'regular' );
-			if( $styles->get( 'light' ) && $license === 'pro' )
-				self::addV5CdnResource( $env, 'light' );
-			if( $styles->get( 'brand' ) )
-				self::addV5CdnResource( $env, 'brand' );
-			self::addV5CdnResource( $env, 'fontawesome' );
-		}
-
-		if( 1 || $mc->get( 'v5.shim' ) ){
-			self::addV5CdnResource( $env, 'v4-shims' );
-		}
+		$atLeastVersion5 = version_compare( $mc->get( 'version' ), '5.0.0', '>=' );
+		$atLeastVersion5 ? $this->loadVersion5( $this->env ) : $this->loadVersion4( $this->env );
 	}
 
-	protected static function addV5CdnResource( $env, $style = 'all' )
+	/**
+	 *	@param		WebEnvironment	$env
+	 *	@param		string			$style
+	 *	@return		void
+	 */
+	protected function addV5CdnResource( WebEnvironment $env, string $style = 'all' ): void
 	{
 		$config			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
 		$urlTemplateCss	= 'https://%s.fontawesome.com/releases/v%s/css/%s.css';
@@ -88,6 +61,53 @@ class Hook_UI_Font_FontAwesome extends Hook
 				'defer'			=> 'defer',
 				'crossorigin'	=> 'anonymous',
 			] ) );
+		}
+	}
+
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		void
+	 */
+	protected function loadVersion4( WebEnvironment $env ): void
+	{
+		$mc		= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
+		if( '4.7.0' === $mc->get( 'version' ) ){
+			if( $mc->get( 'v4.cdn' ) ){
+				$url	= 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+				$env->getPage()->css->theme->addUrl( $url );
+			}
+			else{
+				$url	= 'FontAwesome/4.7.0/font-awesome.min.css';
+				$env->getPage()->css->common->addUrl( $url );
+			}
+		}
+	}
+
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		void
+	 */
+	protected function loadVersion5( WebEnvironment $env ): void
+	{
+		$mc			= $env->getConfig()->getAll( 'module.ui_font_fontawesome.', TRUE );
+		$license	= $mc->get( 'v5.license' );
+		$styles		= $mc->getAll( 'v5.'.$license.'.', TRUE );
+		if( $styles->get( 'all' ) )
+			$this->addV5CdnResource( $env, 'all' );
+		else{
+			if( $styles->get( 'solid' ) )
+				$this->addV5CdnResource( $env, 'solid' );
+			if( $styles->get( 'regular' ) )
+				$this->addV5CdnResource( $env, 'regular' );
+			if( $styles->get( 'light' ) && 'pro' === $license )
+				$this->addV5CdnResource( $env, 'light' );
+			if( $styles->get( 'brand' ) )
+				$this->addV5CdnResource( $env, 'brand' );
+			$this->addV5CdnResource( $env, 'fontawesome' );
+		}
+
+		if( 1 || $mc->get( 'v5.shim' ) ){
+			$this->addV5CdnResource( $env, 'v4-shims' );
 		}
 	}
 }
