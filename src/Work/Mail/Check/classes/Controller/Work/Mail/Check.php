@@ -76,33 +76,6 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( 'group', TRUE );
 	}
 
-	public function ajaxAddress( string $addressId ): void
-	{
-		$address	= $this->modelAddress->get( $addressId );
-		if( $address ){
-			$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, ['createdAt' => 'DESC'] );
-			$this->addData( 'addressId', $addressId );
-			$this->addData( 'address', $address );
-		}
-	}
-
-	public function ajaxEditAddress(): void
-	{
-		$addressId	= $this->request->get( 'id' );
-		$address	= $this->request->get( 'address' );
-
-		$result	= FALSE;
-		if( $this->modelAddress->get( $addressId ) ){
-			$this->modelAddress->edit( $addressId, [
-				'address'	=> trim( $address ),
-				'status'	=> 0
-			] );
-			$result	= TRUE;
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
 	public function check(): void
 	{
 		$addressIds	= $this->request->get( 'addressId' );
@@ -415,7 +388,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->addData( 'groups', $groups );
 	}
 
-	public function remove()
+	public function remove(): void
 	{
 		$addressIds	= $this->request->get( 'addressId' );
 		if( !is_array( $addressIds ) )

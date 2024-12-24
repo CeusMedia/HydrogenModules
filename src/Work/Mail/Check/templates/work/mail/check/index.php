@@ -233,7 +233,7 @@ function editAddress(id, address){
 	let edited = prompt("What?", address);
 	if(edited){
 		$.ajax({
-			url: "./work/mail/check/ajaxEditAddress",
+			url: "./ajax/work/mail/check/editAddress",
 			method: "POST",
 			data: {id: id, address: edited},
 			dataType: "JSON",
