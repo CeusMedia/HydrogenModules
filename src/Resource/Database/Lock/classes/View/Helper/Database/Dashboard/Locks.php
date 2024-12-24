@@ -39,7 +39,7 @@ class View_Helper_Database_Dashboard_Locks
 			$module	= $modules[$lock->subject];
 			$entry	= $module->model->get( $lock->entryId );
 			if( !$entry )
-				throw new Exception( 'Relation between timer and module is invalid' );
+				throw new RuntimeException( 'Relation between timer and module is invalid' );
 			$lock->type				= $module->typeLabel;
 			$lock->relation			= $entry;
 			$lock->relationTitle	= $entry->{$module->column};

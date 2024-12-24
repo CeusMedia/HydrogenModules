@@ -8,15 +8,11 @@ class Controller_Database_Lock extends Controller
 {
 	protected Model_Lock $model;
 
-	public function ajaxRenderDashboardPanel( string $panelId ): void
-	{
-		$modelUser	= new Model_User( $this->env );
-		$locks		= $this->model->getAll();
-		foreach( $locks as $lock )
-			$lock->user	= $modelUser->get( $lock->userId );
-		$this->addData( 'locks', $locks );
-	}
-
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$modules	= $this->env->getModules();
@@ -32,7 +28,12 @@ class Controller_Database_Lock extends Controller
 		$this->addData( 'locks', $locks );
 	}
 
-	public function unlock( string $lockId ): void
+	/**
+	 *	@param		int|string		$lockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unlock( int|string $lockId ): void
 	{
 		$lock	= $this->model->get( $lockId );
 		if( !$lock )
@@ -42,11 +43,21 @@ class Controller_Database_Lock extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );
 	}
 
+	/**
+	 *	@param		object		$lock
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getEntryTitle( object $lock ): string
 	{
 		$title	= '<em><small class="muted">unbekannt</small></em>';
