@@ -22,11 +22,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	protected Model_Mail $model;
 	protected string $filterPrefix	= 'filter_admin_mail_queue_';
 
-	public function ajaxRenderDashboardPanel( string $panelId )
-	{
-		return $this->view->ajaxRenderDashboardPanel();
-	}
-
 	/**
 	 *	Delivers attachment content.
 	 *	By sending the attachments MIME type, the browser can decide, what to do.

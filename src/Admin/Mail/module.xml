@@ -3,7 +3,7 @@
 	<title>Admin: Mail</title>
 	<description/>
 	<category>Administration</category>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted parts of mail resource module to form this module.</log>
 	<log version="0.3">Finished migration to own module.</log>
@@ -67,6 +67,7 @@
 	<log version="0.9.9">Add bulk actions in queue index.</log>
 	<log version="1.0">Support attachment folders.</log>
 	<log version="1.0.1">Code update.</log>
+	<log version="1.0.2">Finish extraction of AJAX controllers.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -77,6 +78,7 @@
 		<class>Controller/Admin/Mail/Template.php</class>
 		<class>Controller/Admin/Mail/Template/Export.php</class>
 		<class>Controller/Admin/Mail/Template/Import.php</class>
+		<class>Controller/Ajax/Admin/Mail/Queue.php</class>
 		<class>Controller/Ajax/Admin/Mail/Template.php</class>
 		<class>Hook/Admin/Mail/Attachment.php</class>
 		<class>Hook/Admin/Mail/Queue.php</class>
