@@ -1,68 +1,24 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Author extends Controller
 {
-	protected $frontend;
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected Logic_Frontend $frontend;
+	protected Logic_Catalog $logic;
+	protected HttpRequest $request;
+	protected HttpPartitionSession $session;
+	protected MessengerResource $messenger;
 
-	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$cache		= $env->getCache();
-		if( !( $list = $cache->get( 'catalog.tinymce.images.authors' ) ) ){
-			$logic		= new Logic_Catalog( $env );
-			$frontend	= Logic_Frontend::getInstance( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );				//  focus module configuration
-			$pathImages	= $frontend->getPath( 'contents' ).$config->get( 'path.authors' );			//  get path to author images
-			$pathImages	= substr( $pathImages, strlen( $frontend->getPath() ) );					//  strip frontend base path
-			$list		= [];
-			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
-			foreach( $authors as $item ){
-				if( $item->image ){
-					$id		= str_pad( $item->authorId, 5, 0, STR_PAD_LEFT );
-//					$label	= $item->lastname.( $item->firstname ? ', '.$item->firstname : "" );
-					$label	= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
-					$list[] = (object) [
-						'title'	=> $label,
-						'value'	=> $pathImages.$id.'_'.$item->image,
-					];
-				}
-			}
-			$cache->set( 'catalog.tinymce.images.authors', $list );
-		}
-		$context->list  = array_merge( $context->list, [(object) [			//  extend global collection by submenu with list of items
-			'title'	=> 'Autoren:',												//  label of submenu @todo extract
-			'menu'	=> array_values( $list ),								//  items of submenu
-		]] );
-	}
-
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$cache		= $env->getCache();
-		if( !( $authors = $cache->get( 'catalog.tinymce.links.authors' ) ) ){
-			$logic		= new Logic_Catalog( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$authors	= $logic->getAuthors( [], ['lastname' => 'ASC', 'firstname' => 'ASC'] );
-			foreach( $authors as $nr => $item ){
-				$label		= ( $item->firstname ? $item->firstname.' ' : '' ).$item->lastname;
-				$url		= $logic->getAuthorUri( $item );
-				$authors[$nr] = (object) ['title' => $label, 'value' => $url];
-			}
-			$cache->set( 'catalog.tinymce.links.authors', $authors );
-		}
-		$context->list  = array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
-			'title'	=> 'Autoren:',												//  label of submenu @todo extract
-			'menu'	=> array_values( $authors ),								//  items of submenu
-		]] );
-	}
-
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'add' );
@@ -82,13 +38,12 @@ class Controller_Manage_Catalog_Author extends Controller
 		$this->addData( 'authors', $this->logic->getAuthors() );
 	}
 
-	public function ajaxSetTab( $tabKey )
-	{
-		$this->session->set( 'manage.catalog.author.tab', $tabKey );
-		exit;
-	}
-
-	public function edit( $authorId )
+	/**
+	 *	@param		int|string		$authorId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $authorId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -108,7 +63,10 @@ class Controller_Manage_Catalog_Author extends Controller
 		$this->addData( 'articles', $this->logic->getArticlesFromAuthor( $author ) );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 #		if( !( $authors	= $this->env->getCache()->get( 'authors' ) ) ){
 			$authors	= $this->logic->getAuthors();
@@ -117,7 +75,11 @@ class Controller_Manage_Catalog_Author extends Controller
 		$this->addData( 'authors', $authors );
 	}
 
-	public function remove( $authorId )
+	/**
+	 *	@param		int|string		$authorId
+	 *	@return		void
+	 */
+	public function remove( int|string $authorId ): void
 	{
 		$words	= $this->getWords( 'remove' );
 		if( $this->logic->getArticlesFromAuthor( $authorId ) )
@@ -128,18 +90,26 @@ class Controller_Manage_Catalog_Author extends Controller
 		}
 	}
 
-	public function removeImage( $authorId )
+	/**
+	 *	@param		int|string		$authorId
+	 *	@return		void
+	 */
+	public function removeImage( int|string $authorId ): void
 	{
 		$this->logic->removeAuthorImage( $authorId );
 		$this->restart( 'manage/catalog/author/edit/'.$authorId );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Author::init start' );
-		$this->messenger	= $this->env->getMessenger();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Catalog( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
@@ -151,11 +121,11 @@ class Controller_Manage_Catalog_Author extends Controller
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Author::init done' );
 	}
 
-	protected function uploadImage( $authorId, $file )
+	protected function uploadImage( int|string $authorId, array $file ): bool
 	{
 		$words		= (object) $this->getWords( 'upload' );
-		if( !isset( $file['name'] ) || empty( $file['name'] ) )
-			return;
+		if( empty( $file['name'] ) )
+			return FALSE;
 		if( $file['error']	!= 0 ){
 			$handler	= new UploadErrorHandler();
 			$handler->setMessages( $this->getWords( 'uploadErrors' ) );
@@ -175,9 +145,11 @@ class Controller_Manage_Catalog_Author extends Controller
 		try{
 			$this->logic->removeAuthorImage( $authorId );											//  remove older image if set
 			$this->logic->addAuthorImage( $authorId, $file );										//  set newer image
+			return TRUE;
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->msgErrorUpload, $e->getMessage() );
 		}
+		return FALSE;
 	}
 }

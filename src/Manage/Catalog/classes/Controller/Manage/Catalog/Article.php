@@ -14,101 +14,7 @@ class Controller_Manage_Catalog_Article extends Controller
 	protected $session;
 	protected $sessionPrefix;
 
-	/**
-	 *	...
-	 *	@static
-	 *	@access		public
-	 *	@param		object		$env
-	 *	@param		object		$context
-	 *	@param		unknown		$module
-	 *	@param		unknown		$arguments
-	 *	@return		void
-	 *	@todo		 code doc
-	 */
-	public static function ___onTinyMCE_getImageList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$cache		= $env->getCache();
-		if( !( $list = $cache->get( 'catalog.tinymce.images.articles' ) ) ){
-			$logic		= new Logic_Catalog( $env );
-			$frontend	= Logic_Frontend::getInstance( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );				//  focus module configuration
-			$pathCovers	= $frontend->getPath( 'contents' ).$config->get( 'path.covers' );			//  get path to cover images
-			$pathCovers	= substr( $pathCovers, strlen( $frontend->getPath() ) );					//  strip frontend base path
-			$list       = [];
-			$conditions	= ['cover' => '> 0'];
-			$orders		= ['articleId' => 'DESC'];
-			foreach( $logic->getArticles( $conditions, $orders, [0, 200] ) as $item ){
-				$id		= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
-				$list[] = (object) array(
-					'title'	=> TextTrimmer::trimCentric( $item->title, 60 ),
-					'value'	=> $pathCovers.$id.'__'.$item->cover,
-				);
-			}
-			$cache->set( 'catalog.tinymce.images.articles', $list );
-		}
-		$context->list  = array_merge( $context->list, [(object) [				//  extend global collection by submenu with list of items
-			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
-			'menu'	=> array_values( $list ),									//  items of submenu
-		]] );
-	}
-
-	/**
-	 *	...
-	 *	@static
-	 *	@access		public
-	 *	@param		Environment		$env
-	 *	@param		object		$context
-	 *	@param		unknown		$module
-	 *	@param		array		$arguments
-	 *	@return		void
-	 *	@todo		 code doc
-	 */
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$cache		= $env->getCache();
-		$logic		= new Logic_Catalog( $env );
-		$frontend	= Logic_Frontend::getInstance( $env );
-		$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-
-		if( !( $articles = $cache->get( 'catalog.tinymce.links.articles' ) ) ){
-			$orders		= ['articleId' => 'DESC'];
-			$articles	= $logic->getArticles( [], $orders, [0, 200] );
-			foreach( $articles as $nr => $item ){
-/*				$category	= $logic->getCategoryOfArticle( $article->articleId );
-				if( $category->volume )
-					$item->title	.= ' - Band '.$category->volume;
-*/				$articles[$nr]	= (object) array(
-					'title'	=> TextTrimmer::trimCentric( $item->title, 80 ),
-					'value'	=> $logic->getArticleUri( $item ),
-				);
-			}
-			$cache->set( 'catalog.tinymce.links.articles', $articles );
-		}
-		$context->list	= array_merge( $context->list, [(object) [
-			'title'	=> 'Veröffentlichungen:',
-			'menu'	=> array_values( $articles ),
-		]] );
-
-		if( !( $documents = $cache->get( 'catalog.tinymce.links.documents' ) ) ){
-			$pathDocs	= $frontend->getPath( 'contents' ).$config->get( 'path.documents' );
-			$documents	= $logic->getDocuments( [], ['articleDocumentId' => 'DESC'], [0, 200] );
-			foreach( $documents as $nr => $item ){
-				$id				= str_pad( $item->articleId, 5, 0, STR_PAD_LEFT );
-				$article		= $logic->getArticle( $item->articleId );
-				$documents[$nr]	= (object) array(
-					'title'	=> TextTrimmer::trimCentric( $article->title, 40 ).' - '.$item->title,
-					'value'	=> $pathDocs.$id.'_'.$item->url,
-				);
-			}
-			$cache->set( 'catalog.tinymce.links.documents', $documents );
-		}
-		$context->list	= array_merge( $context->list, [(object) [
-			'title'	=> 'Dokuments:',
-			'menu'	=> array_values( $documents ),
-		]] );
-	}
-
-	public function add()
+	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -129,7 +35,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->addData( 'articles', $this->getFilteredArticles() );
 	}
 
-	public function addAuthor( $articleId )
+	public function addAuthor( int|string $articleId ): void
 	{
 		$authorId	= $this->request->get( 'authorId' );
 		$editor		= $this->request->get( 'editor' );
@@ -137,7 +43,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function addCategory( $articleId )
+	public function addCategory( int|string $articleId ): void
 	{
 		$categoryId		= $this->request->get( 'categoryId' );
 		$volume			= $this->request->get( 'volume' );
@@ -145,7 +51,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function addDocument( $articleId )
+	public function addDocument( int|string $articleId ): void
 	{
 		$file		= $this->request->get( 'document' );
 		$title		= $this->request->get( 'title' );
@@ -179,56 +85,23 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function addTag( $articleId, $tag = NULL )
+	/**
+	 *	@param		int|string		$articleId
+	 *	@param		string|NULL		$tag
+	 *	@return		void
+	 */
+	public function addTag( int|string $articleId, string $tag = NULL ): void
 	{
 		$tag	= $tag ?: $this->request->get( 'tag' );
 		$this->logic->addArticleTag( $articleId, $tag );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function ajaxGetTags()
-	{
-		$startsWith	= $this->request->get( 'query' );
-		$conditions	= ['tag' => $startsWith.'%'];
-		$orders		= ['tag' => 'ASC'];
-		$limits		= [0, 10];
-		$tags		= $this->logic->getTags( $conditions, $orders, $limits );
-		$list		= [];
-		foreach( $tags as $tag )
-			$list[$tag->tag]	= $tag->tag;
-		ksort( $list );
-		$json	= json_encode( array_keys( $list ) );
-		header( 'Content-Type: application/json' );
-		header( 'Content-Length: '.strlen( $json ) );
-		print( $json );
-		exit;
-	}
-
-	public function ajaxGetIsns()
-	{
-		$startsWith	= $this->request->get( 'query' );
-		$conditions	= ['isn' => $startsWith.'%'];
-		$orders		= ['isn' => 'ASC'];
-		$limits		= [0, 10];
-		$articles	= $this->logic->getArticles( $conditions, $orders, $limits );
-		$list		= [];
-		foreach( $articles as $article )
-			$list[$article->isn]	= $article->isn;
-		ksort( $list );
-		$json	= json_encode( array_keys( $list ) );
-		header( 'Content-Type: application/json' );
-		header( 'Content-Length: '.strlen( $json ) );
-		print( $json );
-		exit;
-	}
-
-	public function ajaxSetTab( $tabKey )
-	{
-		$this->session->set( 'manage.catalog.article.tab', $tabKey );
-		exit;
-	}
-
-	public function edit( $articleId )
+	/**
+	 *	@param		int|string		$articleId
+	 *	@return		void
+	 */
+	public function edit( int|string $articleId ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words	= (object) $this->getWords( 'edit' );
@@ -275,8 +148,10 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$articles	= $this->getFilteredArticles();
 		if( count( $articles ) === 1 ){
@@ -290,45 +165,55 @@ class Controller_Manage_Catalog_Article extends Controller
 	/**
 	 *	Removes article with images and relations to categories and authors.
 	 *	@access		public
-	 *	@param		$articleId
+	 *	@param		int|string		$articleId
 	 */
-	public function remove( $articleId )
+	public function remove( int|string $articleId ): void
 	{
 		$this->logic->removeArticle( $articleId );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeAuthor( $articleId, $authorId )
+	public function removeAuthor( int|string $articleId, int|string $authorId ): void
 	{
 		$this->logic->removeAuthorFromArticle( $articleId, $authorId );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function removeCategory( $articleId, $categoryId )
+	public function removeCategory( int|string $articleId, int|string $categoryId ): void
 	{
 		$this->logic->removeCategoryFromArticle( $articleId, $categoryId );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function removeDocument( $articleId, $articleDocumentId )
+	public function removeDocument( int|string $articleId, int|string $articleDocumentId ): void
 	{
 		$this->logic->removeArticleDocument( $articleDocumentId );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function removeTag( $articleId, $articleTagId )
+	public function removeTag( int|string $articleId, int|string $articleTagId ): void
 	{
 		$this->logic->removeArticleTag( $articleTagId );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function setAuthorRole( $articleId, $authorId, $role )
+	/**
+	 *	@param		int|string		$articleId
+	 *	@param		int|string		$authorId
+	 *	@param		int|string		$role
+	 *	@return		void
+	 */
+	public function setAuthorRole( int|string $articleId, int|string $authorId, int|string $role ): void
 	{
 		$this->logic->setArticleAuthorRole( $articleId, $authorId, $role );
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
-	public function setCover( $articleId )
+	/**
+	 *	@param		int|string		$articleId
+	 *	@return		void
+	 */
+	public function setCover( int|string $articleId ): void
 	{
 		$file		= $this->request->get( 'image' );
 		$words		= (object) $this->getWords( 'upload' );
@@ -359,6 +244,10 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->restart( 'manage/catalog/article/edit/'.$articleId );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		parent::__onInit();
@@ -381,7 +270,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Article::init done' );
 	}
 
-	protected function getFilteredArticles()
+	protected function getFilteredArticles(): array
 	{
 		$filters	= $this->session->getAll( 'module.manage_catalog_article.filter.' );
 		$orders		= [];
@@ -442,7 +331,6 @@ class Controller_Manage_Catalog_Article extends Controller
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
 		$offset		= $filter['offset'] ?? 0;
-		$articles	= $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
-		return $articles;
+		return $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 	}
 }
