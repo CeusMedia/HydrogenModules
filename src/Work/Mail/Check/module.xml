@@ -34,11 +34,10 @@
 		<class>Model/Mail/Address/Check.php</class>
 		<class>Model/Mail/Group.php</class>
 		<class>Job/Work/Mail/Check.php</class>
-		<template>work/mail/check/ajaxAddress.php</template>
 		<template>work/mail/check/export.php</template>
 		<template>work/mail/check/group.php</template>
-		<template>work/mail/check/index.php</template>
 		<template>work/mail/check/import.php</template>
+		<template>work/mail/check/index.php</template>
 		<template>work/mail/check/status.php</template>
 		<locale>de/work/mail/check.ini</locale>
 		<style source="theme" load="auto" level="end">module.work.mail.check.css</style>

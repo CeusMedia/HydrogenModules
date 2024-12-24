@@ -109,7 +109,7 @@ class Controller_Work_Mail_Check extends Controller
 				$status	= 2;
 				if( !$result ){
 					$status	= -2;
-					if( substr( $response->code, 0, 1 ) == "4" )
+					if( str_starts_with( $response->code, "4" ) )
 						$status	= -1;
 				}
 				$this->modelAddress->edit( $addressId, [
@@ -144,12 +144,12 @@ class Controller_Work_Mail_Check extends Controller
 		$conditions		= [];
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
-		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
+		$filterQuery	= trim( $this->session->get( 'work_mail_check_filter_query', '' ) );
 		if( $filterGroupId )
 			$conditions['mailGroupId']	= $filterGroupId;
 		if( $filterStatus && $filterStatus[0] !== '' )
 			$conditions['status']		= $filterStatus;
-		if( $filterQuery && strlen( $filterQuery ) )
+		if( '' !== $filterQuery )
 			$conditions['address']		= '%'.str_replace( '*', '%', $filterQuery ).'%';
 
 		$this->modelAddress->editByIndices( $conditions, ['status' => 1] );
@@ -239,7 +239,7 @@ class Controller_Work_Mail_Check extends Controller
 	{
 		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		foreach( $groups as $group ){
-			/** @var array<Entity_Address> $addresses */
+			/** @var array<object> $addresses */
 			$addresses	= $this->modelAddress->getAll( ['mailGroupId' => $group->mailGroupId] );
 			$group->numbers	= (object) [
 				'total'		=> count( $addresses ),
@@ -401,7 +401,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( string $groupId ): void
+	public function removeGroup( int|string $groupId ): void
 	{
 		$group	= $this->checkGroupId( $groupId );
 		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
@@ -411,7 +411,7 @@ class Controller_Work_Mail_Check extends Controller
 		$this->restart( 'group', TRUE );
 	}
 
-	public function status( string $groupId ): void
+	public function status( int|string $groupId ): void
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$indices	= ['mailGroupId' => $groupId];
