@@ -5,6 +5,9 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment;
 
+/**
+ * Modal for POST via AJAX.
+ */
 class View_Helper_Info_Contact_Form_Modal
 {
 	protected Environment $env;
@@ -41,7 +44,7 @@ class View_Helper_Info_Contact_Form_Modal
 		$iconSave	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 		$modal	= new BootstrapModalDialog( $this->id );
 //		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
-		$modal->setFormAction( './info/contact/ajax/form' );
+		$modal->setFormAction( './ajax/info/contact/form' );
 		$modal->setFormSubmit( 'ModuleInfoContactForm.sendContactForm(this)' );
 		$modal->setHeading( $this->heading ?: $this->moduleWords['form']['heading'] );
 		$modal->setBody( $form );

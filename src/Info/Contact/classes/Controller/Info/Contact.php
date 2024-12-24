@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
@@ -13,46 +14,6 @@ class Controller_Info_Contact extends Controller
 	protected bool $useCsrf;
 	protected bool $useHoneypot;
 	protected bool $useNewsletter;
-
-	/**
-	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	public function ajaxForm(): void
-	{
-		$message	= '';
-		$data		= NULL;
-		if( !$this->request->isAjax() )
-			$message	= "Access granted for AJAX requests, only.";
-		else if( !$this->request->getMethod()->isPost() )
-			$message	= "Access granted for POST requests, only.";
-		else{
-			try{
-				$logic		= Logic_Mail::getInstance( $this->env );
-				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
-				$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
-				$logic->handleMail( $mail, $receiver, 'de' );
-				$data		= TRUE;
-			}
-			catch( Exception $e ){
-				$message	= $e->getMessage();
-			}
-		}
-		header( 'Content-Type: application/json' );
-		if( $message ){
-			print( json_encode( [
-				'status'	=> 'error',
-				'message'	=> $message,
-			] ) );
-		}
-		else{
-			print( json_encode( [
-				'status'	=> 'data',
-				'data'		=> $data,
-			] ) );
-		}
-		exit;
-	}
 
 	/**
 	 *	@return		void
@@ -125,7 +86,7 @@ class Controller_Info_Contact extends Controller
 	 *	@throws		\CeusMedia\HydrogenFramework\Environment\Exception
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyNewsletterForwardingInEnabled(): void
+	protected function applyNewsletterForwardingIfEnabled(): void
 	{
 		if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
 			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
@@ -200,87 +161,35 @@ class Controller_Info_Contact extends Controller
 	}
 
 	/**
-	 *	@return		void
+	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 *	@throws		ReflectionException
 	 */
-	protected function saveInput(): void
+	protected function saveInput(): bool
 	{
-		if( !$this->validateInput() )
-			return;
-
 		try{
-			$words		= (object) $this->getWords( 'index' );
-			$logicMail	= Logic_Mail::getInstance( $this->env );
-			$mail		= new Mail_Info_Contact( $this->env, $this->request->getAll() );
-			$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
-			$logicMail->handleMail( $mail, $receiver, 'de' );
-			$this->messenger->noteSuccess( $words->msgSuccess );
+			/** @var Dictionary $inputData */
+			$inputData		= $this->request->getAll();
+			$logic			= new Logic_Info_Contact( $this->env );
+			$words			= $this->getWords( 'index' );
+			$errorsOrTrue	= $logic->validateInput( $inputData );
+			if( TRUE !== $errorsOrTrue ){
+				foreach( $errorsOrTrue as $error )
+					$this->messenger->noteError( $words['msgError'.$error] );
+				return FALSE;
+			}
+			$logic->sendDefaultMail( $inputData );
+			$this->messenger->noteSuccess( $words['msgSuccess'] );
 
-			$this->applyNewsletterForwardingInEnabled();
+			$this->applyNewsletterForwardingIfEnabled();
 
 			//	@todo handle newsletter registration
+
+			return TRUE;
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
 			$this->env->getLog()->logException( $e );
 		}
-	}
-
-	/**
-	 *	@return		bool
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	protected function validateInput(): bool
-	{
-		$words			= (object) $this->getWords( 'index' );
-
-		$valid		= TRUE;
-		if( !strlen( trim( $this->request->get( 'fullname' ) ) ) ){
-			$this->messenger->noteError( $words->msgErrorFullNameMissing );
-			$valid	= FALSE;
-		}
-		if( !strlen( trim( $this->request->get( 'email' ) ) ) ){
-			$this->messenger->noteError( $words->msgErrorEmailMissing );
-			$valid	= FALSE;
-		}
-		if( !strlen( trim( $this->request->get( 'subject' ) ) ) ){
-			$this->messenger->noteError( $words->msgErrorSubjectMissing );
-			$valid	= FALSE;
-		}
-		if( !strlen( trim( $this->request->get( 'message' ) ) ) ){
-			$this->messenger->noteError( $words->msgErrorMessageMissing );
-			$valid	= FALSE;
-		}
-		if( strlen( trim( $this->request->get( 'trap' ) ) ) ){
-			$this->messenger->noteError( $words->msgErrorAccessDenied );
-			$valid	= FALSE;
-		}
-
-		if( $this->useCsrf ){
-			if( !Logic_CSRF::getInstance( $this->env )->verifyToken(
-				$this->request->get( 'csrf_form_name' ),
-				$this->request->get( 'csrf_token' )
-			) ){
-				if( !empty( $words->msgErrorCsrfFailed ) )
-					$this->messenger->noteError( $words->msgErrorCsrfFailed );
-				return FALSE;
-			}
-		}
-
-		$quotedUrl	= preg_quote( $this->env->url, '/' );
-		if( !preg_match( '/^'.$quotedUrl.'/', getEnv( 'HTTP_REFERER' ) ) ){
-			$this->messenger->noteError( $words->msgErrorRefererInvalid );
-			return FALSE;
-		}
-		if( $this->useCaptcha ){
-			$captchaWord	= $this->request->get( 'captcha' );
-			if( !View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) ){
-				$this->messenger->noteError( $words->msgErrorCaptchaFailed );
-				$valid	= FALSE;
-			}
-		}
-		return $valid;
+		return FALSE;
 	}
 }

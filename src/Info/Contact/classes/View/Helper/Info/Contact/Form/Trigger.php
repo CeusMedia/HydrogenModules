@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/**
+ * Trigger for modal for POST via AJAX.
+ */
 class View_Helper_Info_Contact_Form_Trigger
 {
 	protected string $class				= 'btn';
