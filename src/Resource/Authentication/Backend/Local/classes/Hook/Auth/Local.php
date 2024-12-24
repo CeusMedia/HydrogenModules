@@ -1,6 +1,7 @@
 <?php
 
 //use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Auth_Local extends Hook
@@ -24,6 +25,10 @@ class Hook_Auth_Local extends Hook
 		$this->context?->registerTab( 'auth/local/login', $words->login['tab'], $rank );				//  register main tab
 	}
 
+	/**
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
 	public function onGetRelatedUsers(): bool
 	{
 		if( !$this->env->getConfig()->get( self::$configPrefix.'relateToAllUsers' ) )
@@ -51,9 +56,15 @@ class Hook_Auth_Local extends Hook
 		$this->env->getPage()->js->addScriptOnReady( $script, 1 );									//  enlist script to be run on ready
 	}*/
 
+	/**
+	 *	@return		void
+	 *	@throws		Exception
+	 */
 	public function onViewRenderContent(): void
 	{
-		$processor	= new Logic_Shortcode( $this->env );
+		/** @var WebEnvironment $env */
+		$env		= $this->env;
+		$processor	= new Logic_Shortcode( $env );
 		$shortCodes	= [
 			'auth:local:panel:login'	=> [
 				'oauth'		=> TRUE,
@@ -65,11 +76,11 @@ class Hook_Auth_Local extends Hook
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;
-			$helper		= new View_Helper_Auth_Local_Panel_Login( $this->env );
+			$helper		= new View_Helper_Auth_Local_Panel_Login( $env );
 			while( is_array( $attr = $processor->find( $shortCode, $defaultAttributes ) ) ){
-				$attr['oauth']		= !( strtolower( $attr['oauth'] ) === 'no' );
-				$attr['remember']	= !( strtolower( $attr['remember'] ) === 'no' );
-				$attr['register']	= !( strtolower( $attr['register'] ) === 'no' );
+				$attr['oauth']		= !( 'no' === strtolower( $attr['oauth'] ) );
+				$attr['remember']	= !( 'no' === strtolower( $attr['remember'] ) );
+				$attr['register']	= !( 'no' === strtolower( $attr['register'] ) );
 				try{
 					$helper->setUseOauth2( $attr['oauth'] );
 					$helper->setUseRemember( $attr['remember'] );

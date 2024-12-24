@@ -174,6 +174,10 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 		return $this;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();

@@ -8,12 +8,13 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function usernameExists(): void
 	{
-		$username	= trim( $this->request->get( 'username' ) );
+		$username	= trim( $this->request->get( 'username', '' ) );
 		$result		= FALSE;
-		if( strlen( $username ) ){
+		if( '' !== trim( $username ) ){
 			$modelUser		= new Model_User( $this->env );
 			$result			= (bool) $modelUser->countByIndex( 'username', $username );
 		}
@@ -23,6 +24,7 @@ class Controller_Ajax_Auth_Local extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function emailExists(): void
 	{

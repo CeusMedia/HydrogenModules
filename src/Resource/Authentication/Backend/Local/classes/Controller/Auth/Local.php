@@ -30,41 +30,6 @@ class Controller_Auth_Local extends Controller
 	protected ?Logic_Limiter $limiter			= NULL;
 	protected Logic_Authentication_Backend_Local $logic;
 
-	public function ajaxUsernameExists(): void
-	{
-		$username	= trim( $this->request->get( 'username' ) );
-		$result		= FALSE;
-		if( strlen( $username ) ){
-			$modelUser		= new Model_User( $this->env );
-			$result			= (bool) $modelUser->countByIndex( 'username', $username );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxEmailExists(): void
-	{
-		$email	= trim( $this->request->get( 'email' ) );
-		$result		= FALSE;
-		if( strlen( $email ) ){
-			$modelUser		= new Model_User( $this->env );
-			$result			= (bool) $modelUser->countByIndex( 'email', $email );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxPasswordStrength(): void
-	{
-		$password	= trim( $this->request->get( 'password' ) );
-		$result		= 0;
-		if( strlen( $password ) ){
-			$result			= PasswordStrength::getStrength( $password );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
 	/**
 	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
@@ -77,7 +42,7 @@ class Controller_Auth_Local extends Controller
 		$from		= $this->request->get( 'from'  );
 		$from		= str_replace( "index/index", "", $from );
 
-		if( strlen( trim( (string) $code ) ) ){
+		if( '' !== trim( (string) $code ) ){
 			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
 			$modelUser		= new Model_User( $this->env );
 			$users			= $modelUser->getAllByIndex( 'status', 0 );
