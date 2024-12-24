@@ -1,36 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to static method render\\(\\) on an unknown class CeusMedia\\\\Mail\\\\Renderer\\.$#"
-			count: 2
-			path: ../../src/Resource/Mail/classes/Job/Mail/Archive.php
+			message: "#^Function Sentry\\\\captureException not found\\.$#"
+			count: 1
+			path: ../../src/App/Site/index.php
 
 		-
-			message: "#^Class CeusMedia\\\\Mail\\\\Part\\\\Attachment not found\\.$#"
+			message: "#^Function Sentry\\\\captureException not found\\.$#"
 			count: 1
-			path: ../../src/Resource/Mail/classes/Job/Mail/Archive.php
+			path: ../../src/Server/Log/Sentry/classes/Hook/Server/Log/Sentry.php
 
 		-
-			message: "#^Access to static property \\$delimiter on an unknown class Net_Mail\\.$#"
+			message: "#^Function Sentry\\\\init not found\\.$#"
 			count: 1
-			path: ../../src/Resource/Mail/classes/Job/Mail/Migration.php
-
-		-
-			message: "#^Call to static method parseBody\\(\\) on an unknown class CeusMedia\\\\Mail\\\\Parser\\.$#"
-			count: 1
-			path: ../../src/Resource/Mail/classes/Job/Mail/Migration.php
-
-		-
-			message: "#^Call to static method render\\(\\) on an unknown class CeusMedia\\\\Mail\\\\Renderer\\.$#"
-			count: 1
-			path: ../../src/Resource/Mail/classes/Job/Mail/Migration.php
-
-		-
-			message: "#^Instantiated class CeusMedia\\\\Mail\\\\Participant not found\\.$#"
-			count: 1
-			path: ../../src/Resource/Mail/classes/Job/Mail/Migration.php
-
-		-
-			message: "#^Call to static method render\\(\\) on an unknown class CeusMedia\\\\Mail\\\\Renderer\\.$#"
-			count: 1
-			path: ../../src/Resource/Mail/classes/Logic/Mail.php
+			path: ../../src/Server/Log/Sentry/classes/Hook/Server/Log/Sentry.php

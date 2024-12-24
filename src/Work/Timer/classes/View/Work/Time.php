@@ -18,13 +18,6 @@ class View_Work_Time extends View
 	/**
 	 *	@return void
 	 */
-	public function ajaxRenderDashboardPanel(): void
-	{
-	}
-
-	/**
-	 *	@return void
-	 */
 	public function edit(): void
 	{
 	}
@@ -40,6 +33,7 @@ class View_Work_Time extends View
 	 *	@param		Environment $env
 	 *	@param		$current
 	 *	@return		string
+	 *	@throws		ReflectionException
 	 */
 	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
