@@ -31,7 +31,13 @@ class Controller_Info_Forum extends Controller
 	protected ?string $userId			= NULL;
 	protected ?array $userPosts			= NULL;
 
-	public function addPost( $threadId )
+	/**
+	 *	@param		int|string		$threadId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addPost( int|string $threadId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 
@@ -88,7 +94,11 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'thread/'.$threadId.'#post-'.$postId, TRUE );
 	}
 
-	public function addThread()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addThread(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
@@ -101,7 +111,11 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'addPost/'.$threadId, TRUE );
 	}
 
-	public function addTopic()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addTopic(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
@@ -113,7 +127,12 @@ class Controller_Info_Forum extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function approvePost( $postId )
+	/**
+	 *	@param		int|string		$postId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function approvePost( int|string $postId ): void
 	{
 		$post		= $this->modelPost->get( $postId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -125,7 +144,10 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 		$topics		= $this->modelTopic->getAll( [], ['rank' => 'ASC'] );
 //		if( count( $topics ) == 1 )
@@ -144,10 +166,16 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'topics', $topics );
 	}
 
-	public function rankTopic( $topicId, $downwards = NULL )
+	/**
+	 *	@param		int|string		$topicId
+	 *	@param		bool|NULL		$downwards
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function rankTopic( int|string $topicId, bool $downwards = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$direction	= (boolean) $downwards ? +1 : -1;
+		$direction	= $downwards ? +1 : -1;
 		if( !( $topic = $this->modelTopic->get( (int) $topicId ) ) )
 			$this->messenger->noteError( $words->errorInvalidTopicId, $topicId );
 		else{
@@ -160,7 +188,13 @@ class Controller_Info_Forum extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function thread( $threadId )
+	/**
+	 *	@param		int|string		$threadId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function thread( int|string $threadId ): void
 	{
 		if( $this->env->getRequest()->has( 'mail' ) )
 			$this->informThreadUsersAboutPost( $threadId, 71 );
@@ -177,8 +211,8 @@ class Controller_Info_Forum extends Controller
 			'status'	=> [0, 1],
 		];
 		$posts	= $this->modelPost->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
-		foreach( $posts as $nr => $post )
-			$posts[$nr]->author	= $modelUser->get( $post->authorId );
+		foreach( $posts as $post )
+			$post->author	= $modelUser->get( $post->authorId );
 		$topic	= $this->modelTopic->get( $thread->topicId );
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'rights', $this->rights );
@@ -188,7 +222,12 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'userPosts', $this->userPosts );
 	}
 
-	public function topic( string $topicId ): void
+	/**
+	 *	@param		int|string		$topicId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function topic( int|string $topicId ): void
 	{
 		$topicId	= (int) $topicId;
 		$topic		= $this->modelTopic->get( $topicId );
@@ -211,7 +250,12 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'threads', $threads );
 	}
 
-	public function removePost( string $postId ): void
+	/**
+	 *	@param		int|string		$postId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removePost( int|string $postId ): void
 	{
 		$post		= $this->modelPost->get( $postId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -241,7 +285,12 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'thread/'.$post->threadId, TRUE );
 	}
 
-	public function removeThread( string $threadId ): void
+	/**
+	 *	@param		int|string		$threadId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeThread( int|string $threadId ): void
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -255,7 +304,12 @@ class Controller_Info_Forum extends Controller
 		$this->restart( 'topic/'.$thread->topicId, TRUE );
 	}
 
-	public function removeTopic( string $topicId ): void
+	/**
+	 *	@param		int|string		$topicId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeTopic( int|string $topicId ): void
 	{
 		$topic		= $this->modelTopic->get( $topicId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -304,7 +358,14 @@ class Controller_Info_Forum extends Controller
 			mkdir( $path, 0770, TRUE );
 	}
 
-	protected function informThreadUsersAboutPost( string $threadId, ?string $postId = NULL )
+	/**
+	 *	@param		int|string			$threadId
+	 *	@param		int|string|NULL		$postId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function informThreadUsersAboutPost( int|string $threadId, int|string $postId = NULL ): void
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		if( !( $thread = $this->modelThread->get( $threadId ) ) )

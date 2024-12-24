@@ -5,7 +5,9 @@ use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
+/** @var Environment $env */
 /** @var View_Info_Forum $view */
 /** @var array<object> $topics */
 
@@ -34,7 +36,7 @@ foreach( $topics as $topic ){
 			'title'	=> $words['index']['buttonUp'],
 		] );
 	}
-	if( in_array( 'ajaxRenameTopic', $rights ) ){
+	if( $env->getAcl()->has( 'ajax/info/forum', 'renameTopic' ) ){
 		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoForum.changeTopicName('.$topic->topicId.', \''.$topic->title.'\')',
 			'class'		=> 'btn not-btn-small',

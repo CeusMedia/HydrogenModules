@@ -6,7 +6,9 @@ use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
+/** @var Environment $env */
 /** @var View_Info_Forum $view */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'topic.top', 'topic.bottom'], 'html/info/forum/' ) );
@@ -21,8 +23,8 @@ $iconRename	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconStar	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$userCanStar	= in_array( 'ajaxStarThread', $rights );
-$userCanEdit	= in_array( 'ajaxRenameThread', $rights );
+$userCanStar	= $env->getAcl()->has( 'ajax/info/forum', 'starThread' );
+$userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'renameThread' );
 $userCanRemove	= in_array( 'removeThread', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 

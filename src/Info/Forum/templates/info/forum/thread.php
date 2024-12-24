@@ -7,6 +7,11 @@ use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'thread.top', 'thread.bottom'], 'html/info/forum/' ) );
 $textTop	= $textThreadTop ?: $textIndexTop;
@@ -19,7 +24,7 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
-$userCanEdit	= in_array( 'ajaxEditPost', $rights );
+$userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'editPost' );
 $userCanRemove	= in_array( 'removePost', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
@@ -157,7 +162,7 @@ img.avatar {
 </style>
 <script>
 $(document).ready(function(){
-	InfoForum.pollForUpdates('.$thread->threadId.', '.$lastPostId.');
+	InfoForum.pollForUpdates('.$thread->threadId.', '.$lastPostId.')
 });
 </script>
 '.$textBottom;

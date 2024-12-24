@@ -8,7 +8,14 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	protected Model_Forum_Thread $modelThread;
 	protected Model_Forum_Topic $modelTopic;
 
-	public function countUpdates( $threadId, $lastPostId ): int
+	/**
+	 *	@param		int|string		$threadId
+	 *	@param		int|string		$lastPostId
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function countUpdates( int|string $threadId, int|string $lastPostId ): int
 	{
 		$thread		= $this->modelThread->get( $threadId );
 		if( !$thread )
@@ -29,55 +36,84 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	}
 
 	/**
-	 * @return void
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function editPost(): void
+	public function editPost(): int
 	{
 		$postId		= $this->request->get( 'postId' );
 		$content	= $this->request->get( 'content' );
 		if( $postId && $content ){
 			$post	= $this->modelPost->get( (int) $postId );
-			if( $post->content !== $content )
+			if( $post->content !== $content ){
 				$this->modelPost->edit( (int) $postId, ['content' => $content, 'modifiedAt' => time()] );
+				return $this->respondData( TRUE );
+			}
 		}
-		exit;
+		return $this->respondData( FALSE );
 	}
 
-	public function getPost( string $postId ): void
+	/**
+	 *	@param		int|string		$postId
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getPost( int|string $postId ): int
 	{
 		$post		= $this->modelPost->get( $postId );
 		if( !$post )
 			$post	= ['content', 'Error: Invalid post ID: '.$postId];
-		$this->respondData( $post );
+		return $this->respondData( $post );
 	}
 
-	public function renameThread(): void
+	/**
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function renameThread(): int
 	{
 		$threadId	= $this->request->get( 'threadId' );
 		$name		= $this->request->get( 'name' );
 		if( $threadId && $name ){
 			$this->modelThread->edit( (int) $threadId, ['title' => $name] );
+			return $this->respondData( TRUE );
 		}
-		exit;
+		return $this->respondData( FALSE );
 	}
 
-	public function renameTopic(): void
+	/**
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function renameTopic(): int
 		{
 		$topicId	= $this->request->get( 'topicId' );
 		$name		= $this->request->get( 'name' );
 		if( $topicId && $name ){
 			$this->modelTopic->edit( (int) $topicId, ['title' => $name] );
+			return $this->respondData( TRUE );
 		}
-		exit;
+		return $this->respondData( FALSE );
 	}
 
-	public function starThread( $threadId ): void
+	/**
+	 *	@param		int|string		$threadId
+	 *	@return		int
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function starThread( int|string $threadId ): int
 	{
 		$thread		= $this->modelThread->get( (int) $threadId );
 		if( $thread ){
 			$this->modelThread->edit( (int) $threadId, ['type' => $thread->type ? 0 : 1] );
+			return $this->respondData( TRUE );
 		}
-		exit;
+		return $this->respondData( FALSE );
 	}
 
 	/**
