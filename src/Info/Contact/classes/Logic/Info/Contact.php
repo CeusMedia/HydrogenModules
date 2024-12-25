@@ -66,9 +66,10 @@ class Logic_Info_Contact extends Logic
 			$errors[]	= 'AccessDenied';
 
 		if( $this->useCsrf ){
-			if( !Logic_CSRF::getInstance( $this->env )->verifyToken(
-				$data->get( 'csrf_form_name' ),
-				$data->get( 'csrf_token' )
+			$logicCsrf	= Logic_CSRF::getInstance( $this->env );
+			if( !$logicCsrf->verifyToken(
+				$data->get( 'csrf_form_name', '' ),
+				$data->get( 'csrf_token', '' )
 			) )
 				$errors[]	= 'CsrfFailed';
 		}
@@ -79,8 +80,9 @@ class Logic_Info_Contact extends Logic
 
 		if( $this->useCaptcha ){
 			$captchaWord	= $data->get( 'captcha' );
-			if( !View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) )
-				$errors[]	= 'CaptchaFailed';
+			if( '' !== $captchaWord || !$this->env->getRequest()->isAjax() )
+				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) )
+					$errors[]	= 'CaptchaFailed';
 		}
 
 		return [] === $errors ? TRUE : $errors;
@@ -114,7 +116,8 @@ class Logic_Info_Contact extends Logic
 				$this->env->getLog()->log( 'warn', 'Module "Security_CSRF" needs to be enabled.' );
 				throw new RuntimeException( 'Module "Security_CSRF" needs to be enabled.' );
 			}
-			$this->useCsrf	= TRUE;
+			if( !$this->env->getRequest()->isAjax() )
+				$this->useCsrf	= TRUE;
 		}
 	}
 }

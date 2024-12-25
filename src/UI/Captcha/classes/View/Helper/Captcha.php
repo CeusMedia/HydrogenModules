@@ -34,10 +34,15 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	public static function checkCaptcha( Environment $env, ?string $word )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
-		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
-			$request	= new HttpPost();
+		if( 'recaptcha' === $moduleConfig->get( 'mode' ) ){
 			$url		= 'https://www.google.com/recaptcha/api/siteverify';
-			$response	= json_decode( $request->send( $url ) );
+			$request	= new HttpPost( $url );
+			$request->setContentType( 'application/x-www-form-urlencoded' );
+			$request->setContent( http_build_query( [
+				'secret'	=> $moduleConfig->get( 'recaptcha.secret' ),
+				'response'	=> $word
+			] ) );
+			$response	= json_decode( $request->send() );
 			return $response->success;
 		}
 		return $env->getSession()->get( 'captcha' ) == $word;
@@ -123,7 +128,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->captcha->generateImage( $word, $filePath );
 		$image	= file_get_contents( $filePath );
 		unlink( $filePath );
-		if( $this->format === self::FORMAT_RAW )
+		if( self::FORMAT_RAW === $this->format )
 			return $image;
 		return HtmlTag::create( 'img', NULL, [
 			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image ),
@@ -135,7 +140,7 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 	{
 		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
 		return HtmlTag::create( 'div', '', [
-			'class'					=> "g-recaptcha",
+			'class'			=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
 		] );
 	}

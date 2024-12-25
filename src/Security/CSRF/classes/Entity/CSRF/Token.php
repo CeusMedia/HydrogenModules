@@ -11,7 +11,7 @@ class Entity_CSRF_Token
 	public string $formName;
 	public int $timestamp;
 
-	public function __construct( array $data )
+	public function __construct( array $data = [] )
 	{
 		$this->timestamp	= time();
 		foreach( $data as $key => $value )

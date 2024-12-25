@@ -96,13 +96,13 @@ class Logic_CSRF extends Logic
 	 */
 	public function verifyToken( string $formName, string $token ): int
 	{
-		if( !strlen( trim( $formName ) ) )
+		if( '' === trim( $formName ) )
 			return self::CHECK_FORM_NAME_MISSING;
-		if( !strlen( trim( $token ) ) )
+		if( '' === trim( $token ) )
 			return self::CHECK_TOKEN_MISSING;
-		/** @var Entity_CSTF_Token $entry */
+		/** @var Entity_CSRF_Token $entry */
 		$entry  = $this->model->getByIndex( 'token', $token );
-		if( !$entry )
+		if( NULL === $entry )
 			return self::CHECK_TOKEN_INVALID;
 		if( self::STATUS_USED === $entry->status )
 			return self::CHECK_TOKEN_USED;
@@ -115,7 +115,7 @@ class Logic_CSRF extends Logic
 		if( $entry->ip !== $this->ip )
 			return self::CHECK_IP_MISMATCH;
 		$this->model->edit( $entry->tokenId, ['status' => self::STATUS_USED] );
-			return self::CHECK_OK;
+		return self::CHECK_OK;
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Logic_CSRF extends Logic
 	 */
 	protected function cancelOutdatedTokens(): ?int
 	{
-		/** @var Entity_CSTF_Token[] $outdatedTokens */
+		/** @var Entity_CSRF_Token[] $outdatedTokens */
 		$outdatedTokens	= $this->model->getAll( [
 			'status'	=> self::STATUS_OPEN,
 			'timestamp'	=> '< '.( time() - $this->moduleConfig->get( 'duration' ) ),
