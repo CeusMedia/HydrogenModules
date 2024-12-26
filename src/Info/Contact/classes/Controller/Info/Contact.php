@@ -170,7 +170,7 @@ class Controller_Info_Contact extends Controller
 	{
 		try{
 			/** @var Dictionary $inputData */
-			$inputData		= $this->request->getAll();
+			$inputData		= $this->request->getAll( '', TRUE );
 			$logic			= new Logic_Info_Contact( $this->env );
 			$words			= $this->getWords( 'index' );
 			$errorsOrTrue	= $logic->validateInput( $inputData );

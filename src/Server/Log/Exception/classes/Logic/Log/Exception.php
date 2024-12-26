@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\UI\HTML\Exception\Trace as HtmlExceptionTrace;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Log_Exception extends Logic
@@ -31,10 +30,10 @@ class Logic_Log_Exception extends Logic
 	}
 
 	/**
-	 *	@param		Exception		$exception
+	 *	@param		Throwable		$exception
 	 *	@return		object
 	 */
-	public function collectData( Exception $exception ): object
+	public function collectData( Throwable $exception ): object
 	{
 		try{
 			@serialize( $exception );
@@ -45,7 +44,7 @@ class Logic_Log_Exception extends Logic
 				'timestamp'		=> time(),
 			];
 		}
-		catch( Exception ){
+		catch( Throwable ){
 			$content	= (object) [
 				'message'		=> $exception->getMessage(),
 				'code'			=> $exception->getCode(),
@@ -64,7 +63,7 @@ class Logic_Log_Exception extends Logic
 		];
 		try{
 			$content->request			= $this->env->getRequest();
-		} catch( Exception ){}
+		} catch( Throwable ){}
 		try{
 			$sessionData	= $this->env->getSession()->getAll();
 			if( isset( $sessionData['exception'] ) )
@@ -74,7 +73,7 @@ class Logic_Log_Exception extends Logic
 			if( isset( $sessionData['exceptionUrl'] ) )
 				unset( $sessionData['exceptionUrl'] );
 			$content->session			= $sessionData;
-		} catch( Exception ){}
+		} catch( Throwable ){}
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
 		$content->previous			= $exception->getPrevious();
 		$content->class				= get_class( $exception );
@@ -102,7 +101,6 @@ class Logic_Log_Exception extends Logic
 	/**
 	 *	@param		int		$limit
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importFromLogFile( int $limit = 200 ): int
 	{
@@ -115,7 +113,7 @@ class Logic_Log_Exception extends Logic
 					try{
 						$this->importLogFileItem( $line );
 					}
-					catch( Exception ){}
+					catch( Throwable ){}
 					$count++;
 				}
 			}
@@ -149,7 +147,7 @@ class Logic_Log_Exception extends Logic
 			'modifiedAt'	=> time(),
 		];
 
-		if( isset( $object->exception ) && $object->exception instanceof Exception ){
+		if( isset( $object->exception ) && $object->exception instanceof Throwable ){
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object->exception ),
 				'message'		=> $object->exception->getMessage(),
@@ -161,7 +159,7 @@ class Logic_Log_Exception extends Logic
 			] );
 		}
 
-		else if( $object instanceof Exception ){
+		else if( $object instanceof Throwable ){
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object ),
 				'message'		=> $object->getMessage(),
@@ -196,11 +194,11 @@ class Logic_Log_Exception extends Logic
 	}
 
 	/**
-	 *	@param		Exception		$exception
+	 *	@param		Throwable		$exception
 	 *	@return		bool|NULL
 	 *	@throws		ReflectionException
 	 */
-	public function log( Exception $exception ): ?bool
+	public function log( Throwable $exception ): ?bool
 	{
 		$payload	= ['exception' => $exception];
 		return $this->captain->callHook( 'Env', 'logException', $this->env, $payload );
@@ -234,11 +232,12 @@ class Logic_Log_Exception extends Logic
 	}
 
 	/**
-	 *	@param		Exception		$exception
+	 *	@param		Throwable		$exception
 	 *	@return		FALSE|void
-	 *	@throws		ReflectionException
+	 *	@throws		ReflectionException|
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function sendExceptionAsMail( Exception $exception )
+	public function sendExceptionAsMail( Throwable $exception )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
@@ -261,6 +260,7 @@ class Logic_Log_Exception extends Logic
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
