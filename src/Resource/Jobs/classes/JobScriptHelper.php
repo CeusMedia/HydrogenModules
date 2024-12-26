@@ -36,6 +36,68 @@ class JobScriptHelper
 	}
 
 	/**
+	 *	@return		static
+	 */
+	public function changeDirIntoApp(): static
+	{
+		$path	= $this->detectAppPath();
+		if( $path !== getCwd().'/' ){
+			if( $this->verbose ){
+				print( '- Application: '.$path.PHP_EOL );
+				print( '- Current Dir: '.getCwd().'/'.PHP_EOL );
+				print( 'Changing into application directory...'.PHP_EOL );
+			}
+			if( !chdir( $path ) )
+				throw new RuntimeException( 'Could not change into application directory ('.$path.')' );
+			if( !file_exists( getCwd().'/job.php' ) )
+				throw new RuntimeException( 'Change into application directory ('.$path.') failed' );
+		}
+		return $this;
+	}
+
+	/**
+	 *	@return		static
+	 */
+	public function detectAppMode(): static
+	{
+		if( !$this->mode ){
+			$file	= '.hymn';
+			if( file_exists( $file ) ){
+				$hymn = JsonFileReader::load( $file );
+				$mode = $hymn->application->installMode ?? 'dev';
+				if( in_array( $mode, $this->modes ) )
+					$this->mode = $mode;
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 *	@return		string
+	 */
+	public function detectAppPath(): string
+	{
+		if( $this->verbose )
+			print( 'Detecting application path...'.PHP_EOL );
+		if( isset( $_SERVER['PWD'] ) ){
+			if( isset( $_SERVER['PHP_SELF'] ) ){
+				$scriptFilename	= $_SERVER['SCRIPT_FILENAME'];
+				if( str_starts_with( $scriptFilename, '/' ) )
+					return dirname( $scriptFilename ).'/';
+				$dir	= preg_replace( '@^\./$@', '', dirname( $_SERVER['PHP_SELF'] ).'/' );
+				if( !strlen( trim( $dir ) ) )
+					return $_SERVER['PWD'].'/';
+				if( $this->verbose )
+					print( '- Script Path: '.$dir.PHP_EOL );
+				return realpath( $_SERVER['PWD'].'/'.$dir ).'/';
+			}
+		}
+		if( isset( $_SERVER['OLDPWD'] ) )
+			return $_SERVER['OLDPWD'].'/';
+		throw new RuntimeException( 'Could not determine working directory' );
+	}
+
+	/**
 	 *	@param		int			$number
 	 *	@param		string		$message
 	 *	@param		?string		$file
@@ -61,9 +123,9 @@ class JobScriptHelper
 
 	/**
 	 *	@param		string		$configFile
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setConfigFile( string $configFile ): self
+	public function setConfigFile( string $configFile ): static
 	{
 		$this->configFile	= $configFile;
 		return $this;
@@ -71,9 +133,9 @@ class JobScriptHelper
 
 	/**
 	 *	@param		array		$errorHandling
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setErrorHandling( array $errorHandling ): self
+	public function setErrorHandling( array $errorHandling ): static
 	{
 		$this->errorHandling	= $errorHandling;
 		return $this;
@@ -81,9 +143,9 @@ class JobScriptHelper
 
 	/**
 	 *	@param		string		$mode
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setMode( string $mode ): self
+	public function setMode( string $mode ): static
 	{
 		if( !in_array( $mode, $this->modes ) )
 			throw new RangeException( 'Invalid mode: '.$mode );
@@ -93,9 +155,9 @@ class JobScriptHelper
 
 	/**
 	 *	@param		array		$modes
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setModes( array $modes ): self
+	public function setModes( array $modes ): static
 	{
 		$this->modes		= $modes;
 		return $this;
@@ -103,9 +165,9 @@ class JobScriptHelper
 
 	/**
 	 *	@param		string		$pathClasses
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setClassesPath( string $pathClasses ): self
+	public function setClassesPath( string $pathClasses ): static
 	{
 		$this->pathClasses		= $pathClasses;
 		return $this;
@@ -113,77 +175,15 @@ class JobScriptHelper
 
 	/**
 	 *	@param		bool		$verbose
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setVerbose( bool $verbose = TRUE ): self
+	public function setVerbose( bool $verbose = TRUE ): static
 	{
 		$this->verbose		= $verbose;
 		return $this;
 	}
 
 	//  --  PROTECTED  --  //
-
-	/**
-	 *	@return		self
-	 */
-	protected function changeDirIntoApp(): self
-	{
-		$path	= $this->detectAppPath();
-		if( $path !== getCwd().'/' ){
-			if( $this->verbose ){
-				print( '- Application: '.$path.PHP_EOL );
-				print( '- Current Dir: '.getCwd().'/'.PHP_EOL );
-				print( 'Changing into application directory...'.PHP_EOL );
-			}
-			if( !chdir( $path ) )
-				throw new RuntimeException( 'Could not change into application directory ('.$path.')' );
-			if( !file_exists( getCwd().'/job.php' ) )
-				throw new RuntimeException( 'Change into application directory ('.$path.') failed' );
-		}
-		return $this;
-	}
-
-	/**
-	 *	@return		self
-	 */
-	protected function detectAppMode(): self
-	{
-		if( !$this->mode ){
-			$file	= '.hymn';
-			if( file_exists( $file ) ){
-				$hymn = JsonFileReader::load( $file );
-				$mode = $hymn->application->installMode ?? 'dev';
-				if( in_array( $mode, $this->modes ) )
-					$this->mode = $mode;
-			}
-		}
-		return $this;
-	}
-
-	/**
-	 *	@return		string
-	 */
-	protected function detectAppPath(): string
-	{
-		if( $this->verbose )
-			print( 'Detecting application path...'.PHP_EOL );
-		if( isset( $_SERVER['PWD'] ) ){
-			if( isset( $_SERVER['PHP_SELF'] ) ){
-				$scriptFilename	= $_SERVER['SCRIPT_FILENAME'];
-				if( str_starts_with( $scriptFilename, '/' ) )
-					return dirname( $scriptFilename ).'/';
-				$dir	= preg_replace( '@^\./$@', '', dirname( $_SERVER['PHP_SELF'] ).'/' );
-				if( !strlen( trim( $dir ) ) )
-					return $_SERVER['PWD'].'/';
-				if( $this->verbose )
-					print( '- Script Path: '.$dir.PHP_EOL );
-				return realpath( $_SERVER['PWD'].'/'.$dir ).'/';
-			}
-		}
-		if( isset( $_SERVER['OLDPWD'] ) )
-			return $_SERVER['OLDPWD'].'/';
-		throw new RuntimeException( 'Could not determine working directory' );
-	}
 
 	/**
 	 *	@return		never
@@ -215,9 +215,9 @@ class JobScriptHelper
 	}
 
 	/**
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function setupEnvironment(): self
+	protected function setupEnvironment(): static
 	{
 		Loader::create( 'php', $this->pathClasses )->register();		//  register autoloader for project classes
 
@@ -238,9 +238,9 @@ class JobScriptHelper
 	}
 
 	/**
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function setupErrorHandling(): self
+	protected function setupErrorHandling(): static
 	{
 		error_reporting( $this->errorHandling['report'] );
 		ini_set( 'display_errors', $this->errorHandling['display'] );

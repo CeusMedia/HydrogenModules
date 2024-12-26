@@ -206,6 +206,8 @@ class Model_Job
 
 	protected function readJobsFromXmlFiles( array $modes = [] ): array
 	{
+		if( !file_exists( $this->pathJobs ) )
+			return [];
 		$jobs			= [];
 		$index			= new RegexFileFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){
