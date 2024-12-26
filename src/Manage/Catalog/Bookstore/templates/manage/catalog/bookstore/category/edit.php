@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['edit'];
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $tabs		= [];
 $panes		= [

@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 
 $w	= (object) $words['add'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 $optParent	= [0 => ''];
 foreach( $categories as $item )

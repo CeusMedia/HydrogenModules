@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 
 $w			= (object) $words['add'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 $optGender	= [/*$words['gender']*/];
 $optGender	= HtmlElements::Options( $optGender/*, $author->gender*/ );

@@ -95,7 +95,7 @@ class View_Manage_Page extends View
 		}
 	}
 
-	protected function renderTabs( $labels, $templates, $current )
+	public function renderTabs( array $labels, array $templates, $current ): string
 	{
 		$page	= $this->getData( 'page' );
 		$app	= $this->getData( 'app' );

@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 $list		= $this->renderList( $authors, $author->authorId );
 
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );

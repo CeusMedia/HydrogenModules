@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w	= (object) $words['add'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 $optParent	= [0 => ''];
 foreach( $categories as $item )

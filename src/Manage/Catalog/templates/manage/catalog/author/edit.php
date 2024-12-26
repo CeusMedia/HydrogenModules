@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $tabs       = [];
 $panes      = array(

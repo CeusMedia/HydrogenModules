@@ -1,7 +1,7 @@
 <?php
 $w	= (object) $words['index'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/category/list.php' );
 

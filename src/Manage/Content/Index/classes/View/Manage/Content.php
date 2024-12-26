@@ -3,10 +3,14 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Content extends View{
-	public function index(){}
+class View_Manage_Content extends View
+{
+	public function index()
+	{
+	}
 
-	protected function renderTabs(){
+	public function renderTabs(): string
+	{
 		$current	= $this->env->getRequest()->get( '__controller' );
 		$tabs	    = [
 			'manage/content'			=> 'Übersicht',
@@ -20,7 +24,6 @@ class View_Manage_Content extends View{
 			$link	= HtmlTag::create( 'a', $value, ['href' => $key] );
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
-		$tabs	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-tabs'] );
-		return $tabs;
+		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-tabs'] );
 	}
 }

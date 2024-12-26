@@ -17,7 +17,7 @@ $w			= (object) $words['edit'];
 
 #$articles	= array_slice( $articles, 0, 50 );
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $tabs		= [];
 $panes		= [

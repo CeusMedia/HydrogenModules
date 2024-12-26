@@ -63,7 +63,7 @@ $panelList	= '
 		</div>
 ';
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 extract( $view->populateTexts( ['top', 'bottom', 'index'], 'html/manage/catalog/bookstore/tag/' ) );
 

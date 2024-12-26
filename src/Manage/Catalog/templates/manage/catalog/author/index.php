@@ -1,5 +1,5 @@
 <?php
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 $panelList	= $view->loadTemplateFile( 'manage/catalog/author/list.php' );
 
