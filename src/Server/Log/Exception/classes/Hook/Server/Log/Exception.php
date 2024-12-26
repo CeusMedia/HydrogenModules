@@ -18,7 +18,7 @@ class Hook_Server_Log_Exception extends Hook
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		if( !is_object( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Given exception is not an object' );
-		if( !( $data['exception'] instanceof Throwable && !$data['exception'] instanceof Exception ) )
+		if( !$data['exception'] instanceof Throwable )
 			throw new InvalidArgumentException( 'Given exception object is not an exception instance' );
 
 		$logic			= $this->env->getLogic()->get( 'logException');

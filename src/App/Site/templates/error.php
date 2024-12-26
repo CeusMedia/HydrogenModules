@@ -30,8 +30,8 @@ try{
 	$header		= Template::renderFile( 'locales/de/html/app.header.html', ['theme' => 'custom'] );
 	$footer		= Template::renderFile( 'locales/de/html/app.footer.html', ['theme' => 'custom', 'time' => 1] );
 }
-catch( Throwable $e ){
-	$env->getLog()->logException( $e );
+catch( Throwable $innerException ){
+	$env->getLog()->logException( $innerException );
 	$header	= '';
 	$footer	= '';
 }
