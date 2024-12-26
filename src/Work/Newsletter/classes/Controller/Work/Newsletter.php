@@ -280,14 +280,14 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'addTemplates', $templates );
 		$this->addData( 'addNewsletters', $newsletters );
 
-		$filterTitle	= $this->session->get( $this->filterPrefix.'title' );
-		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
-		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' );
+		$filterTitle	= trim( $this->session->get( $this->filterPrefix.'title', '' ) );
+		$filterStatus	= trim( $this->session->get( $this->filterPrefix.'status', '' ) );
+		$filterLimit	= (int) $this->session->get( $this->filterPrefix.'limit', 10 );
 
 		$conditions	= [];
-		if( strlen( $filterTitle ) )
+		if( '' !== $filterTitle )
 			$conditions['title']	= '%'.$filterTitle.'%';
-		if( strlen( $filterStatus ) )
+		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
 
 		$orders		= ['newsletterId' => 'DESC'];

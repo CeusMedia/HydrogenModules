@@ -33,7 +33,7 @@ class View_Work_Newsletter extends View
 		$this->addData( 'words', $words );
 	}
 
-	protected function renderMainTabs(): string
+	public function renderMainTabs(): string
 	{
 		$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'work/newsletter' );
@@ -47,7 +47,7 @@ class View_Work_Newsletter extends View
 		return HtmlTag::create( 'ul', $list, ['class' => "nav nav-tabs"] );
 	}
 
-	protected function renderTabs( $tabs, $baseUrl, $current, $disabled = [] ): string
+	public function renderTabs( $tabs, $baseUrl, $current, $disabled = [] ): string
 	{
 		$list	= [];
 		$number	= 0;

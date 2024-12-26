@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $tabbedLinks */
 /** @var object $group */
 
-$tabsMain	= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain	= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $w			= (object) $words['add'];
 

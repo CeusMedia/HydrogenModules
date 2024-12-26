@@ -13,7 +13,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var int|string $groupId */
 /** @var ?Logic_Limiter $limiter */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';

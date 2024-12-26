@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $newsletterId */
 /** @var View_Work_Newsletter $view */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 
@@ -38,7 +38,7 @@ else if( (int) $newsletter->status == Model_Newsletter::STATUS_SENT ){
 	$disabledTabs	= [/*2, 3,*/ 4];
 	$disabled		= 'disabled="disabled"';
 }
-$tabsContent	= $this->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
+$tabsContent	= $view->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
 
 $listSents	= '<em><small class="muted">Keine.</small></em>';
 

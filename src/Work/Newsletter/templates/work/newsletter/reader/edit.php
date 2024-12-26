@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $readerLetters */
 /** @var array $readerGroups */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $statusIcons	= [
 	-1		=> 'remove',

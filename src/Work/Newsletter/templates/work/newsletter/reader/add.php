@@ -13,7 +13,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $totalReaders */
 /** @var ?Logic_Limiter $limiter */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';

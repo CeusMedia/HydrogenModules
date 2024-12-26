@@ -13,12 +13,12 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $templateId */
 /** @var string $format */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $isUsed			= FALSE;
 $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.content.tab' );
 $tabs			= $words->tabs;
-$tabsContent	= $this->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
+$tabsContent	= $view->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
