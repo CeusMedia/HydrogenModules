@@ -12,11 +12,11 @@ class Mail_Info_Contact extends Mail_Abstract
 		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
 		$data		= $this->data;
 		$do			= (object) [
-			'email'			=> strip_tags( @$data['email'] ),
-			'subject'		=> strip_tags( @$data['subject'] ),
-			'fullname'		=> strip_tags( @$data['fullname'] ),
-			'message'		=> strip_tags( @$data['message'] ),
-			'newsletter'	=> strip_tags( @$data['newsletter'] ),
+			'email'			=> strip_tags( $data['email'] ?? '' ),
+			'subject'		=> strip_tags( $data['subject'] ?? '' ),
+			'fullname'		=> strip_tags( $data['fullname'] ?? '' ),
+			'message'		=> strip_tags( $data['message'] ?? '' ),
+			'newsletter'	=> strip_tags( $data['newsletter'] ?? '' ),
 		];
 
 		$mailSubject	= $words['mail']['subject'];

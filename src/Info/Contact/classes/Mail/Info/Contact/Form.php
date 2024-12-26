@@ -13,16 +13,16 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$data		= $this->data;
 
 		$do			= (object) [
-			'email'		=> strip_tags( @$data['email'] ),
-			'phone'		=> strip_tags( @$data['phone'] ),
-			'type'		=> (int) strip_tags( @$data['type'] ),
-			'subject'	=> strip_tags( @$data['subject'] ),
-			'person'	=> strip_tags( @$data['person'] ),
-			'company'	=> strip_tags( @$data['company'] ),
-			'street'	=> strip_tags( @$data['street'] ),
-			'city'		=> strip_tags( @$data['city'] ),
-			'postcode'	=> strip_tags( @$data['postcode'] ),
-			'body'		=> strip_tags( @$data['body'] ),
+			'email'		=> strip_tags( $data['email'] ?? '' ),
+			'phone'		=> strip_tags( $data['phone'] ?? '' ),
+			'type'		=> (int) strip_tags( $data['type'] ?? '' ),
+			'subject'	=> strip_tags( $data['subject'] ?? '' ),
+			'person'	=> strip_tags( $data['person'] ?? '' ),
+			'company'	=> strip_tags( $data['company'] ?? '' ),
+			'street'	=> strip_tags( $data['street'] ?? '' ),
+			'city'		=> strip_tags( $data['city'] ?? '' ),
+			'postcode'	=> strip_tags( $data['postcode'] ?? '' ),
+			'body'		=> strip_tags( $data['body'] ?? '' ),
 		];
 
 		$type	= current( $words['form-types'] );

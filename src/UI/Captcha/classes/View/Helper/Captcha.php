@@ -98,11 +98,11 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		switch( strtolower( $strength ) ){
 			case 'soft':
 				$this->captcha->useDigits	= FALSE;
-				$this->captcha->useLarge	= FALSE;
+				$this->captcha->useLarges	= FALSE;
 				break;
 			case 'hard':
 				$this->captcha->useDigits	= TRUE;
-				$this->captcha->useLarge	= TRUE;
+				$this->captcha->useLarges	= TRUE;
 				break;
 		}
 		return $this;

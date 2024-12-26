@@ -103,7 +103,7 @@ abstract class Mail_Abstract
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new MailMessage();
-//		$this->view				= new View( $env );
+		$this->view				= new View( $env );
 		$this->page				= new HtmlPage();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );

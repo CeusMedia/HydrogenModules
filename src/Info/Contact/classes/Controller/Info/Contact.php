@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Info_Contact extends Controller
 {
+	public static string $moduleId	= 'Info_Contact';
+
 	protected HttpRequest $request;
 	protected MessengerResource $messenger;
 

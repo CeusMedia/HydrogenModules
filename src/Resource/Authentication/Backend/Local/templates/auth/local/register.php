@@ -36,10 +36,9 @@ $files		= [
 
 function reduceContentFile( $view, $fileName ): string
 {
-	$contentFile	= $view->getContentUri( $fileName );
-	if( !file_exists( $contentFile ) )
+	if( !$view->hasContent( $fileName ) )
 		return '';
-	return preg_replace( "/<!--(.|\s)*?-->/", "", FileReader::load( $contentFile ) );
+	return preg_replace( "/<!--(.|\s)*?-->/", "", $view->loadContentFile( $fileName ) );
 }
 
 function getLegalFileContent( WebEnvironment $env, View $view, string $legal ): string
