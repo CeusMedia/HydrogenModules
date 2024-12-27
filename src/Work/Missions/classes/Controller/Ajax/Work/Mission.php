@@ -420,7 +420,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		return $this->filterKeyPrefix.$mode;
 	}
 
-	protected function getWords( ?string $topic = NULL )
+	protected function getWords( string $section = NULL, ?string $topic = NULL): array
 	{
 		$words	= $this->env->getLanguage()->getWords( 'work/mission' );
 		if( '' !== ( $topic ?? '' ) )
