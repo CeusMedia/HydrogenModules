@@ -59,7 +59,7 @@ return $textTop.'
 	</div>
 </div>';
 
-$panelInfo	= $this->loadTemplateFile( 'manage/image/slider/editSlide.info.php' );
+$panelInfo	= $view->loadTemplateFile( 'manage/image/slider/editSlide.info.php' );
 
 return '
 <div class="row-fluid">

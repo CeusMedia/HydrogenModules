@@ -38,7 +38,7 @@ $options	= [
 $this->env->page->js->addScript( '$(document).ready(function(){'.$tabs->buildScript( '#tabs-module', $options ).'});' );
 */
 
-$panelGeneral	= $this->loadTemplateFile( 'admin/module/viewer/general.php' );
+$panelGeneral	= $view->loadTemplateFile( 'admin/module/viewer/general.php' );
 
 return '
 <style>

@@ -5,8 +5,8 @@
 
 $w		= (object) $words['index'];
 
-$panelFilter	= $this->loadTemplateFile( 'manage/relocation/index.filter.php' );
-$panelList		= $this->loadTemplateFile( 'manage/relocation/index.list.php' );
+$panelFilter	= $view->loadTemplateFile( 'manage/relocation/index.filter.php' );
+$panelList		= $view->loadTemplateFile( 'manage/relocation/index.list.php' );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/relocation/' ) );
 

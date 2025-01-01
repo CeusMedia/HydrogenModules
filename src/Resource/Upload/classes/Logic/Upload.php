@@ -4,8 +4,9 @@ use CeusMedia\Common\Alg\UnitParser;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic\Capsuled as CapsuledLogic;
 
-class Logic_Upload
+class Logic_Upload extends CapsuledLogic
 {
 	protected Environment $env;
 
@@ -20,7 +21,7 @@ class Logic_Upload
 	 */
 	public function __construct( Environment $env )
 	{
-		$this->env	= $env;
+		parent::__construct( $env );
 	}
 
 	/**

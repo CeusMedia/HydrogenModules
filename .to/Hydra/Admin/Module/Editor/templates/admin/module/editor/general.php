@@ -51,9 +51,9 @@ $panelEdit	= '
 </fieldset>
 ';
 
-$panelCompanies	= $this->loadTemplateFile( 'admin/module/editor/general.companies.php' );
-$panelAuthors	= $this->loadTemplateFile( 'admin/module/editor/general.authors.php' );
-$panelLicenses	= $this->loadTemplateFile( 'admin/module/editor/general.licenses.php' );
+$panelCompanies	= $view->loadTemplateFile( 'admin/module/editor/general.companies.php' );
+$panelAuthors	= $view->loadTemplateFile( 'admin/module/editor/general.authors.php' );
+$panelLicenses	= $view->loadTemplateFile( 'admin/module/editor/general.licenses.php' );
 
 /*$panelData	= '
 <dl>

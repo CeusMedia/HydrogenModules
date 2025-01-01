@@ -21,12 +21,12 @@ $tabsMain	= $view->renderMainTabs();
 
 $tabs		= [];
 $panes		= [
-	'details'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.details.php', ['w' => $w] ),
-	'authors'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.authors.php', ['w' => $w] ),
-	'categories'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.categories.php', ['w' => $w] ),
-	'cover'			=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.cover.php', ['w' => $w] ),
-	'documents'		=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.documents.php', ['w' => $w] ),
-	'tags'			=> $this->loadTemplateFile( 'manage/catalog/bookstore/article/edit.tags.php', ['w' => $w] ),
+	'details'		=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.details.php', ['w' => $w] ),
+	'authors'		=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.authors.php', ['w' => $w] ),
+	'categories'	=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.categories.php', ['w' => $w] ),
+	'cover'			=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.cover.php', ['w' => $w] ),
+	'documents'		=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.documents.php', ['w' => $w] ),
+	'tags'			=> $view->loadTemplateFile( 'manage/catalog/bookstore/article/edit.tags.php', ['w' => $w] ),
 ];
 
 $current	= $env->getSession()->get( 'manage.catalog.bookstore.article.tab' );

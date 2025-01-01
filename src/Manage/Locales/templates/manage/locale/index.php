@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 /** @var array<string> $paths */
 /** @var array<string,array<string,string>> $words */
 
-$panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
-$panelList		= $this->loadTemplate( 'manage/locale', 'list' );
+$panelFilter	= $view->loadTemplate( 'manage/locale', 'filter' );
+$panelList		= $view->loadTemplate( 'manage/locale', 'list' );
 
 $optPath	= array_merge( [''], $paths );
 $optPath	= array_combine( $optPath, $optPath );

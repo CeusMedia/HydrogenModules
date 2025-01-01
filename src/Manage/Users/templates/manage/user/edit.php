@@ -192,11 +192,11 @@ $panelEdit	= '
 	</div>
 </div>';
 
-$panelGroups	= $this->loadTemplateFile( 'manage/user/edit.groups.php' );
-$panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
-$panelPassword	= $this->loadTemplateFile( 'manage/user/edit.password.php' );
-$panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
-$panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
+$panelGroups	= $view->loadTemplateFile( 'manage/user/edit.groups.php' );
+$panelStatus	= $view->loadTemplateFile( 'manage/user/edit.status.php' );
+$panelPassword	= $view->loadTemplateFile( 'manage/user/edit.password.php' );
+$panelInfo		= $view->loadTemplateFile( 'manage/user/edit.info.php' );
+$panelRights	= $view->loadTemplateFile( 'manage/user/edit.rights.php' );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/user/' ) );
 

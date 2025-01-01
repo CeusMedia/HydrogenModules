@@ -77,7 +77,7 @@ $panelEdit	= '
 		</div>
 ';
 
-$panelInfo	= $this->loadTemplateFile( 'manage/relocation/edit.info.php' );
+$panelInfo	= $view->loadTemplateFile( 'manage/relocation/edit.info.php' );
 
 extract( $view->populateTexts( ['edit.top', 'edit.bottom'], 'html/manage/relocation/' ) );
 

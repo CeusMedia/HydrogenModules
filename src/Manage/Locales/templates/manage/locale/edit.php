@@ -10,8 +10,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var string $pathName */
 /** @var array<string> $paths */
 
-$panelFilter	= $this->loadTemplate( 'manage/locale', 'filter' );
-$panelList		= $this->loadTemplate( 'manage/locale', 'list' );
+$panelFilter	= $view->loadTemplate( 'manage/locale', 'filter' );
+$panelList		= $view->loadTemplate( 'manage/locale', 'list' );
 
 $w	= (object) $words['edit'];
 

@@ -45,7 +45,7 @@ $iconIn		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-right', 'title' => 
 $iconOut	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left', 'title' => 'von anderen'] );
 
 $table		= $view->renderTable( $bills );
-$filter		= $this->loadTemplateFile( 'work/bill/index.filter.php' );
+$filter		= $view->loadTemplateFile( 'work/bill/index.filter.php' );
 
 $w		= (object) $words['index'];
 $tabs	= View_Work_Bill::renderTabs( $env );

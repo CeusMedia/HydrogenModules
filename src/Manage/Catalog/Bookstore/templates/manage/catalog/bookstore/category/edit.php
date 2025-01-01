@@ -12,8 +12,8 @@ $tabsMain	= $view->renderMainTabs();
 
 $tabs		= [];
 $panes		= [
-	'details'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/category/edit.details.php', ['w' => $w] ),
-	'articles'	=> $this->loadTemplateFile( 'manage/catalog/bookstore/category/edit.articles.php', ['w' => $w] ),
+	'details'	=> $view->loadTemplateFile( 'manage/catalog/bookstore/category/edit.details.php', ['w' => $w] ),
+	'articles'	=> $view->loadTemplateFile( 'manage/catalog/bookstore/category/edit.articles.php', ['w' => $w] ),
 ];
 
 $current	= $this->env->getSession()->get( 'manage.catalog.bookstore.category.tab' );
