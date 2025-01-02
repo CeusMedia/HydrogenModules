@@ -67,18 +67,18 @@
     "autoload-dev": {
         "classmap": ["src/"],
         "psr-4": {
-            "CeusMedia\\HydrogenModulesTest\\": ["test/"],
+            "CeusMedia\\HydrogenModulesUnitTest\\": ["test/Unit"],
             "CeusMedia\\HydrogenModulesIntegrationTest\\": ["test/Integration"]
         }
     },
     "scripts": {
         "dev:all": [
             "@dev:test-syntax",
+            "@dev:phpstan",
             "@dev:phpunit",
             "@dev:index-serial",
             "@dev:index-json",
             "@dev:index-html",
-            "@dev:phpstan",
             "@dev:rector"
         ],
         "dev:install": "composer install --quiet --ignore-platform-reqs",
@@ -116,7 +116,6 @@
             "XDEBUG_MODE=off vendor/bin/phpstan analyse --configuration=tool/config/phpstan.neon --generate-baseline=tool/config/phpstan-baseline.neon"
         ],
         "dev:phpunit": [
-            "@dev:install",
             "XDEBUG_MODE=coverage php vendor/bin/phpunit --configuration tool/config/phpunit.xml --testsuite units"
         ],
         "dev:phpunit-integration": [

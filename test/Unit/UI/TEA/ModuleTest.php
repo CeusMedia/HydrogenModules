@@ -1,10 +1,10 @@
 <?php
-namespace CeusMedia\HydrogenModulesTest\UI\TEA;
+namespace CeusMedia\HydrogenModulesUnitTest\UI\TEA;
 
 
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
-use CeusMedia\HydrogenModulesTest\BaseTestCase;
+use CeusMedia\HydrogenModulesUnitTest\BaseTestCase;
 use CeusMedia\TemplateAbstraction\Factory;
 
 class ModuleTest extends BaseTestCase

@@ -1,5 +1,5 @@
 <?php
-namespace CeusMedia\HydrogenModulesTest\Resource\Cache;
+namespace CeusMedia\HydrogenModulesUnitTest\Resource\Cache;
 
 use CeusMedia\Cache\Adapter\AbstractAdapter;
 use CeusMedia\Cache\Adapter\Folder as FolderAdapter;
@@ -9,7 +9,7 @@ use CeusMedia\Cache\Encoder\JSON as JsonEncoder;
 use CeusMedia\Cache\Encoder\Msgpack as MsgpackEncoder;
 use CeusMedia\Cache\SimpleCacheFactory;
 use CeusMedia\Cache\SimpleCacheInterface;
-use CeusMedia\HydrogenModulesTest\BaseTestCase;
+use CeusMedia\HydrogenModulesUnitTest\BaseTestCase;
 
 class ModuleTest extends BaseTestCase
 {

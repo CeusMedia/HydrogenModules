@@ -1,9 +1,10 @@
 <?php
-namespace CeusMedia\HydrogenModulesTest;
+namespace CeusMedia\HydrogenModulesUnitTest;
 
 use CeusMedia\Common\FS\File\Reader;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer;
+use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\Loader;
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Environment;
@@ -15,14 +16,17 @@ class BaseTestCase extends TestCase
 {
 	protected string $path;
 	protected string $pathApp;
+	protected string $pathSrc;
 	protected array $defaultAppOptions;
 
 	protected function setUp(): void
 	{
 		$this->path 	= __DIR__.'/';
+		$this->pathSrc 	= dirname( __DIR__, 2 ).'/src/';
 		$this->pathApp	= $this->path.'.app/';
 		$this->defaultAppOptions	= [
 			'pathApp'		=> $this->pathApp,
+			'uri'			=> $this->pathApp,
 			'configFile'	=> 'config.ini'
 		];
 	}
@@ -55,20 +59,21 @@ class BaseTestCase extends TestCase
 	{
 		$modulePath	= str_replace( [':', '_'], '/', $moduleId );
 		$moduleFile	= str_replace( [':', '/'], '_', $moduleId );
+		(new Folder( $this->pathApp.'config/modules' ))->create( 0770, FALSE );
 		Writer::save(
 			$this->pathApp.'config/modules/'.$moduleFile.'.xml',
-			Reader::load( $this->path.'../src/'.$modulePath.'/module.xml' )
+			Reader::load( $this->pathSrc.'../src/'.$modulePath.'/module.xml' )
 		);
 
-		if( file_exists( $this->path.'../src/'.$modulePath.'/classes' ) )
-			Loader::create( 'php', $this->path.'../src/'.$modulePath.'/classes' )->register();
+		if( file_exists( $this->pathSrc.$modulePath.'/classes' ) )
+			Loader::create( 'php', $this->pathSrc.$modulePath.'/classes' )->register();
 
 		$definition	= Environment\Resource\Module\Reader::load( $this->pathApp.'config/modules/'.$moduleFile.'.xml', $moduleId );
 		/** @var Environment\Resource\Module\Definition\File $file */
 /*		foreach( $definition->files->classes as $file ){
 			$targetFile	= $this->pathApp.'classes/'.$file->file;
 			mkdir( dirname( $targetFile ), 0777, TRUE );
-			copy( $this->path.'../src/'.$modulePath.'/classes/'.$file->file, $targetFile );
+			copy( $this->pathSrc.$modulePath.'/classes/'.$file->file, $targetFile );
 		}*/
 
 //		copy( 'src/'.$modulePath.'/module.xml', $this->pathApp.'config/modules/'.$moduleFile.'.xml' );
