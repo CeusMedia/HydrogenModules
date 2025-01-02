@@ -75,7 +75,6 @@
 	<files>
 		<class>Controller/Admin/Mail/Attachment.php</class>
 		<class>Controller/Admin/Mail/Attachment/Folder.php</class>
-		<class>Controller/Admin/Mail/Attachment/Modal/Add.php</class>
 		<class>Controller/Admin/Mail/Queue.php</class>
 		<class>Controller/Admin/Mail/Template.php</class>
 		<class>Controller/Admin/Mail/Template/Export.php</class>
@@ -86,6 +85,7 @@
 		<class>Hook/Admin/Mail/Queue.php</class>
 		<class>View/Admin/Mail/Attachment.php</class>
 		<class>View/Admin/Mail/Attachment/Folder.php</class>
+		<class>View/Admin/Mail/Attachment/Modal/Add.php</class>
 		<class>View/Admin/Mail/Queue.php</class>
 		<class>View/Admin/Mail/Template.php</class>
 		<template>admin/mail/attachment/add.php</template>
