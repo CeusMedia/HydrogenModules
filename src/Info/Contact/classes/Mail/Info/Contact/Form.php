@@ -15,7 +15,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$do			= (object) [
 			'email'		=> strip_tags( $data['email'] ?? '' ),
 			'phone'		=> strip_tags( $data['phone'] ?? '' ),
-			'type'		=> (int) strip_tags( $data['type'] ?? '' ),
+			'type'		=> strip_tags( $data['type'] ?? '' ),
 			'subject'	=> strip_tags( $data['subject'] ?? '' ),
 			'person'	=> strip_tags( $data['person'] ?? '' ),
 			'company'	=> strip_tags( $data['company'] ?? '' ),
@@ -25,11 +25,8 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'body'		=> strip_tags( $data['body'] ?? '' ),
 		];
 
-		$type	= current( $words['form-types'] );
-		if( !empty( $do->type ) ){
-
-		}
-		$type	= $words['form-types'][$do->type];
+		if( '' === $do->type )
+			$do->type	= current( array_keys( $words['form-types'] ) );
 
 		$wordsMail		= $words['mail'];
 		if( array_key_exists( 'mail-type-'.$do->type, $words ) )
