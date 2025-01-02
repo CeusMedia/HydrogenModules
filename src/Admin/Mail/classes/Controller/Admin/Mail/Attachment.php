@@ -23,7 +23,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		if( $this->request->has( 'add' ) ){
+		if( $this->request->getMethod()->isPost() ){
 			$files	= $this->listFiles();
 			if( !strlen( $class = trim( $this->request->get( 'class' ) ) ) )
 				$this->messenger->noteError( $words->errorClassMissing, htmlentities( $class, ENT_QUOTES, 'UTF-8' ) );
@@ -70,7 +70,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 				);
 			}
 		}
-//		$this->restart( NULL, TRUE );
+		$this->restart( NULL, TRUE );
 	}
 
 	public function download( string $fileName ): void
@@ -97,7 +97,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 			$session->set( $prefix.'file', $this->request->get( 'file' ) );
 			$session->set( $prefix.'class', $this->request->get( 'class' ) );
 			$session->set( $prefix.'language', $this->request->get( 'language' ) );
-			$session->set( $prefix.'limit', $this->request->get( 'limit' ) );
+			$session->set( $prefix.'limit', max( 1, min( 1000, abs( $this->request->get( 'limit' ) ) ) ) );
 			$session->set( $prefix.'order', $this->request->get( 'order' ) );
 			$session->set( $prefix.'direction', $this->request->get( 'direction' ) );
 		}
@@ -112,7 +112,7 @@ class Controller_Admin_Mail_Attachment extends Controller
 		$this->addData( 'filterFile', $filterFile = $session->get( $prefix.'file' ) );
 		$this->addData( 'filterClass', $filterClass = $session->get( $prefix.'class' ) );
 		$this->addData( 'filterLanguage', $filterLanguage = $session->get( $prefix.'language' ) );
-		$this->addData( 'filterLimit', $filterLimit = $session->get( $prefix.'limit' ) );
+		$this->addData( 'filterLimit', $filterLimit = $session->get( $prefix.'limit', 10 ) );
 		$this->addData( 'filterOrder', $filterOrder = $session->get( $prefix.'order' ) );
 		$this->addData( 'filterDirection', $filterDirection = $session->get( $prefix.'direction' ) );
 

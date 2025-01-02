@@ -14,6 +14,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string|NULL $filterClass */
 /** @var string|NULL $filterStatus */
 /** @var string|NULL $filterLanguage */
+/** @var int $filterLimit */
 
 $w	= (object) $words['filter'];
 
@@ -64,6 +65,14 @@ return '
 				<div class="span12">
 					<label for="input_language">'.$w->labelLanguage.'</label>
 					<select name="language" id="input_language" class="span12">'.$optLanguage.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span6">
+					<label for="input_limit">'.$w->labelLimit.'</label>
+					<input type="text" name="limit" id="input_limit" class="span12" value="'.$filterLimit.'"/>
+				</div>
+				<div class="span6">
 				</div>
 			</div>
 			<div class="buttonbar">
