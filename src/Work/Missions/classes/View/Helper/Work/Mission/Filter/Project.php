@@ -62,7 +62,7 @@ class View_Helper_Work_Mission_Filter_Project extends View_Helper_Work_Mission_F
 			'class'	=> 'table table-condensed table-fixed'
 		] );
 
-		$modal			= new View_Helper_Modal( $this->env );
+		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal->setId( 'modal-work-mission-filter-projects' );
 		$modal->setHeading( 'Filter: Projekte' );
 		$modal->setBody( $table );
@@ -77,7 +77,7 @@ class View_Helper_Work_Mission_Filter_Project extends View_Helper_Work_Mission_F
 		$buttonAttr		= [
 			'class'	=> 'btn '.( count( $changedProjects ) ? "btn-info" : "" ),
 		];
-		$modalTrigger	= new View_Helper_ModalTrigger( $this->env );
+		$modalTrigger	= new View_Helper_Bootstrap_Modal_Trigger( $this->env );
 		$modalTrigger->setId( 'modal-work-mission-filter-projects-trigger' );
 		$modalTrigger->setModalId( 'modal-work-mission-filter-projects' );
 		$modalTrigger->setLabel( $buttonIcon.$buttonLabel );

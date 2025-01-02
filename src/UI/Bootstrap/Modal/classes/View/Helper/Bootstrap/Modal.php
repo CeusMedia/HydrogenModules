@@ -1,10 +1,10 @@
 <?php
 
+use CeusMedia\Common\Renderable;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-/** @phpstan-consistent-constructor */
-class View_Helper_Bootstrap_Modal
+class View_Helper_Bootstrap_Modal implements Renderable, Stringable
 {
 	protected Environment $env;
 	protected string $id;
@@ -31,13 +31,22 @@ class View_Helper_Bootstrap_Modal
 		$this->isBs4		= version_compare( $this->bsVersion, 4, '>=' );
 	}
 
-	public function __toString(){
+	/**
+	 *	@return		string
+	 */
+	public function __toString()
+	{
 		return $this->render();
 	}
 
+	/**
+	 *	@param		Environment		$env
+	 *	@return		static
+	 */
 	public static function create( Environment $env ): static
 	{
-		return new static( $env );
+		$className	= static::class;
+		return new $className( $env );
 	}
 
 	/**
@@ -47,9 +56,7 @@ class View_Helper_Bootstrap_Modal
 	 */
 	public function render(): string
 	{
-		$body		= HtmlTag::create( 'div', $this->body, [
-			'class'	=> 'modal-body',
-		] );
+		$body		= HtmlTag::create( 'div', $this->body, ['class' => 'modal-body'] );
 		$footer		= $this->renderFooter();
 		$header		= $this->renderHeader();
 		$attributes	= [
@@ -100,9 +107,9 @@ class View_Helper_Bootstrap_Modal
 	 *	Set value for class will be added.
 	 *	@access		public
 	 *	@param		array		$attributes		Map of button attributes
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setAttributes( array $attributes ): self
+	public function setAttributes( array $attributes ): static
 	{
 		$this->attributes	= $attributes;
 		return $this;
@@ -112,9 +119,9 @@ class View_Helper_Bootstrap_Modal
 	 *	Set label of cancel button in modal footer.
 	 *	@access		public
 	 *	@param		string		$label			Label of cancel button in modal footer
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setButtonLabelCancel( string $label ): self
+	public function setButtonLabelCancel( string $label ): static
 	{
 		$this->labelButtonCancel	= $label;
 		return $this;
@@ -124,9 +131,9 @@ class View_Helper_Bootstrap_Modal
 	 *	Set label of submit button in modal footer.
 	 *	@access		public
 	 *	@param		string		$label			Label of submit button in modal footer
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setButtonLabelSubmit( string $label ): self
+	public function setButtonLabelSubmit( string $label ): static
 	{
 		$this->labelButtonSubmit	= $label;
 		return $this;
@@ -136,10 +143,10 @@ class View_Helper_Bootstrap_Modal
 	 *	...
 	 *	@access		public
 	 *	@param		string		$body			...
-	 *	@return		self
+	 *	@return		static
 	 *	@todo		code doc
 	 */
-	public function setBody( string $body ): self
+	public function setBody( string $body ): static
 	{
 		$this->body		= $body;
 		return $this;
@@ -149,10 +156,10 @@ class View_Helper_Bootstrap_Modal
 	 *	...
 	 *	@access		public
 	 *	@param		string		$fade			...
-	 *	@return		self
+	 *	@return		static
 	 *	@todo		code doc
 	 */
-	public function setFade( string $fade ): self
+	public function setFade( string $fade ): static
 	{
 		$this->fade		= $fade;
 		return $this;
@@ -162,10 +169,10 @@ class View_Helper_Bootstrap_Modal
 	 *	...
 	 *	@access		public
 	 *	@param		string		$action			...
-	 *	@return		self
+	 *	@return		static
 	 *	@todo		code doc
 	 */
-	public function setFormAction( string $action ): self
+	public function setFormAction( string $action ): static
 	{
 		$this->formAction	= $action;
 		return $this;
@@ -175,10 +182,10 @@ class View_Helper_Bootstrap_Modal
 	 *	...
 	 *	@access		public
 	 *	@param		string		$heading		...
-	 *	@return		self
+	 *	@return		static
 	 *	@todo		code doc
 	 */
-	public function setHeading( string $heading ): self
+	public function setHeading( string $heading ): static
 	{
 		$this->heading		= $heading;
 		return $this;
@@ -188,10 +195,10 @@ class View_Helper_Bootstrap_Modal
 	 *	...
 	 *	@access		public
 	 *	@param		string		$id				...
-	 *	@return		self
+	 *	@return		static
 	 *	@todo		code doc
 	 */
-	public function setId( string $id ): self
+	public function setId( string $id ): static
 	{
 		$this->id		= $id;
 		return $this;
@@ -217,12 +224,12 @@ class View_Helper_Bootstrap_Modal
 	protected function renderHeader(): string
 	{
 		$buttonClose	= HtmlTag::create( 'button', '×', [
-			'type'			=> "button",
-			'class'			=> "close",
-			'data-dismiss'	=> "modal",
-			'aria-hidden'	=> "true",
+			'type'			=> 'button',
+			'class'			=> 'close',
+			'data-dismiss'	=> 'modal',
+			'aria-hidden'	=> 'true',
 		] );
-		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => "myModalLabel"] );
+		$heading	= HtmlTag::create( 'h3', $this->heading, ['id' => 'myModalLabel'] );
 		return HtmlTag::create( 'div', [$buttonClose, $heading], [
 			'class'	=> 'modal-header',
 		] );

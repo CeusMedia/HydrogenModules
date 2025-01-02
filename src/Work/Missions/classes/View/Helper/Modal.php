@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
+/**
+ *	@deprecated 	Use module UI:Bootstrap:Modal instead
+ */
 class View_Helper_Modal
 {
 	protected WebEnvironment $env;
@@ -19,6 +22,9 @@ class View_Helper_Modal
 	 */
 	public function __construct( WebEnvironment $env )
 	{
+		\CeusMedia\Common\Deprecation::getInstance()
+			->setExceptionVersion( '1' )
+			->message( 'Use module UI:Bootstrap:Modal instead' );
 		$this->env		= $env;
 	}
 

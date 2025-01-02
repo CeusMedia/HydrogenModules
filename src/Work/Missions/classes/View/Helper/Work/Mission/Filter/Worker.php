@@ -84,7 +84,7 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 			'class'	=> 'table table-condensed table-fixed'
 		] );
 
-		$modal			= new View_Helper_Modal( $this->env );
+		$modal			= new View_Helper_Bootstrap_Modal( $this->env );
 		$modal->setId( 'modal-work-mission-filter-workers' );
 		$modal->setHeading( 'Filter: Bearbeiter' );
 		$modal->setBody( $table );
@@ -99,7 +99,7 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 		$buttonAttr		= [
 			'class'	=> 'btn '.( count( $changedWorkers ) ? "btn-info" : "" ),
 		];
-		$modalTrigger	= new View_Helper_ModalTrigger( $this->env );
+		$modalTrigger	= new View_Helper_Bootstrap_Modal_Trigger( $this->env );
 		$modalTrigger->setId( 'modal-work-mission-filter-workers-trigger' );
 		$modalTrigger->setModalId( 'modal-work-mission-filter-workers' );
 		$modalTrigger->setLabel( $buttonIcon.$buttonLabel );
