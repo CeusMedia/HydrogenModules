@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Captcha extends Controller
 {
-	public function image()
+	public function image(): void
 	{
 		$helper	= new View_Helper_Captcha( $this->env );
 		$helper->setFormat( View_Helper_Captcha::FORMAT_RAW );
@@ -14,7 +14,7 @@ class Controller_Captcha extends Controller
 		exit;
 	}
 
-	public function test()
+	public function test(): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();

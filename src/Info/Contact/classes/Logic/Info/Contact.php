@@ -51,6 +51,42 @@ class Logic_Info_Contact extends Logic
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
+	public function validateAjaxInput( Dictionary $data ): bool|array
+	{
+		$errors		= [];
+		if( '' === trim( $data->get( 'person', '' ) ) )
+			$errors[]	= 'FullNameMissing';
+		if( '' === trim( $data->get( 'email', '' ) ) )
+			$errors[]	= 'EmailMissing';
+		if( '' === trim( $data->get( 'subject', '' ) ) )
+			$errors[]	= 'SubjectMissing';
+		if( '' === trim( $data->get( 'body', '' ) ) )
+			$errors[]	= 'MessageMissing';
+		if( '' !== $data->get( 'trap', '' ) )
+			$errors[]	= 'AccessDenied';
+
+		if( $this->useCsrf ){
+			$logicCsrf	= Logic_CSRF::getInstance( $this->env );
+			if( !$logicCsrf->verifyToken(
+				$data->get( 'csrf_form_name', '' ),
+				$data->get( 'csrf_token', '' )
+			) )
+				$errors[]	= 'CsrfFailed';
+		}
+
+		$quotedUrl	= preg_quote( $this->env->url, '/' );
+		if( !preg_match( '/^'.$quotedUrl.'/', getEnv( 'HTTP_REFERER' ) ) )
+			$errors[]	= 'RefererInvalid';
+
+		return [] === $errors ? TRUE : $errors;
+	}
+
+	/**
+	 *	@param		Dictionary		$data
+	 *	@return		bool|array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function validateInput( Dictionary $data ): bool|array
 	{
 		$errors		= [];

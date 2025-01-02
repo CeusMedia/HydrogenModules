@@ -84,17 +84,10 @@ class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
 	}
 
 	//  --  SETTERS  --  //
-	public function setId( int|string $id ): self
+	public function setId( int|string $id ): static
 	{
-		$this->id		= $id;
 		$this->trigger->setModalId( $id );
-		return $this;
-	}
-
-	public function setHeading( string $heading ): self
-	{
-		$this->heading		= $heading;
-		return $this;
+		return parent::setId( $id );
 	}
 
 	public function setTitle( string $title ): self
@@ -114,13 +107,9 @@ class View_Modal_Manage_Group_Add extends View_Helper_Bootstrap_Modal
 		$this->types		= $types;
 		return $this;
 	}
-	/*
-		public function setFrom( $from ): self
-		{
-			$this->from		= $from;
-		}*/
 
 	//  --  PROTECTED  --  //
+
 	protected function renderTypeOptions(): string
 	{
 		$optType	= [];

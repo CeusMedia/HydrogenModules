@@ -38,7 +38,7 @@ class Controller_Abstract extends Controller
 		}
 	}
 
-	protected function setupView( bool $force = TRUE ): self
+	protected function setupView( bool $force = TRUE ): static
 	{
 		return $this;
 	}

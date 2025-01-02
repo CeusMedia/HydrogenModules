@@ -24,7 +24,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 			/** @var Dictionary $inputData */
 			$inputData		= $this->request->getAll( '', TRUE );
 			$logic			= new Logic_Info_Contact( $this->env );
-			$errorsOrTrue	= $logic->validateInput( $inputData );
+			$errorsOrTrue	= $logic->validateAjaxInput( $inputData );
 			if( TRUE !== $errorsOrTrue )
 				return $this->respondError( 0, 'Invalid input: '.join( ' ', $errorsOrTrue ) );
 			$logic->sendFormMail( $inputData );

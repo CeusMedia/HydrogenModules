@@ -8,7 +8,7 @@ class Hook_Tracker_Matomo extends Hook
 {
 	/**
 	 *	Loads connector to local Matomo installation for PHP side tracking, if enabled and available.
-	 *	Adds resource 'piwik' to environment.
+	 *	Adds resource 'matomo' to environment.
 	 *	@access		public
 	 *	@return		void
 	 */
@@ -23,12 +23,12 @@ class Hook_Tracker_Matomo extends Hook
 			return;
 		$serverUrl	= rtrim( $config->get( 'server.URL' ), '/' ).'/';
 		$localPath	= rtrim( $config->get( 'local.path' ), '/' ).'/';
-		$classFile	= $localPath.'/libs/PiwikTracker/PiwikTracker.php';							//  calculate Piwik tracker class file
-		@include_once $classFile;																//  include Piwik tracker class file
+		$classFile	= $localPath.'/libs/PiwikTracker/PiwikTracker.php';							//  calculate Matomo tracker class file
+		@include_once $classFile;																//  include Matomo tracker class file
 		if( !class_exists( 'PiwikTracker' ) )													//  include was NOT successful
-			throw new RuntimeException( 'Piwik tracker inclusion failed ('.$classFile.')' );
+			throw new RuntimeException( 'Matomo tracker inclusion failed ('.$classFile.')' );
 		PiwikTracker::$URL = $serverUrl;														//  set URL of Matomo service
-		$this->env->set( 'piwik', new PiwikTracker( $config->get( 'ID' ) ) );							//  register Piwik tracker instance in environment
+		$this->env->set( 'matomo', new PiwikTracker( $config->get( 'ID' ) ) );							//  register Matomo tracker instance in environment
 	}
 
 	/**

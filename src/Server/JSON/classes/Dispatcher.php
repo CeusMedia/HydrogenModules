@@ -26,6 +26,7 @@
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Alg\Obj\MethodFactory as ObjectMethodFactory;
+use CeusMedia\Common\UI\OutputBuffer;
 use CeusMedia\HydrogenFramework\Controller as Controller;
 use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
 
@@ -56,7 +57,7 @@ class Dispatcher extends GeneralDispatcher
 	 *	@return		void
 	 *	@throws		RuntimeException if authentication is active and not fulfilled
 	 */
-	protected function checkAuth( string $controller, string $action )
+	protected function checkAuth( string $controller, string $action ): void
 	{
 		$config	= $this->env->getConfig()->getAll( 'module.server_json.', TRUE );					//  shortcut module config
 		if( !$config->get( 'token.active' ) )														//  token is not needed for authentication
@@ -75,33 +76,40 @@ class Dispatcher extends GeneralDispatcher
 
 	/**
 	 *	Calls controller method depending on request and returns result.
-	 *	Notifies Piwik tracker if enabled.
+	 *	Notifies Matomo tracker if enabled.
+	 *	@param		?OutputBuffer		$devBuffer
 	 *	@access		public
 	 *	@return		mixed		Result returned by called controller method
 	 *	@throws		ReflectionException
 	 */
-	public function dispatch(): string
+	public function dispatch( ?OutputBuffer $devBuffer = NULL ): string
 	{
-		$this->realizeCall();																		//  set defaults if necessary
+		$this->setDefaults();																		//  set defaults if necessary
 
 		$controller	= trim( $this->request->get( '__controller' ) );								//  get called controller
 		$action		= trim( $this->request->get( '__action' ) );									//  get called action
 		$arguments	= $this->request->get( '__arguments' );											//  get given arguments
 
-		if( $this->env->getModules()->has( 'Resource_Tracker_Piwik' ) )								//  Piwik tracker is installed
-			if( $this->env->getConfig()->get( 'module.resource_tracker_piwik.tracker.enabled' ) )	//  a tracker is enabled
-				$this->env->get( 'piwik' )->doTrackPageView( $controller.' > '.$action );			//  track request
+		if( $this->env->getModules()->has( 'Resource_Tracker_Matomo' ) )								//  Piwik tracker is installed
+			if( $this->env->getConfig()->get( 'module.resource_tracker_matomo.tracker.enabled' ) )	//  a tracker is enabled
+				$this->env->get( 'matomo' )->doTrackPageView( $controller.' > '.$action );			//  track request
 
 		$this->checkAuth( $controller, $action );													//  ensure authentication
-		$className	= self::getControllerClassFromPath( $controller );								// get controller class name from requested controller path
-		$this->checkClass( $className );															//  ensure controller class
 
-		$factory	= new ObjectFactory();															//  raise object factory
+		$controllerInstanceOrFirstGuess	= self::getPrefixedClassInstanceByPathOrFirstClassNameGuess(	// get controller class name from requested controller path
+			$this->env,
+			'Controller_',
+			$controller
+		);
+
+		if( !is_object( $controllerInstanceOrFirstGuess ) )
+			throw new RuntimeException( 'Invalid controller "'.$controllerInstanceOrFirstGuess.'"' );
+
 		/** @var Controller $instance */
-		$instance	= $factory->createObject( $className, [&$this->env] );							//  build controller instance
-		$this->checkClassAction( $className, $instance, $action );									//  ensure action method
+		$instance	= $controllerInstanceOrFirstGuess;
+		$this->checkClassAction( $instance, $action );												//  ensure action method
 		if( $this->checkClassActionArguments )														//  action method arguments are to be checked
-			$this->checkClassActionArguments( $className, $instance, $action );						//  ensure action method arguments
+			$this->checkClassActionArguments( $instance, $action );									//  ensure action method arguments
 
 		$data	= ObjectMethodFactory::staticCallObjectMethod( $instance, $action, $arguments );	//  call action method in controller class with arguments
 		$this->noteLastCall( $instance );															//  store this call to avoid loops
