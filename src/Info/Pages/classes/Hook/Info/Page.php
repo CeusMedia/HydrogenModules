@@ -16,27 +16,27 @@ class Hook_Info_Page extends Hook
 	{
 		/** @var Web $env */
 		$env		= $this->env;
-		if( $env->getModules()->has( 'Resource_Frontend' ) )										//  frontend resource exists
-			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )				//  this app is a backend
+		if( $env->getModules()->has( 'Resource_Frontend' ) )								//  frontend resource exists
+			if( $env->getConfig()->get( 'module.resource_frontend.path' ) !== './' )			//  this app is a backend
 				return FALSE;																		//  no (frontend) pages for backend
 
 		$request	= $env->getRequest();
 		/** @var Logic_Page $logic */
 		$logic		= $env->getLogic()->get( 'page' );												//  get page logic instance
 
-		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
+		$path		= trim( $request->get( '__path', '' ), '/' );				//  get requested path
 		$pagePath	= strlen( $path ) ? $path : 'index';											//  ensure page path is not empty
 		$page		= $logic->getPageFromRequest( TRUE, FALSE );
-		if( !$page )																				//  no page found for called page path
+		if( NULL === $page )																		//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
 
-		if( (int) $page->status === Model_Page::STATUS_DISABLED ){									//  page is deactivated
-			$previewCode	= $request->get( 'preview' );											//  get preview code if requested (iE. by page management)
+		if( Model_Page::STATUS_DISABLED === $page->status ){										//  page is deactivated
+			$previewCode	= $request->get( 'preview' );										//  get preview code if requested (iE. by page management)
 			if( $previewCode != $page->createdAt.$page->modifiedAt )								//  no valid preview code => no bypassing disabled state
 				return FALSE;																		//  quit hook call and return without result
 		}
 
-		switch( (int) $page->type ){
+		switch( $page->type ){
 			case Model_Page::TYPE_COMPONENT:
 				break;
 			case Model_Page::TYPE_CONTENT:
@@ -97,6 +97,7 @@ class Hook_Info_Page extends Hook
 
 	/**
 	 *	@return		FALSE
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onControllerDetectPath()
@@ -128,6 +129,7 @@ class Hook_Info_Page extends Hook
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function onEnvConstructEnd(): void
 	{
@@ -144,6 +146,8 @@ class Hook_Info_Page extends Hook
 		];
 		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );							//  get all module based pages
 		foreach( $pages as $page ){																	//  iterate pages
+			if( str_starts_with( strtolower( $page->controller ), 'ajax' ) )						//  ajax controller
+				continue;																			//  skip this controller
 			$className	= 'Controller_'.$page->controller;											//  page delivers unprefixed controller class name
 			if( !class_exists( $className ) )														//  controller class is not existing
 				continue;																			//  skip this page
@@ -224,6 +228,7 @@ class Hook_Info_Page extends Hook
 	 *	@todo		localize error messages
 	 *	@todo		remove old code
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onRenderContent(): void
 	{
@@ -238,10 +243,12 @@ class Hook_Info_Page extends Hook
 	 *	OLD CODE
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyStrategy1(): void
 	{
 		$pattern	= "/^(.*)(\[page:(.+)\])(.*)$/sU";
+		/** @var Logic_Page $logic */
 		$logic		= $this->env->getLogic()->get( 'page' );
 		$matches	= [];
 		while( preg_match( $pattern, $this->payload['content'], $matches ) ){
@@ -270,9 +277,11 @@ class Hook_Info_Page extends Hook
 	 *	NEW CODE USING UI:SHORTCODE
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyStrategy2(): void
 	{
+		/** @var Logic_Page $logic */
 		$logic = $this->env->getLogic()->get('page');
 		if( !$this->env->getModules()->has( 'UI_Shortcode' ) )
 			return;
@@ -316,23 +325,23 @@ class Hook_Info_Page extends Hook
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
-					if( (int) $page->type == Model_Page::TYPE_COMPONENT ){
-						if( (int) $page->status == Model_Page::STATUS_HIDDEN ){						//  page component is hidden
+					if( Model_Page::TYPE_COMPONENT === $page->type ){
+						if( Model_Page::STATUS_HIDDEN === $page->status ){							//  page component is hidden
 							$processor->removeNext( $shortCode );									//  remove hidden shortcode
 							continue;																//  skip to next appearance
 						}
-						if( (int) $page->status == Model_Page::STATUS_DISABLED ){					//  page component is disabled
+						if( Model_Page::STATUS_DISABLED === $page->status ){						//  page component is disabled
 							$processor->removeNext( $shortCode );									//  remove hidden shortcode
 							continue;																//  skip to next appearance
 						}
 					}
-					if( (int) $page->status == Model_Page::STATUS_DISABLED ){
+					if( Model_Page::STATUS_DISABLED === $page->status ){
 						$message	= $messages->errorPageDisabled;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
-					if( (int) $page->type === Model_Page::TYPE_BRANCH ){
+					if( Model_Page::TYPE_BRANCH === $page->type ){
 						$message	= $messages->errorPageIsBranch;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
@@ -355,9 +364,11 @@ class Hook_Info_Page extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onRenderSearchResults(): void
 	{
+		/** @var Logic_Page $logic */
 		$logic		= $this->env->getLogic()->get( 'page' );
 		$options	= $this->env->getConfig()->getAll( 'module.info_pages.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'main' );

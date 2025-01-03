@@ -15,7 +15,7 @@ class View_Info_Page extends View
 		$page		= $this->env->getPage();
 
 		$data		= new Dictionary( $this->getData() );											//  wrap view data into dictionary object
-		/** @var ?object $object */
+		/** @var ?Entity_Page $object */
 		$object		= $data->get( 'page' );
 		if( NULL === $object )																		//  no page has been found for called path
 			return NULL;
@@ -46,7 +46,7 @@ class View_Info_Page extends View
 	{
 		$logic	= new Logic_Page( $this->env );
 		$page	= $logic->getPageFromPath( $path, TRUE );
-		if( $page )
+		if( NULL !== $page )
 			return $page->content;
 		$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
 		return '';

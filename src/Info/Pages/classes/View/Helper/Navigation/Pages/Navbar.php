@@ -12,6 +12,7 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 
 	/**
 	 *	@return		string
+	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{
