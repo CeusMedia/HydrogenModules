@@ -77,7 +77,7 @@ $panelDetails	= '
 						</div>
 						<div class="span2">
 							<label for="input_trackingCode"><abbr title="'.$words->edit->labelTrackingCode_title.'">'.$words->edit->labelTrackingCode.'</abbr></label>
-							<input '.$disabled.' type="text" name="trackingCode" id="input_trackingCode" class="span12" value="'.htmlentities( $newsletter->trackingCode, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="trackingCode" id="input_trackingCode" class="span12" value="'.htmlentities( $newsletter->trackingCode ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span2">
 							<label for="input_status">'.$words->edit->labelStatus.'</label>
@@ -91,17 +91,17 @@ $panelDetails	= '
 						</div>
 						<div class="span4">
 							<label for="input_senderAddress">'.$words->edit->labelSenderAddress.'</label>
-							<input '.$disabled.' type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required" value="'.htmlentities( $newsletter->senderAddress, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required" value="'.htmlentities( $newsletter->senderAddress ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span4">
 							<label for="input_senderName">'.$words->edit->labelSenderName.'</label>
-							<input '.$disabled.' type="text" name="senderName" id="input_senderName" class="span12" value="'.htmlentities( $newsletter->senderName, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="senderName" id="input_senderName" class="span12" value="'.htmlentities( $newsletter->senderName ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 				<!--		<div class="span7">
 							<label for="input_heading">'.$words->edit->labelHeading.'</label>
-							<input '.$disabled.' type="text" name="heading" id="input_heading" class="span12" value="'.htmlentities( $newsletter->heading, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="heading" id="input_heading" class="span12" value="'.htmlentities( $newsletter->heading ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>-->
 				<!--		<div class="span6">
 								<label for="input_status" class="checkbox">

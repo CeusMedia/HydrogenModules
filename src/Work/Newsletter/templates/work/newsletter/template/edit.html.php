@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
+/** @var View_Work_Newsletter_Template $view */
 /** @var object $words */
 /** @var bool $tabbedLinks */
 /** @var object $template */
@@ -13,38 +13,6 @@ use CeusMedia\HydrogenFramework\View;
 
 extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/html' ) );
 extract( $view->populateTexts( ['placeholders'], 'html/work/newsletter/template/' ) );
-
-//  --  PANEL: PREVIEW  --  //
-$urlPreview			= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml			= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreview	= '
-<div class="content-panel">
-	<h4>
-		<span>HTML-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewHtml.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		<div id="newsletter-preview">
-			<div id="newsletter-preview-container">
-		 		<div id="newsletter-preview-iframe-container">
-					'.$iframeHtml.'
-				</div>
-			</div>
-		</div>
-	</div>
-</div>';
 
 $value		= htmlentities( $template->html, ENT_QUOTES, 'UTF-8' );
 $content	= $textTop.'
@@ -70,7 +38,7 @@ $content	= $textTop.'
 		</div>
 	</div>
 	<div class="span5">
-		'.$panelPreview.'
+		'.$view->renderHtmlPreviewPanel( $template ).'
 	</div>
 <!--	<div class="span3">
 		'.$textInfo.'

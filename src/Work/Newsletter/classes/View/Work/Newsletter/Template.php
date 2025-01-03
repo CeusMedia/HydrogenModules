@@ -1,4 +1,7 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class View_Work_Newsletter_Template extends View_Work_Newsletter
 {
 	public function add(): void
@@ -31,5 +34,71 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 
 	public function viewTheme()
 	{
+	}
+
+	/**
+	 *	@param		object		$template
+	 *	@return		string
+	 */
+	public function renderHtmlPreviewPanel( object $template ): string
+	{
+		$urlPreview	= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
+		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'h4', [
+				HtmlTag::create( 'span', 'HTML-Vorschau' ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
+						'type'			=> 'button',
+						'class'			=> 'btn btn-info btn-mini',
+						'data-toggle'	=> 'modal',
+						'data-target'	=> '#modal-preview',
+						'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
+					] )
+				], ['style' => 'float: right'] ),
+			] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
+							HtmlTag::create('iframe', '', [
+								'src'			=> $urlPreview,
+								'frameborder'	=> '0',
+							] )
+						], ['newsletter-preview-iframe-container'] ),
+					], ['id' => 'newsletter-preview-container'] ),
+				], ['id' => 'newsletter-preview'] ),
+			], ['class' => 'content-panel-inner'] )
+		], ['class' => 'content-panel'] );
+	}
+
+	public function renderTextPreviewPanel( object $template ): string
+	{
+		$urlPreview	= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
+		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'h4', [
+				HtmlTag::create( 'span', 'Text-Vorschau' ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
+						'type'			=> 'button',
+						'class'			=> 'btn btn-info btn-mini',
+						'data-toggle'	=> 'modal',
+						'data-target'	=> '#modal-preview',
+						'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
+					] )
+				], ['style' => 'float: right'] ),
+			] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
+							HtmlTag::create('iframe', '', [
+								'src'			=> $urlPreview,
+								'frameborder'	=> '0',
+							] )
+						], ['newsletter-preview-iframe-container'] ),
+					], ['id' => 'newsletter-preview-container'] ),
+				], ['id' => 'newsletter-preview'] ),
+			], ['class' => 'content-panel-inner'] )
+		], ['class' => 'content-panel'] );
 	}
 }

@@ -314,25 +314,15 @@ $panelEdit		= '
 	</div>
 </div>';
 
-$content	= '
-<div class="row-fluid">
-	<div class="span7">
-		'.$panelEdit.'
-		<div class="row-fluid">
-			<div class="span6">
-				'.$panelCopy.'
-			</div>
-			<div class="span6">
-				'.$panelRemove.'
-				'.$panelNewsletters.'
-			</div>
-		</div>
-		<div class="row-fluid"></div>
-	</div>
-	<div class="span5">
-		'.$panelPreview.'
-	</div>
-</div>
-<div class="row-fluid"></div>';
-
-return $content;
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
+		$panelEdit,
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [$panelCopy], ['class' => 'span6'] ),
+			HtmlTag::create( 'div', [$panelRemove, $panelNewsletters], ['class' => 'span6'] ),
+		], ['class' => 'row-fluid'] ),
+	], ['class' => 'span7'] ),
+	HtmlTag::create( 'div', [
+		$panelPreview
+	], ['class' => 'span5'] ),
+], ['class' => 'row-fluid'] );
