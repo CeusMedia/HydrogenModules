@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 class Controller_Ajax_Manage_Page extends AjaxController
 {
 	protected string $sessionPrefix		= 'filter_manage_pages_';
-	protected object $model;
+	protected Model_Page|Model_Config_Page $model;
 	protected Environment $envManaged;
 	protected ?Logic_Frontend $frontend	= NULL;
 	protected ?string $appFocus			= NULL;
@@ -19,6 +19,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		EnvironmentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -32,16 +33,17 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			$this->frontend		= Logic_Frontend::getInstance( $this->env );
 			$this->envManaged	= $this->frontend->getEnv();
 		}
-		$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-		if( $source === 'Database' )
-			$this->model		= new Model_Page( $this->envManaged );
-		else if( $source === 'Config' )
-			$this->model		= new Model_Config_Page( $this->envManaged );
+		$source	= $this->envManaged->getModules()->get( 'UI_Navigation' )->config['menu.source']->value;
+		if( 'Database' === $source )
+			$this->model	= new Model_Page( $this->envManaged );
+		else if( 'Config' === $source )
+			$this->model	= new Model_Config_Page( $this->envManaged );
 	}
 
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function blacklistSuggestedKeywords(): void
 	{
@@ -51,8 +53,8 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			$blacklistFile	= 'config/terms.blacklist.txt';
 			$wordsInput		= trim( $this->request->get( 'words' ) );							//  get string of whitespace concatenated words from request
 			$wordsGiven		= [];																	//  prepare empty list of given words to add to blacklist
-			if( strlen( trim( $wordsInput ) ) )														//  given string of listed keywords is not empty
-				$wordsGiven		= preg_split( '/\s*(,|\s)\s*/', $wordsInput );				//  split to list of words to add to blacklist
+			if( '' !== $wordsInput )																//  given string of listed keywords is not empty
+				$wordsGiven	= preg_split( '/\s*(,|\s)\s*/', $wordsInput );					//  split to list of words to add to blacklist
 			$wordsAdded		= [];																	//  prepare empty list of words added to blacklist
 			if( count( $wordsGiven ) ){																//  at least one word is given
 				if( !file_exists( $blacklistFile ) )												//  blacklist file is not existing, yet
@@ -65,10 +67,11 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			}
 			$blacklist	= ListFileReader::read( $blacklistFile );									//  read list of words in blacklist
 
+			/** @var Entity_Page[] $pages */
 			$pages	= $this->model->getAll();
 			foreach( $pages as $page ){
 				$keywords	= [];
-				if( strlen( trim( $page->keywords ) ) )
+				if( '' !== trim( $page->keywords ) )
 					$keywords	= preg_split( '/\s*,\s*/', $page->keywords );
 				if( $keywords ){
 					$reduced	= array_diff( $keywords, $blacklist );
@@ -95,6 +98,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function orderPages(): void
 	{
@@ -107,31 +111,34 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function saveContent(): void
 	{
 		$content	= $this->request->get( 'content' );
 		$pageId		= $this->request->get( 'pageId' );
-		$result		= ['status' => FALSE];
+//		$result		= ['status' => FALSE];
 		try{
 			/*	@todo remove this old string-based solution soon */
 			if( preg_match( '/[a-z]/', $pageId ) ){
+				/** @var Entity_Page $page */
 				if( $page = $this->model->getByIndex( 'identifier', $pageId ) ){
 					$this->model->edit( $page->pageId, [
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
 					], FALSE );
-					$result	= ['pageId' => $pageId, 'content' => $content];
-					$result	= ['status' => TRUE];
+//					$result	= ['pageId' => $pageId, 'content' => $content];
+//					$result	= ['status' => TRUE];
 				}
 			}
 			else if( $pageId ){
+				/** @var Entity_Page $page */
 				if( $page = $this->model->get( (int) $pageId ) ){
 					$this->model->edit( $page->pageId, [
 						'content'		=> $content,
 						'modifiedAt'	=> time(),
 					], FALSE );
-					$result	= ['status' => TRUE];
+//					$result	= ['status' => TRUE];
 				}
 			}
 			$this->respondData( TRUE );														//  respond to client
@@ -172,6 +179,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function suggestKeywords(): void
 	{
@@ -200,9 +208,10 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@param		int|string		$pageId
 	 *	@param		bool		$strict
-	 *	@return		object|FALSE
+	 *	@return		Entity_Page|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): object|FALSE
+	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): Entity_Page|FALSE
 	{
 		if( !$pageId ){
 			if( $strict )
@@ -210,7 +219,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			return FALSE;
 		}
 		$page	= $this->model->get( $pageId );
-		if( !$page ){
+		if( NULL === $page ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid page ID given' );
 			return FALSE;

@@ -24,6 +24,9 @@ class View_Helper_Manage_Page_ContentEditor
 		$this->env		= $env;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function getBestEditor(): string
 	{
 		return $this->collectEditors()->bestEditorKey;
@@ -39,7 +42,7 @@ class View_Helper_Manage_Page_ContentEditor
 		return '';
 	}
 
-	public function setCurrentEditor( string $key ): self
+	public function setCurrentEditor( string $key ): static
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->currentEditorKey !== $key ){
@@ -49,7 +52,7 @@ class View_Helper_Manage_Page_ContentEditor
 		return $this;
 	}
 
-	public function setDefaultEditor( string $key ): self
+	public function setDefaultEditor( string $key ): static
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->defaultEditorKey !== $key ){
@@ -59,7 +62,7 @@ class View_Helper_Manage_Page_ContentEditor
 		return $this;
 	}
 
-	public function setForcedEditor( string $key ): self
+	public function setForcedEditor( string $key ): static
 	{
 		$key	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $key ) );
 		if( $this->forcedEditorKey !== $key ){
@@ -69,7 +72,7 @@ class View_Helper_Manage_Page_ContentEditor
 		return $this;
 	}
 
-	public function setFormat( string $format ): self
+	public function setFormat( string $format ): static
 	{
 		$format	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $format ) );
 		if( $this->format !== $format ){
@@ -79,13 +82,13 @@ class View_Helper_Manage_Page_ContentEditor
 		return $this;
 	}
 
-	public function setLabelTemplate( $template ): self
+	public function setLabelTemplate( $template ): static
 	{
 		$this->labelTemplate	= $template;
 		return $this;
 	}
 
-	public function setType( string $type ): self
+	public function setType( string $type ): static
 	{
 		$type	= strtolower( preg_replace( '/[^a-z0-9_-]/i', '', $type ) );
 		if( $this->type !== $type ){
@@ -95,7 +98,10 @@ class View_Helper_Manage_Page_ContentEditor
 		return $this;
 	}
 
-	protected function collectEditors(): self
+	/**
+	 *	@return		static
+	 */
+	protected function collectEditors(): static
 	{
 		if( $this->status === static::STATUS_COLLECTED )
 			return $this;
@@ -106,12 +112,17 @@ class View_Helper_Manage_Page_ContentEditor
 			'default'	=> $this->defaultEditorKey,
 			'current'	=> $this->currentEditorKey,
 		];
-		$this->env->getCaptain()->callHook(
-			'Module',
-			'onGetAvailableContentEditor',
-			$this,
-			$payload
-		);
+		try{
+			$this->env->getCaptain()->callHook(
+				'Module',
+				'onGetAvailableContentEditor',
+				$this,
+				$payload
+			);
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()?->logException( $e );
+		}
 		$this->status		= static::STATUS_COLLECTED;
 		krsort( $payload['list'] );
 		$this->editors	= [];

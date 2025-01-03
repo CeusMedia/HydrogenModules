@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\File\Collection\Reader as ListFileReader;
@@ -41,10 +42,18 @@ class Controller_Manage_Page extends Controller
 	 */
 	public function add( int|string $parentId = 0 ): void
 	{
+		if( method_exists( $this->model, 'getColumns' ) )
+			$columns	= $this->model->getColumns();
+		else{
+			/** @var Model_Page $model */
+			$model		= ObjectFactory::createObjectWithoutConstruction( Model_Page::class );
+			$columns	= $model->getColumns();
+		}
+
 		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
 			$data	= [];
-			foreach( $this->model->getColumns() as $column ){
+			foreach( $columns as $column ){
 				if( $this->request->has( 'page_'.$column ) ){
 					$value	= $this->request->get( 'page_'.$column );
 					if( $column == 'identifier' )
@@ -645,6 +654,7 @@ ModuleManagePages.PageEditor.init();
 			'status'	=> '> -2',
 			'scope'		=> $scope,
 		];
+		/** @var Entity_Page[] $pages */
 		$pages		= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
 		$tree		= [];
 		$parentMap	= ['0' => '-'];
@@ -653,9 +663,9 @@ ModuleManagePages.PageEditor.init();
 			if( $item->pageId != $currentPageId && $item->type == 1 )
 				$parentMap[$item->pageId]	= $item->title;
 			$indices		= ['parentId' => $item->pageId];
-			$item->subpages	= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
-			foreach( $item->subpages as $nr => $subitem )
-				$item->subpages[$nr]	= $this->translatePage( $subitem );
+			$item->pages	= $this->model->getAllByIndices( $indices, ['rank' => "ASC"] );
+			foreach( $item->pages as $nr => $subitem )
+				$item->pages[$nr]	= $this->translatePage( $subitem );
 			$tree[]		= $item;
 		}
 		$this->addData( 'tree', $tree );
@@ -663,12 +673,12 @@ ModuleManagePages.PageEditor.init();
 	}
 
 	/**
-	 *	@param		object		$page
-	 *	@return		object
+	 *	@param		Entity_Page		$page
+	 *	@return		Entity_Page
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function translatePage( object $page ): object
+	protected function translatePage( Entity_Page $page ): Entity_Page
 	{
 		if( !class_exists( 'Logic_Localization' ) )							//  localization module is not installed
 			return $page;

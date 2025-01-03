@@ -5,43 +5,48 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Page extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 		$captain	= $this->env->getCaptain();
 		$captain->disableHook( 'View', 'onRenderContent' );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function renderTree( $tree, $currentPageId = NULL )
+	/**
+	 *	@param		Entity_Page[]	$tree
+	 *	@param		$currentPageId
+	 *	@return		string
+	 */
+	public function renderTree( array $tree, $currentPageId = NULL ): string
 	{
 		$app	= $this->getData( 'app' );
 		$source	= $this->getData( 'source' );
 
-		$isSelfApp		= $app === 'self';
-		$isFrontendApp	= $app === 'frontend';
-		$isFromConfig	= $source === 'Config';
-		$isFromDatabase	= $source === 'Database';
+		$isSelfApp		= 'self' === $app;
+		$isFrontendApp	= 'frontend' === $app;
+		$isFromConfig	= 'Config' === $source;
+		$isFromDatabase	= 'Database' === $source;
 
 		$list	= [];
 		foreach( $tree as $item ){
 			$sublist	= '';
-			if( isset( $item->subpages ) ){
+			if( [] !== $item->pages ){
 				$sublist	= [];
-				foreach( $item->subpages as $subitem ){
+				foreach( $item->pages as $subitem ){
 					$classes	= [];
 					if( $currentPageId && $currentPageId == $subitem->pageId )
 						$classes[]	= 'active';
 					if( $subitem->status < Model_Page::STATUS_VISIBLE || $item->status < Model_Page::STATUS_VISIBLE )
 						$classes[]	= 'disabled';
 					if( $subitem->status < Model_Page::STATUS_HIDDEN )
-						$subitem->title	= '<strike>'.$subitem->title.'</strike>';
+						$subitem->title	= '<span style="text-decoration: line-through;">' .$subitem->title. '</span>';
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
 					$link	= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'autocut'] );
@@ -61,7 +66,7 @@ class View_Manage_Page extends View
 			if( $item->status < Model_Page::STATUS_VISIBLE )
 				$classes[]	= 'disabled';
 			if( $item->status < Model_Page::STATUS_HIDDEN )
-				$item->title	= '<strike>'.$item->title.'</strike>';
+				$item->title	= '<span style="text-decoration: line-through;">' .$item->title. '</span>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
 			$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
@@ -81,39 +86,37 @@ class View_Manage_Page extends View
 //		$page	= $this->env->getPage();
 	}
 
-	protected function getPageIcon( $page )
+	protected function getPageIcon( Entity_Page $page ): string
 	{
-		switch( $page->type ){
-			case 0:
-				return '<i class="fa fa-fw fa-file-text-o"></i>';
-			case 1:
-				return '<i class="fa fa-fw fa-chevron-down"></i>';
-			case 2:
-				return '<i class="fa fa-fw fa-plug"></i>';
-			case 3:
-				return '<i class="fa fa-fw fa-puzzle-piece"></i>';
-		}
+		return match( $page->type ){
+			0		=> '<i class="fa fa-fw fa-file-text-o"></i>',
+			1		=> '<i class="fa fa-fw fa-chevron-down"></i>',
+			2		=> '<i class="fa fa-fw fa-plug"></i>',
+			3		=> '<i class="fa fa-fw fa-puzzle-piece"></i>',
+			default	=> '',
+		};
 	}
 
 	public function renderTabs( array $labels, array $templates, $current ): string
 	{
+		/** @var Entity_Page $page */
 		$page	= $this->getData( 'page' );
 		$app	= $this->getData( 'app' );
 		$source	= $this->getData( 'source' );
 		$meta	= $this->getData( 'appHasMetaModule' );
 
-		$isSelfApp		= $app === 'self';
-		$isFrontendApp	= $app === 'frontend';
-		$isFromConfig	= $source === 'Config';
-//		$isFromDatabase	= $source === 'Database';
-//		$isFromModules	= $source === 'Modules';
+		$isSelfApp		= 'self' === $app;
+		$isFrontendApp	= 'frontend' === $app;
+		$isFromConfig	= 'Config' === $source;
+//		$isFromDatabase	= 'Database' === $source;
+//		$isFromModules	= 'Modules' === $source;
 
 		$listTabs	= [];
 		$listPanes	= [];
 		foreach( $labels as $tabKey => $label ){
-			$isPage		= (int) $page->type === Model_Page::TYPE_CONTENT;
-			$isBranch	= (int) $page->type === Model_Page::TYPE_BRANCH;
-			$isModule	= (int) $page->type === Model_Page::TYPE_MODULE;
+			$isPage		= Model_Page::TYPE_CONTENT === $page->type;
+			$isBranch	= Model_Page::TYPE_BRANCH === $page->type;
+			$isModule	= Model_Page::TYPE_MODULE === $page->type;
 			$disabled	= FALSE;
 			$attributes		= ['href' => '#tab-'.$tabKey, 'data-toggle' => 'tab'];
 			switch( $tabKey ){
