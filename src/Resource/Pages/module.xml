@@ -3,7 +3,7 @@
 	<title>Resource: Pages</title>
 	<description><![CDATA[Base of providing addressed pages.]]></description>
 	<category>Resource</category>
-	<version>0.9.4</version>
+	<version>0.9.5</version>
 	<log version="0.1.0">Starting this module as Info:Pages.</log>
 	<log version="0.1.1">Later, the extraction to Resource:Pages happened.</log>
 	<log version="0.1.2">This version log is the reduced progress of the former module.</log>
@@ -31,10 +31,12 @@
 	<log version="0.9.2">Refactor page detection to be more stable.</log>
 	<log version="0.9.3">Extend model by fullpath for faster dispatching.</log>
 	<log version="0.9.4">Add dummy model for pages defined in modules.</log>
+	<log version="0.9.5">Add page entity and use in logic class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Entity/Page.php</class>
 		<class>Logic/Page.php</class>
 		<class>Model/Page.php</class>
 		<class>Model/Config/Page.php</class>

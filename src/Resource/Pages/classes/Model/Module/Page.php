@@ -7,33 +7,22 @@ class Model_Module_Page
 	protected Environment $env;
 //	protected $acl;
 	protected bool $useAcl;
-	protected array $baseItem		= [
-		'parentId'		=> 0,
-		'status'		=> 0,
-		'type'			=> 0,
-		'controller'	=> '',
-		'action'		=> '',
-		'access'		=> 'acl',
-		'content'		=> '',
-		'keywords'		=> '',
-		'changefreq'	=> '',
-		'priority'		=> '',
-		'icon'			=> '',
-		'format'		=> 'HTML',
-		'template'		=> '',
-		'createdAt'		=> 0,
-		'modifiedAt'	=> 0,
-	];
+
 	protected array $scopes		= [
 		0	=> 'main',
+//		1	=> 'header',
+//		2	=> 'footer',
 	];
+
 	protected array $types		= [
 		0	=> 'page',
 		1	=> 'menu',
-		2	=> 'module'
+		2	=> 'module',
+		3	=> 'component',
+//		4	=> 'redirect',
 	];
 
-	/** @var array<object> $pages */
+	/** @var array<Entity_Page> $pages */
 	protected array $pages;
 
 	public function __construct( Environment $env )
@@ -44,16 +33,16 @@ class Model_Module_Page
 		$this->loadPages();
 	}
 
-	public function edit( string $pageId, array $data = [] )
+	public function edit( int|string $pageId, array $data = [] )
 	{
 		throw new RuntimeException( 'Not implemented yet' );
 	}
 
 	/**
-	 *	@param		string		$pageId
-	 *	@return		?object
+	 *	@param		int|string		$pageId
+	 *	@return		?Entity_Page
 	 */
-	public function get( string $pageId ): ?object
+	public function get( int|string $pageId ): ?Entity_Page
 	{
 		foreach( $this->pages as $page )
 			if( (string) $page->pageId === $pageId )
@@ -62,7 +51,7 @@ class Model_Module_Page
 	}
 
 	/**
-	 *	@return object[]
+	 *	@return Entity_Page[]
 	 */
 	public function getAll(): array
 	{
@@ -72,9 +61,9 @@ class Model_Module_Page
 	/**
 	 *	@param		array		$indices
 	 *	@param		array		$orders
-	 *	@return		?object
+	 *	@return		?Entity_Page
 	 */
-	public function getByIndices( array $indices = [], array $orders = [] ): ?object
+	public function getByIndices( array $indices = [], array $orders = [] ): ?Entity_Page
 	{
 		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
@@ -83,7 +72,7 @@ class Model_Module_Page
 	 *	@param		array		$indices
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		Entity_Page[]
 	 */
 	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
@@ -113,7 +102,7 @@ class Model_Module_Page
 					unset( $data[$nr] );
 			}
 		}
-		if( count( $limits ) === 2 )
+		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return array_values( $data );
 	}
@@ -127,7 +116,7 @@ class Model_Module_Page
 	{
 		$pageId		= 0;
 		$pages		= [];
-		foreach( array_keys( $this->scopes ) as $scope ){
+		foreach( array_keys( $this->scopes ) as $scopeNr => $scope ){
 			foreach( $this->env->getModules()->getAll() as $module ){
 				foreach( $module->links as $link ){
 					$pageId++;
@@ -139,17 +128,22 @@ class Model_Module_Page
 //					$pathParts	= explode( '/', $link->path );
 //					$action		= array_pop( $pathParts );
 //					$controller	= implode( '_', $pathParts );
+
 					$rank		= strlen( $link->rank ) ? $link->rank : 50;
-					$rank		= $scope.str_pad( $rank, 3, "0", STR_PAD_LEFT );
-					$rank		.= "_".str_pad( $pageId, 2, "0", STR_PAD_LEFT );
+					$rank		= (int) preg_replace( '/^0/', '', vsprintf( '%s%s%s', [
+						str_pad( $scopeNr, 2, '0', STR_PAD_LEFT ),
+						str_pad( $rank, 3, '0', STR_PAD_LEFT ),
+						str_pad( $pageId, 3, '0', STR_PAD_LEFT ),
+					] ) );
+
 					$controller	= str_replace( '/', '_', ucwords( $link->path, '/' ) );
 
-					$item		= (object) array_merge( $this->baseItem, [
+					$item	= Entity_Page::fromArray( [
 						'pageId'		=> $pageId,
 						'moduleId'		=> $module->id,
 						'type'			=> (int) array_search( 'module', $this->types ),
 						'scope'			=> $link->scope,
-						'status'		=> 1,
+						'status'		=> Model_Page::STATUS_VISIBLE,
 						'access'		=> $link->access,
 						'identifier'	=> $link->path,
 						'fullpath'		=> $link->path,
@@ -157,7 +151,7 @@ class Model_Module_Page
 						'action'		=> '',//$action,
 						'path'			=> $link->path,
 						'link'			=> !empty( $link->link ) ? $link->link : $link->path,
-						'icon'			=> !empty( $link->icon ) ? $link->icon : '',
+						'icon'			=> !empty( $link->icon ) ? $link->icon : NULL,
 						'title'			=> $link->label,
 						'language'		=> $link->language,
 						'rank'			=> $link->rank,

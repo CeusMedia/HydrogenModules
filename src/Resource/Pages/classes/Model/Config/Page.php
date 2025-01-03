@@ -7,31 +7,21 @@ use CeusMedia\HydrogenFramework\Environment;
 class Model_Config_Page
 {
 	protected Environment $env;
+
 	protected string $filePath;
-	protected object|array $fileData;
+	protected array $fileData;
+
+	/** @var array<Entity_Page> $pages */
 	protected array $pages;
+
 	protected array $scopes;
-	protected array $baseItem	= [
-		'parentId'		=> 0,
-		'status'		=> 0,
-		'type'			=> 0,
-		'controller'	=> '',
-		'action'		=> '',
-		'access'		=> 'acl',
-		'content'		=> '',
-		'keywords'		=> '',
-		'changefreq'	=> '',
-		'priority'		=> '',
-		'icon'			=> '',
-		'format'		=> 'HTML',
-		'template'		=> '',
-		'createdAt'		=> 0,
-		'modifiedAt'	=> 0,
-	];
+
 	protected array $types	= [
 		0	=> 'page',
 		1	=> 'menu',
-		2	=> 'module'
+		2	=> 'module',
+		3	=> 'component',
+//		4	=> 'redirect',
 	];
 
 	public function __construct( Environment $env )
@@ -48,8 +38,18 @@ class Model_Config_Page
 	public function add( array $data ): int
 	{
 		$pageId		= max( [0] + array_keys( $this->pages ) ) + 1;
-		$page		= $this->transformInputToPage( $pageId, $data );
-		$this->pages[$pageId]	= $page;
+
+		$data['pageId']		= $pageId;
+		$data['parentId']	= (int) $data['parentId'] ?? 0;
+		$data['type']		= (int) $data['type'] ?? 0;
+		$data['status']		= (int) $data['status'] ?? 0;
+		$data['rank']		= (int) $data['rank'] ?? 0;
+
+		$parentId	= $data['parentId'];
+		if( 0 !== $parentId && isset( $this->pages[$parentId] ) )
+			$data['identifier']	= $this->pages[$parentId]->identifier.'/'.$data['identifier'];
+
+		$this->pages[$pageId]	= Entity_Page::fromArray( $data );
 		$this->savePages();
 		return $pageId;
 	}
@@ -57,25 +57,26 @@ class Model_Config_Page
 	/**
 	 *	@param		int|string		$pageId
 	 *	@param		array			$data
+	 *	@param		bool			$stripTags		Flag: strip HTML tags from values, does nothing in this implementation, exists for compatibility with Model_Page
 	 *	@return		bool
 	 */
-	public function edit( int|string $pageId, array $data = [] ): bool
+	public function edit( int|string $pageId, array $data = [], bool $stripTags = FALSE ): bool
 	{
-		$changes	= [];
-		foreach( $data as $key => $value )
-			if( $this->pages[$pageId]->$key	!= $value )
-				$changes[$key]	= $value;
-		if( 0 === count( $changes ) )
+		$pageId		= (int) $pageId;
+		$changes	= array_filter( $data, function ( $value, $key ) use ( $pageId ){
+			return $this->pages[$pageId]->$key != $value;
+		}, ARRAY_FILTER_USE_BOTH );
+		if( [] === $changes )
 			return TRUE;
-		$this->pages[$pageId]	= (object) array_merge( (array) $this->pages[$pageId], $changes );
+		$this->pages[$pageId]	= Entity_Page::mergeWithArray( $this->pages[$pageId], $changes );
 		return $this->savePages();
 	}
 
 	/**
 	 *	@param		int|string		$pageId
-	 *	@return		object|NULL
+	 *	@return		Entity_Page|NULL
 	 */
-	public function get( int|string $pageId ): ?object
+	public function get( int|string $pageId ): ?Entity_Page
 	{
 		$pageId	= (int) $pageId;
 		foreach( $this->pages as $page )
@@ -84,48 +85,30 @@ class Model_Config_Page
 		return NULL;
 	}
 
+	/**
+	 *	@return		Entity_Page[]
+	 */
 	public function getAll(): array
 	{
 		return $this->pages;
 	}
 
-	public function getColumns(): array
+	/**
+	 *	@param		array		$indices
+	 *	@param		array		$orders
+	 *	@return		Entity_Page|FALSE
+	 */
+	public function getByIndices( array $indices = [], array $orders = [] ): Entity_Page|FALSE
 	{
-		return [
-			'pageId',
-			'parentId',
-			'type',
-			'scope',
-			'status',
-			'rank',
-			'identifier',
-			'controller',
-			'action',
-			'access',
-			'title',
-			'content',
-			'format',
-			'description',
-			'keywords',
-			'changefreq',
-			'priority',
-			'icon',
-			'template',
-			'createdAt',
-			'modifiedAt'
-		];
+		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
 	}
 
 	/**
 	 *	@param		array		$indices
 	 *	@param		array		$orders
-	 *	@return		object|FALSE
+	 *	@param		array		$limits
+	 *	@return		Entity_Page[]
 	 */
-	public function getByIndices( array $indices = [], array $orders = [] ): object|FALSE
-	{
-		return current( $this->getAllByIndices( $indices, $orders, [0, 1] ) );
-	}
-
 	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
 		$data	= $this->pages;
@@ -162,6 +145,17 @@ class Model_Config_Page
 
 	//  --  PROTECTED  --  //
 
+	protected function getTypeFromInput( array $input ): int
+	{
+		$input['type']	??= reset( $this->types );
+		$type	= (int) array_search( $input['type'], $this->types );
+		if( !empty( $input['pages'] ) )
+			return Model_Page::TYPE_BRANCH;
+		else if( !empty( $input['controller'] ) )
+			return Model_Page::TYPE_MODULE;
+		return $type;
+	}
+
 	protected function loadPages(): void
 	{
 		$this->fileData	= JsonFileReader::load( $this->filePath, TRUE );
@@ -171,29 +165,21 @@ class Model_Config_Page
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){
 				$pageId++;
-				$page['type']	??= reset( $this->types );
-				$type	= (int) array_search( $page['type'], $this->types );
-				if( !empty( $page['pages'] ) )
-					$type	= 1;
-				else if( !empty( $page['controller'] ) )
-					$type	= 2;
-
-				$pageItem	= (object) array_merge( $this->baseItem, [
+				$pageItem	= Entity_Page::fromArray( [
 					'pageId'		=> $pageId,
-					'parentId'		=> 0,
-					'status'		=> 1,			//@todo realize
-					'type'			=> $type,
-					'controller'	=> !empty( $page['controller'] ) ? $page['controller'] : '',
-					'action'		=> !empty( $page['action'] ) ? $page['action'] : '',
+					'type'			=> $this->getTypeFromInput( $page ),
+					'status'		=> Model_Page::STATUS_VISIBLE,			//@todo realize
 					'scope'			=> $scopeNr,
 					'rank'			=> $pageNr + 1,
 					'identifier'	=> $page['path'],
 					'fullpath'		=> $page['path'],
 					'title'			=> $page['label'],
-					'access'		=> !empty( $page['access'] ) ? $page['access'] : '',
-					'description'	=> !empty( $page['desc'] ) ? $page['desc'] : '',
-					'icon'			=> !empty( $page['icon'] ) ? $page['icon'] : '',
-					'template'		=> !empty( $page['template'] ) ? $page['template'] : '',
+					'controller'	=> $page['controller'] ?? NULL,
+					'action'		=> $page['action'] ?? NULL,
+					'access'		=> $page['access'] ?? NULL,
+					'description'	=> $page['desc'] ?? NULL,
+					'icon'			=> $page['icon'] ?? NULL,
+					'template'		=> $page['template'] ?? NULL,
 				] );
 
 				$this->pages[$pageItem->pageId]	= $pageItem;
@@ -201,30 +187,24 @@ class Model_Config_Page
 				if( !empty( $page['pages'] ) ){
 					foreach( $page['pages'] as $subpageNr => $subpage ){
 						$pageId++;
-						$subpage['type']	??= reset( $this->types );
-						$type	= (int) array_search( $subpage['type'], $this->types );
-						if( !empty( $subpage['pages'] ) )
-							$type	= 1;
-						else if( !empty( $subpage['controller'] ) )
-							$type	= 2;
-
-						$subpageItem	= (object) array_merge( $this->baseItem, [
+						$subpageItem	= Entity_Page::fromArray( [
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
-							'status'		=> 1,			//@todo realize
-							'type'			=> $type,
-							'controller'	=> !empty( $subpage['controller'] ) ? $subpage['controller'] : '',
-							'action'		=> !empty( $subpage['action'] ) ? $subpage['action'] : '',
+							'type'			=> $this->getTypeFromInput( $subpage ),
+							'status'		=> Model_Page::STATUS_VISIBLE,			//@todo realize
 							'scope'			=> $scopeNr,
 							'rank'			=> $subpageNr + 1,
 							'identifier'	=> $subpage['path'],
 							'fullpath'		=> $page['path'].'/'.$subpage['path'],
 							'title'			=> $subpage['label'],
-							'access'		=> !empty( $subpage['access'] ) ? $subpage['access'] : '',
-							'description'	=> !empty( $subpage['desc'] ) ? $subpage['desc'] : '',
-							'icon'			=> !empty( $subpage['icon'] ) ? $subpage['icon'] : '',
-							'template'		=> !empty( $subpage['template'] ) ? $subpage['template'] : '',
+							'controller'	=> $subpage['controller'] ?? NULL,
+							'action'		=> $subpage['action'] ?? NULL,
+							'access'		=> $subpage['access'] ?? NULL,
+							'description'	=> $subpage['desc'] ?? NULL,
+							'icon'			=> $subpage['icon'] ?? NULL,
+							'template'		=> $subpage['template'] ?? NULL,
 						] );
+
 						$this->pages[$subpageItem->pageId]	= $subpageItem;
 						$this->fileData[$scope][$pageNr]['pageId']	= $pageItem->pageId;
 					}
@@ -238,32 +218,7 @@ class Model_Config_Page
 		return (bool) JsonFileWriter::save( $this->filePath, $this->transformPagesToJsonTree(), TRUE );
 	}
 
-
-	protected function transformInputToPage( int $pageId, array $data ): object
-	{
-		$page	= (object) [
-			'pageId'		=> $pageId,
-			'parentId'		=> $data['parentId'],
-			'status'		=> $data['status'] ?? 0,
-			'type'			=> (int) $data['type'] ?? 0,
-			'controller'	=> $data['controller'] ?? '',
-			'action'		=> $data['action'] ?? '',
-			'scope'			=> $data['scope'],
-			'rank'			=> $data['rank'] ?? 0,
-			'identifier'	=> $data['identifier'],
-			'title'			=> $data['title'],
-//			'access'		=> $data['access'] ?? '',
-//			'description'	=> $data['description'] ?? '',
-			'icon'			=> $data['icon'] ?? '',
-			'template'		=> $data['template'] ?? '',
-		];
-		$parentId	= (int) $data['parentId'] ?? 0;
-		if( 0 != $parentId )
-			$page->identifier	= $this->pages[$parentId]->identifier.'/'.$page->identifier;
-		return $page;
-	}
-
-	protected function transformPageToJsonItem( object $page ): array
+	protected function transformPageToJsonItem( Entity_Page $page ): array
 	{
 		$item	= [
 			'path'	=> $page->identifier,

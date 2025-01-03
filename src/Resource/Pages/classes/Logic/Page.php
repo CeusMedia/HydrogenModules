@@ -25,13 +25,13 @@ class Logic_Page extends Logic
 	/**
 	 *	Decorates page with its parent pages by adding a list of parent pages to the given page object.
 	 *	@access		public
-	 *	@param		object		$page		Page data object to set list of parent pages to
-	 *	@return		array		List of parent pages, added to given page object
+	 *	@param		Entity_Page		$page		Page data object to set list of parent pages to
+	 *	@return		array			List of parent pages, added to given page object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
-	public function decoratePathWithParents( object $page ): array
+	public function decoratePathWithParents( Entity_Page $page ): array
 	{
 		$model		= $this->getPageModel();
 		$current	= $page;
@@ -75,14 +75,14 @@ class Logic_Page extends Logic
 	/**
 	 *	Return page of type component by full path, if available.
 	 *	@access		public
-	 *	@param		string		$path			Full path to get component for
-	 *	@return		object|NULL					Page data object if available or NULL of strict is disabled
+	 *	@param		string			$path		Full path to get component for
+	 *	@return		?Entity_Page				Page data object if available or NULL of strict is disabled
 	 *	@throws		InvalidArgumentException	if given path is not a string or empty
 	 *	@throws		RangeException				if no page object found for by fullpath in strict mode
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
-	public function getComponentFromPath( string $path, bool $strict = TRUE ): ?object
+	public function getComponentFromPath( string $path, bool $strict = TRUE ): ?Entity_Page
 	{
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
@@ -99,17 +99,20 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
+	 *	@param		int|string		$pageId
+	 *	@param		bool			$strict		Flag: throw exception on miss, default: yes
+	 *	@return		?Entity_Page
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
+	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
 	 */
-	public function getPage( int|string $pageId, bool $strict = TRUE  )
+	public function getPage( int|string $pageId, bool $strict = TRUE  ): ?Entity_Page
 	{
 		if( !preg_match( '/^[0-9]+$/', $pageId ) )
 			throw new RangeException( 'Given page is not an ID' );
 		$page	= $this->getPageModel()->get( $pageId );
-		if( !$page ){
+		if( NULL === $page ){
 			if( $strict )
 				throw new RangeException( 'Given page is not an ID' );
 			return NULL;
@@ -134,14 +137,14 @@ class Logic_Page extends Logic
 	 *	@access		public
 	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
 	 *	@param		boolean		$strict			Flag: throw exceptions on failure
-	 *	@return		object|NULL					Data object of found page or NULL if nothing found
+	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 *	@todo		check if this is deprecated! why the hell get page from controller alone?
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		EnvironmentException
 	 */
-	public function getPageFromController( string $controllerName, bool $strict = TRUE ): ?object
+	public function getPageFromController( string $controllerName, bool $strict = TRUE ): ?Entity_Page
 	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
@@ -161,13 +164,13 @@ class Logic_Page extends Logic
 	 *	@param		string		$controllerName	Name of controller (Controller_Test -> Test)
 	 *	@param		string		$action			Name of controller action
 	 *	@param		boolean		$strict			Flag: throw exceptions on failure
-	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		EnvironmentException
 	 */
-	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE ): ?object
+	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE ): ?Entity_Page
 	{
 		if( !strlen( trim( $controllerName ) ) )
 			throw new InvalidArgumentException( 'No controller name given' );
@@ -194,12 +197,12 @@ class Logic_Page extends Logic
 	 *	@access		public
 	 *	@param		string		$path			Path to find page for
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
-	 *	@return		?object						Data object of found page or NULL if nothing found
+	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		RangeException				if path is not resolvable
 	 *	@throws		RangeException				if path parent part is not resolvable
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE ): ?object
+	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE ): ?Entity_Page
 	{
 		$path		= trim( $path, '/' );
 		try{
@@ -223,11 +226,11 @@ class Logic_Page extends Logic
 	 *	@access		public
 	 *	@param		bool		$withParents	Flag: Returns page parents as well (default: no)
 	 *	@param		boolean		$strict			Flag: throw exception on failure
-	 *	@return		object|null					Data object of found page or NULL if nothing found
+	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		RuntimeException			if path is not resolvable
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE ): ?object
+	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE ): ?Entity_Page
 	{
 		$request	= $this->env->getRequest();
 		$path		= trim( $request->get( '__path', '' ), '/' );									//  get requested path
@@ -274,18 +277,18 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	@param		object		$page
+	 *	@param		Entity_Page		$page
 	 *	@return		bool
 	 */
-	public function isAccessible( object $page ): bool
+	public function isAccessible( Entity_Page $page ): bool
 	{
 		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
-		if( $page->type == Model_Page::TYPE_MODULE && $page->access == 'acl' )
+		if( Model_Page::TYPE_MODULE === $page->type && 'acl' === $page->access )
 			$hasRight	= $this->env->getAcl()->has( $page->controller, $page->action ?: 'index' );
-		$public		= $page->access == "public";
-		$outside	= !$isAuthenticated && $page->access == "outside";
-		$inside		= $isAuthenticated && $page->access == "inside";
+		$public		= 'public' === $page->access;
+		$outside	= !$isAuthenticated && 'outside' === $page->access;
+		$inside		= $isAuthenticated && 'inside' === $page->access;
 		return $public || $outside || $inside || $hasRight;
 	}
 
@@ -300,12 +303,12 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	@param		object		$page
-	 *	@return		object
+	 *	@param		Entity_Page		$page
+	 *	@return		Entity_Page
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function translatePage( object $page ): object
+	public function translatePage( Entity_Page $page ): Entity_Page
 	{
 		if( !class_exists( 'Logic_Localization' ) )
 			return $page;
@@ -380,13 +383,13 @@ class Logic_Page extends Logic
 	 *	@param		string		$path			Path to find page for
 	 *	@param		integer		$parentPageId	Parent page ID to start with (default: 0)
 	 *	@param		boolean		$strict			Flag: strict mode - throw exceptions
-	 *	@return		object|NULL					Data object of found page or NULL if nothing found and not in strict mode
+	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found and not in strict mode
 	 *	@throws		RangeException				if path is not resolvable and strict mode is on
 	 *	@todo		remove strategies absolute_backward and relative_forward since both are buggy
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
-	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE ): ?object
+	protected function getPageFromPathRecursive( string $path, int $parentPageId = 0, bool $strict = TRUE ): ?Entity_Page
 	{
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
