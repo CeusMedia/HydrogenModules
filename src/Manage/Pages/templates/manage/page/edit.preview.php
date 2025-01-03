@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 /** @var Environment $env */
 /** @var View_Manage_Page $view */
 /** @var array<string,array<string,string>> $words */
-/** @var object $page */
+/** @var Entity_Page $page */
 /** @var bool $isAccessible */
 /** @var string $pageUrl */
 /** @var string $pagePreviewUrl */

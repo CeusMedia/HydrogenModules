@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var View_Manage_Page $view */
 /** @var array<string,array<string,string>> $words */
 /** @var string $path */
-/** @var object $page */
+/** @var Entity_Page $page */
 /** @var array<string> $controllers */
 /** @var bool $useAuth */
 /** @var array<int|string,string> $parentMap */

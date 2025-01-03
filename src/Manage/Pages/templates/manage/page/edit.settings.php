@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 /** @var array<string,array<string,string>> $words */
 /** @var string $source */
 /** @var string $path */
-/** @var object $page */
+/** @var Entity_Page $page */
 /** @var array<string> $controllers */
 /** @var bool $useAuth */
 /** @var array<int|string,string> $parentMap */
@@ -116,7 +116,7 @@ return $hints.'
 				</div>
 				<div class="span2 optional page_type page_type-2" style="display: none">
 					<label for="input_page_action">'.$w->labelAction.'</label>
-					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<h4>'.$w->sectionSettingsAccess.'</h4>

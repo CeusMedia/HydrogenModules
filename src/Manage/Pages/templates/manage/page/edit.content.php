@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 /** @var array<string,array<string,string>> $words */
-/** @var object $page */
+/** @var Entity_Page $page */
 /** @var array $versions */
 /** @var ?string $version */
 /** @var array $editors */

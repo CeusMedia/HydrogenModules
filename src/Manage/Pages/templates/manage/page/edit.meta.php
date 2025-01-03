@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<string,array<string,string>> $words */
-/** @var object $page */
+/** @var Entity_Page $page */
 /** @var bool $appHasMetaModule */
 /** @var array $meta */
 /** @var array $metaBlacklist */
