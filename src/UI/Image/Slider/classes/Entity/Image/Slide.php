@@ -12,7 +12,7 @@ class Entity_Image_Slide
 	public int $rank					= 0;
 	public int $timestamp;
 
-	public static function fromArray( array $array): self
+	public static function fromArray( array $array ): self
 	{
 		$instance	= new self();
 		foreach( $array as $key => $value )

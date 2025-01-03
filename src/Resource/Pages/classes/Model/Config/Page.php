@@ -32,24 +32,29 @@ class Model_Config_Page
 	}
 
 	/**
-	 *	@param		array		$data
+	 *	@param		Entity_Page|array		$data
 	 *	@return		int
 	 */
-	public function add( array $data ): int
+	public function add( Entity_Page|array $data ): int
 	{
 		$pageId		= max( [0] + array_keys( $this->pages ) ) + 1;
 
-		$data['pageId']		= $pageId;
-		$data['parentId']	= (int) $data['parentId'] ?? 0;
-		$data['type']		= (int) $data['type'] ?? 0;
-		$data['status']		= (int) $data['status'] ?? 0;
-		$data['rank']		= (int) $data['rank'] ?? 0;
+		if( is_array( $data ) ){
+			$data['pageId']		= $pageId;
+			$data['parentId']	= (int) $data['parentId'] ?? 0;
+			$data['type']		= (int) $data['type'] ?? 0;
+			$data['status']		= (int) $data['status'] ?? 0;
+			$data['rank']		= (int) $data['rank'] ?? 0;
+			$parentId	= $data['parentId'];
+			if( 0 !== $parentId && isset( $this->pages[$parentId] ) )
+				$data['identifier']	= $this->pages[$parentId]->identifier.'/'.$data['identifier'];
+			$entity = Entity_Page::fromArray( $data );
+		}
+		else{
+			$entity = Entity_Page::mergeWithArray( $data, ['pageId'	=> $pageId] );
+		}
 
-		$parentId	= $data['parentId'];
-		if( 0 !== $parentId && isset( $this->pages[$parentId] ) )
-			$data['identifier']	= $this->pages[$parentId]->identifier.'/'.$data['identifier'];
-
-		$this->pages[$pageId]	= Entity_Page::fromArray( $data );
+		$this->pages[$pageId]	= $entity;
 		$this->savePages();
 		return $pageId;
 	}

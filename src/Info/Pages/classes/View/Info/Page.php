@@ -45,6 +45,7 @@ class View_Info_Page extends View
 	protected function loadSubpage( string $path ): string
 	{
 		$logic	= new Logic_Page( $this->env );
+		/** @var Entity_Page $page */
 		$page	= $logic->getPageFromPath( $path, TRUE );
 		if( NULL !== $page )
 			return $page->content;

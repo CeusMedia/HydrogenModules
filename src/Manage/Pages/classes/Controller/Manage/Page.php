@@ -56,12 +56,11 @@ class Controller_Manage_Page extends Controller
 			foreach( $columns as $column ){
 				if( $this->request->has( 'page_'.$column ) ){
 					$value	= $this->request->get( 'page_'.$column );
-					if( $column == 'identifier' )
+					if( 'identifier' === $column )
 						$value	= preg_replace( $this->patternIdentifier, '', $value );
 					$data[$column]	= $value;
 				}
 			}
-			$data['createdAt']	= time();
 			$data['fullpath']	= '';
 			unset( $data['pageId'] );
 
@@ -77,24 +76,23 @@ class Controller_Manage_Page extends Controller
 			}
 		}
 
-		$page	= (object) [
+		$data	= $this->request->getAll( 'page_', TRUE );
+		$page	= Entity_Page::fromArray( [
 			'pageId'		=> 0,
-			'parentId'		=> $parentId ?: (int) $this->request->get( 'page_parentId' ),
-			'type'			=> (int) $this->request->get( 'page_type', 0 ),
-			'scope'			=> (int) $this->request->get( 'page_scope', 0 ),
-			'status'		=> 0,
-			'rank'			=> (int) $this->request->get( 'page_rank', 0 ),
-			'identifier'	=> $this->request->get( 'page_identifier' ),
-			'title'			=> $this->request->get( 'page_title', '' ),
-			'content'		=> $this->request->get( 'page_content', '' ),
-			'format'		=> $this->request->get( 'page_format' ),
-			'controller'	=> $this->request->get( 'page_controller', '' ),
-			'action'		=> $this->request->get( 'page_action', '' ),
-			'access'		=> $this->request->get( 'page_access' ),
-			'icon'			=> $this->request->get( 'page_icon', '' ),
-			'template'		=> $this->request->get( 'page_template' ),
-			'createdAt'		=> time(),
-		];
+			'parentId'		=> $parentId ?: (int) $data->get( 'parentId' ),
+			'type'			=> (int) $data->get( 'type', 0 ),
+			'scope'			=> (int) $data->get( 'scope', 0 ),
+			'rank'			=> (int) $data->get( 'rank', 0 ),
+			'identifier'	=> $data->get( 'identifier' ),
+			'title'			=> $data->get( 'title', '' ),
+			'content'		=> $data->get( 'content', '' ),
+			'format'		=> $data->get( 'format' ),
+			'controller'	=> $data->get( 'controller', '' ),
+			'action'		=> $data->get( 'action', '' ),
+			'access'		=> $data->get( 'access' ),
+			'icon'			=> $data->get( 'icon', '' ),
+			'template'		=> $data->get( 'template' ),
+		] );
 
 		if( 'self' !== $this->appFocus ){
 			$path		= $this->frontend->getUrl();
@@ -158,7 +156,7 @@ ModuleManagePages.PageEditor.init();
 		$isFromDatabase	= $source == 'Database';
 		$page			= $this->checkPageId( $pageId );
 		$scope			= (int) $this->appSession->get( 'scope' );
-		$logic			= new Logic_Page( $this->env );
+		$logicPage		= new Logic_Page( $this->env );
 
 //		$logic		= Logic_Versions::getInstance( $this->env );
 
@@ -226,14 +224,14 @@ ModuleManagePages.PageEditor.init();
 				else if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
 					$contentNew	= $this->request->get( 'page_content' );
 					if( $page->content !== $contentNew ){											//  new content differs from page content
-						$logic		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
-						$versions	= $logic->getAll( 'Info_Pages', $pageId );
+						$logicVersion		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
+						$versions	= $logicVersion->getAll( 'Info_Pages', $pageId );
 						$found		= FALSE;														//  init indicator if current page content is a version
 						foreach( $versions as $_version )											//  iterate all page versions
 							if( $_version->content === $page->content )								//  page content is a version
 								$found = TRUE;														//  note this
 						if( !$found )																//  page content is not a version
-							$logic->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
+							$logicVersion->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
 					}
 				}
 
@@ -246,7 +244,7 @@ ModuleManagePages.PageEditor.init();
 				$data['modifiedAt']	= time();
 				unset( $data['pageId'] );
 				$this->model->edit( $pageId, $data, FALSE );
-				$logic->updateFullpath( $pageId );
+				$logicPage->updateFullpath( $pageId );
 				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}
@@ -298,7 +296,7 @@ ModuleManagePages.PageEditor.init();
 		$this->addData( 'source', $this->appSession->get( 'source' ) );
 		$this->addData( 'editor', $editor );
 		$this->addData( 'editors', $editors );
-		$this->addData( 'isAccessible', $logic->isAccessible( $page ) );
+		$this->addData( 'isAccessible', $logicPage->isAccessible( $page ) );
 		$this->addData( 'modules', $this->envManaged->getModules() );
 		$this->addData( 'controllers', $this->getFrontendControllers() );
 		$this->preparePageTree( $pageId );

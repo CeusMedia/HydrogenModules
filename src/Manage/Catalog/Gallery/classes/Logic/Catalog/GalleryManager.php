@@ -40,10 +40,12 @@ class Logic_Catalog_GalleryManager
 		$this->pathModule		= $this->cache->get( 'catalog.gallery.path.module' );
 		if( !$this->pathModule ){
 			$this->pathModule		= './catalog/gallery/';
-			if( $this->env->getModules()->has( 'Info_Pages' ) )
-				if( ( $logic = new Logic_Page( $this->env ) ) )
-					if( $page = $logic->getPageFromController( 'Catalog_Gallery' ) )
-						$this->pathModule		= './'.$page->identifier.'/';
+			if( $this->env->getModules()->has( 'Info_Pages' ) ){
+				$logic = new Logic_Page( $this->env );
+				$page	= $logic->getPageFromController( 'Catalog_Gallery', FALSE );
+				if( NULL !== $page )
+					$this->pathModule		= './'.$page->identifier.'/';
+			}
 			$this->cache->set( 'catalog.gallery.path.module', $this->pathModule );
 		}
 

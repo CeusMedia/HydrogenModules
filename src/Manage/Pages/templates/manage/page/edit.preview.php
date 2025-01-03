@@ -20,7 +20,7 @@ $controllers	= [
 	'Manage_Page',
 ];
 
-$logicPage	= new Logic_Page( $env );
+//$logicPage	= new Logic_Page( $env );
 
 if( !$isAccessible )
 	$noPreview	= TRUE;

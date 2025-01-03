@@ -95,10 +95,12 @@ class Controller_Info_Contact extends Controller
 				$path	= 'info/newsletter';
 				if( $this->env->getModules()->has( 'Info_Pages' ) ){
 					$logicPage	= Logic_Page::getInstance( $this->env );
+					/** @var ?Entity_Page $page */
 					$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
-					if( !$page )
+					if( NULL === $page )
+						/** @var ?Entity_Page $page */
 						$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
-					if( $page )
+					if( NULL !== $page )
 						$path	= $page->fullpath;
 				}
 				$fullname	= trim( $this->request->get( 'fullname' ) );
