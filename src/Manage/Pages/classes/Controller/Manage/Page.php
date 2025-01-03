@@ -42,15 +42,8 @@ class Controller_Manage_Page extends Controller
 	 */
 	public function add( int|string $parentId = 0 ): void
 	{
-		if( method_exists( $this->model, 'getColumns' ) )
-			$columns	= $this->model->getColumns();
-		else{
-			/** @var Model_Page $model */
-			$model		= ObjectFactory::createObjectWithoutConstruction( Model_Page::class );
-			$columns	= $model->getColumns();
-		}
-
-		$parent	= $parentId ? $this->checkPageId( $parentId ) : NULL;
+		$columns	= $this->model->getColumns();
+		$parent		= $parentId ? $this->checkPageId( $parentId ) : NULL;
 		if( $this->request->has( 'save' ) ){
 			$data	= [];
 			foreach( $columns as $column ){
@@ -104,7 +97,6 @@ class Controller_Manage_Page extends Controller
 		}
 		if( $parentId && isset( $parent->type ) && Model_Page::TYPE_BRANCH === (int) $parent->type )
 			$path	.= $parent->identifier.'/';
-
 
 		$this->addData( 'path', $path );
 		$this->addData( 'page', $page );

@@ -62,7 +62,7 @@ else{
 				</div>
 			</div>
 			<div class="row-fluid">
-				<textarea name="page_content" id="input_page_content" class="span12" rows="20" data-ace-option-max-lines="32">'.htmlentities( $page->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+				<textarea name="page_content" id="input_page_content" class="span12" rows="20" data-ace-option-max-lines="32">'.htmlentities( $page->content ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				<div id="hint"></div>
 			</div>
 			<div class="buttonbar">

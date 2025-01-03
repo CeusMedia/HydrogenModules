@@ -81,30 +81,42 @@ class Model_Module_Page
 			$indices['scope']	= 0;
 
 		$data	= $this->pages;
-		$regExp	= '/^(!=|>=|<=|>|<) (.+)$/';
-		foreach( $indices as $indexKey => $indexValue ){
-			foreach( $data as $nr => $page ){
-				$pageValue	= $page->$indexKey;
-				$matches	= [];
-				if( is_array( $indexValue ) ){
-					if( !in_array( $pageValue, $indexValue ) )
-						unset( $data[$nr] );
-				}
-				else if( preg_match( $regExp, $indexValue, $matches ) ){
-					if( $matches[1] === '!=' && $pageValue === trim( (string) $matches[2], '"\'' ) ||
-						$matches[1] === '>=' && (float) $pageValue < (float) $matches[2] ||
-						$matches[1] === '<=' && (float) $pageValue > (float) $matches[2] ||
-						$matches[1] === '>' && (float) $pageValue <= (float) $matches[2] ||
-						$matches[1] === '<' && (float) $pageValue >= (float) $matches[2] )
-							unset( $data[$nr] );
-				}
-				else if( $pageValue != $indexValue )
-					unset( $data[$nr] );
-			}
-		}
+		if( [] !== $indices )
+			$data	= Model_Config_Page::filterPagesByIndices( $data, $indices );
+//		if( [] !== $orders )
+//			$data	= Model_Config_Page::orderPages( $data, $orders );
 		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return array_values( $data );
+	}
+
+	public function getColumns(): array
+	{
+		return [
+			'pageId',
+			'parentId',
+//			'moduleId',
+			'type',
+			'scope',
+			'status',
+			'rank',
+			'identifier',
+			'fullpath',
+			'controller',
+			'action',
+			'access',
+			'title',
+			'content',
+			'format',
+			'description',
+			'keywords',
+			'changefreq',
+			'priority',
+			'icon',
+			'template',
+			'createdAt',
+			'modifiedAt'
+		];
 	}
 
 	//  --  PROTECTED  --  //

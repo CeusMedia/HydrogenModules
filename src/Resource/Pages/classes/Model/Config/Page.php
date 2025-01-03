@@ -24,6 +24,37 @@ class Model_Config_Page
 //		4	=> 'redirect',
 	];
 
+	/**
+	 *	@param		Entity_Page[]	$pages
+	 *	@param		array			$indices
+	 *	@return		Entity_Page[]
+	 */
+	public static function filterPagesByIndices( array $pages, array $indices ): array
+	{
+		$regExp	= '/^(!=|>=|<=|>|<) (.+)$/';
+		foreach( $indices as $indexKey => $indexValue ){
+			foreach( $pages as $nr => $page ){
+				$pageValue	= $page->$indexKey;
+				$matches	= [];
+				if( is_array( $indexValue ) ){
+					if( !in_array( $pageValue, $indexValue ) )
+						unset( $pages[$nr] );
+				}
+				else if( preg_match( $regExp, $indexValue, $matches ) ){
+					if( $matches[1] === '!=' && $pageValue === trim( (string) $matches[2], '"\'' ) ||
+						$matches[1] === '>=' && (float) $pageValue < (float) $matches[2] ||
+						$matches[1] === '<=' && (float) $pageValue > (float) $matches[2] ||
+						$matches[1] === '>' && (float) $pageValue <= (float) $matches[2] ||
+						$matches[1] === '<' && (float) $pageValue >= (float) $matches[2] )
+						unset( $pages[$nr] );
+				}
+				else if( $pageValue != $indexValue )
+					unset( $pages[$nr] );
+			}
+		}
+		return $pages;
+	}
+
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -50,13 +81,41 @@ class Model_Config_Page
 				$data['identifier']	= $this->pages[$parentId]->identifier.'/'.$data['identifier'];
 			$entity = Entity_Page::fromArray( $data );
 		}
-		else{
+		else
 			$entity = Entity_Page::mergeWithArray( $data, ['pageId'	=> $pageId] );
-		}
 
 		$this->pages[$pageId]	= $entity;
 		$this->savePages();
 		return $pageId;
+	}
+
+	public function getColumns(): array
+	{
+		return [
+			'pageId',
+			'parentId',
+//			'moduleId',
+			'type',
+			'scope',
+			'status',
+			'rank',
+			'identifier',
+			'fullpath',
+			'controller',
+			'action',
+			'access',
+			'title',
+			'content',
+			'format',
+			'description',
+			'keywords',
+			'changefreq',
+			'priority',
+			'icon',
+			'template',
+			'createdAt',
+			'modifiedAt'
+		];
 	}
 
 	/**
@@ -117,27 +176,10 @@ class Model_Config_Page
 	public function getAllByIndices( array $indices = [], array $orders = [], array $limits = [] ): array
 	{
 		$data	= $this->pages;
-		$regExp	= '/^(!=|>=|<=|>|<) (.+)$/';
-		foreach( $indices as $indexKey => $indexValue ){
-			foreach( $data as $nr => $page ){
-				$pageValue	= $page->$indexKey;
-				$matches	= [];
-				if( is_array( $indexValue ) ){
-					if( !in_array( $pageValue, $indexValue ) )
-						unset( $data[$nr] );
-				}
-				else if( preg_match( $regExp, $indexValue, $matches ) ){
-					if( $matches[1] === '!=' && $pageValue === trim( (string) $matches[2], '"\'' ) ||
-						$matches[1] === '>=' && (float) $pageValue < (float) $matches[2] ||
-						$matches[1] === '<=' && (float) $pageValue > (float) $matches[2] ||
-						$matches[1] === '>' && (float) $pageValue <= (float) $matches[2] ||
-						$matches[1] === '<' && (float) $pageValue >= (float) $matches[2] )
-							unset( $data[$nr] );
-				}
-				else if( $pageValue != $indexValue )
-					unset( $data[$nr] );
-			}
-		}
+		if( [] !== $indices )
+			$data	= Model_Config_Page::filterPagesByIndices( $data, $indices );
+//		if( [] !== $orders )
+//			$data	= Model_Config_Page::orderPages( $data, $orders );
 		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return $data;
