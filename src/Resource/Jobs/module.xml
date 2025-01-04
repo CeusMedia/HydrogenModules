@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<module>
+<module frameworks="Hydrogen:>=1.0">
 	<title>Jobs</title>
 	<subtitle>Console based job execution.</subtitle>
 	<description><![CDATA[Console based job execution.
@@ -101,6 +101,7 @@ code:shell>./job.php Job.info JOB_ID<code
 	</files>
 	<relations>
 		<needs type="composer">dragonmantank/cron-expression</needs>
+		<needs type="composer">ceus-media/php-parser</needs>
 		<supports type="module">Resource_Maintainer</supports>
 		<supports type="module">Resource_Mail</supports>
 	</relations>

@@ -117,8 +117,8 @@ return '
 					<h4>Erreichbarkeit</h4>
 					<div class="row-fluid">
 						<div class="span3">
-							<label for="input_page_status" class="muted">'.$w->labelStatus.'</label>
-							<select name="page_status" class="span12 muted" id="input_page_status">'.$optStatus.'</select>
+							<label for="input_page_status">'.$w->labelStatus.'</label>
+							<select name="page_status" class="span12" id="input_page_status">'.$optStatus.'</select>
 						</div>
 						'.$colAccess.'
 					</div>

@@ -18,11 +18,11 @@ list>
 Modules can send mails on (user) request or use the mail queue.
 Using the queue, provided by mail logic, will result in better web request performance.
 To enable queued mails you need to set a cron job:
-code>* * * * * cd /path/to/project && ./job.php sendQueuedMails<code
+code>* * * * * cd /path/to/project && ./job.php Mail.Queue.send<code
 
 All mails are stored within database, which also is an archive of sent mails.
 Since all mails are stored completely with all MIME parts, the database table will grow in size.
-To cleanup the database, for example to clean all mails older than 3 months, call the cleanup job:
+To cleanup the database, for example to remove all mails older than 3 months, call the cleanup job:
 
 code>php job.php Mail.Archive.clean --age=3M</code
 

@@ -41,15 +41,15 @@ return '
 		</div>
 		<div class="span2">
 			<label for="filter_email">'.$words->index_filter['labelEmail'].'</label>
-			<input type="text" name="email" id="filter_email" class="span12" value="'.htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ).'"/>
+			<input type="text" name="email" id="filter_email" class="span12" value="'.htmlentities( $filterEmail ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
 			<label for="filter_firstname">'.$words->index_filter['labelFirstname'].'</label>
-			<input type="text" name="firstname" id="filter_firstname" class="span12" value="'.htmlentities( $filterFirstname, ENT_QUOTES, 'UTF-8' ).'"/>
+			<input type="text" name="firstname" id="filter_firstname" class="span12" value="'.htmlentities( $filterFirstname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
 			<label for="filter_surname">'.$words->index_filter['labelSurname'].'</label>
-			<input type="text" name="surname" id="filter_surname" class="span12" value="'.htmlentities( $filterSurname, ENT_QUOTES, 'UTF-8' ).'"/>
+			<input type="text" name="surname" id="filter_surname" class="span12" value="'.htmlentities( $filterSurname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
 			<label for="filter_groupId">'.$words->index_filter['labelGroup'].'</label>

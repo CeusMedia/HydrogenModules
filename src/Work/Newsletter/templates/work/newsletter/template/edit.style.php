@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $words */
 /** @var object $template */
 /** @var bool $isUsed */
+/** @var string $buttons */
 
 $w				= (object) $words->styles;
 
@@ -35,9 +36,9 @@ $panelForm		= '
 
 extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/style/' ) );
 
-return $textTop.HtmlTag::create( '', [
-	HtmlTag::create( '', $panelForm, ['class' => 'span6'] ),
-	HtmlTag::create( '', [
+return $textTop.HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', $panelForm, ['class' => 'span6'] ),
+	HtmlTag::create( 'div', [
 		$textInfo,
 		$view->renderHtmlPreviewPanel( $template )
 	], ['class' => 'span6'] )

@@ -74,6 +74,7 @@ class Controller_Manage_Page extends Controller
 			'pageId'		=> 0,
 			'parentId'		=> $parentId ?: (int) $data->get( 'parentId' ),
 			'type'			=> (int) $data->get( 'type', 0 ),
+			'status'		=> (int) $data->get( 'status', 0 ),
 			'scope'			=> (int) $data->get( 'scope', 0 ),
 			'rank'			=> (int) $data->get( 'rank', 0 ),
 			'identifier'	=> $data->get( 'identifier' ),
@@ -128,9 +129,12 @@ ModuleManagePages.PageEditor.init();
 		$page	= $this->model->get( $pageId );
 		if( !$page )
 			throw new OutOfRangeException( 'Invalid page ID given' );
+
+		$data	= [];
 		foreach( $page as $key => $value )
-			$this->request->set( 'page_'.$key, $value );
-		$this->redirect( 'manage/page', 'add' );
+			if( !in_array( $key, ['pageId', 'createdAt', 'modifiedAt'] ) )
+				$data['page_'.$key]	= $value;
+		$this->restart( 'manage/page/add?'.http_build_query( $data ) );
 	}
 
 	/**
@@ -185,10 +189,10 @@ ModuleManagePages.PageEditor.init();
 			}
 
 			$indices		= [
-				'scope'			=> $scope,
-				'parentId'		=> $this->request->get( 'page_parentId' ),
+				'identifier'	=> $this->request->get( 'page_identifier' ),
 				'pageId'		=> '!= '.$pageId,
-				'identifier'	=> $this->request->get( 'page_identifier' )
+				'parentId'		=> $this->request->get( 'page_parentId' ),
+				'scope'			=> $scope,
 			];
 			if( $this->model->getByIndices( $indices ) ){
 				if( $this->request->get( 'page_parentId' ) )
@@ -271,6 +275,7 @@ ModuleManagePages.PageEditor.init();
 			if( $isFromDatabase && $parent )
 				$path	.= $parent->identifier.'/';
 		}
+
 		$versions	= $this->getPageVersions( $page, $version );
 		$editor		= $this->appSession->get( 'editor.'.strtolower( $page->format ) ) ?: current( array_keys( $editors ) );
 

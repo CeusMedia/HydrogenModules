@@ -3,10 +3,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
+/** @var View_Work_Newsletter_Template $view */
 /** @var object $words */
 /** @var bool $tabbedLinks */
 /** @var object $template */
@@ -22,8 +21,10 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&n
 $iconPreview	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] ).'&nbsp;';
 $optStatus		= HtmlElements::Options( $words->states, $template->status );
 
+/*  --  PANEL: NEWSLETTERS  --  */
+
 $listNewsletters	= '<em><small class="muted">Nicht verwendet.</small></em>';
-if( $newsletters ){
+if( [] !== $newsletters ){
 	$listNewsletters	= [];
 	foreach( $newsletters as $newsletter ){
 		$link	= HtmlTag::create( 'a', $newsletter->title, ['href' => './work/newsletter/edit/'.$newsletter->newsletterId] );
@@ -32,75 +33,6 @@ if( $newsletters ){
 	$listNewsletters	= HtmlTag::create( 'ul', $listNewsletters, ['class' => 'unstyled nav nav-pills nav-stacked'] );
 }
 
-/*  --  PANEL: PREVIEW: HTML  --  */
-$urlPreview		= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
-$iframeHtml		= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreviewHtml	= '
-<div id="newsletter-preview" class="half-size">
-	<div id="newsletter-preview-container">
- 		<div id="newsletter-preview-iframe-container">
-			'.$iframeHtml.'
-		</div>
-	</div>
-</div>';
-
-/*  --  PANEL: PREVIEW: TEXT  --  */
-$urlPreview		= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
-$iframeText		= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreviewText	= '
-<div id="newsletter-preview" class="half-size">
-	<div id="newsletter-preview-container">
- 		<div id="newsletter-preview-iframe-container">
-			'.$iframeText.'
-		</div>
-	</div>
-</div>';
-
-$panelPreview		= '
-<div class="content-panel">
-	<h4>
-		<span>HTML-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewHtml.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		'.$panelPreviewHtml.'
-	</div>
-</div>
-<div class="content-panel">
-	<h4>
-		<span>Text-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewText.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		'.$panelPreviewText.'
-	</div>
-</div>';
-
-/*  --  PANEL: NEWSLETTERS  --  */
 $panelNewsletters	= '';
 if( isset( $newsletters ) && count( $newsletters ) )
 	$panelNewsletters	= '
@@ -258,7 +190,7 @@ $panelEdit		= '
 						] ).'
 					</div>
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorEmail ?? ''.'</label>
+						<label for="input_authorName">'.$w->labelAuthorEmail.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorEmail",
@@ -272,7 +204,7 @@ $panelEdit		= '
 				</div>
 				<div class="row-fluid">
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorCompany ?? ''.'</label>
+						<label for="input_authorName">'.$w->labelAuthorCompany.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorCompany",
@@ -284,7 +216,7 @@ $panelEdit		= '
 						] ).'
 					</div>
 					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorUrl ?? ''.'</label>
+						<label for="input_authorName">'.$w->labelAuthorUrl.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorUrl",
@@ -323,6 +255,7 @@ return HtmlTag::create( 'div', [
 		], ['class' => 'row-fluid'] ),
 	], ['class' => 'span7'] ),
 	HtmlTag::create( 'div', [
-		$panelPreview
+		$view->renderHtmlPreviewPanel( $template, 'half-size' ),
+		$view->renderTextPreviewPanel( $template, 'half-size' ),
 	], ['class' => 'span5'] ),
 ], ['class' => 'row-fluid'] );

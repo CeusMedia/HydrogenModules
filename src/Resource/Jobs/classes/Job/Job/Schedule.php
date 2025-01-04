@@ -191,6 +191,9 @@ class Job_Job_Schedule extends Job_Abstract
 		);
 		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, ['jobRunId'] );
 		$nrJobs	= count( $runIds );
+
+		if( $this->dryMode )
+			$this->out( sprintf( 'Dry Mode: Would remove %d job runs.', $nrJobs ) );
 		if( $nrJobs ){
 			$this->showProgress( $counter = 0, $nrJobs );
 			$database	= $this->env->getDatabase();

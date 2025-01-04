@@ -41,11 +41,13 @@ class Model_Config_Page
 						unset( $pages[$nr] );
 				}
 				else if( preg_match( $regExp, $indexValue, $matches ) ){
-					if( $matches[1] === '!=' && $pageValue === trim( (string) $matches[2], '"\'' ) ||
-						$matches[1] === '>=' && (float) $pageValue < (float) $matches[2] ||
-						$matches[1] === '<=' && (float) $pageValue > (float) $matches[2] ||
-						$matches[1] === '>' && (float) $pageValue <= (float) $matches[2] ||
-						$matches[1] === '<' && (float) $pageValue >= (float) $matches[2] )
+					if( !match( $matches[1] ){
+						'!='	=> (string) $pageValue !== trim( (string) $matches[2], '"\'' ),
+						'>='	=> (float) $pageValue >= (float) $matches[2],
+						'<='	=> (float) $pageValue <= (float) $matches[2],
+						'>'		=> (float) $pageValue > (float) $matches[2],
+						'<'		=> (float) $pageValue < (float) $matches[2],
+					} )
 						unset( $pages[$nr] );
 				}
 				else if( $pageValue != $indexValue )
@@ -284,7 +286,7 @@ class Model_Config_Page
 		if( isset( $page->template ) && 'default' === $page->template )
 			unset( $page->template );
 
-		$optionals	= ['desc', 'icon', 'access', 'template', 'rank'];
+		$optionals	= ['desc', 'icon', 'access', 'template'/*, 'rank'*/];
 		foreach( $optionals as $option )
 			if( '' !== ( $page->$option ?? '' ) )
 				$item[$option]	= $page->$option;
@@ -297,15 +299,24 @@ class Model_Config_Page
 		foreach( $this->scopes as $scopeNr => $scope ){
 			$tree[$scope]	= [];
 			$pages1	= $this->getAllByIndices( ['scope' => $scopeNr, 'parentId' => 0] );
-			foreach( $pages1 as $page1 ){
+			foreach( $pages1 as $page1Nr => $page1 ){
 				$data1	= $this->transformPageToJsonItem( $page1 );
 				if( Model_Page::TYPE_BRANCH === $page1->type ){
 					$pages2	= $this->getAllByIndices( ['scope' => $scopeNr, 'parentId' => $page1->pageId] );
-					foreach( $pages2 as $page2 )
-						$data1['pages']	= $this->transformPageToJsonItem( $page2 );
+					foreach( $pages2 as $page2Nr => $page2 ){
+						$stamp	= ( $page1Nr * 100 - $page2Nr ) / 100000;
+						$rank	= ($page2->rank ?: 0 ) + $stamp;
+						$data1['pages'][(string) $rank]	= $this->transformPageToJsonItem( $page2 );
+					}
+					ksort( $data1['pages'] );
+					$data1['pages']	= array_values( $data1['pages'] );
 				}
-				$tree[$scope][]	= $data1;
+				$stamp	= ( $page1Nr * 100 ) / 100000;
+				$rank	= ($page1->rank ?: 0 ) + $stamp;
+				$tree[$scope][(string) $rank]	= $data1;
 			}
+			ksort( $tree[$scope] );
+			$tree[$scope]	= array_values( $tree[$scope] );
 		}
 		return $tree;
 	}

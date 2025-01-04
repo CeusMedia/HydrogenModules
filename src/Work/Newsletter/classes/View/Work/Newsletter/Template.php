@@ -38,9 +38,10 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 
 	/**
 	 *	@param		object		$template
+	 *	@param		string		$class			CSS class to apply to newsletter preview div
 	 *	@return		string
 	 */
-	public function renderHtmlPreviewPanel( object $template ): string
+	public function renderHtmlPreviewPanel( object $template, string $class = '' ): string
 	{
 		$urlPreview	= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
 		return HtmlTag::create( 'div', [
@@ -64,14 +65,14 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 								'src'			=> $urlPreview,
 								'frameborder'	=> '0',
 							] )
-						], ['newsletter-preview-iframe-container'] ),
+						], ['id' => 'newsletter-preview-iframe-container'] ),
 					], ['id' => 'newsletter-preview-container'] ),
-				], ['id' => 'newsletter-preview'] ),
+				], ['id' => 'newsletter-preview', 'class' => $class] ),
 			], ['class' => 'content-panel-inner'] )
 		], ['class' => 'content-panel'] );
 	}
 
-	public function renderTextPreviewPanel( object $template ): string
+	public function renderTextPreviewPanel( object $template, string $class = '' ): string
 	{
 		$urlPreview	= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
 		return HtmlTag::create( 'div', [
@@ -95,9 +96,9 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 								'src'			=> $urlPreview,
 								'frameborder'	=> '0',
 							] )
-						], ['newsletter-preview-iframe-container'] ),
+						], ['id' => 'newsletter-preview-iframe-container'] ),
 					], ['id' => 'newsletter-preview-container'] ),
-				], ['id' => 'newsletter-preview'] ),
+				], ['id' => 'newsletter-preview', 'class' => $class] ),
 			], ['class' => 'content-panel-inner'] )
 		], ['class' => 'content-panel'] );
 	}

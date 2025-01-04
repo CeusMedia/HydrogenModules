@@ -33,15 +33,16 @@ class Job_Mail_Queue extends Job_Abstract
 		$counter	= 0;
 		$listSent	= [];
 		$listFailed	= [];
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> [
 				Model_Mail::STATUS_NEW,
 				Model_Mail::STATUS_RETRY
 			],
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
-		);
-		$orders		= ['status' => 'ASC', 'mailId' => 'ASC'];
+		];
+		$orders		= ['status' => 'ASC', 'mailId' => 'ASC'];		//  FIFO
 		$count		= $this->logic->countQueue( $conditions );
+
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 			$this->out( 'Would send '.$count.' mails.' );
@@ -68,7 +69,7 @@ class Job_Mail_Queue extends Job_Abstract
 				}
 			}
 		}
-		$this->results	= [
+		$this->results	= [				//  save job results
 			'count'		=> $count,
 			'failed'	=> count( $listFailed ),
 			'sent'		=> count( $listSent ),
@@ -86,7 +87,6 @@ class Job_Mail_Queue extends Job_Abstract
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->options		= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
 	}
