@@ -38,6 +38,8 @@ class Entity_Page
 	/** @var ?object $dispatcher */
 	public ?object $dispatcher	= NULL;
 
+	public ?string $path        = NULL;
+
 	/**
 	 *	@param		array			$array
 	 *	@return		self

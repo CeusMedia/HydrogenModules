@@ -88,7 +88,7 @@ class Model_Page extends Model
 		'priority',
 	];
 
-	protected int $fetchMode			= PDO::FETCH_CLASS;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $fetchEntityClass = Entity_Page::class;
+	protected ?string $className 	= Entity_Page::class;
 }
