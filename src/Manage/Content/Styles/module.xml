@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <module>
 	<title>Manage: Content: Styles</title>
-	<description><![CDATA[Simple Editor for CSS style files.]]></description>
+	<description><![CDATA[
+Simple Editor for CSS style files.
+
+Supports editors like Ace and CodeMirror.
+To make use of one of these code editors, install one of them.
+]]></description>
 	<category>Management</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">JavaScript magic.</log>
@@ -12,6 +17,7 @@
 	<log version="0.2.4">Support Ace editor.</log>
 	<log version="0.3">Import from protected module repository.</log>
 	<log version="0.3.1">Migrate AJAX save to own controller.</log>
+	<log version="0.3.2">Add support for JS:Ace.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -34,8 +40,8 @@
 	<link xml:lang="en" access="acl" rank="66" path="manage/content/style">Style Definitions</link>
 	<link access="acl" path="ajax/manage/content/style/saveContent"/>
 	<relations>
-		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">Resource_Frontend</needs>
 		<supports type="module">JS_Ace</supports>
+		<supports type="module">JS_CodeMirror</supports>
 	</relations>
 </module>

@@ -3,6 +3,7 @@
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 
 class Controller_Ajax_Manage_Content_Style extends AjaxController
 {
@@ -36,9 +37,23 @@ class Controller_Ajax_Manage_Content_Style extends AjaxController
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
-		$frontend			= Logic_Frontend::getInstance( $this->env );
-		$basePath			= $frontend->getPath( 'themes' );
-		$theme				= $frontend->getConfigValue( 'layout.theme' );
+
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			/** @var ModuleDefinition $module */
+			$module	= $this->env->getModules()->get( 'Resource_Frontend' );
+			if( $module->isActive && './' !== ( $module->config['path']->value ?? '' ) ){
+				$frontend		= Logic_Frontend::getInstance( $this->env );
+				$basePath		= $frontend->getPath( 'themes' );
+				$theme			= $frontend->getConfigValue( 'layout.theme' );
+				$this->pathCss	= $basePath.$theme.'/css/';
+				$this->uriCss	= $frontend->getUri().$basePath.$theme.'/css/';
+				return;
+			}
+		}
+
+		$basePath			= $this->env->getPath( 'themes' );
+		$theme				= $this->env->getConfig()->get( 'layout.theme' );
 		$this->pathCss		= $basePath.$theme.'/css/';
+		$this->uriCss		= $this->env->uri.$basePath.$theme.'/css/';
 	}
 }
