@@ -27,6 +27,7 @@ class Controller_File extends Controller
 		$file		= $this->logic->getByPath( $uriPath );
 		$this->addData( 'uriPath', $uriPath );
 		$this->addData( 'file', $file );
+		$this->addData( 'fresh', $this->env->getRequest()->has( 'fresh' ) );
 		if( $file ){
 			if( $this->env->getRequest()->has( 'download' ) ){
 				$this->addData( 'download', $this->env->getRequest()->has( 'download' ) );

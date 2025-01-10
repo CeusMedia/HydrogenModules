@@ -45,7 +45,7 @@ if( $useOauth2 ?? FALSE ){
 }
 
 $fieldRemember	= '';
-if( $useRemember ?? FALSE ){
+if( FALSE && ( $useRemember ?? FALSE ) ){			//  disabled: insecure and not supporting user password resource
 	$inputRemember	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'name'		=> 'login_remember',
@@ -64,7 +64,7 @@ if( $useRemember ?? FALSE ){
 	], ['class' => 'bs2-checkbox bs4-form-check'] );
 	$fieldRemember	= HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', [
 		HTML::DivClass( 'bs2-span12 bs3-col-md-12 bs4-col-md-12', $labelRemember )
-	], ['style'	=> $useRemember ? 'display: none' : NULL] );
+	] );
 }
 
 $linkPassword	= HtmlTag::create( 'a', $w->linkPassword, [
@@ -126,7 +126,7 @@ HTML::DivClass( 'content-panel content-panel-form', [
 						] ),
 						HtmlTag::create( 'input', NULL, [
 							'value'		=> htmlentities( $login_username ?? '', ENT_QUOTES, 'UTF-8' ),
-							'class'		=> 'bs2-span12 bs3-form-control bs4-form-control mandatory',
+							'class'		=> 'bs2-span12 bs3-form-control bs3-input-lg bs4-form-control bs4-form-control-lg mandatory',
 							'type'		=> 'text',
 							'name'		=> 'login_username',
 							'id'		=> 'input_login_username',

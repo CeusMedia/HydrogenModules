@@ -54,7 +54,7 @@ class Logic_FileBucket extends Logic
 		if( !@copy( $sourceFilePath, $this->filePath.$hash ) )
 			throw new RuntimeException( 'Copying file to bucket failed' );
 		clearstatcache();
-		$data	= array(
+		$data	= [
 //			'creatorId'		=> 0,
 			'moduleId'		=> $moduleId,
 			'hash'			=> $hash,
@@ -64,7 +64,7 @@ class Logic_FileBucket extends Logic
 			'fileName'		=> $parts->fileName,
 			'createdAt'		=> filemtime( $sourceFilePath ),
 			'modifiedAt'	=> filemtime( $sourceFilePath ),
-		);
+		];
 		return $this->model->add( $data );
 	}
 

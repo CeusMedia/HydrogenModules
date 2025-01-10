@@ -113,7 +113,9 @@ class Logic_Log_Exception extends Logic
 					try{
 						$this->importLogFileItem( $line );
 					}
-					catch( Throwable ){}
+					catch( Throwable $e ){
+						$this->env->getLog()?->logException( $e );
+					}
 					$count++;
 				}
 			}
@@ -151,19 +153,18 @@ class Logic_Log_Exception extends Logic
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object->exception ),
 				'message'		=> $object->exception->getMessage(),
-				'code'			=> $object->exception->getCode(),
+				'code'			=> $object->exception->getCode() ?? '',
 				'file'			=> $object->exception->getFile(),
 				'line'			=> $object->exception->getLine(),
 				'trace'			=> $object->exception->getTraceAsString(),
 				'previous'		=> serialize( $object->exception->getPrevious() ),
 			] );
 		}
-
 		else if( $object instanceof Throwable ){
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object ),
 				'message'		=> $object->getMessage(),
-				'code'			=> $object->getCode(),
+				'code'			=> $object->getCode() ?? '',
 				'file'			=> $object->getFile(),
 				'line'			=> $object->getLine(),
 				'trace'			=> $object->getTraceAsString(),
@@ -174,7 +175,7 @@ class Logic_Log_Exception extends Logic
 			$data	= array_merge( $data, [
 				'type'			=> 'Exception',
 				'message'		=> $object->message,
-				'code'			=> $object->code,
+				'code'			=> $object->code ?? '',
 				'file'			=> $object->file,
 				'line'			=> $object->line,
 				'trace'			=> $object->trace,

@@ -273,14 +273,9 @@ class Model_Config_Page
 			'path'	=> $page->identifier,
 			'label'	=> $page->title,
 		];
-		switch( $page->type ){
-			case Model_Page::TYPE_BRANCH:
-				$item['pages']	= [];
-				break;
-			case Model_Page::TYPE_MODULE:
-				$item['controller']	= $page->controller;
-				$item['action']		= $page->action;
-				break;
+		if( Model_Page::TYPE_MODULE === $page->type ){
+			$item['controller']	= $page->controller;
+			$item['action']		= $page->action;
 		}
 
 		if( isset( $page->template ) && 'default' === $page->template )
@@ -290,6 +285,10 @@ class Model_Config_Page
 		foreach( $optionals as $option )
 			if( '' !== ( $page->$option ?? '' ) )
 				$item[$option]	= $page->$option;
+
+		if( Model_Page::TYPE_BRANCH === $page->type ){	//  add subpages (at the end for better readable json structure)
+			$item['pages']	= [];
+		}
 		return $item;
 	}
 

@@ -13,7 +13,8 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 	public function onPageApplyModules(): void
 	{
 		$database		= $this->env->getDatabase();
-		$copyPrefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
+		$defaultPrefix	= (string) $this->env->getConfig()->get( 'module.resource_database.access.prefix' );
+		$copyPrefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix', $defaultPrefix );
 		$copyDbName		= $this->env->getConfig()->get( 'module.admin_database_backup.copy.database' );
 		if( $copyPrefix ){
 			try{
@@ -39,7 +40,7 @@ class Hook_Admin_Database_Backup_Copy extends Hook
 		$defaultDbName	= (string) $this->env->getConfig()->get( 'module.resource_database.access.name' );
 		$defaultPrefix	= (string) $this->env->getConfig()->get( 'module.resource_database.access.prefix' );
 		$copyDbName		= (string) $this->env->getConfig()->get( 'module.admin_database_backup.copy.database' );
-		$copyPrefix		= (string) $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
+		$copyPrefix		= (string) $this->env->getSession()->get( 'admin-database-backup-copy-prefix', $defaultPrefix );
 		$dbName			= $copyDbName ?: $defaultDbName;
 		if( $defaultPrefix !== $copyPrefix ){
 			$prefix		= $copyPrefix ?: $defaultPrefix;

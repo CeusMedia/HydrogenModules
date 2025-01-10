@@ -103,7 +103,7 @@ class Controller_Auth_Local extends Controller
 
 		$this->session->set( 'auth_backend', 'Local' );
 
-		$this->tryLoginByCookie();
+//		$this->tryLoginByCookie();		// disabled: insecure and not supporting user password resource
 
 		$this->tryLoginByPostRequest();
 
@@ -720,7 +720,9 @@ class Controller_Auth_Local extends Controller
 	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
-			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
+			$passwordHash	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
+
+
 			$modelUser	= new Model_User( $this->env );												//  get user model
 			$modelRole	= new Model_Role( $this->env );												//  get role model
 			/** @var Entity_User $user */

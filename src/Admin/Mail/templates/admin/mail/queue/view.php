@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 $panelFacts		= $view->loadTemplateFile( 'admin/mail/queue/view.facts.php' );
 $panelBody		= $view->loadTemplateFile( 'admin/mail/queue/view.body.php' );
 
-$mail->date		= date( "Y-m-d H:i:s", max( $mail->enqueuedAt, $mail->sentAt ) );
+#$mail->date		= date( "Y-m-d H:i:s", max( $mail->enqueuedAt, $mail->sentAt ) );
 
 [$textTop, $textBottom]	= array_values( $view->populateTexts( ['top', 'bottom'], 'html/admin/mail/queue/' ) );
 

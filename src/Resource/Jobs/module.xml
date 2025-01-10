@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module frameworks="Hydrogen:>=1.0">
-	<title>Jobs</title>
+	<title>Resource: Jobs</title>
 	<subtitle>Console based job execution.</subtitle>
 	<description><![CDATA[Console based job execution.
 

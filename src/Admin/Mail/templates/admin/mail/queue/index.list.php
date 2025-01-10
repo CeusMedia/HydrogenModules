@@ -101,7 +101,7 @@ if( $mails ){
 		$cells[]	= HtmlTag::create( 'td', $checkbox, ['class' => ''] );
 		$cells[]	= HtmlTag::create( 'td', $features );
 		$cells[]	= HtmlTag::create( 'td', $senderMail.'<br/>'.$link, ['class' => 'autocut cell-mail-subject'] );
-		$cells[]	= HtmlTag::create( 'td', $receiverName.'<br/>'.$receiverMail, ['class' => 'autocut cell-mail-receiver'] );
+		$cells[]	= HtmlTag::create( 'td', $receiverMail.'<br/>'.$receiverName, ['class' => 'autocut cell-mail-receiver'] );
 		$cells[]	= HtmlTag::create( 'td', $status.'<br/>'.$datetime, ['class' => 'cell-mail-status'] );
 		$cells[]	= HtmlTag::create( 'td', $buttons, ['class' => 'cell-mail-actions'] );
 

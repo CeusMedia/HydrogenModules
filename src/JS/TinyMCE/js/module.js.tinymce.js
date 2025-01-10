@@ -22,8 +22,7 @@ var ModuleJsTinyMce = {
 		}
 	},
 	configAuto: function(options){
-		var key;
-		for(key in options){
+		for(let key in options){
 			tinymce.Config[key] = options[key];
 		}
 	}

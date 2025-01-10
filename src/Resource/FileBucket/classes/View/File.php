@@ -40,7 +40,8 @@ class View_File extends View
 		/** @todo remove version check, since we are on PHP 7 or 8 */
 		if( version_compare( PHP_VERSION, '5.3.0' ) >= 0 ){								//  at least PHP 5.3
 			header_remove( 'Cache-Control' );														//  remove sent cache control header
-			header_remove( 'Pragma' );																//  remove sent pragma header
+			header_remove( 'Pragma' );															//  remove sent pragma header
+			header_remove( 'Expires' );															//  remove sent expires header
 		}
 		else{
 			header( 'Cache-Control: public' );
@@ -58,11 +59,20 @@ class View_File extends View
 		if( $this->getData( 'download', FALSE ) ){
 			HttpDownload::sendFile( $sourceFilePath, $file->fileName, TRUE );
 		}
+
 		header( 'Content-Type: '.$file->mimeType );
 		header( 'Content-Length: '.$file->fileSize );
-		header( 'Cache-Control: max-age=2592000, public' );
-		header( 'Last-Modified: '.date( 'r', $file->modifiedAt ) );
-		header( 'Expires: '.date( 'r', time() + 2592000 ) );
+
+		if( $this->getData( 'fresh', FALSE ) ){
+			header( 'Cache-Control: no-store, no-cache, must-revalidate' );
+			header( 'Pragma: no-cache' );
+			header( 'Expires: 0' );
+		}
+		else{
+			header( 'Cache-Control: max-age=2592000, public' );
+			header( 'Last-Modified: '.date( 'r', $file->modifiedAt ) );
+			header( 'Expires: '.date( 'r', time() + 2592000 ) );
+		}
 		$handle	= fopen( $sourceFilePath, 'rb' );
 		while( !feof( $handle ) )
 			print( fread( $handle, 1024 ) );

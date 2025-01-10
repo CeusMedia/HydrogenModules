@@ -33,6 +33,7 @@ class Logic_Frontend extends Logic
 	];
 	protected ?string $path						= NULL;
 	protected ?string $url						= NULL;
+	protected ?string $uri						= NULL;
 
 	public function getAppConfigValue( string $key )
 	{
@@ -178,6 +179,18 @@ class Logic_Frontend extends Logic
 		return array_keys( $this->installedModules );
 	}
 
+	/**
+	 *	Returns (relative) path to frontend application.
+	 *
+	 *	Returns a configured (relative) path (within frontend application), identified by path key.
+	 *	So, by default, path of 'images' will return '{FRONTEND_PATH}/contents/images/.
+	 *	Path values can be defined in base config file.
+	 *	Otherwise, default paths will be used.
+	 *
+	 * 	Returns
+	 *	@param		string|NULL		$key
+	 *	@return		string
+	 */
 	public function getPath( ?string $key = NULL ): string
 	{
 		if( !$key )
@@ -188,16 +201,14 @@ class Logic_Frontend extends Logic
 	}
 
 	/**
-	 *	Returns frontend URI.
-	 *	Alias for getUrl();
+	 *	Returns frontend URI, meaning an absolute file system path.
+	 *
 	 *	@access		public
 	 *	@return		string|NULL		Frontend URL
-	 *	@deprecated	use getUrl instead
-	 *	@todo		to be removed in 0.9
 	 */
 	public function getUri(): ?string
 	{
-		return $this->getUrl();
+		return $this->uri;
 	}
 
 	/**
@@ -208,6 +219,22 @@ class Logic_Frontend extends Logic
 	public function getUrl(): ?string
 	{
 		return $this->url;
+	}
+
+	public function hasModule( string $moduleId ): bool
+	{
+		return array_key_exists( $moduleId, $this->installedModules );
+	}
+
+	public function setPath( string $path ): void
+	{
+		if( !file_exists( $path ) )
+			throw new DomainException( 'Invalid frontend path' );
+		$this->path		= $path;
+		$this->uri		= realpath( dirname( $path ) );
+		$this->detectConfig();
+		$this->detectModules();
+		$this->detectBaseUrl();
 	}
 
 	//  --  PROTECTED  --  //
@@ -221,23 +248,6 @@ class Logic_Frontend extends Logic
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
 		$this->setPath( $moduleConfig->get( 'path' ) );
 	}
-
-	public function hasModule( string $moduleId ): bool
-	{
-		return isset( $this->installedModules[$moduleId] );
-	}
-
-	public function setPath( string $path ): void
-	{
-		if( !file_exists( $path ) )
-			throw new DomainException( 'Invalid frontend path' );
-		$this->path		= $path;
-		$this->detectConfig();
-		$this->detectModules();
-		$this->detectBaseUrl();
-	}
-
-	//  --  PROTECTED  --  //
 
 	protected function detectConfig(): void
 	{

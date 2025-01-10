@@ -44,10 +44,10 @@ class Logic_Share extends Logic
 
 	/**
 	 *	@param		string		$moduleId
-	 *	@param		string		$relationId
+	 *	@param		int|string		$relationId
 	 *	@return		object|NULL
 	 */
-	public function get( string $moduleId, string $relationId ): ?object
+	public function get( string $moduleId, int|string $relationId ): ?object
 	{
 		$indices	= [
 			'moduleId'		=> $moduleId,
