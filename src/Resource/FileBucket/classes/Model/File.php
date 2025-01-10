@@ -45,5 +45,7 @@ class Model_File extends Model
 		'fileName',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_File::class;
 }
