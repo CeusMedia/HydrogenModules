@@ -2,9 +2,11 @@
 /** @noinspection PhpUndefinedNamespaceInspection */
 /** @noinspection PhpUndefinedClassInspection */
 
-use BaconQrCode\Renderer\Image\Png as QrCodePngImage;
-use BaconQrCode\Writer as QrCodeWriter;
-use CeusMedia\Common\Alg\ID;
+use BaconQrCode\Renderer\ImageRenderer as QrRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd as QrPngBackEnd;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd as QrSvgBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle as QrStyle;
+use BaconQrCode\Writer as QrWriter;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Share extends Logic
@@ -19,10 +21,10 @@ class Logic_Share extends Logic
 	 *	@param		string		$path
 	 *	@param		$access
 	 *	@param		$validity
-	 *	@return		object
+	 *	@return		Entity_Share
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function create( string $moduleId, string $relationId, string $path, $access, $validity ): object
+	public function create( string $moduleId, string $relationId, string $path, $access, $validity ): Entity_Share
 	{
 		if( $this->get( $moduleId, $relationId ) )
 			throw new RangeException( 'Share for module relation "'.$moduleId.':'.$relationId.'" is already existing' );
@@ -33,28 +35,31 @@ class Logic_Share extends Logic
 			'moduleId'		=> $moduleId,
 			'relationId'	=> $relationId,
 			'path'			=> $path,
-			'uuid'			=> ID::uuid(),
+//			'uuid'			=> ID::uuid(),
 			'createdAt'		=> time(),
 		] );
 		$share	= $this->modelShare->get( $shareId );
 		$url	= $this->env->url.'share/'.$share->uuid;
 		$this->generateQrCode( $shareId, $url );
-		return $this->modelShare->get( $shareId );
+		/** @var Entity_Share $entity */
+		$entity	= $this->modelShare->get( $shareId );
+		return $entity;
 	}
 
 	/**
-	 *	@param		string		$moduleId
+	 *	@param		string			$moduleId
 	 *	@param		int|string		$relationId
-	 *	@return		object|NULL
+	 *	@return		?Entity_Share
 	 */
-	public function get( string $moduleId, int|string $relationId ): ?object
+	public function get( string $moduleId, int|string $relationId ): ?Entity_Share
 	{
 		$indices	= [
 			'moduleId'		=> $moduleId,
 			'relationId'	=> $relationId,
 		];
+		/** @var ?Entity_Share $share */
 		$share	= $this->modelShare->getByIndices( $indices );
-		if( $share ){
+		if( NULL !== $share ){
 			$share->qr	= $this->logicFileBucket->getByPath( 'share-qr-'.$share->shareId );
 			$filePath	= $this->logicFileBucket->getPath().$share->qr->hash;
 			$share->qr->content	= base64_encode( file_get_contents( $filePath ) );
@@ -78,12 +83,13 @@ class Logic_Share extends Logic
 
 	/**
 	 *	@param		string		$uuid
-	 *	@return		object|NULL
+	 *	@return		?Entity_Share
 	 */
-	public function getByUuid( string $uuid ): ?object
+	public function getByUuid( string $uuid ): ?Entity_Share
 	{
+		/** @var ?Entity_Share $share */
 		$share	= $this->modelShare->getByIndex( 'uuid', $uuid );
-		if( $share ){
+		if( NULL !== $share ){
 			$share->qr	= $this->logicFileBucket->getByPath( 'share-qr-'.$share->shareId );
 			$filePath	= $this->logicFileBucket->getPath().$share->qr->hash;
 			$share->qr->content	= base64_encode( file_get_contents( $filePath ) );
@@ -101,7 +107,7 @@ class Logic_Share extends Logic
 	public function changePath( string $moduleId, string $relationId, string $path ): void
 	{
 		$share	= $this->get( $moduleId, $relationId );
-		if( $share )
+		if( NULL !== $share )
 			$this->modelShare->edit( $share->shareId, ['path' => $path] );
 	}
 
@@ -123,7 +129,6 @@ class Logic_Share extends Logic
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicFileBucket	= Logic_FileBucket::getInstance( $this->env );
 		$this->modelShare		= new Model_Share( $this->env );
 	}
@@ -131,18 +136,44 @@ class Logic_Share extends Logic
 	/**
 	 *	@param		int|string		$shareId
 	 *	@param		string			$url
-	 *	@return		string
+	 *	@return		Entity_File		File bucket object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateQrCode( int|string $shareId, string $url ): string
+	protected function generateQrCode( int|string $shareId, string $url ): Entity_File
+	{
+//		return $this->generateQrCodeAsPng( $shareId, $url );
+		return $this->generateQrCodeAsSvg( $shareId, $url );
+	}
+
+	/**
+	 *	@param		int|string		$shareId
+	 *	@param		string			$url
+	 *	@return		Entity_File		File bucket object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generateQrCodeAsPng( int|string $shareId, string $url ): Entity_File
 	{
 		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
-		$renderer	= new QrCodePngImage();
-		$renderer->setHeight( 32 );
-		$renderer->setWidth( 32 );
-		$writer		= new QrCodeWriter( $renderer );
+		$writer		= new QrWriter( new QrRenderer( new QrStyle( 128 ), new QrPngBackEnd() ) );
 		$writer->writeFile( $url, $fileName );
 		$file	= $this->logicFileBucket->add( $fileName, 'share-qr-'.$shareId, 'image/png', 'Shares' );
 		unlink( $fileName );
-		return $file;
+		return $this->logicFileBucket->get( $file );
+	}
+
+	/**
+	 *	@param		int|string		$shareId
+	 *	@param		string			$url
+	 *	@return		Entity_File		File bucket object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generateQrCodeAsSvg( int|string $shareId, string $url ): Entity_File
+	{
+		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.svg';
+		$writer		= new QrWriter( new QrRenderer( new QrStyle( 128 ), new QrSvgBackEnd() ) );
+		$writer->writeFile( $url, $fileName );
+		$file	= $this->logicFileBucket->add( $fileName, 'share-qr-'.$shareId, 'application/svg+xml', 'Shares' );
+		unlink( $fileName );
+		return $this->logicFileBucket->get( $file );
 	}
 }

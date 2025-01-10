@@ -8,6 +8,9 @@ class Model_Share extends Model
 	public const ACCESS_CAPTCHA			= 1;
 	public const ACCESS_LOGIN			= 2;
 
+	public const STATUS_INACTIVE		= 0;
+	public const STATUS_ACTIVE			= 1;
+
 	protected string $name				= 'shares';
 
 	protected array $columns			= [
@@ -35,5 +38,7 @@ class Model_Share extends Model
 
 	protected string $primaryKey		= 'shareId';
 
-	protected int $fetchMode			= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_CLASS;
+
+	protected ?string $className		= Entity_Share::class;
 }
