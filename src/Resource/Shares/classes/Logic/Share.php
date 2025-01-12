@@ -19,25 +19,23 @@ class Logic_Share extends Logic
 	 *	@param		string		$moduleId
 	 *	@param		string		$relationId
 	 *	@param		string		$path
-	 *	@param		$access
+	 *	@param		int			$access			Access type, one of Model_Share::ACCESS_* (public, captcha, login)
 	 *	@param		$validity
 	 *	@return		Entity_Share
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function create( string $moduleId, string $relationId, string $path, $access, $validity ): Entity_Share
+	public function create( string $moduleId, string $relationId, string $path, int $access, $validity ): Entity_Share
 	{
 		if( $this->get( $moduleId, $relationId ) )
 			throw new RangeException( 'Share for module relation "'.$moduleId.':'.$relationId.'" is already existing' );
-		$shareId	= $this->modelShare->add( [
-			'status'		=> 1,
+		$shareId	= $this->modelShare->add( Entity_Share::fromArray( [
+			'status'		=> Model_Share::STATUS_ACTIVE,
 			'access'		=> $access,
 			'validity'		=> $validity,
 			'moduleId'		=> $moduleId,
 			'relationId'	=> $relationId,
 			'path'			=> $path,
-//			'uuid'			=> ID::uuid(),
-			'createdAt'		=> time(),
-		] );
+		] ) );
 		$share	= $this->modelShare->get( $shareId );
 		$url	= $this->env->url.'share/'.$share->uuid;
 		$this->generateQrCode( $shareId, $url );

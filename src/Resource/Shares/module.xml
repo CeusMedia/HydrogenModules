@@ -32,6 +32,7 @@ This module will need the sever router module and a route.
 	</files>
 	<relations>
 		<needs type="module">Server_Router</needs>
+		<needs type="package" version="^3.0">bacon/bacon-qr-code</needs>
 	</relations>
 	<link access="public" path="share/index"/>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[
