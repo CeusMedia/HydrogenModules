@@ -56,7 +56,7 @@
         "monolog/monolog": "3.x-dev",
         "paquettg/php-html-parser": "dev-master",
         "twig/twig": "3.x-dev",
-        "bacon/bacon-qr-code": "^1.0",
+        "bacon/bacon-qr-code": "^3.0",
         "php-imap/php-imap": "^4.0",
         "dragonmantank/cron-expression": "3.x-dev",
         "amenadiel/jpgraph": "^4"
