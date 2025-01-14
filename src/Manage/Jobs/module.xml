@@ -59,6 +59,7 @@
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="composer">ceus-media/php-parser</needs>
 		<needs type="composer">lorisleiva/cron-translator</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/job" rank="85">Job-Dashboard</link>

@@ -100,8 +100,8 @@ code:shell>./job.php Job.info JOB_ID<code
 		<file>job.php</file>
 	</files>
 	<relations>
+		<needs type="composer">ceus-media/mail</needs>
 		<needs type="composer">dragonmantank/cron-expression</needs>
-		<needs type="composer">ceus-media/php-parser</needs>
 		<supports type="module">Resource_Maintainer</supports>
 		<supports type="module">Resource_Mail</supports>
 	</relations>
