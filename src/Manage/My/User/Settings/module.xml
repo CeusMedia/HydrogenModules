@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User Settings</title>
 	<description>Management for user configuration settings.</description>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.3.6">Changes to support new tab module.</log>
 	<log version="0.3.7">Fixed bug in database script.</log>
 	<log version="0.3.8">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -14,6 +14,7 @@
 	<log version="0.4.4">Extract hooks to own hook class.</log>
 	<log version="0.4.5">Add hook for user relations.</log>
 	<log version="0.4.6">Update code style.</log>
+	<log version="0.4.7">Add model entity.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

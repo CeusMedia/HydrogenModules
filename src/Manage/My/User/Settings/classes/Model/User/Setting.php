@@ -42,9 +42,11 @@ class Model_User_Setting extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function applyConfig( $userId = NULL, bool $hidePasswords = TRUE ): Dictionary
+	public function applyConfig( $userId = NULL, bool $hidePasswords = TRUE ): void
 	{
-		$config		= $this->env->getConfig()->getAll();
+		$config = $this->env->getConfig();
+
+//		$config		= $this->env->getConfig()->getAll();
 		if( $userId === NULL )
 			$userId		= $this->env->getSession()->get( 'auth_user_id' );
 		$model		= new Model_User_Setting( $this->env );
@@ -52,22 +54,22 @@ class Model_User_Setting extends Model
 		$settings	= $model->getAllByIndex( 'userId', $userId );
 		foreach( $settings as $setting ){
 			$key	= 'module.'.strtolower( $setting->moduleId ).'.'.$setting->key;
-			if( array_key_exists( $key, $config ) ){
-				$value	= $this->castValue( gettype( $config[$key] ), $setting->value );
-				$config[$key]	= $value;
+			if( $config->has( $key ) ){
+				$type	= gettype( $config->get( $key ) );
+				$value	= $this->castValue( $type, $setting->value );
+				$config->set( $key, $value );
 			}
 		}
 		if( $hidePasswords )
-			foreach( $config as $key => $value )
+			foreach( $config->getAll() as $key => $value )
 				if( preg_match( "/password/", $key ) )
-					$config[$key]	= (bool) $value;
-		return new Dictionary( $config );
+					$config->set( $key, (bool) $value );
 	}
 
-	static public function applyConfigStatic( Environment $env, $userId = NULL, bool $hidePasswords = TRUE ): Dictionary
+	public static function applyConfigStatic( Environment $env, $userId = NULL, bool $hidePasswords = TRUE ): void
 	{
 		$model	= new Model_User_Setting( $env );
-		return $model->applyConfig( $userId, $hidePasswords );
+		$model->applyConfig( $userId, $hidePasswords );
 	}
 
 	public function castValue( string $type, $value )
