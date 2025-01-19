@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
-class Entity_File
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_File extends Entity
 {
 	public int $fileId			= 0;
 	public int $creatorId		= 0;
@@ -29,8 +33,9 @@ class Entity_File
 		return $instance;
 	}
 
-	public function __construct()
+	public function __construct( Dictionary|array $data = [] )
 	{
 		$this->createdAt = time();
+		parent::__construct( $data );
 	}
 }

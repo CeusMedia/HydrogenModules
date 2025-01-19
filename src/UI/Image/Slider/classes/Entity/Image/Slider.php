@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Image_Slider
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Image_Slider extends Entity
 {
 	public int|string $sliderId			= 0;
 	public int|string $creatorId		= 0;

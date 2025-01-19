@@ -1,6 +1,10 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Image_Slide
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Image_Slide extends Entity
 {
 	public int|string $sliderSlideId	= 0;
 	public int|string $sliderId			= 0;
@@ -12,17 +16,9 @@ class Entity_Image_Slide
 	public int $rank					= 0;
 	public int $timestamp;
 
-	public static function fromArray( array $array ): self
-	{
-		$instance	= new self();
-		foreach( $array as $key => $value )
-			if( property_exists( $instance, $key ) )
-				$instance->{$key} = $value;
-		return $instance;
-	}
-
-	public function __construct()
+	public function __construct( Dictionary|array $data = [] )
 	{
 		$this->timestamp	= time();
+		parent::__construct( $data );
 	}
 }

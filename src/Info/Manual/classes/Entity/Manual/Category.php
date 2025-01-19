@@ -1,5 +1,9 @@
 <?php
-class Entity_Manual_Category
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Manual_Category extends Entity
 {
 	public int|string $manualCategoryId;
 	public int|string|NULL $creatorId		= NULL;
@@ -11,5 +15,4 @@ class Entity_Manual_Category
 	public string $content;
 	public string $createdAt;
 	public ?string $modifiedAt				= NULL;
-
 }

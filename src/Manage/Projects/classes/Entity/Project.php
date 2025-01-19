@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Project
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Project extends Entity
 {
 	public int|string $projectId;
 	public int|string $creatorId;

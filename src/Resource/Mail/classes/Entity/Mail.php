@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
 
 /**
  * @property array $parts
  */
-class Entity_Mail
+class Entity_Mail extends Entity
 {
 	public int|string|NULL $mailId		= NULL;
 	public int|string $senderId			= 0;
@@ -27,12 +30,4 @@ class Entity_Mail
 	public Mail_Abstract|NULL $objectInstance	= NULL;
 	public string|NULL $objectSerial			= NULL;
 	public string|NULL $rawInflated				= NULL;
-
-	public static function createFromArray( array $array ): self
-	{
-		$obj = new self();
-		foreach( $array as $key => $value )
-			$obj->{$key}	= $value;
-		return $obj;
-	}
 }

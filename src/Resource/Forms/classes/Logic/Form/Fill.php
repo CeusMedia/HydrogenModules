@@ -53,8 +53,12 @@ class Logic_Form_Fill extends Logic
 				continue;
 
 			$transferData	= $formData;
-			$transfer		= new Entity_Form_Fill_Transfer_Quest( $target, $rule, $formData );
-			$transfer->data	= [];
+			$transfer		= Entity_Form_Fill_Transfer_Quest::fromArray( [
+				'target'	=> $target,
+				'rule'		=> $rule,
+				'formData'	=> $formData,
+				'data'		=> [],
+			] );
 			$reportData	= [
 				'formId'				=> $transfer->rule->formId,
 				'formTransferRuleId'	=> $transfer->rule->formTransferRuleId,

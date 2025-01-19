@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-class Entity_Address
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Address extends Entity
 {
 	public int|string $addressId;
 	public int|string $relationId;

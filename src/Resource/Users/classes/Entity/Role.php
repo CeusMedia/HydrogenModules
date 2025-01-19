@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Role
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Role extends Entity
 {
 	public int|string $roleId;
 	public int $access				= Model_Role::ACCESS_NONE;

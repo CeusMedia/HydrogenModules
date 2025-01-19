@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
 
 /**
  * @property ?Entity_Manual_Category $category
  */
-class Entity_Manual_Page
+class Entity_Manual_Page extends Entity
 {
 	public int|string $manualPageId;
 	public int|string $manualCategoryId;

@@ -1,5 +1,9 @@
 <?php
-class Entity_Manual_Version
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Manual_Version extends Entity
 {
 	public int|string $manualVersionId;
 	public int|string $userId;

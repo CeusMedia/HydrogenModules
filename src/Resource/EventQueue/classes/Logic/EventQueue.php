@@ -58,7 +58,7 @@ class Logic_EventQueue extends Logic
 	 *	Return event by given ID.
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to return
-	 *	@return		object|NULL	Data object of event
+	 *	@return		object|NULL		Data object of event
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $eventId ): object|NULL
@@ -85,10 +85,10 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to mark as new
 	 *	@param		mixed			$result			Results to store
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsNew( int|string $eventId, mixed $result = NULL ): self
+	public function markAsNew( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_NEW, $result );
 	}
@@ -98,10 +98,10 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to mark as ignored
 	 *	@param		mixed			$result			Results to store
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsIgnored( int|string $eventId, mixed $result = NULL ): self
+	public function markAsIgnored( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_IGNORED, $result );
 	}
@@ -111,10 +111,10 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to mark as revoked
 	 *	@param		mixed			$result			Results to store
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsRevoked( int|string $eventId, mixed $result = NULL ): self
+	public function markAsRevoked( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_REVOKED, $result );
 	}
@@ -127,7 +127,7 @@ class Logic_EventQueue extends Logic
 	 *	@return		self
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsInRunning( int|string $eventId, mixed $result = NULL ): self
+	public function markAsInRunning( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_RUNNING, $result );
 	}
@@ -137,10 +137,10 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to mark as failed
 	 *	@param		mixed			$result			Results to store
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsFailed( int|string $eventId, mixed $result = NULL ): self
+	public function markAsFailed( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_FAILED, $result );
 	}
@@ -150,10 +150,10 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to mark as succeeded
 	 *	@param		mixed			$result			Results to store
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function markAsSucceeded( int|string $eventId, mixed $result = NULL ): self
+	public function markAsSucceeded( int|string $eventId, mixed $result = NULL ): static
 	{
 		return $this->setStatus( $eventId, Model_Queue_Event::STATUS_SUCCEEDED, $result );
 	}
@@ -162,9 +162,9 @@ class Logic_EventQueue extends Logic
 	 *	Sets scope.
 	 *	@access		public
 	 *	@param		string		$scope			Scope to set
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setScope( string $scope ): self
+	public function setScope( string $scope ): static
 	{
 		$this->scope	= $scope;
 		return $this;
@@ -174,6 +174,7 @@ class Logic_EventQueue extends Logic
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -184,10 +185,10 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId
 	 *	@param		int				$status
 	 *	@param		mixed			$result
-	 *	@return		self
-	 *	@throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@return		static
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setStatus( int|string $eventId, int $status, mixed $result = NULL ): self
+	protected function setStatus( int|string $eventId, int $status, mixed $result = NULL ): static
 	{
 		$event		= $this->get( $eventId );
 		if( NULL === $event )
@@ -196,12 +197,12 @@ class Logic_EventQueue extends Logic
 		$possibleStatuses	= Model_Queue_Event::STATUSES_TRANSITIONS[$event->status];
 		if( !in_array( $status, $possibleStatuses, TRUE ) )
 			throw new RangeException( 'Invalid status transition' );
-		$data	= [
+
+		$this->model->edit( $eventId, [
 			'status'		=> $status,
 			'result'		=> json_encode( $result ),
 			'modifiedAt'	=> time(),
-		];
-		$this->model->edit( $eventId, $data );
+		] );
 		return $this;
 	}
 }

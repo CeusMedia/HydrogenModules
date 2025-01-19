@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
 
 /** @property ?object $avatar */
 /** @property ?array $settings */
 /** @property ?Entity_Address $addressDelivery */
 /** @property ?Entity_Address $addressBilling */
-class Entity_User
+class Entity_User extends Entity
 {
 	public int|string $userId;
 	public int|string $accountId	= 0;

@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Mission_Document
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Mission_Document extends Entity
 {
 	public int|string $missionDocumentId;
 	public int|string $missionId;

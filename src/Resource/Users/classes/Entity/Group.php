@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_Group
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Group extends Entity
 {
 	public int|string $groupId;
 	public int|string $accountId;

@@ -36,12 +36,13 @@ class Logic_Share extends Logic
 			'relationId'	=> $relationId,
 			'path'			=> $path,
 		] ) );
+		/** @var Entity_Share $share */
 		$share	= $this->modelShare->get( $shareId );
 		$url	= $this->env->url.'share/'.$share->uuid;
-		$this->generateQrCode( $shareId, $url );
-		/** @var Entity_Share $entity */
-		$entity	= $this->modelShare->get( $shareId );
-		return $entity;
+		$this->generateQrCode( $share, $url );
+		/** @var Entity_Share $share */
+		$share	= $this->modelShare->get( $shareId );
+		return $share;
 	}
 
 	/**
@@ -132,45 +133,55 @@ class Logic_Share extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$shareId
+	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateQrCode( int|string $shareId, string $url ): Entity_File
+	protected function generateQrCode( Entity_Share $share, string $url ): Entity_File
 	{
-//		return $this->generateQrCodeAsPng( $shareId, $url );
-		return $this->generateQrCodeAsSvg( $shareId, $url );
+//		return $this->generateQrCodeAsPng( $share, $url );
+		return $this->generateQrCodeAsSvg( $share, $url );
 	}
 
 	/**
-	 *	@param		int|string		$shareId
+	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateQrCodeAsPng( int|string $shareId, string $url ): Entity_File
+	protected function generateQrCodeAsPng( Entity_Share $share, string $url ): Entity_File
 	{
-		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.png';
+		$fileName	= sys_get_temp_dir().'/qr-'.$share->shareId.'.png';
 		$writer		= new QrWriter( new QrRenderer( new QrStyle( 128 ), new QrPngBackEnd() ) );
 		$writer->writeFile( $url, $fileName );
-		$file	= $this->logicFileBucket->add( $fileName, 'share-qr-'.$shareId, 'image/png', 'Shares' );
+		$file	= $this->logicFileBucket->add(
+			$fileName,
+			'share-qr-'.$share->shareId,
+			'image/png',
+			'Shares'
+		);
 		unlink( $fileName );
 		return $this->logicFileBucket->get( $file );
 	}
 
 	/**
-	 *	@param		int|string		$shareId
+	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateQrCodeAsSvg( int|string $shareId, string $url ): Entity_File
+	protected function generateQrCodeAsSvg( Entity_Share $share, string $url ): Entity_File
 	{
-		$fileName	= sys_get_temp_dir().'/qr-'.$shareId.'.svg';
+		$fileName	= sys_get_temp_dir().'/qr-'.$share->shareId.'.svg';
 		$writer		= new QrWriter( new QrRenderer( new QrStyle( 128 ), new QrSvgBackEnd() ) );
 		$writer->writeFile( $url, $fileName );
-		$file	= $this->logicFileBucket->add( $fileName, 'share-qr-'.$shareId, 'application/svg+xml', 'Shares' );
+		$file	= $this->logicFileBucket->add(
+			$fileName,
+			'share-qr-'.$share->shareId,
+			'application/svg+xml',
+			'Shares'
+		);
 		unlink( $fileName );
 		return $this->logicFileBucket->get( $file );
 	}

@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_User_Password
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_User_Password extends Entity
 {
 	public int|string $userPasswordId;
 	public int|string $userId;

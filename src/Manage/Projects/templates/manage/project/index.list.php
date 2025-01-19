@@ -69,7 +69,7 @@ if( $projects ){
 	) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
-	$colgroup	= HtmlElements::ColumnGroup( ['30px', '35%', '25%', '10%', '15%'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['30px', '', '', '100', '120px'] );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 

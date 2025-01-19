@@ -1,6 +1,8 @@
 <?php
 
-class Entity_User_Settings extends \CeusMedia\HydrogenFramework\Entity
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_User_Settings extends Entity
 {
 	public int|string $userSettingId;
 	public string $moduleId;

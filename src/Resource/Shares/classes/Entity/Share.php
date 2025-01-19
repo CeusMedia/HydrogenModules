@@ -1,8 +1,11 @@
 <?php
+declare(strict_types=1);
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\HydrogenFramework\Entity;
 
-class Entity_Share
+class Entity_Share extends Entity
 {
 	public int $shareId				= 0;
 	public int $status				= Model_Share::STATUS_INACTIVE;
@@ -17,19 +20,10 @@ class Entity_Share
 
 	public ?Entity_File $qr			= NULL;
 
-	public static function fromArray( array $data ): static
-	{
-		$className	= static::class;
-		$instance	= new $className();
-		foreach( $data as $key => $value )
-			if( property_exists( $instance, $key ) )
-				$instance->{$key} = $value;
-		return $instance;
-	}
-
-	public function __construct()
+	public function __construct( Dictionary|array $data = [] )
 	{
 		$this->uuid			= ID::uuid();
 		$this->createdAt	= time();
+		parent::__construct( $data );
 	}
 }

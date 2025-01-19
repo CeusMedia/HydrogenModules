@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Entity;
 
 /**
  * @property ?Entity_User $creator
@@ -7,7 +10,7 @@
  * @property ?Entity_Project $project
  * @property Entity_Mission_Version[] $versions
  */
-class Entity_Mission
+class Entity_Mission extends Entity
 {
 	public string $missionId;
 	public int|string $creatorId		= 0;
@@ -21,8 +24,8 @@ class Entity_Mission
 	public string $dayEnd;
 	public ?string $timeStart			= NULL;
 	public ?string $timeEnd				= NULL;
-	public string $minutesProjected;
-	public string $minutesRequired;
+	public ?string $minutesProjected	= NULL;
+	public ?string $minutesRequired		= NULL;
 	public string $title;
 	public string $content;
 	public ?string $location			= NULL;

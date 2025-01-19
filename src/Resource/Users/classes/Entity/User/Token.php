@@ -1,6 +1,9 @@
 <?php
+declare(strict_types=1);
 
-class Entity_User_Token
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_User_Token extends Entity
 {
 	public int|string $userTokenId;
 	public int|string $userId;

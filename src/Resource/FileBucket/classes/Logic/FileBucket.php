@@ -11,6 +11,7 @@ class Logic_FileBucket extends Logic
 {
 	public const HASH_MD5			= 0;
 	public const HASH_UUID			= 1;
+	public const HASH_SHA1			= 2;
 
 	protected string $filePath;
 	protected int $hashFunction	= 0;
@@ -25,14 +26,11 @@ class Logic_FileBucket extends Logic
 	{
 		$this->model		= new Model_File( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_filebucket.', TRUE );
-		switch( strtoupper( $this->moduleConfig->get( 'hash', '' ) ) ){
-			case 'UUID':
-				$this->setHashFunction( self::HASH_UUID );
-				break;
-			case 'MD5':
-			default:
-				$this->setHashFunction( self::HASH_MD5 );
-		}
+		$this->setHashFunction( match( strtoupper( $this->moduleConfig->get( 'hash', '' ) ) ){
+			'UUID'	=> self::HASH_UUID,
+			'SHA1'	=> self::HASH_SHA1,
+			default	=> self::HASH_MD5
+		} );
 		$basePath	= $this->env->getConfig()->get( 'path.contents' );
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$basePath	= Logic_Frontend::getInstance( $this->env )->getPath( 'contents' );

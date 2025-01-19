@@ -429,7 +429,7 @@ class Logic_Mail extends Logic
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
-		$incompleteMailDataObject	= Entity_Mail::createFromArray( [
+		$incompleteMailDataObject	= Entity_Mail::fromArray( [
 			'compression'		=> $this->getRecommendedCompression(),
 			'object'			=> NULL,
 			'objectInstance'	=> $mail,
