@@ -36,5 +36,7 @@ class Model_Form_Fill extends Model
 
 	protected string $name			= 'form_fills';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form_Fill::class;
 }

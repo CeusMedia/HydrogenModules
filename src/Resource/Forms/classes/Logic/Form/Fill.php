@@ -27,9 +27,12 @@ class Logic_Form_Fill extends Logic
 	 */
 	public function applyTransfers( int|string $fillId ): array
 	{
-		if( !( $fill = $this->modelFill->get( $fillId ) ) )
+		/** @var ?Entity_Form_Fill $fill */
+		$fill	= $this->modelFill->get( $fillId );
+		if( NULL === $fill )
 			throw new DomainException( 'Invalid fill given' );
 
+		/** @var Entity_Form_Transfer_Rule[] $rules */
 		$rules	= $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId );
 		if( !$rules )
 			return [];
@@ -38,6 +41,8 @@ class Logic_Form_Fill extends Logic
 		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters ){
 			$formData[$fieldName]	= $fieldParameters->value;
 		}
+
+//		/** @var Entity_Form $form */
 //		$form		= $this->modelForm->get( $fill->formId );
 
 		$parser		= new JsonParser;
@@ -48,12 +53,13 @@ class Logic_Form_Fill extends Logic
 			if( '' === trim( $rule->rules ) )
 				continue;
 
-			$target = $this->modelTransferTarget->get( $rule->formTransferTargetId );
+			/** @var ?Entity_Form_Transfer_Target $target */
+			$target	= $this->modelTransferTarget->get( $rule->formTransferTargetId );
 			if( Model_Form_Transfer_Target::STATUS_DISABLED === $target->status )
 				continue;
 
 			$transferData	= $formData;
-			$transfer		= Entity_Form_Fill_Transfer_Quest::fromArray( [
+			$transfer		= Entity_Form_Transfer_Quest::fromArray( [
 				'target'	=> $target,
 				'rule'		=> $rule,
 				'formData'	=> $formData,
@@ -115,13 +121,14 @@ class Logic_Form_Fill extends Logic
 	/**
 	 *	@param		int|string		$fillId
 	 *	@param		bool			$strict
-	 *	@return		?object
+	 *	@return		?Entity_Form_Fill
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkId( int|string $fillId, bool $strict = TRUE ): ?object
+	public function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
+		/** @var ?Entity_Form_Fill $fill */
 		$fill	= $this->modelFill->get( $fillId );
-		if( !$fill ){
+		if( NULL === $fill ){
 			if( $strict )
 				throw new RuntimeException( 'Invalid fill ID' );
 			return NULL;
@@ -132,20 +139,23 @@ class Logic_Form_Fill extends Logic
 	/**
 	 *	@param		int|string		$fillId
 	 *	@param		bool			$strict
-	 *	@return		?object
+	 *	@return		?Entity_Form_Fill
 	 *	@throws		RuntimeException	if no ID given
 	 *	@throws		DomainException		if invalid ID given
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( int|string $fillId, bool $strict = TRUE ): ?object
+	public function get( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
 		$fillId	= (int) $fillId;
-		if( !$fillId ){
+		if( 0 === $fillId ){
 			if( $strict )
 				throw new RuntimeException( 'No fill ID given' );
 			return NULL;
 		}
-		if( !( $fill = $this->modelFill->get( $fillId ) ) ){
+
+		/** @var ?Entity_Form_Fill $fill */
+		$fill	= $this->modelFill->get( $fillId );
+		if( NULL === $fill ){
 			if( $strict )
 				throw new DomainException( 'Invalid fill ID given' );
 			return NULL;
@@ -161,20 +171,26 @@ class Logic_Form_Fill extends Logic
 	 */
 	public function sendConfirmMail( int|string $fillId ): bool
 	{
-		if( !( $fill = $this->modelFill->get( $fillId ) ) )
+		/** @var ?Entity_Form_Fill $fill */
+		$fill	= $this->modelFill->get( $fillId );
+		if( NULL === $fill )
 			throw new DomainException( 'Invalid fill given' );
 		if( !$fill->email )
 			return FALSE;
+		/** @var ?Entity_Form $form */
 		$form		= $this->modelForm->get( $fill->formId );
+		/** @var ?Entity_Form_Mail $formMail */
 		$formMail	= $this->modelMail->getByIndex( 'identifier', 'customer_confirm' );
-		if( !$formMail )
+		if( NULL === $formMail )
 			throw new RuntimeException( 'No confirmation mail defined' );
 
 		//  -  SEND MAIL  --  //
 		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
 		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
-		if( isset( $form->senderAddress ) && $form->senderAddress )
-			$sender		= $form->senderAddress;
+
+//		NOT YET IMPLEMENTED ?
+//		if( isset( $form->senderAddress ) && $form->senderAddress )
+//			$sender		= $form->senderAddress;
 		$data		= [
 			'fill'				=> $fill,
 			'form'				=> $form,
@@ -197,11 +213,14 @@ class Logic_Form_Fill extends Logic
 	public function sendCustomerResultMail( int|string $fillId ): ?bool
 	{
 		$fill	= $this->checkId( $fillId );
-		if( !$fill->email )
+		if( '' === trim( $fill->email ) )
 			return NULL;
 
+		/** @var ?Entity_Form $form */
 		$form		= clone $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
+
+		/** @var Entity_Form_Rule[] $rulesets */
 		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
@@ -224,11 +243,13 @@ class Logic_Form_Fill extends Logic
 		}
 		if( !$form->customerMailId )
 			return NULL;
+		/** @var ?Entity_Form_Mail $formMail */
 		$formMail		= $this->modelMail->get( $form->customerMailId );
-		if( !$formMail )
+		if( NULL === $formMail )
 			throw new DomainException( 'Invalid mail ID ('.$form->customerMailId.') connected to form ('.$form->formId.')' );
 
 		$form->attachments	= [];
+		/** @var Entity_Form_Rule[] $rulesets */
 		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_ATTACHMENT,
@@ -257,8 +278,11 @@ class Logic_Form_Fill extends Logic
 		//  -  SEND MAIL  --  //
 		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
 		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
-		if( isset( $form->senderAddress ) && $form->senderAddress )
-			$sender		= $form->senderAddress;
+
+//		NOT YET IMPLEMENTED ?
+//		if( isset( $form->senderAddress ) && $form->senderAddress )
+//			$sender		= $form->senderAddress;
+
 		$subject	= $formMail->subject ?: 'Anfrage erhalten';
 		$mail		= new Mail_Form_Customer_Result( $this->env, [
 			'fill'				=> $fill,
@@ -285,6 +309,7 @@ class Logic_Form_Fill extends Logic
 		$config		= $this->env->getConfig()->getAll( 'module.resource_forms.mail.', TRUE );
 		$sender		= $this->createSenderMailAddress( $config->getAll( 'sender.', TRUE ) );
 
+		/** @var ?Entity_Form $form */
 		$form		= $this->modelForm->get( $formId );
 		$subject	= 'Fehler bei Formular "'.$form->title.'" ('.date( 'd.m.Y' ).')';
 		$mail		= new Mail_Form_Manager_Error( $this->env, [

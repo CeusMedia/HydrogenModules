@@ -19,5 +19,7 @@ class Model_Form_Block extends Model
 
 	protected string $name			= 'form_blocks';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form_Block::class;
 }

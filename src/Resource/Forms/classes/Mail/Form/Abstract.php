@@ -20,10 +20,10 @@ abstract class Mail_Form_Abstract extends Mail_Abstract
 
 	/**
 	 *	@param		string		$content
-	 *	@param		object		$fill
+	 *	@param		Entity_Form_Fill		$fill
 	 *	@return		string
 	 */
-	protected function applyFillData( string $content, object $fill ): string
+	protected function applyFillData( string $content, Entity_Form_Fill $fill ): string
 	{
 		$data	= json_decode( $fill->data, TRUE );
 		while( preg_match( '/\[data_(\S+)\]/su', $content ) ){
@@ -41,13 +41,13 @@ abstract class Mail_Form_Abstract extends Mail_Abstract
 	}
 
 	/**
-	 *	@param		string		$content
-	 *	@param		object		$fill
-	 *	@param		object		$form
-	 *	@param		bool		$extended
+	 *	@param		string				$content
+	 *	@param		Entity_Form_Fill	$fill
+	 *	@param		Entity_Form			$form
+	 *	@param		bool				$extended
 	 *	@return		string
 	 */
-	protected function applyHelpers( string $content, object $fill, object $form, bool $extended = FALSE ): string
+	protected function applyHelpers( string $content, Entity_Form_Fill $fill, Entity_Form $form, bool $extended = FALSE ): string
 	{
 		while( preg_match( '/\[helper_(\S+)\]/su', $content ) ){
 			$identifier		= preg_replace( '/.*\[helper_(\S+)\].*/su', "\\1", $content );

@@ -1,18 +1,20 @@
 <?php
+declare(strict_types=1);
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Form_Fill_Data
 {
-	public const MODE_NORMAL		= 0;
-	public const MODE_EXTENDED		= 1;
+	public const MODE_NORMAL			= 0;
+	public const MODE_EXTENDED			= 1;
 
 	protected Environment $env;
-	protected object $fill;
-	protected object $form;
-	protected int $mode				= 0;
-	protected array $fields			= [
+	protected ?Entity_Form_Fill $fill	= NULL;
+	protected ?Entity_Form $form		= NULL;
+	protected int $mode					= 0;
+	protected array $fields				= [
 		'gender',
 		'firstname',
 		'surname',
@@ -35,9 +37,9 @@ class View_Helper_Form_Fill_Data
 	 */
 	public function render(): string
 	{
-		if( !$this->fill )
+		if( NULL === $this->fill )
 			throw new DomainException( 'No fill given' );
-		if( !$this->form )
+		if( NULL === $this->form )
 			throw new DomainException( 'No form given' );
 		$inputs		= json_decode( $this->fill->data, TRUE );
 
@@ -88,19 +90,20 @@ class View_Helper_Form_Fill_Data
 	}
 
 	/**
-	 *	@param		object		$fill
-	 *	@return		self
+	 *	@param		Entity_Form_Fill		$fill
+	 *	@return		static
 	 */
-	public function setFill( object $fill ): self
+	public function setFill( Entity_Form_Fill $fill ): static
 	{
 		$this->fill		= $fill;
-		return $this;	}
+		return $this;
+	}
 
 	/**
-	 *	@param		object		$form
-	 *	@return		self
+	 *	@param		Entity_Form		$form
+	 *	@return		static
 	 */
-	public function setForm( object $form ): self
+	public function setForm( Entity_Form $form ): static
 	{
 		$this->form		= $form;
 		return $this;
@@ -108,9 +111,9 @@ class View_Helper_Form_Fill_Data
 
 	/**
 	 *	@param		int		$mode
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setMode( int $mode ): self
+	public function setMode( int $mode ): static
 	{
 		$this->mode = $mode;
 		return $this;

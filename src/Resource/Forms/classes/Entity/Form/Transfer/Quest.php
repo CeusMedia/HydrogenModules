@@ -2,13 +2,13 @@
 declare(strict_types=1);
 
 use CeusMedia\HydrogenFramework\Entity;
-use Entity_Form_Fill_Transfer_Result as Result;
+use Entity_Form_Transfer_Result as ResultEntity;
 
 /**
  * Data exchange object for storing transfer requests towards transfer target implementation.
  * This entity will not be stored in database directly, but interpreted by transfer invocation.
  */
-class Entity_Form_Fill_Transfer_Quest extends Entity
+class Entity_Form_Transfer_Quest extends Entity
 {
 /*	const STATUS_TRANSFERRED	= 3;
 	const STATUS_APPLIED		= 2;
@@ -17,11 +17,11 @@ class Entity_Form_Fill_Transfer_Quest extends Entity
 	const STATUS_ERROR			= -1;
 	const STATUS_EXCEPTION		= -2;*/
 
-	public string $status		= 'none';
+	public string $status			= 'none';
 	public object $rule;
 	public object $target;
 	public array $formData;
-	public ?array $data			= NULL;
-	public ?string $error		= NULL;
-	public ?Result $result		= NULL;
+	public ?array $data				= NULL;
+	public ?string $error			= NULL;
+	public ?ResultEntity $result	= NULL;
 }

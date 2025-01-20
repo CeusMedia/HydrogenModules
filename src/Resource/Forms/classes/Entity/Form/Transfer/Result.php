@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Data exchange object for storing transfer results provided by transfer target implementation.
  * This entity will not be stored in database directly, but interpreted by transfer invocation.
  */
-class Entity_Form_Fill_Transfer_Result
+class Entity_Form_Transfer_Result
 {
 	public int $status		= Model_Form_Fill_Transfer::STATUS_UNKNOWN;
 

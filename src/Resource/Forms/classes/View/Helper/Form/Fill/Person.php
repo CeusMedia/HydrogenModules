@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -7,11 +9,11 @@ class View_Helper_Form_Fill_Person
 {
 	protected Environment $env;
 
-	protected object $fill;
+	protected ?Entity_Form_Fill $fill	= NULL;
 
-	protected object $form;
+	protected ?Entity_Form $form		= NULL;
 
-	protected array $fields		= [
+	protected array $fields				= [
 		'gender',
 		'firstname',
 		'surname',
@@ -23,7 +25,7 @@ class View_Helper_Form_Fill_Person
 		'country'
 	];
 
-	protected string $heading		= 'Person';
+	protected string $heading			= 'Person';
 
 	public function __construct( Environment $env )
 	{
@@ -32,9 +34,9 @@ class View_Helper_Form_Fill_Person
 
 	/**
 	 *	@param		array<string>		$fields
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function addFields( array $fields ): self
+	public function addFields( array $fields ): static
 	{
 		$this->fields	= array_merge( $this->fields, $fields );
 		return $this;
@@ -58,9 +60,9 @@ class View_Helper_Form_Fill_Person
 
 	/**
 	 *	@param		array<string>		$fields
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function removeFields( array $fields ): self
+	public function removeFields( array $fields ): static
 	{
 		$this->fields	= array_diff( $this->fields, $fields );
 		return $this;
@@ -71,7 +73,7 @@ class View_Helper_Form_Fill_Person
 	 */
 	public function render(): string
 	{
-		if( !$this->fill )
+		if( NULL === $this->fill )
 			throw new DomainException( 'No fill given' );
 //		if( !$this->form )
 //			throw new DomainException( 'No form given' );
@@ -110,29 +112,29 @@ class View_Helper_Form_Fill_Person
 
 	/**
 	 *	@param		array<string>		$fields
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setFields( array $fields ): self
+	public function setFields( array $fields ): static
 	{
 		$this->fields	= $fields;
 		return $this;
 	}
 
 	/**
-	 *	@param		object		$fill
-	 *	@return		self
+	 *	@param		Entity_Form_Fill		$fill
+	 *	@return		static
 	 */
-	public function setFill( object $fill ): self
+	public function setFill( Entity_Form_Fill $fill ): static
 	{
 		$this->fill		= $fill;
 		return $this;
 	}
 
 	/**
-	 *	@param		object		$form
-	 *	@return		self
+	 *	@param		Entity_Form		$form
+	 *	@return		static
 	 */
-	public function setForm( object $form ): self
+	public function setForm( Entity_Form $form ): static
 	{
 		$this->form		= $form;
 		return $this;

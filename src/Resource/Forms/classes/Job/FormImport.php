@@ -96,6 +96,7 @@ class Job_FormImport extends Job_Abstract
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -108,13 +109,14 @@ class Job_FormImport extends Job_Abstract
 	}
 
 	/**
-	 * @return array<object>
+	 * @return array<Entity_Form_Import_Rule>
 	 * @todo filter out controller based rules, perhaps introduce new type: async (job based) and sync (HTTP based)
 	 */
 	protected function getActiveFormImportRules(): array
 	{
+		/** @var Entity_Form[] $forms */
 		$forms		= $this->modelForm->getAllByIndex( 'status', Model_Form::STATUS_ACTIVATED );
-		if( 0 === count( $forms ) )
+		if( [] === $forms )
 			return [];
 
 		$formMap	= [];
@@ -132,6 +134,7 @@ class Job_FormImport extends Job_Abstract
 			'formId'				=> 'ASC',
 		];
 		$limits		= [];
+		/** @var Entity_Form_Import_Rule[] $rules */
 		$rules		= $this->modelImportRule->getAll( $conditions, $orders, $limits );
 		foreach( $rules as $rule )
 			$rule->form = $formMap[$rule->formId];
