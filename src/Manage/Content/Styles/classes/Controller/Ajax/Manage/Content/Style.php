@@ -10,6 +10,8 @@ class Controller_Ajax_Manage_Content_Style extends AjaxController
 	protected HttpRequest $request;
 	protected string $pathCss;
 
+	protected string $uriCss;
+
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
@@ -33,6 +35,7 @@ class Controller_Ajax_Manage_Content_Style extends AjaxController
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -51,9 +54,9 @@ class Controller_Ajax_Manage_Content_Style extends AjaxController
 			}
 		}
 
-		$basePath			= $this->env->getPath( 'themes' );
-		$theme				= $this->env->getConfig()->get( 'layout.theme' );
-		$this->pathCss		= $basePath.$theme.'/css/';
-		$this->uriCss		= $this->env->uri.$basePath.$theme.'/css/';
+		$basePath		= $this->env->getPath( 'themes' );
+		$theme			= $this->env->getConfig()->get( 'layout.theme' );
+		$this->pathCss	= $basePath.$theme.'/css/';
+		$this->uriCss	= $this->env->uri.$basePath.$theme.'/css/';
 	}
 }

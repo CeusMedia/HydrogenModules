@@ -220,7 +220,7 @@ class Job_Work_Mission extends Job_Abstract
 		foreach( $excludes as $userId )															//  iterate users to exclude
 			if( array_key_exists( (int) $userId, $list ) )										//  user is in list
 				unset( $list[(int) $userId] );													//  remove user from list
-		$users			= [];																//  prepare final user list
+		$users			= [];																	//  prepare final user list
 		$config			= $this->env->getConfig();												//  get default config
 		foreach( $list as $userId => $user ){													//  iterate so far listed users
 			if( $this->useSettings )															//  user settings are enabled

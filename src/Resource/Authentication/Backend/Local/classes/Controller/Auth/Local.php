@@ -725,15 +725,15 @@ class Controller_Auth_Local extends Controller
 
 			$modelUser	= new Model_User( $this->env );												//  get user model
 			$modelRole	= new Model_Role( $this->env );												//  get role model
-			/** @var Entity_User $user */
+			/** @var ?Entity_User $user */
 			$user		= $modelUser->get( $userId );												//  user is existing and password is given
-			if( $userId && $password && NULL !== $user ){
-				/** @var Entity_Role $role */
+			if( $userId && $passwordHash && NULL !== $user ){
+				/** @var ?Entity_Role $role */
 				$role		= $modelRole->get( $user->roleId );										//  get role of user
-				if( $role && $role->access ){														//  role exists and allows login
-					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
+				if( NULL !== $role && $role->access ){												//  role exists and allows login
+					$passwordMatch	= md5( sha1( $user->password ) ) === $passwordHash;				//  compare hashed password with user password
 					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )				//  for PHP 5.5.0+
-						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
+						$passwordMatch	= password_verify( $user->password, $passwordHash );		//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session

@@ -372,8 +372,11 @@ class Controller_Info_Forum extends Controller
 			throw new InvalidArgumentException( 'Invalid thread ID' );
 		if( !( $post = $this->modelPost->get( (int) $postId ) ) )
 			throw new InvalidArgumentException( 'Invalid post ID' );
+
+		/** @var array<string,Entity_User> $authors */
 		$authors	= [];
 		$modelUser	= new Model_User( $this->env );
+
 		$posts		= $this->modelPost->getAllByIndex( 'threadId', $threadId, ['postId' => 'ASC'] );
 		foreach( $posts as $entry )
 			if( !array_key_exists( $entry->authorId, $authors ) )
@@ -383,7 +386,7 @@ class Controller_Info_Forum extends Controller
 		$config	= $this->env->getConfig();
 		foreach( $authors as $authorId => $author ){
 			if( $useSettings )
-				$config		= Model_User_Setting::applyConfigStatic( $this->env, $authorId );
+				$config	= Model_User_Setting::applyConfigStatic( $this->env, $authorId );
 			if( !$config->get( 'module.info_forum.mail.inform.authors' ) )
 				continue;
 			if( $author->userId == $post->authorId )

@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Entity;
 
 class Entity_Image_Slider extends Entity
@@ -27,17 +28,9 @@ class Entity_Image_Slider extends Entity
 
 	public array $slides				= [];
 
-	public static function fromArray( array $array): self
-	{
-		$instance	= new self();
-		foreach( $array as $key => $value )
-			if( property_exists( $instance, $key ) )
-				$instance->{$key} = $value;
-		return $instance;
-	}
-
-	public function __construct()
+	public function __construct( Dictionary|array $data = [] )
 	{
 		$this->createdAt	= time();
+		parent::__construct( $data );
 	}
 }

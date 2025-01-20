@@ -13,8 +13,12 @@ class Hook_Manage_My_User_Setting extends Hook
 		if( !$this->env->has( 'session' ) )													//  environment has no session support
 			return;
 		$userId	= (int) $this->env->getSession()->get( 'auth_user_id', '' );
-		if( 0 !== $userId )																			//  a user is logged in
-			Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );		//  apply user configuration
+		if( 0 !== $userId ){																			//  a user is logged in
+			$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );	//  apply user configuration
+			foreach( $this->env->getConfig() as $key => $value )
+				if( $config->has( $key ) && $config->get( $key ) !== $value )
+					$this->env->getConfig()->set( $key, $value );
+		}
 	}
 
 	/**
