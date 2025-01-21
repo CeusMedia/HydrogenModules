@@ -209,7 +209,8 @@ class Logic_Work_Mission extends Logic
 
 	public function hasFullAccess(): bool
 	{
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
+		$roleId	= $this->env->getSession()->get( 'auth_role_id', '' );
+		return '' !== $roleId && $this->env->getAcl()->hasFullAccess($roleId);
 	}
 
 	/**
@@ -218,6 +219,7 @@ class Logic_Work_Mission extends Logic
 	 *	@param		$data
 	 *	@param		int|string		$currentUserId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function noteChange( int|string $type, int|string $missionId, $data, int|string $currentUserId ): void

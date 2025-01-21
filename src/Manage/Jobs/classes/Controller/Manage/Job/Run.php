@@ -87,7 +87,7 @@ die;*/
 
 		$filterLimit		= $this->session->get( $this->filterPrefix.'limit' ) ?? 15;
 		$filterStatus		= $this->session->get( $this->filterPrefix.'status' );
-		$filterType			= $this->session->get( $this->filterPrefix.'type' );
+		$filterType			= $this->session->get( $this->filterPrefix.'type', '' );
 		$filterJobId		= $this->session->get( $this->filterPrefix.'jobId' );
 		$filterClassName	= $this->session->get( $this->filterPrefix.'className' );
 		$filterStartFrom	= $this->session->get( $this->filterPrefix.'startFrom' );
@@ -102,7 +102,7 @@ die;*/
 		];
 		if( is_array( $filterStatus ) && count( $filterStatus ) )
 			$conditions['status']		= $filterStatus;
-		if( strlen( $filterType ) && in_array( $filterType, Model_Job_Run::TYPES ) )
+		if( '' !== $filterType && in_array( (int) $filterType, Model_Job_Run::TYPES ) )
 			$conditions['type']			= $filterType;
 
 		$definitionIds	= [];

@@ -180,13 +180,13 @@ class Controller_Info_File extends Controller
 	 */
 	public function index( int|string|NULL $folderId = NULL ): void
 	{
-		$search		= trim( $this->request->get( 'search' ) );
+		$search		= trim( $this->request->get( 'search', '' ) );
 		$folderId	= (int) $folderId;
 
 		$folders	= [];
-		if( $search ){
+		if( '' !== $search ){
 			$conditions	= ['title' => '%'.$search.'%'];
-			if( $folderId ){
+			if( 0 !== $folderId ){
 				$folderIds	= $this->logic->getNestedFolderIds( $folderId );
 				array_unshift( $folderIds, $folderId );
 				$conditions['downloadFolderId']	= $folderIds;
@@ -198,7 +198,7 @@ class Controller_Info_File extends Controller
 		else{
 			$orders		= ['rank' => 'ASC'];
 			$orders		= ['title' => 'ASC'];
-			if( $folderId ){
+			if( 0 !== $folderId ){
 				$folder		= $this->logic->getFolder( $folderId );
 				if( !$folder ){
 					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
