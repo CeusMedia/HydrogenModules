@@ -8,7 +8,8 @@ class View_Helper_Database_Dashboard_Locks
 {
 	protected Environment $env;
 
-	protected ?array $locks			= NULL;
+	/** @var array<Entity_Database_Lock>|NULL $locks */
+	protected ?array $locks			= [];
 
 	/**
 	 *	@param		Environment		$env
@@ -35,6 +36,7 @@ class View_Helper_Database_Dashboard_Locks
 		$modules	= $context->getRegisteredModules();
 
 		$rows	= [];
+		/** @var Entity_Database_Lock $lock */
 		foreach( $this->locks as $lock ){
 			$module	= $modules[$lock->subject];
 			$entry	= $module->model->get( $lock->entryId );

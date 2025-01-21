@@ -16,6 +16,7 @@ class Controller_Ajax_Database_Lock extends AjaxController
 	public function renderDashboardPanel( string $panelId ): int
 	{
 		$modelUser	= new Model_User( $this->env );
+		/** @var Entity_Database_Lock[] $locks */
 		$locks		= $this->model->getAll();
 		foreach( $locks as $lock )
 			$lock->user	= $modelUser->get( $lock->userId );
@@ -24,6 +25,10 @@ class Controller_Ajax_Database_Lock extends AjaxController
 		return $this->respondData( $helper->render() );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );

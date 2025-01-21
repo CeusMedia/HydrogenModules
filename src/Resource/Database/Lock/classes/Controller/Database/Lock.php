@@ -17,6 +17,7 @@ class Controller_Database_Lock extends Controller
 	{
 		$modules	= $this->env->getModules();
 		$model		= new Model_User( $this->env );
+		/** @var Entity_Database_Lock[] $locks */
 		$locks		= $this->model->getAll();
 		foreach( $locks as $lock ){
 			$lock->module	= NULL;
@@ -35,8 +36,9 @@ class Controller_Database_Lock extends Controller
 	 */
 	public function unlock( int|string $lockId ): void
 	{
+		/** @var ?Entity_Database_Lock $lock */
 		$lock	= $this->model->get( $lockId );
-		if( !$lock )
+		if( NULL === $lock )
 			$this->env->getMessenger()->noteError( 'Diese Sperre existiert nicht mehr.' );
 		else
 			$this->model->remove( $lockId );
@@ -53,12 +55,12 @@ class Controller_Database_Lock extends Controller
 	}
 
 	/**
-	 *	@param		object		$lock
+	 *	@param		Entity_Database_Lock	$lock
 	 *	@return		string
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getEntryTitle( object $lock ): string
+	protected function getEntryTitle( Entity_Database_Lock $lock ): string
 	{
 		$title	= '<em><small class="muted">unbekannt</small></em>';
 		$uri	= NULL;

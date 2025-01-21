@@ -5,6 +5,11 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Database_Lock extends Hook
 {
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onAuthLogout(): void
 	{
 		$model		= new Model_Lock( $this->env );
@@ -13,6 +18,9 @@ class Hook_Database_Lock extends Hook
 		] );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function onRegisterDashboardPanels(): void
 	{
 		if( !$this->env->getAcl()->has( 'ajax/database/lock', 'renderDashboardPanel' ) )
@@ -27,6 +35,9 @@ class Hook_Database_Lock extends Hook
 		] );
 	}
 
+	/**
+	 *	@return		bool|int
+	 */
 	public function onAutoModuleLockRelease(): bool|int
 	{
 		$request	= $this->env->getRequest();
