@@ -68,8 +68,8 @@ class Logic_User extends Logic
 			return NULL;
 		}
 		if( self::EXTEND_NOTHING !== $extend ){
-			if( $extend & self::EXTEND_ROLE )
-				$user->role	= $this->modelRole->get( $userId );
+			if( $extend & self::EXTEND_ROLE && 0 !== (int) $user->roleId  )
+				$user->role	= $this->modelRole->get( $user->roleId );
 			if( $extend & self::EXTEND_GROUPS )
 				$user->groups	= $this->getUserGroups( $user );
 		}

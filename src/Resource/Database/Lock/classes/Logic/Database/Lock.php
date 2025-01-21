@@ -42,16 +42,15 @@ class Logic_Database_Lock extends Logic
 	/**
 	 *	@param		string			$subject
 	 *	@param		int|string		$entryId
-	 *	@return		Entity_Database_Lock
+	 *	@return		Entity_User
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getLockUser( string $subject, int|string $entryId ): Entity_Database_Lock
+	public function getLockUser( string $subject, int|string $entryId ): Entity_User
 	{
-		$lockUserId	= $this->getLockUserId( $subject, $entryId );
 		$modelUser	= new Model_User( $this->env );
-		/** @var ?Entity_Database_Lock $lockUser */
-		$lockUser	= $modelUser->get( $lockUserId );
+		/** @var ?Entity_User $lockUser */
+		$lockUser	= $modelUser->get( $this->getLockUserId( $subject, $entryId ) );
 		if( NULL === $lockUser )
 			throw new RuntimeException( 'Lock user is not existing anymore' );
 		return $lockUser;

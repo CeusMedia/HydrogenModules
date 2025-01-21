@@ -303,11 +303,11 @@ class Controller_Work_Mission extends Controller
 			/** @noinspection PhpUnhandledExceptionInspection */
 			$date	= new DateTime( $mission->dayStart );
 			$data['dayStart'] = $date->modify( $change )->format( "Y-m-d" );
-			if( $mission->dayEnd ){													//  mission has a duration
-				if(  Model_Mission::TYPE_EVENT === (int) $mission->type ){							//  mission is an event, not a task
+			if( $mission->dayEnd ){																//  mission has a duration
+				if(  Model_Mission::TYPE_EVENT === $mission->type ){							//  mission is an event, not a task
 					/** @noinspection PhpUnhandledExceptionInspection */
-					$date	= new  DateTime( $mission->dayEnd );					//  take end timestamp and ...
-					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );  //  ... store new moved end date
+					$date	= new  DateTime( $mission->dayEnd );								//  take end timestamp and ...
+					$data['dayEnd'] = $date->modify( $change )->format( "Y-m-d" );		//  ... store new moved end date
 				}
 			}
 			$this->model->edit( $missionId, $data );
@@ -1055,7 +1055,8 @@ class Controller_Work_Mission extends Controller
 	 */
 	protected function hasFullAccess(): bool
 	{
-		return $this->env->getAcl()->hasFullAccess( $this->session->get( 'auth_role_id' ) );
+		$roleId	= $this->session->get( 'auth_role_id', '' );
+		return '' !== $roleId && $this->env->getAcl()->hasFullAccess( $roleId );
 	}
 
 	protected function initDefaultFilters(): void

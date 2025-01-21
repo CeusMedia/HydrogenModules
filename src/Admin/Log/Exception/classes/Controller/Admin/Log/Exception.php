@@ -173,7 +173,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
+		$exceptionSession	= new Dictionary( unserialize( $exception->session ?? 'b:0;' ) ?: [] );
 
 		$user	= NULL;
 		if( $exceptionSession->get( 'auth_user_id' ) ){
