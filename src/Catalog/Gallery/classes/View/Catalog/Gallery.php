@@ -42,7 +42,7 @@ class View_Catalog_Gallery extends View
 	/**
 	 *	@todo	implement auto-path (see controller)
 	 */
-	protected function renderCategoryList( array $categories, $currentId = NULL, bool $badges = TRUE ): string
+	public function renderCategoryList( array $categories, $currentId = NULL, bool $badges = TRUE ): string
 	{
 		$list   	= [];
 		$pathModule	= $this->logic->pathModule;
@@ -63,7 +63,7 @@ class View_Catalog_Gallery extends View
 		return HtmlTag::create( 'ul', $list, $attr );
 	}
 
-	protected function renderCategoryMatrix( array $categories ): string
+	public function renderCategoryMatrix( array $categories ): string
 	{
 		$list  		= [];
 		$pathImages	= $this->logic->pathImages;

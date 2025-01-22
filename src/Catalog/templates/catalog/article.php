@@ -7,6 +7,7 @@
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
+/** @var View_Catalog $view */
 /** @var array $words */
 /** @var object $article */
 /** @var object $category */

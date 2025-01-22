@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Environment $env */
 /** @var array $words */
 /** @var object $article */
+/** @var bool $cart */
 
 if( !in_array( $article->status, [-1, 0, 1] ) )
 	return '';

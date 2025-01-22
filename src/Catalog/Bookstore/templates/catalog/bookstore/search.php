@@ -14,6 +14,12 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $limit */
 /** @var int $total */
 
+/** @var ?string $searchAuthorId */
+/** @var ?string $searchTerm */
+/** @var ?string $searchCategoryId */
+
+
+
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 $words	= (object) $words['search'];
 

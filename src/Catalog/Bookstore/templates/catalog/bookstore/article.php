@@ -2,6 +2,7 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Environment $env */
+/** @var View_Catalog_Bookstore $view */
 /** @var array $words */
 /** @var object $article */
 /** @var object $category */

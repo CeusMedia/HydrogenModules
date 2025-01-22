@@ -16,8 +16,10 @@ $panes		= [
 ];
 
 $current	= $this->env->getSession()->get( 'manage.catalog.bookstore.author.tab' );
-if( !$current )
-	$current	= @array_shift( array_keys( $words['tabs'] ) );
+if( !$current ){
+	$tabKeys	= array_keys( $words['tabs'] );
+	$current	= @array_shift( $tabKeys );
+}
 foreach( $words['tabs'] as $key => $label ){
 	$attributes	= array(
 		'href'			=> '#tab-'.$key,

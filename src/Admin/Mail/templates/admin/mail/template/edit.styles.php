@@ -1,15 +1,16 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var Web $env */
+/** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var object $template */
 /** @var string $appPath */
 /** @var string $appUrl */
+/** @var string $buttonList */
 
 $iconOpen		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-folder-open"] );
 $iconView		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-eye"] );

@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var object[] $authors */
 /** @var object[] $documents */
 /** @var object[] $tags */
+/** @var ?string $uriCoverLarge */
 
 $a			= clone( $article );
 $w			= (object) $words['article'];

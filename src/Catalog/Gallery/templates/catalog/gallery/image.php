@@ -9,6 +9,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var object[] $images */
 /** @var object $category */
 /** @var string $pathImages */
+/** @var int $bridgeId */
+/** @var ?object $image */
 
 $iconCategory	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );

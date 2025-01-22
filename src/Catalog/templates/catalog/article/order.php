@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array $words */
 /** @var object $article */
+/** @var bool $cart */
 
 $w				= (object) $words['article'];
 $iconCart		= '<i class="icon-shopping-cart icon-white"></i>';
