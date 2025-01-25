@@ -33,4 +33,12 @@ class Entity_Mission extends Entity
 	public ?string $reference			= NULL;
 	public string $createdAt;
 	public ?string $modifiedAt			= NULL;
+
+	public ?Entity_User $creator		= NULL;
+	public ?Entity_User $modifier		= NULL;
+	public ?Entity_User $worker			= NULL;
+	public ?Entity_Project $project		= NULL;
+
+	/** @var Entity_Mission_Version[] */
+	public array $versions				= [];
 }
