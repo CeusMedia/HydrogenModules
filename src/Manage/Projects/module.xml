@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: Projects</title>
 	<description>Management for projects.</description>
-	<version>0.7.5</version>
+	<version>0.7.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added status indicator.</log>
@@ -49,12 +49,15 @@
 	<log version="0.7.3">Upgrade classes.</log>
 	<log version="0.7.4">Code update.</log>
 	<log version="0.7.5">Add english locales.</log>
+	<log version="0.7.6">Add model entity classes.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Project.php</class>
+		<class>Entity/Project.php</class>
+		<class>Entity/Project/User.php</class>
 		<class>Hook/Manage/Project.php</class>
 		<class>Logic/Project.php</class>
 		<class>Mail/Manage/Project/Abstract.php</class>

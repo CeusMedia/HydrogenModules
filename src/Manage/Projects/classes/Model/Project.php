@@ -47,7 +47,9 @@ class Model_Project extends Model
 		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Project::class;
 
 	public function getUserProjects( string $userId, array $conditions = [], array $orders = [] ): array
 	{
