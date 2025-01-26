@@ -15,4 +15,6 @@ class Entity_Project extends Entity
 	public string $description;
 	public string $createdAt;
 	public ?string $modifiedAt		= NULL;
+
+	public bool $isDefault			= FALSE;
 }
