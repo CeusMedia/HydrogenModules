@@ -4,6 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Controller_Ajax_Work_Mission_Kanban extends Controller_Ajax_Work_Mission
 {
+	protected string $filterKeyPrefix		= 'filter.work.mission.kanban.';
+
 	protected ?DateTime $today	= NULL;
 	public function renderIndex(): void
 	{

@@ -1,6 +1,8 @@
 <?php
 class Controller_Ajax_Work_Mission_Future extends Controller_Ajax_Work_Mission
 {
+	protected string $filterKeyPrefix		= 'filter.work.mission.future.';
+
 	/**
 	 *	@return		void
 	 *	@throws		JsonException

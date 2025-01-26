@@ -5,6 +5,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Controller_Ajax_Work_Mission_Calendar extends Controller_Ajax_Work_Mission
 {
+	protected string $filterKeyPrefix		= 'filter.work.mission.calendar.';
+
 	protected DateTime $today;
 	protected string $year;
 	protected string $month;

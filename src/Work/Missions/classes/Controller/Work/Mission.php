@@ -1122,6 +1122,7 @@ class Controller_Work_Mission extends Controller
 	 */
 	protected function recoverFilters( int|string $userId ): void
 	{
+		return;
 		$model	= new Model_Mission_Filter( $this->env );
 		$serial	= $model->getByIndex( 'userId', $userId, [], ['serial'], FALSE );
 //	print_m( $serial );

@@ -52,6 +52,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	public function changeDay( int|string $missionId ): void
 	{
 		$date		= trim( $this->request->get( 'date' ) );
+		/** @var ?Entity_Mission $mission */
 		$mission	= $this->model->get( $missionId );
 		$data		= [
 			'modifierId'	=> $this->userId,
