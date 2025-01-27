@@ -7,6 +7,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var View_Manage_Job_Definition $view */
 /** @var array<object> $runs */
 /** @var object $definition */
+/** @var ?object $definitionCode */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -66,6 +67,11 @@ foreach( $facts as $factKey => $factValue ){
 }
 $list	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
+$sourceCode	= HtmlTag::create( 'div', 'Klasse nicht gefunden.', ['class' => 'alert alert-info'] );
+if( NULL !== $definitionCode ){
+	$sourceCode	= HtmlTag::create( 'xmp', join( PHP_EOL, $definitionCode ) );
+}
+
 return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', '<span class="muted">Job:</span> '.$definition->identifier ),
 	HtmlTag::create( 'div', [
@@ -75,7 +81,7 @@ return $tabs.HtmlTag::create( 'div', [
 		HtmlTag::create( 'h4', 'Run List' ),
 		$runList,
 		HtmlTag::create( 'h4', 'Code' ),
-		HtmlTag::create( 'xmp', join( PHP_EOL, $definitionCode ) ),
+		$sourceCode,
 	], ['class' => 'content-panel-inner'] )
 ], ['class' => 'content-panel'] );
 
