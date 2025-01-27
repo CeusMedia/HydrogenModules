@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use CeusMedia\Common\Exception\Data\Missing as DataMissingException;
 use CeusMedia\HydrogenFramework\Entity;
 
 /**
@@ -30,4 +31,18 @@ class Entity_Mail extends Entity
 	public Mail_Abstract|NULL $objectInstance	= NULL;
 	public string|NULL $objectSerial			= NULL;
 	public string|NULL $rawInflated				= NULL;
+
+	protected static function checkValues( array $data ): void
+	{
+		if( !array_key_exists( 'receiverAddress', $data ) )
+			throw new DataMissingException( 'Field "receiverAddress" is missing' );
+		if( !array_key_exists( 'senderAddress', $data ) )
+			throw new DataMissingException( 'Field "senderAddress" is missing' );
+		if( !array_key_exists( 'subject', $data ) )
+			throw new DataMissingException( 'Field "subject" is missing' );
+		if( !array_key_exists( 'mailClass', $data ) )
+			throw new DataMissingException( 'Field "mailClass" is missing' );
+		if( !array_key_exists( 'enqueuedAt', $data ) )
+			throw new DataMissingException( 'Field "enqueuedAt" is missing' );
+	}
 }

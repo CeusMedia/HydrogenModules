@@ -1,12 +1,14 @@
 <?php
+declare(strict_types=1);
 
 use CeusMedia\Common\Exception\Data\Missing as DataMissingException;
+use CeusMedia\HydrogenFramework\Entity;
 
 /**
  * @property int|NULL $used
  * @property bool $activeByModule
  */
-class Entity_Mail_Template
+class Entity_Mail_Template extends Entity
 {
 	public int|string|NULL $mailTemplateId		= NULL;
 	public int $status							= Model_Mail_Template::STATUS_NEW;
@@ -20,15 +22,12 @@ class Entity_Mail_Template
 	public int $createdAt;
 	public int|NULL $modifiedAt					= NULL;
 
-	public static function createFromArray( array $array ): self
-	{
-		$obj = new self();
-		$obj->createdAt		= time();
+	public int|NULL $used						= NULL;
+	public bool $activeByModule					= FALSE;
 
-		if( !array_key_exists( 'title', $array ) )
+	protected static function checkValues( array $data ): void
+	{
+		if( !array_key_exists( 'title', $data ) )
 			throw new DataMissingException( 'Field "title" is missing' );
-		foreach( $array as $key => $value )
-			$obj->{$key}	= $value;
-		return $obj;
 	}
 }
