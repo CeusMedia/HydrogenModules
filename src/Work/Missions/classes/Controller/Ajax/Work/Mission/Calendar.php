@@ -126,48 +126,14 @@ $(document).ready(function(){
 		$this->projects	= $this->logic->getUserProjects( $userId );
 		$showMonth		= str_pad( $month, 2, "0", STR_PAD_LEFT );
 		$showScope		= $year.'-'.$showMonth.'-01';
-//		$monthDate		= new DateTime( $showScope );
 		$monthDays		= date( "t", strtotime( $showScope ) );
-		$offsetStart	= date( "w", strtotime( $showScope ) ) - 1;
-		$offsetStart	= $offsetStart >= 0 ? $offsetStart : 6;
-		$weeks			= ceil( ( (int) $monthDays + (int)  $offsetStart ) / 7 );
 		$orders			= ['priority' => 'ASC'];
 
-		$rows			= [];
-		for( $i=0; $i<$weeks; $i++ ){
-			$row	= [];
-			$j		= 0;
-			$class	= '';
-//			if( $i == 0 ){
-//				for( $j=0; $j<$offsetStart; $j++ ){
-//					$preDate	= clone $monthDate;
-//					$preDate	= $preDate->modify( "-".( $offsetStart - $j )." days" );
-//					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
-//				}
-//			}
-			while( $j < 7 ){
-				$day		= $i * 7 - $offsetStart + $j +1;
-				$showYear	= $year;
-				$showMonth	= $month;
-				if( $day <= $monthDays ){
-					$date	= $showYear.'-'.$showMonth.'-'.$day;
-					/** @noinspection PhpUnhandledExceptionInspection */
-					$row[]	= '<tr>'.$this->renderDay( $userId, new DateTime( $date ), $orders, $class ).'</tr>';
-				}
-				/*
-									$class	= "inactive";
-									$day	-= $monthDays;
-									$showMonth++;
-									if( $showMonth > 12 ){
-										$showMonth	-= 12;
-										$showYear++;
-									}
-								}
-				*/				$j++;
-			}
-//			$weekNr	= date( "W", strtotime( $date ) );
-//			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
-			$rows[]	= join( $row );
+		$rows		= [];
+		for( $i=1; $i<=$monthDays; $i++ ){
+			/** @noinspection PhpUnhandledExceptionInspection */
+			$date	= new DateTime( $year.'-'.$month.'-'.$i );
+			$rows[]	= '<tr>'.$this->renderDay( $userId, $date, $orders ).'</tr>';
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
 //		$heads		= HtmlElements::TableHeads( ["KW", "..."] );

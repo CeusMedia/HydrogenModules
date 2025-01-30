@@ -347,7 +347,8 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		}
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
-		$this->env->restart( 'ajax/work/mission/renderIndex' );
+		$this->renderIndex();
+//		$this->env->restart( 'ajax/work/mission/renderIndex' );
 	}
 
 	//  --  PROTECTED  --  //

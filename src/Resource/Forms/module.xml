@@ -33,7 +33,6 @@
 		<class>Entity/Form/Mail.php</class>
 		<class>Entity/Form/Rule.php</class>
 		<class>Entity/Form/Fill/Transfer.php</class>
-		<class>Entity/Form/Fill/Transfer/Quest.php</class>
 		<class>Entity/Form/Import/Rule.php</class>
 		<class>Entity/Form/Transfer/Quest.php</class>
 		<class>Entity/Form/Transfer/Result.php</class>
