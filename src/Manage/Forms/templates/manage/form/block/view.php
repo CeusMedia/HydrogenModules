@@ -1,13 +1,11 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
-/** @var object $block */
-
-$modelBlock	= new Model_Form_Block( $env );
-
-$blocks		= $modelBlock->getAll( [], ['title' => 'ASC'] );
+/** @var Entity_Form_Block $block */
+/** @var Entity_Form_Block[] $blocks */
 
 foreach( $blocks as $item ){
 	if( preg_match( '/\[block_'.$item->identifier.'\]/', $block->content ) ){

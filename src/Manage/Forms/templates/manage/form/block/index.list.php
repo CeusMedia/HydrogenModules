@@ -1,4 +1,7 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+declare(strict_types=1);
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -38,7 +41,7 @@ $linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Block', [
 	'class'	=> 'btn btn-success'
 ] );
 
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './manage/form/block', $page, $pages );
+$pagination	= new PageControl( './manage/form/block', $page, $pages );
 
 return '
 <div class="content-panel">

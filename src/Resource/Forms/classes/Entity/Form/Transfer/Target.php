@@ -13,4 +13,11 @@ class Entity_Form_Transfer_Target extends Entity
 	public ?string $apiKey		= NULL;
 	public int $createdAt		= 0;
 	public int $modifiedAt		= 0;
+
+
+	public int|array $rules		= 0;
+	public int|array $transfers	= 0;
+	public int|array $fails		= 0;
+	public int $usedAt			= 0;
+
 }

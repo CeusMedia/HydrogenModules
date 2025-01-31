@@ -62,6 +62,7 @@ class Controller_Manage_Form_Target extends Controller
 	 */
 	public function index(): void
 	{
+		/** @var Entity_Form_Transfer_Target[] $targets */
 		$targets	= $this->modelTarget->getAll( [], ['title' => 'ASC'] );
 		foreach( $targets as $target ){
 			$target->rules		= $this->modelRule->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );

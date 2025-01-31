@@ -144,8 +144,7 @@ class Controller_Manage_Form_Mail extends Controller
 	 */
 	public function view( string $mailId ): void
 	{
-		$mail	= $this->checkId( $mailId );
-		$this->addData( 'mail', $mail );
+		$this->addData( 'mail', $this->checkId( $mailId ) );
 	}
 
 	/**
@@ -161,15 +160,19 @@ class Controller_Manage_Form_Mail extends Controller
 
 	/**
 	 *	@param		int|string		$mailId
-	 *	@return		object
+	 *	@return		Entity_Form_Mail
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkId( int|string $mailId ): object
+	protected function checkId( int|string $mailId ): Entity_Form_Mail
 	{
-		if( !$mailId )
+		if( '' === trim( (int) $mailId ) )
 			throw new RuntimeException( 'No mail ID given' );
-		if( !( $mail = $this->modelMail->get( $mailId ) ) )
+
+		/** @var ?Entity_Form_Mail $mail */
+		$mail	= $this->modelMail->get( $mailId );
+		if( NULL === $mail )
 			throw new DomainException( 'Invalid mail ID given' );
+
 		return $mail;
 	}
 }

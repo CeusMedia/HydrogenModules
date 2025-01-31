@@ -1,9 +1,11 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+declare(strict_types=1);
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/** @var object $target */
-/** @var array<object> $fails List of failed fills */
+/** @var Entity_Form_Transfer_Target $target */
+/** @var array<Entity_Form_Fill> $fails List of failed fills */
 
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );

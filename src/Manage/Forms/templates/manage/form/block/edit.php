@@ -1,13 +1,14 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
-/** @var object $block */
-/** @var array<object> $withinForms */
-/** @var array<object> $withinBlocks */
+/** @var Entity_Form_Block $block */
+/** @var array<Entity_Form> $withinForms */
+/** @var array<Entity_Form_Block> $withinBlocks */
 
-$modelForm	= new Model_Form( $env );
+//$modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );

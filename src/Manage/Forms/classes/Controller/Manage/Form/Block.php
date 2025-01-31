@@ -105,6 +105,7 @@ class Controller_Manage_Form_Block extends Controller
 		$limits		= [$page * $limit, $limit];
 		$total		= $this->modelBlock->count();
 		$count		= $this->modelBlock->count( $conditions );
+		/** @var Entity_Form_Block[] $blocks */
 		$blocks		= $this->modelBlock->getAll( $conditions, $orders, $limits );
 		$this->addData( 'blocks', $blocks );
 		$this->addData( 'page', $page );
@@ -132,6 +133,7 @@ class Controller_Manage_Form_Block extends Controller
 	{
 		$block	= $this->checkId( $blockId );
 		$this->addData( 'block', $block );
+		$this->addData( 'blocks', $this->modelBlock->getAll( [], ['title' => 'ASC'] ) );
 	}
 
 	/**
@@ -195,10 +197,10 @@ class Controller_Manage_Form_Block extends Controller
 	/**
 	 *	@param		int|string		$blockId
 	 *	@param		bool			$strict
-	 *	@return		object|FALSE
+	 *	@return		Entity_Form_Block|FALSE
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkId( int|string $blockId, bool $strict = TRUE ): object|FALSE
+	protected function checkId( int|string $blockId, bool $strict = TRUE ): Entity_Form_Block|FALSE
 	{
 		if( !$blockId )
 			throw new RuntimeException( 'No block ID given' );

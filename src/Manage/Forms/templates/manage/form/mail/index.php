@@ -1,7 +1,9 @@
-<?php
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-/** @var \CeusMedia\HydrogenFramework\View $view */
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
 
 $panelFilter	= $view->loadTemplateFile( 'manage/form/mail/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/form/mail/index.list.php' );

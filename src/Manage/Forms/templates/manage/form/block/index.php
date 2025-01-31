@@ -1,7 +1,10 @@
-<?php
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+declare(strict_types=1);
 
-/** @var \CeusMedia\HydrogenFramework\View $view */
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
 
 $panelFilter	= $view->loadTemplateFile( 'manage/form/block/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/form/block/index.list.php' );

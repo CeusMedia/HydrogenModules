@@ -1,8 +1,9 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/** @var array<object> $forms */
+/** @var array<Entity_Form> $forms */
 /** @var int|string $filterStatus */
 /** @var array<string> $filterFormId */
 /** @var string $filterFillId */

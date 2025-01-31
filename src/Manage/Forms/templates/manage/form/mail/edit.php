@@ -1,13 +1,16 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+/** @noinspection DuplicatedCode */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
-/** @var object{mailId: string, roleType: int, identifier: string, format: int, subject: string, title: string, content: string} $mail */
+/** @var Entity_Form_Mail $mail */
 
 $modelForm	= new Model_Form( $env );
-$modelMail	= new Model_Form_Mail( $env );
+//$modelMail	= new Model_Form_Mail( $env );
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );

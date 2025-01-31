@@ -17,4 +17,5 @@ class Entity_Form extends Entity
 	public int $timestamp				= 0;
 
 	public array $attachments			= [];
+	public array $transferRules			= [];
 }

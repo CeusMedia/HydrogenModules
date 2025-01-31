@@ -1,9 +1,10 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<object> $connections */
-/** @var array<object> $forms */
+/** @var array<Entity_Form> $forms */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -24,8 +25,8 @@ foreach( $connections as $connection )
 $optConnection	= HtmlElements::Options( $optConnection );
 
 $optForm	= [];
-foreach( $forms as $formId => $form )
-	$optForm[$formId]	= $form->title;
+foreach( $forms as $form )
+	$optForm[$form->formId]	= $form->title;
 $optForm	= HtmlElements::Options( $optForm );
 
 $rulesTemplate	= <<<EOT

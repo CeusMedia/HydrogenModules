@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\PageControl;
@@ -7,8 +7,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
-/** @var array<object> $fills */
-/** @var array<object> $transferTargets */
+/** @var array<Entity_Form_Fill> $fills */
+/** @var array<Entity_Form_Transfer_Target> $transferTargets */
 /** @var ?string $filterStatus */
 /** @var int $page */
 /** @var int $pages */
@@ -31,7 +31,7 @@ $statuses	= [
 
 $rows		= [];
 foreach( $fills as $fill ){
-	$fillData	= json_decode( $fill->data );
+	$fill->data	= json_decode( $fill->data );
 	$linkView	= HtmlTag::create( 'a', $iconView, [
 		'href'	=> './manage/form/fill/view/'.$fill->fillId.'?page='.$page,
 		'class'	=> 'btn btn-mini btn-info',
@@ -47,8 +47,8 @@ foreach( $fills as $fill ){
 	$date		= HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $fill->createdAt ) );
 	$email		= HtmlTag::create( 'small', $fill->email );
 	$name		= '';
-	if( isset( $fillData->firstname ) )
-		$name		= $fillData->firstname->value.' '.$fillData->surname->value.'<br/>';
+	if( isset( $fill->data->firstname ) )
+		$name		= $fill->data->firstname->value.' '.$fill->data->surname->value.'<br/>';
 	$linkForm	= './manage/form/edit/'.$fill->formId.( $page ? '?page='.$page : '' );
 	$linkView	= './manage/form/fill/view/'.$fill->fillId.( $page ? '?page='.$page : '' );
 	$title		= HtmlTag::create( 'a', $name.$email, ['href' => $linkView] );

@@ -33,80 +33,31 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	public function index(): void
 	{
 		error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
-		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
-		$origin	= $origin ?: $this->env->getBaseUrl();
-		$origin	= rtrim( $origin, '/' );
-		header( 'Access-Control-Allow-Origin: '.$origin );
-		header( 'Access-Control-Allow-Credentials: true' );
 //		ini_set( 'display_errors', FALSE );
+
 //		$this->checkIsAjax();
+		$this->sendAllowOriginHeaders();
 		try{
 			$this->checkIsPost();
 			$data	= $this->request->getAll();
-			if( !isset( $data['inputs'] ) || !$data['inputs'] )
-				throw new Exception( 'No form data given.' );
-			if( !( $formId = $this->request->get( 'formId' ) ) )
-				throw new Exception( 'No form ID given.' );
-			if( !preg_match( '/^[0-9]+$/', $formId ) )
-				throw new Exception( 'Invalid form ID given.' );
+			$formId	= $this->checkMandatoryFields( $data );
+
+			/** @var ?Entity_Form $form */
 			$form		= $this->modelForm->get( $formId );
-//			if( $data['inputs']['surname']['value'] === "Testmann" )
-//				throw new Exception( 'Hallo Herr Testmann!' );
-			$email		= '';
-			$captcha	= '';
-			foreach( $data['inputs'] as $nr => $input ){
-				if( $input['name'] === 'email' )
-					$email	= strip_tags( $input['value'] );
-				if( $input['name'] === 'captcha' ){
-					$captcha	= $input['value'];
-					unset( $data['inputs'][$nr] );
-				}
-			}
-			if( $captcha ){
-				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
-					header( 'Content-Type: application/json' );
-					print( json_encode( ['status' => 'captcha', 'data' => [
-						'captcha'	=> $captcha,
-						'real'		=> $this->env->getSession()->get( 'captcha' ),
-						'formId'	=> $formId,
-						'formType'	=> @$form->type,
-					] ] ) );
-					exit;
-				}
-			}
-			if( !isset( $input) )
-				throw new DomainException( 'No form ID given.' );
+			if( NULL === $form )
+				throw new DomainException( 'Form not existing anymore.' );
 
-			$status		= Model_Form_Fill::STATUS_CONFIRMED;
-			if( $form->type == Model_Form::TYPE_CONFIRM )
-				$status	= Model_Form_Fill::STATUS_NEW;
+			$inputs	= $data['inputs'] ?? [];
+			$this->filterData( $inputs );
+			$this->checkCaptcha( $form, $inputs );
+			$fillId	= $this->createFillFromInputs( $form, $inputs );
+			$this->applyActionsOnCreatedFill( $form, $fillId );
 
-			foreach( $data['inputs'] as $input )
-				$input['value']	= strip_tags( $input['value'] );
-
-			$data		= [
-				'formId'	=> $formId,
-				'status'	=> $status,
-				'email'		=> strip_tags( $email ),
-//				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
-				'data'		=> json_encode( $data['inputs'] ),
-				'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
-				'agent'		=> strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
-				'createdAt'	=> time(),
-			];
-			$fillId		= $this->modelFill->add( $data, FALSE );
-			if( Model_Form::TYPE_NORMAL === (int) $form->type ){
-				$this->logicFill->sendCustomerResultMail( $fillId );
-				$this->logicFill->sendManagerResultMails( $fillId );
-				$this->logicFill->applyTransfers( $fillId );
-			}
-			else if( Model_Form::TYPE_CONFIRM === (int) $form->type ){
-				$this->logicFill->sendConfirmMail( $fillId );
-			}
 			$status	= 'ok';
 			$data	= [
 				'formId'	=> $form->formId,
 				'formType'	=> $form->type,
+				'fillId'	=> $fillId,
 			];
 		}
 		catch( Exception $e ){
@@ -117,8 +68,8 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$data	= [
 				'error'		=> $e->getMessage(),
 				'trace'		=> $e->getTraceAsString(),
-				'formId'	=> @$form->formId,
-				'formType'	=> @$form->type,
+				'formId'	=> $form?->formId ?? '',
+				'formType'	=> $form?->type ?? '',
 			];
 		}
 		header( 'Content-Type: application/json' );
@@ -138,6 +89,53 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelFill	= new Model_Form_Fill( $this->env );
 		$this->logicFill	= new Logic_Form_FillManager( $this->env );
+	}
+
+	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		int|string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function applyActionsOnCreatedFill( Entity_Form $form, int|string $fillId ): void
+	{
+		if( Model_Form::TYPE_NORMAL === $form->type ){
+			$this->logicFill->sendCustomerResultMail( $fillId );
+			$this->logicFill->sendManagerResultMails( $fillId );
+			$this->logicFill->applyTransfers( $fillId );
+		}
+		else if( Model_Form::TYPE_CONFIRM === $form->type ){
+			$this->logicFill->sendConfirmMail( $fillId );
+		}
+	}
+
+	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		array			$inputs
+	 *	@return		void
+	 */
+	protected function checkCaptcha( Entity_Form $form, array & $inputs ): void
+	{
+		$captcha	= '';
+		foreach( $inputs as $nr => $input ){
+			if( $input['name'] === 'captcha' ){
+				$captcha	= $input['value'];
+				unset( $inputs[$nr] );
+			}
+		}
+		if( $captcha ){
+			if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
+				header( 'Content-Type: application/json' );
+				print( json_encode( ['status' => 'captcha', 'data' => [
+					'captcha'	=> $captcha,
+					'real'		=> $this->env->getSession()->get( 'captcha' ),
+					'formId'	=> $form->formId,
+					'formType'	=> @$form->type,
+				] ] ) );
+				exit;
+			}
+		}
 	}
 
 	/**
@@ -169,5 +167,61 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		if( $strict )
 			throw new RuntimeException( 'Access denied: POST requests, only' );
 		return FALSE;
+	}
+
+	protected function checkMandatoryFields( array $data ): int
+	{
+		$inputs	= $data['inputs'] ?? [];
+		if( [] === $inputs )
+			throw new Exception( 'No form data inputs given.' );
+
+		$formId	= trim( $data['formId'] ?? '' );
+		if( '' === $formId )
+			throw new Exception( 'No form ID given.' );
+
+		if( !preg_match( '/^[0-9]+$/', $formId ) )
+			throw new Exception( 'Invalid form ID given.' );
+
+		return $formId;
+	}
+
+	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		array			$inputs
+	 *	@return		int|string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function createFillFromInputs( Entity_Form $form, array $inputs ): int|string
+	{
+		$status	= match( $form->type ){
+			Model_Form::TYPE_CONFIRM	=> Model_Form_Fill::STATUS_NEW,
+			default						=> Model_Form_Fill::STATUS_CONFIRMED,
+		};
+
+		return $this->modelFill->add( Entity_Form_Fill::fromArray( [
+			'formId'	=> $form->formId,
+			'status'	=> $status,
+			'email'		=> $inputs['email'] ?? '',
+//				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
+			'data'		=> json_encode( $inputs ),
+			'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
+			'agent'		=> strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
+			'createdAt'	=> time(),
+		] ), FALSE );
+	}
+
+	protected function filterData( array & $inputs ): void
+	{
+		foreach( $inputs as $input )
+			$input['value'] = trim( strip_tags( $input['value'] ) );
+	}
+
+	protected function sendAllowOriginHeaders(): void
+	{
+		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
+		$origin	= $origin ?: $this->env->getBaseUrl();
+		$origin	= rtrim( $origin, '/' );
+		header( 'Access-Control-Allow-Origin: '.$origin );
+		header( 'Access-Control-Allow-Credentials: true' );
 	}
 }

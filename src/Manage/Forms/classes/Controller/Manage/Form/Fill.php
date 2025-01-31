@@ -36,9 +36,8 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function confirm( string $fillId ): void
 	{
-		if( !( $fill = $this->modelFill->get( $fillId ) ) )
-			throw new DomainException( 'Invalid fill ID given' );
-		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
+		$fill	= $this->checkId( $fillId );
+		if( $fill->status !== Model_Form_Fill::STATUS_NEW ){
 			if( $fill->referer ){
 				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 				$this->restart( $fill->referer.$urlGlue.'rc=3', FALSE, NULL, TRUE );
@@ -53,10 +52,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
 
+		/** @var ?Entity_Form $form */
 		$form	= $this->modelForm->get( $fill->formId );
 		if( $form->forwardOnSuccess ){
-			$urlGlue	= preg_match( '/\?/', $fill->forwardOnSuccess ) ? '&' : '?';
-			$this->restart( $fill->forwardOnSuccess.$urlGlue.'rc=2', FALSE, NULL, TRUE );
+			$urlGlue	= preg_match( '/\?/', $form->forwardOnSuccess ) ? '&' : '?';
+			$this->restart( $form->forwardOnSuccess.$urlGlue.'rc=2', FALSE, NULL, TRUE );
 		}
 
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
@@ -226,8 +226,9 @@ class Controller_Manage_Form_Fill extends Controller
 		$page		= (int) $this->request->get( 'page' );
 		if( !$fillId )
 			throw new DomainException( 'No fill ID given' );
+		/** @var ?Entity_Form_Fill $fill */
 		$fill	= $this->modelFill->get( $fillId );
-		if( !$fill )
+		if( NULL === $fill )
 			throw new DomainException( 'Invalid fill ID given' );
 		$this->modelFill->remove( $fillId );
 		$this->restart( $page ? '/'.$page : '', TRUE );
@@ -254,10 +255,14 @@ class Controller_Manage_Form_Fill extends Controller
 	public function view( string $fillId ): void
 	{
 		$fill	= $this->checkId( $fillId );
+
+		/** @var ?Entity_Form $form */
 		$form	= $this->modelForm->get( $fill->formId );
+
 		$form->transferRules	= [];
 		foreach( $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId ) as $transferRule )
 			$form->transferRules[$transferRule->formTransferRuleId]	= $transferRule;
+
 		$this->addData( 'fill', $fill );
 		$this->addData( 'form', $form );
 		$this->addData( 'fillTransfers', $this->modelFillTransfer->getAllByIndex( 'fillId', $fillId ) );
@@ -289,12 +294,12 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		int|string		$fillId
 	 *	@param		bool			$strict
-	 *	@return		object
+	 *	@return		?Entity_Form_Fill
 	 *	@throws		RuntimeException	if no ID given
 	 *	@throws		DomainException		if invalid ID given
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkId( int|string $fillId, bool $strict = TRUE ): object
+	protected function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
 		return $this->logicFill->get( $fillId, $strict );
 	}

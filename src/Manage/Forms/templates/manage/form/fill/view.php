@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
@@ -8,8 +8,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var array $fillTransfers */
-/** @var object $fill */
-/** @var object $form */
+/** @var Entity_Form_Fill $fill */
+/** @var Entity_Form $form */
 /** @var object[] $transferTargetMap */
 
 $page		= (int) $env->getRequest()->get( 'page' );
