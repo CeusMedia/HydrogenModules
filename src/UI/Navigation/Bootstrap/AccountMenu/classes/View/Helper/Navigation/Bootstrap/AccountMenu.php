@@ -10,7 +10,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	public string $guestEmail			= "<em>(not logged in)</em>";
 
 	protected Environment $env;
-	protected ?object $user				= NULL;
+	protected ?Entity_User $user		= NULL;
 	protected bool $showAvatar			= TRUE;
 	protected bool $showEmail			= FALSE;
 	protected bool $showFullname		= TRUE;
@@ -103,7 +103,7 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 				$links		= $this->renderSetLinks( $this->linksOutside );							//  @todo: remove
 		}																							//  @todo: remove
 		$avatar	= '';
-		if( $this->user && $this->showAvatar ){														//  user is available and avatars enabled
+		if( NULL !== $this->user && $this->showAvatar ){														//  user is available and avatars enabled
 			if( $this->env->getModules()->has( 'Manage_My_User_Avatar' ) ){							//  use user avatar helper module
 				$helper			= new View_Helper_UserAvatar( $this->env );							//  create helper
 				$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );			//  get module config
@@ -218,19 +218,12 @@ class View_Helper_Navigation_Bootstrap_AccountMenu
 	}
 
 	/**
-	 *	@param		object|string|int		$userObjectOrId
+	 *	@param		Entity_User		$user
 	 *	@return		self
 	 */
-	public function setUser( object|string|int $userObjectOrId ): self
+	public function setUser( Entity_User $user ): self
 	{
-		if( is_object( $userObjectOrId ) )
-			$this->user	= $userObjectOrId;
-		else if( is_int( $userObjectOrId ) || is_string( $userObjectOrId ) ){
-			$model	= new Model_User( $this->env );
-			$this->user	= $model->get( $userObjectOrId );
-		}
-		else
-			throw new InvalidArgumentException( "Given data is neither an user object nor an user ID" );
+		$this->user	= $user;
 		return $this;
 	}
 

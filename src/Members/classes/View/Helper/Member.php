@@ -79,7 +79,7 @@ class View_Helper_Member
 		$helperAvatar	= NULL;
 		if( class_exists( 'View_Helper_UserAvatar' ) ){
 			$helperAvatar	= new View_Helper_UserAvatar( $this->env );
-			$helperAvatar->setUser( (int) $this->user->userId );
+			$helperAvatar->setUser( $this->user );
 		}
 
 		switch( $this->mode ){
@@ -145,7 +145,7 @@ class View_Helper_Member
 		return $this;
 	}
 
-	public function setUser( string|int|object $userObjectOrId ): self
+	public function setUser( string|int|Entity_User $userObjectOrId ): self
 	{
 		if( is_object( $userObjectOrId ) )
 			$this->user	= $userObjectOrId;

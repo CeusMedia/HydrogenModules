@@ -201,7 +201,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 		return $this->modelFill->add( Entity_Form_Fill::fromArray( [
 			'formId'	=> $form->formId,
 			'status'	=> $status,
-			'email'		=> $inputs['email'] ?? '',
+			'email'		=> $inputs['email']['value'] ?? '',
 //				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
 			'data'		=> json_encode( $inputs ),
 			'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',

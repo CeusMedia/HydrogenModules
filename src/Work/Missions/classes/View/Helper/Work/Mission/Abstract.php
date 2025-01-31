@@ -82,6 +82,7 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 			$this->users[(int) $userId] = $modelUser->get( $userId );
 		if( !$this->users[(int) $userId] )
 			return "UNKNOWN";
+		/** @var Entity_User $worker */
 		$worker	= $this->users[(int) $userId];
 
 		if( !$this->useAvatar )
