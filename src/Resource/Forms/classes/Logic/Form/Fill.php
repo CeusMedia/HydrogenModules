@@ -226,10 +226,10 @@ class Logic_Form_Fill extends Logic
 			'type'		=> Model_Form_Rule::TYPE_CUSTOMER,
 		] );
 		foreach( $rulesets as $ruleset ){
-			$ruleset->rules	= json_decode( $ruleset->rules );
-			if( count( $ruleset->rules ) ){
+			$rulesetRules	= json_decode( $ruleset->rules );
+			if( count( $rulesetRules ) ){
 				$valid	= TRUE;
-				foreach( $ruleset->rules as $rule ){
+				foreach( $rulesetRules as $rule ){
 					if( !isset( $data[$rule->key] ) )
 						$valid = FALSE;
 					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
@@ -257,10 +257,10 @@ class Logic_Form_Fill extends Logic
 //print_m( $rulesets );
 
 		foreach( $rulesets as $ruleset ){
-			$ruleset->rules	= json_decode( $ruleset->rules );
-			if( count( $ruleset->rules ) ){
+			$rulesetRules	= json_decode( $ruleset->rules );
+			if( count( $rulesetRules ) ){
 				$valid	= TRUE;
-				foreach( $ruleset->rules as $rule ){
+				foreach( $rulesetRules as $rule ){
 					if( !isset( $data[$rule->key] ) )
 						$valid = FALSE;
 					else if( (string) $data[$rule->key]['value'] !== (string) $rule->value )
@@ -341,9 +341,9 @@ class Logic_Form_Fill extends Logic
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,
 		] );
 		foreach( $rulesets as $ruleset ){
-			$ruleset->rules	= json_decode( $ruleset->rules );
+			$rulesetRules	= json_decode( $ruleset->rules );
 			$valid	= TRUE;
-			foreach( $ruleset->rules as $rule ){
+			foreach( $rulesetRules as $rule ){
 				if( !isset( $data[$rule->key] ) )
 					$valid = FALSE;
 				else if( $data[$rule->key]['value'] != $rule->value )
