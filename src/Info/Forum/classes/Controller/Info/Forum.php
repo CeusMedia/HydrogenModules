@@ -164,6 +164,7 @@ class Controller_Info_Forum extends Controller
 		}
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'topics', $topics );
+		$this->addData( 'request', $this->request );
 	}
 
 	/**

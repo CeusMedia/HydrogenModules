@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller;
@@ -7,7 +7,15 @@ class Controller_Index extends Controller
 {
 	protected array $pathsSelf		= ['', 'index', 'index/index'];
 
-	public function index( $arg1 = NULL, $arg2 = NULL, $arg3 = NULL ): void
+	/**
+	 *	@param		?string		$arg1
+	 *	@param		?string		$arg2
+	 *	@param		?string		$arg3
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( string $arg1 = NULL, string $arg2 = NULL, string $arg3 = NULL ): void
 	{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();
@@ -15,15 +23,15 @@ class Controller_Index extends Controller
 
 		$pathLocales	= $config->get( 'path.locales' );
 		$pathHtml		= $pathLocales.$language.'/html/index/';
+		$isInside		= 0 !== (int) $session->get( 'auth_user_id', 0 );
 
 		if( !$this->authenticateByModule() )
 			$this->authenticateByResource( $session );
 
-		$this->mayForwardAfterLogin();
+		$this->mayForwardAfterLogin( $isInside );
 		$this->mayRewindToFrom();
-		$this->dispatchByLocaleHtmlFile( $pathHtml );
 
-		$isInside		= $session->get( 'auth_user_id' ) > 0;
+		$this->dispatchByLocaleHtmlFile( $pathHtml, array_filter( func_get_args() ) );
 
 		$this->addData( 'isInside', $isInside );
 		$this->addData( 'pathLocales', $pathLocales );
@@ -55,6 +63,7 @@ class Controller_Index extends Controller
 
 	/**
 	 *	fallback: no local auth, but local users
+	 *	@param		Dictionary		$session
 	 *	@return		bool
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
@@ -64,20 +73,19 @@ class Controller_Index extends Controller
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
 
-		$userId		= $session->get( 'auth_user_id' );
-		$roleId		= $session->get( 'auth_role_id' );
-		if( $userId ){
+		$userId		= (int) $session->get( 'auth_user_id', 0 );
+		$roleId		= (int) $session->get( 'auth_role_id', 0 );
+		if( 0 !== $userId ){
 			$this->addData( 'user', $this->getModel( 'user' )->get( $userId ) );
-			if( $roleId )
+			if( 0 !== $roleId )
 				$this->addData( 'role', $this->getModel( 'role' )->get( $roleId ) );
 		}
 		return TRUE;
 	}
 
-	protected function mayForwardAfterLogin(): void
+	protected function mayForwardAfterLogin( bool $isInside ): void
 	{
 		$config			= $this->env->getConfig();
-		$isInside		= $this->env->getSession()->get( 'auth_user_id' ) > 0;
 
 		//  redirect forced by auth module ?
 		$forward		= $config->getAll( 'module.resource_authentication.login.forward.', TRUE );
@@ -95,21 +103,23 @@ class Controller_Index extends Controller
 				$this->restart( $pathByFrom );
 	}
 
-	protected function dispatchByLocaleHtmlFile( string $pathHtml ): void
+	protected function dispatchByLocaleHtmlFile( string $pathHtml, array $args ): void
 	{
-		$args	= array_filter( func_get_args() );
-		if( count( $args ) > 0 ){
-			$pathByArgs		= join( "/", $args );
-			$fileByArgs		= $pathHtml.join( "/", $args ).'.html';
-			if( file_exists( $fileByArgs ) )
-				$this->addData( 'path', $fileByArgs );
-			else if( !in_array( $pathByArgs, $this->pathsSelf ) ){
-				$words	= (object) $this->getWords( 'index', 'main' );
-				if( isset( $words->msgPageNotFound ) )
-					if( strlen( trim( @$words->msgPageNotFound ) ) )
-						$this->env->getMessenger()->noteNotice( $words->msgPageNotFound );
-				$this->env->getResponse()->setStatus( 404 );
-			}
+		if( [] === $args )
+			return;
+
+		$pathByArgs		= join( '/', $args );
+		$fileByArgs		= $pathHtml.$pathByArgs.'.html';
+		if( file_exists( $fileByArgs ) ){
+			$this->addData( 'path', $fileByArgs );
+			return;
+		}
+
+		if( !in_array( $pathByArgs, $this->pathsSelf ) ){
+			$words	= (object) $this->getWords( 'index', 'main' );
+			if( '' !== trim( $words->msgPageNotFound ?? '' ) )
+				$this->env->getMessenger()->noteNotice( $words->msgPageNotFound );
+			$this->env->getResponse()->setStatus( 404 );
 		}
 	}
 }

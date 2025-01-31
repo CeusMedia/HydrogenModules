@@ -10,6 +10,8 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Environment $env */
 /** @var View_Info_Forum $view */
 /** @var array<object> $topics */
+/** @var array $rights */
+/** @var array<string,array<string,string>> $words */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/forum/' ) );
 $textTop	= $textIndexTop ?: '';
