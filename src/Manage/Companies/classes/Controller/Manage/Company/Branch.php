@@ -32,8 +32,8 @@ class Controller_Manage_Company_Branch extends Controller
 						$modelImage->remove( $image->branchImageId );
 					}
 					$modelTag->removeByIndex( 'branchId', $branch->branchId );
+//					$modelBranch->remove( $branch->branchId );
 				}
-				$modelBranch->remove( $branch->branchId );
 			}
 		}
 	}

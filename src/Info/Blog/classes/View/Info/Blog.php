@@ -35,7 +35,10 @@ class View_Info_Blog extends View
 	{
 		$words 	= $env->getLanguage()->getWords( 'info/blog' );
 		$model	= new Model_Blog_Post( $env );
+
 		$post	= NULL;
+		$title	= $words['panelTitles']['typeDefault'];
+
 		if( 'random' === $modeOrId ){
 			$number	= $model->countByIndex( 'status', 1 );
 			$index	= random_int( 1, $number ) - 1;
@@ -51,7 +54,6 @@ class View_Info_Blog extends View
 		}
 		else if( $modeOrId ){
 			$post	= $model->get( $modeOrId );
-			$title	= $words['panelTitles']['typeDefault'];
 		}
 		if( !$post )
 			return '';

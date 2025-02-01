@@ -63,9 +63,11 @@ class View_Helper_Info_Event_Calendar
 				$row[]	= $this->renderDay( new DateTime( $date ), $orders, $class );
 				$j++;
 			}
-			$weekNr	= date( "W", strtotime( $date ) );
-			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
-			$rows[]	= '<tr>'.join( $row ).'</tr>';
+			if( isset( $date ) ){
+				$weekNr	= date( "W", strtotime( $date ) );
+				array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
+				$rows[]	= '<tr>'.join( $row ).'</tr>';
+			}
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
 		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );

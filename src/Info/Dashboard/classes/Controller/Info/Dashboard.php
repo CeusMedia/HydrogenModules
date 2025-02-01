@@ -71,8 +71,9 @@ class Controller_Info_Dashboard extends Controller
 			}
 			if( $count > 1 )
 				$this->messenger->noteSuccess( $this->messages->successPanelsAdded, $count );
-			else if( $count )
+			else if( $count && isset( $panelId ) ){
 				$this->messenger->noteSuccess( $this->messages->successPanelAdded, $this->panels[$panelId]->title );
+			}
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){

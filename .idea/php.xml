@@ -99,7 +99,6 @@
       <path value="$PROJECT_DIR$/vendor/ceus-media/template-abstraction" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-ctype" />
       <path value="$PROJECT_DIR$/vendor/twig/twig" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/vendor/bacon/bacon-qr-code" />
       <path value="$PROJECT_DIR$/vendor/php-imap/php-imap" />
       <path value="$PROJECT_DIR$/vendor/dragonmantank/cron-expression" />
