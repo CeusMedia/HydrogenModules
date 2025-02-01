@@ -111,21 +111,12 @@ class Logic_Catalog_Provision extends Logic
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
 		$oneDay	= 24 * 60 * 60;
 
-		switch( $unit ){
-			case 'd':
-				$factor		= $oneDay;
-				break;
-			case 'w':
-				$factor		= 7 * $oneDay;
-				break;
-			case 'm':
-				$factor		= 30 * $oneDay;
-				break;
-			case 'a':
-				$factor		= 365 * $oneDay;
-				break;
-		}
-		return $number * $factor;
+		return $number * $oneDay * match( $unit ){
+			'a'		=> 365,
+			'm'		=> 30,
+			'w'		=> 7,
+			default	=> 1,
+		};
 	}
 
 	/**
@@ -133,9 +124,9 @@ class Logic_Catalog_Provision extends Logic
 	 *	@access		public
 	 *	@param		int|string		$userId			User ID
 	 *	@param		int|string		$productId		Product ID
-	 *	@return		integer						User license key ID
-	 *	@throws		RangeException				if given user ID is invalid
-	 *	@throws		RuntimeException			if given user is not activated
+	 *	@return		integer							User license key ID
+	 *	@throws		RangeException					if given user ID is invalid
+	 *	@throws		RuntimeException				if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException

@@ -377,7 +377,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller_Manage_Cata
 		}
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
-		$offset		= $filter['offset'] ?? 0;
+		$offset		= $filters['offset'] ?? 0;
 		return $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 	}
 }

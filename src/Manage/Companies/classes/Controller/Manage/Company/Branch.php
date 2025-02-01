@@ -1,18 +1,20 @@
 <?php
 
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Company_Branch extends Controller
 {
-	protected $frontend;
-	protected $request;
-	protected $messenger;
-	protected $modelBranch;
-	protected $modelCompany;
-	protected $modelImage;
-	protected $modelTag;
+	protected Logic_Frontend $frontend;
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
+	protected Model_Branch $modelBranch;
+	protected Model_Company $modelCompany;
+	protected Model_Branch_Image $modelImage;
+	protected Model_Branch_Tag $modelTag;
 
 	public static function ___onRemoveCompany( Environment $env, $module, $content, $data = [] )
 	{
@@ -36,7 +38,7 @@ class Controller_Manage_Company_Branch extends Controller
 		}
 	}
 
-	public function activate( $branchId )
+	public function activate( int|string $branchId ): void
 	{
 		$this->modelBranch->edit( $branchId, [
 			'status'		=> 2,
@@ -47,7 +49,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function deactivate( $branchId )
+	public function deactivate( int|string $branchId ): void
 	{
 		$this->modelBranch->edit( $branchId, [
 			'status'		=> -2,
@@ -58,7 +60,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function reject( $branchId )
+	public function reject( int|string $branchId ): void
 	{
 		$this->modelBranch->edit( $branchId, [
 			'status'		=> -1,
@@ -69,7 +71,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch' );
 	}
 
-	public function add( $companyId = NULL )
+	public function add( $companyId = NULL ): void
 	{
 		$words			= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
@@ -111,7 +113,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->view->setData( array( 'companies' => $this->modelCompany->getAll() ) );
 	}
 
-	public function addImage( $branchId )
+	public function addImage( int|string $branchId ): void
 	{
 		try{
 			$image		= $this->request->get( 'image' );
@@ -175,9 +177,9 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function addTag( $branchId )
+	public function addTag( int|string $branchId ): void
 	{
-		$branch		= $this->checkBranch( $branchId );
+		$this->checkBranch( $branchId );
 		$tags		= explode( " ", trim( $this->request->get( 'tags' ) ) );
 		$list		= [];
 		if( $tags ){
@@ -196,7 +198,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( 'manage/company/branch/edit/'.$branchId );
 	}
 
-	public function edit( $branchId )
+	public function edit( int|string $branchId ): void
 	{
 		$config			= $this->env->getConfig();
 		$words			= (object) $this->getWords( 'msg' );
@@ -234,7 +236,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->view->setData(
 			array(
 				'branch'	=> $branch,
-				'companies' => $this->modelCompany->getAll( NULL, ['title' => 'ASC'] )
+				'companies' => $this->modelCompany->getAll( [], ['title' => 'ASC'] )
 			)
 		);
 		$this->view->addData( 'images', [] );//$modelImage->getAllByIndex( 'branchId', $branchId ) );
@@ -242,13 +244,13 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->addData( 'frontend', $this->frontend );
 	}
 
-	public function filter()
+	public function filter(): void
 	{
 /*		$this->messenger->noteSuccess( "Companies have been filtered." );
 */		$this->restart( './manage/company/branch' );
 	}
 
-	public function index( $branchId = NULL )
+	public function index( $branchId = NULL ): void
 	{
 		if( $branchId )
 			$this->restart( 'edit/'.$branchId, TRUE );
@@ -258,7 +260,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->view->addData( 'branches', $branches );
 	}
 
-	public function remove( $branchId )
+	public function remove( int|string $branchId ): void
 	{
 		$branch	= $this->modelBranch->get( $branchId );
 		if( !$branch ){
@@ -276,7 +278,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch' );
 	}
 
-	public function removeImage( $branchId, $imageId )
+	public function removeImage( int|string $branchId, int|string $imageId ): void
 	{
 		$image			= $this->modelImage->get( $imageId );
 		if( !$image )
@@ -290,7 +292,7 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
-	public function removeTag( $branchTagId )
+	public function removeTag( int|string $branchTagId ): void
 	{
 		$modelTag	= new Model_Branch_Tag( $this->env );
 		$tag		= $this->modelTag->get( $branchTagId );
@@ -310,12 +312,14 @@ class Controller_Manage_Company_Branch extends Controller
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
 	}
 
-	protected function checkBranch( $branchId )
+	protected function checkBranch( int|string $branchId ): object
 	{
-		if( !$this->modelBranch->get( $branchId ) ){
+		$branch	= $this->modelBranch->get( $branchId );
+		if( NULL === $branch ){
 			$words	= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorBranchInvalid );
 			$this->restart( NULL, TRUE );
 		}
+		return $branch;
 	}
 }

@@ -1,18 +1,21 @@
 <?php
 
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Article extends Controller
 {
-	protected $frontend;
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
-	protected $sessionPrefix;
+	protected Logic_Frontend $frontend;
+	protected Logic_Catalog $logic;
+	protected MessengerResource $messenger;
+	protected HttpRequest $request;
+	protected HttpPartitionSession $session;
+	protected string $sessionPrefix;
 
 	public function add(): void
 	{
@@ -125,7 +128,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		$this->addData( 'filters', $this->session->getAll( 'module.manage_catalog_article.filter.' ) );
 	}
 
-	public function filter( $reset = FALSE )
+	public function filter( $reset = FALSE ): void
 	{
 		$this->session->set( $this->sessionPrefix.'term', trim( $this->request->get( 'term' ) ) );
 		$this->session->set( $this->sessionPrefix.'author', trim( $this->request->get( 'author' ) ) );
@@ -154,7 +157,7 @@ class Controller_Manage_Catalog_Article extends Controller
 	public function index(): void
 	{
 		$articles	= $this->getFilteredArticles();
-		if( count( $articles ) === 1 ){
+		if( 1 === count( $articles ) ){
 			$article	= array_pop( $articles );
 			$this->restart( './manage/catalog/article/edit/'.$article->articleId );
 		}
@@ -330,7 +333,7 @@ class Controller_Manage_Catalog_Article extends Controller
 		}
 		if( $articleIds )
 			$conditions['articleId']	= $articleIds;
-		$offset		= $filter['offset'] ?? 0;
+		$offset		= $filters['offset'] ?? 0;
 		return $this->logic->getArticles( $conditions, $orders, [$offset, 50] );
 	}
 }

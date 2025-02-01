@@ -36,7 +36,7 @@ class View_Info_Blog extends View
 		$words 	= $env->getLanguage()->getWords( 'info/blog' );
 		$model	= new Model_Blog_Post( $env );
 		$post	= NULL;
-		if( $modeOrId === "random" ){
+		if( 'random' === $modeOrId ){
 			$number	= $model->countByIndex( 'status', 1 );
 			$index	= random_int( 1, $number ) - 1;
 			$orders	= ['postId' => 'DESC'];

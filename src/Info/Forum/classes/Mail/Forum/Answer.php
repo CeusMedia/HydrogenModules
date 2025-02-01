@@ -6,7 +6,19 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 {
 	protected function renderHtmlBody(): string
 	{
-		extract( $this->data );
+		/** @var Entity_User $owner */
+		$owner		= $this->data['owner'];
+		/** @var Entity_User $author */
+		$author		= $this->data['author'];
+		/** @var Entity_User $user */
+		$user		= $this->data['user'];
+		$config		= $this->data['config'];
+		$options	= $this->data['options'];
+		$thread		= $this->data['thread'];
+		$post		= $this->data['post'];
+		$posts		= $this->data['posts'];
+		$authors	= $this->data['authors'];
+
 		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
 
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );

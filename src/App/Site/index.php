@@ -18,16 +18,11 @@ $defaultTimezone	= 'Europe/Berlin';						//  default time zone
 //  --  NO NEED TO CHANGE BELOW  --  //
 //  -------------------------------  //
 
-if( isset( $configFile ) )									//  an alternative config file has been set
-	WebEnvironment::$configFile	= $configFile;				//  set alternative config file in environment
-if( isset( $classRouter ) )									//  an alternative router class has been set
-	WebEnvironment::$classRouter	= $classRouter;			//  set alternative router class in environment
-if( isset( $errorReporting ) )
-	error_reporting( $errorReporting );
-if( isset( $displayErrors ) )
-	ini_set( 'display_errors', $displayErrors );
-if( isset( $defaultTimezone ) )								//  an alternative time zone is defined
-	date_default_timezone_set( $defaultTimezone );			//  set alternative time zone
+WebEnvironment::$configFile		= $configFile;				//  set (possibly alternative) config file in environment
+WebEnvironment::$classRouter	= $classRouter;				//  set (possibly alternative) router class in environment
+error_reporting( $errorReporting );
+ini_set( 'display_errors', $displayErrors );
+date_default_timezone_set( $defaultTimezone );				//  set (possibly alternative) time zone
 
 try{
 	Loader::create()->setPath( $pathClasses )->register();	//  register autoloader for project classes

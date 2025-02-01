@@ -355,21 +355,12 @@ class Logic_User_Provision extends Logic
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
 		$oneDay	= 24 * 60 * 60;
 
-		switch( $unit ){
-			case 'd':
-				$factor		= $oneDay;
-				break;
-			case 'w':
-				$factor		= 7 * $oneDay;
-				break;
-			case 'm':
-				$factor		= 30 * $oneDay;
-				break;
-			case 'a':
-				$factor		= 365 * $oneDay;
-				break;
-		}
-		return $number * $factor;
+		return $number * $oneDay * match( $unit ){
+			'a'		=> 365,
+			'm'		=> 30,
+			'w'		=> 7,
+			default	=> 1,
+		};
 	}
 
 	/**
@@ -777,9 +768,7 @@ class Logic_User_Provision extends Logic
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );

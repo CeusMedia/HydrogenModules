@@ -10,7 +10,11 @@ class Controller_Provision_Rest extends Controller
 {
 	protected Logic_User_Provision $logic;
 
-	public function __construct( Environment $env, $setupView = TRUE )
+	/**
+	 *	@param		Environment			$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( Environment $env )
 	{
 		parent::__construct( $env, FALSE );
 	}

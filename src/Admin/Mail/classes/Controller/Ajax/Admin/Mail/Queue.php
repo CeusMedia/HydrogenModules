@@ -50,6 +50,7 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 		$rows	= [];
 		foreach( $this->statuses as $statusKey => $statusLabel ){
 			$row	= [];
+			/** @var object $lastRange */
 			foreach( array_reverse( $this->ranges, TRUE ) as $days => $label ){
 				$lastRange	= (object) [
 					'key'		=> $days,

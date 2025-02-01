@@ -53,13 +53,14 @@ class Controller_Admin_Mail_Template_Import extends Controller
 				$upload->checkVirus( TRUE );
 				if( $upload->getError() )
 					throw new RuntimeException( 'Upload failed' );
+
+				/** @var object $template */
 				$template	= json_decode( $upload->getContent() );
 				if( !$template )
 					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );
 				if( empty( $template->type ) || $template->type !== 'mail-template' )
 					throw new InvalidArgumentException( 'Uploaded file does not contain a template' );
 
-				/** @var array $data */
 				if( !empty( $template->version ) && $template->version == 2 )
 					$data	= $this->getDataFromExportV2( $template );
 				else if( empty( $template->entity ) )

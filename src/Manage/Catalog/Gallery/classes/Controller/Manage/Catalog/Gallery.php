@@ -69,8 +69,8 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'single'			=> TRUE,
 				'modifiedAt'		=> time(),
 			];
+			$imageId	= $this->modelImage->add( $data );
 			try{
-				$imageId	= $this->modelImage->add( $data );
 				$this->rerankImages( $categoryId );
 				if( $this->uploadImage( $imageId, $this->request->get( 'upload' ) ) ){
 					$this->messenger->noteSuccess( $words->successImageAdded );

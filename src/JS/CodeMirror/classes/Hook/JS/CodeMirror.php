@@ -139,7 +139,7 @@ CodeMirror.on(window, "resize", function() {
 			'force'			=> 10,
 		];
 		foreach( $criteria as $key => $value )
-			if( !empty( $payload[$key] ) && strtolower( $this->payload[$key] ) === $editor->key )
+			if( !empty( $this->payload[$key] ) && strtolower( $this->payload[$key] ) === $editor->key )
 				$editor->score	+= $value;
 
 //		if( !empty( $payload['format'] ) ){}
