@@ -5,20 +5,24 @@ use CeusMedia\HydrogenFramework\Hook;
 class Hook_Manage_My_User_Setting extends Hook
 {
 	/**
-	 *	...
+	 *	Applies module configuration values assigned to a user.
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function onSessionInit(): void
 	{
 		if( !$this->env->has( 'session' ) )													//  environment has no session support
 			return;
 		$userId	= (int) $this->env->getSession()->get( 'auth_user_id', '' );
-		if( 0 !== $userId ){																			//  a user is logged in
-			$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );	//  apply user configuration
-			foreach( $this->env->getConfig() as $key => $value )
-				if( $config->has( $key ) && $config->get( $key ) !== $value )
-					$this->env->getConfig()->set( $key, $value );
-		}
+		if( 0 === $userId )																			//  no user is logged in
+			return;
+
+		$config		= $this->env->getConfig();
+		$changed	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );  //  apply user configuration
+		$diff		= array_diff_assoc( $changed->getAll(), $config->getAll() );
+		foreach( $diff as $key => $value )
+			if( $config->has( $key ) )
+				$config->set( $key, $value );
 	}
 
 	/**
@@ -32,8 +36,8 @@ class Hook_Manage_My_User_Setting extends Hook
 	}
 
 	/**
-	 *    ...
-	 *	@return        void
+	 *	...
+	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */

@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
@@ -259,7 +260,8 @@ class Logic_FileBucket extends Logic
 		$file	= $this->get( $fileId );
 		if( !$file )
 			throw new DomainException( 'Given source file is not existing' );
-		@unlink( $this->getPath().$file->hash );
+
+		FileEditor::delete( $this->getPath().$file->hash );
 		return $this->model->remove( $fileId );
 	}
 

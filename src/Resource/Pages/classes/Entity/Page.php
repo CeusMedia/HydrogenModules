@@ -1,6 +1,8 @@
 <?php
 
-class Entity_Page
+use CeusMedia\HydrogenFramework\Entity;
+
+class Entity_Page extends Entity
 {
 	public int $pageId			= 0;
 	public int $parentId		= 0;
@@ -42,29 +44,11 @@ class Entity_Page
 
 	/**
 	 *	@param		array			$array
-	 *	@return		self
+	 *	@return		void
 	 */
-	public static function fromArray( array $array ): self
+	public static function presetDynamicValues( array & $array ): void
 	{
-		return self::mergeWithArray( new self(), $array );
-	}
-
-	/**
-	 *	@param		Entity_Page		$instance
-	 *	@param		array			$array
-	 *	@return		self
-	 */
-	public static function mergeWithArray( self $instance, array $array ): self
-	{
-		foreach( $array as $key => $value )
-			if( NULL !== $value && property_exists( $instance, $key ) )
-				$instance->{$key} = $value;
-		return $instance;
-	}
-
-	public function __construct()
-	{
-		$this->createdAt	= time();
+		$array['createdAt']	= time();
 	}
 }
 

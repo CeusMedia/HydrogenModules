@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
+/** @var View_Manage_Bookmark $view */
 /** @var object $bookmark */
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
@@ -21,7 +22,7 @@ return '
 		<div class="content-panel">
 			<h3>Lesezeichen</h3>
 			<div class="content-panel-inner">
-				'.$this->renderList( $bookmark->bookmarkId ).'
+				'.$view->renderList( $bookmark->bookmarkId ).'
 			</div>
 		</div>
 	</div>

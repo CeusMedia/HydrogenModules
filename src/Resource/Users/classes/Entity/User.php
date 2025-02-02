@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\Entity;
 class Entity_User extends Entity
 {
 	public int|string $userId;
-	public int|string $accountId	= 0;
+	public int|string|NULL $accountId	= 0;
 	public int|string $roleId		= 0;
 	public int|string $roomId		= 0;
 	public int|string $companyId	= 0;
