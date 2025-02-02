@@ -7,9 +7,14 @@ Handle exceptions on application level.
 Module to handle uncaught exceptions with redirect to an exception page.
 Is called by hook App::onException.
 Suggested for any web application if you do not have your own exception handling.
+
+Caught exceptions will be stored in a log file and user session.
+The user session data may be used on showing an error page.
+The log file will be imported into database by module Admin:Log:Exception.
+This module can be used to view all collected information about the exception.
 ]]></description>
 	<category>Server</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extract hook to class.</log>
@@ -23,6 +28,7 @@ Suggested for any web application if you do not have your own exception handling
 	<log version="0.3.6">Improve view and its actions.</log>
 	<log version="0.3.7">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
 	<log version="0.3.8">Code refactoring.</log>
+	<log version="0.3.9">Design a basic error page.</log>
 <!--	<log version="0.3.x">Make facts configurable.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>

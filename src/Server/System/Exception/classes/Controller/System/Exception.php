@@ -11,6 +11,7 @@ class Controller_System_Exception extends Controller
 		$session	= $this->env->getSession();
 		if( $session->has( 'exception' ) ){
 			$exception	= unserialize( $session->get( 'exception' ) );
+			print_m( $exception );
 			if( $session->has( 'exceptionRequest' ) ){
 				$this->addData( 'exceptionRequest', $session->get( 'exceptionRequest' ) );
 			}

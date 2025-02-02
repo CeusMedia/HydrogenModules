@@ -25,7 +25,7 @@ class Hook_System_Exception extends Hook
 			return;
 
 		$moduleConfig	= $env->getConfig()->getAll( 'module.server_system_exception.', TRUE );
-		if( !$moduleConfig->get( 'module.server_system_exception.active' ) )
+		if( !$moduleConfig->get( 'active' ) )
 			return;
 
 		$exception	= $this->payload['exception'] ?? new stdClass();
@@ -124,6 +124,20 @@ class Hook_System_Exception extends Hook
 	protected function storeExceptionInSession( Throwable $exception ): void
 	{
 		$session	= $this->env->getSession();
+		try{
+			$serial	= serialize( $exception );
+		}
+		catch( Error|Throwable ){
+			$serial	= serialize( (object) [
+				'class'		=> $exception::class,
+				'message'	=> $exception->getMessage(),
+				'code'		=> $exception->getCode(),
+				'file'		=> $exception->getFile(),
+				'line'		=> $exception->getLine(),
+				'trace'		=> $exception->getTraceAsString(),
+			] );
+		}
+		$session->set( 'exception', $serial );
 		$session->set( 'exception', serialize( (object) [
 			'message'	=> $exception->getMessage(),
 			'code'		=> $exception->getCode(),
