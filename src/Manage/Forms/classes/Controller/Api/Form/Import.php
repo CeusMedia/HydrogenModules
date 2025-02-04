@@ -37,6 +37,7 @@ class Controller_Api_Form_Import extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -44,9 +45,13 @@ class Controller_Api_Form_Import extends Controller
 		$this->modelRule	= new Model_Form_Import_Rule( $this->env );
 	}
 
-	protected function checkAuthentication( object $connection ): void
+	/**
+	 *	@param		Entity_Import_Connection $connection
+	 *	@return		void
+	 */
+	protected function checkAuthentication( Entity_Import_Connection $connection ): void
 	{
-		if( Model_Import_Connection::AUTH_TYPE_KEY === (int) $connection->authType ){
+		if( Model_Import_Connection::AUTH_TYPE_KEY === $connection->authType ){
 			$header	= $this->request->getHeader( 'X-API-Key', FALSE );
 			if( NULL === $header )
 				throw new RuntimeException( 'Access denied: Missing API key' );
@@ -57,13 +62,13 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param		object		$connector
+	 *	@param		Entity_Import_Connector		$connector
 	 *	@return		void
 	 */
-	protected function checkRequestMethodIsAllowed( object $connector ): void
+	protected function checkRequestMethodIsAllowed( Entity_Import_Connector $connector ): void
 	{
 		$requestMethod	= $this->request->getMethod();
-		$matchingMethod	= match( (int) $connector->type ){
+		$matchingMethod	= match( $connector->type ){
 			Model_Import_Connector::TYPE_PUSH_POST	=> $requestMethod->isPost(),
 			Model_Import_Connector::TYPE_PUSH_PUT	=> $requestMethod->isPut(),
 			default									=> FALSE,
@@ -74,10 +79,10 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param		object		$connector
+	 *	@param		Entity_Import_Connector		$connector
 	 *	@return		void
 	 */
-	protected function checkMimeTypeIsAllowed( object $connector ): void
+	protected function checkMimeTypeIsAllowed( Entity_Import_Connector $connector ): void
 	{
 		$setMimeTypes	= $connector->mimeTypes ?? '';
 		if( '' === $setMimeTypes )
@@ -90,13 +95,13 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param		object		$connector
-	 *	@param		object		$importRule
-	 *	@return		array
+	 *	@param		Entity_Import_Connector		$connector
+	 *	@param		Entity_Form_Import_Rule		$importRule
+	 *	@return		array<Entity_Import_SourceItem>
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getImportDataSets( object $connector, object $importRule ): array
+	protected function getImportDataSets( Entity_Import_Connector $connector, Entity_Form_Import_Rule $importRule ): array
 	{
 //		$clock		= new Clock();
 		$connection	= $this->logic->getConnectionInstanceFromId( $importRule->importConnectionId, $connector );
@@ -106,15 +111,16 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param		array		$results
-	 *	@param		object		$importRule
-	 *	@param		bool		$verbose
-	 *	@param		bool		$dryMode
-	 *	@return		int			Number of imported data sets
+	 *	@param		array						$results
+	 *	@param		Entity_Form_Import_Rule		$importRule
+	 *	@param		bool						$verbose
+	 *	@param		bool						$dryMode
+	 *	@return		int							Number of imported data sets
 	 *	@throws		ReflectionException
+	 *	@throws		JsonException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function importDataSets( array $results, object $importRule, bool $verbose, bool $dryMode ): int
+	protected function importDataSets( array $results, Entity_Form_Import_Rule $importRule, bool $verbose, bool $dryMode ): int
 	{
 		$valid		= [];
 		$errors		= [];
@@ -144,28 +150,31 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@return		?object
+	 *	@return		?Entity_Form_Import_Rule
 	 */
-	protected function tryToFindImportRuleByConnectionApiKey(): ?object
+	protected function tryToFindImportRuleByConnectionApiKey(): ?Entity_Form_Import_Rule
 	{
 		$apiKey	= $this->request->getHeader( 'X-API-Key', FALSE ) ?? '';
 		if( '' !== $apiKey ){
 			$connection	= $this->logic->getConnectionFromApiKey( $apiKey );
-			if( NULL !== $connection )
-				return $this->modelRule->getByIndex( 'importConnectionId', $connection->importConnectionId );
+			if( NULL !== $connection ){
+				/** @var ?Entity_Form_Import_Rule $rule */
+				$rule	= $this->modelRule->getByIndex( 'importConnectionId', $connection->importConnectionId );
+				return $rule;
+			}
 		}
 		return NULL;
 	}
 
 	/**
-	 *	@param		object		$importRule
-	 *	@return		object
+	 *	@param		Entity_Form_Import_Rule		$importRule
+	 *	@return		Entity_Import_Connector
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function tryToGetConnector( object $importRule ): object
+	protected function tryToGetConnector( Entity_Form_Import_Rule $importRule ): Entity_Import_Connector
 	{
 		$connector	= $this->logic->getConnectorFromConnectionId( $importRule->importConnectionId );
-		if( !in_array( (int) $connector->type, $this->allowedConnectorTypes, TRUE ) )
+		if( !in_array( $connector->type, $this->allowedConnectorTypes, TRUE ) )
 			$this->respondError( 401, 'Connection not allowed for push communication' );
 
 		$this->checkMimeTypeIsAllowed( $connector );
@@ -175,20 +184,22 @@ class Controller_Api_Form_Import extends Controller
 
 	/**
 	 *	@param		int|string		$importRuleId
-	 *	@return		object
+	 *	@return		Entity_Form_Import_Rule
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function tryToGetImportRule( int|string $importRuleId ): object
+	protected function tryToGetImportRule( int|string $importRuleId ): Entity_Form_Import_Rule
 	{
 		$importRule	= $this->tryToFindImportRuleByConnectionApiKey();
 		if( NULL === $importRule ){
 			if( 0 === (int) $importRuleId )
 				$this->respondError( 400, 'No import rule ID given' );
 
-			/** @var ?object $importRule */
+			/** @var ?Entity_Form_Import_Rule $importRule */
 			$importRule	= $this->modelRule->get( $importRuleId );
 			if( NULL === $importRule )
 				$this->respondError( 404, 'Access denied: Invalid ID given' );
+
+			/** @var Entity_Import_Connection $connection */
 			$connection	= $this->logic->getConnection( $importRule->importConnectionId );
 			$this->checkAuthentication( $connection );
 		}

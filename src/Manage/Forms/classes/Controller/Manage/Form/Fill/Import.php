@@ -98,13 +98,13 @@ class Controller_Manage_Form_Fill_Import extends Controller
 
 	/**
 	 *	@param		int|string		$importRuleId
-	 *	@return		object
+	 *	@return		Entity_Form_Import_Rule
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkImportRuleExists( int|string $importRuleId ): object
+	protected function checkImportRuleExists( int|string $importRuleId ): Entity_Form_Import_Rule
 	{
 		$model		= new Model_Form_Import_Rule( $this->env );
-		/** @var ?object $importRule */
+		/** @var ?Entity_Form_Import_Rule $importRule */
 		$importRule	= $model->get( $importRuleId );
 
 		if( NULL === $importRule ){
@@ -167,13 +167,13 @@ class Controller_Manage_Form_Fill_Import extends Controller
 	}
 
 	/**
-	 *	@param		object		$connector
-	 *	@param		object		$importRule
-	 *	@return		array
+	 *	@param		Entity_Import_Connector		$connector
+	 *	@param		Entity_Form_Import_Rule		$importRule
+	 *	@return		array<Entity_Import_SourceItem>
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getImportDataSets( object $connector, object $importRule ): array
+	protected function getImportDataSets( Entity_Import_Connector $connector, Entity_Form_Import_Rule $importRule ): array
 	{
 //		$clock		= new Clock();
 		$connection	= $this->logic->getConnectionInstanceFromId( $importRule->importConnectionId, $connector );
@@ -183,15 +183,14 @@ class Controller_Manage_Form_Fill_Import extends Controller
 	}
 
 	/**
-	 *	@param		array		$results
-	 *	@param		object		$importRule
-	 *	@param		bool		$verbose
-	 *	@param		bool		$dryMode
+	 *	@param		Entity_Import_SourceItem[]	$results
+	 *	@param		Entity_Form_Import_Rule		$importRule
+	 *	@param		bool						$verbose
+	 *	@param		bool						$dryMode
 	 *	@return		array
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function importDataSets( array $results, object $importRule, bool $verbose, bool $dryMode ): array
+	protected function importDataSets( array $results, Entity_Form_Import_Rule $importRule, bool $verbose, bool $dryMode ): array
 	{
 		$errors	= [];
 		foreach( $results as $result ){

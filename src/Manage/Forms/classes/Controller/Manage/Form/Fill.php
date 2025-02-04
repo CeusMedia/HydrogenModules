@@ -37,7 +37,7 @@ class Controller_Manage_Form_Fill extends Controller
 	public function confirm( string $fillId ): void
 	{
 		$fill	= $this->checkId( $fillId );
-		if( $fill->status !== Model_Form_Fill::STATUS_NEW ){
+		if( Model_Form_Fill::STATUS_NEW !== $fill->status ){
 			if( $fill->referer ){
 				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 				$this->restart( $fill->referer.$urlGlue.'rc=3', FALSE, NULL, TRUE );
@@ -157,6 +157,7 @@ class Controller_Manage_Form_Fill extends Controller
 			$page	= 0;
 		$orders		= ['fillId' => 'DESC'];
 		$limits		= [$page * $limit, $limit];
+		/** @var Entity_Form_Fill[] $fills */
 		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
 		$forms		= $this->modelForm->getAll( [], ['title' => 'ASC'] );
 
@@ -166,6 +167,7 @@ class Controller_Manage_Form_Fill extends Controller
 		}
 
 		$transferTargetMap  = [];
+		/** @var Entity_Form_Transfer_Target $target */
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$transferTargetMap[$target->formTransferTargetId]   = $target;
 		$this->addData( 'transferTargets', $transferTargetMap );
@@ -223,9 +225,10 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function remove( string $fillId ): void
 	{
-		$page		= (int) $this->request->get( 'page' );
+		$page	= (int) $this->request->get( 'page' );
 		if( !$fillId )
 			throw new DomainException( 'No fill ID given' );
+
 		/** @var ?Entity_Form_Fill $fill */
 		$fill	= $this->modelFill->get( $fillId );
 		if( NULL === $fill )
@@ -243,7 +246,7 @@ class Controller_Manage_Form_Fill extends Controller
 	public function resendManagerMails( string $fillId ): void
 	{
 		$this->logicFill->sendManagerResultMails( $fillId );
-		$page		= (int) $this->request->get( 'page' );
+		$page	= (int) $this->request->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
@@ -287,6 +290,7 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->logicMail			= Logic_Mail::getInstance( $this->env );
 		$this->logicFill			= new Logic_Form_FillManager( $this->env );
 
+		/** @var Entity_Form_Transfer_Target $target */
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}

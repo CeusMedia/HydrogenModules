@@ -44,6 +44,7 @@ class Controller_Manage_Import extends Controller
 	 */
 	public function edit( string $connectionId ): void
 	{
+		/** @var Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $connectionId );
 		if( NULL === $connection ){
 			$this->env->getMessenger()->noteError( 'Invalid Connection ID' );
@@ -67,12 +68,14 @@ class Controller_Manage_Import extends Controller
 			] );
 			$this->restart( NULL, TRUE );
 		}
+		/** @var Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $connectionId );
 		$this->addData( 'connection', $connection );
 	}
 
 	public function index(): void
 	{
+		/** @var Entity_Import_Connection[] $connection */
 		$connections	= $this->modelConnection->getAll();
 		$this->addData( 'connections', $connections );
 	}
@@ -81,6 +84,7 @@ class Controller_Manage_Import extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -88,6 +92,7 @@ class Controller_Manage_Import extends Controller
 		$this->modelConnector	= new Model_Import_Connector( $this->env );
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 
+		/** @var Entity_Import_Connector[] $connectors */
 		$connectors	= $this->modelConnector->getAll();
 		foreach( $connectors as $connector )
 			$this->connectorMap[$connector->importConnectorId]	= $connector;

@@ -64,10 +64,23 @@ class Controller_Manage_Form_Import extends Controller
 			$this->restart( NULL, TRUE );
 		}
 
+		/** @var ?Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
+		if( NULL === $connection ){
+			$this->env->getMessenger()->noteError( 'Related connections ID is invalid' );
+			$this->restart( NULL, TRUE );
+		}
+
+		/** @var ?Entity_Import_Connector $connector */
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
+		if( NULL === $connector ){
+			$this->env->getMessenger()->noteError( 'Related connector ID is invalid' );
+			$this->restart( NULL, TRUE );
+		}
 
 		$factory		= new ObjectFactory();
+
+		/** @var Logic_Import_Connector_Interface $remoteResource */
 		$remoteResource	= $factory->create( $connector->className, [$this->env] );
 		$remoteResource->setConnection( $connection )->connect();
 		$folders		= $remoteResource->getFolders( TRUE );

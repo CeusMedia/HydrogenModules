@@ -114,6 +114,7 @@ The form action will save the entered data and send mails according to rules.
 		<needs type="module">Resource_Forms</needs>
 		<needs type="module">UI_Helper_Forms</needs>
 		<needs type="module">UI_Helper_StatusBadge</needs>
+		<needs type="extension">php-imap</needs>
 	</relations>
 	<link xml:lang="de" access="acl" rank="45" path="manage/form">Formulare</link>
 	<link xml:lang="de" access="acl" rank="46" path="manage/form/fill">Einträge</link>

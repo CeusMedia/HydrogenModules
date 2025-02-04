@@ -17,8 +17,6 @@ class Controller_Manage_Form extends Controller
 	protected Model_Form_Transfer_Target $modelTransferTarget;
 	protected Model_Form_Transfer_Rule $modelTransferRule;
 	protected Model_Form_Import_Rule $modelImportRule;
-	protected Model_Import_Connector $modelImportConnector;
-	protected Model_Import_Connection $modelImportConnection;
 	protected string $basePath;
 
 	protected array $filters		= [
@@ -115,7 +113,10 @@ class Controller_Manage_Form extends Controller
 	public function confirm(): string
 	{
 		$fillId		= $this->request->get( 'fillId' );
+		/** @var Entity_Form_Fill $fill */
 		$fill		= $this->modelFill->get( $fillId );
+		// @todo check against NULL and throw exception
+
 		$this->modelFill->edit( $fillId, [
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'modifiedAt'	=> time(),
@@ -127,6 +128,7 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( string $formId ): void
 	{
@@ -164,6 +166,7 @@ class Controller_Manage_Form extends Controller
 			'formId'	=> $formId,
 		] ) );
 
+		/** @var Entity_Form_Fill[] $fills */
 		$fills	= $this->modelFill->getAll( ['formId' => $formId] );
 		$this->addData( 'fills', $fills );
 		$this->addData( 'hasFills', count( $fills ) > 0 );
@@ -349,13 +352,14 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'mode', (string) $mode );
 //		$helper	= new View_Helper_Form( $this->env );
 //		return $helper->setId( $formId )->render();
-		$this->addData( 'references', ['http://a.b.c']);
+		$this->addData( 'references', ['https://a.b.c']);
 	}
 
 	//  --  PROTECTED  --  //
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -368,8 +372,6 @@ class Controller_Manage_Form extends Controller
 		$this->modelTransferTarget		= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransferRule		= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelImportRule			= new Model_Form_Import_Rule( $this->env );
-		$this->modelImportConnector		= new Model_Import_Connector( $this->env );
-		$this->modelImportConnection	= new Model_Import_Connection( $this->env );
 
 		$module			= $this->env->getModules()->get( 'Manage_Forms' );
 		$mailDomains	= trim( $module->config['mailDomains']->value );
@@ -469,6 +471,7 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		string		$content
 	 *	@return		array<string,object>
+	 *	@throws		ReflectionException
 	 */
 	protected function getBlocksFromFormContent( string $content ): array
 	{

@@ -23,6 +23,7 @@ class Logic_Form_FillManager extends Logic_Form_Fill
 		$indices	= [$type.'Id' => $ids];
 		if( !is_null( $status ) )
 			$indices['status']	= $status;
+		/** @var Entity_Form_Fill[] $fills */
 		$fills	= $this->modelFill->getAllByIndices( $indices );
 		foreach( $fills as $fill ){
 			$fill->data	= json_decode( $fill->data, FALSE, 512, JSON_THROW_ON_ERROR );
