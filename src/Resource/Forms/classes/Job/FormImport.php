@@ -25,11 +25,16 @@ class Job_FormImport extends Job_Abstract
 //		Encoding::$decodeStrategy = Encoding::DECODE_STRATEGY_ICONV_TOLERANT;
 		$verbose		= in_array( 'verbose', $arguments ) || $this->parameters->get( 'verbose' );
 		$dryMode		= in_array( 'dry', $arguments ) || $this->parameters->get( 'dry' );
+		$connectorTypes	= [Model_Import_Connector::TYPE_PULL_ASYNC, Model_Import_Connector::TYPE_PULL_SYNC];
 		$errors			= [];
 		$importRules	= $this->getActiveFormImportRules();
 		foreach( $importRules as $importRule ){
+			/** @var Entity_Import_Connection $connection */
 			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
+			/** @var Entity_Import_Connector $connector */
 			$connector			= $this->modelConnector->get( $connection->importConnectorId );
+			if( !in_array( $connector->type, $connectorTypes, TRUE ) )
+				continue;
 			$connectionInstance	= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
 			$connectionInstance->setOptions( $this->jsonParser->parse( $importRule->options ) );
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
@@ -77,15 +82,13 @@ class Job_FormImport extends Job_Abstract
 		$importRules	= $this->getActiveFormImportRules();
 		foreach( $importRules as $importRule ){
 
-//			$connection			= $this->modelConnection->get( $importRule->importConnectionId );
-//			$connector			= $this->modelConnector->get( $connection->importConnectorId );
-
 			$connection		= $this->logicImport->getConnectionInstanceFromId( $importRule->importConnectionId );
 			$connection->setOptions( $this->jsonParser->parse( $importRule->options ) );
 
 			$searchCriteria		= explode( PHP_EOL, $importRule->searchCriteria );
 //			$clock				= new Clock();
 			$results			= $connection->find( $searchCriteria, [], [0, 10] );
+			/** @noinspection PhpComposerExtensionStubsInspection */
 			echo "The current read timeout is " . imap_timeout(IMAP_READTIMEOUT) . "\n";
 //			$connectionInstance->disconnect();
 			break;
