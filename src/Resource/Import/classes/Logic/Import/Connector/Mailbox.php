@@ -9,6 +9,7 @@ class Logic_Import_Connector_Mailbox extends Logic_Import_Connector_MailAbstract
 	 *	@param		array		$orders
 	 *	@param		array		$limit
 	 *	@return		array<string,Message>
+	 *	@throws		ReflectionException
 	 */
 	public function find( array $conditions, array $orders = [], array $limit = [] ): array
 	{

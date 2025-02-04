@@ -6,7 +6,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 {
 	protected Model_Import_Connection $modelConnection;
 
-	protected ?object $connection	= NULL;
+	protected ?Entity_Import_Connection $connection	= NULL;
 
 	protected ?object $options		= NULL;
 
@@ -14,23 +14,29 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	protected int $offset			= 0;
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limit
+	 *	@return		array<Entity_Import_SourceItem|object>
+	 */
 	abstract public function find( array $conditions, array $orders = [], array $limit = [] ): array;
 
 	abstract public function getFolders( bool $recursive = FALSE ): array;
 
 	/**
-	 *	@return		object|NULL
+	 *	@return		Entity_Import_Connection|NULL
 	 */
-	public function getConnection(): ?object
+	public function getConnection(): ?Entity_Import_Connection
 	{
 		return $this->connection;
 	}
 
 	/**
-	 *	@param		object		$connection
-	 *	@return		self
+	 *	@param		Entity_Import_Connection	$connection
+	 *	@return		static
 	 */
-	public function setConnection( object $connection  ): self
+	public function setConnection( Entity_Import_Connection $connection  ): static
 	{
 		$this->connection	= $connection;
 		return $this;
@@ -38,10 +44,10 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	/**
 	 *	@param		int|string		$connectionId
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setConnectionId( int|string $connectionId  ): self
+	public function setConnectionId( int|string $connectionId  ): static
 	{
 		$this->connection	= $this->modelConnection->get( $connectionId );
 		return $this;
@@ -49,9 +55,9 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	/**
 	 *	@param		int		$limit
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setLimit( int $limit ): self
+	public function setLimit( int $limit ): static
 	{
 		$this->limit	= $limit;
 		return $this;
@@ -59,9 +65,9 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	/**
 	 *	@param		object		$options
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setOptions( object $options ): self
+	public function setOptions( object $options ): static
 	{
 		$this->options	= $options;
 		return $this;
@@ -69,9 +75,9 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	/**
 	 *	@param		int		$offset
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setOffset( int $offset ): self
+	public function setOffset( int $offset ): static
 	{
 		$this->offset	= $offset;
 		return $this;
@@ -81,6 +87,7 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -93,21 +100,21 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limit
-	 *	@return		object{source: object{id: string, type: string, search: object{conditions: array, orders: array, limit: array}}, data: array}
+	 *	@return		Entity_Import_SourceItem
 	 */
-	protected function getEmptySourceItem( string $id, string $type, array $conditions, array $orders, array $limit ): object
+	protected function getEmptySourceItem( string $id, string $type, array $conditions, array $orders, array $limit ): Entity_Import_SourceItem
 	{
-		return (object) [
-			'source'	=> (object) [
+		return Entity_Import_SourceItem::fromArray( [
+			'data'		=> [],
+			'source'	=> Entity_Import_Source::fromArray( [
 				'id'		=> $id,
 				'type'		=> $type,
-				'search'	=> (object) [
+				'search'	=> Entity_Import_Search::fromArray( [
 					'conditions'	=> $conditions,
 					'orders'		=> $orders,
 					'limit'			=> $limit,
-				],
-			],
-			'data'		=> [],
-		];
+				] )
+			] ),
+		] );
 	}
 }

@@ -12,9 +12,9 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 	protected Connection $resource;
 
 	/**
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function connect(): self
+	public function connect(): static
 	{
 		if( !$this->connection )
 			throw new RuntimeException( 'No connection set' );

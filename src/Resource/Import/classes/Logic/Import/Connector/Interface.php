@@ -2,9 +2,9 @@
 interface Logic_Import_Connector_Interface
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function connect(): self;
+	public function connect(): static;
 
 	/**
 	 *	@return		void
@@ -17,7 +17,7 @@ interface Logic_Import_Connector_Interface
 	 */
 	public function getFolders( bool $recursive = FALSE ): array;
 
-	public function setConnection( object $connection );
+	public function setConnection( Entity_Import_Connection $connection );
 
 	public function setConnectionId( int|string $connectionId );
 }

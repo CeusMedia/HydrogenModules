@@ -54,5 +54,7 @@ class Model_Import_Connector extends Model
 		'className',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Import_Connector::class;
 }

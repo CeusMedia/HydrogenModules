@@ -1,11 +1,13 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+
 class Logic_Import_Connector_Controller extends Logic_Import_Connector_Abstract implements Logic_Import_Connector_Interface
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function connect(): self
+	public function connect(): static
 	{
 		return $this;
 	}
@@ -30,11 +32,13 @@ class Logic_Import_Connector_Controller extends Logic_Import_Connector_Abstract 
 			throw new RuntimeException( 'No connection set' );
 
 		$request	= $this->env->getRequest();
+		if( !$request instanceof HttpRequest )
+			throw new RuntimeException( 'Access denied: HTTP requests, only' );
 
 //		if( '' !== ( $this->connection->hostPath ?? '' ) && $request->getUrl() !== $this->connection->hostPath )
 //			throw new RuntimeException( 'Access denied: Path mismatch' );
 
-		if( Model_Import_Connection::AUTH_TYPE_KEY === (int) $this->connection->authType ){
+		if( Model_Import_Connection::AUTH_TYPE_KEY === $this->connection->authType ){
 			$header	= $request->getHeader( 'X-API-Key', FALSE );
 			if( NULL === $header )
 				throw new RuntimeException( 'Access denied: Missing API key' );
@@ -42,8 +46,8 @@ class Logic_Import_Connector_Controller extends Logic_Import_Connector_Abstract 
 				throw new RuntimeException( 'Access denied: Invalid API key' );
 		}
 
-		$rawData	= $request->getRawPostData();
-		if( '' === trim( $rawData ) )
+		$rawData	= trim( $request->getRawPostData() );
+		if( '' === $rawData )
 			throw new RuntimeException( 'Missing JSON in POST body' );
 
 		if( !str_starts_with( $rawData, '[' ) )

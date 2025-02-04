@@ -53,5 +53,7 @@ class Model_Import_Connection extends Model
 		'authKey',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Import_Connection::class;
 }

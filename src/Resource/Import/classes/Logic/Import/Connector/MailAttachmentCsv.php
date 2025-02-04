@@ -8,7 +8,7 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limit
-	 *	@return		array
+	 *	@return		array<Entity_Import_SourceItem>
 	 *	@throws		ReflectionException
 	 */
 	public function find( array $conditions, array $orders = [], array $limit = [] ): array
@@ -28,29 +28,27 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 					continue;
 				$item->data[$fileName]	= $this->readAttachmentFromMessagePart( $part );
 			}
-			if( count( $item->data ) ){
-				$item	= $this->fixEncodingOnSourceItemWithDataFiles( $item );
-				$list[]	= $item;
-			}
+			if( [] === $item->data )
+				$list[]	= $this->fixEncodingOnSourceItemWithDataFiles( $item );
 		}
 		return $list;
 	}
 
 	/**
-	 * @param object $item
-	 * @return object
+	 *	@param		Entity_Import_SourceItem		$item
+	 *	@return		Entity_Import_SourceItem
 	 */
-	protected function fixEncodingOnSourceItemWithDataFiles( object $item ): object
+	protected function fixEncodingOnSourceItemWithDataFiles( Entity_Import_SourceItem $item ): Entity_Import_SourceItem
 	{
 		$clone	= clone $item;
-		if (isset($this->options->encoding) && $this->options->encoding !== 'UTF-8') {
-			foreach ($clone->data as $fileName => $dataSet) {
-				foreach ($dataSet as $dataSetId => $data) {
-					$data2 = [];
-					foreach ($data as $key => $value) {
-						$key = iconv($this->options->encoding, 'UTF-8', $key);
-						$value = iconv($this->options->encoding, 'UTF-8', $value);
-						$data2[$key] = $value;
+		if( isset( $this->options->encoding ) && 'UTF-8' !== $this->options->encoding ){
+			foreach( $clone->data as $fileName => $dataSet ){
+				foreach( $dataSet as $dataSetId => $data ){
+					$data2	= [];
+					foreach( $data as $key => $value ){
+						$key	= iconv( $this->options->encoding, 'UTF-8', $key );
+						$value	= iconv( $this->options->encoding, 'UTF-8', $value );
+						$data2[$key]	= $value;
 					}
 					$clone->data[$fileName][$dataSetId] = $data2;
 				}
@@ -62,7 +60,6 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 	/**
 	 *	@param		MessagePartAttachment		$part
 	 *	@return		array|NULL
-	 *	@throws		ReflectionException
 	 */
 	protected function readAttachmentFromMessagePart( MessagePartAttachment $part ): ?array
 	{

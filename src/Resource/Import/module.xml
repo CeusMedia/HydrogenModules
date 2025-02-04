@@ -4,7 +4,7 @@
 	<subtitle>Provider for import connections.</subtitle>
 	<description><![CDATA[]]></description>
 	<category>Resource</category>
-	<version>0.2.7</version>
+	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Add mailbox as first connector.</log>
@@ -14,9 +14,15 @@
 	<log version="0.2.5">Adjust to changes in accessing mailboxes.</log>
 	<log version="0.2.6">Add import connector adapter to use HTTP requests.</log>
 	<log version="0.2.7">Extract specific import logic to project module.</log>
+	<log version="0.2.8">Add model entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Entity/Import/Connection.php</class>
+		<class>Entity/Import/Connector.php</class>
+		<class>Entity/Import/Search.php</class>
+		<class>Entity/Import/Source.php</class>
+		<class>Entity/Import/SourceItem.php</class>
 		<class>Logic/Import.php</class>
 		<class>Logic/Import/Connector/Abstract.php</class>
 		<class>Logic/Import/Connector/Controller.php</class>

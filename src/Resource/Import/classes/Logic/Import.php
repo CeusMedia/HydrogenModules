@@ -28,22 +28,25 @@ class Logic_Import extends Logic
 
 	/**
 	 *	@param		int|string		$connectionId
-	 *	@return		?object
+	 *	@return		?Entity_Import_Connection
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getConnection( int|string $connectionId ): ?object
+	public function getConnection( int|string $connectionId ): ?Entity_Import_Connection
 	{
-		return $this->modelConnection->get( $connectionId );
+		/** @var ?Entity_Import_Connection $connection */
+		$connection	= $this->modelConnection->get( $connectionId );
+		return $connection;
 	}
 
 	/**
 	 *	Tries to find exactly one connection by API key.
 	 *	Will only look at enabled connections.
 	 *	@param		string		$apiKey
-	 *	@return		?object
+	 *	@return		?Entity_Import_Connection
 	 */
-	public function getConnectionFromApiKey( string $apiKey ): ?object
+	public function getConnectionFromApiKey( string $apiKey ): ?Entity_Import_Connection
 	{
+		/** @var Entity_Import_Connection[] $connections */
 		$connections	= $this->modelConnection->getAllByIndices( [
 			'authType'	=> Model_Import_Connection::AUTH_TYPE_KEY,
 			'status'	=> Model_Import_Connection::STATUS_ENABLED,
@@ -54,22 +57,24 @@ class Logic_Import extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$connectionId
-	 *	@param		?object			$connector			Connector data object, optional, if already available
+	 *	@param		int|string					$connectionId
+	 *	@param		?Entity_Import_Connector	$connector			Connector data object, optional, if already available
 	 *	@return		Logic_Import_Connector_Interface
-	 *	@throws		RangeException			if connection ID is invalid
+	 *	@throws		RangeException				if connection ID is invalid
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getConnectionInstanceFromId( int|string $connectionId, ?object $connector = NULL ): Logic_Import_Connector_Interface
+	public function getConnectionInstanceFromId( int|string $connectionId, ?Entity_Import_Connector $connector = NULL ): Logic_Import_Connector_Interface
 	{
 		if( !isset( $this->connections[$connectionId] ) ){
-			/** @var object $connection */
+			/** @var ?Entity_Import_Connection $connection */
 			$connection	= $this->modelConnection->get( $connectionId );
 			if( !$connection )
 				throw new RangeException( 'Invalid connection ID' );
+
+			/** @var Entity_Import_Connector $connector */
 			$connector	= $connector ?? $this->modelConnector->get( $connection->importConnectorId  );
-			if( (int) $connector->status !== Model_Import_Connector::STATUS_ENABLED )
+			if( Model_Import_Connector::STATUS_ENABLED !== $connector->status )
 				throw new NotEnabledException( 'Connector "'.$connector->title.'" is not enabled' );
 
 			/** @var Logic_Import_Connector_Interface $instance */
@@ -82,31 +87,34 @@ class Logic_Import extends Logic
 
 	/**
 	 *	@param		int|string		$connectionId
-	 *	@return		?object
+	 *	@return		?Entity_Import_Connector
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getConnectorFromConnectionId( int|string $connectionId ): ?object
+	public function getConnectorFromConnectionId( int|string $connectionId ): ?Entity_Import_Connector
 	{
+		/** @var ?Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $connectionId );
-		if( !$connection )
+		if( NULL === $connection )
 			throw new RangeException( 'Invalid connection ID' );
-		return $this->modelConnector->get( $connection->importConnectorId  );
+		/** @var Entity_Import_Connector $connector */
+		$connector	= $this->modelConnector->get( $connection->importConnectorId  );
+		return $connector;
 	}
 
 	/**
 	 *	...
-	 *	@param		object		$importRule			Data object of form input rule
-	 *	@param		array		$importData			Data from connected import source
-	 *	@param		boolean		$verbose			Show details in CLI output, default: no
-	 *	@param		boolean		$dryMode			Flag: do not change anything, default: no
-	 *	@return		integer		Fill ID
-	 *	@throws		RuntimeException				if not data given
-	 *	@throws		RuntimeException				if parsing JSON of rule failed
+	 *	@param		Entity_Form_Import_Rule	$importRule		Data object of form input rule
+	 *	@param		array					$importData		Data from connected import source
+	 *	@param		boolean					$verbose		Show details in CLI output, default: no
+	 *	@param		boolean					$dryMode		Flag: do not change anything, default: no
+	 *	@return		integer					Fill ID
+	 *	@throws		RuntimeException		if not data given
+	 *	@throws		RuntimeException		if parsing JSON of rule failed
 	 *	@throws		ReflectionException
-	 *	@throws		JsonException					if encoding sent data as JSON failed
+	 *	@throws		JsonException			if encoding sent data as JSON failed
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function importData( object $importRule, array $importData, bool $verbose, bool $dryMode ): int
+	public function importData( Entity_Form_Import_Rule $importRule, array $importData, bool $verbose, bool $dryMode ): int
 	{
 		if( !count( $importData ) )
 			throw new RuntimeException( 'No import data given.' );
@@ -160,6 +168,7 @@ class Logic_Import extends Logic
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
