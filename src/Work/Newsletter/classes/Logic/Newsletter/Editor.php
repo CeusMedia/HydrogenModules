@@ -216,8 +216,8 @@ return $html;
 				$this->modelReaderLetter->remove( $letter->newsletterReaderLetterId );
 			}
 			$this->modelReaderGroup->removeByIndex( 'newsletterGroupId', $groupId );
-			if( !$this->getGroupsOfReader( $letter->newsletterReaderId ) )
-				$this->modelReader->remove( $letter->newsletterReaderId );
+			if( !$this->getGroupsOfReader( $reader->newsletterReaderId ) )
+				$this->modelReader->remove( $reader->newsletterReaderId );
 		}
 		return $this->modelGroup->remove( $groupId );
 	}

@@ -105,7 +105,7 @@ class Server extends WebSite
 			$data['exception']	= $exception;
 			try{
 				if( $config->get( 'module.server_json.exception.serialize' ) )
-					$data['serial']		= @serialize( $e );
+					$data['serial']		= @serialize( $exception );
 			}
 			catch( PDOException $e ){}
 		}

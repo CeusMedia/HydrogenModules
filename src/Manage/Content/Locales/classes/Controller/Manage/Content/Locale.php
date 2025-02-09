@@ -223,10 +223,11 @@ class Controller_Manage_Content_Locale extends Controller
 	protected function getLanguages(): array
 	{
 		$index	= new FolderLister( $this->basePath );
+		$list	= [];
 		foreach( $index->getList() as $folder )
-			$languages[]	= $folder->getFilename();
-		natcasesort( $languages );
-		return $languages;
+			$list[]	= $folder->getFilename();
+		natcasesort( $list );
+		return $list;
 	}
 
 	protected function indexFiles(): void

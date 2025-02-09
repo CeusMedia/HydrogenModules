@@ -116,13 +116,13 @@ class Job_Newsletter extends Job_Abstract
 	}
 
 	/**
-	 *	@param		bool		$verbose
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function send( bool $verbose = FALSE ): void
+	public function send(): void
 	{
+		$verbose	= (bool) $this->parameters->get( '--verbose', TRUE );
 		$words		= (object) $this->words->send;												//  get words or like date formats
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
 		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail

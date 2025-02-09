@@ -76,16 +76,14 @@ class Controller_Work_Note extends Controller
 
 	/**
 	 * @param $noteId
-	 * @param $tagId
 	 * @return void
 	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addLink( $noteId, $tagId = NULL ): void
+	public function addLink( $noteId ): void
 	{
-		if( (int) $tagId < 1 )
-			$linkId	= $this->logic->createLink( $this->request->get( 'link_url' ), FALSE );
+		$words	= (object) $this->getWords( 'msg' );
+		$linkId	= $this->logic->createLink( $this->request->get( 'link_url' ), FALSE );
 		$this->logic->addLinkToNote( $linkId, $noteId, $this->request->get( 'link_title' ), FALSE );
-		$words		= (object) $this->getWords( 'msg' );
 		$this->messenger->noteSuccess( $words->successNoteLinkAdded );
 		$this->restart( './work/note/edit/'.$noteId );
 	}

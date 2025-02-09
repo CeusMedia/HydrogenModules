@@ -134,7 +134,8 @@ class Model_Config_Page
 		}, ARRAY_FILTER_USE_BOTH );
 		if( [] === $changes )
 			return TRUE;
-		$this->pages[$pageId]	= Entity_Page::mergeWithArray( $this->pages[$pageId], $changes );
+		foreach( $changes as $key => $value )
+			$this->pages[$pageId]->set( $key, $value );
 		return $this->savePages();
 	}
 

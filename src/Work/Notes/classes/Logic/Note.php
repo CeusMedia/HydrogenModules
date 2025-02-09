@@ -271,7 +271,7 @@ class Logic_Note extends Logic
 			$notes		= $this->modelNoteTag->getAllByIndices( $indices );
 			foreach( $notes as $note ){
 				if( $note->noteId != $noteId ){
-					if( !isset( $list[$note->noteId] ) )
+					if( !isset( $relatedNoteIds[$note->noteId] ) )
 						$relatedNoteIds[$note->noteId]	= 0;
 					$relatedNoteIds[$note->noteId]++ ;
 				}

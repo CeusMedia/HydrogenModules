@@ -236,7 +236,7 @@ class Logic_Project extends Logic
 							'project'	=> $this->getProject( $projectId ),
 							'user'		=> $user,
 						);
-						$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
+						$mail	= new Mail_Manage_Project_Members( $this->env, $data );
 						$logicMail->handleMail( $mail, $user, $language->getLanguage() );
 					}
 				}

@@ -31,7 +31,9 @@ class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 		//  --  TASKS  --  //
 		$tasks		= $w->textNoTasks;
 		if( count( $data['tasks'] ) ){
-			$helper		= new View_Helper_Work_Mission_List( $this->env, $data['tasks'], $words );
+			$helper		= new View_Helper_Work_Mission_List( $this->env );
+			$helper->setMissions( $data['tasks'] );
+			$helper->setWords( $words );
 			$rows		= $helper->renderRows( 0 );
 			$colgroup	= HtmlElements::ColumnGroup( "125", "" );
 			$attributes	= ['class' => 'table-mail table-mail-tasks'];

@@ -124,6 +124,7 @@ class Controller_Info_Mail_Group extends Controller
 				$group		= $this->logic->getGroup( $groupId, TRUE, FALSE );
 			else if( $address )
 				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
+
 			if( !isset( $group ) )
 				$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
 			else{
@@ -159,22 +160,22 @@ class Controller_Info_Mail_Group extends Controller
 						$registered	= TRUE;
 					}
 				}
-			}
-			if( $registered ){
-				$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
+				if( $registered ){
+					$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
 
-				$member	= $this->logic->getGroupMember( $memberId );
-				$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, [
-					'member'	=> $member,
-					'group'		=> $group,
-					'action'	=> $action,
-				] );
-				$receiver	= (object) ['email' => $member->address];
-				$language	= $this->env->getLanguage()->getLanguage();
-				$this->logicMail->appendRegisteredAttachments( $mail, $language );
-				$this->logicMail->sendMail( $mail, $receiver );
-				$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
-				$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
+					$member	= $this->logic->getGroupMember( $memberId );
+					$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, [
+						'member'	=> $member,
+						'group'		=> $group,
+						'action'	=> $action,
+					] );
+					$receiver	= (object) ['email' => $member->address];
+					$language	= $this->env->getLanguage()->getLanguage();
+					$this->logicMail->appendRegisteredAttachments( $mail, $language );
+					$this->logicMail->sendMail( $mail, $receiver );
+					$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
+					$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
+				}
 			}
 		}
 		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;

@@ -71,7 +71,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				$this->helperFacts->add( 'dayEnd', $weekdayEnd.', '.$dateEnd );
 			}
 			$timeRange	= $timeStart.' - '.$timeEnd;
-			$timeRange	= $this->labels->labelTime_prefix.$timeRange.$this->labels->labelTime_suffix;
+			$timeRange	= $this->labels['labelTime_prefix'].$timeRange.$this->labels['labelTime_suffix'];
 			$this->helperFacts->add( 'time', $timeRange );
 //			$helperFacts->add( 'timeStart', date( 'H:i', $timestampStart ) );
 //			$helperFacts->add( 'timeEnd', date( 'H:i', $timestampEnd ) );
