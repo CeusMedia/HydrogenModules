@@ -122,8 +122,11 @@ die;*/
 				$timestampTo	= strtotime( $filterStartTo.' 23:59:59' );
 				$conditions['ranAt']		= '<= '.$timestampTo;
 			}
-			if( $filterStartFrom && $filterStartTo )
+			if( $filterStartFrom && $filterStartTo ){
+				/** @var int $timestampStart */
+				/** @var int $timestampTo */
 				$conditions['ranAt']		= '>< '.$timestampStart.' & '.$timestampTo;
+			}
 		}
 
 		$total		= $this->modelRun->count( $conditions );

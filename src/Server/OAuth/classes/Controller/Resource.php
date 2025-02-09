@@ -7,7 +7,8 @@ class Controller_Resource extends Controller
 {
 	public function __construct( WebEnvironment $env, $setupView = TRUE )
 	{
-		parent::__construct( $env, FALSE );
+		/** @noinspection PhpBooleanCanBeSimplifiedInspection */
+		parent::__construct( $env, $setupView && FALSE );
 	}
 
 	/**

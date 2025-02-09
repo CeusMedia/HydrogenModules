@@ -212,7 +212,7 @@ abstract class Mail_Abstract
 	public function initTransport( bool $verbose = FALSE ): static
 	{
 		if( empty( $this->logicMail ) )
-			$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
+			$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
 		switch( strtolower( $options->get( 'type' ) ) ){
 			case 'smtp':
@@ -257,6 +257,7 @@ abstract class Mail_Abstract
 	 *	@access		public
 	 *	@param		string		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendToUser( string $userId ): bool
@@ -328,7 +329,7 @@ abstract class Mail_Abstract
 			'title'	=> $this->env->getConfig()->get( 'app.name' ),
 			'host'	=> $host,
 		]] );
-		$this->mail->setSubject( $subject, $this->encodingSubject );
+		$this->mail->setSubject( $subject );
 		return $this;
 	}
 
@@ -490,7 +491,7 @@ abstract class Mail_Abstract
 					throw new NotSupportedException( 'Not implemented yet' );
 				else{
 					if( !file_exists( $this->env->uri.$image ) ){
-//						throw new RuntimeException( 'Loading image from "'.$image.'" failed' );
+						$this->env->getLog()->log( 'error', 'Loading image from "'.$image.'" failed' );
 						$messenger->noteError( 'Loading image from "'.$this->env->uri.$image.'" failed.' );
 						continue;
 					}

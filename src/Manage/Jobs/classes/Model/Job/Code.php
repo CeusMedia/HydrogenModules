@@ -8,10 +8,12 @@ use CeusMedia\PhpParser\Parser\Regular as PhpParser;
 
 class Model_Job_Code
 {
+	protected Environment $env;
 	protected array $classes	= [];
 
 	public function __construct( Environment $env )
 	{
+		$this->env	= $env;
 	}
 
 	public function getClassesNames(): array

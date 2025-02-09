@@ -23,6 +23,8 @@ class Environment extends WebEnvironment
 	 *	Constructor, sets up all resources.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function __construct()
 	{
@@ -42,12 +44,12 @@ class Environment extends WebEnvironment
 		$this->initPage();
 		$this->__onInit();																			//  call init event (implemented by extending classes)
 		if( $this->getModules()->has( 'Resource_Database' ) )
-			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
+			$this->getDatabase()->query( 'SET NAMES "utf8"' );												//  ...
 	}
 
 	public function get( string $key, bool $strict = TRUE ): ?object
 	{
-		if( $key == "dbc" )
+		if( 'dbc' === $key )
 			return $this->getDatabase();
 		return parent::get( $key, $strict );
 	}

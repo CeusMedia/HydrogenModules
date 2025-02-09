@@ -10,6 +10,10 @@ class View_Helper_Oauth_ProviderButtons
 	protected string $linkPath			= './auth/local/login';
 	protected string $dropdownLabel		= 'more';
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env				= $env;

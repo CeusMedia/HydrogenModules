@@ -35,7 +35,7 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 
 //		$this->customer		= $this->logicShop->getOrderCustomer( $this->order->orderId );
 
-		foreach( $this->order->positions as $nr => $position ){
+		foreach( $this->order->positions as $position ){
 			$bridge				= $this->logicBridge->getBridgeObject( (int) $position->bridgeId );
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}

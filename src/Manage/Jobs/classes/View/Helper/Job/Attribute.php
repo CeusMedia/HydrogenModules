@@ -118,11 +118,12 @@ class View_Helper_Job_Attribute
 				$labelClass	= static::SCHEDULE_STATUS_CLASSES[$this->object->status];
 				$labelText	= $this->words['job-schedule-statuses'][$this->object->status];
 				break;
+			default:
+				throw new InvalidArgumentException( 'Invalid attribute' );
 		}
 		$icon	= HtmlTag::create( 'i', '', ['class' => $iconClass] );
 		$label	= $iconClass ? $icon.'&nbsp;'.$labelText : $labelText;
-		$label	= HtmlTag::create( 'span', $label, ['class' => $labelClass] );
-		return $label;
+		return HtmlTag::create( 'span', $label, ['class' => $labelClass] );
 	}
 
 	public function setAttribute( int $attribute ): self

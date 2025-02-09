@@ -222,8 +222,8 @@ class Controller_Manage_My_Company_Branch extends Controller
 	 */
 	protected function checkBranch( int|string $branchId ): object
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		if( !$this->modelBranch->get( $branchId ) ){
-			$words	= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorBranchInvalid );
 			$this->restart( NULL, TRUE );
 		}

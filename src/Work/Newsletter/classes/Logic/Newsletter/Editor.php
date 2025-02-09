@@ -198,6 +198,7 @@ return $html;
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		bool
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeGroup( int|string $groupId ): bool

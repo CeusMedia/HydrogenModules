@@ -5,10 +5,11 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 class Controller_Ajax_Work_Time extends AjaxController
 {
 	/**
-	 * @param string $panelId
-	 * @return void
-	 * @throws JsonException
-	 * @throws ReflectionException
+	 *	@param		string		$panelId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDashboardPanel( string $panelId ): void
 	{

@@ -91,10 +91,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $tagId
-	 * @param int $page
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		string		$tagId
+	 *	@param		int			$page
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addSearchTag( string $tagId, int $page = 0 ): void
 	{

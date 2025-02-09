@@ -11,7 +11,6 @@ class Mail_Info_Mail_Group_Member_Activated extends Mail_Abstract
 		$sender->setName( $data['group']->title );
 		$this->setSender( $sender );
 
-		$member	= $data['member']->title ?: $data['member']->address;
 		$this->setSubject( 'Mitgliedschaft in der Gruppe "'.$data['group']->title.'" aktiviert' );
 
 		$data['appTitle']	= $wordsMain['main']['title'];

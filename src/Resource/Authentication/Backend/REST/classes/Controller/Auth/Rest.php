@@ -188,8 +188,9 @@ class Controller_Auth_Rest extends Controller
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	public function register()
+	public function register(): void
 	{
+		$words		= (object) $this->getWords( 'register' );
 		$data	= [];
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAllFromSource( 'POST', TRUE );
