@@ -94,11 +94,9 @@ abstract class Mail_Abstract
 	 *	@access		public
 	 *	@param		Environment		$env			Environment object
 	 *	@param		array			$data			Map of template mail data
-	 *	@param		boolean			$defaultStyle	Flag: load default mail style file
-	 *	@todo		resolve todos below after all modules have adjusted
 	 *	@throws		ReflectionException
 	 */
-	public function __construct( Environment $env, array $data = [], bool $defaultStyle = TRUE )
+	public function __construct( Environment $env, array $data = [] )
 	{
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );

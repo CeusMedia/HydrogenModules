@@ -66,7 +66,7 @@ class Job_Mail_Group extends Job_Abstract
 						if( !$this->dryMode )
 							$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
-					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, ['group' => $group] );
 					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address
@@ -136,7 +136,7 @@ class Job_Mail_Group extends Job_Abstract
 							$this->logicMail->handleMail( $mail, $receiver, $language );
 						$this->out( '  - Member: "'.$entry->title.'" <'.$entry->address.'>' );
 					}
-					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, ['group' => $group] );
 					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address

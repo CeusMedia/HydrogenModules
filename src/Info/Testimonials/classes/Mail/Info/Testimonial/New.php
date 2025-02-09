@@ -9,7 +9,7 @@ class Mail_Info_Testimonial_New extends Mail_Abstract
 	protected function generate(): static
 	{
 		$data			= $this->data;
-		$config			= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );
+//		$config			= $this->env->getConfig()->getAll( 'module.info_testimonials.', TRUE );
 		$words			= $this->env->getLanguage()->getWords( 'info/testimonial' );
 
 //		$data['url']	= $this->env->url.'manage/testimonial/edit/'.$data['entry']->testimonialId;

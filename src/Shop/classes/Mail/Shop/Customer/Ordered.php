@@ -69,7 +69,6 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 
 //		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $this->data );
 
-		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
 
 		$panelPayment	= $this->loadContentFile( $filePayment, [
@@ -112,7 +111,6 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
-		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
 		$panelPayment	= $this->loadContentFile( $filePayment, [
 			'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),

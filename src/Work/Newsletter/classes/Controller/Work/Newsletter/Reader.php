@@ -235,6 +235,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				foreach( array_values( $readers ) as $nr => $reader ){
 					$row	= [];
 					foreach( $headers as $header => $toBeQuoted ){
+						$value	= $reader->$header ?? '';
 						if( $header === 'nr' )
 							$value	= $nr + 1;
 						else if( $header === 'id' )
@@ -251,8 +252,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 								$list[]	= $group->title;
 							$value	= join( ',', $list );
 						}
-						else
-							$value	= $reader->$header ?? '';
 
 						if( $toBeQuoted !== NULL )
 							$value	= $toBeQuoted ? '"'.$value.'"' : $value;

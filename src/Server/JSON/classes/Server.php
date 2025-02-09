@@ -107,7 +107,7 @@ class Server extends WebSite
 				if( $config->get( 'module.server_json.exception.serialize' ) )
 					$data['serial']		= @serialize( $exception );
 			}
-			catch( PDOException $e ){}
+			catch( PDOException ){}
 		}
 
 	//	$data['requestHeaders']	= $request->headers->toArray();
