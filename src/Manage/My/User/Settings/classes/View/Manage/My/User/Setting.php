@@ -90,6 +90,7 @@ class View_Manage_My_User_Setting extends View
 				break;
 			case 'string':
 			case 'password':
+			default:
 				if( $config->values ){
 					$labels		= array_combine( $config->values, $config->values );
 					foreach( $config->values as $valueKey ){

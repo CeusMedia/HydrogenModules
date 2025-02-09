@@ -34,13 +34,6 @@ class View_Helper_Work_Mission_Export_Ical extends ViewHelper
 		$calendar->addChild( new XmlNode( 'VERSION', '2.0' ) );
 		foreach( $this->missions as $mission ){
 			switch( $mission->type ){
-				case 0:
-					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
-					$node	= new XmlNode( 'VTODO' );
-					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
-					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
-					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
-					break;
 				case 1:
 					$node	= new XmlNode( 'VEVENT' );
 					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
@@ -65,6 +58,14 @@ class View_Helper_Work_Mission_Export_Ical extends ViewHelper
 						$datetime	= date( "Ymd\THis", strtotime( $day ) );
 						$node->addChild( new XmlNode( 'DTEND', $datetime ) );
 					}
+					break;
+				case 0:
+				default:
+					$date	= date( "Ymd", strtotime( $mission->dayStart ) + 24 * 60 * 60 -1 );
+					$node	= new XmlNode( 'VTODO' );
+					$node->addChild( new XmlNode( 'UID', md5( $mission->missionId ).'@'.$this->env->host ) );
+					$node->addChild( new XmlNode( 'DUE', $date, ['VALUE' => 'DATE'] ) );
+					$node->addChild( new XmlNode( 'STATUS', $statesTask[$mission->status] ) );
 					break;
 			}
 			$modelProject	= new Model_Project( $this->env );

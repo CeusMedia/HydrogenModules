@@ -32,7 +32,7 @@ if( class_exists( '\Environment_Console' ) )					//  an individual console envir
 //if( class_exists( 'Environment' ) )
 //	Maintainer::$classEnvironment	= 'Environment';
 
-/** @phpstan-ignore-next-line */
+///** @8.3_phpstan-ignore-next-line */
 if( '' !== ( $configFile ?? '' ) )									//  an alternative config file is set
 	ConsoleEnvironment::$configFile   = $configFile;				//  set config file
 
