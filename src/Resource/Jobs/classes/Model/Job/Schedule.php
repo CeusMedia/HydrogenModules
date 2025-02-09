@@ -94,5 +94,7 @@ class Model_Job_Schedule extends Model
 		'lastRunAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Job_Schedule::class;
 }

@@ -54,5 +54,7 @@ class Model_Job_Definition extends Model
 		'modifiedAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Job_Definition::class;
 }

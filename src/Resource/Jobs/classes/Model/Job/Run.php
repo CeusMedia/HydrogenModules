@@ -150,5 +150,7 @@ class Model_Job_Run extends Model
 		'modifiedAt',
 	];
 
-	protected int $fetchMode	= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Job_Run::class;
 }

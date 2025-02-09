@@ -29,7 +29,7 @@ You can get information about each job with:
 code:shell>./job.php Job.info JOB_ID<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.8.6</version>
+	<version>0.8.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -79,9 +79,13 @@ code:shell>./job.php Job.info JOB_ID<code
 	<log version="0.8.4">Support removal of archivable job runs.</log>
 	<log version="0.8.5">Add job to terminate discontinued job runs.</log>
 	<log version="0.8.6">Extract script helper to own class file.</log>
+	<log version="0.8.7">Add model entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Entity/Job/Definition.php</class>
+		<class>Entity/Job/Run.php</class>
+		<class>Entity/Job/Schedule.php</class>
 		<class>Jobber.php</class>
 		<class>JobScriptHelper.php</class>
 		<class>Job/Abstract.php</class>
