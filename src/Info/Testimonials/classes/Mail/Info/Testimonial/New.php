@@ -14,10 +14,10 @@ class Mail_Info_Testimonial_New extends Mail_Abstract
 
 //		$data['url']	= $this->env->url.'manage/testimonial/edit/'.$data['entry']->testimonialId;
 
-		$contentText	= $this->view->loadContentFile( 'mail/info/testimonial/new.txt', $data );
+		$contentText	= $this->loadContentFile( 'mail/info/testimonial/new.txt', $data ) ?? '';
 		$this->setText( $contentText );
 
-		$contentHtml	= $this->view->loadContentFile( 'mail/info/testimonial/new.html', $data );
+		$contentHtml	= $this->loadContentFile( 'mail/info/testimonial/new.html', $data ) ?? '';
 		$this->page->addBody( $contentHtml );
 		$this->setHtml( $this->page->build() );
 

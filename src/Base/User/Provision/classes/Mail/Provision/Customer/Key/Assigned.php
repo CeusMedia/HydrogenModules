@@ -40,7 +40,7 @@ class Mail_Provision_Customer_Key_Assigned extends Mail_Abstract
 	{
 /*		$helperFacts	= new View_Helper_Mail_Facts( $this->env );
 		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_HTML );*/
-		return $this->view->loadContentFile( 'mail/provision/customer/key/assigned.html', $data );
+		return $this->loadContentFile( 'mail/provision/customer/key/assigned.html', $data ) ?? '';
 	}
 
 	/**
@@ -52,6 +52,6 @@ class Mail_Provision_Customer_Key_Assigned extends Mail_Abstract
 	{
 /*		$helperFacts	= new View_Helper_Mail_Facts( $this->env );
 		$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT );*/
-		return $this->view->loadContentFile( 'mail/provision/customer/key/assigned.txt', $data );
+		return $this->loadContentFile( 'mail/provision/customer/key/assigned.txt', $data ) ?? '';
 	}
 }

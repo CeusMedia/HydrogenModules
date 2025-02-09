@@ -21,7 +21,7 @@ class Mail_Info_Mail_Group_Members_MemberActivated extends Mail_Abstract
 			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberActivated.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/members/memberActivated.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

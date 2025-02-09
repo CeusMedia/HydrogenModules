@@ -29,6 +29,6 @@ class Mail_Info_Newsletter_Register extends Mail_Abstract
 		$data['key']		= substr( md5( 'InfoNewsletterSalt:'.$data['readerId'] ), 10, 10 );
 		$data['baseUrl']	= $this->env->url;
 
-		return $this->view->loadContentFile( 'mail/info/newsletter/register.txt', $data );
+		return $this->loadContentFile( 'mail/info/newsletter/register.txt', $data ) ?? '';
 	}
 }

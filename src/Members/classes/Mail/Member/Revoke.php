@@ -11,7 +11,7 @@ class Mail_Member_Revoke extends Mail_Abstract
 		$data['appBaseUrl']	= $this->env->url;
 //		$data['from']		= $data['from'] ? '?from='.$data['from'] : '';
 		$data['config']		= $this->env->getConfig()->getAll();
-		$body	= $this->view->loadContentFile( 'mail/member/revoke.txt', $data );
+		$body	= $this->loadContentFile( 'mail/member/revoke.txt', $data ) ?? '';
 
 		$this->setSubject( $wordsMails['mails']['onRevoke'] );
 		$this->setText( $body );

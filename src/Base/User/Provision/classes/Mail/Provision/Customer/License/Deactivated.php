@@ -37,7 +37,7 @@ class Mail_Provision_Customer_License_Deactivated extends Mail_Abstract
 	 */
 	protected function renderHtml( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/deactivated.html', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/deactivated.html', $data ) ?? '';
 	}
 
 	/**
@@ -47,6 +47,6 @@ class Mail_Provision_Customer_License_Deactivated extends Mail_Abstract
 	 */
 	protected function renderText( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/deactivated.txt', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/deactivated.txt', $data ) ?? '';
 	}
 }

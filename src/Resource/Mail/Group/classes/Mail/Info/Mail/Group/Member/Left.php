@@ -21,7 +21,7 @@ class Mail_Info_Mail_Group_Member_Left extends Mail_Abstract
 			'group'			=> $this->env->url.'info/mail/group/view/'.$data['group']->mailGroupId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/left.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/member/left.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

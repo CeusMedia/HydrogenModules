@@ -10,7 +10,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\View\Helper\Content as ContentHelper;
 use CeusMedia\Mail\Address as Address;
 use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Transport\Local as LocalMailTransport;
@@ -51,8 +51,8 @@ abstract class Mail_Abstract
 	/** @var		object					$transport		Mail transport object, build on construction */
 	protected object $transport;
 
-	/** @var		View 					$view			General view instance */
-	protected View $view;
+//	/** @var		View 					$view			General view instance */
+//	protected View $view;
 
 	/** @var		Model_Mail_Template		$modelTemplate	Mail template model object */
 	protected Model_Mail_Template $modelTemplate;
@@ -103,7 +103,7 @@ abstract class Mail_Abstract
 		$this->setEnv( $env );
 		$this->modelTemplate	= new Model_Mail_Template( $env );
 		$this->mail				= new MailMessage();
-		$this->view				= new View( $env );
+//		$this->view				= new View( $env );
 		$this->page				= new HtmlPage();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
@@ -632,6 +632,20 @@ abstract class Mail_Abstract
 		if( empty( $section ) )
 			return $language->getWords( $topic );
 		return $language->getSection( $topic, $section );
+	}
+
+	/**
+	 *	@param		string		$filePath
+	 *	@param		array		$data
+	 *	@return		?string
+	 *	@throws		ReflectionException
+	 */
+	protected function loadContentFile( string $filePath, array $data = [] ): ?string
+	{
+		$helper	= new ContentHelper( $this->env );
+		if( !$helper->has( $filePath ) )
+			return NULL;
+		return $helper->setFileKey( $filePath )->setData( $data )->render();
 	}
 
 	/**

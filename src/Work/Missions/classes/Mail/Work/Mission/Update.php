@@ -329,7 +329,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
 			]
 		] );
-		return $this->view->loadContentFile( 'mail/work/mission/update.html', $data );
+		return $this->loadContentFile( 'mail/work/mission/update.html', $data ) ?? '';
 	}
 
 	/**
@@ -373,6 +373,6 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
 			]
 		] );
-		return $this->view->loadContentFile( 'mail/work/mission/update.txt', $data );
+		return $this->loadContentFile( 'mail/work/mission/update.txt', $data ) ?? '';
 	}
 }

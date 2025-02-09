@@ -45,7 +45,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$salutation		= $salutations[array_rand($salutations)];
 		$valueAddress	= $do->street ? $do->street.', '.$do->postcode.' '.$do->city : '';
 
-		$this->setHtml( $this->view->loadContentFile( 'mail/info/contact/form.html', [
+		$this->setHtml( $this->loadContentFile( 'mail/info/contact/form.html', [
 			'salutation'	=> $salutation,
 			'email'			=> htmlentities( $do->email, ENT_QUOTES, 'UTF-8' ),
 			'type'			=> $words['form-types'][$do->type],
@@ -54,8 +54,8 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> htmlentities( $do->company, ENT_QUOTES, 'UTF-8' ),
 			'address'		=> htmlentities( $valueAddress, ENT_QUOTES, 'UTF-8' ),
 			'body'			=> nl2br( htmlentities( $do->body, ENT_QUOTES, 'UTF-8' ) ),
-		] ) );
-		$this->setText( $this->view->loadContentFile( 'mail/info/contact/form.txt', [
+		] ) ?? '' );
+		$this->setText( $this->loadContentFile( 'mail/info/contact/form.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,
 			'type'			=> $words['form-types'][$do->type],
@@ -64,7 +64,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> $do->company,
 			'address'		=> $valueAddress,
 			'body'			=> $do->body,
-		] ) );
+		] ) ?? '' );
 		return $this;
 	}
 }

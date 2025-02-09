@@ -28,22 +28,22 @@ class Mail_Info_Contact extends Mail_Abstract
 		$salutation			= $salutations[array_rand($salutations)];
 		$valueNewsletter	= $words['newsletter-answers'][(int) !empty( $do->newsletter )];
 
-		$this->setHtml( $this->view->loadContentFile( 'mail/info/contact.html', [
+		$this->setHtml( $this->loadContentFile( 'mail/info/contact.html', [
 			'salutation'	=> $salutation,
 			'email'			=> htmlentities( $do->email, ENT_QUOTES, 'UTF-8' ),
 			'subject'		=> htmlentities( $do->subject, ENT_QUOTES, 'UTF-8' ),
 			'fullname'		=> htmlentities( $do->fullname, ENT_QUOTES, 'UTF-8' ),
 			'message'		=> nl2br( htmlentities( $do->message, ENT_QUOTES, 'UTF-8' ) ),
 			'newsletter'	=> $valueNewsletter,
-		] ) );
-		$this->setText( $this->view->loadContentFile( 'mail/info/contact.txt', [
+		] ) ?? '' );
+		$this->setText( $this->loadContentFile( 'mail/info/contact.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,
 			'subject'		=> $do->subject,
 			'fullname'		=> $do->fullname,
 			'message'		=> $do->message,
 			'newsletter'	=> $valueNewsletter,
-		] ) );
+		] ) ?? '' );
 		return $this;
 	}
 }

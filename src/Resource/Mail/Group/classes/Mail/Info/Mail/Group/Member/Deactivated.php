@@ -22,7 +22,7 @@ class Mail_Info_Mail_Group_Member_Deactivated extends Mail_Abstract
 			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/deactivated.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/member/deactivated.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

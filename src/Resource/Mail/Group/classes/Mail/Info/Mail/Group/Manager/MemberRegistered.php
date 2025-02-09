@@ -22,7 +22,7 @@ class Mail_Info_Mail_Group_Manager_MemberRegistered extends Mail_Abstract
 			'deactivate'	=> $this->env->url.'work/mail/group/setMemberStatus/'.$data['group']->mailGroupId.'/'.$data['member']->mailGroupMemberId.'/'.Model_Mail_Group_Member::STATUS_DEACTIVATED,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/memberRegistered.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/manager/memberRegistered.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

@@ -20,7 +20,7 @@ class Mail_Info_Mail_Group_Manager_MemberJoined extends Mail_Abstract
 			'member'		=> $this->env->url.'work/mail/group/member/edit/'.$data['member']->mailGroupMemberId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/memberJoined.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/manager/memberJoined.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

@@ -11,7 +11,7 @@ class Mail_Member_Request extends Mail_Abstract
 		$data['appBaseUrl']	= $this->env->url;
 //		$data['from']		= $data['from'] ? '?from='.$data['from'] : '';
 		$data['config']		= $this->env->getConfig()->getAll();
-		$body	= $this->view->loadContentFile( 'mail/member/request.txt', $data );
+		$body	= $this->loadContentFile( 'mail/member/request.txt', $data ) ?? '';
 
 		$this->setSubject( $wordsMails['mails']['onRequest'] );
 		$this->setText( $body );

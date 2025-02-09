@@ -42,7 +42,7 @@ class Mail_Work_Newsletter_Invite extends Mail_Abstract
 		$data['groups']		= HtmlTag::create( 'ul', $groups );
 		$data['emailHash']	= base64_encode( $data['reader']->email );
 
-		return $this->view->loadContentFile( 'mail/work/newsletter/invite.html', $data );
+		return $this->loadContentFile( 'mail/work/newsletter/invite.html', $data ) ?? '';
 	}
 
 	/**
@@ -67,6 +67,6 @@ class Mail_Work_Newsletter_Invite extends Mail_Abstract
 		$data['groups']		= join( "\n", $groups );
 		$data['emailHash']	= base64_encode( $data['reader']->email );
 
-		return $this->view->loadContentFile( 'mail/work/newsletter/invite.txt', $data );
+		return $this->loadContentFile( 'mail/work/newsletter/invite.txt', $data ) ?? '';
 	}
 }

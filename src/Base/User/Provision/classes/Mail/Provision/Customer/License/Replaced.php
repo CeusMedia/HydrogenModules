@@ -37,7 +37,7 @@ class Mail_Provision_Customer_License_Replaced extends Mail_Abstract
 	 */
 	protected function renderHtml( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/replaced.html', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/replaced.html', $data ) ?? '';
 	}
 
 	/**
@@ -47,6 +47,6 @@ class Mail_Provision_Customer_License_Replaced extends Mail_Abstract
 	 */
 	protected function renderText( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/replaced.txt', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/replaced.txt', $data ) ?? '';
 	}
 }

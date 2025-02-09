@@ -22,7 +22,7 @@ class Mail_Info_Mail_Group_Member_Leaving extends Mail_Abstract
 			'confirm'		=> $this->env->url.'info/mail/group/completeMemberAction/'.$data['action']->mailGroupActionId.'/'.$data['action']->uuid,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/leaving.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/member/leaving.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

@@ -23,7 +23,7 @@ class Mail_Info_Mail_Group_Member_Invited extends Mail_Abstract
 			'confirm'		=> $this->env->url.'info/mail/group/completeMemberAction/'.$data['action']->mailGroupActionId.'/'.$data['action']->uuid,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/invited.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/member/invited.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

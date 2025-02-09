@@ -17,7 +17,7 @@ class Mail_Info_Mail_Group_Activated extends Mail_Abstract
 			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/activated.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/activated.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

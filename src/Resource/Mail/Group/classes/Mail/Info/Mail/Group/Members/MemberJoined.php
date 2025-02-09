@@ -22,7 +22,7 @@ class Mail_Info_Mail_Group_Members_MemberJoined extends Mail_Abstract
 		];
 		$data['greeting']	= strlen( trim( $data['greeting'] ) ) ? $data['greeting'] : '-';
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/members/memberJoined.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/members/memberJoined.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

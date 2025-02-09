@@ -1,8 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View;
-
 class Mail_Shop_Manager_Payed extends Mail_Abstract
 {
 	protected ?object $order								= NULL;
@@ -20,12 +17,6 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 		$this->helperCart		= new View_Helper_Shop_CartPositions( $this->env );
 		$this->helperCart->setDisplay( View_Helper_Shop_CartPositions::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
-
-		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
-		/** @todo replace this hack by a better general solution */
-		/** @var WebEnvironment $env */
-		$env		= $this->env;
-		$this->view	= new View( $env );
 	}
 
 	/**
@@ -73,7 +64,7 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 
 		$helperShop	= new View_Helper_Shop( $this->env );
 
-		$body	= $this->view->loadContentFile( 'mail/shop/manager/payed.html', [
+		$body	= $this->loadContentFile( 'mail/shop/manager/payed.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'orderStatus'		=> $this->words['statuses-order'][$this->order->status],
@@ -89,7 +80,7 @@ class Mail_Shop_Manager_Payed extends Mail_Abstract
 			'tableCart'			=> $this->helperCart->render(),
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
-		] );
+		] ) ?? '';
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );
