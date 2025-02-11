@@ -83,9 +83,10 @@ class Model_Config_Page
 				$data['identifier']	= $this->pages[$parentId]->identifier.'/'.$data['identifier'];
 			$entity = Entity_Page::fromArray( $data );
 		}
-		else
-			$entity = Entity_Page::mergeWithArray( $data, ['pageId'	=> $pageId] );
-
+		else{
+			$entity	= $data;
+			$entity->pageId		= $pageId;
+		}
 		$this->pages[$pageId]	= $entity;
 		$this->savePages();
 		return $pageId;

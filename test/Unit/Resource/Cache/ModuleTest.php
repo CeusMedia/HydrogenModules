@@ -66,8 +66,8 @@ class ModuleTest extends BaseTestCase
 	/** @noinspection PhpUnhandledExceptionInspection */
 	public function testFileCacheWithIgbinaryEncoder(): void
 	{
-		if( !extension_loaded( 'msgpack' ) )
-			$this->markTestSkipped( 'Extension "msgpack" not installed' );
+		if( !extension_loaded( 'igbinary' ) )
+			$this->markTestSkipped( 'Extension "igbinary" not installed' );
 
 		$text	= file_get_contents( __FILE__ );
 		$cache	= SimpleCacheFactory::createStorage( 'Folder', $this->pathApp.'.cache' );
