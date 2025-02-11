@@ -1,6 +1,16 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var View $view */
+/** @var object $project */
+/** @var array $notes $w */
 
 $w		= (object) $words['index'];
 
@@ -8,12 +18,12 @@ $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $iconTag	= HtmlTag::create( 'i', '', ['class' => 'icon-tag'] );
 
 
-$tags	= $env->session->get( 'filter_notes_tags' );
+$tags	= $env->getSession()->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= [];
 
 $indicator	= new HtmlIndicator();
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/note', $page, ceil( $notes['number'] / $filterLimit ) );
+$pagination	= new PageControl( './work/note', $page, ceil( $notes['number'] / $filterLimit ) );
 $helper		= new View_Helper_TimePhraser( $this->env );
 $list	= [];
 foreach( $notes['list'] as $note ){
@@ -64,7 +74,10 @@ $pagination	= $pagination->render();
 //  --  FILTER  --  //
 $panelFilter	= $view->loadTemplateFile( 'work/note/index.filter.php' );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' neue Notiz', ['href' => './work/note/add', 'class' => 'btn not-btn-small btn-primary'] );
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' neue Notiz', [
+	'href'	=> './work/note/add',
+	'class'	=> 'btn not-btn-small btn-primary'
+] );
 
 
 return '

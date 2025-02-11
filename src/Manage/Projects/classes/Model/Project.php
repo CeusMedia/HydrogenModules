@@ -6,6 +6,22 @@ class Model_Project extends Model
 {
 //	const STATES_ACTIVE		= [];
 
+	const STATUS_CANCELLED	= -2;
+	const STATUS_PAUSED		= -1;
+	const STATUS_PLANING	= 0;
+	const STATUS_PROGRESS	= 1;
+	const STATUS_PRODUCTION	= 2;
+	const STATUS_CLOSED		= 3;
+
+	const STATUSES		= [
+		self::STATUS_CANCELLED,
+		self::STATUS_PAUSED,
+		self::STATUS_PLANING,
+		self::STATUS_PROGRESS,
+		self::STATUS_PRODUCTION,
+		self::STATUS_CLOSED,
+	];
+
 	protected string $name			= 'projects';
 
 	protected array $columns		= [
@@ -31,9 +47,11 @@ class Model_Project extends Model
 		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	public function getUserProjects( $userId, array $conditions = [], array $orders = [] ): array
+	protected ?string $className	= Entity_Project::class;
+
+	public function getUserProjects( string $userId, array $conditions = [], array $orders = [] ): array
 	{
 		$modelProject	= new Model_Project( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
@@ -46,7 +64,7 @@ class Model_Project extends Model
 		if( !$projectIds )
 			return [];
 		$conditions['projectId']	= $projectIds;
-		$orders		= $orders ? $orders : ['title' => 'ASC'];
+		$orders		= $orders ?: ['title' => 'ASC'];
 		$projects	= [];
 		foreach( $modelProject->getAll( $conditions, $orders ) as $project ){
 			$project->isDefault = $defaultProject == $project->projectId;
@@ -55,18 +73,36 @@ class Model_Project extends Model
 		return $projects;
 	}
 
-	public function getProjectUsers( $projectId, array $conditions = [], array $orders = [] ): array
+	/**
+	 *	@param		int|string	$projectId
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array<int|string,Entity_User>
+	 */
+	public function getProjectUsers( int|string $projectId, array $conditions = [], array $orders = [] ): array
+	{
+		return $this->getProjectsUsers( [$projectId], $conditions, $orders );
+	}
+
+	/**
+	 *	@param		array		$projectIds
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array<int|string,Entity_User>
+	 */
+	public function getProjectsUsers( array $projectIds, array $conditions = [], array $orders = [] ): array
 	{
 		$modelUser		= new Model_User( $this->env );
 		$modelRelation	= new Model_Project_User( $this->env );
 		$userIds		= [];
-		foreach( $modelRelation->getAllByIndex( 'projectId', $projectId ) as $relation )
+		foreach( $modelRelation->getAllByIndex( 'projectId', $projectIds ) as $relation )
 			$userIds[]	= $relation->userId;
 		if( !$userIds )
 			return [];
 		$conditions['userId']	= $userIds;
-		$orders		= $orders ? $orders : [/*'roleId' => 'ASC', */'username' => 'ASC'];
+		$orders		= $orders ?: [/*'roleId' => 'ASC', */'username' => 'ASC'];
 		$users		= [];
+		/** @var Entity_User $user */
 		foreach( $modelUser->getAll( $conditions, $orders ) as $user ){
 			unset( $user->password );
 			$users[$user->userId]	= $user;

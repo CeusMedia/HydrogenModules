@@ -2,17 +2,18 @@
 use CeusMedia\Common\ADT\Constant as Constants;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env  */
+/** @var WebEnvironment $env  */
 /** @var array $words */
 /** @var object[] $passwords */
 /** @var int $userId */
 /** @var int $pwdMinLength */
 /** @var int $pwdMinStrength */
+/** @var bool $atLeastOne */
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
-$env->page->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
+$env->getPage()->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
 
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['editPassword'];
@@ -37,7 +38,7 @@ $(document).ready(function(){
 		inputPassword.pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: false,//'.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",
@@ -51,7 +52,9 @@ $(document).ready(function(){
 		inputConfirm.bind("input", matchPasswords);
 	}
 });';
-$env->page->js->addScript( $script );
+$env->getPage()->js->addScript( $script );
+
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $atLeastOne		= TRUE;
 $history		= '';
@@ -95,10 +98,10 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		HtmlTag::create( 'thead', $heads ),
 		HtmlTag::create( 'tbody', $rows )
 	], ['class' => 'table table-condensed table-fixed table-bordered'] );
-	$history	= HTML::DivClass( 'collapsable-block', [
+	$history	= HtmlTag::create( 'div', [
 //		HtmlTag::create( 'h4', 'Historie', ['class' => 'collapsable-block-trigger'] ),
-		HTML::DivClass( 'collapsable-block-content', $table ),
-	] );
+		HtmlTag::create( 'div', $table, ['class' => 'collapsable-block-content'] ),
+	], ['class' => 'collapsable-block'] );
 }
 
 $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [
@@ -142,7 +145,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [
 //			HTML::BR,
 //			$history,
 			HTML::DivClass( 'buttonbar', [
-				HtmlElements::Button( 'savePassword', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
+				HtmlElements::Button( 'savePassword', $iconSave.' '.$w->buttonSave, 'btn btn-primary' )
 			] ),
 		], ['autocomplete' => 'off'] )
 	)

@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Client.View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\View;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\View;
  *	@category		cmApps
  *	@package		Chat.Client.View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Manage_Content_Locale extends View
 {

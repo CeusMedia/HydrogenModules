@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<module>
+    <title>Resource: Mail: Sent</title>
+    <description><![CDATA[Stores sent mails onto IMAP server.
+
+To pull sent mails from database (mail queue) to IMAP folder, run a job:
+
+code>php job.php Mail.Sent.pull --age=3M</code
+
+or add a cron job:
+
+code>* * * * * cd /path/to/project && ./job.php Mail.Sent.pull --age=3M</code
+
+This job will copy the raw mails to the configured IMAP folder
+and will **REMOVE** the origin database entity.
+]]></description>
+    <category>Resource</category>
+    <version>0.1</version>
+    <log version="0.1">Initial prototype.</log>
+    <company site="https://ceusmedia.de/">Ceus Media</company>
+    <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+    <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+    <languages>
+        <language complete="100%">de</language>
+        <language complete="100%">en</language>
+    </languages>
+    <files>
+        <class>Logic/Mail/Sent.php</class>
+        <class>Job/Mail/Sent.php</class>
+        <locale>de/mail/sent.ini</locale>
+        <locale>en/mail/sent.ini</locale>
+    </files>
+    <config protected="yes" type="string" name="connect.hostname" mandatory="yes">localhost</config>
+    <config protected="yes" type="string" name="connect.port" mandatory="yes">143</config>
+    <config protected="yes" type="string" name="connect.folder" mandatory="yes">INBOX.Sent</config>
+    <config protected="yes" type="string" name="connect.username" mandatory="yes"></config>
+    <config protected="yes" type="string" name="connect.password" mandatory="yes"></config>
+    <config protected="yes" type="boolean" name="connect.secure" values="yes,no">yes</config>
+    <relations>
+        <needs type="module">Resource_Mail</needs>
+        <needs type="package">ceus-media/mail:^2.6.2</needs>
+        <supports type="module">Resource_Maintainer</supports>
+    </relations>
+    <job id="Mail.Sent.pull">Mail_Sent::pull</job>
+</module>
+
+
+

@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var object $words */
 /** @var object $newsletter */
+/** @var bool $inlineFilter */
 
 $w		= (object) $words->index_filter;
 
@@ -53,7 +54,7 @@ return '
 	<div class="row-fluid">
 		<div class="span2">
 			<label for="input_title">Titel</label>
-			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'UTF-8' ).'"/>
+			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
 			<label for="input_status">Zustand</label>

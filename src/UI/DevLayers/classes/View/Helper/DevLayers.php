@@ -35,12 +35,12 @@ class View_Helper_DevLayers
 		foreach( self::$layers as $layer ){
 			$attributes	= ['class' => 'dev-layer', 'id' => 'dev-layer-'.$layer->id];
 			$layers[]	= HtmlTag::create( 'div', $layer->content, $attributes );
-			$attributes	= array(
+			$attributes	= [
 				'type'		=> 'button',
 				'class'		=> 'dev-layer-trigger',
 				'id'		=> 'dev-layer-'.$layer->id.'-trigger',
 				'onclick'	=> "UI.DevLayers.show('".$layer->id."');"
-			);
+			];
 			$buttons[]	= HtmlTag::create( 'button', $layer->label, $attributes );
 		}
 		$layers		= HtmlTag::create( 'div', $layers, ['id' => 'dev-layers'] );

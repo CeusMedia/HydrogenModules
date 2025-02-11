@@ -2,17 +2,19 @@
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var object $user */
 
 $w				= (object) $words['add'];
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
-$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
-	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-}
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $roleMap	= [];
 foreach( $roles as $role )
@@ -28,7 +30,7 @@ $script	= '
 		$("#input_password").pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: '.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",

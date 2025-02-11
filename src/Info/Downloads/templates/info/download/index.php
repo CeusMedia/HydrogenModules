@@ -1,8 +1,25 @@
 <?php
 
+use CeusMedia\Bootstrap\Button;
+use CeusMedia\Bootstrap\Button\Group as ButtonGroup;
+use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $folders */
+/** @var array $files */
+/** @var array $words */
+/** @var array $rights */
+/** @var array $steps */
+/** @var string $pathBase */
+/** @var string $folderPath */
+/** @var int|string $folderId */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
@@ -50,10 +67,10 @@ foreach( $files as $file ){
 	$buttons		= $buttonDownload.'&nbsp;'.$buttonRemove;
 	$actions		= HtmlTag::create( 'div', $buttonView.$buttonDownload.$buttonRemove, ['class' => 'btn-group pull-right'] );
 //	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells			= array(
+	$cells			= [
 		HtmlTag::create( 'td', $label/*$link*/, ['class' => 'file'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row			= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	$rows['files'][$file->title]		= $row;
 }
@@ -71,12 +88,12 @@ foreach( $folders as $folder ){
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $words['index']['buttonOpenFolder']
 	] );
-	if( in_array( 'ajaxRenameFolder', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+	if( $env->getAcl()->has( 'ajax/info/download', 'renameFolder' ) ){
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'ModuleInfoDownloads.changeFolderName('.$folder->downloadFolderId.', \''.$folder->title.'\')',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $words['index']['buttonRename'],
-		) );
+		] );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
 		$buttons[]	= HtmlTag::create( 'a', $iconUp, [
@@ -99,10 +116,10 @@ foreach( $folders as $folder ){
 	}
 	$actions	= HtmlTag::create( 'div', join( $buttons ), ['class' => 'btn-group pull-right'] );
 //	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells		= array(
+	$cells		= [
 		HtmlTag::create( 'td', $label, ['class' => 'folder'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row	= HtmlTag::create( 'tr', $cells, ['class' => 'info folder'] );
 	$rows['folders'][$folder->title]	= $row;
 }
@@ -113,10 +130,10 @@ $table	= '<br/><p><em><small class="muted">'.$words['index']['empty'].'</small><
 
 if( $rows ){
 	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
-	$heads		= HtmlTag::create( 'tr', array(
+	$heads		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', $words['index']['headFile'] ),
 		HtmlTag::create( 'th', $words['index']['headActions'], ['class' => 'pull-right'] ),
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped not-table-condensed'] );
@@ -135,20 +152,20 @@ if( 0 )
 
 $way		= '';
 $parts		= $folderPath ? explode( "/", '/'.trim( $folderPath, " /\t" ) ) : [''];
-$iconHome	= new \CeusMedia\Bootstrap\Icon( 'home', !$folderPath );
-$buttonHome	= new \CeusMedia\Bootstrap\LinkButton( './info/download/index', $iconHome );
+$iconHome	= new Icon( 'home', !$folderPath );
+$buttonHome	= new LinkButton( './info/download/index', $iconHome );
 if( !$folderPath )
-	$buttonHome	= new \CeusMedia\Bootstrap\Button( $iconHome, 'btn-inverse', NULL, TRUE );
+	$buttonHome	= new Button( $iconHome, 'btn-inverse', NULL, TRUE );
 $buttons	= [$buttonHome];
 foreach( $steps as $nr => $stepFolder ){
 	$way		.= strlen( $stepFolder->title ) ? $stepFolder->title.'/' : '';
 	$isCurrent	= $folderId === (int) $stepFolder->downloadFolderId;
 	$url		= './info/download/index/'.$stepFolder->downloadFolderId;
-	$icon		= new \CeusMedia\Bootstrap\Icon( 'folder-open', $isCurrent );
+	$icon		= new Icon( 'folder-open', $isCurrent );
 	$class		= $isCurrent ? 'btn-inverse' : NULL;
-	$buttons[]	= new \CeusMedia\Bootstrap\LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
+	$buttons[]	= new LinkButton( $url, $stepFolder->title, $class, $icon, $isCurrent );
 }
-$position	= new \CeusMedia\Bootstrap\ButtonGroup( $buttons );
+$position	= new ButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/download/' ) );

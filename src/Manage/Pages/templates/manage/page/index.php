@@ -1,5 +1,7 @@
 <?php
 
+/** @var View_Manage_Page $view */
+
 $panelTree	= $view->loadTemplateFile( 'manage/page/tree.php' );
 
 extract( $view->populateTexts( ['index'], 'html/manage/page/' ) );

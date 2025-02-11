@@ -13,8 +13,8 @@ class Controller_Shop_Customer extends Controller
 	protected Dictionary $moduleConfig;
 	protected object $words;
 
-	/**	@var	array					$backends			List of available payment backends */
-	protected array $backends			= [];
+	/**	@var	Model_Shop_Payment_BackendRegister					$backends			List of available payment backends */
+	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**	@var	float					$cartTotal			Total price of cart */
 	protected float $cartTotal			= .0;
@@ -41,12 +41,14 @@ class Controller_Shop_Customer extends Controller
 	 *	@param		integer		$type			...
 	 *	@param		boolean		$remove			Flag: remove address and return
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function address( string $addressId, $type = NULL, bool $remove = NULL ): void
 	{
 		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
-		$countries		= $this->env->getLanguage()->getWords( 'countries' );
+//		$countries		= $this->env->getLanguage()->getWords( 'countries' );
 		$relationType	= 'user';
 		$relationId		= $this->modelCart->get( 'userId' );
 		if( !$relationId )
@@ -67,6 +69,7 @@ class Controller_Shop_Customer extends Controller
 			$country	= $data->get( 'country' );
 		if( $this->request->has( 'save' ) ){
 			if( $addressId > 0 ){
+				/** @var ?Entity_Address $address */
 				$address	= $this->modelAddress->getByIndices( [
 					'addressId'		=> $addressId,
 	 				'relationId'	=> $relationId,
@@ -118,8 +121,9 @@ class Controller_Shop_Customer extends Controller
 				$data->set( 'country', $country );
 				$addressId	= $this->modelAddress->add( $data->getAll() );
 			}
-			if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+			if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_GUEST ){
 				if( $type === Model_Address::TYPE_BILLING ){
+					/** @var ?Entity_Address $address */
 					$address	= $this->modelAddress->get( $addressId );
 					$this->modelUser->edit( $relationId, [
 						'firstname'	=> $address->firstname,
@@ -141,6 +145,7 @@ class Controller_Shop_Customer extends Controller
 			$this->messenger->noteError( 'No address ID given.' );
 			$this->restart( NULL, TRUE );
 		}
+		/** @var ?Entity_Address $address */
 		$address	= $this->modelAddress->get( $addressId );
 		if( !$address ){
 			$this->messenger->noteError( 'Invalid address ID given.' );
@@ -154,8 +159,10 @@ class Controller_Shop_Customer extends Controller
 	 *	@access		public
 	 *	@param		string		$mode		Optional: Customer mode to set (account|guest)
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( $mode = NULL )
+	public function index( $mode = NULL ): void
 	{
 		if( $mode === 'account' && $this->useAuth )
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT;
@@ -164,7 +171,7 @@ class Controller_Shop_Customer extends Controller
 		else if( $mode === 'reset' )
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_UNKNOWN;
 		if( is_int( $mode ) ){
-			$logicShop	= new Logic_Shop( $this->env );
+//			$logicShop	= new Logic_Shop( $this->env );
 			$this->modelCart->set( 'customerMode', (int) $mode );
 			$this->restart( NULL, TRUE );
 		}
@@ -190,34 +197,10 @@ class Controller_Shop_Customer extends Controller
 		}
 	}
 
-
-	/**
-	 *	Register a payment backend.
-	 *	@access		public
-	 *	@param		string		$backend		...
-	 *	@param		string		$key			...
-	 *	@param		string		$title			...
-	 *	@param		string		$path			...
-	 *	@param		integer		$priority		...
-	 *	@param		string		$icon			...
-	 *	@return		void
-	 */
-	public function registerPaymentBackend( $backend, string $key, string $title, string $path, int $priority = 5, string $icon = NULL, array $countries = [] )
-	{
-		$this->backends[]	= (object) [
-			'backend'	=> $backend,
-			'key'		=> $key,
-			'title'		=> $title,
-			'path'		=> $path,
-			'priority'	=> $priority,
-			'icon'		=> $icon,
-			'countries'	=> $countries,
-		];
-	}
-
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -231,13 +214,15 @@ class Controller_Shop_Customer extends Controller
 
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuth		= TRUE;
+			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 			$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 		}
 
 		$captain	= $this->env->getCaptain();
-		$payload	= [];
+		$payload	= ['register' => new Model_Shop_Payment_BackendRegister( $this->env )];
 		$captain->callHook( 'ShopPayment', 'registerPaymentBackend', $this, $payload );
-		$this->addData( 'paymentBackends', $this->backends );
+		$this->backends	= $payload['register'];
+		$this->addData( 'paymentBackends', $payload['register'] );
 
 		if( $this->modelCart->get( 'positions' ) ){
 			foreach( $this->modelCart->get( 'positions' ) as $position ){
@@ -253,8 +238,9 @@ class Controller_Shop_Customer extends Controller
 	 *	Handle customer having a user account.
 	 *	@access		protected
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function handleAccount()
+	protected function handleAccount(): void
 	{
 		$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$userId		= 0;
@@ -263,12 +249,15 @@ class Controller_Shop_Customer extends Controller
 			if( $userId ){
 				if( !$this->modelCart->get( 'userId' ) )
 					$this->modelCart->set( 'userId', $userId );
+				/** @var ?Entity_User $user */
 				$user		= $this->modelUser->get( $userId );
+				/** @var ?Entity_Address $addressDelivery */
 				$addressDelivery	= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
 					'type'			=> Model_Address::TYPE_DELIVERY,
 				] );
+				/** @var ?Entity_Address $addressBilling */
 				$addressBilling		= $this->modelAddress->getByIndices( [
 					'relationType'	=> 'user',
 					'relationId'	=> $userId,
@@ -297,10 +286,12 @@ class Controller_Shop_Customer extends Controller
 	 *	Handle customer having a guest account.
 	 *	@access		protected
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function handleGuest()
+	protected function handleGuest(): void
 	{
-		$countries	= $this->env->getLanguage()->getWords( 'countries' );
+	//	$countries	= $this->env->getLanguage()->getWords( 'countries' );
 		$this->addData( 'mode', Model_Shop_Cart::CUSTOMER_MODE_GUEST );
 		$this->addData( 'userId', 0 );
 
@@ -315,14 +306,16 @@ class Controller_Shop_Customer extends Controller
 				'modifiedAt'	=> time(),
 			] );
 			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
-			$logicAuth->setIdentifiedUser( $this->modelUser->get( $userId ) );
+			$logicAuth->setAuthenticatedUser( $this->modelUser->get( $userId ) );
 			$this->modelCart->set( 'userId', $userId );
 		}
+		/** @var ?Entity_Address $addressDelivery */
 		$addressDelivery	= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,
 			'type'			=> Model_Address::TYPE_DELIVERY,
 		] );
+		/** @var ?Entity_Address $addressBilling */
 		$addressBilling		= $this->modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $userId,

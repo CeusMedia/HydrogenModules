@@ -2,19 +2,20 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Customer_Rating extends Controller
 {
-	protected $messenger;
-	protected $modelCustomer;
-	protected $modelRating;
+	protected MessengerResource $messenger;
+	protected Model_Customer $modelCustomer;
+	protected Model_Customer_Rating $modelRating;
 
-	public static function ___onRegisterTab( Environment $env, $context )
+	public static function ___onRegisterTab( Environment $env, $context ): void
 	{
 		View_Manage_Customer::registerTab( 'rating/%s', 'Bewertungen' );
 	}
 
-	public function add( $customerId )
+	public function add( string $customerId ): void
 	{
 		$request		= $this->env->getRequest();
 		$customer		= $this->modelCustomer->get( $customerId );
@@ -56,12 +57,9 @@ class Controller_Manage_Customer_Rating extends Controller
 		$this->addData( 'customers', $customers );
 	}
 */
-	public function index( $customerId )
+	public function index( string $customerId ): void
 	{
-		$modelCustomer	= new Model_Customer( $this->env );
-		$modelRating	= new Model_Customer_Rating( $this->env );
-
-		$customer	= $modelCustomer->get( $customerId );
+		$customer	= $this->modelCustomer->get( $customerId );
 		$order		= ['timestamp' => 'DESC'];
 		$limit		= [0, 10];
 		$ratings	= $this->modelRating->getAllByIndex( 'customerId', $customerId, $order, $limit );

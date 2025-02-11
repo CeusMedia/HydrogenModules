@@ -7,6 +7,13 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var array<object> $groups */
+/** @var ?string $filterStatus */
+/** @var ?string $filterGroupId */
+/** @var ?string $filterEmail */
+/** @var ?string $filterFirstname */
+/** @var ?string $filterSurname */
+/** @var ?string $filterLimit */
 
 $optStatus		= ['' => '- alle -'];
 foreach( $words->states as $key => $value )
@@ -36,19 +43,19 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="filter_email">'.$words->index_filter['labelEmail'].'</label>
-					<input type="text" name="email" id="filter_email" class="span12" value="'.htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="email" id="filter_email" class="span12" value="'.htmlentities( $filterEmail ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="filter_firstname">'.$words->index_filter['labelFirstname'].'</label>
-					<input type="text" name="firstname" id="filter_firstname" class="span12" value="'.htmlentities( $filterFirstname, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="firstname" id="filter_firstname" class="span12" value="'.htmlentities( $filterFirstname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="filter_surname">'.$words->index_filter['labelSurname'].'</label>
-					<input type="text" name="surname" id="filter_surname" class="span12" value="'.htmlentities( $filterSurname, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="surname" id="filter_surname" class="span12" value="'.htmlentities( $filterSurname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

@@ -3,32 +3,61 @@
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
+/**
+ * @todo refactor to use Ajax or Api controller
+ */
 class Controller_Provision_Rest extends Controller
 {
 	protected Logic_User_Provision $logic;
 
-	public function __construct( Environment $env, $setupView = TRUE )
+	/**
+	 *	@param		Environment			$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( Environment $env )
 	{
 		parent::__construct( $env, FALSE );
 	}
 
-	public function getLicense( $productLicenseId )
+	/**
+	 *	@param		int|string		$productLicenseId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getLicense( int|string $productLicenseId ): void
 	{
 		$this->handleJsonResponse( 'data', $this->logic->getProductLicense( $productLicenseId ) );
 	}
 
-	public function getLicenses( $productId )
+	/**
+	 *	@param		int|string		$productId
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getLicenses( int|string $productId ): void
 	{
 		$this->handleJsonResponse( 'data', $this->logic->getProductLicenses( $productId, 2 ) );
 	}
 
-	public function getProducts()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function getProducts(): void
 	{
 		$products	= $this->logic->getProducts( 1 );
 		$this->handleJsonErrorResponse( $products );							//  return with error
 	}
 
-	public function handleJsonErrorResponse( $message, $code = 0 ): void
+	/**
+	 *	@param		mixed			$message
+	 *	@param		int|NULL		$code
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function handleJsonErrorResponse( mixed $message, ?int $code = 0 ): void
 	{
 		$this->handleJsonResponse( 'error', [
 			'message'	=> $message,
@@ -37,19 +66,27 @@ class Controller_Provision_Rest extends Controller
 	}
 
 	/**
-	 *	@todo 		finish implementation (exception log)
+	 *	@param		Throwable		$throwable
+	 *	@todo		finish implementation (exception log)
+	 *	@throws		JsonException
 	 */
-	public function handleJsonExceptionResponse( $exception )
+	public function handleJsonExceptionResponse( Throwable $throwable ): void
 	{
 		$this->handleJsonResponse( 'exception', [
-			'message'	=> $exception->getMessage(),
-			'code'		=> $exception->getCode(),
-			'file'		=> $exception->getFile(),
-			'line'		=> $exception->getLine(),
+			'message'	=> $throwable->getMessage(),
+			'code'		=> $throwable->getCode(),
+			'file'		=> $throwable->getFile(),
+			'line'		=> $throwable->getLine(),
 		] );
 	}
 
-	public function hasActiveKey( $showExceptions = FALSE )
+	/**
+	 *	@param		bool		$showExceptions
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function hasActiveKey( bool $showExceptions = FALSE ): void
 	{
 //		$productId	= $this->env->getRequest()->get( 'productId' );
 //		$userId		= $this->env->getRequest()->get( 'userId' );
@@ -94,8 +131,10 @@ class Controller_Provision_Rest extends Controller
 	 *	Allows to order free single user licenses for new users.
 	 *	ATTENTION: Commercial or group licenses are not order-able using this interface.
 	 *	ATTENTION: Free single user licenses are order-able only once for one user.
+	 *	@throws		JsonException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function orderLicense()
+	public function orderLicense(): void
 	{
 		$request			= $this->env->getRequest();
 		$userId				= $request->get( 'userId' );
@@ -149,17 +188,22 @@ class Controller_Provision_Rest extends Controller
 		}
 	}
 
-	public function test()
+	public function test(): void
 	{
 		$data	= [
-			'products' => $this->getProducts(),
-			'licenses' => $this->getLicenses( 1 ),
+			'products' => $this->logic->getProducts( 1 ),
+			'licenses' => $this->logic->getProductLicenses( 1, 2 ),
 		];
 		$this->handleJsonResponse( 'data', $data );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= Logic_User_Provision::getInstance( $this->env );
 	}
 }

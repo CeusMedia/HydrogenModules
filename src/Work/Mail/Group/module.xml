@@ -25,7 +25,7 @@
 	<log version="0.4.3">EOL: Moved to GitLab::CeusMedia:MailGroup.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Mail/Group.php</class>
 		<class>Controller/Work/Mail/Group/Message.php</class>

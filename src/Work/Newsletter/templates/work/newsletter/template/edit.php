@@ -6,17 +6,19 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Template $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
 /** @var object $template */
 /** @var string $templateId */
+/** @var string $format */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
-$isUsed	= FALSE;
+$isUsed			= FALSE;
 $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.content.tab' );
 $tabs			= $words->tabs;
-$tabsContent	= $this->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
+$tabsContent	= $view->renderTabs( $tabs, 'template/setContentTab/'.$templateId.'/', $currentTab );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
@@ -30,32 +32,32 @@ $buttonCancel	= HtmlTag::create( 'a', $iconCancel.$words->edit->buttonCancel, [
 	'class'		=> "btn btn-small",
 	'href'		=> "./work/newsletter/template/index",
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'type'			=> "submit",
 	'class'			=> "btn btn-primary".( $isUsed ? ' disabled' : '' ),
 	'name'			=> "save",
 	'readonly'		=> $isUsed ? 'readonly' : NULL,
 	'onmousedown'	=> $isUsed ? "alert('".$words->edit->buttonSaveDisabled."');" : NULL,
-) );
-$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, array(
+] );
+$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, [
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-preview",
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("./work/newsletter/template/preview/'.$format.'/'.$templateId.'");'
-) );
+] );
 /*
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'class'		=> "btn btn-info",
 	'href'		=> './work/newsletter/template/preview/'.$format.'/'.$templateId.'/1',
 	'target'	=> "NewsletterTemplatePreview",
 ] );*/
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
 	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
-) );
+] );
 $buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
 	'class'		=> "btn btn-success btn-small",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
@@ -74,25 +76,16 @@ $buttons		= HtmlTag::create( 'div', join( ' ', [
 //	$buttonCopy,
 ] ), ['class' => 'buttonbar'] );
 
-switch( $currentTab ){
-	case 0:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.details.php', ['buttons' => $buttons] );
-		break;
-	case 1:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.html.php', ['buttons' => $buttons] );
-		break;
-	case 2:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.text.php', ['buttons' => $buttons] );
-		break;
-	case 3:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.style.php', ['buttons' => $buttons] );
-		break;
-	case 4:
-		$content	= $view->loadTemplateFile( 'work/newsletter/template/edit.styles.php', ['buttons' => $buttons] );
-		break;
-	default:
-		throw new InvalidArgumentException( 'Invalid tab: '.$currentTab );
-}
+$pathTemplates	= 'work/newsletter/template/';
+
+$content = match( $currentTab ){
+	0		=> $view->loadTemplateFile( $pathTemplates.'edit.details.php', ['buttons' => $buttons] ),
+	1		=> $view->loadTemplateFile( $pathTemplates.'edit.html.php', ['buttons' => $buttons] ),
+	2		=> $view->loadTemplateFile( $pathTemplates.'edit.text.php', ['buttons' => $buttons] ),
+	3		=> $view->loadTemplateFile( $pathTemplates.'edit.style.php', ['buttons' => $buttons] ),
+	4		=> $view->loadTemplateFile( $pathTemplates.'edit.styles.php', ['buttons' => $buttons] ),
+	default	=> throw new InvalidArgumentException('Invalid tab: ' . $currentTab),
+};
 $tabsContent	.= HtmlTag::create( 'div', $content, ['tab-content'] );
 
 $modalPreview	= '

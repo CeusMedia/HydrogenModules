@@ -1,18 +1,19 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication extends Logic
 {
-	const STATUS_UNKNOWN		= 0;
-	const STATUS_IDENTIFIED		= 1;
-	const STATUS_AUTHENTICATED	= 2;
+	public const STATUS_UNKNOWN			= 0;
+	public const STATUS_IDENTIFIED		= 1;
+	public const STATUS_AUTHENTICATED	= 2;
 
-	protected $backend;
-	protected array $backends	= [];
-	protected $session;
+	protected Dictionary $session;
+	protected ?Logic_Authentication_BackendInterface $backend	= NULL;
+	protected array $backends			= [];
 
-	public function checkPassword( $userId, string $password )
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		return $this->backend->checkPassword( $userId, $password );
 	}
@@ -28,22 +29,26 @@ class Logic_Authentication extends Logic
 		return $this->backends;
 	}
 
-	public function getCurrentRole( bool $strict = TRUE )
+	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		return $this->backend->getCurrentRole( $strict );
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE )
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		return $this->backend->getCurrentRoleId( $strict );
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		return $this->backend->getCurrentUser( $strict, $withRole );
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		return $this->backend->getCurrentUserId( $strict );
 	}
@@ -57,22 +62,25 @@ class Logic_Authentication extends Logic
 	 *	For advanced uses, a list of reporting modules and their collected user relations can be returned instead.
 	 *
 	 *	@access		public
-	 *	@param		integer		$userId			ID of user to get related users for
-	 *	@param		boolean		$groupByModules	Flag: group related users by reporting modules
-	 *	@return		array		Map of related users or list of reporting modules with related users
+	 *	@param		int|string		$userId			ID of user to get related users for
+	 *	@param		boolean			$groupByModules	Flag: group related users by reporting modules
+	 *	@return		array<int|string,Entity_User>			Map of related users or list of reporting modules with related users
 	 *	@triggers	Resource:User::getRelatedUsers
+	 *	@throws		ReflectionException
 	 */
-	public function getRelatedUsers( $userId, bool $groupByModules = FALSE ): array
+	public function getRelatedUsers( int|string $userId, bool $groupByModules = FALSE ): array
 	{
-		$payload	= (object) ['userId' => $userId, 'list' => []];
+		$payload	= ['userId' => $userId, 'list' => []];
 		$this->env->getCaptain()->callHook( 'Resource:Users', 'getRelatedUsers', $this, $payload );
+
 		if( $groupByModules )
-			return $payload->list;
+			return $payload['list'];
 
 		$list		= [];
 		$map		= [];
-		foreach( $payload->list as $group ){
+		foreach( $payload['list'] ?? [] as $group ){
 			if( $group->count )
+				/** @var Entity_User $user */
 				foreach( $group->list as $user )
 					$list[$user->username]	= $user;
 		}
@@ -94,7 +102,7 @@ class Logic_Authentication extends Logic
 		return $this->backend->isAuthenticated();
 	}
 
-	public function isCurrentUserId( $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
 	}
@@ -125,12 +133,17 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
-	public function setAuthenticatedUser( $user ): self
+	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->backend->setAuthenticatedUser( $user );
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$key
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 	public function setBackend( string $key ): self
 	{
 		if( !array_key_exists( $key, $this->backends ) )
@@ -143,12 +156,16 @@ class Logic_Authentication extends Logic
 		return $this;
 	}
 
-	public function setIdentifiedUser( $user ): self
+	public function setIdentifiedUser( Entity_User $user ): self
 	{
 		$this->backend->setIdentifiedUser( $user );
 		return $this;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();

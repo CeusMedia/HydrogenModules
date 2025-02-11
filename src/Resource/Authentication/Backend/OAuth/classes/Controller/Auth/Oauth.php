@@ -64,11 +64,11 @@ class Controller_Auth_Oauth extends Controller
 				$handle->setUrl( $this->providerUri.'/token' );
 				$handle->setOption( CURLOPT_POST, TRUE );
 				$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-				$handle->setOption( CURLOPT_HTTPHEADER, array(
+				$handle->setOption( CURLOPT_HTTPHEADER, [
 					'Authorization: Basic '.$authorization,
 					'Content-Type: application/x-www-form-urlencoded',
 					'Content-Length: '.strlen( $postData ),
-				) );
+				] );
 				$response	= $handle->exec();
 				$response	= json_decode( $response );
 				if( !empty( $response->error ) ){
@@ -110,8 +110,8 @@ class Controller_Auth_Oauth extends Controller
 							$this->session->set( 'auth_user_id', $userId );
 							$this->session->set( 'auth_role_id', $data->roleId );
 							$this->logic->setAuthenticatedUser( $modelUser->get( $userId ) );
-							if( $this->request->get( 'login_remember' ) )
-								$this->rememberUserInCookie( $user );
+//							if( $this->request->get( 'login_remember' ) )
+//								$this->rememberUserInCookie( $user );
 						}
 					}
 /*					$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
@@ -161,11 +161,11 @@ class Controller_Auth_Oauth extends Controller
 			$handle->setUrl( $this->providerUri.'/token' );
 			$handle->setOption( CURLOPT_POST, TRUE );
 			$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-			$handle->setOption( CURLOPT_HTTPHEADER, array(
+			$handle->setOption( CURLOPT_HTTPHEADER, [
 				'Authorization: Basic '.$authorization,
 				'Content-Type: application/x-www-form-urlencoded',
 				'Content-Length: '.strlen( $postData ),
-			) );
+			] );
 			$response	= $handle->exec();
 			$responseData	= json_decode( $response );
 
@@ -187,7 +187,7 @@ class Controller_Auth_Oauth extends Controller
 					$this->session->set( 'oauth_access_expires_at', $expiresAt );
 					$this->session->set( 'oauth_refresh_token', $responseData->refresh_token );
 					$this->session->set( 'oauth_scope', $responseData->scope );
-	//				$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );
+	//				$modelUser->edit( $user->userId, ['loggedAt' => time() ) );
 	//				$this->messenger->noteSuccess( $words->msgSuccess );
 
 					$modelUser	= new Model_User( $this->env );
@@ -196,8 +196,8 @@ class Controller_Auth_Oauth extends Controller
 						$this->session->set( 'auth_user_id', $user->userId );
 						$this->session->set( 'auth_role_id', $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+//						if( $this->request->get( 'login_remember' ) )
+//							$this->rememberUserInCookie( $user );
 					}
 					else{																			//  register new user
 						$modelRole		= new Model_Role( $this->env );
@@ -210,8 +210,8 @@ class Controller_Auth_Oauth extends Controller
 						$this->session->set( 'auth_user_id', $userId );
 						$this->session->set( 'auth_role_id', $data['roleId'] );
 						$this->logic->setAuthenticatedUser( $user );
-						if( $this->request->get( 'login_remember' ) )
-							$this->rememberUserInCookie( $user );
+//						if( $this->request->get( 'login_remember' ) )
+//							$this->rememberUserInCookie( $user );
 					}
 					$this->redirectAfterLogin();
 				}
@@ -247,7 +247,8 @@ class Controller_Auth_Oauth extends Controller
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->session->remove( 'auth_user_id' );
 			$this->session->remove( 'auth_role_id' );
-			$this->clearCurrentUser();
+			$this->logic->clearCurrentUser();
+
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );
 			}
@@ -260,6 +261,8 @@ class Controller_Auth_Oauth extends Controller
 //			if( $this->moduleConfig->get( 'logout.clearSession' ) )									//  session is to be cleared on logout
 //				session_destroy();																	//  completely destroy session
 		}
+		$redirectController	= NULL;
+		$redirectAction		= NULL;
 		$this->redirectAfterLogout( $redirectController, $redirectAction );
 	}
 
@@ -366,11 +369,11 @@ class Controller_Auth_Oauth extends Controller
 					$handle->setUrl( $this->providerUri.'/token' );
 					$handle->setOption( CURLOPT_POST, TRUE );
 					$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-					$handle->setOption( CURLOPT_HTTPHEADER, array(
+					$handle->setOption( CURLOPT_HTTPHEADER, [
 						'Authorization: Basic '.$authorization,
 						'Content-Type: application/x-www-form-urlencoded',
 						'Content-Length: '.strlen( $postData ),
-					) );
+					] );
 					$response	= $handle->exec();
 					$response	= json_decode( $response );
 					if( !empty( $response->error ) ){
@@ -426,7 +429,7 @@ class Controller_Auth_Oauth extends Controller
 					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );

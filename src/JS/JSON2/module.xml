@@ -4,7 +4,7 @@
 	<description><![CDATA[Ensures JSON browser support.]]></description>
 	<category>JavaScript</category>
 	<version>2011-10-19</version>
-	<company site="http://json.org/">JSON.org</company>
+	<company site="https://json.org/">JSON.org</company>
 	<author email="douglas@crockford.com">Douglas Crockford</author>
 	<license>Public Domain</license>
 	<files>

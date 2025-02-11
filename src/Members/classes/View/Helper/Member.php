@@ -5,11 +5,13 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Member
 {
-	protected $useGravatar	= TRUE;
-	protected $user;
-	protected $url;
-	protected $mode			= 'inline';
-	protected $modelUser;
+	protected Environment $env;
+	protected bool $useGravatar		= TRUE;
+	protected ?Entity_User $user	= NULL;
+	protected ?string $url			= NULL;
+	protected string $mode			= 'inline';
+	protected Model_User $modelUser;
+	protected View_Helper_Gravatar $helperGravatar;
 
 	public function __construct( Environment $env )
 	{
@@ -77,7 +79,7 @@ class View_Helper_Member
 		$helperAvatar	= NULL;
 		if( class_exists( 'View_Helper_UserAvatar' ) ){
 			$helperAvatar	= new View_Helper_UserAvatar( $this->env );
-			$helperAvatar->setUser( (int) $this->user->userId );
+			$helperAvatar->setUser( $this->user );
 		}
 
 		switch( $this->mode ){
@@ -143,7 +145,7 @@ class View_Helper_Member
 		return $this;
 	}
 
-	public function setUser( $userObjectOrId ): self
+	public function setUser( string|int|Entity_User $userObjectOrId ): self
 	{
 		if( is_object( $userObjectOrId ) )
 			$this->user	= $userObjectOrId;

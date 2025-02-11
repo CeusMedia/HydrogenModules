@@ -6,17 +6,28 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Web $env */
 /** @var View $view */
 /** @var array<array<string,string>> $words */
+/** @var ?string $from */
+/** @var string $pak */
 
 $w		= (object) $words['confirm'];
 
+$iconSend	= HTML::Icon( 'ok', TRUE );
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+}
+
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+	$iconSend	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+}
+
 [$textTop, $textInfo, $textBottom]	= array_values( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/confirm/' ) );
 
-$panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
+$panelConfirm	= HTML::DivClass( "content-panel content-panel-form", [
 	HTML::H3( $w->heading ),
-	HTML::DivClass( "content-panel-inner", array(
-		HtmlTag::create( 'form', array(
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span12', array(
+	HTML::DivClass( "content-panel-inner", [
+		HtmlTag::create( 'form', [
+			HTML::DivClass( 'row-fluid', [
+				HTML::DivClass( 'span12', [
 					HTML::Label( "confirm_code", $w->labelCode, "mandatory" ),
 					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'hidden',
@@ -31,29 +42,29 @@ $panelConfirm	= HTML::DivClass( "content-panel content-panel-form", array(
 						'required'	=> 'required',
 						'value'		=> $pak
 					] ),
-				) ),
-			) ),
-			HTML::DivClass( "buttonbar", array(
-				HtmlTag::create( 'button', '<i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSend, [
+				] ),
+			] ),
+			HTML::DivClass( "buttonbar", [
+				HtmlTag::create( 'button', $iconSend.'&nbsp;'.$w->buttonSend, [
 					'type'	=> "submit",
 					'name'	=> "confirm",
 					'class'	=> "btn btn-primary btn-large"
 				] )
-			) )
-		), [
+			] )
+		], [
 			'action'	=> './auth/local/confirm',
 			'method'	=> 'POST',
 			'name'		=> 'auth-confirm'
 		] )
-	) )
-) );
+	] )
+] );
 
 if( strlen( trim( strip_tags( $textInfo ) ) ) ){
 	return $textTop.
-		HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', array(
+		HTML::DivClass( 'bs2-row-fluid bs3-row bs4-row', [
 			HTML::DivClass( 'bs2-span4 bs3-col-md-4 bs4-col-md-4 bs2-offset1 bs3-col-offset-1 bs4-col-offset-1', $panelConfirm ),
 			HTML::DivClass( 'bs2-span6 bs3-col-md-6 bs4-col-md-6', $textInfo ),
-		) ).$textBottom;
+		] ).$textBottom;
 }
 
 if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textBottom ) ) ) ){
@@ -61,9 +72,9 @@ if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textB
 }
 
 $env->getPage()->addBodyClass( 'auth-centered' );
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', $panelConfirm, ['class' => 'centered-pane'] )
-), ['class' => 'centered-pane-container'] );
+], ['class' => 'centered-pane-container'] );
 
 //return HTML::DivClass( "auth-confirm-text-top", $textTop ).
 //HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", [

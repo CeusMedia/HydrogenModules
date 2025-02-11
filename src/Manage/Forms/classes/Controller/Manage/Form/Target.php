@@ -6,7 +6,12 @@ class Controller_Manage_Form_Target extends Controller
 {
 	protected Model_Form_Transfer_Target $modelTarget;
 	protected Model_Form_Fill_Transfer $modelTransfer;
+	protected Model_Form_Transfer_Rule $modelRule;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$request	= $this->env->getRequest();
@@ -26,7 +31,12 @@ class Controller_Manage_Form_Target extends Controller
 		}
 	}
 
-	public function edit( $targetId ): void
+	/**
+	 *	@param		string		$targetId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( string $targetId ): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->getMethod()->isPost() ){
@@ -47,30 +57,50 @@ class Controller_Manage_Form_Target extends Controller
 		$this->addData( 'fails', $this->getLatestUnhandledFailedTransfers( $targetId ) );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
+		/** @var Entity_Form_Transfer_Target[] $targets */
 		$targets	= $this->modelTarget->getAll( [], ['title' => 'ASC'] );
 		foreach( $targets as $target ){
-			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, [], ['createdAt'] );
+			$target->rules		= $this->modelRule->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->transfers	= $this->modelTransfer->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->fails		= count( $this->getLatestUnhandledFailedTransfers( $target->formTransferTargetId ) );
+			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, ['createdAt' => 'DESC'], ['createdAt'] );
 		}
 		$this->addData( 'targets', $targets );
 	}
 
+	/**
+	 *	@param		string		$targetId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $targetId ): void
 	{
 		$this->modelTarget->remove( $targetId );
 		$this->restart( NULL, TRUE );
 	}
 
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelTarget		= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransfer	= new Model_Form_Fill_Transfer( $this->env );
+		$this->modelRule		= new Model_Form_Transfer_Rule( $this->env );
 	}
 
-	protected function getLatestUnhandledFailedTransfers( string $targetId )
+	/**
+	 *	@param		string		$targetId
+	 *	@return		array<object>
+	 */
+	protected function getLatestUnhandledFailedTransfers( string $targetId ): array
 	{
 		$query	= <<<EOT
 SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));

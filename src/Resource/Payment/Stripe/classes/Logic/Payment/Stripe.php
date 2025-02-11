@@ -1,32 +1,41 @@
 <?php
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Stripe\Exception\ApiErrorException as StripeApiErrorException;
+use Stripe\Stripe as Stripe;
+use Stripe\Charge as StripeCharge;
+use Stripe\Customer as StripeCustomer;
 
 class Logic_Payment_Stripe extends Logic
 {
-	protected $cache;
-	protected $provider;
-	protected $skipCacheOnNextRequest;
-	protected $baseUrl;
+	protected Dictionary $moduleConfig;
+	protected SimpleCacheInterface $cache;
+	protected Resource_Stripe $provider;
+	protected bool $skipCacheOnNextRequest;
+	protected ?string $baseUrl			= '';
 
-	public function checkUser( $userId )
+	public function checkUser( string $userId ): StripeCustomer
 	{
 		return $this->getUser( $userId );
 	}
 
-	public function createMandate( $bankAccountId, $returnUrl )
+	public function createMandate( string $bankAccountId, string $returnUrl )
 	{
 		throw new Exception( 'Not implemented yet' );
 		//  ...
 	}
 
-	public function getUserMandates( $userId )
+	public function getUserMandates( string $userId )
 	{
 		throw new Exception( 'Not implemented yet' );
 		//  ...
 	}
 
-	public function getBankAccountMandates( $userId, $bankAccountId )
+	public function getBankAccountMandates( string $userId, string $bankAccountId )
 	{
 		throw new Exception( 'Not implemented yet' );
 		//  ...
@@ -44,16 +53,16 @@ class Logic_Payment_Stripe extends Logic
 		return $items;
 	}
 
-	public function createChargeFromToken( $orderId, $token )
+	public function createChargeFromToken( string $orderId, string $token ): StripeCharge
 	{
 		$modelOrder	= new Model_Shop_Order( $this->env );
 		$order		= $modelOrder->get( $orderId );
-		$charge		= \Stripe\Charge::create( array(
+		$charge		= StripeCharge::create( [
 			"amount"		=> $order->priceTaxed * 100,
 			"currency"		=> $order->currency,
 			"description"	=> "Online-Bestellung am ".date( 'j.n.Y' ),
 			"source"		=> $token,
-		) );
+		] );
 		return $charge;
 	}
 
@@ -63,17 +72,17 @@ class Logic_Payment_Stripe extends Logic
 		//  ...
 	}
 
-	public function createCustomerFromLocalUser( $localUserId )
+	public function createCustomerFromLocalUser( $localUserId ): StripeCustomer
 	{
 		$modelUser		= new Model_User( $this->env );
-		$modelAddress	= new Model_Address( $this->env );
-		$user			= $modelUser->get( $localUserId );
-		$user	= \Stripe\Customer::create( array(
-			'email'			=> $address->email,
+		/** @var ?Entity_User $user */
+		$user		= $modelUser->get( $localUserId );
+		$customer	= StripeCustomer::create( [
+			'email'			=> $user->email,
 			'description'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')',
-		) );
-		$this->setUserIdForLocalUserId( $user->id, $localUserId );
-		return $user;
+		] );
+		$this->setUserIdForLocalUserId( $customer->id, $localUserId );
+		return $customer;
 	}
 
 	/**
@@ -87,18 +96,26 @@ class Logic_Payment_Stripe extends Logic
 		}
 	}
 
-	public function getUser( $userId )
+	/**
+	 *	@param		string		$userId
+	 *	@return		StripeCustomer
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		StripeApiErrorException
+	 */
+	public function getUser( string $userId ): StripeCustomer
 	{
 		$cacheKey	= 'stripe_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
-		if( is_null( $item = $this->cache->get( $cacheKey ) ) ){
-			$item	= \Stripe\Customer::retrieve( $userId );
+		/** @var ?Customer $item */
+		$item		= $item = $this->cache->get( $cacheKey );
+		if( is_null( $item ) ){
+			$item	= StripeCustomer::retrieve( $userId );
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
 	}
 
-	public function setUserIdForLocalUserId( $userId, $localUserId )
+	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -106,22 +123,22 @@ class Logic_Payment_Stripe extends Logic
 			'provider'	=> 'stripe',
 		] );
 		if( $relation ){
-			$modelAccount->edit( $relation->userPaymentAccountId, array(
+			$modelAccount->edit( $relation->userPaymentAccountId, [
 				'paymentAccountId'	=> $userId,
 //				'modifiedAt'		=> time(),
-			) );
+			] );
 		}
 		else{
-			$modelAccount->add( array(
+			$modelAccount->add( [
 				'userId'	=> $localUserId,
 				'paymentAccountId'	=> $userId,
 				'provider'	=> 'stripe',
 				'createdAt'	=> time(),
-			) );
+			] );
 		}
 	}
 
-	public function getUserIdFromLocalUserId( $localUserId, $strict = TRUE )
+	public function getUserIdFromLocalUserId( int|string $localUserId, bool $strict = TRUE )
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -135,17 +152,23 @@ class Logic_Payment_Stripe extends Logic
 		return $relation->paymentAccountId;
 	}
 
-	public function skipCacheOnNextRequest( $skip )
+	public function skipCacheOnNextRequest( bool $skip ): self
 	{
-		$this->skipCacheOnNextRequest	= (bool) $skip;
+		$this->skipCacheOnNextRequest	= $skip;
+		return $this;
 	}
 
-	public function uncache( $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function uncache( string $key ): bool
 	{
-		$this->cache->remove( 'stripe_'.$key );
+		return $this->cache->delete( 'stripe_'.$key );
 	}
 
-	public function updateCustomer( $user )
+	public function updateCustomer( StripeCustomer $user )
 	{
 		throw new Exception( 'Not implemented yet' );
 		$this->uncache( 'user_'.$user->Id );
@@ -155,28 +178,28 @@ class Logic_Payment_Stripe extends Logic
 	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
-		\Stripe\Stripe::setApiKey( $this->moduleConfig->get( 'api.key.secret' ) );
+		Stripe::setApiKey( $this->moduleConfig->get( 'api.key.secret' ) );
 
 //		print_m( $this->moduleConfig->getAll() );die;
 		$this->cache		= $this->env->getCache();
 		$this->provider		= Resource_Stripe::getInstance( $this->env );
 		$this->baseUrl		= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 	}
 
 	/**
 	 *	Removes cache key of next API request if skipping next request is enabled.
-	 *	Disables skipping next request afterwards.
+	 *	Disables skipping next request afterward.
 	 *	To be called right before the next API request.
 	 *	@access		protected
 	 *	@param		string			$cacheKey			Cache key of entity to possible uncache
 	 *	@return		void
 	 */
-	protected function applyPossibleCacheSkip( $cacheKey )
+	protected function applyPossibleCacheSkip( string $cacheKey ): void
 	{
 		if( $this->skipCacheOnNextRequest ){
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 			$this->skipCacheOnNextRequest	= FALSE;
 		}
 	}

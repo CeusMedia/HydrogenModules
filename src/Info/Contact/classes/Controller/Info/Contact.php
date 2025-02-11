@@ -1,192 +1,50 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Contact extends Controller
 {
-	protected $request;
-	protected $messenger;
+	public static string $moduleId	= 'Info_Contact';
+
+	protected HttpRequest $request;
+	protected MessengerResource $messenger;
 
 	protected ?string $useCaptcha	= NULL;
 	protected bool $useCsrf;
 	protected bool $useHoneypot;
 	protected bool $useNewsletter;
 
-	public function ajaxForm()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index(): void
 	{
-		$message	= '';
-		$data		= NULL;
-		if( !$this->request->isAjax() )
-			$message	= "Access granted for AJAX requests, only.";
-		else if( !$this->request->getMethod()->isPost() )
-			$message	= "Access granted for POST requests, only.";
-		else{
-			try{
-				$logic		= Logic_Mail::getInstance( $this->env );
-				$mail		= new Mail_Info_Contact_Form( $this->env, $this->request->getAll() );
-				$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
-				$logic->handleMail( $mail, $receiver, 'de' );
-				$data		= TRUE;
-			}
-			catch( Exception $e ){
-				$message	= $e->getMessage();
-			}
-		}
-		header( 'Content-Type: application/json' );
-		if( $message ){
-			print( json_encode( [
-				'status'	=> "error",
-				'message'	=> $message,
-			] ) );
-		}
-		else{
-			print( json_encode( [
-				'status'	=> "data",
-				'data'		=> $data,
-			] ) );
-		}
-		exit;
-	}
-
-	public function index()
-	{
-		$words			= (object) $this->getWords( 'index' );
-
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$referer	= getEnv( 'HTTP_REFERER' );
-			$valid		= TRUE;
-			if( !strlen( trim( $this->request->get( 'fullname' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorFullNameMissing );
-				$valid	= FALSE;
-			}
-			if( !strlen( trim( $this->request->get( 'email' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorEmailMissing );
-				$valid	= FALSE;
-			}
-			if( !strlen( trim( $this->request->get( 'subject' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorSubjectMissing );
-				$valid	= FALSE;
-			}
-			if( !strlen( trim( $this->request->get( 'message' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorMessageMissing );
-				$valid	= FALSE;
-			}
-			if( strlen( trim( $this->request->get( 'trap' ) ) ) ){
-				$this->messenger->noteError( $words->msgErrorAccessDenied );
-				$valid	= FALSE;
-			}
-			if( $this->useCsrf ){
-//				$logic	= $this->env->getLogic()->get( 'CSRF' );
-				$logic	= Logic_CSRF::getInstance( $this->env );
-				if( !$logic->verifyToken(
-					$this->request->get( 'csrf_form_name' ),
-					$this->request->get( 'csrf_token' )
-				) ){
-					if( !empty( $words->msgErrorCsrfFailed ) )
-						$this->messenger->noteError( $words->msgErrorCsrfFailed );
-					$valid	= FALSE;
-				}
-			}
-//			if( substr( getEnv( 'HTTP_REFERER' ), 0, strlen( $this->env->url ) ) === $this->env->url ){
-			if( !preg_match( '/^'.preg_quote( $this->env->url, '/' ).'/', getEnv( 'HTTP_REFERER' ) ) ){
-				$this->messenger->noteError( $words->msgErrorRefererInvalid );
-				$valid	= FALSE;
-			}
-			if( $this->useCaptcha ){
-				$captchaWord	= $this->request->get( 'captcha' );
-				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captchaWord ) ){
-					$this->messenger->noteError( $words->msgErrorCaptchaFailed );
-					$valid	= FALSE;
-				}
-			}
-			if( $valid ){
-				$data	= $this->request->getAll();
-				try{
-					$logic		= Logic_Mail::getInstance( $this->env );
-					$mail		= new Mail_Info_Contact( $this->env, $data );
-					$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.receiver' )];
-					$logic->handleMail( $mail, $receiver, 'de' );
-					$this->messenger->noteSuccess( $words->msgSuccess );
-
-					//  --  NEWSLETTER  FORWARDING  --  //
-					if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
-						if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
-							$path	= 'info/newsletter';
-							if( $this->env->getModules()->has( 'Info_Pages' ) ){
-								$logicPage	= $this->env->getLogic()->page;
-								$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
-								if( !$page )
-									$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
-								if( $page )
-									$path	= $page->fullpath;
-							}
-							$fullname	= trim( $this->request->get( 'fullname' ) );
-							$parts		= preg_split( '/\s+/', $fullname.' ', 2 );
-							$path		= $path.'?'.http_build_query( array(
-								'fullname'		=> $fullname,
-								'firstname'		=> trim( $parts[0] ),
-								'surname'		=> trim( $parts[1] ),
-								'email'			=> $this->request->get( 'email' ),
-								'groups'		=> $this->request->get( 'topics' ),
-							), '', '&' );
-							$this->restart( $path, FALSE );
-						}
-					}
-					$this->restart( NULL, TRUE );
-
-				//	@todo handle newsletter registration
-				}
-				catch( Exception $e ){
-					$this->messenger->noteFailure( $e->getMessage() );
-					$this->restart( NULL, TRUE );
-				}
-			}
+			$this->saveInput();
+			$this->restart( NULL, TRUE );
 		}
 
+		$this->collectNewsletterTopicsIfEnabled();
 
-		$path	= "./info/contact";
-		if( $this->env->getModules()->has( 'Info_Pages' ) ){
-			$model	= new Model_Page( $this->env );
-			$page	= $model->getByIndex( 'controller', 'Info_Contact' );
-			if( isset( $page->fullpath ) && !empty( $page->fullpath ) ){
-			    $path	= "./".$page->fullpath;
-			}
-			else{
-			    $path	= "./".$page->identifier;
-				if( $page->parentId ){
-					$parent = $model->get( $page->parentId );
-					$path	= "./".$parent->identifier.'/'.$page->identifier;
-				}
-			}
-		}
-
-		if( $this->useNewsletter ){
-			$topics		= [];
-			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
-				$model	= new Model_Newsletter_Group( $this->env );
-				$conditions	= [
-					'status'	=> Model_Newsletter_Group::STATUS_USABLE,
-					'type'		=> [
-						Model_Newsletter_Group::TYPE_DEFAULT,
-						Model_Newsletter_Group::TYPE_AUTOMATIC
-					] ];
-				$orders		= ['title' => 'ASC'];
-				$topics		= $model->getAll( $conditions, $orders );
-			}
-			$this->addData( 'newsletterTopics', $topics );
-		}
-
-		if( $this->useCaptcha === "default" ){
+		if( 'default' === $this->useCaptcha ){
 			$this->addData( 'captchaLength', $this->moduleConfig->get( 'captcha.length' ) );
 			$this->addData( 'captchaStrength', $this->moduleConfig->get( 'captcha.strength' ) );
 		}
-		$this->addData( 'formPath', $path );
-		$this->addData( 'fullname', $this->request->get( 'fullname' ) );
-		$this->addData( 'email', $this->request->get( 'email' ) );
-		$this->addData( 'subject', $this->request->get( 'subject' ) );
-		$this->addData( 'message', $this->request->get( 'message' ) );
+		$this->addData( 'formPath', $this->getFormPath() );
+		$this->addData( 'fullname', $this->request->get( 'fullname', '' ) );
+		$this->addData( 'email', $this->request->get( 'email', '' ) );
+		$this->addData( 'subject', $this->request->get( 'subject', '' ) );
+		$this->addData( 'message', $this->request->get( 'message', '' ) );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -222,5 +80,120 @@ class Controller_Info_Contact extends Controller
 		$this->addData( 'useCsrf', $this->useCsrf );
 		$this->addData( 'useNewsletter', $this->useNewsletter );
 		$this->addData( 'useHoneypot', $this->useHoneypot );
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\CeusMedia\HydrogenFramework\Environment\Exception
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function applyNewsletterForwardingIfEnabled(): void
+	{
+		if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
+			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
+				$path	= 'info/newsletter';
+				if( $this->env->getModules()->has( 'Info_Pages' ) ){
+					$logicPage	= Logic_Page::getInstance( $this->env );
+					/** @var ?Entity_Page $page */
+					$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
+					if( NULL === $page )
+						/** @var ?Entity_Page $page */
+						$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
+					if( NULL !== $page )
+						$path	= $page->fullpath;
+				}
+				$fullname	= trim( $this->request->get( 'fullname' ) );
+				$parts		= preg_split( '/\s+/', $fullname.' ', 2 );
+				$path		= $path.'?'.http_build_query( [
+						'fullname'		=> $fullname,
+						'firstname'		=> trim( $parts[0] ),
+						'surname'		=> trim( $parts[1] ),
+						'email'			=> $this->request->get( 'email' ),
+						'groups'		=> $this->request->get( 'topics' ),
+					], '', '&' );
+				$this->restart( $path );
+			}
+		}
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function collectNewsletterTopicsIfEnabled(): void
+	{
+		if( !$this->useNewsletter )
+			return;
+		$topics		= [];
+		if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
+			$model		= new Model_Newsletter_Group( $this->env );
+			$conditions	= [
+				'status'	=> Model_Newsletter_Group::STATUS_USABLE,
+				'type'		=> [
+					Model_Newsletter_Group::TYPE_DEFAULT,
+					Model_Newsletter_Group::TYPE_AUTOMATIC
+				] ];
+			$orders		= ['title' => 'ASC'];
+			$topics		= $model->getAll( $conditions, $orders );
+		}
+		$this->addData( 'newsletterTopics', $topics );
+	}
+
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getFormPath(): string
+	{
+		$path	= "./info/contact";
+		if( $this->env->getModules()->has( 'Info_Pages' ) ){
+			$model	= new Model_Page( $this->env );
+			$page	= $model->getByIndex( 'controller', 'Info_Contact' );
+			if( !empty( $page->fullpath ) )
+				$path	= "./".$page->fullpath;
+			else{
+				$path	= "./".$page->identifier;
+				if( $page->parentId ){
+					$parent = $model->get( $page->parentId );
+					$path	= "./".$parent->identifier.'/'.$page->identifier;
+				}
+			}
+		}
+		return $path;
+	}
+
+	/**
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function saveInput(): bool
+	{
+		try{
+			/** @var Dictionary $inputData */
+			$inputData		= $this->request->getAll( '', TRUE );
+			$logic			= new Logic_Info_Contact( $this->env );
+			$words			= $this->getWords( 'index' );
+			$errorsOrTrue	= $logic->validateInput( $inputData );
+			if( TRUE !== $errorsOrTrue ){
+				foreach( $errorsOrTrue as $error )
+					$this->messenger->noteError( $words['msgError'.$error] );
+				return FALSE;
+			}
+			$logic->sendDefaultMail( $inputData );
+			$this->messenger->noteSuccess( $words['msgSuccess'] );
+
+			$this->applyNewsletterForwardingIfEnabled();
+
+			//	@todo handle newsletter registration
+
+			return TRUE;
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $e->getMessage() );
+			$this->env->getLog()->logException( $e );
+		}
+		return FALSE;
 	}
 }

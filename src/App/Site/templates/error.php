@@ -4,7 +4,12 @@ use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\JQuery as JQuery;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\Common\UI\Template as Template;
+use CeusMedia\TemplateEngine\Template as Template;
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Exception $e */
 
 //  --  Basic HTML Page Setup  --  //
 
@@ -21,8 +26,15 @@ $options	= ['foldTraces' => TRUE];
 $script		= JQuery::buildPluginCall( 'cmExceptionView', 'dl.exception', $options );
 $page->addHead( HtmlTag::create( 'script', $script ) );
 
-$header		= Template::render( 'locales/de/html/app.header.html', ['theme' => 'custom'] );
-$footer		= Template::render( 'locales/de/html/app.footer.html', ['theme' => 'custom', 'time' => 1] );
+try{
+	$header		= Template::renderFile( 'locales/de/html/app.header.html', ['theme' => 'custom'] );
+	$footer		= Template::renderFile( 'locales/de/html/app.footer.html', ['theme' => 'custom', 'time' => 1] );
+}
+catch( Throwable $innerException ){
+	$env->getLog()->logException( $innerException );
+	$header	= '';
+	$footer	= '';
+}
 $view		= ExceptionView::render( $e );
 
 if( file_exists( 'config/config.ini' ) && $config = @parse_ini_file( 'config/config.ini' ) ){
@@ -32,7 +44,9 @@ if( file_exists( 'config/config.ini' ) && $config = @parse_ini_file( 'config/con
 
 //  --  Custom Content  --  //
 
-( include_once 'templates/error.custom.php' ) or $template	= '<h2>Error</h2>';
+$template	= '<h2>Error</h2>';
+if( file_exists( 'templates/error.custom.php' ) )
+	$template	= include_once 'templates/error.custom.php';
 
 //  --  Content  --  //
 

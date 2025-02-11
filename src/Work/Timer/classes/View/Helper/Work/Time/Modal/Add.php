@@ -5,15 +5,18 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 {
 	protected ?string $module		= NULL;
 	protected ?string $moduleId		= NULL;
-	protected ?string $projectId	= NULL;
+	protected int|string|NULL $projectId	= NULL;
 
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
+		/** @var Logic_Project $logicProject */
 		$logicProject	= Logic_Project::getInstance( $this->env );
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
 
@@ -130,10 +133,10 @@ class View_Helper_Work_Time_Modal_Add extends View_Helper_Work_Time
 	}
 
 	/**
-	 *	@param		string		$projectId
+	 *	@param		int|string		$projectId
 	 *	@return		self
 	 */
-	public function setProjectId( string $projectId ): self
+	public function setProjectId( int|string $projectId ): self
 	{
 		$this->projectId	= $projectId;
 		return $this;

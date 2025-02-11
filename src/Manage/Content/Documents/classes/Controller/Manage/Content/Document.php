@@ -5,11 +5,13 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Content_Document extends Controller
 {
-	protected $frontend;
+	protected Logic_Frontend $frontend;
 	protected Dictionary $moduleConfig;
-	protected $docPath;
-	protected $model;
-	protected $rights;
+	protected string $docPath;
+	protected Model_Document $model;
+	protected array $rights;
+	protected $request;
+	protected $messenger;
 
 	public function add()
 	{

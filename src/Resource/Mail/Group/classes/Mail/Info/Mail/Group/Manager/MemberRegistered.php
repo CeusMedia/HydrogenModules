@@ -1,13 +1,13 @@
 <?php
 class Mail_Info_Mail_Group_Manager_MemberRegistered extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
-		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
+		$member	= $data['member']->title ?: $data['member']->address;
 		$this->setSubject( 'Gruppe "'.$data['group']->title.'": '.$member.' ist beigetreten und benötigt Freigabe' );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
@@ -22,7 +22,7 @@ class Mail_Info_Mail_Group_Manager_MemberRegistered extends Mail_Abstract
 			'deactivate'	=> $this->env->url.'work/mail/group/setMemberStatus/'.$data['group']->mailGroupId.'/'.$data['member']->mailGroupMemberId.'/'.Model_Mail_Group_Member::STATUS_DEACTIVATED,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/memberRegistered.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/manager/memberRegistered.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

@@ -23,13 +23,13 @@ if( $reserves ){
 		}
 		$percent	= (float) $reserve->percent ? number_format( $reserve->percent, 2, ',', '.' ).'&nbsp;%' : '-';
 		$amount		= (float) $reserve->amount ? number_format( $reserve->amount, 2, ',', '.' ).'&nbsp;&euro;' : '-';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $corporation, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $reserve->personalize ? 'ja' : 'nein', ['class' => 'cell-feature'] ),
 			HtmlTag::create( 'td', $percent, ['class' => 'cell-number'] ),
 			HtmlTag::create( 'td', $amount, ['class' => 'cell-number'] ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'25%',
@@ -38,13 +38,13 @@ if( $reserves ){
 		'100',
 		'100',
 	] );
-	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Bezeichnung' ),
 		HtmlTag::create( 'th', 'Zielkonto' ),
 		HtmlTag::create( 'th', '<small>personalisiert</small>', ['class' => 'cell-feature'] ),
 		HtmlTag::create( 'th', 'Prozent', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }

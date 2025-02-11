@@ -16,7 +16,11 @@ class Controller_Stripe_Event extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
 
-	public function receive()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function receive(): void
 	{
 		$response	= $this->env->getResponse();
 		$eventId	= 0;
@@ -63,16 +67,21 @@ class Controller_Stripe_Event extends Controller
 		exit;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->stripe		= Logic_Payment_Stripe::getInstance( $this->env );
 		$this->model		= new Model_Stripe_Event( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
 	}
 
-	protected function sendMail( $type, $data )
+	protected function sendMail( string $type, $data )
 	{
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
 			return;
@@ -81,16 +90,16 @@ class Controller_Stripe_Event extends Controller
 		$mail		= ObjectFactory::createObject( $className, $arguments );
 		$receiver	= ['email' => $this->moduleConfig->get( 'mail.hook' )];
 		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->env->logic->mail->sendMail( $mail, $receiver, $language );
+		return $this->env->getLogic()->get( 'Mail' )->sendMail( $mail, $receiver, $language );
 	}
 
-	protected function verify( string $eventType, $resourceId )
+	protected function verify( string $eventType, $resourceId ): bool
 	{
-		if( preg_match( '@_CREATED$@', $eventType ) )
+		if( str_ends_with( $eventType, '_CREATED' ) )
 			$status	= 'CREATED';
-		else if( preg_match( '@_FAILED$@', $eventType ) )
+		else if( str_ends_with( $eventType, '_FAILED' ) )
 			$status	= 'FAILED';
-		else if( preg_match( '@_SUCCEEDED$@', $eventType ) )
+		else if( str_ends_with( $eventType, '_SUCCEEDED' ) )
 			$status	= 'SUCCEEDED';
 		else return TRUE;														//  no handleable and verifiable event found
 		$entity	= $this->stripe->getEventResource( $eventType, $resourceId );

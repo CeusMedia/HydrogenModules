@@ -10,9 +10,9 @@ It is built on the top of the popular JavaScript framework jQuery and is both ea
 	<version>3.3.5-p3</version>
 	<log version="3.3.5-p2">Extract hook to own hook class.</log>
 	<log version="3.3.5-p3">Support module main switch.</log>
-	<company site="http://fancyapps.com/">fancyapps</company>
+	<company site="https://fancyapps.com/">fancyapps</company>
 	<author email="janis@fancyapps.com">Jānis Skarnelis</author>
-	<license source="http://opensource.org/licenses/gpl-3.0.html">GPL v3</license>
+	<license source="https://opensource.org/licenses/gpl-3.0.html">GPL v3</license>
 	<files>
 		<class>Hook/UI/JS/FancyBox.php</class>
 		<script>jquery.fancybox-3.3.5.min.js</script>

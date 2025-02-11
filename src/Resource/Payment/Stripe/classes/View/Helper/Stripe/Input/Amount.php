@@ -1,11 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract{
-
-	protected $amount;
-	protected $min				= 0;
-	protected $max				= NULL;
+class View_Helper_Stripe_Input_Amount extends View_Helper_Stripe_Abstract
+{
+	protected float $amount			= 0;
+	protected float $min			= 0;
+	protected ?float $max			= NULL;
 	protected string $step			= '0.01';
 
 	protected string $id			= 'input_amount';

@@ -3,7 +3,7 @@
 	<title>Resource: Newsletter</title>
 	<description><![CDATA[Let customers register for newsletter mails.]]></description>
 	<category>Resource</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -26,9 +26,10 @@
 	<log version="0.4.8">Improve template and theme handling.</log>
 	<log version="0.4.9">Improve code style.</log>
 	<log version="0.5">Import from protected SVN repository.</log>
+	<log version="0.5.1">Add theme entity.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Logic/Newsletter.php</class>
 		<class>Mail/Newsletter.php</class>
@@ -40,6 +41,7 @@
 		<class>Model/Newsletter/Reader/Letter.php</class>
 		<class>Model/Newsletter/Template.php</class>
 		<class>Model/Newsletter/Theme.php</class>
+		<class>Entity/Newsletter/Theme.php</class>
 		<class>View/Helper/Newsletter.php</class>
 		<class>View/Helper/Newsletter/Mail.php</class>
 		<class>View/Helper/HtmlToPlainText.php</class>

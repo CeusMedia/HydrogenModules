@@ -6,10 +6,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_FinishPanel_Bank
 {
-	const OUTPUT_FORMAT_HTML		= 1;
-	const OUTPUT_FORMAT_TEXT		= 2;
+	public const OUTPUT_FORMAT_HTML		= 1;
+	public const OUTPUT_FORMAT_TEXT		= 2;
 
-	const OUTPUT_FORMATS			= [
+	public const OUTPUT_FORMATS			= [
 		self::OUTPUT_FORMAT_HTML,
 		self::OUTPUT_FORMAT_TEXT,
 	];
@@ -94,12 +94,12 @@ class View_Helper_Shop_FinishPanel_Bank
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 
 		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
-			return HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+			return HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h3', $this->heading ),
 					$facts->setFormat( $facts::FORMAT_HTML )->setListClass( $this->listClass )->render(),
-				), ['class' => 'content-panel-inner'] ),
-			), ['class' => 'content-panel'] );
+				], ['class' => 'content-panel-inner'] ),
+			], ['class' => 'content-panel'] );
 
 		return PHP_EOL.join( PHP_EOL, [
 			View_Helper_Mail_Text::underscore( $this->heading ),

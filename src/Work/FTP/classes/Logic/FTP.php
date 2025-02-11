@@ -22,7 +22,7 @@ class Logic_FTP
 		$this->cache	= $this->env->getCache();
 	}
 
-	public function connect( string $host, $port, string $username, string $password, string $path )
+	public function connect( string $host, $port, string $username, string $password, string $path ): void
 	{
 		$this->client	= new FtpClient( $host, $port, $path, $username, $password );
 		$this->cachePrefix	= 'ftp_'.$host.$path.'_';
@@ -80,10 +80,10 @@ class Logic_FTP
 
 	public function uncache( string $path )
 	{
-		return $this->cache->remove( $this->cachePrefix.'path_'.$path );
+		return $this->cache->delete( $this->cachePrefix.'path_'.$path );
 	}
 
-	protected function checkConnection()
+	protected function checkConnection(): void
 	{
 		if( !$this->client )
 			throw new RuntimeException( 'Not connected' );

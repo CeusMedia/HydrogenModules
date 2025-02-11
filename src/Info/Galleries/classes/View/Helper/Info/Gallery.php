@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Gallery extends Abstraction
 {
-	const SCOPE_GALLERY		= 0;
-	const SCOPE_IMAGE		= 1;
+	public const SCOPE_GALLERY		= 0;
+	public const SCOPE_IMAGE		= 1;
 
 	protected Dictionary $moduleConfig;
 	protected string $baseFilePath;
@@ -59,7 +59,7 @@ class View_Helper_Info_Gallery extends Abstraction
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$config			= $this->env->getConfig();
-		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathImages		= $config->get( 'path.images' ) ?: 'images/';
 		$pathGalleries	= $this->moduleConfig->get( 'folder' );
 		return $pathImages.$pathGalleries;
 	}
@@ -73,7 +73,7 @@ class View_Helper_Info_Gallery extends Abstraction
 		return $galleries;
 	}
 
-	protected function getGalleryImages( $galleryId ): array
+	protected function getGalleryImages( int|string $galleryId ): array
 	{
 		$configSort		= $this->moduleConfig->getAll( 'gallery.order.', TRUE );
 		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];

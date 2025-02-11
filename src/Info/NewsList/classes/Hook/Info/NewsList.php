@@ -1,12 +1,11 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_NewsList extends Hook
 {
-	public function onViewRenderContent()
+	public function onViewRenderContent(): void
 	{
 		$processor		= new Logic_Shortcode( $this->env );
 		$processor->setContent( $this->payload['content'] );
@@ -54,6 +53,6 @@ class Hook_Info_NewsList extends Hook
 				}
 			}
 		}
-		$payload['content']	= $processor->getContent();
+		$this->payload['content']	= $processor->getContent();
 	}
 }

@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Billing_Corporation extends Model
 {
-	const STATUS_DISABLED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_ACTIVE		= 1;
+	public const STATUS_DISABLED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVE		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_DISABLED,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,

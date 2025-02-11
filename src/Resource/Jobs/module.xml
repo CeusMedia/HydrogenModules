@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<module>
-	<title>Jobs</title>
+<module frameworks="Hydrogen:>=1.0">
+	<title>Resource: Jobs</title>
 	<subtitle>Console based job execution.</subtitle>
 	<description><![CDATA[Console based job execution.
 
@@ -22,10 +22,14 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 Having set execution permissions to job.php, you can run the job like this:
 code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 
-<b>Attention: </b> Make sure to run the job script only after changing directory to the application's root folder.
+For example, to wait for 1 second, run:
+code:shell>./job.php Job.Test.wait 1<code
+
+You can get information about each job with:
+code:shell>./job.php Job.info JOB_ID<code
 ]]></description>
 	<category>Resource</category>
-	<version>0.8.4</version>
+	<version>0.8.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extracted to Hydrogen module.</log>
 	<log version="0.2.1">Introduced logging mechanism.</log>
@@ -73,10 +77,17 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<log version="0.8.2">Refactor job schedule model to support schedule formats: cron, interval, datetime.</log>
 	<log version="0.8.3">Improve error handling.</log>
 	<log version="0.8.4">Support removal of archivable job runs.</log>
+	<log version="0.8.5">Add job to terminate discontinued job runs.</log>
+	<log version="0.8.6">Extract script helper to own class file.</log>
+	<log version="0.8.7">Add model entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Entity/Job/Definition.php</class>
+		<class>Entity/Job/Run.php</class>
+		<class>Entity/Job/Schedule.php</class>
 		<class>Jobber.php</class>
+		<class>JobScriptHelper.php</class>
 		<class>Job/Abstract.php</class>
 		<class>Job/Job.php</class>
 		<class>Job/Job/Lock.php</class>
@@ -93,6 +104,7 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 		<file>job.php</file>
 	</files>
 	<relations>
+		<needs type="composer">ceus-media/mail</needs>
 		<needs type="composer">dragonmantank/cron-expression</needs>
 		<supports type="module">Resource_Maintainer</supports>
 		<supports type="module">Resource_Mail</supports>
@@ -100,6 +112,7 @@ code:shell>./job.php JOB_ID [COMMAND]* [--PARAMETER=VALUE]*<code
 	<job id="Job.list">Job::index</job>
 	<job id="Job.info">Job::info</job>
 <!--	<job id="Job.jsonfy">Job::convertJobConfigToJson</job>-->
+	<job id="Job.jsonfy">Job::terminateDiscontinuedRuns</job>
 	<job id="Job.Lock.list">Job_Lock::list</job>
 	<job id="Job.Lock.clear">Job_Lock::clear</job>
 <!--	<job id="Job.Lock.alert">Job_Lock::alert</job>-->

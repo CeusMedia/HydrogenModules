@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Function Sentry\\\\captureException not found\\.$#"
+			count: 1
+			path: ../../src/App/Site/index.php
+
+		-
+			message: "#^Function Sentry\\\\captureException not found\\.$#"
+			count: 1
+			path: ../../src/Server/Log/Sentry/classes/Hook/Server/Log/Sentry.php
+
+		-
+			message: "#^Function Sentry\\\\init not found\\.$#"
+			count: 1
+			path: ../../src/Server/Log/Sentry/classes/Hook/Server/Log/Sentry.php

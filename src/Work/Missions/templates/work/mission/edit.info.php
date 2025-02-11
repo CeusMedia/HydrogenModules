@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $words */
 /** @var object[] $projects */
 /** @var object[] $missionUsers */
-/** @var object $mission */
+/** @var Entity_Mission $mission */
 
 /**
  * @param $user

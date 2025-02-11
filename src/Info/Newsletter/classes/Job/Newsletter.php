@@ -1,19 +1,30 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+
 class Job_Newsletter extends Job_Abstract
 {
-	protected $config;
-	protected $logic;
-	protected $language;
-	protected $options;
-	protected $words;
+	protected Dictionary $config;
+	protected Logic_Newsletter $logic;
+	protected Language $language;
+	protected Dictionary $options;
+	protected object $words;
 
-	public function clean()
+	/**
+	 * @throws ReflectionException
+	 * @throws DateMalformedIntervalStringException
+	 * @throws DateInvalidOperationException
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 * @todo refactor for scalability: read mail ids first and mail objects in loop
+	 */
+	public function clean(): void
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$modelMail	= new Model_Mail( $this->env );
 		$age		= $this->parameters->get( '--age', '1Y' ) ;
 		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
-		$conditions	= array(
+		$conditions	= [
 			'status'		=> [
 				Model_Mail::STATUS_ABORTED,														//  status: -3
 				Model_Mail::STATUS_FAILED,														//  status: -2
@@ -24,9 +35,10 @@ class Job_Newsletter extends Job_Abstract
 			],
 			'mailClass'		=> 'Mail_Newsletter',
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 		$orders		= ['mailId' => 'ASC'];
 		$limits		= [];
+		/** @var array<Entity_Mail> $mails */
 		$mails		= $modelMail->getAll( $conditions, $orders, $limits );
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -46,7 +58,11 @@ class Job_Newsletter extends Job_Abstract
 		}
 	}
 
-	public function count()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function count(): void
 	{
 		$words		= (object) $this->words->send;													//  get words or like date formats
 
@@ -67,13 +83,19 @@ class Job_Newsletter extends Job_Abstract
 		$this->out( sprintf( '%d mails in newsletter %d queues.', $total, count( $queues ) ) );
 	}
 
-	public function migrate( $verbose = FALSE )
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function migrate( bool $verbose = FALSE ): void
 	{
 		if( $verbose ){
 			$this->out( '' );
 			$this->out( 'Migration::recoverReaderLetterQueueIds' );
 		}
-		$results	= $this->recoverReaderLetterQueueIds( $verbose );
+		$results	= $this->recoverReaderLetterQueueIds();
 		if( $verbose && ( 1 || $results->letters ) )
 			$this->out( vsprintf( "Migrated %d letters into %d queues.", [
 				$results->letters,
@@ -93,8 +115,14 @@ class Job_Newsletter extends Job_Abstract
 			] ) );
 	}
 
-	public function send( $verbose = FALSE )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function send(): void
 	{
+		$verbose	= (bool) $this->parameters->get( '--verbose', TRUE );
 		$words		= (object) $this->words->send;												//  get words or like date formats
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
 		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
@@ -135,9 +163,13 @@ class Job_Newsletter extends Job_Abstract
 				$logicMail->appendRegisteredAttachments( $mail, $language );
 				if( $verbose )
 					$this->out( sprintf( 'Sending mail to %s ...', $letter->reader->email ) );
-				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
-				if( is_int( $mailId ) )
-					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+
+//				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
+//				if( is_int( $mailId ) )
+//					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+
+				$mailId	= $logicMail->enqueueMail( $mail, $language, $receiver );
+				$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 
 				$this->logic->setReaderLetterStatus(
 					$letter->newsletterReaderLetterId,
@@ -170,6 +202,9 @@ class Job_Newsletter extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();												//  get app config
@@ -179,7 +214,13 @@ class Job_Newsletter extends Job_Abstract
 		$this->words		= (object) $this->language->getWords( 'info/newsletter' );				//  get module words
 	}
 
-	protected function recoverReaderLetterMailIds( bool $verbose = FALSE )
+	/**
+	 *	@param		bool		$verbose
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function recoverReaderLetterMailIds( bool $verbose = FALSE ): object
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$countLetters	= 0;
@@ -229,14 +270,19 @@ class Job_Newsletter extends Job_Abstract
 		}
 		if( $verbose && $newsletters )
 			$this->out();
-		return (object) array(
+		return (object) [
 			'newsletters'	=> count( $entries ),
 			'letters'		=> $countLetters,
 			'recovered'		=> $countRecovered,
-		);
+		];
 	}
 
-	protected function recoverReaderLetterQueueIds()
+	/**
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function recoverReaderLetterQueueIds(): object
 	{
 		$modelQueue		= new Model_Newsletter_Queue( $this->env );
 		$modelLetter	= new Model_Newsletter_Reader_Letter( $this->env );
@@ -269,9 +315,9 @@ class Job_Newsletter extends Job_Abstract
 				] );
 			}
 		}
-		return (object) array(
+		return (object) [
 			'queues'		=> count( $newsletterIds ),
 			'letters'		=> count( $letters ),
-		);
+		];
 	}
 }

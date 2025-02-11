@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Manage_Relocation $view */
+/** @var object $relocation */
+/** @var string $shortcut */
 
 $w		= (object) $words['edit'];
 
@@ -17,11 +24,11 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'name'		=> 'save',
 	'class'		=> 'btn btn-success',
 ] );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/relocation/remove/'.$relocation->relocationId,
 	'class'		=> 'btn btn-small btn-danger',
 	'onclick'	=> htmlentities( 'return confirm("'.$w->buttonRemove_confirm.'")', ENT_QUOTES, 'UTF-8' ),
-) );
+] );
 
 $optStatus		= HtmlElements::Options( $words['states'], $relocation->status );
 $urlService		= $env->url.'info/relocation/'.$relocation->relocationId;
@@ -70,7 +77,7 @@ $panelEdit	= '
 		</div>
 ';
 
-$panelInfo	= $this->loadTemplateFile( 'manage/relocation/edit.info.php' );
+$panelInfo	= $view->loadTemplateFile( 'manage/relocation/edit.info.php' );
 
 extract( $view->populateTexts( ['edit.top', 'edit.bottom'], 'html/manage/relocation/' ) );
 

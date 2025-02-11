@@ -13,6 +13,7 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 	public string $classLinkActive		= '';
 	public string $classLinkDisabled	= '';
 
+	/** @var array<object{url: string, label: string, priority: int,disabled: bool}>  */
 	protected array $tabs				= [];
 	protected $current			= 0;
 	protected string $basePath			= '';
@@ -42,6 +43,10 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 	public function renderTabs( $current = 0 ): string
 	{
 		$list	= [];																			//  prepare empty list
+		/**
+		 * @var int $nr
+		 * @var object{url: string, label: string, priority: int,disabled: bool} $tab
+		 */
 		foreach( $this->tabs as $nr => $tab ){														//  iterate registered tabs
 			$link	= [];
 			$item	= [];
@@ -65,13 +70,15 @@ class View_Helper_Navigation_Bootstrap_Tabs extends Abstraction
 			$key		= (float) $tab->priority.'.'.str_pad( $nr, 2, '0', STR_PAD_LEFT );			//  generate order key
 			$list[$key]	= HtmlTag::create( 'li', $link, $item );								//  enlist tab
 		}
+		if( [] === $list )																			//  no tabs
+			return '';
+
 		ksort( $list );
-		if( count( $list ) > 1 )																	//  more than 1 tab
-			return HtmlTag::create( 'ul', $list, [											//  return rendered tab list
-				'class'			=> $this->classList,
-				'data-toggle'	=> $tab->url[0] == '#' ? 'tab' : NULL,
-			] );
-		return '';
+		/** @var object{url: string, label: string, priority: int,disabled: bool} $tab */
+		return HtmlTag::create( 'ul', $list, [												//  return rendered tab list
+			'class'			=> $this->classList,
+			'data-toggle'	=> $tab->url[0] == '#' ? 'tab' : NULL,
+		] );
 	}
 
 	public function setBasePath( string $path ): self

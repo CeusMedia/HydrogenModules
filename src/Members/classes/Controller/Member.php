@@ -8,30 +8,11 @@ class Controller_Member extends Controller
 	protected $request;
 	protected $session;
 	protected $messenger;
-	protected $modelUser;
-	protected $modelRelation;
-	protected $userId;
-	protected $logicMember;
-	protected $logicMail;
-
-	public static function ___onGetRelatedUsers( Environment $env, $context, $module, $payload )
-	{
-		$modelUser	= new Model_User( $env );
-		$userIds	= Logic_Member::getInstance( $env )->getRelatedUserIds( $payload->userId, 2 );
-		$list		= [];
-		if( $userIds ){
-			$relatedUsers	= $modelUser->getAll( ['userId' => $userIds], ['username' => 'ASC'] );
-			foreach( $relatedUsers as $relatedUser )
-				$list[$relatedUser->userId]	= $relatedUser;
-		}
-		$words	= $env->getLanguage()->getWords( 'member' );
-		$payload->list[]	= (object) array(
-			'module'		=> 'Members',
-			'label'			=> $words['hook-getRelatedUsers']['label'],
-			'count'			=> count( $list ),
-			'list'			=> $list,
-		);
-	}
+	protected Model_User $modelUser;
+	protected Model_User_Relation $modelRelation;
+	protected ?string $userId;
+	protected Logic_Member $logicMember;
+	protected Logic_Mail $logicMail;
 
 	public function accept( $userRelationId )
 	{
@@ -44,10 +25,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Accept( $this->env, array(
+			$mail		= new Mail_Member_Accept( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> 2,
@@ -125,10 +106,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Reject( $this->env, array(
+			$mail		= new Mail_Member_Reject( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
 
 			$this->modelRelation->edit( $relation->userRelationId, [
@@ -161,10 +142,10 @@ class Controller_Member extends Controller
 				$toUserId	= $relation->fromUserId;
 
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Revoke( $this->env, array(
+			$mail		= new Mail_Member_Revoke( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $toUserId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $toUserId, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
 			$this->messenger->noteSuccess( $words->successReleased );
@@ -199,10 +180,10 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
-			$mail		= new Mail_Member_Request( $this->env, array(
+			$mail		= new Mail_Member_Request( $this->env, [
 				'sender'	=> $this->modelUser->get( $this->userId ),
 				'receiver'	=> $this->modelUser->get( $userId ),
-			) );
+			] );
 			$this->logicMail->handleMail( $mail, (int) $userId, $language );
 			$data	= array(
 				'fromUserId'	=> $this->userId,
@@ -237,6 +218,7 @@ class Controller_Member extends Controller
 				if( ( $key = array_search( $userId, $userIds ) ) !== FALSE )
 					unset( $userIds[$key] );
 			if( $userIds ){
+				/** @var array<Entity_User> $users */
 				$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
 				foreach( $users as $user )
 					$user->relation	= $this->modelRelation->getByIndex( 'fromUserId', $this->userId );
@@ -246,9 +228,10 @@ class Controller_Member extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function view( $userId )
+	public function view( int|string $userId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
+		/** @var ?Entity_User $user */
 		$user = $this->modelUser->get( $userId );
 		if( !$user ){
 			$this->messenger->noteError( $words->errorUserIdInvalid );

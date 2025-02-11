@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 /**
@@ -7,13 +8,13 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Info_Dashboard extends Logic
 {
-	protected $model;
-	protected $moduleConfig;
+	protected Model_Dashboard $model;
+	protected Dictionary $moduleConfig;
 
 	/**
 	 *	Adds a new user dashboard.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to assign dashboard to
+	 *	@param		int|string		$userId			ID of user to assign dashboard to
 	 *	@param		string			$title			Title of dashboard (mandatory)
 	 *	@param		string			$description	Description of dashboard (optional)
 	 *	@param		array|string	$panels			List of panel IDs to add to dashboard as array or comma-separated string
@@ -21,20 +22,20 @@ class Logic_Info_Dashboard extends Logic
 	 *	@return		integer			ID of new user dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function addUserDashboard( $userId, string $title, string $description, array $panels = [], bool $select = FALSE )
+	public function addUserDashboard( int|string $userId, string $title, string $description, array|string $panels = [], bool $select = FALSE ): int
 	{
 		if( is_string( $panels ) )
 			$panels		= strlen( trim( $panels ) ) ? explode( ',', $panels ) : [];
 		if( !is_array( $panels ) )
 			throw new InvalidArgumentException( 'Panels list must be array or string' );
-		$dashboardId	= $this->model->add( array(
+		$dashboardId	= $this->model->add( [
 			'userId'		=> $userId,
 			'title'			=> $title,
 			'description'	=> $description,
 			'panels'		=> join( ',', $panels ),
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( count( $this->getUserDashboards( $userId ) ) === 1 || $select )
 			$this->setUserDashboard( $userId, $dashboardId );
 		return $dashboardId;
@@ -43,14 +44,14 @@ class Logic_Info_Dashboard extends Logic
 	/**
 	 *	Adds a panel to current dashboard of user.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to assign panel to
+	 *	@param		int|string		$userId			ID of user to assign panel to
 	 *	@param		string			$panelId		ID of panel to add to current dashboard of user
 	 *	@param		string			$position		Position in dashboard to add panel to (top|bottom), default: bottom
 	 *	@return		boolean
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 *	@throws		RangeException					if limit of panels per dashboard has been reached
 	 */
-	public function addPanelToUserDashboard( $userId, $panelId, string $position = 'bottom' ): bool
+	public function addPanelToUserDashboard( int|string $userId, $panelId, string $position = 'bottom' ): bool
 	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		$panels		= strlen( $dashboard->panels ) ? explode( ',', $dashboard->panels ) : [];
@@ -65,25 +66,25 @@ class Logic_Info_Dashboard extends Logic
 				array_push( $panels, $panelId );
 				break;
 		}
-		return (bool) $this->model->edit( $dashboard->dashboardId, array(
+		return (bool) $this->model->edit( $dashboard->dashboardId, [
 			'panels'		=> implode( ',', $panels ),
 			'modifiedAt'	=> time()
-		) );
+		] );
 	}
 
 	/**
-	 *	Indicates whether an user (by its ID) has access to a dashboard (by ID).
+	 *	Indicates whether a user (by its ID) has access to a dashboard (by ID).
 	 *	If available, the dashboard data object will be returned.
 	 *	If not available an exception will be thrown having strict mode enabled (default).
-	 *	Otherwise with strict mode disabed FALSE will be returned.
+	 *	Otherwise, with strict mode disabled FALSE will be returned.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to assign dashboard to
+	 *	@param		int|string		$userId			ID of user to assign dashboard to
 	 *	@param		integer			$dashboardId	ID of dashboard to check user against to
 	 *	@param		boolean			$strict			Flag: throw exception if not available (default), otherwise return FALSE
 	 *	@return		object|boolean	Data object of current user dashboard or FALSE if not available and strict mode disabled
 	 *	@throws		DomainException					if dashboard is not existing or not assigned to user and strict mode enabled
 	 */
-	public function checkUserDashboard( $userId, $dashboardId, bool $strict = TRUE )
+	public function checkUserDashboard( int|string $userId, $dashboardId, bool $strict = TRUE )
 	{
 		foreach( $this->getUserDashboards( $userId ) as $dashboard )
 			if( $dashboard->dashboardId == $dashboardId )
@@ -96,7 +97,7 @@ class Logic_Info_Dashboard extends Logic
 	/**
 	 *	Indicates whether user dashboards are enabled by module configuration.
 	 *	If not available an exception will be thrown having strict mode enabled (default).
-	 *	Otherwise with strict mode disabed FALSE will be returned.
+	 *	Otherwise, with strict mode disabled FALSE will be returned.
 	 *	@access		public
 	 *	@param		boolean			$strict			Flag: throw exception if not available (default), otherwise return FALSE
 	 *	@return		boolean
@@ -114,12 +115,12 @@ class Logic_Info_Dashboard extends Logic
 	/**
 	 *	Returns current user dashboard if available.
 	 *	@access		public
-	 *	@param		string			$userId			ID of user to get current dashboard for
+	 *	@param		int|string		$userId			ID of user to get current dashboard for
 	 *	@param		boolean			$strict			Flag: throw exception if not available (default), otherwise return FALSE
 	 *	@return		object|NULL		Dashboard data object
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 */
-	public function getUserDashboard( string $userId, bool $strict = TRUE ): ?object
+	public function getUserDashboard( int|string $userId, bool $strict = TRUE ): ?object
 	{
 		$dashboard	= $this->model->getByIndices( ['userId' => $userId, 'isCurrent' => 1] );
 		if( $dashboard )
@@ -133,10 +134,10 @@ class Logic_Info_Dashboard extends Logic
 	 *	Returns list of user dashboards.
 	 *	List is ordered by last modification date descending.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to assign dashboard to
+	 *	@param		int|string		$userId			ID of user to assign dashboard to
 	 *	@return		array			List of user dashboards
 	 */
-	public function getUserDashboards( $userId ): array
+	public function getUserDashboards( int|string $userId ): array
 	{
 		return $this->model->getAllByIndices(
 			array( 'userId' => $userId ),
@@ -147,12 +148,12 @@ class Logic_Info_Dashboard extends Logic
 	/**
 	 *	Set user dashboard to be current.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user
+	 *	@param		int|string		$userId			ID of user
 	 *	@param		integer			$dashboardId	ID of dashboard to set as current for user
 	 *	@return		boolean			Whether changes has been made or not
 	 *	@throws		DomainException					if dashboard is not existing or not assigned to user and strict mode enabled
 	 */
-	public function setUserDashboard( $userId, $dashboardId ): bool
+	public function setUserDashboard( int|string $userId, $dashboardId ): bool
 	{
 		$dashboardToSelect	= $this->checkUserDashboard( $userId, $dashboardId );
 		if( ( $dashboardCurrent = $this->getUserDashboard( $userId, FALSE ) ) ){
@@ -165,15 +166,15 @@ class Logic_Info_Dashboard extends Logic
 	}
 
 	/**
-	 *	Sets ordered list of panels (by ID) to an user dashboard.
+	 *	Sets ordered list of panels (by ID) to a user dashboard.
 	 *	@access		public
-	 *	@param		integer			$userId			ID of user to assign dashboard to
+	 *	@param		int|string		$userId			ID of user to assign dashboard to
 	 *	@param		array|string	$panels			List of panel IDs to set to dashboard as array or comma-separated string
 	 *	@return		boolean			Whether changes has been made or not
 	 *	@throws		DomainException					if user is not having a current dashboard
 	 *	@throws		InvalidArgumentException		if given panels is neither an array nor a valid string
 	 */
-	public function setUserPanels( $userId, array $panels = [] ): bool
+	public function setUserPanels( int|string $userId, array|string $panels = [] ): bool
 	{
 		$dashboard	= $this->getUserDashboard( $userId );
 		if( is_string( $panels ) )
@@ -183,10 +184,10 @@ class Logic_Info_Dashboard extends Logic
 		$panelsString	= join( ',', $panels );
 		if( $dashboard->panels === $panelsString )
 			return FALSE;
-		return (bool) $this->model->edit( $dashboard->dashboardId, array(
+		return (bool) $this->model->edit( $dashboard->dashboardId, [
 			'panels'		=> $panelsString,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
 	/**

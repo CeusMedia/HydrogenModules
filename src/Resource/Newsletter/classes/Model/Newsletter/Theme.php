@@ -36,6 +36,10 @@ class Model_Newsletter_Theme
 
 	protected string $themePath;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string			$themePath
+	 */
 	public function __construct( Environment $env, string $themePath )
 	{
 		$this->env			= $env;
@@ -46,35 +50,35 @@ class Model_Newsletter_Theme
 	 *	@param		string		$templateId
 	 *	@param		array		$data
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function createFromTemplate( string $templateId, array $data )
+	public function createFromTemplate( string $templateId, array $data ): void
 	{
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
 		$template		= $modelTemplate->get( $templateId );
 		$data			= (object) array_merge( (array) $template, $data );
-		$json	= (object) [
-			'id'		=> ID::uuid(),
-			'title'		=> $data->title,
-			'version'	=> $data->version,
-			'created'	=> date( 'c', $data->createdAt ),
-			'modified'	=> date( 'c', $data->modifiedAt ),
-			'sender'	=> [
-				'address'	=> $data->senderAddress,
-				'name'		=> $data->senderName,
-			],
-			'imprint'	=> $data->imprint,
-			'styles'	=> $data->styles,
-			'author'	=> [
-				'name'		=> $data->authorName,
-				'email'		=> $data->authorEmail,
-				'company'	=> $data->authorCompany,
-				'url'		=> $data->authorUrl,
-			],
-			'license'		=> $data->license,
-			'licenseUrl'	=> $data->licenseUrl,
-			'description'	=> $data->description,
+
+		$entity			= new Entity_Newsletter_Theme();
+		$entity->title		= $data->title;
+		$entity->version	= $data->version;
+		$entity->created	= date( 'c', $data->createdAt );
+		$entity->modified	= date( 'c', $data->modifiedAt );
+		$entity->sender		= (object) [
+			'address'	=> $data->senderAddress,
+			'name'		=> $data->senderName,
 		];
+		$entity->imprint	= $data->imprint;
+		$entity->styles	= $data->styles;
+		$entity->author		= (object) [
+			'name'		=> $data->authorName,
+			'email'		=> $data->authorEmail,
+			'company'	=> $data->authorCompany,
+			'url'		=> $data->authorUrl,
+		];
+		$entity->license	= $data->license;
+		$entity->licenseUrl	= $data->licenseUrl;
+		$entity->description	= $data->description;
+
 		$themeKey		= strtolower( $data->title );
 		$themeKey		= preg_replace( '/[^a-z0-9 ]/', '', $themeKey );
 		$themeKey		= str_replace( ' ', '_', $themeKey ).'_v'.$data->version;
@@ -85,7 +89,7 @@ class Model_Newsletter_Theme
 			$folder		= $this->themePath.$themeKey.'_'.$version;
 		}
 		mkdir( $folder );
-		$json	= json_encode( $json, JSON_PRETTY_PRINT );
+		$json	= json_encode( $entity, JSON_PRETTY_PRINT );
 		file_put_contents( $folder.'/template.json', $json );
 		file_put_contents( $folder.'/template.html', $data->html );
 		file_put_contents( $folder.'/template.txt', $data->plain );
@@ -102,11 +106,16 @@ class Model_Newsletter_Theme
 			$this->env->getMessenger()->noteFailure( $error );
 	}
 
-	public function get( string $theme )
+	public function get( string $theme ): Entity_Newsletter_Theme
 	{
 		return $this->getFromFolder( $theme );
 	}
 
+	/**
+	 * @return Entity_Newsletter_Theme[]
+	 * @throws UnexpectedValueException if the path cannot be opened.
+	 * @throws RuntimeException if the path is an empty string.
+	 */
 	public function getAll(): array
 	{
 		$themes	= [];
@@ -120,11 +129,11 @@ class Model_Newsletter_Theme
 		ksort( $themes );
 		$list	= [];
 		foreach( $themes as $theme )
-			$list[$theme->id->getValue()]	= $theme;
+			$list[$theme->id]	= $theme;
 		return $list;
 	}
 
-	public function getFromFolder( string $theme )
+	public function getFromFolder( string $theme ): Entity_Newsletter_Theme
 	{
 		if( file_exists( $this->themePath.$theme.'/template.json' ) )
 			return $this->getFromFolderJson( $theme );
@@ -133,28 +142,38 @@ class Model_Newsletter_Theme
 		throw new RangeException( 'Theme meta file "'.$theme.'" is not existing' );
 	}
 
-	public function getFromId( $id )
+	/**
+	 *	@param		int|string		$id
+	 *	@return		?Entity_Newsletter_Theme
+	 */
+	public function getFromId( int|string $id ): ?Entity_Newsletter_Theme
 	{
 		$themes	= $this->getAll();
-		return $themes[$id];
+		return $themes[$id] ?? NULL;
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function getFromFolderJson( string $theme )
+	protected function getFromFolderJson( string $theme ): Entity_Newsletter_Theme
 	{
 		$json	= file_get_contents( $this->themePath.$theme.'/template.json' );
+
 		$data	= json_decode( $json );
 		if( !isset( $data->id ) ){
- 			$data->id	= ID::uuid();
+			$data->id	= ID::uuid();
 			$json		= json_encode( $data, JSON_PRETTY_PRINT );
 			file_put_contents( $this->themePath.$theme.'/template.json', $json );
 		}
-		$data->folder	= $theme;
-		return $data;
+
+		$entity	= new Entity_Newsletter_Theme();
+		foreach( $data as $key => $value )
+			$entity->$key	= $value;
+		$entity->folder	= $theme;
+
+		return $entity;
 	}
 
-	protected function getFromFolderXml( string $theme )
+	protected function getFromFolderXml( string $theme ): Entity_Newsletter_Theme
 	{
 		$xml	= XmlElementReader::readFile( $this->themePath.$theme.'/template.xml' );
 		foreach( $xml->author as $author ){
@@ -163,21 +182,21 @@ class Model_Newsletter_Theme
 					$author->setAttribute( $attributeName, $attributeDefault );
 		}
 		if( !$xml->copyright )
-			$xml->addChild( 'copyright', NULL );
+			$xml->addChild( 'copyright' );
 		foreach( $this->attributesCopyright as $attributeName => $attributeDefault )
 			if( !$xml->copyright->hasAttribute( $attributeName ) )
 				$xml->copyright->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->description )
-			$xml->addChild( 'description', NULL );
+			$xml->addChild( 'description' );
 		foreach( $this->attributesDescription as $attributeName => $attributeDefault )
 			if( !$xml->description->hasAttribute( $attributeName ) )
 				$xml->description->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->createdAt )
-			$xml->addChild( 'created', NULL );
+			$xml->addChild( 'created' );
 		if( !$xml->modifiedAt )
-			$xml->addChild( 'modified', NULL );
+			$xml->addChild( 'modified' );
 		foreach( $this->attributesTimestamp as $attributeName => $attributeDefault )
 			if( !$xml->created->hasAttribute( $attributeName ) )
 				$xml->created->setAttribute( $attributeName, $attributeDefault );
@@ -186,12 +205,18 @@ class Model_Newsletter_Theme
 				$xml->modified->setAttribute( $attributeName, $attributeDefault );
 
 		if( !$xml->license )
-			$xml->addChild( 'license', NULL );
+			$xml->addChild( 'license' );
 		foreach( $this->attributesLicense as $attributeName => $attributeDefault )
 			if( !$xml->license->hasAttribute( $attributeName ) )
 				$xml->license->setAttribute( $attributeName, $attributeDefault );
 
 		$xml->addChild( 'id', $theme );
-		return $xml;
+		$entity	= new Entity_Newsletter_Theme();
+		$object	= \CeusMedia\Common\XML\Converter::toPlainObject( $xml );
+		foreach( $object as $key => $value )
+			$entity->$key	= $value;
+		$entity->folder	= $theme;
+
+		return $entity;
 	}
 }

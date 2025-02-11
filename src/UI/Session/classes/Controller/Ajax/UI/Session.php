@@ -4,7 +4,7 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Ajax_UI_Session extends Controller
 {
-	public function keepAlive()
+	public function keepAlive(): never
 	{
 		exit;
 /*		$config		= $this->env->getConfig();

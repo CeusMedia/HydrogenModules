@@ -1,26 +1,17 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_MetaTags_MobileWebApp extends Hook
 {
-	/**
-	 *	@param		Environment		$env		Environment object
-	 *	@static
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
-	 *	@return		void
-	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload )
+	public function onPageApplyModules(): void
 	{
-		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_metatags_mobilewebapp.', TRUE );
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_metatags_mobilewebapp.', TRUE );
 		if( !$moduleConfig->get( 'active' ) )
 			return;
 
-		$context->addMetaTag( 'name', 'mobile-web-app-capable', 'yes' );
-		$context->addMetaTag( 'name', 'apple-mobile-web-app-capable', 'yes' );
+		$this->context->addMetaTag( 'name', 'mobile-web-app-capable', 'yes' );
+		$this->context->addMetaTag( 'name', 'apple-mobile-web-app-capable', 'yes' );
 
 /*		$options	= [];
 		foreach( $moduleConfig->getAll() as $key => $value )

@@ -130,19 +130,36 @@ body.moduleShop form {
 /*  --  PAYMENT METHODS  --  */
 ul.payment-method-list li.payment-method-list-item {
 	}
-ul.payment-method-list li.payment-method-list-item a {
-	display: block;
-	font-size: 1.5em;
-	line-height: 1.5em;
+ul.payment-method-list li.payment-method-list-item a div.item {
+	display: flex;
 	margin-bottom: 0.2em;
-	padding: 0.5em 0.75em;
 	background-color: rgba(191, 191, 191, 0.05);
 	border: 1px solid rgba(127, 127, 127, 0.25);
-	border-radius: 0.2em;
+/*	border-radius: 0.2em;*/
 	min-height: 55px;
 	}
-ul.payment-method-list li.payment-method-list-item a.current,
-ul.payment-method-list li.payment-method-list-item a:hover {
+ul.payment-method-list li.payment-method-list-item a div.item {
+	}
+ul.payment-method-list li.payment-method-list-item a div.item-icon {
+	width: 120px;
+	padding: 0.5em;
+	}
+ul.payment-method-list li.payment-method-list-item a div.item-data {
+	flex: 1;
+	padding: 0.5em;
+	}
+ul.payment-method-list li.payment-method-list-item a div.item-data div.item-title {
+	font-size: 1.5em;
+	line-height: 1.5em;
+	}
+ul.payment-method-list li.payment-method-list-item a div.item-data div.item-desc {
+	}
+ul.payment-method-list li.payment-method-list-item a div.item-data div.item-fees {
+	font-size: 0.85em;
+	}
+
+ul.payment-method-list li.payment-method-list-item a.current div.item,
+ul.payment-method-list li.payment-method-list-item a:hover div.item {
 	background-color: rgba(191, 191, 191, 0.25);
 	border: 1px solid rgba(127, 127, 127, 0.5);
 	text-decoration: none;

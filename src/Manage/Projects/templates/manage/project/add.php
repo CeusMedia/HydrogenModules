@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var ?string $from */
+
 $w	= (object) $words['add'];
 
 /*  --  STATES  --  */
@@ -30,11 +33,11 @@ $optPriority		= join( '', $optPriority );
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'not-icon-arrow-left icon-list'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
-	'href'	=> './'.( $from ? $from : 'manage/project' ),
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
+	'href'	=> './'.( $from ?: 'manage/project' ),
 	'class'	=> 'btn btn-small',
-) );
-if( $from && preg_match( '/add$/', $from ) )
+] );
+if( $from && str_ends_with( $from, 'add' ) )
 	$buttonCancel	= "";
 
 $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [

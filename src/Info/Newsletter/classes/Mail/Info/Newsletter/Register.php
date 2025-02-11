@@ -1,7 +1,12 @@
 <?php
 class Mail_Info_Newsletter_Register extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$words		= (object) $this->getWords( 'info/newsletter', 'register' );
 		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
@@ -12,6 +17,10 @@ class Mail_Info_Newsletter_Register extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderTextBody(): string
 	{
 		$data				= $this->data;
@@ -20,6 +29,6 @@ class Mail_Info_Newsletter_Register extends Mail_Abstract
 		$data['key']		= substr( md5( 'InfoNewsletterSalt:'.$data['readerId'] ), 10, 10 );
 		$data['baseUrl']	= $this->env->url;
 
-		return $this->view->loadContentFile( 'mail/info/newsletter/register.txt', $data );
+		return $this->loadContentFile( 'mail/info/newsletter/register.txt', $data ) ?? '';
 	}
 }

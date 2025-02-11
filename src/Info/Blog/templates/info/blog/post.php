@@ -1,5 +1,16 @@
 <?php
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var Dictionary $moduleConfig */
+/** @var array<string,array<string,string>> $words */
+/** @var object $post */
+/** @var object $prevPost */
+/** @var object $nextPost */
 
 $w			= (object) $words['post'];
 
@@ -25,15 +36,15 @@ $linkIndex	= HtmlTag::create( 'a', $iconIndex.'&nbsp;'.$w->linkIndex, [
 
 if( $prevPost ){
 	$label		= HtmlTag::create( 'span', $w->linkPrev, ['class' => 'muted'] );
-	$linkPrev	= $label.HtmlTag::create( 'a', $prevPost->title, array(
+	$linkPrev	= $label.HtmlTag::create( 'a', $prevPost->title, [
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $prevPost ),
-	) );
+	] );
 }
 if( $nextPost ){
 	$label		= HtmlTag::create( 'span', $w->linkNext, ['class' => 'muted'] );
-	$linkNext	= $label.HtmlTag::create( 'a', $nextPost->title, array(
+	$linkNext	= $label.HtmlTag::create( 'a', $nextPost->title, [
 		'href'	=> View_Info_Blog::renderPostUrlStatic( $env, $nextPost ),
-	) );
+	] );
 }
 
 $panelComment	= '';

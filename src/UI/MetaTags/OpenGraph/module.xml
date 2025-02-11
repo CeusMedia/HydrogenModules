@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: MetaTags: OpenGraph</title>
 	<description><![CDATA[Enables basic support for Open Graph.]]></description>
@@ -10,7 +11,7 @@
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de"><![CDATA[Christian Würker]]></author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<config protected="yes" type="string" name="audio"></config>
 	<config protected="yes" type="string" name="audio.type" values=",audio/basic,audio/L24,audio/mp4,audio/mpeg,audio/ogg,audio/vorbis,audio/vnd.rn-realaudio,audio/vnd.wave,audio/webm,audio/x-aac,audio/x-caf"></config>
 	<config protected="yes" type="string" name="image"></config>

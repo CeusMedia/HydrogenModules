@@ -2,7 +2,7 @@
 /**
  *	View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 /**
  *	View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Lab_Session extends View
 {

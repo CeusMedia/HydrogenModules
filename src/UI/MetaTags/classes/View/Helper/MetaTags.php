@@ -1,10 +1,15 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\OpenGraph\Node as OpenGraphNode;
+use CeusMedia\OpenGraph\Renderer as OpenGraphRenderer;
+use CeusMedia\OpenGraph\Structure\Audio as OpenGraphAudio;
+use CeusMedia\OpenGraph\Structure\Image as OpenGraphImage;
+use CeusMedia\OpenGraph\Structure\Video as OpenGraphVideo;
 
 class View_Helper_MetaTags
 {
-	protected $env;
+	protected Environment $env;
 
 	public function __construct( Environment $env )
 	{
@@ -35,16 +40,17 @@ class View_Helper_MetaTags
 		}
 
 		if( $this->env->getModules()->has( 'Info_Pages' ) ){
-			$logic		= new Logic_Page( $this->env );
-			$path		= trim( $request->get( '__path' ) );
+			/** @var Logic_Page $logic */
+			$logic		= Logic_Page::getInstance( $this->env );
+			$path		= trim( $request->get( '__path', '' ) );
 			try{
 				$object		= $logic->getPageFromPath( strlen( $path ) ? $path : 'index' );
 				if( $object ){
-					if( strlen( trim( $object->title ) ) )
+					if( strlen( trim( $object->title ?? '' ) ) )
 						$title			= $object->title;
-					if( strlen( trim( $object->description ) ) )
+					if( strlen( trim( $object->description ?? '' ) ) )
 						$description	= $object->description;
-					if( strlen( trim( $object->keywords ) ) )
+					if( strlen( trim( $object->keywords ?? '' ) ) )
 						$keywords		= $object->keywords;
 				}
 			}
@@ -99,40 +105,38 @@ class View_Helper_MetaTags
 				$ogData	= (object) $config->getAll( 'module.ui_metatags_opengraph.', TRUE );		//  extract module data
 
 				$url	= $this->env->scheme.'://'.$this->env->host.getEnv( 'REQUEST_URI' );
-				$ogNode	= new \CeusMedia\OpenGraph\Node( $url );
+				$ogNode	= new OpenGraphNode( $url );
 				$ogNode->setType( 'website' );
 				$ogNode->setTitle( $title );
 				$ogNode->setDescription( $description );
 				if( $ogData->get( 'audio') ){
-					$audio	= new \CeusMedia\OpenGraph\Audio( $ogData->get( 'audio' ) );
+					$audio	= new OpenGraphAudio( $ogData->get( 'audio' ) );
 					if( $ogData->get( 'audio.type' ) )
 						$audio->setType( $ogData->get( 'audio.type' ) );
-					$ogNode->add( $audio );
+					$ogNode->addAudio( $audio );
 				}
 				if( $ogData->get( 'image') ){
-					$image	= new \CeusMedia\OpenGraph\Image( $ogData->get( 'image' ) );
+					$image	= new OpenGraphImage( $ogData->get( 'image' ) );
 					if( $ogData->get( 'image.width' ) )
 						$image->setWidth( $ogData->get( 'image.width' ) );
 					if( $ogData->get( 'image.height' ) )
 						$image->setHeight( $ogData->get( 'image.height' ) );
 					if( $ogData->get( 'image.type' ) )
 						$image->setType( $ogData->get( 'image.type' ) );
-					$ogNode->add( $image );
+					$ogNode->addImage( $image );
 				}
 				if( $ogData->get( 'video') ){
-					$video	= new \CeusMedia\OpenGraph\Video( $ogData->get( 'video' ) );
+					$video	= new OpenGraphVideo( $ogData->get( 'video' ) );
 					if( $ogData->get( 'video.width' ) )
 						$video->setWidth( $ogData->get( 'video.width' ) );
 					if( $ogData->get( 'video.height' ) )
 						$video->setHeight( $ogData->get( 'video.height' ) );
 					if( $ogData->get( 'video.type' ) )
 						$video->setType( $ogData->get( 'video.type' ) );
-					$ogNode->add( $video );
+					$ogNode->addVideo( $video );
 				}
-				$page->addHead( \CeusMedia\OpenGraph\Renderer::render( $ogNode ) );
-//				foreach( \CeusMedia\OpenGraph\Renderer::toArray( $ogNode ) as $property => $content )
-//					$page->addMetaTag( 'property', $property, $content );
-				$page->addPrefix( "og", "http://ogp.me/ns#" );
+				$page->addHead( OpenGraphRenderer::render( $ogNode ) );
+				$page->addPrefix( 'og', 'https://ogp.me/ns#' );
 			}
 		}
 		return TRUE;

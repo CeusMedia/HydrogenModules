@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var object $reader */
+/** @var array $subscriptions */
+/** @var array $groups */
+/** @var int|string $readerId */
+/** @var int|string $letterId */
+
 $status	= $words['reader-states'][$reader->status];
 
 $panelReader	= '
@@ -11,7 +18,7 @@ $panelReader	= '
 	<dt>Vor- und Nachname</dt>
 	<dd>'.$reader->firstname.' '.$reader->surname.'</dd>
 	<dt>Institution</dt>
-	<dd>'.( $reader->institution ? $reader->institution : '-' ).'</dd>
+	<dd>'.( $reader->institution ?: '-' ).'</dd>
 	<dt>Registriert am/um</dt>
 	<dd>'.date( 'd.m.Y H:i', $reader->registeredAt ).'</dd>
 	<dt>active</dt>
@@ -28,12 +35,12 @@ foreach( $subscriptions as $subscription )
 
 $list	= [];
 foreach( $groups as $group ){
-	$checkbox	= HtmlTag::create( 'input', NULL, array(
+	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'name'		=> 'groups[]',
 		'value'		=> $group->newsletterGroupId,
 		'checked'	=> in_array( $group->newsletterGroupId, $readerGroups ) ? 'checked' : NULL
-	) );
+	] );
 	$label	= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$group->title, ['class' => 'checkbox'] );
 	$list[]	= HtmlTag::create( 'li', $label );
 }

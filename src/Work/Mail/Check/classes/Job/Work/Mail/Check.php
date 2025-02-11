@@ -11,8 +11,9 @@ class Job_Work_Mail_Check extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function run()
+	public function run(): void
 	{
 		$modelAddress	= new Model_Mail_Address( $this->env );
 		$modelCheck		= new Model_Mail_Address_Check( $this->env );
@@ -40,7 +41,7 @@ class Job_Work_Mail_Check extends Job_Abstract
 				$status	= 2;
 				if( !$result ){
 					$status	= -2;
-					if( substr( $response->code, 0, 1 ) == "4" )
+					if( str_starts_with( $response->code, "4" ) )
 						$status	= -1;
 				}
 				$modelAddress->edit( $address->mailAddressId, [

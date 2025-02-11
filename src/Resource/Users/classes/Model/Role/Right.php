@@ -1,13 +1,13 @@
 <?php
 /**
- *	Role Model.
+ *	Role Right Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
- *	Role Model.
+ *	Role Right Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Role_Right extends Model
@@ -30,14 +30,17 @@ class Model_Role_Right extends Model
 		'action',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
 
-	public static function maxifyController( string $controller ): string
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Role_Right';
+
+	public static function maximizeController( string $controller ): string
 	{
 		return str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $controller ) ) );
 	}
 
-	public static function minifyController( string $controller ): string
+	public static function minimizeController(string $controller ): string
 	{
 		return str_replace( ['-', '/'], '_', strtolower( $controller ) );
 	}

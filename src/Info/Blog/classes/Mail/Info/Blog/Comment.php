@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Blog_Comment extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'info/blog' );
@@ -14,10 +14,10 @@ class Mail_Info_Blog_Comment extends Mail_Abstract
 		$this->setSubject( $mailSubject );
 		$this->setSender( $config->get( 'mail.sender' ) );
 
-		$contentText	= $this->view->loadContentFile( 'mail/info/blog/comment.txt', $data );
+		$contentText	= $this->loadContentFile( 'mail/info/blog/comment.txt', $data ) ?? '';
 		$this->setText( $contentText );
 
-		$contentHtml	= $this->view->loadContentFile( 'mail/info/blog/comment.html', $data );
+		$contentHtml	= $this->loadContentFile( 'mail/info/blog/comment.html', $data ) ?? '';
 		$this->page->addBody( $contentHtml );
 		$this->setHtml( $this->page->build() );
 

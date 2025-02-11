@@ -4,16 +4,24 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Form_Import extends View
 {
-	public function add()
+	/**
+	 *	@return		void
+	 */
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	/**
+	 *	@return		void
+	 */
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 	}
-
 }

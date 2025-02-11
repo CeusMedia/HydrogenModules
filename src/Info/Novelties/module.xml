@@ -15,7 +15,7 @@
 <!--	<log version="0.3.5">Extract JavaScript.</log>-->
 	<files>
 		<class>Controller/Ajax/Info/Novelty.php</class>
-		<class>Hook/Info/Novelties.php</class>
+		<class>Hook/Info/Novelty.php</class>
 		<class>Model/Novelty.php</class>
 		<class>View/Helper/Info/Novelty/DashboardPanel.php</class>
 	</files>

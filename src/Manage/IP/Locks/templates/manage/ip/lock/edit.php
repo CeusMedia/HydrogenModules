@@ -1,5 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+
+/** @var Web $env */
+/** @var object $lock */
 
 $data	= print_m( $lock, NULL, NULL, TRUE );
 
@@ -36,7 +40,7 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
 
 $panelEdit	= '
 <div class="content-panel">
-	<h3><a class="muted" hred="./manage/ip/lock">IP-Sperre:</a> '.$lock->IP.'</h3>
+	<h3><a class="muted" href="./manage/ip/lock">IP-Sperre:</a> '.$lock->IP.'</h3>
 	<div class="content-panel-inner">
 		'.$data.'
 		<div class="buttonbar">
@@ -49,5 +53,5 @@ $panelEdit	= '
 </div>';
 
 
-$tabs   = View_Manage_Ip_Lock::renderTabs( $env );
+$tabs   = View_Manage_IP_Lock::renderTabs( $env );
 return $tabs.HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $panelEdit ) );

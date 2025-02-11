@@ -3,7 +3,7 @@
 	<title>Manage: Pages</title>
 	<description><![CDATA[Editor for page structure.]]></description>
 	<category>Management</category>
-	<version>1.2.9</version>
+	<version>1.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.7.4">Added links.</log>
@@ -55,17 +55,19 @@
 	<log version="1.2.7">Add hook to detect available editors.</log>
 	<log version="1.2.8">Improve settings editor by icon and preview only if accessible.</log>
 	<log version="1.2.9">Extract contend editor view helper.</log>
+	<log version="1.3.0">Migration to PHP 8.</log>
+	<log version="1.3.1">Use page entity from Resource:Pages.</log>
 <!--	<log version="1.2.1">Add page manager logic.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Manage/Page.php</class>
 		<class>Controller/Manage/Page.php</class>
-		<class>Controller/Manage/Page/Ajax.php</class>
 <!--		<class>Logic/PageManager.php</class>-->
+		<class>Hook/Manage/Page.php</class>
 		<class>View/Helper/Manage/Page/ContentEditor.php</class>
 		<class>View/Manage/Page.php</class>
-		<class>Hook/Manage/Page.php</class>
 		<template>manage/page/add.php</template>
 		<template>manage/page/edit.php</template>
 		<template>manage/page/edit.content.php</template>
@@ -99,14 +101,12 @@
 	</relations>
 	<link access="acl" path="manage/page" xml:lang="de">Seiten</link>
 	<link access="acl" path="manage/page" xml:lang="en">Pages</link>
-	<link access="acl" path="manage/page/ajaxBlacklistSuggestedKeywords"/>
-	<link access="acl" path="manage/page/ajaxOrderPages"/>
-	<link access="acl" path="manage/page/ajaxSaveContent"/>
-<!--	<link access="acl" path="manage/page/ajaxSetEditor"/>-->
-<!--	<link access="acl" path="manage/page/ajaxSetTab"/>-->
-	<link access="acl" path="manage/page/ajax/setEditor"/>
-	<link access="acl" path="manage/page/ajax/setTab"/>
-	<link access="acl" path="manage/page/ajaxSuggestKeywords"/>
+	<link access="acl" path="ajax/manage/page/blacklistSuggestedKeywords"/>
+	<link access="acl" path="ajax/manage/page/orderPages"/>
+	<link access="acl" path="ajax/manage/page/saveContent"/>
+	<link access="acl" path="ajax/manage/page/setEditor"/>
+	<link access="acl" path="ajax/manage/page/setTab"/>
+	<link access="acl" path="ajax/manage/page/suggestKeywords"/>
 	<link access="acl" path="manage/page/copy"/>
 	<link access="acl" path="manage/page/edit"/>
 	<link access="acl" path="manage/page/getJsImageList"/>

@@ -51,7 +51,7 @@ class Model_Calculator_Math
 	{
 		if( $token[0] == '$' ){
 			$key = substr( $token, 1 );
-			return isset( $this->variables[$key] ) ? $this->variables[$key] : 0;
+			return $this->variables[$key] ?? 0;
 		}
 		return $token;
 	}

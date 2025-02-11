@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use Lorisleiva\CronTranslator\CronTranslator;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var array<object> $scheduledJobs */
 
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
@@ -63,17 +69,17 @@ if( $scheduledJobs ){
 
 		$expression	= $item->expression;
 		if( (int) $item->type === Model_Job_Schedule::TYPE_CRON )
-			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => \Lorisleiva\CronTranslator\CronTranslator::translate( $expression )] );
+			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => CronTranslator::translate( $expression )] );
 
 
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $item->definition->identifier, ['class' => ''] ),
 			HtmlTag::create( 'td', $type, ['class' => ''] ),
 			HtmlTag::create( 'td', HtmlTag::create( 'tt', $expression ), ['class' => ''] ),
 			HtmlTag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', ['class' => ''] ),
 			HtmlTag::create( 'td', $status, ['class' => ''] ),
 			HtmlTag::create( 'td', $buttons, ['class' => ''] ),
-		) );
+		] );
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '180px', '140px', '140px', '140px', '140px' );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Job ID / Title', 'Typ/Format', 'Ausführung', 'letzter Lauf', 'Zustand', ''] ) );
@@ -83,14 +89,14 @@ if( $scheduledJobs ){
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'schedule' );
 
-return $tabs.HtmlTag::create( 'div', array(
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', [
 			$buttonAdd,
 		], ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

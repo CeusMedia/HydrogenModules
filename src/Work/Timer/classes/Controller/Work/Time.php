@@ -17,7 +17,12 @@ class Controller_Work_Time extends Controller
 	protected array $projectMap;
 	protected array $modules			= [];
 
-	public function add()
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time/add' );
@@ -66,7 +71,11 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'workers', $this->logicProject->getCoworkers( $this->userId ) );
 	}
 
-	public function assign()
+	/**
+	 * @return void
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function assign(): void
 	{
 		$module		= $this->request->get( 'module' );
 		$moduleId	= $this->request->get( 'moduleId' );
@@ -94,8 +103,9 @@ class Controller_Work_Time extends Controller
 	 *	@param		string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( string $timerId )
+	public function edit( string $timerId ): void
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( !$timer ){
@@ -140,9 +150,9 @@ class Controller_Work_Time extends Controller
 					else if( $newStatus === 3 )														//  to stop
 						$this->logicTimer->stop( $timerId );										//  handle change by logic (calculate times)
 					else if( $newStatus === 0 )														//  to new
-						$this->modelTimer->edit( $timerId, array(									//  edit timer by resetting
+						$this->modelTimer->edit( $timerId, [										//  edit timer by resetting
 							'secondsNeeded'	=> 0,													//  needed time to 0
-						) );
+						] );
 				}
 			}
 			$this->messenger->noteSuccess( 'Timer saved.' );
@@ -156,10 +166,12 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'from', $this->request->get( 'from' ) );
 		$this->addData( 'timerId', $timerId );
 
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$currentUserId	= $logicAuth->getCurrentUserId();
 		$projectUsers	= [];
 		if( $timer->projectId ){
+			/** @var Logic_Project $logicProject */
 			$logicProject   = Logic_Project::getInstance( $this->env );
 			$projectUsers	= $logicProject->getProjectUsers( $timer->projectId, [], ['username' => 'ASC'] );
 			if( !$timer->workerId )
@@ -168,7 +180,7 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'projectUsers', $projectUsers );
 	}
 
-	public function filter()
+	public function filter(): void
 	{
 		$this->session->set( 'filter_work_timer_activityId', $this->request->get( 'activityId' ) );
 		$this->session->set( 'filter_work_timer_projectId', $this->request->get( 'projectId' ) );
@@ -176,7 +188,13 @@ class Controller_Work_Time extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $limit = 10, $page = 0 )
+	/**
+	 *	@param		int		$limit
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function index( int $limit = 10, int $page = 0 ): void
 	{
 		if( !$this->projectMap && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/time' );
@@ -187,10 +205,10 @@ class Controller_Work_Time extends Controller
 		foreach( $timers as $timer ){
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 		}
-		$conditions	= array(
+		$conditions	= [
 			'userId'	=> (int) $this->userId,
 			'status'	=> 1,
-		);
+		];
 		$timer		= $this->modelTimer->getByIndices( $conditions );
 		if( $timer )
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
@@ -212,7 +230,12 @@ class Controller_Work_Time extends Controller
 		$this->addData( 'unrelatedTimers', $unrelatedTimers );
 	}
 
-	public function pause( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function pause( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->pause( $timerId );
@@ -226,12 +249,21 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
-	public function remove( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 */
+	public function remove( string $timerId ): void
 	{
 		$this->restart( NULL, TRUE );
 	}
 
-	public function start( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function start( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->start( $timerId );
@@ -245,7 +277,12 @@ class Controller_Work_Time extends Controller
 		}
 	}
 
-	public function stop( $timerId )
+	/**
+	 *	@param		string		$timerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function stop( string $timerId ): void
 	{
 		try{
 			$this->logicTimer->stop( $timerId );
@@ -276,6 +313,7 @@ class Controller_Work_Time extends Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 //		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

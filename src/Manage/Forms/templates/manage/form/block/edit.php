@@ -1,7 +1,14 @@
-<?php
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-$modelForm	= new Model_Form( $env );
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Entity_Form_Block $block */
+/** @var array<Entity_Form> $withinForms */
+/** @var array<Entity_Form_Block> $withinBlocks */
+
+//$modelForm	= new Model_Form( $env );
 $modelBlock	= new Model_Form_Block( $env );
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
@@ -52,6 +59,9 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 	if( $list )
 		$listBlocksWithin	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
+
+$env->getPage()->js->addScriptOnReady('FormEditor.applyAceEditor("#input_content");');
+
 return '
 <h2><span class="muted">Block:</span> '.$block->title.'</h2>
 <div class="content-panel">
@@ -77,12 +87,12 @@ return '
 				<a href="./manage/form/block" class="btn">'.$iconList.' zur Liste</a>
 				<a href="./manage/form/block/view/'.$block->blockId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
 				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'		=> ( $withinForms || $withinBlocks ) ? NULL : './manage/form/block/remove/'.$block->blockId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> ( $withinForms || $withinBlocks ) ? 'disabled' : NULL,
 					'onclick'	=> 'return confirm("Wirklich ?");',
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>
@@ -106,9 +116,4 @@ return '
 		</div>
 	</div>
 </div>
-<script>
-jQuery(document).ready(function(){
-	FormEditor.applyAceEditor("#input_content");
-});
-</script>
 ';

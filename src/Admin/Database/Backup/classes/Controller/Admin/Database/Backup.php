@@ -2,18 +2,19 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Database_Backup extends Controller
 {
 	protected Dictionary $config;
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected Logic_Database_Backup $logicBackup;
 
-	public function backup()
+	public function backup(): void
 	{
 		if( $this->request->has( 'save' ) ){
 			try{
@@ -29,18 +30,24 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->addData( 'path', $this->path );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$prefix		= $this->session->get( 'admin-database-backup-copy-prefix' );
 		$this->addData( 'backups', $this->logicBackup->index() );
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
-	public function download( $id )
+	/**
+	 *	@param		string		$id
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function download( string $id ): void
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
-		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
 			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
 			$this->restart( 'view/'.$id, TRUE );
 		}
@@ -48,7 +55,7 @@ class Controller_Admin_Database_Backup extends Controller
 		HttpDownload::sendFile( $backup->pathname, $backup->filename );
 	}
 
-	public function remove( $id )
+	public function remove( string $id ): void
 	{
 		$backup	= $this->check( $id );
 		$this->logicBackup->remove( $id );
@@ -56,11 +63,17 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function restore( $id )
+	/**
+	 *	@param		string		$id
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function restore( string $id ): void
 	{
+		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$userId			= $logicAuth->getCurrentUserId();
-		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password' ) ) ){
+		if( !$logicAuth->checkPassword( $userId, $this->request->get( 'password', '' ) ) ){
 			$this->messenger->noteError( 'Das Passwort stimmt nicht.' );
 			$this->restart( 'view/'.$id, TRUE );
 		}
@@ -75,7 +88,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->restart( 'view/'.$id, TRUE );
 	}
 
-	public function view( $id )
+	public function view( string $id ): void
 	{
 		$backup		= $this->check( $id );
 		$prefix		= $this->env->getSession()->get( 'admin-database-backup-copy-prefix' );
@@ -83,6 +96,10 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->addData( 'currentCopyPrefix', $prefix );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -91,6 +108,7 @@ class Controller_Admin_Database_Backup extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->config->getAll( 'module.admin_database_backup.', TRUE );
 
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
 
 		if( !$this->env->getModules()->has( 'Resource_Database' ) ){

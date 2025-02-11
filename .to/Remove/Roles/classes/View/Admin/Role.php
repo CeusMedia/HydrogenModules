@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.View.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
  *	@version		$Id$
  */
 
@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\View;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.View.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Admin_Role extends View
 {

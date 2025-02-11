@@ -1,9 +1,4 @@
 <?php
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-
-/**
- *	@todo		Code Doc
- */
 
 use CeusMedia\HydrogenFramework\Controller;
 
@@ -32,11 +27,16 @@ class Controller_Work_Issue extends Controller
 	protected array $userProjects;
 	protected ?string $userId;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( !$this->userProjects && !$this->env->getRequest()->isAjax() )
 			$this->restart( './manage/project/add?from=work/issue/add' );
-		$request	= $this->env->request;
+		$request	= $this->env->getRequest();
 		$managerId	= (int) $request->get( 'managerId' );
 		// @todo activate after getDefaultProjectManager is implemented
 /*		if( !$managerId ){
@@ -72,17 +72,19 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'type', $request->get( 'type' ) );
 		$this->addData( 'priority', $request->get( 'priority' ) );
 		$this->addData( 'projectId', $request->get( 'projectId' ) );
-		$this->addData( 'title', $request->get( 'title' ) );
-		$this->addData( 'content', $request->get( 'content' ) );
+		$this->addData( 'title', $request->get( 'title', '' ) );
+		$this->addData( 'content', $request->get( 'content', '' ) );
 		$this->addData( 'projects', $this->userProjects );
 	}
 
-	public function ajaxRenderDashboardPanel( $panelId ): string
-	{
-		return HtmlTag::create( 'div', '...' );
-	}
 
-	public function edit( $issueId ): void
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $issueId ): void
 	{
 		$request	= $this->env->getRequest();
 		$issue		= $this->checkIssue( $issueId );
@@ -90,7 +92,7 @@ class Controller_Work_Issue extends Controller
 
 //			$this->logic->informAboutChange( 50, $this->userId );
 
-			$data		= array(
+			$data		= [
 //				'projectId'		=> (int) $request->get( 'projectId' ),
 //				'type'			=> (int) $request->get( 'type' ),
 //				'severity'		=> (int) $request->get( 'severity' ),
@@ -100,7 +102,7 @@ class Controller_Work_Issue extends Controller
 				'title'			=> trim( $request->get( 'title' ) ),
 				'content'		=> trim( $request->get( 'content' ) ),
 				'modifiedAt'	=> time()
-			);
+			];
 			$modelIssue			= new Model_Issue( $this->env );
 			$modelIssue->edit( $issueId, $data, FALSE );								//  save data
 //			$this->logic->informAboutChange( $issueId, $this->userId );
@@ -109,10 +111,16 @@ class Controller_Work_Issue extends Controller
 //		$this->logic->informAboutChange( $issueId, $this->userId );
 		$this->addData( 'issue', $this->logic->get( $issueId, TRUE ) );
 		$this->addData( 'projects', $this->userProjects );
-		$this->addData( 'users', $this->logic->getParticitatingUsers( $issueId ) );
+		$this->addData( 'users', $this->logic->getParticipatingUsers( $issueId ) );
 	}
 
-	public function emerge( string $issueId ): void
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function emerge( int|string $issueId ): void
 	{
 		$request	= $this->env->getRequest();
 		$modelIssue		= new Model_Issue( $this->env );
@@ -149,7 +157,7 @@ class Controller_Work_Issue extends Controller
 				foreach( $changeTypes as $changeKey => $changeType ){
 					$value	= $request->get( $changeKey );
 					if( strlen( $value ) && $value != $issue->$changeKey ){
-						$this->noteChange( $issueId, $noteId, $changeType, $issue->$changeKey, $value );
+						$this->logic->noteChange( $issueId, $noteId, $changeType, $issue->$changeKey, $value );
 					}
 				}
 				$modelIssue->edit( $issueId, $changes, FALSE );
@@ -161,25 +169,6 @@ class Controller_Work_Issue extends Controller
 				$this->env->getMessenger()->noteError( 'Keine Veränderungen vorgenommen.' );
 		}
 		$this->restart( './work/issue/edit/'.$issueId );
-	}
-
-	public function export( $limit = 10, $offset = 0 ): void
-	{
-		$request	= $this->env->getRequest();
-		if( !($filters	= $request->get( 'filters' ) ) )
-			$filters	= [
-				'type'		=> 0,
-				'status'	=> [1, 2, 3, 4, 5],
-			];
-		if( !($orders	= $request->get( 'orders' ) ) )
-			$orders	= [
-				'priority'	=> 'ASC',
-				'status'	=> 'ASC',
-			];
-		$modelIssue		= new Model_Issue( $this->env );
-		$issues		= $modelIssue->getAll( $filters, $orders, [$offset, $limit] );
-		print( json_encode( $issues ) );
-		exit;
 	}
 
 	public function filter( $mode = NULL, $modeValue = 0 ): void
@@ -248,30 +237,30 @@ class Controller_Work_Issue extends Controller
 		$modelUser		= new Model_User( $this->env );
 
 		$numberTypes	= [
-			0	=> $modelIssue->count( array_merge( $filters, ['type' => 0] ) ),
-			1	=> $modelIssue->count( array_merge( $filters, ['type' => 1] ) ),
-			2	=> $modelIssue->count( array_merge( $filters, ['type' => 2] ) ),
-			3	=> $modelIssue->count( array_merge( $filters, ['type' => 3] ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['type' => Model_Issue::TYPE_ERROR] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['type' => Model_Issue::TYPE_TASK] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['type' => Model_Issue::TYPE_REQUEST] ) ),
+//			3	=> $modelIssue->count( array_merge( $filters, ['type' => 3] ) ),
 		];
 
 		$numberStates	= [
-			0	=> $modelIssue->count( array_merge( $filters, ['status'=> 0] ) ),
-			1	=> $modelIssue->count( array_merge( $filters, ['status' => 1] ) ),
-			2	=> $modelIssue->count( array_merge( $filters, ['status' => 2] ) ),
-			3	=> $modelIssue->count( array_merge( $filters, ['status' => 3] ) ),
-			4	=> $modelIssue->count( array_merge( $filters, ['status' => 4] ) ),
-			5	=> $modelIssue->count( array_merge( $filters, ['status' => 5] ) ),
-			6	=> $modelIssue->count( array_merge( $filters, ['status' => 6] ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['status'=> Model_Issue::STATUS_NEW] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_ASSIGNED] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_ACCEPTED] ) ),
+			3	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_PROGRESSING] ) ),
+			4	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_READY] ) ),
+			5	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_REOPENED] ) ),
+			6	=> $modelIssue->count( array_merge( $filters, ['status' => Model_Issue::STATUS_CLOSED] ) ),
 		];
 
 		$numberPriorities	= [
-			0	=> $modelIssue->count( array_merge( $filters, ['priority' => 0] ) ),
-			1	=> $modelIssue->count( array_merge( $filters, ['priority' => 1] ) ),
-			2	=> $modelIssue->count( array_merge( $filters, ['priority' => 2] ) ),
-			3	=> $modelIssue->count( array_merge( $filters, ['priority' => 3] ) ),
-			4	=> $modelIssue->count( array_merge( $filters, ['priority' => 4] ) ),
-			5	=> $modelIssue->count( array_merge( $filters, ['priority' => 5] ) ),
-			6	=> $modelIssue->count( array_merge( $filters, ['priority' => 6] ) ),
+			0	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_UNKNOWN] ) ),
+			1	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_NECESSARY] ) ),
+			2	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_IMPORTANT] ) ),
+			3	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_NORMAL] ) ),
+			4	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_DISPENSABLE] ) ),
+			5	=> $modelIssue->count( array_merge( $filters, ['priority' => Model_Issue::PRIORITY_FUTILE] ) ),
+//			6	=> $modelIssue->count( array_merge( $filters, ['priority' => 6] ) ),
 		];
 
 		$numberProjects	= [];
@@ -282,15 +271,15 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'numberProjects', $numberProjects );
 
 		$userIds	= [];
-		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, $limit] );
-		foreach( $issues as $nr => $issue ){
-			$issues[$nr]->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
-			$issues[$nr]->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
+		$issues		= $modelIssue->getAll( $filters, $orders, [$limit * $page, (int) $limit] );
+		foreach( $issues as $issue ){
+			$issue->notes = $modelNote->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
+			$issue->changes	= $modelChange->getAllByIndex( 'issueId', $issue->issueId, ['timestamp' => 'ASC'] );
 			$userIds[]	= $issue->reporterId;
 			$userIds[]	= $issue->managerId;
-			foreach( $issues[$nr]->notes as $note )
+			foreach( $issue->notes as $note )
 				$userIds[]	= $note->userId;
-			foreach( $issues[$nr]->changes as $change )
+			foreach( $issue->changes as $change )
 				$userIds[]	= $change->userId;
 		}
 
@@ -318,56 +307,33 @@ class Controller_Work_Issue extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function search(): void
-	{
-		$request	= $this->env->getRequest();
-		$terms		= explode( " ", trim( $request->get( 'term' ) ) );
-		$modelIssue	= new Model_Issue( $this->env );
-		$issues		= [];
-		$ids		= [];
-		foreach( $terms as $term ){
-			$filters	= ['title' => '%'.$term.'%'];
-			foreach( $modelIssue->getAll( $filters ) as $issue ){
-				$issues[$issue->issueId]	= $issue;
-				if( empty( $ids[$issue->issueId] ) )
-					$ids[$issue->issueId]	= 0;
-				$ids[$issue->issueId] ++;
-			}
-		}
-		arsort( $ids );
-		$list	= [];
-		foreach( $ids as $id => $number )
-			if( $number == count( $terms ) )
-				$list[]	= $issues[$id];
-		print( json_encode( $list ) );
-		exit;
-	}
 
 	// --  PROTECTED  --  //
 
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Issue( $this->env );
-		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$this->userProjects	= $this->logic->getUserProjects();
 	}
 
-	protected function checkIssue( string $issueId, bool $strict = TRUE )
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkIssue( int|string $issueId, bool $strict = TRUE ): ?object
 	{
 		$issue	= $this->logic->get( $issueId, TRUE );
-		$users	= $this->logic->getParticitatingUsers( $issueId );
+		$users	= $this->logic->getParticipatingUsers( $issueId );
 		if( $issue && $users ){
-			$logicAuth	= Logic_Authentication::getInstance( $this->env );
-			if( array_key_exists( $logicAuth->getCurrentUserId(), $users ) )
+			if( array_key_exists( (string) $this->userId, $users ) )
 				return $issue;
 		}
 		if( $strict )
 			throw new RangeException( 'Invalid issue ID' );
 		return NULL;
-	}
-
-	protected function noteChange( string $issueId, string $noteId, $type, $from, $to )
-	{
-		return $this->logic->noteChange( $issueId, $noteId, $type, $from, $to );
 	}
 }

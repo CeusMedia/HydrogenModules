@@ -34,29 +34,29 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 $rows	= [];
 foreach( $module->config as $item ){
-	$isNumeric		= in_array( $item->type, ["integer", "float"] ) || preg_match( "/^[0-9\.]+$/", $item->value );
-	if( preg_match( '/password/', $item->key ) )
-		$value	= HtmlTag::create( 'em', 'versteckt', array( 'class' => 'muted') );
+	$isNumeric		= in_array( $item->type, ['integer', 'float'] ) || preg_match( "/^[0-9\.]+$/", $item->value );
+	if( str_contains( $item->key, 'password' ) )
+		$value	= HtmlTag::create( 'em', 'versteckt', ['class' => 'muted'] );
 	else if( $item->type === "boolean" )
 		$value	= $item->value ? 'yes' : 'no';
 	else
 		$value		= htmlentities( $item->value, ENT_QUOTES, 'UTF-8' );
 
-	$protection	= HtmlTag::create( 'abbr', $iconUnlock, array( 'title' => 'public - öffentlich (bekannt im Browser)' ) );
+	$protection	= HtmlTag::create( 'abbr', $iconUnlock, ['title' => 'public - öffentlich (bekannt im Browser)'] );
 	if( $item->protected === "user" )
 		$protection	= HtmlTag::create( 'abbr', $iconUser, ['title' => 'user - durch Benutzer konfigurierbar'] );
 	if( $item->protected === "yes" )
-		$protection	= HtmlTag::create( 'abbr', $iconLock, array( 'title' => 'protected - nicht öffentlich (nur auf Server bekannt)' ) );
+		$protection	= HtmlTag::create( 'abbr', $iconLock, ['title' => 'protected - nicht öffentlich (nur auf Server bekannt)'] );
 
 	$key	= $item->mandatory ? '<b>'.$item->key.'</b>' : $item->key;
 	$key	= $item->title ? '<abbr title="'.$item->title.'">'.$key.'</abbr>' : $key;
 	$type	= '<small class="muted">'.$item->type.'</small>';
-	$rows[$moduleId.'|'.$item->key]	= HtmlTag::create( 'tr', array(
+	$rows[$moduleId.'|'.$item->key]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $protection, ['class' => 'cell-protection'] ),
 		HtmlTag::create( 'td', $key, ['class' => 'cell-key autocut'] ),
 		HtmlTag::create( 'td', $type, ['class' => 'cell-type'] ),
 		HtmlTag::create( 'td', $value, ['class' => 'cell-value autocut'] ),
-	) );
+	] );
 //	ksort( $rows );
 }
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [

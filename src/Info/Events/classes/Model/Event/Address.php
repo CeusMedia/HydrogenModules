@@ -4,13 +4,13 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Event_Address extends Model
 {
-	const STATUS_INACTIVE	= -2;
-	const STATUS_REJECTED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_CHANGED	= 1;
-	const STATUS_ACTIVE		= 2;
+	public const STATUS_INACTIVE	= -2;
+	public const STATUS_REJECTED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_CHANGED		= 1;
+	public const STATUS_ACTIVE		= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_INACTIVE,
 		self::STATUS_REJECTED,
 		self::STATUS_NEW,
@@ -18,7 +18,7 @@ class Model_Event_Address extends Model
 		self::STATUS_ACTIVE,
 	];
 
-	protected int $radiusEarth  = 6371;
+	protected int $radiusEarth		= 6371;
 
 	protected string $name			= 'event_addresses';
 
@@ -48,7 +48,12 @@ class Model_Event_Address extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function extendWithGeocodes( $addressId ): bool
+	/**
+	 *	@param		int|string		$addressId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function extendWithGeocodes( int|string $addressId ): bool
 	{
 		$address	= $this->get( $addressId );
 		try{
@@ -72,12 +77,20 @@ class Model_Event_Address extends Model
 			return TRUE;
 		}
 		catch( Exception $e ){
-die( $e->getMessage() );
-			return FALSE;
+			die( $e->getMessage() );
 		}
+		return FALSE;
 	}
 
-	public function getAllInDistance( $x, $y, $z, $distance, array $havingIds = [] ): array
+	/**
+	 *	@param		float			$x
+	 *	@param		float			$y
+	 *	@param		int|float		$z
+	 *	@param		int|float		$distance
+	 *	@param array $havingIds
+	 *	@return array
+	 */
+	public function getAllInDistance( float $x, float $y, int|float $z, int|float $distance, array $havingIds = [] ): array
 	{
 		$query		= 'SELECT *
 		FROM addresses as a
@@ -89,7 +102,7 @@ die( $e->getMessage() );
 		if( $havingIds )
 			$query	.= " AND addressId IN(".join( ", ", $havingIds ).")";
 		$list	= [];
-		foreach( $this->env->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $address ){
+		foreach( $this->env->getDatabase()->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $address ){
 			$powX	= pow( $x - $address->x, 2);
 			$powY	= pow( $y - $address->y, 2);
 			$powZ	= pow( $z - $address->z, 2);
@@ -102,10 +115,10 @@ die( $e->getMessage() );
 	/**
 	 *	@todo		move to branch module and remove
 	 */
-	public function getBranchesInRangeOf( $point, $radius, array $havingIds = [] )
+	public function getBranchesInRangeOf( object $point, $radius, array $havingIds = [] ): array
 	{
 		$model		= new Model_Branch( $this->env );
 		$distance	= 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
-		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance, $havingIds );
+		return $model->getAllInDistance( $point->x, $point->y, $point->z, $distance );
 	}
 }

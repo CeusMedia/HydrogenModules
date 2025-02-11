@@ -5,10 +5,17 @@ use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var View_Info_Forum $view */
+/** @var array<object> $topics */
+/** @var array $rights */
+/** @var array<string,array<string,string>> $words */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/forum/' ) );
-$textTop	= $textIndexTop	? $textIndexTop : '';
-$textBottom	= $textIndexBottom	? $textIndexBottom : '';
+$textTop	= $textIndexTop ?: '';
+$textBottom	= $textIndexBottom ?: '';
 
 $helper		= new View_Helper_TimePhraser( $env );
 $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-up'] );
@@ -31,12 +38,12 @@ foreach( $topics as $topic ){
 			'title'	=> $words['index']['buttonUp'],
 		] );
 	}
-	if( in_array( 'ajaxRenameTopic', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+	if( $env->getAcl()->has( 'ajax/info/forum', 'renameTopic' ) ){
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoForum.changeTopicName('.$topic->topicId.', \''.$topic->title.'\')',
-			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonRename'],
-		) );
+			'class'		=> 'btn not-btn-small',
+			'title'		=> $words['index']['buttonRename'],
+		] );
 	}
 	if( in_array( 'removeTopic', $rights ) ){
 		$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
@@ -51,10 +58,10 @@ foreach( $topics as $topic ){
 	$modifiedAt	= $helper->convert( $topic->createdAt, TRUE );
 	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Letzter Beitrag: vor '.$modifiedAt;
 	$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
-	$cells		= array(
-		HtmlTag::create( 'td', $label, array( 'class' => 'topic-label') ),
+	$cells		= [
+		HtmlTag::create( 'td', $label, ['class' => 'topic-label'] ),
 		HtmlTag::create( 'td', $buttons ),
-	);
+	];
 	$rows[]	= HtmlTag::create( 'tr', $cells );
 }
 $heads	= HtmlElements::TableHeads( [

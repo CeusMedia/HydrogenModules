@@ -1,6 +1,6 @@
 <?php
 
-$tabs	= $this->renderMainTabs();
+$tabs	= $view->renderMainTabs();
 
 return '
 '.$tabs.'

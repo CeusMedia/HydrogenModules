@@ -1,6 +1,22 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var View_Info_Manual $view */
+/** @var Dictionary $moduleConfig */
+/** @var array<object> $categories */
+/** @var Entity_Manual_Page $page */
+/** @var object $file */
+/** @var int|string $categoryId */
+/** @var int|string $pageId */
+/** @var array $folders */
+/** @var array<string,array<string,string>> $words */
+/** @var string $content */
+/** @var array<string> $rights */
 
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );
@@ -55,13 +71,13 @@ $panelEdit	= '
 						<div class="span12">
 							<label for="input_content">'.$words['edit']['labelContent'].'</label>
 							<!--noShortcode-->
-							'.HtmlTag::create( 'textarea', $content, array(
+							'.HtmlTag::create( 'textarea', $content, [
 								'class'		=> "span12 CodeMirror-auto ace-auto",
 								'name'		=> "content",
 								'id'		=> "input_content",
 								'rows'		=> $moduleConfig->get( 'editor.rows' ),
 								'data-ace-option-max-lines'	=> 20,
-							) ).'
+							] ).'
 <!--							<textarea class="span12 CodeMirror-auto ace-auto" name="content" id="input_content" rows="'.$moduleConfig->get( 'editor.rows' ).'">'.$content.'</textarea>-->
 							<!--/noShortcode-->
 						</div>

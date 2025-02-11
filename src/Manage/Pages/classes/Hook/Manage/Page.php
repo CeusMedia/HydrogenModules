@@ -1,17 +1,21 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_Page extends Hook
 {
-	static public function onTinyMceGetLinkList( Environment $env, $context, $module, $payload = [] ){
-		$frontend		= Logic_Frontend::getInstance( $env );
+	/**
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onTinyMceGetLinkList(): void
+	{
+		$frontend		= Logic_Frontend::getInstance( $this->env );
 		if( !$frontend->hasModule( 'Resource_Pages' ) )
 			return;
 
-		$words		= $env->getLanguage()->getWords( 'manage/page' );
-		$model		= new Model_Page( $env );
+		$words		= $this->env->getLanguage()->getWords( 'manage/page' );
+		$model		= new Model_Page( $this->env );
 		$list		= [];
 		foreach( $model->getAllByIndex( 'status', 1, ['rank' => 'ASC'] ) as $nr => $page ){
 			$page->level		= 0;
@@ -38,8 +42,8 @@ class Hook_Manage_Page extends Hook
 				'title'	=> $words['tinyMCE']['prefix'],
 				'menu'	=> array_values( $list ),
 			) );
-	//		$context->list	= array_merge( $context->list, array_values( $list ) );
-			$context->list	= array_merge( $context->list, $list );
+	//		$this->context->list	= array_merge( $this->context->list, array_values( $list ) );
+			$this->context->list	= array_merge( $this->context->list, $list );
 		}
 	}
 }

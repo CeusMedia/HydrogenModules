@@ -22,7 +22,7 @@ $selected	= 0;
 $nr	= 0;
 foreach( $mapTabs as $tabKey => $tabLabel ){
 	$count		= 0;
-	$content	= $this->loadTemplateFile( 'admin/module/editor/'.$tabKey.'.php' );
+	$content	= $view->loadTemplateFile( 'admin/module/editor/'.$tabKey.'.php' );
 	$label		= $w->$tabLabel;
 	$label		.= $count ? ' <small>('.$count.')</small>' : '';
 	$selected	= ( $tab == $tabKey ) ? $nr : $selected;											//  

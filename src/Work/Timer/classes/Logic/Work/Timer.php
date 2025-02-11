@@ -7,26 +7,27 @@ class Logic_Work_Timer
 {
 	protected Environment $env;
 	protected Dictionary $session;
-	protected static Logic_Work_Timer $instance;
+	protected static ?Logic_Work_Timer $instance	= NULL;
 	protected Model_Work_Timer $modelTimer;
-	protected ?string $userId;
+	protected int|string|NULL $userId;
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( string $timerId ): ?object
+	public function get( int|string $timerId ): ?object
 	{
 		return $this->checkTimerId( $timerId );
 	}
 
 	/**
-	 *	@param		array|string	$conditions
-	 *	@param		array			$orders
-	 *	@param		array			$limits
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
 	 *	@return		array
 	 */
-	public function index( $conditions = [], array $orders = [], array $limits = [] ): array
+	public function index( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelTimer->getAll( $conditions, $orders, $limits );
 	}
@@ -34,7 +35,6 @@ class Logic_Work_Timer
 	/**
 	 *	@param		Environment		$env
 	 *	@return		static
-	 *	@throws		ReflectionException
 	 */
 	public static function getInstance( Environment $env ): self
 	{
@@ -44,11 +44,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function pause( string $timerId ): void
+	public function pause( int|string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status != 2 ){
@@ -63,11 +64,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function start( string $timerId ): void
+	public function start( int|string $timerId ): void
 	{
 		$timer		= $this->checkTimerId( $timerId );
 		if( $timer->status != 1 ){
@@ -77,18 +79,19 @@ class Logic_Work_Timer
 			] );
 			if( $active )
 				$this->pause( $active->workTimerId );
-			$this->modelTimer->edit( $timerId, array( 'status' => 1, 'modifiedAt' => time() ) );
+			$this->modelTimer->edit( $timerId, ['status' => 1, 'modifiedAt' => time()] );
 			$payload	= ['timer' => $this->checkTimerId( $timerId )];
 			$this->env->getCaptain()->callHook( 'Work_Timer', 'onStartTimer', $this, $payload );
 		}
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function stop( string $timerId ): void
+	public function stop( int|string $timerId ): void
 	{
 		$timer	= $this->checkTimerId( $timerId );
 		if( $timer->status == 1 )
@@ -132,7 +135,6 @@ class Logic_Work_Timer
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	protected function __construct( Environment $env )
 	{
@@ -143,11 +145,12 @@ class Logic_Work_Timer
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTimerId( string $timerId, bool $strict = TRUE ): ?object
+	protected function checkTimerId( int|string $timerId, bool $strict = TRUE ): ?object
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( $timer )

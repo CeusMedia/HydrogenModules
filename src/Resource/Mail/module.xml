@@ -18,11 +18,11 @@ list>
 Modules can send mails on (user) request or use the mail queue.
 Using the queue, provided by mail logic, will result in better web request performance.
 To enable queued mails you need to set a cron job:
-code>* * * * * cd /path/to/project && ./job.php sendQueuedMails<code
+code>* * * * * cd /path/to/project && ./job.php Mail.Queue.send<code
 
 All mails are stored within database, which also is an archive of sent mails.
 Since all mails are stored completely with all MIME parts, the database table will grow in size.
-To cleanup the database, for example to clean all mails older than 3 months, call the cleanup job:
+To cleanup the database, for example to remove all mails older than 3 months, call the cleanup job:
 
 code>php job.php Mail.Archive.clean --age=3M</code
 
@@ -32,7 +32,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 
 ]]></description>
 	<category>Resource</category>
-	<version>1.0.5</version>
+	<version>1.1.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -102,28 +102,35 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 	<log version="1.0.3">Mail table can be skipped on dump but dumped by job.</log>
 	<log version="1.0.4">Add job to regenerate mail objects from raw.</log>
 	<log version="1.0.5">Increase performance on queue pagination.</log>
+	<log version="1.0.6">Code update.</log>
+	<log version="1.1.0">Use entity for mail model.</log>
+	<log version="1.1.1">Use entity for attachment and template models.</log>
+	<log version="1.1.2">Use new entity base class from framework.</log>
 <!--	<log version="1.1">Code style review and strict type hinting.</log>-->
 <!--	<log version="1.2">Support pausing mails.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<languages>
 		<language complete="100%">de</language>
 		<language complete="100%">en</language>
 	</languages>
 	<files>
+		<class>Entity/Mail.php</class>
+		<class>Entity/Mail/Attachment.php</class>
+		<class>Entity/Mail/Template.php</class>
+		<class>Job/Mail.php</class>
+		<class>Job/Mail/Archive.php</class>
+		<class>Job/Mail/Migration.php</class>
+		<class>Job/Mail/Queue.php</class>
 		<class>Hook/Resource/Mail.php</class>
+		<class>Logic/Mail.php</class>
 		<class>Mail/Abstract.php</class>
 		<class>Mail/Example.php</class>
 		<class>Mail/Test.php</class>
 		<class>Model/Mail.php</class>
 		<class>Model/Mail/Attachment.php</class>
 		<class>Model/Mail/Template.php</class>
-		<class>Logic/Mail.php</class>
-		<class>Job/Mail.php</class>
-		<class>Job/Mail/Archive.php</class>
-		<class>Job/Mail/Migration.php</class>
-		<class>Job/Mail/Queue.php</class>
 		<class>View/Helper/Mail/Facts.php</class>
 		<class>View/Helper/Mail/Text.php</class>
 		<class>View/Helper/Mail/View/HTML.php</class>

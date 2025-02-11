@@ -7,7 +7,7 @@ class View_Helper_Catalog_Bookstore_Relations
 {
 	protected Environment $env;
 	protected Logic_Catalog_Bookstore $logic;
-	protected string $articleId			= '0';
+	protected int|string $articleId		= '0';
 	protected int $limit				= 20;
 	protected string $heading			= "Ähnliche Veröffentlichungen";
 	protected array $tags				= [];
@@ -62,7 +62,7 @@ class View_Helper_Catalog_Bookstore_Relations
 </div>';
 	}
 
-	public function setArticleId( string $articleId ): self
+	public function setArticleId( int|string $articleId ): self
 	{
 		$this->tags			= [];
 		$this->articleId	= $articleId;

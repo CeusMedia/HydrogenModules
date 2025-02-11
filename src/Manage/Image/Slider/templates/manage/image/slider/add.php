@@ -1,6 +1,13 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use View_Manage_Image_Slider as View;
+
+/** @var View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Dictionary $data */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
@@ -15,7 +22,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$words['add']['buttonSav
 	'class'	=> 'btn btn-primary',
 ] );
 
-$optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status', NULL ) );
+$optStatus		= HtmlElements::Options( $words['states'], $data->get( 'status' ) );
 $optEasing		= HtmlElements::Options( $words['optEasing'], $data->get( 'easing' ) );
 $optAnimation	= HtmlElements::Options( $words['optAnimation'], $data->get( 'animation' ) );
 $optShowButtons	=  HtmlElements::Options( $words['optBoolean'], $data->get( 'showButtons' ) );
@@ -36,11 +43,11 @@ return $textTop.'
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_title" class="mandatory required">'.$wordsSlider->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" required="required" value="'.htmlentities( $data->get( 'title' ), ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="title" id="input_title" class="span12" required="required" value="'.htmlentities( $data->get( 'title', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span6">
 					<label for="input_path"><abbr title="'.$wordsSlider->labelPath_title.'">'.$wordsSlider->labelPath.'</abbr></label>
-					<input type="text" name="path" id="input_path" class="span12" required="required" value="'.htmlentities( $data->get( 'path' ), ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="path" id="input_path" class="span12" required="required" value="'.htmlentities( $data->get( 'path', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_status">'.$wordsSlider->labelStatus.'</label>
@@ -50,19 +57,19 @@ return $textTop.'
 			<div class="row-fluid">
 				<div class="span2">
 					<label for="input_width"><abbr title="'.$wordsSlider->labelWidth_title.'">'.$wordsSlider->labelWidth.'</abbr> <small class="muted">'.$wordsSlider->labelWidth_suffix.'</small></label>
-					<input type="text" name="width" id="input_width" class="span12" required="required" value="'.$data->get( 'width' ).'"/>
+					<input type="text" name="width" id="input_width" class="span12" required="required" value="'.$data->get( 'width', '' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_height"><abbr title="'.$wordsSlider->labelHeight_title.'">'.$wordsSlider->labelHeight.'</abbr> <small class="muted">'.$wordsSlider->labelHeight_suffix.'</small></label>
-					<input type="text" name="height" id="input_height" class="span12" required="required" value="'.$data->get( 'height' ).'"/>
+					<input type="text" name="height" id="input_height" class="span12" required="required" value="'.$data->get( 'height', '' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_durationShow"><abbr title="'.$wordsSlider->labelDurationShow_title.'">'.$wordsSlider->labelDurationShow.'</abbr> <small class="muted">'.$wordsSlider->labelDurationShow_suffix.'</small></label>
-					<input type="text" name="durationShow" id="input_durationShow" class="span12" required="required" value="'.$data->get( 'durationShow' ).'"/>
+					<input type="text" name="durationShow" id="input_durationShow" class="span12" required="required" value="'.$data->get( 'durationShow', '' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_durationSlide"><abbr title="'.$wordsSlider->labelDurationSlide_title.'">'.$wordsSlider->labelDurationSlide.'</abbr> <small class="muted">'.$wordsSlider->labelDurationSlide_suffix.'</small></label>
-					<input type="text" name="durationSlide" id="input_durationSlide" class="span12" required="required" value="'.$data->get( 'durationSlide' ).'"/>
+					<input type="text" name="durationSlide" id="input_durationSlide" class="span12" required="required" value="'.$data->get( 'durationSlide', '' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_easing"><abbr title="'.$wordsSlider->labelEasing_title.'">'.$wordsSlider->labelEasing.'</abbr> <small class="muted">'.$wordsSlider->labelEasing_suffix.'</small></label>

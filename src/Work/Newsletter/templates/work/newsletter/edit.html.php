@@ -25,13 +25,13 @@ $iframeHtml			= HtmlTag::create( 'iframe', '', [
 	'src'			=> './work/newsletter/preview/html/'.$newsletter->newsletterId,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("./work/newsletter/preview/html/'.$newsletter->newsletterId.'");',
-) );
+] );
 $panelPreview	= '
 <div class="content-panel">
 	<h4>
@@ -76,12 +76,12 @@ if( $styles ){
 </div>';
 }
 
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'type'		=> 'submit',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'save',
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
-) );
+] );
 
 
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
@@ -90,13 +90,13 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 	'class'		=> 'btn btn-info btn-small',
 ] );
 
-$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, array(
+$buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-preview",
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/html/'.$newsletterId.'/1\');'
-) );
+] );
 
 
 $buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, [

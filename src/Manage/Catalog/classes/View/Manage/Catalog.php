@@ -3,11 +3,14 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_Catalog extends View{
+class View_Manage_Catalog extends View
+{
+	public function index()
+	{
+	}
 
-	public function index(){}
-
-	protected function renderMainTabs(){
+	public function renderMainTabs(): string
+	{
 		$currentTab		= (int) $this->env->getSession()->get( 'manage.catalog.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'manage/catalog' );
 		$current		= strtolower( $this->env->getRequest()->get( '__controller' ) );

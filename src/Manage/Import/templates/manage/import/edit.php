@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection DuplicatedCode */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -73,7 +74,7 @@ return '<div class="content-panel">
 				</div>
 				<div class="span4 optional authType authType-1">
 					<label for="input_authUsername" class="mandatory">Benutzername</label>
-					<input type="text" name="authUsername" id="input_authUsername" class="span12" required="required" value="'.htmlentities( $connection->authUsername, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="authUsername" id="input_authUsername" class="span12" required="required" value="'.htmlentities( $connection->authUsername ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span4 optional authType authType-1">
 					<label for="input_authPassword" class="mandatory">Passwort</label>
@@ -81,13 +82,13 @@ return '<div class="content-panel">
 				</div>
 				<div class="span8 optional authType authType-2">
 					<label for="input_authKey" class="mandatory">Schlüssel</label>
-					<textarea name="authKey" id="input_authKey" rows="3" class="span12" required="required">'.htmlentities( $connection->authKey, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="authKey" id="input_authKey" rows="3" class="span12" required="required">'.htmlentities( $connection->authKey ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_description">Beschreibung</label>
-					<textarea name="description" id="input_description" rows="4" class="span12">'.htmlentities( $connection->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="description" id="input_description" rows="4" class="span12">'.htmlentities( $connection->description ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">

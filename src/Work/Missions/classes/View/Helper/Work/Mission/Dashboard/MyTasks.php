@@ -38,8 +38,8 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				$project			= $this->projects[$task->projectId];
 				$daysLeft			= ( strtotime( $task->dayEnd ) - strtotime( date( 'Y-m-d' ) ) ) / ( 24 * 3600 );
 				$daysLeft			= max( 1, min( 6, $daysLeft ) );
-				$priorityTask		= $task->priority ? $task->priority : 6;
-				$priorityProject	= $project->priority ? $project->priority : 6;
+				$priorityTask		= $task->priority ?: 6;
+				$priorityProject	= $project->priority ?: 6;
 				$priority			= 3 / ( $priorityTask + $priorityProject + $daysLeft );
 				$rowStyle	= '';
 				$helperDaysBadge->setMission( $task );
@@ -55,11 +55,11 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				$label	= $link/*.'<br/>'.$labelProject*/;
 				$key	= $priority.uniqid();
 				$daysBadge	= HtmlTag::create( 'span', $helperDaysBadge->render(), ['class' => 'pull-right'] );
-				$rows[$key]	= HtmlTag::create( 'tr', array(
+				$rows[$key]	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $label, ['class' => 'autocut'] ),
 					HtmlTag::create( 'td', $daysBadge ),
 //					HtmlTag::create( 'td', '<small class="muted">'.round( $priority, 2 ).'</small>' );
-				), ['class' => $rowStyle] );
+				], ['class' => $rowStyle] );
 			};
 			krsort( $rows );
 			$colgroup	= HtmlElements::ColumnGroup( [

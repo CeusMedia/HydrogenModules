@@ -9,7 +9,8 @@ class Controller_Provision_Rest extends Controller
 
 	public function __construct( Environment $env, $setupView = TRUE )
 	{
-		parent::__construct( $env, FALSE );
+		/** @noinspection PhpBooleanCanBeSimplifiedInspection */
+		parent::__construct( $env, $setupView && FALSE );
 	}
 
 	public function getLicense( $productLicenseId )

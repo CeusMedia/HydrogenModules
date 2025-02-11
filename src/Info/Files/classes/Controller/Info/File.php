@@ -1,10 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\FS\File\Editor as FileEditor;
-use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
-use CeusMedia\Common\FS\Folder\Lister as FolderLister;
-use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -13,82 +9,62 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 
 class Controller_Info_File extends Controller
 {
-	/**	@var	Messenger										$messenger	*/
+	/**	@var	Messenger								$messenger	*/
 	protected Messenger $messenger;
 
-	/**	@var	Model_Download_File								$modelFile			Database model of files */
-	protected Model_Download_File $modelFile;
+	/**	@var	Logic_Download							$logic				Logic class for file and folder management */
+	protected Logic_Download $logic;
 
-	/**	@var	Model_Download_Folder							$modelFolder		Database model of folders */
-	protected Model_Download_Folder $modelFolder;
-
-	/**	@var	Dictionary										$options			Module configuration object */
+	/**	@var	Dictionary								$options			Module configuration object */
 	protected Dictionary $options;
 
-	/**	@var	string											$path				Base path to files */
+	/**	@var	string									$path				Base path to files */
 	protected string $path;
 
-	/**	@var	HttpRequest										$request			Object to map request parameters */
+	/**	@var	HttpRequest								$request			Object to map request parameters */
 	protected HttpRequest $request;
 
-	/**	@var	array											$rights				List of access rights of current user */
+	/**	@var	array									$rights				List of access rights of current user */
 	protected array $rights		= [];
 
 	protected object $messages;
 
-	public function addFolder( $folderId = NULL )
+	/**
+	 *	@param		int|string|NULL		$folderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addFolder( int|string|NULL $folderId = NULL ): void
 	{
-		$path		= $this->getPathFromFolderId( $folderId );
+		$path		= $this->logic->getPathFromFolderId( $folderId );
 		$folder		= trim( $this->request->get( 'folder' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
-			$url	= ( $folderId ?: NULL).'?input_folder='.rawurlencode( $folder );
+			$url	= ( $folderId ?: NULL ).'?input_folder='.rawurlencode( $folder );
 			$this->restart( $url, TRUE );
 		}
-		else if( file_exists( $this->path.$path.$folder ) ){
+		if( file_exists( $this->path.$path.$folder ) ){
 			$this->messenger->noteError( sprintf( 'Ein Eintrag <small>(ein Ordner oder eine Datei)</small> mit dem Namen "%s" existiert in diesem Ordner bereits.', $folder ) );
 			$this->restart( $folderId.'?input_folder='.rawurlencode( $folder ), TRUE );
 		}
-		else{
-			FolderEditor::createFolder( $this->path.$path.$folder );
-			$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
-			$newId	= $this->modelFolder->add( [
-				'parentId'	=> (int) $folderId,
-				'rank'		=> $this->countFolders( $folderId ),
-				'type'		=> 0,
-				'title'		=> $folder,
-				'createdAt'	=> time(),
-			] );
-			$this->updateNumber( $folderId, 'folder', 1 );
-			$this->restart( 'index/'.$folderId, TRUE );
-		}
+		$this->logic->addFolder( $folder, $folderId );
+		$this->messenger->noteSuccess( 'Ordner <b>"%s"</b> hinzugefügt.', $folder );
+		$this->restart( 'index/'.$folderId, TRUE );
 	}
 
-	public function ajaxRenameFolder()
+	/**
+	 *	@param		int|string		$fileId
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function deliver( int|string $fileId ): never
 	{
-		$folderId	= $this->request->get( 'folderId' );
-		$title		= $this->request->get( 'name' );
-
-		$pathOld	= $this->getPathFromFolderId( $folderId, TRUE );
-		$pathNew	= dirname( $pathOld ).'/'.$title;
-		if( @rename( $pathOld, $pathNew ) ){
-			$this->modelFolder->edit( $folderId, [
-				'title'			=> $title,
-				'modifiedAt'	=> time()
-			] );
-		}
-		print( json_encode( $this->modelFolder->get( $folderId ) ) );
-		exit;
-	}
-
-	public function deliver( $fileId )
-	{
-		$file		= $this->modelFile->get( $fileId );
+		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= getCwd().'/'.$this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$path	= getCwd().'/'.$this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
 			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
@@ -104,202 +80,199 @@ class Controller_Info_File extends Controller
 		exit;
 	}
 
-	public function download( $fileId )
+	/**
+	 *	@param		int|string		$fileId
+	 *	@return		never
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function download( int|string $fileId ): never
 	{
-		$file		= $this->modelFile->get( $fileId );
+		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		if( !file_exists( $path.$file->title ) ){
 			$this->messenger->noteError( 'Die Datei wurde nicht am Speicherort gefunden. Bitte informieren Sie den Administrator!' );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
-		$this->modelFile->edit( $fileId, [
-			'nrDownloads'	=> $file->nrDownloads + 1,
-			'downloadedAt'	=> time(),
-		] );
+		$this->logic->makeDownloadCount( $fileId );
 		HttpDownload::sendFile( $path.$file->title );
 		exit;
 	}
 
-	public function editFile( $fileId )
+	/**
+	 *	@param		int|string		$fileId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editFile( int|string $fileId ): void
 	{
-		$file		= $this->modelFile->get( $fileId );
+		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$data		= [];
-			$path		= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+
 			$title		= $this->request->get( 'title' );
 			$folderId	= $this->request->get( 'folderId' );
 			if( $title != $file->title ){
-				$editor	= new FileEditor( $path.$file->title );
-				$editor->rename( $path.$title );
-				$data['title']	= $title;
+				$this->logic->renameFile( $fileId, $title );
 			}
 			if( $folderId != $file->downloadFolderId ){
-				$pathTarget	= $this->getPathFromFolderId( $folderId, TRUE );
-				if( !file_exists( $pathTarget ) ){
+				if( !$this->logic->folderPathExists( $folderId ) ){
 					$this->messenger->noteError( 'Target folder is not existing' );
 					$this->restart( 'editFile/'.$fileId, TRUE );
 				}
-				$editor		= new FileEditor( $path.$file->title );
-				$editor->rename( $pathTarget.$file->title );
-				$this->updateNumbers( $file->downloadFolderId );
-				$this->updateNumbers( $folderId );
-				$data['downloadFolderId']	= $folderId;
+				$this->logic->moveFile( $fileId, $folderId );
 			}
-			if( $data )
-				$this->modelFile->edit( $fileId, $data );
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
 		$this->addData( 'file', $file );
 		$this->addData( 'folderId', -1 );//(int) $file->downloadFolderId );
-		$this->addData( 'folderPath', $this->getPathFromFolderId( $file->downloadFolderId ) );
-		$this->addData( 'folders', $this->listFolderNested() );
+		$this->addData( 'folderPath', $this->logic->getPathFromFolderId( $file->downloadFolderId ) );
+		$this->addData( 'folders', $this->logic->listFolderNested() );
 		$this->addData( 'rights', $this->rights );
 	}
 
-	public function editFolder( $folderId )
+	/**
+	 *	@param		int|string		$folderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editFolder( int|string $folderId ): void
 	{
-		$folder		= $this->modelFolder->get( $folderId );
+		$folder		= $this->logic->getFolder( $folderId );
 		if( !$folder ){
 			$this->messenger->noteError( 'Invalid folder ID: %s', $folderId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$data		= [];
-			$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
 			$title		= $this->request->get( 'title' );
 			$parentId	= $this->request->get( 'parentId' );
 			if( $title != $folder->title ){
-				$editor	= new FolderEditor( $path.$folder->title );
-				$editor->rename( $path.$title );
-				$data['title']	= $title;
+				$this->logic->renameFolder( $folderId, $title );
 			}
 			if( $parentId != $folder->parentId ){
-				$pathTarget	= $this->getPathFromFolderId( $parentId, TRUE );
-				if( !file_exists( $pathTarget ) ){
+				if( !$this->logic->folderPathExists( $parentId ) ){
 					$this->messenger->noteError( 'Target folder is not existing' );
 					$this->restart( 'editFolder/'.$folderId, TRUE );
 				}
-				$editor		= new FolderEditor( $path.$folder->title );
-				$editor->move( $pathTarget );
-				$this->updateNumbers( $folder->parentId );
-				$this->updateNumbers( $parentId );
-				$data['parentId']	= $parentId;
+				$this->logic->moveFolder( $folderId, $parentId );
 			}
-			if( $data )
-				$this->modelFolder->edit( $folderId, $data );
 			$this->restart( 'index/'.$folder->parentId, TRUE );
 		}
-		$files	= $this->modelFile->getAll( ['downloadFolderId' => $folderId], ['title' => 'ASC'] );
+		$files	= $this->logic->findFiles( ['downloadFolderId' => $folderId], ['title' => 'ASC'] );
 
 		$this->addData( 'folder', $folder );
-		$this->addData( 'folderPath', $this->getPathFromFolderId( $folder->parentId ) );
-		$this->addData( 'folders', $this->listFolderNested( 0, $folderId ) );
+		$this->addData( 'folderPath', $this->logic->getPathFromFolderId( $folder->parentId ) );
+		$this->addData( 'folders', $this->logic->listFolderNested( 0, $folderId ) );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'files', $files );
 	}
 
-	public function index( $folderId = NULL )
+	/**
+	 *	@param		int|string|NULL		$folderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int|string|NULL $folderId = NULL ): void
 	{
-		$search		= trim( $this->request->get( 'search' ) );
+		$search		= trim( $this->request->get( 'search', '' ) );
 		$folderId	= (int) $folderId;
 
 		$folders	= [];
-		if( $search ){
+		if( '' !== $search ){
 			$conditions	= ['title' => '%'.$search.'%'];
-			if( $folderId ){
-				$folderIds	= $this->getNestedFolderIds( $folderId );
+			if( 0 !== $folderId ){
+				$folderIds	= $this->logic->getNestedFolderIds( $folderId );
 				array_unshift( $folderIds, $folderId );
 				$conditions['downloadFolderId']	= $folderIds;
 			}
 			$orders		= ['title' => 'ASC'];
 			$limits		= [];
-			$files		= $this->modelFile->getAll( $conditions, $orders, $limits );
+			$files		= $this->logic->findFiles( $conditions, $orders, $limits );
 		}
 		else{
 			$orders		= ['rank' => 'ASC'];
 			$orders		= ['title' => 'ASC'];
-			if( $folderId ){
-				$folder		= $this->modelFolder->get( $folderId );
+			if( 0 !== $folderId ){
+				$folder		= $this->logic->getFolder( $folderId );
 				if( !$folder ){
 					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 					$this->restart( NULL, TRUE );
 				}
 				$this->addData( 'folder', $folder );
 			}
-			$files		= $this->modelFile->getAll( ['downloadFolderId' => $folderId], $orders );
-			$orders		= ['title' => 'ASC'];
-			$folders	= $this->modelFolder->getAll( ['parentId' => $folderId], $orders );
+			$files		= $this->logic->findFiles( ['downloadFolderId' => $folderId], $orders );
+			$folders	= $this->logic->findFolders( ['parentId' => $folderId], ['title' => 'ASC'] );
 		}
 
 		$this->addData( 'files', $files );
 		$this->addData( 'folders', $folders );
 		$this->addData( 'folderId', $folderId );
 		$this->addData( 'pathBase', $this->path );
-		$this->addData( 'folderPath', $this->getPathFromFolderId( $folderId ) );
+		$this->addData( 'folderPath', $this->logic->getPathFromFolderId( $folderId ) );
 		$this->addData( 'rights', $this->rights );
 		$this->addData( 'search', $this->request->get( 'search' ) );
 	}
 
-	public function rankFolder( $folderId, $downwards = NULL )
+	/**
+	 *	@param		int|string		$folderId
+	 *	@param		$downwards
+	 *	@return		void
+	 */
+	public function rankFolder( int|string $folderId, $downwards = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$direction	= (boolean) $downwards ? +1 : -1;
-		if( !( $folder = $this->modelFolder->get( (int) $folderId ) ) )
+		$direction	= ('' !== $downwards ?? '' ) ? +1 : -1;
+		if( !( $folder = $this->logic->getFolder( (int) $folderId ) ) )
 			$this->messenger->noteError( $words->errorInvalidFolderId, $folderId );
 		else{
-			$rank		= $folder->rank + $direction;
-			$conditions	= ['rank' => $rank, 'parentId' => $folder->parentId];
-			if( ( $next = $this->modelFolder->getByIndices( $conditions ) ) ){
-				$this->modelFolder->edit( (int) $folderId, ['rank' => $rank, 'modifiedAt' => time()] );
-				$this->modelFolder->edit( $next->downloadFolderId, ['rank' => $folder->rank, 'modifiedAt' => time()] );
-			}
+			$this->logic->rankFolder( $folderId, $direction );
 		}
 		$this->restart( 'index/'.$folder->parentId, TRUE );
 	}
 
-	public function remove( $fileId )
+	/**
+	 *	@param		int|string		$fileId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $fileId ): void
 	{
-		$file		= $this->modelFile->get( $fileId );
+		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= $this->path;
-		if( $file->downloadFolderId ){
-			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		}
-		@unlink( $path.$file->title );
-		$this->modelFile->remove( $fileId );
-		$this->updateNumber( $file->downloadFolderId, 'file', -1 );
+		$this->logic->removeFile( $fileId );
 		$this->messenger->noteSuccess( 'Datei <b>"%s"</b> entfernt.', $file->title );
 		$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 	}
 
-	public function removeFolder( $folderId )
+	/**
+	 *	@param		int|string		$folderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeFolder( int|string $folderId ): void
 	{
 		if( $folderId ){
-			$folder		= $this->modelFolder->get( $folderId );
+			$folder		= $this->logic->getFolder( $folderId );
 			if( !$folder ){
 				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 			}
 			else{
-				$hasFiles	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
-				$hasFolders	= $this->modelFolder->count( ['parentId' => $folderId] );
+				$hasFiles	= $this->logic->countFilesInFolder( $folderId );
+				$hasFolders	= $this->logic->countFoldersInFolder( $folderId );
 				if( $hasFiles || $hasFolders ){
 					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
 				}
 				else{
-					rmdir( $this->getPathFromFolderId( $folderId, TRUE ) );
-					$this->modelFolder->remove( $folderId );
-					$this->updateNumber( $folder->parentId, 'folder', -1 );
+					$this->logic->removeFolder( $folderId );
 				}
 				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
 			}
@@ -307,12 +280,16 @@ class Controller_Info_File extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function scan()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function scan(): void
 	{
 		$statsImport	= (object) ['folders' => [], 'files' => []];
 		$statsClean		= (object) ['folders' => [], 'files' => []];
-		$this->scanRecursive( 0, '', $statsImport );
-		$this->cleanRecursive( 0, '', $statsClean );
+		$this->logic->scanRecursive( 0, '', $statsImport );
+		$this->logic->cleanRecursive( 0, '', $statsClean );
 
 		$addedSomething		= count( $statsImport->folders ) + count( $statsImport->folders ) > 0;
 		$removedSomething	= count( $statsClean->folders ) + count( $statsClean->folders ) > 0;
@@ -341,7 +318,12 @@ class Controller_Info_File extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function upload( $folderId = NULL )
+	/**
+	 *	@param		int|string|NULL		$folderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function upload( int|string $folderId = NULL ): void
 	{
 		if( !in_array( 'upload', $this->rights ) )
 			$this->restart( NULL, TRUE );
@@ -349,21 +331,9 @@ class Controller_Info_File extends Controller
 			$upload	= (object) $this->request->get( 'upload' );
 			$logicUpload	= new Logic_Upload( $this->env );
 			try{
+				$description	= $this->request->get( 'description', '' );
 				$logicUpload->setUpload( $upload );
-				$logicUpload->checkSize( Logic_Upload::getMaxUploadSize(), TRUE );
-//				$logicUpload->checkVirus( TRUE );
-				$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$upload->name;
-				$logicUpload->saveTo( $targetFile );
-				$rank	= $this->modelFile->count( ['downloadFolderId' => $folderId] );
-				$this->modelFile->add( [
-					'downloadFolderId'	=> $folderId,
-					'rank'				=> $rank,
-					'size'				=> $logicUpload->getFileSize(),
-					'title'				=> $logicUpload->getFileName(),
-					'description'		=> (string) $this->request->get( 'description' ),
-					'uploadedAt'		=> time()
-				] );
-				$this->updateNumber( $folderId, 'file', 1 );
+				$this->logic->addFileFromUpload( $logicUpload, $folderId, $description );
 				$this->messenger->noteSuccess( 'Datei "%s" hochgeladen.', $upload->name );
 			}
 			catch( Exception $e ){
@@ -376,14 +346,19 @@ class Controller_Info_File extends Controller
 		$this->restart( 'index/'.$folderId, TRUE );
 	}
 
-	public function view( $fileId = NULL )
+	/**
+	 *	@param		int|string|NULL		$fileId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string|NULL $fileId = NULL ): void
 	{
-		$file		= $this->modelFile->get( $fileId );
+		$file		= $this->logic->getFile( $fileId );
 		if( !$file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
-		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
+		$path	= $this->logic->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		$this->addData( 'file', $file );
 		$this->addData( 'path', $path );
 		$this->addData( 'rights', $this->rights );
@@ -394,22 +369,24 @@ class Controller_Info_File extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->options		= $this->env->getConfig()->getAll( 'module.info_files.', TRUE );
-		$this->rights		= $this->env->getAcl()->index( 'info/file' );
 		$this->path			= $this->options->get( 'path' );
-		$this->modelFolder	= new Model_Download_Folder( $this->env );
-		$this->modelFile	= new Model_Download_File( $this->env );
+		$this->logic		= new Logic_Download( $this->env, $this->path );
+		$this->rights		= $this->env->getAcl()->index( 'info/file' );
 		$this->messages		= (object) $this->getWords( 'msg' );
 	}
 
-	protected function checkFolder( $folderId ): bool
+	protected function checkFolder( int|string $folderId ): bool
 	{
 		if( (int) $folderId > 0 ){
-			$folder		= $this->modelFolder->get( $folderId );
+			$folder		= $this->logic->getFolder( $folderId );
 			if( $folder && file_exists( $this->path.$folder->title ) )
 				return TRUE;
 			if( !$folder )
@@ -423,183 +400,5 @@ class Controller_Info_File extends Controller
 			$this->messenger->noteError( 'Base folder %s is not existing', $this->path );
 		}
 		return FALSE;
-	}
-
-	protected function cleanRecursive( $parentId, $path, $stats )
-	{
-		$path		= $this->getPathFromFolderId( $parentId, FALSE );
-		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId] );
-		$files		= $this->modelFile->getAll( ['downloadFolderId' => $parentId] );
-		foreach( $folders as $folder ){
-			$this->cleanRecursive( $folder->downloadFolderId, $path.$folder->title.'/', $stats );
-			if( !file_exists( $this->path.$path.$folder->title ) ){
-				$this->modelFolder->remove( $folder->downloadFolderId );
-				$stats->folders[]	= (object) ['title' => $folder->title, 'path' => $path];
-			}
-		}
-		foreach( $files as $file ){
-			if( !file_exists( $this->path.$path.$file->title ) ){
-				$this->modelFile->remove( $file->downloadFileId );
-				$stats->files[]	= (object) ['title' => $file->title, 'path' => $path];
-			}
-		}
-	}
-
-	protected function countFolders( $folderId ): int
-	{
-		return $this->modelFolder->count( ['parentId' => $folderId] );
-	}
-
-	protected function countIn( $path, bool $recursive = FALSE ): object
-	{
-		$files		= 0;
-		$folders	= 0;
-		if( $recursive ){
-			$index		= RecursiveFolderLister::getMixedList( $this->path.$path );
-			foreach( $index as $entry )
-				$entry->isDir() ? $folders++ : $files++;
-		}
-		else{
-			$index		= FolderLister::getMixedList( $this->path.$path );
-			foreach( $index as $entry )
-				$entry->isDir() ? $folders++ : $files++;
-		}
-		return (object) ['folders' => $folders, 'files' => $files];
-	}
-
-	protected function listFolderNested( $parentId = 0, $excludeFolderId = 0, int $level = 0 ): array
-	{
-		$list		= [];
-		$orders		= ['title' => 'ASC'];
-		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId], $orders );
-		$icon		= '<i class="fa fa-fw fa-folder-open"></i>';
-		foreach( $folders as $folder ){
-			if( $folder->downloadFolderId == $excludeFolderId )
-				continue;
-			$list[$folder->downloadFolderId]	= str_repeat( '- ', $level ).$folder->title;
-			$children	= $this->listFolderNested( $folder->downloadFolderId, $excludeFolderId, $level + 1 );
-			foreach( $children as $childId => $childLabel )
-				$list[$childId]	= $childLabel;
-		}
-		return $list;
-	}
-
-	protected function getPathFromFolderId( $folderId, bool $withBasePath = FALSE ): string
-	{
-		$path	= '';
-		while( $folderId ){
-			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
-			$path		= $folder->title.'/'.$path;
-			$folderId	= $folder->parentId;
-		}
-		return $withBasePath ? $this->path.$path : $path;
-	}
-
-	protected function getStepsFromFolderId( $folderId ): array
-	{
-		$steps		= [];
-		while( $folderId ){
-			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
-			$steps[$folder->downloadFolderId]	= $folder;
-			$folderId	= $folder->parentId;
-		}
-		$steps	= array_reverse( $steps );
-		return $steps;
-	}
-
-	protected function getNestedFolderIds( $parentId ): array
-	{
-		$list		= [];
-		$folders	= $this->modelFolder->getAllByIndex( 'parentId', $parentId );
-		foreach( $folders as $folder ){
-			$list[]	= $folder->downloadFolderId;
-			foreach( $this->getNestedFolderIds( $folder->downloadFolderId ) as $id )
-				$list[]	= $id;
-		}
-		return $list;
-	}
-
-	protected function scanRecursive( $parentId, string $path, $stats )
-	{
-		$index	= new DirectoryIterator( $this->path.$path );
-		foreach( $index as $entry ){
-			if( $entry->isDot() || substr( $entry->getFilename(), 0, 1 ) === '.' )
-				continue;
-			$nrFolders	= $this->modelFolder->count( ['parentId' => $parentId] );
-			$nrFiles	= $this->modelFile->count( ['downloadFolderId' => $parentId] );
-			$entryName	= $entry->getFilename();
-			if( $entry->isDir() ){
-				$data	= [
-					'parentId'	=> $parentId,
-					'title'		=> $entryName
-				];
-				$folder	= $this->modelFolder->getByIndices( $data );
-				if( $folder )
-					$folderId	= $folder->downloadFolderId;
-				else{
-					$data['rank']		= $nrFolders++;
-					$data['createdAt']	= filemtime( $entry->getPathname() );
-					$folderId			= $this->modelFolder->add( $data );
-					$this->updateNumber( $parentId, 'folder' );
-					$stats->folders[]	= (object) ['title' => $entryName, 'path' => $path];
-				}
-				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
-			}
-			else if( $entry->isFile() ){
-				$data		= [
-					'downloadFolderId'	=> $parentId,
-					'title'				=> $entryName,
-				];
-				if( !$this->modelFile->count( $data ) ){
-					$data['rank']		= $nrFiles++;
-					$data['size']		= filesize( $entry->getPathname() );
-					$data['uploadedAt']	= filemtime( $entry->getPathname() );
-					$this->modelFile->add( $data );
-					$this->updateNumber( $parentId, 'file' );
-					$stats->files[]	= (object) ['title' => $entryName, 'path' => $path];
-				}
-			}
-		}
-	}
-
-	protected function updateNumbers( $folderId )
-	{
-		if( $folderId ){
-			$path		= $this->getPathFromFolderId( $folderId, FALSE );
-			$counts		= $this->countIn( $path, TRUE );
-			$this->modelFolder->edit( $folderId, [
-				'nrFolders'	=> $counts->folders,
-				'nrFiles'	=> $counts->files,
-			] );
-			$folder	= $this->modelFolder->get( $folderId );
-			if( $folder->parentId )
-				$this->updateNumbers( $folder->parentId );
-		}
-	}
-
-	protected function updateNumber( $folderId, string $type, int $diff = 1 )
-	{
-		if( !in_array( $type, ['folder', 'file'] ) )
-			throw new InvalidArgumentException( 'Type must be folder or file' );
-		while( $folderId ){
-			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
-			switch( $type ){
-				case 'folder':
-					$data	= ['nrFolders' => $folder->nrFolders + $diff];
-					break;
-				case 'file':
-					$data	= ['nrFiles' => $folder->nrFiles + $diff];
-					break;
-			}
-			$data['modifiedAt']	= time();
-			$this->modelFolder->edit( $folderId, $data );
-			$folderId	= $folder->parentId;
-		}
 	}
 }

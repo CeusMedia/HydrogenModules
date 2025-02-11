@@ -30,7 +30,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$type		= $matches[2][$i];
 			$code		= trim( $matches[3][$i] );
-			$attributes	= ['class' => $type ? $type : 'code'];
+			$attributes	= ['class' => $type ?: 'code'];
 			$new		= HtmlTag::create( 'xmp', $code, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}
@@ -116,7 +116,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
-			$url		= 'http://www.youtube.com/watch?v='.$query;
+			$url		= 'https://www.youtube.com/watch?v='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-youtube';
 			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
@@ -150,7 +150,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
-			$url		= 'http://www.discogs.com/'.$query;
+			$url		= 'https://www.discogs.com/'.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-discogs';
 			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
@@ -165,7 +165,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
-			$url		= 'http://www.myspace.com/'.$query;
+			$url		= 'https://www.myspace.com/'.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-myspace';
 			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
@@ -180,7 +180,7 @@ class View_Helper_ContentConverter
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
 			$query		= trim( $matches[1][$i] );
 			$title		= empty( $matches[3][$i] ) ? $query : trim( $matches[3][$i] );
-			$url		= 'http://www.imdb.com/find?s=tt&q='.$query;
+			$url		= 'https://www.imdb.com/find?s=tt&q='.$query;
 			$class		= ( self::$linkClass ? self::$linkClass.' ' : '' ).'link-imdb';
 			$link		= HtmlElements::Link( $url, $title, $class, self::$linkTarget );
 			$content	= str_replace( $matches[0][$i], $link, $content );
@@ -190,7 +190,7 @@ class View_Helper_ContentConverter
 
 	public static function formatText( Environment $env, string $content ): string
 	{
-		$converters	= array(
+		$converters	= [
 			"/####(.+)####\r?\n/U"	=> "<h5>\\1</h5>\n",
 			"/###(.+)###\r?\n/U"	=> "<h4>\\1</h4>\n",
 			"/##(.+)##\r?\n/U"		=> "<h3>\\1</h3>\n",
@@ -201,7 +201,7 @@ class View_Helper_ContentConverter
 			"/>>(.+)<</U"			=> "<small>\\1</small>",
 			"/<<(.+)>>/U"			=> "<big>\\1</big>",
 			"/--(.+)--/U"			=> "<strike>\\1</strike>",
-		);
+		];
 		foreach( $converters as $key => $value )
 			$content	= preg_replace( $key, $value, $content );
 		return $content;
@@ -213,13 +213,13 @@ class View_Helper_ContentConverter
 		$matches	= [];
 		preg_match_all( $pattern, $content, $matches );
 		for( $i=0; $i<count( $matches[0] ); $i++ ){
-			$type		= $matches[2][$i] ? $matches[2][$i] : 'u';
+			$type		= $matches[2][$i] ?: 'u';
 			$class		= $matches[3][$i];
 			$lines		= explode( "\n", trim( $matches[4][$i] ) );
 			foreach( $lines as $nr => $line )
 				$lines[$nr]	= preg_replace( '/^- /', '<li>', trim( $lines[$nr] ) ).'</li>';
 			$lines	= implode( "\n", $lines );
-			$attributes	= array( 'class' => $class ? $class : 'list');
+			$attributes	= ['class' => $class ?: 'list'];
 			$new		= HtmlTag::create( $type.'l', $lines, $attributes );
 			$content	= str_replace( $matches[0][$i], $new, $content );
 		}

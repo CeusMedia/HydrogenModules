@@ -3,7 +3,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Newsletter_Add extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$words		= (object) $this->getWords( 'work/newsletter/reader', 'mail-add' );
 		$prefix	= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
@@ -15,12 +20,16 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderHtmlBody(): string
 	{
 		$data		= $this->data;
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$groups	= [];
 		foreach( $data['groups'] as $item )
@@ -33,15 +42,19 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 		$data['groups']		= HtmlTag::create( 'ul', $groups );
 		$data['emailHash']	= base64_encode( $data['reader']->email );
 
-		return $this->view->loadContentFile( 'mail/work/newsletter/add.html', $data );
+		return $this->loadContentFile( 'mail/work/newsletter/add.html', $data ) ?? '';
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderTextBody(): string
 	{
 		$data		= $this->data;
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$groups	= [];
 		foreach( $data['groups'] as $item )
@@ -54,6 +67,6 @@ class Mail_Work_Newsletter_Add extends Mail_Abstract
 		$data['groups']		= join( "\n", $groups );
 		$data['emailHash']	= base64_encode( $data['reader']->email );
 
-		return $this->view->loadContentFile( 'mail/work/newsletter/add.txt', $data );
+		return $this->loadContentFile( 'mail/work/newsletter/add.txt', $data ) ?? '';
 	}
 }

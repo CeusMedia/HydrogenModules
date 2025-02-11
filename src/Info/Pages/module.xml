@@ -3,7 +3,7 @@
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>
 	<category>Info</category>
-	<version>0.9.2</version>
+	<version>0.9.3</version>
 	<log version="0.5">Complete redesign with hook on App:onDispatch.</log>
 	<log version="0.5.1">Switch to deny direct access to controller.</log>
 	<log version="0.5.2">Added page content format.</log>
@@ -42,9 +42,10 @@
 	<log version="0.9">Use logic and model from Resource:Pages.</log>
 	<log version="0.9.1">Add module main switch.</log>
 	<log version="0.9.2">Improve code style.</log>
+	<log version="0.9.3">Use page entity from Resource:Pages.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Info/Page.php</class>
 		<class>Hook/Info/Page.php</class>

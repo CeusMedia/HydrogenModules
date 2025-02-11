@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\UI\HTML\Exception\Trace as HtmlExceptionTrace;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Log_Exception extends Logic
@@ -14,7 +13,13 @@ class Logic_Log_Exception extends Logic
 
 	protected string $pathLogs;
 
-	public function check( $id, bool $strict = TRUE )
+	/**
+	 *	@param		int|string		$id
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function check( int|string $id, bool $strict = TRUE ): ?object
 	{
 		$exception	= $this->model->get( $id );
 		if( $exception )
@@ -24,7 +29,11 @@ class Logic_Log_Exception extends Logic
 		return NULL;
 	}
 
-	public function collectData( Exception $exception )
+	/**
+	 *	@param		Throwable		$exception
+	 *	@return		object
+	 */
+	public function collectData( Throwable $exception ): object
 	{
 		try{
 			@serialize( $exception );
@@ -35,7 +44,7 @@ class Logic_Log_Exception extends Logic
 				'timestamp'		=> time(),
 			];
 		}
-		catch( Exception $_e ){
+		catch( Throwable ){
 			$content	= (object) [
 				'message'		=> $exception->getMessage(),
 				'code'			=> $exception->getCode(),
@@ -54,7 +63,7 @@ class Logic_Log_Exception extends Logic
 		];
 		try{
 			$content->request			= $this->env->getRequest();
-		} catch (Exception $e ){}
+		} catch( Throwable ){}
 		try{
 			$sessionData	= $this->env->getSession()->getAll();
 			if( isset( $sessionData['exception'] ) )
@@ -64,7 +73,7 @@ class Logic_Log_Exception extends Logic
 			if( isset( $sessionData['exceptionUrl'] ) )
 				unset( $sessionData['exceptionUrl'] );
 			$content->session			= $sessionData;
-		} catch (Exception $e ){}
+		} catch( Throwable ){}
 	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
 		$content->previous			= $exception->getPrevious();
 		$content->class				= get_class( $exception );
@@ -89,6 +98,10 @@ class Logic_Log_Exception extends Logic
 		return $content;
 	}
 
+	/**
+	 *	@param		int		$limit
+	 *	@return		int
+	 */
 	public function importFromLogFile( int $limit = 200 ): int
 	{
 		$count		= 0;
@@ -100,7 +113,9 @@ class Logic_Log_Exception extends Logic
 					try{
 						$this->importLogFileItem( $line );
 					}
-					catch( Exception $e ){}
+					catch( Throwable $e ){
+						$this->env->getLog()?->logException( $e );
+					}
 					$count++;
 				}
 			}
@@ -113,9 +128,14 @@ class Logic_Log_Exception extends Logic
 		return $count;
 	}
 
-	public function importLogFileItem( string $line )
+	/**
+	 *	@param		string		$line
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function importLogFileItem( string $line ): string
 	{
-		list($timestamp, $dataEncoded)	= explode( ":", $line );
+		[$timestamp, $dataEncoded]	= explode( ":", $line );
 		$data	= base64_decode( $dataEncoded );
 		$object	= @unserialize( $data );
 		if( !is_object( $object ) )
@@ -129,23 +149,22 @@ class Logic_Log_Exception extends Logic
 			'modifiedAt'	=> time(),
 		];
 
-		if( isset( $object->exception ) && $object->exception instanceof Exception ){
+		if( isset( $object->exception ) && $object->exception instanceof Throwable ){
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object->exception ),
 				'message'		=> $object->exception->getMessage(),
-				'code'			=> $object->exception->getCode(),
+				'code'			=> $object->exception->getCode() ?? '',
 				'file'			=> $object->exception->getFile(),
 				'line'			=> $object->exception->getLine(),
 				'trace'			=> $object->exception->getTraceAsString(),
 				'previous'		=> serialize( $object->exception->getPrevious() ),
 			] );
 		}
-
-		else if( $object instanceof Exception ){
+		else if( $object instanceof Throwable ){
 			$data	= array_merge( $data, [
 				'type'			=> get_class( $object ),
 				'message'		=> $object->getMessage(),
-				'code'			=> $object->getCode(),
+				'code'			=> $object->getCode() ?? '',
 				'file'			=> $object->getFile(),
 				'line'			=> $object->getLine(),
 				'trace'			=> $object->getTraceAsString(),
@@ -156,7 +175,7 @@ class Logic_Log_Exception extends Logic
 			$data	= array_merge( $data, [
 				'type'			=> 'Exception',
 				'message'		=> $object->message,
-				'code'			=> $object->code,
+				'code'			=> $object->code ?? '',
 				'file'			=> $object->file,
 				'line'			=> $object->line,
 				'trace'			=> $object->trace,
@@ -168,29 +187,44 @@ class Logic_Log_Exception extends Logic
 		$data['env']	= '';
 		if( !empty( $object->env ) )
 			$data['env']	= serialize( $object->env );
-		if( !empty( $object->request ) )
+		if( property_exists( $object, 'request' ) && !empty( $object->request ) )
 			$data['request']	= serialize( $object->request );
-		if( !empty( $object->session ) )
-		$data['session']	= serialize( $object->session );
+		if( property_exists( $object, 'session' ) && !empty( $object->session ) )
+			$data['session']	= serialize( $object->session );
 		return $this->model->add( $data, FALSE );
 	}
 
-	public function log( Exception $exception )
+	/**
+	 *	@param		Throwable		$exception
+	 *	@return		bool|NULL
+	 *	@throws		ReflectionException
+	 */
+	public function log( Throwable $exception ): ?bool
 	{
 		$payload	= ['exception' => $exception];
-		$this->captain->callHook( 'Env', 'logException', $this->env, $payload );
+		return $this->captain->callHook( 'Env', 'logException', $this->env, $payload );
 	}
 
-	public function saveCollectedDataToLogFile( $data )
+	/**
+	 *	@param		$data
+	 *	@return		void
+	 */
+	public function saveCollectedDataToLogFile( $data ): void
 	{
 		if( $this->moduleConfig->get( 'file.active' ) ){
 			if( trim( $this->moduleConfig->get( 'file.name' ) ) ){
 				$msg	= time().":".base64_encode( serialize( $data ) );
+//				$msg	= (new DateTime())->format( 'Y-m-d H:i:s' ).": ".json_encode( $data, JSON_PRETTY_PRINT );
 				error_log( $msg.PHP_EOL, 3, $this->logFile );
 			}
 		}
 	}
 
+	/**
+	 *	@param		$data
+	 *	@return		FALSE|void
+	 *	@todo		implement
+	 */
 	public function sendCollectedDataAsMail( $data )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
@@ -198,12 +232,18 @@ class Logic_Log_Exception extends Logic
 		die( 'Not implemented, yet.' );
 	}
 
-	public function sendExceptionAsMail( Exception $exception )
+	/**
+	 *	@param		Throwable		$exception
+	 *	@return		FALSE|void
+	 *	@throws		ReflectionException|
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendExceptionAsMail( Throwable $exception )
 	{
 		if( !$this->moduleConfig->get( 'mail.active' ) )
 			return FALSE;
 		$hasReceivers	= trim( $this->moduleConfig->get( 'mail.receivers' ) );
-		$hasMailModule	= $this->env->getModules()->has( 'Resource_Mail', TRUE );
+		$hasMailModule	= $this->env->getModules()->has( 'Resource_Mail' );
 		$hasBaseUrl		= $this->env->getConfig()->get( 'app.base.url' );
 		if( !( $hasReceivers && $hasMailModule && $hasBaseUrl ) )
 			return FALSE;
@@ -219,6 +259,10 @@ class Logic_Log_Exception extends Logic
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Log_Exception( $this->env );
@@ -227,7 +271,7 @@ class Logic_Log_Exception extends Logic
 		if( $this->env->getModules()->has( 'Frontend' ) ){
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$this->pathLogs		= $frontend->getPath( 'logs' );
-			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );;
+			$moduleConfig		= $frontend->getModuleConfigValues( 'Server_Log_Exception' );
 			$this->moduleConfig	= new Dictionary( $moduleConfig );
 		}
 		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );

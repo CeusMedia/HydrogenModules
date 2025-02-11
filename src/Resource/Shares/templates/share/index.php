@@ -1,5 +1,9 @@
 <?php
-if( $show ){}
+//if( $show ){}
+
+/** @var string $uuid */
+/** @var string $captchaImage */
+/** @var int $captchaLength */
 
 $panel	= '
 <div class="row-fluid">
@@ -38,11 +42,11 @@ $panel	= '
 	</div>
 </div>
 <script>
-var captchaLength = '.( (int) $captchaLength ).';
+let captchaLength = '.( (int) $captchaLength ).';
 jQuery(document).ready(function(){
 	if(captchaLength > 0){
 		jQuery("#input_captcha").on("keyup", function(){
-			var button = jQuery(".panel-foot button");
+			let button = jQuery(".panel-foot button");
 			button.attr("disabled", "disabled");
 			if(jQuery(this).val().length === captchaLength){
 				button.removeAttr("disabled");

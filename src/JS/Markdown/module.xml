@@ -3,7 +3,7 @@
 	<title>JS: Markdown</title>
 	<description><![CDATA[Dynamic Markdown processor based on [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown] to create HTML in browser.
 
-This module uses parts of code based on pagedown - a [wiki:http://de.wikipedia.org/wiki/JavaScript|JavaScript] [wiki:http://de.wikipedia.org/wiki/Markdown|Markdown] implementation used by [link:http://stackoverflow.com/|Stack Overflow].
+This module uses parts of code based on pagedown - a [wiki:https://de.wikipedia.org/wiki/JavaScript|JavaScript] [wiki:https://de.wikipedia.org/wiki/Markdown|Markdown] implementation used by [link:https://stackoverflow.com/|Stack Overflow].
 The Markdown converter **HAS NOT** been implemented, but extended and integrated by [link:http:/ceusmedia.de/|Ceus Media].
 So, this is a modified version of parts of [link:https://code.google.com/p/pagedown/wiki/PageDown|pagedown].
 
@@ -28,7 +28,7 @@ $("#myMarkdownInput").on( "change", function(){
 	<version>0.3</version>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<script source="local" load="auto">Markdown.Converter.js</script>
 	</files>

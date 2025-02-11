@@ -3,30 +3,30 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 class View_Helper_Panel
 {
-	static protected $defaultAttributes		= [];
-	static protected $defaultClass			= 'panel';
-	static protected $defaultClassBody		= 'panel-body';
-	static protected $defaultClassFoot		= 'panel-foot';
-	static protected $defaultClassHead		= 'panel-head';
-	static protected $defaultTheme			= 'default';
+	protected static array $defaultAttributes		= [];
+	protected static string $defaultClass			= 'panel';
+	protected static string $defaultClassBody		= 'panel-body';
+	protected static string $defaultClassFoot		= 'panel-foot';
+	protected static string $defaultClassHead		= 'panel-head';
+	protected static string $defaultTheme			= 'default';
 
-	protected $attributes					= [];
-	protected $env;
-	protected $class;
-	protected $classBody;
-	protected $classFoot;
-	protected $classHead;
-	protected $contentBody;
-	protected $contentFoot;
-	protected $contentHead;
-	protected $theme;
-	protected $body;
-	protected $foot;
-	protected $head;
+	protected array $attributes					= [];
+	protected Environment $env;
+	protected ?string $class					= NULL;
+	protected ?string $classBody				= NULL;
+	protected ?string $classFoot				= NULL;
+	protected ?string $classHead				= NULL;
+	protected ?string $theme					= NULL;
+	protected ?string $body;
+	protected ?string $foot;
+	protected ?string $head;
 
-	public static function create( Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL )
+	public static function create( Environment $env, string $head, string $body, string $foot, array $attributes = [], array $classes = [], string $theme = NULL, string $id = NULL ): static
 	{
 		$instance	= new static( $env );
 		$instance->setHead( $head )->setBody( $body )->setFoot( $foot );
@@ -38,7 +38,7 @@ class View_Helper_Panel
 				$instance->setClassBody( $value );
 			if( $key === 'foot' )
 				$instance->setClassFoot( $value );
-		};
+		}
 		if( $theme !== NULL )
 			$instance->setTheme( $theme );
 		if( $id )
@@ -62,21 +62,22 @@ class View_Helper_Panel
 	 *	...
 	 *	@access		public
 	 *	@static
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$theme			...
+	 *	@return		void
 	 */
-	public static function setDefaultTheme( $theme = 'default' ){
-		static::$theme	= $theme;
+	public static function setDefaultTheme( string $theme = 'default' ): void
+	{
+		static::$defaultTheme	= $theme;
 	}
 
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
-		$this->setAttributes( static::$attributes );
+		$this->setAttributes( static::$defaultAttributes );
 		$this->setClass( static::$defaultClass );
 		$this->setClassBody( static::$defaultClassBody );
 		$this->setClassFoot( static::$defaultClassFoot );
-		$this->setCassHead( static::$defaultClassHead );
+		$this->setClassHead( static::$defaultClassHead );
 		$this->setTheme( static::$defaultTheme );
 	}
 
@@ -98,14 +99,14 @@ class View_Helper_Panel
 	public function render(): string
 	{
 		$attributes		= $this->attributes;
-		$attributes['class']	= isset( $attributes['class'] ) ? $attributes['class'] : '';
+		$attributes['class']	= $attributes['class'] ?? '';
 		$attributes['class']	= trim( $this->class.' '.$attributes['class'] );
 		$attributes['class']	= $attributes['class'].' panel-theme-'.$this->theme;
-		return HtmlTag::create( 'div', array(
+		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', $this->head, ['class' => $this->classHead] ),
 			HtmlTag::create( 'div', $this->body, ['class' => $this->classBody] ),
 			HtmlTag::create( 'div', $this->foot, ['class' => $this->classFoot] ),
-		), $attributes );
+		], $attributes );
 	}
 
 
@@ -120,8 +121,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$body			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setBody( string $body ): self
 	{
@@ -132,8 +133,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$class			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setClass( string $class ): self
 	{
@@ -144,8 +145,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$class			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setClassBody( string $class ): self
 	{
@@ -156,8 +157,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$class			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setClassFoot( string $class ): self
 	{
@@ -168,8 +169,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$class			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setClassHead( string $class ): self
 	{
@@ -180,8 +181,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$foot			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setFoot( string $foot ): self
 	{
@@ -192,8 +193,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$head			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setHead( string $head ): self
 	{
@@ -204,8 +205,8 @@ class View_Helper_Panel
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		...			...
-	 *	@return		object		Helper instance for chainability
+	 *	@param		string		$id			...
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setId( string $id ): self
 	{
@@ -217,7 +218,7 @@ class View_Helper_Panel
 	 *	...
 	 *	@access		public
 	 *	@param		string		$theme			...
-	 *	@return		object		Helper instance for chainability
+	 *	@return		self		Helper instance for method chaining
 	 */
 	public function setTheme( string $theme ): self
 	{
@@ -227,7 +228,7 @@ class View_Helper_Panel
 
 	protected function checkRenderable( $mixed )
 	{
-		if( is_null( $mixed ) || is_string( $mixed ) || is_number( $mixed ) )
+		if( is_null( $mixed ) || is_string( $mixed ) || is_numeric( $mixed ) )
 			return $mixed;
 		if( is_object( $mixed ) ){
 			$isRenderable		= is_a( 'Renderable', $mixed );

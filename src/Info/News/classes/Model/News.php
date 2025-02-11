@@ -4,7 +4,7 @@
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -14,15 +14,15 @@ use CeusMedia\HydrogenFramework\Model;
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013 Ceus Media
+ *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_News extends Model
 {
-	const STATUS_HIDDEN		= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_PUBLIC		= 1;
+	public const STATUS_HIDDEN		= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_PUBLIC		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_HIDDEN,
 		self::STATUS_NEW,
 		self::STATUS_PUBLIC,

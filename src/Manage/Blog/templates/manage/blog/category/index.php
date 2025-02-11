@@ -1,6 +1,13 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Blog $view */
+/** @var array<string,array<string,string>> $words */
+/** @var array<object> $categories */
 
 $w		= (object) $words['index'];
 
@@ -13,9 +20,9 @@ if( $categories ){
 	$list	= [];
 	foreach( $categories as $item ){
 		$link	= HtmlTag::create( 'a', $item->title, ['href' => './manage/blog/category/edit/'.$item->categoryId] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "100%" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle] ) );

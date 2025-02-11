@@ -5,7 +5,7 @@
 
 This module combines several navigation types to provide a standard navigation composition.
 ]]></description>
-	<version>0.5.5</version>
+	<version>0.5.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -39,10 +39,11 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.5.3">Improve brand integration for sidebar navigation.</log>
 	<log version="0.5.4">Extract hook to own class.</log>
 	<log version="0.5.5">Support submenu dividers (via page chapters) in dropdown menu.</log>
+	<log version="0.5.6">Add hook to render all menus.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Hook/UI/Navigation.php</class>
 		<class>Model/Menu.php</class>
@@ -73,4 +74,5 @@ This module combines several navigation types to provide a standard navigation c
 		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Navigation::setupSidebar</hook>
+	<hook type="resource" resource="Navigation" event="renderMenus">Hook_UI_Navigation::onRenderNavigationMenus</hook>
 </module>

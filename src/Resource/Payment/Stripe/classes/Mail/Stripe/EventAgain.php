@@ -6,7 +6,11 @@ use CeusMedia\Common\UI\OutputBuffer;
 
 class Mail_Stripe_EventAgain extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
+	protected function generate(): static
 	{
 		$data		= new Dictionary( $this->data );
 		$buffer		= new OutputBuffer();

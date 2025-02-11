@@ -188,8 +188,9 @@ class Controller_Auth_Rest extends Controller
 		$this->restart( $redirectTo );															//  restart (to redirect URL if set)
 	}
 
-	public function register()
+	public function register(): void
 	{
+		$words		= (object) $this->getWords( 'register' );
 		$data	= [];
 		if( $this->request->has( 'save' ) ){
 			$data	= $this->request->getAllFromSource( 'POST', TRUE );
@@ -207,7 +208,7 @@ class Controller_Auth_Rest extends Controller
 			}
 			if( !preg_match( '/^[a-z]+:-[0-9]+$/i', $result ) )
 				throw new InvalidArgumentException( 'Invalid response code' );
-			list( $level, $code )	= explode( ':', $result, 2 );
+			[$level, $code]	= explode( ':', $result, 2 );
 			$message	= 'error-'.$level.$code;
 			$message	= $words[$message] ?? $message;
 			$this->messenger->noteError( $message );
@@ -325,7 +326,7 @@ class Controller_Auth_Rest extends Controller
 					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set

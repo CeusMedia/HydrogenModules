@@ -53,18 +53,18 @@ try{
 			'title'		=> $countUserPanels >= $maxUserPanels ? 'Maximum erreicht' : 'neues Panel im Dashboard',
 			'disabled'	=> $countUserPanels >= $maxUserPanels ? 'disabled' : NULL,
 		] );
-		$buttonEditTitle	= HtmlTag::create( 'button', $iconEditTitle, array(
+		$buttonEditTitle	= HtmlTag::create( 'button', $iconEditTitle, [
 			'type'				=> 'button',
 			'class'				=> 'btn btn-small button-rename-board',
 			'data-dashboard-id'	=> $dashboard->dashboardId,
 			'data-title'		=> htmlentities( $dashboard->title, ENT_QUOTES, 'UTF-8' ),
-			) );
-		$buttonRemoveBoard	= HtmlTag::create( 'a', $iconRemove, array(
+		] );
+		$buttonRemoveBoard	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './info/dashboard/remove/'.$dashboard->dashboardId,
 			'class'		=> 'btn btn-small btn-inverse',
 			'title'		=> 'aktuelles Dashboard verwerfen',
 			'onclick'	=> 'if(!confirm(\'Wirklich das aktuelle Dashboard auflösen?\'))return false;',
-		) );
+		] );
 
 		$optDashboardId	= [];
 		foreach( $dashboards as $entry )

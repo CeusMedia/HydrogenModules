@@ -4,22 +4,27 @@ use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var Environment $env */
+/** @var array<Entity_Manual_Category> $categories */
+/** @var array<string> $files */
+/** @var int|string $categoryId */
+
 $rows		= [];
 foreach( $files as $fileName ){
-	$buttonImport	= HtmlTag::create( 'a', 'import', array(
+	$buttonImport	= HtmlTag::create( 'a', 'import', [
 		'href'	=> './info/manual/import/'.base64_encode( $fileName ),
 		'class'	=> 'btn',
-	) );
-	$checkbox		= HtmlTag::create( 'input', NULL, array(
+	] );
+	$checkbox		= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'name'		=> 'files[]',
 		'value'		=> base64_encode( $fileName ),
-	) );
-	$rows[]	= HtmlTag::create( 'tr', array(
+	] );
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $checkbox ),
 		HtmlTag::create( 'td', $fileName ),
 		HtmlTag::create( 'td', $buttonImport ),
-	) );
+	] );
 }
 $colgroup		= HtmlElements::ColumnGroup( ['', ''] );
 $thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['1', '2'] ) );
@@ -46,36 +51,36 @@ $buttonSave		= HtmlTag::create( 'button', 'importieren', [
 	'class' 	=> 'btn btn-primary',
 ] );
 
-$preset		= HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+$preset		= HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'label', 'Kategorie', ['for' => 'input_categoryId'] ),
 		HtmlTag::create( 'select', $optCategory, [
 			'name'		=> 'categoryId',
 			'id'		=> 'input_categoryId',
 			'class'		=> 'span12'
 		] ),
-	), ['class' => 'span4'] ),
-	HtmlTag::create( 'div', array(
+	], ['class' => 'span4'] ),
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'label', 'Format', ['for' => 'input_format'] ),
 		HtmlTag::create( 'select', $optFormat, [
 			'name'		=> 'format',
 			'id'		=> 'input_format',
 			'class'		=> 'span12'
 		] ),
-	), ['class' => 'span4'] ),
-), ['class' => 'row-fluid'] );
+	], ['class' => 'span4'] ),
+], ['class' => 'row-fluid'] );
 
-$panelList	= HtmlTag::create( 'div', array(
+$panelList	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Import' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', join( '&nbsp;', [
 			$preset,
 			$buttonCancel,
 			$buttonSave,
 		] ), ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
 
 return HtmlTag::create( 'form', $panelList, [
 	'action'	=> './info/manual/import',

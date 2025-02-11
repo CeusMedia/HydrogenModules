@@ -8,9 +8,9 @@ class View_Helper_Shop_Tabs
 {
 	protected Environment $env;
 	protected array $words;
-	protected array $backends;
+	protected Model_Shop_Payment_BackendRegister $backends;
 	protected float $cartTotal			= .0;
-	protected $content;
+	protected string $content			= '';
 	protected ?string $current			= NULL;
 	protected bool $whiteIcons			= FALSE;
 
@@ -20,11 +20,19 @@ class View_Helper_Shop_Tabs
 		$this->words	= $this->env->getLanguage()->getWords( 'shop' );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function __toString(): string
 	{
 		return $this->render();
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		$tabs		= new BootstrapTabsNav( "tabs-cart" );
@@ -45,7 +53,7 @@ class View_Helper_Shop_Tabs
 				unset( $disabled[array_search( 'shop-conditions', $disabled )] );
 				if( $modelCart->get( 'acceptRules' ) ){
 					unset( $disabled[array_search( 'shop-payment', $disabled )] );
-					if( $modelCart->get( 'paymentMethod' ) || !count( $this->backends ) )
+					if( $modelCart->get( 'paymentMethod' ) || !count( $this->backends->getAll() ) )
 						unset( $disabled[array_search( 'shop-checkout', $disabled )] );
 				}
 			}
@@ -60,7 +68,6 @@ class View_Helper_Shop_Tabs
 		$iconCheckout		= HtmlTag::create( 'i', '', ['title' => $tabLabels->checkout, 'class' => 'fa fa-fw fa-check'] );
 		$iconService		= HtmlTag::create( 'i', '', ['title' => $tabLabels->service, 'class' => 'fa fa-fw fa-star'] );
 
-		$tabLabels			= (object) $this->words['tabs'];
 		foreach( $tabLabels as $key => $value )
 			$tabLabels->$key	= HtmlTag::create( 'span', '&nbsp;'.$value.'&nbsp;', ['class' => 'hidden-phone'] );
 
@@ -82,7 +89,7 @@ class View_Helper_Shop_Tabs
 			$iconConditions.$tabLabels->conditions,
 			$this->current === 'shop-conditions' ? $this->content : ''
 		);
-		if( count( $this->backends ) > 1 && $this->cartTotal > 0 )
+		if( count( $this->backends->getAll() ) > 1 && $this->cartTotal > 0 )
 			$tabs->add(
 				'shop-payment',
 				'./shop/payment',
@@ -115,7 +122,7 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setContent( $content ): self
+	public function setContent( string $content ): self
 	{
 		$this->content	= $content;
 		return $this;
@@ -127,7 +134,7 @@ class View_Helper_Shop_Tabs
 		return $this;
 	}
 
-	public function setPaymentBackends( array $backends ): self
+	public function setPaymentBackends(Model_Shop_Payment_BackendRegister $backends ): self
 	{
 		$this->backends	= $backends;
 		return $this;

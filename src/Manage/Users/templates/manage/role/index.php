@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Role $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var bool $hasRightToAdd */
+/** @var bool $hasRightToEdit */
 
 $wf		= (object) $words['index'];
 
@@ -24,27 +32,26 @@ foreach( $roles as $nr => $role ){
 	$labelAccess	= HtmlTag::create( 'span', $words['type-access'][$role->access], ['class' => 'role-access access'.$role->access] );
 	$labelRegister	= HtmlTag::create( 'span', $words['type-register'][$role->register], ['class' => 'role-register register'.$role->register] );
 
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $labelRole ),
 		HtmlTag::create( 'td', $labelCount ),
 		HtmlTag::create( 'td', $labelAccess ),
 		HtmlTag::create( 'td', $labelRegister ),
-	) );
+	] );
 }
 $heads	= HtmlElements::TableHeads( $heads );
-$table	= HtmlTag::create( 'table', array(
+$table	= HtmlTag::create( 'table', [
 	HtmlElements::ColumnGroup( "45%", "10%", "25%", "20%" ),
 	HtmlTag::create( 'thead', $heads ),
 	HtmlTag::create( 'tbody', $rows ),
-), ['class' => 'table not-table-condensed table-striped', 'id' => 'roles'] );
+], ['class' => 'table not-table-condensed table-striped', 'id' => 'roles'] );
 
 $panelFilter	= '';
 
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
+
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-	if( $env->getModules()->get( 'UI_Font_FontAwesome' ) )
-		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$wf->buttonAdd, [
 		'href'	=> './manage/role/add',
 		'class'	=> 'btn btn-success'

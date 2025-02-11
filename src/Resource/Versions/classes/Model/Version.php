@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Versions.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2015 Ceus Media
+ *	@copyright		2015-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Versions.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2015 Ceus Media
+ *	@copyright		2015-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Version extends Model
 {

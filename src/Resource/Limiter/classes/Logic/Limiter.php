@@ -8,45 +8,66 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Logic_Limiter
 {
-	const OPERATION_BOOLEAN				= 0;
-	const OPERATION_COMPARE_NUMBER		= 1;
+	public const OPERATION_BOOLEAN				= 0;
+	public const OPERATION_COMPARE_NUMBER		= 1;
 
-	static protected $instance;
+	protected static ?self $instance			= NULL;
 
-	protected $env;
+	protected Environment $env;
 
-	protected $rules;
+	protected Dictionary $rules;
 
-	public static function getInstance( $env )
+	protected bool $enabled;
+
+	protected Dictionary $moduleConfig;
+
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 */
+	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance )
+		if( NULL === self::$instance )
 			self::$instance		= new self( $env );
 		return self::$instance;
 	}
 
-	public function allows( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	/**
+	 *	@param		string		$key
+	 *	@param		$value
+	 *	@param		int			$operation
+	 *	@return		bool
+	 */
+	public function allows( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER ): bool
 	{
 		if( !$this->rules->has( $key ) )
 			return TRUE;
 		if( $value === NULL )
 			$operation	= self::OPERATION_BOOLEAN;
-		switch( $operation ){
-			case self::OPERATION_BOOLEAN:
-				return (bool) $this->rules->get( $key );
-			case self::OPERATION_COMPARE_NUMBER:
-				return $this->rules->get( $key ) >= $value;
-		}
+		return match( $operation ){
+			self::OPERATION_BOOLEAN		=> (bool) $this->rules->get( $key ),
+			default						=> $this->rules->get( $key ) >= $value,
+		};
 	}
 
-	public function denies( $key, $value = NULL, $operation = self::OPERATION_COMPARE_NUMBER )
+	/**
+	 *	@param		string		$key
+	 *	@param		$value
+	 *	@param		int			$operation
+	 *	@return		bool
+	 */
+	public function denies( string $key, $value = NULL, int $operation = self::OPERATION_COMPARE_NUMBER ): bool
 	{
 		if( !$this->rules->has( $key ) )
 			return FALSE;
 		return !$this->allows( $key, $value, $operation );
 	}
 
-
-	public function get( $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		mixed
+	 */
+	public function get( string $key ): mixed
 	{
 		return $this->rules->get( $key );
 	}
@@ -55,34 +76,49 @@ class Logic_Limiter
 	 *	Returns all rules of limiter as an array.
 	 *	Using a filter prefix, all rules with keys starting with prefix are returned.
 	 *	Attention: A given prefix will be cut from rule keys.
-	 *	By default an array is returned. Alternatively another dictionary can be returned.
+	 *	By default, an array is returned. Alternatively another dictionary can be returned.
 	 *	@access		public
-	 *	@param		string		$prefix			Prefix to filter keys, e.g. "mail." for all rules starting with "mail."
-	 *	@param		boolean		$asDictionary	Flag: return list as dictionary object instead of an array
-	 *	@param		boolean		$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivy
-	 *	@return		array|Dictionary	Map or dictionary object containing all or filtered rules
+	 *	@param		string|NULL		$prefix			Prefix to filter keys, e.g. "mail." for all rules starting with "mail."
+	 *	@param		boolean			$asDictionary	Flag: return list as dictionary object instead of an array
+	 *	@param		boolean			$caseSensitive	Flag: return list with lowercase rule keys or dictionary with no case sensitivity
+	 *	@return		array|Dictionary				Map or dictionary object containing all or filtered rules
 	 */
-	public function getAll( $prefix = NULL, $asDictionary = FALSE, $caseSensitive = TRUE )
+	public function getAll( ?string $prefix = NULL, bool $asDictionary = FALSE, bool $caseSensitive = TRUE ): array|Dictionary
 	{
 		return $this->rules->getAll( $prefix, $asDictionary, $caseSensitive );
 	}
 
-	public function getRules()
+	/**
+	 *	@return		Dictionary
+	 */
+	public function getRules(): Dictionary
 	{
 		return $this->rules;
 	}
 
-	public function has( $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 */
+	public function has( string $key ): bool
 	{
 		return $this->rules->has( $key );
 	}
 
-	public function index()
+	/**
+	 *	@return		array
+	 */
+	public function index(): array
 	{
 		return $this->rules->getAll();
 	}
 
-	public function set( $key, $value )
+	/**
+	 *	@param		string		$key
+	 *	@param		mixed		$value
+	 *	@return		bool|NULL
+	 */
+	public function set( string $key, mixed $value ): ?bool
 	{
 		if( !$this->enabled )
 			return NULL;

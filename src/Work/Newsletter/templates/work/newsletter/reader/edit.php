@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Reader $this */
 /** @var object $words */
 /** @var object $reader */
 /** @var bool $tabbedLinks */
@@ -13,7 +14,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $readerLetters */
 /** @var array $readerGroups */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $statusIcons	= [
 	-1		=> 'remove',
@@ -47,10 +48,10 @@ if( $readerGroups ){
 		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
 		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, ['href' => $urlGroup] );
 
-		$listGroups[]	= HtmlTag::create( 'tr', array(
+		$listGroups[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $linkGroup, ['class' => ''] ),
 			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		) );
+		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
 	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Gruppen', ''] );
@@ -91,6 +92,7 @@ if( $readerLetters ){
 		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, ['class' => 'autocut'] );
 	}
 	$listLetters	= HtmlTag::create( 'ul', $listLetters, ['class' => 'unstyled'] );
+	$listLetters	= HtmlTag::create( 'div', $listLetters, ['id' => 'reader-newsletter-list'] );
 	if( $stats->sent > 0 ){
 		$list	= [];
 		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );
@@ -202,7 +204,7 @@ return $textTop.'
 				<div class="content-panel-inner">
 					'.$listGroups.'
 					<div class="row-fluid" '.$hideGroupAdd.'>
-						<hr style="margin: -3px 0px 6px 0px"/>
+						<hr style="margin: -3px 0 6px 0"/>
 						<form action="./work/newsletter/reader/addGroup/'.$reader->newsletterReaderId.'" method="post">
 							<div class="span9">
 								<select name="groupId" class="span12">'.$optGroup.'</select>

@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 abstract class View_Helper_Work_Time extends Abstraction
 {
-	public $from;
+	public string $from;
 
 	protected Dictionary $session;
 	protected Logic_Work_Timer $logicTimer;
@@ -26,11 +26,12 @@ abstract class View_Helper_Work_Time extends Abstraction
 		$this->session			= $this->env->getSession();
 		$this->userId			= $this->session->get( 'auth_user_id' );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );
-		$this->from				= $this->env->getRequest()->get( '__path' );
+		$this->from				= $this->env->getRequest()->get( '__path', '' );
 		if( $this->env->getRequest()->has( 'from' ) )
 			$this->from				= $this->env->getRequest()->get( 'from' );
 	}
@@ -41,7 +42,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 	 * @param		bool		$shorten
 	 * @return		string
 	 */
-	public static function formatSeconds( $duration, string $space = ' ', bool $shorten = FALSE ): string
+	public static function formatSeconds( int|string $duration, string $space = ' ', bool $shorten = FALSE ): string
 	{
 		$seconds 	= $duration % 60;
 		$duration	= ( $duration - $seconds ) / 60;
@@ -69,7 +70,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 		return ltrim( $duration, $space );
 	}
 
-	static public function parseTime( $time ): int
+	public static function parseTime( $time ): int
 	{
 		$regexWeeks	= '@([0-9]+)w\s*@';
 		$regexDays	= '@([0-9]+)d\s*@';
@@ -116,9 +117,8 @@ abstract class View_Helper_Work_Time extends Abstraction
 	 * @param		array			$statuses
 	 * @param		bool			$formatAsTime
 	 * @return		int|string
-	 * @throws		ReflectionException
 	 */
-	public static function sumTimersOfModuleId( Environment $env, string $moduleKey, string $moduleId, array $statuses = [3], bool $formatAsTime = FALSE )
+	public static function sumTimersOfModuleId( Environment $env, string $moduleKey, string $moduleId, array $statuses = [3], bool $formatAsTime = FALSE ): int|string
 	{
 		$logic		= Logic_Work_Timer::getInstance( $env );
 		$seconds	= $logic->sumTimersOfModuleId( $moduleKey, $moduleId, $statuses );

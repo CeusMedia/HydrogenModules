@@ -12,8 +12,8 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Newsletter_Mail
 {
-	const MODE_PLAIN		= 0;
-	const MODE_HTML			= 1;
+	public const MODE_PLAIN			= 0;
+	public const MODE_HTML			= 1;
 
 	protected Environment $env;
 	protected Logic_Newsletter $logic;
@@ -60,7 +60,12 @@ class View_Helper_Newsletter_Mail
 		return $this;
 	}
 
-	public function setNewsletterId( $newsletterId ): self
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setNewsletterId( int|string $newsletterId ): self
 	{
 		$this->logic->checkNewsletterId( $newsletterId, TRUE );
 		$this->newsletter	= $this->logic->getNewsletter( $newsletterId );
@@ -68,7 +73,12 @@ class View_Helper_Newsletter_Mail
 		return $this;
 	}
 
-	public function setReaderLetterId( $readerLetterId ): self
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setReaderLetterId( int|string $readerLetterId ): self
 	{
 		$this->logic->checkReaderLetterId( $readerLetterId, TRUE );
 		$this->letter	= $this->logic->getReaderLetter( $readerLetterId );
@@ -78,10 +88,11 @@ class View_Helper_Newsletter_Mail
 	}
 
 	/**
-	 *	@param		string		$readerId
+	 *	@param		int|string		$readerId
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setReaderId( string $readerId ): self
+	public function setReaderId( int|string $readerId ): self
 	{
 		$this->logic->checkReaderId( $readerId );
 		$this->reader	= $this->logic->getReader( $readerId );
@@ -89,10 +100,11 @@ class View_Helper_Newsletter_Mail
 	}
 
 	/**
-	 *	@param		string		$templateId
+	 *	@param		int|string		$templateId
 	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setTemplateId( string $templateId ): self
+	public function setTemplateId( int|string $templateId ): self
 	{
 		$this->logic->checkTemplateId( $templateId, TRUE );
 		$this->template	= $this->logic->getTemplate( $templateId );
@@ -105,6 +117,7 @@ class View_Helper_Newsletter_Mail
 
 	/**
 	 *	@param		array		$matches
+	 * @todo finish impl
 	 */
 	protected function callbackReplacePlainColumns( array $matches )
 	{
@@ -250,9 +263,9 @@ class View_Helper_Newsletter_Mail
 			$script	= 'document.getElementById("browser-link").remove();';							//  script to remove browser link in browser view
 			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );		//  add script to HTML page
 			if( isset( $data['linkTracking'] ) && $data['linkTracking'] ){							//  tracking link is defined
-				$data['tracking']	= HtmlTag::create( 'img', NULL, array(						//  create tracking pixel image
+				$data['tracking']	= HtmlTag::create( 'img', NULL, [						//  create tracking pixel image
 					'src' => $data['linkTracking']													//  ... pointing to tracking URL
-				) );
+				] );
 			}
 		}
 
@@ -269,17 +282,24 @@ class View_Helper_Newsletter_Mail
 		) );
 	}
 
-	protected function renderImprint( $asHtml = FALSE )
+	/**
+	 *	@param		bool		$asHtml
+	 *	@return		string
+	 */
+	protected function renderImprint( bool $asHtml = FALSE ): string
 	{
-		$content	= $this->template->imprint;
+		$content	= $this->template->imprint ?? '';
 		if( $asHtml ){
 			$content	= preg_replace( "/\n/", "<br/>", $content );
-			$content	= preg_replace( "/(https?:\/\/(([^\s]+))\/?)/", '<a href="\\1">\\2</a>', $content );
-			$content	= preg_replace( "/([^\s]+@[^\s]+)/", '<a href="mailto:\\1">\\1</a>', $content );
+			$content	= preg_replace( "/(https?:\/\/((\S+))\/?)/", '<a href="\\1">\\2</a>', $content );
+			$content	= preg_replace( "/(\S+@\S+)/", '<a href="mailto:\\1">\\1</a>', $content );
 		}
 		return $content;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderPlain(): string
 	{
 		$data	= $this->prepareData();

@@ -1,23 +1,17 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_JS_jQuery_Select2 extends Hook
 {
 	/**
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public function onPageApplyModules(): void
 	{
-		$config		= $env->getConfig()->getAll( 'module.js_jquery_select2.', TRUE );
+		$config		= $this->env->getConfig()->getAll( 'module.js_jquery_select2.', TRUE );
 		$version	= $config->get( 'version' );
-		$baseUrl	= $env->getConfig()->get( 'path.scripts.lib' ).'jquery/select2/'.$version.'/';
+		$baseUrl	= $this->env->getConfig()->get( 'path.scripts.lib' ).'jquery/select2/'.$version.'/';
 		$files		= (object) ['js' => [], 'css' => []];
 		$minified	= $config->get( 'load.minified' );
 		$full		= $config->get( 'load.full' );
@@ -34,8 +28,8 @@ class Hook_JS_jQuery_Select2 extends Hook
 		}
 
 		foreach( $files->js as $filePath )
-			$context->js->addUrl( $baseUrl.$filePath );
+			$this->context->js->addUrl( $baseUrl.$filePath );
 		foreach( $files->css as $filePath )
-			$context->css->theme->addUrl( $baseUrl.$filePath );
+			$this->context->css->theme->addUrl( $baseUrl.$filePath );
 	}
 }

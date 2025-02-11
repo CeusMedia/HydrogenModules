@@ -3,19 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	protected function renderList( $authors, $authorId = NULL )
+	protected function renderList( $authors, $authorId = NULL ): string
 	{
 		$list	= [];
 		foreach( $authors as $author ){
@@ -27,7 +27,6 @@ class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore
 		}
 		ksort( $list );
 		$attributes	= ['class' => 'nav nav-pills nav-stacked boxed', 'id' => 'list-authors', 'style' => 'display: none'];
-		$list	= HtmlTag::create( 'ul', $list, $attributes );
-		return $list;
+		return HtmlTag::create( 'ul', $list, $attributes );
 	}
 }

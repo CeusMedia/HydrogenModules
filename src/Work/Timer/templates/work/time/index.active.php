@@ -34,7 +34,7 @@ if( $timer ){
 				'class'	=> 'autocut',
 			] );
 	}
-	$labelType	= $timer->type ? $timer->type : 'Zuordnung';
+	$labelType	= $timer->type ?: 'Zuordnung';
 	$seconds	= $timer->secondsNeeded + ( time() - $timer->modifiedAt );
 	$from		= $from ? '?from='.$from : '';
 

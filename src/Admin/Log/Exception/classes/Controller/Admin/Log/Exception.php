@@ -4,12 +4,12 @@
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 /**
@@ -17,7 +17,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Admin_Log_Exception extends Controller
 {
@@ -29,13 +29,17 @@ class Controller_Admin_Log_Exception extends Controller
 
 	protected Dictionary $moduleConfig;
 
-	protected Dictionary $request;
+	protected Request $request;
 
 	protected Dictionary $session;
 
 	protected string $filterPrefix		= 'filter_admin_log_exception_';
 
-	public function bulk()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function bulk(): void
 	{
 		$action	= $this->request->get( 'type' );
 		$from	= $this->request->get( 'from' );
@@ -52,7 +56,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( $from, !$from );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->session->getAll( $this->filterPrefix ) as $key => $value )
@@ -70,7 +74,13 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0, $limit = 0 )
+	/**
+	 *	@param		int		$page
+	 *	@param		int		$limit
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0, int $limit = 0 ): void
 	{
 		$count		= $this->logic->importFromLogFile();
 		if( $count )
@@ -78,15 +88,15 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$limit	= $limit ?: $this->session->get( $this->filterPrefix.'limit', 10 );
 
-		$filterMessage		= $this->session->get( $this->filterPrefix.'message' );
-		$filterType			= $this->session->get( $this->filterPrefix.'type' );
-		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart' );
-		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd' );
+		$filterMessage		= $this->session->get( $this->filterPrefix.'message', '' );
+		$filterType			= $this->session->get( $this->filterPrefix.'type', '' );
+		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart', '' );
+		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd', '' );
 
 		$conditions		= [];
-		if( strlen( trim( $filterMessage ) ) )
-			$conditions['message']	= '%'.$filterMessage.'%';
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterMessage ) )
+			$conditions['message']	= '%'.trim( $filterMessage ).'%';
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
 		if( $filterDateStart && $filterDateEnd )
 			$conditions['createdAt']	= '>< '.strtotime( $filterDateStart ).' & '.( strtotime( $filterDateEnd ) + 24 * 3600 - 1);
@@ -95,12 +105,12 @@ class Controller_Admin_Log_Exception extends Controller
 		else if( $filterDateEnd )
 			$conditions['createdAt']	= '<= '.( strtotime( $filterDateEnd ) + 24 * 36000 - 1);
 
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
-		if( strlen( trim( $filterType ) ) )
+		if( '' !== trim( $filterType ) )
 			$conditions['type']	= $filterType;
 
-		$page	= preg_match( "/^[0-9]+$/", $page ) ? (int) $page : 0;
+		$page	= preg_match( "/^[0-9]+$/", $page ) ? $page : 0;
 		$limit	= preg_match( "/^[0-9]+$/", $limit ) ? (int) $limit : 20;
 		$count	= $this->model->count( $conditions );
 		$pages	= ceil( $count / $limit );
@@ -124,21 +134,37 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'exceptionTypes', $types );
 	}
 
-	public function remove( $id )
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $id ): void
 	{
 		$this->model->remove( $id );
 		$page	= $this->session->get( $this->filterPrefix.'page' );
 		$this->restart( $page ?: NULL, TRUE );
 	}
 
-	public function setInstance( $instanceKey )
+	/**
+	 *	@param		?string $instanceKey
+	 *	@return		void
+	 */
+	public function setInstance( ?string $instanceKey ): void
 	{
 		$this->session->set( $this->filterPrefix.'instance', $instanceKey );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $id )
+	/**
+	 *	@param		int|string		$id
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $id ): void
 	{
+		/** @var ?object $exception */
 		$exception	= $this->model->get( $id );
 		if( !$exception ){
 			$this->messenger->noteError( 'Invalid exception number.' );
@@ -147,7 +173,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
+		$exceptionSession	= new Dictionary( unserialize( $exception->session ?? 'b:0;' ) ?: [] );
 
 		$user	= NULL;
 		if( $exceptionSession->get( 'auth_user_id' ) ){
@@ -160,7 +186,6 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'exceptionRequest', $exceptionRequest );
 		$this->addData( 'exceptionSession', $exceptionSession );
 		$this->addData( 'user', $user );
-
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 	}
 
@@ -174,17 +199,16 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.admin.', TRUE );
-		$this->logic			= $this->env->getLogic()->get( 'logException' );
+		$this->logic			= new Logic_Log_Exception( $this->env );
 		$this->model			= new Model_Log_Exception( $this->env );
 
 		$instances	= ['this' => (object) ['title' => 'Diese Instanz']];
-		$path		= $this->env->getConfig()->get( 'path.logs' );
-		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
+//		$path		= $this->env->getConfig()->get( 'path.logs' );
+//		$fileName	= $this->env->getConfig()->get( 'module.server_log_exception.file.name' );
 
-/*
 		$instanceKey	= $this->session->get( $this->filterPrefix.'instance' );
 		$instanceKey 	= !in_array( $instanceKey, ['this', 'remote'] ) ? 'this' : $instanceKey;
-
+/*
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$instances['remote']	= (object) ['title' => 'entfernte Instanz'];
 			if( $instanceKey === 'remote' ){
@@ -195,6 +219,6 @@ class Controller_Admin_Log_Exception extends Controller
 		}*/
 
 		$this->addData( 'instances', $instances );
-//		$this->addData( 'currentInstance', $instanceKey );
+		$this->addData( 'currentInstance', $instanceKey );
 	}
 }

@@ -95,12 +95,12 @@ $panelAdd	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				'.HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, array(
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
 //					'title'	=> htmlentities( $w->buttonSave, ENT_QUOTES, 'UTF-8' ),
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>

@@ -1,5 +1,10 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var ?string $from */
+/** @var array<object> $providers */
 
 $list	= HtmlTag::create( 'div', 'Keine OAuth2-Provider verfügbar.', ['class' => 'alert alert-error'] );
 
@@ -17,22 +22,22 @@ if( $providers ){
 	}
 	$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
-$panelProviders	= HtmlTag::create( 'div', array(
+$panelProviders	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Anmelden mit Anbieter-Konto' ),
 	HtmlTag::create( 'div', [
 		$list,
 	], ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+], ['class' => 'content-panel'] );
 
 extract( $view->populateTexts( ['top', 'bottom', 'info'], 'html/auth/oauth2/login/' ) );
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/oauth2/login' );
 
-return $tabs.$textTop.HtmlTag::create( 'div', array(
+return $tabs.$textTop.HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
 		$panelProviders,
 	], ['class' => 'span6'] ),
 	HtmlTag::create( 'div', [
 		$textInfo
 	], ['class' => 'span6'] ),
-), ['class' => 'row-fluid'] ).$textBottom;
+], ['class' => 'row-fluid'] ).$textBottom;

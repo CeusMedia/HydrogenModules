@@ -18,14 +18,14 @@ class Logic_Form_Transfer_DataMapper extends Logic
 		$input	= new Dictionary( $formData );
 		$output	= new Dictionary();
 
-		$this->applySets( $rules->set ?? [], $input, $output );
-		$this->applyTranslation( (array) $rules->translate ?? [], $input, $output );
-		$this->applyFilters( $rules->filter ?? [], $input, $output );
-		$this->applyDatabaseSearches( $rules->db ?? [], $input, $output );
+		$this->applySets( (array) $rules->set ?? [], $input, $output );
+		$this->applyTranslation( (array) ( $rules->translate ?? [] ), $input, $output );
+		$this->applyFilters( (array) ( $rules->filter ?? [] ), $input, $output );
+		$this->applyDatabaseSearches( (array) ( $rules->db ?? [] ), $input, $output );
 
-		$this->applyCreations( $rules->create ?? [], $input, $output );
-		$this->applyCopies( $rules->copy ?? [], $input, $output );
-		$this->applyMappings( $rules->map ?? [], $input, $output );
+		$this->applyCreations( (array) ( $rules->create ?? [] ), $input, $output );
+		$this->applyCopies( (array) ( $rules->copy ?? [] ), $input, $output );
+		$this->applyMappings( (array) ( $rules->map ?? [] ), $input, $output );
 
 		return $output->getAll();
 	}
@@ -38,8 +38,9 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		array			$creations		List of creation rules
 	 *	@param		Dictionary		$input			Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
+	 *	@return		void
 	 */
-	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output )
+	protected function applyCreations( array $creations, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $creations as $fieldName => $parameters ){
 			$buffer	= '';
@@ -65,13 +66,17 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	Applies filter rules.
 	 *
 	 *	@access		protected
-	 *	@param		array			$filters	Map of filter rules
+	 *	@param		array<object>	$filters	Map of filter rules
 	 *	@param		Dictionary		$input		Input data dictionary
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output )
+	protected function applyFilters( array $filters, Dictionary $input, Dictionary $output ): void
 	{
+		/**
+		 * @var string $fieldName
+		 * @var object{condition: string, onEmpty: string, action: ?string, operation: ?string, else: ?string} $parameters
+		 */
 		foreach( $filters as $fieldName => $parameters ){
 			if( !$input->has( $fieldName ) ){
 				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "skip" )
@@ -108,7 +113,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 					break;
 				case 'contains':
 				case '~=':
-					$truth	= strpos( $inputValue, $condition->match ) !== FALSE;
+					$truth	= str_contains( $inputValue, (string) $condition->match );
 					break;
 				case 'regex':
 					$truth	= preg_match( $condition->match, $inputValue );
@@ -148,23 +153,31 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output )
+	protected function applyDatabaseSearches( array $searches, Dictionary $input, Dictionary $output ): void
 	{
+		/**
+		 * @var string $fieldName
+		 * @var object $parameters
+		 */
 		foreach( $searches as $fieldName => $parameters ){
 			if( empty( $parameters->table ) )
 				continue;
 			if( is_scalar( $parameters->table ) )
 				$parameters->table	= [$parameters->table];
 			$tables		= implode( ', ', $parameters->table );
+			if( empty( $parameters->column ) )
+				throw new RuntimeException( 'DB: No table column defined for target field "'.$fieldName.'"' );
 			if( empty( $parameters->index ) )
 				throw new RuntimeException( 'DB: No index defined for target field "'.$fieldName.'"' );
 
-			$indices	= [1];
+			$indices	= [];
 			foreach( $parameters->index as $indexColumn => $indexSource ){
 				$indexValue	= $this->resolveValue( $indexSource, $input );
 				if( $indexValue === NULL ){
-					if( !isset( $parameters->onEmpty ) )
-						throw new RuntimeException( 'DB: No data available for "'.$indexSource.'", used as index source for target field "'.$fieldName.'" on table(s) '.$tables );
+					if( !isset( $parameters->onEmpty ) ){
+						$msg	= 'DB: No data available for "%s", used as index source for target field "%s" on table %s';
+						throw new RuntimeException( sprintf( $msg, $indexSource, $fieldName, $tables ) );
+					}
 					$indexValue = $parameters->onEmpty;
 				}
 				$indices[]	= $indexColumn.' = "'.$indexValue.'"';
@@ -173,8 +186,11 @@ class Logic_Form_Transfer_DataMapper extends Logic
 			$dbc	= $this->env->getDatabase();
 			$result	= $dbc->query( $query )->fetch( PDO::FETCH_OBJ );
 			if( empty( $result ) ){
-				if( !isset( $parameters->onEmpty ) )
-					throw new RuntimeException( 'DB: No table data found for index source of target field "'.$fieldName.'" from table(s) '.$tables );
+				if( !isset( $parameters->onEmpty ) ){
+					$message		= 'DB: Failed to get "%s" by looking for column "%s" in table "%s" having %s';
+					$indexString	= join( ' and ', $indices );
+					throw new RuntimeException( sprintf( $message, $fieldName, $parameters->column, $tables, $indexString ) );
+				}
 				$result = (object) [ 'value' => $parameters->onEmpty ];
 			}
 			if( !empty( $parameters->to ) && in_array( $parameters->to, ['input', 'request'], TRUE ) )
@@ -193,7 +209,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyTranslation( array $translates, Dictionary $input, Dictionary $output )
+	protected function applyTranslation( array $translates, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $translates as $fieldName => $map ){
 			if( $input->has( $fieldName ) ){
@@ -215,7 +231,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyCopies( array $copies, Dictionary $input, Dictionary $output )
+	protected function applyCopies( array $copies, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $copies as $fieldName )
 			if( $input->has( $fieldName ) )
@@ -231,7 +247,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applyMappings( array $map, Dictionary $input, Dictionary $output )
+	protected function applyMappings( array $map, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $map as $inputFieldName => $outputFieldName )
 			if( $input->has( $inputFieldName ) )
@@ -247,7 +263,7 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary		$output		Output data dictionary
 	 *	@return		void
 	 */
-	protected function applySets( array $map, Dictionary $input, Dictionary $output )
+	protected function applySets( array $map, Dictionary $input, Dictionary $output ): void
 	{
 		foreach( $map as $name => $value ){
 			$output->set( $name, $this->resolveValue( $value, $input ) );
@@ -269,14 +285,11 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	protected function resolveValue( string $value, Dictionary $input ): ?string
 	{
 		$prefix	= substr( $value, 0, 1 );
-		switch( $prefix ){
-			case '!':
-				return $this->resolveFunction( substr( $value, 1 ) );
-			case '@':
-				return $input->get( substr( $value, 1 ) );
-			default:
-				return $value;
-		}
+		return match( $prefix ){
+			'!'		=> $this->resolveFunction( substr( $value, 1 ) ),
+			'@'		=> $input->get( substr( $value, 1 ) ),
+			default	=> $value,
+		};
 	}
 
 	/**
@@ -290,16 +303,12 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 */
 	protected function resolveFunction( string $function, $arguments = '' ): ?string
 	{
-		switch( $function ){
-			case 'datetime':
-				return date( 'Y-m-d H:i:s' );
-			case 'date':
-				return date( 'Y-m-d' );
-			case 'time':
-				return date( 'H:i:s' );
-			default:
-				return NULL;
-		}
+		return match( $function ){
+			'datetime'	=> date( 'Y-m-d H:i:s' ),
+			'date'		=> date( 'Y-m-d' ),
+			'time'		=> date( 'H:i:s' ),
+			default		=> NULL,
+		};
 	}
 
 	/**
@@ -311,23 +320,13 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 *	@param		Dictionary	$input			Map of form input data
 	 *	@return		string|integer|NULL
 	 */
-	protected function resolveOperation( string $operation, string $value, Dictionary $input )
+	protected function resolveOperation( string $operation, string $value, Dictionary $input ): string|int|NULL
 	{
-		switch( strtolower( $operation ) ){
-			case 'set':
-				return $this->resolveValue( $value, $input );
-			case 'inc':
-			case 'increment':
-			case '++':
-				return ( (int) $value ) + 1;
-			case 'dec':
-			case 'decrement':
-			case '--':
-				return ( (int) $value ) - 1;
-			case 'remove':
-			case 'delete':
-			default:
-				return NULL;
-		}
+		return match( strtolower( $operation ) ){
+			'set'						=> $this->resolveValue( $value, $input ),
+			'inc', 'increment', '++'	=> ( (int) $value ) + 1,
+			'dec', 'decrement', '--'	=> ( (int) $value ) - 1,
+			default						=> NULL,
+		};
 	}
 }

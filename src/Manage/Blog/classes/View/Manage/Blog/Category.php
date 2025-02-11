@@ -1,15 +1,15 @@
 <?php
 class View_Manage_Blog_Category extends View_Manage_Blog
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 }

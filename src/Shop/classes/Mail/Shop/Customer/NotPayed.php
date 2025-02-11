@@ -1,8 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View;
-
 class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 {
 	protected ?object $order								= NULL;
@@ -23,15 +20,14 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 		$this->helperOrderFacts	= new View_Helper_Shop_OrderFacts( $this->env );
 		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
-
-		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
-		/** @todo replace this hack by a better general solution */
-		/** @var WebEnvironment $env */
-		$env		= $this->env;
-		$this->view	= new View( $env );
 	}
 
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
@@ -63,13 +59,13 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_HTML );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends'] as $item )
+		foreach( $this->data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
 		$helperShop	= new View_Helper_Shop( $this->env );
 
-		$body	= $this->view->loadContentFile( 'mail/shop/manager/not_payed.html', [
+		$body	= $this->loadContentFile( 'mail/shop/manager/not_payed.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'orderStatus'		=> $this->words['statuses-order'][$this->order->status],
@@ -86,7 +82,7 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 			'addressDelivery'	=> $this->helperAddress->setAddress( $this->order->customer->addressDelivery )->render(),
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
-		] );
+		] ) ?? '';
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );
@@ -111,6 +107,6 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 		];
-		return $this->view->loadContentFile( 'mail/shop/customer/not_payed.txt', $templateData );
+		return $this->loadContentFile( 'mail/shop/customer/not_payed.txt', $templateData ) ?? '';
 	}
 }

@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use View_Manage_Image_Slider as View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var string $basePath */
+/** @var array $words */
+/** @var array<Entity_Image_Slider> $sliders */
 
 $iconDurationShow		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconDurationTransition	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-h'] );
@@ -19,7 +27,10 @@ if( $sliders ){
 	foreach( $sliders as $slider ){
 		$cover	= '';
 		if( $slider->slides )
-			$cover	= HtmlTag::create( 'img', NULL, ['src' => $basePath.$slider->path.$slider->slides[0]->source, 'style' => 'max-width: 96px; max-height: 64px'] );
+			$cover	= HtmlTag::create( 'img', NULL, [
+				'src'	=> $basePath.$slider->path.$slider->slides[0]->source,
+				'style'	=> 'max-width: 96px; max-height: 64px'
+			] );
 		$link	= HtmlTag::create( 'a', $slider->title, ['href' => './manage/image/slider/edit/'.$slider->sliderId] );
 		$createdAt	= date( 'd.m.Y', $slider->createdAt ).' <small>'.date( 'H:i:s', $slider->createdAt ).'</small>';
 		if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
@@ -28,29 +39,29 @@ if( $sliders ){
 		$iconFormat	= $iconFormatLandscape;
 		if( $slider->width < $slider->height )
 			$iconFormat	= $iconFormatPortrait;
-		$dimensions	= join( '<br/>', array(
+		$dimensions	= join( '<br/>', [
 			$iconSlides.' '.count( $slider->slides ).' Slides',
 			$iconFormat.' '.$slider->width.'&times;'.$slider->height.'px',
-		) );
+		] );
 		$transition	= join( ', ', [
 			'Animation: '.$words['optAnimation'][$slider->animation],
 			'Übergang: '.$words['optEasing'][$slider->easing],
 		] );
-		$durations	= join( '<br/>', array(
+		$durations	= join( '<br/>', [
 			$iconDurationShow.' '.$helperDuration->formatDuration( $slider->durationShow ).'s',
 			HtmlTag::create( 'acronym', $iconDurationTransition.' '.$helperDuration->formatDuration( $slider->durationSlide ).'s', ['title' => $transition] ),
-		) );
+		] );
 		$views		= join( '<br/>', [
 			$iconViews.' '.$slider->views,
 			$iconAge.' '.$createdAt,
 		] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $cover, ['class' => 'image-slider-cover', 'style' => 'text-align: center'] ),
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$slider->path.'</small>', ['class' => 'image-slider-title'] ),
 			HtmlTag::create( 'td', $dimensions, ['class' => 'image-slider-dimensions'] ),
 			HtmlTag::create( 'td', $durations, ['class' => 'image-slider-times'] ),
 			HtmlTag::create( 'td', $views, ['class' => 'image-slider-views-since'] ),
-		), ['class' => $rowClass, 'style' => 'height: 70px'] );
+		], ['class' => $rowClass, 'style' => 'height: 70px'] );
 	}
 	$heads	= [
 		'Cover',
@@ -89,13 +100,15 @@ return $textTop.'
 	</div>
 </div>';
 
-class View_Helper_NumberCommons{
-
-	static function getDivider( $numbers ){
-		return array_reduce( array_unique( $numbers ), 'static::_gcd_rec' );
+class View_Helper_NumberCommons
+{
+	public static function getDivider( array $numbers )
+	{
+		return array_reduce( array_unique( $numbers ), [self::class, '_gcd_rec'] );
 	}
 
-	static function getPrecision( $numbers, $maxPrecision = 3 ){
+	public static function getPrecision( array $numbers, $maxPrecision = 3 ): int
+	{
 		if( !count( $numbers ) || $maxPrecision < 1 )
 			return 0;
 		$gcd	= static::getDivider( array_unique( $numbers ) );
@@ -103,25 +116,28 @@ class View_Helper_NumberCommons{
 		return ( $maxPrecision - min( $zeros, $maxPrecision ) );
 	}
 
-	protected static function _count_trailing_zeros( $number ){
+	protected static function _count_trailing_zeros( int|float $number ): int
+	{
 		$zeros	= 0;
 		while( $number >= 10 && $number % 10 === 0 )
 			$zeros	+= (int)(bool)( $number /= 10 );
 		return $zeros;
 	}
 
-	protected static function _gcd_rec( $a, $b ){
+	protected static function _gcd_rec( $a, $b )
+	{
 		return $b ? static::_gcd_rec( $b, $a % $b ) : $a;
 	}
 }
 
-class View_Helper_Image_Slider_Duration{
+class View_Helper_Image_Slider_Duration
+{
+	public const MAX_PRECISION		= 3;
 
-	const MAX_PRECISION			= 3;
+	protected int $precision		= 0;
 
-	protected $precision		= 0;
-
-	function getSlidersPrecision( $sliders, $maxPrecision = self::MAX_PRECISION ){
+	function getSlidersPrecision( array $sliders, int $maxPrecision = self::MAX_PRECISION ): int
+	{
 		$times	= [];
 		foreach( $sliders as $slider ){
 			$times[]	= $slider->durationShow;
@@ -130,17 +146,20 @@ class View_Helper_Image_Slider_Duration{
 		return View_Helper_NumberCommons::getPrecision( $times, $maxPrecision );
 	}
 
-	function formatDuration( $msecs, $precision = NULL, $sepDecimal = '.', $sepThousand = ',' ){
-		$precision	= is_null( $precision ) ? $this->precision : 0;
-		return number_format( $msecs / pow( 10, 3 ), $precision, $sepDecimal, $sepThousand );
+	function formatDuration( int|float $msecs, ?int $precision = NULL, string $sepDecimal = '.', string $sepThousand = ',' ): string
+	{
+		$precision	= $precision ?? $this->precision;
+		return number_format( (float) $msecs / pow( 10, 3 ), $precision, $sepDecimal, $sepThousand );
 	}
 
-	public function setPrecision( $precision ){
+	public function setPrecision( int $precision ): self
+	{
 		$this->precision	= $precision;
 		return $this;
 	}
 
-	public function setPrecisionBySliders( $sliders, $maxPrecision = self::MAX_PRECISION ){
+	public function setPrecisionBySliders( array $sliders, int $maxPrecision = self::MAX_PRECISION ): self
+	{
 		return $this->setPrecision( $this->getSlidersPrecision( $sliders, $maxPrecision ) );
 	}
 }

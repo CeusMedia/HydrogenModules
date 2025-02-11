@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var array $words */
+/** @var View $view */
+/** @var object $project */
 
 $w		= (object) $words['add'];
 extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/note/add.' ) );

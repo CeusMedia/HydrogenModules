@@ -19,14 +19,18 @@ class Controller_Work_Newsletter extends Controller
 	protected string $filterPrefix				= 'filter_work_newsletter_';
 	protected string $frontendUrl;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() ){
-			$data	= array(
+			$data	= [
 				'creatorId'				=> $this->session->get( 'auth_user_id' ),
 				'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
-			);
+			];
 			if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
 				$data	= (array) $this->logic->getNewsletter( $newsletterId );
 				unset( $data['status'] );
@@ -86,6 +90,11 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'newsletter', $newsletter );
 	}
 
+	/**
+	 *	@param		string		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function dequeueLetter( string $readerLetterId ): void
 	{
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
@@ -93,6 +102,11 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -129,9 +143,9 @@ class Controller_Work_Newsletter extends Controller
 		}
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
-		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
+		$templates		= $this->logic->getTemplates( ['status' => '>= '.Model_Newsletter_Template::STATUS_READY], ['title' => 'ASC'] );
 		$groups			= [];
-		foreach( $this->logic->getGroups( ['status' => 1], ['title' => 'ASC'] ) as $group ){
+		foreach( $this->logic->getGroups( ['status' => Model_Newsletter_Group::STATUS_USABLE], ['title' => 'ASC'] ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;
 		}
@@ -175,6 +189,11 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function editFull( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -187,6 +206,11 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function enqueue( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -222,7 +246,10 @@ class Controller_Work_Newsletter extends Controller
 			$this->logic->enqueue( $queueId, $readerId, $newsletterId, TRUE ) ? $numberSent++ : $numberSkipped++;	//
 		if( $numberSent ){
 			$this->messenger->noteSuccess( $words->msgSuccess, $numberSent );
-			$this->logic->editNewsletter( $newsletterId, array( 'status' => Model_Newsletter::STATUS_SENT, 'sentAt' => time() ) );
+			$this->logic->editNewsletter( $newsletterId, [
+				'status'	=> Model_Newsletter::STATUS_SENT,
+				'sentAt'	=> time()
+			] );
 			$this->logic->setTemplateStatus( $newsletter->newsletterTemplateId, Model_Newsletter_Template::STATUS_USED );
 		}
 		if( $numberSkipped )
@@ -253,14 +280,14 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'addTemplates', $templates );
 		$this->addData( 'addNewsletters', $newsletters );
 
-		$filterTitle	= $this->session->get( $this->filterPrefix.'title' );
-		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
-		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' );
+		$filterTitle	= trim( $this->session->get( $this->filterPrefix.'title', '' ) );
+		$filterStatus	= trim( $this->session->get( $this->filterPrefix.'status', '' ) );
+		$filterLimit	= (int) $this->session->get( $this->filterPrefix.'limit', 10 );
 
 		$conditions	= [];
-		if( strlen( $filterTitle ) )
+		if( '' !== $filterTitle )
 			$conditions['title']	= '%'.$filterTitle.'%';
-		if( strlen( $filterStatus ) )
+		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
 
 		$orders		= ['newsletterId' => 'DESC'];
@@ -274,6 +301,13 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'filterLimit', $filterLimit );
 	}
 
+	/**
+	 *	@param		string		$format
+	 *	@param		string		$newsletterId
+	 *	@param		bool		$simulateOffline
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function preview( string $format, string $newsletterId, bool $simulateOffline = FALSE ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -331,6 +365,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$readerLetterId		ID of former send reader newsletter
 	 *	@return		void
 	 *	@todo		extend by queue support, otherwise this wont work anymore
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendLetter( string $readerLetterId ): void
 	{
@@ -345,6 +380,12 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@param		string		$tabKey
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setContentTab( string $newsletterId, string $tabKey ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -352,6 +393,12 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( './work/newsletter/edit/'.$newsletterId );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setStatus( string $newsletterId, $status ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -365,12 +412,17 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( 'Invalid status.', $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
-		$this->logic->editNewsletter( $newsletterId, array( 'status' => (int) $status ) );
+		$this->logic->editNewsletter( $newsletterId, ['status' => (int) $status] );
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$urlForwardTo	= $this->request->get( 'forwardTo' );
 		$this->restart( $urlForwardTo ?: 'edit/'.$newsletterId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function test( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -383,14 +435,19 @@ class Controller_Work_Newsletter extends Controller
 		foreach( $readerIds as $readerId )
 			$this->logic->sendTestLetter( $newsletterId, $readerId );
 		$this->messenger->noteSuccess( $w->msgSuccess, count( $readerIds ) );
-/*		$this->logic->editNewsletter( $newsletterId, array(										//  update newsletter
+/*		$this->logic->editNewsletter( $newsletterId, [										//  update newsletter
 			'status' 	=> Model_Newsletter_Template::STATUS_READY,								//  ... by setting to READY
 			'modifiedAt' => time()																//  ... and not change time
-		) );*/
+		] );*/
 		$this->restart( 'edit/'.$newsletterId.'?askForReady', TRUE );
 //		$this->restart( 'setContentTab/'.$newsletterId.'/4', TRUE );
 	}
 
+	/**
+	 *	@param		string		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $readerLetterId ): void
 	{
 		try{
@@ -398,7 +455,7 @@ class Controller_Work_Newsletter extends Controller
 			$newsletter	= $this->logic->getNewsletter( $letter->newsletterId );
 			try{
 				$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
-				$data		= $helper->prepareReaderDataForLetter( $readerLetterId, TRUE );
+				$data		= $helper->prepareReaderDataForLetter( $readerLetterId );
 				$mail		= $helper->renderNewsletterHtml( $letter->newsletterId, $letter->newsletterReaderId, $data );
 				print( $mail );
 				die;
@@ -408,12 +465,17 @@ class Controller_Work_Newsletter extends Controller
 				exit;
 			}
 		}
-		catch( Exception $e ){
+		catch( Exception ){
 			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
 			$this->restart( NULL, TRUE );
 		}
 	}
 
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
@@ -422,6 +484,9 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );
@@ -450,7 +515,12 @@ class Controller_Work_Newsletter extends Controller
 			$this->session->set( $this->filterPrefix.'limit', 10 );
 	}
 
-	protected function checkNewsletterId( string $newsletterId ): void
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkNewsletterId( int|string $newsletterId ): void
 	{
 		if( !$this->logic->checkNewsletterId( $newsletterId ) ){
 			$words		= (object) $this->getWords( 'edit' );

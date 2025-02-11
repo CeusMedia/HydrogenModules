@@ -14,8 +14,10 @@ class Controller_Info_Manual extends Controller
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected string $docPath;
+
+	/** @var array<string> $files */
 	protected array $files					= [];
-	protected string $userId				= '0';
+	protected int|string $userId				= '0';
 	protected Model_Manual_Category $modelCategory;
 	protected Model_Manual_Page $modelPage;
 	protected Model_User $modelUser;
@@ -25,8 +27,14 @@ class Controller_Info_Manual extends Controller
 	protected string $ext					= ".md";
 	protected bool $isEditable				= FALSE;
 	protected array $rights					= [];
+
+	/** @var array<Entity_Manual_Category> $categories */
 	protected array $categories				= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( !$this->isEditable || !in_array( 'add', $this->rights ) )
@@ -53,7 +61,7 @@ class Controller_Info_Manual extends Controller
 			if( !strlen( trim( $title ) ) )
 				$this->messenger->noteError( $words->msgErrorFilenameMissing );
 			else{
-				$pageId	= $this->modelPage->add( array(
+				$pageId	= $this->modelPage->add( [
 					'manualCategoryId'	=> $categoryId,
 					'parentId'			=> $parentId,
 					'creatorId'			=> (int) $this->userId,
@@ -65,7 +73,7 @@ class Controller_Info_Manual extends Controller
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				), FALSE );
+				], FALSE );
 				$this->messenger->noteSuccess( $words->msgSuccess, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 				$this->restartToPage( $this->modelPage->get( $pageId ) );
 			}
@@ -77,14 +85,20 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'title', $title );
 		$this->addData( 'content', $content );
 
-        $folders    = [];
-        $allPages   = $this->modelPage->getAll( [], ['title' => 'ASC'] );
-        foreach( $allPages as $folder )
-            $folders[]  = $folder;
-        $this->addData( 'folders', $folders );
+		$folders	= [];
+		/** @var array<Entity_Manual_Page> $allPages */
+		$allPages	= $this->modelPage->getAll( [], ['title' => 'ASC'] );
+		foreach( $allPages as $folder )
+			$folders[]	= $folder;
+		$this->addData( 'folders', $folders );
 	}
 
-	public function category( $categoryId )
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function category( int|string $categoryId ): void
 	{
 		$categoryId	= (int) $categoryId;
 		$category	= $this->checkCategoryId( $categoryId );
@@ -97,7 +111,7 @@ class Controller_Info_Manual extends Controller
 		$pages		= $this->modelPage->getAll( $conditions, $orders );
 		if( !$pages ){
 //			throw new RuntimeException( 'No page found in category' );
-			$pageId	= $this->modelPage->add( array(
+			$pageId	= $this->modelPage->add( [
 				'manualCategoryId'	=> $category->manualCategoryId,
 				'creatorId'			=> (int) $this->userId,
 				'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -108,14 +122,20 @@ class Controller_Info_Manual extends Controller
 				'content'			=> "## Start Page ##\nNo content, yet.",
 				'createdAt'			=> time(),
 				'modifiedAt'		=> time(),
-			) );
+			] );
 			$this->restartToPage( (int) $pageId );
 		}
 		$firstPage	= current( $pages );
 		$this->restartToPage( $firstPage );
 	}
 
-	public function edit( $pageId, $version = NULL )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@param		$version
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $pageId, $version = NULL ): void
 	{
 		$page	= $this->checkPageId( $pageId );
 		if( !$this->isEditable || !in_array( 'edit', $this->rights ) )
@@ -130,21 +150,21 @@ class Controller_Info_Manual extends Controller
 //				$this->messenger->noteNotice( $words->msgNoChanges );
 //				$this->restartToPage( $page );
 //			}
-			$this->modelVersion->add( array(
+			$this->modelVersion->add( [
 				'userId'	=> $this->userId,
 				'objectId'	=> $page->manualPageId,
 				'type'		=> Model_Manual_Version::TYPE_PAGE,
 				'version'	=> $page->version,
 				'object'	=> serialize( $page ),
 				'timestamp'	=> time(),
-			), FALSE );
+			], FALSE );
 
-			$data	= array(
+			$data	= [
 				'title'			=> $title,
 				'content'		=> $content,
 				'version'		=> $page->version + 1,
 				'modifiedAt'	=> time(),
-			);
+			];
 			if( strlen( trim( $parentId ) ) )
 				$data['parentId']	= $parentId;
 			$this->modelPage->edit( $page->manualPageId, $data, FALSE );
@@ -167,7 +187,12 @@ class Controller_Info_Manual extends Controller
 
 	}
 
-	public function import( $fileHash = NULL )
+	/**
+	 *	@param		string|NULL	$fileHash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function import( ?string $fileHash = NULL ): void
 	{
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$categoryId	= $this->request->get( 'categoryId' );
@@ -180,7 +205,7 @@ class Controller_Info_Manual extends Controller
 				if( file_exists( $this->docPath.$fileName ) ){
 					$content	= FileReader::load( $this->docPath.$fileName );
 					$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
-					$newPages[]	= $this->modelPage->add( array(
+					$newPages[]	= $this->modelPage->add( [
 						'manualCategoryId'	=> $categoryId,
 						'creatorId'			=> (int) $this->userId,
 						'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -191,14 +216,14 @@ class Controller_Info_Manual extends Controller
 						'content'			=> $content,
 						'createdAt'			=> time(),
 						'modifiedAt'		=> time(),
-					) );
+					] );
 					@unlink( $this->docPath.$fileName );
 				}
 			}
-			$message	= vsprintf( 'Imported %d pages into category "%s".', array(
+			$message	= vsprintf( 'Imported %d pages into category "%s".', [
 				count( $newPages ),
 				$category->title,
-			) );
+			] );
 			$this->messenger->noteSuccess( $message );
 			$this->restart( 'import', TRUE );
 		}
@@ -208,7 +233,7 @@ class Controller_Info_Manual extends Controller
 				$content	= FileReader::load( $this->docPath.$fileName );
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$nextRank	= $this->modelCategory->countByIndex( 'manualCategoryId', $categoryId ) + 1;
-				$this->modelPage->add( array(
+				$this->modelPage->add( [
 					'manualCategoryId'	=> $categoryId,
 					'creatorId'			=> (int) $this->userId,
 					'status'			=> Model_Manual_Page::STATUS_NEW,
@@ -219,7 +244,7 @@ class Controller_Info_Manual extends Controller
 					'content'			=> $content,
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
-				) );
+				] );
 				@unlink( $this->docPath.$fileName );
 				$this->restart( 'import', TRUE );
 			}
@@ -228,17 +253,22 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'files', $this->files );
 	}
 
-	public function index( $categoryId = NULL )
+	/**
+	 *	@param		int|string|NULL		$categoryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int|string|NULL $categoryId = NULL ): void
 	{
 		$categoryId	= (int) $categoryId;
 
-		if( !$categoryId ){
+		if( 0 === $categoryId ){
 			if( $this->session->get( 'filter_info_manual_categoryId' ) ){
 				$categoryId	= $this->session->get( 'filter_info_manual_categoryId' );
 				$category	= $this->modelCategory->get( $categoryId );
 				$this->restartToCategory( $category );
 			}
-			else if( count( $this->categories ) === 1 ){
+			else if( 1 === count( $this->categories ) ){
 				$categories	= array_values( $this->categories );
 				$category	= $categories[0];
 				$this->restartToCategory( $category );
@@ -249,11 +279,17 @@ class Controller_Info_Manual extends Controller
 
 		$conditions	= ['status' => '>= '.Model_Manual_Page::STATUS_NEW];
 		$orders		= [];
-		$pages	= $this->modelPage->getAll( $conditions, $orders );
+		/** @var array<Entity_Manual_Page> $pages */
+		$pages		= $this->modelPage->getAll( $conditions, $orders );
 		$this->addData( 'pages', $pages );
 	}
 
-	public function movePageDown( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function movePageDown( int|string $pageId ): void
 	{
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
@@ -267,7 +303,12 @@ class Controller_Info_Manual extends Controller
 		$this->restartToPage( $page );
 	}
 
-	public function movePageUp( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function movePageUp( int|string $pageId ): void
 	{
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'move' );
@@ -281,7 +322,7 @@ class Controller_Info_Manual extends Controller
 		$this->restartToPage( $page );
 	}
 
-	public function reload()
+	public function reload(): void
 	{
 		if( !in_array( 'reload', $this->rights ) )
 			$this->restart( NULL, TRUE );
@@ -296,7 +337,12 @@ class Controller_Info_Manual extends Controller
 		$this->restart( getEnv( 'HTTP_REFERER' ) );
 	}
 
-	public function removePage( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removePage( int|string $pageId ): void
 	{
 		$page		= $this->checkPageId( $pageId );
 		$words		= (object) $this->getWords( 'remove' );
@@ -318,7 +364,7 @@ class Controller_Info_Manual extends Controller
 		FileWriter::save( $orderFile, implode( "\n", $this->order->getAll() ) );
 	}*/
 
-	public function scanFiles()
+	public function scanFiles(): void
 	{
 		$this->files	= [];
 		$index	= new RecursiveRegexFileIndex( $this->docPath, "/\\".$this->ext."$/" );
@@ -329,7 +375,12 @@ class Controller_Info_Manual extends Controller
 		}
 	}
 
-	public function page( $pageId )
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function page( int|string $pageId ): void
 	{
 		$pageId		= (int) $pageId;
 		$page		= $this->checkPageId( $pageId );
@@ -347,7 +398,7 @@ class Controller_Info_Manual extends Controller
 		$renderer			= $this->moduleConfig->get( 'renderer' );
 		$markdownOnServer	= $this->env->getModules()->has( 'UI_Markdown' );
 		$markdownOnClient	= $this->env->getModules()->has( 'JS_Markdown' );
-		if( !$markdownOnServer && preg_match( "/^server/", $renderer ) )
+		if( !$markdownOnServer && str_starts_with( $renderer, 'server' ) )
 			$renderer	= 'client';
 		if( !$markdownOnClient && $renderer === 'client' )
 			$this->messenger->noteFailure( 'No Markdown renderer installed.' );
@@ -365,6 +416,7 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -407,10 +459,11 @@ class Controller_Info_Manual extends Controller
 		$this->categories	= [];
 		$conditions			= ['status' => '>= '.Model_Manual_Category::STATUS_NEW];
 		$orders				= ['rank' => 'ASC'];
+		/** @var Entity_Manual_Category $category */
 		foreach( $this->modelCategory->getAll( $conditions, $orders ) as $category )
 			$this->categories[$category->manualCategoryId]	= $category;
 		if( !$this->categories ){
-			$this->modelCategory->add( array(
+			$this->modelCategory->add( [
 				'creatorId'		=> (int) $this->userId,
 				'status'		=> Model_Manual_Category::STATUS_NEW,
 				'format'		=> Model_Manual_Category::FORMAT_TEXT,
@@ -420,7 +473,7 @@ class Controller_Info_Manual extends Controller
 				'content'		=> '',
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$sessionKeyCategoryId	= 'filter_info_manual_categoryId';
@@ -434,6 +487,10 @@ class Controller_Info_Manual extends Controller
 		$this->addData( 'categoryId', $this->session->get( $sessionKeyCategoryId ) );
 	}
 
+	/**
+	 *	@param		array		$matches
+	 *	@return		string
+	 */
 	protected function __callbackEncode( array $matches ): string
 	{
 		if( preg_match( "/^[a-z]+:\/\//i", $matches[2] ) )
@@ -447,22 +504,34 @@ class Controller_Info_Manual extends Controller
 		return '<del>' .$matches[1].'('.urlencode( $matches[2] ). ')</del>';
 	}
 
-	protected function checkCategoryId( $categoryId ): object
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		Entity_Manual_Category
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkCategoryId( int|string $categoryId ): Entity_Manual_Category
 	{
-		if( !strlen( trim( $categoryId ) ) )
+		if( '' === trim( (string) $categoryId ) )
 			throw new InvalidArgumentException( 'No category ID given' );
+		/** @var Entity_Manual_Category $category */
 		$category	= $this->modelCategory->get( $categoryId );
-		if( !$category )
+		if( NULL === $category )
 			throw new InvalidArgumentException( 'Invalid category ID given' );
 		return $category;
 	}
 
-	protected function checkPageId( $pageId ): object
+	/**
+	 *	@param		int|string		$pageId
+	 *	@return		Entity_Manual_Page
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkPageId( int|string $pageId ): Entity_Manual_Page
 	{
-		if( !strlen( trim( $pageId ) ) )
+		if( '' === trim( (string) $pageId ) )
 			throw new InvalidArgumentException( 'No page ID given' );
+		/** @var Entity_Manual_Page $page */
 		$page	= $this->modelPage->get( (int) $pageId );
-		if( !$page )
+		if( NULL === $page )
 			throw new InvalidArgumentException( 'Invalid page ID given' );
 		if( $page->manualCategoryId )
 			$page->category	= $this->modelCategory->get( $page->manualCategoryId );
@@ -486,14 +555,18 @@ class Controller_Info_Manual extends Controller
 		return $list;
 	}
 
-	protected function restartToCategory( $categoryOrId )
+	/**
+	 *	@param		Entity_Manual_Category|int|string		$categoryOrId
+	 *	@return		void
+	 */
+	protected function restartToCategory( Entity_Manual_Category|int|string $categoryOrId ): void
 	{
 		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
 			->setCategory( $categoryOrId )
 			->render() );
 	}
 
-	protected function restartToPage( $pageOrId )
+	protected function restartToPage( Entity_Manual_Page|int|string $pageOrId ): void
 	{
 		$this->restart( View_Helper_Info_Manual_Url::spawn( $this->env )
 			->setPage( $pageOrId )

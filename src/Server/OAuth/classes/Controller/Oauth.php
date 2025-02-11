@@ -3,7 +3,7 @@
  *	Controller for OAuth server.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Controller for OAuth server.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  *	@todo			code doc
  *	@todo			todos within code
  *	@todo			add response headers: "Cache-Control: no-store", "Pragma: no-cache"
@@ -44,12 +44,14 @@ class Controller_Oauth extends Controller
 	 *	Supported grant types: authorization code (missing: implicit)
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@see		http://tools.ietf.org/html/rfc6749#section-4.1.2.1
 	 *	@todo		#1 implement error types: unauthorized_client, invalid_scope, server_error, temporarily_unavailable
 	 *	@todo		#2 implement grant type: implicit
 	 *	@todo		#3 make configurable: client agent (default, RFC) OR show login fail on authorization server (nicer)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function authorize()
+	public function authorize(): void
 	{
 #		if( $this->request->getMethod() !== "GET" )
 #			$this->errorRedirect( 'GET request required.', 'This request must use the GET method.' );
@@ -66,7 +68,7 @@ class Controller_Oauth extends Controller
 				/*  --  VALIDATION OF CLIENT ID  --  */
 				if( !( $applicationId = $this->getApplicationIdFromClientId( $clientId ) ) )		//  no application found for client ID
 					$this->errorRedirect( 'invalid_client' );
-				if( $this->request->getMethod() === "POST" ){
+				if( $this->request->getMethod()->isPost() ){
 					$logic		= Logic_Authentication::getInstance( $this->env );
 					$modelUser	= new Model_User( $this->env );
 					if( !( $user = $modelUser->getByIndex( 'username', $this->request->get( 'username' ) ) ) )
@@ -86,7 +88,7 @@ class Controller_Oauth extends Controller
 						$this->errorReport( 'Login failed.', $uri );*/
 					}
 					$scope	= trim( $this->request->get( 'scope' ) );
-					$code	= $this->generateAuthorizationCode( $applicationId, $user->userId, $redirectUri, $scope );
+					$code	= $this->generateAuthorizationCode( $applicationId, (string) $user->userId, $redirectUri, $scope );
 					$url	= $redirectUri.'?'.http_build_query( [
 						'code'	=> $code,
 						'state'	=> $state,
@@ -118,8 +120,9 @@ class Controller_Oauth extends Controller
 	 *	Supported grant types: authorization_code, password, client_credentials, refresh_token
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function token()
+	public function token(): void
 	{
 		if( !strlen( trim( $grantType = $this->request->get( 'grant_type' ) ) ) )
 			$this->errorResponse( 'invalid_request', 'Missing grant type.' );
@@ -144,13 +147,17 @@ class Controller_Oauth extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request	= $this->env->getRequest();
 		$config			= $this->env->getConfig()->getAll( 'module.server_oauth.', TRUE );
 		$this->lifetimeAccessToken			= $config->get( 'lifetime.access' );
 		$this->lifetimeAuthorizationCode	= $config->get( 'lifetime.code' );
-		$this->lifetimeRefreshRefreshToken	= $config->get( 'lifetime.refresh' );
+		$this->lifetimeRefreshToken			= $config->get( 'lifetime.refresh' );
 		$this->cleanUp();
 	}
 
@@ -160,8 +167,9 @@ class Controller_Oauth extends Controller
 	 *	@access		protected
 	 *	@return		void
 	 *	@todo		idea: return list of refreshed tokens/codes
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function cleanUp()
+	protected function cleanUp(): void
 	{
 		$modelCode			= new Model_Oauth_Code( $this->env );
 		$modelApplication	= new Model_Oauth_Application( $this->env );
@@ -186,20 +194,20 @@ class Controller_Oauth extends Controller
 	 *	@access		protected
 	 *	@return		object|NULL		Data object containing client ID and secret if detected, NULL otherwise
 	 */
-	protected function decodeBasicAuthentication()
+	protected function decodeBasicAuthentication(): ?object
 	{
-		$headers    = getallheaders();
+		$headers	= getallheaders();
 		if( !empty( $headers['Authorization'] ) ){
-			if( preg_match( "/^Basic /", $headers['Authorization'] ) ){
+			if( str_starts_with( $headers['Authorization'], 'Basic ' ) ){
 				$code	= preg_replace( "/^Basic /", "", $headers['Authorization'] );
-				list( $clientId, $clientSecret ) = explode( ":", base64_decode( $code ) );
+				[$clientId, $clientSecret] = explode( ":", base64_decode( $code ) );
 				return (object) ['clientId' => $clientId, 'clientSecret' => $clientSecret];
 			}
 		}
 		return NULL;
 	}
 
-	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 )
+	protected function errorRedirect( $message, $description = NULL, $uri = NULL, $status = 302 ): void
 	{
 		$parameters		= ['error' => $message];
 		if( strlen( trim( $description ) ) )
@@ -217,10 +225,10 @@ class Controller_Oauth extends Controller
 	 *	Attention: URIs to redirect afterwards can only be within local application.
 	 *	@access		protected
 	 *	@param		string		$message		Error message to report
-	 *	@param		string		$uri			URI within local application to redirect to
+	 *	@param		?string		$uri			URI within local application to redirect to
 	 *	@return		void
 	 */
-	protected function errorReport( $message, $uri = NULL )
+	protected function errorReport( string $message, ?string $uri = NULL ): void
 	{
 		$this->env->getMessenger()->noteError( $message );
 		$this->restart( $uri, !$uri );
@@ -231,11 +239,12 @@ class Controller_Oauth extends Controller
 	 *	Sends content type header fo MIME type application/json.
 	 *	@access		protected
 	 *	@param		string		$message		Key of error message
-	 *	@param		string		$description	Description of error message (will be decoded to ASCII)
-	 *	@param		string		$uri			URI for further information
+	 *	@param		?string		$description	Description of error message (will be decoded to ASCII)
+	 *	@param		?string		$uri			URI for further information
+	 *	@param		int			$status			Default: 400
 	 *	@return		void
 	 */
-	protected function errorResponse( $message, $description = NULL, $uri = NULL, $status = 400 )
+	protected function errorResponse( string $message, ?string $description = NULL, ?string $uri = NULL, int $status = 400 ): void
 	{
 		$parameters	= ['error' => $message];
 		if( strlen( trim( $description ) ) )
@@ -259,24 +268,25 @@ class Controller_Oauth extends Controller
 	 *  This code will expire and be removed by method cleanUp automatically.
 	 *	Requested scopes will be stored and validated/filtered later.
 	 *	@access		public
-	 *	@param		integer		$applicationId		ID of registered application
-	 *	@param		integer		$userId				ID of authenticating user
+	 *	@param		int|string	$applicationId		ID of registered application
+	 *	@param		int|string	$userId				ID of authenticating user
 	 *	@param		string		$redirectUri		URI to redirect to afterwards ()
-	 *	@param		string		$scope				List of scopes asked to access to
+	 *	@param		?string		$scope				List of scopes asked to access to
 	 *	@return		string		Authorization code to be delivered to redirect URI
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateAuthorizationCode( $applicationId, $userId, $redirectUri, $scope = NULL ): string
+	protected function generateAuthorizationCode( int|string $applicationId, int|string $userId, string $redirectUri, ?string $scope = NULL ): string
 	{
 		$modelCode	= new Model_Oauth_Code( $this->env );
 		$code		= $modelCode->getNewCode( $applicationId, $scope );
-		$codeId		= $modelCode->add( array(
+		$codeId		= $modelCode->add( [
 			'oauthApplicationId'	=> $applicationId,
 			'userId'				=> $userId,
 			'redirectUri'			=> $redirectUri,
 			'code'					=> $code,
 			'scope'					=> $scope,
 			'createdAt'				=> time()
-		) );
+		] );
 		return $code;
 	}
 
@@ -286,25 +296,26 @@ class Controller_Oauth extends Controller
 	 *  This token will expire and be removed by method cleanUp automatically.
 	 *	Attention: Scopes MUST be validated/filtered by now.
 	 *	@access		protected
-	 *	@param		integer		$applicationId		ID of registered application
-	 *	@param		integer		$userId				ID of authenticated user
-	 *	@param		string		$scope				List of scopes to grant access to
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
+	 *	@param		int|string	$applicationId		ID of registered application
+	 *	@param		int|string	$userId				ID of authenticated user
+	 *	@param		?string		$scope				List of scopes to grant access to
+	 *	@param		?string		$salt				Token hash salt (optional)
+	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateAccessToken( $applicationId, $userId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	protected function generateAccessToken( int|string $applicationId, int|string $userId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		$modelToken	= new Model_Oauth_AccessToken( $this->env );
 		$token		= $modelToken->getNewToken( $applicationId, $scope, $salt, $pepper );
-		$tokenId	= $modelToken->add( array(
+		$tokenId	= $modelToken->add( [
 			'oauthApplicationId'	=> $applicationId,
 			'userId'				=> $userId,
 			'token'					=> $token,
 			'scope'					=> (string) $scope,
 			'createdAt'				=> time(),
-		) );
+		] );
 		return $token;
 	}
 
@@ -314,34 +325,35 @@ class Controller_Oauth extends Controller
 	 *  This token will expire and be removed by method cleanUp automatically.
 	 *	Attention: Scopes MUST be validated/filtered by now.
 	 *	@access		protected
-	 *	@param		integer		$applicationId		ID of registered application
-	 *	@param		string		$scope				List of scopes to grant access to
-	 *	@param		string		$salt				Token hash salt (optional)
-	 *	@param		string		$pepper				Token hash pepper (optional)
+	 *	@param		int|string	$applicationId		ID of registered application
+	 *	@param		?string		$scope				List of scopes to grant access to
+	 *	@param		?string		$salt				Token hash salt (optional)
+	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateRefreshToken( $applicationId, $scope = NULL, $salt = NULL, $pepper = NULL ): string
+	protected function generateRefreshToken( int|string $applicationId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
 		$modelRefresh	= new Model_Oauth_RefreshToken( $this->env );
 		$token			= $modelRefresh->getNewToken( $applicationId, $scope, $salt, $pepper );
-		$refreshId		= $modelRefresh->add( array(
+		$refreshId		= $modelRefresh->add( [
 			'oauthApplicationId'	=> $applicationId,
 			'token'					=> $token,
 			'scope'					=> (string) $scope,
 			'createdAt'				=> time(),
-		) );
+		] );
 		return $token;
 	}
 
 	/**
 	 *	... unfinished helper method ...
 	 *	@access		protected
-	 *	@param		string			Client ID
+	 *	@param		string			$clientId		Client ID
 	 *	@return		integer|NULL	Application ID or NULL if not available
 	 *	@todo		refactor to getApplicationFromClientId, delivering application data object instead of ID
 	 */
-	protected function getApplicationIdFromClientId( $clientId )
+	protected function getApplicationIdFromClientId( string $clientId ): ?int
 	{
 		$model			= new Model_Oauth_Application( $this->env );
 		$application	= $model->getByIndex( 'clientId', $clientId );
@@ -350,8 +362,11 @@ class Controller_Oauth extends Controller
 		return NULL;
 	}
 
-
-	protected function tokenAuthorizationCode()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function tokenAuthorizationCode(): void
 	{
 		$modelCode			= new Model_Oauth_Code( $this->env );									//  connect storage of authorization codes
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
@@ -399,13 +414,16 @@ class Controller_Oauth extends Controller
 		}
 		$data['scope']		= $authCode->scope;														//  @todo implement scope filter
 		$data['user_id']	= $authCode->userId;
-		$data['user_id']	= $authCode->userId;
 
 		$modelCode->remove( $authCode->oauthCodeId );												//  remove authorization code after single use
 		$this->respondJsonData( $data );
 	}
 
-	protected function tokenClient()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function tokenClient(): void
 	{
 		if( !( $client = $this->decodeBasicAuthentication() ) )										//  no basic authentication found
 			$this->errorResponse( 'invalid_client', 'Missing client authentication header', NULL, 401 );
@@ -423,7 +441,7 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
 		$data	= [
-			'access_token'	=> $this->generateAccessToken( $applicationId ),
+			'access_token'	=> $this->generateAccessToken( $applicationId, 0 ),
 			'token_type'	=> 'bearer',
 			'expires_in'	=> $this->lifetimeRefreshToken,
 		];
@@ -431,9 +449,10 @@ class Controller_Oauth extends Controller
 	}
 
 	/**
-	 *	@todo	protect against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
+	 *	@todo		protect against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function tokenPassword()
+	protected function tokenPassword(): void
 	{
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		if( !strlen( trim( $username = $this->request->get( 'username' ) ) ) )						//  if username is not in request
@@ -441,7 +460,8 @@ class Controller_Oauth extends Controller
 		if( !strlen( trim( $password = $this->request->get( 'password' ) ) ) )						//  if password is not in request
 			$this->errorResponse( 'invalid_request', 'Missing password.' );							//  respond error
 
-		if( ( $client = $this->decodeBasicAuthentication() ) ){										//  try to find basic authentication
+		$client = $this->decodeBasicAuthentication();												//  try to find basic authentication
+		if( NULL !== $client ){
 			$clientId		= $client->clientId;													//  get client ID from basic authentication
 			$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
 		}
@@ -465,11 +485,13 @@ class Controller_Oauth extends Controller
 			$this->errorResponse( 'unauthorized_client', 'Invalid grant type for this client.' );
 
 		$modelUser	= new Model_User( $this->env );
-		if( !( $user = $modelUser->getByIndex( 'username', $username ) ) )
+		/** @var ?Entity_User $user */
+		$user = $modelUser->getByIndex( 'username', $username );
+		if( NULL === $user )
 			$this->errorResponse( 'invalid_client', 'Invalid user', NULL, 401 );
 
 		$logic	= Logic_UserPassword::getInstance( $this->env );
-		if( !$logic->validateUserPassword( $user->userId, $password ) )
+		if( !$logic->validateUserPassword( $user, $password ) )
 			$this->errorResponse( 'invalid_client', 'Invalid password', NULL, 401 );
 
 		$scope	= $this->request->get( 'scope' );
@@ -486,27 +508,28 @@ class Controller_Oauth extends Controller
 		$this->respondJsonData( $data );
 	}
 
-	protected function tokenRefreshToken()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function tokenRefreshToken(): void
 	{
 		$modelApplication	= new Model_Oauth_Application( $this->env );							//  connect storage of applications
 		$modelRefresh		= new Model_Oauth_RefreshToken( $this->env );
-		if( !strlen( trim( $refreshToken = $this->request->get( 'refresh_token' ) ) ) )				//  if authorization code is not in request
-			$this->errorResponse( 'invalid_request', 'Missing refresh token.' );					//  respond error
+		$refreshToken		= $this->request->get( 'refresh_token' );
+		if( 0 === strlen( trim( $refreshToken ) ) )														//  if authorization code is not in request
+			$this->errorResponse( 'invalid_request', 'Missing refresh token.' );		//  respond error
 
-		if( ( $client = $this->decodeBasicAuthentication() ) ){										//  try to find basic authentication
-			$clientId		= $client->clientId;													//  get client ID from basic authentication
-			$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
-		}
-		else																						//  try to find client authorization in POST data
+		$client = $this->decodeBasicAuthentication();									//  try to find basic authentication
+		if( NULL === $client )
 			$this->errorResponse( 'invalid_client', 'Missing basic authentication.', NULL, 401 );
-//			if( !strlen( trim( $clientId = $this->request->get( 'client_id' ) ) ) )					//  if client ID is not in request
-//				$this->errorResponse( 'invalid_client', 'Missing client ID.' );						//  respond error
-//			if( !strlen( trim( $clientSecret = $this->request->get( 'client_secret' ) ) ) )			//
-//				$this->errorResponse( 'invalid_client', 'Missing client secret or basic authentication.' );
-//		}
+
+		$clientId		= $client->clientId;													//  get client ID from basic authentication
+		$clientSecret	= $client->clientSecret;												//  get client secret from basic authentication
 
 		/*  --  VALIDATION OF CLIENT ID  --  */
-		if( !( $applicationId = $this->getApplicationIdFromClientId( $clientId ) ) )				//  no application found for client ID
+		$applicationId	= $this->getApplicationIdFromClientId( $clientId );
+		if( NULL === $applicationId )				//  no application found for client ID
 			$this->errorResponse( 'invalid_client', 'Invalid client ID.', NULL, 401 );				//  respond error
 
 		/*  --  VALIDATION OF CLIENT SECRET  --  */
@@ -514,10 +537,10 @@ class Controller_Oauth extends Controller
 		if( !( $application = $modelApplication->getByIndices( $indices ) ) )						//  no application found by client ID and secret
 			$this->errorResponse( 'invalid_client', 'Invalid client secret.', NULL, 401 );			//  respond error
 
-		$indices	= array(																		//  indices to find refresh token
+		$indices	= [																		//  indices to find refresh token
 			'oauthApplicationId'	=> $application->oauthApplicationId,
 			'token'					=> $refreshToken
-		);
+		];
 		if( !( $refresh = $modelRefresh->getByIndices( $indices ) ) )								//  no refresh token found
 			$this->errorResponse( 'invalid_request', 'Invalid refresh token.', NULL, 401 );			//  respond error
 
@@ -536,7 +559,7 @@ class Controller_Oauth extends Controller
 		$this->respondJsonData( $data );
 	}
 
-	protected function respondJsonData( $data )
+	protected function respondJsonData( $data ): never
 	{
 		header( 'Content-Type: application/json' );
 		print( json_encode( $data ) );

@@ -1,10 +1,18 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var Logic_Frontend $frontend */
+/** @var array $words */
+/** @var array<object> $authors */
+/** @var object $author */
+/** @var array<object> $articles */
 
 $w			= (object) $words['edit'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 $list		= $this->renderList( $authors, $author->authorId );
 
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
@@ -30,12 +38,12 @@ if( $author->image ){
 	$buttonRemoveImage	= HtmlTag::create( 'button', $iconRemove, $attributes );
 }
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/catalog/bookstore/author/remove/'.$author->authorId,
 	'disabled'	=> $articles ? 'disabled' : NULL,
 	'class'		=> "btn btn-small btn-danger",
 	'onclick'	=> "if(!confirm('Wirklich?')) return false",
-) );
+] );
 
 $helperUpload	= new View_Helper_Input_File( $env );
 $helperUpload->setName( 'image' );
@@ -97,7 +105,7 @@ return '
 			<div class="buttonbar">
 <!--				<a class="btn btn-small" href="./manage/catalog/bookstore/author"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>-->
 				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<a href="'.$frontend->getUri().'catalog/bookstore/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
+				<a href="'.$frontend->getUrl().'catalog/bookstore/author/'.$author->authorId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 				'.$buttonRemove.'
 			</div>
 		</form>

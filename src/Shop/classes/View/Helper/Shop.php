@@ -33,6 +33,7 @@ class View_Helper_Shop
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
 		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_TEXT );
+//		$helper->setPaymentBackend(...);
 		return $helper->render();
 	}
 
@@ -40,6 +41,7 @@ class View_Helper_Shop
 	{
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
 		$helper->setPositions( $positions );
+//		$helper->setPaymentBackend(...);
 		$helper->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML );
 		return '<h4>Warenkorb</h4>'.$helper->render();
 	}

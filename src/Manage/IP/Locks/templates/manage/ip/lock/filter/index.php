@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+
+/** @var Web $env */
+/** @var object $filters */
 
 $states	= [
 	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
@@ -71,7 +75,7 @@ if( $filters ){
 		if( $filter->appliedAt && $helperTime )
 			$appliedAt	= 'vor '.$helperTime->convert( $filter->appliedAt, TRUE );
 
-		$method		= $filter->method ? $filter->method : '<span class="muted">alle</span>';
+		$method		= $filter->method ?: '<span class="muted">alle</span>';
 		$lockStatus	= $lockStates[$filter->lockStatus];
 		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
 		$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
@@ -83,7 +87,7 @@ if( $filters ){
 			$rowClass	= 'info';
 
 		$reason	= HtmlTag::create( 'div', $filter->reason->title, ['class' => 'autocut'] );
-		$list[]		= HtmlTag::create( 'tr', array(
+		$list[]		= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $method, ['class' => 'lock-filter-method'] ),
 			HtmlTag::create( 'td', $title, ['class' => 'lock-filter-title'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-filter-reason'] ),
@@ -91,7 +95,7 @@ if( $filters ){
 			HtmlTag::create( 'td', $states[$filter->status], ['class' => 'lock-filter-status'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-filter-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		), ['class' => $rowClass] );
+		], ['class' => $rowClass] );
 	}
 	$heads	= [
 		'Methode',
@@ -102,7 +106,7 @@ if( $filters ){
 		'Anwendung',
 		'Aktion',
 	];
-	$colgroup	= HtmlElements::ColumnGroup( "80px", "", "", "90px", "120px", "110px", "80px" );
+	$colgroup	= HtmlElements::ColumnGroup( '80px', '', '', '90px', '120px', '110px', '80px' );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
@@ -123,5 +127,5 @@ $panelList	= HTML::DivClass( 'content-panel',
 	)
 );
 
-$tabs	= View_Manage_Ip_Lock::renderTabs( $env, 'filter' );
+$tabs	= View_Manage_IP_Lock::renderTabs( $env, 'filter' );
 return $tabs.$panelList;

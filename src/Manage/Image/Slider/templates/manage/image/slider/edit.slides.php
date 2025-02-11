@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use View_Manage_Image_Slider as View;
+
+/** @var View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_Image_Slider $slider */
+/** @var string $basePath */
 
 $w		= (object) $words['edit.slides'];
 
@@ -21,7 +27,7 @@ if( $slider->slides ){
 			$buttonDown	= HtmlTag::create( 'a', $iconRankDown, ['class' => 'btn btn-mini disabled'] );
 		$thumb		= HtmlTag::create( 'img', NULL, ['src' => $basePath.$slider->path.$slide->source, 'width' => '60px'] );
 		$thumb		= HtmlTag::create( 'a', $thumb, ['href' => $basePath.$slider->path.$slide->source, 'class' => 'fancybox-auto', 'rel' => 'slides'] );
-		$title		= $slide->title ? $slide->title : '<em>- ohne Titel -</em>';
+		$title		= $slide->title ?: '<em>- ohne Titel -</em>';
 		$title		= HtmlTag::create( 'span', $title, ['class' => ''] );
 		$title		= HtmlTag::create( 'a', $title, ['href' => './manage/image/slider/editSlide/'.$slide->sliderSlideId] );
 		$source		= HtmlTag::create( 'small', $slide->source, ['class' => 'muted'] );

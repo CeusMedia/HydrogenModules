@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\View;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\View;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Manage_Role extends View
 {
@@ -22,11 +22,11 @@ class View_Manage_Role extends View
 	{
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 		$roleId	= $this->getData( 'roleId' );
 		$this->env->getPage()->runScript( 'ModuleManageUsers.setRoleId('.$roleId.').init()' );

@@ -4,17 +4,20 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Work_Mission_Done extends Mail_Work_Mission_Change
 {
-	protected function generate(): self
+
+	//  --  PROTECTED  --  //
+
+	protected function generate(): static
 	{
 		$w			= (object) $this->getWords( 'work/mission', 'mail-change' );
 
 		parent::generate();
-		$this->setHtml( $this->renderBody() );
-//		$this->setText( $this->renderText() );
+		$this->setHtml( $this->renderHtmlMailBody() );
+//		$this->setText( $this->renderTextMailBody() );
 		return $this;
 	}
 
-	public function renderBody(): string
+	protected function renderHtmlMailBody(): string
 	{
 		return "not implemented, yet";
 /*

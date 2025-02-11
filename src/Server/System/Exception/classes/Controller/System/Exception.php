@@ -11,13 +11,14 @@ class Controller_System_Exception extends Controller
 		$session	= $this->env->getSession();
 		if( $session->has( 'exception' ) ){
 			$exception	= unserialize( $session->get( 'exception' ) );
+			print_m( $exception );
 			if( $session->has( 'exceptionRequest' ) ){
 				$this->addData( 'exceptionRequest', $session->get( 'exceptionRequest' ) );
 			}
 			if( $session->has( 'exceptionUrl' ) ){
 				$this->addData( 'exceptionUrl', $session->get( 'exceptionUrl' ) );
 			}
-			if( isset( $exception->code ) ){
+			if( isset( $exception->code ) && is_int( $exception->code ) ){
 				if( HttpStatus::isCode( $exception->code ) ){
 					HttpStatus::sendHeader( $exception->code );					//  send HTTP status code header
 					$this->env->getResponse()->setStatus( $exception->code );			//  indicate HTTP status 500 - internal server error

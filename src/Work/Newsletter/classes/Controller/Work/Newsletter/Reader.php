@@ -11,13 +11,13 @@ use CeusMedia\Mail\Address\Collection\Parser as MailAddressCollectionParser;
 
 class Controller_Work_Newsletter_Reader extends Controller
 {
-	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
+	/**	@var	Logic_Newsletter_Editor		$logic		Instance of newsletter editor logic */
 	protected Logic_Newsletter_Editor $logic;
 	protected Dictionary $session;
 	protected HttpRequest $request;
 	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
-	protected $limiter;
+	protected ?Logic_Limiter $limiter		= NULL;
 
 	protected array $filters		= [
 		'email',
@@ -29,6 +29,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 	];
 	protected string $filterPrefix	= 'filter_work_newsletter_reader_';
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
@@ -46,6 +51,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				$readerId	= $this->logic->addReader( $this->request->getAll() );
 				$reader		= $this->logic->getReader( $readerId );
 				$this->messenger->noteSuccess( $words->msgSuccess );
+				$groups		= [];
 				if( $groupIds ){
 					foreach( $groupIds as $groupId ){
 						$this->logic->addReaderToGroup( $readerId, $groupId );
@@ -62,27 +68,21 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$mail	= new Mail_Work_Newsletter_Invite( $this->env, $data );
 					if( $status === Model_Newsletter_Reader::STATUS_CONFIRMED )
 						$mail	= new Mail_Work_Newsletter_Add( $this->env, $data );
-					$receiver	= (object) array(
+					$receiver	= (object) [
 						'username'	=> $this->request->get( 'firstname' ).' '.$this->request->get( 'surname' ),
 						'email'		=> $this->request->get( 'email' ),
-					);
+					];
 					$language		= $this->env->getLanguage()->getLanguage();
 					$logicMail		= Logic_Mail::getInstance( $this->env );
 					$logicMail->appendRegisteredAttachments( $mail, $language );
 					$logicMail->handleMail( $mail, $receiver, $language );
 				}
 
-				switch( strtolower( $this->request->get( 'nextAction' ) ) ){
-					case 'add':
-						$this->restart( 'add', TRUE );
-					case 'edit':
-						$this->restart( 'edit/'.$readerId, TRUE );
-					case 'index':
-					default:
-						$this->restart( NULL, TRUE );
-
-				}
-				$this->restart( 'edit/'.$readerId, TRUE );
+				$this->restart( match( strtolower( $this->request->get( 'nextAction' ) ) ){
+					'add'		=> 'add',
+					'edit'		=> 'edit/'.$readerId,
+					default		=> NULL,
+				}, TRUE );
 			}
 		}
 		$reader		= (object) [
@@ -122,7 +122,13 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'totalReaders', $totalReaders );
 	}
 
-	public function addGroup( $readerId, $groupId = NULL ): void
+	/**
+	 *	@param		int|string			$readerId
+	 *	@param		int|string|NULL		$groupId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addGroup( int|string $readerId, int|string|NULL $groupId = NULL ): void
 	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		if( $groupId )
@@ -130,12 +136,17 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
-	public function edit( $readerId ): void
+	/**
+	 *	@param		int|string		$readerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		if( !$this->logic->checkReaderId( $readerId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $readerId );
-			$this->restart( './work/newsletter/readerIndex' );
+			$this->restart( './work/newsletter/reader' );
 		}
 		if( $this->request->has( 'save' ) ){
 			$this->logic->editReader( $readerId, $this->request->getAll() );
@@ -144,16 +155,20 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 		$this->addData( 'readerId', $readerId );
 		$this->addData( 'reader', $this->logic->getReader( $readerId ) );
-
 		$this->addData( 'groups', $this->logic->getGroups( [], ['title' => 'ASC'] ) );
-		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId,  [], ['title' => 'ASC'] ) );
-		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId,  ['status' => '>= 1'], ['title' => 'ASC'] ) );
+		$this->addData( 'readerGroups', $this->logic->getGroupsOfReader( $readerId, [], ['title' => 'ASC'] ) );
+		$this->addData( 'readerLetters', $this->logic->getLettersOfReader( $readerId, ['status' => '>= 1'], ['title' => 'ASC'] ) );
 	}
 
-	public function export( $mode = 'csv' ): void
+	/**
+	 *	@param		string		$mode
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function export( string $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
-			$this->messenger->noteNotice( 'Exportieren ist deaktivert. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( 'Exportieren ist deaktiviert. Vorgang abgebrochen.' );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -220,6 +235,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 				foreach( array_values( $readers ) as $nr => $reader ){
 					$row	= [];
 					foreach( $headers as $header => $toBeQuoted ){
+						$value	= $reader->$header ?? '';
 						if( $header === 'nr' )
 							$value	= $nr + 1;
 						else if( $header === 'id' )
@@ -236,8 +252,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 								$list[]	= $group->title;
 							$value	= join( ',', $list );
 						}
-						else
-							$value	= $reader->$header;
 
 						if( $toBeQuoted !== NULL )
 							$value	= $toBeQuoted ? '"'.$value.'"' : $value;
@@ -246,29 +260,38 @@ class Controller_Work_Newsletter_Reader extends Controller
 					$data[]	= join( ';', $row );
 				}
 				$csv	= join( PHP_EOL, $data ).PHP_EOL;
-				HttpDownload::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv", TRUE );
+				HttpDownload::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv" );
 		}
 	}
 
-	public function filter( $reset = FALSE ): void
+	/**
+	 *	@param		bool		$reset
+	 *	@return		void
+	 */
+	public function filter( bool $reset = FALSE ): void
 	{
 		if( $reset ){
 			foreach( $this->filters as $key )
-				$this->session->remove( $this->filterPrefix.''.$key );
+				$this->session->remove( $this->filterPrefix.$key );
 		}
 		$this->session->remove( $this->filterPrefix.'limit' );
 		$this->session->remove( $this->filterPrefix.'page' );
 		if( $this->request->has( 'filter' ) ){
 			foreach( $this->filters as $key )
-				$this->session->set( $this->filterPrefix.''.$key, $this->request->get( $key ) );
+				$this->session->set( $this->filterPrefix.$key, $this->request->get( $key ) );
 		}
 		$this->restart( './work/newsletter/reader' );
 	}
 
-	public function import( $mode = 'csv' ): void
+	/**
+	 *	@param		string		$mode
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function import( string $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
-			$this->messenger->noteNotice( 'Importieren ist deaktivert. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( 'Importieren ist deaktiviert. Vorgang abgebrochen.' );
 			$this->restart( NULL, TRUE );
 		}
 		$words		= (object) $this->getWords( 'add' );
@@ -324,7 +347,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ): void
+	/**
+	 *	@param		?int		$page
+	 *	@return		void
+	 */
+	public function index( ?int $page = NULL ): void
 	{
 		if( is_null( $page ) ){
 			$page	= 0;
@@ -332,7 +359,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 //				$page	= $this->session->get( $this->filterPrefix.'page' );
 		}
 
-		$readers	= $this->logic->getReaders( [] );
+		/** @todo use count instead of getAll */
+		$readers	= $this->logic->getReaders();
 		$this->addData( 'total', count( $readers ) );
 
 		$this->session->set( $this->filterPrefix.'page', $page );
@@ -341,7 +369,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$filterFirstname	= $this->session->get( $this->filterPrefix.'firstname' );
 		$filterSurname		= $this->session->get( $this->filterPrefix.'surname' );
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
-		$filterLimit		= $this->session->get( $this->filterPrefix.'limit' );
+		$filterLimit		= (int) $this->session->get( $this->filterPrefix.'limit' );
 		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		$conditions	= [];
 		if( strlen( $filterStatus ) )
@@ -366,12 +394,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$total		= count( $this->logic->getReaders( $conditions ) );
 		$readers	= $this->logic->getReaders( $conditions, $filterOrder, $limits );
 		$model		= new Model_Newsletter_Reader_Group( $this->env );
-		foreach( $readers as $nr => $reader ){
+		foreach( $readers as $reader ){
 			$conditions	= ['newsletterReaderId' => $reader->newsletterReaderId];
 			$list		= [];
-			foreach( $relations	= $model->getAll( $conditions ) as $relation )
+			foreach( $model->getAll( $conditions ) as $relation )
 				$list[]	= $groups[$relation->newsletterGroupId];
-			$readers[$nr]->groups	= $list;
+			$reader->groups	= $list;
 		}
 		$this->addData( 'found', count( $readers ) );
 //		$readers	= array_slice( $readers, $page * $filterLimit, $filterLimit );
@@ -390,7 +418,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'totalReaders', $total );
 	}
 
-	public function remove( $readerId ): void
+	/**
+	 *	@param		int|string		$readerId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $readerId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 
@@ -404,13 +437,22 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeGroup( $readerId, $groupId = NULL ): void
+	/**
+	 *	@param		int|string			$readerId
+	 *	@param		int|string|NULL		$groupId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeGroup( int|string $readerId, int|string|NULL $groupId = NULL ): void
 	{
 		$groupId	= is_null( $groupId ) ? $this->request->get( 'groupId' ) : $groupId;
 		$this->logic->removeReaderFromGroup( $readerId, $groupId );
 		$this->restart( 'edit/'.$readerId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );

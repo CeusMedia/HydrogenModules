@@ -1,5 +1,18 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var Environment $env */
+/** @var View_Info_Manual $view */
+/** @var Entity_Manual_Page $page */
+/** @var array<Entity_Manual_Category> $categories */
+/** @var int|string $categoryId */
+/** @var Dictionary $moduleConfig */
+/** @var array<string,array<string,string>> $words */
+/** @var array<string> $rights */
+/** @var string $renderer */
+/** @var string $content */
 
 $helperCategory	= new View_Helper_Info_Manual_CategorySelector( $env );
 $helperCategory->setCategories( $categories );

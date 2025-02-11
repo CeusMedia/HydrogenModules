@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <module>
-	<title>Server: Syslog</title>
+	<title>Server: Log: Exception</title>
 	<description><![CDATA[Extends server by system log.
 
 Sends mail to developer with exception trace if a developer mail address is defined.
@@ -12,7 +12,7 @@ list>
 - can send mails to one or more mail receivers
 <list
 
-**Invokation:**
+**Invocation:**
 code>
 ...
 catch( Exception $e ){
@@ -42,7 +42,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.5.9</version>
+	<version>0.6.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -60,6 +60,7 @@ Please think about using the hook instead.
 	<log version="0.5.7">Replace job file by module configuration.</log>
 	<log version="0.5.8">Improve import.</log>
 	<log version="0.5.9">Improve index.</log>
+	<log version="0.6.0">Migration to PHP 8 and strict types.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -83,10 +84,39 @@ Please think about using the hook instead.
 	<config protected="yes" type="boolean" name="mail.active" title="Enable sending mails">yes</config>
 	<config protected="yes" type="string" name="mail.receivers" title="Mail receiver address[es] (comma separated)"></config>
 	<relations>
-		<needs type="module">Resource_Mail</needs>
+		<supports type="module">Resource_Mail</supports>
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
+	<sql on="update" type="mysql" version="install"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
+  `exceptionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `status` int(11) NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `message` text COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `file` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `line` int(11) NOT NULL,
+  `trace` text COLLATE utf8_unicode_ci NOT NULL,
+  `previous` text COLLATE utf8_unicode_ci,
+  `sqlCode` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `resource` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `env` text COLLATE utf8_unicode_ci NOT NULL,
+  `request` text COLLATE utf8_unicode_ci,
+  `session` text COLLATE utf8_unicode_ci,
+  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
+  `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
+  PRIMARY KEY (`exceptionId`),
+  KEY `status` (`status`),
+  KEY `type` (`type`),
+  KEY `code` (`code`),
+  KEY `file` (`file`),
+  KEY `createdAt` (`createdAt`),
+  KEY `modifiedAt` (`modifiedAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 	<sql on="update" type="mysql" version="0.5"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (

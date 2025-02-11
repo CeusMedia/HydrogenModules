@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <module>
 	<title>Shop</title>
-	<description><![CDATA[Basic shop with cart, shipping and conditions.
-For payment you need to install a payment module.]]></description>
+	<description><![CDATA[Basic shop with cart, supporting several catalogs via shop bridge mechanism.
+For payment or shipping you need to install another module.]]></description>
 	<category>Shop</category>
-	<version>0.8.7</version>
+	<version>0.9.1</version>
 	<log version="0.3.14">Improved cart panels.</log>
 	<log version="0.3.15">Changed and extracted locales.</log>
 	<log version="0.3.16">Added support for article description in tables and mails.</log>
-	<log version="0.3.17">Added mail attachments for revocation of orders or registrered services.</log>
+	<log version="0.3.17">Added mail attachments for revocation of orders or registered services.</log>
 	<log version="0.3.18">Improved localisation of customer and conditions panels.</log>
 	<log version="0.3.19">Improved cart markup, support white icons in tabs.</log>
 	<log version="0.4">Adjust to new version of shop bridge.</log>
@@ -35,7 +35,7 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.6.6">Renamed mail classes.</log>
 	<log version="0.6.7">Decrease article stock quantity if order has been payed.</log>
 	<log version="0.6.8">Add mail for not payed orders.</log>
-	<log version="0.7">Support reponsive design in cart and checkout.</log>
+	<log version="0.7">Support responsive design in cart and checkout.</log>
 	<log version="0.7.1">Improve locales.</log>
 	<log version="0.7.2">Add english mail locales.</log>
 	<log version="0.7.3">Add helper for order facts, used in mails.</log>
@@ -53,12 +53,16 @@ For payment you need to install a payment module.]]></description>
 	<log version="0.8.5">Refactoring to use shop user instead of shop customer.</log>
 	<log version="0.8.6">Move job definitions to module configuration.</log>
 	<log version="0.8.7">Improve code style.</log>
+	<log version="0.9.0">Support PHP 8.1 and refactor payments.</log>
+	<log version="0.9.1">Code update on types and strictness.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop.php</class>
 		<class>Controller/Shop/Customer.php</class>
+		<class>Entity/Shop/Customer.php</class>
+		<class>Hook/Shop.php</class>
 		<class>Hook/Shop/FinishPanel.php</class>
 		<class>Job/Shop.php</class>
 		<class>Logic/Shop.php</class>
@@ -130,7 +134,7 @@ For payment you need to install a payment module.]]></description>
 		<template>shop/customer/outside.php</template>
 		<template>shop/payment.php</template>
 		<template>shop/service.php</template>
-		<style sourc="theme" load="auto">module.shop.css</style>
+		<style source="theme" load="auto">module.shop.css</style>
 		<file>contents/attachments/Widerrufsformular.odt</file>
 		<file>contents/attachments/Widerrufsformular.pdf</file>
 		<file>contents/attachments/Widerrufsformular.txt</file>
@@ -169,6 +173,7 @@ For payment you need to install a payment module.]]></description>
 		<supports type="module">Shop_Shipping</supports>
 	</relations>
 	<hook type="resource" resource="Shop" event="renderServicePanels">Hook_Shop_FinishPanel::onRenderServicePanels</hook>
+	<hook type="resource" resource="Auth" event="onBeforeLogout">Hook_Shop::onLogout</hook>
 	<job id="Shop.OldCustomers.cleanup" mode="dev,test,live">Shop::cleanupOldCustomers</job>
 	<job id="Shop.OldCustomers.cleanupTestOrders" mode="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
 	<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" mode="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>

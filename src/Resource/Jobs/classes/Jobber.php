@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
@@ -16,28 +16,29 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Jobber extends ConsoleApplication
 {
-	protected array $jobs	= [];
 	protected Logic_Job $logic;
 	protected Model_Job $modelJob;
 //	protected Model_Job_Lock $modelLock;
-	protected $mode;
+	protected array $jobs					= [];
 	protected string $pathJobs;
 	protected ?string $pathLogs;
+	protected ?string $mode					= NULL;
 	protected ?object $runningJob			= NULL;
 
 	public function __construct( Environment $env = NULL )
 	{
-		parent::__construct( $env, TRUE );															//  construct parent and call __onInit
+		parent::__construct( $env );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
-		$format				=
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
+
 		$this->logic		= $this->env->getLogic()->get( 'Job' );
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->pathJobs		= 'config/jobs/';
-		$this->modelJob		= new \Model_Job( $this->env );
+		$this->modelJob		= new Model_Job( $this->env );
 		$this->modelJob->setFormat( Model_Job::FORMAT_XML );
 //		$this->modelJob->setFormat( Model_Job::FORMAT_MODULE );
 //		$this->modelLock	= new \Model_Job_Lock( $this->env );
@@ -52,19 +53,32 @@ class Jobber extends ConsoleApplication
 		}
 	}*/
 
+	/**
+	 *	@param		array		$modes
+	 *	@param		bool		$strict
+	 *	@return		self
+	 */
 	public function loadJobs( array $modes, bool $strict = TRUE ): self
 	{
 		$this->modelJob->load( $modes, $strict );
 		return $this;
 	}
 
-	public function getJobs( $conditions = [] ): array
+	/**
+	 *	@param		array		$conditions
+	 *	@return		array
+	 */
+	public function getJobs( array $conditions = [] ): array
 	{
 		if( $this->mode && !isset( $conditions['mode'] ) )
 			$conditions['mode']	= $this->mode;
 		return $this->modelJob->getAll( $conditions );
 	}
 
+	/**
+	 *	@param		string		$message
+	 *	@return		self
+	 */
 	public function log( string $message ): self
 	{
 		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
@@ -72,6 +86,10 @@ class Jobber extends ConsoleApplication
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$message
+	 *	@return		self
+	 */
 	public function logError( string $message ): self
 	{
 		$line	= sprintf( '%s: Jobber: %s', date( "Y-m-d H:i:s" ), $message );
@@ -80,6 +98,10 @@ class Jobber extends ConsoleApplication
 		return $this;
 	}
 
+	/**
+	 *	@param		Throwable		$t
+	 *	@return		self
+	 */
 	public function logException( Throwable $t ): self
 	{
 		$message	= $t->getMessage().'@'.$t->getFile().':'.$t->getLine().PHP_EOL.$t->getTraceAsString();
@@ -90,6 +112,8 @@ class Jobber extends ConsoleApplication
 	/**
 	 *	Executes possible job call.
 	 *	@return		integer
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function run(): int
 	{
@@ -104,9 +128,9 @@ class Jobber extends ConsoleApplication
 				return $this->runJobManually( $job );
 			}
 		}
-		$this->out( '' );
+		$this->out();
 		$this->out( 'Usage: ./job.php [job]' );
-		$this->out( '' );
+		$this->out();
 		$this->out( 'List of available jobs:' );
 		$availableJobs	= $this->logic->getDefinitions( [], ['identifier' => 'ASC'] );
 		foreach( $availableJobs as $availableJob )
@@ -114,13 +138,21 @@ class Jobber extends ConsoleApplication
 		return 0;
 	}
 
-	public function setMode( $mode ): self
+	/**
+	 *	@param		string		$mode
+	 *	@return		self
+	 */
+	public function setMode( string $mode ): self
 	{
 		$this->mode	= $mode;
 		return $this;
 	}
 
 	/*  --  PROTECTED  --  */
+
+	/**
+	 *	@return		false|mixed|null
+	 */
 	protected function getJobIdFromRequest()
 	{
 		if( $this->env->getRequest()->get( 0 ) )
@@ -131,11 +163,17 @@ class Jobber extends ConsoleApplication
 		return FALSE;
 	}
 
-	protected function out( string $message = '' )
+	protected function out( string $message = '' ): void
 	{
 		print( $message.PHP_EOL );
 	}
 
+	/**
+	 *	@param		object		$job
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function runJobManually( object $job ): int
 	{
 		$commands			= $this->env->getRequest()->get( 'commands' );
@@ -147,7 +185,7 @@ class Jobber extends ConsoleApplication
 		if( !empty( $parameters['--report-mode'] ) ){
 			$modes	= $jobRunConstants->getAll( 'REPORT_MODE_' );
 			if( !array_key_exists( strtoupper( $parameters['--report-mode'] ), $modes ) )
-				throw new \RangeException( 'Invalid job report mode given' );
+				throw new RangeException( 'Invalid job report mode given' );
 			$reportMode	= $modes[strtoupper( $parameters['--report-mode'] )];
 		}
 		if( !empty( $parameters['--report-receivers'] ) )
@@ -155,7 +193,7 @@ class Jobber extends ConsoleApplication
 		if( !empty( $parameters['--report-channel'] ) ){
 			$channels	= $jobRunConstants->getAll( 'REPORT_CHANNEL_' );
 			if( !array_key_exists( strtoupper( $parameters['--report-channel'] ), $channels ) )
-				throw new \RangeException( 'Invalid job report channel given' );
+				throw new RangeException( 'Invalid job report channel given' );
 			$reportChannel	= $channels[strtoupper( $parameters['--report-channel'] )];
 		}
 		if( $reportMode && $reportReceivers && !$reportChannel )
@@ -185,8 +223,8 @@ class Jobber extends ConsoleApplication
 		try{
 			$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 		}
-		catch( \Exception $e ){
-			$cwd	= dirname( __FILE__ ).'/';
+		catch( Exception $e ){
+//			$cwd	= __DIR__.'/';
 			$cwd	= getCwd().'/';
 			$p		= $e->getPrevious() ?: $e;
 			print( 'Error:     '.get_class( $p ).' thrown and not caught'.PHP_EOL );
@@ -200,12 +238,6 @@ class Jobber extends ConsoleApplication
 		}
 
 		$this->runningJob	= NULL;
-		if( is_integer( $result ) ){
-			return $result;
-		if( strlen( trim( $result ) ) )																//  handle old return strings @deprecated
-			foreach( explode( "\n", trim( $result ) ) as $line )									//  handle each result line
-				$this->log( $line );																//  by logging
-		}
-		return 1;																					//  quit with positive status
+		return $result;
 	}
 }

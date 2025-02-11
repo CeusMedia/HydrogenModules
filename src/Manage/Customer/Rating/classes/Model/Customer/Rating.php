@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Model;
 
 class Model_Customer_Rating extends Model
 {
@@ -30,7 +31,7 @@ class Model_Customer_Rating extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function calculateCustomerIndex( $rating )
+	public function calculateCustomerIndex( $rating ): float
 	{
 		$factors	= [
 			'affability'	=> 3,

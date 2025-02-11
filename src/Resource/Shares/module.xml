@@ -4,24 +4,27 @@
 	<description><![CDATA[Public share links.
 
 Each share link will have an unguessable link and a QR code.
-Depending in access type, the user will have to answer a CAPTCHA code.
+Depending on access type, the user will have to answer a CAPTCHA code.
 The share link will redirect to a given resource.
 This resource must be available for visitors, too.
 
 This module will need the sever router module and a route.
 		]]></description>
 	<category>Resource</category>
-	<version>0.2.3</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add missing template.</log>
 	<log version="0.2.2">Use system temp folder for file creation.</log>
 	<log version="0.2.3">Migrate to support CeusMedia::Common 0.8.5.</log>
+	<log version="0.2.4">Code update.</log>
+	<log version="0.2.5">Add model entity.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Share.php</class>
+		<class>Entity/Share.php</class>
 		<class>Logic/Share.php</class>
 		<class>Model/Share.php</class>
 		<class>View/Share.php</class>
@@ -29,6 +32,7 @@ This module will need the sever router module and a route.
 	</files>
 	<relations>
 		<needs type="module">Server_Router</needs>
+		<needs type="package" version="^3.0">bacon/bacon-qr-code</needs>
 	</relations>
 	<link access="public" path="share/index"/>
 	<sql on="install" type="mysql" version="0.1"><![CDATA[

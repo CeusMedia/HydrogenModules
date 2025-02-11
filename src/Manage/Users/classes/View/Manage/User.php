@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\View;
@@ -14,22 +14,22 @@ use CeusMedia\HydrogenFramework\View;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.View.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Manage_User extends View
 {
-	public function index()
+	public function index(): void
 	{
 		$words		=$this->env->getLanguage()->getWords( 'manage/user' );
 		$this->setData( $words['status'], 'states' );
 		$this->setData( $words['activity'], 'activities' );
 	}
 
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 

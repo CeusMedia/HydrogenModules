@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.6</version>
+	<version>0.6.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -27,10 +27,11 @@
 	<log version="0.5.8">Move password panel in line.</log>
 	<log version="0.5.9">Add relations panel.</log>
 	<log version="0.6">Extract hook to own class.</log>
+	<log version="0.6.1">Strict types.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/My/User.php</class>
 		<class>Hook/Manage/My/User.php</class>

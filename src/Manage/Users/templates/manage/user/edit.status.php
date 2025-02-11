@@ -1,6 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Dictionary $moduleConfig */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var array<object> $projects */
+/** @var object $user */
 
 $w	= (object) $words['editStatus'];
 
@@ -9,14 +18,9 @@ foreach( array_reverse( $words['status'], TRUE ) as $key => $label )
 	$optStatus[]	= HtmlElements::Option( (string) $key, $label, $key == $user->status, FALSE, 'user-status status'.$key );
 $optStatus	= join( $optStatus );
 
-$iconAccept		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-$iconBan		= HtmlTag::create( 'i', '', ['class' => 'icon-lock icon-white'] );
-$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconAccept		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-	$iconBan		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-lock'] );
-	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-remove'] );
-}
+$iconAccept		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+$iconBan		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-lock'] );
+$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $buttons	= [];
 if( $user->status != 1 ){

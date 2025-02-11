@@ -10,7 +10,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 	protected WebEnvironment $env;
 	protected Logic_Shop $logicShop;
 	protected Dictionary $options;
-	protected ?string $orderId			= NULL;
+	protected int|string|NULL $orderId			= NULL;
 	protected ?object $address			= NULL;
 
 	public function __construct( WebEnvironment $env )
@@ -33,6 +33,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 
 		$order			= $this->logicShop->getOrder( $this->orderId );
 		$modelAddress	= new Model_Address( $this->env );
+		/** @var ?Entity_Address $address */
 		$address		= $modelAddress->getByIndices( [
 			'relationType'	=> 'user',
 			'relationId'	=> $order->userId,
@@ -45,6 +46,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 
 		$helperCart			= new View_Helper_Shop_CartPositions( $this->env );
 		$helperCart->setPositions( $this->logicShop->getOrderPositions( $this->orderId ) );
+		$helperCart->setPaymentBackend( $order->paymentMethod );
 		$helperCart->setChangeable( FALSE );
 		$cartDesktop	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'hidden-phone'] );
 		$helperCart->setOutput( View_Helper_Shop_CartPositions::OUTPUT_HTML_LIST );
@@ -54,7 +56,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 		return $view->loadContentFile( 'html/catalog/clothing/finished.html', $data );
 	}
 
-	public function setOrderId( string $orderId ): self
+	public function setOrderId( int|string $orderId ): self
 	{
 		$this->orderId	= $orderId;
 		$order			= $this->logicShop->getOrder( $orderId );

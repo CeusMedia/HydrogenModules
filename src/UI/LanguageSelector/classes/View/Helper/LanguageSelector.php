@@ -3,21 +3,22 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_LanguageSelector extends Abstraction
 {
-	protected $dropdownAlign	= 'right';
-	protected $mode				= 0;
-	protected $language;
-	protected $languages;
-	protected $current;
-	protected $words;
-	protected $labels;
-	protected $path;
+	protected string $dropdownAlign	= 'right';
+	protected int $mode				= 0;
+	protected Language $language;
+	protected array $languages;
+	protected string $current;
+	protected array $words;
+	protected array $labels;
+	protected string $path;
 
-	const MODE_SELECT			= 0;
-	const MODE_DROPDOWN			= 1;
+	public const MODE_SELECT		= 0;
+	public const MODE_DROPDOWN		= 1;
 
 	public function __construct( Environment $env )
 	{
@@ -30,7 +31,7 @@ class View_Helper_LanguageSelector extends Abstraction
 		$this->mode				= (int) ( $this->env->getConfig()->get( 'module.ui_languageselector.mode' ) !== "select" );
 //		$this->dropdownAlign	= $this->env->getConfig()->get( 'module.ui_languageselector.mode.dropdown.align' );
 		$path					= $this->env->getRequest()->get( '__path' );			//  @todo use path key from App or Env
-		$this->path				= rtrim( $path ? $path : "./", "/" )."/";
+		$this->path				= rtrim( $path ?: "./", "/" )."/";
 	}
 
 	public function getMode(): int
@@ -78,16 +79,16 @@ class View_Helper_LanguageSelector extends Abstraction
 		$list	= [];
 		foreach( $this->languages as $entry ){
 			if( isset( $this->labels[$entry] ) ){
-				$icon	= HtmlTag::create( 'i', '', array(
+				$icon	= HtmlTag::create( 'i', '', [
 					'class'	=> ( $entry == $this->current ) ? 'icon-ok' : 'icon-empty',
-				) );
+				] );
 				$link	= HtmlTag::create( 'a', '<%?OPTIONALICON%>'.$icon.'&nbsp;'.$this->labels[$entry], [
 					'href'	=> $this->path.'?switchLanguageTo='.$entry,
 					'class'	=> 'language-selector-link active',
 				] );
 				$payload	= ["label" => $link, "language" => $entry];
 				$this->env->getCaptain()->callHook('LanguageSelector', 'queryLanguageDecorator', $this, $payload );
-				$link		= $payload['label'];
+				$link		= str_replace( '<%?OPTIONALICON%>', '', $payload['label'] );
 				$list[]		= HtmlTag::create( 'li', $link );
 			}
 		}
@@ -98,10 +99,10 @@ class View_Helper_LanguageSelector extends Abstraction
 		$label			= '<%?OPTIONALICON%>'.$this->words['selector']['label'];
 		$payload 		= ["label" => $label, "language" => $this->language->GetLanguage()];
 		$this->env->getCaptain()->callHook('LanguageSelector','queryLanguageDecorator', $this, $payload );
-		$label			= $payload['label'];
+		$label			= str_replace( '<%?OPTIONALICON%>', '', $payload['label'] );
 /* TODO Move to own Module and add support here for themeable icons
 		$flagimgpath		= "themes/common/img/".$this->language->GetLanguage().".png";
-		$flagimg		= HtmlTag::create( 'img' , '', array( 'src' => $flagimgpath , 'style' =>'height:1em') );
+		$flagimg		= HtmlTag::create( 'img' , '', ['src' => $flagimgpath , 'style' =>'height:1em'] );
 		$flagimg		.= '&nbsp;'
 */
 		$caret			= HtmlTag::create( 'span', '', ['class' => 'caret'] );
@@ -126,11 +127,10 @@ class View_Helper_LanguageSelector extends Abstraction
 		$options	= HtmlElements::Options( $options, $this->current );
 
 		$uri	= $this->path.'?switchLanguageTo=';
-		$select	= HtmlTag::create( 'select', $options, [
+		return HtmlTag::create( 'select', $options, [
 			'onchange'	=> "document.location.href='".$uri."'+this.value;",
 			'class'		=> 'span12',
 			'id'		=> 'language-selector-input',
 		] );
-		return $select;
 	}
 }

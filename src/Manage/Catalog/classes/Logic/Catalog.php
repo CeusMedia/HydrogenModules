@@ -4,6 +4,7 @@ use CeusMedia\Cache\SimpleCacheInterface;
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\Image\ThumbnailCreator as ImageThumbnailCreator;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 /**
  *	@todo	extract classes Logic_Upload and CeusMedia\Common\Alg\UnitParser
@@ -12,7 +13,7 @@ class Logic_Catalog extends Logic
 {
 
 	/**	@var	SimpleCacheInterface				$cache */
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	/**	@var	Logic_Frontend						$frontend */
 	protected Logic_Frontend $frontend;
@@ -53,8 +54,8 @@ class Logic_Catalog extends Logic
 	{
 		$data['createdAt']	= time();
 		$articleId	= $this->modelArticle->add( $data );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.links.articles' );
 		return $articleId;
 	}
 
@@ -85,7 +86,7 @@ class Logic_Catalog extends Logic
 		$imageHeight	= $this->moduleConfig->get( 'article.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'article.image.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$creator->thumbizeByLimit( $imageWidth, $imageHeight );
 
 		/*  --  CREATE THUMBNAIL IMAGE  --  */
 		$uriThumb		= $this->pathArticleCovers.$id."__".$imagename;
@@ -93,10 +94,10 @@ class Logic_Catalog extends Logic
 		$thumbHeight	= $this->moduleConfig->get( 'article.image.thumb.maxHeight' );
 		$thumbQuality	= $this->moduleConfig->get( 'article.image.thumb.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriThumb );
-		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight, $thumbQuality );
+		$creator->thumbizeByLimit( $thumbWidth, $thumbHeight );
 
 		$this->editArticle( $articleId, ['cover' => $imagename] );
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
 	}
 
 	/**
@@ -128,7 +129,7 @@ class Logic_Catalog extends Logic
 			'title'			=> $title,
 		];
 		$this->clearCacheForArticle( $articleId );													//
-		$this->cache->remove( 'catalog.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->add( $data );
 	}
 
@@ -182,7 +183,7 @@ class Logic_Catalog extends Logic
 		$imageHeight	= $this->moduleConfig->get( 'author.image.maxHeight' );
 		$imageQuality	= $this->moduleConfig->get( 'author.image.quality' );
 		$creator		= new ImageThumbnailCreator( $uriSource, $uriSource );
-		$creator->thumbizeByLimit( $imageWidth, $imageHeight, $imageQuality );
+		$creator->thumbizeByLimit( $imageWidth, $imageHeight );
 		$this->clearCacheForAuthor( $authorId );
 		$this->editAuthor( $authorId, ['image' => $imagename] );
 	}
@@ -265,9 +266,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkAuthorId( $authorId, $throwException = FALSE )
+	public function checkAuthorId( $authorId, $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
 			return TRUE;
@@ -277,11 +279,12 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function checkCategoryId( $categoryId, $throwException = FALSE )
+	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelCategory->has( (int) $categoryId ) )
+		if( $this->modelCategory->has( $categoryId ) )
 			return TRUE;
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid category ID '.$categoryId );
@@ -291,7 +294,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function countArticles( $conditions = [] )
+	public function countArticles( $conditions = [] ): int
 	{
 		return $this->modelArticle->count( $conditions );
 	}
@@ -300,11 +303,11 @@ class Logic_Catalog extends Logic
 	 *	Returns number of articles within a category or its sub categories, if enabled.
 	 *	Uses cache 'catalog.count.categories.articles' in recursive mode.
 	 *	@access		public
-	 *	@param 		integer		$categoryId		ID of category to count articles for
+	 *	@param 		string		$categoryId		ID of category to count articles for
 	 *	@param 		boolean		$recursive		Flag: count in sub categories, default: FALSE
 	 *	@return		integer						Number of found articles in category
 	 */
-	public function countArticlesInCategory( $categoryId, $recursive = FALSE )
+	public function countArticlesInCategory( string $categoryId, bool $recursive = FALSE ): int
 	{
 		if( $recursive && isset( $this->countArticlesInCategories[$categoryId] ) )
 			return $this->countArticlesInCategories[$categoryId];
@@ -318,20 +321,22 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editArticle( $articleId, $data )
+	public function editArticle( string $articleId, array $data ): void
 	{
 		$this->checkArticleId( $articleId, TRUE );
 //		$data['modifiedAt']	= time();
 		$this->modelArticle->edit( $articleId, $data );
-		$this->clearCacheForArticle( $articleId, TRUE );
+		$this->clearCacheForArticle( $articleId );
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editAuthor( $authorId, $data )
+	public function editAuthor( string $authorId, array $data ): void
 	{
 		$this->checkAuthorId( $authorId, TRUE );
 //		$data['modifiedAt']	= time();																//
@@ -340,9 +345,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editCategory( $categoryId, $data )
+	public function editCategory( string $categoryId, array $data ): void
 	{
 		$this->checkCategoryId( $categoryId, TRUE );
 		$old	= $this->modelCategory->get( $categoryId );
@@ -355,9 +361,10 @@ class Logic_Catalog extends Logic
 	}
 
 	/**
-	 *	@todo		 code doc
+	 *	@todo		code doc
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getArticle( $articleId )
+	public function getArticle( $articleId ): object
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
@@ -371,7 +378,7 @@ class Logic_Catalog extends Logic
 	 *	@todo		 use cache if possible
 	 *	@todo		 code doc
 	 */
-	public function getArticles( $conditions = [], $orders = [], $limits = [] )
+	public function getArticles( $conditions = [], $orders = [], $limits = [] ): array
 	{
 #		$cacheKey	= md5( json_encode( [$conditions, $orders, $limits] ) );
 #		if( NULL !== ( $data = $this->cache->get( 'catalog.articles.'.$cacheKey ) ) )
@@ -386,7 +393,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] )
+	public function getArticlesFromAuthor( $author, $orders = [], $limits = [] ): array
 	{
 		$articles	= $this->modelArticleAuthor->getAllByIndex( 'authorId', $author->authorId );
 		$articleIds	= [];
@@ -395,14 +402,13 @@ class Logic_Catalog extends Logic
 		if( !$articles )
 			return [];
 		$conditions	= ['articleId' => $articleIds];
-		$articles	= $this->getArticles( $conditions, $orders, $limits );
-		return $articles;
+		return $this->getArticles( $conditions, $orders, $limits );
 	}
 
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE )
+	public function getArticlesFromAuthorIds( $authorIds, $returnIds = FALSE ): array
 	{
 		$model		= new Model_Catalog_Article_Author( $this->env );
 		$articles	= $model->getAll( ['authorId' => array_values( $authorIds )] );
@@ -417,7 +423,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticlesFromAuthors( $authors, $returnIds = FALSE )
+	public function getArticlesFromAuthors( $authors, $returnIds = FALSE ): array
 	{
 		$authorIds	= [];
 		foreach( $authors as $author )
@@ -428,10 +434,10 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getArticleUri( $articleOrId )
+	public function getArticleUri( object|string $articleOrId ): string
 	{
 		$article	= $articleOrId;
-		if( is_int( $articleOrId ) )
+		if( is_string( $articleOrId ) )
 			$article	= $this->getArticle( $articleOrId );
 		if( !is_object( $article ) )
 			throw new InvalidArgumentException( 'Given article data is invalid' );
@@ -488,7 +494,7 @@ class Logic_Catalog extends Logic
 	{
 		$author = $authorOrId;
 		if( is_int( $authorOrId ) )
-			$author	= $this->getAuthor( $authorOrId, TRUE );
+			$author	= $this->getAuthor( $authorOrId );
 		else if( !is_object( $author ) )
 			throw new InvalidArgumentException( 'Given author data is invalid' );
 		$name	= $author->lastname;
@@ -536,7 +542,7 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		 code doc
 	 */
-	public function getCategory( $categoryId )
+	public function getCategory( string $categoryId )
 	{
 		if( NULL !== ( $data = $this->cache->get( 'catalog.category.'.$categoryId ) ) )
 			return $data;
@@ -674,7 +680,7 @@ class Logic_Catalog extends Logic
 		$id			= str_pad( $document->articleId, 5, 0, STR_PAD_LEFT );
 		@unlink( $this->pathArticleDocuments.$id."_".$document->url );
 		$this->clearCacheForArticle( $document->articleId );
-		$this->cache->remove( 'catalog.tinymce.links.documents' );
+		$this->cache->delete( 'catalog.tinymce.links.documents' );
 		return $this->modelArticleDocument->remove( $documentId );
 	}
 
@@ -796,7 +802,7 @@ class Logic_Catalog extends Logic
 		$indices	= ['articleId' => $articleId, 'authorId' => $authorId];
 		$relation	= $this->modelArticleAuthor->getByIndices( $indices );
 		if( $relation ){
-			$this->modelArticleAuthor->edit( $relation->articleAuthorId, array( 'editor' => (int) $role ) );
+			$this->modelArticleAuthor->edit( $relation->articleAuthorId, ['editor' => (int) $role] );
 			$this->clearCacheForArticle( $articleId );
 			$this->clearCacheForAuthor( $authorId );
 		}
@@ -848,15 +854,15 @@ class Logic_Catalog extends Logic
 	protected function clearCacheForArticle( $articleId )
 	{
 		$article	= $this->modelArticle->get( $articleId );										//  get article
-		$this->cache->remove( 'catalog.article.'.$articleId );										//  remove article cache
-		$this->cache->remove( 'catalog.article.author.'.$articleId );								//  remove article author cache
+		$this->cache->delete( 'catalog.article.'.$articleId );										//  remove article cache
+		$this->cache->delete( 'catalog.article.author.'.$articleId );								//  remove article author cache
 		$categories	= $this->modelArticleCategory->getAllByIndex( 'articleId', $articleId );		//  get related categories of article
 		foreach( $categories as $category ){														//  iterate assigned categories
 			$categoryId	= $category->categoryId;													//  get category ID of related category
 			$this->clearCacheForCategory( $categoryId );
 		}
-		$this->cache->remove( 'catalog.tinymce.images.articles' );
-		$this->cache->remove( 'catalog.tinymce.links.articles' );
+		$this->cache->delete( 'catalog.tinymce.images.articles' );
+		$this->cache->delete( 'catalog.tinymce.links.articles' );
 	}
 
 	/**
@@ -872,9 +878,9 @@ class Logic_Catalog extends Logic
 		foreach( $relations as $relation ){															//  iterate article relations
 			$this->clearCacheForArticle( $relation->articleId );									//  clear article cache
 		}
-		$this->cache->remove( 'catalog.search.authors' );
-		$this->cache->remove( 'catalog.tinymce.images.authors' );
-		$this->cache->remove( 'catalog.tinymce.links.authors' );
+		$this->cache->delete( 'catalog.search.authors' );
+		$this->cache->delete( 'catalog.tinymce.images.authors' );
+		$this->cache->delete( 'catalog.tinymce.links.authors' );
 	}
 
 	/**
@@ -889,15 +895,15 @@ class Logic_Catalog extends Logic
 		while( $categoryId ){																		//  loop while category ID exists
 			$category	= $this->modelCategory->get( $categoryId );									//  get category of category ID
 			if( $category ){																		//  category exists
-				$this->cache->remove( 'catalog.category.'.$categoryId );							//  remove category cache
-				$this->cache->remove( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
+				$this->cache->delete( 'catalog.category.'.$categoryId );							//  remove category cache
+				$this->cache->delete( 'catalog.html.categoryArticleList.'.$categoryId );			//  remove category view cache
 				$categoryId	= (int) $category->parentId;											//  category parent ID is category ID for next loop
 			}
 			else																					//  category is not existing
 				$categoryId	= 0;																	//  no further loops
 		}
-		$this->cache->remove( 'catalog.categories' );
-		$this->cache->remove( 'catalog.tinymce.links.categories' );
-		$this->cache->remove( 'catalog.count.categories.articles' );
+		$this->cache->delete( 'catalog.categories' );
+		$this->cache->delete( 'catalog.tinymce.links.categories' );
+		$this->cache->delete( 'catalog.count.categories.articles' );
 	}
 }

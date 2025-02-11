@@ -1,5 +1,13 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Dictionary $moduleConfig */
+/** @var array<string,array<string,string>> $words */
+/** @var object $post */
 
 $w		= (object) $words['comment'];
 
@@ -17,11 +25,11 @@ $buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 ] );
 
 if( $moduleConfig->get( 'comments.ajax' ) )
-	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, array(
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
 		'type'		=> 'button',
 		'onclick'	=> 'Blog.comment()',
 		'class'		=> 'btn btn-primary',
-	) );
+	] );
 
 return '
 <div class="content-panel content-panel-form">
@@ -72,54 +80,4 @@ return '
 	</div>
 </div>
 <script>
-var Blog = {
-	init: function(){
-		var form = $("#form-info-blog-comment-add");
-		form.find(":input[required]").on("keyup", Blog.updateSaveButton);
-		this.updateSaveButton();
-	},
-	updateSaveButton: function(){
-		var form = $("#form-info-blog-comment-add");
-		var required = form.find(":input[required]");
-		var got = 0;
-		required.each(function(){
-			if($(this).val().length)
-				got ++;
-		});
-		if(got == required.length)
-			form.find("button").removeProp("disabled");
-		else
-			form.find("button").prop("disabled", "disabled");
-	},
-	comment: function(){
-		var form = $("#form-info-blog-comment-add");
-		$.ajax({
-			url: "./info/blog/ajaxComment/",
-			data: {
-				postId: form.find("#input_postId").val(),
-				username: form.find("#input_username").val(),
-				email: form.find("#input_username").val(),
-				content: form.find("#input_content").val(),
-			},
-			method: "post",
-			dataType: "json",
-			success: function(json){
-				var container = $("<div></div>").addClass("comment-new").hide();
-				container.html(json.data.html);
-				$(".list-comments").append(container);
-				container.fadeIn(1000);
-			},
-			error: function(json){
-				console.log(json);
-				if(typeof json.responseJSON != "undefined")
-					alert(json.responseJSON.data);
-				else
-					alert(json);
-			}
-		});
-	}
-};
-$(document).ready(function(){
-	Blog.init();
-});
 </script>';

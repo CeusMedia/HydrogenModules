@@ -18,12 +18,14 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	Activate user license and send mails to user license key users.
 	 *	@access		protected
-	 *	@param		integer			$userLicenseId		User license ID
+	 *	@param		int|string		$userLicenseId		User license ID
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about activation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about assigment
 	 *	@return		boolean
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function activateUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE )
+	public function activateUserLicense( int|string $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -56,12 +58,14 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	Deactivate user license and send mails to user license key users.
 	 *	@access		protected
-	 *	@param		integer			$userLicenseId		User license ID
+	 *	@param		int|string			$userLicenseId		User license ID
 	 *	@param		boolean			$sendOwnerMail		Flag: send mail to user license owner about revokation
 	 *	@param		boolean			$sendUserMails		Flag: send mails to user license keys users about revokation
 	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function revokeUserLicense( $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
+	public function revokeUserLicense( int|string $userLicenseId, bool $sendOwnerMail = TRUE, bool $sendUserMails = TRUE ): bool
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -95,10 +99,10 @@ class Logic_User_Provision extends Logic
 			throw new RangeException( 'Invalid user license ID.' );
 		if( $userLicense->status !== Model_Provision_User_License::STATUS_ACTIVE )
 			throw new RuntimeException( 'User license cannot be revoked.' );
- 		$result		= $this->modelUserLicense->edit( $userLicenseId, array(
+ 		$result		= $this->modelUserLicense->edit( $userLicenseId, [
 			'status'		=> Model_Provision_User_License::STATUS_EXPIRED,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		if( $result )
 			return FALSE;
 
@@ -112,9 +116,10 @@ class Logic_User_Provision extends Logic
 	}*/
 
 	/**
-	 *	@todo   		rework, send mails
+	 *	@todo		rework, send mails
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addUserLicense( $userId, $productLicenseId, bool $assignFirst = FALSE ): string
+	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		$data		= [
@@ -146,11 +151,13 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo		doc
+	 *	@param		int|string		$userLicenseKeyId
+	 *	@param		int|string		$userId
 	 *	@return		bool
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setUserOfUserLicenseKey( $userLicenseKeyId, $userId = 0 ): bool
+	public function setUserOfUserLicenseKey( int|string $userLicenseKeyId, int|string $userId = 0 ): bool
 	{
 		if( !$this->env->getDatabase()->getOpenTransactions() )										//  only if not database transactions are open
 			$this->getUserLicenseKey( $userLicenseKeyId );											//  check if user
@@ -179,7 +186,7 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		doc
 	 */
-	public function countUserLicensesByProductLicense( $productLicenseId ): int
+	public function countUserLicensesByProductLicense( int|string $productLicenseId ): int
 	{
 		return $this->modelUserLicense->countByIndex( 'productLicenseId', $productLicenseId );
 	}
@@ -192,14 +199,16 @@ class Logic_User_Provision extends Logic
 	 *	- user license is active
 	 *	- another user license key for product is prepared
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
-	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
+	 *	@param		int|string			$userId			User ID
+	 *	@param		int|string			$productId		Product ID
+	 *	@return		integer|FALSE|NULL	ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
-	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
+	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -238,13 +247,15 @@ class Logic_User_Provision extends Logic
 	 *	@todo		implement and document
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload )
+	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload ): void
 	{
 		if( !isset( $payload['status'] ) )
 			throw new InvalidArgumentException( 'Missing new status' );
 		if( !isset( $payload['userId'] ) )
 			throw new InvalidArgumentException( 'Missing user ID' );
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $payload['userId'] );
 		if( !$user )
 			throw new RangeException( 'Invalid user ID' );
@@ -258,6 +269,11 @@ class Logic_User_Provision extends Logic
 		}
 	}
 
+	/**
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function handleOutdatedUserLicenses(): array
 	{
 		$results	= [];
@@ -273,12 +289,15 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@deprecated  	use handleOutdatedUserLicenses instead
 	 *	@todo   		remove, after job has been updated
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function handleExpiredKeys(): array
 	{
 		return $this->handleOutdatedUserLicenses();
 		$dbc		= $this->env->getDatabase();
 		$language	= $this->env->getLanguage()->getLanguage();
+		/** @var Logic_Mail $logicMail */
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$list		= [];
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
@@ -330,42 +349,35 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@todo   		rework
 	 */
-	public function getDurationInSeconds( $duration )
+	public function getDurationInSeconds( $duration ): float|int
 	{
 		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
 		$oneDay	= 24 * 60 * 60;
 
-		switch( $unit ){
-			case 'd':
-				$factor		= $oneDay;
-				break;
-			case 'w':
-				$factor		= 7 * $oneDay;
-				break;
-			case 'm':
-				$factor		= 30 * $oneDay;
-				break;
-			case 'a':
-				$factor		= 365 * $oneDay;
-				break;
-		}
-		return $number * $factor;
+		return $number * $oneDay * match( $unit ){
+			'a'		=> 365,
+			'm'		=> 30,
+			'w'		=> 7,
+			default	=> 1,
+		};
 	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
+	 *	@param		int|string		$userId			User ID
+	 *	@param		int|string		$productId		Product ID
 	 *	@return		integer						User license key ID
 	 *	@throws		RangeException				if given user ID is invalid
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
+	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -395,7 +407,12 @@ class Logic_User_Provision extends Logic
 		return $this->modelUserKey->getAllByIndices( $indices );
 	}
 
-	public function getProduct( $productId ): object
+	/**
+	 *	@param		int|string		$productId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProduct( int|string $productId ): object
 	{
 		$product	= $this->modelProduct->get( $productId );
 		if( !$product )
@@ -403,7 +420,12 @@ class Logic_User_Provision extends Logic
 		return $product;
 	}
 
-	public function getProductLicense( $productLicenseId = 0 )
+	/**
+	 *	@param		int|string		$productLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		if( !$productLicense )
@@ -412,7 +434,13 @@ class Logic_User_Provision extends Logic
 		return $productLicense;
 	}
 
-	public function getProductLicenses( $productId, $status = NULL )
+	/**
+	 *	@param		int|string		$productId
+	 *	@param		$status
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
 		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
@@ -433,8 +461,14 @@ class Logic_User_Provision extends Logic
 		return $this->modelProduct->getAll( $indices, $orders );
 	}
 
-	public function getUser( $userId ): object
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUser( int|string $userId ): object
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new OutOfRangeException( 'User ID '.$userId.' is not existing' );
@@ -442,7 +476,12 @@ class Logic_User_Provision extends Logic
 		return $user;
 	}
 
-	public function getUserLicense( $userLicenseId ): object
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicense( int|string $userLicenseId ): object
 	{
 		$userLicense	= $this->modelUserLicense->get( $userLicenseId );
 		if( !$userLicense )
@@ -454,7 +493,12 @@ class Logic_User_Provision extends Logic
 		return $clone;
 	}
 
-	public function getUserLicenseOwner( $userLicenseId ): object
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicenseOwner( int|string $userLicenseId ): object
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
 		$user			= $this->getUser( $userLicense->userId );
@@ -463,7 +507,12 @@ class Logic_User_Provision extends Logic
 		return $user;
 	}
 
-	public function getUserLicenseKey( $userLicenseKeyId ): object
+	/**
+	 *	@param		int|string $userLicenseKeyId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicenseKey( int|string $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->modelUserKey->get( $userLicenseKeyId );
 		if( !$userLicenseKey )
@@ -471,7 +520,12 @@ class Logic_User_Provision extends Logic
 		return $userLicenseKey;
 	}
 
-	public function getUserLicenseKeyOwner( $userLicenseKeyId ): object
+	/**
+	 *	@param		int|string		$userLicenseKeyId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicenseKeyOwner( int|string $userLicenseKeyId ): object
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$user	= $this->getUser( $userLicenseKey->userId );
@@ -484,7 +538,13 @@ class Logic_User_Provision extends Logic
 	{
 	}*/
 
-	public function getUserLicensesFromUser( $userId, $productId = NULL ): array
+	/**
+	 *	@param		int|string			$userId
+	 *	@param		int|string|NULL		$productId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicensesFromUser( int|string $userId, int|string $productId = NULL ): array
 	{
 		$indices		= ['userId' => $userId];
 		if( $productId )
@@ -498,7 +558,13 @@ class Logic_User_Provision extends Logic
 		return $userLicenses;
 	}
 
-	public function getNotAssignedUserLicenseKeysFromUser( $userId, $projectId = NULL ): array
+	/**
+	 *	@param		int|string			$userId
+	 *	@param		int|string|NULL		$projectId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getNotAssignedUserLicenseKeysFromUser( int|string $userId, int|string|NULL $projectId = NULL ): array
 	{
 		$list		= [];
 		$licenses	= $this->getUserLicensesFromUser( $userId, $projectId );
@@ -510,26 +576,41 @@ class Logic_User_Provision extends Logic
 		return $list;
 	}
 
-	public function getNotAssignedUserLicenseKeysFromUserLicense( $userLicenseId )
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getNotAssignedUserLicenseKeysFromUserLicense( int|string $userLicenseId ): array
 	{
 		$license	= $this->getUserLicense( $userLicenseId );
 		$indices	= ['userLicenseId' => $userLicenseId, 'userId' => 0];
 		$orders		= ['userLicenseId' => 'ASC'] ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
+		return $this->modelUserKey->getAll( $indices, $orders );
 	}
 
-	public function getUserLicenseKeys( $userLicenseId, bool $assignedOnly = FALSE )
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@param		bool			$assignedOnly
+	 *	@return		array
+	 */
+	public function getUserLicenseKeys( int|string $userLicenseId, bool $assignedOnly = FALSE ): array
 	{
 		$indices	= ['userLicenseId' => $userLicenseId];
 		if( $assignedOnly )
 			$indices['status']	= Model_Provision_User_License_Key::STATUS_ASSIGNED;
 		$orders		= ['userLicenseKeyId' => 'ASC'] ;
-		$keys		= $this->modelUserKey->getAll( $indices, $orders );
-		return $keys;
+		return $this->modelUserKey->getAll( $indices, $orders );
 	}
 
-	public function getUserLicenseKeysFromUser( $userId, bool $activeOnly = NULL, $productId = NULL )
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		bool|NULL		$activeOnly
+	 *	@param		int|string|NULL	$productId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicenseKeysFromUser( int|string $userId, bool $activeOnly = NULL, int|string|NULL $productId = NULL ): array
 	{
 		$indices	= [
 			'userId'	=> $userId,
@@ -552,27 +633,57 @@ class Logic_User_Provision extends Logic
 		return $keys;
 	}
 
-	public function sendMailOnActivatedUserLicense( $userLicenseId ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendMailOnActivatedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Activated' );
 	}
 
-	public function sendMailOnDeactivatedUserLicense( $userLicenseId ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendMailOnDeactivatedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Deactivated' );
 	}
 
-	public function sendMailOnExpiredUserLicense( $userLicenseId ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendMailOnExpiredUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Expired' );
 	}
 
-	public function sendMailOnReplacedUserLicense( $userLicenseId ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendMailOnReplacedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Replaced' );
 	}
 
-	public function sendMailOnRevokedUserLicense( $userLicenseId ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function sendMailOnRevokedUserLicense( int|string $userLicenseId ): bool
 	{
 		return $this->sendMailOnUserLicenseChange( $userLicenseId, 'Revoked' );
 	}
@@ -580,12 +691,13 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	Send mail to user of user license key about assigned key or activated license.
 	 *	@access		protected
-	 *	@param		integer			$userLicenseKeyId		User license key ID
+	 *	@param		int|string			$userLicenseKeyId		User license key ID
 	 *	@return		boolean
 	 *	@todo   	user language
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function sendMailOnAssignUserLicenseKey( $userLicenseKeyId ): bool
+	public function sendMailOnAssignUserLicenseKey( int|string $userLicenseKeyId ): bool
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
@@ -603,13 +715,14 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	Send mail to user of user license key about revoked key or deactivated/outdated license.
 	 *	@access		protected
-	 *	@param		integer			$userLicenseKeyId		User license key ID
-	 *	@param		integer			$oldUserId				User ID before revokation
+	 *	@param		int|string			$userLicenseKeyId		User license key ID
+	 *	@param		int|string			$oldUserId				User ID before revokation
 	 *	@return		boolean
 	 *	@todo   	user language
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function sendMailOnRevokeUserLicenseKey( $userLicenseKeyId, $oldUserId ): bool
+	public function sendMailOnRevokeUserLicenseKey( int|string $userLicenseKeyId, int|string $oldUserId ): bool
 	{
 		$userLicenseKey	= $this->getUserLicenseKey( $userLicenseKeyId );
 		$userLicense	= $this->getUserLicense( $userLicenseKey->userLicenseId );
@@ -625,9 +738,13 @@ class Logic_User_Provision extends Logic
 	}
 
 	/**
-	 *	@todo 		 finish implementation
+	 *	@todo 		finish implementation
+	 *	@param		int|string		$userLicenseId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setUserLicenseStatus( $userLicenseId, $status )
+	public function setUserLicenseStatus( int|string $userLicenseId, $status ): void
 	{
 		$userLicense	= $this->getUserLicense( $userLicenseId );
 
@@ -660,7 +777,13 @@ class Logic_User_Provision extends Logic
 		$this->modelUser		= new Model_User( $this->env );
 	}
 
-	protected function handleOutdatedUserLicense( $userLicenseId ): object
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleOutdatedUserLicense( int|string $userLicenseId ): object
 	{
 		$outdatedUserLicense		= $this->getUserLicense( $userLicenseId );
 		$outdatedUserLicenseKeys	= $this->getUserLicenseKeys( $userLicenseId, TRUE );			//  get assigned keys of outdated user license
@@ -722,7 +845,14 @@ class Logic_User_Provision extends Logic
 		];
 	}
 
-	protected function sendMailOnUserLicenseChange( $userLicenseId, $change ): bool
+	/**
+	 *	@param		int|string		$userLicenseId
+	 *	@param		$change
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function sendMailOnUserLicenseChange( int|string $userLicenseId, $change ): bool
 	{
 		$changes	= ['Activated', 'Deactivated', 'Expired', 'Replaced', 'Revoked'];
 		if( !in_array( $change, $changes ) )

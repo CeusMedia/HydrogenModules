@@ -6,6 +6,7 @@ use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Catalog extends Controller
 {
@@ -137,14 +138,14 @@ class Controller_Catalog extends Controller
 		$helper		= new View_Helper_Catalog( $this->env );
 
 		$builder	= new RssGoogleBaseBuilder();
-		$builder->setChannelData( array(
+		$builder->setChannelData( [
 			'title'			=> $this->env->title,
 			'link'			=> $this->env->url,
 			'description'	=> $words->description,
 			'pubDate'		=> date( 'r' ),
 			'lastBuildDate'	=> date( 'r' ),
 			'language'		=> $language,
-		) );
+		] );
 
 		$builder->addItemElement( 'g:price', TRUE );
 		$builder->addItemElement( 'g:condition', TRUE );
@@ -168,12 +169,12 @@ class Controller_Catalog extends Controller
 			foreach( $this->logic->getCategoriesOfArticle( $article->articleId ) as $category )
 				$categories[]	= $category->{"label_".$language};
 			$price	= (float) str_replace( ",", ".", $article->price );
-			$item	= array(
+			$item	= [
 				"title"				=> $article->title,
 				"description"		=> $article->description,
 				"link"				=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"			=> join( ', ', $categories ),
-				"pubDate"			=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"			=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"				=> $this->env->url.'catalog/article/'.$article->articleId ,
 				"g:id"				=> $article->articleId,
 				"g:price"			=> number_format( $price, 2, '.', '' ).' EUR',
@@ -181,7 +182,7 @@ class Controller_Catalog extends Controller
 				"g:condition"		=> 'neu',
 				"g:availability"	=> $availabilities[(int) $article->status],
 				"g:gtin"			=> $article->isn
-			);
+			];
 			if( $article->cover )
 				$item['g:image_link']	= $this->logic->getArticleCoverUrl( $article, FALSE, TRUE );
 			$builder->addItem( $item );
@@ -201,10 +202,14 @@ class Controller_Catalog extends Controller
 		$this->addData( 'articles', $articles );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function order(): void
 	{
 		$request	= $this->env->getRequest();
-		$articleId	= (int) $request->get( 'articleId' );
+		$articleId	= $request->get( 'articleId' );
 		$article	= $this->logic->getArticle( $articleId );
 		$forwardUrl	= urlencode( $this->logic->getArticleUri( $articleId ) );
 		$quantity	= (int) preg_replace( "/[^0-9-]/", "", $request->get( 'quantity' ) );
@@ -270,7 +275,7 @@ class Controller_Catalog extends Controller
 				"description"	=> $article->description,
 				"link"			=> $helper->getArticleUri( $article->articleId, TRUE ),
 				"category"		=> join( ', ', $categories ),
-				"pubDate"		=> date( 'r', $pubDate ? $pubDate : $article->createdAt ),
+				"pubDate"		=> date( 'r', $pubDate ?: $article->createdAt ),
 				"guid"			=> $this->env->url.'catalog/article/'.$article->articleId ,
 				"source"		=> $this->env->url.'catalog/rss',
 			];

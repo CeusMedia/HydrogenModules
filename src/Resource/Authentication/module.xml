@@ -20,7 +20,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.3.1">Made session refresh and its interval (in seconds) configurable.</log>
 	<log version="0.3.2">Made auto logout and its timeout (in seconds) configurable.</log>
 	<log version="0.3.3">Allow user configuration to configure auto logout.</log>
-	<log version="0.3.4">Added AJAX method to check username existance (used on registration).</log>
+	<log version="0.3.4">Added AJAX method to check username existence (used on registration).</log>
 	<log version="0.3.5">Added support to forward to a controller action on logout.</log>
 	<log version="0.3.6">Fixed logout loop.</log>
 	<log version="0.3.7">Force to reload page if session refresh indicates expired server session.</log>
@@ -35,7 +35,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.4.6">Support CGI/FastCGI for Basic Authentication.</log>
 	<log version="0.5">Migrate registration to Bootstrap, add logic class and cleanup.</log>
 	<log version="0.5.1">Migrate confirmation to Bootstrap.</log>
-	<log version="0.5.2">Implement check of user name by regular expression.</log>
+	<log version="0.5.2">Implement check of username by regular expression.</log>
 	<log version="0.5.3">Implement check of password length and strength.</log>
 	<log version="0.5.4">Improve registration mail and handling of mail failure.</log>
 	<log version="0.5.5">Carry source URL through registration/confirmation/login process.</log>
@@ -43,8 +43,8 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="0.5.7">Add english HTML and mail files.</log>
 	<log version="0.5.8">Translated language file.</log>
 	<log version="0.5.9">Add empty terms and conditions in HTML and Markdown.</log>
-	<log version="0.6">Added support for auto forward after login and on index.</log>
-	<log version="0.6.1">Changed support for auto forward after logout.</log>
+	<log version="0.6">Added support for auto-forward after login and on index.</log>
+	<log version="0.6.1">Changed support for auto-forward after logout.</log>
 	<log version="0.6.2">Removed old loginInside action and view.</log>
 	<log version="0.6.3">Added flag to allow or deny registration.</log>
 	<log version="0.6.4">Lay mails on queue but send immediately.</log>
@@ -82,9 +82,10 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="1.0.2">Provide ACL handler for Hydrogen Framework version 0.8.7.8.</log>
 	<log version="1.0.3">Adjust to changes in authentication backends.</log>
 	<log version="1.0.4">Use module Resource:Disclosure.</log>
+	<log version="1.0.5">Introduce backend logic interface.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth.php</class>
 		<class>Controller/Ajax/Auth.php</class>
@@ -92,6 +93,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<class>View/Auth.php</class>
 		<class>BasicAuthentication.php</class>
 		<class>Logic/Authentication.php</class>
+		<class>Logic/Authentication/BackendInterface.php</class>
 		<class>Resource/Acl/Authentication.php</class>
 		<locale>de/auth.ini</locale>
 		<locale>en/auth.ini</locale>

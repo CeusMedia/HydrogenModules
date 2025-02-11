@@ -61,13 +61,13 @@ return '
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_subject">'.$wf->labelSubject.'</label>
-						<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $filters->get( 'subject' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $filters->get( 'subject', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_receiverAddress">'.$wf->labelReceiverAddress.'</label>
-						<input type="text" name="receiverAddress" id="input_receiverAddress" class="span12" value="'.htmlentities( $filters->get( 'receiverAddress' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="text" name="receiverAddress" id="input_receiverAddress" class="span12" value="'.htmlentities( $filters->get( 'receiverAddress', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 				<div class="row-fluid">
@@ -85,23 +85,23 @@ return '
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_dateStart">'.$wf->labelDateStart.'</label>
-						<input type="date" name="dateStart" id="input_dateStart" class="span12" value="'.htmlentities( $filters->get( 'dateStart' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="date" name="dateStart" id="input_dateStart" class="span12" value="'.htmlentities( $filters->get( 'dateStart', '' ) ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_dateEnd">'.$wf->labelDateEnd.'</label>
-						<input type="date" name="dateEnd" id="input_dateEnd" class="span12" value="'.htmlentities( $filters->get( 'dateEnd' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="date" name="dateEnd" id="input_dateEnd" class="span12" value="'.htmlentities( $filters->get( 'dateEnd', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 <!--				<div class="row-fluid">
 					<div class="span6">
 						<label for="input_timeStart">'.$wf->labelTimeStart.'</label>
-						<input type="time" name="timeStart" id="input_timeStart" class="span12" value="'.htmlentities( $filters->get( 'timeStart' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="time" name="timeStart" id="input_timeStart" class="span12" value="'.htmlentities( $filters->get( 'timeStart', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 					<div class="span6">
 						<label for="input_timeEnd">'.$wf->labelTimeEnd.'</label>
-						<input type="time" name="timeEnd" id="input_timeEnd" class="span12" value="'.htmlentities( $filters->get( 'timeEnd' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input type="time" name="timeEnd" id="input_timeEnd" class="span12" value="'.htmlentities( $filters->get( 'timeEnd', '' ) ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>-->
 				<div class="row-fluid">
@@ -117,7 +117,7 @@ return '
 					</div>
 					<div class="span5">
 						<label for="input_limit">'.$wf->labelLimit.'</label>
-						<input type="text" name="limit" id="input_limit" class="span12" value="'.$filters->get( 'limit' ).'"/>
+						<input type="text" name="limit" id="input_limit" class="span12" value="'.$filters->get( 'limit', '' ).'"/>
 					</div>
 				</div>
 				<div class="buttonbar">

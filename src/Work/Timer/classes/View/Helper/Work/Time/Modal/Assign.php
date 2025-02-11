@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 class View_Helper_Work_Time_Modal_Assign extends Abstraction
 {
 	protected array $timers			= [];
-	protected ?string $userId		= NULL;
+	protected int|string|NULL $userId		= NULL;
 	protected ?object $relation		= NULL;
 	protected ?string $from			= NULL;
 
@@ -21,7 +21,6 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 
 	/**
 	 *	@return		string
-	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{
@@ -36,7 +35,7 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 		else{
 			$modelTimer	= new Model_Work_Timer( $this->env );
 
-			$conditions	= array( 'moduleId' => 0);
+			$conditions	= ['moduleId' => 0];
 			if( $this->userId )
 				$conditions['userId']	= $this->userId;
 			$orders		= ['title' => 'ASC'];
@@ -113,10 +112,10 @@ class View_Helper_Work_Time_Modal_Assign extends Abstraction
 	}
 
 	/**
-	 *	@param		string		$userId
+	 *	@param		int|string		$userId
 	 *	@return		self
 	 */
-	public function setUserId( string $userId ): self
+	public function setUserId( int|string $userId ): self
 	{
 		$this->userId	= $userId;
 		return $this;

@@ -30,21 +30,20 @@ class Logic_Catalog_Gallery extends Logic
 	/**	@var	string							$pathModule */
 	public string $pathModule;
 
-	protected string $articleUriTemplate				= 'catalog/gallery/image/%2$d-%3$s';
+	protected string $articleUriTemplate		= 'catalog/gallery/image/%2$d-%3$s';
 
 	/**
 	 *	Change stock quantity of article.
 	 *	@access		public
-	 *	@param		integer		$articleId		ID of article
-	 *	@param		integer		$change			Negative value on payed order, positive value on restock.
-	 *	@return		integer						Article quantity in stock after change
-	 *	@throws		InvalidArgumentException	if not found
+	 *	@param		int|string		$articleId		ID of article
+	 *	@param		integer			$change			Negative value on paid order, positive value on restock.
+	 *	@return		integer							Article quantity in stock after change
+	 *	@throws		InvalidArgumentException		if not found
 	 *	@todo		implement
 	 */
-	public function changeQuantity( $articleId, int $change ): int
+	public function changeQuantity( int|string $articleId, int $change ): int
 	{
 		return 1;
-		$change		= (int) $change;
 		$article	= $this->modelArticle->get( $articleId );
 		if( !$article && $strict )
 			throw new RuntimeException( 'Article with ID '.$articleId.' is not existing' );
@@ -56,14 +55,13 @@ class Logic_Catalog_Gallery extends Logic
 		return $article->quantity + $change;
 	}
 
-	public function countCategoryImages( $categoryId ): int
+	public function countCategoryImages( int|string $categoryId ): int
 	{
 		return count( $this->getCategoryImages( $categoryId ) );
 	}
 
-	public function getCategory( $categoryId ): ?object
+	public function getCategory( int|string $categoryId ): ?object
 	{
-		$categoryId	= (int) $categoryId;
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId;
 		$category	= $this->cache->get( $cacheKey );
 		if( !$category ){
@@ -74,7 +72,7 @@ class Logic_Catalog_Gallery extends Logic
 		return $category;
 	}
 
-	public function getCategoryImages( $categoryId ): array
+	public function getCategoryImages( int|string $categoryId ): array
 	{
 		$cacheKey	= 'catalog.gallery.category.'.$categoryId.'.images';
 		$images		= $this->cache->get( $cacheKey );
@@ -101,7 +99,7 @@ class Logic_Catalog_Gallery extends Logic
 		return $categories;
 	}
 
-	public function getImage( $imageId ): ?object
+	public function getImage( int|string $imageId ): ?object
 	{
 		$cacheKey	= 'catalog.gallery.image.'.$imageId;
 		$image		= $this->cache->get( $cacheKey );
@@ -113,7 +111,7 @@ class Logic_Catalog_Gallery extends Logic
 		return $image;
 	}
 
-	public function getImageUri( $imageOrId, bool $absolute = FALSE ): string
+	public function getImageUri( int|string $imageOrId, bool $absolute = FALSE ): string
 	{
 		$image		= $imageOrId;
 		if( is_int( $imageOrId ) )
@@ -131,7 +129,7 @@ class Logic_Catalog_Gallery extends Logic
 	/**
 	 *	@todo		code doc
 	 */
-	public function getUriPart( string $label, string $delimiter = '_' )
+	public function getUriPart( string $label, string $delimiter = '_' ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
@@ -158,10 +156,13 @@ class Logic_Catalog_Gallery extends Logic
 		$this->pathModule		= $this->cache->get( 'catalog.gallery.path.module' );
 		if( !$this->pathModule ){
 			$this->pathModule		= './catalog/gallery/';
-			if( $this->env->getModules()->has( 'Info_Pages' ) )
-				if( ( $logic = new Logic_Page( $this->env ) ) )
-					if( $page = $logic->getPageFromController( 'Catalog_Gallery' ) )
-						$this->pathModule		= './'.$page->identifier.'/';
+			if( $this->env->getModules()->has( 'Info_Pages' ) ){
+				$logic = new Logic_Page( $this->env );
+				/** @var ?Entity_Page $page */
+				$page = $logic->getPageFromController( 'Catalog_Gallery' );
+				if( NULL !== $page )
+					$this->pathModule		= './'.$page->identifier.'/';
+			}
 			$this->cache->set( 'catalog.gallery.path.module', $this->pathModule );
 		}
 

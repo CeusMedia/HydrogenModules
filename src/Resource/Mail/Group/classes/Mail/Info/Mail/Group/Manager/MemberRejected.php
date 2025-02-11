@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Mail_Group_Manager_MemberRejected extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -14,17 +14,17 @@ class Mail_Info_Mail_Group_Manager_MemberRejected extends Mail_Abstract
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
 		$data['greeting']	= strlen( trim( $data['greeting'] ) ) ? $data['greeting'] : '-';
-		$data['member']		= [
-			'title'		=> $data['name'],
-			'address'	=> $data['address'],
-		];
 //		$data['member']->link	= $this->env->url.'work/mail/group/member/edit/'.$data['member']->mailGroupMemberId;
 		$data['link']		= [
 			'group'			=> $this->env->url.'work/mail/group/edit/'.$data['group']->mailGroupId,
 			'member'		=> $this->env->url.'work/mail/group/member/edit/'.$data['member']->mailGroupMemberId,
 		];
+		$data['member']		= [
+			'title'		=> $data['name'],
+			'address'	=> $data['address'],
+		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/manager/memberRejected.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/manager/memberRejected.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 /*		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Info_Manual_Url
 {
-	const MODE_UNKNOWN		= 0;
-	const MODE_CATEGORY		= 1;
-	const MODE_PAGE			= 2;
+	public const MODE_UNKNOWN		= 0;
+	public const MODE_CATEGORY		= 1;
+	public const MODE_PAGE			= 2;
 
 	protected Environment $env;
 	protected Model_Manual_Page $modelPage;
@@ -43,11 +43,11 @@ class View_Helper_Info_Manual_Url
 		return '';
 	}
 
-	public function setCategory( $categoryOrId ): self
+	public function setCategory( object|int|string $categoryOrId ): self
 	{
 		if( is_object( $categoryOrId ) )
 			$category	= $categoryOrId;
-		else if( is_int( $categoryOrId ) ){
+		else if( is_int( $categoryOrId ) || is_string( $categoryOrId ) ){
 			$category	= $this->modelCategory->get( $categoryOrId );
 			if( !$category )
 				throw new RangeException( 'Invalid category ID given' );
@@ -67,11 +67,12 @@ class View_Helper_Info_Manual_Url
 		return $this;
 	}
 
-	public function setPage( $pageOrId ): self
+	public function setPage( Entity_Manual_Page|int|string $pageOrId ): self
 	{
 		if( is_object( $pageOrId ) )
 			$page	= $pageOrId;
-		else if( is_int( $pageOrId ) ){
+		else if( is_int( $pageOrId ) || is_string( $pageOrId ) ){
+			/** @var Entity_Manual_Page $page */
 			$page	= $this->modelPage->get( $pageOrId );
 			if( !$page )
 				throw new RangeException( 'Invalid page ID given' );

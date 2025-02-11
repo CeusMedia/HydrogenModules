@@ -16,19 +16,19 @@ if( $corporations ){
 		$link	= HtmlTag::create( 'a', $iconCompany.'&nbsp;'.$corporation->title, [
 			'href' => './work/billing/corporation/edit/'.$corporation->corporationId
 		] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', number_format( $corporation->balance, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'',
 		'100',
 	] );
-	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Bezeichnung' ),
 		HtmlTag::create( 'th', 'Balance', ['class' => 'cell-number'] )
-	) ) );
+	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }

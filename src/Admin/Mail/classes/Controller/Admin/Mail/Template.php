@@ -13,6 +13,10 @@ class Controller_Admin_Mail_Template extends Controller
 	protected string $appPath;
 	protected string $appUrl;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->has( 'save' ) ){
@@ -40,7 +44,7 @@ class Controller_Admin_Mail_Template extends Controller
 		}
 		$data	= (object) [];
 		foreach( $this->modelTemplate->getColumns() as $key ){
-			if( !in_array( $key, ['mailTemplateId'] ) ){
+			if( !in_array( $key, ['mailTemplateId'], TRUE ) ){
 				$data->$key		= '';
 				if( $this->request->has( 'template_'.$key ) ){
 					$value	= trim( $this->request->get( 'template_'.$key ) );
@@ -52,7 +56,12 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'template', $data );
 	}
 
-	public function copy( $templateId ): void
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function copy( int|string $templateId ): void
 	{
 		if( $this->request->getMethod()->isPost() ){
 			$title	= trim( $this->request->get( 'title' ) );
@@ -61,6 +70,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->messenger->noteError( 'Dieser Titel ist bereits vergeben.' );
 				$this->restart( 'edit/'.$templateId, TRUE );
 			}
+			/** @var Entity_Mail_Template $template */
 			$template	= $this->modelTemplate->get( $templateId );
 			$templateId	= $this->modelTemplate->add( [
 				'status'		=> Model_Mail_Template::STATUS_NEW,
@@ -80,11 +90,11 @@ class Controller_Admin_Mail_Template extends Controller
 	}
 
 	/**
-	 *	@param		$templateId
+	 *	@param		int|string		$templateId		Template ID
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function edit( $templateId ): void
+	public function edit( int|string $templateId ): void
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$template		= $this->checkTemplate( $templateId );
@@ -117,6 +127,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			else if( $this->request->get( 'template_style' ) ){
+				/** @var Entity_Mail_Template $template */
 				$template	= $this->modelTemplate->get( $templateId );
 				if( strlen( trim( $template->styles ) ) && preg_match( "/^[a-z0-9]/", $template->styles ) )
 					$template->styles	= json_encode( explode( ",", $template->styles ) );
@@ -139,7 +150,7 @@ class Controller_Admin_Mail_Template extends Controller
 				$this->restart( './admin/mail/template/edit/'.$templateId );
 			}
 			foreach( $this->modelTemplate->getColumns() as $key ){
-				if( !in_array( $key, ['mailTemplateId'] ) ){
+				if( !in_array( $key, ['mailTemplateId'], TRUE ) ){
 					if( $this->request->has( 'template_'.$key ) ){
 						$value	= trim( $this->request->get( 'template_'.$key ) );
 						if( strlen( $value ) )
@@ -153,10 +164,10 @@ class Controller_Admin_Mail_Template extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
+		/** @var Entity_Mail_Template[] $templates */
 		$templates			= $this->modelTemplate->getAll();
 		$moduleTemplateId	= $this->env->getConfig()->get( 'module.resource_mail.template' );
 		$modelMail			= new Model_Mail( $this->env );
@@ -168,7 +179,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->addData( 'moduleTemplateId', $moduleTemplateId );
 	}
 
-	public function preview( $templateId, $mode = NULL )
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		string|NULL		$mode
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function preview( int|string $templateId, ?string $mode = NULL ): void
 	{
 		try{
 			$template	= $this->checkTemplate( $templateId );
@@ -178,7 +195,7 @@ class Controller_Admin_Mail_Template extends Controller
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 				$env	= Logic_Frontend::getRemoteEnv( $this->env );
 			$mail		= new Mail_Test( $env, ['forceTemplateId' => $templateId] );
-			switch( strtolower( $mode ) ){
+			switch( strtolower( $mode ?? 'auto' ) ){
 				case 'html':
 					$helper	= new View_Helper_Mail_View_HTML( $this->env );
 					$helper->setMailObjectInstance( $mail );
@@ -195,6 +212,7 @@ class Controller_Admin_Mail_Template extends Controller
 						] ),
 					] ) );
 					break;
+				case 'auto':
 				default:
 					if( strlen( trim( $template->html ) ) )
 						$this->preview( $templateId, 'html' );
@@ -208,7 +226,12 @@ class Controller_Admin_Mail_Template extends Controller
 		exit;
 	}
 
-	public function remove( $templateId ): void
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $templateId ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $template->status == Model_Mail_Template::STATUS_ACTIVE ){
@@ -220,7 +243,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeImage( $templateId, $pathBase64 ): void
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		string			$pathBase64
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeImage( int|string $templateId, string $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$images		= json_decode( $template->images, TRUE );
@@ -234,7 +263,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function removeStyle( $templateId, $pathBase64 ): void
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		string			$pathBase64
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeStyle( int|string $templateId, string $pathBase64 ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$styles		= json_decode( $template->styles, TRUE );
@@ -248,7 +283,13 @@ class Controller_Admin_Mail_Template extends Controller
 		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 
-	public function setStatus( $templateId, $status ): void
+	/**
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		int				$status			Status to be set, one of Model_Mail_Template::STATUS_*
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( int|string $templateId, int $status ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		if( $status == Model_Mail_Template::STATUS_ACTIVE ){
@@ -274,11 +315,12 @@ class Controller_Admin_Mail_Template extends Controller
 	}
 
 	/**
-	 *	@param		$templateId
+	 *	@param		int|string		$templateId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function test( $templateId ): void
+	public function test( int|string $templateId ): void
 	{
 		$email		= trim( $this->request->get( 'email' ) );
 		if( !strlen( trim( $email ) ) ){
@@ -314,16 +356,18 @@ class Controller_Admin_Mail_Template extends Controller
 		}
 		$this->addData( 'appPath', $this->appPath );
 		$this->addData( 'appUrl', $this->appUrl );
-		$logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
 	/**
-	 *	@param		string		$templateId
-	 *	@param		bool		$strict
-	 *	@return		object|false
+	 *	@param		int|string		$templateId			Template ID
+	 *	@param		bool		$strict				Flag: throw exception if template ID is invalid, default: yes
+	 *	@return		Entity_Mail_Template|FALSE
+	 *	@throws		RangeException		if template ID is invalid
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	protected function checkTemplate( int|string $templateId, bool $strict = TRUE ): Entity_Mail_Template|FALSE
 	{
+		/** @var Entity_Mail_Template $template */
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
 			return $template;

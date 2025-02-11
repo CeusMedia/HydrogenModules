@@ -1,7 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment;
 
-$languageSelector	= '';
+/** @var Environment $env */
+/** @var array $words */
+/** @var array<string> $languages */
+/** @var string $language */
+/** @var array $folders */
+/** @var array $files */
+/** @var ?string $file */
+/** @var ?string $folder */
+
+$filterLanguage		= '';
 if( count( $languages ) > 1 ){
 	$optFolder		= '';
 	$optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $language );
@@ -28,7 +38,8 @@ $optFolder	= HtmlElements::Options( $optFolder, $folder );
 
 $helper	= new View_Helper_Manage_Content_Locale_List( $env );
 $helper->setFiles( $files );
-$helper->setCurrent( $file );
+if( NULL !== $file )
+	$helper->setCurrent( $file );
 $helper->setLanguage( $language );
 $helper->setFolder( $folder );
 

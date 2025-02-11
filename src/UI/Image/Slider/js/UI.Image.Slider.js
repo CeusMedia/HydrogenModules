@@ -11,6 +11,7 @@ UI.Image.Slider = {
 		animations: ['slide', 'fade'],
 		selectorPrefix: 'imageSlider-',
 		strict: false,
+		showDots: false
 	},
 	events: {
 		onMoveDoneByClick: function(instance){},
@@ -32,8 +33,8 @@ UI.Image.Slider = {
 	});
 	},
 	animateSlide: function(instance, nr, slide1, slide2, callback) {
-		var target1 = "-100%";
-		var source2 = "100%";
+		let target1 = "-100%";
+		let source2 = "100%";
 		if((1 || instance.options.rollback) && nr < instance.current){
 			slide2.css({left: target1});
 			target1 = "100%";
@@ -59,10 +60,10 @@ UI.Image.Slider = {
 			return $(instance.slides[nr]).find("img").prop("title");
 	},
 	init: function(sliderId, options, events){
-		var options = $.extend({}, this.options, options);
-		var prefix = options.selectorPrefix;
-		var selector = "#"+prefix+sliderId;
-		var instance = {
+		options = $.extend({}, this.options, options);
+		let prefix = options.selectorPrefix;
+		let selector = "#"+prefix+sliderId;
+		let instance = {
 			sliderId: sliderId,
 			options: options,
 			events: $.extend({}, this.events, events),
@@ -94,9 +95,9 @@ UI.Image.Slider = {
 		instance.container.on("mouseleave", {instance: instance}, function(event){
 			UI.Image.Slider.resumeAutoSlide(event.data.instance);
 		});
-		var dots = $("."+prefix+"dot", instance.container);
+		let dots = $("."+prefix+"dot", instance.container);
 		dots.on("click", {instance: instance}, function(event){
-			var instance = event.data.instance;
+			let instance = event.data.instance;
 			instance.events.onMoveStartByClick(instance);
 			UI.Image.Slider.moveTo(instance, $(this).data('nr'), function(){
 				instance.events.onMoveDoneByClick(instance);
@@ -109,7 +110,7 @@ UI.Image.Slider = {
 		$(window).on("resize", {instance: instance}, function(event){
 			UI.Image.Slider.onSliderWidthChange(event.data.instance);
 		});
-		if(parseInt(instance.options.scaleToFit, 10))
+		if(instance.options.scaleToFit)
 			this.setWidth(instance, "100%");
 		instance.container.data('slider', instance);
 	},
@@ -120,8 +121,8 @@ UI.Image.Slider = {
 			this.moveTo(instance, toOrBy, callback);
 	},
 	moveBy: function(instance, by, callback){
-		var total = instance.slides.length;
-		var number = instance.current + parseInt(by);
+		let total = instance.slides.length;
+		let number = instance.current + parseInt(by);
 		if(number >= total)
 		   number -= total;
 		else if(number < 0)
@@ -133,16 +134,16 @@ UI.Image.Slider = {
 		callback = callback || function(){};
 		if(instance.slides.filter(":animated").length)
 			return;
-		var nr = parseInt(nr);
+		nr = parseInt(nr);
 		if(!(nr >= 0 && nr < instance.slides.length))
 			return;
-		var slide1 = instance.slides.eq(instance.current).css("z-index", 1003);
-		var slide2 = instance.slides.eq(nr).css("z-index", 1004);
+		let slide1 = instance.slides.eq(instance.current).css("z-index", 1003);
+		let slide2 = instance.slides.eq(nr).css("z-index", 1004);
 		slide1.stop(true, true);
 		slide2.stop(true, true);
-		var animation = instance.options.animation;
+		let animation = instance.options.animation;
 		if(animation === 'random'){
-			var index = Math.floor(Math.random() * instance.options.animations.length);
+			let index = Math.floor(Math.random() * instance.options.animations.length);
 			animation = instance.options.animations[index];
 		}
 		if(animation === 'slide')
@@ -153,10 +154,10 @@ UI.Image.Slider = {
 			instance.dots.removeClass('active');
 			instance.dots.eq(nr).addClass('active');
 		}
-		var label = instance.container.find("."+instance.options.selectorPrefix+"label");
-		var duration = instance.options.durationSlide / 2;
-		var title = slide2.find("img").prop("title");
-		var link = slide2.find("img").data("link");
+		let label = instance.container.find("."+instance.options.selectorPrefix+"label");
+		let duration = instance.options.durationSlide / 2;
+		let title = slide2.find("img").prop("title");
+		let link = slide2.find("img").data("link");
 		if(link)
 			title = $("<a></a>").html(title).attr({href: link});
 		label.fadeOut(duration, function(){
@@ -164,12 +165,12 @@ UI.Image.Slider = {
 		});
 	},
 	onSliderWidthChange: function(instance){
-		var width = instance.container.width();
-		var ratio = instance.container.data("ratio");
-		var height = Math.floor(width * ratio);
+		let width = instance.container.width();
+		let ratio = instance.container.data("ratio");
+		let height = Math.floor(width * ratio);
 		instance.container.height(height);
 		instance.slides.each(function(){
-			var content = $(this).children("."+instance.options.selectorPrefix+"slide-content");
+			let content = $(this).children("."+instance.options.selectorPrefix+"slide-content");
 			if(content.length){
 				content.css("top", (height - content.height()) / 2);
 			}

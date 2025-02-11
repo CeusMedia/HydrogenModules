@@ -10,19 +10,19 @@ use CeusMedia\HydrogenFramework\Logic;
  */
 class Logic_Issue extends Logic
 {
-	const CHANGE_UNKNOWN		= 0;
-	const CHANGE_REPORTER		= 1;
-	const CHANGE_MANAGER		= 2;
-	const CHANGE_PROJECT		= 3;
-	const CHANGE_TYPE			= 4;
-	const CHANGE_SEVERITY		= 5;
-	const CHANGE_PRIORITY		= 6;
-	const CHANGE_STATUS			= 7;
-	const CHANGE_PROGRESS		= 8;
-	const CHANGE_DETAILS		= 9;
-	const CHANGE_NOTE			= 10;
-	const CHANGE_ATTACHMENT		= 11;
-	const CHANGE_PATCH			= 12;
+	public const CHANGE_UNKNOWN			= 0;
+	public const CHANGE_REPORTER		= 1;
+	public const CHANGE_MANAGER			= 2;
+	public const CHANGE_PROJECT			= 3;
+	public const CHANGE_TYPE			= 4;
+	public const CHANGE_SEVERITY		= 5;
+	public const CHANGE_PRIORITY		= 6;
+	public const CHANGE_STATUS			= 7;
+	public const CHANGE_PROGRESS		= 8;
+	public const CHANGE_DETAILS			= 9;
+	public const CHANGE_NOTE			= 10;
+	public const CHANGE_ATTACHMENT		= 11;
+	public const CHANGE_PATCH			= 12;
 
 	protected Logic_Project $logicProject;
 	protected Model_User $modelUser;
@@ -37,6 +37,7 @@ class Logic_Issue extends Logic
 	 *	@param		boolean		$extended		Flag: extend issue by project, notes and changes
 	 *	@return		object		Issue data object
 	 *	@throws		OutOfRangeException			if issue ID is not valid
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( string $issueId, bool $extended = FALSE ): object
 	{
@@ -69,25 +70,29 @@ class Logic_Issue extends Logic
 	 *	Returns map of all users participating on an issue.
 	 *	This includes project members, note authors, change authors and former assigned users.
 	 *	@access		public
-	 *	@param		string		$issueId		ID of issue to get participating users for
-	 *	@return		array		Map of ordered participating users by ID
+	 *	@param		int|string			$issueId		ID of issue to get participating users for
+	 *	@return		array<object>		Map of ordered participating users by ID
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getParticitatingUsers( string $issueId ): array
+	public function getParticipatingUsers( int|string $issueId ): array
 	{
 		$issue		= $this->get( $issueId, TRUE );
 		$userIds	= [];																		//  prepare empty list of user IDs
 		$usersProject	= $this->getProjectUsers( $issue->projectId );								//  get users of issue project
 		foreach( $usersProject as $user )															//  iterate users of issue project
-			$userIds[]	= (int) $user->userId;														//  note user ID
-		$userIds[]	= (int) $issue->reporterId;														//  note user ID of issue reporter
-		$userIds[]	= (int) $issue->managerId;														//  note user ID of issue manager
+			$userIds[]	= (string) $user->userId;														//  note user ID
+		$userIds[]	= (string) $issue->reporterId;														//  note user ID of issue reporter
+		$userIds[]	= (string) $issue->managerId;														//  note user ID of issue manager
 		foreach( $issue->notes as $note ){															//  iterate issue notes
-			$userIds[]	= (int) $note->userId;														//  note user ID of note author
+			$userIds[]	= (string) $note->userId;														//  note user ID of note author
 			foreach( $note->changes as $change ){													//  iterate issue changes
-				$userIds[]	= (int) $change->userId;												//  note user ID of change author
-				if( in_array( $change->type, [1, 2] ) ){										//  issue reporter or manager has been changed
-					$userIds[]	= (int) $change->from;												//  note user ID of old reporter or manager
-					$userIds[]	= (int) $change->to;												//  note user ID of new reporter or manager
+				$userIds[]	= (string) $change->userId;												//  note user ID of change author
+				if( in_array( $change->type, [														//  issue reporter or manager has been changed
+					Model_Issue_Change::TYPE_REPORTER,
+					Model_Issue_Change::TYPE_MANAGER
+				] ) ){
+					$userIds[]	= (string) $change->from;												//  note user ID of old reporter or manager
+					$userIds[]	= (string) $change->to;												//  note user ID of new reporter or manager
 				}
 			}
 		}
@@ -95,6 +100,7 @@ class Logic_Issue extends Logic
 		$users		= [];																			//  prepare empty result map
 		$conditions	= ['userId' => array_unique( $userIds )];										//  reduce to unique user IDs
 		$orders		= ['username' => 'ASC'];														//  order by username
+		/** @var ?Entity_User $user */
 		foreach( $this->modelUser->getAll( $conditions, $orders ) as $user ){						//  iterate found users
 			$users[$user->userId]	= $user;														//  note user by its ID
 			$user->isInProject	= FALSE;															//  set project assignment to false default
@@ -117,7 +123,7 @@ class Logic_Issue extends Logic
 	 *	@access		public
 	 *	@todo		support conditions ot orders
 	 */
-	public function getProjectUsers( string $projectId ): array
+	public function getProjectUsers( int|string $projectId ): array
 	{
 		return $this->logicProject->getProjectUsers( $projectId );
 	}
@@ -128,24 +134,34 @@ class Logic_Issue extends Logic
 	 */
 	public function getUserProjects(): array
 	{
-		$userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$userId		= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		return $this->logicProject->getUserProjects( $userId, TRUE );
 	}
 
-	public function informAboutNew( string $issueId, string $currentUserId ): array
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$currentUserId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informAboutNew( int|string $issueId, int|string $currentUserId ): array
 	{
-		$users		= $this->getParticitatingUsers( $issueId );
+		$users		= $this->getParticipatingUsers( $issueId );
 		$issue		= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
 			$issue->reporter	= $users[$issue->reporterId];
 		if( $issue->managerId )
 			$issue->manager		= $users[$issue->managerId];
-		if( isset( $users[$currentUserId] ) )
+
+		if( array_key_exists( (string) $currentUserId, $users ) )
 			unset( $users[$currentUserId] );
+
 		if( count( $users ) ){
+			/** @var Logic_Mail $logicMail */
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
-				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$userProjects		= $this->getUserProjects();
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
@@ -159,20 +175,28 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
-	public function informAboutChange( string $issueId, string $currentUserId ): array
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$currentUserId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informAboutChange( int|string $issueId, int|string $currentUserId ): array
 	{
-		$users				= $this->getParticitatingUsers( $issueId );
-		$issue				= $this->get( $issueId, TRUE );
+		$users		= $this->getParticipatingUsers( $issueId );
+		$issue		= $this->get( $issueId, TRUE );
 		if( $issue->reporterId )
 			$issue->reporter	= $users[$issue->reporterId];
 		if( $issue->managerId )
 			$issue->manager		= $users[$issue->managerId];
-		if( isset( $users[$currentUserId] ) )
+		if( array_key_exists( (string) $currentUserId, $users ) )
 			unset( $users[$currentUserId] );
 		if( count( $users ) ){
+			/** @var Logic_Mail $logicMail */
 			$logicMail		= Logic_Mail::getInstance( $this->env );
 			if( $issue->projectId ){
-				$userProjects		= $this->getUserProjects( $currentUserId, TRUE );
+				$userProjects		= $this->getUserProjects();
 				$issue->project		= $userProjects[$issue->projectId];
 			}
 			foreach( $users as $user ){
@@ -186,11 +210,20 @@ class Logic_Issue extends Logic
 		return $users;
 	}
 
-	public function noteChange( string $issueId, string $noteId, $type, $from, $to ): string
+	/**
+	 *	@param		int|string		$issueId
+	 *	@param		int|string		$noteId
+	 *	@param		$type
+	 *	@param		$from
+	 *	@param		$to
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function noteChange( int|string $issueId, int|string $noteId, $type, $from, $to ): string
 	{
 		$data	= [
 			'issueId'	=> $issueId,
-			'userId'	=> $this->env->getSession()->get( 'auth_user_id' ),
+			'userId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentUserId(),
 			'noteId'	=> $noteId,
 			'type'		=> $type,
 			'from'		=> $from,
@@ -200,7 +233,12 @@ class Logic_Issue extends Logic
 		return $this->modelIssueChange->add( $data );
 	}
 
-	public function remove( string $issueId ): bool
+	/**
+	 *	@param		int|string		$issueId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $issueId ): bool
 	{
 		$this->modelIssueNote->removeByIndex( 'issueId', $issueId );
 		$this->modelIssueChange->removeByIndex( 'issueId', $issueId );
@@ -209,8 +247,13 @@ class Logic_Issue extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );										//  get model of users
 		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues

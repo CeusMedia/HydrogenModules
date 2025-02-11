@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,string|HtmlTag> $navButtons */
+
 /**
  *	@deprecated		shown in view tab
  *	@todo			remove with references in module config

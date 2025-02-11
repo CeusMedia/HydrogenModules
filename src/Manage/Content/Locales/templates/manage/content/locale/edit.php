@@ -1,6 +1,21 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var string $folderPathFull */
+/** @var string $file */
+/** @var array $editors */
+/** @var ?string $editor */
+/** @var ?string $editorByExt */
+/** @var ?bool $readonly */
+/** @var ?string $folder */
+/** @var ?string $content */
+/** @var ?string $language */
 
 $classAutoEditor	= $editor;
 $options			= [];
@@ -36,7 +51,7 @@ else if( $editor === "Ace" ){
 	$script	= '
 		ModuleAceAutoSave.applyToEditor(
 			jQuery("#input_content").data("ace-editor-instance"),
-			"./manage/content/locale/ajaxSaveContent"
+			"./ajax/manage/content/locale/saveContent"
 		);';
 	$env->getPage()->js->addScriptOnReady( $script, 9 );
 }

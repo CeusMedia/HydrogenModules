@@ -4,39 +4,6 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Work_Mission_Future extends View
 {
-	public function ajaxRenderIndex(): void
-	{
-		$words		= $this->env->getLanguage()->getWords( 'work/mission' );
-		extract( $this->getData() );
-
-		if( $missions ){
-			$helperButtons	= new View_Helper_Work_Mission_List_Pagination( $this->env );
-			$helperList		= new View_Helper_Work_Mission_List( $this->env );
-
-			$helperList->setMissions( $this->getData( 'missions' ) );
-			$helperList->setWords( $words );
-			$helperList->setBadges( FALSE );
-
-			$listLarge		= $helperList->renderDayList( 2, 0, TRUE, TRUE, TRUE );
-			$buttonsLarge	= $helperButtons->render( $total, $limit, $page );
-		}
-		else{
-			$buttonsLarge	= "";
-			$listLarge		= '<div class="alert alert-warning"><em>'.$words['index']['messageNoEntries'].'</em></div>';
-		}
-
-		$data			= [
-			'buttons'	=> [
-				'large'	=> $buttonsLarge,
-			],
-			'lists' => [
-				'large'	=> $listLarge,
-			]
-		];
-		print( json_encode( $data ) );
-		exit;
-	}
-
 	public function index(): string
 	{
 		$page			= $this->env->getPage();
@@ -82,9 +49,10 @@ $(document).ready(function(){
 if(0){
 	$(document).ready(function(){
 		$.ajax({
-			url: "./work/mission/ajaxRenderContent",
-			success: function(html){
-				$("#work-mission-index-content").html(html);
+			url: "./ajax/work/mission/future/renderContent",
+			dataType: "json",
+			success: function(json){
+				$("#work-mission-index-content").html(json.data);
 			}
 		});
 	});

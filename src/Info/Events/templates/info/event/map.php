@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var array<object> $events */
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -25,10 +26,10 @@ if( $center ){
 	if( $branches ){
 		$list	= [];
 		foreach( $branches as $branch ){
-			$link	= HtmlTag::create( 'a', $branch->title, array(
+			$link	= HtmlTag::create( 'a', $branch->title, [
 				'href'		=> './index/view/'.$branch->branchId,
 				'onclick'	=> "clickItem($(this).parent(), true); return false;",
-			) );
+			] );
 			$list[]	= HtmlTag::create( 'li', $link, [
 				'data-longitude'	=> $branch->longitude,
 				'data-latitude'		=> $branch->latitude,
@@ -38,10 +39,10 @@ if( $center ){
 	$list		= HtmlTag::create( 'ul', $list, ['class' => 'list-branches nav nav-pills nav-stacked'] );
 */
 	$list	= '<div><em class="muted">Nichts gefunden.</em></div>';
-	if( $events ){
+	if( [] !== $events ){
 		$list	= [];
 		foreach( $events as $nr => $event ){
-			$link	= HtmlTag::create( 'a', $iconMarker.'&nbsp;'.$event->title, array(
+			$link	= HtmlTag::create( 'a', $iconMarker.'&nbsp;'.$event->title, [
 			//	'href'				=> './index/view/'.$branch->branchId,
 				'href'				=> '#accordion-collapse-'.$event->eventId,
 				'onclick'			=> "clickItem($(this), true);",
@@ -51,7 +52,7 @@ if( $center ){
 				'data-longitude'	=> $event->longitude,
 				'data-latitude'		=> $event->latitude,
 				'data-marker-title' => htmlentities( $event->title, ENT_QUOTES, 'UTF-8' )
-			) );
+			] );
 			$logo	= '';
 /*			if( $branch->company->logo ){
 				$logo	= HtmlTag::create( 'img', NULL, [

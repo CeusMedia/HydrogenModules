@@ -6,10 +6,14 @@ use CeusMedia\Bootstrap\Button\Link as BootstrapLinkButton;
 use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var View_Info_Forum $view */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'topic.top', 'topic.bottom'], 'html/info/forum/' ) );
-$textTop	= $textTopicTop	? $textTopicTop: $textIndexTop;
-$textBottom	= $textTopicBottom ? $textTopicBottom : $textIndexBottom;
+$textTop	= $textTopicTop ?: $textIndexTop;
+$textBottom	= $textTopicBottom ?: $textIndexBottom;
 
 $helper		= new View_Helper_TimePhraser( $env );
 $iconSticky	= HtmlTag::create( 'i', '', ['class' => 'icon-exclamation-sign not-icon-white'] );
@@ -19,8 +23,8 @@ $iconRename	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconStar	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$userCanStar	= in_array( 'ajaxStarThread', $rights );
-$userCanEdit	= in_array( 'ajaxRenameThread', $rights );
+$userCanStar	= $env->getAcl()->has( 'ajax/info/forum', 'starThread' );
+$userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'renameThread' );
 $userCanRemove	= in_array( 'removeThread', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
@@ -32,25 +36,25 @@ if( $threads ){
 		$userIsAuthor	= $thread->authorId == $userId;
 		$userCanChange	= $userIsManager || $userIsAuthor;
 		if( $userCanEdit && $userCanChange ){
-			$buttons[]	= HtmlTag::create( 'button', $iconRename, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconRename, [
 				'onclick'	=> 'InfoForum.changeThreadName('.$thread->threadId.', '.$thread->topicId.', \''.htmlentities( $thread->title, ENT_QUOTES, 'UTF-8' ).'\')',
 				'class'	=> 'btn not-btn-small',
 				'title'	=> $words['topic']['buttonRename'],
-			) );
+			] );
 		}
 		if( $userCanStar && $userCanChange ){
-			$buttons[]	= HtmlTag::create( 'button', $iconStar, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconStar, [
 				'onclick'	=> 'InfoForum.changeThreadType('.$thread->threadId.', '.$thread->topicId.', \''.$thread->type.'\')',
 				'class'	=> 'btn not-btn-small',
 				'title'	=> $words['topic']['buttonStar'],
-			) );
+			] );
 		}
 		if( $userCanRemove && $userCanChange ){
-			$buttons[]	= HtmlTag::create( 'button', $iconRemove, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconRemove, [
 				'onclick'	=> 'if(confirm(\'Wirklich ?\')) document.location.href = \'./info/forum/removeThread/'.$thread->threadId.'\';',
 				'class'	=> 'btn not-btn-small btn-danger',
 				'title'	=> $words['topic']['buttonRemove']
-			) );
+			] );
 		}
 
 		$class		= '';
@@ -64,10 +68,10 @@ if( $threads ){
 		$underline	= 'Einträge: '.$thread->posts.', Latest: vor '.$modifiedAt;
 		$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
 		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
-		$cells		= array(
+		$cells		= [
 			HtmlTag::create( 'td', $label, ['class' => 'thread-label autocut'] ),
 			HtmlTag::create( 'td', $buttons ),
-		);
+		];
 		$rows[]	= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	}
 	$heads	= HtmlElements::TableHeads( [
@@ -92,10 +96,10 @@ $panelAdd	= $view->loadTemplateFile( 'info/forum/topic.add.php' );
 $iconHome	= new BootstrapIcon( 'home' );
 $iconFolder	= new BootstrapIcon( 'folder-open', TRUE );
 $url		= './info/forum/';
-$buttons	= array(
+$buttons	= [
 	new BootstrapLinkButton( $url, $iconHome ),
 	new BootstrapButton( $topic->title, 'btn-inverse', $iconFolder, TRUE ),
-);
+];
 $position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 

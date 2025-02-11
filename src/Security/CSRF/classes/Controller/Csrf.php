@@ -8,6 +8,11 @@ class Controller_Csrf extends Controller
 	protected Logic_CSRF $logic;
 	protected MessengerResource $messenger;
 
+	/**
+	 *	@param		?string		$redirectUrl
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function checkToken( ?string $redirectUrl = NULL ): bool
 	{
 		$token		= $this->env->getRequest()->get( 'csrf_token' );							//  get token from request
@@ -65,7 +70,7 @@ class Controller_Csrf extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		$this->logic		= $this->env->getLogic()->get( 'CSRF' );
+		$this->logic		= Logic_CSRF::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.security_csrf.', TRUE );
 	}

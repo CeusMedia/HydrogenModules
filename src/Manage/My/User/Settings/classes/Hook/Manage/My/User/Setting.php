@@ -1,107 +1,100 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_My_User_Setting extends Hook
 {
 	/**
-	 *	...
-	 *	@static
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Event call context object
-	 *	@param		object			$module		Event call module object
-	 *	@param		array			$data		Payload map
+	 *	Applies module configuration values assigned to a user.
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	static public function onSessionInit( Environment $env, $context, $module, $data = [] )
+	public function onSessionInit(): void
 	{
-		if( $env->has( 'session' ) ){															//  environment has session support
-			if( ( $userId = $env->getSession()->get( 'auth_user_id' ) ) ){						//  an user is logged in
-				$config	= Model_User_Setting::applyConfigStatic( $env, $userId, FALSE );		//  apply user configuration
-				$env->set( 'config', $config, TRUE );											//  override config by user config
-			}
-		}
+		if( !$this->env->has( 'session' ) )													//  environment has no session support
+			return;
+		$userId	= (int) $this->env->getSession()->get( 'auth_user_id', '' );
+		if( 0 === $userId )																			//  no user is logged in
+			return;
+
+		$config		= $this->env->getConfig();
+		$changed	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );  //  apply user configuration
+		$diff		= array_diff_assoc( $changed->getAll(), $config->getAll() );
+		foreach( $diff as $key => $value )
+			if( $config->has( $key ) )
+				$config->set( $key, $value );
 	}
 
 	/**
 	 *	...
-	 *	@static
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Event call context object
-	 *	@param		object			$module		Event call module object
-	 *	@param		array			$data		Payload map
 	 *	@return		void
 	 */
-	static public function onViewRegisterTab( Environment $env, $context, $module, $data = [] )
+	public function onViewRegisterTab(): void
 	{
-		$words	= (object) $env->getLanguage()->getWords( 'manage/my/user/setting' );			//  load words
-		$context->registerTab( 'setting', $words->module['tab'], 4 );							//  register main tab
+		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user/setting' );	//  load words
+		$this->context->registerTab( 'setting', $words->module['tab'], 4 );							//  register main tab
 	}
 
 	/**
 	 *	...
-	 *	@static
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Event call context object
-	 *	@param		object			$module		Event call module object
-	 *	@param		object			$payload	Payload object
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	static public function onUserRemove( Environment $env, $context, $module, $payload )
+	public function onUserRemove(): void
 	{
-		$payload	= (object) $payload;
+		$payload	= (object) $this->getPayload();
+		$count		= 0;
 		if( !empty( $payload->userId ) ){
-			$model	= new Model_User_Setting( $env );
+			$model	= new Model_User_Setting( $this->env );
 			$count	= $model->removeByIndex( 'userId', $payload->userId );
 		}
 		if( isset( $payload->counts ) )
 			$payload->counts['Manage_My_User_Settings']	= (object) ['entities' => $count];
+		$payload	= get_object_vars( $payload );
+		$this->setPayload( $payload );
 	}
 
 	/**
 	 *	...
 	 *	Disabled, since resolution to module setting labels is not implemented.
-	 *	@static
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Event call context object
-	 *	@param		object			$module		Event call module object
-	 *	@param		array			$data		Payload map
 	 *	@return		void
 	 *	@todo		active, once config key can be translated labels @see View_Manage_My_User_Setting::getModuleWords
+	 *	@throws		ReflectionException
 	 */
-	static public function onListUserRelations( Environment $env, $context, $module, $data )
+	public function onListUserRelations(): void
 	{
 		return;
-		if( empty( $data->userId ) ){
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Manage_My_User_Setting::onListUserRelations" is missing user ID in data.';
-			$env->getMessenger()->noteFailure( $message );
+			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$words	= $env->getLanguage()->getWords( 'manage/my/user/setting' );
 
-		$data->activeOnly	= isset( $data->activeOnly ) ? $data->activeOnly : FALSE;
-		$data->linkable		= isset( $data->linkable ) ? $data->linkable : FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 
 		$list		= [];
-		$model		= new Model_User_Setting( $env );
-		$settings	= $model->getAllByIndex( 'userId', $data->userId );
+		$model		= new Model_User_Setting( $this->env );
+		$settings	= $model->getAllByIndex( 'userId', $this->payload['userId'] );
 		foreach( $settings as $setting ){
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? '#'.$setting->key : NULL,
+				'id'		=> $this->payload['linkable'] ? '#'.$setting->key : NULL,
 				'label'		=> $setting->moduleId.' :: '.$setting->key,
 			];
 		}
 
-		if( $list )
-			View_Helper_ItemRelationLister::enqueueRelations(
-				$data,																			//  hook content data
-				$module,																		//  module called by hook
-				'entity',																		//  relation type: entity or relation
-				$list,																			//  list of related items
-				$words['helper-relations']['heading'],											//  label of type of related items
-				'Manage_My_User_Setting',														//  controller of entity
-				'edit'																			//  action to view or edit entity
-			);
+		if( [] === $list )
+			return;
+		View_Helper_ItemRelationLister::enqueueRelations(
+			$this->payload,																	//  hook content data
+			$module,																				//  module called by hook
+			'entity',																			//  relation type: entity or relation
+			$list,																					//  list of related items
+			$words['helper-relations']['heading'],													//  label of type of related items
+			'Manage_My_User_Setting',														//  controller of entity
+			'edit'																			//  action to view or edit entity
+		);
 	}
 }

@@ -15,13 +15,13 @@
  *	GNU General Public License for more details.
  *
  *	You should have received a copy of the GNU General Public License
- *	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *	@category		cmFrameworks
  *	@package		Hydrogen.Environment.Resource.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Christian Würker
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -31,11 +31,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	Resource to communicate with chat server.
- *	@category		cmFrameworks
- *	@package		Hydrogen.Environment.Resource.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2010-2012 Christian Würker
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 class Resource_Server_Json
 {
@@ -92,7 +90,7 @@ class Resource_Server_Json
 	public static function ___onEnvInit( Environment $env, $context, $module, array $data = [] )
 	{
 		$server		= new Resource_Server_Json( $context );
-		$context->set( 'server', $server );
+		$context->set( 'jsonServerClient', $server );
 		$config		= $context->getConfig();
 		$session	= $context->getSession();
 		try{
@@ -111,7 +109,7 @@ class Resource_Server_Json
 			}
 		}
 		catch( Exception $e ){
-			$message	= "Der Chat-Server ist momentan nicht erreichbar.";
+			$message	= "Der Server ist momentan nicht erreichbar.";
 			$env->getMessenger()->noteFailure( $message );
 			return;
 		}

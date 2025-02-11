@@ -1,8 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View;
-
 class Mail_Shop_Customer_Ordered extends Mail_Abstract
 {
 	protected ?object $order								= NULL;
@@ -25,20 +22,16 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts	= new View_Helper_Shop_OrderFacts( $this->env );
 		$this->helperOrderFacts->setDisplay( View_Helper_Shop_OrderFacts::DISPLAY_MAIL );
 		$this->words			= $this->getWords( 'shop' );
-
-		/* hack: empty view instance with casted environment, will break if cli runtime (job context)
-		/** @todo replace this hack by a better general solution */
-		/** @var WebEnvironment $env */
-		$env		= $this->env;
-		$this->view	= new View( $env );
 	}
 
 	/**
 	 *	@return		self
 	 *	@throws		RangeException
 	 *	@throws		InvalidArgumentException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		if( empty( $this->data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
@@ -70,22 +63,20 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_HTML );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends'] as $item )
+		foreach( $this->data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
 //		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $this->data );
 
-		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
 
-		if( $this->view->hasContentFile( $filePayment ) )
-			$panelPayment	= $this->view->loadContentFile( $filePayment, [
-				'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
-				'order'		=> $this->order,
-			] );
+		$panelPayment	= $this->loadContentFile( $filePayment, [
+			'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
+			'order'		=> $this->order,
+		] ) ?? '';
 
-		$body	= $this->view->loadContentFile( 'mail/shop/customer/ordered.html', [
+		$body	= $this->loadContentFile( 'mail/shop/customer/ordered.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
 			'orderTime'			=> date( 'H:i:s', $this->order->modifiedAt ),
 			'date'				=> ['year' => date( 'Y' ), 'month' => date( 'm' ), 'day' => date( 'd' )],
@@ -102,7 +93,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			'addressBilling'	=> $this->helperAddress->setAddress( $this->order->customer->addressBilling )->render(),
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
-		] );
+		] ) ?? '';
 		$this->addThemeStyle( 'module.shop.css' );
 		$this->addBodyClass( 'moduleShop' );
 		$this->page->setBaseHref( $this->env->url );
@@ -116,17 +107,15 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends'] as $item )
+		foreach( $this->data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
-		$panelPayment	= '';
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
-		if( $this->view->hasContentFile( $filePayment ) )
-			$panelPayment	= $this->view->loadContentFile( $filePayment, [
-				'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
-				'order'		=> $this->order,
-			] );
+		$panelPayment	= $this->loadContentFile( $filePayment, [
+			'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
+			'order'		=> $this->order,
+		] ) ?? '';
 
 		$templateData	= [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
@@ -145,7 +134,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			'orderFacts'		=> $this->helperOrderFacts->setData( $this->data )->render(),
 			'panelPayment'		=> $panelPayment,
 		];
-		return $this->view->loadContentFile( 'mail/shop/customer/ordered.txt', $templateData );
+		return $this->loadContentFile( 'mail/shop/customer/ordered.txt', $templateData ) ?? '';
 	}
 }
 

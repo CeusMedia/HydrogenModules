@@ -48,9 +48,9 @@ function renderTimers( Web $env, $timers ): string
 		$title	= HtmlTag::create( 'a', $title, ['href' => './work/time/edit/'.$timer->workTimerId.'?from=work/time/analysis'] );
 		$title	= HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
 
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $title.$linkRelation ),
-		) );
+		] );
 	}
 	return HtmlTag::create( 'table', $list, ['class' => 'table table-striped table-condensed'] );
 }
@@ -68,22 +68,22 @@ if( $filterMode === "users" ){
 		if( !$entry->secondsPlanned )
 			continue;
 		$timers	= renderTimers( $env, $entry->timers );
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $allProjects[$projectId]->title.$timers ),
 			HtmlTag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), ['style' => 'text-align: right'] ),
-		) );
+		] );
 	}
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
-	) );
-	$thead	= HtmlTag::create( 'thead', array(
+	] );
+	$thead	= HtmlTag::create( 'thead', [
 		HtmlTag::create( 'th', 'Projekt' ),
 		HtmlTag::create( 'th', 'geplant', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'erfasst', ['style' => 'text-align: right'] ),
-	) );
+	] );
 	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
@@ -97,22 +97,22 @@ else {
 			continue;
 		$timers	= renderTimers( $env, $entry->timers );
 		$username	= HtmlTag::create( 'small', '('.$allUsers[$userId]->firstname.' '.$allUsers[$userId]->surname.')', ['class' => 'muted'] );
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $allUsers[$userId]->username.'&nbsp;'.$username.$timers ),
 			HtmlTag::create( 'td', renderTime( $entry->secondsPlanned ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsPlanned, $data['@total']->secondsPlanned, 100 ), ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', renderTime( $entry->secondsNeeded ).'&nbsp;&nbsp;<br/>'.$indicator->build( $entry->secondsNeeded, $data['@total']->secondsNeeded, 100 ), ['style' => 'text-align: right'] ),
-		) );
+		] );
 	}
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'big', 'Gesamt' ) ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsPlanned ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'td', HtmlTag::create( 'big', renderTime( $data['@total']->secondsNeeded ) ).'&nbsp;&nbsp;', ['style' => 'text-align: right'] ),
-	) );
-	$thead	= HtmlTag::create( 'thead', array(
+	] );
+	$thead	= HtmlTag::create( 'thead', [
 		HtmlTag::create( 'th', 'Bearbeiter' ),
 		HtmlTag::create( 'th', 'geplant', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'erfasst', ['style' => 'text-align: right'] ),
-	) );
+	] );
 	$colgroup	= HtmlElements::ColumnGroup( '', '120', '120' );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );

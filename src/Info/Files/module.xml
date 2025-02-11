@@ -1,11 +1,16 @@
 <?xml version="1.0"?>
 <module>
 	<title>Info: Files</title>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[
+Advanced frontend view of downloadable files, provided by module Resource:Downloads and managed by module Manage:Downloads.
+
+Provides management, based on role rights.
+Can be replaced by module Info:Downloads, which has no management.
+]]></description>
 	<category>Info</category>
-	<version>0.5.2</version>
+	<version>0.6.1</version>
 	<log version="0.1">Initial prototype.</log>
-	<log version="0.2">Separation to Hydroge module.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added support for news list via hook.</log>
 	<log version="0.3">Apply module UI:CSS:Panel.</log>
 	<log version="0.3.1">Use module UI:Helper:Input:File.</log>
@@ -15,7 +20,7 @@
 	<log version="0.4">Resurrection for having display and management in one module.</log>
 	<log version="0.4.1">Add search for files in folders.</log>
 	<log version="0.4.2">Add job to migrate older file entries.</log>
-	<log version="0.4.3">Add icon to newslist items ans focus search.</log>
+	<log version="0.4.3">Add icon to news list items and focus search.</log>
 	<log version="0.4.4">Add actions and view to edit files and folders.</log>
 	<log version="0.4.5">Extract hook methods to own class.</log>
 	<log version="0.4.6">Migrate to support CeusMedia::Common 0.8.5.</log>
@@ -25,14 +30,17 @@
 	<log version="0.5">Improve code style.</log>
 	<log version="0.5.1">Apply Bootstrap.</log>
 	<log version="0.5.2">Show maximum upload file size.</log>
+	<log version="0.5.3">Extract logic from controller to own class.</log>
+	<log version="0.5.3">Migration to PHP 8.</log>
+	<log version="0.5.4">Strict types.</log>
+	<log version="0.6.0">Extracted logic, models and job to new module Resource:Downloads.</log>
+	<log version="0.6.1">Extract AJAX actions to own controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
+		<class>Controller/Ajax/Info/File.php</class>
 		<class>Controller/Info/File.php</class>
 		<class>Hook/Info/File.php</class>
-		<class>Job/Info/Files.php</class>
-		<class>Model/Download/File.php</class>
-		<class>Model/Download/Folder.php</class>
 		<class>View/Info/File.php</class>
 		<locale>de/info/file.ini</locale>
 		<locale>de/html/info/file/index.bottom.html</locale>
@@ -47,12 +55,12 @@
 		<template>info/file/index.upload.php</template>
 		<style>module.info.files.css</style>
 		<script load="auto">InfoFile.js</script>
-		<file>contents/files/.htaccess</file>
 	</files>
 	<config protected="yes" type="string" name="path">contents/files/</config>
 	<link xml:lang="de" access="acl" rank="21" path="info/file">Dateien</link>
 	<link xml:lang="en" access="acl" rank="21" path="info/file">Files</link>
 	<relations>
+		<needs type="module">Resource_Downloads</needs>
 		<needs type="module">Info_NewsList</needs>
 		<needs type="module">UI_Bootstrap</needs>
 		<needs type="module">UI_Helper_Input_File</needs>
@@ -60,90 +68,4 @@
 	</relations>
 	<hook type="resource" resource="Page" event="collectNews">Hook_Info_File::onPageCollectNews</hook>
 	<hook type="resource" resource="Novelties" event="collect">Hook_Info_File::onCollectNovelties</hook>
-	<job id="Info.Files.migrate">Info_Files::migrate</job>
-	<sql on="install" type="mysql" version="0.1"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>download_files`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
-  `downloadFileId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `downloadFolderId` int(10) unsigned NOT NULL,
-  `rank` smallint(6) NOT NULL,
-  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `nrDownloads` smallint(5) unsigned NOT NULL,
-  `uploadedAt` decimal(12,0) unsigned NOT NULL,
-  `downloadedAt` decimal(12,0) unsigned DEFAULT '0',
-  PRIMARY KEY (`downloadFileId`),
-  KEY `downloadFolderId` (`downloadFolderId`),
-  KEY `rank` (`rank`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
-  `downloadFolderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `parentId` int(10) unsigned NOT NULL,
-  `type` tinyint(1) unsigned NOT NULL,
-  `rank` smallint(5) unsigned NOT NULL,
-  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci NOT NULL,
-  `nrFolders` smallint(5) unsigned DEFAULT '0',
-  `nrFiles` smallint(5) unsigned DEFAULT '0',
-  `createdAt` decimal(12,0) unsigned NOT NULL,
-  `modifiedAt` decimal(12,0) unsigned DEFAULT '0',
-  PRIMARY KEY (`downloadFolderId`),
-  KEY `parentId` (`parentId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql on="update" type="mysql" version="0.2.9"><![CDATA[
-ALTER TABLE `<%?prefix%>download_files` ADD  `size` INT UNSIGNED NOT NULL AFTER  `rank`;
-ALTER TABLE `<%?prefix%>download_files` ADD INDEX ( `title` );
-ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `type` );
-ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `rank` );
-ALTER TABLE `<%?prefix%>download_folders` ADD INDEX ( `title` );
-]]></sql>
-	<sql on="update" type="mysql" version="0.3.5"><![CDATA[
-ALTER TABLE `<%?prefix%>download_files` CHANGE `description` `description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
-ALTER TABLE `<%?prefix%>download_files` CHANGE `nrDownloads` `nrDownloads` SMALLINT(5) UNSIGNED NULL DEFAULT '0';
-ALTER TABLE `<%?prefix%>download_folders` CHANGE `description` `description` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
-]]></sql>
-	<sql on="install" type="mysql" version="0.4"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>download_files`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>download_files` (
-  `downloadFileId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `downloadFolderId` int(10) UNSIGNED NOT NULL,
-  `rank` smallint(6) NOT NULL,
-  `size` int(10) UNSIGNED NOT NULL,
-  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `nrDownloads` smallint(5) UNSIGNED DEFAULT '0',
-  `uploadedAt` decimal(12,0) UNSIGNED NOT NULL,
-  `downloadedAt` decimal(12,0) UNSIGNED DEFAULT '0',
-  PRIMARY KEY (`downloadFileId`),
-  KEY `downloadFolderId` (`downloadFolderId`),
-  KEY `rank` (`rank`),
-  KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>download_folders` (
-  `downloadFolderId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `parentId` int(10) UNSIGNED NOT NULL,
-  `type` tinyint(1) UNSIGNED NOT NULL,
-  `rank` smallint(5) UNSIGNED NOT NULL,
-  `title` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `description` text COLLATE utf8_unicode_ci,
-  `nrFolders` smallint(5) UNSIGNED DEFAULT '0',
-  `nrFiles` smallint(5) UNSIGNED DEFAULT '0',
-  `createdAt` decimal(12,0) UNSIGNED NOT NULL,
-  `modifiedAt` decimal(12,0) UNSIGNED DEFAULT '0',
-  PRIMARY KEY (`downloadFolderId`),
-  KEY `parentId` (`parentId`),
-  KEY `type` (`type`),
-  KEY `rank` (`rank`),
-  KEY `title` (`title`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>download_folders`;
-DROP TABLE IF EXISTS `<%?prefix%>download_files`;
-]]></sql>
 </module>

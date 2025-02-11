@@ -3,7 +3,7 @@
 $panelList		= $view->loadTemplateFile( 'manage/shop/bridge/index.list.php' );
 $panelDiscover	= $view->loadTemplateFile( 'manage/shop/bridge/index.discover.php' );
 
-//$tabs	= $this->renderMainTabs();
+//$tabs	= $view->renderMainTabs();
 $tabs	= View_Manage_Shop::renderTabs( $env, 'bridge' );
 
 return $tabs.'

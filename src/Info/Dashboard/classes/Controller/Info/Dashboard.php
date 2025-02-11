@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Info_Dashboard extends Controller
 {
+	protected Dictionary $config;
 	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
@@ -16,7 +17,7 @@ class Controller_Info_Dashboard extends Controller
 	protected object $messages;
 	protected ?object $user					= NULL;
 
-	public function add()
+	public function add(): void
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -38,7 +39,7 @@ class Controller_Info_Dashboard extends Controller
 		}
 	}
 
-	public function addPanels()
+	public function addPanels(): void
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -58,7 +59,7 @@ class Controller_Info_Dashboard extends Controller
 				$panelId	= trim( $panelId );
 				if( in_array( $panelId, $this->panels ) )
 					continue;
-				$position	= isset( $positions[$panelId] ) ? $positions[$panelId] : NULL;
+				$position	= $positions[$panelId] ?? NULL;
 				try{
 					$this->logic->addPanelToUserDashboard( $this->userId, $panelId, $position );
 					$count++;
@@ -70,8 +71,9 @@ class Controller_Info_Dashboard extends Controller
 			}
 			if( $count > 1 )
 				$this->messenger->noteSuccess( $this->messages->successPanelsAdded, $count );
-			else if( $count )
+			else if( $count && isset( $panelId ) ){
 				$this->messenger->noteSuccess( $this->messages->successPanelAdded, $this->panels[$panelId]->title );
+			}
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
@@ -80,7 +82,7 @@ class Controller_Info_Dashboard extends Controller
 		}
 	}
 
-	public function index()
+	public function index(): void
 	{
 		try{
 			if( $this->checkUserDashboardsEnabled( FALSE ) && $this->userId ){
@@ -99,13 +101,13 @@ class Controller_Info_Dashboard extends Controller
 				$this->addData( 'dashboards', $this->logic->getUserDashboards( $this->userId ) );
 			}
 			else{
-				$this->addData( 'dashboard', (object) array(
+				$this->addData( 'dashboard', (object) [
 					'dashboardId'	=> 0,
 					'title'			=> '',
 					'description'	=> '',
 					'panels'		=> $this->moduleConfig->get( 'panels' ),
 					'isCurrent'		=> TRUE,
-				) );
+				] );
 				$this->addData( 'dashboards', [] );
 			}
 		}
@@ -115,7 +117,7 @@ class Controller_Info_Dashboard extends Controller
 		$this->addData( 'user', $this->user );
 	}
 
-	public function registerPanel( $panelId, $data )
+	public function registerPanel( $panelId, $data ): void
 	{
 		$data		= array_merge( [
 			'id'		=> $panelId,
@@ -132,7 +134,7 @@ class Controller_Info_Dashboard extends Controller
 		$this->panels[$panelId]	= (object) $data;
 	}
 
-	public function remove( $dashboardId )
+	public function remove( $dashboardId ): void
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -155,7 +157,7 @@ class Controller_Info_Dashboard extends Controller
 		}
 	}
 
-	public function removePanel( $panelId )
+	public function removePanel( $panelId ): void
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -171,10 +173,10 @@ class Controller_Info_Dashboard extends Controller
 
 			$panel		= $this->panels[$panelId];
 			unset( $panels[array_search( $panelId, $panels )] );
-			$this->model->edit( $dashboard->dashboardId, array(
+			$this->model->edit( $dashboard->dashboardId, [
 				'panels'		=> implode( ',', $panels ),
 				'modifiedAt'	=> time()
-			) );
+			] );
 			$this->messenger->noteSuccess( $this->messages->successPanelRemoved, $panel->title );
 			$this->restart( NULL, TRUE );
 		}
@@ -184,7 +186,7 @@ class Controller_Info_Dashboard extends Controller
 		}
 	}
 
-	public function select( $dashboardId )
+	public function select( $dashboardId ): void
 	{
 		try{
 			$this->checkUserDashboardsEnabled();
@@ -204,6 +206,7 @@ class Controller_Info_Dashboard extends Controller
 	protected function __onInit(): void
 	{
 		/*  --  ENV RESOURCES  --  */
+		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
@@ -211,6 +214,7 @@ class Controller_Info_Dashboard extends Controller
 		/*  --  MODULE RESOURCES  --  */
 		$this->logic		= Logic_Info_Dashboard::getInstance( $this->env );
 		$this->model		= new Model_Dashboard( $this->env );
+		$this->moduleConfig	= $this->config->getAll( 'module.info_dashboard.', TRUE );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->messages		= (object) $this->getWords( 'msg', 'info/dashboard' );
 

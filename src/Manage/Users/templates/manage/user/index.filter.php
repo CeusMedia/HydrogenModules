@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var int $limit */
+/** @var ?string $username */
 
 //  --  FILTER  --  //
 $w			= (object) $words['indexFilter'];
@@ -43,7 +51,7 @@ $script	= '
 	UI.autocompleteUser("input.complete-username");
 });*/
 ';
-$env->page->js->addScript( $script );
+$env->getPage()->js->addScript( $script );
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-in icon-white'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );

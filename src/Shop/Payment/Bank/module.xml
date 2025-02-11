@@ -4,7 +4,7 @@
 	<description><![CDATA[Integrates regular delayed bank transfer into shop.
 ]]></description>
 	<category>Shop</category>
-	<version>0.3.1</version>
+	<version>0.4.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add service panel for shop order finish.</log>
@@ -15,10 +15,11 @@
 	<log version="0.2.6">Support payment backend mode (delayed|instant).</log>
 	<log version="0.3">Use shop user instead of shop customer.</log>
 	<log version="0.3.1">Improve code style.</log>
+	<log version="0.4.0">Refactor payment registration.</log>
 
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Shop/Payment/Bank.php</class>
 		<class>Hook/Shop/Payment/Bank.php</class>
@@ -45,11 +46,16 @@
 	<config protected="no" type="string" mandatory="yes" name="bank.holder" title="Holder of company bank account"></config>
 	<config protected="no" type="string" mandatory="yes" name="bank.iban" title="IBAN of company bank account"></config>
 	<config protected="no" type="string" mandatory="yes" name="bank.bic" title="BIC of company bank account"></config>
-	<config protected="yes" type="integer" name="method.Transfer" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<config protected="yes" type="boolean" name="method.Transfer.active">yes</config>
+	<config protected="yes" type="integer" name="method.Transfer.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">8</config>
+	<config protected="yes" type="boolean" name="method.Transfer.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Transfer.fee.formula" title="Fixed amount or formula">0</config>
+	<config protected="yes" type="boolean" name="method.Bill.active">yes</config>
+	<config protected="yes" type="integer" name="method.Bill.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">9</config>
+	<config protected="yes" type="boolean" name="method.Bill.fee.exclusive" title="Fee comes on top">yes</config>
+	<config protected="yes" type="string" name="method.Bill.fee.formula" title="Fixed amount or formula">0</config>
 	<relations>
-<!--		<implements type="module">Shop_Payment</implements>-->
-<!--		<needs type="module">Shop_Payment</needs>-->
-<!--		<needs type="module">Resource_Payment_Bank</needs>-->
+		<needs type="module">Shop_Payment</needs>
 	</relations>
 	<link access="public" path="shop/payment/bank/perBill"/>
 	<link access="public" path="shop/payment/bank/perTransfer"/>

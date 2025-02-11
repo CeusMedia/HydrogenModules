@@ -4,17 +4,27 @@ use CeusMedia\Common\UI\HTML\Exception\Trace as HtmlExceptionTrace;
 
 class Mail_Log_Exception extends Mail_Abstract
 {
-	protected $helperFacts;
+	/** @var View_Helper_Mail_Exception_Facts|NULL $helperFacts */
+	protected ?View_Helper_Mail_Exception_Facts $helperFacts	= NULL;
 
-	protected function prepareFacts( $data )
+	/**
+	 *	@param		$data
+	 *	@return		void
+	 */
+	protected function prepareFacts( $data ): void
 	{
 		$this->helperFacts	= new View_Helper_Mail_Exception_Facts( $this->env );
 		$this->helperFacts->setException( $data['exception'] );
 		if( !( isset( $data['showPrevious'] ) && !$data['showPrevious'] ) )
-			$this->helperFacts->setShowPrevious( TRUE );
+			$this->helperFacts->setShowPrevious();
 	}
 
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );

@@ -1,20 +1,26 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Oauth_ProviderButtons
 {
-	protected $env;
-	protected $from;
-	protected $linkPath			= './auth/local/login';
-	protected $dropdownLabel	= 'more';
+	protected Environment $env;
+	protected Model_Oauth_Provider $modelProvider;
+	protected string $from				= '';
+	protected string $linkPath			= './auth/local/login';
+	protected string $dropdownLabel		= 'more';
 
-	public function __construct( $env )
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( Environment $env )
 	{
 		$this->env				= $env;
 		$this->modelProvider	= new Model_Oauth_Provider( $this->env );
 	}
 
-	public function count()
+	public function count(): int
 	{
 		$conditions	= ['status' => Model_Oauth_Provider::STATUS_ACTIVE];
 		return $this->modelProvider->count( $conditions );
@@ -32,32 +38,32 @@ class View_Helper_Oauth_ProviderButtons
 			$icon	= '';
 			if( $provider->icon )
 				$icon	= HtmlTag::create( 'i', '', ['class' => $provider->icon] ).'&nbsp;';
-			$label	=  HtmlTag::create( 'a', $icon.$provider->title, array(
+			$label	=  HtmlTag::create( 'a', $icon.$provider->title, [
 				'href'		=> $this->linkPath.$provider->oauthProviderId.$from,
 				'class'		=> 'btn not-btn-info oauth2-provider',
 				'onclick'	=> "jQuery('#modalLoadingOauth2').modal();",
-			) );
+			] );
 			if( $provider->rank < 10)
 				$buttons[]	= $label;
 			else{
-				$dropdown[]	= HtmlTag::create( 'li', array(
-					HtmlTag::create( 'a', $icon.$provider->title, array(
+				$dropdown[]	= HtmlTag::create( 'li', [
+					HtmlTag::create( 'a', $icon.$provider->title, [
 						'href'		=> $this->linkPath.$provider->oauthProviderId.$from,
 						'class'		=> 'oauth2-provider',
 						'onclick'	=> "jQuery('#modalLoadingOauth2').modal();",
-					) )
-				) );
+					] )
+				] );
 			}
 		}
 		if( $dropdown ){
-			$buttons[]	= HtmlTag::create( 'div', array(
+			$buttons[]	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'a', $this->dropdownLabel.' <span class="caret"></span>', [
 					'href'			=> $this->linkPath.$provider->oauthProviderId.$from,
 					'class'			=> 'btn dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				] ),
 				HtmlTag::create( 'ul', $dropdown, ['class' => 'dropdown-menu'] ),
-			), ['class' => 'btn-group'] );
+			], ['class' => 'btn-group'] );
 		}
 		$modal		= $this->renderModal();
 		$buttons	= HtmlTag::create( 'div', join( ' ', $buttons ), ['class' => 'oauth2-provider-buttons'] );

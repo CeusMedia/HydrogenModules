@@ -3,11 +3,10 @@
 use CeusMedia\Bootstrap\Alert;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
-/** @var object $words */
+/** @var View_Manage_User $view */
+/** @var array $words */
 /** @var object $newsletter */
 /** @var object $user */
 

@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
@@ -8,7 +9,20 @@ use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 
 class View_Helper_Thumbnailer
 {
-	public function __construct( Environment $env, $maxWidth = 120, $maxHeight = 80 )
+	protected Environment $env;
+	protected Dictionary $config;
+	protected Model_Image_Thumbnail $model;
+	protected int $maxWidth;
+	protected int $maxHeight;
+
+	/**
+	 *	@param		Environment $env
+	 *	@param		int		$maxWidth
+	 *	@param		int		$maxHeight
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function __construct( Environment $env, int $maxWidth = 120, int $maxHeight = 80 )
 	{
 		$this->env			= $env;
 		$this->config		= $this->env->getConfig();
@@ -23,7 +37,14 @@ class View_Helper_Thumbnailer
 		}
 	}
 
-	public function get( $imagePath, $maxWidth = NULL, $maxHeight = NULL )
+	/**
+	 *	@param		string			$imagePath
+	 *	@param		int|NULL		$maxWidth
+	 *	@param		int|NULL		$maxHeight
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function get( string $imagePath, ?int $maxWidth = NULL, ?int $maxHeight = NULL ): string
 	{
 		$extension	= pathinfo( $imagePath, PATHINFO_EXTENSION );
 		if( strtolower( $extension ) === "svg" ){
@@ -31,15 +52,15 @@ class View_Helper_Thumbnailer
 			$content	= file_get_contents( $imagePath );
 			return 'data:'.$mime.';base64,'.base64_encode( $content );
 		}
-		$maxWidth	= is_null( $maxWidth ) ? $this->maxWidth : (int) $maxWidth;
-		$maxHeight	= is_null( $maxHeight ) ? $this->maxHeight : (int) $maxHeight;
+		$maxWidth	= $maxWidth ?? $this->maxWidth;
+		$maxHeight	= $maxHeight ?? $this->maxHeight;
 		$indices	= [
 			'imageId'	=> $imagePath,
 			'maxWidth'	=> $maxWidth,
 			'maxHeight'	=> $maxHeight,
 		];
 		if( !file_exists( $imagePath ) ){
-			$this->uncacheFile( $imagePath, $maxWidth, $maxHeight );
+			$this->uncacheFile( $imagePath );
 			throw new RuntimeException( 'Image "'.$imagePath.'" is not existing' );
 		}
 		if( ( $thumb = $this->model->getByIndices( $indices ) ) )
@@ -49,40 +70,54 @@ class View_Helper_Thumbnailer
 		$tmpName	= tempnam( sys_get_temp_dir(), 'img_' );
 		$image		= new Image( $imagePath );
 		$processor	= new ImageProcessing( $image );
-		$processor->scaleDownToLimit( (int) $maxWidth, (int) $maxHeight );
+		$processor->scaleDownToLimit( $maxWidth, $maxHeight );
 		$image->save( $tmpName );
 		$content	= 'data:'.$mime.';base64,'.base64_encode( file_get_contents( $tmpName ) );
 		unlink( $tmpName );
-		$this->model->add( array_merge( $indices, array(
+		$this->model->add( array_merge( $indices, [
 			'realWidth'		=> $image->getWidth(),
 			'realHeight'	=> $image->getHeight(),
 			'data'			=> $content,
 			'timestamp'		=> time(),
-		) ) );
+		] ) );
 		return $content;
 	}
 
-	public function optimize( $pathImages )
+	/**
+	 *	@param		string		$pathImages
+	 * 	@return		void
+	 */
+	public function optimize( string $pathImages ): void
 	{
 		return;
-		$ids	= $this->cache->index();
+		$ids	= $this->cache?->index();
 		foreach( RecursiveFolderLister::getFileList( $pathImages ) as $entry ){
 			foreach( $ids as $nr => $id ){
-				if( strpos( $id, $entry->getPathname() ) !== FALSE )
+				if( str_contains( $id, (string) $entry->getPathname() ) )
 					unset( $ids[$nr] );
 			}
 
 		}
 		foreach( $ids as $id )
-			$this->cache->remove( $id );
+			$this->cache?->delete( $id );
 	}
 
-	public function uncacheFolder( $folderPath )
+	/**
+	 *	@param		string		$folderPath
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function uncacheFolder( string $folderPath ): int
 	{
-		return (int) $this->model->removeByIndex( 'imageId', $folderPath.'%' );
+		return $this->model->removeByIndex( 'imageId', $folderPath.'%' );
 	}
 
-	public function uncacheFile( $imagePath )
+	/**
+	 *	@param		string		$imagePath
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function uncacheFile( string $imagePath ): int
 	{
 		$indices	= [
 			'imageId'	=> $imagePath,
@@ -92,7 +127,11 @@ class View_Helper_Thumbnailer
 		return $this->model->removeByIndices( $indices );
 	}
 
-	public function flushCache()
+	/**
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function flushCache(): int
 	{
 //		return $this->model->truncate();
 		return $this->model->removeByIndex( 'imageThumbnailId', '> 0' );

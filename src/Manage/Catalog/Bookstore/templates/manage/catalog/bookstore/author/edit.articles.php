@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var array<object> $articles */
+
 $w			= (object) $words['edit'];
 
 $list		= '<div><em class="muted">Keine Veröffentlichungen vorhanden.</em></div>';
@@ -12,9 +15,9 @@ if( $articles ){
 		$label	= htmlentities( $article->title, ENT_QUOTES, 'UTF-8' );
 		$link	= HtmlTag::create( 'a', $article->title, ['href' => $url] );
 		$list[]	= HtmlTag::create( 'li', $link );
-//		$rows[]	= HtmlTag::create( 'tr', array(
+//		$rows[]	= HtmlTag::create( 'tr', [
 //			HtmlTag::create( 'td', $link, ['class' => ''] ),
-//		) );
+//		] );
 	}
 	$list	= HtmlTag::create( 'ul', $list );
 //	$list	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );

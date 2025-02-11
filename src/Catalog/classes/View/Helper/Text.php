@@ -15,14 +15,14 @@ class View_Helper_Text
 	 *	@param		string		$content		Content to be realized with internal Links
 	 *	@return		string
 	 */
-	static public function applyLinks( string $content ): string
+	public static function applyLinks( string $content ): string
 	{
 		$content	= preg_replace( "@\[article:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;article_id,\\1'>\\2</a>", $content );
 		$content	= preg_replace( "@\[category:([^\|]+)\|([^\]]+)\]@i", "<a href='article.html;categoryId,\\1'>\\2</a>", $content );
 		return preg_replace( "@\[link:(http://)?([^\|]+)\|([^\]]+)\]@i", "<a href='https://\\2' rel='nofollow'>\\3</a>", $content );
 	}
 
-	static public function applyExpandable( string $text, int $length = 0, $labelMore = FALSE, $labelLess = FALSE ): string
+	public static function applyExpandable( string $text, int $length = 0, $labelMore = FALSE, $labelLess = FALSE ): string
 	{
 		if( $length && strlen( $text ) > $length ){
 			$count	= -1;

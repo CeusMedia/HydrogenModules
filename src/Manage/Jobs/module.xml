@@ -21,7 +21,7 @@
 	<log version="0.3.3">Support removal of archivable job runs.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Job.php</class>
 		<class>Controller/Manage/Job/Definition.php</class>
@@ -59,6 +59,7 @@
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
+		<needs type="composer">ceus-media/php-parser</needs>
 		<needs type="composer">lorisleiva/cron-translator</needs>
 	</relations>
 	<link xml:lang="de" access="acl" path="manage/job" rank="85">Job-Dashboard</link>

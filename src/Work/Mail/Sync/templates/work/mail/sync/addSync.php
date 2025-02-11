@@ -1,9 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<object> $hosts */
+
 $hostMap	= [];
 foreach( $hosts as $host )
-	$hostMap[$host->mailSyncHostId]	= $host->host ? $host->host : $host->ip;
+	$hostMap[$host->mailSyncHostId]	= $host->host ?: $host->ip;
 
 $optHost1	= HtmlElements::Options( $hostMap );
 $optHost2	= HtmlElements::Options( $hostMap );

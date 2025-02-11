@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<object> $applications */
+/** @var array<string,array<string|int,string>> $words */
+
+
 /*
 $list	= '<div class="muted"><em><small>Keine Applikationen angemeldet.</small></em></div><br/>';
 if( $applications ){
@@ -17,11 +21,11 @@ if( $applications ){
 		$type		= $words['types'][$application->type];
 		$status		= $words['states'][$application->status];
 		$trClass	= 
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/>'.$clientId ),
 			HtmlTag::create( 'td', $type.'<br/>'.$status ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), array( 'class' => $trClasses[(int) $application->status]) );
+		], ['class' => $trClasses[(int) $application->status]] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "30%", "40%", "15%", "15%" );
 	$theads		= HtmlElements::TableHeads( [
@@ -65,40 +69,39 @@ if( $applications ){
 
 		$statusLabel	= $words['states'][$application->status];
 		$statusIcon		= $iconsStatus[$application->status];
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$application->url.'</small>' ),
 			HtmlTag::create( 'td', $typeIcon.' '.$typeLabel ),
 			HtmlTag::create( 'td', $statusIcon.' '.$statusLabel ),
 			HtmlTag::create( 'td', $createdAt.'<br/>'.$modifiedAt ),
-		), ['class' => NULL] );
+		], ['class' => NULL] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '50%', '15%', '15%', '20%' );
-	$theads		= HtmlElements::TableHeads( [
+	$heads		= HtmlElements::TableHeads( [
 		'Applikation',
 		'Vertraulichkeit',
 		'Zustand',
 		'erstellt / verändert',
 	] );
-	$thead		= HtmlTag::create( 'thead', $theads );
+	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 		'class'	=> 'table table-striped'
 	] );
 }
 
-
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
 	'class'	=> 'btn btn-primary btn-small',
 	'href'	=> './oauth/application/add',
 ] );
-return '
-<h2 class="muted">OAuth-Server</h2>
-<div class="content-panel">
-	<div class="content-panel-inner">
-		<h3>Applikationen</h3>
-		'.$list.'
-		<div class="buttonbar">
-			'.$buttonAdd.'
-		</div>
-	</div>
-</div>';
+
+return join( [
+	HtmlTag::create( 'h2', 'OAuth-Server', ['class' => 'muted'] ),
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'h3', 'Applikationen' ),
+			$list,
+			HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] ),
+		], ['class' => 'content-panel-inner'] ),
+	], ['class' => 'content-panel'] ),
+] );

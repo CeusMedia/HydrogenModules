@@ -1,11 +1,16 @@
 <?php
 class Job_Mail_Group extends Job_Abstract
 {
-	protected $logicGroup;
-	protected $logicMail;
-	protected $logicMessage;
+	protected Logic_Mail_Group $logicGroup;
+	protected Logic_Mail $logicMail;
+	protected Logic_Mail_Group_Message $logicMessage;
 
-	public function activateConfirmedMembers()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function activateConfirmedMembers(): void
 	{
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
@@ -27,10 +32,10 @@ class Job_Mail_Group extends Job_Abstract
 				$this->out( 'Mail Group: '.$group->title );
 			foreach( $members as $member ){
 				if( !$this->dryMode )
-					$modelMember->edit( $member->mailGroupMemberId, array(
+					$modelMember->edit( $member->mailGroupMemberId, [
 						'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 						'modifiedAt'	=> time(),
-					) );
+					] );
 
 				$action	= $modelAction->getByIndices( [
 					'action'			=> 'activateAfterConfirm',
@@ -61,7 +66,7 @@ class Job_Mail_Group extends Job_Abstract
 						if( !$this->dryMode )
 							$this->logicMail->handleMail( $mail, $receiver, $language );
 					}
-					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, ['group' => $group] );
 					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address
@@ -70,10 +75,10 @@ class Job_Mail_Group extends Job_Abstract
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){
 						$this->logicMail->handleMail( $mail, $receiver, $language );
-						$modelAction->edit( $action->mailGroupActionId, array(
+						$modelAction->edit( $action->mailGroupActionId, [
 							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 					}
 				}
 				$this->out( '- Member "'.$member->title.'" <'.$member->address.'> activated' );
@@ -82,7 +87,12 @@ class Job_Mail_Group extends Job_Abstract
 		$this->out( $count.' members activated' );
 	}
 
-	public function informMembersAboutNewMember()
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informMembersAboutNewMember(): void
 	{
 		$modelMember	= new Model_Mail_Group_Member( $this->env );
 		$modelAction	= new Model_Mail_Group_Action( $this->env );
@@ -126,7 +136,7 @@ class Job_Mail_Group extends Job_Abstract
 							$this->logicMail->handleMail( $mail, $receiver, $language );
 						$this->out( '  - Member: "'.$entry->title.'" <'.$entry->address.'>' );
 					}
-					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, $mailData );
+					$mail		= new Mail_Info_Mail_Group_Member_Activated( $this->env, ['group' => $group] );
 					$receiver	= (object) [
 						'username'	=> $member->title,
 						'email'		=> $member->address
@@ -135,10 +145,10 @@ class Job_Mail_Group extends Job_Abstract
 					$this->logicMail->appendRegisteredAttachments( $mail, $language );
 					if( !$this->dryMode ){
 						$this->logicMail->handleMail( $mail, $receiver, $language );
-						$modelAction->edit( $action->mailGroupActionId, array(
+						$modelAction->edit( $action->mailGroupActionId, [
 							'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 					}
 				}
 			}
@@ -146,7 +156,11 @@ class Job_Mail_Group extends Job_Abstract
 		$this->out( $count.' members activated' );
 	}
 
-	public function test()
+	/**
+	 *	@return		void
+	 *	@throws		Exception
+	 */
+	public function test(): void
 	{
 		$this->out( 'PHP Version: '.phpversion() );
 		$this->out( 'Dry Mode: '.( $this->dryMode ? 'yes' : 'no' ) );
@@ -155,7 +169,7 @@ class Job_Mail_Group extends Job_Abstract
 		throw new Exception( 'Test exception thrown' );
 	}
 
-	public function handle()
+	public function handle(): void
 	{
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
@@ -248,6 +262,10 @@ class Job_Mail_Group extends Job_Abstract
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logicGroup		= Logic_Mail_Group::getInstance( $this->env );

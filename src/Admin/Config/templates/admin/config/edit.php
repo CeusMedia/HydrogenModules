@@ -3,10 +3,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
-use CeusMedia\HydrogenFramework\View;
 
 /** @var Web $env */
-/** @var View $view */
+/** @var View_Admin_Config $view */
 /** @var array<array<string,string>> $words */
 /** @var object $module */
 /** @var string $moduleId */
@@ -47,7 +46,7 @@ foreach( $module->config as $item ){
 		HtmlTag::create( 'td', $protection, ['class' => 'cell-protection'] ),
 		HtmlTag::create( 'td', $key, ['class' => 'cell-key autocut'] ),
 		HtmlTag::create( 'td', $type, ['class' => 'cell-type'] ),
-		HtmlTag::create( 'td', $input, ['class' => 'cell-value'] ),
+		HtmlTag::create( 'td', $input, ['class' => 'cell-value autocut'] ),
 	] );
 //	ksort( $rows );
 }

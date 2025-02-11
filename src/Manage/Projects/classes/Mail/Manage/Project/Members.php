@@ -1,9 +1,16 @@
 <?php
+
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		IoException
+	 */
+	protected function generate(): static
 	{
 		parent::generate();
 		$baseUrl	= $this->env->url;
@@ -30,7 +37,7 @@ class Mail_Manage_Project_Members extends Mail_Manage_Project_Abstract
 		}
 
 		//  --  FORMAT: PLAIN TEXT  --  //
-		$helperText	= new View_Helper_Mail_Text( $this->env );
+		$helperText	= new View_Helper_Mail_Text();
 		$text	= $helperText->underscore( $config->get( 'app.name' ), '=' ).PHP_EOL.
 			PHP_EOL.
 			sprintf( $w->headingText, $project->title ).PHP_EOL.

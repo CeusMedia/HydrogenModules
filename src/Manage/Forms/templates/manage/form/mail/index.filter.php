@@ -1,6 +1,10 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var Dictionary $filters */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
@@ -15,7 +19,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'class'	=> 'btn btn-small btn-inverse'
 ] );
 
-/*$optIdentifier	= array( '' => '- alle -');
+/*$optIdentifier	= ['' => '- alle -'];
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filterIdentifier );
@@ -25,7 +29,7 @@ $formatMap	= [
 	Model_Form_Mail::FORMAT_TEXT	=> 'Text',
 ];
 
-$optFormat	= array( '' => '- alle -');
+$optFormat	= ['' => '- alle -'];
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat	= HtmlElements::Options( $optFormat, $filters->get( 'format' ) );
@@ -43,7 +47,7 @@ $roleTypeMap	= [
 	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
 ];
 
-$optRoleType	= array( '' => '- egal -');
+$optRoleType	= ['' => '- egal -'];
 foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )
 	$optRoleType[$roleTypeKey]	= $roleTypeLabel;
 $optRoleType	= HtmlElements::Options( $optRoleType, $filters->get( 'roleType' ) );

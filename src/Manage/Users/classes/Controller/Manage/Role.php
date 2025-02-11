@@ -4,12 +4,15 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Language as LanguageResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use Resource_Disclosure as Disclosure;
 
@@ -18,18 +21,22 @@ use Resource_Disclosure as Disclosure;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2020 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Role extends Controller
 {
-	protected $modelRole;
-	protected $modelRoleRight;
-	protected $modelUser;
-	protected $messenger;
-	protected $language;
-	protected $request;
+	protected HttpRequest $request;
+	protected Model_Role $modelRole;
+	protected Model_Role_Right $modelRoleRight;
+	protected Model_User $modelUser;
+	protected MessengerResource $messenger;
+	protected LanguageResource $language;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$words	= $this->language->getWords( 'manage/role' );
 		if( $this->request->getMethod()->isPost() ){
@@ -57,7 +64,12 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'words', $words );
 	}
 
-	public function addRight( int $roleId )
+	/**
+	 *	@param		int|string		$roleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addRight( int|string $roleId ): void
 	{
 		$words		= $this->language->getWords( 'manage/role' );
 		if( $this->request->getMethod()->isPost() ){
@@ -65,7 +77,7 @@ class Controller_Manage_Role extends Controller
 			$action		= $this->request->getFromSource( 'action', 'POST' );
 			$data		= array(
 				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minifyController( $controller ),
+				'controller'	=> Model_Role_Right::minimizeController( $controller ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
 			);
@@ -74,7 +86,12 @@ class Controller_Manage_Role extends Controller
 		$this->restart( 'edit/'.$roleId, TRUE );
 	}
 
-	public function edit( int $roleId )
+	/**
+	 *	@param		int|string		$roleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $roleId ): void
 	{
 		$words		= $this->language->getWords( 'manage/role' );
 		$role		= $this->modelRole->get( $roleId );
@@ -116,7 +133,7 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'roleId', $roleId );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$roles	= $this->modelRole->getAll();
 		foreach( $roles as $role ){
@@ -127,12 +144,17 @@ class Controller_Manage_Role extends Controller
 		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'manage_role', 'edit' ) );
 	}
 
-	public function remove( $roleId )
+	/**
+	 *	@param		int|string		$roleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $roleId ): void
 	{
 		$words		= $this->language->getWords( 'manage/role' );
 		$role		= $this->modelRole->get( $roleId );
 
-		if( $this->modelUser->getByIndex( 'roleId', $roleId ) ){
+		if( $this->modelUser->hasByIndex( 'roleId', $roleId ) ){
 			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
 			$this->restart( 'edit/'.$roleId, TRUE );
 		}
@@ -148,11 +170,18 @@ class Controller_Manage_Role extends Controller
 		}
 	}
 
-	public function removeRight( int $roleId, string $controller, string $action )
+	/**
+	 *	@param		int|string		$roleId
+	 *	@param		string			$controller
+	 *	@param		string			$action
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeRight( int|string $roleId, string $controller, string $action ): void
 	{
 		$indices	= array(
 			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minifyController( $controller ),
+			'controller'	=> Model_Role_Right::minimizeController( $controller ),
 			'action'		=> $action
 		);
 		$this->modelRoleRight->removeByIndices( $indices );
@@ -166,15 +195,22 @@ class Controller_Manage_Role extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->language			= $this->env->getLanguage();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelRole		= $this->getModel( 'Role' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelUser		= $this->getModel( 'User' );
 		$this->addData( 'modules', $this->env->getModules()->getAll() );
 	}
 
-	protected function getModuleFromControllerClassName( string $controller )
+	/**
+	 *	@param		string		$controller
+	 *	@return		?object
+	 */
+	protected function getModuleFromControllerClassName( string $controller ): ?object
 	{
-		$controllerPathName	= "Controller/".str_replace( "_", "/", $controller );
+		$controllerPathName	= 'Controller/'.str_replace( '_', '/', $controller );
 		foreach( $this->env->getModules()->getAll() as $module ){
 			foreach( $module->files->classes as $file ){
 				$path	= pathinfo( $file->file, PATHINFO_DIRNAME ).'/';
@@ -183,6 +219,7 @@ class Controller_Manage_Role extends Controller
 					return $module;
 			}
 		}
+		return NULL;
 	}
 
 	protected function getModuleWords( ModuleDefinition $module ): array
@@ -213,14 +250,14 @@ class Controller_Manage_Role extends Controller
 
 	protected function getSingular( string $string ): string
 	{
-		if( preg_match( "/des$/", $string ) )
-			$string	= preg_replace( "/des$/", "de", $string );
-		else if( preg_match( "/ies$/", $string ) )
-			$string	= preg_replace( "/ies$/", "y", $string );
-		else if( preg_match( "/es$/", $string ) )
-			$string	= preg_replace( "/es$/", "", $string );
-		else if( preg_match( "/s$/", $string ) )
-			$string	= preg_replace( "/s$/", "", $string );
+		if( str_ends_with( $string, 'des' ) )
+			$string	= preg_replace( "/des$/", 'de', $string );
+		else if( str_ends_with( $string, 'ies' ) )
+			$string	= preg_replace( "/ies$/", 'y', $string );
+		else if( str_ends_with( $string, 'es' ) )
+			$string	= preg_replace( "/es$/", '', $string );
+		else if( str_ends_with( $string, 's' ) )
+			$string	= preg_replace( "/s$/", '', $string );
 		return $string;
 	}
 }

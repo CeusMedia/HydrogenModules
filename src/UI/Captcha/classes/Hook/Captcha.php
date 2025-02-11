@@ -11,21 +11,21 @@ class Hook_Captcha extends Hook
 
 		$default	= $config->getAll( 'default.', TRUE );
 		$length		= $default->get( 'length' ) > 2 ? $default->get( 'length' ) : 4;
-		$strength	= $default->get( 'strength' ) ? $default->get( 'strength' ) : 'soft';
+		$strength	= $default->get( 'strength' ) ?: 'soft';
 		$width		= $default->get( 'width' ) > 0 ? $default->get( 'width' ) : 100;
 		$height		= $default->get( 'height' ) > 0 ? $default->get( 'height' ) : 40;
 
 		$processor		= new Logic_Shortcode( $env );
 		$processor->setContent( $payload['content'] );
-		$shortCodes		= array(
-			'captcha'	=> array(
+		$shortCodes		= [
+			'captcha'	=> [
 				'mode'		=> $config->get( 'mode' ),
 				'length'	=> $length,
 				'strength'	=> $strength,
 				'width'		=> $width,
 				'height'	=> $height,
-			)
-		);
+			]
+		];
 		foreach( $shortCodes as $shortCode => $defaultAttributes ){
 			if( !$processor->has( $shortCode ) )
 				continue;

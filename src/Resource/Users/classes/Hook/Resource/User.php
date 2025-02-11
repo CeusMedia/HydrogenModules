@@ -1,30 +1,28 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Resource_User extends Hook
 {
 	/**
 	 *	...
-	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	static public function onUserRemove( Environment $env, $context, $module, $payload = [] )
+	public function onUserRemove(): void
 	{
-		$payload	= (object) $payload;
-		if( !empty( $payload->userId ) ){
-			$modelUser		= new Model_User( $env );
-			$modelPassword	= new Model_User_Password( $env );
-			$modelPassword->removeByIndex( 'userId', $payload->userId );
-			$modelUser->remove( $payload->userId );
-			if( isset( $payload->counts ) )
-				$payload->counts['Resource_Users']	= (object) ['entities' => 1];
+		if( !empty( $this->payload['userId'] ) ){
+			$modelUser		= new Model_User( $this->env );
+			$modelPassword	= new Model_User_Password( $this->env );
+			$modelGroupUser	= new Model_Group_User( $this->env );
+
+			$modelPassword->removeByIndex( 'userId', $this->payload['userId'] );
+			$modelGroupUser->removeByIndex( 'userId', $this->payload['userId'] );
+			$modelUser->remove( $this->payload['userId'] );
+
+			if( isset( $this->payload['counts'] ) )
+				$this->payload['counts']['Resource_Users']	= (object) ['entities' => 1];
 		}
 	}
 }

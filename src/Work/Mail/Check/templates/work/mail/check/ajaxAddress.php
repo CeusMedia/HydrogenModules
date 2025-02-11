@@ -1,4 +1,6 @@
 <?php
+/** @deprecated remove template, is new: Controller_Ajax_Work_Mail_Check */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
 

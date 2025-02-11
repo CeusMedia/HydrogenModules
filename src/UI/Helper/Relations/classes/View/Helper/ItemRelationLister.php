@@ -7,17 +7,17 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_ItemRelationLister
 {
 	protected Environment $env;
-	protected ?array $relations			= NULL;
+	protected ?array $relations				= NULL;
 	protected string $hookResource;
 	protected string $hookEvent;
-	protected array $hookIndices				= [];
-	protected string $tableClass				= '';
-	protected string $renderMode				= 'table';
+	protected array $hookIndices			= [];
+	protected string $tableClass			= '';
+	protected string $renderMode			= 'table';
 	protected bool $activeOnly				= FALSE;
 	protected bool $linkable					= TRUE;
 	protected int $limit					= 20;
-	protected string $labelCountEntities		= '';
-	protected string $labelCountRelations		= '';
+	protected string $labelCountEntities	= '';
+	protected string $labelCountRelations	= '';
 //	protected $hintEntities;
 //	protected $hintRelations;
 
@@ -37,12 +37,12 @@ class View_Helper_ItemRelationLister
 		];
 	}
 
-	public static function enqueueRelations( $data, $module, $type, $items, $label, $controller = NULL, $action = NULL )
+	public static function enqueueRelations( array & $data, Environment\Resource\Module\Definition|NULL $module, string $type, array $items, $label, $controller = NULL, $action = NULL ): void
 	{
-		if( !isset( $data->list ) )
-			$data->list	= [];
+		if( !isset( $data['list'] ) )
+			$data['list']	= [];
 		if( count( $items ) ){
-			$data->list[]	= (object) [
+			$data['list'][]	= (object) [
 				'module'		=> (object) [
 					'id'		=> $module->id,
 					'label'		=> $module->title,
@@ -130,7 +130,7 @@ class View_Helper_ItemRelationLister
 
 	//  --  PROTECTED  --  //
 
-	protected function load()
+	protected function load(): void
 	{
 		if( !$this->hookResource || !$this->hookEvent )
 			throw new RuntimeException( 'No hook for event call defined' );
@@ -244,7 +244,7 @@ class View_Helper_ItemRelationLister
 	/**
 	 *	@todo			code style
 	 */
-	protected function renderTypes()
+	protected function renderTypes(): void
 	{
 		$this->types	= [
 			'entity'		=> $this->labels['entities.count.label'],

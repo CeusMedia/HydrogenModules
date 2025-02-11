@@ -14,7 +14,7 @@ else
 	$article	= "";
 
 $helperNews	= new View_Helper_News( $env );
-$list		= $helperNews->render( 10 );
+$list		= $helperNews->render();
 
 extract( $view->populateTexts( ['info/news/top', 'info/news/bottom'], 'html' ) );
 

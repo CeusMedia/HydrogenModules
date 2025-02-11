@@ -6,7 +6,19 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 {
 	protected function renderHtmlBody(): string
 	{
-		extract( $this->data );
+		/** @var Entity_User $owner */
+		$owner		= $this->data['owner'];
+		/** @var Entity_User $author */
+		$author		= $this->data['author'];
+		/** @var Entity_User $user */
+		$user		= $this->data['user'];
+		$config		= $this->data['config'];
+		$options	= $this->data['options'];
+		$thread		= $this->data['thread'];
+		$post		= $this->data['post'];
+		$posts		= $this->data['posts'];
+		$authors	= $this->data['authors'];
+
 		$this->setSubject( 'Antwort im Forum zum Thema: '.$thread->title );
 
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -18,10 +30,10 @@ class Mail_Forum_Answer extends Mail_Forum_Abstract
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? TextTrimmer::trim( $parts[1], 100 ) : '';
 			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= HtmlTag::create( 'img', NULL, array(
+			$image		= HtmlTag::create( 'img', NULL, [
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
-			) );
+			] );
 			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		else{

@@ -12,14 +12,14 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mail_Group extends Model
 {
-	const STATUS_ARCHIVED		= -9;
-	const STATUS_DEACTIVATED	= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_EXISTING		= 1;
-	const STATUS_ACTIVATED		= 2;
-	const STATUS_WORKING		= 3;
+	public const STATUS_ARCHIVED		= -9;
+	public const STATUS_DEACTIVATED		= -1;
+	public const STATUS_NEW				= 0;
+	public const STATUS_EXISTING		= 1;
+	public const STATUS_ACTIVATED		= 2;
+	public const STATUS_WORKING			= 3;
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_ARCHIVED,
 		self::STATUS_DEACTIVATED,
 		self::STATUS_NEW,
@@ -28,24 +28,24 @@ class Model_Mail_Group extends Model
 		self::STATUS_WORKING,
 	];
 
-	const TYPE_AUTOJOIN			= 0;
-	const TYPE_JOIN				= 1;
-	const TYPE_REGISTER			= 2;
-	const TYPE_INVITE			= 3;
+	public const TYPE_AUTOJOIN			= 0;
+	public const TYPE_JOIN				= 1;
+	public const TYPE_REGISTER			= 2;
+	public const TYPE_INVITE			= 3;
 
-	const TYPES					= [
+	public const TYPES					= [
 		self::TYPE_AUTOJOIN,
 		self::TYPE_JOIN,
 		self::TYPE_REGISTER,
 		self::TYPE_INVITE,
 	];
 
-	const VISIBILITY_PUBLIC		= 0;
-	const VISIBILITY_INSIDE		= 1;
-	const VISIBILITY_MANAGER	= 2;
-	const VISIBILITY_HIDDEN		= 3;
+	public const VISIBILITY_PUBLIC		= 0;
+	public const VISIBILITY_INSIDE		= 1;
+	public const VISIBILITY_MANAGER		= 2;
+	public const VISIBILITY_HIDDEN		= 3;
 
-	const VISIBILITES			= [
+	public const VISIBILITES			= [
 		self::VISIBILITY_PUBLIC,
 		self::VISIBILITY_INSIDE,
 		self::VISIBILITY_MANAGER,

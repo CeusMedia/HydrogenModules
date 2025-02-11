@@ -16,32 +16,54 @@ class Hook_Shop_Payment_Bank extends Hook
 	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
 	 */
-	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object$module, array & $payload )
+	public static function onRegisterShopPaymentBackends( Environment $env, object $context, object $module, array & $payload )
 	{
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];
-		$descs		= (object) $words['payment-method-descriptions'];
-		if( $methods->get( 'Transfer' ) ){
-			$context->registerPaymentBackend(
-				'Bank',									//  backend class name
-				'Bank:Transfer',						//  payment method key
-				$labels->transfer,						//  payment method label
-				'bank/perTransfer',						//  shop URL
-				$methods->get( 'Transfer' ),			//  priority
-				'bank-1.png'							//  icon
-			);
+		$descs		= (object) ( $words['payment-method-descriptions'] ?? [] );
+		/** @var Model_Shop_Payment_BackendRegister $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
+
+		if( $methods->get( 'Transfer.active', FALSE ) ){
+			$priority	= $methods->get( 'Transfer.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Transfer.', TRUE );
+				$register->add( [
+					'backend'		=> 'Bank',									//  backend class name
+					'key'			=> 'Bank:Transfer',							//  payment method key
+					'path'			=> 'bank/perTransfer',						//  shop URL
+					'icon'			=> 'bank-1.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->transfer,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
-		if( $methods->get( 'Bill' ) ){
-			$context->registerPaymentBackend(
-				'Bank',									//  backend class name
-				'Bank:Bill',							//  payment method key
-				$labels->bill,							//  payment method label
-				'bank/perBill',							//  shop URL
-				$methods->get( 'Bill' ),				//  priority
-				'bank-1.png'							//  icon
-			);
+
+		if( $methods->get( 'Bill.active', FALSE ) ){
+			$priority	= $methods->get( 'Bill.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Bill.', TRUE );
+				$register->add( [
+					'backend'		=> 'Bank',									//  backend class name
+					'key'			=> 'Bank:Bill',								//  payment method key
+					'path'			=> 'bank/perBill',							//  shop URL
+					'icon'			=> 'bank-bill.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->bill,							//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
+
+		$payload['register']	= $register;
 	}
 
 	/**
@@ -56,11 +78,11 @@ class Hook_Shop_Payment_Bank extends Hook
 	 */
 	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
 		$order	= $model->get( $payload['orderId'] );
-		foreach( $payload['paymentBackends'] as $backend ){
+		foreach( $payload['paymentBackends']->getAll() as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){

@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Job_Definition $view */
+/** @var array<object> $runs */
+/** @var object $definition */
+/** @var ?object $definitionCode */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -13,11 +20,11 @@ if( $runs ){
 		$output		= '<em class="muted">none</em>';
 		if( $item->status != Model_Job_Run::STATUS_PREPARED && $item->message ){
 			$message	= json_decode( $item->message );
-			$output		= $message->type ?? '<em class="muted">unknonwn</em>';
+			$output		= $message->type ?? '<em class="muted">unknown</em>';
 		}
 
-		$title	= $item->title ? $item->title : $definition->identifier;
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$title	= $item->title ?: $definition->identifier;
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
 			HtmlTag::create( 'td', '<a href="./manage/job/run/view/'.$item->jobRunId.'">'.$title.'</a>' ),
 			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_STATUS )->render() ),
@@ -25,7 +32,7 @@ if( $runs ){
 			HtmlTag::create( 'td', date( 'd.m.Y H:i:s', $item->createdAt ) ),
 			HtmlTag::create( 'td', $item->ranAt ? date( 'd.m.Y H:i:s', $item->ranAt ) : '-' ),
 			HtmlTag::create( 'td', $item->finishedAt ? date( 'd.m.Y H:i:s', $item->finishedAt ) : '-' ),
-		) );
+		] );
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Run-ID', 'Job-ID', 'Zustand', 'vorbereitet', 'gestartet', 'beendet'] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
@@ -60,18 +67,23 @@ foreach( $facts as $factKey => $factValue ){
 }
 $list	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 
-return $tabs.HtmlTag::create( 'div', array(
+$sourceCode	= HtmlTag::create( 'div', 'Klasse nicht gefunden.', ['class' => 'alert alert-info'] );
+if( NULL !== $definitionCode ){
+	$sourceCode	= HtmlTag::create( 'xmp', join( PHP_EOL, $definitionCode ) );
+}
+
+return $tabs.HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', '<span class="muted">Job:</span> '.$definition->identifier ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'h4', 'Facts' ),
 		$list,
 //		HtmlTag::create( 'div', print_m( $definition, NULL, NULL, TRUE ) ),
 		HtmlTag::create( 'h4', 'Run List' ),
 		$runList,
 		HtmlTag::create( 'h4', 'Code' ),
-		HtmlTag::create( 'xmp', join( PHP_EOL, $definitionCode ) ),
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+		$sourceCode,
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
 
 function removeEnvPath( $env, $string ): string
 {

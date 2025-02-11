@@ -20,11 +20,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	protected bool $badgesShowPast		= TRUE;
 	protected bool $badgesShowFuture	= TRUE;
 	protected bool $badgesColored		= TRUE;
+	/** @var array<Entity_Mission> $missions */
 	protected array $missions			= [];
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
+	 *	@throws		Exception
 	 */
 	public function __construct( Environment $env )
 	{
@@ -48,9 +49,10 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		];
 	}
 
-	public function renderBadgeDaysOverdue( object $mission ): string
+	public function renderBadgeDaysOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
+		/** @noinspection PhpUnhandledExceptionInspection */
 		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
 		$class	= $this->badgesColored ? "important" : NULL;
 		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
@@ -61,10 +63,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	/**
 	 *	Render overdue container.
 	 *	@access		public
-	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@param		Entity_Mission	$mission		Mission data object
+	 *	@return		string			DIV container with number of overdue days or empty string
+	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysStill( object $mission ): string
+	public function renderBadgeDaysStill( Entity_Mission $mission ): string
 	{
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return '';																			//  return without content
@@ -78,7 +81,12 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return $this->renderBadgeDays( $this->today->diff( $end )->days, $class );
 	}
 
-	public function renderBadgeDaysUntil( object $mission ): string
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	public function renderBadgeDaysUntil( Entity_Mission $mission ): string
 	{
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
@@ -88,6 +96,16 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, $class );
 	}
 
+	/**
+	 *	@param		$tense
+	 *	@param		$day
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function renderDayListOfEvents( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$list			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
@@ -129,6 +147,16 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return $list;
 	}
 
+	/**
+	 *	@param		$tense
+	 *	@param		$day
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function renderDayListOfTasks( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$list			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
@@ -170,28 +198,37 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return $list;
 	}
 
+	/**
+	 *	@param		$tense
+	 *	@param		$day
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
-		$list0		= $this->renderDayListOfTasks( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
-		$list1		= $this->renderDayListOfEvents( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
+		$list0		= $this->renderDayListOfTasks( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense );
+		$list1		= $this->renderDayListOfEvents( $tense, $day, $showStatus, $showPriority, $showDate, $showActions && $tense );
 		if( !strlen( $list0.$list1 ) )
 			return '';
 		return HtmlTag::create( 'div', $list1.$list0, ['class' => "table-day", 'id' => 'table-'.$day] );
 	}
 
-	public function renderRowButtonEdit( object $mission ): string
+	public function renderRowButtonEdit( Entity_Mission $mission ): string
 	{
 		if( !$this->isEditor )
 			return '';
-		$attributes	= [
+		return HtmlTag::create( 'a', $this->icons['edit'], [
 			'href'		=> "./work/mission/edit/".$mission->missionId,
 			'class'		=> 'btn btn-mini work-mission-list-row-button work-mission-list-row-button-edit',
 			'title'		=> $this->words['list-actions']['edit'],
-		];
-		return HtmlTag::create( 'a', $this->icons['edit'], $attributes );
+		] );
 	}
 
-	public function renderRowButtons( object $mission, $days ): string
+	public function renderRowButtons( Entity_Mission $mission, $days ): string
 	{
 		$buttonToggle	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-caret-down'] ), [
 			'type'				=> 'button',
@@ -215,11 +252,10 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 			$list[]	= HtmlTag::create( 'li', $link );
 		}
 		$dropdown		= HtmlTag::create( 'ul', $list, ['class' => 'dropdown-menu'] );
-		$buttonGroup	= HtmlTag::create( 'div', [$buttonToggle.$dropdown], ['class' => 'btn-group pull-right'] );
-		return $buttonGroup;
+		return HtmlTag::create( 'div', [$buttonToggle.$dropdown], ['class' => 'btn-group pull-right'] );
 	}
 
-	public function renderRowLabel( $mission, $edit = TRUE ): string
+	public function renderRowLabel( Entity_Mission $mission, bool $edit = TRUE ): string
 	{
 //		$label		= TextTrimmer::trimCentric( $mission->title, $this->titleLength, '...' );
 		$label		= htmlentities( $mission->title, ENT_QUOTES, 'UTF-8' );
@@ -236,7 +272,18 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'a', $label, ['href' => $url, 'class' => $class] );
 	}
 
-	public function renderRowOfEvent( $event, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
+	/**
+	 *	@param		object		$event
+	 *	@param		$days
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		Exception
+	 */
+	public function renderRowOfEvent( object $event, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
 	{
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $event, FALSE );
@@ -284,7 +331,18 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'tr', join( $cells ), $attributes );
 	}
 
-	public function renderRowOfTask( $task, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
+	/**
+	 *	@param		Entity_Mission	$task
+	 *	@param		$days
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		Exception
+	 */
+	public function renderRowOfTask( Entity_Mission $task, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
 	{
 		$modelUser	= new Model_User( $this->env );
 		$link		= $this->renderRowLabel( $task, FALSE );
@@ -327,16 +385,26 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return HtmlTag::create( 'tr', join( $cells ), $attributes );
 	}
 
-	public function renderRows( $day, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions, $typeOnly = NULL ): string
+	/**
+	 *	@param		$day
+	 *	@param		bool		$showStatus
+	 *	@param		bool		$showPriority
+	 *	@param		bool		$showDate
+	 *	@param		bool		$showActions
+	 *	@param		int			$typeOnly
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function renderRows( $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE, $typeOnly = NULL ): string
 	{
 		$list	= [];
 		foreach( $this->missions as $nr => $mission ){
 			$nr	= str_pad( $nr, 4, 0, STR_PAD_LEFT );
-			if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 0 ){
+			if( ( is_null( $typeOnly ) || $typeOnly == (int) $mission->type ) && Model_Mission::TYPE_TASK === (int) $mission->type ){
 				$key	= 'task_'.$nr;
 				$list[$key]	= $this->renderRowOfTask( $mission, $day, $showPriority, $showStatus, $showDate, $showActions );
 			}
-			else if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && $mission->type == 1 ){
+			else if( ( is_null( $typeOnly ) || $typeOnly == $mission->type ) && Model_Mission::TYPE_EVENT === (int) $mission->type ){
 				$key	= 'event_'.str_replace( ':', '_', $mission->timeStart ).'_'.$nr;
 				$list[$key]	= $this->renderRowOfEvent( $mission, $day, $showPriority, $showStatus, $showDate, $showActions );
 			}
@@ -345,19 +413,33 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return join( $list );
 	}
 
+	/**
+	 *	@param		array<Entity_Mission>		$missions
+	 *	@return		self
+	 */
 	public function setMissions( array $missions ): self
 	{
 		$this->missions		= $missions;
 		return $this;
 	}
 
-	public function setWords( $words ): self
+	/**
+	 *	@param		array		$words
+	 *	@return		self
+	 */
+	public function setWords( array $words ): self
 	{
 		$this->words	= $words;
 		return $this;
 	}
 
-	public function setBadges( $showPast = TRUE, $showFuture = TRUE, $colored = TRUE ): self
+	/**
+	 *	@param		bool		$showPast
+	 *	@param		bool		$showFuture
+	 *	@param		bool		$colored
+	 *	@return		self
+	 */
+	public function setBadges( bool $showPast = TRUE, bool $showFuture = TRUE, bool $colored = TRUE ): self
 	{
 		$this->badgesShowPast	= $showPast;
 		$this->badgesShowFuture	= $showFuture;
@@ -365,6 +447,11 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@param		int				$days
+	 *	@param		string|NULL		$class
+	 *	@return		string
+	 */
 	protected function renderBadgeDays( int $days, ?string $class = NULL ): string
 	{
 		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );

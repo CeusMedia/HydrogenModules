@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;
@@ -20,15 +20,14 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		cmFrameworks.Hydrogen.Modules
  *	@package		Controller.Manage.Content
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Locale extends Controller
 {
-	protected $path;
+	protected string $path;
 
-	public function add()
+	public function add(): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
@@ -60,9 +59,8 @@ class Controller_Manage_Locale extends Controller
 		$this->restart( './manage/locale' );
 	}
 
-	public function addFolder()
+	public function addFolder(): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'addFolder' );
@@ -89,9 +87,8 @@ class Controller_Manage_Locale extends Controller
 		$this->restart( './manage/locale' );
 	}
 
-	public function edit( $fileHash = NULL )
+	public function edit( ?string $fileHash = NULL ): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'edit' );
@@ -128,7 +125,7 @@ class Controller_Manage_Locale extends Controller
 						$content	= $newContent;
 						$messenger->noteSuccess( $words->msgSuccess, $newName, $newPath );
 					}
-					catch( Exception $e ){
+					catch( Exception ){
 						$messenger->noteFailure( $words->msgWriteError, $newName, $newPath );
 					}
 				}
@@ -145,7 +142,7 @@ class Controller_Manage_Locale extends Controller
 							$this->restart( './manage/locale/edit/'.$fileHash );
 						}
 						catch( Exception $e ){
-							$messenger->noteFailure( $words->msgRenameError, $name, $path, $e->getMessage() );
+							$messenger->noteFailure( $words->msgRenameError, $filePath, $e->getMessage() );
 						}
 					}
 				}
@@ -162,7 +159,7 @@ class Controller_Manage_Locale extends Controller
 		$this->loadFileTree();
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$config	= $this->env->getConfig();
 #		$request	= $this->env->getRequest();
@@ -172,10 +169,8 @@ class Controller_Manage_Locale extends Controller
 		$this->addData( 'showAddForms', $config->get( 'module.manage_locales.create' ) );
 	}
 
-	public function remove( $fileHash )
+	public function remove( string $fileHash ): void
 	{
-		$config		= $this->env->getConfig();									//  @todo	 define and use configured rule
-		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'remove' );
 
@@ -203,7 +198,7 @@ class Controller_Manage_Locale extends Controller
 		$config		= $this->env->getConfig();
 		$locales	= $config->get( 'path.locales' );
 		$locales	= $config->get( 'module.manage_locales.path' );
-		$language	= $this->env->language->getLanguage();
+		$language	= $this->env->getLanguage()->getLanguage();
 		$this->path	= $locales.$language.'/';
 		if( !file_exists( $this->path ) )
 			FolderEditor::createFolder( $this->path );
@@ -212,7 +207,7 @@ class Controller_Manage_Locale extends Controller
 		$index	= RecursiveFolderLister::getFolderList( $this->path );
 		foreach( $index as $item ){
 			$path	= substr( $item->getPathname(), strlen( $this->path ) );
-			if( substr( $path, 0, 4 ) != 'html' )
+			if( !str_starts_with( $path, 'html' ) )
 				$paths[$path]	= $path;
 		}
 		ksort( $paths );
@@ -221,7 +216,7 @@ class Controller_Manage_Locale extends Controller
 		$this->addData( 'filePath', NULL );
 	}
 
-	protected function loadFileTree()
+	protected function loadFileTree(): void
 	{
 		$files	= new RecursiveRegexFileIndex( $this->path, '/^(?!html).+\.ini$/' );
 		$this->addData( 'files', $files );

@@ -9,12 +9,13 @@ use CeusMedia\HydrogenFramework\View;
  */
 class Browser
 {
-	protected $env;
+	protected Environment $env;
+	protected float $time1;
 
 	public function __construct( Environment $env )
 	{
-		$this->env	= $env;
-		$this->time1	= $this->env->getClock()->stop( 3, 1 );
+		$this->env		= $env;
+		$this->time1	= $this->env->getRuntime()->get( 3, 1 );
 	}
 
 	public function render( $body, $headers = [] )
@@ -72,9 +73,9 @@ class Browser
 			'post'			=> $request->get( 'post' ),
 			'response'		=> (object) array(
 				'json'		=> $body,
-				'data'		=> isset( $response->data ) ? $response->data : '',
-				'debug'		=> isset( $response->debug ) ? $response->debug : '',
-				'exception'	=> isset( $response->exception ) ? $response->exception : '',
+				'data'		=> $response->data ?? '',
+				'debug'		=> $response->debug ?? '',
+				'exception'	=> $response->exception ?? '',
 			),
 			'json'			=> (object) [
 				'raw'		=> $body,

@@ -5,20 +5,20 @@ use CeusMedia\Common\UI\Image\Captcha as ImageCaptcha;
 
 class Job_Shop extends Job_Abstract
 {
-	protected $versionShop;
+	protected ?string $versionShop;
 
-	protected $configFileOldCustomers;
+	protected string $configFileOldCustomers;
 
-	protected $data;
+	protected array|object $data;
 
-	public function cleanupOldCustomers()
+	public function cleanupOldCustomers(): void
 	{
 		$this->cleanupOldCustomerTestOrders();
 //		$this->cleanupOldCustomerInvalidOrders();
 		$this->sanitizeOldCustomerCountries();
 	}
 
-	public function cleanupOldCustomerTestOrders()
+	public function cleanupOldCustomerTestOrders(): void
 	{
 		$this->loadConfig();
 		if( !isset( $this->data->testOrders ) ){
@@ -57,14 +57,14 @@ class Job_Shop extends Job_Abstract
 		}
 	}
 
-	public function createOldCustomersConfig( array $arguments = [], array $parameters = [] )
+	public function createOldCustomersConfig( array $arguments = [], array $parameters = [] ): void
 	{
 		$force	= in_array( 'force', $arguments );
 		if( file_exists( $this->configFileOldCustomers ) && !$force ){
 			$this->out( 'Shop job configuration is already existing in '.$this->configFileOldCustomers );
 			return;
 		}
-		$data	= array(
+		$data	= [
 			'testOrders'	=> [
 				'template'	=> [
 					'country'				=> 'Deutschland',
@@ -123,12 +123,17 @@ class Job_Shop extends Job_Abstract
 					'useSymbols'	=> FALSE
 				]
 			]
-		);
+		];
 		file_put_contents( $this->configFileOldCustomers, json_encode( $data, JSON_PRETTY_PRINT ) );
 	}
 
-	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = [], array $parameters = [] )
+	public function importOldCustomersAsMigrantsAndSaveAsCsv( array $arguments = [], array $parameters = [] ): void
 	{
+		if( !class_exists( 'Model_Shop_Migrant' ) ){
+			$this->out( 'No migrant model class found (Model_Shop_Migrant)' );
+			return;
+		}
+
 		$this->loadConfig();
 		if( !isset( $this->data->migrants ) ){
 			$this->out( 'No migrants configuration found in '.$this->configFileOldCustomers );
@@ -174,7 +179,7 @@ class Job_Shop extends Job_Abstract
 		$captcha	= new ImageCaptcha();
 		$captcha->length		= $this->data->migrants->captcha->length;
 		$captcha->useDigits		= $this->data->migrants->captcha->useDigits;
-		$captcha->useSymbols	= $this->data->migrants->captcha->useSymbols;
+//		$captcha->useSymbols	= $this->data->migrants->captcha->useSymbols;
 		$regExp		= '/^(.+)\s+([0-9]+.*)$/';
 		$count		= 0;
 		$total		= count( $emails );
@@ -185,7 +190,7 @@ class Job_Shop extends Job_Abstract
 				$data->customer->number		= preg_replace( $regExp, '\\2',$data->customer->address );
 				$data->customer->address	= preg_replace( $regExp, '\\1', $data->customer->address );
 			}
-			$data	= array(
+			$data	= [
 				'customerId'	=> $data->customer->customerId,
 				'orderId'		=> $data->order->orderId,
 				'firstname'		=> str_replace( '"', '', trim( $data->customer->firstname ) ),
@@ -199,12 +204,9 @@ class Job_Shop extends Job_Abstract
 				'phone'			=> str_replace( '"', '', trim( $data->customer->phone ) ),
 				'orderDate'		=> date( 'Y-m-d H:i:s', (int) $data->order->createdAt ),
 				'hash'			=> $captcha->generateWord(),
-			);
+			];
 			$migrantId	= $modelMigrant->add( $data );
-			$migrants[]	= array_merge(
-				array('shopMigrantId' => $migrantId ),
-				$data
-			);
+			$migrants[]	= array_merge( ['shopMigrantId' => $migrantId], $data );
 			$this->showProgress( ++$count, $total );
 		}
 		$this->out();
@@ -217,7 +219,7 @@ class Job_Shop extends Job_Abstract
 		}
 	}
 
-	public function migrateOldCustomers( array $arguments = [], array $parameters = [] )
+	public function migrateOldCustomers( array $arguments = [], array $parameters = [] ): void
 	{
 		$modelCustomerNew	= new Model_Shop_Customer( $this->env );
 		$modelCustomerOld	= new Model_Shop_CustomerOld( $this->env );
@@ -228,7 +230,7 @@ class Job_Shop extends Job_Abstract
 		$conditions	= [];
 		$orders		= ['customerId' => 'ASC'];
 		$limit		= [0, 1000];
-		$countries	= IniFileReader::load( $pathLocales.'de/countries.ini' );
+		$countries	= IniFileReader::loadArray( $pathLocales.'de/countries.ini' );
 		$customers	= $modelCustomerOld->getAll( $conditions, $orders/*, $limit*/ );
 		if( !$customers ){
 			$this->out( 'Migration already done' );
@@ -285,14 +287,14 @@ class Job_Shop extends Job_Abstract
 		$this->out();
 	}
 
-	public function sanitizeOldCustomerCountries()
+	public function sanitizeOldCustomerCountries(): void
 	{
 		$this->loadConfig();
 		if( !isset( $this->data->countries->sanitizeMap ) ){
 			$this->out( 'No country sanitation configuration found in '.$this->configFileOldCustomers );
 			return;
 		}
-		$mapCountries	= IniFileReader::load( 'contents/locales/de/countries.ini' );
+		$mapCountries	= IniFileReader::loadArray( 'contents/locales/de/countries.ini' );
 		$transCountries	= $this->data->countries->sanitizeMap;
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
 		if( version_compare( $this->versionShop, '0.8', '>=' ) )
@@ -337,11 +339,11 @@ class Job_Shop extends Job_Abstract
 
 	protected function __onInit(): void
 	{
-		$this->versionShop	= $this->env->getModules()->get( 'Shop' )->versionInstalled;
+		$this->versionShop	= $this->env->getModules()->get( 'Shop' )->version->installed;
 		$this->configFileOldCustomers	= 'config/job.shop.oldCustomers.json';
 	}
 
-	protected function loadConfig()
+	protected function loadConfig(): void
 	{
 		if( $this->data )
 			return;
@@ -353,7 +355,8 @@ class Job_Shop extends Job_Abstract
 	/**
 	 *	seems to be dysfunctional or rather incomplete (takes no actions)
 	 */
-	protected function cleanupOldCustomerInvalidOrders(){
+	protected function cleanupOldCustomerInvalidOrders(): void
+	{
 		$this->loadConfig();
 		$dataDefault		= [
 			'country'				=> 'Deutschland',

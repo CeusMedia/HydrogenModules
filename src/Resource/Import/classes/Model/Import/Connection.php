@@ -2,7 +2,7 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2021 Ceus Media
+ *	@copyright		2021-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -10,16 +10,16 @@ use CeusMedia\HydrogenFramework\Model;
 /**
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2021 Ceus Media
+ *	@copyright		2021-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Import_Connection extends Model
 {
-	const AUTH_TYPE_NONE	= 0;
-	const AUTH_TYPE_LOGIN	= 1;
-	const AUTH_TYPE_KEY		= 2;
+	public const AUTH_TYPE_NONE		= 0;
+	public const AUTH_TYPE_LOGIN	= 1;
+	public const AUTH_TYPE_KEY		= 2;
 
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
 	protected string $name			= 'import_connections';
 
@@ -50,7 +50,10 @@ class Model_Import_Connection extends Model
 		'hostName',
 		'hostPort',
 		'authType',
+		'authKey',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Import_Connection::class;
 }

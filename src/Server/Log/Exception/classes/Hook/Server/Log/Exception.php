@@ -4,25 +4,31 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Server_Log_Exception extends Hook
 {
-	static public function onEnvLogException( $env, $context, $module, $data = [] )
+	/**
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	public function onEnvLogException(): bool
 	{
-		if( is_object( $data ) && $data instanceof Exception )
+		$data	= $this->getPayload();
+		if( is_object( $data ) && $data instanceof Throwable )
 			$data	= ['exception' => $data];
+
 		if( !isset( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Missing exception in given hook call data' );
 		if( !is_object( $data['exception'] ) )
 			throw new InvalidArgumentException( 'Given exception is not an object' );
-		if( !( $data['exception'] instanceof Exception ) )
+			if( !$data['exception'] instanceof Throwable )
 			throw new InvalidArgumentException( 'Given exception object is not an exception instance' );
 
-		$logic			= $env->getLogic()->get( 'logException');
-		$moduleConfig	= $env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
+		$logic			= $this->env->getLogic()->get( 'logException');
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.server_log_exception.', TRUE );
 		$content		= $logic->collectData( $data['exception'] );
 
 		$logic->saveCollectedDataToLogFile( $content );
 //		$logic->sendCollectedDataAsMail( $content );
 		$logic->sendExceptionAsMail( $data['exception'] );
 
-		return !TRUE;															//  mark hook as unhandled
+		return FALSE;															//  mark hook as unhandled
 	}
 }

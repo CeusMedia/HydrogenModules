@@ -4,27 +4,48 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Localization extends Logic
 {
-	protected $language;
-	protected $languages;
+	protected Model_Localization $model;
+	protected string $default;
+	protected string $language;
+	protected array $languages;
 
-	public function getLanguage()
+	/**
+	 *	@return		string
+	 */
+	public function getLanguage(): string
 	{
 		return $this->language;
 	}
 
-	public function getLanguages()
+	/**
+	 *	@return		array
+	 */
+	public function getLanguages(): array
 	{
 		return $this->languages;
 	}
 
-	public function setLanguage( $language )
+	/**
+	 *	@param		string		$language
+	 *	@return		self
+	 */
+	public function setLanguage( string $language ): self
 	{
 		if( !in_array( $language, $this->languages ) )
 			throw new RangeException( 'Invalid language: '.$language );
 		$this->language		= $language;
+		return $this;
 	}
 
-	public function translate( $id, $content, $translated = NULL )
+	/**
+	 *	@param		string			$id
+	 *	@param		string			$content
+	 *	@param		string|NULL		$translated
+	 *	@return		int|string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function translate( string $id, string $content, ?string $translated = NULL ): int|string
 	{
 		$this->env->getLog()->log("debug", "trying to translate $id to $this->language", $this);
 		$indices		= ['language' => $this->language, 'id' => $id];
@@ -43,13 +64,17 @@ class Logic_Localization extends Logic
 		return $content;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\CeusMedia\HydrogenFramework\Environment\Exception
+	 */
 	protected function __onInit(): void
 	{
-		$this->model		= new  Model_Localization( $this->env );
+		$this->model		= new Model_Localization( $this->env );
 		$this->languages	= $this->env->getLanguage()->getLanguages();
-		$this->default		= $this->env->getLanguage();
+		$this->default		= $this->env->getLanguage()->getLanguage();
 		$this->setLanguage( $this->env->getLanguage()->getLanguage() );
-		if(  $this->env->getModules()->has( 'Resource_Frontend' ) ){
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend			= Logic_Frontend::getInstance( $this->env );
 			$env				= $frontend->getRemoteEnv( $this->env );
 			$this->default		= $frontend->getDefaultLanguage();

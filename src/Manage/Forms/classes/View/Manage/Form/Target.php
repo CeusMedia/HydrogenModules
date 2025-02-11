@@ -4,15 +4,27 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Form_Target extends View
 {
-	public function add()
+	/**
+	 *	Will automatically load template manage/form/target/add and return to app flow.
+	 *	@return		void
+	 */
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	/**
+	 *	Will automatically load template manage/form/target/edit and return to app flow.
+	 *	@return		void
+	 */
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	/**
+	 *	Will automatically load template manage/form/target/index and return to app flow.
+	 *	@return		void
+	 */
+	public function index(): void
 	{
 	}
 }

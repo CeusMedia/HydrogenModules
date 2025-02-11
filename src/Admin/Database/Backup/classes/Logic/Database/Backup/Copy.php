@@ -17,6 +17,7 @@ class Logic_Database_Backup_Copy extends Logic
 	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicBackup	= Logic_Database_Backup::getInstance( $this->env );
 	}
 }

@@ -1,5 +1,9 @@
 <?php
 
+/** @var View_Manage_Content_Image $view */
+/** @var array $words */
+/** @var ?string $path */
+
 $w				= (object) $words['index.list'];
 $listFolders	= $view->listFolders( /*dirname( $imagePath )*/ $path );
 

@@ -1,17 +1,30 @@
 <?php
 class Job_User_Provision extends Job_Abstract
 {
-	/** @todo rework */
-	public function manageLicenses( array $parameters = [] )
+	/**
+	 *	@param		array		$parameters
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@todo rework
+	 */
+	public function manageLicenses( array $parameters = [] ): void
 	{
 //		$this->handleOutdatedUserLicenses();
 		$this->manageOrderedLicenses();
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function manageOrderedLicenses(): void
 	{
 		$logicBridge	= new Logic_ShopBridge( $this->env );
+		/** @var Logic_Shop $logicShop */
 		$logicShop		= Logic_Shop::getInstance( $this->env );
+		/** @var Logic_User_Provision $logicProvision */
 		$logicProvision	= Logic_User_Provision::getInstance( $this->env );
 		$bridgeId		= $logicBridge->getBridgeId( 'Provision' );
 
@@ -56,17 +69,22 @@ class Job_User_Provision extends Job_Abstract
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handleOutdatedUserLicenses(): void
 	{
+		/** @var Logic_User_Provision $logic */
 		$logic	= Logic_User_Provision::getInstance( $this->env );
 		$keys	= $logic->handleExpiredLicenses();
 		if( $keys ){
 			$followUps	= 0;
 			foreach( $keys as $key )
 				$followUps	+= (int) isset( $key->nextKey );
-			$this->out( 'Provision.expire: Disabled '.count( $keys ).' license(s).', TRUE );
+			$this->out( 'Provision.expire: Disabled '.count( $keys ).' license(s).' );
 			if( $followUps )
-				$this->out( 'Provision: Enabled '.$followUps.' license(s) afterwards.', TRUE );
+				$this->out( 'Provision: Enabled '.$followUps.' license(s) afterwards.' );
 		}
 	}
 }

@@ -1,17 +1,8 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
-
-use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
-
-class Controller_Manage_Catalog_Bookstore_Tag extends Controller
+<?php
+class Controller_Manage_Catalog_Bookstore_Tag extends Controller_Manage_Catalog_Bookstore
 {
-	protected Logic_Frontend $frontend;
-	protected Logic_Catalog_Bookstore $logic;
-	protected MessengerResource $messenger;
-	protected Dictionary $request;
-	protected Dictionary $session;
-	protected string $sessionPrefix;
+	/** @todo make use of this or remove */
+	protected string $sessionPrefix		= 'module.manage_catalog_bookstore_article.filter.';
 
 	public function filter( $reset = 0 ): void
 	{
@@ -71,19 +62,5 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller
 		$this->addData( 'articleIds', $articleIds );
 		$this->addData( 'articles', $articles );
 		$this->addData( 'filterSearch', $this->session->get( 'filter_manage_catalog_bookstore_tag_search' ) );
-	}
-
-	protected function __onInit(): void
-	{
-		parent::__onInit();
-		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Article::init start' );
-		$this->messenger		= $this->env->getMessenger();
-		$this->request			= $this->env->getRequest();
-		$this->session			= $this->env->getSession();
-		$this->logic			= new Logic_Catalog_Bookstore( $this->env );
-		$this->frontend			= Logic_Frontend::getInstance( $this->env );
-		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-		$this->sessionPrefix	= 'module.manage_catalog_bookstore_article.filter.';
-		$this->addData( 'frontend', $this->frontend );
 	}
 }

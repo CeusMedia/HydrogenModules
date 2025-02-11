@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Info_Newsletter $view */
+/** @var object{email: string} $data */
+
 extract( $view->populateTexts( ['unregister.top', 'unregister.bottom', 'unregister.info'], 'html/info/newsletter' ) );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
@@ -128,7 +131,7 @@ return $textUnregisterTop.'
 	}
 </style>
 <script>
-var ModuleInfoNewsletter = {
+let ModuleInfoNewsletter = {
 	init: function(){
 		$("#input_disable").on("change", ModuleInfoNewsletter.handleUnregisterMode)
 		$("label.radio input, label.form-check input").on("change", ModuleInfoNewsletter.handleUnregisterType);

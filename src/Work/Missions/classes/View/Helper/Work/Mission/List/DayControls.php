@@ -6,11 +6,18 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 {
 	protected array $dayMissions	= [];
 
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@throws		Exception
+	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		$buttons	= [];
@@ -38,7 +45,14 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		] );
 	}
 
-	public function renderDayButtonLabel( $day, $number, $max, $template = '%1$s%2$s%3$s%4$s' ): string
+	/**
+	 *	@param		int			$day
+	 *	@param		int			$number
+	 *	@param		int			$max
+	 *	@param		string		$template
+	 *	@return		string
+	 */
+	public function renderDayButtonLabel( int $day, int $number, int $max, string $template = '%1$s%2$s%3$s%4$s' ): string
 	{
 		$then		= time() - $this->logic->timeOffset + ( $day * 24 * 60 * 60 );
 		$indicator	= $this->renderDayLoadIndicator( $number, $max, !TRUE );
@@ -52,7 +66,13 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		return sprintf( $template, $dayDate, $dayLabel, $number, $indicator );
 	}
 
-	protected function renderDayLoadIndicator( $number, $max, bool $useInfo = FALSE ): string
+	/**
+	 *	@param		int			$number
+	 *	@param		int			$max
+	 *	@param		bool		$useInfo
+	 *	@return		string
+	 */
+	protected function renderDayLoadIndicator( int $number, int $max, bool $useInfo = FALSE ): string
 	{
 		$max		= max( $max, 18 );														//  max is at least 18
 		$ratio		= $number / $max;
@@ -86,7 +106,11 @@ class View_Helper_Work_Mission_List_DayControls extends View_Helper_Work_Mission
 		return HtmlTag::create( 'div', $bar, ['class' => 'progress', 'data-max' => $max] );
 	}
 
-	public function setDayMissions( $dayMissions ): self
+	/**
+	 *	@param		array<object>		$dayMissions
+	 *	@return		self
+	 */
+	public function setDayMissions( array $dayMissions ): self
 	{
 		$this->dayMissions	= $dayMissions;
 		return $this;

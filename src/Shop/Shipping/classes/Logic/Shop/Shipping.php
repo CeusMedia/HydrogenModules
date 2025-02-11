@@ -5,19 +5,19 @@ use CeusMedia\HydrogenFramework\Logic;
 class Logic_Shop_Shipping extends Logic
 {
 	/**	@var		Model_Shop_Shipping_Country			$modelCountry */
-	protected $modelCountry;
+	protected Model_Shop_Shipping_Country $modelCountry;
 
 	/**	@var		Model_Shop_Shipping_Grade			$modelGrade */
-	protected $modelGrade;
+	protected Model_Shop_Shipping_Grade $modelGrade;
 
 	/**	@var		Model_Shop_Shipping_Option			$modelOption */
-	protected $modelOption;
+	protected Model_Shop_Shipping_Option $modelOption;
 
 	/**	@var		Model_Shop_Shipping_Price			$modelPrice */
-	protected $modelPrice;
+	protected Model_Shop_Shipping_Price $modelPrice;
 
 	/**	@var		Model_Shop_Shipping_Zone			$modelZone */
-	protected $modelZone;
+	protected Model_Shop_Shipping_Zone $modelZone;
 
 	/**
 	 *	Returns shipping price by country code and total weight of cart content.
@@ -26,7 +26,7 @@ class Logic_Shop_Shipping extends Logic
 	 *	@param		integer		$weight				Total weight of cart content
 	 *	@return		float
 	 */
-	public function getPriceFromCountryCodeAndWeight( string $countryCode, $weight )
+	public function getPriceFromCountryCodeAndWeight( string $countryCode, int $weight ): float
 	{
 		$zone	= $this->getZoneFromCountryCode( $countryCode );
 		$grade	= $this->getGradeFromWeight( $weight );
@@ -45,7 +45,7 @@ class Logic_Shop_Shipping extends Logic
 	 *	@return 	object
 	 *	@throws		RangeException if country code is neither assigned to a zone nor a fallback zone is existing.
 	 */
-	public function getZoneFromCountryCode( string $countryCode )
+	public function getZoneFromCountryCode( string $countryCode ): object
 	{
 		$country	= $this->modelCountry->getByIndex( 'countryCode', $countryCode );
 		if( $country )
@@ -64,7 +64,7 @@ class Logic_Shop_Shipping extends Logic
 	 *	@return 	object
 	 *	@throws		RangeException if weight is neither covered by a zone nor a fallback grade is existing.
 	 */
-	public function getGradeFromWeight( $weight )
+	public function getGradeFromWeight( int $weight ): object
 	{
 		$grades	= $this->modelGrade->getAll( ['fallback' => 0], ['weight' => 'ASC'] );
 		foreach( $grades as $grade ){
@@ -80,13 +80,13 @@ class Logic_Shop_Shipping extends Logic
 	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
-	 *	@param		int		$zoneId 		ID of Shipping Zone
-	 *	@param		int		$gradeId 		ID of Shipping Grade
-	 *	@return		string
+	 *	@param		int|string		$zoneId 		ID of Shipping Zone
+	 *	@param		int|string		$gradeId 		ID of Shipping Grade
+	 *	@return		string|NULL
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getPrice( $zoneId, $gradeId )
+	public function getPrice( int|string $zoneId, int|string $gradeId ): ?string
 	{
 		$indices	= ['zoneId' => $zoneId, 'gradeId' => $gradeId];
 		$data		= $this->modelPrice->getByIndices( $indices );
@@ -97,12 +97,12 @@ class Logic_Shop_Shipping extends Logic
 
 	/**
 	 *	Alias for getShippingZoneId.
-	 *	@param		integer		$countryId
-	 *	@return		integer|NULL
+	 *	@param		int|string		$countryId
+	 *	@return		string|NULL
 	 *	@todo		remove method and its calls
 	 *	@deprecated
 	 */
-	public function getZoneId( $countryId )
+	public function getZoneId( int|string $countryId ): ?string
 	{
 		$data	= $this->modelZone->getByIndex( 'countryId', $countryId );
 		if( $data )

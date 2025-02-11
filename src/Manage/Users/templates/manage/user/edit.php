@@ -1,24 +1,28 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
+//use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var object $user */
+/** @var bool $needsEmail */
+/** @var bool $needsFirstname */
+/** @var bool $needsSurname */
+/** @var ?string $from */
 
 $w				= (object) $words['edit'];
 //$helperAge		= new View_Helper_TimePhraser( $env );
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
-$iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'icon-search'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
-	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-	$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
-	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-	$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-	$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
-}
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconList		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-list'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconGroup		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
 
 /*
  *	@deprecated		not used. nice feature but no styling done.
@@ -30,7 +34,7 @@ $script		= '
 		$("form :input#password").pstrength({
 			minChar: '.$pwdMinLength.',
 			displayMinChar: '.$pwdMinLength.',
-			minCharText:  "'.$words['pstrength']['mininumLength'].'",
+			minCharText:  "'.$words['pstrength']['minimumLength'].'",
 			verdicts:	[
 				"'.$words['pstrength']['verdict-1'].'",
 				"'.$words['pstrength']['verdict-2'].'",
@@ -67,13 +71,13 @@ $optStatus  = join( $optStatus );
 
 $optGender	= HtmlElements::Options( $words['gender'], $user->gender );
 
-$buttonList			= HtmlElements::LinkButton( $from ? $from : './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
+$buttonList			= HtmlElements::LinkButton( $from ?: './manage/user', $iconList.'&nbsp;'.$w->buttonList, 'btn not-btn-small' );
 $buttonSave			= HtmlElements::Button( 'saveUser', $iconSave.'&nbsp;'.$w->buttonSave, 'btn btn-primary' );
 
 $buttonRemove		= '';
 if( $env->getAcl()->has( 'manage/user', 'remove' ) ){
 	$buttonRemove		= HtmlElements::LinkButton(
-		'./manage/user/remove/'.$userId,
+		'./manage/user/remove/'.$user->userId,
 		$iconRemove.'&nbsp;'.$w->buttonRemove,
 		'btn btn-mini btn-danger',
 		$w->buttonRemoveConfirm
@@ -92,7 +96,7 @@ $panelEdit	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form name="editUser" action="./manage/user/edit/'.$userId.'" method="post">
+		<form name="editUser" action="./manage/user/edit/'.$user->userId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 <!--			<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">-->
@@ -142,7 +146,7 @@ $panelEdit	= '
 						'name'		=> "firstname",
 						'id'		=> "input_firstname",
 						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsFirstname ? 'mandatory' : '' ),
-						'value'		=> htmlentities( $user->firstname, ENT_QUOTES, 'UTF-8' ),
+						'value'		=> htmlentities( $user->firstname ?? '', ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsFirstname ? "required" : NULL
 					) ).'
 				</div>
@@ -153,7 +157,7 @@ $panelEdit	= '
 						'name'		=> "surname",
 						'id'		=> "input_surname",
 						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsSurname ? 'mandatory' : '' ),
-						'value'		=> htmlentities( $user->surname, ENT_QUOTES, 'UTF-8' ),
+						'value'		=> htmlentities( $user->surname ?? '', ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsSurname ? "required" : NULL
 					) ).'
 				</div>
@@ -188,10 +192,11 @@ $panelEdit	= '
 	</div>
 </div>';
 
-$panelStatus	= $this->loadTemplateFile( 'manage/user/edit.status.php' );
-$panelPassword	= $this->loadTemplateFile( 'manage/user/edit.password.php' );
-$panelInfo		= $this->loadTemplateFile( 'manage/user/edit.info.php' );
-$panelRights	= $this->loadTemplateFile( 'manage/user/edit.rights.php' );
+$panelGroups	= $view->loadTemplateFile( 'manage/user/edit.groups.php' );
+$panelStatus	= $view->loadTemplateFile( 'manage/user/edit.status.php' );
+$panelPassword	= $view->loadTemplateFile( 'manage/user/edit.password.php' );
+$panelInfo		= $view->loadTemplateFile( 'manage/user/edit.info.php' );
+$panelRights	= $view->loadTemplateFile( 'manage/user/edit.rights.php' );
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/manage/user/' ) );
 
@@ -205,6 +210,11 @@ return $textIndexTop.'
 				'.$panelPassword.'
 			</div>
 			<div class="bs2-span6 bs3-col-md-6 bs4-col-md-6">
+				'.$panelGroups.'
+			</div>
+		</div>
+		<div class="bs2-row-fluid bs3-row bs4-row">
+			<div class="bs2-span12 bs3-col-md-12 bs4-col-md-12">
 				'.$panelRights.'
 			</div>
 		</div>

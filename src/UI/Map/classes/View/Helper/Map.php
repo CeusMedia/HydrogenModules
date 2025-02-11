@@ -5,19 +5,19 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Map
 {
-	protected $env;
+	protected Environment $env;
 
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function build( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	public function build( $latitude, $longitude, string $title = NULL, string $class = NULL, $zoom = NULL ): string
 	{
 		return $this->render( $latitude, $longitude, $title, $class, $zoom );
 	}
 
-	public function render( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	public function render( float|string $latitude, float|string $longitude, ?string $title = NULL, ?string $class = NULL, $zoom = NULL ): string
 	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
 		$html	= $this->renderHtml( $latitude, $longitude, $title, $class, $zoom );
@@ -26,30 +26,27 @@ class View_Helper_Map
 		return $html;
 	}
 
-	public function renderHtml( $latitude, $longitude, $title = NULL, $class = NULL, $zoom = NULL ): string
+	public function renderHtml( float|string $latitude, float|string $longitude, ?string $title = NULL, ?string $class = NULL, $zoom = NULL ): string
 	{
 		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
-		$map	= HtmlTag::create( 'div', '', array(
+		return HtmlTag::create( 'div', '', [
 			'id'				=> $id,
 			'class'				=> $class,
 			'data-latitude'		=> (float) $latitude,
 			'data-longitude'	=> (float) $longitude,
 			'data-marker-title'	=> $title,
 			'data-zoom'			=> $zoom,
-		) );
-		return $map;
+		] );
 	}
 
-	public function renderScript( $latitude, $longitude, $title = NULL, $zoom = NULL ): string
+	public function renderScript( float|string $latitude, float|string $longitude, ?string $title = NULL, $zoom = NULL ): string
 	{
-		$id		= self::getMapId( $latitude, $longitude, $title, $zoom );
-		$script	= sprintf( 'loadMap("%s");', $id );
-		return $script;
+		return sprintf( 'loadMap("%s");', self::getMapId( $latitude, $longitude, $title, $zoom ) );
 	}
 
-	protected static function getMapId( $latitude, $longitude, $title = NULL, $zoom = NULL ): string
+	protected static function getMapId( float|string $latitude, float|string $longitude, ?string $title = NULL, $zoom = NULL ): string
 	{
-		$hash	= md5( json_encode( [$latitude, $longitude, $title, $zoom] ) );
+		$hash	= md5( json_encode( [(float) $latitude, (float) $longitude, $title, $zoom] ) );
 		return 'map-'.$hash;
 	}
 }

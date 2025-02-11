@@ -9,20 +9,15 @@ class View_Helper_HTML
 
 class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 {
-	const BR = '<br/>';
-	const HR = '<hr/>';
+	public const BR = '<br/>';
+	public const HR = '<hr/>';
 
 	public static string $prefixIdInput	= 'input_';
 	public static string $prefixIdForm	= 'form_';
 
 	public static function Abbr( string $label, string $title = NULL ): string
 	{
-		if( !strlen( trim( $title ) ) )
-			$label;
-		$attributes	= [
-			'title'		=> $title
-		];
-		return self::Tag( 'abbr', $label, $attributes );
+		return self::Tag( 'abbr', $label, ['title' => $title] );
 	}
 
 	public static function Button( string $name, string $label, string $class ): string
@@ -44,7 +39,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function Checkbox( string $name, $value, bool $checked = FALSE, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes	= array(
+		$attributes	= [
 			'type'		=> 'checkbox',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
@@ -52,7 +47,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 			'class'		=> $class,
 			'checked'	=> $checked ? 'checked' : NULL,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		return self::Tag( 'input', NULL, $attributes );
 	}
 
@@ -65,12 +60,12 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function DivClass( string $class, $content = '', array $attributes = [] ): string
 	{
-		return self::Tag( 'div', $content, ['class' => $class] );
+		return self::Tag( 'div', $content, array_merge( ['class' => $class], $attributes ) );
 	}
 
 	public static function DivID( string $id, $content, array $attributes = [] ): string
 	{
-		return self::Tag( 'div', $content, ['id' => $id] );
+		return self::Tag( 'div', $content, array_merge( ['id' => $id], $attributes ) );
 	}
 
 	public static function Dl( array $definitions ): string
@@ -105,7 +100,7 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 		$attributes		= array_merge( [
 			'name'		=> $name,
 			'action'	=> $url,
-			'id'		=> $name === NULL ? NULL : self::$prefixIdForm.$name,
+			'id'		=> '' === $name ? NULL : self::$prefixIdForm.$name,
 			'method'	=> "post",
 			'enctype'	=> $enctype,
 		], $attributes );
@@ -148,14 +143,14 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 
 	public static function Input( string $name, $value, string $class = NULL, bool $readonly = NULL ): string
 	{
-		$attributes	= array(
+		$attributes	= [
 			'type'		=> 'text',
 			'id'		=> self::$prefixIdInput.$name,
 			'name'		=> $name,
-			'value'		=> htmlspecialchars( $value, ENT_COMPAT, 'UTF-8' ),
+			'value'		=> htmlspecialchars( $value ?? '', ENT_COMPAT, 'UTF-8' ),
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-		);
+		];
 		if( preg_match( "/(mandatory|required)/", $class ) )
 			$attributes['required']	= 'required';
 		return self::Tag( 'input', NULL, $attributes );
@@ -179,7 +174,8 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 		return self::Tag( 'legend', $content, ['class' => $class] );
 	}
 
-	public static function Li( $content, string $class = NULL ){
+	public static function Li( $content, string $class = NULL ): string
+	{
 		return self::Tag( 'li', $content, ['class' => $class] );
 	}
 
@@ -236,29 +232,31 @@ class HTML/* extends \CeusMedia\Common\UI\HTML\Elements*/
 	public static function Select( string $name, $options, string $class = NULL, bool $readonly = NULL, string $onChange = NULL ): string
 	{
 		if( is_array( $options ) ){
-			$selected	= isset( $options['_selected'] ) ? $options['_selected'] : NULL;
+			$selected	= $options['_selected'] ?? NULL;
 			$options	= self::Options( $options, $selected );
 		}
-		if( preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )
+		if( NULL !== $onChange && preg_match( '/^[a-z0-9_-]+$/i', $onChange ) )
 			$onChange	= "document.getElementById('".self::$prefixIdForm.$onChange."').submit();";
-		$attributes	= array(
-			'id'		=> str_replace( "[]", "", self::$prefixIdInput.$name ),
+		$attributes	= [
+			'id'		=> str_replace( '[]', '', self::$prefixIdInput.$name ),
 			'name'		=> $name,
 			'class'		=> $class,
 			'readonly'	=> $readonly ? 'readonly' : NULL,
-			'multiple'	=> substr( trim( $name ), -2 ) == "[]"	? "multiple" : NULL,
+			'multiple'	=> str_ends_with( trim( $name ), '[]' ) ? 'multiple' : NULL,
 			'onchange'	=> $onChange,
-		);
-		return HTML::Tag( "select", $options, $attributes );
+		];
+		return HTML::Tag( 'select', $options, $attributes );
 	}
 
 	public static function SpanClass( string $class, $content = '', array $attributes = [] ): string
 	{
-		return HTML::Tag( 'span', $content, ['class' => $class] );
+		return HTML::Tag( 'span', $content, array_merge( ['class' => $class], $attributes ) );
 	}
 
 	public static function Tag( string $nodeName, $content = NULL, array $attributes = [], array $data = [] ): string
 	{
+		foreach( $data as $key => $value )
+			$attributes['data-'.$key]	= $value;
 		return HtmlTag::create( $nodeName, $content, $attributes );
 	}
 

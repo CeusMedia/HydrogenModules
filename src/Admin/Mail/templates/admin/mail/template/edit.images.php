@@ -2,13 +2,14 @@
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var array<array<string,string>> $words */
 /** @var object $template */
 /** @var string $appUrl */
 /** @var string $appPath */
+/** @var string $buttonList */
 
 $iconOpen		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-folder-open"] );
 $iconView		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-eye"] );
@@ -69,7 +70,7 @@ if( $template->images ){
 			HtmlTag::create( 'td', $image ),
 			HtmlTag::create( 'td', '<strong><kbd>image'.( $nr + 1).'</kbd></strong>' ),
 			HtmlTag::create( 'td', $itemFile.'<br/>'.$itemPath ),
-			HtmlTag::create( 'td', $buttons, array( 'style' => 'text-align: right') ),
+			HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
 		], ['class' => $rowClass] );
 	}
 	$listImages	= HtmlTag::create( 'table', [
@@ -110,11 +111,11 @@ return '
 			<div class="content-panel-inner">
 				<form action="./admin/mail/template/edit/'.$template->mailTemplateId.'" method="post" class="not-form-changes-auto">
 					<div class="row-fluid">
-						<div class="span9">
+						<div class="span8">
 							<label for="input_template_image">'.$words['edit-image-add']['labelPath'].'</label>
 							<input type="text" name="template_image" id="input_template_image" class="span12" required="required"/>
 						</div>
-						<div class="span3">
+						<div class="span4">
 							<label>&nbsp;</label>
 							<div class="btn-group">
 								'.$trigger.'

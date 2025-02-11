@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var View_Work_Bill $view */
+/** @var array $words */
+/** @var string $userId */
+
+
 $model	= new Model_Bill( $this->env );
 
 $daysFuture	= 60;
@@ -8,11 +14,11 @@ $dateFuture	= date( 'Ymd', time() + $daysFuture * 24 * 60 * 60 );
 
 
 /*  --  OPEN BILLS: PAST  --  */
-$conditions	= array(
+$conditions	= [
 	'userId'	=> $userId,
 	'date'		=> '<'.date( 'Ymd' ),
 	'status'	=> 0
-);
+];
 $sum	= 0;
 $openBills	= $model->getAll( $conditions );
 foreach( $openBills as $nr => $bill )
@@ -21,11 +27,11 @@ $listOpenPast	= $view->renderTable( $openBills, './work/bill/graph', FALSE );
 
 
 /*  --  OPEN BILLS: FUTURE  --  */
-$openFutureBills	= $model->getAll( array(
+$openFutureBills	= $model->getAll( [
 	'userId'	=> $userId,
 	'date'		=> '>'.date( 'Ymd' ),
 	'status'	=> 0
-), ['date' => 'ASC'] );
+], ['date' => 'ASC'] );
 
 foreach( $openFutureBills as $nr => $bill )
 	if( $bill->date > $dateFuture )
@@ -119,16 +125,16 @@ return '
 </div>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script>
-var dataGraph = '.json_encode( $dataGraph ).';
+let dataGraph = '.json_encode( $dataGraph ).';
 
 // Load the Visualization API and the piechart package.
 google.load("visualization", "1.0", {"packages":["corechart"]});
 
 // Set a callback to run when the Google Visualization API is loaded.
 google.setOnLoadCallback(function () {
-	var chart = new google.visualization.AreaChart(document.getElementById("chart_balance"));
-	var data = google.visualization.arrayToDataTable(dataGraph);
-	var options = {
+	let chart = new google.visualization.AreaChart(document.getElementById("chart_balance"));
+	let data = google.visualization.arrayToDataTable(dataGraph);
+	let options = {
 		title: "Prognose",
 		width: "100%",
 		height: "100%",

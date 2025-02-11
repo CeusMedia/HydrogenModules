@@ -1,7 +1,10 @@
 <?php
-class Resource_SqliteCache{
+class Resource_SqliteCache
+{
+	protected PDO $db;
 
-	public function __construct( $cacheFile ){
+	public function __construct( $cacheFile )
+	{
 		if( !extension_loaded('pdo') )
 			throw new RuntimeException( 'PHP extension PDO is not installed' );
 		if( !extension_loaded('pdo_sqlite' ) )
@@ -13,7 +16,8 @@ class Resource_SqliteCache{
 			$this->db->query( "CREATE TABLE store (id text, data blob, PRIMARY KEY (id) )");
 	}
 
-	public function flush( $prefix = NULL ){
+	public function flush( $prefix = NULL ): void
+	{
 		if( $prefix )
 			$this->db->query( "DELETE FROM store WHERE id LIKE '".str_replace( "%", "\%", $prefix )."%';" );
 		else
@@ -21,14 +25,16 @@ class Resource_SqliteCache{
 		$this->db->query( "VACUUM store" );
 	}
 
-	public function get( $id ){
+	public function get( $id )
+	{
 		$q	= $this->db->query( "SELECT data FROM store WHERE id = '".$id."'" )->fetch( PDO::FETCH_OBJ );
 		if( $q )
 			return $q->data;
 		return NULL;
 	}
 
-	public function index(){
+	public function index(): array
+	{
 		$list	= [];
 		$q		= $this->db->query( "SELECT id FROM store" );
 		foreach( $q->fetchAll( PDO::FETCH_OBJ ) as $entry )
@@ -36,12 +42,14 @@ class Resource_SqliteCache{
 		return $list;
 	}
 
-	public function remove( $id ){
+	public function remove( $id ): void
+	{
 		$this->db->query( "DELETE FROM store WHERE id='".$id."';" );
 		$this->db->query( "VACUUM store" );
 	}
 
-	public function set( $id, $data ){
+	public function set( $id, $data )
+	{
 		$q	= $this->db->query( "INSERT INTO store VALUES ('".$id."', '".addslashes( $data )."');" );
 		print_m( $q->fetch() );
 		print_m( $this->db->errorInfo() );

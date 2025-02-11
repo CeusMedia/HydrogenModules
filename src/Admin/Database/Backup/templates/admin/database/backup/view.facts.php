@@ -24,7 +24,8 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 	'class'	=> 'btn btn-danger'
 ] );
 
-$comment	= $backup->comment['comment'] ?: '<em class="muted">Kein Kommentar</em>';
+$comment	= $backup->comment['comment'] ?? '';
+$comment	= ( '' !== $comment ) ? $comment: '<em class="muted">Kein Kommentar</em>';
 
 return '
 <div class="content-panel">

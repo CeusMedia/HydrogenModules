@@ -1,4 +1,13 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var array<int|string,string> $words */
+/** @var array<object> $files */
+/** @var array<object> $folders */
+
 $w	= (object) $words['info'];
 
 $helper			= new View_Helper_TimePhraser( $env );
@@ -11,13 +20,12 @@ foreach( $files as $entry ){
 	$downloads		+= $entry->nrDownloads;
 }
 
-return '
-<h4>Informationen</h4>
-<ul>
-	<li>'.sprintf( $w->filesInFolders, count( $files ), count( $folders ) ).'</li>
-	<li>'.sprintf( $w->downloads, $downloads ).'</li>
-	<li>'.sprintf( $w->lastUpload, $helper->convert( $lastUpload, TRUE ) ).'</li>
-	<li>'.sprintf( $w->lastDownload, $helper->convert( $lastDownload, TRUE ) ).'</li>
-</ul>
-';
-
+return join( [
+	HtmlTag::create( 'h4', 'Informationen' ),
+	HtmlTag::create( 'ul', [
+		HtmlTag::create( 'li', sprintf( $w->filesInFolders, count( $files ), count( $folders ) ) ),
+		HtmlTag::create( 'li', sprintf( $w->downloads, $downloads ) ),
+		HtmlTag::create( 'li', sprintf( $w->lastUpload, $helper->convert( $lastUpload, TRUE ) ) ),
+		HtmlTag::create( 'li', sprintf( $w->lastDownload, $helper->convert( $lastDownload, TRUE ) ) ),
+	] )
+] );

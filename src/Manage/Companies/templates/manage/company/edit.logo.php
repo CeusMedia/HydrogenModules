@@ -8,10 +8,10 @@ $iconOpen	= HTML::Icon( 'folder-open', TRUE );
 
 $logo	= '<div><em><small class="muted">Kein Logo vorhanden.</small></em></div>';
 if( $company->logo ){
-	$logo	= HtmlTag::create( 'img', NULL, array(
+	$logo	= HtmlTag::create( 'img', NULL, [
 		'src'	=> $frontend->getPath().'images/companies/'.$company->logo,
 		'class'	=> 'thumbnail',
-	) );
+	] );
 }
 
 return '

@@ -7,11 +7,11 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 {
 	protected $entity;
 	protected $event;
-	protected $logicStripe;
+	protected Logic_Payment_Stripe $logicStripe;
 
 	abstract public function handle();
 
-	public function setEvent( $event )
+	public function setEvent( $event ): self
 	{
 		$this->event	= $event;
 		$this->entity	= $this->logicStripe->getEventResource( $event->type, $event->id );
@@ -21,6 +21,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 	protected function __onInit(): void
 	{
 		parent::__onInit();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicStripe		= Logic_Payment_Stripe::getInstance( $this->env );
 
 		/*  -- MORE PERFORMANT VERSION  --  */
@@ -28,7 +29,7 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 //		later get logic object by: $this->env->logic->paymentStripe;
 	}
 
-	protected function sendMail( $mailClass, $data, $receiver, $language = NULL )
+	protected function sendMail( string $mailClass, $data, object $receiver, ?string $language = NULL ): bool
 	{
 		$className	= 'Mail_'.$mailClass;
 		if( !class_exists( $className ) )
@@ -36,10 +37,12 @@ abstract class Logic_Payment_Stripe_Event extends Logic
 
 		$arguments	= [$this->env, $data];
 		$mail		= ObjectFactory::createObject( $className, $arguments );
-		$this->env->logic->mail->sendMail( $mail, $receiver, $language );
+		/** @var Logic_Mail $logic */
+		$logic		= $this->env->getLogic()->get( 'Mail' );
+		return $logic->sendMail( $mail, $receiver );
 	}
 
-	protected function uncache( $key )
+	protected function uncache( string $key ): void
 	{
 		$this->env->getCache()->remove( 'stripe_'.$key );
 	}

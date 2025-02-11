@@ -3,17 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $tabs       = [];
 $panes      = array(
-	'details'	=> $this->loadTemplateFile( 'manage/catalog/author/edit.details.php', ['w' => $w] ),
-	'articles'	=> $this->loadTemplateFile( 'manage/catalog/author/edit.articles.php', ['w' => $w] ),
+	'details'	=> $view->loadTemplateFile( 'manage/catalog/author/edit.details.php', ['w' => $w] ),
+	'articles'	=> $view->loadTemplateFile( 'manage/catalog/author/edit.articles.php', ['w' => $w] ),
 );
 
 $current	= $this->env->getSession()->get( 'manage.catalog.author.tab' );
-if( !$current )
-	$current	= @array_shift( array_keys( $words['tabs'] ) );
+if( !$current ){
+	$tabKeys	= array_keys( $words['tabs'] );
+	$current	= @array_shift( $tabKeys );
+}
 foreach( $words['tabs'] as $key => $label ){
 	$attributes	= array(
 		'href'			=> '#tab-'.$key,

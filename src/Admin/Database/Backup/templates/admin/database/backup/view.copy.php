@@ -23,7 +23,6 @@ $buttonDeactivateCopy	= '';
 $buttonRemoveCopy		= '';
 if( !empty( $backup->comment['copyPrefix'] ) ){
 	$buttonCreateCopy		= '';
-	$buttonDeactivateCopy	= '';
 	$buttonActivateCopy		= HtmlTag::create( 'a', $iconRemove.'&nbsp; Kopie aktivieren', [
 		'href'	=> './admin/database/backup/copy/activate/'.$backup->id,
 		'class'	=> 'btn btn-success'

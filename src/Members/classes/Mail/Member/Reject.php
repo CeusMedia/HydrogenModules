@@ -1,7 +1,7 @@
 <?php
 class Mail_Member_Reject extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -11,7 +11,7 @@ class Mail_Member_Reject extends Mail_Abstract
 		$data['appBaseUrl']	= $this->env->url;
 //		$data['from']		= $data['from'] ? '?from='.$data['from'] : '';
 		$data['config']		= $this->env->getConfig()->getAll();
-		$body	= $this->view->loadContentFile( 'mail/member/reject.txt', $data );
+		$body	= $this->loadContentFile( 'mail/member/reject.txt', $data ) ?? '';
 
 		$this->setSubject( $wordsMails['mails']['onReject'] );
 		$this->setText( $body );

@@ -11,19 +11,23 @@ class Controller_Manage_Project extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $session;
 	protected Logic_Project $logic;
-	protected Logic_Mail $logicMail;
 	protected Model_Project $modelProject;
 	protected Model_Project_User $modelProjectUser;
 	protected Model_User $modelUser;
 	protected bool $useMissions			= FALSE;
 	protected bool $useCompanies		= FALSE;
 	protected bool $useCustomers		= FALSE;
-	protected ?string $userId;
-	protected ?string $roleId;
+	protected int|string $userId		= 0;
+	protected int|string $roleId		= 0;
 	protected bool $isAdmin;
 	protected bool $isEditor;
 
-	public function acceptInvite( string $projectId ): void
+	/**
+	 *	@param		int|string		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function acceptInvite( int|string $projectId ): void
 	{
 		$indices	= [
 			'projectId'	=> $projectId,
@@ -35,15 +39,19 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
 		}
 		else{
-			$this->modelProjectUser->edit( $relation->projectUserId, array(
+			$this->modelProjectUser->edit( $relation->projectUserId, [
 				'status'		=> 1,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->messenger->noteSuccess( 'Die Einladung wurde zu einer Mitgliedschaft am Projekt umgewandelt.' );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words			= (object) $this->getWords( 'add' );
@@ -53,32 +61,39 @@ class Controller_Manage_Project extends Controller
 			$title		= $this->request->get( 'title' );
 			if( !strlen( $title ) )
 				$this->messenger->noteError( $words->msgTitleMissing );
-			if( $this->modelProject->count( ['title' => $title, 'creatorId' => $this->userId] ) )
+			if( $this->logic->countProjects( ['title' => $title, 'creatorId' => $this->userId] ) )
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
 			if( !$this->messenger->gotError() ){
-				$isFirstUserProject	= !$this->modelProject->countByIndex( 'creatorId', $this->userId );
+				$isFirstUserProject	= !$this->logic->countProjects( ['creatorId' => $this->userId] );
 
 				$data				= $this->request->getAll();
 				$data['creatorId']	= $this->userId;
 				$data['createdAt']	= time();
 				$data['modifiedAt']	= time();
-				$projectId			= $this->modelProject->add( $data, FALSE );
 
-				if( 1 || !$this->env->getAcl()->hasFullAccess( $this->session->get( 'auth_role_id' ) ) ){
-					$this->modelProjectUser->add( array(
+				try{
+					$this->env->getDatabase()->beginTransaction();
+					$projectId			= $this->modelProject->add( $data, FALSE );
+					$this->modelProjectUser->add( [
 						'projectId'		=> $projectId,
 						'userId'		=> $this->userId,
 						'isDefault'		=> $isFirstUserProject ? 1 : 0,
 						'createdAt'		=> time(),
 						'modifiedAt'	=> time(),
-					) );
+					] );
+					$this->env->getDatabase()->commit();
+					$this->messenger->noteSuccess( $words->msgSuccess );
+					if( $this->request->get( 'from' ) ){
+						$this->messenger->noteNotice( 'Weiterleitung zurück zum Ausgangspunkt.' );
+						$this->restart( $this->request->get( 'from' ) );
+					}
+					$this->restart( 'edit/'.$projectId, TRUE );
 				}
-				$this->messenger->noteSuccess( $words->msgSuccess );
-				if( $this->request->get( 'from' ) ){
-					$this->messenger->noteNotice( 'Weiterleitung zurück zum Ausgangspunkt.' );
-					$this->restart( $this->request->get( 'from' ) );
+				catch( Exception $e ){
+					$this->env->getDatabase()->rollBack();
+					$this->messenger->noteFailure( $words->msgFailureException );
+					$this->restart( NULL, TRUE );
 				}
-				$this->restart( 'edit/'.$projectId, TRUE );
 			}
 		}
 //		$this->addData( 'filterStatus', $this->session->get( 'filter_manage_project_status' ) );
@@ -86,9 +101,16 @@ class Controller_Manage_Project extends Controller
 //		$this->addData( 'filterDirection', $this->session->get( 'filter_manage_project_direction' ) );
 	}
 
-	public function addUser( string $projectId, ?string $userId = NULL ): void
+	/**
+	 *	@param		int|string			$projectId
+	 *	@param		int|string|NULL		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addUser( int|string $projectId, int|string|NULL $userId = NULL ): void
 	{
-		$userId			= $userId ? $userId : $this->request->get( 'userId' );
+		$userId			= $userId ?: $this->request->get( 'userId' );
 		$forwardTo		= $this->request->get( 'forwardTo' );
 		$words			= (object) $this->getWords( 'edit-panel-users' );
 		$project		= $this->modelProject->get( (int) $projectId );
@@ -96,30 +118,24 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( $words->msgInvalidProject );
 		}
 		else if( (int) $userId > 0 ){
+			/** @var ?Entity_User $user */
 			$user		= $this->modelUser->get( $userId );
 			if( !$user ){
 				$this->messenger->noteError( $words->msgInvalidUser );
 			}
 			else{
-				$this->modelProjectUser->add( array(
+				$this->modelProjectUser->add( [
 					'projectId'		=> (int) $projectId,
 					'creatorId'		=> $this->userId,
 					'userId'		=> (int) $userId,
 					'status'		=> 1,
 					'createdAt'		=> time(),
 					'modifiedAt'	=> time(),
-				) );
+				] );
 				$this->messenger->noteSuccess( $words->msgUserAdded, $user->username, $project->title );
 
 				$language		= $this->env->getLanguage();
-				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
-					if( $member->userId !== $this->userId ){
-						$user	= $this->modelUser->get( $member->userId );
-						$data	= ['project' => $project, 'user' => $user];
-						$mail	= new Mail_Manage_Project_Members( $this->env, $data, FALSE );
-						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-					}
-				}
+				$this->logic->informMembersAboutMembers( $project, $this->userId );
 
 				if( $forwardTo )
 					$this->restart( './'.$forwardTo );
@@ -128,6 +144,11 @@ class Controller_Manage_Project extends Controller
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function declineInvite( string $projectId ): void
 	{
 		$indices	= [
@@ -140,19 +161,25 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
 		}
 		else{
-			$this->modelProjectUser->edit( $relation->projectUserId, array(
+			$this->modelProjectUser->edit( $relation->projectUserId, [
 				'status'		=> -1,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 			$this->messenger->noteSuccess( 'Die Einladung zum Projekt wurde abgelehnt.' );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$projectId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $projectId ): void
 	{
 		$words			= (object) $this->getWords( 'edit' );
-		$project		= $this->checkProject( $projectId, TRUE );
+		$project		= $this->checkProject( $projectId );
 
 		if( !( $this->isAdmin || $this->isEditor ) ){
 			$this->messenger->noteError( $words->msgNoRightToEdit );
@@ -170,28 +197,21 @@ class Controller_Manage_Project extends Controller
 				$this->messenger->noteError( $words->msgTitleMissing );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}
-			$found	= $this->modelProject->getByIndices( [
+			$found	= $this->logic->getProjects( [
 				'title'		=> $title,
 				'creatorId'	=> $this->userId,
+				'projectId' => '!= '.$projectId,
 			] );
-			if( $found && $found->projectId != $projectId ){
+			if( [] !== $found ){
 				$this->messenger->noteError( $words->msgTitleExisting, $title );
 				$this->restart( 'edit/'.$projectId, TRUE );
 			}
 			$data				= $this->request->getAll();
 			$data['modifiedAt']	= time();
-			$this->modelProject->edit( $projectId, $data , FALSE );
+			$this->modelProject->edit( $projectId, $data, FALSE );
 			$this->messenger->noteSuccess( $words->msgSuccess );
+			$this->logic->informMembersAboutChange( $project, $this->userId );
 
-			$language		= $this->env->getLanguage();											//  get language support
-			$projectUsers	= $this->logic->getProjectUsers( $projectId );							//  get projects users
-			foreach( $projectUsers as $user ){														//  iterate project users
-				if( $user->userId == $this->userId )												//  project user is current user
-					continue;																		//  skip
-				$data	= ['project' => $project, 'user' => $user];
-				$mail	= new Mail_Manage_Project_Changed( $this->env, $data, FALSE );
-				$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-			}
 			$this->restart( 'edit/'.$projectId, TRUE );
 		}
 
@@ -212,11 +232,15 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'canRemove', $this->env->getAcl()->has( 'manage_project', 'remove' ) );
 		$this->addData( 'isDefault', $isDefault );
 		if( $this->useCompanies ){
-			$modelCompany			= new Model_Company( $this->env );
-			$modelProjectCompany	= new Model_Project_Company( $this->env );
-			$this->addData( 'companies', $modelCompany->getAll() );				//   @todo: order!
-			$conditions		= ['projectId' => $project->projectId];
-			$this->addData( 'projectCompanies', $modelProjectCompany->get( $conditions ) );	//   @todo: order!
+			if( class_exists( 'Model_Company' ) ){
+				$modelCompany			= new Model_Company( $this->env );
+				$this->addData( 'companies', $modelCompany->getAll() );				//   @todo: order!
+			}
+			if( class_exists( 'Model_Project_Company' ) ){
+				$modelProjectCompany	= new Model_Project_Company( $this->env );
+				$conditions		= ['projectId' => $project->projectId];
+				$this->addData( 'projectCompanies', $modelProjectCompany->get( $conditions ) );	//   @todo: order!
+			}
 		}
 		if( $this->useCustomers ){
 			$modelCustomer	= new Model_Customer( $this->env );
@@ -257,15 +281,19 @@ class Controller_Manage_Project extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 ): void
+	/**
+	 *	@param		int			$page
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$this->checkDefault();
 //		$this->env->getCaptain()->callHook( 'Project', 'update', $this, ['projectId' => '43'] );
-		if( $this->useMissions )
-			$modelMission	= new Model_Mission( $this->env );
 
 		$filterId			= $this->session->get( 'filter_manage_project_id' );
-		$filterQuery		= $this->session->get( 'filter_manage_project_query' );
+		$filterQuery		= $this->session->get( 'filter_manage_project_query', '' );
 		$filterStatus		= $this->session->get( 'filter_manage_project_status' );
 		$filterPriority		= $this->session->get( 'filter_manage_project_priority' );
 		$filterUser			= $this->session->get( 'filter_manage_project_user' );
@@ -290,7 +318,7 @@ class Controller_Manage_Project extends Controller
 		if( (int) $filterId > 0 )
 			$conditions['projectId']	= [$filterId];
 		else{
-			if( strlen( trim( $filterQuery ) ) ){
+			if( 0 !== strlen( trim( $filterQuery ?? '' ) ) ){
 				$projectIds		= [];
 				$filters	= [
 					"title LIKE '%".$filterQuery."%'",
@@ -320,6 +348,7 @@ class Controller_Manage_Project extends Controller
 			$conditions['priority']	= $filterPriority;
 		if( isset( $conditions['projectId'] ) && !$conditions['projectId'] )
 			$conditions['projectId'] = [0];
+		$total	= $this->logic->countProjects( $conditions );
 
 		$orders	= [];
 		if( !( $filterOrder && $filterDirection ) ){
@@ -328,7 +357,6 @@ class Controller_Manage_Project extends Controller
 		}
 		$orders[$filterOrder]	= $filterDirection;
 
-		$total	= $this->modelProject->count( $conditions );
 		if( $page * $filterLimit > $total )
 			$this->restart( '0', TRUE );
 //		$page	= max( 0, min( floor( $total / $filterLimit ), $page ) );
@@ -336,7 +364,7 @@ class Controller_Manage_Project extends Controller
 		$limits	= [$page * $filterLimit, $filterLimit];
 
 		$projects	= [];
-		foreach( $this->modelProject->getAll( $conditions, $orders, $limits ) as $project ){
+		foreach( $this->logic->getProjects( $conditions, $orders, $limits ) as $project ){
 			$projects[$project->projectId]	= $project;
 			$project->users	= $this->modelProjectUser->getAllByIndex( 'projectId', $project->projectId );
 			$project->isDefault	= FALSE;
@@ -345,8 +373,10 @@ class Controller_Manage_Project extends Controller
 					$project->isDefault	= (bool) $projectUser->isDefault;
 				$project->users[$nr]	= $this->modelUser->get( $projectUser->userId );
 			}
-			if( $this->useMissions )
+			if( $this->useMissions ){
+				$modelMission	= new Model_Mission( $this->env );
 				$project->missions	= $modelMission->countByIndex( 'projectId', $project->projectId );
+			}
 		}
 		$this->addData( 'page', $page );
 		$this->addData( 'total', $total );
@@ -367,30 +397,24 @@ class Controller_Manage_Project extends Controller
 
 	/**
 	 *	@todo		finish: implement hook on other modules and test
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $projectId, bool $confirmed = FALSE ): void
 	{
 		$this->checkDefault();
-		$project	= $this->checkProject( $projectId, TRUE, TRUE, TRUE );
+		$project	= $this->checkProject( $projectId );
 
 		if( $confirmed && $this->request->has( 'remove' ) ){
 			$dbc	= $this->env->getDatabase();
 			$words	= (object) $this->getWords( 'remove' );
 			try{
 				$dbc->beginTransaction();
-				$language		= $this->env->getLanguage();
-				foreach( $this->logic->getProjectUsers( $projectId ) as $member ){
-					if( $member->userId !== $this->userId ){
-						$user	= $this->modelUser->get( $member->userId );
-						$data	= ['project' => $project, 'user' => $user];
-						$mail	= new Mail_Manage_Project_Removed( $this->env, $data, FALSE );
-						$this->logicMail->handleMail( $mail, $user, $language->getLanguage() );
-					}
-				}
 				$payload	= ['projectId' => $projectId];
 				$this->env->getCaptain()->callHook( 'Project', 'remove', $this, $payload );
 				$dbc->commit();
 				$this->messenger->noteSuccess( $words->msgSuccessRemoved, $project->title );
+				$this->logic->informMembersAboutRemoval( $project );
 				$this->restart( NULL, TRUE );
 			}
 			catch( Exception $e ){
@@ -404,14 +428,22 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'project', $project );
 	}
 
+	/**
+	 *	@param		string		$projectId
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeUser( string $projectId, string $userId ): void
 	{
-		$project		= $this->checkProject( $projectId, TRUE, TRUE );
+		$project		= $this->checkProject( $projectId );
 		$words			= (object) $this->getWords( 'edit-panel-users' );
 		$numberUsers	= 0;																	//  prepare user counter
 		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );	//  get project user relations
 		$user			= NULL;
 		foreach( $relations as $relation ){														//  iterate relations
+			/** @var ?Entity_User $relatedUser */
 			$relatedUser	= $this->modelUser->get( $relation->userId );						//  get user from relation
 			$numberUsers	+= ( $relatedUser && $relatedUser->status > 0 ) ? 1 : 0;			//  count only existing and active users
 			if( $relatedUser->userId === $userId )
@@ -424,18 +456,24 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( $words->msgInvalidUser );
 		}
 		else{
-			$this->logic->removeProjectUser( $projectId, $userId, TRUE );
+			$this->logic->removeProjectUser( $projectId, $userId );
 			$this->messenger->noteSuccess( $words->msgUserRemoved, $user->username, $project->title );
+			$this->logic->informMembersAboutMembers( $project, $this->userId );
 		}
 		if( $userId == $this->userId )
 			$this->restart( NULL, TRUE );
 		$this->restart( 'edit/'.$projectId, TRUE );
 	}
 
+	/**
+	 *	@param		string|NULL		$projectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setDefault( string $projectId = NULL ): void
 	{
 		$this->checkUserProjects();
-		$projectId	= $projectId ? $projectId : $this->request->get( 'projectId' );
+		$projectId	= $projectId ?: $this->request->get( 'projectId' );
 
 		$projects	= $this->modelProject->getUserProjects( $this->userId );
 		if( count( $projects ) === 1 ){
@@ -453,12 +491,18 @@ class Controller_Manage_Project extends Controller
 		$this->addData( 'from', $this->request->get( 'from' ) );
 	}
 
+	/**
+	 *	@param		string		$projectId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $projectId ): void
 	{
-		$project			= $this->checkProject( $projectId, TRUE );
+		$project			= $this->checkProject( $projectId );
 		$project->users		= $this->logic->getProjectUsers( $projectId );
 		$project->coworkers	= $this->logic->getCoworkers( $this->userId, $projectId );
-		$project->creator	= $project->creatorId && isset( $project->creatorId ) ? $project->users[$project->creatorId] : NULL;
+		$project->creator	= $project->creatorId ? $project->users[$project->creatorId] : NULL;
 
 		$isOwner		= $project->creatorId == $this->userId;
 		$isWorker		= array_key_exists( $this->userId, $project->users );
@@ -469,6 +513,9 @@ class Controller_Manage_Project extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 * @throws ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -477,23 +524,24 @@ class Controller_Manage_Project extends Controller
 		$this->useMissions		= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies		= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
-		$this->userId			= $this->session->get( 'auth_user_id' );
-		$this->roleId			= $this->session->get( 'auth_role_id' );
-		$this->logic			= Logic_Project::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->userId			= $this->session->get( 'auth_user_id', 0 );
+		$this->roleId			= $this->session->get( 'auth_role_id', 0 );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->getLogic( 'Project' );
-		$this->logicMail		= $this->getLogic( 'Mail' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelProject		= $this->getModel( 'Project' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelProjectUser	= $this->getModel( 'Project_User' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelUser		= $this->getModel( 'User' );
-		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId );
+		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId ?? '' );
 		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
 
 		if( !$this->session->get( 'filter_manage_project_limit' ) )
 			$this->session->set( 'filter_manage_project_limit', 15 );
 	}
 
-	protected function checkDefault()
+	protected function checkDefault(): void
 	{
 		$default	= $this->modelProjectUser->getByIndices( [
 			'userId'	=> $this->userId,
@@ -505,7 +553,13 @@ class Controller_Manage_Project extends Controller
 		}
 	}
 
-	protected function checkProject( string $projectId, bool $checkMembership = TRUE )
+	/**
+	 *	@param		string		$projectId
+	 *	@param		bool		$checkMembership
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkProject( string $projectId, bool $checkMembership = TRUE ): ?object
 	{
 		$project		= $this->modelProject->get( $projectId );
 		if( !$project ){
@@ -525,7 +579,7 @@ class Controller_Manage_Project extends Controller
 		return $project;
 	}
 
-	protected function checkUserProjects()
+	protected function checkUserProjects(): void
 	{
 		if( !$this->modelProjectUser->countByIndex( 'userId', $this->userId ) ){
 			$words		= (object) $this->getWords( 'index' );
@@ -534,6 +588,10 @@ class Controller_Manage_Project extends Controller
 		}
 	}
 
+	/**
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 */
 	protected function getWorkersOfMyProjects(): array
 	{
 		return $this->logic->getCoworkers( $this->userId );

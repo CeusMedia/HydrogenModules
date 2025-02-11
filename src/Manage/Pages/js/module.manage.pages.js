@@ -16,7 +16,7 @@ ModuleManagePages.PageEditor = {
 		if(!(words))
 			return;
 		jQuery.ajax({
-			url: "./manage/page/ajax/blacklistSuggestedKeywords",
+			url: "./ajax/manage/page/blacklistSuggestedKeywords",
 			data: {pageId: pageId, words: words},
 			method: "post",
 			dataType: "JSON",
@@ -64,7 +64,7 @@ ModuleManagePages.PageEditor = {
 		var format = jQuery("#input_page_format").val();
 		var value = jQuery("#input_page_editor").val();
 		jQuery.ajax({
-			url: "./manage/page/ajax/setEditor/"+value+"/"+format,
+			url: "./ajax/manage/page/setEditor/"+value+"/"+format,
 			success: function(){
 				jQuery("#input_page_editor").data("original-value", value).trigger("keyup.FormChanges");
 				document.location.reload();
@@ -98,7 +98,7 @@ ModuleManagePages.PageEditor = {
 				},
 				"Ctrl-S": function(cm) {
 					jQuery.ajax({
-						url: "./manage/page/ajax/saveContent/",
+						url: "./ajax/manage/page/saveContent/",
 						data: {content: cm.getValue(), pageId: ModuleManagePages.PageEditor.pageId},
 						dataType: "json",
 						method: "post",
@@ -146,7 +146,7 @@ ModuleManagePages.PageEditor = {
 
 	suggestKeyWords: function(pageId, id){
 		jQuery.ajax({
-			url: "./manage/page/ajax/suggestKeywords",
+			url: "./ajax/manage/page/suggestKeywords",
 			data: {pageId: pageId},
 			method: "post",
 			dataType: "JSON",
@@ -213,7 +213,7 @@ ModuleManagePages.PageEditor = {
 			if(key == 'preview')
 				ModuleManagePages.PageEditor.loadPagePreview();
 			jQuery.ajax({
-				url: "./manage/page/ajax/setTab/"+key,
+				url: "./ajax/manage/page/setTab/"+key,
 				type: "post"
 			});
 		});
@@ -264,7 +264,7 @@ ModuleManagePages.PageEditor = {
 					pageIds.push(jQuery(this).data("pageId"));
 				});
 				jQuery.ajax({
-					url: "./manage/page/ajax/orderPages",
+					url: "./ajax/manage/page/orderPages",
 					data: {pageIds: pageIds},
 					method: "POST",
 					success: function(){}

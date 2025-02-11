@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $templates */
 /** @var object $template */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $optTemplate	= ['' => '-'];
 foreach( $templates as $item )

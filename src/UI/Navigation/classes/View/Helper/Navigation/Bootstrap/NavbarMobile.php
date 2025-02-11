@@ -3,12 +3,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar
 {
-	protected $hideOnDesktop	= FALSE;
+	protected bool $hideOnDesktop	= FALSE;
 
 	/**
 	 *	@todo 		 remove after abstract interface and abstract of Hydrogen view helper are updated
 	 */
-	public function __toString()
+	public function __toString(): string
 	{
 		return $this->render();
 	}
@@ -25,8 +25,8 @@ class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigati
 		$classes	= ['layout-navbar-mobile navbar-fixed-top mm-fixed-top'];
 		if( $this->hideOnDesktop )
 			$classes[]	= 'hidden-desktop';
-		return  HtmlTag::create( 'div', parent::render(), array(
+		return  HtmlTag::create( 'div', parent::render(), [
 			'class'	=> join( ' ', $classes ),
-		) );
+		] );
 	}
 }

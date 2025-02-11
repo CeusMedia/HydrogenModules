@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -12,7 +12,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RegexFilter as RegexFileFilter;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\XML\ElementReader as XmlElementReader;
-use CeusMedia\HydrogenFramework\Application\Console as ConsoleApplication;
+use CeusMedia\HydrogenFramework\Application\ConsoleAbstraction;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -20,9 +20,9 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
-class Scheduler extends ConsoleApplication
+class Scheduler extends ConsoleAbstraction
 {
 	protected array $intervals	= [
 		'sec'	=> [],
@@ -64,7 +64,7 @@ class Scheduler extends ConsoleApplication
 				if( $modes && !in_array( $job->mode, $modes ) )
 					continue;
 				if( array_key_exists( $jobObj->id, $map->jobs ) )
-					throw new \DomainException( 'Duplicate job ID "'.$jobObj->id.'"' );
+					throw new DomainException( 'Duplicate job ID "'.$jobObj->id.'"' );
 #				foreach( $job->data as $date )
 #					$jobObj->data[$date->getAttribute( 'key' )]	= (string) $job;
 				$map->jobs[$jobObj->id] = $jobObj;
@@ -82,7 +82,12 @@ class Scheduler extends ConsoleApplication
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.server_scheduler.', TRUE );
 	}
 
-	public function loadJobs( $mode = NULL )
+	/**
+	 *	@param		$mode
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function loadJobs( $mode = NULL ): void
 	{
 		if( $mode === NULL )
 			$mode	= $this->moduleConfig->get( 'mode' );
@@ -99,7 +104,7 @@ class Scheduler extends ConsoleApplication
 		$this->jobber->loadJobs( [$mode] );
 	}
 
-	public function run( $loop = FALSE, $verbose = FALSE )
+	public function run( $loop = FALSE, $verbose = FALSE ): ?int
 	{
 		$sleep		= $this->moduleConfig->get( 'console.sleep' );
 		$loop		= $loop	&& $sleep > 0;
@@ -124,6 +129,7 @@ class Scheduler extends ConsoleApplication
 				sleep( $sleep );
 		}
 		while( $loop );
+		return 0;
 	}
 
 	protected function getChanges( $last, $now ): array
@@ -139,10 +145,10 @@ class Scheduler extends ConsoleApplication
 		$changes	= [
 			'sec'	=> $last != $now,
 			'min'	=> $minute1 != $minute2,
-			'min5'	=> floor( $minute1 / 5 ) != floor( $minute1 / 5 ),
-			'min10'	=> floor( $minute1 / 10 ) != floor( $minute1 / 10 ),
-			'min15'	=> floor( $minute1 / 15 ) != floor( $minute1 / 15 ),
-			'min30'	=> floor( $minute1 / 30 ) != floor( $minute1 / 30 ),
+			'min5'	=> floor( $minute1 / 5 ) != floor( $minute2 / 5 ),
+			'min10'	=> floor( $minute1 / 10 ) != floor( $minute2 / 10 ),
+			'min15'	=> floor( $minute1 / 15 ) != floor( $minute2 / 15 ),
+			'min30'	=> floor( $minute1 / 30 ) != floor( $minute2 / 30 ),
 			'hour'	=> $hour1 != $hour2,
 			'day'	=> $day1 != $day2,
 			'week'	=> date( "w", $last ) != date( "w", $now ),
@@ -154,7 +160,8 @@ class Scheduler extends ConsoleApplication
 		return $changes;
 	}
 
-	protected function out( $message ){
-		print( $message."\n" );
+	protected function out( string $message ): void
+	{
+		print( $message.PHP_EOL );
 	}
 }

@@ -6,12 +6,23 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_My_Provision_License extends View
 {
-	public function add(){}
-	public function assign(){}
-	public function index(){}
-	public function view(){}
+	public function add(): void
+	{
+	}
 
-	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
+	public function assign(): void
+	{
+	}
+
+	public function index(): void
+	{
+	}
+
+	public function view(): void
+	{
+	}
+
+	public static function ___onRegisterTab( Environment $env, $context, $module, $data ): void
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $env );
 		$logicProvision = Logic_User_Provision::getInstance( $env );
@@ -33,7 +44,7 @@ class View_Manage_My_Provision_License extends View
 		$context->registerTab( '../license/key', self::renderTabLabel( $env, 'keys', $nrKeys, 'key' ) );
 	}*/
 
-	public static function renderDefinitionList( $data )
+	public static function renderDefinitionList( array $data ): string
 	{
 		if( !count( $data ) )
 			return '';
@@ -45,10 +56,15 @@ class View_Manage_My_Provision_License extends View
 		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
-	public function renderLicenseFacts( $productLicense, $columns = [] )
+	/**
+	 *	@param		object		$productLicense
+	 *	@param		array		$columns
+	 *	@return		string
+	 */
+	public function renderLicenseFacts( object $productLicense, array $columns = [] ): string
 	{
 		$words	= $this->getWords();
-		$list = [];
+		$list	= [];
 		$facts	= ['productTitle', 'licenseTitle', 'users', 'duration', 'price'];
 		foreach( $facts as $fact ){
 			if( $columns && !in_array( $fact, $columns ) )
@@ -80,12 +96,13 @@ class View_Manage_My_Provision_License extends View
 //			$list[]	= HtmlTag::create( 'dt', $words['add']["label".ucFirst( $fact )] );
 //			$list[]	= HtmlTag::create( 'dd', $value );
 		}
-		if( $list )
-			return self::renderDefinitionList( $list );
-//			return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
+		if( [] === $list )
+			return '';
+		return self::renderDefinitionList( $list );
+//		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
-	public static function renderTabs( Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 

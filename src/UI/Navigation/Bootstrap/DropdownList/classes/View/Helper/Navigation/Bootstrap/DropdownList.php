@@ -3,11 +3,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Navigation_Bootstrap_DropdownList
 {
-	protected static $matches	= [];
+	protected static array $matches	= [];
 
 	public static function render( $map, $current ): string
 	{
-		$current	= self::calculateMatches( $map, $current ? $current : 'index' );
+		$current	= self::calculateMatches( $map, $current ?: 'index' );
 		$list		= [];
 		foreach( $map as $nr => $entry ){
 			$entry	= (object) $entry;
@@ -29,7 +29,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 		] );
 	}
 
-	protected static function calculateMatches( $map, $current )
+	protected static function calculateMatches( $map, $current ): int|string|NULL
 	{
 		foreach( $map as $entry ){
 			if( $entry->type === "menu" )
@@ -88,7 +88,7 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 	{
 		if( !isset( $entry->icon ) )
 			return $entry->label;
-		if( preg_match( '/^fa /', $entry->icon ) )
+		if( str_starts_with( $entry->icon, 'fa ' ) )
 			$icon	= HtmlTag::create( 'i', '', ['class' => $entry->icon] );
 		else
 			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-'.$entry->icon] );
@@ -103,10 +103,10 @@ class View_Helper_Navigation_Bootstrap_DropdownList
 			$class	= 'active';
 		}
 		$label		= self::renderLabelWithIcon( $entry );
-		$link		= HtmlTag::create( 'a', $label, array(
+		$link		= HtmlTag::create( 'a', $label, [
 			'href'	=> $entry->path,
 			'title'	=> !empty( $entry->desc ) ? $entry->desc : NULL,
-		) );
+		] );
 		return HtmlTag::create( 'li', $link, [
 			'class'	=> $class,
 			'role'	=> 'presentation'

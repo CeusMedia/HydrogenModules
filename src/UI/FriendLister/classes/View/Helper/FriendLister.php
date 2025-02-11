@@ -3,8 +3,8 @@
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@copyright		2012-2024 Ceus Media <https://ceusmedia.de/>
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -18,8 +18,8 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  *	Renders list of linked friend sites.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012-2021 Ceus Media <https://ceusmedia.de/>
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
+ *	@copyright		2012-2024 Ceus Media <https://ceusmedia.de/>
+ *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 class View_Helper_FriendLister extends Abstraction
 {
@@ -56,10 +56,10 @@ class View_Helper_FriendLister extends Abstraction
 			$icon	= $this->renderIcon( $item );													//
 			$icon	= HtmlTag::create( 'span', $icon, ['class' => 'user-icon'] );		//
 			$name	= HtmlTag::create( 'span', $item->name, ['class' => 'user-name'] );	//
-			$attr	= array(
+			$attr	= [
 				'href'	=> (string) $item->link,
 				'title'	=> addslashes( (string) $item->title ),
-			);
+			];
 			$link	= HtmlTag::create( 'a', $icon.$name, $attr );								//
 			$label	= HtmlTag::create( 'span', $link, ['class' => 'user-label'] );		//
 			$list[]	= HtmlTag::create( 'li', $label, ['class' => 'user-item'] );			//
@@ -96,7 +96,7 @@ class View_Helper_FriendLister extends Abstraction
 			$icon	= (string) $friend->icon;														//
 		if( !$icon )
 			return '&nbsp;';
-		$attributes	= array( 'src' => $icon, 'alt' => (string) $friend->name );						//
+		$attributes	= ['src' => $icon, 'alt' => (string) $friend->name];						//
 		return HtmlTag::create( 'img', NULL, $attributes );										//
 	}
 }

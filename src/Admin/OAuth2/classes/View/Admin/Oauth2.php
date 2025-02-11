@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Oauth2 extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 

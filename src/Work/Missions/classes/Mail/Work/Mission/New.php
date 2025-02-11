@@ -6,23 +6,36 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	protected ?string $languageSection				= 'mail-new';
 	protected ?View_Helper_Mail_Facts $helperFacts	= NULL;
 
-	public function generate(): self
+	//  --  PROTECTED  --  //
+
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		parent::generate();
-		$data			= $this->data;
+		$data	= $this->data;
 		$this->setSubjectFromMission( $data['mission'] );
 		$this->prepareFacts( $data );
 		$this->addBodyClass( 'job-work-mission-mail-new' );
-		$this->setHtml( $this->renderHtml() );
-		$this->setText( $this->renderText() );
+		$this->setHtml( $this->renderHtmlMailBody() );
+		$this->setText( $this->renderTextMailBody() );
 		return $this;
 	}
 
-	public function prepareFacts( array $data ): void
+	/**
+	 *	@param		array		$data
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function prepareFacts( array $data ): void
 	{
 		$mission	= $data['mission'];
 		$this->helperFacts	= new View_Helper_Mail_Facts();
-		$this->helperFacts->setLabels( (array) $this->labels );
+		$this->helperFacts->setLabels( $this->labels );
 		$this->helperFacts->setTextLabelLength( 13 );
 
 		$this->helperFacts->add( 'type', $this->labelsTypes[$mission->type], $this->labelsTypes[$mission->type] );
@@ -33,6 +46,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 			$this->helperFacts->add( 'projectId', $link, $project->title );
 		}
 		if( (int) $mission->workerId ){
+			/** @var ?Entity_User $worker */
 			$worker		= $this->modelUser->get( $mission->workerId );
 			$this->helperFacts->add( 'worker', $this->renderUser( $worker ), $this->renderUserAsText( $worker ) );
 		}
@@ -57,7 +71,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				$this->helperFacts->add( 'dayEnd', $weekdayEnd.', '.$dateEnd );
 			}
 			$timeRange	= $timeStart.' - '.$timeEnd;
-			$timeRange	= $this->labels->labelTime_prefix.$timeRange.$this->labels->labelTime_suffix;
+			$timeRange	= $this->labels['labelTime_prefix'].$timeRange.$this->labels['labelTime_suffix'];
 			$this->helperFacts->add( 'time', $timeRange );
 //			$helperFacts->add( 'timeStart', date( 'H:i', $timestampStart ) );
 //			$helperFacts->add( 'timeEnd', date( 'H:i', $timestampEnd ) );
@@ -72,10 +86,15 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 			$this->helperFacts->add( 'reference', $mission->reference );
 	}
 
-	public function renderHtml(): string
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderHtmlMailBody(): string
 	{
 		$data			= $this->data;
-		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
+//		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
 		$url			= $this->baseUrl.'work/mission/'.$mission->missionId;
@@ -83,7 +102,7 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 		$dateFull		= $nowWeekday.', der '.date( "j" ).'.&nbsp;'.$nowMonth;
 
-		$content		= HtmlTag::create( 'em', $this->words->emptyContent, ['class' => 'muted'] );
+		$content		= HtmlTag::create( 'em', $this->words['emptyContent'], ['class' => 'muted'] );
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= View_Helper_Markdown::transformStatic( $this->env, $mission->content );
 
@@ -108,20 +127,26 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
 			]
 		] );
-		return $this->view->loadContentFile( 'mail/work/mission/new.html', $data );
+		return $this->loadContentFile( 'mail/work/mission/new.html', $data ) ?? '';
 	}
 
-	public function renderText(): string
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderTextMailBody(): string
 	{
 		$data			= $this->data;
-		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
+//		$titleLength	= 80;#$config->get( 'module.work_mission.mail.title.length' );
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$mission		= $data['mission'];
+		/** @var ?Entity_User $modifier */
 		$modifier		= $this->modelUser->get( $mission->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 
-		$content		= $this->words->emptyContent;
+		$content		= $this->words['emptyContent'];
 		if( strlen( trim( $mission->content ) ) )
 		 	$content	= strip_tags( $mission->content );
 
@@ -145,6 +170,6 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 				'salute'	=> $this->salutes ? $this->salutes[array_rand( $this->salutes )] : '',
 			]
 		] );
-		return $this->view->loadContentFile( 'mail/work/mission/new.txt', $data );
+		return $this->loadContentFile( 'mail/work/mission/new.txt', $data ) ?? '';
 	}
 }

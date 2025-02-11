@@ -7,7 +7,7 @@ $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $nrMembers		= count( $group->members );
 $labelMembers	= $nrMembers == 1 ? $nrMembers.' Mitglied' : $nrMembers.' Mitglieder';
-$description	= $group->description ? $group->description : '<em class="muted">Keine Beschreibung derzeit.</em>';
+$description	= $group->description ?: '<em class="muted">Keine Beschreibung derzeit.</em>';
 $participation	= HtmlTag::create( 'abbr', $words['types'][$group->type], ['title' => $words['types-description'][$group->type]] );
 $address		= HtmlTag::create( 'kbd', $group->address );
 $facts			= join( '&nbsp;&nbsp;|&nbsp;&nbsp;', [

@@ -4,14 +4,16 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Backup as FileBackup;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\HTML\Exception\View as HtmlExceptionView;
 use CeusMedia\Common\XML\Element as XmlElement;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Admin_Config extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
+	protected string $filterPrefix	= 'filter_admin_config_';
 
 	/*	public function direct()
 	{
@@ -30,26 +32,29 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'versions', $versions );
 	}*/
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
-			$this->session->remove( 'filter_admin_config_category' );
-			$this->session->remove( 'filter_admin_config_moduleId' );
-			$this->session->remove( 'filter_admin_config_query' );
+			$this->session->remove( $this->filterPrefix.'category' );
+			$this->session->remove( $this->filterPrefix.'moduleId' );
+			$this->session->remove( $this->filterPrefix.'query' );
 		}
+		if( $this->request->has( 'query' ) )
+			$this->session->set( $this->filterPrefix.'query', trim( $this->request->get( 'query', '' ) ) );
 		if( $this->request->has( 'category' ) )
-			$this->session->set( 'filter_admin_config_category', trim( $this->request->get( 'category' ) ) );
+			$this->session->set( $this->filterPrefix.'category', trim( $this->request->get( 'category', '' ) ) );
 		if( $this->request->has( 'moduleId' ) )
-			$this->session->set( 'filter_admin_config_moduleId', trim( $this->request->get( 'moduleId' ) ) );
-		if( !$this->session->get( 'filter_admin_config_category' ) )
-			$this->session->remove( 'filter_admin_config_moduleId' );
+			$this->session->set( $this->filterPrefix.'moduleId', trim( $this->request->get( 'moduleId', '' ) ) );
+		if( !$this->session->get( $this->filterPrefix.'category' ) )
+			$this->session->remove( $this->filterPrefix.'moduleId' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
-		$filterCategory	= $this->session->get( 'filter_admin_config_category' );
-		$filterModuleId	= $this->session->get( 'filter_admin_config_moduleId' );
+		$filterCategory	= $this->session->get( $this->filterPrefix.'category' );
+		$filterQuery	= $this->session->get( $this->filterPrefix.'query' );
+		$filterModuleId	= $this->session->get( $this->filterPrefix.'moduleId' );
 
 		$foundModules	= $this->env->getModules()->getAll();
 		$categories		= [];
@@ -69,11 +74,19 @@ class Controller_Admin_Config extends Controller
 					if( $filterCategory === $module->category )
 						$modules[$moduleId]	= $module;
 			$filteredModules	= $foundModules	= $modules;
-			if( !$filterModuleId && count( $foundModules ) === 1 ){
-				$module	= array_slice( array_keys( $foundModules ), 0, 1 );
-				$this->restart( 'filter?moduleId='.$module[0], TRUE );
-			}
 		}
+		if( $filterQuery ){
+			$modules		= [];
+			foreach( $foundModules as $moduleId => $module )
+				if( str_contains( $module->title.' '.$module->description, $filterQuery ) )
+					$modules[$moduleId]	= $module;
+			$filteredModules	= $foundModules	= $modules;
+		}
+		if( !$filterModuleId && count( $foundModules ) === 1 ){
+			$module	= array_slice( array_keys( $foundModules ), 0, 1 );
+			$this->restart( 'filter?moduleId='.$module[0], TRUE );
+		}
+
 		if( $filterModuleId ){
 			if( !array_key_exists( $filterModuleId, $foundModules ) )
 				$this->restart( 'filter?moduleId=', TRUE );
@@ -84,14 +97,14 @@ class Controller_Admin_Config extends Controller
 			$foundModules	= $modules;
 		}
 
-		$this->addData( 'filterCategory', $this->session->get( 'filter_admin_config_category' ) );
-		$this->addData( 'filterModuleId', $this->session->get( 'filter_admin_config_moduleId' ) );
+		$this->addData( 'filterCategory', $this->session->get( $this->filterPrefix.'category' ) );
+		$this->addData( 'filterModuleId', $this->session->get( $this->filterPrefix.'moduleId' ) );
 		$this->addData( 'categories', $categories );
 		$this->addData( 'filteredModules', $filteredModules );
 		$this->addData( 'modules', $foundModules );
 	}
 
-	public function edit( $moduleId = NULL )
+	public function edit( $moduleId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
@@ -107,10 +120,10 @@ class Controller_Admin_Config extends Controller
 			if( $request->has( 'save' ) ){
 				$list	= [];
 				foreach( $request->getAll() as $key => $value ){
-					if( preg_match( '/password/', $key ) && !strlen( $value ) )
+					if( str_contains( $key, 'password' ) && !strlen( $value ) )
 						continue;
 					if( substr_count( $key, "|" ) ){
-						list( $partModuleId, $partKey ) = explode( "|", $key );
+						[$partModuleId, $partKey] = explode( "|", $key );
 						$partKey	= preg_replace( "/([a-z0-9])_(\S)/", "\\1.\\2", $partKey );
 						if( !isset( $list[$partModuleId] ) )
 							$list[$partModuleId]	= [];
@@ -133,14 +146,15 @@ class Controller_Admin_Config extends Controller
 			$file		= new FileBackup( $fileName );
 			$version	= $file->getVersion();
 			$version	= is_int( $version ) ? $version + 1 : 0;
-			$versions	= $version;
+			$versions[]	= $version;
 			$this->addData( 'module', $module );
 			$this->addData( 'versions', $versions );
 		}
 		$this->addData( 'moduleId', $moduleId );
 	}
 
-	public function restore( $moduleId ){
+	public function restore( string $moduleId ): void
+	{
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( file_exists( $fileName ) ){
 			$file	= new FileBackup( $fileName );
@@ -158,7 +172,7 @@ class Controller_Admin_Config extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $moduleId )
+	public function view( string $moduleId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$modules	= $this->env->getModules()->getAll();
@@ -173,7 +187,7 @@ class Controller_Admin_Config extends Controller
 		$file		= new FileBackup( $fileName );
 		$version	= $file->getVersion();
 		$version	= is_int( $version ) ? $version + 1 : 0;
-		$versions	= $version;
+		$versions[]	= $version;
 		$this->addData( 'module', $module );
 		$this->addData( 'moduleId', $moduleId );
 		$this->addData( 'versions', $versions );
@@ -201,9 +215,9 @@ class Controller_Admin_Config extends Controller
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
 		if( !is_writable( $fileName ) )
 			throw new RuntimeException( 'Config file of module "'.$moduleId.'" is not writable' );
-		$xml		= FileReader::load( $fileName );
-		$tree		= new XmlElement( $xml );
 		try{
+			$xml		= FileReader::load( $fileName );
+			$tree		= new XmlElement( $xml );
 			foreach( $tree->config as $node ){
 				$type	= $node->getAttribute( 'type' );
 				$value	= $node->getValue();

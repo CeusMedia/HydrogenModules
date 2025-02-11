@@ -3,7 +3,7 @@
 	<title>Catalog: Bookstore</title>
 	<description/>
 	<category>Catalog</category>
-	<version>0.8</version>
+	<version>0.8.1</version>
 	<log version="0.4.6">Responsive Design for category index.</log>
 	<log version="0.4.7">Support for search engine module.</log>
 	<log version="0.4.8">Supporting article description for shop lists and mails.</log>
@@ -33,6 +33,7 @@
 	<log version="0.7.8">Add categories to sitemap / search index.</log>
 	<log version="0.7.9">Extract hooks to own class.</log>
 	<log version="0.8">Migration to support CeusMedia:* 0.9.x.</log>
+	<log version="0.8.1">Migration to support CeusMedia:* 1.0.x.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -80,7 +81,7 @@
 	<config type="string" name="feed.managingEditor" title="Email address for person responsible for editorial content."></config>
 	<config type="string" name="feed.webMaster" title="Email address for person responsible for technical issues relating to channel."></config>
 	<config type="string" name="feed.generator" title="A string indicating the program used to generate the channel."></config>
-	<config type="string" name="feed.docs" title="A URL that points to the documentation for the format used in the RSS file.">http://blogs.law.harvard.edu/tech/rss</config>
+	<config type="string" name="feed.docs" title="A URL that points to the documentation for the format used in the RSS file.">https://blogs.law.harvard.edu/tech/rss</config>
 	<config type="integer" name="feed.ttl" title="A number of minutes that indicates how long a channel can be cached before refreshing from the source.">60</config>
 	<config type="string" name="feed.skipHours" title="An XML element that contains up to 24 hour-sub-elements whose value is a number between 0 and 23"></config>
 	<config type="string" name="feed.skipDays" title="An XML element that contains up to seven day-sub-elements whose value is Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday."></config>

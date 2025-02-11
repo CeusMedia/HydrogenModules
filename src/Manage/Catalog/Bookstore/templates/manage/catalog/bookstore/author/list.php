@@ -1,4 +1,8 @@
 <?php
+
+/** @var array $words */
+/** @var array<object> $authors */
+
 $w			= (object) $words['index'];
 
 $list		= $this->renderList( $authors, isset( $author ) ? $author->authorId : NULL );

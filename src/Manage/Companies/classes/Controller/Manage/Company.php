@@ -15,10 +15,10 @@ class Controller_Manage_Company extends Controller
 	public function activate( $companyId )
 	{
 		$company	= $this->checkCompany( $companyId );
-		$this->modelCompany->edit( $companyId, array(
+		$this->modelCompany->edit( $companyId, [
 			'status'		=> 2,
 			'modifiedAt'	=> time()
-		) );
+		] );
 		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
 		$this->restart( './manage/company' );
 	}
@@ -58,10 +58,10 @@ class Controller_Manage_Company extends Controller
 	public function deactivate( $companyId )
 	{
 		$company	= $this->checkCompany( $companyId );
-		$this->modelCompany->edit( $companyId, array(
+		$this->modelCompany->edit( $companyId, [
 			'status'	=> -2,
 			'modifiedAt' => time()
-		) );
+		] );
 		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
 		$this->restart( './manage/company' );
 	}
@@ -120,10 +120,10 @@ class Controller_Manage_Company extends Controller
 	public function reject( $companyId )
 	{
 		$company	= $this->checkCompany( $companyId );
-		$this->modelCompany->edit( $companyId, array(
+		$this->modelCompany->edit( $companyId, [
 			'status'	=> -1,
 			'modifiedAt' => time()
-		) );
+		] );
 		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" abgelehnt.' );
 		$this->restart( './manage/company' );
 	}

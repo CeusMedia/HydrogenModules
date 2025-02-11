@@ -1,13 +1,24 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var object $target */
+/** @var array<object> $targets List of transfer targets */
 
 $table	= HtmlTag::create( 'div', 'Keine Transferziele definiert. <a href="./manage/form/target/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );
 
-$statuses	= [
-	0	=> 'inaktiv',
-	1	=> 'aktiv',
-];
+$statusHelper	= View_Helper_StatusBadge::create()
+	->setType( View_Helper_StatusBadge::TYPE_LABEL )
+	->setStatusMap( [
+		View_Helper_StatusBadge::STATUS_POSITIVE	=> 1,
+		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 0,
+	] )
+	->setLabelMap( [
+		View_Helper_StatusBadge::STATUS_POSITIVE	=> 'aktiv',
+		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'inaktiv',
+	] );
 
 $helper	= new View_Helper_TimePhraser( $env );
 $helper->setTemplate( 'vor %s' );
@@ -18,16 +29,18 @@ if( count( $targets ) ){
 		$rows[]	= HtmlTag::create( 'tr', [
 //			HtmlTag::create( 'td', print_m($target, NULL, NULL, TRUE ) ),
 			HtmlTag::create( 'td', $link ),
-			HtmlTag::create( 'td', $statuses[$target->status] ),
+			HtmlTag::create( 'td', $statusHelper->setStatus( $target->status ) ),
 //			HtmlTag::create( 'td', $target->className ),
+			HtmlTag::create( 'td', $target->rules ),
 			HtmlTag::create( 'td', $target->transfers ),
 			HtmlTag::create( 'td', $target->fails ),
 			HtmlTag::create( 'td', $target->usedAt ? $helper->setTimestamp( $target->usedAt )->render() : '-' ),
 		] );
 	}
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Titel', 'Zustand'/*, 'Implementierung'*/, 'Transfers', 'Fails', 'Verwendung'] ) );
-	$tbody	= HtmlTag::create( 'tbody', $rows );
-	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped table-fixed not-table-bordered'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '10%', '10%', '10%', '10%', '10%'] );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Titel', 'Zustand', 'Formulare', 'Transfers', 'Fails', 'Verwendung'] ) );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped table-fixed not-table-bordered'] );
 }
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );

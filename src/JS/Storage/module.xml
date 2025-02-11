@@ -9,7 +9,7 @@
 	<category>JavaScript</category>
 	<source url="https://github.com/julien-maurel/js-storage">github.com</source>
 	<author site="https://github.com/julien-maurel">Julien Maurel</author>
-	<license source="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+	<license source="https://www.opensource.org/licenses/mit-license.php">MIT</license>
 	<files>
 		<class>Hook/JS/Storage.php</class>
 		<script>js.storage.js</script>

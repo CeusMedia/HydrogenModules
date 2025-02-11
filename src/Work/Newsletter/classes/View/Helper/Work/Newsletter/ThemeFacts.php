@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Work_Newsletter_ThemeFacts
 {
 	protected array $attributes	= [];
-	protected $data;
+	protected ?Entity_Newsletter_Theme $data		= NULL;
 	protected Environment $env;
 
 	public function __construct( Environment $env )
@@ -16,10 +16,10 @@ class View_Helper_Work_Newsletter_ThemeFacts
 
 	public function render(): string
 	{
-		$list	= [];
-		if( !$this->data )
+		if( NULL === $this->data )
 			throw new RuntimeException( 'No theme data set yet' );
 
+		$list	= [];
 		if( $this->data->license ){
 			$license	= $this->data->license;
 			if( $this->data->licenseUrl )
@@ -59,7 +59,7 @@ class View_Helper_Work_Newsletter_ThemeFacts
 		return $this;
 	}
 
-	public function setThemeData( $data ): self
+	public function setThemeData( Entity_Newsletter_Theme $data ): self
 	{
 		$this->data	= $data;
 		return $this;

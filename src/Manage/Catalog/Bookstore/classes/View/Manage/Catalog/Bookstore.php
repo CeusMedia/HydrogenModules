@@ -5,11 +5,11 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Catalog_Bookstore extends View
 {
-	public function index()
+	public function index(): void
 	{
 	}
 
-	protected function renderMainTabs()
+	public function renderMainTabs(): string
 	{
 		$currentTab		= (int) $this->env->getSession()->get( 'manage.catalog.bookstore.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'manage/catalog/bookstore' );

@@ -1,15 +1,23 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_News extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
+	protected HttpRequest $request;
+	protected PartitionSession $session;
+	protected MessengerResource $messenger;
 	protected Model_News $model;
 
-	public function add(){
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
+	{
 		$words	= $this->getWords();
 		if( $this->request->has( 'save' ) ){
 			$data	= array(
@@ -38,7 +46,13 @@ class Controller_Manage_News extends Controller
 		$this->addData( 'news', $news, FALSE );
 	}
 
-	public function edit( $newsId ){
+	/**
+	 *	@param		int|string		$newsId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $newsId ): void
+	{
 		$words	= $this->getWords();
 		if( !( strlen( trim( $newsId ) ) && (int) $newsId ) )
 			throw new OutOfRangeException( 'No news ID given' );
@@ -68,7 +82,8 @@ class Controller_Manage_News extends Controller
 		$this->addData( 'newsId', $newsId );
 	}
 
-	public function filter( $reset = NULL ){
+	public function filter( $reset = NULL ): void
+	{
 		$prefix	= 'filter_manage_news_';
 		if( $reset ){
 			$this->session->remove( $prefix.'query' );
@@ -79,7 +94,13 @@ class Controller_Manage_News extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $pageNr = 0, $limit = 15 ){
+	/**
+	 *	@param		int		$pageNr
+	 *	@param		int		$limit
+	 *	@return		void
+	 */
+	public function index( int $pageNr = 0, int $limit = 15 ): void
+	{
 		$limit		= max( 10, min( 100, abs( $limit ) ) );
 		$filterQuery	= $this->session->get( 'filter_manage_news_query' );
 		$filterStatus	= $this->session->get( 'filter_manage_news_status' );
@@ -101,7 +122,13 @@ class Controller_Manage_News extends Controller
 		$this->addData( 'filterStatus', $filterStatus );
 	}
 
-	public function remove( $newsId ){
+	/**
+	 *	@param		int|string		$newsId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $newsId ): void
+	{
 		$words	= $this->getWords();
 		$news	= $this->model->get( $newsId );
 		if( $news ){

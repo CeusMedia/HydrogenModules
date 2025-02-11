@@ -1,12 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/**
- *	Template for Univerlag Frontend.
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
- */
-
 /** @var Environment $env */
+/** @var View_Catalog_Bookstore $view */
 /** @var array $words */
 /** @var object $article */
 /** @var object $category */
@@ -21,9 +17,9 @@ $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $a->volume		= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $position		= $helper->renderPositionFromArticle( $article );
 
-$panelDetails	= $this->loadTemplateFile( 'catalog/bookstore/article/details.php' );
-$panelOrder		= $this->loadTemplateFile( 'catalog/bookstore/article/order.php' );
-$panelRelations	= $this->loadTemplateFile( 'catalog/bookstore/article/relations.php' );
+$panelDetails	= $view->loadTemplateFile( 'catalog/bookstore/article/details.php' );
+$panelOrder		= $view->loadTemplateFile( 'catalog/bookstore/article/order.php' );
+$panelRelations	= $view->loadTemplateFile( 'catalog/bookstore/article/relations.php' );
 
 $linkBack		= '';
 if( isset( $from ) && strlen( $from ) )

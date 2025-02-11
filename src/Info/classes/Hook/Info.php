@@ -1,28 +1,29 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info extends Hook
 {
-	public static function onAppDispatch( Environment $env, $context, $module, $payload )
+	public function onAppDispatch()
 	{
-		$path	= $env->getRequest()->get( '__path' );
-		if( !preg_match( "/^info/", $path ) )
+		$path	= $this->env->getRequest()->get( '__path', '' );
+		if( !str_starts_with( $path, 'info' ) )
 			return;
 
 		$path	= preg_replace( "/^info\//", "", $path );
-		$view	= new View_Info( $env );
-		if( $view->hasContentFile( 'html/info/'.$path.".html" ) ){
-			$controller	= new Controller_Info( $env, FALSE );
-			$controller->redirect( 'info', 'index', [$path] );
-			return TRUE;
-		}
-		else if( $env->getModules()->has( 'UI_Markdown' ) ){
-			$fileKey	= 'html/info/'.$path.".md";
-			if( $view->hasContentFile( $fileKey ) ){
-				$controller	= new Controller_Info( $env, FALSE );
-				$controller->redirect( 'info', 'index', [$path] );
+		$view	= new View_Info( $this->env );
+
+		$files	= [
+			'html/info/'.$path.'.html',
+			'html/info/'.$path.'.md',
+		];
+		foreach( $files as $file ){
+			if( $view->hasContentFile( $file ) ){
+				$request	= $this->env->getRequest();
+				$request->set( '__controller', 'info' );
+				$request->set( '__action', 'index' );
+				$request->set( '__arguments', [$path] );
 				return TRUE;
 			}
 		}

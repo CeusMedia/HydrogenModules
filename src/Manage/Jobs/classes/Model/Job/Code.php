@@ -1,16 +1,30 @@
 <?php
+
+use CeusMedia\Common\Exception\FileNotExisting as FileNotExistingException;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\PhpParser\Exception\MergeException as ParserMergeException;
 use CeusMedia\PhpParser\Parser\Regular as PhpParser;
 
 class Model_Job_Code
 {
+	protected Environment $env;
 	protected array $classes	= [];
+
+	public function __construct( Environment $env )
+	{
+		$this->env	= $env;
+	}
 
 	public function getClassesNames(): array
 	{
 		return array_keys( $this->classes );
 	}
 
+	/**
+	 *	@param		string		$className
+	 *	@return		object
+	 */
 	public function getClassData( string $className ): object
 	{
 		if( !array_key_exists( $className, $this->classes ) )
@@ -18,6 +32,11 @@ class Model_Job_Code
 		return $this->classes[$className];
 	}
 
+	/**
+	 *	@param		string		$className
+	 *	@param		string		$methodName
+	 *	@return		object
+	 */
 	public function getClassMethodData( string $className, string $methodName ): object
 	{
 		$class	= $this->getClassData( $className );
@@ -26,12 +45,21 @@ class Model_Job_Code
 		return $class->methods[$methodName];
 	}
 
+	/**
+	 *	@param		string		$className
+	 *	@return		array
+	 */
 	public function getClassMethods( string $className ): array
 	{
 		$class	= $this->getClassData( $className );
 		return array_keys( $class->methods );
 	}
 
+	/**
+	 *	@param		string		$className
+	 *	@param		string		$methodName
+	 *	@return		array
+	 */
 	public function getClassMethodSourceCode( string $className, string $methodName ): array
 	{
 		$method	= $this->getClassMethodData( $className, $methodName );
@@ -43,6 +71,11 @@ class Model_Job_Code
 		return $this->classes;
 	}
 
+	/**
+	 *	@param		string		$path
+	 *	@return		array
+	 *	@throws		ParserMergeException
+	 */
 	public function readAll( string $path ): array
 	{
 		if( !( file_exists( $path ) && is_dir( $path ) ) )
@@ -57,48 +90,68 @@ class Model_Job_Code
 		return $this->classes;
 	}
 
-	public function readFile( string $filePath ): object
+	/**
+	 *	@param		string		$filePath
+	 *	@return		object|FALSE
+	 *	@throws		FileNotExistingException
+	 *	@throws		ParserMergeException
+	 */
+	public function readFile( string $filePath ): object|FALSE
 	{
 		if( !( file_exists( $filePath ) && ( is_file( $filePath ) || is_link( $filePath ) ) ) )
-			throw new DomainException( 'File is not existing' );
+			throw FileNotExistingException::create( 'File is not existing' )
+				->setResource( $filePath )
+				->setDescription( 'The class name, referenced in job definition, is not leading to a job class file.' );
 
 		return $this->readFileWithParser( $filePath );
 	}
 
-	protected function readFileWithParser( string $filePath ): object
+	/**
+	 *	@param		string		$filePath
+	 *	@return		object|FALSE
+	 *	@throws		ParserMergeException
+	 */
+	protected function readFileWithParser( string $filePath ): object|FALSE
 	{
 		$parser	= new PhpParser();
 		$file	= $parser->parseFile( $filePath, '' );
 		foreach( $file->getClasses() as $className => $class ){
 			$methods	= [];
-			$this->classes[$className]	= (object) array(
+			$this->classes[$className]	= (object) [
 				'file'		=> $filePath,
 				'methods'	=> & $methods,
-				'desc'		=> preg_split( '/\r?\n/', $class->getDescription() ),
-			);
+				'desc'		=> preg_split( '/\r?\n/', $class->getDescription() ?? '' ),
+			];
 			foreach( $class->getMethods( FALSE ) as $methodName => $method ){
 				if( $method->getAccess() !== 'public' )
 					continue;
 				$arguments	= [];
-				$methods[$methodName]	= (object) array(
+				$methods[$methodName]	= (object) [
 					'arguments'	=> & $arguments,
 					'source' 	=> $this->clearSourceCode( $method->getSourceCode() ),
-					'desc'		=> preg_split( '/\r?\n/', $method->getDescription() ),
-				);
+					'desc'		=> preg_split( '/\r?\n/', $method->getDescription() ?? '' ),
+				];
 				foreach( $method->getParameters() as $paramName => $param ){
-					$arguments[$paramName]	= (object) array(
+					$arguments[$paramName]	= (object) [
 						'type'	=> $param->getType(),
 						'desc'	=> $param->getDescription(),
-					);
+					];
 				}
 			}
 		}
 		return reset( $this->classes );
 	}
 
-	protected function clearSourceCode( ?array $code ): ?array
+	/**
+	 *	Replaces two leading tabs from every line.
+	 *	@param		array		$code		Lines of source code
+	 *	@return		array
+	 */
+	protected function clearSourceCode( array $code ): array
 	{
-		return $code;
-		$code	= preg_replace( '@^(//)?\t@s', '\\1', $code );
+		$list	= [];
+		foreach( $code as $line )
+			$list[]	= preg_replace( '@^(//)?(\t){2}(.*)@', '\\3', $line );
+		return $list;
 	}
 }

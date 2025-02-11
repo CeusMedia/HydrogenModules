@@ -4,32 +4,15 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	OAuth Access Token Model.
- *	@category		cmFrameworks.Hydrogen.Module
- *	@package		Users.Model
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
- */
-/**
-DROP TABLE IF EXISTS `<%?prefix%>oauth_access_tokens`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>oauth_access_tokens` (
-  `oauthAccessTokenId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `oauthApplicationId` int(10) unsigned NOT NULL,
-  `userId` int(11) unsigned DEFAULT NULL,
-  `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `scope` text COLLATE utf8_unicode_ci NOT NULL,
-  `createdAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`oauthAccessTokenId`),
-  KEY `oauthApplicationId` (`oauthApplicationId`),
-  KEY `userId` (`userId`),
-  KEY `token` (`token`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Oauth_AccessToken extends Model
 {

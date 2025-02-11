@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Info_Manual extends AjaxController
 {
-	protected $sessionPrefix	= 'filter_info_manual_';
+	protected string $sessionPrefix	= 'filter_info_manual_';
 
-	public function setBranchStatus()
+	public function setBranchStatus(): void
 	{
 		$pageId		= (string) $this->request->get( 'pageId' );
 		$categoryId	= $this->session->get( $this->sessionPrefix.'categoryId' );

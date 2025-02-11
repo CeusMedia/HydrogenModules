@@ -8,22 +8,22 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_CartPositions
 {
-	const DISPLAY_UNKNOWN			= 0;
-	const DISPLAY_BROWSER			= 1;
-	const DISPLAY_MAIL				= 2;
+	public const DISPLAY_UNKNOWN		= 0;
+	public const DISPLAY_BROWSER		= 1;
+	public const DISPLAY_MAIL			= 2;
 
-	const DISPLAYS					= [
+	public const DISPLAYS				= [
 		self::DISPLAY_UNKNOWN,
 		self::DISPLAY_BROWSER,
 		self::DISPLAY_MAIL,
 	];
 
-	const OUTPUT_UNKNOWN			= 0;
-	const OUTPUT_TEXT				= 1;
-	const OUTPUT_HTML				= 2;
-	const OUTPUT_HTML_LIST			= 3;
+	public const OUTPUT_UNKNOWN			= 0;
+	public const OUTPUT_TEXT			= 1;
+	public const OUTPUT_HTML			= 2;
+	public const OUTPUT_HTML_LIST		= 3;
 
-	const OUTPUTS					= [
+	public const OUTPUTS				= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,
@@ -34,10 +34,12 @@ class View_Helper_Shop_CartPositions
 	protected Logic_ShopBridge $bridge;
 	protected Dictionary $config;
 	protected array $words;
-	protected bool $changeable		= TRUE;
-	protected ?string $forwardPath	= NULL;
-	protected object $deliveryAddress;
+	protected bool $changeable			= TRUE;
+	protected ?string $forwardPath		= NULL;
+	protected ?object $deliveryAddress	= NULL;
 	protected array $positions;
+	protected ?Model_Shop_Payment_BackendRegister $paymentsBackends	= NULL;
+	protected object|string|NULL $paymentBackend;
 	protected int $display				= self::DISPLAY_BROWSER;
 	protected int $output				= self::OUTPUT_HTML;
 
@@ -53,15 +55,11 @@ class View_Helper_Shop_CartPositions
 	{
 		if( !$this->positions )
 			return '';
-		switch( $this->output ){
-			case self::OUTPUT_HTML:
-				return $this->renderAsHtml();
-			case self::OUTPUT_HTML_LIST:
-				return $this->renderAsHtmlList();
-			case self::OUTPUT_TEXT:
-			default:
-				return $this->renderAsText();
-		}
+		return match( $this->output ){
+			self::OUTPUT_HTML		=> $this->renderAsHtml(),
+			self::OUTPUT_HTML_LIST	=> $this->renderAsHtmlList(),
+			default					=> $this->renderAsText(),
+		};
 	}
 
 	public function setChangeable( bool $isChangeable = TRUE ): self
@@ -99,14 +97,26 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
+	public function setPaymentBackend( object|string|NULL $backend ): self
+	{
+		$this->paymentBackend	= $backend;
+		return $this;
+	}
+
+	public function setPaymentBackends( Model_Shop_Payment_BackendRegister $backends ): self
+	{
+		$this->paymentsBackends	= $backends;
+		return $this;
+	}
+
 	public function setPositions( array $positions ): self
 	{
 		$this->positions		= $positions;
-		foreach( $positions as $nr => $position ){
+		foreach( $positions as $position ){
 			if( !isset( $position->article ) ){
 				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );
 				$article	= $source->get( $position->articleId, $position->quantity );
-				$positions[$nr]->article	= $article;
+				$position->article	= $article;
 			}
 		}
 		return $this;
@@ -130,7 +140,7 @@ class View_Helper_Shop_CartPositions
 		$totalWeight	= 0;
 		$taxes			= [];
 		$allSingle		= TRUE;
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->positions as $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
 
@@ -196,7 +206,24 @@ class View_Helper_Shop_CartPositions
 				] );
 			}
 		}
-		$priceTotal		= $totalPrice + $priceShipping;
+
+		$pricePayment	= 0;
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$logicPayment	= new Logic_Shop_Payment( $this->env );
+			if( $this->deliveryAddress ){
+				$pricePayment	= $logicPayment->getPrice(
+					$this->deliveryAddress->country,
+					$this->paymentBackend,
+					$this->deliveryAddress->country
+				);
+				$rows[]	= HtmlTag::create( 'tr', [
+					HtmlTag::create( 'td', '&nbsp;' ),
+					HtmlTag::create( 'td', $words->labelPayment, ['class' => 'autocut'] ),
+					HtmlTag::create( 'td', '&nbsp;', ['class' => 'column-cart-quantity'] ),
+					HtmlTag::create( 'td', $this->formatPrice( $pricePayment ), ['class' => 'price'] )
+				] );
+			}
+		}
 
 		$priceTax		= $this->formatPrice( $totalTax );
 		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
@@ -209,7 +236,7 @@ class View_Helper_Shop_CartPositions
 			], ['class' => 'tax'] );
 		}
 
-		$priceTotal		= $totalPrice + $priceShipping;
+		$priceTotal		= $totalPrice + $priceShipping + $pricePayment;
 		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $words->labelTotal, ['class' => 'autocut', 'colspan' => 2] ),
@@ -225,9 +252,7 @@ class View_Helper_Shop_CartPositions
 		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
 			$tableAttr['class']	.= ' table-bordered';
 
-		$tablePositions	= HtmlTag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
-		return $tablePositions;
-
+		return HtmlTag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
 	}
 
 	protected function renderAsHtml(): string
@@ -240,7 +265,7 @@ class View_Helper_Shop_CartPositions
 		$totalWeight	= 0;
 		$taxes			= [];
 		$allSingle		= TRUE;
-		foreach( $this->positions as $nr => $position ){
+		foreach( $this->positions as $position ){
 			$isSingle		= isset( $position->article->single ) && $position->article->single;
 			$allSingle		= $allSingle && $isSingle;
 //print_m( $position );die;
@@ -288,7 +313,6 @@ class View_Helper_Shop_CartPositions
 		] ) );
 		$tbody			= HtmlTag::create( 'tbody', $rows );
 
-		$priceShipping	= 0;
 		$priceTax		= $this->formatPrice( $totalTax );
 		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
 		$rows	= [];
@@ -302,6 +326,7 @@ class View_Helper_Shop_CartPositions
 			], ['class' => 'tax'] );
 		}
 
+		$priceShipping	= 0;
 		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
 			$logicShipping	= new Logic_Shop_Shipping( $this->env );
 			if( $this->deliveryAddress ){
@@ -317,7 +342,29 @@ class View_Helper_Shop_CartPositions
 				] );
 			}
 		}
-		$priceTotal		= $totalPrice + $priceShipping;
+
+		$pricePayment	= .0;
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$logicPayment	= new Logic_Shop_Payment( $this->env );
+			if( NULL !== $this->paymentsBackends )
+				$logicPayment->setBackends( $this->paymentsBackends );
+			if( $this->paymentBackend && $this->deliveryAddress ){
+				$pricePayment	= $logicPayment->getPrice(
+					$totalPrice + $priceShipping,
+					$this->paymentBackend,
+					$this->deliveryAddress->country
+				);
+				if( NULL !== $pricePayment && 0 == $pricePayment )
+					$rows[]	= HtmlTag::create( 'tr', [
+						HtmlTag::create( 'td', '&nbsp;' ),
+						HtmlTag::create( 'td', $words->labelPayment, ['class' => 'autocut'] ),
+						HtmlTag::create( 'td', '&nbsp;', ['class' => 'column-cart-quantity'] ),
+						HtmlTag::create( 'td', $this->formatPrice( $pricePayment ), ['class' => 'price'] )
+					] );
+			}
+		}
+
+		$priceTotal		= $totalPrice + $priceShipping + $pricePayment;
 		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '&nbsp;' ),
@@ -394,6 +441,24 @@ class View_Helper_Shop_CartPositions
 					$helperText->fit( $words->labelShipping, 60 ),
 					$helperText->fit( "", 6, 0 ),
 					$helperText->fit( $this->formatPrice( $priceShipping, TRUE, FALSE ), 10, 0 ),
+				] );
+			}
+		}
+
+		$pricePayment	= 0;
+		if( $this->env->getModules()->has( 'Shop_Payment' ) ){
+			$logicPayment	= new Logic_Shop_Payment( $this->env );
+			if( $this->deliveryAddress ){
+				$pricePayment	= $logicPayment->getPrice(
+					$totalPrice,
+					$this->paymentBackend,
+					$this->deliveryAddress->country
+				);
+				$totalPrice	+= $pricePayment;
+				$list[]	= join( ' ', [
+					$helperText->fit( $words->labelPayment, 60 ),
+					$helperText->fit( "", 6, 0 ),
+					$helperText->fit( $this->formatPrice( $pricePayment, TRUE, FALSE ), 10, 0 ),
 				] );
 			}
 		}

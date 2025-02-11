@@ -7,9 +7,13 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 {
 	protected Logic_Work_Mission $logic;
 	protected DateTime $today;
-	protected ?object $mission				= NULL;
+	protected ?Entity_Mission $mission		= NULL;
 	protected bool $badgesColored			= TRUE;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		Exception
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -18,25 +22,39 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		$this->today	= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
 	}
 
-	protected function formatDays( int $days ): int
+	/**
+	 *	@param		int		$days
+	 *	@return		string
+	 */
+	protected function formatDays( int $days ): string
 	{
 		if( $days > 365.25 )
-			return (int) floor( $days / 365.25 )."y";
+			return floor( $days / 365.25 )."y";
 		if( $days > 30.42 )
-			return (int) floor( $days / 30.42 )."m";
+			return floor( $days / 30.42 )."m";
 		if( $days > 7 )
-			return (int) floor( $days / 7 )."w";
+			return floor( $days / 7 )."w";
 		return $days;
 	}
 
-	protected function renderBadgeDays( int $days, $class = NULL ): string
+	/**
+	 *	@param		int			$days
+	 *	@param		?string		$class
+	 *	@return		string
+	 */
+	protected function renderBadgeDays( int $days, ?string $class = NULL ): string
 	{
 		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
 		$class	= 'badge'.( $class ? ' badge-'.$class : '' );
 		return HtmlTag::create( 'span', $label, ['class' => $class] );
 	}
 
-	public function renderBadgeDaysOverdue( object $mission ): string
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	public function renderBadgeDaysOverdue( Entity_Mission $mission ): string
 	{
 		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
 		/** @noinspection PhpUnhandledExceptionInspection */
@@ -50,10 +68,11 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 	/**
 	 *	Render overdue container.
 	 *	@access		public
-	 *	@param		object		$mission		Mission data object
+	 *	@param		Entity_Mission	$mission		Mission data object
 	 *	@return		string		DIV container with number of overdue days or empty string
+	 *	@throws		Exception
 	 */
-	public function renderBadgeDaysStill( object $mission ): string
+	public function renderBadgeDaysStill( Entity_Mission $mission ): string
 	{
 		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
 			return '';																			//  return without content
@@ -67,7 +86,12 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $this->today->diff( $end )->days, $class );
 	}
 
-	public function renderBadgeDaysUntil( object $mission ): string
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		string
+	 *	@throws		Exception
+	 */
+	public function renderBadgeDaysUntil( Entity_Mission $mission ): string
 	{
 		/** @noinspection PhpUnhandledExceptionInspection */
 		$start	= new DateTime( $mission->dayStart );
@@ -77,6 +101,10 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $this->today->diff( $start)->days, $class );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		Exception
+	 */
 	public function render(): string
 	{
 		$todayStart	= strtotime( date( 'Y-m-d', time() ) );
@@ -94,7 +122,7 @@ class View_Helper_Work_Mission_DaysBadge extends Abstraction
 		return $this->renderBadgeDays( $iconToday, 'important' );
 	}
 
-	public function setMission( object $mission ): self
+	public function setMission( Entity_Mission $mission ): self
 	{
 		$this->mission	= $mission;
 		return $this;

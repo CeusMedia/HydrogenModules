@@ -8,17 +8,22 @@ abstract class Mail_Form_Abstract extends Mail_Abstract
 	 *	@param		string		$subject		Subject to set on mail
 	 *	@param		boolean		$usePrefix		For compatibility only, no function
 	 *	@param		boolean		$useTemplate	For compatibility only, no function
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): self
+	public function setSubject( string $subject, bool $usePrefix = TRUE, bool $useTemplate = TRUE ): static
 	{
-		$this->mail->setSubject( $subject, $this->encodingSubject );
+		$this->mail->setSubject( $subject );
 		return $this;
 	}
 
 	//  --  PROTECTED  --  //
 
-	protected function applyFillData( string $content, $fill ): string
+	/**
+	 *	@param		string		$content
+	 *	@param		Entity_Form_Fill		$fill
+	 *	@return		string
+	 */
+	protected function applyFillData( string $content, Entity_Form_Fill $fill ): string
 	{
 		$data	= json_decode( $fill->data, TRUE );
 		while( preg_match( '/\[data_(\S+)\]/su', $content ) ){
@@ -35,7 +40,14 @@ abstract class Mail_Form_Abstract extends Mail_Abstract
 		return $content;
 	}
 
-	protected function applyHelpers( string $content, $fill, $form, bool $extended = FALSE ): string
+	/**
+	 *	@param		string				$content
+	 *	@param		Entity_Form_Fill	$fill
+	 *	@param		Entity_Form			$form
+	 *	@param		bool				$extended
+	 *	@return		string
+	 */
+	protected function applyHelpers( string $content, Entity_Form_Fill $fill, Entity_Form $form, bool $extended = FALSE ): string
 	{
 		while( preg_match( '/\[helper_(\S+)\]/su', $content ) ){
 			$identifier		= preg_replace( '/.*\[helper_(\S+)\].*/su', "\\1", $content );

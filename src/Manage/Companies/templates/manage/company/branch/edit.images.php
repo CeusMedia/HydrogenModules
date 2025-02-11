@@ -4,6 +4,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
+/** @var array $words */
+/** @var Logic_Frontend $frontend */
+/** @var object $branch */
+
 $w	= (object) $words['edit-images'];
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
@@ -20,7 +24,7 @@ if( $branch->images ){
 		$urlImage		= $pathImages.'branches/'.$image->filename;
 		$urlRemove		= './manage/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
 		$img			= new Image( $urlImage );
-		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
+		$title			= $image->title ?: '<small class="muted"><em>Kein Titel.</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',
 				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), [

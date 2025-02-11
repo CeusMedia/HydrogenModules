@@ -1,5 +1,14 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+
+/** @var View_Manage_My_User_Setting $view */
+/** @var Web $env */
+/** @var array<string,array<string,string>> $words */
+/** @var ?string $from */
+/** @var Entity_User_Settings[] $settings */
+/** @var array[] $modules */
 
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );
@@ -8,17 +17,17 @@ $panelSettings	= '<div class="muted">'.$w->noSettings.'</div>';
 if( isset( $modules ) && count( $modules ) ){
 	$formUri 	= './manage/my/user/setting/update'.( $from ? '?from='.$from : '' );
 	$iconSave	= HtmlTag::create( 'i', '', ['class' => "icon-ok icon-white"] );
-	$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, array(
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 		'type'		=> 'submit',
 		'name'		=> 'save',
 		'class'		=> 'btn btn-primary',
-		'disabled'	=> isset( $modules ) && count( $modules ) ? NULL : 'disabled',
-	) );
+		'disabled'	=> isset( $modules ) && [] !== $modules ? NULL : 'disabled',
+	] );
 
 	$panels		= [];
 	foreach( $modules as $module ){
 		$moduleWords	= $view->getModuleWords( $module );
-		$key			= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->id;
+		$key			= $moduleWords['title'] ?? $module->id;
 		$panel			= $view->renderModuleSettings( $module, $settings, $moduleWords, $from );
 		$panel ? $panels[$key]	= $panel : NULL;
 	}

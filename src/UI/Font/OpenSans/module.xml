@@ -8,9 +8,9 @@
 	<log version="0.2">Separated to Hydrogen module.</log>
 	<log version="0.2.1">Use general module main switch.</log>
 	<log version="0.2.2">Extract hook to own hook class.</log>
-	<company site="http://www.opensans.com/">opensans.com</company>
-	<author site="http://en.wikipedia.org/wiki/Steve_Matteson">Steve Matteson</author>
-	<license source="http://www.apache.org/licenses/LICENSE-2.0.html">Apache License version 2.0</license>
+	<company site="https://www.opensans.com/">opensans.com</company>
+	<author site="https://en.wikipedia.org/wiki/Steve_Matteson">Steve Matteson</author>
+	<license source="https://www.apache.org/licenses/LICENSE-2.0.html">Apache License version 2.0</license>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<files>
 		<class>Hook/UI/Font/OpenSans.php</class>

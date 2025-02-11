@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Environment extends WebEnvironment
 {
@@ -23,6 +23,8 @@ class Environment extends WebEnvironment
 	 *	Constructor, sets up all resources.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function __construct()
 	{
@@ -42,12 +44,12 @@ class Environment extends WebEnvironment
 		$this->initPage();
 		$this->__onInit();																			//  call init event (implemented by extending classes)
 		if( $this->getModules()->has( 'Resource_Database' ) )
-			$this->dbc->query( 'SET NAMES "utf8"' );												//  ...
+			$this->getDatabase()->query( 'SET NAMES "utf8"' );												//  ...
 	}
 
-	public function get( $key, $strict = TRUE )
+	public function get( string $key, bool $strict = TRUE ): ?object
 	{
-		if( $key == "dbc" )
+		if( 'dbc' === $key )
 			return $this->getDatabase();
 		return parent::get( $key, $strict );
 	}

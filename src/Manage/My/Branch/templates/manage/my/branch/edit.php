@@ -3,6 +3,11 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 
+/** @var View_Manage_My_Branch $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $branch */
+
+
 //  --  PANEL: MAP  --  //
 $w				= (object) $words['map'];
 $panelMap		= '';
@@ -12,24 +17,6 @@ if( $branch->longitude && $branch->latitude ){
 			<div id="map_canvas" style="width: 100%; height: 100%;" data-longitude="'.$branch->longitude.'" data-latitude="'.$branch->latitude.'" data-zoom="14" data-marker-title="'.$branch->title.'"></div>
 		</div>';
 }
-
-
-//  --  PANEL: COUPONS  --  //
-$panelCoupons	= "";
-if( $env->getModules()->has( 'Manage_Coupon' ) ){
-	$w				= (object) $words['coupons'];
-	$listCoupons	= [];
-	foreach( $coupons as $coupon ){
-		$url	= './manage/my/coupon/edit/'.$coupon->couponId;
-		$listCoupons[]	= HTML::Li( HTML::Link( $url, $coupon->title ), 'coupon' );
-	}
-	$panelCoupons	= HTML::Fields(
-		HTML::Legend( $w->legend, 'list company coupons' ).
-		HTML::UlClass( 'list-branches', $listCoupons ? join( $listCoupons ) : $w->noEntries ).
-		HTML::Buttons( HTML::LinkButton( './manage/my/coupon/add', $w->buttonAdd, 'button add' ) )
-	);
-}
-
 
 
 $w	= (object) $words['edit'];
@@ -152,9 +139,7 @@ return HTML::DivClass( 'column-left-60',
 	$panelImages
 ).
 HTML::DivClass( 'column-left-40',
-	$panelCoupons.
 	$panelMap.
 	$text['info']
 ).
 HTML::DivClass( 'column-clear' );
-?>

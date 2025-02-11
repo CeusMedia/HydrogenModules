@@ -4,9 +4,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_ChangeFacts
 {
-	const FORMAT_HTML		= 1;
-	const FORMAT_TEXT		= 2;
-	const FORMATS			= [
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_TEXT		= 2;
+	public const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];
@@ -20,7 +20,6 @@ class View_Helper_Work_Issue_ChangeFacts
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -29,6 +28,9 @@ class View_Helper_Work_Issue_ChangeFacts
 		$this->modelChange	= new Model_Issue_Change( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
@@ -36,12 +38,22 @@ class View_Helper_Work_Issue_ChangeFacts
 		return $this->renderAsHtml();
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
 		return $this;
 	}
 
+	/**
+	 *	@param		object		$note
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setNote( object $note ): self
 	{
 		$this->note	= $note;
@@ -51,6 +63,11 @@ class View_Helper_Work_Issue_ChangeFacts
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function prepareFacts(): void
 	{
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );

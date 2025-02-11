@@ -3,6 +3,17 @@
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $words */
+/** @var array $rights */
+/** @var array $folders */
+/** @var array $files */
+/** @var int|string|NULL $folderId */
+/** @var object|NULL $folder */
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconOpenFolder	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
@@ -57,10 +68,10 @@ foreach( $files as $item ){
 	}
 	$actions		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 //	$actions		= HtmlTag::create( 'div', $buttonDownload.'&nbsp;'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells			= array(
+	$cells			= [
 		HtmlTag::create( 'td', $label/*$link*/, ['class' => 'file'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row			= HtmlTag::create( 'tr', $cells, ['class' => $class] );
 	$rows['files'][$item->title]		= $row;
 }
@@ -85,12 +96,12 @@ foreach( $folders as $item ){
 		'class'	=> 'btn not-btn-small btn-info',
 		'title'	=> $w->buttonOpenFolder
 	] );
-	if( 0 && in_array( 'ajaxRenameFolder', $rights ) ){
-		$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+	if( 0 && $env->getAcl()->has( 'ajax/info/files', 'renameFolder' ) ){
+		$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 			'onclick'	=> 'InfoFile.changeFolderName('.$item->downloadFolderId.', \''.$item->title.'\')',
 			'class'	=> 'btn not-btn-small',
 			'title'	=> $w->buttonRename,
-		) );
+		] );
 	}
 	if( in_array( 'rankTopic', $rights ) && count( $folders ) > 1 ){
 		$buttons[]	= HtmlTag::create( 'a', $iconUp, [
@@ -120,10 +131,10 @@ foreach( $folders as $item ){
 	}
 	$actions	= HtmlTag::create( 'div', join( $buttons ), ['class' => 'btn-group pull-right'] );
 //	$actions	= HtmlTag::create( 'div', $buttonOpen.'&nbsp'.$buttonRemove, ['class' => 'pull-right'] );
-	$cells		= array(
+	$cells		= [
 		HtmlTag::create( 'td', $label, ['class' => 'folder'] ),
 		HtmlTag::create( 'td', $actions ),
-	);
+	];
 	$row	= HtmlTag::create( 'tr', $cells, ['class' => 'info folder'] );
 	$rows['folders'][$item->title]	= $row;
 }
@@ -134,10 +145,10 @@ $rows	= $rows['folders'] + $rows['files'];
 $table	= '<br/><div class="alert alert-info"><em class="not-muted">'.$w->empty.'</em></div>';
 if( $rows ){
 	$colgroup	= HtmlElements::ColumnGroup( "85%", "15%" );
-	$heads		= HtmlTag::create( 'tr', array(
+	$heads		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', $search ? $w->headFiles : $w->headFilesAndFolders ),
 		HtmlTag::create( 'th', $w->headActions, ['class' => 'pull-right'] ),
-	) );
+	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped not-table-condensed'] );
@@ -159,8 +170,7 @@ if( !$search && $folderId && $folder->downloadFolderId > 0 ){
 }
 
 $panels		= [];
-if( 1 )
-	$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
+$panels[]	= $view->loadTemplateFile( 'info/file/index.search.php' );
 if( !in_array( 'upload', $rights ) )
 	$panels[]	= $view->loadTemplateFile( 'info/file/index.info.php' );
 if( in_array( 'upload', $rights ) )
@@ -172,16 +182,14 @@ if( in_array( 'scan', $rights ) )
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/info/file/' ) );
 
-return $textIndexTop.'
-<!--<h3>Dateien</h3>-->
-<div>'.View_Info_File::renderPosition( $env, $folderId, $search ).'</div><br/>
-<div class="row-fluid">
-	<div class="span9">
-		'.$panelList.'
-			'.$linkUp.'
-	</div>
-	<div class="span3">
-		'.join( /*'<hr/>', */$panels ).'
-	</div>
-</div>
-'.$textIndexBottom;
+return join( [
+	$textIndexTop,
+//	'<!--<h3>Dateien</h3>-->',
+	HtmlTag::create( 'div', View_Info_File::renderPosition( $env, $folderId, $search ) ),
+	HtmlTag::create( 'br' ),
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [$panelList, $linkUp], ['class' => 'span9'] ),
+		HtmlTag::create( 'div', join( /*'<hr/>', */$panels ), ['class' => 'span3'] ),
+	], ['class' => 'row-fluid'] ),
+	$textIndexBottom,
+] );

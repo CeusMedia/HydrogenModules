@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		cmApps
  *	@package		Chat.Server.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010 Ceus Media
+ *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Abstract extends Controller
 {
@@ -38,7 +38,8 @@ class Controller_Abstract extends Controller
 		}
 	}
 
-	protected function setupView( $force = TRUE )
+	protected function setupView( bool $force = TRUE ): static
 	{
+		return $this;
 	}
 }

@@ -1,9 +1,13 @@
 <?php
-abstract class View_Helper_Stripe_Abstract
-{
-	protected $env;
 
-	public function __construct( $env )
+use CeusMedia\Common\Renderable;
+use CeusMedia\HydrogenFramework\Environment;
+
+abstract class View_Helper_Stripe_Abstract implements Stringable, Renderable
+{
+	protected Environment $env;
+
+	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->__onInit();
@@ -14,7 +18,7 @@ abstract class View_Helper_Stripe_Abstract
 		return $this->render();
 	}
 
-	abstract public function render();
+	abstract public function render(): string;
 
 	protected function __onInit(): void
 	{

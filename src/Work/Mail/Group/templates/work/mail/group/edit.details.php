@@ -37,26 +37,26 @@ foreach( $servers as $server )
 	$optServerId[$server->mailGroupServerId]	= $server->title;
 $optServerId		= HtmlElements::Options( $optServerId, @$data->mailGroupServerId );
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'E-Mail-Gruppe bearbeiten' ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Title', [
 						'for'	=> 'input_title',
 						'class'	=> 'mandatory',
 					] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
 						'id'		=> 'input_title',
 						'class'		=> 'span12',
 						'required'	=> 'required',
 						'value'		=> htmlentities( $group->title, ENT_QUOTES, 'UTF-8' ),
-					) ),
-				), ['class' => 'span7'] ),
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span7'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Server', [
 						'for'	=> 'input_mailGroupServerId',
 					] ),
@@ -65,15 +65,15 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_mailGroupServerId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span5'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span5'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'E-Mail-Adresse', [
 						'for'	=> 'input_address',
 						'class'	=> 'mandatory',
 					] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'			=> 'email',
 						'name'			=> 'address',
 						'id'			=> 'input_address',
@@ -81,9 +81,9 @@ return HtmlTag::create( 'div', array(
 						'required'		=> 'required',
 						'value'			=> htmlentities( $group->address, ENT_QUOTES, 'UTF-8' ),
 						'autocomplete'	=> 'off',
-					) ),
-				), ['class' => 'span5'] ),
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span5'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Passwort', [
 						'for'	=> 'input_password',
 						'class'	=> 'mandatory',
@@ -95,8 +95,8 @@ return HtmlTag::create( 'div', array(
 						'class'			=> 'span12',
 						'autocomplete'	=> 'off',
 					] ),
-				), ['class' => 'span3'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span3'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Zustand', [
 						'for'	=> 'input_status',
 					] ),
@@ -105,10 +105,10 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span4'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span4'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Administrator', [
 						'for'	=> 'input_managerId',
 						'class'	=> 'mandatory',
@@ -118,8 +118,8 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_managerId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span6'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span6'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Standard-Rolle', [
 						'for'	=> 'input_roleId',
 						'class'	=> 'mandatory',
@@ -129,10 +129,10 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_roleId',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span6'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span6'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Beitritt', [
 						'for'	=> 'input_type',
 						'class'	=> 'mandatory',
@@ -142,8 +142,8 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_type',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span7'] ),
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span7'] ),
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Sichtbarkeit', [
 						'for'	=> 'input_visibility',
 						'class'	=> 'mandatory',
@@ -153,10 +153,10 @@ return HtmlTag::create( 'div', array(
 						'id'		=> 'input_visibility',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span5'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span5'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Beschreibung der Gruppe', [
 						'for'	=> 'input_description',
 					] ),
@@ -166,9 +166,9 @@ return HtmlTag::create( 'div', array(
 						'rows'	=> 6,
 						'class'	=> 'span12',
 					] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', join( ' ', array(
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', join( ' ', [
 				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', [
 					'href'	=> './work/mail/group',
 					'class'	=> 'btn',
@@ -178,11 +178,11 @@ return HtmlTag::create( 'div', array(
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
 				] ),
-			) ), ['class' => 'buttonbar'] ),
-		), [
+			] ), ['class' => 'buttonbar'] ),
+		], [
 			'action'		=> './work/mail/group/edit/'.$group->mailGroupId,
 			'method'		=> 'post',
 			'autocomplete'	=> 'off',
 		] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

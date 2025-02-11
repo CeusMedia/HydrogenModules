@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Mail_Group_Member_Activated extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -11,7 +11,6 @@ class Mail_Info_Mail_Group_Member_Activated extends Mail_Abstract
 		$sender->setName( $data['group']->title );
 		$this->setSender( $sender );
 
-		$member	= $data['member']->title ? $data['member']->title : $data['member']->address;
 		$this->setSubject( 'Mitgliedschaft in der Gruppe "'.$data['group']->title.'" aktiviert' );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
@@ -22,7 +21,7 @@ class Mail_Info_Mail_Group_Member_Activated extends Mail_Abstract
 			'leave'			=> $this->env->url.'info/mail/group/leave/'.$data['group']->mailGroupId,
 		];
 
-		$plain	= $this->view->loadContentFile( 'mail/info/mail/group/member/activated.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/info/mail/group/member/activated.txt', $data ) ?? '';
 		$this->setText( $plain );
 		return $this;
 	}

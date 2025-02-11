@@ -47,13 +47,13 @@ if( $backups ){
 			$time			= HtmlTag::create( 'small', date( 'H:i:s', $backup->timestamp ), ['class' => 'muted'] );
 			$creationDate	= $date.' '.$time;
 		}
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $status ),
 			HtmlTag::create( 'td', HtmlTag::create( 'small', $backup->comment['comment'], ['class' => 'muted'] ) ),
 			HtmlTag::create( 'td', UnitFormater::formatBytes( $backup->filesize ) ),
 			HtmlTag::create( 'td', $creationDate ),
-		), ['class' => $rowClass] );
+		], ['class' => $rowClass] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['33%', '15%', '', '100px', '150px'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Datei', 'Status', 'Kommentar', 'Größe', 'Erstellungsdatum'] ) );

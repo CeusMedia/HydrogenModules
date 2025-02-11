@@ -21,7 +21,7 @@ $tabs	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-tabs'] );
 $content	= "[Index]";
 return '
 <div class="tabbable" id="tabs-manage-content">
-	'.$this->renderTabs().'
+	'.$view->renderTabs().'
 	<div class="tab-content">
 		'.$content.'
 	</div>

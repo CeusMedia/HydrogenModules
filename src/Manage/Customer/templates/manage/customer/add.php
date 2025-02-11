@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string,array<string,string>> $words */
+/** @var object $customer */
+
 $optSize	= $words['sizes'];
 $optSize	= HtmlElements::Options( $optSize, $customer->size );
 

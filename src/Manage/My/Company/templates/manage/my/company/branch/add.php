@@ -1,4 +1,8 @@
 <?php
+
+/** @var array<string,array<string,string>> $words */
+/** @var View_Company_Branch $view */
+
 $w		= (object) $words['add'];
 
 $iconCancel	= HTML::Icon( 'arrow-left' );

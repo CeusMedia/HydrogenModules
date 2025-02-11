@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Manual_Version extends Model
 {
-	const TYPE_PAGE			= 0;
-	const TYPE_CATEGORY		= 1;
+	public const TYPE_PAGE			= 0;
+	public const TYPE_CATEGORY		= 1;
 
-	const TYPES				= [
+	public const TYPES				= [
 		self::TYPE_PAGE,
 		self::TYPE_CATEGORY,
 	];
@@ -33,5 +33,7 @@ class Model_Manual_Version extends Model
 		'version',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Manual_Version';
 }

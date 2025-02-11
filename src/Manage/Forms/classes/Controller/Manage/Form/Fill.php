@@ -1,35 +1,47 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Form_Fill extends Controller
 {
 	protected HttpRequest $request;
-	protected Dictionary $session;
+	protected HttpSession $session;
 	protected Logic_Mail $logicMail;
-	protected Logic_Form_Fill $logicFill;
+	protected Logic_Form_FillManager $logicFill;
 
 	protected Model_Form $modelForm;
 	protected Model_Form_Fill $modelFill;
-	protected Model_Form_Mail $modelMail;
-	protected Model_Form_Rule $modelRule;
 	protected Model_Form_Transfer_Target $modelTransferTarget;
 	protected Model_Form_Transfer_Rule $modelTransferRule;
 	protected Model_Form_Fill_Transfer $modelFillTransfer;
 
 	protected array $transferTargetMap	= [];
+	protected string $sessionFilterPrefix	= 'manage_form_fill_';
+	protected array $filters				= [
+		'fillId',
+		'email',
+		'formId',
+		'status',
+	];
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		DomainException		if given fill ID is invalid
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function confirm( string $fillId ): void
 	{
-		if( !( $fill = $this->modelFill->get( $fillId ) ) )
-			throw new DomainException( 'Invalid fill given' );
-		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
-		if( $fill->status != Model_Form_Fill::STATUS_NEW ){
-			if( $fill->referer )
+		$fill	= $this->checkId( $fillId );
+		if( Model_Form_Fill::STATUS_NEW !== $fill->status ){
+			if( $fill->referer ){
+				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 				$this->restart( $fill->referer.$urlGlue.'rc=3', FALSE, NULL, TRUE );
+			}
 			throw new DomainException( 'Fill already confirmed' );
 		}
 		$this->modelFill->edit( $fillId, [
@@ -39,11 +51,26 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->logicFill->sendCustomerResultMail( $fillId );
 		$this->logicFill->sendManagerResultMails( $fillId );
 		$this->logicFill->applyTransfers( $fillId );
+
+		/** @var ?Entity_Form $form */
+		$form	= $this->modelForm->get( $fill->formId );
+		if( $form->forwardOnSuccess ){
+			$urlGlue	= preg_match( '/\?/', $form->forwardOnSuccess ) ? '&' : '?';
+			$this->restart( $form->forwardOnSuccess.$urlGlue.'rc=2', FALSE, NULL, TRUE );
+		}
+
+		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->referer )
 			$this->restart( $fill->referer.$urlGlue.'rc=2', FALSE, NULL, TRUE );
 		$this->restart( 'confirmed/'.$fillId, TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function testResultMails( string $fillId ): void
 	{
 		$this->logicFill->sendCustomerResultMail( $fillId );
@@ -52,78 +79,95 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId, TRUE );
 	}
 
-	public function testTransfer( string $fillId ): void
+	/**
+	 *	@param		string		$fillId
+	 *	@return		never
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function testTransfer( string $fillId ): never
 	{
 		print_m( $this->logicFill->applyTransfers( $fillId ) );
 		exit;
 	}
 
-	public function export( $format, $type, $ids, $status = NULL ): void
+	/**
+	 *	@param		string			$format		Data format, currently no used, since only CSV is supported
+	 *	@param		string			$type		Type of ID (form|fill)
+	 *	@param		string			$ids		Comma separated list of fill or form IDs or empty string
+	 *	@param		int|string|NULL	$status
+	 *	@return		void
+	 *	@throws		DomainException			if type is not (form|fill)
+	 *	@throws		JsonException			if decoding JSON of fill data failed
+	 */
+	public function export( string $format, string $type, string $ids, int|string|NULL $status = NULL ): void
 	{
 		$ids		= explode( ',', $ids );
-		if( $status !== NULL )
-			$csv		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
-		else
-			$csv		= $this->logicFill->renderToCsv( $type, $ids );
-
-		$fileName	= 'Export_'.date( 'Y-m-d_H:i:s' ).'.csv';
-		HttpDownload::sendString( $csv, $fileName, TRUE );
-//		xmp( $csv );
-//		die;
+		$basename	= 'Export_'.date( 'Y-m-d_H:i:s' );
+		switch( $format ){
+			case 'csv':
+			default:
+				$fileName	= $basename.'.csv';
+				if( $status !== NULL )
+					$data		= $this->logicFill->renderToCsv( $type, $ids, (int) $status );
+				else
+					$data		= $this->logicFill->renderToCsv( $type, $ids );
+		}
+		HttpDownload::sendString( $data, $fileName );
 	}
 
 	public function filter( $reset = NULL ): void
 	{
-		if( $reset ){
-			$this->session->remove( 'manage_form_fill_fillId' );
-			$this->session->remove( 'manage_form_fill_email' );
-			$this->session->remove( 'manage_form_fill_formId' );
-			$this->session->remove( 'manage_form_fill_status' );
-		}
-		if( $this->request->has( 'fillId' ) )
-			$this->session->set( 'manage_form_fill_fillId', $this->request->get( 'fillId' ) );
-		if( $this->request->has( 'email' ) )
-			$this->session->set( 'manage_form_fill_email', $this->request->get( 'email' ) );
-		if( $this->request->has( 'formId' ) )
-			$this->session->set( 'manage_form_fill_formId', $this->request->get( 'formId' ) );
-		if( $this->request->has( 'status' ) )
-			$this->session->set( 'manage_form_fill_status', $this->request->get( 'status' ) );
+		if( $reset )
+			foreach( $this->filters as $filter )
+				$this->session->remove( $this->sessionFilterPrefix.$filter );
+
+		foreach( $this->filters as $filter )
+			if( $this->request->has( $filter ) )
+				$this->session->set( $this->sessionFilterPrefix.$filter, $this->request->get( $filter ) );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL ): void
+	/**
+	 *	@param		integer		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0 ): void
 	{
-		$filterFillId	= $this->session->get( 'manage_form_fill_fillId' );
-		$filterEmail	= $this->session->get( 'manage_form_fill_email' );
-		$filterFormId	= $this->session->get( 'manage_form_fill_formId', [] );
-		$filterStatus	= $this->session->get( 'manage_form_fill_status' );
+		$filterFillId	= $this->session->get( $this->sessionFilterPrefix.'fillId', '' );
+		$filterEmail	= $this->session->get( $this->sessionFilterPrefix.'email', '' );
+		$filterFormId	= $this->session->get( $this->sessionFilterPrefix.'formId', [] );
+		$filterStatus	= $this->session->get( $this->sessionFilterPrefix.'status', '' );
 
 		$conditions		= [];
-		if( strlen( trim( $filterFillId ) ) )
+		if( 0 !== strlen( trim( $filterFillId ) ) )
 			$conditions['fillId']	= $filterFillId;
-		if( strlen( trim( $filterEmail ) ) )
+		if( 0 !== strlen( trim( $filterEmail ) ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
 //		if( strlen( trim( $filterFormId ) ) )
-		if( count( array_filter( $filterFormId ) ) !== 0 )
+		if( 0 !== count( array_filter( $filterFormId ) ) )
 			$conditions['formId']	= array_filter( $filterFormId );
-		if( strlen( trim( $filterStatus ) ) )
+		if( 0 !== strlen( trim( $filterStatus ) ) )
 			$conditions['status']	= $filterStatus;
 
 		$limit		= 10;
 		$pages		= ceil( $this->modelFill->count( $conditions ) / $limit );
-		$page		= (int) $page;
 		if( $page >= $pages )
 			$page	= 0;
 		$orders		= ['fillId' => 'DESC'];
 		$limits		= [$page * $limit, $limit];
+		/** @var Entity_Form_Fill[] $fills */
 		$fills		= $this->modelFill->getAll( $conditions, $orders, $limits );
 		$forms		= $this->modelForm->getAll( [], ['title' => 'ASC'] );
 
 		foreach( $fills as $fill ){
 			$fill->transfers	= $this->modelFillTransfer->getAllByIndex( 'fillId', $fill->fillId );
+			$fill->form			= $this->modelForm->get( $fill->formId );
 		}
 
 		$transferTargetMap  = [];
+		/** @var Entity_Form_Transfer_Target $target */
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$transferTargetMap[$target->formTransferTargetId]   = $target;
 		$this->addData( 'transferTargets', $transferTargetMap );
@@ -140,6 +184,12 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->addData( 'filterStatus', $filterStatus );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function markAsConfirmed( string $fillId ): void
 	{
 		$this->checkId( $fillId );
@@ -152,6 +202,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function markAsHandled( string $fillId ): void
 	{
 		$this->checkId( $fillId );
@@ -162,128 +217,55 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
-	public function receive(): void
-	{
-		error_reporting( E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED );
-		$origin	= $this->env->getConfig()->get( 'module.manage_forms.origin' );
-		$origin	= $origin ?: $this->env->getBaseUrl();
-		$origin	= rtrim( $origin, '/' );
-		header( 'Access-Control-Allow-Origin: '.$origin );
-		header( 'Access-Control-Allow-Credentials: true' );
-//		ini_set( 'display_errors', FALSE );
-//		$this->checkIsAjax();
-		try{
-			$this->checkIsPost();
-			$data	= $this->request->getAll();
-			if( !isset( $data['inputs'] ) || !$data['inputs'] )
-				throw new Exception( 'No form data given.' );
-			if( !( $formId = $this->request->get( 'formId' ) ) )
-				throw new Exception( 'No form ID given.' );
-			if( !preg_match( '/^[0-9]+$/', $formId ) )
-				throw new Exception( 'Invalid form ID given.' );
-			$form		= $this->modelForm->get( $formId );
-//			if( $data['inputs']['surname']['value'] === "Testmann" )
-//				throw new Exception( 'Hallo Herr Testmann!' );
-			$email		= '';
-			$captcha	= '';
-			foreach( $data['inputs'] as $nr => $input ){
-				if( $input['name'] === 'email' )
-					$email	= strip_tags( $input['value'] );
-				if( $input['name'] === 'captcha' ){
-					$captcha	= $input['value'];
-					unset( $data['inputs'][$nr] );
-				}
-			}
-			if( $captcha ){
-				if( !View_Helper_Captcha::checkCaptcha( $this->env, $captcha ) ){
-					header( 'Content-Type: application/json' );
-					print( json_encode( array( 'status' => 'captcha', 'data' => array(
-						'captcha'	=> $captcha,
-						'real'		=> $this->env->getSession()->get( 'captcha' ),
-						'formId'	=> $formId,
-						'formType'	=> @$form->type,
-					) ) ) );
-					exit;
-				}
-			}
-			if( !isset( $input) )
-				throw new DomainException( 'No form ID given.' );
-
-			$status		= Model_Form_Fill::STATUS_CONFIRMED;
-			if( $form->type == Model_Form::TYPE_CONFIRM )
-				$status	= Model_Form_Fill::STATUS_NEW;
-
-			foreach( $data['inputs'] as $index => $input )
-				$input['value']	= strip_tags( $input['value'] );
-
-			$data		= [
-				'formId'	=> $formId,
-				'status'	=> $status,
-				'email'		=> strip_tags( $email ),
-//				'data'		=> json_encode( $data['inputs'], JSON_PRETTY_PRINT ),
-				'data'		=> json_encode( $data['inputs'] ),
-				'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
-				'agent'		=> strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
-				'createdAt'	=> time(),
-			];
-			$fillId		= $this->modelFill->add( $data, FALSE );
-			if( $form->type == Model_Form::TYPE_NORMAL ){
-				$this->logicFill->sendCustomerResultMail( $fillId );
-				$this->logicFill->sendManagerResultMails( $fillId );
-				$this->logicFill->applyTransfers( $fillId );
-			}
-			else if( $form->type == Model_Form::TYPE_CONFIRM ){
-				$this->logicFill->sendConfirmMail( $fillId );
-			}
-			$status	= 'ok';
-			$data	= [
-				'formId'	=> $form->formId,
-				'formType'	=> $form->type,
-			];
-		}
-		catch( Exception $e ){
-			$payload	= ['exception' => $e];
-			$this->env->getCaptain()->callHook( 'Env', 'logException', $this, $payload );
-//			$this->logicFill->sendManagerErrorMail( @$data );
-			$status	= 'error';
-			$data	= [
-				'error'		=> $e->getMessage(),
-				'trace'		=> $e->getTraceAsString(),
-				'formId'	=> @$form->formId,
-				'formType'	=> @$form->type,
-			];
-		}
-		header( 'Content-Type: application/json' );
-		print( json_encode( ['status' => $status, 'data' => $data] ) );
-		exit;
-	}
-
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		DomainException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $fillId ): void
 	{
-		$page		= (int) $this->request->get( 'page' );
+		$page	= (int) $this->request->get( 'page' );
 		if( !$fillId )
 			throw new DomainException( 'No fill ID given' );
+
+		/** @var ?Entity_Form_Fill $fill */
 		$fill	= $this->modelFill->get( $fillId );
-		if( !$fill )
+		if( NULL === $fill )
 			throw new DomainException( 'Invalid fill ID given' );
 		$this->modelFill->remove( $fillId );
 		$this->restart( $page ? '/'.$page : '', TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function resendManagerMails( string $fillId ): void
 	{
 		$this->logicFill->sendManagerResultMails( $fillId );
-		$page		= (int) $this->request->get( 'page' );
+		$page	= (int) $this->request->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
+	/**
+	 *	@param		string		$fillId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $fillId ): void
 	{
 		$fill	= $this->checkId( $fillId );
+
+		/** @var ?Entity_Form $form */
 		$form	= $this->modelForm->get( $fill->formId );
+
 		$form->transferRules	= [];
 		foreach( $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId ) as $transferRule )
 			$form->transferRules[$transferRule->formTransferRuleId]	= $transferRule;
+
 		$this->addData( 'fill', $fill );
 		$this->addData( 'form', $form );
 		$this->addData( 'fillTransfers', $this->modelFillTransfer->getAllByIndex( 'fillId', $fillId ) );
@@ -302,38 +284,27 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->session				= $this->env->getSession();
 		$this->modelForm			= new Model_Form( $this->env );
 		$this->modelFill			= new Model_Form_Fill( $this->env );
-		$this->modelMail			= new Model_Form_Mail( $this->env );
-		$this->modelRule			= new Model_Form_Rule( $this->env );
 		$this->modelTransferTarget	= new Model_Form_Transfer_Target( $this->env );
 		$this->modelTransferRule	= new Model_Form_Transfer_Rule( $this->env );
 		$this->modelFillTransfer	= new Model_Form_Fill_Transfer( $this->env );
 		$this->logicMail			= Logic_Mail::getInstance( $this->env );
-		$this->logicFill			= $this->getLogic( 'formFill' );
+		$this->logicFill			= new Logic_Form_FillManager( $this->env );
 
+		/** @var Entity_Form_Transfer_Target $target */
 		foreach( $this->modelTransferTarget->getAll() as $target )
 			$this->transferTargetMap[$target->formTransferTargetId]	= $target;
 	}
 
-	protected function checkId( string $fillId, bool $strict = TRUE )
+	/**
+	 *	@param		int|string		$fillId
+	 *	@param		bool			$strict
+	 *	@return		?Entity_Form_Fill
+	 *	@throws		RuntimeException	if no ID given
+	 *	@throws		DomainException		if invalid ID given
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
 		return $this->logicFill->get( $fillId, $strict );
-	}
-
-	protected function checkIsAjax( bool $strict = TRUE ): bool
-	{
-		if( $this->request->isAjax() )
-			return TRUE;
-		if( $strict )
-			throw new RuntimeException( 'AJAX requests allowed only' );
-		return FALSE;
-	}
-
-	protected function checkIsPost( bool $strict = TRUE ): bool
-	{
-		if( $this->request->getMethod()->isPost() )
-			return TRUE;
-		if( $strict )
-			throw new RuntimeException( 'Access denied: POST requests, only' );
-		return FALSE;
 	}
 }

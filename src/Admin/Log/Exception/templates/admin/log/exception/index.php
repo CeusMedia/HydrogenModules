@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 use CeusMedia\HydrogenFramework\View;
 
@@ -11,12 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 $panelList		= $view->loadTemplateFile( 'admin/log/exception/index.list.php' );
 $panelFilter	= $view->loadTemplateFile( 'admin/log/exception/index.filter.php' );
 
-return '
-<div class="row-fluid">
-	<div class="span3">
-		'.$panelFilter.'
-	</div>
-	<div class="span9">
-		'.$panelList.'
-	</div>
-</div>';
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', $panelFilter, ['class' => 'span3'] ),
+	HtmlTag::create( 'div', $panelList, ['class' => 'span9'] )
+], ['class' => 'row-fluid'] );

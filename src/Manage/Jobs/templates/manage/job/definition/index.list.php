@@ -1,6 +1,18 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $wordsGeneral */
+/** @var array $words */
+/** @var array<object> $definitions */
+/** @var int $page */
+/** @var int $limit */
+/** @var int $total */
+/** @var ?string $filterLimit */
 
 $helperAttribute	= new View_Helper_Job_Attribute( $env );
 
@@ -71,14 +83,14 @@ if( $definitions ){
 
 		$runs	= $item->runs ? '<div>'.$item->runs.' Runs</div>' : '-';
 		$fails	= $item->fails ? '<div><span class="text-error">'.$item->fails.' Fails</span></div>' : '';
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$item->className.' >> '.$item->methodName.'</small>', ['class' => ''] ),
 			HtmlTag::create( 'td', $runs.$fails, ['class' => ''] ),
 			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_MODE )->render(), ['class' => ''] ),
 			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_DEFINITION_STATUS )->render(), ['class' => ''] ),
 			HtmlTag::create( 'td', $item->lastRunAt ? $helperTime->setTimestamp( $item->lastRunAt )->render() : '-', ['class' => ''] ),
 //			HtmlTag::create( 'td', $buttons, ['class' => ''] ),
-		) );
+		] );
 	}
 	$cols	= HtmlElements::ColumnGroup( '', '100px', '120px', '120px', '140px'/*, '140px'*/ );
 
@@ -94,18 +106,18 @@ if( $definitions ){
 	$table	= HtmlTag::create( 'table', [$cols, $thead, $tbody], ['class' => 'table table-striped table-condensed'] );
 
 	/*  --  PAGINATION  --  */
-	$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/job/definition', $page, ceil( $total / $filterLimit ) );
-	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttunbar'] );
+	$pagination	= new PageControl( './manage/job/definition', $page, ceil( $total / $filterLimit ) );
+	$table		.= HtmlTag::create( 'div', $pagination, ['class' => 'buttonbar'] );
 }
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $words['index']['heading'] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', [
 			$buttonAdd,
 		], ['class' => 'buttonbar'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );
 
 //return print_m( $schedule, NULL, NULL, TRUE );

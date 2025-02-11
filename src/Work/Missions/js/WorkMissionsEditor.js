@@ -152,7 +152,7 @@ var WorkMissionsEditor = {
 	},
 	_setupMarkdownEditorWithAce: function(missionId){
 		var editor 	= ModuleAce.applyTo("#input_content");
-		var saveUrl	= "work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId;
+		var saveUrl	= "ajax/work/mission/saveContent/"+WorkMissionsEditor.missionId;
 		var onUpdate	= function(chance, editor){
 			jQuery.post("./ajax/helper/markdown/render", {content: editor.getValue()})
 			.done(function(json){
@@ -179,14 +179,14 @@ var WorkMissionsEditor = {
 			if(WorkMissionsEditor.missionId){
 				WorkMissionsEditor.markdown.css({opacity: 0.5});
 				$.ajax({
-					url: "./work/mission/ajaxSaveContent/"+WorkMissionsEditor.missionId,
+					url: "./ajax/work/mission/saveContent/"+WorkMissionsEditor.missionId,
 					data: {content: WorkMissionsEditor.textarea.val()},
 					method: "POST",
-					dataType: "html",
-					success: function(html){
+					dataType: "json",
+					success: function(json){
 						if(missionId)
 							$(".CodeMirror").removeClass("changed");
-						WorkMissionsEditor.markdown.html(html).css({opacity: 1});
+						WorkMissionsEditor.markdown.html(json.data).css({opacity: 1});
 					}
 				});
 			}
@@ -224,7 +224,7 @@ var WorkMissionsEditor = {
 		currentWorkerId = parseInt(currentWorkerId, 10);
 		var options = $.extend({
 			idSelectWorker: "input_workerId",
-			urlGetProjectUsers: "./work/mission/ajaxGetProjectUsers/"+projectId,
+			urlGetProjectUsers: "./ajax/work/mission/getProjectUsers/"+projectId,
 			allowEmpty: true,
 		}, options);
 		$.ajax({
@@ -236,10 +236,10 @@ var WorkMissionsEditor = {
 					var option = $("<option></option>").val("").html("-");
 					selectWorker.append(option);
 				}
-				$(json).each(function(nr){
+				$(json.data).each(function(nr){
 					var option = $("<option></option>").val(this.userId).html(this.username);
 					this.userId = parseInt(this.userId, 10);
-					if(currentWorkerId === this.userId || json.length === 1 || ( !currentWorkerId && this.userId === Auth.userId ) )
+					if(currentWorkerId === this.userId || json.data.length === 1 || ( !currentWorkerId && this.userId === Auth.userId ) )
 						option.prop("selected", "selected");
 					selectWorker.append(option);
 				});

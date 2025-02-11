@@ -1,7 +1,16 @@
 <?php
-class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Stripe_Event_Payin_Normal{
 
-	public function handle(){
+use Stripe\Exception\ApiErrorException as StripeApiErrorException;
+
+class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Stripe_Event_Payin_Normal
+{
+	/**
+	 *	@return		bool|int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		StripeApiErrorException
+	 */
+	public function handle(): bool|int
+	{
 		$indices	= [
 			'status' 	=> Model_Stripe_Payin::STATUS_CREATED,
 			'id'		=> $this->event->id,
@@ -23,13 +32,13 @@ class Logic_Payment_Stripe_Event_Payin_Normal_Failed extends Logic_Payment_Strip
 		$data->status	= Model_Stripe_Payin::getStatusLabel( $data->status );
 		$data->type		= Model_Stripe_Payin::getTypeLabel( $data->type );
 		unset( $data->data );
-		$mailData	= array(
+		$mailData	= [
 			'payin'			=> $payin,
 			'data'			=> $data,
 			'user'			=> $this->logicStripe->getUser( $payin->AuthorId ),
 			'event'			=> $this->event,
-		);
-		$receiver	= ['email' => 'dev@ceusmedia.de'];
+		];
+		$receiver	= (object) ['email' => 'dev@ceusmedia.de'];
 		$this->sendMail( 'Stripe_Event_Payin', $mailData, $receiver, 'de' );
 		return time();
 	}

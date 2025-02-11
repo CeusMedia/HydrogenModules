@@ -9,12 +9,12 @@ var WorkMissionsKanban = {
 //		WorkMissionsList.blendOut(100);
 		$("#day-lists-empty").hide();
 		$.ajax({
-			url: "./work/mission/ajaxRenderIndex",
+			url: "./ajax/work/mission/kanban/renderIndex",
 			dataType: "json",
 			success: function(json){
 				$("#message-loading-list").remove();
-				$("#day-lists .visible-desktop").html(json.lists.large);
-				$("#day-lists .hidden-desktop").html(json.lists.large);
+				$("#day-lists .visible-desktop").html(json.data.lists.large);
+				$("#day-lists .hidden-desktop").html(json.data.lists.large);
 //				$("#mission-folders").equalize({
 				$(".work-mission-kanban-lane-item").equalize({
 					equalize: 'height',
@@ -36,7 +36,7 @@ var WorkMissionsKanban = {
 			receive: function( event, ui ){
 //				console.log(ui);
 				$.ajax({
-					url: "./work/mission/kanban/ajaxSetMissionStatus",
+					url: "./ajax/work/mission/kanban/setMissionStatus",
 					data: {
 						missionId: ui.item[0].dataset.id,
 						status: event.target.id.replace(/^[a-z-]+/, "")

@@ -8,7 +8,7 @@ class View_Helper_Shop_FinishPanel_CatalogGallery
 {
 	protected WebEnvironment $env;
 	protected Dictionary $options;
-	protected ?string $orderId			= NULL;
+	protected int|string|NULL $orderId			= NULL;
 
 	public function __construct( WebEnvironment $env )
 	{
@@ -36,7 +36,7 @@ class View_Helper_Shop_FinishPanel_CatalogGallery
 		return $view->loadContentFile( 'html/catalog/gallery/delivery.html', $data );
 	}
 
-	public function setOrderId( string $orderId ): self
+	public function setOrderId( int|string $orderId ): self
 	{
 		$this->orderId		= $orderId;
 		return $this;

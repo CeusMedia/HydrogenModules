@@ -2,6 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Company_Branch $view */
+/** @var object $branch */
 
 $iconCancel	= HTML::Icon( 'arrow-left' );
 $iconSave	= HTML::Icon( 'ok', TRUE );
@@ -15,7 +21,7 @@ if( $branch->images ){
 		$urlImage		= 'images/branches/'.$image->filename;
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
 		$img			= new Image( $urlImage );
-		$title			= $image->title ? $image->title : '<small class="muted"><em>Kein Titel.</em></small>';
+		$title			= $image->title ?: '<small class="muted"><em>Kein Titel.</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',
 				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), [

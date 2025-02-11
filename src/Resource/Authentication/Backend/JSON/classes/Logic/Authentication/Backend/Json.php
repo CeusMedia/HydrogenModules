@@ -3,19 +3,25 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
-class Logic_Authentication_Backend_Json extends Logic
+class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentication_BackendInterface
 {
 	protected Dictionary $session;
+	protected Resource_Server_Json $client;
 
-	public function checkPassword( string $username, string $password ): bool
+	/**
+	 *	@param		int|string		$userId			In this case, it is the username
+	 *	@param		string			$password
+	 *	@return		bool
+	 */
+	public function checkPassword( int|string $userId, string $password ): bool
 	{
 		$data	= [
 			'filters'	=> [
-				'username'	=> $username,
+				'username'	=> $userId,
 				'password'	=> md5( $password )
 			]
 		];
-		$result = $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+		$result = $this->client->postData( 'user', 'index', NULL, $data );
 		return count( $result ) === 1;
 	}
 
@@ -31,11 +37,16 @@ class Logic_Authentication_Backend_Json extends Logic
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this, $payload );
 	}
 
+	/**
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->env->getServer()->postData( 'role', 'get', [$roleId] );
+			$role	= $this->client->postData( 'role', 'get', [$roleId] );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -44,7 +55,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		return NULL;
 	}
 
-	public function getCurrentRoleId( bool $strict = TRUE ): ?string
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -54,14 +69,19 @@ class Logic_Authentication_Backend_Json extends Logic
 		return $this->env->getSession()->get( 'auth_role_id');
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE )
+	/**
+	 *	@param		bool		$strict
+	 *	@param		bool		$withRole
+	 *	@return		object|NULL
+	 */
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
-			$user	= $this->env->getServer()->postData( 'user', 'get', [$userId] );
+			$user	= $this->client->postData( 'user', 'get', [$userId] );
 			if( $user ){
 				if( $withRole )
-					$user->role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
+					$user->role	= $this->client->postData( 'role', 'get', [$user->roleId] );
 				return $user;
 			}
 		}
@@ -70,7 +90,11 @@ class Logic_Authentication_Backend_Json extends Logic
 		return NULL;
 	}
 
-	public function getCurrentUserId( bool $strict = TRUE )
+	/**
+	 *	@param		bool		$strict
+	 *	@return		int|string|NULL
+	 */
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -93,12 +117,12 @@ class Logic_Authentication_Backend_Json extends Logic
 		return 0 !== strlen( trim( $this->session->get( 'auth_user_id', '' ) ) );
 	}
 
-	public function isCurrentUserId( string $userId ): bool
+	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
 	}
 
-	public function setAuthenticatedUser( object $user ): self
+	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->setIdentifiedUser( $user );
 		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
@@ -120,7 +144,22 @@ class Logic_Authentication_Backend_Json extends Logic
 	/**
 	 *	@todo		implement if possible
 	 */
-	protected function noteUserActivity()
+	public function noteUserActivity(): self
 	{
+		return $this;
+	}
+
+	protected function __onInit(): void
+	{
+		$client		= $this->env->get( 'jsonServerClient' );
+		if( !$client instanceof Resource_Server_Json ){
+			if( class_exists( NotSupportedExtension::class ) )
+				throw NotSupportedExtension::create()
+					->setMessage( 'Sorry, support for Resource_Server_Json only, atm' )
+					->setSuggestion( 'You can fix this! This is open source software ;-)' );
+			throw new RuntimeException( 'Sorry, support for Resource_Server_Json only, atm - you can fix this: it is open source ;-)' );
+		}
+		$this->client		= $client;
+		$this->session		= $this->env->getSession();
 	}
 }

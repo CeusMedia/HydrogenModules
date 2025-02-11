@@ -50,7 +50,9 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 						$model		= new Model_Shop_Customer( $this->env );
 						$value		= '%'.str_replace( " ", "%", str_replace( ' ', '', $filterValue ) ).'%';
 						$find		= array( 'CONCAT(firstname, surname)' => $value );
-						if( ( $customers = $model->getAll( $find ) ) ){
+						/** @var array<Entity_Shop_Customer> $customers */
+						$customers	= $model->getAll( $find );
+						if( [] !== $customers ){
 							$conditions['userId']	= [];
 							foreach( $customers as $customer )
 								$conditions['userId'][]	= $customer->userId;

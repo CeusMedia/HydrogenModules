@@ -2,69 +2,24 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
+/** @var View_Work_Newsletter_Group $view */
+/** @var View_Work_Newsletter_Group $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
+/** @var array<object> $groupReaders */
+/** @var object $group */
+/** @var int|string $groupId */
+/** @var ?Logic_Limiter $limiter */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 $iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
-
-//  --  PANEL: READERS  --  //
-$w			= (object) $words['edit_readers'];
-
-$statusIcons	= [
-	-1		=> 'remove',
-	0		=> 'star',
-	1		=> 'check',
-];
-
-$labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
-$listReaders	= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
-
-if( $groupReaders ){
-	$listReaders	= [];
-	foreach( $groupReaders as $reader ){
-		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$reader->status]] );
-		$name			= HtmlTag::create( 'small', $reader->firstname.' '.$reader->surname );
-
-		$label			= $iconStatus.'&nbsp;&lt;'.$reader->email.'&gt;';
-		$urlReader		= './work/newsletter/reader/edit/'.$reader->newsletterReaderId;
-		$urlRemove		= './work/newsletter/group/removeReader/'.$group->newsletterGroupId.'/'.$reader->newsletterReaderId;
-		$attributes		= [
-			'href'		=> $urlRemove,
-			'class'		=> 'btn btn-mini btn-inverse',
-		];
-		$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
-		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
-		$linkReader		= HtmlTag::create( 'a', $label, ['href' => $urlReader] );
-		$listReaders[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', $linkReader.' '.$name, ['class' => ''] ),
-			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		) );
-	}
-	$colgroup		= HtmlElements::ColumnGroup( '', '120px' );
-	$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser'] );
-	$thead			= HtmlTag::create( 'thead', $tableHeads );
-	$tbody			= HtmlTag::create( 'tbody', $listReaders );
-	$listReaders	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
-		'class'	=> 'table table-condensed table-striped table-fixed'
-	] );
-}
-$panelReaders	= '
-<div class="content-panel">
-	<h3>'.$w->heading.'</h3>
-	<div class="content-panel-inner" id="group-reader-list">
-		'.$listReaders.'
-	</div>
-</div>';
 
 //  --  PANEL: FORM  --  //
 $w			= (object) $words['edit'];
@@ -87,17 +42,17 @@ $buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, [
 ] );
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
-	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, array(
+	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small not-btn-info disabled',
 		'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, array(
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 	'href'		=> './work/newsletter/group/remove/'.$groupId,
 	'class'		=> 'btn btn-danger btn-small',
 	'onclick'	=> "if(!confirm('Wirklich?')) return false;",
-) );
+] );
 if( !$groupReaders )
 	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 		'href'		=> './work/newsletter/group/remove/'.$groupId,
@@ -105,6 +60,7 @@ if( !$groupReaders )
 		'onclick'	=> "return false;",
 		'disabled'	=> 'disabled',
 	] );
+
 $buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, [
 	'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
 	'class'		=> 'btn btn-success btn-small',
@@ -141,6 +97,17 @@ $panelForm	= '
 		</form>
 	</div>
 </div>';
+
+
+//  --  PANEL: READERS  --  //
+
+$helperReaders	= new View_Helper_Work_Newsletter_GroupReaders( $env );
+$helperReaders->setGroup( $group );
+$helperReaders->setReaders( $groupReaders );
+$helperReaders->setWords( $words );
+$panelReaders	= $helperReaders->render();
+
+
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/group/edit/', ['words' => $words, 'group' => $group] ) );
 

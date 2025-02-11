@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var object $customer */
+/** @var int|string $customerId */
 
 $panelMap	= '';
 
@@ -42,9 +47,9 @@ return '
 			<dt>E-Mail</dt>
 			<dd><a href="mailto:'.$customer->email.'">'.$customer->email.'</a>&nbsp;</dd>
 			<dt>Telefon</dt>
-			<dd>'.( $customer->phone ? $customer->phone : '-' ).'&nbsp;</dd>
+			<dd>'.( $customer->phone ?: '-' ).'&nbsp;</dd>
 			<dt>Telefax</dt>
-			<dd>'.( $customer->fax ? $customer->fax : '-' ).'&nbsp;</dd>
+			<dd>'.( $customer->fax ?: '-' ).'&nbsp;</dd>
 			<dt>GPS</dt>
 			<dd>'.( $customer->latitude ? $customer->latitude.', '.$customer->longitude : '' ).'&nbsp;</dd>
 		</dl>

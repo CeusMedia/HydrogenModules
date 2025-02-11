@@ -1,15 +1,18 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_UI_Shortcode_Example extends Hook
 {
-	static public function onViewRenderContent( Environment $env, $context, $module, array & $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public function onViewRenderContent(): void
 	{
-		$processor		= new Logic_Shortcode( $env );
-		$processor->setContent( $payload['content'] );
+		$processor		= new Logic_Shortcode( $this->env );
+		$processor->setContent( $this->payload['content'] );
 //		$words			= $env->getLanguage()->getWords( '...module/id...' );
 		$shortCodes		= [
 			'example'	=> [
@@ -34,12 +37,12 @@ class Hook_UI_Shortcode_Example extends Hook
 					}
 				}
 				catch( Exception $e ){
-					$env->getLog()->logException( $e );
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$this->env->getLog()->logException( $e );
+					$this->env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
 					$processor->removeNext( $shortCode );
 				}
 			}
 		}
-		$payload['content']	= $processor->getContent();
+		$this->payload['content']	= $processor->getContent();
 	}
 }

@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var object[] $authors */
 /** @var object[] $documents */
 /** @var object[] $tags */
+/** @var ?string $uriCoverLarge */
 
 $a			= clone( $article );
 $w			= (object) $words['article'];
@@ -52,7 +53,7 @@ if( $documents ){
 	$list	= [];
 	foreach( $documents as $document ){
 		$link	= $helper->renderDocumentLink( $document );
-		$list[]	= HtmlTag::create( 'li', $link, array( 'class' => 'document') );
+		$list[]	= HtmlTag::create( 'li', $link, ['class' => 'document'] );
 	}
 	$a->documents	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled documents documentList'] );
 }
@@ -157,9 +158,9 @@ return '
 	'.$definitions.'
 </div>
 <script>
-var ViewHelperText = {
+let ViewHelperText = {
 	toggleLongText: function(toggler){
-		var parent = $(toggler).parent().parent();
+		let parent = $(toggler).parent().parent();
 //console.log(parent);
 		$("div.text_more", parent).toggle();
 		$("div.text_less", parent).toggle();

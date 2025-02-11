@@ -1,15 +1,22 @@
-<?php
+<?php /** @noinspection XmlDeprecatedElement */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\IO as IoException;
 
 class Mail_Test extends Mail_Abstract
 {
-	public function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		IoException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function generate(): static
 	{
 		if( isset( $this->data['verbose'] ) && is_bool( $this->data['verbose'] ) )
 			$this->transport->setVerbose( $this->data['verbose'] );
 
-		$data		= new Dictionary( (array) $this->data );
+		$data		= new Dictionary( $this->data );
 		$subject	= $data->get( 'subject', 'Test' );
 		$text		= $data->get( 'text', $this->renderText() );
 		$html		= $data->get( 'html', $this->renderHtml() );
@@ -25,24 +32,23 @@ class Mail_Test extends Mail_Abstract
 
 	protected function renderHtml(): string
 	{
-		$content	= '
+		/** @noinspection HtmlDeprecatedTag */
+		return '
 <h2>E-Mail-Test</h2>
 <div>
 	<big>This is a text.</big>
 	<div class="alert alert-info">The current timestamp is '.time().'.</div>
 </div>';
-		return $content;
 	}
 
 	protected function renderText(): string
 	{
-		$content	= '
+		return '
 *E-Mail-Test*
 
 This is just a test.
 The current timestamp ist '.time().'
 
 Goodbye';
-		return $content;
 	}
 }

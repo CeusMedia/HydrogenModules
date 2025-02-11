@@ -4,6 +4,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Helper_Catalog_Bookstore
 {
@@ -16,7 +18,7 @@ class View_Helper_Catalog_Bookstore
 	/**	@var	Logic_Catalog_Bookstore		$logic */
 	protected Logic_Catalog_Bookstore $logic;
 
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	public function __construct( Environment $env )
 	{
@@ -26,7 +28,13 @@ class View_Helper_Catalog_Bookstore
 		$this->cache	= $this->env->getCache();
 	}
 
-	public static function applyLinks( Environment $env, $content/*&$item*/ )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		string			$content
+	 *	@return		array|mixed|string|string[]|null
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public static function applyLinks( Environment $env, string $content/*&$item*/ )
 	{
 //		$content	= $item->content;
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
@@ -81,27 +89,54 @@ class View_Helper_Catalog_Bookstore
 		return str_replace( ".", $separator, $price );
 	}
 
-	public function getArticleUri( $articleId, bool $absolute = FALSE ): string
+	/**
+	 *	@param		int|string		$articleId
+	 *	@param		bool			$absolute
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function getArticleUri( int|string $articleId, bool $absolute = FALSE ): string
 	{
 		return $this->logic->getArticleUri( (int) $articleId, $absolute );
 	}
 
-	public function getAuthorUri( $authorId, bool $absolute = FALSE ): string
+	/**
+	 *	@param		int|string		$authorId
+	 *	@param		bool			$absolute
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function getAuthorUri( int|string $authorId, bool $absolute = FALSE ): string
 	{
 		return $this->logic->getAuthorUri( (int) $authorId, $absolute );
 	}
 
+	/**
+	 *	@param		$categoryOrId
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function getCategoryUri( $categoryOrId ): string
 	{
 		return $this->logic->getCategoryUri( $categoryOrId );
 	}
 
+	/**
+	 *	@param		$tagOrId
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function getTagUri( $tagOrId ): string
 	{
 		return $this->logic->getTagUri( $tagOrId );
 	}
 
-	public function prepareArticleData( $article ): array
+	/**
+	 *	@param		object		$article
+	 *	@return		array
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function prepareArticleData( object $article ): array
 	{
 		$config		= $this->env->getConfig();
 		$language	= $this->env->getLanguage();
@@ -136,7 +171,7 @@ class View_Helper_Catalog_Bookstore
 		if( $article->digestion )
 			$info[]	= $article->digestion;
 		if( $article->price )
-			$info[]	= str_replace( ".", ",", $this->formatPrice( $article->price, "." ) ).$words['price_suffix'];
+			$info[]	= str_replace( ".", ",", static::formatPrice( $article->price, "." ) ).$words['price_suffix'];
 		$item['info']	= implode( ", ", $info );
 		$labelISN	= $article->series ? $words['issn'] : $words['isbn'];
 		if( isset( $article->branches ) )
@@ -176,14 +211,24 @@ class View_Helper_Catalog_Bookstore
 		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
-	public function renderArticleLink( $article ): string
+	/**
+	 *	@param		object		$article
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderArticleLink( object $article ): string
 	{
 		$title		= View_Helper_Text::applyFormat( $article->title );
 		$url		= $this->logic->getArticleUri( $article );
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderArticleListItem( $article ): string
+	/**
+	 *	@param		object		$article
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderArticleListItem( object $article ): string
 	{
 		$data	= $this->prepareArticleData( $article );
 		$view	= new View_Catalog_Bookstore( $this->env );
@@ -205,7 +250,12 @@ class View_Helper_Catalog_Bookstore
 		return HtmlElements::Image( $pathImages."bookstore/no_picture.png", $labelNoPicture );
 	}
 
-	public function renderAuthorLink( $author ): string
+	/**
+	 *	@param		object		$author
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderAuthorLink( object $author ): string
 	{
 		$name	= $author->lastname;
 		if( $author->firstname )
@@ -220,7 +270,13 @@ class View_Helper_Catalog_Bookstore
 		return HtmlTag::create( 'a', $name, ['href' => $url] );
 	}
 
-	public function renderCategory( $category, ?string $heading = NULL ): string
+	/**
+	 *	@param		object			$category
+	 *	@param		string|NULL		$heading
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderCategory( object $category, ?string $heading = NULL ): string
 	{
 		if( is_string( $heading ) )
 			$heading	= HtmlTag::create( 'h3', $heading );
@@ -242,7 +298,12 @@ class View_Helper_Catalog_Bookstore
 		return $heading.$descriptions.$articles;
 	}
 
-	public function renderCategoryArticleList( $category )
+	/**
+	 *	@param		object		$category
+	 *	@return		array
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderCategoryArticleList( object $category ): array
 	{
 		$cacheKey	= 'catalog.bookstore.html.categoryArticleList.'.$category->categoryId;
 		if( NULL === ( $list = $this->cache->get( $cacheKey ) ) ){
@@ -256,7 +317,13 @@ class View_Helper_Catalog_Bookstore
 		return $list;
 	}
 
-	public function renderCategoryLink( $category, string $language = 'de' ): string
+	/**
+	 *	@param		object		$category
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderCategoryLink( object $category, string $language = 'de' ): string
 	{
 		$labelKey	= 'label_'.$language;
 		$title		= View_Helper_Text::applyFormat( $category->$labelKey );
@@ -264,7 +331,13 @@ class View_Helper_Catalog_Bookstore
 		return HtmlTag::create( 'a', $title, ['href' => $url] );
 	}
 
-	public function renderCategoryList( $data, string $language = 'de' ): string
+	/**
+	 *	@param		array		$data
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderCategoryList( array $data, string $language = 'de' ): string
 	{
 		$list	= [];
 		foreach( $data as $category ){
@@ -293,13 +366,24 @@ class View_Helper_Catalog_Bookstore
 		] );
 	}
 
-	public function renderPositionFromArticle( $article, string $language = 'de' ): string
+	/**
+	 *	@param		object		$article
+	 *	@param		string		$language
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderPositionFromArticle( object $article, string $language = 'de' ): string
 	{
 		$helper	= new View_Helper_Catalog_Bookstore_Position( $this->env );
 		return $helper->renderFromArticle( $article );
 	}
 
-	public function renderPositionFromCategory( $category = NULL ): string
+	/**
+	 *	@param		object|NULL		$category
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function renderPositionFromCategory( ?object $category = NULL ): string
 	{
 		$helper	= new View_Helper_Catalog_Bookstore_Position( $this->env );
 		return $helper->renderFromCategory( $category );

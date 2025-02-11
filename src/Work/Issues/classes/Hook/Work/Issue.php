@@ -5,6 +5,15 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Issue extends Hook
 {
+	protected array $statusesActive	= [
+		Model_Issue::STATUS_NEW,
+		Model_Issue::STATUS_ASSIGNED,
+		Model_Issue::STATUS_ACCEPTED,
+		Model_Issue::STATUS_PROGRESSING,
+		Model_Issue::STATUS_READY,
+		Model_Issue::STATUS_REOPENED
+	];
+
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
@@ -25,10 +34,10 @@ class Hook_Work_Issue extends Hook
 	 */
 	public function onRegisterDashboardPanels(): void
 	{
-		if( !$this->env->getAcl()->has( 'work/issue', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'ajax/work/issue', 'renderDashboardPanel' ) )
 			return;
 		$this->context->registerPanel( 'work-issues', [
-			'url'			=> 'work/issue/ajaxRenderDashboardPanel',
+			'url'			=> 'ajax/work/issue/renderDashboardPanel',
 			'title'			=> 'offene Probleme',
 			'heading'		=> 'offene Probleme',
 			'icon'			=> 'fa fa-fw fa-exclamation',
@@ -38,7 +47,7 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -52,47 +61,44 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function onListUserRelations(): void
 	{
-		$payload	= (object) $this->payload;
-		if( empty( $payload->userId ) ){
+		if( empty( $this->payload['userId'] ) ){
 			$message	= 'Hook "Work_Issues::onListUserRelations" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
 		$modelIssue		= new Model_Issue( $this->env );
 
-		$activeOnly		= $payload->activeOnly ?? FALSE;
-		$linkable		= $payload->linkable ?? FALSE;
-		$statusesActive	= [0, 1, 2, 3, 4, 5];
+		$activeOnly		= $this->payload['activeOnly'] ?? FALSE;
+		$linkable		= $this->payload['linkable'] ?? FALSE;
 		$list			= [];
-		$indices		= ['reporterId' => $payload->userId];
+		$indices		= ['reporterId' => $this->payload['userId']];
 		if( $activeOnly )
-			$indices['status']	= $statusesActive;
+			$indices['status']	= $this->statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
-		$icons			= array(
+		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
+		];
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
 		foreach( $reportedIssues as $issue ){
 			$icon		= $icons[$issue->type];
-			$isOpen		= in_array( $issue->status, $statusesActive );
+			$isOpen		= in_array( $issue->status, $this->statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $payload->linkable ? $issue->issueId : NULL,
+				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$payload,																				//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items
@@ -106,6 +112,7 @@ class Hook_Work_Issue extends Hook
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
@@ -115,6 +122,7 @@ class Hook_Work_Issue extends Hook
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
+		/** @var Logic_Issue $logic */
 		$logic			= Logic_Issue::getInstance( $this->env );
 		$modelIssue		= new Model_Issue( $this->env );
 		$modelChange	= new Model_Issue_Change( $this->env );
@@ -147,52 +155,52 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onListProjectRelations(): void
 	{
 		$modelProject	= new Model_Project( $this->env );
-		if( empty( $payload->projectId ) ){
+		if( empty( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations" is missing project ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( !( $project = $modelProject->get( $payload->projectId ) ) ){
+		if( !$modelProject->has( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Issues::onListProjectRelations": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$payload->activeOnly	= $payload->activeOnly ?? FALSE;
-		$payload->linkable		= $payload->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 		$language		= $this->env->getLanguage();
-		$statusesActive	= [0, 1, 2, 3, 4, 5];
+
 		$list			= [];
 		$modelIssue		= new Model_Issue( $this->env );
-		$indices		= ['projectId' => $payload->projectId];
-		if( $payload->activeOnly )
-			$indices['status']	= $statusesActive;
+		$indices		= ['projectId' => $this->payload['projectId']];
+		if( $this->payload['activeOnly'] )
+			$indices['status']	= $this->statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
-		$icons			= array(
+		$icons			= [
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
 			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
-		);
+		];
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){
 			$icon		= $icons[$issue->type];
-			$isOpen		= in_array( $issue->status, $statusesActive );
+			$isOpen		= in_array( $issue->status, $this->statusesActive );
 			$status		= '('.$words['states'][$issue->status].')';
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $payload->linkable ? $issue->issueId : NULL,
+				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$payload,																				//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																			//  relation type: entity or relation
 			$list,																					//  list of related items

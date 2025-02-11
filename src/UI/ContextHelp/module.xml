@@ -26,7 +26,7 @@ So the example path will resolve to file locales/[xy]/my/example/contexthelp.htm
 Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 ]]></description>
 	<category>User Interface</category>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extend show and hide by toggle.</log>
@@ -40,10 +40,11 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<log version="0.3">Migration from protected to public repository.</log>
 	<log version="0.3.1">Hide masks on click.</log>
 	<log version="0.3.2">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+	<log version="0.3.3">Extract hooks to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
-		<class>View/Helper/ContextHelp.php</class>
+		<class>Hook/UI/ContextHelp.php</class>
 		<script source="local" load="auto">module.ui.contexthelp.js</script>
 		<style source="theme" load="auto">module.ui.contexthelp.css</style>
 		<locale>de/html/app.contexthelp.html</locale>
@@ -51,11 +52,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<relations>
 <!--		<needs type="module">JS_jQuery_UI</needs>-->
 	</relations>
-	<hook env="resource" resource="ContextHelp" event="register">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
-	<hook env="resource" resource="Controller" event="onDetectPath">View_Helper_ContextHelp::___onRegisterContextHelp</hook>
-	<hook env="resource" resource="Page" event="applyModules"><![CDATA[
-		$payload = ['path' => 'app.contexthelp'];
-		$env->getCaptain()->callHook( 'ContextHelp', 'register', $context, $payload );
-		$context->js->addSCriptOnReady('ContextHelp.prepare()');
-]]></hook>
+	<hook env="resource" resource="ContextHelp" event="register">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
+	<hook env="resource" resource="Controller" event="onDetectPath">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
+	<hook env="resource" resource="Page" event="applyModules">Hook_UI_ContextHelp::onPageApplyModules</hook>
 </module>

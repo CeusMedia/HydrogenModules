@@ -7,10 +7,15 @@ use CeusMedia\Bootstrap\Icon as BootstrapIcon;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
 
 extract( $view->populateTexts( ['index.top', 'index.bottom', 'thread.top', 'thread.bottom'], 'html/info/forum/' ) );
-$textTop	= $textThreadTop	? $textThreadTop: $textIndexTop;
-$textBottom	= $textThreadBottom ? $textThreadBottom : $textIndexBottom;
+$textTop	= $textThreadTop ?: $textIndexTop;
+$textBottom	= $textThreadBottom ?: $textIndexBottom;
 
 $helper			= new View_Helper_TimePhraser( $env );
 $iconApprove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -19,7 +24,7 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $table	= '<em><small class="muted">Keine.</small></em>';
 $userCanApprove	= in_array( 'approvePost', $rights );
-$userCanEdit	= in_array( 'ajaxEditPost', $rights );
+$userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'editPost' );
 $userCanRemove	= in_array( 'removePost', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
@@ -42,23 +47,23 @@ if( $posts ){
 				] );
 		}
 		if( $userCanEdit && $userCanChange && !$post->type ){
-			$buttons[]	= HtmlTag::create( 'button', $iconEdit, array(
+			$buttons[]	= HtmlTag::create( 'button', $iconEdit, [
 				'onclick'	=> 'InfoForum.preparePostEditor('.$post->postId.')',
 				'class'		=> 'btn not-btn-small',
 				'title'		=> $words['thread']['buttonEdit']
-			) );
+			] );
 		}
 		if( $userCanRemove && $userCanChange ){
-			$buttons[]	= HtmlTag::create( 'a', $iconRemove, array(
+			$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 				'onclick'	=> 'if(!confirm(\'Wirklich ?\')) return false;',
 				'href'		=> './info/forum/removePost/'.$post->postId,
 				'class'		=> 'btn not-btn-small btn-danger',
 				'title'		=> $words['thread']['buttonRemove']
-			) );
+			] );
 		}
 		$user	= '-';
 		if( $post->author ){
-			$gravatar	= 'http://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
+			$gravatar	= 'https://www.gravatar.com/avatar/'.md5( strtolower( trim( $post->author->email ) ) ).'?s=32&d=mm&r=g';
 			$gravatar	= HtmlTag::create( 'img', NULL, ['src' => $gravatar, 'class' => 'avatar'] );
 			$nrPosts	= HtmlTag::create( 'small', ' ('.$userPosts[$post->author->userId].')', ['class' => 'muted'] );
 			$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $post->createdAt ), ['class' => 'muted'] );
@@ -71,21 +76,21 @@ if( $posts ){
 			$parts		= explode( "\n", $post->content );
 			$title		= $parts[1] ? TextTrimmer::trim( $parts[1], 100 ) : '';
 			$caption	= $title ? HtmlTag::create( 'figcaption', htmlentities( $parts[1], ENT_QUOTES, 'UTF-8') ) : '';
-			$image		= HtmlTag::create( 'img', NULL, array(
+			$image		= HtmlTag::create( 'img', NULL, [
 				'src'	=> 'contents/forum/'.$parts[0],
 				'title'	=> htmlentities( $title, ENT_QUOTES, 'UTF-8')
-			) );
+			] );
 			$content	= HtmlTag::create( 'figure', $image.$caption );
 		}
 		if( $post->modifiedAt ){
 			$modifiedAt		= sprintf( $words['thread']['modifiedAt'], date( "d.m.Y H:i", $post->createdAt ) );
 			$content		.= HtmlTag::create( 'div', $modifiedAt, ['class' => 'modified muted'] );
 		}
-		$cells	= array(
+		$cells	= [
 			HtmlTag::create( 'td', $user ),
 			HtmlTag::create( 'td', $content, ['class' => 'content'] ),
 			HtmlTag::create( 'td', $buttons ),
-		);
+		];
 		$rows[]	= HtmlTag::create( 'tr', $cells, [
 			'id'	=> 'post-'.$post->postId,
 			'class'	=> 'post-type-'.$post->type
@@ -111,11 +116,11 @@ $iconHome	= new BootstrapIcon( 'home' );
 $iconFolder	= new BootstrapIcon( 'folder-open' );
 $iconFile	= new BootstrapIcon( 'file', TRUE );
 $url		= './info/forum/';
-$buttons	= array(
+$buttons	= [
 	new BootstrapLinkButton( $url, $iconHome ),
 	new BootstrapLinkButton( $url.'topic/'.$topic->topicId, $topic->title, NULL, $iconFolder ),
 	new BootstrapButton( $thread->title, 'btn-inverse disabled', $iconFile, TRUE ),
-);
+];
 $position	= new BootstrapButtonGroup( $buttons );
 $position->setClass( 'position-bar' );
 
@@ -157,7 +162,7 @@ img.avatar {
 </style>
 <script>
 $(document).ready(function(){
-	InfoForum.pollForUpdates('.$thread->threadId.', '.$lastPostId.');
+	InfoForum.pollForUpdates('.$thread->threadId.', '.$lastPostId.')
 });
 </script>
 '.$textBottom;

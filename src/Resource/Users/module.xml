@@ -7,8 +7,8 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.1</version>
-	<log version="0.1">Initital prototype.</log>
+	<version>0.4.4</version>
+	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
 	<log version="0.2.2">Changed ACL right key for controllers.</log>
@@ -25,16 +25,31 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.3.6">Update code style.</log>
 	<log version="0.4">Support user tokens backed by user passwords.</log>
 	<log version="0.4.1">Extend user tokens by scope.</log>
+	<log version="0.4.2">Code update.</log>
+	<log version="0.4.3">Add model entities.</log>
+	<log version="0.4.4">Add logic class for user, group and role management.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Hook/Resource/User.php</class>
+		<class>Entity/Group.php</class>
+		<class>Entity/Group/Right.php</class>
+		<class>Entity/Group/User.php</class>
+		<class>Entity/Role.php</class>
+		<class>Entity/Role/Right.php</class>
+		<class>Entity/User.php</class>
+		<class>Entity/User/Password.php</class>
+		<class>Entity/User/Token.php</class>
+		<class>Model/Group.php</class>
+		<class>Model/Group/Right.php</class>
+		<class>Model/Group/User.php</class>
 		<class>Model/Role.php</class>
 		<class>Model/Role/Right.php</class>
 		<class>Model/User.php</class>
 		<class>Model/User/Password.php</class>
 		<class>Model/User/Token.php</class>
+		<class>Logic/User.php</class>
 		<class>Logic/UserPassword.php</class>
 		<class>Logic/UserToken.php</class>
 		<locale>de/countries.ini</locale>
@@ -59,7 +74,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<config protected="yes" type="boolean" name="password.salt.decay">1</config>
 	<config protected="yes" type="integer" name="password.salt.decay.seconds">86400</config>
 	<config protected="yes" type="string" name="password.pepper" title="string to pepper password with"/>
-	<config protected="no" type="boolean" name="address.mandatory" title="user needs an address"></config>
+	<config protected="no" type="boolean" name="address.mandatory" title="user needs an address">0</config>
 	<hook type="resource" resource="User" event="remove" level="9">Hook_Resource_User::onUserRemove</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>users`;
@@ -96,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   KEY `username` (`username`),
   KEY `gender` (`gender`),
   KEY `country` (`country`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 INSERT INTO `<%?prefix%>users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
 (1, 1, 0, 0, 1, 'root@localhost', 'root', '63a9f0ea7bb98050796b649e85481845', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1383589432, NULL, NULL, 1383589432);
@@ -112,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
   `modifiedAt` decimal(12,0) NOT NULL,
   PRIMARY KEY (`roleId`),
   KEY `access` (`access`,`register`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `description`, `createdAt`, `modifiedAt`) VALUES
 (1, 128, 0, 'Developer', '', '1294083736', '0'),
@@ -130,7 +145,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
   `timestamp` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`roleRightId`),
   KEY `roleId` (`roleId`,`controller`,`action`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
@@ -151,77 +166,57 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
   KEY `status` (`status`),
   KEY `algo` (`algo`),
   KEY `failsLast` (`failsLast`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-]]></sql>
-	<sql on="install" type="sqlite" version="final"><![CDATA[
-DROP TABLE IF EXISTS "<%?prefix%>users";
-CREATE TABLE "<%?prefix%>users" (
-	"userId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,
-	"accountId" INTEGER,
-	"roleId" INTEGER,
-	"companyId" INTEGER,
-	"roomId" INTEGER,
-	"status" INTEGER,
-	"username" VARCHAR,
-	"password" VARCHAR,
-	"email" VARCHAR,
-	"gender" INTEGER,
-	"salutation" VARCHAR,
-	"firstname" VARCHAR,
-	"surname" VARCHAR,
-	"country" VARCHAR,
-	"postcode" VARCHAR,
-	"city" VARCHAR,
-	"street" VARCHAR,
-	"number" VARCHAR,
-	"phone" VARCHAR,
-	"fax" VARCHAR,
-	"createdAt" DECIMAL,
-	"modifiedAt" DECIMAL,
-	"loggedAt" DECIMAL,
-	"activeAt" DECIMAL
-	);
-DROP TABLE IF EXISTS "<%?prefix%>roles";
-CREATE TABLE "<%?prefix%>roles" (
-	"roleId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
-	"access" INTEGER NOT NULL  DEFAULT 0,
-	"register" INTEGER NOT NULL  DEFAULT 0,
-	"title" VARCHAR NOT NULL ,
-	"description" TEXT NOT NULL ,
-	"createdAt" NUMERIC NOT NULL ,
-	"modifiedAt" NUMERIC NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (1, 128, 0, 'Entwickler', '', '1294083736', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (2, 128, 0, 'Administrator', '', '1294083928', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (3, 64, 0, 'Manager', '', '1294083948', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (4, 64, 128, 'Benutzer', '', '1294083995', '0');
-INSERT INTO "<%?prefix%>roles" ('roleId', 'access', 'register', 'title', 'description', 'createdAt', 'modifiedAt') VALUES (5, 64, 64, 'Gast', '', '1294084004', '0');
+DROP TABLE IF EXISTS `<%?prefix%>groups`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
+  `groupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `accountId` int(11) unsigned DEFAULT '0',
+  `leaderId` int(11) unsigned DEFAULT '0',
+  `companyId` int(11) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `type` tinyint(1) DEFAULT '0',
+  `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`groupId`),
+  KEY `accountId` (`accountId`),
+  KEY `leaderId` (`leaderId`),
+  KEY `companyId` (`companyId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS "<%?prefix%>role_rights";
-CREATE TABLE "<%?prefix%>role_rights" (
-	"roleRightId" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
-	"roleId" INTEGER NOT NULL ,
-	"controller" VARCHAR NOT NULL ,
-	"action" VARCHAR,
-	"timestamp" NUMERIC NOT NULL
-);
+INSERT INTO `<%?prefix%>groups` (`groupId`, `title`, `createdAt`, `modifiedAt`) VALUES
+(1, 'Default', '1294083736', '1294083736');
 
-DROP TABLE IF EXISTS "<%?prefix%>user_passwords";
-CREATE TABLE "<%?prefix%>user_passwords" (
-	"userPasswordId` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE ,
-	"userId" INTEGER NOT NULL ,
-	"status" tinyint(1) NOT NULL,
-	"algo" VARCHAR NOT NULL ,
-	"salt" VARCHAR,
-	"hash" VARCHAR NOT NULL ,
-	"failsLast" INTEGER,
-	"failsTotal" INTEGER,
-	"createdAt" NUMERIC NOT NULL,
-	"failedAt" NUMERIC NOT NULL,
-	"usedAt" NUMERIC NOT NULL,
-	"revokedAt" NUMERIC NOT NULL
-);
+DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
+  `groupRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `controller` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupRightId`),
+  KEY `groupId` (`groupId`),
+  KEY `controller` (`controller`),
+  KEY `action` (`action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>group_users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
+  `groupUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupUserId`),
+  KEY `groupId` (`groupId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
 ALTER TABLE `<%?prefix%>users` ADD `accountId` INT(11) UNSIGNED NULL AFTER `userId`, ADD UNIQUE (`accountId`) ;
@@ -290,19 +285,66 @@ ALTER TABLE `<%?prefix%>user_tokens`
 	<sql on="update" type="mysql" version="0.4.1"><![CDATA[
 ALTER TABLE `<%?prefix%>user_tokens` ADD `scope` VARCHAR(127) NULL DEFAULT '' AFTER `status`, ADD INDEX (`scope`);
 ]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>users`;
-DROP TABLE IF EXISTS `<%?prefix%>roles`;
-DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
-DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
-DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
+	<sql on="update" type="mysql" version="0.4.3"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>groups`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
+  `groupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `accountId` int(11) unsigned DEFAULT '0',
+  `leaderId` int(11) unsigned DEFAULT '0',
+  `companyId` int(11) unsigned DEFAULT '0',
+  `status` tinyint(1) DEFAULT '0',
+  `type` tinyint(1) DEFAULT '0',
+  `email` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `title` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) NOT NULL,
+  `modifiedAt` decimal(12,0) NOT NULL,
+  PRIMARY KEY (`groupId`),
+  KEY `accountId` (`accountId`),
+  KEY `leaderId` (`leaderId`),
+  KEY `companyId` (`companyId`),
+  KEY `status` (`status`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+INSERT INTO `<%?prefix%>groups` (`groupId`, `title`, `createdAt`, `modifiedAt`) VALUES
+(1, 'Default', '1294083736', '1294083736');
+
+DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
+  `groupRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `controller` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
+  `action` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupRightId`),
+  KEY `groupId` (`groupId`),
+  KEY `controller` (`controller`),
+  KEY `action` (`action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>group_users`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
+  `groupUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) DEFAULT '0',
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupUserId`),
+  KEY `groupId` (`groupId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="uninstall" type="sqlite"><![CDATA[
-DROP TABLE IF EXISTS "<%?prefix%>users";
-DROP TABLE IF EXISTS "<%?prefix%>roles";
-DROP TABLE IF EXISTS "<%?prefix%>role_rights";
-DROP TABLE IF EXISTS "<%?prefix%>user_passwords";
-DROP TABLE IF EXISTS "<%?prefix%>user_tokens";
+	<sql on="uninstall" type="mysql"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
+DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
+DROP TABLE IF EXISTS `<%?prefix%>users`;
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
+DROP TABLE IF EXISTS `<%?prefix%>group_users`;
+DROP TABLE IF EXISTS `<%?prefix%>groups`;
 ]]></sql>
 	<todo>
 <![CDATA[

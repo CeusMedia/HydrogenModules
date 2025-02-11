@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use View_Manage_Image_Slider as View;
+
+/** @var View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_Image_Slide $slide */
 
 $w		= (object) $words['editSlide'];
 
@@ -54,7 +59,7 @@ return $textTop.'
 	</div>
 </div>';
 
-$panelInfo	= $this->loadTemplateFile( 'manage/image/slider/editSlide.info.php' );
+$panelInfo	= $view->loadTemplateFile( 'manage/image/slider/editSlide.info.php' );
 
 return '
 <div class="row-fluid">

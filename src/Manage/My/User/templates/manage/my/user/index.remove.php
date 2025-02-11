@@ -1,5 +1,11 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+
 if( !$env->getAcl()->has( 'manage/my/user', 'remove' ) )
 	return;
 

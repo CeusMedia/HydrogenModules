@@ -70,24 +70,24 @@ foreach( $timers as $timer ){
 			'class'	=> 'title autocut',
 		] );
 
-	$rows[]		= HtmlTag::create( 'tr', array(
+	$rows[]		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $link, ['class' => 'title'] ),
 		HtmlTag::create( 'td', $timer->type ),
 		HtmlTag::create( 'td', $linkRelation ),
 		HtmlTag::create( 'td', $timer->project->title ),
 		HtmlTag::create( 'td', HtmlTag::create( 'span', View_Helper_Work_Time::formatSeconds( $secondsNeeded ), ['class' => 'pull-right'] ) ),
 /*		HtmlTag::create( 'td', $buttons ),*/
-	), ['class' => $rowClasses[$timer->status]] );
+	], ['class' => $rowClasses[$timer->status]] );
 }
 
 $colgroup	= HtmlElements::ColumnGroup( "", "10%", "20%", "25%", "120" );
-$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+$thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 	HtmlTag::create( 'th', 'Aktivität' ),
 	HtmlTag::create( 'th', 'Typ <small class="muted">(Modul)</small>' ),
 	HtmlTag::create( 'th', 'Aufgabe' ),
 	HtmlTag::create( 'th', 'Projekt' ),
 	HtmlTag::create( 'th', 'Zeit', ['class' => 'pull-right'] ),
-) ) );
+] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 $pagination	= new PageControl( './work/time/archive/'.$limit, $page, ceil( $total / $limit ) );

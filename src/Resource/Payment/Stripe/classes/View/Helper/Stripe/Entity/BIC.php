@@ -3,11 +3,11 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract
+{
+	protected string $bic			= '';
 	protected ?string $nodeClass	= NULL;
 	protected string $nodeName		= 'tt';
-	protected object $bic;
 
 	public function render(): string
 	{
@@ -33,7 +33,7 @@ class View_Helper_Stripe_Entity_BIC extends View_Helper_Stripe_Abstract{
 		return $instance->set( $iban )->render();
 	}
 
-	public function set( object $bic ): self
+	public function set( string $bic ): self
 	{
 		$this->bic	= $bic;
 		return $this;

@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_ChangeFact
 {
-	const FORMAT_HTML		= 1;
-	const FORMAT_TEXT		= 2;
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_TEXT		= 2;
 
-	const FORMATS			= [
+	public const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];
@@ -21,6 +21,9 @@ class View_Helper_Work_Issue_ChangeFact
 	protected int $format		= self::FORMAT_HTML;
 	protected ?object $change	= NULL;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
@@ -30,6 +33,11 @@ class View_Helper_Work_Issue_ChangeFact
 		$this->modelChange	= new Model_Issue_Change( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
@@ -37,12 +45,20 @@ class View_Helper_Work_Issue_ChangeFact
 		return $this->renderAsHtml();
 	}
 
-	public function setChange( $change ): self
+	/**
+	 *	@param		object		$change
+	 *	@return		self
+	 */
+	public function setChange( object $change ): self
 	{
 		$this->change	= $change;
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
@@ -51,6 +67,11 @@ class View_Helper_Work_Issue_ChangeFact
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function renderAsHtml(): string
 	{
 		if( !$this->change )
@@ -61,12 +82,12 @@ class View_Helper_Work_Issue_ChangeFact
 			case 2:
 				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
-				if( $this->change->from && $this->modelUser->get( $this->change->from ) ){
+				if( $this->change->from && $this->modelUser->has( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
 					$from	= HtmlTag::create( 'a', $from, ['href' => './user/view/'.$this->change->from] );
 					$from	= HtmlTag::create( 'span', $from, ['class' => 'issue-user'] );
 				}
-				if( $this->change->to && $this->modelUser->get( $this->change->to ) ){
+				if( $this->change->to && $this->modelUser->has( $this->change->to ) ){
 					$to		= $this->modelUser->get( $this->change->to )->username;
 					$to		= HtmlTag::create( 'a', $to, ['href' => './user/view/'.$this->change->from] );
 					$to		= HtmlTag::create( 'span', $to, ['class' => 'issue-user'] );
@@ -74,6 +95,7 @@ class View_Helper_Work_Issue_ChangeFact
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
+				/** @var Logic_Project $logic */
 				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
 				$to		= HtmlTag::create( 'small', 'unbekannt', ['class' => 'muted'] );
@@ -114,6 +136,11 @@ class View_Helper_Work_Issue_ChangeFact
 		return HtmlTag::create( 'dd', $change );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function renderAsText(): string
 	{
 		if( !$this->change )
@@ -125,15 +152,16 @@ class View_Helper_Work_Issue_ChangeFact
 			case 2:
 				$from	= 'unbekannt';
 				$to		= 'unbekannt';
-				if( $this->change->from && $this->modelUser->get( $this->change->from ) ){
+				if( $this->change->from && $this->modelUser->has( $this->change->from ) ){
 					$from	= $this->modelUser->get( $this->change->from )->username;
 				}
-				if( $this->change->to && $this->modelUser->get( $this->change->to ) ){
+				if( $this->change->to && $this->modelUser->has( $this->change->to ) ){
 					$to		= $this->modelUser->get( $this->change->to )->username;
 				}
 				$change	= $from." -> ".$to;
 				break;
 			case 3:
+				/** @var Logic_Project $logic */
 				$logic	= Logic_Project::getInstance( $this->env );
 				$from	= 'unbekannt';
 				$to		= 'unbekannt';

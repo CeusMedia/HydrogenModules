@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var View_Manage_Page $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_Page $page */
+
 $w				= (object) $words['edit'];
 $wSitemap		= (object) $words['edit-sitemap'];
 

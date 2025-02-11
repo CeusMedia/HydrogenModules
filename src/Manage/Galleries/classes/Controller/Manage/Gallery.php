@@ -16,6 +16,10 @@ class Controller_Manage_Gallery extends Controller
 	protected Model_Gallery_Image $modelImage;
 	protected string $baseUri;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -50,6 +54,11 @@ class Controller_Manage_Gallery extends Controller
 		$this->addData( 'gallery', $gallery );
 	}
 
+	/**
+	 *	@param		string		$galleryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addImage( string $galleryId ): void
 	{
 		$gallery	= $this->getGallery( $galleryId );
@@ -122,6 +131,11 @@ class Controller_Manage_Gallery extends Controller
 		exit;
 	}
 
+	/**
+	 *	@param		string		$galleryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $galleryId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -158,7 +172,12 @@ class Controller_Manage_Gallery extends Controller
 
 	}
 
-	public function editImage( $imageId )
+	/**
+	 *	@param		string		$imageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editImage( string $imageId ): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		$image	= $this->getImage( $imageId );
@@ -172,7 +191,12 @@ class Controller_Manage_Gallery extends Controller
 	{
 	}
 
-	public function remove( $galleryId )
+	/**
+	 *	@param		string		$galleryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( string $galleryId ): void
 	{
 		$gallery	= $this->getGallery( $galleryId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -192,7 +216,12 @@ class Controller_Manage_Gallery extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeImage( $imageId )
+	/**
+	 *	@param		string		$imageId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeImage( string $imageId ): void
 	{
 		$image		= $this->getImage( $imageId );
 		$path		= $this->getPath( $image->galleryId );
@@ -207,7 +236,6 @@ class Controller_Manage_Gallery extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -233,7 +261,12 @@ class Controller_Manage_Gallery extends Controller
 //		$this->baseUri		= '../images/gallery/';
 	}
 
-	protected function getGallery( $galleryId )
+	/**
+	 *	@param		string $galleryId
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getGallery( string $galleryId ): ?object
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( strlen( trim( $galleryId ) ) && (int) $galleryId ){
@@ -245,8 +278,14 @@ class Controller_Manage_Gallery extends Controller
 		else
 			$this->messenger->noteError( $words->errorGalleryIdInvalid );
 		$this->restart( NULL, TRUE );
+		return NULL;
 	}
 
+	/**
+	 *	@param		string		$imageId
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getImage( string $imageId ): ?object
 	{
 		$words		= (object) $this->getWords( 'msg' );
@@ -258,9 +297,16 @@ class Controller_Manage_Gallery extends Controller
 		else
 			$this->messenger->noteError( $words->errorImageIdInvalid );
 		$this->restart( NULL, TRUE );
+		return NULL;
 	}
 
-	protected function getPath( $gallery, bool $thumbs = FALSE ): string
+	/**
+	 *	@param		object|int|string		$gallery
+	 *	@param		bool					$thumbs
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getPath( object|int|string $gallery, bool $thumbs = FALSE ): string
 	{
 		if( is_int( $gallery ) || is_string( $gallery ) )
 			$gallery	= $this->getGallery( (int) $gallery );

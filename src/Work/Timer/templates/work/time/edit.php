@@ -32,10 +32,10 @@ $optWorker	= HtmlElements::Options( $optWorker, $timer->workerId );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, array(
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'	=> './'.( $from ?: 'work/time' ),
 	'class'	=> "btn btn-small"
-) );
+] );
 
 $buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'type'		=> "submit",
@@ -56,13 +56,13 @@ return $textEditTop.'
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_title">'.$w->labelTitle.'</label>
-							'.HtmlTag::create( 'input', NULL, array(
+							'.HtmlTag::create( 'input', NULL, [
 								'type'		=> 'text',
 								'name'		=> 'title',
 								'id'		=> 'input_title',
 								'class'		=> 'span12',
 								'value'		=> htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ),
-							) ).'
+							] ).'
 						</div>
 					</div>
 					<div class="row-fluid">

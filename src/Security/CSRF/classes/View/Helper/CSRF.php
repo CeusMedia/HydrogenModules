@@ -5,10 +5,25 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_CSRF
 {
-	protected $env;
-	protected $formName;
+	protected Environment $env;
+	protected ?string $formName		= NULL;
 
-	public function __construct( $env )
+	/**
+	 *	@param		Environment	$env
+	 *	@param		?string		$formName
+	 *	@return		string
+	 */
+	public static function renderStatic( Environment $env, ?string $formName = NULL ): string
+	{
+		$helper	= new self( $env );
+		$helper->setFormName( $formName );
+		return $helper->render();
+	}
+
+	/**
+	 *	@param		Environment		$env
+	 */
+	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
@@ -16,9 +31,9 @@ class View_Helper_CSRF
 	/**
 	 *	@todo		remove formName after other modules have been updated
 	 */
-	public function render( $formName = NULL )
+	public function render( ?string $formName = NULL ): string
 	{
-		$formName	= $formName ? $formName : $this->formName;
+		$formName	= $formName ?: $this->formName;
 		if( !$formName )
 			throw new RuntimeException( 'No form name set' );
 //		$token	= $this->env->getLogic()->get( 'CSRF' )->getToken( $formName );
@@ -37,14 +52,11 @@ class View_Helper_CSRF
 		return $input1.$input2;
 	}
 
-	public static function renderStatic( Environment $env, $formName )
-	{
-		$helper	= new self( $env );
-		$helper->setFormName( $formName );
-		return $helper->render();
-	}
-
-	public function setFormName( $formName ): self
+	/**
+	 *	@param		string		$formName
+	 *	@return		self
+	 */
+	public function setFormName( string $formName ): self
 	{
 		$this->formName	= $formName;
 		return $this;

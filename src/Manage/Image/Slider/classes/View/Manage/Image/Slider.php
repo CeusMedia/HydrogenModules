@@ -5,28 +5,28 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Image_Slider extends View
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function demo()
+	public function demo(): void
 	{
 		$this->env->getCaptain()->disableHook( 'View', 'onRenderContent' );
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function editSlide()
+	public function editSlide(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function label( $section, $name, $options = [] )
+	public function label( string $section, string $name, array $options = [] ): string
 	{
 		$options	= array_merge( [
 			'titleElement'	=> 'abbr',
@@ -38,8 +38,8 @@ class View_Manage_Image_Slider extends View
 		$keyTitle	= $keyLabel.'_title';
 		$keySuffix	= $keyLabel.'_suffix';
 		if( !isset( $words->$keyLabel ) )
-			return;
-		$label		= str_replace( " ", "&nbsp;", $words->$keyLabel );
+			return '';
+		$label		= str_replace( ' ', '&nbsp;', $words->$keyLabel );
 		if( isset( $words->$keyTitle ) && strlen( trim( $words->$keyTitle ) ) )
 			$label	= '&nbsp;'.HtmlTag::create( 'abbr', $label, array(
 				'title'		=> trim( $words->$keyTitle ),

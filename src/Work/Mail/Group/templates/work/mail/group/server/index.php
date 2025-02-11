@@ -22,14 +22,14 @@ if( count( $servers ) ){
 	foreach( $servers as $server ){
 		$label	= HtmlTag::create( 'a', $server->title, ['href' => './work/mail/group/server/edit/'.$server->mailGroupServerId] );
 //		$status	= HtmlTag::create( 'span', $statusLabels[$group->status], ['class' => 'label '.$statusClasses[$group->status]] );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $server->imapHost.':'.$server->imapPort ),
 			HtmlTag::create( 'td', $server->smtpHost.':'.$server->smtpPort ),
 	//		HtmlTag::create( 'td', $status ),
 	//		HtmlTag::create( 'td', count( $group->members ) ),
 			HtmlTag::create( 'td', $helperTimestamp->convert( $server->createdAt, TRUE, 'vor' ) ),
-		) );
+		] );
 	}
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Titel',
@@ -43,16 +43,16 @@ if( count( $servers ) ){
 	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
-$panelServers	= HtmlTag::create( 'div', array(
+$panelServers	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'E-Mail-Servers' ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		$list,
-		HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
 /*			HtmlTag::create( 'a', $iconCancel.'&nbsp;...', ['href' => './work/mail/group', 'class' => 'btn'] ),*/
 			HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => './work/mail/group/server/add', 'class' => 'btn btn-primary'] ),
-		), ['class' => 'buttonbar'] )
-	), ['class' => 'content-panel-inner'] )
-), ['class' => 'content-panel'] );
+		], ['class' => 'buttonbar'] )
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
 
 $tabs	= $view->renderTabs( $env, 'server' );
 

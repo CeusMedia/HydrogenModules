@@ -37,5 +37,7 @@ class Model_Lock extends Model
 	];
 
 	/**	@var	integer		$fetchMode	Fetch mode, see PDO documentation */
-	protected int $fetchMode			= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_CLASS;
+
+	protected ?string $className		= Entity_Database_Lock::class;
 }

@@ -1,5 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+use View_Manage_Image_Slider as View;
+
+/** @var Web $env */
+/** @var View $view */
+/** @var array<string,array<string,string>> $words */
+/** @var string $basePath */
+/** @var string $sliderId */
 
 $iconBack	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 
@@ -12,10 +20,10 @@ $buttonBack	= HtmlTag::create( 'a', $iconBack.'&nbsp;'.$words['demo']['buttonBac
 	'class'	=> 'btn btn-small',
 ] );
 
-$code	= join( "\n", array(
+$code	= join( "\n", [
 	'$helper	= new View_Helper_Image_Slider( $env );',
 	'$slider	= $helper->render( '.$sliderId.' );',
-) );
+] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/image/slider' ) );
 

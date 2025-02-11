@@ -12,18 +12,25 @@ class View_Helper_Mail_Facts
 	protected string $listClass				= 'dl-horizontal';
 	protected int $textLabelLength			= 23;
 
-	const FORMAT_HTML				= 0;
-	const FORMAT_TEXT				= 1;
+	public const FORMAT_HTML				= 0;
+	public const FORMAT_TEXT				= 1;
 
-	const FORMATS					= [
+	public const FORMATS					= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];
 
+	/**
+	 *	@param		string			$keyOrLabel
+	 *	@param		string			$valueAsHtml
+	 *	@param		string|NULL		$valueAsText
+	 *	@param		$direction
+	 *	@return		self
+	 */
 	public function add( string $keyOrLabel, string $valueAsHtml, ?string $valueAsText = NULL, $direction = NULL ): self
 	{
 		$key	= $label	= $keyOrLabel;
-		$valueAsText	= $valueAsText !== NULL ? $valueAsText : strip_tags( $valueAsHtml );
+		$valueAsText	= $valueAsText ?? strip_tags( $valueAsHtml );
 		if( !empty( $this->labels[$key] ) )
 			$label	= $this->labels[$key];
 		if( !empty( $this->labels['label'.ucFirst( $key )] ) )
@@ -38,6 +45,9 @@ class View_Helper_Mail_Facts
 		return $this;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( count( $this->facts ) ) {
@@ -49,6 +59,10 @@ class View_Helper_Mail_Facts
 		return '';
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		if( !in_array( $format, self::FORMATS, TRUE ) )
@@ -57,18 +71,30 @@ class View_Helper_Mail_Facts
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$labels
+	 *	@return		self
+	 */
 	public function setLabels( array $labels ): self
 	{
 		$this->labels	= $labels;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$listClass
+	 *	@return		self
+	 */
 	public function setListClass( string $listClass ): self
 	{
 		$this->listClass	= $listClass;
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$integer
+	 *	@return		self
+	 */
 	public function setTextLabelLength( int $integer ): self
 	{
 		$this->textLabelLength	= max( 0, min( $integer, 36 ) );
@@ -82,6 +108,9 @@ class View_Helper_Mail_Facts
 		$this->helperText	= new View_Helper_Mail_Text( $this->env );
 	}*/
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsHtml(): string
 	{
 		$list	= [];
@@ -104,13 +133,20 @@ class View_Helper_Mail_Facts
 		return HtmlTag::create( 'dl', $list, ['class' => $this->listClass] );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsText(): string
 	{
 		$list	= [];
 		foreach( $this->facts as $fact ){
 			$label	= trim( strip_tags( $fact->label.':' ) );
 			$label	= View_Helper_Mail_Text::fit( $label, $this->textLabelLength, STR_PAD_LEFT );
-			$value	= View_Helper_Mail_Text::indent( $fact->valueText, $this->textLabelLength + 2, 76 - $this->textLabelLength - 2 );
+			$value	= View_Helper_Mail_Text::indent(
+				$fact->valueText,
+				$this->textLabelLength + 2,
+				76 - $this->textLabelLength - 2
+			);
 			$list[]	= $label.'  '.$value;
 		}
 		return join( "\n", $list );

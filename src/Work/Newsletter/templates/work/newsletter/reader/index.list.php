@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -7,6 +9,14 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var array<object> $readers */
+/** @var ?string $filterLimit */
+/** @var ?string $filterPage */
+/** @var int $total */
+/** @var int $found */
+/** @var int $totalReaders */
+/** @var ?Logic_Limiter $limiter */
+
 
 $w			= (object) $words->index;
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
@@ -58,70 +68,70 @@ if( $readers ){
 	$list	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped table-fixed'] );
 }
 
-$pagination		= new \CeusMedia\Bootstrap\PageControl( './work/newsletter/reader', $filterPage, ceil( $totalReaders / $filterLimit ) );
+$pagination		= new PageControl( './work/newsletter/reader', $filterPage, ceil( $totalReaders / $filterLimit ) );
 
 $buttonImport	= '';
 if( $env->getAcl()->has( 'work/newsletter/reader', 'import' ) ){
-	$buttonImport	= HtmlTag::create( 'div', array(
+	$buttonImport	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'a', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
 		] ),
-		HtmlTag::create( 'ul', array(
-			HtmlTag::create( 'li', array(
+		HtmlTag::create( 'ul', [
+			HtmlTag::create( 'li', [
 				HtmlTag::create( 'a', 'aus Empfängerliste', [
 					'href'			=> '#modalImportList',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
 				] )
-			) ),
-			HtmlTag::create( 'li', array(
+			] ),
+			HtmlTag::create( 'li', [
 				HtmlTag::create( 'a', 'aus CSV-Exportdatei', [
 					'href'			=> '#modalImportCsv',
 					'role'			=> 'button',
 					'data-toggle'	=> 'modal',
 				] )
-			) ),
-		), ['class' => 'dropdown-menu'] ),
-	), ['class' => 'btn-group'] );
+			] ),
+		], ['class' => 'dropdown-menu'] ),
+	], ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
-	$buttonImport	= HtmlTag::create( 'button', $iconImport.'importieren&nbsp;<span class="caret"></span>', array(
+	$buttonImport	= HtmlTag::create( 'button', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small disabled',
 		'onclick'	=> 'alert("Importieren von Abonnenten ist in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 }
 
 $buttonExport	= '';
 if( $env->getAcl()->has( 'work/newsletter/reader', 'export' ) ){
-	$buttonExport	= HtmlTag::create( 'div', array(
+	$buttonExport	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'a', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
 			'class'			=> 'btn btn-small dropdown-toggle',
 			'data-toggle'	=> 'dropdown'
 		] ),
-		HtmlTag::create( 'ul', array(
-			HtmlTag::create( 'li', array(
+		HtmlTag::create( 'ul', [
+			HtmlTag::create( 'li', [
 				HtmlTag::create( 'a', 'in Empfängerliste', [
 					'href'	=> './work/newsletter/reader/export/list',
 				] )
-			) ),
-			HtmlTag::create( 'li', array(
+			] ),
+			HtmlTag::create( 'li', [
 				HtmlTag::create( 'a', 'in CSV-Exportdatei', [
 					'href'	=> './work/newsletter/reader/export/csv',
 				] )
-			) ),
-		), ['class' => 'dropdown-menu'] ),
-	), ['class' => 'btn-group'] );
+			] ),
+		], ['class' => 'dropdown-menu'] ),
+	], ['class' => 'btn-group'] );
 }
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
-	$buttonExport	= HtmlTag::create( 'button', $iconExport.'exportieren&nbsp;<span class="caret"></span>', array(
+	$buttonExport	= HtmlTag::create( 'button', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small disabled',
 		'onclick'	=> 'alert("Exportieren von Abonnenten ist in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 }
 
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'neuer Abonnent', [
@@ -129,11 +139,11 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'neuer Abonnent', [
 	'class'		=> 'btn btn-success btn-small',
 ] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 1 ) )
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.'neuer Leser', array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.'neuer Leser', [
 		'type'		=> 'button',
 		'class'		=> 'btn btn-small btn-success disabled',
 		'onclick'	=> 'alert("Weitere Abonnenten sind in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 
 $filter		= $view->loadTemplateFile( 'work/newsletter/reader/index.list.filter.php' );
 

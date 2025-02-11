@@ -28,7 +28,7 @@ Otherwise please install the geo database dump fitting to your needs on your own
 	<log version="0.3.3">Add database dumps of geodb and postcodes (~8MB).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Model/OpenGeo.php</class>
 		<class>Model/OpenGeo/Postcode.php</class>
@@ -38,6 +38,6 @@ Otherwise please install the geo database dump fitting to your needs on your own
 		<sql>postcodes.sql.gz</sql>
 	</files>
 	<relations/>
-	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
-	]]></hook>
+<!--	<hook type="resource" resource="Page" event="applyModules"><![CDATA[
+	]]></hook>-->
 </module>

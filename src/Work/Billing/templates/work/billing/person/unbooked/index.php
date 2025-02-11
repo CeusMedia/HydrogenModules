@@ -16,11 +16,11 @@ if( $unpayedBillShares ){
 		] );
 		$billTitle	= $unpayedBillShare->bill->title;
 		$amount		= number_format( $unpayedBillShare->amount, 2, ',', '.' ).'&nbsp;&euro;';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $billTitle ),
 			HtmlTag::create( 'td', $amount ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['60', '', '80'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['RNr', 'Rechnung', 'Betrag'] ) );

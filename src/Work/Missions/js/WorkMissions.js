@@ -49,7 +49,7 @@ var WorkMissions = {
 	moveMissionStartDate: function(missionId, date){
 		WorkMissionsList.blendOut(150);
 		$.ajax({
-			url: './work/mission/changeDay/'+missionId,
+			url: './ajax/work/mission/changeDay/'+missionId,
 			data: {date: date},
 			dataType: "json",
 			success: function(json){
@@ -63,10 +63,10 @@ var WorkMissions = {
 		WorkMissionsList.blendOut(150);
 		if(permanent)
 			$.ajax({
-				url: "./work/mission/ajaxSelectDay/"+day,
+				url: "./ajax/work/mission/selectDay/"+day,
 				dataType: "json",
 				success: function(json){
-					WorkMissionsList.renderDayListDayControls(json);
+					WorkMissionsList.renderDayListDayControls(json.data);
 //					WorkMissionsList.loadCurrentListAndDayControls(onSuccess);
 				}
 			});

@@ -5,13 +5,13 @@
 	<version>1.1.0-p1</version>
 	<log version="1.1.0-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
-	<author site="http://www.documentcloud.org/">DocumentCloud</author>
-	<url>http://backbonejs.org/</url>
+	<author site="https://www.documentcloud.org/">DocumentCloud</author>
+	<url>https://backbonejs.org/</url>
 	<license source="https://github.com/jashkenas/backbone/blob/master/LICENSE">MIT</license>
 	<files>
 		<class>Hook/JS/Backbone.php</class>
-		<script load="auto" top="yes">backbone-1.1.0-min.js</script>
-		<script top="yes">backbone-1.1.0.js</script>
+		<script load="auto" level="top">backbone-1.1.0-min.js</script>
+		<script level="top">backbone-1.1.0.js</script>
 	</files>
 	<relations>
 		<needs type="module">JS_Underscore</needs>

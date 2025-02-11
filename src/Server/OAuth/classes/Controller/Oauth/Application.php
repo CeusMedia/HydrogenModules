@@ -2,17 +2,18 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+//use Random\RandomException;
 
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  *	@version		$Id$
  */
 class Controller_Oauth_Application extends Controller
@@ -25,7 +26,12 @@ class Controller_Oauth_Application extends Controller
 
 	protected ?string $userId;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RandomException
+	 */
+	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
@@ -54,6 +60,7 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $applicationId ): void
 	{
@@ -80,7 +87,7 @@ class Controller_Oauth_Application extends Controller
 	/**
 	 *	@todo 		 think about the fullAccess code below - is it needed?
 	 */
-	public function index( $page = 0, $limit = 10 )
+	public function index( int $page = 0, int $limit = 10 ): void
 	{
 		$orders			= ['title' => 'ASC'];
 		$limits			= [abs( $page ) * abs( $limit ), abs( $limit )];
@@ -96,8 +103,9 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function view( string $applicationId )
+	public function view( string $applicationId ): void
 	{
 		$this->checkAccess( $applicationId );
 		$this->addData( 'application', $this->model->get( $applicationId ) );
@@ -121,8 +129,9 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string|NULL		$modeResourceId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function remove( string $applicationId, ?string $removeMode = NULL, ?string $modeResourceId = NULL )
+	public function remove( string $applicationId, ?string $removeMode = NULL, ?string $modeResourceId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
@@ -157,12 +166,13 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function enable( string $applicationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->checkAccess( $applicationId );
-		$this->model->edit( $applicationId, array( 'status' => 1, 'modifiedAt' => time() ) );
+		$this->model->edit( $applicationId, ['status' => 1, 'modifiedAt' => time()] );
 		$this->messenger->noteSuccess( $words->successEnabled );
 		$this->restart( 'edit/'.$applicationId, TRUE );
 	}
@@ -171,6 +181,7 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function disable( string $applicationId ): void
 	{
@@ -185,7 +196,6 @@ class Controller_Oauth_Application extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -199,8 +209,9 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkAccess( string $applicationId )
+	protected function checkAccess( string $applicationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( !$this->isUserApplication( $applicationId ) ){
@@ -213,6 +224,7 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		bool
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function isUserApplication( string $applicationId ): bool
 	{

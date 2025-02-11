@@ -15,16 +15,16 @@ var WorkMissionsCalendar = {
 
 	checkForUpdate: function(){
 		$.ajax({
-			url: "./work/mission/checkForUpdate/"+WorkMissionsCalendar.userId,
+			url: "./ajax/work/mission/checkForUpdate/"+WorkMissionsCalendar.userId,
 			dataType: "json",
 			success: function(json){
-				if(!json)
+				if(!json.data)
 					return;
 				$.ajax({
-					url: "work/mission/ajaxRenderIndex",
+					url: "ajax/work/mission/calendar/renderIndex",
 					dataType: "json",
 					success: function(json){
-						WorkMissionsList.renderDayListDayControls(json);
+						WorkMissionsList.renderDayListDayControls(json.data);
 					}
 				});
 			}

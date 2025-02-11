@@ -4,13 +4,13 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Import_Rule extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_TEST		= 1;
-	const STATUS_ACTIVE		= 2;
-	const STATUS_PAUSED		= 3;
-	const STATUS_DISABLED	= 4;
+	public const STATUS_NEW			= 0;
+	public const STATUS_TEST		= 1;
+	public const STATUS_ACTIVE		= 2;
+	public const STATUS_PAUSED		= 3;
+	public const STATUS_DISABLED	= 4;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_TEST,
 		self::STATUS_ACTIVE,
@@ -18,30 +18,30 @@ class Model_Form_Import_Rule extends Model
 		self::STATUS_DISABLED,
 	];
 
-	const TRANSITIONS_STATUS	= [
-		self::STATUS_NEW		=> [
+	public const TRANSITIONS_STATUS	= [
+		self::STATUS_NEW			=> [
 			self::STATUS_TEST,
 			self::STATUS_ACTIVE,
 			self::STATUS_PAUSED,
 			self::STATUS_DISABLED,
 		],
-		self::STATUS_TEST		=> [
+		self::STATUS_TEST			=> [
 			self::STATUS_ACTIVE,
 			self::STATUS_PAUSED,
 			self::STATUS_DISABLED,
 		],
-		self::STATUS_ACTIVE		=> [
+		self::STATUS_ACTIVE			=> [
 			self::STATUS_PAUSED,
 			self::STATUS_ACTIVE,
 			self::STATUS_DISABLED,
 			self::STATUS_TEST,
 		],
-		self::STATUS_PAUSED		=> [
+		self::STATUS_PAUSED			=> [
 			self::STATUS_ACTIVE,
 			self::STATUS_DISABLED,
 			self::STATUS_TEST,
 		],
-		self::STATUS_DISABLED	=> [
+		self::STATUS_DISABLED		=> [
 			self::STATUS_PAUSED,
 			self::STATUS_ACTIVE,
 			self::STATUS_TEST,
@@ -73,5 +73,7 @@ class Model_Form_Import_Rule extends Model
 
 	protected string $name			= 'form_import_rules';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form_Import_Rule::class;
 }

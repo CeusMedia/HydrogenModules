@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Blog $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $post */
+/** @var array<object> $categories */
+/** @var array<object> $users */
 
 $w			= (object) $words['add'];
 
@@ -38,7 +46,7 @@ return '
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $post->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $post->title ?? '', ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 				<div class="span4">
 					<label for="input_categoryId">'.$w->labelCategoryId.'</label>
@@ -62,14 +70,14 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_content">'.$w->labelContent.'</label>
-					<textarea name="content" id="input_content" class="span12 TinyMCE" data-tinymce-mode="extended" rows="20">'.htmlentities( $post->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="content" id="input_content" class="span12 TinyMCE" data-tinymce-mode="extended" rows="20">'.htmlentities( $post->content ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 					<br/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_abstract">'.$w->labelAbstract.' <small class="muted">'.$w->labelAbstract_suffix.'</small></label>
-					<textarea name="abstract" id="input_abstract" class="span12 TinyMCE" data-tinymce-mode="minimal" rows="8">'.htmlentities( $post->abstract, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="abstract" id="input_abstract" class="span12 TinyMCE" data-tinymce-mode="minimal" rows="8">'.htmlentities( $post->abstract ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 					<br/>
 				</div>
 			</div>

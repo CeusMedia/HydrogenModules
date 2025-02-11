@@ -18,10 +18,10 @@
 	<log version="4.1.1-p3">Improve handling of missing library.</log>
 	<log version="4.4.1">Add Bootstrap v4.4.1.</log>
 	<log version="4.4.1-p1">Mark module UI:Font:FontAwesome as needed.</log>
-	<company site="http://twitter.github.com/bootstrap/">Twitter</company>
+	<company site="https://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
-	<license source="http://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
+	<license source="https://www.apache.org/licenses/LICENSE-2.0">Apache License v2.0</license>
 	<license source="https://github.com/twbs/bootstrap/blob/master/LICENSE" title="MIT License">MIT</license>
 	<files>
 		<class>Hook/UI/Bootstrap.php</class>

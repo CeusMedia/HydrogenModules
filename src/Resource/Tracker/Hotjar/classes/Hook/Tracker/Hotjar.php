@@ -1,14 +1,13 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Tracker_Hotjar extends Hook
 {
-	static public function onPageApplyModules( Environment $env, $context, $modules, array & $payload )
+	public function onPageApplyModules(): void
 	{
-		$config	= $env->getConfig()->getAll( 'module.resource_tracker_hotjar.', TRUE );				//  get module configuration as array map
-		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  piwik tracking is disabled or ID is not set
+		$config	= $this->env->getConfig()->getAll( 'module.resource_tracker_hotjar.', TRUE );				//  get module configuration as array map
+		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  hotjar tracking is disabled or ID is not set
 			return;
 
 		$script	= "
@@ -22,6 +21,6 @@ class Hook_Tracker_Hotjar extends Hook
 	a.appendChild(r);
 })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');";
 		$script	= sprintf( $script, $config->get( 'ID' ), $config->get( 'version' ) );
-		$context->js->addScriptOnReady( $script );
+		$this->context->js->addScriptOnReady( $script );
 	}
 }

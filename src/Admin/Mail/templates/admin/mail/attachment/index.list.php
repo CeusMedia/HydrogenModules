@@ -16,6 +16,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $page */
 /** @var int $total */
 /** @var int $limit */
+/** @var string[] $files */
+/** @var string[] $classes */
 
 $iconEnable		= new Icon( 'toggle-on' );
 $iconDisable	= new Icon( 'toggle-off' );
@@ -56,12 +58,12 @@ if( count( $attachments ) ){
 		$status		= HtmlTag::create( 'span', $status->icon.' '.$status->label,  ['class' => $status->class] );
 		$date		= date( "d.m.Y", $attachment->createdAt );
 		$time		= date( "H:i", $attachment->createdAt );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $label ),
 			HtmlTag::create( 'td', $attachment->className.'<br/>'.$status ),
 			HtmlTag::create( 'td', $date.' <small class="muted">'.$time.'</small>' ),
 			HtmlTag::create( 'td', HtmlTag::create( 'div', [$buttonStatus, $buttonRemove], ['class' => 'btn-group']) ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "", "140px", "80px" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
@@ -76,13 +78,21 @@ if( count( $attachments ) ){
 
 $pagination	= new PageControl( './admin/mail/attachment', $page, ceil( $total / $limit ) );
 
+$modal	= new View_Admin_Mail_Attachment_Modal_Add( $env );
+$modal->setClasses( $classes );
+$modal->setFiles( $files );
+$modal->render();
+
 return '
 <!-- templates/admin/mail/attachment/index.list.php -->
 <div class="content-panel content-panel-list">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
+		<div class="buttonbar">
+		'.$modal->trigger->render().'
 		'.$pagination.'
+		</div>
 	</div>
-</div>';
+</div>'.$modal;
 

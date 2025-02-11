@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
-/** @var object $mission */
+/** @var Entity_Mission $mission */
 /** @var bool $useTimer */
 
 if( !$useTimer )
@@ -33,11 +33,11 @@ $helperTimer	= new View_Helper_Work_Time_Timer( $env );
 $helperTimer->setModule( 'Work_Missions' );
 $helperTimer->setModuleId( $mission->missionId );
 
-$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;neue Aktivität', array(
+$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;neue Aktivität', [
 	'type'		=> 'button',
 	'onclick'	=> '$("#myModalWorkTimeAdd").modal("toggle");',
 	'class'		=> 'btn btn-small btn-success',
-) );
+] );
 
 
 $modalAssign	= '';
@@ -49,11 +49,11 @@ if( $unrelatedTimers ){
 	$helperAssign->setFrom( './work/mission/edit/'.$mission->missionId );
 	$modalAssign	= $helperAssign->render();
 
-	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-link'] ).'&nbsp;zuordnen', array(
+	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-link'] ).'&nbsp;zuordnen', [
 		'type'		=> 'button',
 		'onclick'	=> '$("#myModalWorkTimeAssign").modal("toggle");',
 		'class'		=> 'btn btn-small',
-	) );
+	] );
 }
 
 return '

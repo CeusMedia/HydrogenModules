@@ -1,20 +1,20 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 
 class View_Helper_Navigation_Bootstrap_Sidebar
 {
-	protected $env;
-	protected $menu;
-	protected $inverse			= FALSE;
-	protected $linksToSkip		= [];
-	protected $logoTitle;
-	protected $logoLink;
-	protected $logoIcon;
-	protected $scope			= 'main';
-	protected $style;
-	protected $helperAccountMenu;
+	protected Environment $env;
+	protected Model_Menu $menu;
+	protected bool $inverse			= FALSE;
+	protected array $linksToSkip	= [];
+	protected string $scope			= 'main';
+	protected ?string $logoTitle	= NULL;
+	protected ?string $logoLink		= NULL;
+	protected ?string $logoIcon		= NULL;
+	protected ?string $style		= NULL;
+	protected ?object $helperAccountMenu	= NULL;
 
 	public function __construct( Environment $env, Model_Menu $menu = NULL )
 	{
@@ -37,11 +37,10 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		$pages	= $this->menu->getPages( $this->scope, FALSE );
 		foreach( $pages as $page ){
 			if( $page->type == 'menu' ){
-				$sublist	= [];
 				if( !$page->items )
 					continue;
 				$title		= $this->renderLabelWithIcon( $page );
-				$list[]		= HtmlTag::create( 'li', $title, array( 'class' => 'bs4-nav-link nav-header'	) );
+				$list[]		= HtmlTag::create( 'li', $title, ['class' => 'bs4-nav-link nav-header'] );
 
 				foreach( $page->items as $subpage ){
 					$class		= 'bs4-nav-item nav-list-sub-item '.( $subpage->active ? 'active' : NULL );
@@ -55,7 +54,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= 'bs4-nav-item '.( $page->active ? 'active' : NULL );
-				$href	= $page->path == "index" ? './' : './'.$page->link;
+				$href	= $page->path == 'index' ? './' : './'.$page->link;
 //				$link	= HtmlTag::create( 'a', $page->label, ['href' => $href] );
 				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href, 'class' => 'bs4-nav-link'] );
 				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
@@ -69,7 +68,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 			$account	= $this->helperAccountMenu->render();
 		}
 
-		$list	= HtmlTag::create( 'ul', $list, ["class" => 'nav nav-list bs4-nav-pills bs4-flex-column'] );
+		$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-list bs4-nav-pills bs4-flex-column'] );
 		$list	= HtmlTag::create( 'div', $list, ['id' => 'nav-sidebar-list'] );
 		$this->env->getPage()->js->addScriptOnReady('jQuery(".dropdown-toggle").dropdown();');
 		return $logo.$account.$list;
@@ -77,9 +76,10 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 
 	public function renderLogo(): string
 	{
-		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
+		$logoTitle	= trim( $this->logoTitle ?? '' );
+		$logoIcon	= trim( $this->logoIcon ?? '' );
+		if( '' === $logoTitle && '' === $logoIcon )
 			return '';
-		$icon	= "";
 		$label	= $this->logoTitle;
 		if( $this->logoIcon ){
 			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
@@ -88,7 +88,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		}
 		if( !$this->logoLink )
 			return HtmlTag::create( 'div', $label, [
-//				'id'	=> "logo",
+//				'id'	=> 'logo',
 				'class'	=> 'brand'
 			] );
 		$link	= HtmlTag::create( 'a', $label, [
@@ -147,7 +147,7 @@ class View_Helper_Navigation_Bootstrap_Sidebar
 		if( empty( $entry->icon ) || !strlen( trim( $entry->icon ) )  )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", trim( $entry->icon ) ) )
+		if( !str_starts_with( trim( $entry->icon ), 'fa' ) )
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		if( strlen( $entry->label ) )

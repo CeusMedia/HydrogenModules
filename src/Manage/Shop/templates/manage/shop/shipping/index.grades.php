@@ -28,7 +28,7 @@ $listZones	= Html::create( 'table', [$thead, $tbody], ['class' => 'table table-c
 $modalBody	= array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Titel', array( 'class' => 'mandatory required') ),
+			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',

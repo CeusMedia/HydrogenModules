@@ -1,5 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var View_Shop_Customer $view */
+/** @var Entity_Address $address */
+/** @var array<string,array<string,string>> $words */
 
 $w	= (object) $words['customer-delivery'];
 if( $address->type == 2 )

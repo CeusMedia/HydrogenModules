@@ -12,12 +12,18 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Newsletter
 {
 	protected Environment $env;
-	protected string $cachePath	= "cache/";
-	protected bool $preview		= FALSE;
 	protected Logic_Newsletter $logic;
+	protected string $cachePath	= 'cache/';
+	protected bool $preview		= FALSE;
 	protected object $template;
 
-	public function __construct( Environment $env, $templateId, bool $preview = FALSE )
+	/**
+	 *	@param		Environment		$env
+	 *	@param		int|string		$templateId
+	 *	@param		bool			$preview
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function __construct( Environment $env, int|string $templateId, bool $preview = FALSE )
 	{
 		$this->env		= $env;
 		$this->preview	= $preview;
@@ -27,7 +33,13 @@ class View_Helper_Newsletter
 		$this->template->styles		= $this->logic->getTemplateAttributeList( $templateId, 'styles' );
 	}
 
-	public function generateMail( $readerLetterId ): Mail_Newsletter
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		Mail_Newsletter
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function generateMail( int|string $readerLetterId ): Mail_Newsletter
 	{
 		$this->logic->checkReaderLetterId( $readerLetterId );
 		$readerLetter	= $this->logic->getReaderLetter( $readerLetterId );
@@ -40,8 +52,11 @@ class View_Helper_Newsletter
 
 	/**
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
+	 *	@param		int|string		$newsletterId
+	 *	@param		int|string		$newsletterReaderId
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function prepareReaderDataForNewsletter( $newsletterId, $newsletterReaderId )
+	public function prepareReaderDataForNewsletter( int|string $newsletterId, int|string $newsletterReaderId )
 	{
 		throw new Exception( 'Method View_Helper_Newsletter::prepareReaderDataForNewsletter is deprecated' );
 		$readerLetterId	= 0;
@@ -52,7 +67,7 @@ class View_Helper_Newsletter
 
 		$baseUrl		= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$emailHash	= base64_encode( $reader->email );
 		$confirmKey	= substr( md5( 'InfoNewsletterSalt:'.$newsletterReaderId ), 10, 10 );
@@ -87,9 +102,11 @@ class View_Helper_Newsletter
 	/**
 	 *	@todo		 correct urls
 	 *	@todo		 code doc
+	 *	@param		int|string		$readerLetterId
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function prepareReaderDataForLetter( $readerLetterId )
+	public function prepareReaderDataForLetter( int|string $readerLetterId )
 	{
 		throw new Exception( 'Method View_Helper_Newsletter::prepareReaderDataForLetter is deprecated' );
 		$letter			= $this->logic->getReaderLetter( $readerLetterId );
@@ -99,7 +116,7 @@ class View_Helper_Newsletter
 
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 
 		$emailHash	= base64_encode( $reader->email );
 		$urlView	= $baseUrl.'info/newsletter/view/'.$readerLetterId;
@@ -164,14 +181,19 @@ class View_Helper_Newsletter
 	}
 
 	/**
-	 *	@todo  			check if deprecated
+	 *	@todo		check if deprecated
+	 *	@param		int|string			$newsletterId
+	 *	@param		int|string|NULL		$readerId
+	 *	@param		array				$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function renderNewsletterPlain( $newsletterId, $readerId = NULL, array $data = [] ): string
+	public function renderNewsletterPlain( int|string $newsletterId, int|string|NULL $readerId = NULL, array $data = [] ): string
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId );
 		$data['title']		= $newsletter->heading;
-		$data['content']	= wordwrap( $newsletter->plain, 78, "\n", FALSE );
+		$data['content']	= wordwrap( $newsletter->plain, 78 );
 		if( $readerId ){
 			$reader		= $this->logic->getReader( $readerId );
 			$data['prefix']			= $reader->prefix;
@@ -183,9 +205,15 @@ class View_Helper_Newsletter
 	}
 
 	/**
-	 *	@todo  			check if deprecated
+	 *	@todo		check if deprecated
+	 *	@param		int|string			$newsletterId
+	 *	@param		int|string|NULL		$readerId
+	 *	@param		array				$data
+	 *	@param		bool				$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function renderNewsletterHtml( $newsletterId, $readerId = NULL, array $data = [], bool $strict = TRUE ): string
+	public function renderNewsletterHtml( int|string $newsletterId, int|string|NULL $readerId = NULL, array $data = [], bool $strict = TRUE ): string
 	{
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 		$helper		= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId, $this->preview );
@@ -202,7 +230,9 @@ class View_Helper_Newsletter
 	}
 
 	/**
-	 *	@todo  			check if deprecated
+	 *	@todo		check if deprecated
+	 *	@param		array				$data
+	 *	@return		string
 	 */
 	public function renderPlain( array $data ): string
 	{
@@ -221,6 +251,12 @@ class View_Helper_Newsletter
 		return $content;
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@param		bool		$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function renderHtml( array $data, bool $strict = TRUE ): string
 	{
 		$page		= new HtmlPage();
@@ -231,13 +267,13 @@ class View_Helper_Newsletter
 		if( isset( $data['baseUrl'] ) )
 			$baseUrl	= $data['baseUrl'];
 		else if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUri();
+			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 		$page->setBaseHref( $baseUrl );
 
 		if( isset( $data['title'] ) )
 			$page->setTitle( $data['title'] );
 
-		$styles		= "";
+		$styles		= '';
 		foreach( $this->template->styles as $url ){
 			$cacheKey	= 'newsletter_resource_'.md5( $url );
 

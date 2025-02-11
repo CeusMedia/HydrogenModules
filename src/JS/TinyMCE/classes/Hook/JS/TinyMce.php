@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Hook;
 
@@ -21,7 +20,7 @@ class Hook_JS_TinyMce extends Hook
 
 			$baseUrl	= $env->url;
 			if( $env->getModules()->has( 'Resource_Frontend' ) )
-				$baseUrl	= Logic_Frontend::getInstance( $env )->getUri();
+				$baseUrl	= Logic_Frontend::getInstance( $env )->getUrl();
 
 			/* @todo extract to language file after rethinking this solution */
 			$labels	= [

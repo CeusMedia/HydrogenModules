@@ -21,7 +21,8 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		if( ( $error = $request->get( 'error' ) ) ){
 			$this->env->getLog()->log( 'error', $error, $client );
 			$this->messenger->noteError( $words->msgErrorResponded, $provider->title, $error );
-			$this->restart( $authUrl, FALSE, NULL, TRUE );
+			$this->restart( NULL, TRUE );
+//			$this->restart( $authUrl, FALSE, NULL, TRUE );
 		}
 		else if( ( $code = $request->get( 'code' ) ) ){
 			$state		= $request->get( 'state' );
@@ -38,12 +39,12 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 					$this->messenger->noteError( $words->msgErrorAlreadyConnected, $provider->title );
 					$this->restart( NULL, TRUE );
 				}
-				$this->modelUserOauth->add( array(
+				$this->modelUserOauth->add( [
 					'oauthProviderId'	=> $providerId,
 					'oauthId'			=> $user->getId(),
 					'localUserId'		=> $this->logicAuth->getCurrentUserId(),
 					'timestamp'			=> time(),
-				) );
+				] );
 				$this->messenger->noteSuccess( $words->msgSuccess, $provider->title );
 			}
 			catch( Exception $e ){

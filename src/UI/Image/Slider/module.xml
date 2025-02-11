@@ -12,7 +12,7 @@ code>[shortcode id="1"]<code
 
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Refactoring to Hydrogen Module.</log>
 	<log version="0.2.1">Added title layer.</log>
@@ -40,10 +40,13 @@ code>[shortcode id="1"]<code
 	<log version="0.4.2">Reduce former SQL install scripts to one finale script.</log>
 	<log version="0.4.3">Make prefix for CSS classes and JavaScript IDs variable.</log>
 	<log version="0.4.4">Extract hook to own class and refactor to use module UI:Shortcode.</log>
+	<log version="0.4.5">Add model entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Entity/Image/Slider.php</class>
+		<class>Entity/Image/Slide.php</class>
 		<class>Hook/UI/Image/Slider.php</class>
 		<class>Model/Image/Slider.php</class>
 		<class>Model/Image/Slide.php</class>

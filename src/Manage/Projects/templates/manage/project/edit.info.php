@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $project */
+/** @var array $missions */
+
 $facts	= [];
 if( isset( $missions ) && count( $missions ) ){
 	$url	= './work/mission/filter?projects[]='.$project->projectId;
@@ -28,4 +31,3 @@ return '
 		</dl>
 	</div>
 </div>';
-?>

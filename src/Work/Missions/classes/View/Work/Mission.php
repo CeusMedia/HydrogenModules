@@ -24,28 +24,6 @@ class View_Work_Mission extends View
 		return "HELP";
 	}
 
-	public function ajaxRenderDashboardPanel(): string
-	{
-		try{
-			switch( $this->getData( 'panelId' ) ){
-				case 'work-mission-my-tasks':
-					$helper		= new View_Helper_Work_Mission_Dashboard_MyTasks( $this->env );
-					$helper->setTasks( $this->getData( 'tasks' ) );
-					break;
-				case 'work-mission-my-today':
-				default:
-					$helper		= new View_Helper_Work_Mission_Dashboard_MyEvents( $this->env );
-					$helper->setEvents( $this->getData( 'events' ) );
-					break;
-			}
-			$helper->setProjects( $this->getData( 'projects' ) );
-			return $helper->render();
-		}
-		catch( Exception $e ){
-			return $e->getMessage();
-		}
-	}
-
 	public static function formatSeconds( $duration, string $space = ' ' ): string
 	{
 		$seconds 	= $duration % 60;
@@ -140,7 +118,7 @@ class View_Work_Mission extends View
 	{
 		if( !strlen( $time ) )
 			return '-';
-		list( $hours, $minutes ) = explode( ':', $time );
+		[$hours, $minutes] = explode( ':', $time );
 		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'big', str_pad( $hours, 2, 0, STR_PAD_LEFT ) ),
 			HtmlTag::create( 'sup', str_pad( $minutes, 2, 0, STR_PAD_LEFT ) ),

@@ -63,15 +63,14 @@ class Controller_Manage_Catalog_Gallery extends Controller
 				'title'				=> $this->request->get( 'title' ),
 				'status'			=> $this->request->get( 'status' ),
 				'price'				=> $this->request->get( 'price' ),
-				'rank'				=> $this->request->get( 'rank' ),
 				'type'				=> $this->request->get( 'type' ),
 				'rank'				=> $this->request->get( 'rank' ),
 				'galleryCategoryId'	=> $categoryId,
 				'single'			=> TRUE,
 				'modifiedAt'		=> time(),
 			];
+			$imageId	= $this->modelImage->add( $data );
 			try{
-				$imageId	= $this->modelImage->add( $data );
 				$this->rerankImages( $categoryId );
 				if( $this->uploadImage( $imageId, $this->request->get( 'upload' ) ) ){
 					$this->messenger->noteSuccess( $words->successImageAdded );
@@ -100,7 +99,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		foreach( $this->modelImage->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
 		$data['rank']	= max( $number, $lastRank + 1, (int) $this->request->get( 'rank' ) );
-		$this->addData( 'image', (object) $data );
+		$this->addData( 'entity', (object) $data );
 		$this->addData( 'categoryId', $categoryId );
 		$this->addData( 'category', $category );
 	}
@@ -331,7 +330,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
-	protected function checkCategoryId( string $categoryId )
+	protected function checkCategoryId( int|string $categoryId )
 	{
 		$category	= $this->modelCategory->get( $categoryId );
 		if( $category )
@@ -341,7 +340,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	protected function checkImageId( string $imageId )
+	protected function checkImageId( int|string $imageId )
 	{
 		$image	= $this->modelImage->get( $imageId );
 		if( $image )

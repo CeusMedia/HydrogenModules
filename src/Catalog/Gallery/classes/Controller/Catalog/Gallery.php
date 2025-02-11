@@ -5,6 +5,7 @@ use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Catalog_Gallery extends Controller
 {
@@ -39,6 +40,12 @@ class Controller_Catalog_Gallery extends Controller
 		}
 	}
 
+	/**
+	 *	@param		$categoryId
+	 *	@param		$arg2
+	 *	@param		$arg3
+	 *	@return		void
+	 */
 	public function category( $categoryId, $arg2 = NULL, $arg3 = NULL ): void
 	{
 //		$categoryId	= (int) $categoryId;
@@ -110,7 +117,12 @@ class Controller_Catalog_Gallery extends Controller
 	{
 	}
 
-	public function order( $imageId ): void
+	/**
+	 *	@param		string		$imageId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function order( string $imageId ): void
 	{
 		$image	= $this->modelImage->get( $imageId );
 		if( !$image ){
@@ -122,6 +134,11 @@ class Controller_Catalog_Gallery extends Controller
 		$this->restart( $restartUrl );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();

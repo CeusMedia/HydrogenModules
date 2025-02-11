@@ -1,5 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -9,6 +11,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var object $words */
 /** @var object[] $newsletters */
+/** @var int $total */
+/** @var int $page */
+/** @var int $pages */
+/** @var ?Logic_Limiter $limiter */
 
 $w		= (object) $words->index;
 
@@ -61,7 +67,7 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'class'	=> 'btn btn-small btn-success btn-small'
 ] );
 
-$modalAddTrigger	= new \CeusMedia\Bootstrap\Modal\Trigger( 'modal-add-trigger' );
+$modalAddTrigger	= new ModalTrigger( 'modal-add-trigger' );
 $modalAddTrigger->setModalId( 'modal-add' );
 $modalAddTrigger->setLabel( $iconAdd.$w->link_add );
 $modalAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
@@ -69,13 +75,13 @@ $modalAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
 $buttonAdd	= $modalAddTrigger;
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Newsletter:maxItems', count( $newsletters ) + 1 ) ){
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'class'		=> 'btn btn-small btn-success disabled',
 		'onclick'	=> 'alert("Weitere Kampagnen sind in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 }
 
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './work/newsletter', $page, $pages );
+$pagination	= new PageControl( './work/newsletter', $page, $pages );
 
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/index.filter.php', ['inlineFilter' => TRUE] );
 

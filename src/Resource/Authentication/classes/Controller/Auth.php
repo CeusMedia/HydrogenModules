@@ -1,23 +1,28 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use JetBrains\PhpStorm\NoReturn;
 
 class Controller_Auth extends Controller
 {
 	public static string $moduleId	= 'Resource_Authentication';
 
-	protected $config;
-	protected $request;
-	protected $session;
-	protected $cookie;
-	protected $messenger;
-	protected $useCsrf;
+	protected Dictionary $config;
+	protected Request $request;
+	protected Dictionary $session;
+	protected HttpCookie $cookie;
+	protected Messenger $messenger;
+	protected bool $useCsrf;
+	protected Logic_Authentication $logic;
 
 	/**
 	 *	@deprecated		use Ajax::isAuthenticated instead
 	 */
-	public function ajaxIsAuthenticated()
+	public function ajaxIsAuthenticated(): void
 	{
 		print( json_encode( $this->session->has( 'auth_user_id' ) ) );
 		exit;
@@ -26,24 +31,24 @@ class Controller_Auth extends Controller
 	/**
 	 *	@deprecated		use Ajax::refreshSession instead
 	 */
-	public function ajaxRefreshSession()
+	public function ajaxRefreshSession(): void
 	{
 		$this->ajaxIsAuthenticated();
 	}
 
-	public function confirm()
+	public function confirm(): void
 	{
 		$this->forwardToBackendAction( 'confirm' );
 	}
 
-	public function index( $arg1 = NULL, $arg2 = NULL )
+	public function index( $arg1 = NULL, $arg2 = NULL ): void
 	{
 		if( !$this->logic->isAuthenticated() )
 			$this->restart( 'login', TRUE );
 		$this->redirectAfterLogin();
 	}
 
-	public function login( ?string $username = NULL )
+	public function login( ?string $username = NULL ): void
 	{
 		if( $this->logic->isAuthenticated() )
 			$this->redirectAfterLogin();
@@ -53,19 +58,19 @@ class Controller_Auth extends Controller
 		$this->forwardToBackendAction( $action );
 	}
 
-	public function logout()
+	public function logout(): void
 	{
 		if( !$this->logic->isAuthenticated() )
 			$this->redirectAfterLogout();
 		$this->forwardToBackendAction( 'logout' );
 	}
 
-	public function password()
+	public function password(): void
 	{
 		$this->forwardToBackendAction( 'password' );
 	}
 
-	public function register()
+	public function register(): void
 	{
 		$this->forwardToBackendAction( 'register' );
 	}
@@ -77,6 +82,7 @@ class Controller_Auth extends Controller
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= $this->env->getLogic()->get( 'Authentication' );
 		$this->cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) )
@@ -87,7 +93,8 @@ class Controller_Auth extends Controller
 		$this->addData( 'useCsrf', $this->useCsrf = $this->env->getModules()->has( 'Security_CSRF' ) );
 	}
 
-	protected function forwardToBackendAction( $action, $carryFrom = TRUE ){
+	protected function forwardToBackendAction( $action, $carryFrom = TRUE ): void
+	{
 		$backend	= $this->getBackend();
 		$path		= 'auth/'.strtolower( $backend->path ).'/'.$action;
 		$from		= trim( $this->request->get( 'from' ) );
@@ -108,7 +115,7 @@ class Controller_Auth extends Controller
 		return $backends[$backendKey];
 	}
 
-	protected function redirectAfterLogin()
+	protected function redirectAfterLogin(): void
 	{
 		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$from			= str_replace( "index/index", "", $this->request->get( 'from' ) );
@@ -121,10 +128,10 @@ class Controller_Auth extends Controller
 			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		$this->restart( NULL );
+		$this->restart();
 	}
 
-	protected function redirectAfterLogout()
+	protected function redirectAfterLogout(): void
 	{
 		$moduleConfig	= $this->config->getAll( 'module.resource_authentication.', TRUE );
 		$from			= $this->request->get( 'from' );
@@ -137,10 +144,10 @@ class Controller_Auth extends Controller
 			$this->restart( $from );
 		if( $forwardPath )
 			$this->restart( $forwardPath.( $from ? '?from='.$from : '' ) );
-		$this->restart( NULL );
+		$this->restart();
 	}
 
-	protected function rememberUserInCookie( $user )
+	protected function rememberUserInCookie( $user ): void
 	{
 		$expires	= strtotime( "+2 years" ) - time();
 		$passwordHash	= md5( sha1( $user->password ) );											//  hash password using SHA1 and MD5
@@ -160,7 +167,7 @@ class Controller_Auth extends Controller
 	 *	@access		public
 	 *	@return		void
 	 */
-	protected function tryLoginByCookie()
+	protected function tryLoginByCookie(): void
 	{
 		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
 			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
@@ -174,7 +181,7 @@ class Controller_Auth extends Controller
 					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, array( 'loggedAt' => time() ) );			//  note login time in database
+						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
 						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
 						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
 						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set

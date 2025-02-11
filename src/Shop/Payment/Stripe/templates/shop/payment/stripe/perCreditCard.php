@@ -1,13 +1,24 @@
 <?php
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var array<string,array<string,string>> $words */
+/** @var Dictionary $configShop */
 
 $w				= (object) $words['checkout'];
 
 $iconSubmit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-if( count( $paymentBackends ) > 1 )
-	$buttonPrev	= new \CeusMedia\Bootstrap\LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+$buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
+if( count( $paymentBackends->getAll() ) > 1 )
+	$buttonPrev	= new LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 if( $w->linkCreditCard )
 	$w->labelCreditCard	= HtmlTag::create( 'a', $w->labelCreditCard, ['href' => $w->linkCreditCard, 'target' => '_blank'] );
@@ -41,12 +52,12 @@ $form		= '
 $script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
 $env->page->js->addScriptOnReady( $script );
 
-$panel	= HtmlTag::create( 'div', array(
+$panel	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$form,
 	], ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+], ['class' => 'content-panel'] );
 
 $w				= (object) $words['modal-loading'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
@@ -62,7 +73,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	</div>
 </div><script>
 jQuery(document).ready(function(){
-	if('.count( $paymentBackends ).'){
+	if('.count( $paymentBackends->getAll() ).'){
 		jQuery("#card-submit").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});

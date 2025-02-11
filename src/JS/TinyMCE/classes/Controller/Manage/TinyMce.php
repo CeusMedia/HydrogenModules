@@ -14,7 +14,11 @@ class Controller_Manage_TinyMce extends Controller
 	protected string $cssClassPrefix		= 'list';
 	protected string $baseUrl;
 
-	public function index( string $mode = 'image' )
+	/**
+	 *	@param		string		$mode
+	 *	@return		void
+	 */
+	public function index( string $mode = 'image' ): void
 	{
 		$topicId	= (int) $this->session->get( $this->sessionPrefix.$mode );
 		$path		= (string) $this->session->get( $this->sessionPrefix.$mode.'_'.$topicId );
@@ -34,24 +38,43 @@ class Controller_Manage_TinyMce extends Controller
 		$this->helper->render();
 	}
 
+	/**
+	 *	@param		string		$mode
+	 *	@param		string		$topicId
+	 *	@return		void
+	 */
 	public function setTopic( string $mode, string $topicId ): void
 	{
 		$this->session->set( $this->sessionPrefix.$mode, $topicId );
 		$this->restart( $mode, TRUE );
 	}
 
+	/**
+	 *	@param		string		$mode
+	 *	@param		string		$displayMode
+	 *	@return		void
+	 */
 	public function setDisplayMode( string $mode, string $displayMode ): void
 	{
 		$this->session->set( $this->sessionPrefix.'displayMode', $displayMode );
 		$this->restart( $mode, TRUE );
 	}
 
+	/**
+	 *	@param		string		$mode
+	 *	@param		string		$topicId
+	 *	@param		string		$pathBase64
+	 *	@return		void
+	 */
 	public function setPath( string $mode, string $topicId, string $pathBase64 = '' ): void
 	{
 		$this->session->set( $this->sessionPrefix.$mode.'_'.$topicId, base64_decode( $pathBase64 ) );
 		$this->restart( $mode, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();

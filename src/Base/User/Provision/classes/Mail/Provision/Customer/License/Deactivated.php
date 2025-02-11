@@ -1,7 +1,12 @@
 <?php
 class Mail_Provision_Customer_License_Deactivated extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 		$words		= $this->env->getLanguage()->getWords( 'user/provision' );
@@ -25,13 +30,23 @@ class Mail_Provision_Customer_License_Deactivated extends Mail_Abstract
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderHtml( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/deactivated.html', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/deactivated.html', $data ) ?? '';
 	}
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	protected function renderText( array $data = [] ): string
 	{
-		return $this->view->loadContentFile( 'mail/provision/customer/license/deactivated.txt', $data );
+		return $this->loadContentFile( 'mail/provision/customer/license/deactivated.txt', $data ) ?? '';
 	}
 }

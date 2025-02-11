@@ -4,9 +4,12 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Download extends View{
 
-	public function index(){
+	public function index(): void
+	{
 		$this->env->getPage()->addThemeStyle( 'module.manage.downloads.css' );
 	}
 
-	public function view(){}
+	public function view(): void
+	{
+	}
 }

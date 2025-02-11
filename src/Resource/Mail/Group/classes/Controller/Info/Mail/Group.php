@@ -1,60 +1,69 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Info_Mail_Group extends Controller
 {
-	protected $request;
-	protected $session;
-	protected $messenger;
-	protected $logic;
-	protected $logicMail;
-	protected $modelGroup;
-	protected $modelMember;
-	protected $modelAction;
-	protected $modelUser;
-	protected $filterPrefix		= 'filter_info_mail_group_';
-	protected $defaultLimit		= 10;
+	protected HttpRequest $request;
+	protected HttpPartitionSession $session;
+	protected MessengerResource $messenger;
+	protected Logic_Mail_Group $logic;
+	protected Logic_Mail $logicMail;
+	protected Model_Mail_Group $modelGroup;
+	protected Model_Mail_Group_Member $modelMember;
+	protected Model_Mail_Group_Action $modelAction;
+	protected Model_User $modelUser;
+	protected string $filterPrefix		= 'filter_info_mail_group_';
+	protected int $defaultLimit		= 10;
 
-	public function completeMemberAction( $actionId, $hash )
+	/**
+	 *	@param		string		$actionId
+	 *	@param		string		$hash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function completeMemberAction( string $actionId, string $hash ): void
 	{
 		$indices	= ['mailGroupActionId' => $actionId, 'uuid' => $hash];
 		$action		= $this->modelAction->getByIndices( $indices );
 		if( !$action ){
 			$this->messenger->noteError( 'Invalid action.' );
-			$this->restart( NULL );
+			$this->restart( );
 		}
 		if( $action->status == 1 ){
 			$this->messenger->noteError( 'Der Bestätigungslink ist nicht mehr gültig.' );
-			$this->restart( NULL );
+			$this->restart();
 		}
 		try{
 			$payload	= ['action' => $action];
-			$result	= $this->env->getModules()->callHookWithPayload(
+			$result		= $this->env->getModules()->callHookWithPayload(
 				'MailGroupAction',
 				$action->action,
 				$this,
 				$payload
 			);
 			if( $result )
-				$this->modelAction->edit( $action->mailGroupActionId, array(
+				$this->modelAction->edit( $action->mailGroupActionId, [
 					'status'		=> Model_Mail_Group_Action::STATUS_HANDLED,
 					'modifiedAt'	=> time(),
-				) );
+				] );
 			if( is_string( $result ) )
 				$this->restart( $result );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $e->getMessage() );
-			$this->modelAction->edit( $action->mailGroupActionId, array(
+			$this->modelAction->edit( $action->mailGroupActionId, [
 				'status'		=> Model_Mail_Group_Action::STATUS_FAILED,
 				'modifiedAt'	=> time(),
-			) );
+			] );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'page' );
@@ -66,7 +75,7 @@ class Controller_Info_Mail_Group extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = NULL, $limit = NULL )
+	public function index( $page = NULL, $limit = NULL ): void
 	{
 		if( !is_null( $page ) && $page >= 0 )
 			$this->session->set( $this->filterPrefix.'page', (int) $page );
@@ -96,7 +105,13 @@ class Controller_Info_Mail_Group extends Controller
 		$this->addData( 'filterPages', ceil( $total / $limit ) );
 	}
 
-	public function join( $groupId = 0 )
+	/**
+	 *	@param		string|NULL		$groupId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function join( string $groupId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$address	= trim( $this->request->get( 'address' ) );
@@ -109,8 +124,9 @@ class Controller_Info_Mail_Group extends Controller
 				$group		= $this->logic->getGroup( $groupId, TRUE, FALSE );
 			else if( $address )
 				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
-			if( !$group )
-				$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
+
+			if( !isset( $group ) )
+				$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
 			else{
 				$groupId 	= $group->mailGroupId;
 				$member		= $this->logic->getGroupMemberByAddress( $group->mailGroupId, $email, FALSE, FALSE );
@@ -135,31 +151,31 @@ class Controller_Info_Mail_Group extends Controller
 					else if( $member->status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
 						$this->messenger->noteError( 'Diese Adresse war an der Gruppe bereits registriert, wurde aber deaktiviert.' );
 					else if( $member->status == Model_Mail_Group_Member::STATUS_UNREGISTERED ){
-						$this->modelMember->edit( $memberId, array(
+						$this->modelMember->edit( $memberId, [
 							'roleId'		=> $group->defaultRoleId,
 							'status'		=> Model_Mail_Group_Member::STATUS_REGISTERED,
 							'title'			=> strlen( $name ) ? $name : NULL,
 							'modifiedAt'	=> time(),
-						) );
+						] );
 						$registered	= TRUE;
 					}
 				}
-			}
-			if( $registered ){
-				$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
+				if( $registered ){
+					$action	= $this->logic->registerMemberAction( 'confirmAfterJoin', $groupId, $memberId, $greeting );
 
-				$member	= $this->logic->getGroupMember( $memberId, FALSE );
-				$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, [
-					'member'	=> $member,
-					'group'		=> $group,
-					'action'	=> $action,
-				] );
-				$receiver	= (object) ['email' => $member->address];
-				$language	= $this->env->getLanguage()->getLanguage();
-				$this->logicMail->appendRegisteredAttachments( $mail, $language );
-				$this->logicMail->sendMail( $mail, $receiver, $language );
-				$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
-				$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
+					$member	= $this->logic->getGroupMember( $memberId );
+					$mail	= new Mail_Info_Mail_Group_Member_Joining( $this->env, [
+						'member'	=> $member,
+						'group'		=> $group,
+						'action'	=> $action,
+					] );
+					$receiver	= (object) ['email' => $member->address];
+					$language	= $this->env->getLanguage()->getLanguage();
+					$this->logicMail->appendRegisteredAttachments( $mail, $language );
+					$this->logicMail->sendMail( $mail, $receiver );
+					$this->messenger->noteSuccess( 'Der Beitritt zur Gruppe wurde beantragt. Bitte jetzt im Postfach nach der Bestätigungs-E-Mail schauen!' );
+					$this->restart( 'joined/'.$groupId.'/'.$memberId, TRUE );
+				}
 			}
 		}
 		$group = (int) $groupId > 0 ? $this->checkId( $groupId ) : NULL;
@@ -167,7 +183,12 @@ class Controller_Info_Mail_Group extends Controller
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function joined( $groupId, $memberId )
+	/**
+	 *	@param		string		$groupId
+	 *	@param		string		$memberId
+	 *	@return		void
+	 */
+	public function joined( string $groupId, string $memberId ): void
 	{
 		$group = $this->checkId( (int) $groupId );
 		$member = $this->logic->checkMemberId( (int) $memberId );
@@ -175,21 +196,28 @@ class Controller_Info_Mail_Group extends Controller
 		$this->addData( 'member', $member );
 	}
 
-	public function leave( $groupId = NULL )
+	/**
+	 *	@param		string|NULL		$groupId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function leave( ?string $groupId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
-			$address	= trim( $this->request->get( 'address' ) );
-			$email		= trim( $this->request->get( 'email' ) );
-			$name		= trim( $this->request->get( 'name' ) );
-			$greeting	= trim( $this->request->get( 'message' ) );
+			$address	= trim( $this->request->get( 'address', '' ) );
+			$email		= trim( $this->request->get( 'email', '' ) );
+			$name		= trim( $this->request->get( 'name', '' ) );
+			$greeting	= trim( $this->request->get( 'message', '' ) );
 			$registered	= FALSE;
 
 			if( $groupId )
 				$group		= $this->logic->getGroup( $groupId, TRUE, FALSE );
 			else if( $address )
 				$group		= $this->logic->getMailGroupFromAddress( $address, TRUE, FALSE );
-			if( !$group )
-				$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
+
+			if( !isset( $group ) )
+				$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
 			else{
 				$groupId 	= $group->mailGroupId;
 				$member		= $this->logic->getGroupMemberByAddress( $group->mailGroupId, $email, FALSE, FALSE );
@@ -229,13 +257,21 @@ class Controller_Info_Mail_Group extends Controller
 		$this->addData( 'data', (object) $this->request->getAll() );
 	}
 
-	public function view( $groupId )
+	/**
+	 *	@param		string		$groupId
+	 *	@return		void
+	 */
+	public function view( string $groupId ): void
 	{
 		$this->addData( 'group', $this->checkId( $groupId ) );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -251,12 +287,17 @@ class Controller_Info_Mail_Group extends Controller
 			$this->session->set( $this->filterPrefix.'limit', $this->defaultLimit );
 	}
 
-	protected function checkId( $groupId, bool $restart = TRUE )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$restart
+	 *	@return		object|FALSE
+	 */
+	protected function checkId( int|string $groupId, bool $restart = TRUE ): object|FALSE
 	{
 		try{
  			$group				= $this->logic->getGroup( $groupId, TRUE );
-			$group->members		= $this->logic->countGroupMembers( $groupId );					//  does not scale very vell
-			$group->messages	= $this->logic->countGroupMessages( $groupId );					//  does not scale very vell
+			$group->members		= $this->logic->countGroupMembers( $groupId );					//  does not scale very well
+			$group->messages	= $this->logic->countGroupMessages( $groupId );					//  does not scale very well
 			return $group;
 		}
 		catch( Exception $e ){
@@ -264,15 +305,21 @@ class Controller_Info_Mail_Group extends Controller
 			if( $restart )
 				$this->restart( NULL, TRUE );
 		}
+		return FALSE;
 	}
 
-	protected function checkGroupByIdOrAddress( $idOrAddress, bool $strict = TRUE )
+	/**
+	 *	@param		int|string|object		$idOrAddress
+	 *	@param		bool					$strict
+	 *	@return		Object|FALSE
+	 */
+	protected function checkGroupByIdOrAddress( int|string|object $idOrAddress, bool $strict = TRUE ): object|FALSE
 	{
 		if( is_int( $idOrAddress ) )
 			return $this->checkId( $idOrAddress, $strict );
-		if( ( $group = $this->logic->getMailGroupFromAddress( $address, TRUE ) ) )
+		if( ( $group = $this->logic->getMailGroupFromAddress( $idOrAddress, TRUE ) ) )
 			return $group;
-		$this->messenger->noteError( 'Die gewählte Gruppe existent nicht oder nicht mehr.' );
+		$this->messenger->noteError( 'Die gewählte Gruppe existiert nicht oder nicht mehr.' );
 		return FALSE;
 	}
 }

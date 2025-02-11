@@ -2,6 +2,17 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var array<object> $users */
+/** @var array $filterStatus */
+/** @var array $filterPriority */
+/** @var array $filterUser */
+/** @var ?string $filterId */
+/** @var ?string $filterQuery */
+/** @var ?string $filterOrder */
+/** @var ?string $filterDirection */
+/** @var int $filterLimit */
+
 $w			= (object) $words['filter'];
 
 $isFiltered	= count( $filterStatus ) || count( $filterPriority ) || count( $filterUser ) || $filterId || $filterQuery;
@@ -73,11 +84,11 @@ $panelFilter = '
 			<div class="row-fluid">
 				<div class="span10">
 					<label for="input_query">Suchbegriff</label>
-					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery, ENT_QUOTES, 'utf-8' ).'"/>
+					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery ?? '', ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_id">ID</label>
-					<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filterId, ENT_QUOTES, 'utf-8' ).'"/>
+					<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filterId ?? '', ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

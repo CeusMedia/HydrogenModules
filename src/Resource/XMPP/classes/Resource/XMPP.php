@@ -1,33 +1,52 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\XMPP\JID as XmppJid;
 use CeusMedia\Common\Net\XMPP\MessageSender as XmppMessageSender;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Resource_XMPP{
-
-	protected $env;
-	protected $options;
+class Resource_XMPP
+{
+	protected Environment $env;
+	protected Dictionary $options;
 
 	public function __construct( Environment $env ){
 		$this->env		= $env;
 		$this->options	= $env->getConfig()->getAll( 'module.resource_xmpp.', TRUE );
 	}
 
-	static public function ___onModulesInit( Environment $env ){
+	/**
+	 *	@param		Environment		$env
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	public static function ___onModulesInit( Environment $env ): void
+	{
 		$env->set( 'xmpp', new self( $env ) );
-		if( $env->modules )
-			$env->modules->callHook( 'XMPP', 'init', $env );
+		if( $env->getModules()->count() )
+			$env->getModules()->callHook( 'XMPP', 'init', $env );
 	}
 
-	protected function getDefaultSenderJid(){
+	/**
+	 *	@return		string
+	 */
+	protected function getDefaultSenderJid(): string
+	{
 		$sender			= $this->options->getAll( 'sender.', TRUE );
 		$senderJid		= $sender->get( 'node' ).'@'.$sender->get( 'domain' );
 		$senderJid		.= $sender->get( 'resource' ) ? '/'.$sender->get( 'resource' ) : '';
 		return $senderJid;
 	}
 
-	public function sendMessageTo( $message, $receiverJid, $senderJid = NULL, $senderPassword = NULL ){
+	/**
+	 *	@param		string		$message
+	 *	@param		string		$receiverJid
+	 *	@param		?string		$senderJid
+	 *	@param		?string		$senderPassword
+	 *	@return		void
+	 */
+	public function sendMessageTo( string $message, string $receiverJid, ?string $senderJid = NULL, ?string $senderPassword = NULL ): void
+	{
 		if( strlen( trim( $senderJid ) ) && !strlen( trim( $senderPassword ) ) )
 			throw new InvalidArgumentException( 'No password given' );
 

@@ -5,6 +5,8 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Bookmark extends Controller
 {
+	protected Model_Bookmark $model;
+
 	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
 	{
 		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
@@ -20,27 +22,31 @@ class Controller_Manage_Bookmark extends Controller
 				'value'	=> $link->url,
 			];
 		}
-		$list	= array( (object) array(
+		$list	= [(object) [
 			'title'	=> $prefixes->bookmark,
 			'menu'	=> array_values( $list ),
-		) );
+		] ];
 //		$context->list	= array_merge( $context->list, array_values( $list ) );
 		$context->list	= array_merge( $context->list, $list );
 	}
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$messenger	= $this->env->getMessenger();
-			$data	= array(
+			$data	= [
 				'url'	=> $request->get( 'url' ),
 				'title'	=> $request->get( 'title' ),
-			);
+			];
 			if( !strlen( trim( $data['url'] ) ) )
 				$messenger->noteError( 'Die Adresse fehlt.' );
 			else if( !preg_match( "/^(ht|f)tps?:\/\//", $data['url'] ) )
-				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. http://).' );
+				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. https://).' );
 			else if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( 'Der Titel fehlt.' );
 			else{
@@ -52,7 +58,12 @@ class Controller_Manage_Bookmark extends Controller
 		}
 	}
 
-	public function edit( $bookmarkId )
+	/**
+	 *	@param		int|string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $bookmarkId ): void
 	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
@@ -61,14 +72,14 @@ class Controller_Manage_Bookmark extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'url'	=> $request->get( 'url' ),
 				'title'	=> $request->get( 'title' ),
-			);
+			];
 			if( !strlen( trim( $data['url'] ) ) )
 				$messenger->noteError( 'Die Adresse fehlt.' );
 			else if( !preg_match( "/^(http|https|ftp):\/\//", $data['url'] ) )
-				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. http://).' );
+				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. https://).' );
 			else if( !strlen( trim( $data['title'] ) ) )
 				$messenger->noteError( 'Der Titel fehlt.' );
 			else{
@@ -85,7 +96,12 @@ class Controller_Manage_Bookmark extends Controller
 	{
 	}
 
-	public function remove( $bookmarkId )
+	/**
+	 *	@param		int|string		$bookmarkId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $bookmarkId ): void
 	{
 		$this->model->remove( $bookmarkId );
 		$this->restart( NULL, TRUE );

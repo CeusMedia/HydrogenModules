@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web;
+
+/** @var Web $env */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
@@ -58,7 +61,7 @@ $panelAdd	= '
 </div>
 ';
 
-$tabs	= View_Manage_Ip_Lock::renderTabs( $env, 'reason' );
+$tabs	= View_Manage_IP_Lock::renderTabs( $env, 'reason' );
 return $tabs.HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span8',
 		 $panelAdd

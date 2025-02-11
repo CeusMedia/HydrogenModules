@@ -1,8 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+declare(strict_types=1);
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+
+$env->getPage()->js->addScriptOnReady('FormEditor.applyAceEditor("#input_content");');
 
 return '
 <h2><span class="muted">Block:</span> Neu</h2>
@@ -32,11 +39,6 @@ return '
 		</form>
 	</div>
 </div>
-<script>
-jQuery(document).ready(function(){
-	FormEditor.applyAceEditor("#input_content");
-});
-</script>
 <style>
 .ace_editor {
 	border: 1px solid rgba(127, 127, 127, 0.5);

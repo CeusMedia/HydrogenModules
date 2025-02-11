@@ -1,30 +1,32 @@
 <?php
 class Mail_Info_Contact_Form extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig()->getAll( 'module.info_contact.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'info/contact' );
 		$data		= $this->data;
 
-		$do			= (object) array(
-			'email'		=> strip_tags( @$data['email'] ),
-			'phone'		=> strip_tags( @$data['phone'] ),
-			'type'		=> (int) strip_tags( @$data['type'] ),
-			'subject'	=> strip_tags( @$data['subject'] ),
-			'person'	=> strip_tags( @$data['person'] ),
-			'company'	=> strip_tags( @$data['company'] ),
-			'street'	=> strip_tags( @$data['street'] ),
-			'city'		=> strip_tags( @$data['city'] ),
-			'postcode'	=> strip_tags( @$data['postcode'] ),
-			'body'		=> strip_tags( @$data['body'] ),
-		);
+		$do			= (object) [
+			'email'		=> strip_tags( $data['email'] ?? '' ),
+			'phone'		=> strip_tags( $data['phone'] ?? '' ),
+			'type'		=> strip_tags( $data['type'] ?? '' ),
+			'subject'	=> strip_tags( $data['subject'] ?? '' ),
+			'person'	=> strip_tags( $data['person'] ?? '' ),
+			'company'	=> strip_tags( $data['company'] ?? '' ),
+			'street'	=> strip_tags( $data['street'] ?? '' ),
+			'city'		=> strip_tags( $data['city'] ?? '' ),
+			'postcode'	=> strip_tags( $data['postcode'] ?? '' ),
+			'body'		=> strip_tags( $data['body'] ?? '' ),
+		];
 
-		$type			= current( $words['form-types'] );
-		if( !empty( $do->type ) ){
-
-		}
-		$type	= $words['form-types'][$do->type];
+		if( '' === $do->type )
+			$do->type	= current( array_keys( $words['form-types'] ) );
 
 		$wordsMail		= $words['mail'];
 		if( array_key_exists( 'mail-type-'.$do->type, $words ) )
@@ -43,7 +45,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 		$salutation		= $salutations[array_rand($salutations)];
 		$valueAddress	= $do->street ? $do->street.', '.$do->postcode.' '.$do->city : '';
 
-		$this->setHtml( $this->view->loadContentFile( 'mail/info/contact/form.html', array(
+		$this->setHtml( $this->loadContentFile( 'mail/info/contact/form.html', [
 			'salutation'	=> $salutation,
 			'email'			=> htmlentities( $do->email, ENT_QUOTES, 'UTF-8' ),
 			'type'			=> $words['form-types'][$do->type],
@@ -52,8 +54,8 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> htmlentities( $do->company, ENT_QUOTES, 'UTF-8' ),
 			'address'		=> htmlentities( $valueAddress, ENT_QUOTES, 'UTF-8' ),
 			'body'			=> nl2br( htmlentities( $do->body, ENT_QUOTES, 'UTF-8' ) ),
-		) ) );
-		$this->setText( $this->view->loadContentFile( 'mail/info/contact/form.txt', [
+		] ) ?? '' );
+		$this->setText( $this->loadContentFile( 'mail/info/contact/form.txt', [
 			'salutation'	=> $salutation,
 			'email'			=> $do->email,
 			'type'			=> $words['form-types'][$do->type],
@@ -62,7 +64,7 @@ class Mail_Info_Contact_Form extends Mail_Abstract
 			'company'		=> $do->company,
 			'address'		=> $valueAddress,
 			'body'			=> $do->body,
-		] ) );
+		] ) ?? '' );
 		return $this;
 	}
 }

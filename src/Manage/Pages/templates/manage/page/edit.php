@@ -1,4 +1,10 @@
 <?php
+
+/** @var View_Manage_Page $view */
+/** @var View_Manage_Page $this */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_Page $page */
+
 $w		= (object) $words['edit'];
 
 $tabTemplates	= [

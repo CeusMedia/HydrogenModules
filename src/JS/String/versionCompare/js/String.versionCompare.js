@@ -1,7 +1,7 @@
 /**
  * Compares two software version numbers (e.g. "1.7.1" or "1.2b").
  *
- * This function was born in http://stackoverflow.com/a/6832721.
+ * This function was born in https://stackoverflow.com/a/6832721.
  *
  * @param {string} v1 The first version to be compared.
  * @param {string} v2 The second version to be compared.

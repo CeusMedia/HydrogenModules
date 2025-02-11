@@ -1,10 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $event */
+
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconNotice			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] );
-$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'';
+$iconClose			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $factLabelDate		= date( 'j.n.Y', strtotime( $event->dateStart ) );
 $factLabelTime		= date( 'H:i', strtotime( $event->dateStart.' '.$event->timeStart ) ).' &minus; '.date( 'H:i', strtotime( $event->dateStart.' '.$event->timeEnd ) );
@@ -38,7 +40,7 @@ return	'
 	</div>-->
 </div>
 <script>
-var modalForm = jQuery("#form-modal-event");
+let modalForm = jQuery("#form-modal-event");
 if(modalForm.length){
 	modalForm.find("input[name=\'eventId\']").val('.$event->eventId.');
 	modalForm.find("#modal-button-details").on("click", function(){

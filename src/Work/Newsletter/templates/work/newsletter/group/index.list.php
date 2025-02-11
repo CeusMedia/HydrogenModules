@@ -7,6 +7,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
+/** @var array<object> $groups */
+/** @var int $totalGroups */
+/** @var ?Logic_Limiter $limiter */
 
 $w		= (object) $words['index'];
 
@@ -67,10 +70,10 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'class'	=> "btn btn-small btn-success",
 ] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:maxItems', $totalGroups + 1 ) )
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, array(
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'class'		=> 'btn btn-small btn-success disabled',
 		'onclick'	=> 'alert("Weitere Kategorien sind in dieser Demo-Installation nicht möglich.")',
-	) );
+	] );
 
 $filter		= $view->loadTemplateFile( 'work/newsletter/group/index.list.filter.php' );
 

@@ -1,7 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
 
-$w			= (object) $view->getWords( 'index.list', 'manage/catalog/bookstore/article' );
+/** @var View $view */
+/** @var array $articles */
+/** @var array $words */
+
+$w			= (object) $words['index.list'];
 
 $list		= $this->renderList( $articles, isset( $article ) ? $article->articleId : NULL );
 

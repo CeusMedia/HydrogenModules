@@ -37,11 +37,11 @@ class Controller_Manage_Shop extends Controller
 		if( $customerIds )
 			$customers	= $this->logicShop->getCustomers( ['customerId' => $customerIds], ['customerId' => 'DESC'], [10] );
 
+		$markers	= [];
 		//  ALTER TABLE `shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
 /*		$geocoder	= new GoogleMapsGeocoder( "" );
 		$geocoder->setCachePath( 'cache/' );
 		$modelCustomer	= new Model_Shop_Customer( $this->env );
-		$markers	= [];
 		foreach( $customers as $customer ){
 			if( !$customer->longitude ){
 				try{

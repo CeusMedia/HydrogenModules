@@ -5,10 +5,11 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
+/** @var View_Work_Newsletter_Template $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/template/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'work/newsletter/template/index.list.php' );

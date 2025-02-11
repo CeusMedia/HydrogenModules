@@ -66,6 +66,7 @@ class Controller_Info_Event extends Controller
 		switch( $this->request->get( 'do' ) ){
 			case 'view':
 				$this->restart( 'view/'.$eventId.'?from=info/event/calendar', TRUE );
+				break;
 			default:
 				$this->restart( NULL, TRUE );
 		}
@@ -84,7 +85,7 @@ class Controller_Info_Event extends Controller
 
 		$events		= [];
 		$center		= NULL;
-		if( $location && $range ){
+		if( 0 && $range ){
 			$geocoder	= new Logic_Geocoder( $this->env );
 			try{
 				$parts		= preg_split( "/\s+/", $location );
@@ -114,7 +115,12 @@ class Controller_Info_Event extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $eventId ): void
+	/**
+	 *	@param		int|string		$eventId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $eventId ): void
 	{
 		$event	= $this->modelEvent->get( $eventId );
 		if( !$event ){
@@ -125,6 +131,9 @@ class Controller_Info_Event extends Controller
 		$this->addData( 'event', $event );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();

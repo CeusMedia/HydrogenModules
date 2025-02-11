@@ -1,5 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var View_Manage_Page $view */
+/** @var array<string,array<string,string>> $words */
+/** @var Entity_Page $page */
+/** @var bool $isAccessible */
+/** @var string $pageUrl */
+/** @var string $pagePreviewUrl */
 
 $noPreview	= FALSE;
 $controllerActions	= [
@@ -11,7 +20,7 @@ $controllers	= [
 	'Manage_Page',
 ];
 
-$logicPage	= new Logic_Page( $env );
+//$logicPage	= new Logic_Page( $env );
 
 if( !$isAccessible )
 	$noPreview	= TRUE;

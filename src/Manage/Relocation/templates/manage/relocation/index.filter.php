@@ -2,6 +2,13 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var ?string $filterStatus */
+/** @var ?string $filterOrderColumn */
+/** @var ?string $filterOrderDirection */
+/** @var ?string $filterTitle */
+/** @var ?string $filterId */
+
 $w			= (object) $words['index-filter'];
 
 $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
@@ -18,7 +25,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, [
 	'class'	=> 'btn btn-small btn-inverse',
 ] );
 
-$optStatus	= HtmlElements::Options( $words['states'], $filterStatus );
+$optStatus		= HtmlElements::Options( $words['states'], $filterStatus );
 
 $optOrderColumn	= [
 	'title'			=> 'Titel',
@@ -42,11 +49,11 @@ return '
 					<div class="row-fluid">
 						<div class="span10">
 							<label for="input_title">'.$w->labelTitle.'</label>
-							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span2">
 							<label for="input_id">'.$w->labelId.'</label>
-							<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filterId, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="id" id="input_id" class="span12" value="'.htmlentities( $filterId ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">

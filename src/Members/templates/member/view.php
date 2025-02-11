@@ -1,5 +1,18 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var Entity_User $user */
+/** @var int|string $currentUserId */
+/** @var ?string $from */
+/** @var Dictionary $config */
+/** @var array<string,array<string,string>> $words */
+
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
@@ -16,7 +29,7 @@ $helperAvatar	= NULL;
 if( $env->getModules()->has( 'Manage_My_User_Avatar' ) ){									//  use user avatar helper module
 	$helperAvatar			= new View_Helper_UserAvatar( $env );							//  create helper
 	$moduleConfig	= $config->getAll( 'module.manage_my_user_avatar.', TRUE );				//  get module config
-	$helperAvatar->useGravatar( $moduleConfig->get( 'use.gravatar' ) );						//  use gravatar as fallback
+	$helperAvatar->useGravatar( (bool) $moduleConfig->get( 'use.gravatar' ) );			//  use gravatar as fallback
 	$helperAvatar->setUser( $user );														//  set user data
 	$helperAvatar->setSize( 256 );															//  set image size
 //	$avatar	= $helperAvatar->render();														//  render avatar
@@ -30,10 +43,10 @@ else if( $this->env->getModules()->has( 'UI_Helper_Gravatar' ) ){							//  use 
 
 $image	= '';
 if( $helperAvatar ){
-	$image	= HtmlTag::create( 'img', NULL, array(
+	$image	= HtmlTag::create( 'img', NULL, [
 		'src'	=> $helperAvatar->getImageUrl(),
 	//	'class'	=> 'img-polaroid',
-	) );
+	] );
 }
 
 $helperAvatar	= new View_Helper_UserAvatar( $env );
@@ -47,7 +60,7 @@ $role		= $modelRole->get( $user->roleId );
 $data	= print_m( $user, NULL, NULL, TRUE );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
-	'href'		=> $from ? $from : './member/search',
+	'href'		=> $from ?: './member/search',
 	'class'		=> 'btn btn-small',
 ] );
 
@@ -72,11 +85,11 @@ if( $user->userId !== $currentUserId ){
 			] );
 		}
 		if( $relation->status == 2 ){
-			$buttonRevoke	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, array(
+			$buttonRevoke	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, [
 				'href'		=> './member/release/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn-small btn-inverse',
 				'onclick'	=> "if(!confirm('Wirklich?')) return false;",
-			) );
+			] );
 		}
 	}
 	else{

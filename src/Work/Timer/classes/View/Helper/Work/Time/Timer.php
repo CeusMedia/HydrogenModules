@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 {
+	/** @var array<object> $modules */
 	protected static array $modules		= [];
 
 	protected ?string $moduleId			= NULL;
@@ -16,12 +17,14 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 
 	/**
 	 *	@param		Environment		$env
-	 *	@param		object		$timer
-	 *	@param		bool		$strict
+	 *	@param		object			$timer
+	 *	@param		bool			$strict
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		RuntimeException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE )
+	public static function decorateTimer( Environment $env, object $timer, bool $strict = TRUE ): void
 	{
 		$modelProject		= new Model_Project( $env );
 		if( $timer->projectId )
@@ -32,9 +35,9 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		$timer->relationTitle	= NULL;
 		$timer->relationLink	= NULL;
 		if( $timer->module ){
-			if( !array_key_exists( $timer->module, self::$modules ) )
-				throw new Exception( 'Module "'.$timer->module.'" not registered' );
-			$module	= self::$modules[$timer->module];
+			if( !array_key_exists( $timer->module, static::$modules ) )
+				throw new RuntimeException( 'Module "'.$timer->module.'" not registered' );
+			$module	= static::$modules[$timer->module];
 //print_m( self::$modules );
 //print_m( $timer );
 //print_m( $module );
@@ -42,7 +45,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 			$entry	= $module->model->get( $timer->moduleId );
 			if( !$entry ){
 				if( $strict )
-					throw new Exception( 'Relation between timer and module is invalid' );
+					throw new RuntimeException( 'Relation between timer and module is invalid' );
 				return;
 			}
 			$timer->type			= $module->typeLabel;
@@ -57,19 +60,19 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 	 */
 	public static function getRegisteredModules(): array
 	{
-		return self::$modules;
+		return static::$modules;
 	}
 
 	/**
 	 *	@param		object		$module
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 */
-	public function registerModule( object $module ): self
+	public function registerModule( object $module ): static
 	{
 		$arguments		= [$this->env];
 		$modelInstance	= ObjectFactory::createObject( $module->modelClass, $arguments );
-		self::$modules[$module->moduleId]	= (object) [
+		static::$modules[$module->moduleId]	= (object) [
 			'id'			=> $module->moduleId,
 			'title'			=> $module->moduleId,
 			'modelClass'	=> $module->modelClass,
@@ -84,6 +87,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -152,9 +156,9 @@ $(document).ready(function(){
 
 	/**
 	 *	@param		string		$module
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setModule( string $module ): self
+	public function setModule( string $module ): static
 	{
 		$this->module		= $module;
 		return $this;
@@ -162,9 +166,9 @@ $(document).ready(function(){
 
 	/**
 	 *	@param		string		$moduleId
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function setModuleId( string $moduleId ): self
+	public function setModuleId( string $moduleId ): static
 	{
 		$this->moduleId	= $moduleId;
 		return $this;

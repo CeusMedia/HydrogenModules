@@ -27,7 +27,8 @@ class Controller_Admin_App extends Controller
 
 	public function removeIcon(): void
 	{
-		if( $current = $this->config->get( 'app.icon' ) ){
+		$current	= $this->config->get( 'app.icon', '' );
+		if( '' !== trim( $current ) ){
 			@unlink( $current );
 			$this->setConfig( 'app.icon', '' );
 		}
@@ -54,9 +55,10 @@ class Controller_Admin_App extends Controller
 
 	public function setIcon(): void
 	{
+		$icon	= (object) $this->request->get( 'icon' );
 		try{
-			$icon = (object) $this->request->get( 'icon' );
-			if( $fileName = $this->uploadImage( $icon ) ){
+			$fileName = $this->uploadImage( $icon );
+			if( !!$fileName ){
 				$this->setConfig( 'app.icon', $fileName );
 				$this->messenger->noteSuccess( 'Das Icon wurde geändert.' );
 			}
@@ -69,8 +71,8 @@ class Controller_Admin_App extends Controller
 
 	public function setLogo(): void
 	{
+		$logo	= (object) $this->request->get( 'logo' );
 		try{
-			$logo = (object) $this->request->get( 'logo' );
 			$fileName = $this->uploadImage( $logo );
 			if( $fileName ){
 				$this->setConfig( 'app.logo', $fileName );
@@ -85,7 +87,8 @@ class Controller_Admin_App extends Controller
 
 	public function setTitle(): void
 	{
-		if( strlen( trim( $title = $this->request->get( 'title' ) ) ) ){
+		$title	= $this->request->get( 'title' );
+		if( '' !== trim( $title ) ){
 			if( $this->setMainWord( 'title', $title ) )
 				$this->messenger->noteSuccess( 'Der Titel wurde geändert.' );
 		}
@@ -125,7 +128,7 @@ class Controller_Admin_App extends Controller
 	 *	@param		object		$upload
 	 *	@return		string|FALSE|NULL
 	 */
-	protected function uploadImage( object $upload ): ?string
+	protected function uploadImage( object $upload ): string|FALSE|NULL
 	{
 		if( $upload->error === 4 )
 			return NULL;

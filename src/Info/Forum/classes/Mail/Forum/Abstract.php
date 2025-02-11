@@ -11,7 +11,7 @@ abstract class Mail_Forum_Abstract extends Mail_Abstract
 	 *	@todo			render text, too
 	 *	@throws	ReflectionException
 	 */
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$this->modelPost	= new Model_Forum_Post( $this->env );
 		$this->modelThread	= new Model_Forum_Thread( $this->env );

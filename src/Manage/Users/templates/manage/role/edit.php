@@ -1,6 +1,13 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Role $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $role */
+/** @var int $userCount */
 
 $optAccess	= [];
 foreach( $words['type-access'] as $key => $label ){
@@ -22,7 +29,7 @@ $panelEdit	= '
 <div class="content-panel content-panel-form">
 	<h3>'.$words['edit']['heading'].'</h3>
 	<div class="content-panel-inner">
-		<form name="editRole" action="./manage/role/edit/'.$roleId.'" method="post">
+		<form name="editRole" action="./manage/role/edit/'.$role->roleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="title">'.$words['edit']['labelTitle'].'</label>
@@ -46,13 +53,13 @@ $panelEdit	= '
 			</div>
 			<div class="buttonbar">
 				<div class="btn-toolbar">
-					'.HtmlElements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
-					'.HtmlElements::Button( 'saveRole', '<i class="icon-ok icon-white"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
+					'.HtmlElements::LinkButton( './manage/role', '<i class="fa fa-fw fa-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
+					'.HtmlElements::Button( 'saveRole', '<i class="fa fa-fw fa-check"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/role/remove/'.$roleId, '<i class="icon-remove icon-white"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
+					'.HtmlElements::LinkButton( './manage/role/remove/'.$role->roleId, '<i class="fa fa-fw fa-remove"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/user/add?roleId='.$roleId, '<i class="icon-plus icon-white"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
-					'.HtmlElements::LinkButton( './manage/user/filter?roleId='.$roleId, '<i class="icon-search"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/add?roleId='.$role->roleId, '<i class="fa fa-fw fa-plus"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/filter?roleId='.$role->roleId, '<i class="fa fa-fw fa-magnifying-class"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
 				</div>
 			</div>
 		</form>

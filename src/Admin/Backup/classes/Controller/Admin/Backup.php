@@ -92,7 +92,6 @@ class Controller_Admin_Backup extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

@@ -1,4 +1,14 @@
 <?php
+
+use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var Environment $env */
+/** @var View $view */
+/** @var array $folders */
+/** @var array $files */
+/** @var array $words */
+
 $w	= (object) $words['info'];
 
 $helper			= new View_Helper_TimePhraser( $env );

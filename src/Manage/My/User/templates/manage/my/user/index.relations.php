@@ -1,5 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var int|string $currentUserId */
 
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );

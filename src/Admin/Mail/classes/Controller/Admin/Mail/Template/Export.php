@@ -17,11 +17,13 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@access		public
 	 *	@param		WebEnvironment	$env			Application Environment Object
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
 	}
 
@@ -29,22 +31,23 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	Export mail template as JSON.
 	 *	Will provide file download by default.
 	 *	@access		public
-	 *	@param		string		$templateId		ID of template to export
-	 *	@param		string		$output			Type of output (download|print)
+	 *	@param		int|string		$templateId		ID of template to export
+	 *	@param		string			$output			Type of output (download|print)
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( string $templateId, string $output = 'download' )
+	public function index( int|string $templateId, string $output = 'download' ): void
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$title		= new String_( $template->title );
 		$titleKey	= $title->hyphenate();										//  preserve whitespace in title as hyphen
 		$json		= $this->generateJson( $templateId );
-		$fileName	= vsprintf( '%s%s%s%s', array(
+		$fileName	= vsprintf( '%s%s%s%s', [
 			'MailTemplate_',													//  file name prefix @todo make configurable
 			preg_replace( '/[: "\']/', '', $titleKey ),							//  template title as file ID (stripped invalid characters)
 			'_'.date( 'Y-m-d' ),
 			'.json',															//  file extension @todo make configurable
-		) );
+		] );
 		switch( $output ){
 			case 'print':
 			case 'dev':
@@ -62,12 +65,14 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	//  --  PROTECTED  --  //
 
 	/**
-	 *	@param		string		$templateId
-	 *	@param		bool		$strict
-	 *	@return		object|FALSE
+	 *	@param		int|string		$templateId		Template ID
+	 *	@param		bool			$strict
+	 *	@return		Entity_Mail_Template|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkTemplate( string $templateId, bool $strict = TRUE )
+	protected function checkTemplate( int|string $templateId, bool $strict = TRUE ): Entity_Mail_Template|FALSE
 	{
+		/** @var Entity_Mail_Template $template */
 		$template	= $this->modelTemplate->get( $templateId );
 		if( $template )
 			return $template;
@@ -79,10 +84,12 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	/**
 	 *	Generate JSON representing mail template.
 	 *	@access		protected
-	 *	@param		string		$templateId		ID of mail template
+	 *	@param		int|string		$templateId		ID of mail template
 	 *	@return		string
+	 *	@throws		RangeException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function generateJson( string $templateId ): string
+	protected function generateJson( int|string $templateId ): string
 	{
 		$template	= $this->checkTemplate( $templateId );
 		$files		= ['styles' => [], 'images' => []];
@@ -97,10 +104,10 @@ class Controller_Admin_Mail_Template_Export extends Controller
 					$this->messenger->noteError( 'File is missing: '.$item );
 					continue;
 				}
-				$files[$topic][]	= array(
+				$files[$topic][]	= [
 					'filePath'	=> $item,
 					'content'	=> base64_encode( FileReader::load( $item ) ),
-				);
+				];
 			}
 		}
 

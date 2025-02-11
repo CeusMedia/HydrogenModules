@@ -8,17 +8,20 @@ use CeusMedia\Common\Net\API\Google\Maps\Geocoder as GoogleMapsGeocoder;
  */
 class Logic_Geocoder{
 
-	protected $radiusEarth  = 6371;
+	protected \CeusMedia\HydrogenFramework\Environment $env;
+	protected int $radiusEarth  = 6371;
 
 	public function __construct( $env ){
 		$this->env	= $env;
 	}
 
-	public function calculateDistance( $radius ){
+	public function calculateDistance( int|float $radius ): float
+	{
 		return 2 * $this->radiusEarth * sin( $radius / ( 2 * $this->radiusEarth ) );
 	}
 
-	public function convertRadianToCoords( $longitude, $latitude ){
+	public function convertRadianToCoords( float|string $longitude, float|string $latitude ): object
+	{
 		$lambda	= $longitude * pi() / 180;
 		$phi	= $latitude * pi() / 180;
 		$x		= $this->radiusEarth * cos( $phi ) * cos( $lambda );
@@ -27,7 +30,8 @@ class Logic_Geocoder{
 		return (object) ['x' => $x, 'y' => $y, 'z' => $z];
 	}
 
-	public function geocodeAddress( $street, $number, $postcode, $city, $country ){
+	public function geocodeAddress( string $street, string $number, string $postcode, string $city, string $country ): object
+	{
 		$geocoder	= new GoogleMapsGeocoder( "" );
 		$geocoder->setCachePath( 'cache/geo/' );
 		$query		= $street.' '.$number.', '.$postcode.' '.$city.', '.$country;
@@ -37,23 +41,27 @@ class Logic_Geocoder{
 		return (object) $geocoder->getGeoTags( $query );
 	}
 
-	public function getCities( $startsWith ){
+	public function getCities( string $startsWith ): array
+	{
 		$dbGeo	= new Model_OpenGeo( $this->env->getDatabase() );
 		return $dbGeo->getCities( $startsWith );
 	}
 
-	public function getPointByCity( $city ){
+	public function getPointByCity( string $city ): ?object
+	{
 		$dbGeo	= new Model_OpenGeo( $this->env->getDatabase() );
 		$point	= $dbGeo->geocodeCity( $city );
-		$coords		= $this->convertRadianToCoords( $point->lon, $point->lat );
-		$point->x	= $coords->x;
-		$point->y	= $coords->y;
-		$point->z	= $coords->z;
+		if( NULL !== $point ){
+			$coords		= $this->convertRadianToCoords( $point->lon, $point->lat );
+			$point->x	= $coords->x;
+			$point->y	= $coords->y;
+			$point->z	= $coords->z;
+		}
 		return $point;
-
 	}
 
-	public function getPointByPostcodeAndCity( $postcode, $city ){
+	public function getPointByPostcodeAndCity( string $postcode, string $city ): object
+	{
 		$model		= new Model_OpenGeo_Postcode( $this->env );
 		$indices	= ['postcode' => $postcode, 'city' => $city];
 		if( !( $entry = $model->getByIndices( $indices ) ) )
@@ -67,7 +75,8 @@ class Logic_Geocoder{
 		return $entry;
 	}
 
-	public function getPointByPostcode( $postcode ){
+	public function getPointByPostcode( string $postcode ): object
+	{
 		$dbGeo	= new Model_OpenGeo( $this->env->getDatabase() );
 		$point	= $dbGeo->geocodePostcode_old( $postcode );
 //print_m( $point );die;

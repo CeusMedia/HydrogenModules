@@ -6,6 +6,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array $words */
 /** @var object $issue */
 /** @var object[] $users */
+/** @var object[] $projects */
 
 $optType		= $view->renderOptions( $words['types'], 'type', $issue->type, 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $issue->severity, 'issue-severity severity-%1$d');
@@ -52,7 +53,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 return '
 	<script>
 $(document).ready(function(){
-	var value = parseInt($("#progress").hide().val());
+	let value = parseInt($("#progress").hide().val());
 	$("#progress-slider").slider({
 		value: value,
 		min: 0,
@@ -68,8 +69,8 @@ $(document).ready(function(){
 function getColor(ratio,opacity){
 	opacity	= typeof opacity == "undefined" ? 1 : opacity;
 	ratio	= Math.max(0,Math.min(1,ratio));									//  keep ratio between 0 and 1
-	var colorR	= ( 1 - ratio ) > 0.5 ? 255 : Math.round( ( 1 - ratio ) * 2 * 255 );
-	var colorG	= ratio > 0.5 ? 255 : Math.round( ratio * 2 * 255 );
+	let colorR	= ( 1 - ratio ) > 0.5 ? 255 : Math.round( ( 1 - ratio ) * 2 * 255 );
+	let colorG	= ratio > 0.5 ? 255 : Math.round( ratio * 2 * 255 );
 	return "rgba(" + colorR + "," + colorG + ",0,"+opacity+")";
 }
 

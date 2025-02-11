@@ -3,6 +3,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Info_Gallery_Matrix extends View_Helper_Info_Gallery
 {
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		$list		= [];

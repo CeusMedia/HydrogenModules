@@ -1,12 +1,13 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Work_Mail_Group extends Controller
 {
-	protected Dictionary $request;
+	protected Request $request;
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
 	protected Model_Mail_Group $modelGroup;
@@ -51,6 +52,7 @@ class Controller_Work_Mail_Group extends Controller
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
+		/** @var array<Entity_User> $users */
 		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
 		$roles		= $this->modelRole->getAll( [], ['rank' => 'ASC'] );
@@ -141,6 +143,7 @@ class Controller_Work_Mail_Group extends Controller
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
 		$this->addData( 'group', $group );
+		/** @var array<Entity_User> $users */
 		$users		= $this->modelUser->getAll( ['status' => '> 0'], ['username' => 'ASC'] );
 		$this->addData( 'users', $users );
 		$members	= $this->modelMember->getAll( ['mailGroupId' => $groupId], ['title' => 'ASC'] );

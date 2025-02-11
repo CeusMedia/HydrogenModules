@@ -1,43 +1,57 @@
 <?php
+
 use CeusMedia\Mail\Mailbox;
 use CeusMedia\Mail\Mailbox\Connection;
 
 abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connector_Abstract implements Logic_Import_Connector_Interface
 {
+	/**	@var	Mailbox|NULL		$mailbox */
 	protected ?Mailbox $mailbox		= NULL;
 
+	/**	@var	Connection			$resource */
 	protected Connection $resource;
 
-	public function connect()
+	/**
+	 *	@return		static
+	 */
+	public function connect(): static
 	{
 		if( !$this->connection )
-			throw new RuntimeException( 'No connection set') ;
+			throw new RuntimeException( 'No connection set' );
 		if( !$this->connection->hostName )
-			die( 'Error: No mail host defined.' );
+			throw new RuntimeException( 'No mail host defined' );
 //		if( !$this->connection->hostPath )
 //			die( 'Error: No mailbox address defined.' );
 		if( !$this->connection->authUsername )
-			die( 'Error: No mailbox user name defined.' );
+			throw new RuntimeException( 'No mailbox user name defined' );
 		if( !$this->connection->authPassword )
-			die( 'Error: No mailbox user password defined.' );
+			throw new RuntimeException( 'No mailbox user password defined' );
 		$this->resource	= new Connection(
 			$this->connection->hostName,
 			$this->connection->authUsername,
 			$this->connection->authPassword
 		);
-		$this->resource->setSecure( TRUE, TRUE );
+		$this->resource->setSecure();
 		$this->resource->connect();
 		$this->mailbox	= new Mailbox( $this->resource );
 		return $this;
 	}
 
-	public function disconnect()
+	/**
+	 *	@return		void
+	 */
+	public function disconnect(): void
 	{
 		if( !$this->connection || !$this->mailbox )
 			throw new RuntimeException( 'No connection set') ;
 		$this->resource->disconnect();
 	}
 
+	/**
+	 *	@param		int			$mailId
+	 *	@param		string		$newName
+	 *	@return		bool
+	 */
 	public function renameTo( int $mailId, string $newName ): bool
 	{
 		return FALSE;
@@ -53,6 +67,10 @@ abstract class Logic_Import_Connector_MailAbstract extends Logic_Import_Connecto
 		return $this->mailbox->moveMail( $mailId, $targetFolder, TRUE );
 	}
 
+	/**
+	 *	@param		bool		$recursive
+	 *	@return		array
+	 */
 	public function getFolders( bool $recursive = FALSE ): array
 	{
 		return $this->mailbox->getFolders( $recursive );

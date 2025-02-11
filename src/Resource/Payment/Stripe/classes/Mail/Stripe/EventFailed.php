@@ -6,7 +6,12 @@ use CeusMedia\Common\UI\OutputBuffer;
 
 class Mail_Stripe_EventFailed extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$data		= new Dictionary( $this->data );
 		$buffer		= new OutputBuffer();

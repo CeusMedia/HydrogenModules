@@ -8,7 +8,7 @@ class View_Helper_Info_Manual_CategorySelector
 {
 	protected Environment $env;						// \CeusMedia\HydrogenFramework\Environment
 	protected array $categories			= [];
-	protected ?string $categoryId		= NULL;
+	protected int|string|NULL $categoryId		= NULL;
 
 	/**
 	 *	Constructor.
@@ -53,7 +53,7 @@ class View_Helper_Info_Manual_CategorySelector
 			<script></script>';
 	}
 
-	public function setActiveCategoryId( string $categoryId ): self
+	public function setActiveCategoryId( int|string $categoryId ): self
 	{
 		$this->categoryId	= $categoryId;
 		return $this;

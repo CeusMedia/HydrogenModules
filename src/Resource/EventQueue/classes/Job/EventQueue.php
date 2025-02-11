@@ -1,14 +1,20 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+
 class Job_EventQueue extends Job_Abstract
 {
-	protected $logic;
-	protected $model;
-	protected $options;
+	protected Logic_Job $logic;
+	protected Model_Queue_Event $model;
+	protected Dictionary $options;
 
-	public function count()
+	/**
+	 *	@return		void
+	 */
+	public function count(): void
 	{
 		$conditions	= [
-			'status'	=> Model_Event::STATUS_NEW,
+			'status'	=> Model_Queue_Event::STATUS_NEW,
 		];
 		$count	= $this->model->count( $conditions );
 		if( $count ){
@@ -21,28 +27,32 @@ class Job_EventQueue extends Job_Abstract
 		$this->out( 'No unhandled events found' );
 	}
 
-	public function handle()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function handle(): void
 	{
-		$conditions	= ['status' => Model_Event::STATUS_NEW];
+		$conditions	= ['status' => Model_Queue_Event::STATUS_NEW];
 		$captain	= $this->env->getCaptain();
 		$events		= $this->model->getAll( $conditions, ['createdAt' => 'ASC'] );
+		$results	= (object) [
+			'nrSucceeded'	=> 0,
+			'nrFailed'		=> 0,
+			'nrIgnored'		=> 0,
+			'succeeded'		=> [],
+			'failed'		=> [],
+			'ignored'		=> [],
+		];
 		foreach( $events as $event ){
 			$this->out( '- '.date( 'Y-m-d H:i', $event->createdAt ).': '.$event->identifier );
 			$this->model->edit( $event->eventId, [
-				'status'		=> Model_Event::STATUS_RUNNING,
+				'status'		=> Model_Queue_Event::STATUS_RUNNING,
 				'modifiedAt'	=> time(),
 			] );
-			$results	= (object) [
-				'nrSucceeded'	=> 0,
-				'nrFailed'		=> 0,
-				'nrIgnored'		=> 0,
-				'succeeded'		=> [],
-				'failed'		=> [],
-				'ignored'		=> [],
-			];
 			try{
 				$data	= [
-					'status'		=> Model_Event::STATUS_IGNORED,
+					'status'		=> Model_Queue_Event::STATUS_IGNORED,
 					'modifiedAt'	=> time(),
 				];
 				$payload	= [
@@ -56,7 +66,7 @@ class Job_EventQueue extends Job_Abstract
 				}
 				else{
 					$data	= array_merge( $data, [
-						'status'		=> Model_Event::STATUS_SUCCEEDED,
+						'status'		=> Model_Queue_Event::STATUS_SUCCEEDED,
 						'result'		=> json_encode( $result ),
 					] );
 					$results->nrSucceeded++;
@@ -65,7 +75,7 @@ class Job_EventQueue extends Job_Abstract
 			}
 			catch( Exception $e ){
 				$data	= array_merge( $data, [
-					'status'		=> Model_Event::STATUS_FAILED,
+					'status'		=> Model_Queue_Event::STATUS_FAILED,
 					'result'		=> json_encode( [
 						'message'	=> $e->getMessage(),
 						'code'		=> $e->getCode(),
@@ -81,10 +91,15 @@ class Job_EventQueue extends Job_Abstract
 		$this->results	= $results;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->options	= $this->env->getConfig()->getAll( 'module.resource_eventqueue.', TRUE );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
-		$this->model	= new Model_Event( $this->env );
+		$this->model	= new Model_Queue_Event( $this->env );
 	}
 }

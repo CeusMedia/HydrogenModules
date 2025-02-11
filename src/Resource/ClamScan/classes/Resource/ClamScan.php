@@ -1,23 +1,27 @@
 <?php
 class Resource_ClamScan{
 
-	static public $socketPath	= '/var/run/clamav/clamd.ctl';
+	public static string $socketPath	= '/var/run/clamav/clamd.ctl';
 	protected $socket;
 
-	public function __construct(){
+	public function __construct()
+	{
 		$this->openSocket();
 	}
 
-	public function __destruct(){
+	public function __destruct()
+	{
 		$this->closeSocket();
 	}
 
-	protected function closeSocket(){
+	protected function closeSocket(): void
+	{
 		if( $this->socket && is_resource( $this->socket ) )
 			fclose( $this->socket );
 	}
 
-	public function scanFile( $filePath ){
+	public function scanFile( string $filePath ): object
+	{
 		if( !file_exists( $filePath ) )
 			throw new RuntimeException( 'File "'.$filePath.'" is not existing' );
 		if( !$this->socket )
@@ -41,7 +45,8 @@ class Resource_ClamScan{
 		);
 	}
 
-	protected function openSocket(){
+	protected function openSocket(): void
+	{
 		$this->closeSocket();
 		$this->socket	= @fsockopen( 'unix://'.self::$socketPath, -1, $errno, $errstr, 2 );
 		if( !$this->socket ){

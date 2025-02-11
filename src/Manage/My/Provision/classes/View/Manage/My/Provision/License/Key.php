@@ -1,15 +1,15 @@
 <?php
-class View_Manage_My_Provision_License_Key extends View_Manage_My_License
+class View_Manage_My_Provision_License_Key extends View_Manage_My_Provision_License
 {
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function view()
+	public function view(): void
 	{
 	}
 

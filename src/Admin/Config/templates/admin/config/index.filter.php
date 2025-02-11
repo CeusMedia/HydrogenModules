@@ -36,6 +36,12 @@ return '
 					<select name="category" id="input_category" class="span12 has-optionals" onchange="this.form.submit();">'.$optCategory.'</select>
 				</div>
 			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_query">'.$w->labelQuery.'</label>
+					<input type="text" name="query" id="input_query" class="span12" onchange="this.form.submit();" value="'.htmlentities( $query ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
 			<div class="buttonbar">
 				<div class="btn-group">
 					<button type="submit" name="search" class="btn btn-small btn-info">'.$iconSearch.'&nbsp;'.$w->buttonSearch.'</button>

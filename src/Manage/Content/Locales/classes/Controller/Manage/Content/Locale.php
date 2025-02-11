@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -21,7 +21,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011 Ceus Media
+ *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Content_Locale extends Controller
 {
@@ -33,7 +33,7 @@ class Controller_Manage_Content_Locale extends Controller
 	protected string $basePath;
 	protected string $folderPathFull;
 	protected Model_Provision_Product_License $modelLicense;
-	protected ?string $folder			= NULL;
+	protected ?string $folder		= NULL;
 	protected ?string $file			= NULL;
 
 	public static array $folders	= [
@@ -44,18 +44,7 @@ class Controller_Manage_Content_Locale extends Controller
 
 	public static string $filterPrefix	= 'filter_manage_content_locale_';
 
-	public function ajaxSaveContent()
-	{
-		$this->checkAjaxRequest();
-		if( !( $this->language && $this->file ) )
-			return;
-		$content	= $this->request->get( 'content' );
-		$editor		= new FileEditor( $this->folderPathFull.$this->file );
-		$editor->writeString( $content );
-		$this->handleJsonResponse( 'success', TRUE );
-	}
-
-	public function edit( $folder, $language, $file )
+	public function edit( string $folder, string $language, string $file ): void
 	{
 		$this->setFolder( $folder );
 		$this->setLanguage( $language );
@@ -106,7 +95,7 @@ class Controller_Manage_Content_Locale extends Controller
 			$ext	= strtolower( pathinfo( $this->file, PATHINFO_EXTENSION ) );
 			$editor	= $this->session->get( static::$filterPrefix.'editor_'.$ext );
 			$editor	= $editor ?: $this->session->get( static::$filterPrefix.'editor' );
-			$editor	= $editor ?: array_shift( $editor );
+			$editor	= $editor ?: array_shift( $editors );
 			$editor	= $editor ?: 'Plain';
 			$this->addData( 'editor', $editor );
 			$this->addData( 'editorByExt', $this->session->get( static::$filterPrefix.'editor_'.$ext ) );
@@ -114,7 +103,7 @@ class Controller_Manage_Content_Locale extends Controller
 		}
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( static::$filterPrefix.'folder' );
@@ -142,20 +131,17 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $folder = NULL, $language = NULL )
+	public function index( ?string $folder = NULL, ?string $language = NULL ): void
 	{
-		if( $folder && $language ){
+		if( NULL !== $folder ){
 			$this->setFolder( $folder );
-			$this->setLanguage( $language );
-			$this->restart( NULL, TRUE );
-		}
-		if( $folder ){
-			$this->setFolder( $folder );
+			if( NULL !== $language )
+				$this->setLanguage( $language );
 			$this->restart( NULL, TRUE );
 		}
 	}
 
-	public function setEditor()
+	public function setEditor(): void
 	{
 		$editor		= $this->request->get( 'editor' );
 		$ext		= $this->request->get( 'ext' );
@@ -176,7 +162,7 @@ class Controller_Manage_Content_Locale extends Controller
 		) ), TRUE );
 	}
 
-	protected function	__onInit(): void
+	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
@@ -234,16 +220,17 @@ class Controller_Manage_Content_Locale extends Controller
 		return implode( "\n", $lines );
 	}*/
 
-	protected function getLanguages()
+	protected function getLanguages(): array
 	{
 		$index	= new FolderLister( $this->basePath );
+		$list	= [];
 		foreach( $index->getList() as $folder )
-			$languages[]	= $folder->getFilename();
-		natcasesort( $languages );
-		return $languages;
+			$list[]	= $folder->getFilename();
+		natcasesort( $list );
+		return $list;
 	}
 
-	protected function indexFiles()
+	protected function indexFiles(): void
 	{
 		$list		= [];
 		foreach( static::$folders as $folderKey => $folderPath ){
@@ -253,25 +240,25 @@ class Controller_Manage_Content_Locale extends Controller
 			if( file_exists( $path.$folderPath ) ){
 				$index	= RecursiveFolderLister::getFileList( $path.$folderPath );
 				foreach( $index as $item ){
-					if( substr( $item->getFilename(), -1 ) !== "~" ){
+					if( !str_ends_with( $item->getFilename(), '~' ) ){
 						$pathName	= substr( $item->getPathname(), strlen( $path ) );
 						if( $this->folder === 'locale' ){
-							if( substr( $pathName, 0, 5 ) === 'html/' )
+							if( str_starts_with( $pathName, 'html/' ) )
 								continue;
-							if( substr( $pathName, 0, 5 ) === 'mail/' )
+							if( str_starts_with( $pathName, 'mail/' ) )
 								continue;
 						}
 						$content	= FileReader::load( $item->getPathname() );
 						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
 						$pathName	= substr( $pathName, strlen( $folderPath ) );
 						$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
-						$list[$root.'_'.$pathName]	= (object) array(
+						$list[$root.'_'.$pathName]	= (object) [
 							'pathName'	=> $pathName,
 							'fileName'	=> $item->getFilename(),
 							'baseName'	=> pathinfo( $item->getFilename(), PATHINFO_FILENAME ),
 							'extension'	=> pathinfo( $item->getFilename(), PATHINFO_EXTENSION ),
 							'size'		=> strlen( trim( $content ) ),
-						);
+						];
 					}
 				}
 			}
@@ -280,7 +267,7 @@ class Controller_Manage_Content_Locale extends Controller
 		$this->addData( 'files', $list );
 	}
 
-	protected function setFile( string $file ): ?bool
+	protected function setFile( ?string $file ): ?bool
 	{
 		if( $this->file === $file )
 			return NULL;
@@ -307,7 +294,7 @@ class Controller_Manage_Content_Locale extends Controller
 			throw new RuntimeException( 'Invalid folder' );
 		$this->session->set( static::$filterPrefix.'folder', $this->folder = $folder );
 		$this->addData( 'folder', $this->folder );
-		$this->setFile( NULL );
+		$this->setFile( '' );
 		return TRUE;
 	}
 

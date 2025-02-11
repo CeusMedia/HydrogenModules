@@ -1,4 +1,7 @@
 <?php
+
+/** @var array<string> $rights */
+
 if( !in_array( 'scan', $rights ) )
 	return '';
 return '

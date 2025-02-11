@@ -3,22 +3,22 @@
 $content	= '----';
 
 if( $data->code == 2 ){
-	$content	= $view->loadContentFile( 'html/provision/status/active.html', array(
+	$content	= $view->loadContentFile( 'html/provision/status/active.html', [
 		'key'			=> $data->active,
 		'serverUrl'		=> $serverUrl,
 		'keyEnd'		=> date( 'd.m.Y H:i:s', $data->active->endsAt ),
 		'keyEndDate'	=> date( 'd.m.Y', $data->active->endsAt ),
 		'keyEndTime'	=> date( 'H:i:s', $data->active->endsAt ),
-	) );
+	] );
 }
 if( $data->code == -1 ){
-	$content	= $view->loadContentFile( 'html/provision/status/outdated.html', array(
+	$content	= $view->loadContentFile( 'html/provision/status/outdated.html', [
 		'key'			=> $data->outdated,
 		'serverUrl'		=> $serverUrl,
 		'keyEnd'		=> date( 'd.m.Y H:i:s', $data->outdated->endsAt ),
 		'keyEndDate'	=> date( 'd.m.Y', $data->outdated->endsAt ),
 		'keyEndTime'	=> date( 'H:i:s', $data->outdated->endsAt ),
-	) );
+	] );
 }
 if( $data->code == 0 ){
 	$content	= $view->loadContentFile( 'html/provision/status/none.html', [

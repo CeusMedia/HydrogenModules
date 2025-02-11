@@ -20,6 +20,8 @@ class Controller_Manage_My_User extends Controller
 	protected string $userId;
 
 	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 */
 	public function edit(): void
@@ -27,6 +29,7 @@ class Controller_Manage_My_User extends Controller
 		$this->checkConfirmationPassword();
 
 		$words		= (object) $this->getWords( 'edit' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -76,7 +79,8 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@todo   	Redesign: Send mail with confirmation before applying new mail address
+	 *	@todo		Redesign: Send mail with confirmation before applying new mail address
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function email(): void
 	{
@@ -84,6 +88,7 @@ class Controller_Manage_My_User extends Controller
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'email' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$email		= trim( $this->request->get( 'email' ) );
 
@@ -113,6 +118,10 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -123,6 +132,7 @@ class Controller_Manage_My_User extends Controller
 			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
 			$this->restart( './' );
 		}
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$user->role	= $modelRole->get( $user->roleId );
 		if( class_exists( 'Model_Company' ) ){
@@ -147,10 +157,12 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function password(): void
 	{
 		$words		= (object) $this->getWords( 'password' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -159,15 +171,15 @@ class Controller_Manage_My_User extends Controller
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
 		$data				= $this->request->getAllFromSource( 'POST', TRUE );
-		$passwordOld		= trim( $this->request->getFromSource( 'passwordOld', 'POST' ) );
-		$passwordNew		= trim( $this->request->getFromSource( 'passwordNew', 'POST' ) );
-		$passwordConfirm	= trim( $this->request->getFromSource( 'passwordConfirm', 'POST' ) );
+		$passwordOld		= $data->get( 'passwordOld', '' );
+		$passwordNew		= $data->get( 'passwordNew', '' );
+		$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
 
-		if( !strlen( $passwordOld ) )
+		if( '' === $passwordOld )
 			$this->messenger->noteError( $words->msgPasswordOldMissing );
-		else if( !strlen( $passwordNew ) )
+		else if( '' === $passwordNew )
 			$this->messenger->noteError( $words->msgPasswordNewMissing );
-		else if( !strlen( $passwordConfirm ) )
+		else if( '' === $passwordConfirm )
 			$this->messenger->noteError( $words->msgPasswordConfirmMissing );
 		else if( $passwordOld === $passwordNew )
 			$this->messenger->noteError( $words->msgPasswordNewSame );
@@ -182,8 +194,8 @@ class Controller_Manage_My_User extends Controller
 		else{
 			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
 				$logic			= Logic_UserPassword::getInstance( $this->env );
-				$userPasswordId	= $logic->addPassword( $user->userId, $passwordNew );
-				$logic->activatePassword( $userPasswordId );
+				$userPassword	= $logic->addPassword( $user, $passwordNew );
+				$logic->activatePassword( $userPassword );
 			}
 			else{
 				$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
@@ -193,6 +205,11 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( './manage/my/user' );
 	}
 
+	/**
+	 *	@param		$confirmed
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( $confirmed = NULL ): void
 	{
 		$this->addData( 'userId', $this->userId );
@@ -221,7 +238,8 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@todo   	Redesign: Send mail with confirmation before applying new username
+	 *	@todo		Redesign: Send mail with confirmation before applying new username
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function username(): void
 	{
@@ -229,10 +247,11 @@ class Controller_Manage_My_User extends Controller
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'username' );
+		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$username	= trim( $this->request->get( 'username' ) );
 
-		if( !strlen( $username ) ){
+		if( '' === $username ){
 			$this->messenger->noteError( $words->msgUsernameMissing );
 			$this->restart( NULL, TRUE );
 		}
@@ -245,7 +264,7 @@ class Controller_Manage_My_User extends Controller
 			'userId'	=> '!= '.$this->userId,
 //			'status'	=> '>= -1',																//  disabled for integrity
 		];
-		if( $this->modelUser->getByIndices( $indices ) ){
+		if( $this->modelUser->hasByIndices( $indices ) ){
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );
 			$this->restart( NULL, TRUE );
 		}
@@ -254,6 +273,11 @@ class Controller_Manage_My_User extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request		= $this->env->getRequest();
@@ -265,20 +289,25 @@ class Controller_Manage_My_User extends Controller
 		$msg	= (object) $this->getWords( 'msg' );
 		if( !$this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->messenger->noteFailure( $msg->failureNoAuthentication );
-			$this->restart( NULL );
+			$this->restart();
 		}
 		if( !$this->logicAuth->isAuthenticated() ){
 //			$this->messenger->noteFailure( $msg->errorNotAuthenticated );
 			$this->restart( 'auth/login' );
 		}
 		$this->userId = $this->logicAuth->getCurrentUserId();
-		if( !$this->modelUser->get( $this->userId ) ){
+		if( !$this->modelUser->has( $this->userId ) ){
 			$this->messenger->noteError( $msg->errorInvalidUser );
-			$this->restart( NULL );
+			$this->restart();
 		}
 	}
 
-	protected function checkConfirmationPassword( $from = NULL )
+	/**
+	 *	@param		$from
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkConfirmationPassword( $from = NULL ): void
 	{
 		$msg		= (object) $this->getWords( 'msg' );
 		$password	= trim( $this->request->get( 'password' ) );
@@ -305,6 +334,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@param   	string		$password	Password to check on login
 	 *	@todo   	clean up if support for old passwort decays
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPassword( object $user, string $password ): bool
 	{

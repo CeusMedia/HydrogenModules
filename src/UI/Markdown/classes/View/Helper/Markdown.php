@@ -7,7 +7,7 @@ use CeusMedia\Markdown\Renderer\Html as MarkdownToHtmlRenderer;
 
 class View_Helper_Markdown extends View
 {
-	protected $renderer;
+	protected ?int $renderer	= NULL;
 
 	public function __construct( Environment $env )
 	{

@@ -5,15 +5,15 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Navigation_Bootstrap_Dropdown
 {
-	protected $env;
-	protected $menu;
-	protected $inverse			= FALSE;
-	protected $linksToSkip		= [];
-	protected $logoTitle;
-	protected $logoLink;
-	protected $logoIcon;
-	protected $scope			= 'main';
-	protected $style;
+	protected Environment $env;
+	protected ?Model_Menu $menu		= NULL;
+	protected bool $inverse			= FALSE;
+	protected array $linksToSkip	= [];
+	protected string $scope			= 'main';
+	protected ?string $logoTitle	= NULL;
+	protected ?string $logoLink		= NULL;
+	protected ?string $logoIcon		= NULL;
+	protected ?string $style		= NULL;
 
 	public function __construct( Environment $env, Model_Menu $menu = NULL )
 	{
@@ -35,7 +35,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		if( NULL === $this->menu )
 			throw new RuntimeException( 'No menu model set' );
 		$listClass	= 'nav';
-		if( strtolower( $this->style ) == "pills" )
+		if( 'pills' === strtolower( $this->style ?? '' ) )
 			$listClass	.= ' nav-pills';
 
 		$list	= [];
@@ -72,34 +72,36 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 				if( in_array( $page->path, $this->linksToSkip ) )
 					continue;
 				$class	= $page->active ? 'active' : NULL;
-				$href	= $page->path == "index" ? './' : './'.$page->link;
+				$href	= $page->path == 'index' ? './' : './'.$page->link;
 //				$link	= HtmlTag::create( 'a', $page->label, ['href' => $href] );
 				$link	= HtmlTag::create( 'a', self::renderLabelWithIcon( $page ), ['href' => $href] );
 				$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 			}
 		}
 		$logo	= $this->renderLogo();
-		return $logo.HtmlTag::create( 'ul', $list, ["class" => $listClass] );
+		return $logo.HtmlTag::create( 'ul', $list, ['class' => $listClass] );
 	}
 
 	public function renderLogo(): string
 	{
-		if( !( strlen( trim( $this->logoTitle ) ) || strlen( trim( $this->logoIcon ) ) ) )
+		$logoTitle	= trim( $this->logoTitle ?? '' );
+		$logoIcon	= trim( $this->logoIcon ?? '' );
+		if( '' === $logoTitle && '' === $logoIcon )
 			return '';
-		$icon	= "";
-		if( $this->logoIcon ){
-			$icon	= $this->inverse ? $this->logoIcon.' icon-white' : $this->logoIcon;
+		$icon	= '';
+		if( '' !== $logoIcon ){
+			$icon	= $this->inverse ? $logoIcon.' icon-white' : $logoIcon;
 			$icon	= HtmlTag::create( 'i', '', ['class' => $icon] );
 		}
 		$label	= $icon.'&nbsp;'.$this->logoTitle;
 		if( !$this->logoLink )
 			return HtmlTag::create( 'div', $label, [
-//				'id'	=> "logo",
+//				'id'	=> 'logo',
 				'class'	=> 'brand'
 			] );
 		return HtmlTag::create( 'a', $label, [
 			'href'	=> $this->logoLink,
-//			'id'	=> "logo",
+//			'id'	=> 'logo',
 			'class'	=> 'brand'
 		] );
 	}
@@ -147,7 +149,7 @@ class View_Helper_Navigation_Bootstrap_Dropdown
 		if( empty( $entry->icon ) )
 			return $entry->label;
 		$class	= $entry->icon;
-		if( !preg_match( "/^fa/", $entry->icon ) )
+		if( !str_starts_with( $entry->icon, 'fa' ))
 			$class	= 'icon-'.$class.( $this->inverse ? ' icon-white' : '' );
 		$icon   = HtmlTag::create( 'i', '', ['class' => $class] );
 		if( strlen( $entry->label ) )

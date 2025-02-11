@@ -1,18 +1,18 @@
 <?php
 /**
  *	Data Model of Shop Bridges.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop.Bridge
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 
 use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Shop Bridges.
- *	@category		cmProjects
- *	@package		LUV.Model
- *	@author			Christian Würker <Christian.Wuerker@CeuS-Media.de>
+ *	@category		Model
+ *	@package		Hydrogen.Module.Shop.Bridge
+ *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 class Model_Shop_Bridge extends Model
 {

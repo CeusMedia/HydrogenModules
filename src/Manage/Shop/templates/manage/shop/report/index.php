@@ -7,7 +7,7 @@ foreach( $ordersPerYear as $nr => $entry )
 
 $dataYearsPieTurnover	= [];
 foreach( $ordersPerYear as $nr => $entry )
-	$dataYearsPieTurnover[]	= array( (string)$entry->year, array( 'v' => (int)$entry->turnover, 'f' => (int)$entry->turnover." €" ) );
+	$dataYearsPieTurnover[]	= array( (string)$entry->year, ['v' => (int)$entry->turnover, 'f' => (int) $entry->turnover." €"] );
 
 
 $sumOrders		= 0;

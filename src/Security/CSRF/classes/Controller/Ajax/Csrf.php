@@ -4,9 +4,13 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Csrf extends AjaxController
 {
-	protected $logic;
+	protected Logic_CSRF $logic;
 
-	public function getToken()
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 */
+	public function getToken(): void
 	{
 		$formName	= $this->request->get( 'formName' );
 		try{
@@ -15,13 +19,17 @@ class Controller_Ajax_Csrf extends AjaxController
 			$token	= $this->logic->getToken( $formName );
 			$this->respondData( ['token' => $token] );
 		}
-		catch( Exception $e ){
-			$this->respondException( $e );
+		catch( Throwable $t ){
+			$this->respondException( $t );
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
-		$this->logic	= $this->env->getLogic()->get( 'CSRF' );
+		$this->logic	= Logic_CSRF::getInstance( $this->env );
 	}
 }

@@ -36,40 +36,33 @@ class View_Helper_Gravatar
 	{
 		if( !$this->user )
 			throw new RuntimeException( "No user set" );
-		$attributes['src']		= $this->getImageUrl( $this->user->email, $this->size, $this->rating );
+		$attributes['src']		= $this->getImageUrl();
 		$attributes['width']	= $this->size;
 		$attributes['height']	= $this->size;
 		return HtmlTag::create( 'img', NULL, $attributes );
 	}
 
-	public function setDefault( string $theme ): self
+	public function setDefault( string $theme ): static
 	{
 		$this->default	= $theme;
 		return $this;
 	}
 
-	public function setRating( string $rating ): self
+	public function setRating( string $rating ): static
 	{
 		$this->rating	= $rating;
 		return $this;
 	}
 
-	public function setSize( int $size ): self
+	public function setSize( int $size ): static
 	{
 		$this->size		= $size;
 		return $this;
 	}
 
-	public function setUser( $userObjectOrId ): self
+	public function setUser( Entity_User $user ): static
 	{
-		if( is_object( $userObjectOrId ) )
-			$this->user	= $userObjectOrId;
-		else if( is_int( $userObjectOrId ) ){
-			$model	= new Model_User( $this->env );
-			$this->user	= $model->get( $userObjectOrId );
-		}
-		else
-			throw new InvalidArgumentException( "Given data is neither an user object nor an user ID" );
-			return $this;
+		$this->user	= $user;
+		return $this;
 	}
 }

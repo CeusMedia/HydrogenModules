@@ -3,14 +3,14 @@
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Logic_Sitemap{
-
-	static protected $instance;
+class Logic_Sitemap
+{
+	protected static self $instance;
 
 	protected $config;
-	protected $env;
-	protected $links		= [];
-	protected $frequencies  = [
+	protected Environment $env;
+	protected array $links		= [];
+	protected array $frequencies  = [
 		'always',
 		'hourly',
 		'daily',
@@ -20,24 +20,28 @@ class Logic_Sitemap{
 		'never'
 	];
 
-	protected $defaultFrequency	= 'yearly';
-	protected $defaultPriority	= 0.1;
+	protected string $defaultFrequency	= 'yearly';
+	protected float $defaultPriority	= 0.1;
 
-    public $providers	= [
-//		'ask'		=> "http://submissions.ask.com/ping?sitemap=%s",
-		'bing'		=> "http://www.bing.com/ping?sitemap=%s",
-		'google'	=> "http://www.google.com/webmasters/tools/ping?sitemap=%s",
-		'moreover'	=> "http://api.moreover.com/ping?u=%s",
+	public array $providers	= [
+//		'ask'		=> "https://submissions.ask.com/ping?sitemap=%s",
+		'bing'		=> "https://www.bing.com/ping?sitemap=%s",
+		'google'	=> "https://www.google.com/webmasters/tools/ping?sitemap=%s",
+		'moreover'	=> "https://api.moreover.com/ping?u=%s",
     ];
 
-	protected function __construct( Environment $env ){
+	protected function __construct( Environment $env )
+	{
 		$this->env		= $env;
 		$this->config	= $this->env->getConfig()->getAll( 'module.resource_sitemap.', TRUE );
 	}
 
-	protected function __clone(){}
+	protected function __clone()
+	{
+	}
 
-	public function addLink( $location, $timestamp, $priority = NULL, $frequency = NULL ){
+	public function addLink( $location, $timestamp, $priority = NULL, $frequency = NULL ): void
+	{
 		$priority	= is_null( $priority ) ? $this->defaultPriority : (float) $priority;
 		$frequency	= is_null( $frequency ) ? $this->defaultFrequency : trim( strtolower( $frequency ) );
 		if( $priority < 0 )
@@ -57,17 +61,20 @@ class Logic_Sitemap{
 		);
 	}
 
-	static public function getInstance( Environment $env ){
+	static public function getInstance( Environment $env ): self
+	{
 		if( !self::$instance )
 			self::$instance	= new Logic_Sitemap( $env );
 		return self::$instance;
 	}
 
-	public function getLinks(){
+	public function getLinks(): array
+	{
 		return $this->links;
 	}
 
-	public function submitToProviders(){
+	public function submitToProviders(): array
+	{
 		$result	= [];
 		foreach( $this->providers as $key => $value ){
 			$url	= sprintf( $value, urlencode( $this->env->url.'sitemap' ) );

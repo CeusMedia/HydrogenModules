@@ -3,55 +3,21 @@
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Database_Lock extends Controller
 {
-	protected $model;
+	protected Model_Lock $model;
 
 	/**
-	 *	@deprecated		use hook class instead
-	 *	@todo			remove after all installations are updated
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	static public function ___onAuthLogout( Environment $env, $context, $module, $data = [] )
-	{
-		$model		= new Model_Lock( $env );
-		$model->removeByIndices( [
-			'userId'	=> $data['userId'],
-		] );
-	}
-
-	/**
-	 *	@deprecated		use hook class instead
-	 *	@todo			remove after all installations are updated
-	 */
-	static public function ___onRegisterDashboardPanels( Environment $env, $context, $module, $data )
-	{
-		if( !$env->getAcl()->has( 'work/time', 'ajaxRenderDashboardPanel' ) )
-			return;
-		$context->registerPanel( 'resource-database-locks', [
-			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
-			'title'			=> 'Datenbank-Sperren',
-			'heading'		=> 'Datenbank-Sperren',
-			'icon'			=> 'fa fa-fw fa-lock',
-			'rank'			=> 90,
-			'refresh'		=> 10,
-		] );
-	}
-
-	public function ajaxRenderDashboardPanel( $panelId )
-	{
-		$modelUser	= new Model_User( $this->env );
-		$locks		= $this->model->getAll();
-		foreach( $locks as $lock )
-			$lock->user	= $modelUser->get( $lock->userId );
-		$this->addData( 'locks', $locks );
-	}
-
-	public function index()
+	public function index(): void
 	{
 		$modules	= $this->env->getModules();
 		$model		= new Model_User( $this->env );
+		/** @var Entity_Database_Lock[] $locks */
 		$locks		= $this->model->getAll();
 		foreach( $locks as $lock ){
 			$lock->module	= NULL;
@@ -63,22 +29,38 @@ class Controller_Database_Lock extends Controller
 		$this->addData( 'locks', $locks );
 	}
 
-	public function unlock( $lockId )
+	/**
+	 *	@param		int|string		$lockId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unlock( int|string $lockId ): void
 	{
+		/** @var ?Entity_Database_Lock $lock */
 		$lock	= $this->model->get( $lockId );
-		if( !$lock )
+		if( NULL === $lock )
 			$this->env->getMessenger()->noteError( 'Diese Sperre existiert nicht mehr.' );
 		else
 			$this->model->remove( $lockId );
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );
 	}
 
-	protected function getEntryTitle( $lock )
+	/**
+	 *	@param		Entity_Database_Lock	$lock
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function getEntryTitle( Entity_Database_Lock $lock ): string
 	{
 		$title	= '<em><small class="muted">unbekannt</small></em>';
 		$uri	= NULL;

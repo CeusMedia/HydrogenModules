@@ -70,10 +70,10 @@ class Job_Work_Mail_Sync extends Job_Abstract
 		$syncRunId	= $this->logic->addSyncRun( $sync->mailSyncId );
 
 
-		$this->logic->editSync( $sync->mailSyncId, array(
+		$this->logic->editSync( $sync->mailSyncId, [
 			'status'		=> Model_Mail_Sync::STATUS_SYNCHING,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$lastline	= exec( $command, $results, $code );
 $this->out( 'Code: '.$code );
 
@@ -88,11 +88,11 @@ $this->out( 'Code: '.$code );
 
 		if( $status > 0 ){
 			$statistics	= $this->readStatistics( $lines );
-			$this->logic->editSyncRun( $syncRunId, array(
+			$this->logic->editSyncRun( $syncRunId, [
 				'status'		=> Model_Mail_Sync_Run::STATUS_SUCCESS,
 				'output'		=> json_encode( $results ),
 				'statistics'	=> json_encode( $statistics ),
-			) );
+			] );
 			$this->logic->editSync( $sync->mailSyncId, [
 				'status'		=> Model_Mail_Sync::STATUS_SYNCHED,
 			] );
@@ -101,12 +101,12 @@ $this->out( 'Code: '.$code );
 				$this->out( $key.':'.$value );
 		}
 		else{
-			$this->logic->editSyncRun( $syncRunId, array(
+			$this->logic->editSyncRun( $syncRunId, [
 				'status'		=> Model_Mail_Sync_Run::STATUS_FAIL,
 				'message'		=> $lastline,
 				'output'		=> json_encode( $results ),
 				'statistics'	=> json_encode( [] ),
-			) );
+			] );
 			$this->logic->editSync( $sync->mailSyncId, [
 				'status'		=> Model_Mail_Sync::STATUS_ERROR,
 			] );

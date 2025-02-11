@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Net\HTTP\Method as HttpMethod;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -10,8 +10,14 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Web $env */
 /** @var View $view */
+
 /** @var array<array<string,string>> $words */
 /** @var object $instances */
+/** @var array<object> $exceptions */
+/** @var int $page */
+/** @var int $total */
+/** @var int $limit */
+/** @var ?string $currentInstance */
 
 $w	= (object) $words['index.list'];
 
@@ -21,7 +27,7 @@ $iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
 $iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
 
-$from		= 'admin/log/exception'.($page ? '/'.$page : '' );
+$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
 
 $selectInstance	= '';
 if( count( $instances ) > 1 ){
@@ -29,11 +35,11 @@ if( count( $instances ) > 1 ){
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
 	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
-	$selectInstance	= HtmlTag::create( 'select', $optInstance, array(
+	$selectInstance	= HtmlTag::create( 'select', $optInstance, [
 		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
 		'class'		=> '',
 		'style'		=> 'width: 100%',
-	) );
+	] );
 
 }
 
@@ -45,13 +51,15 @@ if( $exceptions ){
 //print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
 		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary( unserialize( $exception->session ) ?: [] );
+		$exceptionSession	= new Dictionary();
+		if( NULL !== $exception->session )
+			$exceptionSession	= new Dictionary( unserialize( $exception->session ) );
 
 		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
 		$date	= date( 'Y.m.d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
 
-		$buttons	= HtmlTag::create( 'div', array(
+		$buttons	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn not-btn-mini btn-small not-btn-info',
 				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
@@ -60,7 +68,7 @@ if( $exceptions ){
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
 			] ),
-		), ['class' => 'btn-group'] );
+		], ['class' => 'btn-group'] );
 
 		$checkbox		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
@@ -70,7 +78,7 @@ if( $exceptions ){
 
 		$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path' ), ENT_QUOTES, 'utf-8' ).'</small>';
 		$method			= 'CLI';
-		if( preg_match( '/Web/', $exceptionEnv['class'] ) && $exceptionRequest instanceof HttpRequest ){
+		if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
 			try{
 				$method	= $exceptionRequest->getMethod();
 			}
@@ -89,7 +97,7 @@ if( $exceptions ){
 			] );
 		}
 
-		$list[]			= HtmlTag::create( 'tr', array(
+		$list[]			= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $checkbox ),
 			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
@@ -98,7 +106,7 @@ if( $exceptions ){
 			HtmlTag::create( 'td', $icons ),
 			HtmlTag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
 			HtmlTag::create( 'td', $buttons ),
-		) );
+		] );
 	}
 
 
@@ -137,7 +145,7 @@ if( $exceptions ){
 	}
 }
 
-$pagination	= new \CeusMedia\Bootstrap\Nav\PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
+$pagination	= new PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
 $pagination	= $pagination->render();
 
 return '

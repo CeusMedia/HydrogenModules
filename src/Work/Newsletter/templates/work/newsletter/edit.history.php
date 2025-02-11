@@ -47,12 +47,12 @@ if( $letterHistory ){
 				$buttonRemove	= "";
 				break;
 		}
-		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', array(
+		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', [
 			HtmlTag::create( 'a', $readerLetter->reader->firstname.' '.$readerLetter->reader->surname, ['href' => $urlReader] ),
 			$readerLetter->reader->email,
 			$words->letterStates[$readerLetter->status],
 			$buttonView.' '.$buttonSend.' '.$buttonRemove
-		) ).'</td></tr>';
+		] ).'</td></tr>';
 	}
 	$columns	= HtmlElements::ColumnGroup( "25%", "30%", "20%", "25%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';

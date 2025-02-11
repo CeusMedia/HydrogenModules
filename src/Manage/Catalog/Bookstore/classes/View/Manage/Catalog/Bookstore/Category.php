@@ -3,19 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Bookstore
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	protected function renderTree( $categories, $categoryId = NULL )
+	protected function renderTree( $categories, $categoryId = NULL ): string
 	{
 /*		$cache	= $this->env->getCache();
 		if( NULL !== ( $data = $cache->get( 'admin.categories.list.html' ) ) ){
@@ -24,7 +24,7 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 		}*/
 
 		$this->env->getRuntime()->reach( 'View_Catalog_Bookstore_Category::renderTree start' );
-		$logic		= new Logic_Catalog_Bookstore( $this->env );
+		$logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$listMain	= [];
 		foreach( $categories as $nr => $category ){
 			if( (int) $category->parentId !== 0 )

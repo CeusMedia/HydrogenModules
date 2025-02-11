@@ -5,21 +5,24 @@ $w			= (object) $words['edit'];
 
 #$articles	= array_slice( $articles, 0, 50 );
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $tabs		= [];
 $panes		= array(
-	'details'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.details.php', ['w' => $w] ),
-	'authors'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.authors.php', ['w' => $w] ),
-	'categories'	=> $this->loadTemplateFile( 'manage/catalog/article/edit.categories.php', ['w' => $w] ),
-	'cover'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.cover.php', ['w' => $w] ),
-	'documents'		=> $this->loadTemplateFile( 'manage/catalog/article/edit.documents.php', ['w' => $w] ),
-	'tags'			=> $this->loadTemplateFile( 'manage/catalog/article/edit.tags.php', ['w' => $w] ),
+	'details'		=> $view->loadTemplateFile( 'manage/catalog/article/edit.details.php', ['w' => $w] ),
+	'authors'		=> $view->loadTemplateFile( 'manage/catalog/article/edit.authors.php', ['w' => $w] ),
+	'categories'	=> $view->loadTemplateFile( 'manage/catalog/article/edit.categories.php', ['w' => $w] ),
+	'cover'			=> $view->loadTemplateFile( 'manage/catalog/article/edit.cover.php', ['w' => $w] ),
+	'documents'		=> $view->loadTemplateFile( 'manage/catalog/article/edit.documents.php', ['w' => $w] ),
+	'tags'			=> $view->loadTemplateFile( 'manage/catalog/article/edit.tags.php', ['w' => $w] ),
 );
 
 $current	= $this->env->getSession()->get( 'manage.catalog.article.tab' );
-if( !$current )
-	$current	= @array_shift( array_keys( $words['tabs'] ) );
+if( !$current ){
+	$tabKeys	= array_keys( $words['tabs'] );
+	$current	= @array_shift( $tabKeys );
+}
+
 foreach( $words['tabs'] as $key => $label ){
 	$attributes	= array(
 		'href'			=> '#tab-'.$key,

@@ -5,20 +5,28 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Database_Lock extends Hook
 {
-	static public function onAuthLogout( Environment $env, $context, $module, $payload = [] )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onAuthLogout(): void
 	{
-		$model		= new Model_Lock( $env );
+		$model		= new Model_Lock( $this->env );
 		$model->removeByIndices( [
-			'userId'	=> $payload['userId'],
+			'userId'	=> $this->payload['userId'],
 		] );
 	}
 
-	static public function onRegisterDashboardPanels( Environment $env, $context, $module, $payload )
+	/**
+	 *	@return		void
+	 */
+	public function onRegisterDashboardPanels(): void
 	{
-		if( !$env->getAcl()->has( 'database/lock', 'ajaxRenderDashboardPanel' ) )
+		if( !$this->env->getAcl()->has( 'ajax/database/lock', 'renderDashboardPanel' ) )
 			return;
-		$context->registerPanel( 'resource-database-locks', [
-			'url'			=> 'database/lock/ajaxRenderDashboardPanel',
+		$this->context->registerPanel( 'resource-database-locks', [
+			'url'			=> 'ajax/database/lock/renderDashboardPanel',
 			'title'			=> 'Datenbank-Sperren',
 			'heading'		=> 'Datenbank-Sperren',
 			'icon'			=> 'fa fa-fw fa-lock',
@@ -27,19 +35,22 @@ class Hook_Database_Lock extends Hook
 		] );
 	}
 
-	static public function onAutoModuleLockRelease( Environment $env, $context, $module, $payload = [] )
+	/**
+	 *	@return		bool|int
+	 */
+	public function onAutoModuleLockRelease(): bool|int
 	{
-		$request	= $env->getRequest();
+		$request	= $this->env->getRequest();
 		if( $request->isAjax() )
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
-		$payload	= array(
-			'userId'		=> $env->getSession()->get( 'auth_user_id' ),
+		$payload	= [
+			'userId'		=> $this->env->getSession()->get( 'auth_user_id' ),
 			'request'		=> $request,
 			'controller'	=> $request->get( '__controller' ),
 			'action'		=> $request->get( '__action' ),
 			'uri'			=> getEnv( 'REQUEST_URI' ),
-		);
-		return $env->getModules()->callHookWithPayload( 'Database_Lock', 'checkRelease', $context, $payload );
+		];
+		return $this->env->getModules()->callHookWithPayload( 'Database_Lock', 'checkRelease', $this->context, $payload );
 	}
 }

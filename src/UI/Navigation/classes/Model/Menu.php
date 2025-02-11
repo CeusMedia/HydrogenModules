@@ -1,24 +1,26 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Acl\Abstraction as AclAbstraction;
 
 class Model_Menu
 {
-	protected $acl;
-	protected $current				= NULL;
-	protected $env;
-	protected $language;			//  @todo rename to current language or user language
-	protected $localization			= NULL;
-	protected $moduleConfig;
-	protected $pageMap				= [];
-	protected $pages				= [];
-	protected $scopes				= [];
-	protected $source;				//  @todo needed?
-	protected $userId;
-	protected $useAcl;				//  @todo needed?
+	protected AclAbstraction $acl;
+	protected ?object $current						= NULL;
+	protected Environment $env;
+	protected string $language;						//  @todo rename to current language or user language
+	protected ?Logic_Localization $localization		= NULL;
+	protected Dictionary $moduleConfig;
+	protected array $pageMap						= [];
+	protected array $pages							= [];
+	protected array $scopes							= [];
+	protected string $source;						//  @todo needed?
+	protected ?string $userId						= NULL;
+	protected bool $useAcl;							//  @todo needed?
 
-	public static $pathRequestKey	= "__path";			//  @todo get from env or router?
+	public static string $pathRequestKey			= "__path";			//  @todo get from env or router?
 
 	public function __construct( Environment $env )
 	{
@@ -28,7 +30,7 @@ class Model_Menu
 		$this->language		= $this->env->getLanguage()->getLanguage();
 		$this->useAcl		= $this->env->getModules()->has( 'Resource_Users' );
 		$this->acl			= $this->env->getAcl();
-		$this->source		= $this->moduleConfig->get( 'menu.source' );
+		$this->source		= $this->moduleConfig->get( 'menu.source', '' );
 
 		if( $this->env->getModules()->has( 'Resource_Localization' ) )
 			$this->localization	= new Logic_Localization( $this->env );
@@ -44,7 +46,7 @@ class Model_Menu
 		$this->readUserPages();
 	}
 
-	public function getCurrent()
+	public function getCurrent(): ?object
 	{
 		return $this->current;
 	}
@@ -65,11 +67,16 @@ class Model_Menu
 		return [];
 	}
 
+	public function getScopes(): array
+	{
+		return $this->scopes;
+	}
+
 	/**
-	 *	Sets currenty active path.
+	 *	Sets currently active path.
 	 *	@access		public
-	 *	@param		string		Path to set as currently active
-	 *	@return		self		This instance for chainability
+	 *	@param		string		$path		Path to set as currently active
+	 *	@return		self		This instance for method chaining
 	 */
 	public function setCurrent( string $path ): self
 	{
@@ -83,14 +90,14 @@ class Model_Menu
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		$current		Currently requested path, autodetected if not set
+	 *	@param		?string		$path		Currently requested path, auto-detected if not set
 	 *	@return		string
 	 */
-	protected function identifyActive( $path = NULL )
+	protected function identifyActive( ?string $path = NULL ): string
 	{
 		if( isset( $_REQUEST[self::$pathRequestKey] ) && $path === NULL )
-			$path	= utf8_decode( $_REQUEST[self::$pathRequestKey] );
-		$path		= $path ? $path : 'index';
+			$path	= @utf8_decode( $_REQUEST[self::$pathRequestKey] );
+		$path		= $path ?: 'index';
 		$matches	= [];																		//  empty array to regular matching
 		$selected	= [];																		//  list of possibly selected links
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
@@ -130,7 +137,7 @@ class Model_Menu
 		return '';
 	}
 
-	protected function readUserPages()
+	protected function readUserPages(): void
 	{
 		switch( $this->source ){
 			case 'Modules':
@@ -148,7 +155,7 @@ class Model_Menu
 		$this->identifyActive();
 	}
 
-	protected function readUserPagesFromConfigFile()
+	protected function readUserPagesFromConfigFile(): void
 	{
 		$pagesFile		= $this->env->getPath( 'config' ).'pages.json';
 		if( !file_exists( $pagesFile ) ){
@@ -171,19 +178,19 @@ class Model_Menu
 					continue;
 				if( isset( $page->{"label@".$this->language} ) )
 					$page->label	= $page->{"label@".$this->language};
-				$item	= (object) array(
+				$item	= (object) [
 					'parent'	=> NULL,
 					'type'		=> 'item',
 					'scope'		=> $scope,
 					'path'		=> $page->path,
-					'link'		=> isset( $page->link ) ? $page->link : $page->path,
+					'link'		=> $page->link ?? $page->path,
 					'label'		=> $page->label,
 					'language'	=> $this->language,
 					'rank'		=> $pageId,
 //					'active'	=> $this->current == $page->path,
 					'active'	=> FALSE,
-					'icon'		=> isset( $page->icon ) ? $page->icon : NULL,
-				);
+					'icon'		=> $page->icon ?? NULL,
+				];
 				$subpages	= [];
 				if( isset( $page->pages ) ){
 					$item->type		= 'menu';
@@ -208,20 +215,20 @@ class Model_Menu
 							continue;
 						if( isset( $subpage->{"label@".$this->language} ) )
 							$subpage->label	= $subpage->{"label@".$this->language};
-						$subitem	= (object) array(
+						$subitem	= (object) [
 							'parent'	=> $item->path,
 							'type'		=> 'item',
 							'scope'		=> $scope,
 							'path'		=> $subpage->path,
-							'link'		=> isset( $subpage->link ) ? $subpage->link : $subpage->path,
+							'link'		=> $subpage->link ?? $subpage->path,
 							'label'		=> $subpage->label,
 							'language'	=> $this->language,
 							'rank'		=> $subpageId,
 //							'active'	=> $this->current == $page->path.'/'.$subpage->path,
 							'active'	=> FALSE,
-							'icon'		=> isset( $subpage->icon ) ? $subpage->icon : NULL,
+							'icon'		=> $subpage->icon ?? NULL,
 							'chapter'	=> $subpage->chapter ?? '',
-						);
+						];
 						$subpages[]	= $subitem;
 					}
 				}
@@ -248,7 +255,7 @@ class Model_Menu
 	 *	@access		protected
 	 *	@todo		repair flag "active"
 	 */
-	protected function readUserPagesFromDatabase()
+	protected function readUserPagesFromDatabase(): void
 	{
 		$model		= new Model_Page( $this->env );
 		$scopes		= [
@@ -349,7 +356,7 @@ class Model_Menu
 	 *	@access		protected
 	 *	@todo		repair flag "active"
 	 */
-	protected function readUserPagesFromModules()
+	protected function readUserPagesFromModules(): void
 	{
 		$scopes			= ['main'];
 		$this->scopes	= array_keys( $scopes );
@@ -361,7 +368,7 @@ class Model_Menu
 				foreach( $module->links as $link ){
 					if( $link->language && $link->language != $this->language )
 						continue;
-					$link->scope	= isset( $link->scope ) ? $link->scope : 'main';
+					$link->scope	= $link->scope ?? 'main';
 					if( $link->scope !== $scope )
 						continue;
 					if( $link->access == 'none' )
@@ -386,7 +393,7 @@ class Model_Menu
 					$rank	= strlen( $link->rank ) ? $link->rank : 50;
 					$rank	= str_pad( $rank, 3, "0", STR_PAD_LEFT );
 					$rank	.= "_".str_pad( count( $this->pages[$scope] ), 2, "0", STR_PAD_LEFT );
-					$item	= (object) array(
+					$item	= (object) [
 						'parent'	=> NULL,
 						'type'		=> 'item',
 						'scope'		=> $scope,
@@ -397,7 +404,7 @@ class Model_Menu
 						'rank'		=> $link->rank,
 //						'active'	=> $this->current == $link->path,
 						'active'	=> FALSE,
-					);
+					];
 					$this->pages[$scope][$rank]	= $item;
 					$this->pageMap[$link->path]	= $item;
 				}

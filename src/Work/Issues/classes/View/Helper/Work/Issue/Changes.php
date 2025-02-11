@@ -15,13 +15,17 @@ class View_Helper_Work_Issue_Changes
 		$this->modelNote	= new Model_Issue_Note( $this->env );
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		if( !$this->issue )
 			throw new RuntimeException( 'No issue set.' );
 		$list			= [];
 		$notes			= $this->modelNote->getAllByIndex( 'issueId', $this->issue->issueId );
-		$helper			= new View_Helper_Work_Issue_ChangeNote( $this->env );
 		$helperFacts	= new View_Helper_Work_Issue_ChangeFacts( $this->env );
 		$helperNote		= new View_Helper_Work_Issue_ChangeNote( $this->env );
 		foreach( $notes as $note ){
@@ -29,7 +33,7 @@ class View_Helper_Work_Issue_Changes
 			$helperNote->setNote( $note );
 			$list[]		= HtmlTag::create( 'tr',
 				HtmlTag::create( 'td',
-					HtmlTag::create( 'div', array(
+					HtmlTag::create( 'div', [
 						HtmlTag::create( 'div', $helperFacts->render(), [
 							'class'	=> 'span5',
 							'id'	=> 'issue-change-list-facts'
@@ -39,15 +43,18 @@ class View_Helper_Work_Issue_Changes
 							'id'	=> 'issue-change-list-note'
 						] ),
 						'<br/>'
-					), ['class' => 'issue-note row-fluid'] )
+					], ['class' => 'issue-note row-fluid'] )
 				)
 			);
 		}
 		$tbody		= HtmlTag::create( 'tbody', $list );
-		$table		= HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped table-fixed'] );
-		return $table;
+		return HtmlTag::create( 'table', $tbody, ['class' => 'table table-striped table-fixed'] );
 	}
 
+	/**
+	 *	@param		object		$issue
+	 *	@return		self
+	 */
 	public function setIssue( object $issue ): self
 	{
 		$this->issue	= $issue;

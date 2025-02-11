@@ -1,5 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var bool $useRemember */
+/** @var bool $useRegister */
+/** @var bool $useCsrf */
+/** @var ?string $from */
+/** @var ?string $login_username */
 
 $w				= (object) $words['login'];
 
@@ -17,8 +26,8 @@ $fieldRemember	= "";
 /*
 if( $useRemember )
 	$fieldRemember	= HTML::DivClass( "row-fluid",
-		HTML::DivClass( "span12", array(
-			HtmlTag::create( 'label', array(
+		HTML::DivClass( "span12", [
+			HtmlTag::create( 'label', [
 				HtmlTag::create( 'input', NULL, [
 					'type'		=> "checkbox",
 					'name'		=> "login_remember",
@@ -29,8 +38,8 @@ if( $useRemember )
 				HtmlTag::create( 'abbr', $w->labelRemember, [
 					'title'		=> $w->labelRemember_title
 				] ),
-			), ['class' => "checkbox"] )
-		)
+			], ['class' => "checkbox"] )
+		]
 	), [
 		'style'	=> $useRemember ? 'display: none' : NULL
 	] );
@@ -46,38 +55,38 @@ $buttonPassword	= "";
 
 $buttonRegister	= "";
 if( $useRegister ){
-	$buttonRegister	= HtmlTag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, array(
+	$buttonRegister	= HtmlTag::create( 'a', $iconRegister.'&nbsp;'.$w->buttonRegister, [
 		'href'		=> './auth/rest/register'.( $from ? '?from='.$from : '' ),
 		'class'		=> 'btn btn-block btn-success',
-	) );
+	] );
 }
 
 $panelLogin	=
-HTML::DivClass( "content-panel content-panel-form", array(
+HTML::DivClass( "content-panel content-panel-form", [
 	HTML::H3( $w->heading ),
 	HTML::DivClass( "content-panel-inner",
 		HTML::DivClass( "auth-login-form",
-			HtmlTag::create( 'form', array(
+			HtmlTag::create( 'form', [
 				( $useCsrf ? View_Helper_CSRF::renderStatic( $env, 'auth/login' ) : '' ),
 				HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => 'from', 'value' => htmlentities( $from, ENT_QUOTES, 'UTF-8' )] ),
 				HTML::DivClass( "row-fluid",
-					HTML::DivClass( "span12", array(
+					HTML::DivClass( "span12", [
 						HtmlTag::create( 'label', $w->labelUsername, [
 							'for'	=> "input_login_username",
 							'class'	=> "mandatory"
 						] ),
-						HtmlTag::create( 'input', NULL, array(
+						HtmlTag::create( 'input', NULL, [
 							'value'		=> htmlentities( $login_username, ENT_QUOTES, 'UTF-8' ),
 							'class'		=> 'span12 mandatory',
 							'type'		=> 'text',
 							'name'		=> 'login_username',
 							'id'		=> 'input_login_username',
 							'required'	=> 'required'
-						) )
-					) )
+						] )
+					] )
 				),
 				HTML::DivClass( "row-fluid",
-					HTML::DivClass( "span12", array(
+					HTML::DivClass( "span12", [
 						HtmlTag::create( 'label', $w->labelPassword, [
 							'for'	=> "input_login_password",
 							'class'	=> "mandatory"
@@ -90,23 +99,23 @@ HTML::DivClass( "content-panel content-panel-form", array(
 							'id'		=> 'input_login_password',
 							'required'	=> 'required'
 						] )
-					) )
+					] )
 				),
 				$fieldRemember,
-				HTML::DivClass( "buttonbar", array(
+				HTML::DivClass( "buttonbar", [
 					HTML::DivClass( "btn_toolbar", [
 						$buttonLogin,
 						$buttonRegister,
 						$buttonPassword,
 					] )
-				) )
-			), [
+				] )
+			], [
 				'action'	=> './auth/rest/login',
 				'name'		=> "editUser",
 				'method'	=> "post"
 			] )
 		)
 	)
-) );
+] );
 
 return $panelLogin;

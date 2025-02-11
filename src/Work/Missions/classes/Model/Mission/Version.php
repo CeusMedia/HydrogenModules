@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Mission_Version extends Model
 {
 	/**	@var	string		$name		Table name without prefix of database connection */
-	protected string $name				= "mission_versions";
+	protected string $name				= 'mission_versions';
 
 	/**	@var	array		$columns	List of columns within table */
 	protected array $columns			= [
@@ -25,7 +25,7 @@ class Model_Mission_Version extends Model
 	];
 
 	/**	@var	string		$primaryKey	Name of column with primary key */
-	protected string $primaryKey		= "missionVersionId";
+	protected string $primaryKey		= 'missionVersionId';
 
 	/**	@var	array		$indices	List of columns which are a foreign key and/or indexed */
 	protected array $indices			= [
@@ -35,5 +35,8 @@ class Model_Mission_Version extends Model
 	];
 
 	/**	@var	integer		$fetchMode	Fetch mode, see PDO documentation */
-	protected int $fetchMode			= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Mission_Version';
 }

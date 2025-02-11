@@ -1,10 +1,10 @@
-var ModuleManageUsers = {
+let ModuleManageUsers = {
 	countries: [],
 	roleId: 0,
 	init: function(){
-		var body = jQuery("body");
+		let body = jQuery("body");
 		if(this.roleId && body.hasClass("site-manage-role-edit")){
-			var container = $("#role-edit-rights").parent();
+			let container = $("#role-edit-rights").parent();
 			container.find("td.column-actions li.changable").on("mousedown", ModuleManageUsers.onChangeRightToggle );
 			container.find("#input-toggle-rights-all").on("change", ModuleManageUsers.onChangeVisibleRightsToggle);
 			container.find("#button-toggle").on("click", function(e){jQuery(this).children("label").trigger("click");});
@@ -20,13 +20,13 @@ var ModuleManageUsers = {
 		}
 	},
 	onChangeVisibleRightsToggle: function(event){
-		var toggle = $(this);
-		var showAll = toggle.is(":checked");
-		var items = $("li.acl-module").not(".changable");
+		let toggle = $(this);
+		let showAll = toggle.is(":checked");
+		let items = $("li.acl-module").not(".changable");
 		showAll ? items.slideDown(250) : items.slideUp(250);
-		var rows = $("#role-edit-rights tbody tr");
+		let rows = $("#role-edit-rights tbody tr");
 		rows.each(function(){
-			var row = $(this);
+			let row = $(this);
 			if(showAll){
 				row.fadeIn({duration: 0, queue: false});
 				row.find("li.action").show();
@@ -34,7 +34,7 @@ var ModuleManageUsers = {
 			}
 			else{
 				row.find(".label-module,.label-controller").hide();
-				var hasChangables = $(this).find("li.action.changable").length;
+				let hasChangables = $(this).find("li.action.changable").length;
 				if(!hasChangables)
 					row.fadeOut({duration: 0, queue: false});
 				else{
@@ -47,9 +47,9 @@ var ModuleManageUsers = {
 	onChangeRightToggle: function(event){
 		if(event.button != 0)
 			return;
-		var toggle = $(this);
-		var action = toggle.data("action");
-		var controller = toggle.data("controller");
+		let toggle = $(this);
+		let action = toggle.data("action");
+		let controller = toggle.data("controller");
 		toggle.addClass("yellow");
 		$.ajax({
 			url: "./ajax/manage/role/changeRight",

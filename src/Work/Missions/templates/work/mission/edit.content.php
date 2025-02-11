@@ -2,17 +2,19 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array $words */
+/** @var Entity_Mission $mission */
+/** @var string $format */
 
 /*  THIS TEMPLATE IS USED FOR MARKDOWN - NOT FOR HTML  */
-if( strtoupper( $format ) === "HTML" )
+if( 'HTML' === strtoupper( $format ) )
 	return '';
 
-$mode	= "splitted";
-$mode	= "tabbed";
+$mode	= 'splitted';
+$mode	= 'tabbed';
 
 $w	= (object) $words['edit-content'];
 
-if( $mode === "tabbed" ){
+if( 'tabbed' === $mode ){
 	$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, [
 		'href'		=> $w->hintMarkdownLink,
 		'target'	=> '_blank',
@@ -52,21 +54,24 @@ if( $mode === "tabbed" ){
 				<div class="row-fluid">
 					<div class="span6">
 						<p>
-							Diese Beschreibung ist im <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>-Format.
+							Diese Beschreibung ist im <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>-Format.
 							Alternativ dazu kann dieser Text auch mit einem HTML-Editor bearbeitet werden.
 						</p>
 						<p>
 							Dazu kann man diese Beschreibung von Markdown in HTML überführen.
 							Bei zukünftigen Veränderungen wird danach immer der HTML-Editor angezeigt.
-							Das betrifft auch ggfs. Andere, die diesen Eintrag bearbeiten können.
+							Das betrifft auch ggf. Andere, die diesen Eintrag bearbeiten können.
 						</p>
 					</div>
 					<div class="span6">
 						<div class="alert alert-danger">
 							<b>Achtung: </b>Dieser Vorgang kann nicht rückgängig gemacht werden.<br/>
 						</div>
-						<p>
-							<a href="./work/mission/convertContent/'.$mission->missionId.'/markdown/html" class="btn btn-inverse">Konvertieren: Markdown -> HTML</a>
+						<p>'.
+							HtmlTag::create( 'a', 'Konvertieren: Markdown -> HTML', [
+								'href'	=> './work/mission/convertContent/'.$mission->missionId.'/markdown/html',
+								'class'	=> 'btn btn-inverse',
+							] ).'
 						</p>
 					</div>
 				</div>
@@ -77,7 +82,7 @@ if( $mode === "tabbed" ){
 	return $panelContentTabbed;
 }
 
-$panelContentSplitted	= '
+$panelContentSplit	= '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel content-panel-form">
@@ -85,9 +90,15 @@ $panelContentSplitted	= '
 				<form>
 					<h3>Editor</h3>
 					<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
-					<textarea id="input_content" name="content" rows="4" class="span12 -max -cmGrowText -cmClearInput" style="visibility: hidden">'.htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ).'</textarea>
+					'.HtmlTag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ), [
+						'id'		=> 'input_content',
+						'name'		=> 'content',
+						'rows'		=> 4,
+						'class'		=> 'span12 -max -cmGrowText -cmClearInput',
+						'style'		=> 'visibility: hidden;',
+					] ).'
 					<p>
-						<span class="muted">Du kannst hier den <a href="http://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+						<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
 					</p>
 				</form>
 			</div>
@@ -104,4 +115,4 @@ $panelContentSplitted	= '
 		</div>
 	</div>
 </div>';
-return $panelContentSplitted;
+return $panelContentSplit;

@@ -5,9 +5,10 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-class View_Manage_My_User_Setting extends View{
-
-	protected function getModuleWords( $module ){
+class View_Manage_My_User_Setting extends View
+{
+	public function getModuleWords($module )
+	{
 		$path		= $this->env->getConfig()->get( 'path.locales' );
 		$language	= $this->env->getLanguage()->getLanguage();
 		$moduleKey	= $this->getSingular( str_replace( '_', '/', strtolower( $module->id ) ) );
@@ -31,31 +32,33 @@ class View_Manage_My_User_Setting extends View{
 		}
 	}
 
-	protected function getSingular( $string ){
-		if( preg_match( "/des$/", $string ) )
-			$string	= preg_replace( "/des$/", "de", $string );
-		else if( preg_match( "/ies$/", $string ) )
-			$string	= preg_replace( "/ies$/", "y", $string );
-		else if( preg_match( "/es$/", $string ) )
-			$string	= preg_replace( "/es$/", "", $string );
-		else if( preg_match( "/s$/", $string ) )
-			$string	= preg_replace( "/s$/", "", $string );
+	protected function getSingular( $string ): string
+	{
+		if( str_ends_with( $string, 'des' ) )
+			return preg_replace( "/des$/", 'de', $string );
+		else if( str_ends_with( $string, "ies" ) )
+			return preg_replace( "/ies$/", 'y', $string );
+		else if( str_ends_with( $string, "es" ) )
+			return preg_replace( "/es$/", '', $string );
+		else if( str_ends_with( $string, "s" ) )
+			return preg_replace( "/s$/", '', $string );
 		return $string;
 	}
 
-	public function index(){
+	public function index(): void
+	{
 		$userId		= $this->getData( 'userId' );
 		$settings	= $this->getData( 'settings' );
 		$words		= $this->env->getLanguage()->load( 'manage/my/user/setting' );
 		$w			= (object) $words['index'];
 	}
 
-	protected function renderModuleSettingInput( $module, $config, $moduleWords ){
+	protected function renderModuleSettingInput( $module, $config, $moduleWords ): string
+	{
 		$inputKey	= $module->id.'::'.$config->key;
 		switch( $config->type ){
 			case 'bool':
 			case 'boolean':
-				$checked	= $config->value ? ' checked="checked"' : '';
 				$checked1	= $config->value ? ' checked="checked"' : '';
 				$checked0	= !$config->value ? ' checked="checked"' : '';
 				$input	= '<label class="radio inline">
@@ -87,6 +90,7 @@ class View_Manage_My_User_Setting extends View{
 				break;
 			case 'string':
 			case 'password':
+			default:
 				if( $config->values ){
 					$labels		= array_combine( $config->values, $config->values );
 					foreach( $config->values as $valueKey ){
@@ -119,7 +123,7 @@ class View_Manage_My_User_Setting extends View{
 							'name'	=> $inputKey,
 							'id'	=> 'input_'.$inputKey,
 							'class'	=> "span12",
-							'rows'	=> (int) substr_count( $config->value, "," ),
+							'rows'	=> substr_count( $config->value, "," ),
 						) );
 					}
 					else{
@@ -137,7 +141,8 @@ class View_Manage_My_User_Setting extends View{
 		return $input;
 	}
 
-	protected function renderModuleSettings( $module, $settings, $moduleWords, $from = NULL ){
+	public function renderModuleSettings($module, $settings, $moduleWords, $from = NULL ): string
+	{
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
 		$iconReset	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
@@ -151,22 +156,22 @@ class View_Manage_My_User_Setting extends View{
 		}
 
 		//  order settings by order of pairs in module related locale file
-		if( is_array( $moduleWords ) ) {										//  module has setting labels
-			$sorted	= [];													//  prepare empty list of sorted pairs
-			foreach( array_keys( $moduleWords ) as $key ){						//  iterate module related locale pairs
-				if( preg_match( "/^config\./", $key ) ){						//  if they begin with 'config.'
+		if( is_array( $moduleWords ) ) {															//  module has setting labels
+			$sorted	= [];																			//  prepare empty list of sorted pairs
+			foreach( array_keys( $moduleWords ) as $key ){											//  iterate module related locale pairs
+				if( preg_match( "/^config\./", $key ) ){										//  if they begin with 'config.'
 					$key	= preg_replace( "/^config\./", "", $key );			//  get (possible) setting key from locale key
-					if( isset( $list[$key] ) ){									//  setting key is existing in module config
-						$sorted[$key]	= $list[$key];							//  append setting to sorted list
-						unset( $list[$key]);									//  remove setting from unsorted list
+					if( isset( $list[$key] ) ){														//  setting key is existing in module config
+						$sorted[$key]	= $list[$key];												//  append setting to sorted list
+						unset( $list[$key]);														//  remove setting from unsorted list
 					}
 				}
 			}
-			$list	= array_merge( $sorted, $list );							//  append all left unsorted settings to list
+			$list	= array_merge( $sorted, $list );												//  append all left unsorted settings to list
 		}
 
 		if( $list ){
-			$moduleLabel	= isset( $moduleWords['title'] ) ? $moduleWords['title'] : $module->title;
+			$moduleLabel	= $moduleWords['title'] ?? $module->title;
 
 			if( $rows )
 				$rows[]		= '<br/>';
@@ -190,7 +195,7 @@ class View_Manage_My_User_Setting extends View{
 				$suffix	= '';
 				if( isset( $moduleWords['config.'.$config->key.'_suffix'] ) ){
 					$suffix	= $moduleWords['config.'.$config->key.'_suffix'];
-					if( preg_match( '/^icon-/', trim( $suffix ) ) )
+					if( str_starts_with( trim( $suffix ), 'icon-' ) )
 						$suffix	= '<i class="'.$suffix.'"></i>';
 					else
 						$suffix	= '<span class="suffix">'.$moduleWords['config.'.$config->key.'_suffix'].'</span>';

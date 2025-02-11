@@ -5,11 +5,21 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Work_Mission_List_Pagination extends Abstraction
 {
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->setEnv( $env );
 	}
 
+	/**
+	 *	@param		int			$total
+	 *	@param		int|NULL	$limit
+	 *	@param		int			$page
+	 *	@param		bool		$reverse
+	 *	@return		string
+	 */
 	public function render( int $total, ?int $limit = NULL, int $page = 0, bool $reverse = FALSE ): string
 	{
 		if( !$total )

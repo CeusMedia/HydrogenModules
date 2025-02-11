@@ -21,7 +21,7 @@ class Controller_Ajax_Auth extends AjaxController
 	 */
 	public function refreshSession()
 	{
-		$this->ajaxIsAuthenticated();
+		$this->isAuthenticated();
 	}
 
 	protected function __onInit(): void

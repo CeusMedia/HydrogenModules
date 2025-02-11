@@ -26,7 +26,7 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		$this->facts[$key]	= $term.$definition;
 	}
 
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$this->baseUrl			= $this->env->getConfig()->get( 'app.base.url' );
 		$this->words			= $this->getWords( 'work/mission', $this->languageSection );
@@ -34,7 +34,12 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $this;
 	}
 
-	protected function renderUser( object $user, $link = FALSE ): string
+	/**
+	 *	@param		object		$user
+	 *	@param		bool		$link
+	 *	@return		string
+	 */
+	protected function renderUser( object $user, bool $link = FALSE ): string
 	{
 		if( !$user )
 			return '-';
@@ -54,6 +59,10 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $userLabel;
 	}
 
+	/**
+	 *	@param		object		$user
+	 *	@return		string
+	 */
 	protected function renderUserAsText( object $user ): string
 	{
 		if( !$user )
@@ -70,18 +79,28 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 		return $user->username.$fullname;
 	}
 
-	protected function renderLinkedTitle( object $mission ): string
-	{
-		return HtmlTag::create( 'a', $mission->title, [
-			'href'	=> './work/mission/view/'.$mission->missionId
-		] );
-	}
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 */
 
-	protected function setSubjectFromMission( object $mission ): self
+	protected function setSubjectFromMission( Entity_Mission $mission ): self
 	{
 		$subjectKey	= $mission->type ? 'subjectEvent' : 'subjectTask';
 		$subject	= sprintf( $this->words[$subjectKey], $mission->title );
 		$this->setSubject( $subject );
 		return $this;
+	}
+
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@return		string
+	 */
+	protected function renderLinkedTitle( Entity_Mission $mission ): string
+	{
+		return HtmlTag::create( 'a', $mission->title, [
+			'href'	=> './work/mission/view/'.$mission->missionId
+		] );
 	}
 }

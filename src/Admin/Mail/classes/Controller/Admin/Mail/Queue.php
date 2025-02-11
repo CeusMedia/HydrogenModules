@@ -3,18 +3,18 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Loader as ClassLoader;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\Response\Sender as HttpResponseSender;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
-use CeusMedia\Mail\Part\Attachment as MailV1Attachment;
-use CeusMedia\Mail\Part\InlineImage as MailV1InlineImage;
-use CeusMedia\Mail\Message\Part\Attachment as MailV2Attachment;
-use CeusMedia\Mail\Message\Part\InlineImage as MailV2InlineImage;
+use CeusMedia\Mail\Message\Part;
+use CeusMedia\Mail\Message\Part\Attachment as MailAttachment;
+use CeusMedia\Mail\Message\Part\InlineImage as MailInlineImage;
 
 class Controller_Admin_Mail_Queue extends Controller
 {
-	/** @var Dictionary $request */
-	protected Dictionary $request;
+	/** @var HttpRequest $request */
+	protected HttpRequest $request;
 
 	protected Dictionary $session;
 	protected MessengerResource $messenger;
@@ -22,48 +22,30 @@ class Controller_Admin_Mail_Queue extends Controller
 	protected Model_Mail $model;
 	protected string $filterPrefix	= 'filter_admin_mail_queue_';
 
-	public function ajaxRenderDashboardPanel( string $panelId )
-	{
-		return $this->view->ajaxRenderDashboardPanel();
-	}
-
 	/**
 	 *	Delivers attachment content.
 	 *	By sending the attachments MIME type, the browser can decide, what to do.
 	 *	Set delivery mode to 'download' to force download.
 	 *	Exits after delivery.
 	 *	@access		public
-	 *	@param		string		$mailId			ID of mail of attachment
-	 *	@param		integer		$attachmentNr	Index key attachment within mail
+	 *	@param		int|string		$mailId			ID of mail of attachment
+	 *	@param		integer			$attachmentNr	Index key attachment within mail
 	 *	@todo		export locales
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function attachment( string $mailId, int $attachmentNr, $deliveryMode = NULL )
+	public function attachment( int|string $mailId, int $attachmentNr, $deliveryMode = NULL ): never
 	{
-		$libraries			= $this->logic->detectAvailableMailLibraries();
 		$deliveryMode		= $deliveryMode == 'download' ? 'download' : 'view';
 		$mail				= $this->logic->getMail( $mailId );
-		$this->logic->detectMailLibraryFromMail( $mail );
-		if( !( $libraries & $mail->usedLibrary ) ){
-			$message	= 'Die beim Versand benutzte Bibliothek wird nicht mehr unterstützt.';
-			$this->env->getMessenger()->noteError( $message );
-			$this->restart( 'view/'.$mailId, TRUE );
-		}
 
-		$mailObjectParts	= $mail->object->instance->mail->getParts();
+		/** @var array<Part> $mailObjectParts */
+		$mailObjectParts	= $mail->objectInstance->mail->getParts();
 		$attachments		= [];
 		foreach( $mailObjectParts as $key => $part ){
-			if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V2 ){
-				$isAttachment	= $part instanceof MailV2Attachment;
-				$isInlineImage	= $part instanceof MailV2InlineImage;
-				if( $isAttachment || $isInlineImage )
-					$attachments[$key]	= $part;
-			}
-			else if( $mail->usedLibrary === Logic_Mail::LIBRARY_MAIL_V1 ){
-				$isAttachment	= $part instanceof MailV1Attachment;
-				$isInlineImage	= $part instanceof MailV1InlineImage;
-				if( $isAttachment || $isInlineImage )
-					$attachments[$key]	= $part;
-			}
+			$isAttachment	= $part instanceof MailAttachment;
+			$isInlineImage	= $part instanceof MailInlineImage;
+			if( $isAttachment || $isInlineImage )
+				$attachments[$key]	= $part;
 		}
 
 		if( !array_key_exists( $attachmentNr, $attachments ) ){
@@ -72,7 +54,7 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->restart( 'view/'.$mailId, TRUE );
 		}
 		$item	= $attachments[$attachmentNr];
-		if( $deliveryMode === 'download' ){
+		if( 'download' === $deliveryMode ){
 			HttpDownload::sendString( $item->getContent(), $item->getFileName() );
 		}
 		else{
@@ -92,6 +74,10 @@ class Controller_Admin_Mail_Queue extends Controller
 		exit;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function bulk(): void
 	{
 		$type	= $this->request->get( 'type' );
@@ -111,11 +97,11 @@ class Controller_Admin_Mail_Queue extends Controller
 	}
 
 	/**
-	 *	@param		$mailId
+	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function cancel( $mailId ): void
+	public function cancel( int|string $mailId ): void
 	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
@@ -133,6 +119,10 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function enqueue(): void
 	{
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -198,10 +188,10 @@ class Controller_Admin_Mail_Queue extends Controller
 			$this->session->set( $this->filterPrefix.'mailClass', $this->request->get( 'mailClass' ) );
 			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
 			$this->session->set( $this->filterPrefix.'dateEnd', $this->request->get( 'dateEnd' ) );
-			$this->session->set( $this->filterPrefix.'timeStart', $this->request->get( 'timeStart' ) );
-			$this->session->set( $this->filterPrefix.'timeEnd', $this->request->get( 'timeEnd' ) );
+			$this->session->set( $this->filterPrefix.'timeStart', $this->request->get( 'timeStart', '' ) );
+			$this->session->set( $this->filterPrefix.'timeEnd', $this->request->get( 'timeEnd', '' ) );
 //			$this->session->set( $this->filterPrefix.'way', $this->request->get( 'way' ) );
-			$this->session->set( $this->filterPrefix.'limit', $this->request->get( 'limit' ) );
+			$this->session->set( $this->filterPrefix.'limit', (int) $this->request->get( 'limit' ) );
 			$this->session->set( $this->filterPrefix.'order', $this->request->get( 'order' ) );
 			$this->session->set( $this->filterPrefix.'direction', $this->request->get( 'direction' ) );
 
@@ -213,12 +203,17 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function html( $mailId ): void
+	/**
+	 *	@param		int|string		$mailId		Mail ID
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function html( int|string $mailId ): void
 	{
 		$this->addData( 'mail', $this->logic->getMail( (int) $mailId ) );
 	}
 
-	public function index( $page = 0 ): void
+	public function index( int $page = 0 ): void
 	{
 //		if( !$this->session->get( $this->filterPrefix.'status' ) )
 //			$this->session->set( $this->filterPrefix.'status', [0] );
@@ -249,7 +244,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		else if( $dateEnd )
 			$conditions['enqueuedAt']	= '<= '.( strtotime( $dateEnd ) + 24 * 36000 - 1);
 
-		$page		= max( 0, (int) $page );
+		$page		= max( 0, $page );
 		$total		= $this->logic->countQueue( $conditions );
 		$maxPage	= ceil( $total / $filters->get( 'limit' ) ) - 1;
 		if( $page > $maxPage )
@@ -257,7 +252,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		$offset		= $page * $filters->get( 'limit' );
 
 		$orders		= [$filters->get( 'order' ) => $filters->get( 'direction' )];
-		$limits		= [$offset, $filters->get( 'limit' )];
+		$limits		= [$offset, (int) $filters->get( 'limit' )];
 		$mails		= $this->logic->getQueuedMails( $conditions, $orders, $limits );
 		$total		= $this->logic->countQueue( $conditions );
 		$this->addData( 'mails', $mails );
@@ -273,9 +268,15 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->addData( 'mailClasses', $mailClasses );
 	}
 
+	protected function checkAjaxRequest(): void
+	{
+		parent::checkAjaxRequest(); // TODO: Change the autogenerated stub
+	}
+
 	/**
 	 *	@param		$mailId
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( $mailId ): void
 	{
@@ -286,11 +287,11 @@ class Controller_Admin_Mail_Queue extends Controller
 	}
 
 	/**
-	 *	@param		$mailId
+	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function resend( $mailId ): void
+	public function resend( int|string $mailId ): void
 	{
 		$model	= new Model_Mail( $this->env );
 		$mail	= $model->get( $mailId );
@@ -308,7 +309,11 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( 'view/'.$mailId, TRUE );
 	}
 
-	public function send()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function send(): void
 	{
 		$count	= $this->logic->countQueue( ['status' => '< '.Model_Mail::STATUS_SENT] );
 		if( $count ){
@@ -328,15 +333,18 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function view( $mailId )
+	/**
+	 *	@param		int|string		$mailId		Mail ID
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $mailId ): void
 	{
 		try{
 			$mail			= $this->logic->getMail( $mailId );
 			$mail->parts	= $this->logic->getMailParts( $mail );
-			$this->logic->detectMailLibraryFromMail( $mail );
 
 			$this->addData( 'mail', $mail );
-			$this->addData( 'libraries', $this->logic->detectAvailableMailLibraries() );
 			$this->addData( 'page', $this->request->get( 'page' ) );
 		}
 		catch( Exception $e ){
@@ -361,16 +369,19 @@ class Controller_Admin_Mail_Queue extends Controller
 		$this->logic		= Logic_Mail::getInstance( $this->env );
 		$this->model		= new Model_Mail( $this->env );
 
-		$path				= '';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$path	= Logic_Frontend::getInstance( $this->env )->getPath();
-			ClassLoader::registerNew( 'php', 'Mail_', $path.'classes/Mail/' );
+			ClassLoader::create( 'php', $path.'classes/Mail/', 'Mail_' )->register();
 		}
 		if( !is_array( $this->session->get( $this->filterPrefix.'status' ) ) )
 			$this->session->set( $this->filterPrefix.'status', []);
 	}
 
-	protected function bulkAbort( $mailIds ): int
+	/**
+	 *	@param		array<int|string>		$mailIds		List of mail IDs
+	 *	@return		int
+	 */
+	protected function bulkAbort( array $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
@@ -388,7 +399,11 @@ class Controller_Admin_Mail_Queue extends Controller
 		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 
-	protected function bulkRetry( $mailIds ): int
+	/**
+	 *	@param		array<int|string>		$mailIds		List of mail IDs
+	 *	@return		int
+	 */
+	protected function bulkRetry( array $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;
@@ -405,7 +420,12 @@ class Controller_Admin_Mail_Queue extends Controller
 		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
 	}
 
-	protected function bulkRemove( $mailIds ): int
+	/**
+	 *	@param		array<int|string>		$mailIds		List of mail IDs
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function bulkRemove( array $mailIds ): int
 	{
 		if( !count( $mailIds ) )
 			return 0;

@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array $words */
+/** @var ?string $from */
+/** @var ?string $query */
+/** @var ?string $location */
+/** @var ?string $range */
 
 $w	= (object) $words['panel-search'];
 

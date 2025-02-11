@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.5</version>
+	<version>0.3.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -21,10 +21,12 @@
 	<log version="0.3.3">Replace job file by module configuration.</log>
 	<log version="0.3.4">Improve code style.</log>
 	<log version="0.3.5">Extract hook to own class.</log>
+	<log version="0.3.6">Extract AJAX actions to own controller.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Work/Mail/Check.php</class>
 		<class>Controller/Work/Mail/Check.php</class>
 		<class>Hook/Work/Mail/Check.php</class>
 		<class>View/Work/Mail/Check.php</class>
@@ -32,11 +34,10 @@
 		<class>Model/Mail/Address/Check.php</class>
 		<class>Model/Mail/Group.php</class>
 		<class>Job/Work/Mail/Check.php</class>
-		<template>work/mail/check/ajaxAddress.php</template>
 		<template>work/mail/check/export.php</template>
 		<template>work/mail/check/group.php</template>
-		<template>work/mail/check/index.php</template>
 		<template>work/mail/check/import.php</template>
+		<template>work/mail/check/index.php</template>
 		<template>work/mail/check/status.php</template>
 		<locale>de/work/mail/check.ini</locale>
 		<style source="theme" load="auto" level="end">module.work.mail.check.css</style>

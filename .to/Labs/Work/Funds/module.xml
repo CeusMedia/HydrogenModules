@@ -26,7 +26,7 @@
 -->	</relations>
 	<link xml:lang="de" access="acl" path="work/fund">Fonds</link>
 	<link xml:lang="en" access="acl" path="work/fund">Funds</link>
-	<config type="string" name="urlView">http://www.fondsweb.de/</config>
+	<config type="string" name="urlView">https://www.fondsweb.de/</config>
 	<sql on="install" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>funds`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>funds` (
@@ -64,7 +64,7 @@ DROP TABLE IF EXISTS `<%?prefix%>fund_prices`;
 	<data><![CDATA[
 -- phpMyAdmin SQL Dump
 -- version 3.4.5deb1
--- http://www.phpmyadmin.net
+-- https://www.phpmyadmin.net
 --
 -- Host: localhost
 -- Erstellungszeit: 02. Mai 2012 um 03:43

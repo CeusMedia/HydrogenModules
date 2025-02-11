@@ -6,10 +6,13 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Work_Note extends Hook
 {
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 */
 	public function onProjectRemove(): void
 	{
-		$data		= (object) $this->payload;
-		$projectId	= $data->projectId;
+		$projectId	= $this->payload['projectId'];
 		$model		= new Model_Note( $this->env );
 		$logic		= Logic_Note::getInstance( $this->env );
 		foreach( $model->getAllByIndex( 'projectId', $projectId ) as $note ){
@@ -17,28 +20,31 @@ class Hook_Work_Note extends Hook
 		}
 	}
 
+	/**
+	 * @return void
+	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onListProjectRelations(): void
 	{
-		$data		= (object) $this->payload;
 		$modelProject	= new Model_Project( $this->env );
-		if( empty( $data->projectId ) ){
+		if( empty( $this->payload['projectId'] ) ){
 			$message	= 'Hook "Work_Notes::onListProjectRelations" is missing project ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		if( !( $project = $modelProject->get( $data->projectId ) ) ){
+		if( !( $project = $modelProject->get( $this->payload['projectId'] ) ) ){
 			$message	= 'Hook "Work_Notes::onListProjectRelations": Invalid project ID.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		$data->activeOnly	= $data->activeOnly ?? FALSE;
-		$data->linkable		= $data->linkable ?? FALSE;
+		$this->payload['activeOnly']	= $this->payload['activeOnly'] ?? FALSE;
+		$this->payload['linkable']		= $this->payload['linkable'] ?? FALSE;
 		$language		= $this->env->getLanguage();
 //		$statusesActive	= [0, 1, 2, 3, 4, 5];
 		$list			= [];
 		$modelNote		= new Model_Note( $this->env );
-		$indices		= ['projectId' => $data->projectId];
-//		if( $data->activeOnly )
+		$indices		= ['projectId' => $this->payload['projectId']];
+//		if( $this->payload['activeOnly'] )
 //			$indices['status']	= $statusesActive;
 		$orders			= ['status' => 'ASC', 'title' => 'ASC'];
 		$notes			= $modelNote->getAllByIndices( $indices, $orders );	//  ...
@@ -56,12 +62,12 @@ class Hook_Work_Note extends Hook
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? $note->noteId : NULL,
+				'id'		=> $this->payload['linkable'] ? $note->noteId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$this->payload,																					//  hook content data
 			$this->module,																				//  module called by hook
 			'entity',																				//  relation type: entity or relation
 			$list,																					//  list of related items
@@ -71,23 +77,28 @@ class Hook_Work_Note extends Hook
 		);
 	}
 
+	/**
+	 * @return void
+	 * @throws ReflectionException
+	 */
 	public function onUserRemove(): void
 	{
-		$data		= (object) $this->payload;
-		$userId		= $data->userId;
+		$userId		= $this->payload['userId'];
 		$model		= new Model_Note( $this->env );
 		$logic		= Logic_Note::getInstance( $this->env );
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		foreach( $notes as $note )
 			$logic->removeNote( $note->noteId );
-		if( isset( $data->counts ) )
-			$data->counts['Work_Notes']	= (object) ['entities' => count( $notes )];
+		if( isset( $this->payload['counts'] ) )
+			$this->payload['counts']['Work_Notes']	= (object) ['entities' => count( $notes )];
 	}
 
+	/**
+	 * @return void
+	 */
 	public function onListUserRelations(): void
 	{
-		$data		= (object) $this->payload;
-		$userId		= $data->userId;
+		$userId		= $this->payload['userId'];
 		$model		= new Model_Note( $this->env );
 		$notes		= $model->getAllByIndex( 'userId', $userId );
 		$language	= $this->env->getLanguage();
@@ -101,12 +112,12 @@ class Hook_Work_Note extends Hook
 			$title		= $isOpen ? $note->title : HtmlTag::create( 'del', $note->title );
 			$label		= $icon.'&nbsp;'.$title;//.'&nbsp;'.$status;
 			$list[]		= (object) [
-				'id'		=> $data->linkable ? $note->noteId : NULL,
+				'id'		=> $this->payload['linkable'] ? $note->noteId : NULL,
 				'label'		=> $label,
 			];
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$data,																					//  hook content data
+			$this->payload,																					//  hook content data
 			$this->module,																			//  module called by hook
 			'entity',																				//  relation type: entity or relation
 			$list,																					//  list of related items

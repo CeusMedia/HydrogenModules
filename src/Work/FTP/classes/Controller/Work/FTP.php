@@ -12,17 +12,17 @@ class Controller_Work_FTP extends Controller
 	/**	@var	Logic_FTP	$logic */
 	protected Logic_FTP $logic;
 
-	public function login()
+	public function login(): void
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'host'		=> $request->get( 'ftp_host' ),
 				'port'		=> $request->get( 'ftp_port' ),
 				'path'		=> $request->get( 'ftp_path' ),
 				'username'	=> $request->get( 'ftp_username' ),
 				'password'	=> $request->get( 'ftp_password' ),
-			);
+			];
 			$this->session->set( 'module_work_ftp_access', $data );
 			$this->connect();
 			$this->restart( NULL, TRUE );
@@ -57,7 +57,7 @@ class Controller_Work_FTP extends Controller
 		exit;
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->connect();
 		$clock	= new Clock;
@@ -65,7 +65,7 @@ class Controller_Work_FTP extends Controller
 		if( $this->env->getRequest()->has( 'refresh' ) )
 			$this->logic->uncache( $path );
 		$deepPath	= $this->session->get( 'deepestPath' );
-		if( $path && ( !$deepPath || substr( $deepPath, 0, strlen( $path ) ) !== $path ) )
+		if( $path && ( !$deepPath || !str_starts_with( $deepPath, $path ) ) )
 			$this->session->set( 'deepestPath', $deepPath = $path );
 
 		$entries	= $this->logic->index( $path );

@@ -4,13 +4,13 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Billing_Expense extends Model
 {
-	const FREQUENCY_YEARLY		= 1;
-	const FREQUENCY_QUARTER		= 2;
-	const FREQUENCY_MONTHLY		= 3;
-	const FREQUENCY_WEEKLY		= 4;
-	const FREQUENCY_DAILY		= 5;
+	public const FREQUENCY_YEARLY	= 1;
+	public const FREQUENCY_QUARTER	= 2;
+	public const FREQUENCY_MONTHLY	= 3;
+	public const FREQUENCY_WEEKLY	= 4;
+	public const FREQUENCY_DAILY	= 5;
 
-	const FREQUENCIES			= [
+	public const FREQUENCIES		= [
 		self::FREQUENCY_YEARLY,
 		self::FREQUENCY_QUARTER,
 		self::FREQUENCY_MONTHLY,
@@ -18,10 +18,10 @@ class Model_Billing_Expense extends Model
 		self::FREQUENCY_DAILY,
 	];
 
-	const STATUS_DISABLED		= 0;
-	const STATUS_ACTIVE			= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ACTIVE		= 1;
 
-	const STATUSES				= [
+	public const STATUSES			= [
 		self::STATUS_DISABLED,
 		self::STATUS_ACTIVE,
 	];

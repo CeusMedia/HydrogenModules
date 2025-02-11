@@ -8,10 +8,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Model_Job
 {
-	const FORMAT_AUTO		= 0;
-	const FORMAT_XML		= 1;
-	const FORMAT_JSON		= 2;
-	const FORMAT_MODULE		= 3;
+	public const FORMAT_AUTO		= 0;
+	public const FORMAT_XML			= 1;
+	public const FORMAT_JSON		= 2;
+	public const FORMAT_MODULE		= 3;
 
 	protected Environment $env;
 	protected string $pathJobs		= 'config/jobs/';
@@ -87,31 +87,32 @@ class Model_Job
 	public function load( array $modes, bool $strict = TRUE ): self
 	{
 		$this->jobs	= [];
-		if( $this->format === static::FORMAT_XML ){
-			foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job ){
-				if( $strict && array_key_exists( $jobId, $this->jobs ) )
-					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
-				$this->jobs[$jobId]	= $job;
-			}
-		}
-		else if( $this->format === static::FORMAT_JSON ){
-			foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job ){
-				if( $strict && array_key_exists( $jobId, $this->jobs ) )
-					throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
-				$this->jobs[$jobId]	= $job;
-			}
-		}
-		else if( $this->format === static::FORMAT_AUTO ){
-			foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job )
-				$this->jobs[$jobId]	= $job;
-			foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job )
-				$this->jobs[$jobId]	= $job;
-		}
-		else if( $this->format === static::FORMAT_MODULE ){
-			foreach( self::readJobsFromModules( $modes ) as $jobId => $job )
-				$this->jobs[$jobId]	= $job;
-//			foreach( self::readJobsFromJsonFiles( $modes ) as $jobId => $job )
-//				$this->jobs[$jobId]	= $job;
+		switch( $this->format ){
+			case self::FORMAT_XML:
+				foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job ){
+					if( $strict && array_key_exists( $jobId, $this->jobs ) )
+						throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
+					$this->jobs[$jobId]	= $job;
+				}
+				break;
+			case self::FORMAT_JSON:
+				foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job ){
+					if( $strict && array_key_exists( $jobId, $this->jobs ) )
+						throw new DomainException( 'Duplicate job ID "'.$jobId.'"' );
+					$this->jobs[$jobId]	= $job;
+				}
+				break;
+			case self::FORMAT_MODULE:
+				foreach( self::readJobsFromModules( $modes ) as $jobId => $job )
+					$this->jobs[$jobId]	= $job;
+				break;
+			case self::FORMAT_AUTO:
+				foreach( $this->readJobsFromXmlFiles( $modes ) as $jobId => $job )
+					$this->jobs[$jobId]	= $job;
+				foreach( $this->readJobsFromJsonFiles( $modes ) as $jobId => $job )
+					$this->jobs[$jobId]	= $job;
+				break;
+			default:
 		}
 		ksort( $this->jobs/*, SORT_NATURAL | SORT_FLAG_CASE*/ );
 		return $this;
@@ -119,14 +120,13 @@ class Model_Job
 
 	public function readJobsFromJsonFile( string $pathName, $modes = [] ): array
 	{
-		$jobs			= [];
-		$json	= JsonFileReader::load( $pathName, FALSE );
-		foreach( $json as $jobId => $job ){
+		$jobs	= [];
+		foreach( JsonFileReader::load( $pathName ) as $jobId => $job ){
 			$job->id		= $jobId;
 			$job->source	= 'json';
 			$job->mode		= is_string( $job->mode ) ? explode( ",", $job->mode ) : $job->mode;
-			$job->multiple	= isset( $job->multiple ) ? $job->multiple : FALSE;
-			$job->interval	= isset( $job->interval ) ? $job->inteval : NULL;
+			$job->multiple	??= FALSE;
+			$job->interval	??= NULL;
 			if( $modes && !array_intersect( $job->mode, $modes ) )
 				continue;
 			if( array_key_exists( $jobId, $jobs ) )
@@ -136,16 +136,20 @@ class Model_Job
 		return $jobs;
 	}
 
+	/**
+	 *	@param		string		$pathName
+	 *	@param		array		$modes
+	 *	@return		array
+	 */
 	public function readJobsFromXmlFile( string $pathName, array $modes = [] ): array
 	{
 		$jobs	= [];
-		$xml	= XmlElementReader::readFile( $pathName );
-		foreach( $xml->job as $job ){
-			$jobObj				= new \stdClass();
+		foreach( XmlElementReader::readFile( $pathName )->job as $job ){
+			$jobObj				= new stdClass();
 			$jobObj->id			= $job->getAttribute( 'id' );
 			$jobObj->source		= 'xml';
 			$jobObj->mode		= ['dev'];
-			$jobObj->multiple	= $job->hasAttribute( 'multiple' ) ? TRUE : FALSE;
+			$jobObj->multiple	= $job->hasAttribute( 'multiple' );
 			$jobObj->deprecated	= NULL;
 			foreach( $job->children() as $nodeName => $node ){
 				$value	= (string) $node;
@@ -166,6 +170,7 @@ class Model_Job
 	 *	@param		string		$format
 	 *	@return		self
 	 *	@throws		ReflectionException
+	 *	@throws		RangeException			if given format is invalid
 	 */
 	public function setFormat( string $format ): self
 	{
@@ -178,7 +183,7 @@ class Model_Job
 
 	/*  --  PROTECTED  --  */
 
-	protected function readJobsFromJsonFiles( $modes = [] ): array
+	protected function readJobsFromJsonFiles( array $modes = [] ): array
 	{
 		$jobs		= [];
 		$index			= new RegexFileFilter( $this->pathJobs, '/\.json$/i' );
@@ -195,10 +200,10 @@ class Model_Job
 		return $jobs;
 	}
 
-	protected function readJobsFromModules( $modes = [] ): array
+	protected function readJobsFromModules( array $modes = [] ): array
 	{
 		$jobs	= [];
-		foreach( $this->env->getModules()->getAll() as $moduleId => $module )
+		foreach( $this->env->getModules()->getAll() as $module )
 			foreach( $module->jobs as $job )
 				$jobs[$job->id]	= $job;
 		return $jobs;
@@ -206,6 +211,8 @@ class Model_Job
 
 	protected function readJobsFromXmlFiles( array $modes = [] ): array
 	{
+		if( !file_exists( $this->pathJobs ) )
+			return [];
 		$jobs			= [];
 		$index			= new RegexFileFilter( $this->pathJobs, '/\.xml$/i' );
 		foreach( $index as $file ){

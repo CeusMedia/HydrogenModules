@@ -5,7 +5,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $list	= [];
 foreach( $bridges as $bridge ){
-	$label	= $bridge->title ? $bridge->title : $bridge->class;
+	$label	= $bridge->title ?: $bridge->class;
 	$link	= HtmlTag::create( 'a', $label, [
 		'href'	=> './manage/shop/bridge/edit/'.$bridge->bridgeId,
 	] );

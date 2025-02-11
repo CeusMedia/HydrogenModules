@@ -23,11 +23,11 @@ class Controller_Tool_Calculator extends Controller
 			$status	= "error";
 			$answer	= $e->getMessage();
 		}
-		print json_encode( array(
+		print json_encode( [
 			'status'	=> $status,
 			'data'		=> $answer,
 			'referer'	=> getEnv( 'HTTP_REFERER' ),
-		) );
+		] );
 		exit;
 	}
 }

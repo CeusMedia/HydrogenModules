@@ -82,9 +82,9 @@ $panelEdit	= '
 ';
 
 $panelInfo		= $this->loadContentFile( 'html/admin/instance/edit.info.html' );
-$panelCheck		= $this->loadTemplateFile( 'admin/instance/edit.check.php' );
-$panelDatabase	= $this->loadTemplateFile( 'admin/instance/edit.database.php' );
-$panelConfig	= $this->loadTemplateFile( 'admin/instance/edit.config.php' );
+$panelCheck		= $view->loadTemplateFile( 'admin/instance/edit.check.php' );
+$panelDatabase	= $view->loadTemplateFile( 'admin/instance/edit.database.php' );
+$panelConfig	= $view->loadTemplateFile( 'admin/instance/edit.config.php' );
 
 return '
 <script>

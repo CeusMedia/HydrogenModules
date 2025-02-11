@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Transfer_Target extends Model
 {
-	const STATUS_DISABLED	= 0;
-	const STATUS_ENABLED	= 1;
+	public const STATUS_DISABLED	= 0;
+	public const STATUS_ENABLED		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_DISABLED,
 		self::STATUS_ENABLED,
 	];
@@ -32,5 +32,7 @@ class Model_Form_Transfer_Target extends Model
 
 	protected string $name			= 'form_transfer_targets';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form_Transfer_Target::class;
 }

@@ -1,9 +1,9 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File;
 use CeusMedia\Common\FS\Folder;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 class Controller_Admin_Mail_Template_Import extends Controller
 {
 	protected MessengerResource $messenger;
-	protected Dictionary $request;
+	protected HttpRequest $request;
 	protected Model_Mail_Template $modelTemplate;
 
 	/**
@@ -19,15 +19,22 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	 *	@access		public
 	 *	@param		WebEnvironment		$env			Application Environment Object
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( WebEnvironment $env )
 	{
 		parent::__construct( $env, FALSE );
 		$this->messenger			= $this->env->getMessenger();
 		$this->request				= $this->env->getRequest();
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelTemplate		= $this->getModel( 'Mail_Template' );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -46,6 +53,8 @@ class Controller_Admin_Mail_Template_Import extends Controller
 				$upload->checkVirus( TRUE );
 				if( $upload->getError() )
 					throw new RuntimeException( 'Upload failed' );
+
+				/** @var object $template */
 				$template	= json_decode( $upload->getContent() );
 				if( !$template )
 					throw new InvalidArgumentException( 'Uploaded file is not valid JSON' );

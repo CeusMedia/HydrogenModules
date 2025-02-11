@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w			= (object) $words['add'];
 
-$tabsMain	= $this->renderMainTabs();
+$tabsMain	= $view->renderMainTabs();
 
 $optStatus	= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $article->status );

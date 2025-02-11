@@ -30,6 +30,11 @@ class Logic_Newsletter extends Logic
 	/**	@var		Model_Newsletter_Template		$modelTemplate */
 	protected Model_Newsletter_Template $modelTemplate;
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addReader( array $data ): string
 	{
 		if( !isset( $data['registeredAt'] ) )
@@ -37,7 +42,14 @@ class Logic_Newsletter extends Logic
 		return $this->modelReader->add( $data );
 	}
 
-	public function addReaderToGroup( string $readerId, string $groupId, bool $strict = TRUE ): string
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$strict
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addReaderToGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): string
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
@@ -52,7 +64,13 @@ class Logic_Newsletter extends Logic
 		return $this->modelReaderGroup->add( $data );
 	}
 
-	public function checkGroupId( string $groupId, bool $throwException = FALSE ): bool
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$throwException
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function checkGroupId( int|string $groupId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelGroup->has( $groupId ) )
 			return TRUE;
@@ -64,12 +82,13 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter ID is valid.
 	 *	@access		public
-	 *	@param		string		$newsletterId		ID of newsletter to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		int|string		$newsletterId		ID of newsletter to check
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter is not exising and $throwException is TRUE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkNewsletterId( string $newsletterId, bool $throwException = FALSE ): bool
+	public function checkNewsletterId( int|string $newsletterId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelNewsletter->has( $newsletterId ) )
 			return TRUE;
@@ -81,12 +100,13 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter reader letter ID is valid.
 	 *	@access		public
-	 *	@param		string		$readerLetterId		ID of newsletter reader letter to check
+	 *	@param		int|string		$readerLetterId		ID of newsletter reader letter to check
 	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter reader letter is not exising and $throwException is TRUE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkReaderLetterId( string $readerLetterId, bool $throwException = FALSE ): bool
+	public function checkReaderLetterId( int|string $readerLetterId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelReaderLetter->has( $readerLetterId ) )
 			return TRUE;
@@ -98,12 +118,13 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter reader ID is valid.
 	 *	@access		public
-	 *	@param		string		$readerId			ID of newsletter reader to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		int|string		$readerId			ID of newsletter reader to check
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter reader is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkReaderId( string $readerId, bool $throwException = FALSE ): bool
+	public function checkReaderId( int|string $readerId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelReader->has( $readerId ) )
 			return TRUE;
@@ -115,12 +136,13 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Indicates whether a given newsletter template ID is valid.
 	 *	@access		public
-	 *	@param		string		$templateId			ID of newsletter template to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		int|string		$templateId			ID of newsletter template to check
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter template is not exising and $throwException is TRUE
+	 *	@throws		InvalidArgumentException			if newsletter template is not exising and $throwException is TRUE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkTemplateId( string $templateId, bool $throwException = FALSE ): bool
+	public function checkTemplateId( int|string $templateId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelTemplate->has( $templateId ) )
 			return TRUE;
@@ -129,30 +151,57 @@ class Logic_Newsletter extends Logic
 		return FALSE;
 	}
 
-	public function countGroupReaders( string $groupId ): int
+	/**
+	 *	@param		int|string 		$groupId
+	 *	@return		int
+	 */
+	public function countGroupReaders( int|string $groupId ): int
 	{
 		return $this->modelReaderGroup->countByIndex( 'newsletterGroupId', $groupId );
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@return		int
+	 */
 	public function countNewsletters( array $conditions = [] ): int
 	{
 		return $this->modelNewsletter->count( $conditions );
 	}
 
-	public function editNewsletter( string $newsletterId, array $data ): int
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@param		array			$data
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editNewsletter( int|string $newsletterId, array $data ): int
 	{
 		$this->checkNewsletterId( $newsletterId, TRUE );
 		$data['modifiedAt']	= time();
 		return $this->modelNewsletter->edit( $newsletterId, $data, FALSE );
 	}
 
-	public function editReader( string $readerId, array $data, bool $strict = TRUE ): int
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		array 			$data
+	 *	@param		bool			$strict
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editReader( int|string $readerId, array $data, bool $strict = TRUE ): int
 	{
 		$this->checkReaderId( $readerId, $strict );
 		return $this->modelReader->edit( $readerId, $data );
 	}
 
-	public function getActiveReaderFromEmail( string $email, bool $activeOnly = TRUE, bool $strict = TRUE )
+	/**
+	 *	@param		string		$email
+	 *	@param		bool		$activeOnly
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 */
+	public function getActiveReaderFromEmail( string $email, bool $activeOnly = TRUE, bool $strict = TRUE ): ?object
 	{
 		$conditions	= ['email' => $email];
 		if( $activeOnly )
@@ -166,13 +215,23 @@ class Logic_Newsletter extends Logic
 		return array_shift( $readers );
 	}
 
-	public function getGroup( string $groupId, bool $strict = TRUE ): object
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getGroup( int|string $groupId, bool $strict = TRUE ): ?object
 	{
 		$this->checkGroupId( $groupId, $strict );
 		return $this->modelGroup->get( $groupId );
 	}
 
-	public function getGroupReaders( string $groupId ): array
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		array
+	 */
+	public function getGroupReaders( int|string $groupId ): array
 	{
 		$list		= [];
 		$readers	= [];
@@ -185,6 +244,11 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array
+	 */
 	public function getGroups( array $conditions = [], array $orders = [] ): array
 	{
 		$list	= [];
@@ -193,7 +257,14 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getGroupsOfReader( string $readerId, array $conditions = [], array $orders = [] ): array
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		array			$conditions
+	 *	@param		array			$orders
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getGroupsOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
 	{
 		$this->checkReaderId( $readerId, TRUE );
 		$list		= [];
@@ -210,7 +281,15 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getLettersOfReader( string $readerId, array $conditions = [], array $orders = [] ): array
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		array			$conditions
+	 *	@param		array			$orders
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 * @todo implement or remove conditions and orders
+	 */
+	public function getLettersOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
 	{
 		$this->checkReaderId( $readerId, TRUE );
 		$letters	= $this->modelReaderLetter->getAllByIndex( 'newsletterReaderId', $readerId );
@@ -219,14 +298,26 @@ class Logic_Newsletter extends Logic
 		return $letters;
 	}
 
-	public function getNewsletter( string $newsletterId, bool $strict = TRUE ): ?object
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getNewsletter( int|string $newsletterId, bool $strict = TRUE ): ?object
 	{
 		if( $this->checkNewsletterId( $newsletterId, $strict ) )
 			return $this->modelNewsletter->get( $newsletterId );
 		return NULL;
 	}
 
-	public function getQueue( $queueId, $extended = FALSE )
+	/**
+	 *	@param		int|string		$queueId
+	 *	@param		bool			$extended
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getQueue( int|string $queueId, bool $extended = FALSE ): ?object
 	{
 		$queue	= $this->modelQueue->get( $queueId );
 		if( $extended ){
@@ -247,6 +338,12 @@ class Logic_Newsletter extends Logic
 		return $queue;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getNewsletters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
@@ -255,12 +352,24 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getQueues( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelQueue->getAll( $conditions, $orders, $limits );
 	}
 
-	public function getQueuesOfNewsletter( string $newsletterId, bool $extended = FALSE ): array
+	/**
+	 *	@param		int|string		$newsletterId
+	 *	@param		bool			$extended
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getQueuesOfNewsletter( int|string $newsletterId, bool $extended = FALSE ): array
 	{
 		$queues	= $this->modelQueue->getAllByIndex( 'newsletterId', $newsletterId );
 		foreach( $queues as $queue ){
@@ -285,18 +394,36 @@ class Logic_Newsletter extends Logic
 		return $queues;
 	}
 
-	public function getReader( string $readerId, bool $strict = TRUE ): ?object
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getReader( int|string $readerId, bool $strict = TRUE ): ?object
 	{
 		if( $this->checkReaderId( $readerId, $strict ) )
 			return $this->modelReader->get( $readerId );
 		return NULL;
 	}
 
-	public function getReaderLetter( string $readerLetterId ): object
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		object|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getReaderLetter( int|string $readerLetterId ): ?object
 	{
 		return $this->modelReaderLetter->get( $readerLetterId );
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
@@ -307,6 +434,12 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
 	public function getReaders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
@@ -315,11 +448,23 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getReadersOfGroup( string $groupId, array $conditions = [], array $orders = [] ): array
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		array			$conditions
+	 *	@param		array			$orders
+	 *	@return		array
+	 */
+	public function getReadersOfGroup( int|string $groupId, array $conditions = [], array $orders = [] ): array
 	{
 		return $this->getReadersOfGroups( [$groupId], $conditions, $orders );
 	}
 
+	/**
+	 *	@param		array		$groupIds
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array
+	 */
 	public function getReadersOfGroups( array $groupIds, array $conditions = [], array $orders = [] ): array
 	{
 		$list		= [];
@@ -341,17 +486,22 @@ class Logic_Newsletter extends Logic
 	/**
 	 *	Returns template data object for template ID.
 	 *	@access		public
-	 *	@param		string		$templateId		ID of template to get data object for
-	 *	@param		boolean		$strict			Strict mode: throw exception if checks fail
-	 *	@return		object						Data object of template
-	 *	@throws		InvalidArgumentException	if template ID is invalid
+	 *	@param		int|string		$templateId		ID of template to get data object for
+	 *	@param		boolean			$strict			Strict mode: throw exception if checks fail
+	 *	@return		object							Data object of template
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getTemplate( string $templateId, bool $strict = TRUE ): object
+	public function getTemplate( int|string $templateId, bool $strict = TRUE ): object
 	{
 		$this->checkTemplateId( $templateId, $strict );
 		return $this->modelTemplate->get( $templateId );
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@return		array
+	 */
 	public function getTemplates( array $conditions = [], array $orders = [] ): array
 	{
 		$list		= [];
@@ -364,7 +514,14 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function getTemplateAttributeList( string $templateId, string $columnKey, bool $strict = TRUE ): array
+	/**
+	 *	@param		int|string		$templateId
+	 *	@param		string			$columnKey
+	 *	@param		bool			$strict
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getTemplateAttributeList( int|string $templateId, string $columnKey, bool $strict = TRUE ): array
 	{
 		$this->checkTemplateId( $templateId, $strict );
 		$template	= $this->modelTemplate->get( $templateId );
@@ -378,7 +535,14 @@ class Logic_Newsletter extends Logic
 		return $list;
 	}
 
-	public function removeReaderFromGroup( string $readerId, string $groupId, bool $strict = TRUE ): int
+	/**
+	 *	@param		int|string		$readerId
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$strict
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeReaderFromGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): int
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
@@ -389,7 +553,13 @@ class Logic_Newsletter extends Logic
 		return $this->modelReaderGroup->removeByIndices( $indices );
 	}
 
-	public function setQueueStatus( string $queueId, int $status ): int
+	/**
+	 *	@param		int|string		$queueId
+	 *	@param		int				$status
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setQueueStatus( int|string $queueId, int $status ): int
 	{
 		return $this->modelQueue->edit( $queueId, [
 			'status'		=> $status,
@@ -397,7 +567,13 @@ class Logic_Newsletter extends Logic
 		] );
 	}
 
-	public function setReaderLetterStatus( string $readerLetterId, int $status ): int
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@param		int				$status
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setReaderLetterStatus( int|string $readerLetterId, int $status ): int
 	{
 		$readerLetter	= $this->modelReaderLetter->get( $readerLetterId );
 		if( !$readerLetter || $readerLetter->status >= $status )
@@ -413,7 +589,13 @@ class Logic_Newsletter extends Logic
 		return $this->modelReaderLetter->edit( $readerLetterId, $data );
 	}
 
-	public function setReaderLetterMailId( string $readerLetterId, string $mailId ): int
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@param		int|string		$mailId
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setReaderLetterMailId( int|string $readerLetterId, int|string $mailId ): int
 	{
 		return $this->modelReaderLetter->edit( $readerLetterId, ['mailId' => $mailId] );
 	}

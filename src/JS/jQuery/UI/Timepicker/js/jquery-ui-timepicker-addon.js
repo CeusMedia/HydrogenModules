@@ -1,13 +1,13 @@
 /*
  * jQuery timepicker addon
- * By: Trent Richardson [http://trentrichardson.com]
+ * By: Trent Richardson [https://trentrichardson.com]
  * Version 1.1.1
  * Last Modified: 11/07/2012
  *
  * Copyright 2012 Trent Richardson
  * You may use this project under MIT or GPL licenses.
- * http://trentrichardson.com/Impromptu/GPL-LICENSE.txt
- * http://trentrichardson.com/Impromptu/MIT-LICENSE.txt
+ * https://trentrichardson.com/Impromptu/GPL-LICENSE.txt
+ * https://trentrichardson.com/Impromptu/MIT-LICENSE.txt
  */
 
 /*jslint evil: true, white: false, undef: false, nomen: false */
@@ -483,7 +483,7 @@
 					this.timeDefined = timeDefined;
 				}
 
-				// slideAccess integration: http://trentrichardson.com/2011/11/11/jquery-ui-sliders-and-touch-accessibility/
+				// slideAccess integration: https://trentrichardson.com/2011/11/11/jquery-ui-sliders-and-touch-accessibility/
 				if (this._defaults.addSliderAccess) {
 					var sliderAccessArgs = this._defaults.sliderAccessArgs,
 						rtl = this._defaults.isRTL;
@@ -1217,7 +1217,7 @@
 
 	/*
 	* the bad hack :/ override datepicker so it doesnt close on select
-	// inspired: http://stackoverflow.com/questions/1252512/jquery-datepicker-prevent-closing-picker-when-clicking-a-date/1762378#1762378
+	// inspired: https://stackoverflow.com/questions/1252512/jquery-datepicker-prevent-closing-picker-when-clicking-a-date/1762378#1762378
 	*/
 	$.datepicker._base_selectDate = $.datepicker._selectDate;
 	$.datepicker._selectDate = function(id, dateStr) {

@@ -2,7 +2,7 @@ This module provides a help against Cross Site Request Forgery.
 
 The aim is to protect POST requests of HTML forms against double use or calls from a third person.
 
-Therefore you can use the helper to inject a token into form templates and check this token in controller action on form submit.
+Therefore, you can use the helper to inject a token into form templates and check this token in controller action on form submit.
 
 Tokens will be:
 

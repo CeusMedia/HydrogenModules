@@ -1,24 +1,19 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Hook;
 
-class Hook_Tracker_Google_TagManager extends Controller{
-
+class Hook_Tracker_Google_TagManager extends Hook
+{
 	/**
 	 *	Extends response page by Google Tag Manager invocation.
-	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onPageApplyModules( Environment $env, object $context, $module, array & $payload ){
+	public function onPageApplyModules(): void
+	{
 		$configKey	= 'module.resource_tracker_google_tagmanager.';
-		$config		= $env->getConfig()->getAll( $configKey, TRUE );								//  get module configuration as dictionary
+		$config		= $this->env->getConfig()->getAll( $configKey, TRUE );								//  get module configuration as dictionary
 		if( !$config->get( 'active' ) || !$config->get( 'ID' ) )									//  module is disabled or ID is not set
 			return;
 		$baseUrl	= 'https://www.googletagmanager.com/';
@@ -32,14 +27,14 @@ class Hook_Tracker_Google_TagManager extends Controller{
 		$script		= HtmlTag::create( 'script', $script, [
 			'type'	=> 'text/javascript',
 		] );
-		$context->addHead( $script, 1 );
+		$this->context->addHead( $script, 1 );
 
-		$iframe		= HtmlTag::create( 'iframe', array(
+		$iframe		= HtmlTag::create( 'iframe', [
 			'src'		=> $baseUrl.'ns.html?id='.$config->get( 'ID' ),
 			'height'	=> 0,
 			'width'		=> 0,
 			'style'		=> 'display:none;visibility:hidden'
-		) );
-		$context->addBody( HtmlTag::create( 'noscript', $iframe ) );							//  prepend noscript tag to body
+		] );
+		$this->context->addBody( HtmlTag::create( 'noscript', $iframe ) );							//  prepend noscript tag to body
 	}
 }

@@ -1,13 +1,17 @@
 <?php
 class Job_Job_Lock extends Job_Abstract
 {
+	protected Logic_Job $logic;
+	private array $skipJobs;
+
 	/**
 	 *	@todo		finish implementation
 	 */
 	public function alert(){
 	}
 
-	public function clear( $jobIds = [], $reason = NULL ){
+	public function clear( $jobIds = [], $reason = NULL ): void
+	{
 		$list	= [];
 		foreach( $this->getLockedJobs() as $runningJob ){
 			$messageData	= $reason ? ['reason' => $reason] : [];
@@ -26,7 +30,8 @@ class Job_Job_Lock extends Job_Abstract
 		$list ? $this->out() : NULL;
 	}
 
-	public function list(){
+	public function list(): void
+	{
 		$list	= [];
 		foreach( $this->getLockedJobs() as $runningJob ){
 			$list[]	= (object) array(
@@ -47,6 +52,7 @@ class Job_Job_Lock extends Job_Abstract
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
 		$this->skipJobs	= array(
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,
@@ -54,7 +60,8 @@ class Job_Job_Lock extends Job_Abstract
 		);
 	}
 
-	protected function getLockedJobs(){
+	protected function getLockedJobs(): array
+	{
 		$runningJobs	= $this->logic->getRunningJobs( [], ['ranAt' => 'ASC'] );
 		$list			= [];
 		foreach( $runningJobs as $runningJob )

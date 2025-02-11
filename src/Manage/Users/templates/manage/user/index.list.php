@@ -1,11 +1,26 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_User $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var array<object> $roles */
+/** @var array<object> $users */
+/** @var int $page */
+/** @var int $limit */
+/** @var int $total */
+/** @var int $all */
+/** @var bool $hasRightToAdd */
+/** @var bool $hasRightToEdit */
 
 $w		= (object) $words['indexList'];
 
 /*  --  PAGINATION  --  */
-$pagination	= new \CeusMedia\Bootstrap\PageControl( './manage/user', $page, ceil( $total / $limit ) );
+$pagination	= new PageControl( './manage/user', $page, ceil( $total / $limit ) );
 
 if( $total ){
 	$rows		= [];
@@ -35,8 +50,8 @@ if( $total ){
 			HtmlTag::create( 'td', $labelUser, ['class' => 'cell-user'] ),
 			HtmlTag::create( 'td', $labelRole, ['class' => 'cell-role'] ),
 			HtmlTag::create( 'td', $labelStatus, ['class' => 'cell-status'] ),
-			HtmlTag::create( 'td', $phraser->convert( $user->createdAt, TRUE ), ['class' => 'cell-created'] ),
-			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt, TRUE ), ['class' => 'cell-logged'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->createdAt ?? '', TRUE ), ['class' => 'cell-created'] ),
+			HtmlTag::create( 'td', $phraser->convert( $user->loggedAt ?? '', TRUE ), ['class' => 'cell-logged'] ),
 		), [
 			'data-user-role'	=> $user->roleId,
 			'data-user-status'	=> $user->status,
@@ -52,12 +67,10 @@ if( $total ){
 else
 	$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
 
+$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $buttonAdd	= '';
 if( $hasRightToAdd ){
-	$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
-		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 	$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 		'href'	=> './manage/user/add',
 		'class'	=> 'btn btn-success'

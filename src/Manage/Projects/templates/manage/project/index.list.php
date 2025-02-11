@@ -1,7 +1,18 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var array $projects */
+/** @var int $page */
+/** @var int $total */
+/** @var int $filterLimit */
+/** @var bool $canAdd */
 
 $w				= (object) $words['index'];
 $indicator		= new HtmlIndicator();
@@ -12,7 +23,7 @@ $iconDefault	= HtmlTag::create( 'i', '', ['class' => 'fa fa-star'] );
 //if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 //	$iconDefault	= HtmlTag::create( 'b', '', ['class' => 'fa fa-star'] );
 
-$pagination		= new \CeusMedia\Bootstrap\PageControl( './manage/project', $page, ceil( $total / $filterLimit ), ['shortenFirst' => FALSE] );
+$pagination		= new PageControl( './manage/project', $page, ceil( $total / $filterLimit ) );
 $pagination		= $pagination->render();
 
 $list	= '<div><em class="muted">'.$w->noEntries.'</em></div><br/>';
@@ -25,10 +36,10 @@ if( $projects ){
 		$link		= HtmlTag::create( 'a', $label, ['href' => $url] );
 		$users		= [];
 		foreach( $project->users as $projectUser ){
-			if( $projectUser->userId === $project->creatorId )
+			if( $projectUser?->userId === $project->creatorId )
 				$users[]	= HtmlTag::create( 'u', $projectUser->username );
 			else
-				$users[]	= $projectUser->username;
+				$users[]	= $projectUser?->username;
 		}
 
 //		$desc	= explode( "\n", trim( strip_tags( $project->description ) ) );
@@ -58,7 +69,7 @@ if( $projects ){
 	) );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', join( $rows ) );
-	$colgroup	= HtmlElements::ColumnGroup( ['30px', '35%', '25%', '10%', '15%'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['30px', '', '', '100', '120px'] );
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
@@ -73,7 +84,7 @@ $buttonAddSmall	= HtmlTag::create( 'a', $iconAdd, [
 
 if( !$canAdd ){
 	$buttonAdd	= HtmlElements::LinkButton( './manage/project/add', $iconAdd.' '.$w->buttonAdd, 'btn btn-success btn-small disabled', NULL, TRUE );
-	$nuttonAddSmall	= "";
+	$buttonAddSmall	= "";
 }
 
 return '

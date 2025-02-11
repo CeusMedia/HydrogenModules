@@ -8,7 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $words */
 /** @var bool $tabbedLinks */
 
-$tabsMain		= $tabbedLinks ? $this->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/index/', ['words' => $words] ) );
 

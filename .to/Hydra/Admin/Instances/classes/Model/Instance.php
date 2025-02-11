@@ -55,7 +55,7 @@ class Model_Instance{
 			return NULL;
 		$data	= $this->data[$id];
 		$data->path		= empty( $data->path ) ? '' : $data->path;
-		$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
+		$data->protocol	= empty( $data->protocol ) ? 'https://' : $data->protocol;
 		return (object) $data;
 	}
 
@@ -63,7 +63,7 @@ class Model_Instance{
 		$list		= [];
 		foreach( $this->data as $id => $data ){
 			$data->path		= empty( $data->path ) ? '' : $data->path;
-			$data->protocol	= empty( $data->protocol ) ? 'http://' : $data->protocol;
+			$data->protocol	= empty( $data->protocol ) ? 'https://' : $data->protocol;
 			$list[$id]	= (object) $this->data[$id];
 		}
 		return $list;

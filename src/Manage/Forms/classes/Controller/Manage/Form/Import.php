@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
@@ -9,20 +8,32 @@ use CeusMedia\HydrogenFramework\Controller;
 class Controller_Manage_Form_Import extends Controller
 {
 	protected HttpRequest $request;
+
 	protected Dictionary $session;
+
 	protected Model_Form $modelForm;
+
 	protected Model_Form_Import_Rule $modelRule;
+
 	protected Model_Import_Connection $modelConnection;
+
 	protected Model_Import_Connector $modelConnector;
+
 	protected array $connectionMap		= [];
+
 	protected array $formMap			= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
-		if( $this->request->getMethod()->isPost() ){
+		if( $this->checkIsPost( FALSE ) ){
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
+				'status'				=> $this->request->get( 'status' ),
 				'title'					=> $this->request->get( 'title' ),
 				'searchCriteria'		=> $this->request->get( 'searchCriteria' ),
 				'options'				=> $this->request->get( 'options' ),
@@ -39,46 +50,37 @@ class Controller_Manage_Form_Import extends Controller
 		$this->addData( 'connections', $this->connectionMap );
 	}
 
-	public function ajaxTestRules()
-	{
-		$this->checkIsPost();
-		$ruleId	= $this->request->get( 'ruleId' );
-		$this->checkImportRuleId( $ruleId );
-		$rules	= $this->request->get( 'rules' );
-
-		$response	= [
-			'userId'	=> $this->session->get( 'auth_user_id' ),
-			'ruleId'	=> $ruleId,
-			'rules'		=> $rules,
-			'status'	=> 'empty',
-			'message'	=> NULL,
-		];
-
-		if( strlen( trim( $rules ) ) ){
-			$parser	= new JsonParser;
-			try{
-				$ruleSet	= $parser->parse( $rules, FALSE );
-				$response['status']	= 'parsed';
-			}
-			catch( RuntimeException $e ){
-				$response['status']		= 'exception';
-				$response['message']	= $e->getMessage();
-			}
-		}
-
-		print( json_encode( $response ) );
-		exit;
-
-		$this->respondData( $response );
-	}
-
-	public function edit( $ruleId )
+	/**
+	 *	@param		int|string		$ruleId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $ruleId ): void
 	{
 		$rule		= $this->modelRule->get( $ruleId );
+		if( NULL === $rule ){
+			$this->env->getMessenger()->noteError( 'Invalid Rule ID' );
+			$this->restart( NULL, TRUE );
+		}
+
+		/** @var ?Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
+		if( NULL === $connection ){
+			$this->env->getMessenger()->noteError( 'Related connections ID is invalid' );
+			$this->restart( NULL, TRUE );
+		}
+
+		/** @var ?Entity_Import_Connector $connector */
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
+		if( NULL === $connector ){
+			$this->env->getMessenger()->noteError( 'Related connector ID is invalid' );
+			$this->restart( NULL, TRUE );
+		}
 
 		$factory		= new ObjectFactory();
+
+		/** @var Logic_Import_Connector_Interface $remoteResource */
 		$remoteResource	= $factory->create( $connector->className, [$this->env] );
 		$remoteResource->setConnection( $connection )->connect();
 		$folders		= $remoteResource->getFolders( TRUE );
@@ -87,10 +89,11 @@ class Controller_Manage_Form_Import extends Controller
 //			if( !in_array( $this->request->get( 'moveTo' ), $folders ) )
 //				throw new InvalidArgumentException( 'Invalid folder' );
 
-		if( $this->request->getMethod()->isPost() ){
+		if( $this->checkIsPost( FALSE ) ){
 			$data		= [
 				'importConnectionId'	=> $this->request->get( 'importConnectionId' ),
 				'formId'				=> $this->request->get( 'formId' ),
+				'status'				=> $this->request->get( 'status' ),
 				'title'					=> $this->request->get( 'title' ),
 				'searchCriteria'		=> $this->request->get( 'searchCriteria' ),
 				'options'				=> $this->request->get( 'options' ),
@@ -108,6 +111,9 @@ class Controller_Manage_Form_Import extends Controller
 		$this->addData( 'connections', $this->connectionMap );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
 		$rules	= $this->modelRule->getAll();
@@ -121,7 +127,6 @@ class Controller_Manage_Form_Import extends Controller
 
 	/**
 	 *	@return	void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -137,15 +142,13 @@ class Controller_Manage_Form_Import extends Controller
 			$this->connectionMap[$connection->importConnectionId] = $connection;
 	}
 
-	protected function checkImportRuleId( string $importRuleId ): object
-	{
-		if( !$importRuleId )
-			throw new RuntimeException( 'No import rule ID given' );
-		if( !( $importRule = $this->modelRule->get( $importRuleId ) ) )
-			throw new DomainException( 'Invalid import rule ID given' );
-		return $importRule;
-	}
-
+	/**
+	 *	Checks whether the current request is done via POST.
+	 *	Throws exception in strict mode.
+	 *	@param		bool		$strict		Flag: throw exception if not POST and strict mode (default)
+	 *	@return		bool
+	 *	@throws		RuntimeException		if request method is not POST and strict mode is enabled
+	 */
 	protected function checkIsPost( bool $strict = TRUE ): bool
 	{
 		if( $this->request->getMethod()->is( 'POST' ) )

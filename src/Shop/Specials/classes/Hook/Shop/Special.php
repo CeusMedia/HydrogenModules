@@ -21,9 +21,9 @@ class Hook_Shop_Special extends Hook
 	{
 		$request	= $env->getRequest();
 		$model		= new Model_Shop_Bridge( $env );
-		$bridge		= $model->getByIndices( array(
+		$bridge		= $model->getByIndices( [
 			'frontendUriPath'	=> $request->get( '__controller' ).'/',
-		) );
+		] );
 		if( !$bridge )
 			return;
 //		if( $request->get( '__action' ) !== 'article' )

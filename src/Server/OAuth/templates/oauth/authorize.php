@@ -1,5 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var object $application */
+/** @var array<string,array<string|int,string>> $words */
 
 $w	= (object) $words['authorize'];
 

@@ -1,42 +1,19 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Catalog_Category extends Controller
 {
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$cache		= $env->getCache();
-		if( !( $categories = $cache->get( 'catalog.tinymce.links.categories' ) ) ){
-			$logic		= new Logic_Catalog( $env );
-			$config		= $env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-			$language	= $env->getLanguage()->getLanguage();
-			$conditions	= ['visible' => '> 0', 'parentId' => 0];
-			$categories	= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
-			foreach( $categories as $nr1 => $item ){
-				$conditions	= ['visible' => '> 0', 'parentId' => $item->categoryId];
-				$subs		= $logic->getCategories( $conditions, ['rank' => 'ASC'] );
-				foreach( $subs as $nr2 => $sub ){
-					$subs[$nr2] = (object) [
-						'title'	=> $sub->{"label_".$language},
-						'value'	=> 'catalog/category/'.$item->categoryId,
-					];
-				}
-				$categories[$nr1] = (object) array(
-					'title'	=> $item->{"label_".$language},
-					'menu'	=> array_values( $subs ),
-				);
-			}
-			$cache->set( 'catalog.tinymce.links.categories', $categories );
-		}
-		$context->list  = array_merge( $context->list, array( (object) array(		//  extend global collection by submenu with list of items
-			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
-			'menu'	=> array_values( $categories ),									//  items of submenu
-		) ) );
-	}
+	protected HttpRequest $request;
+	protected HttpPartitionSession $session;
+	protected Logic_Catalog $logic;
+	protected MessengerResource $messenger;
 
-	public function add( $parentId = NULL )
+	public function add( $parentId = NULL ): void
 	{
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'add' );
@@ -57,13 +34,12 @@ class Controller_Manage_Catalog_Category extends Controller
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function ajaxSetTab( $tabKey )
-	{
-		$this->session->set( 'manage.catalog.category.tab', $tabKey );
-		exit;
-	}
-
-	public function edit( $categoryId )
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -86,12 +62,17 @@ class Controller_Manage_Catalog_Category extends Controller
 		$this->addData( 'articles', $this->logic->getCategoryArticles( $category ) );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$this->addData( 'categories', $this->logic->getCategories() );
 	}
 
-	public function remove( $categoryId )
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $categoryId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$category	= $this->logic->getCategory( $categoryId );
@@ -112,8 +93,8 @@ class Controller_Manage_Catalog_Category extends Controller
 	{
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init start' );
 		$this->logic		= new Logic_Catalog( $this->env );
-		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
+		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 		$this->env->getRuntime()->reach( 'Controller_Manage_Catalog_Category::init done' );
 	}

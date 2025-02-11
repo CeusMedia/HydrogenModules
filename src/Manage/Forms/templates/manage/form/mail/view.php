@@ -1,5 +1,10 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Entity_Form_Mail $mail */
 
 $modelMail	= new Model_Form_Mail( $env );
 
@@ -21,16 +26,16 @@ $buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', [
 if( $mail->format == Model_Form_Mail::FORMAT_TEXT )
 	$mail->content	= nl2br( $mail->content );
 
-return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'h2', '<span class="muted">Mail:</span> '.$mail->title ),
-	), [] ),
+	] ),
 	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'div', $mail->content, [
 		'style' => 'border: 2px solid gray; padding: 2em;'
 	] ),
-	HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
 		HtmlTag::create( 'hr' ),
 		join( ' ', [$buttonCancel, $buttonEdit] ),
-	), [] ),
-), [] );
+	] ),
+] );

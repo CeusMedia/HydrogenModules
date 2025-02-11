@@ -11,13 +11,13 @@ class Job_Job_Test extends Job_Abstract
 //	protected $pathJobs		= 'config/jobs/';
 //	protected $logic;
 
-	public function reflect()
+	public function reflect(): void
 	{
 		$this->reflectCommands();
 		$this->reflectParameters();
 	}
 
-	public function reflectCommands()
+	public function reflectCommands(): void
 	{
 //		$this->out( json_encode( $this->commands ) );
 		$this->out( 'Commands: '.join( ', ', $this->commands ) );
@@ -26,9 +26,9 @@ class Job_Job_Test extends Job_Abstract
 	/**
 	 *	Prints given parameters.
 	 *	@access		public
-	 *	@return		...
+	 *	@return		void
 	 */
-	public function reflectParameters()
+	public function reflectParameters(): void
 	{
 //		$this->out( json_encode( $this->parameters->getAll() ) );
 		$this->out( 'Parameters: ' );
@@ -39,24 +39,25 @@ class Job_Job_Test extends Job_Abstract
 	/**
 	 *	Prints given parameters.
 	 *	@access		public
-	 *	@return		...
+	 *	@return		void
 	 */
-	public function throwException()
+	public function throwException(): void
 	{
 		throw new RuntimeException( 'Test Exception' );
 	}
 
 	/**
-	 *	Prints given parameters.
+	 *	Waits for n second.
+	 *	Takes first argument as number of seconds, defaults to 1.
 	 *	@access		public
-	 *	@return		...
+	 *	@return		void
 	 */
-	public function wait()
+	public function wait(): void
 	{
 //		throw new Exception( 'Test Exception' );
 		$seconds	= 1;
-		if( $this->commands )
-			$seconds	= (int) current( $this->commands );
+		if( [] !== $this->commands )
+			$seconds	= max( 1, (int) current( $this->commands ) );
 		$this->out( 'Waiting for '.$seconds.' seconds ...' );
 		sleep( $seconds );
 	}

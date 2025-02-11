@@ -3,19 +3,19 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstore
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	protected function renderList( $articles, $articleId = NULL )
+	protected function renderList( array $articles, int|string|NULL $articleId = NULL ): string
 	{
 		$list	= [];
 		foreach( $articles as $article ){
@@ -26,7 +26,6 @@ class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstor
 			$list[]	= HtmlTag::create( 'li', $link, ['class' => $class] );
 		}
 //		ksort( $list );
-		$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked boxed'] );
-		return $list;
+		return HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked boxed'] );
 	}
 }

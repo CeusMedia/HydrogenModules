@@ -24,7 +24,7 @@ abstract class Model_Calculator_TerminalExpression
 			return new Model_Calculator_Division( $value );
 		elseif ( $value === '^' )
 			return new Model_Calculator_Power( $value );
-		else if( in_array( $value, array( '(', ')' ) ) )
+		else if( in_array( $value, ['(', ')'] ) )
 			return new Model_Calculator_Parenthesis( $value );
 		throw new Exception( 'Undefined Value ' . $value );
 	}

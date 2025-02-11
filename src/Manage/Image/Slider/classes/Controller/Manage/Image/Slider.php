@@ -1,21 +1,28 @@
 <?php
 
+use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\Image;
 use CeusMedia\Common\UI\Image\Processing as ImageProcessing;
 use CeusMedia\HydrogenFramework\Controller;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Manage_Image_Slider extends Controller
 {
-	protected $modelSlider;
-	protected $modelSlide;
-	protected $frontend;
-	protected $messenger;
-	protected $request;
-	protected $basePath;
+	protected Model_Image_Slider $modelSlider;
+	protected Model_Image_Slide $modelSlide;
+	protected Logic_Frontend $frontend;
+	protected MessengerResource $messenger;
+	protected HttpRequest $request;
+	protected string $basePath;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
@@ -37,7 +44,12 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->addData( 'data', $this->request->getAll( NULL, TRUE ) );
 	}
 
-	public function addSlide( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addSlide( int|string $sliderId ): void
 	{
 		$slider	= $this->checkSliderId( $sliderId );
 		$words	= (object) $this->getWords( 'msg' );
@@ -47,7 +59,7 @@ class Controller_Manage_Image_Slider extends Controller
 				'sliderId'  => $sliderId,
 				'source'    => $image['name']
 			];
-			if( $this->modelSlide->getByIndices( $indices ) ){
+			if( $this->modelSlide->hasByIndices( $indices ) ){
 				$this->messenger->noteError( $words->errorSlideExists, $image['name'] );
 				$this->restart( './edit/'.$sliderId, TRUE );
 			}
@@ -104,10 +116,15 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->restart( 'edit/'.$sliderId, TRUE );
 	}
 
-	public function demo( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function demo( int|string $sliderId ): void
 	{
 		$slider	= $this->checkSliderId( $sliderId );
-		if( !$this->modelSlide->getAllByIndex( 'sliderId', $sliderId ) ){
+		if( !$this->modelSlide->hasByIndex( 'sliderId', $sliderId ) ){
 			$words	= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorNoSlides, $slider->title );
 			$this->restart( 'edit/'.$sliderId, TRUE );
@@ -116,7 +133,12 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->addData( 'sliderId', $sliderId );
 	}
 
-	public function edit( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $sliderId ): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		$slider	= $this->checkSliderId( $sliderId );
@@ -128,10 +150,10 @@ class Controller_Manage_Image_Slider extends Controller
 				$pathOld	= $this->basePath.$slider->path;
 				$pathNew	= $this->basePath.$data['path'];
 				try{
-					Folder_Editor::renameFolder( $pathOld, $pathNew );
+					FolderEditor::renameFolder( $pathOld, $pathNew );
 				}
 				catch( Exception $e ){
-					$this->messenger->noteError( $words->errorMovingSliderFailed );
+					$this->messenger->noteError( $words->errorMovingSliderFailed, $e->getMessage() );
 					$data['path']	= $slider->path;
 				}
 			}
@@ -145,7 +167,12 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->addData( 'slider', $slider );
 	}
 
-	public function editSlide( $slideId )
+	/**
+	 *	@param		int|string		$slideId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editSlide( int|string $slideId ): void
 	{
 		$slide	= $this->checkSlideId( $slideId );
 		$slider	= $this->checkSliderId( $slide->sliderId );
@@ -155,15 +182,15 @@ class Controller_Manage_Image_Slider extends Controller
 		$slides	= $this->modelSlide->getAllByIndex( 'sliderId', $slide->sliderId, $orders );
 
 		if( $this->request->has( 'save' ) ){
-			$data	= $this->request->getAll();
-			$data	= array(
-				'status'	=> $this->request->get( 'status' ),
-				'title'		=> $this->request->get( 'title' ),
-				'content'	=> $this->request->get( 'content' ),
-				'link'		=> $this->request->get( 'link' ),
-				'rank'		=> $this->request->get( 'rank' ),
+			$post	= $this->request->getAllFromSource( 'post', TRUE );
+			$data	= [
+				'status'	=> $post->get( 'status' ),
+				'title'		=> $post->get( 'title' ),
+				'content'	=> $post->get( 'content' ),
+				'link'		=> $post->get( 'link' ),
+				'rank'		=> $post->get( 'rank' ),
 				'timestamp'	=> time(),
-			);
+			];
 			$this->modelSlide->edit( $slideId, $data, FALSE );
 			$this->reorderSlides( $slide->sliderId );
 			$this->messenger->noteSuccess( $words->successSlideEdited );
@@ -176,9 +203,14 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->addData( 'slides', $slides );
 	}
 
-	public function importSlides( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function importSlides( int|string $sliderId ): void
 	{
-		$slider	= $this->checkSliderId( $sliderId );
+		$this->checkSliderId( $sliderId );
 		$slides	= $this->modelSlide->getAll( ['sliderId' => $sliderId] );
 		$list	= [];
 		$index	= new DirectoryIterator( $this->basePath );
@@ -210,21 +242,27 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->restart( 'edit/'.$sliderId, TRUE );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$conditions	= [];
 		$orders		= ['status' => 'DESC', 'title' => 'ASC'];
 		$sliders	= $this->modelSlider->getAll( $conditions, $orders );
-		foreach( $sliders as $nr => $slider )
+		foreach( $sliders as $slider )
 			$slider->slides	= $this->modelSlide->getAll( ['sliderId' => $slider->sliderId], ['rank' => 'ASC'] );
 
 		$this->addData( 'sliders', $sliders );
 	}
 
-	public function rankSlide( $slideId, $moveBy )
+	/**
+	 *	@param		int|string			$slideId
+	 *	@param		int|string		$moveBy
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function rankSlide( int|string $slideId, int|string $moveBy ): void
 	{
 		$slide	= $this->checkSlideId( $slideId );
-		$slider	= $this->checkSliderId( $slide->sliderId );
+		$this->checkSliderId( $slide->sliderId );
 		$this->modelSlide->edit( $slideId, array(
 			'rank'		=> $slide->rank + (int) $moveBy,
 			'timestamp'	=> time()
@@ -233,7 +271,12 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->restart( 'edit/'.$slide->sliderId, TRUE );
 	}
 
-	public function remove( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( int|string $sliderId ): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		$slider	= $this->checkSliderId( $sliderId );
@@ -250,11 +293,17 @@ class Controller_Manage_Image_Slider extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function removeSlide( $slideId, $removeSourceBackup = FALSE )
+	/**
+	 *	@param		int|string		$slideId
+	 *	@param		bool		$removeSourceBackup
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeSlide( int|string $slideId, bool $removeSourceBackup = FALSE ): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		$slide	= $this->checkSlideId( $slideId );
-		$slider	= $this->checkSliderId( $slide->sliderId );
+		$this->checkSliderId( $slide->sliderId );
 
 		$this->modelSlide->remove( $slideId );
 		$message	= $words->successSlideRemoved1;
@@ -270,6 +319,10 @@ class Controller_Manage_Image_Slider extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
@@ -281,16 +334,22 @@ class Controller_Manage_Image_Slider extends Controller
 		$pathImages		= $this->frontend->getPath( 'images' );
 		if( !$this->frontend->hasModule( 'UI_Image_Slider' ) ){
 			$this->messenger->noteFailure( 'Module "UI_Image_Slider" is not installed in frontend instance. Your request has been reset to start.' );
-			$this->restart( NULL );
+			$this->restart();
 		}
 		$pathSliders	= $this->frontend->getModuleConfigValue( 'UI_Image_Slider', 'path' );
 		$this->addData( 'basePath', $this->basePath = $pathImages.$pathSliders );
 	}
 
-	protected function checkSlideId( $slideId )
+	/**
+	 *	@param		int|string		$slideId
+	 *	@return		Entity_Image_Slide
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkSlideId( int|string $slideId ): Entity_Image_Slide
 	{
+		/** @var Entity_Image_Slide $slide */
 		$slide		= $this->modelSlide->get( $slideId );
-		if( !$slide ){
+		if( NULL === $slide ){
 			$words	= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorInvalidSlideId );
 			$this->restart( NULL, TRUE );
@@ -298,10 +357,16 @@ class Controller_Manage_Image_Slider extends Controller
 		return $slide;
 	}
 
-	protected function checkSliderId( $sliderId )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@return		Entity_Image_Slider
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkSliderId( int|string $sliderId ): Entity_Image_Slider
 	{
+		/** @var Entity_Image_Slider $slider */
 		$slider		= $this->modelSlider->get( $sliderId );
-		if( !$slider ){
+		if( NULL === $slider ){
 			$words	= (object) $this->getWords( 'msg' );
 			$this->messenger->noteError( $words->errorInvalidSliderId );
 			$this->restart( NULL, TRUE );
@@ -309,14 +374,21 @@ class Controller_Manage_Image_Slider extends Controller
 		return $slider;
 	}
 
-	protected function reorderSlides( $sliderId, $takeNewerFirst = TRUE )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@param		bool		$takeNewerFirst
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function reorderSlides( int|string $sliderId, bool $takeNewerFirst = TRUE ): bool
 	{
 		$this->checkSliderId( $sliderId );
 		$orders		= ['rank' => 'ASC', 'timestamp' => $takeNewerFirst ? 'DESC' : 'ASC'];
+		/** @var Entity_Image_Slide[] $slides */
 		$slides		= $this->modelSlide->getAllByIndex( 'sliderId', $sliderId, $orders );
 		$changes	= 0;
 		foreach( $slides as $nr => $slide ){
-			if( (int) $slide->rank !== $nr + 1 ){
+			if( $slide->rank !== $nr + 1 ){
 				$this->modelSlide->edit( $slide->sliderSlideId, ['rank' => $nr + 1] );
 				$changes++;
 			}
@@ -324,7 +396,20 @@ class Controller_Manage_Image_Slider extends Controller
 		return (bool) $changes;
 	}
 
-	protected function scaleImage( $sliderId, $slideId, $posX = "center", $posY = "center" )
+	/**
+	 *	@param		int|string		$sliderId
+	 *	@param		int|string		$slideId
+	 *	@param		string			$posX
+	 *	@param		string			$posY
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RuntimeException	if image file is not existing
+	 *	@throws		RuntimeException	if image file is not readable
+	 *	@throws		RuntimeException	if image file is not an image
+	 *	@throws		Exception			if detected image type is not supported
+	 *	@throws		Exception			if image type is not supported for reading
+	 */
+	protected function scaleImage( int|string $sliderId, int|string $slideId, string $posX = "center", string $posY = "center" ): bool
 	{
 		$slider	= $this->checkSliderId( $sliderId );
 		$slide	= $this->checkSlideId( $slideId );
@@ -333,15 +418,15 @@ class Controller_Manage_Image_Slider extends Controller
 		if( !file_exists( $path ) )
 			throw new RuntimeException( 'Slider image file "'.$path.$slide->source.'" is not existing' );
 
-		$slideWidth		= (int) $slider->width;
-		$slideHeight	= (int) $slider->height;
+		$slideWidth		= $slider->width;
+		$slideHeight	= $slider->height;
 		$image			= new Image( $path.$slider->path.$slide->source );
 		if( $image->getWidth() === $slideWidth && $image->getHeight() === $slideHeight )			//  no need to scale or crop
 			return FALSE;																			//  indicate to have done nothing
 
 		if( !is_dir( $path.'source/' ) )															//  no backup folder found
 			mkdir( $path.'source/' );																//  create backup folder
-		if( !@copy( $path.$slider->path.$slide->source, $path.'source/'.$slide->source ) )			//  try to backup original image
+		if( !@copy( $path.$slider->path.$slide->source, $path.'source/'.$slide->source ) )			//  try to back up original image
 			throw new RuntimeException( 'Slider image backup to path "'.$path.'source/" failed' );
 
 		$processor	= new ImageProcessing( $image );											//  start image processor
@@ -352,16 +437,17 @@ class Controller_Manage_Image_Slider extends Controller
 
 		$image->save();																				//  save image to source file
 
-		$startX	= 0;
-		$startY	= 0;
-		if( $posX == "center" )
-			$startX = (int) floor( ( $image->getWidth() - $slideWidth ) / 2 );						//  calculate top offset
-		else if( $posX == "bottom" )
-			$startX	= $image->getWidth() - $slideWidth;												//  calculate top offset
-		if( $posY == "center" )
-			$startY = (int) floor( ( $image->getHeight() - $slideHeight ) / 2 );					//  calculate left offset
-		else if( $posY == "bottom" )
-			$startY	= $image->getHeight() - $slideHeight;											//  calculate left offset
+		$startX	= match( $posX ){																	//  calculate left offset
+			'center'	=> (int) floor( ( $image->getWidth() - $slideWidth ) / 2 ),
+			'right'		=> $image->getWidth() - $slideWidth,
+			default		=> 0,
+		};
+
+		$startY	= match( $posY ){																	//  calculate top offset
+			'center'	=> (int) floor( ( $image->getHeight() - $slideHeight ) / 2 ),
+			'bottom'	=> $image->getHeight() - $slideHeight,
+			default		=> 0,
+		};
 
 		$processor->crop( $startX, $startY, $slideWidth, $slideHeight );							//  crop image
 		$image->save();																				//  save image to source file

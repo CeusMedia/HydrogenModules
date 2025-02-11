@@ -1,7 +1,16 @@
 <?php
+
+use CeusMedia\Common\Exception\IO as IoException;
+
 class Mail_Auth_Local_Password extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		static
+	 *	@throws		ReflectionException
+	 *	@throws		IoException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -12,7 +21,7 @@ class Mail_Auth_Local_Password extends Mail_Abstract
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
-		$plain	= $this->view->loadContentFile( 'mail/auth/local/password.txt', $data );
+		$plain	= $this->loadContentFile( 'mail/auth/local/password.txt', $data ) ?? '';
 		$this->setText( $plain );
 
 		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );

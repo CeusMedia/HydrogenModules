@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
-/** @var object $missions */
+/** @var Entity_Mission $missions */
 
 $w			= (object) $words['index'];
 

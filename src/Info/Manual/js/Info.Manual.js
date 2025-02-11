@@ -1,4 +1,4 @@
-var InfoManual = {};
+let InfoManual = {};
 
 InfoManual.UI = {};
 
@@ -8,8 +8,8 @@ InfoManual.UI.Filter = {
 		jQuery(InfoManual.UI.Filter.selectorCategoryId).bind('change', this.onFilterCategoryChange);
 	},
 	onFilterCategoryChange: function(){
-//		var categoryId = jQuery(InfoManual.UI.Filter.selectorCategoryId).val();
-		var categoryId = jQuery(this).val();
+//		let categoryId = jQuery(InfoManual.UI.Filter.selectorCategoryId).val();
+		let categoryId = jQuery(this).val();
 		document.location.href = './info/manual/category/' + categoryId;
 	}
 };
@@ -19,9 +19,9 @@ InfoManual.UI.Tree = {
 		jQuery(selectorTree+" li.list-group-item").bind("click", this.onFolderToggle);
 	},
 	onFolderToggle: function(event){
-		var folder = jQuery(this);
-		var link = folder.children("a");
-		var pageId = parseInt(link.prop('href').split(/\//).pop(), 10);
+		let folder = jQuery(this);
+		let link = folder.children("a");
+		let pageId = parseInt(link.prop('href').split(/\//).pop(), 10);
 		jQuery.ajax({
 			url: './ajax/info/manual/setBranchStatus',
 			method: 'POST',
@@ -44,11 +44,11 @@ InfoManual.UI.Page = {
 
 
 	renderMarkdown: function(selectorContainer){
-		var markdown = $(selectorContainer);
+		let markdown = $(selectorContainer);
 		if(markdown.length){
 			if(this.renderer === "client"){
-				var converter = new Markdown.Converter();
-				var content = markdown.html().replace(/&gt;/, ">").replace(/&lt;/, "<");
+				let converter = new Markdown.Converter();
+				let content = markdown.html().replace(/&gt;/, ">").replace(/&lt;/, "<");
 				markdown.html(converter.makeHtml(content)).show();
 			}
 			else if(this.renderer === "server-ajax"){
@@ -57,7 +57,7 @@ InfoManual.UI.Page = {
 						markdown.html(data).show();
 					}, function(json){});
 				}else{
-					var content = markdown.html()/*.replace(/&gt;/, ">").replace(/&lt;/, "<")*/;
+					let content = markdown.html()/*.replace(/&gt;/, ">").replace(/&lt;/, "<")*/;
 					$.ajax({
 						url: "./helper/markdown/ajaxRender",
 						dataType: "html",
@@ -83,9 +83,9 @@ InfoManual.UI.Page = {
 			throw "No heading levels given."
 		levels	= "h"+levels.join(",h");
 		itemClassPrefix = typeof itemClassPrefix === "undefined" ? "" : itemClassPrefix;
-		var list = jQuery("<ul></ul>").addClass("index-list");
+		let list = jQuery("<ul></ul>").addClass("index-list");
 		jQuery(selectorSource).find(levels).each(function(nr){
-			var label, id, anchorLink, className, listItem;
+			let label, id, anchorLink, className, listItem;
 			label = jQuery(this).html();
 			if(!label.length)
 				return;
@@ -97,7 +97,7 @@ InfoManual.UI.Page = {
 			list.append(listItem);
 		});
 		if(list.children().length >= 3){
-			var pathname = window.location.href.split('#')[0];
+			let pathname = window.location.href.split('#')[0];
 			list.find('a[href^="#"]').each(function() {
 				$(this).attr('href', pathname + $(this).attr('href'));
 			});

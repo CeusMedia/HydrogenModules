@@ -21,7 +21,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -62,9 +62,10 @@ list>
 	<log version="0.6">Extract AJAX actions to own class AJAX controller.</log>
 	<log version="0.6.1">Deny registration if no default role is set.</log>
 	<log version="0.6.2">Upgrade to changes in authentication core.</log>
+	<log version="0.6.3">Use new user logic and model entities from Resource:Users.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Auth/Local.php</class>
 		<class>Controller/Ajax/Auth/Local.php</class>
@@ -147,7 +148,7 @@ list>
 	<link xml:lang="de" rank="99" access="inside" path="auth/local/logout">Logout</link>
 	<link xml:lang="en" rank="10" access="outside" path="auth/local/login">Login</link>
 	<link xml:lang="en" rank="11" access="outside" path="auth/local/password">Password</link>
-	<link xml:lang="en" rank="12" access="outside" path="auth/local/register">Rgister Account</link>
+	<link xml:lang="en" rank="12" access="outside" path="auth/local/register">Register Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/local/confirm">Confirm Account</link>
 	<link xml:lang="en" rank="99" access="inside" path="auth/local/logout">Logout</link>
 	<link rank="99" access="public" path="auth/local/index"></link>

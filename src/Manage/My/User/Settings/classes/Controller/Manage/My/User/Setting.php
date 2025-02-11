@@ -7,6 +7,9 @@ class Controller_Manage_My_User_Setting extends Controller
 	protected Model_User_Setting $model;
 	protected ?string $userId;
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
 		$this->addData( 'from', $this->env->getRequest()->get( 'from' ) );
@@ -15,6 +18,12 @@ class Controller_Manage_My_User_Setting extends Controller
 		$this->addData( 'settings', $this->model->getAllByIndex( 'userId', $this->userId ) );		//  get all user settings from database
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$configKey
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function reset( string $moduleId, string $configKey ): void
 	{
 		$from		= $this->env->getRequest()->get( 'from' );
@@ -29,6 +38,10 @@ class Controller_Manage_My_User_Setting extends Controller
 		$this->restart( NULL, TRUE );												//  @todo: make another redirect possible
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function update(): void
 	{
 		$request	= $this->env->getRequest();
@@ -37,21 +50,22 @@ class Controller_Manage_My_User_Setting extends Controller
 		$count		= 0;
 		foreach( $this->env->getModules()->getAll() as $module ){									//  iterate modules
 			foreach( $module->config as $config ){													//  iterate module config pairs
-				if( $config->protected !== "user" )													//  config pair is not writable for user settings
+				if( 'user' !== $config->protected )													//  config pair is not writable for user settings
 					continue;																		//  skip this config pair
-				$key	= $module->id.'::'.str_replace( '.', '_', $config->key );	//  key name of form input
+				$key	= $module->id.'::'.str_replace( '.', '_', $config->key );		//  key name of form input
 				if( !$request->has( $key ) )														//  no value for current config pair is in form request
 					continue;																		//  so skip this one
 				$value		= $this->model->castValue( $config->type, $request->get( $key ) );		//  convert sent input value to type of config value
-				if( preg_match( "/password$/", $config->key."|".$config->type ) )	//  pair is a password or pair key ends with 'password'
+				if( str_ends_with( $config->key . "|" . $config->type, 'password' ) )				//  pair is a password or pair key ends with 'password'
 					if( !strlen( trim( $value ) ) )													//  no newer password entered
-					continue;																		//  do not save empty password
+						continue;																	//  do not save empty password
 
 				$indices	= [																		//  prepare indices for search for user setting in database
 					'userId'	=> $this->userId,
 					'moduleId'	=> $module->id,
 					'key'		=> $config->key
 				];
+				/** @var Entity_User_Settings $setting */
 				$setting	= $this->model->getByIndices( $indices );								//  search for user setting of this config pair
 
 				if( $value === $config->value ){													//  new value matches config value

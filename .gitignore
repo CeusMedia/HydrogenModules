@@ -1,7 +1,10 @@
 /composer.lock
 /vendor
+/doc
+/.idea
 
 
 ## temporary
-/test
-/.idea
+/.phpunit.result.cache
+/tool/config/.phpunit.cache/
+/tmp

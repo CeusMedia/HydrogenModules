@@ -7,6 +7,7 @@
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
+/** @var View_Catalog $view */
 /** @var array $words */
 /** @var object $article */
 /** @var object $category */
@@ -21,9 +22,9 @@ $a->subtitle	= View_Helper_Text::applyFormat( $a->subtitle );
 $a->volume		= $category->volume ? $w->volume."&nbsp;".$category->volume : "";
 $position		= $helper->renderPositionFromArticle( $article );
 
-$panelDetails	= $this->loadTemplateFile( 'catalog/article/details.php' );
-$panelOrder		= $this->loadTemplateFile( 'catalog/article/order.php' );
-$panelRelations	= $this->loadTemplateFile( 'catalog/article/relations.php' );
+$panelDetails	= $view->loadTemplateFile( 'catalog/article/details.php' );
+$panelOrder		= $view->loadTemplateFile( 'catalog/article/order.php' );
+$panelRelations	= $view->loadTemplateFile( 'catalog/article/relations.php' );
 
 return '
 <div class="article">

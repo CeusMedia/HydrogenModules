@@ -97,7 +97,8 @@ class Controller_Manage_My_User_Avatar extends Controller
 				$messenger->noteSuccess( $words->successImageSaved );
 			}
 			catch( Exception $e ){
-				$this->callHook( 'Env', 'logException', $this, $e );
+				$payload	= ['exception' => $e];
+				$this->callHook( 'Env', 'logException', $this, $payload );
 				$message	=  'Bei der Bildverarbeitung ist ein <abbr title="%s">Fehler</abbr> aufgetreten.';
 				$messenger->noteFailure( $message, $e->getMessage() );
 			}

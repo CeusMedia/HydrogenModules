@@ -1,10 +1,18 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var View $view */
+/** @var object $project */
+/** @var array $projects */
 
 $w		= (object) $words['filter'];
 
-$term	= $env->session->get( 'filter_notes_term' );
-$tags	= $env->session->get( 'filter_notes_tags' );
+$term	= $env->getSession()->get( 'filter_notes_term' );
+$tags	= $env->getSession()->get( 'filter_notes_tags' );
 if( !is_array( $tags ) )
 	$tags	= [];
 

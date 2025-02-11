@@ -21,16 +21,28 @@ class Hook_Shop_Payment_Paypal extends Hook
 		$methods	= $env->getConfig()->getAll( 'module.shop_payment_paypal.method.', TRUE );
 		$words		= $env->getLanguage()->getWords( 'shop/payment/paypal' );
 		$labels		= (object) $words['payment-methods'];
-		if( $methods->get( 'Express' ) ){
-			$context->registerPaymentBackend(
-				'Paypal',									//  backend class name
-				'PayPal:Express',							//  payment method key
-				$labels->express,							//  payment method label
-				'paypal/authorize',							//  shop URL
-	 			$methods->get( 'Express' ),					//  priority
-				'paypal-2.png'								//  icon
-			);
+		$descs		= (object) ( $words['payment-method-descriptions'] ?? [] );
+		/** @var Model_Shop_Payment_BackendRegister $register */
+		$register	= $payload['register'] ?? new Model_Shop_Payment_BackendRegister( $env );
+
+		if( $methods->get( 'Express.active', FALSE ) ){
+			$priority	= $methods->get( 'Express.priority', 0 );
+			if( 0 !== $priority ){
+				$method		= $methods->getAll( 'Express.', TRUE );
+				$register->add( [
+					'backend'		=> 'Paypal',								//  backend class name
+					'key'			=> 'PayPal:Express',						//  payment method key
+					'path'			=> 'paypal/authorize',						//  shop URL
+					'icon'			=> 'paypal-2.png',							//  icon
+					'priority'		=> $priority,								//  priority
+					'label'			=> $labels->express,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] );
+			}
 		}
+		$payload['register']	= $register;
 	}
 
 	/**
@@ -45,11 +57,11 @@ class Hook_Shop_Payment_Paypal extends Hook
 	 */
 	static public function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
 	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
+		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
 		$model	= new Model_Shop_Order( $env );
 		$order	= $model->get( $payload['orderId'] );
-		foreach( $payload['paymentBackends'] as $backend ){
+		foreach( $payload['paymentBackends']->getAll() as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){

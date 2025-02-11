@@ -28,3 +28,33 @@
 	color: white;
 	border-radius: 0 0 0 4px;
 	}
+
+/* Transfer rules test */
+span.indicator-transfer-rules-test {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	border: 1px solid gray;
+	border-radius: 0.3em;
+}
+span.indicator-transfer-rules-test.test-success {
+	background-color: green;
+}
+span.indicator-transfer-rules-test.test-fail {
+	background-color: green;
+}
+
+/* Import rules test */
+span.indicator-import-rules-test {
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	border: 1px solid gray;
+	border-radius: 0.3em;
+}
+span.indicator-import-rules-test.test-success {
+	background-color: green;
+}
+span.indicator-import-rules-test.test-fail {
+	background-color: green;
+}

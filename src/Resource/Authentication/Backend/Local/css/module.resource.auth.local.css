@@ -60,14 +60,14 @@ body.auth-centered.moduleAuthLocal.action-login #layout-content,
 body.auth-centered.moduleAuthLocal.action-password #layout-content,
 body.auth-centered.moduleAuthLocal.action-password #layout-field,
 body.auth-centered.moduleAuthLocal.action-password #layout-content{
-	height: 100vh;
+	height: 80vh;
 	margin-top: 0 !important;
 	overflow: hidden;
 	}
 body.auth-centered.moduleAuthLocal.action-confirm #layout-content .centered-pane-container,
 body.auth-centered.moduleAuthLocal.action-login #layout-content .centered-pane-container,
 body.auth-centered.moduleAuthLocal.action-password #layout-content .centered-pane-container{
-	height: 90vh;
+	height: 80vh;
 	display: flex;           /* establish flex container */
 	flex-direction: column;  /* make main axis vertical */
 	justify-content: center; /* center items vertically, in this case */

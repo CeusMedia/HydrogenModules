@@ -4,10 +4,10 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Billing_Bill_Expense extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_BOOKED		= 1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_BOOKED		= 1;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_BOOKED,
 	];

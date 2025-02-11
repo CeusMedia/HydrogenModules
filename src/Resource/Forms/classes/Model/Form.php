@@ -4,12 +4,12 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form extends Model
 {
-	const TYPE_NORMAL		= 0;
-	const TYPE_CONFIRM		= 1;
+	public const TYPE_NORMAL		= 0;
+	public const TYPE_CONFIRM		= 1;
 
-	const STATUS_DISABLED	= -1;
-	const STATUS_NEW		= 0;
-	const STATUS_ACTIVATED	= 1;
+	public const STATUS_DISABLED	= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_ACTIVATED	= 1;
 
 	protected array $columns		= [
 		'formId',
@@ -20,6 +20,7 @@ class Model_Form extends Model
 		'title',
 		'receivers',
 		'content',
+		'forwardOnSuccess',
 		'timestamp',
 	];
 
@@ -33,5 +34,7 @@ class Model_Form extends Model
 
 	protected string $name			= 'forms';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form::class;
 }

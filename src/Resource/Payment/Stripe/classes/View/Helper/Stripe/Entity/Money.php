@@ -1,15 +1,15 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
+class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract
+{
+	public const FORMAT_AMOUNT_CURRENCY			= '%1$s%3$s';
+	public const FORMAT_AMOUNT_SPACE_CURRENCY	= '%1$s%2$s%3$s';
+	public const FORMAT_CURRENCY_AMOUNT			= '%3$s%1$s';
+	public const FORMAT_CURRENCY_SPACE_AMOUNT	= '%3$s%2$s%1$s';
 
-	const FORMAT_AMOUNT_CURRENCY		= '%1$s%3$s';
-	const FORMAT_AMOUNT_SPACE_CURRENCY	= '%1$s%2$s%3$s';
-	const FORMAT_CURRENCY_AMOUNT		= '%3$s%1$s';
-	const FORMAT_CURRENCY_SPACE_AMOUNT	= '%3$s%2$s%1$s';
-
-	const NUMBER_FORMAT_DOT				= 0;
-	const NUMBER_FORMAT_COMMA			= 1;
+	public const NUMBER_FORMAT_DOT				= 0;
+	public const NUMBER_FORMAT_COMMA			= 1;
 
 	protected int $accuracy				= 2;
 	protected int $amount				= 0;
@@ -32,10 +32,10 @@ class View_Helper_Stripe_Entity_Money extends View_Helper_Stripe_Abstract{
 		return HtmlTag::create( $this->nodeName, $label, ['class' => $this->nodeClass] );
 	}
 
-	public function set( \Stripe\Money $money, ?int $accuracy = NULL ): self
+	public function set( int $amount, string $currency, ?int $accuracy = NULL ): self
 	{
-		$this->setAmount( $money->Amount );
-		$this->setCurrency( $money->Currency );
+		$this->setAmount( $amount );
+		$this->setCurrency( $currency );
 		if( $accuracy !== NULL )
 			$this->setAccuracy( $accuracy );
 		return $this;

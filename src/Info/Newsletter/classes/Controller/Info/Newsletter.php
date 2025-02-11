@@ -1,62 +1,26 @@
 <?php
 
+use CeusMedia\Common\Net\HTTP\PartitionSession;
+use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment;
-use CeusMedia\HydrogenFramework\View;
 
 class Controller_Info_Newsletter extends Controller
 {
 	/**	@var	Logic_Newsletter	$logic */
-	protected $logic;
-	protected $messenger;
-	protected $request;
-	protected $session;
+	protected Logic_Newsletter $logic;
+	protected Environment\Resource\Messenger $messenger;
+	protected Request $request;
+	protected PartitionSession $session;
 
 	/**
-	 *	...
-	 *	@static
-	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		array			$payload	Map of hook arguments
+	 *	@param		int|string		$readerId
+	 *	@param		?string			$key
 	 *	@return		void
-	 *	@todo		finish implementation, extract to hook class and register in module config
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public static function __onRenderServicePanels( Environment $env, object $context, $module, array & $payload = [] )
-	{
-		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends'] ) )
-			return;
-		$view		= new View( $env );
-//		$modelOrder	= new Model_Shop_Order( $env );
-//		$order		= $modelOrder->get( $payload['orderId'] );
-
-		$path	= 'html/info/newsletter/';
-		$files	= [
-			1	=> 'finishTop.html',
-			3	=> 'finishAbove.html',
-			5	=> 'finish.html',
-			7	=> 'finishBelow.html',
-			9	=> 'finishBottom.html',
-		];
-		foreach( $files as $priority => $file ){
-			if( $view->hasContentFile( $path.$file ) ){
-				$content	= $view->loadContentFile( $path.$file );
-				$context->registerServicePanel( 'Newsletter:'.$priority, $content, $priority );
-			}
-		}
-
-
-
-		$localeFile	= 'html/info/newsletter/finishPanel.html';
-		if( $view->hasContentFile( $localeFile ) ){
-			$content	= $view->loadContentFile( $localeFile );
-			$context->registerServicePanel( 'Newsletter', $content, 8 );
-		}
-	}
-
-	public function confirm( $readerId, $key = NULL )
+	public function confirm( int|string $readerId, ?string $key = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'confirm' );
 		$reader		= $this->logic->getReader( $readerId );
@@ -103,15 +67,21 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'readerId', $readerId );
 	}*/
 
-	public function index( $arg1 = NULL )
+	/**
+	 *	@param		$arg1
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( $arg1 = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'index' );
 		if( $this->request->has( 'save' ) ){
 			$language			= $this->env->getLanguage()->getLanguage();
-			$readersFoundByMail	= $this->logic->getReaders( array(
+			$readersFoundByMail	= $this->logic->getReaders( [
 				'email'		=> trim( $this->request->get( 'email' ) ),
 				'status'	=> [0, 1],
-			) );
+			] );
 			if( !strlen( trim( $this->request->get( 'email' ) ) ) )
 				$this->messenger->noteError( $words->msgErrorNoEmail );
 			else if( !strlen( trim( $this->request->get( 'firstname' ) ) ) )
@@ -131,10 +101,10 @@ class Controller_Info_Newsletter extends Controller
 				if( $this->request->get( 'groups' ) )
 					foreach( $this->request->get( 'groups' ) as $groupId )						//  iterate selected groups
 						$this->logic->addReaderToGroup( $readerId, $groupId );					//  add reader to group
-				$conditions	= array(															//  get active automatic groups
+				$conditions	= [																	//  get active automatic groups
 					'status'	=> Model_Newsletter_Group::STATUS_USABLE,						//  status: active
 					'type'		=> Model_Newsletter_Group::TYPE_AUTOMATIC,
-				);
+				];
 				foreach( $this->logic->getGroups( $conditions ) as $group )						//  iterate found groups
 					$this->logic->addReaderToGroup( $readerId, $group->newsletterGroupId );		//  add reader to group
 
@@ -158,13 +128,13 @@ class Controller_Info_Newsletter extends Controller
 
 		$requestedGroups	= $this->request->get( 'groups' );
 		$requestedGroups	= is_array( $requestedGroups ) ? $requestedGroups : [];
-		$groups	= $this->logic->getGroups( array(
+		$groups	= $this->logic->getGroups( [
 			'status'	=> Model_Newsletter_Group::STATUS_USABLE,								//  status: active
-			'type'		=> array(																//  type: default or automatic
+			'type'		=> [																	//  type: default or automatic
 				Model_Newsletter_Group::TYPE_DEFAULT,
 				Model_Newsletter_Group::TYPE_AUTOMATIC,
-			),
-		), ['title' => 'ASC'] );
+			],
+		], ['title' => 'ASC'] );
 		foreach( $groups as $group )
 			$group->isChecked	= in_array( $group->newsletterGroupId, $requestedGroups );
 		$this->addData( 'groups', $groups );
@@ -177,7 +147,12 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'latest', $latest );
 	}
 
-	public function preview( $newsletterId = NULL )
+	/**
+	 *	@param		int|string|NULL		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function preview( int|string|NULL $newsletterId = NULL ): void
 	{
 		if( !$newsletterId ){
 			$newsletters	= $this->logic->getNewsletters( ['status' => '>= 1'], ['newsletterId' => 'DESC'] );
@@ -202,7 +177,13 @@ class Controller_Info_Newsletter extends Controller
 		exit;
 	}
 
-	public function unregister( $emailHash = NULL, $readerLetterId = NULL )
+	/**
+	 *	@param		?string				$emailHash
+	 *	@param		int|string|NULL		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unregister( ?string $emailHash = NULL, int|string|NULL $readerLetterId = NULL ): void
 	{
 		$email		= trim( $emailHash ? base64_decode( $emailHash ) : $this->request->get( 'email' ) );
 		$words		= (object) $this->getWords( 'unregister' );
@@ -253,7 +234,12 @@ class Controller_Info_Newsletter extends Controller
 		$this->addData( 'reader', $reader );
 	}
 
-	public function track( $letterId )
+	/**
+	 *	@param		int|string		$letterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function track( int|string $letterId ): void
 	{
 		$pixelGIF	= "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 		if( !$this->request->has( 'dry' ) ){
@@ -269,20 +255,25 @@ class Controller_Info_Newsletter extends Controller
 		exit;
 	}
 
-	public function view( $readerLetterId )
+	/**
+	 *	@param		int|string		$readerLetterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $readerLetterId ): void
 	{
 		try{
 			$letter		= $this->logic->getReaderLetter( $readerLetterId );
-			$helper		= new View_Helper_Newsletter_Mail( $this->env );;
+			$helper		= new View_Helper_Newsletter_Mail( $this->env );
 			$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
 			$helper->setReaderLetterId( $readerLetterId );
 			$helper->setReaderId( $letter->newsletterReaderId );
 //			$helper->setNewsletterId( $letter->newsletterId );
-			$helper->setData( array(
+			$helper->setData( [
 				'readerLetterId'	=> $readerLetterId,
 				'newsletterId'		=> $letter->newsletterId,
 				'preview'			=> $this->request->has( 'dry' ),
-			) );
+			] );
 			print( $helper->render() );
 			exit;
 		}
@@ -296,6 +287,9 @@ class Controller_Info_Newsletter extends Controller
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Newsletter( $this->env );

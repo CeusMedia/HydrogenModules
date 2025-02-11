@@ -4,29 +4,42 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Manage_Company extends Controller
 {
-	public function activate( $companyId )
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function activate( int|string $companyId ): void
 	{
-		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => 1, 'modifiedAt' => time() ) );
+		$model->edit( $companyId, ['status' => 1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function deactivate( $companyId )
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function deactivate( int|string $companyId ): void
 	{
-		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
-		$model->edit( $companyId, array( 'status' => -1, 'modifiedAt' => time() ) );
+		$model->edit( $companyId, ['status' => -1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
 		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function add(){
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function add(): void
+	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
 		$words		= (object) $this->getWords( 'add' );
@@ -60,24 +73,34 @@ class Controller_Manage_Company extends Controller
 		$this->view->addData( 'company', $data );
 	}
 
-	public function delete( $companyId ){
-		$request		= $this->env->getRequest();
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function delete( int|string $companyId ): void
+	{
 		$messenger		= $this->env->getMessenger();
 		$model			= new Model_Company( $this->env );
 		$data			= $model->get( $companyId );
 		if( !$data ){
 			$messenger->noteError( 'Invalid ID: '.$companyId );
-			return $this->restart( NULL, TRUE );
+			$this->restart( NULL, TRUE );
 		}
 		$model->remove( $companyId );
 		$messenger->noteSuccess( 'Removed: '.$data['title'] );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function edit( $companyId ){
+	/**
+	 *	@param		int|string		$companyId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $companyId ): void
+	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
-		$title			= $request->get( 'title' );
 		$words			= (object) $this->getWords( 'edit' );
 		$modelCompany	= new Model_Company( $this->env );
 		$modelUser		= new Model_User( $this->env );
@@ -104,7 +127,6 @@ class Controller_Manage_Company extends Controller
 			}
 		}
 		$company		= $modelCompany->get( $companyId );
-		$branches		= [];
 		$modelBranch	= new Model_Branch( $this->env );
 		$branches		= $modelBranch->getAllByIndex( 'companyId', $companyId );
 		$company->branches	= $branches;
@@ -115,14 +137,19 @@ class Controller_Manage_Company extends Controller
 		$this->view->addData( 'company', $company );
 	}
 
-	public function filter(){
+	public function filter(): void
+	{
 		$this->env->getMessenger()->noteSuccess( "Companies have been filtered." );
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index(){
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
+	{
 		$model	= new Model_Company( $this->env );
-		$this->view->setData( array( 'companies' => $model->getAll() ) );
+		$this->view->setData( ['companies' => $model->getAll()] );
 		$this->addData( 'companies', $model->getAll() );
 	}
 }

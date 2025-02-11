@@ -9,14 +9,14 @@ class Job_Job_Util extends Job_Abstract
 	/**
 	 *	Returns current date time depending on format parameter.
 	 *	Uses parameter --format (-f), default: 'r' (RFC 2822).
-	 *	Supports all date formats (http://php.net/manual/de/function.date.php).
+	 *	Supports all date formats (https://php.net/manual/de/function.date.php).
 	 *	Supports format constants, like DATE_W3C.
 	 *	Removes milliseconds (.v) below PHP version 7.
 	 *	@access		public
 	 *	@return		string		Current date time in requested format
 	 *	@todo		use environment date after framework update, see below
 	 */
-	public function getDate()
+	public function getDate(): string
 	{
 		$format	= 'r';
 		if( $this->parameters->get( '-f' ) && !$this->parameters->get( '--format' ) )
@@ -36,9 +36,10 @@ class Job_Job_Util extends Job_Abstract
 		$this->results	= date_create()->format( $format );						//  @todo replace by line below after framework update
 //		$this->results	= $this->env->date->now->format( $format );
 		$this->out( $this->results );
+		return $this->results;
 	}
 
-	public function getExtensionVersion()
+	public function getExtensionVersion(): void
 	{
 		if( !( $extensions	= $this->commands ) ){
 			$this->out( 'No extension(s) given' );

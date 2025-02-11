@@ -1,25 +1,25 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
+use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class View_Helper_TinyMce extends Abstraction
 {
-	public array $list		= [];
-	public array $listImages	= [];
-	public array $listLinks	= [];
+	public array $list				= [];
+	public array $listImages		= [];
+	public array $listLinks			= [];
 
 	protected static bool $loaded	= FALSE;
 
 	/**	@var	Dictionary		$config			Module configuration */
-	protected $config;
+	protected Dictionary $config;
 
-	/**	@var 	string			$pathFront		Path to frontend application */
-	protected $pathFront;
+//	/**	@var 	string			$pathFront		Path to frontend application */
+//	protected string $pathFront;
 
-	protected $cache;
+	protected SimpleCacheInterface $cache;
 
 	/**
 	 *	Constructor.
@@ -30,17 +30,21 @@ class View_Helper_TinyMce extends Abstraction
 	public function __construct( WebEnvironment $env ){
 		$this->setEnv( $env );
 		$this->config		= $this->env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$this->pathFront	= $this->config->get( 'path' );
+//		$this->pathFront	= $this->config->get( 'path' );
 		$this->cache		= $this->env->getCache();
 	}
 
-	public static function load( Environment $env ): void
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		void
+	 */
+	public static function load( WebEnvironment $env ): void
 	{
 		if( self::$loaded )
 			return;
 
 		$page		= $env->getPage();
-		$language	= $env->getLanguage()->getLanguage();
+		$language	= self::getLanguage( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
 
@@ -53,48 +57,49 @@ class View_Helper_TinyMce extends Abstraction
 		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
 		$page->js->addUrl( $pathLocal.'TinyMCE.FileBrowser.js' );
 
-		$languages	= self::getLanguage( $env );
-		if( !$config->get( 'CDN' ) && $language !== "en" )
+		if( !$config->get( 'CDN' ) && 'en' !== $language )
 			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
 
 		self::$loaded	= TRUE;
 	}
 
-	public static function getLanguage( Environment $env ): string
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@return		string
+	 */
+	public static function getLanguage( WebEnvironment $env ): string
 	{
 		$language	= $env->getLanguage()->getLanguage();
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
 		$languages	= explode( ",", $config->get( 'languages' ) );
 		if( $config->get( 'CDN' ) )
 			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
-		if( $language !== "en" && !in_array( $language, $languages ) )
-			$language = "en";
+		if( 'en' !== $language && !in_array( $language, $languages ) )
+			$language = 'en';
 		return $language;
-	}
-
-	protected function __compare( object $a, object $b ): int
-	{
-		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 
 	/**
 	 *	...
 	 *	@access		public
 	 *	@return		array		List of images
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getImageList( bool $refresh = FALSE ): array
 	{
 		$cacheKey	= 'tinymce.images';
 		if( $refresh ){
 			$this->listImages	= [];
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 		}
-		if( !( $this->listImages = $this->cache->get( $cacheKey ) ) ){
+		if( $this->cache->has( $cacheKey ) )
+			$this->listImages	= $this->cache->get( $cacheKey );
+		else{
 			$this->list	= [];
-			if( ( $modules = $this->env->getModules() ) ){	 										//  get module handler resource if existing
-				$payload	= ['hidePrefix' => FALSE];
-				$modules->callHookWithPayload( 'TinyMCE', 'getImageList', $this, $payload );	//  call related module event hooks
-			}
+			$modules	= $this->env->getModules();
+			$payload	= ['hidePrefix' => FALSE];
+			$modules->callHookWithPayload( 'TinyMCE', 'getImageList', $this, $payload );	//  call related module event hooks
 			$this->listImages	= $this->list;
 			usort( $this->listImages, [$this, "__compare"] );
 			$this->cache->set( $cacheKey, $this->listImages );
@@ -103,18 +108,21 @@ class View_Helper_TinyMce extends Abstraction
 	}
 
 	/**
-	 *	...
 	 *	@access		public
 	 *	@return		array		List of links
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLinkList( bool $refresh = FALSE ): array
 	{
 		$cacheKey	= 'tinymce.links';
 		if( $refresh || 1 ){
 			$this->listLinks	= [];
-			$this->cache->remove( $cacheKey );
+			$this->cache->delete( $cacheKey );
 		}
-		if( !( $this->listLinks = $this->cache->get( $cacheKey ) ) ){
+		if( $this->cache->has( $cacheKey ) )
+			$this->listLinks	= $this->cache->get( $cacheKey );
+		else{
 			$this->list	= [];
 			if( ( $modules = $this->env->getModules() ) )											//  get module handler resource if existing
 				$modules->callHook( 'TinyMCE', 'getLinkList', $this );								//  call related module event hooks
@@ -125,6 +133,11 @@ class View_Helper_TinyMce extends Abstraction
 		return $this->listLinks;
 	}
 
+	/**
+	 *	@param		string		$html
+	 *	@param		array		$options
+	 *	@return		string
+	 */
 	public static function tidyHtml( string $html, array $options = [] ): string
 	{
 		if( function_exists( 'tidy_repair_string' ) ){
@@ -140,5 +153,15 @@ class View_Helper_TinyMce extends Abstraction
 			$html	= str_replace( "    ", "\t", $html );
 		}
 		return $html;
+	}
+
+	/**
+	 *	@param		object		$a
+	 *	@param		object		$b
+	 *	@return		int
+	 */
+	protected function __compare( object $a, object $b ): int
+	{
+		return strcmp( strtolower( $a->title ), strtolower( $b->title ) );
 	}
 }

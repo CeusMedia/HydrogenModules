@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Role $view */
+/** @var array<string,array<string|int,string|int>> $words */
+/** @var object $role */
+
 $optAccess	= [];
 foreach( $words['type-access'] as $key => $label ){
 	$selected	= $key == $role->get( 'access' );
@@ -20,6 +24,8 @@ $optRegister	= join( $optRegister );
 
 extract( $view->populateTexts( ['add.top', 'add.bottom', 'add.right'], 'html/manage/role/' ) );
 
+$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $panelAdd	= '
 <div class="content-panel content-panel-form">
@@ -48,8 +54,8 @@ $panelAdd	= '
 			</div>
 			<div class="buttonbar">
 				<div class="btn-toolbar">
-					'.HtmlElements::LinkButton( './manage/role', '<i class="icon-arrow-left"></i> '.$words['add']['buttonCancel'], 'btn btn-small' ).'
-					'.HtmlElements::Button( 'saveRole','<i class="icon-ok icon-white"></i> '. $words['add']['buttonSave'], 'btn btn-primary' ).'
+					'.HtmlElements::LinkButton( './manage/role', $iconCancel.' '.$words['add']['buttonCancel'], 'btn btn-small' ).'
+					'.HtmlElements::Button( 'saveRole',$iconSave.' '. $words['add']['buttonSave'], 'btn btn-primary' ).'
 				</div>
 			</div>
 		</form>

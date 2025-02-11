@@ -30,7 +30,6 @@ class View_Work_Time_Archive extends View
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

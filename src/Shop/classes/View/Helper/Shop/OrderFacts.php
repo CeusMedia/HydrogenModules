@@ -5,21 +5,21 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_OrderFacts
 {
-	const DISPLAY_UNKNOWN			= 0;
-	const DISPLAY_BROWSER			= 1;
-	const DISPLAY_MAIL				= 2;
+	public const DISPLAY_UNKNOWN		= 0;
+	public const DISPLAY_BROWSER		= 1;
+	public const DISPLAY_MAIL			= 2;
 
-	const DISPLAYS					= [
+	public const DISPLAYS				= [
 		self::DISPLAY_UNKNOWN,
 		self::DISPLAY_BROWSER,
 		self::DISPLAY_MAIL,
 	];
 
-	const OUTPUT_UNKNOWN			= 0;
-	const OUTPUT_TEXT				= 1;
-	const OUTPUT_HTML				= 2;
+	public const OUTPUT_UNKNOWN			= 0;
+	public const OUTPUT_TEXT			= 1;
+	public const OUTPUT_HTML			= 2;
 
-	const OUTPUTS					= [
+	public const OUTPUTS				= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,
@@ -54,7 +54,12 @@ class View_Helper_Shop_OrderFacts
 		return $this->renderAsText();
 	}
 
-	public function setData( $data ): self
+	/**
+	 *	@param		array		$data
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setData( array $data ): self
 	{
 //		$this->data	= (object) $data;
 		if( empty( $data['orderId'] ) )
@@ -63,7 +68,7 @@ class View_Helper_Shop_OrderFacts
 		if( !$this->order )
 			throw new InvalidArgumentException( 'Invalid order ID' );
 		$this->paymentBackend	= NULL;
-		foreach( $data['paymentBackends'] as $item )
+		foreach( $data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$this->paymentBackend	= $item;
 		$this->facts		= [

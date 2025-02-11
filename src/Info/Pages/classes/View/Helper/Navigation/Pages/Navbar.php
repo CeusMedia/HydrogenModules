@@ -7,9 +7,13 @@ use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
  */
 class View_Helper_Navigation_Pages_Navbar extends Abstraction
 {
-	protected ?string $current		= NULL;
-	protected string $scopeId		= '0';
+	protected ?string $current			= NULL;
+	protected int|string $scopeId		= '0';
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		$model		= new Model_Page( $this->env );
@@ -18,7 +22,7 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 			'scope'		=> $this->scopeId,
 		];
 		$pages		= $model->getAllByIndices( $indices, ['rank' => 'ASC'] );
-		$list	= [];
+		$list		= [];
 		foreach( $pages as $page ){
 			if( $page->status < 1 )
 				continue;
@@ -56,13 +60,21 @@ class View_Helper_Navigation_Pages_Navbar extends Abstraction
 		return HtmlTag::create( 'div', $list, ['id' => 'layout-nav-main'] );
 	}
 
+	/**
+	 *	@param		string		$current
+	 *	@return		self
+	 */
 	public function setCurrent( string $current ): self
 	{
 		$this->current		= $current;
 		return $this;
 	}
 
-	public function setScopeId( string $scopeId ): self
+	/**
+	 *	@param		int|string		$scopeId
+	 *	@return		self
+	 */
+	public function setScopeId( int|string $scopeId ): self
 	{
 		$this->scopeId		= $scopeId;
 		return $this;

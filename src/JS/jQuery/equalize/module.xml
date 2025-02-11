@@ -5,7 +5,7 @@
 	<version>1.0.2-p1</version>
 	<log version="1.0.2-p1">Extract hook to own hook class.</log>
 	<category>JavaScript</category>
-	<author site="http://timsvensen.com/">Tim Svensen</author>
+	<author site="https://timsvensen.com/">Tim Svensen</author>
 	<url>https://github.com/tsvensen</url>
 	<license>MIT</license>
 	<license>GPL 2</license>

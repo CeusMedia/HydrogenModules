@@ -1,12 +1,13 @@
 <?php
 
+use CeusMedia\Common\Loader;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 
 $timezone		= "Europe/Berlin";										//  default time zone
 
 require_once 'vendor/autoload.php';
 
-Loader::registerNew( 'php5', NULL, 'classes/' );						//  register new autoloader
+Loader::create()->setPath( 'classes/' )->register();					//  register new autoloader
 
 if( $timezone )
 	date_default_timezone_set( $timezone );								//  set default time zone

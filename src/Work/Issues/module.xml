@@ -3,7 +3,7 @@
 	<title>Work: Issues</title>
 	<description>Issue management</description>
 	<category>Work</category>
-	<version>0.4.7</version>
+	<version>0.5.3</version>
 	<log version="0.2.2">Adapted templates to bootstrap.</log>
 	<log version="0.2.3">Rearranged form elements in editor.</log>
 	<log version="0.2.4">Add logic class from extracted controller methods.</log>
@@ -15,8 +15,8 @@
 	<log version="0.3.1">Support hook Project::onListRelations.</log>
 	<log version="0.3.2">Support hook Project::onRemove.</log>
 	<log version="0.3.3">Support hook Dashboard::renderPanels.</log>
-	<log version="0.3.4">Upgrade support for new dasboard module.</log>
-	<log version="0.3.5">Remove support for old dasboard module.</log>
+	<log version="0.3.4">Upgrade support for new dashboard module.</log>
+	<log version="0.3.5">Remove support for old dashboard module.</log>
 	<log version="0.3.6">Split note change view into several view helpers.</log>
 	<log version="0.3.7">Send mail on every issue change.</log>
 	<log version="0.3.8">Send mail on every new issue.</log>
@@ -24,14 +24,19 @@
 	<log version="0.4.1">Adjust behaviour of filters.</log>
 	<log version="0.4.2">Add abstract mail class.</log>
 	<log version="0.4.3">Rewrite mail components to support HTML and plain text.</log>
-	<log version="0.4.4">Separate disploy of change facts and note.</log>
+	<log version="0.4.4">Separate display of change facts and note.</log>
 	<log version="0.4.5">Extract hooks to own hook class.</log>
 	<log version="0.4.6">Add hooks to list and remove user related entities.</log>
 	<log version="0.4.7">Update code style.</log>
+	<log version="0.5.0">Support PHP 8.</log>
+	<log version="0.5.1">Extract dashboard and graph as view helpers.</log>
+	<log version="0.5.2">Extract AJAX actions to own controller.</log>
+	<log version="0.5.3">Define model constants.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Controller/Ajax/Work/Issue.php</class>
 		<class>Controller/Work/Issue.php</class>
 		<class>Hook/Work/Issue.php</class>
 		<class>Mail/Work/Issue/Abstract.php</class>
@@ -46,6 +51,8 @@
 		<class>View/Helper/Work/Issue/ChangeFacts.php</class>
 		<class>View/Helper/Work/Issue/ChangeNote.php</class>
 		<class>View/Helper/Work/Issue/Changes.php</class>
+		<class>View/Helper/Work/Issue/Dashboard.php</class>
+		<class>View/Helper/Work/Issue/Graph.php</class>
 		<locale>de/work/issue.ini</locale>
 		<template>work/issue/add.php</template>
 		<template>work/issue/edit.php</template>
@@ -84,6 +91,7 @@
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Users</needs>
 		<needs type="module">Manage_Projects</needs>
+		<needs type="package">amenadiel/jpgraph:^4</needs>
 		<supports type="module">UI_Markdown</supports>
 	</relations>
 	<link xml:lang="de" access="acl" rank="80" path="work/issue">Probleme</link>

@@ -1,6 +1,7 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\Common\Renderable;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Helper_Auth_Local_Panel_Login implements Renderable
@@ -15,10 +16,13 @@ class View_Helper_Auth_Local_Panel_Login implements Renderable
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		$words		= $this->env->getLanguage()->getWords( 'auth/local' );
-		$wordsLogin	= $words['login'];
 		$request	= $this->env->getRequest();
 		$view		= new View( $this->env );
 		$view->addData( 'words', $words );

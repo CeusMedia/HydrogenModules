@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array $words */
+/** @var array<object> $articles */
+/** @var object $category */
+
 $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
 $iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
 
@@ -21,17 +25,17 @@ if( $articles ){
 			'class'	=> 'btn btn-mini',
 		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonUp, $buttonDown], ['class' => 'btn-group'] );
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $article->rank.'. '.$link, ['class' => 'autocut'] ),
 			HtmlTag::create( 'td', $article->volume, ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $buttons, ['style' => 'text-align: right'] ),
-		) );
+		] );
 	}
-	$heads		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
+	$heads		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 		HtmlTag::create( 'th', 'Veröffentlichung' ),
 		HtmlTag::create( 'th', 'Band', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'Rank' ),
-	) ) );
+	] ) );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$colgroup		= HtmlElements::ColumnGroup( ['', '20%', '15%'] );
 	$listArticles	= HtmlTag::create( 'table', $colgroup.$heads.$tbody, ['class' => 'table table-striped table-small table-condensed'] );

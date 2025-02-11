@@ -34,7 +34,7 @@ return '
 					</div>
 				</div>
 			</div>
-			'.HTML::Buttons( array(
+			'.HTML::Buttons( [
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
 					HTML::DivClass( 'span6', [
@@ -53,7 +53,7 @@ return '
 						)
 					] )
 				)
-			) ).'
+			] ).'
 		</form>
 	</div>
 </div>';

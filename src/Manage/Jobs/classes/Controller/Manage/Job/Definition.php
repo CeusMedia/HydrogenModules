@@ -15,7 +15,7 @@ class Controller_Manage_Job_Definition extends Controller
 	protected Logic_Job $logic;
 	protected string $filterPrefix			= 'filter_manage_job_definition_';
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( $this->filterPrefix.'limit' );
@@ -32,31 +32,30 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	public function index( int $page = 0 ): void
 	{
 		$filterLimit	= $this->session->get( $this->filterPrefix.'limit' ) ?? 10;
-		$filterStatus	= $this->session->get( $this->filterPrefix.'status' );
-		$filterMode		= $this->session->get( $this->filterPrefix.'mode' );
-		$filterClass	= $this->session->get( $this->filterPrefix.'class' );
-		$filterMethod	= $this->session->get( $this->filterPrefix.'method' );
+		$filterStatus	= trim( $this->session->get( $this->filterPrefix.'status', '' ) );
+		$filterMode		= trim( $this->session->get( $this->filterPrefix.'mode', '' ) );
+		$filterClass	= trim( $this->session->get( $this->filterPrefix.'class', '' ) );
+		$filterMethod	= trim( $this->session->get( $this->filterPrefix.'method', '' ) );
 
 		$conditions		= [];
-		if( strlen( $filterStatus ) )
+		if( '' !== $filterStatus )
 			$conditions['status']		= $filterStatus;
-		if( strlen( $filterMode ) )
+		if( '' !== $filterMode )
 			$conditions['mode']			= $filterMode;
-		if( strlen( $filterClass ) )
+		if( '' !== $filterClass )
 			$conditions['className']	= $filterClass;
-		if( strlen( $filterMethod ) )
+		if( '' !== $filterMethod )
 			$conditions['methodName']	= $filterMethod;
 
 		$total	= $this->modelDefinition->count( $conditions );
 		$orders	= ['identifier' => 'ASC'];
 		$limits	= [$page * $filterLimit, $filterLimit];
 		$definitions	= $this->modelDefinition->getAll( $conditions, $orders, $limits );
-		foreach( $definitions as $item ){
+		foreach( $definitions as $item )
 			$item->scheduled	= $this->modelSchedule->getAllByIndex( 'jobDefinitionId', $item->jobDefinitionId );
-		}
 
 		$classNames		= [];
 		$methodNames	= [];
@@ -81,37 +80,60 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->addData( 'page', $page );
 	}
 
-	public function view( $jobDefinitionId )
+	/**
+	 *	@param		int|string		$jobDefinitionId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string $jobDefinitionId ): void
 	{
 		$definition	= $this->modelDefinition->get( $jobDefinitionId );
 		if( !$definition ){
 			$this->env->getMessenger()->noteError( 'Invalid Job Definition ID.' );
 			$this->restart( NULL, TRUE );
 		}
-		$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php' );
-		$definitionCode	= $this->modelCode->getClassMethodSourceCode( 'Job_'.$definition->className, $definition->methodName );
+
+		try{
+			$this->modelCode->readFile( 'classes/Job/'.str_replace( '_', '/', $definition->className ).'.php' );
+			$definitionCode	= $this->modelCode->getClassMethodSourceCode( 'Job_'.$definition->className, $definition->methodName );
+			$this->addData( 'definitionCode', $definitionCode );
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()?->logException( $e );
+			$this->addData( 'definitionCode', NULL );
+		}
+
 		$runs	= $this->modelRun->getAllByIndex( 'jobDefinitionId', $jobDefinitionId, ['createdAt' => 'DESC'], [0, 10] );
 		$this->addData( 'definition', $definition );
 		$this->addData( 'runs', $runs );
-		$this->addData( 'definitionCode', $definitionCode );
 //		print_m( $definition );
 //		print_m( $runs );
 //		print( $runList );
 //		die;
 	}
 
-	public function setStatus( $jobDefinitionId, $status )
+	/**
+	 *	@param		int|string		$jobDefinitionId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( int|string $jobDefinitionId, $status ): void
 	{
 		$from	= $this->request->get( 'from' );
-		$this->modelDefinition->edit( $jobDefinitionId, array(
+		$this->modelDefinition->edit( $jobDefinitionId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
-		$this->restart( $from ? $from : NULL, !$from );
+		] );
+		$this->restart( $from ?: NULL, !$from );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -120,6 +142,7 @@ class Controller_Manage_Job_Definition extends Controller
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 		$this->modelRun			= new Model_Job_Run( $this->env );
 		$this->modelCode		= new Model_Job_Code( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 		$this->addData( 'wordsGeneral', $this->env->getLanguage()->getWords( 'manage/job' ) );
 	}

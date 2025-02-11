@@ -15,7 +15,7 @@ var WorkMissionsViewer = {
 				$(this).addClass( 'active' );
 				var version		= parseInt($(this).data("version"), 10);
 				var missionId	= WorkMissionsViewer.missionId;
-				var serviceUri	= "./work/mission/ajaxRenderMissionContent/"+missionId;
+				var serviceUri	= "./ajax/work/mission/renderMissionContent/"+missionId;
 				if(version > 0)
 					serviceUri	+= "/"+version;
 				if(version > 1)
@@ -35,7 +35,7 @@ var WorkMissionsViewer = {
 
 	loadContent: function(){
 		$.ajax({
-			url: "./work/mission/ajaxRenderMissionContent/"+this.missionId,
+			url: "./ajax/work/mission/renderMissionContent/"+this.missionId,
 			dataType: "json",
 			success: function(json){
 				if(json.status == "data"){

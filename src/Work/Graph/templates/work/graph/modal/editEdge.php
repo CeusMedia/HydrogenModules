@@ -8,7 +8,7 @@ $optGraph	= HtmlElements::Options( $optGraph );
 
 $optNode	= [];
 foreach( $nodes as $node )
-	$optNode[$node->nodeId]	= $node->label ? $node->label : $node->ID;
+	$optNode[$node->nodeId]	= $node->label ?: $node->ID;
 $optFromNode	= HtmlElements::Options( $optNode, $edge->fromNodeId );
 $optToNode		= HtmlElements::Options( $optNode, $edge->toNodeId );
 
@@ -74,7 +74,7 @@ $panelStyle	= '
 
 $nodeIndex	= [];
 foreach( $nodes as $node )
-	$nodeIndex[$node->nodeId]	= $node->label ? $node->label : '<tt><em>'.$node->ID.'</em></tt>';
+	$nodeIndex[$node->nodeId]	= $node->label ?: '<tt><em>'.$node->ID.'</em></tt>';
 
 $label	= $nodeIndex[$edge->fromNodeId].'&nbsp;&rarr;&nbsp;'.$nodeIndex[$edge->toNodeId];
 if( $edge->label )

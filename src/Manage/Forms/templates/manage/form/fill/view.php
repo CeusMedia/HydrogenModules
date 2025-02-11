@@ -1,15 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var array $fillTransfers */
-/** @var object $fill */
-/** @var object $form */
+/** @var Entity_Form_Fill $fill */
+/** @var Entity_Form $form */
 /** @var object[] $transferTargetMap */
 
 $page		= (int) $env->getRequest()->get( 'page' );
@@ -38,7 +38,7 @@ $helperPerson->setForm( $form );
 $helperData		= new View_Helper_Form_Fill_Data( $env );
 $helperData->setFill( $fill );
 $helperData->setForm( $form );
-$helperData->setMode(View_Helper_Form_Fill_Data::MODE_EXTENDED);
+$helperData->setMode( View_Helper_Form_Fill_Data::MODE_EXTENDED );
 
 
 //  --  PANEL: FACTS  --  //
@@ -79,7 +79,7 @@ if( $fillTransfers ){
 		if( $fillTransfer->data ){
 			$formData		= json_decode( $fillTransfer->data, TRUE );
 			$modalId		= 'transfer-report-'.$fillTransfer->formFillTransferId;
-			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules, FALSE );
+			$ruleSet		= $parser->parse( $form->transferRules[$fillTransfer->formTransferRuleId]->rules );
 			try{
 				$transferData	= $mapper->applyRulesToFormData( $formData, $ruleSet );
 			}
@@ -127,7 +127,7 @@ if( $fillTransfers ){
 				HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed'] ),
 			] ),
 		], ['class' => 'content-panel-inner'] ),
-	], ['class' => 'content-panel'] ).join( $modals );;
+	], ['class' => 'content-panel'] ).join( $modals );
 }
 
 //  --  BUTTONS  --  //

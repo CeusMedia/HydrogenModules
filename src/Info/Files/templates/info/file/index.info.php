@@ -1,5 +1,12 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array $words */
+/** @var array $files */
+/** @var array $folders */
 
 $w	= (object) $words['info'];
 
@@ -27,10 +34,7 @@ foreach( $facts as $nr => $fact )
 	$facts[$nr]	= HtmlTag::create( 'li', $fact );
 $facts	= HtmlTag::create( 'ul', $facts );
 
-return '
-<div class="content-panel">
-	<h4>Informationen</h4>
-	<div class="content-panel-inner">
-		'.$facts.'
-	</div>
-</div>';
+return HtmlTag::create( 'div', [
+	HtmlTag::create( 'h4', 'Informationen' ),
+	HtmlTag::create( 'div', $facts, ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

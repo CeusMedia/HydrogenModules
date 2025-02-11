@@ -1,7 +1,7 @@
 <?php
 class Mail_Info_Contact_Developer extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$config		= $this->env->getConfig();
 		$appName	= $config->get( 'app.name' );
@@ -10,7 +10,7 @@ class Mail_Info_Contact_Developer extends Mail_Abstract
 		$data['message']	= htmlentities( $data['message'], ENT_COMPAT, 'UTF-8' );
 
 		$subject	= 'Report to Developer';
-		$body		= $this->view->loadContentFile( 'mail/info/contact/developer.html', $data );
+		$body		= $this->loadContentFile( 'mail/info/contact/developer.html', $data ) ?? '';
 
 		$this->page->addBody( '<h3><span class="muted">'.$appName.'</span> Report to Developer</h3>' );
 		$this->page->addBody( $body );

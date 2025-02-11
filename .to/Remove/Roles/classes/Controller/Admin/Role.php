@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Roles.Controller.Admin
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Ceus Media
+ *	@copyright		2010-2012-2024 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Admin_Role extends Controller
 {
@@ -56,7 +56,7 @@ class Controller_Admin_Role extends Controller
 			$action		= $request->getFromSource( 'action', 'POST' );
 			$data		= array(
 				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minifyController( $controller ),
+				'controller'	=> Model_Role_Right::minimizeController( $controller ),
 				'action'		=> $action,
 				'timestamp'		=> time(),
 			);
@@ -72,7 +72,7 @@ class Controller_Admin_Role extends Controller
 			$modelRight	= new Model_Role_Right( $this->env );
 			$indices	= array(
 				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minifyController( $controller ),
+				'controller'	=> Model_Role_Right::minimizeController( $controller ),
 				'action'		=> $action
 			);
 			$right	= $modelRight->getByIndices( $indices );
@@ -157,7 +157,7 @@ class Controller_Admin_Role extends Controller
 		$modelRight	= new Model_Role_Right( $this->env );
 		$indices	= array(
 			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minifyController( $controller ),
+			'controller'	=> Model_Role_Right::minimizeController( $controller ),
 			'action'		=> $action
 		);
 		$modelRight->removeByIndices( $indices );

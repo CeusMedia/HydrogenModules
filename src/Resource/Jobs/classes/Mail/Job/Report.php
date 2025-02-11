@@ -4,7 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class Mail_Job_Report extends Mail_Abstract
 {
-	protected function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function generate(): static
 	{
 		$data	= $this->data;
 //		$words	= $this->env->getLanguage()->getWords( 'resource/jobs' );
@@ -58,7 +63,7 @@ class Mail_Job_Report extends Mail_Abstract
 
 	}
 
-	protected function renderText(): self
+	protected function renderText(): string
 	{
 		return json_encode( $this->data, JSON_PRETTY_PRINT );
 	}

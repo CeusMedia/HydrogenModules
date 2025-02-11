@@ -1,5 +1,12 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Company $view */
+/** @var object $company */
+
 $iconAdd	= HTML::Icon( 'plus', TRUE );
 $iconSave	= HTML::Icon( 'ok', TRUE );
 
@@ -44,7 +51,7 @@ $panelUsers	= '
 	<h3>'.$w->legend.'</h3>
 	<div class="content-panel-inner">
 		'.$listUsers.'
-		'.HTML::Buttons( HTML::LinkButton( './manage/my/user/add/'.$company->companyId, $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary', NULL, TRUE ) ).'
+		'.HTML::Buttons( HTML::LinkButton( './manage/my/user/add/'.$company->companyId, $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary' ) ).'
 	</div>
 </div>';
 

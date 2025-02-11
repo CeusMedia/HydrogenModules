@@ -5,22 +5,22 @@ use CeusMedia\HydrogenFramework\Model;
 class Model_Log_Message extends Model
 {
 
-	const TYPE_ERROR		= 1;
-	const TYPE_WARNING		= 2;
-	const TYPE_NOTICE		= 4;
-	const TYPE_INFO			= 8;
-	const TYPE_DEBUG		= 16;
+	public const TYPE_ERROR			= 1;
+	public const TYPE_WARNING		= 2;
+	public const TYPE_NOTICE		= 4;
+	public const TYPE_INFO			= 8;
+	public const TYPE_DEBUG			= 16;
 
-	const STATUS_NEW		= 0;
-	const STATUS_SEEN		= 1;
-	const STATUS_MANAGED	= 2;
-	const STATUS_CLOSED		= 4;
+	public const STATUS_NEW			= 0;
+	public const STATUS_SEEN		= 1;
+	public const STATUS_MANAGED		= 2;
+	public const STATUS_CLOSED		= 4;
 
-	const FORMAT_TEXT		= 0;
-	const FORMAT_PHP		= 1;
-	const FORMAT_JSON		= 2;
-	const FORMAT_XML		= 4;
-	const FORMAT_WDDX		= 8;
+	public const FORMAT_TEXT		= 0;
+	public const FORMAT_PHP			= 1;
+	public const FORMAT_JSON		= 2;
+	public const FORMAT_XML			= 4;
+	public const FORMAT_WDDX		= 8;
 
 	/**	@var		string				$name				Name of Database Table without Prefix */
 	protected string $name				= 'log_messages';

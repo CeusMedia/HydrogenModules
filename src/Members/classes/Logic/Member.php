@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Logic_Member
 {
-	protected static Logic_Member $instance;
+	protected static ?Logic_Member $instance		= NULL;
 
 	protected Environment $env;
 	protected MessengerResource $messenger;
@@ -25,7 +25,7 @@ class Logic_Member
 		return self::$instance;
 	}
 
-	public function getRelatedUserIds( string $userId, $status = NULL ): array
+	public function getRelatedUserIds( int|string $userId, $status = NULL ): array
 	{
 		$userIds	= [];
 		$relations	= $this->modelRelation->getAllByIndices( [
@@ -54,22 +54,23 @@ class Logic_Member
 			'status'	=> '>= '.Model_User::STATUS_UNCONFIRMED,
 			'username'	=> '%'.$query.'%'
 		];
+		/** @var array<Entity_User> $byUsername */
 		$byUsername	= $this->modelUser->getAll( $conditions, ['username' => 'ASC'] );
 		foreach( $byUsername as $user )
 			$userIds[]	= $user->userId;
 
-		$query		= vsprintf( "SELECT %s FROM %s HAVING %s", array(
+		$query		= vsprintf( "SELECT %s FROM %s HAVING %s", [
 			"userId, CONCAT(firstname, ' ', surname) AS fullname",
 			$prefix.'users',
 			"fullname LIKE '%".$query."%'",
-		) );
+		] );
 		foreach( $dbc->query( $query )->fetchAll( PDO::FETCH_OBJ ) as $user )
 			$userIds[]	= $user->userId;
 		$userIds	= array_unique( $userIds );
 		return $userIds;
 	}
 
-	public function getUserRelation( string $currentUserId, string $relatedUserId, $status = NULL ): ?object
+	public function getUserRelation( int|string $currentUserId, int|string $relatedUserId, $status = NULL ): ?object
 	{
 		$conditions	= [
 			'fromUserId'	=> $currentUserId,
@@ -96,13 +97,14 @@ class Logic_Member
 		return NULL;
 	}
 
-	public function getUsersWithRelations( string $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
+	public function getUsersWithRelations( int|string $currentUserId, array $userIds, int $limit = 0, int $offset = 0 ): array
 	{
 		$key	= array_search( $currentUserId, $userIds );
 		if ( $key !== FALSE )
 			unset( $userIds[$key] );
 		if( !$userIds )
 			return [];
+		/** @var array<Entity_User> $users */
 		$users		= $this->modelUser->getAllByIndex( 'userId', $userIds );
 		if( $limit && count( $userIds ) > $limit )
 			$users	= array_slice( $users, $offset, $limit );
@@ -117,7 +119,6 @@ class Logic_Member
 
 	/**
 	 *	@param		Environment		$env
-	 *	@throws		ReflectionException
 	 */
 	protected function __construct( Environment $env )
 	{

@@ -1,10 +1,18 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var Entity_Form_Import_Rule $rule */
+/** @var array<object> $connections */
+/** @var array<Entity_Form> $forms */
+/** @var array<string,string> $folders */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconTest		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['class' => 'btn btn-small', 'href' => './manage/form/import'] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'class' => 'btn btn-primary'] );
@@ -68,28 +76,28 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_rules-'.$rule->formImportRuleId.'">Regeln <small class="muted">(im JSON-Format) '.$buttonTest.'</small></label>
-					<textarea name="rules" id="input_rules-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="25" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->rules, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="rules" id="input_rules-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="25" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->rules ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_searchCriteria">Suchkriterien <small class="muted">(im IMAP-Format)</small></label>
-					<textarea name="searchCriteria" id="input_searchCriteria" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->searchCriteria, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="searchCriteria" id="input_searchCriteria" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->searchCriteria ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 				<div class="span6">
 					<label for="input_options-'.$rule->formImportRuleId.'">Optionen</label>
-					<textarea name="options" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( @$rule->options, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="options" id="input_options-'.$rule->formImportRuleId.'" class="span12 ace-auto" rows="18" data-ace-option-max-lines="5" data-ace-option-line-height="1" data-ace-flag-font-size="12">'.htmlentities( $rule->options ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
 					<label for="input_renameTo">anschließend verschieben nach</label>
-<!--					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo, ENT_QUOTES, 'UTF-8' ).'"/>-->
+<!--					<input type="text" name="moveTo" id="input_moveTo" class="span12" value="'.htmlentities( $rule->moveTo ?? '', ENT_QUOTES, 'UTF-8' ).'"/>-->
 					<select name="moveTo" id="input_moveTo" class="span12">'.$optMoveTo.'</select>
 				</div>
 				<div class="span4">
 					<label for="input_renameTo"><strike class="muted">anschließend umbenennen zu</strike></label>
-					<input type="text" name="renameTo" id="input_renameTo" class="span12" disabled="disabled" value="'.htmlentities( $rule->renameTo, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="renameTo" id="input_renameTo" class="span12" disabled="disabled" value="'.htmlentities( $rule->renameTo ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -100,71 +108,5 @@ $form	= '<div class="content-panel" id="rule-import-edit-'.$rule->formImportRule
 	</div>
 </div>';
 
-
-$script		= '
-<script>
-var FormsImportRuleTest = {
-	init: function(){
-		jQuery(".button-test-rules").bind("click", function(){
-			var button = jQuery(this);
-			var ruleId = button.data("rule-id");
-			var modal = jQuery("#rule-import-edit-"+ruleId);
-			var rules = modal.find("#input_rules-"+ruleId).val();
-			FormsImportRuleTest.updateImportRulesTestTrigger(ruleId, rules);
-		});
-	},
-	testImportRules: function(ruleId, rules, callback){
-		jQuery.ajax({
-			url: "./manage/form/import/ajaxTestRules",
-			method: "POST",
-			dataType: "json",
-			data: {
-				ruleId: ruleId,
-				rules: rules
-			},
-			success: callback
-		});
-	},
-	updateImportRulesTestTrigger: function(ruleId, rules){
-		var callback = function(json){
-			var button = jQuery("#button-test-"+ruleId);
-			button.prop("title", null);
-			button.removeClass("btn-info btn-success btn-danger")
-			if(json.status !== "empty"){
-				if(json.status === "exception" || json.status === "error"){
-					button.addClass("btn-danger");
-					button.prop("title", json.message);
-				}
-				else if(json.status === "success" || json.status === "parsed"){
-					button.addClass("btn-success");
-				}
-			}
-			button.blur();
-		}
-		FormsImportRuleTest.testImportRules(ruleId, rules, callback);
-	}
-}
-jQuery(document).ready(function(){
-	FormsImportRuleTest.init();
-});
-</script>';
-
-
-$style	= '
-<style>
-span.indicator-import-rules-test {
-	display: inline-block;
-	width: 24px;
-	height: 24px;
-	border: 1px solid gray;
-	border-radius: 0.3em;
-	}
-span.indicator-import-rules-test.test-success {
-	background-color: green;
-	}
-span.indicator-import-rules-test.test-fail {
-	background-color: green;
-	}
-</style>';
-
-return $form.$script.$style;
+$js	= $env->getPage()->js->addScriptOnReady('FormsImportRuleTest.init();');
+return $form;

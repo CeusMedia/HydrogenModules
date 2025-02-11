@@ -9,12 +9,16 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array $words */
 /** @var object $address $w */
+/** @var Model_Shop_Payment_BackendRegister $paymentBackends */
+/** @var Model_Shop_Cart $cart */
+
 
 $w				= (object) $words['checkout'];
 
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $cart->get( 'positions' ) );
+$helperCart->setPaymentBackend( $paymentBackends->get( $cart->get( 'paymentMethod' ) ) );
 $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );
@@ -26,35 +30,35 @@ $tablePositions			= $tablePositionsDesktop.$tablePositionsPhone;
 extract( $view->populateTexts( ['top', 'bottom', 'checkout.top', 'checkout.bottom'], 'html/shop/' ) );
 
 $buttonPrev	= new LinkButton( './shop/conditions', $w->buttonToConditions, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
-if( count( $paymentBackends ) > 1 && $cartTotal > 0 )
+if( count( $paymentBackends->getAll() ) > 1 && $cartTotal > 0 )
 	$buttonPrev	= new LinkButton( './shop/payment', $w->buttonToPayment, 'not-pull-right', 'fa fa-fw fa-arrow-left' );
 
 $buttonNext	= new SubmitButton( 'save', $w->buttonNext, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
-if( !$paymentBackends || $cartTotal == 0 )
+if( !$paymentBackends->getAll() || $cartTotal == 0 )
 	$buttonNext	= new SubmitButton( 'save', $w->buttonNextPriceless, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' );
 
-$tabContent	= HtmlTag::create( 'div', array(
+$tabContent	= HtmlTag::create( 'div', [
 	$textCheckoutTop,
-	HtmlTag::create( 'form', array(
+	HtmlTag::create( 'form', [
 		HtmlTag::create( 'h4', $words['panel-cart']['heading'] ),
 		$tablePositions,
-		HtmlTag::create( 'div', array(
-			HtmlTag::create( 'div', array(
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'h4', $words['panel-customer']['heading'] ),
 				$helperAddress->setAddress( $customer->addressDelivery ),
-			), ['class' => 'span6'] ),
-			HtmlTag::create( 'div', array(
+			], ['class' => 'span6'] ),
+			HtmlTag::create( 'div', [
 				HtmlTag::create( 'h4', $words['panel-billing']['heading'] ),
 				$helperAddress->setAddress( $customer->addressBilling ),
-			), ['class' => 'span6'] ),
-		), ['class' => 'row-fluid'] ),
+			], ['class' => 'span6'] ),
+		], ['class' => 'row-fluid'] ),
 		$textCheckoutBottom,
 		HtmlTag::create( 'div', [
 			$buttonPrev, ' ',
 			$buttonNext,
 		], ['class' => 'buttonbar well well-small'] ),
-	), ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
-) );
+	], ['method' => 'post', 'action' => './shop/checkout', 'id' => 'form-shop-checkout'] ),
+] );
 
 $w				= (object) $words['modal-loading-payment'];
 $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
@@ -70,7 +74,7 @@ $modalLoading	= '<div id="modalLoadingPayment" class="modal hide not-fade">
 	</div>
 </div><script>
 jQuery(document).ready(function(){
-	if('.( count( $paymentBackends ) && $cartTotal > 0 ).'){
+	if('.( count( $paymentBackends->getAll() ) && $cartTotal > 0 ).'){
 		jQuery("#form-shop-checkout button[type=submit]").on("click", function(event){
 			jQuery("#modalLoadingPayment").modal();
 		});

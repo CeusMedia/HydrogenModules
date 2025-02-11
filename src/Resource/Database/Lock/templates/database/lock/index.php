@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var array<Entity_Database_Lock> $locks */
+
 $w		= (object) $words['index'];
 
 //$table		= '<div class="info empty"><em><small>'.$w->noEntries.'</small></em></div>';
@@ -15,14 +18,14 @@ if( count( $locks ) > 0 ){
 			'href'		=> './database/lock/unlock/'.$lock->lockId,
 			'class'		=> 'btn btn-mini btn-danger'
 		] );
-		$moduleTitle	= $lock->module ? $lock->module : '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
-		$list[]	= HtmlTag::create( 'tr', array(
+		$moduleTitle	= $lock->module ?: '<em><small class="muted">'.$w->moduleUnknown.'</small></em>';
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $lock->user->username, ['class' => 'lock-user'] ),
 			HtmlTag::create( 'td', $moduleTitle, ['class' => 'lock-module'] ),
 			HtmlTag::create( 'td', $lock->title, ['class' => 'lock-title'] ),
 			HtmlTag::create( 'td', date( 'Y-m-d H:i:s', $lock->timestamp ), ['class' => 'lock-date'] ),
 			HtmlTag::create( 'td', $buttonRemove, ['class' => 'lock-actions'] ),
-		) );
+		] );
 	}
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [

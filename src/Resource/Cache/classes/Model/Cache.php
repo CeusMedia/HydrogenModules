@@ -1,5 +1,11 @@
 <?php
 
+use CeusMedia\Cache\SimpleCacheInterface;
+
+use CeusMedia\Cache\Factory as CacheV2Factory;
+use CeusMedia\Cache\SimpleCacheFactory as CacheV3Factory;
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
 /**
@@ -7,56 +13,68 @@ use CeusMedia\HydrogenFramework\Environment;
  */
 class Model_Cache
 {
-	protected $model;
-	protected $env;
-	protected $config;
+	protected SimpleCacheInterface $model;
+	protected Environment $env;
+	protected Dictionary $config;
 
+	/**
+	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
-		$this->config	= (object) $this->env->getConfig()->getAll( 'module.resource_cache.' );
+		$this->config	= $this->env->getConfig()->getAll( 'module.resource_cache.', TRUE );
 
 		if( class_exists( '\\CeusMedia\\Cache\\SimpleCacheFactory' ) )						//  CeusMedia/Cache v0.3
-			$factory	= new \CeusMedia\Cache\SimpleCacheFactory;
+			$factory	= new CacheV3Factory();
 		else if( class_exists( '\\CeusMedia\\Cache\\Factory' ) )							//  CeusMedia/Cache v0.2
-			$factory	= new \CeusMedia\Cache\Factory();
+			$factory	= new CacheV2Factory();
 		else
 			throw new RuntimeException( 'No suitable cache implementation found' );
 
-		$type		= $this->config->type;
-		$resource	= $this->config->resource ? $this->config->resource : NULL;
-		$context	= $this->config->context ? $this->config->context : NULL;
-		$expiration	= $this->config->expiration ? (int) $this->config->expiration : 0;
+		$type		= $this->config->get( 'type' );
+		$resource	= $this->config->get( 'resource' );
+		$context	= $this->config->get( 'context' );
+		$expiration	= (int) $this->config->get( 'expiration', 0 );
 
-		if( $type === 'PDO' ){
+		if( 'PDO' === $type ){
 			if( !$this->env->getDatabase() )
 				throw new RuntimeException( 'A database connection is needed for PDO cache adapter' );
 			$dbc		= $this->env->getDatabase();
-			$resource	= array( $dbc, $dbc->getPrefix().$resource );
+			$resource	= [$dbc, $dbc->getPrefix().$resource];
 		}
 		$model	= $factory->newStorage( $type, $resource, $context, $expiration );
 		$this->env->set( 'cache', $model );
 	}
 
-	public function flush( ?string $context = NULL )
+	public function flush( ?string $context = NULL ): bool
 	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
-			$this->setContext( $this->config->context.$context );
-			$result	= $this->model->flush();
+			$this->setContext( $this->config->get( 'context', '' ).$context );
+			$result	= $this->model->clear();
 			$this->setContext( $_ctx );
 			return $result;
 		}
-		return $this->model->flush();
+		return $this->model->clear();
 	}
 
-	public function get( string $key, ?string $default = NULL, ?string $context = NULL )
+	/**
+	 *	@param		string			$key
+	 *	@param		string|NULL		$default
+	 *	@param		string|NULL		$context
+	 *	@return		mixed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function get( string $key, ?string $default = NULL, ?string $context = NULL ): mixed
 	{
 		if( $context !== NULL ){
 			if( !$this->has( $key, $context ) )
 				return $default;
 			$_ctx	= $this->getContext();
-			$this->setContext( $this->config->context.$context );
+			$this->setContext( $this->config->get( 'context' ).$context );
 			$result	= unserialize( $this->model->get( $key ) );
 			$this->setContext( $_ctx );
 			return $result;
@@ -66,21 +84,27 @@ class Model_Cache
 		return $default;
 	}
 
-	public function getContext()
+	public function getContext(): ?string
 	{
 		return $this->model->getContext();
 	}
 
 	public function getType()
 	{
-		return $this->config->type;
+		return $this->config->get( 'type' );
 	}
 
+	/**
+	 *	@param		string		$key
+	 *	@param		string|NULL		$context
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function has( string $key, ?string $context = NULL ): bool
 	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
-			$this->setContext( $this->config->context.$context );
+			$this->setContext( $this->config->get( 'context' ).$context );
 			$result	= $this->model->has( $key );
 			$this->setContext( $_ctx );
 			return $result;
@@ -88,11 +112,15 @@ class Model_Cache
 		return $this->model->has( $key );
 	}
 
+	/**
+	 *	@param		string|NULL		$context
+	 *	@return		array
+	 */
 	public function index( ?string $context = NULL ): array
 	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
-			$this->setContext( $this->config->context.$context );
+			$this->setContext( $this->config->get( 'context' ).$context );
 			$result	= $this->model->index();
 			$this->setContext( $_ctx );
 			return $result;
@@ -100,16 +128,28 @@ class Model_Cache
 		return $this->model->index();
 	}
 
-	public function remove( string $key )
+	/**
+	 *	@param		string		$key
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remove( string $key ): bool
 	{
-		return $this->model->remove( $key );
+		return $this->model->delete( $key );
 	}
 
-	public function set( string $key, $value, ?string $context = NULL )
+	/**
+	 *	@param		string			$key
+	 *	@param		mixed			$value
+	 *	@param		string|NULL		$context
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function set( string $key, mixed $value, ?string $context = NULL ): bool
 	{
 		if( $context !== NULL ){
 			$_ctx	= $this->getContext();
-			$this->setContext( $this->config->context.$context );
+			$this->setContext( $this->config->get( 'context' ).$context );
 			$result	= $this->model->set( $key, serialize( $value ) );
 			$this->setContext( $_ctx );
 			return $result;
@@ -122,10 +162,11 @@ class Model_Cache
 	 *	If folder is not existing, it will be created.
 	 *	@access		public
 	 *	@param		string|NULL		$context		Context within cache storage
-	 *	@return		void
+	 *	@return		self
 	 */
 	public function setContext( ?string $context ): self
 	{
 		$this->model->setContext( $context );
+		return $this;
 	}
 }

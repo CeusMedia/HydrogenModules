@@ -36,10 +36,10 @@ return '
 					</div>
 				</div>
 			</div>
-			'.HTML::Buttons( array(
+			'.HTML::Buttons( [
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6', array(
+					HTML::DivClass( 'span6', [
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
 							HtmlTag::create( 'input', '', [
@@ -53,9 +53,9 @@ return '
 							] ).
 							HtmlElements::Button( 'save', '<i class="fa fa-fw fa-download"></i> '.$w->buttonDownload, 'btn btn-primary' )
 						)
-					) )
+					] )
 				)
-			) ).'
+			] ).'
 		</form>
 	</div>
 </div>';

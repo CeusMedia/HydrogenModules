@@ -5,16 +5,26 @@ use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Info_Gallery extends Controller
 {
-	protected $baseFilePath;
+	protected string $baseFilePath;
 
-	public function index( $galleryId = NULL )
+	/**
+	 *	@param		int|string|NULL		$galleryId
+	 *	@return		void
+	 */
+	public function index( int|string|NULL $galleryId = NULL ): void
 	{
-		$this->env->getSession()->set( 'gallery_referer', new Url( getEnv( 'HTTP_REFERER' ) ) );
+		if( getEnv( 'HTTP_REFERER' ) )
+			$this->env->getSession()->set( 'gallery_referer', new Url( getEnv( 'HTTP_REFERER' ) ) );
 		if( $galleryId )
 			$this->restart( 'view/'.$galleryId, TRUE );
 	}
 
-	public function view( $galleryId = NULL )
+	/**
+	 *	@param		int|string|NULL		$galleryId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function view( int|string|NULL $galleryId = NULL ): void
 	{
 		$modelGallery	= new Model_Gallery( $this->env );
 
@@ -54,7 +64,7 @@ class Controller_Info_Gallery extends Controller
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.info_galleries.', TRUE );
 		$config			= $this->env->getConfig();
-		$pathImages		= $config->get( 'path.images' ) ? $config->get( 'path.images' ) : 'images/';
+		$pathImages		= $config->get( 'path.images' ) ?: 'images/';
 		$pathGalleries	= $this->moduleConfig->get( 'folder' );
 		$this->addData( 'baseUriPath', $this->path );
 		$this->addData( 'baseFilePath', $this->baseFilePath = $pathImages.$pathGalleries );

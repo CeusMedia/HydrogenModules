@@ -1,5 +1,11 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+
+/** @var Dictionary $request */
+/** @var array $rights */
+/** @var array<string,array<string,string>> $words */
 
 $optStatus	= $words['states-thread'];
 $optStatus	= HtmlElements::Options( $optStatus, (int) $request->get( 'status' ) );

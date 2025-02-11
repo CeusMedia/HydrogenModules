@@ -1,9 +1,20 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
 
 //  --  FILTER  --  //
-function numerizeWords( $words, $numbers = [] ){
+
+/**
+ *	Append quantity (found in numbers by key) to key label.
+ *	@param		array		$words
+ *	@param		array		$numbers
+ *	@return		array
+ */
+function quantifyWords( array $words, array $numbers = [] ): array
+{
 	foreach( $words as $key => $label ){
 		if( !strlen( $key ) ){
 			$number	= ' ('.array_sum( $numbers ).')';
@@ -20,12 +31,21 @@ function numerizeWords( $words, $numbers = [] ){
 	}
 	return $words;
 }
+
+/** @var Environment $env */
+/** @var View_Work_Issue $view */
+/** @var array $words */
+/** @var array $numberTypes */
+/** @var array $numberPriorities */
+/** @var array $numberStates */
+/** @var array $numberProjects */
+
 $session	= $env->getSession();
 
 $title		= $session->get( 'filter-issue-title' );
-$limit		= $session->get( 'filter-issue-limit' ) ? $session->get( 'filter-issue-limit' ) : 10;
+$limit		= $session->get( 'filter-issue-limit' ) ?: 10;
 $issueId	= $session->get( 'filter-issue-issueId' );
-$order		= $session->get( 'filter-issue-order' );
+$order		= $session->get( 'filter-issue-order', '' );
 $direction	= 'DESC';#$session->get( 'filter-issue-direction' );
 
 
@@ -42,10 +62,10 @@ foreach( $words['indexFilterDirections'] as $key => $label ){
 }
 $optDirection	= join( $optDirection );
 
-$words['types']			= numerizeWords( ['' => '- alle -'] + $words['types'], $numberTypes );
-$words['severities']	= numerizeWords( ['' => '- alle -'] + $words['severities'], [] );
-$words['priorities']	= numerizeWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
-$words['states']		= numerizeWords( ['' => '- alle -'] + $words['states'], $numberStates );
+$words['types']			= quantifyWords( ['' => '- alle -'] + $words['types'], $numberTypes );
+$words['severities']	= quantifyWords( ['' => '- alle -'] + $words['severities'] );
+$words['priorities']	= quantifyWords( ['' => '- alle -'] + $words['priorities'], $numberPriorities );
+$words['states']		= quantifyWords( ['' => '- alle -'] + $words['states'], $numberStates );
 
 $optType		= $view->renderOptions( $words['types'], 'type', $session->get( 'filter-issue-type' ), 'issue-type type-%1$d');
 $optSeverity	= $view->renderOptions( $words['severities'], 'severity', $session->get( 'filter-issue-severity' ), 'issue-severity severity-%1$d');
@@ -70,76 +90,77 @@ $filters[]	= HTML::DivClass( 'row-fluid',
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'relation', $words['indexFilter']['labelRelation'] ).
-		HtmlTag::create( 'select', $optRelation, array(
+		HtmlTag::create( 'select', $optRelation, [
 			'id'		=> 'input_relation',
 			'name'		=> 'relation',
 			'class'		=> 'span12',
 //			'size'		=> 3,
 			'onchange'	=> 'this.form.submit()'
-		) )
+		] )
 	)
 );
 if( !empty( $projects ) ){
 	$optProject	= [];
+	/** @var object $project */
 	foreach( $projects as $project )
 //		if( $numberProjects[$project->projectId] > 0 )
 			$optProject[$project->projectId]	= $project->title;
 
-	$optProject		= numerizeWords( ['' => '- alle -'] + $optProject, $numberProjects );
+	$optProject		= quantifyWords( ['' => '- alle -'] + $optProject, $numberProjects );
 	$optProject		= $view->renderOptions( $optProject, 'projectId', $session->get( 'filter-issue-projectId' ), 'issue-project');
 
-	$filters[]	= HTML::DivClass( 'row-fluid', array(
+	$filters[]	= HTML::DivClass( 'row-fluid', [
 		HTML::DivClass( 'span12',
 			HTML::Label( 'projectId', $words['indexFilter']['labelProject'] ).
-			HtmlTag::create( 'select', $optProject, array(
+			HtmlTag::create( 'select', $optProject, [
 				'id'		=> 'input_projectId',
 				'name'		=> 'projectId',
 				'class'		=> 'span12',
 				'onchange'	=> 'this.form.submit()',
-			) ) )
-		)
+			] ) )
+		]
 	);
 }
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'status', $words['indexFilter']['labelStatus'] ).
 	//	HTML::Select( 'status[]', $optStatus, 'span12 -max rows-8', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optStatus, array(
+		HtmlTag::create( 'select', $optStatus, [
 			'id'		=> 'input_status',
 			'name'		=> 'status[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 8,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'type', $words['indexFilter']['labelType'] ).
 	//	HTML::Select( 'type[]', $optType, '-max span12 rows-4', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optType, array(
+		HtmlTag::create( 'select', $optType, [
 			'id'		=> 'input_type',
 			'name'		=> 'type[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 4,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',
 	HTML::DivClass( 'span12',
 		HTML::Label( 'priority', $words['indexFilter']['labelPriority'] ).
 	//	HTML::Select( 'priority[]', $optPriority, '-max span12 rows-7', NULL, 'this.form.submit()' )
-		HtmlTag::create( 'select', $optPriority, array(
+		HtmlTag::create( 'select', $optPriority, [
 			'id'		=> 'input_priority',
 			'name'		=> 'priority[]',
 			'multiple'	=> 'multiple',
 			'class'		=> 'span12',
 			'size'		=> 7,
-			'onchange'	=> 'this.form.submit()' )
-		)
+			'onchange'	=> 'this.form.submit()'
+		] )
 	)
 );
 $filters[]	= HTML::DivClass( 'row-fluid',

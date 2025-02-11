@@ -2,6 +2,14 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var array<object> $projects */
+/** @var string $title */
+/** @var string $content */
+/** @var int|string|NULL $projectId */
+/** @var int|string|NULL $type */
+/** @var int|string|NULL $priority */
+
 $types	= $words['types'];
 $optType	= ['_selected' => $type];
 foreach( $types as $key => $value )
@@ -53,7 +61,7 @@ $(document).ready(function(){
 					type: "post",
 					dataType: "json",
 					success: function(response){
-						Issues.renderIssues($("#list-similar tbody"), response);
+						Issues.renderIssues($("#list-similar tbody"), response.data);
 					}
 				});
 	//

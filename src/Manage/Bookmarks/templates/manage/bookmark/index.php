@@ -1,5 +1,10 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Bookmark $view */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
@@ -12,7 +17,7 @@ return '
 		<div class="content-panel">
 			<h3>Lesezeichen</h3>
 			<div class="content-panel-inner">
-				'.$this->renderList().'
+				'.$view->renderList().'
 			</div>
 		</div>
 	</div>

@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Issue_ChangeNote
 {
-	const FORMAT_HTML		= 1;
-	const FORMAT_TEXT		= 2;
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_TEXT		= 2;
 
-	const FORMATS			= [
+	public const FORMATS			= [
 		self::FORMAT_HTML,
 		self::FORMAT_TEXT,
 	];
@@ -17,11 +17,17 @@ class View_Helper_Work_Issue_ChangeNote
 	protected ?object $note		= NULL;
 	protected int $format		= self::FORMAT_HTML;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( $this->format === self::FORMAT_TEXT )
@@ -29,12 +35,20 @@ class View_Helper_Work_Issue_ChangeNote
 		return $this->renderAsHtml();
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setFormat( int $format ): self
 	{
 		$this->format	= $format;
 		return $this;
 	}
 
+	/**
+	 *	@param		object		$note
+	 *	@return		self
+	 */
 	public function setNote( object $note ): self
 	{
 		$this->note	= $note;
@@ -43,6 +57,9 @@ class View_Helper_Work_Issue_ChangeNote
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsHtml(): string
 	{
 		if( !$this->note )
@@ -51,7 +68,7 @@ class View_Helper_Work_Issue_ChangeNote
 		$words		= $this->env->getLanguage()->getWords( 'work/issue' );
 
 		$noteText	= '<em><small class="muted">Kein Kommentar.</small></em>';
-		if( trim( $this->note->note ) ){
+		if( trim( $this->note->note ?? '' ) ){
 			if( $this->env->getModules()->has( 'UI_Markdown' ) )
 				$noteText	= View_Helper_Markdown::transformStatic( $this->env, $this->note->note );
 			else if( $this->env->getModules()->has( 'UI_Helper_Content' ) )
@@ -59,10 +76,12 @@ class View_Helper_Work_Issue_ChangeNote
 			else
 				$noteText	= nl2br( $this->note->note );
 		}
-		$note	= HtmlTag::create( 'tt', $noteText, ['class' => 'issue-change-list-note-content'] );
-		return $note;
+		return HtmlTag::create( 'tt', $noteText, ['class' => 'issue-change-list-note-content'] );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsText(): string
 	{
 		if( !$this->note )

@@ -2,7 +2,7 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\View;
@@ -10,16 +10,35 @@ use CeusMedia\HydrogenFramework\View;
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014 Ceus Media
- *	@todo			code doc
+ *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
  */
 class View_Oauth_Application extends View
 {
-	public function add(){}
+	/**
+	 *	@return		void
+	 */
+	public function add(): void
+	{
+	}
 
-	public function edit(){}
+	/**
+	 *	@return		void
+	 */
+	public function edit(): void
+	{
+	}
 
-	public function index(){}
+	/**
+	 *	@return		void
+	 */
+	public function index(): void
+	{
+	}
 
-	public function view(){}
+	/**
+	 *	@return		void
+	 */
+	public function view(): void
+	{
+	}
 }

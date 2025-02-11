@@ -6,99 +6,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_List_Days
 {
-	protected array $missions		= [];
-/*
-	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ){
-		$this->missions	= $this->list[$day];
-
-		return HtmlTag::create( 'div', [
-			HtmlTag::create( 'div', $link, ['class' => 'cell-title'] ),
-			HtmlTag::create( 'div', [
-				HtmlTag::create( 'span', $worker, ['class' => 'cell-workerId'] ),
-				HtmlTag::create( 'span', $worker, ['class' => 'cell-project'] ),
-				HtmlTag::create( 'span', $worker, ['class' => 'cell-priority'] ),
-				HtmlTag::create( 'span', $worker, ['class' => 'cell-actions'] ),
-			] )
-		] );
-
-		$colgroup		= [];
-		$tableHeads		= [];
-
-		$colgroup		= HtmlElements::ColumnGroup( $colgroup );
-		$tableHeads		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) );
-		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
-		$list1			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 1 );
-
-		$tableBody		= HtmlTag::create( 'tbody', $list1.$list0 );
-		$table			= HtmlTag::create( 'table', $colgroup.$tableHeads.$tableBody, ['class' => 'table table-striped work-mission-list'] );
-		return HtmlTag::create( 'div', $table, ['class' => "table-day", 'id' => 'table-'.$day] );
-	}
-*/
-
-/*
-	protected $baseUrl;
-	protected $indicator;
-	protected $logic;
-	protected $pathIcons	= 'https://cdn.ceusmedia.de/img/famfamfam/silk/';
-	protected $projects		= [];
-	protected $titleLength	= 80;
-	protected $today;
-	protected $words		= [];
-	protected $isEditor;
-	protected $isViewer;
-
-	public function __construct( $env ){
-		parent::__construct( $env );
-		$this->baseUrl		= $env->getConfig()->get( 'app.base.url' );
-		$this->indicator	= new \CeusMedia\Common\UI\HTML\Indicator();
-		$this->logic		= Logic_Work_Mission::getInstance( $env );
-		$this->today		= new DateTime( date( 'Y-m-d', time() - $this->logic->timeOffset ) );
-		$this->projects		= [];
-		$modelProject		= new Model_Project( $this->env );
-		foreach( $modelProject->getAll() as $project )
-			$this->projects[$project->projectId] = $project;
-		$this->isEditor	= $this->env->getAcl()->has( 'work/mission', 'edit' );
-		$this->isViewer	= $this->env->getAcl()->has( 'work/mission', 'view' );
-	}
-
-	protected function renderBadgeDays( $days, $class ){
-		$label	= HtmlTag::create( 'small', $this->formatDays( $days ) );
-		return HtmlTag::create( 'span', $label, ['class' => 'badge badge-'.$class] );
-	}
-
-	public function renderBadgeDaysOverdue( $mission ){
-		$end	= max( $mission->dayStart, $mission->dayEnd );										//  use maximum of start and end as due date
-		$diff	= $this->today->diff( new DateTime( $end ) );										//  calculate date difference
-		if( $diff->days > 0 && $diff->invert )														//  date is overdue and in past
-			return $this->renderBadgeDays( $diff->days, "important" );
-	}
-*/
-/*	/**
-	 *	Render overdue container.
-	 *	@access		public
-	 *	@param		object		$mission		Mission data object
-	 *	@return		string		DIV container with number of overdue days or empty string
-	 */
-/*	public function renderBadgeDaysStill( object $mission ): string
-	{
-		if( !$mission->dayEnd || $mission->dayEnd == $mission->dayStart )						//  mission has no duration
-			return "";																			//  return without content
-		$start	= new DateTime( $mission->dayStart );
-		$end	= new DateTime( $mission->dayEnd );
-		if( $this->today < $start || $end <= $this->today )										//  starts in future or has already ended
-			return "";																			//  return without content
-		return $this->renderBadgeDays( $this->today->diff( $end )->days, "warning" );
-	}
-
-	public function renderBadgeDaysUntil( object $mission ): string
-	{
-		$start	= new DateTime( $mission->dayStart );
-		if( $start <= $this->today )																//  mission has started in past
-			return "";																			//  return without content
-		return $this->renderBadgeDays( $this->today->diff( $start)->days, "success" );
-	}
-*/
-	public function renderDayList( $tense, $day, $showStatus = FALSE, $showPriority = FALSE, $showDate = FALSE, $showActions = FALSE ): string
+	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
 		$this->missions	= $this->list[$day];
 		$list0			= $this->renderRows( $day, $showStatus, $showPriority, $showDate, $showActions && $tense, 0 );
@@ -117,7 +25,12 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'div', $list1.$list0, ['class' => "table-day-small", 'id' => 'table-small-'.$day] );
 	}
 
-	public function renderRowButtons( $mission, $days ): string
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@param		$days
+	 *	@return		string
+	 */
+	public function renderRowButtons( Entity_Mission $mission, $days ): string
 	{
 		$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
 		$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
@@ -161,7 +74,13 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'div', $dropdownToggle.$dropdownMenu, ['class' => 'btn-group'] );
 	}
 
-	public function renderRowLabel( $mission, $edit = TRUE, bool $showIcon = TRUE ): string
+	/**
+	 *	@param		Entity_Mission	$mission
+	 *	@param		bool			$edit
+	 *	@param		bool			$showIcon
+	 *	@return		string
+	 */
+	public function renderRowLabel( Entity_Mission $mission, bool $edit = TRUE, bool $showIcon = TRUE ): string
 	{
 		$label		= TextTrimmer::trimCentric( $mission->title, $this->titleLength );
 		$label		= htmlentities( $label, ENT_QUOTES, 'UTF-8' );
@@ -177,7 +96,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'a', $label, ['href' => $url, 'class' => $class, 'style' => 'font-size: 1.25em'] );
 	}
 
-	public function renderRowOfEvent( $event, $days, $showStatus, $showPriority, $showDate, $showActions ): string
+	public function renderRowOfEvent( object $event, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
 	{
 		$link		= $this->renderRowLabel( $event, TRUE, FALSE );
 		$badgeO		= $this->renderBadgeDaysOverdue( $event );
@@ -333,7 +252,7 @@ class View_Helper_Work_Mission_List_DaysSmall extends View_Helper_Work_Mission_L
 		return HtmlTag::create( 'table', $colgroup.$tbody, $attributes );
 	}
 
-	public function renderRows( $day, $showStatus, $showPriority, $showDate, $showActions, $typeOnly = NULL ): string
+	public function renderRows( $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE, $typeOnly = NULL ): string
 	{
 		if( !count( $this->missions ) )
 			return '';

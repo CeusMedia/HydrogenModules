@@ -14,9 +14,10 @@ class Logic_Catalog_Provision extends Logic
 	protected Model_User $modelUser;
 
 	/**
-	 *	@todo   		rework, send mails
+	 *	@todo		rework, send mails
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function addUserLicense( $userId, $productLicenseId, bool $assignFirst = FALSE ): string
+	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		$data		= [
@@ -55,14 +56,16 @@ class Logic_Catalog_Provision extends Logic
 	 *	- user license is active
 	 *	- another user license key for product is prepared
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
+	 *	@param		int|string		$userId			User ID
+	 *	@param		int|string		$productId		Product ID
 	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function enableNextUserLicenseKeyForProduct( $userId, $productId )
+	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -102,42 +105,35 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@todo   		rework
 	 */
-	public function getDurationInSeconds( $duration )
+	public function getDurationInSeconds( $duration ): float|int
 	{
 		$number	= (int) preg_replace( "/^([0-9]+)/", "\\1", $duration );
 		$unit	= preg_replace( "/^([0-9]+)([a-z]+)$/", "\\2", $duration );
 		$oneDay	= 24 * 60 * 60;
 
-		switch( $unit ){
-			case 'd':
-				$factor		= $oneDay;
-				break;
-			case 'w':
-				$factor		= 7 * $oneDay;
-				break;
-			case 'm':
-				$factor		= 30 * $oneDay;
-				break;
-			case 'a':
-				$factor		= 365 * $oneDay;
-				break;
-		}
-		return $number * $factor;
+		return $number * $oneDay * match( $unit ){
+			'a'		=> 365,
+			'm'		=> 30,
+			'w'		=> 7,
+			default	=> 1,
+		};
 	}
 
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$userId			User ID
-	 *	@param		integer		$productId		Product ID
-	 *	@return		integer						User license key ID
-	 *	@throws		RangeException				if given user ID is invalid
-	 *	@throws		RuntimeException			if given user is not activated
+	 *	@param		int|string		$userId			User ID
+	 *	@param		int|string		$productId		Product ID
+	 *	@return		integer							User license key ID
+	 *	@throws		RangeException					if given user ID is invalid
+	 *	@throws		RuntimeException				if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getNextUserLicenseKeyIdForProduct( $userId, $productId )
+	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
 		if( !$user )
 		 	throw new RangeException( 'Invalid user ID' );
@@ -155,7 +151,12 @@ class Logic_Catalog_Provision extends Logic
 		return 0;
 	}
 
-	public function getProduct( $productId )
+	/**
+	 *	@param		int|string		$productId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProduct( int|string $productId ): object
 	{
 		$product	= $this->modelProduct->get( $productId );
 		if( !$product )
@@ -163,7 +164,12 @@ class Logic_Catalog_Provision extends Logic
 		return $product;
 	}
 
-	public function getProductLicense( $productLicenseId = 0 )
+	/**
+	 *	@param		int|string		$productLicenseId
+	 *	@return		object
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
 		$productLicense	= $this->modelLicense->get( $productLicenseId );
 		if( !$productLicense )
@@ -172,7 +178,13 @@ class Logic_Catalog_Provision extends Logic
 		return $productLicense;
 	}
 
-	public function getProductLicenses( $productId, $status = NULL )
+	/**
+	 *	@param		int|string		$productId
+	 *	@param		$status
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
 		$indices	= ['productId' => $productId];
 		if( $status !== NULL )
@@ -184,36 +196,54 @@ class Logic_Catalog_Provision extends Logic
 		return $productLicenses;
 	}
 
-	public function getProductUri( $productOrId, bool $absolute = FALSE )
+	/**
+	 *	@param		int|string		$productOrId
+	 *	@param		bool			$absolute
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductUri( int|string $productOrId, bool $absolute = FALSE ): string
 	{
 		$product	= $productOrId;
 		if( is_int( $productOrId ) )
 			$product	= $this->getProductLicense( $productOrId );
 		if( !is_object( $product ) )
 			throw new InvalidArgumentException( 'Given product data is invalid (neither product object nor valid product ID)' );
-		$uri	= vsprintf( 'catalog/provision/product/%1$d-%2$s', array(
+		$uri	= vsprintf( 'catalog/provision/product/%1$d-%2$s', [
 			$product->productId,
 			$this->getUriPart( $product->title ),
-		) );
+		] );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getProductLicenseUri( $productLicenseOrId, bool $absolute = FALSE )
+	/**
+	 *	@param		int|string		$productLicenseOrId
+	 *	@param		bool			$absolute
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getProductLicenseUri( int|string $productLicenseOrId, bool $absolute = FALSE ): string
 	{
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) )
 			$productLicense	= $this->getProductLicense( $productLicenseOrId );
 		if( !is_object( $productLicense ) )
 			throw new InvalidArgumentException( 'Given product license data is invalid (neither product license object nor valid product license ID)' );
-		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', array(
+		$uri	= vsprintf( 'catalog/provision/product/license/%2$d-%3$s', [
 			$productLicense->productId,
 			$productLicense->productLicenseId,
 			$this->getUriPart( $productLicense->title ),
-		) );
+		] );
 		return $absolute ? $this->env->url.$uri : './'.$uri;
 	}
 
-	public function getUserLicensesFromUser( $userId, $productId = NULL )
+	/**
+	 *	@param		int|string			$userId
+	 *	@param		int|string|NULL		$productId
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUserLicensesFromUser( int|string $userId, int|string|NULL $productId = NULL ): array
 	{
 		$indices		= ['userId' => $userId];
 		if( $productId )
@@ -252,7 +282,9 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );

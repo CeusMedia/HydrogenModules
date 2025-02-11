@@ -4,8 +4,8 @@
 	<description><![CDATA[]]></description>
 	<version>1.4.2</version>
 	<category>JavaScript</category>
-	<author site="http://flesler.blogspot.de/" email="aflesler@gmail.com">Ariel Flesler</author>
-	<url>http://flesler.blogspot.de/2007/10/jqueryscrollto.html</url>
+	<author site="https://flesler.blogspot.de/" email="aflesler@gmail.com">Ariel Flesler</author>
+	<url>https://flesler.blogspot.de/2007/10/jqueryscrollto.html</url>
 	<license>Public Domain?</license>
 	<files>
 		<script load="auto">jquery.scrollTo.min.js</script>

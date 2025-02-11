@@ -2,12 +2,12 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Page $view */
 /** @var array $words */
-
 /** @var array $apps */
 /** @var array $sources */
 /** @var array $languages */
-
+/** @var string $app */
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSortable	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrows-v'] );
@@ -84,12 +84,12 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', [
 	'class'		=> 'btn btn-small btn-success',
 ] );
 
-$buttonSortable	= HtmlTag::create( 'button', $iconSortable, array(
+$buttonSortable	= HtmlTag::create( 'button', $iconSortable, [
 	'type'		=> 'button',
 	'id'		=> 'toggle-sortable',
 	'onclick'	=> 'ModuleManagePages.PageEditor.toggleSortable()',
 	'class'		=> 'btn btn-small',
-) );
+] );
 
 $currentId	= !empty( $pageId ) ? $pageId : $parentId;
 $listPages	= $view->renderTree( $tree, $currentId );

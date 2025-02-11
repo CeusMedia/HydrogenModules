@@ -1,15 +1,24 @@
 <?php
 class Mail_Form_Customer_Result extends Mail_Form_Abstract
 {
-	public function generate(): self
+	/**
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function generate(): static
 	{
+		/** @var ?Entity_Form $form */
 		$form	= $this->data['form'];
+
+		/** @var ?Entity_Form_Fill $fill */
 		$fill	= $this->data['fill'];
+
+		/** @var ?Entity_Form_Mail $mail */
 		$mail	= $this->data['mail'];
 
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
 
-		if( $mail->format == Model_Form_Mail::FORMAT_HTML ){
+		if( Model_Form_Mail::FORMAT_HTML === $mail->format ){
 			$content	= $this->applyFillData( $content, $fill );
 			$content	= $this->applyHelpers( $content, $fill, $form );
 			$this->setHtml( $content );

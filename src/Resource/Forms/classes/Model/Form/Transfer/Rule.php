@@ -4,11 +4,11 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_Form_Transfer_Rule extends Model
 {
-	const STATUS_NEW		= 0;
-	const STATUS_CONFIRMED	= 1;
-	const STATUS_HANDLED	= 2;
+	public const STATUS_NEW			= 0;
+	public const STATUS_CONFIRMED	= 1;
+	public const STATUS_HANDLED		= 2;
 
-	const STATUSES			= [
+	public const STATUSES			= [
 		self::STATUS_NEW,
 		self::STATUS_CONFIRMED,
 		self::STATUS_HANDLED,
@@ -33,5 +33,7 @@ class Model_Form_Transfer_Rule extends Model
 
 	protected string $name			= 'form_transfer_rules';
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Form_Transfer_Rule::class;
 }

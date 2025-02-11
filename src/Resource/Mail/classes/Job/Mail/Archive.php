@@ -1,5 +1,8 @@
 <?php
 
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
+
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -12,9 +15,6 @@ class Job_Mail_Archive extends Job_Abstract
 	protected Model_Mail $model;
 
 	protected Logic_Mail $logicMail;
-
-	/** @var	int		$libraries		Bitmask of supported mail libraries */
-	protected int $libraries;
 
 	protected array $statusesHandledMails	= [
 		Model_Mail::STATUS_ABORTED,																//  status: -3
@@ -55,8 +55,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function clean()
+	public function clean(): void
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
@@ -96,26 +97,45 @@ class Job_Mail_Archive extends Job_Abstract
 		$this->out( 'Removed '.$nrMails.' old mails.' );
 	}
 
-	public function dump()
+	/**
+	 *	Exports mails to SQL file.
+	 * 	Support limit and order (--limit 100 --order="mailId DESC").
+	 *
+	 *	@access		public
+	 *	@return		void
+	 */
+	public function dump(): void
 	{
-		$path		= $this->parameters->get( '--to', './' );
+		$path	= $this->parameters->get( '--to', './' );
+		$limit	= $this->parameters->get( '--limit' );
+		$order	= $this->parameters->get( '--order' );
+
+		$where	= [];
+		if( NULL !== $limit || NULL !== $order ){
+			$where[]    = 1;
+			if( NULL !== $order )
+				$where[]	= 'ORDER BY '.$order;
+			if( NULL !== $limit )
+				$where[]	= 'LIMIT '.max( 1, abs( $limit ) );
+		}
+		$params		= $where ? ' --where="'.addslashes( join( ' ', $where ) ).'"' : '';
 
 		$filename	= "dump_".date( "Y-m-d_H:i:s" )."_mails.sql";
 		$pathname	= $path.$filename;
 
-		$dbc		= $this->env->getDatabase();
 		$dba		= $this->env->getConfig()->getAll( 'module.resource_database.access.', TRUE );
 		$prefix		= $dba->get( 'prefix' );
 		$tables		= $prefix.'mails';
 
-		$command	= call_user_func_array( "sprintf", [										//  call sprintf with arguments list
-			"mysqldump -h%s -P%s -u%s -p%s %s %s > %s",												//  command to replace within
+		$command	= call_user_func_array( "sprintf", [											//  call sprintf with arguments list
+			"mysqldump -h%s -P%s -u%s -p%s %s %s %s > %s",											//  command to replace within
 			escapeshellarg( $dba->get( 'host' ) ),													//  configured host name as escaped shell arg
-			escapeshellarg( $dba->get( 'port' ) ? $dba->get( 'port' ) : 3306  ),					//  configured port as escaped shell arg
+			escapeshellarg( $dba->get( 'port' ) ?: 3306  ),					//  configured port as escaped shell arg
 			escapeshellarg( $dba->get( 'username' ) ),												//  configured username as escaped shell arg
 			escapeshellarg( $dba->get( 'password' ) ),												//  configured password as escaped shell arg
 			escapeshellarg( $dba->get( 'name' ) ),													//  configured database name as escaped shell arg
 			$tables,																				//  collected found tables
+			$params,																				//  additional parameters, like --where (buil from --order or --limit)
 			escapeshellarg( $pathname ),															//  dump output filename
 		] );
 		$resultCode		= 0;
@@ -155,8 +175,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function regenerate()
+	public function regenerate(): void
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
@@ -211,8 +232,9 @@ class Job_Mail_Archive extends Job_Abstract
 	 *			- default: empty, meaning all mail classes
 	 *
 	 *	@todo	test
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function removeAttachments()
+	public function removeAttachments(): void
 	{
 		$age		= $this->parameters->get( '--age', '1Y' );
 		$age		= $age ? strtoupper( $age ) : '1Y';
@@ -246,55 +268,35 @@ class Job_Mail_Archive extends Job_Abstract
 		$mailIds	= $this->model->getAllByIndices( $conditions, $orders, [], ['mailId'] );
 		foreach( $mailIds as $mailId ){
 			try{
+				/** @var Entity_Mail $mail */
 				$mail			= $this->model->get( $mailId );
 				$this->logicMail->decompressMailObject( $mail );
-				$sizeBefore		= strlen( $mail->object->raw );
-				if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-					$parts		= $mail->object->instance->mail->getParts();
-					foreach( $parts as $nr => $part ){
+				$sizeBefore		= strlen( $mail->object );
+				$parts			= $mail->objectInstance->mail->getParts();
+				foreach( $parts as $nr => $part ){
 //						$this->out( "Part: ".get_class( $part ) );
-						if( $part->isAttachment() ){
-							$mail->object->instance->mail->removePart( $nr );
-							$this->logicMail->compressMailObject( $mail );
-							$renderer	= new \CeusMedia\Mail\Message\Renderer();
-							$raw		= $renderer->render( $mail->object->instance->mail );
-							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object->raw,
-									'raw'		=> $this->logicMail->compressString( $raw ),
-								], FALSE );
-							}
-							$results->attachments++;
-							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object->raw );
+					if( $part->isAttachment() ){
+						$mail->objectInstance->mail->removePart( $nr );
+						$this->logicMail->compressMailObject( $mail );
+						$renderer	= new \CeusMedia\Mail\Message\Renderer();
+						$raw		= $renderer->render( $mail->objectInstance->mail );
+						if( !$this->dryMode ){
+							$this->model->edit( $mail->mailId, [
+								'object'	=> $mail->object,
+								'raw'		=> $this->logicMail->compressString( $raw ),
+							], FALSE );
 						}
-					}
-				}
-				else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-					$parts		= $mail->object->instance->mail->getParts();
-					foreach( $parts as $nr => $part ){
-//						$this->out( "Part: ".get_class( $part ) );
-						if( $part instanceof \CeusMedia\Mail\Part\Attachment ){
-							$mail->object->instance->mail->removePart( $nr );
-							$this->logicMail->compressMailObject( $mail );
-							$raw	= \CeusMedia\Mail\Renderer::render( $mail->object->instance->mail );
-							if( !$this->dryMode ){
-								$this->model->edit( $mail->mailId, [
-									'object'	=> $mail->object->raw,
-									'raw'		=> $this->logicMail->compressString( $raw ),
-								], FALSE );
-							}
-							$results->attachments++;
-							$results->sizeBefore	+= $sizeBefore;
-							$results->sizeAfter		+= strlen( $mail->object->raw );
-						}
+						$results->attachments++;
+						$results->sizeBefore	+= $sizeBefore;
+						$results->sizeAfter		+= strlen( $mail->object );
 					}
 				}
 				$this->showProgress( ++$results->mails, count( $mailIds ) );
 			}
 			catch( Exception $e ){
 				$this->showProgress( ++$results->mails, count( $mailIds ), 'E' );
-				$fails[$mail->mailId]	= $e->getMessage();
+				if( isset( $mail ) )
+					$fails[$mail->mailId]	= $e->getMessage();
 			}
 		}
 		if( $mailIds )
@@ -315,8 +317,9 @@ class Job_Mail_Archive extends Job_Abstract
 	/**
 	 *	Work in progress!
 	 *	Store raw mails in shard folders.
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function shard()
+	public function shard(): void
 	{
 		$path		= 'contents/mails/';
 		$indexFile	= $path.'index.json';
@@ -343,14 +346,9 @@ class Job_Mail_Archive extends Job_Abstract
 				$this->showProgress( $count, count( $mailIds ), '.' );
 				continue;
 			}
+			/** @var Entity_Mail $mail */
 			$mail	= $this->model->get( $mailId );
 			$this->logicMail->decompressMailObject( $mail );
-			$usedLibrary	= $this->logicMail->detectMailLibraryFromMail( $mail );
-			if( !( $this->libraries & $usedLibrary ) ){
-				$fails[]	= 'Mail #'.$mailId.': Mail library mismatch: '.$usedLibrary;
-				$this->showProgress( $count, count( $mailIds ), 'E' );
-				continue;
-			}
 			$uuid		= ID::uuid();
 			$shard		= $uuid[0].'/'.$uuid[1].'/'.$uuid[2].'/';
 			if( !empty( $mail->raw ) ){
@@ -362,7 +360,7 @@ class Job_Mail_Archive extends Job_Abstract
 				$this->showProgress( $count, count( $mailIds ), '+' );
 			}
 			else{
-				$object	= $mail->object->instance;
+				$object	= $mail->objectInstance;
 				$class	= get_class( $object->mail );
 				if( $class !== 'CeusMedia\\Mail\\Message' ){
 					$fails[]	= 'Mail #'.$mailId.': Unsupported mail class: '.$class;
@@ -370,16 +368,12 @@ class Job_Mail_Archive extends Job_Abstract
 					continue;
 				}
 				try{
+					$raw	= NULL;
 					if( !count( $object->mail->getParts( FALSE ) ) ){
 						if( ( $page = $object->getPage() ) )
 						$object->mail->addHtml( $page->build() );
 					}
-					if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-						$raw		= CeusMedia\Mail\Renderer::render( $object->mail );
-					}
-					else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-						$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
-					}
+					$raw		= CeusMedia\Mail\Message\Renderer::render( $object->mail );
 					if( !file_exists( $path.$shard ) )
 						FolderEditor::createFolder( $path.$shard );
 					FileWriter::save( $path.$shard.$uuid.'.raw', $raw );
@@ -408,8 +402,8 @@ class Job_Mail_Archive extends Job_Abstract
 	protected function __onInit(): void
 	{
 		$this->model		= new Model_Mail( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= $this->env->getLogic()->get( 'Mail' );
-		$this->libraries	= $this->logicMail->detectAvailableMailLibraries();
 		$this->_loadMailClasses();
 	}
 
@@ -420,7 +414,7 @@ class Job_Mail_Archive extends Job_Abstract
 		return $matches[1].$matches[2].$this->prefixPlaceholder.$matches[4].$matches[5];
 	}
 
-	protected function _loadMailClasses()
+	protected function _loadMailClasses(): void
 	{
 		$loadedClasses	= [];
 		$mailClassPaths	= ['./', 'admin/'];

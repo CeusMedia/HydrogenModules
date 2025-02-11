@@ -1,31 +1,32 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\HydrogenFramework\Environment;
 
 class Job_Abstract
 {
 	/**	@var	Environment				$env			Environment object */
-	protected $env;
+	protected Environment $env;
 
-	protected $logFile;
+	protected string $logFile;
 
-	/**	@var	string					$jobClass		Class name of inheriting job */
-	protected $jobClass;
+	/**	@var	?string					$jobClass		Class name of inheriting job */
+	protected ?string $jobClass			= NULL;
 
-	/**	@var	string					$jobMethod		Method name of job task */
-	protected $jobMethod;
+	/**	@var	?string					$jobMethod		Method name of job task */
+	protected ?string $jobMethod		= NULL;
 
-	/**	@var	string					$jobModuleId	Module ID of inheriting job */
-	protected $jobModuleId;
+	/**	@var	?string					$jobModuleId	Module ID of inheriting job */
+	protected ?string $jobModuleId		= NULL;
 
-	protected $commands			= [];
-	protected $dryMode			= FALSE;
-	protected $verbose			= FALSE;
-	protected $parameters;
+	protected array $commands			= [];
+	protected bool $dryMode			= FALSE;
+	protected bool $verbose			= FALSE;
+	protected Dictionary $parameters;
 
-	protected $versionModule;
-	protected $progress;
+	protected ?string $versionModule	= NULL;
+	protected ?ProgressOutput $progress	= NULL;
 
 	protected $results;
 
@@ -65,16 +66,16 @@ class Job_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		array		$command		...
+	 *	@param		array		$commands		...
 	 *	@param		array		$parameters		...
-	 *	@return		self
+	 *	@return		static
 	 */
-	public function noteArguments( array $commands = [], array $parameters = [] ): self
+	public function noteArguments( array $commands = [], array $parameters = [] ): static
 	{
 		$this->commands		= array_diff( $commands, ['dry', 'verbose'] );
 		$this->parameters	= new Dictionary( $parameters );
-		$this->dryMode		= in_array( 'dry', (array) $commands );
-		$this->verbose		= in_array( 'verbose', (array) $commands );
+		$this->dryMode		= in_array( 'dry', $commands );
+		$this->verbose		= in_array( 'verbose', $commands );
 		return $this;
 	}
 
@@ -83,26 +84,14 @@ class Job_Abstract
 	 *	@access		public
 	 *	@param		string		$className		Class name of inheriting job
 	 *	@param		string		$jobName		Method name of job task
-	 *	@param		string		$moduleId		Module ID of inheriting job
-	 *	@return		self
+	 *	@param		?string		$moduleId		Module ID of inheriting job
+	 *	@return		static
 	 */
-	public function noteJob( string $className, string $jobName, string $moduleId = NULL ): self
+	public function noteJob( string $className, string $jobName, string $moduleId = NULL ): static
 	{
 		$this->setJobClassName( $className );
 		$this->jobMethod	= $jobName;
 		$this->setJobModuleId( $moduleId );
-		return $this;
-	}
-
-	/**
-	 *	@access		public
-	 *	@param		string		$message		Message to be displayed
-	 *	@return		self
-	 *	@todo		make protected
-	 */
-	public function out( ?string $message = NULL ): self
-	{
-		print( $message."\n" );
 		return $this;
 	}
 
@@ -133,9 +122,9 @@ class Job_Abstract
 	 *	Write message to log.
 	 *	@access		protected
 	 *	@param		string		$message		Message to log
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function log( string $message ): self
+	protected function log( string $message ): static
 	{
 //		$this->manager->log( $this->getLogPrefix().$message );
 		return $this;
@@ -145,9 +134,10 @@ class Job_Abstract
 	 *	Write error message to log.
 	 *	@access		protected
 	 *	@param		string		$message		Error message to log
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function logError( $message ){
+	protected function logError( string $message ): static
+	{
 		$this->manager->logError( $this->getLogPrefix().$message );
 		return $this;
 	}
@@ -156,11 +146,22 @@ class Job_Abstract
 	 *	Log caught exception.
 	 *	@access		protected
 	 *	@param		Throwable	$exception		Exception to be logged
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function logException( Throwable $exception ): self
+	protected function logException( Throwable $exception ): static
 	{
 		$this->manager->logException( $exception );
+		return $this;
+	}
+
+	/**
+	 *	@access		public
+	 *	@param		?string		$message		Message to be displayed
+	 *	@return		static
+	 */
+	protected function out( ?string $message = NULL ): static
+	{
+		print( $message.PHP_EOL );
 		return $this;
 	}
 
@@ -168,9 +169,9 @@ class Job_Abstract
 	 *	Set class name of inheriting job for information output or logging.
 	 *	@access		protected
 	 *	@param		string		$jobClassName	Class name of inheriting job
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function setJobClassName( string $jobClassName ): self
+	protected function setJobClassName( string $jobClassName ): static
 	{
 		$this->jobClass		= strlen( trim( $jobClassName ) ) ? $jobClassName : get_class( $this );
 		return $this;
@@ -179,16 +180,16 @@ class Job_Abstract
 	/**
 	*	Set module of inheriting job for information output or logging.
 	 *	@access		protected
-	 *	@param		string		$jobModuleId	Module ID of inheriting job
-	 *	@return		self
+	 *	@param		?string		$jobModuleId	Module ID of inheriting job
+	 *	@return		static
 	 */
-	protected function setJobModuleId( ?string $jobModuleId ): self
+	protected function setJobModuleId( ?string $jobModuleId ): static
 	{
-		$this->jobModuleId		= strlen( trim( $jobModuleId ) ) ? $jobModuleId : NULL;
+		$this->jobModuleId		= strlen( trim( $jobModuleId ?? '' ) ) ? $jobModuleId : NULL;
 		$this->versionModule	= NULL;
 		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
 			$module	= $this->env->getModules()->get( $this->jobModuleId );
-			$this->versionModule	= $module->versionInstalled;
+			$this->versionModule	= $module->version->installed;
 		}
 		return $this;
 	}
@@ -200,48 +201,41 @@ class Job_Abstract
 	 *	@param		integer		$total			Number of all steps of progress bar
 	 *	@param		string		$sign			Character to display progress within bar
 	 *	@param		integer		$length			Length of progress bar
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): self
+	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): static
 	{
-		if( class_exists( ProgressOutput::class ) ){
-			if( $count === 0 ){
-				$this->progress	= new ProgressOutput();
-				$this->progress->setTotal( $total )->start();
-			}
-			else if( $count === $total ){
-				if( $this->progress ){
-					$this->progress->update( $count );
-					$this->progress->finish();
-				}
-			}
-			else{
-				if( !$this->progress ){
-					$this->progress	= new ProgressOutput();
-					$this->progress->setTotal( $total );
-					$this->progress->start();
-				}
+		if( $count === 0 ){
+			$this->progress	= new ProgressOutput();
+			$this->progress->setTotal( $total )->start();
+		}
+		else if( $count === $total ){
+			if( $this->progress ){
 				$this->progress->update( $count );
+				$this->progress->finish();
 			}
-
-		} else {
-			echo $sign;
-			if( $count % $length === 0 )
-				echo str_pad( $count.'/'.$total, 18, " ", STR_PAD_LEFT ).PHP_EOL;
+		}
+		else{
+			if( !$this->progress ){
+				$this->progress	= new ProgressOutput();
+				$this->progress->setTotal( $total );
+				$this->progress->start();
+			}
+			$this->progress->update( $count );
 		}
 		return $this;
 	}
 
 	/**
-	 *	Display caucht error messages.
+	 *	Display caught error messages.
 	 *	@access		protected
 	 *	@param		string		$taskName		Name of task producing errors
 	 *	@param		array		$errors			List of error messages to show
-	 *	@return		self
+	 *	@return		static
 	 */
-	protected function showErrors( string $taskName, array $errors ): self
+	protected function showErrors( string $taskName, array $errors ): static
 	{
-		if( is_array( $errors ) && count( $errors ) ){
+		if( 0 !== count( $errors ) ){
 			$this->out( 'Errors on '.$taskName.':' );
 			foreach( $errors as $mailId => $message )
 				$this->out( '- '.$mailId.': '.$message );

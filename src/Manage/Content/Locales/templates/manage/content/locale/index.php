@@ -1,4 +1,7 @@
 <?php
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
 
 $panelFilter	= $view->loadTemplateFile( 'manage/content/locale/filter.php' );
 

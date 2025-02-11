@@ -19,7 +19,7 @@ Can be used to cover long loading requests.
 <!--	<log version="0.3.x">Support for localized default messages.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Hook/UI/LockLayer.php</class>
 		<script load="auto">UI.LockLayer.js</script>

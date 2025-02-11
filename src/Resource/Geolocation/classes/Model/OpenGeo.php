@@ -19,7 +19,7 @@ class Model_OpenGeo{
 		$locations	= $this->dbc->query( $query )->fetchAll( PDO::FETCH_OBJ );
 		if( $locations ){
 			return array_pop( $locations );
-			return array_shift( $locations );
+//			return array_shift( $locations );
 		}
 		throw new InvalidArgumentException( 'City "'.$city.'" not found' );
 	}

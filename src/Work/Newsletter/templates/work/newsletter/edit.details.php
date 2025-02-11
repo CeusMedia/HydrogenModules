@@ -31,29 +31,29 @@ foreach( $templates as $entry )
 	$optTemplate[$entry->newsletterTemplateId]	= $entry->title;
 $optTemplate	= HtmlElements::Options( $optTemplate, $newsletter->newsletterTemplateId );
 
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, array(
+$buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'type'		=> 'submit',
 	'class'		=> 'btn btn-primary',
 	'name'		=> 'save',
 	'disabled'	=> 	(int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
-) );
-$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, array(
+] );
+$buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPreview, [
 	'type'			=> "button",
 	'class'			=> "btn btn-info",
 	'data-toggle'	=> "modal",
 	'data-target'	=> "#modal-preview",
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/html/'.$newsletterId.'/1\');'
-) );
-$buttonAbort		= HtmlTag::create( 'a', $iconAbort.$words->edit->buttonAbort, array(
+] );
+$buttonAbort		= HtmlTag::create( 'a', $iconAbort.$words->edit->buttonAbort, [
 	'href'		=> './work/newsletter/setStatus/'.$newsletterId.'/-1',
 	'class'		=> 'btn btn-inverse bs4-btn-dark btn-small',
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
-) );
-$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, array(
+] );
+$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
 	'href'		=> './work/newsletter/remove/'.$newsletterId,
 	'class'		=> 'btn btn-danger btn-small',
 	'disabled'	=> (int) $newsletter->status >= Model_Newsletter::STATUS_SENT ? 'disabled' : NULL,
-) );
+] );
 $buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn bs4-btn-secondary not-btn-small',
@@ -77,7 +77,7 @@ $panelDetails	= '
 						</div>
 						<div class="span2">
 							<label for="input_trackingCode"><abbr title="'.$words->edit->labelTrackingCode_title.'">'.$words->edit->labelTrackingCode.'</abbr></label>
-							<input '.$disabled.' type="text" name="trackingCode" id="input_trackingCode" class="span12" value="'.htmlentities( $newsletter->trackingCode, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="trackingCode" id="input_trackingCode" class="span12" value="'.htmlentities( $newsletter->trackingCode ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span2">
 							<label for="input_status">'.$words->edit->labelStatus.'</label>
@@ -91,17 +91,17 @@ $panelDetails	= '
 						</div>
 						<div class="span4">
 							<label for="input_senderAddress">'.$words->edit->labelSenderAddress.'</label>
-							<input '.$disabled.' type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required" value="'.htmlentities( $newsletter->senderAddress, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required" value="'.htmlentities( $newsletter->senderAddress ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span4">
 							<label for="input_senderName">'.$words->edit->labelSenderName.'</label>
-							<input '.$disabled.' type="text" name="senderName" id="input_senderName" class="span12" value="'.htmlentities( $newsletter->senderName, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="senderName" id="input_senderName" class="span12" value="'.htmlentities( $newsletter->senderName ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 				<!--		<div class="span7">
 							<label for="input_heading">'.$words->edit->labelHeading.'</label>
-							<input '.$disabled.' type="text" name="heading" id="input_heading" class="span12" value="'.htmlentities( $newsletter->heading, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input '.$disabled.' type="text" name="heading" id="input_heading" class="span12" value="'.htmlentities( $newsletter->heading ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>-->
 				<!--		<div class="span6">
 								<label for="input_status" class="checkbox">
@@ -209,13 +209,13 @@ $iframeHtml		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreviewHtml	= '
 <div id="newsletter-preview" class="half-size">
 	<div id="newsletter-preview-container">
@@ -231,13 +231,13 @@ $iframeText		= HtmlTag::create( 'iframe', '', [
 	'src'			=> $urlPreview,
 	'frameborder'	=> '0',
 ] );
-$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', array(
+$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
 	'type'			=> 'button',
 	'class'			=> 'btn btn-info btn-mini',
 	'data-toggle'	=> 'modal',
 	'data-target'	=> '#modal-preview',
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-) );
+] );
 $panelPreviewText	= '
 <div id="newsletter-preview" class="half-size">
 	<div id="newsletter-preview-container">

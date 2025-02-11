@@ -26,12 +26,12 @@ class View_Helper_Info_Dashboard_Modal_Add extends Abstraction
 		if( $this->panels ){
 			$list	= [];
 			foreach( $this->panels as $panelId => $panel ){
-				$input	= HtmlTag::create( 'input', NULL, array(
+				$input	= HtmlTag::create( 'input', NULL, [
 					'type'		=> 'checkbox',
 					'name'		=> 'panels[]',
 					'value'		=> $panelId,
 					'checked'	=> in_array( $panelId, $defaultPanels ) ? "checked" : NULL,
-				) );
+				] );
 				$key	= str_pad( $panel->rank, 3, 0, STR_PAD_LEFT ).'.'.uniqid();
 				$list[$key]	= HtmlTag::create( 'label', $input.'&nbsp;'.$panel->title, [
 					'class'	=> 'checkbox',

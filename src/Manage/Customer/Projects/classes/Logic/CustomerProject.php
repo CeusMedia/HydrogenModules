@@ -4,33 +4,33 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_CustomerProject
 {
-	protected $env;
-	protected static $instance		= NULL;
-	protected $modelCustomer;
-	protected $modelProject;
-	protected $modelRelation;
+	protected Environment $env;
+	protected static ?self $instance		= NULL;
+	protected Model_Customer $modelCustomer;
+	protected Model_Project $modelProject;
+	protected Model_Customer_Project $modelRelation;
 
-	public static function getInstance( Environment $env )
+	public static function getInstance( Environment $env ): self
 	{
 		if( !self::$instance )
 			self::$instance	= new Logic_CustomerProject( $env );
 		return self::$instance;
 	}
 
-	public function add( $customerId, $projectId, $type )
+	public function add( int|string $customerId, $projectId, $type ): int|string
 	{
 		$session	= $this->env->getSession();
-		return $this->modelRelation->add( array(
+		return $this->modelRelation->add( [
 			'customerId'	=> $customerId,
 			'projectId'		=> $projectId,
 			'userId'		=> $session->get( 'auth_user_id' ),
 			'type'			=> $type,
 			'status'		=> 1,
 			'createdAt'		=> time(),
-		) );
+		] );
 	}
 
-	public function getProjects( $customerId )
+	public function getProjects( int|string $customerId ): array
 	{
 		$list		= [];
 		$relations	= $this->modelRelation->getAll( ['customerId' => $customerId] );
@@ -41,7 +41,7 @@ class Logic_CustomerProject
 		return $list;
 	}
 
-	public function remove( $customerId, $projectId )
+	public function remove( int|string $customerId, int|string $projectId ): ?int
 	{
 		$relations	= $this->modelRelation->getAll( ['customerId' => $customerId, 'projectId' => $projectId] );
 		foreach( $relations as $relation )

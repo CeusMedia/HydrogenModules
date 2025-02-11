@@ -44,19 +44,19 @@ class Model_User_Invite extends Model
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public function generateInviteCode( $inviterId, $mode = 0, int $length = 10, int $split = 5 )
+	public function generateInviteCode( string $inviterId, $mode = 0, int $length = 10, int $split = 5 ): string
 	{
 		switch( $mode ){
 			default:
 				$seed	= uniqid( $inviterId.'-'.microtime( TRUE ), TRUE );
-				$code	= md5( $userId.$seed );
+				$code	= md5( $inviterId.$seed );
 		}
 		$length	= min( $length, strlen( $code ) );													//  length cannot be longer than generated raw code
 		$length	= max( $length, 3 );																//  length must be at least 3
 		$split	= min( $split, $length );															//  split length cannot be longer than length
 		$split	= max( $split, 0 );																	//  split cannot by negative
 
-		$pos	= rand( 0, count( $code ) - $length - 1 );
+		$pos	= random_int( 0, strlen( $code ) - $length - 1 );
 		$code	= substr( $code, $pos, $length );
 		$code	= strtoupper( $code );
 		if( $split !== 0 && $split !== $length )													//  valid split length is set
@@ -64,19 +64,19 @@ class Model_User_Invite extends Model
 		return $code;
 	}
 
-	public function getInviteByEmail( $email )
+	public function getInviteByEmail( string $email ): ?object
 	{
 		$model	= new Model_User_Invite( $this->env );
 		return $model->getByIndex( 'email', $email );
 	}
 
-	public function setStatus( $userInviteId, $status ): int
+	public function setStatus( string $userInviteId, $status ): int
 	{
 		if( !is_int( $status ) )
 			throw new InvalidArgumentException( 'Status must be integer' );
 		if( $status < -2 || $status > 2 )
 			throw new RangeException( 'Status must be within -2 and 2' );
 		$model	= new Model_User_Invite( $this->env );
-		return $model->edit( $userInviteId, array( 'status' => $status, 'modifiedAt' => time() ) );	//  set new status and note timestamp
+		return $model->edit( $userInviteId, ['status' => $status, 'modifiedAt' => time()] );	//  set new status and note timestamp
 	}
 }

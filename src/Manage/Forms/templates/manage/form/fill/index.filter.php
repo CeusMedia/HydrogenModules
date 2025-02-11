@@ -1,6 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var array<Entity_Form> $forms */
+/** @var int|string $filterStatus */
+/** @var array<string> $filterFormId */
+/** @var string $filterFillId */
+/** @var string $filterEmail */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
@@ -8,7 +15,7 @@ $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] 
 $optForm		= ['' => '- alle -'];
 foreach( $forms as $item )
 	if( $item->status > 0 )
-		$optForm[$item->formId]	= $item->title;
+		$optForm[(string) $item->formId]	= $item->title;
 $optForm		= HtmlElements::Options( $optForm, $filterFormId );
 
 $optStatus		= [
@@ -19,46 +26,46 @@ $optStatus		= [
 ];
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 
-return HtmlTag::create( 'div', array(
+return HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', 'Filter' ),
-	HtmlTag::create( 'div', array(
-		HtmlTag::create( 'form', array(
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'form', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'ID', ['for' => 'input_fillId'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'fillId',
 						'id'		=> 'input_fillId',
 						'class'		=> 'span12',
 						'value'		=> htmlentities( $filterFillId, ENT_QUOTES, 'UTF-8' ),
-					) ),
-				), ['class' => 'span4'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span4'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'E-Mail <small class="muted">(ungefähr)</small>', ['for' => 'input_email'] ),
-					HtmlTag::create( 'input', NULL, array(
+					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'email',
 						'id'		=> 'input_email',
 						'class'		=> 'span12',
 						'value'		=> htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ),
-					) ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+					] ),
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Zustand', ['for' => 'input_status'] ),
 					HtmlTag::create( 'select', $optStatus, [
 						'name'		=> 'status',
 						'id'		=> 'input_status',
 						'class'		=> 'span12',
 					] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'label', 'Formulare', ['for' => 'input_formId'] ),
 					HtmlTag::create( 'select', $optForm, [
 						'name'		=> 'formId[]',
@@ -67,10 +74,10 @@ return HtmlTag::create( 'div', array(
 						'multiple'	=> 'multiple',
 						'size'		=> 12,
 					] ),
-				), ['class' => 'span12'] ),
-			), ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', array(
-				HtmlTag::create( 'div', array(
+				], ['class' => 'span12'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
 					HtmlTag::create( 'button', $iconFilter.'&nbsp;filtern', [
 						'type'	=> 'submit',
 						'name'	=> 'filter',
@@ -80,8 +87,8 @@ return HtmlTag::create( 'div', array(
 						'href'	=> './manage/form/fill/filter/reset',
 						'class'	=> 'btn btn-small btn-inverse',
 					] ),
-				), ['class' => 'btn-group'] ),
-			), ['class' => 'buttonbar'] ),
-		), ['action' => './manage/form/fill/filter', 'method' => 'post'] ),
-	), ['class' => 'content-panel-inner'] ),
-), ['class' => 'content-panel'] );
+				], ['class' => 'btn-group'] ),
+			], ['class' => 'buttonbar'] ),
+		], ['action' => './manage/form/fill/filter', 'method' => 'post'] ),
+	], ['class' => 'content-panel-inner'] ),
+], ['class' => 'content-panel'] );

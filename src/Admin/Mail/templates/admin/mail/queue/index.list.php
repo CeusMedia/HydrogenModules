@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array<array<string,string>> $words */
 /** @var Dictionary $filters */
-/** @var object[] $mails */
+/** @var array<Entity_Mail> $mails */
 /** @var string[] $mailClasses */
 /** @var int|NULL $page */
 /** @var int|NULL $total */
@@ -48,6 +48,7 @@ $dropdown	= '';
 $table		= HtmlTag::create( 'em', $wl->noEntries, ['class' => 'muted'] );
 if( $mails ){
 	$rows	= [];
+	/** @var Entity_Mail $mail */
 	foreach( $mails as $mail ){
 		$logic->decompressMailObject( $mail );
 /*		$timestamp	= $mail->enqueuedAt;
@@ -92,7 +93,7 @@ if( $mails ){
 
 
 		$features	= [];
-		if( $mail->object->instance->mail->hasAttachments() )
+		if( $mail->objectInstance->mail->hasAttachments() )
 			$features[]	= $iconAttachment;
 		$features	= join( '', $features );
 
@@ -100,7 +101,7 @@ if( $mails ){
 		$cells[]	= HtmlTag::create( 'td', $checkbox, ['class' => ''] );
 		$cells[]	= HtmlTag::create( 'td', $features );
 		$cells[]	= HtmlTag::create( 'td', $senderMail.'<br/>'.$link, ['class' => 'autocut cell-mail-subject'] );
-		$cells[]	= HtmlTag::create( 'td', $receiverName.'<br/>'.$receiverMail, ['class' => 'autocut cell-mail-receiver'] );
+		$cells[]	= HtmlTag::create( 'td', $receiverMail.'<br/>'.$receiverName, ['class' => 'autocut cell-mail-receiver'] );
 		$cells[]	= HtmlTag::create( 'td', $status.'<br/>'.$datetime, ['class' => 'cell-mail-status'] );
 		$cells[]	= HtmlTag::create( 'td', $buttons, ['class' => 'cell-mail-actions'] );
 

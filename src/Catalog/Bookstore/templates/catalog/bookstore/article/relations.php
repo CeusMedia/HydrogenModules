@@ -22,10 +22,10 @@ $helper				= new View_Helper_Catalog_Bookstore( $env );
 $list		= [];
 $tagList	= [];
 foreach( $tags as $tag ){
-	$tagList[]	= HtmlTag::create( 'a', $tag->tag, array(
+	$tagList[]	= HtmlTag::create( 'a', $tag->tag, [
 		'href'	=> $helper->getTagUri( $tag ),
 		'class' => 'link-tag',
-	) );
+	] );
 }
 $tagList	= HtmlTag::create( 'span', join( ", ", $tagList ), ['class' => 'tag-list'] );
 

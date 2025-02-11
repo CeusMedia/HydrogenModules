@@ -1,6 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string,array<string,string>> $words */
+/** @var string $source */
+/** @var string $path */
+/** @var Entity_Page $page */
+/** @var array<string> $controllers */
+/** @var bool $useAuth */
+/** @var array<int|string,string> $parentMap */
+/** @var array<string,string> $masterTemplates */
+/** @var int|string $current */
+/** @var ?string $version */
+
 $w				= (object) $words['edit'];
 
 $optController	= ['' => '-'];
@@ -32,7 +43,7 @@ if( $page->icon ){
 
 $path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><strong>\\2</strong>', $path );
 
-$isWritable	= $source === 'Database';		//  not writable for 'Config' or 'Modules'
+$isWritable	= in_array( $source, ['Database', 'Config'] );		//  not writable for 'Config' or 'Modules'
 $hints		= [];
 if( !$isWritable )
 	$hints[]	= '<div class="alert alert-warning">Pages of source "'.$source.'" are not writable right now.</div>';
@@ -105,7 +116,7 @@ return $hints.'
 				</div>
 				<div class="span2 optional page_type page_type-2" style="display: none">
 					<label for="input_page_action">'.$w->labelAction.'</label>
-					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="page_action" class="span12" id="input_page_action" value="'.htmlentities( $page->action ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<h4>'.$w->sectionSettingsAccess.'</h4>

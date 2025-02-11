@@ -6,11 +6,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Work_Billing_Helper_Transactions
 {
-	const MODE_NONE				= 0;
-	const MODE_CORPORATION		= 1;
-	const MODE_PERSON			= 2;
+	public const MODE_NONE				= 0;
+	public const MODE_CORPORATION		= 1;
+	public const MODE_PERSON			= 2;
 
-	const MODES					= [
+	public const MODES					= [
 		self::MODE_NONE,
 		self::MODE_CORPORATION,
 		self::MODE_PERSON,
@@ -125,7 +125,7 @@ class View_Work_Billing_Helper_Transactions
 				}
 
 				$title	= $this->transformRelationToTitle( $transaction );
-				$title	= $title ? $title : $transaction->title;
+				$title	= $title ?: $transaction->title;
 
 				$year	= HtmlTag::create( 'small', date( 'y', strtotime( $transaction->dateBooked ) ), ['class' => 'muted'] );
 				$date	= date( 'd.m.', strtotime( $transaction->dateBooked ) ).$year;

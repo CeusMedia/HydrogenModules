@@ -1,26 +1,31 @@
 <?php
 
-use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\UnitFormater;
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\Folder;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
 use CeusMedia\Common\FS\Folder\Lister as FolderIndex;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderIndex;
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\Net\HTTP\UploadErrorHandler;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Admin_Mail_Attachment_Folder extends Controller
 {
-	protected Dictionary $request;
+	protected HttpRequest $request;
 	protected Model_Mail_Attachment $model;
-	protected string $basePath;
 	protected MessengerResource $messenger;
 	protected Logic_Mail $logicMail;
 	protected Logic_Upload $logicUpload;
+	protected string $basePath;
 
-	public function add()
+	/**
+	 *	@return		void
+	 *	@throws		IoException
+	 */
+	public function add(): void
 	{
 //		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'folder' ) ){
@@ -35,7 +40,11 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function download( string $filePathEncoded )
+	/**
+	 *	@param		string		$filePathEncoded
+	 *	@return		void
+	 */
+	public function download( string $filePathEncoded ): void
 	{
 		$filePath	= base64_decode( $filePathEncoded );
 		if( !file_exists( $this->basePath.$filePath ) ){
@@ -46,7 +55,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		HttpDownload::sendFile( $this->basePath.$filePath, $fileName );
 	}
 
-	public function index( ?string $pathEncoded = NULL )
+	public function index( ?string $pathEncoded = NULL ): void
 	{
 		$path		= '';
 //		remark( 'pathEncoded: '.$pathEncoded );
@@ -75,7 +84,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		$this->addData( 'paths', $paths );
 	}
 
-	public function remove( string $filePathEncoded )
+	public function remove( string $filePathEncoded ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 
@@ -89,7 +98,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 			try{
 				FolderEditor::removeFolder( $this->basePath.$filePath );
 			}
-			catch( Exception $e ){
+			catch( Exception ){
 				$this->messenger->noteFailure(
 					$words->failureRemoveFailed,
 					htmlentities( $filePath, ENT_QUOTES, 'UTF-8' )
@@ -125,7 +134,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 	 *	@return		void
 	 *	@todo		handle failure (with mail to developer or exception log)
 	 */
-	public function upload()
+	public function upload(): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'file' ) ){
@@ -152,7 +161,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 					if( $path )
 						$this->restart( 'index/'.base64_encode( $path ), TRUE );
 				}
-				catch( Exception $e ){
+				catch( Exception ){
 					$this->messenger->noteFailure( $words->failureUploadFailed );
 				}
 			}
@@ -171,6 +180,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
 		$pathApp			= '';
@@ -182,7 +192,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 //		$this->addData( 'files', $this->listFiles() );
 	}
 
-	protected function getMimeTypeOfFile( string $fileName )
+	protected function getMimeTypeOfFile( string $fileName ): bool|string
 	{
 		if( !file_exists( $this->basePath.$fileName ) )
 			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );

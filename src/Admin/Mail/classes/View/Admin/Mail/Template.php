@@ -7,19 +7,13 @@ class View_Admin_Mail_Template extends View
 {
 	public function add(): void
 	{
-		$template	= $this->getData( 'template' );
-		$defaults	= [
-			'plain'	=> 'default.txt',
-			'html'	=> 'default.html',
-			'css'	=> 'default.css',
-		];
 		$defaultsPath	= 'admin/mail/template/';
-		foreach( $defaults as $key => $value ){
-			if( empty( $template->{$key} ) ){
-				$templateFile	= $this->getTemplateUriFromFile( $defaultsPath.$value );
-				$template->{$key}	= FileReader::load( $templateFile );
-			}
-		}
+
+		/** @var Entity_Mail_Template $template */
+		$template	= $this->getData( 'template' );
+		$template->plain	= $this->loadTemplateFile( $defaultsPath.'default.txt', [], FALSE );
+		$template->html		= $this->loadTemplateFile( $defaultsPath.'default.html', [], FALSE );
+		$template->css		= $this->loadTemplateFile( $defaultsPath.'default.css', [], FALSE );
 	}
 
 	public function edit(): void

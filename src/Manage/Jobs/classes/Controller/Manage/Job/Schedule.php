@@ -12,6 +12,10 @@ class Controller_Manage_Job_Schedule extends Controller
 	protected Model_Job_Run $modelRun;
 	protected array $allDefinitions				= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -46,7 +50,12 @@ class Controller_Manage_Job_Schedule extends Controller
 		}
 	}
 
-	public function edit( string $jobScheduleId ): void
+	/**
+	 *	@param		int|string		$jobScheduleId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $jobScheduleId ): void
 	{
 		if( !( $jobSchedule = $this->modelSchedule->get( $jobScheduleId ) ) ){
 			$this->env->getMessenger()->noteError( 'Ungültige ID gegeben. Weiterleitung zur Liste.' );
@@ -84,7 +93,11 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->addData( 'item', $jobSchedule );
 	}
 
-	public function index( $page = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$schedule		= $this->modelSchedule->getAll( [], [] );
 		foreach( $schedule as $item ){
@@ -94,18 +107,24 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->addData( 'scheduledJobs', $schedule );
 	}
 
-	public function remove( string $jobScheduleId ): void
+	public function remove( int|string $jobScheduleId ): void
 	{
 	}
 
-	public function setStatus( string $jobScheduleId, $status ): void
+	/**
+	 *	@param		int|string		$jobScheduleId
+	 *	@param		$status
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setStatus( int|string $jobScheduleId, $status ): void
 	{
 		$from	= $this->request->get( 'from' );
 		$this->modelSchedule->edit( $jobScheduleId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		] );
-		$this->restart( $from ? $from : NULL, !$from );
+		$this->restart( $from ?: NULL, !$from );
 	}
 
 	//  --  PROTECTED  --  //
@@ -120,6 +139,7 @@ class Controller_Manage_Job_Schedule extends Controller
 		$this->modelDefinition	= new Model_Job_Definition( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 		$this->modelRun			= new Model_Job_Run( $this->env );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->env->getLogic()->get( 'Job' );
 
 		$definitions	= $this->modelDefinition->getAll( [], ['identifier' => 'ASC'] );

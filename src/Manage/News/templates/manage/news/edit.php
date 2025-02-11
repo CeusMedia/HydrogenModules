@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Environment;
+
+/** @var Environment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var object $news */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -19,11 +24,11 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'name'		=> 'save',
 	'class'		=> 'btn btn-primary',
 ] );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, array(
-	'href'		=> './manage/news/remove/'.$newsId,
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
+	'href'		=> './manage/news/remove/'.$news->newsId,
 	'class'		=> 'btn btn-small btn-danger',
 	'onclick'	=> "return confirm('Wirklich?');",
-) );
+] );
 
 $editorClass	= View_Manage_News::getEditorClass( $env );
 
@@ -31,7 +36,7 @@ return '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/news/edit/'.$newsId.'" method="post">
+		<form action="./manage/news/edit/'.$news->newsId.'" method="post">
 			<div class="row-fluid">
 				<div class="span6">
 					<label for="input_title" class="mandatory required">'.$w->labelTitle.'</label>

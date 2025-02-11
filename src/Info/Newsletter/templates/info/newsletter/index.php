@@ -1,6 +1,14 @@
 <?php
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var array<string,array<string,string>> $words */
+/** @var Environment $env */
+/** @var View_Info_Newsletter $view */
+/** @var Dictionary $data */
 
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
@@ -53,7 +61,7 @@ if( $latest ){
 </div>';
 }
 
-return $textIndexTop.'
+$panelRegister = '
 <div class="content-panel content-panel-form">
 	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
@@ -65,25 +73,25 @@ return $textIndexTop.'
 				</div>
 				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_prefix">'.$w->labelPrefix.'</label>
-					<input type="text" name="prefix" id="input_prefix" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'prefix' ), ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="prefix" id="input_prefix" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'prefix', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">
 					<label for="input_firstname" class="mandatory required">'.$w->labelFirstname.'</label>
-					<input type="text" name="firstname" id="input_firstname" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'firstname' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+					<input type="text" name="firstname" id="input_firstname" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'firstname', '' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 				<div class="bs2-span5 bs3-col-md-5 bs3-form-group bs4-col-md-5 bs4-form-group">
 					<label for="input_surname" class="mandatory required">'.$w->labelSurname.'</label>
-					<input type="text" name="surname" id="input_surname" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'surname' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+					<input type="text" name="surname" id="input_surname" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'surname', '' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span7 bs3-col-md-7 bs3-form-group bs4-col-md-7 bs4-form-group">
 					<label for="input_email" class="mandatory" class="mandatory required">'.$w->labelEmail.'</label>
-					<input type="email" name="email" id="input_email" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'email' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
+					<input type="email" name="email" id="input_email" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'email', '' ), ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 				<div class="bs2-span5 bs3-col-md-5 bs3-form-group bs4-col-md-5 bs4-form-group">
 					<label for="input_institution">'.$w->labelInstitution.'</label>
-					<input type="text" name="institution" id="input_institution" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'institution' ), ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="institution" id="input_institution" class="bs2-span12 bs3-form-control bs4-form-control" value="'.htmlentities( $data->get( 'institution', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			'.$topics.'
@@ -103,6 +111,6 @@ return $textIndexTop.'
 			</div>
 		</form>
 	</div>
-</div>
-<!--'.$panelLatest.'-->
-'.$textIndexBottom;
+</div>';
+
+return $textIndexTop.$panelRegister.$panelLatest.$textIndexBottom;

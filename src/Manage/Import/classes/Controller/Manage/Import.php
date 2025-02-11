@@ -10,6 +10,10 @@ class Controller_Manage_Import extends Controller
 	protected Model_Import_Connector $modelConnector;
 	protected array $connectorMap		= [];
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
@@ -33,8 +37,20 @@ class Controller_Manage_Import extends Controller
 		}
 	}
 
+	/**
+	 * @param		string		$connectionId
+	 * @return		void
+	 * @throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $connectionId ): void
 	{
+		/** @var Entity_Import_Connection $connection */
+		$connection	= $this->modelConnection->get( $connectionId );
+		if( NULL === $connection ){
+			$this->env->getMessenger()->noteError( 'Invalid Connection ID' );
+			$this->restart( NULL, TRUE );
+		}
+
 		if( $this->request->getMethod()->isPost() ){
 			$this->modelConnection->edit( $connectionId, [
 				'importConnectorId'	=> $this->request->get( 'importConnectorId' ),
@@ -52,12 +68,14 @@ class Controller_Manage_Import extends Controller
 			] );
 			$this->restart( NULL, TRUE );
 		}
+		/** @var Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $connectionId );
 		$this->addData( 'connection', $connection );
 	}
 
 	public function index(): void
 	{
+		/** @var Entity_Import_Connection[] $connection */
 		$connections	= $this->modelConnection->getAll();
 		$this->addData( 'connections', $connections );
 	}
@@ -74,6 +92,7 @@ class Controller_Manage_Import extends Controller
 		$this->modelConnector	= new Model_Import_Connector( $this->env );
 		$this->modelConnection	= new Model_Import_Connection( $this->env );
 
+		/** @var Entity_Import_Connector[] $connectors */
 		$connectors	= $this->modelConnector->getAll();
 		foreach( $connectors as $connector )
 			$this->connectorMap[$connector->importConnectorId]	= $connector;

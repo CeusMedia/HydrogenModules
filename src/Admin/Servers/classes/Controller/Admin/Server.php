@@ -11,6 +11,10 @@ class Controller_Admin_Server extends Controller
 	protected Model_Server $modelServer;
 	protected Model_Server_Project $modelServerProject;
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$words	= (object) $this->getWords( 'add' );
@@ -36,6 +40,11 @@ class Controller_Admin_Server extends Controller
 		$this->addData( 'server', (object) $server );
 	}
 
+	/**
+	 *	@param		string		$serverId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addProject( string $serverId ): void
 	{
 		$words		= (object) $this->getWords( 'addProject' );
@@ -53,6 +62,11 @@ class Controller_Admin_Server extends Controller
 		$this->restart( './admin/server/edit/'.$serverId );
 	}
 
+	/**
+	 *	@param		string		$serverId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function edit( string $serverId ): void
 	{
 		$post	= $this->request->getAllFromSource( 'POST', TRUE );
@@ -74,17 +88,17 @@ class Controller_Admin_Server extends Controller
 			}
 		}
 		$modelProject			= new Model_Project( $this->env );
-		$modelProjectVersion	= new Model_Project_Version( $this->env );
+//		$modelProjectVersion	= new Model_Project_Version( $this->env );
 		$this->addData( 'server', $this->modelServer->get( $serverId ) );
 		$this->addData( 'projects', $modelProject->getAll() );
 		$relations	= [];
-		foreach( $this->modelServerProject->getAllByIndex( 'serverId', $serverId ) as $relation ){
+/*		foreach( $this->modelServerProject->getAllByIndex( 'serverId', $serverId ) as $relation ){
 			if( $relation->projectVersionId ){
 				$relation->projectVersion	= $modelProjectVersion->get( $relation->projectVersionId );
 				$relation->project			= $modelProject->get( $relation->projectVersion->projectId );
 			}
 			$relations[]	= $relation;
-		}
+		}*/
 		$this->env->getLanguage()->load( 'admin/project' );
 		$this->addData( 'wordsProjectVersionStates', $this->getWords( 'version-states', 'admin/project' ) );
 		$this->addData( 'serverProjects', $relations );
@@ -100,6 +114,11 @@ class Controller_Admin_Server extends Controller
 		$this->addData( 'servers', $this->modelServer->getAll( $conditions ) );
 	}
 
+	/**
+	 *	@param		string		$serverId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( string $serverId ): void
 	{
 		$server	= $this->modelServer->get( $serverId );
@@ -109,6 +128,11 @@ class Controller_Admin_Server extends Controller
 		$this->addData( 'server', $server );
 	}
 
+	/**
+	 *	@param		string		$serverId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( string $serverId ): void
 	{
 		$server	= $this->modelServer->get( $serverId );
@@ -119,6 +143,11 @@ class Controller_Admin_Server extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$serverProjectId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeProject( string $serverProjectId ): void
 	{
 		$this->modelServerProject->remove( $serverProjectId );

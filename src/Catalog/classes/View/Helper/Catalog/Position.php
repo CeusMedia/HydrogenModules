@@ -2,6 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Helper_Catalog_Position
 {
@@ -23,6 +24,11 @@ class View_Helper_Catalog_Position
 		$this->helper	= new View_Helper_Catalog( $env );
 	}
 
+	/**
+	 *	@param		object		$article
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderFromArticle( object $article ): string
 	{
 		$category	= $this->logic->getCategoryOfArticle( $article->articleId );
@@ -35,6 +41,11 @@ class View_Helper_Catalog_Position
 		return $this->renderList( $categories, !FALSE );
 	}
 
+	/**
+	 *	@param		object|NULL		$category
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function renderFromCategory( ?object $category = NULL ): string
 	{
 		if( !is_object( $category ) )
@@ -48,6 +59,12 @@ class View_Helper_Catalog_Position
 		return $this->renderList( $categories, FALSE );
 	}
 
+	/**
+	 *	@param		array		$categories
+	 *	@param		bool		$linkLast
+	 *	@return		string
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	protected function renderList( array $categories, bool $linkLast = TRUE ): string
 	{
 		$level		= count( $categories );

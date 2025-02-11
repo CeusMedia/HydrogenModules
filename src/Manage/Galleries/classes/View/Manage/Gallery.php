@@ -5,7 +5,9 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Gallery extends View
 {
-	public static function urlencodeTitle( $label, $delimiter = "_" )
+	protected array $images		= [];
+
+	public static function urlencodeTitle( string $label, string $delimiter = "_" ): string
 	{
 		$label	= str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label	= preg_replace( "/[^a-z0-9 ]/i", "", $label );
@@ -25,7 +27,7 @@ class View_Manage_Gallery extends View
 	{
 	}
 
-	protected function renderList( $galleryId = NULL )
+	protected function renderList( $galleryId = NULL ): string
 	{
 		$words		= (object) $this->getWords( 'index' );
 		$model		= new Model_Gallery( $this->env );
@@ -63,7 +65,7 @@ class View_Manage_Gallery extends View
 		return $list;
 	}
 
-	protected function renderThumbnail( $image, $linked = FALSE, $galleryPath = NULL )
+	protected function renderThumbnail( $image, bool $linked = FALSE, $galleryPath = NULL ): string
 	{
 		$frontend	= Logic_Frontend::getInstance( $this->env );
 		$baseUri	= $frontend->getPath( 'images' ).$this->env->getConfig()->get( 'module.manage_galleries.image.path' );
@@ -86,7 +88,7 @@ class View_Manage_Gallery extends View
 		return $thumb;
 	}
 
-	protected function getGalleryImages( $galleryId )
+	protected function getGalleryImages( string $galleryId )
 	{
 		if( !isset( $this->images[$galleryId] ) ){
 			$indices	= ['galleryId' => $galleryId];

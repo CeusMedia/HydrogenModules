@@ -5,6 +5,10 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 {
 	protected ?string $baseUriPath		= NULL;
 
+	/**
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function render(): string
 	{
 		$list		= [];
@@ -33,7 +37,12 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 
 	//  --  PROTECTED  --  //
 
-	protected function renderGalleryImage( string $galleryId ): string
+	/**
+	 *	@param		int|string		$galleryId
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function renderGalleryImage( int|string $galleryId ): string
 	{
 		$gallery		= $this->modelGallery->get( $galleryId );
 		$images			= $this->getGalleryImages( $galleryId );
@@ -45,11 +54,10 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 			'class'	=> $this->moduleConfig->get( 'index.thumb.class'),
 			'alt'	=> htmlspecialchars( $images[0]->title, ENT_QUOTES, 'UTF-8' ),
 		] );
-		$link	= HtmlTag::create( 'a', $thumb, [
+		return HtmlTag::create( 'a', $thumb, [
 			'href'	=> self::getGalleryUrl( $gallery, $this->baseUriPath ),
 //			'class'	=> $this->getThumbnailLinkClass( View_Helper_Info_Gallery::SCOPE_GALLERY ),
 			'title'	=> htmlspecialchars( $gallery->title, ENT_QUOTES, 'UTF-8' ),
 		] );
-		return $link;
 	}
 }

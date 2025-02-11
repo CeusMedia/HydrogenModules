@@ -4,6 +4,9 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_My_User extends Hook
 {
+	/**
+	 *	@return		void
+	 */
 	public function onRegisterTab(): void
 	{
 		$words	= (object) $this->env->getLanguage()->getWords( 'manage/my/user' );			//  load words

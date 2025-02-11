@@ -66,17 +66,17 @@ if( $incoming || $outgoing ){
 	$list	= [];
 	foreach( $incoming as $relation ){
 		$helperMember->setUser( $relation->user );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $helperMember->render() ),
 			HtmlTag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
-		) );
+		] );
 	}
 	foreach( $outgoing as $relation ){
 		$helperMember->setUser( $relation->user );
-		$list[]	= HtmlTag::create( 'tr', array(
+		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $helperMember->render() ),
 			HtmlTag::create( 'td', '<small>'.date( 'd.m.Y', $relation->createdAt ).'</small>' ),
-		) );
+		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "", "80" );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Mitglied', 'Datum'] ) );

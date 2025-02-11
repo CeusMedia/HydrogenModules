@@ -1,30 +1,41 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\CURL as NetCurl;
+use CeusMedia\HydrogenFramework\Environment;
 
 /**
  *	@todo		apply module config main switch
  */
-class Resource_Oauth{
+class Resource_Oauth
+{
+	protected Environment $env;
+	protected Dictionary $config;
+	protected Dictionary $moduleConfig;
+	protected string $serverUri;
 
-	public function __construct( $env ){
+	public function __construct( Environment $env )
+	{
 		$this->env			= $env;
 		$this->config		= $this->env->getConfig();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_oauth.', TRUE );
 		$this->serverUri	= $this->moduleConfig->get( 'server.URI' );
 	}
 
-	protected function getToken(){
+	protected function getToken(): string
+	{
 		$token	= $this->env->getSession()->get( 'oauth_access_token' );
 		if( $token )
 			return $token;
 		throw new RuntimeException( 'OAuth access token is missing' );
 	}
 
-	protected function handleRequest( $handle ){
+	protected function handleRequest( $handle )
+	{
 	}
 
-	public function read( $resourcePath ){
+	public function read( string $resourcePath )
+	{
 		if( !trim( $resourcePath ) && ltrim( $resourcePath, '/' ) )
 			throw new InvalidArgumentException( 'Missing resource path to request' );
 		$resourcePath	= ltrim( $resourcePath, '/' );
@@ -33,11 +44,11 @@ class Resource_Oauth{
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 //		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-		$handle->setOption( CURLOPT_HTTPHEADER, array(
+		$handle->setOption( CURLOPT_HTTPHEADER, [
 			'Authorization: Bearer '.$this->getToken(),
 //			'Content-Type: application/x-www-form-urlencoded',
 //			'Content-Length: '.strlen( $postData ),
-		) );
+		] );
 		$response	= $handle->exec();
 		$httpCode	= $handle->getInfo( 'http_code' );
 		if( $httpCode < 200 || $httpCode >= 300 )
@@ -48,7 +59,13 @@ class Resource_Oauth{
 		return $response->data;
 	}
 
-	public function write( $resourcePath, $postData = [] ){
+	/**
+	 *	@param		string		$resourcePath
+	 *	@param		array		$postData
+	 *	@return		mixed
+	 */
+	public function write( string $resourcePath, array $postData = [] ): mixed
+	{
 		if( !trim( $resourcePath ) && ltrim( $resourcePath, '/' ) )
 			throw new InvalidArgumentException( 'Missing resource path to request' );
 		$resourcePath	= ltrim( $resourcePath, '/' );
@@ -57,11 +74,11 @@ class Resource_Oauth{
 		$handle->setUrl( $this->serverUri.'/'.$resourcePath );
 		$handle->setOption( CURLOPT_POST, TRUE );
 		$handle->setOption( CURLOPT_POSTFIELDS, $postData );
-		$handle->setOption( CURLOPT_HTTPHEADER, array(
+		$handle->setOption( CURLOPT_HTTPHEADER, [
 			'Authorization: Bearer '.$this->getToken(),
 			'Content-Type: application/x-www-form-urlencoded',
 			'Content-Length: '.strlen( $postData ),
-		) );
+		] );
 		$response	= $handle->exec();
 		$httpCode	= $handle->getInfo( 'http_code' );
 		if( $httpCode < 200 || $httpCode >= 300 )

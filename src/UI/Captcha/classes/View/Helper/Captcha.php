@@ -7,20 +7,20 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 {
-	protected $background	= [255, 255, 255];
-	protected $height		= 55;
-	protected $fontSize		= 16;
-	protected $format		= 'image';
-	protected $mode			= 'default';
-	protected $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
+	protected array $background		= [255, 255, 255];
+	protected int $height			= 55;
+	protected int|float $fontSize	= 16;
+	protected string $format		= 'image';
+	protected string $mode			= 'default';
+	protected string $recaptchaApi	= 'https://www.google.com/recaptcha/api.js';
 
-	protected $env;
+	protected Environment $env;
 	protected $session;
 	protected $moduleConfig;
-	protected $captcha;
+	protected ImageCaptcha $captcha;
 
-	CONST FORMAT_IMAGE		= 0;
-	CONST FORMAT_RAW		= 1;
+	public CONST FORMAT_IMAGE		= 0;
+	public CONST FORMAT_RAW			= 1;
 
 	public function __construct( Environment $env )
 	{
@@ -28,20 +28,21 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
 		$this->captcha		= new ImageCaptcha();
-		$this->captcha->useUnique	= TRUE;
+		$this->captcha->unique	= TRUE;
 	}
 
 	public static function checkCaptcha( Environment $env, ?string $word )
 	{
 		$moduleConfig	= $env->getConfig()->getAll( 'module.ui_captcha.', TRUE );
-		if( $moduleConfig->get( 'mode' ) === 'recaptcha' ){
-			$request	= new HttpPost();
+		if( 'recaptcha' === $moduleConfig->get( 'mode' ) ){
 			$url		= 'https://www.google.com/recaptcha/api/siteverify';
-			$response	= json_decode( $request->send( $url, array(
-				'response'	=> $env->getRequest()->get( 'g-recaptcha-response' ),
-				'secret'		=> $moduleConfig->get( 'recaptcha.secret' ),
-				'remoteip'	=> getEnv( 'REMOTE_ADDR' ),
-			) ) );
+			$request	= new HttpPost( $url );
+			$request->setContentType( 'application/x-www-form-urlencoded' );
+			$request->setContent( http_build_query( [
+				'secret'	=> $moduleConfig->get( 'recaptcha.secret' ),
+				'response'	=> $word
+			] ) );
+			$response	= json_decode( $request->send() );
 			return $response->success;
 		}
 		return $env->getSession()->get( 'captcha' ) == $word;
@@ -97,11 +98,11 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		switch( strtolower( $strength ) ){
 			case 'soft':
 				$this->captcha->useDigits	= FALSE;
-				$this->captcha->useLarge	= FALSE;
+				$this->captcha->useLarges	= FALSE;
 				break;
 			case 'hard':
 				$this->captcha->useDigits	= TRUE;
-				$this->captcha->useLarge	= TRUE;
+				$this->captcha->useLarges	= TRUE;
 				break;
 		}
 		return $this;
@@ -127,20 +128,20 @@ class View_Helper_Captcha /*extends CMF_Hydrogen_View_Helper*/
 		$this->captcha->generateImage( $word, $filePath );
 		$image	= file_get_contents( $filePath );
 		unlink( $filePath );
-		if( $this->format === self::FORMAT_RAW )
+		if( self::FORMAT_RAW === $this->format )
 			return $image;
-		return HtmlTag::create( 'img', NULL, array(
+		return HtmlTag::create( 'img', NULL, [
 			'src'	=> 'data:image/jpg;base64,'.base64_encode( $image ),
 			'class'	=> 'captcha-image',
-		) );
+		] );
 	}
 
 	protected function renderRecaptcha(): string
 	{
 		$this->env->getPage()->js->addUrl( 'https://www.google.com/recaptcha/api.js' );
-		return HtmlTag::create( 'div', '', array(
-			'class'					=> "g-recaptcha",
+		return HtmlTag::create( 'div', '', [
+			'class'			=> "g-recaptcha",
 			'data-sitekey'	=> $this->moduleConfig->get( 'recaptcha.key' ),
-		) );
+		] );
 	}
 }

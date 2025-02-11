@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Resource_Limiter extends Hook
@@ -16,6 +15,7 @@ class Hook_Resource_Limiter extends Hook
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function onPageApplyModules(): void
 	{

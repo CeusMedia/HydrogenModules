@@ -7,84 +7,6 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Admin_Mail_Queue extends View
 {
-	public function ajaxRenderDashboardPanel(): string
-	{
-		$model			= new Model_Mail( $this->env );
-
-		$statuses		= [
-			Model_Mail::STATUS_SENT		=> 'versendet',
-			Model_Mail::STATUS_FAILED	=> 'fehlgeschlagen',
-			Model_Mail::STATUS_ABORTED	=> 'gescheitert',
-		];
-		$ranges		= [
-			1		=> 'Tag',
-			7		=> 'Woche',
-			30		=> 'Monat',
-			365		=> 'Jahr',
-		];
-		$data	= [];
-		foreach( $statuses as $statusKey => $statusLabel ){
-			$data[$statusKey]	= [];
-			foreach( $ranges as $rangeKey => $rangeLabel ){
-				$conditions	= array(
-					'status'		=> $statusKey,
-					'enqueuedAt'	=> '>= '.( time() - $rangeKey * 24 * 3600 ),
-				);
-				$data[$statusKey][$rangeKey]	= $model->count( $conditions );
-			}
-		}
-
-		$tableHeads		= [''];
-		foreach( $ranges as $rangeLabel )
-			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, ['class' => 'pull-right'] );
-
-		$lengthKeys			= array_keys( $ranges );
-		$lastRangeLength	= @array_pop( $lengthKeys );
-
-		$rows	= [];
-		foreach( $statuses as $statusKey => $statusLabel ){
-			$row	= [];
-			foreach( array_reverse( $ranges, TRUE ) as $days => $label ){
-				$lastRange	= (object) [
-					'key'		=> $days,
-					'value'		=> $data[$statusKey][$days],
-					'label'		=> $label,
-				];
-				break;
-			}
-			foreach( array_reverse( $ranges, TRUE ) as $rangeKey => $rangeLabel ){
-				$label	= $data[$statusKey][$rangeKey];
-				if( $rangeKey !== $lastRange->key && $data[$statusKey][$lastRange->key] > 10 ){
-					$average	= $lastRange->value ? $data[$statusKey][$lastRange->key] / $lastRange->key : 0;
-					$capacity	= $data[$statusKey][$rangeKey] / $rangeKey;
-					$change		= $average ? round( ( ( $capacity / $average ) - 1 ) * 100 ) : 0;
-					$diff		= $change > 0 ? '+'.$change : $change;
-					$label		.= '&nbsp;<small class="muted">'.$diff.'</small>';
-				}
-				$row[]	= HtmlTag::create( 'td', $label, ['style' => 'text-align: right'] );
-			}
-			$row[]	= HtmlTag::create( 'th', $statusLabel );
-			$rows[]	= HtmlTag::create( 'tr', array_reverse( $row ) );
-		}
-		$table2	= HtmlTag::create( 'table', [
-			HtmlElements::ColumnGroup( '', '15%', '15%', '15%', '15%' ),
-			HtmlTag::create( 'thead', HtmlElements::TableHeads( $tableHeads ) ),
-			HtmlTag::create( 'tbody', $rows ),
-		], [
-			'class'		=> 'table table-condensed table-fixed',
-		] );
-		$table1	= HtmlTag::create( 'table', [
-			HtmlElements::ColumnGroup( '20%', '80%' ),
-			HtmlTag::create( 'tbody', HtmlTag::create( 'tr', [
-				HtmlTag::create( 'td', '<span style="font-size: 3em">'.$model->count( ['status' => 0] ).'</span>', ['style' => 'text-align: right; vertical-align: bottom'] ),
-				HtmlTag::create( 'td', '<span>Mails in der<br/>Warteschlange</span>', ['style' => 'vertical-align: bottom'] ),
-			] ) ),
-		], [
-			'class'		=> 'table table-fixed',
-		] );
-		return $table1.'<br/>'.$table2;
-	}
-
 	public function enqueue(): void
 	{
 	}
@@ -92,9 +14,10 @@ class View_Admin_Mail_Queue extends View
 	public function html(): void
 	{
 		try{
+			/** @var Entity_Mail $mail */
 			$mail	= $this->getData( 'mail' );
 			$helper	= new View_Helper_Mail_View_HTML( $this->env );
-			$helper->setMailObjectInstance( $mail->object->instance );
+			$helper->setMailObjectInstance( $mail->objectInstance );
 			print( $helper->render() );
 		}
 		catch( Exception $e ){
@@ -107,10 +30,6 @@ class View_Admin_Mail_Queue extends View
 	{
 		$script	= 'ModuleAdminMail.Queue.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
-	}
-
-	public function view(): void
-	{
 	}
 
 	public function renderFact( string $key, $value ): string
@@ -127,7 +46,7 @@ class View_Admin_Mail_Queue extends View
 			$value	= preg_replace( '/_/', ':', $value );
 			$value	= HtmlTag::create( 'abbr', $value, ['title' => $original] );
 		}
-		else if( preg_match( '/At$/', $key ) ){
+		else if( str_ends_with( $key, 'At' ) ){
 			if( !( (int) $value ) )
 				return '';
 			$helper	= new View_Helper_TimePhraser( $this->env );
@@ -135,23 +54,26 @@ class View_Admin_Mail_Queue extends View
 			$phrase	= $helper->convert( $value, TRUE, 'vor ' );
 			$value	= $phrase.'&nbsp;<small class="muted">('.$date.')</small>';
 		}
-		else if( preg_match( '/Id$/', $key ) ){
+		else if( str_ends_with( $key, 'Id' ) ){
 			if( (int) $value === 0 )
 				return '';
 		}
-		else if( preg_match( '/Address/', $key ) && strlen( $value ) ){
+		else if( str_contains( $key, 'Address' ) && strlen( $value ) ){
 			$icon	= HtmlTag::create( 'i', '', ['class' => 'icon-envelope'] );
 			$link	= HtmlTag::create( 'a', $value, ['href' => 'mailto:'.$value] );
 			$value	= $icon.'&nbsp;'.$link;
 		}
-		else{
-			if( !strlen( $value ) )
-				return '';
-		}
+		else if( '' === ($value ?? '' ) )
+			return '';
+
 		$label	= $words['view-facts']['label'.ucfirst( $key )];
 		$term	= HtmlTag::create( 'dt', $label );
 		$def	= HtmlTag::create( 'dd', $value.'&nbsp;' );
 		return $term.$def;
+	}
+
+	public function view(): void
+	{
 	}
 
 	protected function __onInit(): void

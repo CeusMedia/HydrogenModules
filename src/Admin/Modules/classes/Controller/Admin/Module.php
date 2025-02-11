@@ -2,14 +2,15 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
+use CeusMedia\TemplateEngine\Template;
 
 class Controller_Admin_Module extends Controller
 {
-	const INSTALL_TYPE_UNKNOWN	= 0;
-	const INSTALL_TYPE_LINK		= 1;
-	const INSTALL_TYPE_COPY		= 2;
+	public const INSTALL_TYPE_UNKNOWN	= 0;
+	public const INSTALL_TYPE_LINK		= 1;
+	public const INSTALL_TYPE_COPY		= 2;
 
-	const INSTALL_TYPES			= [
+	public const INSTALL_TYPES			= [
 		self::INSTALL_TYPE_UNKNOWN,
 		self::INSTALL_TYPE_LINK,
 		self::INSTALL_TYPE_COPY,
@@ -20,14 +21,14 @@ class Controller_Admin_Module extends Controller
 	 *	@deprecated		replaced by module installer
 	 *	@todo			remove
 	 */
-	public function copy( string $moduleId )
+	public function copy( string $moduleId ): void
 	{
 		if( $this->installModule( $moduleId, self::INSTALL_TYPE_COPY ) )
 			$this->env->getMessenger()->noteSuccess( 'Module "'.$moduleId.'" successfully copied.' );
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
-	public function index()
+	public function index(): void
 	{
 		$model	= new Model_Module( $this->env );
 		$this->addData( 'modules', $model->getAll() );
@@ -39,7 +40,7 @@ class Controller_Admin_Module extends Controller
 	/**
 	 * @deprecated	use Logic_Module::installModule instead
 	 */
-	public function installModule( string $moduleId, int $installType = 0, bool $verbose = NULL )
+	public function installModule( string $moduleId, int $installType = 0, bool $verbose = NULL ): bool
 	{
 		$config		= $this->env->getConfig();
 		$model		= new Model_Module( $this->env );
@@ -49,15 +50,11 @@ class Controller_Admin_Module extends Controller
 		$filesLink	= [];
 		$filesCopy	= [];
 
-		switch( $installType ){
-
-			case self::INSTALL_TYPE_LINK:
-				$array	= 'filesLink'; break;
-			case self::INSTALL_TYPE_COPY:
-				$array	= 'filesCopy'; break;
-			default:
-				throw new InvalidArgumentException( 'Unknown installation type' );
-		}
+		$array	= match ($installType) {
+			self::INSTALL_TYPE_LINK	=> 'filesLink',
+			self::INSTALL_TYPE_COPY	=> 'filesCopy',
+			default					=> throw new InvalidArgumentException('Unknown installation type'),
+		};
 		foreach( $module->files->classes as $class )
 			${$array}['classes/'.$class]	= 'classes/'.$class;
 		foreach( $module->files->templates as $template )
@@ -75,7 +72,7 @@ class Controller_Admin_Module extends Controller
 		$state		= NULL;
 		$listDone	= [];
 		foreach( ['filesLink', 'filesCopy'] as $type ){
-			foreach( $$type as $fileIn => $fileOut ){
+			foreach( ${$type} as $fileIn => $fileOut ){
 				if( $state !== FALSE ){
 					if( $type == 'filesLink' )														//  @todo: OS check -> no links in windows <7
 						$state	= $this->linkModuleFile( $moduleId, $fileIn, $fileOut );
@@ -89,7 +86,7 @@ class Controller_Admin_Module extends Controller
 
 		//  --  SQL  --  //
 		if( $state !== FALSE ){
-			$driver	= $this->env->dbc->getDriver();
+			$driver	= $this->env->getDatabase()->getDriver();
 			if( $driver && !empty( $module->sql['install@'.$driver] ) )
 				$state	= $this->executeSql( $module->sql['install@'.$driver] );
 			else if( !empty( $module->sql['install@*'] ) )
@@ -119,7 +116,7 @@ class Controller_Admin_Module extends Controller
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
-	public function uninstall( string $moduleId, bool $verbose = TRUE )
+	public function uninstall( string $moduleId, bool $verbose = TRUE ): void
 	{
 		$config		= $this->env->getConfig();
 		$pathTheme	= $config->get( 'path.themes' ).$config->get( 'layout.theme' ).'/';
@@ -151,13 +148,13 @@ class Controller_Admin_Module extends Controller
 
 			if( $state !== FALSE ){
 				//  --  SQL  --  //
-				$driver	= $this->env->dbc->getDriver();
+				$driver	= $this->env->getDatabase()->getDriver();
 				$data	= ['prefix' => $config->get( 'database.prefix' )];
 				$sql	= "";
 				if( $driver && !empty( $module->sql['uninstall@'.$driver] ) )
-					$sql	= \CeusMedia\Common\UI\Template::renderString( $module->sql['uninstall@'.$driver], $data );
+					$sql	= Template::renderString( $module->sql['uninstall@'.$driver], $data );
 				else if( !empty( $module->sql['uninstall@*'] ) )
-					$sql	= \CeusMedia\Common\UI\Template::renderString( $module->sql['uninstall@*'], $data );
+					$sql	= Template::renderString( $module->sql['uninstall@*'], $data );
 				if( $sql )
 					$state = $this->executeSql( $sql );
 			}
@@ -173,7 +170,7 @@ class Controller_Admin_Module extends Controller
 		$this->restart( './admin/module/view/'.$moduleId );
 	}
 
-	public function view( string $moduleId )
+	public function view( string $moduleId ): void
 	{
 		$model	= new Model_Module( $this->env );
 		$this->addData( 'module', $model->get( $moduleId ) );
@@ -250,11 +247,10 @@ class Controller_Admin_Module extends Controller
 			$line = array_shift( $lines );
 			if( !trim( $line ) )
 				continue;
-			$buffer[]	= \CeusMedia\Common\UI\Template::renderString( trim( $line ), ['prefix' => $prefix] );
-			if( preg_match( '/;$/', trim( $line ) ) )
-			{
+			$buffer[]	= Template::renderString( trim( $line ), ['prefix' => $prefix] );
+			if( str_ends_with( trim( $line ), ';' ) ){
 				$commands[]	= join( "\n", $buffer );
-				$buffer	= [];
+				$buffer		= [];
 			}
 			if( !count( $lines ) && $buffer )
 				$commands[]	= join( "\n", $buffer ).';';
@@ -262,7 +258,7 @@ class Controller_Admin_Module extends Controller
 		$state	= NULL;
 		foreach( $commands as $command ){
 			error_log( nl2br( $command )."\n", 3, 'a.log' );
-			if( $state !== FALSE ){
+			if( FALSE !== $state ){
 				try{
 					$this->env->getDatabase()->exec( $command );
 					$state	= TRUE;
@@ -322,7 +318,7 @@ class Controller_Admin_Module extends Controller
 		return TRUE;
 	}
 
-	protected function unlinkModuleFile( string $moduleId, string $fileName, string $path )
+	protected function unlinkModuleFile( string $moduleId, string $fileName, string $path ): void
 	{
 		$fileName	= $path.$fileName;
 		if( file_exists( $fileName ) ){

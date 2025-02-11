@@ -28,8 +28,12 @@ class View_Auth_Oauth extends View
 	{
 	}
 
-	public function renderRegisterFormExtensions()
+	/**
+	 *	@throws		ReflectionException
+	 */
+	public function renderRegisterFormExtensions(): ?bool
 	{
-		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, [] );
+		$payload	= [];
+		return $this->env->getCaptain()->callHook( 'Auth', 'renderRegisterFormExtensions', $this, $payload );
 	}
 }

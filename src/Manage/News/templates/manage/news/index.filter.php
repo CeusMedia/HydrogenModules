@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+/** @var ?string $filterStatus */
+/** @var ?string $filterQuery */
+
 $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
 
@@ -33,7 +37,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_query">'.$w->labelTitle.'</label>
-					<input type="text" name="query" id="input_query" value="'.htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ).'" class="span12"/>
+					<input type="text" name="query" id="input_query" value="'.htmlentities( $filterQuery ?? '', ENT_QUOTES, 'UTF-8' ).'" class="span12"/>
 				</div>
 			</div>
 			<div class="row-fluid">

@@ -1,7 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\View;
 
-$w			= (object) $view->getWords( 'index.filter', 'manage/catalog/bookstore/article' );
+/** @var View $view */
+/** @var array $words */
+/** @var array $filters */
+
+$w			= (object) $words['index.filter'];
 
 $filterId		= !empty( $filters['id'] ) ? $filters['id'] : "";
 $filterTerm		= !empty( $filters['term'] ) ? $filters['term'] : "";
@@ -101,14 +106,14 @@ return '
 $(document).ready(function(){
 	$("#input_tag").prop("autocomplete", "off").typeahead({
 		source: function (query, process) {
-			return $.get("./manage/catalog/bookstore/article/ajaxGetTags", {query: query}, function(data) {
+			return $.get("./ajax/manage/catalog/bookstore/article/getTags", {query: query}, function(data) {
 				return process(data);
 			});
 		}
 	});
 	$("#input_isn").prop("autocomplete", "off").typeahead({
 		source: function (query, process) {
-			return $.get("./manage/catalog/bookstore/article/ajaxGetIsns", {query: query}, function(data) {
+			return $.get("./ajax/manage/catalog/bookstore/article/getIsns", {query: query}, function(data) {
 				return process(data);
 			});
 		}

@@ -8,13 +8,14 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
+/** @var Logic_Frontend $frontend */
 /** @var View $view */
 /** @var array $words */
 /** @var object $article */
 /** @var string $pathCovers */
 /** @var Dictionary $moduleConfig */
 
-$urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
+$urlBase	= $frontend->getUrl().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
 $panelCover	= '<div class="alert alert-info">Noch kein Cover-Bild hochgeladen.</div>';
 

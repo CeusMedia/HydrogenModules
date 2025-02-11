@@ -1,6 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
+/** @var array $words */
+/** @var object $project */
+/** @var array<object> $projectUsers */
+/** @var array<object> $users */
+/** @var bool $canEdit */
 
 $w			= (object) $words['edit-panel-users'];
 
@@ -55,7 +63,7 @@ $optUser	= HtmlElements::Options( $optUser );
 
 $buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary' );
 if( !$canEdit )
-	$buttonAdd	= HtmlTag::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
+	$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
 
 return '
 <div class="content-panel content-panel-form">

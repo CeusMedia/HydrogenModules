@@ -12,7 +12,7 @@ var ModuleManageContentLocale = {
 
 	onCodeMirrorSave: function(cm){
 		$.ajax({
-			url: "./manage/content/ajaxSaveContent",
+			url: "./ajax/manage/content/saveContent",
 			data: {content: cm.getValue()},
 			dataType: "json",
 			method: "post",

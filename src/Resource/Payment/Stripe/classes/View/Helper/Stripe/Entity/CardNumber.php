@@ -3,8 +3,8 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
-class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
-
+class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract
+{
 	protected ?string $nodeClass	= NULL;
 	protected string $nodeName		= 'tt';
 	protected string $number		= '';
@@ -14,6 +14,8 @@ class View_Helper_Stripe_Entity_CardNumber extends View_Helper_Stripe_Abstract{
 	 */
 	public function render(): string
 	{
+		if( '' === $this->number )
+			throw new RuntimeException( 'No card number set' );
 		$pattern	= '/^([^x]+)(x+)(.+)$/i';
 		$replace	= '\\1<small class="muted">\\2</small>\\3';
 		$number		= preg_replace( $pattern, $replace, $this->number );

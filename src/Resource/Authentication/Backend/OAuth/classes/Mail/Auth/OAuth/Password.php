@@ -1,7 +1,7 @@
 <?php
 class Mail_Auth_OAuth_Password extends Mail_Abstract
 {
-	protected function generate(): self
+	protected function generate(): static
 	{
 		$data		= $this->data;
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
@@ -10,7 +10,7 @@ class Mail_Auth_OAuth_Password extends Mail_Abstract
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
-		$body	= $this->view->loadContentFile( 'mail/auth/oauth/password.txt', $data );
+		$body	= $this->loadContentFile( 'mail/auth/oauth/password.txt', $data ) ?? '';
 		$this->setSubject( $wordsMails['mails']['onRegister'] );
 		$this->setText( $body );
 		return $this;

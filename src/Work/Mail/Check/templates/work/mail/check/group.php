@@ -48,11 +48,11 @@ foreach( $groups as $group ){
 		$percentSuccess	= floor( $group->numbers->positive / $group->numbers->total * 1000 ) / 10;
 	}
 
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 		'href'		=> './work/mail/check/removeGroup/'.$group->mailGroupId,
 		'class'		=> 'btn btn-small btn-inverse',
 		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
-	) );
+	] );
 	$buttons	= HtmlTag::create( 'div', $buttonRemove, ['class' => 'btn-group'] );
 	$link		= HtmlTag::create( 'a', $group->title, [
 		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailGroupId,
@@ -61,13 +61,13 @@ foreach( $groups as $group ){
 	$link		.= '&nbsp;'.HtmlTag::create( 'small', '('.$group->numbers->total.')', ['class' => 'muted'] );
 	$createdAt	= HtmlTag::create( 'small', date( 'd.m.Y', $group->createdAt ) );
 
-	$rows[]	= HtmlTag::create( 'tr', array(
+	$rows[]	= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', $link, ['class' => 'cell-group-title'] ),
 		HtmlTag::create( 'td', $percentTested.'% ('.$group->numbers->tested.')', ['class' => 'cell-group-tested'] ),
 		HtmlTag::create( 'td', $percentSuccess.'% ('.$group->numbers->positive.')', ['class' => 'cell-group-success'] ),
 		HtmlTag::create( 'td', $createdAt, ['class' => 'cell-group-createdAt'] ),
 		HtmlTag::create( 'td', $buttons, ['class' => 'cell-group-createdAt'] ),
-	) );
+	] );
 }
 $colgroup	= HtmlElements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
 $thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getestet', 'Qualität', 'Erstellung'] ) );

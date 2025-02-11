@@ -8,11 +8,13 @@
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale support.</log>
 	<log version="0.2.2">Translate to english.</log>
+	<log version="0.2.3">Add entity class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Model/Address.php</class>
+		<class>Entity/Address.php</class>
 <!--		<class>Logic/Address.php</class>-->
 		<locale>de/address.ini</locale>
 		<locale>en/address.ini</locale>

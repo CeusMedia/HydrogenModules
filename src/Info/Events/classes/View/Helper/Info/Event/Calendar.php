@@ -63,9 +63,11 @@ class View_Helper_Info_Event_Calendar
 				$row[]	= $this->renderDay( new DateTime( $date ), $orders, $class );
 				$j++;
 			}
-			$weekNr	= date( "W", strtotime( $date ) );
-			array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
-			$rows[]	= '<tr>'.join( $row ).'</tr>';
+			if( isset( $date ) ){
+				$weekNr	= date( "W", strtotime( $date ) );
+				array_unshift( $row, '<th class="week-number"><span>'.$weekNr.'</span></th>' );
+				$rows[]	= '<tr>'.join( $row ).'</tr>';
+			}
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
 		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
@@ -168,14 +170,14 @@ $(document).ready(function(){
 			'class'		=> 'btn btn-large',
 			'title'		=> '1 Monat weiter',
 		] );
-		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  array(
+		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  [
 			'href'		=> './info/event/setMonth/'.date( 'Y' ).'/'.date( 'm' ),
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'title'		=> 'aktueller Monat',
 			'disabled'	=> $isNow ? 'disabled' : NULL,
-		) );
+		] );
 
-		$label      = $this->renderLabel( $this->year, $this->month );
+		$label		= $this->renderLabel( $this->year, $this->month );
 
 		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
 			'href'		=> './info/event/export/ical',
@@ -242,10 +244,10 @@ $(document).ready(function(){
 		$month	= (int) $month;
 		if( $month < 1 || $month > 12 )
 			throw new InvalidArgumentException( 'Invalid month' );
-		return HtmlTag::create( 'span', array(
+		return HtmlTag::create( 'span', [
 			HtmlTag::create( 'span', $this->words['months'][$month], ['class' => "month-label"] ),
 			HtmlTag::create( 'span', $year, ['class' => "year-label"] ),
-		), ['id' => 'mission-calendar-control-label'] );
+		], ['id' => 'mission-calendar-control-label'] );
 	}
 
 	public function setEvents( array $events ): self

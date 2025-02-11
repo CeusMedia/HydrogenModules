@@ -1,5 +1,8 @@
-<?php /** @noinspection PhpUndefinedClassInspection */
+<?php
+/** @noinspection PhpUndefinedClassInspection */
 /** @noinspection PhpMultipleClassDeclarationsInspection */
+/** @noinspection PhpUndefinedNamespaceInspection */
+/** @noinspection PhpUndefinedClassInspection */
 
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
@@ -12,9 +15,9 @@ use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
-use CeusMedia\Mail\Renderer as MailMessageRendererV1;
-
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 /**
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
@@ -22,14 +25,12 @@ use CeusMedia\Mail\Renderer as MailMessageRendererV1;
  */
 class Logic_Mail extends Logic
 {
-	const LIBRARY_UNKNOWN		= 0;
-	const LIBRARY_COMMON		= 1;
-	const LIBRARY_MAIL_V1		= 2;
-	const LIBRARY_MAIL_V2		= 4;
+	public const LIBRARY_UNKNOWN		= 0;
+	public const LIBRARY_COMMON			= 1;
+	public const LIBRARY_MAIL_V1		= 2;
+	public const LIBRARY_MAIL_V2		= 4;
 
-	protected int $libraries			= 0;
-
-	/** @var array<int,object> $detectedTemplates */
+	/** @var array<int,Entity_Mail_Template> $detectedTemplates */
 	protected array $detectedTemplates	= [];
 
 	protected Dictionary $options;
@@ -41,6 +42,7 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	@return		int
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function abortMailsWithTooManyAttempts(): int
 	{
@@ -61,10 +63,11 @@ class Logic_Mail extends Logic
 	 *	@return		void
 	 *	@throws		IoException
 	 */
-	public function appendRegisteredAttachments( Mail_Abstract $mail, string $language )
+	public function appendRegisteredAttachments( Mail_Abstract $mail, string $language ): void
 	{
 		$class			= get_class( $mail );
 		$indices		= ['className' => $class, 'status' => Model_Mail::STATUS_SENDING, 'language' => $language];
+		/** @var array<Entity_Mail_Attachment> $attachments */
 		$attachments	= $this->modelAttachment->getAllByIndices( $indices );
 		foreach( $attachments as $attachment ){
 			$fileName	= $this->pathAttachments.$attachment->filename;
@@ -83,14 +86,15 @@ class Logic_Mail extends Logic
 	}
 
 	/**
-	 *	@param		array		$userIds
-	 *	@param		array		$roleIds
+	 *	@param		array|string	$userIds
+	 *	@param		array|string	$roleIds
 	 *	@return		array
 	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@deprecated
 	 *	@todo		find usage and move to module or remove, reason: uncool hard binding to user/role models
 	 */
-	public function collectConfiguredReceivers( $userIds, array $roleIds = [] ): array
+	public function collectConfiguredReceivers( array|string $userIds, array|string $roleIds = [] ): array
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return [];
@@ -129,7 +133,7 @@ class Logic_Mail extends Logic
 	 *	@param		integer		$compression	Compression to apply
 	 *	@return		string
 	 */
-	public function compressString( string $string, int $compression ): string
+	public function compressString( string $string, int $compression = Model_Mail::COMPRESSION_NONE ): string
 	{
 		switch( $compression ){
 			case Model_Mail::COMPRESSION_BZIP:
@@ -195,21 +199,21 @@ class Logic_Mail extends Logic
 	 *
 	 *	The created raw output will replace the raw content within given mail object.
 	 *	@access		public
-	 *	@param		object		$mail			Mail object to compress object serial within
-	 *	@param		boolean		$serialize		Flag: try to realize mail object from decompressed serial (default: yes)
-	 *	@throws		RuntimeException			if no object instance is available
-	 *	@throws		RuntimeException			if no object serial is available
+	 *	@param		Entity_Mail		$mail			Mail object to compress object serial within
+	 *	@param		boolean			$serialize		Flag: try to realize mail object from decompressed serial (default: yes)
+	 *	@throws		RuntimeException				if no object instance is available
+	 *	@throws		RuntimeException				if no object serial is available
 	 */
-	public function compressMailObject( object $mail, bool $serialize = TRUE )
+	public function compressMailObject( Entity_Mail $mail, bool $serialize = TRUE ): void
 	{
 		if( $serialize ){
-			if( empty( $mail->object->instance ) )
+			if( empty( $mail->objectInstance ) )
 				throw new RuntimeException( 'Mail object has not been decompressed before, no mail object instance available' );
-			$mail->object->serial	= serialize( $mail->object->instance );
+			$mail->objectSerial	= serialize( $mail->objectInstance );
 		}
-		if( empty( $mail->object->serial ) )
+		if( empty( $mail->objectSerial ) )
 			throw new RuntimeException( 'Mail object has not been serialized or decompressed before, no mail object serial available' );
-		$mail->object->raw	= $this->compressString( $mail->object->serial, $mail->compression );
+		$mail->object	= $this->compressString( $mail->objectSerial, $mail->compression );
 	}
 
 	/**
@@ -221,36 +225,43 @@ class Logic_Mail extends Logic
 	 *	Will not apply decompression again on already mail object.
 	 *
 	 *	@access		public
-	 *	@param		object		$mail			Mail object to decompress serial within
-	 *	@param		boolean		$unserialize	Flag: try to realize mail object from decompressed serial (default: yes)
-	 *	@param		boolean		$force			Flag: force detection and decompression (default: no)
-	 *	@throws		RuntimeException			if no compressed raw column content is available
-	 *	@throws		RuntimeException			if deserialization fails
+	 *	@param		Entity_Mail		$mail			Mail object to decompress serial within
+	 *	@param		boolean			$unserialize	Flag: try to realize mail object from decompressed serial (default: yes)
+	 *	@param		boolean			$force			Flag: force detection and decompression (default: no)
+	 *	@throws		RuntimeException				if no compressed raw column content is available
+	 *	@throws		RuntimeException				if deserialization fails
 	 */
-	public function decompressMailObject( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
+	public function decompressMailObject( Entity_Mail $mail, bool $unserialize = TRUE, bool $force = FALSE ): void
 	{
-		if( is_object( $mail->object ) && $unserialize && !is_null( $mail->object->instance ) && !$force )
+		if( is_object( $mail->objectInstance ) && $unserialize && !$force )
 			return;
 
-		if( is_string( $mail->object ) ){
-			$mail->object	= (object) [
-				'raw'		=> $mail->object,
-				'serial'	=> NULL,
-				'instance'	=> NULL,
-			];
-		}
-		if( empty( $mail->object->raw ) )
+		if( empty( $mail->object ) )
 			throw new RuntimeException( 'No raw (compressed) mail object serial available' );
-		if( empty( $mail->object->serial ) || $force ){
-			$this->detectUsedMailCompression( $mail, $force );
-			$mail->object->serial	= $this->decompressString( $mail->object->raw, (int) $mail->compression );
+		if( empty( $mail->objectSerial ) || $force ){
+			$method				= $this->detectUsedMailCompression( $mail, $force );
+			$mail->objectSerial	= $this->decompressString( $mail->object, $method );
 		}
-		$noInstanceYet	= empty( $mail->object->instance );
+		$noInstanceYet	= empty( $mail->objectInstance );
 		if( ( $noInstanceYet && $unserialize ) || ( $force && $unserialize ) ){
-			$creation		= unserialize( $mail->object->serial );
-			if( !$creation )
+			try{
+				$creation		= unserialize( $mail->objectSerial );
+				$mail->objectInstance	= $creation;
+			}
+			catch( Throwable ){
+				try{
+					$this->decompressMailRaw( $mail );
+					$class	= new ReflectionClass( $mail->mailClass );
+					$mail->objectInstance	= $class->newInstanceWithoutConstructor();
+					$mail->objectInstance->mail	= CeusMedia\Mail\Message\Parser::getInstance()->parse( $mail->rawInflated );
+					$this->compressMailObject( $mail );
+				}
+				catch( Throwable $t ){
+					throw new RuntimeException( 'Deserialization failed: '.$t->getMessage(), 0, $t );
+				}
+			}
+			if( !$mail->objectInstance )
 				throw new RuntimeException( 'Deserialization failed' );
-			$mail->object->instance	= $creation;
 		}
 	}
 
@@ -258,29 +269,18 @@ class Logic_Mail extends Logic
 	 *	Tries to decompress the raw column of mail database item.
 	 *	In force mode, a beforehand made copy of raw database column will be used.
 	 *	@access		public
-	 *	@param		object		$mail		...
+	 *	@param		Entity_Mail		$mail		...
 	 *	@param		boolean		$force		Flag: force detection and decompression (default: no)
 	 *	@return		boolean
 	 *	@throws		RuntimeException		if no compressed raw column content is available
 	 */
-	public function decompressMailRaw( object $mail, bool $force = FALSE ): bool
+	public function decompressMailRaw( Entity_Mail $mail, bool $force = FALSE ): bool
 	{
-		if( is_object( $mail->raw ) && !$force )
+		if( NULL !== $mail->rawInflated && !$force )
 			return TRUE;
-		if( is_string( $mail->raw ) || $force ){
-			if( $force ){
-				if( !isset( $mail->raw->raw ) )
-					throw new RuntimeException( 'Re-decompression failed' );
-				$mail->raw	= $mail->raw->raw;
-			}
-		}
-		$this->detectUsedMailCompression( $mail, $force );
-		$object	= (object) [
-			'raw'		=> $mail->raw,
-			'serial'	=> $this->decompressString( $mail->raw, (int) $mail->compression ),
-			'instance'	=> NULL,
-		];
-		$mail->raw		= $object;
+
+		$method				= $this->detectUsedMailCompression( $mail, $force );
+		$mail->rawInflated	= $this->decompressString( $mail->raw, $method );
 		return TRUE;
 	}
 
@@ -317,76 +317,6 @@ class Logic_Mail extends Logic
 	}
 
 	/**
-	 *	...
-	 *	@access		public
-	 *	@return		integer			Flags of available mail library constants
-	 */
-	public function detectAvailableMailLibraries(): int
-	{
-		$libraries	= static::LIBRARY_UNKNOWN;
-		if( class_exists( 'CeusMedia\Mail\Part\HTML' ) )
-			$libraries	|= static::LIBRARY_MAIL_V1;
-		if( class_exists( 'CeusMedia\Mail\Message\Part\HTML' ) )
-			$libraries	|= static::LIBRARY_MAIL_V2;
-		return $libraries;
-	}
-
-	/**
-	 *	Tries to detect mail library used for mail by its ID.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		string		$mailId		ID of mail to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
-	 */
-	public function detectMailLibraryFromMailId( string $mailId ): int
-	{
-		return $this->detectMailLibraryFromMail( $this->getMail( $mailId ) );
-	}
-
-	/**
-	 *	Tries to detect mail library used for mail data object.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		object		$mail		Mail data object from database to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
-	 */
-	public function detectMailLibraryFromMail( object $mail ): int
-	{
-		if( !is_object( $mail ) )
-			throw new InvalidArgumentException( 'No mail object given' );
-		if( empty( $mail->usedLibrary ) ){
-			if( is_string( $mail->object ) )
-				$this->decompressMailObject( $mail );
-			$mail->usedLibrary	= $this->detectMailLibraryFromMailObjectInstance( $mail->object->instance );
-		}
-		return $mail->usedLibrary;
-	}
-
-	/**
-	 *	Tries to detect mail library used for unpacked mail object.
-	 *	Returns detected library ID using constants of Logic_Mail::LIBRARY_*.
-	 *	@access		public
-	 *	@param		object		$mailObject		Mail data object from database to get used library for
-	 *	@return		integer		ID of used library using Logic_Mail::LIBRARY_*
-	 */
-	public function detectMailLibraryFromMailObjectInstance( object $mailObject ): int
-	{
-		if( is_a( $mailObject, 'Mail_Abstract' ) ){
-			if( is_a( $mailObject->mail, 'Net_Mail' ) )
-				return Logic_Mail::LIBRARY_COMMON;
-			if( is_a( $mailObject->mail, 'CeusMedia\Mail\Message' ) ){
-				$agent		= $mailObject->mail->getUserAgent();
-//				$this->env->getMessenger()->noteNotice( 'Agent: '.$agent );die;
-				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/2.', '/' ).'/', $agent ) )
-					return Logic_Mail::LIBRARY_MAIL_V2;
-//				if( preg_match( '/^'.preg_quote( 'CeusMedia::Mail/1.', '/' ).'/', $agent ) )
-				return Logic_Mail::LIBRARY_MAIL_V1;
-			}
-		}
-		return Logic_Mail::LIBRARY_UNKNOWN;
-	}
-
-	/**
 	 *	Detects the best template to use by looking for:
 	 *	- given template ID, realizing mail settings of mail class of a module
 	 *	- active mail template ID within database
@@ -397,10 +327,11 @@ class Logic_Mail extends Logic
 	 *	@param		integer			$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
-	 *	@return		object|NULL		Model entity object of detected mail template
+	 *	@return		Entity_Mail_Template|NULL				Model entity object of detected mail template
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		see code doc
 	 */
-	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
+	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?Entity_Mail_Template
 	{
 		if( array_key_exists( $preferredTemplateId, $this->detectedTemplates ) )
 			return $this->detectedTemplates[$preferredTemplateId];
@@ -413,7 +344,7 @@ class Logic_Mail extends Logic
 				$frontend				= $this->env->getLogic()->get( 'Frontend' );
 				$defaultFromFrontend	= $frontend->getModuleConfigValue( 'Resource_Mail', 'template' );
 			}
-			catch( Exception $e ){}
+			catch( Exception ){}
 		}
 
 		//  collect template defaults and overrides
@@ -445,6 +376,7 @@ class Logic_Mail extends Logic
 
 		//  get the best template and store for later
 		$detectedTemplateId	= array_pop( $templateIds );
+		/** @var Entity_Mail_Template $template */
 		$template			= $this->modelTemplate->get( $detectedTemplateId );
 		$this->detectedTemplates[$detectedTemplateId]	= $template;
 		return $template;
@@ -452,24 +384,23 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	Detected compression used when mail object was stored.
+	 *	Stores detected compression method in given mail object.
+	 *	Returns detected compression as one of Model_Mail::COMPRESSION_*.
 	 *	@access		public
-	 *	@param		object		$mail		Mail item from database
-	 *	@param		boolean		$force		Flag: re-detect (default: no)
-	 *	@return		integer		Detected compression as of Model_Mail::COMPRESSION_*
+	 *	@param		Entity_Mail		$mail		Mail item from database
+	 *	@param		boolean			$force		Flag: re-detect (default: no)
+	 *	@return		integer			Detected compression as of Model_Mail::COMPRESSION_*
 	 */
-	public function detectUsedMailCompression( object $mail, bool $force = FALSE ): int
+	public function detectUsedMailCompression( Entity_Mail $mail, bool $force = FALSE ): int
 	{
 		if( !$mail->compression || $force ){
-			if( is_string( $mail->object ) )
-				$source	= $mail->object;
-			else if( is_object( $mail->object ) && !empty( $mail->object->raw ) )
-				$source	= $mail->object->raw;
-			else
+			if( empty( $mail->object ) )
 				throw new RuntimeException( 'Detection failed since no raw source is available' );
+
 			$mail->compression	= Model_Mail::COMPRESSION_BASE64;
-			if( substr( $source, 0, 2 ) === "BZ" )										//  BZIP compression detected
+			if( str_starts_with( $mail->object, "BZ" ) )										//  BZIP compression detected
 				$mail->compression	= Model_Mail::COMPRESSION_BZIP;
-			else if( substr( $source, 0, 2 ) === "GZ" )								//  GZIP compression detected
+			else if( str_starts_with( $mail->object, "GZ" ) )									//  GZIP compression detected
 				$mail->compression	=  Model_Mail::COMPRESSION_GZIP;
 		}
 		return $mail->compression;
@@ -484,12 +415,11 @@ class Logic_Mail extends Logic
 	 *	@param		string|NULL		$senderId		Optional: ID of sending user
 	 *	@return		string							ID of queued mail
 	 *	@throws		InvalidArgumentException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
-	public function enqueueMail( Mail_Abstract $mail, string $language, $receiver, ?string $senderId = NULL ): string
+	public function enqueueMail( Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): string
 	{
-		if( is_array( $receiver ) )
-			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
@@ -499,47 +429,28 @@ class Logic_Mail extends Logic
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
-		$senderAddress	= '';
-		if( $this->libraries & self::LIBRARY_MAIL_V1 || $this->libraries & self::LIBRARY_MAIL_V2 )
-			$senderAddress	= $mail->mail->getSender()->getAddress();
-		else if( $this->libraries & self::LIBRARY_COMMON )
-			$senderAddress	= $mail->mail->getSender()->address;
+		$incompleteMailDataObject	= Entity_Mail::fromArray( [
+			'compression'		=> $this->getRecommendedCompression(),
+			'object'			=> NULL,
+			'objectInstance'	=> $mail,
+			'raw'				=> NULL,
+		] );
 
-		$incompleteMailDataObject	= (object) array(
-			'compression'	=> $this->getRecommendedCompression(),
-			'object'		=> (object) ['instance' => $mail],
-			'raw'			=> NULL,
-		);
-
-		$this->compressMailObject( $incompleteMailDataObject, TRUE );
-
-		$raw			= '';
-		$libraryObject	= $incompleteMailDataObject->object->instance->mail;
-		if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V2 ){
-			$raw	= MailMessageRendererV2::render( $libraryObject );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_MAIL_V1 ){
-			$raw	= MailMessageRendererV1::render( $libraryObject );
-		}
-		else if( $this->libraries & Logic_Mail::LIBRARY_COMMON ){
-			$raw		= implode( "\r\n", array_merge( array_map(static function( $field ){
-				return $field->toString();
-			}, $libraryObject->getHeaders()->getFields()), ['', $libraryObject->getBody()] ) );
-		}
-		$incompleteMailDataObject->raw	= $this->compressString( $raw, $incompleteMailDataObject->compression );
+		$this->compressMailObject( $incompleteMailDataObject );
+		$this->regenerateRaw( $incompleteMailDataObject );
 
 		$data		= [
 			'templateId'		=> $mail->getTemplateId(),
 			'language'			=> strtolower( trim( $language ) ),
 			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $senderAddress,
+			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
 			'receiverId'		=> $receiver->userId ?? 0,
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> $receiver->username ?? NULL,
 			'subject'			=> $mail->getSubject(),
 			'mailClass'			=> get_class( $mail ),
 			'compression'		=> $incompleteMailDataObject->compression,
-			'object'			=> $incompleteMailDataObject->object->raw,
+			'object'			=> $incompleteMailDataObject->object,
 			'raw'				=> $incompleteMailDataObject->raw,
 			'enqueuedAt'		=> time(),
 			'attemptedAt'		=> 0,
@@ -551,23 +462,25 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns saved mail as uncompressed object by mail ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of queued mail
-	 *	@return		object							Mail object from queue
+	 *	@param		int|string		$mailId			ID of queued mail
+	 *	@return		Entity_Mail						Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
 	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
-	 *	@throws		RuntimeException				if unserialize mail serial fails
+	 *	@throws		RuntimeException				if deserialize mail serial fails
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getMail( string $mailId ): object
+	public function getMail( int|string $mailId ): Entity_Mail
 	{
+		/** @var Entity_Mail $mail */
 		$mail	= $this->modelQueue->get( $mailId );
 		if( !$mail )
 			throw new OutOfRangeException( 'Invalid mail ID: '.$mailId );
 		$this->decompressMailObject( $mail );
 		$this->decompressMailRaw( $mail );
-		if( !$mail->object->instance )
+		if( !$mail->objectInstance )
 			throw new RuntimeException( 'Deserialization of mail object failed' );
-		if( !$mail->raw->serial )
+		if( !$mail->rawInflated )
 			throw new RuntimeException( 'Decompression of raw mail failed' );
 		return $mail;
 	}
@@ -591,10 +504,10 @@ class Logic_Mail extends Logic
 		}
 		$regexExt		= "/\.php5?$/";																//  define regular expression of acceptable mail class file extensions
 		$regexClass		= "/class\s+(Mail_\S+)\s+extends\s+Mail_/i";								//  define regular expression of acceptable mail class implementations
-		$index			= new RecursiveRegexFileIndex( $pathClasses, "/\.php5$/", $regexClass );	//  get recursive list of acceptable files
+		$index			= new RecursiveRegexFileIndex( $pathClasses, $regexExt, $regexClass );		//  get recursive list of acceptable files
 		foreach( $index as $file ){																	//  iterate recursive list
-			$content	= FileReader::load( $file->getPathname() );								//  get content of class file
-			preg_match_all( $regexClass, $content, $matches );										//  apply regular expression of mail class to content
+			$content	= FileReader::load( $file->getPathname() );									//  get content of class file
+			preg_match_all( $regexClass, $content, $matches );									//  apply regular expression of mail class to content
 			if( count( $matches[0] ) && count( $matches[1] ) ){										//  if valid mail class name found
 				$path			= substr( $file->getPathname(), strlen( $pathClasses ) );			//  get filename of class file as list key
 				$list[$path]	= $matches[1][0];													//  enqueue mail class name by list key
@@ -611,17 +524,17 @@ class Logic_Mail extends Logic
 	 *	@return		array					Map of headers
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getMailHeaders( $mail ): array
+	public function getMailHeaders( Mail_Abstract|string $mail ): array
 	{
-		$complete	= TRUE;
 		$mail		= $this->getMailFromObjectOrId( $mail );
-		if( !is_object( $mail->object ) )
+		if( !is_object( $mail->objectInstance ) )
 			$this->decompressMailObject( $mail );
-		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
-			throw new Exception( 'Mail object is not extending Mail_Abstract' );
+		if( !is_a( $mail->objectInstance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
+			throw new RuntimeException( 'Mail object is not extending Mail_Abstract' );
 		$list		= [];
-		foreach( $mail->object->instance->mail->getHeaders()->getFields() as $headerField )
+		foreach( $mail->objectInstance->mail->getHeaders()->getFields() as $headerField )
 			$list[$headerField->getName()]	= $headerField->getValue();
 		return $list;
 	}
@@ -629,31 +542,32 @@ class Logic_Mail extends Logic
 	/**
 	 *	Returns mail parts.
 	 *	@access		public
-	 *	@param		object|string		$mail		Mail object or ID
+	 *	@param		Entity_Mail		$mail			Mail object
 	 *	@return		array							List of mail part objects
 	 *	@throws		InvalidArgumentException		if given argument is neither integer nor object
 	 *	@throws		Exception						if given mail object is not uncompressed and unserialized (use getMail)
 	 *	@throws		RuntimeException				if given mail object is of outdated Net_Mail and parser CMM_Mail_Parser is not available
 	 *	@throws		RuntimeException				if given no parser is available for mail object
 	 */
-	public function getMailParts( $mail ): array
+	public function getMailParts( Entity_Mail $mail ): array
 	{
 		$this->decompressMailObject( $mail );
-		if( !is_a( $mail->object->instance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
-			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->object->instance ) );
-		if( $mail->object->instance->mail instanceof \CeusMedia\Mail\Message )							//  modern mail message with parsed body parts
-			return $mail->object->instance->mail->getParts( TRUE );
+		if( !is_a( $mail->objectInstance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
+			throw new Exception( 'Mail object is not extending Mail_Abstract, but '.get_class( $mail->objectInstance ) );
+		if( $mail->objectInstance->mail instanceof MailMessage)							//  modern mail message with parsed body parts
+			return $mail->objectInstance->mail->getParts();
 		throw new RuntimeException( 'No mail parser available.' );							//  ... which is not available
 	}
 
 	/**
 	 *	Returns queued mail object of mail ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of queued mail
+	 *	@param		int|string		$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function getQueuedMail( string $mailId ): object
+	public function getQueuedMail( int|string $mailId ): object
 	{
 		return $this->getMail( $mailId );
 	}
@@ -706,6 +620,8 @@ class Logic_Mail extends Logic
 	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		boolean			TRUE if success
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function handleMail( Mail_Abstract $mail, object $receiver, string $language, bool $forceSendNow = NULL ): bool
 	{
@@ -717,12 +633,13 @@ class Logic_Mail extends Logic
 	/**
 	 *	Remove mail by its ID.
 	 *	@access		public
-	 *	@param		string			$mailId			ID of mail to remove
+	 *	@param		int|string			$mailId			ID of mail to remove
 	 *	@return		boolean
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function removeMail( string $mailId ): bool
+	public function removeMail( int|string $mailId ): bool
 	{
-		return (bool) $this->modelQueue->remove( $mailId );
+		return $this->modelQueue->remove( $mailId );
 	}
 
 	/**
@@ -731,11 +648,11 @@ class Logic_Mail extends Logic
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@return		boolean			TRUE if success
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function sendMail( Mail_Abstract $mail, $receiver )
+	public function sendMail( Mail_Abstract $mail, int|object $receiver ): bool
 	{
-		if( is_array( $receiver ) )
-			$receiver	= (object) $receiver;
 		if( is_integer( $receiver ) ){
 			$model		= new Model_User( $this->env );
 			$receiver	= $model->get( $receiver );
@@ -750,20 +667,22 @@ class Logic_Mail extends Logic
 	/**
 	 *	Send prepared mail right now.
 	 *	@access		public
-	 *	@param		string		$mailId
+	 *	@param		int|string		$mailId
 	 *	@param		boolean		$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		boolean
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use logging on exception (=sending mail failed)
+	 *	@throws		ReflectionException
 	 */
-	public function sendQueuedMail( string $mailId, bool $forceResent = FALSE ): bool
+	public function sendQueuedMail( int|string $mailId, bool $forceResent = FALSE ): bool
 	{
 		$mail		= $this->getMail( $mailId );
 		$this->decompressMailObject( $mail );
-		if( (int) $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
+		if( $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new RuntimeException( 'Mail already has been sent' );
-		$mail->object->instance->setEnv( $this->env );
-		$mail->object->instance->initTransport();
+		$mail->objectInstance->setEnv( $this->env );
+		$mail->objectInstance->initTransport();
 		$this->modelQueue->edit( $mailId, [
 			'status'		=> Model_Mail::STATUS_SENDING,
 			'attempts'		=> $mail->attempts + 1,
@@ -771,14 +690,14 @@ class Logic_Mail extends Logic
 		] );
 		try{
 			if( !empty( $mail->receiverId ) ){
-				$mail->object->instance->sendToUser( $mail->receiverId );
+				$mail->objectInstance->sendToUser( $mail->receiverId );
 			}
 			else{
 				$receiver	= (object) [
 					'email'		=> $mail->receiverAddress,
 					'username'	=> $mail->receiverName,
 				];
-				$mail->object->instance->sendTo( $receiver );
+				$mail->objectInstance->sendTo( $receiver );
 			}
 			$this->modelQueue->edit( $mailId, [
 				'status'		=> Model_Mail::STATUS_SENT,
@@ -800,15 +719,16 @@ class Logic_Mail extends Logic
 	 *	Set mail status.
 	 *	New status will be validated against allowed status transitions.
 	 *	@access		public
-	 *	@param		Mail_Abstract|integer	$mail		Mail object or ID
+	 *	@param		Mail_Abstract|int|string	$mail		Mail object or ID
 	 *	@param		integer					$status		Status to set, will be validated against allowed status transitions
 	 *	@return 	boolean
 	 *	@throws		DomainException			if given status is invalid
 	 *	@throws		DomainException			if transition to new status is not allowed
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function setMailStatus( $mail, $status ): bool
+	public function setMailStatus( Mail_Abstract|int|string $mail, int $status ): bool
 	{
-		$status			= (int) $status;
 		$mail			= $this->getMailFromObjectOrId( $mail );
 		$mail->status	= (int) $mail->status;
 		$modelStatuses	= ObjectConstants::staticGetAll( 'Model_Mail', 'STATUS_' );
@@ -819,25 +739,25 @@ class Logic_Mail extends Logic
 			return FALSE;
 		if( !in_array( $status, Model_Mail::$transitions[$mail->status] ) )
 			throw new DomainException( 'Transition from status '.$statusMap[$mail->status].' to '.$statusMap[$status]. ' is not allowed' );
-		return (bool) $this->modelQueue->edit( $mail->mailId, array(
+		return (bool) $this->modelQueue->edit( $mail->mailId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 	}
 
 	/**
 	 *	Enable or disable use of queue or return current state.
 	 *	Returns current state of no new state is given.
 	 *	@access		public
-	 *	@return		void
 	 *	@param		boolean|NULL	$toggle			New state or NULL to return current state
-	 *	@return		boolean|NULL	Current state if no new state is given
+	 *	@return		boolean|self	Current state if no new state is given
 	 */
-	public function useQueue( ?bool $toggle = NULL )
+	public function useQueue( ?bool $toggle = NULL ): bool|self
 	{
-		if( $toggle === NULL )
+		if( NULL === $toggle )
 			return $this->options->get( 'queue.enabled' );
-		$this->options->set( 'queue.enabled', (bool) $toggle );
+		$this->options->set( 'queue.enabled', $toggle );
+		return $this;
 	}
 
 	//  --  STATIC PUBLIC  --  //
@@ -847,15 +767,18 @@ class Logic_Mail extends Logic
 	 *	Alias of decompressMailObject.
 	 *	@todo		check if needed or remove
 	 */
-	public function decompressObjectInMail( object $mail, bool $unserialize = TRUE, bool $force = FALSE )
+	public function decompressObjectInMail( Entity_Mail $mail, bool $unserialize = TRUE, bool $force = FALSE ): void
 	{
 		$this->decompressMailObject( $mail, $unserialize, $force );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
-		$this->libraries		= $this->detectAvailableMailLibraries();
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
@@ -879,7 +802,12 @@ class Logic_Mail extends Logic
 		}
 	}
 
-	protected function getMailFromObjectOrId( $mailObjectOrId ): object
+	/**
+	 *	@param		object|int|string		$mailObjectOrId
+	 *	@return		object
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function getMailFromObjectOrId( object|int|string $mailObjectOrId ): object
 	{
 		if( is_object( $mailObjectOrId ) )
 			return $mailObjectOrId;
@@ -900,6 +828,17 @@ class Logic_Mail extends Logic
 		if( $this->canGzip() )
 			return Model_Mail::COMPRESSION_GZIP;
 		return Model_Mail::COMPRESSION_BASE64;
+	}
+
+	/**
+	 *	Renders compressed raw mail message and applies it to given mail object for storage in database.
+	 *	@param		Entity_Mail		$mail
+	 *	@return		void
+	 */
+	protected function regenerateRaw( Entity_Mail $mail ): void
+	{
+		$raw		= MailMessageRendererV2::render( $mail->objectInstance->mail );
+		$mail->raw	= $this->compressString( $raw, $mail->compression );
 	}
 
 	/**

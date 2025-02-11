@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var View_Company $view */
+/** @var array<object> $companies */
 
 $w	= (object) $words['index'];
 
@@ -13,11 +19,11 @@ if( $companies ){
 		] );
 		$createdAt	= $timeHelper->convert( $company->createdAt, TRUE );
 		$modifiedAt	= $company->modifiedAt ? $timeHelper->convert( $company->modifiedAt ) : "-";
-		$rows[]	= HtmlTag::create( 'tr', array(
+		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $createdAt ),
 			HtmlTag::create( 'td', $modifiedAt ),
-		) );
+		] );
 	}
 	$heads	= [
 	//	'<input type="checkbox" class="toggler"/>',

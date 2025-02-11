@@ -20,11 +20,11 @@ var WorkMissionsList = {
 		WorkMissionsList.blendOut(250);
 		$("#day-lists-empty").hide();
 		$.ajax({
-			url: "./work/mission/ajaxRenderIndex",
+			url: "./ajax/work/mission/renderIndex",
 			dataType: "json",
 			success: function(json){
 				$("#message-loading-list").remove();
-				WorkMissionsList.renderDayListDayControls(json);
+				WorkMissionsList.renderDayListDayControls(json.data);
 				WorkMissions.showTotalDayMissionCount();
 				onSuccess();
 			},
@@ -75,10 +75,10 @@ var WorkMissionsList = {
 		$("#day-controls-small li:eq("+data.day+") a").tab("show");
 	},
 	setPage: function(page){
-		$.ajax({															//  store action using AJAX
-			url: "./work/mission/setFilter/page/"+page,						//  URL to set changed filter
+		$.ajax({																//  store action using AJAX
+			url: "./ajax/work/mission/setFilter/page/"+page,					//  URL to set changed filter
 				success: function(){										//  on response
-					WorkMissionsList.loadCurrentListAndDayControls();		//  reload day lists and controls
+					WorkMissionsList.loadCurrentListAndDayControls();			//  reload day lists and controls
 				}
 		});
 	},

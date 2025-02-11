@@ -7,6 +7,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array<array<string,string>> $words */
 /** @var array $projectMap */
+/** @var ?string $filterProjectId */
+/** @var ?string $filterQuery */
+/** @var ?string $filterStatus */
 
 $optProject	= ['' => '- alle -'];
 foreach( $projectMap as $project )
@@ -24,7 +27,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_activity">Aktivität</label>
-					<input type="text" name="activity" id="input_activity" class="span12" value="'.htmlentities( $filterQuery, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="activity" id="input_activity" class="span12" value="'.htmlentities( $filterQuery ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

@@ -1,19 +1,26 @@
 <?php
 class Job_Work_Mission extends Job_Abstract
 {
-	protected $logicMail;
-	protected $language;
-	protected $modelChange;
-	protected $modelMission;
-	protected $modelProject;
-	protected $modelUser;
-	protected $useSettings;
+	protected Logic_Mail $logicMail;
+	protected string $language;
+	protected Model_Mission_Change $modelChange;
+	protected Model_Mission_Document $modelDocument;
+	protected Model_Mission_Version $modelVersion;
+	protected Model_Mission $modelMission;
+	protected Model_Project $modelProject;
+	protected Model_User $modelUser;
+	protected bool $useSettings;
 
-    public function informAboutChanges()
+	/**
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function informAboutChanges(): int
 	{
 		$language		= $this->language;														//  @todo get user language instead of current language
 		$count			= 0;																	//  init mail counter
-		foreach( $this->modelChange->getAll( [], [], [0, 10] ) as $change ){										//  iterate mission changes
+		foreach( $this->modelChange->getAll( [], [], [0, 10] ) as $change ){					//  iterate mission changes
 			$missionNew	= $this->modelMission->get( $change->missionId );						//  get current mission data
 			if( !$missionNew ){																	//  mission is not existing anymore
 				$this->modelChange->remove( $change->missionChangeId );							//  remove change
@@ -22,16 +29,16 @@ class Job_Work_Mission extends Job_Abstract
 			switch( strtolower( $change->type ) ){												//  which change type?
 				case 'new':																		//  inform about new mission
 					$receivers	= $this->getUpdateMailReceivers(								//  get mail receivers
-						array( (int) $missionNew->projectId ),									//  of mission project
-						array( $missionNew->workerId ),											//  include project worker
-						array( $change->userId )												//  exclude change maker
+						[(int) $missionNew->projectId],											//  of mission project
+						[$missionNew->workerId],												//  include project worker
+						[$change->userId]														//  exclude change maker
 					);
 					foreach( $receivers as $receiverId => $user ){								//  iterate mail receivers
-						$mail	= new Mail_Work_Mission_New( $this->env, array(					//  prepare mail
+						$mail	= new Mail_Work_Mission_New( $this->env, [						//  prepare mail
 							'mission'		=> $missionNew,										//  provide current mission data
 							'user'			=> $user,											//  provide receiver user data
-							'modifier'		=> $this->modelUser->get( $change->userId ),		//  provide modyifing user data
-						) );
+							'modifier'		=> $this->modelUser->get( $change->userId ),		//  provide modifying user data
+						] );
 						$this->logicMail->handleMail( $mail, $user, $language );				//  send mail to current receiver
 						$count++;																//  count sent mail
 					}
@@ -39,17 +46,17 @@ class Job_Work_Mission extends Job_Abstract
 				case 'update':																	//  inform about mission update
 					$missionOld	= unserialize( $change->data );									//  get old mission data
 					$receivers	= $this->getUpdateMailReceivers(								//  get mail receivers
-						array( (int) $missionNew->projectId, (int) $missionOld->projectId ),	//  of old and new project
-						array( $missionNew->workerId, $missionOld->workerId ),					//  include old and new project worker
-						array( $change->userId )												//  exclude change maker
+						[(int) $missionNew->projectId, (int) $missionOld->projectId],			//  of old and new project
+						[$missionNew->workerId, $missionOld->workerId],							//  include old and new project worker
+						[$change->userId]														//  exclude change maker
 					);
 					foreach( $receivers as $receiverId => $user ){								//  iterate mail receivers
-						$mail   = new Mail_Work_Mission_Update( $this->env, array(				//  prepare mail
+						$mail	= new Mail_Work_Mission_Update( $this->env, [					//  prepare mail
 							'missionBefore'	=> $missionOld,										//  provide old mission data
 							'missionAfter'	=> $missionNew,										//  provide new mission data
 							'user'			=> $user,											//  provide receiver user data
 							'modifier'		=> $this->modelUser->get( $change->userId ),		//  provide modifying user data
-						) );
+						] );
 						$this->logicMail->handleMail( $mail, $user, $language );				//  send mail to current receiver
 						$count++;																//  count sent mail
 					}
@@ -57,7 +64,7 @@ class Job_Work_Mission extends Job_Abstract
 			}
 			$this->modelChange->remove( $change->missionChangeId );								//  remove change
 		}
-		$this->out( date( "Y-m-d H:i:s" ).' sent '.$count.' mails.' );							//  note sent mails
+		$this->out( date( "Y-m-d H:i:s" ).' sent '.$count.' mails.' );					//  note sent mails
 		return $count;																			//  return number of sent mails
 	}
 
@@ -68,10 +75,13 @@ class Job_Work_Mission extends Job_Abstract
 	 *	@access		public
 	 *	@todo		implement this job
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function mailDaily()
+	public function mailDaily(): void
 	{
 		$count			= 0;
+		/** @var array<Entity_User> $activeUsers */
 		$activeUsers	= $this->modelUser->getAll( ['status' => '> 0'] );						//  get all active users
 		foreach( $activeUsers as $user ){														//  iterate found users
 			if( $this->sendDailyMailOfUser( $user ) )											//  try to send daily mail
@@ -80,19 +90,20 @@ class Job_Work_Mission extends Job_Abstract
 		$this->out( 'Sent '.$count.' mails.' );
 	}
 
-	public function cleanup()
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function cleanup(): void
 	{
-		$modelVersion	= new Model_Mission_Version( $this->env );
-		$modelMission	= new Model_Mission( $this->env );
-
-		$missionIds		= array_unique( array_values( $modelVersion->getAll(
-			array(),
-			array( 'timestamp' => 'ASC' ),
-			array(),
-			array( 'missionId' )
+		$missionIds		= array_unique( array_values( $this->modelVersion->getAll(
+			[],
+			['timestamp' => 'ASC'],
+			[],
+			['missionId']
 		) ) );
 		if( $missionIds ){
-			$missionIds	= $modelMission->getAll( [
+			$missionIds	= $this->modelMission->getAll( [
 				'status'	=> [
 					Model_Mission::STATUS_ABORTED,
 					Model_Mission::STATUS_REJECTED,
@@ -108,7 +119,7 @@ class Job_Work_Mission extends Job_Abstract
 			else{
 				$count	= 0;
 				foreach( $missionIds as $nr => $missionId ){
-					$count	+= $modelVersion->removeByIndex( 'missionId', $missionId );
+					$count	+= $this->modelVersion->removeByIndex( 'missionId', $missionId );
 					$this->showProgress( $nr + 1, count( $missionIds ) );
 				}
 				if( $missionIds )
@@ -117,16 +128,10 @@ class Job_Work_Mission extends Job_Abstract
 			}
 		}
 
-		$modelProject	= new Model_Project( $this->env );
 		$projects		= [];
-		foreach( $modelProject->getAll() as $project )
+		foreach( $this->modelProject->getAll() as $project )
 			$projects[$project->projectId]	= $project;
 		$projectIds	= array_keys( $projects );
-
-		//  MISSION WITHOUT PROJECTS RELATIONS
-		$modelMissionChange		= new Model_Mission_Change( $this->env );
-		$modelMissionDocument	= new Model_Mission_Document( $this->env );
-		$modelMissionVersion	= new Model_Mission_Version( $this->env );
 
 		$query		= 'SELECT missionId FROM missions WHERE projectId NOT IN ('.join( ',', $projectIds ).')';
 		$result		= $this->env->getDatabase()->query( $query );
@@ -134,15 +139,15 @@ class Job_Work_Mission extends Job_Abstract
 		if( $missions ){
 			foreach( $missions as $mission ){
 				$missionId		= $mission->missionId;
-				$nrChanges		= $modelMissionChange->count( ['missionId' => $missionId] );
-				$nrVersions		= $modelMissionVersion->count( ['missionId' => $missionId] );
-				$nrDocuments	= $modelMissionDocument->count( ['missionId' => $missionId] );
+				$nrChanges		= $this->modelChange->count( ['missionId' => $missionId] );
+				$nrVersions		= $this->modelVersion->count( ['missionId' => $missionId] );
+				$nrDocuments	= $this->modelDocument->count( ['missionId' => $missionId] );
 				$this->out( 'Mission: '.$missionId.' => ('.$nrChanges.' changes, '.$nrDocuments.' documents, '.$nrVersions.' versions)' );
 				if( !$this->dryMode ){
-					$modelMissionChange->removeByIndex( 'missionId', $missionId );
-					$modelMissionVersion->removeByIndex( 'missionId', $missionId );
-					$modelMissionDocument->removeByIndex( 'missionId', $missionId );
-					$modelMission->remove( $missionId );
+					$this->modelChange->removeByIndex( 'missionId', $missionId );
+					$this->modelVersion->removeByIndex( 'missionId', $missionId );
+					$this->modelDocument->removeByIndex( 'missionId', $missionId );
+					$this->modelMission->remove( $missionId );
 				}
 			}
 		}
@@ -156,8 +161,8 @@ class Job_Work_Mission extends Job_Abstract
 		$countTimerRemoved	= 0;
 		if( $timers ){
 			foreach( $timers as $timer ){
-				if( $timer->module === 'Work_Missions' ){
-					$mission	= $modelMission->get( $timer->moduleId );
+				if( 'Work_Missions' === $timer->module ){
+					$mission	= $this->modelMission->get( $timer->moduleId );
 					if( $mission ){
 						$modelWorkTimer->edit( $timer->workTimerId, [
 							'moduleId'	=> $mission->missionId,
@@ -179,24 +184,29 @@ class Job_Work_Mission extends Job_Abstract
 
 	protected function __onInit(): void
 	{
+		/** @noinspection PhpUnhandledExceptionInspection */
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->language		= $this->env->getLanguage()->getLanguage();							//  @deprecated if each mail is sent in user language
-		$this->modelChange	= new Model_Mission_Change( $this->env );							//  get mission changes model
-		$this->modelMission	= new Model_Mission( $this->env );									//  get mission model
-		$this->modelProject	= new Model_Project( $this->env );									//  get project model
-		$this->modelUser	= new Model_User( $this->env );										//  get user model
-		$this->useSettings	= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
+		$this->modelChange		= new Model_Mission_Change( $this->env );							//  get mission changes model
+		$this->modelDocument	= new Model_Mission_Document( $this->env );
+		$this->modelVersion		= new Model_Mission_Version( $this->env );
+		$this->modelMission		= new Model_Mission( $this->env );									//  get mission model
+		$this->modelProject		= new Model_Project( $this->env );									//  get project model
+		$this->modelUser		= new Model_User( $this->env );										//  get user model
+		$this->useSettings		= $this->env->getModules()->has( 'Manage_My_User_Settings' );			//  user settings are enabled
 	}
 
 	/**
 	 *	Get mail receivers of update mails.
 	 *	@access		protected
-	 *	@param		array		$projectsIds		List of project IDs to collect user of
-	 *	@param		array		$includes			List of user IDs to include
-	 *	@param		array		$excludes			List of user IDs to exclude
+	 *	@param		array		$projectIds		List of project IDs to collect user of
+	 *	@param		array		$includes		List of user IDs to include
+	 *	@param		array		$excludes		List of user IDs to exclude
 	 *  @return		array		List of mail receiving users
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function getUpdateMailReceivers( $projectIds, $includes = [], $excludes = [] )
+	protected function getUpdateMailReceivers( array $projectIds, array $includes = [], array $excludes = [] ): array
 	{
 		$list	= [];																		//  prepare empty user list
 		$projectIds	= array_unique( $projectIds );
@@ -210,7 +220,7 @@ class Job_Work_Mission extends Job_Abstract
 		foreach( $excludes as $userId )															//  iterate users to exclude
 			if( array_key_exists( (int) $userId, $list ) )										//  user is in list
 				unset( $list[(int) $userId] );													//  remove user from list
-		$users			= [];																//  prepare final user list
+		$users			= [];																	//  prepare final user list
 		$config			= $this->env->getConfig();												//  get default config
 		foreach( $list as $userId => $user ){													//  iterate so far listed users
 			if( $this->useSettings )															//  user settings are enabled
@@ -225,7 +235,13 @@ class Job_Work_Mission extends Job_Abstract
 		return $users;																			//  return final user list
 	}
 
-	protected function sendDailyMailOfUser( $user )
+	/**
+	 *	@param		object		$user
+	 *	@return		true|void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function sendDailyMailOfUser( object $user )
 	{
 		if( $user->userId != 4 )
 			return;
@@ -236,47 +252,47 @@ class Job_Work_Mission extends Job_Abstract
 		if( $this->useSettings )
 			$config	= Model_User_Setting::applyConfigStatic( $this->env, $user->userId );
 		$config		= $config->getAll( 'module.work_missions.mail.', TRUE );
-		$isActiveUser	= (int) $user->status > 0 && strlen( trim( $user->email ) );			//  user is active and has mail address
-		$isMailReceiver	= $config->get( 'active' ) && $config->get( 'daily' );					//  mails are enabled
-		$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );				//  the future is now
+		$isActiveUser	= (int) $user->status >= Model_User::STATUS_ACTIVE;						//  user is active and has mail address
+		$isMailReceiver	= $config->get( 'active' ) && $config->get( 'daily' );		//  mails are enabled
+		$isSendHour		= (int) $config->get( 'daily.hour' ) === (int) date( "H" );	//  the future is now
 		if( !( $isActiveUser && $isMailReceiver && $isSendHour ) )								//
 			return;
-		$groupings	= ['missionId'];														//  group by mission ID to apply HAVING clause
-		$havings	= array(																	//  apply filters after grouping
+		$groupings	= ['missionId'];															//  group by mission ID to apply HAVING clause
+		$havings	= [																			//  apply filters after grouping
 			'creatorId = '.(int) $user->userId,													//
 			'workerId = '.(int) $user->userId,													//
-		);
+		];
 		$userProjects	= $this->modelProject->getUserProjects( $user->userId );			//  get projects assigned to user
 		if( $userProjects )																	//  projects found
 			$havings[]	= 'projectId IN ('.join( ',', array_keys( $userProjects ) ).')';	//  add to HAVING clause
 		$havings	= [join( ' OR ', $havings )];										//	render HAVING clause
 
 		//  --  TASKS  --  //
-			$filters	= array(																//  task filters
+			$filters	= [																		//  task filters
 			'type'		=> 0,																	//  tasks only
-			'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
-			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  present and past (overdue)
-		);
+			'status'	=> [0, 1, 2, 3],														//  states: new, accepted, progressing, ready
+			'dayStart'	=> '<= '.date( "Y-m-d", time() ),								//  present and past (overdue)
+		];
 		$order	= ['priority' => 'ASC'];
-		$tasks	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered tasks ordered by priority
+		$tasks	= $this->modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered tasks ordered by priority
 
 		//  --  EVENTS  --  //
-		$filters	= array(																	//  event filters
+		$filters	= [																			//  event filters
 			'type'		=> 1,																	//  events only
-			'status'	=> [0, 1, 2, 3],													//  states: new, accepted, progressing, ready
-			'dayStart'	=> '<= '.date( "Y-m-d", time() ),										//  starting today
-		);
+			'status'	=> [0, 1, 2, 3],														//  states: new, accepted, progressing, ready
+			'dayStart'	=> '<= '.date( "Y-m-d", time() ),								//  starting today
+		];
 		$order	= ['timeStart' => 'ASC'];
-		$events	= $this->modelMission->getAll( $filters, $order, NULL, NULL, $groupings, $havings );	//  get filtered events ordered by start time
+		$events	= $this->modelMission->getAll( $filters, $order, [], [], $groupings, $havings );	//  get filtered events ordered by start time
 
 		if( !$events && !$tasks )																//  user has neither tasks nor events
 			return;																				//  do not send a mail, leave user alone
 
-		$mail	= new Mail_Work_Mission_Daily( $this->env, array(								//  create mail and populate data
+		$mail	= new Mail_Work_Mission_Daily( $this->env, [								//  create mail and populate data
 			'user'		=> $user,
 			'tasks'		=> $tasks,
 			'events'	=> $events
-		) );
+		] );
 		$this->logicMail->handleMail( $mail, $user, $language );
 		return TRUE;
 	}

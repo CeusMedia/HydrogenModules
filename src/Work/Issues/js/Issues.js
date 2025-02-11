@@ -34,7 +34,7 @@ var Issues = {
             dataType: "json",
             success: function (response) {
                 var table = $(selector + " tbody");
-                Issues.renderIssues(table, response);
+                Issues.renderIssues(table, response.data);
             },
             error: function (response, message, error) {
                 UI.Messenger.noteFailure("AJAX request (Issues:loadLatest) failed: " + message);
@@ -58,7 +58,7 @@ var Issues = {
             dataType: "json",
             success: function (response) {
                 var table = $(selector + " tbody").html("");
-                Issues.renderIssues(table, response);
+                Issues.renderIssues(table, response.data);
             },
             error: function (response, message, error) {
                 UI.Messenger.noteFailure("AJAX request (Issue:loadLatestDone) failed: " + message);

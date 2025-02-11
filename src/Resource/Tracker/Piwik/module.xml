@@ -21,7 +21,7 @@ list>
 ]]></description>
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Resource/Tracker/Matomo">End of life: Use module Resource:Tracker:Matomo instead!</deprecation>
 	<category>Resource</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -34,15 +34,17 @@ list>
 	<log version="0.4.2">Switch to HTTPS.</log>
 	<log version="0.4.3">Announce deprecation. Use Resource:Tracker:Matomo instead.</log>
 	<log version="0.4.4">Use general module main switch.</log>
+	<log version="0.4.5">Extract hook to own class.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Piwik.php</class>
+		<class>Hook/Tracker/Piwik.php</class>
 		<class>View/Piwik.php</class>
 		<template>piwik/index.php</template>
 		<locale>de/html/piwik/index.html</locale>
-		<script deprecated="reintegrated in helper">piwik.js</script>
+		<script>piwik.js</script>
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
@@ -51,7 +53,7 @@ list>
 	<config protected="yes" mandatory="no" type="string" name="local.path" title="path to local installation">vendor/piwik/piwik/</config>
 	<config protected="yes" mandatory="yes" type="string" name="URI" title="URI to Piwik service">https://stats.ceusmedia.de/</config>
 	<link access="public" path="piwik/index"/>
-	<hook type="resource" resource="Env" event="init">Controller_Piwik::___onEnvInit</hook>
-	<hook type="resource" resource="Page" event="applyModules">Controller_Piwik::___onPageApplyModules</hook>
-	<hook type="resource" resource="Page" event="build">Controller_Piwik::___onPageBuild</hook>
+	<hook type="resource" resource="Env" event="init">Hook_Piwik::onEnvInit</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_Piwik::onPageApplyModules</hook>
+	<hook type="resource" resource="Page" event="build">Hook_Piwik::onPageBuild</hook>
 </module>

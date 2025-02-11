@@ -17,6 +17,7 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 	 *	This method is called after construction is done and right before generation takes place.
 	 *	@access		protected
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -26,7 +27,8 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 		$this->addThemeStyle( 'site.user.css' );
 		$this->addThemeStyle( 'site.work.issue.css' );
 		$this->addBodyClass( 'moduleWorkIssues' );
-		$this->words		= (array) $this->getWords( 'work/issue' );
+		$this->words		= $this->getWords( 'work/issue' );
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );										//  get model of users
 		$this->modelIssue		= new Model_Issue( $this->env );									//  get model of issues
@@ -34,7 +36,11 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 		$this->modelIssueChange	= new Model_Issue_Change( $this->env );								//  get model of issue changes
 	}
 
-	protected function prepareFacts( array $data )
+	/**
+	 *	@param		array		$data
+	 *	@return		void
+	 */
+	protected function prepareFacts( array $data ): void
 	{
 		$issue		= $data['issue'];
 
@@ -52,11 +58,15 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 			'<span class="issue-type type-'.$issue->type.'">'.$this->words['types'][$issue->type].'</span>',
 			$this->words['types'][$issue->type]
 		);
+		/** @noinspection XmlDeprecatedElement */
+		/** @noinspection HtmlDeprecatedTag */
 		$this->factsMain->add(
 			'title',
 			'<big><a href="./work/issue/edit/'.$issue->issueId.'">'.$issue->title.'</a></big>',
 			$issue->title
 		);
+		/** @noinspection XmlDeprecatedElement */
+		/** @noinspection HtmlDeprecatedTag */
 		$this->factsMain->add(
 			'content',
 			'<tt>'.nl2br( $issue->content ).'</tt><br/><br/>',
@@ -101,17 +111,19 @@ abstract class Mail_Work_Issue_Abstract extends Mail_Abstract
 		if( $issue->reporterId ){
 			$this->factsAll->add(
 				'reporter',
-				$this->renderUser( $issue->reporter, TRUE ),
+				$this->renderUser( $issue->reporter ),
 				$this->renderUser( $issue->reporter, FALSE )
 			);
 		}
 		if( $issue->managerId ){
 			$this->factsAll->add(
 				'manager',
-				$this->renderUser( $issue->manager, TRUE ),
+				$this->renderUser( $issue->manager ),
 				$this->renderUser( $issue->manager, FALSE )
 			);
 		}
+		/** @noinspection XmlDeprecatedElement */
+		/** @noinspection HtmlDeprecatedTag */
 		$this->factsAll->add(
 			'id',
 			'<tt>#'.$issue->issueId.'</tt>',

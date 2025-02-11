@@ -2,6 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Page $view */
+/** @var array<string,array<string,string>> $words */
+/** @var string $path */
+/** @var Entity_Page $page */
+/** @var array<string> $controllers */
+/** @var bool $useAuth */
+/** @var array<int|string,string> $parentMap */
+/** @var array<string,string> $masterTemplates */
+/** @var ?int $scope */
+
 $w				= (object) $words['add'];
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
@@ -59,7 +69,7 @@ return '
 							<label for="input_page_identifier" class="mandatory required">'.$w->labelIdentifier.'</label>
 							<div class="input-prepend">
 								<span class="add-on"><small>'.$path.'</small></span>
-								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" required="required" value="'.htmlentities( $page->identifier, ENT_QUOTES, 'UTF-8' ).'"/>
+								<input type="text" name="page_identifier" class="span6 mandatory required" id="input_page_identifier" required="required" value="'.htmlentities( $page->identifier ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 							</div>
 						</div>
 					</div>
@@ -107,8 +117,8 @@ return '
 					<h4>Erreichbarkeit</h4>
 					<div class="row-fluid">
 						<div class="span3">
-							<label for="input_page_status" class="muted">'.$w->labelStatus.'</label>
-							<select name="page_status" class="span12 muted" id="input_page_status">'.$optStatus.'</select>
+							<label for="input_page_status">'.$w->labelStatus.'</label>
+							<select name="page_status" class="span12" id="input_page_status">'.$optStatus.'</select>
 						</div>
 						'.$colAccess.'
 					</div>

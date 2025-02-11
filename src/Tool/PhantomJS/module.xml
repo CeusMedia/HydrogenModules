@@ -12,7 +12,7 @@ See section "Installation" on https://packagist.org/packages/jakoch/phantomjs-in
 
 ## Way 2: Use global/manual binary
 
-Manual installation: http://phantomjs.org/download.html
+Manual installation: https://phantomjs.org/download.html
 Set module config "path.binary" to global or manual path.
 Example for Linux: <code>/usr/local/bin/phantomjs</code>
 
@@ -23,7 +23,7 @@ Example for Linux: <code>/usr/local/bin/phantomjs</code>
 	<log version="0.3">Improve binary path handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
-	<license source="http://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<category>Tools</category>
 	<files>
 		<class>Resource/PhantomJS.php</class>

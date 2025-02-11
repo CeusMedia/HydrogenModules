@@ -5,15 +5,26 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Blog extends Hook
 {
-	public static function onViewRenderContent( Environment $env, $context, $module, array & $payload )
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		Exception
+	 */
+	public function onViewRenderContent(): void
 	{
-		$data		= (object) $payload;
-		$pattern	= "/^(.*)(\[blog:(.+)\])(.*)$/sU";
-		while( preg_match( $pattern, $data->content ) ){
-			$id				= trim( preg_replace( $pattern, "\\3", $data->content ) );
-			$content		= View_Info_Blog::renderPostAbstractPanelStatic( $env, $id );
-			$replacement	= "\\1".$content."\\4";													//  insert content of nested page...
-			$data->content	= preg_replace( $pattern, $replacement, $data->content );				//  ...into page content
+		$content	= $this->payload['content'];
+
+		/** @todo remove this legacy support */
+		$pattern	= "/\[blog:(\S+)\]/sU";															//  old syntax
+		if( preg_match( $pattern, $content ) )														//  found instance of old syntax
+			$content	= preg_replace( $pattern, '[blog id="\\1"]', $content );			//  replace by new syntax
+
+		$processor	= new Logic_Shortcode( $this->env );
+		$processor->setContent( $content );
+		while( $attr = $processor->find( 'blog' ) ){
+			$panel	= View_Info_Blog::renderPostAbstractPanelStatic( $this->env, $attr['id'] );
+			$processor->replaceNext( 'blog', $panel );
 		}
+		$this->payload['content']	= $processor->getContent();
 	}
 }

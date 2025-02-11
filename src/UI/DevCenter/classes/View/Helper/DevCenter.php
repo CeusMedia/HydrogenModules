@@ -3,7 +3,7 @@
 use CeusMedia\Bootstrap\Nav\TabbableNavbar;
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\CamelCase as TextCamelCase;
-use CeusMedia\Common\UI\HTML\Tree\VariableDump as HtmlVariableDump;
+use CeusMedia\Common\UI\HTML\Tree\VariableDump as HtmlTreeVariableDump;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -32,14 +32,14 @@ class View_Helper_DevCenter
 		foreach( $resourceDevCenter->getResources() as $resource ){
 			$id		= preg_replace( "/[^a-z0-9 _-]/i", "", $resource->key );
 			$id		= TextCamelCase::convert( 'tab'.ucfirst( $id ) );
-			$data	= HtmlTreeVariableDump::dumpVar( $resource->value, !TRUE, !TRUE );
+			$data	= HtmlTreeVariableDump::dumpVar( $resource->value, FALSE );
 			$count	= HtmlTreeVariableDump::$count;
 			if( $count )
 				$resource->label	.= '&nbsp;&nbsp;<span class="badge">'.$count.'</span>';
 			$tabs->add( $id, $resource->label, $data );
 		}
 		$current	= $this->session->get( 'DevCenterTab' );
-		$tabs		= $tabs->render( $current, $label, $url );
+		$tabs		= $tabs->render();
 		$content	= HtmlTag::create( 'div', $tabs, ['id' => "DevCenterContent"] );		//
 		$handleTop	= HtmlTag::create( 'div', "====", ['id' => 'DevCenterHandleTop'] );	//
 

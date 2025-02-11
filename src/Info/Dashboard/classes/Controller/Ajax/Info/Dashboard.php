@@ -35,10 +35,10 @@ class Controller_Ajax_Info_Dashboard extends AjaxController
 				if( $entry->title === $title )
 					$this->respondError( -4, 'Another dashboard already has this title.' );
 
-		$result	= (bool) $this->model->edit( $currentDashboard->dashboardId, array(
+		$result	= (bool) $this->model->edit( $currentDashboard->dashboardId, [
 			'title'			=> $title,
 			'modifiedAt'	=> time(),
-		) );
+		] );
 		$this->respondData( $result );
 	}
 

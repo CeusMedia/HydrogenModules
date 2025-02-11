@@ -1,6 +1,12 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as Env;
+
+/** @var Env $env */
+/** @var View_Work_Issue $view */
+/** @var array<string,array<string,string>> $words */
+/** @var object $issue */
 
 $types	= $words['types'];
 krsort( $types );
@@ -41,7 +47,7 @@ $(document).ready(function(){
 	});
 });';
 
-$env->page->js->addScript( $script );
+$env->getPage()->js->addScript( $script );
 
 $content	= $issue->content;
 if( $env->getModules()->has( 'UI_Markdown' ) )

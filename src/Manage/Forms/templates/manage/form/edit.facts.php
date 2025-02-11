@@ -4,6 +4,13 @@ use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var object $form */
+/** @var array<object> $mailsCustomer */
+/** @var array<object> $mailsManager */
+/** @var bool $hasFills */
+/** @var array<string,string|HtmlTag> $navButtons */
+
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -33,8 +40,6 @@ $optMailManager		= ['' => '- keine -'];
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager		= HtmlElements::Options( $optMailManager, $form->managerMailId );
-
-
 
 $listReferences = '<em class="muted">Keine.</em>';
 
@@ -98,12 +103,18 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span6">
-					<label for="input_customerMailId">Ergebnis-Email an Kunden (=Absender)</label>
+					<label for="input_customerMailId">Ergebnis-Email an Kunden <small class="muted">(=Absender)</small></label>
 					<select name="customerMailId" id="input_customerMailId" class="span12">'.$optMailCustomer.'</select>
 				</div>
 				<div class="span6">
-					<label for="input_managerMailId">Ergebnis-Email an Manager (=Empfänger)</label>
+					<label for="input_managerMailId">Ergebnis-Email an Manager <small class="muted">(=Empfänger)</small></label>
 					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_forwardOnSuccess">URL-Weiterleitung bei Erfolg<!-- <small class="muted">(...)</small>--></label>
+					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12" value="'.htmlentities( $form->forwardOnSuccess ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="buttonbar">
@@ -114,12 +125,12 @@ return '
 					'class'		=> 'btn btn-primary',
 				] ).'
 				'.$navButtons['nextView'].'
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', array(
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 					'href'		=> './manage/form/remove/'.$form->formId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> $hasFills ? 'disabled' : NULL,
 					'onclick'	=> "return confirm('Wirklich ?');",
-				) ).'
+				] ).'
 			</div>
 		</form>
 	</div>

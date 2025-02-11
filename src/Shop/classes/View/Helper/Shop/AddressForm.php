@@ -6,13 +6,12 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Shop_AddressForm
 {
 	protected Environment $env;
-	protected Model_Address $model;
 	protected array $words;
 	protected string $defaultCountryCode	= 'DE';
-	protected ?object $address				= NULL;
+	protected ?Entity_Address $address				= NULL;
 	protected ?string $heading				= NULL;
 	protected ?string $textTop				= NULL;
-	protected $type							= 0;
+	protected int $type						= Model_Address::TYPE_LOCATION;
 
 	public function __construct( Environment $env )
 	{
@@ -51,27 +50,27 @@ class View_Helper_Shop_AddressForm
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_institution">'.$w->labelInstitution.'</label>
-							<input type="text" name="institution" id="input_institution" class="span12" value="'.htmlentities( $d->institution, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="institution" id="input_institution" class="span12" value="'.htmlentities( $d->institution ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span5">
 							<label for="input_firstname" class="required mandatory">'.$w->labelFirstname.'</label>
-							<input type="text" name="firstname" id="input_firstname" class="span12" required="required" value="'.htmlentities( $d->firstname, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="firstname" id="input_firstname" class="span12" required="required" value="'.htmlentities( $d->firstname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span7">
 							<label for="input_lastname"" class="required mandatory">'.$w->labelLastname.'</label>
-							<input type="text" name="surname" id="input_surname" class="span12" required="required" value="'.htmlentities( $d->surname, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="surname" id="input_surname" class="span12" required="required" value="'.htmlentities( $d->surname ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span8">
 							<label for="input_email" class="required mandatory">'.$w->labelEmail.'</label>
-							<input type="text" name="email" id="input_email" class="span12" required="required" value="'.htmlentities( $d->email, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="email" id="input_email" class="span12" required="required" value="'.htmlentities( $d->email ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span4">
 							<label for="input_phone">'.$w->labelPhone.'</label>
-							<input type="text" name="phone" id="input_phone" class="span12" value="'.htmlentities( $d->phone, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="phone" id="input_phone" class="span12" value="'.htmlentities( $d->phone ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 				</div>
@@ -80,17 +79,17 @@ class View_Helper_Shop_AddressForm
 					<div class="row-fluid">
 						<div class="span12">
 							<label for="input_address" class="required mandatory">'.$w->labelAddress.'</label>
-							<input type="text" name="street" id="input_street" class="span12" required="required" value="'.htmlentities( $d->street, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="street" id="input_street" class="span12" required="required" value="'.htmlentities( $d->street ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span3">
 							<label for="input_postcode" class="required mandatory">'.$w->labelPostcode.'</label>
-							<input type="text" name="postcode" id="input_postcode" class="span12" required="required" value="'.htmlentities( $d->postcode, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="postcode" id="input_postcode" class="span12" required="required" value="'.htmlentities( $d->postcode ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 						<div class="span9">
 							<label for="input_city" class="required mandatory">'.$w->labelCity.'</label>
-							<input type="text" name="city" id="input_city" class="span12" required="required" value="'.htmlentities( $d->city, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="city" id="input_city" class="span12" required="required" value="'.htmlentities( $d->city ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 					<div class="row-fluid">
@@ -100,7 +99,7 @@ class View_Helper_Shop_AddressForm
 						</div>
 						<div class="span6">
 							<label for="input_region">'.$w->labelRegion.'</label>
-							<input type="text" name="region" id="input_region" class="span12" value="'.htmlentities( $d->region, ENT_QUOTES, 'UTF-8' ).'"/>
+							<input type="text" name="region" id="input_region" class="span12" value="'.htmlentities( $d->region ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 						</div>
 					</div>
 				</div>
@@ -119,20 +118,15 @@ jQuery(document).ready(function(){
 		jQuery(this).typeahead({
 			source: '.json_encode( array_values( $this->words['countries'] ) ).',
 			items: 4
-		});
+		})
 	});
 });
 </script>';
 	}
 
-	public function setAddress( $addressOrId ): self
+	public function setAddress( Entity_Address $address ): self
 	{
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		$this->address	= $address;
 		return $this;
 	}
 

@@ -6,11 +6,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_AddressView
 {
-	const OUTPUT_UNKNOWN		= 0;
-	const OUTPUT_TEXT			= 1;
-	const OUTPUT_HTML			= 2;
+	public const OUTPUT_UNKNOWN		= 0;
+	public const OUTPUT_TEXT		= 1;
+	public const OUTPUT_HTML		= 2;
 
-	const OUTPUTS				= [
+	public const OUTPUTS			= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,
@@ -19,9 +19,9 @@ class View_Helper_Shop_AddressView
 	protected Environment $env;
 	protected Model_Address $model;
 	protected array $words;
-	protected int $output			= self::OUTPUT_HTML;
-	protected ?object $address		= NULL;
-	protected ?string $textTop		= NULL;			//  unused atm
+	protected int $output				= self::OUTPUT_HTML;
+	protected ?Entity_Address $address	= NULL;
+	protected ?string $textTop			= NULL;			//  unused atm
 
 	public function __construct( Environment $env )
 	{
@@ -49,7 +49,7 @@ class View_Helper_Shop_AddressView
 	public function render(): string
 	{
 		$content	= '';
-		if( $this->address ){
+		if( NULL !== $this->address ){
 			switch( $this->output ){
 				case self::OUTPUT_HTML:
 					$content	= $this->renderAsHtml();
@@ -62,14 +62,13 @@ class View_Helper_Shop_AddressView
 		return $content;
 	}
 
-	public function setAddress( $addressOrId ): self
+	/**
+	 *	@param		Entity_Address		$address
+	 *	@return		self
+	 */
+	public function setAddress( Entity_Address $address ): self
 	{
-		if( is_object( $addressOrId ) )
-			$this->address	= $addressOrId;
-		else if( preg_match( '/^[0-9]+$/', $addressOrId ) )
-			$this->address	= $this->model->get( $addressOrId );
-		if( !$this->address )
-			throw new InvalidArgumentException( 'Neither address nor valid address ID given' );
+		$this->address	= $address;
 		return $this;
 	}
 
@@ -94,19 +93,19 @@ class View_Helper_Shop_AddressView
 
 	protected function renderAsHtml(): string
 	{
-		$w		= (object) $this->words['view'];
+//		$w		= (object) $this->words['view'];
 		$d		= new Dictionary( (array) $this->address );
 //		print_m( $d->getAll() );die;
 		$list	= [];
 		if( trim( $d->get( 'institution' ) ) )
 			$list[]	= $this->renderRow( 'institution', $this->escape( $d->get( 'institution' ) ) );
 		$list[]	= $this->renderRow( 'name', $this->escape( $d->get( 'firstname' ).' '.$d->get( 'surname' ) ) );
-		$list[]	= $this->renderRow( 'address', join( '<br/>', array(
+		$list[]	= $this->renderRow( 'address', join( '<br/>', [
 			$this->escape( $d->get( 'street' ) ),
 			$this->escape( $d->get( 'postcode' ).' '.$d->get( 'city' ) ),
 			$this->getCountryLabel( $d->get( 'country' ) ),
 			$this->escape( $d->get( 'region' ) ),
-		) ) );
+		] ) );
 		$list[]	= $this->renderRow( 'email', $this->escape( $d->get( 'email' ) ) );
 		if( trim( $d->get( 'phone' ) ) )
 			$list[]	= $this->renderRow( 'phone', $this->escape( $d->get( 'phone' ) ) );
@@ -123,12 +122,12 @@ class View_Helper_Shop_AddressView
 		if( trim( $d->get( 'institution' ) ) )
 			$helperFacts->add( 'institution', '', $d->get( 'institution' ) );
 		$helperFacts->add( 'name', '', $d->get( 'firstname' ).' '.$d->get( 'surname' ) );
-		$helperFacts->add( 'address', '', join( "\n", array(
+		$helperFacts->add( 'address', '', join( "\n", [
 			$d->get( 'street' ),
 			$d->get( 'postcode' ).' '.$d->get( 'city' ),
 			$this->getCountryLabel( $d->get( 'country' ) ),
 			$d->get( 'region' ),
-		) ) );
+		] ) );
 		$helperFacts->add( 'email', '', $d->get( 'email' ) );
 		if( trim( $d->get( 'phone' ) ) )
 			$helperFacts->add( 'phone', '', $d->get( 'phone' ) );

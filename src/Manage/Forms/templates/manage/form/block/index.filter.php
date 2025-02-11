@@ -1,6 +1,12 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+declare(strict_types=1);
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var Dictionary $filters */
+/** @var array<string> $identifiers */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
@@ -15,7 +21,7 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
 	'class'	=> 'btn btn-small btn-inverse'
 ] );
 
-$optIdentifier	= array( '' => '- alle -');
+$optIdentifier	= ['' => '- alle -'];
 foreach( $identifiers as $identifier )
 	$optIdentifier[$identifier]	= $identifier;
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filters->get( 'identifier' ) );

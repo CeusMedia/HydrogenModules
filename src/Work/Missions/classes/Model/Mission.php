@@ -11,14 +11,14 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Mission extends Model
 {
-	const PRIORITY_NONE			= 0;
-	const PRIORITY_HIGHEST		= 1;
-	const PRIORITY_HIGH			= 2;
-	const PRIORITY_NORMAL		= 3;
-	const PRIORITY_LOW			= 4;
-	const PRIORITY_LOWEST		= 5;
+	public const PRIORITY_NONE			= 0;
+	public const PRIORITY_HIGHEST		= 1;
+	public const PRIORITY_HIGH			= 2;
+	public const PRIORITY_NORMAL		= 3;
+	public const PRIORITY_LOW			= 4;
+	public const PRIORITY_LOWEST		= 5;
 
-	const PRIORITIES			= [
+	public const PRIORITIES				= [
 		self::PRIORITY_NONE,
 		self::PRIORITY_HIGHEST,
 		self::PRIORITY_HIGH,
@@ -27,15 +27,15 @@ class Model_Mission extends Model
 		self::PRIORITY_LOWEST,
 	];
 
-	const STATUS_ABORTED		= -2;
-	const STATUS_REJECTED		= -1;
-	const STATUS_NEW			= 0;
-	const STATUS_ACCEPTED		= 1;
-	const STATUS_PROGRESS		= 2;
-	const STATUS_READY			= 3;
-	const STATUS_FINISHED		= 4;
+	public const STATUS_ABORTED			= -2;
+	public const STATUS_REJECTED		= -1;
+	public const STATUS_NEW				= 0;
+	public const STATUS_ACCEPTED		= 1;
+	public const STATUS_PROGRESS		= 2;
+	public const STATUS_READY			= 3;
+	public const STATUS_FINISHED		= 4;
 
-	const STATUSES				= [
+	public const STATUSES				= [
 		self::STATUS_ABORTED,
 		self::STATUS_REJECTED,
 		self::STATUS_NEW,
@@ -45,16 +45,16 @@ class Model_Mission extends Model
 		self::STATUS_FINISHED,
 	];
 
-	const TYPE_TASK				= 0;
-	const TYPE_EVENT			= 1;
+	public const TYPE_TASK				= 0;
+	public const TYPE_EVENT				= 1;
 
-	const TYPES					= [
+	public const TYPES					= [
 		self::TYPE_TASK.
 		self::TYPE_EVENT,
 	];
 
 	/**	@var	$name		string		Table name without prefix of database connection */
-	protected string $name				= "missions";
+	protected string $name				= 'missions';
 
 	/**	@var	array		$columns	List of columns within table */
 	protected array $columns			= [
@@ -82,7 +82,7 @@ class Model_Mission extends Model
 	];
 
 	/**	@var	string		$primaryKey		Name of column with primary key */
-	protected string $primaryKey			= "missionId";
+	protected string $primaryKey			= 'missionId';
 
 	/**	@var	array		$name			List of columns which are a foreign key and/or indexed */
 	protected array $indices				= [
@@ -98,5 +98,8 @@ class Model_Mission extends Model
 	];
 
 	/**	@var	integer		$fetchMode		Fetch mode, see PDO documentation */
-	protected int $fetchMode				= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className				= 'Entity_Mission';
 }

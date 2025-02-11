@@ -1,17 +1,18 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Shortcode extends Logic
 {
-	const PARSE_STATUS_START					= 0;
-	const PARSE_STATUS_READ_CODE				= 1;
-	const PARSE_STATUS_READ_ATTR_KEY			= 2;
-	const PARSE_STATUS_READ_ATTR_VALUE_QUOTE	= 3;
-	const PARSE_STATUS_READ_ATTR_VALUE			= 4;
-	const PARSE_STATUS_FINAL					= 5;
+	public const PARSE_STATUS_START					= 0;
+	public const PARSE_STATUS_READ_CODE				= 1;
+	public const PARSE_STATUS_READ_ATTR_KEY			= 2;
+	public const PARSE_STATUS_READ_ATTR_VALUE_QUOTE	= 3;
+	public const PARSE_STATUS_READ_ATTR_VALUE		= 4;
+	public const PARSE_STATUS_FINAL					= 5;
 
-	const PARSE_STATUSES						= [
+	public const PARSE_STATUSES						= [
 		self::PARSE_STATUS_START,
 		self::PARSE_STATUS_READ_CODE,
 		self::PARSE_STATUS_READ_ATTR_KEY,
@@ -20,33 +21,42 @@ class Logic_Shortcode extends Logic
 		self::PARSE_STATUS_FINAL,
 	];
 
-	protected $content;
-	protected $ignoredBlocks		= [];
-	protected $moduleConfig;
-	protected $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
+	protected ?string $content			= NULL;
+	protected array $ignoredBlocks		= [];
+	protected Dictionary $moduleConfig;
+	protected string $pattern				= "/^(.*)(\[##shortcode##(\s[^\]]+)?\])(.*)$/sU";
 
-	public function find( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' )
+	/**
+	 *	@param		string		$shortCode
+	 *	@param		array		$defaultAttributes
+	 *	@param		string		$defaultMode
+	 *	@return		bool|array
+	 *	@throws		Exception
+	 */
+	public function find( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' ): bool|array
 	{
 		$mode	= $this->moduleConfig->get( 'mode' );
 		if( !in_array( $mode, ['allow', 'deny'] ) )
 			$mode	=  $defaultMode;
 		$allow	= preg_split( '/, */', $this->moduleConfig->get( 'allow' ) );
 		$deny	= preg_split( '/, */', $this->moduleConfig->get( 'deny' ) );
-		if( $mode === "deny" && !in_array( $shortCode, $allow ) )
-			return;
-		if( $mode === "allow" && in_array( $shortCode, $deny ) )
-			return;
+		if( 'deny' === $mode && !in_array( $shortCode, $allow ) )
+			return FALSE;
+		if( 'allow' === $mode && in_array( $shortCode, $deny ) )
+			return FALSE;
 
 		$pattern		= $this->getShortCodePattern( $shortCode );
 		if( preg_match( $pattern, $this->content ) ){
 			$code		= preg_replace( $pattern, "\\2", $this->content );
 			$shortcode	= (object) $this->parse( $code );
-			$attr		= array_merge( $defaultAttributes, $shortcode->attributes );
-			return $attr;
+			return array_merge( $defaultAttributes, $shortcode->attributes );
 		}
 		return FALSE;
 	}
 
+	/**
+	 *	@return		string
+	 */
 	public function getContent(): string
 	{
 		if( !$this->ignoredBlocks )
@@ -59,7 +69,11 @@ class Logic_Shortcode extends Logic
 		return $content;
 	}
 
-	public function has( string $shortCode, array $defaultAttributes = [], string $defaultMode = 'allow' ): string
+	/**
+	 *	@param		string		$shortCode
+	 *	@return		string
+	 */
+	public function has( string $shortCode ): string
 	{
 		return preg_match( $this->getShortCodePattern( $shortCode ), $this->content );
 	}
@@ -100,7 +114,7 @@ class Logic_Shortcode extends Logic
 	 *	Will blind ignorable blocks.
 	 *	@access		public
 	 *	@param		string			$content		Content to process on
-	 *	@return		void
+	 *	@return		self
 	 */
 	public function setContent( string $content ): self
 	{
@@ -121,6 +135,9 @@ class Logic_Shortcode extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.ui_shortcode.', TRUE );
@@ -141,10 +158,11 @@ class Logic_Shortcode extends Logic
 
 	/**
 	 *	Parses shortcode string and tries to read parameters.
-	 *	Returns map containing nodename and attributes.
+	 *	Returns map containing node name and attributes.
 	 *	@access		protected
 	 *	@param		string			$string
 	 *	@return		array
+	 *	@throws		RuntimeException
 	 */
 	protected function parse( string $string ): array
 	{
@@ -157,12 +175,12 @@ class Logic_Shortcode extends Logic
 		$bufferAttrVal	= '';
 		while( $position < $length ){
 			$char	= $string[$position];
-			if( $status == self::PARSE_STATUS_START ){
+			if( self::PARSE_STATUS_START === $status ){
 				if( $char !== "[" )
-					throw new Exception( 'Must start with [' );
+					throw new RuntimeException( 'Must start with [' );
 				$status = self::PARSE_STATUS_READ_CODE;
 			}
-			else if( $status == self::PARSE_STATUS_READ_CODE ){
+			else if( self::PARSE_STATUS_READ_CODE === $status ){
 				if( in_array( $char, [" ", "\n"] ) ){
 					$bufferAttrKey	= '';
 					$status	= self::PARSE_STATUS_READ_ATTR_KEY;
@@ -171,19 +189,18 @@ class Logic_Shortcode extends Logic
 					$nodename	.= $char;
 				}
 			}
-			else if( $status == self::PARSE_STATUS_READ_ATTR_KEY ){
+			else if( self::PARSE_STATUS_READ_ATTR_KEY === $status ){
 				if( in_array( $char, [" ", "\n"] ) ){
 					if( $bufferAttrKey ){
 						$attributes[$bufferAttrKey] = TRUE;
 						$bufferAttrKey	= '';
-						$status	= self::PARSE_STATUS_READ_ATTR_KEY;
 						continue;
 					}
 				}
-				else if( $char == "=" ){
+				else if( '=' === $char ){
 					$status	= self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE;
 				}
-				else if( $char == "]" ){
+				else if( ']' === $char ){
 					if( $bufferAttrKey )
 						$attributes[$bufferAttrKey] = TRUE;
 					$status	= self::PARSE_STATUS_FINAL;
@@ -193,14 +210,14 @@ class Logic_Shortcode extends Logic
 					$bufferAttrKey	.= $char;
 				}
 			}
-			else if( $status == self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE ){
-				if( $char !== '"' )
-					throw new Exception( 'Attribute value must be double quoted' );
+			else if( self::PARSE_STATUS_READ_ATTR_VALUE_QUOTE === $status  ){
+				if( '"' !== $char )
+					throw new RuntimeException( 'Attribute value must be double quoted' );
 				$bufferAttrVal	= '';
 				$status	= self::PARSE_STATUS_READ_ATTR_VALUE;
 			}
-			else if( $status == self::PARSE_STATUS_READ_ATTR_VALUE ){
-				if( $char == '"' ){
+			else if( self::PARSE_STATUS_READ_ATTR_VALUE === $status ){
+				if( '"' === $char ){
 					$attributes[$bufferAttrKey] = $bufferAttrVal;
 					$bufferAttrKey	= '';
 					$status	= self::PARSE_STATUS_READ_ATTR_KEY;
@@ -209,11 +226,10 @@ class Logic_Shortcode extends Logic
 					$bufferAttrVal	.= $char;
 				}
 			}
-			if( $status == self::PARSE_STATUS_FINAL ){
+			if( self::PARSE_STATUS_FINAL === $status ){
 				break;
 			}
 			$position++;
-			continue;
 		}
 		return [
 			'nodename'		=> $nodename,

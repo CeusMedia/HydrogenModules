@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Info_Workshop $view */
+/** @var object $workshop */
+/** @var string $pathImages */
+
 $imageAlignH	= [
 	Model_Workshop::IMAGE_ALIGN_H_AUTO		=> 'auto',
 	Model_Workshop::IMAGE_ALIGN_H_LEFT		=> 'left',
@@ -26,14 +30,14 @@ if( $workshop->image ){
 	] );
 }
 $facts		= HtmlTag::create( 'div', $workshop->description ).'<br/>';
-$panel		= HtmlTag::create( 'div', array(
+$panel		= HtmlTag::create( 'div', [
 	$heading,
 	$image,
 	$facts,
 	HtmlTag::create( 'div', [
 		$buttonCancel
 	], ['class' => 'buttonbar'] ),
-), ['class' => 'workshop-view'] );
+], ['class' => 'workshop-view'] );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/info/workshop/view/' ) );
 

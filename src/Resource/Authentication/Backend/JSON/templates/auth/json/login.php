@@ -1,5 +1,8 @@
 <?php
 
+/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var ?string $from */
+
 $panelLogin	= $view->loadTemplateFile( 'auth/json/login.form.php' );
 
 extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/json/login/', ['from' => $from] ) );
@@ -7,12 +10,8 @@ extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/json/login/
 $tabs	= View_Auth::renderTabs( $env, 'auth/json/login' );
 
 return $tabs.HTML::DivClass( "auth-login-text-top", $textTop ).
-HTML::DivClass( "row-fluid", array(
-	HTML::DivClass( "span4",
-		$panelLogin
-	),
-	HTML::DivClass( "span8",
-		HTML::DivClass( "auth-login-text-info", $textInfo )
-	)
-) ).
+HTML::DivClass( "row-fluid", [
+	HTML::DivClass( "span4", $panelLogin ),
+	HTML::DivClass( "span8", HTML::DivClass( "auth-login-text-info", $textInfo ) )
+] ).
 HTML::DivClass( "auth-login-text-bottom", $textBottom );

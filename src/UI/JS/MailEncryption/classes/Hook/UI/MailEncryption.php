@@ -21,29 +21,29 @@ class Hook_UI_MailEncryption extends Hook
 			return;
 		$matches		= [];
 		$pattern	= '@^(.*)<a[^>]+href="mailto:(\S+\@\S+)".*>(.+)</a>(.*)$@siU';					//  pattern to match mail shortcode
-		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail links in content
-			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
-			list( $partName, $partHost )	= explode( '@', $matches[2][0] );						//  extract mail parts
-			$replacement	= HtmlTag::create( 'span', $matches[3][0], array(					//  build replacement ...
+		while( preg_match( $pattern, $payload['content'] ) ){										//  while mail links in content
+			preg_match_all( $pattern, $payload['content'], $matches );							//  get all match parts
+			[$partName, $partHost]	= explode( '@', $matches[2][0] );						//  extract mail parts
+			$replacement	= HtmlTag::create( 'span', $matches[3][0], [						//  build replacement ...
 				'class'			=> 'encrypted-mail',												//  ... set identifier class for JS decryption
 				'data-name'		=> $partName,														//  ... set name part
 				'data-host'		=> $partHost,														//  ... set host part
-			) );
+			] );
 			$replacement	= "\\1".$replacement."\\4";												//  build preg replacement
 			$payload['content']	= preg_replace( $pattern, $replacement, $payload['content'], 1 );		//  and replace in page content
 		}
 
 		$pattern	= '@^(.*)(\[\[mailto:(.+)\@(.*)(\|(.+))?\]\])(.*)$@siU';						//  pattern to match mail shortcode
-		while( preg_match( $pattern, $payload['content'] ) ){											//  while mail shortcodes in content
-			preg_match_all( $pattern, $payload['content'], $matches );								//  get all match parts
+		while( preg_match( $pattern, $payload['content'] ) ){										//  while mail shortcodes in content
+			preg_match_all( $pattern, $payload['content'], $matches );							//  get all match parts
 			$label			= $matches[3][0].'@'.$matches[4][0];									//  glue label from name and host part
 			if( !empty( $matches[6][0] ) )															//  a link label has been set
 				$label	= $matches[6][0];															//  replace glued label by set label
-			$replacement	= HtmlTag::create( 'span', $label, array(							//  build replacement ...
+			$replacement	= HtmlTag::create( 'span', $label, [							//  build replacement ...
 				'class'			=> 'encrypted-mail',												//  ... set identifier class for JS decryption
 				'data-name'		=> $matches[3][0],													//  ... set name part
 				'data-host'		=> $matches[4][0],													//  ... set host part
-			) );
+			] );
 			$replacement	= "\\1".$replacement."\\7";												//  build preg replacement
 			$payload['content']	= preg_replace( $pattern, $replacement, $payload['content'], 1 );		//  and replace in page content
 		}

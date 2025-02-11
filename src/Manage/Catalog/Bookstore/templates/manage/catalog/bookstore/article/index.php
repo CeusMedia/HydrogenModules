@@ -1,7 +1,12 @@
 <?php
+use CeusMedia\HydrogenFramework\View;
+
+/** @var View $view */
+/** @var array $words */
+
 $w			= (object) $words['index'];
 
-$tabs		= $this->renderMainTabs();
+$tabs		= $view->renderMainTabs();
 
 extract( $view->populateTexts( ['top', 'bottom', 'index'], 'html/manage/catalog/bookstore/article/' ) );
 

@@ -1,32 +1,13 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-/**
- *	...
- *	@category		Library
- *	@package		CeusMedia.HydrogenFramework.Environment.Resource
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012-2021 Ceus Media
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@link			https://github.com/CeusMedia/HydrogenFramework
- */
-
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\HydrogenFramework\Environment;
 
-/**
- *	...
- *	@category		Library
- *	@package		CeusMedia.HydrogenFramework.Environment.Resource
- *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2012-2021 Ceus Media
- *	@license		http://www.gnu.org/licenses/gpl-3.0.txt GPL 3
- *	@link			https://github.com/CeusMedia/HydrogenFramework
- */
 class Resource_Disclosure
 {
 	protected Environment $env;
 
-	protected $reflectOptions	= [
+	protected array $reflectOptions	= [
 		'classPrefix'		=> 'Controller_',
 		'readMethods'		=> TRUE,
 		'readParameters'	=> TRUE,
@@ -57,7 +38,7 @@ class Resource_Disclosure
 			if( empty( $module->files->classes ) )
 				continue;
 			foreach( $module->files->classes as $moduleFile )
-				if( preg_match( "/^Controller/", $moduleFile->file ) ){
+				if( str_starts_with( $moduleFile->file, "Controller" ) ){
 					$name	= preg_replace( "/^Controller\/(.+)\.php.?$/", "$1", $moduleFile->file );
 					$controllers[]	= str_replace( "/", "_", $name );
 				}
@@ -113,10 +94,10 @@ class Resource_Disclosure
 					if( $method->class !== $className )												//  method is inherited
 						continue;																	//  skip this method
 				if( $options['skipFramework'] )														//  skipping framework methods is enabled
-					if( substr( $method->class, 0, 4 ) == "CMF_" )									//  method is inherited from framework
+					if( str_starts_with($method->class, "CMF_" ) )									//  method is inherited from framework
 						continue;																	//  skip this method
 				if( $options['skipMagic'] )															//  skipping magic methods is enabled
-					if( substr( $method->name, 0, 2 ) == "__" )										//  method is magic
+					if( str_starts_with($method->name, "__" ) )										//  method is magic
 						continue;																	//  skip this method
 				if( $options['reflectMethod'] )														//  reflecting methods is enabled to
 					$method->reflection	= $methodReflection;										//  store the method reflection object
