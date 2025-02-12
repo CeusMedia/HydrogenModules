@@ -91,6 +91,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/ceus-media/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/amenadiel/jpgraph" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dasprid/enum" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/icewind/smb" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/icewind/streams" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

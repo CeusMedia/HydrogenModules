@@ -17,7 +17,7 @@ class BaseTestCase extends TestCase
 	protected string $path;
 	protected string $pathApp;
 	protected string $pathSrc;
-	protected array $defaultAppOptions;
+	protected array $defaultAppOptions = [];
 
 	protected function setUp(): void
 	{
