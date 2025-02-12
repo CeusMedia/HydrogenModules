@@ -53,6 +53,7 @@
         "mangopay/php-sdk-v2": "*",
         "stripe/stripe-php": "^15.8@beta",
         "phpseclib/phpseclib": "^2.0",
+        "icewind/smb": "3.*",
         "sentry/sentry": "*",
         "monolog/monolog": "3.x-dev",
         "paquettg/php-html-parser": "dev-master",
