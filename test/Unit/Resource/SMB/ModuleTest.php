@@ -8,8 +8,8 @@ class ModuleTest extends BaseTestCase
 	public static string $host			= '';
 	public static string $username		= '';
 	public static string $password		= '';
-	public static string $workgroup	= '';
-	public static string $share		= '';
+	public static string $workgroup		= '';
+	public static string $share			= '';
 
 	protected \Resource_SMB $resource;
 
@@ -27,7 +27,7 @@ class ModuleTest extends BaseTestCase
 		if( '' === self::$host )
 			$this->markTestSkipped( 'No SMB configuration provided' );
 
-		$this->installModule( 'Resource:SMB' );
+//		$this->installModule( 'Resource:SMB' );
 		$env		= $this->createEnvironment();
 		$this->resource	= new \Resource_SMB( $env );
 		$this->resource->connect(
@@ -37,5 +37,11 @@ class ModuleTest extends BaseTestCase
 			self::$password,
 			self::$share
 		);
+	}
+
+	protected function tearDown(): void
+	{
+		parent::tearDown();
+//		$this->uninstallModule( 'Resource:SMB' );
 	}
 }
