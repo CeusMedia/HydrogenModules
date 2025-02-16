@@ -3,7 +3,7 @@
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>
 	<category>User Interface</category>
-	<version>4.4.1-p1</version>
+	<version>5.3.3</version>
 	<log version="2.3.2">Add Bootstrap v2.3.2.</log>
 	<log version="3.3.6">Add Bootstrap v3.3.6 and option to set used version.</log>
 	<log version="3.3.6-p1">Improve file handling in hook.</log>
@@ -18,6 +18,7 @@
 	<log version="4.1.1-p3">Improve handling of missing library.</log>
 	<log version="4.4.1">Add Bootstrap v4.4.1.</log>
 	<log version="4.4.1-p1">Mark module UI:Font:FontAwesome as needed.</log>
+	<log version="5.3.3">Add Bootstrap v5.3.3.</log>
 	<company site="https://twitter.github.com/bootstrap/">Twitter</company>
 	<author site="https://twitter.com/mdo">Mark Otto</author>
 	<author site="https://twitter.com/fat">fat-kun</author>
@@ -56,7 +57,22 @@
 		<style source="common">bootstrap/4.4.1/bootstrap-reboot.css.map</style>
 		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css</style>
 		<style source="common">bootstrap/4.4.1/bootstrap-reboot.min.css.map</style>
-		<style source="common">bootstrap.print.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap.css.map</style>
+		<style source="common">bootstrap/4.6.2/bootstrap.min.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap.min.css.map</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-grid.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-grid.css.map</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-grid.min.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-grid.min.css.map</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-reboot.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-reboot.css.map</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-reboot.min.css</style>
+		<style source="common">bootstrap/4.6.2/bootstrap-reboot.min.css.map</style>
+		<style source="common">bootstrap/5.3.3/bootstrap.css</style>
+		<style source="common">bootstrap/5.3.3/bootstrap.css.map</style>
+		<style source="common">bootstrap/5.3.3/bootstrap.min.css</style>
+		<style source="common">bootstrap/5.3.3/bootstrap.min.css.map</style>
 		<script>bootstrap/2.3.2/bootstrap.js</script>
 		<script>bootstrap/2.3.2/bootstrap.min.js</script>
 		<script>bootstrap/3.3.6/bootstrap.js</script>
@@ -74,10 +90,26 @@
 		<script>bootstrap/4.4.1/bootstrap.js.map</script>
 		<script>bootstrap/4.4.1/bootstrap.min.js</script>
 		<script>bootstrap/4.4.1/bootstrap.min.js.map</script>
+		<script>bootstrap/4.6.2/bootstrap.bundle.js</script>
+		<script>bootstrap/4.6.2/bootstrap.bundle.js.map</script>
+		<script>bootstrap/4.6.2/bootstrap.bundle.min.js</script>
+		<script>bootstrap/4.6.2/bootstrap.bundle.min.js.map</script>
+		<script>bootstrap/4.6.2/bootstrap.js</script>
+		<script>bootstrap/4.6.2/bootstrap.js.map</script>
+		<script>bootstrap/4.6.2/bootstrap.min.js</script>
+		<script>bootstrap/4.6.2/bootstrap.min.js.map</script>
+		<script>bootstrap/5.3.3/bootstrap.js</script>
+		<script>bootstrap/5.3.3/bootstrap.js.map</script>
+		<script>bootstrap/5.3.3/bootstrap.min.js</script>
+		<script>bootstrap/5.3.3/bootstrap.min.js.map</script>
+		<script>bootstrap/5.3.3/bootstrap.bundle.js</script>
+		<script>bootstrap/5.3.3/bootstrap.bundle.js.map</script>
+		<script>bootstrap/5.3.3/bootstrap.bundle.min.js</script>
+		<script>bootstrap/5.3.3/bootstrap.bundle.min.js.map</script>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="no" type="boolean" name="cdn">no</config>
-	<config protected="no" type="string" name="cdn.path">https://maxcdn.bootstrapcdn.com/bootstrap/%s/</config>
+	<config protected="no" type="string" name="cdn.path">https://cdn.jsdelivr.net/npm/bootstrap@%s/dist/</config>
 	<config protected="no" type="boolean" name="local">yes</config>
 	<config protected="no" type="string" name="local.path">bootstrap/%s/</config>
 	<config protected="no" type="string" name="local.theme"></config>
@@ -85,7 +117,7 @@
 	<config protected="no" type="boolean" name="minified">yes</config>
 	<config protected="no" type="boolean" name="responsive">yes</config>
 	<config protected="no" type="boolean" name="bundle">yes</config>
-	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1,4.4.1">2.3.2</config>
+	<config protected="no" type="string" name="version" values="2.3.2,3.3.6,4.1.1,4.4.1,4.6.2,5.3.3">2.3.2</config>
 	<config protected="yes" type="string" name="missing.library" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.module" values="ignore,note,throw">throw</config>
 	<config protected="yes" type="string" name="missing.fontawesome" values="ignore,note,throw">throw</config>
