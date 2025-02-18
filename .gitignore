@@ -7,3 +7,4 @@
 /.phpunit.result.cache
 /tool/config/.phpunit.cache/
 /tmp
+/test/Unit/UI/TEA/tmp
