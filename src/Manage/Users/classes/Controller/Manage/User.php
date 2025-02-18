@@ -276,7 +276,7 @@ class Controller_Manage_User extends Controller
 	{
 		$session	= $this->env->getSession();
 		$limit		= abs( $session->get( 'filter-user-limit', 0 ) );
-		$limit		= 0 !== $limit ?: 15;
+		$limit		= 0 !== $limit ? $limit : 15;
 		$page		= max( 0, (int) $page );
 
 		if( !$this->env->getAcl()->has( 'manage/user' ) )

@@ -11,7 +11,7 @@ class Hook_Auth extends Hook
 		$load	= (object) $this->payload;
 		if( !property_exists( $load, 'exception' ) )
 			throw new Exception( 'No exception data given' );
-		if( !( $load->exception instanceof Exception ) )
+		if( !( $load->exception instanceof Throwable ) )
 			throw new Exception( 'Given exception data is not an exception object' );
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
