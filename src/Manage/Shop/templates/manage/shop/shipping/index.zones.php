@@ -39,7 +39,7 @@ foreach( $countryMap as $countryCode => $countryLabel ){
 	$listCountries[]	= Html::create( 'li', $label );
 }
 $listCountries	= Html::create( 'ul', $listCountries, ['class' => 'unstyled'] );
-$modalBody	= array(
+$modalBody	= Html::create( 'div', array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
 			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
@@ -78,7 +78,7 @@ $modalBody	= array(
 			$listGrades
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
-);
+) );
 $modalZone	= new BootstrapModalDialog( 'modalAddZone' );
 $modalZone->setBody( $modalBody )->setHeading( 'Neue Zone' );
 $modalZone->setFormAction( './manage/shop/shipping/addZone' );
