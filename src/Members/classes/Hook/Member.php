@@ -27,4 +27,11 @@ class Hook_Member extends Hook
 			'list'		=> $list,
 		];
 	}
+
+	public function onRegisterTab()
+	{
+		$words	= (object) $this->env->getLanguage()->getWords( 'member' );			//  load words
+		$this->context->registerTab( '', $words->tabs['index'], 0 );					//  register main tab
+		$this->context->registerTab( 'search', $words->tabs['search'], 1 );			//  register main tab
+	}
 }
