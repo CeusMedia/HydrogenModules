@@ -22,6 +22,7 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 			$data		= $this->request->getAll();
 			$data['users']		= (int) $data['users'];
 			$data['price']		= (float) $data['price'];
+			$data['currency']	= 'EUR';
 			$data['rank']		= (int) $data['rank'];
 			$data['productId']	= $productId;
 			$data['createdAt']	= time();

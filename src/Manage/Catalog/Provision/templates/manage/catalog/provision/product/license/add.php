@@ -22,7 +22,7 @@ $panelAdd	= '
 			<div class="row-fluid">
 				<div class="span8">
 					<label for="input_title">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $license->title, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $license->title ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span3">
 					<label for="input_status">'.$w->labelStatus.'</label>
@@ -30,7 +30,7 @@ $panelAdd	= '
 				</div>
 				<div class="span1">
 					<label for="input_rank">'.$w->labelRank.'</label>
-					<input type="text" name="rank" id="input_rank" class="span12" value="'.htmlentities( $license->rank, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="rank" id="input_rank" class="span12" value="'.htmlentities( $license->rank ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -44,17 +44,17 @@ $panelAdd	= '
 				</div>
 				<div class="span2">
 					<label for="input_users">'.$w->labelUsers.'</label>
-					<input type="text" name="users" id="input_users" class="span12" value="'.htmlentities( $license->users, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="users" id="input_users" class="span12" value="'.htmlentities( $license->users ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
 					<label for="input_price">'.$w->labelPrice.'</label>
-					<input type="text" name="price" id="input_price" class="span12" value="'.htmlentities( $license->price, ENT_QUOTES, 'UTF-8' ).'"/>
+					<input type="text" name="price" id="input_price" class="span12" value="'.htmlentities( $license->price ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_description">'.$w->labelDescription.'</label>
-					<textarea name="description" id="input_description" class="span12 TinyMCE" data-tinymce-mode="minimal">'.htmlentities( $license->description, ENT_QUOTES, 'UTF-8' ).'</textarea>
+					<textarea name="description" id="input_description" class="span12 TinyMCE" data-tinymce-mode="minimal">'.htmlentities( $license->description ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
