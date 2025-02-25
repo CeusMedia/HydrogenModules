@@ -28,19 +28,6 @@ class View_Manage_Customer extends View
 	{
 	}
 
-	public static function ___onRegisterTab( Environment $env, $context, $module, $data ): void
-	{
-		$words	= (object) $env->getLanguage()->getWords( 'manage/customer' );						//  load words
-		View_Manage_Customer::registerTab( 'edit/'.$data['customerId'], $words->tabs['edit'], 0 );	//  register main tab
-		if( $env->getModules()->has( 'UI_Map' ) ){													//  map module is enabled
-			$model		= new Model_Customer( $env );												//  get customer model
-			$customer	= $model->get( $data['customerId'] );										//  get customer data
-			$disabled	= !$customer || (bool) !$customer->latitude;								//  no customer or customer not geocoded
-			$label		= $words->tabs['map'];														//  get tab label
-			View_Manage_Customer::registerTab( 'map/'.$data['customerId'], $label, 2, $disabled );	//  register map tab
-		}
-	}
-
 	public static function registerTab( $url, $label, $priority = 5, $disabled = NULL ): void
 	{
 		self::$tabs[]	= (object) [
