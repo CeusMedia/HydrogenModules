@@ -25,7 +25,7 @@ $thead		= Html::create( 'thead', Html::create( 'tr', $heads ) );
 $tbody		= Html::create( 'tbody', Html::create( 'tr', $cols ) );
 $listZones	= Html::create( 'table', [$thead, $tbody], ['class' => 'table table-condensed table-striped'] );
 
-$modalBody	= array(
+$modalBody	= Html::create( 'div', array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
 			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
@@ -71,7 +71,7 @@ $modalBody	= array(
 			$listZones
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
-);
+) );
 $modalGrade	= new BootstrapModalDialog( 'modalAddGrade' );
 $modalGrade->setBody( $modalBody )->setHeading( 'Neue Gewichtsklasse' );
 $modalGrade->setFormAction( './manage/shop/shipping/addGrade' );

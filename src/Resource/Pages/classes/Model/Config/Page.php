@@ -213,6 +213,7 @@ class Model_Config_Page
 		$this->scopes	= array_keys( (array) $this->fileData );
 		$this->pages	= [];
 		$pageId			= 0;
+		$language		= $this->env->getLanguage()->getLanguage();
 		foreach( $this->scopes as $scopeNr => $scope ){
 			foreach( $this->fileData[$scope] as $pageNr => $page ){
 				$pageId++;
@@ -224,7 +225,7 @@ class Model_Config_Page
 					'rank'			=> $pageNr + 1,
 					'identifier'	=> $page['path'],
 					'fullpath'		=> $page['path'],
-					'title'			=> $page['label'],
+					'title'			=> $page['label@'.$language] ?? $page['label'],
 					'controller'	=> $page['controller'] ?? NULL,
 					'action'		=> $page['action'] ?? NULL,
 					'access'		=> $page['access'] ?? NULL,
@@ -247,7 +248,7 @@ class Model_Config_Page
 							'rank'			=> $subpageNr + 1,
 							'identifier'	=> $subpage['path'],
 							'fullpath'		=> $page['path'].'/'.$subpage['path'],
-							'title'			=> $subpage['label'],
+							'title'			=> $subpage['label@'.$language] ?? $subpage['label'],
 							'controller'	=> $subpage['controller'] ?? NULL,
 							'action'		=> $subpage['action'] ?? NULL,
 							'access'		=> $subpage['access'] ?? NULL,
