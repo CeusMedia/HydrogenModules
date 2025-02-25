@@ -28,64 +28,7 @@ class View_Helper_Catalog
 		$this->cache	= $this->env->getCache();
 	}
 
-	/**
-	 *	@param		Environment		$env
-	 *	@param		object			$context
-	 *	@param		object			$module
-	 *	@param		array			$payload
-	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
-	public static function ___onRenderNewsItem( Environment $env, object $context, object $module, array & $payload ): void
-	{
-		$context->content	= self::applyLinks( $env, $context->content );
-	}
 
-	/**
-	 *	@param		Environment		$env
-	 *	@param		string			$content
-	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
-	public static function applyLinks( Environment $env, string $content/*&$item*/ ): string
-	{
-//		$content	= $item->content;
-		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";
-		$logic	= new Logic_Catalog( $env );
-		while( preg_match( $patternAuthor, $content ) ){
-			$matches	= [];
-			preg_match( $patternAuthor, $content, $matches );
-			$url		= $logic->getAuthorUri( (int) $matches[1] );
-			if( !isset( $matches[2] ) ){
-				$author		= $logic->getAuthor( (int) $matches[1] );
-				$matches[2]	= $author->firstname ? $author->firstname." ".$author->lastname : $author->lastname;
-			}
-			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
-			$content	= preg_replace( $patternAuthor, $link, $content, 1 );
-		}
-		$patternArticle	= "/\[article:([0-9]+)\|?([^\]]+)?\]/";
-		while( preg_match( $patternArticle, $content ) ){
-			$matches		= [];
-			preg_match( $patternArticle, $content, $matches );
-			$url		= $logic->getArticleUri( $matches[1] );
-			if( !isset( $matches[2] ) )
-				$matches[2]	= $logic->getArticle( $matches[1] )->title;
-			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
-			$content	= preg_replace( $patternArticle, $link, $content, 1 );
-		}
-		$patternCategory	= "/\[category:([0-9]+)\|?([^\]]+)?\]/";
-		while( preg_match( $patternCategory, $content ) ){
-			$matches		= [];
-			preg_match( $patternCategory, $content, $matches );
-			$url		= $logic->getCategoryUri( $matches[1] );
-			if( !isset( $matches[2] ) )
-				$matches[2]	= $logic->getCategory( $matches[1] )->label_de;
-			$link		= HtmlTag::create( 'a', $matches[2], ['href' => $url] );
-			$content	= preg_replace( $patternCategory, $link, $content, 1 );
-		}
-	//	$item->content	= $content;
-		return $content;
-	}
 
 	/**
 	 *	Returns a float formatted as currency.

@@ -124,6 +124,7 @@ class Logic_Catalog extends Logic
 		if( NULL !== ( $data = $this->cache->get( 'catalog.article.'.$articleId ) ) )
 			return $data;
 		$this->checkArticleId( $articleId, TRUE );
+		/** @var object $data */
 		$data	= $this->modelArticle->get( $articleId );
 		$this->cache->set( 'catalog.article.'.$articleId, $data );
 		return $data;
