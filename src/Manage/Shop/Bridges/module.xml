@@ -3,7 +3,7 @@
 	<title>Manage: Shop Bridge</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.2.9</version>
+	<version>0.3.0</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Finish add and edit.</log>
@@ -14,12 +14,14 @@
 	<log version="0.2.6">Add locale file.</log>
 	<log version="0.2.7">Updated relations.</log>
 	<log version="0.2.8">Extend forms by table data.</log>
-	<log version="0.2.9">Add method to remove bidge.</log>
+	<log version="0.2.9">Add method to remove bridge.</log>
+	<log version="0.3.0">Extract hook.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Shop/Bridge.php</class>
+		<class>Hook/Manage/Shop/Bridge.php</class>
 		<class>View/Manage/Shop/Bridge.php</class>
 		<locale>de/manage/shop/bridge.ini</locale>
 		<locale>en/manage/shop/bridge.ini</locale>
@@ -35,5 +37,5 @@
 	</relations>
 	<link xml:lang="de" path="manage/shop/bridge">Kataloge</link>
 	<link xml:lang="en" path="manage/shop/bridge">Catalogs</link>
-	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Bridge::___onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">Hook_Manage_Shop_Bridge::onRegisterTab</hook>
 </module>
