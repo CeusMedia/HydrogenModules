@@ -59,7 +59,7 @@
 	<link access="inside" path="member/request"/>
 	<link access="inside" path="member/search"/>
 	<link access="inside" path="member/view"/>
-	<hook type="resource" resource="Member" event="registerTabs">View_Member::___onRegisterTab</hook>
+	<hook type="resource" resource="Member" event="registerTabs">Hook_Member::onRegisterTab</hook>
 	<hook type="resource" resource="Resource:Users" event="getRelatedUsers">Hook_Member::onGetRelatedUsers</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>user_relations`;
