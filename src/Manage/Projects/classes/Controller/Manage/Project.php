@@ -299,7 +299,7 @@ class Controller_Manage_Project extends Controller
 		$filterUser			= $this->session->get( 'filter_manage_project_user' );
 		$filterOrder		= $this->session->get( 'filter_manage_project_order' );
 		$filterDirection	= $this->session->get( 'filter_manage_project_direction' );
-		$filterLimit		= $this->session->get( 'filter_manage_project_limit' );
+		$filterLimit		= (int) $this->session->get( 'filter_manage_project_limit', 10 );
 		if( !is_array( $filterStatus ) )
 			$filterStatus	= [];
 		if( !is_array( $filterPriority ) )
