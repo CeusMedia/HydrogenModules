@@ -21,29 +21,6 @@ class View_Manage_My_Provision_License extends View
 	public function view(): void
 	{
 	}
-
-	public static function ___onRegisterTab( Environment $env, $context, $module, $data ): void
-	{
-		$logicAuth		= Logic_Authentication::getInstance( $env );
-		$logicProvision = Logic_User_Provision::getInstance( $env );
-		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
-		$nrKeys		= count( $logicProvision->getUserLicenseKeysFromUser( $logicAuth->getCurrentUserId() ) );
-
-		$context->registerTab( '', self::renderTabLabel( $env, 'index', $nrLicenses, 'euro' ) );
-		$context->registerTab( 'key', self::renderTabLabel( $env, 'keys', $nrKeys, 'key' ) );
-		$context->registerTab( 'add', self::renderTabLabel( $env, 'add', 0, 'plus' ) );
-	}
-/*
-	public static function ___onMyUserRegisterTab( Environment $env, $context, $module, $data ){
-		$logicAuth		= Logic_Authentication::getInstance( $env );
-		$logicProvision = Logic_Accounting::getInstance( $env );
-		$nrLicenses	= count( $logicProvision->getUserLicensesFromUser( $logicAuth->getCurrentUserId() ) );
-		$nrKeys		= count( $logicProvision->getUserLicenseKeysFromUser( $logicAuth->getCurrentUserId() ) );
-
-		$context->registerTab( '../license', self::renderTabLabel( $env, 'index', $nrLicenses, 'euro' ) );
-		$context->registerTab( '../license/key', self::renderTabLabel( $env, 'keys', $nrKeys, 'key' ) );
-	}*/
-
 	public static function renderDefinitionList( array $data ): string
 	{
 		if( !count( $data ) )
@@ -118,18 +95,5 @@ class View_Manage_My_Provision_License extends View
 	protected function __onInit(): void
 	{
 		$this->env->getPage()->addThemeStyle( 'module.manage.my.provision.css' );
-	}
-
-	protected static function renderTabLabel( Environment $env, $labelKey, $count = 0, $icon = NULL )
-	{
-		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
-		$label	= $words->tabs[$labelKey];
-		if( $count )
-			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';
-		if( $icon ){
-			$icon	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-'.$icon] );
-			$label	= $icon.'&nbsp;'.$label;
-		}
-		return $label;
 	}
 }
