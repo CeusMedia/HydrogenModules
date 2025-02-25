@@ -4,7 +4,6 @@ use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\XML\RSS\GoogleBaseBuilder as RssGoogleBaseBuilder;
 use CeusMedia\Common\XML\RSS\Builder as RssBuilder;
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
@@ -13,8 +12,8 @@ class Controller_Catalog extends Controller
 	/**	@var	Logic_ShopBridge	$bridge */
 	protected Logic_ShopBridge $bridge;
 
-	/**	@var	integer				$bridgeId */
-	protected $bridgeId;
+	/**	@var	int|string				$bridgeId */
+	protected int|string $bridgeId;
 
 	/**	@var	Logic_Catalog		$logic */
 	protected Logic_Catalog $logic;
@@ -22,27 +21,15 @@ class Controller_Catalog extends Controller
 	protected Request $request;
 	protected Messenger $messenger;
 
-	public static function ___onRegisterSitemapLinks( Environment $env, object $context, object $module, array & $payload )
-	{
-		$baseUrl	= $env->url.'catalog/';
-		$logic		= new Logic_Catalog( $env );
-		$articles	= $logic->getArticles( [], ['articleId' => 'DESC'] );
-		foreach( $articles as $article ){
-			$url	= $logic->getArticleUri( $article, TRUE );
-			$date	= max( $article->createdAt, $article->modifiedAt );
-			$context->addLink( $url, $date > 0 ? $payload : NULL );
-		}
-		$authors	= $logic->getAuthors( [], ['authorId' => 'DESC'] );
-		foreach( $authors as $author ){
-			$url	= $logic->getAuthorUri( $author, TRUE );
-			$date	= NULL;//max( $author->createdAt, $author->modifiedAt );
-			$context->addLink( $url, $date );
-		}
-	}
-
-	public function article( $articleId ): void
+	/**
+	 *	@param		int|string		$articleId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function article( int|string $articleId ): void
 	{
 		$articleId	= (int) $articleId;
+		/** @var object $article */
 		$article	= $this->logic->getArticle( $articleId );
 		if( !$article ){
 			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
@@ -70,7 +57,12 @@ class Controller_Catalog extends Controller
 	{
 	}
 
-	public function author( $authorId ): void
+	/**
+	 *	@param		int|string		$authorId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function author( int|string $authorId ): void
 	{
 //		$authorId	= preg_replace( "/-[a-z0-9_-]*$/", "", $authorId );
 		$authorId	= (int) $authorId;
@@ -87,6 +79,10 @@ class Controller_Catalog extends Controller
 		$this->addData( 'authors', $this->logic->getAuthors( [], ['lastname' => 'ASC'] ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function categories(): void
 	{
 		$cache	= $this->env->getCache();
@@ -103,7 +99,12 @@ class Controller_Catalog extends Controller
 		$this->addData( 'categories', $categories );
 	}
 
-	public function category( $categoryId ): void
+	/**
+	 *	@param		int|string		$categoryId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function category( int|string $categoryId ): void
 	{
 		$categoryId	= (int) $categoryId;
 		$category	= $this->logic->getCategory( $categoryId );
@@ -129,6 +130,9 @@ class Controller_Catalog extends Controller
 	 *	@todo		rename to (and implement as) ___onMerchantFeedEnlist after module MerchantFeed is implemented
 	 *	@todo		extract labels
 	 *	@todo		BONUS: draft resolution for Google categories and implement solution for hooked modules
+	 *	@throws		DOMException
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function feed(): void
 	{
@@ -219,7 +223,14 @@ class Controller_Catalog extends Controller
 		$this->restart( $url );
 	}
 
-	public function rss( $categoryId = NULL ): void
+	/**
+	 *	@param		int|string|NULL		$categoryId
+	 *	@return		void
+	 *	@throws		DOMException
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function rss( int|string $categoryId = NULL ): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.catalog.feed.', TRUE );
 		$language	= $this->env->getLanguage()->getLanguage();
@@ -288,7 +299,13 @@ class Controller_Catalog extends Controller
 		exit;
 	}
 
-	public function search( $page = 0 ): void
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function search( int $page = 0 ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
