@@ -3,7 +3,7 @@
 	<title>Manage: Shop</title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.4.7</version>
+	<version>0.4.8</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added shipping.</log>
@@ -29,6 +29,7 @@
 	<log version="0.4.5">Reintegrate shipping.</log>
 	<log version="0.4.6">Finish shipping panels.</log>
 	<log version="0.4.7">Extract shipping logic.</log>
+	<log version="0.4.8">Extract hooks.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -38,6 +39,10 @@
 		<class>Controller/Manage/Shop/Report.php</class>
 		<class>Controller/Manage/Shop/Shipping.php</class>
 		<class>Entity/Shop/Customer.php</class>
+		<class>Hook/Manage/Shop.php</class>
+		<class>Hook/Manage/Shop/Order.php</class>
+		<class>Hook/Manage/Shop/Report.php</class>
+		<class>Hook/Manage/Shop/Shipping.php</class>
 		<class>Logic/ShopManager.php</class>
 		<class>Logic/Shop/Shipping.php</class>
 		<class>Model/Shop/Customer.php</class>
@@ -78,8 +83,8 @@
 	</relations>
 	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
 	<link xml:lang="en" path="manage/shop/report">Statistik</link>
-	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop::___onRegisterTab</hook>
-	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Order::___onRegisterTab</hook>
-	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Report::___onRegisterTab</hook>
-	<hook type="resource" resource="ManageShop" event="registerTabs">View_Manage_Shop_Shipping::___onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">Hook_Manage_Shop::onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">Hook_Manage_Shop_Order::onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">Hook_Manage_Shop_Report::onRegisterTab</hook>
+	<hook type="resource" resource="ManageShop" event="registerTabs">Hook_Manage_Shop_Shipping::onRegisterTab</hook>
 </module>
