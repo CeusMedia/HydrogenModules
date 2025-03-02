@@ -44,15 +44,15 @@ extract( $view->populateTexts( [
 	'panel.password.bottom',
 ], 'html/manage/my/user/', ['pwdMinLength' => $pwdMinLength] ) );
 
-return HTML::DivClass( 'content-panel content-panel-form', array(
+return HTML::DivClass( 'content-panel content-panel-form', [
 	HtmlTag::create( 'h4', $w->legend ),
 	HTML::DivClass( 'content-panel-inner',
-		HTML::Form( './manage/my/user/password', 'my_user_password', array(
+		HTML::Form( './manage/my/user/password', 'my_user_password', [
 			$textPanelPasswordAbove ? HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $textPanelPasswordAbove ) ) : '',
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span6', array(
+			HTML::DivClass( 'row-fluid', [
+				HTML::DivClass( 'span6', [
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'passwordNew', $w->labelPasswordNew, 'mandatory', sprintf( $w->labelPasswordNew_title, $pwdMinLength ) ),
 							HtmlTag::create( 'input', NULL, [
 								'type'			=> "password",
@@ -63,10 +63,10 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'value'			=> "",
 								'autocomplete'	=> "new-password"
 							] ),
-						) )
+						] )
 					),
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'passwordConfirm', $w->labelPasswordConfirm, 'mandatory', $w->labelPasswordConfirm_title ),
 							HtmlTag::create( 'input', NULL, [
 								'type'			=> "password",
@@ -77,16 +77,16 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'value'			=> "",
 								'autocomplete'	=> "new-password"
 							] ),
-						) )
+						] )
 					),
-				) ),
+				] ),
 				HTML::DivClass( 'span6', $textPanelPasswordInfo ),
 				$textPanelPasswordBelow ? HTML::DivClass( 'row-fluid', HTML::DivClass( 'span12', $textPanelPasswordBelow ) ) : '',
-			) ),
-			HTML::Buttons( array(
+			] ),
+			HTML::Buttons( [
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6', array(
+					HTML::DivClass( 'span6', [
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
 							HtmlTag::create( 'input', '', [
@@ -100,11 +100,11 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
-					) )
+					] )
 				)
-			) )
-		), ['autocomplete' => 'off'] )
-	) )
+			] )
+		], ['autocomplete' => 'off'] )
+	) ]
 ).'
 <style>
 #password-strength {

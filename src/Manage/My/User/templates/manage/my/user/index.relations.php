@@ -16,12 +16,13 @@ $helperRelations->setLimit( 5 );
 $helperRelations->setTableClass( 'limited' );
 $helperRelations->setHintTextForEntities( '' );
 $helperRelations->setHintTextForRelations( '' );
+
 if( $helperRelations->hasRelations() ){
-	$panelRelations	= HTML::DivClass( 'content-panel content-panel-form', array(
+	$panelRelations	= HTML::DivClass( 'content-panel content-panel-form', [
 		HtmlTag::create( 'h4', 'Zugehörige Daten' ),
-		HTML::DivClass( 'content-panel-inner', array(
+		HTML::DivClass( 'content-panel-inner', [
 			$helperRelations->render()
-		) ),
-	) );
+		] ),
+	] );
 }
 return $panelRelations;

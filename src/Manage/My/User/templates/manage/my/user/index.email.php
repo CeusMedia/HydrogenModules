@@ -17,47 +17,47 @@ if( !$env->getConfig()->get( 'module.manage_my_user.email.changeable' ) )
 
 extract( $view->populateTexts( ['panel.email.above', 'panel.email.below', 'panel.email.info'], 'html/manage/my/user/' ) );
 
-$hasInfo	= strlen( trim( strip_tags( $textPanelEmailInfo ) ) );
+$hasInfo	= '' !== trim( strip_tags( $textPanelEmailInfo ) );
 
-return HTML::DivClass( 'content-panel content-panel-form', array(
+return HTML::DivClass( 'content-panel content-panel-form', [
 	HtmlTag::create( 'h4', $w->heading ),
 	HTML::DivClass( 'content-panel-inner',
-		HTML::Form( './manage/my/user/email', 'my_user_email', array(
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( $hasInfo ? 'span6' : 'span12', array(
+		HTML::Form( './manage/my/user/email', 'my_user_email', [
+			HTML::DivClass( 'row-fluid', [
+				HTML::DivClass( $hasInfo ? 'span6' : 'span12', [
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'email', $w->labelEmailOld ),
-							HtmlTag::create( 'input', NULL, array(
-								'type'			=> "text",
-								'class'			=> "span11",
+							HtmlTag::create( 'input', NULL, [
+								'type'			=> 'text',
+								'class'			=> 'span11',
 								'disabled'		=> 'disabled',
 								'readonly'		=> 'readonly',
 								'value'			=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
-							) ),
-						) )
+							] ),
+						] )
 					),
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'email', $w->labelEmailNew, 'mandatory', $w->labelEmailNew_title ),
 							HtmlTag::create( 'input', NULL, [
-								'type'			=> "text",
-								'name'			=> "email",
-								'id'			=> "input_email",
-								'class'			=> "span11 mandatory",
+								'type'			=> 'text',
+								'name'			=> 'email',
+								'id'			=> 'input_email',
+								'class'			=> 'span11 mandatory',
 								'required'		=> 'required',
 								'value'			=> '',
-								'autocomplete'	=> "off"
+								'autocomplete'	=> 'off'
 							] ),
-						) )
+						] )
 					),
-				) ),
+				] ),
 				$hasInfo ? HTML::DivClass( 'span6', $textPanelEmailInfo ) : '',
-			) ),
-			HTML::Buttons( array(
+			] ),
+			HTML::Buttons( [
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6', array(
+					HTML::DivClass( 'span6', [
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
 							HtmlTag::create( 'input', '', [
@@ -71,9 +71,9 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
-					) )
+					] )
 				)
-			) )
-		), ['autocomplete' => 'off'] )
-	) )
-);
+			] )
+		], ['autocomplete' => 'off'] )
+	)
+] );

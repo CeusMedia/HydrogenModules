@@ -17,26 +17,26 @@ if( 0 && !$env->getConfig()->get( 'module.manage_my_user.username.changeable' ) 
 
 extract( $view->populateTexts( ['panel.username.above', 'panel.username.below', 'panel.username.info'], 'html/manage/my/user/' ) );
 
-return HTML::DivClass( 'content-panel content-panel-form', array(
+return HTML::DivClass( 'content-panel content-panel-form', [
 	HtmlTag::create( 'h4', $w->heading ),
-	HTML::DivClass( 'content-panel-inner', array(
-		HTML::Form( './manage/my/user/username', 'my_user_username', array(
-			HTML::DivClass( 'row-fluid', array(
-				HTML::DivClass( 'span6', array(
+	HTML::DivClass( 'content-panel-inner', [
+		HTML::Form( './manage/my/user/username', 'my_user_username', [
+			HTML::DivClass( 'row-fluid', [
+				HTML::DivClass( 'span6', [
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'email', $w->labelUsernameOld ),
-							HtmlTag::create( 'input', NULL, array(
+							HtmlTag::create( 'input', NULL, [
 								'type'			=> "text",
 								'class'			=> "span11 ",
 								'disabled'		=> 'disabled',
 								'readonly'		=> 'readonly',
 								'value'			=> htmlentities( $user->username, ENT_QUOTES, 'UTF-8' ),
-							) ),
-						) )
+							] ),
+						] )
 					),
 					HTML::DivClass( 'row-fluid',
-						HTML::DivClass( 'span12', array(
+						HTML::DivClass( 'span12', [
 							HTML::Label( 'username', $w->labelUsernameNew, 'mandatory', $w->labelUsernameNew_title ),
 							HtmlTag::create( 'input', NULL, [
 								'type'			=> "text",
@@ -47,15 +47,15 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 								'value'			=> '',
 								'autocomplete'	=> "off"
 							] ),
-						) )
+						] )
 					),
-				) ),
+				] ),
 				HTML::DivClass( 'span6', $textPanelUsernameInfo ),
-			) ),
-			HTML::Buttons( array(
+			] ),
+			HTML::Buttons( [
 				HtmlTag::create( 'small', $w->labelPasswordCurrent_title, ['class' => 'not-muted'] ),
 				HTML::DivClass( 'row-fluid',
-					HTML::DivClass( 'span6', array(
+					HTML::DivClass( 'span6', [
 						HTML::DivClass( 'input-prepend input-append',
 							HTML::SpanClass( 'add-on', '<i class="fa fa-fw fa-lock"></i>' ).
 							HtmlTag::create( 'input', '', [
@@ -69,9 +69,9 @@ return HTML::DivClass( 'content-panel content-panel-form', array(
 							] ).
 							HtmlElements::Button( 'saveUser', '<i class="fa fa-fw fa-check"></i> '.$w->buttonSave, 'btn btn-primary' )
 						)
-					) )
+					] )
 				)
-			) )
-		) )
-	) )
-) );
+			] )
+		] )
+	] )
+] );

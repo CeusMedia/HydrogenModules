@@ -3,6 +3,7 @@
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Manage_My_User_Oauth2 extends Controller
 {
@@ -11,10 +12,17 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 	protected Model_Oauth_User $modelUserOauth;
 	protected Logic_Authentication $logicAuth;
 
-	public function add( string $providerId ): void
+	/**
+	 *	@param		int|string		$providerId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function add( int|string $providerId ): void
 	{
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
+		/** @var object $provider */
 		$provider	= $this->modelProvider->get( $providerId );
 		$client		= $this->getProviderObject( $providerId );
 		$words		= (object) $this->getWords( 'add' );
@@ -89,7 +97,12 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->addData( 'relations', $list );
 	}
 
-	public function remove( string $providerId ): void
+	/**
+	 *	@param		int|string		$providerId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function remove( int|string $providerId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
 		$provider	= $this->checkProvider( $providerId );
@@ -107,6 +120,10 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->messenger		= $this->env->getMessenger();
@@ -115,16 +132,30 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 	}
 
-	protected function checkProvider( string $providerId, bool $strict = TRUE ): ?object
+	/**
+	 *	@param		int|string		$providerId
+	 *	@param		bool			$strict
+	 *	@return		object|NULL
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function checkProvider( int|string $providerId, bool $strict = TRUE ): ?object
 	{
-		if( $provider = $this->modelProvider->get( $providerId ) )
+		/** @var ?object $provider */
+		$provider	= $this->modelProvider->get( $providerId );
+		if( NULL !== $provider )
 			return $provider;
 		if( $strict )
 			throw new RangeException( 'Invalid provider ID' );
 		return NULL;
 	}
 
-	protected function getProviderObject( string $providerId ): object
+	/**
+	 *	@param		int|string		$providerId
+	 *	@return		object
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function getProviderObject( int|string $providerId ): object
 	{
 		$provider	= $this->checkProvider( $providerId );
 		if( !class_exists( $provider->className ) )

@@ -14,9 +14,9 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 	$rows	= [];
 	foreach( $passwords as $password ){
 		$rowClass	= 'info';
-		if( $password->status == 0 )
+		if( Model_User_Password::STATUS_NEW === $password->status )
 			$rowClass	= 'warning';
-		if( $password->status == 1 )
+		if( Model_User_Password::STATUS_ACTIVE === $password->status )
 			$rowClass	= 'success';
 		$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
 		$dateUsed		= $password->usedAt ? date( 'd.m.Y', $password->usedAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->usedAt ).'</small>' : '-';
