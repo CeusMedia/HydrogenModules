@@ -36,54 +36,55 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconSave   = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 }
 
-return HTML::DivClass( 'row-fluid', array(
-	HTML::DivClass( 'span8', array(
-		HTML::DivClass( 'content-panel', array(
-			HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Benutzer: ', ['class' => 'muted'] ).$user->username ),
-			HTML::DivClass( 'content-panel-inner', array(
-				HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', array(
-					HTML::H4( $w->heading ),
-					$textRemoveTop,
-					$relations,
-					HtmlTag::create( 'hr' ),
-					HTML::DivClass( 'row-fluid', array(
-						HTML::DivClass( 'span6', array(
-							HTML::DivClass( 'row-fluid', array(
-								HTML::DivClass( 'span12', array(
-									HTML::Label( 'username', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
-									HtmlTag::create( 'input', NULL, [
-										'type'			=> "password",
-										'name'			=> "password",
-										'id'			=> "input_password_username",
-										'class'			=> "span11 mandatory",
-										'required'		=> 'required',
-										'value'			=> '',
-										'placeholder'	=> $w->labelPassword_holder,
-										'autocomplete'	=> "current-password"
-									] ),
-								) )
-							) ),
-						) ),
-						HTML::DivClass( 'span6', $textRemoveInfo ),
-					) ),
-					HTML::DivClass( 'buttonbar', array(
-						HTML::DivClass( 'btn-toolbar', array(
-							HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
-								'href'  => './manage/my/user',
-								'class' => 'btn btn-small',
-							] ),
-							HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
-								'type'  => 'submit',
-								'name'  => 'remove',
-								'class' => 'btn btn-danger',
-							] )
-						) )
-					) )
-				) )
-			) )
-		) )
-	) ),
-	HTML::DivClass( 'span4', [
-		$textRemoveRight
+$inputPassword	= HtmlTag::create( 'input', NULL, [
+	'type'			=> "password",
+	'name'			=> "password",
+	'id'			=> "input_password_username",
+	'class'			=> "span11 mandatory",
+	'required'		=> 'required',
+	'value'			=> '',
+	'placeholder'	=> $w->labelPassword_holder,
+	'autocomplete'	=> "current-password"
+] );
+
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
+	'href'  => './manage/my/user',
+	'class' => 'btn btn-small',
+] );
+
+$buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
+	'type'  => 'submit',
+	'name'  => 'remove',
+	'class' => 'btn btn-danger',
+] );
+
+$panel	= HTML::DivClass( 'content-panel', [
+	HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Benutzer: ', ['class' => 'muted'] ).$user->username ),
+	HTML::DivClass( 'content-panel-inner', [
+		HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', [
+			HTML::H4( $w->heading ),
+			$textRemoveTop,
+			$relations,
+			HtmlTag::create( 'hr' ),
+			HTML::DivClass( 'row-fluid', [
+				HTML::DivClass( 'span6', [
+					HTML::DivClass( 'row-fluid', [
+						HTML::DivClass( 'span12', [
+							HTML::Label( 'password', $w->labelPassword, 'mandatory', $w->labelPassword_title ),
+							$inputPassword,
+						] )
+					] ),
+				] ),
+				HTML::DivClass( 'span6', $textRemoveInfo ),
+			] ),
+			HTML::DivClass( 'buttonbar', [
+				HTML::DivClass( 'btn-toolbar', [$buttonCancel, $buttonSave] )
+			] )
+		] )
 	] )
-) );
+] );
+
+return HTML::DivClass( 'row-fluid', [
+	HTML::DivClass( 'span8', $panel ),
+	HTML::DivClass( 'span4', $textRemoveRight )
+] );
