@@ -51,6 +51,7 @@ class Resource_SMB
 	public function index( string $path = './', $pattern = NULL ): array
 	{
 		$this->openConnection();
+		$list	= [];
 		foreach( $this->share->dir( $this->path.$path ) as $item ){
 			if( NULL !== $pattern && 1 !== preg_match( $pattern, $item->getName() ) )
 				continue;

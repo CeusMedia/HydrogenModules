@@ -15,8 +15,9 @@ class Controller_Csrf extends Controller
 	 */
 	public function checkToken( ?string $redirectUrl = NULL ): bool
 	{
-		$token		= $this->env->getRequest()->get( 'csrf_token' );							//  get token from request
-		$formName	= $this->env->getRequest()->get( 'csrf_form_name' );						//  get form name from request
+		$token		= $this->env->getRequest()->get( 'csrf_token', '' );					//  get token from request
+		$formName	= $this->env->getRequest()->get( 'csrf_form_name', '' );				//  get form name from request
+
 		$result		= $this->logic->verifyToken( $formName, $token );							//  check token against environment
 		if( $result !== Logic_CSRF::CHECK_OK ){													//  there has been an error
 			$statusCode	= 401;																	//  HTTP status: Forbidden
