@@ -44,22 +44,18 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 		foreach( $this->ranges as $rangeLabel )
 			$tableHeads[]	= HtmlTag::create( 'small', $rangeLabel, ['class' => 'pull-right'] );
 
-		$lengthKeys			= array_keys( $this->ranges );
-		$lastRangeLength	= @array_pop( $lengthKeys );
+		$reversedRanges	= array_reverse( $this->ranges, TRUE );
+		$lastRangeDays	= current( array_keys( $reversedRanges ) );
 
 		$rows	= [];
 		foreach( $this->statuses as $statusKey => $statusLabel ){
 			$row	= [];
-			/** @var object $lastRange */
-			foreach( array_reverse( $this->ranges, TRUE ) as $days => $label ){
-				$lastRange	= (object) [
-					'key'		=> $days,
-					'value'		=> $data[$statusKey][$days],
-					'label'		=> $label,
-				];
-				break;
-			}
-			foreach( array_reverse( $this->ranges, TRUE ) as $rangeKey => $rangeLabel ){
+			$lastRange		= (object) [
+				'key'		=> $lastRangeDays,
+				'value'		=> $data[$statusKey][$lastRangeDays],
+				'label'		=> $this->ranges[$lastRangeDays],
+			];
+			foreach( $reversedRanges as $rangeKey => $rangeLabel ){
 				$label	= $data[$statusKey][$rangeKey];
 				if( $rangeKey !== $lastRange->key && $data[$statusKey][$lastRange->key] > 10 ){
 					$average	= $lastRange->value ? $data[$statusKey][$lastRange->key] / $lastRange->key : 0;

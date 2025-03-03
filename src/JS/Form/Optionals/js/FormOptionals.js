@@ -1,33 +1,35 @@
+// noinspection JSUnresolvedFunction,JSUnresolvedVariable
+
 /**
  *	Handles optional contents related to input elements.
  *
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright	2012-2023 Ceus Media (https://ceusmedia.de)
  */
-var FormOptionals = {
+let FormOptionals = {
 	init: function (selector) {
 		if(typeof selector === "undefined")										//  no specific container set
 			selector = "body";													//  assume body as work container
-		var items = jQuery(selector).find(":input.has-optionals");				//  find all input elements having optionals
+		let items = jQuery(selector).find(":input.has-optionals");				//  find all input elements having optionals
 		items.on("change change-update", function () {							//  bind event on change of input elements
 			FormOptionals.showOptionals(this);									//  apply handling of optionals
 		}).trigger("change-update");											//  trigger event to apply input values on start
 	},
 	showOptionals: function (elem) {
-		var form = jQuery(elem.form);											//  get input containing form as a parent container
-		var name = jQuery(elem).attr("name");									//  get name of input
-		var type = jQuery(elem).attr("type");									//  get type of input
-		var value = jQuery(elem).val().replace(/[( @\.]/g, '_');				//  get cleansed value
+		let form = jQuery(elem.form);											//  get input containing form as a parent container
+		let name = jQuery(elem).attr("name");									//  get name of input
+		let type = jQuery(elem).attr("type");									//  get type of input
+		let value = jQuery(elem).val().replace(/[( @\.]/g, '_');				//  get cleansed value
 
 		if (type === "checkbox" && name.match(/\[\]$/))							//  if input is checkbox of a checkbox group
 			name = name.replace(/\[\]/, '') + "-" + value;						//  get cleansed name and combine
-		var identifier = name + "-" + value;									//  build identifier by name and cleansed value
+		let identifier = name + "-" + value;									//  build identifier by name and cleansed value
 		if (type === "checkbox" )												//  if input is checkbox
 			identifier = name + "-" + jQuery(elem).prop("checked");				//  extend identifier by checkbox state
 
-		var optionals = form.find(".optional." + name);							//  get all optionals for input within form
-		var toHide = optionals.not("." + identifier);							//  collect optionals not having identifier
-		var toShow = optionals.filter("." + identifier);						//  collect optionals having identifier
+		let optionals = form.find(".optional." + name);							//  get all optionals for input within form
+		let toHide = optionals.not("." + identifier);							//  collect optionals not having identifier
+		let toShow = optionals.filter("." + identifier);						//  collect optionals having identifier
 
 		if (type === "radio") {													//  element input is of type radio
 			if (!jQuery(elem).prop("checked")) {								//  this radio is NOT checked
@@ -63,10 +65,10 @@ var FormOptionals = {
 		}
 	},
 	disableRequired: function(container){
-		var $selfInput		= container.filter(":input")
-		var $childInputs	= container.find(":input");
+		let $selfInput		= container.filter(":input")
+		let $childInputs	= container.find(":input");
 		$selfInput.add($childInputs).each(function(){
-			var elem = jQuery(this);
+			let elem = jQuery(this);
 			if(elem.attr("required")){
 				elem.data("optionals-required", elem.attr("required"));
 				elem.removeAttr("required");
@@ -74,10 +76,10 @@ var FormOptionals = {
 		});
 	},
 	enableRequired: function(container){
-		var $selfInput		= container.filter(":input")
-		var $childInputs	= container.find(":input");
+		let $selfInput		= container.filter(":input")
+		let $childInputs	= container.find(":input");
 		$selfInput.add($childInputs).each(function(){
-			var elem = jQuery(this);
+			let elem = jQuery(this);
 			if(elem.data("optionals-required")){
 				elem.attr("required", elem.data("optionals-required"));
 				elem.data("optionals-required", null);
