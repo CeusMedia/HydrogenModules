@@ -326,8 +326,8 @@ class Controller_Manage_Content_Image extends Controller
 		$target			= $this->basePath.$targetPath;
 		$thumbnailer	= new ImageThumbnailCreator( $source, $target, $quality );
 		$thumbnailer->thumbize( $width, $height );
-		$this->env->getCache()->remove( 'ManageContentImages.list.static' );
-		$this->messenger->noteSuccess( $words->successImageScaled, $targetName );
+		$this->env->getCache()->delete( 'ManageContentImages.list.static' );
+		$this->messenger->noteSuccess( $words->successImageScaled, $imagePath );
 		$this->restart( 'editImage/'.base64_encode( $imagePath ), TRUE );
 	}
 
