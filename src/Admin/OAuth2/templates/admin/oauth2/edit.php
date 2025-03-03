@@ -154,7 +154,7 @@ $form	= HtmlTag::create( 'form', [
 				'name'			=> 'options',
 				'id'			=> 'input_options',
 				'class'			=> 'span12',
-				'value'			=> htmlentities( $provider->options, ENT_QUOTES, 'UTF-8' ),
+				'value'			=> htmlentities( $provider->options ?? '', ENT_QUOTES, 'UTF-8' ),
 			//	'disabled'		=> $provider->status > 0 ? 'disabled' : NULL,
 			] ),
 		], ['class' => 'span5'] ),

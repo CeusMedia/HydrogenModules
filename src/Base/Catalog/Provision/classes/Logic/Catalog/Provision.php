@@ -205,7 +205,7 @@ class Logic_Catalog_Provision extends Logic
 	public function getProductUri( int|string $productOrId, bool $absolute = FALSE ): string
 	{
 		$product	= $productOrId;
-		if( is_int( $productOrId ) )
+		if( is_int( $productOrId ) || is_string( $productOrId ) )
 			$product	= $this->getProductLicense( $productOrId );
 		if( !is_object( $product ) )
 			throw new InvalidArgumentException( 'Given product data is invalid (neither product object nor valid product ID)' );
@@ -225,7 +225,7 @@ class Logic_Catalog_Provision extends Logic
 	public function getProductLicenseUri( int|string $productLicenseOrId, bool $absolute = FALSE ): string
 	{
 		$productLicense	= $productLicenseOrId;
-		if( is_int( $productLicenseOrId ) )
+		if( is_int( $productLicenseOrId ) || is_string( $productLicenseOrId ) )
 			$productLicense	= $this->getProductLicense( $productLicenseOrId );
 		if( !is_object( $productLicense ) )
 			throw new InvalidArgumentException( 'Given product license data is invalid (neither product license object nor valid product license ID)' );
