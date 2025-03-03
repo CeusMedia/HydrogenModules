@@ -2,7 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Environment;
 
-class Model_Module_Page
+class Model_Page_ByModules
 {
 	protected Environment $env;
 //	protected $acl;
@@ -82,9 +82,9 @@ class Model_Module_Page
 
 		$data	= $this->pages;
 		if( [] !== $indices )
-			$data	= Model_Config_Page::filterPagesByIndices( $data, $indices );
+			$data	= Model_Page_ByConfig::filterPagesByIndices( $data, $indices );
 //		if( [] !== $orders )
-//			$data	= Model_Config_Page::orderPages( $data, $orders );
+//			$data	= Model_Page_ByConfig::orderPages( $data, $orders );
 		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return array_values( $data );
@@ -155,7 +155,7 @@ class Model_Module_Page
 						'moduleId'		=> $module->id,
 						'type'			=> (int) array_search( 'module', $this->types ),
 						'scope'			=> $link->scope,
-						'status'		=> Model_Page::STATUS_VISIBLE,
+						'status'		=> Model_Page_ByDatabase::STATUS_VISIBLE,
 						'access'		=> $link->access,
 						'identifier'	=> $link->path,
 						'fullpath'		=> $link->path,
