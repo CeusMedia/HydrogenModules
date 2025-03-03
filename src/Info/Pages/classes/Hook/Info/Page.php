@@ -30,27 +30,27 @@ class Hook_Info_Page extends Hook
 		if( NULL === $page )																		//  no page found for called page path
 			return FALSE;																			//  quit hook call and return without result
 
-		if( Model_Page::STATUS_DISABLED === $page->status ){										//  page is deactivated
+		if( Model_Page_ByDatabase::STATUS_DISABLED === $page->status ){										//  page is deactivated
 			$previewCode	= $request->get( 'preview' );										//  get preview code if requested (iE. by page management)
 			if( $previewCode != $page->createdAt.$page->modifiedAt )								//  no valid preview code => no bypassing disabled state
 				return FALSE;																		//  quit hook call and return without result
 		}
 
 		switch( $page->type ){
-			case Model_Page::TYPE_COMPONENT:
+			case Model_Page_ByDatabase::TYPE_COMPONENT:
 				break;
-			case Model_Page::TYPE_CONTENT:
+			case Model_Page_ByDatabase::TYPE_CONTENT:
 				$request->set( '__redirected', TRUE );												//  note redirection for access check
 				static::redirect( $env, 'info/page', 'index', [$pagePath] );			//  redirect to page controller and quit hook
 				return TRUE;
-			case Model_Page::TYPE_BRANCH:
+			case Model_Page_ByDatabase::TYPE_BRANCH:
 				if( !( $children = $logic->getChildren( $page->pageId ) ) )							//  identified branch page has children
 					throw new RangeException( 'Page branch '.$page->title.' has no pages' );
-				if( Model_Page::STATUS_DISABLED === (int) $children[0]->status )					//  child page is disabled
+				if( Model_Page_ByDatabase::STATUS_DISABLED === (int) $children[0]->status )					//  child page is disabled
 					throw new RangeException( 'Page branch '.$page->title.' has no active pages' );
 				static::restart( $env, $page->identifier.'/'.$children[0]->identifier );		//  redirect to child page and exit hook
 				return TRUE;
-			case Model_Page::TYPE_MODULE:
+			case Model_Page_ByDatabase::TYPE_MODULE:
 				if( !$page->controller )															//  but no module controller has been selected
 					throw new RangeException( 'Module page '.$page->title.' has no assigned controller' );
 				$controllerName	= strtolower( str_replace( "_", "/", $page->controller ) );			//  get module controller path
@@ -102,10 +102,10 @@ class Hook_Info_Page extends Hook
 	 */
 	public function onControllerDetectPath()
 	{
-		$modelPage			= new Model_Page( $this->env );
+		$modelPage			= new Model_Page_ByDatabase( $this->env );
 		$controllerPages	= $modelPage->getAllByIndices( [
-			'status'		=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],				//  hidden or visible, only (not disabled)
-			'type'			=> Model_Page::TYPE_MODULE,												//  type 'module', only
+			'status'		=> [Model_Page_ByDatabase::STATUS_HIDDEN, Model_Page_ByDatabase::STATUS_VISIBLE],				//  hidden or visible, only (not disabled)
+			'type'			=> Model_Page_ByDatabase::TYPE_MODULE,												//  type 'module', only
 			'controller'	=> $this->payload['controllerName'],
 		] );
 		if( $controllerPages ){
@@ -138,13 +138,13 @@ class Hook_Info_Page extends Hook
 		if( file_exists( 'config/pages.json' ) )
 			return;
 		$acl	= $this->env->getAcl();
-		$model	= new Model_Page( $this->env );
+		$model	= new Model_Page_ByDatabase( $this->env );
 		$paths	= [
 			'public'	=> ['info_page_index'],
 			'inside'	=> [],
 			'outside'	=> []
 		];
-		$pages	= $model->getAll( ['type' => Model_Page::TYPE_MODULE] );							//  get all module based pages
+		$pages	= $model->getAll( ['type' => Model_Page_ByDatabase::TYPE_MODULE] );							//  get all module based pages
 		foreach( $pages as $page ){																	//  iterate pages
 			if( str_starts_with( strtolower( $page->controller ), 'ajax' ) )						//  ajax controller
 				continue;																			//  skip this controller
@@ -177,18 +177,18 @@ class Hook_Info_Page extends Hook
 				$urls		= [];
 				$orders		= ['scope' => 'ASC', 'rank' => 'ASC', 'modifiedAt' => 'DESC'];	//  collect latest changed pages first
 				for( $scopeId = 0; $scopeId < 10; $scopeId++ ){
-					$model		= new Model_Page( $this->env );										//  get model of pages
+					$model		= new Model_Page_ByDatabase( $this->env );										//  get model of pages
 					$indices	= [																	//  focus on ...
-						'status'	=> Model_Page::STATUS_VISIBLE,									//  ... visible pages ...
+						'status'	=> Model_Page_ByDatabase::STATUS_VISIBLE,									//  ... visible pages ...
 						'parentId'	=> 0,															//  ... in top level ...
 						'scope'		=> $scopeId,													//  ... of scoped navigation
 						'access'	=> ['public', 'outside'],										//  ... accessible by everyone
 					];
 					$pages		= $model->getAllByIndices( $indices, $orders );						//  get all active top level pages
 					foreach( $pages as $page ){														//  iterate found pages
-						if( (int) $page->type === Model_Page::TYPE_BRANCH ){						//  page is a branch only (without content)
+						if( (int) $page->type === Model_Page_ByDatabase::TYPE_BRANCH ){						//  page is a branch only (without content)
 							$indices	= [															//  focus on ...
-								'status'	=> [Model_Page::STATUS_VISIBLE],						//  ... visible pages ...
+								'status'	=> [Model_Page_ByDatabase::STATUS_VISIBLE],						//  ... visible pages ...
 								'parentId'	=> $page->pageId,										//  ... on sublevel
 								'access'	=> ['public', 'outside'],								//  ... accessible by everyone
 							];
@@ -325,23 +325,23 @@ class Hook_Info_Page extends Hook
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
-					if( Model_Page::TYPE_COMPONENT === $page->type ){
-						if( Model_Page::STATUS_HIDDEN === $page->status ){							//  page component is hidden
+					if( Model_Page_ByDatabase::TYPE_COMPONENT === $page->type ){
+						if( Model_Page_ByDatabase::STATUS_HIDDEN === $page->status ){							//  page component is hidden
 							$processor->removeNext( $shortCode );									//  remove hidden shortcode
 							continue;																//  skip to next appearance
 						}
-						if( Model_Page::STATUS_DISABLED === $page->status ){						//  page component is disabled
+						if( Model_Page_ByDatabase::STATUS_DISABLED === $page->status ){						//  page component is disabled
 							$processor->removeNext( $shortCode );									//  remove hidden shortcode
 							continue;																//  skip to next appearance
 						}
 					}
-					if( Model_Page::STATUS_DISABLED === $page->status ){
+					if( Model_Page_ByDatabase::STATUS_DISABLED === $page->status ){
 						$message	= $messages->errorPageDisabled;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
 						continue;																	//  skip to next appearance
 					}
-					if( Model_Page::TYPE_BRANCH === $page->type ){
+					if( Model_Page_ByDatabase::TYPE_BRANCH === $page->type ){
 						$message	= $messages->errorPageIsBranch;									//  get error message
 						$this->env->getMessenger()->noteFailure( $message, $pagePath );				//  note failure in UI
 						$processor->removeNext( $shortCode );										//  remove erroneous shortcode
