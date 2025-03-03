@@ -20,8 +20,8 @@ $iconSuggest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-magic'] );
 $iconExclude	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-ban'] );
 
 $metaPageTypes	= [
-	Model_Page::TYPE_CONTENT,
-	Model_Page::TYPE_MODULE,
+	Model_Page_ByDatabase::TYPE_CONTENT,
+	Model_Page_ByDatabase::TYPE_MODULE,
 ];
 if( !in_array( (int) $page->type, $metaPageTypes, TRUE ) )
 	return '<div class="alert alert-info"><em>'.$wMeta->no_meta.'</em></div>';

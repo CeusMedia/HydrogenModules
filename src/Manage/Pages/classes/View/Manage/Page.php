@@ -43,9 +43,9 @@ class View_Manage_Page extends View
 					$classes	= [];
 					if( $currentPageId && $currentPageId == $subitem->pageId )
 						$classes[]	= 'active';
-					if( $subitem->status < Model_Page::STATUS_VISIBLE || $item->status < Model_Page::STATUS_VISIBLE )
+					if( $subitem->status < Model_Page_ByDatabase::STATUS_VISIBLE || $item->status < Model_Page_ByDatabase::STATUS_VISIBLE )
 						$classes[]	= 'disabled';
-					if( $subitem->status < Model_Page::STATUS_HIDDEN )
+					if( $subitem->status < Model_Page_ByDatabase::STATUS_HIDDEN )
 						$subitem->title	= '<span style="text-decoration: line-through;">' .$subitem->title. '</span>';
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
@@ -63,9 +63,9 @@ class View_Manage_Page extends View
 			$classes	= ['autocut'];
 			if( $currentPageId && $currentPageId == $item->pageId )
 				$classes[]	= 'active';
-			if( $item->status < Model_Page::STATUS_VISIBLE )
+			if( $item->status < Model_Page_ByDatabase::STATUS_VISIBLE )
 				$classes[]	= 'disabled';
-			if( $item->status < Model_Page::STATUS_HIDDEN )
+			if( $item->status < Model_Page_ByDatabase::STATUS_HIDDEN )
 				$item->title	= '<span style="text-decoration: line-through;">' .$item->title. '</span>';
 			$url	= './manage/page/edit/'.$item->pageId;
 			$label	= $this->getPageIcon( $item ).' '.$item->title;
@@ -114,9 +114,9 @@ class View_Manage_Page extends View
 		$listTabs	= [];
 		$listPanes	= [];
 		foreach( $labels as $tabKey => $label ){
-			$isPage		= Model_Page::TYPE_CONTENT === $page->type;
-			$isBranch	= Model_Page::TYPE_BRANCH === $page->type;
-			$isModule	= Model_Page::TYPE_MODULE === $page->type;
+			$isPage		= Model_Page_ByDatabase::TYPE_CONTENT === $page->type;
+			$isBranch	= Model_Page_ByDatabase::TYPE_BRANCH === $page->type;
+			$isModule	= Model_Page_ByDatabase::TYPE_MODULE === $page->type;
 			$disabled	= FALSE;
 			$attributes		= ['href' => '#tab-'.$tabKey, 'data-toggle' => 'tab'];
 			switch( $tabKey ){

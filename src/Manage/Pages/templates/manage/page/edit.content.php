@@ -10,9 +10,9 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 $w				= (object) $words['edit'];
 
-if( $page->type == Model_Page::TYPE_MODULE )
+if( $page->type == Model_Page_ByDatabase::TYPE_MODULE )
 	$content	= '<div class="alert alert-info"><em>'.$w->no_editor.'</em></div>';
-else if( $page->type == Model_Page::TYPE_BRANCH )
+else if( $page->type == Model_Page_ByDatabase::TYPE_BRANCH )
 	$content	= '<div class="alert alert-info"><em>'.$w->no_content.'</em></div>';
 else{
 	$optVersion	= ['' => '- latest -'];

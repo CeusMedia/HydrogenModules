@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 class Controller_Ajax_Manage_Page extends AjaxController
 {
 	protected string $sessionPrefix		= 'filter_manage_pages_';
-	protected Model_Page|Model_Config_Page $model;
+	protected Model_Page_ByDatabase|Model_Page_ByConfig $model;
 	protected Environment $envManaged;
 	protected ?Logic_Frontend $frontend	= NULL;
 	protected ?string $appFocus			= NULL;
@@ -33,11 +33,8 @@ class Controller_Ajax_Manage_Page extends AjaxController
 			$this->frontend		= Logic_Frontend::getInstance( $this->env );
 			$this->envManaged	= $this->frontend->getEnv();
 		}
-		$source	= $this->envManaged->getModules()->get( 'UI_Navigation' )->config['menu.source']->value;
-		if( 'Database' === $source )
-			$this->model	= new Model_Page( $this->envManaged );
-		else if( 'Config' === $source )
-			$this->model	= new Model_Config_Page( $this->envManaged );
+		$logic			= new Logic_Page( $this->env );
+		$this->model	= $logic->getPageModel();
 	}
 
 	/**
