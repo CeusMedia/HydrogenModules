@@ -4,8 +4,17 @@
 	<description><![CDATA[Responsive navigation composite.
 
 This module combines several navigation types to provide a standard navigation composition.
+
+Can make use of module Resource:Pages (with database stored pages) but is not based upon this.
+
+Using source "Config", the file config/pages.json will be used as storage.
+This is less mighty than the database storage, but okay for an application without database, like a one-page web app.
+
+Using source "Modules", the definition files of all installed module will be used as storage.
+This is even lesser mighty, but provides an easy way to have at least some information for an automatic navigation.
+
 ]]></description>
-	<version>0.5.6</version>
+	<version>0.6.0</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improve configuration and scoped rendering.</log>
@@ -40,6 +49,7 @@ This module combines several navigation types to provide a standard navigation c
 	<log version="0.5.4">Extract hook to own class.</log>
 	<log version="0.5.5">Support submenu dividers (via page chapters) in dropdown menu.</log>
 	<log version="0.5.6">Add hook to render all menus.</log>
+	<log version="0.6.0">Implement pages entity.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -71,6 +81,7 @@ This module combines several navigation types to provide a standard navigation c
 	<relations>
 		<supports type="module">JS_jQuery_mmenu</supports>
 		<supports type="module">JS_Storage</supports>
+		<supports type="module">Resource_Pages</supports>
 		<supports type="module">UI_Navigation_Bootstrap_Navbar</supports>
 	</relations>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_Navigation::setupSidebar</hook>

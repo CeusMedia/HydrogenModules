@@ -10,7 +10,7 @@ class View_Helper_Navigation_Bootstrap_DropdownPillBar extends Abstraction
 
 	public function render( $scope = 0 ): string
 	{
-		$model		= new Model_Page( $this->env );
+		$model		= new Model_Page_ByDatabase( $this->env );
 		$indices	= ['parentId' => 0, 'scope' => $scope];
 		$pages		= $model->getAllByIndices( $indices, ['rank' => 'ASC'] );
 
