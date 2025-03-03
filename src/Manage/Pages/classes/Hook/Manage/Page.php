@@ -15,7 +15,7 @@ class Hook_Manage_Page extends Hook
 			return;
 
 		$words		= $this->env->getLanguage()->getWords( 'manage/page' );
-		$model		= new Model_Page( $this->env );
+		$model		= new Model_Page_ByDatabase( $this->env );
 		$list		= [];
 		foreach( $model->getAllByIndex( 'status', 1, ['rank' => 'ASC'] ) as $nr => $page ){
 			$page->level		= 0;

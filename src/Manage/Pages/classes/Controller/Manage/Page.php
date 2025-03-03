@@ -17,11 +17,13 @@ class Controller_Manage_Page extends Controller
 {
 	public static string $moduleId		= 'Manage_Pages';
 
-	protected Model_Page|Model_Config_Page|Model_Module_Page $model;
+	protected Model_Page_ByDatabase|Model_Page_ByConfig|Model_Page_ByModules $model;
 	protected HttpRequest $request;
 	protected MessengerResource $messenger;
 	protected PartitionSession $session;
 	protected Logic_Frontend $frontend;
+	protected Logic_Page $logic;
+
 	protected array $words;
 	protected string $patternIdentifier	= '@[^a-z0-9_/-]@';
 	protected string $sessionPrefix		= 'filter_manage_pages_';
@@ -96,7 +98,7 @@ class Controller_Manage_Page extends Controller
 			$path		= $this->env->url;
 			$moduleIds	= array_keys( $this->env->getModules()->getAll() );
 		}
-		if( $parentId && isset( $parent->type ) && Model_Page::TYPE_BRANCH === (int) $parent->type )
+		if( $parentId && isset( $parent->type ) && Model_Page_ByDatabase::TYPE_BRANCH === (int) $parent->type )
 			$path	.= $parent->identifier.'/';
 
 		$this->addData( 'path', $path );
@@ -231,24 +233,29 @@ ModuleManagePages.PageEditor.init();
 					}
 				}
 
-				$data		= [];
-				foreach( $this->model->getColumns() as $column )
-					if( $this->request->has( 'page_'.$column ) )
-						$data[$column]	= $this->request->get( 'page_'.$column );
+				$data		= $page;
+				foreach( $this->model->getColumns() as $column ){
+					if( $this->request->has( 'page_'.$column ) ){
+						$value	= $this->request->get( 'page_'.$column );
+						if( is_int( $data->$column ) )
+							$value	= (int) $value;
+						if( $data->$column !== $value )
+							$data->$column	= $value;
+					}
+				}
 				if( $scope != $page->scope )														//  switched scope
-					$data['parentId']	= 0;														//  clear parent page
-				$data['modifiedAt']	= time();
-				unset( $data['pageId'] );
+					$data->parentId	= 0;														//  clear parent page
+				$data->modifiedAt	= time();
 				$this->model->edit( $pageId, $data, FALSE );
 				$logicPage->updateFullpath( $pageId );
-				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data['title'] );
+				$this->env->getMessenger()->noteSuccess( $words->successEdited, $data->title );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}
 		}
 
 		$pages	= [];
 		$visiblePages	= $this->model->getAllByIndices(
-			array( 'status'	=> Model_Page::STATUS_VISIBLE ),
+			array( 'status'	=> Model_Page_ByDatabase::STATUS_VISIBLE ),
 			array( 'title' => "ASC" )
 		);
 		foreach( $visiblePages as $item ){
@@ -441,6 +448,7 @@ ModuleManagePages.PageEditor.init();
 		$this->words			= $this->getWords();
 		$this->session			= $this->env->getSession();
 		$this->frontend			= Logic_Frontend::getInstance( $this->env );
+		$this->logic			= Logic_Page::getInstance( $this->env );
 
 		$apps	= $this->detectManagedApp();
 		$source	= $this->detectSource();
@@ -499,8 +507,8 @@ ModuleManagePages.PageEditor.init();
 				$this->envManaged	= $this->frontend->getEnv();
 				$this->appSession	= $this->session->getAll( $this->sessionPrefix.$this->appFocus.'.', TRUE );
 				$this->appLanguages	= $this->frontend->getLanguages();
-				//			$source	= $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value;
-				//			$source	= $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' );
+	//			$source	= strtolower( $this->envManaged->getModules( TRUE )->get( 'UI_Navigation' )->config['menu.source']->value );
+	//			$source	= strtolower( $this->frontend->getModuleConfigValue( 'UI_Navigation', 'menu.source' ) );
 				$this->defaultLanguage	= $this->frontend->getDefaultLanguage();
 			}
 		}
@@ -513,21 +521,21 @@ ModuleManagePages.PageEditor.init();
 	 */
 	protected function detectSource(): string
 	{
-		$managesModules		= $this->envManaged->getModules();
+		$managedModules		= $this->envManaged->getModules();
 		$possibleSources	= [];
-		if( $managesModules->has( 'Resource_Pages' ) )
-			$possibleSources[]	= 'Database';
+		if( $managedModules->has( 'Resource_Pages' ) ){}
+			$possibleSources[]	= 'database';
 		if( file_exists( $this->envManaged->uri.'config/pages.json' ) )
-			$possibleSources[]	= 'Config';
-		$possibleSources[]	= 'Modules';
+			$possibleSources[]	= 'config';
+		$possibleSources[]	= 'modules';
 		if( $possibleSources !== $this->appSession->get( 'sources' ) )
 			$this->appSession->set( 'sources', $possibleSources );
 		$this->addData( 'sources', $possibleSources );
 
 		$defaultSource	= reset( $possibleSources );
-		if( $managesModules->has( 'UI_Navigation' ) ){
-			$module			= $this->envManaged->getModules()->get( 'UI_Navigation' );
-			$defaultSource	= $module->config['menu.source']->value;
+		if( $managedModules->has( 'UI_Navigation' ) ){
+			$module			= $managedModules->get( 'UI_Navigation' );
+			$defaultSource	= strtolower( $module->config['menu.source']->value );
 			$this->addData( 'sources', [$defaultSource] );
 		}
 		$source		= $this->appSession->get( 'source', $defaultSource );
@@ -537,12 +545,13 @@ ModuleManagePages.PageEditor.init();
 			$this->appSession->set( 'source', $source );
 		$this->addData( 'source', $source );
 
-		//  connect to model of source
+		if( !in_array( $source, Logic_Page::SOURCES, TRUE ) )
+			throw new RangeException( 'Unsupported source: '.$source );
+
 		$this->model	= match( $source ){
-			'Database'	=> new Model_Page($this->envManaged),
-			'Config'	=> new Model_Config_Page($this->envManaged),
-			'Modules'	=> new Model_Module_Page($this->envManaged),
-			default		=> throw new RangeException('Unsupported source: '.$source ),
+			'config'	=> new Model_Page_ByConfig( $this->envManaged ),
+			'database'	=> new Model_Page_ByDatabase( $this->envManaged ),
+			'modules'	=> new Model_Page_ByModules( $this->envManaged ),
 		};
 		return $source;
 	}
