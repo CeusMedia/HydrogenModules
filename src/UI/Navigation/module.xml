@@ -49,6 +49,7 @@ This is even lesser mighty, but provides an easy way to have at least some infor
 	<log version="0.5.4">Extract hook to own class.</log>
 	<log version="0.5.5">Support submenu dividers (via page chapters) in dropdown menu.</log>
 	<log version="0.5.6">Add hook to render all menus.</log>
+	<log version="0.5.7">Add locale files.</log>
 	<log version="0.6.0">Implement pages entity.</log>
 	<category>User Interface</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
@@ -64,6 +65,8 @@ This is even lesser mighty, but provides an easy way to have at least some infor
 		<class>View/Helper/Navigation/Bootstrap/Sidebar.php</class>
 		<class>View/Helper/Navigation/BootstrapResponsive.php</class>
 		<class>View/Helper/Navigation/Mobile.php</class>
+		<locale>de/ui/menu.ini</locale>
+		<locale>en/ui/menu.ini</locale>
 		<style source="common" load="auto">module.ui.navigation.css</style>
 		<script>module.ui.navigation.sidebar.js</script>
 	</files>
