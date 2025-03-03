@@ -16,7 +16,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
  */
-class Model_Page extends Model
+class Model_Page_ByDatabase extends Model
 {
 	public const TYPE_CONTENT		= 0;
 	public const TYPE_BRANCH		= 1;
@@ -40,6 +40,19 @@ class Model_Page extends Model
 		self::STATUS_DISABLED,
 		self::STATUS_HIDDEN,
 		self::STATUS_VISIBLE,
+	];
+
+	public const ACCESS_NONE		= 'none';
+	public const ACCESS_PUBLIC		= 'public';
+	public const ACCESS_OUTSIDE		= 'outside';
+	public const ACCESS_INSIDE		= 'inside';
+	public const ACCESS_ACL			= 'acl';
+	public const ACCESSES			= [
+		self::ACCESS_NONE,
+		self::ACCESS_PUBLIC,
+		self::ACCESS_OUTSIDE,
+		self::ACCESS_INSIDE,
+		self::ACCESS_ACL,
 	];
 
 	protected string $name			= 'pages';

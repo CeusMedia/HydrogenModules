@@ -4,7 +4,7 @@ use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Model_Config_Page
+class Model_Page_ByConfig
 {
 	protected Environment $env;
 
@@ -123,14 +123,14 @@ class Model_Config_Page
 
 	/**
 	 *	@param		int|string		$pageId
-	 *	@param		array			$data
+	 *	@param		Entity_Page			$data
 	 *	@param		bool			$stripTags		Flag: strip HTML tags from values, does nothing in this implementation, exists for compatibility with Model_Page
 	 *	@return		bool
 	 */
-	public function edit( int|string $pageId, array $data = [], bool $stripTags = FALSE ): bool
+	public function edit( int|string $pageId, Entity_Page $data, bool $stripTags = FALSE ): bool
 	{
 		$pageId		= (int) $pageId;
-		$changes	= array_filter( $data, function ( $value, $key ) use ( $pageId ){
+		$changes	= array_filter( $data->toArray(), function ( $value, $key ) use ( $pageId ){
 			return $this->pages[$pageId]->$key != $value;
 		}, ARRAY_FILTER_USE_BOTH );
 		if( [] === $changes )
@@ -181,9 +181,9 @@ class Model_Config_Page
 	{
 		$data	= $this->pages;
 		if( [] !== $indices )
-			$data	= Model_Config_Page::filterPagesByIndices( $data, $indices );
+			$data	= Model_Page_ByConfig::filterPagesByIndices( $data, $indices );
 //		if( [] !== $orders )
-//			$data	= Model_Config_Page::orderPages( $data, $orders );
+//			$data	= Model_Page_ByConfig::orderPages( $data, $orders );
 		if( 2 === count( $limits ) )
 			$data	= array_slice( $data, $limits[0], $limits[1] );
 		return $data;
@@ -201,9 +201,9 @@ class Model_Config_Page
 		$input['type']	??= reset( $this->types );
 		$type	= (int) array_search( $input['type'], $this->types );
 		if( !empty( $input['pages'] ) )
-			return Model_Page::TYPE_BRANCH;
+			return Model_Page_ByDatabase::TYPE_BRANCH;
 		else if( !empty( $input['controller'] ) )
-			return Model_Page::TYPE_MODULE;
+			return Model_Page_ByDatabase::TYPE_MODULE;
 		return $type;
 	}
 
@@ -220,7 +220,7 @@ class Model_Config_Page
 				$pageItem	= Entity_Page::fromArray( [
 					'pageId'		=> $pageId,
 					'type'			=> $this->getTypeFromInput( $page ),
-					'status'		=> Model_Page::STATUS_VISIBLE,			//@todo realize
+					'status'		=> Model_Page_ByDatabase::STATUS_VISIBLE,			//@todo realize
 					'scope'			=> $scopeNr,
 					'rank'			=> $pageNr + 1,
 					'identifier'	=> $page['path'],
@@ -243,7 +243,7 @@ class Model_Config_Page
 							'pageId'		=> $pageId,
 							'parentId'		=> $pageItem->pageId,
 							'type'			=> $this->getTypeFromInput( $subpage ),
-							'status'		=> Model_Page::STATUS_VISIBLE,			//@todo realize
+							'status'		=> Model_Page_ByDatabase::STATUS_VISIBLE,			//@todo realize
 							'scope'			=> $scopeNr,
 							'rank'			=> $subpageNr + 1,
 							'identifier'	=> $subpage['path'],
@@ -276,7 +276,7 @@ class Model_Config_Page
 			'path'	=> $page->identifier,
 			'label'	=> $page->title,
 		];
-		if( Model_Page::TYPE_MODULE === $page->type ){
+		if( Model_Page_ByDatabase::TYPE_MODULE === $page->type ){
 			$item['controller']	= $page->controller;
 			$item['action']		= $page->action;
 		}
@@ -289,7 +289,7 @@ class Model_Config_Page
 			if( '' !== ( $page->$option ?? '' ) )
 				$item[$option]	= $page->$option;
 
-		if( Model_Page::TYPE_BRANCH === $page->type ){	//  add subpages (at the end for better readable json structure)
+		if( Model_Page_ByDatabase::TYPE_BRANCH === $page->type ){	//  add subpages (at the end for better readable json structure)
 			$item['pages']	= [];
 		}
 		return $item;
@@ -303,7 +303,7 @@ class Model_Config_Page
 			$pages1	= $this->getAllByIndices( ['scope' => $scopeNr, 'parentId' => 0] );
 			foreach( $pages1 as $page1Nr => $page1 ){
 				$data1	= $this->transformPageToJsonItem( $page1 );
-				if( Model_Page::TYPE_BRANCH === $page1->type ){
+				if( Model_Page_ByDatabase::TYPE_BRANCH === $page1->type ){
 					$pages2	= $this->getAllByIndices( ['scope' => $scopeNr, 'parentId' => $page1->pageId] );
 					foreach( $pages2 as $page2Nr => $page2 ){
 						$stamp	= ( $page1Nr * 100 - $page2Nr ) / 100000;

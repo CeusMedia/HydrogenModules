@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\HydrogenFramework\Logic;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 
 /**
@@ -19,6 +20,15 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
  */
 class Logic_Page extends Logic
 {
+	public const SOURCE_DATABASE	= 'database';
+	public const SOURCE_CONFIG		= 'config';
+	public const SOURCE_MODULES		= 'modules';
+	public const SOURCES			= [
+		self::SOURCE_CONFIG,
+		self::SOURCE_DATABASE,
+		self::SOURCE_MODULES,
+	];
+
 	protected string $app			= 'self';
 	protected array $model			= [];
 
@@ -68,7 +78,7 @@ class Logic_Page extends Logic
 			throw new InvalidArgumentException( 'Invalid page ID given: '.$pageId );
 		$indices	= ['parentId'	=> $pageId];
 		if( $activeOnly )
-			$indices['status']	= Model_Page::STATUS_VISIBLE;
+			$indices['status']	= Model_Page_ByDatabase::STATUS_VISIBLE;
 		return $this->getPageModel()->getAllByIndices( $indices, ['rank' => 'ASC'] );
 	}
 
@@ -87,7 +97,7 @@ class Logic_Page extends Logic
 		if( !strlen( trim( $path ) ) )
 			throw new InvalidArgumentException( 'No path given' );
 		$page	= $this->getPageModel()->getByIndices( [
-			'type'		=> Model_Page::TYPE_COMPONENT,
+			'type'		=> Model_Page_ByDatabase::TYPE_COMPONENT,
 			'fullpath'	=> $path
 		] );
 		if( !$page ){
@@ -271,7 +281,7 @@ class Logic_Page extends Logic
 	 */
 	public function hasPages( bool $visible = TRUE ): bool
 	{
-		$minimumStatus	= $visible ? Model_Page::STATUS_VISIBLE : Model_Page::STATUS_HIDDEN;
+		$minimumStatus	= $visible ? Model_Page_ByDatabase::STATUS_VISIBLE : Model_Page_ByDatabase::STATUS_HIDDEN;
 		$indices		= ['status' => '>= '.$minimumStatus];
 		return $this->getPageModel()->count( $indices );
 	}
@@ -284,11 +294,11 @@ class Logic_Page extends Logic
 	{
 		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
-		if( Model_Page::TYPE_MODULE === $page->type && 'acl' === $page->access )
+		if( Model_Page_ByDatabase::TYPE_MODULE === $page->type && Model_Page_ByDatabase::ACCESS_ACL === $page->access )
 			$hasRight	= $this->env->getAcl()->has( $page->controller, $page->action ?: 'index' );
-		$public		= 'public' === $page->access;
-		$outside	= !$isAuthenticated && 'outside' === $page->access;
-		$inside		= $isAuthenticated && 'inside' === $page->access;
+		$public		= Model_Page_ByDatabase::ACCESS_PUBLIC === $page->access;
+		$outside	= Model_Page_ByDatabase::ACCESS_OUTSIDE === $page->access && !$isAuthenticated;
+		$inside		= Model_Page_ByDatabase::ACCESS_INSIDE === $page->access && $isAuthenticated;
 		return $public || $outside || $inside || $hasRight;
 	}
 
@@ -331,6 +341,7 @@ class Logic_Page extends Logic
 	public function updateFullpath( int|string $pageId, string $parentPath = NULL ): void
 	{
 		$model	= $this->getPageModel();
+		/** @var Entity_Page $page */
 		$page	= $model->get( $pageId );
 		if( !$parentPath ){
 			$parentPath	= '';
@@ -340,11 +351,10 @@ class Logic_Page extends Logic
 				$parentPath	= $parent->identifier.'/'.$parentPath;
 			}
 		}
-		$model->edit( $pageId, [
-			'fullpath'		=> $parentPath.$page->identifier,
-			'modifiedAt'	=> time(),
-		] );
-		if( Model_Page::TYPE_BRANCH === (int) $page->type )
+		$page->fullpath		= $parentPath.$page->identifier;
+		$page->modifiedAt	= time();
+		$model->edit( $pageId, $page );
+		if( Model_Page_ByDatabase::TYPE_BRANCH === (int) $page->type )
 			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
 				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );
 	}
@@ -394,8 +404,8 @@ class Logic_Page extends Logic
 		$model	= $this->getPageModel();
 		$parts	= preg_split( '/\//', $path );
 		$indices	= [																		//  basic indices to find page
-			'type'		=> [Model_Page::TYPE_CONTENT, Model_Page::TYPE_MODULE],				//  ... being of page type content or module
-			'status'	=> [Model_Page::STATUS_HIDDEN, Model_Page::STATUS_VISIBLE],			//  ... being visible or hidden, but not disabled
+			'type'		=> [Model_Page_ByDatabase::TYPE_CONTENT, Model_Page_ByDatabase::TYPE_MODULE],				//  ... being of page type content or module
+			'status'	=> [Model_Page_ByDatabase::STATUS_HIDDEN, Model_Page_ByDatabase::STATUS_VISIBLE],			//  ... being visible or hidden, but not disabled
 		];
 		$dispatcher	= [
 			'type'		=> 'module',
@@ -409,7 +419,7 @@ class Logic_Page extends Logic
 		 *	Reduces requested path backwards until matching a fullpath.
 		 *	Found page:
 		 *	 - can be, of course, at every level - parent ID does not matter.
-		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be of type Model_Page_ByDatabase::TYPE_CONTENT or TYPE_MODULE
 		 *	 - must be visible or at least hidden
 		 */
 		for( $i=count( $parts ); $i>0; $i-- ){														//  backward resolution
@@ -433,7 +443,7 @@ class Logic_Page extends Logic
 		 *	Reduces requested path backwards until matching an identifier.
 		 *	Found page:
 		 *	 - must be in root, so having no parent
-		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be of type Model_Page_ByDatabase::TYPE_CONTENT or TYPE_MODULE
 		 *	 - must be visible or at least hidden
 		 *	Problem: Does not work for pages in deeper levels
 		 */
@@ -456,7 +466,7 @@ class Logic_Page extends Logic
 		 *
 		 *	Iterates pages recursive by parents starting from top while each path part matches a page identifier.
 		 *	Returns deepest found page, that
-		 *	 - must be of type Model_Page::TYPE_CONTENT or TYPE_MODULE
+		 *	 - must be of type Model_Page_ByDatabase::TYPE_CONTENT or TYPE_MODULE
 		 *	 - must be visible or at least hidden
 		 *
 		 *	Problem: Does not work if page identifier contains a slash, e.g. is like abc/def
@@ -486,26 +496,47 @@ class Logic_Page extends Logic
 	}
 
 	/**
-	 *	@return		Model_Config_Page|Model_Module_Page|Model_Page
+	 *	@param		?Environment	$env		Specific environment of managed app, falls back to frontend or local environment
+	 *	@param		?string			$source		Specific source, falls back to setting in module UI:Navigation
+	 *	@return		Model_Page_ByConfig|Model_Page_ByModules|Model_Page_ByDatabase
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
-	protected function getPageModel(): Model_Page|Model_Module_Page|Model_Config_Page
+	public function getPageModel( Environment $env = NULL, string $source = NULL ): Model_Page_ByDatabase|Model_Page_ByModules|Model_Page_ByConfig
 	{
 		if( !empty( $this->model[$this->app] ) )
 			return $this->model[$this->app];
-		$envManaged		= $this->env;
-		if( $this->app === 'frontend' && class_exists( 'Logic_Frontend' ) ){
-			$frontend	= Logic_Frontend::getInstance( $this->env );
-			$envManaged	= $frontend->getEnv();
+
+		if( NULL === $env ){
+			$env	= $this->env;
+			if( 'frontend' === $this->app && $env->getModules()->has( 'Resource_Frontend' ) ){
+				$frontend	= Logic_Frontend::getInstance( $this->env );
+				$env	= $frontend->getEnv();
+			}
 		}
-		$source	= $envManaged->getModules()->get( 'UI_Navigation' )->config['menu.source']->value;
-		if( $source === 'Database' )
-			$this->model[$this->app]	= new Model_Page( $envManaged );
-		else if( $source === 'Config' )
-			$this->model[$this->app]	= new Model_Config_Page( $envManaged );
-		else if( $source === 'Modules' )
-			$this->model[$this->app]	= new Model_Module_Page( $envManaged );
+
+		//  no specific source given
+		if( NULL === $source ){
+			$managedModules	= $env->getModules();
+			if( $managedModules->has( 'UI_Navigation' ) ){
+				$managedModule	= $managedModules->get( 'UI_Navigation' );
+				$source	= strtolower( $managedModule->config['menu.source']->value );
+			}
+		}
+
+		//  still no source found
+		if( NULL === $source )
+			throw new RuntimeException( 'No page source given or none detected' );
+
+		//  unsupported source
+		if( !in_array( $source, self::SOURCES, TRUE ) )
+			throw new RuntimeException( 'Invalid page source: '.$source );
+
+		$this->model[$this->app]	= match( $source ){
+			self::SOURCE_CONFIG		=> new Model_Page_ByConfig( $env ),
+			self::SOURCE_DATABASE	=> new Model_Page_ByDatabase( $env ),
+			self::SOURCE_MODULES	=> new Model_Page_ByModules( $env ),
+		};
 		return $this->model[$this->app];
 	}
 }

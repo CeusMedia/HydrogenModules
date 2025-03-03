@@ -15,7 +15,7 @@ class Entity_Page extends Entity
 	public string $fullpath		= '';
 	public ?string $controller	= NULL;
 	public ?string $action		= NULL;
-	public string $access		= 'public';
+	public string $access		= Model_Page_ByDatabase::ACCESS_PUBLIC;
 	public string $title		= '';
 	public ?string $content		= NULL;
 	public string $format		= 'HTML';
