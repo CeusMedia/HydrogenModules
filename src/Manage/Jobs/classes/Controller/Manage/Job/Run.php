@@ -114,19 +114,16 @@ die;*/
 			$conditions['jobDefinitionId']		= $definitionIds;
 
 		if( $filterStartFrom || $filterStartTo ){
-			if( $filterStartFrom ){
-				$timestampStart	= strtotime( $filterStartFrom.' 00:00:00' );
-				$conditions['ranAt']		= '>= '.$timestampStart;
-			}
-			if( $filterStartTo ){
-				$timestampTo	= strtotime( $filterStartTo.' 23:59:59' );
-				$conditions['ranAt']		= '<= '.$timestampTo;
-			}
 			if( $filterStartFrom && $filterStartTo ){
-				/** @var int $timestampStart */
-				/** @var int $timestampTo */
-				$conditions['ranAt']		= '>< '.$timestampStart.' & '.$timestampTo;
+				$conditions['ranAt']	= vsprintf( '>< %s & %s', [
+					strtotime( $filterStartFrom.' 00:00:00' ),
+					strtotime( $filterStartTo.' 23:59:59' ),
+				] );
 			}
+			else if( $filterStartFrom )
+				$conditions['ranAt']	= '>= '.strtotime( $filterStartFrom.' 00:00:00' );
+			else if( $filterStartTo )
+				$conditions['ranAt']	= '<= '.strtotime( $filterStartTo.' 23:59:59' );
 		}
 
 		$total		= $this->modelRun->count( $conditions );

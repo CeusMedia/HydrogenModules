@@ -38,7 +38,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	public function index(): void
 	{
 		if( $this->request->getMethod()->isPost() ){
-			$upload	= $this->env->getLogic()->get( 'upload' );
+			$upload	= Logic_Upload::getInstance( $this->env );
 			try{
 				$upload->setUpload( $this->request->get( 'template' ) );
 			}
@@ -61,16 +61,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 				if( empty( $template->type ) || $template->type !== 'mail-template' )
 					throw new InvalidArgumentException( 'Uploaded file does not contain a template' );
 
-				if( !empty( $template->version ) && $template->version == 2 )
-					$data	= $this->getDataFromExportV2( $template );
-				else if( empty( $template->entity ) )
-					$data	= $this->getDataFromExportV1( $template );
-				else{
-					$this->messenger->noteError( 'File is not compatible' );
-					$this->restart( 'admin/mail/template' );
-				}
-				$templateId	= $this->modelTemplate->add( $data, FALSE );
-//				$this->messenger->noteSuccess( 'Template imported as '.$title );
+				$templateId	= $this->importTemplate( $template );
 				$this->restart( 'admin/mail/template/edit/'.$templateId );
 			}
 			catch( Exception $e ){
@@ -85,6 +76,22 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	}
 
 	//  --  PROTECTED  --  //
+
+	/**
+	 *	@param		object		$template
+	 *	@return		int|string|FALSE
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function importTemplate( object $template ): int|string|FALSE
+	{
+		if( !empty( $template->version ) && $template->version == 2 )
+			return $this->modelTemplate->add( $this->getDataFromExportV2( $template ), FALSE );
+		else if( empty( $template->entity ) )
+			return $this->modelTemplate->add( $this->getDataFromExportV1( $template ), FALSE );
+		$this->messenger->noteError( 'File is not compatible' );
+		$this->restart( 'admin/mail/template' );
+		return FALSE;
+	}
 
 	protected function getDataFromExportV1( object $template ): array
 	{
