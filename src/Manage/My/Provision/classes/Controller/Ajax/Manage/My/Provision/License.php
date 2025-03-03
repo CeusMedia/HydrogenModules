@@ -3,7 +3,7 @@
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
-class Controller_Manage_My_Provision_License extends AjaxController
+class Controller_Ajax_Manage_My_Provision_License extends AjaxController
 {
 	/**
 	 *	@return		int

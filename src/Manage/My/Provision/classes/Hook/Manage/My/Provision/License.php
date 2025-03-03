@@ -1,10 +1,17 @@
 <?php
-declare
+declare(strict_types=1);
 
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_My_Provision_License extends Hook
 {
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onRegisterTab(): void
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );

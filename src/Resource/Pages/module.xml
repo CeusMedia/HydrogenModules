@@ -39,9 +39,9 @@
 	<files>
 		<class>Entity/Page.php</class>
 		<class>Logic/Page.php</class>
-		<class>Model/Page.php</class>
-		<class>Model/Config/Page.php</class>
-		<class>Model/Module/Page.php</class>
+		<class>Model/Page/ByDatabase.php</class>
+		<class>Model/Page/ByConfig.php</class>
+		<class>Model/Page/ByModules.php</class>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>

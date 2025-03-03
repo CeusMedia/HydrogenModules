@@ -11,7 +11,7 @@ class Controller_Catalog_Provision_Product extends Controller
 	public function index( $productId = NULL ): void
 	{
 		if( !is_null( $productId ) && strlen( trim( $productId ) ) )
-			$this->restart( 'view/'.$productId );
+			$this->restart( 'view/'.$productId, TRUE );
 		$conditions	= [];
 		$orders		= ['rank' => 'ASC'];
 		$products	= $this->modelProduct->getAll( $conditions, $orders );

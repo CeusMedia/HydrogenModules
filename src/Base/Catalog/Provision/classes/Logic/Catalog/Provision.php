@@ -197,12 +197,12 @@ class Logic_Catalog_Provision extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$productOrId
+	 *	@param		object|int|string		$productOrId
 	 *	@param		bool			$absolute
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getProductUri( int|string $productOrId, bool $absolute = FALSE ): string
+	public function getProductUri( object|int|string $productOrId, bool $absolute = FALSE ): string
 	{
 		$product	= $productOrId;
 		if( is_int( $productOrId ) || is_string( $productOrId ) )
@@ -217,12 +217,12 @@ class Logic_Catalog_Provision extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$productLicenseOrId
+	 *	@param		object|int|string		$productLicenseOrId
 	 *	@param		bool			$absolute
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getProductLicenseUri( int|string $productLicenseOrId, bool $absolute = FALSE ): string
+	public function getProductLicenseUri( object|int|string $productLicenseOrId, bool $absolute = FALSE ): string
 	{
 		$productLicense	= $productLicenseOrId;
 		if( is_int( $productLicenseOrId ) || is_string( $productLicenseOrId ) )

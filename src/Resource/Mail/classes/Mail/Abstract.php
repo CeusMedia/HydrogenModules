@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -327,7 +328,7 @@ abstract class Mail_Abstract
 			'title'	=> $this->env->getConfig()->get( 'app.name' ),
 			'host'	=> $host,
 		]] );
-		$this->mail->setSubject( $subject );
+		$this->mail->setSubject( TextTrimmer::trimCentric( $subject, 255 ) );
 		return $this;
 	}
 
