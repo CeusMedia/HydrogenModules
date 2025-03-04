@@ -56,6 +56,7 @@ This is even lesser mighty, but provides an easy way to have at least some infor
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Entity/Menu/Item.php</class>
 		<class>Hook/UI/Navigation.php</class>
 		<class>Model/Menu.php</class>
 		<class>View/Helper/Navigation.php</class>
