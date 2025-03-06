@@ -4,6 +4,7 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_IP_Lock extends Model
 {
+	public const STATUS_DISABLED_BY_REASON	= -10;
 	public const STATUS_UNLOCKED		= -2;
 	public const STATUS_CANCELLED		= -1;
 	public const STATUS_REQUEST_LOCK	= 0;
@@ -42,5 +43,7 @@ class Model_IP_Lock extends Model
 		'lockedAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Server_IP_Lock::class;
 }

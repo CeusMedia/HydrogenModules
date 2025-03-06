@@ -1,21 +1,25 @@
 <?php
 
 use CeusMedia\Common\Net\HTTP\Status as HttpStatus;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_IP_Lock extends Hook
 {
-	public static function onEnvInit( Environment $env, object $context, object $module, array & $payload )
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function onEnvInit(): void
 	{
-		$ip		= getEnv( 'REMOTE_ADDR' );																	//  get IP address of request
-		$logic	= Logic_IP_Lock::getInstance( $env );														//  get instance of IP lock logic
-		$logic->unlockIfOverdue( $ip, FALSE );																//  clear lock if existing and outdated
+		$ip		= getEnv( 'REMOTE_ADDR' );															//  get IP address of request
+		$logic	= Logic_IP_Lock::getInstance( $this->env );													//  get instance of IP lock logic
+		$logic->unlockIfOverdue( $ip, FALSE );														//  clear lock if existing and outdated
 		$logic->applyFilters();																				//  apply filters on request of IP
 		if( !$logic->isLockedIp( $ip ) )																	//  no lock is active for IP address
 			return;
 		$lock	= $logic->getByIp( $ip );																	//  get lock according to IP address
-		$logic->countView( $lock->ipLockId );																//  count this error page view
+		$logic->countView( $lock );																//  count this error page view
 		HttpStatus::sendHeader( $lock->reason->code );														//  send HTTP status code header
 		header( 'Content-type: text/html; charset=utf-8' );													//  send MIME type header for UTF-8 HTML error page
 		if( $lock->unlockIn > 0 )																			//  seconds to retry after are set
