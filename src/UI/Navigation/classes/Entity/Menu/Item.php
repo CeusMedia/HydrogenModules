@@ -22,14 +22,14 @@ class Entity_Menu_Item extends Entity
 
 	public int|string|NULL $parent		= NULL;
 	public string $type					= self::TYPE_ITEM;
-	public int $scope					= 0;
+	public string $scope				= 'main';
 	public string $path					= '';
 	public string $link					= '';
 	public string $label				= '';
 	public ?string $language			= NULL;
 	public int $rank					= 0;
 	public bool $active					= FALSE;
-	public string $icon					= '';
+	public ?string $icon				= NULL;
 	public ?string $chapter				= NULL;
 
 	public array $items					= [];
