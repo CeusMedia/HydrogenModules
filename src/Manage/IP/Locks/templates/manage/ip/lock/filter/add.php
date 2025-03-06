@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
-/** @var array<object> $reasons */
+/** @var array<Entity_Server_IP_Lock_Reason> $reasons */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );

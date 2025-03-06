@@ -8,9 +8,9 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var Web $env */
 /** @var array $reasons */
 
-$states	= [
-	0	=> 'disabled',
-	1	=> 'active',
+$statuses	= [
+	Model_IP_Lock_Reason::STATUS_DISABLED	=> 'disabled',
+	Model_IP_Lock_Reason::STATUS_ENABLED	=> 'active',
 ];
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
@@ -44,7 +44,7 @@ if( $reasons ){
 			'class'		=> 'btn btn-success btn-small btn-mini',
 			'title'		=> 'aktivieren',
 		] );
-		if( $reason->status ){
+		if( Model_IP_Lock_Reason::STATUS_ENABLED === $reason->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/ip/lock/reason/deactivate/'.$reason->ipLockReasonId,
 				'class'		=> 'btn btn-inverse btn-small btn-mini',

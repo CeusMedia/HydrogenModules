@@ -5,19 +5,19 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
-/** @var array<object> $locks */
+/** @var array<Entity_Server_IP_Lock> $locks */
 /** @var int $total */
 /** @var int $count */
 /** @var int $limit */
 /** @var int $page */
 
-$states	= [
-	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
-	-2	=> 'unlocked',
-	-1	=> '...',
-	0	=> 'lock requested',
-	1	=> 'locked',
-	2	=> 'unlock requested',
+$statuses	= [
+	Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
+	Model_IP_Lock::STATUS_UNLOCKED				=> 'unlocked',
+	Model_IP_Lock::STATUS_CANCELLED				=> '...',
+	Model_IP_Lock::STATUS_REQUEST_LOCK			=> 'lock requested',
+	Model_IP_Lock::STATUS_LOCKED				=> 'locked',
+	Model_IP_Lock::STATUS_REQUEST_UNLOCK		=> 'unlock requested',
 ];
 
 $iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
@@ -39,22 +39,35 @@ $list	= '<div><em><small>Keine IP-Locks gefunden.</small></em></div>';
 if( $locks ){
 	$list	= [];
 	foreach( $locks as $lock ){
-		if( $lock->reason->status < 1 )
-			$lock->status = -10;
+		if( $lock->reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
+			$lock->status = Model_IP_Lock::STATUS_DISABLED_BY_REASON;
 		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/ip/lock/edit/'.$lock->ipLockId,
 			'class'		=> 'btn btn-small',
 			'title'		=> 'bearbeiten',
 		] );
-		$buttonStatus	= "";
-		if( in_array( $lock->status, [-2, -1, 0] ) ){
+		$buttonStatus	= '';
+		$statusesLockable		= [
+			Model_IP_Lock::STATUS_UNLOCKED,
+			Model_IP_Lock::STATUS_CANCELLED,
+			Model_IP_Lock::STATUS_REQUEST_LOCK
+		];
+		$statusesUnlockable		= [
+			Model_IP_Lock::STATUS_LOCKED,
+			Model_IP_Lock::STATUS_REQUEST_UNLOCK,
+		];
+		$statusesRemovable		= [
+			Model_IP_Lock::STATUS_UNLOCKED,
+			Model_IP_Lock::STATUS_DISABLED_BY_REASON,
+		];
+		if( in_array( $lock->status, $statusesLockable, TRUE ) ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconLock, [
 				'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-success',
 				'title'		=> 'aktivieren',
 			] );
 		}
-		else if( in_array( $lock->status, [1, 2] ) ){
+		else if( in_array( $lock->status, $statusesUnlockable, TRUE ) ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconUnlock, [
 				'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-inverse',
@@ -62,7 +75,7 @@ if( $locks ){
 			] );
 		}
 		$buttonRemove	= "";
-		if( in_array( $lock->status, [-2, -10] ) ){
+		if( in_array( $lock->status, $statusesRemovable, TRUE ) ){
 			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 				'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-danger',
@@ -102,7 +115,7 @@ if( $locks ){
 
 		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link, ['class' => 'lock-ip'] ),
-			HtmlTag::create( 'td', $states[$lock->status], ['class' => 'lock-status'] ),
+			HtmlTag::create( 'td', $statuses[$lock->status], ['class' => 'lock-status'] ),
 			HtmlTag::create( 'td', $lockedAt, ['class' => 'lock-lockedAt'] ),
 			HtmlTag::create( 'td', $unlockAt, ['class' => 'lock-unlockAt'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-reason-title'] ),
