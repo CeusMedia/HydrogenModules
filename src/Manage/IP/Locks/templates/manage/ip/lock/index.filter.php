@@ -21,13 +21,14 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.' zurücksetzen', [
 ] );
 
 $optStatus = [
-	-10	=> 'deaktiviert',
-	-2	=> 'unlocked',
-	-1	=> '...',
+	Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> 'deaktiviert',
+	Model_IP_Lock::STATUS_UNLOCKED				=> 'unlocked',
+	Model_IP_Lock::STATUS_CANCELLED				=> '...',
 	''	=> '- alle -',
-	0	=> 'lock requested',
-	1	=> 'locked',
-	2	=> 'unlock requested',
+	Model_IP_Lock::STATUS_REQUEST_LOCK			=> 'lock requested',
+	Model_IP_Lock::STATUS_LOCKED				=> 'locked',
+	Model_IP_Lock::STATUS_REQUEST_UNLOCK		=> 'unlock requested',
+
 ];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 

@@ -19,8 +19,8 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
 ] );
 
 $optStatus	= HtmlElements::Options( [
-	1		=> 'aktiv',
-	0		=> 'inaktiv',
+	Model_IP_Lock_Reason::STATUS_ENABLED	=> 'aktiv',
+	Model_IP_Lock_Reason::STATUS_DISABLED	=> 'inaktiv',
 ] );
 
 $panelAdd	= '

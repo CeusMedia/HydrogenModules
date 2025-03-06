@@ -4,12 +4,12 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
-/** @var object $filters */
+/** @var array<Entity_Server_IP_Lock_Filter> $filters */
 
-$states	= [
-	-10	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
-	0	=> 'inaktiv',
-	1	=> 'aktiv',
+$statuses	= [
+	Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
+	Model_IP_Lock_Filter::STATUS_DISABLED			=> 'inaktiv',
+	Model_IP_Lock_Filter::STATUS_ENABLED			=> 'aktiv',
 ];
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
@@ -44,7 +44,7 @@ if( $filters ){
 	$list	= [];
 	foreach( $filters as $filter ){
 		if( $filter->reason->status < 1 )
-			$filter->status	= -10;
+			$filter->status	= Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON;
 
 		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId,
@@ -52,14 +52,14 @@ if( $filters ){
 			'title'		=> 'edit',
 		] );
 		$buttonStatus	= "";
-		if( in_array( $filter->status, [0] ) ){
+		if( Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 				'href'		=> './manage/ip/lock/filter/activate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-success btn-small btn-mini',
 				'title'		=> 'aktivieren',
 			] );
 		}
-		else if( in_array( $filter->status, [1] ) ){
+		else if( Model_IP_Lock_Filter::STATUS_ENABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/ip/lock/filter/deactivate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-inverse btn-small btn-mini',
@@ -81,9 +81,9 @@ if( $filters ){
 		$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
 		$title		= HtmlTag::create( 'div', $link, ['class' => 'autocut'] );
 		$rowClass	= 'success';
-		if( $filter->status < 1 )
+		if( $filter->status < Model_IP_Lock_Filter::STATUS_ENABLED )
 			$rowClass	= 'warning';
-		if( $filter->status < 0 )
+		if( $filter->status < Model_IP_Lock_Filter::STATUS_DISABLED )
 			$rowClass	= 'info';
 
 		$reason	= HtmlTag::create( 'div', $filter->reason->title, ['class' => 'autocut'] );
@@ -92,7 +92,7 @@ if( $filters ){
 			HtmlTag::create( 'td', $title, ['class' => 'lock-filter-title'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-filter-reason'] ),
 			HtmlTag::create( 'td', $lockStatus, ['class' => 'lock-filter-lock-status'] ),
-			HtmlTag::create( 'td', $states[$filter->status], ['class' => 'lock-filter-status'] ),
+			HtmlTag::create( 'td', $statuses[$filter->status], ['class' => 'lock-filter-status'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-filter-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
 		], ['class' => $rowClass] );

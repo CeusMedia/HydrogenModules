@@ -24,6 +24,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
@@ -57,13 +58,15 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@param		string		$filterId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $filterId ): void
 	{
 		$request	= $this->env->getRequest();
+		/** @var ?Entity_Server_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
-		if( !$filter ){
+		if( NULL === $filter ){
 			$this->messenger->noteError( 'Invalid filter ID.' );
 			$this->restart();
 		}
@@ -81,6 +84,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
@@ -90,9 +94,8 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$limits		= [];
 		$model		= new Model_IP_Lock_Reason( $this->env );
 		$filters	= $this->model->getAll( $conditions, $orders, $limits );
-		foreach( $filters as $filter ){
+		foreach( $filters as $filter )
 			$filter->reason	= $model->get( $filter->reasonId );
-		}
 		$this->addData( 'filters', $filters );
 	}
 
@@ -104,14 +107,15 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	public function remove( string $filterId ): void
 	{
 //		$request	= $this->env->getRequest();
+		/** @var ?Entity_Server_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
-		if( !$filter ){
+		if( NULL === $filter ){
 			$this->messenger->noteError( 'Invalid filter ID.' );
 			$this->restart();
 		}
 		$locks		= $this->logic->getAll( ['filterId' => $filterId] );
 		foreach( $locks as $lock )
-			$this->logic->remove( $lock->ipLockId );
+			$this->logic->remove( $lock );
 		$this->model->remove( $filterId );
 		$this->messenger->noteSuccess( 'Filter and related locks removed.' );
 		$this->restart( NULL, TRUE );
@@ -123,7 +127,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Filter( $this->env );

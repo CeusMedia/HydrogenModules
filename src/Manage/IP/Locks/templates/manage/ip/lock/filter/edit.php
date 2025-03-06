@@ -4,8 +4,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
-/** @var array<object> $reasons */
-/** @var object $filter */
+/** @var array<Entity_Server_IP_Lock_Reason> $reasons */
+/** @var Entity_Server_IP_Lock_Filter $filter */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
@@ -39,8 +39,8 @@ $optLockStatus	= HtmlElements::Options( [
 ], $filter->lockStatus );
 
 $optStatus	= HtmlElements::Options( [
-	1		=> 'aktiv',
-	0		=> 'inaktiv',
+	Model_IP_Lock_Filter::STATUS_ENABLED	=> 'aktiv',
+	Model_IP_Lock_Filter::STATUS_DISABLED	=> 'inaktiv',
 ], $filter->status );
 
 $optReason	= [];

@@ -35,7 +35,10 @@ class Controller_Manage_IP_Lock extends Controller
 	 */
 	public function cancel( string $ipLockId ): void
 	{
-		if( $this->logic->cancel( $ipLockId ) )
+		$lock	= $this->logic->get( $ipLockId );
+		if( NULL === $lock )
+			throw new RuntimeException( 'Invalid lock ID given' );
+		if( $this->logic->cancel( $lock ) )
 			$this->messenger->noteSuccess( 'IP lock cancelled.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
@@ -50,7 +53,7 @@ class Controller_Manage_IP_Lock extends Controller
 	public function edit( string $ipLockId ): void
 	{
 		$lock	= $this->logic->get( $ipLockId, FALSE );
-		if( !$lock ){
+		if( NULL === $lock ){
 			$this->messenger->noteError( 'Invalid lock ID.' );
 			$this->restart( NULL, TRUE );
 		}
@@ -69,7 +72,7 @@ class Controller_Manage_IP_Lock extends Controller
 	{
 		$session	= $this->env->getSession();
 		$conditions	= [
-			'status'	=> '!= -1',
+			'status'	=> '!= '.Model_IP_Lock::STATUS_CANCELLED,
 		];
 		$order		= [];
 		if( $session->get( $this->filterSessionPrefix.'ip' ) )
@@ -108,7 +111,10 @@ class Controller_Manage_IP_Lock extends Controller
 	 */
 	public function lock( string $ipLockId ): void
 	{
-		if( $this->logic->lock( $ipLockId ) )
+		$lock	= $this->logic->get( $ipLockId );
+		if( NULL === $lock )
+			throw new RuntimeException( 'Invalid lock ID given' );
+		if( $this->logic->lock( $lock ) )
 			$this->messenger->noteSuccess( 'IP locked.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
@@ -146,7 +152,10 @@ class Controller_Manage_IP_Lock extends Controller
 	 */
 	public function unlock( string $ipLockId ): void
 	{
-		if( $this->logic->unlock( $ipLockId ) )
+		$lock	= $this->logic->get( $ipLockId );
+		if( NULL === $lock )
+			throw new RuntimeException( 'Invalid lock ID given' );
+		if( $this->logic->unlock( $lock ) )
 			$this->messenger->noteSuccess( 'IP unlocked.' );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );

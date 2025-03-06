@@ -60,8 +60,9 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	public function edit( string $reasonId ): void
 	{
 		$request	= $this->env->getRequest();
+		/** @var ?Entity_Server_IP_Lock_Reason $reason */
 		$reason		= $this->model->get( $reasonId );
-		if( !$reason ){
+		if( NULL ===$reason ){
 			$this->messenger->noteError( 'Invalid reason ID.' );
 			$this->restart();
 		}
@@ -100,8 +101,9 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	public function remove( string $reasonId ): void
 	{
 //		$request	= $this->env->getRequest();
+		/** @var ?Entity_Server_IP_Lock_Reason $reason */
 		$reason		= $this->model->get( $reasonId );
-		if( !$reason ){
+		if( NULL === $reason ){
 			$this->messenger->noteError( 'Invalid reason ID.' );
 			$this->restart();
 		}
@@ -116,7 +118,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Reason( $this->env );
