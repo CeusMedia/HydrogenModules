@@ -17,6 +17,7 @@ class Model_IP_Lock_Reason extends Model
 	protected array $columns		= [
 		'ipLockReasonId',
 		'status',
+		'code',
 		'duration',
 		'title',
 		'description',
@@ -33,5 +34,7 @@ class Model_IP_Lock_Reason extends Model
 		'appliedAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Server_IP_Lock_Reason::class;
 }

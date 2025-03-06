@@ -3,6 +3,7 @@ use CeusMedia\HydrogenFramework\Model;
 
 class Model_IP_Lock_Filter extends Model
 {
+	public const STATUS_DISABLED_BY_REASON	= -10;
 	public const STATUS_DISABLED	= 0;
 	public const STATUS_ENABLED		= 1;
 
@@ -38,5 +39,7 @@ class Model_IP_Lock_Filter extends Model
 		'createdAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Server_IP_Lock_Filter::class;
 }

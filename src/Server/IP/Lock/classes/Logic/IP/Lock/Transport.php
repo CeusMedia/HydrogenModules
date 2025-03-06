@@ -20,13 +20,13 @@ class Logic_IP_Lock_Transport extends Logic
 	 */
 	public function export( array $reasonIds = [], array $filterIds = [] ): object
 	{
-		if( !$reasonIds ){
+		if( [] === $reasonIds ){
 			$reasons	= $this->modelReason->getAll();
 			$filters	= $this->modelFilter->getAll();
 		}
 		else{
 			$reasons	= $this->modelReason->getAll( ['ipLockReasonId' => $reasonIds] );
-			if( !$filterIds ){
+			if( [] === $filterIds ){
 				$filters	= $this->modelFilter->getAllByIndex( 'reasonId', $reasonIds );
 			}
 			else{
@@ -82,8 +82,8 @@ class Logic_IP_Lock_Transport extends Logic
 			$dbc->beginTransaction();
 			if( $resetAllBefore )
 				$this->logicLock->removeAll( TRUE, TRUE, TRUE );
-			$hasReasons		= $this->modelReason->count();
-			$hasFilters		= $this->modelFilter->count();
+			$hasReasons		= 0 !== $this->modelReason->count();
+			$hasFilters		= 0 !== $this->modelFilter->count();
 			if( !$hasReasons && !$hasFilters ){
 				foreach( $data->reasons as $reason )
 					$this->modelReason->add( (array) $reason, FALSE );
