@@ -34,7 +34,7 @@ class Controller_Manage_IP_Lock_Transport extends Controller
 		if( !$this->request->getMethod()->isPost() )
 			$this->restart( NULL, TRUE );
 
-		$fileName	= $this->request->get( 'filename', '' );
+		$fileName	= trim( $this->request->get( 'filename', '' ) );
 		$reasonIds	= $this->request->get( 'reasonIds' );
 		$filterIds	= $this->request->get( 'filterIds' );
 
@@ -44,7 +44,7 @@ class Controller_Manage_IP_Lock_Transport extends Controller
 			$filterIds	= [];
 		$json		= $this->logicTransport->export( $reasonIds, $filterIds );
 
-		if( !strlen( trim( $fileName ) ) )
+		if( '' === $fileName )
 			$fileName	= 'IP_lock_{DATE}';
 		$fileName	= str_replace( '{DATE}', date( 'Y-M-D' ), $fileName );
 		if( !preg_match( '/\.\S+$/', $fileName ) )

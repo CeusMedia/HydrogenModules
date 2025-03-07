@@ -77,7 +77,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$order		= [];
 		if( $session->get( $this->filterSessionPrefix.'ip' ) )
 			$conditions['IP']	= $session->get( $this->filterSessionPrefix.'ip' );
-		if( strlen( trim( $session->get( $this->filterSessionPrefix.'status' ) ) ) )
+		if( '' !== trim( $session->get( $this->filterSessionPrefix.'status', '' ) ) )
 			$conditions['status']	= $session->get( $this->filterSessionPrefix.'status' );
 		$sort	= 'lockedAt';
 		if( $session->get( $this->filterSessionPrefix.'sort' ) )
