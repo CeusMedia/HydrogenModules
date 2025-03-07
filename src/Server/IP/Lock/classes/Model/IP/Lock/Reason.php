@@ -36,5 +36,5 @@ class Model_IP_Lock_Reason extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= Entity_Server_IP_Lock_Reason::class;
+	protected ?string $className	= Entity_IP_Lock_Reason::class;
 }

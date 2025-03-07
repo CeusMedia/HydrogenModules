@@ -6,7 +6,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
-/** @var array<Entity_Server_IP_Lock> $locks */
+/** @var array<Entity_IP_Lock> $locks */
 /** @var int $total */
 /** @var int $count */
 /** @var int $limit */
@@ -92,7 +92,7 @@ function renderListNumbers( $page, $limit, $count, $total ): string
 	return HtmlTag::create( 'small', '('.$label.')', ['class' => 'muted'] );
 }
 
-function renderRow( Entity_Server_IP_Lock $lock, string $urlSuffixFrom, $helperTime ): string
+function renderRow(Entity_IP_Lock $lock, string $urlSuffixFrom, $helperTime ): string
 {
 	$statuses	= [
 		Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
@@ -126,7 +126,7 @@ function renderRow( Entity_Server_IP_Lock $lock, string $urlSuffixFrom, $helperT
 		HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
 	], ['class' => $rowClass] );
 }
-function renderRowButtons( Entity_Server_IP_Lock $lock, string $urlSuffixFrom ): string
+function renderRowButtons(Entity_IP_Lock $lock, string $urlSuffixFrom ): string
 {
 //	$iconView	= HtmlTag::create( 'i', '', ['class' => 'icon-eye-open'] );
 	$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
@@ -183,7 +183,7 @@ function renderRowButtons( Entity_Server_IP_Lock $lock, string $urlSuffixFrom ):
 	] );
 }
 
-function renderRowLockDate( Entity_Server_IP_Lock $lock, $helperTime = NULL ): string
+function renderRowLockDate(Entity_IP_Lock $lock, $helperTime = NULL ): string
 {
 	$lockedAt	= date( 'Y-m-d H:i:s', $lock->lockedAt );
 	if( $helperTime )
@@ -191,7 +191,7 @@ function renderRowLockDate( Entity_Server_IP_Lock $lock, $helperTime = NULL ): s
 	return $lockedAt;
 }
 
-function renderRowUnlockDate( Entity_Server_IP_Lock $lock ): string
+function renderRowUnlockDate(Entity_IP_Lock $lock ): string
 {
 	$unlockAt	= '<small class="muted">nie</small>';
 	if( $lock->reason->duration ){

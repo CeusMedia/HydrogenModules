@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
-/** @var Entity_Server_IP_Lock $lock */
+/** @var Entity_IP_Lock $lock */
 
 $data	= print_m( $lock, NULL, NULL, TRUE );
 

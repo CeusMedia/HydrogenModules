@@ -64,7 +64,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	public function edit( string $filterId ): void
 	{
 		$request	= $this->env->getRequest();
-		/** @var ?Entity_Server_IP_Lock_Filter $filter */
+		/** @var ?Entity_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
 		if( NULL === $filter ){
 			$this->messenger->noteError( 'Invalid filter ID.' );
@@ -107,7 +107,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	public function remove( string $filterId ): void
 	{
 //		$request	= $this->env->getRequest();
-		/** @var ?Entity_Server_IP_Lock_Filter $filter */
+		/** @var ?Entity_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
 		if( NULL === $filter ){
 			$this->messenger->noteError( 'Invalid filter ID.' );
