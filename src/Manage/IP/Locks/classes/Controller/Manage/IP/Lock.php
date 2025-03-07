@@ -168,7 +168,6 @@ class Controller_Manage_IP_Lock extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 	}
