@@ -14,4 +14,7 @@ class Entity_IP_Lock_Reason extends Entity
 	public int $createdAt			= 0;
 	public int $appliedAt			= 0;
 	public ?int $unlockedAt			= NULL;
+
+	/** @var array<Entity_IP_Lock_Filter> $filters */
+	public array $filters			= [];
 }

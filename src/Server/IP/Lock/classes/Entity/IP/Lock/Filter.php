@@ -11,6 +11,7 @@ class Entity_IP_Lock_Filter extends Entity
 	public int $lockStatus			= Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE;
 	public ?string $method			= NULL;
 	public string $pattern;
+	public string $title;
 	public int $createdAt			= 0;
 	public ?int $appliedAt			= NULL;
 	public ?int $modifiedAt			= NULL;

@@ -73,7 +73,7 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 			$this->messenger->noteSuccess( 'Reason saved.' );
 			$this->restart( NULL, TRUE );
 		}
-		$reason->filters	= $this->logic->getFiltersOfReason( $reason->reasonId );
+		$reason->filters	= $this->logic->getFiltersOfReason( $reason );
 		$this->addData( 'reason', $reason );
 	}
 
@@ -85,10 +85,11 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$conditions	= [];
 		$orders		= [];
 		$limits		= [];
+		/** @var array<Entity_IP_Lock_Reason> $reasons */
 		$reasons	= $this->model->getAll( $conditions, $orders, $limits );
 //		$model		= new Model_IP_Lock_Filter( $this->env );
 		foreach( $reasons as $reason ){
-			$reason->filters	= $this->logic->getFiltersOfReason( $reason->reasonId );
+			$reason->filters	= $this->logic->getFiltersOfReason( $reason );
 		}
 		$this->addData( 'reasons', $reasons );
 	}

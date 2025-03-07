@@ -141,15 +141,15 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		int|string	$reasonId
+	 *	@param		Entity_IP_Lock_Reason	$reason
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
 	 *	@return		array<Entity_IP_Lock_Filter>
 	 */
-	public function getFiltersOfReason( int|string $reasonId, array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getFiltersOfReason( Entity_IP_Lock_Reason $reason, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		$conditions['reasonId']	= $reasonId;
+		$conditions['reasonId']	= $reason->ipLockReasonId;
 		return $this->getFilters( $conditions, $orders, $limits );
 	}
 
