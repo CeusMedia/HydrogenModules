@@ -12,6 +12,13 @@ class Model_IP_Lock_Filter extends Model
 		self::STATUS_ENABLED,
 	];
 
+	public const LOCK_STATUS_REQUEST	= 0;
+	public const LOCK_STATUS_IMMEDIATE	= 1;
+	public const LOCK_STATUSES		= [
+		self::LOCK_STATUS_REQUEST,
+		self::LOCK_STATUS_IMMEDIATE,
+	];
+
 	protected string $name			= 'ip_lock_filters';
 
 	protected array $columns		= [
