@@ -28,9 +28,9 @@ $optMethod	= HtmlElements::Options( [
 ] );
 
 $optLockStatus	= HtmlElements::Options( [
-	1		=> 'aktive Sperre',
-	0		=> 'nur Sperrantrag',
-] );
+	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> 'aktive Sperre',
+	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> 'nur Sperrantrag',
+], Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE );
 
 $optReason	= [];
 foreach( $reasons as $reason )

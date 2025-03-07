@@ -30,20 +30,20 @@ if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 }
 
 $lockStates	= [
-	0	=> 'nur Sperranfrage',
-	1	=> 'aktive Sperre',
+	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> 'nur Sperranfrage',
+	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> 'aktive Sperre',
 ];
 
 $lockStates	= [
-	0	=> 'Anfrage',
-	1	=> 'Sperre',
+	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> 'Anfrage',
+	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> 'Sperre',
 ];
 
 $list	= '<div><em><small>Keine IP-Lock-Filter gefunden.</small></em></div>';
 if( $filters ){
 	$list	= [];
 	foreach( $filters as $filter ){
-		if( $filter->reason->status < 1 )
+		if( $filter->reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
 			$filter->status	= Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON;
 
 		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
@@ -52,6 +52,7 @@ if( $filters ){
 			'title'		=> 'edit',
 		] );
 		$buttonStatus	= "";
+
 		if( Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 				'href'		=> './manage/ip/lock/filter/activate/'.$filter->ipLockFilterId,

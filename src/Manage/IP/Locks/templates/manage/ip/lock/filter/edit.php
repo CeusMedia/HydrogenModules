@@ -34,8 +34,8 @@ $optMethod	= HtmlElements::Options( [
 ], $filter->method );
 
 $optLockStatus	= HtmlElements::Options( [
-	1		=> 'aktive Sperre',
-	0		=> 'nur Sperrantrag',
+	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> 'aktive Sperre',
+	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> 'nur Sperrantrag',
 ], $filter->lockStatus );
 
 $optStatus	= HtmlElements::Options( [
