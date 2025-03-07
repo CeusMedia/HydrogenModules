@@ -48,5 +48,5 @@ class Model_IP_Lock_Filter extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= Entity_Server_IP_Lock_Filter::class;
+	protected ?string $className	= Entity_IP_Lock_Filter::class;
 }

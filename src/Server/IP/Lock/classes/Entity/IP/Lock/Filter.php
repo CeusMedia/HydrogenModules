@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 use CeusMedia\HydrogenFramework\Entity;
 
-class Entity_Server_IP_Lock_Filter extends Entity
+class Entity_IP_Lock_Filter extends Entity
 {
 	public int|string $ipLockFilterId;
 	public int|string $reasonId;

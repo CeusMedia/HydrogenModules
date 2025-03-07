@@ -21,7 +21,7 @@ class Logic_IP_Lock extends Logic
 		$conditions	= ['status' => Model_IP_Lock_Filter::STATUS_ENABLED];
 		$filters	= $this->modelFilter->getAll( $conditions );
 		foreach( $filters as $filter ){
-			/** @var ?Entity_Server_IP_Lock_Reason $reason */
+			/** @var ?Entity_IP_Lock_Reason $reason */
 			$reason		= $this->modelReason->get( $filter->reasonId );
 			if( NULL === $reason || $reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
 				continue;
@@ -41,11 +41,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function cancel( Entity_Server_IP_Lock $lock ): bool
+	public function cancel(Entity_IP_Lock $lock ): bool
 	{
 		if( $lock->status == Model_IP_Lock::STATUS_CANCELLED )
 			return FALSE;																			//  indicate: lock already cancelled
@@ -58,11 +58,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function countView( Entity_Server_IP_Lock $lock ): void
+	public function countView(Entity_IP_Lock $lock ): void
 	{
 		$this->modelLock->edit( $lock->ipLockId, [
 			'views'		=> $lock->views + 1,
@@ -73,12 +73,12 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		int|string		$ipLockId
 	 *	@param		bool			$strict
-	 *	@return		?Entity_Server_IP_Lock
+	 *	@return		?Entity_IP_Lock
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function get( int|string $ipLockId, bool $strict = TRUE ): ?Entity_Server_IP_Lock
+	public function get( int|string $ipLockId, bool $strict = TRUE ): ?Entity_IP_Lock
 	{
-		/** @var ?Entity_Server_IP_Lock $lock */
+		/** @var ?Entity_IP_Lock $lock */
 		$lock	= $this->modelLock->get( $ipLockId );
 		if( NULL === $lock ){
 			if( $strict )
@@ -100,7 +100,7 @@ class Logic_IP_Lock extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array<Entity_Server_IP_Lock>
+	 *	@return		array<Entity_IP_Lock>
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
@@ -114,12 +114,12 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		string		$ip
 	 *	@param		bool		$strict
-	 *	@return		?Entity_Server_IP_Lock
+	 *	@return		?Entity_IP_Lock
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getByIp( string $ip, bool $strict = TRUE ): ?Entity_Server_IP_Lock
+	public function getByIp( string $ip, bool $strict = TRUE ): ?Entity_IP_Lock
 	{
-		/** @var ?Entity_Server_IP_Lock $lock */
+		/** @var ?Entity_IP_Lock $lock */
 		$lock	= $this->modelLock->getByIndex( 'IP', $ip );
 		if( NULL === $lock ){
 			if( $strict )
@@ -133,7 +133,7 @@ class Logic_IP_Lock extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array<Entity_Server_IP_Lock_Filter>
+	 *	@return		array<Entity_IP_Lock_Filter>
 	 */
 	public function getFilters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -145,7 +145,7 @@ class Logic_IP_Lock extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array<Entity_Server_IP_Lock_Filter>
+	 *	@return		array<Entity_IP_Lock_Filter>
 	 */
 	public function getFiltersOfReason( int|string $reasonId, array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -157,7 +157,7 @@ class Logic_IP_Lock extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array<Entity_Server_IP_Lock_Reason>
+	 *	@return		array<Entity_IP_Lock_Reason>
 	 */
 	public function getReasons( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -178,11 +178,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function lock( Entity_Server_IP_Lock $lock ): bool
+	public function lock(Entity_IP_Lock $lock ): bool
 	{
 		$states	= [
 			Model_IP_Lock::STATUS_UNLOCKED,
@@ -198,10 +198,10 @@ class Logic_IP_Lock extends Logic
 	 *	@param		string				$ip
 	 *	@param		int|string|NULL		$reasonId
 	 *	@param		object|NULL			$filter
-	 *	@return		Entity_Server_IP_Lock
+	 *	@return		Entity_IP_Lock
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function lockIp( string $ip, int|string|NULL $reasonId = NULL, ?object $filter = NULL ): Entity_Server_IP_Lock
+	public function lockIp( string $ip, int|string|NULL $reasonId = NULL, ?object $filter = NULL ): Entity_IP_Lock
 	{
 		$lock	= $this->getByIp( $ip, FALSE );
 		if( NULL === $lock ){
@@ -222,11 +222,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function remove( Entity_Server_IP_Lock $lock ): bool
+	public function remove(Entity_IP_Lock $lock ): bool
 	{
 		return $this->modelLock->remove( $lock->ipLockId );
 	}
@@ -242,11 +242,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function requestUnlock( Entity_Server_IP_Lock $lock ): bool
+	public function requestUnlock(Entity_IP_Lock $lock ): bool
 	{
 		if( $lock->status !== Model_IP_Lock::STATUS_LOCKED )
 			return FALSE;																			//  indicate: lock is not locked
@@ -254,12 +254,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@param		int						$status
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function setStatus( Entity_Server_IP_Lock $lock, int $status ): bool
+	public function setStatus(Entity_IP_Lock $lock, int $status ): bool
 	{
 		$data	= ['status' => $status];
 		if( $status == Model_IP_Lock::STATUS_UNLOCKED )
@@ -272,12 +272,12 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock|string	$lockOrIp
+	 *	@param		Entity_IP_Lock|string	$lockOrIp
 	 *	@param		bool $strict
 	 *	@return		bool|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function unlockIfOverdue( Entity_Server_IP_Lock|string $lockOrIp, bool $strict = TRUE ): ?bool
+	public function unlockIfOverdue(Entity_IP_Lock|string $lockOrIp, bool $strict = TRUE ): ?bool
 	{
 		if( is_string( $lockOrIp ) ){
 			$lockOrIp	= $this->getByIp( $lockOrIp, $strict );
@@ -292,11 +292,11 @@ class Logic_IP_Lock extends Logic
 	}
 
 	/**
-	 *	@param		Entity_Server_IP_Lock	$lock
+	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function unlock( Entity_Server_IP_Lock $lock ): bool|NULL
+	public function unlock(Entity_IP_Lock $lock ): bool|NULL
 	{
 		if( $lock->status !== Model_IP_Lock::STATUS_LOCKED )
 			return FALSE;																			//  indicate: lock not locked

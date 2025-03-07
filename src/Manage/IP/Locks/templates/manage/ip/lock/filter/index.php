@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
-/** @var array<Entity_Server_IP_Lock_Filter> $filters */
+/** @var array<Entity_IP_Lock_Filter> $filters */
 
 $statuses	= [
 	Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
