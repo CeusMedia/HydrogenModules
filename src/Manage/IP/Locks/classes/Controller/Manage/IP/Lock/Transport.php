@@ -92,7 +92,6 @@ class Controller_Manage_IP_Lock_Transport extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->modelFilter		= new Model_IP_Lock_Filter( $this->env );
 		$this->modelReason		= new Model_IP_Lock_Reason( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicTransport	= Logic_IP_Lock_Transport::getInstance( $this->env );
 
 //		$logicPool				= $this->env->getLogic();
