@@ -4,7 +4,7 @@ use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 
-class Controller_Manage_Ip_Lock_Transport extends Controller
+class Controller_Manage_IP_Lock_Transport extends Controller
 {
 	protected HttpRequest $request;
 	protected Logic_IP_Lock_Transport $logicTransport;
