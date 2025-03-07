@@ -86,9 +86,29 @@ class Logic_IP_Lock_Transport extends Logic
 			$hasFilters		= 0 !== $this->modelFilter->count();
 			if( !$hasReasons && !$hasFilters ){
 				foreach( $data->reasons as $reason )
-					$this->modelReason->add( (array) $reason, FALSE );
+					$this->modelReason->add( new Entity_IP_Lock_Reason( [
+						'ipLockReasonId'	=> $reason->ipLockReasonId,
+						'status'			=> (int) $reason->status,
+						'code'				=> (int) $reason->code,
+						'duration'			=> (int) $reason->duration,
+						'title'				=> $reason->title,
+						'description'		=> $reason->description,
+						'createdAt'			=> (int) $reason->createdAt,
+						'appliedAt'			=> (int) $reason->appliedAt,
+					] ), FALSE );
 				foreach( $data->filters as $filter )
-					$this->modelFilter->add( (array) $filter, FALSE );
+					$this->modelFilter->add( new Entity_IP_Lock_Filter( [
+						'ipLockFilterId'	=> $filter->ipLockFilterId,
+						'reasonId'			=> $filter->reasonId,
+						'status'			=> (int) $filter->status,
+						'lockStatus'		=> (int) $filter->lockStatus,
+						'method'			=> $filter->method,
+						'pattern'			=> $filter->pattern,
+						'title'				=> $filter->title,
+						'createdAt'			=> (int) $filter->createdAt,
+						'appliedAt'			=> (int) $filter->appliedAt,
+						'modifiedAt'		=> (int) $filter->modifiedAt,
+					] ), FALSE );
 				$result		= (object) [
 					'reasons'	=> count( $data->reasons ),
 					'filters'	=> count( $data->filters ),
@@ -100,6 +120,7 @@ class Logic_IP_Lock_Transport extends Logic
 		}
 		catch( Exception $e ){
 			$dbc->rollBack();
+			$this->env->getLog()->logException( $e );
 			throw new RuntimeException( 'Import failed', 0, $e );
 		}
 		return $result;
@@ -183,7 +204,16 @@ class Logic_IP_Lock_Transport extends Logic
 			if( $existingReason )
 				$reasonIdMap[$reasonImportId]	= $existingReason;
 			else{
-				$reasonId	= $this->modelReason->add( (array) $reason, FALSE );
+				$reasonId	= $this->modelReason->add( new Entity_IP_Lock_Reason( [
+					'ipLockReasonId'	=> $reason->ipLockReasonId,
+					'status'			=> (int) $reason->status,
+					'code'				=> (int) $reason->code,
+					'duration'			=> (int) $reason->duration,
+					'title'				=> $reason->title,
+					'description'		=> $reason->description,
+					'createdAt'			=> (int) $reason->createdAt,
+					'appliedAt'			=> (int) $reason->appliedAt,
+				] ), FALSE );
 				$reason->ipLockReasonId	= $reasonId;
 				$reasonIdMap[$reasonImportId]	= $reason;
 				$countReasons++;
@@ -196,7 +226,18 @@ class Logic_IP_Lock_Transport extends Logic
 			] );
 			if( !$existingFilter ){
 				$filter->reasonId	= $reasonIdMap[$filter->reasonId]->ipLockReasonId;
-				$this->modelFilter->add( (array) $filter, FALSE );
+				$this->modelFilter->add( new Entity_IP_Lock_Filter( [
+					'ipLockFilterId'	=> $filter->ipLockFilterId,
+					'reasonId'			=> $filter->reasonId,
+					'status'			=> (int) $filter->status,
+					'lockStatus'		=> (int) $filter->lockStatus,
+					'method'			=> $filter->method,
+					'pattern'			=> $filter->pattern,
+					'title'				=> $filter->title,
+					'createdAt'			=> (int) $filter->createdAt,
+					'appliedAt'			=> (int) $filter->appliedAt,
+					'modifiedAt'		=> (int) $filter->modifiedAt,
+				] ), FALSE );
 				$countFilters++;
 			}
 		}
