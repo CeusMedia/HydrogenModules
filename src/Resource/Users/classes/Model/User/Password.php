@@ -16,12 +16,14 @@ class Model_User_Password extends Model
 	public const STATUS_OUTDATED	= -1;
 	public const STATUS_NEW			= 0;
 	public const STATUS_ACTIVE		= 1;
+	public const STATUS_UPDATE		= 2;
 
 	public const STATUSES			= [
 		self::STATUS_REVOKED,
 		self::STATUS_OUTDATED,
 		self::STATUS_NEW,
 		self::STATUS_ACTIVE,
+		self::STATUS_UPDATE,
 	];
 
 	protected string $name			= 'user_passwords';

@@ -24,6 +24,7 @@ class Logic_UserPassword
 	 *	@access		public
 	 *	@param  	Environment		$env		Environment object
 	 *	@return		self			Singleton instance of this logic class
+	 *	@throws		ReflectionException
 	 */
 	public static function getInstance( Environment $env ): self
 	{
@@ -58,7 +59,7 @@ class Logic_UserPassword
 		/** @var ?Entity_User_Password $old */
 		$old	= $this->model->getByIndices( [
 			'userId'	=> $new->userId,
-			'status'	=> Model_User_Password::STATUS_ACTIVE,
+			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
 		] );
 		if( $old ){
 			$this->model->edit( $old->userPasswordId, [
@@ -92,16 +93,18 @@ class Logic_UserPassword
 	public function addPassword( Entity_User $user, string $password ): Entity_User_Password
 	{
 		$salt	= $this->generateSalt();															//  generate password salt
-		/** @var ?Entity_User_Password $other */
-		$other	= $this->model->getByIndices( [
+		/** @var Entity_User_Password[] $others */
+		$others	= $this->model->getAllByIndices( [
 			'userId'	=> $user->userId,
-			'status'	=> Model_User_Password::STATUS_NEW,
+			'status'	=> Model_User_Password::STATUS_NEW
 		] );
-		if( $other ){																				//  find other new password
-			$this->model->edit( $other->userPasswordId, [											//  and revoke it
-				'status'	=> Model_User_Password::STATUS_REVOKED,
-				'revokedAt' => time()
-			] );
+		if( $others ){																				//  find other new password
+			foreach( $others as $other ){
+				$this->model->edit( $other->userPasswordId, [										//  and revoke it
+					'status'	=> Model_User_Password::STATUS_REVOKED,
+					'revokedAt' => time()
+				] );
+			}
 		}
 		$data	= [
 			'userId'	=> $user->userId,
@@ -176,6 +179,11 @@ class Logic_UserPassword
 		return password_hash( $password, $algo, $options );
 	}
 
+	/**
+	 *	@param		Entity_User		$user
+	 *	@param		string			$password
+	 *	@return		Entity_User_Password|null
+	 */
 	public function getActivatableUserPassword( Entity_User $user, string $password ): ?Entity_User_Password
 	{
 		$indices	= [
@@ -190,6 +198,24 @@ class Logic_UserPassword
 	}
 
 	/**
+	 *	Returns the password entity waiting for confirmation, related to a password update.
+	 *	@param		Entity_User		$user
+	 *	@return		?Entity_User_Password
+	 */
+	public function getWaitingPasswordForPasswordUpdate( Entity_User $user ): ?Entity_User_Password
+	{
+		if( !$this->needsPasswordUpdate( $user ) )
+			return NULL;
+
+		/** @var ?Entity_User_Password $item */
+		$item	= $this->model->getByIndices( [
+			'userId'	=> $user->userId,
+			'status'	=> Model_User_Password::STATUS_NEW,
+		] );
+		return $item;
+	}
+
+	/**
 	 *	Indicates whether an active password has been set for user.
 	 *
 	 *	@access		public
@@ -200,7 +226,7 @@ class Logic_UserPassword
 	{
 		$indices	= [
 			'userId'	=> $user->userId,
-			'status'	=> Model_User_Password::STATUS_ACTIVE,
+			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
 		];
 		return (bool) $this->model->count( $indices );
 	}
@@ -210,6 +236,7 @@ class Logic_UserPassword
 	 *	@param		string			$password
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function migrateOldUserPassword( Entity_User $user, string $password ): void
 	{
@@ -219,6 +246,18 @@ class Logic_UserPassword
 		}
 		$model	= new Model_User( $this->env );
 		$model->edit( $user->userId, ['password' => ''] );
+	}
+
+	/**
+	 *	@param		Entity_User		$user
+	 *	@return		bool
+	 */
+	public function needsPasswordUpdate( Entity_User $user ): bool
+	{
+		return 0 !== $this->model->countByIndices( [
+			'userId'	=> $user->userId,
+			'status'	=> Model_User_Password::STATUS_UPDATE
+		] );
 	}
 
 	/**
@@ -249,7 +288,7 @@ class Logic_UserPassword
 		/** @var Entity_User_Password $item */
 		$item	= $this->model->getByIndices( [
 			'userId'	=> $user->userId,
-			'status'	=> Model_User_Password::STATUS_ACTIVE,
+			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
 		] );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
 			if( $resetFails ){
@@ -269,6 +308,7 @@ class Logic_UserPassword
 	 *	Protected constructor - this is a singleton.
 	 *	@access		protected
 	 *	@param		Environment		$env		Environment object
+	 *	@throws		ReflectionException
 	 */
 	protected function __construct( Environment $env )
 	{
