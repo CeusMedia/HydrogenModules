@@ -12,8 +12,8 @@ class Entity_IP_Lock extends Entity
 	public string $IP;
 	public string $uri;
 	public int $views				= 0;
-	public int $lockedAt			= 0;
-	public int $visitedAt			= 0;
+	public ?int $lockedAt			= NULL;
+	public ?int $visitedAt			= NULL;
 	public int $unlockedAt			= 0;
 
 	public ?Entity_IP_Lock_Filter $filter	= NULL;

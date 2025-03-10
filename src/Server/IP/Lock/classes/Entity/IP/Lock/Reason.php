@@ -12,7 +12,7 @@ class Entity_IP_Lock_Reason extends Entity
 	public string $title;
 	public ?string $description		= NULL;
 	public int $createdAt			= 0;
-	public int $appliedAt			= 0;
+	public ?int $appliedAt			= NULL;
 	public ?int $unlockedAt			= NULL;
 
 	/** @var array<Entity_IP_Lock_Filter> $filters */
