@@ -54,27 +54,48 @@ $(document).ready(function(){
 });';
 $env->getPage()->js->addScript( $script );
 
+$helperTime = FALSE;
+if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
+	$helperTime	= new View_Helper_TimePhraser( $env );
+
 $iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
-$atLeastOne		= TRUE;
-$history		= '';
+$atLeastOne		= !TRUE;
+$history		= '<div class="alert alert-info">Keine.</div>';
 if( !$atLeastOne || count( $passwords ) > 1 ){
 	$passwordCryptTypes = array_flip( Constants::getAll( 'PASSWORD_' ) );
 
 	$rows	= [];
 	foreach( $passwords as $password ){
-		$rowClass	= 'info';
-		if( $password->status == Model_User_Password::STATUS_NEW )
-			$rowClass	= 'warning';
-		if( $password->status == Model_User_Password::STATUS_ACTIVE )
-			$rowClass	= 'success';
-		$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
-		$dateUsed		= $password->usedAt ? date( 'd.m.Y', $password->usedAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->usedAt ).'</small>' : '-';
+		$rowClass	= match( $password->status ){
+			Model_User_Password::STATUS_NEW		=> 'warning',
+			Model_User_Password::STATUS_ACTIVE	=> 'success',
+			default								=> 'info',
+		};
+		$iconStatus	= match( $password->status ){
+			Model_User_Password::STATUS_REVOKED		=> 'ban',
+			Model_User_Password::STATUS_OUTDATED	=> 'calendar',
+			Model_User_Password::STATUS_NEW			=> 'plus-circle',
+			Model_User_Password::STATUS_ACTIVE		=> 'check-circle',
+			Model_User_Password::STATUS_UPDATE		=> 'refresh',
+		};
 		$labelStatus	= $words['password-statuses'][$password->status];
+		$iconStatus	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-'.$iconStatus] );
+		$dateCreated	= date( 'd.m.Y', $password->createdAt ).'&nbsp;<span class="muted">'.date( 'H:i', $password->createdAt ).'</small>';
+		if( FALSE !== $helperTime )
+			$dateUsed	= $helperTime->convert( $password->usedAt );
+		else{
+			$dateUsed		= '-';
+			if( $password->usedAt ){
+				$date		= date( 'd.m.Y', $password->usedAt );
+				$time		= date( 'H:i', $password->usedAt );
+				$dateUsed	= $date.'&nbsp;<span class="muted">'.$time.'</small>';
+			}
+		}
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', '<small class="not-muted">'.$dateCreated.'</small>' ),
 			HtmlTag::create( 'td', '<small class="not-muted">'.$dateUsed.'</small>' ),
-			HtmlTag::create( 'td', $labelStatus ),
+			HtmlTag::create( 'td', $iconStatus.'&nbsp;'.$labelStatus ),
 //			HtmlTag::create( 'td', preg_replace( '/^PASSWORD_/', '', $passwordCryptTypes[$password->algo] ) ),
 //			HtmlTag::create( 'td', $password->failsTotal ),
 		], ['class' => $rowClass] );

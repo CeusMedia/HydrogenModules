@@ -6,6 +6,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Auth extends Hook
 {
+	/**
+	 * @return false|void
+	 * @throws Exception
+	 */
 	public function onAppException()
 	{
 		$load	= (object) $this->payload;
@@ -33,7 +37,7 @@ class Hook_Auth extends Hook
 		return FALSE;
 	}
 
-	public function onPageApplyModules()
+	public function onPageApplyModules(): void
 	{
 		$session	= $this->env->getSession();
 		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
