@@ -98,8 +98,10 @@ class Controller_Auth_Local extends Controller
 	 */
 	public function login( $username = NULL ): void
 	{
-		if( $this->session->has( 'auth_user_id' ) )
+		if( $this->session->has( 'auth_user_id' ) ){
+			$this->redirectAfterLoginIfPasswordUpdateNeeded( $this->session->get( 'auth_user_id' ) );
 			$this->redirectAfterLogin();
+		}
 
 		$this->session->set( 'auth_backend', 'Local' );
 
@@ -257,6 +259,37 @@ class Controller_Auth_Local extends Controller
 		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
 	}
 
+	/**
+	 *	Displays form to set a new password for current user, since the current password needs to be updated.
+	 *
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	public function update( ?string $hash = NULL ): void
+	{
+		$logicAuth		= Logic_Authentication::getInstance( $this->env );
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+
+		/** @var ?Entity_User $user */
+		$user	= $logicAuth->getCurrentUser();
+		if( NULL === $user || !$logicPassword->needsPasswordUpdate( $user ) )
+			$this->restart();
+
+		if( $this->request->getMethod()->isPost() )
+			$this->handlePasswordUpdatePostRequest( $user );										//  handle POST request
+		if( '' !== $hash )
+			$this->handlePasswordUpdateConfirmGetRequest( $user, $hash );
+
+		$this->addData( 'password', $this->request->get( 'password' ) );
+
+		$from		= $this->request->get( 'from', '' );
+		$from		= str_replace( 'index/index', '', $from );
+		$this->addData( 'from', $from );														//  forward redirect URL to form action
+
+	}
+
+
 	//  --  PROTECTED  --  //
 
 	/**
@@ -324,7 +357,7 @@ class Controller_Auth_Local extends Controller
 			if( NULL !== $user )
 				break;
 		}
-		if( !$user ){
+		if( NULL === $user ){
 			$this->messenger->noteError( $words->msgInvalidUser );
 			return NULL;
 		}
@@ -359,7 +392,7 @@ class Controller_Auth_Local extends Controller
 			-2	=> $words->msgUserDisabled,
 		];
 		foreach( $insufficientUserStatuses as $status => $message ){
-			if( (int) $user->status === $status ){
+			if( $user->status === $status ){
 				$this->messenger->noteError( $message );
 				return NULL;
 			}
@@ -382,6 +415,7 @@ class Controller_Auth_Local extends Controller
 	 *	@todo		clean up if support for old password decays
 	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function checkPasswordOnLogin( Entity_User $user, string $password ): bool
 	{
@@ -417,6 +451,89 @@ class Controller_Auth_Local extends Controller
 	}
 
 	/**
+	 *	@param		Entity_User		$user
+	 *	@param		string			$hash
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function handlePasswordUpdateConfirmGetRequest( Entity_User $user, string $hash ): void
+	{
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+
+		/** @var ?Entity_User_Password $password */
+		$password	= $logicPassword->getWaitingPasswordForPasswordUpdate( $user );
+		if( NULL === $password )
+			return;
+		if( $hash !== sha1( join( '-', [$user->userId, $password->userPasswordId] ) ) )
+			return;
+
+		$logicPassword->activatePassword( $password );
+
+		$from	= trim( $this->request->get( 'from', '' ) );
+		if( '' !== $from )
+			$this->restart( $from );
+		$this->restart();
+	}
+
+	/**
+	 *	@param		Entity_User $user
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function handlePasswordUpdatePostRequest( Entity_User $user ): void
+	{
+		$words			= (object) $this->getWords( 'update' );
+		/** @var Dictionary $input */
+		$input			= $this->request->getAllFromSource( 'POST', TRUE );
+		$newPassword	= trim( $input->get( 'password', '' ) );
+		if( '' === $newPassword ){
+			$this->messenger->noteError( $words->msgNoPassword );
+			return;
+		}
+		$pwdMinLength	= (int) $this->moduleConfigUsers->get( 'password.length.min', 0 );
+		if( 0 !== $pwdMinLength && strlen( $newPassword ) < $pwdMinLength ){
+			$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+			return;
+		}
+
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+
+		$this->env->getDatabase()->beginTransaction();
+		try{
+			$password	= $logicPassword->addPassword( $user, $newPassword );
+			$data		= [
+				'user'			=> $user,
+				'firstname'		=> $user->firstname,
+				'surname'		=> $user->surname,
+				'username'		=> $user->username,
+				'userId'		=> $user->userId,
+				'password'		=> $newPassword,
+				'passwordId'	=> $password->userPasswordId
+			];
+			$language	= $this->env->getLanguage()->getLanguage();
+			$mail		= new Mail_Auth_Local_Update( $this->env, $data );
+			$logic		= Logic_Mail::getInstance( $this->env );
+			$logic->appendRegisteredAttachments( $mail, $language );
+			$logic->sendQueuedMail( $logic->enqueueMail( $mail, $language, $user ) );
+			$this->env->getDatabase()->commit();
+			$this->messenger->noteSuccess( $words->msgSuccess );
+			if( !$this->env->isInLiveMode() )
+				$this->messenger->noteNotice( 'Neues Passwort: '.$newPassword." <small><em>(Diese Meldung kommt nicht im Live-Betrieb.)</em></small>" );	//  @todo: remove before going live
+			$this->restart();
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( $words->msgSendingMailFailed );
+			$payload	= ['exception' => $e];
+			$this->callHook( 'Env', 'logException', $this, $payload );
+		}
+		finally{
+			$this->env->getDatabase()->rollBack();
+		}
+	}
+
+	/**
 	 *	Dispatch next route after login, by these rules:
 	 *	1. Given controller and action
 	 *	2. Forced forward path of this auth module
@@ -432,6 +549,7 @@ class Controller_Auth_Local extends Controller
 	 */
 	protected function redirectAfterLogin( ?string $controller = NULL, ?string $action = NULL ): void
 	{
+
 		if( '' !== ( $controller ?? '' ) )																//  a redirect controller has been argumented
 			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
@@ -480,6 +598,31 @@ class Controller_Auth_Local extends Controller
 		$this->restart();																				//  fallback: go to index (empty path)
 	}
 
+	/**
+	 *	Redirects to password update form after login, if current password needs an update.
+	 *	This will be the case, if a password has been preset or set by an admin or moderator
+	 *	AND the user itself should set a new password, since the current one is not a secret,
+	 *	only know by the user.
+	 *
+	 *	@param		Entity_User|int|string		$userOrId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function redirectAfterLoginIfPasswordUpdateNeeded( Entity_User|int|string $userOrId ): void
+	{
+		$logicUser		= Logic_User::getInstance( $this->env );
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+		if( !is_object( $userOrId ) )
+			$userOrId	= $logicUser->checkId( $userOrId );
+		if( $logicPassword->needsPasswordUpdate( $userOrId ) )
+			$this->restart( 'update', TRUE );
+	}
+
+	/**
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 */
 	protected function evaluateRoleIdOnRegister(): int
 	{
 		$modelRole	= new Model_Role( $this->env );
@@ -608,8 +751,9 @@ class Controller_Auth_Local extends Controller
 
 	/**
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
-	protected function linkCreatedAccountToOAuth($userId ): void
+	protected function linkCreatedAccountToOAuth( $userId ): void
 	{
 		if( $this->session->get( 'auth_register_oauth_user_id' ) ){
 			$modelOauthUser	= new Model_Oauth_User( $this->env );
@@ -715,6 +859,7 @@ class Controller_Auth_Local extends Controller
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function tryLoginByCookie(): void
 	{
@@ -789,6 +934,8 @@ class Controller_Auth_Local extends Controller
 			$logicAuth->setAuthenticatedUser( $user, $password );
 			if( $this->request->get( 'login_remember' ) )
 				$this->rememberUserInCookie( $user );
+
+			$this->redirectAfterLoginIfPasswordUpdateNeeded( $user );
 			$this->redirectAfterLogin();
 		}
 		catch( Exception $e ){

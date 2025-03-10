@@ -1,7 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -10,8 +9,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var Dictionary $config */
-/** @var array $words */
+/** @var array<string,array<string,string>> $words */
 /** @var Dictionary $user */
+/** @var array<string,string> $countries */
+/** @var ?string $from */
 
 $w				= (object) $words['register'];
 
@@ -78,7 +79,7 @@ if( $tacHtml ){
 
 $fieldOauth2	= '';
 if( isset( $useOauth2 ) && $useOauth2 ){
-	$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
+	$helper		= new View_Helper_Oauth_ProviderButtons( $env );
 	if( $helper->count() ){
 		$iconUnbind			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 		$assignedProvider	= $env->getSession()->get( 'auth_register_oauth_provider' );
@@ -117,7 +118,7 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 			], ['class' => 'alert alert-success'] );
 		}
 		else{
-			$helper		= new View_Helper_Oauth_ProviderButtons( $this->env );
+			$helper		= new View_Helper_Oauth_ProviderButtons( $env );
 			$helper->setDropdownLabel( 'weitere Anbieter' );
 			$buttons	= $helper->setLinkPath( './auth/oauth2/register/' )->render();
 			$field		=  array(
@@ -279,7 +280,7 @@ if( $from )
 	'class'		=> 'btn btn-large',
 ] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconRegister.'&nbsp'.$w->buttonSave, [
+$buttonSave	= HtmlTag::create( 'button', $iconSend.'&nbsp'.$w->buttonSave, [
 	'type'		=> 'submit',
 	'id'		=> 'button_save',
 	'class'		=> 'btn btn-primary btn-large save',
@@ -324,14 +325,22 @@ $panelUser	= HTML::DivClass( 'content-panel', [
 	] )
 ] );
 
-$textTop	= $textTop ? HTML::DivClass( "auth-register-text-top", $textTop ) : '';
-$textBottom	= $textTop ? HTML::DivClass( "auth-register-text-bottom", $textBottom ) : '';
+$textTop	= trim( strip_tags( $textTop ?? '' ) );
+$textBottom	= trim( strip_tags( $textBottom ?? '' ) );
+$textInfo	= trim( strip_tags( $textInfo ?? '' ) );
 
-if( strlen( trim( strip_tags( $textInfo ) ) ) ){
+if( '' !== $textTop )
+	$textTop	= HTML::DivClass( "auth-register-text-top", $textTop );
+
+if( '' !== $textBottom )
+	$textBottom	= HTML::DivClass( "auth-register-text-bottom", $textBottom );
+
+if( '' !== $textInfo ){
 	return $textTop.
 	HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", [
 		HTML::DivClass( "bs2-span4 bs3-col-md-4 bs4-col-md-4", $panelUser ),
 		HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
 	] ).$textBottom;
 }
+
 return $panelUser;

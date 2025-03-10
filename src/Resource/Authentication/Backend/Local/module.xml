@@ -21,7 +21,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.6.3</version>
+	<version>0.6.4</version>
 	<log version="0.1">Initial fork from module Resource:Authentication.</log>
 	<log version="0.2">Integrated locale backend functionality.</log>
 	<log version="0.2.1">Extend configuration.</log>
@@ -63,6 +63,7 @@ list>
 	<log version="0.6.1">Deny registration if no default role is set.</log>
 	<log version="0.6.2">Upgrade to changes in authentication core.</log>
 	<log version="0.6.3">Use new user logic and model entities from Resource:Users.</log>
+	<log version="0.6.4">Add new passwort status "update".</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -73,6 +74,7 @@ list>
 		<class>Logic/Authentication/Backend/Local.php</class>
 		<class>Mail/Auth/Local/Register.php</class>
 		<class>Mail/Auth/Local/Password.php</class>
+		<class>Mail/Auth/Local/Update.php</class>
 		<class>View/Auth/Local.php</class>
 		<class>View/Helper/Auth/Local/Panel/Login.php</class>
 		<template>auth/local/confirm.php</template>
@@ -80,6 +82,7 @@ list>
 		<template>auth/local/login.form.php</template>
 		<template>auth/local/password.php</template>
 		<template>auth/local/register.php</template>
+		<template>auth/local/update.php</template>
 		<template>auth/local/panel/login.php</template>
 		<locale>de/auth/local.ini</locale>
 		<locale>de/html/auth/local/confirm/top.html</locale>
@@ -91,15 +94,19 @@ list>
 		<locale>de/html/auth/local/password/top.html</locale>
 		<locale>de/html/auth/local/password/info.html</locale>
 		<locale>de/html/auth/local/password/bottom.html</locale>
+		<locale>de/html/auth/local/privacy.html</locale>
+		<locale>de/html/auth/local/privacy.md</locale>
 		<locale>de/html/auth/local/register/top.html</locale>
 		<locale>de/html/auth/local/register/info.html</locale>
 		<locale>de/html/auth/local/register/bottom.html</locale>
-		<locale>de/html/auth/local/privacy.html</locale>
-		<locale>de/html/auth/local/privacy.md</locale>
 		<locale>de/html/auth/local/tac.html</locale>
 		<locale>de/html/auth/local/tac.md</locale>
-		<locale>de/mail/auth/local/register.txt</locale>
+		<locale>de/html/auth/local/update/top.html</locale>
+		<locale>de/html/auth/local/update/info.html</locale>
+		<locale>de/html/auth/local/update/bottom.html</locale>
 		<locale>de/mail/auth/local/password.txt</locale>
+		<locale>de/mail/auth/local/register.txt</locale>
+		<locale>de/mail/auth/local/update.txt</locale>
 		<locale>en/auth/local.ini</locale>
 		<locale>en/html/auth/local/login/top.html</locale>
 		<locale>en/html/auth/local/login/info.html</locale>
@@ -110,13 +117,19 @@ list>
 		<locale>en/html/auth/local/password/top.html</locale>
 		<locale>en/html/auth/local/password/info.html</locale>
 		<locale>en/html/auth/local/password/bottom.html</locale>
+		<locale>en/html/auth/local/privacy.html</locale>
+		<locale>en/html/auth/local/privacy.md</locale>
 		<locale>en/html/auth/local/register/top.html</locale>
 		<locale>en/html/auth/local/register/info.html</locale>
 		<locale>en/html/auth/local/register/bottom.html</locale>
 		<locale>en/html/auth/local/tac.html</locale>
 		<locale>en/html/auth/local/tac.md</locale>
-		<locale>en/mail/auth/local/register.txt</locale>
+		<locale>en/html/auth/local/update/top.html</locale>
+		<locale>en/html/auth/local/update/info.html</locale>
+		<locale>en/html/auth/local/update/bottom.html</locale>
 		<locale>en/mail/auth/local/password.txt</locale>
+		<locale>en/mail/auth/local/register.txt</locale>
+		<locale>en/mail/auth/local/update.txt</locale>
 		<style source="common">module.resource.auth.local.css</style>
 		<script>module.resource.auth.local.js</script>
 	</files>

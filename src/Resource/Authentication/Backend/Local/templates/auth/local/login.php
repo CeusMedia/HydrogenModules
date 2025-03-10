@@ -15,14 +15,14 @@ extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/login
 
 $tabs	= View_Auth::renderTabs( $env, 'auth/local/login' );
 
-if( strlen( trim( strip_tags( $textInfo ) ) ) ){
+if( '' !== trim( strip_tags( $textInfo ) ) ){
 	return $tabs.$textTop.
 		HTML::DivClass( "bs2-row-fluid bs3-row bs4-row", [
 			HTML::DivClass( "bs2-span4 bs3-col-md-4 bs4-col-md-4", $panelLogin ),
 			HTML::DivClass( "bs2-span8 bs3-col-md-8 bs4-col-md-8", $textInfo ),
 		] ).$textBottom;
 }
-if( strlen( trim( strip_tags( $textTop ) ) ) || strlen( trim( strip_tags( $textBottom ) ) ) ){
+if( '' !== trim( strip_tags( $textTop ) ) || '' !== trim( strip_tags( $textBottom ) ) ){
 	return $tabs.$textTop.$panelLogin.$textBottom;
 }
 if( $tabs ){

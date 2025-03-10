@@ -1,11 +1,11 @@
-var ModuleResourceAuthLocal = {
+let ModuleResourceAuthLocal = {
 	regExpEmail: /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 };
 ModuleResourceAuthLocal.Password = {
 	init: function(){
 		$("#input_password_email").on("input", function(event){
-			var button = $("#button_save");
-			var value = $(event.target).val();
+			let button = $("#button_save");
+			let value = $(event.target).val();
 			button.attr("disabled","disabled");
 			if(!value.replace(/\s/, '').length)
 				return;
@@ -13,6 +13,11 @@ ModuleResourceAuthLocal.Password = {
 				return;
 			button.removeAttr("disabled");
 		});
+	}
+};
+ModuleResourceAuthLocal.PasswordUpdate = {
+	init: function(){
+		$("#input_password").keyup(ModuleResourceAuthLocal.Registration.checkPassword);
 	}
 };
 
@@ -45,7 +50,7 @@ ModuleResourceAuthLocal.Registration = {
 	},
 
 	checkEmail: function(event){
-		var input = $(event.target);
+		let input = $(event.target);
 		if(!input.val().length){
 			input.removeClass("state-good").removeClass("state-bad");
 			return;
@@ -68,7 +73,7 @@ ModuleResourceAuthLocal.Registration = {
 	},
 
 	checkPassword: function(event){
-		var input = $(event.target);
+		let input = $(event.target);
 		if(!input.val().length){
 			input.removeClass("state-good").removeClass("state-bad");
 			return;
@@ -77,7 +82,7 @@ ModuleResourceAuthLocal.Registration = {
 			input.removeClass("state-good").addClass("state-bad");
 			return;
 		}
-		else if(settings.Resource_Users.password_strength_min){
+		if(settings.Resource_Users.password_strength_min){
 			$.ajax({
 				url: "./ajax/auth/passwordStrength",
 				method: "post",
@@ -85,7 +90,7 @@ ModuleResourceAuthLocal.Registration = {
 				dataType: "json",
 				context: input,
 				success: function(response){
-					var tooWeak	= response.data < settings.Resource_Users.password_strength_min;
+					let tooWeak	= response.data < settings.Resource_Users.password_strength_min;
 					$(this).removeClass("state-good").removeClass("state-bad");
 					$(this).addClass(tooWeak ? "state-bad" : "state-good");
 				}
@@ -97,20 +102,20 @@ ModuleResourceAuthLocal.Registration = {
 	},
 
 	checkUsername: function(event){
-		var input = $(event.target);
-		var lenMin = settings.Resource_Users.name_length_min;
-		var lenMax = settings.Resource_Users.name_length_max;
-		var length = input.val().length;
+		let input = $(event.target);
+		let lenMin = settings.Resource_Users.name_length_min;
+		let lenMax = settings.Resource_Users.name_length_max;
+		let length = input.val().length;
 		if(!length){
 			input.removeClass("state-good").removeClass("state-bad");
 			return;
 		}
 		if(input.data("last") != input.val()){
 			if(settings.Resource_Users.name_preg){
-				var preg = settings.Resource_Users.name_preg;
-				var flags = preg.replace(/.*\/([gimy]*)$/, '$1');
-				var pattern = preg.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
-				var regex = new RegExp(pattern, flags);
+				let preg = settings.Resource_Users.name_preg;
+				let flags = preg.replace(/.*\/([gimy]*)$/, '$1');
+				let pattern = preg.replace(new RegExp('^/(.*?)/'+flags+'$'), '$1');
+				let regex = new RegExp(pattern, flags);
 				if(!regex.test(input.val())){
 					input.val(input.data("last"));
 				}

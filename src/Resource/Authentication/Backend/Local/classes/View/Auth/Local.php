@@ -34,6 +34,11 @@ class View_Auth_Local extends View
 		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.Registration.init();');
 	}
 
+	public function update(): void
+	{
+		$this->env->getPage()->js->addScriptOnReady('ModuleResourceAuthLocal.PasswordUpdate.init();');
+	}
+
 	/**
 	 *	@return		bool|NULL
 	 *	@throws		ReflectionException
