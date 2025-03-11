@@ -16,9 +16,9 @@ return renderLayout( $env, $view, $panelUpdate );
 function renderLayout( Web $env, View $view, string $panel ): string
 {
 	$texts		= (object) $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/update/' );
-	$textTop	= trim( strip_tags( $texts->textTop ?? '' ) );
-	$textBottom	= trim( strip_tags( $texts->textBottom ?? '' ) );
-	$textInfo	= trim( strip_tags( $texts->textInfo ?? '' ) );
+	$textTop	= trim( $texts->textTop ?? '' );
+	$textBottom	= trim( $texts->textBottom ?? '' );
+	$textInfo	= trim( $texts->textInfo ?? '' );
 
 	if( '' !== $textInfo )
 		return $textTop.
@@ -54,14 +54,12 @@ function renderPanel( Web $env, object $w, ?string $from ): string
 		'id'		=> 'button_save',
 		'class'		=> 'btn btn-primary',
 		'name'		=> 'sendPassword',
-		'disabled'	=> 'disabled',
 	] );
 	$buttonSaveBlock = HtmlTag::create( 'button', $iconSend . '&nbsp;' . $w->buttonSend, [
 		'type'		=> 'submit',
 		'id'		=> 'button_save',
 		'class'		=> 'btn btn-primary btn-block',
 		'name'		=> 'sendPassword',
-		'disabled'	=> 'disabled',
 	] );
 
 	$labelPassword = $w->labelPassword;
