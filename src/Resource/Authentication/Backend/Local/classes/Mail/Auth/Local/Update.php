@@ -23,12 +23,11 @@ class Mail_Auth_Local_Update extends Mail_Abstract
 		$data['appBaseUrl']	= $this->env->url;
 		$data['config']		= $this->env->getConfig()->getAll();
 		$data['hash']		= sha1( join( '-', [$data['userId'], $data['passwordId']] ) );
+		$html	= $this->loadContentFile( 'mail/auth/local/update.html', $data ) ?? '';
+		$this->setHtml( $html );
+
 		$plain	= $this->loadContentFile( 'mail/auth/local/update.txt', $data ) ?? '';
 		$this->setText( $plain );
-
-		$html	= preg_replace( "/(http[\S]+)([.,])?/u", '<a href="\\1">\\1</a>\\2', $plain );
-		$html	= nl2br( $html );
-		$this->setHtml( $html );
 		return $this;
 	}
 }

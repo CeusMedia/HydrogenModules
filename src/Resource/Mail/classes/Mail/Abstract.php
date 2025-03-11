@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+use CeusMedia\Common\Exception\FileNotExisting as FileNotExistingException;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -637,14 +638,14 @@ abstract class Mail_Abstract
 	/**
 	 *	@param		string		$filePath
 	 *	@param		array		$data
-	 *	@return		?string
+	 *	@return		string
 	 *	@throws		ReflectionException
+	 *	@throws		FileNotExistingException	if file is not existing
+	 *	@throws		FileNotExistingException	if given path is not a file
 	 */
-	protected function loadContentFile( string $filePath, array $data = [] ): ?string
+	protected function loadContentFile( string $filePath, array $data = [] ): string
 	{
 		$helper	= new ContentHelper( $this->env );
-		if( !$helper->has( $filePath ) )
-			return NULL;
 		return $helper->setFileKey( $filePath )->setData( $data )->render();
 	}
 

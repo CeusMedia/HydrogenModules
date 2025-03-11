@@ -129,6 +129,7 @@ list>
 		<locale>en/html/auth/local/update/bottom.html</locale>
 		<locale>en/mail/auth/local/password.txt</locale>
 		<locale>en/mail/auth/local/register.txt</locale>
+		<locale>en/mail/auth/local/update.html</locale>
 		<locale>en/mail/auth/local/update.txt</locale>
 		<style source="common">module.resource.auth.local.css</style>
 		<script>module.resource.auth.local.js</script>
