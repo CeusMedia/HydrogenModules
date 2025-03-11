@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Resource\Captain;
 use CeusMedia\HydrogenFramework\View;
 
 /**
@@ -11,7 +12,7 @@ class View_Auth_Local extends View
 {
 	protected function __onInit(): void
 	{
-		$this->env->getPage()->addCommonStyle('module.resource.auth.local.css');
+		$this->env->getPage()->addCommonStyle( 'module.resource.auth.local.css', Captain::LEVEL_LOWEST );
 		$this->env->getPage()->js->addModuleFile( 'module.resource.auth.local.js');
 	}
 
