@@ -106,6 +106,7 @@ list>
 		<locale>de/html/auth/local/update/bottom.html</locale>
 		<locale>de/mail/auth/local/password.txt</locale>
 		<locale>de/mail/auth/local/register.txt</locale>
+		<locale>de/mail/auth/local/update.html</locale>
 		<locale>de/mail/auth/local/update.txt</locale>
 		<locale>en/auth/local.ini</locale>
 		<locale>en/html/auth/local/login/top.html</locale>
