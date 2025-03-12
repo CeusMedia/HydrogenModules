@@ -278,7 +278,7 @@ class Controller_Auth_Local extends Controller
 
 		if( $this->request->getMethod()->isPost() )
 			$this->handlePasswordUpdatePostRequest( $user );										//  handle POST request
-		if( '' !== $hash )
+		if( '' !== ( $hash ?? '' )	 )
 			$this->handlePasswordUpdateConfirmGetRequest( $user, $hash );
 
 		$this->addData( 'password', $this->request->get( 'password' ) );
@@ -459,6 +459,7 @@ class Controller_Auth_Local extends Controller
 	 */
 	protected function handlePasswordUpdateConfirmGetRequest( Entity_User $user, string $hash ): void
 	{
+		$words			= (object) $this->getWords( 'update' );
 		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
 
 		/** @var ?Entity_User_Password $password */
@@ -469,6 +470,7 @@ class Controller_Auth_Local extends Controller
 			return;
 
 		$logicPassword->activatePassword( $password );
+		$this->messenger->noteSuccess( $words->msgConfirmed );
 
 		$from	= trim( $this->request->get( 'from', '' ) );
 		if( '' !== $from )

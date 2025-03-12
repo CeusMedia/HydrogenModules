@@ -54,12 +54,14 @@ function renderPanel( Web $env, object $w, ?string $from ): string
 		'id'		=> 'button_save',
 		'class'		=> 'btn btn-primary',
 		'name'		=> 'sendPassword',
+//		'disabled'	=> 'disabled',
 	] );
 	$buttonSaveBlock = HtmlTag::create( 'button', $iconSend . '&nbsp;' . $w->buttonSend, [
 		'type'		=> 'submit',
 		'id'		=> 'button_save',
 		'class'		=> 'btn btn-primary btn-block',
 		'name'		=> 'sendPassword',
+//		'disabled'	=> 'disabled',
 	] );
 
 	$labelPassword = $w->labelPassword;
