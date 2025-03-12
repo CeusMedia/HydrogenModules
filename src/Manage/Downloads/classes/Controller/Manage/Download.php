@@ -171,13 +171,13 @@ class Controller_Manage_Download extends Controller
 				$this->messenger->noteError( sprintf( 'Invalid download folder ID: %s', $folderId ) );
 			}
 			else{
-				$hasFiles	= $this->logic->countFilesInFolder( $folderId );
-				$hasFolders	= $this->logic->countFoldersInFolder( $folderId );
+				$hasFiles	= $this->logic->countFilesInFolder( $folder );
+				$hasFolders	= $this->logic->countFoldersInFolder( $folder );
 				if( $hasFiles || $hasFolders ){
 					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
 				}
 				else{
-					$this->logic->removeFolder( $folderId );
+					$this->logic->removeFolder( $folder );
 				}
 				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
 			}
