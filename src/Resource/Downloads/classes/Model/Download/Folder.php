@@ -14,6 +14,8 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_Download_Folder extends Model
 {
+	public const TYPE_DEFAULT		= 0;
+
 	protected string $name			= 'download_folders';
 
 	protected array $columns		= [
@@ -38,5 +40,9 @@ class Model_Download_Folder extends Model
 		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Download_Folder::class;
 }
+
+
