@@ -57,18 +57,18 @@ class Job_Downloads extends Job_Abstract
 	}
 
 	/**
-	 *	@param		string		$path
-	 *	@param		object		$file
+	 *	@param		string					$path
+	 *	@param		Entity_Download_File	$file
 	 *	@return		int
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setFileSize( string $path, object $file ): int
+	protected function setFileSize( string $path, Entity_Download_File $file ): int
 	{
-		if( 0 === (int) $file->size ){
+		if( 0 === $file->size ){
 			if( !file_exists( $path.$file->title ) ){
 				$this->out( 'File found and migrated: '.$path.$file->title );
 				$data	= ['size' => filesize( $path.$file->title )];
-				$this->logic->editFile( $file->downloadFileId, $data );
+				$this->logic->editFile( $file, $data );
 				return 1;
 			}
 			$this->out( 'File NOT found: '.$path.$file->title );

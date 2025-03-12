@@ -13,6 +13,10 @@ use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentExcept
  */
 class Logic_Download extends Logic
 {
+	protected const TYPE_FILE		= 0;
+	protected const TYPE_FOLDER		= 1;
+
+
 	/**	@var	Model_Download_File								$modelFile			Database model of files */
 	protected Model_Download_File $modelFile;
 
@@ -40,40 +44,46 @@ class Logic_Download extends Logic
 	 */
 	public function addFileFromUpload( Logic_Upload $logicUpload, int|string $folderId = 0, ?string $description = NULL ): void
 	{
+		$folder		= $this->getFolder( $folderId );
+		if( NULL === $folder )
+			throw new RuntimeException( 'Invalid folder ID' );
+
 		$logicUpload->checkSize( Logic_Upload::getMaxUploadSize(), TRUE );
 //		$logicUpload->checkVirus( TRUE );
+
 		$targetFile	= $this->getPathFromFolderId( $folderId, TRUE ).$logicUpload->getFileName();
 		$logicUpload->saveTo( $targetFile );
 		$this->modelFile->add( [
 			'downloadFolderId'	=> $folderId,
-			'rank'				=> $this->countFilesInFolder( $folderId ),
+			'rank'				=> $this->countFilesInFolder( $folder ),
 			'size'				=> $logicUpload->getFileSize(),
 			'title'				=> $logicUpload->getFileName(),
 			'description'		=> $description,
 			'uploadedAt'		=> time()
 		] );
-		$this->updateNumber( $folderId, 'file' );
+		$this->updateNumber( $folder, self::TYPE_FILE );
 	}
 
 	/**
 	 *	@param		string 			$folder
 	 *	@param		int|string		$parentId
 	 *	@param		int				$type
-	 *	@return		string
+	 *	@return		int|string
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function addFolder( string $folder, int|string $parentId = 0, int $type = 0 ): string
+	public function addFolder( string $folder, int|string $parentId = 0, int $type = 0 ): int|string
 	{
 		$path		= $this->getPathFromFolderId( $parentId );
 		FolderEditor::createFolder( $this->path.$path.$folder );
-		$newId	= $this->modelFolder->add( [
+		$parent		= $this->getFolder( $parentId );
+		$newId	= $this->modelFolder->add( new Entity_Download_Folder( [
 			'parentId'	=> (int) $parentId,
-			'rank'		=> $this->countFoldersInFolder( $parentId ),
+			'rank'		=> $this->countFoldersInFolder( $parent ),
 			'type'		=> $type,
 			'title'		=> $folder,
 			'createdAt'	=> time(),
-		] );
-		$this->updateNumber( $parentId, 'folder' );
+		] ) );
+		$this->updateNumber( $parent, self::TYPE_FOLDER );
 		return $newId;
 	}
 
@@ -93,32 +103,40 @@ class Logic_Download extends Logic
 			$this->cleanRecursive( $folder->downloadFolderId, $path.$folder->title.'/', $stats );
 			if( !file_exists( $this->path.$path.$folder->title ) ){
 				$this->modelFolder->remove( $folder->downloadFolderId );
-				$stats->folders[]	= (object) ['title' => $folder->title, 'path' => $path];
+				$stats->folders[]	= (object) [
+					'title'		=> $folder->title,
+					'path'		=> $path,
+				];
 			}
 		}
 		foreach( $files as $file ){
 			if( !file_exists( $this->path.$path.$file->title ) ){
 				$this->modelFile->remove( $file->downloadFileId );
-				$stats->files[]	= (object) ['title' => $file->title, 'path' => $path];
+				$stats->files[]	= (object) [
+					'title'		=> $file->title,
+					'path'		=> $path,
+				];
 			}
 		}
 	}
 
 	/**
-	 *	@param		int|string		$folderId
+	 *	@param		?Entity_Download_Folder	$folder
 	 *	@return		int
 	 */
-	public function countFilesInFolder( int|string $folderId ): int
+	public function countFilesInFolder( ?Entity_Download_Folder $folder ): int
 	{
+		$folderId	= NULL !== $folder ? $folder->downloadFolderId : 0;
 		return $this->modelFile->count( ['downloadFolderId' => $folderId] );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
+	 *	@param		?Entity_Download_Folder	$folder
 	 *	@return		int
 	 */
-	public function countFoldersInFolder(int|string $folderId ): int
+	public function countFoldersInFolder( ?Entity_Download_Folder $folder ): int
 	{
+		$folderId	= NULL !== $folder ? $folder->downloadFolderId : 0;
 		return $this->modelFolder->count( ['parentId' => $folderId] );
 	}
 
@@ -133,31 +151,34 @@ class Logic_Download extends Logic
 		$indexClass	= $recursive ? RecursiveFolderLister::class : FolderLister::class;
 		foreach( $indexClass::getMixedList( $this->path.$path ) as $entry )
 			$entry->isDir() ? $folders++ : $files++;
-		return (object) ['folders' => $folders, 'files' => $files];
+		return (object) [
+			'folders'	=> $folders,
+			'files'		=> $files
+		];
 	}
 
 	/**
-	 *	@param		int|string		$fileId
-	 *	@param		array			$data
+	 *	@param		Entity_Download_File	$file
+	 *	@param		array					$data
 	 *	@return		bool|NULL
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function editFile( int|string $fileId, array $data ): ?bool
+	public function editFile( Entity_Download_File $file, array $data ): ?bool
 	{
-		return (bool) $this->modelFile->edit( $fileId, array_merge( $data, [
+		return (bool) $this->modelFile->edit( $file->downloadFileId, array_merge( $data, [
 			'modifiedAt' => time()
 		] ) );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
-	 *	@param		array			$data
+	 *	@param		Entity_Download_Folder	$folder
+	 *	@param		array					$data
 	 *	@return		bool|NULL
 	 */
-	public function editFolder( int|string $folderId, array $data ): ?bool
+	public function editFolder( Entity_Download_Folder $folder, array $data ): ?bool
 	{
 		try{
-			return (bool) $this->modelFolder->edit( $folderId, array_merge( $data, [
+			return (bool) $this->modelFolder->edit( $folder->downloadFolderId, array_merge( $data, [
 				'modifiedAt' => time()
 			] ) );
 		}
@@ -170,7 +191,7 @@ class Logic_Download extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		array<Entity_Download_File>
 	 */
 	public function findFiles( array $conditions, array $orders = [], array $limits = [] ): array
 	{
@@ -181,7 +202,7 @@ class Logic_Download extends Logic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		array<Entity_Download_Folder>
 	 */
 	public function findFolders( array $conditions, array $orders = [], array $limits = [] ): array
 	{
@@ -189,23 +210,25 @@ class Logic_Download extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$folderId
+	 *	@param		Entity_Download_Folder		$folder
 	 *	@return		bool
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function folderPathExists( int|string $folderId ): bool
+	public function folderPathExists( Entity_Download_Folder $folder ): bool
 	{
-		return file_exists( $this->getPathFromFolderId( $folderId, TRUE ) );
+		return file_exists( $this->getPathFromFolderId( $folder->downloadFolderId, TRUE ) );
 	}
 
 	/**
 	 *	@param		int|string		$fileId
-	 *	@return		object|NULL
+	 *	@return		?Entity_Download_File
 	 */
-	public function getFile( int|string $fileId ): ?object
+	public function getFile( int|string $fileId ): ?Entity_Download_File
 	{
 		try{
-			return $this->modelFile->get( $fileId );
+			/** @var ?Entity_Download_File $file */
+			$file	= $this->modelFile->get( $fileId );
+			return $file;
 		}
 		catch( SimpleCacheInvalidArgumentException ){
 		}
@@ -214,12 +237,14 @@ class Logic_Download extends Logic
 
 	/**
 	 *	@param		int|string		$folderId
-	 *	@return		object|NULL
+	 *	@return		?Entity_Download_Folder
 	 */
-	public function getFolder( int|string $folderId ): ?object
+	public function getFolder( int|string $folderId ): ?Entity_Download_Folder
 	{
 		try{
-			return $this->modelFolder->get( $folderId );
+			/** @var ?Entity_Download_Folder $folder */
+			$folder	= $this->modelFolder->get( $folderId );
+			return $folder;
 		}
 		catch( SimpleCacheInvalidArgumentException  ){
 		}
@@ -237,7 +262,7 @@ class Logic_Download extends Logic
 		$path	= '';
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
+			if( NULL === $folder )
 				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			$path		= $folder->title.'/'.$path;
 			$folderId	= $folder->parentId;
@@ -252,6 +277,7 @@ class Logic_Download extends Logic
 	public function getNestedFolderIds( int|string $parentId ): array
 	{
 		$list		= [];
+		/** @var array<Entity_Download_Folder> $folders */
 		$folders	= $this->modelFolder->getAllByIndex( 'parentId', $parentId );
 		foreach( $folders as $folder ){
 			$list[]	= $folder->downloadFolderId;
@@ -270,8 +296,9 @@ class Logic_Download extends Logic
 	{
 		$steps		= [];
 		while( $folderId ){
+			/** @var ?Entity_Download_Folder $folder */
 			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
+			if( NULL === $folder )
 				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
 			$steps[$folder->downloadFolderId]	= $folder;
 			$folderId	= $folder->parentId;
@@ -289,6 +316,7 @@ class Logic_Download extends Logic
 	{
 		$list		= [];
 		$orders		= ['title' => 'ASC'];
+		/** @var array<Entity_Download_Folder> $folders */
 		$folders	= $this->modelFolder->getAll( ['parentId' => $parentId], $orders );
 		foreach( $folders as $folder ){
 			if( $folder->downloadFolderId == $excludeFolderId )
@@ -308,47 +336,47 @@ class Logic_Download extends Logic
 	 */
 	public function makeDownloadCount( int|string $fileId ): void
 	{
+		/** @var ?Entity_Download_File $file */
 		$file	= $this->getFile( $fileId );
-		$this->modelFile->edit( $fileId, [
-			'nrDownloads'	=> $file->nrDownloads + 1,
-			'downloadedAt'	=> time(),
-		] );
+		if( NULL !== $file )
+			$this->modelFile->edit( $fileId, [
+				'nrDownloads'	=> $file->nrDownloads + 1,
+				'downloadedAt'	=> time(),
+			] );
 	}
 
 	/**
-	 *	@param		int|string		$fileId
-	 *	@param		int|string		$folderId
+	 *	@param		Entity_Download_File	$file
+	 *	@param		Entity_Download_Folder	$folder
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function moveFile( int|string $fileId, int|string $folderId ): void
+	public function moveFile( Entity_Download_File $file, Entity_Download_Folder $folder ): void
 	{
-		$file		= $this->getFile( $fileId );
 		$path		= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
-		$pathTarget	= $this->getPathFromFolderId( $folderId, TRUE );
+		$pathTarget	= $this->getPathFromFolderId( $folder->downloadFolderId, TRUE );
 		$editor		= new FileEditor( $path.$file->title );
 		$editor->rename( $pathTarget.$file->title );
-		$this->editFile( $fileId, ['downloadFolderId' => $folderId] );
-		$this->updateNumbers( $file->downloadFolderId );
-		$this->updateNumbers( $folderId );
+		$this->editFile( $file, ['downloadFolderId' => $folder->downloadFolderId] );
+		$this->updateNumbers( $this->getFolder( $file->downloadFolderId ) );
+		$this->updateNumbers( $folder );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
-	 *	@param		int|string		$parentId
+	 *	@param		Entity_Download_Folder	$folder
+	 *	@param		int|string				$parentId
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function moveFolder( int|string $folderId, int|string $parentId ): void
+	public function moveFolder( Entity_Download_Folder $folder, int|string $parentId ): void
 	{
-		$folder		= $this->getFolder( $folderId );
 		$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
 		$pathTarget	= $this->getPathFromFolderId( $parentId, TRUE );
 		$editor		= new FolderEditor( $path.$folder->title );
 		$editor->move( $pathTarget );
-		$this->updateNumbers( $folder->parentId );
-		$this->updateNumbers( $parentId );
-		$this->editFolder( $folderId, ['parentId' => $parentId] );
+		$this->updateNumbers( $this->getFolder( $folder->parentId ) );
+		$this->updateNumbers( $this->getFolder( $parentId ) );
+		$this->editFolder( $folder, ['parentId' => $parentId] );
 	}
 
 	/**
@@ -363,8 +391,8 @@ class Logic_Download extends Logic
 		$conditions	= ['rank' => $rank, 'parentId' => $folder->parentId];
 		$next		= current( $this->findFolders( $conditions ) );
 		if( $next ){
-			$this->editFolder( $folderId, ['rank' => $rank] );
-			$this->editFolder( $next->downloadFolderId, ['rank' => $folder->rank] );
+			$this->editFolder( $folder, ['rank' => $rank] );
+			$this->editFolder( $this->getFolder( $next->downloadFolderId ), ['rank' => $folder->rank] );
 		}
 	}
 
@@ -381,51 +409,50 @@ class Logic_Download extends Logic
 			$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		@unlink( $path.$file->title );
 		$this->modelFile->remove( $fileId );
-		$this->updateNumber( $file->downloadFolderId, 'file', -1 );
+		$this->updateNumber( $this->getFolder( $file->downloadFolderId ), self::TYPE_FILE, -1 );
 
 	}
 
 	/**
-	 *	@param		int|string		$fileId
-	 *	@param		string			$title
+	 *	@param		Entity_Download_File	$file
+	 *	@param		string					$title
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function renameFile( int|string $fileId, string $title ): void
+	public function renameFile( Entity_Download_File $file, string $title ): void
 	{
-		$file	= $this->getFile( $fileId );
 		$path	= $this->getPathFromFolderId( $file->downloadFolderId, TRUE );
 		$editor	= new FileEditor( $path.$file->title );
 		$editor->rename( $path.$title );
-		$this->editFile( $fileId, ['title' => $title ] );
+		$file->title	= $title;
+		$this->editFile( $file, ['title' => $title ] );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
-	 *	@param		string			$title
+	 *	@param		Entity_Download_Folder	$folder
+	 *	@param		string					$title
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function renameFolder( int|string $folderId, string $title ): void
+	public function renameFolder( Entity_Download_Folder $folder, string $title ): void
 	{
-		$folder		= $this->getFolder( $folderId );
 		$path		= $this->getPathFromFolderId( $folder->parentId, TRUE );
 		$editor	= new FolderEditor( $path.$folder->title );
 		$editor->rename( $path.$title );
-		$this->editFolder( $folderId, ['title' => $title] );
+		$folder->title	= $title;
+		$this->editFolder( $folder, ['title' => $title] );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
+	 *	@param		Entity_Download_Folder	$folder
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function removeFolder( int|string $folderId ): void
+	public function removeFolder( Entity_Download_Folder $folder ): void
 	{
-		$folder	= $this->getFolder( $folderId );
-		rmdir( $this->getPathFromFolderId( $folderId, TRUE ) );
-		$this->modelFolder->remove( $folderId );
-		$this->updateNumber( $folder->parentId, 'folder', -1 );
+		rmdir( $this->getPathFromFolderId( $folder->downloadFolderId, TRUE ) );
+		$this->modelFolder->remove( $folder->downloadFolderId );
+		$this->updateNumber( $this->getFolder( $folder->parentId ), self::TYPE_FOLDER, -1 );
 	}
 
 	/**
@@ -456,8 +483,11 @@ class Logic_Download extends Logic
 					$data['rank']		= ++$nrFolders;
 					$data['createdAt']	= filemtime( $entry->getPathname() );
 					$folderId			= $this->modelFolder->add( $data );
-					$this->updateNumber( $parentId, 'folder' );
-					$stats->folders[]	= (object) ['title' => $entryName, 'path' => $path];
+					$this->updateNumber( $this->getFolder( $parentId ), self::TYPE_FOLDER );
+					$stats->folders[]	= (object) [
+						'title'		=> $entryName,
+						'path'		=> $path,
+					];
 				}
 				$this->scanRecursive( $folderId, $path.$entryName.'/',  $stats );
 			}
@@ -471,57 +501,59 @@ class Logic_Download extends Logic
 					$data['size']		= filesize( $entry->getPathname() );
 					$data['uploadedAt']	= filemtime( $entry->getPathname() );
 					$this->modelFile->add( $data );
-					$this->updateNumber( $parentId, 'file' );
-					$stats->files[]	= (object) ['title' => $entryName, 'path' => $path];
+					$this->updateNumber( $this->getFolder( $parentId ), self::TYPE_FILE );
+					$stats->files[]	= (object) [
+						'title'		=> $entryName,
+						'path'		=> $path,
+					];
 				}
 			}
 		}
 	}
 
 	/**
-	 *	@param		int|string		$folderId
+	 *	@param		Entity_Download_Folder	$folder
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function updateNumbers( int|string $folderId ): void
+	public function updateNumbers( Entity_Download_Folder $folder ): void
 	{
-		if( $folderId ){
-			$path		= $this->getPathFromFolderId( $folderId );
-			$counts		= $this->countFilesAndFoldersInPath( $path, TRUE );
-			$this->modelFolder->edit( $folderId, [
-				'nrFolders'	=> $counts->folders,
-				'nrFiles'	=> $counts->files,
-			] );
-			$folder	= $this->modelFolder->get( $folderId );
-			if( $folder->parentId )
-				$this->updateNumbers( $folder->parentId );
-		}
+		$path		= $this->getPathFromFolderId( $folder->downloadFolderId );
+		$counts		= $this->countFilesAndFoldersInPath( $path, TRUE );
+		$this->modelFolder->edit( $folder->downloadFolderId, [
+			'nrFolders'	=> $counts->folders,
+			'nrFiles'	=> $counts->files,
+		] );
+		$folder	= $this->modelFolder->get( $folder->downloadFolderId );
+		if( $folder->parentId )
+			$this->updateNumbers( $this->getFolder( $folder->parentId ) );
 	}
 
 	/**
-	 *	@param		int|string		$folderId
-	 *	@param		string			$type
-	 *	@param		int				$diff
+	 *	@param		Entity_Download_Folder	$folder
+	 *	@param		int						$type
+	 *	@param		int						$diff
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public function updateNumber( int|string $folderId, string $type, int $diff = 1 ): void
+	public function updateNumber( Entity_Download_Folder $folder, int $type, int $diff = 1 ): void
 	{
-		if( !in_array( $type, ['folder', 'file'] ) )
+		if( !in_array( $type, [self::TYPE_FOLDER, self::TYPE_FILE] ) )
 			throw new InvalidArgumentException( 'Type must be folder or file' );
-		while( $folderId ){
-			$folder	= $this->modelFolder->get( $folderId );
-			if( !$folder )
-				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
+		do{
 			$data	= match( $type ){
-				'folder'	=> ['nrFolders' => $folder->nrFolders + $diff],
-				'file'		=> ['nrFiles' => $folder->nrFiles + $diff],
+				self::TYPE_FOLDER	=> ['nrFolders' => $folder->nrFolders + $diff],
+				self::TYPE_FILE		=> ['nrFiles' => $folder->nrFiles + $diff],
 			};
-			$this->editFolder( $folderId, $data );
-			$folderId	= $folder->parentId;
+			$this->editFolder( $folder, $data );
+			$folder	= $this->getFolder( $folder->parentId );
 		}
+		while( NULL !== $folder );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelFile	= new Model_Download_File( $this->env );
