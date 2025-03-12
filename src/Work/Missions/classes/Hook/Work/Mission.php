@@ -139,15 +139,15 @@ class Hook_Work_Mission extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $mission->missionId : NULL,
 				'label'		=> $label,
-			];
+			] );
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label'],														//  label of type of related items
 			'Work_Mission',																//  controller of entity
@@ -166,7 +166,6 @@ class Hook_Work_Mission extends Hook
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
-		/** @var Logic_Project $logic */
 		$logic			= Logic_Project::getInstance( $this->env );
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
 
@@ -202,16 +201,16 @@ class Hook_Work_Mission extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $mission->title : HtmlTag::create( 'del', $mission->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $mission->missionId : NULL,
 				'label'		=> $label,
-			];
+			] );
 		}
 		if( $list )
 			View_Helper_ItemRelationLister::enqueueRelations(
 				$this->payload,															//  hook content data
 				$this->module,																	//  module called by hook
-				'entity',																	//  relation type: entity or relation
+				Entity_ModuleEntityRelation::TYPE_ENTITY,									//  relation type: entity or relation
 				$list,																			//  list of related items
 				$words['hook-relations']['label'],												//  label of type of related items
 				'Work_Mission',														//  controller of entity

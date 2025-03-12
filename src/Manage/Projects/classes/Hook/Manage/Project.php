@@ -11,14 +11,13 @@ class Hook_Manage_Project extends Hook
 	 */
 	public function onGetRelatedUsers(): void
 	{
-		$modelUser			= new Model_User( $this->env );
 		$modelProjectUser	= new Model_Project_User( $this->env );
 		$projectIds			= [];
 		$userIds			= [-1];
 		$myProjects			= $modelProjectUser->getAll( ['userId' => $this->payload['userId']] );
 		foreach( $myProjects as $relation )
 			$projectIds[]   = $relation->projectId;
-		if( !$projectIds )
+		if( [] === $projectIds )
 			return;
 		$logic				= Logic_Project::getInstance( $this->env );
 		$users				= $logic->getProjectsUsers( array_unique( $projectIds ), ['status' => '> 0'] );
@@ -35,6 +34,7 @@ class Hook_Manage_Project extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onUpdate(): void
 	{
@@ -47,6 +47,7 @@ class Hook_Manage_Project extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -122,11 +123,11 @@ class Hook_Manage_Project extends Hook
 		$lists	= (object) ['entities' => [], 'relations'	=> []];
 		foreach( $projects as $project ){
 			$users		= $logic->getProjectUsers( $project->projectId );
-			$item		= (object) [
+			$item		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $project->projectId : NULL,
 				'label'		=> $icon.'&nbsp;'.$project->title,
-			];
-			if( count( $users ) === 1 && isset( $users[$this->payload['userId']] ) ){								//  no other users in project
+			] );
+			if( count( $users ) === 1 && isset( $users[$this->payload['userId']] ) ){				//  no other users in project
 				$lists->entities[]	= $item;
 			}
 			else{
@@ -135,23 +136,23 @@ class Hook_Manage_Project extends Hook
 		}
 		if( $lists->entities )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$this->payload,																					//  hook content data
-				$this->module,																				//  module called by hook
-				'entity',																				//  relation type: entity or relation
-				$lists->entities,																					//  list of related items
-				$words['hook-relations']['labelProjects'],												//  label of type of related items
-				'Manage_Project',																		//  controller of entity
-				'view'																					//  action to view or edit entity
+				$this->payload,																//  hook content data
+				$this->module,																		//  module called by hook
+				Entity_ModuleEntityRelation::TYPE_ENTITY,										//  relation type: entity or relation
+				$lists->entities,																	//  list of related items
+				$words['hook-relations']['labelProjects'],											//  label of type of related items
+				'Manage_Project',															//  controller of entity
+				'view'																		//  action to view or edit entity
 			);
 		if( $lists->relations )
 			View_Helper_ItemRelationLister::enqueueRelations(
-				$this->payload,																					//  hook content data
-				$this->module,																				//  module called by hook
-				'relation',																				//  relation type: entity or relation
-				$lists->relations,																		//  list of related items
-				$words['hook-relations']['labelProjectRelations'],										//  label of type of related items
-				'Manage_Project',																		//  controller of entity
-				'view'																					//  action to view or edit entity
+				$this->payload,																//  hook content data
+				$this->module,																		//  module called by hook
+				Entity_ModuleEntityRelation::TYPE_RELATION,									//  relation type: entity or relation
+				$lists->relations,																	//  list of related items
+				$words['hook-relations']['labelProjectRelations'],									//  label of type of related items
+				'Manage_Project',															//  controller of entity
+				'view'																		//  action to view or edit entity
 			);
 	}
 
@@ -178,8 +179,6 @@ class Hook_Manage_Project extends Hook
 		$this->payload['activeOnly']	??= FALSE;
 		$this->payload['linkable']		??= FALSE;
 
-		$modelUser			= new Model_User( $this->env );
-
 		$conditions		= [];
 		if( $this->payload['activeOnly'] )
 			$conditions['status']	= 1;
@@ -204,19 +203,19 @@ class Hook_Manage_Project extends Hook
 					'href'	=> 'member/view/'.$user->userId,
 				] );
 			}
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $user->userId : NULL,
 				'label'		=> $link,
-			];
+			] );
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$this->payload,																					//  hook content data
-			$this->module,																				//  module called by hook
-			'relation',																				//  relation type: entity or relation
+			$this->payload,																	//  hook content data
+			$this->module,																			//  module called by hook
+			Entity_ModuleEntityRelation::TYPE_RELATION,										//  relation type: entity or relation
 			$list,																					//  list of related items
-			'Projekt-Teilnehmer',																	//  label of type of related items
-			'Manage_User',																			//  controller of entity
-			'edit'																					//  action to view or edit entity
+			'Projekt-Teilnehmer',																//  label of type of related items
+			'Manage_User',																	//  controller of entity
+			'edit'																			//  action to view or edit entity
 		);
 	}
 }
