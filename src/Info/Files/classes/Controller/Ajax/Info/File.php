@@ -24,8 +24,10 @@ class Controller_Ajax_Info_File extends AjaxController
 		$folderId	= $this->request->get( 'folderId' );
 		$title		= $this->request->get( 'name' );
 
-		$this->logic->renameFolder( $folderId, $title );
-		$this->respondData( $this->logic->getFolder( $folderId ) );
+		$folder		= $this->logic->getFolder( $folderId );
+		if( NULL !== $folder )
+			$this->logic->renameFolder( $folder, $title );
+		$this->respondData( $folder );
 	}
 
 	//  --  PROTECTED  --  //

@@ -37,7 +37,7 @@ class Controller_Info_File extends Controller
 	public function addFolder( int|string|NULL $folderId = NULL ): void
 	{
 		$path		= $this->logic->getPathFromFolderId( $folderId );
-		$folder		= trim( $this->request->get( 'folder' ) );
+		$folder		= trim( $this->request->get( 'folder', '' ) );
 		if( preg_match( "/[\/\?:]/", $folder) ){
 			$this->messenger->noteError( 'Folgende Zeichen sind in Ordnernamen nicht erlaubt: / : ?' );
 			$url	= ( $folderId ?: NULL ).'?input_folder='.rawurlencode( $folder );
@@ -60,7 +60,7 @@ class Controller_Info_File extends Controller
 	public function deliver( int|string $fileId ): never
 	{
 		$file		= $this->logic->getFile( $fileId );
-		if( !$file ){
+		if( NULL === $file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
@@ -110,7 +110,7 @@ class Controller_Info_File extends Controller
 	public function editFile( int|string $fileId ): void
 	{
 		$file		= $this->logic->getFile( $fileId );
-		if( !$file ){
+		if( NULL === $file ){
 			$this->messenger->noteError( 'Invalid file ID: %s', $fileId );
 			$this->restart( NULL, TRUE );
 		}
@@ -118,15 +118,16 @@ class Controller_Info_File extends Controller
 
 			$title		= $this->request->get( 'title' );
 			$folderId	= $this->request->get( 'folderId' );
-			if( $title != $file->title ){
-				$this->logic->renameFile( $fileId, $title );
-			}
-			if( $folderId != $file->downloadFolderId ){
-				if( !$this->logic->folderPathExists( $folderId ) ){
+			$folder		= $this->logic->getFolder( $folderId );
+			if( $title != $file->title )
+				$this->logic->renameFile( $file, $title );
+
+			if( $folder->downloadFolderId != $file->downloadFolderId ){
+				if( !$this->logic->folderPathExists( $folder ) ){
 					$this->messenger->noteError( 'Target folder is not existing' );
 					$this->restart( 'editFile/'.$fileId, TRUE );
 				}
-				$this->logic->moveFile( $fileId, $folderId );
+				$this->logic->moveFile( $file, $folder );
 			}
 			$this->restart( 'index/'.$file->downloadFolderId, TRUE );
 		}
@@ -145,22 +146,24 @@ class Controller_Info_File extends Controller
 	public function editFolder( int|string $folderId ): void
 	{
 		$folder		= $this->logic->getFolder( $folderId );
-		if( !$folder ){
+		if( NULL === $folder ){
 			$this->messenger->noteError( 'Invalid folder ID: %s', $folderId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
-			$title		= $this->request->get( 'title' );
-			$parentId	= $this->request->get( 'parentId' );
+			/** @var string $title */
+			$title		= $this->request->get( 'title', '' );
+			/** @var string $parentId */
+			$parentId	= $this->request->get( 'parentId', '' );
 			if( $title != $folder->title ){
-				$this->logic->renameFolder( $folderId, $title );
+				$this->logic->renameFolder( $folder, $title );
 			}
 			if( $parentId != $folder->parentId ){
-				if( !$this->logic->folderPathExists( $parentId ) ){
+				if( !$this->logic->folderPathExists( $this->logic->getFolder( $parentId ) ) ){
 					$this->messenger->noteError( 'Target folder is not existing' );
 					$this->restart( 'editFolder/'.$folderId, TRUE );
 				}
-				$this->logic->moveFolder( $folderId, $parentId );
+				$this->logic->moveFolder( $folder, $parentId );
 			}
 			$this->restart( 'index/'.$folder->parentId, TRUE );
 		}
@@ -200,7 +203,7 @@ class Controller_Info_File extends Controller
 			$orders		= ['title' => 'ASC'];
 			if( 0 !== $folderId ){
 				$folder		= $this->logic->getFolder( $folderId );
-				if( !$folder ){
+				if( NULL === $folder ){
 					$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 					$this->restart( NULL, TRUE );
 				}
@@ -266,13 +269,13 @@ class Controller_Info_File extends Controller
 				$this->messenger->noteError( sprintf( 'Invalid folder ID: %s', $folderId ) );
 			}
 			else{
-				$hasFiles	= $this->logic->countFilesInFolder( $folderId );
-				$hasFolders	= $this->logic->countFoldersInFolder( $folderId );
+				$hasFiles	= $this->logic->countFilesInFolder( $folder );
+				$hasFolders	= $this->logic->countFoldersInFolder( $folder );
 				if( $hasFiles || $hasFolders ){
 					$this->messenger->noteError( 'Der Ordner <b>"%s"</b> ist nicht leer und kann daher nicht entfernt werden.', $folder->title );
 				}
 				else{
-					$this->logic->removeFolder( $folderId );
+					$this->logic->removeFolder( $folder );
 				}
 				$this->restart( $folder->parentId ? 'index/'.$folder->parentId : '', TRUE );
 			}
