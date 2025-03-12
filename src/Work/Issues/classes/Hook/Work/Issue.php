@@ -92,15 +92,15 @@ class Hook_Work_Issue extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
-			];
+			] );
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label'],														//  label of type of related items
 			'Work_Issue',																	//  controller of entity
@@ -194,15 +194,15 @@ class Hook_Work_Issue extends Hook
 			$status		= HtmlTag::create( 'small', $status, ['class' => 'muted'] );
 			$title		= $isOpen ? $issue->title : HtmlTag::create( 'del', $issue->title );
 			$label		= $icon.'&nbsp;'.$title.'&nbsp;'.$status;
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? $issue->issueId : NULL,
 				'label'		=> $label,
-			];
+			] );
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label'],														//  label of type of related items
 			'Work_Issue',																	//  controller of entity

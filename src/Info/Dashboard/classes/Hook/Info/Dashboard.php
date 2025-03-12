@@ -1,11 +1,14 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Info_Dashboard extends Hook
 {
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function onListUserRelations(): void
 	{
 		if( empty( $this->payload['userId'] ) ){
@@ -14,7 +17,6 @@ class Hook_Info_Dashboard extends Hook
 			return;
 		}
 
-		/** @var Logic_Info_Dashboard $logic */
 		$logic	= Logic_Info_Dashboard::getInstance( $this->env );
 		$dashboards = $logic->getUserDashboards( $this->payload['userId'] );
 
@@ -25,15 +27,15 @@ class Hook_Info_Dashboard extends Hook
 		$words			= $this->env->getLanguage()->getWords( 'info/dashboard' );
 
 		foreach( $dashboards as $dashboard ){
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $linkable ? $dashboard->dashboardId : NULL,
 				'label'		=> $icon.'&nbsp;'.$dashboard->title,
-			];
+			] );
 		}
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label'],														//  label of type of related items
 			'Info_Dashboard',																//  controller of entity
@@ -41,6 +43,11 @@ class Hook_Info_Dashboard extends Hook
 		);
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function onUserRemove(): void
 	{
 		if( empty( $this->payload['userId'] ) ){

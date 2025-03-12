@@ -79,10 +79,10 @@ class Hook_Manage_My_User_Setting extends Hook
 		$model		= new Model_User_Setting( $this->env );
 		$settings	= $model->getAllByIndex( 'userId', $this->payload['userId'] );
 		foreach( $settings as $setting ){
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $this->payload['linkable'] ? '#'.$setting->key : NULL,
 				'label'		=> $setting->moduleId.' :: '.$setting->key,
-			];
+			] );
 		}
 
 		if( [] === $list )
@@ -90,7 +90,7 @@ class Hook_Manage_My_User_Setting extends Hook
 		View_Helper_ItemRelationLister::enqueueRelations(
 			$this->payload,																	//  hook content data
 			$module,																				//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,																			//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['helper-relations']['heading'],													//  label of type of related items
 			'Manage_My_User_Setting',														//  controller of entity

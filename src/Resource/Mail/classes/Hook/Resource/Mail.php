@@ -62,14 +62,14 @@ class Hook_Resource_Mail extends Hook
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		/** @var object{mailId: int, status: int, 'subject: string, enqueuedAt: int} $mail */
 		foreach( $mails as $mail )
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $linkable ? $mail->mailId : NULL,
 				'label'		=> $icon.'&nbsp;'.$mail->subject,
-			];
+			] );
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$this->payload,																			//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label-received'],												//  label of type of related items
 			$linkController,																		//  controller of entity
@@ -85,14 +85,14 @@ class Hook_Resource_Mail extends Hook
 		$mails	 	= $modelMail->getAll( $indices, $orders, [], $fields );
 		/** @var object{mailId: int, status: int, 'subject: string, enqueuedAt: int} $mail */
 		foreach( $mails as $mail )
-			$list[]		= (object) [
+			$list[]		= new Entity_ModuleEntityRelationItem( [
 				'id'		=> $linkable ? $mail->mailId : NULL,
 				'label'		=> $icon.'&nbsp;'.$mail->subject,
-			];
+			] );
 		View_Helper_ItemRelationLister::enqueueRelations(
-			$this->payload,																			//  hook content data
+			$this->payload,																	//  hook content data
 			$this->module,																			//  module called by hook
-			'entity',																			//  relation type: entity or relation
+			Entity_ModuleEntityRelation::TYPE_ENTITY,											//  relation type: entity or relation
 			$list,																					//  list of related items
 			$words['hook-relations']['label-sent'],													//  label of type of related items
 			$linkController,																		//  controller of entity

@@ -8,18 +8,29 @@ Can be used for confirmation views to enlist entities related to an item.
 Uses hooks to retrieve information about related items from other modules.
 
 To append entities, you need to implement Hook::listRelations.
+
+Rendering supports two modes:
+list>
+- list: simple list for small views
+- table: table for large views
+<list
+
 ]]></description>
 	<category>User Interface</category>
-	<version>0.4.2</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Rework to match view helper interface.</log>
 	<log version="0.3.1">Provider render types 'list' and 'table'.</log>
 	<log version="0.3.2">Limit relations list items.</log>
 	<log version="0.4">Support localization.</log>
-	<log version="0.4.1">Support chainability on view helper class.</log>
+	<log version="0.4.1">Support method chaining on view helper class.</log>
 	<log version="0.4.2">Improve localization.</log>
+	<log version="0.4.3">Add entities for module relation and its items.</log>
+	<log version="0.4.4">Use constants for render mode.</log>
 	<files>
+		<class>Entity/ModuleEntityRelation.php</class>
+		<class>Entity/ModuleEntityRelationItem.php</class>
 		<class>View/Helper/ItemRelationLister.php</class>
 		<locale>de/helper/relation.ini</locale>
 		<locale>en/helper/relation.ini</locale>
