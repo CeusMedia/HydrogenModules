@@ -20,7 +20,7 @@ class Controller_Manage_Customer_Project extends Controller
 		}
 		$this->logic->add( $customerId, $projectId, $type );
 		$this->messenger->noteSuccess( 'Relation added.' );
-		$this->restart( $customerId, TRUE );
+		$this->restart( (string) $customerId, TRUE );
 	}
 
 	public function index( $customerId )
@@ -45,7 +45,7 @@ class Controller_Manage_Customer_Project extends Controller
 	{
 		if( $this->logic->remove( $customerId, $projectId ) )
 			$this->messenger->noteSuccess( 'Relation removed.' );
-		$this->restart( $customerId, TRUE );
+		$this->restart( (string) $customerId, TRUE );
 	}
 
 	protected function __onInit(): void

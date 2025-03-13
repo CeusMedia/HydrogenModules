@@ -13,7 +13,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 	{
 		$reserveId	= $this->request->get( 'reserveId' );
 		$this->logic->addBillReserve( $billId, $reserveId );
-		$this->restart( $billId, TRUE );
+		$this->restart( (string) $billId, TRUE );
 	}
 
 	public function addShare( string $billId ): void
@@ -31,7 +31,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 				$this->logic->addBillCorporationShare( $billId, $corporationId, $amount, $percent );
 				break;
 		}
-		$this->restart( $billId, TRUE );
+		$this->restart( (string) $billId, TRUE );
 	}
 
 	public function addExpense( string $billId ): void
@@ -40,7 +40,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		$amount	= $this->request->get( 'amount' );
 		$status	= $this->request->get( 'status' );
 		$this->logic->addBillExpense( $billId, $status, $amount, $title );
-		$this->restart( $billId, TRUE );
+		$this->restart( (string) $billId, TRUE );
 	}
 
 	public function book( string $billId ): void
@@ -84,7 +84,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		if( !$billReserve )
 			$this->restart( NULL, TRUE );
 		$this->logic->removeBillReserve( $billReserveId );
-		$this->restart( $billReserve->billId, TRUE );
+		$this->restart( (string) $billReserve->billId, TRUE );
 	}
 
 	public function removeShare( string $billShareId ): void
@@ -93,7 +93,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		if( !$billShare )
 			$this->restart( NULL, TRUE );
 		$this->logic->removeBillShare( $billShareId );
-		$this->restart( $billShare->billId, TRUE );
+		$this->restart( (string) $billShare->billId, TRUE );
 	}
 
 	public function removeExpense( string $billExpenseId ): void
@@ -102,7 +102,7 @@ class Controller_Work_Billing_Bill_Breakdown extends Controller
 		if( !$billExpense )
 			$this->restart( NULL, TRUE );
 		$this->logic->removeBillExpense( $billExpenseId );
-		$this->restart( $billExpense->billId, TRUE );
+		$this->restart( (string) $billExpense->billId, TRUE );
 	}
 
 	protected function __onInit(): void

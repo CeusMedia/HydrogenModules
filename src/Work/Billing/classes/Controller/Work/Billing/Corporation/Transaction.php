@@ -21,7 +21,7 @@ class Controller_Work_Billing_Corporation_Transaction extends Controller
 			$this->session->set( $this->filterPrefix.'year', $this->request->get( 'year' ) );
 			$this->session->set( $this->filterPrefix.'month', $this->request->get( 'month' ) );
 		}
-		$this->restart( $corporationId, TRUE );
+		$this->restart( (string) $corporationId, TRUE );
 	}
 
 	public function index( string $corporationId ): void

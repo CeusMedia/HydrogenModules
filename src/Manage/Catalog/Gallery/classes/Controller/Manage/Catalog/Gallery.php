@@ -283,7 +283,7 @@ class Controller_Manage_Catalog_Gallery extends Controller
 		unlink( $this->pathImagesOriginal.$category->path.'/'.$image->filename );
 		$this->modelImage->remove( $imageId );
 		$this->messenger->noteSuccess( $words->successImageRemoved );
-		$this->restart( $image->galleryCategoryId, TRUE );
+		$this->restart( (string) $image->galleryCategoryId, TRUE );
 	}
 
 	/**

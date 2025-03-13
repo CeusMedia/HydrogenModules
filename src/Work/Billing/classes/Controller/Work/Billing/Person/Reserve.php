@@ -21,7 +21,7 @@ class Controller_Work_Billing_Person_Reserve extends Controller
 			$this->session->set( $this->filterPrefix.'year', $this->request->get( 'year' ) );
 			$this->session->set( $this->filterPrefix.'month', $this->request->get( 'month' ) );
 		}
-		$this->restart( $personId, TRUE );
+		$this->restart( (string) $personId, TRUE );
 	}
 
 	public function index( string $personId ): void
