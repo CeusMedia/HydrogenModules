@@ -17,7 +17,7 @@ class Controller_Work_Billing_Person_Payout extends Controller
 		$title		= $this->request->get( 'title' );
 		$date		= $this->request->get( 'dateBooked' );
 		$this->logic->addPersonPayout( $personId, $amount, $title, $date );
-		$this->restart( $personId, TRUE );
+		$this->restart( (string) $personId, TRUE );
 	}
 
 	public function filter( string $personId, $reset = FALSE ): void
@@ -30,7 +30,7 @@ class Controller_Work_Billing_Person_Payout extends Controller
 			$this->session->set( $this->filterPrefix.'year', $this->request->get( 'year' ) );
 			$this->session->set( $this->filterPrefix.'month', $this->request->get( 'month' ) );
 		}
-		$this->restart( $personId, TRUE );
+		$this->restart( (string) $personId, TRUE );
 	}
 
 	public function index( string $personId ): void

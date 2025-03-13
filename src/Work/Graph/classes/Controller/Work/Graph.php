@@ -30,7 +30,7 @@ class Controller_Work_Graph extends Controller
 		$edgeId	= $this->modelEdge->add( $data );
 		$this->modelGraph->edit( $graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $graphId, TRUE );
-		$this->restart( $nodeId ? 'node/'.$nodeId : $graphId, TRUE );
+		$this->restart( $nodeId ? 'node/'.$nodeId : (string) $graphId, TRUE );
 	}
 
 	/**
@@ -45,7 +45,7 @@ class Controller_Work_Graph extends Controller
 		$data['createdAt']	= time();
 		$graphId	= $this->modelGraph->add( $data );
 		$this->renderGraphImage( $graphId, TRUE );
-		$this->restart( $graphId, TRUE );
+		$this->restart( (string) $graphId, TRUE );
 	}
 
 	/**
@@ -95,7 +95,7 @@ class Controller_Work_Graph extends Controller
 		$this->modelGraph->edit( $graphId, $data );
 		$this->modelGraph->edit( $graphId, ['modifiedAt' => time()] );
 //		$this->renderGraphImage( $graphId, TRUE );
-		$this->restart( $graphId, TRUE );
+		$this->restart( (string) $graphId, TRUE );
 	}
 
 	/**

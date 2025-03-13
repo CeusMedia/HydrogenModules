@@ -17,7 +17,7 @@ class Controller_Work_Billing_Corporation_Expense extends Controller
 		$title		= $this->request->get( 'title' );
 		$date		= $this->request->get( 'dateBooked' );
 		$this->logic->addCorporationExpense( $corporationId, $amount, $title, $date );
-		$this->restart( $corporationId, TRUE );
+		$this->restart( (string) $corporationId, TRUE );
 	}
 
 	public function filter( string $corporationId, $reset = FALSE ): void
@@ -30,7 +30,7 @@ class Controller_Work_Billing_Corporation_Expense extends Controller
 			$this->session->set( $this->filterPrefix.'year', $this->request->get( 'year' ) );
 			$this->session->set( $this->filterPrefix.'month', $this->request->get( 'month' ) );
 		}
-		$this->restart( $corporationId, TRUE );
+		$this->restart( (string) $corporationId, TRUE );
 	}
 
 	public function index( string $corporationId ): void
