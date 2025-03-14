@@ -68,10 +68,10 @@ class Logic_Share extends Logic
 
 	/**
 	 *	@param		string		$moduleId
-	 *	@param		string		$relationId
+	 *	@param		int|string		$relationId
 	 *	@return		bool
 	 */
-	public function has( string $moduleId, string $relationId ): bool
+	public function has( string $moduleId, int|string $relationId ): bool
 	{
 		$indices	= [
 			'moduleId'		=> $moduleId,

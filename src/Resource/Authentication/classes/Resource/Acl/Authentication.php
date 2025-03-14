@@ -40,7 +40,7 @@ class Resource_Acl_Authentication extends Abstraction
 				return [];
 			$roleId	= $this->env->getSession()->get( 'auth_role_id' );
 		}
-		if( $this->hasFullAccess( $roleId ) ){
+		if( $this->hasFullAccess( $roleId ?? '' ) ){
 			if( !$this->controllerActions )
 				$this->scanControllerActions();
 			if( $controller === NULL )
@@ -60,13 +60,13 @@ class Resource_Acl_Authentication extends Abstraction
 	/**
 	 *	Allows access to a controller action for a role.
 	 *	@access		public
-	 *	@param		string		$roleId			Role ID
-	 *	@param		string		$controller		Name of Controller
-	 *	@param		string		$action			Name of Action
+	 *	@param		int|string		$roleId			Role ID
+	 *	@param		string			$controller		Name of Controller
+	 *	@param		string			$action			Name of Action
 	 *	@return		integer
 	 *	@todo 		refactor return type to string
 	 */
-	public function setRight( string $roleId, string $controller, string $action ): int
+	public function setRight( int|string $roleId, string $controller, string $action ): int
 	{
 		if( $this->hasFullAccess( $roleId ) )
 			return -1;
@@ -112,10 +112,11 @@ class Resource_Acl_Authentication extends Abstraction
 	/**
 	 *	Returns Role.
 	 *	@access		protected
-	 *	@param		integer		$roleId			Role ID
+	 *	@param		int|string		$roleId			Role ID
 	 *	@return		array|object
+	 *	@throws		OutOfRangeException				if role is not existing
 	 */
-	protected function getRole( $roleId )
+	protected function getRole( int|string $roleId ): object|array
 	{
 		if( !$roleId )
 			return [];
@@ -153,7 +154,7 @@ class Resource_Acl_Authentication extends Abstraction
 	 *	@access		protected
 	 *	@return		void
 	 */
-	protected function scanControllerActions()
+	protected function scanControllerActions(): void
 	{
 		if( !class_exists( 'Resource_Disclosure' ) ){
 			$this->env->getMessenger()->noteFailure( 'Missing module "Resource_Disclosure".' );
