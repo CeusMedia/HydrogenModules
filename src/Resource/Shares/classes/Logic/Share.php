@@ -16,15 +16,15 @@ class Logic_Share extends Logic
 	protected Model_Share $modelShare;
 
 	/**
-	 *	@param		string		$moduleId
-	 *	@param		string		$relationId
-	 *	@param		string		$path
-	 *	@param		int			$access			Access type, one of Model_Share::ACCESS_* (public, captcha, login)
+	 *	@param		string			$moduleId
+	 *	@param		int|string		$relationId
+	 *	@param		string			$path
+	 *	@param		int				$access			Access type, one of Model_Share::ACCESS_* (public, captcha, login)
 	 *	@param		$validity
 	 *	@return		Entity_Share
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function create( string $moduleId, string $relationId, string $path, int $access, $validity ): Entity_Share
+	public function create( string $moduleId, int|string $relationId, string $path, int $access, $validity ): Entity_Share
 	{
 		if( $this->get( $moduleId, $relationId ) )
 			throw new RangeException( 'Share for module relation "'.$moduleId.':'.$relationId.'" is already existing' );
@@ -97,13 +97,13 @@ class Logic_Share extends Logic
 	}
 
 	/**
-	 *	@param		string		$moduleId
-	 *	@param		string		$relationId
-	 *	@param		string		$path
+	 *	@param		string			$moduleId
+	 *	@param		int|string		$relationId
+	 *	@param		string			$path
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function changePath( string $moduleId, string $relationId, string $path ): void
+	public function changePath( string $moduleId, int|string $relationId, string $path ): void
 	{
 		$share	= $this->get( $moduleId, $relationId );
 		if( NULL !== $share )
@@ -111,12 +111,12 @@ class Logic_Share extends Logic
 	}
 
 	/**
-	 *	@param		string		$moduleId
-	 *	@param		string		$relationId
+	 *	@param		string			$moduleId
+	 *	@param		int|string		$relationId
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function remove( string $moduleId, string $relationId ): bool
+	public function remove( string $moduleId, int|string $relationId ): bool
 	{
 		$share	= $this->get( $moduleId, $relationId );
 		return NULL !== $share && $this->modelShare->remove( $share->shareId );
