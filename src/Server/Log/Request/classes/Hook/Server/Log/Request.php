@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
+use CeusMedia\Common\Net\HTTP\Header\Section as HeaderSection;
+use CeusMedia\Common\Net\HTTP\Header\Field as HeaderField;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Server_Log_Request extends Hook
 {
-	public function onAppDispatch(): void
+	public function onEnvInit(): void
 	{
 		/** @var ModuleDefinition $module */
 		$module	= $this->env->getModules()->get( 'Server_Log_Request' );
@@ -35,16 +37,24 @@ class Hook_Server_Log_Request extends Hook
 	 */
 	protected function collectData(): Entity_Log_Request
 	{
+		$cookie	= [];
+		if( $this->env->has( 'cookie' ) )
+			$cookie	= $this->env->getCookie()->getAll();
+		$headers	= [];
+		/** @var HeaderSection $section */
+		foreach( $this->env->getRequest()->getHeaders() as $section )
+			/** @var HeaderField $field */
+			foreach( $section as $field )
+				$headers[] = $field->toString();
 		return Entity_Log_Request::fromArray( [
-			'url'		=> getenv( 'REQUEST_URI' ),
-			'method'	=> getenv( 'REQUEST_METHOD' ),
 			'ip'		=> getenv( 'REMOTE_ADDR' ),
-			'path'		=> $this->env->getRequest()->getPath(),
+			'method'	=> getenv( 'REQUEST_METHOD' ),
+			'url'		=> substr( getenv( 'REQUEST_URI' ), 0, 255 ),
 			'request'	=> json_encode( $this->env->getRequest()->getAll() ),
-			'session'	=>  json_encode( $this->env->getSession()->getAll() ),
-			'cookie'	=>  json_encode( $this->env->has( 'cookie' ) ? $this->env->getCookie()->getAll() : [] ),
-			'headers'	=> $this->env->getRequest()->getHeaders()->render(),
-			'timestamp'	=> date( 'Y-m-d H:i:s' ),
+			'session'	=> json_encode( $this->env->getSession()->getAll() ),
+			'cookie'	=> json_encode( $cookie ),
+			'headers'	=> json_encode( $headers ),
+			'timestamp'	=> date( 'Y-m-d H:i:s.u' ),
 		] );
 	}
 }
