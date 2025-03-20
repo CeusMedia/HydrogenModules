@@ -111,7 +111,7 @@ class Logic_Info_Contact extends Logic
 		}
 
 		$quotedUrl	= preg_quote( $this->env->url, '/' );
-		if( !preg_match( '/^'.$quotedUrl.'/', getEnv( 'HTTP_REFERER' ) ) )
+		if( !preg_match( '/^'.$quotedUrl.'/', getEnv( 'HTTP_REFERER' ) ?: '' ) )
 			$errors[]	= 'RefererInvalid';
 
 		if( $this->useCaptcha ){
