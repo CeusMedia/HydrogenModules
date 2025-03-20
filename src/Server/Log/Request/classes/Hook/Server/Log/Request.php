@@ -33,19 +33,20 @@ class Hook_Server_Log_Request extends Hook
 	}
 
 	/**
-	 *	@return Entity_Log_Request
+	 *	@return		Entity_Log_Request
 	 */
 	protected function collectData(): Entity_Log_Request
 	{
 		$cookie	= [];
 		if( $this->env->has( 'cookie' ) )
-			$cookie	= $this->env->getCookie()->getAll();
-		$headers	= [];
-		/** @var HeaderSection $section */
-		foreach( $this->env->getRequest()->getHeaders() as $section )
-			/** @var HeaderField $field */
-			foreach( $section as $field )
-				$headers[] = $field->toString();
+			$cookie	= $this->env->get( 'cookie' )->getAll();
+
+		$headers	= array_map( static function( HeaderField $field ){
+			return $field->toString();
+		}, $this->env->getRequest()->getHeaders()->getFields() );
+
+		$date	= DateTime::createFromFormat( 'U.u', (string) microtime( TRUE ) );
+
 		return Entity_Log_Request::fromArray( [
 			'ip'		=> getenv( 'REMOTE_ADDR' ),
 			'method'	=> getenv( 'REQUEST_METHOD' ),
@@ -54,7 +55,7 @@ class Hook_Server_Log_Request extends Hook
 			'session'	=> json_encode( $this->env->getSession()->getAll() ),
 			'cookie'	=> json_encode( $cookie ),
 			'headers'	=> json_encode( $headers ),
-			'timestamp'	=> date( 'Y-m-d H:i:s.u' ),
+			'timestamp'	=> $date->format( 'Y-m-d H:i:s.u' ),
 		] );
 	}
 }
