@@ -22,5 +22,23 @@ Automatically logs all HTTP requests.
 	<config protected="yes" type="string" name="file">requests.log</config>
 	<config protected="yes" type="boolean" name="delay" title="Flag: save to file first, import with job later">no</config>
 	<job id="Server.Log.Request.import">Server_Log_Request::import</job>
-	<hook type="resource" resource="Env" event="log">Hook_Server_Log_Request::onAppDispatch</hook>
+	<hook type="resource" resource="Env" event="init">Hook_Server_Log_Request::onEnvInit</hook>
+	<sql type="mysql" on="install" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
+  `requestId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ip` varchar(63) NOT NULL,
+  `method` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `request` text COLLATE utf8_unicode_ci NOT NULL,
+  `session` text COLLATE utf8_unicode_ci NOT NULL,
+  `cookie` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` datetime NOT NULL,
+  PRIMARY KEY (`requestId`),
+  KEY `ip` (`ip`),
+  KEY `method` (`method`),
+  KEY `url` (`url`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 </module>
