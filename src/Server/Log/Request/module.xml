@@ -3,12 +3,13 @@
 	<title>Server: Log: Request</title>
 	<description><![CDATA[Log for requests on web applications.
 
-Automatically logs all HTTP requests.
+Automatically logs all HTTP requests and CLI job calls.
 ]]></description>
 	<category>Server</category>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Add session ID.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -19,21 +20,19 @@ Automatically logs all HTTP requests.
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active">yes</config>
-	<config protected="yes" type="string" name="file">requests.log</config>
-	<config protected="yes" type="boolean" name="delay" title="Flag: save to file first, import with job later">no</config>
-	<job id="Server.Log.Request.import">Server_Log_Request::import</job>
 	<hook type="resource" resource="Env" event="init">Hook_Server_Log_Request::onEnvInit</hook>
 	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   `requestId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `ip` varchar(63) NOT NULL,
-  `method` varchar(16) COLLATE utf8_unicode_ci NOT NULL,
-  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `request` text COLLATE utf8_unicode_ci NOT NULL,
-  `session` text COLLATE utf8_unicode_ci NOT NULL,
-  `cookie` text COLLATE utf8_unicode_ci NOT NULL,
-  `headers` text COLLATE utf8_unicode_ci NOT NULL,
+  `sessionId` varchar(255) DEFAULT NULL,
+  `method` varchar(16) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `request` text NOT NULL,
+  `session` text DEFAULT NULL,
+  `cookie` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
   `timestamp` datetime(6) NOT NULL,
   PRIMARY KEY (`requestId`),
   KEY `ip` (`ip`),
