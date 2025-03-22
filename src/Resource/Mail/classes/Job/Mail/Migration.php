@@ -50,10 +50,7 @@ class Job_Mail_Migration extends Job_Abstract
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		];
+		$limits		= $this->getLimitsFromRequest();
 		$count		= 0;
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
@@ -113,10 +110,7 @@ class Job_Mail_Migration extends Job_Abstract
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		];
+		$limits		= $this->getLimitsFromRequest();
 		$parser		= new MailMessageParserV2();
 		$regex		= '/^O:[0-9]+:"([^"]+)":.+$/U';
 		$logic		= $this->logicMail;

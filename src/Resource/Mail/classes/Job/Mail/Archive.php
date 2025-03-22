@@ -9,6 +9,7 @@ use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\Writer as FileWriter;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
 use CeusMedia\Common\FS\Folder\Editor as FolderEditor;
+use CeusMedia\Mail\Message\Renderer as MailMessageRenderer;
 
 class Job_Mail_Archive extends Job_Abstract
 {
@@ -56,16 +57,13 @@ class Job_Mail_Archive extends Job_Abstract
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		DateMalformedIntervalStringException
 	 */
 	public function clean(): void
 	{
-		$age		= $this->parameters->get( '--age', '1Y' );
-		$age		= $age ? strtoupper( $age ) : '1Y';
-		$limits		= [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		];
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$threshold	= $this->getAgeThreshold( '--age', '1Y' );
+		$limits		= $this->getLimitsFromRequest();
 
 		$class		= $this->parameters->get( '--class', NULL );
 		if( $class !== NULL ){
@@ -181,10 +179,7 @@ class Job_Mail_Archive extends Job_Abstract
 	{
 		$conditions	= ['status' > $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		];
+		$limits		= $this->getLimitsFromRequest();
 		$count		= 0;
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );
@@ -233,12 +228,12 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@todo	test
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		DateMalformedIntervalStringException
 	 */
 	public function removeAttachments(): void
 	{
-		$age		= $this->parameters->get( '--age', '1Y' );
-		$age		= $age ? strtoupper( $age ) : '1Y';
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$threshold	= $this->getAgeThreshold( '--age', '1Y' );
 
 		$class		= $this->parameters->get( '--class', NULL );
 		if( $class !== NULL ){
@@ -278,7 +273,7 @@ class Job_Mail_Archive extends Job_Abstract
 					if( $part->isAttachment() ){
 						$mail->objectInstance->mail->removePart( $nr );
 						$this->logicMail->compressMailObject( $mail );
-						$renderer	= new \CeusMedia\Mail\Message\Renderer();
+						$renderer	= new MailMessageRenderer();
 						$raw		= $renderer->render( $mail->objectInstance->mail );
 						if( !$this->dryMode ){
 							$this->model->edit( $mail->mailId, [
@@ -331,10 +326,7 @@ class Job_Mail_Archive extends Job_Abstract
 
 		$conditions	= ['status' => $this->statusesHandledMails];
 		$orders		= ['mailId' => 'ASC'];
-		$limits		= [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		];
+		$limits		= $this->getLimitsFromRequest();
 		$count		= 0;
 		$fails		= [];
 		$mailIds	= $this->model->getAll( $conditions, $orders, $limits, ['mailId'] );

@@ -164,13 +164,12 @@ class Job_Mail_Sent extends Job_Abstract
 	/**
 	 *	Applies given CLI parameters to pick a list of IDs of matching mail entities
 	 *	@return		array<int|string>		List of IDs of found mail entities
+	 *	@throws		DateInvalidOperationException
 	 *	@throws		DateMalformedIntervalStringException
 	 */
 	protected function pickMailIds(): array
 	{
-		$age		= strtoupper( $this->parameters->get( '--age', '1Y' ) );
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
-
+		$threshold	= $this->getAgeThreshold( '--age', '1Y' );
 		$class		= $this->parameters->get( '--class' );
 		if( NULL !== $class ){
 			$class	= preg_split( '/\s*,\s*/', $class );
@@ -182,9 +181,6 @@ class Job_Mail_Sent extends Job_Abstract
 			'status'		=> $this->statusesHandledMails,
 			'mailClass'		=> $class,
 			'enqueuedAt' 	=> '< '.$threshold->format( 'U' ),
-		], ['mailId' => 'ASC'], [
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		], ['mailId'] );
+		], ['mailId' => 'ASC'], $this->getLimitsFromRequest(), ['mailId'] );
 	}
 }
