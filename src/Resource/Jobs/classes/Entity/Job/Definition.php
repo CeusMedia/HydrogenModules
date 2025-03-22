@@ -18,6 +18,8 @@ class Entity_Job_Definition extends Entity
 	public int $modifiedAt;
 	public int $lastRunAt				= 0;
 
+	public array $schedules				= [];
+
 	protected static array $mandatoryFields	= [
 		'identifier',
 		'className',

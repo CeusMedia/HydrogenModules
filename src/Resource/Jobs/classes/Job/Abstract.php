@@ -3,6 +3,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
 use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Log;
 
 class Job_Abstract
 {
@@ -21,29 +22,24 @@ class Job_Abstract
 	protected ?string $jobModuleId		= NULL;
 
 	protected array $commands			= [];
-	protected bool $dryMode			= FALSE;
-	protected bool $verbose			= FALSE;
+	protected bool $dryMode				= FALSE;
+	protected bool $verbose				= FALSE;
 	protected Dictionary $parameters;
 
 	protected ?string $versionModule	= NULL;
 	protected ?ProgressOutput $progress	= NULL;
 
-	protected $results;
-
-	/**	@var		Jobber				$manager		Job manager instance */
-	protected $manager;
+	protected array $results;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@param		Environment			$env		Environment instance
-	 *	@param		Jobber				$manager	Job manage instance
 	 *	@return		void
 	 */
-	public function __construct( Environment $env, $manager, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
+	public function __construct( Environment $env, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
 	{
 		$this->env			= $env;
-		$this->manager		= $manager;
 		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
 		$this->parameters	= new Dictionary();
 		if( $jobClassName )
@@ -56,9 +52,10 @@ class Job_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@return		???
+	 *	@return		array
+	 *	@todo		Refactor results array to list of result entities
 	 */
-	public function getResults()
+	public function getResults(): array
 	{
 		return $this->results;
 	}
@@ -106,6 +103,35 @@ class Job_Abstract
 	}
 
 	/**
+	 *	@param		string		$requestParameterName
+	 *	@param		string		$default
+	 *	@return		DateTime
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		DateMalformedIntervalStringException
+	 */
+	protected function getAgeThreshold( string $requestParameterName, string $default = '1M' ): DateTime
+	{
+		$value	= $this->parameters->get( $requestParameterName, $default );
+		$period	= $this->getPeriod( $value ) ?? $this->getPeriod( $default );
+		return date_create()->sub( new DateInterval( $period ) );
+	}
+
+	/**
+	 *	Returns limits part for database listings, using Model_*::getAll.
+	 *	Therefor, reads request parameters --limit and --offset.
+	 *	Sets defaults if not requested: default limit is 1000 and default offset is 0.
+	 *	Limit will be at least 1 and offset will be at least 0.
+	 *	@return		array<int,int>
+	 */
+	protected function getLimitsFromRequest( int $defaultLimit = 1000, int $defaultOffset = 0 ): array
+	{
+		return [
+			max( 0, (int) $this->getParameterFromRequest( '--offset', $defaultOffset ) ),
+			max( 1, (int) $this->getParameterFromRequest( '--limit', $defaultLimit ) ),
+		];
+	}
+
+	/**
 	 *	Returns prefix for log lines depending on set job class and method.
 	 *	@access		protected
 	 *	@return		string
@@ -119,14 +145,46 @@ class Job_Abstract
 	}
 
 	/**
+	 *	Returns request parameter by name or sets given default.
+	 *	All space characters will be removed.
+	 *	@param		string		$requestParameterName
+	 *	@param		string		$default
+	 *	@return		string
+	 */
+	protected function getParameterFromRequest( string $requestParameterName, string $default = '*' ): string
+	{
+		$value	= $this->parameters->get( $requestParameterName, $default );
+		return preg_replace( '/\s/', '', $value );
+	}
+
+	/**
+	 *	Returns date period string.
+	 *	Examples: 1Y (1 year), 2M (2 months), 3D (3 days), 4h (4 hours), 5m (5 minutes), 6s (6 seconds)
+	 *	Attention: Combination is NOT supported.
+	 *	@param		string		$value
+	 *	@return		?string
+	 *	@see		https://www.php.net/manual/en/dateinterval.construct.php
+	 */
+	protected function getPeriod( string $value ): ?string
+	{
+		if( !preg_match( '/^[0-9]+[YMDhms]$/', $value ) )
+			return NULL;
+		$number	= preg_replace( '/[YMDhms]$/', '', $value );
+		$unit	= preg_replace( '/^[0-9]+/', '', $value );
+		$prefix	= in_array( $unit, ['Y', 'M', 'D'], TRUE ) ? 'P' : 'PT';
+		return $prefix.$number.strtoupper( $unit );
+	}
+
+	/**
 	 *	Write message to log.
 	 *	@access		protected
-	 *	@param		string		$message		Message to log
+	 *	@param		string		$message		Message type as string (debug,info,note,warn,error), @see Log::TYPE_*
+	 *	@param		string		$logLevel		Message to log
 	 *	@return		static
 	 */
-	protected function log( string $message ): static
+	protected function log( string $message, string $logLevel = Log::TYPE_INFO ): static
 	{
-//		$this->manager->log( $this->getLogPrefix().$message );
+		$this->env->getLog()->log( $logLevel, $this->getLogPrefix().$message );
 		return $this;
 	}
 
@@ -138,8 +196,7 @@ class Job_Abstract
 	 */
 	protected function logError( string $message ): static
 	{
-		$this->manager->logError( $this->getLogPrefix().$message );
-		return $this;
+		return $this->log( $message, Log::TYPE_ERROR );
 	}
 
 	/**
@@ -150,7 +207,7 @@ class Job_Abstract
 	 */
 	protected function logException( Throwable $exception ): static
 	{
-		$this->manager->logException( $exception );
+		$this->env->getLog()->logException( $exception );
 		return $this;
 	}
 
@@ -173,23 +230,40 @@ class Job_Abstract
 	 */
 	protected function setJobClassName( string $jobClassName ): static
 	{
-		$this->jobClass		= strlen( trim( $jobClassName ) ) ? $jobClassName : get_class( $this );
+		$this->jobClass	= '' !== trim( $jobClassName ) ? $jobClassName : get_class( $this );
 		return $this;
 	}
 
 	/**
-	*	Set module of inheriting job for information output or logging.
+	 *	Set module of inheriting job for information output or logging.
 	 *	@access		protected
 	 *	@param		?string		$jobModuleId	Module ID of inheriting job
 	 *	@return		static
 	 */
 	protected function setJobModuleId( ?string $jobModuleId ): static
 	{
-		$this->jobModuleId		= strlen( trim( $jobModuleId ?? '' ) ) ? $jobModuleId : NULL;
+		$this->jobModuleId		= '' !== trim( $jobModuleId ?? '' ) ? $jobModuleId : NULL;
 		$this->versionModule	= NULL;
 		if( $this->jobModuleId && $this->env->getModules()->has( $this->jobModuleId ) ){
 			$module	= $this->env->getModules()->get( $this->jobModuleId );
 			$this->versionModule	= $module->version->installed;
+		}
+		return $this;
+	}
+
+	/**
+	 *	Display caught error messages.
+	 *	@access		protected
+	 *	@param		string		$taskName		Name of task producing errors
+	 *	@param		array		$errors			List of error messages to show
+	 *	@return		static
+	 */
+	protected function showErrors( string $taskName, array $errors ): static
+	{
+		if( [] !== $errors ){
+			$this->out( 'Errors on '.$taskName.':' );
+			foreach( $errors as $mailId => $message )
+				$this->out( '- '.$mailId.': '.$message );
 		}
 		return $this;
 	}
@@ -205,41 +279,13 @@ class Job_Abstract
 	 */
 	protected function showProgress( int $count, int $total, string $sign = '.', int $length = 60 ): static
 	{
-		if( $count === 0 ){
+		if( NULL === $this->progress ){
 			$this->progress	= new ProgressOutput();
 			$this->progress->setTotal( $total )->start();
 		}
-		else if( $count === $total ){
-			if( $this->progress ){
-				$this->progress->update( $count );
-				$this->progress->finish();
-			}
-		}
-		else{
-			if( !$this->progress ){
-				$this->progress	= new ProgressOutput();
-				$this->progress->setTotal( $total );
-				$this->progress->start();
-			}
-			$this->progress->update( $count );
-		}
-		return $this;
-	}
-
-	/**
-	 *	Display caught error messages.
-	 *	@access		protected
-	 *	@param		string		$taskName		Name of task producing errors
-	 *	@param		array		$errors			List of error messages to show
-	 *	@return		static
-	 */
-	protected function showErrors( string $taskName, array $errors ): static
-	{
-		if( 0 !== count( $errors ) ){
-			$this->out( 'Errors on '.$taskName.':' );
-			foreach( $errors as $mailId => $message )
-				$this->out( '- '.$mailId.': '.$message );
-		}
+		$this->progress->update( $count );
+		if( $count === $total )
+			$this->progress->finish();
 		return $this;
 	}
 }

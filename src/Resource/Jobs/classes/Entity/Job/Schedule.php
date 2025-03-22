@@ -19,7 +19,12 @@ class Entity_Job_Schedule extends Entity
 	public int $modifiedAt;
 	public int $lastRunAt				= 0;
 
-	protected static array $mandatoryFields	= [
+	public ?Entity_Job_Definition $definition	= NULL;
+
+	/** @var Entity_Job_Run[] $latestRuns */
+	public array $latestRuns					= [];
+
+	protected static array $mandatoryFields		= [
 		'jobDefinitionId',
 		'title',
 		'createdAt',

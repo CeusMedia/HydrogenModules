@@ -112,33 +112,30 @@ class Logic_Job extends Logic
 
 	/**
 	 *	@param		int|string		$jobDefinitionId
-	 *	@return		object|NULL
+	 *	@return		?Entity_Job_Definition
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getDefinition( int|string $jobDefinitionId ): ?object
+	public function getDefinition( int|string $jobDefinitionId ): ?Entity_Job_Definition
 	{
-		return $this->modelDefinition->get( $jobDefinitionId );
+		/** @var ?Entity_Job_Definition $definition */
+		$definition	= $this->modelDefinition->get( $jobDefinitionId );
+		return $definition;
 	}
 
-	public function getDefinitionByIdentifier( string $jobDefinitionIdentifier, array $extendBy = [] ): ?object
+	public function getDefinitionByIdentifier( string $jobDefinitionIdentifier, array $extendBy = [] ): ?Entity_Job_Definition
 	{
+		/** @var ?Entity_Job_Definition $jobDefinition */
 		$jobDefinition	= $this->modelDefinition->getByIndex( 'identifier', $jobDefinitionIdentifier );
-		if( $jobDefinition ){
-			if( $extendBy ){
-				if( in_array( 'schedules', $extendBy ) ){
-					$jobDefinition->schedules	= $this->modelSchedule->getAll( [
-						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-					] );
-				}
-				if( in_array( 'runs', $extendBy ) ){
-					$jobDefinition->runs		= $this->modelRun->getAll( [
-						'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
-					] );
-				}
+		if( NULL === $jobDefinition )
+			return NULL;
+		if( $extendBy ){
+			if( in_array( 'schedules', $extendBy ) ){
+				$jobDefinition->schedules	= $this->modelSchedule->getAll( [
+					'jobDefinitionId'	=> $jobDefinition->jobDefinitionId,
+				] );
 			}
-			return $jobDefinition;
 		}
-		return NULL;
+		return $jobDefinition;
 	}
 
 	/**
@@ -171,6 +168,13 @@ class Logic_Job extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@param		array		$fields
+	 *	@return		array
+	 */
 	public function getRunningJobs( array $conditions = [], array $orders = [], array $limits = [], array $fields = [] ): array
 	{
 		$conditions['status']	= Model_Job_Run::STATUS_RUNNING;
@@ -182,13 +186,14 @@ class Logic_Job extends Logic
 	 *	@access		public
 	 *	@param		int|string		$jobRunId		ID of job run
 	 *	@param		array			$extendBy		List of data extensions (definition, schedules)
-	 *	@return		object|NULL	Found prepared job run
+	 *	@return		?Entity_Job_Run	Found prepared job run
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getPreparedJobRun( int|string $jobRunId, array $extendBy = [] ): ?object
+	public function getPreparedJobRun( int|string $jobRunId, array $extendBy = [] ): ?Entity_Job_Run
 	{
+		/** @var ?Entity_Job_Run $jobRun */
 		$jobRun	= $this->modelRun->get( $jobRunId );
-		if( $jobRun && $extendBy ){
+		if( NULL !== $jobRun && $extendBy ){
 			if( in_array( 'schedules', $extendBy ) && $jobRun->jobScheduleId )
 				$jobRun->schedule	= $this->modelSchedule->get( $jobRun->jobScheduleId );
 			if( in_array( 'definition', $extendBy ) )
@@ -202,7 +207,7 @@ class Logic_Job extends Logic
 	 *	@access		public
 	 *	@param		int|string		$jobDefinitionId	ID of job definition to filter by (optional)
 	 *	@param		array			$extendBy			List of data extensions (definition, schedules)
-	 *	@return		array			list of found prepared job runs
+	 *	@return		Entity_Job_Run[]					list of found prepared job runs
 	 *	@todo		remove
 	 *	@deprecated	seems to be unused
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
@@ -212,12 +217,13 @@ class Logic_Job extends Logic
 		$indices	= ['status' => Model_Job_Run::STATUS_PREPARED];
 		if( $jobDefinitionId )
 			$indices['jobDefinitionId']	= $jobDefinitionId;
+		/** @var Entity_Job_Run[] $preparedJobs */
 		$preparedJobs	= $this->modelRun->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $preparedJobs as $preparedJob ){
 			if( in_array( 'definition', $extendBy ) )
 				$preparedJob->definition	= $this->modelDefinition->get( $preparedJob->jobDefinitionId );
 			if( in_array( 'schedules', $extendBy ) )
-				$preparedJob->schedules	= $this->modelSchedule->getAll( [
+				$preparedJob->schedules		= $this->modelSchedule->getAll( [
 					'jobDefinitionId'	=> $preparedJob->jobDefinitionId,
 				] );
 		}
@@ -232,8 +238,9 @@ class Logic_Job extends Logic
 	public function getScheduledJobs( array $conditions = [] ): array
 	{
 		$conditions	= array_merge( [
-			'status'	=> 1,
+			'status'	=> Model_Job_Schedule::STATUS_ENABLED,
 		], $conditions );
+		/** @var Entity_Job_Schedule[] $list */
 		$list	= $this->modelSchedule->getAll( $conditions );
 		foreach( $list as $item ){
 			$item->definition	= $this->modelDefinition->get( $item->jobDefinitionId );
@@ -255,17 +262,19 @@ class Logic_Job extends Logic
 			'mode'		=> Model_Job_Definition::MODE_EXCLUSIVE,
 			'status'	=> Model_Job_Definition::STATUS_ENABLED,
 		], [], [], ['jobDefinitionId'] );
-		if( $exclusiveJobsDefinitionIds ){
-			$exclusiveJobIsRunning	= $this->modelRun->getByIndices( [
-				'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
-				'status'			=> Model_Job_Run::STATUS_RUNNING,
-			] );
-			if( $exclusiveJobIsRunning )
-				return TRUE;
-		}
-		return FALSE;
+		if( [] === $exclusiveJobsDefinitionIds )
+			return FALSE;
+		$exclusiveJobIsRunning	= $this->modelRun->countByIndices( [
+			'jobDefinitionId'	=> $exclusiveJobsDefinitionIds,
+			'status'			=> Model_Job_Run::STATUS_RUNNING,
+		] );
+		return 0 !== $exclusiveJobIsRunning;
 	}
 
+	/**
+	 *	@param		int		$processId
+	 *	@return		bool
+	 */
 	public function isActiveProcessId( int $processId ): bool
 	{
 		if( $processId < 2 )
@@ -274,20 +283,24 @@ class Logic_Job extends Logic
 		return count( $table ) > 1;
 	}
 
-	public function isRunningSingleJob( object $jobDefinition, ?int $runType = NULL ): bool
+	/**
+	 *	@param		Entity_Job_Definition	$jobDefinition
+	 *	@param		?int					$runType
+	 *	@return		bool
+	 */
+	public function isRunningSingleJob( Entity_Job_Definition $jobDefinition, ?int $runType = NULL ): bool
 	{
-		if( (int) $jobDefinition->mode !== Model_Job_Definition::MODE_SINGLE )
+		if( Model_Job_Definition::MODE_SINGLE !== $jobDefinition->mode )
 			return FALSE;
 		$conditions	= ['jobDefinitionId' => $jobDefinition->jobDefinitionId];
-		if( !is_null( $runType ) )
+		if( NULL !== $runType )
 			$conditions['type']	= $runType;
-		return (bool) count( $this->getRunningJobs( $conditions ) );
+		return [] !== $this->getRunningJobs( $conditions );
 	}
 
 	/**
 	 *	@param		string		$error
 	 *	@return		self
-	 *	@throws		ReflectionException
 	 */
 	public function logError( string $error ): self
 	{
@@ -313,12 +326,12 @@ class Logic_Job extends Logic
 	}
 
 	/**
-	 *	@param		object		$job
-	 *	@param		array		$options
-	 *	@return		object|NULL
+	 *	@param		Entity_Job_Definition	$job
+	 *	@param		array					$options
+	 *	@return		?Entity_Job_Run
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function prepareManuallyJobRun( object $job, array $options ): ?object
+	public function prepareManuallyJobRun( Entity_Job_Definition $job, array $options ): ?Entity_Job_Run
 	{
 		if( !$this->isPreparableJob( $job, Model_Job_Run::TYPE_MANUALLY ) )
 			return NULL;
@@ -359,9 +372,11 @@ class Logic_Job extends Logic
 	public function runPreparedJob( int|string $jobRunId ): void
 	{
 		$jobRun	= $this->getPreparedJobRun( $jobRunId, ['definition'] );
-		if( Model_Job_Run::STATUS_PREPARED !== (int) $jobRun->status )
+		if( NULL === $jobRun )
+			throw new RuntimeException( 'Job is not prepared' );
+		if( Model_Job_Run::STATUS_PREPARED !== $jobRun->status )
 			throw new RuntimeException( 'Job run is not in prepared state' );
-		if( $jobRun->definition && !$jobRun->processId ){
+		if( NULL !== $jobRun->definition && 0 === $jobRun->processId ){
 			try{
 				$this->modelRun->edit( $jobRun->jobRunId, [
 					'status'		=> Model_Job_Run::STATUS_RUNNING,
@@ -371,7 +386,6 @@ class Logic_Job extends Logic
 //				exec( $jobRun->method );
 			}
 			catch( Exception ){
-
 			}
 		}
 	}
@@ -385,9 +399,10 @@ class Logic_Job extends Logic
 	 */
 	public function quitJobRun( int|string $jobRunId, int $status, array $messageData = [] ): bool
 	{
+		/** @var ?Entity_Job_Run $jobRun */
 		$jobRun	= $this->modelRun->get( $jobRunId );
-		if( Model_Job_Run::STATUS_RUNNING !== (int) $jobRun->status ){
-			if( $status === Model_Job_Run::STATUS_TERMINATED )
+		if( Model_Job_Run::STATUS_RUNNING !== $jobRun->status ){
+			if( Model_Job_Run::STATUS_TERMINATED === $status )
 				return FALSE;
 			throw new RuntimeException( 'Job (id: '.$jobRun->jobDefinitionId.') is not running (status: '.$jobRun->status.')' );
 		}
@@ -400,9 +415,10 @@ class Logic_Job extends Logic
 			'message'		=> json_encode( $messageData ),
 		];
 		if( Model_Job_Run::STATUS_TERMINATED === $status )
-			if( $this->isActiveProcessId( (int) $jobRun->processId ) )
-				$this->killJobRunProcess( (int) $jobRun->processId );
+			if( $this->isActiveProcessId( $jobRun->processId ) )
+				$this->killJobRunProcess( $jobRun->processId );
 		$this->modelRun->edit( $jobRun->jobRunId, $dataRun );
+		/** @var ?Entity_Job_Definition $jobDefinition */
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$dataDefinition	= [];
 		if( in_array( $status, Model_Job_Run::STATUSES_NEGATIVE, TRUE ) )
@@ -413,16 +429,16 @@ class Logic_Job extends Logic
 	}
 
 	/**
-	 *	@param		object		$jobRun
-	 *	@param		array		$commands
-	 *	@param		array		$parameters
+	 *	@param		Entity_Job_Run	$jobRun
+	 *	@param		array			$commands
+	 *	@param		array			$parameters
 	 *	@return		int
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function startJobRun( object $jobRun, array $commands = [], array $parameters = [] ): int
+	public function startJobRun( Entity_Job_Run $jobRun, array $commands = [], array $parameters = [] ): int
 	{
-		if( Model_Job_Run::STATUS_PREPARED !== (int) $jobRun->status )
+		if( Model_Job_Run::STATUS_PREPARED !== $jobRun->status )
 			throw new RuntimeException( 'Job run is not in prepared state' );
 		$this->modelRun->edit( $jobRun->jobRunId, [
 			'status'		=> Model_Job_Run::STATUS_RUNNING,
@@ -431,6 +447,7 @@ class Logic_Job extends Logic
 			'ranAt'			=> time(),
 		] );
 
+		/** @var ?Entity_Job_Definition $jobDefinition */
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$this->modelDefinition->edit( $jobRun->jobDefinitionId, [
 			'runs'		=> $jobDefinition->runs + 1,
@@ -446,10 +463,10 @@ class Logic_Job extends Logic
 
 
 		$className	= 'Job_'.$jobDefinition->className;												//  build job class name
-		$classArgs	= [$this->env, $this];															//  prepare job class instance arguments
+		$classArgs	= [$this->env];																	//  prepare job class instance arguments
 		$arguments	= [$commands, $parameters];														//
 		$methodName	= $jobDefinition->methodName;													//  shortcut method name
-		$jobObject	= ObjectFactory::createObject( '\\'.$className, $classArgs );				//  ... create job class instance with arguments
+		$jobObject	= ObjectFactory::createObject( '\\'.$className, $classArgs );			//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
 		$jobObject->noteArguments( $commands, $parameters );										//  ... inform job instance about request arguments
 
@@ -489,7 +506,7 @@ class Logic_Job extends Logic
 				'line'		=> $t->getLine(),														//  ...
 				'trace'		=> $t->getTraceAsString(),												//  ...
 			] );
-			if( (int) $jobRun->type === Model_Job_Run::TYPE_MANUALLY ){								//  since job has been run manually
+			if( Model_Job_Run::TYPE_MANUALLY === $jobRun->type ){									//  since job has been run manually
 				throw new RuntimeException( 'Job run failed: '.$t->getMessage(), 0, $t );			//  ... carry exception out
 			}
 		}
@@ -632,17 +649,17 @@ class Logic_Job extends Logic
 		return $jobSchedules;
 	}
 
-	protected function isPreparableJob( object $jobDefinition, ?int $runType = 0 ): bool
+	protected function isPreparableJob( Entity_Job_Definition $jobDefinition, ?int $runType = 0 ): bool
 	{
 		$preparableJobStatuses	= [Model_Job_Definition::STATUS_ENABLED];
-		if( !in_array( (int) $jobDefinition->status, $preparableJobStatuses, TRUE ) )
+		if( !in_array( $jobDefinition->status, $preparableJobStatuses, TRUE ) )
 			return FALSE;
 
 //		$this->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
 		if( $this->hasRunningExclusiveJob() )
 			return FALSE;
 
-		switch( (int) $jobDefinition->mode ){
+		switch( $jobDefinition->mode ){
 			case Model_Job_Definition::MODE_MULTIPLE:
 				return TRUE;
 			case Model_Job_Definition::MODE_EXCLUSIVE:
@@ -672,17 +689,19 @@ class Logic_Job extends Logic
 	}
 
 	/**
-	 *	@param 		array $scheduledJobRunsToPrepare
-	 *	@return		array
+	 *	@param 		array		$scheduledJobRunsToPrepare
+	 *	@return		array<int,Entity_Job_Run>
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function prepareJobRunsForScheduledJobs( array $scheduledJobRunsToPrepare ): array
 	{
+		/** @var array<int,Entity_Job_Run> $list */
 		$list	= [];
 		foreach( $scheduledJobRunsToPrepare as $scheduledJob ){
 			$date	= date( 'Y-m-d-H-i' );
-			$job	= $this->modelDefinition->get( $scheduledJob->jobDefinitionId );
-			if( $this->isPreparableJob( $job ) ){
+			/** @var ?Entity_Job_Definition $jobDefinition */
+			$jobDefinition	= $this->modelDefinition->get( $scheduledJob->jobDefinitionId );
+			if( NULL !== $jobDefinition && $this->isPreparableJob( $jobDefinition ) ){
 				$this->abortPreparedJobRuns( $scheduledJob->jobDefinitionId );
 				$jobRunId	= $this->modelRun->add( [
 					'jobScheduleId'		=> $scheduledJob->jobScheduleId,
@@ -774,13 +793,13 @@ class Logic_Job extends Logic
 	}
 
 	/**
-	 *	@param		int|string $jobRunId
-	 *	@param		array $commands
-	 *	@param		array $parameters
+	 *	@param		int|string		$jobRunId
+	 *	@param		array			$commands
+	 *	@param		array			$parameters
 	 *	@param		$resultCode
 	 *	@return		int|NULL
-	 *	@throws ReflectionException
-	 *	@throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function sendReport( int|string $jobRunId, array $commands, array $parameters, $resultCode ): ?int
 	{

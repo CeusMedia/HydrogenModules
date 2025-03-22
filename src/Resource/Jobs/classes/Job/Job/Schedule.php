@@ -42,56 +42,29 @@ class Job_Job_Schedule extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		DateMalformedIntervalStringException
 	 */
 	public function archive(): int
 	{
-		$modelRun			= new Model_Job_Run( $this->env );
-
-		$age		= $this->parameters->get( '--age', '1M' );
-		$age		= $age ? strtoupper( $age ) : '1M';
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$modelRun	= new Model_Job_Run( $this->env );
+		$threshold	= $this->getAgeThreshold( '--age' );
 
 		//  GET JOB RUNS
-		$conditions		= array(
+		$conditions		= [
 			'archived'		=> Model_Job_Run::ARCHIVED_NO,
 			'finishedAt'	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 
-		//  PARAMETER: IDENTIFIER(S)
-		$identifierParam	= $this->parameters->get( '--identifier', '*' );
-		$identifierParam	= preg_replace( '/\s/', '', $identifierParam );
-		if( $identifierParam !== '*' ){
-			$jobDefinitionIds	= [];
-			$jobDefinitionMap	= [];
-			foreach( $this->logic->getDefinitions() as $definition )
-				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
-			foreach( explode( ',', $identifierParam ) as $identifier ){
-				if( !array_key_exists( $identifier, $jobDefinitionMap ) )
-					throw new InvalidArgumentException( 'Invalid job identifier: '.$identifier );
-				$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
-			}
-			$conditions['jobDefinitionId']	= $jobDefinitionIds;
-		}
+		$this->extendConditionsByJobDefinitionIdentifierForRequestParameter( $conditions );
+		$this->extendConditionsByStatusesForRequestParameter( $conditions );
 
 		//  PARAMETER: STATUS(ES)
-		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
-		$statusParam	= preg_replace( '/\s/', '', $statusParam );
-		if( $statusParam !== '*' ){
-			$statuses	= [];
-			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
-			foreach( explode( ',', $statusParam ) as $statusKey ){
-				if( !array_key_exists( $statusKey, $statusMap ) )
-					throw new InvalidArgumentException( 'Invalid job run status: '.$statusKey );
-				$statuses[]	= $statusMap[$statusKey];
-			}
-			$conditions['status']	= $statuses;
-		}
 
 		$orders		= ['jobRunId' => 'ASC'];
-		$limits		= array(
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		);
+		$limits		= $this->getLimitsFromRequest();
 		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, ['jobRunId'] );
 		$nrJobs	= count( $runIds );
 		if( $nrJobs ){
@@ -139,56 +112,26 @@ class Job_Job_Schedule extends Job_Abstract
 	 *	@access		public
 	 *	@return		int
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		DateMalformedIntervalStringException
 	 */
 	public function remove(): int
 	{
 		$modelRun	= new Model_Job_Run( $this->env );
-
-		$age		= $this->parameters->get( '--age', '1M' );
-		$age		= $age ? strtoupper( $age ) : '1M';
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$threshold	= $this->getAgeThreshold( '--age' );
 
 		//  GET JOB RUNS
-		$conditions		= array(
+		$conditions		= [
 //			'archived'		=> Model_Job_Run::ARCHIVED_NO,
 			'finishedAt'	=> '< '.$threshold->format( 'U' ),
-		);
+		];
 
-		//  PARAMETER: IDENTIFIER(S)
-		$identifierParam	= $this->parameters->get( '--identifier', '*' );
-		$identifierParam	= preg_replace( '/\s/', '', $identifierParam );
-		if( $identifierParam !== '*' ){
-			$jobDefinitionIds	= [];
-			$jobDefinitionMap	= [];
-			foreach( $this->logic->getDefinitions() as $definition )
-				$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
-			foreach( explode( ',', $identifierParam ) as $identifier ){
-				if( !array_key_exists( $identifier, $jobDefinitionMap ) )
-					throw new InvalidArgumentException( 'Invalid job identifier: '.$identifier );
-				$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
-			}
-			$conditions['jobDefinitionId']	= $jobDefinitionIds;
-		}
+		$this->extendConditionsByJobDefinitionIdentifierForRequestParameter( $conditions );
+		$this->extendConditionsByStatusesForRequestParameter( $conditions );
 
-		//  PARAMETER: STATUS(ES)
-		$statusParam	= strtoupper( $this->parameters->get( '--status', 'done,success' ) );
-		$statusParam	= preg_replace( '/\s/', '', $statusParam );
-		if( $statusParam !== '*' ){
-			$statuses	= [];
-			$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
-			foreach( explode( ',', $statusParam ) as $statusKey ){
-				if( !array_key_exists( $statusKey, $statusMap ) )
-					throw new InvalidArgumentException( 'Invalid job run status: '.$statusKey );
-				$statuses[]	= $statusMap[$statusKey];
-			}
-			$conditions['status']	= $statuses;
-		}
-
-		$orders		= ['jobRunId' => 'ASC'];
-		$limits		= array(
-			max( 0, (int) $this->parameters->get( '--offset', '0' ) ),
-			max( 1, (int) $this->parameters->get( '--limit', '1000' ) ),
-		);
+		$orders	= ['jobRunId' => 'ASC'];
+		$limits	= $this->getLimitsFromRequest();
 		$runIds	= $modelRun->getAll( $conditions, $orders, $limits, ['jobRunId'] );
 		$nrJobs	= count( $runIds );
 
@@ -210,6 +153,11 @@ class Job_Job_Schedule extends Job_Abstract
 		return $nrJobs ? 2 : 1;
 	}
 
+	/**
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function run(): int
 	{
 		$preparedJobs	= $this->logic->prepareScheduledJobs();
@@ -240,7 +188,7 @@ class Job_Job_Schedule extends Job_Abstract
 				if( $result === 1 )
 					$numberDone++;
 			}
-			catch( Exception $e ){
+			catch( Exception ){
 			}
 		}
 		$this->results	= [
@@ -253,13 +201,61 @@ class Job_Job_Schedule extends Job_Abstract
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->logic	= $this->env->getLogic()->get( 'Job' );
+		$this->logic	= Logic_Job::getInstance( $this->env );
 /*		$this->skipJobs	= array(
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.list' )->jobDefinitionId,
 		);*/
+	}
+
+	/**
+	 *	@param		array		$conditions
+	 *	@param		string		$default
+	 *	@return		void
+	 */
+	protected function extendConditionsByJobDefinitionIdentifierForRequestParameter( array & $conditions, string $default = '*' ): void
+	{
+		$identifierParam	= $this->getParameterFromRequest( '--identifier', $default );
+		if( '*' === $identifierParam )
+			return;
+		/** @var array<int|string> $jobDefinitionIds */
+		$jobDefinitionIds	= [];
+		/** @var array<string,int|string> $jobDefinitionMap */
+		$jobDefinitionMap	= [];
+		foreach( $this->logic->getDefinitions() as $definition )
+			$jobDefinitionMap[$definition->identifier]	= $definition->jobDefinitionId;
+		foreach( explode( ',', $identifierParam ) as $identifier ){
+			if( !array_key_exists( $identifier, $jobDefinitionMap ) )
+				throw new InvalidArgumentException( 'Invalid job identifier: '.$identifier );
+			$jobDefinitionIds[]	= $jobDefinitionMap[$identifier];
+		}
+		$conditions['jobDefinitionId']	= $jobDefinitionIds;
+	}
+
+	/**
+	 *	@param		array		$conditions
+	 *	@param		string		$default
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function extendConditionsByStatusesForRequestParameter( array & $conditions, string $default = 'done,success' ): void
+	{
+		$statusParam	= $this->getParameterFromRequest( '--status', $default );
+		if( '*' === $statusParam )
+			return;
+		$statuses	= [];
+		$statusMap	= ObjectConstants::staticGetAll( 'Model_Job_Run', 'STATUS_' );
+		foreach( explode( ',', strtoupper( $statusParam ) ) as $statusKey ){
+			if( !array_key_exists( $statusKey, $statusMap ) )
+				throw new InvalidArgumentException( 'Invalid job run status: '.$statusKey );
+			$statuses[]	= $statusMap[$statusKey];
+		}
+		$conditions['status']	= $statuses;
 	}
 }

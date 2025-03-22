@@ -90,7 +90,7 @@ class Job_Job extends Job_Abstract
 		}
 		foreach( $jobIdentifiers as $jobIdentifier ){
 			$job	= $this->logic->getDefinitionByIdentifier( $jobIdentifier );
-			if( !$job ){
+			if( NULL === $job ){
 				$this->out( 'Job "'.$jobIdentifier.'" is not existing' );
 				continue;
 			}

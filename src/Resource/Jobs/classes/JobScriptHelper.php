@@ -19,7 +19,7 @@ class JobScriptHelper
 	];
 
 	protected Request $request;
-	protected string $configFile	= "config.ini";							//  config file
+	protected string $configFile	= 'config.ini';							//  config file
 	protected array $errorHandling	= [
 		'report'	=> E_ALL,
 		'display'	=> TRUE,
