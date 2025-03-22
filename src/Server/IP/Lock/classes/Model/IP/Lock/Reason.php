@@ -30,6 +30,7 @@ class Model_IP_Lock_Reason extends Model
 	protected array $indices		= [
 		'status',
 		'duration',
+		'title',
 		'createdAt',
 		'appliedAt',
 	];
