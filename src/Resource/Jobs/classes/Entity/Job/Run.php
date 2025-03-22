@@ -16,12 +16,18 @@ class Entity_Job_Run extends Entity
 	public int $reportChannel			= Model_Job_Run::REPORT_CHANNEL_NONE;
 	public ?string $reportReceivers		= NULL;
 	public ?string $arguments			= NULL;
-	public string $title;
+	public string $title				= '';
 	public ?string $message				= NULL;
 	public int $createdAt;
 	public int $modifiedAt;
 	public int $ranAt					= 0;
 	public int $finishedAt				= 0;
+
+	public ?Entity_Job_Definition $definition	= NULL;
+	public ?Entity_Job_Schedule $schedule		= NULL;
+
+	/** @var Entity_Job_Run[] $schedules */
+	public array $schedules				= [];
 
 	protected static array $mandatoryFields	= [
 		'jobDefinitionId',

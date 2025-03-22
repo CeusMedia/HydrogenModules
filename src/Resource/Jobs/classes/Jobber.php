@@ -119,13 +119,13 @@ class Jobber extends ConsoleApplication
 	{
 		$jobId	= $this->getJobIdFromRequest();
 
-		if( strlen( trim( $jobId ) ) ){
-			$job	= $this->logic->getDefinitionByIdentifier( $jobId );
-			if( $job ){
+		if( '' !== trim( $jobId ) ){
+			$jobDefinition	= $this->logic->getDefinitionByIdentifier( $jobId );
+			if( NULL !== $jobDefinition ){
 				$commands	= $this->env->getRequest()->get( 'commands' );
 				$commands	= array_slice( $commands, 1 );
 				$this->env->getRequest()->set( 'commands', $commands );
-				return $this->runJobManually( $job );
+				return $this->runJobManually( $jobDefinition );
 			}
 		}
 		$this->out();
@@ -151,9 +151,10 @@ class Jobber extends ConsoleApplication
 	/*  --  PROTECTED  --  */
 
 	/**
-	 *	@return		false|mixed|null
+	 *	@return		mixed|FALSE|NULL
+	 *	@todo		improve return type strictness
 	 */
-	protected function getJobIdFromRequest()
+	protected function getJobIdFromRequest(): mixed
 	{
 		if( $this->env->getRequest()->get( 0 ) )
 			return $this->env->getRequest()->get( 0 );
@@ -163,18 +164,23 @@ class Jobber extends ConsoleApplication
 		return FALSE;
 	}
 
+	/**
+	 *	Print output.
+	 *	@param		string		$message
+	 *	@return		void
+	 */
 	protected function out( string $message = '' ): void
 	{
 		print( $message.PHP_EOL );
 	}
 
 	/**
-	 *	@param		object		$job
+	 *	@param		Entity_Job_Definition		$job
 	 *	@return		int
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function runJobManually( object $job ): int
+	protected function runJobManually( Entity_Job_Definition $job ): int
 	{
 		$commands			= $this->env->getRequest()->get( 'commands' );
 		$parameters			= $this->env->getRequest()->get( 'parameters' );
@@ -209,7 +215,7 @@ class Jobber extends ConsoleApplication
 		}
 
 		$preparedJobRun	= $this->logic->prepareManuallyJobRun( $job, $options );
-		if( !$preparedJobRun ){
+		if( NULL === $preparedJobRun ){
 			$this->out( 'Job not runnable at the moment. Maybe already running or blocked by an exclusive job.' );
 			print_m($job);
 			return 0;
@@ -223,7 +229,7 @@ class Jobber extends ConsoleApplication
 		try{
 			$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 		}
-		catch( Exception $e ){
+		catch( Throwable $e ){
 //			$cwd	= __DIR__.'/';
 			$cwd	= getCwd().'/';
 			$p		= $e->getPrevious() ?: $e;

@@ -54,10 +54,10 @@ class Job_Job_Lock extends Job_Abstract
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= $this->env->getLogic()->get( 'Job' );
-		$this->skipJobs	= array(
+		$this->skipJobs	= [
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.clear' )->jobDefinitionId,
 			$this->logic->getDefinitionByIdentifier( 'Job.Lock.list' )->jobDefinitionId,
-		);
+		];
 	}
 
 	protected function getLockedJobs(): array
