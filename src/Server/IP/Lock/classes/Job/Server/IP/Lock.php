@@ -30,9 +30,7 @@ class Job_Server_IP_Lock extends Job_Abstract
 	 */
 	public function clean(): void
 	{
-		$age		= $this->parameters->get( '--age', '1M' );
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
-
+		$threshold	= $this->getAgeThreshold( '--age', '1M' );
 		$locks		= $this->logic->getAll( [
 			'status'		=> Model_IP_Lock::STATUS_UNLOCKED,
 			'unlockedAt'	=> '< '.$threshold->format( 'U' ),

@@ -12,18 +12,17 @@ class Job_Newsletter extends Job_Abstract
 	protected object $words;
 
 	/**
-	 * @throws ReflectionException
-	 * @throws DateMalformedIntervalStringException
-	 * @throws DateInvalidOperationException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
-	 * @todo refactor for scalability: read mail ids first and mail objects in loop
+	 *	@throws		ReflectionException
+	 *	@throws		DateMalformedIntervalStringException
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@todo		refactor for scalability: read mail ids first and mail objects in loop
 	 */
 	public function clean(): void
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$modelMail	= new Model_Mail( $this->env );
-		$age		= $this->parameters->get( '--age', '1Y' ) ;
-		$threshold	= date_create()->sub( new DateInterval( 'P'.$age ) );
+		$threshold	= $this->getAgeThreshold( '--age', '1Y' );
 		$conditions	= [
 			'status'		=> [
 				Model_Mail::STATUS_ABORTED,														//  status: -3
