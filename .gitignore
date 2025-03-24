@@ -8,3 +8,6 @@
 /.phpunit.result.cache
 /tool/config/.phpunit.cache/
 /tmp
+/test/Unit/.app/vendor/
+/test/Unit/.app/config/modules/
+/test/Unit/UI/TEA/tmp/
