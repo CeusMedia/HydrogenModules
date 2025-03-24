@@ -112,6 +112,25 @@
       <path value="$PROJECT_DIR$/vendor/dasprid/enum" />
       <path value="$PROJECT_DIR$/vendor/icewind/streams" />
       <path value="$PROJECT_DIR$/vendor/icewind/smb" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/client-common" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/discovery" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/httplug" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/symfony/polyfill-php80" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/clue/stream-filter" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/psr/http-client" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/symfony/options-resolver" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/message" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/promise" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/composer" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/php-http/guzzle7-adapter" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/guzzlehttp/psr7" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/guzzlehttp/guzzle" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/influxdata/influxdb-client-php" />
+      <path value="$PROJECT_DIR$/test/Unit/.app/vendor/guzzlehttp/promises" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

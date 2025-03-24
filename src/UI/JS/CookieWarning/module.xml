@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: JS: Cookie Warning</title>
 	<description><![CDATA[Informs user about cookies being stored.]]></description>

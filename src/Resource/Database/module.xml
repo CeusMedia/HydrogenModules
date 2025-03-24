@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module frameworks="Hydrogen:>0.8">
 	<title>Resource: Database</title>
 	<description><![CDATA[Database connection support.]]></description>

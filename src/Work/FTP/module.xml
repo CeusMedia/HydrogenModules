@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Work: FTP</title>
 	<description><![CDATA[Basic FTP file management client.]]></description>

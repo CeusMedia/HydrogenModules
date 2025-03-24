@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Google Tag Manager</title>
 	<description><![CDATA[Integration of Google Tag Manager.]]></description>

@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Server: Measurement: InfluxDB</title>
 	<description>Client to report measurements to InfluxDB instance.</description>
@@ -24,36 +25,4 @@
 		<needs type="package" version="^1.0">guzzlehttp/guzzle</needs>
 	</relations>
 	<hook type="resource" resource="App" event="onMeasure">Hook_Server_Measurement_Influx::onAppMeasure</hook>
-	<sql on="install" type="mysql" version="0.2.5"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>routes`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>routes` (
-  `routeId` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `status` tinyint(1) NOT NULL,
-  `regex` tinyint(1) NOT NULL,
-  `code` decimal(3,0) NOT NULL,
-  `source` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `target` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `title` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdAt` decimal(12,0) NOT NULL,
-  PRIMARY KEY (`routeId`),
-  KEY `status` (`status`),
-  KEY `regex` (`regex`),
-  KEY `code` (`code`),
-  KEY `source` (`source`),
-  KEY `target` (`target`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
-INSERT INTO `<%?prefix%>routes` (`routeId`, `status`, `regex`, `code`, `source`, `target`, `title`, `createdAt`) VALUES
-(1, 0, 0, 301, 'OldAddress', 'NewAddress', 'Permanently moved.', 1424946122),
-(2, 0, 1, 404, '/.+\\.(js|json|css|png)?(\\?.+)?/', '', 'Catch all not loadable resources.', 1424946122),
-(3, 0, 0, 410, 'NotExistingAnymore', '', 'Gone.', 1424946201);
-]]></sql>
-	<sql on="update" type="mysql" version="0.2.6"><![CDATA[
-ALTER TABLE `<%?prefix%>routes` ADD `methods` VARCHAR( 50 ) NULL AFTER `status`;
-ALTER TABLE `<%?prefix%>routes` ADD `ajax` TINYINT( 1 ) UNSIGNED NULL DEFAULT '0' AFTER `methods`;
-ALTER TABLE `<%?prefix%>routes` ADD INDEX (`ajax`);
-]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>routes`;
-]]></sql>
 </module>

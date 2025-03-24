@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Admin: Database: Backup</title>
 	<description><![CDATA[Backup and restore database dumps.]]></description>

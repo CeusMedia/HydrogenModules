@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Manage: Contents: Statics</title>
 	<description>Basic content management for HTML files.</description>

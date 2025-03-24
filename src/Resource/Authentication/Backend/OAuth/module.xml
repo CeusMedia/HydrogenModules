@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Resource: Authentication: Backend: OAuth</title>
 	<description><![CDATA[Module for authentication against OAuth provider.]]></description>

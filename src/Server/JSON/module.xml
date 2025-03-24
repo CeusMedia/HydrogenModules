@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>JSON Server</title>
 	<description><![CDATA[Standalone JSON answering server application base.]]></description>
