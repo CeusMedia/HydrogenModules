@@ -1,0 +1,11 @@
+{
+    "require": {
+        "influxdata/influxdb-client-php": "^3.0",
+        "php-http/guzzle7-adapter": "^1.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
+}

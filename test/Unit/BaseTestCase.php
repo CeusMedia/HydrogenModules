@@ -29,6 +29,8 @@ class BaseTestCase extends TestCase
 			'uri'			=> $this->pathApp,
 			'configFile'	=> 'config.ini'
 		];
+
+		require_once $this->pathApp.'vendor/autoload.php';
 	}
 
 	/**
