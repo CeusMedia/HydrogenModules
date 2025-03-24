@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Info: Pages</title>
 	<description><![CDATA[Support for static pages and automatic routing to them.]]></description>

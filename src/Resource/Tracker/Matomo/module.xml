@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Matomo Tracker</title>
 	<description><![CDATA[Request tracking using Matomo (aka Piwik).

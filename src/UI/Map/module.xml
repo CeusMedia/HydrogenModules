@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: Map</title>
 	<description><![CDATA[Loader for Google Maps.]]></description>

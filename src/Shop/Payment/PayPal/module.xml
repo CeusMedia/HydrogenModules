@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Shop: Payment: PayPal</title>
 	<description><![CDATA[Integrates PayPal Express into shop.

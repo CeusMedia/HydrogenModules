@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>App: Client</title>
 	<description><![CDATA[Base container for Client Applications.]]></description>

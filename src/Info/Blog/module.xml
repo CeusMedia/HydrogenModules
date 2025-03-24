@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>

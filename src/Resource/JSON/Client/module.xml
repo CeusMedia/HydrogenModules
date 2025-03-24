@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Resource: JSON Client</title>
 	<description><![CDATA[Access to a JSON Server.]]></description>

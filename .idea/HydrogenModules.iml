@@ -93,6 +93,25 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dasprid/enum" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/icewind/smb" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/icewind/streams" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/clue/stream-filter" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/influxdata/influxdb-client-php" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/client-common" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/discovery" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/guzzle7-adapter" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/httplug" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/message" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/php-http/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/symfony/deprecation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/symfony/options-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/test/Unit/.app/vendor/symfony/polyfill-php80" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

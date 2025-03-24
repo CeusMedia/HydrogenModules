@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Resource: JSON Server</title>
 	<deprecation>Use Resource:JSON:Client instead.</deprecation>

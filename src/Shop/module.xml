@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Shop</title>
 	<description><![CDATA[Basic shop with cart, supporting several catalogs via shop bridge mechanism.

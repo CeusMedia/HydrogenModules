@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: Compressor</title>
 	<description><![CDATA[Increases performance of web applications by reducing HTTP requests and traffic.

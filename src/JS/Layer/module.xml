@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>JS: Layer</title>
 	<description><![CDATA[Layer for displaying images and contents.]]></description>

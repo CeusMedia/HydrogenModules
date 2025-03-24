@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Resource: XMPP (Jabber)</title>
 	<description><![CDATA[Support for XMPP protocol.

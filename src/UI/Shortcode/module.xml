@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: Shortcode</title>
 	<slogan>Processor for shortcodes in response content, called by hooks.</slogan>

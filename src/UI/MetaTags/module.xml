@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: Meta Tags</title>
 	<description><![CDATA[Support for HTML meta tags, including Dublin Core and Open Graph.]]></description>

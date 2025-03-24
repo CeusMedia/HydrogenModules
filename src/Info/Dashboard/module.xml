@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Info: Dashboard</title>
 	<description><![CDATA[Overview with panels collected from other modules.

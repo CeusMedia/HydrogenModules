@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>UI: Bootstrap</title>
 	<description><![CDATA[Sleek, intuitive, and powerful front-end framework for faster and easier web development.]]></description>

@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
 <module>
 	<title>Resource: OAuth</title>
 	<description><![CDATA[OAuth resource client.
