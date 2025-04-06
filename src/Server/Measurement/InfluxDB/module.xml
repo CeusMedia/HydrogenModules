@@ -4,10 +4,11 @@
 	<title>Server: Measurement: InfluxDB</title>
 	<description>Client to report measurements to InfluxDB instance.</description>
 	<category>Server</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add default tags.</log>
+	<log version="0.2.2">Add hook Env::logException.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -26,4 +27,5 @@
 		<needs type="package" version="^1.0">guzzlehttp/guzzle</needs>
 	</relations>
 	<hook type="resource" resource="App" event="onMeasure">Hook_Server_Measurement_Influx::onAppMeasure</hook>
+	<hook type="resource" resource="Env" event="logException">Hook_Server_Measurement_Influx::onEnvLogException</hook>
 </module>
