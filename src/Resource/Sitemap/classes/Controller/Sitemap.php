@@ -7,7 +7,6 @@ class Controller_Sitemap extends Controller
 	/**
 	 *	@param		?string		$forceFormat
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function index( ?string $forceFormat = NULL ): void
 	{

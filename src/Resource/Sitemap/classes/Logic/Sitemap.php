@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -7,8 +8,10 @@ class Logic_Sitemap
 {
 	protected static self $instance;
 
-	protected $config;
+	protected Dictionary $config;
 	protected Environment $env;
+
+	/** @var array<Entity_Sitemap_Link> $links */
 	protected array $links		= [];
 	protected array $frequencies  = [
 		'always',
@@ -53,21 +56,28 @@ class Logic_Sitemap
 		foreach( $this->links as $link )
 			if( $location === $link->location )
 				throw new InvalidArgumentException( 'Link already set by location: '.$location );
-		$this->links[]	= (object) array(
+		$this->links[]	= Entity_Sitemap_Link::fromArray( [
 			'location'	=> $location,
 			'datetime'	=> $timestamp > 0 ? date( 'c', (int) $timestamp ) : NULL,
 			'frequency'	=> $frequency,
 			'priority'	=> $priority,
-		);
+		] );
 	}
 
-	static public function getInstance( Environment $env ): self
+	/**
+	 *	@param		Environment		$env
+	 *	@return		self
+	 */
+	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance )
+		if( !isset( self::$instance ) )
 			self::$instance	= new Logic_Sitemap( $env );
 		return self::$instance;
 	}
 
+	/**
+	 *	@return		array<Entity_Sitemap_Link>
+	 */
 	public function getLinks(): array
 	{
 		return $this->links;
