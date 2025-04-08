@@ -15,7 +15,7 @@ class Entity_User extends Entity
 	public int|string $roomId		= 0;
 	public int|string $companyId	= 0;
 	public int $status				= Model_User::STATUS_UNCONFIRMED;
-	public string $email;
+	public ?string $email			= NULL;
 	public string $username;
 	public string $password;																					//  @todo remove after old user password support decayed
 	public int $gender				= Model_User::GENDER_UNKNOWN;

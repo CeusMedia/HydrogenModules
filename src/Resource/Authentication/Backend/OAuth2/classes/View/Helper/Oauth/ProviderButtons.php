@@ -30,6 +30,7 @@ class View_Helper_Oauth_ProviderButtons
 	{
 		$conditions	= ['status' => Model_Oauth_Provider::STATUS_ACTIVE];
 		$orders		= ['rank' => 'ASC'];
+		/** @var array<object> $providers */
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$buttons	= [];
 		$dropdown	= [];
