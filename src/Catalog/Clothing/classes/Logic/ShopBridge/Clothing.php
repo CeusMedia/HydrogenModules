@@ -68,42 +68,40 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$quantity
-	 *	@return		object
+	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
 		$article	= $this->check( $articleId );
-		$data		= (object) [
-			'id'		=> $articleId,
-			'link'		=> $this->getLink( $articleId ),
-			'picture'	=> (object) [
-				'relative'	=> $this->getPicture( $articleId ),
-				'absolute'	=> $this->getPicture( $articleId, TRUE ),
-			],
-			'price'	=> (object) [
-				'one'	=> $this->getPrice( $articleId ),
-				'all'	=> $this->getPrice( $articleId, $quantity ),
-			],
-			'tax'	=> (object) [
-				'one'	=> $this->getTax( $articleId ),
-				'rate'	=> $this->taxRate,
-				'all'	=> $this->getTax( $articleId, $quantity ),
-			],
-			'single'		=> FALSE,
+		$entity	= new Entity_Shop_Bridge_Article( [
+			'id'			=> $articleId,
+			'link'			=> $this->getLink( $articleId ),
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
 			'bridge'		=> $this->getBridgeClass(),
 			'bridgeId'		=> $this->getBridgeId(),
-			'raw'			=> $this->modelArticle->get( $articleId ),
-		];
+		] );
+		$entity->picture->relative	= $this->getPicture( $articleId );
+		$entity->picture->absolute	= $this->getPicture( $articleId, TRUE );
+		$entity->price->one			= $this->getPrice( $articleId );
+		$entity->price->all			= $this->getPrice( $articleId, $quantity );
+		$entity->tax->rate			= $this->taxRate;
+		$entity->tax->one			= $this->getTax( $articleId );
+		$entity->tax->all			= $this->getTax( $articleId, $quantity );
+		$entity->weight->one		= $this->getWeight( $articleId );
+		$entity->weight->all		= $this->getWeight( $articleId, $quantity );
+
+		$entity->single		= FALSE;
+		$entity->raw		= $this->modelArticle->get( $articleId );
+
 		if( $this->localization ){
 			$id	= 'catalog.clothing.article.'.$articleId.'-title';
-			$data->title	= $this->localization->translate( $id, $data->title );
+			$entity->title	= $this->localization->translate( $id, $entity->title );
 			$id	= 'catalog.clothing.article.'.$articleId.'-description';
-			$data->description	= $this->localization->translate( $id, $data->description );
+			$entity->description	= $this->localization->translate( $id, $entity->description );
 		}
-		return $data;
+		return $entity;
 	}
 
 	/**
