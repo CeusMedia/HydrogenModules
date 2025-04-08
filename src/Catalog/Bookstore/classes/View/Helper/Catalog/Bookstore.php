@@ -160,7 +160,7 @@ class View_Helper_Catalog_Bookstore
 #			$item['future']	= $article->isFuture( $article->articleId ) ? "future_".$this->env->getSession()->get( 'language' )." " : "";
 #		}
 
-		$item['hasCover']	= strlen( trim( $article->cover ) ) > 0;
+		$item['hasCover']	= '' !== trim( $article->cover ?? '' );
 		$item['thumb']		= $this->renderArticleThumbnail( $article, $words['no_picture'] );
 //		$item['image']		= $this->renderArticleImage( $article );
 		$item['title']		= $this->renderArticleLink( $article );

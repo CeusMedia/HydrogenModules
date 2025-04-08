@@ -40,6 +40,7 @@ class Controller_Catalog_Bookstore extends Controller
 			$this->addData( 'documents', $this->logic->getDocumentsOfArticle( $articleId ) );
 			$this->addData( 'cart', (bool) $logicShop->countArticlesInCart() );
 			$this->addData( 'inCart', $logicShop->countArticleInCart( $this->bridgeId, $articleId ) );
+			$this->addData( 'quantity', (int) $this->env->getRequest()->get( 'quantity', 0 ) );
 
 			$fileImageLarge	= $this->logic->getArticleCoverUrl( $article, 'l' );
 //print_m( $fileImageLarge );die;
