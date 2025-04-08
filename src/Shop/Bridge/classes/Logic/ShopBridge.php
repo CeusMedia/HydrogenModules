@@ -26,6 +26,7 @@ class Logic_ShopBridge
 	 *	@access		public
 	 *	@param		Environment		$env	Environment
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
@@ -36,6 +37,11 @@ class Logic_ShopBridge
 	//		$this->readBridges();
 	}
 
+	/**
+	 *	@param		bool		$install
+	 *	@return		array
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function discoverBridges( bool $install = FALSE ): array
 	{
 		$list	= [];
@@ -43,7 +49,7 @@ class Logic_ShopBridge
 			if( $entry->isDir() || $entry->isDot() )												//  exclude folders and folder links
 				continue;
 			$class	= pathinfo( $entry->getFilename(), PATHINFO_FILENAME );							//
-			if( $class === "Abstract" )
+			if( 'Abstract' === $class )
 				continue;
 			if( !array_key_exists( $class, $this->bridgeClasses ) ){					//
 				$name		= trim( TextCamelCase::decode( $class ) );
