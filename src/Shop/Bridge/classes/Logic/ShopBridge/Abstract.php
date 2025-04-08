@@ -49,7 +49,7 @@ abstract class Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$quantity
-	 *	@return		object
+	 *	@return		Entity_Shop_Bridge_Article
 	 */
 	abstract public function get( int|string $articleId, int $quantity = 1 ): object;
 

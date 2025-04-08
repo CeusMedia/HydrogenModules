@@ -39,5 +39,7 @@ class Model_Shop_Bridge extends Model
 		'frontendUriPath',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Shop_Bridge::class;
 }

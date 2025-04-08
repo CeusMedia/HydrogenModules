@@ -72,12 +72,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge			Bridge ID or class name
+	 *	@param		int|string		$bridge			Bridge ID or class name
 	 *	@param		int|string		$articleId		Article ID
 	 *	@param		integer			$quantity
-	 *	@return		object
+	 *	@return		Entity_Shop_Bridge_Article
 	 */
-	public function getArticle( $bridge, int|string $articleId, int $quantity = 1 ): object
+	public function getArticle( int|string $bridge, int|string $articleId, int $quantity = 1 ): Entity_Shop_Bridge_Article
 	{
 		return $this->bridge( $bridge )->get( $articleId, $quantity );
 	}
@@ -85,11 +85,11 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridge		Bridge ID or class name
+	 *	@param		int|string	$bridge		Bridge ID or class name
 	 *	@param		string		$articleId	Article ID
 	 *	@return		string
 	 */
-	public function getArticleDescription( $bridge, string $articleId ): string
+	public function getArticleDescription( int|string $bridge, string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getDescription( $articleId );
 	}
@@ -97,11 +97,11 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge		Bridge ID or class name
+	 *	@param		int|string		$bridge		Bridge ID or class name
 	 *	@param		int|string		$articleId	Article ID
 	 *	@return		string
 	 */
-	public function getArticleLink( $bridge, int|string $articleId ): string
+	public function getArticleLink( int|string $bridge, int|string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getLink( $articleId );
 	}
@@ -109,12 +109,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge			Bridge ID or class name
+	 *	@param		int|string		$bridge			Bridge ID or class name
 	 *	@param		int|string		$articleId		Article ID
 	 *	@param		bool			$absolute		...
 	 *	@return		string
 	 */
-	public function getArticlePicture( $bridge, int|string $articleId, bool $absolute = FALSE ): string
+	public function getArticlePicture( int|string $bridge, int|string $articleId, bool $absolute = FALSE ): string
 	{
 		return $this->bridge( $bridge )->getPicture( $articleId, $absolute );
 	}
@@ -122,12 +122,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge			Bridge ID or class name
+	 *	@param		int|string		$bridge			Bridge ID or class name
 	 *	@param		int|string		$articleId		Article ID
 	 *	@param		integer			$amount
 	 *	@return		float
 	 */
-	public function getArticlePrice( $bridge, int|string $articleId, int $amount = 1 ): float
+	public function getArticlePrice( int|string $bridge, int|string $articleId, int $amount = 1 ): float
 	{
 		return $this->bridge( $bridge )->getPrice( $articleId, $amount );
 	}
@@ -135,12 +135,12 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge			Bridge ID or class name
+	 *	@param		int|string		$bridge			Bridge ID or class name
 	 *	@param		int|string		$articleId		Article ID
 	 *	@param		integer			$amount
 	 *	@return		float
 	 */
-	public function getArticleTax( $bridge, int|string $articleId, int $amount = 1 ): float
+	public function getArticleTax( int|string $bridge, int|string $articleId, int $amount = 1 ): float
 	{
 		return $this->bridge( $bridge )->getTax( $articleId, $amount );
 	}
@@ -148,11 +148,11 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed			$bridge			Bridge ID or class name
+	 *	@param		int|string		$bridge			Bridge ID or class name
 	 *	@param		int|string		$articleId		Article ID
 	 *	@return		string
 	 */
-	public function getArticleTitle( $bridge, int|string $articleId ): string
+	public function getArticleTitle( int|string $bridge, int|string $articleId ): string
 	{
 		return $this->bridge( $bridge )->getTitle( $articleId );
 	}
@@ -203,15 +203,15 @@ class Logic_ShopBridge
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		mixed		$bridgeIdOrClass	Bridge ID or class name
+	 *	@param		int|string		$bridgeIdOrClass	Bridge ID or class name
 	 *	@return		Logic_ShopBridge_Abstract
 	 */
-	public function bridge( $bridgeIdOrClass ): object
+	public function bridge( int|string $bridgeIdOrClass ): object
 	{
 		return $this->getBridgeObject( $bridgeIdOrClass );
 	}
 
-	public function getBridgeObject( $bridgeIdOrClass ): object
+	public function getBridgeObject( int|string $bridgeIdOrClass ): object
 	{
 		if( is_int( $bridgeIdOrClass ) || (int) $bridgeIdOrClass == $bridgeIdOrClass ){
 			if( !isset( $this->bridges[(int) $bridgeIdOrClass] ) )
@@ -237,6 +237,7 @@ class Logic_ShopBridge
 	{
 		$this->bridges			= [];
 		$this->bridgeClasses	= [];
+		/** @var Entity_Shop_Bridge $bridge */
 		foreach( $this->model->getAll() as $bridge ){
 			$className	= "Logic_ShopBridge_".$bridge->class;
 			$bridge		= (object) [
