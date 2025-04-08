@@ -33,7 +33,7 @@ return HTML::DivClass( 'content-panel content-panel-form', [
 								'class'			=> 'span11',
 								'disabled'		=> 'disabled',
 								'readonly'		=> 'readonly',
-								'value'			=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
+								'value'			=> htmlentities( $user->email ?? '', ENT_QUOTES, 'UTF-8' ),
 							] ),
 						] )
 					),

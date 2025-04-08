@@ -25,7 +25,7 @@ return HTML::DivClass( 'content-panel content-panel-info', [
 						HTML::Label( 'email', $w->labelEmail ),
 						HtmlTag::create( 'div',
 							HtmlTag::create( 'big',
-								HtmlTag::create( 'strong', htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ) )
+								HtmlTag::create( 'strong', htmlentities( $user->email ?? '', ENT_QUOTES, 'UTF-8' ) )
 							)
 						)
 					] ),

@@ -31,7 +31,7 @@ if( $currentPassword )
 	$lastPasswordChange	= $currentPassword->createdAt;
 $mapInfo[$w->labelPasswordChange]	= $helper->convert( $lastPasswordChange, TRUE, $w->timePhrasePrefixSince, $w->timePhraseSuffixSince );
 
-$mapInfo[$w->labelLogin]		= $helper->convert( $user->loggedAt, TRUE, $w->timePhrasePrefixAgo, $w->timePhraseSuffixAgo );
+$mapInfo[$w->labelLogin]		= $helper->convert( $user->loggedAt ?? 0, TRUE, $w->timePhrasePrefixAgo, $w->timePhraseSuffixAgo );
 //$mapInfo[$w->labelActive]		= $helper->convert( $user->activeAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 
 $listInfo	= [];
