@@ -25,7 +25,7 @@ class Hook_Info_Gallery extends Hook
 						$this->context,
 						$p2
 					);
-					$helper->setBaseUriPath( $p2['fullath'] ?: 'info/gallery' );
+					$helper->setBaseUriPath( $p2['fullpath'] ?: 'info/gallery' );
 			}
 			$this->payload['content']	= preg_replace(
 				$pattern,
