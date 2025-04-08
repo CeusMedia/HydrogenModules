@@ -348,6 +348,6 @@ class Controller_Shop_Customer extends Controller
 		if( $addressBilling && !$addressDelivery ){
 			$user	= $addressBilling;
 		}
-		$this->addData( 'user', $user );
+		$this->addData( 'user', $this->modelUser->get( $userId ) );
 	}
 }

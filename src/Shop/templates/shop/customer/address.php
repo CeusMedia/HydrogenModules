@@ -19,11 +19,17 @@ if( strlen( trim( $w->textTop ) ) )
 	$helper->setTextTop( HtmlTag::create( 'p', $w->textTop ) );
 $tabContent	= $helper->render();
 
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
+	'href'		=> './shop/customer',
+	'class'		=> 'btn btn-small',
+] );
+
 extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
 $helper		= new View_Helper_Shop_Tabs( $env );
 $helper->setCurrent( 'shop-customer' );
-$helper->setContent( $tabContent );
+$helper->setContent( $hint.$tabContent );
 $helper->setCartTotal( $cartTotal );
 $helper->setPaymentBackends( $this->getData( 'paymentBackends' ) );
 //$helper->setWhiteIcons( $options->get( 'tabs.icons.white' ) );

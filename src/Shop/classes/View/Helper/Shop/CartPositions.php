@@ -353,8 +353,8 @@ class View_Helper_Shop_CartPositions
 					$totalPrice + $priceShipping,
 					$this->paymentBackend,
 					$this->deliveryAddress->country
-				);
-				if( NULL !== $pricePayment && 0 == $pricePayment )
+				) ?? .0;
+				if( $pricePayment > 0 )
 					$rows[]	= HtmlTag::create( 'tr', [
 						HtmlTag::create( 'td', '&nbsp;' ),
 						HtmlTag::create( 'td', $words->labelPayment, ['class' => 'autocut'] ),
