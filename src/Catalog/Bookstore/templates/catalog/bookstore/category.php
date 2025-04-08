@@ -17,7 +17,7 @@ $children		= "";
 if( $category->children ){
 	$children	= [];
 	foreach( $category->children as $child ){
-		$children[]	= $helper->renderCategory( $child, TRUE );
+		$children[]	= $helper->renderCategory( $child );
 	}
 	$children	= join( $children );
 }
