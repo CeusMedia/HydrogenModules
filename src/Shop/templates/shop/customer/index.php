@@ -1,14 +1,24 @@
 <?php
+declare(strict_types=1);
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+
+/** @var WebEnvironment $env */
+/** @var array<string,array<string,string>> $words */
+/** @var Model_Shop_Cart $cart */
+/** @var View_Shop $view */
+/** @var int|string $userId */
+
 $w			= (object) $words['customer'];
 
 $customerMode   = $cart->get( 'customerMode' );
-if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_ACCOUNT ){
+if( Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT === $customerMode ){
  	if( $userId )
 		$tabContent	= $view->loadTemplateFile( 'shop/customer/inside.php' );
 	else
 		$tabContent	= $view->loadTemplateFile( 'shop/customer/outside.php' );
 }
-if( $customerMode === Model_Shop_CART::CUSTOMER_MODE_GUEST ){
+if( Model_Shop_Cart::CUSTOMER_MODE_GUEST === $customerMode ){
 	$tabContent	= $view->loadTemplateFile( 'shop/customer/inside.php' );
 }
 

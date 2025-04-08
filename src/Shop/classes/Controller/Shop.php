@@ -148,7 +148,7 @@ class Controller_Shop extends Controller
 	{
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 //		print_m( $this->session->getAll( 'shop_' ) );die;
-		if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT ){
+		if( Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT === $customerMode ){
 			$logicAuth	= new Logic_Authentication( $this->env );
 			if( !$logicAuth->isIdentified() ){
 				$this->modelCart->set( 'userId', 0 );
@@ -156,7 +156,7 @@ class Controller_Shop extends Controller
 				$this->restart( 'customer', TRUE );
 			}
 		}
-		else if( $customerMode === Model_Shop_Cart::CUSTOMER_MODE_GUEST ){
+		else if( Model_Shop_Cart::CUSTOMER_MODE_GUEST === $customerMode ){
 			if( !$this->modelCart->get( 'userId' ) )
 				$this->restart( 'customer', TRUE );
 		}
@@ -264,12 +264,8 @@ class Controller_Shop extends Controller
 
 		$logicPayment	= new Logic_Shop_Payment( $this->env );
 		$logicPayment->setBackends( $this->backends );
-		$backendPrices	= [];
-		foreach( $this->backends->getAll() as $backend ){
-			$backendPrices[$backend->key]	= NULL;
-			if( $backend->feeExclusive )
-				$backendPrices[$backend->key]	= $logicPayment->getPrice( $price, $backend, $address->country );
-		}
+		$backendPrices	= $logicPayment->calculateFees( $price, $address);
+
 		$this->addData( 'cart', $this->modelCart );
 		$this->addData( 'billingAddress', $address );
 		$this->addData( 'backendPrices', $backendPrices );
@@ -495,6 +491,11 @@ class Controller_Shop extends Controller
 			$this->restart( 'customer', TRUE );
 		$this->addData( 'customer', $customer );
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
+
+		$logicPayment	= new Logic_Shop_Payment( $this->env );
+		$logicPayment->setBackends( $this->backends );
+		$backendPrices	= $logicPayment->calculateFees( $price, $address);
+
 	}
 
 	/**

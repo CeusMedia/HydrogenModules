@@ -20,6 +20,7 @@ $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',
 ] );
+$hint	= '';
 
 if( !$addressDelivery ){
 	$address				= new Entity_Address();
