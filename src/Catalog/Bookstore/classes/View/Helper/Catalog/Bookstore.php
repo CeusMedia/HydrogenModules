@@ -280,9 +280,11 @@ class View_Helper_Catalog_Bookstore
 	{
 		if( is_string( $heading ) )
 			$heading	= HtmlTag::create( 'h3', $heading );
-		else if( $heading ){
+		else{
 			$labelKey	= 'label_'.$this->language->getLanguage();
-			$heading	= HtmlTag::create( 'h3', $category->$labelKey );
+			$heading	= HtmlTag::create( 'h3', $category->label_de );
+			if( '' !== ( $category->$labelKey ?? '' ) )
+				$heading	= HtmlTag::create( 'h3', $category->$labelKey );
 		}
 #		if($data['label_former'])
 #			$content = '<small>'.$words['aka'].'</small>&nbsp;'.$data['label_former'].'<br/><br/>'.$content;
