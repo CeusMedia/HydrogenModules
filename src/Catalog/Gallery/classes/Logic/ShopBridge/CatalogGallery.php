@@ -58,38 +58,30 @@ class Logic_ShopBridge_CatalogGallery extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$quantity
-	 *	@return		object
+	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
 		$image	= $this->check( $articleId );
-		return (object) [
-			'id'		=> $articleId,
-			'link'		=> $this->getLink( $articleId ),
-			'picture'	=> (object) [
-				'relative'	=> $this->getPicture( $articleId ),
-				'absolute'	=> $this->getPicture( $articleId, TRUE ),
-			],
-			'price'	=> (object) [
-				'one'	=> $this->getPrice( $articleId ),
-				'all'	=> $this->getPrice( $articleId, $quantity ),
-			],
-			'tax'	=> (object) [
-				'one'	=> $this->getTax( $articleId ),
-				'rate'	=> $this->taxRate,
-				'all'	=> $this->getTax( $articleId, $quantity ),
-			],
-			'weight'	=> (object) [
-				'one'	=> $this->getWeight( $articleId ),
-				'all'	=> $this->getWeight( $articleId, $quantity ),
-			],
-			'single'		=> TRUE,
+		$entity	= new Entity_Shop_Bridge_Article( [
+			'id'			=> $articleId,
+			'link'			=> $this->getLink( $articleId ),
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
 			'bridge'		=> $this->getBridgeClass(),
 			'bridgeId'		=> $this->getBridgeId(),
-		];
+		] );
+		$entity->picture->relative	= $this->getPicture( $articleId );
+		$entity->picture->absolute	= $this->getPicture( $articleId, TRUE );
+		$entity->price->one			= $this->getPrice( $articleId );
+		$entity->price->all			= $this->getPrice( $articleId, $quantity );
+		$entity->tax->rate			= $this->taxPercent;
+		$entity->tax->one			= $this->getTax( $articleId );
+		$entity->tax->all			= $this->getTax( $articleId, $quantity );
+		$entity->weight->one		= $this->getWeight( $articleId );
+		$entity->weight->all		= $this->getWeight( $articleId, $quantity );
+		return $entity;
 	}
 
 	/**
