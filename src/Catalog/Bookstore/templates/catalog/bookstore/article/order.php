@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var array $words */
 /** @var object $article */
 /** @var bool $cart */
+/** @var int $quantity */
 
 if( !in_array( $article->status, [-1, 0, 1] ) )
 	return '';
@@ -40,7 +41,7 @@ $inputQuantity	= HtmlTag::create( 'input', NULL, [
 	'id'		=> 'input_quantity',
 	'class'		=> 'span2 numeric',
 	'required'	=> 'required',
-	'value'		=> min( 1000, max( 1, (int) $request->get( 'quantity' ) ) ),
+	'value'		=> min( 1000, max( 1, $quantity ) ),
 ] );
 
 $buttonOrder	= HtmlTag::create( 'button', $iconOrder.' '.$labelButtonOrder, [
