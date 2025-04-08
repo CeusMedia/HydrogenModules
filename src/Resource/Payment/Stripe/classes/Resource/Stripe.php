@@ -30,7 +30,7 @@ class Resource_Stripe
 
 	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance ){
+		if( !isset( self::$instance ) ){
 			self::$instance	= new Resource_Stripe( $env );
 		}
 		return self::$instance;

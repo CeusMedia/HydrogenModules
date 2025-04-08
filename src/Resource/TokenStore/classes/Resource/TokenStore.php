@@ -35,7 +35,7 @@ class Resource_TokenStore
 	 */
 	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance )
+		if( !isset( self::$instance ) )
 			self::$instance	= new Resource_TokenStore( $env );
 		return self::$instance;
 	}

@@ -121,7 +121,7 @@ class Logic_Versions
 	 */
 	public static function getInstance( Environment $env ): self
 	{
-		if( !self::$instance )
+		if( !isset( self::$instance ) )
 			self::$instance	= new self( $env );
 		return self::$instance;
 	}
