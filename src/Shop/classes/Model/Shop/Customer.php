@@ -28,5 +28,5 @@ class Model_Shop_Customer extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= Entity_Address::class;
+	protected ?string $className	= Entity_Shop_Customer::class;
 }

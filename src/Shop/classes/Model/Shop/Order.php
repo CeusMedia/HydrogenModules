@@ -61,5 +61,7 @@ class Model_Shop_Order extends Model
 		'currency'
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Shop_Order::class;
 }

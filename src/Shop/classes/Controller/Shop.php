@@ -491,11 +491,6 @@ class Controller_Shop extends Controller
 			$this->restart( 'customer', TRUE );
 		$this->addData( 'customer', $customer );
 		$this->addData( 'address', $this->logic->getDeliveryAddressFromCart() );
-
-		$logicPayment	= new Logic_Shop_Payment( $this->env );
-		$logicPayment->setBackends( $this->backends );
-		$backendPrices	= $logicPayment->calculateFees( $price, $address);
-
 	}
 
 	/**

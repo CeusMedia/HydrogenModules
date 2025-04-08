@@ -101,6 +101,7 @@ class Model_Shop_Cart
 		if( NULL === $orderId )
 			return;
 
+		/** @var Entity_Shop_Order $order */
 		$order	= $this->modelOrder->get( $orderId );
 		if( NULL === $order )
 			return;
