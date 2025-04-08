@@ -26,7 +26,7 @@ class Entity_Page extends Entity
 	public ?string $icon		= NULL;
 	public ?string $template	= NULL;
 	public int $createdAt		= 0;
-	public int $modifiedAt		= 0;
+	public ?int $modifiedAt		= NULL;
 
 	/** @var Entity_Page[] $pages */
 	public array $pages			= [];
