@@ -29,18 +29,19 @@ class Hook_Shop_Payment_Bank extends Hook
 			$priority	= $methods->get( 'Transfer.priority', 0 );
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Transfer.', TRUE );
-				$register->add( [
-					'backend'		=> 'Bank',									//  backend class name
-					'key'			=> 'Bank:Transfer',							//  payment method key
-					'path'			=> 'bank/perTransfer',						//  shop URL
-					'icon'			=> 'bank-1.png',							//  icon
-//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
-					'priority'		=> $priority,								//  priority
-					'label'			=> $labels->transfer,						//  payment method label
-					'description'	=> $descs->transfer ?? '',
-					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
-					'feeFormula'	=> $method->get( 'fee.formula' ),
-				] );
+
+				$entity	= new Entity_Shop_Payment_Backend();
+				$entity->backend		= 'Bank';								//  backend class name
+				$entity->key			= 'Bank:Transfer';						//  payment method key
+				$entity->path			= 'bank/perTransfer';					//  shop URL
+				$entity->icon			= 'bank-1.png';							//  icon
+//				$entity->icon			= 'fa fa-fw fa-bank';					//  icon
+				$entity->priority		= $priority;							//  priority
+				$entity->label			= $labels->transfer;					//  payment method label
+				$entity->description	= $descs->transfer ?? '';
+				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
+				$entity->feeFormula		= $method->get( 'fee.formula' );
+				$register->addEntity( $entity );
 			}
 		}
 
@@ -48,18 +49,19 @@ class Hook_Shop_Payment_Bank extends Hook
 			$priority	= $methods->get( 'Bill.priority', 0 );
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Bill.', TRUE );
-				$register->add( [
-					'backend'		=> 'Bank',									//  backend class name
-					'key'			=> 'Bank:Bill',								//  payment method key
-					'path'			=> 'bank/perBill',							//  shop URL
-					'icon'			=> 'bank-bill.png',							//  icon
-//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
-					'priority'		=> $priority,								//  priority
-					'label'			=> $labels->bill,							//  payment method label
-					'description'	=> $descs->transfer ?? '',
-					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
-					'feeFormula'	=> $method->get( 'fee.formula' ),
-				] );
+
+				$entity	= new Entity_Shop_Payment_Backend();
+				$entity->backend		= 'Bank';								//  backend class name
+				$entity->key			= 'Bank:Bill';							//  payment method key
+				$entity->path			= 'bank/perBill';						//  shop URL
+				$entity->icon			= 'bank-bill.png';						//  icon
+//				$entity->icon			= 'fa fa-fw fa-bank';					//  icon
+				$entity->priority		= $priority;							//  priority
+				$entity->label			= $labels->bill;						//  payment method label
+				$entity->description	= $descs->transfer ?? '';
+				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
+				$entity->feeFormula		= $method->get( 'fee.formula' );
+				$register->addEntity( $entity );
 			}
 		}
 

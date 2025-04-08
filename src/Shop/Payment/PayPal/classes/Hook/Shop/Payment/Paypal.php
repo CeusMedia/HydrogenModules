@@ -29,17 +29,19 @@ class Hook_Shop_Payment_Paypal extends Hook
 			$priority	= $methods->get( 'Express.priority', 0 );
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Express.', TRUE );
-				$register->add( [
-					'backend'		=> 'Paypal',								//  backend class name
-					'key'			=> 'PayPal:Express',						//  payment method key
-					'path'			=> 'paypal/authorize',						//  shop URL
-					'icon'			=> 'paypal-2.png',							//  icon
-					'priority'		=> $priority,								//  priority
-					'label'			=> $labels->express,						//  payment method label
-					'description'	=> $descs->transfer ?? '',
-					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
-					'feeFormula'	=> $method->get( 'fee.formula' ),
-				] );
+
+				$entity	= new Entity_Shop_Payment_Backend();
+				$entity->backend		= 'Paypal';								//  backend class name
+				$entity->key			= 'PayPal:Express';						//  payment method key
+				$entity->path			= 'paypal/authorize';					//  shop URL
+				$entity->icon			= 'paypal-2.png';						//  icon
+				$entity->priority		= $priority;							//  priority
+				$entity->label			= $labels->express;						//  payment method label
+				$entity->description	= $descs->transfer ?? '';
+				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
+				$entity->feeFormula		= $method->get( 'fee.formula' );
+
+				$register->addEntity( $entity );
 			}
 		}
 		$payload['register']	= $register;

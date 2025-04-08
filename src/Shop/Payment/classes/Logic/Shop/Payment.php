@@ -8,9 +8,29 @@ class Logic_Shop_Payment extends Logic
 	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**
-	 * Use hook to call for payment modules to register payment backends/methods.
-	 * @return self
-	 * @throws ReflectionException
+	 *	@param		$price
+	 *	@param		Entity_Address $address
+	 *	@return		array<string,float>
+	 *	@throws		ReflectionException
+	 */
+	public function calculateFees( $price, Entity_Address $address ): array
+	{
+		if( !$this->backends->count() )
+			$this->collectBackends();
+
+		$backendPrices	= [];
+		foreach( $this->backends->getAll() as $backend ){
+			$backendPrices[$backend->key]	= NULL;
+			if( $backend->feeExclusive )
+				$backendPrices[$backend->key]	= $this->getPrice( $price, $backend, $address->country );
+		}
+		return $backendPrices;
+	}
+
+	/**
+	 *	Use hook to call for payment modules to register payment backends/methods.
+	 *	@return		self
+	 *	@throws		ReflectionException
 	 */
 	public function collectBackends(): self
 	{
