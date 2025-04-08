@@ -59,36 +59,30 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId		ID of article
 	 *	@param		integer			$quantity		Amount of articles
-	 *	@return		object
+	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
-		return (object) [
-			'id'		=> $articleId,
-			'link'		=> $this->getLink( $articleId ),
-			'picture'	=> (object) [
-				'relative'	=> $this->getPicture( $articleId ),
-				'absolute'	=> $this->getPicture( $articleId, TRUE ),
-			],
-			'price'		=> (object) [
-				'one'		=> $this->getPrice( $articleId ),
-				'all'		=> $this->getPrice( $articleId, $quantity ),
-			],
-			'tax'		=> (object) [
-				'rate'		=> $this->taxPercent,
-				'one'		=> $this->getTax( $articleId ),
-				'all'		=> $this->getTax( $articleId, $quantity ),
-			],
-			'weight'	=> (object) [
-				'one'		=> $this->getWeight( $articleId ),
-				'all'		=> $this->getWeight( $articleId, $quantity ),
-			],
+		$entity	= new Entity_Shop_Bridge_Article( [
+			'id'			=> $articleId,
+			'link'			=> $this->getLink( $articleId ),
 			'title'			=> $this->getTitle( $articleId ),
 			'description'	=> $this->getDescription( $articleId ),
 			'bridge'		=> $this->getBridgeClass(),
 			'bridgeId'		=> $this->getBridgeId(),
-		];
+		] );
+		$entity->picture->relative	= $this->getPicture( $articleId );
+		$entity->picture->absolute	= $this->getPicture( $articleId, TRUE );
+		$entity->price->one			= $this->getPrice( $articleId );
+		$entity->price->all			= $this->getPrice( $articleId, $quantity );
+		$entity->tax->rate			= $this->taxPercent;
+		$entity->tax->one			= $this->getTax( $articleId );
+		$entity->tax->all			= $this->getTax( $articleId, $quantity );
+		$entity->weight->one		= $this->getWeight( $articleId );
+		$entity->weight->all		= $this->getWeight( $articleId, $quantity );
+
+		return $entity;
 	}
 
 	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
