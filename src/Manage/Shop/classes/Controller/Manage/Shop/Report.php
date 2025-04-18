@@ -4,7 +4,7 @@
 
 class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 {
-	public function index()
+	public function index(): void
 	{
 		$dbc			= $this->env->getDatabase();
 		$prefix			= $dbc->getPrefix();
@@ -23,9 +23,11 @@ class Controller_Manage_Shop_Report extends Controller_Manage_Shop
 		$modelOrder		= new Model_Shop_Order( $this->env );
 		$modelPosition	= new Model_Shop_Order_Position( $this->env );
 //		$modelArticle	= new Model_Catalog_Article( $this->env );
+
+		/** @var Entity_Shop_Order[] $orders */
 		$orders			= $modelOrder->getAll( [], ['orderId' => 'ASC'] );
 		foreach( $orders as $order ){
-			if( (float) $order->price > 0 )
+			if( $order->price > 0 )
 				continue;
 			$sum		= 0;
 			$tax		= 0;

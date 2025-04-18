@@ -82,10 +82,10 @@ class Controller_Manage_Page extends Controller
 			'identifier'	=> $data->get( 'identifier' ),
 			'title'			=> $data->get( 'title', '' ),
 			'content'		=> $data->get( 'content', '' ),
-			'format'		=> $data->get( 'format' ),
+			'format'		=> $data->get( 'format', '' ),
 			'controller'	=> $data->get( 'controller', '' ),
 			'action'		=> $data->get( 'action', '' ),
-			'access'		=> $data->get( 'access' ),
+			'access'		=> $data->get( 'access', '' ),
 			'icon'			=> $data->get( 'icon', '' ),
 			'template'		=> $data->get( 'template' ),
 		] );

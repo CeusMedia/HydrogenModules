@@ -200,7 +200,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	protected function __onInit(): void
 	{
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->logic		= new Logic_Catalog_Bookstore( $this->env );
+		$this->logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
 		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.shop.tax.percent' );

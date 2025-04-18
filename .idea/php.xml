@@ -104,8 +104,6 @@
       <path value="$PROJECT_DIR$/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/vendor/ceus-media/php-parser" />
       <path value="$PROJECT_DIR$/vendor/amenadiel/jpgraph" />
-      <path value="$PROJECT_DIR$/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/vendor/kzykhys/ciconia" />
       <path value="$PROJECT_DIR$/vendor/cebe/markdown" />
       <path value="$PROJECT_DIR$/vendor/erusev/parsedown" />
       <path value="$PROJECT_DIR$/vendor/picas/markdown-extended" />
@@ -131,6 +129,7 @@
       <path value="$PROJECT_DIR$/test/Unit/.app/vendor/guzzlehttp/guzzle" />
       <path value="$PROJECT_DIR$/test/Unit/.app/vendor/influxdata/influxdb-client-php" />
       <path value="$PROJECT_DIR$/test/Unit/.app/vendor/guzzlehttp/promises" />
+      <path value="$PROJECT_DIR$/vendor/jean85/pretty-package-versions" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
