@@ -19,7 +19,7 @@ class Controller_Manage_Shop extends Controller
 	protected Logic_ShopBridge $logicBridge;
 
 
-	public function index()
+	public function index(): void
 	{
 		$orders			= ['orderId' => 'ASC'];
 
@@ -63,7 +63,7 @@ class Controller_Manage_Shop extends Controller
 
 	}
 
-	public function setTab( $newsletterId, $tabKey )
+	public function setTab( $newsletterId, $tabKey ): void
 	{
 		$this->session->set( 'manage.shop.tab', $tabKey );
 #		$this->restart( './work/newsletter/edit/'.$newsletterId );

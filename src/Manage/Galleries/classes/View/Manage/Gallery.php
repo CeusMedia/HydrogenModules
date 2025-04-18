@@ -27,7 +27,7 @@ class View_Manage_Gallery extends View
 	{
 	}
 
-	protected function renderList( $galleryId = NULL ): string
+	public function renderList( $galleryId = NULL ): string
 	{
 		$words		= (object) $this->getWords( 'index' );
 		$model		= new Model_Gallery( $this->env );

@@ -22,23 +22,24 @@ class Entity_Shop_Bridge_Article extends Entity
 	public bool $single	= FALSE;
 	public object|NULL $raw	= NULL;
 
-	protected static array $presetValues	= [
-		'picture'	=> (object) [
+	protected static function presetDynamicValues( array &$array ): void
+	{
+		$array['picture']	= (object) [
 			'relative'	=> '',
 			'absolute'	=> '',
-		],
-		'price'		=> (object) [
+		];
+		$array['price']		= (object) [
 			'rate'		=> 0,
 			'one'		=> .0,
 			'all'		=> .0,
-		],
-		'tax'		=> (object) [
+		];
+		$array['tax']		= (object) [
 			'one'		=> .0,
 			'all'		=> .0,
-		],
-		'weight'	=> (object) [
+		];
+		$array['weight']	= (object) [
 			'one'		=> .0,
 			'all'		=> .0,
-		],
-	];
+		];
+	}
 }
