@@ -1,8 +1,8 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\HydrogenFramework\Controller\Ajax as Controller;
+use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
-class Controller_Manage_Catalog_Bookstore_Category extends Controller
+class Controller_Ajax_Manage_Catalog_Bookstore_Category extends AjaxController
 {
 	protected Logic_Catalog_BookstoreManager $logic;
 

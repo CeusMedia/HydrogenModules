@@ -56,5 +56,5 @@ class Model_Manual_Category extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= 'Entity_Manual_Category';
+	protected ?string $className	= Entity_Manual_Category::class;
 }

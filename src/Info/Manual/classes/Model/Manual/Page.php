@@ -63,5 +63,5 @@ class Model_Manual_Page extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= 'Entity_Manual_Page';
+	protected ?string $className	= Entity_Manual_Page::class;
 }
