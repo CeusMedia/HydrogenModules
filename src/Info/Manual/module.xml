@@ -54,6 +54,9 @@ This module can be localized.
 	<files>
 		<class>Controller/Ajax/Info/Manual.php</class>
 		<class>Controller/Info/Manual.php</class>
+		<class>Entity/Manual/Category.php</class>
+		<class>Entity/Manual/Page.php</class>
+		<class>Entity/Manual/Version.php</class>
 		<class>Hook/Info/Manual/Shortcode.php</class>
 		<class>Model/Manual/Category.php</class>
 		<class>Model/Manual/Page.php</class>

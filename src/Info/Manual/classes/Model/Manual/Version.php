@@ -35,5 +35,5 @@ class Model_Manual_Version extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= 'Entity_Manual_Version';
+	protected ?string $className	= Entity_Manual_Version::class;
 }
