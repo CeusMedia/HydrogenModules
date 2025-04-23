@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/** @var array $words */
+/** @var array<string,array<string,int|string>> $words */
 /** @var array<object> $categories */
 /** @var object $category */
 /** @var int $nrArticles */

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\URL;
 use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;

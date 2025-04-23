@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Database model of mail templates.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

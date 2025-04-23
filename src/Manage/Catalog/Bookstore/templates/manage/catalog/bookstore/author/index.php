@@ -2,7 +2,7 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-/** @var View $view */
+/** @var View_Manage_Catalog_Bookstore_Author $view */
 
 $tabs		= $view->renderMainTabs();
 

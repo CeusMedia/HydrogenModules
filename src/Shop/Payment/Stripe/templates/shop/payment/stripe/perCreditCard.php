@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -11,6 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 /** @var array<string,array<string,string>> $words */
 /** @var Dictionary $configShop */
+/** @var object $order */
 
 $w				= (object) $words['checkout'];
 
@@ -50,7 +51,7 @@ $form		= '
 </form>';
 
 $script	= 'ShopPaymentStripe.apply("#card-element" ,"payment-form", "card-errors", "card-submit");';
-$env->page->js->addScriptOnReady( $script );
+$env->getPage()->js->addScriptOnReady( $script );
 
 $panel	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),

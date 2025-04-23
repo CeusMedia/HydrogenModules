@@ -1,16 +1,16 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Language;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Helper_Catalog_Bookstore
 {
-	/**	@var	Environment					$env */
-	protected Environment $env;
+	/**	@var	WebEnvironment				$env */
+	protected WebEnvironment $env;
 
 	/**	@var	Language					$language */
 	protected Language $language;
@@ -227,6 +227,7 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		object		$article
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderArticleListItem( object $article ): string
 	{
@@ -275,6 +276,7 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		string|NULL		$heading
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderCategory( object $category, ?string $heading = NULL ): string
 	{
@@ -304,6 +306,7 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		object		$category
 	 *	@return		array
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderCategoryArticleList( object $category ): array
 	{

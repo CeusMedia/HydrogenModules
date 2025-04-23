@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-/** @var array $words */
+/** @var array<string,array<string,int|string>> $words */
 /** @var array<object> $articles */
 
 $w			= (object) $words['edit'];

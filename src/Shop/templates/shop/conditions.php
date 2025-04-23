@@ -3,6 +3,9 @@
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 
+/** @var View_Shop $view */
+/** @var array<string,array<string,string>> $words */
+
 $w			= (object) $words['conditions'];
 extract( $view->populateTexts( ['conditions'], 'html/shop/' ) );
 

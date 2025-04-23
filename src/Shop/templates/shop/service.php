@@ -1,5 +1,8 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var View_Shop $view */
 
 extract( $view->populateTexts( ['top', 'bottom', 'service'], 'html/shop/' ) );
 

@@ -20,4 +20,6 @@ class Entity_Manual_Page extends Entity
 	public string $content;
 	public string $createdAt;
 	public ?string $modifiedAt				= NULL;
+
+	public array $children					= [];
 }

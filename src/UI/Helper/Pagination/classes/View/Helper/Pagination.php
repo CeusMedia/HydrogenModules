@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -7,31 +7,31 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Pagination
 {
 	/**	@var		object		$env		... */
-	protected $env;
+	protected object $env;
 
-	/**	@var		integer		$total		... */
-	protected $total;
+	/**	@var		int			$total		... */
+	protected int $total;
 
-	/**	@var		integer		$limit		... */
-	protected $limit;
+	/**	@var		int			$limit		... */
+	protected int $limit;
 
-	/**	@var		integer		$page		... */
-	protected $page;
+	/**	@var		int			$page		... */
+	protected int $page;
 
-	/**	@var		integer		$count		... */
-	protected $count;
+	/**	@var		int			$count		... */
+	protected int $count;
 
 	/**
 	 *	Constructor.
 	 *	@access		public
-	 *	@param		object		$env		...
-	 *	@param		integer		$total		...
-	 *	@param		integer		$limit		...
-	 *	@param		integer		$page		...
-	 *	@param		integer		$count		...
+	 *	@param		Environment		$env		...
+	 *	@param		?int			$total		...
+	 *	@param		?int			$limit		...
+	 *	@param		?int			$page		...
+	 *	@param		?int			$count		...
 	 *	@return		void
 	 */
-	public function __construct( Environment $env = NULL, $total = NULL, $limit = NULL, $page = NULL, $count = NULL )
+	public function __construct( Environment $env, int $total = NULL, int $limit = NULL, int $page = NULL, int $count = NULL )
 	{
 		$this->env		= $env;
 		$this->total	= $total;
@@ -50,7 +50,7 @@ class View_Helper_Pagination
 	{
 		if( $this->env && $this->env->getModules()->has( 'Resource_Library_cmModules' ) ){
 			if( $total <= $limit )
-				return "";
+				return '';
 			$control = new PageControl( $baseUri, $page, ceil( $total / $limit ) );
 			if( !$wrapIntoButtonbar )
 				return $control->render();
@@ -62,10 +62,10 @@ class View_Helper_Pagination
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		integer		$total		...
-	 *	@param		integer		$limit		...
-	 *	@param		integer		$page		...
-	 *	@param		integer		$count		...
+	 *	@param		int			$total		...
+	 *	@param		int			$limit		...
+	 *	@param		int			$page		...
+	 *	@param		int			$count		...
 	 *	@return		string					...
 	 */
 	public function renderListNumbers( int $total, int $limit, int $page, int $count ): string
@@ -119,9 +119,8 @@ class View_Helper_Pagination
 		}
 		$list[]	= HtmlTag::create( 'li', $link );
 
-		$list	= HtmlTag::create( 'ul', join( $list ), ['class' => 'pagination'] );
-		return $list;
-		return HtmlTag::create( 'div', $list, ['class' => 'pagination'] );
+		return HtmlTag::create( 'ul', join( $list ), ['class' => 'pagination'] );
+//		return HtmlTag::create( 'div', $list, ['class' => 'pagination'] );
 	}
 
 	protected function renderListNumber( string $type, $value ): string

@@ -2,13 +2,13 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var View $view */
-/** @var array $articles */
-/** @var array $words */
+/** @var View_Manage_Catalog_Bookstore_Article $view */
+/** @var array<object> $articles */
+/** @var array<string,array<string,int|string>> $words */
 
 $w			= (object) $words['index.list'];
 
-$list		= $this->renderList( $articles, isset( $article ) ? $article->articleId : NULL );
+$list		= $view->renderList( $articles, isset( $article ) ? $article->articleId : NULL );
 
 $heading	= $w->heading;
 if( !empty( $w->heading_title ) )

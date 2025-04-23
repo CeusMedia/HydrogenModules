@@ -1,10 +1,11 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Mail_Facts
 {
-	protected string $changedFactClassPos  = 'label label-success';
-	protected string $changedFactClassNeg  = 'label label-important';
+	protected string $changedFactClassPos	= 'label label-success';
+	protected string $changedFactClassNeg	= 'label label-important';
 	protected string $changedFactClassInfo	= 'label label-info';
 	protected array $facts					= [];
 	protected array $labels					= [];
@@ -51,9 +52,9 @@ class View_Helper_Mail_Facts
 	public function render(): string
 	{
 		if( count( $this->facts ) ) {
-			if ($this->format === self::FORMAT_HTML)
+			if( self::FORMAT_HTML === $this->format )
 				return $this->renderAsHtml();
-			if ($this->format === self::FORMAT_TEXT)
+			if( self::FORMAT_TEXT === $this->format )
 				return $this->renderAsText();
 		}
 		return '';

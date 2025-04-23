@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -41,11 +41,10 @@ class View_Helper_Shop_FinishPanel_Bank
 
 	public function render(): string
 	{
-		switch( $this->order->paymentMethod ){
-			case 'Bank:Transfer':
-				return $this->renderTransfer();
-		}
-		return '';
+		return match( $this->order->paymentMethod ){
+			'Bank:Transfer'	=> $this->renderTransfer(),
+			default			=> '',
+		};
 	}
 
 
@@ -55,7 +54,12 @@ class View_Helper_Shop_FinishPanel_Bank
 		return $this;
 	}
 
-	public function setOrderId( $orderId ): self
+	/**
+	 *	@param		int|string		$orderId
+	 *	@return		self
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setOrderId( int|string $orderId ): self
 	{
 		$this->order	= $this->modelOrder->get( $orderId );
 /*		if( $this->order->paymentId > 0 ){

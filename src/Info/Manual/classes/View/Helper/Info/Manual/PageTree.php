@@ -145,7 +145,7 @@ InfoManual.UI.Tree.init("#page-tree");';
 		$sessionPrefix	= 'filter_info_manual_';
 		$categoryId		= $session->get( $sessionPrefix.'categoryId' );
 		$sessionKeyOpen	= $sessionPrefix.'categoryId_'.$categoryId.'_openFolders';
-		$openPages		= array_filter( explode( ',', $session->get( $sessionKeyOpen ) ) );
+		$openPages		= array_filter( explode( ',', $session->get( $sessionKeyOpen, '' ) ) );
 		$openPages		= array_merge( $openPages, $this->openParents );
 
 		$list	= [];

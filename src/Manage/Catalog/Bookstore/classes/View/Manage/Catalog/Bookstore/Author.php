@@ -15,7 +15,7 @@ class View_Manage_Catalog_Bookstore_Author extends View_Manage_Catalog_Bookstore
 	{
 	}
 
-	protected function renderList( $authors, $authorId = NULL ): string
+	public function renderList( $authors, $authorId = NULL ): string
 	{
 		$list	= [];
 		foreach( $authors as $author ){

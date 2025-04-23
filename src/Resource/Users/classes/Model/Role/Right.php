@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Role Right Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

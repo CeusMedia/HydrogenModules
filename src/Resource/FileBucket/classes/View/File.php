@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Net\HTTP\Download as HttpDownload;
 use CeusMedia\Common\Net\HTTP\Status as HttpStatus;

@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -23,7 +24,7 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
 				], ['class' => 'row-fluid'] ),
-				HtmlTag::create( 'hr', NULL ),
+				HtmlTag::create( 'hr' ),
 			], ['class' => 'span12'] ),
 		], ['class' => 'row-fluid'] );
 	}

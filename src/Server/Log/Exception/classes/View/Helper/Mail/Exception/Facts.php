@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Exception\Logic as LogicException;

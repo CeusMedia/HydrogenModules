@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 /** @var array<string,array<string,string>> $words */
@@ -43,7 +44,7 @@ if( $page->icon ){
 
 $path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><strong>\\2</strong>', $path );
 
-$isWritable	= in_array( $source, ['Database', 'Config'] );		//  not writable for 'Config' or 'Modules'
+$isWritable	= in_array( $source, [Logic_Page::SOURCE_DATABASE, Logic_Page::SOURCE_CONFIG], TRUE );		//  not writable for 'Config' or 'Modules'
 $hints		= [];
 if( !$isWritable )
 	$hints[]	= '<div class="alert alert-warning">Pages of source "'.$source.'" are not writable right now.</div>';

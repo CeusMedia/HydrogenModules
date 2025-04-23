@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
@@ -27,7 +27,6 @@ class Model_Shop_Cart
 	/**	@var	Model_Shop_Order_Position	$modelPosition */
 	protected Model_Shop_Order_Position $modelPosition;
 
-
 	/**	@var	Dictionary					$data */
 	protected Dictionary $data;
 
@@ -46,6 +45,7 @@ class Model_Shop_Cart
 	/**
 	 *	@param		Environment		$env
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{

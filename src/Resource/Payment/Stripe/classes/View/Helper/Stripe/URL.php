@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\HydrogenFramework\Environment;

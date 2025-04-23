@@ -4,8 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /** @var Environment $env */
+/** @var View_Manage_Catalog_Bookstore_Author $view */
 /** @var Logic_Frontend $frontend */
-/** @var array $words */
+/** @var array<string,array<string,int|string>> $words */
 /** @var array<object> $authors */
 /** @var object $author */
 /** @var array<object> $articles */

@@ -1,12 +1,15 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Environment $env */
-/** @var View $view */
-/** @var array $words */
+/** @var View_Shop $view */
+/** @var array<string,array<string,string>> $words */
 /** @var object $address $w */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 /** @var Model_Shop_Cart $cart */
+/** @var float $cartTotal */
 
 $w		= (object) $words['cart'];
 
@@ -22,7 +25,7 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
 	$buttonbar		= HtmlTag::create( 'div', [
-		new \CeusMedia\Bootstrap\Button\Link( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
+		new LinkButton( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
 	], ['class' => 'buttonbar well well-small'] );
 }
 

@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Data Model of Route.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

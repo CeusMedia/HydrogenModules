@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Time\Converter as TimeConverter;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;

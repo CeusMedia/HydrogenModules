@@ -183,10 +183,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
-		$pathApp			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->basePath		= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->basePath		= $this->logicMail->getMailAttachmentPath();
 		$this->addData( 'basePath', $this->basePath );
 
 //		$this->addData( 'files', $this->listFiles() );

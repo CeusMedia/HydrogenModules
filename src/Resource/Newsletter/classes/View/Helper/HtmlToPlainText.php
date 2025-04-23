@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpComposerExtensionStubsInspection */
+/** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Converts HTML to plain text using a DOM parser.
  *

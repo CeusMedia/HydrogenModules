@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstants;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
@@ -30,16 +30,18 @@ class Model_Job
 		throw new RangeException( 'Job with ID "'.$jobId.'" is not existing' );
 	}
 
-	public function getAll( $conditions = [] ): array
+	/**
+	 *	@param		array		$conditions
+	 *	@return		array
+	 */
+	public function getAll( array $conditions = [] ): array
 	{
 		$list	= [];
 		foreach( $this->jobs as $jobId => $job ){
 			foreach( $conditions as $key => $value ){
 				if( is_array( $value ) ){
-					if( is_array( $job->$key ) ){
-						if( !array_intersect( $value, $job->$key ) )
-							continue 2;
-					}
+					if( is_array( $job->$key ) && !array_intersect( $value, $job->$key ) )
+						continue 2;
 					else if( !in_array( $job->$key, $value ) )
 						continue 2;
 				}
@@ -47,11 +49,9 @@ class Model_Job
 					if( $value !== (bool) $job->$key )
 						continue 2;
 				}
-				else {
-					if( is_array( $job->$key ) ){
-						if( !in_array( $value, $job->$key ) )
-							continue 2;
-					}
+				else{
+					if( is_array( $job->$key ) && !in_array( $value, $job->$key ) )
+						continue 2;
 					else if( $value != $job->$key )
 						continue 2;
 				}
@@ -79,11 +79,20 @@ class Model_Job
 		return $intervals;
 	}
 
+	/**
+	 *	@param		string		$jobId
+	 *	@return		bool
+	 */
 	public function has( string $jobId ): bool
 	{
 		return array_key_exists( $jobId, $this->jobs );
 	}
 
+	/**
+	 *	@param		array		$modes
+	 *	@param		bool		$strict
+	 *	@return		self
+	 */
 	public function load( array $modes, bool $strict = TRUE ): self
 	{
 		$this->jobs	= [];
@@ -118,7 +127,12 @@ class Model_Job
 		return $this;
 	}
 
-	public function readJobsFromJsonFile( string $pathName, $modes = [] ): array
+	/**
+	 *	@param		string		$pathName
+	 *	@param		array		$modes
+	 *	@return		array
+	 */
+	public function readJobsFromJsonFile( string $pathName, array $modes = [] ): array
 	{
 		$jobs	= [];
 		foreach( JsonFileReader::load( $pathName ) as $jobId => $job ){
@@ -183,6 +197,10 @@ class Model_Job
 
 	/*  --  PROTECTED  --  */
 
+	/**
+	 *	@param		array		$modes
+	 *	@return		array
+	 */
 	protected function readJobsFromJsonFiles( array $modes = [] ): array
 	{
 		$jobs		= [];
@@ -200,6 +218,10 @@ class Model_Job
 		return $jobs;
 	}
 
+	/**
+	 *	@param		array		$modes
+	 *	@return		array
+	 */
 	protected function readJobsFromModules( array $modes = [] ): array
 	{
 		$jobs	= [];
@@ -209,6 +231,10 @@ class Model_Job
 		return $jobs;
 	}
 
+	/**
+	 *	@param		array		$modes
+	 *	@return		array
+	 */
 	protected function readJobsFromXmlFiles( array $modes = [] ): array
 	{
 		if( !file_exists( $this->pathJobs ) )

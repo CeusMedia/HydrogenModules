@@ -1,8 +1,9 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Gallery extends Abstraction
@@ -15,7 +16,11 @@ class View_Helper_Info_Gallery extends Abstraction
 	protected Model_Gallery $modelGallery;
 	protected Model_Gallery_Image $modelImage;
 
-	public function __construct( Environment $env )
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@throws		ReflectionException
+	 */
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env			= $env;
 		$this->moduleConfig	= $env->getConfig()->getAll( 'module.info_galleries.', TRUE );
@@ -36,9 +41,16 @@ class View_Helper_Info_Gallery extends Abstraction
 		);
 	}
 
-	public static function renderGalleryDescription( Environment $env, $view, $gallery ): string
+	/**
+	 *	@param		WebEnvironment		$env
+	 *	@param		View				$view
+	 *	@param		object				$gallery
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public static function renderGalleryDescription( WebEnvironment $env, View $view, object $gallery ): string
 	{
-		$content	= "";
+		$content	= '';
 		if( trim( $gallery->description ) ){
 			$content	= trim( $gallery->description );
 			$content	= View_Info_Gallery::renderContentStatic( $env, $view, $content );
@@ -51,8 +63,7 @@ class View_Helper_Info_Gallery extends Abstraction
 	{
 		$label  = str_replace( ['ä', 'ö', 'ü', 'Ä', 'Ö', 'Ü', 'ß'], ['ae', 'oe', 'ue', 'Ae', 'Oe', 'Ue', 'ss'], $label );
 		$label  = preg_replace( "/[^a-z0-9 ]/i", "", $label );
-		$label  = preg_replace( "/ +/", $delimiter, $label );
-		return $label;
+		return preg_replace( "/ +/", $delimiter, $label );
 	}
 
 	protected function getBasePath(): string
@@ -69,16 +80,14 @@ class View_Helper_Info_Gallery extends Abstraction
 		$conditions		= ['status' => '> 0'];
 		$configSort		= $this->moduleConfig->getAll( 'index.order.', TRUE );
 		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];
-		$galleries		= $this->modelGallery->getAll( $conditions, $order );
-		return $galleries;
+		return $this->modelGallery->getAll( $conditions, $order );
 	}
 
 	protected function getGalleryImages( int|string $galleryId ): array
 	{
 		$configSort		= $this->moduleConfig->getAll( 'gallery.order.', TRUE );
 		$order			= [$configSort->get( 'by' ) => $configSort->get( 'direction' )];
-		$images			= $this->modelImage->getAllByIndex( 'galleryId', $galleryId, $order );
-		return $images;
+		return $this->modelImage->getAllByIndex( 'galleryId', $galleryId, $order );
 	}
 
 	protected function getThumbnailLinkClass( $scope = 0 ): string

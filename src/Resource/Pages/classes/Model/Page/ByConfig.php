@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
 use CeusMedia\Common\FS\File\JSON\Writer as JsonFileWriter;
@@ -233,6 +233,8 @@ class Model_Page_ByConfig
 					'icon'			=> $page['icon'] ?? NULL,
 					'template'		=> $page['template'] ?? NULL,
 				] );
+				if( Model_Page_ByDatabase::TYPE_MODULE === $pageItem->type && NULL === $pageItem->controller )
+					$pageItem->controller	= $pageItem->identifier;
 
 				$this->pages[$pageItem->pageId]	= $pageItem;
 				$this->fileData[$scope][$pageNr]['pageId']	= $pageItem->pageId;
@@ -256,6 +258,8 @@ class Model_Page_ByConfig
 							'icon'			=> $subpage['icon'] ?? NULL,
 							'template'		=> $subpage['template'] ?? NULL,
 						] );
+						if( Model_Page_ByDatabase::TYPE_MODULE === $subpageItem->type && NULL === $subpageItem->controller )
+							$subpageItem->controller	= $subpageItem->identifier;
 
 						$this->pages[$subpageItem->pageId]	= $subpageItem;
 						$this->fileData[$scope][$pageNr]['pageId']	= $pageItem->pageId;

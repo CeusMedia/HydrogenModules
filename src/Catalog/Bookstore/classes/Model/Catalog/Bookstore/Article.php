@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Data Model of Bookstore Articles.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

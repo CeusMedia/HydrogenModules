@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\HydrogenFramework\Model;
 
 class Model_IP_Lock_Filter extends Model

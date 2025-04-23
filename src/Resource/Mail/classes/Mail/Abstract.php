@@ -318,11 +318,10 @@ abstract class Mail_Abstract
 
 		$host	= '';
 		if( $this->env instanceof RemoteEnvironment){
-			$logic	= Logic_Frontend::getInstance( $this->env );
-			$host	= parse_url( $logic->getUrl(), PHP_URL_HOST );
+			$host	= parse_url( $this->env->url, PHP_URL_HOST );
 		}
 		else if( $this->env instanceof WebEnvironment){
-			$host	= $this->env->host ?? parse_url( $this->baseUrl, PHP_URL_HOST );
+			$host	= parse_url( $this->baseUrl, PHP_URL_HOST );
 		}
 
 		$subject	= Template::renderString( $subject, ['app' => [

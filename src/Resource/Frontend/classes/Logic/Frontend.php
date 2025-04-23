@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+/** @noinspection ALL */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -35,6 +37,22 @@ class Logic_Frontend extends Logic
 	protected ?string $url						= NULL;
 	protected ?string $uri						= NULL;
 
+	/**
+	 *	@param		Environment		$parentEnv
+	 *	@param		array			$options
+	 *	@return		RemoteEnvironment
+	 *	@throws		EnvironmentException
+	 */
+	public static function getRemoteEnv( Environment $parentEnv, array $options = [] ): RemoteEnvironment
+	{
+		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
+		return new RemoteEnvironment( array_merge( $options, [
+//			'configFile'	=> 'config/config.ini',
+			'pathApp' 		=> $path,
+			'parentEnv'		=> $parentEnv,
+		] ) );
+	}
+
 	public function getAppConfigValue( string $key )
 	{
 		$values	= $this->getAppConfigValues( [$key] );
@@ -45,12 +63,9 @@ class Logic_Frontend extends Logic
 	{
 		if( is_string( $keys ) && strlen( trim( $keys ) ) )
 			$keys	= [$keys];
-		$list	= [];
-		foreach( $this->config->getAll( 'app.' ) as $key => $value ){
-			if( !$keys || in_array( $key, $keys ) )
-				$list[$key]	= $value;
-		}
-		return $list;
+		return array_filter( $this->config->getAll( 'app.' ), function( $key ) use ( $keys ){
+			return !$keys || in_array( $key, $keys, TRUE );
+		}, ARRAY_FILTER_USE_KEY );
 	}
 
 	public function getConfigValue( string $key )
@@ -76,22 +91,6 @@ class Logic_Frontend extends Logic
 		] );
 	}
 
-	/**
-	 *	@param		Environment		$parentEnv
-	 *	@param		array			$options
-	 *	@return		RemoteEnvironment
-	 *	@throws		EnvironmentException
-	 */
-	public static function getRemoteEnv( Environment $parentEnv, array $options = [] ): RemoteEnvironment
-	{
-		$path	= $parentEnv->getConfig()->get( 'module.resource_frontend.path' );
-		return new RemoteEnvironment( array_merge( $options, [
-			'configFile'	=> $path.'config/config.ini',
-			'pathApp' 		=> $path,
-			'parentEnv'		=> $parentEnv,
-		] ) );
-	}
-
 	public function getLanguages(): array
 	{
 		$data		= $this->config->getAll( 'locale.', TRUE );
@@ -104,68 +103,36 @@ class Logic_Frontend extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@param		string		$key
+	 *	@param		bool		$strict
+	 *	@return		int|float|string|NULL
+	 *	@throws		OutOfBoundsException	if config key is not existing in module configuration
+	 */
 	public function getModuleConfigValue( string $moduleId, string $key, bool $strict = FALSE )
 	{
 		$values	= $this->getModuleConfigValues( $moduleId, [$key], TRUE, $strict );
-		return array_pop( $values );
+		if( isset( $values[$key] ) )
+			return $values[$key];
+		if( !$strict )
+			return NULL;
+		return OutOfBoundsException( 'Config key is invalid' );
 	}
 
+	/**
+	 *	...
+	 *	@param		string		$moduleId		Module ID
+	 *	@param		array		$keys			List of config keys, empty list for all
+	 *	@param		bool		$useFasterUncachedSolution
+	 *	@param		bool		$strict
+	 *	@return		array
+	 */
 	public function getModuleConfigValues( string $moduleId, array $keys = [], bool $useFasterUncachedSolution = TRUE, bool $strict = TRUE ): array
 	{
-		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
-		$list		= [];
-		if( !file_exists( $fileName ) ){
-			if( $strict )
-				throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
-			return $list;
-		}
-		if( $useFasterUncachedSolution ){
-			//  version 1
-			//  description: get config pairs using regular expressions
-			//  performance: fast, but maybe unstable
-			//  use default: no
-			//  benefits:    - speed (>5x faster than version 1)
-			//               - minimal code usage
-			//               - no valid XML needed
-			//  downsides:   - maybe unstable (using regexp)
-			//               - must handle empty nodes
-			//               - not OOP
-			$lines	= explode( "\n", FileReader::load( $fileName ) );
-			foreach( $lines as $nr => $line ){
-				if( str_contains( $line, '<config ' ) ){
-					$key	= preg_replace( '@^.+name="(.+)".+$@U', '\\1', $line );
-					if( !$key || ( $keys && !in_array( $key, $keys ) ) )
-						continue;
-					if( str_ends_with( $line, '/>' ) ){
-						$list[$key]	= NULL;
-						continue;
-					}
-					$list[$key]	= preg_replace( '@^.+>(.*)</.+$@', '\\1', $line );
-				}
-			}
-		}
-		else{
-			//  version 2
-			//  description: get module config object using XML parser
-			//  performance: slow, but stable
-			//  stability:   stable
-			//  use default: yes
-			//  benefits:    - stable (using DOM via framework class)
-			//               - handle empty nodes automatically
-			//               - use cache for each module (good for future methods)
-			//               - modern (more OOP)
-			//  downsides:   - >5x slower than version 1
-			//               - more code to use
-			//               - DOM use (needs to be valid XML)
-			if( empty( $this->installedModules[$moduleId]->config ) ){
-				$module	= HydrogenModuleReader::load( $fileName, $moduleId );
-				$this->installedModules[$moduleId]->config	= $module;
-			}
-			foreach( $this->installedModules[$moduleId]->config->config as $configKey => $configData )
-				if( !$keys || in_array( $configKey, $keys ) )
-					$list[$configKey]	= (string) $configData->value;
-		}
-		return $list;
+		if( $useFasterUncachedSolution )
+			return $this->getModuleConfigValuesUsingXmlFileStrategy( $moduleId, $keys, $strict );
+		return $this->getModuleConfigValuesUsingModuleDefinitionStrategy( $moduleId, $keys, $strict );
 	}
 
 	/**
@@ -221,17 +188,25 @@ class Logic_Frontend extends Logic
 		return $this->url;
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@return		bool
+	 */
 	public function hasModule( string $moduleId ): bool
 	{
 		return array_key_exists( $moduleId, $this->installedModules );
 	}
 
+	/**
+	 *	@param		string		$path
+	 *	@return		void
+	 */
 	public function setPath( string $path ): void
 	{
 		if( !file_exists( $path ) )
 			throw new DomainException( 'Invalid frontend path' );
 		$this->path		= $path;
-		$this->uri		= realpath( dirname( $path ) );
+		$this->uri		= realpath( $path ).'/';
 		$this->detectConfig();
 		$this->detectModules();
 		$this->detectBaseUrl();
@@ -239,16 +214,25 @@ class Logic_Frontend extends Logic
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 */
 	protected function __clone()
 	{
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_frontend.', TRUE );
 		$this->setPath( $moduleConfig->get( 'path' ) );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function detectConfig(): void
 	{
 		$configFile		= $this->path.'config/config.ini';
@@ -263,7 +247,7 @@ class Logic_Frontend extends Logic
 	 *	Tries to resolve frontend URL.
 	 *	@access		protected
 	 *	@return		void
-	 *	@throws		RuntimeException				if URL is not defined
+	 *	@throws		RuntimeException		if URL is not defined
 	 */
 	protected function detectBaseUrl(): void
 	{
@@ -277,6 +261,9 @@ class Logic_Frontend extends Logic
 			throw new RuntimeException( 'Frontend URL could not been detected' );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function detectModules(): void
 	{
 		$this->installedModules	= [];
@@ -284,13 +271,96 @@ class Logic_Frontend extends Logic
 		foreach( $index as $entry ){
 			if( preg_match( '@^(.+)(\.xml)$@', $entry->getFilename() ) ){
 				$key	= preg_replace( '@^(.+)(\.xml)$@', '\\1', $entry->getFilename() );
-				$this->installedModules[$key]	= (object) array(
+				$this->installedModules[$key]	= (object) [
 					'id'			=> $key,
 					'configFile'	=> $entry->getPathname(),
 					'config'		=> NULL,
-				);
+				];
 			}
 		}
 		ksort( $this->installedModules );
+	}
+
+	/**
+	 *	Get module config object using XML parser.
+	 *	Strategy (2) for getModuleConfigValues.
+	 *
+	 *	Performance: slow, but stable
+	 *	Stability:   stable
+	 *	Use default: yes
+	 *	Benefits:
+	 *    - stable (using DOM via framework class)
+	 *	  - handle empty nodes automatically
+	 *	  - use cache for each module (good for future methods)
+	 *	  - modern (more OOP)
+	 *	Downsides:
+	 *	  - >5x slower than version 1
+	 *	  - more code to use
+	 *	  - DOM use (needs to be valid XML)
+	 *
+	 *	@param		string		$moduleId
+	 *	@param		array		$keys
+	 *	@param		bool		$strict
+	 *	@return		array
+	 *	@throws		OutOfBoundsException		if module ID is invalid, no such module found
+	 */
+	protected function getModuleConfigValuesUsingModuleDefinitionStrategy( string $moduleId, array $keys = [], bool $strict = TRUE ): array
+	{
+		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
+		if( !file_exists( $fileName ) ){
+			if( !$strict )
+				throw new OutOfBoundsException( 'Invalid module ID: '.$moduleId );
+			return [];
+		}
+		if( empty( $this->installedModules[$moduleId]->config ) ){
+			$module	= HydrogenModuleReader::load( $fileName, $moduleId );
+			$this->installedModules[$moduleId]->config	= $module;
+		}
+		$list		= [];
+		foreach( $this->installedModules[$moduleId]->config->config as $configKey => $configData )
+			if( [] === $keys || in_array( $configKey, $keys, TRUE ) )
+				$list[$configKey]	= (string) $configData->value;
+		return $list;
+	}
+
+	/**
+	 *	Get config pairs using regular expressions.
+	 *	Strategy (1) for getModuleConfigValues.
+	 *
+	 *	Performance: fast, but maybe unstable
+	 *	Use default: no
+	 *	Benefits:
+	 *	  - speed (>5x faster than version 1)
+	 *	  - minimal code usage
+	 *	  - no valid XML needed
+	 *	Downsides:
+	 *	  - maybe unstable (using regexp)
+	 *	  - must handle empty nodes
+	 *	  - not OOP
+	 *
+	 *	@param		string		$moduleId
+	 *	@param		array		$keys
+	 *	@param		bool		$strict
+	 *	@return		array
+	 *	@throws		RuntimeException		if module is not existing
+	 */
+	protected function getModuleConfigValuesUsingXmlFileStrategy( string $moduleId, array $keys = [], bool $strict = TRUE ): array
+	{
+		$list		= [];
+		$fileName	= $this->getPath( 'modules' ).$moduleId.'.xml';
+		$lines		= explode( "\n", FileReader::load( $fileName ) );
+		foreach( $lines as $nr => $line ){
+			if( !str_contains( $line, '<config ' ) )
+				continue;
+			$key	= preg_replace( '@^.+name="(.+)".+$@U', '\\1', $line );
+			if( [] !== $key && !in_array( $key, $keys, TRUE ) )
+				continue;
+			if( str_ends_with( $line, '/>' ) ){
+				$list[$key]	= NULL;
+				continue;
+			}
+			$list[$key]	= preg_replace( '@^.+>(.*)</.+$@', '\\1', $line );
+		}
+		return $list;
 	}
 }

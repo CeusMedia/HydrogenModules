@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Common\ADT\Collection\Dictionary;

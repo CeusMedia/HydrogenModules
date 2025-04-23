@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\FS\File\CSS\Compressor as CssCompressor;
 use CeusMedia\Common\Net\Reader as NetReader;

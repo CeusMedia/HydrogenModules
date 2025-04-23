@@ -1,5 +1,7 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -106,8 +108,8 @@ class View_Helper_Shop_AddressForm
 			</div>
 			<br/>
 			<div class="buttonbar well well-small">
-				'.new \CeusMedia\Bootstrap\Button\Link( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
-				'.new \CeusMedia\Bootstrap\Button\Submit( "save", $w->buttonToConditions, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
+				'.new LinkButton( './shop/cart', $w->buttonToCart, 'not-pull-right', 'fa fa-fw fa-arrow-left' ).'
+				'.new SubmitButton( "save", $w->buttonToConditions, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right' ).'
 			</div>
 		</form>
 	</div>

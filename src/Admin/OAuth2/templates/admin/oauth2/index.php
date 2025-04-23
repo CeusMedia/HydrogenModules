@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -35,6 +35,7 @@ if( $providers ){
 		$rows[]	= HtmlTag::create( 'tr', [
 //			HtmlTag::create( 'td', $provider->oauthProviderId, ['style' => 'text-align: right'] ),
 			HtmlTag::create( 'td', $label ),
+			HtmlTag::create( 'td', '<small>'.$provider->composerPackage.'</small>' ),
 			HtmlTag::create( 'td', $helperTime->convert( max( $provider->createdAt, $provider->modifiedAt ), TRUE, 'vor' ) ),
 			HtmlTag::create( 'td', $words['statuses'][$provider->status], ['style' => 'text-align: center; background-color: '.calculateColor( ( $provider->status + 1 ) / 2 )] ),
 			HtmlTag::create( 'td', $provider->rank, ['style' => 'text-align: right'] ),
@@ -43,6 +44,7 @@ if( $providers ){
 	$colgroup	= HtmlElements::ColumnGroup( [
 //		'50px',
 		'',
+		'250px',
 		'120px',
 		'140px',
 		'60px',
@@ -50,6 +52,7 @@ if( $providers ){
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
 //		HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
 		HtmlTag::create( 'th', 'Anbieter' ),
+		HtmlTag::create( 'th', 'Paket' ),
 		HtmlTag::create( 'th', 'geändert' ),
 		HtmlTag::create( 'th', 'Zustand', ['style' => 'text-align: center'] ),
 		HtmlTag::create( 'th', 'Rang', ['style' => 'text-align: right'] ),

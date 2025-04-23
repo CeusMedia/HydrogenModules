@@ -191,15 +191,12 @@ class Controller_Admin_Mail_Attachment extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		$this->request		= $this->env->getRequest();
-		$this->messenger	= $this->env->getMessenger();
-		$this->model		= new Model_Mail_Attachment( $this->env );
-		$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		$this->logicUpload	= new Logic_Upload( $this->env );
-		$pathApp			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->attachmentPath			= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->request			= $this->env->getRequest();
+		$this->messenger		= $this->env->getMessenger();
+		$this->model			= new Model_Mail_Attachment( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->logicUpload		= new Logic_Upload( $this->env );
+		$this->attachmentPath	= $this->logicMail->getMailAttachmentPath();
 		$this->addData( 'path', $this->attachmentPath );
 		$this->addData( 'files', $this->listFiles() );
 

@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var View $view */
-/** @var array $words */
+/** @var View_Manage_Catalog_Bookstore_Article $view */
+/** @var array<string,array<string,int|string>> $words */
 /** @var array $filters */
 
 $w			= (object) $words['index.filter'];
@@ -21,7 +21,7 @@ $filterStatus	= isset( $filters['status'] ) && strlen( $filters['status'] ) ? $f
 
 $optStatus	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
-	$optStatus[(string)$key]	= $value;
+	$optStatus[(string) $key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, (string) $filterStatus );
 
 $optOrder	= [

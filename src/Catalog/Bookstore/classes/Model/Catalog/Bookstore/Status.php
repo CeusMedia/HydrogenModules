@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Data model of bookstore states.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

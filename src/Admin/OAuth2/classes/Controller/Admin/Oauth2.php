@@ -116,6 +116,7 @@ class Controller_Admin_Oauth2 extends Controller
 	{
 		$conditions	= [];
 		$orders		= ['rank' => 'ASC'];
+		$orders		= ['status' => 'DESC', 'title' => 'ASC'];
 		$providers	= $this->modelProvider->getAll( $conditions, $orders );
 		$this->addData( 'providersIndex', array_values( $this->providersIndex ) );
 		$this->addData( 'providersAvailable', $this->providersAvailable );

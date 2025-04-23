@@ -1,10 +1,14 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\View;
 
 class View_Info extends View
 {
-	public function index()
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function index(): string
 	{
 		$site		= $this->getData( 'site' );
 		$types		= explode( ',', $this->env->getConfig()->get( 'module.info.types' ) );
@@ -35,6 +39,6 @@ class View_Info extends View
 
 	protected function __onInit(): void
 	{
-		$this->env->page->addThemeStyle( 'module.info.css' );
+		$this->env->getPage()->addThemeStyle( 'module.info.css' );
 	}
 }

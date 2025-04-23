@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Stripe_Entity_Wallet extends View_Helper_Stripe_Abstract

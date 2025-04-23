@@ -1,11 +1,12 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Button;
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var View_Shop $view */
 /** @var Model_Shop_Cart $cart */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
@@ -84,7 +85,7 @@ $tabContent	= '
 <h3>'.$w->heading.'</h3>
 <p>'.$w->textTop.'</p>
 '.$list.'
-'.$buttonbar.'';
+'.$buttonbar;
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
