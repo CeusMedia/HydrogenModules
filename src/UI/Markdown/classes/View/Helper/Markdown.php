@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Obj\Constant as ObjectConstant;
 use CeusMedia\HydrogenFramework\Environment;

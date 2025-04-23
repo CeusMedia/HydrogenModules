@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -8,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var array<string,array<string,string>> $words */
 
 $w	= (object) $words['customer-delivery'];
-if( $address->type == 2 )
+if( Model_Address::TYPE_BILLING === $address->type )
 	$w	= (object) $words['customer-billing'];
 
 $helper		= new View_Helper_Shop_AddressForm( $env );

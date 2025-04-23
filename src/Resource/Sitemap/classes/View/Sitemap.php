@@ -1,5 +1,8 @@
-<?php
+<?php /** @noinspection PhpComposerExtensionStubsInspection */
 
+/** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\XML\DOM\Builder as XmlBuilder;
 use CeusMedia\Common\XML\DOM\Node as XmlNode;
@@ -12,7 +15,7 @@ class View_Sitemap extends View
 		$format		= $this->getData( 'format' );
 		$links		= $this->getData( 'links' );
 		$options	= $this->getData( 'options' );
-		if( $options->get( 'html.enabled' ) && $format === 'HTML' ){
+		if( $options->get( 'html.enabled' ) && 'HTML' === $format ){
 			$list	= [];
 			foreach( $links as $link ){
 				$label	= substr( $link->location, strlen( $this->env->url ) );
@@ -32,7 +35,13 @@ class View_Sitemap extends View
 		exit;
 	}
 
-	protected function renderXml( array $links, $options )
+	/**
+	 *	@param		array			$links
+	 *	@param		Dictionary		$options
+	 *	@return		object{mimeType: string, content: string}
+	 *	@throws		DOMException
+	 */
+	protected function renderXml( array $links, Dictionary $options ): object
 	{
 		$root	= new XmlNode( 'urlset' );
 		$root->setAttribute( 'xmlns', "https://www.sitemaps.org/schemas/sitemap/0.9" );

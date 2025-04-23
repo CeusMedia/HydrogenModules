@@ -14,6 +14,7 @@ use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\File\RecursiveRegexFilter as RecursiveRegexFileIndex;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\Mail\Message as MailMessage;
 use CeusMedia\Mail\Message\Renderer as MailMessageRendererV2;
@@ -560,6 +561,27 @@ class Logic_Mail extends Logic
 	}
 
 	/**
+	 *	Returns absolute to mail attachments folder, also considering frontend environment setup.
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function getMailAttachmentPath(): string
+	{
+		$configKey			= 'path.attachments';
+
+		/** @var ?ModuleDefinition $module */
+		$module	= $this->env->getModules()->get( 'Resource_Frontend' );
+		if( NULL !== $module && ( './' !== $module->getConfigAsDictionary()->get( 'path' ) ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$path		= $frontend->getModuleConfigValue( 'Resource_Mail', $configKey );
+			return $frontend->getUri().$path;
+		}
+
+		$path	= $this->env->getConfig()->get( 'module.resource_mail.'.$configKey );
+		return $this->env->uri.$path;
+	}
+
+	/**
 	 *	Returns queued mail object of mail ID.
 	 *	@access		public
 	 *	@param		int|string		$mailId			ID of queued mail
@@ -779,6 +801,12 @@ class Logic_Mail extends Logic
 	protected function __onInit(): void
 	{
 		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$this->options	= new Dictionary( $frontend->getModuleConfigValues( 'Resource_Mail' ) );
+			foreach( ['attachments', 'classes'] as $type )
+				$this->options->set( 'path.'.$type, $frontend->getPath().$this->options->get( 'path.'.$type ) );
+		}
 
 		/*  --  INIT QUEUE  --  */
 		$this->modelQueue		= new Model_Mail( $this->env );
@@ -789,6 +817,7 @@ class Logic_Mail extends Logic
 		/*  --  INIT ATTACHMENTS  --  */
 		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
 		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+
 		$this->frontendPath		= './';
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
 			$frontend				= Logic_Frontend::getInstance( $this->env );

@@ -36,12 +36,12 @@ if( count( $attachments ) ){
 		if( $attachment->status )
 			$buttonStatus	= HtmlTag::create( 'a', $iconDisable, [
 				'href'	=> './admin/mail/attachment/setStatus/'.$attachment->mailAttachmentId.'/0',
-				'class'	=> 'btn btn-danger',
+				'class'	=> 'btn btn-danger btn-small',
 				'title'	=> $w->buttonDeactivate
 			] );
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'	=> './admin/mail/attachment/unregister/'.$attachment->mailAttachmentId,
-			'class'	=> 'btn btn-inverse',
+			'class'	=> 'btn btn-inverse btn-small',
 			'title'	=> $w->buttonUnregister
 		] );
 

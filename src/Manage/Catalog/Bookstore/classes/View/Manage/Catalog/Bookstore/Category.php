@@ -15,7 +15,7 @@ class View_Manage_Catalog_Bookstore_Category extends View_Manage_Catalog_Booksto
 	{
 	}
 
-	protected function renderTree( $categories, $categoryId = NULL ): string
+	public function renderTree( $categories, $categoryId = NULL ): string
 	{
 /*		$cache	= $this->env->getCache();
 		if( NULL !== ( $data = $cache->get( 'admin.categories.list.html' ) ) ){

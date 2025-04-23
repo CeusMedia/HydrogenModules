@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Job Schedule Model.
  *	@category		cmFrameworks.Hydrogen.Module

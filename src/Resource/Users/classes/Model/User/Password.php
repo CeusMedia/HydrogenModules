@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	User Password Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>

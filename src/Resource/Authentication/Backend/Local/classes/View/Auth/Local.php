@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\Environment\Resource\Captain;
 use CeusMedia\HydrogenFramework\View;

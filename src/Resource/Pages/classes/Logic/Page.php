@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	...
  *	@category		...
@@ -295,7 +296,7 @@ class Logic_Page extends Logic
 		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
 		if( Model_Page_ByDatabase::TYPE_MODULE === $page->type && Model_Page_ByDatabase::ACCESS_ACL === $page->access )
-			$hasRight	= $this->env->getAcl()->has( $page->controller, $page->action ?: 'index' );
+			$hasRight	= $this->env->getAcl()->has( $page->controller ?? $page->path, $page->action ?: 'index' );
 		$public		= Model_Page_ByDatabase::ACCESS_PUBLIC === $page->access;
 		$outside	= Model_Page_ByDatabase::ACCESS_OUTSIDE === $page->access && !$isAuthenticated;
 		$inside		= Model_Page_ByDatabase::ACCESS_INSIDE === $page->access && $isAuthenticated;

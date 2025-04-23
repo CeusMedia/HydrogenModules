@@ -1,8 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$galleries	= $this->renderList( $gallery->galleryId );
+/** @var View_Manage_Gallery $view */
+/** @var object $gallery */
+/** @var array<string,array<string,string>> $words */
+
+$galleries	= $view->renderList( $gallery->galleryId );
 
 $optStatus	= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $gallery->status );

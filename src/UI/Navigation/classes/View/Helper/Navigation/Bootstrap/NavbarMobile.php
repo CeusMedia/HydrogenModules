@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Navigation_Bootstrap_NavbarMobile extends View_Helper_Navigation_Bootstrap_Navbar

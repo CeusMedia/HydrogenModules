@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract
@@ -8,6 +9,9 @@ class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract
 	protected string $nodeName		= 'span';
 	protected ?string $url			= NULL;
 
+	/**
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( NULL === $this->card )
@@ -24,7 +28,7 @@ class View_Helper_Stripe_Entity_Card extends View_Helper_Stripe_Abstract
 		];
 		if( $this->url ){
 			$url	= sprintf( $this->url, $this->card->id );
-			if( $this->nodeName == 'a' )
+			if( 'a' === $this->nodeName )
 				$attributes['href']	= $url;
 			else
  				$attributes['onclick']	= 'document.location.href="'.$url.'";';

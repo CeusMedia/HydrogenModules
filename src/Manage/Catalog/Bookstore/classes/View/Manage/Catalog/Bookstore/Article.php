@@ -15,7 +15,7 @@ class View_Manage_Catalog_Bookstore_Article extends View_Manage_Catalog_Bookstor
 	{
 	}
 
-	protected function renderList( array $articles, int|string|NULL $articleId = NULL ): string
+	public function renderList( array $articles, int|string|NULL $articleId = NULL ): string
 	{
 		$list	= [];
 		foreach( $articles as $article ){

@@ -116,7 +116,7 @@ $panelEdit	= '
 						'name'		=> "email",
 						'id'		=> "input_email",
 						'class'		=> "bs2-span12 bs3-form-control bs4-form-control ".( $needsEmail ? 'mandatory' : '' ),
-						'value'		=> htmlentities( $user->email, ENT_QUOTES, 'UTF-8' ),
+						'value'		=> htmlentities( $user->email ?? '', ENT_QUOTES, 'UTF-8' ),
 						'required'	=> $needsEmail ? "required" : NULL
 					) ).'
 				</div>

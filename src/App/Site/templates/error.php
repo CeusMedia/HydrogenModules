@@ -1,12 +1,11 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Exception\View as ExceptionView;
 use CeusMedia\Common\UI\HTML\PageFrame as HtmlPage;
 use CeusMedia\Common\UI\HTML\JQuery as JQuery;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\TemplateEngine\Template as Template;
-
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\TemplateEngine\Template as Template;
 
 /** @var WebEnvironment $env */
 /** @var Exception $e */

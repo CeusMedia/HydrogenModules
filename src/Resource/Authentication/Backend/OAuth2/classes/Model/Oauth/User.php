@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	OAuth Provider User Model.
  *	@category		cmFrameworks.Hydrogen.Module

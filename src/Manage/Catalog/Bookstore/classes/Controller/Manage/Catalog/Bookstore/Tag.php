@@ -61,6 +61,6 @@ class Controller_Manage_Catalog_Bookstore_Tag extends Controller_Manage_Catalog_
 		$this->addData( 'tags', $tags );
 		$this->addData( 'articleIds', $articleIds );
 		$this->addData( 'articles', $articles );
-		$this->addData( 'filterSearch', $this->session->get( 'filter_manage_catalog_bookstore_tag_search' ) );
+		$this->addData( 'filterSearch', $this->session->get( 'filter_manage_catalog_bookstore_tag_search', '' ) );
 	}
 }

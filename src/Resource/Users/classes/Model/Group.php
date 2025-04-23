@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Group Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
@@ -67,5 +68,5 @@ class Model_Group extends Model
 	protected int $fetchMode				= PDO::FETCH_CLASS;
 
 	/** @var	?string		$className		Entity class to use */
-	protected ?string $className				= 'Entity_Group';
+	protected ?string $className			= 'Entity_Group';
 }

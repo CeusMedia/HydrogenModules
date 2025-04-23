@@ -65,7 +65,7 @@ class View_Manage_Gallery extends View
 		return $list;
 	}
 
-	protected function renderThumbnail( $image, bool $linked = FALSE, $galleryPath = NULL ): string
+	public function renderThumbnail( $image, bool $linked = FALSE, $galleryPath = NULL ): string
 	{
 		$frontend	= Logic_Frontend::getInstance( $this->env );
 		$baseUri	= $frontend->getPath( 'images' ).$this->env->getConfig()->get( 'module.manage_galleries.image.path' );
@@ -88,7 +88,12 @@ class View_Manage_Gallery extends View
 		return $thumb;
 	}
 
-	protected function getGalleryImages( string $galleryId )
+	/**
+	 *	@param		string		$galleryId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 */
+	protected function getGalleryImages( string $galleryId ): array
 	{
 		if( !isset( $this->images[$galleryId] ) ){
 			$indices	= ['galleryId' => $galleryId];

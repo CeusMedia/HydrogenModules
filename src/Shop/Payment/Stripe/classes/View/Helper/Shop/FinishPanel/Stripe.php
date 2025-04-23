@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -36,6 +36,7 @@ class View_Helper_Shop_FinishPanel_Stripe
 
 	/**
 	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{

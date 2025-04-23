@@ -2,8 +2,8 @@
 
 use CeusMedia\HydrogenFramework\View;
 
-/** @var View $view */
-/** @var array $words */
+/** @var View_Manage_Catalog_Bookstore_Category $view */
+/** @var array<string,array<string,int|string>> $words */
 
 $w	= (object) $words['index'];
 

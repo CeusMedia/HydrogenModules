@@ -378,10 +378,7 @@ class Controller_Manage_Form extends Controller
 		$mailDomains	= strlen( $mailDomains ) ? preg_split( '/\s*,\s*/', $mailDomains ) : [];
 		$this->addData( 'mailDomains', $mailDomains );
 
-		$pathApp			= '';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathApp		= Logic_Frontend::getInstance( $this->env )->getPath();
-		$this->basePath		= $pathApp.$this->env->getConfig()->get( 'module.resource_mail.path.attachments' );
+		$this->basePath	= Logic_Mail::getInstance( $this->env )->getMailAttachmentPath();
 		$this->addData( 'files', $this->listFiles() );
 	}
 

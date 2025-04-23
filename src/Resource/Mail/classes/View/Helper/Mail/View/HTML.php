@@ -17,8 +17,6 @@ class View_Helper_Mail_View_HTML
 
 	/**
 	 *	@return		string
-	 *	@throws		ReflectionException
-	 *	@throws		AmbiguousDataException
 	 *	@throws		Exception
 	 */
 	public function render(): string

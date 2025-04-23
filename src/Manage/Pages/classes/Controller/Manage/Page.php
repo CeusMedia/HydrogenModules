@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
@@ -150,13 +150,13 @@ ModuleManagePages.PageEditor.init();
 	public function edit( int|string $pageId, ?string $version = NULL ): void
 	{
 		$source			= $this->getData( 'source' );
-		$isFromConfig	= $source == 'Config';
-		$isFromDatabase	= $source == 'Database';
+		$isFromConfig	= $source === 'Config';
+		$isFromDatabase	= $source === 'Database';
 		$page			= $this->checkPageId( $pageId );
 		$scope			= (int) $this->appSession->get( 'scope' );
-		$logicPage		= new Logic_Page( $this->env );
+		$logicPage		= Logic_Page::getInstance( $this->env );
 
-//		$logic		= Logic_Versions::getInstance( $this->env );
+//		$logic			= Logic_Versions::getInstance( $this->env );
 
 		$defaultEditor	= $this->moduleConfig->get( 'editor'.'.'.strtolower( $page->format ) );
 		$currentEditor	= $this->session->get( $this->sessionPrefix.$this->appFocus.'.editor' );
@@ -205,9 +205,9 @@ ModuleManagePages.PageEditor.init();
 				$this->messenger->noteError( $message, $identifier );
 			}
 			else{
-//				if( $this->env->getModules()->has( 'Resource_Localization' ) ){							//  localization module is installed
-				if( class_exists( 'Logic_Localization' ) ){							//  localization module is installed
-					$localization	= new Logic_Localization( $this->env );
+//				if( $this->env->getModules()->has( 'Resource_Localization' ) ){						//  localization module is installed
+				if( class_exists( 'Logic_Localization' ) ){									//  localization module is installed
+					$localization	= Logic_Localization::getInstance( $this->env );
 					$localization->setLanguage( $this->appSession->get( 'language' ) );
 					$idTitle	= 'page.'.$page->identifier.'-title';
 					$idContent	= 'page.'.$page->identifier.'-content';
@@ -219,17 +219,17 @@ ModuleManagePages.PageEditor.init();
 					if( $content && $localization->translate( $idContent, NULL, $content ) )
 						$this->request->remove( 'page_content' );
 				}
-				else if( $this->env->getModules()->has( 'Resource_Versions' ) ){							//  versioning module is installed
+				else if( $this->env->getModules()->has( 'Resource_Versions' ) ){					//  versioning module is installed
 					$contentNew	= $this->request->get( 'page_content' );
 					if( $page->content !== $contentNew ){											//  new content differs from page content
-						$logicVersion		= Logic_Versions::getInstance( $this->env );					//  start versioning logic
+						$logicVersion		= Logic_Versions::getInstance( $this->env );			//  start versioning logic
 						$versions	= $logicVersion->getAll( 'Info_Pages', $pageId );
 						$found		= FALSE;														//  init indicator if current page content is a version
 						foreach( $versions as $_version )											//  iterate all page versions
 							if( $_version->content === $page->content )								//  page content is a version
 								$found = TRUE;														//  note this
 						if( !$found )																//  page content is not a version
-							$logicVersion->add( 'Info_Pages', $pageId, $page->content );					//  store current page content as version
+							$logicVersion->add( 'Info_Pages', $pageId, $page->content );			//  store current page content as version
 					}
 				}
 
@@ -255,8 +255,8 @@ ModuleManagePages.PageEditor.init();
 
 		$pages	= [];
 		$visiblePages	= $this->model->getAllByIndices(
-			array( 'status'	=> Model_Page_ByDatabase::STATUS_VISIBLE ),
-			array( 'title' => "ASC" )
+			['status'	=> Model_Page_ByDatabase::STATUS_VISIBLE],
+			['title' => "ASC"]
 		);
 		foreach( $visiblePages as $item ){
 			if( $isFromDatabase && $item->parentId ){
@@ -360,7 +360,7 @@ ModuleManagePages.PageEditor.init();
 		$index	= new RecursiveRegexFileIndex( $pathFront.$pathImages, "/\.jpg$/i" );
 		$list	= [];
 		foreach( $index as $item ){
-			$parts	= explode( "/", $item->getPathname() );
+			$parts	= explode( '/', $item->getPathname() );
 			$file	= array_pop( $parts );
 			$path	= implode( ' / ', array_slice( $parts , 1 ) );
 			$label	= $path ? $path.': '.$file : $file;
@@ -524,10 +524,10 @@ ModuleManagePages.PageEditor.init();
 		$managedModules		= $this->envManaged->getModules();
 		$possibleSources	= [];
 		if( $managedModules->has( 'Resource_Pages' ) ){}
-			$possibleSources[]	= 'database';
+			$possibleSources[]	= Logic_Page::SOURCE_DATABASE;
 		if( file_exists( $this->envManaged->uri.'config/pages.json' ) )
-			$possibleSources[]	= 'config';
-		$possibleSources[]	= 'modules';
+			$possibleSources[]	= Logic_Page::SOURCE_CONFIG;
+		$possibleSources[]	= Logic_Page::SOURCE_MODULES;
 		if( $possibleSources !== $this->appSession->get( 'sources' ) )
 			$this->appSession->set( 'sources', $possibleSources );
 		$this->addData( 'sources', $possibleSources );

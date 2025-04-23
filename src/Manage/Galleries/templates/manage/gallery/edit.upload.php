@@ -1,6 +1,13 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
+/** @var WebEnvironment $env */
+/** @var View_Manage_Gallery $view */
+/** @var object $gallery */
+/** @var array<string,array<string,string>> $words */
 
 $optStatus	= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $gallery->status );

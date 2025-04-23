@@ -9,7 +9,7 @@ class View_Info_Newsletter extends View
 	 */
 	public function index(): void
 	{
-		$script	= 'Module_Info_Newletter_Form.init();';
+		$script	= 'Module_Info_Newsletter_Form.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		$this->env->getPage()->js->addModuleFile( 'module.info.newsletter.js' );
 	}

@@ -2,8 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var array $words */
-/** @var View $view */
+/** @var View_Manage_Catalog_Bookstore_Article $view */
+/** @var array<string,array<string,int|string>> $words */
 /** @var object $article */
 
 $w			= (object) $words['add'];

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\JSON\Reader as JsonFileReader;
@@ -148,7 +148,7 @@ class Model_Menu
 		foreach( $this->pageMap as $pagePath => $page ){											//  iterate link map
 			$page->active = FALSE;
 			if( $pagePath == $path ){																//  page path matches requested path
-				$selected[$pagePath]	= strlen( $path );											//  note page with highest conformity (longest match length)
+				$selected[$pagePath]	= strlen( $path );											//  note page with the highest conformity (longest match length)
 				break;
 			}
 			$pathLength	= min( 1, strlen( $path ) );
@@ -156,7 +156,7 @@ class Model_Menu
 			$parts	= explode( '/', $page->link );											//  parts of menu page link
 			for( $i=0; $i<strlen( $path ); $i++ ){													//  iterate requested path
 				if( !isset( $page->link[$i] ) ){													//  menu page link is finished
-					if( $path[$i] === "/" )															//  but path goes on
+					if( '/' === $path[$i] )															//  but path goes on
 						$i	+= 3;																	//  add bonus to rank of this page with if rest of path is action, only
 					break;																			//  break scan here
 				}

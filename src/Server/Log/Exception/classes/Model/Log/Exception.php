@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Exception Log Model.
  *	@category		cmFrameworks.Hydrogen.Module

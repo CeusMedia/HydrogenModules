@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Job Definition Model.
  *	@category		cmFrameworks.Hydrogen.Module

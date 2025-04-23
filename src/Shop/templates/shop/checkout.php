@@ -1,17 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Bootstrap\Button\Link as LinkButton;
 use CeusMedia\Bootstrap\Button\Submit as SubmitButton;
 use CeusMedia\HydrogenFramework\View;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
 /** @var object $address $w */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 /** @var Model_Shop_Cart $cart */
-
 
 $w				= (object) $words['checkout'];
 

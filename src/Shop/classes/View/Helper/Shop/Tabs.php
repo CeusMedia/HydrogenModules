@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Nav\Tabs as BootstrapTabsNav;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;

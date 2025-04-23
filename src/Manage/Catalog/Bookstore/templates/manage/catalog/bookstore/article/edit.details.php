@@ -5,8 +5,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
-/** @var View $view */
-/** @var array $words */
+/** @var View_Manage_Catalog_Bookstore_Article $view */
+/** @var array<string,array<string,int|string>> $words */
 /** @var object $article */
 
 $optStatus	= HtmlElements::Options( $words['states'], $article->status );

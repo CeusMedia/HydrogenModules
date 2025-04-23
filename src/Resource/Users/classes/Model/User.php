@@ -1,4 +1,7 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
+/** @noinspection PhpComposerExtensionStubsInspection */
+/** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	User Model.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
