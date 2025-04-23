@@ -2,7 +2,7 @@
 /**
  *	Controller for system CPU load handling and indicating.
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright	2014-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -13,7 +13,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /**
  *	Controller for system CPU load handling and indicating.
  *	@author		Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright	2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright	2014-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Ajax_System_Load extends AjaxController
 {

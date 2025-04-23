@@ -2,7 +2,7 @@
 /**
  *	Token Store Singleton.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	Token Store Singleton.
  *	This is a singleton implementation - please use static call to getInstance() instead of construction with new.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  *	@todo			problem: several clients behind same IP will have same token
  *	@todo			concept: binding token to unique client id and unique client instance id
  */

@@ -2,7 +2,7 @@
 /**
  *	Server Action Dispatcher Class.
  *
- *	Copyright (c) 2010-2013 Christian Würker (ceus-media.de)
+ *	Copyright (c) 2010-2025 Christian Würker (ceus-media.de)
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  *	@since			0.1
  */
 
@@ -35,7 +35,7 @@ use CeusMedia\HydrogenFramework\Dispatcher\General as GeneralDispatcher;
  *	@category		cmApps
  *	@package		Chat.Server.Resource
  *	@author			Christian Würker <christian.wuerker@ceus-media.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Dispatcher extends GeneralDispatcher
 {

@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Environment\Router\Recursive as RecursiveRouter;
@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
  *	@category		cmApps
  *	@package		Chat.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Environment extends WebEnvironment
 {

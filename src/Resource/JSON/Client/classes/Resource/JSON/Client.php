@@ -20,7 +20,7 @@
  *	@category		cmFrameworks
  *	@package		Hydrogen.Environment.Resource.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Christian Würker
+ *	@copyright		2010-2025 Christian Würker
  *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
@@ -34,7 +34,7 @@ use CeusMedia\HydrogenFramework\Environment;
  *	@category		cmFrameworks
  *	@package		Hydrogen.Environment.Resource.Server
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2012 Christian Würker
+ *	@copyright		2010-2025 Christian Würker
  *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 class Resource_JSON_Client

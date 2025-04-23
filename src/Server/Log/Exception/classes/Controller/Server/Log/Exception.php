@@ -4,7 +4,7 @@
  *	@category		CeusMedia.Hydrogen.Module
  *	@package		Server.Log.Exception
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media {@link https://ceusmedia.de/}
+ *	@copyright		2010-2025 Ceus Media {@link https://ceusmedia.de/}
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Controller;
  *	@category		CeusMedia.Hydrogen.Module
  *	@package		Server.Log.Exception
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media {@link https://ceusmedia.de/}
+ *	@copyright		2010-2025 Ceus Media {@link https://ceusmedia.de/}
  */
 class Controller_Server_Log_Exception extends Controller
 {

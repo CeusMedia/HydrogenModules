@@ -5,7 +5,7 @@
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2013-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Logic;
@@ -17,7 +17,7 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
  *	@category		...
  *	@package		...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2013-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2013-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Logic_Page extends Logic
 {

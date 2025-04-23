@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View;
  *	@category		cmApps
  *	@package		Chat.Admin.View
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 class View_Auth_Oauth2 extends View
 {

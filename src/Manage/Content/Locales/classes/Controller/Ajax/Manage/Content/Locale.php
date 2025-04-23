@@ -4,7 +4,7 @@
  *	@category		cmApps
  *	@package		Chat.Admin.Controller
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2011-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2011-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\FS\File\Editor as FileEditor;

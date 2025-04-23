@@ -6,7 +6,7 @@ use CeusMedia\HydrogenFramework\View;
 /**
  *	Authentication View.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 class View_Auth_Local extends View
 {

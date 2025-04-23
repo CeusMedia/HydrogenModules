@@ -2,7 +2,7 @@
 /**
  *	Model for storing folders for downloadable files.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2014-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Model;
@@ -10,7 +10,7 @@ use CeusMedia\HydrogenFramework\Model;
 /**
  *	Model for storing folders for downloadable files.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2014-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Model_Download_Folder extends Model
 {
