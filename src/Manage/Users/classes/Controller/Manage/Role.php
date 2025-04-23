@@ -4,7 +4,7 @@
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
@@ -21,7 +21,7 @@ use Resource_Disclosure as Disclosure;
  *	@category		cmFrameworks.Hydrogen.Module
  *	@package		Manage_Users.Controller.Manage
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 class Controller_Manage_Role extends Controller
 {

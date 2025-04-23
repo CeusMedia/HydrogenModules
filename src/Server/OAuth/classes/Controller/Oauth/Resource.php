@@ -2,7 +2,7 @@
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2014-2025 Ceus Media (https://ceusmedia.de/)
  */
 
 use CeusMedia\HydrogenFramework\Controller;
@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /**
  *	...
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2014-2024 Ceus Media (https://ceusmedia.de/)
+ *	@copyright		2014-2025 Ceus Media (https://ceusmedia.de/)
  *	@todo			finish implementation
  *	@todo			code doc
  */

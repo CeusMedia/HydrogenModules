@@ -3,7 +3,7 @@
 /**
  *	Setup for access control list using a Database.
  *
- *	Copyright (c) 2010-2024 Christian Würker (ceusmedia.de)
+ *	Copyright (c) 2010-2025 Christian Würker (ceusmedia.de)
  *
  *	This program is free software: you can redistribute it and/or modify
  *	it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
  *	along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Christian Würker (ceusmedia.de)
+ *	@copyright		2010-2025 Christian Würker (ceusmedia.de)
  *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 
@@ -29,7 +29,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Acl\Abstraction;
  *	Setup for access control list using a Database.
  *
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
- *	@copyright		2010-2024 Christian Würker (ceusmedia.de)
+ *	@copyright		2010-2025 Christian Würker (ceusmedia.de)
  *	@license		https://www.gnu.org/licenses/gpl-3.0.txt GPL 3
  */
 class Resource_Acl_Authentication extends Abstraction
