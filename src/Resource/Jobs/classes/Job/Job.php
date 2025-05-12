@@ -69,10 +69,16 @@ class Job_Job extends Job_Abstract
 //		if( $mode )
 //			$conditions['mode']	= $mode;
 //		$this->out( 'List of available jobs:' );
+		$results		= [];
 		$availableJobs	= $this->logic->getDefinitions( $conditions, ['identifier' => 'ASC'] );
 		foreach( $availableJobs as $availableJob )
-			$this->results[$availableJob->jobDefinitionId]	= $availableJob->identifier;
-		$this->out( join( PHP_EOL, $this->results ) );
+			$results[$availableJob->jobDefinitionId]	= $availableJob->identifier;
+		$this->out( join( PHP_EOL, $results ) );
+		$this->setResult(
+			Entity_Job_Result::STATUS_SUCCESS,
+			count( $results ),
+			$results,
+		);
 		return 1;
 	}
 
@@ -142,10 +148,11 @@ class Job_Job extends Job_Abstract
 	{
 		$list	= $this->logic->terminateDiscontinuedJobRuns( 'Cleanup on next job run' );
 
-		$this->results	= [
-			'count'		=> count( $list ),
-			'runs'		=> array_values( $list ),
-		];
+		$this->setResult(
+			Entity_Job_Result::STATUS_SUCCESS,
+			count( $list ),
+			array_values( $list ),
+		);
 		$this->log( json_encode( array_merge( [
 			'timestamp' => time(),
 			'datetime'  => date( "Y-m-d H:i:s" ),

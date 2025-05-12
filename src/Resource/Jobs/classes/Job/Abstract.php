@@ -29,7 +29,7 @@ class Job_Abstract
 	protected ?string $versionModule	= NULL;
 	protected ?ProgressOutput $progress	= NULL;
 
-	protected array $results;
+	protected Entity_Job_Result|array $results	= [];
 
 	/**
 	 *	Constructor.
@@ -52,12 +52,27 @@ class Job_Abstract
 	/**
 	 *	...
 	 *	@access		public
-	 *	@return		array
+	 *	@return		Entity_Job_Result|array
 	 *	@todo		Refactor results array to list of result entities
 	 */
-	public function getResults(): array
+	public function getResults(): Entity_Job_Result|array
 	{
 		return $this->results;
+	}
+
+	/**
+	 *	@param		int		$status
+	 *	@param		int		$count
+	 *	@param		object|array|NULL $data
+	 *	@return		void
+	 */
+	protected function setResult( int $status, int $count, object|array $data = NULL ): void
+	{
+		$this->results	= Entity_Job_Result::fromArray( [
+			'status'	=> $status,
+			'count'		=> $count,
+			'data'		=> $data
+		] );
 	}
 
 	/**

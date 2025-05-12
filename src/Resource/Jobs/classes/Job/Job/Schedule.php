@@ -78,7 +78,7 @@ class Job_Job_Schedule extends Job_Abstract
 			}
 			$database->commit();
 		}
-		$this->results	= ['count' => $nrJobs];
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, $nrJobs );
 		$this->out( sprintf( 'Archived %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
 	}
@@ -148,7 +148,7 @@ class Job_Job_Schedule extends Job_Abstract
 			}
 			$database->commit();
 		}
-		$this->results	= ['count' => $nrJobs];
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, $nrJobs );
 		$this->out( sprintf( 'Removed %d job runs.', $nrJobs ) );
 		return $nrJobs ? 2 : 1;
 	}
@@ -191,11 +191,15 @@ class Job_Job_Schedule extends Job_Abstract
 			catch( Exception ){
 			}
 		}
-		$this->results	= [
+		$status	= Entity_Job_Result::STATUS_SUCCESS;
+		if( $numberDone !== $numberFound )
+			$status	= Entity_Job_Result::STATUS_PARTIAL;
+
+		$this->setResult( $status, $numberDone, [
 			'numberFound'	=> $numberFound,
 			'numberRan'		=> $numberRan,
 			'numberDone'	=> $numberDone,
-		];
+		] );
 		return 1;
 	}
 
