@@ -46,10 +46,10 @@ class Job_Mail_Queue extends Job_Abstract
 		if( $this->dryMode ){
 			$this->out( 'DRY RUN - no changes will be made.' );
 			$this->out( 'Would send '.$count.' mails.' );
-			$this->results	= [
+			$this->setResult( Entity_Job_Result::STATUS_SUCCESS, 0, [
 				'mode'		=> 'dry',
-				'count'		=> $count,
-			];
+				'would'		=> $count,
+			] );
 			return;
 		}
 		while( $count && $counter < $count && ( !$limit || $counter < $limit ) ){
@@ -69,16 +69,24 @@ class Job_Mail_Queue extends Job_Abstract
 				}
 			}
 		}
-		$this->results	= [				//  save job results
+		$status	= Entity_Job_Result::STATUS_SUCCESS;
+		if( 0 !== count( $listFailed ) ){
+			$status	= Entity_Job_Result::STATUS_PARTIAL;
+			if( 0 === count( $listSent ) )
+				$status	= Entity_Job_Result::STATUS_FAILURE;
+		}
+		$resultData	= [
 			'count'		=> $count,
+			'limit'		=> $limit,
 			'failed'	=> count( $listFailed ),
 			'sent'		=> count( $listSent ),
 			'ids'		=> $listSent,
 		];
+		$this->setResult( $status, count( $listSent ), $resultData );				//  save job results
 		$this->log( json_encode( array_merge( [
 			'timestamp'	=> time(),
 			'datetime'	=> date( "Y-m-d H:i:s" ),
-		], $this->results ) ) );
+		], $resultData ) ) );
 	}
 
 	/**
