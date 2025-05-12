@@ -3,7 +3,7 @@
 	<title>Resource: Newsletter</title>
 	<description><![CDATA[Let customers register for newsletter mails.]]></description>
 	<category>Resource</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -27,6 +27,7 @@
 	<log version="0.4.9">Improve code style.</log>
 	<log version="0.5">Import from protected SVN repository.</log>
 	<log version="0.5.1">Add theme entity.</log>
+	<log version="0.5.2">Add config for themes path.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -49,6 +50,7 @@
 	</files>
 	<config access="protected" type="boolean" name="premailer.html" title="Use Premailer API to work on mail HTML content">no</config>
 	<config access="protected" type="boolean" name="premailer.plain" title="Use Premailer API to generate mail plain content from HTML content">no</config>
+	<config access="protected" type="string" name="path.themes" title="folder for newsletter themes (may be absolute)">contents/newsletter-themes/</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
