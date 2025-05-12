@@ -110,4 +110,64 @@ DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
 DROP TABLE IF EXISTS `<%?prefix%>ip_lock_filters`;
 DROP TABLE IF EXISTS `<%?prefix%>ip_lock_reasons`;
 ]]></sql>
+	<sql on="install" type="mysql" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>ip_locks`;
+CREATE TABLE `<%?prefix%>ip_locks` (
+  `ipLockId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `filterId` int(11) DEFAULT 0,
+  `reasonId` smallint(5) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `IP` varchar(40) NOT NULL,
+  `uri` varchar(255) NOT NULL,
+  `views` int(10) unsigned DEFAULT 0,
+  `lockedAt` decimal(12,0) unsigned NOT NULL,
+  `visitedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `unlockedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ipLockId`),
+  KEY `reasonId` (`reasonId`),
+  KEY `status` (`status`),
+  KEY `IP` (`IP`),
+  KEY `lockedAt` (`lockedAt`),
+  KEY `filterId` (`filterId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_filters`;
+CREATE TABLE `<%?prefix%>ip_lock_filters` (
+	`ipLockFilterId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+	`reasonId` smallint(5) unsigned NOT NULL,
+	`status` tinyint(4) NOT NULL,
+	`lockStatus` tinyint(4) NOT NULL,
+	`method` varchar(10) DEFAULT NULL,
+	`pattern` varchar(100) NOT NULL,
+	`title` varchar(100) NOT NULL,
+	`createdAt` decimal(12,0) unsigned NOT NULL,
+	`appliedAt` decimal(12,0) unsigned DEFAULT NULL,
+	`modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+	PRIMARY KEY (`ipLockFilterId`),
+	KEY `reasonId` (`reasonId`),
+	KEY `status` (`status`),
+	KEY `lockStatus` (`lockStatus`),
+	KEY `method` (`method`),
+	KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>ip_lock_reasons`;
+CREATE TABLE `<%?prefix%>ip_lock_reasons` (
+  `ipLockReasonId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `status` tinyint(1) NOT NULL,
+  `code` decimal(3,0) unsigned DEFAULT 423,
+  `duration` decimal(6,0) unsigned DEFAULT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `appliedAt` decimal(12,0) unsigned DEFAULT NULL,
+  PRIMARY KEY (`ipLockReasonId`),
+  KEY `status` (`status`),
+  KEY `duration` (`duration`),
+  KEY `createdAt` (`createdAt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 </module>
+
+
+

@@ -88,7 +88,18 @@ class Job_EventQueue extends Job_Abstract
 			}
 			$this->model->edit( $event->eventId, $data );
 		}
-		$this->results	= $results;
+
+		$status	= Entity_Job_Result::STATUS_SUCCESS;
+		if( 0 !== $results->nrIgnored || 0 !== $results->nrFailed ){
+			$status	= Entity_Job_Result::STATUS_PARTIAL;
+			if( 0 !== $results->failed && 0 === $results->nrSucceeded )
+				$status	= Entity_Job_Result::STATUS_FAILURE;
+		}
+		$this->setResult(
+			$status,
+			$results->nrSucceeded,
+			$results,
+		);
 	}
 
 	/**

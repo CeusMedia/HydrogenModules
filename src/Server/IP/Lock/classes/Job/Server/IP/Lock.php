@@ -15,11 +15,10 @@ class Job_Server_IP_Lock extends Job_Abstract
 	{
 		$nr1	= $this->unlockOverdueLocks();
 		$nr2	= $this->unlockDisabledReasonLocks();
-		$this->results	= [
-			'total'						=> $nr1 + $nr2,
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, $nr1 + $nr2, [
 			'unlockOverdueLocks'		=> $nr1,
 			'unlockDisabledReasonLocks'	=> $nr2,
-		];
+		] );
 	}
 
 	/**
@@ -37,9 +36,7 @@ class Job_Server_IP_Lock extends Job_Abstract
 		] );
 		foreach( $locks as $lock )
 			$this->logic->remove( $lock );
-		$this->results	= [
-			'total'	=> count( $locks )
-		];
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, count( $locks ) );
 	}
 	protected function __onInit(): void
 	{
