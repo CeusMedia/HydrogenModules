@@ -397,7 +397,7 @@ class Logic_Job extends Logic
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function quitJobRun( int|string $jobRunId, int $status, array $messageData = [] ): bool
+	public function quitJobRun( int|string $jobRunId, int $status, Entity_Job_Result|array $messageData = [] ): bool
 	{
 		/** @var ?Entity_Job_Run $jobRun */
 		$jobRun	= $this->modelRun->get( $jobRunId );

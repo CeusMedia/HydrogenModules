@@ -16,14 +16,18 @@ class Job_Job_Lock extends Job_Abstract
 		foreach( $this->getLockedJobs() as $runningJob ){
 			$messageData	= $reason ? ['reason' => $reason] : [];
 			$this->logic->quitJobRun( (int) $runningJob->jobRunId, Model_Job_Run::STATUS_TERMINATED, $messageData );
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'jobRunId'			=> $runningJob->jobRunId,
 				'jobDefinitionId'	=> $runningJob->jobDefinitionId,
 				'jobScheduleId'		=> $runningJob->jobScheduleId,
 				'jobDefinition'		=> $this->logic->getDefinition( $runningJob->jobDefinitionId ),
-			);
+			];
 		}
-		$this->results	= $list;
+		$this->setResult(
+			Entity_Job_Result::STATUS_SUCCESS,
+			count( $list ),
+			$list,
+		);
 		$this->out( 'Removed '.count( $list ).' locks'.( $list ? ':' : '.' ) );
 		foreach( $list as $item )
 			$this->out( ' - '.$item->jobDefinition->identifier.' (Run ID: '.$item->jobRunId.')' );
@@ -34,14 +38,19 @@ class Job_Job_Lock extends Job_Abstract
 	{
 		$list	= [];
 		foreach( $this->getLockedJobs() as $runningJob ){
-			$list[]	= (object) array(
+			$list[]	= (object) [
 				'jobRunId'			=> $runningJob->jobRunId,
 				'jobDefinitionId'	=> $runningJob->jobDefinitionId,
 				'jobScheduleId'		=> $runningJob->jobScheduleId,
 				'jobDefinition'		=> $this->logic->getDefinition( $runningJob->jobDefinitionId ),
-			);
+			];
 		}
-		$this->results	= $list;
+		$this->setResult(
+			Entity_Job_Result::STATUS_SUCCESS,
+			count( $list ),
+			$list,
+		);
+
 		$this->out( 'Found '.count( $list ).' locks'.( $list ? ':' : '.' ) );
 		foreach( $list as $item )
 			$this->out( ' - '.$item->jobDefinition->identifier.' (Run ID: '.$item->jobRunId.')' );

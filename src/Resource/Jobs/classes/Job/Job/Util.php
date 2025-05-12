@@ -33,10 +33,12 @@ class Job_Job_Util extends Job_Abstract
 				$this->out( 'Removing milliseconds for PHP < 7.' );
 			$format	= preg_replace( '/\.v/', '', $format );
 		}
-		$this->results	= date_create()->format( $format );						//  @todo replace by line below after framework update
-//		$this->results	= $this->env->date->now->format( $format );
-		$this->out( $this->results );
-		return $this->results;
+		$result	= date_create()->format( $format );						//  @todo replace by line below after framework update
+//		$result	= $this->env->date->now->format( $format );
+
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, 0 );
+		$this->out( $result );
+		return $result;
 	}
 
 	public function getExtensionVersion(): void
@@ -53,14 +55,14 @@ class Job_Job_Util extends Job_Abstract
 		}
 	}
 
-	public function getPhpVersion()
+	public function getPhpVersion(): void
 	{
 		$phpVersion		= phpversion();
-		$this->results	= (object) [
+		$this->setResult( Entity_Job_Result::STATUS_SUCCESS, 0, [
 			'full'	=> $phpVersion,
 			'short'	=> $this->shortenVersion( $phpVersion ),
-		];
-		$this->out( $this->results->short );
+		] );
+		$this->out( $this->shortenVersion( $phpVersion ) );
 	}
 
 	protected function shortenVersion( string $version ): string
