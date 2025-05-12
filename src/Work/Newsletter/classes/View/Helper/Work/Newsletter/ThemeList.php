@@ -1,6 +1,7 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -18,8 +19,7 @@ class View_Helper_Work_Newsletter_ThemeList
 	{
 		$this->env	= $env;
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.themes.', TRUE );
-		$this->themePath	= $this->moduleConfig->get( 'path' );
-		$this->themePath	= 'contents/themes/';
+		$this->themePath	= 'contents/newsletter-themes/';
 	}
 
 	/**
@@ -29,9 +29,8 @@ class View_Helper_Work_Newsletter_ThemeList
 	public function render(): string
 	{
 		$list	= [];
-		foreach( $this->themes as $theme ){
+		foreach( $this->themes as $theme )
 			$list[]	= $this->renderItem( $theme );
-		}
 		return HtmlTag::create( 'ul', join( $list ), ['class' => 'thumbnails'] );
 	}
 
@@ -61,11 +60,12 @@ class View_Helper_Work_Newsletter_ThemeList
 
 	protected function renderItem( $theme ): string
 	{
+		$base64	= base64_encode( FileReader::load( $this->themePath.$theme->folder.'/template.png' ) );
 		return '<li style="width: 250px; display: inline-block; text-align: center;">
 	<div class="thumbnail" style="background-color: white">
-		<a href="'.$this->themePath.$theme->folder.'/template.png" class="fancybox-auto">
+		<a href="data:image/jpeg;base64,'.$base64.'" class="fancybox-auto">
 			'.HtmlTag::create( 'img', NULL, [
-				'src'	=> $this->themePath.$theme->folder.'/template.png',
+				'src'	=> 'data:image/jpeg;base64,'.$base64,
 				'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
 				'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
 			], ['class' => 'img-polaroid'] ).'

@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\HTTP\PartitionSession;
@@ -25,6 +25,8 @@ class Controller_Work_Newsletter_Template extends Controller
 	protected PartitionSession $session;
 
 	protected ?Logic_Limiter $limiter		= NULL;
+
+	protected Model_Newsletter_Theme $modelTheme;
 
 	/**
 	 *	@return		void
@@ -165,8 +167,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->has( 'save' ) ){
-			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
-			$model->createFromTemplate( $templateId, $this->request->getAll() );
+			$this->modelTheme->createFromTemplate( $templateId, $this->request->getAll() );
 			$this->messenger->noteSuccess( $words->msgSuccess );
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
@@ -181,9 +182,7 @@ class Controller_Work_Newsletter_Template extends Controller
 		$conditions		= [];
 		$orders			= ['title' => 'ASC'];
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
-
-		$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
-		$this->addData( 'themes', $model->getAll() );
+		$this->addData( 'themes', $this->modelTheme->getAll() );
 	}
 
 	/**
@@ -193,8 +192,8 @@ class Controller_Work_Newsletter_Template extends Controller
 	 */
 	public function installTheme( string $themeId ): void
 	{
-		$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
-		$theme	= $model->getFromId( $themeId );
+		$theme		= $this->modelTheme->getFromId( $themeId );
+		$pathThemes	= $this->logic->getNewsletterThemesPath();
 		if( NULL === $theme ){
 			$this->messenger->noteError( 'Invalid theme ID' );
 			$this->restart( NULL, TRUE );
@@ -222,9 +221,9 @@ class Controller_Work_Newsletter_Template extends Controller
 			'imprint'		=> $imprint,
 			'createdAt'		=> strtotime( $theme->created ),
 			'modifiedAt'	=> strtotime( $theme->modified ),
-			'html'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.html' ),
-			'plain'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.txt' ),
-			'style'			=> FileReader::load( 'contents/themes/'.$theme->folder.'/template.css' ),
+			'html'			=> FileReader::load( $pathThemes.$theme->folder.'/template.html' ),
+			'plain'			=> FileReader::load( $pathThemes.$theme->folder.'/template.txt' ),
+			'style'			=> FileReader::load( $pathThemes.$theme->folder.'/template.css' ),
 		];
 		$templateId	= $this->logic->addTemplate( $data );
 		if( isset( $theme->styles ) && is_array( $theme->styles ) )
@@ -291,9 +290,8 @@ class Controller_Work_Newsletter_Template extends Controller
 	public function previewTheme( string $themeId ): void
 	{
 		try{
-			$path	= 'contents/themes/';
-			$model	= new Model_Newsletter_Theme( $this->env, $path );
-			$theme	= $model->get( $themeId );
+			$path	= $this->logic->getNewsletterThemesPath();
+			$theme	= $this->modelTheme->get( $themeId );
 
 			$css	= FileReader::load( $path.$theme->id.'/template.css' );
 			$html	= FileReader::load( $path.$theme->id.'/template.html' );
@@ -358,9 +356,8 @@ class Controller_Work_Newsletter_Template extends Controller
 	public function viewTheme( string $themeId ): void
 	{
 		try{
-			$model	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
-			$this->addData( 'theme', $model->getFromId( $themeId ) );
-			$this->addData( 'themePath', 'contents/themes/' );
+			$this->addData( 'theme', $this->modelTheme->getFromId( $themeId ) );
+			$this->addData( 'themePath', $this->logic->getNewsletterThemesPath() );
 		}
 		catch( Exception ){
 			$this->messenger->noteError( 'Invalid theme ID' );
@@ -374,11 +371,13 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->modelTheme	= new Model_Newsletter_Theme( $this->env, $this->logic->getNewsletterThemesPath() );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'tabbedLinks', $this->moduleConfig->get( 'tabbedLinks' ) );
 		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
+		$this->addData( 'pathNewsletterThemes', $this->logic->getNewsletterThemesPath() );
 	}
 }
