@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection;
 use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 
 /**
  *	@todo	extend \CeusMedia\HydrogenFramework\Logic instead
@@ -9,6 +10,8 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
  */
 class Logic_Newsletter extends Logic
 {
+	public static string $defaultPath				= 'contents/newsletter-themes/';
+
 	/**	@var		Model_Newsletter_Group			$modelGroup */
 	protected Model_Newsletter_Group $modelGroup;
 
@@ -312,6 +315,53 @@ class Logic_Newsletter extends Logic
 	}
 
 	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
+	 */
+	public function getNewsletters( array $conditions = [], array $orders = [], array $limits = [] ): array
+	{
+		$list	= [];
+		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
+			$list[$newsletter->newsletterId]	= $newsletter;
+		return $list;
+	}
+
+	/**
+	 *	Returns absolute path to newsletter themes.
+	 *	Configured by 'path.themes'.
+	 *	Will prefix with environment base uri, if not configured absolutely.
+	 *	Supports frontend resource.
+	 *	Hint: This method is a core method.
+	 *  - Used for every instance of Model_Newsletter_Template.
+	 *	- Allows absolute path definition for custom setups.
+	 *	- Appends trailing slash if needed.
+	 *
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
+	public function getNewsletterThemesPath(): string
+	{
+		$configKey			= 'path.themes';
+		$moduleConfigKey	= 'module.resource_newsletter.'.$configKey;
+
+		/** @var ?ModuleDefinition $module */
+		$module	= $this->env->getModules()->get( 'Resource_Frontend', TRUE, FALSE );
+		if( NULL !== $module && ( './' !== $module->getConfigAsDictionary()->get( 'path' ) ) ){
+			$frontend	= Logic_Frontend::getInstance( $this->env );
+			$path		= $frontend->getModuleConfigValue( 'Resource_Newsletter', $configKey );
+			$path		??= self::$defaultPath;
+			$path		.= !str_ends_with( $path, '/' ) ? '/' : '';									//  ensure trailing slash
+			return !str_starts_with( $path, '/' ) ? $frontend->getUri().$path : $path;				//  prepend with remote app environment base uri if path is releative
+		}
+
+		$path	= $this->env->getConfig()->get( $moduleConfigKey, self::$defaultPath );				//  get path from module config or default path
+		$path	.= !str_ends_with( $path, '/' ) ? '/' : '';											//  ensure trailing slash
+		return !str_starts_with( $path, '/' ) ? $this->env->uri.$path : $path;						//  prepend with app environment base uri if path is releative
+	}
+
+	/**
 	 *	@param		int|string		$queueId
 	 *	@param		bool			$extended
 	 *	@return		object|NULL
@@ -336,20 +386,6 @@ class Logic_Newsletter extends Logic
 			}*/
 		}
 		return $queue;
-	}
-
-	/**
-	 *	@param		array		$conditions
-	 *	@param		array		$orders
-	 *	@param		array		$limits
-	 *	@return		array
-	 */
-	public function getNewsletters( array $conditions = [], array $orders = [], array $limits = [] ): array
-	{
-		$list	= [];
-		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
-			$list[$newsletter->newsletterId]	= $newsletter;
-		return $list;
 	}
 
 	/**
@@ -504,8 +540,8 @@ class Logic_Newsletter extends Logic
 	 */
 	public function getTemplates( array $conditions = [], array $orders = [] ): array
 	{
-		$list		= [];
-		$modelTheme	= new Model_Newsletter_Theme( $this->env, 'contents/themes/' );
+		$list	= [];
+		$modelTheme	= new Model_Newsletter_Theme( $this->env, $this->getNewsletterThemesPath() );
 		foreach( $this->modelTemplate->getAll( $conditions, $orders ) as $template ){
 			if( $template->themeId )
 				$template->theme	= $modelTheme->getFromId( $template->themeId );
@@ -600,6 +636,10 @@ class Logic_Newsletter extends Logic
 		return $this->modelReaderLetter->edit( $readerLetterId, ['mailId' => $mailId] );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelGroup			= new Model_Newsletter_Group( $this->env );
