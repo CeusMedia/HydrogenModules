@@ -24,7 +24,7 @@ if( $useNewsletter ){
 				'name'		=> 'topics[]',
 				'value'		=> $topic->newsletterGroupId,
 				'checked'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'checked' : NULL,
-				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
+//				'disabled'	=> $topic->type == Model_Newsletter_Group::TYPE_AUTOMATIC ? 'disabled' : NULL,
 			] );
 			$label		= HtmlTag::create( 'label', $checkbox.'&nbsp;'.$topic->title, ['class' => 'checkbox'] );
 			$list[]		= HtmlTag::create( 'li', $label );
