@@ -430,36 +430,29 @@ class Logic_Mail extends Logic
 		if( empty( $receiver->email ) )
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
-		$incompleteMailDataObject	= Entity_Mail::fromArray( [
-			'receiverAddress'	=> $receiver->email,
+		$mailDataObject		= Entity_Mail::fromArray( [
+			'templateId'		=> $mail->getTemplateId(),
+			'senderId'			=> (int) $senderId,
 			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
+			'receiverId'		=> $receiver->userId ?? 0,
+			'receiverAddress'	=> $receiver->email,
+			'receiverName'		=> $receiver->username ?? NULL,
+			'language'			=> strtolower( trim( $language ) ),
+			'subject'			=> $mail->getSubject(),
+			'mailClass'			=> get_class( $mail ),
 			'compression'		=> $this->getRecommendedCompression(),
 			'object'			=> NULL,
 			'objectInstance'	=> $mail,
 			'raw'				=> NULL,
-		] );
-
-		$this->compressMailObject( $incompleteMailDataObject );
-		$this->regenerateRaw( $incompleteMailDataObject );
-
-		$data		= [
-			'templateId'		=> $mail->getTemplateId(),
-			'language'			=> strtolower( trim( $language ) ),
-			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $incompleteMailDataObject->senderAddress,
-			'receiverId'		=> $receiver->userId ?? 0,
-			'receiverAddress'	=> $receiver->email,
-			'receiverName'		=> $receiver->username ?? NULL,
-			'subject'			=> $mail->getSubject(),
-			'mailClass'			=> get_class( $mail ),
-			'compression'		=> $incompleteMailDataObject->compression,
-			'object'			=> $incompleteMailDataObject->object,
-			'raw'				=> $incompleteMailDataObject->raw,
 			'enqueuedAt'		=> time(),
 			'attemptedAt'		=> 0,
 			'sentAt'			=> 0,
-		];
-		return $this->modelQueue->add( $data, FALSE );
+		] );
+
+		$this->compressMailObject( $mailDataObject );
+		$this->regenerateRaw( $mailDataObject );
+
+		return $this->modelQueue->add( $mailDataObject, FALSE );
 	}
 
 	/**
