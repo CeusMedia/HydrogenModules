@@ -2,6 +2,7 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var View_Info_Contact $view */
 /** @var array $words */
 
 $w		= (object) $words['index'];
@@ -10,7 +11,7 @@ $iconSave	= '<i class="icon-envelope icon-white"></i>';
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
 	$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
 
-extract( $this->populateTexts( ['before', 'after', 'top', 'right', 'bottom', 'privacy'], 'html/info/contact/' ) );
+extract( $view->populateTexts( ['before', 'after', 'top', 'right', 'bottom', 'privacy'], 'html/info/contact/' ) );
 
 $newsletter    = '';
 if( $useNewsletter ){
