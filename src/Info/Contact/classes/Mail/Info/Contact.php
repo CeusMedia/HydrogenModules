@@ -26,7 +26,7 @@ class Mail_Info_Contact extends Mail_Abstract
 
 		$salutations		= array_values( $words['mailSalutations'] );
 		$salutation			= $salutations[array_rand($salutations)];
-		$valueNewsletter	= $words['newsletter-answers'][(int) !empty( $do->newsletter )];
+		$valueNewsletter	= $words['newsletter-answers'][(int) !empty( $do->newsletter )] ?? '-';
 
 		$this->setHtml( $this->loadContentFile( 'mail/info/contact.html', [
 			'salutation'	=> $salutation,
