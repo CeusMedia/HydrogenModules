@@ -68,21 +68,20 @@ class Controller_Info_Newsletter extends Controller
 	}*/
 
 	/**
-	 *	@param		$arg1
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( $arg1 = NULL ): void
+	public function register(): void
 	{
-		$words		= (object) $this->getWords( 'index' );
-		if( $this->request->has( 'save' ) ){
+		$words		= (object) $this->getWords( 'register' );
+		if( $this->env->getRequest()->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$language			= $this->env->getLanguage()->getLanguage();
 			$readersFoundByMail	= $this->logic->getReaders( [
-				'email'		=> trim( $this->request->get( 'email' ) ),
+				'email'		=> trim( $this->request->get( 'email', '' ) ),
 				'status'	=> [0, 1],
 			] );
-			if( !strlen( trim( $this->request->get( 'email' ) ) ) )
+			if( !strlen( trim( $this->request->get( 'email', '' ) ) ) )
 				$this->messenger->noteError( $words->msgErrorNoEmail );
 			else if( !strlen( trim( $this->request->get( 'firstname' ) ) ) )
 				$this->messenger->noteError( $words->msgErrorNoFirstname );
@@ -93,7 +92,7 @@ class Controller_Info_Newsletter extends Controller
 			else {
 				$data					= $this->request->getAll();
 				$data['language']		= $language;
-				$data['status']			= 0;
+				$data['status']			= Model_Newsletter_Reader::STATUS_REGISTERED;
 				$data['registeredAt']	= time();
 				$readerId	= $this->logic->addReader( $data );
 				$reader		= $this->logic->getReader( $readerId );
@@ -124,6 +123,18 @@ class Controller_Info_Newsletter extends Controller
 				$this->restart( NULL, TRUE );
 			}
 		}
+		$this->restart( NULL, TRUE );
+	}
+
+	/**
+	 *	@param		$arg1
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( $arg1 = NULL ): void
+	{
+		$words		= (object) $this->getWords( 'index' );
 		$this->addData( 'data', $this->request->getAll( '', TRUE ) );
 
 		$requestedGroups	= $this->request->get( 'groups' );

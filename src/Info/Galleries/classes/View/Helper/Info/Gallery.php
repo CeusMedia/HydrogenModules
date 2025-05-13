@@ -3,7 +3,6 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
-use CeusMedia\HydrogenFramework\View;
 use CeusMedia\HydrogenFramework\View\Helper\Abstraction;
 
 class View_Helper_Info_Gallery extends Abstraction
@@ -43,17 +42,17 @@ class View_Helper_Info_Gallery extends Abstraction
 
 	/**
 	 *	@param		WebEnvironment		$env
-	 *	@param		View				$view
+	 *	@param		object				$context
 	 *	@param		object				$gallery
 	 *	@return		string
 	 *	@throws		ReflectionException
 	 */
-	public static function renderGalleryDescription( WebEnvironment $env, View $view, object $gallery ): string
+	public static function renderGalleryDescription( WebEnvironment $env, object $context, object $gallery ): string
 	{
 		$content	= '';
 		if( trim( $gallery->description ) ){
 			$content	= trim( $gallery->description );
-			$content	= View_Info_Gallery::renderContentStatic( $env, $view, $content );
+			$content	= View_Info_Gallery::renderContentStatic( $env, $context, $content );
 			$content	= HtmlTag::create( 'p', $content );
 		}
 		return $content;

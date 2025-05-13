@@ -83,38 +83,48 @@ class Controller_Info_Contact extends Controller
 	}
 
 	/**
+	 *	@param		string		$fullName
+	 *	@param		string		$email
+	 *	@param		array		$newsletterGroupIds
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\CeusMedia\HydrogenFramework\Environment\Exception
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyNewsletterForwardingIfEnabled(): void
+	protected function applyNewsletterForwardingIfEnabled( string $fullName, string $email, array $newsletterGroupIds ): void
 	{
-		if( $this->useNewsletter && $this->request->has( 'newsletter' ) ){
-			if( $this->env->getModules()->has( 'Resource_Newsletter' ) ){
-				$path	= 'info/newsletter';
-				if( $this->env->getModules()->has( 'Info_Pages' ) ){
-					$logicPage	= Logic_Page::getInstance( $this->env );
-					/** @var ?Entity_Page $page */
-					$page	= $logicPage->getPageFromControllerAction( 'Info_Newsletter', 'index', FALSE );
-					if( NULL === $page )
-						/** @var ?Entity_Page $page */
-						$page	= $logicPage->getPageFromController( 'Info_Newsletter', FALSE );
-					if( NULL !== $page )
-						$path	= $page->fullpath;
-				}
-				$fullname	= trim( $this->request->get( 'fullname' ) );
-				$parts		= preg_split( '/\s+/', $fullname.' ', 2 );
-				$path		= $path.'?'.http_build_query( [
-						'fullname'		=> $fullname,
-						'firstname'		=> trim( $parts[0] ),
-						'surname'		=> trim( $parts[1] ),
-						'email'			=> $this->request->get( 'email' ),
-						'groups'		=> $this->request->get( 'topics' ),
-					], '', '&' );
-				$this->restart( $path );
-			}
-		}
+		if( !$this->useNewsletter )
+			return;
+		if( !$this->env->getModules()->has( 'Resource_Newsletter' ) )
+			return;
+
+		$logic		= new Logic_Newsletter( $this->env );
+		$parts		= preg_split( '/\s+/', $fullName.' ', 2 );
+		$readerId	= $logic->addReader( [
+			'status'		=> Model_Newsletter_Reader::STATUS_REGISTERED,
+			'email'			=> $email,
+//			'gender'		=> '',
+//			'prefix',
+			'firstname'		=> trim( $parts[0] ),
+			'surname'		=> trim( $parts[1] ),
+//			'institution',
+			'registeredAt'	=> time(),
+		] );
+		foreach( $newsletterGroupIds as $newsletterGroupId )
+			$logic->addReaderToGroup( $readerId, $newsletterGroupId );
+
+		$language	= $this->env->getLanguage()->getLanguage();
+		$reader		= $logic->getReader( $readerId );
+		$mail		= new Mail_Info_Newsletter_Register( $this->env, [
+			'readerId'		=> $readerId,
+			'reader'		=> $reader,
+		] );
+		$logicMail	= Logic_Mail::getInstance( $this->env );
+		$logicMail->appendRegisteredAttachments( $mail, $language );
+		$receiver	= (object) [
+			'username'	=> $reader->firstname.' '.$reader->surname,
+			'email'		=> $reader->email,
+		];
+		$logicMail->handleMail( $mail, $receiver, $language );
 	}
 
 	/**
@@ -184,9 +194,12 @@ class Controller_Info_Contact extends Controller
 			$logic->sendDefaultMail( $inputData );
 			$this->messenger->noteSuccess( $words['msgSuccess'] );
 
-			$this->applyNewsletterForwardingIfEnabled();
-
-			//	@todo handle newsletter registration
+			if( $this->request->has( 'newsletter' ) )
+				$this->applyNewsletterForwardingIfEnabled(
+					$this->request->get( 'fullname' ),
+					$this->request->get( 'email' ),
+					$this->request->get( 'topics' ),
+				);
 
 			return TRUE;
 		}
