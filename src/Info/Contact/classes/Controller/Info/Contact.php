@@ -198,7 +198,7 @@ class Controller_Info_Contact extends Controller
 				$this->applyNewsletterForwardingIfEnabled(
 					$this->request->get( 'fullname' ),
 					$this->request->get( 'email' ),
-					$this->request->get( 'topics' ),
+					$this->request->get( 'topics', [] ),
 				);
 
 			return TRUE;

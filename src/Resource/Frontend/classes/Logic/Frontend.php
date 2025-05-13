@@ -9,7 +9,6 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 use CeusMedia\HydrogenFramework\Logic;
-use OutOfBoundsException;
 
 /**
  *	@todo		remove singleton to have several frontend logics for different environments
