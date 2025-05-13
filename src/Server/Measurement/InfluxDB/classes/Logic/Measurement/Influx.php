@@ -29,13 +29,17 @@ class Logic_Measurement_Influx extends SharedLogic
 
 		$this->bucket	= $moduleConfig->get( 'bucket' );
 		$this->org		= $moduleConfig->get( 'org' );
+		$host			= $moduleConfig->get( 'host', 'localhost' );
+		$port			= $moduleConfig->get( 'port', '8086' );
+		$verifySsl		= $moduleConfig->get( 'verifySSL', TRUE );
+		$protocol		= match( (int) $port ){
+			443		=> 'https',
+			8086	=> 'http',
+		};
 		$connectionData	= [
-			'url'		=> vsprintf( '%s://%s:%s', [
-				'http',
-				$moduleConfig->get( 'host', 'localhost' ),
-				$moduleConfig->get( 'port', '8036' ),
-			] ),
+			'url'		=> vsprintf( '%s://%s:%s', [$protocol, $host, $port] ),
 			'token'		=> $moduleConfig->get( 'token', '' ),
+			'verifySSL'	=> $verifySsl,
 		];
 
 		$this->client	= new InfluxClient( $connectionData );
@@ -49,7 +53,8 @@ class Logic_Measurement_Influx extends SharedLogic
 
 		$line	= $measurement;
 		foreach( array_merge( $this->tags, $tags ) as $key => $value )
-			$line	.= ','.$key.'='.$value;
+			if( '' !== trim( (string) ( $value ?? '' ) ) )
+				$line	.= ','.$key.'='.$value;
 
 		$line	.= ' ';
 		$list	= [];
