@@ -60,7 +60,9 @@
         "bacon/bacon-qr-code": "^3.0",
         "php-imap/php-imap": "^4.0",
         "dragonmantank/cron-expression": "3.x-dev",
-        "amenadiel/jpgraph": "^4"
+        "amenadiel/jpgraph": "^4",
+        "influxdata/influxdb-client-php": "^3.0",
+        "guzzlehttp/guzzle": "*"
     },
     "suggest": {
         "ext-rrd": "*"
