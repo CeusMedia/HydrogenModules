@@ -65,7 +65,7 @@ $panelRegister = '
 <div class="content-panel content-panel-form">
 	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
-		<form name="" action="./info/newsletter" method="post" onsubmit="return checkNewsletterRegisterForm();">
+		<form name="" action="./info/newsletter/register" method="post" onsubmit="return checkNewsletterRegisterForm();">
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">
 					<label for="input_gender">'.$w->labelGender.'</label>

@@ -85,6 +85,7 @@ $(document).ready(function(){
 					$row[]		= $this->renderDay( $userId, $preDate, $orders, 'inactive' );
 				}
 			}
+			/** @var string $date */
 			while( $j < 7 ){
 				$day		= $i * 7 - $offsetStart + $j +1;
 				$showYear	= $year;

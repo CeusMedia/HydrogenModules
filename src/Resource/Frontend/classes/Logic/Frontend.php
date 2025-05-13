@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 use CeusMedia\HydrogenFramework\Logic;
+use OutOfBoundsException;
 
 /**
  *	@todo		remove singleton to have several frontend logics for different environments
@@ -117,7 +118,7 @@ class Logic_Frontend extends Logic
 			return $values[$key];
 		if( !$strict )
 			return NULL;
-		return OutOfBoundsException( 'Config key is invalid' );
+		return new OutOfBoundsException( 'Config key is invalid' );
 	}
 
 	/**

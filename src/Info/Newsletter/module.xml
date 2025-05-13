@@ -78,6 +78,7 @@ For sending mails you need to setup a cron job:
 	<link xml:lang="en" access="outside" path="info/newsletter/unregister">leave</link>
 	<link access="public" path="info/newsletter/confirm"></link>
 	<link access="public" path="info/newsletter/preview"></link>
+	<link access="public" path="info/newsletter/register"></link>
 	<link access="public" path="info/newsletter/track"></link>
 	<link access="public" path="info/newsletter/view"></link>
 	<relations>

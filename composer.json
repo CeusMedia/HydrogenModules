@@ -150,5 +150,10 @@
         "dev:rector-fix": "Apply currently configured Rector rules to codebase",
         "dev:test-syntax": "Validate code base syntax using PHP linter",
         "dev:update": "Updates project dependencies for Development stage"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
