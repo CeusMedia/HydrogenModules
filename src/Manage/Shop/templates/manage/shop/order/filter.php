@@ -1,11 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string,array<string|string>> $words */
+/** @var array<string,string|int> $filters */
+
 $w	= (object) $words['filter'];
 
 $filterCustomer	= !empty( $filters['customer'] ) ? $filters['customer'] : "";
 
-$optStatus	= array(/* '' => '- alle -' */);
+$optStatus	= [/* '' => '- alle -' */];
 foreach( $words['states'] as $key => $value )
 	$optStatus[$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, $filters['status'] );

@@ -11,8 +11,8 @@ use CeusMedia\HydrogenFramework\Model;
 /**
  *	Data Model of Customers.
  *	@category		Model
- *	@package		Hydrogen.Module.Shop
- *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
+ *	@package		Hydrogen.Module.Resource_Shop
+ *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Shop_CustomerOld extends Model
 {

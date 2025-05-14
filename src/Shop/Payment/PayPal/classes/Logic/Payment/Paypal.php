@@ -143,7 +143,7 @@ class Logic_Payment_PayPal
 		$language		= $this->env->getLanguage();
 		$titleCart		= $language->getWords( 'shop/payment/paypal' )['cart']['title'];
 		$titleApp		= $language->getWords( 'main' )['main']['title'];
-		$taxIncluded	= $this->env->getConfig()->get( 'module.shop.tax.included' );
+		$taxIncluded	= $this->env->getConfig()->get( 'module.resource_shop.tax.included' );
 
 		$logicShop		= new Logic_Shop( $this->env );
 		$logicBridge	= new Logic_ShopBridge( $this->env );

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <module>
 	<title>Manage: Shop</title>
-	<description><![CDATA[...]]></description>
+	<description><![CDATA[Management for shop orders.]]></description>
 	<category>Management</category>
-	<version>0.4.8</version>
+	<version>0.5</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added shipping.</log>
@@ -18,7 +18,7 @@
 	<log version="0.3.4">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.3.5">Apply CSS panels.</log>
 	<log version="0.3.6">Reworked dashboard view.</log>
-	<log version="0.3.7">Remove releation to Resource_Library_cmModules.</log>
+	<log version="0.3.7">Remove relation to Resource_Library_cmModules.</log>
 	<log version="0.3.8">Use shop bridge in order position list and report.</log>
 	<log version="0.3.9">Renamed shop logic to shop manager logic.</log>
 	<log version="0.4">Adjustment to shop model changes.</log>
@@ -30,6 +30,7 @@
 	<log version="0.4.6">Finish shipping panels.</log>
 	<log version="0.4.7">Extract shipping logic.</log>
 	<log version="0.4.8">Extract hooks.</log>
+	<log version="0.5">Use module Resource:Shop.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -45,15 +46,6 @@
 		<class>Hook/Manage/Shop/Shipping.php</class>
 		<class>Logic/ShopManager.php</class>
 		<class>Logic/Shop/Shipping.php</class>
-		<class>Model/Shop/Customer.php</class>
-		<class>Model/Shop/CustomerOld.php</class>
-		<class>Model/Shop/Order.php</class>
-		<class>Model/Shop/Order/Position.php</class>
-		<class>Model/Shop/Shipping/Country.php</class>
-		<class>Model/Shop/Shipping/Grade.php</class>
-		<class>Model/Shop/Shipping/Option.php</class>
-		<class>Model/Shop/Shipping/Price.php</class>
-		<class>Model/Shop/Shipping/Zone.php</class>
 		<class>View/Manage/Shop.php</class>
 		<class>View/Manage/Shop/Order.php</class>
 		<class>View/Manage/Shop/Report.php</class>
@@ -77,7 +69,7 @@
 	<relations>
 		<needs type="module">Resource_Address</needs>
 		<needs type="module">Resource_Users</needs>
-		<needs type="module">Shop_Bridge</needs>
+		<needs type="module">Resource_Shop</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 		<needs type="module">UI_Map</needs>
 	</relations>

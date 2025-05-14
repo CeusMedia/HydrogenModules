@@ -3,12 +3,15 @@ use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 
+/** @var object $zones */
+/** @var object $grades */
+
 $iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 $heads	= [];
 $cols	= [];
 foreach( $zones as $zone ){
-	$input	= Html::create( 'input', NULL, array(
+	$input	= Html::create( 'input', NULL, [
 		'type'	=> 'number',
 		'step'	=> '0.01',
 		'min'	=> 0,
@@ -16,7 +19,7 @@ foreach( $zones as $zone ){
 		'id'	=> 'input_price_'.$zone->zoneId,
 		'class'	=> 'span10',
 		'value'	=> number_format( 0, 2 ),
-	) );
+	] );
 	$label		= Html::create( 'label', $input, ['class' => 'checkbox'] );
 	$heads[]	= Html::create( 'th', $zone->title, ['class' => 'cell-price'] );
 	$cols[]		= Html::create( 'td', $input, ['class' => 'cell-price'] );

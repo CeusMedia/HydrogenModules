@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var object $zones */
+/** @var object $grades */
+/** @var array<int|string,array<int|string,float|int|string>> $priceMatrix */
+
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );

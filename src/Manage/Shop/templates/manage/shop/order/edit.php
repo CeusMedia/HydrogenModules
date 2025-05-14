@@ -1,11 +1,22 @@
 <?php
+
+use CeusMedia\Bootstrap\Button\Link as LinkButton;
+use CeusMedia\Bootstrap\Button\Toolbar as ButtonToolbar;
+use CeusMedia\Bootstrap\Button\Group as ButtonGroup;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array<string,array<string|string>> $words */
+/** @var object $order */
 
 $labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
-$buttons	= [new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
+$buttons	= [new LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
 
 $states	= array(
 	(object) [
@@ -109,7 +120,7 @@ $states	= array(
 foreach( $states as $status ){
 	if( $status->enabled ){
 		if( in_array( $order->status, $status->from ) ){
-			$buttons[]	= new \CeusMedia\Bootstrap\LinkButton(
+			$buttons[]	= new LinkButton(
 				$baseUrl.$status->to,
 				$status->label,
 				'btn-small '.$status->class,
@@ -124,10 +135,11 @@ $buttons[]	= HtmlTag::create( 'a', '<i class="icon-question-sign icon-white"></i
 	'target'	=> '_blank',
 ) );
 
-$buttons	= new \CeusMedia\Bootstrap\Button\Toolbar( [new \CeusMedia\Bootstrap\ButtonGroup( $buttons )] );
+$buttons	= new ButtonToolbar( [new ButtonGroup( $buttons )] );
 
 
-function renderDataList( $keys, $data, $labels ){
+function renderDataList( $keys, $data, $labels ): string
+{
 	$list	= [];
 	foreach( $keys as $key ){
 		if( isset( $data->$key ) && strlen( trim( $data->$key ) ) ){
@@ -137,6 +149,7 @@ function renderDataList( $keys, $data, $labels ){
 	}
 	if( $list )
 		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
+	return '';
 }
 
 $optStatus	= $words['states'];
@@ -192,15 +205,15 @@ foreach( $order->positions as $position ){
 	$cellBridge		= HtmlTag::create( 'td', $position->bridge->data->title, ['class' => 'cell-position-bridge'] );
 	$cellTitle		= HtmlTag::create( 'td', $link, ['class' => 'cell-position-title'] );
 	$cellQuantity	= HtmlTag::create( 'td', $position->quantity, ['class' => 'cell-position-quantity'] );
-	$cellStatus		= HtmlTag::create( 'td', new \CeusMedia\Bootstrap\ButtonGroup( array(
-		new \CeusMedia\Bootstrap\LinkButton(
+	$cellStatus		= HtmlTag::create( 'td', new ButtonGroup( array(
+		new LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
 			'btn-small btn-warning',
 			'arrow-right',
 			$order->status < 1 || $position->status != 0
 		),
-		new \CeusMedia\Bootstrap\LinkButton(
+		new LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/2',
 			'geliefert',
 			'btn-small btn-success',

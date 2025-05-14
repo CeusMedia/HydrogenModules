@@ -1,9 +1,19 @@
 <?php
+
+use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
 
-$words	= (object) $words;
-$w		= (object) $words->index;
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array<string,array<string|string>> $words */
+/** @var object[] $orders */
+/** @var int $pageNr */
+/** @var int $total */
+
+$w		= (object) $words['index'];
 
 $statusIcons		= [
 	-6		=> 'remove',
@@ -21,6 +31,19 @@ $statusIcons		= [
 	6		=> 'ok',
 ];
 
+$colorMap	= [
+	Model_Shop_Order::STATUS_COMPLETED			=> 'success',
+	Model_Shop_Order::STATUS_COMPLAINED			=> 'warning',
+	Model_Shop_Order::STATUS_ORDERED			=> 'warning',
+	Model_Shop_Order::STATUS_PAYED				=> 'warning',
+	Model_Shop_Order::STATUS_PARTLY_DELIVERED	=> 'warning',
+	Model_Shop_Order::STATUS_DELIVERED			=> 'warning',
+	Model_Shop_Order::STATUS_REFUNDED			=> 'error',
+	Model_Shop_Order::STATUS_NOT_DELIVERED		=> 'error',
+	Model_Shop_Order::STATUS_NOT_PAYED			=> 'error',
+	Model_Shop_Order::STATUS_REVERSED			=> 'error',
+	Model_Shop_Order::STATUS_CANCELLED			=> 'error'
+];
 
 $listOrders	= [];
 foreach( $orders as $order ){
@@ -33,18 +56,11 @@ foreach( $orders as $order ){
 	$link		= HtmlTag::create( 'small', "#".$order->orderId, ['class' => 'muted'] );
 	$cellLink		= HtmlTag::create( 'td', $link );
 	$cellCustomer	= HtmlTag::create( 'td', $customer );
-	$cellStatus		= HtmlTag::create( 'td', '<small>'./*$iconStatus.' '.*/$words->states[$order->status].'</small>' );
+	$cellStatus		= HtmlTag::create( 'td', '<small>'./*$iconStatus.' '.*/$words['states'][$order->status].'</small>' );
 	$cellCreated	= HtmlTag::create( 'td', '<small>'.( $order->createdAt ? date( 'd.m.Y', $order->createdAt ) : "-" ).'</small>' );
 	$cellModified	= HtmlTag::create( 'td', '<small>'.( $order->modifiedAt ? date( 'd.m.Y', $order->modifiedAt ) : '-' ).'</small>' );
-	$rowColor		= "info";
-	if( in_array( $order->status, [6] ) )
-		$rowColor	= 'success';
-	else if( in_array( $order->status, [-5, 2, 3, 4, 5] ) )
-		$rowColor	= 'warning';
-	else if( in_array( $order->status, [-6, -4, -3, -2, -1] ) )
-		$rowColor	= 'error';
 	$cells			= [$cellLink, $cellCustomer, $cellStatus, $cellCreated, $cellModified];
-	$attributes		= ['class' => $rowColor];
+	$attributes		= ['class' => $colorMap[$order->status] ?? 'info'];
 	$listOrders[]	= HtmlTag::create( 'tr', $cells, $attributes );
 }
 $tableRows		= join( $listOrders );
@@ -60,7 +76,7 @@ $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $tableRows );
 $listOrders		= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 
-$pagination		= new \CeusMedia\Bootstrap\PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
+$pagination		= new PageControl( './manage/shop/order', $pageNr, ceil( $total / 20 ) );
 $tabs			= View_Manage_Shop::renderTabs( $env, 'order' );
 
 return '

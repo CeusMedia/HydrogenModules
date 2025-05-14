@@ -5,7 +5,7 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_Shop extends View
 {
-	public static function renderTabs( Environment $env, $current = 0 )
+	public static function renderTabs( Environment $env, $current = 0 ): string
 	{
 		$tabs	= new View_Helper_Navigation_Bootstrap_Tabs( $env );
 		$tabs->setBasePath( './manage/shop/' );
@@ -13,7 +13,7 @@ class View_Manage_Shop extends View
 		return $tabs->renderTabs( $current );
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 }

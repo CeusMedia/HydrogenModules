@@ -1,5 +1,11 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+
 $panelPrices	= $view->loadTemplateFile( 'manage/shop/shipping/index.prices.php' );
 $panelZones		= $view->loadTemplateFile( 'manage/shop/shipping/index.zones.php' );
 $panelGrades	= $view->loadTemplateFile( 'manage/shop/shipping/index.grades.php' );

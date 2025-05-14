@@ -168,7 +168,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 		$this->logic		= new Logic_Catalog( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog.', TRUE );
-		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.shop.tax.percent' );
-		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.shop.tax.included' );
+		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.percent' );
+		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.included' );
 	}
 }
