@@ -32,7 +32,7 @@
 		<template>manage/shop/bridge/index.list.php</template>
 	</files>
 	<relations>
-		<needs type="module">Shop_Bridge</needs>
+		<needs type="module">Resource_Shop_Bridge</needs>
 		<needs type="module">Manage_Shop</needs>
 	</relations>
 	<link xml:lang="de" path="manage/shop/bridge">Kataloge</link>
