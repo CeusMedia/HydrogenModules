@@ -181,7 +181,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	protected function __onInit(): void
 	{
 		$this->logic		= new Logic_Catalog( $this->env );
-		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.shop.tax.percent' );
-		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.shop.tax.included' );
+		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.percent' );
+		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.included' );
 	}
 }

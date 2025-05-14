@@ -132,17 +132,6 @@ class Logic_ShopManager extends Logic
 	}
 
 	/**
-	 *	Returns Shipping Grade ID by Quantity.
-	 *	@access		public
-	 *	@param		integer		$quantity		Quantity to ge Shipping Grade for
-	 *	@return		int
-	 */
-	public function getShippingGradeIdByQuantity( int $quantity ): int
-	{
-		return $this->getShipping()?->getGradeID( $quantity );
-	}
-
-	/**
 	 *	Returns Price of Shipping Grade in Shipping Zone.
 	 *	@access		public
 	 *	@param		int|string		$shippingZoneId 		ID of Shipping Zone

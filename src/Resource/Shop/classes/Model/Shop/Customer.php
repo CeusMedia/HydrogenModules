@@ -1,8 +1,9 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	@category		Model
+ *	@package		Hydrogen.Module.Resource_Shop
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
@@ -10,8 +11,8 @@ use CeusMedia\HydrogenFramework\Model;
 
 /**
  *	Data Model of Customers.
- *	@category		cmProjects
- *	@package		LUV.Model
+ *	@category		Model
+ *	@package		Hydrogen.Module.Resource_Shop
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 class Model_Shop_Customer extends Model
@@ -19,7 +20,7 @@ class Model_Shop_Customer extends Model
 	protected string $name			= 'shop_customers';
 
 	protected array $columns		= [
-		"customerId",
+		'customerId',
 	];
 
 	protected string $primaryKey	= 'customerId';
@@ -28,5 +29,5 @@ class Model_Shop_Customer extends Model
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 
-	protected ?string $className	= Entity_Address::class;
+	protected ?string $className	= Entity_Shop_Customer::class;
 }

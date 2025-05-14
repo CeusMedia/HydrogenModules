@@ -203,7 +203,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 		$this->logic		= new Logic_Catalog_BookstoreManager( $this->env );
 		$this->frontend		= Logic_Frontend::getInstance( $this->env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_catalog_bookstore.', TRUE );
-		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.shop.tax.percent' );
-		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.shop.tax.included' );
+		$this->taxPercent	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.percent' );
+		$this->taxIncluded	= (float) $this->env->getConfig()->get( 'module.resource_shop.tax.included' );
 	}
 }

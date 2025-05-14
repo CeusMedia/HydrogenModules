@@ -1,5 +1,15 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
+
+/** @var WebEnvironment $env */
+/** @var View $view */
+/** @var array<object> $ordersTotal */
+/** @var array<object> $ordersNotPayed */
+/** @var array<object> $ordersNotDelivered */
+/** @var array<object> $ordersNotFinished */
+
 $panelOpenOrders	= '
 <div class="content-panel">
 	<h3>Offen</h3>
@@ -52,7 +62,7 @@ return $tabs.'
 		<!--'.$panelEmpty.'-->
 	</div>
 </div>';
-
+/*
 return $tabs.'
 <div class="row-fluid">
 	<div class="span4">
@@ -82,3 +92,4 @@ $(document).ready(function(){
 </style>
 
 ';
+*/

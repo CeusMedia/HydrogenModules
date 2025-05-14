@@ -46,7 +46,7 @@ class View_Helper_Shop_CartPositions
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
-		$this->config	= $this->env->getConfig()->getAll( 'module.shop.', TRUE );
+		$this->config	= $this->env->getConfig()->getAll( 'module.resource_shop.', TRUE );
 		$this->words	= $this->env->getLanguage()->getWords( 'shop' );
 		$this->bridge	= new Logic_ShopBridge( $this->env );
 	}

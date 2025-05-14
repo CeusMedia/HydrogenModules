@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<module>
+	<title>Resource_Shop</title>
+	<description><![CDATA[Structural base component for shop applications.]]></description>
+	<category>Resource</category>
+	<version>0.1</version>
+	<log version="0.1">Extracted from module Shop after version 0.9.2.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Entity/Shop/Customer.php</class>
+		<class>Entity/Shop/Order.php</class>
+		<class>Job/Shop.php</class>
+		<class>Logic/ShopResource.php</class>
+		<class>Model/Shop/Cart.php</class>
+		<class>Model/Shop/Customer.php</class>
+		<class>Model/Shop/CustomerOld.php</class>
+		<class>Model/Shop/Order.php</class>
+		<class>Model/Shop/Order/Position.php</class>
+	</files>
+	<config protected="yes" type="boolean" name="tax.included">yes</config>
+	<config protected="yes" type="integer" name="tax.percent">7</config>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+		<needs type="module">Resource_Address</needs>
+        <needs type="module">Resource_Shop_Bridge</needs>
+        <supports type="module">Resource_Shop_Shipping</supports>
+        <supports type="module">Shop_Payment</supports>
+	</relations>
+	<job id="Shop.OldCustomers.cleanup" mode="dev,test,live">Shop::cleanupOldCustomers</job>
+	<job id="Shop.OldCustomers.cleanupTestOrders" mode="dev,test,live">Shop::cleanupOldCustomerTestOrders</job>
+	<job id="Shop.OldCustomers.importAsMigrantsAndSaveAsCsv" mode="dev,test,live">Shop::importOldCustomersAsMigrantsAndSaveAsCsv</job>
+	<job id="Shop.OldCustomers.migrate" mode="dev,test,live">Shop::migrateOldCustomers</job>
+	<job id="Shop.OldCustomers.sanitizeCountries" mode="dev,test,live">Shop::sanitizeOldCustomerCountries</job>
+	<job id="Shop.OldCustomers.createConfig" mode="dev,test,live">Shop::createOldCustomersConfig</job>
+	<sql type="mysql" on="install" version="0.1">
+<![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_customers` (
+  `customerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `country` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `region` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `city` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `password` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `alternative` tinyint(1) NOT NULL DEFAULT '0',
+  `billing_institution` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_firstname` varchar(40) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_tnr` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_country` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_city` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `billing_address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `billing_email` varchar(200) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`customerId`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_orders`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_orders` (
+  `orderId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `customerId` int(11) unsigned NOT NULL DEFAULT '0',
+  `sessionId` varchar(32) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `options` varchar(100) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
+  `channel` varchar(20) CHARACTER SET latin1 COLLATE latin1_german2_ci NOT NULL DEFAULT '',
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `editedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`orderId`),
+  KEY `customer_id` (`customerId`),
+  KEY `session_id` (`sessionId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_order_positions`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_order_positions` (
+  `positionId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) unsigned NOT NULL DEFAULT '0',
+  `bridgeId` int(11) unsigned NOT NULL,
+  `articleId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL DEFAULT '0',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `quantity` int(4) unsigned NOT NULL DEFAULT '1',
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `editedAt` decimal(12,0) DEFAULT NULL,
+  PRIMARY KEY (`positionId`),
+  KEY `orderId` (`orderId`),
+  KEY `articleId` (`articleId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>shop_receipts`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_receipts` (
+  `receiptId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `positions` text COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` varchar(12) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`receiptId`),
+  KEY `order_id` (`orderId`),
+  KEY `user_id` (`userId`),
+  KEY `type` (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `<%?prefix%>shop_customers` ADD  `institution` VARCHAR( 100 ) NULL AFTER  `password` ;
+ALTER TABLE `<%?prefix%>shop_orders` ADD `price` DECIMAL(8,2) UNSIGNED NOT NULL AFTER `status`, ADD `priceTaxed` DECIMAL(8,2) UNSIGNED NOT NULL AFTER `price`;
+ALTER TABLE `<%?prefix%>shop_order_positions` ADD `price` DECIMAL(6,2) UNSIGNED NOT NULL AFTER `quantity`, ADD `priceTaxed` DECIMAL(6,2) UNSIGNED NOT NULL AFTER `price`;
+ALTER TABLE `<%?prefix%>shop_customers` ADD `longitude` FLOAT NULL AFTER `password`, ADD `latitude` FLOAT NULL AFTER `longitude`;
+ALTER TABLE `<%?prefix%>shop_orders` ADD `userId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `sessionId`;
+ALTER TABLE `<%?prefix%>shop_orders` CHANGE `editedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL;
+ALTER TABLE `<%?prefix%>shop_order_positions` CHANGE `editedAt` `modifiedAt` DECIMAL(12,0) UNSIGNED NULL;
+ALTER TABLE `<%?prefix%>shop_customers`
+  CHANGE `billing_institution` `billing_institution` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  CHANGE `billing_firstname` `billing_firstname` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  CHANGE `billing_lastname` `billing_lastname` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  CHANGE `billing_tnr` `billing_tnr` VARCHAR(40) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  CHANGE `billing_country` `billing_country` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  CHANGE `billing_city` `billing_city` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  CHANGE `billing_postcode` `billing_postcode` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  CHANGE `billing_address` `billing_address` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  CHANGE `billing_phone` `billing_phone` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL,
+  CHANGE `billing_email` `billing_email` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '';
+
+ALTER TABLE `<%?prefix%>shop_orders` ADD  `currency` VARCHAR(3) NOT NULL DEFAULT  'EUR' AFTER  `status`, ADD INDEX (  `currency` ) ;
+ALTER TABLE `<%?prefix%>shop_order_positions` ADD  `currency` VARCHAR(3) NOT NULL DEFAULT  'EUR' AFTER  `quantity`, ADD INDEX (  `currency` ) ;
+ALTER TABLE `<%?prefix%>shop_orders` CHANGE `channel` `paymentMethod` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL;
+ALTER TABLE `<%?prefix%>shop_orders` ADD `paymentId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `paymentMethod`;
+
+RENAME TABLE `<%?prefix%>shop_customers` TO `<%?prefix%>shop_customers_old`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>shop_customers` (
+  `customerId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`customerId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>shop_customers`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_order_positions`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_orders`;
+DROP TABLE IF EXISTS `<%?prefix%>shop_receipts`;
+DELETE FROM `<%?prefix%>mail_attachments` WHERE className = "Mail_Shop_Customer_Ordered";
+]]></sql>
+</module>

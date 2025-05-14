@@ -54,7 +54,7 @@ class Model_Shop_Cart
 		$this->bridge			= new Logic_ShopBridge( $env );
 		$this->modelOrder		= new Model_Shop_Order( $env );
 		$this->modelPosition	= new Model_Shop_Order_Position( $env );
-		$this->taxIncluded		= $env->getConfig()->get( 'module.shop.tax.included' );
+		$this->taxIncluded		= $env->getConfig()->get( 'module.resource_shop.tax.included' );
 		$this->defaultCurrency	= $env->getConfig()->get( 'module.shop.price.currency' );
 
 		if( !$this->session->has( 'shop_cart' ) )

@@ -5,18 +5,22 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Manage_Shop_Order extends View_Manage_Shop
 {
-	public function add()
+	public function add(): void
 	{
 	}
 
-	public function edit()
+	public function edit(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
+	/**
+	 * @deprecated	since not used and incomplete
+	 * @todo		to be removed
+	 */
 	protected function renderList( $orders, $orderId = NULL ): string
 	{
 		return '[LIST]';
