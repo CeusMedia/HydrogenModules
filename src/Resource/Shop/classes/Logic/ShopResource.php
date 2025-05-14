@@ -41,27 +41,6 @@ class Logic_ShopResource extends Logic
 		return $order->priceTaxed;
 	}
 
-	public function countArticleInCart( int|string $bridgeId, int|string $articleId ): int
-	{
-		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) )
-			foreach( $positions as $position )
-				if( $position->bridgeId == $bridgeId && $position->articleId == $articleId )
-					return (int) $position->quantity;
-		return 0;
-	}
-
-	public function countArticlesInCart( bool $countEach = FALSE ): int
-	{
-		$number	= 0;
-		if( is_array( ( $positions = $this->modelCart->get( 'positions' ) ) ) ){
-			if( !$countEach )
-				return count( $positions );
-			foreach( $positions as $position )
-				$number	+= $position->quantity;
-		}
-		return $number;
-	}
-
 	public function countOrders( array $conditions ): int
 	{
 		return $this->modelOrder->count( $conditions );

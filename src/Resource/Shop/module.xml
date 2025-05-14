@@ -13,7 +13,6 @@
 		<class>Entity/Shop/Order.php</class>
 		<class>Job/Shop.php</class>
 		<class>Logic/ShopResource.php</class>
-		<class>Model/Shop/Cart.php</class>
 		<class>Model/Shop/Customer.php</class>
 		<class>Model/Shop/CustomerOld.php</class>
 		<class>Model/Shop/Order.php</class>
