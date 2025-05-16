@@ -20,7 +20,7 @@ class View_Helper_Catalog_Bookstore
 
 	protected SimpleCacheInterface $cache;
 
-	public function __construct( Environment $env )
+	public function __construct( WebEnvironment $env )
 	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
@@ -29,12 +29,12 @@ class View_Helper_Catalog_Bookstore
 	}
 
 	/**
-	 *	@param		Environment		$env
+	 *	@param		WebEnvironment		$env
 	 *	@param		string			$content
 	 *	@return		array|mixed|string|string[]|null
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	public static function applyLinks( Environment $env, string $content/*&$item*/ )
+	public static function applyLinks( WebEnvironment $env, string $content/*&$item*/ )
 	{
 //		$content	= $item->content;
 		$patternAuthor = "/\[author:([0-9]+)\|?([^\]]+)?\]/";

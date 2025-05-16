@@ -25,4 +25,10 @@ class Entity_Shop_Order extends Entity
 		'priceTaxed',
 		'createdAt',
 	];
+
+	public ?Entity_User $customer			= NULL;
+	public ?array $positions				= NULL;
+	public ?object $shipping				= NULL;
+	public ?object $payment					= NULL;
+	public ?array $taxes					= NULL;
 }

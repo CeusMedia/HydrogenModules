@@ -99,41 +99,24 @@ class Logic_Log_Exception extends Logic
 	}
 
 	/**
-	 *	@param		int		$limit
+	 *	@param		int			$limit			Number of lines to import at once, default: 200
+	 *	@param		string		$strategy		One of 'recreatingUsingTailStrategy', 'strictInlineStrategy'
 	 *	@return		int
 	 */
-	public function importFromLogFile( int $limit = 200 ): int
+	public function importFromLogFile( int $limit = 200, string $strategy = 'recreatingUsingTailStrategy' ): int
 	{
-		$count		= 0;
-		if( file_exists( $this->logFile ) && filesize( $this->logFile ) !== 0 ){
-			$handle		= fopen( $this->logFile, 'r' );
-			while( !feof( $handle ) && $count < $limit ){
-				$line	= fgets( $handle );
-				if( strlen( trim( $line ) ) ){
-					try{
-						$this->importLogFileItem( $line );
-					}
-					catch( Throwable $e ){
-						$this->env->getLog()?->logException( $e );
-					}
-					$count++;
-				}
-			}
-			if( $count !== 0 ){
-				// @link https://www.baeldung.com/linux/remove-first-line-text-file
-				$command	= 'tail -n +%1$d %2$s > %2$s.tmp && mv %2$s.tmp %2$s';
-				exec( sprintf( $command, $count + 1, $this->logFile ) );
-			}
-		}
-		return $count;
+		return match( $strategy ){
+			'strictInlineStrategy'	=> $this->importFromLogFileByStrictInlineStrategy( $limit ),
+			default					=> $this->importFromLogFileByRecreatingUsingTailStrategy( $limit ),
+		};
 	}
 
 	/**
 	 *	@param		string		$line
-	 *	@return		string
+	 *	@return		int|string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function importLogFileItem( string $line ): string
+	public function importLogFileItem( string $line ): int|string
 	{
 		[$timestamp, $dataEncoded]	= explode( ":", $line );
 		$data	= base64_decode( $dataEncoded );
@@ -275,5 +258,93 @@ class Logic_Log_Exception extends Logic
 			$this->moduleConfig	= new Dictionary( $moduleConfig );
 		}
 		$this->logFile		= $this->pathLogs.$this->moduleConfig->get( 'file.name' );
+	}
+
+	/**
+	 *	New strategy: Work strictly in-file to keep file permissions.
+	 *	@param		int		$limit
+	 *	@return		int
+	 */
+	protected function importFromLogFileByStrictInlineStrategy( int $limit ): int
+	{
+		if(
+			!file_exists( $this->logFile ) ||
+			!is_readable( $this->logFile ) ||
+			!is_writable( $this->logFile ) )
+			return 0;
+
+		if( FALSE === ( $fp	= fopen( $this->logFile, 'r+' ) ) )
+			return 0;
+
+		if( !flock( $fp, LOCK_EX ) ){
+			fclose( $fp );
+			return 0;
+		}
+
+		$importedLines	= 0;
+		$remaining		= [];
+		while( FALSE === feof( $fp ) ){
+			if( FALSE === ( $line = fgets( $fp ) ) )
+				break;
+			$lineTrimmed	= rtrim( $line, "\r\n" );
+			if( $importedLines < $limit ){
+				try {
+					$this->importLogFileItem( $lineTrimmed );
+					$importedLines++;
+					continue;
+				}
+				catch( Throwable $e ){
+					$this->env->getLog()?->logException( $e );
+					continue;
+				}
+			}
+			$remaining[] = $line;
+		}
+		ftruncate( $fp, 0 );
+		rewind( $fp );
+		foreach( $remaining as $line )
+			fwrite( $fp, $line );
+		fflush( $fp );
+		flock( $fp, LOCK_UN );
+		fclose( $fp );
+		return $importedLines;
+	}
+
+	/**
+	 *	First implemented strategy: Use tail to create remaining log file after import.
+	 *	Has problem: Log file will be recreated under current user, which is NOT the web user if run by job.
+	 *	@param		int		$limit
+	 *	@return		int
+	 */
+	protected function importFromLogFileByRecreatingUsingTailStrategy( int $limit = 200 ): int
+	{
+		if( !file_exists( $this->logFile ) )
+			return 0;
+		if( 0 === filesize( $this->logFile ) )
+			return 0;
+
+		$countDone		= 0;
+		$countFail		= 0;
+		$handle		= fopen( $this->logFile, 'r' );
+		while( !feof( $handle ) && ( $countDone + $countFail ) < $limit ){
+			$line	= fgets( $handle );
+			if( '' === trim( $line ) )
+				continue;
+			try{
+				$this->importLogFileItem( $line );
+				$countDone++;
+			}
+			catch( Throwable $e ){
+				$this->env->getLog()?->logException( $e );
+				$countFail++;
+			}
+		}
+		if( 0 === ( $countDone + $countFail ) )
+			return 0;
+
+		// @link https://www.baeldung.com/linux/remove-first-line-text-file
+		$command	= 'tail -n +%1$d %2$s > %2$s.tmp && mv %2$s.tmp %2$s';
+		exec( sprintf( $command, ( $countDone + $countFail + 1 ), $this->logFile ) );
+		return $countDone + $countFail;
 	}
 }
