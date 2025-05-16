@@ -458,7 +458,7 @@ class View_Helper_Shop_CartPositions
 				$list[]	= join( ' ', [
 					$helperText->fit( $words->labelPayment, 60 ),
 					$helperText->fit( "", 6, 0 ),
-					$helperText->fit( $this->formatPrice( $pricePayment, TRUE, FALSE ), 10, 0 ),
+					$helperText->fit( $this->formatPrice( $pricePayment ?? 0, TRUE, FALSE ), 10, 0 ),
 				] );
 			}
 		}

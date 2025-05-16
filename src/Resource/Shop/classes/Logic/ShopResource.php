@@ -110,14 +110,15 @@ class Logic_ShopResource extends Logic
 	 */
 	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
 	{
+		/** @var ?Entity_Shop_Order $order */
 		$order	= $this->modelOrder->get( $orderId );
-		if( !$order )
+		if( NULL === $order )
 			throw new RangeException( 'Invalid order ID: '.$orderId );
 		if( $extended ){
 			$order->customer	= $this->getOrderCustomer( $order );
 			$order->positions	= $this->getOrderPositions( $orderId, TRUE );
 			$order->shipping	= $this->getOrderShipping( $orderId );
-			$order->options		= $this->getOrderOptions( $orderId );
+//			$order->options		= $this->getOrderOptions( $orderId );
 			$order->payment		= $this->getOrderPaymentFees( $orderId );
 			$order->taxes		= $this->getOrderTaxes( $orderId );
 		}
@@ -126,12 +127,12 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@param		object|int|string		$orderObjectOrId
-	 *	@return		object					Customer account data object
+	 *	@return		Entity_User					Customer account data object
 	 *	@throws		RangeException			if no order found for given order ID
 	 *	@throws		RuntimeException		if order has no user assigned
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getOrderCustomer( object|int|string $orderObjectOrId ): object
+	public function getOrderCustomer( object|int|string $orderObjectOrId ): Entity_User
 	{
 		$order	= $orderObjectOrId;
 		if( !is_object( $order ) ){
