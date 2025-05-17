@@ -30,18 +30,17 @@ class Hook_Shop_Payment_Paypal extends Hook
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Express.', TRUE );
 
-				$entity	= new Entity_Shop_Payment_Backend();
-				$entity->backend		= 'Paypal';								//  backend class name
-				$entity->key			= 'PayPal:Express';						//  payment method key
-				$entity->path			= 'paypal/authorize';					//  shop URL
-				$entity->icon			= 'paypal-2.png';						//  icon
-				$entity->priority		= $priority;							//  priority
-				$entity->label			= $labels->express;						//  payment method label
-				$entity->description	= $descs->transfer ?? '';
-				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
-				$entity->feeFormula		= $method->get( 'fee.formula' );
-
-				$register->addEntity( $entity );
+				$register->addEntity( Entity_Shop_Payment_Backend::fromArray( [
+					'backend'		=> 'Paypal',								//  backend class name
+					'key'			=> 'PayPal:Express',						//  payment method key
+					'path'			=> 'paypal/authorize',						//  shop URL
+					'icon'			=> 'paypal-2.png',							//  icon
+					'priority'		=> $priority,								//  priority
+					'title'			=> $labels->express,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] ) );
 			}
 		}
 		$payload['register']	= $register;
@@ -49,29 +48,25 @@ class Hook_Shop_Payment_Paypal extends Hook
 
 	/**
 	 *	...
-	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env		Environment instance
-	 *	@param		object			$context	Hook context object
-	 *	@param		object			$module		Module object
-	 *	@param		array			$payload	Map of hook arguments
 	 *	@return		void
 	 */
-	static public function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
+	public function onRenderServicePanels(): void
 	{
+		$payload	= $this->getPayload();
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
-		$model	= new Model_Shop_Order( $env );
+		$model	= new Model_Shop_Order( $this->env );
 		$order	= $model->get( $payload['orderId'] );
 		foreach( $payload['paymentBackends']->getAll() as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){
-					$object	= ObjectFactory::createObject( $className, [$env] );
+					$object	= ObjectFactory::createObject( $className, [$this->env] );
 					$object->setOrderId( $payload['orderId'] );
 					$object->setOutputFormat( $className::OUTPUT_FORMAT_HTML );
 					$panelPayment	= $object->render();
-					$context->registerServicePanel( 'ShopPaymentPaypal', $panelPayment, 2 );
+					$this->context->registerServicePanel( 'ShopPaymentPaypal', $panelPayment, 2 );
 				}
 			}
 		}

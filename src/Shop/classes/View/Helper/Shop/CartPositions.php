@@ -33,15 +33,15 @@ class View_Helper_Shop_CartPositions
 	protected Environment $env;
 	protected Logic_ShopBridge $bridge;
 	protected Dictionary $config;
-	protected array $words;
-	protected bool $changeable			= TRUE;
-	protected ?string $forwardPath		= NULL;
-	protected ?object $deliveryAddress	= NULL;
-	protected array $positions;
 	protected ?Model_Shop_Payment_BackendRegister $paymentsBackends	= NULL;
-	protected object|string|NULL $paymentBackend;
-	protected int $display				= self::DISPLAY_BROWSER;
-	protected int $output				= self::OUTPUT_HTML;
+	protected ?Entity_Shop_Payment_Backend $paymentBackend			= NULL;
+	protected ?Entity_Address $deliveryAddress						= NULL;
+	protected array $positions										= [];
+	protected bool $changeable										= TRUE;
+	protected int $display											= self::DISPLAY_BROWSER;
+	protected int $output											= self::OUTPUT_HTML;
+	protected array $words;
+	protected ?string $forwardPath									= NULL;
 
 	public function __construct( Environment $env )
 	{
@@ -74,7 +74,7 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
-	public function setDeliveryAddress( object $address ): self
+	public function setDeliveryAddress( Entity_Address $address ): self
 	{
 		$this->deliveryAddress	= $address;
 		return $this;
@@ -97,8 +97,24 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
-	public function setPaymentBackend( object|string|NULL $backend ): self
+	/**
+	 *	Sets payment backend by object or key string.
+	 *	If given by key string, payment backends have to be set before.
+	 *	@param		Entity_Shop_Payment_Backend|string	$backend
+	 *	@return		self
+	 *	@throws		RuntimeException	if backend is given by string and no payment backends have been set
+	 *	@throws		CeusMedia\Common\Exception\NotSupported		if backend is given by string and no payment backend can be found by this key
+	 */
+	public function setPaymentBackend( Entity_Shop_Payment_Backend|string $backend ): self
 	{
+		if( is_string( $backend ) ){
+			if( NULL === $this->paymentsBackends )
+				throw new RuntimeException( 'Set payment backends set, yet' );
+			if( !$this->paymentsBackends->has( $backend ) )
+				throw CeusMedia\Common\Exception\NotSupported::create()
+					->setMessage( sprintf( 'No payment backend found by key "%s"', $backend ) );
+			return $this->setPaymentBackend( $this->paymentsBackends->get( $backend ) );
+		}
 		$this->paymentBackend	= $backend;
 		return $this;
 	}

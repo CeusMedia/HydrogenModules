@@ -24,7 +24,8 @@ class Model_Shop_Payment_BackendRegister implements Countable
 	 */
 	public function add( array $map ): string
 	{
-		$object	= Entity_Shop_Payment_Backend::fromArray( array_merge( [
+		throw \CeusMedia\Common\Exception\Deprecation::create( 'Use addEntity' );
+/*		$object	= Entity_Shop_Payment_Backend::fromArray( array_merge( [
 			'backend'		=> '',
 			'key'			=> '',
 			'title'			=> '',
@@ -40,7 +41,7 @@ class Model_Shop_Payment_BackendRegister implements Countable
 		if( array_key_exists( $id, $this->backends ) )
 			throw new RuntimeException( 'Backend with key "'.$id.'" already registered' );
 		$this->backends[$id]	= $object;
-		return $id;
+		return $id;*/
 	}
 
 	/**
@@ -51,7 +52,7 @@ class Model_Shop_Payment_BackendRegister implements Countable
 	 */
 	public function addEntity( Entity_Shop_Payment_Backend $entity ): string
 	{
-		$id		= $entity->key ?? 'unknown';
+		$id		= $entity->key;
 		if( array_key_exists( $id, $this->backends ) )
 			throw new RuntimeException( 'Backend with key "'.$id.'" already registered' );
 		$this->backends[$id]	= $entity;
@@ -78,7 +79,8 @@ class Model_Shop_Payment_BackendRegister implements Countable
 	 */
 	public function create( $backend, string $key, string $title, string $path, int $priority = 5, ?string $icon = NULL ): Entity_Shop_Payment_Backend
 	{
-		$this->backends[$key]	= Entity_Shop_Payment_Backend::fromArray( [
+		throw \CeusMedia\Common\Exception\Deprecation::create( 'Use addEntity' );
+/*		$this->backends[$key]	= Entity_Shop_Payment_Backend::fromArray( [
 			'backend'		=> $backend,
 			'key'			=> $key,
 			'title'			=> $title,
@@ -87,7 +89,7 @@ class Model_Shop_Payment_BackendRegister implements Countable
 			'icon'			=> $icon,
 			'feeFormula'	=> '',
 		] );
-		return $this->backends[$key];
+		return $this->backends[$key];*/
 	}
 
 	public function get( string $key, bool $strict = TRUE )
