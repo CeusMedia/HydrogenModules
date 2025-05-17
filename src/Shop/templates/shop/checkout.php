@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array $words */
-/** @var object $address $w */
+/** @var Entity_Address $address $w */
 /** @var Model_Shop_Payment_BackendRegister $paymentBackends */
 /** @var Model_Shop_Cart $cart */
 
@@ -18,7 +18,7 @@ $w				= (object) $words['checkout'];
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $cart->get( 'positions' ) );
-$helperCart->setPaymentBackend( $paymentBackends->get( $cart->get( 'paymentMethod' ) ) );
+$helperCart->setPaymentBackend( $cart->get( 'paymentMethod' ) );
 $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );
 $helperCart->setForwardPath( 'shop/checkout' );

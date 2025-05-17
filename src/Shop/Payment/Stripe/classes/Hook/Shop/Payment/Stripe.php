@@ -30,19 +30,18 @@ class Hook_Shop_Payment_Stripe extends Hook
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Card.', TRUE );
 
-				$entity	= new Entity_Shop_Payment_Backend();
-				$entity->backend		= 'Stripe';								//  backend class name
-				$entity->key			= 'Stripe:Card';						//  payment method key
-				$entity->path			= 'stripe/perCreditCard';				//  shop URL
-				$entity->icon			= 'creditcard-1.png';					//  icon
-//				$entity->icon			= 'fa fa-fw fa-credit-card';			//  icon
-				$entity->priority		= $priority;							//  priority
-				$entity->label			= $labels->card;						//  payment method label
-				$entity->description	= $descs->card ?? '';
-				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
-				$entity->feeFormula		= $method->get( 'fee.formula' );
-
-				$register->addEntity( $entity );
+				$register->addEntity( new Entity_Shop_Payment_Backend( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Card',							//  payment method key
+					'path'			=> 'stripe/perCreditCard',					//  shop URL
+					'icon'			=> 'creditcard-1.png',						//  icon
+//					'icon'			=> 'fa fa-fw fa-credit-card',				//  icon
+					'priority'		=> $priority,								//  priority
+					'title'			=> $labels->card,							//  payment method label
+					'description'	=> $descs->card ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+				] ) );
 			}
 		}
 
@@ -51,20 +50,19 @@ class Hook_Shop_Payment_Stripe extends Hook
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Sofort.', TRUE );
 
-				$entity	= new Entity_Shop_Payment_Backend();
-				$entity->backend		= 'Stripe';								//  backend class name
-				$entity->key			= 'Stripe:Sofort';						//  payment method key
-				$entity->path			= 'stripe/perSofort';					//  shop URL
-				$entity->icon			= 'klarna-2.png';						//  icon
-//				$entity->icon			= 'fa fa-fw fa-bank';					//  icon
-				$entity->priority		= $priority;							//  priority
-				$entity->label			= $labels->sofort;						//  payment method label
-				$entity->description	= $descs->sofort ?? '';
-				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
-				$entity->feeFormula		= $method->get( 'fee.formula' );
-				$entity->countries		= ['AT', 'BE', 'DE', 'IT', 'NL', 'ES'];
-
-				$register->addEntity( $entity );
+				$register->addEntity( new Entity_Shop_Payment_Backend( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Sofort',							//  payment method key
+					'path'			=> 'stripe/perSofort',						//  shop URL
+					'icon'			=> 'klarna-2.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'title'			=> $labels->sofort,							//  payment method label
+					'description'	=> $descs->sofort ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+					'countries'		=> ['AT', 'BE', 'DE', 'IT', 'NL', 'ES'],
+				] ) );
 			}
 		}
 
@@ -73,23 +71,21 @@ class Hook_Shop_Payment_Stripe extends Hook
 			if( 0 !== $priority ){
 				$method		= $methods->getAll( 'Giropay.', TRUE );
 
-				$entity	= new Entity_Shop_Payment_Backend();
-				$entity->backend		= 'Stripe';								//  backend class name
-				$entity->key			= 'Stripe:Giropay';						//  payment method key
-				$entity->path			= 'stripe/perGiropay';					//  shop URL
-				$entity->icon			= 'giropay.png';						//  icon
-//				$entity->icon			= 'fa fa-fw fa-bank';					//  icon
-				$entity->priority		= $priority;							//  priority
-				$entity->label			= $labels->giropay;						//  payment method label
-				$entity->description	= $descs->transfer ?? '';
-				$entity->feeExclusive	= $method->get( 'fee.exclusive' );
-				$entity->feeFormula		= $method->get( 'fee.formula' );
-				$entity->countries		= ['DE'];
-
-				$register->addEntity( $entity );
+				$register->addEntity( new Entity_Shop_Payment_Backend( [
+					'backend'		=> 'Stripe',								//  backend class name
+					'key'			=> 'Stripe:Giropay',						//  payment method key
+					'path'			=> 'stripe/perGiropay',						//  shop URL
+					'icon'			=> 'giropay.png',							//  icon
+//					'icon'			=> 'fa fa-fw fa-bank',						//  icon
+					'priority'		=> $priority,								//  priority
+					'title'			=> $labels->giropay,						//  payment method label
+					'description'	=> $descs->transfer ?? '',
+					'feeExclusive'	=> $method->get( 'fee.exclusive' ),
+					'feeFormula'	=> $method->get( 'fee.formula' ),
+					'countries'		=> ['DE'],
+				] ) );
 			}
 		}
-
 		$payload['register']	= $register;
 	}
 

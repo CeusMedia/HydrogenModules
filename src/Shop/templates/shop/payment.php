@@ -46,7 +46,7 @@ foreach( $paymentBackends->getAll() as $paymentBackend ){
 	$cont   = HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', $icon, ['class' => 'item-icon'] ),
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'div', $paymentBackend->label, ['class' => 'item-title'] ),
+			HtmlTag::create( 'div', $paymentBackend->title, ['class' => 'item-title'] ),
 			$desc,
 			$costs,
 		], ['class' => 'item-data'] ),

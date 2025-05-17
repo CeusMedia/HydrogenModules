@@ -14,6 +14,5 @@ class Entity_Shop_Payment_Backend extends Entity
 	public array $countries			= [];
 	public bool $feeExclusive		= FALSE;
 	public string $feeFormula		= '';
-	public ?string $label			= NULL;
 	public ?string $description		= NULL;
 }

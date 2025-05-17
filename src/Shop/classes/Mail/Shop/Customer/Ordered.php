@@ -107,11 +107,13 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperOrderFacts->setOutput( View_Helper_Shop_OrderFacts::OUTPUT_TEXT );
 
 		$paymentBackend	= NULL;
-		foreach( $this->data['paymentBackends']->getAll() as $item )
+		/** @var Model_Shop_Payment_BackendRegister $paymentBackendRegister */
+		$paymentBackendRegister	= $this->data['paymentBackends'];
+		foreach( $paymentBackendRegister->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
-		$this->helperCart->setPaymentBackend( $this->order->paymentMethod );
+		$this->helperCart->setPaymentBackend( $paymentBackend );
 
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
 		$panelPayment	= $this->loadContentFile( $filePayment, [
