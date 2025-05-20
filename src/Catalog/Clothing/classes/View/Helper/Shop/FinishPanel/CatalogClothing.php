@@ -10,6 +10,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 	protected WebEnvironment $env;
 	protected Logic_Shop $logicShop;
 	protected Dictionary $options;
+	protected Model_Shop_Payment_BackendRegister $paymentBackends;
 	protected int|string|NULL $orderId			= NULL;
 	protected ?object $address			= NULL;
 
@@ -46,6 +47,7 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 
 		$helperCart			= new View_Helper_Shop_CartPositions( $this->env );
 		$helperCart->setPositions( $this->logicShop->getOrderPositions( $this->orderId ) );
+		$helperCart->setPaymentBackends( $this->paymentBackends );
 		$helperCart->setPaymentBackend( $order->paymentMethod );
 		$helperCart->setChangeable( FALSE );
 		$cartDesktop	= HtmlTag::create( 'div', $helperCart->render(), ['class' => 'hidden-phone'] );
@@ -68,6 +70,12 @@ class View_Helper_Shop_FinishPanel_CatalogClothing
 				'type'			=> Model_Address::TYPE_DELIVERY,
 			] );
 		}
+		return $this;
+	}
+
+	public function setPaymentBackends( Model_Shop_Payment_BackendRegister $paymentBackends ): self
+	{
+		$this->paymentBackends	= $paymentBackends;
 		return $this;
 	}
 }

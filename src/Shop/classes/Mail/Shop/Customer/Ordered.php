@@ -113,6 +113,7 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 			if( $item->key === $this->order->paymentMethod )
 				$paymentBackend	= $item;
 
+		$this->helperCart->setPaymentBackends( $paymentBackendRegister );
 		$this->helperCart->setPaymentBackend( $paymentBackend );
 
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';

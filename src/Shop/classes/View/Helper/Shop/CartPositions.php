@@ -109,7 +109,7 @@ class View_Helper_Shop_CartPositions
 	{
 		if( is_string( $backend ) ){
 			if( NULL === $this->paymentsBackends )
-				throw new RuntimeException( 'Set payment backends set, yet' );
+				throw new RuntimeException( 'No payment backends set, yet' );
 			if( !$this->paymentsBackends->has( $backend ) )
 				throw CeusMedia\Common\Exception\NotSupported::create()
 					->setMessage( sprintf( 'No payment backend found by key "%s"', $backend ) );
