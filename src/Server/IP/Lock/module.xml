@@ -29,6 +29,7 @@
 		<class>Entity/IP/Lock.php</class>
 		<class>Entity/IP/Lock/Filter.php</class>
 		<class>Entity/IP/Lock/Reason.php</class>
+		<class>Job/Server/IP/Lock.php</class>
 		<class>Hook/IP/Lock.php</class>
 		<class>Logic/IP/Lock.php</class>
 		<class>Logic/IP/Lock/Transport.php</class>
