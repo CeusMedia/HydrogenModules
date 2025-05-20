@@ -18,6 +18,7 @@ class Controller_Catalog_Clothing extends Controller
 			$view		= new View_Catalog_Clothing( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogClothing( $env );
 			$helper->setOrderId( $orderId );
+			$helper->setPaymentBackends( $arguments->get( 'paymentBackends' ) );
 			$context->registerServicePanel(
 				'CatalogClothing',
 				$helper,

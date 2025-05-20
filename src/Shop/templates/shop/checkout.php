@@ -18,6 +18,7 @@ $w				= (object) $words['checkout'];
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $helperCart		= new View_Helper_Shop_CartPositions( $env );
 $helperCart->setPositions( $cart->get( 'positions' ) );
+$helperCart->setPaymentBackends( $paymentBackends );
 $helperCart->setPaymentBackend( $cart->get( 'paymentMethod' ) );
 $helperCart->setDeliveryAddress( $address );
 $helperCart->setChangeable( TRUE );

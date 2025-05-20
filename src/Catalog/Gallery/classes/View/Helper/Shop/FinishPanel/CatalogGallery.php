@@ -8,6 +8,7 @@ class View_Helper_Shop_FinishPanel_CatalogGallery
 {
 	protected WebEnvironment $env;
 	protected Dictionary $options;
+	protected Model_Shop_Payment_BackendRegister $paymentBackends;
 	protected int|string|NULL $orderId			= NULL;
 
 	public function __construct( WebEnvironment $env )
@@ -39,6 +40,12 @@ class View_Helper_Shop_FinishPanel_CatalogGallery
 	public function setOrderId( int|string $orderId ): self
 	{
 		$this->orderId		= $orderId;
+		return $this;
+	}
+
+	public function setPaymentBackends( Model_Shop_Payment_BackendRegister $paymentBackends ): self
+	{
+		$this->paymentBackends	= $paymentBackends;
 		return $this;
 	}
 }

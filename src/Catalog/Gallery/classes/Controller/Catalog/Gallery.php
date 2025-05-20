@@ -36,6 +36,7 @@ class Controller_Catalog_Gallery extends Controller
 			$view		= new View_Catalog_Gallery( $env );
 			$helper		= new View_Helper_Shop_FinishPanel_CatalogGallery( $env );
 			$helper->setOrderId( $orderId );
+			$helper->setPaymentBackends( $arguments->get( 'paymentBackends' ) );
 			$context->registerServicePanel( 'CatalogGallery', $helper, 2 );
 		}
 	}

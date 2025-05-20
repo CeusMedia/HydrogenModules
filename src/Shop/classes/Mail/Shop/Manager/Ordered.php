@@ -37,6 +37,7 @@ class Mail_Shop_Manager_Ordered extends Mail_Abstract
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}
 		$this->helperCart->setPositions( $this->order->positions );
+		$this->helperCart->setPaymentBackends( $this->data['paymentBackends'] );
 		$this->helperCart->setPaymentBackend( $this->order->paymentMethod );
 
 		$wordsMail	= (object) $this->words['mail-manager-ordered'];
