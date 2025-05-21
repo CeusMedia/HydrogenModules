@@ -4,15 +4,15 @@ use CeusMedia\HydrogenFramework\View;
 
 class View_Shop_Customer extends View
 {
-	public function address()
+	public function address(): void
 	{
 	}
 
-	public function index()
+	public function index(): void
 	{
 	}
 
-	public function register()
+	public function register(): void
 	{
 	}
 }

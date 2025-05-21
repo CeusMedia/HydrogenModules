@@ -15,7 +15,10 @@ $w			= (object) $words['customer'];
 $wDelivery	= (object) $words['customer-delivery'];
 $wBilling	= (object) $words['customer-billing'];
 
-$iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconCancel			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconHeaderDelivery	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-truck'] );
+$iconHeaderBilling	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-euro'] );
+
 $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
 	'href'		=> './shop/customer/reset',
 	'class'		=> 'btn btn-small',
@@ -37,12 +40,13 @@ if( !$addressDelivery ){
 	$address->institution	= '';
 	$address->region		= '';//$user->region;
 
-	$helper		= new View_Helper_Shop_AddressForm( $env );
-	$helper->setAddress( $address );
-	$helper->setHeading( $wDelivery->heading );
-	$helper->setType( Model_Address::TYPE_DELIVERY );
-	$helper->setTextTop( '<div class="alert alert-info">'.$wDelivery->textTop.'<br/></div>' );
-	return $hint.$helper->render();
+
+	$helperForm		= new View_Helper_Shop_AddressForm( $env );
+	$helperForm->setAddress( $address );
+	$helperForm->setHeading( $iconHeaderDelivery.'&nbsp;'.$wDelivery->heading );
+	$helperForm->setType( Model_Address::TYPE_DELIVERY );
+	$helperForm->setTextTop( '<div class="alert alert-info">'.$wDelivery->textTop.'<br/></div>' );
+	return $hint.$helperForm->render();
 }
 
 if( !$addressBilling ){
@@ -51,7 +55,7 @@ if( !$addressBilling ){
 
 	$helper		= new View_Helper_Shop_AddressForm( $env );
 	$helper->setAddress( $address );
-	$helper->setHeading( $wBilling->heading );
+	$helper->setHeading( $iconHeaderBilling.'&nbsp;'.$wBilling->heading );
 	$helper->setType( Model_Address::TYPE_BILLING );
 	$helper->setTextTop( '<div class="alert alert-info">'.$wBilling->textTop.'<br/></div>' );
 	return $hint.$helper->render();
@@ -59,18 +63,18 @@ if( !$addressBilling ){
 
 $helperAddress	= new View_Helper_Shop_AddressView( $env );
 $panelDelivery	= '<div class="content-panel">
-	<h3>'.$wDelivery->heading.'</h3>
+	<h3>'.$iconHeaderDelivery.'&nbsp;'.$wDelivery->heading.'</h3>
 	<div class="content-panel-inner">
-		'.$helperAddress->setAddress( $addressDelivery ).'<br/>
+		'.$helperAddress->setAddress( $addressDelivery )->render().'<br/>
 		<a href="./shop/customer/address/'.$addressDelivery->addressId.'/4" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wDelivery->buttonEdit.'</a>
 		<a href="./shop/customer/address/'.$addressDelivery->addressId.'/4/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wDelivery->buttonRemove.'</a>
 	</div>
 </div>';
 
 $panelBilling	= '<div class="content-panel">
-	<h3>'.$wBilling->heading.'</h3>
+	<h3>'.$iconHeaderBilling.'&nbsp;'.$wBilling->heading.'</h3>
 	<div class="content-panel-inner">
-		'.$helperAddress->setAddress( $addressBilling ).'<br/>
+		'.$helperAddress->setAddress( $addressBilling )->render().'<br/>
 		<a href="./shop/customer/address/'.$addressBilling->addressId.'/2" class="btn btn-small"><i class="fa fa-fw fa-pencil"></i> '.$wBilling->buttonEdit.'</a>
 		<a href="./shop/customer/address/'.$addressBilling->addressId.'/2/1" class="btn btn-small btn-inverse"><i class="fa fa-fw fa-remove"></i> '.$wBilling->buttonRemove.'</a>
 	</div>

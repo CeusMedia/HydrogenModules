@@ -12,13 +12,13 @@ $w	= (object) $words['customer-delivery'];
 if( Model_Address::TYPE_BILLING === $address->type )
 	$w	= (object) $words['customer-billing'];
 
-$helper		= new View_Helper_Shop_AddressForm( $env );
-$helper->setAddress( $address );
-$helper->setHeading( $w->heading );
-$helper->setType( $address->type );
+$helperForm		= new View_Helper_Shop_AddressForm( $env );
+$helperForm->setAddress( $address );
+$helperForm->setHeading( $w->heading );
+$helperForm->setType( $address->type );
 if( strlen( trim( $w->textTop ) ) )
-	$helper->setTextTop( HtmlTag::create( 'p', $w->textTop ) );
-$tabContent	= $helper->render();
+	$helperForm->setTextTop( HtmlTag::create( 'p', $w->textTop ) );
+$tabContent	= $helperForm->render();
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
@@ -28,11 +28,12 @@ $hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/shop/' ) );
 
-$helper		= new View_Helper_Shop_Tabs( $env );
-$helper->setCurrent( 'shop-customer' );
-$helper->setContent( $hint.$tabContent );
-$helper->setCartTotal( $cartTotal );
-$helper->setPaymentBackends( $this->getData( 'paymentBackends' ) );
-//$helper->setWhiteIcons( $options->get( 'tabs.icons.white' ) );
-$tabs	= $helper->render();
+$helperTabs		= new View_Helper_Shop_Tabs( $env );
+$helperTabs->setCurrent( 'shop-customer' );
+$helperTabs->setContent( $hint.$tabContent );
+$helperTabs->setCartTotal( $cartTotal );
+$helperTabs->setPaymentBackends( $this->getData( 'paymentBackends' ) );
+//$helperTabs->setWhiteIcons( $options->get( 'tabs.icons.white' ) );
+$tabs	= $helperTabs->render();
+
 return $textTop.$tabs.$textBottom;
