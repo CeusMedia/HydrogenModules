@@ -145,8 +145,8 @@ class View_Helper_Shop_AddressView
 					HtmlTag::create( 'small', $label, ['class' => 'muted'] )
 				] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'big', $content, ['class' => NULL] )
-				] ),
+					HtmlTag::create( 'big', $content )
+				], ['style' => 'padding-bottom: 0.75em'] ),
 			], ['class' => 'span12'] )
 		], ['class' => 'row-fluid'] );
 	}
