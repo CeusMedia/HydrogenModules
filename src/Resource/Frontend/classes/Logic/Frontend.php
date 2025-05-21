@@ -84,9 +84,14 @@ class Logic_Frontend extends Logic
 	 */
 	public function getEnv(): RemoteEnvironment
 	{
+		$uri	= $this->path;
+		if( !str_starts_with( $uri, '/' ) && !str_starts_with( $uri, 'http' ) ){
+			$uri	= realpath( $this->env->uri.'/'.$this->path ).'/';
+		}
 		return new RemoteEnvironment( [
 			'configFile'	=> 'config/config.ini',
 			'pathApp' 		=> $this->path,
+			'uri'			=> $uri,
 			'parentEnv'		=> $this->env,
 		] );
 	}
