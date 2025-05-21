@@ -81,6 +81,7 @@ class Controller_Admin_Mail_Queue extends Controller
 	public function bulk(): void
 	{
 		$type	= $this->request->get( 'type' );
+		$page	= (int) $this->request->get( 'page', 0 );
 		$ids	= preg_split( '/\s*,\s*/', $this->request->get( 'ids' ) );
 		switch( $type ){
 			case 'abort':
@@ -93,6 +94,8 @@ class Controller_Admin_Mail_Queue extends Controller
 				$this->bulkRemove( $ids );
 				break;
 		}
+		if( 0 !== $page )
+			$this->restart( $page, TRUE );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -281,7 +284,8 @@ class Controller_Admin_Mail_Queue extends Controller
 	public function remove( $mailId ): void
 	{
 		$this->logic->removeMail( $mailId );
-		if( ( $page = $this->request->get( 'page' ) ) )
+		$page	= (int) $this->request->get( 'page', 0 );
+		if( 0 !== $page )
 			$this->restart( $page, TRUE );
 		$this->restart( NULL, TRUE );
 	}
