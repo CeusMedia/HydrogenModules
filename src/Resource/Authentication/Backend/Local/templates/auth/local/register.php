@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
-/** @var View $view */
+/** @var View_Auth_Local $view */
 /** @var Dictionary $config */
 /** @var array<string,array<string,string>> $words */
 /** @var Dictionary $user */
@@ -35,14 +35,14 @@ $files		= [
 	'html/auth/local/privacy',
 ];
 
-function reduceContentFile( $view, $fileName ): string
+function reduceContentFile( View_Auth_Local $view, $fileName ): string
 {
-	if( !$view->hasContent( $fileName ) )
+	if( !$view->hasContentFile( $fileName ) )
 		return '';
 	return preg_replace( "/<!--(.|\s)*?-->/", "", $view->loadContentFile( $fileName ) );
 }
 
-function getLegalFileContent( WebEnvironment $env, View $view, string $legal ): string
+function getLegalFileContent( WebEnvironment $env, View_Auth_Local $view, string $legal ): string
 {
 	if( ( $html = reduceContentFile( $view, $legal.'.html' ) ) )
 		return $html;

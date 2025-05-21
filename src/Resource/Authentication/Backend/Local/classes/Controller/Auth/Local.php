@@ -43,7 +43,7 @@ class Controller_Auth_Local extends Controller
 		$from		= str_replace( "index/index", "", $from );
 
 		if( '' !== trim( (string) $code ) ){
-			$passwordSalt	= trim( $this->config->get( 'module.resource.users.password.salt' ) );						//  string to salt password with
+			$passwordSalt	= trim( $this->config->get( 'module.resource_users.password.salt', '' ) );						//  string to salt password with
 			$modelUser		= new Model_User( $this->env );
 			$users			= $modelUser->getAllByIndex( 'status', 0 );
 			foreach( $users as $user ){
@@ -680,7 +680,10 @@ class Controller_Auth_Local extends Controller
 		$input->set( 'firstname', trim( $input->get( 'firstname', '' ) ) );
 		$input->set( 'surname', trim( $input->get( 'surname' ) ) );
 
-		$this->callHook( 'Auth', 'checkBeforeRegister', $this, $input );
+		$payload	= $input->getAll();
+		$this->callHook( 'Auth', 'checkBeforeRegister', $this, $payload );
+		$input	= new Dictionary( $payload );
+
 		if( '' === $input->get( 'username' ) ){
 			$this->messenger->noteError( $words->msgNoUsername );
 			return FALSE;

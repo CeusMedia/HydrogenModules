@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 use CeusMedia\HydrogenFramework\View;
@@ -17,9 +18,9 @@ return renderLayout( $env, $view, $panelConfirm );
 function renderLayout( Web $env, View $view, string $panel ): string
 {
 	[$textTop, $textInfo, $textBottom]	= array_values( $view->populateTexts( ['top', 'info', 'bottom'], 'html/auth/local/confirm/' ) );
-	$textTop	= trim( strip_tags( $textTop ?? '' ) );
-	$textBottom	= trim( strip_tags( $textBottom ?? '' ) );
-	$textInfo	= trim( strip_tags( $textInfo ?? '' ) );
+	$textTop	= trim( $textTop ?? '' );
+	$textBottom	= trim( $textBottom ?? '' );
+	$textInfo	= trim( $textInfo ?? '' );
 
 	if( '' !== $textInfo )
 		return $textTop.
@@ -37,7 +38,7 @@ function renderLayout( Web $env, View $view, string $panel ): string
 	], ['class' => 'centered-pane-container'] );
 }
 
-function renderPanel( Web $env, object $w, string $pak, ?string $from ): string
+function renderPanel( Web $env, object $w, ?string $pak, ?string $from ): string
 {
 	$iconSend	= HTML::Icon( 'ok', TRUE );
 	if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
@@ -60,7 +61,7 @@ function renderPanel( Web $env, object $w, string $pak, ?string $from ): string
 							'id'		=> 'input_confirm_code',
 							'class'		=> 'bs2-span12 bs3-col-md-12 bs4-col-md-12 mandatory',
 							'required'	=> 'required',
-							'value'		=> $pak
+							'value'		=> $pak ?? '',
 						] ),
 					] ),
 				] ),
