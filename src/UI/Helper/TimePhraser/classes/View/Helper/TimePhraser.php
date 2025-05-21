@@ -15,7 +15,8 @@ class View_Helper_TimePhraser
 
 	protected Environment $env;
 	protected bool $asHtml			= TRUE;
-	protected string $template			='%s';
+	protected string $template		='%s';
+	protected string $case			= '';
 	protected int $mode				= self::MODE_HINT;
 	protected $timestamp;
 
@@ -31,23 +32,26 @@ class View_Helper_TimePhraser
 
 	public function convert( float|int|string $timestamp, bool $asHtml = FALSE, ?string $prefix = NULL, ?string $suffix = NULL ): string
 	{
-		$helper	= new Timestamp( (int) $timestamp );
+		$helper				= new Timestamp( (int) $timestamp );
+		$languageTopicKey	= 'phrases-time';
+		if( '' !== $this->case )
+			$languageTopicKey	= 'phrases-time-'.$this->case;
 
 		switch( $this->mode ){
 			case self::MODE_BREAK:
-				$phrase	= $helper->toPhrase( $this->env, FALSE, 'timephraser', 'phrases-time' );
+				$phrase	= $helper->toPhrase( $this->env, FALSE, 'timephraser', $languageTopicKey );
 				if( $this->template )
 					$phrase	= sprintf( $this->template, $phrase );
 				$phrase	= '<div style="font-size: 0.9em; line-height: 1.1em;">'.$phrase.'</div><div style="font-size: 0.75em; opacity: 0.66; line-height: 1em;">'.date( 'd.m. H:i:s', $timestamp ).'</div>';
 				break;
 			case self::MODE_HINT:
 			default:
-				$phrase	= $helper->toPhrase( $this->env, $asHtml, 'timephraser', 'phrases-time' );
+				$phrase	= $helper->toPhrase( $this->env, $asHtml, 'timephraser', $languageTopicKey );
 				if( 0 !== ( (int) $timestamp ) ){
 					if( $this->template )
 						$phrase	= sprintf( $this->template, $phrase );
-					$phrase	= $prefix ? $prefix.' '.$phrase : $phrase;
-					$phrase	= $suffix ? $phrase.' '.$suffix : $phrase;
+					$phrase	= ( '' !== ( $prefix ?? '' ) ) ? $prefix.' '.$phrase : $phrase;
+					$phrase	= ( '' !== ( $suffix ?? '' ) ) ? $phrase.' '.$suffix : $phrase;
 				}
 				break;
 		}
@@ -70,6 +74,12 @@ class View_Helper_TimePhraser
 	public function setAsHtml( bool $asHtml = TRUE ): self
 	{
 		$this->asHtml	= $asHtml;
+		return $this;
+	}
+
+	public function setCase( string $case = '' ): self
+	{
+		$this->case	= $case;
 		return $this;
 	}
 
