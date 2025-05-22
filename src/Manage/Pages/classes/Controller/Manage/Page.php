@@ -186,25 +186,24 @@ ModuleManagePages.PageEditor.init();
 
 			if( $this->request->has( 'page_identifier' ) ){
 				$identifier	= $this->request->get( 'page_identifier' );
+				$parentId	= $this->request->get( 'page_parentId' );
 				$identifier	= preg_replace( $this->patternIdentifier, '', $identifier );
 				$this->request->set( 'page_identifier', $identifier );
+				$indices	= [
+					'identifier'	=> $identifier,
+					'pageId'		=> '!= '.$pageId,
+					'parentId'		=> $parentId,
+					'scope'			=> $scope,
+				];
+				if( $this->model->hasByIndices( $indices ) ){
+					$message	= $words->errorIdentifierTaken;
+					if( $parentId )
+						$message	= $words->errorIdentifierInParentTaken;
+					$this->messenger->noteError( $message, $identifier );
+				}
 			}
 
-			$indices		= [
-				'identifier'	=> $this->request->get( 'page_identifier' ),
-				'pageId'		=> '!= '.$pageId,
-				'parentId'		=> $this->request->get( 'page_parentId' ),
-				'scope'			=> $scope,
-			];
-			if( $this->model->getByIndices( $indices ) ){
-				if( $this->request->get( 'page_parentId' ) )
-					$message	= $words->errorIdentifierInParentTaken;
-				else
-					$message	= $words->errorIdentifierTaken;
-				$identifier	= $this->request->get( 'page_identifier' );
-				$this->messenger->noteError( $message, $identifier );
-			}
-			else{
+			if( !$this->messenger->gotError() ){
 //				if( $this->env->getModules()->has( 'Resource_Localization' ) ){						//  localization module is installed
 				if( class_exists( 'Logic_Localization' ) ){									//  localization module is installed
 					$localization	= Logic_Localization::getInstance( $this->env );
@@ -222,7 +221,7 @@ ModuleManagePages.PageEditor.init();
 				else if( $this->env->getModules()->has( 'Resource_Versions' ) ){					//  versioning module is installed
 					$contentNew	= $this->request->get( 'page_content' );
 					if( $page->content !== $contentNew ){											//  new content differs from page content
-						$logicVersion		= Logic_Versions::getInstance( $this->env );			//  start versioning logic
+						$logicVersion	= Logic_Versions::getInstance( $this->env );				//  start versioning logic
 						$versions	= $logicVersion->getAll( 'Info_Pages', $pageId );
 						$found		= FALSE;														//  init indicator if current page content is a version
 						foreach( $versions as $_version )											//  iterate all page versions

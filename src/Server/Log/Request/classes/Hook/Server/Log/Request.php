@@ -64,6 +64,8 @@ class Hook_Server_Log_Request extends Hook
 			'session'	=> json_encode( $session ),
 			'cookie'	=> json_encode( $cookie ),
 			'headers'	=> json_encode( $headers ),
+			'referer'	=> $_SERVER['HTTP_REFERER'] ?? '',
+			'userAgent'	=> $_SERVER['HTTP_USER_AGENT'] ?? '',
 			'timestamp'	=> $date->format( 'Y-m-d H:i:s.u' ),
 		] );
 	}
