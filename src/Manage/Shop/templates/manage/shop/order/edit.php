@@ -9,16 +9,14 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
-/** @var View $view */
+/** @var View_Manage_Shop_Order $view */
 /** @var array<string,array<string|string>> $words */
 /** @var object $order */
-
-$labelsCustomer	= $this->getWords( 'customer', 'manage/shop' );
 
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= [new LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
 
-$states	= array(
+$states	= [
 	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [-5, -4, 3],
@@ -115,7 +113,7 @@ $states	= array(
 		'class'		=> 'btn-success',
 		'icon'		=> 'ok',
 	],
-);
+];
 
 foreach( $states as $status ){
 	if( $status->enabled ){
@@ -129,20 +127,20 @@ foreach( $states as $status ){
 		}
 	}
 }
-$buttons[]	= HtmlTag::create( 'a', '<i class="icon-question-sign icon-white"></i>', array(
+$buttons[]	= HtmlTag::create( 'a', '<i class="icon-question-sign icon-white"></i>', [
 	'class'		=> 'btn btn-info btn-small fancybox-auto',
 	'href'		=> $env->getConfig()->get( 'path.images' ).'states.png',
 	'target'	=> '_blank',
-) );
+] );
 
 $buttons	= new ButtonToolbar( [new ButtonGroup( $buttons )] );
 
 
-function renderDataList( $keys, $data, $labels ): string
+function renderDataList( array $keys, object $labels, object $data ): string
 {
 	$list	= [];
 	foreach( $keys as $key ){
-		if( isset( $data->$key ) && strlen( trim( $data->$key ) ) ){
+		if( isset( $data->$key ) && '' !== trim( $data->$key ?? '' ) ){
 			$list[]	= HtmlTag::create( 'dt', $labels->$key );
 			$list[]	= HtmlTag::create( 'dd', $data->$key );
 		}
@@ -153,8 +151,10 @@ function renderDataList( $keys, $data, $labels ): string
 }
 
 $optStatus	= $words['states'];
-$optStatus	= HtmlElements::Options( $optStatus, (string)$order->status );
+$optStatus	= HtmlElements::Options( $optStatus, (string) $order->status );
 
+$labelsCustomer	= (object) $env->getLanguage()->getWords( 'manage/shop' )['customer'];
+$keysCustomer	= ['institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone'];
 $panels	= [];
 $panels[]	= '
 	<div class="span4">
@@ -179,7 +179,7 @@ if( $order->customer )
 		<div class="content-panel">
 			<h4>Lieferanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( ['institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone'], $order->customer->addressDelivery, $labelsCustomer ).'
+				'.renderDataList( $keysCustomer, $labelsCustomer, $order->customer->addressDelivery ).'
 			</div>
 		</div>
 	</div>';
@@ -189,7 +189,7 @@ if( $order->customer && $order->customer->addressBilling )
 		<div class="content-panel">
 			<h4>Rechnungsanschrift</h4>
 			<div class="content-panel-inner">
-				'.renderDataList( ['institution', 'firstname', 'surname', 'country', 'region', 'city', 'postcode', 'street', 'email', 'phone'], $order->customer->addressBilling, $labelsCustomer ).'
+				'.renderDataList( $keysCustomer, $labelsCustomer, $order->customer->addressBilling ).'
 			</div>
 		</div>
 	</div>';
@@ -205,7 +205,7 @@ foreach( $order->positions as $position ){
 	$cellBridge		= HtmlTag::create( 'td', $position->bridge->data->title, ['class' => 'cell-position-bridge'] );
 	$cellTitle		= HtmlTag::create( 'td', $link, ['class' => 'cell-position-title'] );
 	$cellQuantity	= HtmlTag::create( 'td', $position->quantity, ['class' => 'cell-position-quantity'] );
-	$cellStatus		= HtmlTag::create( 'td', new ButtonGroup( array(
+	$cellStatus		= HtmlTag::create( 'td', new ButtonGroup( [
 		new LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
 			'bestellt',
@@ -220,7 +220,7 @@ foreach( $order->positions as $position ){
 			'ok',
 			$order->status < 1 || $position->status == 2
 		),
-	) ), ['class' => 'cell-position-actions'] );
+	] ), ['class' => 'cell-position-actions'] );
 
 	$rowColor		= $position->status == 1 ? 'warning' : ( $position->status == 2 ? 'success' : 'error' );
 	$cells			= [$cellQuantity, $cellTitle, $cellBridge, $cellStatus];
