@@ -72,6 +72,7 @@
 		<needs type="module">Resource_Shop</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 		<needs type="module">UI_Map</needs>
+		<supports type="module">Resource_Shop_Shipping</supports>
 	</relations>
 	<link xml:lang="de" path="manage/shop/order">Bestellungen</link>
 	<link xml:lang="en" path="manage/shop/report">Statistik</link>
