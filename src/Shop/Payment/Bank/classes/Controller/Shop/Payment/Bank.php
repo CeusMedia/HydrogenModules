@@ -18,19 +18,20 @@ class Controller_Shop_Payment_Bank extends Controller
 
 	protected HttpRequest $request;
 	protected MessengerResource $messenger;
+	protected Model_Shop_Payment_BackendRegister $backends;
 	protected ?string $orderId;
 	protected ?object $order;
 	protected ?string $localUserId;
 	protected ?string $userId;
 	protected ?object $wallet;
-	protected Model_Shop_Payment_BackendRegister $backends;
 
 	/**
 	 *	Entry point for payment.
 	 *	Since "Transfer" (user pays on another channel) is selected, no further actions are needed.
 	 *	Forwards to shop finish.
+	 *	@return		void
 	 */
-	public function perTransfer()
+	public function perTransfer(): void
 	{
 		$this->restart( 'shop/finish' );
 	}
@@ -39,14 +40,16 @@ class Controller_Shop_Payment_Bank extends Controller
 	 *	Entry point for payment.
 	 *	Since "Bill" (user pays bill coming on delivery) is selected, no further actions are needed.
 	 *	Forwards to shop finish.
+	 *	@return		void
 	 */
-	public function perBill()
+	public function perBill(): void
 	{
 		$this->restart( 'shop/finish' );
 	}
 
 	/**
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void

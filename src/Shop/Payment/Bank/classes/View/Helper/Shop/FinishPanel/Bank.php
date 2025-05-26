@@ -97,7 +97,7 @@ class View_Helper_Shop_FinishPanel_Bank
 		$facts->add( 'BIC', HtmlTag::create( 'tt', $bank->get( 'bic' ) ) );
 		$facts->add( 'Preis', number_format( $this->order->priceTaxed, 2, ',', '' ).' '.$this->order->currency );
 
-		if( $this->outputFormat == self::OUTPUT_FORMAT_HTML )
+		if( self::OUTPUT_FORMAT_HTML === $this->outputFormat )
 			return HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'h3', $this->heading ),
