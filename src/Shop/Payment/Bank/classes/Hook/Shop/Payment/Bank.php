@@ -94,7 +94,7 @@ class Hook_Shop_Payment_Bank extends Hook
 		if( NULL === $order )
 			throw new RuntimeException( 'Invalid order ID set' );
 
-		foreach( $backendRegistry->getAll() as $backend ){
+		foreach( $paymentBackends as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){
