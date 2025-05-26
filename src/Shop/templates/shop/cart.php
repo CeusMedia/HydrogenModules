@@ -14,6 +14,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $w		= (object) $words['cart'];
 
 $tablePositions	= '<p><em class="muted">'.$w->empty.'</em></p>';
+$tableShipping	= '';
 $buttonbar		= '';
 
 if( count( $positions = $cart->get( 'positions' ) ) ){
@@ -26,15 +27,29 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 		$helperCart->setDeliveryAddress( $address );
 	$helperCart->setChangeable( TRUE );
 	$tablePositions	= $helperCart->render();
-	$buttonbar		= HtmlTag::create( 'div', [
-		new LinkButton( './shop/customer', $w->buttonToCustomer, 'btn-success not-pull-right', 'fa fa-fw fa-arrow-right', !$positions )
-	], ['class' => 'buttonbar well well-small'] );
+	$buttonbar		= HtmlTag::create( 'div', new LinkButton(
+		'./shop/customer',
+		$w->buttonToCustomer,
+		'btn-success not-pull-right',
+		'fa fa-fw fa-arrow-right',
+		!$positions
+	), ['class' => 'buttonbar well well-small'] );
+
+	$helperShipping	= new View_Helper_Shop_Shipping( $env );
+	$helperShipping->setPositions( $positions );
+	if( is_object( $address ) )
+		$helperShipping->setDeliveryAddress( $address );
+
+	$tableShipping	= $helperShipping->render();
 }
 
 $tabContent	= '
 	<h3>'.$w->heading.'</h3>
 	'.$tablePositions.'
 	'.$buttonbar.'
+	<br/>
+	<br/>
+	'.$tableShipping.'
 ';
 
 $helperTabs		= new View_Helper_Shop_Tabs( $env );

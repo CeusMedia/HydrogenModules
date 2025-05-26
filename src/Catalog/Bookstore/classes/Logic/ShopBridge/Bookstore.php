@@ -15,6 +15,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	public string $path		= "catalog/bookstore/article/%articleId%";
 	public float $taxPercent;
 	public float $taxIncluded;
+	public int|float $minimumWeight		= 250;
 
 	/**
 	 *	@param		int|string		$articleId
@@ -187,7 +188,11 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 */
 	public function getWeight( int|string $articleId, int $amount = 1 ): float
 	{
-		return (float) $this->check( $articleId )->weight * $amount;
+		$weight	= (float) $this->check( $articleId )->weight;
+		if( .0 === $weight && 0 !== (int) $this->minimumWeight )
+			$weight	= $this->minimumWeight;
+		return $weight * $amount;
+#		return (float) $this->check( $articleId )->weight * $amount;
 	}
 
 	protected function __onInit(): void
