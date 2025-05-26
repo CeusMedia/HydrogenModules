@@ -60,15 +60,15 @@ class Logic_Shop_Shipping extends Logic
 	 *	Get shipping grade from weight.
 	 *	If weight is not covered by a grade, the fallback grade will be returned, if existing.
 	 *	@access		public
-	 *	@param		integer		$weight			Total weight of cart content in grams
+	 *	@param		int|float		$weight			Total weight of cart content in grams
 	 *	@return 	object
 	 *	@throws		RangeException if weight is neither covered by a zone nor a fallback grade is existing.
 	 */
-	public function getGradeFromWeight( int $weight ): object
+	public function getGradeFromWeight( int|float $weight ): object
 	{
 		$grades	= $this->modelGrade->getAll( ['fallback' => 0], ['weight' => 'ASC'] );
 		foreach( $grades as $grade ){
-			if( (int) $grade->weight > (int) $weight )
+			if( (int) $grade->weight = $weight )
 				return $grade;
 		}
 		$grade	= $this->modelGrade->getByIndex( 'fallback', 1 );

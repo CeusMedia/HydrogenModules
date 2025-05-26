@@ -53,7 +53,7 @@ class View_Helper_Shop_CartPositions
 
 	public function render(): string
 	{
-		if( !$this->positions )
+		if( [] === $this->positions )
 			return '';
 		return match( $this->output ){
 			self::OUTPUT_HTML		=> $this->renderAsHtml(),
@@ -207,7 +207,7 @@ class View_Helper_Shop_CartPositions
 
 		//  @todo add shipping
 		$priceShipping	= 0;
-		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+		if( $this->env->getModules()->has( 'Resource_Shop_Shipping' ) ){
 			$logicShipping	= new Logic_Shop_Shipping( $this->env );
 			if( $this->deliveryAddress ){
 				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
@@ -343,7 +343,7 @@ class View_Helper_Shop_CartPositions
 		}
 
 		$priceShipping	= 0;
-		if( $this->env->getModules()->has( 'Shop_Shipping' ) ){
+		if( $this->env->getModules()->has( 'Resource_Shop_Shipping' ) ){
 			$logicShipping	= new Logic_Shop_Shipping( $this->env );
 			if( $this->deliveryAddress ){
 				$priceShipping	= $logicShipping->getPriceFromCountryCodeAndWeight(
