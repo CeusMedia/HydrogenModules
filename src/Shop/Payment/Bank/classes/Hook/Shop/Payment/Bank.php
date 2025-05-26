@@ -34,7 +34,7 @@ class Hook_Shop_Payment_Bank extends Hook
 					'backend'		=> 'Bank',								//  backend class name
 					'key'			=> 'Bank:Transfer',						//  payment method key
 					'path'			=> 'bank/perTransfer',					//  shop URL
-					'icon'			=> 'bank-1.png',						//  icon
+					'icon'			=> 'bank-transfer.png',					//  icon
 //					'icon'			=> 'fa fa-fw fa-bank',					//  icon
 					'priority'		=> $priority,							//  priority
 					'title'			=> $labels->transfer,					//  payment method label
