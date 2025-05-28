@@ -155,6 +155,7 @@ ModuleManagePages.PageEditor.init();
 		$page			= $this->checkPageId( $pageId );
 		$scope			= (int) $this->appSession->get( 'scope' );
 		$logicPage		= Logic_Page::getInstance( $this->env );
+		$logicPage->setApp( $this->appFocus );
 
 //		$logic			= Logic_Versions::getInstance( $this->env );
 
