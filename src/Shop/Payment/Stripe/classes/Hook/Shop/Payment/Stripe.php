@@ -13,6 +13,7 @@ class Hook_Shop_Payment_Stripe extends Hook
 	 */
 	public function onRegisterShopPaymentBackends(): void
 	{
+		$payload	= $this->getPayload() ?? [];
 		$methods	= $this->env->getConfig()->getAll( 'module.shop_payment_stripe.method.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'shop/payment/stripe' );
 		$labels		= (object) $words['payment-methods'];
@@ -76,6 +77,7 @@ class Hook_Shop_Payment_Stripe extends Hook
 			}
 		}
 		$payload['register']	= $register;
+		$this->setPayload( $payload );
 	}
 
 	/**

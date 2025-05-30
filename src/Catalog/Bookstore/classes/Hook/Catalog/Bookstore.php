@@ -83,10 +83,17 @@ class Hook_Catalog_Bookstore extends Hook
 				$path		= preg_replace( "@^catalog/bookstore/author/@", "", $resultDocument->path );
 				if( $authorId = (int) $path ){
 					$author		= $modelAuthor->get( $authorId );
-					$title		= $author->lastname;
-					if( $author->firstname )
-						$title	= $author->firstname." ".$title;
-					$authorUri	= $helper->getAuthorUri( $author->authorId );
+					if( NULL !== $author ){
+						$title		= $author->lastname;
+						if( $author->firstname )
+							$title	= $author->firstname." ".$title;
+						$authorUri	= $helper->getAuthorUri( $author->authorId );
+					}
+					else{
+						$title		= '---';
+						$authorUri	= 'catalog/bookstore/author/'.$path;
+						$author		= (object) ['image' => NULL];
+					}
 					$resultDocument->facts	= (object) [
 						'title'			=> $title,
 						'link'			=> preg_replace( '/^\.\//', '', $authorUri ),

@@ -22,7 +22,7 @@ $about	= '';
 $image	= '';
 $link	= '';
 $id		= str_pad( $author->authorId, 5, 0, STR_PAD_LEFT );
-$text	= nl2br( htmlentities( $author->description, ENT_COMPAT, 'UTF-8' ) );
+$text	= nl2br( htmlentities( $author->description ?? '', ENT_COMPAT, 'UTF-8' ) );
 $name	= $author->lastname;
 if( $author->firstname )
 	$name	= $author->firstname." ".$name;
@@ -85,6 +85,6 @@ return '
 	'.$about.'
 	<h3>'.$w->caption." ".$name.'</h3>
 	'.$list.'
-	<a href="#" onclick="history.back()" class="btn btn-small">'.$w->link_back.'</a>
+	<button type="button" onclick="return history.back()" class="btn btn-small">'.$w->link_back.'</button>
 </div>
 ';
