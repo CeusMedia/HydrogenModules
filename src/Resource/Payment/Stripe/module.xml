@@ -48,7 +48,7 @@ Cronjobs:
 		<class>Job/Stripe/Event.php</class>
 		<class>Mail/Stripe/EventFailed.php</class>
 		<class>Mail/Stripe/EventAgain.php</class>
-		<class>Mail/Stripe/EventUnverfied.php</class>
+		<class>Mail/Stripe/EventUnverified.php</class>
 		<class>Mail/Stripe/Event/Payin.php</class>
 		<class>Model/Stripe/Event.php</class>
 		<class>Model/Stripe/Payin.php</class>

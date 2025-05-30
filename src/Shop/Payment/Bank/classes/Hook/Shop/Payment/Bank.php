@@ -14,7 +14,6 @@ class Hook_Shop_Payment_Bank extends Hook
 	public function onRegisterShopPaymentBackends(): void
 	{
 		$payload	= $this->getPayload() ?? [];
-
 		$methods	= $this->env->getConfig()->getAll( 'module.shop_payment_bank.method.', TRUE );
 		$words		= $this->env->getLanguage()->getWords( 'shop/payment/bank' );
 		$labels		= (object) $words['payment-methods'];

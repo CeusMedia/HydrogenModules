@@ -9,30 +9,37 @@ class Model_Stripe_Event extends Model
 	public const STATUS_HANDLED		= 2;
 	public const STATUS_CLOSED		= 3;
 
+	public const STATUSES			= [
+		self::STATUS_RECEIVED,
+		self::STATUS_FAILED,
+		self::STATUS_HANDLED,
+		self::STATUS_CLOSED,
+	];
+
 	protected string $name			= 'stripe_events';
 
 	protected array $columns		= [
-		"eventId",
-		"status",
-		"id",
-		"type",
-		"output",
-		"triggeredAt",
-		"receivedAt",
-		"handledAt",
+		'eventId',
+		'status',
+		'id',
+		'type',
+		'output',
+		'triggeredAt',
+		'receivedAt',
+		'handledAt',
 	];
 
 	protected string $primaryKey	= 'eventId';
 
 	protected array $indices		= [
-		"status",
-		"id",
-		"type",
+		'status',
+		'id',
+		'type',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
 
-	public $types			= [
+	public array $types				= [
 		'PAYIN_NORMAL'				=> ['PAYIN_NORMAL_CREATED', 'PAYIN_NORMAL_SUCCEEDED', 'PAYIN_NORMAL_FAILED'],
 		'PAYOUT_NORMAL_'			=> ['PAYOUT_NORMAL_CREATED', 'PAYOUT_NORMAL_SUCCEEDED', 'PAYOUT_NORMAL_FAILED'],
 		'TRANSFER_NORMAL'			=> ['TRANSFER_NORMAL_CREATED', 'TRANSFER_NORMAL_SUCCEEDED', 'TRANSFER_NORMAL_FAILED'],
