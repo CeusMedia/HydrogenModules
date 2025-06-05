@@ -352,9 +352,10 @@ class Logic_Page extends Logic
 				$parentPath	= $parent->identifier.'/'.$parentPath;
 			}
 		}
-		$page->fullpath		= $parentPath.$page->identifier;
-		$page->modifiedAt	= time();
-		$model->edit( $pageId, $page );
+		$model->edit( $pageId, [
+			'fullpath'		=> $parentPath.$page->identifier,
+			'modifiedAt'	=> time(),
+		] );
 		if( Model_Page_ByDatabase::TYPE_BRANCH === (int) $page->type )
 			foreach( $model->getAllByIndex( 'parentId', $pageId ) as $subpage )
 				$this->updateFullpath( $subpage->pageId, $parentPath.$page->identifier.'/' );

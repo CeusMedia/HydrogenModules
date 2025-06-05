@@ -81,16 +81,23 @@ class Controller_Stripe_Event extends Controller
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
 	}
 
-	protected function sendMail( string $type, $data )
+	/**
+	 *	@param		string		$type
+	 *	@param		array		$data
+	 *	@return		?bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function sendMail( string $type, array $data ): ?bool
 	{
 		if( !$this->moduleConfig->get( 'mail.hook' ) )
-			return;
+			return NULL;
 		$className	= 'Mail_Stripe_'.$type;
 		$arguments	= [$this->env, $data];
 		$mail		= ObjectFactory::createObject( $className, $arguments );
-		$receiver	= ['email' => $this->moduleConfig->get( 'mail.hook' )];
+		$receiver	= (object) ['email' => $this->moduleConfig->get( 'mail.hook' )];
 		$language	= $this->env->getLanguage()->getLanguage();
-		return $this->env->getLogic()->get( 'Mail' )->sendMail( $mail, $receiver, $language );
+		return Logic_Mail::getInstance( $this->env )->sendMail( $mail, $receiver, $language );
 	}
 
 	protected function verify( string $eventType, $resourceId ): bool
