@@ -5,7 +5,7 @@ use CeusMedia\Common\Net\HTTP\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Logic_Payment_PayPal
+class Logic_Shop_Payment_Paypal
 {
 	public ?object $latestResponse		= NULL;
 

@@ -9,8 +9,8 @@ class Controller_Shop_Payment_Paypal extends Controller
 	/**	@var	Dictionary					$config			Module configuration dictionary */
 	protected Dictionary $config;
 
-	/**	@var	Logic_Payment_PayPal		$provider		Payment provider logic instance */
-	protected Logic_Payment_PayPal $logicProvider;
+	/**	@var	Logic_Shop_Payment_Paypal	$provider		Payment provider logic instance */
+	protected Logic_Shop_Payment_Paypal $logicProvider;
 
 	/**	@var	Logic_Shop					$shop			Shop logic instance */
 	protected Logic_Shop $logicShop;
@@ -23,7 +23,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 	protected ?string $orderId				= NULL;
 	protected ?object $order				= NULL;
 
-	public function authorize()
+	public function authorize(): void
 	{
 		$price		= $this->order->priceTaxed;
 		$paymentId	= $this->logicProvider->requestToken( $this->orderId, $price );
@@ -37,7 +37,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		$this->restart( $url, FALSE, NULL, TRUE );
 	}
 
-	public function authorized()
+	public function authorized(): void
 	{
 		$token		= $this->env->getRequest()->get( 'token' );
 		try{
@@ -51,7 +51,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		}
 	}
 
-	public function cancelled()
+	public function cancelled(): void
 	{
 		$this->session->remove( 'paymentId' );
 		$this->session->remove( 'token' );
@@ -74,7 +74,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		$this->addData( 'payment', $payment );
 	}*/
 
-	public function pay()
+	public function pay(): void
 	{
 		$messenger	= $this->env->getMessenger();
 		$paymentId	= $this->session->get( 'paymentId' );
@@ -111,7 +111,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		$this->config		= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		$this->logicProvider	= new Logic_Payment_PayPal( $this->env );
+		$this->logicProvider	= new Logic_Shop_Payment_Paypal( $this->env );
 		$this->logicShop		= new Logic_Shop( $this->env );
 
 		$modelCart			= new Model_Shop_Cart( $this->env );
