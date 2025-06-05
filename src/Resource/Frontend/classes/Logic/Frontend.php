@@ -49,6 +49,7 @@ class Logic_Frontend extends Logic
 		return new RemoteEnvironment( array_merge( $options, [
 //			'configFile'	=> 'config/config.ini',
 			'pathApp' 		=> $path,
+			'uri' 			=> $path,
 			'parentEnv'		=> $parentEnv,
 		] ) );
 	}

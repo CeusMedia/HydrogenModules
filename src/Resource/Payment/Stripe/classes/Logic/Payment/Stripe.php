@@ -9,6 +9,7 @@ use Stripe\Exception\ApiErrorException as StripeApiErrorException;
 use Stripe\Stripe as Stripe;
 use Stripe\Charge as StripeCharge;
 use Stripe\Customer as StripeCustomer;
+use Stripe\Event as StripeEvent;
 
 class Logic_Payment_Stripe extends Logic
 {
@@ -210,4 +211,9 @@ class Logic_Payment_Stripe extends Logic
 	//	@todo check card against user cards
 		return $card;
 	}*/
+
+	public function getEventResource( string $type, int|string $eventId ): StripeEvent
+	{
+		return StripeEvent::retrieve( $eventId );
+	}
 }
