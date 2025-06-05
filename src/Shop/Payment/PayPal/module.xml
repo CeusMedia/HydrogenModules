@@ -43,7 +43,7 @@ Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 	<files>
 		<class>Controller/Shop/Payment/Paypal.php</class>
 		<class>Hook/Shop/Payment/Paypal.php</class>
-		<class>Logic/Payment/Paypal.php</class>
+		<class>Logic/Shop/Payment/Paypal.php</class>
 		<class>Model/Shop/Payment/Paypal.php</class>
 		<class>View/Shop/Payment/Paypal.php</class>
 		<locale>de/shop/payment/paypal.ini</locale>
