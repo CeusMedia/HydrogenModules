@@ -148,14 +148,14 @@ class Logic_Shop_Payment_Paypal
 		$logicShop		= new Logic_Shop( $this->env );
 		$logicBridge	= new Logic_ShopBridge( $this->env );
 
-		$order		= $logicShop->getOrder( $orderId, TRUE );
-		$customer	= $order->customer;
-		$positions	= $order->positions;
+		$order			= $logicShop->getOrder( $orderId, TRUE );
+		$billingAddress	= $logicShop->getAccountCustomer( $order->userId )->addressBilling;
+		$positions		= $order->positions;
 
 		$handling	= 0;
 		$insurance	= 0;
-
 		$shipping	= 0;
+
 		if( isset( $order->shipping ) )
 			$shipping	= $order->shipping->priceTaxed;
 
@@ -176,8 +176,8 @@ class Logic_Shop_Payment_Paypal
 		$data['PAYFLOWCOLOR']	= $this->config->get( 'option.payflow.color.background' );
 		$data['LOCALECODE']		= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$data['ALLOWNOTE']		= "1";
-		$data['FIRSTNAME']		= $customer->firstname;
-		$data['LASTNAME']		= $customer->surname;
+		$data['FIRSTNAME']		= $billingAddress->firstname;
+		$data['LASTNAME']		= $billingAddress->surname;
 
 		$totalPrice	= 0;
 		$totalTax	= 0;
@@ -214,42 +214,34 @@ class Logic_Shop_Payment_Paypal
 		$data['PAYMENTREQUEST_0_INSURANCEAMT']	= number_format( $insurance, 2 );
 		$data['PAYMENTREQUEST_0_AMT']			= number_format( $total, 2 );
 
-		try{
-			$response	= (object) $this->request( $data );
-			if( !$response || $response->ACK !== "Success" ){
-				$this->latestResponse	= $response;
-				print_m( $data );
-				print_m( $response );
-				throw new RuntimeException( 'Requesting token failed' );
-			}
-/*			$modelAddress	= new Model_Address( $this->env );
-			$address		= $modelAddress->get( [
-				'relationType'	=> 'user',
-				'relationId'	=> $this->localUserId,
-				'type'			=> Model_Address::TYPE_BILLING,
-			] );*/
-			$data	= [
-				'orderId'	=> $orderId,
-				'token'		=> $response->TOKEN,
-				'status'	=> 0,
-				'amount'	=> $total,
-				'email'		=> $customer->email,
-				'firstname'	=> $customer->firstname,
-				'lastname'	=> $customer->surname,
-				'country'	=> $customer->country,
-				'postcode'	=> $customer->postcode,
-				'city'		=> $customer->city,
-				'street'	=> $customer->street.( $customer->number ? ' '.$customer->number : '' ),
-				'timestamp'	=> time(),
-			];
-			return $this->model->add( $data );
+		$response	= (object) $this->request( $data );
+		if( !$response || $response->ACK !== "Success" ){
+			$this->latestResponse	= $response;
+			print_m( $data );
+			print_m( $response );
+			throw new RuntimeException( 'Requesting token failed' );
 		}
-		catch( Exception $e ){
-			HtmlExceptionPage::display( $e );exit;
-			print( $e->getMessage() );
-			print_m( $this->latestResponse );
-			die;
-		}
+/*		$modelAddress	= new Model_Address( $this->env );
+		$address		= $modelAddress->get( [
+			'relationType'	=> 'user',
+			'relationId'	=> $this->localUserId,
+			'type'			=> Model_Address::TYPE_BILLING,
+		] );*/
+		$data	= [
+			'orderId'	=> $orderId,
+			'token'		=> $response->TOKEN,
+			'status'	=> 0,
+			'amount'	=> $total,
+			'email'		=> $billingAddress->email ?? '',
+			'firstname'	=> $billingAddress->firstname ?? '',
+			'lastname'	=> $billingAddress->surname ?? '',
+			'country'	=> $billingAddress->country ?? '',
+			'postcode'	=> $billingAddress->postcode ?? '',
+			'city'		=> $billingAddress->city,
+			'street'	=> $billingAddress->street,
+			'timestamp'	=> time(),
+		];
+		return $this->model->add( $data );
 	}
 
 	/**
