@@ -70,11 +70,14 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 //		$this->env->getModules()->callHook( 'Shop', 'renderServicePanels', $this, $this->data );
 
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.html';
+		$languagePath	= $this->env->getLanguage()->getLanguagePath();
 
-		$panelPayment	= $this->loadContentFile( $filePayment, [
-			'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
-			'order'		=> $this->order,
-		] ) ?? '';
+		$panelPayment	= '';
+		if( file_exists( $languagePath.$filePayment ) )
+			$panelPayment	= $this->loadContentFile( $filePayment, [
+				'module'		=> $this->env->getConfig()->getAll( 'module.', TRUE ),
+				'order'		=> $this->order,
+			] );
 
 		$body	= $this->loadContentFile( 'mail/shop/customer/ordered.html', [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
@@ -117,10 +120,14 @@ class Mail_Shop_Customer_Ordered extends Mail_Abstract
 		$this->helperCart->setPaymentBackend( $paymentBackend );
 
 		$filePayment	= 'mail/shop/customer/ordered/'.$paymentBackend->path.'.txt';
-		$panelPayment	= $this->loadContentFile( $filePayment, [
-			'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
-			'order'		=> $this->order,
-		] ) ?? '';
+		$languagePath	= $this->env->getLanguage()->getLanguagePath();
+
+		$panelPayment	= '';
+		if( file_exists( $languagePath.$filePayment ) )
+			$panelPayment	= $this->loadContentFile( $filePayment, [
+				'module'	=> $this->env->getConfig()->getAll( 'module.', TRUE ),
+				'order'		=> $this->order,
+			] );
 
 		$templateData	= [
 			'orderDate'			=> date( 'd.m.Y', $this->order->modifiedAt ),
