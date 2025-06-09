@@ -3,22 +3,26 @@
 	<title><![CDATA[Resource: Address]]></title>
 	<description><![CDATA[Address store for several other modules.]]></description>
 	<category>Resource</category>
-	<version>0.2.2</version>
+	<version>0.2.4</version>
 	<log version="0.1">Initital prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale support.</log>
 	<log version="0.2.2">Translate to english.</log>
 	<log version="0.2.3">Add entity class.</log>
+	<log version="0.2.4">Add hooks for user relations.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Model/Address.php</class>
 		<class>Entity/Address.php</class>
+		<class>Hook/Resource/Address.php</class>
 <!--		<class>Logic/Address.php</class>-->
 		<locale>de/address.ini</locale>
 		<locale>en/address.ini</locale>
 	</files>
+	<hook type="resource" resource="User" event="listRelations">Hook_Resource_Address::onListUserRelations</hook>
+	<hook type="resource" resource="User" event="remove">Hook_Resource_Address::onUserRemove</hook>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>

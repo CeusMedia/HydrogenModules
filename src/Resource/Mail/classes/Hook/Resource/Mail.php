@@ -13,7 +13,7 @@ class Hook_Resource_Mail extends Hook
 	public function onListUserRelations(): void
 	{
 		if( empty( $this->payload['userId'] ) ){
-			$message	= 'Hook "Hook_Info_Mail::onListUserRelations" is missing user ID in data.';
+			$message	= 'Hook "Hook_Resource_Mail::onListUserRelations" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}
@@ -109,7 +109,7 @@ class Hook_Resource_Mail extends Hook
 	{
 		$data	= $this->getPayload();
 		if( empty( $data->userId ) ){
-			$message	= 'Hook "Hook_Info_Mail::onUserRemove" is missing user ID in data.';
+			$message	= 'Hook "Hook_Resource_Mail::onUserRemove" is missing user ID in data.';
 			$this->env->getMessenger()->noteFailure( $message );
 			return;
 		}

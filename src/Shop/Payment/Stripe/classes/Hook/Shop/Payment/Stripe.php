@@ -110,7 +110,7 @@ class Hook_Shop_Payment_Stripe extends Hook
 		$model		= new Model_Shop_Order( $this->env );
 		$orderId	= $payload->get( 'orderId' );
 		$order		= $model->get( $orderId );
-		foreach( $paymentBackends->getAll() as $backend ){
+		foreach( $paymentBackends as $backend ){
 			if( $backend->key === $order->paymentMethod ){
 				$className	= 'View_Helper_Shop_FinishPanel_'.$backend->backend;
 				if( class_exists( $className ) ){

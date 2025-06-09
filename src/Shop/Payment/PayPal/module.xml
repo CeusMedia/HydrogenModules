@@ -116,8 +116,11 @@ ALTER TABLE `<%?prefix%>shop_payments_paypal` CHANGE `payerId` `payerId` VARCHAR
 ]]></sql>
 	<sql type="mysql" on="update" version="0.5.3"><![CDATA[
 ALTER TABLE `<%?prefix%>shop_payments_paypal`
-ADD COLUMN `request` TEXT NULL AFTER `postcode`,
-ADD COLUMN `response` TEXT NULL AFTER `request`;
+  ADD COLUMN `request` TEXT NULL AFTER `postcode`,
+  ADD COLUMN `response` TEXT NULL AFTER `request`;
+ALTER TABLE `<%?prefix%>shop_payments_paypal`
+  CHANGE COLUMN `token` `token` VARCHAR(30) NULL DEFAULT NULL,
+  DROP INDEX `token`;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_paypal`;
