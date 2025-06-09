@@ -503,6 +503,7 @@ class Controller_Shop extends Controller
 	{
 		$order		= $this->logic->getOrder( $orderId );
 		$customer	= $this->logic->getOrderCustomer( $order );
+		$customer->email	??= $this->logic->getAccountCustomer( $order->userId )->addressBilling->email;
 		$language	= $this->env->getLanguage()->getLanguage();
 		$language   = !empty( $customer->language ) ? $customer->language : $language;
 

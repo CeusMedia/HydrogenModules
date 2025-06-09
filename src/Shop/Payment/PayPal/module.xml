@@ -17,7 +17,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 ]]></description>
 	<category>Shop</category>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished database design.</log>
@@ -38,6 +38,7 @@ Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 	<log version="0.5">Refactoring to use shop user instead of shop customer.</log>
 	<log version="0.5.1">Refactor payment registration.</log>
 	<log version="0.5.2">Use billing address instead of user on payment request.</log>
+	<log version="0.5.3">Store payment request and response.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -112,6 +113,11 @@ ALTER TABLE `<%?prefix%>shop_payments_paypal` CHANGE `payerId` `payerId` VARCHAR
 ]]></sql>
 	<sql type="mysql" on="update" version="0.5"><![CDATA[
 ALTER TABLE `<%?prefix%>shop_payments_paypal` CHANGE `payerId` `payerId` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL;
+]]></sql>
+	<sql type="mysql" on="update" version="0.5.3"><![CDATA[
+ALTER TABLE `<%?prefix%>shop_payments_paypal`
+ADD COLUMN `request` TEXT NULL AFTER `postcode`,
+ADD COLUMN `response` TEXT NULL AFTER `request`;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>shop_payments_paypal`;

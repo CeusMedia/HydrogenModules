@@ -214,34 +214,33 @@ class Logic_Shop_Payment_Paypal
 		$data['PAYMENTREQUEST_0_INSURANCEAMT']	= number_format( $insurance, 2 );
 		$data['PAYMENTREQUEST_0_AMT']			= number_format( $total, 2 );
 
-		$response	= (object) $this->request( $data );
-		if( !$response || $response->ACK !== "Success" ){
-			$this->latestResponse	= $response;
-			print_m( $data );
-			print_m( $response );
-			throw new RuntimeException( 'Requesting token failed' );
-		}
-/*		$modelAddress	= new Model_Address( $this->env );
-		$address		= $modelAddress->get( [
-			'relationType'	=> 'user',
-			'relationId'	=> $this->localUserId,
-			'type'			=> Model_Address::TYPE_BILLING,
-		] );*/
-		$data	= [
+		$paymentId	= $this->model->add( [
 			'orderId'	=> $orderId,
-			'token'		=> $response->TOKEN,
 			'status'	=> 0,
 			'amount'	=> $total,
-			'email'		=> $billingAddress->email ?? '',
-			'firstname'	=> $billingAddress->firstname ?? '',
-			'lastname'	=> $billingAddress->surname ?? '',
-			'country'	=> $billingAddress->country ?? '',
-			'postcode'	=> $billingAddress->postcode ?? '',
+			'email'		=> $billingAddress->email,
+			'firstname'	=> $billingAddress->firstname,
+			'lastname'	=> $billingAddress->surname,
+			'country'	=> $billingAddress->country,
+			'postcode'	=> $billingAddress->postcode,
 			'city'		=> $billingAddress->city,
 			'street'	=> $billingAddress->street,
+			'request'	=> json_encode( $data ),
 			'timestamp'	=> time(),
-		];
-		return $this->model->add( $data );
+		] );
+
+		$response	= (object) $this->request( $data );
+		$this->latestResponse	= $response;
+
+		$this->model->edit( $paymentId, [
+			'token'		=> $response->TOKEN,
+			'response'	=> json_encode( $response ),
+		] );
+
+		if( !$response || $response->ACK !== "Success" )
+			throw new RuntimeException( 'Requesting token failed' );
+
+		return $paymentId;
 	}
 
 	/**
