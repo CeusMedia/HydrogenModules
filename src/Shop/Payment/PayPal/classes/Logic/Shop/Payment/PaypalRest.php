@@ -5,7 +5,7 @@ use CeusMedia\Common\Net\HTTP\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
 
-class Logic_Shop_Payment_Paypal
+class Logic_Shop_Payment_PaypalRest
 {
 	public ?object $latestResponse		= NULL;
 
@@ -15,7 +15,7 @@ class Logic_Shop_Payment_Paypal
 	protected Model_Shop_Payment_Paypal $model;
 
 	/**	@var	Dictionary				$config			Module configuration dictionary */
-	protected Dictionary $config;
+	protected Dictionary $moduleConfig;
 
 	protected ?string $password			= NULL;
 	protected ?string $username			= NULL;
@@ -27,9 +27,9 @@ class Logic_Shop_Payment_Paypal
 	 */
 	public function __construct( Environment $env )
 	{
-		$this->env		= $env;
-		$this->model	= new Model_Shop_Payment_Paypal( $env );
-		$this->config	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
+		$this->env			= $env;
+		$this->model		= new Model_Shop_Payment_Paypal( $env );
+		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
 	}
 
 	public function finishPayment( int|string $paymentId ): bool
@@ -119,7 +119,7 @@ class Logic_Shop_Payment_Paypal
 			'firstname'	=> $response->FIRSTNAME,
 			'lastname'	=> $response->LASTNAME,
 		];
-		if( $this->config->get( 'option.shipping' ) !== "none" ){
+		if( $this->moduleConfig->get( 'strategy.rest.option.shipping' ) !== "none" ){
 			$data		+= [
 				'country'	=> $response->SHIPTOCOUNTRYCODE,
 				'street'	=> $response->SHIPTOSTREET,
@@ -133,7 +133,7 @@ class Logic_Shop_Payment_Paypal
 	/**
 	 *	Requests token from PayPal and returns payment ID.
 	 *	@access		public
-	 *	@param		string			$orderId		ID of shop order
+	 *	@param		int|string		$orderId		ID of shop order
 	 *	@param		float			$amount			Total cart price
 	 *	@param		string|NULL		$subject
 	 *	@return		string			Payment ID
@@ -149,8 +149,9 @@ class Logic_Shop_Payment_Paypal
 		$logicBridge	= new Logic_ShopBridge( $this->env );
 
 		$order			= $logicShop->getOrder( $orderId, TRUE );
-		$billingAddress	= $logicShop->getAccountCustomer( $order->userId )->addressBilling;
-		$positions		= $order->positions;
+		$customerAccount	= $logicShop->getAccountCustomer( $order->userId );
+		$billingAddress		= $customerAccount->addressBilling;
+		$deliveryAddress	= $customerAccount->addressDelivery;
 
 		$handling	= 0;
 		$insurance	= 0;
@@ -167,22 +168,23 @@ class Logic_Shop_Payment_Paypal
 			'CANCELURL'		=> $this->env->url."shop/payment/paypal/cancelled",
 			'ALLOWNOTE'		=> 1,
 		];
-		if( $this->config->get( 'option.shipping' ) === "none" )
+		$strategyConfig		= $this->moduleConfig->getAll( 'strategy.rest.', TRUE );
+
+		if( 'none' === $strategyConfig->get( 'option.shipping' ) )
 			$data['NOSHIPPING']	= 1;
-		$headerOptions	= $this->config->getAll( '', TRUE );
-		$data['HDRBACKCOLOR']	= $this->config->get( 'option.header.color.background' );
-		$data['HDRBORDERCOLOR']	= $this->config->get( 'option.header.color.border' );
-		$data['HDRIMG']			= $this->config->get( 'option.header.image' );
-		$data['PAYFLOWCOLOR']	= $this->config->get( 'option.payflow.color.background' );
+		$data['HDRBACKCOLOR']	= $strategyConfig->get( 'option.header.color.background' );
+		$data['HDRBORDERCOLOR']	= $strategyConfig->get( 'option.header.color.border' );
+		$data['HDRIMG']			= $strategyConfig->get( 'option.header.image' );
+		$data['PAYFLOWCOLOR']	= $strategyConfig->get( 'option.payflow.color.background' );
 		$data['LOCALECODE']		= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$data['ALLOWNOTE']		= "1";
-		$data['FIRSTNAME']		= $billingAddress->firstname;
-		$data['LASTNAME']		= $billingAddress->surname;
+		$data['FIRSTNAME']		= $deliveryAddress->firstname;
+		$data['LASTNAME']		= $deliveryAddress->surname;
 
 		$totalPrice	= 0;
 		$totalTax	= 0;
 		$items		= [];
-		foreach( array_values( $positions ) as $nr => $position ){
+		foreach( array_values( $order->positions ) as $nr => $position ){
 			$article	= $logicBridge->getArticle( $position->bridgeId, $position->articleId, $position->quantity );
 			$totalPrice	+= $article->price->all;
 			$totalTax	+= $article->tax->all;
@@ -218,13 +220,13 @@ class Logic_Shop_Payment_Paypal
 			'orderId'	=> $orderId,
 			'status'	=> 0,
 			'amount'	=> $total,
-			'email'		=> $billingAddress->email,
-			'firstname'	=> $billingAddress->firstname,
-			'lastname'	=> $billingAddress->surname,
-			'country'	=> $billingAddress->country,
-			'postcode'	=> $billingAddress->postcode,
-			'city'		=> $billingAddress->city,
-			'street'	=> $billingAddress->street,
+			'email'		=> $deliveryAddress->email,
+			'firstname'	=> $deliveryAddress->firstname,
+			'lastname'	=> $deliveryAddress->surname,
+			'country'	=> $deliveryAddress->country,
+			'postcode'	=> $deliveryAddress->postcode,
+			'city'		=> $deliveryAddress->city,
+			'street'	=> $deliveryAddress->street,
 			'request'	=> json_encode( $data ),
 			'timestamp'	=> time(),
 		] );
@@ -268,15 +270,16 @@ class Logic_Shop_Payment_Paypal
 	{
 		if( !( $this->username && $this->password && $this->signature ) )
 			throw new RuntimeException( 'No merchant account set' );
-		$data	= array_merge( [
+
+		$strategyConfig	= $this->moduleConfig->getAll( 'strategy.rest.', TRUE );
+		$mode		= $this->moduleConfig->get( 'mode' );
+		$server		= $strategyConfig->get( 'server.api.'.$mode );
+		$response	= HttpPost::sendData( $server, array_merge( [
 			'USER'		=> $this->username,
 			'PWD'		=> $this->password,
 			'SIGNATURE'	=> $this->signature,
-			'VERSION'	=> $this->config->get( 'server.api.version' ),
-		], $data );
-		$mode		= $this->config->get( 'mode' );
-		$server		= $this->config->get( 'server.api.'.$mode );
-		$response	= HttpPost::sendData( $server, $data );
+			'VERSION'	=> $strategyConfig->get( 'server.api.version' ),
+		], $data ) );
 		$data		= [];
 		parse_str( $response, $data );
 		return $data;
