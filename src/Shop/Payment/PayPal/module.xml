@@ -7,6 +7,14 @@
 This module extends the plain basic shop module by the possibility to pay directly usind PayPal Express.
 To make use of this module you need to have a PayPal account with signature.
 
+There are 2 strategies available:
+list>
+1. Express Checkout v1: very old, deprecated and meanwhile reduced
+2. Express Checkout v2: old, deprecated, implementation currently in test
+<list
+
+For v1:
+
 While in test mode (using PayPal sandbox) you can use the following settings:
 code>
 merchant.username: sdk-three_api1.sdk.com
@@ -17,7 +25,7 @@ merchant.signature: A-IzJhZZjhg29XQ2qnhapuwxIDzyAZQ92FRP5dqBzVesOkzbdUONzmOU
 Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 ]]></description>
 	<category>Shop</category>
-	<version>0.5.3</version>
+	<version>0.5.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Finished database design.</log>
@@ -39,6 +47,8 @@ Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 	<log version="0.5.1">Refactor payment registration.</log>
 	<log version="0.5.2">Use billing address instead of user on payment request.</log>
 	<log version="0.5.3">Store payment request and response.</log>
+	<log version="0.5.4">Implement OAuth strategy.</log>
+	<log version="0.5.5">Refactor older strategy to REST.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,32 +56,41 @@ Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 		<class>Controller/Shop/Payment/Paypal.php</class>
 		<class>Hook/Shop/Payment/Paypal.php</class>
 		<class>Logic/Shop/Payment/Paypal.php</class>
+		<class>Logic/Shop/Payment/PaypalOauth.php</class>
 		<class>Model/Shop/Payment/Paypal.php</class>
 		<class>View/Shop/Payment/Paypal.php</class>
 		<locale>de/shop/payment/paypal.ini</locale>
 		<locale>en/shop/payment/paypal.ini</locale>
 	</files>
 	<config protected="no" type="boolean" mandatory="no" name="active" title="Main switch of module">yes</config>
-	<config protected="yes" mandatory="yes" type="string" name="merchant.username">sdk-three_api1.sdk.com</config>
-	<config protected="yes" mandatory="yes" type="string" name="merchant.password"></config>
-	<config protected="yes" mandatory="yes" type="string" name="merchant.signature"></config>
 	<config protected="yes" mandatory="yes" type="string" name="mode" values="live,test">test</config>
-	<config protected="yes" mandatory="yes" type="string" name="server.api.live">https://api-3t.paypal.com/nvp</config>
-	<config protected="yes" mandatory="yes" type="string" name="server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
-	<config protected="yes" mandatory="yes" type="string" name="server.api.version">123</config>
-	<config protected="yes" mandatory="yes" type="string" name="server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
-	<config protected="yes" mandatory="yes" type="string" name="server.login.test">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
-	<config protected="yes" mandatory="yes" type="string" name="option.shipping" values="none,paypal,shop">paypal</config>
-	<config protected="yes" mandatory="no" type="string" name="option.header.color.background"/>
-	<config protected="yes" mandatory="no" type="string" name="option.header.color.border"/>
-	<config protected="yes" mandatory="no" type="string" name="option.header.image"/>
-	<config protected="yes" mandatory="no" type="string" name="option.payflow.color.background"/>
-	<config protected="yes" mandatory="yes" type="boolean" name="option.instantPay">0</config>
 	<config protected="yes" type="boolean" name="method.Express.active">yes</config>
 	<config protected="yes" type="integer" name="method.Express.priority" title="priority: 0-disabled, 1-highest, ..., 9-lowest">4</config>
 	<config protected="yes" type="boolean" name="method.Express.fee.exclusive" title="Fee comes on top">yes</config>
 	<config protected="yes" type="string" name="method.Express.fee.formula" title="Fixed amount or formula">2.99% + 0.39</config>
 <!--	<config type="string" protected="yes" mandatory="yes" name="forward.on.success">shop/finish</config>-->
+	<config protected="yes" type="string" name="strategy" title="API type to use" values="REST,OAuth">REST</config>
+	<config protected="yes" type="string" name="strategy.oauth" title=""></config>
+	<config protected="yes" type="string" name="strategy.oauth.mode" values="live,test" default="test" original="test">test</config>
+	<config protected="yes" type="string" name="strategy.oauth.server.api.live" default="https://api-m.paypal.com" original="https://api-m.paypal.com">https://api-m.paypal.com</config>
+	<config protected="yes" type="string" name="strategy.oauth.server.api.test" default="https://api-m.sandbox.paypal.com" original="https://api-m.sandbox.paypal.com">https://api-m.sandbox.paypal.com</config>
+	<config protected="yes" type="string" name="strategy.oauth.auth.client.id" title=""></config>
+	<config protected="yes" type="string" name="strategy.oauth.auth.secret" title=""></config>
+	<config protected="yes" type="string" name="strategy.rest.merchant.username">sdk-three_api1.sdk.com</config>
+	<config protected="yes" type="string" name="strategy.rest.merchant.password"></config>
+	<config protected="yes" type="string" name="strategy.rest.merchant.signature"></config>
+	<config protected="yes" type="string" name="strategy.rest.server.api.live">https://api-3t.paypal.com/nvp</config>
+	<config protected="yes" type="string" name="strategy.rest.server.api.test">https://api-3t.sandbox.paypal.com/nvp</config>
+	<config protected="yes" type="string" name="strategy.rest.server.api.version">123</config>
+	<config protected="yes" type="string" name="strategy.rest.server.login.live">https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config protected="yes" type="string" name="strategy.rest.server.login.test">https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout</config>
+	<config protected="yes" type="string" name="strategy.rest.option.shipping" values="none,paypal,shop">paypal</config>
+	<config protected="yes" type="string" name="strategy.rest.option.header.color.background"/>
+	<config protected="yes" type="string" name="strategy.rest.option.header.color.border"/>
+	<config protected="yes" type="string" name="strategy.rest.option.header.image"/>
+	<config protected="yes" type="string" name="strategy.rest.option.payflow.color.background"/>
+	<config protected="yes" type="boolean" name="strategy.rest.option.instantPay">0</config>
+
 	<relations>
 		<needs type="module">Shop_Payment</needs>
 	</relations>
