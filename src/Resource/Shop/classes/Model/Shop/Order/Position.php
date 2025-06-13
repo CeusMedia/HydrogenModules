@@ -55,5 +55,7 @@ class Model_Shop_Order_Position extends Model
 		'status',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Shop_Order_Position::class;
 }
