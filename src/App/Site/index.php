@@ -32,5 +32,11 @@ try{
 catch( Throwable $e ){										//  an uncaught exception happened
 	class_exists( '\\SentrySdk' ) && \Sentry\captureException( $e );
 	http_response_code( 500 );
-	(include_once 'templates/error.php') or ExceptionPage::display( $e );
+	if( isset( $app ) ){
+		$env	= $app->getEnvironment();
+		(include_once 'templates/error.php');
+	}
+	else{
+		ExceptionPage::display( $e );
+	}
 }
