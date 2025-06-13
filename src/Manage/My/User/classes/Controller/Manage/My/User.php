@@ -170,39 +170,49 @@ class Controller_Manage_My_User extends Controller
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
 		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		$data				= $this->request->getAllFromSource( 'POST', TRUE );
-		$passwordOld		= $data->get( 'passwordOld', '' );
-		$passwordNew		= $data->get( 'passwordNew', '' );
-		$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
+		if( $this->request->getMethod()->isPost() ){
+			$data				= $this->request->getAllFromSource( 'POST', TRUE );
+			$passwordOld		= $data->get( 'passwordOld', '' );
+			$passwordNew		= $data->get( 'passwordNew', '' );
+			$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
 
-		if( '' === $passwordOld )
-			$this->messenger->noteError( $words->msgPasswordOldMissing );
-		else if( '' === $passwordNew )
-			$this->messenger->noteError( $words->msgPasswordNewMissing );
-		else if( '' === $passwordConfirm )
-			$this->messenger->noteError( $words->msgPasswordConfirmMissing );
-		else if( $passwordOld === $passwordNew )
-			$this->messenger->noteError( $words->msgPasswordNewSame );
-		else if( $passwordNew !== $passwordConfirm )
-			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
-		else if( !$this->checkPassword( $user, $passwordOld ) )
-			$this->messenger->noteError( $words->msgPasswordOldMismatch );
-		else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
-			$this->messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
-//		else if( $pwdMinStrength && ... < $pwdMinStrength )
-//			$this->messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
-		else{
-			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
-				$logic			= Logic_UserPassword::getInstance( $this->env );
-				$userPassword	= $logic->addPassword( $user, $passwordNew );
-				$logic->activatePassword( $userPassword );
-			}
+			if( '' === $passwordOld )
+				$this->messenger->noteError( $words->msgPasswordOldMissing );
+			else if( '' === $passwordNew )
+				$this->messenger->noteError( $words->msgPasswordNewMissing );
+			else if( '' === $passwordConfirm )
+				$this->messenger->noteError( $words->msgPasswordConfirmMissing );
+			else if( $passwordOld === $passwordNew )
+				$this->messenger->noteError( $words->msgPasswordNewSame );
+			else if( $passwordNew !== $passwordConfirm )
+				$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
+			else if( !$this->checkPassword( $user, $passwordOld ) )
+				$this->messenger->noteError( $words->msgPasswordOldMismatch );
+			else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
+				$this->messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
+			//		else if( $pwdMinStrength && ... < $pwdMinStrength )
+			//			$this->messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
 			else{
-				$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
+				if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+					$logic			= Logic_UserPassword::getInstance( $this->env );
+					$userPassword	= $logic->addPassword( $user, $passwordNew );
+					$logic->activatePassword( $userPassword );
+				}
+				else{
+					$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
+				}
+				$this->messenger->noteSuccess( $words->msgSuccess );
 			}
-			$this->messenger->noteSuccess( $words->msgSuccess );
+			$this->restart( './manage/my/user' );
 		}
-		$this->restart( './manage/my/user' );
+
+		$modelPassword	= new Model_User_Password( $this->env );
+		$passwords		= $modelPassword->getAll( ['userId' => $this->userId] );
+
+		$this->addData( 'currentUserId', $this->userId );
+		$this->addData( 'passwords', $passwords );
+		$this->addData( 'pwdMinLength', $pwdMinLength );
+		$this->addData( 'pwdMinStrength', $pwdMinStrength );
 	}
 
 	/**

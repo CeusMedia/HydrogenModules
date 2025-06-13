@@ -1,12 +1,16 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
+/** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array<string,array<string,string>> $words */
 
 $w	= (object) $words['remove'];
+
+$tabs	= View_Manage_My_User::renderTabs( $env, 'remove' );
 
 extract( $view->populateTexts( [
 	'remove.top',
@@ -15,6 +19,14 @@ extract( $view->populateTexts( [
 	'remove.right',
 	'remove.below',
 	'remove.bottom',
+], 'html/manage/my/user/' ) );
+
+extract( $view->populateTexts( [
+	'panel.remove.top',
+	'panel.remove.above',
+	'panel.remove.info',
+	'panel.remove.below',
+	'panel.remove.bottom',
 ], 'html/manage/my/user/' ) );
 
 $relations			= '<div class="muted"><small><em>'.$w->noRelations.'</em></small></div>';
@@ -84,7 +96,17 @@ $panel	= HTML::DivClass( 'content-panel', [
 	] )
 ] );
 
-return HTML::DivClass( 'row-fluid', [
-	HTML::DivClass( 'span8', $panel ),
-	HTML::DivClass( 'span4', $textRemoveRight )
-] );
+return $tabs.'<div class="content-panel">
+	<h3>Konto entfernen</h3>
+	<div class="content-panel-inner">
+		<form action="./manage/my/user/remove" method="post">
+			'.$textPanelRemoveAbove.'
+			<button type="submit" name="save" class="btn btn-inverse">Konto entfernen</button>
+		</form>
+	</div>
+</div>'.HTML::DivClass( 'row-fluid', [
+		HTML::DivClass( 'span8', $panel ),
+		HTML::DivClass( 'span4', $textRemoveRight )
+	] );
+
+

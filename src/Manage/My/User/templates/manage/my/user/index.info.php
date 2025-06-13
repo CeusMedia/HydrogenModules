@@ -7,9 +7,11 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<string,array<string|int,string|int>> $words */
 /** @var object $user */
 
-$helper		= new View_Helper_TimePhraser( $env );
-
 $w			= (object) $words['info'];
+
+$helper		= new View_Helper_TimePhraser( $env );
+$helper->setCase( $w->timePhraseCaseSince );
+
 
 $mapInfo	= [];
 
