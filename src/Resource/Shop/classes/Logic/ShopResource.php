@@ -48,10 +48,10 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@param		int|string		$userId
-	 *	@return		object
+	 *	@return		Entity_User
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getAccountCustomer( int|string $userId ): object
+	public function getAccountCustomer( int|string $userId ): Entity_User
 	{
 		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->get( $userId );
