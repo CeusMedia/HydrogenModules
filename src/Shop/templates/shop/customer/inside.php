@@ -6,6 +6,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 
 /** @var Environment $env */
+/** @var View_Shop_Customer $view */
 /** @var ?Entity_Address $addressDelivery */
 /** @var ?Entity_Address $addressBilling */
 /** @var array<string,array<string,string>> $words */
