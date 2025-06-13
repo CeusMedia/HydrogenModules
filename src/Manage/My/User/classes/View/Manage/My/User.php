@@ -28,6 +28,13 @@ class View_Manage_My_User extends View
 	/**
 	 *	@return		void
 	 */
+	public function password(): void
+	{
+	}
+
+	/**
+	 *	@return		void
+	 */
 	public function remove(): void
 	{
 	}
