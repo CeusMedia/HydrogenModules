@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Post as HttpPost;
@@ -7,29 +7,35 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class Logic_Shop_Payment_PaypalOauth
 {
+	protected string $mode;
+	protected string $server;
+
 	protected ?string $accessToken		= NULL;
 	protected ?string $refreshToken		= NULL;
 	protected ?string $redirectUrl		= NULL;
 	protected ?string $scope			= NULL;
-	protected string $mode;
-	protected string $server;
+	protected ?string $clientId			= NULL;
+	protected ?string $clientSecret		= NULL;
 	protected ?string $paypalOrderId	= NULL;
 
 	//  --  //
 
-	public ?object $latestResponse		= NULL;
+	public ?object $latestResponse			= NULL;
 
 	protected Environment $env;
 
-	/**	@var	Model_Shop_Payment_Paypal		$model			*/
-	protected Model_Shop_Payment_Paypal $model;
+	/**	@var	Model_Shop_Payment_Paypal	$modelPayment 	*/
+	protected Model_Shop_Payment_Paypal 	$modelPayment;
 
-	/**	@var	Dictionary				$config			Module configuration dictionary */
+	/**	@var	Model_Shop_Order			$modelOrder */
+	protected Model_Shop_Order				$modelOrder;
+
+	/**	@var	Dictionary					$config			Module configuration dictionary */
 	protected Dictionary $moduleConfig;
 
-	protected ?string $password			= NULL;
-	protected ?string $username			= NULL;
-	protected ?string $signature		= NULL;
+	protected ?string $password				= NULL;
+	protected ?string $username				= NULL;
+	protected ?string $signature			= NULL;
 
 	/**
 	 *	@param		Environment		$env
@@ -38,9 +44,10 @@ class Logic_Shop_Payment_PaypalOauth
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
-		$this->model		= new Model_Shop_Payment_Paypal( $env );
+		$this->modelPayment	= new Model_Shop_Payment_Paypal( $env );
+		$this->modelOrder	= new Model_Shop_Order( $env );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.shop_payment_paypal.', TRUE );
-		$this->mode			= $this->config->get( 'mode', 'test' );
+		$this->mode			= $this->moduleConfig->get( 'mode', 'test' );
 
 		$strategyConfig		= $this->moduleConfig->getAll( 'strategy.oauth.', TRUE );
 		$this->clientId		= $strategyConfig->get( 'auth.client.id' );
@@ -51,19 +58,16 @@ class Logic_Shop_Payment_PaypalOauth
 	}
 
 	/**
-	 * @param int|string $orderId
-	 * @return object|mixed Response object of request
-	 * @throws ReflectionException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
-	 * @throws DomainException
+	 *	@param		int|string			$orderId
+	 *	@return		object|mixed		Response object of request
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DomainException
 	 */
 	public function createOrder( int|string $orderId ): object
 	{
 		if( !$this->accessToken )
 			$this->getAccessToken();
-
-		$itemTotal		= 0.0;
-		$paypalItems	= [];
 
 		$logicShop		= new Logic_Shop( $this->env );
 		$logicBridge	= new Logic_ShopBridge( $this->env );
@@ -79,57 +83,51 @@ class Logic_Shop_Payment_PaypalOauth
 		$totalTax	= 0;
 		$items		= [];
 
-		/**
-		 * @var  $nr
-		 * @var Entity_Shop_Order_Position $position
-		 */
-		foreach( array_values( $order->positions ) as $nr => $position ){
+		/** @var Entity_Shop_Order_Position $position */
+		foreach( $order->positions as $position ){
 			$article	= $logicBridge->getArticle( $position->bridgeId, $position->articleId, $position->quantity );
-			$totalPrice	+= $article->price->all;
-			$totalTax	+= $article->tax->all;
-
-			$price		= number_format( (float) $article->price->one, 2, '.', '' );
-			$itemTotal += $price * $position->quantity;
-
-			$paypalItems[] = [
+			$taxedPrice	= (float) $article->price->one + (float) $article->tax->one;
+			$items[]	= [
 				"name"			=> $article->title,
 				"description"	=> $article->description,
 				"unit_amount"	=> [
 					"currency_code"	=> $position->currency,
-					"value"			=> $price
+					"value"			=> number_format( $taxedPrice, 2, '.', '' )
 				],
-				"quantity" => (string) $position->quantity
+				"quantity"		=> (string) $position->quantity
 			];
+			$totalPrice	+= $article->price->all;
+			$totalTax	+= $article->tax->all;
 		}
 
-		$returnUrl	= $this->env->url.'shop/payment/paypal/authorized';
-		$cancelUrl	= $this->env->url.'shop/payment/paypal/cancelled';
-
+		$totalTaxedPrice			= $totalPrice + $totalTax;
+		$totalTaxedPriceFormatted	= number_format( $totalTaxedPrice, 2, '.', '' );
 		$data = [
-			"intent" => "CAPTURE",
-			"purchase_units" => [[
-				"amount" => [
-					"currency_code" => "EUR",
-					"value" => number_format( $totalTax, 2, '.', '' ),
-					"breakdown" => [
-						"item_total" => [
-							"currency_code" => "EUR",
-							"value" => number_format( $totalTax, 2, '.', '' )
+			'intent'	=> 'CAPTURE',
+			'purchase_units'	=> [[
+				'amount'	=> [
+					'currency_code'	=> 'EUR',
+					'value'			=> $totalTaxedPriceFormatted,
+					'breakdown'		=> [
+						'item_total'		=> [
+							'currency_code'	=> 'EUR',
+							'value'			=> $totalTaxedPriceFormatted
 						]
 					]
 				],
-				"items" => $paypalItems
-			]],
-			"application_context" => [
-				"return_url" => $returnUrl,
-				"cancel_url" => $cancelUrl
+				'items'	=> $items
+			] ],
+			'application_context'	=> [
+				'return_url'	=> $this->env->url.'shop/payment/paypal/authorized',
+				'cancel_url'	=> $this->env->url.'shop/payment/paypal/cancelled'
 			]
 		];
 
-		$paymentId	= $this->model->add( [
+		$paymentId	= $this->modelPayment->add( [
 			'orderId'	=> $orderId,
+			'token'		=> '',
 			'status'	=> 0,
-			'amount'	=> $total,
+			'amount'	=> $totalPrice + $totalTax,
 			'email'		=> $deliveryAddress->email,
 			'firstname'	=> $deliveryAddress->firstname,
 			'lastname'	=> $deliveryAddress->surname,
@@ -141,7 +139,7 @@ class Logic_Shop_Payment_PaypalOauth
 			'timestamp'	=> time(),
 		] );
 
-		$ch = curl_init( "{$this->apiBase}/v2/checkout/orders" );
+		$ch = curl_init( "{$this->server}/v2/checkout/orders" );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, [
 			"Content-Type: application/json",
@@ -149,7 +147,6 @@ class Logic_Shop_Payment_PaypalOauth
 		]);
 		curl_setopt( $ch, CURLOPT_POST, TRUE );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
-
 		$response = curl_exec( $ch );
 		curl_close( $ch );
 
@@ -160,7 +157,7 @@ class Logic_Shop_Payment_PaypalOauth
 		$result					= json_decode( $response );
 		$this->paypalOrderId	= $result->id;
 		$this->latestResponse	= $result;
-		$this->model->edit( $paymentId, [
+		$this->modelPayment->edit( $paymentId, [
 			'token'		=> $result->id,
 			'response'	=> json_encode( $result ),
 		] );
@@ -175,21 +172,25 @@ class Logic_Shop_Payment_PaypalOauth
 		if( 'COMPLETED' !== $paypalOrder->status )
 			throw new RuntimeException( 'Transaction failed' );
 
-		$openPayment	= $this->model->get( [
+		$openPayment	= $this->modelPayment->getByIndices( [
 			'paymentId'		=> $paymentId,
-			'transactionId'	=> $capture->id,
+//			'transactionId'	=> $capture->id,
 			'status'		=> '< 2',
 		] );
 
 		if( NULL === $openPayment )
 			throw new RuntimeException( 'Payment not open anymore' );
 
-		$this->model->edit( $paymentId, [
+		$this->modelPayment->edit( $paymentId, [
 			'status'		=> 2,
 			'payerId'		=> $paypalOrder->payer->payer_id,
 			'transactionId'	=> $capture->id,
-			'amount'		=> $capture->amount->value,
+//			'amount'		=> $capture->amount->value,
 //			'currency'		=> $capture->amount->currency_code,
+		] );
+		$this->modelOrder->edit( $openPayment->orderId, [
+			'status'		=> Model_Shop_Order::STATUS_PAYED,
+			'modifiedAt'	=> time(),
 		] );
 		return TRUE;
 	}
@@ -202,7 +203,7 @@ class Logic_Shop_Payment_PaypalOauth
 
 	public function getPayment( int|string $paymentId ): object
 	{
-		$payment	= $this->model->get( $paymentId );
+		$payment	= $this->modelPayment->get( $paymentId );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with ID "'.$paymentId.'"' );
 		return $payment;
@@ -210,7 +211,7 @@ class Logic_Shop_Payment_PaypalOauth
 
 	public function getPaymentFromToken( string $token ): object
 	{
-		$payment	= $this->model->getByIndex( 'token', $token );
+		$payment	= $this->modelPayment->getByIndex( 'token', $token );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with token "'.$token.'"' );
 		return $payment;
@@ -224,7 +225,7 @@ class Logic_Shop_Payment_PaypalOauth
 
 	public function getToken( int|string $paymentId ): string
 	{
-		$payment	= $this->model->get( $paymentId );
+		$payment	= $this->modelPayment->get( $paymentId );
 		if( !$payment )
 			throw new InvalidArgumentException( 'No payment with ID "'.$paymentId.'"' );
 		return $payment->token;
@@ -247,7 +248,7 @@ class Logic_Shop_Payment_PaypalOauth
 
 		$this->getPaypalPaymentDetails( $paypalOrder );
 //		...
-//		$this->model->edit( $paymentId, $data );
+//		$this->modelPayment->edit( $paymentId, $data );
 	}
 
 	/**
@@ -267,7 +268,7 @@ class Logic_Shop_Payment_PaypalOauth
 
 	protected function getAccessToken(): ?string
 	{
-		$ch	= curl_init( "{$this->apiBase}/v1/oauth2/token" );
+		$ch	= curl_init( "{$this->server}/v1/oauth2/token" );
 		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, TRUE );
 		curl_setopt( $ch, CURLOPT_USERPWD, "{$this->clientId}:{$this->clientSecret}" );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, "grant_type=client_credentials" );
@@ -308,7 +309,7 @@ class Logic_Shop_Payment_PaypalOauth
 	}
 
 	/**
-	 *	Not realy needed, but implemented like Logic_Shop_Payment_PaypalRest
+	 *	Not really needed, but implemented like Logic_Shop_Payment_PaypalRest
 	 *	@param		object		$paypalOrder
 	 *	@return		array
 	 */

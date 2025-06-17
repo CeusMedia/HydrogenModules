@@ -29,10 +29,8 @@ $errorHandling	= [
 /*  --  no need to edit below  --  */
 
 require_once __DIR__.'/classes/JobScriptHelper.php';
-@include 'vendor/autoload.php';
 
 $helper = new JobScriptHelper();
-$helper->changeDirIntoApp();
 file_exists( getCwd().'/vendor' ) or die( 'Please install first, using composer!' );
 require_once getCwd().'/vendor/autoload.php';
 #require_once getCwd().'/vendor/ceus-media/common/src/compat8.php';

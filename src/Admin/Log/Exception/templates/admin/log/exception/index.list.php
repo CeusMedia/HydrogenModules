@@ -76,11 +76,12 @@ if( $exceptions ){
 			'data-id'	=> $exception->exceptionId,
 		] );
 
-		$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path' ), ENT_QUOTES, 'utf-8' ).'</small>';
+		$requestPath	= join( ' ', $exceptionRequest->get( 'arguments', [] ) ).' '.join( ' ', $exceptionRequest->get( 'commands', [] ) );
 		$method			= 'CLI';
 		if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
 			try{
 				$method	= $exceptionRequest->getMethod();
+				$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
 			}
 			catch( Error $e ){}
 		}

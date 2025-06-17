@@ -11,6 +11,7 @@ class Model_Shop_Payment_Paypal extends Model
 		'orderId',
 		'token',
 		'payerId',
+//		'transactionId',
 		'status',
 		'amount',
 		'email',
@@ -29,6 +30,7 @@ class Model_Shop_Payment_Paypal extends Model
 		'orderId',
 		'token',
 		'payerId',
+//		'transactionId',
 		'status',
 	];
 

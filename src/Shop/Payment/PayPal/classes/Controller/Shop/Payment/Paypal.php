@@ -50,7 +50,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 			$provider	= $this->logicProvider;
 			$response	= $provider->createOrder( $this->orderId );
 
-			$payment	= $provider->getPayment( $response->payment_id ); // ????? WIP
+			$payment	= $provider->getPaymentFromToken( $response->id );
 			$this->session->set( 'paymentId', $payment->paymentId );
 			$this->session->set( 'paymentToken', $payment->token );
 			$this->session->set( 'paypalOrderId', $response->id );
@@ -73,7 +73,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 				$provider->requestPayerDetails( $payment->paymentId );
 				$this->restart( 'pay', TRUE );
 			}
-			catch( Exception $e){
+			catch( Exception $e ){
 				die( $e->getMessage() );
 				throw new RuntimeException( 'Der Bezahlvorgang kann ohne Login bei PayPal nicht fortgeführt werden.' );
 			}
@@ -82,11 +82,22 @@ class Controller_Shop_Payment_Paypal extends Controller
 			/** @var Logic_Shop_Payment_PaypalOauth $provider */
 			$provider	= $this->logicProvider;
 			$provider->finishPayment( $payment->paymentId, $token );
+			$this->session->remove( 'paymentId' );
+			$this->session->remove( 'token' );
+			$this->restart( './shop/finish' );
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function cancelled(): void
 	{
+		$paymentId	= $this->session->get( 'paymentId' );
+		$token		= $this->env->getRequest()->get( 'token' );
+		$payment	= $this->logicProvider->getPaymentFromToken( $token );
+		$this->logicShop->setOrderStatus( $payment->orderId, Model_Shop_Order::STATUS_CANCELLED );
 		if( self::STRATEGY_REST === $this->strategy ){
 			$this->session->remove( 'paymentId' );
 			$this->session->remove( 'token' );

@@ -27,4 +27,6 @@ class Entity_Shop_Order_Position extends Entity
 		'price',
 		'priceTaxed',
 	];
+
+	public ?object $article		= NULL;
 }

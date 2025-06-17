@@ -52,6 +52,7 @@ class JobScriptHelper
 			if( !file_exists( getCwd().'/job.php' ) )
 				throw new RuntimeException( 'Change into application directory ('.$path.') failed' );
 		}
+		@include getCwd().'/vendor/autoload.php';
 		return $this;
 	}
 
@@ -79,6 +80,9 @@ class JobScriptHelper
 	{
 		if( $this->verbose )
 			print( 'Detecting application path...'.PHP_EOL );
+		if( isset( $_SERVER['OLDPWD'] ) )
+			if( is_dir( $_SERVER['OLDPWD'].'/vendor' ) )
+				return $_SERVER['OLDPWD'].'/';
 		if( isset( $_SERVER['PWD'] ) ){
 			if( isset( $_SERVER['PHP_SELF'] ) ){
 				$scriptFilename	= $_SERVER['SCRIPT_FILENAME'];
@@ -219,7 +223,7 @@ class JobScriptHelper
 	 */
 	protected function setupEnvironment(): static
 	{
-		Loader::create( 'php', $this->pathClasses )->register();		//  register autoloader for project classes
+		Loader::create( 'php', getCwd().'/'.$this->pathClasses )->register();		//  register autoloader for project classes
 
 		$request	= new RequestReceiver();									//
 		$this->request	= new Request();
