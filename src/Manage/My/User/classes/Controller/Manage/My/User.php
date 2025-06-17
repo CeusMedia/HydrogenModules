@@ -340,17 +340,17 @@ class Controller_Manage_My_User extends Controller
 	 *	If newer password store is supported and old password has been found, migration will apply.
 	 *
 	 *	@access		protected
-	 *	@param   	object   	$user		User data object
-	 *	@param   	string		$password	Password to check on login
+	 *	@param   	Entity_User   	$user		User data object
+	 *	@param   	string			$password	Password to check on login
 	 *	@todo   	clean up if support for old passwort decays
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function checkPassword( object $user, string $password ): bool
+	protected function checkPassword( Entity_User $user, string $password ): bool
 	{
 		if( class_exists( 'Logic_UserPassword' ) ){													//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
-			if( $logic->validateUserPassword( $user->userId, $password ) )
+			if( $logic->validateUserPassword( $user, $password ) )
 				return TRUE;
 		}
 		$pepper		= $this->env->getConfig()->get( 'module.resource_users.password.pepper' );
