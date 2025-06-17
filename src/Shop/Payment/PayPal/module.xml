@@ -57,7 +57,7 @@ Prices: https://www.paypal.com/en/webapps/mpp/merchant-fees
 		<class>Hook/Shop/Payment/Paypal.php</class>
 		<class>Logic/Shop/Payment/Paypal.php</class>
 		<class>Logic/Shop/Payment/PaypalOauth.php</class>
-		<class>Model/Shop/Payment/Paypal.php</class>
+		<class>Model/Shop/Payment/PaypalRest.php</class>
 		<class>View/Shop/Payment/Paypal.php</class>
 		<locale>de/shop/payment/paypal.ini</locale>
 		<locale>en/shop/payment/paypal.ini</locale>
