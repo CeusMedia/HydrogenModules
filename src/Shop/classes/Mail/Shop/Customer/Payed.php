@@ -2,7 +2,7 @@
 
 class Mail_Shop_Customer_Payed extends Mail_Abstract
 {
-	protected ?object $order								= NULL;
+	protected ?Entity_Shop_Order $order						= NULL;
 	protected Logic_ShopBridge $logicBridge;
 	protected Logic_Shop $logicShop;
 	protected View_Helper_Shop_AddressView $helperAddress;

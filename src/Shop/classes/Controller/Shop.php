@@ -66,13 +66,17 @@ class Controller_Shop extends Controller
 			}
 		}
 		$source		= $this->bridge->getBridgeObject( $bridgeId );
+		/** @var Entity_Shop_Bridge_Article $article */
 		$article	= $source->get( $articleId, $quantity );
-		$positions[$bridgeId.'_'.$articleId]	= (object) [
-			'bridgeId'	=> $bridgeId,
-			'articleId'	=> $articleId,
-			'quantity'	=> $quantity,
-			'article'	=> $article,
-		];
+		$positions[$bridgeId.'_'.$articleId]	= Entity_Shop_Order_Position::fromArray( [
+			'orderId'		=> 0,
+			'bridgeId'		=> $bridgeId,
+			'articleId'		=> $articleId,
+			'quantity'		=> $quantity,
+			'article'		=> $article,
+			'price'			=> 0,
+			'priceTaxed'	=> 0,
+		] );
 		$this->modelCart->set( 'positions', $positions );
 //		$title		= $this->bridge->getArticleTitle( $bridgeId, $articleId );
 		$this->messenger->noteSuccess( $this->words['successAddedToCart'], $article->title, $quantity );
@@ -109,6 +113,7 @@ class Controller_Shop extends Controller
 		$articleId		= (int) $articleId;
 		$quantity		= abs( $quantity );
 		$forwardTo		= $this->request->get( 'forwardTo' );
+		/** @var Entity_Shop_Order_Position[] $positions */
 		$positions		= $this->modelCart->get( 'positions' );
 		foreach( $positions as $nr => $position ){
 			if( $position->bridgeId == $bridgeId && $position->articleId == $articleId ){
