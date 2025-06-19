@@ -1,6 +1,7 @@
 <?php /** @noinspection ALL */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\Common\Net\HTTP\Post as HttpPost;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
 use CeusMedia\HydrogenFramework\Environment;
@@ -147,20 +148,25 @@ class Logic_Shop_Payment_PaypalOauth
 		]);
 		curl_setopt( $ch, CURLOPT_POST, TRUE );
 		curl_setopt( $ch, CURLOPT_POSTFIELDS, json_encode( $data ) );
-		$response = curl_exec( $ch );
+		$response	= curl_exec( $ch );
+		$httpcode	= curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		curl_close( $ch );
 
-		if( !$response )
-			throw new Exception("Fehler beim Erstellen der Bestellung.");
+		$this->modelPayment->edit( $paymentId, ['response' => $response] );
+
+		if( str_starts_with( (string) $httpcode, '4' ) ){
+			/** @var object{name: string, message: string, links: array} $result */
+			$result	= json_decode( $response );
+			throw new RuntimeException( 'Payment request failed: '.$result->message );
+		}
+		else if( !str_starts_with( (string) $httpcode, '2' ) )
+			throw NotSupportedException::create( 'Unsupported response code: '.$httpcode );
 
 		/** @var object{id: string, status: string, links: array} $result */
 		$result					= json_decode( $response );
 		$this->paypalOrderId	= $result->id;
 		$this->latestResponse	= $result;
-		$this->modelPayment->edit( $paymentId, [
-			'token'		=> $result->id,
-			'response'	=> json_encode( $result ),
-		] );
+		$this->modelPayment->edit( $paymentId, ['token' => $result->id] );
 		return $result;
 	}
 
