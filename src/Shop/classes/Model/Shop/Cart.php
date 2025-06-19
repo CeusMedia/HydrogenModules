@@ -113,15 +113,11 @@ class Model_Shop_Cart
 		$this->data->set( 'price', $order->price );
 		$this->data->set( 'priceTaxed', $order->priceTaxed );
 		$positions	= [];
+		/** @var Entity_Shop_Order_Position $item */
 		foreach( $this->modelPosition->getAllByIndex( 'orderId', $orderId ) as $item ){
-			$source		= $this->bridge->getBridgeObject( (int) $item->bridgeId );
-			$article	= $source->get( $item->articleId, $item->quantity );
-			$positions[$item->articleId]	= (object) [
-				'bridgeId'		=> $item->bridgeId,
-				'articleId'		=> $item->articleId,
-				'quantity'		=> $item->quantity,
-				'article'		=> $article,
-			];
+			$source			= $this->bridge->getBridgeObject( (int) $item->bridgeId );
+			$item->article	= $source->get( $item->articleId, $item->quantity );
+			$positions[$item->articleId]	= $item;
 		}
 		$this->data->set( 'positions', $positions );
 	}
