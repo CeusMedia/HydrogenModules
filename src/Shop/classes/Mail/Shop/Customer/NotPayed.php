@@ -40,6 +40,8 @@ class Mail_Shop_Customer_NotPayed extends Mail_Abstract
 			$position->article	= $bridge->get( $position->articleId, $position->quantity );
 		}
 		$this->helperCart->setPositions( $this->order->positions );
+		$this->helperCart->setPaymentBackends( $this->data['paymentBackends'] );
+		$this->helperCart->setPaymentBackend( $this->order->paymentMethod );
 		$this->helperCart->setDeliveryAddress( $this->order->customer->addressDelivery );
 
 		$wordsMail	= (object) $this->words['mail-customer-not-payed'];

@@ -10,7 +10,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 	protected Dictionary $config;
 
 	/**	@var	Logic_Shop_Payment_PaypalRest|Logic_Shop_Payment_PaypalOauth	$logicProvider		Payment provider logic instance */
-	protected Logic_Shop_Payment_Paypal|Logic_Shop_Payment_PaypalOauth $logicProvider;
+	protected Logic_Shop_Payment_PaypalRest|Logic_Shop_Payment_PaypalOauth $logicProvider;
 
 	/**	@var	Logic_Shop					$shop			Shop logic instance */
 	protected Logic_Shop $logicShop;

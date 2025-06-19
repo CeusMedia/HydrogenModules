@@ -2,6 +2,7 @@
 
 use CeusMedia\Bootstrap\Button\Group as BootstrapButtonGroup;
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -31,18 +32,34 @@ class View_Helper_Shop_CartPositions
 	];
 
 	protected Environment $env;
+
 	protected Logic_ShopBridge $bridge;
+
 	protected Dictionary $config;
+
 	protected ?Model_Shop_Payment_BackendRegister $paymentsBackends	= NULL;
+
 	protected ?Entity_Shop_Payment_Backend $paymentBackend			= NULL;
+
 	protected ?Entity_Address $deliveryAddress						= NULL;
+
+	/** @var Entity_Shop_Order_Position[] $positions */
 	protected array $positions										= [];
+
 	protected bool $changeable										= TRUE;
+
 	protected int $display											= self::DISPLAY_BROWSER;
+
 	protected int $output											= self::OUTPUT_HTML;
+
 	protected array $words;
+
 	protected ?string $forwardPath									= NULL;
 
+	/**
+	 *	@param		Environment				$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -51,6 +68,11 @@ class View_Helper_Shop_CartPositions
 		$this->bridge	= new Logic_ShopBridge( $this->env );
 	}
 
+	/**
+	 *	Return rendered card as HTML or text, depending on set output format.
+	 *	Returns empty string if cart is empty.
+	 *	@return		string
+	 */
 	public function render(): string
 	{
 		if( [] === $this->positions )
@@ -62,38 +84,59 @@ class View_Helper_Shop_CartPositions
 		};
 	}
 
+	/**
+	 *	@param		bool	$isChangeable
+	 *	@return		self
+	 */
 	public function setChangeable( bool $isChangeable = TRUE ): self
 	{
 		$this->changeable	= $isChangeable;
 		return $this;
 	}
 
-	public function setForwardPath( string $forwardPath ): self
-	{
-		$this->forwardPath		= $forwardPath;
-		return $this;
-	}
-
+	/**
+	 *	@param		Entity_Address		$address
+	 *	@return		self
+	 */
 	public function setDeliveryAddress( Entity_Address $address ): self
 	{
 		$this->deliveryAddress	= $address;
 		return $this;
 	}
 
+	/**
+	 *	Set display type for rendering.
+	 *	@param		int		$display
+	 *	@return		self
+	 */
 	public function setDisplay( int $display ): self
 	{
-		if( !in_array( $display, [self::DISPLAY_BROWSER, self::DISPLAY_MAIL], TRUE ) )
+		if( !in_array( $display, array_diff( self::DISPLAYS, [self::DISPLAY_UNKNOWN] ), TRUE ) )
 			throw new InvalidArgumentException( 'Invalid display format' );
-		$this->display		= $display;
+		$this->display	= $display;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$forwardPath
+	 *	@return		self
+	 */
+	public function setForwardPath( string $forwardPath ): self
+	{
+		$this->forwardPath	= $forwardPath;
+		return $this;
+	}
+
+	/**
+	 *	Set output format for rendering.
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setOutput( int $format ): self
 	{
-		$formats	= [self::OUTPUT_HTML, self::OUTPUT_TEXT, self::OUTPUT_HTML_LIST];
-		if( !in_array( $format, $formats ) )
+		if( !in_array( $format, array_diff( self::OUTPUTS, [self::OUTPUT_UNKNOWN] ), TRUE ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= $format;
+		$this->output	= $format;
 		return $this;
 	}
 
@@ -102,8 +145,8 @@ class View_Helper_Shop_CartPositions
 	 *	If given by key string, payment backends have to be set before.
 	 *	@param		Entity_Shop_Payment_Backend|string	$backend
 	 *	@return		self
-	 *	@throws		RuntimeException	if backend is given by string and no payment backends have been set
-	 *	@throws		CeusMedia\Common\Exception\NotSupported		if backend is given by string and no payment backend can be found by this key
+	 *	@throws		RuntimeException		if backend is given by string and no payment backends have been set
+	 *	@throws		NotSupportedException	if backend is given by string and no payment backend can be found by this key
 	 */
 	public function setPaymentBackend( Entity_Shop_Payment_Backend|string $backend ): self
 	{
@@ -111,7 +154,7 @@ class View_Helper_Shop_CartPositions
 			if( NULL === $this->paymentsBackends )
 				throw new RuntimeException( 'No payment backends set, yet' );
 			if( !$this->paymentsBackends->has( $backend ) )
-				throw CeusMedia\Common\Exception\NotSupported::create()
+				throw NotSupportedException::create()
 					->setMessage( sprintf( 'No payment backend found by key "%s"', $backend ) );
 			return $this->setPaymentBackend( $this->paymentsBackends->get( $backend ) );
 		}
@@ -119,15 +162,25 @@ class View_Helper_Shop_CartPositions
 		return $this;
 	}
 
+	/**
+	 *	Set list of available payment methods by payment backend register.
+	 *	@param		Model_Shop_Payment_BackendRegister	$backends
+	 *	@return		self
+	 */
 	public function setPaymentBackends( Model_Shop_Payment_BackendRegister $backends ): self
 	{
 		$this->paymentsBackends	= $backends;
 		return $this;
 	}
 
+	/**
+	 *	Set list of positions.
+	 *	@param		Entity_Shop_Order_Position[]	$positions
+	 *	@return		self
+	 */
 	public function setPositions( array $positions ): self
 	{
-		$this->positions		= $positions;
+		$this->positions	= $positions;
 		foreach( $positions as $position ){
 			if( !isset( $position->article ) ){
 				$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );
@@ -140,12 +193,22 @@ class View_Helper_Shop_CartPositions
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	Render price.
+	 *	@param		float		$price
+	 *	@param		bool		$spaceBeforeCurrency
+	 *	@param		bool		$asHtml
+	 *	@return		string
+	 */
 	protected function formatPrice( float $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
 	{
 		$helper		= new View_Helper_Shop( $this->env );
 		return $helper->formatPrice( $price, $spaceBeforeCurrency, $asHtml );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsHtmlList(): string
 	{
 		$words			= (object) $this->words['panel-cart'];
@@ -265,12 +328,15 @@ class View_Helper_Shop_CartPositions
 //			$colgroup		= HtmlElements::ColumnGroup( '7%', '', '140' );
 			$tableAttr['class']	.= ' articleList-allSingle';
 		}
-		if( !$allSingle || $this->display === self::DISPLAY_MAIL )
+		if( !$allSingle || self::DISPLAY_MAIL === $this->display )
 			$tableAttr['class']	.= ' table-bordered';
 
 		return HtmlTag::create( 'table', $colgroup.$tbody.$tfoot, $tableAttr );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsHtml(): string
 	{
 		$words		= (object) $this->words['panel-cart'];
@@ -307,7 +373,7 @@ class View_Helper_Shop_CartPositions
 
 			$quantity		= HtmlTag::create( 'big', $position->quantity );
 			$cellQuantity	= $isSingle ? '' : $quantity;
-			if( $this->changeable ){
+			if( self::DISPLAY_MAIL !== $this->display && $this->changeable ){
 				$buttons		= $this->renderPositionQuantityButtons( $position );
 				$cellQuantity	= $isSingle ? $buttons : $quantity.'&nbsp; &nbsp;'.$buttons;
 			}
@@ -401,6 +467,9 @@ class View_Helper_Shop_CartPositions
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, $tableAttr );
 	}
 
+	/**
+	 *	@return		string
+	 */
 	protected function renderAsText(): string
 	{
 		$words		= (object) $this->words['panel-cart'];
@@ -491,7 +560,11 @@ class View_Helper_Shop_CartPositions
 		return join( "\n", $list );
 	}
 
-	protected function renderPositionQuantityButtons( $position ): string
+	/**
+	 *	@param		Entity_Shop_Order_Position		$position
+	 *	@return		string
+	 */
+	protected function renderPositionQuantityButtons( Entity_Shop_Order_Position $position ): string
 	{
 		$w				= (object) $this->words['cart'];
 		$iconPlus		= "&plus;";
@@ -533,7 +606,7 @@ class View_Helper_Shop_CartPositions
 		] );
 		if( isset( $position->article->single ) && $position->article->single )
 			return $buttonRemove;
-		$buttons		= [$buttonPlus, $buttonMinus, $buttonRemove];
-		return new BootstrapButtonGroup( $buttons );
+
+		return BootstrapButtonGroup::create( [$buttonPlus, $buttonMinus, $buttonRemove] )->render();
 	}
 }
