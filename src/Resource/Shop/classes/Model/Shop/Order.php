@@ -7,7 +7,7 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
-use CeusMedia\HydrogenFramework\Model;
+use CeusMedia\HydrogenFramework\Model\Database\Table as DatabaseTableModel;
 
 /**
  *	Data Model of Orders.
@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@package		Hydrogen.Module.Resource_Shop
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Shop_Order extends Model
+class Model_Shop_Order extends DatabaseTableModel
 {
 	public const STATUS_REFUNDED			= -6;
 	public const STATUS_COMPLAINED			= -5;
