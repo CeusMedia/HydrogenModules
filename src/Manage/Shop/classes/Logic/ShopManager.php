@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\Logic;
 
@@ -13,11 +14,13 @@ class Logic_ShopManager extends Logic
 	/**	@var		Model_Shop_Order			$modelOrder */
 	protected Model_Shop_Order $modelOrder;
 
-	/**	@var		Model_Shop_Order_Position	$modelOrderPosition */
-	protected Model_Shop_Order_Position $modelOrderPosition;
+//	/**	@var		Model_Shop_Order_Position	$modelOrderPosition */
+//	protected Model_Shop_Order_Position $modelOrderPosition;
 
 	/**	@var		?Logic_Shop_Shipping			$shipping			Shipping logic if module is installed */
 	protected ?Logic_Shop_Shipping $shipping	= NULL;
+
+	protected Logic_ShopResource $logicShop;
 
 	/**
 	 *	Returns number of orders for given conditions.
@@ -27,7 +30,8 @@ class Logic_ShopManager extends Logic
 	 */
 	public function countOrders( array $conditions ): int
 	{
-		return $this->modelOrder->count( $conditions );
+//		return $this->modelOrder->count( $conditions );
+		return $this->logicShop->countOrders( $conditions );
 	}
 
 	public function getOrderCustomer( int|string $orderId ): object
@@ -42,23 +46,15 @@ class Logic_ShopManager extends Logic
 		throw new Exception( 'No user or customer assigned to order' );
 	}
 
-	public function getAccountCustomer( int|string $userId ): object
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		Entity_User
+	 *	@throws		RangeException	if customer ID is invalid
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getAccountCustomer( int|string $userId ): Entity_User
 	{
-		/** @var ?Entity_User $user */
-		$user	= $this->modelUser->get( $userId );
-		if( !$user )
-			throw new RangeException( 'No customer found for user ID '.$userId );
-		$user->addressBilling	= $this->modelAddress->getByIndices( [
-			'relationType'	=> 'user',
-			'relationId'	=> $userId,
-			'type'			=> Model_Address::TYPE_BILLING,
-		] );
-		$user->addressDelivery	= $this->modelAddress->getByIndices( [
-			'relationType'	=> 'user',
-			'relationId'	=> $userId,
-			'type'			=> Model_Address::TYPE_DELIVERY,
-		] );
-		return $user;
+		return $this->logicShop->getAccountCustomer( $userId );
 	}
 
 	/**
@@ -90,29 +86,45 @@ class Logic_ShopManager extends Logic
 		return [];//$this->modelCustomer->getAll( $conditions, $orders, $limits );
 	}
 
+	/**
+	 *	@param		int|string	$orderId
+	 *	@param		bool		$extended		Flag: also load [customer,positions,shipping,(options),payment,taxes], default: no
+	 *	@return		Entity_Shop_Order
+	 *	@throws		RangeException				if given order ID is invalid
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
 	{
-		$order	= $this->modelOrder->get( $orderId );
-		if( $order && $extended ){
-			$order->customer	= $this->getOrderCustomer( $orderId );
-			$order->positions	= $this->getOrderPositions( $orderId );
-		}
-		return $order;
+		return $this->logicShop->getOrder( $orderId, $extended );
 	}
 
 	public function getOrders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		return $this->modelOrder->getAll( $conditions, $orders, $limits );
+//		return $this->modelOrder->getAll( $conditions, $orders, $limits );
+		return $this->logicShop->getOrders( $conditions, $orders, $limits );
 	}
 
-	public function getOrderPositions( int|string $orderId ): array
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		bool			$extended		Flag: extend by article entities
+	 *	@return		array<Entity_Shop_Order_Position>
+	 */
+	public function getOrderPositions( int|string $orderId, bool $extended = FALSE ): array
 	{
-		return $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
+//		return $this->modelOrderPosition->getAllByIndex( 'orderId', $orderId );
+		return $this->logicShop->getOrderPositions( $orderId, $extended );
 	}
 
-	public function getOrderPosition( int|string $positionId ): ?object
+	/**
+	 *	@param		int|string		$positionId
+	 *	@param		bool			$extended		Flag: extend by article entity
+	 *	@return		Entity_Shop_Order_Position|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getOrderPosition( int|string $positionId, bool $extended = FALSE ): ?object
 	{
-		return $this->modelOrderPosition->get( $positionId );
+//		return $this->modelOrderPosition->get( $positionId );
+		return $this->logicShop->getOrderPosition( $positionId, $extended );
 	}
 
 	public function getOpenSessionOrder( string $sessionId ): array
@@ -161,10 +173,12 @@ class Logic_ShopManager extends Logic
 	 *	@param		integer|string		$positionId		Order position ID
 	 *	@param		integer|string		$status			Status to set
 	 *	@return		integer				1: order changed, 0: nothing changed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderPositionStatus( int|string $positionId, int|string $status ): int
 	{
-		return $this->modelOrderPosition->edit( $positionId, ['status' => $status] );
+//		return $this->modelOrderPosition->edit( $positionId, ['status' => $status] );
+		return $this->logicShop->setOrderPositionStatus( $positionId, (int) $status );
 	}
 
 	/**
@@ -173,10 +187,14 @@ class Logic_ShopManager extends Logic
 	 *	@param		integer|string	$orderId		Order ID
 	 *	@param		integer|string	$status			Status to set
 	 *	@return		integer			1: order changed, 0: nothing changed
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderStatus( int|string $orderId, int|string $status ): int
 	{
-		return $this->modelOrder->edit( $orderId, ['status' => $status] );
+		return $this->modelOrder->edit( $orderId, [
+			'status'		=> $status,
+			'modifiedAt'	=> time(),
+		] );
 	}
 
 	/**
@@ -193,10 +211,10 @@ class Logic_ShopManager extends Logic
 
 	protected function __onInit(): void
 	{
-		$this->modelUser			= new Model_User( $this->env );
+		$this->logicShop			= new Logic_ShopResource( $this->env );
 		$this->modelAddress			= new Model_Address( $this->env );
 		$this->modelOrder			= new Model_Shop_Order( $this->env );
-		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
+//		$this->modelOrderPosition	= new Model_Shop_Order_Position( $this->env );
 		if( !$this->env->hasModules() )
 			$this->setShipping( new Logic_Shop_Shipping( $this->env ) );
 	}
