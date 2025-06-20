@@ -36,5 +36,7 @@ class Model_User_Payment_Account extends Model
 		'provider',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+	
+	protected ?string $className	= Entity_User_Payment_Account::class;
 }
