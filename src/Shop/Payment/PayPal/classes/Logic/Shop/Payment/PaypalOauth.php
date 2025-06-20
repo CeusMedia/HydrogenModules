@@ -152,7 +152,10 @@ class Logic_Shop_Payment_PaypalOauth
 		$httpcode	= curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		curl_close( $ch );
 
-		$this->modelPayment->edit( $paymentId, ['response' => $response] );
+		$this->modelPayment->edit( $paymentId, [
+			'request'	=> json_encode( $data ),
+			'response'	=> $response,
+		] );
 
 		if( str_starts_with( (string) $httpcode, '4' ) ){
 			/** @var object{name: string, message: string, links: array} $result */

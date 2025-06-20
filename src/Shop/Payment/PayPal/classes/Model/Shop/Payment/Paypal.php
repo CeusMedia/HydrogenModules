@@ -21,6 +21,8 @@ class Model_Shop_Payment_Paypal extends Model
 		'street',
 		'city',
 		'postcode',
+		'request',
+		'response',
 		'timestamp',
 	];
 
