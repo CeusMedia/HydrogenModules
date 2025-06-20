@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Exception\Deprecation as DeprecationException;
 use CeusMedia\HydrogenFramework\Logic;
@@ -32,15 +32,23 @@ class Logic_ShopResource extends Logic
 	/**
 	 *	@deprecated	get Model_Shop_Order::priceTaxed instead
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException	if given order ID is invalid
 	 */
 	public function calculateOrderTotalPrice( int|string $orderId ): float
 	{
+		/** @var ?Entity_Shop_Order $order */
 		$order	= $this->modelOrder->get( $orderId );
-		if( !$order )
+		if( NULL === $order )
 			throw new InvalidArgumentException( 'Invalid order ID' );								//  else quit with exception
 		return $order->priceTaxed;
 	}
 
+	/**
+	 *	Returns number of orders for given conditions.
+	 *	@access		public
+	 *	@param		array		$conditions
+	 *	@return		integer
+	 */
 	public function countOrders( array $conditions ): int
 	{
 		return $this->modelOrder->count( $conditions );
@@ -49,6 +57,7 @@ class Logic_ShopResource extends Logic
 	/**
 	 *	@param		int|string		$userId
 	 *	@return		Entity_User
+	 *	@throws		RangeException	if customer ID is invalid
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAccountCustomer( int|string $userId ): Entity_User
@@ -72,7 +81,8 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@deprecated
-	 *	@noinspection PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnused
 	 */
 	public function getGuestCustomer( int|string $customerId ): object
 	{
@@ -104,11 +114,12 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@param		int|string	$orderId
-	 *	@param		bool		$extended
-	 *	@return		object
+	 *	@param		bool		$extended		Flag: also load [customer,positions,shipping,(options),payment,taxes], default: no
+	 *	@return		Entity_Shop_Order
+	 *	@throws		RangeException				if given order ID is invalid
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getOrder( int|string $orderId, bool $extended = FALSE ): object
+	public function getOrder( int|string $orderId, bool $extended = FALSE ): Entity_Shop_Order
 	{
 		/** @var ?Entity_Shop_Order $order */
 		$order	= $this->modelOrder->get( $orderId );
@@ -157,14 +168,15 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@param		int|string		$positionId
-	 *	@param		bool			$extended
-	 *	@return		object|NULL
+	 *	@param		bool			$extended		Flag: extend by article entity
+	 *	@return		Entity_Shop_Order_Position|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getOrderPosition( int|string $positionId, bool $extended = FALSE ): ?object
+	public function getOrderPosition( int|string $positionId, bool $extended = FALSE ): ?Entity_Shop_Order_Position
 	{
+		/** @var ?Entity_Shop_Order_Position $position */
 		$position	= $this->modelOrderPosition->get( $positionId );
-		if( $extended ){
+		if( NULL !== $position && $extended ){
 			$source		= $this->bridge->getBridgeObject( (int) $position->bridgeId );				//  get bridge source of article
 			$position->article	= $source->get( $position->articleId, $position->quantity );		//  get article data
 		}
@@ -190,6 +202,8 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RangeException			if no order found for given order ID
+	 *	@throws		RuntimeException		if order has no user assigned
 	 */
 	public function getOrderShipping( int|string $orderId ): object
 	{
@@ -204,7 +218,7 @@ class Logic_ShopResource extends Logic
 			return $facts;
 
 		$customer		= $this->getOrderCustomer( $orderId );
-		if( $customer && $customer->addressDelivery ){
+		if( NULL !== $customer->addressDelivery ){
 			$weight			= 0;
 			$positions		= $this->getOrderPositions( $orderId, TRUE );
 			foreach( $positions as $position )
@@ -312,7 +326,8 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@deprecated
-	 *	@noinspection PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnused
 	 */
 	public function getShipping( bool $strict = TRUE ): ?bool
 	{
@@ -339,7 +354,8 @@ class Logic_ShopResource extends Logic
 	 *	@param		integer		 $quantity		Quantity to ge Shipping Grade for
 	 *	@return		int
 	 *	@deprecated
-	 *	@noinspection PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnused
 	 */
 	public function getShippingGradeIdByQuantity( int $quantity ): int
 	{
@@ -353,7 +369,8 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$shippingGradeId 		ID of Shipping Grade
 	 *	@return		string
 	 *	@deprecated
-	 *	@noinspection PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnused
 	 */
 	public function getShippingPrice( int|string $shippingZoneId, int|string $shippingGradeId ): string
 	{
@@ -425,8 +442,10 @@ class Logic_ShopResource extends Logic
 	public function setOrderStatus( int|string $orderId, int $status ): bool
 	{
 		$order	= $this->getOrder( $orderId );
-		if( $status == Model_Shop_Order::STATUS_PAYED ){
-			if( $order->status == Model_Shop_Order::STATUS_ORDERED ){
+		if( $status === $order->status )
+			return FALSE;
+		if( Model_Shop_Order::STATUS_PAYED === $status ){
+			if( Model_Shop_Order::STATUS_ORDERED === $order->status ){
 				$positions	= $this->getOrderPositions( $orderId );
 				foreach( $positions as $position ){
 					$bridge	= $this->bridge->getBridge( $position->bridgeId );
@@ -443,7 +462,8 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@deprecated
-	 *	@noinspection PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnusedParameterInspection
+	 *	@noinspection	PhpUnused
 	 */
 	public function setShipping( $logic )
 	{
@@ -452,7 +472,7 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
