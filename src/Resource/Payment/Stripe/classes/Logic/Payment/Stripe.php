@@ -1,8 +1,9 @@
-<?php
-/** @noinspection PhpUndefinedNamespaceInspection */
-/** @noinspection PhpUndefinedClassInspection */
+<?php /** @noinspection PhpUnusedParameterInspection */
+/** @noinspection PhpUnused */
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\HydrogenFramework\Logic;
 use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 use Stripe\Exception\ApiErrorException as StripeApiErrorException;
@@ -19,61 +20,57 @@ class Logic_Payment_Stripe extends Logic
 	protected bool $skipCacheOnNextRequest;
 	protected ?string $baseUrl			= '';
 
-	public function checkUser( string $userId ): StripeCustomer
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		StripeCustomer
+	 *	@throws		StripeApiErrorException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function checkUser( int|string $userId ): StripeCustomer
 	{
 		return $this->getUser( $userId );
 	}
 
-	public function createMandate( string $bankAccountId, string $returnUrl )
+	/**
+	 *	@param		int|string		$orderId
+	 *	@param		string			$token
+	 *	@return		StripeCharge
+	 *	@throws		ReflectionException
+	 *	@throws		StripeApiErrorException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function createChargeFromToken( int|string $orderId, string $token ): StripeCharge
 	{
-		throw new Exception( 'Not implemented yet' );
-		//  ...
-	}
+		/** @var Entity_Shop_Order $order */
+		$order	= Logic_Shop::getInstance( $this->env )->getOrder( $orderId, TRUE );
 
-	public function getUserMandates( string $userId )
-	{
-		throw new Exception( 'Not implemented yet' );
-		//  ...
-	}
-
-	public function getBankAccountMandates( string $userId, string $bankAccountId )
-	{
-		throw new Exception( 'Not implemented yet' );
-		//  ...
-	}
-
-	public function getMandates()
-	{
-		throw new Exception( 'Not implemented yet' );
-		$cacheKey	= 'stripe_mandates';
-		$this->applyPossibleCacheSkip( $cacheKey );
-		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
-		//  ...
-			$this->cache->set( $cacheKey, $items );
-		}
-		return $items;
-	}
-
-	public function createChargeFromToken( string $orderId, string $token ): StripeCharge
-	{
-		$modelOrder	= new Model_Shop_Order( $this->env );
-		$order		= $modelOrder->get( $orderId );
-		$charge		= StripeCharge::create( [
-			"amount"		=> $order->priceTaxed * 100,
-			"currency"		=> $order->currency,
-			"description"	=> "Online-Bestellung am ".date( 'j.n.Y' ),
-			"source"		=> $token,
+		return StripeCharge::create( [
+			'amount'			=> $order->priceTaxed * 100,
+			'currency'			=> $order->currency,
+			'description'		=> "Online-Bestellung am ".date( 'j.n.Y' ),
+			'source'			=> $token,
+			'receipt_email'		=> $order->customer->addressBilling->email,
+			'shipping'			=> [
+				'address'		=> [
+					'city'			=> $order->customer->addressDelivery->city,
+					'country'		=> $order->customer->addressDelivery->country,
+					'line1'			=> $order->customer->addressDelivery->street,
+					'postal_code'	=> $order->customer->addressDelivery->postcode,
+					'state'			=> $order->customer->addressDelivery->region,
+				],
+				'name'		=> '',
+			],
 		] );
-		return $charge;
 	}
 
-	public function createCustomer( $data )
-	{
-		throw new Exception( 'Not implemented yet' );
-		//  ...
-	}
-
-	public function createCustomerFromLocalUser( $localUserId ): StripeCustomer
+	/**
+	 *	@param		int|string		$localUserId
+	 *	@return		StripeCustomer
+	 *	@throws		ReflectionException
+	 *	@throws		StripeApiErrorException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function createCustomerFromLocalUser( int|string $localUserId ): StripeCustomer
 	{
 		$modelUser		= new Model_User( $this->env );
 		/** @var ?Entity_User $user */
@@ -87,14 +84,14 @@ class Logic_Payment_Stripe extends Logic
 	}
 
 	/**
-	 *	@todo			implement
+	 *	@param		string			$type
+	 *	@param		int|string		$eventId
+	 *	@return		StripeEvent
+	 *	@throws		StripeApiErrorException
 	 */
-	public function getDefaultCurrency( $userId = NULL )
+	public function getEventResource( string $type, int|string $eventId ): StripeEvent
 	{
-		$currency	= 'EUR';
-		if( $userId ){
-
-		}
+		return StripeEvent::retrieve( $eventId );
 	}
 
 	/**
@@ -107,16 +104,23 @@ class Logic_Payment_Stripe extends Logic
 	{
 		$cacheKey	= 'stripe_user_'.$userId;
 		$this->applyPossibleCacheSkip( $cacheKey );
-		/** @var ?Customer $item */
-		$item		= $item = $this->cache->get( $cacheKey );
-		if( is_null( $item ) ){
+		/** @var ?StripeCustomer $item */
+		$item		= $this->cache->get( $cacheKey );
+		if( NULL === $item ){
 			$item	= StripeCustomer::retrieve( $userId );
 			$this->cache->set( $cacheKey, $item );
 		}
 		return $item;
 	}
 
-	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId )
+	/**
+	 *	@param		int|string		$userId
+	 *	@param		int|string		$localUserId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId ): void
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
 		$relation		= $modelAccount->getByIndices( [
@@ -131,28 +135,40 @@ class Logic_Payment_Stripe extends Logic
 		}
 		else{
 			$modelAccount->add( [
-				'userId'	=> $localUserId,
+				'userId'			=> $localUserId,
 				'paymentAccountId'	=> $userId,
-				'provider'	=> 'stripe',
-				'createdAt'	=> time(),
+				'provider'			=> 'stripe',
+				'createdAt'			=> time(),
 			] );
 		}
 	}
 
-	public function getUserIdFromLocalUserId( int|string $localUserId, bool $strict = TRUE )
+	/**
+	 *	@param		int|string		$localUserId
+	 *	@param		bool			$strict
+	 *	@return		string|NULL
+	 *	@throws		ReflectionException
+	 */
+	public function getUserIdFromLocalUserId( int|string $localUserId, bool $strict = TRUE ): ?string
 	{
 		$modelAccount	= new Model_User_Payment_Account( $this->env );
+		/** @var ?Entity_User_Payment_Account $relation */
 		$relation		= $modelAccount->getByIndices( [
 			'userId'	=> $localUserId,
 			'provider'	=> 'stripe',
 		] );
-		if( !$relation && $strict )
+
+		if( NULL !== $relation )
+			return $relation->paymentAccountId;
+		if( $strict )
 			throw new RuntimeException( 'No payment account available' );
-		if( !$relation )
-			return NULL;
-		return $relation->paymentAccountId;
+		return NULL;
 	}
 
+	/**
+	 *	@param		bool		$skip
+	 *	@return		self
+	 */
 	public function skipCacheOnNextRequest( bool $skip ): self
 	{
 		$this->skipCacheOnNextRequest	= $skip;
@@ -169,13 +185,101 @@ class Logic_Payment_Stripe extends Logic
 		return $this->cache->delete( 'stripe_'.$key );
 	}
 
-	public function updateCustomer( StripeCustomer $user )
+
+	//  --  TODO  --  //
+
+
+	/**
+	 * @param string $bankAccountId
+	 * @param string $returnUrl
+	 * @return mixed
+	 * @throws NotSupportedException since not implemented, yet
+	 */
+	public function createMandate( string $bankAccountId, string $returnUrl ): mixed
 	{
-		throw new Exception( 'Not implemented yet' );
-		$this->uncache( 'user_'.$user->Id );
+		throw new NotSupportedException( 'Not implemented yet' );
 		//  ...
 	}
 
+	/**
+	 * @param string $userId
+	 * @return mixed
+	 * @throws NotSupportedException since not implemented, yet
+	 */
+	public function getUserMandates( string $userId ): mixed
+	{
+		throw new NotSupportedException( 'Not implemented yet' );
+		//  ...
+	}
+
+	/**
+	 * @param string $userId
+	 * @param string $bankAccountId
+	 * @return mixed
+	 * @throws NotSupportedException since not implemented, yet
+	 */
+	public function getBankAccountMandates( string $userId, string $bankAccountId ): mixed
+	{
+		throw new NotSupportedException( 'Not implemented yet' );
+		//  ...
+	}
+
+	/**
+	 * @return array
+	 * @throws NotSupportedException since not implemented, yet
+	 */
+	public function getMandates(): array
+	{
+		throw new NotSupportedException( 'Not implemented yet' );
+/*		$cacheKey	= 'stripe_mandates';
+		$this->applyPossibleCacheSkip( $cacheKey );
+		if( is_null( $items = $this->cache->get( $cacheKey ) ) ){
+		//  ...
+			$this->cache->set( $cacheKey, $items );
+		}
+		return $items;*/
+	}
+
+	/**
+	 *	@param		$data
+	 *	@return		mixed
+	 *	@throws		NotSupportedException	since not implemented, yet
+	 */
+	public function createCustomer( $data ): mixed
+	{
+		throw new NotSupportedException( 'Not implemented yet' );
+		//  ...
+	}
+
+	/**
+	 *	@param		int|string|NULL		$userId
+	 *	@return		string
+	 *	@todo		implement $userId
+	 */
+	public function getDefaultCurrency( int|string $userId = NULL ): string
+	{
+		return 'EUR';
+	}
+
+	/**
+	 *	@param		StripeCustomer			$user
+	 *	@throws		NotSupportedException	since not implemented, yet
+	 */
+	public function updateCustomer( StripeCustomer $user )
+	{
+		throw new NotSupportedException( 'Not implemented yet' );
+//		$this->uncache( 'user_'.$user->Id );
+		//  ...
+	}
+
+
+	//  --  PROTECTED  --  //
+
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_payment_stripe.', TRUE );
@@ -196,6 +300,7 @@ class Logic_Payment_Stripe extends Logic
 	 *	@access		protected
 	 *	@param		string			$cacheKey			Cache key of entity to possible uncache
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyPossibleCacheSkip( string $cacheKey ): void
 	{
@@ -211,9 +316,4 @@ class Logic_Payment_Stripe extends Logic
 	//	@todo check card against user cards
 		return $card;
 	}*/
-
-	public function getEventResource( string $type, int|string $eventId ): StripeEvent
-	{
-		return StripeEvent::retrieve( $eventId );
-	}
 }
