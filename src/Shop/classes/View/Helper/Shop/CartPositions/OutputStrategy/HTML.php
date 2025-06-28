@@ -3,7 +3,7 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-class View_Helper_Shop_CartPositions_OutputStrategy_HTML extends View_Helper_Shop_Cart_Positions_OutputStrategy_Abstract
+class View_Helper_Shop_CartPositions_OutputStrategy_HTML extends View_Helper_Shop_CartPositions_OutputStrategy_Abstract
 {
 	public function render(): string
 	{

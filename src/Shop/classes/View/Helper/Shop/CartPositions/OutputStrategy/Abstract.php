@@ -3,7 +3,7 @@
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Environment;
 
-abstract class View_Helper_Shop_Cart_Positions_OutputStrategy_Abstract
+abstract class View_Helper_Shop_CartPositions_OutputStrategy_Abstract
 {
 	public const DISPLAY_UNKNOWN		= 0;
 	public const DISPLAY_BROWSER		= 1;
