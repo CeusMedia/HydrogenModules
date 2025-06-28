@@ -7,7 +7,7 @@
  *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
 
-use CeusMedia\HydrogenFramework\Model;
+use CeusMedia\HydrogenFramework\Model\Database\Table as DatabaseModel;
 
 /**
  *	Data Model of Shop Bridges.
@@ -15,7 +15,7 @@ use CeusMedia\HydrogenFramework\Model;
  *	@package		Hydrogen.Module.Shop.Bridge
  *	@author			Christian Würker <Christian.Wuerker@ceus-media.de>
  */
-class Model_Shop_Bridge extends Model
+class Model_Shop_Bridge extends DatabaseModel
 {
 	protected string $name			= 'shop_bridges';
 
