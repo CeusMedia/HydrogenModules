@@ -122,8 +122,8 @@ abstract class Mail_Abstract
 
 		$this->initTransport();
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
-		$this->__onInit();
 		$this->data		= $data;
+		$this->__onInit();
 		$this->generate();
 	}
 
