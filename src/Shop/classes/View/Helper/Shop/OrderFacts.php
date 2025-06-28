@@ -37,6 +37,11 @@ class View_Helper_Shop_OrderFacts
 	protected ?object $order			= NULL;
 	protected array $facts				= [];
 
+	/**
+	 *	Constructor.
+	 *	@param		Environment			$env
+	 *	@throws		ReflectionException
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env			= $env;
@@ -58,6 +63,8 @@ class View_Helper_Shop_OrderFacts
 	 *	@param		array		$data
 	 *	@return		self
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if order ID in mail data is missing
+	 *	@throws		RangeException					if given order ID is invalid
 	 */
 	public function setData( array $data ): self
 	{
@@ -65,8 +72,6 @@ class View_Helper_Shop_OrderFacts
 		if( empty( $data['orderId'] ) )
 			throw new InvalidArgumentException( 'Missing order ID in mail data' );
 		$this->order		= $this->logicShop->getOrder( $data['orderId'] );
-		if( !$this->order )
-			throw new InvalidArgumentException( 'Invalid order ID' );
 		$this->paymentBackend	= NULL;
 		foreach( $data['paymentBackends']->getAll() as $item )
 			if( $item->key === $this->order->paymentMethod )
@@ -81,25 +86,38 @@ class View_Helper_Shop_OrderFacts
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$display
+	 *	@return		self
+	 */
 	public function setDisplay( int $display ): self
 	{
-		if( !in_array( $display, [self::DISPLAY_BROWSER, self::DISPLAY_MAIL], TRUE ) )
+		$displays	= array_diff( self::DISPLAYS, [self::DISPLAY_UNKNOWN] );
+		if( !in_array( $display, $displays, TRUE ) )
 			throw new InvalidArgumentException( 'Invalid display format' );
 		$this->display		= $display;
 		return $this;
 	}
 
+	/**
+	 *	@param		int		$format
+	 *	@return		self
+	 */
 	public function setOutput( int $format ): self
 	{
-		$formats	= [self::OUTPUT_HTML, self::OUTPUT_TEXT];
+		$formats	= array_diff( self::OUTPUTS, [self::OUTPUT_UNKNOWN] );
 		if( !in_array( $format, $formats ) )
 			throw new InvalidArgumentException( 'Invalid output format' );
-		$this->output		= $format;
+		$this->output	= $format;
 		return $this;
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	Render set facts as HTML.
+	 *	@return		string
+	 */
 	protected function renderAsHtml(): string
 	{
 		$helperFacts	= new View_Helper_Mail_Facts();
@@ -112,6 +130,10 @@ class View_Helper_Shop_OrderFacts
 		return $helperFacts->render();
 	}
 
+	/**
+	 *	Render set facts as text.
+	 *	@return		string
+	 */
 	protected function renderAsText(): string
 	{
 //		$words			= (object) $this->words['panel-facts'];
