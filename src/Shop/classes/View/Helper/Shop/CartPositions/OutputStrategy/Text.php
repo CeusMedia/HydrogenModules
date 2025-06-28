@@ -1,7 +1,7 @@
 <?php
 
 
-class View_Helper_Shop_CartPositions_OutputStrategy_Text extends View_Helper_Shop_Cart_Positions_OutputStrategy_Abstract
+class View_Helper_Shop_CartPositions_OutputStrategy_Text extends View_Helper_Shop_CartPositions_OutputStrategy_Abstract
 {
 	public function render(): string
 	{

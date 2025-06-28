@@ -84,15 +84,19 @@ class View_Helper_Shop_CartPositions
 		switch( $this->output ){
 			case self::OUTPUT_HTML:
 			case self::OUTPUT_HTML_LIST:
-				$strategy->setForwardPath( $this->forwardPath );
+				if( NULL !== $this->forwardPath )
+					$strategy->setForwardPath( $this->forwardPath );
 				$strategy->setChangeable( $this->changeable );
 				break;
 		}
 		$strategy->setPositions( $this->positions );
 		$strategy->setDisplay( $this->output );
-		$strategy->setPaymentBackend( $this->paymentBackend );
-		$strategy->setPaymentBackends( $this->paymentsBackends );
-		$strategy->setDeliveryAddress( $this->deliveryAddress );
+		if( NULL !== $this->paymentBackend )
+			$strategy->setPaymentBackend( $this->paymentBackend );
+		if( NULL !== $this->paymentsBackends )
+			$strategy->setPaymentBackends( $this->paymentsBackends );
+		if( NULL !== $this->deliveryAddress )
+			$strategy->setDeliveryAddress( $this->deliveryAddress );
 		return $strategy->render();
 	}
 
