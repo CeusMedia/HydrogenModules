@@ -2,7 +2,10 @@
 /** @deprecated remove template, is new: Controller_Ajax_Work_Mail_Check */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
+
+/** @var Environment $env */
 
 
 /** @var array<string,array<string,string>> $words */

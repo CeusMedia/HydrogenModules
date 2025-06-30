@@ -3,7 +3,7 @@
 	<title>Work: Mail Check</title>
 	<description/>
 	<category>Work</category>
-	<version>0.3.6</version>
+	<version>0.3.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add job to mass check in background.</log>
@@ -22,6 +22,7 @@
 	<log version="0.3.4">Improve code style.</log>
 	<log version="0.3.5">Extract hook to own class.</log>
 	<log version="0.3.6">Extract AJAX actions to own controller.</log>
+	<log version="0.3.7">Rename database tables and primary keys.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -30,9 +31,9 @@
 		<class>Controller/Work/Mail/Check.php</class>
 		<class>Hook/Work/Mail/Check.php</class>
 		<class>View/Work/Mail/Check.php</class>
-		<class>Model/Mail/Address.php</class>
-		<class>Model/Mail/Address/Check.php</class>
-		<class>Model/Mail/Group.php</class>
+		<class>Model/Mail/Check/Address.php</class>
+		<class>Model/Mail/Check/Address/Run.php</class>
+		<class>Model/Mail/Check/Group.php</class>
 		<class>Job/Work/Mail/Check.php</class>
 		<template>work/mail/check/export.php</template>
 		<template>work/mail/check/group.php</template>
@@ -95,5 +96,20 @@ CREATE TABLE IF NOT EXISTS `mail_groups` (
   `createdAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`mailGroupId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="update" version="0.3.7"><![CDATA[
+ALTER TABLE `<%?prefix%>mail_groups` RENAME TO `<%?prefix%>mail_check_groups`;
+ALTER TABLE `<%?prefix%>mail_check_groups`
+  CHANGE COLUMN `mailGroupId` `mailCheckGroupId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `<%?prefix%>mail_addresses` RENAME TO `<%?prefix%>mail_check_addresses`;
+ALTER TABLE `<%?prefix%>mail_check_addresses`
+  CHANGE COLUMN `mailAddressId` `mailCheckAddressId` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  CHANGE COLUMN `mailGroupId` `mailCheckGroupId` INT(10) UNSIGNED NOT NULL;
+
+ALTER TABLE `<%?prefix%>mail_address_checks` RENAME TO `<%?prefix%>mail_check_address_runs`;
+ALTER TABLE `<%?prefix%>mail_check_address_runs`
+  CHANGE COLUMN `mailAddressCheckId` `mailCheckAddressRunId` INT(10) UNSIGNED NOT NULL,
+  CHANGE COLUMN `mailAddressId` `mailCheckAddressId` INT(10) UNSIGNED NOT NULL;
 ]]></sql>
 </module>

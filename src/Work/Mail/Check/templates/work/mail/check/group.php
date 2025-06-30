@@ -1,6 +1,10 @@
 <?php
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
+
+/** @var Environment $env */
 
 /** @var object[] $groups */
 
@@ -37,10 +41,8 @@ $panelAdd	= '
 	</div>
 </div>';
 
-
 $rows	= [];
 foreach( $groups as $group ){
-
 	$percentTested	= 0;
 	$percentSuccess	= 0;
 	if( $group->numbers->total ){
@@ -49,13 +51,13 @@ foreach( $groups as $group ){
 	}
 
 	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
-		'href'		=> './work/mail/check/removeGroup/'.$group->mailGroupId,
+		'href'		=> './work/mail/check/removeGroup/'.$group->mailCheckGroupId,
 		'class'		=> 'btn btn-small btn-inverse',
 		'onclick'	=> 'return confirm(\'Wirklich?\nDabei werden alle Adressen und Prüfungen gelöscht.\')',
 	] );
 	$buttons	= HtmlTag::create( 'div', $buttonRemove, ['class' => 'btn-group'] );
 	$link		= HtmlTag::create( 'a', $group->title, [
-		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailGroupId,
+		'href'	=> './work/mail/check/filter/reset?groupId='.$group->mailCheckGroupId,
 		'class'	=> '',
 	] );
 	$link		.= '&nbsp;'.HtmlTag::create( 'small', '('.$group->numbers->total.')', ['class' => 'muted'] );
@@ -69,7 +71,7 @@ foreach( $groups as $group ){
 		HtmlTag::create( 'td', $buttons, ['class' => 'cell-group-createdAt'] ),
 	] );
 }
-$colgroup	= HtmlElements::ColumnGroup( "", "15%", "15%", "15%", "15%" );
+$colgroup	= HtmlElements::ColumnGroup( '', '15%', '15%', '15%', '15%' );
 $thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Name', 'Getestet', 'Qualität', 'Erstellung'] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
@@ -82,7 +84,7 @@ $panelList	= '
 	</div>
 </div>';
 
-$tabs	= View_Work_Mail_Check::renderTabs( $env, 'group' );
+$tabs		= View_Work_Mail_Check::renderTabs( $env, 'group' );
 
 return $tabs.'
 <div class="row-fluid">

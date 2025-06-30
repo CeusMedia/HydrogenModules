@@ -1,6 +1,8 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment;
 
+/** @var Environment $env */
 /** @var object[] $groups */
 
 $optType	= ['CSV' => 'CSV'];
@@ -8,8 +10,8 @@ $optType	= HtmlElements::Options( $optType, key( $optType ) );
 
 $optGroup	= [];
 foreach( $groups as $group )
-	$optGroup[$group->mailGroupId]	= $group->title;
-$optGroup	= HtmlElements::Options( $optGroup, $groups ? $groups[0]->mailGroupId : NULL );
+	$optGroup[$group->mailCheckGroupId]	= $group->title;
+$optGroup	= HtmlElements::Options( $optGroup, $groups ? $groups[0]->mailCheckGroupId : NULL );
 
 $statuses	= [
 	-2	=> 'nicht erreichbar',
@@ -17,13 +19,9 @@ $statuses	= [
 	2	=> 'erreichbar',
 ];
 
-$optStatus	= [];
-foreach( $statuses as $key => $label )
-	$optStatus[$key]	= $label;
+$optStatus	= array_map( function ($label) {return $label;}, $statuses );
 $optStatus	= HtmlElements::Options( $optStatus, [2] );
-
-
-$tabs	= View_Work_Mail_Check::renderTabs( $env, 'export' );
+$tabs		= View_Work_Mail_Check::renderTabs( $env, 'export' );
 
 return $tabs.'
 <div class="row-fluid">

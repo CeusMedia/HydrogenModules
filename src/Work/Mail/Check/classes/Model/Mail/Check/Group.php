@@ -10,19 +10,19 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data model of address groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Group extends Model
+class Model_Mail_Check_Group extends Model
 {
-	protected string $name			= 'mail_groups';
+	protected string $name			= 'mail_check_groups';
 
 	protected array $columns		= [
-		"mailGroupId",
+		"mailCheckGroupId",
 		"title",
 		"columns",
 		"mailColumn",
 		"createdAt",
 	];
 
-	protected string $primaryKey	= 'mailGroupId';
+	protected string $primaryKey	= 'mailCheckGroupId';
 
 	protected array $indices		= [
 		"title",

@@ -13,9 +13,9 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 	protected MessengerResource $messenger;
 	protected HttpRequest $request;
 	protected Dictionary $moduleOptions;
-	protected Model_Mail_Address $modelAddress;
-	protected Model_Mail_Address_Check $modelCheck;
-	protected Model_Mail_Group $modelGroup;
+	protected Model_Mail_Check_Address $modelAddress;
+	protected Model_Mail_Check_Address_Run $modelCheck;
+	protected Model_Mail_Check_Group $modelGroup;
 
 	/**
 	 *	@param		string		$addressId
@@ -33,35 +33,35 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 		if( NULL === $address )
 			$this->respondError( 0, 'Invalid address ID' );
 
-		$checks 			= HtmlTag::create('div', 'Keine Prüfungen bisher.', ['class' => 'text text-info']);
-		$address->checks	= $this->modelCheck->getAllByIndex( 'mailAddressId', $addressId, ['createdAt' => 'DESC'] );
-		if( $address->checks ){
+		$runs 			= HtmlTag::create('div', 'Keine Prüfungen bisher.', ['class' => 'text text-info']);
+		$address->runs	= $this->modelCheck->getAllByIndex( 'mailCheckAddressId', $addressId, ['createdAt' => 'DESC'] );
+		if( $address->runs ){
 			$rows	= [];
-			foreach( $address->checks as $check ){
-				$codeLabel	= $this->renderCodeBadge( $check );
-				$codeDesc	= SmtpCode::getText( $check->code );
+			foreach( $address->runs as $run ){
+				$codeLabel	= $this->renderCodeBadge( $run );
+				$codeDesc	= SmtpCode::getText( $run->code );
 
-				$errorLabel	= ucwords( strtolower( str_replace( "_", " ", $words['errorCodes'][$check->error] ) ) );
-				$errorDesc	= $words['errorLabels'][$check->error];
+				$errorLabel	= ucwords( strtolower( str_replace( "_", " ", $words['errorCodes'][$run->error] ) ) );
+				$errorDesc	= $words['errorLabels'][$run->error];
 
 				$facts		= $this->renderFacts( [
 					'SMTP-Code'			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
 					'Fehler'			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
-					'Servermeldung'		=> '<not-pre>'.$check->message.'</not-pre>',
-					'Datum / Uhrzeit'	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
+					'Servermeldung'		=> '<not-pre>'.$run->message.'</not-pre>',
+					'Datum / Uhrzeit'	=> date( 'Y-m-d', $run->createdAt ).' <small class="muted">'.date( 'H:i:s', $run->createdAt ).'</small>',
 				] );
 				$rows[] = HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', $facts ),
 				] );
 			}
-			$checks	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );
+			$runs	= HtmlTag::create( 'table', $rows, ['class' => 'table table-striped'] );
 		}
 		/** @noinspection XmlDeprecatedElement */
 		/** @noinspection HtmlDeprecatedTag */
 		$html	= '
 <big><span class="muted">Adresse: </span>'.$address->address.'</big>
-<h4>Prüfungen <small class="muted">('.count( $address->checks ).')</small></h4>
-'.$checks.'
+<h4>Prüfungen <small class="muted">('.count( $address->runs ).')</small></h4>
+'.$runs.'
 <br/>
 <br/>';
 		$this->respondData( $html );
@@ -101,9 +101,9 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 
 		//  --  PREPARE MODELS  --  //
-		$this->modelAddress		= new Model_Mail_Address( $this->env );
-		$this->modelCheck		= new Model_Mail_Address_Check( $this->env );
-		$this->modelGroup		= new Model_Mail_Group( $this->env );
+		$this->modelAddress		= new Model_Mail_Check_Address( $this->env );
+		$this->modelCheck		= new Model_Mail_Check_Address_Run( $this->env );
+		$this->modelGroup		= new Model_Mail_Check_Group( $this->env );
 	}
 
 	/**

@@ -10,26 +10,26 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data model of addresses to check.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Address extends Model
+class Model_Mail_Check_Address extends Model
 {
-	protected string $name			= 'mail_addresses';
+	protected string $name			= 'mail_check_addresses';
 
 	protected array $columns		= [
-		"mailAddressId",
-		"mailGroupId",
-		"status",
-		"address",
-		"data",
-		"createdAt",
-		"checkedAt",
+		'mailCheckAddressId',
+		'mailCheckGroupId',
+		'status',
+		'address',
+		'data',
+		'createdAt',
+		'checkedAt',
 	];
 
-	protected string $primaryKey	= 'mailAddressId';
+	protected string $primaryKey	= 'mailCheckAddressId';
 
 	protected array $indices		= [
-		"mailGroupId",
-		"status",
-		"address",
+		'mailCheckGroupId',
+		'status',
+		'address',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;
