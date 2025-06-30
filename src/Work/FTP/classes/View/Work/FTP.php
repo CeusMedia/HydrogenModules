@@ -58,7 +58,7 @@ class View_Work_FTP extends View
 #			die;
 			$entry	= (object) $entry;
 			$icon	= '<i class="icon-'.( $entry->isdir ? 'folder-close' : 'file' ).'"></i> ';
-			$label		= $icon.$entry->name;
+			$label	= $icon.$entry->name;
 
 			if( $entry->isdir ){
 				$pathNew	= $path ? $path.'/'.$entry->name : $entry->name;
@@ -86,11 +86,11 @@ class View_Work_FTP extends View
 		}
 		ksort( $folders );
 		ksort( $files );
-		$list	= $folders + $files;
+		$list		= $folders + $files;
 		$colgroup	= HtmlElements::ColumnGroup( ["50%", "15%", "15%", "15%"] );
 		$heads		= HtmlElements::TableHeads( ['Name', 'Size', 'Date', 'Permissions'] );
-		$thead	= HtmlTag::create( 'thead', $heads );
-		$tbody	= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
+		$thead		= HtmlTag::create( 'thead', $heads );
+		$tbody		= HtmlTag::create( 'tbody', HtmlTag::create( 'tr', $list ) );
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed table-striped'] );
 	}
 }

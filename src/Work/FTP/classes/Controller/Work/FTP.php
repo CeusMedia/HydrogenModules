@@ -36,32 +36,11 @@ class Controller_Work_FTP extends Controller
 		$this->addData( 'fromModule', $fromModule );
 	}
 
-	public function ajaxIndex()
-	{
-		$path		= $this->env->getRequest()->getFromSource( 'path', 'GET' );
-		$folders	= [];
-		$files		= [];
-		foreach( $this->logic->index( $path ) as $entry ){
-			$entry	= (object) $entry;
-			if( $entry->isdir ){
-				$folders[$entry->name]	= $entry;
-			}
-			else{
-				$files[$entry->name]	= $entry;
-			}
-		}
-		ksort( $folders );
-		ksort( $files );
-		$list	= $folders + $files;
-		print( json_encode( $list ) );
-		exit;
-	}
-
 	public function index(): void
 	{
 		$this->connect();
 		$clock	= new Clock;
-		$path		= $this->env->getRequest()->get( 'path' );
+		$path	= $this->env->getRequest()->get( 'path' );
 		if( $this->env->getRequest()->has( 'refresh' ) )
 			$this->logic->uncache( $path );
 		$deepPath	= $this->session->get( 'deepestPath' );
@@ -89,10 +68,10 @@ class Controller_Work_FTP extends Controller
 		$this->logic		= new Logic_FTP( $this->env );
 	}
 
-	protected function connect()
+	protected function connect(): void
 	{
 		if( $this->logic->isConnected() )
-			return TRUE;
+			return;
 
 		$config	= $this->config->getAll( FALSE, TRUE );
 		if( $this->session->get( 'module_work_ftp_access' ) ){
@@ -105,7 +84,7 @@ class Controller_Work_FTP extends Controller
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );
 		}
 		$access		= $config->getAll( "module.work_ftp.access.", TRUE );
-		if( $access->get( 'host' )&& $access->get( 'username' ) && $access->get( 'password' ) ){
+		if( $access->get( 'host' ) && $access->get( 'username' ) && $access->get( 'password' ) ){
 			try{
 				$this->logic->connect(
 					$access->get( 'host' ),
