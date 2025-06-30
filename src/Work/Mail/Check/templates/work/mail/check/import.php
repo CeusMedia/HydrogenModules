@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\HydrogenFramework\Environment;
 
 /** @var Environment $env */
 /** @var string[] $columns */

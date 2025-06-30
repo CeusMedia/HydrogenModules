@@ -17,9 +17,9 @@ class Controller_Work_Mail_Check extends Controller
 	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected Dictionary $moduleOptions;
-	protected Model_Mail_Address $modelAddress;
-	protected Model_Mail_Address_Check $modelCheck;
-	protected Model_Mail_Group $modelGroup;
+	protected Model_Mail_Check_Address $modelAddress;
+	protected Model_Mail_Check_Address_Run $modelRun;
+	protected Model_Mail_Check_Group $modelGroup;
 
 	public function add(): void
 	{
@@ -32,16 +32,16 @@ class Controller_Work_Mail_Check extends Controller
 			foreach( $addresses as $address ){
 				if( !strlen( trim( $address ) ) )
 					continue;
-				$indices	= ['mailGroupId' => $groupId, 'address' => $address];
+				$indices	= ['mailCheckGroupId' => $groupId, 'address' => $address];
 				if( $this->modelAddress->getByIndices( $indices ) ){
 					$this->messenger->noteError( 'Address &quot;%s&quot; is already existing in group &quot;%s&quot;.', $address, $group->title );
 					$this->restart( NULL, TRUE );
 				}
 				$addressId	= $this->modelAddress->add( [
-					'mailGroupId'	=> $groupId,
-					'address'		=> $address,
-					'status'		=> 0,
-					'createdAt'		=> time(),
+					'mailCheckGroupId'	=> $groupId,
+					'address'			=> $address,
+					'status'			=> 0,
+					'createdAt'			=> time(),
 				] );
 				$this->messenger->noteSuccess( 'Added address "%s".', htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 			}
@@ -98,13 +98,13 @@ class Controller_Work_Mail_Check extends Controller
 				$result		= $checker->test( new MailAddress( $address->address ) );
 				$response	= $checker->getLastResponse();
 
-				$this->modelCheck->add( [
-					'mailAddressId'	=> $addressId,
-					'status'		=> $result ? 1 : -1,
-					'error'			=> $response->error,
-					'code'			=> $response->code,
-					'message'		=> $response->message,
-					'createdAt'		=> time(),
+				$this->modelRun->add( [
+					'mailCheckAddressId'	=> $addressId,
+					'status'				=> $result ? 1 : -1,
+					'error'					=> $response->error,
+					'code'					=> $response->code,
+					'message'				=> $response->message,
+					'createdAt'				=> time(),
 				] );
 				$status	= 2;
 				if( !$result ){
@@ -119,13 +119,13 @@ class Controller_Work_Mail_Check extends Controller
 		//		$this->messenger->noteSuccess( 'Checked.' );
 			}
 			catch( Exception $e ){
-				$this->modelCheck->add( [
-					'mailAddressId'	=> $addressId,
-					'status'		=> -2,
-					'error'			=> 0,
-					'code'			=> $e->getCode(),
-					'message'		=> $e->getMessage(),
-					'createdAt'		=> time(),
+				$this->modelRun->add( [
+					'mailCheckAddressId'	=> $addressId,
+					'status'				=> -2,
+					'error'					=> 0,
+					'code'					=> $e->getCode(),
+					'message'				=> $e->getMessage(),
+					'createdAt'				=> time(),
 				] );
 				$this->modelAddress->edit( $addressId, [
 					'status'	=> -2,
@@ -146,7 +146,7 @@ class Controller_Work_Mail_Check extends Controller
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
 		$filterQuery	= trim( $this->session->get( 'work_mail_check_filter_query', '' ) );
 		if( $filterGroupId )
-			$conditions['mailGroupId']	= $filterGroupId;
+			$conditions['mailCheckGroupId']	= $filterGroupId;
 		if( $filterStatus && $filterStatus[0] !== '' )
 			$conditions['status']		= $filterStatus;
 		if( '' !== $filterQuery )
@@ -173,8 +173,8 @@ class Controller_Work_Mail_Check extends Controller
 			}
 			$group		= $this->modelGroup->get( $groupId );
 			$conditions	= [
-				'status'		=> $this->request->get( 'status' ),
-				'mailGroupId'	=> $groupId,
+				'status'			=> $this->request->get( 'status' ),
+				'mailCheckGroupId'	=> $groupId,
 			];
 			$addresses	= $this->modelAddress->getAll( $conditions, ['address' => 'ASC'], [10, 0] );
 			$data		= [];
@@ -187,9 +187,9 @@ class Controller_Work_Mail_Check extends Controller
 				'Server-Meldung',
 			] );
 			foreach( $addresses as $address ){
-				$check	= $this->modelCheck->getByIndices(
-					['mailAddressId' => $address->mailAddressId],
-					['mailAddressCheckId' => 'DESC']
+				$run	= $this->modelRun->getByIndices(
+					['mailCheckAddressId' => $address->mailCheckAddressId],
+					['mailCheckAddressRunId' => 'DESC']
 				);
 				if( !strlen( $address->data ) )
 					$address->data	= '[]';
@@ -198,11 +198,11 @@ class Controller_Work_Mail_Check extends Controller
 					[trim( $address->address )],
 	 				array_values( $additionalData ),
 					[
-						$check->code,
-						SmtpCode::getText( $check->code ),
-						$words['errorCodes'][$check->error],
-						$words['errorLabels'][$check->error],
-						$check->message,
+						$run->code,
+						SmtpCode::getText( $run->code ),
+						$words['errorCodes'][$run->error],
+						$words['errorLabels'][$run->error],
+						$run->message,
 					]
 				);
 			}
@@ -240,7 +240,7 @@ class Controller_Work_Mail_Check extends Controller
 		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		foreach( $groups as $group ){
 			/** @var array<object> $addresses */
-			$addresses	= $this->modelAddress->getAll( ['mailGroupId' => $group->mailGroupId] );
+			$addresses	= $this->modelAddress->getAll( ['mailCheckGroupId' => $group->mailCheckGroupId] );
 			$group->numbers	= (object) [
 				'total'		=> count( $addresses ),
 				'negative'	=> 0,
@@ -305,10 +305,10 @@ class Controller_Work_Mail_Check extends Controller
 				$address	= $item[$column];
 				unset( $item[$column] );
 				$this->modelAddress->add( [
-					'mailGroupId'	=> $groupId,
-					'address'		=> $address,
-					'data'			=> json_encode( $item ),
-					'createdAt'		=> time(),
+					'mailCheckGroupId'	=> $groupId,
+					'address'			=> $address,
+					'data'				=> json_encode( $item ),
+					'createdAt'			=> time(),
 				] );
 			}
 			$this->session->remove( 'addressesToImport' );
@@ -326,6 +326,10 @@ class Controller_Work_Mail_Check extends Controller
 		}
 	}
 
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 */
 	public function index( int $page = 0 ): void
 	{
 		$limit			= 20;															//  @todo	 replace by configurable default limit (not existing in config atm)
@@ -334,14 +338,14 @@ class Controller_Work_Mail_Check extends Controller
 
 		$groups	= $this->modelGroup->getAll( [], ['title' => 'ASC'] );
 		if( !$this->session->get( 'work_mail_check_filter_groupId' ) && count( $groups ) )
-			$this->session->set( 'work_mail_check_filter_groupId', $groups[0]->mailGroupId );
+			$this->session->set( 'work_mail_check_filter_groupId', $groups[0]->mailCheckGroupId );
 
 		$filterGroupId	= $this->session->get( 'work_mail_check_filter_groupId' );
 		$filterStatus	= $this->session->get( 'work_mail_check_filter_status' );
 		$filterQuery	= $this->session->get( 'work_mail_check_filter_query' );
 		$filterLimit	= $this->session->get( 'work_mail_check_filter_limit' );
 
-		$conditions		= ['mailGroupId' => $filterGroupId];
+		$conditions		= ['mailCheckGroupId' => $filterGroupId];
 		if( $filterStatus && $filterStatus[0] !== '' )
 			$conditions['status']		= $filterStatus;
 		if( $filterQuery && strlen( $filterQuery ) )
@@ -353,9 +357,9 @@ class Controller_Work_Mail_Check extends Controller
 		$addresses		= $this->modelAddress->getAll( $conditions, $orders, $limits );
 		foreach( $addresses as $address ){
 			if( !in_array( $address->status, [0, 1] ) ){											//  @todo	why exclude status 1 as well? a retesting address has a history eventually
-				$address->check	= $this->modelCheck->getByIndices(
-					['mailAddressId' => $address->mailAddressId],
-					['mailAddressCheckId' => 'DESC']
+				$address->run	= $this->modelRun->getByIndices(
+					['mailCheckAddressId'		=> $address->mailCheckAddressId],
+					['mailCheckAddressRunId'	=> 'DESC']
 				);
 			}
 		}
@@ -363,7 +367,7 @@ class Controller_Work_Mail_Check extends Controller
 
 		$indices		= [];
 		if( $filterGroupId )
-			$indices['mailGroupId']	= $filterGroupId;
+			$indices['mailCheckGroupId']	= $filterGroupId;
 		$countByStatus	= [
 			-2	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -2] ) ),
 			-1	=> $this->modelAddress->countByIndices( array_merge( $indices, ['status' => -1] ) ),
@@ -374,7 +378,7 @@ class Controller_Work_Mail_Check extends Controller
 
 		$countByGroup	= [];
 		foreach( $groups as $group )
-			$countByGroup[$group->mailGroupId]	= $this->modelAddress->countByIndex( 'mailGroupId', $group->mailGroupId );
+			$countByGroup[$group->mailCheckGroupId]	= $this->modelAddress->countByIndex( 'mailCheckGroupId', $group->mailCheckGroupId );
 
 		$this->addData( 'limit', $filterLimit );
 		$this->addData( 'page', $page );
@@ -388,6 +392,10 @@ class Controller_Work_Mail_Check extends Controller
 		$this->addData( 'groups', $groups );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove(): void
 	{
 		$addressIds	= $this->request->get( 'addressId' );
@@ -395,18 +403,23 @@ class Controller_Work_Mail_Check extends Controller
 			$addressIds	= [$addressIds];
 
 		foreach( $addressIds as $addressId ){
-			$this->modelCheck->removeByIndex( 'mailAddressId', $addressId );
+			$this->modelRun->removeByIndex( 'mailCheckAddressId', $addressId );
 			$this->modelAddress->remove( $addressId );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function removeGroup( int|string $groupId ): void
 	{
 		$group	= $this->checkGroupId( $groupId );
-		foreach( $this->modelAddress->getAllByIndex( 'mailGroupId', $groupId ) as $address )
-			$this->modelCheck->removeByIndex( 'mailAddressId', $address->mailAddressId );
-		$this->modelAddress->removeByIndex( 'mailGroupId', $groupId );
+		foreach( $this->modelAddress->getAllByIndex( 'mailCheckGroupId', $groupId ) as $address )
+			$this->modelRun->removeByIndex( 'mailCheckAddressId', $address->mailCheckAddressId );
+		$this->modelAddress->removeByIndex( 'mailCheckGroupId', $groupId );
 		$this->modelGroup->remove( $groupId );
 		$this->restart( 'group', TRUE );
 	}
@@ -414,7 +427,7 @@ class Controller_Work_Mail_Check extends Controller
 	public function status( int|string $groupId ): void
 	{
 		$group		= $this->checkGroupId( $groupId );
-		$indices	= ['mailGroupId' => $groupId];
+		$indices	= ['mailCheckGroupId' => $groupId];
 		$this->setData( [
 			'total'		=> $this->modelAddress->countByIndices( $indices ),
 			'open'		=> $this->modelAddress->countByIndices( array_merge( $indices, [
@@ -441,9 +454,9 @@ class Controller_Work_Mail_Check extends Controller
 		$this->moduleOptions	= $this->env->getConfig()->getAll( 'module.work_mail_check.', TRUE );
 
 		//  --  PREPARE MODELS  --  //
-		$this->modelAddress		= new Model_Mail_Address( $this->env );
-		$this->modelCheck		= new Model_Mail_Address_Check( $this->env );
-		$this->modelGroup		= new Model_Mail_Group( $this->env );
+		$this->modelAddress		= new Model_Mail_Check_Address( $this->env );
+		$this->modelRun			= new Model_Mail_Check_Address_Run( $this->env );
+		$this->modelGroup		= new Model_Mail_Check_Group( $this->env );
 	}
 
 	/**

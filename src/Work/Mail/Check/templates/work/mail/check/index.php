@@ -3,8 +3,10 @@
 use CeusMedia\Bootstrap\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
 
+/** @var Environment $env */
 /** @var object[] $addresses */
 /** @var object[] $groups */
 /** @var int $total */
@@ -25,7 +27,7 @@ foreach( $addresses as $address ){
 	$buttonTestEnabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', [
 		'class'		=> 'btn btn-mini btn-primary',
 		'onclick'	=> 'startTest(this)',
-		'href'		=> './work/mail/check/check?addressId='.$address->mailAddressId.'&from=./work/mail/check/'.$page
+		'href'		=> './work/mail/check/check?addressId='.$address->mailCheckAddressId.'&from=./work/mail/check/'.$page
 	] );
 	$buttonTestDisabled	= HtmlTag::create( 'a', $iconTest.'&nbsp;testen', [
 		'class'		=> 'btn btn-mini btn-primary disabled',
@@ -33,7 +35,7 @@ foreach( $addresses as $address ){
 	$buttonEditEnabled	= HtmlTag::create( 'a', $iconEdit, [
 		'class'		=> 'btn btn-mini',
 		'title'		=> 'bearbeiten',
-		'onclick'	=> 'editAddress('.$address->mailAddressId.', \''.htmlentities( $address->address, ENT_QUOTES, 'UTF-8' ).'\')'
+		'onclick'	=> 'editAddress('.$address->mailCheckAddressId.', \''.htmlentities( $address->address, ENT_QUOTES, 'UTF-8' ).'\')'
 	] );
 	$buttonEditDisabled	= HtmlTag::create( 'a', $iconEdit, [
 		'class'		=> 'btn btn-mini disabled',
@@ -42,7 +44,7 @@ foreach( $addresses as $address ){
 	$buttonRemoveEnabled	= HtmlTag::create( 'a', $iconRemove, [
 		'class'		=> 'btn btn-mini btn-inverse',
 		'title'		=> 'entfernen',
-		'href'		=> './work/mail/check/remove?addressId='.$address->mailAddressId
+		'href'		=> './work/mail/check/remove?addressId='.$address->mailCheckAddressId
 	] );
 	$buttonRemoveDisabled	= HtmlTag::create( 'a', $iconRemove, [
 		'class'		=> 'btn btn-mini btn-inverse disabled',
@@ -51,7 +53,7 @@ foreach( $addresses as $address ){
 	$buttonInfoEnabled		= HtmlTag::create( 'a', $iconInfo, [
 		'class'			=> 'btn btn-mini not-btn-info modal-trigger',
 		'title'			=> 'info',
-		'href'			=> './work/mail/check/ajaxAddress/'.$address->mailAddressId,
+		'href'			=> './work/mail/check/ajaxAddress/'.$address->mailCheckAddressId,
 	] );
 
 	$status			= '-';
@@ -86,7 +88,7 @@ foreach( $addresses as $address ){
 		HtmlTag::create( 'td', $buttons ),
 	], [
 		'class'		=> 'mail-check-address-status-'.$address->status,
-		'data-id'	=> $address->mailAddressId
+		'data-id'	=> $address->mailCheckAddressId
 	] );
 }
 
@@ -115,7 +117,7 @@ $panelList	= '
 
 $optGroup	= [];
 foreach( $groups as $group )
-	$optGroup[$group->mailGroupId]	= $group->title;
+	$optGroup[$group->mailCheckGroupId]	= $group->title;
 $optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $panelAdd	= '
@@ -145,7 +147,7 @@ $panelAdd	= '
 
 $optGroup	= [];
 foreach( $groups as $group )
-	$optGroup[$group->mailGroupId]	= $group->title.' ('.$countByGroup[$group->mailGroupId].')';
+	$optGroup[$group->mailCheckGroupId]	= $group->title.' ('.$countByGroup[$group->mailCheckGroupId].')';
 $optGroup	= HtmlElements::Options( $optGroup, $filterGroupId );
 
 $statuses	= [

@@ -10,13 +10,13 @@ use CeusMedia\HydrogenFramework\Model;
  *	Data model of address checks.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
-class Model_Mail_Address_Check extends Model
+class Model_Mail_Check_Address_Run extends Model
 {
-	protected string $name			= 'mail_address_checks';
+	protected string $name			= 'mail_check_address_runs';
 
 	protected array $columns		= [
-		"mailAddressCheckId",
-		"mailAddressId",
+		"mailCheckAddressRunId",
+		"mailCheckAddressId",
 		"status",
 		"error",
 		"code",
@@ -24,10 +24,10 @@ class Model_Mail_Address_Check extends Model
 		"createdAt",
 	];
 
-	protected string $primaryKey	= 'mailAddressCheckId';
+	protected string $primaryKey	= 'mailCheckAddressRunId';
 
 	protected array $indices		= [
-		"mailAddressId",
+		"mailCheckAddressId",
 		"status",
 		"error",
 		"code",

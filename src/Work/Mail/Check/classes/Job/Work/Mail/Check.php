@@ -15,8 +15,8 @@ class Job_Work_Mail_Check extends Job_Abstract
 	 */
 	public function run(): void
 	{
-		$modelAddress	= new Model_Mail_Address( $this->env );
-		$modelCheck		= new Model_Mail_Address_Check( $this->env );
+		$modelAddress	= new Model_Mail_Check_Address( $this->env );
+		$modelRun		= new Model_Mail_Check_Address_Run( $this->env );
 		$sender			= new MailAddress( $this->options->get( 'sender' ) );
 		$checker		= new MailAvailabilityCheck( $sender );
 #		$checker->setVerbose( !TRUE );
@@ -30,13 +30,13 @@ class Job_Work_Mail_Check extends Job_Abstract
 			try{
 				$result		= $checker->test( new MailAddress( $address->address ) );
 				$response	= $checker->getLastResponse();
-				$modelCheck->add( [
-					'mailAddressId'	=> $address->mailAddressId,
-					'status'		=> $result ? 1 : -1,
-					'error'			=> $response->error,
-					'code'			=> $response->code,
-					'message'		=> $response->message,
-					'createdAt'		=> time(),
+				$modelRun->add( [
+					'mailCheckAddressId'	=> $address->mailCheckAddressId,
+					'status'				=> $result ? 1 : -1,
+					'error'					=> $response->error,
+					'code'					=> $response->code,
+					'message'				=> $response->message,
+					'createdAt'				=> time(),
 				] );
 				$status	= 2;
 				if( !$result ){
@@ -44,21 +44,21 @@ class Job_Work_Mail_Check extends Job_Abstract
 					if( str_starts_with( $response->code, "4" ) )
 						$status	= -1;
 				}
-				$modelAddress->edit( $address->mailAddressId, [
+				$modelAddress->edit( $address->mailCheckAddressId, [
 					'status'	=> $status,
 					'checkedAt'	=> time(),
 				] );
 			}
 			catch( Exception $e ){
-				$modelCheck->add( [
-					'mailAddressId'	=> $address->mailAddressId,
-					'status'		=> -2,
-					'error'			=> NULL,
-					'code'			=> $e->getCode(),
-					'message'		=> $e->getMessage(),
-					'createdAt'		=> time(),
+				$modelRun->add( [
+					'mailCheckAddressId'	=> $address->mailCheckAddressId,
+					'status'				=> -2,
+					'error'					=> NULL,
+					'code'					=> $e->getCode(),
+					'message'				=> $e->getMessage(),
+					'createdAt'				=> time(),
 				] );
-				$modelAddress->edit( $address->mailAddressId, [
+				$modelAddress->edit( $address->mailCheckAddressId, [
 					'status'	=> -2,
 					'checkedAt'	=> time(),
 				] );
