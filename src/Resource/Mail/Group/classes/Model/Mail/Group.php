@@ -4,11 +4,13 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
-use CeusMedia\HydrogenFramework\Model;
+use CeusMedia\Database\PDO\Table as DatabaseTable;
+use CeusMedia\HydrogenFramework\Model\Database\Table as Model;
 
 /**
  *	Data model of mail groups.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@template-extends	DatabaseTable<Entity_Mail_Group>
  */
 class Model_Mail_Group extends Model
 {
@@ -45,45 +47,47 @@ class Model_Mail_Group extends Model
 	public const VISIBILITY_MANAGER		= 2;
 	public const VISIBILITY_HIDDEN		= 3;
 
-	public const VISIBILITES			= [
+	public const VISIBILITIES			= [
 		self::VISIBILITY_PUBLIC,
 		self::VISIBILITY_INSIDE,
 		self::VISIBILITY_MANAGER,
 		self::VISIBILITY_HIDDEN,
 	];
 
-	protected string $name			= 'mail_groups';
+	protected string $name				= 'mail_groups';
 
-	protected array $columns		= [
-		"mailGroupId",
-		"mailGroupServerId",
-		"defaultRoleId",
-		"managerId",
-		"type",
-		"visibility",
-		"status",
-		"title",
-		"address",
-		"password",
-		"bounce",
-		"subtitle",
-		"description",
-		"createdAt",
-		"modifiedAt",
+	protected array $columns			= [
+		'mailGroupId',
+		'mailGroupServerId',
+		'defaultRoleId',
+		'managerId',
+		'type',
+		'visibility',
+		'status',
+		'title',
+		'address',
+		'password',
+		'bounce',
+		'subtitle',
+		'description',
+		'createdAt',
+		'modifiedAt',
 	];
 
-	protected string $primaryKey	= 'mailGroupId';
+	protected string $primaryKey		= 'mailGroupId';
 
-	protected array $indices		= [
-		"mailGroupServerId",
-		"defaultRoleId",
-		"managerId",
-		"type",
-		"visibility",
-		"status",
-		"title",
-		"address",
+	protected array $indices			= [
+		'mailGroupServerId',
+		'defaultRoleId',
+		'managerId',
+		'type',
+		'visibility',
+		'status',
+		'title',
+		'address',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_CLASS;
+
+	protected ?string $fetchEntityClass	= Entity_Mail_Group::class;
 }

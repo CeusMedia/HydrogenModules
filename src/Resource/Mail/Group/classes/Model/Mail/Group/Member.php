@@ -4,11 +4,13 @@
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  */
 
-use CeusMedia\HydrogenFramework\Model;
+use CeusMedia\Database\PDO\Table as DatabaseTable;
+use CeusMedia\HydrogenFramework\Model\Database\Table as Model;
 
 /**
  *	Data model of mail group members.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
+ *	@template-extends	DatabaseTable<Entity_Mail_Group_Member>
  */
 class Model_Mail_Group_Member extends Model
 {
@@ -30,27 +32,30 @@ class Model_Mail_Group_Member extends Model
 		self::STATUS_ACTIVATED,
 	];
 
-	protected string $name			= 'mail_group_members';
+	protected string $name				= 'mail_group_members';
 
-	protected array $columns		= [
-		"mailGroupMemberId",
-		"mailGroupId",
-		"roleId",
-		"status",
-		"address",
-		"title",
-		"createdAt",
-		"modifiedAt",
+	protected array $columns			= [
+		'mailGroupMemberId',
+		'mailGroupId',
+		'roleId',
+		'status',
+		'address',
+		'title',
+		'createdAt',
+		'modifiedAt',
 	];
 
-	protected string $primaryKey	= 'mailGroupMemberId';
+	protected string $primaryKey		= 'mailGroupMemberId';
 
-	protected array $indices		= [
-		"mailGroupId",
-		"status",
-		"address",
-		"title",
+	protected array $indices			= [
+		'mailGroupId',
+		'roleId',
+		'status',
+		'address',
+		'title',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode			= PDO::FETCH_CLASS;
+
+	protected ?string $fetchEntityClass	= Entity_Mail_Group_Member::class;
 }
