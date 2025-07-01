@@ -15,6 +15,11 @@ class Logic_Mail_Group extends Logic
 	protected Model_User $modelUser;
 	protected Logic_Mail $logicMail;
 
+	/**
+	 *	@param		array		$data
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addGroup( array $data ): string
 	{
 		$data		= array_merge( [
@@ -44,6 +49,13 @@ class Logic_Mail_Group extends Logic
 		return $groupId;
 	}
 
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		string			$address
+	 *	@param		string			$title
+	 *	@return		int
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function addGroupMember( int|string $groupId, string $address, string $title )
 	{
 		$group	= $this->checkGroupId( $groupId );
@@ -97,10 +109,12 @@ class Logic_Mail_Group extends Logic
 			throw new RuntimeException( 'Invalid group ID' );
 		if( !in_array( $group->status, $allowedGroupStatuses ) )
 			throw new RuntimeException( 'Group is not activated' );
-		if( (int) $group->type !== Model_Mail_Group::TYPE_AUTOJOIN )
+		if( $group->type !== Model_Mail_Group::TYPE_AUTOJOIN )
 			throw new RuntimeException( 'Group type is not AUTOJOIN' );
 
-		$mail			= $this->env->logic->mailGroupMessage->getMessageObject( $message );
+//		$mail	= $this->env->logic->mailGroupMessage->getMessageObject( $message );
+		$mail	= Logic_Mail_Group_Message::getInstance( $this->env )->getMessageObject( $message );
+
 		$senderAddress	= $mail->getSender()->getAddress();
 		$senderName		= $mail->getSender()->getName();
 		if( !$senderName )
@@ -144,6 +158,7 @@ class Logic_Mail_Group extends Logic
 	 *	@return		?object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 *	@todo 		make this the main implementation after extraction of this large logic to sub logic classes.
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkId( int|string $groupId, bool $strict = TRUE ): ?object
 	{
@@ -155,10 +170,11 @@ class Logic_Mail_Group extends Logic
 	 *	@access		public
 	 *	@param		int|string		$groupId		...
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
-	 *	@return		?object			Group model object if existing
+	 *	@return		?Entity_Mail_Group				Group model entity if existing
 	 *	@throws		RangeException	if mail group is not existing
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkGroupId( int|string $groupId, bool $strict = TRUE ): ?object
+	public function checkGroupId( int|string $groupId, bool $strict = TRUE ): ?Entity_Mail_Group
 	{
 		$group	= $this->modelGroup->get( $groupId );
 		if( $group )
@@ -168,7 +184,14 @@ class Logic_Mail_Group extends Logic
 		return NULL;
 	}
 
-	public function checkMemberId( int|string $memberId, bool $strict = TRUE ): ?object
+	/**
+	 *	@param		int|string		$memberId
+	 *	@param		bool			$strict			Flag: throw exception if not found
+	 *	@return		object|array|NULL				The found entity, depending on fetch type
+	 *	@throws		RangeException					in strict mode if nothing found for ID
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function checkMemberId( int|string $memberId, bool $strict = TRUE ): object|array|NULL
 	{
 		$member	= $this->modelMember->get( $memberId );
 		if( $member )
@@ -217,6 +240,7 @@ class Logic_Mail_Group extends Logic
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
 			];
+		/** @var ?Entity_Mail_Group $group */
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -281,6 +305,7 @@ class Logic_Mail_Group extends Logic
 				Model_Mail_Group::STATUS_ACTIVATED,
 				Model_Mail_Group::STATUS_WORKING,
 			];
+		/** @var ?Entity_Mail_Group $group */
 		if( ( $group = $this->modelGroup->getByIndices( $indices ) ) )
 			return $group;
 		if( !$strict )
@@ -398,7 +423,15 @@ class Logic_Mail_Group extends Logic
 		$this->updateGroup( $groupId, $data, __METHOD__ );
 	}
 
-	public function setMemberStatus( int|string $groupId, $memberId, $status ): bool
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		int|string		$memberId
+	 *	@param		$status
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setMemberStatus( int|string $groupId, int|string $memberId, $status ): bool
 	{
 		$member	= $this->checkMemberId( $memberId );
 		if( (int) $member->status === (int) $status )
@@ -450,6 +483,7 @@ class Logic_Mail_Group extends Logic
 	 *	Tries to create a mailbox using Plesk command line utilities
 	 *	@see		https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/mail-mail-accounts.39181/
 	 *	@todo		finish impl (find a way to execute command as root), run checks beforehand
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function createGroupMailAccountUsingPlesk( int|string $groupId ): void
 	{
@@ -471,6 +505,12 @@ class Logic_Mail_Group extends Logic
 		$this->modelGroup->edit( $groupId, ['status' => Model_Mail_Group::STATUS_EXISTING] );
 	}
 
+	/**
+	 *	@param		int|string			$groupId
+	 *	@return		PhpImapMailbox
+	 *	@throws		\PhpImap\Exceptions\InvalidParameterException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	protected function getMailbox( int|string $groupId ): PhpImapMailbox
 	{
 		$group		= $this->checkGroupId( $groupId );
@@ -492,7 +532,14 @@ class Logic_Mail_Group extends Logic
 		return $mailbox;
 	}
 
-	protected function setMemberStatusToActivated( $group, $member ): void
+	/**
+	 *	@param		object		$group
+	 *	@param		object		$member
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function setMemberStatusToActivated( object $group, object $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -531,7 +578,14 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberActivated', $this, $payload );
 	}
 
-	protected function setMemberStatusToDeactivated( $group, $member ): void
+	/**
+	 *	@param		object		$group
+	 *	@param		object		$member
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function setMemberStatusToDeactivated( object $group, object $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -555,7 +609,14 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberDeactivated', $this, $payload );
 	}
 
-	protected function setMemberStatusToRejected( $group, $member ): void
+	/**
+	 *	@param		object		$group
+	 *	@param		object		$member
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function setMemberStatusToRejected( object $group, object $member ): void
 	{
 		$mailData	= [
 			'group'		=> $group,
@@ -572,15 +633,23 @@ class Logic_Mail_Group extends Logic
 		$this->env->getCaptain()->callHook( 'MailGroup', 'memberRejected', $this, $payload );
 	}
 
-	protected function updateGroup( int|string $groupId, array $data, $method = NULL )
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		array			$data
+	 *	@param		string|NULL		$method
+	 *	@return		bool|NULL
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function updateGroup( int|string $groupId, array $data, string $method = NULL ): ?bool
 	{
 		$group		= $this->checkGroupId( $groupId );
 		$this->modelGroup->edit( $groupId, $data );
 		$payload	= [
-			'groupId'		=> $groupId,
-			'before'		=> $group,
-			'changes'		=> $data,
-			'method'		=> $method,
+			'groupId'	=> $groupId,
+			'before'	=> $group,
+			'changes'	=> $data,
+			'method'	=> $method,
 		];
 		return $this->env->getCaptain()->callHook( 'MailGroup', 'change', $this, $payload );
 	}
