@@ -207,23 +207,27 @@ class Controller_Work_Mail_Group extends Controller
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
 
-		$this->modelGroup	= $this->getModel( 'mailGroup' );
-		$this->modelMember	= $this->getModel( 'mailGroupMember' );
-		$this->modelRole	= $this->getModel( 'mailGroupRole' );
-		$this->modelAction	= $this->getModel( 'mailGroupAction' );
-		$this->modelServer	= $this->getModel( 'mailGroupServer' );
-		$this->modelGroup	= $this->getModel( 'mailGroup' );
-		$this->modelUser	= $this->getModel( 'user' );
-		$this->logicGroup	= $this->getLogic( 'mailGroup' );
-		$this->logicMail	= $this->getLogic( 'mail' );
+		$this->modelGroup	= new Model_Mail_Group( $this->env );
+		$this->modelMember	= new Model_Mail_Group_Member( $this->env );
+		$this->modelRole	= new Model_Mail_Group_Role( $this->env );
+		$this->modelAction	= new Model_Mail_Group_Action( $this->env );
+		$this->modelServer	= new Model_Mail_Group_Server( $this->env );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->logicGroup	= Logic_Mail_Group::getInstance( $this->env );
+		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 	}
 
-	protected function checkGroupId( $groupId, bool $strict = TRUE ): ?object
+	/**
+	 *	@param		int|string		$groupId
+	 *	@param		bool			$strict
+	 *	@return object|array|bool|float|int|string|null
+	 */
+	protected function checkGroupId( int|string $groupId, bool $strict = TRUE ): ?object
 	{
 		return $this->logicGroup->checkGroupId( $groupId, $strict );
 	}
 
-	protected function checkMemberId( $memberId, bool $strict = TRUE ): object
+	protected function checkMemberId( int|string$memberId, bool $strict = TRUE ): object
 	{
 		return $this->logicGroup->checkMemberId( $memberId, $strict );
 	}
