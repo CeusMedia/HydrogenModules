@@ -17,7 +17,6 @@
 		<class>Logic/Measurement/Influx.php</class>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
-	<config protected="yes" type="string" name="source" values="">Database</config>
 	<config protected="yes" type="string" name="host"></config>
 	<config protected="yes" type="string" name="port" default="8086"></config>
 	<config protected="yes" type="boolean" name="verifySSL">yes</config>

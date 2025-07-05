@@ -18,7 +18,27 @@ class Logic_Measurement_Influx extends SharedLogic
 	protected string $org;
 	protected array $tags		= [];
 
-	public function __onInit(): void
+	public function write( $measurement, array $tags = [], array $fields = [] ): bool
+	{
+		if( NULL === $this->writeApi )
+			$this->writeApi = $this->client->createWriteApi();
+
+		$line	= $measurement;
+		foreach( array_merge( $this->tags, $tags ) as $key => $value )
+			if( '' !== trim( (string) ( $value ?? '' ) ) )
+				$line	.= ','.$key.'='.$value;
+
+		$line	.= ' ';
+		$list	= [];
+		foreach( $fields as $key => $value )
+			$list[]	= $key.'='.$value;
+		$line	.= ' '.join( ',', $list );
+
+		$this->writeApi->write( $line, InfluxClientWritePrecision::S, $this->bucket, $this->org );
+		return TRUE;
+	}
+
+	protected function __onInit(): void
 	{
 		parent::__onInit();
 
@@ -44,26 +64,6 @@ class Logic_Measurement_Influx extends SharedLogic
 
 		$this->client	= new InfluxClient( $connectionData );
 		$this->setDefaultTags();
-	}
-
-	public function write( $measurement, array $tags = [], array $fields = [] ): bool
-	{
-		if( NULL === $this->writeApi )
-			$this->writeApi = $this->client->createWriteApi();
-
-		$line	= $measurement;
-		foreach( array_merge( $this->tags, $tags ) as $key => $value )
-			if( '' !== trim( (string) ( $value ?? '' ) ) )
-				$line	.= ','.$key.'='.$value;
-
-		$line	.= ' ';
-		$list	= [];
-		foreach( $fields as $key => $value )
-			$list[]	= $key.'='.$value;
-		$line	.= ' '.join( ',', $list );
-
-		$this->writeApi->write( $line, InfluxClientWritePrecision::S, $this->bucket, $this->org );
-		return TRUE;
 	}
 
 	/**
