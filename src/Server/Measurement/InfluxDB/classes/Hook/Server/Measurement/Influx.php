@@ -15,8 +15,8 @@ class Hook_Server_Measurement_Influx extends Hook
 		$logic		= new Logic_Measurement_Influx( $this->env );
 		$logic->write(
 			$payload->get( 'measurement' ),
-			$payload->get( 'tags' ),
-			$payload->get( 'fields' )
+			$payload->get( 'tags', [] ),
+			$payload->get( 'fields', [] )
 		);
 	}
 
