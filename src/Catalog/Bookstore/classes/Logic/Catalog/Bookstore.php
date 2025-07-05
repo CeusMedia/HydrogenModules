@@ -482,7 +482,6 @@ class Logic_Catalog_Bookstore extends Logic
 			$tag	= $this->getArticleTag( $tagOrId );
 		$uri		= 'catalog';
 		if( isset( $tag->articleTagId ) ){
-			$labelKey	= 'label_'.$language;
 			$keywords	= $this->getUriPart( $tag->tag );
 			$uri		.= '/tag/'.$tag->articleTagId.'-'.$keywords;
 		}
