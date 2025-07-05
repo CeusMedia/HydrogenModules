@@ -69,6 +69,16 @@ class Controller_Catalog_Bookstore extends Controller
 				$relatedArticles	= $this->logic->getArticlesFromTags( $tags, [$article->articleId] );
 				$this->addData( 'relatedArticles', $relatedArticles );
 			}
+
+			$measurement	= [
+				'measurement'	=> 'shop_article',
+				'fields'		=> [
+					'id'	=> $articleId,
+					'title'	=> $article->title,
+					'url'	=> $this->logic->getArticleUri( $article, TRUE ),
+				],
+			];
+			$this->callHook( 'App', 'onMeasure', $this, $measurement );
 		}
 		catch( Throwable ){
 			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
@@ -95,6 +105,17 @@ class Controller_Catalog_Bookstore extends Controller
 
 		$articles	= $this->logic->getArticlesFromAuthor( $author, ['createdAt' => 'DESC'] );
 		$this->addData( 'articles', $articles );
+
+		$measurement	= [
+			'measurement'	=> 'shop_author',
+			'fields'		=> [
+				'id'		=> $authorId,
+				'lastname'	=> $author->lastname,
+				'firstname'	=> $author->firstname,
+				'url'		=> $this->logic->getAuthorUri( $author, TRUE ),
+			],
+		];
+		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 	}
 
 	public function authors(): void
@@ -137,6 +158,16 @@ class Controller_Catalog_Bookstore extends Controller
 		$conditions	= ['parentId' => $categoryId];
 		$orders		= ['rank' => "ASC", 'label_de' => "ASC"];
 		$category->children	= $this->logic->getCategories( $conditions, $orders );
+
+		$measurement	= [
+			'measurement'	=> 'shop_category',
+			'fields'		=> [
+				'id'	=> $categoryId,
+				'title'	=> $category->title,
+				'url'	=> $this->logic->getCategoryUri( $category, 'de', TRUE ),
+			],
+		];
+		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 
 		$this->addData( 'categoryId', $categoryId );
 		$this->addData( 'category', $category );
@@ -482,6 +513,16 @@ class Controller_Catalog_Bookstore extends Controller
 			$this->restart( NULL, TRUE );
 
 		$articles	= $this->logic->getArticlesFromTags( [$tag->tag] );
+
+		$measurement	= [
+			'measurement'	=> 'shop_articles_by_tag',
+			'fields'		=> [
+				'id'	=> $tagId,
+				'tag'	=> $tag->tag,
+				'url'	=> $this->logic->getTagUri( $tag, 'de', TRUE ),
+			],
+		];
+		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 
 		$this->addData( 'tag', $tag );
 		$this->addData( 'tagId', $tagId );
