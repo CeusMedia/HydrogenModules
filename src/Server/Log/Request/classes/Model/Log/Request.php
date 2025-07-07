@@ -11,6 +11,7 @@ class Model_Log_Request extends DatabaseModel
 	protected array $columns		= [
 		'requestId',
 		'ip',
+		'sessionId',
 		'method',
 		'url',
 		'request',
@@ -21,6 +22,7 @@ class Model_Log_Request extends DatabaseModel
 	];
 	protected array $indices		= [
 		'ip',
+		'sessionId',
 		'method',
 		'url',
 		'timestamp',
