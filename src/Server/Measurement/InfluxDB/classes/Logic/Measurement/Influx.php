@@ -26,12 +26,12 @@ class Logic_Measurement_Influx extends SharedLogic
 		$line	= $measurement;
 		foreach( array_merge( $this->tags, $tags ) as $key => $value )
 			if( '' !== trim( (string) ( $value ?? '' ) ) )
-				$line	.= ','.$key.'='.$value;
+				$line	.= ','.$key.'='.rawurlencode( (string) $value );
 
 		$line	.= ' ';
 		$list	= [];
 		foreach( $fields as $key => $value )
-			$list[]	= $key.'='.$value;
+			$list[]	= $key.'='.rawurlencode( (string) $value );
 		$line	.= ' '.join( ',', $list );
 
 		$this->writeApi->write( $line, InfluxClientWritePrecision::S, $this->bucket, $this->org );

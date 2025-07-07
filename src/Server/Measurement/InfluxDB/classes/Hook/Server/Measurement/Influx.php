@@ -13,11 +13,16 @@ class Hook_Server_Measurement_Influx extends Hook
 	{
 		$payload	= new Dictionary( $this->getPayload() );
 		$logic		= new Logic_Measurement_Influx( $this->env );
-		$logic->write(
-			$payload->get( 'measurement' ),
-			$payload->get( 'tags', [] ),
-			$payload->get( 'fields', [] )
-		);
+		try{
+			$logic->write(
+				$payload->get( 'measurement' ),
+				$payload->get( 'tags', [] ),
+				$payload->get( 'fields', [] )
+			);
+		}
+		catch( Throwable|Error $e ){
+			$this->env->getLog()->logException( $e, $this );
+		}
 	}
 
 	/**

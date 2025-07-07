@@ -72,11 +72,12 @@ class Controller_Catalog_Bookstore extends Controller
 
 			$measurement	= [
 				'measurement'	=> 'shop_article',
-				'fields'		=> [
-					'id'	=> $articleId,
+				'tags'		=> [
+					'id'	=> $article->articleId,
 					'title'	=> $article->title,
 					'url'	=> $this->logic->getArticleUri( $article, TRUE ),
 				],
+				'fields'	=> ['count' => '1i'],
 			];
 			$this->callHook( 'App', 'onMeasure', $this, $measurement );
 		}
@@ -108,12 +109,13 @@ class Controller_Catalog_Bookstore extends Controller
 
 		$measurement	= [
 			'measurement'	=> 'shop_author',
-			'fields'		=> [
-				'id'		=> $authorId,
+			'tags'		=> [
+				'id'		=> $author->authorId,
 				'lastname'	=> $author->lastname,
 				'firstname'	=> $author->firstname,
 				'url'		=> $this->logic->getAuthorUri( $author, TRUE ),
 			],
+			'fields'	=> ['count' => '1i'],
 		];
 		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 	}
@@ -161,11 +163,12 @@ class Controller_Catalog_Bookstore extends Controller
 
 		$measurement	= [
 			'measurement'	=> 'shop_category',
-			'fields'		=> [
-				'id'	=> $categoryId,
+			'tags'		=> [
+				'id'	=> $category->categoryId,
 				'title'	=> $category->title,
 				'url'	=> $this->logic->getCategoryUri( $category, 'de', TRUE ),
 			],
+			'fields'	=> ['count' => '1i'],
 		];
 		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 
@@ -516,11 +519,12 @@ class Controller_Catalog_Bookstore extends Controller
 
 		$measurement	= [
 			'measurement'	=> 'shop_articles_by_tag',
-			'fields'		=> [
-				'id'	=> $tagId,
+			'tags'		=> [
+				'id'	=> $tag->tagId,
 				'tag'	=> $tag->tag,
 				'url'	=> $this->logic->getTagUri( $tag, 'de', TRUE ),
 			],
+			'fields'	=> ['count' => '1i'],
 		];
 		$this->callHook( 'App', 'onMeasure', $this, $measurement );
 
