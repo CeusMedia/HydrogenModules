@@ -38,12 +38,12 @@ class Hook_Server_Measurement_Influx extends Hook
 		try{
 			$logic		= new Logic_Measurement_Influx( $this->env );
 			$logic->write( 'exception', [
-					'class'	=> get_class( $exception ),
+				'class'		=> get_class( $exception ),
+				'code'		=> $exception->getCode(),
+				'file'		=> $exception->getFile(),
+				'line'		=> $exception->getLine(),
 			], [
-					'message'	=> $exception->getMessage(),
-					'code'		=> $exception->getCode(),
-					'file'		=> $exception->getFile(),
-					'line'		=> $exception->getLine(),
+				'message'	=> $exception->getMessage(),
 			] );
 		}
 		catch( Throwable ){}
