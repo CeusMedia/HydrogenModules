@@ -17,9 +17,12 @@ class Logic_Measurement_Influx extends SharedLogic
 	protected string $bucket;
 	protected string $org;
 	protected array $tags		= [];
+	protected bool $enabled		= FALSE;
 
 	public function write( $measurement, array $tags = [], array $fields = [] ): bool
 	{
+		if( !$this->enabled )
+			return FALSE;
 		if( NULL === $this->writeApi )
 			$this->writeApi = $this->client->createWriteApi();
 
@@ -47,6 +50,7 @@ class Logic_Measurement_Influx extends SharedLogic
 		$moduleConfig	= $module->getConfigAsDictionary();
 //		$moduleConfig	= $this->env->getConfig()->getAll( 'modules.info_contact.', TRUE );
 
+		$this->enabled	= $moduleConfig->get( 'active' );
 		$this->bucket	= $moduleConfig->get( 'bucket' );
 		$this->org		= $moduleConfig->get( 'org' );
 		$host			= $moduleConfig->get( 'host', 'localhost' );
@@ -54,7 +58,7 @@ class Logic_Measurement_Influx extends SharedLogic
 		$verifySsl		= $moduleConfig->get( 'verifySSL', TRUE );
 		$protocol		= match( (int) $port ){
 			443		=> 'https',
-			8086	=> 'http',
+			8086,0	=> 'http',
 		};
 		$connectionData	= [
 			'url'		=> vsprintf( '%s://%s:%s', [$protocol, $host, $port] ),
