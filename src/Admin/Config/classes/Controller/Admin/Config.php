@@ -50,6 +50,9 @@ class Controller_Admin_Config extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	public function index(): void
 	{
 		$filterCategory	= $this->session->get( $this->filterPrefix.'category' );
@@ -76,10 +79,9 @@ class Controller_Admin_Config extends Controller
 			$filteredModules	= $foundModules	= $modules;
 		}
 		if( $filterQuery ){
-			$modules		= [];
-			foreach( $foundModules as $moduleId => $module )
-				if( str_contains( $module->title.' '.$module->description, $filterQuery ) )
-					$modules[$moduleId]	= $module;
+			$modules = array_filter( $foundModules, function( $module ) use ( $filterQuery ){
+				return str_contains( $module->title.' '.$module->description, $filterQuery );
+			} );
 			$filteredModules	= $foundModules	= $modules;
 		}
 		if( !$filterModuleId && count( $foundModules ) === 1 ){
@@ -90,10 +92,9 @@ class Controller_Admin_Config extends Controller
 		if( $filterModuleId ){
 			if( !array_key_exists( $filterModuleId, $foundModules ) )
 				$this->restart( 'filter?moduleId=', TRUE );
-			$modules		= [];
-			foreach( $foundModules as $moduleId => $module )
-				if( $module->id === $filterModuleId )
-					$modules[$moduleId]	= $module;
+			$modules = array_filter( $foundModules, function( $module ) use ( $filterModuleId ){
+				return $module->id === $filterModuleId;
+			} );
 			$foundModules	= $modules;
 		}
 
@@ -104,7 +105,11 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'modules', $foundModules );
 	}
 
-	public function edit( $moduleId = NULL ): void
+	/**
+	 *	@param		string|NULL		$moduleId
+	 *	@return		void
+	 */
+	public function edit( string $moduleId = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$request	= $this->env->getRequest();
@@ -153,6 +158,10 @@ class Controller_Admin_Config extends Controller
 		$this->addData( 'moduleId', $moduleId );
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@return 	void
+	 */
 	public function restore( string $moduleId ): void
 	{
 		$fileName	= $this->env->uri.'config/modules/'.$moduleId.'.xml';
@@ -172,6 +181,10 @@ class Controller_Admin_Config extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		string		$moduleId
+	 *	@return		void
+	 */
 	public function view( string $moduleId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );

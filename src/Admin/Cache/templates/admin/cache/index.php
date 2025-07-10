@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
@@ -16,8 +17,15 @@ $rows	= [];
 if( !$hasCache )
 	return '<div class="hint">'.$wf->hintNoCache.'</div>';
 
+$iconAdd		= new Icon( 'plus' );
+$iconRemove		= new Icon( 'trash' );
+$buttonRemove	= HtmlTag::create( 'button', $iconRemove, [
+	'type'	=> 'button',
+	'class'	=> 'btn btn-mini btn-danger btn-cache-remove',
+	'title'	=> $wf->buttonRemove,
+] );
+
 foreach( $list as $item ){
-	$buttonRemove	= '<button type="button" class="btn btn-mini btn-danger btn-cache-remove"><i class="icon-remove icon-white" title="'.$wf->buttonRemove.'"></i>&nbsp;</button>';
 	$value	= trim( print_m( $item->value, NULL, NULL, TRUE ) );
 	$value	= preg_replace( "/^<br\/>(.*)<br\/>$/s", "\\1", $value );
 	$cells	= [
@@ -29,10 +37,11 @@ foreach( $list as $item ){
 	$rows[]	= HtmlTag::create( 'tr', $cells, ["data-key" => $item->key] );
 }
 
-$columns	= HtmlElements::ColumnGroup( ['20%', '5%', '65%', '10%'] );
-$heads		= [$wf->headKey, $wf->headType, $wf->headValue, $wf->headAction];
-$heads		= HtmlElements::TableHeads( $heads );
-$table		= HtmlTag::create( 'table', $columns.$heads.implode( $rows ), ['class' => "table table-condensed table-striped"] );
+$table		= HtmlTag::create( 'table', [
+	HtmlElements::ColumnGroup( ['20%', '5%', '65%', '10%'] ),
+	HtmlElements::TableHeads( [$wf->headKey, $wf->headType, $wf->headValue, $wf->headAction] ),
+	implode( $rows )
+], ['class' => "table table-condensed table-striped"] );
 
 $panelEdit	= '
 	<h3>'.$wf->legend.'</h3>
@@ -58,7 +67,7 @@ $panelAdd	= '
 		</div>
 		<div class="span2">
 			<label>&nbsp;</label>
-			<button type="submit" class="button add btn btn-success"><i class="icon-ok icon-white"></i>&nbsp;'.$wf->buttonAdd.'</button>
+			<button type="submit" class="button add btn btn-success">'.$iconAdd.'&nbsp;'.$wf->buttonAdd.'</button>
 		</div>
 	</div>
 </form>';
