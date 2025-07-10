@@ -5,6 +5,10 @@ use Psr\SimpleCache\CacheInterface as SimpleCacheInterface;
 
 class Controller_Admin_Cache extends Controller
 {
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		$post	= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
@@ -29,6 +33,10 @@ class Controller_Admin_Cache extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function index(): void
 	{
 		$list		= [];

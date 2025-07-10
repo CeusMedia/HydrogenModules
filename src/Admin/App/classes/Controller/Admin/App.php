@@ -130,7 +130,7 @@ class Controller_Admin_App extends Controller
 	 */
 	protected function uploadImage( object $upload ): string|FALSE|NULL
 	{
-		if( $upload->error === 4 )
+		if( UPLOAD_ERR_NO_FILE === $upload->error  )
 			return NULL;
 
 		$logicUpload	= new Logic_Upload( $this->env );
@@ -143,6 +143,7 @@ class Controller_Admin_App extends Controller
 			return $fileName;
 		}
 		catch( Exception $e ){
+			$this->env->getLog()->logException( $e, $this );
 			$helper	= new View_Helper_UploadError( $this->env );
 			$helper->setUpload( $logicUpload );
 			$this->messenger->noteError( $helper->render() );
