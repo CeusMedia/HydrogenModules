@@ -22,20 +22,18 @@ class Controller_Manage_Blog_Category extends Controller
 	public function add(): void
 	{
 		if( $this->request->get( 'save' ) ){
-			$data	= [
+			$categoryId		= $this->modelCategory->add( [
 				'status'		=> $this->request->get( 'status' ),
 				'title'			=> $this->request->get( 'title' ),
 				'language'		=> $this->request->get( 'language' ),
 				'content'		=> $this->request->get( 'content' ),
 				'createdAt'		=> time(),
-			];
-			$categoryId		= $this->modelCategory->add( $data );
+			] );
 			$this->restart( NULL, TRUE );
 		}
 		$data	= [];
-		foreach( $this->modelCategory->getColumns() as $column ){
+		foreach( $this->modelCategory->getColumns() as $column )
 			$data[$column]	= $this->request->get( $column );
-		}
 		$this->addData( 'category', (object) $data );
 	}
 
@@ -99,7 +97,7 @@ class Controller_Manage_Blog_Category extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@param		bool			$strict
-	 *	@return		object|
+	 *	@return		object
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkCategory( int|string $categoryId, bool $strict = FALSE ): object

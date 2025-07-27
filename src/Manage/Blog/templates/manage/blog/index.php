@@ -5,10 +5,7 @@
 $panelFilter	= $view->loadTemplateFile( 'manage/blog/index.filter.php' );
 $panelList		= $view->loadTemplateFile( 'manage/blog/index.list.php' );
 
-$tabs	= $view->renderTabs();
-
-return '
-'.$tabs.'
+return $view->renderTabs().'
 <div class="row-fluid">
 	<div class="span3">
 		'.$panelFilter.'

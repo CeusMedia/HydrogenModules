@@ -4,6 +4,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Manage_Blog extends Hook
 {
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function onTinyMCE_getLinkList(): void
 	{
 		$frontend		= Logic_Frontend::getInstance( $this->env );
@@ -15,7 +19,7 @@ class Hook_Manage_Blog extends Hook
 		$list		= [];
 		$conditions	= ['status' => 1];
 		$orders		= ['createdAt' => 'DESC'];
-		foreach( $model->getAll( $conditions, $orders ) as $nr => $post ){
+		foreach( $model->getAll( $conditions, $orders ) as $post ){
 			$list[$post->postId]	= (object) [
 				'title'	=> str_replace( '/', '-', $post->title ),
 				'type'	=> 'link:page',
@@ -27,7 +31,7 @@ class Hook_Manage_Blog extends Hook
 				'title'	=> $words['tinyMCE']['prefix'],
 				'menu'	=> array_values( $list ),
 			]];
-			//		$context->list	= array_merge( $context->list, array_values( $list ) );
+	//		$context->list	= array_merge( $context->list, array_values( $list ) );
 			$this->context->list	= array_merge( $this->context->list, $list );
 		}
 	}

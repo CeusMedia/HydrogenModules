@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
@@ -12,12 +13,18 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 $w				= (object) $words['index.filter'];
 
 $optStatus		= ['' => '- alle -'] + $words['states'];
-$optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
+$inputStatus	= HtmlTag::create( 'select', HtmlElements::Options( $optStatus, $filterStatus ), [
+	'name'	=> 'status',
+	'id'	=> 'input_status',
+] );
 
 $optCategory	= ['' => '- alle -'];
 foreach( $categories as $item )
 	$optCategory[$item->categoryId]	= $item->title;
-$optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );
+$inputCategoryId	= HtmlTag::create( 'select', HtmlElements::Options( $optCategory, $filterCategoryId ), [
+	'name'	=> 'categoryId',
+	'id'	=> 'input_categoryId',
+] );
 
 return '
 <div class="content-panel content-panel-form">
@@ -27,13 +34,13 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_status">'.$w->labelStatus.'</label>
-					<select name="status" id="input_status">'.$optStatus.'</select>
+					'.$inputStatus.'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_categoryId">'.$w->labelCategoryId.'</label>
-					<select name="categoryId" id="input_categoryId">'.$optCategory.'</select>
+					'.$inputCategoryId.'
 				</div>
 			</div>
 <!--			<div class="row-fluid">

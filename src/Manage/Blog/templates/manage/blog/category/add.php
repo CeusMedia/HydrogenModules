@@ -13,7 +13,7 @@ $w		= (object) $words['add'];
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-arrow-left'] );
 	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-check'] );
 }
@@ -23,7 +23,6 @@ $languages		= $env->getLanguage()->getLanguages();
 $optLanguage	= HtmlElements::Options( array_combine( $languages, $languages ), $category->language );
 
 $optStatus		= HtmlElements::Options( $words['states'], $category->status );
-
 
 $buttonCancel		= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
 	'href'		=> "./manage/blog",
@@ -36,10 +35,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 	'class'		=> "btn btn-primary"
 ] );
 
-$tabs	= $view->renderTabs( '/category' );
-
-return '
-'.$tabs.'
+return $view->renderTabs( '/category' ).'
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">

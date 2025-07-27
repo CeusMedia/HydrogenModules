@@ -30,17 +30,19 @@ if( $categories ){
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
-$tabs	= $view->renderTabs( '/category' );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
+	'href'	=> './manage/blog/category/add',
+	'class'	=> 'btn btn-success',
+] );
 
-return '
-'.$tabs.'
+return $view->renderTabs( '/category' ).'
 <div class="content-panel content-panel-list">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
 			<div class="btn-group">
-				<a href="./manage/blog/category/add" class="btn btn-success">'.$iconAdd.'&nbsp;'.$w->buttonAdd.'</a>
+				'.$buttonAdd.'
 			</div>
 		</div>
 	</div>

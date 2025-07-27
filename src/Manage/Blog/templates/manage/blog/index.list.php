@@ -18,8 +18,6 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) )
 
 $list	= '<div class=alert">'.$w->empty.'</div>';
 
-
-
 if( $posts ){
 	$list	= [];
 	foreach( $posts as $post ){
@@ -39,6 +37,11 @@ if( $posts ){
 Icon::$defaultSet	= 'FontAwesome';
 $pagination	= new PageControl( "./manage/blog/", $page ?? 1, $pages ?? 0 );
 
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', [
+	'href'	=> './manage/blog/add',
+	'class'	=> 'btn btn-success',
+] );
+
 return '
 <div class="content-panel content-panel-list">
 	<h3>'.$w->heading.'</h3>
@@ -46,7 +49,7 @@ return '
 		'.$list.'
 		<div class="buttonbar">
 			<div class="btn-group">
-				<a href="./manage/blog/add" class="btn btn-success">'.$iconAdd.'&nbsp;neuer Eintrag</a>
+				'.$buttonAdd.'
 			</div>
 			<div class="btn-group">
 				'.$pagination.'
