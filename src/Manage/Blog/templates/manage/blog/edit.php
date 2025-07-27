@@ -11,7 +11,6 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<object> $categories */
 /** @var array<object> $users */
 
-
 $w			= (object) $words['edit'];
 
 $optCategory	= [];
@@ -32,15 +31,12 @@ $optAuthor		= HtmlElements::Options( $optAuthor, $post->authorId );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
-if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
+if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-arrow-left'] );
 	$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-check'] );
 }
 
-$tabs	= $view->renderTabs();
-
-return '
-'.$tabs.'
+return $view->renderTabs().'
 <div class="content-panel content-panel-form">
 	<h3><span class="muted">Eintrag: </span>'.$post->title.'</h3>
 	<div class="content-panel-inner">

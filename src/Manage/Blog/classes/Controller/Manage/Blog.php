@@ -36,7 +36,6 @@ class Controller_Manage_Blog extends Controller
 	 */
 	public function add(): void
 	{
-		/** @var Logic_Authentication $logicAuth */
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$language		= $this->env->getLanguage();
 		if( $this->request->has( 'save' ) ){
@@ -93,7 +92,6 @@ class Controller_Manage_Blog extends Controller
 		if( !$postId )
 			$this->restart( NULL, TRUE );
 		$post		= $this->checkPost( $postId );
-		/** @var Logic_Authentication $logicAuth */
 		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		$user		= $logicAuth->getCurrentUser();
 //		print_m( $user );die;
@@ -157,7 +155,11 @@ class Controller_Manage_Blog extends Controller
 		$this->addData( 'users', $users );
 	}
 
-	public function filter( $reset = NULL ): void
+	/**
+	 *	@param		bool|NULL		$reset
+	 *	@return		void
+	 */
+	public function filter( bool $reset = NULL ): void
 	{
 		if( $reset ){
 			$this->session->remove( 'filter_manage_blog_status' );
@@ -169,11 +171,11 @@ class Controller_Manage_Blog extends Controller
 	}
 
 	/**
-	 *	@param		$page
+	 *	@param		int|NULL		$page
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( $page = NULL ): void
+	public function index( int $page = NULL ): void
 	{
 		$filterStatus		= $this->session->get( 'filter_manage_blog_status' );
 		$filterCategoryId	= $this->session->get( 'filter_manage_blog_categoryId' );
@@ -203,6 +205,10 @@ class Controller_Manage_Blog extends Controller
 		$this->addData( 'categories', $this->modelCategory->getAll() );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelCategory	= new Model_Blog_Category( $this->env );
@@ -255,11 +261,11 @@ class Controller_Manage_Blog extends Controller
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= [];
-		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];						//  get all visible post comments
+		$indices	= ['postId' => $post->postId, 'status' => '>= 0'];								//  get all visible post comments
 		foreach( $this->modelComment->getAllByIndices( $indices ) as $item ){						//  find former comment authors
 			if( empty( $item->email ) )																//  comment without email address
 				continue;																			//  cannot inform
-			if( $item->email == $this->request->get( 'email' ) )											//  comment by current comment author
+			if( $item->email == $this->request->get( 'email' ) )									//  comment by current comment author
 				continue;																			//  no need to inform
 			if( $item->authorId == $post->authorId )												//  comment by original author
 				continue;																			//  already has been informed
@@ -275,7 +281,7 @@ class Controller_Manage_Blog extends Controller
 			$addresses[]	= $item->email;															//  note used email address
 			$data['myComment']	= $item;															//  decorate mail data by own former comment
 			$mail		= new Mail_Info_Blog_FollowUp( $this->env, $data );							//  generate mail
-			$receiver	= ['username' => $item->username, 'email' => $item->email];			//  receiver is former comment author
+			$receiver	= ['username' => $item->username, 'email' => $item->email];					//  receiver is former comment author
 			$logic->handleMail( $mail, $receiver, $language->getLanguage() );						//  enqueue mail
 		}
 	}*/
