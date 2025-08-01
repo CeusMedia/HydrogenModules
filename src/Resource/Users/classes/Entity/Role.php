@@ -14,5 +14,5 @@ class Entity_Role extends Entity
 	public ?string $modifiedAt		= NULL;
 
 	/** @var Entity_User[] $users */
-	public array $users					= [];
+	public array $users				= [];
 }

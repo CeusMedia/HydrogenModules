@@ -11,7 +11,7 @@ class Entity_User_Password extends Entity
 	public int $status				= Model_User_Password::STATUS_NEW;
 	public string $salt;
 	public string $hash;
-	public string $failsLast;
+	public int $failsLast			= 0;
 	public int $failsTotal			= 0;
 	public string $createdAt;
 	public ?string $failedAt		= NULL;
