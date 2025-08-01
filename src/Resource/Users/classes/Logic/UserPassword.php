@@ -1,37 +1,19 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Logic;
 
 /**
  *	Logic of user password handling.
  *	This is a singleton.
  *	@todo		extend from frameworks single logic once it exists: CeusMedia\HydrogenFramework\Logic\Singleton
  */
-class Logic_UserPassword
+class Logic_UserPassword extends Logic
 {
-	protected static self $instance;
-
-	protected Environment $env;
 	protected Model_User_Password $model;
 	protected bool $useSalt;
 	protected string $defaultSaltAlgo;
 	protected string $defaultSaltLength;
 	protected string $maxAgeBeforeDecay;
-
-	/**
-	 *	Get singleton instance of this logic class.
-	 *	@static
-	 *	@access		public
-	 *	@param  	Environment		$env		Environment object
-	 *	@return		self			Singleton instance of this logic class
-	 *	@throws		ReflectionException
-	 */
-	public static function getInstance( Environment $env ): self
-	{
-		if( !isset( self::$instance ) )
-			self::$instance	= new self( $env );
-		return self::$instance;
-	}
 
 	/**
 	 *	Activates a new password.
@@ -53,13 +35,16 @@ class Logic_UserPassword
 		$new		= $this->model->get( $userPassword->userPasswordId );
 		if( !$new )
 			throw new OutOfRangeException( 'Invalid user password ID' );
-		if( $new->status != Model_User_Password::STATUS_NEW )
+		if( Model_User_Password::STATUS_NEW !== $new->status )
 			throw new OutOfRangeException( 'User password cannot be activated' );
 
 		/** @var ?Entity_User_Password $old */
 		$old	= $this->model->getByIndices( [
 			'userId'	=> $new->userId,
-			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
+			'status'	=> [
+				Model_User_Password::STATUS_ACTIVE,
+				Model_User_Password::STATUS_UPDATE,
+			]
 		] );
 		if( $old ){
 			$this->model->edit( $old->userPasswordId, [
@@ -182,7 +167,7 @@ class Logic_UserPassword
 	/**
 	 *	@param		Entity_User		$user
 	 *	@param		string			$password
-	 *	@return		Entity_User_Password|null
+	 *	@return		Entity_User_Password|NULL
 	 */
 	public function getActivatableUserPassword( Entity_User $user, string $password ): ?Entity_User_Password
 	{
@@ -226,7 +211,10 @@ class Logic_UserPassword
 	{
 		$indices	= [
 			'userId'	=> $user->userId,
-			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
+			'status'	=> [
+				Model_User_Password::STATUS_ACTIVE,
+				Model_User_Password::STATUS_UPDATE,
+			]
 		];
 		return (bool) $this->model->count( $indices );
 	}
@@ -288,7 +276,10 @@ class Logic_UserPassword
 		/** @var Entity_User_Password $item */
 		$item	= $this->model->getByIndices( [
 			'userId'	=> $user->userId,
-			'status'	=> [Model_User_Password::STATUS_ACTIVE, Model_User_Password::STATUS_UPDATE]
+			'status'	=> [
+				Model_User_Password::STATUS_ACTIVE,
+				Model_User_Password::STATUS_UPDATE,
+			]
 		] );
 		if( $item && $this->validatePassword( $item->salt.$password, $item->hash ) ){
 			if( $resetFails ){
@@ -307,13 +298,11 @@ class Logic_UserPassword
 	/**
 	 *	Protected constructor - this is a singleton.
 	 *	@access		protected
-	 *	@param		Environment		$env		Environment object
 	 *	@throws		ReflectionException
 	 */
-	protected function __construct( Environment $env )
+	protected function __onInit(): void
 	{
-		$this->env		= $env;
-		$this->model	= new Model_User_Password( $env );
+		$this->model	= new Model_User_Password( $this->env );
 		$config			= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$this->useSalt				= $config->get( 'password.salt' );
 		$this->defaultSaltAlgo		= $config->get( 'password.salt.algo' );
@@ -321,12 +310,6 @@ class Logic_UserPassword
 		$this->maxAgeBeforeDecay	= $config->get( 'password.salt.decay.seconds' );
 //		$this->clearOutdatedPasswordReplacements();
 	}
-
-	/**
-	 *	Protected clone - this is a singleton.
-	 *	@access		protected
-	 */
-	protected function __clone(){}
 
 	/**
 	 *	Generates a hash of salting passwords, if enabled.

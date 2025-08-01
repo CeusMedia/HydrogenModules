@@ -11,11 +11,24 @@ class Logic_User extends Logic
 	const EXTEND_AVATAR		= 8;
 	const EXTEND_SETTINGS	= 16;
 
+	const EXTENDS		= [
+		self::EXTEND_NOTHING,
+		self::EXTEND_ROLE,
+		self::EXTEND_GROUPS,
+		self::EXTEND_RIGHTS,
+		self::EXTEND_AVATAR,
+		self::EXTEND_SETTINGS,
+	];
+
 	protected Model_User $modelUser;
 	protected Model_Group $modelGroup;
 	protected Model_Group_User $modelGroupUser;
 	protected Model_Role $modelRole;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelUser		= new Model_User( $this->env );
@@ -99,11 +112,16 @@ class Logic_User extends Logic
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
 	}
 
+	/**
+	 *	@param		int|string|Entity_User		$user
+	 *	@param		int|string|Entity_Group		$group
+	 *	@return		bool
+	 */
 	public function isUserInGroup( int|string|Entity_User $user, int|string|Entity_Group $group ): bool
 	{
 		$userId		= is_object( $user ) ? $user->userId : $user;
 		$groupId	= is_object( $group ) ? $group->groupId : $group;
-		return (bool) $this->modelGroupUser->countByIndices( ['userId' => $userId, 'groupId' => $groupId] );
+		return 0 !== $this->modelGroupUser->countByIndices( ['userId' => $userId, 'groupId' => $groupId] );
 	}
 
 	/**

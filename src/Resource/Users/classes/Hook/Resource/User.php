@@ -8,21 +8,23 @@ class Hook_Resource_User extends Hook
 	 *	...
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
-		if( !empty( $this->payload['userId'] ) ){
-			$modelUser		= new Model_User( $this->env );
-			$modelPassword	= new Model_User_Password( $this->env );
-			$modelGroupUser	= new Model_Group_User( $this->env );
+		if( empty( $this->payload['userId'] ) )
+			return;
 
-			$modelPassword->removeByIndex( 'userId', $this->payload['userId'] );
-			$modelGroupUser->removeByIndex( 'userId', $this->payload['userId'] );
-			$modelUser->remove( $this->payload['userId'] );
+		$modelUser		= new Model_User( $this->env );
+		$modelPassword	= new Model_User_Password( $this->env );
+		$modelGroupUser	= new Model_Group_User( $this->env );
 
-			if( isset( $this->payload['counts'] ) )
-				$this->payload['counts']['Resource_Users']	= (object) ['entities' => 1];
-		}
+		$modelPassword->removeByIndex( 'userId', $this->payload['userId'] );
+		$modelGroupUser->removeByIndex( 'userId', $this->payload['userId'] );
+		$modelUser->remove( $this->payload['userId'] );
+
+		if( isset( $this->payload['counts'] ) )
+			$this->payload['counts']['Resource_Users']	= (object) ['entities' => 1];
 	}
 }

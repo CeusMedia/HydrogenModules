@@ -19,9 +19,9 @@ $optType	= join( $optType );
 
 $iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
-$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconAddUser	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-user-plus'] );
 $iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconSearch		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-magnifying-class'] );
+$iconUsers		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-users'] );
 
 $panelEdit	= '
 <div class="content-panel content-panel-form">
@@ -52,8 +52,8 @@ $panelEdit	= '
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, $iconRemove.' '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
 <!--					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, $iconAdd.' '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
-					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, $iconSearch.' '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, $iconAddUser.' '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
+					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, $iconUsers.' '.$words['edit']['buttonFilter'], 'btn btn-small' ).'
 -->				</div>
 			</div>
 		</form>

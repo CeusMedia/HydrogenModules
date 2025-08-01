@@ -57,12 +57,12 @@ class Logic_UserToken extends Logic
 			'token'		=> $token,
 			'status'	=> Model_User_Token::STATUS_ACTIVE,
 		];
-		if( strlen( trim( $username ) ) > 0 )
+		if( '' !== trim( $username ?? '' ) )
 			$indices['userId']	= $this->getUserIdFromUsername( $username );
 
-		/** @var Entity_User_Token $item */
-		$item		= $this->modelToken->getByIndices( $indices );
-		if( !$item )
+		/** @var ?Entity_User_Token $item */
+		$item	= $this->modelToken->getByIndices( $indices );
+		if( NULL === $item )
 			return FALSE;
 
 		$this->modelToken->edit( $item->userTokenId, ['usedAt' => time()] );
@@ -84,7 +84,7 @@ class Logic_UserToken extends Logic
 				Model_User_Token::STATUS_ACTIVE
 			],
 		];
-		if( strlen( trim( $except ) ) > 0 )
+		if( '' !== trim( $except ?? '' ) )
 			$indices['userTokenId']	= '!= '.$except;
 
 		/** @var Entity_User_Token[] $tokens */
@@ -136,14 +136,16 @@ class Logic_UserToken extends Logic
 	{
 		if( strlen( trim( $token ) ) === 0 )
 			throw new InvalidArgumentException( 'No token given' );
-		/** @var Entity_User_Token $token */
-		$token	= $this->modelToken->getByIndex( 'token', $token );
-		if( !$token )
+		/** @var Entity_User_Token $entity */
+		$entity	= $this->modelToken->getByIndex( 'token', $token );
+		if( !$entity )
 			throw new RangeException( 'Invalid token' );
-		return $token;
+		return $entity;
 	}
 
 	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@return		void
 	 */
 	protected function __onInit(): void
@@ -160,13 +162,13 @@ class Logic_UserToken extends Logic
 	protected function getUserFromUsername( string $username ): Entity_User
 	{
 		//  validate input
-		if( 0 === strlen( trim( $username ) ) )
+		if( '' === trim( $username ) )
 			throw new InvalidArgumentException( 'No username given' );
 
 		//  check username
-		/** @var Entity_User $user */
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->getByIndex( 'username', $username );
-		if( !$user )
+		if( NULL === $user )
 			throw new DomainException( 'Invalid username' );
 
 		return $user;
@@ -179,12 +181,13 @@ class Logic_UserToken extends Logic
 	protected function getUserIdFromUsername( string $username ): string
 	{
 		//  validate input
-		if( 0 === strlen( trim( $username ) ) )
+		if( '' === trim( $username ) )
 			throw new InvalidArgumentException( 'No username given' );
 
 		//  check username
+		/** @var ?Entity_User $user */
 		$user	= $this->modelUser->getByIndex( 'username', $username );
-		if( !$user )
+		if( NULL === $user )
 			throw new DomainException( 'Invalid username' );
 
 		return $user->userId;
@@ -223,13 +226,14 @@ class Logic_UserToken extends Logic
 	 */
 	protected function validateUserPassword( string $userId, string $password ): bool
 	{
-		if( 0 === strlen( trim( $password ) ) )
+		if( '' === trim( $password ) )
 			throw new InvalidArgumentException( 'No password given' );
+		/** @var ?Entity_User_Password $item */
 		$item	= $this->modelPassword->getByIndices( [
 			'userId' 	=> $userId,
 			'status'	=> Model_User_Password::STATUS_ACTIVE,
 		] );
-		if( !$item )
+		if( NULL === $item )
 			throw new RangeException( 'No password set for user' );
 		//  @todo support password pepper by using password.pepper from module config
 		$spicedPassword	= $item->salt.$password;//.$pepper;
