@@ -31,8 +31,8 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	{
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
-			$data		= $request->getAll();
-			$data['createdAt']	= time();
+			$data	= Entity_IP_Lock_Filter::fromArray( $request->getAll() );
+			$data->createdAt	= time();
 			$filterId	= $this->model->add( $data );
 			$this->messenger->noteSuccess( 'Filter added.' );
 			$this->restart( NULL, TRUE );

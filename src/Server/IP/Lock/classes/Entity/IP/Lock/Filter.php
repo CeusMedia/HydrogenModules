@@ -22,6 +22,11 @@ class Entity_IP_Lock_Filter extends Entity
 		'title',
 	];
 
+	protected static array $autoTypeConvertFields	= [
+		'status',
+		'lockStatus',
+	];
+
 	protected static function checkValues( array $data ): void
 	{
 		if( !in_array( $data['status'], Model_IP_Lock_Filter::STATUSES, TRUE ) )
