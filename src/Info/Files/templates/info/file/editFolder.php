@@ -16,7 +16,7 @@ $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
 unset( $folders[$folder->downloadFolderId] );
-$folders	= array_merge( [0 => ''], $folders );
+$folders	= array_replace( [0 => ''], $folders );
 $optFolder	= HtmlElements::Options( $folders, $folder->parentId );
 
 $inputTitle		= HtmlTag::create( 'input', NULL, [
