@@ -28,9 +28,15 @@ class Entity_Job_Definition extends Entity
 		'modifiedAt',
 	];
 
-	protected static function presetDynamicValues( array & $array ): void
+	/**
+	 *	Applies preset values dynamically created on manual construction.
+	 *	@param		array		$array		Data array to work on
+	 *	@return		array
+	 */
+	protected static function presetDynamicValues( array $array ): array
 	{
 		$array['createdAt']		= time();
 		$array['modifiedAt']	= time();
+		return $array;
 	}
 }
