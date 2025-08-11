@@ -22,7 +22,12 @@ class Entity_Shop_Bridge_Article extends Entity
 	public bool $single	= FALSE;
 	public object|NULL $raw	= NULL;
 
-	protected static function presetDynamicValues( array &$array ): void
+	/**
+	 *	Applies preset values dynamically created on manual construction.
+	 *	@param		array		$array		Data array to work on
+	 *	@return		array
+	 */
+	protected static function presetDynamicValues( array $array ): array
 	{
 		$array['picture']	= (object) [
 			'relative'	=> '',
@@ -41,5 +46,6 @@ class Entity_Shop_Bridge_Article extends Entity
 			'one'		=> .0,
 			'all'		=> .0,
 		];
+		return $array;
 	}
 }

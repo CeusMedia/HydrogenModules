@@ -38,12 +38,13 @@ class Entity_ModuleEntityRelation extends Entity
 	}
 
 	/**
-	 *	Applies preset values dynamically created on construction.
-	 *	@param		array		$array		Reference to data array to work on
-	 *	@return		void
+	 *	Applies preset values dynamically created on manual construction.
+	 *	@param		array		$array		Data array to work on
+	 *	@return		array
 	 */
-	protected static function presetDynamicValues( array &$array ): void
+	protected static function presetDynamicValues( array $array ): array
 	{
 		$array['count']	= count( $array['items'] );
+		return $array;
 	}
 }

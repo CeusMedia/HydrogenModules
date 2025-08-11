@@ -43,12 +43,14 @@ class Entity_Page extends Entity
 	public ?string $path		= NULL;
 
 	/**
-	 *	@param		array			$array
-	 *	@return		void
+	 *	Applies preset values dynamically created on manual construction.
+	 *	@param		array		$array		Data array to work on
+	 *	@return		array
 	 */
-	public static function presetDynamicValues( array & $array ): void
+	public static function presetDynamicValues( array $array ): array
 	{
 		$array['createdAt']	= time();
+		return $array;
 	}
 }
 
