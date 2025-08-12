@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Controller\Api as Controller;
 
 class Controller_Api_Form_Import extends Controller
@@ -7,6 +8,7 @@ class Controller_Api_Form_Import extends Controller
 	protected Logic_Import $logic;
 	protected Model_Form_Import_Rule $modelRule;
 	protected array $transferTargetMap	= [];
+	protected Dictionary $dictionary;
 	protected array $allowedConnectorTypes	= [
 		Model_Import_Connector::TYPE_PUSH_POST,
 		Model_Import_Connector::TYPE_PUSH_PUT
@@ -24,6 +26,7 @@ class Controller_Api_Form_Import extends Controller
 		$this->response->setHeader( 'Content-type', 'text/plain' );
 
 		try{
+			$this->checkLimits();
 			$importRule	= $this->tryToGetImportRule( $importRuleId );
 			$connector	= $this->tryToGetConnector( $importRule );
 			$results	= $this->getImportDataSets( $connector, $importRule );
@@ -43,6 +46,7 @@ class Controller_Api_Form_Import extends Controller
 	{
 		$this->logic		= new Logic_Import( $this->env );
 		$this->modelRule	= new Model_Form_Import_Rule( $this->env );
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.manage_forms.', TRUE );
 	}
 
 	/**
@@ -62,20 +66,39 @@ class Controller_Api_Form_Import extends Controller
 	}
 
 	/**
-	 *	@param		Entity_Import_Connector		$connector
+	 *	Uses module Server:Log:Request to limit hourly and daily requests on IPs.
+	 *	Responds with HTTP code 429 and message if any limit is hit.
+	 *	Skips any checks if module Server:Log:Request is not installed or no limits are set in configuration.
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	protected function checkRequestMethodIsAllowed( Entity_Import_Connector $connector ): void
+	protected function checkLimits(): void
 	{
-		$requestMethod	= $this->request->getMethod();
-		$matchingMethod	= match( $connector->type ){
-			Model_Import_Connector::TYPE_PUSH_POST	=> $requestMethod->isPost(),
-			Model_Import_Connector::TYPE_PUSH_PUT	=> $requestMethod->isPut(),
-			default									=> FALSE,
-		};
+		if( !$this->env->getModules()->has( 'Server_Log_Request' ) )
+			return;
 
-		if( !$matchingMethod )
-			$this->respondError( 405, 'Invalid request method' );
+		$requestLimitHourly	= $this->moduleConfig->get( 'limit.requests.import.hourly' );
+		$requestLimitDaily	= $this->moduleConfig->get( 'limit.requests.import.daily' );
+		if( 0 === $requestLimitHourly + $requestLimitDaily )
+			return;
+
+		$logic	= Logic_Server_Log_Request::getInstance( $this->env );
+		$ip		= $_SERVER['REMOTE_ADDR'];
+		$path	= '/api/form/import';
+
+		if( 0 !== $requestLimitHourly ){
+			$count	= $logic->countRequestsOfIp( $ip, NULL, $path, 'PT1H' );
+			$msg	= sprintf( 'Hourly limit (%d requests) reached', $requestLimitHourly );
+			if( $count >= $requestLimitHourly )
+				$this->respondError( 429, $msg );
+		}
+
+		if( 0 !== $requestLimitDaily ){
+			$count	= $logic->countRequestsOfIp( $ip, NULL, $path, 'P1D' );
+			$msg	= sprintf( 'Daily limit (%d requests) reached', $requestLimitDaily );
+			if( $count >= $requestLimitDaily )
+				$this->respondError( 429, $msg );
+		}
 	}
 
 	/**
@@ -92,6 +115,23 @@ class Controller_Api_Form_Import extends Controller
 		if( !in_array( $requestMimeType, $allowedMimeTypes, TRUE ) ){
 			$this->respondError( 406, 'Invalid content format: Supported MIME types are: '.join( ', ', $allowedMimeTypes ) );
 		}
+	}
+
+	/**
+	 *	@param		Entity_Import_Connector		$connector
+	 *	@return		void
+	 */
+	protected function checkRequestMethodIsAllowed( Entity_Import_Connector $connector ): void
+	{
+		$requestMethod	= $this->request->getMethod();
+		$matchingMethod	= match( $connector->type ){
+			Model_Import_Connector::TYPE_PUSH_POST	=> $requestMethod->isPost(),
+			Model_Import_Connector::TYPE_PUSH_PUT	=> $requestMethod->isPut(),
+			default									=> FALSE,
+		};
+
+		if( !$matchingMethod )
+			$this->respondError( 405, 'Invalid request method' );
 	}
 
 	/**
