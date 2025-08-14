@@ -89,7 +89,7 @@ Please think about using the hook instead.
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
-	<sql on="update" type="mysql" version="install"><![CDATA[
+	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
   `exceptionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
