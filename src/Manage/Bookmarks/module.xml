@@ -3,19 +3,21 @@
 	<title>Manage: Bookmarks</title>
 	<description>Basic management of noted links for use on e.G. HTML-Editors or some sort of stored locations or blog article references.</description>
 	<category>Management</category>
-	<version>0.3.7</version>
+	<version>0.3.8</version>
 	<log version="0.3.2">Updated TinyMCE link collection.</log>
 	<log version="0.3.3">Apply panel style.</log>
 	<log version="0.3.4">Update button colors.</log>
 	<log version="0.3.5">Support new TineMCE file browser.</log>
 	<log version="0.3.6">Extend allowed protocols by HTTPS.</log>
 	<log version="0.3.7">Apply module UI:Font:FontAwesome.</log>
+	<log version="0.3.8">Extract hook to own class.</log>
 <!--	<log version="0.4">Support locales.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Manage/Bookmark.php</class>
+		<class>Hook/Manage/Bookmark.php</class>
 		<class>Model/Bookmark.php</class>
 		<class>View/Manage/Bookmark.php</class>
 <!--		<locale>de/manage/bookmark.ini</locale>-->
@@ -47,5 +49,5 @@ DROP TABLE IF EXISTS `<%?prefix%>bookmarks`;
 ]]></sql>
 	<link xml:lang="de" access="acl" path="manage/bookmark" rank="67">Lesezeichen</link>
 	<link xml:lang="en" access="acl" path="manage/bookmark" rank="67">Bookmarks</link>
-	<hook type="resource" resource="TinyMCE" event="getLinkList">Controller_Manage_Bookmark::___onTinyMCE_getLinkList</hook>
+	<hook type="resource" resource="TinyMCE" event="getLinkList">Hook_Manage_Bookmark::onTinyMceGetLinkList</hook>
 </module>
