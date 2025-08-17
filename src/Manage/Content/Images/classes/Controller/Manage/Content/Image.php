@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\FS\File\Reader as FileReader;
@@ -17,8 +17,6 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Manage_Content_Image extends Controller
 {
-	protected static array $cacheImageList	= [];
-
 	protected string $basePath;
 	protected string $baseUri;
 
@@ -30,11 +28,16 @@ class Controller_Manage_Content_Image extends Controller
 	protected HttpRequest $request;
 	protected Dictionary $session;
 	protected View_Helper_Thumbnailer $thumbnailer;
-	protected string $imagePath ;
+	protected string $imagePath			= '';
 
-	public function addFolder( $folderHash = NULL )
+	/**
+	 *	@param		?string		$folderHash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addFolder( string $folderHash = NULL ): void
 	{
-		$this->setPathFromHash( $folderHash );
+		$this->setPathFromHash( $folderHash ?? '' );
 		if( $this->request->has( 'save' ) ){
 			$words		= (object) $this->getWords( 'msg' );
 			$folderPath	= $this->imagePath;//trim( $this->request->get( 'path' ) );
@@ -49,7 +52,7 @@ class Controller_Manage_Content_Image extends Controller
 				$target		= $this->basePath.$folder.$name;
 				try{
 					FolderEditor::createFolder( $target, 0775 );
-					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
+					$this->env->getCache()->delete( 'ManageContentImages.list.static' );
 					$this->messenger->noteSuccess( $words->successFolderCreated, $folder.$name );
 					$this->restart( base64_encode( $folder.$name ), TRUE );
 				}
@@ -61,7 +64,10 @@ class Controller_Manage_Content_Image extends Controller
 		$this->addData( 'imagePath', $this->imagePath );
 	}
 
-	public function addImage()
+	/**
+	 *	@return		void
+	 */
+	public function addImage(): void
 	{
 		$path		= $this->imagePath;
 		$folder		= trim( $this->request->get( 'folder' ) );
@@ -89,13 +95,13 @@ class Controller_Manage_Content_Image extends Controller
 							$this->messenger->noteFailure( $words->errorUploadFailed );
 						}
 						else{
-							$this->env->getCache()->remove( 'ManageContentImages.list.static' );
+							$this->env->getCache()->delete( 'ManageContentImages.list.static' );
 							$this->messenger->noteSuccess( $words->successImageAdded, $file['name'] );				//  @todo apply security!
 							$this->restart( '?path='.$this->request->get( 'folder' ), TRUE );
 						}
 					}
 				}
-				catch( exception $e ){
+				catch( Throwable ){
 					$this->messenger->noteError( $words->errorNoSupportedImage, $file['name'] );
 				}
 			}
@@ -103,10 +109,15 @@ class Controller_Manage_Content_Image extends Controller
 		$this->addData( 'imagePath', trim( $this->request->get( 'path' ) ) );
 	}
 
-	public function editFolder( $folderHash = NULL )
+	/**
+	 *	@param		?string		$folderHash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function editFolder( string $folderHash = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$folderPath	= $this->setPathFromHash( $folderHash );
+		$folderPath	= $this->setPathFromHash( $folderHash ?? '' );
 		if( $this->request->has( 'save' ) ){
 			$folder		= trim( $this->request->get( 'folder' ) );
 			$name		= trim( $this->request->get( 'name' ) );
@@ -133,7 +144,7 @@ class Controller_Manage_Content_Image extends Controller
 				if( @rename( $source, $target ) ){
 					$this->messenger->noteSuccess( $words->successFolderMoved, $folderPath, $folder.$name );
 					$this->thumbnailer->uncacheFolder( $this->basePath.$folderPath );
-					$this->env->getCache()->remove( 'ManageContentImages.list.static' );
+					$this->env->getCache()->delete( 'ManageContentImages.list.static' );
 					$this->restart( base64_encode( $folder.$name ), TRUE );
 				}
 				$this->messenger->noteFailure( $words->errorMovingFolderFailed, $folderPath );
@@ -146,9 +157,11 @@ class Controller_Manage_Content_Image extends Controller
 	/**
 	 *	...
 	 *	@access		public
+	 *	@param		string		$imageHash
 	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function editImage( $imageHash )
+	public function editImage( string $imageHash ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 
@@ -173,7 +186,7 @@ class Controller_Manage_Content_Image extends Controller
 				$pathTarget	= $this->basePath.$folderPath.$fileName;
 				rename( $pathSource, $pathTarget );
 				$this->thumbnailer->uncacheFile( $pathSource );
-				$this->env->getCache()->remove( 'ManageContentImages.list.static' );
+				$this->env->getCache()->delete( 'ManageContentImages.list.static' );
 				if( $imageName !== $fileName && $imageFolder !== $folderPath )			//  both name and folder changed
 					$this->messenger->noteSuccess( $words->successImageRenamedAndMoved, $imageName, $fileName, $folderPath );
 				else if( $imageName !== $fileName )										//  only name changed
@@ -201,10 +214,10 @@ class Controller_Manage_Content_Image extends Controller
 		$this->addData( 'imageMegaPixels', round( $megapixels, $megapixels < 1 ? 2 : 1 ) );
 	}
 
-	public function index( $folderHash = NULL )
+	public function index( string $folderHash = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
-		$path		= $this->setPathFromHash( $folderHash );
+		$this->setPathFromHash( $folderHash ?? '' );
 
 //		$folderPath	= $this->env->getRequest()->get( 'path' );
 		$this->addData( 'folderPath', $this->imagePath );
@@ -216,7 +229,13 @@ class Controller_Manage_Content_Image extends Controller
 		}
 	}
 
-	public function process( $imageHash )
+	/**
+	 *	@param		string		$imageHash
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function process( string $imageHash ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 
@@ -256,7 +275,11 @@ class Controller_Manage_Content_Image extends Controller
 		$this->restart( 'editImage/'.$imageHash, TRUE );
 	}
 
-	public function removeFolder( $folderHash = NULL )
+	/**
+	 *	@param		?string		$folderHash
+	 *	@return		void
+	 */
+	public function removeFolder( string $folderHash = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$folderPath	= $this->setPathFromHash( $folderHash );
@@ -266,6 +289,8 @@ class Controller_Manage_Content_Image extends Controller
 		foreach( $index as $entry )
 			if( !$entry->isDot() )
 				$contains++;
+		if( 0 !== $contains )
+			$this->messenger->noteFailure( $words->errorRemovingUnemptyFolder, $folderPath );
 		if( !FolderEditor::removeFolder( $this->basePath.$folderPath, TRUE ) ){
 			$this->messenger->noteFailure( $words->errorRemovingFolderFailed, $folderPath );
 		}
@@ -275,7 +300,12 @@ class Controller_Manage_Content_Image extends Controller
 		$this->restart( base64_encode( dirname( $folderPath ) ), TRUE );
 	}
 
-	public function removeImage( $imageHash )
+	/**
+	 *	@param		string		$imageHash
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeImage( string $imageHash ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$imagePath	= base64_decode( $imageHash );
@@ -285,14 +315,20 @@ class Controller_Manage_Content_Image extends Controller
 			$this->messenger->noteError( $words->errorRemovingImageFailed, $imagePath );
 		}
 		else{
-			$this->env->getCache()->remove( 'ManageContentImages.list.static' );
+			$this->env->getCache()->delete( 'ManageContentImages.list.static' );
 			$this->thumbnailer->uncacheFile( $this->basePath.$imagePath );
 			$this->messenger->noteSuccess( $words->successImageRemoved, $imageName );
 		}
 		$this->restart( NULL, TRUE );
 	}
 
-	public function scale( $imageHash )
+	/**
+	 * @param string $imageHash
+	 * @return        void
+	 * @throws        \Psr\SimpleCache\InvalidArgumentException
+	 * @throws Exception
+	 */
+	public function scale( string $imageHash ): void
 	{
 		$imagePath	= base64_decode( $imageHash );
 		$this->checkFile( $imagePath );
@@ -331,7 +367,12 @@ class Controller_Manage_Content_Image extends Controller
 		$this->restart( 'editImage/'.base64_encode( $imagePath ), TRUE );
 	}
 
-	public function view( $imageHash, $embededInHtml = FALSE )
+	/**
+	 *	@param		string		$imageHash
+	 *	@param		bool		$embeddedInHtml
+	 *	@return		void
+	 */
+	public function view( string $imageHash, bool $embeddedInHtml = FALSE ): void
 	{
 		$imagePath	= base64_decode( $imageHash );
 //		$imagePath	= $this->env->getRequest()->get( 'path' );
@@ -341,7 +382,7 @@ class Controller_Manage_Content_Image extends Controller
 		}
 		$image		= getimagesize( $this->basePath.$imagePath );
 		$mimetype	= image_type_to_mime_type( $image[2] );
-		if( $embededInHtml ){
+		if( $embeddedInHtml ){
 			$content	= base64_encode( file_get_contents( $this->basePath.$imagePath ) );
 			$source		= "data:".$mimetype.";base64,".$content;
 			$page		= new HtmlPage();
@@ -401,7 +442,12 @@ class Controller_Manage_Content_Image extends Controller
 		$this->addData( 'helperThumbnailer', $this->thumbnailer );
 	}
 
-	protected function checkFile( string $filePath )
+	/**
+	 *	Redirects to folder if file is not existing.
+	 *	@param		string		$filePath
+	 *	@return		void
+	 */
+	protected function checkFile( string $filePath ): void
 	{
 		if( !file_exists( $this->basePath.$filePath ) ){
 			$words		= (object) $this->getWords( 'msg' );
@@ -410,7 +456,12 @@ class Controller_Manage_Content_Image extends Controller
 		}
 	}
 
-	protected function checkFolder( string $folderPath )
+	/**
+	 *	Redirects to index if folder is not existing.
+	 *	@param		string		$folderPath
+	 *	@return		void
+	 */
+	protected function checkFolder( string $folderPath ): void
 	{
 		if( !file_exists( $this->basePath.$folderPath ) ){
 			$words		= (object) $this->getWords( 'msg' );
@@ -422,14 +473,20 @@ class Controller_Manage_Content_Image extends Controller
 		}
 	}
 
-	protected function setPathFromHash( $folderHash )
+	/**
+	 *	@param		string		$folderHash
+	 *	@return		string
+	 */
+	protected function setPathFromHash( string $folderHash ): string
 	{
-		if( $folderHash ){
-
+		$folderHash	= trim( $folderHash );
+		if( '' !== trim( $folderHash ) ){
+			/** @var string $path */
 			$path		= str_replace( "../", "", base64_decode( $folderHash ) );
 			if( file_exists( $this->basePath.$path ) ){
 				$this->session->set( 'filter_manage_content_image_path', $path );
-				$this->addData( 'path', $this->imagePath = $path );
+				$this->imagePath = $path;
+				$this->addData( 'path', $path );
 			}
 //			$this->checkFolder( $path );
 /*			if( !file_exists( $this->basePath.$path ) ){

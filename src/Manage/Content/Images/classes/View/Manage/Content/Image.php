@@ -31,7 +31,6 @@ class View_Manage_Content_Image extends View
 	{
 	}
 
-
 	public function listFolders( ?string $currentPath ): string
 	{
 		$words	= (object) $this->getWords( 'index' );

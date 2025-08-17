@@ -1,4 +1,5 @@
 <?php
+/** @var View_Manage_Content_Image $view */
 
 $panelList		= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $panelFolder	= $view->loadTemplateFile( 'manage/content/image/index.folder.php' );
