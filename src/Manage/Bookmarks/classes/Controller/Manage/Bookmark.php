@@ -1,34 +1,10 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
 
 class Controller_Manage_Bookmark extends Controller
 {
 	protected Model_Bookmark $model;
-
-	public static function ___onTinyMCE_getLinkList( Environment $env, $context, $module, $arguments = [] )
-	{
-		$words		= $env->getLanguage()->getWords( 'js/tinymce' );
-		$prefixes	= (object) $words['link-prefixes'];
-
-		$list		= [];
-		$model		= new Model_Bookmark( $env );
-		$orders		= ['title' => 'ASC'];
-		foreach( $model->getAll( [], $orders ) as $nr => $link ){
-			$list[]	= (object) [
-				'title'	=> /*$prefixes->bookmark.*/$link->title,
-				'type'	=> 'link:bookmark',
-				'value'	=> $link->url,
-			];
-		}
-		$list	= [(object) [
-			'title'	=> $prefixes->bookmark,
-			'menu'	=> array_values( $list ),
-		] ];
-//		$context->list	= array_merge( $context->list, array_values( $list ) );
-		$context->list	= array_merge( $context->list, $list );
-	}
 
 	/**
 	 *	@return		void
@@ -67,7 +43,8 @@ class Controller_Manage_Bookmark extends Controller
 	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
-		if( !($bookmark = $this->model->get( $bookmarkId ) ) ){
+		$bookmark	= $this->model->get( $bookmarkId );
+		if( NULL === $bookmark ){
 			$messenger->noteError( 'Dieses Lesezeichen ist nicht vorhanden. Weiterleitung zur Liste.' );
 			$this->restart( NULL, TRUE );
 		}
@@ -107,6 +84,10 @@ class Controller_Manage_Bookmark extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Bookmark( $this->env );
