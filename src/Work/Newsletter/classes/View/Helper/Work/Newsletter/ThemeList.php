@@ -18,8 +18,10 @@ class View_Helper_Work_Newsletter_ThemeList
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
-		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.themes.', TRUE );
-		$this->themePath	= 'contents/newsletter-themes/';
+		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+
+		$resourceModuleConfig	= $this->env->getConfig()->getAll( 'module.resource_newsletter.', TRUE );
+		$this->themePath		= $resourceModuleConfig->get( 'path.themes' );
 	}
 
 	/**
@@ -61,17 +63,24 @@ class View_Helper_Work_Newsletter_ThemeList
 	protected function renderItem( $theme ): string
 	{
 		$base64	= base64_encode( FileReader::load( $this->themePath.$theme->folder.'/template.png' ) );
-		return '<li style="width: 250px; display: inline-block; text-align: center;">
-	<div class="thumbnail" style="background-color: white">
-		<a href="data:image/jpeg;base64,'.$base64.'" class="fancybox-auto">
-			'.HtmlTag::create( 'img', NULL, [
-				'src'	=> 'data:image/jpeg;base64,'.$base64,
-				'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
-				'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
-			], ['class' => 'img-polaroid'] ).'
-		</a>
-		<h4><a href="./work/newsletter/template/viewTheme/'.$theme->id.'">'.$theme->title.'</a></h4>
-	</div>
-</li>';
+		$image	= HtmlTag::create( 'img', NULL, [
+			'src'	=> 'data:image/jpeg;base64,'.$base64,
+			'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
+			'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+		], ['class' => 'img-polaroid'] );
+		$linkedImage	= HtmlTag::create( 'a', $image, [
+			'href'	=> 'data:image/jpeg;base64,'.$base64,
+			'class'	=> 'fancybox-auto',
+		] );
+		$linkedTitle	= HtmlTag::create( 'a', $theme->title, [
+			'href'	=> './work/newsletter/template/viewTheme/'.$theme->id,
+		] );
+		$thumbnail	= HtmlTag::create( 'div', $linkedImage.'<h4>'.$linkedTitle.'</h4>', [
+			'class'	=> 'thumbnail',
+			'style'	=> 'background-color: white',
+		] );
+		return HtmlTag::create( 'li', $thumbnail , [
+			'style'	=> 'width: 250px; display: inline-block; text-align: center;',
+		] );
 	}
 }

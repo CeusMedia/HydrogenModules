@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
@@ -17,6 +18,13 @@ $helper	= new View_Helper_Work_Newsletter_ThemeFacts( $env );
 $helper->setThemeData( $theme );
 //$helper->setListAttributes( ['class' => 'dl-horizontal'] );
 
+$base64	= base64_encode( FileReader::load( $themePath.$theme->folder.'/template.png' ) );
+$image	= HtmlTag::create( 'img', NULL, [
+	'src'	=> 'data:image/jpeg;base64,'.$base64,
+	'style'	=> 'max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray',
+	'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+], ['class' => 'img-polaroid'] );
+
 return '
 <div class="content-panel">
 	<h3>Theme</h3>
@@ -24,15 +32,11 @@ return '
 		<div class="row-fluid">
 		 	<div class="span6">
 				<h4>'.$theme->title.'</h4>
-				<div class="description" style="font-size: 0.9em">'.nl2br( $theme->description ).'</div>
+				<div class="description" style="font-size: 0.9em">'.nl2br( $theme->description ?? '' ).'</div>
 				'.$helper->render().'
 			</div>
 		 	<div class="span6" style="text-align: center">
-				'.HtmlTag::create( 'img', NULL, [
-					'src'	=> $themePath.$theme->folder.'/template.png',
-					'style'	=> 'max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray',
-					'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
-				] ).'
+				'.$image.'
 			</div>
 		</div>
 		<div class="buttonbar">
