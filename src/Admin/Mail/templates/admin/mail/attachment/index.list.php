@@ -24,7 +24,8 @@ $iconDisable	= new Icon( 'toggle-off' );
 $iconRemove		= new Icon( 'trash' );
 
 $w		= (object) $words['index'];
-$list	= '<div class="alert alert-warning"><em class="muted">'.$w->noEntries.'</em></div><br/>';
+$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-warn'] );
+
 if( count( $attachments ) ){
 	$list	= [];
 	foreach( $attachments as $attachment ){

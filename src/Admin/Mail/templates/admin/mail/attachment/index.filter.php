@@ -45,12 +45,6 @@ return '
 		<form action="./admin/mail/attachment/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_status">'.$w->labelStatus.'</label>
-					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span12">
 					<label for="input_file">'.$w->labelFile.'</label>
 					<select name="file" id="input_file" class="span12">'.$optFile.'</select>
 				</div>
@@ -62,7 +56,11 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span6">
+					<label for="input_status">'.$w->labelStatus.'</label>
+					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
+				</div>
+				<div class="span6">
 					<label for="input_language">'.$w->labelLanguage.'</label>
 					<select name="language" id="input_language" class="span12">'.$optLanguage.'</select>
 				</div>

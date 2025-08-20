@@ -19,6 +19,7 @@ class View_Admin_Mail_Attachment_Modal_Add extends View_Helper_Bootstrap_Modal
 
 		$iconCancel		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 		$iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
+		$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
 
 		$w	= (object) $this->moduleWords['add'];
 		$this->setHeading( $w->heading );
@@ -27,7 +28,8 @@ class View_Admin_Mail_Attachment_Modal_Add extends View_Helper_Bootstrap_Modal
 		$this->setButtonLabelCancel( $iconCancel.'&nbsp;'.$w->buttonCancel );
 		$this->trigger	= new View_Helper_Bootstrap_Modal_Trigger( $env );
 		$this->trigger->setModalId( $this->id );
-		$this->trigger->setLabel( $this->moduleWords['index']['buttonRegister'] );
+		$this->trigger->setClass( 'btn-success' );
+		$this->trigger->setLabel( $iconAdd.'&nbsp;'.$this->moduleWords['index']['buttonRegister'] );
 	}
 
 	protected function renderBody(): string
