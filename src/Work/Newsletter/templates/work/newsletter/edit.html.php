@@ -1,15 +1,17 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var Environment $env */
+/** @var WebEnvironment $env */
 /** @var View $view */
 /** @var object $words */
 /** @var object $newsletter */
 /** @var string $newsletterId */
 /** @var array $styles */
+
+$env->getPage()->js->addScriptOnReady( 'ModuleWorkNewsletter.init("'.$env->url.'");' );
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] ).'&nbsp;';
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
@@ -151,9 +153,5 @@ return '
 	<div class="span6">
 		'.$panelStyles.'
 	</div>
-</div><br/>
-<script>
-jQuery(document).ready(function(){
-	ModuleWorkNewsletter.init();
-});
-</script>';
+</div><br/>';
+

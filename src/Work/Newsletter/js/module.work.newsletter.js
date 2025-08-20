@@ -22,6 +22,7 @@ var ModuleWorkNewsletter = {
 	},
 	init: function(baseUrlBackend, templateId, mode){
 		var mode = typeof mode === "undefined" ? 0 : parseInt(mode);
+		var templateId = typeof templateId === "undefined" ? 0 : parseInt(templateId);
 		if($("textarea#input_html").length){
 			switch(settings.Work_Newsletter['editor_' + ModuleWorkNewsletter.modes[mode]]){
 				case 'CodeMirror':
@@ -44,6 +45,7 @@ var ModuleWorkNewsletter = {
 					this.cssSources.unshift(styleUrl + '?' + new Date().getTime());
 					var options = tinymce.Config.apply({
 						selector: "textarea#input_html",
+						language: settings.JS_TinyMCE.auto_language,
 						content_css: ModuleWorkNewsletter.cssSources.join(','),
 //						plugins: "textcolor advlist autolink link image lists charmap preview autosave code charmap hr paste searchreplace visualblocks wordcount visualchars table",
 //						tools: "inserttable",
