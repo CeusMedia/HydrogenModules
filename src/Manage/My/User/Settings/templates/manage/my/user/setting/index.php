@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var View_Manage_My_User_Setting $view */
@@ -8,7 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var array<string,array<string,string>> $words */
 /** @var ?string $from */
 /** @var Entity_User_Settings[] $settings */
-/** @var array[] $modules */
+/** @var ModuleDefinition[] $modules */
 
 $w			= (object) $words['index'];
 $tabs		= View_Manage_My_User::renderTabs( $env, 'setting' );

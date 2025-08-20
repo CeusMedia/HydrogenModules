@@ -3,6 +3,7 @@
 use CeusMedia\Common\FS\File\INI\Reader as IniFileReader;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\View;
 
 class View_Manage_My_User_Setting extends View
@@ -141,7 +142,7 @@ class View_Manage_My_User_Setting extends View
 		return $input;
 	}
 
-	public function renderModuleSettings($module, $settings, $moduleWords, $from = NULL ): string
+	public function renderModuleSettings( ModuleDefinition $module, $settings, $moduleWords, $from = NULL ): string
 	{
 		$words		= $this->env->getLanguage()->getWords( 'manage/my/user/setting' );
 		$words		= (object) $words['index'];
