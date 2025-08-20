@@ -5,7 +5,7 @@ use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 use CeusMedia\HydrogenFramework\View;
 
@@ -77,7 +77,7 @@ $modalFileAdd	= ModalDialog::create( 'modal-file-add' )
 $modalFileAddTrigger	= ModalTrigger::create( 'modal-trigger-file-add' )
 	->setModalId( 'modal-file-add' )
 	->setLabel( 'neue Datei' )
-	->setClass( 'btn-primary' )
+	->setClass( 'btn-success' )
 	->setIcon( 'plus' );
 
 
@@ -108,88 +108,86 @@ $modalFolderAdd	= ModalDialog::create( 'modal-folder-add' )
 $modalFolderAddTrigger	= ModalTrigger::create( 'modal-trigger-folder-add' )
 	->setModalId( 'modal-folder-add' )
 	->setLabel( 'neuer Ordner' )
-	->setClass( 'btn-primary' )
+	->setClass( 'btn-success' )
 	->setIcon( 'plus' );
 
 
 $w	= (object) $words['index.files'];
 
-$list		= [];
+$rows		= [];
 $buttonUp	= '';
 if( $selectedPath ){
-	$label	= Html::create( 'big', $iconUp.'&nbsp;..' );
+	$label	= HtmlTag::create( 'big', $iconUp.'&nbsp;..' );
 	$target	= dirname( $selectedPath );
 	$url	= $baseLinkPath;
 	if( $target !== '.' )
 		$url	.= '/'.base64_encode( $target );
-	$link	= Html::create( 'a', $label, ['href' => $url] );
-	$list[]	= Html::create( 'tr', [
-		Html::create( 'td', $link ),
-		Html::create( 'td', '' ),
+	$link	= HtmlTag::create( 'a', $label, ['href' => $url] );
+	$rows[]	= HtmlTag::create( 'tr', [
+		HtmlTag::create( 'td', $link ),
+		HtmlTag::create( 'td', '' ),
 	] );
-	$buttonUp	= Html::create( 'a', $iconUp.'&nbsp;zurück', [
+	$buttonUp	= HtmlTag::create( 'a', $iconUp.'&nbsp;zurück', [
 		'href'	=> $url,
 		'class'	=> 'btn',
 	] );
 }
 foreach( $folders as $folder ){
 	$fileCode	= base64_encode( $selectedPath.$folder );
-	$label		= Html::create( 'big', $iconFolder.'&nbsp;'.$folder );
-	$link		= Html::create( 'a', $label, [
+	$label		= HtmlTag::create( 'big', $iconFolder.'&nbsp;'.$folder );
+	$link		= HtmlTag::create( 'a', $label, [
 		'href'	=> $baseLinkPath.'/'.$fileCode,
 	] );
-	$buttonRemove	= Html::create( 'a', $iconRemove, [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 		'href'		=> $baseLinkPath.'/remove/'.$fileCode,
 		'class'		=> 'btn btn-small btn-danger',
 	] );
 	$buttons	= [$buttonRemove];
-	$buttons	= Html::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
-	$list[]		= Html::create( 'tr', [
-		Html::create( 'td', $link ),
-		Html::create( 'td', $buttons ),
+	$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
+	$rows[]		= HtmlTag::create( 'tr', [
+		HtmlTag::create( 'td', $link ),
+		HtmlTag::create( 'td', $buttons ),
 	] );
 }
 if( $files ){
 	foreach( $files as $fileName ){
-		$label	= Html::create( 'big', $fileName );
+		$label	= HtmlTag::create( 'big', $fileName );
 		$fileCode		= base64_encode( $selectedPath.$fileName );
-		$buttonRemove	= Html::create( 'a', $iconRemove, [
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> $baseLinkPath.'/remove/'.$fileCode,
 			'class'		=> 'btn btn-small btn-danger',
 		] );
-		$buttonDownload	= Html::create( 'a', $iconDownload, [
+		$buttonDownload	= HtmlTag::create( 'a', $iconDownload, [
 			'href'		=> $baseLinkPath.'/download/'.$fileCode,
 			'class'		=> 'btn btn-small',
 		] );
 
-	//		$mimeType	= Html::create( 'span', $w->labelMimeType.': '.$file->mimeType );
-		$fileSize	= Html::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $basePath.$selectedPath.$fileName ) ) );
-		$info		= Html::create( 'small', $fileSize/*.' | '.$mimeType*/, ['class' => 'muted'] );
+	//		$mimeType	= HtmlTag::create( 'span', $w->labelMimeType.': '.$file->mimeType );
+		$fileSize	= HtmlTag::create( 'span', $w->labelFileSize.': '.UnitFormater::formatBytes( filesize( $basePath.$selectedPath.$fileName ) ) );
+		$info		= HtmlTag::create( 'small', $fileSize/*.' | '.$mimeType*/, ['class' => 'muted'] );
 
 		$buttons	= [$buttonDownload, $buttonRemove];
-		$buttons	= Html::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
-		$list[]		= Html::create( 'tr', [
-			Html::create( 'td', $label.'<br/>'.$info ),
-			Html::create( 'td', $buttons ),
+		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
+		$rows[]		= HtmlTag::create( 'tr', [
+			HtmlTag::create( 'td', $label.'<br/>'.$info ),
+			HtmlTag::create( 'td', $buttons ),
 		] );
 	}
+	$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
+	$thead		= HtmlTag::create( 'thead', '' );
+	$tbody		= HtmlTag::create( 'tbody', $rows );
+	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 else{
-	$list[]		= Html::create( 'tr', [
-		Html::create( 'td', Html::create( 'div', $w->noEntries, ['class' => 'alert alert-warn'] ), ['colspan' => 2] ),
-	] );
+	$list	= HtmlTag::create( 'td', HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-warn'] ) );
 }
-$colgroup	= HtmlElements::ColumnGroup( "", "60px" );
-$thead		= Html::create( 'thead', '' );
-$tbody		= Html::create( 'tbody', $list );
-$table		= Html::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 
 return '
 <div class="content-panel">
 	<h3>Dateien</h3>
 	<div class="content-panel-inner">
 		<div><strong>Pfad: /'.rtrim( $selectedPath, '/' ).'</strong></div>
-		'.$table.'
+		'.$list.'
 		<div class="buttonbar">
 			'.$buttonUp.'
 			'.$modalFileAddTrigger.'

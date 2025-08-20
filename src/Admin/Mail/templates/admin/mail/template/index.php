@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\Alg\UnitFormater as UnitFormat;
@@ -16,57 +17,60 @@ use CeusMedia\HydrogenFramework\View;
 
 $modelMail		= new Model_Mail( $env );
 
-$iconAdd		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconImport		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
-$iconCancel		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
+$iconAdd		= new Icon( 'plus' );
+$iconImport		= new Icon( 'upload' );
+$iconCancel		= new Icon( 'arrow-left' );
 
-$rows	= [];
-foreach( $templates as $template ){
-	$title		= $template->title;
-	$rowClass	= '';
-	if( $template->mailTemplateId == $moduleTemplateId ){
-		$title		= $template->title.'&nbsp;<small class="muted">(Standard)</small>';
-		$rowClass	= 'success';
+$list	= Html::create( 'div', $words['index']['noEntries'], ['class' => 'alert alert-warn'] );
+if( [] !== $templates ){
+	$rows	= [];
+	foreach( $templates as $template ){
+		$title		= $template->title;
+		$rowClass	= '';
+		if( $template->mailTemplateId == $moduleTemplateId ){
+			$title		= $template->title.'&nbsp;<small class="muted">(Standard)</small>';
+			$rowClass	= 'success';
+		}
+		$title	= Html::create( 'a', $title, [
+			'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
+			'class'	=> 'autocut',
+		] );
+		$badgeClass	= 'badge';
+		switch( $template->status ){
+			case Model_Mail_Template::STATUS_NEW:
+			case Model_Mail_Template::STATUS_IMPORTED:
+				$badgeClass	= 'label label-warning';
+				break;
+			case Model_Mail_Template::STATUS_USABLE:
+				$badgeClass	= 'label label-info';
+				break;
+			case Model_Mail_Template::STATUS_ACTIVE:
+				$badgeClass	= 'label label-success';
+				break;
+		}
+		$badgeStatus	= Html::create( 'span', $words['status'][$template->status], ['class' => $badgeClass] );
+		$rows[]	= Html::create( 'tr', [
+			Html::create( 'td', $title ),
+			Html::create( 'td', $badgeStatus ),
+			Html::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
+			Html::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
+			Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
+		], ['class' => $rowClass] );
 	}
-	$title	= Html::create( 'a', $title, [
-		'href'	=> './admin/mail/template/edit/'.$template->mailTemplateId,
-		'class'	=> 'autocut',
+	$tableHeads	= HtmlElements::tableHeads( [
+		$words['index']['headTitle'],
+		$words['index']['headStatus'],
+		$words['index']['headUsed'],
+		$words['index']['headCreated'],
+		$words['index']['headModified']
 	] );
-	$badgeClass	= 'badge';
-	switch( $template->status ){
-		case Model_Mail_Template::STATUS_NEW:
-		case Model_Mail_Template::STATUS_IMPORTED:
-			$badgeClass	= 'label label-warning';
-			break;
-		case Model_Mail_Template::STATUS_USABLE:
-			$badgeClass	= 'label label-info';
-			break;
-		case Model_Mail_Template::STATUS_ACTIVE:
-			$badgeClass	= 'label label-success';
-			break;
-	}
-	$badgeStatus	= Html::create( 'span', $words['status'][$template->status], ['class' => $badgeClass] );
-	$rows[]	= Html::create( 'tr', [
-		Html::create( 'td', $title ),
-		Html::create( 'td', $badgeStatus ),
-		Html::create( 'td', sprintf( $words['index']['valueUsedInMail'], $template->used ) ),
-		Html::create( 'td', date( 'd.m.Y H:i', $template->createdAt ) ),
-		Html::create( 'td', date( 'd.m.Y H:i', $template->modifiedAt ) ),
-	], ['class' => $rowClass] );
-}
-$tableHeads	= HtmlElements::tableHeads( [
-	$words['index']['headTitle'],
-	$words['index']['headStatus'],
-	$words['index']['headUsed'],
-	$words['index']['headCreated'],
-	$words['index']['headModified']
-] );
 
-$table	= Html::create( 'table', [
-	HtmlElements::ColumnGroup( ['', '120', '120', '140', '140'] ),
-	Html::create( 'thead', $tableHeads ),
-	Html::create( 'tbody', $rows ),
-], ['class' => 'table table-fixed'] );
+	$list	= Html::create( 'table', [
+		HtmlElements::ColumnGroup( ['', '120', '120', '140', '140'] ),
+		Html::create( 'thead', $tableHeads ),
+		Html::create( 'tbody', $rows ),
+	], ['class' => 'table table-fixed'] );
+}
 
 $buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd'], [
 	'href'	=> './admin/mail/template/add',
@@ -126,7 +130,7 @@ return '
 		<div class="content-panel">
 			<h3>'.$words['index']['heading'].'</h3>
 			<div class="content-panel-inner">
-				'.$table.'
+				'.$list.'
 				<div class="buttonbar">
 					'.$buttonAdd.'
 					'.$modalImportTrigger.'
