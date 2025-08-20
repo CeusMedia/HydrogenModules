@@ -38,7 +38,7 @@ $mapInfo[$w->labelLogin]		= $helper->convert( $user->loggedAt ?? 0, TRUE, $w->ti
 
 $listInfo	= [];
 foreach( $mapInfo as $term => $definition )
-	$listInfo[]	= HtmlTag::create( 'dt', $term ).HtmlTag::create( 'dd', $definition );
+	$listInfo[]	= HtmlTag::create( 'dt', $term ).HtmlTag::create( 'dd', $definition.'&nbsp;' );
 $listInfo	= HtmlTag::create( 'dl', join( $listInfo ), ['class' => 'dl-horizontal'] );
 
 //  --  PANEL: INFO  --  //
