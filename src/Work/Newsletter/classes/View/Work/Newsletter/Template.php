@@ -102,4 +102,10 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 			], ['class' => 'content-panel-inner'] )
 		], ['class' => 'content-panel'] );
 	}
+
+	protected function __onInit(): void
+	{
+		$this->env->getPage()->js->addModuleFile( 'module.work.newsletter.js' );
+		$this->env->getPage()->css->theme->addUrl( 'module.work.newsletter.css' );
+	}
 }

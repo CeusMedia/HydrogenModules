@@ -104,7 +104,7 @@ extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter
 return $textTop.'
 <script>
 $(document).ready(function(){
-//	ModuleWorkNewsletter.init();
+//	ModuleWorkNewsletter.init("'.$env->url.'");
 });
 </script>
 <div class="newsletter-content">
