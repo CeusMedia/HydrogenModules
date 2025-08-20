@@ -120,6 +120,7 @@
 	<config type="string" protected="no" name="auto.tools">inserttable</config>
 	<config type="boolean" protected="no" name="auto.file">yes</config>
 	<config type="boolean" protected="no" name="auto.file.browser">yes</config>
+	<config type="string" protected="no" name="auto.language" values="de,en">en</config>
 	<config type="boolean" protected="no" name="CDN" title="Switch to enable/disable CDN (Content Distribution Network)">0</config>
 	<config type="string" protected="no" name="CDN.URI" title="Base URI of CDN (with version)">//cloud.tinymce.com/stable/</config>
 	<config type="string" protected="yes" name="CDN.ApiKey"></config>

@@ -490,9 +490,12 @@ class Logic_Mail extends Logic
 	{
 		$list			= [];																	//  prepare empty result list
 		$matches		= [];																	//  prepare empty matches list
-		$pathClasses	= $this->options->get( 'path.classes' );									//  get path to mail classes from module config
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
-			$pathClasses	= Logic_Frontend::getInstance( $this->env )->getPath().$pathClasses;
+		$pathClasses	= $this->options->get( 'path.classes' );							//  get path to mail classes from module config
+
+//		not needed anymote: prefix path by frontend path, is set -> already done on init
+//		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
+//			$pathClasses	= Logic_Frontend::getInstance( $this->env )->getPath().$pathClasses;
+
 		if( !file_exists( $pathClasses ) ){
 			if( $strict )
 				throw new RuntimeException( 'Path to mail classes invalid or not existing' );

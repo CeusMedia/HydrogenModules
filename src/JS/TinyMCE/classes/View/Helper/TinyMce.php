@@ -46,19 +46,22 @@ class View_Helper_TinyMce extends Abstraction
 		$page		= $env->getPage();
 		$language	= self::getLanguage( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
-		$pathLocal	= $env->getConfig()->get( 'path.scripts' );
+		$scriptsPathLocal	= $env->getConfig()->get( 'path.scripts' );
 
-		$sourceUri	= $pathLocal.'tinymce/';
+		$scriptsUri	= $scriptsPathLocal.'tinymce/';
 		if( $config->get( 'CDN' ) )
-			$sourceUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
+			$scriptsUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
 
-		$page->js->addUrl( $sourceUri.'tinymce.min.js' );
-		$page->js->addUrl( $pathLocal.'module.js.tinymce.js' );
-		$page->js->addUrl( $pathLocal.'TinyMCE.Config.js' );
-		$page->js->addUrl( $pathLocal.'TinyMCE.FileBrowser.js' );
+		$page->js->addUrl( $scriptsUri.'tinymce.min.js' );
+		$page->js->addUrl( $scriptsPathLocal.'module.js.tinymce.js' );
+		$page->js->addUrl( $scriptsPathLocal.'TinyMCE.Config.js' );
+		$page->js->addUrl( $scriptsPathLocal.'TinyMCE.FileBrowser.js' );
 
 		if( !$config->get( 'CDN' ) && 'en' !== $language )
-			$page->js->addUrl( $sourceUri.'langs/'.$language.'.js' );
+			$page->js->addUrl( $scriptsUri.'langs/'.$language.'.js' );
+
+		if( $config->get( 'auto' ) && $config->get( 'auto.selector' ) )
+			$config->set( 'module.js_tinymce.auto.language', $language );
 
 		self::$loaded	= TRUE;
 	}
@@ -76,6 +79,7 @@ class View_Helper_TinyMce extends Abstraction
 			$languages	= explode( ",", $config->get( 'CDN.languages' ) );
 		if( 'en' !== $language && !in_array( $language, $languages ) )
 			$language = 'en';
+		$env->getConfig()->set( 'module.js_tinymce.auto.language', $language );
 		return $language;
 	}
 

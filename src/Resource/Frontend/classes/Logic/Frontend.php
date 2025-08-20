@@ -134,7 +134,7 @@ class Logic_Frontend extends Logic
 	 *	@param		bool		$strict
 	 *	@return		array
 	 */
-	public function getModuleConfigValues( string $moduleId, array $keys = [], bool $useFasterUncachedSolution = TRUE, bool $strict = TRUE ): array
+	public function getModuleConfigValues( string $moduleId, array $keys = [], bool $useFasterUncachedSolution = false, bool $strict = TRUE ): array
 	{
 		if( $useFasterUncachedSolution )
 			return $this->getModuleConfigValuesUsingXmlFileStrategy( $moduleId, $keys, $strict );

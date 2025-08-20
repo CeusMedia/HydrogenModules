@@ -12,6 +12,7 @@ class View_Helper_Bootstrap_Modal_Trigger
 	protected array $attributes		= [];
 	protected ?string $id			= NULL;
 	protected ?string $label		= NULL;
+	protected ?string $class		= NULL;
 	protected ?string $modalId		= NULL;
 
 	/**
@@ -49,7 +50,7 @@ class View_Helper_Bootstrap_Modal_Trigger
 			'id'			=> $this->id,
 			'href'			=> "#".$this->modalId,
 			'role'			=> "button",
-			'class'			=> "btn",
+			'class'			=> "btn ".$this->class,
 			'data-toggle'	=> "modal",
 		];
 		foreach( $this->attributes as $key => $value ){
@@ -80,6 +81,18 @@ class View_Helper_Bootstrap_Modal_Trigger
 	public function setAttributes( array $attributes ): self
 	{
 		$this->attributes	= $attributes;
+		return $this;
+	}
+
+	/**
+	 *	Sets additional button class name.
+	 *	@access		public
+	 *	@param		string		$class		Additional button class name
+	 *	@return		self
+	 */
+	public function setClass( string $class ): self
+	{
+		$this->class	= $class;
 		return $this;
 	}
 
