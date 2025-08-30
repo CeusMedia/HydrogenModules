@@ -57,7 +57,7 @@ class View_Admin_Log_Exception extends View
 			$facts['Code']	= $exception->code;
 		$facts['File (Line)']	= $file.' ('.$exception->line.')';
 		$facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
-		$facts['Reqest Path']	= $exceptionRequest->get( '__path' ).'&nbsp;';
+		$facts['Request Path']	= $exceptionRequest->get( '__path' ).'&nbsp;';
 		$facts['App Name']		= $exceptionEnv['appName'];
 		$facts['Base URL']		= $exceptionEnv['url'];
 		$facts['Environment']	= $exceptionEnv['class'];
@@ -75,8 +75,11 @@ class View_Admin_Log_Exception extends View
 
 //	$fileLines	= FileReader::loadArray( $exception->file );
 		$fileLines	= file( $exception->file );
-		$firstLine	= max( 0, $exception->line - 5 );
-		$fileLines	= array_slice( $fileLines, $firstLine, 11 );
+
+		$nrLinesBefore	= 9;
+		$nrLinesAfter	= 3;
+		$firstLine	= max( 0, $exception->line - $nrLinesBefore - 1 );
+		$fileLines	= array_slice( $fileLines, $firstLine, $nrLinesBefore + 1 + $nrLinesAfter );
 		$lines		= [];
 		foreach( $fileLines as $nr => $line ){
 			/** @noinspection HtmlDeprecatedTag */
@@ -84,14 +87,14 @@ class View_Admin_Log_Exception extends View
 			$lines[]	= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'th', $firstLine + $nr + 1 ),
 				HtmlTag::create( 'td', '<tt>'.str_replace( "\t", "&nbsp;&nbsp;&nbsp;&nbsp;", $line ).'</tt>' ),
-			], ['class' => $nr === 5 ? 'warning' : ''] );
+			], ['class' => $nr === $nrLinesBefore ? 'warning' : ''] );
 		}
 		$tbody		= HtmlTag::create( 'tbody', $lines );
 		$lines		= HtmlTag::create( 'table', $tbody, [
 			'class' => 'table table-striped table-condensed',
 			'style'	=> 'border: 1px solid rgba(127, 127, 127, 0.5)',
 		] );
-		return HtmlTag::create( 'h4', 'File' ).$lines;
+		return HtmlTag::create( 'h4', 'File' ).'<div style="font-size: 0.85em">'.$lines.'</div>';
 	}
 
 	function renderMapTable( array $map, $sort = TRUE ): string

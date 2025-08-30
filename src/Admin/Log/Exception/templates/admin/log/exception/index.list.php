@@ -44,7 +44,8 @@ if( count( $instances ) > 1 ){
 }
 
 $dropdown	= '';
-$table		= '<div class="muted"><em><small>No exceptions logged.</small></em></div>';
+$buttonbar	= '';
+$table		= '<div class="alert alert-success"><em><small>No exceptions logged.</small></em></div>';
 if( $exceptions ){
 	$list	= [];
 	foreach( $exceptions as $nr => $exception ){
@@ -144,10 +145,11 @@ if( $exceptions ){
 		], ['toggle' => 'dropdown'] );
 		$dropdown		= HtmlTag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
 	}
+
+	$pagination	= new PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
+	$buttonbar	= HtmlTag::create( 'div', $pagination->render().$dropdown, ['class' => 'buttonbar'] );
 }
 
-$pagination	= new PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
-$pagination	= $pagination->render();
 
 return '
 <div class="content-panel" style="position: relative">
@@ -161,10 +163,7 @@ return '
 			<input type="hidden" name="ids" id="input_ids"/>
 			<input type="hidden" name="from" value="'.$from.'"/>
 			'.$table.'
-			<div class="buttonbar">
-				'.$pagination.'
-				'.$dropdown.'
-			</div>
 		</form>
+		'.$buttonbar.'
 	</div>
 </div>';

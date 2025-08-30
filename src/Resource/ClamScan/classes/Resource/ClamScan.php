@@ -32,6 +32,12 @@ class Resource_ClamScan{
 		$response	= fgets( $this->socket, 4096 );
 		$this->closeSocket();
 
+		if( preg_match( '/ERROR/', $response ) ){
+			$response	= preg_replace( '@'.preg_quote( $filePath, '@' ).': @', '', $response );
+			$response	= preg_replace( '@ ERROR@', '', $response );
+			throw new RuntimeException( 'Scan failed: '.$response );
+		}
+
 		$parts		= explode( ': ', $response, 2 );
 		if( $parts[0] !== $filePath )
 			throw new RuntimeException( "Response not understood: ". $response );
