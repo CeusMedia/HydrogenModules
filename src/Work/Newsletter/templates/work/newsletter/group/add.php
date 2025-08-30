@@ -26,6 +26,20 @@ foreach( $groups as $item )
 	$optGroup[$item->newsletterGroupId]	= $item->title.' ('.$item->count.')';
 $optGroup	= HtmlElements::Options( $optGroup );
 
+$copyUsersFromGroups	= '';
+if( $env->getModules()->get( 'Work_Newsletter' )->getConfigAsDictionary()->get( 'group.allowToCopyUsersFromGroups' ) )
+	$copyUsersFromGroups	= '
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_copyUsersOfGroupIds">Leser diese Empfängerliste(n) übernehmen</label>
+							<select name="copyUsersOfGroupIds[]" id="input_copyUsersOfGroupIds" multiple="multiple" size="8" class="span12 multiple">'.$optGroup.'</select>
+						</div>
+					</div>
+					<div class="alert alert-info">
+						<strong>Hinweis:</strong> Das Übernehmen von Lesern aus anderen Empfängerlisten muss rechtlich abgesichert sein, also in den Nutzungsbedingungen oder Datenschutzrechtlinien explizit erlaubt worden sein.
+					</div>
+';
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -44,15 +58,7 @@ $panelAdd	= '
 						</div>
 					</div>
 					<hr/>
-					<div class="row-fluid">
-						<div class="span12">
-							<label for="input_copyUsersOfGroupIds">Leser diese Gruppe(n) übernehmen</label>
-							<select name="copyUsersOfGroupIds[]" id="input_copyUsersOfGroupIds" multiple="multiple" size="8" class="span12 multiple">'.$optGroup.'</select>
-						</div>
-					</div>
-					<div class="alert alert-info">
-						<strong>Hinweis:</strong> Das Übernehmen von Lesern aus anderen Gruppen muss rechtlich abgesichert sein, also in den Nutzungsbedingungen oder Datenschutzrechtlinien explizit erlaubt worden sein.
-					</div>
+					'.$copyUsersFromGroups.'
 					<div class="row-fluid">
 						<div class="buttonbar">
 							<a href="./work/newsletter/group" class="btn btn-small">'.$iconCancel.$w->buttonCancel.'</a>

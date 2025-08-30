@@ -52,7 +52,7 @@ if( $list ){
 	Du kannst im nächsten Schritt bestimmen, an welche(n) Testbenutzer die Test-E-Mail tatsächlich gehen sollen.
 </div>
 <div class="row-fluid">
-	<label for="input_groupIds">An alle Tester in den Gruppen <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
+	<label for="input_groupIds">An alle Tester in den Empfängerlisten <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
 	<div class="checkbox-list">'.join( $list ).'</div>
 </div>';
 }
@@ -90,7 +90,7 @@ if( $readers ){
 		</div>-->
 		<form action="./work/newsletter/test/'.$newsletterId.'" method="post">
 			<div class="row-fluid">
-				<label>Leser in gewählten Gruppen</label>
+				<label>Leser in gewählten Empfängerlisten</label>
 				<div class="checkbox-list">'.$list.'</div>
 			</div>
 			<div class="buttonbar">

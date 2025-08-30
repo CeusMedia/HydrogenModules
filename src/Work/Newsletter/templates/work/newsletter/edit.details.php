@@ -44,7 +44,9 @@ $buttonPreview	= HtmlTag::create( 'button', $iconPreview.$words->edit->buttonPre
 	'data-target'	=> "#modal-preview",
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/html/'.$newsletterId.'/1\');'
 ] );
-$buttonAbort		= HtmlTag::create( 'a', $iconAbort.$words->edit->buttonAbort, [
+$buttonAbort	= '';
+if( $env->getAcl()->has( 'work/newsletter', 'setStatus' ) )
+	$buttonAbort	= HtmlTag::create( 'a', $iconAbort.$words->edit->buttonAbort, [
 	'href'		=> './work/newsletter/setStatus/'.$newsletterId.'/-1',
 	'class'		=> 'btn btn-inverse bs4-btn-dark btn-small',
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
@@ -133,7 +135,9 @@ $panelDetails	= '
 </div>';
 
 $extras		= '';
-if( $newsletter->status == Model_Newsletter::STATUS_NEW ){
+$allowedToSetStatus	= $env->getAcl()->has( 'work/newsletter', 'setStatus' );
+
+if( $newsletter->status == Model_Newsletter::STATUS_NEW && $allowedToSetStatus ){
 	$url	= './work/newsletter/setStatus/'.$newsletterId.'/1/?forwardTo='.urlencode( 'setContentTab/'.$newsletterId.'/3' );
 	$extras	= '
 <div class="content-panel">
@@ -155,7 +159,7 @@ if( $newsletter->status == Model_Newsletter::STATUS_NEW ){
 </div>';
 
 }
-else if( $newsletter->status == Model_Newsletter::STATUS_READY ){
+else if( $newsletter->status == Model_Newsletter::STATUS_READY && $allowedToSetStatus ){
 	$url	= './work/newsletter/edit/'.$newsletterId.'?save&status=0';
 	$extras	= '
 <div class="content-panel">
@@ -178,7 +182,7 @@ else if( $newsletter->status == Model_Newsletter::STATUS_READY ){
 	</div>
 </div>';
 }
-else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED ){
+else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED && $allowedToSetStatus ){
 	$url	= './work/newsletter/edit/'.$newsletterId.'?save&status=0';
 	$extras	= '
 <div class="content-panel">
@@ -271,7 +275,10 @@ $panelPreview		= '
 	</div>
 </div>';
 
-$panelRemove	= '
+$panelRemove		= '';
+if( $env->getAcl()->has( 'work/newsletter', 'remove' ) ){
+
+	$panelRemove	= '
 <div class="content-panel">
 	<h3>Kampagne entfernen</h3>
 	<div class="content-panel-inner">
@@ -291,10 +298,10 @@ $panelRemove	= '
 	</div>
 </div>';
 
-//print_m( $newsletters );die;
+	//print_m( $newsletters );die;
 
-if( $newsletter->status < Model_Newsletter::STATUS_SENT )
-	$panelRemove	= '
+	if( $newsletter->status < Model_Newsletter::STATUS_SENT )
+		$panelRemove	= '
 <div class="content-panel">
 	<h3>Vorlage entfernen</h3>
 	<div class="content-panel-inner">
@@ -309,6 +316,7 @@ if( $newsletter->status < Model_Newsletter::STATUS_SENT )
 		</div>
 	</div>
 </div>';
+}
 
 return '
 <div class="row-fluid">

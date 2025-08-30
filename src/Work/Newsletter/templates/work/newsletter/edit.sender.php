@@ -35,12 +35,12 @@ foreach( $groups as $group ){
 $listGroups		= $list ? join( '', $list ) : $listGroups;
 $panelGroups	= '
 <div class="content-panel content-panel-form">
-	<h3>Empfängergruppen auswählen</h3>
+	<h3>Empfängerlisten auswählen</h3>
 	<div class="content-panel-inner">
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			<div class="alert alert-info">
 				<strong>Die Kampagne kann nun an reelle Benutzer versendet werden.</strong><br/>
-				Wählen Sie hier eine oder <abbr title="Dazu Taste STRG drücken und mit der Maus auf die Gruppen klicken">mehrere</abbr> Gruppen aus, deren Benutzer die Kampagne empfangen sollen.<br/>
+				Wählen Sie hier eine oder <abbr title="Dazu Taste STRG drücken und mit der Maus auf die Empfängerlisten klicken">mehrere</abbr> Empfängerlisten aus, deren Benutzer die Kampagne empfangen sollen.<br/>
 <!--				<br/>
 				<small>Der Newsletter wird für die ausgewählten Empfänger in der Newsletter-Queue eingereiht.
 				Diese Queue übergibt die E-Mails sukzessive an die E-Mail-Queue.
@@ -48,7 +48,7 @@ $panelGroups	= '
 				<br/>-->
 			</div>
 			<div class="row-fluid">
-				<label for="input_groupIds">Alle Leser in den Gruppen <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
+				<label for="input_groupIds">Alle Leser in den Empfängerlisten <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
 				<div class="checkbox-list">'.$listGroups.'</div>
 			</div>
 			<div class="buttonbar">
@@ -82,7 +82,7 @@ if( $readers ){
 							Das Absenden dieser Liste reiht die Newsletter in der Warteschlange des Versandsystems ein.<br/>
 							Die E-Mails an die Leser werden dann automatisch verschickt.<br/>
 						</div>-->
-						<label>Leser in gewählten Gruppen</label>
+						<label>Leser in gewählten Empfängerlisten</label>
 						<div class="checkbox-list">'.$list.'</div>
 						<div class="buttonbar">
 							<div class="alert alert-danger">

@@ -33,7 +33,7 @@ return '
 		<div class="modal-body">
 			<div class="row-fluid">
 				<div class="span9">
-					<label for="input_groupId">Gruppe</label>
+					<label for="input_groupId">Empfängerliste</label>
 					<select name="groupId" id="input_groupId" class="span12">'.$optGroupId.'</select>
 				</div>
 				<div class="span3">

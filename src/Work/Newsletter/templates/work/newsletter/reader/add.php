@@ -39,15 +39,12 @@ foreach( $groups as $group ){
 }
 $listGroups	= join( $listGroups );
 
-$nextActions	= [];
-if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 2 ) )
-	$nextActions[]	='<label class="radio muted"><input type="radio" name="nextAction" value="add" disabled="disabled">&nbsp;einen weiteren Leser hinzufügen</label>';
-else
-	$nextActions[]	='<label class="radio"><input type="radio" name="nextAction" value="add">&nbsp;einen weiteren Leser hinzufügen</label>';
-
-$nextActions[]	='<label class="radio"><input type="radio" name="nextAction" value="edit" checked="checked">&nbsp;diesen Leser bearbeiten</label>';
-$nextActions[]	='<label class="radio"><input type="radio" name="nextAction" value="index">&nbsp;zurück zur Liste</label>';
-$nextActions	= join( $nextActions );
+$limitReached	= $limiter && $limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 2 );
+$nextActions	= new View_Helper_FormNextAction();
+$nextActions->addAction( 'add', $words->add->labelNextAdd, $limitReached );
+$nextActions->addAction( 'edit', $words->add->labelNextEdit );
+$nextActions->addAction( 'index', $words->add->labelNextIndex );
+$nextActions->setSelected( 'edit' )->setHeading( '<h4>Anschließend:</h4>' );
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/add/', ['words' => $words] ) );
 
@@ -105,13 +102,12 @@ return $textTop.'
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
-								<h4>Gruppenzuordnung:</h4>
+								<h4>Empfängerlistenzuordnung:</h4>
 								'.$listGroups.'
 							</div>
 						</div>
 						<div class="row-fluid">
 							<div class="span12">
-								<h4>Anschließend:</h4>
 								'.$nextActions.'
 							</div>
 						</div>

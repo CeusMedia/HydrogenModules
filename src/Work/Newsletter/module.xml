@@ -3,7 +3,7 @@
 	<title>Work: Newsletter</title>
 	<description><![CDATA[Creating and sending newsletter mails.]]></description>
 	<category>Work</category>
-	<version>1.4.4</version>
+	<version>1.4.6</version>
 	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
 	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
 	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
@@ -62,6 +62,8 @@
 	<log version="1.4.2">Use UI:Helper:StatusBadge.</log>
 	<log version="1.4.3">Use configurable theme path of Resource:Newsletter.</log>
 	<log version="1.4.4">Load module assets on demand, only.</log>
+	<log version="1.4.5">Refactor next actions on adding a reader to view helper.</log>
+	<log version="1.4.6">Add switch to allow copying users from groups to a new group.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -80,6 +82,7 @@
 		<class>View/Work/Newsletter/Group.php</class>
 		<class>View/Work/Newsletter/Reader.php</class>
 		<class>View/Work/Newsletter/Template.php</class>
+		<class>View/Helper/FormNextAction.php</class>
 		<class>View/Helper/Work/Newsletter/GroupReaders.php</class>
 		<class>View/Helper/Work/Newsletter/ThemeFacts.php</class>
 		<class>View/Helper/Work/Newsletter/ThemeList.php</class>
@@ -247,6 +250,7 @@
 	</files>
 	<config type="string" protected="no" mandatory="no" name="editor.newsletter" value="CodeMirror,TinyMCE">TinyMCE</config>
 	<config type="string" protected="no" mandatory="no" name="editor.template" value="CodeMirror,TinyMCE">Ace</config>
+	<config type="boolean" protected="yes" mandatory="no" name="group.allowToCopyUsersFromGroups" value="yes,no">yes</config>
 	<config type="boolean" protected="yes" mandatory="no" name="tabbedLinks" value="yes,no">yes</config>
 	<config type="string" protected="no" mandatory="no" name="themes.path">contents/themes</config>
 	<relations>
