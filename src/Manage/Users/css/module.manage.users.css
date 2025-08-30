@@ -90,7 +90,7 @@ span.role.role5 {
 	}
 
 /*  --  Role Access  --  */
-.role-access {
+/*.role-access {
 	background-repeat: no-repeat;
 	background-position: 2px 1px;
 	padding-left: 1.8em;
@@ -107,7 +107,7 @@ span.role.role5 {
 .role-access.access128 {
 	background-image: url(//cdn.ceusmedia.de/icons/famfamfam/silk/world.png);
 	}
-
+*/
 /*  --  Role Rights Map  --  */
 .acl-card {
 	border: 1px solid rgba(0, 0, 0, 0.33);

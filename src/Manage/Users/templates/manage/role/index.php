@@ -19,6 +19,12 @@ $heads	= [
 	$wf->headRegister
 ];
 
+$iconType	= [
+	0	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-ban'] ),
+	64	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lock'] ),
+	128	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-globe'] ),
+];
+
 $rows	= [];
 foreach( $roles as $nr => $role ){
 	$labelRole	= $role->title;
@@ -29,7 +35,9 @@ foreach( $roles as $nr => $role ){
 	if( strlen( $role->description ) )
 		$labelRole	.= '<br/><blockquote>'.nl2br( $role->description ).'</blockquote>';
 	$labelCount		= HtmlTag::create( 'span', count( $role->users ), ['class' => 'role count'] );
-	$labelAccess	= HtmlTag::create( 'span', $words['type-access'][$role->access], ['class' => 'role-access access'.$role->access] );
+	$labelAccess	= HtmlTag::create( 'span', $iconType[$role->access].'&nbsp;'.$words['type-access'][$role->access], ['class' => 'role-access access'.$role->access] );
+	if( 0 !== $role->rights )
+		$labelAccess	.= '&nbsp;<span class="badge">'.$role->rights.'</span>';
 	$labelRegister	= HtmlTag::create( 'span', $words['type-register'][$role->register], ['class' => 'role-register register'.$role->register] );
 
 	$rows[]	= HtmlTag::create( 'tr', [

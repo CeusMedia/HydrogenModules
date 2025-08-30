@@ -138,6 +138,7 @@ class Controller_Manage_Role extends Controller
 		$roles	= $this->modelRole->getAll();
 		foreach( $roles as $role ){
 			$role->users	= $this->modelUser->getAllByIndex( 'roleId', $role->roleId );
+			$role->rights	= $this->modelRoleRight->countByIndex( 'roleId', $role->roleId );
 		}
 		$this->addData( 'roles', $roles );
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_role', 'add' ) );

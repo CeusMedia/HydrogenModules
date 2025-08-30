@@ -13,7 +13,7 @@ class Controller_Csrf extends Controller
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function checkToken( ?string $redirectUrl = NULL ): bool
+	public function checkToken( bool $redirect = TRUE, ?string $redirectUrl = NULL ): bool
 	{
 		$token		= $this->env->getRequest()->get( 'csrf_token', '' );					//  get token from request
 		$formName	= $this->env->getRequest()->get( 'csrf_form_name', '' );				//  get form name from request
@@ -58,9 +58,12 @@ class Controller_Csrf extends Controller
 					$this->messenger->noteFailure( $message );									//  note failure
 					break;
 			}
-			if( $redirectUrl )
-				$this->restart( './'.$redirectUrl, $statusCode );
-			$this->restart( getEnv( 'HTTP_REFERER' ), $statusCode );
+			if( $redirect ){
+				if( $redirectUrl )
+					$this->restart( './'.$redirectUrl, $statusCode );
+				$this->restart( getEnv( 'HTTP_REFERER' ), $statusCode );
+			}
+			return FALSE;
 		}
 		return TRUE;
 	}
