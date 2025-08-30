@@ -98,6 +98,7 @@ $panelEdit	= '
 	<div class="content-panel-inner">
 		<form name="editUser" action="./manage/user/edit/'.$user->userId.'" method="post">
 			<input type="hidden" name="from" value="'.$from.'"/>
+			'.View_Helper_CSRF::renderStatic( $env, 'manageUserEdit' ).'
 			<div class="bs2-row-fluid bs3-row bs4-row">
 <!--			<div class="bs2-span2 bs3-col-md-2 bs3-form-group bs4-col-md-2 bs4-form-group">-->
 				<div class="bs2-span3 bs3-col-md-3 bs3-form-group bs4-col-md-3 bs4-form-group">

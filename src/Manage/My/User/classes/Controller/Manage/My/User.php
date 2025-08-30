@@ -225,6 +225,10 @@ class Controller_Manage_My_User extends Controller
 		$this->addData( 'userId', $this->userId );
 		$this->addData( 'user', $this->modelUser->get( $this->userId ) );
 		if( $this->request->getMethod()->isPost() && $confirmed ){
+
+			$controller	= new Controller_Csrf( $this->env );
+			$controller->checkToken();
+
 			$this->checkConfirmationPassword( 'manage/my/user/remove' );
 			$dbc	= $this->env->getDatabase();
 			$dbc->beginTransaction();

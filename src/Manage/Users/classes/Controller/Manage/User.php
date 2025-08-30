@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 /**
  *	User Controller.
  *	@category		cmFrameworks.Hydrogen.Module
@@ -28,7 +29,8 @@ class Controller_Manage_User extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $config;
 	protected Logic_User $logic;
-
+	protected Model_Role $modelRole;
+	protected Model_User $modelUser;
 	protected array $countries;
 	protected Dictionary $moduleConfig;
 
@@ -56,6 +58,7 @@ class Controller_Manage_User extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
@@ -65,11 +68,9 @@ class Controller_Manage_User extends Controller
 			$this->restart( NULL, TRUE );
 		}
 
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
 		$user		= new Entity_User();
-		$columns	= $modelUser->getColumns();
+		$columns	= $this->modelUser->getColumns();
 		foreach( $columns as $column ){
 			$value  = $input[$column] ?? '';
 			if( in_array( $column, ['status', 'gender'] ) )
@@ -78,7 +79,7 @@ class Controller_Manage_User extends Controller
 		}
 
 		$this->addData( 'user', $user );
-		$this->addData( 'roles', $modelRole->getAll() );
+		$this->addData( 'roles', $this->modelRole->getAll() );
 	}
 
 	/**
@@ -142,12 +143,11 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		string		$userId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $userId ): void
 	{
-		$modelRole	= new Model_Role( $this->env );
-
 		/** @var Entity_User $user */
 		$user	= $this->logic->checkId( $userId, Logic_User::EXTEND_GROUPS | Logic_User::EXTEND_ROLE );
 		if( NULL === $user ){
@@ -166,12 +166,12 @@ class Controller_Manage_User extends Controller
 		if( empty( $user->country ) )
 			$user->country	= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$user->country	= $this->countries[$user->country];
-		$user->role		= $modelRole->get( $user->roleId );
+		$user->role		= $this->modelRole->get( $user->roleId );
 
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
 		$this->addData( 'from', $this->request->get( 'from' ) );
-		$this->addData( 'roles', $modelRole->getAll() );
+		$this->addData( 'roles', $this->modelRole->getAll() );
 		$this->addData( 'pwdMinLength', $pwdMinLength );
 		$this->addData( 'pwdMinStrength', $pwdMinStrength );
 
@@ -185,70 +185,6 @@ class Controller_Manage_User extends Controller
 		$this->addData( 'passwords', $passwords );
 
 		$this->addData( 'groups', $this->logic->getGroups( [], ['title' => 'ASC'] ) );
-	}
-
-	/**
-	 *	@param		string		$userId
-	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
-	public function password( string $userId ): void
-	{
-		$words			= (object) $this->getWords( 'editPassword' );
-		$input			= $this->request->getAllFromSource( 'POST', TRUE );
-
-		if( !$this->request->getMethod()->isPost() ){
-			$this->messenger->noteError( 'Access denied' );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-
-		$user		= $this->logic->checkId( $userId );
-		if( NULL === $user ){
-			$this->messenger->noteError( 'Invalid user ID' );
-			$this->restart( NULL, TRUE );
-		}
-
-		$passwordNew	= $input->get( 'passwordNew' );
-		if( strlen( trim( $passwordNew ) ) === 0 ){
-			$this->messenger->noteError( $words->msgPasswordNewMissing );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-
-		$passwordConfirm	= $input->get( 'passwordConfirm' );
-		if( strlen( trim( $passwordConfirm ) ) === 0 ){
-			$this->messenger->noteError( $words->msgPasswordNewMissing );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-		if( $passwordNew !== $passwordConfirm ){
-			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-
-		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
-		if( $logicPassword->validateUserPassword( $user, $passwordNew, FALSE ) ){
-			$this->messenger->noteError( $words->msgPasswordNewSame );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-
-		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
-		$pwdMinLength	= $options->get( 'password.length.min' );
-		if( $pwdMinLength > 0 && strlen( $passwordNew ) < $pwdMinLength ){
-			$this->messenger->noteError( $words->msgPasswordNewTooShort );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}
-
-		// @todo implement strength check
-/*		$pwdMinStrength	= $options->get( 'password.strength.min' );
-		$pwdStrength	= todoDoTheMathHere();
-		if( $pwdMinStrength > 0 && $pwdStrength < $pwdMinStrength ){
-			$this->messenger->noteError( $words->msgPasswordTooWeak );
-			$this->restart( 'edit/'.$userId, TRUE );
-		}*/
-
-		$userPassword	= $logicPassword->addPassword( $user, $passwordNew );
-		$logicPassword->activatePassword( $userPassword );
-		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
-		$this->restart( 'edit/'.$userId, TRUE );
 	}
 
 	public function filter( $mode = NULL ): void
@@ -307,15 +243,13 @@ class Controller_Manage_User extends Controller
 			'orders'	=> $orders
 		];*/
 
-		$modelUser	= new Model_User( $this->env );
-		$modelRole	= new Model_Role( $this->env );
 		$roleMap	= [];
-		foreach( $modelRole->getAll() as $role )
+		foreach( $this->modelRole->getAll() as $role )
 			$roleMap[$role->roleId]	= $role;
 
-		$all		= $modelUser->count();
-		$total		= $modelUser->count( $filters );
-		$list		= $modelUser->getAll( $filters, $orders, [$offset, $limit] );
+		$all		= $this->modelUser->count();
+		$total		= $this->modelUser->count( $filters );
+		$list		= $this->modelUser->getAll( $filters, $orders, [$offset, $limit] );
 
 		$this->addData( 'username', $session->get( 'filter-user-username' ) );
 		$this->addData( 'roles', $roleMap );
@@ -340,22 +274,93 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		string		$userId
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function password( string $userId ): void
+	{
+		$words			= (object) $this->getWords( 'editPassword' );
+		$input			= $this->request->getAllFromSource( 'POST', TRUE );
+
+		if( !$this->request->getMethod()->isPost() ){
+			$this->messenger->noteError( 'Access denied' );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$user		= $this->logic->checkId( $userId );
+		if( NULL === $user ){
+			$this->messenger->noteError( 'Invalid user ID' );
+			$this->restart( NULL, TRUE );
+		}
+
+		$passwordNew	= $input->get( 'passwordNew' );
+		if( strlen( trim( $passwordNew ) ) === 0 ){
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$passwordConfirm	= $input->get( 'passwordConfirm' );
+		if( strlen( trim( $passwordConfirm ) ) === 0 ){
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+		if( $passwordNew !== $passwordConfirm ){
+			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$logicPassword	= Logic_UserPassword::getInstance( $this->env );
+		if( $logicPassword->validateUserPassword( $user, $passwordNew, FALSE ) ){
+			$this->messenger->noteError( $words->msgPasswordNewSame );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		$options		= $this->config->getAll( 'module.resource_users.', TRUE );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		if( $pwdMinLength > 0 && strlen( $passwordNew ) < $pwdMinLength ){
+			$this->messenger->noteError( $words->msgPasswordNewTooShort );
+			$this->restart( 'edit/'.$userId, TRUE );
+		}
+
+		// @todo implement strength check
+		/*		$pwdMinStrength	= $options->get( 'password.strength.min' );
+				$pwdStrength	= todoDoTheMathHere();
+				if( $pwdMinStrength > 0 && $pwdStrength < $pwdMinStrength ){
+					$this->messenger->noteError( $words->msgPasswordTooWeak );
+					$this->restart( 'edit/'.$userId, TRUE );
+				}*/
+
+		$userPassword	= $logicPassword->addPassword( $user, $passwordNew );
+		$logicPassword->activatePassword( $userPassword );
+		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
+		$this->restart( 'edit/'.$userId, TRUE );
+	}
+
+	/**
+	 *	@param		string		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $userId ): void
 	{
 		$words		= (object) $this->getWords( 'remove' );
-		$model		= new Model_User( $this->env );
-		$user		= $model->get( $userId );
-		if( !$user ){
-			$this->messenger->noteError( $words->msgInvalidUserId );
-			$this->restart( NULL, TRUE );
+		if( $this->request->getMethod()->isPost() ){
+			/** @var ?Entity_User $user */
+			$user		= $this->modelUser->get( $userId );
+			if( NULL === $user ){
+				$this->messenger->noteError( $words->msgInvalidUserId );
+				$this->restart( NULL, TRUE );
+			}
+			$this->handleRemoveAction( $user );
 		}
-		$model->remove( $userId );
-		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->config		= $this->env->getConfig();
@@ -375,7 +380,9 @@ class Controller_Manage_User extends Controller
 			'needsTac'			=> $this->moduleConfig->get( 'tac.mandatory' ),
 			'countries'			=> $this->countries,
 		] );
-		$this->logic	= new Logic_User( $this->env );
+		$this->logic		= new Logic_User( $this->env );
+		$this->modelUser	= new Model_User( $this->env );
+		$this->modelRole	= new Model_Role( $this->env );
 	}
 
 	/**
@@ -385,9 +392,11 @@ class Controller_Manage_User extends Controller
 	 */
 	protected function handleAddAction(): ?Entity_User
 	{
+		$controller	= new Controller_Csrf( $this->env );
+		$controller->checkToken();
+
 		$words		= (object) $this->getWords( 'add' );
 		$input		= $this->request->getAllFromSource( 'POST', TRUE );
-		$modelUser	= new Model_User( $this->env );
 
 	//	$nameMinLength	= $this->moduleConfig->get( 'name.length.min' );
 	//	$nameMaxLength	= $this->moduleConfig->get( 'name.length.max' );
@@ -405,7 +414,7 @@ class Controller_Manage_User extends Controller
 
 		if( empty( $username ) )																//  no username given
 			$this->messenger->noteError( $words->msgNoUsername );
-		else if( $modelUser->countByIndex( 'username', $username ) )							//  username is already used
+		else if( $this->modelUser->countByIndex( 'username', $username ) )						//  username is already used
 			$this->messenger->noteError( $words->msgUsernameExisting, $username );
 		else if( $nameRegExp )
 			if( !Predicates::isPreg( $username, $nameRegExp ) )
@@ -416,7 +425,7 @@ class Controller_Manage_User extends Controller
 			$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
 		if( $needsEmail && empty( $email ) )
 			$this->messenger->noteError( $words->msgNoEmail );
-		else if( !empty( $email ) && $modelUser->countByIndex( 'email', $email ) )
+		else if( !empty( $email ) && $this->modelUser->countByIndex( 'email', $email ) )
 			$this->messenger->noteError( $words->msgEmailExisting, $email );
 
 		if( $needsFirstname && empty( $input['firstname'] ) )
@@ -454,9 +463,9 @@ class Controller_Manage_User extends Controller
 		if( class_exists( 'Logic_UserPassword' ) )											//  @todo  remove whole block if old user password support decays
 			$data['password'] = '';
 
-		$userId		= $modelUser->add( $data );
+		$userId		= $this->modelUser->add( $data );
 		/** @var Entity_User $user */
-		$user		= $modelUser->get( $userId );
+		$user		= $this->modelUser->get( $userId );
 		if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
 			$logic			= Logic_UserPassword::getInstance( $this->env );
 			$userPassword	= $logic->addPassword( $user, $password );
@@ -474,9 +483,11 @@ class Controller_Manage_User extends Controller
 	 */
 	protected function handleEditAction( Entity_User $user ): void
 	{
+		$controller	= new Controller_Csrf( $this->env );
+		$controller->checkToken();
+
 		$words		= (object) $this->getWords( 'edit' );
 		$input		= $this->request->getAllFromSource( 'POST', TRUE );
-		$modelUser	= new Model_User( $this->env );
 
 	//	$nameMinLength	= $this->moduleConfig->get( 'name.length.min' );
 	//	$nameMaxLength	= $this->moduleConfig->get( 'name.length.max' );
@@ -498,8 +509,8 @@ class Controller_Manage_User extends Controller
 			$this->messenger->noteError( $words->msgNoUsername );
 			$this->restart( 'edit/'.$user->userId, TRUE );
 		}
-		if( $modelUser->countByIndex( 'username', $username ) ){
-			$foundUser	= $modelUser->getByIndex( 'username', $username );
+		if( $this->modelUser->countByIndex( 'username', $username ) ){
+			$foundUser	= $this->modelUser->getByIndex( 'username', $username );
 			if( $foundUser->userId != $user->userId ){													//  username is already used
 				$this->messenger->noteError( $words->msgUsernameExisting, $username );
 				$this->restart( 'edit/'.$user->userId, TRUE );
@@ -515,7 +526,7 @@ class Controller_Manage_User extends Controller
 		}
 		if( !empty( $email ) ){
 			/** @var Entity_User $foundUser */
-			$foundUser	= $modelUser->getByIndex( 'email', $email );
+			$foundUser	= $this->modelUser->getByIndex( 'email', $email );
 			if( $foundUser && $foundUser->userId != $user->userId ){
 				$this->messenger->noteError( $words->msgEmailExisting, $email );
 				$this->restart( 'edit/'.$user->userId, TRUE );
@@ -563,29 +574,59 @@ class Controller_Manage_User extends Controller
 			$countries			= array_flip( $this->countries );
 			$data['country']	= $countries[$data['country']];
 		}
-		$modelUser->edit( $user->userId, $data );
+		$this->modelUser->edit( $user->userId, $data );
 		$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 		$this->restart( 'edit/'.$user->userId, TRUE );
+	}
+
+	/**
+	 *	@param		Entity_User		$user
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws 	\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleRemoveAction( Entity_User $user ): void
+	{
+		$controller	= new Controller_Csrf( $this->env );
+		$controller->checkToken();
+
+		$dbc		= $this->env->getDatabase();
+		$words		= (object) $this->getWords( 'remove' );
+		$dbc->beginTransaction();
+		try{
+			$payload	= [
+				'userId'		=> $user->userId,
+				'informOthers'	=> TRUE,
+			];
+			$this->callHook( 'User', 'remove', $this, $payload );
+			$dbc->commit();
+			$this->restart( 'auth/logout' );
+		}
+		catch( Exception $e ){
+			//	 @todo handle exception
+			$this->messenger->noteError( 'Failed: '.$e->getMessage() );
+			$dbc->rollBack();
+		}
+//		$this->modelUser->remove( $user->userId );
+		$this->messenger->noteSuccess( $words->msgSuccess, $user->username );
 	}
 
 	/**
 	 *	@param		string		$userId
 	 *	@param		int			$status
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setStatus( string $userId, int $status ): void
 	{
-		$model		= new Model_User( $this->env );
-		$user		= $model->get( $userId );
+		$user		= $this->modelUser->get( $userId );
 		if( !$user )
 			throw new DomainException( 'Invalid user ID' );
 		if( !in_array( $status, Model_User::STATUSES, TRUE ) )
 			throw new RangeException( 'Invalid status' );
 		if( !in_array( $status, Model_User::STATUS_TRANSITIONS[(int) $user->status], TRUE ) )
 			throw new RangeException( 'Invalid status transition' );
-		$model->edit( $userId, ['status' => $status, 'modifiedAt' => time()] );
+		$this->modelUser->edit( $userId, ['status' => $status, 'modifiedAt' => time()] );
 /*		$server		= $this->env->getServer();
 		$user		= $server->getData( 'user', 'get', [(int) $userId] );
 		$code		= $server->postData( 'user', 'setStatus', [(int) $userId, $status] );

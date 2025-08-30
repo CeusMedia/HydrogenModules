@@ -10,10 +10,10 @@ class View_Helper_CSRF
 
 	/**
 	 *	@param		Environment	$env
-	 *	@param		?string		$formName
+	 *	@param		string		$formName
 	 *	@return		string
 	 */
-	public static function renderStatic( Environment $env, ?string $formName = NULL ): string
+	public static function renderStatic( Environment $env, string $formName ): string
 	{
 		$helper	= new self( $env );
 		$helper->setFormName( $formName );

@@ -73,7 +73,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
 $panel	= HTML::DivClass( 'content-panel', [
 	HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Benutzer: ', ['class' => 'muted'] ).$user->username ),
 	HTML::DivClass( 'content-panel-inner', [
-		HTML::Form( './manage/my/user/remove/confirmed', 'removeUser', [
+		HTML::Form( './manage/my/user/remove/confirmed', 'manageMyUserRemove', [
 			HTML::H4( $w->heading ),
 			$textRemoveTop,
 			$relations,
@@ -89,6 +89,7 @@ $panel	= HTML::DivClass( 'content-panel', [
 				] ),
 				HTML::DivClass( 'span6', $textRemoveInfo ),
 			] ),
+			View_Helper_CSRF::renderStatic( $this->env, 'manageMyUserRemove' ),
 			HTML::DivClass( 'buttonbar', [
 				HTML::DivClass( 'btn-toolbar', [$buttonCancel, $buttonSave] )
 			] )
@@ -99,10 +100,7 @@ $panel	= HTML::DivClass( 'content-panel', [
 return $tabs.'<div class="content-panel">
 	<h3>Konto entfernen</h3>
 	<div class="content-panel-inner">
-		<form action="./manage/my/user/remove" method="post">
-			'.$textPanelRemoveAbove.'
-			<button type="submit" name="save" class="btn btn-inverse">Konto entfernen</button>
-		</form>
+		'.$textPanelRemoveAbove.'
 	</div>
 </div>'.HTML::DivClass( 'row-fluid', [
 		HTML::DivClass( 'span8', $panel ),
