@@ -101,7 +101,7 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 ] );
 
 
-$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, [
+$buttonPrev		= HtmlTag::Create( 'a', $iconPrev.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/0',
 	'class'	=> 'btn not-btn-small',
 ] );

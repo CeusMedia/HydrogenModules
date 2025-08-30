@@ -27,9 +27,9 @@ class Controller_Work_Newsletter_Group extends Controller
 			$groupId	= $this->logic->addGroup( $this->request->getAll() );
 			$this->messenger->noteSuccess( $words->msgSuccess );
 			$copyUsersOfGroupIds	= $this->request->get( 'copyUsersOfGroupIds' );
-			if( is_array( $copyUsersOfGroupIds ) && count( $copyUsersOfGroupIds ) ){
+			if( is_array( $copyUsersOfGroupIds ) ){
 				$readerIds	= [];
-				foreach( $this->request->get( 'copyUsersOfGroupIds' ) as $copyGroupId ){
+				foreach( $copyUsersOfGroupIds as $copyGroupId ){
 					foreach( $this->logic->getGroupReaders( $copyGroupId ) as $reader ){
 						if( !in_array( $reader->newsletterReaderId, $readerIds ) ){
 							$readerIds[]	= $reader->newsletterReaderId;
@@ -37,7 +37,8 @@ class Controller_Work_Newsletter_Group extends Controller
 						}
 					}
 				}
-				$this->messenger->noteNotice( $words->msgGroupUsersImported, count( $readerIds ) );
+				if( 0 !== count( $readerIds ) )
+					$this->messenger->noteNotice( $words->msgGroupUsersImported, count( $readerIds ) );
 			}
 			$this->restart( './work/newsletter/group/edit/'.$groupId );
 		}

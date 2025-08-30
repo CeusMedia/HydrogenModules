@@ -26,68 +26,9 @@ class Controller_Work_Newsletter extends Controller
 	public function add(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
-		if( $this->request->getMethod()->isPost() ){
-			$data	= [
-				'creatorId'				=> $this->session->get( 'auth_user_id' ),
-				'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
-			];
-			if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
-				$data	= (array) $this->logic->getNewsletter( $newsletterId );
-				unset( $data['status'] );
-				unset( $data['modifiedAt'] );
-				unset( $data['sentAt'] );
-			}
-			else if( $this->request->get( 'newsletterTemplateId' ) ){
-				$template	= $this->logic->getTemplate( $this->request->get( 'newsletterTemplateId' ) );
-				$data		= array_merge( $data, [
-					'senderName'		=> $template->senderName,
-					'senderAddress'		=> $template->senderAddress,
-				] );
-			}
-			$data	= array_merge( $data, [
-				'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
-				'title'				=> $this->request->get( 'title' ),
-				'subject'			=> trim( $this->request->get( 'subject' ) ),
-				'heading'			=> trim( $this->request->get( 'heading' ) ),
-//				'senderName'		=> trim( $this->request->get( 'senderName' ) ),
-//				'senderAddress'		=> trim( $this->request->get( 'senderAddress' ) ),
-				'trackingCode'		=> trim( $this->request->get( 'trackingCode' ) ),
-				'createdAt'			=> time(),
-			] );
-			if( !strlen( $data['subject'] ) )
-				$data['subject']	= $data['title'];
-			if( $this->logic->getNewsletters( ['title' => $data['title']] ) ){
-				$this->messenger->noteError( $words->msgErrorTitleExists );
-			}
-			else{
-				unset( $data['newsletterId'] );
-				$newsletterId		= $this->logic->addNewsletter( $data );
-				$this->messenger->noteSuccess( $words->msgSuccess );
-				$this->setContentTab( $newsletterId, 1 );
-				$this->restart( 'edit/'.$newsletterId, TRUE );
-			}
-		}
-		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
-		if( !$templates ){
-			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
-			$this->restart( 'work/newsletter/template' );
-		}
-
-		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
-		$newsletter		= (object) [
-			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
-			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
-			'creatorId'				=> (int) $this->session->get( 'auth_user_id' ),
-			'title'					=> trim( $this->request->get( 'title' ) ),
-			'senderAddress'			=> trim( $this->request->get( 'senderAddress' ) ),
-			'senderName'			=> trim( $this->request->get( 'senderName' ) ),
-			'heading'				=> trim( $this->request->get( 'heading' ) ),
-			'subject'				=> trim( $this->request->get( 'subject' ) ),
-			'trackingCode'			=> trim( $this->request->get( 'trackingCode' ) ),
-		];
-		$this->addData( 'templates', $templates );
-		$this->addData( 'newsletters', $newsletters );
-		$this->addData( 'newsletter', $newsletter );
+		if( $this->request->getMethod()->isPost() )
+			$this->handleAddRequest();
+		$this->prepareAddData();
 	}
 
 	/**
@@ -110,83 +51,18 @@ class Controller_Work_Newsletter extends Controller
 	public function edit( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
-		$words		= (object) $this->getWords( 'edit' );
-		if( $this->request->has( 'save' ) ){
-			$newsletter	= $this->logic->getNewsletter( $newsletterId );
-//			if( (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ){
-//				$this->messenger->noteError( 'Changes denied since already sent.' );
-//				$this->restart( './work/newsletter' );
-//			}
-			$data		= $this->request->getAll();
-			if( isset( $data['subject'] ) && isset( $data['title'] ) )
-				if( !strlen( $data['subject'] ) && strlen( $data['title'] ) )
-					$data['subject']	= $data['title'];
 
-			if( isset( $data['html'] ) && strlen( $data['html'] ) ){
-				$data['html']	= View_Helper_TinyMce::tidyHtml( $data['html'] );
-				if( $newsletter->generatePlain ){
-					$data['plain']	= $this->logic->convertHtmlToText( $data['html'] );
-				}
-			}
-			if( $this->session->get( 'work.newsletter.content.tab' ) == 2 ){
-				if( !$this->request->get( 'generatePlain' ) )
-					$data['generatePlain']	= 0;
-				else
-					$data['plain']	= $this->logic->convertHtmlToText( $newsletter->html );
-			}
-			if( !isset( $data['status'] ) )
-				$data['status']	= Model_Newsletter::STATUS_NEW;
-			$this->logic->editNewsletter( $newsletterId, $data );
-			$this->messenger->noteSuccess( $words->msgSuccess );
-			$url	= './work/newsletter/edit/'.$newsletterId;
-			$this->restart( $this->request->has( 'forwardTo' ) ? $this->request->get( 'forwardTo' ) : $url );
-		}
-		$newsletter		= $this->logic->getNewsletter( $newsletterId );
-		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
-		$templates		= $this->logic->getTemplates( ['status' => '>= '.Model_Newsletter_Template::STATUS_READY], ['title' => 'ASC'] );
-		$groups			= [];
-		foreach( $this->logic->getGroups( ['status' => Model_Newsletter_Group::STATUS_USABLE], ['title' => 'ASC'] ) as $group ){
-			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
-			$groups[$group->newsletterGroupId]	= $group;
-		}
+		$currentTab	= (int) $this->session->get( 'work.newsletter.content.tab', 1 );
+		if( 3 === $currentTab )
+			if( !$this->env->getAcl()->has( 'work/newsletter', 'test' ) )
+				$this->setContentTab( $newsletterId, '2' );
+		if( 4 === $currentTab )
+			if( !$this->env->getAcl()->has( 'work/newsletter', 'enqueue' ) )
+				$this->setContentTab( $newsletterId, '3' );
 
-		$groupIds		= $this->request->get( 'groupIds' );
-		if( !$groupIds )
-			$groupIds	= [];
-
-		$readers		= [];
-		if( $groupIds ){
-			foreach( $groupIds as $groupId )
-				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
-					$readers[$reader->newsletterReaderId]	= $reader;
-		}
-
-		$queues		= $this->logic->getQueuesOfNewsletter( $newsletterId );
-
-		$letterQueue	= $this->logic->getReaderLetters( [
-			'newsletterId'	=> $newsletterId,
-			'status'		=> 0
-		] );
-		$letterHistory	= $this->logic->getReaderLetters( [
-			'newsletterId'	=> $newsletterId,
-			'status'		=> '!= 0'
-		] );
-
-		$isUsed	= $newsletter->status >= Model_Newsletter::STATUS_SENT;
-		$this->addData( 'isUsed', $isUsed );
-		$this->addData( 'newsletterId', $newsletterId );
-		$this->addData( 'newsletters', $this->logic->getNewsletters() );
-		$this->addData( 'newsletter', $newsletter );
-		$this->addData( 'templates', $templates );
-		$this->addData( 'template', $template );
-		$this->addData( 'groups', $groups );
-		$this->addData( 'groupIds', $groupIds );
-		$this->addData( 'readers', $readers );
-		$this->addData( 'queues', $queues );
-		$this->addData( 'letterQueue', $letterQueue );
-		$this->addData( 'letterHistory', $letterHistory );
-		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
-		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) )
+			$this->handleEditRequest( $newsletterId );
+		$this->prepareEditData( $newsletterId );
 	}
 
 	/**
@@ -426,6 +302,7 @@ class Controller_Work_Newsletter extends Controller
 	public function test( string $newsletterId ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
+
 		$w			= (object) $this->getWords( 'test' );
 		$readerIds	= $this->request->get( 'readerIds' );
 		if( !is_array( $readerIds ) || !count( $readerIds ) ){
@@ -527,5 +404,171 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
 			$this->restart( NULL, TRUE );
 		}
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function handleAddRequest(): void
+	{
+		$words	= (object) $this->getWords( 'add' );
+		$data	= [
+			'creatorId'				=> $this->session->get( 'auth_user_id' ),
+			'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
+		];
+		if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
+			$data	= (array) $this->logic->getNewsletter( $newsletterId );
+			unset( $data['status'] );
+			unset( $data['modifiedAt'] );
+			unset( $data['sentAt'] );
+		}
+		else if( $this->request->get( 'newsletterTemplateId' ) ){
+			$template	= $this->logic->getTemplate( $this->request->get( 'newsletterTemplateId' ) );
+			$data		= array_merge( $data, [
+				'senderName'		=> $template->senderName,
+				'senderAddress'		=> $template->senderAddress,
+			] );
+		}
+		$data	= array_merge( $data, [
+			'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
+			'title'				=> $this->request->get( 'title' ),
+			'subject'			=> trim( $this->request->get( 'subject' ) ),
+			'heading'			=> trim( $this->request->get( 'heading' ) ),
+//				'senderName'		=> trim( $this->request->get( 'senderName' ) ),
+//				'senderAddress'		=> trim( $this->request->get( 'senderAddress' ) ),
+			'trackingCode'		=> trim( $this->request->get( 'trackingCode' ) ),
+			'createdAt'			=> time(),
+		] );
+		if( !strlen( $data['subject'] ) )
+			$data['subject']	= $data['title'];
+		if( $this->logic->getNewsletters( ['title' => $data['title']] ) )
+			$this->messenger->noteError( $words->msgErrorTitleExists );
+		else{
+			unset( $data['newsletterId'] );
+			$newsletterId		= $this->logic->addNewsletter( $data );
+			$this->messenger->noteSuccess( $words->msgSuccess );
+			$this->setContentTab( $newsletterId, 1 );
+			$this->restart( 'edit/'.$newsletterId, TRUE );
+		}
+	}
+
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleEditRequest( string $newsletterId ): void
+	{
+		if( !$this->request->has( 'save' ) )
+			$this->restart( 'edit/'.$newsletterId );
+
+		$words		= (object) $this->getWords( 'edit' );
+		$newsletter	= $this->logic->getNewsletter( $newsletterId );
+		$currentTab	= (int) $this->session->get( 'work.newsletter.content.tab', 1 );
+
+		$data		= $this->request->getAll();
+		if( isset( $data['subject'] ) && isset( $data['title'] ) )
+			if( !strlen( $data['subject'] ) && strlen( $data['title'] ) )
+				$data['subject']	= $data['title'];
+
+		if( isset( $data['html'] ) && strlen( $data['html'] ) ){
+			$data['html']	= View_Helper_TinyMce::tidyHtml( $data['html'] );
+			if( $newsletter->generatePlain ){
+				$data['plain']	= $this->logic->convertHtmlToText( $data['html'] );
+			}
+		}
+		if( 2 === $currentTab ){
+			if( !$this->request->get( 'generatePlain' ) )
+				$data['generatePlain']	= 0;
+			else
+				$data['plain']	= $this->logic->convertHtmlToText( $newsletter->html );
+		}
+		if( !isset( $data['status'] ) )
+			$data['status']	= Model_Newsletter::STATUS_NEW;
+		$this->logic->editNewsletter( $newsletterId, $data );
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$url	= './work/newsletter/edit/'.$newsletterId;
+		$this->restart( $this->request->has( 'forwardTo' ) ? $this->request->get( 'forwardTo' ) : $url );
+	}
+
+	/**
+	 *	@return		void
+	 */
+	public function prepareAddData(): void
+	{
+		$words		= (object) $this->getWords( 'add' );
+		$templates	= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
+		if( !$templates ){
+			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
+			$this->restart( 'work/newsletter/template' );
+		}
+
+		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
+		$newsletter		= (object) [
+			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
+			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
+			'creatorId'				=> (int) $this->session->get( 'auth_user_id' ),
+			'title'					=> trim( $this->request->get( 'title' ) ),
+			'senderAddress'			=> trim( $this->request->get( 'senderAddress' ) ),
+			'senderName'			=> trim( $this->request->get( 'senderName' ) ),
+			'heading'				=> trim( $this->request->get( 'heading' ) ),
+			'subject'				=> trim( $this->request->get( 'subject' ) ),
+			'trackingCode'			=> trim( $this->request->get( 'trackingCode' ) ),
+		];
+		$this->addData( 'templates', $templates );
+		$this->addData( 'newsletters', $newsletters );
+		$this->addData( 'newsletter', $newsletter );
+	}
+
+	/**
+	 *	@param		string		$newsletterId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function prepareEditData( string $newsletterId ): void
+	{
+		$newsletter		= $this->logic->getNewsletter( $newsletterId );
+		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
+		$templates		= $this->logic->getTemplates( ['status' => '>= '.Model_Newsletter_Template::STATUS_READY], ['title' => 'ASC'] );
+		$groups			= [];
+		foreach( $this->logic->getGroups( ['status' => Model_Newsletter_Group::STATUS_USABLE], ['title' => 'ASC'] ) as $group ){
+			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
+			$groups[$group->newsletterGroupId]	= $group;
+		}
+
+		$groupIds		= $this->request->get( 'groupIds', [] );
+		$readers		= [];
+		if( $groupIds )
+			foreach( $groupIds as $groupId )
+				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
+					$readers[$reader->newsletterReaderId]	= $reader;
+
+		$queues		= $this->logic->getQueuesOfNewsletter( $newsletterId );
+
+		$letterQueue	= $this->logic->getReaderLetters( [
+			'newsletterId'	=> $newsletterId,
+			'status'		=> 0
+		] );
+		$letterHistory	= $this->logic->getReaderLetters( [
+			'newsletterId'	=> $newsletterId,
+			'status'		=> '!= 0'
+		] );
+
+		$isUsed	= $newsletter->status >= Model_Newsletter::STATUS_SENT;
+		$this->addData( 'isUsed', $isUsed );
+		$this->addData( 'newsletterId', $newsletterId );
+		$this->addData( 'newsletters', $this->logic->getNewsletters() );
+		$this->addData( 'newsletter', $newsletter );
+		$this->addData( 'templates', $templates );
+		$this->addData( 'template', $template );
+		$this->addData( 'groups', $groups );
+		$this->addData( 'groupIds', $groupIds );
+		$this->addData( 'readers', $readers );
+		$this->addData( 'queues', $queues );
+		$this->addData( 'letterQueue', $letterQueue );
+		$this->addData( 'letterHistory', $letterHistory );
+		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
+		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
 	}
 }

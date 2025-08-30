@@ -89,14 +89,17 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/text/'.$newsletterId.'/1\');'
 ] );
 
-$buttonPrev		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonPrev, [
+$buttonPrev		= HtmlTag::Create( 'a', $iconPrev.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn not-btn-small',
 ] );
-$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
-	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/3',
-	'class'	=> 'btn not-btn-small',
-] );
+
+$buttonNext		= '';
+if( $env->getAcl()->has( 'work/newsletter', 'test' ) )
+	$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
+		'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/3',
+		'class'	=> 'btn not-btn-small',
+	] );
 
 $panelForm	= '
 <div class="content-panel content-panel-form">

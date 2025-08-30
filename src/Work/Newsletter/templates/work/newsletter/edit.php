@@ -22,6 +22,7 @@ $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.content.tab
 $tabs			= $words->tabs;
 
 $disabled		= "";
+
 if( (int) $newsletter->status === Model_Newsletter::STATUS_ABORTED ){
 	$disabledTabs	= [2, 3, 4, 5, 6, 7, 8];
 	$disabled		= 'disabled="disabled"';
@@ -38,6 +39,14 @@ else if( (int) $newsletter->status == Model_Newsletter::STATUS_SENT ){
 	$disabledTabs	= [/*2, 3,*/ 4];
 	$disabled		= 'disabled="disabled"';
 }
+
+if( !$env->getAcl()->has( 'work/newsletter', 'test' ) )
+	$disabledTabs[]	= 4;
+
+if( !$env->getAcl()->has( 'work/newsletter', 'sendNewsletter' ) )
+	$disabledTabs[]	= 5;
+
+
 $tabsContent	= $view->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
 
 $listSents	= '<em><small class="muted">Keine.</small></em>';

@@ -132,28 +132,33 @@ class Logic_Upload extends CapsuledLogic
 	 */
 	public function checkVirus( bool $noteError = FALSE ): object|bool
 	{
+		if( 0 !== $this->upload->error )
+//			throw new Exception( 'Upload failed beforehand' );
+			return FALSE;
+
+		$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
+		copy( realpath( $this->upload->tmp_name ), $copy );
 		try{
-			if( $this->upload->error )
-//				throw new Exception( 'Upload failed beforehand' );
-				return FALSE;
-			$copy		= 'phpUpload_'.md5( microtime( TRUE ) );
-			copy( realpath( $this->upload->tmp_name ), $copy );
 			$scanner	= new Resource_ClamScan();
 			$result		= $scanner->scanFile( $copy );
-			unlink( $copy );
+			$result->file	= $this->upload->name;
+			if( !$result->clean && $noteError )
+				$this->upload->error	= 14;
+			$this->upload->clamscan		= $result;
+			return $result;
 		}
-		catch( Exception $e ){
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
 			$result		= (object) array(
 				'clean'		=> NULL,
 				'status'	=> 'EXCEPTION',
 				'message'	=> $e->getMessage(),
 			);
 		}
-		$result->file	= $this->upload->name;
-		if( !$result->clean && $noteError )
-			$this->upload->error	= 14;
-		$this->upload->clamscan		= $result;
-		return $result;
+		finally{
+			unlink( $copy );
+		}
+		return FALSE;
 	}
 
 	public function getContent(): string

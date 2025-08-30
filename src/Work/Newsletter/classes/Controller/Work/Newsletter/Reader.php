@@ -101,7 +101,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 
 		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		if( !$groups ){
-			$this->messenger->noteNotice( 'Es ist noch keine Gruppe vorhanden. Weiterleitung zu den Gruppen.' );
+			$this->messenger->noteNotice( 'Es ist noch keine Empfängerliste vorhanden. Weiterleitung zu den Empfängerlisten.' );
 			$this->restart( 'work/newsletter/group' );
 		}
 		foreach( $groups as $group ){

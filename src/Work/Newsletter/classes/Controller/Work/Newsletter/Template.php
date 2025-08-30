@@ -182,7 +182,8 @@ class Controller_Work_Newsletter_Template extends Controller
 		$conditions		= [];
 		$orders			= ['title' => 'ASC'];
 		$this->addData( 'templates', $this->logic->getTemplates( $conditions, $orders ) );
-		$this->addData( 'themes', $this->modelTheme->getAll() );
+		if( $this->env->getAcl()->has( 'work/newsletter/template', 'installTheme' ) )
+			$this->addData( 'themes', $this->modelTheme->getAll() );
 	}
 
 	/**

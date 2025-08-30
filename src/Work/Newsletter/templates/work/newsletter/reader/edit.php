@@ -32,7 +32,7 @@ foreach( $groups as $group )
 $hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
 $optGroup	= HtmlElements::Options( $optGroup, array_keys( $readerGroups ) );
 
-$listGroups	= HtmlTag::create( 'div', 'Keine Gruppen zugewiesen.', ['class' => 'alert alert-info'] );
+$listGroups	= HtmlTag::create( 'div', 'Keine Empfängerlisten zugewiesen.', ['class' => 'alert alert-info'] );
 if( $readerGroups ){
 	$listGroups	= [];
 	foreach( $readerGroups as $readerGroup ){
@@ -54,7 +54,7 @@ if( $readerGroups ){
 		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
-	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Gruppen', ''] );
+	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Empfängerlisten', ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listGroups );
 	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
@@ -62,7 +62,7 @@ if( $readerGroups ){
 	] );
 }
 
-$listLetters	= '<em><small class="muted">Keine.</small></em>';
+$listLetters	= '<div class="alert alert-info">Dieser Abonnent hat noch keinen Newsletter erhalten.</div>';
 
 if( $readerLetters ){
 	$stats		= (object) [
@@ -200,7 +200,7 @@ return $textTop.'
 		</div>
 		<div class="span4">
 			<div class="content-panel">
-				<h3>Gruppen</h3>
+				<h3>Empfängerlisten</h3>
 				<div class="content-panel-inner">
 					'.$listGroups.'
 					<div class="row-fluid" '.$hideGroupAdd.'>
