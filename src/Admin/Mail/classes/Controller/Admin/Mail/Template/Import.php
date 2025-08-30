@@ -50,6 +50,7 @@ class Controller_Admin_Mail_Template_Import extends Controller
 //				$this->messenger->noteNotice( 'MIME: '.$upload->getMimeType() );
 //				$upload->checkMimeType( 'application/json', TRUE  );
 				$upload->checkSize( $upload->getMaxUploadSize(), TRUE  );
+				$upload->checkMimeType( 'application/json' );
 				$upload->checkVirus( TRUE );
 				if( $upload->getError() )
 					throw new RuntimeException( 'Upload failed' );

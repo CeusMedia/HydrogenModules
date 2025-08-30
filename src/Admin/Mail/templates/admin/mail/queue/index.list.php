@@ -54,7 +54,7 @@ $logic	= new Logic_Mail( $env );
 //$modelUser	= new Model_User( $env );
 
 $dropdown	= '';
-$table		= HtmlTag::create( 'em', $wl->noEntries, ['class' => 'muted'] );
+$table		= HtmlTag::create( 'div', $wl->noEntries, ['class' => 'alert alert-warn'] );
 if( $mails ){
 	$rows	= [];
 	/** @var Entity_Mail $mail */

@@ -189,7 +189,6 @@ class Controller_Admin_Mail_Template extends Controller
 	{
 		try{
 			$template	= $this->checkTemplate( $templateId );
-//			print_m( $template);die;
 
 			$env	= $this->env;
 			if( $this->env->getModules()->has( 'Resource_Frontend' ) )
