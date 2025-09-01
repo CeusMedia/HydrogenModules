@@ -221,6 +221,7 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'thread', $thread );
 		$this->addData( 'posts', $posts );
 		$this->addData( 'userPosts', $this->userPosts );
+		$this->addData( 'request', $this->request );
 	}
 
 	/**
@@ -249,6 +250,7 @@ class Controller_Info_Forum extends Controller
 		$this->addData( 'topics', $topics );
 		$this->addData( 'topic', $topic );
 		$this->addData( 'threads', $threads );
+		$this->addData( 'request', $this->request );
 	}
 
 	/**

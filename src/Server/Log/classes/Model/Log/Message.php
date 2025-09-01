@@ -28,11 +28,12 @@ class Model_Log_Message extends Model
 	/**	@var		array				$columns			List of Database Table Columns */
 	protected array $columns			= [
 		'logMessageId',
-		'type',
 		'status',
+		'type',
 		'ip',
 		'format',
 		'message',
+		'sessionId',
 		'userAgent',
 		'context',
 		'microtimestamp',
@@ -43,10 +44,11 @@ class Model_Log_Message extends Model
 
 	/**	@var		array				$name				List of foreign Keys of Database Table */
  	protected array $indices			= [
-		'type',
 		'status',
+		'type',
 		'ip',
 		'format',
+		'sessionId',
 	];
 
 	/**	@var		integer				$fetchMode			PDO fetch mode */
