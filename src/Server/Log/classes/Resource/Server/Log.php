@@ -271,24 +271,25 @@ class Resource_Server_Log
 	protected function saveToDatabase( int $type, string $message, string $context, int $format ): void
 	{
 		$use	= $this->moduleConfig->getAll( 'use.', TRUE );
-		if( isset( $this->env->dbc ) ) {
-			if( $this->env->dbc ){
-				$model	= new Model_Log_Message( $this->env );
-				$model->add( [
-					'type'				=> $type,
-					'status'			=> Model_Log_Message::STATUS_NEW,
-					'ip'				=> $use->get( 'ip' ) ? getEnv( 'REMOTE_ADDR' ) : NULL,
-					'format'			=> $format,
-					'message'			=> $message,//is_string( $message ) ? $message : json_encode( $message ),
-					'userAgent'			=> $use->get( 'userAgent' ) ? getEnv( 'HTTP_USER_AGENT' ) : NULL,
-					'context'			=> $context,
-					'microtimestamp'	=> microtime( TRUE ),
-				] );
-			}
+		$dbc	= $this->env->getDatabase();
+		if( NULL !== $dbc && $use->get( 'database' ) ){
+			$model	= new Model_Log_Message( $this->env );
+			$model->add( [
+				'type'				=> $type,
+				'status'			=> Model_Log_Message::STATUS_NEW,
+				'ip'				=> $use->get( 'ip' ) ? getEnv( 'REMOTE_ADDR' ) : NULL,
+				'sessionId'			=> $this->env->getSession()->getSessionId(),
+				'format'			=> $format,
+				'message'			=> $message,//is_string( $message ) ? $message : json_encode( $message ),
+				'userAgent'			=> $use->get( 'userAgent' ) ? getEnv( 'HTTP_USER_AGENT' ) : NULL,
+				'context'			=> $context,
+				'microtimestamp'	=> microtime( TRUE ),
+			] );
 		}
 	}
 
 	/**
+	 *	Saves log entry to configured log file (default: logs/app.log)
 	 *	@param		string		$typeKey
 	 *	@param		string		$message
 	 *	@param		string		$context
