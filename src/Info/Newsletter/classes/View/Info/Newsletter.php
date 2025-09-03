@@ -12,6 +12,7 @@ class View_Info_Newsletter extends View
 		$script	= 'Module_Info_Newsletter_Form.init();';
 		$this->env->getPage()->js->addScriptOnReady( $script );
 		$this->env->getPage()->js->addModuleFile( 'module.info.newsletter.js' );
+		$this->env->getPage()->addCommonStyle( 'module.info.newsletter.css' );
 	}
 
 	/**

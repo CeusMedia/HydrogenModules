@@ -1,5 +1,6 @@
 <?php
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\PartitionSession;
 use CeusMedia\Common\Net\HTTP\Request;
 use CeusMedia\Common\UI\HTML\Exception\Page as HtmlExceptionPage;
@@ -13,6 +14,7 @@ class Controller_Info_Newsletter extends Controller
 	protected Environment\Resource\Messenger $messenger;
 	protected Request $request;
 	protected PartitionSession $session;
+	protected Dictionary $moduleConfig;
 
 	/**
 	 *	@param		int|string		$readerId
@@ -137,6 +139,7 @@ class Controller_Info_Newsletter extends Controller
 		$words		= (object) $this->getWords( 'index' );
 		$this->addData( 'data', $this->request->getAll( '', TRUE ) );
 
+		//  Reader Groups
 		$requestedGroups	= $this->request->get( 'groups' );
 		$requestedGroups	= is_array( $requestedGroups ) ? $requestedGroups : [];
 		$groups	= $this->logic->getGroups( [
@@ -150,12 +153,18 @@ class Controller_Info_Newsletter extends Controller
 			$group->isChecked	= in_array( $group->newsletterGroupId, $requestedGroups );
 		$this->addData( 'groups', $groups );
 
-		$conditions		= ['status' => Model_Newsletter::STATUS_SENT];
-		$orders			= ['newsletterId' => 'DESC'];
-		$newsletters	= $this->logic->getNewsletters( $conditions, $orders );
-		$latest			= $newsletters ? array_shift( $newsletters ) : NULL;
-		$this->addData( 'canShowLatest', $newsletters );
-		$this->addData( 'latest', $latest );
+		//  Latest Newsletters
+		$latestNewsletter	= NULL;
+		$latestNewsletters	= [];
+		if( $this->moduleConfig->get( 'register.showLatest' ) ){
+			$conditions		= ['status' => Model_Newsletter::STATUS_SENT];
+			$orders			= ['newsletterId' => 'DESC'];
+			$latestNewsletters	= $this->logic->getNewsletters( $conditions, $orders );
+			if( [] !== $latestNewsletters )
+				$latestNewsletter	= array_shift( $latestNewsletters );
+		}
+		$this->addData( 'canShowLatest', $latestNewsletters );
+		$this->addData( 'latest', $latestNewsletter );
 	}
 
 	/**
@@ -307,6 +316,7 @@ class Controller_Info_Newsletter extends Controller
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		$this->moduleConfig	= $this->env->getModules()->get( 'Info_Newsletter' )->getConfigAsDictionary();
 
 		$hostReferer	= parse_url( getEnv( 'HTTP_REFERER' ), PHP_URL_HOST );
 		$hostSelf		= parse_url( $this->env->getConfig()->get( 'app.base.url' ), PHP_URL_HOST );
