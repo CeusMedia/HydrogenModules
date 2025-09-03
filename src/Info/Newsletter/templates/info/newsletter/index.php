@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Environment $env */
 /** @var View_Info_Newsletter $view */
 /** @var Dictionary $data */
+/** @var ?object $latest */
 
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 if( $env->hasModule( 'UI_Font_FontAwesome' ) )
@@ -47,18 +48,29 @@ if( $groups ){
 	}
 }
 
+//$latest	= Model_Newsletter::getInstance( $env )->get( 1 );
 $panelLatest	= '';
 if( $latest ){
-	$helper	= new View_Helper_Newsletter( $env, $latest->newsletterTemplateId );
+	$helper			= new View_Helper_Newsletter( $env, $latest->newsletterTemplateId );
+	$renderedNewsletterBase64	= base64_encode( $helper->renderNewsletterHtml( $latest->newsletterId ) );
 	$panelLatest	= '
 <div class="content-panel content-panel-info">
-	<h3>... Latest ...</h3>
+	<h3>'.$w->panelLatestHeading.'</h3>
 	<div class="content-panel-inner">
-		<div style="width: 133.33%; height: 133.33%; transform: scale(0.75); transform-origin: 0 0 0">
-			<iframe src="./info/newsletter/preview" style="width: 100%; height: 500px;" frameborder="0"/>
+		<div class="frame-wrapper">
+			<div class="frame-border">
+				<iframe id="nestedFrame" class="embedded-iframe" frameborder="0"></iframe>
+			</div>
 		</div>
 	</div>
-</div>';
+</div>
+<script>
+jQuery(document).ready(function($) {
+	const htmlContentNewsletterLatest = Module_Info_Newsletter_Latest.base64ToUtf8("'.$renderedNewsletterBase64.'");
+	const iframe = document.getElementById("nestedFrame");
+	Module_Info_Newsletter_Latest.writeHtmlToIframe(iframe, htmlContentNewsletterLatest);
+});
+</script>';
 }
 
 $panelRegister = '

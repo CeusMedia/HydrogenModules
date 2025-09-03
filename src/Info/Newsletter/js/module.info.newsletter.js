@@ -20,3 +20,25 @@ let Module_Info_Newsletter_Form  = {
 		button.prop("disabled", null);
 	}
 };
+
+let Module_Info_Newsletter_Latest = {
+	writeHtmlToIframe: function(iframeEl, htmlString) {
+		// Bei sandbox="allow-same-origin" ist contentWindow.document verfügbar.
+		const doc = iframeEl.contentWindow && iframeEl.contentWindow.document;
+		if (!doc) {
+			console.error('Kein Zugriff auf iframe.document — evtl. sandbox/Browser-Einschränkung.');
+			return;
+		}
+		doc.open();
+		doc.write(htmlString);
+		doc.close();
+	},
+	// Base64 -> Uint8Array -> UTF-8-String
+	base64ToUtf8: function(base64) {
+		const binary = atob(base64); // decodiert Base64 -> binary string (latin1)
+		const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+		// TextDecoder wandelt UTF-8-Bytes in String
+		return new TextDecoder().decode(bytes);
+	}
+};
+
