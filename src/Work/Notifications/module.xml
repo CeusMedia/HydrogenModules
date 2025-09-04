@@ -9,10 +9,12 @@
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Notification.php</class>
-		<class>Entity/Work/Notification.php</class>
+		<class>Entity/Work/Notification/Message.php</class>
+		<class>Entity/Work/Notification/Recipient.php</class>
 		<class>Hook/Work/Notification.php</class>
 		<class>Logic/Work/Notification.php</class>
-		<class>Model/Work/Notification.php</class>
+		<class>Model/Work/Notification/Message.php</class>
+		<class>Model/Work/Notification/Recipient.php</class>
 		<class>View/Work/Notification.php</class>
 		<locale>de/work/notification.ini</locale>
 		<locale>en/work/notification.ini</locale>
