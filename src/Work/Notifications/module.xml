@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Notifications</title>
+	<description><![CDATA[Notifications for users.]]></description>
+	<category>Work</category>
+	<version>0.2.0</version>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Notification.php</class>
+		<class>Entity/Work/Notification.php</class>
+		<class>Hook/Work/Notification.php</class>
+		<class>Logic/Work/Notification.php</class>
+		<class>Model/Work/Notification.php</class>
+		<class>View/Work/Notification.php</class>
+		<locale>de/work/notification.ini</locale>
+		<locale>en/work/notification.ini</locale>
+		<template>work/notification/add.php</template>
+		<template>work/notification/edit.php</template>
+		<template>work/notification/index.php</template>
+		<template>work/notification/index.filter.php</template>
+		<template>work/notification/index.list.php</template>
+		<template>work/notification/view.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="work/notification" rank="85">Benachrichtigungen</link>
+	<link xml:lang="en" access="acl" path="work/notification" rank="85">Notification</link>
+	<hook type="resource" resource="App" event="onControl">Hook_Work_Notification::onAppControl</hook>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>work_notification_messages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>work_notification_messages` (
+  `notificationMessageId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `priority` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `title` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `link` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `dateStart` date DEFAULT NULL,
+  `dateEnd` date DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`notificationMessageId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `type` (`type`),
+  KEY `priority` (`priority`),
+  KEY `status` (`status`),
+  KEY `title` (`title`),
+  KEY `dateStart` (`dateStart`),
+  KEY `dateEnd` (`dateEnd`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>work_notification_recipients`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>work_notification_recipients` (
+  `notificationRecipientsId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `notificationMessageId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`notificationRecipientsId`),
+  KEY `notificationMessageId` (`notificationMessageId`),
+  KEY `userId` (`userId`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>work_notification_recipients`;
+DROP TABLE IF EXISTS `<%?prefix%>work_notification_messages`;
+]]></sql>
+</module>
