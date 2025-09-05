@@ -51,8 +51,8 @@ class Model_Notification_Message extends Table
 		'title',
 		'content',
 		'link',
-		'dayStart',
-		'dayEnd',
+		'dateStart',
+		'dateEnd',
 		'createdAt',
 		'modifiedAt',
 	];
@@ -63,12 +63,11 @@ class Model_Notification_Message extends Table
 	/**	@var	array		$name			List of columns which are a foreign key and/or indexed */
 	protected array $indices				= [
 		'creatorId',
-		'workerId',
 		'type',
 		'priority',
 		'status',
-		'dayStart',
-		'dayEnd',
+		'dateStart',
+		'dateEnd',
 	];
 
 	/**	@var	integer		$fetchMode		Fetch mode, see PDO documentation */

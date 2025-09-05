@@ -12,8 +12,8 @@ class Entity_Notification_Message extends Entity
 	public string $title;
 	public string $content;
 	public string|NULL $link		= NULL;
-	public string $dayStart;
-	public string|NULL $dayEnd		= NULL;
+	public string $dateStart;
+	public string|NULL $dateEnd		= NULL;
 	public int $createdAt;
 	public int $modifiedAt			= 0;
 

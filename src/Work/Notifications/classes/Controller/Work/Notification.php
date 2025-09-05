@@ -2,6 +2,7 @@
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 
 class Controller_Work_Notification extends Controller
@@ -9,6 +10,7 @@ class Controller_Work_Notification extends Controller
 	protected Model_Notification_Message $modelMessage;
 	protected Model_Notification_Recipient $modelRecipient;
 	protected HttpRequest $request;
+	protected HttpPartitionSession $session;
 	protected MessengerResource $messenger;
 	protected int $currentUserId;
 
@@ -26,13 +28,16 @@ class Controller_Work_Notification extends Controller
 				'priority'				=> (int) $this->request->get( 'priority' ),
 				'status'				=> (int) $this->request->get( 'status' ),
 				'title'					=> $this->request->get( 'title' ),
-				'content'				=> $this->request->get( 'content' ),
+				'content'				=> '',
 				'link'					=> $this->request->get( 'link' ),
 				'dateStart'				=> $this->request->get( 'dateStart' ),
 				'dateEnd'				=> $this->request->get( 'dateEnd' ),
 				'createdAt'				=> time(),
 				'modifiedAt'			=> time(),
 			] );
+			$this->modelMessage->edit( $notificationMessageId, [
+				'content'	=> $this->request->get( 'content' ),
+			], FALSE );
 			foreach( $userIds as $userId )
 				$this->modelRecipient->add( [
 					'notificationMessageId'	=> $notificationMessageId,
@@ -56,16 +61,18 @@ class Controller_Work_Notification extends Controller
 
 		if( $this->request->getMethod()->isPost() ){
 			$this->modelMessage->edit( $notificationMessageId, [
-				'type'					=> (int) $this->request->get( 'type' ),
-				'priority'				=> (int) $this->request->get( 'priority' ),
-				'status'				=> (int) $this->request->get( 'status' ),
-				'title'					=> $this->request->get( 'title' ),
-				'content'				=> $this->request->get( 'content' ),
-				'link'					=> $this->request->get( 'link' ),
-				'dateStart'				=> $this->request->get( 'dateStart' ),
-				'dateEnd'				=> $this->request->get( 'dateEnd' ),
-				'modifiedAt'			=> time(),
+#				'type'			=> (int) $this->request->get( 'type' ),
+#				'priority'		=> (int) $this->request->get( 'priority' ),
+#				'status'		=> (int) $this->request->get( 'status' ),
+				'title'			=> $this->request->get( 'title' ),
+#				'link'			=> $this->request->get( 'link' ),
+#				'dateStart'		=> $this->request->get( 'dateStart' ),
+#				'dateEnd'		=> $this->request->get( 'dateEnd' ),
+				'modifiedAt'	=> time(),
 			] );
+			$content	= $this->request->get( 'content' );
+			if( $message->content !== $content )
+				$this->modelMessage->edit( $notificationMessageId, ['content' => $content], FALSE );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'message', $message );
@@ -73,11 +80,10 @@ class Controller_Work_Notification extends Controller
 
 	public function index(): void
 	{
-
 		$conditions	= [];
 		$limits		= [0, 10];
 		$orders		= [];
-		$messages	= $this->modelMessage->getAll( $conditions, $limits, $orders );
+		$messages	= $this->modelMessage->getAll( $conditions, $orders, $limits );
 		foreach( $messages as $message ){
 			$message->nrRecipients		= $this->modelRecipient->countByIndices( [
 				'notificationMessageId' => $message->notificationMessageId
@@ -99,25 +105,32 @@ class Controller_Work_Notification extends Controller
 
 	public function view(): void
 	{
-		$notificationMessageId	= $this->env->getSession()->get( 'work_notification_id' );
+		$notificationMessageId	= $this->session->get( 'work_notification_id' );
+		$from					= $this->session->get( 'work_notification_from' );
 		if( NULL === $notificationMessageId )
 			$this->restart();
 		if( $this->request->getMethod()->isPost() ){
-			$this->modelRecipient->editByIndices( [
-				'notificationMessageId' => $notificationMessageId,
-				'userId'				=> $this->currentUserId,
-				'status'				=> Model_Notification_Recipient::STATUS_NEW,
-			], [
-				'status'		=> Model_Notification_Recipient::STATUS_SEEN,
-				'modifiedAt'	=> time(),
-			] );
+			$confirmed		= (bool) $this->request->get( 'confirm', FALSE );
+			if( $confirmed )
+				$this->modelRecipient->editByIndices( [
+					'notificationMessageId' => $notificationMessageId,
+					'userId'				=> $this->currentUserId,
+					'status'				=> Model_Notification_Recipient::STATUS_NEW,
+				], [
+					'status'		=> Model_Notification_Recipient::STATUS_SEEN,
+					'modifiedAt'	=> time(),
+				] );
+			$this->restart( $from );
 		}
+
 		$this->addData( 'message', $this->modelMessage->get( $notificationMessageId ) );
+		$this->addData( 'from', $from );
 	}
 
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
+		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelMessage		= new Model_Notification_Message( $this->env );
 		$this->modelRecipient	= new Model_Notification_Recipient( $this->env );
