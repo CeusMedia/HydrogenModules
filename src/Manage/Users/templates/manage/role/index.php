@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -16,7 +17,8 @@ $heads	= [
 	$wf->headTitle,
 	$wf->headUsers,
 	$wf->headAccess,
-	$wf->headRegister
+	$wf->headRegister,
+	$wf->headRights
 ];
 
 $iconType	= [
@@ -25,8 +27,13 @@ $iconType	= [
 	128	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-globe'] ),
 ];
 
+$helperIndicator	= new View_Helper_RoleRightsIndicator( $env );
+$helperIndicator->setRoles( $roles );
+
 $rows	= [];
-foreach( $roles as $nr => $role ){
+/** @var Entity_Role $role */
+foreach( $roles as $role ){
+	$helperIndicator->setRoleId( $role->roleId );
 	$labelRole	= $role->title;
 	if( $hasRightToEdit ){
 		$labelRole	= HtmlTag::create( 'a', $labelRole, ['href' => './manage/role/edit/'.$role->roleId] );
@@ -45,11 +52,12 @@ foreach( $roles as $nr => $role ){
 		HtmlTag::create( 'td', $labelCount ),
 		HtmlTag::create( 'td', $labelAccess ),
 		HtmlTag::create( 'td', $labelRegister ),
+		HtmlTag::create( 'td', $helperIndicator->render() ),
 	] );
 }
 $heads	= HtmlElements::TableHeads( $heads );
 $table	= HtmlTag::create( 'table', [
-	HtmlElements::ColumnGroup( "45%", "10%", "25%", "20%" ),
+	HtmlElements::ColumnGroup( "45%", "10%", "25%", "20%", "10%" ),
 	HtmlTag::create( 'thead', $heads ),
 	HtmlTag::create( 'tbody', $rows ),
 ], ['class' => 'table not-table-condensed table-striped', 'id' => 'roles'] );
