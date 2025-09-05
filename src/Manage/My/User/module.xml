@@ -2,7 +2,7 @@
 <module>
 	<title>Manage: My User</title>
 	<description>Management for own user account.</description>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3.0">Added support for tabs.</log>
@@ -29,6 +29,7 @@
 	<log version="0.6">Extract hook to own class.</log>
 	<log version="0.6.1">Strict types.</log>
 	<log version="0.6.2">Extract password management to own tab.</log>
+	<log version="0.6.3">Use CSRF protection.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -70,6 +71,7 @@
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>
+		<needs type="module">Security_CSRF</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 		<needs type="module">UI_Helper_Relations</needs>
 		<needs type="module">UI_Helper_TimePhraser</needs>
