@@ -6,12 +6,18 @@ class Hook_Work_Notification extends Hook
 {
 	public function onAppControl(): bool
 	{
+		$request		= $this->env->getRequest();
 		$auth			= Logic_Authentication::getInstance( $this->env );
-		$currentUserId	= $auth->getCurrentUserId();
 		if( !$auth->isAuthenticated() )
 			return FALSE;
 
-		if( 'work/notification/view' === $this->env->getRequest()->getPath() )
+		$currentUserId	= $auth->getCurrentUserId();
+		$skipPaths		= [
+			'work/notification/view',
+			'auth/logout',
+			'auth/local/logout',
+		];
+		if( in_array( $request->getPath(), $skipPaths ) )
 			return FALSE;
 
 		$modelMessage	= new Model_Notification_Message( $this->env );
@@ -34,9 +40,8 @@ class Hook_Work_Notification extends Hook
 				'status'				=> Model_Notification_Recipient::STATUS_NEW,
 			] );
 			if( NULL !== $recipient ){
-				$from	= $this->env->getRequest()->getUrl( FALSE );
 				$this->env->getSession()->set( 'work_notification_id', $recipient->notificationRecipientId );
-				$this->env->getSession()->set( 'work_notification_from', $from );
+				$this->env->getSession()->set( 'work_notification_from', $request->getPath() );
 				self::redirect( $this->env, 'work/notification', 'view' );
 				return TRUE;
 			}
