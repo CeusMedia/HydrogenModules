@@ -19,15 +19,15 @@ class Entity_Log_Request extends Entity
 	public string $timestamp;
 
 	protected static array $mandatoryFields	= [
-		'url',
+#		'url',
 		'method',
-		'ip',
-		'userAgent',
-		'referer',
-		'request',
-		'session',
-		'cookie',
-		'headers',
+#		'ip',
+#		'userAgent',
+#		'referer',
+#		'request',
+#		'session',
+#		'cookie',
+#		'headers',
 		'timestamp',
 	];
 }
