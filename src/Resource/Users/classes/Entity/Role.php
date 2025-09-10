@@ -15,4 +15,5 @@ class Entity_Role extends Entity
 
 	/** @var Entity_User[] $users */
 	public array $users				= [];
+	public int $nrUsers				= 0;
 }
