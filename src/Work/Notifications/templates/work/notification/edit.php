@@ -2,58 +2,317 @@
 
 /** @var Entity_Notification_Message $message */
 /** @var array<string,array<string,int|float|string>> $words */
+/** @var array<object> $recipientsNew */
+/** @var array<object> $recipientsSeen */
 
 use CeusMedia\Bootstrap\Icon;
+use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['edit'];
 
-$iconCancel	= Icon::create( 'arrow-left' );
-$iconSave	= Icon::create( 'check' );
+$iconCancel		= Icon::create( 'arrow-left' );
+$iconSave		= Icon::create( 'check' );
+$iconAbort		= Icon::create( 'remove' );
+$iconActivate	= Icon::create( 'play' );
+$iconRemove		= Icon::create( 'trash' );
 
-return HtmlTag::create( 'div', [
+$isActive	= Model_Notification_Message::STATUS_ACTIVE === $message->status;
+$isNew		= Model_Notification_Message::STATUS_NEW === $message->status;
+$isSeen		= Model_Notification_Message::STATUS_SEEN === $message->status;
+$isAborted	= Model_Notification_Message::STATUS_ABORTED === $message->status;
+$isEditable	= $isNew || $isAborted;
+$isEditable	= $isNew;
+
+//print_m( $view->getData() );die;
+
+function renderRecipient( object $recipient ): string
+{
+	$gravatar	= 'https://www.gravatar.com/avatar/'.md5( strtolower( trim( $recipient->email ) ) ).'?s=32&d=mm&r=g';
+	$gravatar	= HtmlTag::create( 'img', NULL, ['src' => $gravatar, 'class' => 'avatar'] );
+	$nrPosts	= '';#HtmlTag::create( 'small', ' ()', ['class' => 'muted'] );
+	$datetime	= HtmlTag::create( 'small', date( "d.m.Y H:i", $recipient->seenAt ), ['class' => 'muted'] );
+	$username	= HtmlTag::create( 'div', $recipient->username.$nrPosts, ['class' => 'username'] );
+	return $gravatar.$username.$datetime;
+}
+
+function renderRecipientList( array $recipients ): string
+{
+	$list	= [];
+	foreach( $recipients as $recipient ){
+//		print_m( $recipient );die;
+		$item	= HtmlTag::create( 'li', renderRecipient( $recipient ) );
+//		print_m( $item );die;
+		$list[$recipient->username]	= $item;
+	}
+	if( [] === $list )
+		$list[]	= HtmlTag::create( 'div', 'Niemand.', ['class' => 'alert alert-info'] );
+	uksort( $list, 'strnatcasecmp' );
+	return HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
+}
+
+$panelResults	= '';
+if( $isSeen || $isActive || $isAborted )
+	$panelResults	= HtmlTag::create( 'div', [
+	HtmlTag::create( 'h3', 'Results' ),
+	HtmlTag::create( 'div', [
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'h4', 'Zahlen' ),
+				HtmlTag::create( 'div', count( $recipientsNew ).' ungelesen' ),
+				HtmlTag::create( 'div', count( $recipientsSeen ).' gelesen' ),
+				HtmlTag::create( 'div', ( round( count( $recipientsSeen ) / count( $recipientsNew + $recipientsSeen ) ) * 100 ).' %' ),
+			], ['class' => 'span4'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'h4', 'Ungelesen' ),
+				HtmlTag::create( 'div', [
+					renderRecipientList( $recipientsNew ),
+				], ['class' => 'boxed'] ),
+			], ['class' => 'span4'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'h4', 'Gelesen' ),
+				HtmlTag::create( 'div', [
+					renderRecipientList( $recipientsSeen ),
+				], ['class' => 'boxed'] ),
+			], ['class' => 'span4'] ),
+		], ['class' => 'row-fluid'] )
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel content-panel-form'] );
+
+
+$buttonSave		= '';
+$buttonAbort	= '';
+$buttonActivate	= '';
+$buttonRemove	= '';
+
+if( $isNew ){
+	$buttonActivate	= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, [
+		'href'	=> './work/notification/setStatus/'.$message->notificationMessageId.'/'.Model_Notification_Message::STATUS_ACTIVE,
+		'class'	=> 'btn btn-warning not-btn-small',
+	] );
+}
+if( $isActive ){
+	$buttonAbort	= HtmlTag::create( 'a', $iconAbort.'&nbsp;'.$w->buttonAbort, [
+		'href'	=> './work/notification/setStatus/'.$message->notificationMessageId.'/'.Model_Notification_Message::STATUS_ABORTED,
+		'class'	=> 'btn btn-danger btn-small',
+	] );
+}
+if( $isSeen || $isAborted || $isNew ){
+	$inputContent	= HtmlTag::create( 'div', $message->content, ['class' => 'boxed'] );
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
+		'href'	=> './work/notification/remove/'.$message->notificationMessageId,
+		'class'	=> 'btn btn-inverse btn-small',
+	] );
+}
+if( $isNew ){
+	$buttonSave	= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
+		'type'	=> 'submit',
+		'name'	=> 'save',
+		'class'	=> 'btn btn-success',
+	] );
+}
+
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
+	'href'	=> './work/notification',
+	'class'	=> 'btn btn-small',
+] );
+$buttons	= [];
+foreach( [$buttonCancel, $buttonSave, $buttonActivate, $buttonAbort, $buttonRemove] as $button )
+	if( '' !== $button )
+		$buttons[]	= $button;
+
+$optStatus	= HtmlElements::Options( $words['statuses'], (int) $message->status );
+
+if( $isNew )
+	$panelEdit	= HtmlTag::create( 'div', [
 	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', $w->labelTitle, ),
-					HtmlTag::create( 'input', NULL, [
-						'type'	=> 'text',
-						'name'	=> 'title',
-						'id'	=> 'input_title',
-						'class'	=> 'span12',
-						'value'	=> htmlentities( $message->title, ENT_QUOTES, 'UTF-8' ),
-					] )
-				], ['class' => 'span12'] )
-			], ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', [
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelTitle, ['class' => 'mandatory'] ),
+							HtmlTag::create( 'input', NULL, [
+								'type'		=> 'text',
+								'name'		=> 'title',
+								'id'		=> 'input_title',
+								'class'		=> 'span12',
+								'required'	=> 'required',
+								'value'		=> htmlentities( $message->title, ENT_QUOTES, 'UTF-8' ),
+							] )
+						], ['class' => 'span9'] ),
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelStatus ),
+							HtmlTag::create( 'select', $optStatus, [
+								'name'		=> 'status',
+								'id'		=> 'input_status',
+								'class'		=> 'span12',
+								'readonly'	=> 'readonly',
+								'disabled'	=> 'disabled',
+							] )
+						], ['class' => 'span3'] )
+					], ['class' => 'row-fluid'] ),
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelDateStart, ['class' => 'mandatory'] ),
+							HtmlTag::create( 'input', NULL, [
+								'type'		=> 'date',
+								'name'		=> 'dateStart',
+								'id'		=> 'input_dateStart',
+								'class'		=> 'span12',
+								'required'	=> 'required',
+								'value'		=> htmlentities( $message->dateStart, ENT_QUOTES, 'UTF-8' ),
+							] )
+						], ['class' => 'span3'] ),
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelDateEnd, [] ),
+							HtmlTag::create( 'input', NULL, [
+								'type'	=> 'date',
+								'name'	=> 'dateEnd',
+								'id'	=> 'input_dateEnd',
+								'class'	=> 'span12',
+								'value'	=> htmlentities( $message->dateEnd ?? '', ENT_QUOTES, 'UTF-8' ),
+							] )
+						], ['class' => 'span3'] ),
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelLink, [] ),
+							HtmlTag::create( 'input', NULL, [
+								'type'		=> 'text',
+								'name'		=> 'link',
+								'id'		=> 'input_link',
+								'class'		=> 'span12',
+								'value'		=> htmlentities( $message->link ?? '', ENT_QUOTES, 'UTF-8' ),
+							] )
+						], ['class' => 'span6'] ),
+					], ['class' => 'row-fluid'] ),
+					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', [
+							HtmlTag::create( 'label', $w->labelContent, ),
+							HtmlTag::create( 'textarea', htmlentities( $message->content, ENT_QUOTES, 'UTF-8' ), [
+								'type'	=> 'text',
+								'name'	=> 'content',
+								'id'	=> 'input_content',
+								'class'	=> 'span12 TinyMCE',
+								'rows'	=> 12,
+							] )
+						], ['class' => 'span12'] )
+					], ['class' => 'row-fluid'] ),
+				], ['class' => 'span9'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', $w->labelContent, ),
-					HtmlTag::create( 'textarea', htmlentities( $message->content, ENT_QUOTES, 'UTF-8' ), [
-						'type'	=> 'text',
-						'name'	=> 'content',
-						'id'	=> 'input_content',
-						'class'	=> 'span12 TinyMCE',
-					] )
-				], ['class' => 'span12'] )
+					HtmlTag::create( 'label', 'Empfänger' ),
+					HtmlTag::create( 'div', [
+						renderRecipientList( $recipientsNew ),
+					], ['class' => 'boxed boxed-large'] ),
+				], ['class' => 'span3'] ),
 			], ['class' => 'row-fluid'] ),
-			HtmlTag::create( 'div', [
-				HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, [
-					'href'	=> './work/notification',
-					'class'	=> 'btn btn-small',
-				] ),
-				' ',
-				HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
-					'type'	=> 'submit',
-					'name'	=> 'save',
-					'class'	=> 'btn btn-success',
-				] ),
-			], ['class' => 'buttonbar'] )
+			HtmlTag::create( 'div', join( ' ', $buttons ), ['class' => 'buttonbar'] )
 		], [
 			'action'	=> 'work/notification/edit/'.$message->notificationMessageId,
 			'method'	=> 'post'
 		] )
 	], ['class' => 'content-panel-inner'] )
 ], ['class' => 'content-panel content-panel-form'] );
+else
+	$panelEdit	= HtmlTag::create( 'div', [
+		HtmlTag::create( 'h3', $w->heading ),
+		HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelTitle, ['class' => 'mandatory'] ),
+					HtmlTag::create( 'input', NULL, [
+						'type'		=> 'text',
+						'class'		=> 'span12',
+						'value'		=> htmlentities( $message->title, ENT_QUOTES, 'UTF-8' ),
+						'disabled'	=> 'disabled',
+					] )
+				], ['class' => 'span9'] ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelStatus ),
+					HtmlTag::create( 'select', $optStatus, [
+						'class'		=> 'span12',
+						'readonly'	=> 'readonly',
+						'disabled'	=> 'disabled',
+					] )
+				], ['class' => 'span3'] )
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelDateStart, ['class' => 'mandatory'] ),
+					HtmlTag::create( 'input', NULL, [
+						'type'		=> 'date',
+						'class'		=> 'span12',
+						'value'		=> htmlentities( $message->dateStart, ENT_QUOTES, 'UTF-8' ),
+						'disabled'	=> 'disabled',
+					] )
+				], ['class' => 'span3'] ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelDateEnd, [] ),
+					HtmlTag::create( 'input', NULL, [
+						'type'	=> 'date',
+						'class'	=> 'span12',
+						'value'	=> htmlentities( $message->dateEnd ?? '', ENT_QUOTES, 'UTF-8' ),
+						'disabled'	=> 'disabled',
+					] )
+				], ['class' => 'span3'] ),
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelLink, [] ),
+					HtmlTag::create( 'input', NULL, [
+						'type'		=> 'text',
+						'class'		=> 'span12',
+						'value'		=> htmlentities( $message->link ?? '', ENT_QUOTES, 'UTF-8' ),
+						'disabled'	=> 'disabled',
+					] )
+				], ['class' => 'span6'] ),
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', [
+				HtmlTag::create( 'div', [
+					HtmlTag::create( 'label', $w->labelContent, ),
+					HtmlTag::create( 'div', $message->content, ['class' => 'boxed'] )
+				], ['class' => 'span12'] )
+			], ['class' => 'row-fluid'] ),
+			HtmlTag::create( 'div', join( ' ', $buttons ), ['class' => 'buttonbar'] )
+		], ['class' => 'content-panel-inner'] )
+	], ['class' => 'content-panel'] );
 
+
+
+$style	= '
+<style>
+div.username {
+	line-height: 1.2em;
+	font-size: 1.1em;
+	}
+div.modified {
+	margin-top: 0.5em;
+	padding-top: 0.5em;
+	padding-bottom: 0.25em;
+	border-top: 1px solid #DDD;
+	}
+img.avatar {
+	float: left;
+	width: 32px;
+	height: 32px;
+	margin-right: 8px;
+	border: 1px solid gray;
+	box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+	}
+div.boxed {
+	min-height: 150px;
+	max-height: 300px;
+	overflow-y: auto;
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	border-radius: 4px;
+	padding: 0.5em 1em;
+	margin-bottom: 1.5em;	
+	}
+div.boxed-large {
+	min-height: 470px;
+	max-height: 470px;
+	height: 470px;
+	padding: 0.5em;
+	}
+</style>
+';
+
+return $panelEdit.$panelResults.$style;

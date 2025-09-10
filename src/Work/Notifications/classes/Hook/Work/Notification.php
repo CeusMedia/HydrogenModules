@@ -6,6 +6,7 @@ class Hook_Work_Notification extends Hook
 {
 	public function onAppControl(): bool
 	{
+		/** @var \CeusMedia\Common\Net\HTTP\Request $request */
 		$request		= $this->env->getRequest();
 		$auth			= Logic_Authentication::getInstance( $this->env );
 		if( !$auth->isAuthenticated() )

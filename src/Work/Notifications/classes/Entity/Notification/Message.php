@@ -27,4 +27,9 @@ class Entity_Notification_Message extends Entity
 		'dateStart',
 		'createdAt',
 	];
+
+	public static array $presetValues	= [
+		'type'		=> Model_Notification_Message::TYPE_NONE,
+		'priority'	=> Model_Notification_Message::PRIORITY_NORMAL,
+	];
 }
