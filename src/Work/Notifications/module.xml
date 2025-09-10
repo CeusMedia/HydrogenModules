@@ -1,9 +1,24 @@
 <?xml version="1.0"?>
 <module>
 	<title>Work: Notifications</title>
-	<description><![CDATA[Notifications for users.]]></description>
+	<description><![CDATA[Notifications for users.
+
+Notifications are interruptions after user login.
+
+This module comes with:
+
+- CRUD management
+- HTML editor
+- recipient assignment by roles
+- status process / work flow
+- hook on after login to interrupt work
+
+]]></description>
 	<category>Work</category>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
+	<log version="0.1">Initial prototype of module.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.3">Feature complete towards first concept.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

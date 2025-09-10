@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
@@ -11,13 +11,19 @@ $w	= (object) $words['index'];
 
 $table	= HtmlTag::create( 'div', 'Keine', ['class' => 'alert alert-info'] );
 
+$statusClasses	= [
+	Model_Notification_Message::STATUS_ABORTED	=> 'error',
+	Model_Notification_Message::STATUS_NEW		=> 'info',
+	Model_Notification_Message::STATUS_ACTIVE	=> 'warning',
+	Model_Notification_Message::STATUS_SEEN		=> 'success',
+];
+
 if( [] !== $messages ){
 	$rows	= [];
 	foreach( $messages as $message ){
-
 		$recipients	= $message->nrRecipients;
 		$seen		= $message->nrRecipientsSeen;
-		$ratio		= round( ( $message->nrRecipientsSeen / $message->nrRecipients ) * 100, 0 ).'%';
+		$ratio		= round( ( $message->nrRecipientsSeen / $message->nrRecipients ) * 100 ).'%';
 		$link	= HtmlTag::create( 'a', $message->title, [
 			'href'	=> './work/notification/edit/'.$message->notificationMessageId,
 		 ] );
@@ -26,16 +32,22 @@ if( [] !== $messages ){
 			HtmlTag::create( 'td', $recipients ),
 			HtmlTag::create( 'td', $seen ),
 			HtmlTag::create( 'td', $ratio ),
-		] );
+			HtmlTag::create( 'td', $words['statuses'][(string) $message->status] ),
+			HtmlTag::create( 'td', date( 'j.n.Y', strtotime( $message->dateStart ) ) ),
+			HtmlTag::create( 'td', $message->dateEnd ? date( 'j.n.Y', strtotime( $message->dateEnd ) ) : '-' ),
+		], ['class' => $statusClasses[$message->status]] );
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		'Titel',
 		'Empfänger',
 		'Gelesen',
 		'Leserate',
+		'Zustand',
+		'Start',
+		'Ende',
 	] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
-	$colgroup	= HtmlElements::ColumnGroup( ['', '10%', '10%', '10%'] );
+	$colgroup	= HtmlElements::ColumnGroup( ['', '10%', '10%', '10%', '10%', '10%', '10%'] );
 	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-bordered table-striped'] );
 }
 
