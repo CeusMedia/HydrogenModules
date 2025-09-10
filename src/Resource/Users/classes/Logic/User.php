@@ -90,6 +90,15 @@ class Logic_User extends Logic
 	}
 
 	/**
+	 * @param	Entity_Role		$role
+	 * @return	int
+	 */
+	public function countRoleUsers( Entity_Role $role ): int
+	{
+		return $this->modelUser->countByIndex( 'roleId', $role->roleId );
+	}
+
+	/**
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
@@ -98,6 +107,37 @@ class Logic_User extends Logic
 	public function getGroups( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		return $this->modelGroup->getAll( $conditions, $orders, $limits );
+	}
+
+	/**
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		Entity_Role[]
+	 */
+	public function getRoles( array $conditions = [], array $orders = [], array $limits = [] ): array
+	{
+		return $this->modelRole->getAll( $conditions, $orders, $limits );
+	}
+
+	/**
+	 * @param	Entity_Role|int|string		$role
+	 * @return	Entity_User[]
+	 */
+	public function getRoleUsers( Entity_Role|int|string $roleEntityOrId ): array
+	{
+		$roleId	= $roleEntityOrId instanceof Entity_Role ? $roleEntityOrId->roleId : $roleEntityOrId;
+		return $this->modelUser->getAllByIndex( 'roleId', $roleId );
+	}
+
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		Entity_User|NULL
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getUser( int|string $userId ): ?Entity_User
+	{
+		return $this->modelUser->get( $userId );
 	}
 
 	/**
