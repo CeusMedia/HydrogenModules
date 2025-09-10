@@ -68,7 +68,7 @@ class Controller_Manage_Form_Target extends Controller
 			$target->rules		= $this->modelRule->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->transfers	= $this->modelTransfer->countByIndex( 'formTransferTargetId', $target->formTransferTargetId );
 			$target->fails		= count( $this->getLatestUnhandledFailedTransfers( $target->formTransferTargetId ) );
-			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, ['createdAt' => 'DESC'], ['createdAt'] );
+			$target->usedAt		= $this->modelTransfer->getByIndex( 'formTransferTargetId', $target->formTransferTargetId, ['createdAt' => 'DESC'], ['createdAt'] ) ?? 0;
 		}
 		$this->addData( 'targets', $targets );
 	}

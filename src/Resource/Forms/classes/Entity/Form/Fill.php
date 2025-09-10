@@ -9,9 +9,9 @@ class Entity_Form_Fill extends Entity
 	public int|string $formId;
 	public int $status				= Model_Form_Fill::STATUS_NEW;
 	public string $email			= '';
-	public ?string $data			= NULL;
-	public ?string $referer			= NULL;
-	public ?string $agent			= NULL;
+	public object|string|NULL $data	= NULL;
+	public string|NULL $referer		= NULL;
+	public string|NULL $agent		= NULL;
 	public int $createdAt			= 0;
 	public int $modifiedAt			= 0;
 
