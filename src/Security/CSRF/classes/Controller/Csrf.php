@@ -40,10 +40,13 @@ class Controller_Csrf extends Controller
 					$this->messenger->noteError( $msg->error_token_replaced );					//  note error
 					break;
 				case Logic_CSRF::CHECK_TOKEN_OUTDATED:											//  token is too old
-					$statusCode	= 408;															//  HTTP status: Request Timeout
-					$maxMinutes	= floor( $this->moduleConfig->get( 'duration' ) / 60 );			//  calculate time out minutes
-					$message	= sprintf( $msg->error_token_outdated, $maxMinutes );			//  generate message
-					$this->messenger->noteError( $message );									//  note error
+					$duration	= (int) $this->moduleConfig->get( 'duration', 0 );	//
+					if( 0 !== $duration ){
+						$statusCode	= 408;														//  HTTP status: Request Timeout
+						$maxMinutes	= floor( $duration / 60 );								//  calculate time out minutes
+						$message	= sprintf( $msg->error_token_outdated, $maxMinutes );		//  generate message
+						$this->messenger->noteError( $message );								//  note error
+					}
 					break;
 				case Logic_CSRF::CHECK_SESSION_MISMATCH:										//  session ID is not matching to token
 					$statusCode	= 409;															//  HTTP status: Conflict
