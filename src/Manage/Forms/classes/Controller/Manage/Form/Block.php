@@ -109,7 +109,7 @@ class Controller_Manage_Form_Block extends Controller
 		$blocks		= $this->modelBlock->getAll( $conditions, $orders, $limits );
 		$this->addData( 'blocks', $blocks );
 		$this->addData( 'page', $page );
-		$this->addData( 'pages', ceil( $count / $limit ) );
+		$this->addData( 'pages', (int) ceil( $count / $limit ) );
 		$this->addData( 'count', $count );
 		$this->addData( 'total', $total );
 
