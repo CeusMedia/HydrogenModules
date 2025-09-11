@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\ArgumentParser;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
@@ -33,10 +34,12 @@ class View_Admin_Log_Exception extends View
 
 		$sectionRequestHeaders	= '';
 		if( get_class( $exceptionRequest ) !== ArgumentParser::class ){
-			$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
-			$lines					= $exceptionRequest->getHeaders()->render();
-			$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
-			$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
+			if( $exceptionRequest instanceof HttpRequest ){
+				$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
+				$lines					= $exceptionRequest->getHeaders()->render();
+				$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
+				$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
+			}
 		}
 		$sectionRequestData			= HtmlTag::create( 'h4', 'Request Data' ).$this->renderMapTable( $exceptionRequest->getAll() );
 		return $sectionRequestHeaders.'<hr/>'.$sectionRequestData;
