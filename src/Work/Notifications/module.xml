@@ -47,8 +47,8 @@ This module comes with:
 	<link xml:lang="en" access="acl" path="work/notification" rank="85">Notification</link>
 	<hook type="resource" resource="App" event="onControl">Hook_Work_Notification::onAppControl</hook>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>work_notification_messages`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>work_notification_messages` (
+DROP TABLE IF EXISTS `<%?prefix%>notification_messages`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>notification_messages` (
   `notificationMessageId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `creatorId` int(11) unsigned NOT NULL,
   `type` tinyint(1) NOT NULL,
@@ -71,22 +71,22 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>work_notification_messages` (
   KEY `dateEnd` (`dateEnd`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>work_notification_recipients`;
-CREATE TABLE IF NOT EXISTS `<%?prefix%>work_notification_recipients` (
-  `notificationRecipientsId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `<%?prefix%>notification_recipients`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>notification_recipients` (
+  `notificationRecipientId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `notificationMessageId` int(11) unsigned NOT NULL,
   `userId` int(11) unsigned NOT NULL,
   `status` tinyint(1) NOT NULL,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
-  PRIMARY KEY (`notificationRecipientsId`),
+  PRIMARY KEY (`notificationRecipientId`),
   KEY `notificationMessageId` (`notificationMessageId`),
   KEY `userId` (`userId`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>work_notification_recipients`;
-DROP TABLE IF EXISTS `<%?prefix%>work_notification_messages`;
+DROP TABLE IF EXISTS `<%?prefix%>notification_recipients`;
+DROP TABLE IF EXISTS `<%?prefix%>notification_messages`;
 ]]></sql>
 </module>
