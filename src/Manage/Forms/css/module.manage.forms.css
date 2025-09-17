@@ -19,8 +19,8 @@
 .form-view-block.show .form-block-link {
 	display: inline-block;
 	position: absolute;
-	right: 0px;
-	top: 0px;
+	right: 0;
+	top: 0;
 	z-index: 1000;
 	font-size: 0.8em;
 	padding: 1px 4px;
@@ -36,13 +36,13 @@ span.indicator-transfer-rules-test {
 	height: 24px;
 	border: 1px solid gray;
 	border-radius: 0.3em;
-}
+    }
 span.indicator-transfer-rules-test.test-success {
 	background-color: green;
-}
+    }
 span.indicator-transfer-rules-test.test-fail {
 	background-color: green;
-}
+    }
 
 /* Import rules test */
 span.indicator-import-rules-test {
@@ -51,10 +51,10 @@ span.indicator-import-rules-test {
 	height: 24px;
 	border: 1px solid gray;
 	border-radius: 0.3em;
-}
+    }
 span.indicator-import-rules-test.test-success {
 	background-color: green;
-}
+    }
 span.indicator-import-rules-test.test-fail {
 	background-color: green;
-}
+    }

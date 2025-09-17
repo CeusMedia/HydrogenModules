@@ -8,11 +8,15 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array<string,array<string|int,string|int>> $words */
+/** @var bool $canChangeEmail */
 
 //  --  PANEL: PASSWORD  --  //
 $w	= (object) $words['email'];
 
 if( !$env->getConfig()->get( 'module.manage_my_user.email.changeable' ) )
+	return '';
+
+if( !$canChangeEmail )
 	return '';
 
 extract( $view->populateTexts( ['panel.email.above', 'panel.email.below', 'panel.email.info'], 'html/manage/my/user/' ) );

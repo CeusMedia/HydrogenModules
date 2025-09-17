@@ -153,6 +153,11 @@ class Controller_Manage_My_User extends Controller
 		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
 		$this->addData( 'mandatoryAddress', $options->get( 'address.mandatory' ) );
 		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canChangeEmail', $acl->has( 'manage/my/user', 'email' ) );
+		$this->addData( 'canChangePassword', $acl->has( 'manage/my/user', 'password' ) );
+		$this->addData( 'canChangeUsername', $acl->has( 'manage/my/user', 'username' ) );
 	}
 
 	/**

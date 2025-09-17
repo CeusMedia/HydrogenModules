@@ -8,12 +8,16 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array<string,array<string,string>> $words */
+/** @var bool $canChangeUsername */
 
-//  --  PANEL: USERNAME  --  //
-$w	= (object) $words['username'];
+if( !$canChangeUsername )
+	return '';
 
 if( 0 && !$env->getConfig()->get( 'module.manage_my_user.username.changeable' ) )
 	return '';
+
+//  --  PANEL: USERNAME  --  //
+$w	= (object) $words['username'];
 
 extract( $view->populateTexts( ['panel.username.above', 'panel.username.below', 'panel.username.info'], 'html/manage/my/user/' ) );
 
