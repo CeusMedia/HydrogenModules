@@ -29,6 +29,10 @@ $statuses	= [
 	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
 ];
 
+$helperTime		= new View_Helper_TimePhraser( $env );
+$helperTime->setTemplate( '%s' );
+$helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
+
 $rows		= [];
 foreach( $fills as $fill ){
 	$fill->data	= json_decode( $fill->data );
@@ -44,7 +48,7 @@ foreach( $fills as $fill ){
 		'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
 	] );
 	$buttons	= HtmlTag::create( 'div', [$linkView, $linkRemove], ['class' => 'btn-group'] );
-	$date		= HtmlTag::create( 'small', date( 'Y-m-d H:i:s', $fill->createdAt ) );
+	$date		= $helperTime->setTimestamp( $fill->createdAt );
 	$email		= HtmlTag::create( 'small', $fill->email );
 	$name		= '';
 	if( isset( $fill->data->firstname ) )
@@ -77,14 +81,14 @@ foreach( $fills as $fill ){
 	$rows[]		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'small', $fill->fillId ) ),
 		HtmlTag::create( 'td', $title ),
-		HtmlTag::create( 'td', HtmlTag::create( 'small', $form ) ),
+		HtmlTag::create( 'td', HtmlTag::create( 'div', $form, ['class' => 'autocut', 'style' => 'font-size: 0.9em'] ) ),
 		HtmlTag::create( 'td', $statuses[(int) $fill->status].'&nbsp;'.$transfers ),
 		HtmlTag::create( 'td', $date ),
 		HtmlTag::create( 'td', $buttons ),
 	] );
 }
-$colgroup	= HtmlElements::ColumnGroup( '50px', '', '', '100px', '130px', '80px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Datum / Zeit', ''] ) );
+$colgroup	= HtmlElements::ColumnGroup( '50px', '', '', '95px', '120px', '75px' );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Alter / Datum', ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped not-table-condensed'] );
 

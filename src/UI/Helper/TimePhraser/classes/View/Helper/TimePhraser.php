@@ -42,7 +42,9 @@ class View_Helper_TimePhraser
 				$phrase	= $helper->toPhrase( $this->env, FALSE, 'timephraser', $languageTopicKey );
 				if( $this->template )
 					$phrase	= sprintf( $this->template, $phrase );
-				$phrase	= '<div style="font-size: 0.9em; line-height: 1.1em;">'.$phrase.'</div><div style="font-size: 0.75em; opacity: 0.66; line-height: 1em;">'.date( 'd.m. H:i:s', $timestamp ).'</div>';
+				$format	= date( 'Y' ) === date( $timestamp ) ? 'd.m. H:i:s' : 'd.m.Y H:i:s';
+				$date	= $helper->toDate( $format );
+				$phrase	= '<div style="font-size: 0.9em; line-height: 1.1em;">'.$phrase.'</div><div style="font-size: 0.75em; opacity: 0.66; line-height: 1em;">'.$date.'</div>';
 				break;
 			case self::MODE_HINT:
 			default:

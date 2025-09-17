@@ -9,6 +9,10 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<string,array<string|int,string|int>> $words */
 /** @var int $pwdMinLength */
 /** @var int $pwdMinStrength */
+/** @var bool $canChangePassword */
+
+if( !$canChangePassword )
+	return '';
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->getPage()->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );
