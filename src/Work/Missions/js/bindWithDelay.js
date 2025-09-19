@@ -31,13 +31,13 @@ $.fn.bindWithDelay = function( type, data, fn, timeout, throttle ) {
 	
 	// Bind each separately so that each element has its own delay
 	return this.each(function() {
-        
-        var wait = null;
+
+		let wait = null;
         
         function cb() {
-            var e = $.extend(true, { }, arguments[0]);
-            var ctx = this;
-            var throttler = function() {
+			let e = $.extend(true, { }, arguments[0]);
+			let ctx = this;
+			let throttler = function() {
             	wait = null;
             	fn.apply(ctx, [e]);
             };

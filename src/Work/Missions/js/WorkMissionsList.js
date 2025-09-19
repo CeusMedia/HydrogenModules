@@ -1,9 +1,9 @@
-var WorkMissionsList = {
+let WorkMissionsList = {
 	sortBy: 'priority',
 	sortDir: 'ASC',
 	blendOut: function(duration){
-		var duration = typeof duration == "undefined" ? 500 : duration;
-		$("#day-list-large>*, #day-list-small>*").stop(true).animate({opacity: 0.33}, duration);
+		let _d = typeof duration == "undefined" ? 500 : duration;
+		$("#day-list-large>*, #day-list-small>*").stop(true).animate({opacity: 0.33}, _d);
 
 	},
 	init: function(){
@@ -16,7 +16,7 @@ var WorkMissionsList = {
 		});
 	},
 	loadCurrentListAndDayControls: function(onSuccess){
-		var onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
+		let _onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
 		WorkMissionsList.blendOut(250);
 		$("#day-lists-empty").hide();
 		$.ajax({
@@ -26,7 +26,7 @@ var WorkMissionsList = {
 				$("#message-loading-list").remove();
 				WorkMissionsList.renderDayListDayControls(json.data);
 				WorkMissions.showTotalDayMissionCount();
-				onSuccess();
+				_onSuccess();
 			},
 			error: function(xhr, error){
 				console.log(error);
@@ -34,23 +34,23 @@ var WorkMissionsList = {
 		});
 	},
 	makeTableSortable: function(jq, options){
-		var options = $.extend({order: null, direction: "ASC"}, options);
-		$("body").data("tablesort-options",options);
+		let _options = $.extend({order: null, direction: "ASC"}, options);
+		$("body").data("tablesort-options", _options);
 		jq.find("tr th div.sortable").each(function(){
 			if($(this).data("column")){
 				$(this).removeClass("sortable").parent().addClass("sortable");
-				if($(this).data("column") == options.order){
+				if($(this).data("column") == _options.order){
 					$(this).parent().addClass("ordered");
-					$(this).parent().addClass("direction-"+options.direction.toLowerCase());
+					$(this).parent().addClass("direction-"+_options.direction.toLowerCase());
 				}
 				$(this).on("click",function(){
-					var head = $(this);
-					var options = $("body").data("tablesort-options");
-					var column = head.data("column");
-					var direction = options.direction;
-					if( options.order == column )
-						direction = direction == "ASC" ? "DESC" : "ASC";
-					var url = "./work/mission/filter/?order="+column+"&direction="+direction;
+					let head = $(this);
+					let options = $("body").data("tablesort-options");
+					let column = head.data("column");
+					let direction = options.direction;
+					if( options.order === column )
+						direction = direction === "ASC" ? "DESC" : "ASC";
+					let url = "./work/mission/filter/?order="+column+"&direction="+direction;
 					document.location.href = url;
 				});
 			}

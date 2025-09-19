@@ -178,31 +178,29 @@ class Controller_Ajax_Work_Mission extends AjaxController
 			$helper->setProjects( $this->projects );
 			return $this->respondData( $helper->render() );
 		}
-		catch( Exception $e ){
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
 			return $this->respondException( $e );
 		}
 	}
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		JsonException
 	 */
 	public function renderIndex(): void
 	{
 		$mode	= $this->session->get( $this->filterKeyPrefix.'mode' );
 		if( $mode && $mode !== 'now' )
-			$this->env->restart( 'ajax/work/mission/'.$mode.'/renderIndex' );
-//			$this->redirect( 'work/mission/'.$mode, 'ajaxRenderIndex', func_get_args() );		//  @todo replace redirect but keep AJAX request in mind
-		else{
-			$words		= $this->getWords();
+			$this->env->restart( 'ajax/work/mission/'.$mode.'/renderIndex' );				//  redirect to session-set mode
 
-			$day		= (int) $this->session->get( $this->filterKeyPrefix.'day' );
+		$words		= $this->getWords();
+		$day		= (int) $this->session->get( $this->filterKeyPrefix.'day' );
 
-			$missions	= $this->logic->getFilteredUserMissions( $this->userId, $this->filterKeyPrefix );
-			$missions	= array_slice( $missions, 0, 100 );										//  @todo	 make configurable
+		$missions	= $this->logic->getFilteredUserMissions( $this->userId, $this->filterKeyPrefix );
+		$missions	= array_slice( $missions, 0, 100 );										//  @todo	 make configurable
 
+		try{
 			$listLarge		= new View_Helper_Work_Mission_List_Days( $this->env );
 			$listLarge->setMissions( $missions );
 			$listLarge->setWords( $words );
@@ -241,6 +239,10 @@ class Controller_Ajax_Work_Mission extends AjaxController
 				'filters'	=> $this->session->getAll( $this->filterKeyPrefix.$mode.'.' ),
 			];
 			$this->respondData( $data );
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
+			$this->respondException( $e );
 		}
 	}
 
@@ -316,15 +318,17 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	}
 
 	/**
+	 *	Set filter and show updated index.
 	 *	@param		string		$name
 	 *	@param		$value
-	 *	@param		bool		$set
-	 *	@param		bool		$onlyThisOne
+	 *	@param		bool		$set				Flag: add or remove value
+	 *	@param		bool		$onlyThisOne		Flag: only set this value, reset all others
+	 *	@param		bool		$renderContent		Flag: Respond with updated index view, default: yes
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 * @todo	enable for AJAX
+	 *	@throws		JsonException
 	 */
-	public function setFilter( string $name, $value = NULL, bool $set = FALSE, bool $onlyThisOne = FALSE ): void
+	public function setFilter( string $name, $value = NULL, bool $set = FALSE, bool $onlyThisOne = FALSE, bool $renderContent = TRUE ): void
 	{
 		$sessionPrefix	= $this->getModeFilterKeyPrefix();
 		$storedValues	= $this->session->get( $sessionPrefix.$name );
@@ -347,8 +351,9 @@ class Controller_Ajax_Work_Mission extends AjaxController
 		}
 		$this->session->set( $sessionPrefix.$name, $newValues );
 		$this->saveFilters( $this->userId );
-		$this->renderIndex();
-//		$this->env->restart( 'ajax/work/mission/renderIndex' );
+		if( $renderContent )
+			$this->renderIndex();
+		$this->respondData( [] );
 	}
 
 	//  --  PROTECTED  --  //

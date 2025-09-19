@@ -1,11 +1,11 @@
-var WorkMissionsKanban = {
+let WorkMissionsKanban = {
 	userId: 0,
 
 	init: function(){
 	},
 
 	loadCurrentList: function(onSuccess){
-		var onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
+		let _onSuccess = typeof onSuccess !== "undefined" ? onSuccess : function(){};
 //		WorkMissionsList.blendOut(100);
 		$("#day-lists-empty").hide();
 		$.ajax({
@@ -21,7 +21,7 @@ var WorkMissionsKanban = {
 			//		reset: true,
 					children: 'ul.sortable'
 				});
-				onSuccess();
+				_onSuccess();
 			},
 			error: function(xhr, message){
 				console.log(message);

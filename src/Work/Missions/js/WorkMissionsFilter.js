@@ -1,18 +1,32 @@
-var WorkMissionsFilter = {
+let WorkMissionsFilter = {
 	baseUrl: "./work/mission/",
+	mode: '',
 	form: null,
 	__init: function(mode){
+		this.mode = mode;
 		$("#filter_query").on("keydown", function(event){
 			if(event.keyCode == 13)
 				$("#button_filter_search").trigger("click");
 		})
 		$("#button_filter_search").on("click", function(){
-			var uri = "setFilter/query/"+encodeURI($("#filter_query").val());
-			document.location.href = WorkMissionsFilter.baseUrl + uri;
+			let value = encodeURI($("#filter_query").val());
+			$.ajax({
+				url: "./ajax/work/mission/setFilter/query/"+value+"/1/0/0",
+				dataType: "json",
+				success: function(json){}
+			});
+			document.location.href = WorkMissionsFilter.baseUrl + 'index';
 		})
 		$("#button_filter_search_reset").on("click", function(){
-			if($("#filter_query").val().length)
-				document.location.href = WorkMissionsFilter.baseUrl+"setFilter/query/";
+			if($("#filter_query").val().length){
+				$.ajax({
+					url: "./ajax/work/mission/setFilter/query/"+value+"/0/0/0",
+					dataType: "json",
+					success: function(json){}
+				});
+				$("#filter_query").val('');
+				document.location.href = WorkMissionsFilter.baseUrl + 'index';
+			}
 		})
 		$("#button_filter_reset").on("click", function(){
 			document.location.href = WorkMissionsFilter.baseUrl+"filter/?reset";
@@ -30,8 +44,8 @@ var WorkMissionsFilter = {
 	 *	@todo		remove
 	 */
 	changeView: function(elem){								//  @todo kriss: fix this hack!
-		var val = parseInt($(elem).val());
-		var url = "./work/mission/filter?status&";
+		let val = parseInt($(elem).val());
+		let url = "./work/mission/filter?status&";
 		if(val)
 			url += "states[]=4";
 		else
@@ -47,9 +61,9 @@ var WorkMissionsFilter = {
 	},
 
 	initFilter: function(filterName, listId, buttonId){
-		var container	= $("#"+listId);
-		var checkboxes	= container.find("input[type=checkbox]");
-		var button		= container.find("button.dropdown-toggle");
+		let container	= $("#"+listId);
+		let checkboxes	= container.find("input[type=checkbox]");
+		let button		= container.find("button.dropdown-toggle");
 		if(buttonId)
 			button		= $("#"+buttonId);
 		container.find("ul").on("click", function(event){							//  bind click event on dropdown list
@@ -57,7 +71,7 @@ var WorkMissionsFilter = {
 		});
 		container.find(".trigger-select-this").on("click", function(event){						//  bind click event on ...
 			WorkMissionsList.blendOut(250);
-			var id = $(this).data("id");
+			let id = $(this).data("id");
 			checkboxes.each(function(nr){
 				$(this).prop("checked", $(this).val() == id ? "checked" : null);
 			});
@@ -96,8 +110,8 @@ var WorkMissionsFilter = {
 			WorkMissionsList.blendOut(250);
 			WorkMissionsFilter.updateButtonClass(button, checkboxes);
 			//  store changed filter
-			var value = event.target.checked ? 1 : 0;						//  get check status as integer
-			var id = event.target.value;											//  get ID of filter to set
+			let value = event.target.checked ? 1 : 0;						//  get check status as integer
+			let id = event.target.value;											//  get ID of filter to set
 			$.ajax({																//  store action using AJAX
 				url: "./ajax/work/mission/setFilter/"+filterName+"/"+id+"/"+value,	//  URL to set changed filter
 				dataType: "json",
@@ -130,9 +144,9 @@ var WorkMissionsFilter = {
 
 	updateButtonClass: function(button, checkboxes){
 		//  count checked and unchecked checkboxes
-		var i, value;
-		var countChecked = 0;
-		var countUnchecked = 0;
+		let i, value;
+		let countChecked = 0;
+		let countUnchecked = 0;
 		for(i=0; i<checkboxes.length; i++){											//  iterate checkboxes
 			value = checkboxes.eq(i).prop("checked") ? 1 : 0;						//  get check state
 			countChecked += value;													//  count if checked
@@ -147,7 +161,7 @@ var WorkMissionsFilter = {
 		}
 
 		//  mark filter button if filters have changed
-		if(countUnchecked)															//  atleast one checkbox is unchecked
+		if(countUnchecked)															//  at least one checkbox is unchecked
 			button.addClass("btn-info")												//  mark filter as changed
 		else																		//  no checkbox is unchecked
 			button.removeClass("btn-info");											//  mark filter as unchanged
@@ -155,7 +169,7 @@ var WorkMissionsFilter = {
 	},
 
 	updateFilterReset: function(colored){
-		var btn = $("#work-mission-buttons #button_filter_reset");					//  get reset button
+		let btn = $("#work-mission-buttons #button_filter_reset");					//  get reset button
 		btn.prop("disabled", "disabled");											//  disable it by default
 		if(colored)																	//  button uses colors
 			btn.removeClass('btn-inverse').children("i").removeClass("icon-white");	//  remove color and icon paint
