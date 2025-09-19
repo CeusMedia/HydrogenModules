@@ -1,4 +1,4 @@
-var WorkMissions = {
+let WorkMissions = {
 	currentDay: 0,
 	mode: null,
 	changeView: function(type){
@@ -23,7 +23,7 @@ var WorkMissions = {
 	init: function(mode){
 		WorkMissionsFilter.__init(mode);
 		this.mode = mode;
-		var site = $("body.controller-work-mission");
+		let site = $("body.controller-work-mission");
 		if(!site.length)
 			return;
 
@@ -36,9 +36,9 @@ var WorkMissions = {
 				$("#input-serial").trigger("click")
 			});
 			$("#input-serial").on("change", function(){
-				var value = $("#input-serial").val().replace(/\\/g,"/");
+				let value = $("#input-serial").val().replace(/\\/g,"/");
 				$("#input-import").val(value.split(/\//).pop());
-				var text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
+				let text = "Alle bisherigen Aufgaben und Termine werden gelöscht. Wirklich importieren?";
 				if(confirm(text))
 					$("#input-import").get(0).form.submit();
 				else
@@ -75,7 +75,7 @@ var WorkMissions = {
 	},
 	showTotalDayMissionCount: function(sum){
 		if(typeof sum === "undefined"){
-			var sum = 0;
+			let sum = 0;
 			$("#day-controls-large span.badge").each(function(){
 				sum += parseInt($(this).html());
 			})

@@ -1,4 +1,4 @@
-var WorkMissionsEditor = {
+let WorkMissionsEditor = {
 	contentFormat: null,
 	markdown: null,
 	mirror: null,
@@ -31,15 +31,15 @@ var WorkMissionsEditor = {
 	},
 
 	_bindWorkerSelectUpdateOnProjectInputChange: function(idSelectWorker, idInputProject){
-		var selectProject = $("#"+idInputProject);
+		let selectProject = $("#"+idInputProject);
 		if(selectProject.length){
 			if( !this.mission)
 				$("#"+idSelectWorker).on("change", function(){
 					WorkMissionsEditor.missionWorkerId = $(this).val();
 				});
 			selectProject.on("change", function(){
-				var workerId;
-				var projectId = selectProject.val();
+				let workerId;
+				let projectId = selectProject.val();
 				if(WorkMissionsEditor.mission)
 					workerId = WorkMissionsEditor.mission.workerId;
 				else
@@ -51,8 +51,8 @@ var WorkMissionsEditor = {
 
 	_initForm: function(){
 		$("#input_title").focus();
-		var dateInputs = $("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd");
-		var timeInputs = $("#input_timeStart, #input_timeEnd");
+		let dateInputs = $("#input_dayWork, #input_dayDue, #input_dayStart, #input_dayEnd");
+		let timeInputs = $("#input_timeStart, #input_timeEnd");
 
 /*		dateInputs.datepicker({
 			dateFormat: "yy-mm-dd",
@@ -77,11 +77,11 @@ var WorkMissionsEditor = {
 	},
 
 	_sanitizeDateAndTime: function(event){
-		var typeValue = parseInt($("#input_type").val(), 10);
-		var dayStart  = $(typeValue === 0 ? "#input_dayWork" : "#input_dayStart");
-		var dayEnd    = $(typeValue === 0 ? "#input_dayDue" : "#input_dayEnd");
-		var timeStart = $("#input_timeStart");
-		var timeEnd   = $("#input_timeEnd");
+		let typeValue = parseInt($("#input_type").val(), 10);
+		let dayStart  = $(typeValue === 0 ? "#input_dayWork" : "#input_dayStart");
+		let dayEnd    = $(typeValue === 0 ? "#input_dayDue" : "#input_dayEnd");
+		let timeStart = $("#input_timeStart");
+		let timeEnd   = $("#input_timeEnd");
 		if(dayStart.val() && dayEnd.val()){
 			if(dayStart.val() > dayEnd.val()){
 				dayEnd.datepicker("setDate", dayStart.val()).trigger("change-update");
@@ -92,8 +92,8 @@ var WorkMissionsEditor = {
 			}
 			if(dayStart.val() === dayEnd.val()){
 				if(timeStart.val() && timeEnd.val()){
-					var timeStartValue = parseInt(timeStart.val().replace(/:/, ""), 10);
-					var timeEndValue = parseInt(timeEnd.val().replace(/:/, ""), 10);
+					let timeStartValue = parseInt(timeStart.val().replace(/:/, ""), 10);
+					let timeEndValue = parseInt(timeEnd.val().replace(/:/, ""), 10);
 					if(timeStartValue >= timeEndValue){
 						timeEnd.val("").trigger("change-update");
 						UI.Messenger.noteNotice("Endzeit war ungültig und wurde geleert.");
@@ -104,7 +104,7 @@ var WorkMissionsEditor = {
 	},
 
 	_renderContentOfMarkdownEditor: function(){
-		var content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
+		let content	= WorkMissionsEditor.textarea.hide().val();											//  get content of editor
 		WorkMissionsEditor.markdown.css({opacity: 0.5});
 		$.ajax({
 			url: "./ajax/helper/markdown/render",
@@ -119,16 +119,16 @@ var WorkMissionsEditor = {
 	},
 
 	_resizeMarkdownEditor: function(){
-		var height = WorkMissionsEditor.markdown.height();
-		var length = WorkMissionsEditor.markdown.html().length;
+		let height = WorkMissionsEditor.markdown.height();
+		let length = WorkMissionsEditor.markdown.html().length;
 		if(!height && length){
-			var clone = WorkMissionsEditor.markdown.clone().css("visibility", "hidden");
+			let clone = WorkMissionsEditor.markdown.clone().css("visibility", "hidden");
 			$('body').append(clone);
-			var height = clone.outerHeight();
+			height = clone.outerHeight();
 			clone.remove();
 		}
-		var maxHeight = Math.ceil($(window).height()/2);
-		var height =  Math.min(maxHeight, height);
+		let maxHeight = Math.ceil($(window).height()/2);
+		height = Math.min(maxHeight, height);
 		height = Math.max(height - 19, 160);
 		WorkMissionsEditor.markdown.css("max-height", maxHeight);
 		WorkMissionsEditor.mirror.setSize("99.5%", height);
@@ -139,7 +139,7 @@ var WorkMissionsEditor = {
 		WorkMissionsEditor.missionId = missionId;
 		WorkMissionsEditor.userId = Auth.userId;
 		WorkMissionsEditor.markdown = $("#mission-content-html");
-		var editor = "Ace";
+		let editor = "Ace";
 //		var editor = "CodeMirror";
 		switch(editor){
 			case "Ace":
@@ -151,9 +151,9 @@ var WorkMissionsEditor = {
 		}
 	},
 	_setupMarkdownEditorWithAce: function(missionId){
-		var editor 	= ModuleAce.applyTo("#input_content");
-		var saveUrl	= "ajax/work/mission/saveContent/"+WorkMissionsEditor.missionId;
-		var onUpdate	= function(chance, editor){
+		let editor 	= ModuleAce.applyTo("#input_content");
+		let saveUrl	= "ajax/work/mission/saveContent/"+WorkMissionsEditor.missionId;
+		let onUpdate	= function(chance, editor){
 			jQuery.post("./ajax/helper/markdown/render", {content: editor.getValue()})
 			.done(function(json){
 				jQuery("#work-missions-loader").remove();
@@ -208,7 +208,7 @@ var WorkMissionsEditor = {
 
 	_setupTinyMCE: function(missionId){
 		"use strict";
-		var options = $.extend(tinymce.Config.get(),{
+		let options = $.extend(tinymce.Config.get(),{
 			selector: ".TinyMCE-minimal",
 //			height: settings.Work_Missions.editor_height,					//  @todo not working right now
 			menubar: settings.Work_Missions.editor_TinyMCE_menubar,
@@ -222,22 +222,22 @@ var WorkMissionsEditor = {
 
 	_updateProjectWorkers: function(projectId, currentWorkerId, options){
 		currentWorkerId = parseInt(currentWorkerId, 10);
-		var options = $.extend({
+		let _options = $.extend({
 			idSelectWorker: "input_workerId",
 			urlGetProjectUsers: "./ajax/work/mission/getProjectUsers/"+projectId,
 			allowEmpty: true,
 		}, options);
 		$.ajax({
-			url: options.urlGetProjectUsers,
+			url: _options.urlGetProjectUsers,
 			dataType: "json",
 			success: function(json){
-				var selectWorker = $("#"+options.idSelectWorker).html("");
-				if(options.allowEmpty){
-					var option = $("<option></option>").val("").html("-");
+				let selectWorker = $("#"+_options.idSelectWorker).html("");
+				if(_options.allowEmpty){
+					let option = $("<option></option>").val("").html("-");
 					selectWorker.append(option);
 				}
 				$(json.data).each(function(nr){
-					var option = $("<option></option>").val(this.userId).html(this.username);
+					let option = $("<option></option>").val(this.userId).html(this.username);
 					this.userId = parseInt(this.userId, 10);
 					if(currentWorkerId === this.userId || json.data.length === 1 || ( !currentWorkerId && this.userId === Auth.userId ) )
 						option.prop("selected", "selected");

@@ -1,4 +1,4 @@
-var WorkMissionsCalendar = {
+let WorkMissionsCalendar = {
 	year: null,
 	month: null,
 	monthCurrent: 0,
@@ -42,10 +42,10 @@ var WorkMissionsCalendar = {
 		cmContextMenu.init("#mission-calendar tbody ul li");
 		cmContextMenu.assignRenderer("#mission-calendar tbody tr td", function(menu, elem){
 			menu.addItem("<h4><big>"+elem.data("day")+"."+elem.data("month")+"."+elem.data("year")+"</big></h4>");
-			var urlAdd = "./work/mission/add/?dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
-			var types = [{
+			let urlAdd = "./work/mission/add/?dayStart="+elem.data("date")+"&dayEnd="+elem.data("date");
+			let types = [{
 				url: urlAdd+'&type=0',
-				icon: "icon-wrench",
+//				icon: "icon-wrench",
 				icon: "fa fa-fw fa-wrench",
 				label: "neue Aufgabe"
 			},{
@@ -79,20 +79,20 @@ var WorkMissionsCalendar = {
 		};
 		cmContextMenu.onChange = function(){$("#mission-calendar").css({opacity: 0.5});};
 		cmContextMenu.assignRenderer("#mission-calendar tbody ul li", function(menu, elem){
-			var missionId = elem.data("id");
+			let missionId = elem.data("id");
 			if(elem.data("title"))
 				menu.addItem("<h4>"+elem.data("title")+"</h4>");
 			if(elem.data("project"))
 				menu.addItem("<small>Projekt: </small>"+elem.data("project"));
 			if(elem.data("date")){
-				var div = $("<div></div>").attr("id", "context-date");
-				var value = elem.data("date").replace(/ /,"");
-				var input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small"/*, readonly: "readonly"*/});
+				let div = $("<div></div>").attr("id", "context-date");
+				let value = elem.data("date").replace(/ /,"");
+				let input = $("<input/>").attr({id: "input_date", value: elem.data("date"), class: "small"/*, readonly: "readonly"*/});
 				input.on("change", function(event){
 					cmContextMenu.hide(event, true);
 					document.location.href = "./work/mission/changeDay/"+missionId+"?date="+$(this).val();
 				});
-				var label = $("<small>").append("Datum: ");/*.append(elem.data("date"));*/
+				let label = $("<small>").append("Datum: ");/*.append(elem.data("date"));*/
 				menu.addItem(div.append(label).append(input));
 			}
 			if(elem.data("time"))
@@ -104,7 +104,7 @@ var WorkMissionsCalendar = {
 
 			menu.addItem();
 
-			var actions = [{
+			let actions = [{
 					url: "./work/mission/changeDay/"+missionId+"?date=-1",
 //					icon: WorkMissionsCalendar.pathIcons+"arrow_left.png",
 					icon: "arrow-left",
@@ -131,9 +131,9 @@ var WorkMissionsCalendar = {
 				}
 			];
 
-			var button;
-			var btnGroupMove = $("<div></div>").addClass("btn-group");
-			for(var i=0; i<actions.length; i++){
+			let button, icon;
+			let btnGroupMove = $("<div></div>").addClass("btn-group");
+			for(let i=0; i<actions.length; i++){
 				icon = $("<i/>").attr("class", "icon-"+actions[i].icon);
 				button = $("<a></a>").addClass("btn").html(icon);
 				if(typeof actions[i].size !== "undefined" && actions[i].size.length)
@@ -164,11 +164,11 @@ var WorkMissionsCalendar = {
 				this.month = 12;
 			}
 		}
-		$.ajax({																//  store action using AJAX
-			url: "./work/mission/setFilter/month/"+this.year+"-"+this.month,						//  URL to set changed filter
+		$.ajax({																	//  store action using AJAX
+			url: "./work/mission/setFilter/month/"+this.year+"-"+this.month,		//  URL to set changed filter
 			dataType: "json",
 			success: function(json){											//  on response
-				WorkMissionsList.renderDayListDayControls(json);				//  render day lists and controls
+				WorkMissionsList.renderDayListDayControls(json);					//  render day lists and controls
 			}
 		});
 	}

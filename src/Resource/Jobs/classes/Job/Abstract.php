@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\Output\Progress as ProgressOutput;
+use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Log;
 
@@ -9,8 +10,6 @@ class Job_Abstract
 {
 	/**	@var	Environment				$env			Environment object */
 	protected Environment $env;
-
-	protected string $logFile;
 
 	/**	@var	?string					$jobClass		Class name of inheriting job */
 	protected ?string $jobClass			= NULL;
@@ -40,7 +39,6 @@ class Job_Abstract
 	public function __construct( Environment $env, ?string $jobClassName = NULL, ?string $jobModuleId = NULL )
 	{
 		$this->env			= $env;
-		$this->logFile		= $env->getConfig()->get( 'path.logs' ).'jobs.log';
 		$this->parameters	= new Dictionary();
 		if( $jobClassName )
 			$this->setJobClassName( $jobClassName );
@@ -65,6 +63,8 @@ class Job_Abstract
 	 *	@param		int		$count
 	 *	@param		object|array|NULL $data
 	 *	@return		void
+	 *	@throws		ReflectionException		if reflection of entity class property failed
+	 *	@throws		NotSupportedException	entity property is typed as union or intersection
 	 */
 	protected function setResult( int $status, int $count, object|array $data = NULL ): void
 	{
