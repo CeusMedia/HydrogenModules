@@ -81,8 +81,8 @@ class Logic_Server_Log_Request extends SharedLogic
 	 */
 	protected function collectData(): Entity_Log_Request
 	{
-		$ip			= NULL;
-		$sessionId	= NULL;
+		$ip			= '';
+		$sessionId	= '';
 		$method		= 'CLI';
 		$url		= NULL;
 		$cookie		= NULL;
