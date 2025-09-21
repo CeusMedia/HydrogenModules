@@ -129,7 +129,8 @@ class Job_Job extends Job_Abstract
 				if( 0 !== count( $lines ) ){
 					$this->out();
 					foreach( $lines as $line )
-						$this->out( $line );
+						if( !str_starts_with( $line, '@' ) )
+							$this->out( $line );
 				}
 			}
 			catch( ReflectionException $e ){
