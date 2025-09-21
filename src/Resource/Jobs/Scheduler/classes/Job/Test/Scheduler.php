@@ -1,5 +1,6 @@
 <?php
-class Job_Test_Scheduler extends Job_Abstract{
+class Job_Test_Scheduler extends Job_Abstract
+{
 
 	public function greetMinute(): void
 	{

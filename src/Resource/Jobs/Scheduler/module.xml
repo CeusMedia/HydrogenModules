@@ -3,19 +3,19 @@
 	<title>Server: Scheduler</title>
 	<description><![CDATA[Console based job scheduler.]]></description>
 	<category>Resource</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype in project Chat:Client.</log>
 	<log version="0.2">Separated to this Hydrogen module.</log>
 	<log version="0.3">Use module Resource:Jobs to call jobs to ensure logging and locking.</log>
 	<log version="0.4">Renamed and updated maintain script.</log>
 	<log version="0.5">Import from protected SVN repository.</log>
+	<log version="0.5.1">Convert job definition from XML to module config.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Scheduler.php</class>
 		<class>Job/Test/Scheduler.php</class>
 		<file>schedule.php</file>
-		<file>config/jobs/test.scheduler.xml</file>
 	</files>
 	<config type="string" name="mode" info="mode of jobs to run"  values="dev,test,live">dev</config>
 	<config type="integer" name="console.sleep" info="seconds to sleep if in console loop mode">10</config>
@@ -24,4 +24,7 @@
 	<relations>
 		<needs type="module">Resource_Jobs</needs>
 	</relations>
+	<job id="Scheduler.Test.Day">Test_Scheduler::greetDay</job>
+	<job id="Scheduler.Test.Hour">Test_Scheduler::greetHour</job>
+	<job id="Scheduler.Test.Min">Test_Scheduler::greetMinute</job>
 </module>
