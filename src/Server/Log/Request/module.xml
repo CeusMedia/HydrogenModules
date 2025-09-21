@@ -6,11 +6,12 @@
 Automatically logs all HTTP requests and CLI job calls.
 ]]></description>
 	<category>Server</category>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add session ID.</log>
 	<log version="0.2.2">Add logic class.</log>
+	<log version="0.2.3">Improve data structure.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -23,7 +24,28 @@ Automatically logs all HTTP requests and CLI job calls.
 	<relations/>
 	<config protected="yes" type="boolean" name="active">yes</config>
 	<hook type="resource" resource="Env" event="init">Hook_Server_Log_Request::onEnvInit</hook>
-	<sql type="mysql" on="install" version="final"><![CDATA[
+		<sql type="mysql" on="install" version="final"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
+  `requestId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ip` varchar(63) NOT NULL DEFAULT '',
+  `sessionId` varchar(255) NOT NULL DEFAULT '',
+  `method` varchar(16) NOT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `request` text NOT NULL,
+  `session` text DEFAULT NULL,
+  `cookie` text DEFAULT NULL,
+  `headers` text DEFAULT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  PRIMARY KEY (`requestId`),
+  KEY `ip` (`ip`),
+  KEY `sessionId` (`sessionId`),
+  KEY `method` (`method`),
+  KEY `url` (`url`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   `requestId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -43,7 +65,14 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   KEY `timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
+	<sql type="mysql" on="update" version="0.2.3"><![CDATA[
+ALTER TABLE `<%?prefix%>log_requests`
+  CHANGE COLUMN `ip` `ip` VARCHAR(63) NOT NULL DEFAULT '',
+  CHANGE COLUMN `sessionId` `sessionId` VARCHAR(255) NOT NULL DEFAULT '',
+  ADD INDEX `sessionId` (`sessionId`);
+;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
 ]]></sql>
 </module>
