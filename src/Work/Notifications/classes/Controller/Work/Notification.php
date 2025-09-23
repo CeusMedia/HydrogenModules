@@ -1,9 +1,10 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Work_Notification extends Controller
 {
@@ -12,8 +13,12 @@ class Controller_Work_Notification extends Controller
 	protected HttpRequest $request;
 	protected HttpPartitionSession $session;
 	protected MessengerResource $messenger;
-	protected int $currentUserId;
+	protected int|string $currentUserId;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function add(): void
 	{
 		if( $this->request->getMethod()->isPost() )
@@ -21,10 +26,13 @@ class Controller_Work_Notification extends Controller
 
 		/** @var Logic_User $logicUser */
 		$logicUser	= $this->env->getLogic()->get( 'User' );
-		/** @var Entity_Role[] $roles */
-		$roles	= $logicUser->getRoles( ['access' => Model_Role::ACCESS_ACL], ['roleId' => 'DESC'] );
-		foreach( $roles as $role )
-			$role->nrUsers	= $logicUser->countRoleUsers( $role );
+		$roles		= $logicUser->getRoles( ['access' => Model_Role::ACCESS_ACL], ['roleId' => 'DESC'] );
+		foreach( $roles as $nr => $role ){
+			if( !$this->env->getAcl()->hasRight( $role->roleId, 'work/notification', 'view' ) )
+				unset( $roles[$nr] );
+			else
+				$role->nrUsers	= $logicUser->countRoleUsers( $role );
+		}
 		$this->addData( 'roles', $roles );
 		$this->addData( 'inputTitle', $this->request->get( 'title', '' ) );
 		$this->addData( 'inputDateStart', $this->request->get( 'dateStart', '' ) );
@@ -33,6 +41,12 @@ class Controller_Work_Notification extends Controller
 		$this->addData( 'inputLink', $this->request->get( 'link', '' ) );
 	}
 
+	/**
+	 *	@param		int|string		$messageId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function edit( int|string $messageId ): void
 	{
 		/** @var Entity_Notification_Message|NULL $message */
@@ -132,6 +146,11 @@ class Controller_Work_Notification extends Controller
 		$this->addData( 'messages', $messages );
 	}
 
+	/**
+	 *	@param		int|string		$messageId
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function remove( int|string $messageId ): void
 	{
 		$this->modelRecipient->removeByIndex( 'notificationMessageId', $messageId );
@@ -139,6 +158,12 @@ class Controller_Work_Notification extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$messageId
+	 *	@param		int				$status
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function setStatus( int|string $messageId, int $status ): void
 	{
 		$this->modelMessage->edit( $messageId, [
@@ -148,6 +173,10 @@ class Controller_Work_Notification extends Controller
 		$this->restart( 'edit/'.$messageId, TRUE );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
 	public function view(): void
 	{
 		$messageId	= $this->session->get( 'work_notification_id' );
@@ -181,6 +210,10 @@ class Controller_Work_Notification extends Controller
 		$this->addData( 'from', $from );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
@@ -192,6 +225,10 @@ class Controller_Work_Notification extends Controller
 		$this->currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId() ?? 0;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function handlePostOnAdd(): void
 	{
 		$dbc		= $this->env->getDatabase();
