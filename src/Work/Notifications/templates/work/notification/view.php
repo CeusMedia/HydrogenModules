@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -20,10 +20,9 @@ $buttonCheck	= HtmlTag::create( 'button', $iconConfirm.'&nbsp;'.$w->buttonConfir
 ] );
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'h3', '<span class="muted">'.$w->heading.':</span>&nbsp;'.$message->title ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
-			HtmlTag::create( 'h4', $message->title ),
 			HtmlTag::create( 'div', $message->content, ['class' => ''] ),
 			HtmlTag::create( 'div', $buttonCheck, ['class' => 'buttonbar'] ),
 		], [
