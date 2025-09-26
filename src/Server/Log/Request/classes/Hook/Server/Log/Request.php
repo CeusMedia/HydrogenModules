@@ -24,4 +24,23 @@ class Hook_Server_Log_Request extends Hook
 			$this->env->getLog()->logException( $e );
 		}
 	}
+
+	public function onAfterAppSentResponse(): void
+	{
+		/** @var ModuleDefinition $module */
+		$module	= $this->env->getModules()->get( 'Server_Log_Request' );
+		if( !$module->config['active']->value )
+			return;
+
+		try{
+			Logic_Server_Log_Request::getInstance( $this->env )->logCurrentResponse(
+				$this->payload['status'],
+				$this->payload['mimeType'],
+				$this->payload['content']
+			);
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
+		}
+	}
 }
