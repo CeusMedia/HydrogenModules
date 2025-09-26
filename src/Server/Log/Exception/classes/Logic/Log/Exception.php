@@ -198,6 +198,8 @@ class Logic_Log_Exception extends Logic
 			if( trim( $this->moduleConfig->get( 'file.name' ) ) ){
 				$msg	= time().":".base64_encode( serialize( $data ) );
 //				$msg	= (new DateTime())->format( 'Y-m-d H:i:s' ).": ".json_encode( $data, JSON_PRETTY_PRINT );
+				if( !file_exists( $this->logFile ) )
+					\CeusMedia\Common\FS\File::new( $this->logFile, TRUE, 0666 );
 				error_log( $msg.PHP_EOL, 3, $this->logFile );
 			}
 		}
@@ -345,6 +347,7 @@ class Logic_Log_Exception extends Logic
 		// @link https://www.baeldung.com/linux/remove-first-line-text-file
 		$command	= 'tail -n +%1$d %2$s > %2$s.tmp && mv %2$s.tmp %2$s';
 		exec( sprintf( $command, ( $countDone + $countFail + 1 ), $this->logFile ) );
+		chmod( $this->logFile, 0666 );
 		return $countDone + $countFail;
 	}
 }

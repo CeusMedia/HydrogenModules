@@ -181,6 +181,7 @@ class Controller_Work_Notification extends Controller
 	{
 		$messageId	= $this->session->get( 'work_notification_id' );
 		$from		= $this->session->get( 'work_notification_from' );
+		$words		= $this->env->getLanguage()->getWords( 'work/notification' );
 		if( NULL === $messageId )
 			$this->restart();
 		if( $this->request->getMethod()->isPost() ){
@@ -206,6 +207,8 @@ class Controller_Work_Notification extends Controller
 			$this->restart( $from );
 		}
 
+		if( '' !== ( $words['hook']['message'] ?? '' ) )
+			$this->env->getMessenger()->noteNotice( $words['hook']['message'] );
 		$this->addData( 'message', $this->modelMessage->get( $messageId ) );
 		$this->addData( 'from', $from );
 	}

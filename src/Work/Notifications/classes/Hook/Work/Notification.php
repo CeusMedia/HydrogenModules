@@ -10,7 +10,6 @@ class Hook_Work_Notification extends Hook
 		/** @var HttpRequest $request */
 		$request		= $this->env->getRequest();
 		$session		= $this->env->getSession();
-		$words			= $this->env->getLanguage()->getWords( 'work/notification' );
 
 		try{
 			$logicAuth		= Logic_Authentication::getInstance( $this->env );
@@ -53,8 +52,6 @@ class Hook_Work_Notification extends Hook
 				if( NULL !== $recipient ){
 					$session->set( 'work_notification_id', $recipient->notificationMessageId );
 					$session->set( 'work_notification_from', $request->getPath() );
-					if( '' !== ( $words['hook']['message'] ?? '' ) )
-						$this->env->getMessenger()->noteNotice( $words['hook']['message'] );
 					self::redirect( $this->env, 'work/notification', 'view' );
 					return TRUE;
 				}
