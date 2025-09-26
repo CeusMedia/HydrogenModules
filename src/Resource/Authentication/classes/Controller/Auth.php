@@ -24,7 +24,7 @@ class Controller_Auth extends Controller
 	 */
 	public function ajaxIsAuthenticated(): void
 	{
-		print( json_encode( $this->session->has( 'auth_user_id' ) ) );
+		print( json_encode( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ) );
 		exit;
 	}
 
@@ -106,7 +106,7 @@ class Controller_Auth extends Controller
 	protected function getBackend()
 	{
 		$backends		= $this->logic->getBackends();
-		$backendKey		= $this->session->get( 'auth_backend' );
+		$backendKey		= $this->session->get( Logic_Authentication::$sessionKeyAuthBackend );
 		$backendKeys	= array_keys( $backends );
 		if( !$backends )
 			throw new RuntimeException( 'No authentication backend available' );
@@ -182,8 +182,8 @@ class Controller_Auth extends Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
-						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
 						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

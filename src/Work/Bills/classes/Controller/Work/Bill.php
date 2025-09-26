@@ -166,6 +166,6 @@ class Controller_Work_Bill extends Controller
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Bill( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 }

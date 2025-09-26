@@ -90,9 +90,9 @@ class Controller_Auth_Json extends Controller
 						$this->messenger->noteError( $words->msgInvalidPassword );
 					if( !$this->messenger->gotError() ){
 						$this->messenger->noteSuccess( $words->msgSuccess );
-						$this->session->set( 'auth_user_id', $user->userId );
-						$this->session->set( 'auth_role_id', $user->roleId );
-						$this->session->set( 'auth_backend', 'Json' );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Json' );
 						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user->userId, $password );
@@ -117,8 +117,8 @@ class Controller_Auth_Json extends Controller
 
 		if( $this->logic->isAuthenticated() ){
 			$payload	= [
-				'userId'	=> $this->session->get( 'auth_user_id' ),
-				'roleId'	=> $this->session->get( 'auth_role_id' ),
+				'userId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentUserId(),
+				'roleId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentRoleId(),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->logic->clearCurrentUser();
@@ -227,8 +227,8 @@ class Controller_Auth_Json extends Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
-						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

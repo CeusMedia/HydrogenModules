@@ -60,11 +60,11 @@ class Controller_Work_Mission_Kanban extends Controller_Work_Mission
 		parent::__onInit();
 		$this->session->set( 'filter.work.mission.mode', 'kanban' );
 
-		$this->initFilters( $this->session->get( 'auth_user_id' ) );
+		$this->initFilters( $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 
 		$date	= explode( "-", $this->session->get( $this->filterKeyPrefix.'month' ) );
 		$this->setData( [
-			'userId'	=> $this->session->get( 'auth_user_id' ),
+			'userId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'year'		=> $date[0],
 			'month'		=> $date[1],
 		] );

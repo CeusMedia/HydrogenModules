@@ -24,7 +24,7 @@ abstract class View_Helper_Work_Time extends Abstraction
 	{
 		$this->setEnv( $env );
 		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'auth_user_id' );
+		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );

@@ -112,7 +112,7 @@ class Controller_Manage_My_User_Avatar extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId		= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.manage_my_user_avatar.', TRUE );
 		$this->modelAvatar	= new Model_User_Avatar( $this->env );
 		$this->pathImages	= $this->moduleConfig->get( 'path.images' );

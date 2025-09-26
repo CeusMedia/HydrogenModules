@@ -33,9 +33,9 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 
 	public function clearCurrentUser(): void
 	{
-		$this->session->remove( 'auth_user_id' );
-		$this->session->remove( 'auth_role_id' );
-		$this->session->remove( 'auth_status' );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthUserId );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthRoleId );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthStatus );
 		$this->session->remove( 'auth_account_id' );
 		$this->session->remove( 'auth_token' );
 		$this->session->remove( 'auth_rights' );
@@ -104,20 +104,20 @@ return NULL;
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
-		return $this->session->get( 'auth_user_id' );
+		return $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 
 	public function isAuthenticated(): bool
 	{
 		if( !$this->isIdentified() )
 			return FALSE;
-		$authStatus	= (int) $this->session->get( 'auth_status' );
+		$authStatus	= (int) $this->session->get( Logic_Authentication::$sessionKeyAuthStatus );
 		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
 	public function isIdentified(): bool
 	{
-		return (bool) $this->session->get( 'auth_user_id' );
+		return (bool) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 
 	public function isCurrentUserId( int|string $userId ): bool
@@ -201,16 +201,16 @@ return NULL;
 	public function setAuthenticatedUser( object $user ): self
 	{
 		$this->setIdentifiedUser( $user );
-		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthStatus, Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
 	public function setIdentifiedUser( object $user ): self
 	{
-		$this->session->set( 'auth_backend', 'Rest' );
-		$this->session->set( 'auth_user_id', $user->data->userId );
-		$this->session->set( 'auth_role_id', $user->data->roleId );
-		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Rest' );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->data->userId );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->data->roleId );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthStatus, Logic_Authentication::STATUS_IDENTIFIED );
 		$this->session->set( 'auth_account_id', $user->data->accountId );
 		$this->session->set( 'auth_token', $user->data->token );
 		$this->session->set( 'auth_rights', $user->data->rights );

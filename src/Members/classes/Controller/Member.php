@@ -253,7 +253,7 @@ class Controller_Member extends Controller
 		$this->messenger		= $this->env->getMessenger();
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelRelation	= new Model_User_Relation( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId			= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->addData( 'currentUserId', $this->userId );
 		if( !$this->session->get( 'filter_member_limit' ) )
 			$this->session->set( 'filter_member_limit', 9 );

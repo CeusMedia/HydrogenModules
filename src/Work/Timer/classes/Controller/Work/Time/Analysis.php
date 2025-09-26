@@ -185,7 +185,7 @@ class Controller_Work_Time_Analysis extends Controller
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
-		$this->userId			= $this->session->get( 'auth_user_id' );
+		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->modelProject		= new Model_Project( $this->env );
 		$this->modelMission		= new Model_Mission( $this->env );
 		$this->modelTimer		= new Model_Work_Timer( $this->env );

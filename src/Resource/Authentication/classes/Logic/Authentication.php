@@ -9,6 +9,11 @@ class Logic_Authentication extends Logic
 	public const STATUS_IDENTIFIED		= 1;
 	public const STATUS_AUTHENTICATED	= 2;
 
+	public static string $sessionKeyAuthBackend		= 'auth_backend';
+	public static string $sessionKeyAuthUserId		= 'auth_user_id';
+	public static string $sessionKeyAuthRoleId		= 'auth_role_id';
+	public static string $sessionKeyAuthStatus		= 'auth_status';
+
 	protected Dictionary $session;
 	protected ?Logic_Authentication_BackendInterface $backend	= NULL;
 	protected array $backends			= [];
@@ -29,6 +34,17 @@ class Logic_Authentication extends Logic
 		return $this->backends;
 	}
 
+	/**
+	 *	Returns groups of current user.
+	 *	Forwards to used authentication backend.
+	 *	@return		Entity_Group[]
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getCurrentGroups(): array
+	{
+		return $this->backend->getCurrentGroups();
+	}
+
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
 		return $this->backend->getCurrentRole( $strict );
@@ -39,9 +55,15 @@ class Logic_Authentication extends Logic
 		return $this->backend->getCurrentRoleId( $strict );
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
+	/**
+	 *	@param		bool		$strict
+	 *	@param		bool		$withRole
+	 *	@param		bool		$withGroups
+	 *	@return		object|NULL
+	 */
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, bool $withGroups = FALSE ): ?object
 	{
-		return $this->backend->getCurrentUser( $strict, $withRole );
+		return $this->backend->getCurrentUser( $strict, $withRole, $withGroups );
 	}
 
 	/**
@@ -102,11 +124,23 @@ class Logic_Authentication extends Logic
 		return $this->backend->isAuthenticated();
 	}
 
+	/**
+	 *	Indicates whether given user ID is currently authenticated within in this session.
+	 *	Forwards to used authentication backend.
+	 *
+	 *	@param		int|string		$userId
+	 *	@return		bool
+	 */
 	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->backend->getCurrentUserId( FALSE ) == $userId;
 	}
 
+	/**
+	 *	Indicates whether a user is at least identified within this session.
+	 *	Forwards to used authentication backend.
+	 *	@return		bool
+	 */
 	public function isIdentified(): bool
 	{
 		return $this->backend->isIdentified();
@@ -173,7 +207,7 @@ class Logic_Authentication extends Logic
 		$this->env->getCaptain()->callHook( 'Auth', 'registerBackends', $this, $payload );
 		if( !$this->backends )
 			throw new RuntimeException( 'No authentication backend installed' );
-		$backend = $this->session->get( 'auth_backend' );
+		$backend = $this->session->get( Logic_Authentication::$sessionKeyAuthBackend );
 		if( !$backend ){
 			$backends	= array_keys( $this->getBackends() );
 			$backend	= current( $backends );

@@ -20,7 +20,7 @@ class Hook_Auth extends Hook
 		$request	= $this->env->getRequest();
 		$session	= $this->env->getSession();
 		if( $load->exception->getCode() == 403 ){
-			if( !$session->get( 'auth_user_id' ) ){
+			if( !$session->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
 				$forwardUrl	= $request->get( '__controller' );
 				if( $request->get( '__action' ) )
 					$forwardUrl	.= '/'.$request->get( '__action' );
@@ -40,7 +40,7 @@ class Hook_Auth extends Hook
 	public function onPageApplyModules(): void
 	{
 		$session	= $this->env->getSession();
-		$userId		= (int) $session->get( 'auth_user_id' );										//  get ID of current user (or zero)
+		$userId		= (int) $session->get( Logic_Authentication::$sessionKeyAuthUserId );										//  get ID of current user (or zero)
 		if( $userId ){
 			$cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 			$remember	= (bool) $cookie->get( 'auth_remember' );

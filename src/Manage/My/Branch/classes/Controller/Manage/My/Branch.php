@@ -35,7 +35,7 @@ class Controller_Manage_My_Branch extends Controller
 		$data			= $request->getAllFromSource( 'POST' );
 
 		$modelUser		= new Model_User( $this->env );
-		$user			= $modelUser->get( (int) $session->get( 'auth_user_id' ) );
+		$user			= $modelUser->get( (int) $session->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 		$data['companyId']	= $user->companyId;
 
 		if( $request->get( 'doAdd' ) ){
@@ -203,7 +203,7 @@ class Controller_Manage_My_Branch extends Controller
 	protected function getCurrentUser( string $redirect = 'auth/logout' ): object
 	{
 		$modelUser	= new Model_User( $this->env );
-		$userId		= (int) $this->env->getSession()->get( 'auth_user_id' );
+		$userId		= (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$user		= $modelUser->get( $userId );
 		if( !$user )
 			$this->breakOnFailure( 'userIdInvalid', $redirect );
@@ -242,7 +242,7 @@ class Controller_Manage_My_Branch extends Controller
 		$session		= $this->env->getSession();
 		$messenger		= $this->env->getMessenger();
 		$words			= (object) $this->getWords( 'index' );
-		$userId			= $session->get( 'auth_user_id' );
+		$userId			= $session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$modelBranch	= new Model_Branch( $this->env );
 		$modelUser		= new Model_User( $this->env );
 		$modelCompany	= new Model_Company( $this->env );

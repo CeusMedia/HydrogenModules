@@ -109,6 +109,6 @@ class View_Helper_Work_Mission_Filter_Worker extends View_Helper_Work_Mission_Fi
 
 	protected function __onInit(): void
 	{
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 }

@@ -80,7 +80,7 @@ class Controller_Work_FTP extends Controller
 				$config->set( 'module.work_ftp.access.'.$key, $value );
 		}
 		else if( class_exists( 'Model_User_Setting' ) ){
-			if( ( $userId = $this->session->get( 'auth_user_id' ) ) )
+			if( ( $userId = Logic_Authentication::getInstance( $this->env )->getCurrentUserId() ) )
 				$config	= Model_User_Setting::applyConfigStatic( $this->env, $userId, FALSE );
 		}
 		$access		= $config->getAll( "module.work_ftp.access.", TRUE );

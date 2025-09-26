@@ -26,7 +26,7 @@ class Controller_Manage_Customer extends Controller
 		$request		= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$data	= $request->getAll();
-			$data['userId']		= (int) $this->env->getSession()->get( 'auth_user_id' );
+			$data['userId']		= (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 			$data['createdAt']	= time();
 			$customerId			= $this->modelCustomer->add( $data );
 			$this->env->getMessenger()->noteSuccess( 'Customer has been saved.' );

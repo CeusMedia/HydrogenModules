@@ -1055,7 +1055,7 @@ class Controller_Work_Mission extends Controller
 	 */
 	protected function hasFullAccess(): bool
 	{
-		$roleId	= $this->session->get( 'auth_role_id', '' );
+		$roleId	= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId, '' );
 		return '' !== $roleId && $this->env->getAcl()->hasFullAccess( $roleId );
 	}
 

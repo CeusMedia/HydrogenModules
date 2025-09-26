@@ -92,7 +92,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'enqueue' );
 		$readerIds	= $this->request->get( 'readerIds' );
-		$creatorId	= $this->session->get( 'auth_user_id' );						//  get current user
+		$creatorId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );						//  get current user
 
 		if( !( $queueId = $this->session->get( 'queueId-'.$newsletterId ) ) ){		//  no queue within this session yet
 			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId );	//  create a new queue
@@ -414,7 +414,7 @@ class Controller_Work_Newsletter extends Controller
 	{
 		$words	= (object) $this->getWords( 'add' );
 		$data	= [
-			'creatorId'				=> $this->session->get( 'auth_user_id' ),
+			'creatorId'				=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
 		];
 		if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
@@ -431,7 +431,7 @@ class Controller_Work_Newsletter extends Controller
 			] );
 		}
 		$data	= array_merge( $data, [
-			'creatorId'			=> (int) $this->session->get( 'auth_user_id' ),
+			'creatorId'			=> (int) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'title'				=> $this->request->get( 'title' ),
 			'subject'			=> trim( $this->request->get( 'subject' ) ),
 			'heading'			=> trim( $this->request->get( 'heading' ) ),
@@ -508,7 +508,7 @@ class Controller_Work_Newsletter extends Controller
 		$newsletter		= (object) [
 			'newsletterTemplateId'	=> (int) $this->request->get( 'newsletterTemplateId' ),
 			'newsletterId'			=> (int) $this->request->get( 'newsletterId' ),
-			'creatorId'				=> (int) $this->session->get( 'auth_user_id' ),
+			'creatorId'				=> (int) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'title'					=> trim( $this->request->get( 'title' ) ),
 			'senderAddress'			=> trim( $this->request->get( 'senderAddress' ) ),
 			'senderName'			=> trim( $this->request->get( 'senderName' ) ),

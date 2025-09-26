@@ -38,7 +38,7 @@ class Controller_Manage_My_User_Invite extends Controller
 
 	public function invite(): void
 	{
-		$userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$userId		= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$words		= (object) $this->getWords( 'invite' );
 		if( $this->env->getRequest()->get( 'send' ) ){
 			$email		= $this->request->get( 'email' );

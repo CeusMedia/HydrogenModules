@@ -209,7 +209,7 @@ class Logic_Work_Mission extends Logic
 
 	public function hasFullAccess(): bool
 	{
-		$roleId	= $this->env->getSession()->get( 'auth_role_id', '' );
+		$roleId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthRoleId, '' );
 		return '' !== $roleId && $this->env->getAcl()->hasFullAccess($roleId);
 	}
 

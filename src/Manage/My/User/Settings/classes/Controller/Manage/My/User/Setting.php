@@ -128,6 +128,6 @@ class Controller_Manage_My_User_Setting extends Controller
 	{
 		parent::__onInit();
 		$this->model	= new Model_User_Setting( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 }

@@ -91,8 +91,8 @@ class Controller_Auth_Oauth extends Controller
 					$modelUser	= new Model_User( $this->env );
 					$user 		= $modelUser->getByIndex( 'accountId', $response->user_id );
 					if( $user ){
-						$this->session->set( 'auth_user_id', $user->userId );
-						$this->session->set( 'auth_role_id', $user->roleId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user );
@@ -107,8 +107,8 @@ class Controller_Auth_Oauth extends Controller
 							$data->roleId		= $modelRole->getByIndex( 'register', 128, [], 'roleId' );
 							unset( $data->userId );
 							$userId				= $modelUser->add( (array) $data );
-							$this->session->set( 'auth_user_id', $userId );
-							$this->session->set( 'auth_role_id', $data->roleId );
+							$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $userId );
+							$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $data->roleId );
 							$this->logic->setAuthenticatedUser( $modelUser->get( $userId ) );
 //							if( $this->request->get( 'login_remember' ) )
 //								$this->rememberUserInCookie( $user );
@@ -193,8 +193,8 @@ class Controller_Auth_Oauth extends Controller
 					$modelUser	= new Model_User( $this->env );
 					$user = $modelUser->getByIndex( 'username', $this->request->get( 'login_username' ) );
 					if( $user ){
-						$this->session->set( 'auth_user_id', $user->userId );
-						$this->session->set( 'auth_role_id', $user->roleId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user );
@@ -207,8 +207,8 @@ class Controller_Auth_Oauth extends Controller
 						$data			= $response->data->user;
 						$data['roleId']	= $modelRole->getByIndex( 'register', 128, 'roleId' );
 						$userId			= $modelUser->add( $data );
-						$this->session->set( 'auth_user_id', $userId );
-						$this->session->set( 'auth_role_id', $data['roleId'] );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $userId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $data['roleId'] );
 						$this->logic->setAuthenticatedUser( $user );
 //						if( $this->request->get( 'login_remember' ) )
 //							$this->rememberUserInCookie( $user );
@@ -241,12 +241,10 @@ class Controller_Auth_Oauth extends Controller
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
 		if( $this->logic->isAuthenticated() ){
 			$payload	= [
-				'userId'	=> $this->session->get( 'auth_user_id' ),
-				'roleId'	=> $this->session->get( 'auth_role_id' ),
+				'userId'	=> $this->logic->getCurrentUserId(),
+				'roleId'	=> $this->logic->getCurrentRoleId(),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
-			$this->session->remove( 'auth_user_id' );
-			$this->session->remove( 'auth_role_id' );
 			$this->logic->clearCurrentUser();
 
 			if( $this->request->has( 'autoLogout' ) ){
@@ -430,8 +428,8 @@ class Controller_Auth_Oauth extends Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
-						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request

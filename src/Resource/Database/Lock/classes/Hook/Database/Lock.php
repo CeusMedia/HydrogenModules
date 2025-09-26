@@ -45,7 +45,7 @@ class Hook_Database_Lock extends Hook
 			return FALSE;
 //		error_log( time().": ".json_encode( $request->getAll() )."\n", 3, "unlock.log" );
 		$payload	= [
-			'userId'		=> $this->env->getSession()->get( 'auth_user_id' ),
+			'userId'		=> $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'request'		=> $request,
 			'controller'	=> $request->get( '__controller' ),
 			'action'		=> $request->get( '__action' ),

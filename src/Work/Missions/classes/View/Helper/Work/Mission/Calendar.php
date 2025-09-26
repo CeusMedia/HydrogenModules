@@ -141,7 +141,7 @@ class View_Helper_Work_Mission_Calendar
 ';
 		$script	= '<script>
 $(document).ready(function(){
-//	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( 'auth_user_id' ).';
+//	WorkMissionsCalendar.userId = '.(int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId ).';
 	WorkMissionsCalendar.monthCurrent = '.date( 'n' ).';
 	WorkMissionsCalendar.monthShow    = '.(int) $showMonth.';
 //	$("table#mission-calendar tr td ul li").draggable({containment: "#mission-calendar tbody", revert: true});

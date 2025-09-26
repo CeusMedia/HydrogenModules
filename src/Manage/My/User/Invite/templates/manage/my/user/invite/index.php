@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $modelUser	= new Model_User( $env );
-$userId		= $session->get( 'auth_user_id' );
+$userId		= $session->get( Logic_Authentication::$sessionKeyAuthUserId );
 $user		= $modelUser->get( $userId );
 
 $buttonInvite	= HtmlElements::LinkButton( './manage/my/user/invite/invite', 'jemanden einladen', 'button icon add' );

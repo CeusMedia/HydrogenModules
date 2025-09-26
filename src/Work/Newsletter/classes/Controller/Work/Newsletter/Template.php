@@ -205,7 +205,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$imprint	= $theme->imprint;
 
 		$data	= [
-			'creatorId'		=> $this->env->getSession()->get( 'auth_user_id' ),
+			'creatorId'		=> $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId ),
 			'themeId'		=> $themeId,
 			'status'		=> 0,
 			'title'			=> $theme->title,

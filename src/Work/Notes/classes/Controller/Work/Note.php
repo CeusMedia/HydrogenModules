@@ -25,7 +25,7 @@ class Controller_Work_Note extends Controller
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$post	= $this->request->getAllFromSource( 'POST', TRUE );
 			$data	= [
-				'userId'		=> $this->session->get( 'auth_user_id' ),
+				'userId'		=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
 				'projectId'		=> $post->get( 'note_projectId' ),
 				'status'		=> '0',
 				'title'			=> $post->get( 'note_title' ),
@@ -68,7 +68,7 @@ class Controller_Work_Note extends Controller
 		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->session->get( 'auth_user_id' );
+			$userId		= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -180,7 +180,7 @@ class Controller_Work_Note extends Controller
 		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
-			$userId		= $this->session->get( 'auth_user_id' );
+			$userId		= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 			$projects	= $logic->getUserProjects( $userId, FALSE );
 		}
 		$this->addData( 'projects', $projects );
@@ -299,7 +299,7 @@ class Controller_Work_Note extends Controller
 		if( !is_array( $tags ) )
 			$tags	= [];
 
-		$userId		= $this->session->get( 'auth_user_id' );
+		$userId		= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$projects	= [];
 		if( $this->env->getModules()->has( 'Manage_Projects' ) ){
 			$logic		= Logic_Project::getInstance( $this->env );
@@ -431,8 +431,8 @@ class Controller_Work_Note extends Controller
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Note::getInstance( $this->env );
 		$this->logic->setContext(
-			$this->session->get( 'auth_user_id', '0' ),
-			$this->session->get( 'auth_role_id', '0' ),
+			$this->session->get( Logic_Authentication::$sessionKeyAuthUserId, '0' ),
+			$this->session->get( Logic_Authentication::$sessionKeyAuthRoleId, '0' ),
 			$this->session->get( 'filter_notes_projectId', '' )
 		);
 		$this->addData( 'logicNote', $this->logic );
