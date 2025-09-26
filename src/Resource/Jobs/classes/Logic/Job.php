@@ -3,6 +3,7 @@
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Alg\Obj\MethodFactory as ObjectMethodFactory;
 use CeusMedia\Common\UI\OutputBuffer;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\Mail\Address\Collection as AddressCollection;
 use CeusMedia\Mail\Address\Collection\Parser as AddressCollectionParser;
@@ -12,6 +13,7 @@ class Logic_Job extends Logic
 	protected Model_Job_Schedule $modelSchedule;
 	protected Model_Job_Definition $modelDefinition;
 	protected Model_Job_Run $modelRun;
+	protected ModuleDefinition $module;
 
 	/**
 	 *	@param		int|string		$jobRunId
@@ -44,13 +46,13 @@ class Logic_Job extends Logic
 	/**
 	 *	Discover jobs of modules which are not registered in database.
 	 *	@access		public
-	 *	@return		array 		List of discovered job identifiers and their new job definition ID
+	 *	@return		array<string,Entity_Job_Definition> 	List of discovered jobs
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function discoverJobDefinitions(): array
 	{
-		$list			= [];																	//  prepare empty result list
+		$list			= [];																		//  prepare empty result list
 		$discoveredJobs	= [];
 
 		//  read jobs defined by modules
@@ -95,7 +97,7 @@ class Logic_Job extends Logic
 			$arguments	= [];																		//  assume no arguments
 			if( $discoveredJob->arguments )															//  job as defined arguments
 				$arguments	= $discoveredJob->arguments;											//  carry arguments
-			$jobDefinitionId	= $this->modelDefinition->add( [									//  register job in database
+			$entity	= Entity_Job_Definition::fromArray( [
 				'mode'			=> $mode,
 				'status'		=> Model_Job_Definition::STATUS_ENABLED,
 				'identifier'	=> $discoveredJob->id,
@@ -105,7 +107,9 @@ class Logic_Job extends Logic
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
 			] );
-			$list[$discoveredJob->id]	= $jobDefinitionId;											//  note identifier and new job definition ID
+			$jobDefinitionId	= $this->modelDefinition->add( $entity );							//  register job in database
+			$entity->jobDefinitionId	= $jobDefinitionId;
+			$list[$discoveredJob->id]	= $entity;													//  note identifier and new job definition
 		}
 		return $list;																				//  return result list
 	}
@@ -576,7 +580,9 @@ class Logic_Job extends Logic
 		$this->modelDefinition	= new Model_Job_Definition( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 		$this->modelRun			= new Model_Job_Run( $this->env );
-		$this->discoverJobDefinitions();
+		$this->module			= $this->env->getModules()->get( 'Resource_Jobs' );
+		if( 'always' === $this->module->config['discover']->value )
+			$this->discoverJobDefinitions();
 	}
 
 	/**
