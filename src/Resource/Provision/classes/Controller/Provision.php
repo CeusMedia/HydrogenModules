@@ -18,12 +18,12 @@ class Controller_Provision extends Controller{
 
 	public function index(){
 		$this->addData( 'serverUrl', $this->moduleConfig->get( 'server.url' ) );
-		$this->addData( 'userId', $this->session->get( 'auth_user_id' ) );
+		$this->addData( 'userId', $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 	}
 
 	public function status( $userId = NULL ){
-//		$userId	= $this->session->get( 'auth_user_id' ) ? $this->session->get( 'auth_user_id' ) : $userId;
-		$userId	= $this->session->get( 'auth_user_id' );
+//		$userId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) ? $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) : $userId;
+		$userId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		if( !$userId )
 			$this->restart( NULL, TRUE );
 		try{

@@ -39,7 +39,7 @@ class Resource_Acl_Authentication extends Abstraction
 		if( $roleId === NULL ){
 			if( !$this->env->has( 'session' ) )
 				return [];
-			$roleId	= $this->env->getSession()->get( 'auth_role_id' );
+			$roleId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthRoleId );
 		}
 		if( $this->hasFullAccess( $roleId ?? '' ) ){
 			if( !$this->controllerActions )

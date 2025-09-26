@@ -52,7 +52,7 @@ class Model_User_Setting extends Model
 	{
 		$config		= $this->env->getConfig()->getAll( NULL, TRUE );	//  clone config dictionary
 		if( $userId === NULL )
-			$userId		= $this->env->getSession()->get( 'auth_user_id' );
+			$userId		= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$model		= new Model_User_Setting( $this->env );
 
 		$settings	= $model->getAllByIndex( 'userId', $userId );

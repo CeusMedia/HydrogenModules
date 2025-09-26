@@ -21,7 +21,7 @@ class Controller_Ajax_Manage_Form extends Controller
 		$rules	= $this->request->get( 'rules' );
 
 		$response	= [
-			'userId'	=> $this->session->get( 'auth_user_id' ),
+			'userId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentUserId(),
 			'ruleId'	=> $ruleId,
 			'rules'		=> $rules,
 			'status'	=> 'empty',

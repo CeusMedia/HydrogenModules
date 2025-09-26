@@ -281,7 +281,7 @@ class Logic_Project extends Logic
 
 	protected function hasFullAccess(): bool
 	{
-		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( 'auth_role_id' ) );
+		return $this->env->getAcl()->hasFullAccess( $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthRoleId ) );
 	}
 
 	/**

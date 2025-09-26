@@ -230,7 +230,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$this->order	= $this->getOrderFromCartInSession();
 		$this->orderId	= $this->order->orderId;
 
-		$this->localUserId	= $this->session->get( 'auth_user_id' );
+		$this->localUserId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 
 		$this->buyerData	= $this->getBuyerDataFromOrder( $this->order );
 		$this->userId	= $this->provider->getUserIdFromLocalUserId( $this->localUserId, FALSE );

@@ -59,8 +59,8 @@ class Controller_Auth_Local extends Controller
 					$this->callHook( 'Auth', 'afterConfirm', $this, $payload );
 					if( 1 ){
 						$this->messenger->noteSuccess( $words->msgSuccessAutoLogin );
-						$this->session->set( 'auth_user_id', $user->userId );
-						$this->session->set( 'auth_role_id', $user->roleId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 						if( $from )
 							$this->restart( $from );
 					}
@@ -75,7 +75,7 @@ class Controller_Auth_Local extends Controller
 
 	public function index(): void
 	{
-		if( !$this->session->has( 'auth_user_id' ) )
+		if( !$this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) )
 			$this->restart( 'auth/login' );
 
 		$from			= $this->request->get( 'from' );
@@ -98,12 +98,12 @@ class Controller_Auth_Local extends Controller
 	 */
 	public function login( $username = NULL ): void
 	{
-		if( $this->session->has( 'auth_user_id' ) ){
-			$this->redirectAfterLoginIfPasswordUpdateNeeded( $this->session->get( 'auth_user_id' ) );
+		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ){
+			$this->redirectAfterLoginIfPasswordUpdateNeeded( $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 			$this->redirectAfterLogin();
 		}
 
-		$this->session->set( 'auth_backend', 'Local' );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Local' );
 
 //		$this->tryLoginByCookie();		// disabled: insecure and not supporting user password resource
 
@@ -137,14 +137,14 @@ class Controller_Auth_Local extends Controller
 	{
 		$words		= (object) $this->getWords( 'logout' );
 		$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
-		if( $this->session->has( 'auth_user_id' ) ){
+		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ){
 			$payload	= [
-				'userId'	=> $this->session->get( 'auth_user_id' ),
-				'roleId'	=> $this->session->get( 'auth_role_id' ),
+				'userId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
+				'roleId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId ),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
-			$this->session->remove( 'auth_user_id' );
-			$this->session->remove( 'auth_role_id' );
+			$this->session->remove( Logic_Authentication::$sessionKeyAuthUserId );
+			$this->session->remove( Logic_Authentication::$sessionKeyAuthRoleId );
 			$logicAuth->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->env->getMessenger()->noteNotice( $words->msgAutoLogout );
@@ -886,8 +886,8 @@ class Controller_Auth_Local extends Controller
 						$passwordMatch	= password_verify( $user->password, $passwordHash );		//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
-						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
 						$this->logic->setAuthenticatedUser( $user );
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
@@ -933,8 +933,8 @@ class Controller_Auth_Local extends Controller
 
 			/** @var Entity_User $user */
 			$user	= $modelUser->get( $user->userId );
-			$this->session->set( 'auth_user_id', $user->userId );
-			$this->session->set( 'auth_role_id', $user->roleId );
+			$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+			$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 			$logicAuth	= $this->env->getLogic()->get( 'Authentication' );
 			$logicAuth->setAuthenticatedUser( $user, $password );
 			if( $this->request->get( 'login_remember' ) )

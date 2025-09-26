@@ -46,7 +46,7 @@ class Controller_Auth_Rest extends Controller
 
 	public function index()
 	{
-		if( !$this->session->has( 'auth_user_id' ) )
+		if( !$this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) )
 			$this->restart( 'login', TRUE );										// @todo replace redirect
 
 		$from			= $this->request->get( 'from' );
@@ -85,7 +85,7 @@ class Controller_Auth_Rest extends Controller
 
 	public function login( $username = NULL )
 	{
-		if( $this->session->has( 'auth_user_id' ) ){
+		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ){
 			if( $this->request->has( 'from' ) )
 				$this->restart( $this->request->get( 'from' ) );
 			$this->restart( NULL, TRUE );
@@ -108,8 +108,8 @@ class Controller_Auth_Rest extends Controller
 				$user	= $this->logic->checkPassword( $username, $password );
 				if( isset( $user->data->userId ) ){
 					$this->messenger->noteSuccess( $words->msgSuccess );
-					$this->session->set( 'auth_user_id', $user->data->userId );
-					$this->session->set( 'auth_role_id', $user->data->roleId );
+					$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->data->userId );
+					$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->data->roleId );
 					$this->logic->setAuthenticatedUser( $user );
 	//				if( $this->request->get( 'login_remember' ) )
 	//					$this->rememberUserInCookie( $user->userId, $password );
@@ -155,8 +155,8 @@ class Controller_Auth_Rest extends Controller
 
 		if( $this->logic->isAuthenticated() ){
 			$payload	= [
-				'userId'	=> $this->session->get( 'auth_user_id' ),
-				'roleId'	=> $this->session->get( 'auth_role_id' ),
+				'userId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
+				'roleId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId ),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->logic->clearCurrentUser();
@@ -327,8 +327,8 @@ class Controller_Auth_Rest extends Controller
 						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
 					if( $passwordMatch ){															//  password from cookie is matching
 						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( 'auth_user_id', $user->userId );						//  set user ID in session
-						$this->session->set( 'auth_role_id', $user->roleId );						//  set user role in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
+						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
 						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
 						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
 						$this->restart( './'.$from );												//  restart (or go to redirect URL)

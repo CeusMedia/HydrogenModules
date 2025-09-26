@@ -311,7 +311,7 @@ class Controller_Work_Time extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
-		$this->userId			= $this->session->get( 'auth_user_id' );
+		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicProject		= Logic_Project::getInstance( $this->env );

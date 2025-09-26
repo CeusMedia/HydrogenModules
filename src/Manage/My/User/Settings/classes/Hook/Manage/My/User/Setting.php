@@ -13,7 +13,7 @@ class Hook_Manage_My_User_Setting extends Hook
 	{
 		if( !$this->env->has( 'session' ) )													//  environment has no session support
 			return;
-		$userId	= (int) $this->env->getSession()->get( 'auth_user_id', '' );
+		$userId	= (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId, '' );
 		if( 0 === $userId )																			//  no user is logged in
 			return;
 

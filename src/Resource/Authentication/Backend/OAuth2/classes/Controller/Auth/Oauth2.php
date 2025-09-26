@@ -33,7 +33,7 @@ class Controller_Auth_Oauth2 extends Controller
 	 */
 	public function login( ?string $providerId = NULL )
 	{
-		if( $this->session->has( 'auth_user_id' ) )
+		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) )
 			$this->redirectAfterLogin();
 
 		$modelUser		= new Model_User( $this->env );
@@ -116,8 +116,8 @@ class Controller_Auth_Oauth2 extends Controller
 
 					$this->messenger->noteSuccess( $messages->msgSuccess, $provider->title );
 					$this->session->set( 'oauth2_token', $token );
-					$this->session->set( 'auth_user_id', $user->userId );
-					$this->session->set( 'auth_role_id', $user->roleId );
+					$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+					$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 					$this->logic->setAuthenticatedUser( $user );
 //					if( $this->request->get( 'login_remember' ) )
 //						$this->rememberUserInCookie( $user );
@@ -138,7 +138,7 @@ class Controller_Auth_Oauth2 extends Controller
 		}
 		if( NULL !== $providerId ){
 			if( $this->moduleConfig->get( 'loginMode' ) === 'tab' )
-				$this->session->set( 'auth_backend', 'Oauth2' );
+				$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Oauth2' );
 			$provider	= $this->modelProvider->get( $providerId );
 			if( !$provider ){
 				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
@@ -170,14 +170,14 @@ class Controller_Auth_Oauth2 extends Controller
 		$this->session->remove( 'oauth2_token' );
 
 		$words		= $this->env->getLanguage()->getWords( 'auth' );
-		if( $this->session->has( 'auth_user_id' ) ){
+		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ){
 			$payload	= [
-				'userId'	=> $this->session->get( 'auth_user_id' ),
-				'roleId'	=> $this->session->get( 'auth_role_id' ),
+				'userId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
+				'roleId'	=> $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId ),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
-			$this->session->remove( 'auth_user_id' );
-			$this->session->remove( 'auth_role_id' );
+			$this->session->remove( Logic_Authentication::$sessionKeyAuthUserId );
+			$this->session->remove( Logic_Authentication::$sessionKeyAuthRoleId );
 			$this->logic->clearCurrentUser();
 			if( $this->request->has( 'autoLogout' ) ){
 				$this->messenger->noteNotice( $words['logout']['msgAutoLogout'] );

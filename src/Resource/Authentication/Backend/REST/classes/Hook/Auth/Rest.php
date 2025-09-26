@@ -28,7 +28,7 @@ class Hook_Auth_Rest extends Hook
 
 /*	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
-		$userId		= (int) $env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
+		$userId		= (int) $env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );							//  get ID of current user (or zero)
 		$cookie		= new HttpCookie( parse_url( $env->url, PHP_URL_PATH ) );
 //		$remember	= (bool) $cookie->get( 'auth_remember' );
 //		$env->getSession()->set( 'isRemembered', $remember );

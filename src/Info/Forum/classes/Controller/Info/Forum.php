@@ -55,7 +55,7 @@ class Controller_Info_Forum extends Controller
 		if( in_array( 'approvePost', $this->rights ) )
 			$data['status']	= 1;
 		$data['threadId']	= $threadId;
-		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
+		$data['authorId']	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
 		$data['createdAt']	= time();
 		$data['type']		= 0;
 
@@ -102,7 +102,7 @@ class Controller_Info_Forum extends Controller
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
-		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
+		$data['authorId']	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$data['createdAt']	= time();
 		$threadId	= $this->modelThread->add( $data, FALSE );
 		$thread		= $this->modelThread->get( $threadId );
@@ -119,7 +119,7 @@ class Controller_Info_Forum extends Controller
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$data		= $this->request->getAll();
-		$data['authorId']	= $this->env->getSession()->get( 'auth_user_id' );
+		$data['authorId']	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$data['rank']		= $this->modelTopic->count();
 		$data['createdAt']	= time();
 		$postId		= $this->modelTopic->add( $data );
@@ -268,7 +268,7 @@ class Controller_Info_Forum extends Controller
 		}
 		$userCanEdit	= in_array( 'editPost', $this->rights );
 		$userIsManager	= in_array( 'removeTopic', $this->rights );
-		$userOwnsPost	= $post->authorId === (int) $this->env->getSession()->get( 'auth_user_id' );
+		$userOwnsPost	= $post->authorId === (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		if( !( $userCanEdit && $userOwnsPost || $userIsManager ) )
 			$this->messenger->noteError( $words->errorAccessDenied );
 		else{
@@ -345,7 +345,7 @@ class Controller_Info_Forum extends Controller
 		$this->messenger	= $this->env->getMessenger();
 		$this->options		= $this->env->getConfig()->getAll( 'module.info_forum.', TRUE );
 		$this->rights		= $this->env->getAcl()->index( 'info/forum' );
-		$this->userId		= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId		= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->cache		= $this->env->getCache();
 
 		if( !( $this->userPosts = $this->cache->get( 'info.forum.userPosts' ) ) ){

@@ -54,10 +54,19 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 */
 	public function clearCurrentUser(): void
 	{
-		$this->session->remove( 'auth_user_id' );
-		$this->session->remove( 'auth_role_id' );
-		$this->session->remove( 'auth_status' );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthUserId );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthRoleId );
+		$this->session->remove( Logic_Authentication::$sessionKeyAuthStatus );
 		$this->env->getCaptain()->callHook( 'Auth', 'clearCurrentUser', $this );
+	}
+
+	/**
+	 *	@return		Entity_Group[]
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getCurrentGroups(): array
+	{
+		return $this->logicUser->getUserGroups( $this->getCurrentUser() );
 	}
 
 	/**
@@ -90,7 +99,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->session->get( 'auth_role_id' );
+		return $this->session->get( $this->sessionKeyAuthRoleId );
 	}
 
 	/**
@@ -99,51 +108,69 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, $withGroups = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( FALSE );
-		if( $userId ){
-			$extensions	= Logic_User::EXTEND_ROLE | Logic_User::EXTEND_GROUPS;
-			$user		= $this->logicUser->checkId( $userId, $extensions, FALSE );
-			if( NULL !== $user )
-				return $user;
+		if( !$userId ){
+			if( $strict )
+				throw new RuntimeException( 'No valid user identified' );
+			return NULL;
 		}
 
-		if( $strict )
-			throw new RuntimeException( 'No valid user identified' );
-		return NULL;
+		$extensions	= 0;
+		if( $withRole )
+			$extensions	|= Logic_User::EXTEND_ROLE;
+		if( $withGroups )
+			$extensions	|= Logic_User::EXTEND_GROUPS;
+		$user		= $this->logicUser->checkId( $userId, $extensions, FALSE );
+		if( NULL !== $user )
+			return $user;
 	}
 
 	/**
 	 *	@param		bool		$strict
 	 *	@return		int|string|NULL
+	 *	@throws		RuntimeException	if not user is authenticated in session
 	 */
-	public function getCurrentUserId( bool $strict = TRUE ): int|string|null
+	public function getCurrentUserId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
 			return 0;
 		}
-		return $this->session->get( 'auth_user_id' );
+		return $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 	}
 
+	/**
+	 *	Indicates whether given user ID is currently authenticated within in this session.
+	 *	@return bool
+	 */
 	public function isAuthenticated(): bool
 	{
 		if( !$this->isIdentified() )
 			return FALSE;
-		$authStatus	= (int) $this->session->get( 'auth_status' );
+		$authStatus	= (int) $this->session->get( Logic_Authentication::$sessionKeyAuthStatus );
 		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
-	public function isIdentified(): bool
-	{
-		return (int) $this->session->get( 'auth_user_id' ) > 0;
-	}
-
+	/**
+	 *	Indicates whether given user ID is currently authenticated within in this session.
+	 *	@param		int|string		$userId
+	 *	@return		bool
+	 */
 	public function isCurrentUserId( int|string $userId ): bool
 	{
 		return $this->getCurrentUserId( FALSE ) == $userId;
+	}
+
+	/**
+	 *	Indicates whether a user is at least identified within this session.
+	 *	@return		bool
+	 */
+	public function isIdentified(): bool
+	{
+		return (int) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ) > 0;
 	}
 
 	/**
@@ -158,19 +185,27 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 		return $this;
 	}
 
+	/**
+	 *	@param		Entity_User		$user
+	 *	@return		self
+	 */
 	public function setAuthenticatedUser( Entity_User $user ): self
 	{
 		$this->setIdentifiedUser( $user );
-		$this->session->set( 'auth_status', Logic_Authentication::STATUS_AUTHENTICATED );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthStatus, Logic_Authentication::STATUS_AUTHENTICATED );
 		return $this;
 	}
 
-	public function setIdentifiedUser( object $user ): self
+	/**
+	 *	@param		Entity_User		$user
+	 *	@return		self
+	 */
+	public function setIdentifiedUser( Entity_User $user ): self
 	{
-		$this->session->set( 'auth_backend', 'Local' );
-		$this->session->set( 'auth_user_id', $user->userId );
-		$this->session->set( 'auth_role_id', $user->roleId );
-		$this->session->set( 'auth_status', Logic_Authentication::STATUS_IDENTIFIED );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Local' );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
+		$this->session->set( Logic_Authentication::$sessionKeyAuthStatus, Logic_Authentication::STATUS_IDENTIFIED );
 		return $this;
 	}
 

@@ -92,8 +92,8 @@ if( $exceptions ){
 
 		$icons	= [];
 
-		if( $exceptionSession->get( 'auth_user_id' ) ){
-			$user	= $modelUser->get( $exceptionSession->get( 'auth_user_id' ) );
+		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
+			$user	= $modelUser->get( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 			$icons['user']	= HtmlTag::create( 'span', $iconUser, [
 				'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
 			] );

@@ -140,7 +140,7 @@ class Logic_Work_Timer
 	{
 		$this->env			= $env;
 		$this->session		= $this->env->getSession();
-		$this->userId		= $this->session->get( 'auth_user_id' );
+		$this->userId		= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->modelTimer	= new Model_Work_Timer( $this->env );
 	}
 

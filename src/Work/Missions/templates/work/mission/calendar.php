@@ -53,7 +53,7 @@ $content	= '
 $script	= '
 <script>
 $(document).ready(function(){
-	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( 'auth_user_id' ).';
+	WorkMissionsCalendar.userId = '.(int) $env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId ).';
 	WorkMissionsCalendar.year = '.$year.';
 	WorkMissionsCalendar.month = '.$month.';
 	WorkMissionsCalendar.init();

@@ -524,8 +524,8 @@ class Controller_Manage_Project extends Controller
 		$this->useMissions		= $this->env->getModules()->has( 'Work_Missions' );
 		$this->useCompanies		= $this->env->getModules()->has( 'Manage_Projects_Companies' );
 		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
-		$this->userId			= $this->session->get( 'auth_user_id', 0 );
-		$this->roleId			= $this->session->get( 'auth_role_id', 0 );
+		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId, 0 );
+		$this->roleId			= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId, 0 );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic			= $this->getLogic( 'Project' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

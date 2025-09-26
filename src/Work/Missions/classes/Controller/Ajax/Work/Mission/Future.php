@@ -10,7 +10,7 @@ class Controller_Ajax_Work_Mission_Future extends Controller_Ajax_Work_Mission
 	 */
 	public function renderIndex(): void
 	{
-		$userId		= $this->session->get( 'auth_user_id' );
+		$userId		= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 
 		//  get list limit and page filters and sanitize them
 		$limitMin	= 10;

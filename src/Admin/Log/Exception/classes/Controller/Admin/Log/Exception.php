@@ -176,9 +176,9 @@ class Controller_Admin_Log_Exception extends Controller
 		$exceptionSession	= new Dictionary( unserialize( $exception->session ?? 'b:0;' ) ?: [] );
 
 		$user	= NULL;
-		if( $exceptionSession->get( 'auth_user_id' ) ){
+		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
 			$model	= new Model_User( $this->env );
-			$user	= $model->get( $exceptionSession->get( 'auth_user_id' ) );
+			$user	= $model->get( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
 		}
 
 		$this->addData( 'exception', $exception );

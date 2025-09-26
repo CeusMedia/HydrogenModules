@@ -135,7 +135,7 @@ class Controller_Manage_My_Company extends Controller
 		$this->modelCompany		= new Model_Company( $this->env );
 		$this->modelCompanyUser	= new Model_Company_User( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
-		$this->userId			= $this->env->getSession()->get( 'auth_user_id' );
+		$this->userId			= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->companies		= $this->getMyCompanies();
 	}
 

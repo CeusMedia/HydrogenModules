@@ -48,7 +48,7 @@ class Hook_Auth_Local extends Hook
 
 /*	public function onPageApplyModules(): void
 	{
-		$userId		= (int) $this->env->getSession()->get( 'auth_user_id' );							//  get ID of current user (or zero)
+		$userId		= (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );							//  get ID of current user (or zero)
 		$cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		$remember	= (bool) $cookie->get( 'auth_remember' );
 		$this->env->getSession()->set( 'isRemembered', $remember );

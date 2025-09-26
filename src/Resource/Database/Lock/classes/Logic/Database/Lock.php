@@ -181,6 +181,6 @@ class Logic_Database_Lock extends Logic
 	protected function __onInit(): void
 	{
 		$this->model	= new Model_Lock( $this->env );
-		$this->userId	= $this->env->getSession()->get( 'auth_user_id', '' );
+		$this->userId	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId, '' );
 	}
 }

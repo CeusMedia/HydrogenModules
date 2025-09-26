@@ -125,7 +125,7 @@ class Controller_Manage_My_User extends Controller
 	public function index(): void
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
-		$roleId		= $this->session->get( 'auth_role_id' );
+		$roleId		= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
 		$modelRole	= new Model_Role( $this->env );
 
 		if( !$this->userId ){
