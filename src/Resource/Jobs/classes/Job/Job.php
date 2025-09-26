@@ -55,6 +55,18 @@ class Job_Job extends Job_Abstract
 			JsonFileWriter::save( $targetFile, $moduleJobs, TRUE );
 		}
 	}
+	
+	public function discover(): int
+	{
+		$list	= $this->logic->discoverJobDefinitions();
+		if( [] !== $list ){
+			$this->out( 'Discovered '.count($list).' new jobs:' );
+			foreach( $list as $job ){
+				if( $this->parameters->get( '--verbose' ) )
+					$this->out( '- '.$job->identifier );
+			}
+		}
+	}
 
 	/**
 	 *	Display list of available job identifiers.
