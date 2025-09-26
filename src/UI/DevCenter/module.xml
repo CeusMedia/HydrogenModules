@@ -27,7 +27,7 @@ Press F9 to open DevCenter.
 		<style load="auto" source="theme">ui.dev.center.css</style>
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
-	<hook type="resource" resource="App" event="respond">Hook_UI_DevCenter::onAppRespond</hook>
 	<hook type="resource" resource="Env" event="initModules">Hook_UI_DevCenter::onEnvInitModules</hook>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_DevCenter::onPageApplyModules</hook>
+    <hook type="resource" resource="Page" event="render">Hook_UI_DevCenter::onPageRender</hook>
 </module>

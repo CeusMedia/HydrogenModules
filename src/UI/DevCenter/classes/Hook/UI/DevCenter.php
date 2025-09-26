@@ -15,26 +15,6 @@ class Hook_UI_DevCenter extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onAppRespond( Environment $env, $context, $module, $payload = [] )
-	{
-		if( $env->getConfig()->get( 'module.ui_devcenter.active' ) ){
-			$center		= Resource_DevCenter::getInstance( $env );
-			$helper		= new View_Helper_DevCenter( $env );
-			$label		= '<b>Dev</b><span class="muted">Center</span>';
-			$context->addBody( $helper->render( $center, $label ) );
-		}
-	}
-
-	/**
-	 *	...
-	 *	@access		public
-	 *	@static
-	 *	@param		Environment		$env		Environment object
-	 *	@param		object			$context	Caller object
-	 *	@param		object			$module		Module config data object
-	 *	@param		array			$payload	Map of payload data
-	 *	@return		void
-	 */
 	public static function onEnvInitModules( Environment $env, $context, $module, $payload = [] )
 	{
 		if( $env->getConfig()->get( 'module.ui_devcenter.active' ) ){
@@ -62,6 +42,26 @@ class Hook_UI_DevCenter extends Hook
 			$center->addByModule( 'env' );
 			$center->addByModule( 'server' );
 			$context->addScript( "$(document).ready(function(){UI.DevCenter.init();});" );
+		}
+	}
+
+	/**
+	 *	Appends dev center to page body.
+	 *	@access		public
+	 *	@static
+	 *	@param		Environment		$env		Environment object
+	 *	@param		object			$context	Caller object
+	 *	@param		object			$module		Module config data object
+	 *	@param		array			$payload	Map of payload data
+	 *	@return		void
+	 */
+	public function onPageRender()
+	{
+		if( $this->env->getConfig()->get( 'module.ui_devcenter.active' ) ){
+			$center		= Resource_DevCenter::getInstance( $this->env );
+			$helper		= new View_Helper_DevCenter( $this->env );
+			$label		= '<b>Dev</b><span class="muted">Center</span>';
+			$this->context->addBody( $helper->render( $center, $label ) );
 		}
 	}
 }
