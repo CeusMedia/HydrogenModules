@@ -20,5 +20,5 @@
 	</files>
 	<config protected="no" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<hook type="resource" resource="Page" event="applyModules">Hook_UI_DevLayers::onPageApplyModules</hook>
-	<hook type="resource" resource="App" event="respond">Hook_UI_DevLayers::onAppRespond</hook>
+	<hook type="resource" resource="Page" event="render">Hook_UI_DevLayers::onPageRender</hook>
 </module>

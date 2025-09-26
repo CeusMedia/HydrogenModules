@@ -15,16 +15,14 @@ class Hook_UI_DevLayers extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onAppRespond( Environment $env, $context, $module, $payload = [] )
+	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( 'module.ui_devlayers.active' ) )
 			return;
-		$helper		= new View_Helper_DevLayers( $env );
-		$context->addBody( $helper->render() );
 	}
 
 	/**
-	 *	...
+	 *	Appends dev layers to page body.
 	 *	@access		public
 	 *	@static
 	 *	@param		Environment		$env		Environment object
@@ -33,9 +31,11 @@ class Hook_UI_DevLayers extends Hook
 	 *	@param		array			$payload	Map of payload data
 	 *	@return		void
 	 */
-	public static function onPageApplyModules( Environment $env, $context, $module, $payload = [] )
+	public static function onPageRender( Environment $env, $context, $module, $payload = [] )
 	{
 		if( !$env->getConfig()->get( 'module.ui_devlayers.active' ) )
 			return;
+		$helper		= new View_Helper_DevLayers( $env );
+		$context->addBody( $helper->render() );
 	}
 }
