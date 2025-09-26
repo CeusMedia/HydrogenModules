@@ -4,14 +4,25 @@
 	<description><![CDATA[Log for requests on web applications.
 
 Automatically logs all HTTP requests and CLI job calls.
+
+There are 2 ways to store the collected request data on each app request:
+- directly into database
+- append to log file
+
+To avoid database write commands on heavy load apps, storing the data in a file at first is possible.
+Logged entries can be imported by job periodically.
+This is recommended at the moment. File locks are missing and so on.
+
 ]]></description>
 	<category>Server</category>
-	<version>0.2.3</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add session ID.</log>
 	<log version="0.2.2">Add logic class.</log>
 	<log version="0.2.3">Improve data structure.</log>
+	<log version="0.2.4">Support saving request response data.</log>
+	<log version="0.2.5">Support log file to avoid database work on each request.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -23,8 +34,12 @@ Automatically logs all HTTP requests and CLI job calls.
 	</files>
 	<relations/>
 	<config protected="yes" type="boolean" name="active">yes</config>
+    <config protected="yes" type="string" name="saveTo" values="database,file">database</config>
+	<config protected="yes" type="string" name="file">requests.log</config>
 	<hook type="resource" resource="Env" event="init">Hook_Server_Log_Request::onEnvInit</hook>
-		<sql type="mysql" on="install" version="final"><![CDATA[
+	<job id="Server.Log.Request.archive">Server_Log_Request::archive</job>
+	<job id="Server.Log.Request.import">Server_Log_Request::import</job>
+	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_requests`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   `requestId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -36,12 +51,19 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   `session` text DEFAULT NULL,
   `cookie` text DEFAULT NULL,
   `headers` text DEFAULT NULL,
+  `responseCode` TINYINT(2) UNSIGNED NULL DEFAULT NULL,
+  `responseTime` DECIMAL(8,3) UNSIGNED NULL DEFAULT NULL,
+  `responseType` VARCHAR(63) NULL DEFAULT NULL,
+  `responseContent` MEDIUMTEXT NULL DEFAULT NULL,
   `timestamp` datetime(6) NOT NULL,
   PRIMARY KEY (`requestId`),
   KEY `ip` (`ip`),
   KEY `sessionId` (`sessionId`),
   KEY `method` (`method`),
   KEY `url` (`url`),
+  KEY `responseCode` (`responseCode`),
+  KEY `responseTime` (`responseTime`),
+  KEY `responseType` (`responseType`),
   KEY `timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
@@ -69,7 +91,14 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
 ALTER TABLE `<%?prefix%>log_requests`
   CHANGE COLUMN `ip` `ip` VARCHAR(63) NOT NULL DEFAULT '',
   CHANGE COLUMN `sessionId` `sessionId` VARCHAR(255) NOT NULL DEFAULT '',
-  ADD INDEX `sessionId` (`sessionId`);
+  ADD COLUMN `responseCode` TINYINT(2) UNSIGNED NULL DEFAULT NULL AFTER `headers`,
+  ADD COLUMN `responseTime` DECIMAL(8,3) UNSIGNED NULL DEFAULT NULL AFTER `responseCode`,
+  ADD COLUMN `responseType` VARCHAR(63) NULL DEFAULT NULL AFTER `responseTime`,
+  ADD COLUMN `responseContent` MEDIUMTEXT NULL DEFAULT NULL AFTER `responseType`,
+  ADD INDEX `sessionId` (`sessionId`),
+  ADD INDEX `responseCode` (`responseCode`),
+  ADD INDEX `responseTime` (`responseTime`),
+  ADD INDEX `responseType` (`responseType`)
 ;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[

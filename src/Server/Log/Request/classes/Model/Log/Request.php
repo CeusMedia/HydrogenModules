@@ -18,6 +18,10 @@ class Model_Log_Request extends DatabaseModel
 		'session',
 		'cookie',
 		'headers',
+		'responseCode',
+		'responseTime',
+		'responseType',
+		'responseContent',
 		'timestamp',
 	];
 	protected array $indices		= [
