@@ -1,0 +1,15 @@
+Hallo <%user.firstname%>,
+ein Meeting wurde verändert:
+
+<%meeting.title%>
+========================================
+Zeitpunkt: <%meeting.dateStart%> – <%meeting.dateEnd%>
+----------------------------------------
+Ort: <%meeting.location%>
+----------------------------------------
+
+<%meeting.content%>
+
+----------------------------------------
+
+Browser-Ansicht des Meetings (<%baseUrl%>work/meeting/view/<%meeting.meetingId%>)

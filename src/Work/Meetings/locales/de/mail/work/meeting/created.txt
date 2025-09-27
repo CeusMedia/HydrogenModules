@@ -1,0 +1,15 @@
+Hallo <%user.firstname%>,
+du wurdest zu einem Meeting eingeladen:
+
+<%meeting.title%>
+========================================
+Zeitpunkt: <%meeting.dateStart%> – <%meeting.dateEnd%>
+----------------------------------------
+Ort: <%meeting.location%>
+----------------------------------------
+
+<%meeting.content%>
+
+----------------------------------------
+
+Browser-Ansicht des Meetings (<%baseUrl%>work/meeting/view/<%meeting.meetingId%>)
