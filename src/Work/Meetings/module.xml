@@ -23,16 +23,16 @@ This module comes with:
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Controller/Work/Meeting.php</class>
-		<class>Entity/Meeting.php</class>
-		<class>Entity/Meeting/Participant.php</class>
+		<class>Entity/Work/Meeting.php</class>
+		<class>Entity/Work/Meeting/Participant.php</class>
 <!--		<class>Hook/Work/Meeting.php</class>-->
 		<class>Logic/Work/Meeting.php</class>
 		<class>Mail/Work/Meeting/Cancelled.php</class>
 		<class>Mail/Work/Meeting/Created.php</class>
 		<class>Mail/Work/Meeting/Reminder.php</class>
 		<class>Mail/Work/Meeting/Updated.php</class>
-		<class>Model/Meeting.php</class>
-		<class>Model/Meeting/Participant.php</class>
+		<class>Model/Work/Meeting.php</class>
+		<class>Model/Work/Meeting/Participant.php</class>
 		<class>View/Work/Meeting.php</class>
 		<locale>de/work/meeting.ini</locale>
 		<locale>en/work/meeting.ini</locale>
