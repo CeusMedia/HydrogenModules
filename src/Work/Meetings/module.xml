@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<module>
+	<title>Work: Meetings</title>
+	<description><![CDATA[Meetings for users.
+
+This module comes with:
+
+- CRUD management
+- HTML editor
+- participants assignment
+- status process / work flow
+- mails on creation and reminder
+- jobs for mails
+- --dashboard panel--
+
+]]></description>
+	<category>Work</category>
+	<version>0.2.0</version>
+	<log version="0.1">Initial prototype of module.</log>
+	<log version="0.2">Separation to Hydrogen module.</log>
+	<company site="https://ceusmedia.de/">Ceus Media</company>
+	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+	<files>
+		<class>Controller/Work/Meeting.php</class>
+		<class>Entity/Meeting.php</class>
+		<class>Entity/Meeting/Participant.php</class>
+<!--		<class>Hook/Work/Meeting.php</class>-->
+		<class>Logic/Work/Meeting.php</class>
+		<class>Mail/Work/Meeting/Cancelled.php</class>
+		<class>Mail/Work/Meeting/Created.php</class>
+		<class>Mail/Work/Meeting/Reminder.php</class>
+		<class>Mail/Work/Meeting/Updated.php</class>
+		<class>Model/Meeting.php</class>
+		<class>Model/Meeting/Participant.php</class>
+		<class>View/Work/Meeting.php</class>
+		<locale>de/work/meeting.ini</locale>
+		<locale>en/work/meeting.ini</locale>
+		<locale>de/mail/work/meeting/cancelled.html</locale>
+		<locale>de/mail/work/meeting/cancelled.txt</locale>
+		<locale>de/mail/work/meeting/created.html</locale>
+		<locale>de/mail/work/meeting/created.txt</locale>
+		<locale>de/mail/work/meeting/reminder.html</locale>
+		<locale>de/mail/work/meeting/reminder.txt</locale>
+		<locale>de/mail/work/meeting/updated.html</locale>
+		<locale>de/mail/work/meeting/updated.txt</locale>
+		<locale>en/mail/work/meeting/cancelled.html</locale>
+		<locale>en/mail/work/meeting/cancelled.txt</locale>
+		<locale>en/mail/work/meeting/created.html</locale>
+		<locale>en/mail/work/meeting/created.txt</locale>
+		<locale>en/mail/work/meeting/reminder.html</locale>
+		<locale>en/mail/work/meeting/reminder.txt</locale>
+		<locale>en/mail/work/meeting/updated.html</locale>
+		<locale>en/mail/work/meeting/updated.txt</locale>
+		<template>work/meeting/add.php</template>
+		<template>work/meeting/edit.php</template>
+		<template>work/meeting/index.php</template>
+		<template>work/meeting/view.php</template>
+	</files>
+	<relations>
+		<needs type="module">Resource_Users</needs>
+	</relations>
+	<link xml:lang="de" access="acl" path="work/meeting" rank="85">Meetings</link>
+	<link xml:lang="en" access="acl" path="work/meeting" rank="85">Meetings</link>
+	<sql type="mysql" on="install" version="0.1"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>meetings`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>meetings` (
+  `meetingId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `creatorId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `priority` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `dateStart` date DEFAULT NULL,
+  `dateEnd` date DEFAULT NULL,
+  `location` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `title` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `link` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`meetingId`),
+  KEY `creatorId` (`creatorId`),
+  KEY `type` (`type`),
+  KEY `priority` (`priority`),
+  KEY `status` (`status`),
+  KEY `dateStart` (`dateStart`),
+  KEY `dateEnd` (`dateEnd`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>meeting_participants`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>meeting_participants` (
+  `meetingParticipantId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `meetingId` int(11) unsigned NOT NULL,
+  `userId` int(11) unsigned NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `createdAt` decimal(12,0) unsigned NOT NULL,
+  `modifiedAt` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`meetingParticipantId`),
+  KEY `meetingId` (`meetingId`),
+  KEY `userId` (`userId`),
+  KEY `type` (`type`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql type="mysql" on="uninstall"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>meetings`;
+DROP TABLE IF EXISTS `<%?prefix%>meeting_participants`;
+]]></sql>
+</module>

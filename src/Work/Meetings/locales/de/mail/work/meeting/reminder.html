@@ -1,0 +1,12 @@
+<p>
+    <strong>Hallo <%user.firstname%>,</strong><br/>
+    bitte denke an dieses Meeting:
+</p>
+<p>
+    <h3><%meeting.title%></h3>
+    <div class="meeting-date">Zeitpunkt: <%meeting.dateStart%> – <%meeting.dateEnd%></div>
+    <div class="meeting-location">Ort: <%meeting.location%></div>
+    <div class="meeting-content"><%meeting.content%></div>
+    <hr/>
+    <a href="<%baseUrl%>work/meeting/view/<%meeting.meetingId%>">Browser-Ansicht des Meetings</a>
+</p>
