@@ -5,7 +5,7 @@ Wir haben Sie an unserem Newsletter angemeldet und folgenden Themengruppen zugeo
 <%groups%>
 
 Damit die Anmeldung aktiv wird, muss die Gültigkeit der E-Mail-Adresse bestätigen.
-Öffnen Sie dazu bitte den folgende Link im Browser mit einem Klick:
+Öffnen Sie dazu bitte den folgenden Link im Browser mit einem Klick:
 
 <%baseUrl%>info/newsletter/confirm/<%readerId%>/<%key%>
 
