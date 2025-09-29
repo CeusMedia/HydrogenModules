@@ -6,6 +6,8 @@ class Entity_Work_Meeting extends Entity
 {
 	public int|string $meetingId	= 0;
 	public int|string $creatorId	= 0;
+	public int $type				= Model_Work_Meeting::TYPE_GENERAL;
+	public int $priority			= Model_Work_Meeting::PRIORITY_NORMAL;
 	public int $status				= Model_Work_Meeting::STATUS_NEW;
 	public string $dateStart;
 	public string $dateEnd;
@@ -20,8 +22,8 @@ class Entity_Work_Meeting extends Entity
 	public array $participants		= [];
 
 	protected static array $mandatoryFields	= [
-		'startsAt',
-		'minutes',
+		'dateStart',
+		'dateEnd',
 		'location',
 		'title',
 	];

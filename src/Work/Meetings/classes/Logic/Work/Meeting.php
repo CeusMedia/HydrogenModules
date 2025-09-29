@@ -8,31 +8,36 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	protected Model_Work_Meeting $modelMeeting;
 	protected Model_Work_Meeting_Participant $modelParticipant;
 
-	public function getMeeting( $meetingId ): ?Entity_Work_Meeting
-	{
-		/** @var ?Entity_Work_Meeting $meeting */
-		$meeting	= $this->modelMeeting->get( $meetingId );
-		if( NULL !== $meeting )
-			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId );
-		return $meeting;
-	}
-
 	public function getActiveMeetingsOfCurrentUser(): array
 	{
 		$conditions	= [
 			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
 		];
-		$orders		= ['date' => 'ASC', 'time' => 'ASC'];
+		$orders		= ['dateStart' => 'ASC'];
 		$meetingIds	= $this->modelParticipant->getAllByIndices( [
 			'meetingId'	=> $this->modelMeeting->getAll( $conditions, $orders ),
 			'userId'	=> $this->logicAuth->getCurrentUserId(),
 		], [], [], ['meetingId'] );
 
+		$logicUser	= Logic_User::getInstance( $this->env );
+
+		/** @var Entity_Work_Meeting $meetings */
 		$meetings	= $this->modelMeeting->getAllByIndex( 'meetingId', $meetingIds );
 		foreach( $meetings as $meeting ){
 			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->id );
+			foreach( $meetings->participants as $participant )
+				$participant->user	= $logicUser->getUser( $participant->userId );
 		}
 		return $meetings;
+	}
+
+	public function getMeeting( $meetingId ): ?Entity_Work_Meeting
+	{
+		/** @var ?Entity_Work_Meeting $meeting */
+		$meeting	= $this->modelMeeting->get( $meetingId );
+		if( NULL !== $meeting )
+			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, ['type' => 'ASC'] );
+		return $meeting;
 	}
 
 	/**
@@ -120,6 +125,8 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	public function sendMailsOnUpdate( Entity_Work_Meeting $meeting, array $updates = [] ): int
 	{
 		if( [] === $updates )
+			return 0;
+		if( Model_Work_Meeting::STATUS_ACTIVE !== $meeting->status )
 			return 0;
 
 		$language		= $this->env->getLanguage()->getLanguage();

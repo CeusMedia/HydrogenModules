@@ -1,6 +1,22 @@
 <?php
 class Model_Work_Meeting extends CeusMedia\HydrogenFramework\Model\Database\Table
 {
+	public const TYPE_GENERAL		= 0;
+
+	public const PRIORITY_LOWEST	= 0;
+	public const PRIORITY_LOW		= 1;
+	public const PRIORITY_NORMAL	= 2;
+	public const PRIORITY_HIGH		= 3;
+	public const PRIORITY_HIGHEST	= 4;
+
+	public const PRIORITIES			= [
+		self::PRIORITY_LOWEST,
+		self::PRIORITY_LOW,
+		self::PRIORITY_NORMAL,
+		self::PRIORITY_HIGH,
+		self::PRIORITY_HIGHEST,
+	];
+
 	public const STATUS_CANCELLED	= -1;
 	public const STATUS_NEW			= 0;
 	public const STATUS_ACTIVE		= 1;
@@ -15,10 +31,12 @@ class Model_Work_Meeting extends CeusMedia\HydrogenFramework\Model\Database\Tabl
 		self::STATUS_DONE,
 	];
 
-	protected string $name				= 'work_meetings';
-	protected array $columns			= [
-		'workMeetingId',
+	protected string $name			= 'meetings';
+	protected array $columns		= [
+		'meetingId',
 		'creatorId',
+		'type',
+		'priority',
 		'status',
 		'dateStart',
 		'dateEnd',
@@ -29,17 +47,19 @@ class Model_Work_Meeting extends CeusMedia\HydrogenFramework\Model\Database\Tabl
 		'createdAt',
 		'modifiedAt',
 	];
-	protected array $indexes			= [
+	protected array $indices		= [
 		'creatorId',
+		'type',
+		'priority',
 		'status',
-		'startsAt',
-		'minutes',
+		'dateStart',
+		'dateEnd',
 		'location',
 		'title',
 		'link',
 	];
-	protected string $primaryKey		= 'workMeetingId';
+	protected string $primaryKey	= 'meetingId';
 
-	protected int $fetchMode			= PDO::FETCH_CLASS;
-	protected ?string $fetchEntityClass	= Entity_Work_Meeting::class;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+	protected ?string $className	= Entity_Work_Meeting::class;
 }
