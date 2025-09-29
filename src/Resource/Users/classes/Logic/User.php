@@ -90,12 +90,23 @@ class Logic_User extends Logic
 	}
 
 	/**
-	 * @param	Entity_Role		$role
+	 * @param	Entity_Group|int|string		$groupEntityOrId
 	 * @return	int
 	 */
-	public function countRoleUsers( Entity_Role $role ): int
+	public function countGroupUsers( Entity_Group|int|string $groupEntityOrId ): int
 	{
-		return $this->modelUser->countByIndex( 'roleId', $role->roleId );
+		$groupId	= $groupEntityOrId instanceof Entity_Group ? $groupEntityOrId->groupId : $groupEntityOrId;
+		return $this->modelGroupUser->countByIndex( 'groupId', $groupId );
+	}
+
+	/**
+	 * @param	Entity_Role|int|string		$roleEntityOrId
+	 * @return	int
+	 */
+	public function countRoleUsers( Entity_Role|int|string $roleEntityOrId ): int
+	{
+		$roleId	= $roleEntityOrId instanceof Entity_Role ? $roleEntityOrId->roleId : $roleEntityOrId;
+		return $this->modelUser->countByIndex( 'roleId', $roleId );
 	}
 
 	/**
@@ -110,6 +121,21 @@ class Logic_User extends Logic
 	}
 
 	/**
+	 *	@param		Entity_Group|int|string		$groupEntityOrId
+	 *	@return		Entity_User[]
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getGroupUsers( Entity_Group|int|string $groupEntityOrId ): array
+	{
+		$groupId	= $groupEntityOrId instanceof Entity_Group ? $groupEntityOrId->groupId : $groupEntityOrId;
+		$users		= [];
+		/** @var Entity_Group_User $relation */
+		foreach( $this->modelGroupUser->getAllByIndex( 'groupId', $groupId ) as $relation )
+			$users[$relation->userId]	= $this->modelUser->get( $relation->userId );
+		return $users;
+	}
+
+	/**
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
@@ -121,8 +147,8 @@ class Logic_User extends Logic
 	}
 
 	/**
-	 * @param	Entity_Role|int|string		$role
-	 * @return	Entity_User[]
+	 * @param		Entity_Role|int|string		$role
+	 * @return		Entity_User[]
 	 */
 	public function getRoleUsers( Entity_Role|int|string $roleEntityOrId ): array
 	{
