@@ -14,6 +14,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 *	@param		int|string		$userId
 	 *	@param		string			$password
 	 *	@return		bool
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		remove support for old user password
 	 */
@@ -99,16 +100,17 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->session->get( $this->sessionKeyAuthRoleId );
+		return $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
 	}
 
 	/**
 	 *	@param		bool		$strict
 	 *	@param		bool		$withRole
+	 *	@param		bool		$withGroups
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, $withGroups = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, bool $withGroups = FALSE ): ?object
 	{
 		$userId	= $this->getCurrentUserId( FALSE );
 		if( !$userId ){
@@ -122,9 +124,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 			$extensions	|= Logic_User::EXTEND_ROLE;
 		if( $withGroups )
 			$extensions	|= Logic_User::EXTEND_GROUPS;
-		$user		= $this->logicUser->checkId( $userId, $extensions, FALSE );
-		if( NULL !== $user )
-			return $user;
+		return $this->logicUser->checkId( $userId, $extensions, FALSE );
 	}
 
 	/**
