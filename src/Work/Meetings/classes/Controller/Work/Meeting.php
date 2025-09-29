@@ -1,19 +1,30 @@
-<?php
-class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
+use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Controller;
+
+class Controller_Work_Meeting extends Controller
 {
 	protected Logic_Work_Meeting $logic;
 	protected Logic_Authentication $logicAuth;
 	protected Model_Work_Meeting $modelMeeting;
 	protected Model_Work_Meeting_Participant $modelParticipant;
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function add(): void
 	{
 		if( $this->env->getRequest()->getMethod()->isPost() ){
-			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
-			$entity		= new Entity_Work_Meeting();
-			$entity->creatorId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
-			$entity->dateStart	= $data->get( 'dateStart' );
-			$entity->dateEnd	= $data->get( 'dateEnd' );
+			/** @var Dictionary $data */
+			$data			= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
+			$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+			$entity			= new Entity_Work_Meeting();
+			$entity->creatorId	= $currentUserId;
+			$entity->dateStart	= $data->get( 'dateStart_date' ).' '.$data->get( 'dateStart_time' );
+			$entity->dateEnd	= $data->get( 'dateEnd_date' ).' '.$data->get( 'dateEnd_time' );
 			$entity->location	= $data->get( 'location' );
 			$entity->title		= $data->get( 'title' );
 			$entity->content	= '';
@@ -21,27 +32,104 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 			$entity->createdAt	= time();
 			$entity->modifiedAt	= time();
 
-			$meetingId	= $this->modelMeeting->add( $entity, TRUE );
+			$meetingId	= $this->modelMeeting->add( $entity->toArray() );
 			$entity->content	= $data->get( 'content' );
 			$this->modelMeeting->edit( $meetingId, $entity, FALSE );
 
-			/** @var Entity_Work_Meeting $meeting */
-			$meeting	= $this->modelMeeting->get( $meetingId );
-			$this->logic->sendMailsOnCreated( $meeting );
+			$role	= $data->get( 'role' );
+			$entity	= new Entity_Work_Meeting_Participant();
+			$entity->meetingId	= $meetingId;
+			$entity->role		= $role;
+			$entity->timestamp	= time();
+			$entity->userId		= $currentUserId;
+			$this->modelParticipant->add( $entity );
 
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
+
+		/** @var Dictionary $meeting */
+		$meeting	= $this->env->getRequest()->getAll( NULL, TRUE );
+		$this->addData( 'meeting', $meeting );
 	}
 
-	public function edit( int|string $meetingId ): void
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addParticipants( int|string $meetingId ): void
 	{
-		/** @var ?Entity_Work_Meeting $meeting */
-		$meeting	= $this->modelMeeting->get( $meetingId );
-		if( NULL === $meeting ){
-			$this->env->getMessenger()->noteError( 'Invalid meeting ID.' );
-			$this->restart( NULL, TRUE );
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->checkMeeting( $meetingId );
+		$isEditable	= Model_Work_Meeting::STATUS_NEW === $meeting->status;
+		$isPost		= $this->env->getRequest()->getMethod()->isPost();
+		if( $isEditable && $isPost ){
+			$logicUser	= Logic_User::getInstance( $this->env );
+			/** @var Dictionary $data */
+			$data		= $this->env->getRequest()->getAll( NULL, TRUE );
+			$userIds	= [];
+			switch( $data->get( 'source' ) ){
+				case 'roles':
+					foreach( $data->get( 'roles' ) as $roleId )
+						foreach( $logicUser->getRoleUsers( $roleId ) as $user )
+							$userIds[]	= $user->userId;
+					break;
+				case 'groups':
+					foreach( $data->get( 'groups' ) as $groupId )
+						foreach( $logicUser->getGroupUsers( $groupId ) as $user )
+							$userIds[]	= $user->userId;
+					break;
+//				case 'user':
+//					break;
+			}
+			if( [] !== $userIds ){
+				foreach( $userIds as $userId ){
+					$this->modelParticipant->add( [
+						'meetingId'	=> $meetingId,
+						'userId'	=> $userId,
+						'type'		=> $data->get( 'type' ),
+					] );
+				}
+			}
 		}
+		$this->restart( 'edit/'.$meetingId, TRUE );
+	}
+
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@param		int|string		$userId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeParticipant( int|string $meetingId, int|string $userId ): void
+	{
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->checkMeeting( $meetingId );
+		$isEditable	= Model_Work_Meeting::STATUS_NEW === $meeting->status;
+		if( $isEditable ){
+			$this->modelParticipant->removeByIndices( [
+				'meetingId'	=> $meetingId,
+				'userId'	=> $userId,
+			] );
+		}
+		$this->restart( 'edit/'.$meetingId, TRUE );
+	}
+
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@param		bool			$editMode
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function edit( int|string $meetingId, bool $editMode = FALSE ): void
+	{
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->checkMeeting( $meetingId );
+		$logicUser	= Logic_User::getInstance( $this->env );
 		if( $this->env->getRequest()->getMethod()->isPost() ){
+			/** @var Dictionary $data */
 			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
 			$entity		= clone $meeting;
 			$fields		= ['dateStart', 'dateEnd', 'location', 'title', 'content', 'link'];
@@ -60,8 +148,28 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 			}
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
-
+		$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, ['type' => 'ASC'] );
+		/** @var Entity_Work_Meeting_Participant $participant */
+		foreach( $meeting->participants as $participant )
+			$participant->user	= $logicUser->getUser( $participant->userId );
+		$this->addData( 'editMode', $editMode );
 		$this->addData( 'meeting', $meeting );
+
+		/** @var Logic_User $logicUser */
+		$logicUser	= $this->env->getLogic()->get( 'User' );
+
+		$roles		= $logicUser->getRoles( ['access' => Model_Role::ACCESS_ACL], ['roleId' => 'DESC'] );
+		foreach( $roles as $nr => $role ){
+			if( 0 && !$this->env->getAcl()->hasRight( $role->roleId, 'work/meeting', 'view' ) )
+				unset( $roles[$nr] );
+			else
+				$role->nrUsers	= $logicUser->countRoleUsers( $role );
+		}
+		$this->addData( 'roles', $roles );
+
+		$groups	= $logicUser->getGroups();
+		$this->addData( 'groups', $groups );
+
 	}
 
 	public function index(): void
@@ -73,13 +181,17 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 		$this->addData( 'meetings', $meetings );
 	}
 
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@param		int				$status
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function setStatus( int|string $meetingId, int $status ): void
 	{
-		$meeting	= $this->modelMeeting->get( $meetingId );
-		if( NULL === $meeting ){
-			$this->env->getMessenger()->noteError( 'Invalid meeting ID' );
-			$this->restart( NULL, TRUE );
-		}
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->checkMeeting( $meetingId );
 
 		$this->modelMeeting->edit( $meetingId, [
 			'status'		=> $status,
@@ -105,6 +217,11 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function remove( int|string $meetingId ): void
 	{
 		/** @var ?Entity_Work_Meeting $meeting */
@@ -127,6 +244,10 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int|string|NULL		$meetingId
+	 *	@return		void
+	 */
 	public function view( int|string|NULL $meetingId = NULL ): void
 	{
 		$meetings	= $this->logic->getActiveMeetingsOfCurrentUser();
@@ -136,11 +257,34 @@ class Controller_Work_Meeting extends \CeusMedia\HydrogenFramework\Controller
 			$this->addData( 'meeting', $this->logic->getMeeting( $meetingId ) );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->logic			= Logic_Work_Meeting::getInstance( $this->env );
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
+	}
+
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@param		bool			$strict
+	 *	@return		Entity_Work_Meeting|null
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function checkMeeting( int|string $meetingId, bool $strict = TRUE ): ?Entity_Work_Meeting
+	{
+		/** @var ?Entity_Work_Meeting $meeting */
+		$meeting	= $this->modelMeeting->get( $meetingId );
+		if( NULL === $meeting ){
+			$this->env->getMessenger()->noteError( 'Invalid meeting ID.' );
+			if( $strict )
+				$this->restart( NULL, TRUE );
+			return NULL;
+		}
+		return $meeting;
 	}
 }

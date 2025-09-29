@@ -1,42 +1,42 @@
 <?php
 class Model_Work_Meeting_Participant extends CeusMedia\HydrogenFramework\Model\Database\Table
 {
-	public const ROLE_UNSPECIFIED	= 0;		//  Leiter
-	public const ROLE_LEADER		= 1;		//  Leiter
-	public const ROLE_SPEAKER		= 2;		//  Sprecher
-	public const ROLE_CONTRIBUTOR	= 3;		//  Teilnehmer
-	public const ROLE_LISTENER		= 4;		//  Zuhörer
-	public const ROLE_OBSERVER		= 5;		//  Beobachter
-	public const ROLE_BYSTANDER		= 6;		//  Beisteher
-	public const ROLE_INFORMED		= 7;		//  Informierter
+	public const TYPE_UNSPECIFIED	= 0;		//  ...
+	public const TYPE_LEADER		= 1;		//  Leiter
+	public const TYPE_SPEAKER		= 2;		//  Sprecher
+	public const TYPE_CONTRIBUTOR	= 3;		//  Teilnehmer
+	public const TYPE_LISTENER		= 4;		//  Zuhörer
+	public const TYPE_OBSERVER		= 5;		//  Beobachter
+	public const TYPE_BYSTANDER		= 6;		//  Beisteher
+	public const TYPE_INFORMED		= 7;		//  Informierter
 
-	public const ROLES				= [
-		self::ROLE_UNSPECIFIED,
-		self::ROLE_LEADER,
-		self::ROLE_SPEAKER,
-		self::ROLE_CONTRIBUTOR,
-		self::ROLE_LISTENER,
-		self::ROLE_OBSERVER,
-		self::ROLE_BYSTANDER,
-		self::ROLE_INFORMED,
+	public const TYPES				= [
+		self::TYPE_UNSPECIFIED,
+		self::TYPE_LEADER,
+		self::TYPE_SPEAKER,
+		self::TYPE_CONTRIBUTOR,
+		self::TYPE_LISTENER,
+		self::TYPE_OBSERVER,
+		self::TYPE_BYSTANDER,
+		self::TYPE_INFORMED,
 	];
 
-	protected string $name				= 'work_meeting_participants';
-	protected array $columns			= [
-		'workMeetingParticipantId',
-		'workMeetingId',
+	protected string $name			= 'meeting_participants';
+	protected array $columns		= [
+		'meetingParticipantId',
+		'meetingId',
 		'userId',
-		'role',
+		'type',
 		'timestamp',
 	];
-	protected array $indexes			= [
-		'workMeetingId',
+	protected array $indices		= [
+		'meetingId',
 		'userId',
-		'role',
+		'type',
 	];
-	protected string $primaryKey		= 'workMeetingParticipantId';
+	protected string $primaryKey	= 'meetingParticipantId';
 
-	protected int $fetchMode			= PDO::FETCH_CLASS;
-	protected ?string $fetchEntityClass	= Entity_Work_Meeting_Participant::class;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+	protected ?string $className	= Entity_Work_Meeting_Participant::class;
 
 }
