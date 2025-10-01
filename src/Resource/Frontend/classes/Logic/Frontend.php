@@ -90,7 +90,7 @@ class Logic_Frontend extends Logic
 			$uri	= realpath( $this->env->uri.'/'.$this->path ).'/';
 		}
 		return new RemoteEnvironment( [
-			'configFile'	=> 'config/config.ini',
+			'configFile'	=> 'config.ini',
 			'pathApp' 		=> $this->path,
 			'uri'			=> $uri,
 			'parentEnv'		=> $this->env,

@@ -152,12 +152,12 @@ if( $exceptions ){
 
 
 return '
-<div class="content-panel" style="position: relative">
-	<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
-		'.$selectInstance.'
-	</div>
-	<h3>Exceptions</h3>
-	<form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">
+<form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">
+	<div class="content-panel" style="position: relative">
+		<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
+			'.$selectInstance.'
+		</div>
+		<h3>Exceptions</h3>
 		<div class="content-panel-inner">
 			<input type="hidden" name="type" id="input_type"/>
 			<input type="hidden" name="ids" id="input_ids"/>
@@ -165,5 +165,5 @@ return '
 			'.$table.'
 			'.$buttonbar.'
 		</div>
-	</form>
-</div>';
+	</div>
+</form>';
