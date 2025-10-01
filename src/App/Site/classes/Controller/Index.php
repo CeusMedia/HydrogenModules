@@ -23,7 +23,7 @@ class Controller_Index extends Controller
 
 		$pathLocales	= $config->get( 'path.locales' );
 		$pathHtml		= $pathLocales.$language.'/html/index/';
-		$isInside		= 0 !== (int) $session->get( Logic_Authentication::$sessionKeyAuthUserId, 0 );
+		$isInside		= 0 !== (int) $session->get( 'auth_user_id', 0 );
 
 		if( !$this->authenticateByModule() )
 			$this->authenticateByResource( $session );
@@ -73,8 +73,8 @@ class Controller_Index extends Controller
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			return FALSE;
 
-		$userId		= (int) $session->get( Logic_Authentication::$sessionKeyAuthUserId, 0 );
-		$roleId		= (int) $session->get( Logic_Authentication::$sessionKeyAuthRoleId, 0 );
+		$userId		= (int) $session->get( 'auth_user_id', 0 );
+		$roleId		= (int) $session->get( 'auth_role_id', 0 );
 		if( 0 !== $userId ){
 			$this->addData( 'user', $this->getModel( 'user' )->get( $userId ) );
 			if( 0 !== $roleId )

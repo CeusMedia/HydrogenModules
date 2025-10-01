@@ -25,7 +25,12 @@ class View_Admin_Log_Exception extends View
 	{
 	}
 
-	public function renderRequestSection( $exception, $exceptionRequest ): ?string
+	/**
+	 *	@param		object		$exception
+	 *	@param		object		$exceptionRequest
+	 *	@return		string|NULL
+	 */
+	public function renderRequestSection( object $exception, object $exceptionRequest ): ?string
 	{
 		if( !$exceptionRequest )
 			return NULL;
@@ -41,14 +46,19 @@ class View_Admin_Log_Exception extends View
 				$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
 			}
 		}
-		$sectionRequestData			= HtmlTag::create( 'h4', 'Request Data' ).$this->renderMapTable( $exceptionRequest->getAll() );
+		$sectionRequestData		= HtmlTag::create( 'h4', 'Request Data' ).$this->renderMapTable( $exceptionRequest->getAll() );
 		return $sectionRequestHeaders.'<hr/>'.$sectionRequestData;
 	}
 
-	function renderFactsSection( object $exception, array $exceptionEnv, $exceptionRequest ): string
+	/**
+	 *	@param		object		$exception
+	 *	@param		array		$exceptionEnv
+	 *	@param		Dictionary	$exceptionRequest
+	 *	@return		string
+	 */
+	public function renderFactsSection( object $exception, array $exceptionEnv, Dictionary $exceptionRequest ): string
 	{
-//	$file		= preg_replace( "/^".preg_quote( realpath( $this->env->uri ), '/' )."/", './', $exception->file );
-		$file		= preg_replace( "/^".preg_quote( $this->env->uri, '/' )."/", './', $exception->file );
+		$file		= preg_replace( "/^".preg_quote( $exceptionEnv['uri'], '/' )."/", './', $exception->file );
 		$date		= date( 'Y.m.d', $exception->createdAt );
 		$time		= date( 'H:i:s', $exception->createdAt );
 
@@ -64,6 +74,7 @@ class View_Admin_Log_Exception extends View
 		$facts['App Name']		= $exceptionEnv['appName'];
 		$facts['Base URL']		= $exceptionEnv['url'];
 		$facts['Environment']	= $exceptionEnv['class'];
+		$facts['Error Type']	= $exception->type;
 
 		$list	= [];
 		foreach( $facts as $key => $value )
@@ -71,12 +82,16 @@ class View_Admin_Log_Exception extends View
 		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
-	function renderFileSection( object $exception ): ?string
+	/**
+	 *	@param		object		$exception
+	 *	@return		string|NULL
+	 */
+	public function renderFileSection( object $exception ): ?string
 	{
 		if( !file_exists( $exception->file ) )
 			return NULL;
 
-//	$fileLines	= FileReader::loadArray( $exception->file );
+//		$fileLines	= FileReader::loadArray( $exception->file );
 		$fileLines	= file( $exception->file );
 
 		$nrLinesBefore	= 9;
@@ -100,7 +115,12 @@ class View_Admin_Log_Exception extends View
 		return HtmlTag::create( 'h4', 'File' ).'<div style="font-size: 0.85em">'.$lines.'</div>';
 	}
 
-	function renderMapTable( array $map, $sort = TRUE ): string
+	/**
+	 *	@param		array		$map
+	 *	@param		bool		$sort
+	 *	@return		string
+	 */
+	public function renderMapTable( array $map, bool $sort = TRUE ): string
 	{
 		$rows	= [];
 		if( $sort )
@@ -131,7 +151,11 @@ class View_Admin_Log_Exception extends View
 		] );
 	}
 
-
+	/**
+	 *	@param		object				$exception
+	 *	@param		Dictionary|NULL		$exceptionSession
+	 *	@return		string|NULL
+	 */
 	public function renderSessionSection( object $exception, ?Dictionary $exceptionSession ): ?string
 	{
 		if( !$exceptionSession || !$exceptionSession->count() )
@@ -141,28 +165,37 @@ class View_Admin_Log_Exception extends View
 		return HtmlTag::create( 'h4', 'Session Data' ).$sessionData;
 	}
 
-	public function renderTraceSection( object $exception ): string
+	/**
+	 *	@param		object		$exception
+	 *	@param		object		$exceptionEnv
+	 *	@return		string
+	 */
+	public function renderTraceSection( object $exception, object $exceptionEnv ): string
 	{
 		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
+		$realPath	= preg_replace( '@admin/?$@', '', realpath( $exceptionEnv->uri ) );
 
 		if( isset( $exception->traceAsHtml ) )
 			$trace	= $exception->traceAsHtml;
 		else if( isset( $exception->traceAsString ) ){
 			$trace	= $exception->traceAsString;
-			$trace	= preg_replace( "/ ".preg_quote( realpath( $this->env->uri ), '/' )."/s", ' ./', $trace );
-			$trace	= preg_replace( "/ ".preg_quote( $this->env->uri, '/' )."/s", ' ./', $trace );
+			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ./', $trace );
 			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
 		}
 		else{
 			$trace	= $exception->trace;
-			$trace	= preg_replace( "/ ".preg_quote( realpath( $this->env->uri ), '/' )."/s", ' ./', $trace );
-			$trace	= preg_replace( "/ ".preg_quote( $this->env->uri, '/' )."/s", ' ./', $trace );
+			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ./', $trace );
 			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
 		}
 		return HtmlTag::create( 'h4', 'Stack Trace' ).$trace;
 	}
 
-	function renderUserSection( object $exception, ?object $user ): ?string
+	/**
+	 *	@param		object			$exception
+	 *	@param		object|NULL		$user
+	 *	@return		string|NULL
+	 */
+	public function renderUserSection( object $exception, ?object $user ): ?string
 	{
 		if( !$user )
 			return NULL;

@@ -293,7 +293,7 @@ class Logic_Page extends Logic
 	 */
 	public function isAccessible( Entity_Page $page ): bool
 	{
-		$isAuthenticated	= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
+		$isAuthenticated	= $this->env->getSession()->get( 'auth_user_id' );
 		$hasRight			= FALSE;
 		if( Model_Page_ByDatabase::TYPE_MODULE === $page->type && Model_Page_ByDatabase::ACCESS_ACL === $page->access )
 			$hasRight	= $this->env->getAcl()->has( $page->controller ?? $page->path, $page->action ?: 'index' );

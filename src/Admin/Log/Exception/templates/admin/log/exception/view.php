@@ -18,18 +18,10 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-// already done in controller
-//$exceptionEnv		= unserialize( $exception->env );
-//$exceptionRequest	= unserialize( $exception->request );
-//$exceptionSession	= unserialize( $exception->session );
-
-//print_m($exception);die;
-//print_m($exceptionRequest->getAll());die;
-
 $sections	= [
 	'facts'		=> $view->renderFactsSection( $exception, $exceptionEnv, $exceptionRequest ),
 	'file'		=> $view->renderFileSection( $exception ),
-	'trace'		=> $view->renderTraceSection( $exception ),
+	'trace'		=> $view->renderTraceSection( $exception, $exceptionEnv ),
 	'request'	=> $view->renderRequestSection( $exception, $exceptionRequest ),
 	'session'	=> $view->renderSessionSection( $exception, $exceptionSession ),
 	'user'		=> $view->renderUserSection( $exception, $user ),
