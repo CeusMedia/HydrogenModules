@@ -2,7 +2,7 @@
 class Mail_Work_Meeting_Created extends Mail_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
@@ -10,8 +10,8 @@ class Mail_Work_Meeting_Created extends Mail_Abstract
 	{
 		$words		= (object) $this->getWords( 'work/meeting', 'mail-created' );
 		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$subject	= ( $prefix ? $prefix.' ' : '' ) . $words->mailSubject;
-		$this->mail->setSubject( $subject );
+		$subject	= ( $prefix ? $prefix.' ' : '' ) . $words->subject;
+		$this->mail->setSubject( sprintf( $subject, $this->data['meeting']->title ) );
 
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )

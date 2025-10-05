@@ -1,8 +1,11 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 class Mail_Work_Meeting_Updated extends Mail_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
@@ -10,8 +13,8 @@ class Mail_Work_Meeting_Updated extends Mail_Abstract
 	{
 		$words		= (object) $this->getWords( 'work/meeting', 'mail-updated' );
 		$prefix		= $this->env->getConfig()->get( 'module.resource_mail.subject.prefix' );
-		$subject	= ( $prefix ? $prefix.' ' : '' ) . $words->mailSubject;
-		$this->mail->setSubject( $subject );
+		$subject	= ( $prefix ? $prefix.' ' : '' ) . $words->subject;
+		$this->mail->setSubject( sprintf( $subject, $this->data['meeting']->title ) );
 
 		$baseUrl	= $this->env->url;
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
@@ -32,6 +35,15 @@ class Mail_Work_Meeting_Updated extends Mail_Abstract
 		$data		= $this->data;
 		$words		= $this->getWords( 'work/meeting' );
 
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->data['meeting'];
+		foreach( $this->data['changes'] as $column => $change ){
+			$meeting->set( $column, join( ' ', [
+				HtmlTag::create( 'del', $change[0] ),
+				HtmlTag::create( 'ins', $change[1] ),
+			] ) );
+		}
+
 		return $this->loadContentFile( 'mail/work/meeting/updated.html', $data ) ?? '';
 	}
 
@@ -42,7 +54,7 @@ class Mail_Work_Meeting_Updated extends Mail_Abstract
 	protected function renderTextBody(): string
 	{
 		$data		= $this->data;
-		$data['content']	= strip_tags( $data['content'] );
+		$data['meeting']->content	= strip_tags( $data['meeting']->content );
 
 		$words		= $this->getWords( 'work/meeting' );
 

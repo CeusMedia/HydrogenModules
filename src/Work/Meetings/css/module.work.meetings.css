@@ -1,0 +1,91 @@
+body.site-work-meeting-edit div.user-avatar-list div.username {
+    line-height: 1.2em;
+    font-size: 1.1em;
+    }
+body.site-work-meeting-edit div.user-avatar-list img.avatar {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    border: 1px solid gray;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+body.site-work-meeting-edit div.boxed {
+    min-height: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid rgba(127, 127, 127, 0.5);
+    border-radius: 4px;
+    padding: 0.5em 1em;
+    margin-bottom: 1.5em;
+    }
+body.site-work-meeting-edit div.boxed-small {
+    min-height: 200px;
+    max-height: 200px;
+    height: 200px;
+    padding: 0.5em;
+    }
+body.site-work-meeting-edit div.boxed-large {
+    min-height: 470px;
+    max-height: 470px;
+    height: 470px;
+    padding: 0.5em;
+    }
+body.site-work-meeting-edit div.modified {
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.25em;
+    border-top: 1px solid #DDD;
+    }
+body.site-work-meeting-edit div.form-view-label {
+    font-size: 0.9em;
+    color: rgba(92, 92, 92, 0.5);
+    }
+body.site-work-meeting-edit div.form-view-value {
+    font-size: 1.2em;
+    padding-bottom: 0.4em;
+    }
+
+.meeting-card > div.thumbnail {
+    padding: 6px 20px 20px 20px;
+    }
+
+body.moduleWorkMeetings div.modal {
+    width: 40vw;
+    top: 5vh;
+    margin-left: -20% !important;
+    }
+
+div.modal-body > div.user-avatar-list {
+    overflow-x: auto;
+    text-wrap: nowrap;
+    }
+div.modal-body > div.user-avatar-list > div.user-avatar-item {
+    width: 200px;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    padding: 4px 4px 0px 4px;
+    margin: 2px 4px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.5) 1px 1px 4px;
+    border-radius: 3px;
+    }
+div.modal-body > div.user-avatar-list div.username {
+    line-height: 1.2em;
+    font-size: 1.1em;
+    }
+div.modal-body > div.user-avatar-list img.avatar {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.33);
+    }
+div.modal-body div.form-view-label {
+    font-size: 0.9em;
+    color: rgba(92, 92, 92, 0.5);
+    }
+div.modal-body div.form-view-value {
+    font-size: 1.2em;
+    padding-bottom: 0.4em;
+    }

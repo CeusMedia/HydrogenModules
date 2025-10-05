@@ -33,17 +33,18 @@ class Controller_Work_Meeting extends Controller
 			$entity->modifiedAt	= time();
 
 			$meetingId	= $this->modelMeeting->add( $entity->toArray() );
+			/** @var Entity_Work_Meeting $meeting */
+			$meeting	= $this->modelMeeting->get( $meetingId );
 			$entity->content	= $data->get( 'content' );
 			$this->modelMeeting->edit( $meetingId, $entity, FALSE );
 
 			$role	= $data->get( 'role' );
 			$entity	= new Entity_Work_Meeting_Participant();
 			$entity->meetingId	= $meetingId;
-			$entity->role		= $role;
+			$entity->type		= $role;
 			$entity->timestamp	= time();
 			$entity->userId		= $currentUserId;
 			$this->modelParticipant->add( $entity );
-
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
 
@@ -71,24 +72,30 @@ class Controller_Work_Meeting extends Controller
 			$userIds	= [];
 			switch( $data->get( 'source' ) ){
 				case 'roles':
-					foreach( $data->get( 'roles' ) as $roleId )
+					foreach( $data->get( 'roleIds', [] ) as $roleId )
 						foreach( $logicUser->getRoleUsers( $roleId ) as $user )
 							$userIds[]	= $user->userId;
 					break;
 				case 'groups':
-					foreach( $data->get( 'groups' ) as $groupId )
+					foreach( $data->get( 'groupIds', [] ) as $groupId )
 						foreach( $logicUser->getGroupUsers( $groupId ) as $user )
 							$userIds[]	= $user->userId;
 					break;
-//				case 'user':
-//					break;
+				case 'users':
+					foreach( $data->get( 'userIds', [] ) as $userId )
+						$userIds[]	= $userId;
+					break;
 			}
+			$participantIds	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, [], [], ['userId'] );
 			if( [] !== $userIds ){
 				foreach( $userIds as $userId ){
+					if( in_array( $userId, $participantIds ) )
+						continue;
 					$this->modelParticipant->add( [
 						'meetingId'	=> $meetingId,
 						'userId'	=> $userId,
 						'type'		=> $data->get( 'type' ),
+						'timestamp'	=> time(),
 					] );
 				}
 			}
@@ -131,10 +138,12 @@ class Controller_Work_Meeting extends Controller
 		if( $this->env->getRequest()->getMethod()->isPost() ){
 			/** @var Dictionary $data */
 			$data		= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
-			$entity		= clone $meeting;
+			$data->set( 'dateStart', $data->get( 'dateStart_date' ).' '.$data->get( 'dateStart_time' ) );
+			$data->set( 'dateEnd', $data->get( 'dateEnd_date' ).' '.$data->get( 'dateEnd_time' ) );
 			$fields		= ['dateStart', 'dateEnd', 'location', 'title', 'content', 'link'];
 			$changes	= [];
 			$updates	= [];
+			$entity		= clone $meeting;
 			foreach( $fields as $field ){
 				$value	= $data->get( $field, $meeting->get( $field ) );
 				if( $meeting->get( $field ) !== $value ){
@@ -144,7 +153,9 @@ class Controller_Work_Meeting extends Controller
 			}
 			if( [] !== $changes ){
 				$this->modelMeeting->edit( $meetingId, $updates, FALSE );
-				$this->logic->sendMailsOnUpdate( $meeting, $changes );
+				if( Model_Work_Meeting::STATUS_ACTIVE === $meeting->status )
+					$this->logic->sendMailsOnUpdate( $meeting, $changes );
+
 			}
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
@@ -170,6 +181,10 @@ class Controller_Work_Meeting extends Controller
 		$groups	= $logicUser->getGroups();
 		$this->addData( 'groups', $groups );
 
+		$users	= Model_User::getInstance( $this->env )->getAllByIndices( [
+			'status'	=> Model_User::STATUS_ACTIVE,
+		], ['username' => 'ASC'] );
+		$this->addData( 'users', $users );
 	}
 
 	public function index(): void
@@ -179,6 +194,18 @@ class Controller_Work_Meeting extends Controller
 		$limits		= [];
 		$meetings	= $this->modelMeeting->getAll( $conditions, $orders, $limits );
 		$this->addData( 'meetings', $meetings );
+	}
+
+	public function reuse( int|string $meetingId ): void
+	{
+		/** @var Entity_Work_Meeting $meeting */
+		$meeting	= $this->checkMeeting( $meetingId );
+		if( in_array( $meeting->status, [Model_Work_Meeting::STATUS_CANCELLED, Model_Work_Meeting::STATUS_DONE] ) )
+			$this->modelMeeting->edit( $meetingId, [
+				'status'		=> Model_Work_Meeting::STATUS_NEW,
+				'modifiedAt'	=> time(),
+			] );
+		$this->restart( 'edit/'.$meetingId, TRUE );
 	}
 
 	/**
@@ -202,6 +229,7 @@ class Controller_Work_Meeting extends Controller
 				if( Model_Work_Meeting::STATUS_ACTIVE === $meeting->status ){
 					/** @var Entity_Work_Meeting $meeting */
 					$meeting	= $this->modelMeeting->get( $meetingId );
+					$this->logic->unsetJobSchedule( $meeting );
 					$this->logic->sendMailsOnCancelled( $meeting );
 				}
 				break;
@@ -209,6 +237,7 @@ class Controller_Work_Meeting extends Controller
 				if( Model_Work_Meeting::STATUS_NEW === $meeting->status ){
 					/** @var Entity_Work_Meeting $meeting */
 					$meeting	= $this->modelMeeting->get( $meetingId );
+					$this->logic->setJobSchedule( $meeting );
 					$this->logic->sendMailsOnCreated( $meeting );
 				}
 				break;
@@ -247,14 +276,26 @@ class Controller_Work_Meeting extends Controller
 	/**
 	 *	@param		int|string|NULL		$meetingId
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string|NULL $meetingId = NULL ): void
 	{
 		$meetings	= $this->logic->getActiveMeetingsOfCurrentUser();
 		$this->addData( 'meetings', $meetings );
 
-		if( 0 !== ( (int) trim( $meetingId ?? '' ) ) )
-			$this->addData( 'meeting', $this->logic->getMeeting( $meetingId ) );
+		if( 0 !== ( (int) trim( $meetingId ?? '' ) ) ){
+			/** @var ?Entity_Work_Meeting $meeting */
+			$meeting	= $this->logic->getMeeting( $meetingId );
+			if( NULL !== $meeting && $this->logic->isActive( $meeting ) ){
+				$script	= 'jQuery("#trigger-meeting-'.$meeting->meetingId.'").trigger("click")';
+				$this->env->getPage()->js->addScriptOnReady($script);
+				$this->addData( 'meeting', $meeting );
+			}
+		}
+
+		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		$this->addData( 'currentUserId', $currentUserId );
 	}
 
 	/**

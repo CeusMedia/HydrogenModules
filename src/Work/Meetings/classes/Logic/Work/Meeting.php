@@ -8,36 +8,68 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	protected Model_Work_Meeting $modelMeeting;
 	protected Model_Work_Meeting_Participant $modelParticipant;
 
+	/**
+	 *	@return		array<Entity_Work_Meeting>
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getActiveMeetingsOfCurrentUser(): array
 	{
 		$conditions	= [
 			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
+//			'dateStart'	=> '>'.DateTime::...->sub(new DateInterval("PT1H")->format( 'Y-m-d H:i:s' ),
 		];
 		$orders		= ['dateStart' => 'ASC'];
-		$meetingIds	= $this->modelParticipant->getAllByIndices( [
-			'meetingId'	=> $this->modelMeeting->getAll( $conditions, $orders ),
+		$activeMeetingIds	= $this->modelMeeting->getAll( $conditions, $orders, [], ['meetingId'] );
+		if( [] === $activeMeetingIds )
+			return [];
+
+		$myMeetingIds	= $this->modelParticipant->getAllByIndices( [
+			'meetingId'	=> $activeMeetingIds,
 			'userId'	=> $this->logicAuth->getCurrentUserId(),
 		], [], [], ['meetingId'] );
+		if( [] === $myMeetingIds )
+			return [];
 
 		$logicUser	= Logic_User::getInstance( $this->env );
 
-		/** @var Entity_Work_Meeting $meetings */
-		$meetings	= $this->modelMeeting->getAllByIndex( 'meetingId', $meetingIds );
+		/** @var Entity_Work_Meeting[] $meetings */
+		$meetings	= $this->modelMeeting->getAllByIndex( 'meetingId', $myMeetingIds );
 		foreach( $meetings as $meeting ){
-			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->id );
-			foreach( $meetings->participants as $participant )
+			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
+			foreach( $meeting->participants as $participant )
 				$participant->user	= $logicUser->getUser( $participant->userId );
 		}
 		return $meetings;
 	}
 
-	public function getMeeting( $meetingId ): ?Entity_Work_Meeting
+	/**
+	 *	@param		int|string		$meetingId
+	 *	@return		?Entity_Work_Meeting
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function getMeeting( int|string $meetingId ): ?Entity_Work_Meeting
 	{
 		/** @var ?Entity_Work_Meeting $meeting */
 		$meeting	= $this->modelMeeting->get( $meetingId );
 		if( NULL !== $meeting )
 			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, ['type' => 'ASC'] );
 		return $meeting;
+	}
+
+	/**
+	 *	Indicates whether a meeting is active by checking status and end date.
+	 *	Returns TRUE if status is active and end date is in the future.
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		bool
+	 */
+	public function isActive( Entity_Work_Meeting $meeting ): bool
+	{
+		if( Model_Work_Meeting::STATUS_ACTIVE !== $meeting->status )
+			return FALSE;
+		if( time() > strtotime( $meeting->dateEnd ) )
+			return FALSE;
+		return TRUE;
 	}
 
 	/**
@@ -117,14 +149,14 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 
 	/**
 	 *	@param		Entity_Work_Meeting		$meeting
-	 *	@param		array					$updates
+	 *	@param		array					$changes
 	 *	@return		int						Number of sent mails
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function sendMailsOnUpdate( Entity_Work_Meeting $meeting, array $updates = [] ): int
+	public function sendMailsOnUpdate( Entity_Work_Meeting $meeting, array $changes = [] ): int
 	{
-		if( [] === $updates )
+		if( [] === $changes )
 			return 0;
 		if( Model_Work_Meeting::STATUS_ACTIVE !== $meeting->status )
 			return 0;
@@ -136,11 +168,66 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 			$mail	= new Mail_Work_Meeting_Updated( $this->env, [
 				'meeting'	=> $meeting,
 				'user'		=> $user,
-				'updates'	=> $updates,
+				'changes'	=> $changes,
 			] );
 			$this->logicMail->enqueueMail( $mail, $language, $user );
 		}
 		return count( $participants );
+	}
+
+	/**
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		void
+	 *	@throws		DateInvalidOperationException
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function setJobSchedule( Entity_Work_Meeting $meeting ): void
+	{
+		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
+		$reminderDate		= Datetime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateStart )
+			->sub( new DateInterval( "PT1H" ) );
+
+		if( 0 !== $meeting->jobScheduleId )
+			$modelJobSchedule->edit( $meeting->jobScheduleId, [
+				'expression'	=> $reminderDate->format( 'Y-m-d H:i' ),
+				'modifiedAt'	=> time(),
+			] );
+		else{
+			$modelJobDefinition	= Model_Job_Definition::getInstance( $this->env );
+			$jobDefinitionId	= $modelJobDefinition->getByIndex( 'identifier', 'Work.Meeting.remind', [], ['jobDefinitionId'] );
+			$jobScheduleId		= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
+				'jobDefinitionId'	=> $jobDefinitionId,
+				'type'				=> Model_Job_Schedule::TYPE_DATETIME,
+				'status'			=> Model_Job_Schedule::STATUS_ENABLED,
+				'reportMode'		=> Model_Job_Schedule::REPORT_MODE_NEVER,
+				'reportChannel'		=> Model_Job_Schedule::REPORT_CHANNEL_NONE,
+				'expression'		=> $reminderDate->format( 'Y-m-d H:i' ),
+				'arguments'			=> ['id' => $meeting->meetingId],
+				'createdAt'			=> time(),
+			] ) );
+			$this->modelMeeting->edit( $meeting->meetingId, [
+				'jobScheduleId'		=> $jobScheduleId,
+				'modifiedAt'		=> time(),
+			] );
+		}
+	}
+
+	/**
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function unsetJobSchedule( Entity_Work_Meeting $meeting ): void
+	{
+		if( 0 === $meeting->jobScheduleId )
+			return;
+		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
+		$modelJobSchedule->remove( $meeting->jobScheduleId );
+		$this->modelMeeting->edit( $meeting->meetingId, [
+			'jobScheduleId'		=> 0,
+			'modifiedAt'		=> time(),
+		] );
 	}
 
 	/**
