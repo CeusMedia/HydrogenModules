@@ -7,7 +7,7 @@
  *	@copyright		2010-2025 Ceus Media (https://ceusmedia.de/)
  */
 
-use CeusMedia\HydrogenFramework\Model;
+use CeusMedia\HydrogenFramework\Model\Database\Table as Model;
 
 /**
  *	Job Run Model.

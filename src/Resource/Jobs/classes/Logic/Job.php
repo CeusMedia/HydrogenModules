@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Obj\Factory as ObjectFactory;
 use CeusMedia\Common\Alg\Obj\MethodFactory as ObjectMethodFactory;
@@ -198,10 +198,16 @@ class Logic_Job extends Logic
 		/** @var ?Entity_Job_Run $jobRun */
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( NULL !== $jobRun && $extendBy ){
-			if( in_array( 'schedules', $extendBy ) && $jobRun->jobScheduleId )
-				$jobRun->schedule	= $this->modelSchedule->get( $jobRun->jobScheduleId );
-			if( in_array( 'definition', $extendBy ) )
-				$jobRun->definition		= $this->modelDefinition->get( $jobRun->jobDefinitionId );
+			if( in_array( 'schedules', $extendBy ) && $jobRun->jobScheduleId ){
+				/** @var Entity_Job_Schedule $schedule */
+				$schedule	= $this->modelSchedule->get( $jobRun->jobScheduleId );
+				$jobRun->schedule	= $schedule;
+			}
+			if( in_array( 'definition', $extendBy ) ){
+				/** @var Entity_Job_Definition $definition */
+				$definition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
+				$jobRun->definition		= $definition;
+			}
 		}
 		return $jobRun;
 	}
@@ -224,8 +230,11 @@ class Logic_Job extends Logic
 		/** @var Entity_Job_Run[] $preparedJobs */
 		$preparedJobs	= $this->modelRun->getAllByIndices( $indices, ['createdAt' => 'ASC'] );
 		foreach( $preparedJobs as $preparedJob ){
-			if( in_array( 'definition', $extendBy ) )
-				$preparedJob->definition	= $this->modelDefinition->get( $preparedJob->jobDefinitionId );
+			if( in_array( 'definition', $extendBy ) ){
+				/** @var Entity_Job_Definition $definition */
+				$definition	= $this->modelDefinition->get( $preparedJob->jobDefinitionId );
+				$preparedJob->definition	= $definition;
+			}
 			if( in_array( 'schedules', $extendBy ) )
 				$preparedJob->schedules		= $this->modelSchedule->getAll( [
 					'jobDefinitionId'	=> $preparedJob->jobDefinitionId,
@@ -247,7 +256,9 @@ class Logic_Job extends Logic
 		/** @var Entity_Job_Schedule[] $list */
 		$list	= $this->modelSchedule->getAll( $conditions );
 		foreach( $list as $item ){
-			$item->definition	= $this->modelDefinition->get( $item->jobDefinitionId );
+			/** @var Entity_Job_Definition $definition */
+			$definition			= $this->modelDefinition->get( $item->jobDefinitionId );
+			$item->definition	= $definition;
 			$item->latestRuns	= $this->modelRun->getAll(
 				['jobScheduleId'	=> $item->jobScheduleId],
 				['modifiedAt'		=> 'DESC'],
@@ -397,7 +408,7 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@param		int				$status
-	 *	@param		array			$messageData
+	 *	@param		Entity_Job_Result|array			$messageData
 	 *	@return		bool
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
@@ -470,6 +481,7 @@ class Logic_Job extends Logic
 		$classArgs	= [$this->env];																	//  prepare job class instance arguments
 		$arguments	= [$commands, $parameters];														//
 		$methodName	= $jobDefinition->methodName;													//  shortcut method name
+		/** @var Job_Abstract $jobObject */
 		$jobObject	= ObjectFactory::createObject( '\\'.$className, $classArgs );			//  ... create job class instance with arguments
 		$jobObject->noteJob( $jobDefinition->className, $methodName );								//  ... inform job instance about method to be called
 		$jobObject->noteArguments( $commands, $parameters );										//  ... inform job instance about request arguments
@@ -480,12 +492,12 @@ class Logic_Job extends Logic
 		try{																						//  try to ...
 
 			$outputBuffer	= new OutputBuffer( FALSE );
-			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
+			if( Model_Job_Run::TYPE_SCHEDULED === $jobRun->type )
 				$outputBuffer->open();
-			$factory	= new ObjectMethodFactory( $jobObject );								//  create a factory for this job
+			$factory	= new ObjectMethodFactory( $jobObject );									//  create a factory for this job
 			$result		= $factory->callMethod( $methodName, $arguments );							//  call job method with arguments
 
-			if( $jobRun->type == Model_Job_Run::TYPE_SCHEDULED )
+			if( Model_Job_Run::TYPE_SCHEDULED === $jobRun->type )
 				$output	= $outputBuffer->get( TRUE );
 			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, [			//  finish job run since no exception has been thrown
 				'type'		=> 'data',																//  ... and save message of type "data"
@@ -723,7 +735,9 @@ class Logic_Job extends Logic
 					'createdAt'			=> time(),
 					'modifiedAt'		=> time(),
 				] );
-				$list[$jobRunId]	= $this->modelRun->get( $jobRunId );
+				/** @var Entity_Job_Run $run */
+				$run	= $this->modelRun->get( $jobRunId );
+				$list[$jobRunId]	= $run;
 			}
 		}
 		return $list;
@@ -736,9 +750,10 @@ class Logic_Job extends Logic
 	 */
 	protected function isToReport( int|string $jobRunId/*, ?int $mode = NULL*/ ): bool
 	{
+		/** @var Entity_Job_Run $jobRun */
 		$jobRun			= $this->modelRun->get( $jobRunId );
-		$status			= (int) $jobRun->status;
-		$reportMode		= (int) $jobRun->reportMode;
+		$status			= $jobRun->status;
+		$reportMode		= $jobRun->reportMode;
 
 /*		if( is_int( $mode ) ){
 			if( !in_array( $mode, Model_Job_Run::REPORT_MODES ) )
@@ -809,6 +824,7 @@ class Logic_Job extends Logic
 	 */
 	protected function sendReport( int|string $jobRunId, array $commands, array $parameters, $resultCode ): ?int
 	{
+		/** @var Entity_Job_Run $jobRun */
 		$jobRun		= $this->modelRun->get( $jobRunId );
 		$message	= json_decode( $jobRun->message ?: '{"type": "unknown"}' );
 

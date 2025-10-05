@@ -134,7 +134,6 @@ var ModuleManageJobSchedule = {
 	},
 	applyDatetimeExpressionToInputs: function(exp){
 		var form = jQuery("#formManageJobScheduleAdd,#formManageJobScheduleEdit");
-
 		var parts = exp.split(/ /);
 		if(parts.length === 2){
 			form.find("#input_date").val(parts[0]).trigger("change");
