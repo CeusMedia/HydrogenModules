@@ -164,16 +164,15 @@ class Job_Job_Schedule extends Job_Abstract
 		$numberFound	= count( $preparedJobs );
 		$numberRan		= 0;
 		$numberDone		= 0;
+		$fallBackOnEmptyPair	= FALSE;
 		foreach( $preparedJobs as $preparedJobRun ){
 			try{
-				$args					= $preparedJobRun->arguments;
 				$commands				= [];
 				$parameters				= [];
-				$fallBackOnEmptyPair	= FALSE;
-				if( strlen( trim( $preparedJobRun->arguments ) ) ){
-					$args	= preg_split( '/ +/', trim( $preparedJobRun->arguments ) );
-					foreach( $args as $argument ){
-						if( substr_count( $argument, '=' ) || $fallBackOnEmptyPair ){
+				$trimmedArguments		= trim( $preparedJobRun->arguments );
+				if( '' !== $trimmedArguments ){
+					foreach( preg_split( '/ +/', $trimmedArguments ) as $argument ){
+						if( str_contains( $argument, '=' ) || $fallBackOnEmptyPair ){
 							$parts	= explode( '=', $argument, 2 );
 							$key	= array_shift( $parts );
 							$value	= $parts ? $parts[0] : NULL;
@@ -182,6 +181,9 @@ class Job_Job_Schedule extends Job_Abstract
 						else
 							$commands[]	= $argument;
 					}
+				}
+				if( $this->verbose ){
+					$this->out( 'Running prepared Job: '.$preparedJobRun->title );
 				}
 				$result		= $this->logic->startJobRun( $preparedJobRun, $commands, $parameters );
 				$numberRan++;

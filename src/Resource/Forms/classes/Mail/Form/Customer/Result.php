@@ -2,7 +2,7 @@
 class Mail_Form_Customer_Result extends Mail_Form_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function generate(): static
@@ -21,10 +21,10 @@ class Mail_Form_Customer_Result extends Mail_Form_Abstract
 		if( Model_Form_Mail::FORMAT_HTML === $mail->format ){
 			$content	= $this->applyFillData( $content, $fill );
 			$content	= $this->applyHelpers( $content, $fill, $form );
-			$this->setHtml( $content );
+			$this->setHtml( $content, $this->data['mailTemplateId'] ?? 0 );
 		}
 		else
-			$this->setText( $content );
+			$this->setText( $content, $this->data['mailTemplateId'] ?? 0 );
 
 		if( count( $form->attachments ?? [] ) !== 0 ){
 			$path	= $this->env->getConfig()->get( 'module.resource_mail.path.attachments' );

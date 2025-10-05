@@ -33,8 +33,8 @@ class Jobber extends ConsoleApplication
 	{
 		parent::__construct( $env );															//  construct parent and call __onInit
 		$config				= $this->env->getConfig();
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 
+		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= $this->env->getLogic()->get( 'Job' );
 		$this->pathLogs		= $config->get( 'path.logs' );
 		$this->pathJobs		= 'config/jobs/';

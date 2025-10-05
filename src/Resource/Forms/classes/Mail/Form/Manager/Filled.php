@@ -23,7 +23,7 @@ class Mail_Form_Manager_Filled extends Mail_Form_Abstract
 
 		$content	= str_replace( "[form_title]", $form->title, $mail->content );
 		$content	= $this->applyHelpers( $content, $fill, $form, TRUE );
-		$this->setHtml( $content );
+		$this->setHtml( $content, $this->data['mailTemplateId'] ?? 0 );
 		return $this;
 	}
 }

@@ -60,12 +60,13 @@ class Job_Job extends Job_Abstract
 	{
 		$list	= $this->logic->discoverJobDefinitions();
 		if( [] !== $list ){
-			$this->out( 'Discovered '.count($list).' new jobs:' );
+			$this->out( 'Discovered '.count( $list ).' new jobs:' );
 			foreach( $list as $job ){
 				if( $this->parameters->get( '--verbose' ) )
 					$this->out( '- '.$job->identifier );
 			}
 		}
+		return count( $list );
 	}
 
 	/**

@@ -153,13 +153,12 @@ class View_Helper_Bootstrap_Modal implements Renderable, Stringable
 	}
 
 	/**
-	 *	...
+	 *	Enable or disable fade animation.
 	 *	@access		public
-	 *	@param		string		$fade			...
+	 *	@param		bool		$fade		Flag: enable or disable fade animation
 	 *	@return		static
-	 *	@todo		code doc
 	 */
-	public function setFade( string $fade ): static
+	public function setFade( bool $fade ): static
 	{
 		$this->fade		= $fade;
 		return $this;

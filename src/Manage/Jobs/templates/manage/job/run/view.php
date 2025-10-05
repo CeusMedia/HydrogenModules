@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\Time\Duration;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -7,8 +7,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array $wordsGeneral */
 /** @var array $words */
-/** @var object $definition */
-/** @var object $run */
+/** @var Entity_Job_Definition $definition */
+/** @var Entity_Job_Run $run */
 
 $helperTime		= new View_Helper_TimePhraser( $env );
 $helperTime->setTemplate( $words['index']['timestampTemplate'] );
@@ -34,14 +34,12 @@ $facts['Status']			= $helperAttribute->setAttribute( View_Helper_Job_Attribute::
 $facts['Created']			= date( 'd.m.Y H:i:s', $run->createdAt );
 if( $run->ranAt ){
 	$duration	= '-';
-	if( $run->finishedAt ){
+	$facts['Start']				= date( 'd.m.Y H:i:s', $run->ranAt );
+	if( 0 !== $run->finishedAt ){
 		$duration	= $run->finishedAt - $run->ranAt;
 		$duration	= $duration ? Duration::render( $duration, ' ', TRUE ) : '-';
-	}
-	$facts['Start']				= date( 'd.m.Y H:i:s', $run->ranAt );
-	if( $run->finishedAt ){
-		$facts['Finish']			= $run->finishedAt ? date( 'd.m.Y H:i:s', $run->finishedAt ) : '-';
-		$facts['Duration']			= $duration.'&nbsp;';
+		$facts['Finish']		= date( 'd.m.Y H:i:s', $run->finishedAt );
+		$facts['Duration']		= $duration.'&nbsp;';
 	}
 }
 if( $run->arguments )
@@ -97,7 +95,7 @@ $panelFactsJob	= HtmlTag::create( 'div', [
 	], ['class' => 'content-panel-inner'] )
 ], ['class' => 'content-panel'] );
 
-function formatNumber( $number ): string
+function formatNumber( int|float $number ): string
 {
 	$units  = ['', 'K', 'M', 'G', 'P', 'E'];
 	$unit   = 0;
@@ -162,6 +160,14 @@ if( in_array( $run->status, [Model_Job_Run::STATUS_FAILED, Model_Job_Run::STATUS
 				</div>';
 				break;
 		}
+
+		if( 'output' === $message->type || '' !== trim( $message->output ?? '' ) ){
+			$output	.= '<div>
+					<div>Output</div>
+					<pre>'.$message->output.'</pre>
+				</div>';
+		}
+
 		$panelMessage	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', 'Job Run' ),
 			HtmlTag::create( 'div', [
@@ -193,7 +199,7 @@ HtmlTag::create( 'div', [
 	}
 </style>';
 
-function removeEnvPath( $env, $string ): string
+function removeEnvPath( WebEnvironment $env, string $string ): string
 {
 	return preg_replace( '@'.preg_quote( $env->uri, '@' ).'@', '', $string );
 }

@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -6,9 +7,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array $wordsGeneral */
 /** @var array $words */
-/** @var array<object> $definitions */
+/** @var array<Entity_Job_Definition> $definitions */
 /** @var array $definitionMap */
-/** @var object $item */
+/** @var Entity_Job_Schedule $item */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -24,13 +25,13 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$words['edit']['but
 ] );
 
 $optStatus	= $wordsGeneral['job-definition-statuses'];
-$optStatus	= HtmlElements::Options( $optStatus, $item->status );
+$optStatus	= HtmlElements::Options( $optStatus, (string) $item->status );
 
 
 $optDefinition	= [];
 foreach( $definitionMap as $definitionId => $definition )
 	$optDefinition[$definitionId]	= $definition->identifier;
-$optDefinition	= HtmlElements::Options( $optDefinition );
+$optDefinition	= HtmlElements::Options( $optDefinition, (string) $item->jobDefinitionId );
 
 $format	= '';
 switch( (int) $item->type){
@@ -115,8 +116,8 @@ $optMonth	= [
 ];
 $optMonth		= HtmlElements::Options( $optMonth );
 
-$optReportMode		= HtmlElements::Options( $wordsGeneral['job-schedule-report-modes'], $item->reportMode );
-$optReportChannel	= HtmlElements::Options( $wordsGeneral['job-schedule-report-channels'], $item->reportChannel );
+$optReportMode		= HtmlElements::Options( $wordsGeneral['job-schedule-report-modes'], (string) $item->reportMode );
+$optReportChannel	= HtmlElements::Options( $wordsGeneral['job-schedule-report-channels'], (string) $item->reportChannel );
 
 
 
@@ -198,7 +199,7 @@ $form		= HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
 						HtmlTag::create( 'div', [
-								HtmlTag::create( 'h4', 'Zeit' ),
+							HtmlTag::create( 'h4', 'Zeit' ),
 							HtmlTag::create( 'div', [
 								HtmlTag::create( 'div', [
 									HtmlTag::create( 'label', $words['edit']['labelHourOfDay'], ['for' => 'input_hourOfDay'] ),
@@ -592,8 +593,6 @@ $form		= HtmlTag::create( 'div', [
 	], ['class' => 'row-fluid'] ),
 ] );
 
-$buttons	= HtmlTag::create( 'div', $buttonCancel.' '.$buttonSave, [] );
-
 $tabs		= View_Manage_Job::renderTabs( $env, 'schedule' );
 
 $env->getPage()->js->addScriptOnReady( $script );
@@ -622,7 +621,7 @@ return $tabs.HtmlTag::create( 'div', [
 			] ),
 			$form,
 			HtmlTag::create( 'div', [
-				$buttons,
+				$buttonCancel.' '.$buttonSave,
 			], ['class' => 'buttonbar'] ),
 		], ['action' => './manage/job/schedule/edit/'.$item->jobScheduleId, 'method' => 'post', 'id' => 'formManageJobScheduleEdit'] ),
 	], ['class' => 'content-panel-inner'] ),
