@@ -1,80 +1,84 @@
 <?php
 class Job_Work_Meeting extends Job_Abstract
 {
-	public function close(): int
-	{
-		$model		= new Model_Work_Meeting( $this->env );
-		/** @var Entity_Work_Meeting[] $meetings */
-		$meetings	= $model->getAll( [
-			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
-			'dateEnd'	=> '<= '.date( 'Y-m-d H:i:s' ),
-		] );
-		foreach( $meetings as $meeting ){
-			$model->edit( $meeting->meetingId, [
-				'jobScheduleId'	=> 0,
-				'status'		=> Model_Work_Meeting::STATUS_DONE,
-				'modifiedAt'	=> time(),
-			] );
-			if( 0 !== $meeting->jobScheduleId ){
-				$model	= Model_Job_Schedule::getInstance( $this->env );
-				$model->remove( $meeting->jobScheduleId );
-			}
-		}
-		return count( $meetings );
-	}
+	protected Logic_Work_Meeting $logic;
 
-	public function remind(): void
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function close(): void
 	{
-		$model	= new Model_Work_Meeting( $this->env );
-
 		$id		= (int) $this->parameters->get( 'id', 0 );
+		$count	= 0;
 		if( 0 !== $id ){
 			/** @var ?Entity_Work_Meeting $meeting */
-			$meeting	= $model->get( $id );
+			$meeting	= $this->logic->getMeeting( $id );
 			if( NULL === $meeting ){
 				$this->out( 'Error: Invalid ID' );
 				$this->logError( 'Error: Invalid ID' );
 				return;
 			}
-			$this->out( 'Sending reminder for: '.$meeting->title );
-			$this->sendMeetingReminder( $meeting );
+			$this->out( 'Closing meeting: '.$meeting->title );
+			$count	+= (int) $this->logic->closeMeeting( $meeting );
+			$this->setResult( Entity_Job_Result::STATUS_SUCCESS, $count );
 		}
 		else{
-			$datetime	= new Datetime( 'now' );
-			$target		= $datetime->add( new DateInterval( 'PT1H' ) );
-			if( $this->verbose )
-				$this->out( 'Target DateTime: '.$target->format( 'Y-m-d H:i' ).':00' );
-			$conditions	= [
-				'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
-				'dateStart'	=> $target->format('Y-m-d H:i' ).':00'
-			];
-			$meetings	= $model->getAll( $conditions );
-			foreach ( $meetings as $meeting ){
-				$this->out( 'Sending reminder for: '.$meeting->title );
-				$this->sendMeetingReminder( $meeting );
+			$meetings	= $this->logic->getClosableMeetings();
+			foreach( $meetings as $meeting ){
+				$this->out( 'Closing meeting: '.$meeting->title );
+				$count	+= (int) $this->logic->closeMeeting( $meeting );
 			}
 		}
+		$status	= Entity_Job_Result::STATUS_UNKNOWN;
+		if( 0 !== $count )
+			$status	= Entity_Job_Result::STATUS_SUCCESS;
+		$this->setResult( $status, $count );
 	}
 
-	protected function sendMeetingReminder( Entity_Work_Meeting $meeting ): int
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function remind(): void
 	{
-		$model		= new Model_Work_Meeting_Participant( $this->env );
-		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$logicUser	= Logic_User::getInstance( $this->env );
-
-		/** @var Entity_Work_Meeting_Participant[] $participants */
-		$participants	= $model->getAllByIndices( [
-			'meetingId'	=> $meeting->meetingId,
-			'type'		=> '!= '.Model_Work_Meeting_Participant::TYPE_INFORMED,
-		] );
-		foreach( $participants as $participant ){
-			$user	= $logicUser->getUser( $participant->userId );
-			$mail		= new Mail_Work_Meeting_Reminder( $this->env, [
-				'meeting'	=> $meeting,
-				'user'		=> $user,
-			] );
-			$logicMail->handleMail( $mail, $user, $this->env->getLanguage()->getLanguage() );
+		$id		= (int) $this->parameters->get( 'id', 0 );
+		$count	= 0;
+		if( 0 !== $id ){
+			/** @var ?Entity_Work_Meeting $meeting */
+			$meeting	= $this->logic->getMeeting( $id );
+			if( NULL === $meeting ){
+				$this->out( 'Error: Invalid ID' );
+				$this->logError( 'Error: Invalid ID' );
+				$this->setResult( Entity_Job_Result::STATUS_FAILURE, 0 );
+				return;
+			}
+			$this->out( 'Sending reminder for: '.$meeting->title );
+			$count	+= $this->logic->sendMailsOnReminder( $meeting );
 		}
-		return count( $participants );
+		else{
+			if( $this->verbose ){
+				$datetime	= new Datetime( 'now' );
+				$target		= $datetime->add( new DateInterval( 'PT1H' ) );
+				$this->out( 'Target DateTime: '.$target->format( 'Y-m-d H:i' ).':00' );
+			}
+			$meetings	= $this->logic->getRemindableMeetings();
+			foreach ( $meetings as $meeting ){
+				$this->out( 'Sending reminder for: '.$meeting->title );
+				$count	+= $this->logic->sendMailsOnReminder( $meeting );
+			}
+		}
+
+		$status	= Entity_Job_Result::STATUS_UNKNOWN;
+		if( 0 !== $count )
+			$status	= Entity_Job_Result::STATUS_SUCCESS;
+		$this->setResult( $status, $count );
+	}
+
+	protected function __onInit(): void
+	{
+		$this->logic	= Logic_Work_Meeting::getInstance( $this->env );
 	}
 }

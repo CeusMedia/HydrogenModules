@@ -153,21 +153,16 @@ class Controller_Work_Meeting extends Controller
 			}
 			if( [] !== $changes ){
 				$this->modelMeeting->edit( $meetingId, $updates, FALSE );
-				if( Model_Work_Meeting::STATUS_ACTIVE === $meeting->status )
+				if( Model_Work_Meeting::STATUS_ACTIVE === $meeting->status ){
 					$this->logic->sendMailsOnUpdate( $meeting, $changes );
-
+					$this->logic->setJobSchedule( $this->logic->getMeeting( $meetingId ) );
+				}
 			}
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
-		$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, ['type' => 'ASC'] );
-		/** @var Entity_Work_Meeting_Participant $participant */
-		foreach( $meeting->participants as $participant )
-			$participant->user	= $logicUser->getUser( $participant->userId );
+		$this->logic->extendMeetingByParticipants( $meeting );
 		$this->addData( 'editMode', $editMode );
 		$this->addData( 'meeting', $meeting );
-
-		/** @var Logic_User $logicUser */
-		$logicUser	= $this->env->getLogic()->get( 'User' );
 
 		$roles		= $logicUser->getRoles( ['access' => Model_Role::ACCESS_ACL], ['roleId' => 'DESC'] );
 		foreach( $roles as $nr => $role ){
@@ -285,12 +280,32 @@ class Controller_Work_Meeting extends Controller
 		$this->addData( 'meetings', $meetings );
 
 		if( 0 !== ( (int) trim( $meetingId ?? '' ) ) ){
+			$this->addData( 'meetingId', $meetingId );
 			/** @var ?Entity_Work_Meeting $meeting */
 			$meeting	= $this->logic->getMeeting( $meetingId );
-			if( NULL !== $meeting && $this->logic->isActive( $meeting ) ){
-				$script	= 'jQuery("#trigger-meeting-'.$meeting->meetingId.'").trigger("click")';
-				$this->env->getPage()->js->addScriptOnReady($script);
+			if( NULL === $meeting ){
+				$this->env->getMessenger()->noteError( 'Das verlinkte Meeting ist vorbei und der Eintrag existiert nicht mehr.' );
+				$this->addData( 'gone', TRUE );
+			}
+			else{
 				$this->addData( 'meeting', $meeting );
+				if( $this->logic->isActive( $meeting ) ){
+					$script	= 'jQuery("#trigger-meeting-'.$meeting->meetingId.'").trigger("click")';
+					$this->env->getPage()->js->addScriptOnReady( $script );
+				}
+				else{
+					if( Model_Work_Meeting::STATUS_CANCELLED === $meeting->status ){
+						$this->logic->extendMeetingByParticipants( $meeting );
+						$this->addData( 'meeting', $meeting );
+						$this->addData( 'meetingId', $meetingId );
+						$script	= 'jQuery("#meeting-'.$meetingId.'").modal("show")';
+						$this->env->getPage()->js->addScriptOnReady( $script );
+					}
+					else{
+						$this->env->getMessenger()->noteError( 'Das verlinkte Meeting ist vorbei.' );
+						$this->addData( 'gone', TRUE );
+					}
+				}
 			}
 		}
 

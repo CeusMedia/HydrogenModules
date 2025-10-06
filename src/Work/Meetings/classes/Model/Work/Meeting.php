@@ -35,7 +35,8 @@ class Model_Work_Meeting extends CeusMedia\HydrogenFramework\Model\Database\Tabl
 	protected array $columns		= [
 		'meetingId',
 		'creatorId',
-		'jobScheduleId',
+		'jobScheduleIdRemind',
+		'jobScheduleIdClose',
 		'type',
 		'priority',
 		'status',
@@ -50,7 +51,8 @@ class Model_Work_Meeting extends CeusMedia\HydrogenFramework\Model\Database\Tabl
 	];
 	protected array $indices		= [
 		'creatorId',
-		'jobScheduleId',
+		'jobScheduleIdRemind',
+		'jobScheduleIdClose',
 		'type',
 		'priority',
 		'status',
