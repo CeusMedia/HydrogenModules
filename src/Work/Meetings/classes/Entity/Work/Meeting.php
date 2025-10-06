@@ -6,7 +6,8 @@ class Entity_Work_Meeting extends Entity
 {
 	public int|string $meetingId			= 0;
 	public int|string $creatorId			= 0;
-	public int|string $jobScheduleId		= 0;
+	public int|string $jobScheduleIdRemind	= 0;
+	public int|string $jobScheduleIdClose	= 0;
 	public int $type						= Model_Work_Meeting::TYPE_GENERAL;
 	public int $priority					= Model_Work_Meeting::PRIORITY_NORMAL;
 	public int $status						= Model_Work_Meeting::STATUS_NEW;

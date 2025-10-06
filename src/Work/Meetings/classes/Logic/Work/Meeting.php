@@ -7,9 +7,33 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	protected Logic_User $logicUser;
 	protected Model_Work_Meeting $modelMeeting;
 	protected Model_Work_Meeting_Participant $modelParticipant;
+	protected Model_Job_Schedule $modelSchedule;
 
 	/**
-	 *	@return		array<Entity_Work_Meeting>
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		bool
+	 */
+	public function closeMeeting( Entity_Work_Meeting $meeting ): bool
+	{
+		if( Model_Work_Meeting::STATUS_ACTIVE !== $meeting->status )
+			return FALSE;
+
+		$this->modelMeeting->edit( $meeting->meetingId, [
+			'jobScheduleIdRemind'	=> 0,
+			'jobScheduleIdClose'	=> 0,
+			'status'				=> Model_Work_Meeting::STATUS_DONE,
+			'modifiedAt'			=> time(),
+		] );
+		if( 0 !== $meeting->jobScheduleIdRemind )
+			$this->modelSchedule->remove( $meeting->jobScheduleIdRemind );
+		if( 0 !== $meeting->jobScheduleIdClose )
+			$this->modelSchedule->remove( $meeting->jobScheduleIdClose );
+
+		return TRUE;
+	}
+
+	/**
+	 *	@return		array<int|string,Entity_Work_Meeting>
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
@@ -35,12 +59,39 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 
 		/** @var Entity_Work_Meeting[] $meetings */
 		$meetings	= $this->modelMeeting->getAllByIndex( 'meetingId', $myMeetingIds );
-		foreach( $meetings as $meeting ){
+		$this->extendMeetingsParticipantsByUser( $meetings );
+		$list		= [];
+		foreach( $meetings as $meeting )
+			$list[$meeting->meetingId]	= $meeting;
+		return $list;
+	}
+
+	/**
+	 * @param Entity_Work_Meeting> $meeting
+	 * @return void
+	 */
+	public function extendMeetingByParticipants( Entity_Work_Meeting $meeting ): void
+	{
+		$logicUser	= Logic_User::getInstance( $this->env );
+
+		if( [] === $meeting->participants )
 			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
-			foreach( $meeting->participants as $participant )
-				$participant->user	= $logicUser->getUser( $participant->userId );
-		}
-		return $meetings;
+
+		/** @var Entity_Work_Meeting_Participant $participant */
+		foreach( $meeting->participants as $participant )
+			$participant->user	= $logicUser->getUser( $participant->userId );
+	}
+
+	/**
+	 *	@return		array<Entity_Work_Meeting>
+	 */
+	public function getClosableMeetings(): array
+	{
+		/** @var Entity_Work_Meeting[] $meetings */
+		return $this->modelMeeting->getAll( [
+			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
+			'dateEnd'	=> '<= '.date( 'Y-m-d H:i:s' ),
+		] );
 	}
 
 	/**
@@ -53,8 +104,22 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		/** @var ?Entity_Work_Meeting $meeting */
 		$meeting	= $this->modelMeeting->get( $meetingId );
 		if( NULL !== $meeting )
-			$meeting->participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meetingId, ['type' => 'ASC'] );
+			$this->extendMeetingByParticipants( $meeting );
 		return $meeting;
+	}
+
+	/**
+	 *	@return		array<Entity_Work_Meeting>
+	 */
+	public function getRemindableMeetings(): array
+	{
+		$datetime	= new Datetime( 'now' );
+		$target		= $datetime->add( new DateInterval( 'PT1H' ) );
+		$conditions	= [
+			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
+			'dateStart'	=> $target->format('Y-m-d H:i' ).':00'
+		];
+		return $this->modelMeeting->getAll( $conditions );
 	}
 
 	/**
@@ -133,16 +198,19 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	 */
 	public function sendMailsOnReminder( Entity_Work_Meeting $meeting ): int
 	{
-		$language		= $this->env->getLanguage()->getLanguage();
+		$language	= $this->env->getLanguage()->getLanguage();
 		/** @var Entity_Work_Meeting_Participant[] $participants */
-		$participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
+		$participants	= $this->modelParticipant->getAllByIndices( [
+			'meetingId'	=> $meeting->meetingId,
+			'type'		=> '!= '.Model_Work_Meeting_Participant::TYPE_INFORMED,
+		] );
 		foreach( $participants as $participant ){
 			$user	= $this->logicUser->getUser( $participant->userId );
 			$mail	= new Mail_Work_Meeting_Reminder( $this->env, [
 				'meeting'	=> $meeting,
 				'user'		=> $user,
 			] );
-			$this->logicMail->enqueueMail( $mail, $language, $user );
+			$this->logicMail->handleMail( $mail, $user, $language );
 		}
 		return count( $participants );
 	}
@@ -187,28 +255,53 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
 		$reminderDate		= Datetime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateStart )
 			->sub( new DateInterval( "PT1H" ) );
+		$closeDate		= Datetime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateEnd );
 
-		if( 0 !== $meeting->jobScheduleId )
-			$modelJobSchedule->edit( $meeting->jobScheduleId, [
+		if( 0 !== $meeting->jobScheduleIdRemind ){
+			$modelJobSchedule->edit( $meeting->jobScheduleIdRemind, [
 				'expression'	=> $reminderDate->format( 'Y-m-d H:i' ),
 				'modifiedAt'	=> time(),
 			] );
+			$modelJobSchedule->edit( $meeting->jobScheduleIdClose, [
+				'expression'	=> $closeDate->format( 'Y-m-d H:i' ),
+				'modifiedAt'	=> time(),
+			] );
+		}
 		else{
-			$modelJobDefinition	= Model_Job_Definition::getInstance( $this->env );
+			$modelJobDefinition	= new Model_Job_Definition( $this->env );
+
 			$jobDefinitionId	= $modelJobDefinition->getByIndex( 'identifier', 'Work.Meeting.remind', [], ['jobDefinitionId'] );
-			$jobScheduleId		= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
+			$jobScheduleIdRemind	= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
 				'jobDefinitionId'	=> $jobDefinitionId,
+				'title'				=> 'Meeting Reminder #'.$meeting->meetingId,
 				'type'				=> Model_Job_Schedule::TYPE_DATETIME,
 				'status'			=> Model_Job_Schedule::STATUS_ENABLED,
 				'reportMode'		=> Model_Job_Schedule::REPORT_MODE_NEVER,
 				'reportChannel'		=> Model_Job_Schedule::REPORT_CHANNEL_NONE,
 				'expression'		=> $reminderDate->format( 'Y-m-d H:i' ),
-				'arguments'			=> ['id' => $meeting->meetingId],
+				'arguments'			=> "['id' => ".$meeting->meetingId."]",
 				'createdAt'			=> time(),
 			] ) );
 			$this->modelMeeting->edit( $meeting->meetingId, [
-				'jobScheduleId'		=> $jobScheduleId,
-				'modifiedAt'		=> time(),
+				'jobScheduleIdRemind'	=> $jobScheduleIdRemind,
+				'modifiedAt'			=> time(),
+			] );
+
+			$jobDefinitionId	= $modelJobDefinition->getByIndex( 'identifier', 'Work.Meeting.close', [], ['jobDefinitionId'] );
+			$jobScheduleIdRemind	= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
+				'jobDefinitionId'	=> $jobDefinitionId,
+				'title'				=> 'Meeting Closer #'.$meeting->meetingId,
+				'type'				=> Model_Job_Schedule::TYPE_DATETIME,
+				'status'			=> Model_Job_Schedule::STATUS_ENABLED,
+				'reportMode'		=> Model_Job_Schedule::REPORT_MODE_NEVER,
+				'reportChannel'		=> Model_Job_Schedule::REPORT_CHANNEL_NONE,
+				'expression'		=> $closeDate->format( 'Y-m-d H:i' ),
+				'arguments'			=> "['id' => ".$meeting->meetingId."]",
+				'createdAt'			=> time(),
+			] ) );
+			$this->modelMeeting->edit( $meeting->meetingId, [
+				'jobScheduleIdClose'	=> $jobScheduleIdRemind,
+				'modifiedAt'			=> time(),
 			] );
 		}
 	}
@@ -220,13 +313,15 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	 */
 	public function unsetJobSchedule( Entity_Work_Meeting $meeting ): void
 	{
-		if( 0 === $meeting->jobScheduleId )
+		if( 0 === $meeting->jobScheduleIdRemind )
 			return;
 		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
-		$modelJobSchedule->remove( $meeting->jobScheduleId );
+		$modelJobSchedule->remove( $meeting->jobScheduleIdRemind );
+		$modelJobSchedule->remove( $meeting->jobScheduleIdClose );
 		$this->modelMeeting->edit( $meeting->meetingId, [
-			'jobScheduleId'		=> 0,
-			'modifiedAt'		=> time(),
+			'jobScheduleIdRemind'	=> 0,
+			'jobScheduleIdClose'	=> 0,
+			'modifiedAt'			=> time(),
 		] );
 	}
 
@@ -241,5 +336,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		$this->logicUser		= Logic_User::getInstance( $this->env );
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
+		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
 	}
 }

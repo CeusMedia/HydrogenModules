@@ -372,6 +372,13 @@ class View_Work_Meeting extends View
 		$iconBack		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
 		$iconEdit		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-pencil"] ).'&nbsp;';
 
+		$buttonEdit	= '';
+		if( in_array( $meeting->status, [Model_Work_Meeting::STATUS_NEW, Model_Work_Meeting::STATUS_ACTIVE] ) )
+			$buttonEdit	= HtmlTag::create( 'a', $iconEdit.$w->buttonEdit, [
+				'href'	=> './work/meeting/edit/'.$meeting->meetingId.'/1',
+				'class' => 'btn btn-primary',
+			] );
+
 		return '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -428,7 +435,7 @@ class View_Work_Meeting extends View
 			<div class="row-fluid">
 				<div class="buttonbar">
 					<a href="./work/meeting" class="btn btn-small">'.$iconBack.$w->buttonBack.'</a>
-					<a href="./work/meeting/edit/'.$meeting->meetingId.'/1" class="btn btn-primary">'.$iconEdit.$w->buttonEdit.'</a>
+					'.$buttonEdit.'
 				</div>
 			</div>
 		</form>
@@ -513,6 +520,8 @@ class View_Work_Meeting extends View
 				HtmlTag::create( 'div', $meeting->content, ['class' => ''] ),
 			] );
 
+		$status	= $words['statuses'][$meeting->status];
+
 		$w	= (object) $words['edit'];
 		$blockDateTime	= '
 					<div class="row-fluid">
@@ -541,6 +550,10 @@ class View_Work_Meeting extends View
 							<div class="form-view-value">'.date( 'H:i:s', strtotime( $meeting->dateEnd ) ).'</div>
 						</div>
 						<div class="span4">
+							'.join( [
+								HtmlTag::create( 'div', 'aktueller Zustand', ['class' => 'form-view-label'] ),
+								HtmlTag::create( 'div', $status, ['class' => 'form-view-value'] ),
+							] ).'
 						</div>
 					</div>
 		';
