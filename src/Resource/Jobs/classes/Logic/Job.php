@@ -499,7 +499,14 @@ class Logic_Job extends Logic
 
 			if( Model_Job_Run::TYPE_SCHEDULED === $jobRun->type )
 				$output	= $outputBuffer->get( TRUE );
-			$this->quitJobRun( (int) $jobRun->jobRunId, Model_Job_Run::STATUS_DONE, [			//  finish job run since no exception has been thrown
+
+			$finalStatus	= Model_Job_Run::STATUS_DONE;
+			$runResults		= $jobObject->getResults();
+			if( $runResults instanceof Entity_Job_Result )
+				if( Entity_Job_Result::STATUS_SUCCESS === $runResults->status )
+					$finalStatus	= Model_Job_Run::STATUS_SUCCESS;
+
+			$this->quitJobRun( (int) $jobRun->jobRunId, $finalStatus, [								//  finish job run since no exception has been thrown
 				'type'		=> 'data',																//  ... and save message of type "data"
 				'code'		=> $result,																//  ... containing the method call return code
 				'data'		=> $jobObject->getResults(),											//  ... and results collected by the method call

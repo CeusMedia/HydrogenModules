@@ -128,7 +128,6 @@ jQuery(document).ready(function(){
 	ModuleManageJobSchedule.valuesSelected.day = '.json_encode( array_keys( $words['options-dayOfMonth'] ) ).';
 	ModuleManageJobSchedule.valuesSelected.month = '.json_encode( array_keys( $words['options-monthOfYear'] ) ).';
 	ModuleManageJobSchedule.valuesSelected.weekday = '.json_encode( array_keys( $words['options-dayOfWeek'] ) ).';
-	ModuleManageJobSchedule.init();
 	var exp = "'.$item->expression.'";
 	var format = "'.$format.'";
 	if(format == "interval")
@@ -137,6 +136,7 @@ jQuery(document).ready(function(){
 		ModuleManageJobSchedule.applyDatetimeExpressionToInputs(exp);
 	else
 		ModuleManageJobSchedule.applyCronExpressionToInputs(exp);
+	ModuleManageJobSchedule.init();
 });
 ';
 

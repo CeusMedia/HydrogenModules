@@ -6,7 +6,7 @@ use Lorisleiva\CronTranslator\CronTranslator;
 
 /** @var WebEnvironment $env */
 /** @var array $words */
-/** @var array<object> $scheduledJobs */
+/** @var array<Entity_Job_Schedule> $scheduledJobs */
 
 $iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
@@ -71,9 +71,12 @@ if( $scheduledJobs ){
 		if( (int) $item->type === Model_Job_Schedule::TYPE_CRON )
 			$expression	= HtmlTag::create( 'abbr', $expression, ['title' => CronTranslator::translate( $expression )] );
 
+		$title	= $item->definition->identifier;
+		if( '' !== trim( $item->title ?? '' ) )
+			$title	= $item->title.'<br/><small class="muted">'.$title.'</small>';
 
 		$rows[]	= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'td', $item->definition->identifier, ['class' => ''] ),
+			HtmlTag::create( 'td', $title, ['class' => ''] ),
 			HtmlTag::create( 'td', $type, ['class' => ''] ),
 			HtmlTag::create( 'td', HtmlTag::create( 'tt', $expression ), ['class' => ''] ),
 			HtmlTag::create( 'td', $item->lastRunAt ? date( 'd.m.Y H:i', $item->lastRunAt ) : '-', ['class' => ''] ),
