@@ -28,7 +28,7 @@ class View_Helper_Job_Attribute
 		Model_Job_Run::STATUS_PREPARED			=> 'fa fa-fw fa-asterisk',
 		Model_Job_Run::STATUS_RUNNING			=> 'fa fa-fw fa-cog fa-spin',
 		Model_Job_Run::STATUS_DONE				=> 'fa fa-fw fa-check',
-		Model_Job_Run::STATUS_SUCCESS			=> 'fa fa-fw fa-',
+		Model_Job_Run::STATUS_SUCCESS			=> 'fa fa-fw fa-cog',
 	];
 	public const RUN_TYPE_CLASSES				= [
 		Model_Job_Run::TYPE_MANUALLY			=> 'label label-info',
