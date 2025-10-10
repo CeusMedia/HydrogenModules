@@ -24,9 +24,10 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Database\PDO\Connection as PdoDatabaseConnection;
 use CeusMedia\Database\PDO\DataSourceName as PdoDataSourceName;
 use CeusMedia\HydrogenFramework\Environment;
-
+use Resource_Database_Connection as ModuleDatabaseConnection;
 /**
  *	Database resource using PDO wrapper from cmClasses.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
@@ -71,7 +72,7 @@ class Resource_Database
 		return $this->connections[$this->currentKey]->$name;
 	}
 
-	public function getConnection( ?string $key = 'default' ): PDO
+	public function getConnection( ?string $key = 'default' ): ModuleDatabaseConnection|PdoDatabaseConnection|PDO
 	{
 		if( !array_key_exists( $key, $this->connections ) )
 			throw new DomainException( 'No connection with key "'.$key.'"' );
