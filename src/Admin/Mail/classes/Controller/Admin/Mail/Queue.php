@@ -269,6 +269,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		$mailClasses	= array_keys( $this->logic->getUsedMailClassNames() );
 //		print_m( $mailClasses );die;
 		$this->addData( 'mailClasses', $mailClasses );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'admin_mail_queue', 'remove' ) );
 	}
 
 	protected function checkAjaxRequest(): void

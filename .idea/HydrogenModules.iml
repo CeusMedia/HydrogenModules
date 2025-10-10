@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/test/Integration" isTestSource="true" packagePrefix="CeusMedia\HydrogenModulesIntegrationTest\" />
       <sourceFolder url="file://$MODULE_DIR$/test/Unit" isTestSource="true" packagePrefix="CeusMedia\HydrogenModulesUnitTest\" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nostalgiaz/bootstrap-switch" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/complexity" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/global-state" />

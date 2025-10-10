@@ -14,6 +14,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var int|NULL $page */
 /** @var int|NULL $total */
 /** @var int|NULL $limit */
+/** @var int|NULL $canRemove */
 
 $w		= (object) $words['index'];
 $wl		= (object) $words['index-list'];
@@ -84,11 +85,12 @@ if( $mails ){
 			'class'		=> 'btn btn-info btn-mini',
 			'title'		=> 'anzeigen',
 		] );
-		$buttons[]		= HtmlTag::create( 'a', $iconRemove, [
-			'href'		=> './admin/mail/queue/remove/'.$mail->mailId.$paramPage,
-			'class'		=> 'btn btn-danger btn-mini',
-			'title'		=> 'entfernen',
-		] );
+		if( $canRemove )
+			$buttons[]		= HtmlTag::create( 'a', $iconRemove, [
+				'href'		=> './admin/mail/queue/remove/'.$mail->mailId.$paramPage,
+				'class'		=> 'btn btn-danger btn-mini',
+				'title'		=> 'entfernen',
+			] );
 		$buttons		= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] );
 
 		$statusClass	= $statusLabelClasses[$mail->status];
@@ -121,7 +123,8 @@ if( $mails ){
 		$mailClass	= HtmlTag::create( 'small', $mailClass, ['class' => 'muted'] );
 
 		$cells		= [];
-		$cells[]	= HtmlTag::create( 'td', $checkbox, ['class' => ''] );
+		if( $canRemove )
+			$cells[]	= HtmlTag::create( 'td', $checkbox, ['class' => ''] );
 		$cells[]	= HtmlTag::create( 'td', $features );
 		$cells[]	= HtmlTag::create( 'td', $link.'<br/>'.$mailClass.'&nbsp;'.$receiverName, ['class' => 'autocut cell-mail-subject'] );
 		$cells[]	= HtmlTag::create( 'td', $senderMail.'<br/>'.$receiverMail, ['class' => 'autocut cell-mail-receiver'] );
@@ -139,37 +142,46 @@ if( $mails ){
 		'id'		=> 'admin-mail-queue-list-all-items-toggle',
 	] );
 
-	$heads	= HtmlElements::TableHeads( [
+	$heads	= [
 		$checkboxAll,
 		'',
 		$wl->headMain,
 		$wl->headTraffic,
 		$wl->headStatus,
 		$wl->headActions,
-	] );
+	];
 
-	$colgroup		= HtmlElements::ColumnGroup( ['30px', '25px', '', '30%', '120px', '80px'] );
-	$thead			= HtmlTag::create( 'thead', $heads );
+	$columns		= ['30px', '25px', '', '30%', '120px', '80px'];
+	if( !$canRemove ){
+		array_shift( $columns );
+		array_shift( $heads );
+	}
+	$colgroup		= HtmlElements::ColumnGroup( $columns );
+	$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$table			= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 
-	$dropdownMenu	= HtmlTag::create( 'ul', [
-		HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-remove"></i> <del>abbrechen</del>', ['class' => '#', 'id' => 'action-button-abort'] )
-		),
-		HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-refresh"></i> <del>erneut versuchen</del>', ['class' => '#', 'id' => 'action-button-retry'] )
-		),
-		HtmlTag::create( 'li',
+	$itemList		= [];
+//	$itemList[]		= HtmlTag::create( 'li',
+//		HtmlTag::create( 'a', '<i class="fa fa-remove"></i> <del>abbrechen</del>', ['class' => '#', 'id' => 'action-button-abort'] )
+//	);
+//	$itemList[]		= HtmlTag::create( 'li',
+//		HtmlTag::create( 'a', '<i class="fa fa-refresh"></i> <del>erneut versuchen</del>', ['class' => '#', 'id' => 'action-button-retry'] )
+//	);
+	if( $canRemove )
+		$itemList[]	= HtmlTag::create( 'li',
 			HtmlTag::create( 'a', '<i class="fa fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
-		),
-	], ['class' => 'dropdown-menu not-pull-right'] );
+		);
 
-	$dropdownToggle	= HtmlTag::create( 'button', 'Aktion <span class="caret"></span>', [
-		'type'		=> 'button',
-		'class'		=> 'btn dropdown-toggle',
-	], ['toggle' => 'dropdown'] );
-	$dropdown		= HtmlTag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
+	$dropdown	= '';
+	if( [] !== $itemList ){
+		$dropdownMenu	= HtmlTag::create( 'ul', $itemList, ['class' => 'dropdown-menu not-pull-right'] );
+		$dropdownToggle	= HtmlTag::create( 'button', 'Aktion <span class="caret"></span>', [
+			'type'		=> 'button',
+			'class'		=> 'btn dropdown-toggle',
+		], ['toggle' => 'dropdown'] );
+		$dropdown		= HtmlTag::create( 'div', [$dropdownToggle, $dropdownMenu], ['class' => 'btn-group dropup'] );
+	}
 }
 
 $pagination		= new PageControl( './admin/mail/queue', $page, ceil( $total / $limit ) );
