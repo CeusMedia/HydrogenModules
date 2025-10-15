@@ -27,10 +27,10 @@ class View_Admin_Log_Exception extends View
 
 	/**
 	 *	@param		object		$exception
-	 *	@param		object		$exceptionRequest
+	 *	@param		HttpRequest|Dictionary		$exceptionRequest
 	 *	@return		string|NULL
 	 */
-	public function renderRequestSection( object $exception, object $exceptionRequest ): ?string
+	public function renderRequestSection( object $exception, HttpRequest|Dictionary $exceptionRequest ): ?string
 	{
 		if( !$exceptionRequest )
 			return NULL;
@@ -53,12 +53,13 @@ class View_Admin_Log_Exception extends View
 	/**
 	 *	@param		object		$exception
 	 *	@param		array		$exceptionEnv
-	 *	@param		Dictionary	$exceptionRequest
+	 *	@param		HttpRequest|Dictionary	$exceptionRequest
 	 *	@return		string
 	 */
-	public function renderFactsSection( object $exception, array $exceptionEnv, Dictionary $exceptionRequest ): string
+	public function renderFactsSection( object $exception, array $exceptionEnv, HttpRequest|Dictionary $exceptionRequest ): string
 	{
 		$file		= preg_replace( "/^".preg_quote( $exceptionEnv['uri'], '/' )."/", './', $exception->file );
+		$file		= preg_replace( "/^".preg_quote( $this->env->uri, '/' )."/", './', $file );
 		$date		= date( 'Y.m.d', $exception->createdAt );
 		$time		= date( 'H:i:s', $exception->createdAt );
 
@@ -70,7 +71,7 @@ class View_Admin_Log_Exception extends View
 			$facts['Code']	= $exception->code;
 		$facts['File (Line)']	= $file.' ('.$exception->line.')';
 		$facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
-		$facts['Request Path']	= $exceptionRequest->get( '__path' ).'&nbsp;';
+		$facts['Request Path']	= $exceptionRequest->get( '__path' );
 		$facts['App Name']		= $exceptionEnv['appName'];
 		$facts['Base URL']		= $exceptionEnv['url'];
 		$facts['Environment']	= $exceptionEnv['class'];
@@ -78,7 +79,7 @@ class View_Admin_Log_Exception extends View
 
 		$list	= [];
 		foreach( $facts as $key => $value )
-			$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value );
+			$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value ?: '&nbsp;' );
 		return HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
 	}
 
@@ -167,13 +168,13 @@ class View_Admin_Log_Exception extends View
 
 	/**
 	 *	@param		object		$exception
-	 *	@param		object		$exceptionEnv
+	 *	@param		array		$exceptionEnv
 	 *	@return		string
 	 */
-	public function renderTraceSection( object $exception, object $exceptionEnv ): string
+	public function renderTraceSection( object $exception, array $exceptionEnv ): string
 	{
 		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
-		$realPath	= preg_replace( '@admin/?$@', '', realpath( $exceptionEnv->uri ) );
+		$realPath	= preg_replace( '@admin/?$@', '', realpath( $exceptionEnv['uri'] ) );
 
 		if( isset( $exception->traceAsHtml ) )
 			$trace	= $exception->traceAsHtml;

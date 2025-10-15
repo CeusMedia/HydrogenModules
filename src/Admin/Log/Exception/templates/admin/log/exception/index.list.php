@@ -5,10 +5,10 @@ use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
-use CeusMedia\HydrogenFramework\Environment\Web;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\HydrogenFramework\View;
 
-/** @var Web $env */
+/** @var WebEnvironment $env */
 /** @var View $view */
 
 /** @var array<array<string,string>> $words */
@@ -18,36 +18,32 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $total */
 /** @var int $limit */
 /** @var ?string $currentInstance */
+/** @var bool $canView */
+/** @var bool $canRemove */
+/** @var bool $canBulk */
+/** @var bool $canSetInstance */
 
-$w	= (object) $words['index.list'];
+/**
+ *	@param		WebEnvironment	$env
+ *	@param		array			$exceptions
+ *	@param		bool			$canView
+ *	@param		bool			$canRemove
+ *	@param		bool			$canBulk
+ *	@return		string
+ *	@throws		ReflectionException
+ *	@throws		\Psr\SimpleCache\InvalidArgumentException
+ */
+function renderTable( WebEnvironment $env, array $exceptions, bool $canView, bool $canRemove, bool $canBulk ): string
+{
+	if( [] === $exceptions )
+		return HtmlTag::create( 'div', 'No exceptions logged.', ['class' => "alert alert-success"] );
 
-$modelUser	= new Model_User( $this->env );
-
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
-$iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
-
-$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
-
-$selectInstance	= '';
-if( count( $instances ) > 1 ){
-	$optInstance	= [];
-	foreach( $instances as $instanceKey => $instanceData )
-		$optInstance[$instanceKey]	= $instanceData->title;
-	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
-	$selectInstance	= HtmlTag::create( 'select', $optInstance, [
-		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
-		'class'		=> '',
-		'style'		=> 'width: 100%',
-	] );
-
-}
-
-$dropdown	= '';
-$buttonbar	= '';
-$table		= '<div class="alert alert-success"><em><small>No exceptions logged.</small></em></div>';
-if( $exceptions ){
-	$list	= [];
+	$logicUser	= Logic_User::getInstance( $env );
+	$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
+	$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
+	$iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
+	$iconDate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-clock-o'] );
+	$list		= [];
 	foreach( $exceptions as $nr => $exception ){
 //print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
@@ -57,19 +53,21 @@ if( $exceptions ){
 			$exceptionSession	= new Dictionary( unserialize( $exception->session ) );
 
 		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
-		$date	= date( 'Y.m.d', $exception->createdAt );
+		$date	= date( 'Y-m-d', $exception->createdAt );
 		$time	= date( 'H:i:s', $exception->createdAt );
+		$factDate	= $iconDate.'&nbsp;'.$date.'&nbsp;<small class="muted">'.$time.'</small>';
 
-		$buttons	= HtmlTag::create( 'div', [
-			HtmlTag::create( 'a', $iconView, [
+		$buttons	= [];
+		if( $canView )
+			$buttons[]	= HtmlTag::create( 'a', $iconView, [
 				'class'	=> 'btn not-btn-mini btn-small not-btn-info',
 				'href'	=> './admin/log/exception/view/'.$exception->exceptionId
-			] ),
-			HtmlTag::create( 'a', $iconRemove, [
+			] );
+		if( $canRemove )
+			$buttons[]	= HtmlTag::create( 'a', $iconRemove, [
 				'class'	=> 'btn not-btn-mini btn-small btn-danger',
 				'href'	=> './admin/log/exception/remove/'.$exception->exceptionId
-			] ),
-		], ['class' => 'btn-group'] );
+			] );
 
 		$checkbox		= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
@@ -91,23 +89,27 @@ if( $exceptions ){
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';
 
 		$icons	= [];
-
+		$factUser	= '';
 		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
-			$user	= $modelUser->get( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
-			$icons['user']	= HtmlTag::create( 'span', $iconUser, [
-				'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
+			$user	= $logicUser->getUser( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
+/*			if( NULL !== $user )
+				$icons['user']	= HtmlTag::create( 'span', $iconUser, [
+					'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
+				] );*/
+			$factUser	= HtmlTag::create( 'span', $iconUser.'&nbsp;'.$user->username, [
+				'title'	=> $user->firstname.' '.$user->surname
 			] );
 		}
 
 		$list[]			= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'td', $checkbox ),
-			HtmlTag::create( 'td', $link.'<br/>'.$method.' '.$requestPath, ['class' => 'autocut'] ),
+			$canBulk ? HtmlTag::create( 'td', $checkbox ) : '',
+			HtmlTag::create( 'td', join( '<br/>', [$link, $method.' '.$requestPath, $typeClass] ), ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
 //			HtmlTag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
 
-			HtmlTag::create( 'td', $icons ),
-			HtmlTag::create( 'td', $typeClass.'<br/>'.$date.'&nbsp;<small class="muted">'.$time.'</small>' ),
-			HtmlTag::create( 'td', $buttons ),
+//			HtmlTag::create( 'td', $icons ),
+			HtmlTag::create( 'td', join( '<br/>', [$factDate, $factUser] ) ),
+			HtmlTag::create( 'td', HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] ) ),
 		] );
 	}
 
@@ -117,28 +119,54 @@ if( $exceptions ){
 		'id'	=> 'admin-log-exception-list-all-items-toggle',
 	] );
 
-	$heads	= HtmlElements::TableHeads( [
-		$checkboxAll,
-//		'',
-		'',
-		'',
-	] );
+	$heads	= [];
+	if( $canBulk )
+		$heads[]	= $checkboxAll;
+	$heads[]	= 'Message';
+	$heads[]	= 'Facts';
+	$heads[]	= '';
 
-	$colgroup	= HtmlElements::ColumnGroup( '20px', ''/*, '180px'*//*, '180px'*/, '60px', '150px', '100px' );
-	$thead		= HtmlTag::create( 'thead', $heads );
-	$tbody		= HtmlTag::create( 'tbody', $list );
-	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], [
+	$cols		= [];
+	if( $canBulk )
+		$cols[]	= '22px';
+	$cols[]		= '';
+	$cols[]		= '150px';
+	$cols[]		= '80px';
+
+	return HtmlTag::create( 'table', [
+		HtmlElements::ColumnGroup( $cols ),
+		HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) ),
+		HtmlTag::create( 'tbody', $list )
+	], [
 		'class'	=> 'table table-striped table-condensed',
 		'style'	=> 'table-layout: fixed'
 	] );
+}
 
-	if( count( $exceptions ) > 1 ){
-		$dropdownMenu	= HtmlTag::create( 'ul', [
-			HtmlTag::create( 'li',
-				HtmlTag::create( 'a', '<i class="fa fa-trash"></i> '.$w->buttonRemove, ['class' => '#', 'id' => 'action-button-remove'] )
-			),
-		], ['class' => 'dropdown-menu not-pull-right'] );
+/**
+ *	@param		array<array<string,string>>	$words
+ *	@param		int							$page
+ *	@param		int							$limit
+ *	@param		int							$total
+ *	@param		int							$exceptions
+ *	@param		bool						$canRemove
+ *	@return		string
+ */
+function renderButtonBar( array $words, int $page, int $limit, int $total, int $exceptions, bool $canRemove ): string
+{
+	$w	= (object) $words['index.list'];
+	if( 0 === $exceptions )
+		return '';
 
+	$dropdown	= '';
+	$items		= [];
+	if( $canRemove ){
+		$items[]	= HtmlTag::create( 'li',
+			HtmlTag::create( 'a', '<i class="fa fa-trash"></i> '.$w->buttonRemove, ['class' => '#', 'id' => 'action-button-remove'] )
+		);
+	}
+	if( [] !== $items ){
+		$dropdownMenu	= HtmlTag::create( 'ul', $items, ['class' => 'dropdown-menu not-pull-right'] );
 		$dropdownToggle	= HtmlTag::create( 'button', $w->buttonAction.' <span class="caret"></span>', [
 			'type'		=> 'button',
 			'class'		=> 'btn dropdown-toggle',
@@ -147,16 +175,39 @@ if( $exceptions ){
 	}
 
 	$pagination	= new PageControl( './admin/log/exception', $page, ceil( $total / $limit ) );
-	$buttonbar	= HtmlTag::create( 'div', $pagination->render().$dropdown, ['class' => 'buttonbar'] );
+	return HtmlTag::create( 'div', $pagination->render().$dropdown, ['class' => 'buttonbar'] );
 }
+
+function renderInstanceSelector( array $instances, ?string $currentInstance, bool $canSetInstance ): string
+{
+	if( !$canSetInstance || 1 === count( $instances ) )
+		return '';
+
+	$selectInstance	= '';
+	$optInstance	= [];
+	foreach( $instances as $instanceKey => $instanceData )
+		$optInstance[$instanceKey]	= $instanceData->title;
+	$optInstance	= HtmlElements::Options( $optInstance, $currentInstance );
+	$selectInstance	= HtmlTag::create( 'select', $optInstance, [
+		'oninput'	=> 'document.location.href = "./admin/log/exception/setInstance/" + jQuery(this).val();',
+		'class'		=> '',
+		'style'		=> 'width: 100%',
+	] );
+	return HtmlTag::create( 'div', $selectInstance, ['style' => "position: absolute; right: 1em; top: 0.65em; width: 150px;"] );
+}
+
+$instanceSelector	= renderInstanceSelector( $instances, $currentInstance, $canSetInstance );
+$table				= renderTable( $env, $exceptions, $canView, $canRemove, $canBulk );
+$buttonbar			= renderButtonBar( $words, $page, $limit, $total, count( $exceptions ), $canRemove );
+
+$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
+
 
 
 return '
 <form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">
 	<div class="content-panel" style="position: relative">
-		<div style="position: absolute; right: 1em; top: 0.65em; width: 150px;">
-			'.$selectInstance.'
-		</div>
+		'.$instanceSelector.'
 		<h3>Exceptions</h3>
 		<div class="content-panel-inner">
 			<input type="hidden" name="type" id="input_type"/>

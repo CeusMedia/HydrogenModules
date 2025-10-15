@@ -1,6 +1,7 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
@@ -11,9 +12,11 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var object $exception */
 /** @var int $page */
 /** @var array $exceptionEnv */
-/** @var Dictionary $exceptionRequest */
+/** @var HttpRequest|Dictionary $exceptionRequest */
 /** @var Dictionary $exceptionSession */
 /** @var ?object $user */
+/** @var bool $canIndex */
+/** @var bool $canRemove */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
@@ -26,15 +29,18 @@ $sections	= [
 	'session'	=> $view->renderSessionSection( $exception, $exceptionSession ),
 	'user'		=> $view->renderUserSection( $exception, $user ),
 ];
-
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', [
-	'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
-	'class'		=> 'btn btn-small',
-] );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
-	'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
-	'class'		=> 'btn btn-small btn-danger',
-] );
+$buttonCancel	= '';
+if( $canIndex )
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', [
+		'href'		=> './admin/log/exception'.( $page ? '/'.$page : '' ),
+		'class'		=> 'btn btn-small',
+	] );
+$buttonRemove	= '';
+if( $canRemove )
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+		'href'		=> './admin/log/exception/remove/'.$exception->exceptionId,
+		'class'		=> 'btn btn-small btn-danger',
+	] );
 
 return '
 <div class="row-fluid">
