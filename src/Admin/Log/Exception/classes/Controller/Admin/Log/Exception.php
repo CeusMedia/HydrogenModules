@@ -132,6 +132,10 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$types	= $this->model->getDistinct( 'type', [], ['type' => 'ASC'] );
 		$this->addData( 'exceptionTypes', $types );
+		$this->addData( 'canBulk', $this->env->getAcl()->has( 'admin/log/exception', 'bulk' ) );
+		$this->addData( 'canSetInstance', $this->env->getAcl()->has( 'admin/log/exception', 'setInstance' ) );
+		$this->addData( 'canView', $this->env->getAcl()->has( 'admin/log/exception', 'view' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'admin/log/exception', 'remove' ) );
 	}
 
 	/**
@@ -172,6 +176,7 @@ class Controller_Admin_Log_Exception extends Controller
 		}
 
 		$exceptionEnv		= unserialize( $exception->env );
+		/** @var Request|Dictionary $exceptionRequest */
 		$exceptionRequest	= unserialize( $exception->request );
 		$exceptionSession	= new Dictionary( unserialize( $exception->session ?? 'b:0;' ) ?: [] );
 
@@ -187,6 +192,8 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'exceptionSession', $exceptionSession );
 		$this->addData( 'user', $user );
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
+		$this->addData( 'canIndex', $this->env->getAcl()->has( 'admin/log/exception', 'index' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'admin/log/exception', 'remove' ) );
 	}
 
 	/**
