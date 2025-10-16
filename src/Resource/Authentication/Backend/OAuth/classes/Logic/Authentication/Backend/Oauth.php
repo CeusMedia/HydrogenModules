@@ -87,6 +87,10 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 		return NULL;
 	}
 
+	/**
+	 * @param		bool	$strict
+	 * @return		int|string|NULL
+	 */
 	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
@@ -94,16 +98,16 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->session->get( 'auth_role_id');
+		return $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
 	}
 
 	/**
 	 *	@param		bool		$strict
-	 *	@param		bool		$withRole
+	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_NOTHING
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
