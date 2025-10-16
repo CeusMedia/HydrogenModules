@@ -15,7 +15,7 @@ This is recommended at the moment. File locks are missing and so on.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.1">Initial prototype</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add session ID.</log>
@@ -23,6 +23,7 @@ This is recommended at the moment. File locks are missing and so on.
 	<log version="0.2.3">Improve data structure.</log>
 	<log version="0.2.4">Support saving request response data.</log>
 	<log version="0.2.5">Support log file to avoid database work on each request.</log>
+	<log version="0.2.6">Code style and doc update.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

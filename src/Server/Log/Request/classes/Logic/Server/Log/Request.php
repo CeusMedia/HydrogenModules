@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\Common\Net\HTTP\Header\Field as HeaderField;
 use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
@@ -14,6 +15,13 @@ class Logic_Server_Log_Request extends SharedLogic
 	protected bool $isActive					= FALSE;
 	protected int|string|NULL $currentRequestId	= NULL;
 
+	/**
+	 *	@param		string|NULL								$method
+	 *	@param		DateInterval|DateTime|int|string|NULL	$since
+	 *	@param		DateInterval|DateTime|int|string|NULL	$until
+	 *	@return		int
+	 *	@throws		DateInvalidOperationException
+	 */
 	public function countRequestsOfCurrentIpToCurrentRequest( ?string $method = NULL, DateInterval|DateTime|int|string $since = NULL, DateInterval|DateTime|int|string $until = NULL ): int
 	{
 		$path	= $this->env->getRequest()->get( 'path' );
@@ -21,6 +29,12 @@ class Logic_Server_Log_Request extends SharedLogic
 		return $this->countRequestsOfIp( $ip, $method, $path, $since, $until );
 	}
 
+	/**
+	 *	@param		DateInterval|DateTime|int|string|NULL	$since
+	 *	@param		DateInterval|DateTime|int|string|NULL	$until
+	 *	@return		int
+	 *	@throws		DateInvalidOperationException
+	 */
 	public function countRequestsInInterval( DateInterval|DateTime|int|string $since = NULL, DateInterval|DateTime|int|string $until = NULL ): int
 	{
 		if( NULL === $since && NULL === $until )
@@ -34,12 +48,21 @@ class Logic_Server_Log_Request extends SharedLogic
 		else if( NULL !== $since )
 			$timestamp	= '>= '.$this->convertSomeDateInputsToDateTime( $since )
 				->format( 'Y-m-d H:i:s' );
-		else if( NULL !== $until )
+		else
 			$timestamp	= '<= '.$this->convertSomeDateInputsToDateTime( $until )
 				->format( 'Y-m-d H:i:s' );
 		return $this->model->count( ['timestamp' => $timestamp] );
 	}
 
+	/**
+	 *	@param		string			$ip
+	 *	@param		string|NULL		$method
+	 *	@param		string|NULL		$path
+	 *	@param		DateInterval|DateTime|int|string|NULL	$since
+	 *	@param		DateInterval|DateTime|int|string|NULL 	$until
+	 *	@return		int
+	 *	@throws		DateInvalidOperationException
+	 */
 	public function countRequestsOfIp( string $ip, ?string $method = NULL, ?string $path = NULL, DateInterval|DateTime|int|string $since = NULL, DateInterval|DateTime|int|string $until = NULL ): int
 	{
 		$indices	= ['ip'	=> $ip];
@@ -70,7 +93,6 @@ class Logic_Server_Log_Request extends SharedLogic
 	/**
 	 *	Tries to import file log entries to database.
 	 *	@return		int
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importFromFileToDatabase(): int
@@ -109,16 +131,13 @@ class Logic_Server_Log_Request extends SharedLogic
 	{
 		if( NULL !== $this->currentRequestId )
 			return;
+
 		$data	= $this->collectData();
-		switch( $this->module->config['saveTo']->value ){
-			case 'file':
-				$this->currentRequestId	= $this->logRequestEntityToFile( $data );
-				break;
-			case 'database':
-			default:
-				$this->currentRequestId	= $this->model->add( $data );
-				break;
-		}
+
+		$this->currentRequestId = match( $this->module->config['saveTo']->value ){
+			'file'	=> $this->logRequestEntityToFile( $data ),
+			default	=> $this->model->add( $data ),
+		};
 	}
 
 	/**
@@ -141,7 +160,7 @@ class Logic_Server_Log_Request extends SharedLogic
 		];
 		switch( $this->module->config['saveTo']->value ){
 			case 'file':
-				$this->currentRequestId	= $this->logResponseToFile( $data );
+				$this->logResponseToFile( $data );
 				break;
 			case 'database':
 			default:
@@ -209,6 +228,11 @@ class Logic_Server_Log_Request extends SharedLogic
 		] );
 	}
 
+	/**
+	 *	@param		DateInterval|DateTime|int|string		$input
+	 *	@return		DateTime
+	 *	@throws		DateInvalidOperationException
+	 */
 	protected function convertSomeDateInputsToDateTime( DateInterval|DateTime|int|string $input ): DateTime
 	{
 		if( $input instanceof DateInterval ){
@@ -242,7 +266,7 @@ class Logic_Server_Log_Request extends SharedLogic
 	{
 		$fileName	= $this->module->config['file']->value;
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;
-		$id			= \CeusMedia\Common\Alg\ID::uuid();
+		$id			= ID::uuid();
 		error_log( $id.' '.json_encode( $request->toArray() ).PHP_EOL, 3, $filePath );
 		return $id;
 	}
@@ -251,7 +275,7 @@ class Logic_Server_Log_Request extends SharedLogic
 	 *	@param		array		$data
 	 *	@return		void
 	 */
-	protected function logResponseToFile( array $data )
+	protected function logResponseToFile( array $data ): void
 	{
 		$fileName	= $this->module->config['file']->value;
 		$filePath	= $this->env->getConfig()->get( 'path.logs' ).$fileName;

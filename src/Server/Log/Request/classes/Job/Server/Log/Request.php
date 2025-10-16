@@ -9,6 +9,7 @@ class Job_Server_Log_Request extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		DateInvalidOperationException
 	 *	@todo		implement export and removal
 	 */
 	public function archive(): void
@@ -24,6 +25,11 @@ class Job_Server_Log_Request extends Job_Abstract
 		// @todo implement export and removal
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function import(): void
 	{
 		/** @var ModuleDefinition $module */
