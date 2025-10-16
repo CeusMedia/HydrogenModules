@@ -11,7 +11,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 <code>SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0</code>
 
 ]]></description>
-	<version>1.0.4</version>
+	<version>1.0.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added text block support for every page (german only).</log>
@@ -84,6 +84,7 @@ You need to set this header in your Apache configuration. For example in .htacce
 	<log version="1.0.3">Adjust to changes in authentication backends.</log>
 	<log version="1.0.4">Use module Resource:Disclosure.</log>
 	<log version="1.0.5">Introduce backend logic interface.</log>
+	<log version="1.0.6">Support user logic extensions.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

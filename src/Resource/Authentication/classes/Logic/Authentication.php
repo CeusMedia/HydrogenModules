@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication extends Logic
@@ -57,13 +58,12 @@ class Logic_Authentication extends Logic
 
 	/**
 	 *	@param		bool		$strict
-	 *	@param		bool		$withRole
-	 *	@param		bool		$withGroups
+	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_NOTHING
 	 *	@return		object|NULL
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, bool $withGroups = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{
-		return $this->backend->getCurrentUser( $strict, $withRole, $withGroups );
+		return $this->backend->getCurrentUser( $strict, $extensions );
 	}
 
 	/**
@@ -119,6 +119,11 @@ class Logic_Authentication extends Logic
 		return $this->env->getAcl()->hasFullAccess( $this->getCurrentRoleId() );
 	}
 
+	public function hasAccessToModuleEntity( ModuleDefinition|string $moduleId, int|string $entityId ): bool
+	{
+		return FALSE;
+	}
+	
 	public function isAuthenticated(): bool
 	{
 		return $this->backend->isAuthenticated();
