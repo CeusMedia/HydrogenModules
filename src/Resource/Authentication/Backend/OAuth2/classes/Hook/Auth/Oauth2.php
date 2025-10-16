@@ -7,26 +7,26 @@ class Hook_Auth_Oauth2 extends Hook
 {
 	protected static $configPrefix	= 'module.resource_authentication_backend_oauth2.';
 
-	public static function onAuthRegisterBackend( Environment $env, $context, $module, $payload = [] )
+	public function onAuthRegisterBackend(): void
 	{
-		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
+		if( !$this->env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
-		$words	= $env->getLanguage()->getWords( 'auth/oauth2' );
-		$context->registerBackend( 'Oauth2', 'oauth2', $words['backend']['title'] );
+		$words	= $this->env->getLanguage()->getWords( 'auth/oauth2' );
+		$this->context->registerBackend( 'Oauth2', 'oauth2', $words['backend']['title'] );
 	}
 
-	public static function onAuthRegisterLoginTab( Environment $env, $context, $module, $payload = [] )
+	public function onAuthRegisterLoginTab(): void
 	{
-		if( !$env->getConfig()->get( self::$configPrefix.'active' ) )
+		if( !$this->env->getConfig()->get( self::$configPrefix.'active' ) )
 			return;
-//		if( !$env->getConfig()->get( self::$configPrefix.'loginTab' ) )
+//		if( !$this->env->getConfig()->get( self::$configPrefix.'loginTab' ) )
 //			return;
-		if( $env->getConfig()->get( self::$configPrefix.'loginMode' ) !== 'tab' )
+		if( $this->env->getConfig()->get( self::$configPrefix.'loginMode' ) !== 'tab' )
 			return;
 
-		$words		= (object) $env->getLanguage()->getWords( 'auth/oauth2' );						//  load words
-		$rank		= $env->getConfig()->get( self::$configPrefix.'login.rank' );
+		$words		= (object) $this->env->getLanguage()->getWords( 'auth/oauth2' );						//  load words
+		$rank		= $this->env->getConfig()->get( self::$configPrefix.'login.rank' );
 		$label		= $words->login['tab'];
-		$context->registerTab( 'auth/oauth2/login', $label, $rank );									//  register main tab
+		$this->context->registerTab( 'auth/oauth2/login', $label, $rank );									//  register main tab
 	}
 }

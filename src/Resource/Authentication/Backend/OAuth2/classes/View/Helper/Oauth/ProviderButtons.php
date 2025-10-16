@@ -57,10 +57,10 @@ class View_Helper_Oauth_ProviderButtons
 				] );
 			}
 		}
-		if( $dropdown ){
+		if( [] !== $dropdown ){
 			$buttons[]	= HtmlTag::create( 'div', [
 				HtmlTag::create( 'a', $this->dropdownLabel.' <span class="caret"></span>', [
-					'href'			=> $this->linkPath.$provider->oauthProviderId.$from,
+					'href'			=> '#',
 					'class'			=> 'btn dropdown-toggle',
 					'data-toggle'	=> 'dropdown'
 				] ),
