@@ -71,10 +71,10 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 
 	/**
 	 *	@param		bool		$strict
-	 *	@param		bool		$withRole
+	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_ROLE|Logic_User::EXTEND_GROUPS
 	 *	@return		object|NULL
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
