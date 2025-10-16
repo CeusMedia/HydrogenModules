@@ -110,8 +110,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>meeting_participants` (
   PRIMARY KEY (`meetingParticipantId`),
   KEY `meetingId` (`meetingId`),
   KEY `userId` (`userId`),
-  KEY `type` (`type`),
-  KEY `status` (`status`)
+  KEY `type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[

@@ -59,18 +59,19 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 
 		/** @var Entity_Work_Meeting[] $meetings */
 		$meetings	= $this->modelMeeting->getAllByIndex( 'meetingId', $myMeetingIds );
-		$this->extendMeetingsParticipantsByUser( $meetings );
 		$list		= [];
-		foreach( $meetings as $meeting )
+		foreach( $meetings as $meeting ){
+			$this->extendMeetingsParticipantsByUser( $meeting );
 			$list[$meeting->meetingId]	= $meeting;
+		}
 		return $list;
 	}
 
 	/**
-	 * @param Entity_Work_Meeting> $meeting
-	 * @return void
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		void
 	 */
-	public function extendMeetingByParticipants( Entity_Work_Meeting $meeting ): void
+	public function extendMeetingsParticipantsByUser( Entity_Work_Meeting $meeting ): void
 	{
 		$logicUser	= Logic_User::getInstance( $this->env );
 
@@ -104,7 +105,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		/** @var ?Entity_Work_Meeting $meeting */
 		$meeting	= $this->modelMeeting->get( $meetingId );
 		if( NULL !== $meeting )
-			$this->extendMeetingByParticipants( $meeting );
+			$this->extendMeetingsParticipantsByUser( $meeting );
 		return $meeting;
 	}
 

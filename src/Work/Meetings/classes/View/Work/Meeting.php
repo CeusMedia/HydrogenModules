@@ -296,6 +296,8 @@ class View_Work_Meeting extends View
 		$dateStart	= DateTime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateStart );
 		$dateEnd	= DateTime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateEnd );
 
+		$text	= '';
+		$button	= '';
 		if( Model_Work_Meeting::STATUS_NEW === $meeting->status ){
 			$iconPlay			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
 			$dateValidBefore	= $dateStart->sub( new DateInterval( 'PT1H' ) );
@@ -447,6 +449,7 @@ class View_Work_Meeting extends View
 	{
 		$list	= [];
 		$modals	= [];
+		$myRole	= 'nicht dabei';
 		foreach( $meetings as $meeting ){
 			$nrParticipants	= 0;
 			foreach( $meeting->participants as $participant ){
