@@ -1,6 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Authentication_Backend_Local extends Logic implements Logic_Authentication_BackendInterface
@@ -91,9 +92,9 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 
 	/**
 	 * @param		bool	$strict
-	 * @return		string|NULL
+	 * @return		int|string|NULL
 	 */
-	public function getCurrentRoleId( bool $strict = TRUE ): ?string
+	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
 		if( !$this->isAuthenticated() ){
 			if( $strict )
@@ -105,26 +106,22 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 
 	/**
 	 *	@param		bool		$strict
-	 *	@param		bool		$withRole
-	 *	@param		bool		$withGroups
+	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_ROLE|Logic_User::EXTEND_GROUPS
 	 *	@return		object|NULL
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE, bool $withGroups = FALSE ): ?object
+	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_ROLE|Logic_User::EXTEND_GROUPS ): ?object
 	{
 		$userId	= $this->getCurrentUserId( FALSE );
-		if( !$userId ){
-			if( $strict )
-				throw new RuntimeException( 'No valid user identified' );
-			return NULL;
+		if( $userId ){
+			$user	= $this->logicUser->checkId( $userId, $extensions, FALSE );
+			if( NULL !== $user )
+				return $user;
 		}
 
-		$extensions	= 0;
-		if( $withRole )
-			$extensions	|= Logic_User::EXTEND_ROLE;
-		if( $withGroups )
-			$extensions	|= Logic_User::EXTEND_GROUPS;
-		return $this->logicUser->checkId( $userId, $extensions, FALSE );
+		if( $strict )
+			throw new RuntimeException( 'No valid user identified' );
+		return NULL;
 	}
 
 	/**
@@ -140,6 +137,21 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 			return 0;
 		}
 		return $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
+	}
+
+	/**
+	 *	Indicates whether the current user has access a module entity by groups.
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		int|string					$entityId
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	public function hasAccessToModuleEntity( ModuleDefinition|string $module, int|string $entityId ): bool
+	{
+		$userId			= $this->getCurrentUserId();
+		$logicUser		= Logic_User::getInstance( $this->env );
+		$logicRelation	= Logic_GroupRelation::getInstance( $this->env );
+		return $logicRelation->isRelatedToModuleEntity( $module, $entityId );
 	}
 
 	/**
