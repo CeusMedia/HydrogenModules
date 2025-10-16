@@ -14,9 +14,10 @@ class Controller_Auth_Json extends Controller
 	protected HttpCookie $cookie;
 	protected MessengerResource $messenger;
 	protected Logic_Authentication_Backend_Json $logic;
+	protected Resource_JSON_Client $client;
 	protected bool $useCsrf;
 
-	public function index()
+	public function index(): void
 	{
 		if( !$this->logic->isAuthenticated() )
 			$this->restart( 'login', TRUE );
@@ -34,7 +35,7 @@ class Controller_Auth_Json extends Controller
 		$this->restart();
 	}
 
-	public function login( ?string $username = NULL )
+	public function login( ?string $username = NULL ): void
 	{
 		if( $this->logic->isAuthenticated() ){
 			$from	= $this->request->get( 'from' );
@@ -63,7 +64,7 @@ class Controller_Auth_Json extends Controller
 //					'password'	=> md5( $password )
 				]
 			];
-			$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+			$result	= $this->client->postData( 'user', 'index', NULL, $data );
 			$user	= count( $result ) === 1 ? $result[0] : NULL;
 
 			if( !$this->messenger->gotError() ){
@@ -77,7 +78,7 @@ class Controller_Auth_Json extends Controller
 						'userId'	=> $user ? $user->userId : 0,
 					];
 					$result	= $this->callHook( 'Auth', 'checkBeforeLogin', $this, $payload );
-					$role	= $this->env->getServer()->postData( 'role', 'get', [$user->roleId] );
+					$role	= $this->client->postData( 'role', 'get', [$user->roleId] );
 					if( !$role->access )
 						$this->messenger->noteError( $words->msgInvalidRole );
 					else if( $user->status == 0 )
@@ -111,14 +112,15 @@ class Controller_Auth_Json extends Controller
 //		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout( ?string $redirectController = NULL, ?string $redirectAction = NULL )
+	public function logout( ?string $redirectController = NULL, ?string $redirectAction = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'logout' );
 
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
 		if( $this->logic->isAuthenticated() ){
 			$payload	= [
-				'userId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentUserId(),
-				'roleId'	=> Logic_Authentication::getInstance( $this->env )->getCurrentRoleId(),
+				'userId'	=> $logicAuth->getCurrentUserId(),
+				'roleId'	=> $logicAuth->getCurrentRoleId(),
 			];
 			$this->env->getCaptain()->callHook( 'Auth', 'onBeforeLogout', $this, $payload );
 			$this->logic->clearCurrentUser();
@@ -155,13 +157,19 @@ class Controller_Auth_Json extends Controller
 		$this->config		= $this->env->getConfig();
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
+		$this->messenger	= $this->env->getMessenger();
+
 //		$this->cookie		= new HttpPartitionCookie( "hydrogen", "/" );
 		$this->cookie		= new HttpCookie( parse_url( $this->env->url, PHP_URL_PATH ) );
 		if( isset( $this->env->version ) )
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
 				$this->cookie	= $this->env->getCookie();
-		$this->messenger	= $this->env->getMessenger();
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Json' );
+
+		$this->logic		= Logic_Authentication_Backend_Json::getInstance( $this->env );
+
+		$clientEnvKey	= $this->env->getConfig()->get( 'module.resource_json_client.envKey' );
+		$this->client	= $this->env->get( $clientEnvKey );
+
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_json.', TRUE );
 		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
 		$this->addData( 'useCsrf', $this->useCsrf );
@@ -185,7 +193,7 @@ class Controller_Auth_Json extends Controller
 				'password'	=> md5( $password )
 			]
 		];
-		$result	= $this->env->getServer()->postData( 'user', 'index', NULL, $data );
+		$result	= $this->client->postData( 'user', 'index', NULL, $data );
 		return count( $result ) === 1;
 	}
 
