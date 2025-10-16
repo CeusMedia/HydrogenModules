@@ -17,34 +17,7 @@ class Controller_Auth_Rest extends Controller
 	protected Logic_Authentication_Backend_Rest $logic;
 	protected bool $useCsrf				= FALSE;
 
-	public function ajaxUsernameExists()
-	{
-		$username	= trim( $this->request->get( 'username' ) );
-		$result		= $this->logic->checkUsername( $username );
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxEmailExists()
-	{
-		$email		= trim( $this->request->get( 'email' ) );
-		$result		= $this->logic->checkEmail( $email );
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function ajaxPasswordStrength()
-	{
-		$password	= trim( $this->request->get( 'password' ) );
-		$result		= 0;
-		if( strlen( $password ) ){
-			$result			= PasswordStrength::getStrength( $password );
-		}
-		print( json_encode( $result ) );
-		exit;
-	}
-
-	public function index()
+	public function index(): void
 	{
 		if( !$this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) )
 			$this->restart( 'login', TRUE );										// @todo replace redirect
@@ -83,7 +56,7 @@ class Controller_Auth_Rest extends Controller
 		$this->restart( 'login', TRUE );
 	}
 
-	public function login( $username = NULL )
+	public function login( $username = NULL ): void
 	{
 		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) ){
 			if( $this->request->has( 'from' ) )
@@ -149,7 +122,7 @@ class Controller_Auth_Rest extends Controller
 //		$this->addData( 'useRemember', $this->moduleConfig->get( 'login.remember' ) );
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	public function logout( $redirectController = NULL, $redirectAction = NULL ): void
 	{
 		$words		= (object) $this->getWords( 'logout' );
 
@@ -270,7 +243,7 @@ class Controller_Auth_Rest extends Controller
 				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
 		$this->moduleConfig	= $this->env->getConfig()->getAll( 'module.resource_authentication_backend_rest.', TRUE );
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Rest' );
+		$this->logic		= Logic_Authentication_Backend_Rest::getInstance( $this->env );
 		$this->addData( 'useCsrf', $this->useCsrf );
 	}
 
@@ -284,7 +257,7 @@ class Controller_Auth_Rest extends Controller
 	 *	@todo		clean up if support for old passwort decays
 	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
 	 */
-	protected function checkPasswordOnLogin( object $user, string $password )
+	protected function checkPasswordOnLogin( object $user, string $password ): bool
 	{
 		return $this->logic->checkPassword( $user->username, $password );
 	}

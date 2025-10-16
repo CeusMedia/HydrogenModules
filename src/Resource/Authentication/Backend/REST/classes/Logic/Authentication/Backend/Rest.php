@@ -21,8 +21,7 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 			'username'	=> $username,
 			'password'	=> $password,
 		];
-		$result	= $this->client->post( 'authenticate', $parameters );
-		return $result;
+		return $this->client->post( 'authenticate', $parameters );
 	}
 
 	public function checkUsername( string $username )
@@ -53,8 +52,7 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 			'userId'	=> $userId,
 			'token'		=> $token,
 		];
-		$result	= $this->client->post( 'confirm', $parameters )->data;
-		return $result;
+		return $this->client->post( 'confirm', $parameters )->data;
 	}
 
 	public function getCurrentRole( bool $strict = TRUE ): NULL|object
@@ -71,24 +69,34 @@ return NULL;
 		return NULL;
 	}
 
+	/**
+	 * @param		bool	$strict
+	 * @return		int|string|NULL
+	 */
 	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
-return NULL;
+		return NULL;
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
 			return NULL;
 		}
-		return $this->session->get( 'auth_role_id');
+		return $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
 	}
 
-	public function getCurrentUser( bool $strict = TRUE, bool $withRole = FALSE ): ?object
+	/**
+	 *	@param		bool		$strict
+	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_NOTHING
+	 *	@return		object|mixed|null
+	 */
+	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{
 		$userId	= $this->getCurrentUserId( $strict );
 		if( $userId ){
 			$user	= $this->client->post( 'user/get', [$userId] );
 			if( $user ){
-				$user->role	= $withRole ? $this->getCurrentRole() : NULL;
+				if( $extensions & Logic_User::EXTEND_ROLE )
+					$user->role	= $this->getCurrentRole();
 				return $user;
 			}
 		}
@@ -112,7 +120,7 @@ return NULL;
 		if( !$this->isIdentified() )
 			return FALSE;
 		$authStatus	= (int) $this->session->get( Logic_Authentication::$sessionKeyAuthStatus );
-		return $authStatus == Logic_Authentication::STATUS_AUTHENTICATED;
+		return $authStatus === Logic_Authentication::STATUS_AUTHENTICATED;
 	}
 
 	public function isIdentified(): bool
