@@ -80,7 +80,7 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 		if( $userId ){
 			$user	= $this->client->postData( 'user', 'get', [$userId] );
 			if( $user ){
-				if( $withRole )
+				if( $extensions & Logic_User::EXTEND_ROLE )
 					$user->role	= $this->client->postData( 'role', 'get', [$user->roleId] );
 				return $user;
 			}
