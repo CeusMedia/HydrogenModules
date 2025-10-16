@@ -114,7 +114,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 			/** @var ?Entity_User $user */
 			$user	= $this->modelUser->get( $userId );
 			if( $user ){
-				if( $withRole )
+				if( $extensions & Logic_User::EXTEND_ROLE )
 					$user->role	= $this->modelRole->get( $user->roleId );
 				return $user;
 			}
