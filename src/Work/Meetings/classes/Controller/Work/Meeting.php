@@ -160,7 +160,7 @@ class Controller_Work_Meeting extends Controller
 			}
 			$this->restart( 'edit/'.$meetingId, TRUE );
 		}
-		$this->logic->extendMeetingByParticipants( $meeting );
+		$this->logic->extendMeetingsParticipantsByUser( $meeting );
 		$this->addData( 'editMode', $editMode );
 		$this->addData( 'meeting', $meeting );
 
@@ -295,7 +295,7 @@ class Controller_Work_Meeting extends Controller
 				}
 				else{
 					if( Model_Work_Meeting::STATUS_CANCELLED === $meeting->status ){
-						$this->logic->extendMeetingByParticipants( $meeting );
+						$this->logic->extendMeetingsParticipantsByUser( $meeting );
 						$this->addData( 'meeting', $meeting );
 						$this->addData( 'meetingId', $meetingId );
 						$script	= 'jQuery("#meeting-'.$meetingId.'").modal("show")';
