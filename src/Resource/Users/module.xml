@@ -30,12 +30,14 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.4.4">Add logic class for user, group and role management.</log>
 	<log version="0.4.5">Add password status "update".</log>
 	<log version="0.4.6">Extend logic by countRoleUsers, getRoles, getRoleUsers and getUser.</log>
+	<log version="0.4.7">Add group relation table for module entity grouping.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
 		<class>Hook/Resource/User.php</class>
 		<class>Entity/Group.php</class>
+		<class>Entity/Group/Relation.php</class>
 		<class>Entity/Group/Right.php</class>
 		<class>Entity/Group/User.php</class>
 		<class>Entity/Role.php</class>
@@ -44,6 +46,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Entity/User/Password.php</class>
 		<class>Entity/User/Token.php</class>
 		<class>Model/Group.php</class>
+		<class>Model/Group/Relation.php</class>
 		<class>Model/Group/Right.php</class>
 		<class>Model/Group/User.php</class>
 		<class>Model/Role.php</class>
@@ -219,6 +222,19 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
   KEY `userId` (`userId`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_relations` (
+  `groupRelationId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `moduleId` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `entityId` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupRelationId`),
+  KEY `groupId` (`groupId`),
+  KEY `moduleId` (`moduleId`),
+  KEY `entityId` (`entityId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.2.5"><![CDATA[
 ALTER TABLE `<%?prefix%>users` ADD `accountId` INT(11) UNSIGNED NULL AFTER `userId`, ADD UNIQUE (`accountId`) ;
@@ -338,15 +354,30 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
+	<sql on="update" type="mysql" version="0.4.7"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
+CREATE TABLE IF NOT EXISTS `<%?prefix%>group_relations` (
+  `groupRelationId` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `groupId` int(11) unsigned NOT NULL,
+  `moduleId` varchar(127) COLLATE utf8_unicode_ci NOT NULL,
+  `entityId` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`groupRelationId`),
+  KEY `groupId` (`groupId`),
+  KEY `moduleId` (`moduleId`),
+  KEY `entityId` (`entityId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
-DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
-DROP TABLE IF EXISTS `<%?prefix%>users`;
-DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
-DROP TABLE IF EXISTS `<%?prefix%>roles`;
+DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
 DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
 DROP TABLE IF EXISTS `<%?prefix%>group_users`;
 DROP TABLE IF EXISTS `<%?prefix%>groups`;
+DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
+DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
+DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
+DROP TABLE IF EXISTS `<%?prefix%>roles`;
+DROP TABLE IF EXISTS `<%?prefix%>users`;
 ]]></sql>
 	<todo>
 <![CDATA[
