@@ -6,6 +6,7 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
+use View_Helper_Bootstrap_Modal_Trigger as BootstrapModalTrigger;
 
 /** @var Environment $env */
 /** @var View $view */
@@ -60,19 +61,19 @@ if( $total ){
 		$list			= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 	}
 }
-$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
+$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
+/*$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 	'href'	=> './work/newsletter/add',
 	'class'	=> 'btn btn-small btn-success btn-small'
-] );
+] );*/
 
-$modalAddTrigger	= new ModalTrigger( 'modal-add-trigger' );
-$modalAddTrigger->setModalId( 'modal-add' );
-$modalAddTrigger->setLabel( $iconAdd.$w->link_add );
-$modalAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
-
-$buttonAdd	= $modalAddTrigger;
+$buttonAdd	= BootstrapModalTrigger::create( $env )
+	->setId( 'modal-add-trigger' )
+	->setModalId( 'modal-add' )
+	->setLabel( $iconAdd.$w->link_add )
+	->setAttributes( ['class' => 'btn btn-success'] )
+	->render();
 
 if( $limiter && $limiter->denies( 'Work.Newsletter.Newsletter:maxItems', count( $newsletters ) + 1 ) ){
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [

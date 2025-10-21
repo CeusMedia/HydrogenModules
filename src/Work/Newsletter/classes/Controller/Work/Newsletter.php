@@ -18,6 +18,7 @@ class Controller_Work_Newsletter extends Controller
 	protected ?Logic_Limiter $limiter			= NULL;
 	protected string $filterPrefix				= 'filter_work_newsletter_';
 	protected string $frontendUrl;
+	protected bool $useUserGroupRelations		= FALSE;
 
 	/**
 	 *	@return		void
@@ -165,6 +166,13 @@ class Controller_Work_Newsletter extends Controller
 			$conditions['title']	= '%'.$filterTitle.'%';
 		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
+
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
+		if( $this->useUserGroupRelations && !$logicAuth->hasFullAccess() ){
+			$logic		= Logic_GroupRelation::getInstance( $this->env );
+			$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter' );
+			$conditions['newsletterId']	= array_merge( [0], $entityIds );
+		}
 
 		$orders		= ['newsletterId' => 'DESC'];
 		$limits		= [$page * $filterLimit, $filterLimit];
@@ -366,7 +374,7 @@ class Controller_Work_Newsletter extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		$this->logic		= new Logic_Newsletter_Editor( $this->env );
+		$this->logic		= Logic_Newsletter_Editor::getInstance( $this->env );
 		$this->session		= $this->env->getSession();
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
@@ -390,6 +398,10 @@ class Controller_Work_Newsletter extends Controller
 
 		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
 			$this->session->set( $this->filterPrefix.'limit', 10 );
+
+		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
+		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
+		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relate' ) );
 	}
 
 	/**
@@ -409,48 +421,62 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
-	public function handleAddRequest(): void
+	protected function handleAddRequest(): void
 	{
-		$words	= (object) $this->getWords( 'add' );
-		$data	= [
-			'creatorId'				=> $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
-			'newsletterTemplateId'	=> $this->request->get( 'newsletterTemplateId' ),
-		];
-		if( ( $newsletterId = $this->request->get( 'newsletterId' ) ) ){
-			$data	= (array) $this->logic->getNewsletter( $newsletterId );
-			unset( $data['status'] );
-			unset( $data['modifiedAt'] );
-			unset( $data['sentAt'] );
+		$currentUserId	= (int) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
+		$words			= (object) $this->getWords( 'add' );
+
+		$newsletterTemplateId	= $this->request->get( 'newsletterTemplateId', '' );
+		$sourceNewsletterId		= $this->request->get( 'newsletterId', '' );
+
+		$data	= [];																					//  start to prepare data
+		if( '' !== $sourceNewsletterId ){																//  from source newsletter
+			$data	= (array) $this->logic->getNewsletter( $sourceNewsletterId );						//  take all data from former newsletter
+			unset( $data['status'], $data['modifiedAt'], $data['sentAt'], $data['trackingCode'] );		//  ... but reset status, timestamps and tracking code
 		}
-		else if( $this->request->get( 'newsletterTemplateId' ) ){
-			$template	= $this->logic->getTemplate( $this->request->get( 'newsletterTemplateId' ) );
-			$data		= array_merge( $data, [
-				'senderName'		=> $template->senderName,
-				'senderAddress'		=> $template->senderAddress,
-			] );
+		else if( '' !== $newsletterTemplateId ){														//  from newsletter template
+			$template	= $this->logic->getTemplate( $newsletterTemplateId );							//  load template
+			$data		= [																				//  extend prepared data by newsletter template data
+				'senderName'	=> $template->senderName,												//  ... carry sender name
+				'senderAddress'	=> $template->senderAddress,											//  ... carry sender address
+			];
 		}
-		$data	= array_merge( $data, [
-			'creatorId'			=> (int) $this->session->get( Logic_Authentication::$sessionKeyAuthUserId ),
-			'title'				=> $this->request->get( 'title' ),
-			'subject'			=> trim( $this->request->get( 'subject' ) ),
-			'heading'			=> trim( $this->request->get( 'heading' ) ),
-//				'senderName'		=> trim( $this->request->get( 'senderName' ) ),
-//				'senderAddress'		=> trim( $this->request->get( 'senderAddress' ) ),
-			'trackingCode'		=> trim( $this->request->get( 'trackingCode' ) ),
-			'createdAt'			=> time(),
+
+		$data	= array_merge( $data, [																	//  extend prepared data by input of modal form
+			'newsletterTemplateId'	=> $newsletterTemplateId,
+			'creatorId'			=> $currentUserId,
+			'title'				=> $this->request->get( 'title' ),									//  title is MANDATORY
+			'subject'			=> trim( $this->request->get( 'subject', '' ) ),
+			'heading'			=> trim( $this->request->get( 'heading', '' ) ),
+//			'senderName'		=> trim( $this->request->get( 'senderName', '' ) ),
+//			'senderAddress'		=> trim( $this->request->get( 'senderAddress', '' ) ),
+			'trackingCode'		=> trim( $this->request->get( 'trackingCode', '' ) ),
+			'createdAt'			=> time(),																//  current timestamp
 		] );
-		if( !strlen( $data['subject'] ) )
-			$data['subject']	= $data['title'];
-		if( $this->logic->getNewsletters( ['title' => $data['title']] ) )
-			$this->messenger->noteError( $words->msgErrorTitleExists );
-		else{
-			unset( $data['newsletterId'] );
-			$newsletterId		= $this->logic->addNewsletter( $data );
-			$this->messenger->noteSuccess( $words->msgSuccess );
-			$this->setContentTab( $newsletterId, 1 );
-			$this->restart( 'edit/'.$newsletterId, TRUE );
+		if( '' === $data['subject'] )																	//  no subject set
+			$data['subject']	= $data['title'];														//  take title as subject
+		if( $this->logic->getNewsletters( ['title' => $data['title']] ) ){								//  already got newsletters with this title
+			$this->messenger->noteError( $words->msgErrorTitleExists );									//  note error
+			return;																						//  ... and quit without redirect to GET
 		}
+		unset( $data['newsletterId'] );																	//  clear newsletter ID in prepared data
+		$newsletterId		= $this->logic->addNewsletter( $data );										//  save model data to database
+
+		if( $this->useUserGroupRelations ){																//  apply group relations
+			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );							//  get logic for group relations to module entities
+			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
+			if( '' !== $sourceNewsletterId )															//  from source newsletter
+				$groups	= $logicRelation->getGroups( $entityModuleId, $sourceNewsletterId );			//  ... copy group relations
+			else																						//  current default solution is uncool :(
+				$groups	= Logic_Authentication::getInstance( $this->env )->getCurrentGroups();			//  set group relations of current user
+			foreach( $groups as $group )																//  iterate groups to relate
+				$logicRelation->addModuleEntityRelation( $group, $entityModuleId, $newsletterId );		//  add relation between newsletter and group
+		}
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$this->setContentTab( $newsletterId, 1 );
+		$this->restart( 'edit/'.$newsletterId, TRUE );
 	}
 
 	/**
@@ -495,11 +521,11 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@return		void
 	 */
-	public function prepareAddData(): void
+	protected function prepareAddData(): void
 	{
 		$words		= (object) $this->getWords( 'add' );
 		$templates	= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
-		if( !$templates ){
+		if( [] === $templates ){
 			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
 			$this->restart( 'work/newsletter/template' );
 		}

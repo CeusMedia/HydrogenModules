@@ -18,6 +18,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
 	protected ?Logic_Limiter $limiter		= NULL;
+	protected bool $useUserGroupRelations		= FALSE;
 
 	protected array $filters		= [
 		'email',
@@ -350,6 +351,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		?int		$page
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index( ?int $page = NULL ): void
 	{
@@ -370,21 +372,37 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$filterSurname		= $this->session->get( $this->filterPrefix.'surname' );
 		$filterGroupId		= $this->session->get( $this->filterPrefix.'groupId' );
 		$filterLimit		= (int) $this->session->get( $this->filterPrefix.'limit' );
-		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
+
+		$readerIds	= [0];
+		if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
+			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );
+			$groupIds		= $logicRelation->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
+			$filterGroupId	= in_array( $filterGroupId, $groupIds ) ? $filterGroupId : NULL;
+			$groups			= $this->logic->getGroups( ['newsletterGroupId' => $groupIds], ['title' => 'ASC'] );
+			foreach( $this->logic->getReadersOfGroups( $groupIds ) as $reader )
+				$readerIds[]	 = $reader->newsletterReaderId;
+		}
+		else{
+			$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
+		}
+
 		$conditions	= [];
-		if( strlen( $filterStatus ) )
+		if( '' !== trim( $filterStatus ?? '' ) )
 			$conditions['status']	= $filterStatus;
-		if( strlen( $filterEmail ) )
+		if( '' !== trim( $filterEmail ?? '' ) )
 			$conditions['email']	= '%'.$filterEmail.'%';
-		if( strlen( $filterFirstname ) )
+		if( '' !== trim( $filterFirstname ?? '' ) )
 			$conditions['firstname']	= '%'.$filterFirstname.'%';
-		if( strlen( $filterSurname ) )
+		if( '' !== trim( $filterSurname ?? '' ) )
 			$conditions['surname']	= '%'.$filterSurname.'%';
-		if( strlen( $filterGroupId ) ){
-			$readers	= [0];
+		if( '' !== trim( $filterGroupId ?? '' ) ){
+			$readerIds	= [0];
 			foreach( $this->logic->getReadersOfGroup( $filterGroupId ) as $reader )
-				$readers[]	= $reader->newsletterReaderId;
-			$conditions['newsletterReaderId']	= $readers;
+				$readerIds[]	= $reader->newsletterReaderId;
+			$conditions['newsletterReaderId']	= $readerIds;
+		}
+		else if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
+			$conditions['newsletterReaderId']	= $readerIds;
 		}
 
 		$filterOrder		= ['firstname' => 'ASC', 'surname' => 'ASC'];
@@ -416,6 +434,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$this->addData( 'groups', $groups );
 
 		$this->addData( 'totalReaders', $total );
+
+		$this->addData( 'canImport', $this->env->getAcl()->has( 'work/newsletter/reader', 'import' ) );
+		$this->addData( 'canExport', $this->env->getAcl()->has( 'work/newsletter/reader', 'export' ) );
+
+
 	}
 
 	/**
@@ -468,5 +491,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 
 		if( $this->session->get( $this->filterPrefix.'limit' ) < 1 )
 			$this->session->set( $this->filterPrefix.'limit', 10 );
+
+		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
+		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
 	}
 }

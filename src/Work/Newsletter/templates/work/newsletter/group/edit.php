@@ -12,6 +12,8 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var object $group */
 /** @var int|string $groupId */
 /** @var ?Logic_Limiter $limiter */
+/** @var bool $useUserGroupRelations */
+/** @var bool $canManageGroupRelations */
 
 $tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
@@ -108,6 +110,15 @@ $helperReaders->setWords( $words );
 $panelReaders	= $helperReaders->render();
 
 
+//  --  PANEL: USER GROUPS  --  //
+$helperPanelGroups = new View_Helper_Manage_Group_EntityRelationEditor( $this->env );
+$panelGroups	= $helperPanelGroups
+	->setModule( 'Resource_Newsletter.Group' )
+	->enable( $useUserGroupRelations && $canManageGroupRelations )
+	->setFrom( 'work/newsletter/group/edit/'.$groupId )
+	->setEntityId( $groupId )
+	->render();
+
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/group/edit/', ['words' => $words, 'group' => $group] ) );
 
@@ -119,6 +130,7 @@ return $textTop.'
 	<div class="row-fluid">
 		<div class="span6">
 			'.$panelForm.'
+			'.$panelGroups.'
 		</div>
 		<div class="span6">
 			'.$panelReaders.'
