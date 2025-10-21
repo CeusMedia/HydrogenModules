@@ -132,6 +132,16 @@ class Controller_Manage_Group extends Controller
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );
 		$this->addData( 'groupId', $groupId );
+
+		$logicUser	= Logic_User::getInstance( $this->env );
+
+		$list	= [];
+		/** @var Entity_Group_User[] $relations */
+		$relations	= $this->modelGroupUser->getAllByIndex( 'groupId', $groupId );
+		foreach( $relations as $relation ){
+			$list[]	= $logicUser->checkId( $relation->userId, Logic_User::EXTEND_ROLE );
+		}
+		$this->addData( 'users', $list );
 	}
 
 	public function index(): void
@@ -147,6 +157,17 @@ class Controller_Manage_Group extends Controller
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_group', 'add' ) );
 		$this->addData( 'hasRightToEdit', $this->env->getAcl()->has( 'manage_group', 'edit' ) );
 	}
+
+	public function relation( string $mode, int|string $groupId, string $moduleId, int|string $relationId, string $goto ): void
+	{
+		$logic	= Logic_GroupRelation::getInstance( $this->env );
+		match( $mode ){
+			'add'		=> $logic->addModuleEntityRelation( $groupId, $moduleId, $relationId ),
+			'remove'	=> $logic->removeModuleEntityRelation( $groupId, $moduleId, $relationId ),
+		};
+		$this->restart( base64_decode( $goto ) );
+	}
+
 
 	/**
 	 *	@param		int|string		$groupId

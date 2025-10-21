@@ -1,7 +1,7 @@
 <?php
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 use CeusMedia\Common\UI\HTML\Indicator;
-class View_Helper_RoleRightsIndicator
+class View_Helper_Manage_Role_RightsIndicator
 {
 	/** @var WebEnvironment $env */
 	protected WebEnvironment $env;

@@ -27,7 +27,7 @@ $iconType	= [
 	128	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-globe'] ),
 ];
 
-$helperIndicator	= new View_Helper_RoleRightsIndicator( $env );
+$helperIndicator	= new View_Helper_Manage_Role_RightsIndicator( $env );
 $helperIndicator->setRoles( $roles );
 
 $rows	= [];
