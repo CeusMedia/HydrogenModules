@@ -1,14 +1,14 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection;
-use CeusMedia\HydrogenFramework\Environment\Resource\Logic;
+use CeusMedia\HydrogenFramework\Logic\Shared as SharedLogic;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 
 /**
  *	@todo	extend \CeusMedia\HydrogenFramework\Logic instead
  *	@todo	code doc
  */
-class Logic_Newsletter extends Logic
+class Logic_Newsletter extends SharedLogic
 {
 	public static string $defaultPath				= 'contents/newsletter-themes/';
 

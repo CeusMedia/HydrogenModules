@@ -15,6 +15,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $moduleConfig;
 	protected ?Logic_Limiter $limiter			= NULL;
+	protected bool $useUserGroupRelations		= FALSE;
 
 	/**
 	 *	@return		void
@@ -84,6 +85,9 @@ class Controller_Work_Newsletter_Group extends Controller
 		$orders		= ['firstname' => 'ASC', 'surname' => 'ASC'];
 		$readers	= $this->logic->getReadersOfGroup( $groupId, [], $orders );
 		$this->addData( 'groupReaders', $readers );
+
+		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relate' ) );
+
 	}
 
 	/**
@@ -126,19 +130,27 @@ class Controller_Work_Newsletter_Group extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
 		$orders		= ['title' => 'ASC'];
 
-		$filterQuery	= $this->session->get( 'filter_work_newsletter_group_query' );
-		$filterStatus	= $this->session->get( 'filter_work_newsletter_group_status' );
+		$filterQuery	= $this->session->get( 'filter_work_newsletter_group_query', '' );
+		$filterStatus	= $this->session->get( 'filter_work_newsletter_group_status', '' );
 
 		$conditions		= [];
 		if( $filterQuery )
 			$conditions['title']	= '%'.$filterQuery.'%';
-		if( strlen( $filterStatus ) )
+		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
+
+		$logicAuth	= Logic_Authentication::getInstance( $this->env );
+		if( $this->useUserGroupRelations && !$logicAuth->hasFullAccess() ){
+			$logic		= Logic_GroupRelation::getInstance( $this->env );
+			$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
+			$conditions['newsletterGroupId']	= $entityIds;
+		}
 
 		$groups		= $this->logic->getGroups( $conditions, $orders );
 		foreach( $groups as $group )
@@ -188,5 +200,9 @@ class Controller_Work_Newsletter_Group extends Controller
 		if( $this->env->getModules()->has( 'Resource_Limiter' ) )
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
+
+		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
+		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
+
 	}
 }

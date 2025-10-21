@@ -5,8 +5,7 @@ use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
-/** @var View $view */
-/** @var View_Work_Newsletter_Reader $this */
+/** @var View_Work_Newsletter_Reader $view */
 /** @var object $words */
 /** @var object $reader */
 /** @var bool $tabbedLinks */

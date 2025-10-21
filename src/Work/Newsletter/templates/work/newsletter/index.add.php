@@ -1,10 +1,11 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as Html;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
+
+use View_Helper_Bootstrap_Modal as BootstrapModalDialog;
 
 /** @var Environment $env */
 /** @var View $view */
@@ -81,14 +82,13 @@ jQuery(document).ready(function(){
 </script>
 ';
 
-$modalAdd	= new BootstrapModalDialog( 'modal-add' );
+$modalAdd	= new BootstrapModalDialog( $env );
+$modalAdd->setId( 'modal-add' );
 $modalAdd->setFormAction( './work/newsletter/add' );
 $modalAdd->setBody( $formAdd );
 $modalAdd->setHeading( $w->heading );
-$modalAdd->setCloseButtonLabel( $iconCancel.$w->buttonCancel );
-$modalAdd->setCloseButtonClass( 'btn btn-small' );
-$modalAdd->setSubmitButtonLabel( $iconSave.$w->buttonSave );
-$modalAdd->setSubmitButtonClass( 'btn btn-primary' );
+$modalAdd->setButtonLabelCancel( $iconCancel.$w->buttonCancel );
+$modalAdd->setButtonLabelSubmit( $iconSave.$w->buttonSave );
 
 return $modalAdd->render();
 

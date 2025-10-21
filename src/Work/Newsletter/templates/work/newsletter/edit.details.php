@@ -13,6 +13,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $newsletter */
 /** @var string $newsletterId */
 /** @var bool $isUsed */
+/** @var bool $useUserGroupRelations */
+/** @var bool $canManageGroupRelations */
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] ).'&nbsp;';
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
@@ -318,10 +320,21 @@ if( $env->getAcl()->has( 'work/newsletter', 'remove' ) ){
 </div>';
 }
 
+//  --  PANEL: USER GROUPS  --  //
+$helperPanelGroups = new View_Helper_Manage_Group_EntityRelationEditor( $this->env );
+$panelGroups	= $helperPanelGroups
+	->setModule( 'Resource_Newsletter' )
+	->enable( $useUserGroupRelations && $canManageGroupRelations )
+	->setFrom( 'work/newsletter/edit/'.$newsletterId )
+	->setEntityId( $newsletterId )
+	->render();
+
+
 return '
 <div class="row-fluid">
 	<div class="span7">
 		'.$panelDetails.'
+		'.$panelGroups.'
 		'.$extras.'
 		'.$panelRemove.'
 	</div>

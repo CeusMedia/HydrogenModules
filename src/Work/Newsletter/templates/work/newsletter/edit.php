@@ -11,6 +11,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $newsletter */
 /** @var string $newsletterId */
 /** @var View_Work_Newsletter $view */
+/** @var bool $useUserGroupRelations */
+/** @var bool $canManageGroupRelations */
 
 $tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
@@ -137,8 +139,6 @@ $(document).ready(function(){
 	'.$tabsMain.'
 <!--	<a href="./work/newsletter" class="btn btn-mini">'.$iconCancel.$words->edit->buttonList.'</a>-->
 <!--	<h3><span class="muted">'.$words->edit->heading.':</span> '.$newsletter->title.'</h3>-->
-	<hr/>
 	'.$textAbove.'
-	<hr/>
 	'.$tabsContent.'
 </div>'.$modalPreview.$textBottom;
