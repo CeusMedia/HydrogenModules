@@ -39,6 +39,9 @@ class Entity_User extends Entity
 	/** @var Entity_Group[] $groups  */
 	public array $groups				= [];
 
+	/** @var Entity_Group_Relation[] $groupRelations */
+	public array $groupRelations		= [];
+	
 	public ?Entity_Address $addressDelivery	= NULL;
 	public ?Entity_Address $addressBilling	= NULL;
 }

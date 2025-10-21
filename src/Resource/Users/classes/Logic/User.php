@@ -1,29 +1,33 @@
 <?php
 
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_User extends Logic
 {
-	const EXTEND_NOTHING	= 0;
-	const EXTEND_ROLE		= 1;
-	const EXTEND_GROUPS		= 2;
-	const EXTEND_RIGHTS		= 4;
-	const EXTEND_AVATAR		= 8;
-	const EXTEND_SETTINGS	= 16;
+	const EXTEND_NOTHING			= 0;
+	const EXTEND_ROLE				= 1;
+	const EXTEND_GROUPS				= 2;
+	const EXTEND_RIGHTS				= 4;
+	const EXTEND_AVATAR				= 8;
+	const EXTEND_SETTINGS			= 16;
+	const EXTEND_GROUP_RELATIONS	= 32;
 
-	const EXTENDS		= [
+	const EXTENDS					= [
 		self::EXTEND_NOTHING,
 		self::EXTEND_ROLE,
 		self::EXTEND_GROUPS,
 		self::EXTEND_RIGHTS,
 		self::EXTEND_AVATAR,
 		self::EXTEND_SETTINGS,
+		self::EXTEND_GROUP_RELATIONS,
 	];
 
 	protected Model_User $modelUser;
 	protected Model_Group $modelGroup;
 	protected Model_Group_User $modelGroupUser;
 	protected Model_Role $modelRole;
+	protected Model_Group_Relation $modelGroupRelation;
 
 	/**
 	 *	@return		void
@@ -31,10 +35,11 @@ class Logic_User extends Logic
 	 */
 	protected function __onInit(): void
 	{
-		$this->modelUser		= new Model_User( $this->env );
-		$this->modelGroup		= new Model_Group( $this->env );
-		$this->modelGroupUser	= new Model_Group_User( $this->env );
-		$this->modelRole		= new Model_Role( $this->env );
+		$this->modelUser			= new Model_User( $this->env );
+		$this->modelGroup			= new Model_Group( $this->env );
+		$this->modelGroupUser		= new Model_Group_User( $this->env );
+		$this->modelGroupRelation	= new Model_Group_Relation( $this->env );
+		$this->modelRole			= new Model_Role( $this->env );
 	}
 
 	/**
@@ -85,6 +90,15 @@ class Logic_User extends Logic
 				$user->role	= $this->modelRole->get( $user->roleId );
 			if( $extend & self::EXTEND_GROUPS )
 				$user->groups	= $this->getUserGroups( $user );
+			if( $extend & self::EXTEND_GROUP_RELATIONS ){
+				$groupIds	= [];
+				foreach( $this->getUserGroups( $user ) as $group )
+					$groupIds[]	= $group->groupId;
+				$moduleRelation	= new Model_Group_Relation( $this->env );
+				$user->groupRelations	= $moduleRelation->getAllByIndices( [
+					'groupId'	=> $groupIds,
+				] );
+			}
 		}
 		return $user;
 	}
@@ -167,12 +181,13 @@ class Logic_User extends Logic
 	}
 
 	/**
-	 * @param	Entity_User		$user
+	 * @param	int|string|Entity_User		$user
 	 * @return	Entity_Group[]
 	 */
-	public function getUserGroups( Entity_User $user ): array
+	public function getUserGroups( int|string|Entity_User $user ): array
 	{
-		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $user->userId, [], [], ['groupId'] );
+		$userId		= is_object( $user ) ? $user->userId : $user;
+		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $userId, [], [], ['groupId'] );
 		if( [] === $groupIds )
 			return [];
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
@@ -190,6 +205,19 @@ class Logic_User extends Logic
 		return 0 !== $this->modelGroupUser->countByIndices( ['userId' => $userId, 'groupId' => $groupId] );
 	}
 
+	public function hasGroupAccessToModuleEntity( int|string|Entity_User $user, ModuleDefinition|string $module, int|string $entityId ): bool
+	{
+		$userId		= is_object( $user ) ? $user->userId : $user;
+		$moduleId	= is_object( $module ) ? $module->id : $module;
+		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $userId, [], [], ['groupId'] );
+
+		return $this->modelGroupRelation->hasByIndices( [
+			'groupId'	=> $groupIds,
+			'moduleId'	=> $moduleId,
+			'entityId'	=> $entityId,
+		] );
+	}
+	
 	/**
 	 *	@param		Entity_User		$user
 	 *	@param		Entity_Group	$group
