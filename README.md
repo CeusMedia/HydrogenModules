@@ -10,8 +10,8 @@ A collection of free modules for Hydrogen Framework, maintained by Ceus Media.
 [![Package version](https://img.shields.io/packagist/v/ceus-media/hydrogen-modules.svg?style=flat-square)](https://packagist.org/packages/ceus-media/hydrogen-modules)
 [![License](https://img.shields.io/packagist/l/ceus-media/hydrogen-modules.svg?style=flat-square)](https://packagist.org/packages/ceus-media/hydrogen-modules)
 
-This version is for Hydrogen Framework 1.0.x on PHP 8.1+.    
-The next version 1.1.x is for Hydrogen Framework 1.1.x on PHP 8.3+.     
+This version 1.1.x is for Hydrogen Framework 1.1.x on PHP 8.3+.
+The previous version 1.0.x is for Hydrogen Framework 1.0.x on PHP 8.1+.    
 The older version 0.9.x supports Hydrogen Framework 0.9.x on PHP 7.4+.      
 
 ## Content
