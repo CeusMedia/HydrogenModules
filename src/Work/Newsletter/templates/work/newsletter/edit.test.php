@@ -18,38 +18,43 @@ $iconSelect		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nb
 $iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] ).'&nbsp;';
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconNext		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] ).'&nbsp;';
+$iconWarn		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-warning'] ).'&nbsp;';
+$iconInfo		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] ).'&nbsp;';
 
-$listGroups		= '<div class="alert alert-danger">
-	<strong>Keine verwendbare Testgruppe vorhanden.</strong><br/>
-	Bitte zuerst eine Testgruppe anlegen!<br/>
-	Diese Testgruppe muss Empfänger beinhalten und verwendbar sein.
-</div>';
-$disabled		= ' disabled="disabled"';
-$list			= [];
+$listGroups		= HtmlTag::create( 'div', '<strong>'.$iconWarn.' Keine verwendbare Empfängerliste vorhanden.</strong><br/>
+	Bitte zuerst eine <a href="./work/newsletter/group">Empfängerliste</a> anlegen!<br/>
+	Diese Empfängerliste muss verwendbar sein und Empfänger sowie Test-Empfänger beinhalten.', [
+	'class'	=> "alert alert-danger",
+] );
+
+$disabled	= ' disabled="disabled"';
+$list		= [];
 foreach( $groups as $group ){
-	if( (int) $group->status !== 1 )
+	if( Model_Newsletter_Group::STATUS_USABLE !== (int) $group->status )
 		continue;
-	if( (int) $group->type !== 1 )
-		continue;
+//	if( Model_Newsletter_Group::TYPE_TEST !== (int) $group->type )
+//		continue;
 	$disabled	= '';
+	$count		= count( $group->readers );
 	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'checked'	=> in_array( $group->newsletterGroupId, $groupIds ) ? 'checked' : NULL,
 		'name'		=> 'groupIds[]',
 		'value'		=> $group->newsletterGroupId,
+		'disabled'	=> 0 === $count ? 'disabled' : NULL,
 	] );
-	$title		= $checkbox.'&nbsp;'.$group->title.' ('.count( $group->readers ).')';
+	$title		= $checkbox.'&nbsp;'.$group->title.' ('.$count.')';
 	$label		= HtmlTag::create( 'label', $title, ['class' => 'checkbox'] );
 	$list[]		= $label;
 }
-if( $list ){
+if( [] !== $list ){
 	$listGroups		= '
 <div class="alert alert-info">
-	<strong>Vor dem Versand an angemeldete Benutzer muss die Kampagne getestet werden.</strong><br/>
+	<strong>Vor dem Versand an die Empfänger muss die Kampagne getestet werden.</strong><br/>
 	<br/>
-	Wähle hier eine (oder mehrere Testgruppen, falls vorhanden) aus.
-	Die enthaltenen Benutzer werden dir zu Auswahl gestellt.
-	Du kannst im nächsten Schritt bestimmen, an welche(n) Testbenutzer die Test-E-Mail tatsächlich gehen sollen.
+	Wähle hier mindestens eine Empfängerliste aus.<br/>
+	Die enthaltenen Test-Empfänger werden dir zu Auswahl gestellt.<br/>
+	Du kannst im nächsten Schritt bestimmen, an welche<small>(n)</small> Test-Empfänger die Test-E-Mail tatsächlich gehen sollen.<br/>
 </div>
 <div class="row-fluid">
 	<label for="input_groupIds">An alle Tester in den Empfängerlisten <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
@@ -59,7 +64,7 @@ if( $list ){
 
 $panelGroups	= '
 <div class="content-panel content-panel-form">
-	<h3>Testgruppen auswählen</h3>
+	<h3>Newsletter testen</h3>
 	<div class="content-panel-inner">
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			'.$listGroups.'
@@ -70,28 +75,54 @@ $panelGroups	= '
 	</div>
 </div>';
 
-$list		= '<div class="alert"><em><small class="not-muted">Keine Testgruppe gewählt.</small></em></div>';
-$disabled	= ' disabled="disabled"';
+$panelReaders	= '';
+if( [] === $groupIds )
+	$panelReaders	= '<div class="alert">Noch keine Empfängerliste<small>(n)</small> gewählt.</div>';
+else
+	$panelReaders	= '<div class="alert alert-error">'.$iconWarn.'&nbsp;Keine Test-Abonnenten vorhanden.</div>';
+
+$disabled		= ' disabled="disabled"';
 if( $readers ){
 	$list	= [];
 	foreach( $readers as $reader ){
+		if( FALSE === (bool) (int) $reader->tester ?? 0 )
+			continue;
 		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
-		$list[]	= '<label class="checkbox"><input type="checkbox" name="readerIds[]" checked="checked" value="'.$reader->newsletterReaderId.'"/> '.$label.'</label>';
+		$input	= HtmlTag::create( 'input', NULL, [
+			'type'		=> 'checkbox',
+			'name'		=> 'readerIds[]',
+			'checked'	=> 'checked',
+			'value'		=> $reader->newsletterReaderId,
+		] );
+		$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label, ['class' => 'checkbox'] );
 	}
-	$list	= join( '', $list );
-	$disabled	= '';
-	$list		= '
-<div class="content-panel content-panel-form">
-	<h3>Empfänger bestätigen</h3>
+	$disabled		= '';
+
+	$panelReaders	= '
+<div class="content-panel content-panel-form" xmlns="http://www.w3.org/1999/html">
+	<h3>Test-Empfänger bestätigen</h3>
 	<div class="content-panel-inner">
 <!--		<div class="alert alert-info">
 			Der Newsletter wird direkt an die Testempfänger (ohne Newsletter- oder E-Mail-Queue) versendet.<br/>
 			<strong>Dieser Vorgang kann nicht aufgehalten werden.</strong>
 		</div>-->
-		<form action="./work/newsletter/test/'.$newsletterId.'" method="post">
+		<form action="./work/newsletter/test/' .$newsletterId.'" method="post">
 			<div class="row-fluid">
-				<label>Leser in gewählten Empfängerlisten</label>
-				<div class="checkbox-list">'.$list.'</div>
+				<label>Test-Empfänger in gewählten Empfängerlisten</label>
+				<div class="checkbox-list">'.join( '', $list ).'</div>
+			</div>
+			<div class="row-fluid">
+				<div class="alert alert-warning">
+					<p>
+						<strong>Die Test-Newsletter-Mails werden sofort an die Empfänger versendet.</strong><br/>
+					</p>
+					<p>
+						'.$iconInfo.'&nbsp;Das kann <abbr title="wenn mehrere Empfänger ausgewählt wurden">etwas dauern</abbr>, weil alle Schritte inklusive Mail-Versand <abbr title="alle Warteschlangen werden übersprungen">direkt ausgeführt</abbr> werden.<br/>
+					</p>
+					<p>
+						<i class="fa fa-fw fa-thumbs-o-up"></i> Dafür sollten die Mails innerhalb weniger Sekunden ankommen.
+					</p>
+				</div>
 			</div>
 			<div class="buttonbar">
 				<button type="submit" name="send" class="btn btn-primary"'.$disabled.'>'.$iconSend.'versenden</button>
@@ -107,7 +138,7 @@ return '
 		'.$panelGroups.'
 	</div>
 	<div class="span7">
-		'.$list.'
+		'.$panelReaders.'
 	</div>
 </div>
 <div id="model-askForReady" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

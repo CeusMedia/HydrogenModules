@@ -557,21 +557,34 @@ class Controller_Work_Newsletter extends Controller
 		$newsletter		= $this->logic->getNewsletter( $newsletterId );
 		$template		= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
 		$templates		= $this->logic->getTemplates( ['status' => '>= '.Model_Newsletter_Template::STATUS_READY], ['title' => 'ASC'] );
+
+		//  newsletter groups for testing and sending
 		$groups			= [];
-		foreach( $this->logic->getGroups( ['status' => Model_Newsletter_Group::STATUS_USABLE], ['title' => 'ASC'] ) as $group ){
+		$conditions		= ['status' => Model_Newsletter_Group::STATUS_USABLE];
+		if( $this->useUserGroupRelations ){
+			$logicAuth	= Logic_Authentication::getInstance( $this->env );
+			if( !$logicAuth->hasFullAccess() ){
+				$logic		= Logic_GroupRelation::getInstance( $this->env );
+				$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
+				$conditions['newsletterGroupId']	= $entityIds;
+			}
+		}
+		foreach( $this->logic->getGroups( $conditions, ['title' => 'ASC'] ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;
 		}
 
 		$groupIds		= $this->request->get( 'groupIds', [] );
+		if( 1 === count( $groups ) && [] === $groupIds )
+			$groupIds	= [current( $groups )->newsletterGroupId];
+
 		$readers		= [];
 		if( $groupIds )
 			foreach( $groupIds as $groupId )
 				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
 					$readers[$reader->newsletterReaderId]	= $reader;
 
-		$queues		= $this->logic->getQueuesOfNewsletter( $newsletterId );
-
+		$queues			= $this->logic->getQueuesOfNewsletter( $newsletterId );
 		$letterQueue	= $this->logic->getReaderLetters( [
 			'newsletterId'	=> $newsletterId,
 			'status'		=> 0
@@ -596,5 +609,8 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'letterHistory', $letterHistory );
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );
 		$this->addData( 'askForReady', $this->request->has( 'askForReady' ) );
+
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'work/newsletter', 'remove' ) );
+//		$this->addData( 'canRemove', $this->env->getAcl()->has( 'work/newsletter', 'remove' ) );
 	}
 }

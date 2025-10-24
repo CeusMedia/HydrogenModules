@@ -15,6 +15,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $isUsed */
 /** @var bool $useUserGroupRelations */
 /** @var bool $canManageGroupRelations */
+/** @var bool $canRemove */
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] ).'&nbsp;';
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
@@ -53,15 +54,12 @@ if( $env->getAcl()->has( 'work/newsletter', 'setStatus' ) )
 	'class'		=> 'btn btn-inverse bs4-btn-dark btn-small',
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
 ] );
-$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
-	'href'		=> './work/newsletter/remove/'.$newsletterId,
-	'class'		=> 'btn btn-danger btn-small',
-	'disabled'	=> (int) $newsletter->status >= Model_Newsletter::STATUS_SENT ? 'disabled' : NULL,
-] );
 $buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn bs4-btn-secondary not-btn-small',
 ] );
+
+$buttonList		= HtmlTag::create( 'a', $iconList.$words->edit->buttonList, ['href' => "./work/newsletter", 'class' => "btn"] );
 
 $panelDetails	= '
 <div class="row-fluid">
@@ -123,7 +121,7 @@ $panelDetails	= '
 						</div>-->
 					</div>
 					<div class="buttonbar">
-						<a href="./work/newsletter" class="btn not-btn-small">'.$iconList.$words->edit->buttonList.'</span></a>
+						'.$buttonList.'
 						'.$buttonSave.'
 						'./*$buttonPreview.*/'
 						'.$buttonNext.'
@@ -136,12 +134,12 @@ $panelDetails	= '
 	</div>
 </div>';
 
-$extras		= '';
+$panelFlow			= '';
 $allowedToSetStatus	= $env->getAcl()->has( 'work/newsletter', 'setStatus' );
 
 if( $newsletter->status == Model_Newsletter::STATUS_NEW && $allowedToSetStatus ){
-	$url	= './work/newsletter/setStatus/'.$newsletterId.'/1/?forwardTo='.urlencode( 'setContentTab/'.$newsletterId.'/3' );
-	$extras	= '
+	$url		= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_READY.'/?forwardTo='.urlencode( 'setContentTab/'.$newsletterId.'/3' );
+	$panelFlow	= '
 <div class="content-panel">
 	<h3>Bereit zum Versand?</h3>
 	<div class="content-panel-inner">
@@ -162,8 +160,8 @@ if( $newsletter->status == Model_Newsletter::STATUS_NEW && $allowedToSetStatus )
 
 }
 else if( $newsletter->status == Model_Newsletter::STATUS_READY && $allowedToSetStatus ){
-	$url	= './work/newsletter/edit/'.$newsletterId.'?save&status=0';
-	$extras	= '
+	$url		= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_NEW;
+	$panelFlow	= '
 <div class="content-panel">
 	<h3>Doch nicht fertig zum Versand?</h3>
 	<div class="content-panel-inner">
@@ -185,8 +183,8 @@ else if( $newsletter->status == Model_Newsletter::STATUS_READY && $allowedToSetS
 </div>';
 }
 else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED && $allowedToSetStatus ){
-	$url	= './work/newsletter/edit/'.$newsletterId.'?save&status=0';
-	$extras	= '
+	$url	= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_NEW;
+	$panelFlow	= '
 <div class="content-panel">
 	<h3>Arbeit am Newsletter wieder aufnehmen</h3>
 	<div class="content-panel-inner">
@@ -206,8 +204,6 @@ else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED && $allowedToSe
 	</div>
 </div>';
 }
-
-
 
 /*  --  PANEL: PREVIEW: HTML  --  */
 $urlPreview		= './work/newsletter/preview/html/'.$newsletterId;
@@ -277,41 +273,23 @@ $panelPreview		= '
 	</div>
 </div>';
 
-$panelRemove		= '';
-if( $env->getAcl()->has( 'work/newsletter', 'remove' ) ){
 
+$panelRemove		= '';
+if( $canRemove && $newsletter->status < Model_Newsletter::STATUS_SENT ){
+	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
+		'href'		=> './work/newsletter/remove/'.$newsletterId,
+		'class'		=> 'btn btn-danger btn-small',
+		'disabled'	=> (int) $newsletter->status >= Model_Newsletter::STATUS_SENT ? 'disabled' : NULL,
+	] );
 	$panelRemove	= '
 <div class="content-panel">
 	<h3>Kampagne entfernen</h3>
 	<div class="content-panel-inner">
-		<div class="alert alert-info">
-			Diese Kampagne wurde bereits versendet und kann daher nicht mehr entfernt werden.
-		</div>
 		<p>
-			Da die Empfänger der Kampagne einen Link zum Anzeigen des Newsletters im Browser erhalten haben,
-			kann die Kampagne momemtan nicht entfernt werden,
+			Diese Kampagne wurde noch nicht verwendet und kann daher entfernt werden, wenn sie nicht mehr benötigt wird.
 		</p>
 		<div class="alert alert-info">
-			Sobald eine Kampagne mit dieser Vorlage versendet wird, kann die Vorlage nicht mehr entfernt werden.
-		</div>
-		<div class="buttonbar">
-			'.$buttonRemove.'
-		</div>
-	</div>
-</div>';
-
-	//print_m( $newsletters );die;
-
-	if( $newsletter->status < Model_Newsletter::STATUS_SENT )
-		$panelRemove	= '
-<div class="content-panel">
-	<h3>Vorlage entfernen</h3>
-	<div class="content-panel-inner">
-		<p>
-			Diese Vorlage wurde noch nicht verwendet und kann daher entfernt werden, wenn sie nicht mehr benötigt wird.
-		</p>
-		<div class="alert alert-info">
-			Sobald eine Kampagne mit dieser Vorlage versendet wird, kann die Vorlage nicht mehr entfernt werden.
+			Sobald eine Kampagne versendet wurde, kann sie nicht mehr entfernt werden.
 		</div>
 		<div class="buttonbar">
 			'.$buttonRemove.'
@@ -321,21 +299,21 @@ if( $env->getAcl()->has( 'work/newsletter', 'remove' ) ){
 }
 
 //  --  PANEL: USER GROUPS  --  //
-$helperPanelGroups = new View_Helper_Manage_Group_EntityRelationEditor( $this->env );
-$panelGroups	= $helperPanelGroups
+$helperPanelGroups	= new View_Helper_Manage_Group_EntityRelationEditor( $this->env );
+$panelGroups		= $helperPanelGroups
 	->setModule( 'Resource_Newsletter' )
-	->enable( $useUserGroupRelations && $canManageGroupRelations )
+	->visible( $useUserGroupRelations )
+	->enable( $canManageGroupRelations && $newsletter->status < Model_Newsletter::STATUS_SENT )
 	->setFrom( 'work/newsletter/edit/'.$newsletterId )
 	->setEntityId( $newsletterId )
 	->render();
-
 
 return '
 <div class="row-fluid">
 	<div class="span7">
 		'.$panelDetails.'
 		'.$panelGroups.'
-		'.$extras.'
+		'.$panelFlow.'
 		'.$panelRemove.'
 	</div>
 	<div class="span5">

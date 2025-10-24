@@ -16,6 +16,7 @@ $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconRun		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] );
 $iconStop		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
+$iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
 $list	= [];
 
@@ -32,8 +33,11 @@ $buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;
 	'class'	=> 'btn btn-mini btn-danger disabled',
 ] );
 
+$hasRunningQueue	= FALSE;
+
 foreach( $queues as $queue ){
-//	print_m( $queue);die;
+	if( $queue->status < Model_Newsletter_Queue::STATUS_DONE )
+		$hasRunningQueue	= TRUE;
 	$bar	= new Progress();
 	$bar->addBar(
 		round( ( $queue->countLettersByStatus[1] + $queue->countLettersByStatus[2] ) / $queue->countLetters * 100, 1 ),
@@ -102,13 +106,19 @@ $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, ['class' => 'table table-striped tabled-fixed'] );
 
+$buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$words->edit->buttonList, ['href' => "./work/newsletter", 'class' => "btn"] );
+$buttonReload	= '';
+if( $hasRunningQueue )
+	$buttonReload	= HtmlTag::create( 'a', $iconRefresh.'&nbsp;aktualisieren', ['href' => './work/newsletter/edit/'.$newsletterId, 'class' => "btn"] );
+
 $panelList	= '
 <div class="content-panel">
 	<h3>Sendevorgänge</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
-			<a href="./work/newsletter/edit/'.$newsletterId.'" class="btn">'.$iconRefresh.'&nbsp;aktualisieren</a>
+			'.$buttonList.'
+			'.$buttonReload.'
 		</div>
 	</div>
 </div>';

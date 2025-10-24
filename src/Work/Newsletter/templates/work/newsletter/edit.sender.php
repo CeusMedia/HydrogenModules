@@ -14,21 +14,30 @@ use CeusMedia\HydrogenFramework\View;
 
 $iconSelect		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 $iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] ).'&nbsp;';
+$iconWarn		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-warning'] ).'&nbsp;';
+$iconInfo		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info-circle'] ).'&nbsp;';
 
-$listGroups		= '<div class="alert alert-danger"><strong>Keine Testgruppe vorhanden.</strong><br/>Bitte zuerst eine Testgruppe mit Empfängern anlegen!</div>';
+$listGroups		= HtmlTag::create( 'div', '<strong>'.$iconWarn.' Keine verwendbare Empfängerliste vorhanden.</strong><br/>
+	Bitte zuerst eine <a href="./work/newsletter/group">Empfängerliste</a> anlegen!<br/>
+	Diese Empfängerliste muss verwendbar sein und Empfänger sowie Test-Empfänger beinhalten.', [
+	'class'	=> "alert alert-danger",
+] );
+
 $disabled		= ' disabled="disabled"';
 $list			= [];
 foreach( $groups as $group ){
 	if( (int) $group->status !== 1 )
 		continue;
 	$disabled	= '';
+	$count		= count( $group->readers );
 	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'		=> 'checkbox',
 		'checked'	=> in_array( $group->newsletterGroupId, $groupIds ) ? 'checked' : NULL,
 		'name'		=> 'groupIds[]',
 		'value'		=> $group->newsletterGroupId,
+		'disabled'	=> 0 === $count ? 'disabled' : NULL,
 	] );
-	$title		= $checkbox.'&nbsp;'.$group->title.' ('.count( $group->readers ).')';
+	$title		= $checkbox.'&nbsp;'.$group->title.' ('.$count.')';
 	$label		= HtmlTag::create( 'label', $title, ['class' => 'checkbox'] );
 	$list[]		= $label;
 }
@@ -40,12 +49,7 @@ $panelGroups	= '
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			<div class="alert alert-info">
 				<strong>Die Kampagne kann nun an reelle Benutzer versendet werden.</strong><br/>
-				Wählen Sie hier eine oder <abbr title="Dazu Taste STRG drücken und mit der Maus auf die Empfängerlisten klicken">mehrere</abbr> Empfängerlisten aus, deren Benutzer die Kampagne empfangen sollen.<br/>
-<!--				<br/>
-				<small>Der Newsletter wird für die ausgewählten Empfänger in der Newsletter-Queue eingereiht.
-				Diese Queue übergibt die E-Mails sukzessive an die E-Mail-Queue.
-				Die Newsletter-E-Mails werden dann mit der Zeit ausgeliefert.</small>
-				<br/>-->
+				Wählen Sie hier eine oder mehrere Empfängerlisten aus, deren Benutzer die Kampagne empfangen sollen.<br/>
 			</div>
 			<div class="row-fluid">
 				<label for="input_groupIds">Alle Leser in den Empfängerlisten <small class="muted">(Mehrfachauswahl ist möglich)</small></label>
@@ -62,13 +66,20 @@ $panelGroups	= '
 	</div>
 </div>';
 
-$list		= '<div class="alert"><em class="not-muted">Keine Gruppe gewählt.</em></div>';
+$list		= '<div class="alert"><em class="not-muted">Noch keine Empfängerliste gewählt.</em></div>';
 $disabled	= ' disabled="disabled"';
 if( $readers ){
 	$list	= [];
 	foreach( $readers as $reader ){
 		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
-		$list[]	= '<label class="checkbox"><input type="checkbox" name="readerIds[]" checked="checked" value="'.$reader->newsletterReaderId.'"/> '.$label.'</label>';
+		$input	= HtmlTag::create( 'input', NULL, [
+			'type'		=> 'checkbox',
+			'name'		=> 'readerIds[]',
+			'checked'	=> 'checked',
+			'value'		=> $reader->newsletterReaderId,
+		] );
+		$tester		= $reader->tester ? HtmlTag::create( 'span', 'Tester', ['class' => 'label label-info pull-right'] ) : '';
+		$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label.$tester, ['class' => 'checkbox'] );
 	}
 	$list	= join( '', $list );
 	$disabled	= '';
@@ -85,8 +96,13 @@ if( $readers ){
 						<label>Leser in gewählten Empfängerlisten</label>
 						<div class="checkbox-list">'.$list.'</div>
 						<div class="buttonbar">
+							<div class="alert alert-info">
+								<small>Der Newsletter wird für die ausgewählten Empfänger in der Newsletter-Queue eingereiht.<br/>
+								Die E-Mails werden dann sukzessive erzeugt und <abbr title="in die E-Mail-Queue">zum Versand eingereiht</abbr>.<br/>
+								Die Newsletter-E-Mails werden dann mit der Zeit ausgeliefert.</small>
+							</div>
 							<div class="alert alert-danger">
-								<strong>Achtung:</strong> Dieser Vorgang kann nicht mehr unterbrochen werden.
+								<strong>'.$iconWarn.'&nbsp;Achtung:</strong> Dieser Vorgang kann nicht mehr unterbrochen werden.
 							</div>
 							<button type="submit" name="send" class="btn btn-primary"'.$disabled.'>'.$iconSend.'versenden</button>
 						</div>
