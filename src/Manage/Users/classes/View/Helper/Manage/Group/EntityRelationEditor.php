@@ -8,6 +8,7 @@ class View_Helper_Manage_Group_EntityRelationEditor
 {
 	protected WebEnvironment		$env;
 	protected bool $enabled			= FALSE;
+	protected bool $visible			= FALSE;
 	protected string $moduleId		= '';
 	protected int|string $entityId	= 0;
 	protected string $from			= '';
@@ -36,7 +37,7 @@ class View_Helper_Manage_Group_EntityRelationEditor
 	 */
 	public function render(): string
 	{
-		if( !$this->enabled )
+		if( !$this->visible )
 			return '';
 		$panelGroups	= '';
 		$logicUser			= Logic_User::getInstance( $this->env );
@@ -53,17 +54,21 @@ class View_Helper_Manage_Group_EntityRelationEditor
 		$listGroups	= [];
 		foreach( $groupsAvailable as $availableGroupId => $availableGroup ){
 			if( in_array( $availableGroupId, array_keys( $groupsAssigned ) ) ){
-				$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
-					'href'	=> 'manage/group/relation/remove/'.$availableGroup->groupId.'/'.$this->moduleId.'/'.$this->entityId.'/'.base64_encode( $this->from ),
-					'class'	=> 'btn not-btn-danger btn-mini btn-micro',
-				] );
+				$buttonRemove	= '';
+				if( $this->enabled )
+					$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
+						'href'	=> 'manage/group/relation/remove/'.$availableGroup->groupId.'/'.$this->moduleId.'/'.$this->entityId.'/'.base64_encode( $this->from ),
+						'class'	=> 'btn not-btn-danger btn-mini btn-micro',
+					] );
 				$listGroupsAssigned[]	= '<div class="list-group">'.$buttonRemove.'&nbsp;&nbsp;'.$availableGroup->title.'</div>';
 			}
 			else {
-				$buttonAdd	= HtmlTag::create( 'a', $iconAdd, [
-					'href'	=> 'manage/group/relation/add/'.$availableGroup->groupId.'/'.$this->moduleId.'/'.$this->entityId.'/'.base64_encode( $this->from ),
-					'class'	=> 'btn not-btn-success btn-mini btn-micro',
-				] );
+				$buttonAdd	= '';
+				if( $this->enabled )
+					$buttonAdd	= HtmlTag::create( 'a', $iconAdd, [
+						'href'	=> 'manage/group/relation/add/'.$availableGroup->groupId.'/'.$this->moduleId.'/'.$this->entityId.'/'.base64_encode( $this->from ),
+						'class'	=> 'btn not-btn-success btn-mini btn-micro',
+					] );
 				$listGroupsAvailable[]	= '<div class="list-group">'.$buttonAdd.'&nbsp;&nbsp;'.$availableGroup->title.'</div>';
 			}
 		}
@@ -115,6 +120,16 @@ class View_Helper_Manage_Group_EntityRelationEditor
 	public function setModule( ModuleDefinition|string $module ): self
 	{
 		$this->moduleId	= is_object( $module ) ? $module->id : $module;
+		return $this;
+	}
+
+	/**
+	 *	@param		bool		$switch
+	 *	@return		self
+	 */
+	public function visible( bool $switch ): self
+	{
+		$this->visible	= $switch;
 		return $this;
 	}
 }
