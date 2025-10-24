@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <module>
 	<title>Resource: Newsletter</title>
-	<description><![CDATA[Let customers register for newsletter mails.]]></description>
+	<description><![CDATA[Base library for newsletter modules.
+
+Defines models for readers of topic groups getting delivered with newsletters, built upon templates, using themes and finally sent by queues.
+
+]]></description>
 	<category>Resource</category>
-	<version>0.5.2</version>
+	<version>0.5.3</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -28,6 +32,7 @@
 	<log version="0.5">Import from protected SVN repository.</log>
 	<log version="0.5.1">Add theme entity.</log>
 	<log version="0.5.2">Add config for themes path.</log>
+    <log version="0.5.3">Add tester flag in reader model.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -121,6 +126,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_readers` (
   `firstname` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `surname` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `institution` varchar(250) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tester` tinyint(1) unsigned DEFAULT '0',
   `registeredAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`newsletterReaderId`),
   KEY `status` (`status`),
@@ -243,12 +249,12 @@ ALTER TABLE `<%?prefix%>newsletter_templates` DROP INDEX `authorId`, ADD INDEX `
 ALTER TABLE `<%?prefix%>newsletter_groups` CHANGE `title` `title` VARCHAR(60) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL;
 	]]></sql>
 	<sql on="update" type="mysql" version="0.4.7"><![CDATA[
-ALTER TABLE `<%?prefix%>newsletter_reader_letters` ADD `mailId` INT( 11 ) UNSIGNED NULL DEFAULT '0' AFTER `newsletterId`,
+ALTER TABLE `<%?prefix%>newsletter_reader_letters` ADD `mailId` INT(11) UNSIGNED NULL DEFAULT '0' AFTER `newsletterId`,
 ADD INDEX ( `mailId` );
 	]]></sql>
 	<sql on="update" type="mysql" version="0.4.8"><![CDATA[
-ALTER TABLE `<%?prefix%>newsletter_templates` ADD `version` VARCHAR( 10 ) NOT NULL DEFAULT  '1' AFTER `themeId`;
-ALTER TABLE `<%?prefix%>newsletter_templates` ADD `authorName` VARCHAR( 255 ) NULL AFTER `imprint`,
+ALTER TABLE `<%?prefix%>newsletter_templates` ADD `version` VARCHAR(10) NOT NULL DEFAULT '1' AFTER `themeId`;
+ALTER TABLE `<%?prefix%>newsletter_templates` ADD `authorName` VARCHAR(255) NULL AFTER `imprint`,
 ADD `authorEmail` VARCHAR( 255 ) NULL AFTER `authorName`,
 ADD `authorUrl` VARCHAR( 255 ) NULL AFTER `authorEmail`,
 ADD `authorCompany` VARCHAR( 255 ) NULL AFTER `authorUrl`,
@@ -256,13 +262,16 @@ ADD `license` VARCHAR( 20 ) NULL AFTER `authorCompany`,
 ADD `licenseUrl` VARCHAR( 255 ) NULL AFTER `license`,
 ADD `description` TEXT NULL AFTER `licenseUrl`;
 	]]></sql>
-	<sql on="uninstall" type="mysql"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>newsletters`;
-DROP TABLE IF EXISTS `<%?prefix%>newsletter_groups`;
+    <sql on="update" type="mysql" version="0.5.3"><![CDATA[
+ALTER TABLE `<%?prefix%>newsletter_readers` ADD `tester` TINYINT(1) UNSIGNED DEFAULT '0' AFTER `institution`;
+	]]></sql>
+    <sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_queues`;
-DROP TABLE IF EXISTS `<%?prefix%>newsletter_readers`;
-DROP TABLE IF EXISTS `<%?prefix%>newsletter_reader_groups`;
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_reader_letters`;
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_reader_groups`;
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_readers`;
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_groups`;
+DROP TABLE IF EXISTS `<%?prefix%>newsletters`;
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_templates`;
 	]]></sql>
 </module>
