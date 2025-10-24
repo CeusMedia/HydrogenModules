@@ -85,7 +85,6 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.$words->edit->buttonSave, [
 	'disabled'	=> (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled' : NULL,
 ] );
 
-
 $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview, [
 	'href'		=> './work/newsletter/preview/html/'.$newsletterId.'/1',
 	'target'	=> 'NewsletterPreview',
@@ -100,7 +99,7 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/html/'.$newsletterId.'/1\');'
 ] );
 
-
+//  -- BUTTONS: PREV / NEXT  --  //
 $buttonPrev		= HtmlTag::Create( 'a', $iconPrev.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/0',
 	'class'	=> 'btn not-btn-small',
@@ -117,6 +116,8 @@ $value			= htmlentities( $newsletter->html, ENT_QUOTES, 'UTF-8' );
 $urlFull		= './work/newsletter/editFull/'.$newsletter->newsletterId;
 $buttonFull		= '';//HtmlTag::create( 'a', $w->buttonFullscreen, ['class' => 'btn btn-mini', 'href' => $urlFull] );
 $disabled		= (int) $newsletter->status !== Model_Newsletter::STATUS_NEW ? 'disabled="disabled"' : "";
+
+$buttonList		= HtmlTag::create( 'a', $iconList.$words->edit->buttonList, ['href' => "./work/newsletter", 'class' => "btn"] );
 $panelForm		= '
 <div class="content-panel content-panel-form">
 	<h3>'.$w->heading.'</h3>
@@ -129,7 +130,7 @@ $panelForm		= '
 		<!--		</div>
 			</div>-->
 			<div class="buttonbar">
-				<a href="./work/newsletter" class="btn not-btn-small">'.$iconList.$words->edit->buttonList.'</span></a>
+				'.$buttonList.'
 				'.$buttonPrev.'
 				'.$buttonSave.'
 <!--				'.$buttonPreview.'-->

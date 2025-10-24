@@ -33,6 +33,11 @@ class Logic_GroupRelation extends Logic
 		return $this->getModuleEntityIdsFromGroups( $module, $groups );
 	}
 
+	/**
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		array						$groups
+	 *	@return		array<int|string>			List of entity IDs
+	 */
 	public function getModuleEntityIdsFromGroups( ModuleDefinition|string $module, array $groups ): array
 	{
 		if( [] === $groups )

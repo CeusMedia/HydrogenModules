@@ -128,7 +128,6 @@ if( (int) $reader->status !== 0 )
 //if( (int) $reader->status > 0 )
 //	$buttonRemove		= '<button disabled="disabled" type="button" class="btn btn-danger">'.$labelButtonRemove.'</button>';
 
-
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/edit/', ['words' => $words, 'reader' => $reader] ) );
 
 return $textTop.'
@@ -178,6 +177,16 @@ return $textTop.'
 							<div class="span3">
 								<label for="">registriert am</label>
 								<input type="text" name="" id="input_registeredAt" class="span12 disabled readonly" readonly="readonly" value="'.date( 'd.m.Y', $reader->registeredAt ).'"/>
+							</div>
+							<div class="span2">
+								<label for="">Testempfänger</label>
+								'.HtmlTag::create( 'input', NULL, [
+									'type'	=> 'checkbox',
+									'name'	=> 'tester',
+									'id'	=> 'input_tester',
+									'value'	=> '1',
+									'checked'	=> ( $reader->tester ?? FALSE ) ? 'checked' : NULL,
+								] ).'
 							</div>
 						</div>
 						<div class="row-fluid">

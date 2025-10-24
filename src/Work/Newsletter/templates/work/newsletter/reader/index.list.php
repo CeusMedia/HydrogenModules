@@ -16,6 +16,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var int $found */
 /** @var int $totalReaders */
 /** @var ?Logic_Limiter $limiter */
+/** @var bool $canExport */
+/** @var bool $canImport */
 
 
 $w			= (object) $words->index;
@@ -71,7 +73,7 @@ if( $readers ){
 $pagination		= new PageControl( './work/newsletter/reader', $filterPage, ceil( $totalReaders / $filterLimit ) );
 
 $buttonImport	= '';
-if( $env->getAcl()->has( 'work/newsletter/reader', 'import' ) ){
+if( $canImport ){
 	$buttonImport	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'a', $iconImport.'importieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',
@@ -105,7 +107,7 @@ if( $limiter && $limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
 }
 
 $buttonExport	= '';
-if( $env->getAcl()->has( 'work/newsletter/reader', 'export' ) ){
+if( $canExport ){
 	$buttonExport	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'a', $iconExport.'exportieren&nbsp;<span class="caret"></span>', [
 			'href'			=> '#',

@@ -89,17 +89,20 @@ $buttonPreview	= HtmlTag::create( 'a', $iconPreview.$words->edit->buttonPreview,
 	'onclick'		=> 'ModuleWorkNewsletter.showPreview(\'./work/newsletter/preview/text/'.$newsletterId.'/1\');'
 ] );
 
-$buttonPrev		= HtmlTag::Create( 'a', $iconPrev.$words->edit->buttonPrev, [
+//  -- BUTTONS: PREV / NEXT  --  //
+$buttonPrev		= HtmlTag::create( 'a', $iconPrev.$words->edit->buttonPrev, [
 	'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/1',
 	'class'	=> 'btn not-btn-small',
 ] );
 
 $buttonNext		= '';
 if( $env->getAcl()->has( 'work/newsletter', 'test' ) )
-	$buttonNext		= HtmlTag::Create( 'a', $iconNext.$words->edit->buttonNext, [
+	$buttonNext		= HtmlTag::create( 'a', $iconNext.$words->edit->buttonNext, [
 		'href'	=> './work/newsletter/setContentTab/'.$newsletterId.'/3',
 		'class'	=> 'btn not-btn-small',
 	] );
+
+$buttonList	= HtmlTag::create( 'a', $iconList.$words->edit->buttonList, ['href' => "./work/newsletter", 'class' => "btn"] );
 
 $panelForm	= '
 <div class="content-panel content-panel-form">
@@ -118,7 +121,7 @@ $panelForm	= '
 			</div>
 			'.$fieldContent.'
 			<div class="buttonbar">
-				<a href="./work/newsletter" class="btn not-btn-small">'.$iconList.$words->edit->buttonList.'</span></a>
+				'.$buttonList.'
 				'.$buttonPrev.'
 				'.$buttonSave.'
 <!--				'.$buttonPreview.'-->

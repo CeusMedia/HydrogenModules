@@ -14,44 +14,31 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $useUserGroupRelations */
 /** @var bool $canManageGroupRelations */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
-
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
-
-$pathDefaults	= 'html/work/newsletter/';
+const TAB_DETAILS	= 1;
+const TAB_HTML		= 2;
+const TAB_TEXT		= 3;
+const TAB_TEST		= 4;
+const TAB_SEND		= 5;
+const TAB_QUEUE		= 6;
+const TAB_HISTORY	= 7;
+const TAB_STATS		= 8;
 
 $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.content.tab' );
-$tabs			= $words->tabs;
 
-$disabled		= "";
-
-if( (int) $newsletter->status === Model_Newsletter::STATUS_ABORTED ){
-	$disabledTabs	= [2, 3, 4, 5, 6, 7, 8];
-	$disabled		= 'disabled="disabled"';
-}
-else if( (int) $newsletter->status === Model_Newsletter::STATUS_NEW ){
-	$disabledTabs	= [5, 6, 7, 8];
-//	$disabled		= 'disabled="disabled"';
-}
-else if( (int) $newsletter->status === Model_Newsletter::STATUS_READY ){
-	$disabledTabs	= [/*2, 3, 5,*/ 6, 7, 8];
-//	$disabled		= 'disabled="disabled"';
-}
-else if( (int) $newsletter->status == Model_Newsletter::STATUS_SENT ){
-	$disabledTabs	= [/*2, 3,*/ 4];
-	$disabled		= 'disabled="disabled"';
-}
+$disabledTabs	= match( (int) $newsletter->status ){
+	Model_Newsletter::STATUS_ABORTED	=> [TAB_HTML, TAB_TEXT, TAB_TEST, TAB_SEND, TAB_QUEUE, TAB_HISTORY, TAB_STATS],
+	Model_Newsletter::STATUS_NEW		=> [TAB_SEND, TAB_QUEUE, TAB_HISTORY, TAB_STATS],
+	Model_Newsletter::STATUS_READY		=> [/*TAB_HTML, TAB_TEXT, TAB_SEND,*/ TAB_QUEUE, 7, TAB_STATS],
+	Model_Newsletter::STATUS_SENT		=> [/*TAB_HTML, TAB_TEXT,*/ TAB_TEST, TAB_SEND],
+	default								=> [],
+};
 
 if( !$env->getAcl()->has( 'work/newsletter', 'test' ) )
-	$disabledTabs[]	= 4;
+	$disabledTabs[]	= TAB_TEST;
+if( !$env->getAcl()->has( 'work/newsletter', 'sendLetter' ) )
+	$disabledTabs[]	= TAB_SEND;
 
-if( !$env->getAcl()->has( 'work/newsletter', 'sendNewsletter' ) )
-	$disabledTabs[]	= 5;
-
-
-$tabsContent	= $view->renderTabs( $tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
-
-$listSents	= '<em><small class="muted">Keine.</small></em>';
+$tabsContent	= $view->renderTabs( $words->tabs, 'setContentTab/'.$newsletterId.'/', $currentTab, $disabledTabs );
 
 $tabTemplates	= [
 	0	=> 'details',
@@ -67,37 +54,6 @@ $content	= "Invalid tab: ".$currentTab;
 if( array_key_exists( $currentTab, $tabTemplates ) )
 	$content	= $view->loadTemplate( 'work/newsletter', 'edit.'.$tabTemplates[$currentTab] );
 
-/*
-switch( $currentTab ){
-	case 0:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.details' );
-		break;
-	case 1:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.html' );
-		break;
-	case 2:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.text' );
-		break;
-	case 3:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.test' );
-		break;
-	case 4:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.sender' );
-		break;
-	case 5:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.queue' );
-		break;
-	case 6:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.history' );
-		break;
-	case 7:
-		$content	= $view->loadTemplate( 'work/newsletter', 'edit.statistics' );
-		break;
-	default:
-		$content	= "Invalid tab: ".$currentTab;
-		break;
-}
-*/
 $tabsContent	.= HtmlTag::create( 'div', $content, ['tab-content'] );
 
 $modalPreview	= '
@@ -128,6 +84,9 @@ extract( $view->populateTexts(
 	'html/work/newsletter/edit/',
 	array( 'heading' => $words->edit->heading.$navPrevNext, 'title' => $newsletter->title )
 ) );
+
+$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
 
 return $textTop.'
 <script>
