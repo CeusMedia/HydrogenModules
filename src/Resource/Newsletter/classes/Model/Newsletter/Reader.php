@@ -38,6 +38,7 @@ class Model_Newsletter_Reader extends Model
 		'firstname',
 		'surname',
 		'institution',
+		'tester',
 		'registeredAt',
 	];
 
@@ -48,6 +49,7 @@ class Model_Newsletter_Reader extends Model
 		'email',
 		'firstname',
 		'surname',
+		'tester',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;

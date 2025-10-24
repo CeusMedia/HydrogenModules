@@ -496,16 +496,17 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		array		$groupIds
+	 *	@param		array<int|string|object>	$groups		List of group objects or IDs
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@return		array
 	 */
-	public function getReadersOfGroups( array $groupIds, array $conditions = [], array $orders = [] ): array
+	public function getReadersOfGroups( array $groups, array $conditions = [], array $orders = [] ): array
 	{
 		$list		= [];
 		$readerIds	= [];
-		foreach( $groupIds as $groupId ){
+		foreach( $groups as $group ){
+			$groupId	= is_object( $group ) ? $group->groupId : $group;
 			$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );
 			foreach( $relations as $relation )
 				$readerIds[]	= $relation->newsletterReaderId;
