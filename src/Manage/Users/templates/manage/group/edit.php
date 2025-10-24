@@ -83,8 +83,13 @@ foreach( $users as $user ){
 	] );
 }
 
-$columnGroup	= HtmlElements::ColumnGroup( ['', '30%', '30%', '15%'] );
-$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( [ 'Benutzername', 'Person', 'Role', 'zuletzt eingeloggt' ] ) );
+$columnGroup	= HtmlElements::ColumnGroup( ['20%', '30%', '', '10%'] );
+$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
+	$w->headUsername,
+	$w->headPerson,
+	$w->headRole,
+	$w->headLogin,
+] ) );
 $tbody			= HtmlTag::create( 'tbody', $rows );
 $table			= HtmlTag::create( 'table', [$columnGroup, $thead, $tbody], ['class' => 'table'] );
 $panelUsers		= '
@@ -95,9 +100,43 @@ $panelUsers		= '
 	</div>
 </div>';
 
+$panelEntities	= '';
+/*
+$l = Model_Group_Relation::getInstance( $env );
+$entityRelations	= $l->getAllByIndex( 'groupId', $group->groupId );
+
+$rows	= [];
+foreach( $entityRelations as $entityRelation ){
+	$timestamp	= $helperTime->convert( $entityRelation->timestamp, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
+	$rows[]		= HtmlTag::create( 'tr', [
+		HtmlTag::create( 'td', $entityRelation->moduleId ),
+		HtmlTag::create( 'td', $entityRelation->entityId ),
+		HtmlTag::create( 'td', $timestamp ),
+	] );
+}
+
+$columnGroup	= HtmlElements::ColumnGroup( ['30%', '', '10%'] );
+$thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
+	'Module Key',
+	'Entity Key',
+	'Creation',
+] ) );
+$tbody			= HtmlTag::create( 'tbody', $rows );
+$table			= HtmlTag::create( 'table', [$columnGroup, $thead, $tbody], ['class' => 'table'] );
+
+$panelEntities	= '
+<div class="content-panel">
+	<h3>Module Entity Relations</h3>
+	<div class="content-panel-inner">
+		'.$table.'
+	</div>
+</div>';
+*/
+
 $w				= (object) $words['info'];
 $createdAt		= $helperTime->convert( $group->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
 $modifiedAt		= $group->modifiedAt ? 'vor '.$helperTime->convert( $group->modifiedAt, TRUE ) : '-';
+$nrEntityRelations	= Model_Group_Relation::getInstance( $env )->countByIndex( 'groupId', $group->groupId );
 $panelInfo		= '
 <div class="content-panel content-panel-info">
 	<h3>'.$w->heading.'</h3>
@@ -109,6 +148,8 @@ $panelInfo		= '
 			<dd>'.$createdAt.'</dd>
 			<dt>'.$w->labelModifiedAt.'</dt>
 			<dd>'.$modifiedAt.'</dd>
+			<dt>Module Entity Relations</dt>
+			<dd>'.$nrEntityRelations.'</dd>
 		</dl>
 	</div>
 </div>';
@@ -121,6 +162,7 @@ return $textIndexTop.'
 	<div class="span9">
 		'.$panelEdit.'
 		'.$panelUsers.'
+		'.$panelEntities.'
 	</div>
 	<div class="span3">
 		'.$panelInfo.'
