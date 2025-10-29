@@ -44,7 +44,7 @@ foreach( $roles as $role ){
 	$labelCount		= HtmlTag::create( 'span', count( $role->users ), ['class' => 'role count'] );
 	$labelAccess	= HtmlTag::create( 'span', $iconType[$role->access].'&nbsp;'.$words['type-access'][$role->access], ['class' => 'role-access access'.$role->access] );
 	if( 0 !== $role->rights )
-		$labelAccess	.= '&nbsp;<span class="badge">'.$role->rights.'</span>';
+		$labelAccess	.= '&nbsp;<span class="badge">'.$role->nrRights.'</span>';
 	$labelRegister	= HtmlTag::create( 'span', $words['type-register'][$role->register], ['class' => 'role-register register'.$role->register] );
 
 	$rows[]	= HtmlTag::create( 'tr', [
