@@ -29,6 +29,7 @@ class Controller_Manage_User extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $config;
 	protected Logic_User $logic;
+	protected Logic_Role $logicRole;
 	protected Model_Role $modelRole;
 	protected Model_User $modelUser;
 	protected array $countries;
@@ -63,10 +64,9 @@ class Controller_Manage_User extends Controller
 	 */
 	public function add(): void
 	{
-		if( $this->request->getMethod()->isPost() ){
-			$this->handleAddAction();
-			$this->restart( NULL, TRUE );
-		}
+		if( $this->request->getMethod()->isPost() )
+			if( $this->handleAddAction() )
+				$this->restart( NULL, TRUE );
 
 		$input		= $this->env->getRequest();														//  allow preset data via GET parameters
 		$user		= new Entity_User();
@@ -79,7 +79,7 @@ class Controller_Manage_User extends Controller
 		}
 
 		$this->addData( 'user', $user );
-		$this->addData( 'roles', $this->modelRole->getAll() );
+		$this->addData( 'roles', $this->logicRole->getAll() );
 	}
 
 	/**
@@ -166,12 +166,12 @@ class Controller_Manage_User extends Controller
 		if( empty( $user->country ) )
 			$user->country	= strtoupper( $this->env->getLanguage()->getLanguage() );
 		$user->country	= $this->countries[$user->country];
-		$user->role		= $this->modelRole->get( $user->roleId );
+		$user->role		= $this->logicRole->get( $user->roleId );
 
 		$this->addData( 'userId', (int) $userId );
 		$this->addData( 'user', $user );
 		$this->addData( 'from', $this->request->get( 'from' ) );
-		$this->addData( 'roles', $this->modelRole->getAll() );
+		$this->addData( 'roles', $this->logicRole->getAll() );
 		$this->addData( 'pwdMinLength', $pwdMinLength );
 		$this->addData( 'pwdMinStrength', $pwdMinStrength );
 
@@ -244,7 +244,7 @@ class Controller_Manage_User extends Controller
 		];*/
 
 		$roleMap	= [];
-		foreach( $this->modelRole->getAll() as $role )
+		foreach( $this->logicRole->getAll() as $role )
 			$roleMap[$role->roleId]	= $role;
 
 		$all		= $this->modelUser->count();
@@ -381,8 +381,8 @@ class Controller_Manage_User extends Controller
 			'countries'			=> $this->countries,
 		] );
 		$this->logic		= new Logic_User( $this->env );
+		$this->logicRole	= Logic_Role::getInstance( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
-		$this->modelRole	= new Model_Role( $this->env );
 	}
 
 	/**
@@ -444,15 +444,15 @@ class Controller_Manage_User extends Controller
 			'password'		=> md5( $passwordSalt.$password ),
 			'email'			=> $email,
 			'gender'		=> $input['gender'],
-			'salutation'	=> $input['salutation'],
-			'firstname'		=> $input['firstname'],
-			'surname'		=> $input['surname'],
-			'postcode'		=> $input['postcode'],
-			'city'			=> $input['city'],
-			'street'		=> $input['street'],
-			'country'		=> $input['country'],
-			'phone'			=> $input['phone'],
-			'fax'			=> $input['fax'],
+			'salutation'	=> $input['salutation'] ?? '',
+			'firstname'		=> $input['firstname'] ?? '',
+			'surname'		=> $input['surname'] ?? '',
+			'postcode'		=> $input['postcode'] ?? '',
+			'city'			=> $input['city'] ?? '',
+			'street'		=> $input['street'] ?? '',
+			'country'		=> $input['country'] ?? '',
+			'phone'			=> $input['phone'] ?? '',
+			'fax'			=> $input['fax'] ?? '',
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
 		];
@@ -463,13 +463,24 @@ class Controller_Manage_User extends Controller
 		if( class_exists( 'Logic_UserPassword' ) )											//  @todo  remove whole block if old user password support decays
 			$data['password'] = '';
 
-		$userId		= $this->modelUser->add( $data );
-		/** @var Entity_User $user */
-		$user		= $this->modelUser->get( $userId );
-		if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
-			$logic			= Logic_UserPassword::getInstance( $this->env );
-			$userPassword	= $logic->addPassword( $user, $password );
-			$logic->activatePassword( $userPassword );
+		$dbc		= $this->env->getDatabase();
+		$dbc->beginTransaction();
+		try{
+			$userId		= $this->modelUser->add( $data );
+			$user		= $this->logic->getUser( $userId );
+			if( class_exists( 'Logic_UserPassword' ) ){											//  @todo  remove line if old user password support decays
+				$logic			= Logic_UserPassword::getInstance( $this->env );
+				$userPassword	= $logic->addPassword( $user, $password );
+				$logic->activatePassword( $userPassword );
+			}
+			$dbc->commit();
+		}
+		catch( Exception $e ){
+			$dbc->rollBack();
+			$this->env->getLog()->logException( $e );
+//			throw new RuntimeException( 'Adding user failed ('.$e->getMessage().')', 0, $e );
+			$this->messenger->noteFailure( $words->msgFailed );
+			return NULL;
 		}
 		$this->messenger->noteSuccess( $words->msgSuccess, $input['username'] );
 		return $user;

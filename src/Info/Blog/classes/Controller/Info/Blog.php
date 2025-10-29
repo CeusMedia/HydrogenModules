@@ -5,10 +5,10 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Info_Blog extends Controller
 {
+	protected Logic_User $logicUser;
 	protected Model_Blog_Category $modelCategory;
 	protected Model_Blog_Comment $modelComment;
 	protected Model_Blog_Post $modelPost;
-	protected Model_User $modelUser;
 	protected MessengerResource $messenger;
 
 	public static function getUriPart( string $label, string $delimiter = "_" ): string
@@ -59,7 +59,7 @@ class Controller_Info_Blog extends Controller
 		$limits		= [$limit, $offset];
 		$posts		= $this->modelPost->getAll( $conditions, $orders, $limits );
 		foreach( $posts as $post ){
-			$post->author	= $this->modelUser->get( $post->authorId );
+			$post->author	= $this->logicUser->getUser( $post->authorId );
 		}
 		$words		= $this->getWords( 'comment' );
 //print_m( $words );die;
@@ -83,7 +83,7 @@ class Controller_Info_Blog extends Controller
 			'nrViews'	=> $post->nrViews + 1,														//  ... increased views
 			'viewedAt'	=> time(),																	//  ... last view timestamp
 		] );
-		$post->author	= $this->modelUser->get( $post->authorId );									//  extend post by author
+		$post->author	= $this->logicUser->getUser( $post->authorId );									//  extend post by author
 		$post->comments	= $this->modelComment->getAllByIndices( [									//  collect post comments
 			'postId'	=> $post->postId,															//  ... related to this post
 			'status'	=> '>= 0'																	//  ... and visible
@@ -109,10 +109,10 @@ class Controller_Info_Blog extends Controller
 
 	protected function __onInit(): void
 	{
+		$this->logicUser		= Logic_User::getInstance( $this->env );
 		$this->modelCategory	= new Model_Blog_Category( $this->env );
 		$this->modelComment		= new Model_Blog_Comment( $this->env );
 		$this->modelPost		= new Model_Blog_Post( $this->env );
-		$this->modelUser		= new Model_User( $this->env );
 		$this->messenger		= $this->env->getMessenger();
 
 		$this->moduleConfig		= $this->env->getConfig()->getAll( 'module.info_blog.', TRUE );
@@ -167,7 +167,7 @@ class Controller_Info_Blog extends Controller
 
 		$mail		= new Mail_Info_Blog_Comment( $this->env, $data );								//  generate mail to post author
 		/** @var ?Entity_User $postAuthor */
-		$postAuthor	= $this->modelUser->get( $post->authorId );										//  set post author as mail receiver
+		$postAuthor	= $this->logicUser->getUser( $post->authorId );									//  set post author as mail receiver
 		$logic->handleMail( $mail, $postAuthor, $language->getLanguage() );							//  enqueue mail
 
 		$addresses	= [];
@@ -181,7 +181,7 @@ class Controller_Info_Blog extends Controller
 				continue;																			//  already has been informed
 			if( $item->authorId ){																	//  comment by authenticated user
 				/** @var ?Entity_User $commentAuthor */
-				$commentAuthor	= $this->modelUser->get( $item->authorId );							//  get comment user
+				$commentAuthor	= $this->logicUser->getUser( $item->authorId );						//  get comment user
 				if( $commentAuthor->status < 0 )													//  user is not active (anymore)
 					continue;																		//  skip
 				$item->username	= $commentAuthor->username;											//  not receiver username for mailer

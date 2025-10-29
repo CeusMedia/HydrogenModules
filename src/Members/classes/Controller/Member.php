@@ -1,20 +1,27 @@
 <?php
 
 use CeusMedia\HydrogenFramework\Controller;
-use CeusMedia\HydrogenFramework\Environment;
+use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
 class Controller_Member extends Controller
 {
 	protected $request;
 	protected $session;
-	protected $messenger;
+	protected MessengerResource $messenger;
+	protected Logic_Member $logicMember;
+	protected Logic_Mail $logicMail;
+	protected Logic_User $logicUser;
 	protected Model_User $modelUser;
 	protected Model_User_Relation $modelRelation;
 	protected ?string $userId;
-	protected Logic_Member $logicMember;
-	protected Logic_Mail $logicMail;
 
-	public function accept( $userRelationId )
+	/**
+	 *	@param		int|string		$userRelationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function accept( int|string $userRelationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
@@ -25,11 +32,12 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
+			$receiver	= $this->logicUser->getUser( $relation->fromUserId );
 			$mail		= new Mail_Member_Accept( $this->env, [
-				'sender'	=> $this->modelUser->get( $this->userId ),
-				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
+				'sender'	=> $this->logicUser->getUser( $this->userId ),
+				'receiver'	=> $receiver,
 			] );
-			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+			$this->logicMail->handleMail( $mail, $receiver, $language );
 			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> 2,
 			] );
@@ -46,7 +54,7 @@ class Controller_Member extends Controller
 		$this->restart( $url, TRUE );
 	}
 
-	public function filter( $reset = NULL )
+	public function filter( $reset = NULL ): void
 	{
 		if( $reset ){
 			foreach( $this->session->getAll( 'filter_member_' ) as $key => $value ){
@@ -63,7 +71,12 @@ class Controller_Member extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	public function index( $page = 0 )
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function index( int $page = 0 ): void
 	{
 		$limit		= $this->session->get( 'filter_member_limit' );
 		$offset		= $page * $limit;
@@ -76,14 +89,14 @@ class Controller_Member extends Controller
 			'status'	=> 1,
 		] );
 		foreach( $incoming as $relation )
-			$relation->user	= $this->modelUser->get( $relation->fromUserId );
+			$relation->user	= $this->logicUser->getUser( $relation->fromUserId );
 
 		$outgoing	= $this->modelRelation->getAllByIndices( [
 			'fromUserId'	=> $this->userId,
 			'status'		=> 1,
 		] );
 		foreach( $outgoing as $relation )
-			$relation->user	= $this->modelUser->get( $relation->toUserId );
+			$relation->user	= $this->logicUser->getUser( $relation->toUserId );
 
 		$this->addData( 'incoming', $incoming );
 		$this->addData( 'outgoing', $outgoing );
@@ -96,7 +109,13 @@ class Controller_Member extends Controller
 		$this->addData( 'filterRelation', $this->session->get( 'filter_member_relation' ) );
 	}
 
-	public function reject( $userRelationId )
+	/**
+	 *	@param		int|string		$userRelationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function reject( int|string $userRelationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
@@ -106,11 +125,12 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
+			$receiver	= $this->logicUser->getUser( $relation->fromUserId );
 			$mail		= new Mail_Member_Reject( $this->env, [
-				'sender'	=> $this->modelUser->get( $this->userId ),
-				'receiver'	=> $this->modelUser->get( $relation->fromUserId ),
+				'sender'	=> $this->logicUser->getUser( $this->userId ),
+				'receiver'	=> $receiver,
 			] );
-			$this->logicMail->handleMail( $mail, (int) $relation->fromUserId, $language );
+			$this->logicMail->handleMail( $mail, $receiver, $language );
 
 			$this->modelRelation->edit( $relation->userRelationId, [
 				'status'	=> -1,
@@ -128,7 +148,13 @@ class Controller_Member extends Controller
 		$this->restart( $url, TRUE );
 	}
 
-	public function release( $userRelationId )
+	/**
+	 *	@param		int|string		$userRelationId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function release( int|string $userRelationId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
@@ -142,11 +168,12 @@ class Controller_Member extends Controller
 				$toUserId	= $relation->fromUserId;
 
 			$language	= $this->env->getLanguage()->getLanguage();
+			$receiver	= $this->logicUser->getUser( $toUserId );
 			$mail		= new Mail_Member_Revoke( $this->env, [
-				'sender'	=> $this->modelUser->get( $this->userId ),
-				'receiver'	=> $this->modelUser->get( $toUserId ),
+				'sender'	=> $this->logicUser->getUser( $this->userId ),
+				'receiver'	=> $receiver,
 			] );
-			$this->logicMail->handleMail( $mail, (int) $toUserId, $language );
+			$this->logicMail->handleMail( $mail, $receiver, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
 			$this->messenger->noteSuccess( $words->successReleased );
 		}
@@ -161,7 +188,13 @@ class Controller_Member extends Controller
 		$this->restart( $url, TRUE );
 	}
 
-	public function request( $userId )
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function request( int|string $userId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->getByIndices( [
@@ -180,23 +213,24 @@ class Controller_Member extends Controller
 		}
 		try{
 			$language	= $this->env->getLanguage()->getLanguage();
+			$receiver	= $this->logicUser->getUser( $userId );
 			$mail		= new Mail_Member_Request( $this->env, [
-				'sender'	=> $this->modelUser->get( $this->userId ),
-				'receiver'	=> $this->modelUser->get( $userId ),
+				'sender'	=> $this->logicUser->getUser( $this->userId ),
+				'receiver'	=> $receiver,
 			] );
-			$this->logicMail->handleMail( $mail, (int) $userId, $language );
-			$data	= array(
+			$this->logicMail->handleMail( $mail, $receiver, $language );
+			$data	= [
 				'fromUserId'	=> $this->userId,
 				'toUserId'		=> $userId,
 	//			'type'			=> 1,
 				'status'		=> 1,
 				'createdAt'		=> time(),
 				'modifiedAt'	=> time(),
-			);
+			];
 			$this->modelRelation->add( $data );
 			$this->messenger->noteSuccess( $words->successRequested );
 		}
-		catch( Exception $e ){
+		catch( Throwable $e ){
 			$this->messenger->noteFailure( $words->failureMail );
 			$payload	= ['exception' => $e];
 			$this->callHook( 'Env', 'logException', $this, $payload );
@@ -204,7 +238,7 @@ class Controller_Member extends Controller
 		$this->restart( 'view/'.$userId.'?from='.$this->getReferrer(), TRUE );
 	}
 
-	public function search()
+	public function search(): void
 	{
 		$query		= trim( $this->request->get( 'username' ) );
 		$users		= [];
@@ -228,37 +262,47 @@ class Controller_Member extends Controller
 		$this->addData( 'users', $users );
 	}
 
+	/**
+	 *	@param		int|string		$userId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function view( int|string $userId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		/** @var ?Entity_User $user */
-		$user = $this->modelUser->get( $userId );
+		$user = $this->logicUser->getUser( $userId );
 		if( !$user ){
 			$this->messenger->noteError( $words->errorUserIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$relation	= $this->logicMember->getUserRelation( $this->userId, $userId );
-		$modelRole	= new Model_Role( $this->env );
-		$role		= $modelRole->get( $user->roleId );
+		$role		= Logic_Role::getInstance( $this->env )->get( $user->roleId );
 		$this->addData( 'user', $user );
 		$this->addData( 'role', $role );
 		$this->addData( 'from', $this->getReferrer() );
 		$this->addData( 'relation', $relation );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
+		$this->logicMember		= Logic_Member::getInstance( $this->env );
+		$this->logicMail		= Logic_Mail::getInstance( $this->env );
+		$this->logicUser		= Logic_User::getInstance( $this->env );
 		$this->modelUser		= new Model_User( $this->env );
 		$this->modelRelation	= new Model_User_Relation( $this->env );
 		$this->userId			= $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->addData( 'currentUserId', $this->userId );
 		if( !$this->session->get( 'filter_member_limit' ) )
 			$this->session->set( 'filter_member_limit', 9 );
-		$this->logicMember		= Logic_Member::getInstance( $this->env );
-		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 	}
 
 	protected function getReferrer(/* $encoded = FALSE */)
@@ -268,9 +312,7 @@ class Controller_Member extends Controller
 		$from		= '';
 		$regex		= "/^".preg_quote( $this->env->url, "/" )."/";
 		$referer	= preg_replace( $regex, "", getEnv( 'HTTP_REFERER' ) );
-		if( $referer ){
-			if( !preg_match( '@member/view@', $referer ) )
-				return $referer;
-		}
+		if( $referer && !str_contains( $referer, 'member/view' ) )
+			return $referer;
 	}
 }

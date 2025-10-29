@@ -166,30 +166,43 @@ class Controller_Auth extends Controller
 	 *	Redirects to "from" if given.
 	 *	@access		public
 	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function tryLoginByCookie(): void
 	{
-		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
-			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
-			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
-			$modelUser	= new Model_User( $this->env );												//  get user model
-			$modelRole	= new Model_Role( $this->env );												//  get role model
-			if( $userId && $password && ( $user = $modelUser->get( $userId ) ) ){					//  user is existing and password is given
-				$role		= $modelRole->get( $user->roleId );										//  get role of user
-				if( $role && $role->access ){														//  role exists and allows login
-					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( version_compare( PHP_VERSION, '5.5.0' ) >= 0 )								//  for PHP 5.5.0+
-						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
-					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
-						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
-						$from	= str_replace( "index/index", "", $this->request->get( 'from' ) );	//  get redirect URL from request if set
-						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './'.$from );												//  restart (or go to redirect URL)
-					}
-				}
+		if( !$this->logic->isAuthenticated() )
+			return;
+		if( !$this->cookie->get( 'auth_remember' ) )											//  autologin has not been activated
+			return;
+
+		$userId			= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
+		$passwordHash	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
+		if( 0 === $userId || '' === $passwordHash )													//  missing user ID or password
+			return;
+
+		$modelUser	= new Model_User( $this->env );													//  get user model
+		/** @var ?Entity_User $user */
+		$user		= $modelUser->get( $userId );													//  get user entity
+
+		if( NULL !== $user ){ 																		//  user is NOT existing
+			$role	= Logic_Role::getInstance( $this->env )->get( $user->roleId );					//  get role of user
+			if(																						//  extended IF AND
+				NULL !== $role &&																	//  - role exists
+				0 !== $role->access	&&																//  - role allows login
+				password_verify( $user->password, $passwordHash )									//  - password matche with stored hash
+			){
+				$modelUser->edit( $user->userId, ['loggedAt' => time()] );							//  note login time in database
+				$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );	//  set user ID in session
+				$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );	//  set user role in session
+				$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
+				$from	= str_replace( "index/index", "", $from );							//  shortcut index
+				$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
+				$this->restart( './'.$from );													//  restart (or go to redirect URL)
 			}
 		}
+		$this->cookie->remove( 'auth_remember' );
+		$this->cookie->remove( 'auth_remember_id' );
+		$this->cookie->remove( 'auth_remember_pw' );
 	}
 }

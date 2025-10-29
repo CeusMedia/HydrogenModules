@@ -1,12 +1,14 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Alg\Validation\Predicates;
 use CeusMedia\Common\Net\CURL as NetCurl;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Auth_Oauth extends Controller
 {
@@ -22,6 +24,7 @@ class Controller_Auth_Oauth extends Controller
 	protected string $clientUri;
 	protected string $providerUri;
 	protected bool $useCsrf;
+	protected Dictionary $moduleConfigUsers;
 
 /*	public function ajaxEmailExists(){
 		print( json_encode( NULL ) );
@@ -36,6 +39,7 @@ class Controller_Auth_Oauth extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -43,7 +47,6 @@ class Controller_Auth_Oauth extends Controller
 //		}
 //		else{
 		if( $this->request->get( 'error' ) ){
-			$messenger	= $this->env->getMessenger();
 			$words		= $this->getWords();
 			switch( $this->request->get( 'error' ) ){
 				case 'access_denied':
@@ -121,13 +124,14 @@ class Controller_Auth_Oauth extends Controller
 */
 				}
 			}
-			$this->restart( NULL );
+			$this->restart();
 		}
 	}
 
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function login(): void
 	{
@@ -191,8 +195,9 @@ class Controller_Auth_Oauth extends Controller
 	//				$this->messenger->noteSuccess( $words->msgSuccess );
 
 					$modelUser	= new Model_User( $this->env );
+					/** @var ?Entity_User $user */
 					$user = $modelUser->getByIndex( 'username', $this->request->get( 'login_username' ) );
-					if( $user ){
+					if( NULL !== $user ){
 						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );
 						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );
 						$this->logic->setAuthenticatedUser( $user );
@@ -205,7 +210,7 @@ class Controller_Auth_Oauth extends Controller
 						$path			= 'user/'.$this->request->get( 'login_username' );
 						$response		= $client->read( $path );
 						$data			= $response->data->user;
-						$data['roleId']	= $modelRole->getByIndex( 'register', 128, 'roleId' );
+						$data['roleId']	= $modelRole->getByIndex( 'register', 128, [], 'roleId' );
 						$userId			= $modelUser->add( $data );
 						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $userId );
 						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $data['roleId'] );
@@ -278,12 +283,13 @@ class Controller_Auth_Oauth extends Controller
 		if( isset( $this->env->version ) )
 			if( version_compare( $this->env->version, '0.8.6.5', '>=' ) )
 				$this->cookie	= $this->env->getCookie();
-		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
+		$this->moduleConfig			= $this->config->getAll( 'module.resource_authentication_backend_oauth.', TRUE );
+		$this->moduleConfigUsers	= $this->config->getAll( 'module.resource_users.', TRUE );
 		$this->clientUri	= $this->env->url;
 		$this->clientId		= $this->moduleConfig->get( 'provider.client.ID' );
 		$this->clientSecret	= $this->moduleConfig->get( 'provider.client.secret' );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
-		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Oauth' );
+		$this->logic		= Logic_Authentication_Backend_Oauth::getInstance( $this->env );
 		$this->useCsrf		= $this->env->getModules()->has( 'Security_CSRF' );
 		$this->addData( 'useCsrf', $this->useCsrf );
 		$this->refreshToken();
@@ -298,13 +304,17 @@ class Controller_Auth_Oauth extends Controller
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogin( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect contoller has been argumented
-			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$controller	= trim( $controller ?? '' );
+		$action		= trim( $action ?? '' );
+		if( '' !== $controller )																	//  a redirect controller has been given
+			$this->restart( $controller.( '' !== $action ? '/'.$action : '' ) );					//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
 		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
 		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
@@ -328,13 +338,17 @@ class Controller_Auth_Oauth extends Controller
 	 *	5. Go to index (empty path)
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( ?string $controller = NULL, ?string $action = NULL )
+	protected function redirectAfterLogout( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect contoller has been argumented
-			$this->restart( $controller.( $action ? '/'.$action : '' ) );							//  redirect to controller and action if given
+		$controller	= trim( $controller ?? '' );
+		$action		= trim( $action ?? '' );
+		if( '' !== $controller )																	//  a redirect controller has been given
+			$this->restart( $controller.( '' !== $action ? '/'.$action : '' ) );					//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );													//  get redirect URL from request if set
 //		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
 		$from	= preg_replace( "/^index\/index\/?/", "", $from );									//  remove full index path from redirect request
@@ -346,7 +360,165 @@ class Controller_Auth_Oauth extends Controller
 			$this->restart( 'auth?from='.$from );													//  carry redirect to base auth module dispatcher
 		if( $forwardPath )																			//  fallback: forward path given
 			$this->restart( $forwardPath );															//  redirect to forward path of this auth module
-		$this->restart( NULL );																		//  fallback: go to index (empty path)
+		$this->restart();																				//  fallback: go to index (empty path)
+	}
+
+	/**
+	 *	@return		int
+	 *	@throws		ReflectionException
+	 */
+	protected function evaluateRoleIdOnRegister(): int
+	{
+		$modelRole	= new Model_Role( $this->env );
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+		$words		= (object) $this->getWords( 'register' );
+
+		$roleDefault	= $modelRole->getByIndex( 'register', 128 );
+		if( !$roleDefault ){
+			$this->messenger->noteFailure( $words->msgNoDefaultRoleDefined );
+			$from	= $this->request->get( 'from' );
+			$this->restart( $from ?: NULL, !$from );
+		}
+
+		$rolesAllowed	= [];
+		foreach( $modelRole->getAllByIndex( 'register', [64, 128] ) as $role )
+			$rolesAllowed[]	= $role->roleId;
+		$roleId		= $roleDefault->roleId;															//  use default register role if none given
+
+		if( 0 !== strlen( trim( $input->get( 'roleId', '' ) ) ) )
+			if( in_array( (int) $input->get( 'roleId' ), $rolesAllowed ) )
+				$roleId		= $input->get( 'roleId' );
+		if( !in_array( $roleId, $rolesAllowed ) ){
+			$this->messenger->noteError( $words->msgRoleInvalid );
+			$this->restart( 'register', TRUE );
+		}
+		return $roleId;
+	}
+
+	/**
+	 *	@throws		ReflectionException
+	 */
+	protected function evaluateInputOnRegister(): Dictionary|FALSE
+	{
+		$modelUser	= new Model_User( $this->env );
+		$words		= (object) $this->getWords( 'register' );
+		$options	= $this->moduleConfigUsers;
+		$input		= $this->request->getAllFromSource( 'POST', TRUE );
+
+		$input->set( 'roleId', $this->evaluateRoleIdOnRegister() );
+
+		$nameMinLength	= $options->get( 'name.length.min' );
+		$nameMaxLength	= $options->get( 'name.length.max' );
+		$nameRegExp		= $options->get( 'name.preg' );
+		$pwdMinLength	= $options->get( 'password.length.min' );
+		$needsEmail		= $options->get( 'email.mandatory' );
+		$needsFirstname	= $options->get( 'firstname.mandatory' );
+		$needsSurname	= $options->get( 'surname.mandatory' );
+		$needsTac		= $options->get( 'tac.mandatory' );
+
+		$input->set( 'username', trim( $input->get( 'username', '' ) ) );
+		$input->set( 'password', trim( $input->get( 'password' ) ) );
+		$input->set( 'email', trim( $input->get( 'email' ) ) );
+		$input->set( 'firstname', trim( $input->get( 'firstname', '' ) ) );
+		$input->set( 'surname', trim( $input->get( 'surname' ) ) );
+
+		$payload	= $input->getAll();
+		$this->callHook( 'Auth', 'checkBeforeRegister', $this, $payload );
+		$input	= new Dictionary( $payload );
+
+		if( '' === $input->get( 'username' ) ){
+			$this->messenger->noteError( $words->msgNoUsername );
+			return FALSE;
+		}
+		if( $modelUser->countByIndex( 'username', $input->get( 'username' ) ) ){
+			$this->messenger->noteError( $words->msgUsernameExisting, $input->get( 'username' ) );
+			return FALSE;
+		}
+		if( $nameRegExp && !Predicates::isPreg( $input->get( 'username' ), $nameRegExp ) ){
+			$this->messenger->noteError( $words->msgUsernameInvalid, $input->get( 'username' ), $nameRegExp );
+			return FALSE;
+		}
+		if( '' === $input->get( 'password' ) ){
+			$this->messenger->noteError( $words->msgNoPassword );
+			return FALSE;
+		}
+		if( $pwdMinLength && strlen( $input->get( 'password' ) ) < $pwdMinLength ){
+			$this->messenger->noteError( $words->msgPasswordTooShort, $pwdMinLength );
+			return FALSE;
+		}
+		if( $needsEmail && '' === $input->get( 'email' ) ){
+			$this->messenger->noteError( $words->msgNoEmail);
+			return FALSE;
+		}
+		if( '' !== $input->get( 'email' ) && $modelUser->countByIndex( 'email', $input->get( 'email' ) ) ){
+			$this->messenger->noteError( $words->msgEmailExisting, $input->get( 'email' ) );
+			return FALSE;
+		}
+		if( $needsFirstname && '' === $input->get( 'firstname' ) ){
+			$this->messenger->noteError( $words->msgNoFirstname );
+			return FALSE;
+		}
+		if( $needsSurname && '' === $input->get( 'surname' ) ){
+			$this->messenger->noteError( $words->msgNoSurname );
+			return FALSE;
+		}
+		if( $needsTac && empty( $input['accept_tac'] ) ){
+			$this->messenger->noteError( $words->msgTermsNotAccepted );
+			return FALSE;
+		}
+		return $input;
+	}
+
+	/**
+	 *	@param		Dictionary		$input
+	 *	@param		int|string		$userId
+	 *	@param		int				$status
+	 *	@param		?string			$from
+	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 */
+	protected function sendRegisterMail( Dictionary $input, int|string $userId, int $status, ?string $from ): void
+	{
+		if( Model_User::STATUS_UNCONFIRMED === $status )
+			return;
+		$modelUser	= new Model_User( $this->env );
+		$options	= $this->moduleConfigUsers;
+		$status			= (int) $options->get( 'status.register' );
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
+
+		$data				= $input->getAll();
+		$data['from']		= $from;
+		$data['pak']		= md5( 'pak:'.$userId.'/'.$input->get( 'username' ).'&'.$passwordPepper );
+
+		$language	= $this->env->getLanguage()->getLanguage();
+		/** @var Entity_User $user */
+		$user		= $modelUser->get( $userId );
+		$mail		= new Mail_Auth_Local_Register( $this->env, $data );
+		$logic		= Logic_Mail::getInstance( $this->env );
+		$logic->appendRegisteredAttachments( $mail, $language );
+		$mailId		= $logic->enqueueMail( $mail, $language, $user );
+		$logic->sendQueuedMail( $mailId );
+	}
+
+	/**
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
+	 */
+	protected function linkCreatedAccountToOAuth( $userId ): void
+	{
+		if( !$this->session->get( 'auth_register_oauth_user_id' ) )
+			return;
+		$modelOauthUser	= new Model_Oauth_User( $this->env );
+		$modelOauthUser->add( [
+			'oauthProviderId'	=> $this->session->get( 'auth_register_oauth_provider_id' ),
+			'oauthId'			=> $this->session->get( 'auth_register_oauth_user_id' ),
+			'localUserId'		=> $userId,
+			'timestamp'			=> time(),
+		] );
+		$this->session->remove( 'auth_register_oauth_provider_id' );
+		$this->session->remove( 'auth_register_oauth_provider' );
+		$this->session->remove( 'auth_register_oauth_user_id' );
+		$this->session->remove( 'auth_register_oauth_data' );
 	}
 
 	/**
@@ -404,7 +576,7 @@ class Controller_Auth_Oauth extends Controller
 	}
 
 	/**
-	 *	Tries to relogin user if remembered in cookie.
+	 *	Tries to re-login user if remembered in cookie.
 	 *	Retrieves user ID and password from cookie.
 	 *	Checks user, its password and access per role.
 	 *	Stores user ID and role ID in session on success.
@@ -412,31 +584,43 @@ class Controller_Auth_Oauth extends Controller
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
-	protected function tryLoginByCookie()
+	protected function tryLoginByCookie(): void
 	{
-		if( $this->cookie->get( 'auth_remember' ) ){												//  autologin has been activated
-			$userId		= (int) $this->cookie->get( 'auth_remember_id' );							//  get user ID from cookie
-			$password	= (string) $this->cookie->get( 'auth_remember_pw' );						//  get hashed password from cookie
-			$modelUser	= new Model_User( $this->env );												//  get user model
-			$modelRole	= new Model_Role( $this->env );												//  get role model
-			if( $userId && $password && ( $user = $modelUser->get( $userId ) ) ){					//  user is existing and password is given
-				$role		= $modelRole->get( $user->roleId );										//  get role of user
-				if( $role && $role->access ){														//  role exists and allows login
-					$passwordMatch	= md5( sha1( $user->password ) ) === $password;					//  compare hashed password with user password
-					if( $this->env->getPhp()->version->isAtLeast( '5.5.0' ) )						//  for PHP 5.5.0+
-						$passwordMatch	= password_verify( $user->password, $password );			//  verify password hash
-					if( $passwordMatch ){															//  password from cookie is matching
-						$modelUser->edit( $user->userId, ['loggedAt' => time()] );					//  note login time in database
-						$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );						//  set user ID in session
-						$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );						//  set user role in session
-						$this->logic->setAuthenticatedUser( $user );
-						$from	= $this->request->get( 'from' );									//  get redirect URL from request if set
-						$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
-						$this->restart( './'.$from );												//  restart (or go to redirect URL)
-					}
-				}
+		if( !$this->logic->isAuthenticated() )
+			return;
+		if( !$this->cookie->get( 'auth_remember' ) )											//  autologin has not been activated
+			return;
+
+		$userId			= (int) $this->cookie->get( 'auth_remember_id' );						//  get user ID from cookie
+		$passwordHash	= (string) $this->cookie->get( 'auth_remember_pw' );					//  get hashed password from cookie
+		if( 0 === $userId || '' === $passwordHash )													//  missing user ID or password
+			return;
+
+		$modelUser	= new Model_User( $this->env );													//  get user model
+		/** @var ?Entity_User $user */
+		$user		= $modelUser->get( $userId );													//  get user entity
+
+		if( NULL !== $user ){ 																		//  user is NOT existing
+			$role	= Logic_Role::getInstance( $this->env )->get( $user->roleId );					//  get role of user
+			if(																						//  extended IF AND
+				NULL !== $role &&																	//  - role exists
+				0 !== $role->access	&&																//  - role allows login
+				password_verify( $user->password, $passwordHash )									//  - password matche with stored hash
+			){
+				$modelUser->edit( $user->userId, ['loggedAt' => time()] );							//  note login time in database
+				$this->session->set( Logic_Authentication::$sessionKeyAuthUserId, $user->userId );	//  set user ID in session
+				$this->session->set( Logic_Authentication::$sessionKeyAuthRoleId, $user->roleId );	//  set user role in session
+				$this->logic->setAuthenticatedUser( $user );
+				$from	= $this->request->get( 'from' );										//  get redirect URL from request if set
+				$from	= str_replace( "index/index", "", $from );							//  shortcut index
+				$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';				//  exclude logout from redirect request
+				$this->restart( './'.$from );													//  restart (or go to redirect URL)
 			}
 		}
+		$this->cookie->remove( 'auth_remember' );
+		$this->cookie->remove( 'auth_remember_id' );
+		$this->cookie->remove( 'auth_remember_pw' );
 	}
 }

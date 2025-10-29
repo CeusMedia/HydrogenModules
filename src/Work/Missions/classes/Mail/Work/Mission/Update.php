@@ -226,12 +226,12 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	{
 		if( $old->workerId ){
 			/** @var ?Entity_User $workerOld */
-			$workerOld	= $this->modelUser->get( $old->workerId );
+			$workerOld	= $this->logicUser->getUser( $old->workerId );
 			$workerHtml	= $this->renderUser( $workerOld, TRUE );
 			$workerText	= $this->renderUserAsText( $workerOld );
 			if( $new->workerId && (int) $old->workerId !== (int) $new->workerId ){
 				/** @var ?Entity_User $workerNew */
-				$workerNew	= $this->modelUser->get( $new->workerId );
+				$workerNew	= $this->logicUser->getUser( $new->workerId );
 				$workerHtml	= $workerHtml.' &rarr; '.$this->renderUser( $workerNew, TRUE );
 				$workerText	= $workerText.' -> '.$this->renderUserAsText( $workerNew );
 			}
@@ -313,7 +313,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 			'words'		=> (object) $this->words,
 			'values'	=> [
 				'type'		=> $this->labelsTypes[$old->type],
-				'modifier'	=> $this->renderUser( $this->modelUser->get( $new->modifierId ) ),
+				'modifier'	=> $this->renderUser( $this->logicUser->getUser( $new->modifierId ) ),
 				'url'		=> $url,
 				'link'		=> HtmlTag::create( 'a', $old->title, ['href' => $url] ),
 				'today'		=> [
@@ -344,8 +344,7 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 		$formatDate		= 'j.n.';#$config->get( 'module.work_mission.mail.format.date' );			//  @todo	 realize date format in module config
 		$old			= $data['missionBefore'];
 		$new			= $data['missionAfter'];
-		/** @var ?Entity_User $modifier */
-		$modifier		= $this->modelUser->get( $new->modifierId );
+		$modifier		= $this->logicUser->getUser( $new->modifierId );
 		$nowWeekday		= $this->labelsWeekdays[date( 'w' )];
 		$nowMonth		= $this->labelsMonthNames[date( 'n' )];
 

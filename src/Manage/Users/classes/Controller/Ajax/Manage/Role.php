@@ -18,8 +18,8 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
  */
 class Controller_Ajax_Manage_Role extends AjaxController
 {
-	protected Model_Role $modelRole;
-	protected Model_Role_Right $modelRoleRight;
+	protected Logic_Role $logicRole;
+	protected Logic_RoleRight $logicRight;
 
 	/**
 	 *	Change role right by toggling.
@@ -27,39 +27,32 @@ class Controller_Ajax_Manage_Role extends AjaxController
 	 */
 	public function changeRight(): void
 	{
-		$roleId		= (int) $this->request->get( 'roleId' );
+		$roleId		= (int) $this->request->get( 'roleId', 0 );
 		$controller	= trim( $this->request->get( 'controller' ) );
 		$action		= trim( $this->request->get( 'action' ) );
 
-		if( $roleId === 0 )
+		if( 0 === $roleId )
 			$this->respondError( 0, 'No role ID given', 400 );
-		if( !$this->modelRole->get( $roleId ) )
+		if( NULL === $this->logicRole->get( $roleId ) )
 			$this->respondError( 0, 'Invalid role ID', 400 );
-		if( strlen( $controller ) === 0 )
+		if( '' === $controller )
 			$this->respondError( 0, 'No controller given', 400 );
-		if( strlen( $action ) === 0 )
+		if( '' === $action )
 			$this->respondError( 0, 'No action given', 400 );
 
-		$indices	= array(
-			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minimizeController( $controller ),
-			'action'		=> $action
-		);
-		$right	= $this->modelRoleRight->getByIndices( $indices );
-		if( $right )
-			$this->modelRoleRight->remove( $right->roleRightId );
-		else{
-			$data	= array_merge( $indices, ['timestamp' => time()] );
-			$this->modelRoleRight->add( $data );
-		}
-		$right	= $this->modelRoleRight->getByIndices( $indices );
-		$this->respondData( array( 'current' => (bool) $right ) );
+		if( $this->logicRight->has( $roleId, $controller, $action ) )
+			$this->logicRight->remove( $roleId, $controller, $action );
+		else
+			$this->logicRight->add( $roleId, $controller, $action );
+
+		$this->respondData( [
+			'current'	=> $this->logicRight->has( $roleId, $controller, $action )
+		] );
 	}
 
 	protected function __onInit(): void
 	{
-//		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
-		$this->modelRole		= new Model_Role( $this->env );
-		$this->modelRoleRight	= new Model_Role_Right( $this->env );
+		$this->logicRole		= Logic_Role::getInstance( $this->env );
+		$this->logicRight		= Logic_RoleRight::getInstance( $this->env );
 	}
 }

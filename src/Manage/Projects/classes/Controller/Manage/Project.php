@@ -11,9 +11,9 @@ class Controller_Manage_Project extends Controller
 	protected MessengerResource $messenger;
 	protected Dictionary $session;
 	protected Logic_Project $logic;
+	protected Logic_User $logicUser;
 	protected Model_Project $modelProject;
 	protected Model_Project_User $modelProjectUser;
-	protected Model_User $modelUser;
 	protected bool $useMissions			= FALSE;
 	protected bool $useCompanies		= FALSE;
 	protected bool $useCustomers		= FALSE;
@@ -118,8 +118,7 @@ class Controller_Manage_Project extends Controller
 			$this->messenger->noteError( $words->msgInvalidProject );
 		}
 		else if( (int) $userId > 0 ){
-			/** @var ?Entity_User $user */
-			$user		= $this->modelUser->get( $userId );
+			$user		= $this->logicUser->getUser( $userId );
 			if( !$user ){
 				$this->messenger->noteError( $words->msgInvalidUser );
 			}
@@ -371,7 +370,7 @@ class Controller_Manage_Project extends Controller
 			foreach( $project->users as $nr => $projectUser ){
 				if( $projectUser->userId == $this->userId )
 					$project->isDefault	= (bool) $projectUser->isDefault;
-				$project->users[$nr]	= $this->modelUser->get( $projectUser->userId );
+				$project->users[$nr]	= $this->logicUser->getUser( $projectUser->userId );
 			}
 			if( $this->useMissions ){
 				$modelMission	= new Model_Mission( $this->env );
@@ -443,8 +442,7 @@ class Controller_Manage_Project extends Controller
 		$relations		= $this->modelProjectUser->getAllByIndex( 'projectId', $projectId );	//  get project user relations
 		$user			= NULL;
 		foreach( $relations as $relation ){														//  iterate relations
-			/** @var ?Entity_User $relatedUser */
-			$relatedUser	= $this->modelUser->get( $relation->userId );						//  get user from relation
+			$relatedUser	= $this->logicUser->getUser( $relation->userId );					//  get user from relation
 			$numberUsers	+= ( $relatedUser && $relatedUser->status > 0 ) ? 1 : 0;			//  count only existing and active users
 			if( $relatedUser->userId === $userId )
 				$user	= $relatedUser;
@@ -526,14 +524,12 @@ class Controller_Manage_Project extends Controller
 		$this->useCustomers		= $this->env->getModules()->has( 'Manage_Customers' );
 		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId, 0 );
 		$this->roleId			= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId, 0 );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->logic			= $this->getLogic( 'Project' );
+		$this->logic			= Logic_Project::getInstance( $this->env );
+		$this->logicUser		= Logic_User::getInstance( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelProject		= $this->getModel( 'Project' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelProjectUser	= $this->getModel( 'Project_User' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelUser		= $this->getModel( 'User' );
 		$this->isAdmin			= $this->env->getAcl()->hasFullAccess( $this->roleId ?? '' );
 		$this->isEditor			= $this->env->getAcl()->has( 'manage_project', 'edit' );
 

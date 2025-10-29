@@ -30,14 +30,12 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	@param		string|NULL		$providerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function login( ?string $providerId = NULL )
+	public function login( ?string $providerId = NULL ): void
 	{
 		if( $this->session->has( Logic_Authentication::$sessionKeyAuthUserId ) )
 			$this->redirectAfterLogin();
-
-		$modelUser		= new Model_User( $this->env );
-		$modelRole		= new Model_Role( $this->env );
 
 		$words		= $this->getWords();
 		$messages	= (object) $words['login'];
@@ -84,16 +82,17 @@ class Controller_Auth_Oauth2 extends Controller
 						$this->restart( $from );
 					$this->restart( 'auth/login' );
 				}
-				if( ( $user = $modelUser->get( $relation->localUserId ) ) ){
+				$user	= Logic_User::getInstance( $this->env )->getUser( $relation->localUserId );
+				if( NULL !== $user ){
 					$payload	= [
 						'backend'	=> 'oauth2',
-						'username'	=> $user ? $user->username : '',
+						'username'	=> $user->username,
 		//				'password'	=> $password,															//  disabled for security
-						'userId'	=> $user ? $user->userId : 0,
+						'userId'	=> $user->userId,
 					];
 					$this->callHook( 'Auth', 'checkBeforeLogin', $this, $payload );
 					if( !$this->messenger->gotError() ){
-						$role			= $modelRole->get( $user->roleId );
+						$role			= Logic_Role::getInstance( $this->env )->get( $user->roleId );
 						$allowedRoles	= $this->env->getConfig()->get( 'module.resource_authentication_backend_local.login.roles' );
 						$allowedRoles	= explode( ',', $allowedRoles ?: "*" );
 
@@ -101,11 +100,11 @@ class Controller_Auth_Oauth2 extends Controller
 							$this->messenger->noteError( $messages->msgRoleLocked, $role->title );
 						else if( $allowedRoles !== ["*"] && !in_array( $user->roleId, $allowedRoles ) )
 							$this->messenger->noteError( $messages->msgInvalidRole, $role->title );
-						else if( $user->status == 0 )
+						else if( Model_User::STATUS_UNCONFIRMED === $user->status )
 							$this->messenger->noteError( $messages->msgUserUnconfirmed );
-						else if( $user->status == -1 )
+						else if( Model_User::STATUS_BANNED === $user->status )
 							$this->messenger->noteError( $messages->msgUserLocked );
-						else if( $user->status == -2 )
+						else if( Model_User::STATUS_DISABLED === $user->status )
 							$this->messenger->noteError( $messages->msgUserDisabled );
 					}
 					if( $this->messenger->gotError() ){
@@ -165,7 +164,7 @@ class Controller_Auth_Oauth2 extends Controller
 		return;
 	}
 
-	public function logout( $redirectController = NULL, $redirectAction = NULL )
+	public function logout( $redirectController = NULL, $redirectAction = NULL ): void
 	{
 		$this->session->remove( 'oauth2_token' );
 
@@ -198,11 +197,10 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	@param		string|NULL		$providerId
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function register( ?string $providerId = NULL )
+	public function register( ?string $providerId = NULL ): void
 	{
-		$modelUser		= new Model_User( $this->env );
-
 		$words		= $this->getWords();
 		$messages	= (object) $words['register'];
 
@@ -284,7 +282,7 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	@todo		code doc: what is this method doing at all?
 	 *	@todo		check where this is used
 	 */
-	public function unbind()
+	public function unbind(): void
 	{
 		$keys	= array_keys( $this->session->getAll( 'auth_register_oauth_' ) );
 		foreach( $keys as $key )
@@ -324,7 +322,7 @@ class Controller_Auth_Oauth2 extends Controller
 		$this->refreshToken();
 	}
 
-	protected function getProvider( $providerId )
+	protected function getProvider( $providerId ): object
 	{
 		$provider		= $this->modelProvider->get( $providerId );
 		if( !$provider )
@@ -337,6 +335,7 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	@param		string		$redirectPath
 	 *	@return		object
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getProviderObject( string $providerId, string $redirectPath = 'auth/oauth2/login' ): object
 	{
@@ -364,13 +363,17 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	5. Redirect to base auth module index for further dispatching
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogin( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogin( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect controller has been argumented
-			$this->restart( $controller.( $action ? '/'.$action : '' ) );						//  redirect to controller and action if given
+		$controller	= trim( $controller ?? '' );
+		$action		= trim( $action ?? '' );
+		if( '' !== $controller )																	//  a redirect controller has been given
+			$this->restart( $controller.( '' !== $action ? '/'.$action : '' ) );				//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );												//  get redirect URL from request if set
 //		if( !$from )
 //			$from	= $this->session->get( 'oauth2_from' ) );
@@ -397,13 +400,17 @@ class Controller_Auth_Oauth2 extends Controller
 	 *	5. Go to index (empty path)
 	 *	ATM this is the same method for each auth module.
 	 *	@access		protected
+	 *	@param		?string		$controller
+	 *	@param		?string		$action
 	 *	@return		void
 	 *	@todo		find a way to generalize this method into some base auth adapter controller or logic
 	 */
-	protected function redirectAfterLogout( $controller = NULL, $action = NULL )
+	protected function redirectAfterLogout( ?string $controller = NULL, ?string $action = NULL ): void
 	{
-		if( $controller )																			//  a redirect controller has been argumented
-			$this->restart( $controller.( $action ? '/'.$action : '' ) );						//  redirect to controller and action if given
+		$controller	= trim( $controller ?? '' );
+		$action		= trim( $action ?? '' );
+		if( '' !== $controller )																	//  a redirect controller has been given
+			$this->restart( $controller.( '' !== $action ? '/'.$action : '' ) );				//  redirect to controller and action if given
 		$from	= $this->request->get( 'from' );												//  get redirect URL from request if set
 //		$from	= !preg_match( "/auth\/logout/", $from ) ? $from : '';								//  exclude logout from redirect request
 		$from	= preg_replace( "/^index\/index\/?/", "", $from );				//  remove full index path from redirect request
@@ -441,7 +448,7 @@ class Controller_Auth_Oauth2 extends Controller
 		}
 	}
 
-	protected function retrieveOwnerDate( $provider, $user )
+	protected function retrieveOwnerDate( $provider, $user ): array
 	{
 		$data	= array( 'data' => $user->toArray() );
 		if( $provider->composerPackage === 'league/oauth2-facebook' ){

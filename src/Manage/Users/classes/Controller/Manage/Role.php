@@ -31,10 +31,11 @@ class Controller_Manage_Role extends Controller
 	protected Model_User $modelUser;
 	protected MessengerResource $messenger;
 	protected LanguageResource $language;
+	protected Logic_Role $logicRole;
+	protected Logic_RoleRight $logicRoleRight;
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -44,13 +45,14 @@ class Controller_Manage_Role extends Controller
 			$title		= $data->get( 'title' );
 
 			if( $title ){
-				if( !$this->modelRole->getByIndex( 'title', $data->get( 'title' ) ) ){
-					$roleId		= $this->modelRole->add( array_merge( $data->getAll(), array(
-						'createdAt'		=> time(),
-						'modifiedAt'	=> time(),
-					) ) );
-					if( $roleId )
-						$this->restart( NULL, TRUE );
+				if( !$this->logicRole->hasByTitle( $data->get( 'title' ) ) ){
+					$roleId		= $this->logicRole->add(
+						$data->get( 'title' ),
+						$data->get( 'title' ),
+						$data->get( 'access' ),
+						$data->get( 'register' ),
+					);
+					$this->restart( 'edit/'.$roleId, TRUE );
 				}
 				else
 					$this->messenger->noteError( 'role_title_existing' );
@@ -75,13 +77,7 @@ class Controller_Manage_Role extends Controller
 		if( $this->request->getMethod()->isPost() ){
 			$controller	= $this->request->getFromSource( 'controller', 'POST' );
 			$action		= $this->request->getFromSource( 'action', 'POST' );
-			$data		= array(
-				'roleId'		=> $roleId,
-				'controller'	=> Model_Role_Right::minimizeController( $controller ),
-				'action'		=> $action,
-				'timestamp'		=> time(),
-			);
-			$this->modelRoleRight->add( $data );
+			$this->logicRoleRight->add( $roleId, $controller, $action );
 		}
 		$this->restart( 'edit/'.$roleId, TRUE );
 	}
@@ -94,16 +90,14 @@ class Controller_Manage_Role extends Controller
 	public function edit( int|string $roleId ): void
 	{
 		$words		= $this->language->getWords( 'manage/role' );
-		$role		= $this->modelRole->get( $roleId );
+		$role		= $this->logicRole->get( $roleId );
 
 		if( $this->request->getMethod()->isPost() ){
 			$data	= $this->request->getAllFromSource( 'POST' );
 			$this->modelRole->edit( $roleId, $data );
 			$this->restart( NULL, TRUE );
 		}
-		$orders		= ['controller' => 'ASC', 'action' => 'ASC'];
-		$this->addData( 'rights', $this->modelRoleRight->getAllByIndex( 'roleId', $roleId, $orders ) );
-
+		$this->addData( 'rights', $this->logicRoleRight->getRights( $roleId ) );
 		$this->addData( 'roleId', $roleId );
 		$this->addData( 'role', $role );
 		$this->addData( 'words', $words );
@@ -135,10 +129,10 @@ class Controller_Manage_Role extends Controller
 
 	public function index(): void
 	{
-		$roles	= $this->modelRole->getAll();
+		$roles	= $this->logicRole->getAll();
 		foreach( $roles as $role ){
 			$role->users	= $this->modelUser->getAllByIndex( 'roleId', $role->roleId );
-			$role->rights	= $this->modelRoleRight->countByIndex( 'roleId', $role->roleId );
+			$role->nrRights	= $this->logicRoleRight->count( $role->roleId );
 		}
 		$this->addData( 'roles', $roles );
 		$this->addData( 'hasRightToAdd', $this->env->getAcl()->has( 'manage_role', 'add' ) );
@@ -148,24 +142,23 @@ class Controller_Manage_Role extends Controller
 	/**
 	 *	@param		int|string		$roleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $roleId ): void
 	{
 		$words		= $this->language->getWords( 'manage/role' );
-		$role		= $this->modelRole->get( $roleId );
+		$role		= $this->logicRole->get( $roleId );
 
 		if( $this->modelUser->hasByIndex( 'roleId', $roleId ) ){
 			$this->messenger->noteSuccess( $words['remove']['msgError-0'], $role->title );
 			$this->restart( 'edit/'.$roleId, TRUE );
 		}
 
-		$result		= $this->modelRole->remove( $roleId );
-		if( $result ){
+		try{
+			$this->logicRole->remove( $roleId );
 			$this->messenger->noteSuccess( $words['remove']['msgSuccess'], $role->title );
 			$this->restart( NULL, TRUE );
 		}
-		else{
+		catch( Throwable ){
 			$this->messenger->noteSuccess( $words['remove']['msgError-1'], $role->title );
 			$this->restart( 'edit/'.$roleId, TRUE );
 		}
@@ -180,28 +173,26 @@ class Controller_Manage_Role extends Controller
 	 */
 	public function removeRight( int|string $roleId, string $controller, string $action ): void
 	{
-		$indices	= array(
-			'roleId'		=> $roleId,
-			'controller'	=> Model_Role_Right::minimizeController( $controller ),
-			'action'		=> $action
-		);
-		$this->modelRoleRight->removeByIndices( $indices );
+		$this->logicRoleRight->remove( $roleId, $controller, $action );
 		$this->restart( 'edit/'.$roleId, TRUE );
 	}
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->request			= $this->env->getRequest();
 		$this->messenger		= $this->env->getMessenger();
 		$this->language			= $this->env->getLanguage();
+		$this->logicRoleRight	= Logic_RoleRight::getInstance( $this->env );
+		$this->logicRole		= Logic_Role::getInstance( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->modelRole		= $this->getModel( 'Role' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelRoleRight	= $this->getModel( 'Role_Right' );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
-		$this->modelUser		= $this->getModel( 'User' );
+		$this->modelUser		= Model_User::getInstance( $this->env );
 		$this->addData( 'modules', $this->env->getModules()->getAll() );
 	}
 
