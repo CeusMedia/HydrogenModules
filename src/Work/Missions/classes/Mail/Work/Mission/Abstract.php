@@ -4,7 +4,7 @@ use CeusMedia\Common\UI\HTML\Indicator as HtmlIndicator;
 
 abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 {
-	protected Model_User $modelUser;
+	protected Logic_User $logicUser;
 	protected HtmlIndicator $indicator;
 	protected array $labelsMonthNames;
 	protected array $labelsWeekdays;
@@ -27,7 +27,7 @@ abstract class Mail_Work_Mission_Abstract extends Mail_Abstract
 //		$this->addThemeStyle( 'layout.panels.css' );
 
 		$this->indicator		= new HtmlIndicator();
-		$this->modelUser		= new Model_User( $this->env );
+		$this->logicUser		= Logic_User::getInstance( $this->env );
 
 		$this->labelsMonthNames	= $this->getWords( 'work/mission', 'months' );
 		$this->labelsWeekdays	= $this->getWords( 'work/mission', 'days' );

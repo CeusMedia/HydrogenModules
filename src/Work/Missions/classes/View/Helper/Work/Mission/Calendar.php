@@ -48,7 +48,7 @@ class View_Helper_Work_Mission_Calendar
 		$rows			= [];
 		for( $i=0; $i<$weeks; $i++ ){
 			$row	= [];
-			$j	= 0;
+			$j		= 0;
 			$class	= '';
 			if( $i == 0 ){
 				for( $j=0; $j<$offsetStart; $j++ ){

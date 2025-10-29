@@ -8,7 +8,6 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 {
 	protected Logic_User $logicUser;
 	protected Model_User $modelUser;
-	protected Model_Role $modelRole;
 	protected Dictionary $session;
 
 	/**
@@ -80,8 +79,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			/** @var ?Entity_Role $role */
-			$role	= $this->modelRole->get( $roleId );
+			$role	= Logic_Role::getInstance( $this->env )->get( $roleId );
 			if( NULL !== $role )
 				return $role;
 			if( $strict )
@@ -230,6 +228,5 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 		$this->session		= $this->env->getSession();
 		$this->logicUser	= new Logic_User( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
-		$this->modelRole	= new Model_Role( $this->env );
 	}
 }

@@ -9,8 +9,8 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	protected Dictionary $config;
 	protected Dictionary $session;
 	protected Dictionary $moduleConfig;
+	protected Logic_Role $logicRole;
 	protected Model_User $modelUser;
-	protected Model_Role $modelRole;
 	protected string $providerUri;
 
 	/**
@@ -78,7 +78,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	{
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
-			$role	= $this->modelRole->get( $roleId );
+			$role	= $this->logicRole->get( $roleId );
 			if( $role )
 				return $role;
 			if( $strict )
@@ -115,7 +115,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 			$user	= $this->modelUser->get( $userId );
 			if( $user ){
 				if( $extensions & Logic_User::EXTEND_ROLE )
-					$user->role	= $this->modelRole->get( $user->roleId );
+					$user->role	= $this->logicRole->get( $user->roleId );
 				return $user;
 			}
 		}
@@ -192,7 +192,7 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 		$this->session		= $this->env->getSession();
 		$this->moduleConfig	= $this->config->getAll( 'module.resource_authentication_backend_oauth', TRUE );
 		$this->providerUri	= $this->moduleConfig->get( 'provider.URI' );
+		$this->logicRole	= Logic_Role::getInstance( $this->env );
 		$this->modelUser	= new Model_User( $this->env );
-		$this->modelRole	= new Model_Role( $this->env );
 	}
 }

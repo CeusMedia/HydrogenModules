@@ -126,15 +126,13 @@ class Controller_Manage_My_User extends Controller
 	{
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$roleId		= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
-		$modelRole	= new Model_Role( $this->env );
 
 		if( !$this->userId ){
 			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
 			$this->restart( './' );
 		}
-		/** @var ?Entity_User $user */
-		$user		= $this->modelUser->get( $this->userId );
-		$user->role	= $modelRole->get( $user->roleId );
+		$user		= Logic_User::getInstance( $this->env )->getUser( $this->userId );
+		$user->role	= Logic_Role::getInstance( $this->env )->get( $user->roleId );
 		if( class_exists( 'Model_Company' ) ){
 			$modelCompany	= new Model_Company( $this->env );
 			$user->company	= $modelCompany->get( $user->companyId );

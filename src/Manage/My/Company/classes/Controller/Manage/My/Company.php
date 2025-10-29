@@ -51,8 +51,7 @@ class Controller_Manage_My_Company extends Controller
 		}
 		/** @var ?Entity_User $user */
 		$user				= $this->modelUser->get( $this->userId );
-		$modelRole			= new Model_Role( $this->env );
-		$user->role			= $modelRole->get( $user->roleId );
+		$user->role			= Logic_Role::getInstance( $this->env )->get( $user->roleId );
 		$user->company		= $this->modelCompany->get( $companyId );
 		$company->branches	= $this->modelBranch->getAllByIndex( 'companyId', $companyId, ['title' => 'ASC'] );
 		$company->users		= [];

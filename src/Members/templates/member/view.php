@@ -53,9 +53,7 @@ $helperAvatar	= new View_Helper_UserAvatar( $env );
 $helperAvatar->setUser( $user );
 $helperAvatar->setSize( 256 );
 
-
-$modelRole	= new Model_Role( $env );
-$role		= $modelRole->get( $user->roleId );
+$role		= Logic_Role::getInstance( $this->env )->get( $user->roleId );
 
 $data	= print_m( $user, NULL, NULL, TRUE );
 

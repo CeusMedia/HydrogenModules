@@ -35,13 +35,13 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		object		$user
-	 *	@param		bool		$link
+	 *	@param		?Entity_User	$user
+	 *	@param		bool			$link
 	 *	@return		string
 	 */
-	protected function renderUser( object $user, bool $link = FALSE ): string
+	protected function renderUser( ?Entity_User $user, bool $link = FALSE ): string
 	{
-		if( !$user )
+		if( NULL === $user )
 			return '-';
 		if( $this->env->getModules()->has( 'Members' ) ){
 			$helper	= new View_Helper_Member( $this->env );
@@ -60,20 +60,22 @@ abstract class Mail_Work_Mission_Change extends Mail_Work_Mission_Abstract
 	}
 
 	/**
-	 *	@param		object		$user
+	 *	@param		?Entity_User		$user
 	 *	@return		string
 	 */
-	protected function renderUserAsText( object $user ): string
+	protected function renderUserAsText( ?Entity_User $user ): string
 	{
-		if( !$user )
+		if( NULL === $user )
 			return '-';
 		$fullname	= '';
-		if( strlen( trim( $user->firstname ) ) && strlen( trim( $user->surname ) ) ){
+		$firstname	= trim( $user->firstname ?? '' );
+		$surname	= trim( $user->surname ?? '' );
+		if( '' !== $firstname || '' !== $surname ){
 			$parts	= [];
-			if( 0 !== strlen( trim( $user->firstname ) ) )
-				$parts[]	= trim( $user->firstname );
-			if( 0 !== strlen( trim( $user->surname ) ) )
-				$parts[]	= trim( $user->surname );
+			if( '' !== $firstname )
+				$parts[]	= $firstname;
+			if( '' !== $surname )
+				$parts[]	= $surname;
 			$fullname	= ' ('.join( ' ', $parts ).')';
 		}
 		return $user->username.$fullname;
