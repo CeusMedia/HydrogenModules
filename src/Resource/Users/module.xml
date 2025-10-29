@@ -7,7 +7,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.6</version>
+	<version>0.4.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -31,6 +31,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.4.5">Add password status "update".</log>
 	<log version="0.4.6">Extend logic by countRoleUsers, getRoles, getRoleUsers and getUser.</log>
 	<log version="0.4.7">Add group relation table for module entity grouping.</log>
+	<log version="0.4.8">Add logic classes for group relations and roles.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -54,6 +55,8 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 		<class>Model/User.php</class>
 		<class>Model/User/Password.php</class>
 		<class>Model/User/Token.php</class>
+		<class>Logic/GroupRelation.php</class>
+		<class>Logic/Role.php</class>
 		<class>Logic/User.php</class>
 		<class>Logic/UserPassword.php</class>
 		<class>Logic/UserToken.php</class>
@@ -65,6 +68,41 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	</relations>
 	<config protected="yes" type="string" name="acl">\\CeusMedia\\HydrogenFramework\\Environment\\Resource\\Acl\\Database</config>
 	<config protected="yes" type="integer" name="status.register" title="user status to be set on register, set to 1 for 'auto active'">0</config>
+
+	<!--
+
+##  NEW CONFIG
+Status: to be implemented and applied to related modules: Manage_User, Local Auth, Registration, ...
+
+### Changes:
+
+name.length.min			-> user.username.length.min
+name.length.max			-> user.username.length.max
+name.preg				-> user.username.preg
+email.mandatory			-> user.email.mandatory
+firstname.mandatory		-> user.firstname.mandatory
+surname.mandatory		-> user.surname.mandatory
+
+### Result:
+
+	<config protected="no" type="boolean" name="user.address.mandatory" title="user needs an address">0</config>
+	<config protected="no" type="boolean" name="user.email.mandatory" title="user needs a mail address on register and change">yes</config>
+	<config protected="no" type="boolean" name="user.firstname.mandatory" title="user needs a firstname">yes</config>
+	<config protected="no" type="integer" name="user.username.length.min" title="lowest number of name characters">3</config>
+	<config protected="no" type="integer" name="user.username.length.max" title="highest number of name characters">17</config>
+	<config protected="no" type="string" name="user.username.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]*/i</config>
+	<config protected="no" type="boolean" name="user.surname.mandatory" title="user needs a surname">yes</config>
+	<config protected="no" type="integer" name="password.length.min" title="lowest number of password characters">3</config>
+	<config protected="yes" type="string" name="password.pepper" title="string to pepper password with"/>
+	<config protected="yes" type="boolean" name="password.salt">yes</config>
+	<config protected="yes" type="string" name="password.salt.algo" values="md5(microtime)">md5(microtime)</config>
+	<config protected="yes" type="integer" name="password.salt.length">32</config>
+	<config protected="yes" type="boolean" name="password.salt.decay">yes</config>
+	<config protected="yes" type="integer" name="password.salt.decay.seconds">86400</config>
+	<config protected="no" type="integer" name="password.strength.min" title="minimum strength indicator (depends on used UI component or API)">0</config>
+	-->
+	<config protected="no" type="bool" name="group.useRelations" title="check group access by module entity relations">no</config>
+	<config protected="no" type="bool" name="group.useRights" title="check group access by rights">no</config>
 	<config protected="no" type="integer" name="name.length.min" title="lowest number of name characters">3</config>
 	<config protected="no" type="integer" name="name.length.max" title="highest number of name characters">17</config>
 	<config protected="no" type="string" name="name.preg" title="regular expression to match with username">/[a-z][a-z0-9_-]*/i</config>
