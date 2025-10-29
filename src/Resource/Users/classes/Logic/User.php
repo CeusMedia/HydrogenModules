@@ -5,15 +5,15 @@ use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_User extends Logic
 {
-	const EXTEND_NOTHING			= 0;
-	const EXTEND_ROLE				= 1;
-	const EXTEND_GROUPS				= 2;
-	const EXTEND_RIGHTS				= 4;
-	const EXTEND_AVATAR				= 8;
-	const EXTEND_SETTINGS			= 16;
-	const EXTEND_GROUP_RELATIONS	= 32;
+	public const EXTEND_NOTHING			= 0;
+	public const EXTEND_ROLE			= 1;
+	public const EXTEND_GROUPS			= 2;
+	public const EXTEND_RIGHTS			= 4;
+	public const EXTEND_AVATAR			= 8;
+	public const EXTEND_SETTINGS		= 16;
+	public const EXTEND_GROUP_RELATIONS	= 32;
 
-	const EXTENDS					= [
+	public const EXTENDS				= [
 		self::EXTEND_NOTHING,
 		self::EXTEND_ROLE,
 		self::EXTEND_GROUPS,
@@ -23,24 +23,11 @@ class Logic_User extends Logic
 		self::EXTEND_GROUP_RELATIONS,
 	];
 
+	protected Logic_Role $logicRole;
 	protected Model_User $modelUser;
 	protected Model_Group $modelGroup;
 	protected Model_Group_User $modelGroupUser;
-	protected Model_Role $modelRole;
 	protected Model_Group_Relation $modelGroupRelation;
-
-	/**
-	 *	@return		void
-	 *	@throws		ReflectionException
-	 */
-	protected function __onInit(): void
-	{
-		$this->modelUser			= new Model_User( $this->env );
-		$this->modelGroup			= new Model_Group( $this->env );
-		$this->modelGroupUser		= new Model_Group_User( $this->env );
-		$this->modelGroupRelation	= new Model_Group_Relation( $this->env );
-		$this->modelRole			= new Model_Role( $this->env );
-	}
 
 	/**
 	 *	@param		Entity_User			$user
@@ -73,6 +60,8 @@ class Logic_User extends Logic
 	 *	@param		int				$extend
 	 *	@param		bool			$strict		Flag: throw exception if not existing, default: yes
 	 *	@return		Entity_User|NULL
+	 *	@throws		DomainException
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		implement other extend modes, like avatar and settings
 	 */
@@ -87,7 +76,7 @@ class Logic_User extends Logic
 		}
 		if( self::EXTEND_NOTHING !== $extend ){
 			if( $extend & self::EXTEND_ROLE && 0 !== (int) $user->roleId  )
-				$user->role	= $this->modelRole->get( $user->roleId );
+				$user->role	= $this->logicRole->get( $user->roleId );
 			if( $extend & self::EXTEND_GROUPS )
 				$user->groups	= $this->getUserGroups( $user );
 			if( $extend & self::EXTEND_GROUP_RELATIONS ){
@@ -157,11 +146,11 @@ class Logic_User extends Logic
 	 */
 	public function getRoles( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
-		return $this->modelRole->getAll( $conditions, $orders, $limits );
+		return $this->logicRole->getAll( $conditions, $orders, $limits );
 	}
 
 	/**
-	 * @param		Entity_Role|int|string		$role
+	 * @param		Entity_Role|int|string		$roleEntityOrId
 	 * @return		Entity_User[]
 	 */
 	public function getRoleUsers( Entity_Role|int|string $roleEntityOrId ): array
@@ -177,7 +166,9 @@ class Logic_User extends Logic
 	 */
 	public function getUser( int|string $userId ): ?Entity_User
 	{
-		return $this->modelUser->get( $userId );
+		/** @var ?Entity_User $user */
+		$user	= $this->modelUser->get( $userId );
+		return $user;
 	}
 
 	/**
@@ -193,18 +184,6 @@ class Logic_User extends Logic
 		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
 	}
 
-	/**
-	 *	@param		int|string|Entity_User		$user
-	 *	@param		int|string|Entity_Group		$group
-	 *	@return		bool
-	 */
-	public function isUserInGroup( int|string|Entity_User $user, int|string|Entity_Group $group ): bool
-	{
-		$userId		= is_object( $user ) ? $user->userId : $user;
-		$groupId	= is_object( $group ) ? $group->groupId : $group;
-		return 0 !== $this->modelGroupUser->countByIndices( ['userId' => $userId, 'groupId' => $groupId] );
-	}
-
 	public function hasGroupAccessToModuleEntity( int|string|Entity_User $user, ModuleDefinition|string $module, int|string $entityId ): bool
 	{
 		$userId		= is_object( $user ) ? $user->userId : $user;
@@ -217,7 +196,19 @@ class Logic_User extends Logic
 			'entityId'	=> $entityId,
 		] );
 	}
-	
+
+	/**
+	 *	@param		int|string|Entity_User		$user
+	 *	@param		int|string|Entity_Group		$group
+	 *	@return		bool
+	 */
+	public function isUserInGroup( int|string|Entity_User $user, int|string|Entity_Group $group ): bool
+	{
+		$userId		= is_object( $user ) ? $user->userId : $user;
+		$groupId	= is_object( $group ) ? $group->groupId : $group;
+		return 0 !== $this->modelGroupUser->countByIndices( ['userId' => $userId, 'groupId' => $groupId] );
+	}
+
 	/**
 	 *	@param		Entity_User		$user
 	 *	@param		Entity_Group	$group
@@ -230,5 +221,18 @@ class Logic_User extends Logic
 			'userId'	=> $user->userId,
 			'groupId'	=> $group->groupId
 		] );
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function __onInit(): void
+	{
+		$this->modelUser			= new Model_User( $this->env );
+		$this->modelGroup			= new Model_Group( $this->env );
+		$this->modelGroupUser		= new Model_Group_User( $this->env );
+		$this->modelGroupRelation	= new Model_Group_Relation( $this->env );
+		$this->logicRole			= new Logic_Role( $this->env );
 	}
 }

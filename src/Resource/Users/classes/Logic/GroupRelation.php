@@ -1,24 +1,34 @@
 <?php
 
-use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
-use CeusMedia\HydrogenFramework\Entity;
 
 /**
  * @todo check if deprecated, seems to be not used, right? if so, remove class
  */
 class Logic_GroupRelation extends Logic
 {
-	protected Model_Group_Relation $modelRelation;
+	protected Dictionary $moduleConfig;
+	protected ?Model_Group_Relation $modelRelation	= NULL;
+	protected bool $enabled							= FALSE;
 
-	public function addModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId )
+	/**
+	 *	@param		Entity_Group|int|string		$group
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		int|string					$entityId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function addModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId ): bool
 	{
+		if( !$this->enabled )
+			return FALSE;
 		$groupId	= is_object( $group ) ? $group->groupId : $group;
 		$moduleId	= is_object( $module ) ? $module->id : $module;
 		if( $this->isRelatedToModuleEntity( $groupId, $moduleId, $entityId ) )
 			return FALSE;
-		$relationId	= $this->modelRelation->add( [
+		$this->modelRelation->add( [
 			'groupId'	=> $groupId,
 			'moduleId'	=> $moduleId,
 			'entityId'	=> $entityId,
@@ -27,8 +37,16 @@ class Logic_GroupRelation extends Logic
 		return TRUE;
 	}
 
+	/**
+	 *	@param		ModuleDefinition|string		$module
+	 *	@return		array|int[]|string[]
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getModuleEntityIdsFromCurrentGroups( ModuleDefinition|string $module ): array
 	{
+		if( !$this->enabled )
+			return [];
 		$groups	= Logic_Authentication::getInstance( $this->env )->getCurrentGroups();
 		return $this->getModuleEntityIdsFromGroups( $module, $groups );
 	}
@@ -40,6 +58,8 @@ class Logic_GroupRelation extends Logic
 	 */
 	public function getModuleEntityIdsFromGroups( ModuleDefinition|string $module, array $groups ): array
 	{
+		if( !$this->enabled )
+			return [];
 		if( [] === $groups )
 			return [];
 		$groupIds	= [];
@@ -52,8 +72,17 @@ class Logic_GroupRelation extends Logic
 		], [], [],  ['entityId'] );
 	}
 
+	/**
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		int|string					$entityId
+	 *	@return		array
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
 	public function getGroups( ModuleDefinition|string $module, int|string $entityId ): array
 	{
+		if( !$this->enabled )
+			return [];
 		$moduleId	= is_object( $module ) ? $module->id : $module;
 
 		$relations	= $this->modelRelation->getAllByIndices( [
@@ -68,8 +97,16 @@ class Logic_GroupRelation extends Logic
 		return $list;
 	}
 
+	/**
+	 *	@param		Entity_Group|int|string		$group
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		int|string					$entityId
+	 *	@return		bool
+	 */
 	public function isRelatedToModuleEntity( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId ): bool
 	{
+		if( !$this->enabled )
+			return FALSE;
 		$groupId	= is_object( $group ) ? $group->groupId : $group;
 		$moduleId	= is_object( $module ) ? $module->id : $module;
 		return $this->modelRelation->hasByIndices( [
@@ -79,8 +116,17 @@ class Logic_GroupRelation extends Logic
 		] );
 	}
 
-	public function removeModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId )
+	/**
+	 *	@param		Entity_Group|int|string		$group
+	 *	@param		ModuleDefinition|string		$module
+	 *	@param		int|string					$entityId
+	 *	@return		bool
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	public function removeModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId ): bool
 	{
+		if( !$this->enabled )
+			return FALSE;
 		$groupId	= is_object( $group ) ? $group->groupId : $group;
 		$moduleId	= is_object( $module ) ? $module->id : $module;
 		if( !$this->isRelatedToModuleEntity( $groupId, $moduleId, $entityId ) )
@@ -93,8 +139,16 @@ class Logic_GroupRelation extends Logic
 		return TRUE;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		RuntimeException	if database connection check failed
+	 *	@throws		ReflectionException	if cache setup fails to create cache backend by set cache adapter class
+	 */
 	protected function __onInit(): void
 	{
-		$this->modelRelation = new Model_Group_Relation( $this->env );
+		$this->moduleConfig		= $this->env->getModules()->get( 'Resource_Users' )->getConfigAsDictionary();
+		$this->enabled			= $this->moduleConfig->get( 'group.useRelations' );
+		if( $this->enabled )
+			$this->modelRelation	= new Model_Group_Relation( $this->env );
 	}
 }
