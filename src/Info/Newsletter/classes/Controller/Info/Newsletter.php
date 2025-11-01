@@ -259,8 +259,9 @@ class Controller_Info_Newsletter extends Controller
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function track( int|string $letterId ): void
+	public function track( int|string $letterId, int|string|NULL $linkId = NULL ): void
 	{
+		print_m( $linkId );die;
 		$pixelGIF	= "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 		if( !$this->request->has( 'dry' ) ){
 			$referer	= getEnv( 'HTTP_REFERER' );

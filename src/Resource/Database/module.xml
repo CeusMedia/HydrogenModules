@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <!--suppress CheckTagEmptyBody -->
-<module frameworks="Hydrogen:>0.8">
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+		frameworks="Hydrogen:>=1.0">
 	<title>Resource: Database</title>
 	<description><![CDATA[Database connection support.]]></description>
 	<category>Resource</category>

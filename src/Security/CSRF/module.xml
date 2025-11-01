@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<module>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Security: CSRF</title>
 	<description file="readme.md"><![CDATA[Avoid Cross Site Request Forgery.]]></description>
 	<category>Security</category>
@@ -43,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>csrf_tokens` (
   `status` tinyint(1) NOT NULL,
   `token` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
   `sessionId` varchar(32) COLLATE utf8_unicode_ci NOT NULL,
-  `ip` varchar(15) COLLATE utf8_unicode_ci NOT NULL,
+  `ip` varchar(63) COLLATE utf8_unicode_ci NOT NULL,
   `formName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `timestamp` decimal(12,0) NOT NULL,
   PRIMARY KEY (`tokenId`),

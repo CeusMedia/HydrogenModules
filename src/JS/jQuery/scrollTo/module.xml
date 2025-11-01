@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<module>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>JS: jQuery: scrollTo</title>
 	<description><![CDATA[]]></description>
 	<version>1.4.2</version>
