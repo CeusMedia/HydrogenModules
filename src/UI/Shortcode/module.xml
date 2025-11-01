@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!--suppress CheckTagEmptyBody -->
-<module>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>UI: Shortcode</title>
 	<slogan>Processor for shortcodes in response content, called by hooks.</slogan>
 	<description format="md"><![CDATA[

@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<module>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Manage: Companies</title>
 	<description>Management for company accounts.</description>
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies and Resource:Companies instead!</deprecation>

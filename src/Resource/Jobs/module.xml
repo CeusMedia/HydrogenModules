@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
-<module frameworks="Hydrogen:>=1.0">
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+		frameworks="Hydrogen:>=1.0">
 	<title>Resource: Jobs</title>
-	<subtitle>Console based job execution.</subtitle>
+	<slogan>Console based job execution.</slogan>
 	<description><![CDATA[Console based job execution.
 
 Besides calling your application using a browser, calling business logic on console or as cron job might be interesting to you.

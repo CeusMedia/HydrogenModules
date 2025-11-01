@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <!--suppress CheckTagEmptyBody -->
-<module>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Token Store</title>
 	<description><![CDATA[Storage for tokens bound to client IP adresses.
 Using tokens, client applications can identify requesting clients, authenticated before. All tokens are stored in a database table, together with IP and timestamp of generation. A client can only get a token, if it knows and sends the common secret, if one is setup.
