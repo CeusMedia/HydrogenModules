@@ -19,7 +19,7 @@
 		<class>Model/Module.php</class>
 		<class>View/Admin/Module.php</class>
 		<locale>de/admin/module.ini</locale>
-		<css>module.admin.modules.css</css>
+		<style>module.admin.modules.css</style>
 		<template>admin/module/index.php</template>
 		<template>admin/module/view.php</template>
 	</files>

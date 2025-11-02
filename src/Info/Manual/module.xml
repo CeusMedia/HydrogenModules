@@ -35,7 +35,7 @@ This module can be localized.
 	<log version="0.6.9">Replace file and folder class calls to use CeusMedia:Common.</log>
 	<log version="0.7.0">Replace file base solution by database.</log>
 	<log version="0.7.1">Add helper for category page navigation list.</log>
-	<log versiob="0.7.2">Improve category selection.</log>
+	<log version="0.7.2">Improve category selection.</log>
 	<log version="0.7.3">Support nested pages.</log>
 	<log version="0.7.4">Add hook for shortcodes.</log>
 	<log version="0.7.5">Migrate to support CeusMedia::Common 0.8.5.</log>
