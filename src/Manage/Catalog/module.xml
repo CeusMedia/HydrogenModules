@@ -106,7 +106,7 @@
 		<script load="auto">module.manage.catalog.js</script>
 		<style load="auto">module.manage.catalog.css</style>
 	</files>
-	<config type="string" protected="yes" mandatory="yes" name="article.document.maxSize" title="Maximum document file site in MB." value="1,2,4,8,16,32">4</config>
+	<config type="string" protected="yes" mandatory="yes" name="article.document.maxSize" title="Maximum document file site in MB." values="1,2,4,8,16,32">4</config>
 	<config type="string" protected="yes" mandatory="yes" name="article.document.extensions">gif,jpe,jpeg,jpg,png,pdf,doc</config>
 	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxHeight">240</config>
 	<config type="integer" protected="yes" mandatory="yes" name="article.image.maxWidth">180</config>

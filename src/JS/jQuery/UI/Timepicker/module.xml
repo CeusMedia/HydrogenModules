@@ -7,7 +7,7 @@
 	<version>1.1.1-p2</version>
 	<category>JavaScript</category>
 	<author site="https://trentrichardson.com">Trent Richardson</author>
-	<url title="GitHub">https://github.com/trentrichardson/jQuery-Timepicker-Addon</url>
+	<source url="https://github.com/trentrichardson/jQuery-Timepicker-Addon">github.com</source>
 	<license source="https://trentrichardson.com/Impromptu/GPL-LICENSE.txt">GPL</license>
 	<license source="https://trentrichardson.com/Impromptu/MIT-LICENSE.txt">MIT</license>
 	<files>

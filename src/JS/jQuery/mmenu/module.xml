@@ -12,8 +12,8 @@
 	<author site="https://www.frebsite.nl/" email="info@frebsite.nl">Fred Heusschen</author>
 	<company site="https://www.besite.nl/" email="">BeSite B.V.</company>
 	<url>https://mmenu.frebsite.nl/</url>
-	<license version="5" source="https://en.wikipedia.org/wiki/MIT_License">MIT</license>
-	<license version="7" source="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
+	<license source="https://en.wikipedia.org/wiki/MIT_License">MIT</license>
+	<license source="https://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International</license>
 	<files>
 		<class>Hook/JS/jQuery/Mmenu.php</class>
 		<script>mmenu/5.5.3/jquery.mmenu.dragclose.min.js</script>
