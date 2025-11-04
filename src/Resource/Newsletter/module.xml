@@ -9,7 +9,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.3</version>
+	<version>0.5.4</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -35,6 +35,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 	<log version="0.5.1">Add theme entity.</log>
 	<log version="0.5.2">Add config for themes path.</log>
     <log version="0.5.3">Add tester flag in reader model.</log>
+    <log version="0.5.4">Add models for links and click tracking.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -43,10 +44,12 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 		<class>Mail/Newsletter.php</class>
 		<class>Model/Newsletter.php</class>
 		<class>Model/Newsletter/Group.php</class>
+		<class>Model/Newsletter/Link.php</class>
 		<class>Model/Newsletter/Queue.php</class>
 		<class>Model/Newsletter/Reader.php</class>
 		<class>Model/Newsletter/Reader/Group.php</class>
 		<class>Model/Newsletter/Reader/Letter.php</class>
+		<class>Model/Newsletter/Reader/Letter/Link.php</class>
 		<class>Model/Newsletter/Template.php</class>
 		<class>Model/Newsletter/Theme.php</class>
 		<class>Entity/Newsletter/Theme.php</class>
@@ -103,6 +106,16 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_groups` (
   KEY `type` (`type`),
   KEY `creatorId` (`creatorId`) USING BTREE
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_links`;
+CREATE TABLE `<%?prefix%>newsletter_links` (
+  `newsletterLinkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`newsletterLinkId`),
+  UNIQUE KEY `url` (`url`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_queues`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_queues` (
@@ -167,6 +180,22 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_reader_letters` (
   KEY `newsletterQueueId` (`newsletterQueueId`),
   KEY `mailId` (`mailId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_reader_letter_links`;
+CREATE TABLE `<%?prefix%>newsletter_reader_letter_links` (
+  `newsletterReaderLetterLinkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `newsletterReaderLetterId` int(10) unsigned NOT NULL,
+  `newsletterReaderId` int(10) unsigned NOT NULL,
+  `newsletterLinkId` int(10) unsigned NOT NULL,
+  `newsletterId` int(10) unsigned NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`newsletterReaderLetterLinkId`),
+  KEY `newsletterReaderLetterId` (`newsletterReaderLetterId`),
+  KEY `newsletterReaderId` (`newsletterReaderId`),
+  KEY `newsletterLinkId` (`newsletterLinkId`),
+  KEY `newsletterId` (`newsletterId`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_templates`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_templates` (
@@ -266,6 +295,33 @@ ADD `description` TEXT NULL AFTER `licenseUrl`;
 	]]></sql>
     <sql on="update" type="mysql" version="0.5.3"><![CDATA[
 ALTER TABLE `<%?prefix%>newsletter_readers` ADD `tester` TINYINT(1) UNSIGNED DEFAULT '0' AFTER `institution`;
+	]]></sql>
+    <sql on="update" type="mysql" version="0.5.4"><![CDATA[
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_links`;
+CREATE TABLE `<%?prefix%>newsletter_links` (
+  `newsletterLinkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`newsletterLinkId`),
+  UNIQUE KEY `url` (`url`),
+  KEY `title` (`title`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+DROP TABLE IF EXISTS `<%?prefix%>newsletter_reader_letter_links`;
+CREATE TABLE `<%?prefix%>newsletter_reader_letter_links` (
+  `newsletterReaderLetterLinkId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `newsletterReaderLetterId` int(10) unsigned NOT NULL,
+  `newsletterReaderId` int(10) unsigned NOT NULL,
+  `newsletterLinkId` int(10) unsigned NOT NULL,
+  `newsletterId` int(10) unsigned NOT NULL,
+  `timestamp` decimal(12,0) unsigned NOT NULL,
+  PRIMARY KEY (`newsletterReaderLetterLinkId`),
+  KEY `newsletterReaderLetterId` (`newsletterReaderLetterId`),
+  KEY `newsletterReaderId` (`newsletterReaderId`),
+  KEY `newsletterLinkId` (`newsletterLinkId`),
+  KEY `newsletterId` (`newsletterId`),
+  KEY `timestamp` (`timestamp`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 	]]></sql>
     <sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_queues`;
