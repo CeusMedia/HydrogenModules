@@ -14,7 +14,7 @@ For sending mails you need to setup a cron job:
 
 ]]></description>
 	<category>Info</category>
-	<version>0.7.3</version>
+	<version>0.7.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Finished data structure.</log>
@@ -49,8 +49,9 @@ For sending mails you need to setup a cron job:
 	<log version="0.7.1">Improve code style.</log>
 	<log version="0.7.2">Provide hook for shop service panels.</log>
 	<log version="0.7.3">Improve preview of latest newsletter.</log>
-<!--	<log version="0.7.3">Refactor JavaScript components.</log>-->
-<!--	<log version="0.7.4">Finish extracting locales and clean up.</log>-->
+	<log version="0.7.4">Support tracking of reader letter link clicks.</log>
+<!--	<log version="0.7.5">Refactor JavaScript components.</log>-->
+<!--	<log version="0.7.6">Finish extracting locales and clean up.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -81,11 +82,11 @@ For sending mails you need to setup a cron job:
 	<link xml:lang="de" access="outside" path="info/newsletter/unregister">abbestellen</link>
 	<link xml:lang="en" access="outside" path="info/newsletter/index">join</link>
 	<link xml:lang="en" access="outside" path="info/newsletter/unregister">leave</link>
-	<link access="public" path="info/newsletter/confirm"></link>
-	<link access="public" path="info/newsletter/preview"></link>
-	<link access="public" path="info/newsletter/register"></link>
-	<link access="public" path="info/newsletter/track"></link>
-	<link access="public" path="info/newsletter/view"></link>
+	<link access="public" path="info/newsletter/confirm"/>
+	<link access="public" path="info/newsletter/preview"/>
+	<link access="public" path="info/newsletter/register"/>
+	<link access="public" path="info/newsletter/track"/>
+	<link access="public" path="info/newsletter/view"/>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 		<needs type="module">Resource_Newsletter</needs>
