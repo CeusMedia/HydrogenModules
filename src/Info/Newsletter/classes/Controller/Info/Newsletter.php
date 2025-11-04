@@ -255,24 +255,49 @@ class Controller_Info_Newsletter extends Controller
 	}
 
 	/**
-	 *	@param		int|string		$letterId
+	 *	Track newsletter opening (by embedded pixel image) or link click (by tracking links with forward).
+	 *	Newsletter opening:
+	 *	- newsletter html content can contain a pixel image, linking here
+	 *	- track view in database
+	 *	- respond with pixel image
+	 *	Link Click:
+	 *	- newsletter html content has links, replaced by tracking links
+	 *	- track view in database
+	 *	- forward to registered URL of tracking link
+	 *	- otherwise respond with empty 404 response
+	 *	@param		int|string			$letterId
+	 *	@param		int|string|NULL		$linkId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function track( int|string $letterId, int|string|NULL $linkId = NULL ): void
 	{
-		print_m( $linkId );die;
-		$pixelGIF	= "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-		if( !$this->request->has( 'dry' ) ){
-			$referer	= getEnv( 'HTTP_REFERER' );
-			error_log( $referer."\n", 3, "ref.log" );
+		$dry	= $this->request->has( 'dry' );
+		if( !$dry )
 			$this->logic->setReaderLetterStatus(
 				$letterId,
 				Model_Newsletter_Reader_Letter::STATUS_OPENED
-		 	);
+			);
+
+		if( NULL !== $linkId ){
+			$model	= Model_Newsletter_Link::getInstance( $this->env );
+			$link	= $model->get( $linkId );
+			if( NULL === $link )
+				$this->env->getResponse()->setStatus( 404 )->setBody( 'Not found' )->send();		//  full stop with simple 404 response
+			$letter	= Logic_Newsletter::getInstance( $this->env )->getReaderLetter( $letterId );
+			if( !$dry )
+				Model_Newsletter_Reader_Letter_Link::getInstance( $this->env )->add( [							//  track link click
+					'newsletterReaderLetterId'	=> $letterId,
+					'newsletterReaderId'		=> $letter->newsletterReaderId,
+					'newsletterLinkId'			=> $linkId,
+					'newsletterId'				=> $letter->newsletterId,
+					'timestamp'					=> time(),
+				] );
+			$this->restart( $link->url, FALSE, 303, TRUE );
 		}
+
 		header( "Content-type: image/gif" );
-		print base64_decode( $pixelGIF );
+		print base64_decode( "R0lGODlhAQABAIAAAP///////yH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" );
 		exit;
 	}
 
