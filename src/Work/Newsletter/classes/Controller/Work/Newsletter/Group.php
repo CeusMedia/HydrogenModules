@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\PartitionSession;
@@ -65,7 +65,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
 	 */
 	public function edit( int|string $groupId ): void
 	{

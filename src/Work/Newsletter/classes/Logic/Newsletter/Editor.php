@@ -6,7 +6,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addGroup( array $data ): string
 	{
@@ -17,7 +16,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addNewsletter( array $data ): string
 	{
@@ -29,7 +27,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTemplate( array $data ): string
 	{
@@ -57,7 +54,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		string		$html
 	 *	@param		int			$wrap
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function convertHtmlToText( string $html, int $wrap = 65 ): string
 	{
@@ -103,7 +99,6 @@ return $html;
 	 *	@param		int|string			$newsletterId
 	 *	@param		int|string|NULL		$creatorId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createQueue( int|string $newsletterId, int|string|NULL $creatorId = NULL ): string
 	{
@@ -119,7 +114,7 @@ return $html;
 	/**
 	 *	@param		int|string		$readerLetterId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RuntimeException		if letter has been sent and cannot be removed
 	 */
 	public function dequeue( int|string $readerLetterId ): bool
 	{
@@ -133,7 +128,7 @@ return $html;
 	 *	@param		int|string		$groupId
 	 *	@param		array			$data
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
 	 */
 	public function editGroup( int|string $groupId, array $data ): void
 	{
@@ -146,7 +141,7 @@ return $html;
 	 *	@param		int|string		$letterId
 	 *	@param		array			$data
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter reader letter is not exising
 	 */
 	public function editReaderLetter( int|string $letterId, array $data ): void
 	{
@@ -173,7 +168,6 @@ return $html;
 	 *	@param		int|string		$newsletterId
 	 *	@param		bool			$allowDoubles
 	 *	@return		int|string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function enqueue( int|string $queueId, int|string $readerId, int|string $newsletterId, bool $allowDoubles = FALSE ): int|string
 	{
@@ -338,7 +332,7 @@ return $html;
 	{
 		if( !$this->env->getModules()->has( 'Resource_Mail' ) )
 			throw new RuntimeException( 'Module "Resource_Mail" is not installed' );
-		/** @var Logic_Mail $logicMail */
+
 		$logicMail		= Logic_Mail::getInstance( $this->env );
 
 		$mail			= new Mail_Newsletter( $this->env, [
