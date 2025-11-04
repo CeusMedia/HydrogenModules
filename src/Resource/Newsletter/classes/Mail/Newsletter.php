@@ -46,8 +46,9 @@ class Mail_Newsletter extends Mail_Abstract
 		$plain	= $helper->render();
 		$this->setText( $plain );
 
-		$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
+		$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML_TRACKING );
 		$html	= $helper->render();
+
 		if( $this->env->getConfig()->get( 'module.resource_newsletter.premailer.html' ) ){
 			$premailer	= new Premailer();
 			try{
@@ -60,8 +61,11 @@ class Mail_Newsletter extends Mail_Abstract
 				$converted	= $premailer->getHtml();
 				$html		= $converted;
 			}
-			catch( Exception $e ){}
+			catch( Exception $e ){
+				$this->env->getLog()->logException( $e );
+			}
 		}
+
 		$this->setHtml( $html );
 		return $this;
 	}

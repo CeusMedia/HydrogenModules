@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+<?php /** @noinspection PhpComposerExtensionStubsInspection */
+
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\FS\File\CSS\Compressor as CssFileCompressor;
@@ -14,16 +16,17 @@ class View_Helper_Newsletter_Mail
 {
 	public const MODE_PLAIN			= 0;
 	public const MODE_HTML			= 1;
+	public const MODE_HTML_TRACKING	= 2;
 
 	protected Environment $env;
 	protected Logic_Newsletter $logic;
-	protected string $cachePath		= "contents/cache/";
-	protected array $data			= [];
 	protected int $mode				= self::MODE_PLAIN;
-	protected ?object $template		= NULL;
+	protected array $data			= [];
 	protected ?object $letter		= NULL;
-	protected ?object $reader		= NULL;
 	protected ?object $newsletter	= NULL;
+	protected ?object $reader		= NULL;
+	protected ?object $template		= NULL;
+	protected string $cachePath		= 'contents/cache/';
 
 	public function __construct( $env/*, $templateId = NULL*/ )
 	{
@@ -43,7 +46,7 @@ class View_Helper_Newsletter_Mail
 			throw new RuntimeException( 'No mail template set' );
 		if( !$this->data )
 			throw new RuntimeException( 'No mail data set' );
-		if( $this->mode == self::MODE_HTML )
+		if( in_array( $this->mode, [self::MODE_HTML, self::MODE_HTML_TRACKING] ) )
 			return $this->renderHtml();
 		return $this->renderPlain();
 	}
@@ -54,7 +57,12 @@ class View_Helper_Newsletter_Mail
 		return $this;
 	}
 
-	public function setMode( $mode = self::MODE_PLAIN ): self
+	/**
+	 *	Set rendering mode, one of MODE_PLAIN, MODE_HTML, MODE_HTML_TRACKING
+	 *	@param		int		$mode
+	 *	@return		self
+	 */
+	public function setMode( int $mode = self::MODE_PLAIN ): self
 	{
 		$this->mode	= $mode;
 		return $this;
@@ -220,7 +228,6 @@ class View_Helper_Newsletter_Mail
 		$page->addHead( '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->' );
 		$page->addMetaTag( "name", "viewport", "width=device-width" );
 		$page->addMetaTag( "http-equiv", "X-UA-Compatible", "IE=edge" );
-		$page->addMetaTag( "name", "viewport", "width=device-width" );
 		$page->setBaseHref( $data['baseUrl'] );
 
 		if( isset( $data['title'] ) )
@@ -242,7 +249,8 @@ class View_Helper_Newsletter_Mail
 
 		$page->addHead( "<!--[if mso]><style>* {font-family: sans-serif !important;}</style><![endif]-->" );
 
-/*		$scripts		= [];
+/*		// JavaScript is not working within user email clients
+		$scripts		= [];
 		foreach( $this->template->scripts as $url ){
 			if( file_exists( $this->cachePath.md5( $url ) ) )
 				$scripts[]	= FileReader::load( $this->cachePath.md5( $url ) );
@@ -261,9 +269,9 @@ class View_Helper_Newsletter_Mail
 		$isPreview	= isset( $data['preview'] ) && $data['preview'];
 		if( !$isPreview ){
 			$script	= 'document.getElementById("browser-link").remove();';							//  script to remove browser link in browser view
-			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );		//  add script to HTML page
+			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );	//  add script to HTML page
 			if( isset( $data['linkTracking'] ) && $data['linkTracking'] ){							//  tracking link is defined
-				$data['tracking']	= HtmlTag::create( 'img', NULL, [						//  create tracking pixel image
+				$data['tracking']	= HtmlTag::create( 'img', NULL, [					//  create tracking pixel image
 					'src' => $data['linkTracking']													//  ... pointing to tracking URL
 				] );
 			}
@@ -271,15 +279,54 @@ class View_Helper_Newsletter_Mail
 
 		$content	= $this->template->html;														//  get HTML template
 		foreach( $data as $key => $value )															//  iterate template content data
-			$content	= str_replace( '[#'.$key.'#]', $value, $content );							//  replace placeholder
+			$content	= str_replace( '[#'.$key.'#]', $value, $content );					//  replace placeholder
 		if( $strict )
-			$content	= preg_replace( "/\[#.+#\]/U", "", $content );								//  remove not replace placeholders
-		$content	= $this->realizeColumns( $content, 1 );											//
+			$content	= preg_replace( "/\[#.+#\]/U", "", $content );			//  remove not replace placeholders
+		$content	= $this->realizeColumns( $content, 1 );									//
+		if( self::MODE_HTML_TRACKING === $this->mode )
+			$content	= $this->makeHtmlLinksTrackable( $content );
 		$page->addBody( $content );																	//  set final HTML as page body
-		return $page->build( array(																	//  return rendered HTML page
+		return $page->build( [																		//  return rendered HTML page
 			'class'		=> 'mail',
 			'style'		=> 'mso-line-height-rule: exactly;',
-		) );
+		] );
+	}
+
+	protected function makeHtmlLinksTrackable( string $html ): string
+	{
+		if( NULL === $this->reader || NULL === $this->letter )
+			return $html;
+
+		$dom	= new DOMDocument();
+		libxml_use_internal_errors( TRUE );
+		$dom->loadHTML( $html );
+		libxml_clear_errors();
+
+		foreach( $dom->getElementsByTagName( 'a' ) as $anchor ){
+			$url	= $anchor->getAttribute( 'href' );
+			if( !str_starts_with( $url, 'http' ) )
+				continue;
+			if( str_contains( $url, 'info/newsletter/' ) )
+				continue;
+			$model	= Model_Newsletter_Link::getInstance( $this->env );
+			$link	= $model->getByIndex( 'url', $url );
+			if( NULL !== $link )
+				$linkId	= $link->newsletterLinkId;
+			else{
+				$linkId	= $model->add( [
+					'url'		=> $url,
+					'title'		=> trim( $anchor->textContent ),
+					'timestamp'	=> time(),
+				] );
+			}
+			$baseUrl	= $this->data['baseUrl'] ?? $this->env->url;
+			$anchor->setAttribute( 'href', $baseUrl.join( '/', [
+					'info/newsletter/track',
+					$this->letter->newsletterReaderLetterId,
+					$linkId,
+				] ) );
+		}
+		return $dom->saveHTML();
 	}
 
 	/**

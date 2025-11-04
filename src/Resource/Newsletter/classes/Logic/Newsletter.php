@@ -4,14 +4,8 @@ use CeusMedia\Common\ADT\Collection;
 use CeusMedia\HydrogenFramework\Logic\Shared as SharedLogic;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 
-/**
- *	@todo	extend \CeusMedia\HydrogenFramework\Logic instead
- *	@todo	code doc
- */
 class Logic_Newsletter extends SharedLogic
 {
-	public static string $defaultPath				= 'contents/newsletter-themes/';
-
 	/**	@var		Model_Newsletter_Group			$modelGroup */
 	protected Model_Newsletter_Group $modelGroup;
 
@@ -33,10 +27,11 @@ class Logic_Newsletter extends SharedLogic
 	/**	@var		Model_Newsletter_Template		$modelTemplate */
 	protected Model_Newsletter_Template $modelTemplate;
 
+	public static string $defaultPath				= 'contents/newsletter-themes/';
+
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addReader( array $data ): string
 	{
@@ -50,7 +45,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and strict mode
 	 */
 	public function addReaderToGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): string
 	{
@@ -71,7 +66,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$throwException
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
 	 */
 	public function checkGroupId( int|string $groupId, bool $throwException = FALSE ): bool
 	{
@@ -89,7 +84,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException			if newsletter is not exising and $throwException is TRUE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkNewsletterId( int|string $newsletterId, bool $throwException = FALSE ): bool
 	{
@@ -104,10 +98,9 @@ class Logic_Newsletter extends SharedLogic
 	 *	Indicates whether a given newsletter reader letter ID is valid.
 	 *	@access		public
 	 *	@param		int|string		$readerLetterId		ID of newsletter reader letter to check
-	 *	@param		boolean		$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
+	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
-	 *	@throws		InvalidArgumentException		if newsletter reader letter is not exising and $throwException is TRUE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter reader letter is not exising and $throwException is TRUE
 	 */
 	public function checkReaderLetterId( int|string $readerLetterId, bool $throwException = FALSE ): bool
 	{
@@ -125,7 +118,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkReaderId( int|string $readerId, bool $throwException = FALSE ): bool
 	{
@@ -143,7 +135,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		boolean			$throwException		Flag: throw exception if not existing, otherwise return FALSE (default: TRUE)
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException			if newsletter template is not exising and $throwException is TRUE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkTemplateId( int|string $templateId, bool $throwException = FALSE ): bool
 	{
@@ -289,23 +280,28 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 * @todo implement or remove conditions and orders
 	 */
 	public function getLettersOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
 	{
-		$this->checkReaderId( $readerId, TRUE );
-		$letters	= $this->modelReaderLetter->getAllByIndex( 'newsletterReaderId', $readerId );
-		foreach( $letters as $letter )
-			$letter->newsletter	= $this->getNewsletter( $letter->newsletterId );
-		return $letters;
+		try{
+			$this->checkReaderId( $readerId, TRUE );
+			$indices	= array_merge( $conditions, ['newsletterReaderId' => $readerId] );
+			$letters	= $this->modelReaderLetter->getAllByIndices( $indices, $orders  );
+			foreach( $letters as $letter )
+				$letter->newsletter	= $this->getNewsletter( $letter->newsletterId );
+			return $letters;
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
+			return [];
+		}
 	}
 
 	/**
 	 *	@param		int|string		$newsletterId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter is not exising and strict mode
 	 */
 	public function getNewsletter( int|string $newsletterId, bool $strict = TRUE ): ?object
 	{
@@ -365,7 +361,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$queueId
 	 *	@param		bool			$extended
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getQueue( int|string $queueId, bool $extended = FALSE ): ?object
 	{
@@ -403,7 +398,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$newsletterId
 	 *	@param		bool			$extended
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getQueuesOfNewsletter( int|string $newsletterId, bool $extended = FALSE ): array
 	{
@@ -411,10 +405,9 @@ class Logic_Newsletter extends SharedLogic
 		foreach( $queues as $queue ){
 			$indices	= ['newsletterQueueId' => $queue->newsletterQueueId];
 			$queue->countLetters	= $this->modelReaderLetter->count( $indices );
-			if( $queue->creatorId ){
-				$modelUser		= new Model_User( $this->env );
-				$queue->creator	= $modelUser->get( $queue->creatorId );
-			}
+			if( $queue->creatorId )
+				$queue->creator	= Logic_User::getInstance( $this->env )->getUser( $queue->creatorId );
+
 			$queue->countLettersByStatus	= [];
 			for( $i=-3; $i<3; $i++ ){
 				$queue->countLettersByStatus[$i]	= $this->modelReaderLetter->count(
@@ -434,7 +427,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$readerId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
 	 */
 	public function getReader( int|string $readerId, bool $strict = TRUE ): ?object
 	{
@@ -446,7 +439,6 @@ class Logic_Newsletter extends SharedLogic
 	/**
 	 *	@param		int|string		$readerLetterId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getReaderLetter( int|string $readerLetterId ): ?object
 	{
@@ -458,7 +450,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$orders
 	 *	@param		array		$limits
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
 	 */
 	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -526,7 +518,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$templateId		ID of template to get data object for
 	 *	@param		boolean			$strict			Strict mode: throw exception if checks fail
 	 *	@return		object							Data object of template
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if newsletter template is not exising and strict mode
 	 */
 	public function getTemplate( int|string $templateId, bool $strict = TRUE ): object
 	{
@@ -556,7 +548,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		string			$columnKey
 	 *	@param		bool			$strict
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		InvalidArgumentException		if newsletter template is not exising and strict mode
 	 */
 	public function getTemplateAttributeList( int|string $templateId, string $columnKey, bool $strict = TRUE ): array
 	{
@@ -577,24 +569,28 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeReaderFromGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): int
 	{
-		$this->checkReaderId( $readerId, $strict );
-		$this->checkGroupId( $groupId, $strict );
-		$indices	= [
-			'newsletterReaderId'	=> $readerId,
-			'newsletterGroupId'		=> $groupId,
-		];
-		return $this->modelReaderGroup->removeByIndices( $indices );
+		try{
+			$this->checkReaderId( $readerId, $strict );
+			$this->checkGroupId( $groupId, $strict );
+			$indices	= [
+				'newsletterReaderId'	=> $readerId,
+				'newsletterGroupId'		=> $groupId,
+			];
+			return $this->modelReaderGroup->removeByIndices( $indices );
+		}
+		catch( Throwable $e ){
+			$this->env->getLog()->logException( $e );
+			return 0;
+		}
 	}
 
 	/**
 	 *	@param		int|string		$queueId
 	 *	@param		int				$status
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setQueueStatus( int|string $queueId, int $status ): int
 	{
@@ -608,7 +604,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$readerLetterId
 	 *	@param		int				$status
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setReaderLetterStatus( int|string $readerLetterId, int $status ): int
 	{
@@ -630,7 +625,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$readerLetterId
 	 *	@param		int|string		$mailId
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setReaderLetterMailId( int|string $readerLetterId, int|string $mailId ): int
 	{
