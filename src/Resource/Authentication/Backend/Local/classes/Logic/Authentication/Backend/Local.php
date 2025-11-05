@@ -106,7 +106,8 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 *	@param		bool		$strict
 	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_ROLE|Logic_User::EXTEND_GROUPS
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RuntimeException			if database connection check failed
+	 *	@throws		ReflectionException			if cache setup fails to create cache backend by set cache adapter class
 	 */
 	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_ROLE|Logic_User::EXTEND_GROUPS ): ?object
 	{

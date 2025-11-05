@@ -33,7 +33,6 @@ class Logic_User extends Logic
 	 *	@param		Entity_User			$user
 	 *	@param		Entity_Group		$group
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addUserToGroup( Entity_User $user, Entity_Group $group ): string
 	{
@@ -60,9 +59,9 @@ class Logic_User extends Logic
 	 *	@param		int				$extend
 	 *	@param		bool			$strict		Flag: throw exception if not existing, default: yes
 	 *	@return		Entity_User|NULL
-	 *	@throws		DomainException
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DomainException				if given user ID is invalid
+	 *	@throws		RuntimeException			if database connection check failed
+	 *	@throws		ReflectionException			if cache setup fails to create cache backend by set cache adapter class
 	 *	@todo		implement other extend modes, like avatar and settings
 	 */
 	public function checkId( int|string $userId, int $extend = self::EXTEND_NOTHING, bool $strict = TRUE ): ?Entity_User
@@ -83,7 +82,7 @@ class Logic_User extends Logic
 				$groupIds	= [];
 				foreach( $this->getUserGroups( $user ) as $group )
 					$groupIds[]	= $group->groupId;
-				$moduleRelation	= new Model_Group_Relation( $this->env );
+				$moduleRelation	= Model_Group_Relation::getInstance( $this->env );
 				$user->groupRelations	= $moduleRelation->getAllByIndices( [
 					'groupId'	=> $groupIds,
 				] );
@@ -126,7 +125,6 @@ class Logic_User extends Logic
 	/**
 	 *	@param		Entity_Group|int|string		$groupEntityOrId
 	 *	@return		Entity_User[]
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getGroupUsers( Entity_Group|int|string $groupEntityOrId ): array
 	{
@@ -162,7 +160,6 @@ class Logic_User extends Logic
 	/**
 	 *	@param		int|string		$userId
 	 *	@return		Entity_User|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUser( int|string $userId ): ?Entity_User
 	{
@@ -213,7 +210,6 @@ class Logic_User extends Logic
 	 *	@param		Entity_User		$user
 	 *	@param		Entity_Group	$group
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeUserFromGroup( Entity_User $user, Entity_Group $group ): bool
 	{
