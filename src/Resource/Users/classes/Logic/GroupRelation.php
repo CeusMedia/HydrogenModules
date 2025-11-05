@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic;
@@ -18,7 +18,6 @@ class Logic_GroupRelation extends Logic
 	 *	@param		ModuleDefinition|string		$module
 	 *	@param		int|string					$entityId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId ): bool
 	{
@@ -77,7 +76,6 @@ class Logic_GroupRelation extends Logic
 	 *	@param		int|string					$entityId
 	 *	@return		array
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getGroups( ModuleDefinition|string $module, int|string $entityId ): array
 	{
@@ -121,7 +119,6 @@ class Logic_GroupRelation extends Logic
 	 *	@param		ModuleDefinition|string		$module
 	 *	@param		int|string					$entityId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeModuleEntityRelation( Entity_Group|int|string $group, ModuleDefinition|string $module, int|string $entityId ): bool
 	{

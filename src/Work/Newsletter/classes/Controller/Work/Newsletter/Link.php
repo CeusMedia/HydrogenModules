@@ -29,6 +29,10 @@ class Controller_Work_Newsletter_Link extends Controller
 		$this->addData( 'link', $link );
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->modelLink		= Model_Newsletter_Link::getInstance( $this->env );
