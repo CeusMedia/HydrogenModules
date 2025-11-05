@@ -17,13 +17,14 @@ This module comes with:
 
 ]]></description>
 	<category>Work</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype of module.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add mails and jobs.</log>
 	<log version="0.2.2">Add modals in view mode.</log>
 	<log version="0.2.3">Finish implementation of prototype.</log>
 	<log version="0.2.4">Use job scheduler instead of crond.</log>
+	<log version="0.2.5">Remove meeting participation on user removal.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -31,7 +32,7 @@ This module comes with:
 		<class>Controller/Work/Meeting.php</class>
 		<class>Entity/Work/Meeting.php</class>
 		<class>Entity/Work/Meeting/Participant.php</class>
-<!--		<class>Hook/Work/Meeting.php</class>-->
+		<class>Hook/Work/Meeting.php</class>
 		<class>Job/Work/Meeting.php</class>
 		<class>Logic/Work/Meeting.php</class>
 		<class>Mail/Work/Meeting/Cancelled.php</class>
@@ -70,6 +71,7 @@ This module comes with:
 	</relations>
 	<link xml:lang="de" access="acl" path="work/meeting" rank="85">Meetings</link>
 	<link xml:lang="en" access="acl" path="work/meeting" rank="85">Meetings</link>
+	<hook type="resource" resource="User" event="remove">Hook_Work_Meeting::onUserRemove</hook>
     <job id="Work.Meeting.close">Work_Meeting::close</job>
     <job id="Work.Meeting.remind">Job_Work_Meeting::remind</job>
 	<sql type="mysql" on="install" version="0.1"><![CDATA[
@@ -82,8 +84,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>meetings` (
   `type` tinyint(1) NOT NULL,
   `priority` tinyint(1) NOT NULL,
   `status` tinyint(1) NOT NULL,
-  `dateStart` date DEFAULT NULL,
-  `dateEnd` date DEFAULT NULL,
+  `dateStart` datetime NOT NULL,
+  `dateEnd` datetime  NOT NULL,
   `location` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `title` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci,
@@ -116,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>meeting_participants` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>meetings`;
 DROP TABLE IF EXISTS `<%?prefix%>meeting_participants`;
+DROP TABLE IF EXISTS `<%?prefix%>meetings`;
 ]]></sql>
 </module>
