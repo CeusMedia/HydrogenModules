@@ -268,12 +268,17 @@ class Controller_Info_Newsletter extends Controller
 	 *	@param		int|string			$letterId
 	 *	@param		int|string|NULL		$linkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function track( int|string $letterId, int|string|NULL $linkId = NULL ): void
 	{
+		$tracking	= $this->env->getModules()
+			->get( 'Resource_Newsletter' )
+//			->getConfigAsDictionary( 'track.' );
+			->getConfigAsDictionary()
+			->getAll( 'track.', TRUE );
+
 		$dry	= $this->request->has( 'dry' );
-		if( !$dry )
+		if( $tracking->get( 'openLetter' ) && !$dry )
 			$this->logic->setReaderLetterStatus(
 				$letterId,
 				Model_Newsletter_Reader_Letter::STATUS_OPENED
@@ -284,8 +289,8 @@ class Controller_Info_Newsletter extends Controller
 			$link	= $model->get( $linkId );
 			if( NULL === $link )
 				$this->env->getResponse()->setStatus( 404 )->setBody( 'Not found' )->send();		//  full stop with simple 404 response
-			$letter	= Logic_Newsletter::getInstance( $this->env )->getReaderLetter( $letterId );
-			if( !$dry )
+			if( $tracking->get( 'clickLink' ) && !$dry ){
+				$letter	= Logic_Newsletter::getInstance( $this->env )->getReaderLetter( $letterId );
 				Model_Newsletter_Reader_Letter_Link::getInstance( $this->env )->add( [							//  track link click
 					'newsletterReaderLetterId'	=> $letterId,
 					'newsletterReaderId'		=> $letter->newsletterReaderId,
@@ -293,6 +298,7 @@ class Controller_Info_Newsletter extends Controller
 					'newsletterId'				=> $letter->newsletterId,
 					'timestamp'					=> time(),
 				] );
+			}
 			$this->restart( $link->url, FALSE, 303, TRUE );
 		}
 

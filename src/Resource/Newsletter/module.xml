@@ -58,9 +58,11 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 		<class>View/Helper/HtmlToPlainText.php</class>
 		<locale>de/resource/newsletter.ini</locale>
 	</files>
+	<config access="protected" type="string" name="path.themes" title="folder for newsletter themes (may be absolute)">contents/newsletter-themes/</config>
 	<config access="protected" type="boolean" name="premailer.html" title="Use Premailer API to work on mail HTML content">no</config>
 	<config access="protected" type="boolean" name="premailer.plain" title="Use Premailer API to generate mail plain content from HTML content">no</config>
-	<config access="protected" type="string" name="path.themes" title="folder for newsletter themes (may be absolute)">contents/newsletter-themes/</config>
+	<config access="protected" type="boolean" name="track.openLetter" title="Track if user is reading letters">yes</config>
+	<config access="protected" type="boolean" name="track.clickLink" title="Track if user is clicking links in letters">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
