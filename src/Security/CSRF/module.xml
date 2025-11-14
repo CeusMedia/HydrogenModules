@@ -35,6 +35,8 @@
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
 	<config protected="yes" type="integer" name="duration" title="Seconds before token gets invalid">300</config>
+	<config protected="yes" type="boolean" name="auto.hint" title="Automatically also render JavaScript to reload after token duration">yes</config>
+	<config protected="yes" type="boolean" name="auto.refresh" title="Automatically show hint if not refreshing">yes</config>
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
