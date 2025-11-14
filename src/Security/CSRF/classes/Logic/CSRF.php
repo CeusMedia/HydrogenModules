@@ -56,7 +56,6 @@ class Logic_CSRF extends Logic
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -71,7 +70,6 @@ class Logic_CSRF extends Logic
 	/**
 	 *	@param		string		$formName
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getToken( string $formName ): string
 	{
@@ -89,10 +87,18 @@ class Logic_CSRF extends Logic
 	}
 
 	/**
+	 *	Return configured lifetime of tokens.
+	 *	@return		int
+	 */
+	public function getTokenDuration(): int
+	{
+		return $this->moduleConfig->get( 'duration', 0 );
+	}
+
+	/**
 	 *	@param		string		$formName
 	 *	@param		string		$token
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function verifyToken( string $formName, string $token ): int
 	{
@@ -120,7 +126,6 @@ class Logic_CSRF extends Logic
 
 	/**
 	 *	@return		int|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function cancelOutdatedTokens(): ?int
 	{
@@ -154,8 +159,10 @@ class Logic_CSRF extends Logic
 	}
 
 	/**
+	 *	Remove outdated tokens and return amount.
+	 *	Outdated, of course, means older than configured duration.
+	 *	Will take tokens with status used, not used and outdated.
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeOldTokens(): int
 	{

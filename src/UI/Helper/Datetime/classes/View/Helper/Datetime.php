@@ -84,6 +84,21 @@ class View_Helper_Datetime extends Abstraction
 		return HtmlTag::create( 'span', $phrase, $attributes );
 	}
 
+	public function getDurationPhraseFromSeconds( int $seconds ): string
+	{
+		if( (int)$seconds < 0 )
+			return $this->stringEmpty;
+		if( !$this->phraser ){
+			$this->setPhraserLanguage( $this->languageFileKey, $this->languageSection );
+		}
+		$phrase	= $this->phraser->getPhraseFromSeconds( $seconds );
+		$attributes	= [
+			'class'			=> 'phrase ui-duration',
+			'data-duration'	=> $seconds,
+		];
+		return HtmlTag::create( 'span', $phrase, $attributes );
+	}
+
 	public function getTimeFromTimestamp( $timestamp, $format = NULL ): string
 	{
 		if( (int)$timestamp < 1 )
