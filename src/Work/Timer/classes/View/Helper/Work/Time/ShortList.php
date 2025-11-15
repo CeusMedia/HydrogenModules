@@ -174,7 +174,6 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 	/**
 	 *	@param		object		$timer
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderButtons( object $timer ): string
 	{

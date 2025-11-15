@@ -47,7 +47,7 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -112,7 +112,6 @@ class Hook_Work_Issue extends Hook
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@todo 		maybe reassign issues etc. instead of removing them (as already (partly) implemented for managed issues)
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
@@ -155,7 +154,7 @@ class Hook_Work_Issue extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onListProjectRelations(): void
 	{

@@ -22,7 +22,7 @@ class Controller_Info_Gallery extends Controller
 	/**
 	 *	@param		int|string|NULL		$galleryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function view( int|string|NULL $galleryId = NULL ): void
 	{

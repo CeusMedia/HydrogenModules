@@ -46,7 +46,6 @@ class Hook_Info_Dashboard extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{

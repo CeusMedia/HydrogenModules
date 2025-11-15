@@ -117,7 +117,6 @@ class Logic_User_Provision extends Logic
 
 	/**
 	 *	@todo		rework, send mails
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
@@ -202,7 +201,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		int|string			$userId			User ID
 	 *	@param		int|string			$productId		Product ID
 	 *	@return		integer|FALSE|NULL	ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
 	 */
@@ -247,7 +245,6 @@ class Logic_User_Provision extends Logic
 	 *	@todo		implement and document
 	 *	@todo		add hook in module config
 	 *	@todo		add hook call in module Resource:Users, better implement Logic_UserStatus before
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function __onChangeUserStatus( Environment $env, object $context, object $module, array & $payload ): void
 	{
@@ -297,7 +294,6 @@ class Logic_User_Provision extends Logic
 		return $this->handleOutdatedUserLicenses();
 		$dbc		= $this->env->getDatabase();
 		$language	= $this->env->getLanguage()->getLanguage();
-		/** @var Logic_Mail $logicMail */
 		$logicMail	= Logic_Mail::getInstance( $this->env );
 		$list		= [];
 		foreach( $this->getOutdatedUserLicenseKeys() as $key ){
@@ -373,7 +369,6 @@ class Logic_User_Provision extends Logic
 	 *	@throws		RuntimeException			if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
@@ -410,7 +405,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$productId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProduct( int|string $productId ): object
 	{
@@ -423,7 +417,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$productLicenseId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
@@ -438,7 +431,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		int|string		$productId
 	 *	@param		$status
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
@@ -464,7 +456,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$userId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUser( int|string $userId ): object
 	{
@@ -479,7 +470,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$userLicenseId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicense( int|string $userLicenseId ): object
 	{
@@ -496,7 +486,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$userLicenseId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicenseOwner( int|string $userLicenseId ): object
 	{
@@ -510,7 +499,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string $userLicenseKeyId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicenseKey( int|string $userLicenseKeyId ): object
 	{
@@ -523,7 +511,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$userLicenseKeyId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicenseKeyOwner( int|string $userLicenseKeyId ): object
 	{
@@ -542,7 +529,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		int|string			$userId
 	 *	@param		int|string|NULL		$productId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicensesFromUser( int|string $userId, int|string $productId = NULL ): array
 	{
@@ -562,7 +548,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		int|string			$userId
 	 *	@param		int|string|NULL		$projectId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getNotAssignedUserLicenseKeysFromUser( int|string $userId, int|string|NULL $projectId = NULL ): array
 	{
@@ -579,7 +564,6 @@ class Logic_User_Provision extends Logic
 	/**
 	 *	@param		int|string		$userLicenseId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getNotAssignedUserLicenseKeysFromUserLicense( int|string $userLicenseId ): array
 	{
@@ -608,7 +592,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		bool|NULL		$activeOnly
 	 *	@param		int|string|NULL	$productId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicenseKeysFromUser( int|string $userId, bool $activeOnly = NULL, int|string|NULL $productId = NULL ): array
 	{
@@ -742,7 +725,6 @@ class Logic_User_Provision extends Logic
 	 *	@param		int|string		$userLicenseId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setUserLicenseStatus( int|string $userLicenseId, $status ): void
 	{

@@ -22,9 +22,7 @@ class Job_User_Provision extends Job_Abstract
 	protected function manageOrderedLicenses(): void
 	{
 		$logicBridge	= new Logic_ShopBridge( $this->env );
-		/** @var Logic_Shop $logicShop */
 		$logicShop		= Logic_Shop::getInstance( $this->env );
-		/** @var Logic_User_Provision $logicProvision */
 		$logicProvision	= Logic_User_Provision::getInstance( $this->env );
 		$bridgeId		= $logicBridge->getBridgeId( 'Provision' );
 

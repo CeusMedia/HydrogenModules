@@ -24,7 +24,6 @@ class Logic_Note extends Logic
 	 *	@param		string|NULL		$title
 	 *	@param		bool			$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addLinkToNote( int|string $linkId, int|string $noteId, ?string $title = NULL, bool $strict = TRUE ): string
 	{
@@ -50,7 +49,6 @@ class Logic_Note extends Logic
 	 *	@param		int				$status
 	 *	@param		bool			$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTagToNote( int|string $tagId, int|string $noteId, int $status = Model_Note_Tag::STATUS_NORMAL, bool $strict = TRUE ): string
 	{
@@ -101,7 +99,6 @@ class Logic_Note extends Logic
 	 *	@param		string		$url
 	 *	@param		bool		$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createLink( string $url, bool $strict = TRUE ): string
 	{
@@ -118,7 +115,6 @@ class Logic_Note extends Logic
 	 *	@param		string		$content
 	 *	@param		bool		$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createTag( string $content, bool $strict = TRUE ): string
 	{
@@ -134,7 +130,6 @@ class Logic_Note extends Logic
 	/**
 	 *	@param		int|string		$noteId
 	 *	@return		object|null
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getNoteData( int|string $noteId ): ?object
 	{
@@ -204,7 +199,6 @@ class Logic_Note extends Logic
 	/**
 	 *	@param		int|string		$noteId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getRelatedTags( int|string $noteId ): array
 	{
@@ -331,11 +325,10 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 * @param array $conditions
-	 * @param array $orders
-	 * @param array $limits
-	 * @return array
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		array		$conditions
+	 *	@param		array		$orders
+	 *	@param		array		$limits
+	 *	@return		array
 	 */
 	public function getTopNotes( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -416,7 +409,6 @@ class Logic_Note extends Logic
 	 *	@param		int|string		$noteId
 	 *	@param		bool			$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function ignoreTagOnNote( int|string $tagId, int|string $noteId, bool $strict = TRUE ): string
 	{
@@ -426,7 +418,6 @@ class Logic_Note extends Logic
 	/**
 	 *	@param		object		$note
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function populateNote( object $note ): object
 	{
@@ -454,7 +445,6 @@ class Logic_Note extends Logic
 	/**
 	 *	@param		int|string		$noteId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeNote( int|string $noteId ): bool
 	{
@@ -476,7 +466,6 @@ class Logic_Note extends Logic
 	/**
 	 *	@param		int|string		$noteLinkId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeNoteLink( int|string $noteLinkId ): bool
 	{
@@ -490,7 +479,6 @@ class Logic_Note extends Logic
 	 *	@param		int|string		$linkId
 	 *	@param		int|string		$noteId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeLinkFromNote( int|string $linkId, int|string $noteId ): bool
 	{
@@ -506,7 +494,6 @@ class Logic_Note extends Logic
 	 *	@param		int|string		$tagId
 	 *	@param		int|string		$noteId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeTagFromNote( int|string $tagId, int|string $noteId ): bool
 	{
@@ -519,7 +506,6 @@ class Logic_Note extends Logic
 	}
 
 	/**
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@see		http://stackoverflow.com/questions/71022/sql-max-of-multiple-columns
 	 *	@todo		use of GREATEST only works for MySQL - improve this!
 	 */

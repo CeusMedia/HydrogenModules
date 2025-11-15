@@ -266,7 +266,7 @@ class Resource_Server_Log
 	 *	@param		string		$context
 	 *	@param		int			$format
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function saveToDatabase( int $type, string $message, string $context, int $format ): void
 	{

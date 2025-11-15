@@ -35,7 +35,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	/**
 	 *	@return		array<int|string,Entity_Work_Meeting>
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getActiveMeetingsOfCurrentUser(): array
 	{
@@ -98,7 +97,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	/**
 	 *	@param		int|string		$meetingId
 	 *	@return		?Entity_Work_Meeting
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getMeeting( int|string $meetingId ): ?Entity_Work_Meeting
 	{
@@ -249,7 +247,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	 *	@return		void
 	 *	@throws		DateInvalidOperationException
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setJobSchedule( Entity_Work_Meeting $meeting ): void
 	{
@@ -310,7 +307,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	/**
 	 *	@param		Entity_Work_Meeting		$meeting
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function unsetJobSchedule( Entity_Work_Meeting $meeting ): void
 	{

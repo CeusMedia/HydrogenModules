@@ -31,7 +31,6 @@ class Controller_Work_Newsletter_Template extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -106,7 +105,6 @@ class Controller_Work_Newsletter_Template extends Controller
 	 *	@param		int|string		$templateId		ID of template
 	 *	@param		boolean			$inEditor		Flag: set additional style for TinyMCE editor
 	 *	@return		never
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function ajaxGetStyle( int|string $templateId, bool $inEditor = FALSE ): never
 	{
@@ -123,7 +121,6 @@ class Controller_Work_Newsletter_Template extends Controller
 	/**
 	 *	@param		int|string		$templateId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $templateId ): void
 	{

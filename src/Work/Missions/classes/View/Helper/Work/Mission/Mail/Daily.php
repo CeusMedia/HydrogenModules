@@ -11,7 +11,6 @@ class View_Helper_Work_Mission_Mail_Daily extends AbstractHelper
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render( array $data ): string
 	{

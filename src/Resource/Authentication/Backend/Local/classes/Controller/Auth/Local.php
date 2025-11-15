@@ -10,7 +10,7 @@ use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
-use CeusMedia\HydrogenFramework\Environment\Resource\Module\Library\Local as LocalModuleLibraryResource;
+use CeusMedia\HydrogenFramework\Environment\Resource\Module\LibraryInterface as ModuleLibraryInterface;
 use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Auth_Local extends Controller
@@ -22,7 +22,7 @@ class Controller_Auth_Local extends Controller
 	protected Dictionary $session;
 	protected HttpCookie $cookie;
 	protected ?MessengerResource $messenger;
-	protected LocalModuleLibraryResource $modules;
+	protected ModuleLibraryInterface $modules;
 	protected bool $useCsrf;
 	protected bool $useOauth2;
 	protected Dictionary $moduleConfigAuth;
@@ -32,7 +32,6 @@ class Controller_Auth_Local extends Controller
 
 	/**
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		send mail to user after confirmation with user data
 	 */
 	public function confirm( ?string $code = NULL ): void
@@ -262,6 +261,7 @@ class Controller_Auth_Local extends Controller
 	/**
 	 *	Displays form to set a new password for current user, since the current password needs to be updated.
 	 *
+	 *	@param		string|NULL		$hash		Passwort hash for handling GET confirm requests
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
@@ -307,7 +307,7 @@ class Controller_Auth_Local extends Controller
 				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
 		$this->modules		= $this->env->getModules();
-		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
+		$this->useCsrf		= $this->modules->get( 'Security_CSRF' )?->isActive ?? FALSE;
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
 
@@ -335,7 +335,6 @@ class Controller_Auth_Local extends Controller
 	 *	@param		string		$password
 	 *	@return		?Entity_User
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function authenticateUserByCredentials( string $username, string $password ): ?Entity_User
 	{
@@ -413,7 +412,6 @@ class Controller_Auth_Local extends Controller
 	 *	@return		bool
 	 *	@todo		clean up if support for old password decays
 	 *	@todo		reintegrate cleansed lines into login method (if this makes sense)
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function checkPasswordOnLogin( Entity_User $user, string $password ): bool
@@ -454,7 +452,6 @@ class Controller_Auth_Local extends Controller
 	 *	@param		string			$hash
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function handlePasswordUpdateConfirmGetRequest( Entity_User $user, string $hash ): void
 	{
@@ -611,7 +608,6 @@ class Controller_Auth_Local extends Controller
 	 *	@param		Entity_User|int|string		$userOrId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function redirectAfterLoginIfPasswordUpdateNeeded( Entity_User|int|string $userOrId ): void
 	{
@@ -865,7 +861,6 @@ class Controller_Auth_Local extends Controller
 	 *	Redirects to "from" if given.
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function tryLoginByCookie(): void

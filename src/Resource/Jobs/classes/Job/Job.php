@@ -156,7 +156,7 @@ class Job_Job extends Job_Abstract
 	 *	Closes job runs where process id is not existing, anymore.
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function terminateDiscontinuedRuns(): void
 	{

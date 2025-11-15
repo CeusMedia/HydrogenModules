@@ -87,7 +87,6 @@ class View_Helper_TinyMce extends Abstraction
 	 *	...
 	 *	@access		public
 	 *	@return		array		List of images
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getImageList( bool $refresh = FALSE ): array
@@ -114,7 +113,6 @@ class View_Helper_TinyMce extends Abstraction
 	/**
 	 *	@access		public
 	 *	@return		array		List of links
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLinkList( bool $refresh = FALSE ): array

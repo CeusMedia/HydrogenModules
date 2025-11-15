@@ -217,7 +217,7 @@ class Logic_Issue extends Logic
 	 *	@param		$from
 	 *	@param		$to
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function noteChange( int|string $issueId, int|string $noteId, $type, $from, $to ): string
 	{
@@ -236,7 +236,6 @@ class Logic_Issue extends Logic
 	/**
 	 *	@param		int|string		$issueId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $issueId ): bool
 	{

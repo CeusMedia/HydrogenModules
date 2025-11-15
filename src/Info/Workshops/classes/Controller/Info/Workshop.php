@@ -19,7 +19,6 @@ class Controller_Info_Workshop extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $id ): void
 	{

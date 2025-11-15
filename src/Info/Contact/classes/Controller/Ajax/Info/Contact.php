@@ -14,6 +14,7 @@ class Controller_Ajax_Info_Contact extends AjaxController
 	 *	@return		int
 	 *	@throws		JsonException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function form(): int
 	{

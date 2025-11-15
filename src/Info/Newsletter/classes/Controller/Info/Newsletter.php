@@ -131,8 +131,6 @@ class Controller_Info_Newsletter extends Controller
 	/**
 	 *	@param		$arg1
 	 *	@return		void
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( $arg1 = NULL ): void
 	{

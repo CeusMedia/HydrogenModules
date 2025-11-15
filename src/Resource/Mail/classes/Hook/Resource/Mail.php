@@ -8,7 +8,6 @@ class Hook_Resource_Mail extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException|ReflectionException
 	 */
 	public function onListUserRelations(): void
 	{
@@ -103,7 +102,6 @@ class Hook_Resource_Mail extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{

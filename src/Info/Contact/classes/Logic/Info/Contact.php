@@ -49,7 +49,6 @@ class Logic_Info_Contact extends Logic
 	 *	@param		Dictionary		$data
 	 *	@return		bool|array
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function validateAjaxInput( Dictionary $data ): bool|array
 	{
@@ -85,7 +84,6 @@ class Logic_Info_Contact extends Logic
 	 *	@param		Dictionary		$data
 	 *	@return		bool|array
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function validateInput( Dictionary $data ): bool|array
 	{

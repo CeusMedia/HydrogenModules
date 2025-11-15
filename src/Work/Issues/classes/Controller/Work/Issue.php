@@ -321,7 +321,6 @@ class Controller_Work_Issue extends Controller
 	 *	@param		int|string		$issueId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkIssue( int|string $issueId, bool $strict = TRUE ): ?object

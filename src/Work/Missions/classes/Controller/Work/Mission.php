@@ -82,7 +82,7 @@ class Controller_Work_Mission extends Controller
 	 *	@access		public
 	 *	@param		string|NULL		$copyFromMissionId		ID of mission to copy default values from (optional)
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add( ?string $copyFromMissionId = NULL ): void
 	{
@@ -174,7 +174,7 @@ class Controller_Work_Mission extends Controller
 	/**
 	 *	@param		int|string		$missionId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function addDocument( int|string $missionId ): void
 	{
@@ -274,7 +274,7 @@ class Controller_Work_Mission extends Controller
 	 *	@param		int|string		$missionId		ID of mission to move in time
 	 *	@return		void
 	 *	@throws		DateMalformedStringException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function changeDay( int|string $missionId ): void
 	{
@@ -319,7 +319,7 @@ class Controller_Work_Mission extends Controller
 	/**
 	 *	@param		int|string		$missionId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function close( int|string $missionId ): void
 	{
@@ -349,7 +349,6 @@ class Controller_Work_Mission extends Controller
 	 *	@param		int|string		$missionId
 	 *	@param		string			$format
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function convertContent( int|string $missionId, string $format ): void
 	{
@@ -408,6 +407,7 @@ class Controller_Work_Mission extends Controller
 	 *	@param		int|string		$missionId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $missionId ): void
 	{
@@ -581,7 +581,7 @@ class Controller_Work_Mission extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function import(): void
 	{
@@ -670,7 +670,6 @@ class Controller_Work_Mission extends Controller
 	 *	@param		$priority
 	 *	@param		bool			$showMission
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setPriority( int|string $missionId, $priority, bool $showMission = FALSE ): void
 	{
@@ -691,7 +690,6 @@ class Controller_Work_Mission extends Controller
 	 *	@param		$status
 	 *	@param		bool			$showMission
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $missionId, $status, bool $showMission = FALSE ): void
 	{
@@ -711,7 +709,6 @@ class Controller_Work_Mission extends Controller
 	 * @param		boolean		$send
 	 * @return		void
 	 * @throws		ReflectionException
-	 * @throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function testMail( string $type, bool $send = FALSE ): void
 	{
@@ -774,7 +771,6 @@ class Controller_Work_Mission extends Controller
 	 *	@param		bool|NULL		$asText
 	 *	@return		never
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function testMailNew( int|string $missionId, ?bool $asText = NULL ): never
 	{
@@ -792,7 +788,6 @@ class Controller_Work_Mission extends Controller
 	 *	@param		bool|NULL		$asText
 	 *	@return		never
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function testMailUpdate( int|string $missionId, ?bool $asText = NULL ): never
 	{
@@ -830,7 +825,7 @@ class Controller_Work_Mission extends Controller
 	/**
 	 *	@param		int|string		$missionId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function view( int|string $missionId ): void
 	{
@@ -909,7 +904,6 @@ class Controller_Work_Mission extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -994,7 +988,7 @@ class Controller_Work_Mission extends Controller
 	 *	@param		bool			$download
 	 *	@return		never
 	 *	@todo		check sanity, see below
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function deliverDocument( int|string $missionId, int|string $missionDocumentId, bool $download = FALSE ): never
 	{

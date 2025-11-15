@@ -92,7 +92,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $bookmarkId ): void
 	{
@@ -121,7 +120,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		int		$page
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int $page = 0 ): void
 	{

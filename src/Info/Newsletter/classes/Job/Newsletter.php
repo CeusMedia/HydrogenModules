@@ -59,7 +59,6 @@ class Job_Newsletter extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function count(): void
 	{
@@ -217,7 +216,6 @@ class Job_Newsletter extends Job_Abstract
 	 *	@param		bool		$verbose
 	 *	@return		object
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function recoverReaderLetterMailIds( bool $verbose = FALSE ): object
 	{

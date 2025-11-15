@@ -8,7 +8,6 @@ class Controller_Ajax_Info_Novelty extends AjaxController
 	 *	@return		void
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function dismiss(): void
 	{

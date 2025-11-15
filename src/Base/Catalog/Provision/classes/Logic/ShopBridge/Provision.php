@@ -26,7 +26,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@param		boolean			$strict			Flag: throw exception if article ID is invalid
 	 *	@return		object							Bridged article data object if found
 	 *	@throws		InvalidArgumentException		if not found
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function check( int|string $articleId, bool $strict = TRUE ): object
 	{
@@ -42,7 +41,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$quantity
 	 *	@return		Entity_Shop_Bridge_Article
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
@@ -72,7 +70,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getDescription( int|string $articleId ): string
 	{
@@ -86,7 +83,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLink( int|string $articleId ): string
 	{
@@ -117,7 +113,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$amount
 	 *	@return		float
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getPrice( int|string $articleId, int $amount = 1 ): float
 	{
@@ -131,7 +126,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$amount
 	 *	@return		float
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getTax( int|string $articleId, int $amount = 1 ): float
 	{
@@ -144,7 +138,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getTitle( int|string $articleId ): string
 	{
@@ -160,7 +153,6 @@ class Logic_ShopBridge_Provision extends Logic_ShopBridge_Abstract
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Catalog_Provision::getInstance( $this->env );
 		$this->taxRate		= $this->env->getConfig()->get( 'module.catalog_provision.tax.rate' );
 	}

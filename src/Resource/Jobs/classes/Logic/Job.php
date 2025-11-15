@@ -18,7 +18,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function archiveJobRun( int|string $jobRunId ): bool
 	{
@@ -48,7 +47,6 @@ class Logic_Job extends Logic
 	 *	@access		public
 	 *	@return		array<string,Entity_Job_Definition> 	List of discovered jobs
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function discoverJobDefinitions(): array
 	{
@@ -117,7 +115,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobDefinitionId
 	 *	@return		?Entity_Job_Definition
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getDefinition( int|string $jobDefinitionId ): ?Entity_Job_Definition
 	{
@@ -191,7 +188,6 @@ class Logic_Job extends Logic
 	 *	@param		int|string		$jobRunId		ID of job run
 	 *	@param		array			$extendBy		List of data extensions (definition, schedules)
 	 *	@return		?Entity_Job_Run	Found prepared job run
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getPreparedJobRun( int|string $jobRunId, array $extendBy = [] ): ?Entity_Job_Run
 	{
@@ -220,7 +216,6 @@ class Logic_Job extends Logic
 	 *	@return		Entity_Job_Run[]					list of found prepared job runs
 	 *	@todo		remove
 	 *	@deprecated	seems to be unused
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getPreparedJobRuns( int|string $jobDefinitionId, array $extendBy = [] ): array
 	{
@@ -246,7 +241,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		array		$conditions
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getScheduledJobs( array $conditions = [] ): array
 	{
@@ -344,7 +338,6 @@ class Logic_Job extends Logic
 	 *	@param		Entity_Job_Definition	$job
 	 *	@param		array					$options
 	 *	@return		?Entity_Job_Run
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function prepareManuallyJobRun( Entity_Job_Definition $job, array $options ): ?Entity_Job_Run
 	{
@@ -368,7 +361,6 @@ class Logic_Job extends Logic
 	 *	@param		int|string|NULL		$jobDefinitionId
 	 *	@return		array
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function prepareScheduledJobs( int|string|NULL $jobDefinitionId = NULL ): array
 	{
@@ -382,7 +374,6 @@ class Logic_Job extends Logic
 	 *	@todo		deprecated? see ::startJobRun()
 	 *	@todo		implement! serial or (better) in parallel?
 	 *	@todo		exception handling?
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function runPreparedJob( int|string $jobRunId ): void
 	{
@@ -410,7 +401,6 @@ class Logic_Job extends Logic
 	 *	@param		int				$status
 	 *	@param		Entity_Job_Result|array			$messageData
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function quitJobRun( int|string $jobRunId, int $status, Entity_Job_Result|array $messageData = [] ): bool
 	{
@@ -449,7 +439,6 @@ class Logic_Job extends Logic
 	 *	@param		array			$parameters
 	 *	@return		int
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function startJobRun( Entity_Job_Run $jobRun, array $commands = [], array $parameters = [] ): int
 	{
@@ -542,7 +531,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeJobRun( int|string $jobRunId ): bool
 	{
@@ -557,7 +545,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		string|NULL		$reason
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function terminateDiscontinuedJobRuns( ?string $reason = NULL ): array
 	{
@@ -592,7 +579,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -607,7 +593,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobDefinitionId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function abortPreparedJobRuns( int|string $jobDefinitionId ): array
 	{
@@ -716,7 +701,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param 		array		$scheduledJobRunsToPrepare
 	 *	@return		array<int,Entity_Job_Run>
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function prepareJobRunsForScheduledJobs( array $scheduledJobRunsToPrepare ): array
 	{
@@ -753,7 +737,6 @@ class Logic_Job extends Logic
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function isToReport( int|string $jobRunId/*, ?int $mode = NULL*/ ): bool
 	{
@@ -827,7 +810,6 @@ class Logic_Job extends Logic
 	 *	@param		$resultCode
 	 *	@return		int|NULL
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function sendReport( int|string $jobRunId, array $commands, array $parameters, $resultCode ): ?int
 	{

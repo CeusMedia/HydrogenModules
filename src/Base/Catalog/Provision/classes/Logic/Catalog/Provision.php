@@ -15,7 +15,6 @@ class Logic_Catalog_Provision extends Logic
 
 	/**
 	 *	@todo		rework, send mails
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addUserLicense( int|string $userId, int|string $productLicenseId, bool $assignFirst = FALSE ): string
 	{
@@ -61,7 +60,6 @@ class Logic_Catalog_Provision extends Logic
 	 *	@return		NULL|FALSE|integer			ID of next user license key if prepared and active license, FALSE if still having an active key, NULL otherwise
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function enableNextUserLicenseKeyForProduct( int|string $userId, int|string $productId ): int|FALSE|NULL
 	{
@@ -129,7 +127,6 @@ class Logic_Catalog_Provision extends Logic
 	 *	@throws		RuntimeException				if given user is not activated
 	 *	@todo		check project existence and activity
 	 *	@todo		rework
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getNextUserLicenseKeyIdForProduct( int|string $userId, int|string $productId ): int
 	{
@@ -154,7 +151,6 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@param		int|string		$productId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProduct( int|string $productId ): object
 	{
@@ -167,7 +163,6 @@ class Logic_Catalog_Provision extends Logic
 	/**
 	 *	@param		int|string		$productLicenseId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductLicense( int|string $productLicenseId = 0 ): object
 	{
@@ -182,7 +177,6 @@ class Logic_Catalog_Provision extends Logic
 	 *	@param		int|string		$productId
 	 *	@param		$status
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductLicenses( int|string $productId, $status = NULL ): array
 	{
@@ -198,9 +192,8 @@ class Logic_Catalog_Provision extends Logic
 
 	/**
 	 *	@param		object|int|string		$productOrId
-	 *	@param		bool			$absolute
+	 *	@param		bool					$absolute
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductUri( object|int|string $productOrId, bool $absolute = FALSE ): string
 	{
@@ -218,9 +211,8 @@ class Logic_Catalog_Provision extends Logic
 
 	/**
 	 *	@param		object|int|string		$productLicenseOrId
-	 *	@param		bool			$absolute
+	 *	@param		bool					$absolute
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProductLicenseUri( object|int|string $productLicenseOrId, bool $absolute = FALSE ): string
 	{
@@ -241,7 +233,6 @@ class Logic_Catalog_Provision extends Logic
 	 *	@param		int|string			$userId
 	 *	@param		int|string|NULL		$productId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUserLicensesFromUser( int|string $userId, int|string|NULL $productId = NULL ): array
 	{
@@ -282,9 +273,7 @@ class Logic_Catalog_Provision extends Logic
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= Logic_Mail::getInstance( $this->env );
 		$this->modelProduct		= new Model_Provision_Product( $this->env );
 		$this->modelLicense		= new Model_Provision_Product_License( $this->env );

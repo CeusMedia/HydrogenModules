@@ -26,7 +26,6 @@ class View_Helper_Work_Time_Buttons
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -138,7 +137,6 @@ class View_Helper_Work_Time_Buttons
 	 *	@param		string			$size
 	 *	@param		string			$from
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public static function renderStatic( Environment $env, int|string $timerId, int|string $userId, array $buttons, string $size, string $from ): string
 	{

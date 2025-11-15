@@ -12,7 +12,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@param		string		$filterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activate( string $filterId ): void
 	{
@@ -25,7 +24,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -45,7 +43,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@param		string		$filterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function deactivate( string $filterId ): void
 	{
@@ -59,7 +56,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	 *	@param		string		$filterId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $filterId ): void
 	{
@@ -85,7 +81,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
 	{

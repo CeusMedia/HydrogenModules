@@ -26,10 +26,10 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@return		never
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function record(): never
 	{
-		/** @var Request $request */
 		$request	= $this->env->getRequest();
 		$post		= $request->getAllFromSource( 'POST', TRUE );
 		$data		= $post->getAll();
@@ -51,7 +51,6 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@param		string		$recordId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $recordId ): void
 	{
@@ -92,7 +91,7 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@param		string		$categoryName
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getCategoryId( string $categoryName ): string
 	{
@@ -114,7 +113,7 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@param		string		$clientName
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getClientId( string $clientName ): string
 	{
@@ -136,7 +135,7 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@param		string		$hostName
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getHostId( string $hostName ): string
 	{
@@ -158,7 +157,7 @@ class Controller_Work_Uberlog extends Controller
 	/**
 	 *	@param		string		$userAgent
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getUserAgentId( string $userAgent ): string
 	{

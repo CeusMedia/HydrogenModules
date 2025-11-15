@@ -23,6 +23,7 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -35,7 +36,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$readerLetterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function dequeueLetter( string $readerLetterId ): void
 	{
@@ -191,6 +191,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		bool		$simulateOffline
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function preview( string $format, string $newsletterId, bool $simulateOffline = FALSE ): void
 	{
@@ -249,7 +250,6 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$readerLetterId		ID of former send reader newsletter
 	 *	@return		void
 	 *	@todo		extend by queue support, otherwise this wont work anymore
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendLetter( string $readerLetterId ): void
 	{
@@ -306,6 +306,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function test( string $newsletterId ): void
 	{
@@ -360,6 +361,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function remove( string $newsletterId ): void
 	{
@@ -407,7 +409,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		int|string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkNewsletterId( int|string $newsletterId ): void
 	{
@@ -551,6 +552,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function prepareEditData( string $newsletterId ): void
 	{

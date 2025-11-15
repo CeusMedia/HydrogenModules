@@ -23,7 +23,6 @@ class Controller_Provision_Rest extends Controller
 	 *	@param		int|string		$productLicenseId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLicense( int|string $productLicenseId ): void
 	{
@@ -34,7 +33,6 @@ class Controller_Provision_Rest extends Controller
 	 *	@param		int|string		$productId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLicenses( int|string $productId ): void
 	{
@@ -84,7 +82,6 @@ class Controller_Provision_Rest extends Controller
 	 *	@param		bool		$showExceptions
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function hasActiveKey( bool $showExceptions = FALSE ): void
 	{
@@ -203,7 +200,6 @@ class Controller_Provision_Rest extends Controller
 	 */
 	protected function __onInit(): void
 	{
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic	= Logic_User_Provision::getInstance( $this->env );
 	}
 }

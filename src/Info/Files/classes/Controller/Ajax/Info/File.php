@@ -17,7 +17,6 @@ class Controller_Ajax_Info_File extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renameFolder(): void
 	{

@@ -93,6 +93,7 @@ class Job_Work_Mission extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function cleanup(): void
 	{
@@ -204,7 +205,7 @@ class Job_Work_Mission extends Job_Abstract
 	 *	@param		array		$includes		List of user IDs to include
 	 *	@param		array		$excludes		List of user IDs to exclude
 	 *  @return		array		List of mail receiving users
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getUpdateMailReceivers( array $projectIds, array $includes = [], array $excludes = [] ): array
 	{

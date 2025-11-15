@@ -9,7 +9,6 @@ class Hook_Resource_User extends Hook
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{

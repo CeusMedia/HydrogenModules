@@ -23,7 +23,6 @@ class Controller_Info_Mail_Group extends Controller
 	 *	@param		string		$actionId
 	 *	@param		string		$hash
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function completeMemberAction( string $actionId, string $hash ): void
 	{

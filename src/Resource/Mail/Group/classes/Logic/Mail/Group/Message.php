@@ -26,7 +26,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		string			$rawMail
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addFromRawMail( int|string $groupId, string $rawMail ): string
 	{
@@ -69,7 +68,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		int|string		$messageId
 	 *	@param		bool			$strict
 	 *	@return		?object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkId( int|string $messageId, bool $strict = TRUE ): ?object
 	{
@@ -87,7 +85,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		object|int|string	$messageOrMessageId		Message object or Message ID
 	 *	@return		object				Mail message object
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getMessageObject( object|int|string $messageOrMessageId ): object
 	{
@@ -123,7 +120,6 @@ class Logic_Mail_Group_Message extends Logic
 	/**
 	 *	@param		object|int|string		$messageOrMessageId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getMessageRawMail( object|int|string $messageOrMessageId ): string
 	{
@@ -426,7 +422,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		object|int|string		$messageObjectOrId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function rejectMessage( object|int|string $messageObjectOrId ): void
 	{
@@ -449,7 +444,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		object|int|string		$messageObjectOrId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function stallMessage( object|int|string $messageObjectOrId ): void
 	{
@@ -476,7 +470,6 @@ class Logic_Mail_Group_Message extends Logic
 	 *	@param		?string			$method
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	private function setMessageStatus( int|string $messageId, int $status, ?string $method = NULL ): void
 	{

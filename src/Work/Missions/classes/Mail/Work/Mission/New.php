@@ -88,7 +88,6 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderHtmlMailBody(): string
 	{
@@ -132,7 +131,6 @@ class Mail_Work_Mission_New extends Mail_Work_Mission_Change
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderTextMailBody(): string
 	{

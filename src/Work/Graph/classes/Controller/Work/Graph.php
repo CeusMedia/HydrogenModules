@@ -20,7 +20,6 @@ class Controller_Work_Graph extends Controller
 	 *	@param		int|string			$graphId
 	 *	@param		int|string|NULL		$nodeId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addEdge( int|string $graphId, int|string|NULL $nodeId = NULL ): void
 	{
@@ -35,7 +34,6 @@ class Controller_Work_Graph extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addGraph(): void
 	{
@@ -51,7 +49,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string		$graphId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addNode( int|string $graphId ): void
 	{
@@ -68,7 +65,6 @@ class Controller_Work_Graph extends Controller
 	 *	@param		int|string			$edgeId
 	 *	@param		int|string|NULL		$nodeId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editEdge( int|string $edgeId, int|string|NULL $nodeId = NULL ): void
 	{
@@ -85,7 +81,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string		$graphId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editGraph( int|string $graphId ): void
 	{
@@ -101,7 +96,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string		$nodeId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editNode( int|string $nodeId ): void
 	{
@@ -118,7 +112,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string|NULL		$graphId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int|string|NULL $graphId = NULL ): void
 	{
@@ -136,7 +129,6 @@ class Controller_Work_Graph extends Controller
 	 *	@param		int|string			$edgeId
 	 *	@param		int|string|NULL		$nodeId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edge( int|string $edgeId, int|string|NULL $nodeId = NULL ): void
 	{
@@ -154,7 +146,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string		$nodeId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function node( int|string $nodeId ): void
 	{
@@ -172,7 +163,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		int|string		$graphId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function selectGraph( int|string $graphId ): void
 	{
@@ -190,7 +180,6 @@ class Controller_Work_Graph extends Controller
 	 *	@param		int|string		$graphId
 	 *	@param		bool|NULL		$force
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $graphId, ?bool $force = NULL ): void
 	{
@@ -213,7 +202,6 @@ class Controller_Work_Graph extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -242,7 +230,6 @@ class Controller_Work_Graph extends Controller
 	/**
 	 *	@param		string		$graphId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderGraph( string $graphId ): void
 	{
@@ -303,7 +290,6 @@ class Controller_Work_Graph extends Controller
 	 *	@param		string			$graphId
 	 *	@param		bool|NULL		$force
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderGraphImage( string $graphId, ?bool $force = NULL ): void
 	{

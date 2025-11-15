@@ -78,7 +78,6 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -96,7 +95,6 @@ class View_Helper_Work_Mission_List_Days extends View_Helper_Work_Mission_List
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{

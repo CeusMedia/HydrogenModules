@@ -6,7 +6,6 @@ class Controller_Ajax_Work_Mission_Future extends Controller_Ajax_Work_Mission
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderIndex(): void
 	{

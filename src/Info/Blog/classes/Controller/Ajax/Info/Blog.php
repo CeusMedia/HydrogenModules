@@ -10,7 +10,7 @@ class Controller_Ajax_Info_Blog extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function comment(): void
 	{
@@ -59,7 +59,7 @@ class Controller_Ajax_Info_Blog extends AjaxController
 	 *	@param		int|string		$postId
 	 *	@return		object
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function checkPost( int|string $postId ): object
 	{

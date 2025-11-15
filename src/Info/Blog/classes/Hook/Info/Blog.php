@@ -7,7 +7,6 @@ class Hook_Info_Blog extends Hook
 {
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		Exception
 	 */
 	public function onViewRenderContent(): void

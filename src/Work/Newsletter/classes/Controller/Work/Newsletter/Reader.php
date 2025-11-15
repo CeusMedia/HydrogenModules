@@ -127,7 +127,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@param		int|string			$readerId
 	 *	@param		int|string|NULL		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addGroup( int|string $readerId, int|string|NULL $groupId = NULL ): void
 	{
@@ -287,7 +286,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		string		$mode
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function import( string $mode = 'csv' ): void
 	{
@@ -352,6 +350,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@param		?int		$page
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( ?int $page = NULL ): void
 	{
@@ -464,7 +463,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@param		int|string			$readerId
 	 *	@param		int|string|NULL		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeGroup( int|string $readerId, int|string|NULL $groupId = NULL ): void
 	{

@@ -27,7 +27,6 @@ class Logic_UserPassword extends Logic
 	 *	@return		boolean
 	 *	@throws		OutOfRangeException		if given user password ID is not existing
 	 *	@throws		OutOfRangeException		if new password already has been activated, decayed or revoked
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activatePassword( Entity_User_Password $userPassword ): bool
 	{
@@ -73,7 +72,6 @@ class Logic_UserPassword extends Logic
 	 *	@access		public
 	 *	@param		Entity_User		$user			ID of user to add password for
 	 *	@param		string			$password		The new password to set.
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addPassword( Entity_User $user, string $password ): Entity_User_Password
 	{
@@ -115,7 +113,6 @@ class Logic_UserPassword extends Logic
 	 *
 	 *	@access		public
 	 *	@return		integer			Number of decayed passwords replacement entries
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function clearOutdatedPasswordReplacements(): int
 	{
@@ -223,7 +220,6 @@ class Logic_UserPassword extends Logic
 	 *	@param		Entity_User		$user
 	 *	@param		string			$password
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function migrateOldUserPassword( Entity_User $user, string $password ): void
@@ -269,7 +265,6 @@ class Logic_UserPassword extends Logic
 	 *	@param		string			$password		Password to check for user
 	 *	@param		boolean			$resetFails		Flag: reset fail counter on success, default: yes
 	 *	@return		boolean
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function validateUserPassword( Entity_User $user, string $password, bool $resetFails = TRUE ): bool
 	{

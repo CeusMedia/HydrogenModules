@@ -9,9 +9,9 @@ class Controller_Csrf extends Controller
 	protected MessengerResource $messenger;
 
 	/**
+	 *	@param		bool		$redirect
 	 *	@param		?string		$redirectUrl
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkToken( bool $redirect = TRUE, ?string $redirectUrl = NULL ): bool
 	{

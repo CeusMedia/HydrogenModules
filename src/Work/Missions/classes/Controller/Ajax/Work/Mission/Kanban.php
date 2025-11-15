@@ -40,7 +40,6 @@ $(document).ready(function(){
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setMissionStatus(): void
 	{

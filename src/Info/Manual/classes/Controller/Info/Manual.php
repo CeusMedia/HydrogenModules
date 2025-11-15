@@ -33,7 +33,6 @@ class Controller_Info_Manual extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -96,7 +95,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function category( int|string $categoryId ): void
 	{
@@ -133,7 +131,6 @@ class Controller_Info_Manual extends Controller
 	 *	@param		int|string		$pageId
 	 *	@param		$version
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $pageId, $version = NULL ): void
 	{
@@ -190,7 +187,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		string|NULL	$fileHash
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function import( ?string $fileHash = NULL ): void
 	{
@@ -256,7 +252,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string|NULL		$categoryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int|string|NULL $categoryId = NULL ): void
 	{
@@ -287,7 +282,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function movePageDown( int|string $pageId ): void
 	{
@@ -306,7 +300,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function movePageUp( int|string $pageId ): void
 	{
@@ -340,7 +333,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removePage( int|string $pageId ): void
 	{
@@ -378,7 +370,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function page( int|string $pageId ): void
 	{
@@ -416,7 +407,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -507,7 +497,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		Entity_Manual_Category
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkCategoryId( int|string $categoryId ): Entity_Manual_Category
 	{
@@ -523,7 +512,6 @@ class Controller_Info_Manual extends Controller
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		Entity_Manual_Page
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPageId( int|string $pageId ): Entity_Manual_Page
 	{
