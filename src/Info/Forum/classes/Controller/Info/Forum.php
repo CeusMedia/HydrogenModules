@@ -96,7 +96,6 @@ class Controller_Info_Forum extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addThread(): void
 	{
@@ -113,7 +112,6 @@ class Controller_Info_Forum extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTopic(): void
 	{
@@ -130,7 +128,6 @@ class Controller_Info_Forum extends Controller
 	/**
 	 *	@param		int|string		$postId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function approvePost( int|string $postId ): void
 	{
@@ -171,7 +168,6 @@ class Controller_Info_Forum extends Controller
 	 *	@param		int|string		$topicId
 	 *	@param		bool|NULL		$downwards
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function rankTopic( int|string $topicId, bool $downwards = NULL ): void
 	{
@@ -227,7 +223,6 @@ class Controller_Info_Forum extends Controller
 	/**
 	 *	@param		int|string		$topicId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function topic( int|string $topicId ): void
 	{
@@ -291,7 +286,6 @@ class Controller_Info_Forum extends Controller
 	/**
 	 *	@param		int|string		$threadId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeThread( int|string $threadId ): void
 	{
@@ -310,7 +304,6 @@ class Controller_Info_Forum extends Controller
 	/**
 	 *	@param		int|string		$topicId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeTopic( int|string $topicId ): void
 	{

@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Captain as CaptainResource;
 use CeusMedia\HydrogenFramework\View;
+use Random\RandomException;
 
 class View_Info_Blog extends View
 {
@@ -29,7 +30,8 @@ class View_Info_Blog extends View
 	 *	@param		Environment $env
 	 *	@param		$modeOrId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
+	 *	@throws		RandomException
 	 */
 	public static function renderPostAbstractPanelStatic( Environment $env, $modeOrId ): string
 	{
@@ -73,7 +75,6 @@ class View_Info_Blog extends View
 	 *	@param		bool			$showInfoBar
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public static function renderPostAbstractStatic( Environment $env, object $post, bool $showInfoBar = TRUE ): string
 	{
@@ -106,7 +107,7 @@ class View_Info_Blog extends View
 	 *	@param		Environment		$env
 	 *	@param		object			$post
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public static function renderPostInfoBarStatic( Environment $env, object $post ): string
 	{

@@ -22,7 +22,6 @@ class Hook_Work_Note extends Hook
 
 	/**
 	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onListProjectRelations(): void
 	{

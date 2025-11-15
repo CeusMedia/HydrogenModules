@@ -32,7 +32,6 @@ class Controller_Ajax_Info_Event extends AjaxController
 	 *	@return		void
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function modalView( int|string $eventId ): void
 	{

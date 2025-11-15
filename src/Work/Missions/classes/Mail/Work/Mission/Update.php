@@ -220,7 +220,6 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	 *	@param		object		$old
 	 *	@param		object		$new
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleChangedWorker( object $old, object $new ): void
 	{
@@ -288,7 +287,6 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderHtmlMailBody(): string
 	{
@@ -335,7 +333,6 @@ class Mail_Work_Mission_Update extends Mail_Work_Mission_Change
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderTextMailBody(): string
 	{

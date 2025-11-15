@@ -173,7 +173,6 @@ class Job_Mail_Archive extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function regenerate(): void
 	{
@@ -227,7 +226,6 @@ class Job_Mail_Archive extends Job_Abstract
 	 *			- default: empty, meaning all mail classes
 	 *
 	 *	@todo	test
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		DateInvalidOperationException
 	 *	@throws		DateMalformedIntervalStringException
 	 */
@@ -312,7 +310,6 @@ class Job_Mail_Archive extends Job_Abstract
 	/**
 	 *	Work in progress!
 	 *	Store raw mails in shard folders.
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function shard(): void
 	{

@@ -27,7 +27,6 @@ class View_Helper_Form extends Abstraction
 	 *	@param		string|NULL		$mode		Rendering mode: 'extended' or empty string
 	 *	@param		int|NULL		$onReturnCode
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public static function renderStatic( Environment $env, int|string $formId, ?string $mode = NULL, ?int $onReturnCode = self::RETURN_CODE_NONE ): string
 	{
@@ -52,7 +51,6 @@ class View_Helper_Form extends Abstraction
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -77,7 +75,6 @@ class View_Helper_Form extends Abstraction
 	/**
 	 *	@param		int|string $formId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setId( int|string $formId ): self
 	{
@@ -146,7 +143,6 @@ class View_Helper_Form extends Abstraction
 	/**
 	 *	@param		bool		$injectBlocksAndCaptcha		Flag: also inject form blocks and captcha by shortcodes, default: yes
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderForm( bool $injectBlocksAndCaptcha = TRUE ): string
 	{

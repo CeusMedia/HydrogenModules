@@ -44,7 +44,7 @@ class Job_Mail_Migration extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function migrate(): void
 	{
@@ -104,7 +104,6 @@ class Job_Mail_Migration extends Job_Abstract
 	 *
 	 *	@access		public
 	 *	@return		array		List of errors, mail ID => error message + stack trace
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function regenerate(): array
 	{
@@ -240,7 +239,6 @@ class Job_Mail_Migration extends Job_Abstract
 	/**
 	 *	@param		object		$mail
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	private function _migrateCompression( object $mail ): bool
 	{
@@ -288,7 +286,6 @@ class Job_Mail_Migration extends Job_Abstract
 	 *	Detects mail sender from mail object to note to database.
 	 *	@param		Entity_Mail		$mail		Mail object
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	private function _migrateSenderAddress( Entity_Mail $mail ): bool
 	{
@@ -307,7 +304,7 @@ class Job_Mail_Migration extends Job_Abstract
 	/**
 	 *	Converts old style and image lists to new JSON
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	private function _migrateMailTemplates(): void
 	{

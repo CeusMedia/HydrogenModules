@@ -19,7 +19,6 @@ class View_Helper_Image_Slider
 	 *	@param		int|string $sliderId
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public static function renderStatic( WebEnvironment $env, int|string $sliderId ): string
 	{
@@ -54,7 +53,6 @@ class View_Helper_Image_Slider
 	 *	@access		public
 	 *	@param		int|string		$sliderId		ID of slider to render
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		reactivate scaling after fixing it
 	 */
 	public function render( int|string $sliderId ): string

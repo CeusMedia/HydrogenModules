@@ -118,7 +118,6 @@ class Controller_Info_Event extends Controller
 	/**
 	 *	@param		int|string		$eventId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $eventId ): void
 	{

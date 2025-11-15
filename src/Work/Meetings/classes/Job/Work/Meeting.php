@@ -6,7 +6,6 @@ class Job_Work_Meeting extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function close(): void
 	{

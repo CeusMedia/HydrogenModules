@@ -8,7 +8,6 @@ class Hook_Form extends Hook
 	 *	Injects forms for shortcodes.
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onViewRenderContent(): void
 	{

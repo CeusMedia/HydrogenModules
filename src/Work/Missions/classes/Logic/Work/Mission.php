@@ -195,7 +195,7 @@ class Logic_Work_Mission extends Logic
 	/**
 	 *	@param		int|string		$missionId
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function getVersions( int|string $missionId ): array
 	{
@@ -220,7 +220,6 @@ class Logic_Work_Mission extends Logic
 	 *	@param		int|string		$currentUserId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function noteChange( int|string $type, int|string $missionId, $data, int|string $currentUserId ): void
 	{
@@ -250,7 +249,7 @@ class Logic_Work_Mission extends Logic
 	 *	@param		int|string		$userId
 	 *	@param		string			$content
 	 *	@return		bool|string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function noteVersion( int|string $missionId, int|string $userId, string $content ): bool|string
 	{
@@ -270,7 +269,6 @@ class Logic_Work_Mission extends Logic
 	/**
 	 *	@param		int|string		$documentId
 	 *	@return		bool
-	 *	@throws 	\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeDocument( int|string $documentId ): bool
 	{
@@ -286,7 +284,6 @@ class Logic_Work_Mission extends Logic
 	/**
 	 *	@param		int|string $missionId
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeMission( int|string $missionId ): int
 	{

@@ -74,7 +74,7 @@ class Hook_Work_Mission extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onProjectRemove(): void
 	{
@@ -100,7 +100,7 @@ class Hook_Work_Mission extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onListProjectRelations(): void
 	{
@@ -221,7 +221,6 @@ class Hook_Work_Mission extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
@@ -296,7 +295,7 @@ class Hook_Work_Mission extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onStartTimer(): void
 	{

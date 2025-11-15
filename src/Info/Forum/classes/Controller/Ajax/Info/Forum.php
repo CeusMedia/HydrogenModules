@@ -13,7 +13,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	 *	@param		int|string		$lastPostId
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function countUpdates( int|string $threadId, int|string $lastPostId ): int
 	{
@@ -38,7 +38,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	/**
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function editPost(): int
 	{
@@ -58,7 +58,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	 *	@param		int|string		$postId
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function getPost( int|string $postId ): int
 	{
@@ -71,7 +71,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	/**
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renameThread(): int
 	{
@@ -87,7 +87,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	/**
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renameTopic(): int
 		{
@@ -104,7 +104,7 @@ class Controller_Ajax_Info_Forum extends AjaxController
 	 *	@param		int|string		$threadId
 	 *	@return		int
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function starThread( int|string $threadId ): int
 	{

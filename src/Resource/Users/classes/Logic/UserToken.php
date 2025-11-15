@@ -17,7 +17,6 @@ class Logic_UserToken extends Logic
 	 *	@param		string		$password
 	 *	@param		?string		$scope
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( string $username, string $password, ?string $scope = NULL ): string
 	{
@@ -48,7 +47,6 @@ class Logic_UserToken extends Logic
 	 *	@param		?string		$username
 	 *	@param		?string		$scope
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function validate( string $token, ?string $username, ?string $scope = NULL ): bool
 	{
@@ -73,7 +71,6 @@ class Logic_UserToken extends Logic
 	 *	@param		int|string		$userId
 	 *	@param		string|NULL		$except
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function revokeByUserId( int|string $userId, string $except = NULL ): bool
 	{
@@ -97,7 +94,6 @@ class Logic_UserToken extends Logic
 	/**
 	 *	@param		string		$scope
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function revokeByScope( string $scope ): bool
 	{
@@ -118,7 +114,6 @@ class Logic_UserToken extends Logic
 	/**
 	 *	@param		string		$username
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function revokeByUsername( string $username ): bool
 	{
@@ -196,7 +191,6 @@ class Logic_UserToken extends Logic
 	/**
 	 *	@param		Entity_User_Token		$token
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function revokeByToken( Entity_User_Token $token ): bool
 	{
@@ -208,7 +202,6 @@ class Logic_UserToken extends Logic
 	/**
 	 *	@param		int|string		$tokenId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function revokeByTokenId( int|string $tokenId ): bool
 	{
@@ -222,7 +215,6 @@ class Logic_UserToken extends Logic
 	 *	@param		string		$userId
 	 *	@param		string		$password
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function validateUserPassword( string $userId, string $password ): bool
 	{

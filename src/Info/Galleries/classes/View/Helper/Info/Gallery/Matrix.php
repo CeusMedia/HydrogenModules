@@ -6,7 +6,7 @@ class View_Helper_Info_Gallery_Matrix extends View_Helper_Info_Gallery
 {
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{

@@ -104,7 +104,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDayListOfEvents( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
@@ -155,7 +154,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDayListOfTasks( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
@@ -206,7 +204,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDayList( $tense, $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE ): string
 	{
@@ -280,7 +277,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		Exception
 	 */
 	public function renderRowOfEvent( object $event, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
@@ -339,7 +335,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showDate
 	 *	@param		bool		$showActions
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		Exception
 	 */
 	public function renderRowOfTask( Entity_Mission $task, $days, bool $showStatus, bool $showPriority, bool $showDate, bool $showActions ): string
@@ -393,7 +388,6 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 	 *	@param		bool		$showActions
 	 *	@param		int			$typeOnly
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderRows( $day, bool $showStatus = FALSE, bool $showPriority = FALSE, bool $showDate = FALSE, bool $showActions = FALSE, $typeOnly = NULL ): string
 	{

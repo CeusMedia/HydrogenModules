@@ -98,7 +98,6 @@ class Hook_Info_Page extends Hook
 	/**
 	 *	@return		FALSE
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onControllerDetectPath()
 	{

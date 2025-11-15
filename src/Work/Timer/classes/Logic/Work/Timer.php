@@ -14,7 +14,6 @@ class Logic_Work_Timer
 	/**
 	 *	@param		int|string		$timerId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $timerId ): ?object
 	{
@@ -47,7 +46,6 @@ class Logic_Work_Timer
 	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function pause( int|string $timerId ): void
 	{
@@ -67,7 +65,6 @@ class Logic_Work_Timer
 	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function start( int|string $timerId ): void
 	{
@@ -89,7 +86,6 @@ class Logic_Work_Timer
 	 *	@param		int|string		$timerId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function stop( int|string $timerId ): void
 	{
@@ -146,9 +142,8 @@ class Logic_Work_Timer
 
 	/**
 	 *	@param		int|string		$timerId
-	 *	@param		bool		$strict
+	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkTimerId( int|string $timerId, bool $strict = TRUE ): ?object
 	{

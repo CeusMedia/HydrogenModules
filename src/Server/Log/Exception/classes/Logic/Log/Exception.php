@@ -17,7 +17,6 @@ class Logic_Log_Exception extends Logic
 	 *	@param		int|string		$id
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function check( int|string $id, bool $strict = TRUE ): ?object
 	{
@@ -114,7 +113,6 @@ class Logic_Log_Exception extends Logic
 	/**
 	 *	@param		string		$line
 	 *	@return		int|string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importLogFileItem( string $line ): int|string
 	{
@@ -220,7 +218,7 @@ class Logic_Log_Exception extends Logic
 	/**
 	 *	@param		Throwable		$exception
 	 *	@return		FALSE|void
-	 *	@throws		ReflectionException|
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendExceptionAsMail( Throwable $exception )

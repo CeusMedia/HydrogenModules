@@ -7,7 +7,6 @@ class Mail_Forum_Daily extends Mail_Forum_Abstract
 {
 	/**
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderHtmlBody(): string
 	{

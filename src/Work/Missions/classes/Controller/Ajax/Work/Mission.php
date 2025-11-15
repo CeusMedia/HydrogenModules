@@ -47,7 +47,6 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	 *	@param		int|string		$missionId		ID of mission to move in time
 	 *	@return		void
 	 *	@todo		enable this feature for AJAX called EXCEPT gid list
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function changeDay( int|string $missionId ): void
 	{
@@ -252,7 +251,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	 *	@param		$versionCompare
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderMissionContent( int|string $missionId, $version = NULL, $versionCompare = NULL ): void
 	{
@@ -289,8 +288,8 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	/**
 	 *	@param		int|string		$missionId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function saveContent( int|string $missionId ): void
 	{
@@ -307,8 +306,6 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	/**
 	 *	@param		string		$day
 	 *	@return		void
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		JsonException
 	 */
 	public function selectDay( string $day ): void
@@ -325,8 +322,8 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	 *	@param		bool		$onlyThisOne		Flag: only set this value, reset all others
 	 *	@param		bool		$renderContent		Flag: Respond with updated index view, default: yes
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function setFilter( string $name, $value = NULL, bool $set = FALSE, bool $onlyThisOne = FALSE, bool $renderContent = TRUE ): void
 	{
@@ -361,7 +358,6 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -438,7 +434,7 @@ class Controller_Ajax_Work_Mission extends AjaxController
 	/**
 	 *	@param		int|string		$userId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function saveFilters( int|string $userId ): void
 	{

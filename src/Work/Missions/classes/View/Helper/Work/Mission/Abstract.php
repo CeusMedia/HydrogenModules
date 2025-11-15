@@ -73,7 +73,6 @@ abstract class View_Helper_Work_Mission_Abstract extends Abstraction
 	/**
 	 *	@deprecated use renderUser instead
 	 *	@todo		to be removed
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderUserWithAvatar( int|string $userId, int $width = 160 ): string
 	{

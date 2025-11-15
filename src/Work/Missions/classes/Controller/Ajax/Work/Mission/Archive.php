@@ -5,8 +5,8 @@ class Controller_Ajax_Work_Mission_Archive extends Controller_Ajax_Work_Mission
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function renderIndex(): void
 	{

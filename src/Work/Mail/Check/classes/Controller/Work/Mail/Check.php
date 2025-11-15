@@ -394,7 +394,6 @@ class Controller_Work_Mail_Check extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove(): void
 	{
@@ -412,7 +411,6 @@ class Controller_Work_Mail_Check extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeGroup( int|string $groupId ): void
 	{

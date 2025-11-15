@@ -51,7 +51,6 @@ class Model_Event_Address extends Model
 	/**
 	 *	@param		int|string		$addressId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function extendWithGeocodes( int|string $addressId ): bool
 	{

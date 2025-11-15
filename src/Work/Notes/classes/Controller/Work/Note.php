@@ -13,9 +13,8 @@ class Controller_Work_Note extends Controller
 	protected Logic_Note $logic;
 
 	/**
-	 * @return void
-	 * @throws ReflectionException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -75,11 +74,10 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param $noteId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		void
 	 */
-	public function addLink( $noteId ): void
+	public function addLink( int|string $noteId ): void
 	{
 		$words	= (object) $this->getWords( 'msg' );
 		$linkId	= $this->logic->createLink( $this->request->get( 'link_url' ), FALSE );
@@ -93,7 +91,6 @@ class Controller_Work_Note extends Controller
 	 *	@param		int			$page
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addSearchTag( string $tagId, int $page = 0 ): void
 	{
@@ -114,12 +111,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @param string|NULL $tagId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@param		string|NULL		$tagId
+	 *	@return		void
 	 */
-	public function addTag( string $noteId, ?string $tagId = NULL ): void
+	public function addTag( int|string $noteId, ?string $tagId = NULL ): void
 	{
 		$words			= (object) $this->getWords( 'msg' );
 		if( !is_null( $tagId ) ){
@@ -139,12 +135,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return void
-	 * @throws ReflectionException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public function edit( string $noteId ): void
+	public function edit( int|string $noteId ): void
 	{
 		$words			= (object) $this->getWords( 'edit' );
 
@@ -241,11 +236,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $tagId
-	 * @param int $page
-	 * @return void
+	 *	@param		int|string		$tagId
+	 *	@param		int				$page
+	 *	@return		void
 	 */
-	public function forgetTag( string $tagId, int $page = 0 ): void
+	public function forgetTag( int|string $tagId, int $page = 0 ): void
 	{
 		$list		= [];
 		$tags		= $this->session->get( 'filter_notes_tags' );
@@ -258,22 +253,20 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @param string $tagId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@param		int|string		$tagId
+	 *	@return		void
 	 */
-	public function ignoreTag( string $noteId, string $tagId ): void
+	public function ignoreTag( int|string $noteId, int|string $tagId ): void
 	{
 		$this->logic->ignoreTagOnNote( $tagId, $noteId );
 		$this->restart( './work/note/edit/'.$noteId );
 	}
 
 	/**
-	 * @param int $page
-	 * @return void
-	 * @throws ReflectionException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index( int $page = 0 ): void
 	{
@@ -344,9 +337,9 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $linkId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		string		$linkId
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function link( string $linkId ): void
 	{
@@ -361,11 +354,10 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		void
 	 */
-	public function remove( string $noteId ): void
+	public function remove( int|string $noteId ): void
 	{
 		$this->logic->removeNote( $noteId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -374,12 +366,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @param string $tagId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@param		int|string		$tagId
+	 *	@return		void
 	 */
-	public function removeTag( string $noteId, string $tagId ): void
+	public function removeTag( int|string $noteId, int|string $tagId ): void
 	{
 		$words		= (object) $this->getWords( 'msg' );
 		$this->logic->removeTagFromNote( $tagId, $noteId );
@@ -388,12 +379,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @param string $noteLinkId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@param		int|string		$noteLinkId
+	 *	@return		void
 	 */
-	public function removeLink( string $noteId, string $noteLinkId ): void
+	public function removeLink( int|string $noteId, int|string $noteLinkId ): void
 	{
 		$this->logic->removeNoteLink( $noteLinkId );
 		$words		= (object) $this->getWords( 'msg' );
@@ -402,11 +392,11 @@ class Controller_Work_Note extends Controller
 	}
 
 	/**
-	 * @param string $noteId
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$noteId
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public function view( string $noteId ): void
+	public function view( int|string $noteId ): void
 	{
 		$modelUser	= new Model_User( $this->env );
 		$this->logic->countNoteView( $noteId );
@@ -428,7 +418,6 @@ class Controller_Work_Note extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= Logic_Note::getInstance( $this->env );
 		$this->logic->setContext(
 			$this->session->get( Logic_Authentication::$sessionKeyAuthUserId, '0' ),

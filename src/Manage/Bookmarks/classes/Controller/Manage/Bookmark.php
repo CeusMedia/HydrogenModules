@@ -8,7 +8,6 @@ class Controller_Manage_Bookmark extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -37,7 +36,6 @@ class Controller_Manage_Bookmark extends Controller
 	/**
 	 *	@param		int|string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $bookmarkId ): void
 	{
@@ -76,7 +74,6 @@ class Controller_Manage_Bookmark extends Controller
 	/**
 	 *	@param		int|string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $bookmarkId ): void
 	{

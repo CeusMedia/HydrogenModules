@@ -18,7 +18,6 @@ class Logic_Mail_Group extends Logic
 	/**
 	 *	@param		array		$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addGroup( array $data ): string
 	{
@@ -54,7 +53,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		string			$address
 	 *	@param		string			$title
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addGroupMember( int|string $groupId, string $address, string $title )
 	{
@@ -158,7 +156,6 @@ class Logic_Mail_Group extends Logic
 	 *	@return		?object			Group model object if existing
 	 *	@throws		RangeException	if mail group is not existing
 	 *	@todo 		make this the main implementation after extraction of this large logic to sub logic classes.
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkId( int|string $groupId, bool $strict = TRUE ): ?object
 	{
@@ -172,7 +169,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		boolean			$strict			Flag: throw exception if not existing
 	 *	@return		?Entity_Mail_Group				Group model entity if existing
 	 *	@throws		RangeException	if mail group is not existing
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkGroupId( int|string $groupId, bool $strict = TRUE ): ?Entity_Mail_Group
 	{
@@ -189,7 +185,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		bool			$strict			Flag: throw exception if not found
 	 *	@return		object|array|NULL				The found entity, depending on fetch type
 	 *	@throws		RangeException					in strict mode if nothing found for ID
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkMemberId( int|string $memberId, bool $strict = TRUE ): object|array|NULL
 	{
@@ -429,7 +424,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		$status
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setMemberStatus( int|string $groupId, int|string $memberId, $status ): bool
 	{
@@ -483,7 +477,6 @@ class Logic_Mail_Group extends Logic
 	 *	Tries to create a mailbox using Plesk command line utilities
 	 *	@see		https://docs.plesk.com/en-US/onyx/cli-linux/using-command-line-utilities/mail-mail-accounts.39181/
 	 *	@todo		finish impl (find a way to execute command as root), run checks beforehand
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function createGroupMailAccountUsingPlesk( int|string $groupId ): void
 	{
@@ -509,7 +502,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		int|string			$groupId
 	 *	@return		PhpImapMailbox
 	 *	@throws		\PhpImap\Exceptions\InvalidParameterException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getMailbox( int|string $groupId ): PhpImapMailbox
 	{
@@ -537,7 +529,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		object		$member
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setMemberStatusToActivated( object $group, object $member ): void
 	{
@@ -583,7 +574,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		object		$member
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setMemberStatusToDeactivated( object $group, object $member ): void
 	{
@@ -614,7 +604,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		object		$member
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setMemberStatusToRejected( object $group, object $member ): void
 	{
@@ -639,7 +628,6 @@ class Logic_Mail_Group extends Logic
 	 *	@param		string|NULL		$method
 	 *	@return		bool|NULL
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function updateGroup( int|string $groupId, array $data, string $method = NULL ): ?bool
 	{

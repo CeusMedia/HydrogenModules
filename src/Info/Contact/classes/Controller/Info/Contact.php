@@ -153,7 +153,6 @@ class Controller_Info_Contact extends Controller
 	/**
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getFormPath(): string
 	{

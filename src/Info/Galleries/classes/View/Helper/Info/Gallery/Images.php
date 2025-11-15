@@ -34,7 +34,6 @@ class View_Helper_Info_Gallery_Images extends View_Helper_Info_Gallery
 	/**
 	 *	@param		int|string		$galleryId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setGallery( int|string $galleryId ): self
 	{

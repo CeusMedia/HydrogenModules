@@ -38,7 +38,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		int|string		$templateId
 	 *	@param		string			$url
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTemplateStyle( int|string $templateId, string $url ): void
 	{
@@ -153,7 +152,6 @@ return $html;
 	 *	@param		int|string		$templateId
 	 *	@param		array			$data
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editTemplate( int|string $templateId, array $data ): void
 	{
@@ -243,7 +241,6 @@ return $html;
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException		if newsletter ID is not valid
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeNewsletter( int|string $newsletterId ): bool
 	{
@@ -263,9 +260,8 @@ return $html;
 	}
 
 	/**
-	 * @param int|string $templateId
-	 * @return bool
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string $templateId
+	 *	@return		bool
 	 */
 	public function removeTemplate( int|string $templateId ): bool
 	{
@@ -277,12 +273,11 @@ return $html;
 	}
 
 	/**
-	 * @param int|string $templateId
-	 * @param $index
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@param		int|string		$templateId
+	 *	@param		string			$index
+	 *	@return		void
 	 */
-	public function removeTemplateStyle( int|string $templateId, $index ): void
+	public function removeTemplateStyle( int|string $templateId, string $index ): void
 	{
 		$this->checkTemplateId( $templateId, TRUE );
 		$styles		= $this->getTemplateAttributeList( $templateId, 'styles' );
@@ -353,7 +348,6 @@ return $html;
 	 *	@param		int|string		$templateId
 	 *	@param		$status
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setTemplateStatus( int|string $templateId, $status ): bool
 	{
@@ -371,7 +365,6 @@ return $html;
 	 *	@param		string			$columnKey
 	 *	@param		array			$list
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setTemplateAttributeList( int|string $templateId, string $columnKey, array $list ): int
 	{

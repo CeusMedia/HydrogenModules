@@ -8,7 +8,7 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{
@@ -41,7 +41,6 @@ class View_Helper_Info_Gallery_List extends View_Helper_Info_Gallery
 	/**
 	 *	@param		int|string		$galleryId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderGalleryImage( int|string $galleryId ): string
 	{

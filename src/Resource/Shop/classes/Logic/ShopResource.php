@@ -31,7 +31,6 @@ class Logic_ShopResource extends Logic
 
 	/**
 	 *	@deprecated	get Model_Shop_Order::priceTaxed instead
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		InvalidArgumentException	if given order ID is invalid
 	 */
 	public function calculateOrderTotalPrice( int|string $orderId ): float
@@ -58,7 +57,6 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$userId
 	 *	@return		Entity_User
 	 *	@throws		RangeException	if customer ID is invalid
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAccountCustomer( int|string $userId ): Entity_User
 	{
@@ -141,7 +139,6 @@ class Logic_ShopResource extends Logic
 	 *	@return		Entity_User					Customer account data object
 	 *	@throws		RangeException			if no order found for given order ID
 	 *	@throws		RuntimeException		if order has no user assigned
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getOrderCustomer( object|int|string $orderObjectOrId ): Entity_User
 	{
@@ -201,7 +198,6 @@ class Logic_ShopResource extends Logic
 	}
 
 	/**
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		RangeException			if no order found for given order ID
 	 *	@throws		RuntimeException		if order has no user assigned
 	 */

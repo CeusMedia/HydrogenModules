@@ -19,7 +19,7 @@ class Controller_Work_Newsletter_Group extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -179,7 +179,6 @@ class Controller_Work_Newsletter_Group extends Controller
 	 *	@param		int|string			$groupId
 	 *	@param		int|string|NULL		$readerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeReader( int|string $groupId, int|string|NULL $readerId = NULL ): void
 	{

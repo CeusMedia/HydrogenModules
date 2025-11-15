@@ -21,7 +21,7 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 	 *	@param		string		$addressId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function address( string $addressId ): void
 	{
@@ -71,7 +71,7 @@ class Controller_Ajax_Work_Mail_Check extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function editAddress(): void
 	{

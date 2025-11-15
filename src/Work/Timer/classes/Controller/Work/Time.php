@@ -18,9 +18,8 @@ class Controller_Work_Time extends Controller
 	protected array $modules			= [];
 
 	/**
-	 * @return void
-	 * @throws ReflectionException
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -72,8 +71,7 @@ class Controller_Work_Time extends Controller
 	}
 
 	/**
-	 * @return void
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
+	 *	@return		void
 	 */
 	public function assign(): void
 	{
@@ -231,11 +229,10 @@ class Controller_Work_Time extends Controller
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function pause( string $timerId ): void
+	public function pause( int|string $timerId ): void
 	{
 		try{
 			$this->logicTimer->pause( $timerId );
@@ -259,11 +256,10 @@ class Controller_Work_Time extends Controller
 	}
 
 	/**
-	 *	@param		string		$timerId
+	 *	@param		int|string		$timerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function start( string $timerId ): void
+	public function start( int|string $timerId ): void
 	{
 		try{
 			$this->logicTimer->start( $timerId );
@@ -280,7 +276,6 @@ class Controller_Work_Time extends Controller
 	/**
 	 *	@param		string		$timerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function stop( string $timerId ): void
 	{

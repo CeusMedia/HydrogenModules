@@ -41,7 +41,6 @@ class Controller_Work_Mission_Future extends Controller_Work_Mission
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{

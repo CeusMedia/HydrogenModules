@@ -71,7 +71,6 @@ class Controller_Info_Blog extends Controller
 	/**
 	 *	@param		int|string|NULL		$postId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function post( int|string|NULL $postId = NULL ): void
 	{
@@ -129,7 +128,6 @@ class Controller_Info_Blog extends Controller
 	 *	@param		int|string		$postId
 	 *	@param		bool			$strict
 	 *	@return		object
-	 *	@throws	\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPost( int|string $postId, bool $strict = FALSE ): object
 	{

@@ -13,7 +13,6 @@ class Controller_Work_Meeting extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -244,7 +243,6 @@ class Controller_Work_Meeting extends Controller
 	/**
 	 *	@param		int|string		$meetingId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $meetingId ): void
 	{
@@ -328,8 +326,7 @@ class Controller_Work_Meeting extends Controller
 	/**
 	 *	@param		int|string		$meetingId
 	 *	@param		bool			$strict
-	 *	@return		Entity_Work_Meeting|null
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@return		Entity_Work_Meeting|NULL
 	 */
 	protected function checkMeeting( int|string $meetingId, bool $strict = TRUE ): ?Entity_Work_Meeting
 	{

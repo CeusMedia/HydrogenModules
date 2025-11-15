@@ -156,7 +156,6 @@ class Job_Job_Schedule extends Job_Abstract
 	/**
 	 *	@return		int
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function run(): int
 	{

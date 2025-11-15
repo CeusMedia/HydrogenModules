@@ -20,6 +20,7 @@ class Job_Mail_Queue extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function sendQueuedMails(): void
 	{

@@ -7,7 +7,7 @@ class Hook_Info_Manual_Shortcode extends Hook
 {
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onViewRenderContent(): void
 	{
