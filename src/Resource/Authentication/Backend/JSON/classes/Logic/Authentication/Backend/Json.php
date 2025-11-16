@@ -40,7 +40,6 @@ class Logic_Authentication_Backend_Json extends Logic implements Logic_Authentic
 	/**
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{

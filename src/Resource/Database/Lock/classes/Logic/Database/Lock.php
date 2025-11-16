@@ -14,7 +14,6 @@ class Logic_Database_Lock extends Logic
 	 *	@param		string				$subject
 	 *	@param		int|string|NULL		$entryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public static function release( Environment $env, string $subject, int|string|NULL $entryId = NULL ): void
 	{
@@ -44,7 +43,6 @@ class Logic_Database_Lock extends Logic
 	 *	@param		int|string		$entryId
 	 *	@return		Entity_User
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getLockUser( string $subject, int|string $entryId ): Entity_User
 	{
@@ -126,7 +124,6 @@ class Logic_Database_Lock extends Logic
 	 *	@param		int|string		$entryId
 	 *	@param		int|string		$userId
 	 *	@return		bool|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function lock( string $subject, int|string $entryId, int|string $userId ): ?bool
 	{
@@ -147,7 +144,6 @@ class Logic_Database_Lock extends Logic
 	 *	@param		string			$subject
 	 *	@param		int|string		$entryId
 	 *	@return		bool|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function lockByMe( string $subject, int|string $entryId ): ?bool
 	{
@@ -159,7 +155,6 @@ class Logic_Database_Lock extends Logic
 	 *	@param		int|string		$entryId
 	 *	@param		int|string|NULL	$userId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unlock( string $subject, int|string $entryId = '0', int|string|NULL $userId = NULL ): bool
 	{

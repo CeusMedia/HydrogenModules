@@ -25,7 +25,6 @@ class Mail_Work_Mission_Daily extends Mail_Work_Mission_Abstract
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function renderHtmlMailBody(): string
 	{

@@ -108,7 +108,6 @@ class Controller_Info_Mail_Group extends Controller
 	 *	@param		string|NULL		$groupId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function join( string $groupId = NULL ): void
 	{

@@ -100,7 +100,6 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 	/**
 	 *	@param		int|string		$providerId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function remove( int|string $providerId ): void
 	{
@@ -136,7 +135,6 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 	 *	@param		int|string		$providerId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function checkProvider( int|string $providerId, bool $strict = TRUE ): ?object
 	{
@@ -153,7 +151,6 @@ class Controller_Manage_My_User_Oauth2 extends Controller
 	 *	@param		int|string		$providerId
 	 *	@return		object
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function getProviderObject( int|string $providerId ): object
 	{

@@ -276,7 +276,6 @@ class Hook_Info_Page extends Hook
 	 *	NEW CODE USING UI:SHORTCODE
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyStrategy2(): void
 	{

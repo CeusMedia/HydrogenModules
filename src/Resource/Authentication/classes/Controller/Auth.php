@@ -167,7 +167,6 @@ class Controller_Auth extends Controller
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function tryLoginByCookie(): void
 	{

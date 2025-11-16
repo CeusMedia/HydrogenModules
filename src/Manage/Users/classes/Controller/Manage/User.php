@@ -50,7 +50,6 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		string		$userId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function accept( string $userId ): void
 	{
@@ -86,7 +85,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		int|string		$userId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addToGroup( int|string $userId ): void
 	{
@@ -106,7 +104,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		int|string		$groupId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeFromGroup( int|string $userId, int|string $groupId ): void
 	{
@@ -123,7 +120,6 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		string		$userId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function ban( string $userId ): void
 	{
@@ -133,7 +129,6 @@ class Controller_Manage_User extends Controller
 	/**
 	 *	@param		string		$userId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function disable( string $userId ): void
 	{
@@ -144,7 +139,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		string		$userId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $userId ): void
 	{
@@ -275,7 +269,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		string		$userId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function password( string $userId ): void
 	{
@@ -490,7 +483,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		Entity_User		$user
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleEditAction( Entity_User $user ): void
 	{
@@ -626,7 +618,6 @@ class Controller_Manage_User extends Controller
 	 *	@param		string		$userId
 	 *	@param		int			$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setStatus( string $userId, int $status ): void
 	{

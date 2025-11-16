@@ -13,7 +13,6 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
 	 *	@throws		DataAmbiguousException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render( string $templateId ): void
 	{
@@ -28,7 +27,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@param		string		$templateId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function saveCss( string $templateId ): void
 	{
@@ -44,7 +43,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@param		string		$templateId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function saveHtml( string $templateId ): void
 	{
@@ -60,7 +59,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@param		string		$templateId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function savePlain( string $templateId ): void
 	{
@@ -96,7 +95,7 @@ class Controller_Ajax_Admin_Mail_Template extends AjaxController
 	 *	@param		string		$templateId
 	 *	@param		bool		$strict
 	 *	@return		object|FALSE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RangeException
 	 */
 	protected function checkTemplate( string $templateId, bool $strict = TRUE ): object|FALSE
 	{

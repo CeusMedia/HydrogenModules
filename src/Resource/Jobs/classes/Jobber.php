@@ -113,7 +113,6 @@ class Jobber extends ConsoleApplication
 	 *	Executes possible job call.
 	 *	@return		integer
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function run(): int
 	{
@@ -178,7 +177,6 @@ class Jobber extends ConsoleApplication
 	 *	@param		Entity_Job_Definition		$job
 	 *	@return		int
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function runJobManually( Entity_Job_Definition $job ): int
 	{

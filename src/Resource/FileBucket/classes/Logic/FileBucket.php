@@ -48,7 +48,6 @@ class Logic_FileBucket extends Logic
 	 *	@param		string		$mimeType
 	 *	@param		?string		$moduleId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add( string $sourceFilePath, string $uriPath, string $mimeType, ?string $moduleId = NULL ): string
 	{
@@ -78,7 +77,6 @@ class Logic_FileBucket extends Logic
 	/**
 	 *	@param		int|string		$fileId
 	 *	@return		?Entity_File
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $fileId ): ?Entity_File
 	{
@@ -204,7 +202,6 @@ class Logic_FileBucket extends Logic
 	/**
 	 *	@param		int|string		$fileId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function noteView( int|string $fileId ): void
 	{
@@ -222,7 +219,6 @@ class Logic_FileBucket extends Logic
 	 *	@return		string
 	 *	@throws		DomainException
 	 *	@throws		RuntimeException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function replace( int|string $fileId, string $sourceFilePath, ?string $mimeType = NULL ): string
 	{
@@ -243,7 +239,6 @@ class Logic_FileBucket extends Logic
 	 *	@param		int|string		$fileId
 	 *	@param		string			$name
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function rename( int|string $fileId, string $name ): bool
 	{
@@ -253,7 +248,6 @@ class Logic_FileBucket extends Logic
 	/**
 	 *	@param		int|string		$fileId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $fileId ): bool
 	{

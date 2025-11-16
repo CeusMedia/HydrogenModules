@@ -60,7 +60,6 @@ class Controller_Catalog extends Controller
 	/**
 	 *	@param		int|string		$authorId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function author( int|string $authorId ): void
 	{
@@ -102,7 +101,6 @@ class Controller_Catalog extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function category( int|string $categoryId ): void
 	{
@@ -131,7 +129,6 @@ class Controller_Catalog extends Controller
 	 *	@todo		extract labels
 	 *	@todo		BONUS: draft resolution for Google categories and implement solution for hooked modules
 	 *	@throws		DOMException
-	 *	@throws		ReflectionException
 	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function feed(): void

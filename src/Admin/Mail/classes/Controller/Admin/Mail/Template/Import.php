@@ -33,7 +33,6 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -81,7 +80,6 @@ class Controller_Admin_Mail_Template_Import extends Controller
 	/**
 	 *	@param		object		$template
 	 *	@return		int|string|FALSE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function importTemplate( object $template ): int|string|FALSE
 	{

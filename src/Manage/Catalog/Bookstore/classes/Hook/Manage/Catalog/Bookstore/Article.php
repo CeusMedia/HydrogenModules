@@ -8,6 +8,7 @@ class Hook_Manage_Catalog_Bookstore_Article extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onTinyMCE_getImageList(): void
 	{
@@ -39,6 +40,7 @@ class Hook_Manage_Catalog_Bookstore_Article extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onTinyMCE_getLinkList(): void
 	{

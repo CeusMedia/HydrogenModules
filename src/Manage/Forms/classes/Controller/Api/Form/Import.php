@@ -209,7 +209,6 @@ class Controller_Api_Form_Import extends Controller
 	/**
 	 *	@param		Entity_Form_Import_Rule		$importRule
 	 *	@return		Entity_Import_Connector
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function tryToGetConnector( Entity_Form_Import_Rule $importRule ): Entity_Import_Connector
 	{
@@ -225,7 +224,6 @@ class Controller_Api_Form_Import extends Controller
 	/**
 	 *	@param		int|string		$importRuleId
 	 *	@return		Entity_Form_Import_Rule
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function tryToGetImportRule( int|string $importRuleId ): Entity_Form_Import_Rule
 	{

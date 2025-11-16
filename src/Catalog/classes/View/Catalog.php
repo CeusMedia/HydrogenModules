@@ -4,7 +4,6 @@ use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
-use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class View_Catalog extends View
 {

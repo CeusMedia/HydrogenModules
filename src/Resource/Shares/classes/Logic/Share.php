@@ -22,7 +22,6 @@ class Logic_Share extends Logic
 	 *	@param		int				$access			Access type, one of Model_Share::ACCESS_* (public, captcha, login)
 	 *	@param		$validity
 	 *	@return		Entity_Share
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function create( string $moduleId, int|string $relationId, string $path, int $access, $validity ): Entity_Share
 	{
@@ -101,7 +100,6 @@ class Logic_Share extends Logic
 	 *	@param		int|string		$relationId
 	 *	@param		string			$path
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function changePath( string $moduleId, int|string $relationId, string $path ): void
 	{
@@ -114,7 +112,6 @@ class Logic_Share extends Logic
 	 *	@param		string			$moduleId
 	 *	@param		int|string		$relationId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $moduleId, int|string $relationId ): bool
 	{
@@ -136,7 +133,6 @@ class Logic_Share extends Logic
 	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generateQrCode( Entity_Share $share, string $url ): Entity_File
 	{
@@ -148,7 +144,6 @@ class Logic_Share extends Logic
 	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generateQrCodeAsPng( Entity_Share $share, string $url ): Entity_File
 	{
@@ -169,7 +164,6 @@ class Logic_Share extends Logic
 	 *	@param		Entity_Share	$share
 	 *	@param		string			$url
 	 *	@return		Entity_File		File bucket object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generateQrCodeAsSvg( Entity_Share $share, string $url ): Entity_File
 	{

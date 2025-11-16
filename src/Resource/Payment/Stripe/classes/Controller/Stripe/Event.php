@@ -18,7 +18,7 @@ class Controller_Stripe_Event extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function receive(): void
 	{
@@ -86,7 +86,6 @@ class Controller_Stripe_Event extends Controller
 	 *	@param		array		$data
 	 *	@return		?bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function sendMail( string $type, array $data ): ?bool
 	{

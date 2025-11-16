@@ -12,7 +12,6 @@ class Controller_Manage_Import extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -40,7 +39,6 @@ class Controller_Manage_Import extends Controller
 	/**
 	 * @param		string		$connectionId
 	 * @return		void
-	 * @throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $connectionId ): void
 	{

@@ -50,7 +50,6 @@ class Logic_ShopManager extends Logic
 	 *	@param		int|string		$userId
 	 *	@return		Entity_User
 	 *	@throws		RangeException	if customer ID is invalid
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAccountCustomer( int|string $userId ): Entity_User
 	{
@@ -173,7 +172,6 @@ class Logic_ShopManager extends Logic
 	 *	@param		integer|string		$positionId		Order position ID
 	 *	@param		integer|string		$status			Status to set
 	 *	@return		integer				1: order changed, 0: nothing changed
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderPositionStatus( int|string $positionId, int|string $status ): int
 	{
@@ -187,7 +185,6 @@ class Logic_ShopManager extends Logic
 	 *	@param		integer|string	$orderId		Order ID
 	 *	@param		integer|string	$status			Status to set
 	 *	@return		integer			1: order changed, 0: nothing changed
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderStatus( int|string $orderId, int|string $status ): int
 	{

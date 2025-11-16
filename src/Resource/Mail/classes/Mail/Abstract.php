@@ -258,7 +258,6 @@ abstract class Mail_Abstract
 	 *	@param		string		$userId		ID of user to send mail to
 	 *	@return		boolean		TRUE if success
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendToUser( string $userId ): bool
 	{

@@ -57,7 +57,6 @@ class View_Helper_Shop_FinishPanel_Bank
 	/**
 	 *	@param		int|string		$orderId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderId( int|string $orderId ): self
 	{

@@ -14,7 +14,7 @@ class Controller_Resource extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function me(): void
 	{
@@ -44,7 +44,7 @@ class Controller_Resource extends Controller
 	 *	@param		string		$username
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function user( string $username ): void
 	{
@@ -75,7 +75,7 @@ class Controller_Resource extends Controller
 	 *	@param		int|string $userId
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function userId( int|string $userId ): void
 	{

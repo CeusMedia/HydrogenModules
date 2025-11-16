@@ -19,7 +19,6 @@ class Controller_Manage_Customer extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -43,7 +42,6 @@ class Controller_Manage_Customer extends Controller
 	/**
 	 *	@param		int|string		$customerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $customerId ): void
 	{
@@ -91,7 +89,6 @@ class Controller_Manage_Customer extends Controller
 	/**
 	 *	@param		int|string		$customerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function map( int|string $customerId ): void
 	{
@@ -107,7 +104,6 @@ class Controller_Manage_Customer extends Controller
 	/**
 	 *	@param		int|string		$customerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function rate( int|string $customerId ): void
 	{
@@ -143,7 +139,6 @@ class Controller_Manage_Customer extends Controller
 	/**
 	 *	@param		int|string		$customerId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function resolveGeocode( int|string $customerId ): bool
 	{

@@ -17,7 +17,6 @@ class Controller_Manage_Relocation extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -51,7 +50,6 @@ class Controller_Manage_Relocation extends Controller
 	/**
 	 *	@param		string		$relocationId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $relocationId ): void
 	{
@@ -219,7 +217,6 @@ class Controller_Manage_Relocation extends Controller
 	 *	@param		string		$relocationId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( string $relocationId, $status ): void
 	{
@@ -231,7 +228,6 @@ class Controller_Manage_Relocation extends Controller
 	/**
 	 *	@param		string		$relocationId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $relocationId ): void
 	{
@@ -262,7 +258,6 @@ class Controller_Manage_Relocation extends Controller
 	/**
 	 *	@param		string		$relocationId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkRelocation( string $relocationId ): object
 	{

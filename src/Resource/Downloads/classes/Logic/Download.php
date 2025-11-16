@@ -40,7 +40,6 @@ class Logic_Download extends Logic
 	 *	@param		int|string		$folderId
 	 *	@param		string|NULL		$description
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function addFileFromUpload( Logic_Upload $logicUpload, int|string $folderId = 0, ?string $description = NULL ): void
 	{
@@ -69,7 +68,7 @@ class Logic_Download extends Logic
 	 *	@param		int|string		$parentId
 	 *	@param		int				$type
 	 *	@return		int|string
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function addFolder( string $folder, int|string $parentId = 0, int $type = 0 ): int|string
 	{
@@ -161,7 +160,6 @@ class Logic_Download extends Logic
 	 *	@param		Entity_Download_File	$file
 	 *	@param		array					$data
 	 *	@return		bool|NULL
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function editFile( Entity_Download_File $file, array $data ): ?bool
 	{
@@ -212,7 +210,6 @@ class Logic_Download extends Logic
 	/**
 	 *	@param		Entity_Download_Folder		$folder
 	 *	@return		bool
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function folderPathExists( Entity_Download_Folder $folder ): bool
 	{
@@ -255,7 +252,6 @@ class Logic_Download extends Logic
 	 *	@param		int|string		$folderId
 	 *	@param		bool			$withBasePath
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getPathFromFolderId( int|string $folderId, bool $withBasePath = FALSE ): string
 	{
@@ -290,7 +286,6 @@ class Logic_Download extends Logic
 	/**
 	 *	@param		int|string		$folderId
 	 *	@return		array
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getStepsFromFolderId( int|string $folderId ): array
 	{
@@ -332,7 +327,6 @@ class Logic_Download extends Logic
 	/**
 	 *	@param		int|string		$fileId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function makeDownloadCount( int|string $fileId ): void
 	{
@@ -399,7 +393,6 @@ class Logic_Download extends Logic
 	/**
 	 *	@param		int|string		$fileId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function removeFile( int|string $fileId ): void
 	{
@@ -417,7 +410,6 @@ class Logic_Download extends Logic
 	 *	@param		Entity_Download_File	$file
 	 *	@param		string					$title
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renameFile( Entity_Download_File $file, string $title ): void
 	{
@@ -432,7 +424,6 @@ class Logic_Download extends Logic
 	 *	@param		Entity_Download_Folder	$folder
 	 *	@param		string					$title
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renameFolder( Entity_Download_Folder $folder, string $title ): void
 	{
@@ -446,7 +437,6 @@ class Logic_Download extends Logic
 	/**
 	 *	@param		Entity_Download_Folder	$folder
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function removeFolder( Entity_Download_Folder $folder ): void
 	{

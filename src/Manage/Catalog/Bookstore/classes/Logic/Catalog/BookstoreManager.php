@@ -195,10 +195,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return $this->modelArticleCategory->add( $indices );
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelArticle->has( $articleId ) )
@@ -208,10 +204,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return FALSE;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( $authorId ) )
@@ -221,10 +213,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return FALSE;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( $categoryId ) )
@@ -461,7 +449,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 
 	/**
 	 *	@todo		use cache
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAuthor( int|string $authorId ): object
 	{
@@ -506,10 +493,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return $list;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function getAuthorUri( object|int|string $authorOrId, bool $absolute = FALSE ): string
 	{
 		$author = $authorOrId;
@@ -543,10 +526,6 @@ class Logic_Catalog_BookstoreManager extends Logic
 		return $list;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function getCategoriesOfArticle( int|string $articleId ): array
 	{
 		$this->checkArticleId( $articleId, TRUE );
@@ -940,6 +919,7 @@ class Logic_Catalog_BookstoreManager extends Logic
 	/**
 	 *	@todo		code doc
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

@@ -53,6 +53,7 @@ class Hook_Catalog_Bookstore extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onRenderSearchResults(): void
 	{

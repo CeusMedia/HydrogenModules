@@ -74,7 +74,6 @@ class View_Helper_Shop_FinishPanel_Stripe
 	/**
 	 *	@param		int|string		$orderId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderId( int|string $orderId ): self
 	{
@@ -100,7 +99,6 @@ class View_Helper_Shop_FinishPanel_Stripe
 	/**
 	 *	@param		int|string		$paymentId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setPaymentId( int|string $paymentId ): self
 	{

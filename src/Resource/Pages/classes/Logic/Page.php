@@ -38,7 +38,6 @@ class Logic_Page extends Logic
 	 *	@access		public
 	 *	@param		Entity_Page		$page		Page data object to set list of parent pages to
 	 *	@return		array			List of parent pages, added to given page object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
@@ -68,7 +67,6 @@ class Logic_Page extends Logic
 	 *	@param		int|string		$pageId
 	 *	@param		bool			$activeOnly
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
@@ -113,7 +111,6 @@ class Logic_Page extends Logic
 	 *	@param		int|string		$pageId
 	 *	@param		bool			$strict		Flag: throw exception on miss, default: yes
 	 *	@return		?Entity_Page
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 *	@todo		move "from path" to method hasPageByPath and make pathOrId to pageId
@@ -152,7 +149,6 @@ class Logic_Page extends Logic
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 *	@todo		check if this is deprecated! why the hell get page from controller alone?
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		EnvironmentException
 	 */
 	public function getPageFromController( string $controllerName, bool $strict = TRUE ): ?Entity_Page
@@ -178,7 +174,6 @@ class Logic_Page extends Logic
 	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		InvalidArgumentException	if no or empty module ID is given
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		EnvironmentException
 	 */
 	public function getPageFromControllerAction( string $controllerName, string $action, bool $strict = TRUE ): ?Entity_Page
@@ -211,7 +206,6 @@ class Logic_Page extends Logic
 	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		RangeException				if path is not resolvable
 	 *	@throws		RangeException				if path parent part is not resolvable
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getPageFromPath( string $path, bool $withParents = FALSE, bool $strict = TRUE ): ?Entity_Page
 	{
@@ -239,7 +233,6 @@ class Logic_Page extends Logic
 	 *	@param		boolean		$strict			Flag: throw exception on failure
 	 *	@return		?Entity_Page				Data object of found page or NULL if nothing found
 	 *	@throws		RuntimeException			if path is not resolvable
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getPageFromRequest( bool $withParents = FALSE, bool $strict = TRUE ): ?Entity_Page
 	{
@@ -263,7 +256,6 @@ class Logic_Page extends Logic
 	 *	@return		boolean
 	 *	@throws		InvalidArgumentException	if no or empty path is given, call at least with path 'index'
 	 *	@todo		move "by path" to method hasPageByPath and make pathOrId to pageId
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */
@@ -316,8 +308,6 @@ class Logic_Page extends Logic
 	/**
 	 *	@param		Entity_Page		$page
 	 *	@return		Entity_Page
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function translatePage( Entity_Page $page ): Entity_Page
 	{
@@ -365,7 +355,6 @@ class Logic_Page extends Logic
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 *	@throws		EnvironmentException
 	 */

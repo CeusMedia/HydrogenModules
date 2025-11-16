@@ -16,7 +16,6 @@ class Logic_Project extends Logic
 	/**
 	 *	@param		int|string		$projectId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $projectId ): ?object
 	{
@@ -67,7 +66,6 @@ class Logic_Project extends Logic
 	/**
 	 *	@param		int|string		$projectId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getProject( int|string $projectId ): ?object
 	{

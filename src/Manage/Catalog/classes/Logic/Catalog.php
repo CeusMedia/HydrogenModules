@@ -265,10 +265,6 @@ class Logic_Catalog extends Logic
 		return FALSE;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
 	public function checkAuthorId( $authorId, $throwException = FALSE ): bool
 	{
 		if( $this->modelAuthor->has( (int) $authorId ) )
@@ -278,10 +274,6 @@ class Logic_Catalog extends Logic
 		return FALSE;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
 	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
 		if( $this->modelCategory->has( $categoryId ) )
@@ -320,10 +312,6 @@ class Logic_Catalog extends Logic
 		return $number;
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
 	public function editArticle( string $articleId, array $data ): void
 	{
 		$this->checkArticleId( $articleId, TRUE );
@@ -332,10 +320,6 @@ class Logic_Catalog extends Logic
 		$this->clearCacheForArticle( $articleId );
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
 	public function editAuthor( string $authorId, array $data ): void
 	{
 		$this->checkAuthorId( $authorId, TRUE );
@@ -344,10 +328,6 @@ class Logic_Catalog extends Logic
 		$this->modelAuthor->edit( $authorId, $data );
 	}
 
-	/**
-	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
-	 */
 	public function editCategory( string $categoryId, array $data ): void
 	{
 		$this->checkCategoryId( $categoryId, TRUE );

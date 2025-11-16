@@ -131,7 +131,6 @@ class Job_Mail_Sent extends Job_Abstract
 	 *	@param		int|string			$mailId
 	 *	@param		MailboxUpload		$upload
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function copyMailByRebuild( int|string $mailId, MailboxUpload $upload ): bool
 	{

@@ -18,7 +18,6 @@ class Controller_Manage_Gallery extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -57,7 +56,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$galleryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addImage( string $galleryId ): void
 	{
@@ -134,7 +132,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$galleryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $galleryId ): void
 	{
@@ -175,7 +172,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$imageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editImage( string $imageId ): void
 	{
@@ -194,7 +190,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$galleryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $galleryId ): void
 	{
@@ -219,7 +214,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$imageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeImage( string $imageId ): void
 	{
@@ -264,7 +258,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string $galleryId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getGallery( string $galleryId ): ?object
 	{
@@ -284,7 +277,6 @@ class Controller_Manage_Gallery extends Controller
 	/**
 	 *	@param		string		$imageId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getImage( string $imageId ): ?object
 	{
@@ -304,7 +296,6 @@ class Controller_Manage_Gallery extends Controller
 	 *	@param		object|int|string		$gallery
 	 *	@param		bool					$thumbs
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getPath( object|int|string $gallery, bool $thumbs = FALSE ): string
 	{

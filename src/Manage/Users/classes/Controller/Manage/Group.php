@@ -35,7 +35,6 @@ class Controller_Manage_Group extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -68,7 +67,6 @@ class Controller_Manage_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addRight( int|string $groupId ): void
 	{
@@ -90,7 +88,7 @@ class Controller_Manage_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $groupId ): void
 	{
@@ -172,7 +170,6 @@ class Controller_Manage_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $groupId ): void
 	{
@@ -199,7 +196,6 @@ class Controller_Manage_Group extends Controller
 	 *	@param		string			$controller
 	 *	@param		string			$action
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeRight( int|string $groupId, string $controller, string $action ): void
 	{

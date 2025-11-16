@@ -48,6 +48,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( string $newsletterId ): void
 	{
@@ -69,7 +70,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editFull( string $newsletterId ): void
 	{
@@ -268,7 +268,6 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@param		string		$tabKey
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setContentTab( string $newsletterId, string $tabKey ): void
 	{
@@ -360,7 +359,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function remove( string $newsletterId ): void

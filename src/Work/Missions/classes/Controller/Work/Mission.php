@@ -396,7 +396,7 @@ class Controller_Work_Mission extends Controller
 	 *	@param		int|string		$missionId
 	 *	@param		string			$missionDocumentId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
 	 */
 	public function downloadDocument( int|string $missionId, string $missionDocumentId ): void
 	{
@@ -892,7 +892,7 @@ class Controller_Work_Mission extends Controller
 	 *	@param		int|string		$missionId
 	 *	@param		int|string		$missionDocumentId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function viewDocument( int|string $missionId, int|string $missionDocumentId ): void
 	{

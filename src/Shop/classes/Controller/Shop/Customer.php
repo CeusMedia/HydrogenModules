@@ -42,7 +42,6 @@ class Controller_Shop_Customer extends Controller
 	 *	@param		boolean		$remove			Flag: remove address and return
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function address( string $addressId, $type = NULL, bool $remove = NULL ): void
 	{

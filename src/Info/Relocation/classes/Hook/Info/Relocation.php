@@ -7,7 +7,7 @@ class Hook_Info_Relocation extends Hook
 {
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onPageApplyModulesCheckShortcutRoute(): void
 	{

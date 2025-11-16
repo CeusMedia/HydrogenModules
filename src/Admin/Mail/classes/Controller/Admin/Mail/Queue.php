@@ -76,7 +76,6 @@ class Controller_Admin_Mail_Queue extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function bulk(): void
 	{
@@ -102,7 +101,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function cancel( int|string $mailId ): void
 	{
@@ -209,7 +207,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function html( int|string $mailId ): void
 	{
@@ -280,7 +277,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		$mailId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( $mailId ): void
 	{
@@ -294,7 +290,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function resend( int|string $mailId ): void
 	{
@@ -316,7 +311,6 @@ class Controller_Admin_Mail_Queue extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function send(): void
 	{
@@ -341,7 +335,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		int|string		$mailId		Mail ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $mailId ): void
 	{
@@ -428,7 +421,6 @@ class Controller_Admin_Mail_Queue extends Controller
 	/**
 	 *	@param		array<int|string>		$mailIds		List of mail IDs
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function bulkRemove( array $mailIds ): int
 	{

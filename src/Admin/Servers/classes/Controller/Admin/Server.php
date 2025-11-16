@@ -13,7 +13,6 @@ class Controller_Admin_Server extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -43,7 +42,6 @@ class Controller_Admin_Server extends Controller
 	/**
 	 *	@param		string		$serverId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addProject( string $serverId ): void
 	{
@@ -65,7 +63,6 @@ class Controller_Admin_Server extends Controller
 	/**
 	 *	@param		string		$serverId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $serverId ): void
 	{
@@ -117,7 +114,6 @@ class Controller_Admin_Server extends Controller
 	/**
 	 *	@param		string		$serverId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $serverId ): void
 	{
@@ -131,7 +127,6 @@ class Controller_Admin_Server extends Controller
 	/**
 	 *	@param		string		$serverId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $serverId ): void
 	{
@@ -146,7 +141,6 @@ class Controller_Admin_Server extends Controller
 	/**
 	 *	@param		string		$serverProjectId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeProject( string $serverProjectId ): void
 	{

@@ -167,7 +167,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$newsletterId
 	 *	@param		array			$data
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editNewsletter( int|string $newsletterId, array $data ): int
 	{
@@ -181,7 +180,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array 			$data
 	 *	@param		bool			$strict
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editReader( int|string $readerId, array $data, bool $strict = TRUE ): int
 	{
@@ -213,7 +211,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getGroup( int|string $groupId, bool $strict = TRUE ): ?object
 	{
@@ -256,7 +253,6 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getGroupsOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
 	{

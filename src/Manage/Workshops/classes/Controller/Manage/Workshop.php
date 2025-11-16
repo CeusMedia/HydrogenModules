@@ -14,7 +14,6 @@ class Controller_Manage_Workshop extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -44,7 +43,6 @@ class Controller_Manage_Workshop extends Controller
 	/**
 	 *	@param		int|string		$workshopId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $workshopId ): void
 	{
@@ -71,7 +69,6 @@ class Controller_Manage_Workshop extends Controller
 	/**
 	 *	@param		int|string		$workshopId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $workshopId ): void
 	{

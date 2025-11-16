@@ -39,7 +39,6 @@ class Logic_Authentication extends Logic
 	 *	Returns groups of current user.
 	 *	Forwards to used authentication backend.
 	 *	@return		Entity_Group[]
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCurrentGroups(): array
 	{

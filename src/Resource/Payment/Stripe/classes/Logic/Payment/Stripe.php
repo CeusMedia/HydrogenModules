@@ -41,7 +41,6 @@ class Logic_Payment_Stripe extends Logic
 	 */
 	public function createChargeFromToken( int|string $orderId, string $token ): StripeCharge
 	{
-		/** @var Entity_Shop_Order $order */
 		$order	= Logic_Shop::getInstance( $this->env )->getOrder( $orderId, TRUE );
 
 		return StripeCharge::create( [
@@ -68,7 +67,6 @@ class Logic_Payment_Stripe extends Logic
 	 *	@return		StripeCustomer
 	 *	@throws		ReflectionException
 	 *	@throws		StripeApiErrorException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createCustomerFromLocalUser( int|string $localUserId ): StripeCustomer
 	{
@@ -118,7 +116,6 @@ class Logic_Payment_Stripe extends Logic
 	 *	@param		int|string		$localUserId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setUserIdForLocalUserId( int|string $userId, int|string $localUserId ): void
 	{

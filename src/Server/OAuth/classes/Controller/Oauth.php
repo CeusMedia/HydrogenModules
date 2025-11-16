@@ -49,7 +49,6 @@ class Controller_Oauth extends Controller
 	 *	@todo		#1 implement error types: unauthorized_client, invalid_scope, server_error, temporarily_unavailable
 	 *	@todo		#2 implement grant type: implicit
 	 *	@todo		#3 make configurable: client agent (default, RFC) OR show login fail on authorization server (nicer)
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function authorize(): void
 	{
@@ -120,7 +119,7 @@ class Controller_Oauth extends Controller
 	 *	Supported grant types: authorization_code, password, client_credentials, refresh_token
 	 *	@access		public
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function token(): void
 	{
@@ -149,7 +148,7 @@ class Controller_Oauth extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -167,7 +166,7 @@ class Controller_Oauth extends Controller
 	 *	@access		protected
 	 *	@return		void
 	 *	@todo		idea: return list of refreshed tokens/codes
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function cleanUp(): void
 	{
@@ -273,7 +272,7 @@ class Controller_Oauth extends Controller
 	 *	@param		string		$redirectUri		URI to redirect to afterwards ()
 	 *	@param		?string		$scope				List of scopes asked to access to
 	 *	@return		string		Authorization code to be delivered to redirect URI
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function generateAuthorizationCode( int|string $applicationId, int|string $userId, string $redirectUri, ?string $scope = NULL ): string
 	{
@@ -303,7 +302,7 @@ class Controller_Oauth extends Controller
 	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function generateAccessToken( int|string $applicationId, int|string $userId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
@@ -331,7 +330,7 @@ class Controller_Oauth extends Controller
 	 *	@param		?string		$pepper				Token hash pepper (optional)
 	 *	@return		string		Access token
 	 *	@todo		implement scope validation/filtering beforehand
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function generateRefreshToken( int|string $applicationId, ?string $scope = NULL, ?string $salt = NULL, ?string $pepper = NULL ): string
 	{
@@ -364,7 +363,7 @@ class Controller_Oauth extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function tokenAuthorizationCode(): void
 	{
@@ -421,7 +420,7 @@ class Controller_Oauth extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function tokenClient(): void
 	{
@@ -450,7 +449,7 @@ class Controller_Oauth extends Controller
 
 	/**
 	 *	@todo		protect against brute force attacks (http://tools.ietf.org/html/rfc6749#section-4.3.2)
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function tokenPassword(): void
 	{
@@ -510,7 +509,7 @@ class Controller_Oauth extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function tokenRefreshToken(): void
 	{

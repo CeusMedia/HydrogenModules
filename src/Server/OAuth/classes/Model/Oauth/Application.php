@@ -92,7 +92,7 @@ class Model_Oauth_Application extends Model
 	/**
 	 *	@param		int|string		$id
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function remove( int|string $id ): bool
 	{

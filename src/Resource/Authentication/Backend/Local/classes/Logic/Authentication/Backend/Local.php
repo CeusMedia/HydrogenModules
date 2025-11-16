@@ -15,7 +15,6 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	 *	@param		string			$password
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		remove support for old user password
 	 */
 	public function checkPassword( int|string $userId, string $password ): bool
@@ -63,7 +62,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 
 	/**
 	 *	@return		Entity_Group[]
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function getCurrentGroups(): array
 	{
@@ -73,7 +72,7 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 	/**
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
@@ -186,7 +185,6 @@ class Logic_Authentication_Backend_Local extends Logic implements Logic_Authenti
 
 	/**
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function noteUserActivity(): self
 	{

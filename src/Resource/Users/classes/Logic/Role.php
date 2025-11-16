@@ -52,7 +52,6 @@ class Logic_Role extends SharedLogic
 	 *	@param		Entity_Role|int|string	$role
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( Entity_Role|int|string $role ): bool
 	{

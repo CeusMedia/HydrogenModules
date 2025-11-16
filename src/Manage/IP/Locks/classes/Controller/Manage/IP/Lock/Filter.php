@@ -97,7 +97,6 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	/**
 	 *	@param		string		$filterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $filterId ): void
 	{

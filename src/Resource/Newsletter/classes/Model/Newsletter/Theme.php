@@ -50,7 +50,6 @@ class Model_Newsletter_Theme
 	 *	@param		string		$templateId
 	 *	@param		array		$data
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function createFromTemplate( string $templateId, array $data ): void
 	{

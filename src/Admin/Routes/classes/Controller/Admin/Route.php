@@ -20,7 +20,6 @@ class Controller_Admin_Route extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activate( int|string $id ): void
 	{
@@ -40,7 +39,6 @@ class Controller_Admin_Route extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -76,7 +74,6 @@ class Controller_Admin_Route extends Controller
 	/**
 	 *	@param		int|string $id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function deactivate( int|string $id ): void
 	{
@@ -97,7 +94,6 @@ class Controller_Admin_Route extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $id ): void
 	{
@@ -136,7 +132,6 @@ class Controller_Admin_Route extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $id ): void
 	{

@@ -37,7 +37,6 @@ class Controller_Admin_Log_Exception extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function bulk(): void
 	{
@@ -78,7 +77,6 @@ class Controller_Admin_Log_Exception extends Controller
 	 *	@param		int		$page
 	 *	@param		int		$limit
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int $page = 0, int $limit = 0 ): void
 	{
@@ -141,7 +139,6 @@ class Controller_Admin_Log_Exception extends Controller
 	/**
 	 *	@param		int|string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $id ): void
 	{
@@ -164,7 +161,6 @@ class Controller_Admin_Log_Exception extends Controller
 	 *	@param		int|string		$id
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $id ): void
 	{

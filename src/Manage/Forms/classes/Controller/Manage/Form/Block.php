@@ -19,7 +19,6 @@ class Controller_Manage_Form_Block extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -33,7 +32,6 @@ class Controller_Manage_Form_Block extends Controller
 	/**
 	 *	@param		string		$blockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $blockId ): void
 	{
@@ -127,7 +125,6 @@ class Controller_Manage_Form_Block extends Controller
 	/**
 	 *	@param		string		$blockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $blockId ): void
 	{
@@ -139,7 +136,6 @@ class Controller_Manage_Form_Block extends Controller
 	/**
 	 *	@param		string		$blockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $blockId ): void
 	{
@@ -163,7 +159,6 @@ class Controller_Manage_Form_Block extends Controller
 	 *	@param		string		$oldIdentifier
 	 *	@param		string		$newIdentifier
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyChangedIdentifier( string $oldIdentifier, string $newIdentifier ): array
 	{
@@ -198,7 +193,6 @@ class Controller_Manage_Form_Block extends Controller
 	 *	@param		int|string		$blockId
 	 *	@param		bool			$strict
 	 *	@return		Entity_Form_Block|FALSE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkId( int|string $blockId, bool $strict = TRUE ): Entity_Form_Block|FALSE
 	{

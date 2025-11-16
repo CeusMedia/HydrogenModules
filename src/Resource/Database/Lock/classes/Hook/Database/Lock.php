@@ -8,7 +8,6 @@ class Hook_Database_Lock extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onAuthLogout(): void
 	{

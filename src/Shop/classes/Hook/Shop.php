@@ -9,6 +9,7 @@ class Hook_Shop extends Hook
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onLogout(): void
 	{

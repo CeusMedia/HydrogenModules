@@ -18,7 +18,6 @@ class Controller_Admin_Oauth2 extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -73,7 +72,6 @@ class Controller_Admin_Oauth2 extends Controller
 	/**
 	 *	@param		int|string		$providerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $providerId ): void
 	{
@@ -126,7 +124,6 @@ class Controller_Admin_Oauth2 extends Controller
 	/**
 	 *	@param		int|string		$providerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $providerId ): void
 	{
@@ -147,7 +144,6 @@ class Controller_Admin_Oauth2 extends Controller
 	 *	@param		int|string		$providerId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $providerId, $status ): void
 	{

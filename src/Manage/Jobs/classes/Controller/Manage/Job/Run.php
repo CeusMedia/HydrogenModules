@@ -18,7 +18,6 @@ class Controller_Manage_Job_Run extends Controller
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function abort( int|string $jobRunId ): void
 	{
@@ -43,7 +42,6 @@ class Controller_Manage_Job_Run extends Controller
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function archive( int|string $jobRunId ): void
 	{
@@ -151,7 +149,6 @@ die;*/
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $jobRunId ): void
 	{
@@ -168,7 +165,6 @@ die;*/
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function terminate( int|string $jobRunId ): void
 	{
@@ -194,7 +190,6 @@ die;*/
 	/**
 	 *	@param		int|string		$jobRunId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $jobRunId ): void
 	{

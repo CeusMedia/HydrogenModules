@@ -21,7 +21,6 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		int			$change
 	 *	@return		int
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function changeQuantity( int|string $articleId, int $change ): int
 	{
@@ -34,7 +33,6 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId		ID of article
 	 *	@return		object|FALSE	Bridged article data object if found
 	 *	@throws		InvalidArgumentException	if not found
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function check( int|string $articleId, bool $strict = TRUE ): object|FALSE
 	{
@@ -56,7 +54,6 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId		ID of article
 	 *	@param		integer			$quantity		Amount of articles
 	 *	@return		Entity_Shop_Bridge_Article
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
@@ -106,7 +103,6 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId		ID of article
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getLink( int|string $articleId ): string
 	{

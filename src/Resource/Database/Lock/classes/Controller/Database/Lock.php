@@ -11,7 +11,6 @@ class Controller_Database_Lock extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -32,7 +31,6 @@ class Controller_Database_Lock extends Controller
 	/**
 	 *	@param		int|string		$lockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unlock( int|string $lockId ): void
 	{
@@ -58,7 +56,6 @@ class Controller_Database_Lock extends Controller
 	 *	@param		Entity_Database_Lock	$lock
 	 *	@return		string
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getEntryTitle( Entity_Database_Lock $lock ): string
 	{

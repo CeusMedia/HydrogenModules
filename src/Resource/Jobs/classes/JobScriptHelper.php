@@ -192,7 +192,6 @@ class JobScriptHelper
 	/**
 	 *	@return		never
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function runJobApp(): never
 	{

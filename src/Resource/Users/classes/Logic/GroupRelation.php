@@ -40,7 +40,6 @@ class Logic_GroupRelation extends Logic
 	 *	@param		ModuleDefinition|string		$module
 	 *	@return		array|int[]|string[]
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getModuleEntityIdsFromCurrentGroups( ModuleDefinition|string $module ): array
 	{

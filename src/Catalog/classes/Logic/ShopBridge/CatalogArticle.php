@@ -15,7 +15,6 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		int			$change
 	 *	@return		int
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function changeQuantity( int|string $articleId, int $change ): int
 	{
@@ -47,6 +46,7 @@ class Logic_ShopBridge_CatalogArticle extends Logic_ShopBridge_Abstract
 	 *	@param		integer			$quantity		Amount of articles
 	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{

@@ -131,7 +131,6 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		integer		$page
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int $page = 0 ): void
 	{
@@ -205,7 +204,6 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		string		$fillId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsHandled( string $fillId ): void
 	{
@@ -221,7 +219,6 @@ class Controller_Manage_Form_Fill extends Controller
 	 *	@param		string		$fillId
 	 *	@return		void
 	 *	@throws		DomainException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $fillId ): void
 	{
@@ -253,7 +250,6 @@ class Controller_Manage_Form_Fill extends Controller
 	/**
 	 *	@param		string		$fillId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $fillId ): void
 	{
@@ -301,7 +297,6 @@ class Controller_Manage_Form_Fill extends Controller
 	 *	@return		?Entity_Form_Fill
 	 *	@throws		RuntimeException	if no ID given
 	 *	@throws		DomainException		if invalid ID given
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{

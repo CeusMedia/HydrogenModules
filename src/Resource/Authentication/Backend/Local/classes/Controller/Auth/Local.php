@@ -753,7 +753,6 @@ class Controller_Auth_Local extends Controller
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function linkCreatedAccountToOAuth( $userId ): void

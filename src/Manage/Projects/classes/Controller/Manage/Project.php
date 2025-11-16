@@ -25,7 +25,6 @@ class Controller_Manage_Project extends Controller
 	/**
 	 *	@param		int|string		$projectId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function acceptInvite( int|string $projectId ): void
 	{
@@ -146,7 +145,6 @@ class Controller_Manage_Project extends Controller
 	/**
 	 *	@param		string		$projectId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function declineInvite( string $projectId ): void
 	{
@@ -466,7 +464,6 @@ class Controller_Manage_Project extends Controller
 	/**
 	 *	@param		string|NULL		$projectId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setDefault( string $projectId = NULL ): void
 	{
@@ -493,7 +490,6 @@ class Controller_Manage_Project extends Controller
 	 *	@param		string		$projectId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $projectId ): void
 	{
@@ -553,7 +549,6 @@ class Controller_Manage_Project extends Controller
 	 *	@param		string		$projectId
 	 *	@param		bool		$checkMembership
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkProject( string $projectId, bool $checkMembership = TRUE ): ?object
 	{

@@ -29,7 +29,6 @@ class Logic_Import extends Logic
 	/**
 	 *	@param		int|string		$connectionId
 	 *	@return		?Entity_Import_Connection
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getConnection( int|string $connectionId ): ?Entity_Import_Connection
 	{
@@ -62,7 +61,6 @@ class Logic_Import extends Logic
 	 *	@return		Logic_Import_Connector_Interface
 	 *	@throws		RangeException				if connection ID is invalid
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getConnectionInstanceFromId( int|string $connectionId, ?Entity_Import_Connector $connector = NULL ): Logic_Import_Connector_Interface
 	{
@@ -88,7 +86,6 @@ class Logic_Import extends Logic
 	/**
 	 *	@param		int|string		$connectionId
 	 *	@return		?Entity_Import_Connector
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getConnectorFromConnectionId( int|string $connectionId ): ?Entity_Import_Connector
 	{

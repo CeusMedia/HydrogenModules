@@ -10,7 +10,6 @@ class Controller_Manage_Form_Target extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -34,7 +33,6 @@ class Controller_Manage_Form_Target extends Controller
 	/**
 	 *	@param		string		$targetId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $targetId ): void
 	{
@@ -76,7 +74,6 @@ class Controller_Manage_Form_Target extends Controller
 	/**
 	 *	@param		string		$targetId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $targetId ): void
 	{

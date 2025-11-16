@@ -11,7 +11,6 @@ class Controller_Ajax_Database_Lock extends AjaxController
 	 *	@return		int
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderDashboardPanel( string $panelId ): int
 	{

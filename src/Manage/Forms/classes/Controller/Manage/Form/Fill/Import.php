@@ -99,7 +99,6 @@ class Controller_Manage_Form_Fill_Import extends Controller
 	/**
 	 *	@param		int|string		$importRuleId
 	 *	@return		Entity_Form_Import_Rule
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkImportRuleExists( int|string $importRuleId ): Entity_Form_Import_Rule
 	{

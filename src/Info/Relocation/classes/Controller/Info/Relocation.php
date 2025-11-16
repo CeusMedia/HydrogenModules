@@ -18,7 +18,6 @@ class Controller_Info_Relocation extends Controller
 	/**
 	 *	@param		?string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( ?string $id = NULL ): void
 	{

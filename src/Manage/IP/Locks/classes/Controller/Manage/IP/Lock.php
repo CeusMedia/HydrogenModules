@@ -11,7 +11,6 @@ class Controller_Manage_IP_Lock extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -31,7 +30,6 @@ class Controller_Manage_IP_Lock extends Controller
 	/**
 	 *	@param		string		$ipLockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function cancel( string $ipLockId ): void
 	{
@@ -48,7 +46,6 @@ class Controller_Manage_IP_Lock extends Controller
 	/**
 	 *	@param		string		$ipLockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $ipLockId ): void
 	{
@@ -66,7 +63,6 @@ class Controller_Manage_IP_Lock extends Controller
 	 *	@param		int		$limit
 	 *	@param		int		$page
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int $limit = 15, int $page = 0 ): void
 	{
@@ -107,7 +103,6 @@ class Controller_Manage_IP_Lock extends Controller
 	/**
 	 *	@param		string		$ipLockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function lock( string $ipLockId ): void
 	{
@@ -148,7 +143,6 @@ class Controller_Manage_IP_Lock extends Controller
 	/**
 	 *	@param		string		$ipLockId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unlock( string $ipLockId ): void
 	{

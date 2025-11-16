@@ -93,7 +93,6 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		int|string		$articleId
 	 *	@param		bool			$absolute
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleUri( int|string $articleId, bool $absolute = FALSE ): string
 	{
@@ -104,7 +103,6 @@ class View_Helper_Catalog_Bookstore
 	 *	@param		int|string		$authorId
 	 *	@param		bool			$absolute
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorUri( int|string $authorId, bool $absolute = FALSE ): string
 	{
@@ -214,7 +212,6 @@ class View_Helper_Catalog_Bookstore
 	/**
 	 *	@param		object		$article
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderArticleLink( object $article ): string
 	{
@@ -254,7 +251,6 @@ class View_Helper_Catalog_Bookstore
 	/**
 	 *	@param		object		$author
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderAuthorLink( object $author ): string
 	{

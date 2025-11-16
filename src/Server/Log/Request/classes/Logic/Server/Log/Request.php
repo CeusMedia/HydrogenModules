@@ -93,7 +93,6 @@ class Logic_Server_Log_Request extends SharedLogic
 	/**
 	 *	Tries to import file log entries to database.
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function importFromFileToDatabase(): int
 	{
@@ -125,7 +124,6 @@ class Logic_Server_Log_Request extends SharedLogic
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function logCurrentRequest(): void
 	{
@@ -145,7 +143,6 @@ class Logic_Server_Log_Request extends SharedLogic
 	 *	@param		string		$mimeType
 	 *	@param		string		$content
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function logCurrentResponse( int $status, string $mimeType, string $content ): void
 	{

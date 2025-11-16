@@ -25,7 +25,6 @@ class Controller_Manage_Form_Import extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{

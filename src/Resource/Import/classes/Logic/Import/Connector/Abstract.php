@@ -45,7 +45,6 @@ abstract class Logic_Import_Connector_Abstract extends Logic
 	/**
 	 *	@param		int|string		$connectionId
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setConnectionId( int|string $connectionId  ): static
 	{

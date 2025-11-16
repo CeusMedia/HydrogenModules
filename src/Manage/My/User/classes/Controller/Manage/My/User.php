@@ -21,8 +21,8 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		integrate validation from Controller_Admin_User::edit
+	 *	@throws		ReflectionException
 	 */
 	public function edit(): void
 	{
@@ -80,7 +80,7 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo		Redesign: Send mail with confirmation before applying new mail address
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function email(): void
 	{
@@ -120,7 +120,7 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
@@ -160,7 +160,7 @@ class Controller_Manage_My_User extends Controller
 
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function password(): void
 	{
@@ -222,6 +222,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@param		$confirmed
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function remove( $confirmed = NULL ): void
 	{
@@ -256,7 +257,7 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@todo		integrate validation from Controller_Admin_User::edit
 	 *	@todo		Redesign: Send mail with confirmation before applying new username
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function username(): void
 	{
@@ -293,7 +294,6 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -322,7 +322,7 @@ class Controller_Manage_My_User extends Controller
 	/**
 	 *	@param		$from
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function checkConfirmationPassword( $from = NULL ): void
 	{
@@ -351,7 +351,7 @@ class Controller_Manage_My_User extends Controller
 	 *	@param   	string			$password	Password to check on login
 	 *	@todo   	clean up if support for old passwort decays
 	 *	@todo   	reintegrate cleansed lines into login method (if this makes sense)
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function checkPassword( Entity_User $user, string $password ): bool
 	{

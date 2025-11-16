@@ -24,7 +24,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		mixed			$data			Data for event handling
 	 *	@param		string|NULL		$origin			...
 	 *	@return		int|string		ID of new event
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add( string $identifier, mixed $data, ?string $origin = NULL ): int|string
 	{
@@ -59,7 +58,6 @@ class Logic_EventQueue extends Logic
 	 *	@access		public
 	 *	@param		int|string		$eventId		ID of event to return
 	 *	@return		object|NULL		Data object of event
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $eventId ): object|NULL
 	{
@@ -86,7 +84,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as new
 	 *	@param		mixed			$result			Results to store
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsNew( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -99,7 +96,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as ignored
 	 *	@param		mixed			$result			Results to store
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsIgnored( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -112,7 +108,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as revoked
 	 *	@param		mixed			$result			Results to store
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsRevoked( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -125,7 +120,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as running
 	 *	@param		mixed			$result			Results to store
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsInRunning( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -138,7 +132,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as failed
 	 *	@param		mixed			$result			Results to store
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsFailed( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -151,7 +144,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int|string		$eventId		ID of event to mark as succeeded
 	 *	@param		mixed			$result			Results to store
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function markAsSucceeded( int|string $eventId, mixed $result = NULL ): static
 	{
@@ -186,7 +178,6 @@ class Logic_EventQueue extends Logic
 	 *	@param		int				$status
 	 *	@param		mixed			$result
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setStatus( int|string $eventId, int $status, mixed $result = NULL ): static
 	{

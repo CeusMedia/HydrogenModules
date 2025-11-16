@@ -71,7 +71,6 @@ class View_Helper_Newsletter_Mail
 	/**
 	 *	@param		int|string		$newsletterId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setNewsletterId( int|string $newsletterId ): self
 	{
@@ -84,7 +83,6 @@ class View_Helper_Newsletter_Mail
 	/**
 	 *	@param		int|string		$readerLetterId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setReaderLetterId( int|string $readerLetterId ): self
 	{
@@ -98,7 +96,6 @@ class View_Helper_Newsletter_Mail
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setReaderId( int|string $readerId ): self
 	{
@@ -110,7 +107,6 @@ class View_Helper_Newsletter_Mail
 	/**
 	 *	@param		int|string		$templateId
 	 *	@return		self
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setTemplateId( int|string $templateId ): self
 	{

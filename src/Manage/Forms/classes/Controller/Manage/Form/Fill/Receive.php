@@ -189,7 +189,6 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	 *	@param		Entity_Form		$form
 	 *	@param		array			$inputs
 	 *	@return		int|string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function createFillFromInputs( Entity_Form $form, array $inputs ): int|string
 	{

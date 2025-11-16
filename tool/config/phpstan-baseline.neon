@@ -1,2 +1,51 @@
 parameters:
 	ignoreErrors:
+		-
+			message: "#^Variable \\$outdatedUserLicenseKey might not be defined\\.$#"
+			count: 1
+			path: ../../src/Base/User/Provision/classes/Logic/User/Provision.php
+
+		-
+			message: "#^Access to an undefined property Logic_ShopBridge_CatalogGallery\\:\\:\\$taxPercent\\.$#"
+			count: 1
+			path: ../../src/Catalog/Gallery/classes/Logic/ShopBridge/CatalogGallery.php
+
+		-
+			message: "#^Access to an undefined property Logic_ShopBridge_CatalogGallery\\:\\:\\$taxPercent\\.$#"
+			count: 1
+			path: ../../src/Manage/Catalog/Gallery/classes/Logic/ShopBridge/CatalogGallery.php
+
+		-
+			message: "#^Variable \\$errorHandling in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: ../../src/Resource/Jobs/job.php
+
+		-
+			message: "#^Variable \\$captureResult on left side of \\?\\? is never defined\\.$#"
+			count: 1
+			path: ../../src/Shop/Payment/PayPal/classes/Logic/Shop/Payment/PaypalOauth.php
+
+		-
+			message: "#^Constant FF_FONT1 not found\\.$#"
+			count: 2
+			path: ../../src/Work/Issues/classes/View/Helper/Work/Issue/Graph.php
+
+		-
+			message: "#^Constant FF_FONT2 not found\\.$#"
+			count: 1
+			path: ../../src/Work/Issues/classes/View/Helper/Work/Issue/Graph.php
+
+		-
+			message: "#^Constant FS_NORMAL not found\\.$#"
+			count: 3
+			path: ../../src/Work/Issues/classes/View/Helper/Work/Issue/Graph.php
+
+		-
+			message: "#^Variable \\$date might not be defined\\.$#"
+			count: 1
+			path: ../../src/Work/Missions/classes/Controller/Ajax/Work/Mission/Calendar.php
+
+		-
+			message: "#^Variable \\$date might not be defined\\.$#"
+			count: 1
+			path: ../../src/Work/Missions/classes/View/Helper/Work/Mission/Calendar.php

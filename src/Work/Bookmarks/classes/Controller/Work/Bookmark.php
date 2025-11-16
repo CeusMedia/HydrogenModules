@@ -71,7 +71,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function comment( string $bookmarkId ): void
 	{
@@ -155,7 +154,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $bookmarkId ): void
 	{
@@ -171,7 +169,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function visit( string $bookmarkId ): void
 	{
@@ -187,7 +184,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTag( string $bookmarkId ): void
 	{
@@ -224,7 +220,6 @@ class Controller_Work_Bookmark extends Controller
 	/**
 	 *	@param		string		$bookmarkId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function check( string $bookmarkId ): object
 	{

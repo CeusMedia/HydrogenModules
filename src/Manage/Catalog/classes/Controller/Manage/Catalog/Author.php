@@ -41,7 +41,6 @@ class Controller_Manage_Catalog_Author extends Controller
 	/**
 	 *	@param		int|string		$authorId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $authorId ): void
 	{

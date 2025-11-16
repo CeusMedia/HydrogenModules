@@ -45,7 +45,6 @@ class Job_Auth_Oauth2 extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function migrateScopes(): void
 	{
