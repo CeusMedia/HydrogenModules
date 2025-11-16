@@ -192,7 +192,6 @@ class Controller_Member extends Controller
 	 *	@param		int|string		$userId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function request( int|string $userId ): void
 	{
@@ -266,7 +265,6 @@ class Controller_Member extends Controller
 	 *	@param		int|string		$userId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $userId ): void
 	{

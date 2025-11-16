@@ -23,7 +23,7 @@ class Controller_Manage_My_Provision_License extends Controller
 	 *	@param		int|string|NULL		$productLicenseId
 	 *	@param		int					$stage
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add( int|string|NULL $productId = NULL, int|string|NULL $productLicenseId = NULL, int $stage = 0 ): void
 	{
@@ -93,7 +93,6 @@ class Controller_Manage_My_Provision_License extends Controller
 
 	/**
 	 *	@return		never
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function ajaxGetUsers(): never
 	{

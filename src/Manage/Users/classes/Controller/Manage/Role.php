@@ -85,7 +85,6 @@ class Controller_Manage_Role extends Controller
 	/**
 	 *	@param		int|string		$roleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $roleId ): void
 	{

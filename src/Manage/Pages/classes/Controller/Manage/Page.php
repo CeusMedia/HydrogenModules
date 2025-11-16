@@ -122,7 +122,6 @@ ModuleManagePages.PageEditor.init();
 	/**
 	 *	@param		int|string		$pageId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function copy( int|string $pageId ): void
 	{

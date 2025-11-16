@@ -33,7 +33,6 @@ class View_Manage_Form extends View
 	 *	Uses form view helper to render form content.
 	 *	Stops app flow by directly printing the form content with exit.
 	 *	@return		never
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view(): never
 	{

@@ -32,6 +32,7 @@ class View_Helper_Shop_Tabs
 	/**
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function render(): string
 	{

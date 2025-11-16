@@ -28,7 +28,6 @@ class Job_Server_Log_Request extends Job_Abstract
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function import(): void
 	{

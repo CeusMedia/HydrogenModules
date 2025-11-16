@@ -26,7 +26,6 @@ class Controller_Manage_Form_Mail extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws 	\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -40,7 +39,6 @@ class Controller_Manage_Form_Mail extends Controller
 	/**
 	 *	@param		string		$mailId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $mailId ): void
 	{
@@ -128,7 +126,6 @@ class Controller_Manage_Form_Mail extends Controller
 	/**
 	 *	@param		string		$mailId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $mailId ): void
 	{
@@ -140,7 +137,6 @@ class Controller_Manage_Form_Mail extends Controller
 	/**
 	 *	@param		string		$mailId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $mailId ): void
 	{
@@ -161,7 +157,6 @@ class Controller_Manage_Form_Mail extends Controller
 	/**
 	 *	@param		int|string		$mailId
 	 *	@return		Entity_Form_Mail
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkId( int|string $mailId ): Entity_Form_Mail
 	{

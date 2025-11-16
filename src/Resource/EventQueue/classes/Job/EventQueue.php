@@ -29,7 +29,7 @@ class Job_EventQueue extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function handle(): void
 	{

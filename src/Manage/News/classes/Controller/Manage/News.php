@@ -14,7 +14,6 @@ class Controller_Manage_News extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -49,7 +48,6 @@ class Controller_Manage_News extends Controller
 	/**
 	 *	@param		int|string		$newsId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $newsId ): void
 	{
@@ -125,7 +123,6 @@ class Controller_Manage_News extends Controller
 	/**
 	 *	@param		int|string		$newsId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $newsId ): void
 	{

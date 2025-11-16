@@ -377,7 +377,6 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$orderId
 	 *	@param		int|string		$paymentId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderPaymentId( int|string $orderId, int|string $paymentId ): bool
 	{
@@ -391,7 +390,6 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$orderId
 	 *	@param		string			$paymentMethod
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderPaymentMethod( int|string $orderId, string $paymentMethod ): bool
 	{
@@ -405,7 +403,6 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$positionId
 	 *	@param		int				$status
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderPositionStatus( int|string $positionId, int $status ): bool
 	{
@@ -419,7 +416,6 @@ class Logic_ShopResource extends Logic
 	 *	@param		int|string		$orderId
 	 *	@param		int|string		$userId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setOrderUserId( int|string $orderId, int|string $userId ): bool
 	{

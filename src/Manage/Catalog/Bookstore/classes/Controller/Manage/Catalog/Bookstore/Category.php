@@ -9,6 +9,7 @@ class Controller_Manage_Catalog_Bookstore_Category extends Controller_Manage_Cat
 	 *	@param		string		$direction
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function rankArticle( string $categoryId, string $articleId, string $direction ): void
 	{

@@ -15,7 +15,6 @@ class Job_Newsletter extends Job_Abstract
 	 *	@throws		ReflectionException
 	 *	@throws		DateMalformedIntervalStringException
 	 *	@throws		DateInvalidOperationException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todo		refactor for scalability: read mail ids first and mail objects in loop
 	 */
 	public function clean(): void
@@ -85,7 +84,6 @@ class Job_Newsletter extends Job_Abstract
 	 *	@param		bool		$verbose
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function migrate( bool $verbose = FALSE ): void
 	{
@@ -277,7 +275,6 @@ class Job_Newsletter extends Job_Abstract
 	/**
 	 *	@return		object
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function recoverReaderLetterQueueIds(): object
 	{

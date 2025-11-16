@@ -8,7 +8,6 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activate( int|string $branchId ): void
 	{
@@ -23,7 +22,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -71,7 +70,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function addImage( int|string $branchId ): void
 	{
@@ -136,7 +135,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function deactivate( int|string $branchId ): void
 	{
@@ -151,7 +150,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $branchId ): void
 	{
@@ -198,7 +197,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		string		$redirect
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getCurrentUser( string $redirect = 'auth/logout' ): object
 	{
@@ -212,7 +211,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getMyCompany(): ?object
 	{
@@ -223,7 +222,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@return		array<object>
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function getMyBranches(): array
 	{
@@ -234,7 +233,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
@@ -270,7 +269,7 @@ class Controller_Manage_My_Branch extends Controller
 
 	/**
 	 *	@todo		check ownership of branch
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function removeImage( $branchId, $imageId ): void
 	{
@@ -307,7 +306,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function isMyBranch( int|string $branchId ): bool
 	{
@@ -320,7 +319,7 @@ class Controller_Manage_My_Branch extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function isMyCompany( int|string $companyId ): bool
 	{

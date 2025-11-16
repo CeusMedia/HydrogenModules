@@ -9,7 +9,7 @@ class Job_Server_IP_Lock extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function unlock(): void
 	{
@@ -23,7 +23,6 @@ class Job_Server_IP_Lock extends Job_Abstract
 
 	/**
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		DateMalformedIntervalStringException
 	 *	@throws		DateInvalidOperationException
 	 */
@@ -45,7 +44,6 @@ class Job_Server_IP_Lock extends Job_Abstract
 
 	/**
 	 *	@return		int
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function unlockOverdueLocks(): int
 	{
@@ -60,7 +58,6 @@ class Job_Server_IP_Lock extends Job_Abstract
 
 	/**
 	 *	@return		int
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function unlockDisabledReasonLocks(): int
 	{

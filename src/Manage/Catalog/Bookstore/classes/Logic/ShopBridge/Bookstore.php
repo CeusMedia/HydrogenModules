@@ -61,6 +61,7 @@ class Logic_ShopBridge_Bookstore extends Logic_ShopBridge_Abstract
 	 *	@param		integer			$quantity		Amount of articles
 	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{

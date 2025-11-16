@@ -94,7 +94,6 @@ class Controller_Catalog_Bookstore extends Controller
 	/**
 	 *	@param		string		$authorId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function author( string $authorId ): void
 	{
@@ -150,7 +149,6 @@ class Controller_Catalog_Bookstore extends Controller
 	/**
 	 *	@param		string		$categoryId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function category( string $categoryId ): void
 	{
@@ -289,6 +287,7 @@ class Controller_Catalog_Bookstore extends Controller
 	 *	@return		void
 	 *	@throws		DOMException
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function rss( ?string $categoryId = NULL ): void
 	{
@@ -364,6 +363,7 @@ class Controller_Catalog_Bookstore extends Controller
 	 *	@param		integer		$page
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function search( int $page = 0 ): void
 	{
@@ -507,6 +507,7 @@ class Controller_Catalog_Bookstore extends Controller
 	 *	@param		string|NULL $tagId
 	 *	@return		void
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function tag( string $tagId = NULL ): void
 	{

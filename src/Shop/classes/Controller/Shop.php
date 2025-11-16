@@ -359,7 +359,6 @@ class Controller_Shop extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function service(): void

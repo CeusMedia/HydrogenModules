@@ -60,7 +60,6 @@ class View_Helper_Catalog
 	/**
 	 *	@param		object|int|string		$categoryOrId
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryUri( object|int|string $categoryOrId ): string
 	{
@@ -70,7 +69,6 @@ class View_Helper_Catalog
 	/**
 	 *	@param		object|int|string		$tagOrId
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTagUri( object|int|string $tagOrId ): string
 	{
@@ -137,7 +135,6 @@ class View_Helper_Catalog
 	 *	@param		object		$article			Data object of article
 	 *	@param		string		$labelNoPicture		Title of placeholder image
 	 *	@return		string		Rendered HTML tag of article cover image (or placeholder).
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderArticleImage( object $article, string $labelNoPicture = '' ): string
 	{
@@ -164,6 +161,7 @@ class View_Helper_Catalog
 	 *	@param		object		$article
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderArticleListItem( object $article ): string
 	{
@@ -193,7 +191,6 @@ class View_Helper_Catalog
 	/**
 	 *	@param		object		$author
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderAuthorLink( object $author ): string
 	{
@@ -214,6 +211,7 @@ class View_Helper_Catalog
 	 *	@param		string|NULL		$heading
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderCategory( object $category, ?string $heading = NULL ): string
 	{
@@ -241,6 +239,7 @@ class View_Helper_Catalog
 	 *	@param		object		$category
 	 *	@return		string
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderCategoryArticleList( object $category ): string
 	{
@@ -260,7 +259,6 @@ class View_Helper_Catalog
 	 *	@param		object		$category
 	 *	@param		string		$language
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderCategoryLink( object $category, string $language = 'de' ): string
 	{
@@ -274,7 +272,6 @@ class View_Helper_Catalog
 	 *	@param		array		$data
 	 *	@param		string		$language
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderCategoryList( array $data, string $language = 'de' ): string
 	{
@@ -310,7 +307,6 @@ class View_Helper_Catalog
 	 *	@param		object		$article
 	 *	@param		string		$language
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderPositionFromArticle( object $article, string $language = 'de' ): string
 	{
@@ -321,7 +317,6 @@ class View_Helper_Catalog
 	/**
 	 *	@param		string|NULL		$category
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function renderPositionFromCategory( ?string $category = NULL ): string
 	{

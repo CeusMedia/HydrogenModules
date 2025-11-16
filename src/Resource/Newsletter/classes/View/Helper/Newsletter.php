@@ -21,7 +21,6 @@ class View_Helper_Newsletter
 	 *	@param		Environment		$env
 	 *	@param		int|string		$templateId
 	 *	@param		bool			$preview
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function __construct( Environment $env, int|string $templateId, bool $preview = FALSE )
 	{
@@ -37,7 +36,6 @@ class View_Helper_Newsletter
 	 *	@param		int|string		$readerLetterId
 	 *	@return		Mail_Newsletter
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function generateMail( int|string $readerLetterId ): Mail_Newsletter
 	{
@@ -54,7 +52,7 @@ class View_Helper_Newsletter
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
 	 *	@param		int|string		$newsletterId
 	 *	@param		int|string		$newsletterReaderId
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function prepareReaderDataForNewsletter( int|string $newsletterId, int|string $newsletterReaderId )
 	{
@@ -104,7 +102,7 @@ class View_Helper_Newsletter
 	 *	@todo		 code doc
 	 *	@param		int|string		$readerLetterId
 	 *	@deprecated use View_Helper_Newsletter_Mail::prepareData instead
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function prepareReaderDataForLetter( int|string $readerLetterId )
 	{
@@ -186,7 +184,6 @@ class View_Helper_Newsletter
 	 *	@param		int|string|NULL		$readerId
 	 *	@param		array				$data
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderNewsletterPlain( int|string $newsletterId, int|string|NULL $readerId = NULL, array $data = [] ): string
 	{
@@ -211,7 +208,6 @@ class View_Helper_Newsletter
 	 *	@param		array				$data
 	 *	@param		bool				$strict
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function renderNewsletterHtml( int|string $newsletterId, int|string|NULL $readerId = NULL, array $data = [], bool $strict = TRUE ): string
 	{
@@ -256,6 +252,7 @@ class View_Helper_Newsletter
 	 *	@param		bool		$strict
 	 *	@return		string
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function renderHtml( array $data, bool $strict = TRUE ): string
 	{

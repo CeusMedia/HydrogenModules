@@ -42,8 +42,6 @@ class Logic_Localization extends Logic
 	 *	@param		string			$content
 	 *	@param		string|NULL		$translated
 	 *	@return		int|string
-	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function translate( string $id, string $content, ?string $translated = NULL ): int|string
 	{

@@ -122,7 +122,6 @@ class Logic_Form_Fill extends Logic
 	 *	@param		int|string		$fillId
 	 *	@param		bool			$strict
 	 *	@return		?Entity_Form_Fill
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
@@ -142,7 +141,6 @@ class Logic_Form_Fill extends Logic
 	 *	@return		?Entity_Form_Fill
 	 *	@throws		RuntimeException	if no ID given
 	 *	@throws		DomainException		if invalid ID given
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{

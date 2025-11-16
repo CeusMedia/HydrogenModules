@@ -7,6 +7,7 @@ class Hook_Manage_Catalog_Bookstore_Author extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function onTinyMCE_getImageList(): void
 	{

@@ -14,7 +14,6 @@ class Controller_Manage_Job_Schedule extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -53,7 +52,6 @@ class Controller_Manage_Job_Schedule extends Controller
 	/**
 	 *	@param		int|string		$jobScheduleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $jobScheduleId ): void
 	{
@@ -115,7 +113,6 @@ class Controller_Manage_Job_Schedule extends Controller
 	 *	@param		int|string		$jobScheduleId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $jobScheduleId, $status ): void
 	{

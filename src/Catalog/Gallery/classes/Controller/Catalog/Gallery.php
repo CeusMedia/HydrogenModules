@@ -121,7 +121,6 @@ class Controller_Catalog_Gallery extends Controller
 	/**
 	 *	@param		string		$imageId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function order( string $imageId ): void
 	{

@@ -18,7 +18,6 @@ class Controller_Admin_Mail_Attachment extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -142,7 +141,6 @@ class Controller_Admin_Mail_Attachment extends Controller
 	 *	@param		int|string		$attachmentId		Attachment ID
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $attachmentId, $status ): void
 	{
@@ -165,7 +163,6 @@ class Controller_Admin_Mail_Attachment extends Controller
 	/**
 	 *	@param		int|string		$attachmentId		Attachment ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unregister( int|string $attachmentId ): void
 	{

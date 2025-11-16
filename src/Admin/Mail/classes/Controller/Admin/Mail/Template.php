@@ -15,7 +15,6 @@ class Controller_Admin_Mail_Template extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -59,7 +58,6 @@ class Controller_Admin_Mail_Template extends Controller
 	/**
 	 *	@param		int|string		$templateId		Template ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function copy( int|string $templateId ): void
 	{
@@ -92,7 +90,7 @@ class Controller_Admin_Mail_Template extends Controller
 	/**
 	 *	@param		int|string		$templateId		Template ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $templateId ): void
 	{
@@ -228,7 +226,6 @@ class Controller_Admin_Mail_Template extends Controller
 	/**
 	 *	@param		int|string		$templateId		Template ID
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $templateId ): void
 	{
@@ -246,7 +243,6 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		int|string		$templateId		Template ID
 	 *	@param		string			$pathBase64
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeImage( int|string $templateId, string $pathBase64 ): void
 	{
@@ -266,7 +262,6 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		int|string		$templateId		Template ID
 	 *	@param		string			$pathBase64
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeStyle( int|string $templateId, string $pathBase64 ): void
 	{
@@ -286,7 +281,6 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		int|string		$templateId		Template ID
 	 *	@param		int				$status			Status to be set, one of Model_Mail_Template::STATUS_*
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $templateId, int $status ): void
 	{
@@ -317,7 +311,6 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		int|string		$templateId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function test( int|string $templateId ): void
 	{
@@ -362,7 +355,6 @@ class Controller_Admin_Mail_Template extends Controller
 	 *	@param		bool		$strict				Flag: throw exception if template ID is invalid, default: yes
 	 *	@return		Entity_Mail_Template|FALSE
 	 *	@throws		RangeException		if template ID is invalid
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkTemplate( int|string $templateId, bool $strict = TRUE ): Entity_Mail_Template|FALSE
 	{

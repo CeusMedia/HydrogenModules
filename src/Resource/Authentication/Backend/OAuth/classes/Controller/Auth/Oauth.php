@@ -39,7 +39,6 @@ class Controller_Auth_Oauth extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -131,7 +130,6 @@ class Controller_Auth_Oauth extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function login(): void
 	{
@@ -501,7 +499,6 @@ class Controller_Auth_Oauth extends Controller
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function linkCreatedAccountToOAuth( $userId ): void
@@ -584,7 +581,6 @@ class Controller_Auth_Oauth extends Controller
 	 *	@access		public
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function tryLoginByCookie(): void
 	{

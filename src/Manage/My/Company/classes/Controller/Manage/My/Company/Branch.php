@@ -21,7 +21,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		int|string|NULL		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add( int|string|NULL $companyId = NULL ): void
 	{
@@ -71,7 +70,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addImage( int|string $branchId ): void
 	{
@@ -119,7 +117,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $branchId ): void
 	{
@@ -162,7 +159,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -176,7 +172,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 
 	/**
 	 *	@todo		check ownership of branch
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeImage( int|string $branchId, int|string $imageId ): void
 	{
@@ -198,7 +193,7 @@ class Controller_Manage_My_Company_Branch extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -218,7 +213,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		int|string		$branchId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkBranch( int|string $branchId ): object
 	{
@@ -236,7 +230,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 
 	/**
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkCurrentUser(): object
 	{
@@ -250,7 +243,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		string		$sortByColumn
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getMyBranches( string $sortByColumn = 'branchId' ): array
 	{
@@ -269,7 +261,6 @@ class Controller_Manage_My_Company_Branch extends Controller
 	/**
 	 *	@param		string		$sortByColumn
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{

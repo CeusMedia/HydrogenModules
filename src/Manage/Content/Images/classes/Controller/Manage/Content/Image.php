@@ -233,7 +233,6 @@ class Controller_Manage_Content_Image extends Controller
 	 *	@param		string		$imageHash
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function process( string $imageHash ): void
 	{

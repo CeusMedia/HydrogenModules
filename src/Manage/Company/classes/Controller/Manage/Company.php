@@ -7,7 +7,7 @@ class Controller_Manage_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function activate( int|string $companyId ): void
 	{
@@ -22,7 +22,7 @@ class Controller_Manage_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function deactivate( int|string $companyId ): void
 	{
@@ -36,7 +36,7 @@ class Controller_Manage_Company extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
@@ -76,7 +76,7 @@ class Controller_Manage_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function delete( int|string $companyId ): void
 	{
@@ -95,7 +95,7 @@ class Controller_Manage_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $companyId ): void
 	{

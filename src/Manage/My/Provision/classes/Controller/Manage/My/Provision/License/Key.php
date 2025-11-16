@@ -34,7 +34,6 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index(): void
 	{
@@ -47,7 +46,6 @@ class Controller_Manage_My_Provision_License_Key extends Controller
 	/**
 	 *	@param		string		$userLicenseKeyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $userLicenseKeyId ): void
 	{

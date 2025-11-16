@@ -17,7 +17,6 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	 *	@param		int|string		$userId
 	 *	@param		string			$password
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@todos		implement passwort argument, currently using request inputs, should be password + scope arguments
 	 */
 	public function checkPassword( int|string $userId, string $password ): bool
@@ -72,7 +71,6 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	/**
 	 *	@param		bool		$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCurrentRole( bool $strict = TRUE ): ?object
 	{
@@ -105,7 +103,6 @@ class Logic_Authentication_Backend_Oauth extends Logic implements Logic_Authenti
 	 *	@param		bool		$strict
 	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_NOTHING
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{

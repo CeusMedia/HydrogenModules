@@ -22,7 +22,6 @@ class Controller_Manage_My_User_Setting extends Controller
 	 *	@param		string		$moduleId
 	 *	@param		string		$configKey
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function reset( string $moduleId, string $configKey ): void
 	{
@@ -40,7 +39,6 @@ class Controller_Manage_My_User_Setting extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function update(): void
 	{

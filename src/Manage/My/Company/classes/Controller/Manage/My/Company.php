@@ -21,7 +21,7 @@ class Controller_Manage_My_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $companyId ): void
 	{
@@ -79,7 +79,6 @@ class Controller_Manage_My_Company extends Controller
 	/**
 	 *	@param		int|string		$companyId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function uploadLogo( int|string $companyId ): void
 	{
@@ -124,7 +123,7 @@ class Controller_Manage_My_Company extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -159,7 +158,6 @@ class Controller_Manage_My_Company extends Controller
 	/**
 	 *	@param		string		$sortByColumn
 	 *	@return		array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getMyCompanies( string $sortByColumn = 'companyId' ): array
 	{

@@ -4,7 +4,6 @@ use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
-use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Controller_Work_Notification extends Controller
 {
@@ -45,7 +44,6 @@ class Controller_Work_Notification extends Controller
 	 *	@param		int|string		$messageId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function edit( int|string $messageId ): void
 	{
@@ -149,7 +147,6 @@ class Controller_Work_Notification extends Controller
 	/**
 	 *	@param		int|string		$messageId
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function remove( int|string $messageId ): void
 	{
@@ -162,7 +159,6 @@ class Controller_Work_Notification extends Controller
 	 *	@param		int|string		$messageId
 	 *	@param		int				$status
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function setStatus( int|string $messageId, int $status ): void
 	{
@@ -175,7 +171,6 @@ class Controller_Work_Notification extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function view(): void
 	{

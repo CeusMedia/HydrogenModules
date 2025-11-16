@@ -39,7 +39,6 @@ class Hook_Manage_My_User_Setting extends Hook
 	 *	...
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{

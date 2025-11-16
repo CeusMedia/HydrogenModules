@@ -43,7 +43,6 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	@return		int
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function abortMailsWithTooManyAttempts(): int
 	{
@@ -91,7 +90,6 @@ class Logic_Mail extends Logic
 	 *	@param		array|string	$roleIds
 	 *	@return		array
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@deprecated
 	 *	@todo		find usage and move to module or remove, reason: uncool hard binding to user/role models
 	 */
@@ -464,7 +462,6 @@ class Logic_Mail extends Logic
 	 *	@throws		RuntimeException				if mail is compressed by BZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if mail is compressed by GZIP which is not supported in this environment
 	 *	@throws		RuntimeException				if deserialize mail serial fails
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getMail( int|string $mailId ): Entity_Mail
 	{
@@ -585,7 +582,6 @@ class Logic_Mail extends Logic
 	 *	@param		int|string		$mailId			ID of queued mail
 	 *	@return		object							Mail object from queue
 	 *	@throws		OutOfRangeException				if mail ID is not existing
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getQueuedMail( int|string $mailId ): object
 	{
@@ -655,7 +651,6 @@ class Logic_Mail extends Logic
 	 *	@access		public
 	 *	@param		int|string			$mailId			ID of mail to remove
 	 *	@return		boolean
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function removeMail( int|string $mailId ): bool
 	{
@@ -669,7 +664,6 @@ class Logic_Mail extends Logic
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
 	 *	@return		boolean			TRUE if success
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function sendMail( Mail_Abstract $mail, int|object $receiver ): bool
 	{
@@ -691,7 +685,6 @@ class Logic_Mail extends Logic
 	 *	@param		boolean		$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		boolean
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use logging on exception (=sending mail failed)
 	 *	@throws		ReflectionException
 	 */
@@ -745,7 +738,6 @@ class Logic_Mail extends Logic
 	 *	@throws		DomainException			if given status is invalid
 	 *	@throws		DomainException			if transition to new status is not allowed
 	 *	@throws		ReflectionException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function setMailStatus( Mail_Abstract|int|string $mail, int $status ): bool
 	{
@@ -832,7 +824,6 @@ class Logic_Mail extends Logic
 	/**
 	 *	@param		object|int|string		$mailObjectOrId
 	 *	@return		object
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	protected function getMailFromObjectOrId( object|int|string $mailObjectOrId ): object
 	{

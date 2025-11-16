@@ -60,7 +60,6 @@ class Job_Downloads extends Job_Abstract
 	 *	@param		string					$path
 	 *	@param		Entity_Download_File	$file
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setFileSize( string $path, Entity_Download_File $file ): int
 	{

@@ -6,7 +6,6 @@ class Hook_Manage_Page extends Hook
 {
 	/**
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onTinyMceGetLinkList(): void
 	{

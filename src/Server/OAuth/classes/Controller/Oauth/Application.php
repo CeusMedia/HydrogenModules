@@ -28,8 +28,6 @@ class Controller_Oauth_Application extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 *	@throws		RandomException
 	 */
 	public function add(): void
 	{
@@ -60,7 +58,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $applicationId ): void
 	{
@@ -103,7 +100,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $applicationId ): void
 	{
@@ -129,7 +125,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string|NULL		$modeResourceId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $applicationId, ?string $removeMode = NULL, ?string $modeResourceId = NULL ): void
 	{
@@ -166,7 +161,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function enable( string $applicationId ): void
 	{
@@ -181,7 +175,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function disable( string $applicationId ): void
 	{
@@ -209,7 +202,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkAccess( string $applicationId ): void
 	{
@@ -224,7 +216,6 @@ class Controller_Oauth_Application extends Controller
 	 *	@param		string		$applicationId
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function isUserApplication( string $applicationId ): bool
 	{

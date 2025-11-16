@@ -33,7 +33,6 @@ class Hook_Manage_Project extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function onUpdate(): void
@@ -46,7 +45,6 @@ class Hook_Manage_Project extends Hook
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function onProjectRemove(): void
@@ -61,7 +59,6 @@ class Hook_Manage_Project extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onUserRemove(): void
 	{
@@ -159,7 +156,6 @@ class Hook_Manage_Project extends Hook
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function onListRelations(): void
 	{

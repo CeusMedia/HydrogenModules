@@ -32,7 +32,6 @@ class Controller_Manage_Form extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -52,7 +51,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		int|string	$formType
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addRule( string $formId, int|string $formType ): void
 	{
@@ -81,7 +79,6 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		string		$formId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addTransferRule( string $formId ): void
 	{
@@ -108,7 +105,6 @@ class Controller_Manage_Form extends Controller
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function confirm(): string
 	{
@@ -127,7 +123,6 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		string		$formId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function edit( string $formId ): void
@@ -194,7 +189,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		string		$transferRuleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editTransferRule( string $formId, string $transferRuleId ): void
 	{
@@ -289,7 +283,6 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		string		$formId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $formId ): void
 	{
@@ -302,7 +295,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		string		$ruleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeRule( string $formId, string $ruleId ): void
 	{
@@ -314,7 +306,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		string		$transferRuleId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeTransferRule( string $formId, string $transferRuleId ): void
 	{
@@ -343,7 +334,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		?string		$mode
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $formId, ?string $mode = NULL ): void
 	{
@@ -386,7 +376,6 @@ class Controller_Manage_Form extends Controller
 	 *	@param		string		$formId
 	 *	@param		bool		$strict
 	 *	@return		?object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkId( string $formId, bool $strict = TRUE ): ?object
 	{
@@ -418,7 +407,6 @@ class Controller_Manage_Form extends Controller
 	/**
 	 *	@param		int|string		$transferRuleId
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkTransferRuleId( int|string $transferRuleId ): object
 	{

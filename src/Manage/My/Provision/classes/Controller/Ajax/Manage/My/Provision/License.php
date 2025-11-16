@@ -9,7 +9,6 @@ class Controller_Ajax_Manage_My_Provision_License extends AjaxController
 	 *	@return		int
 	 *	@throws		JsonException
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getUsers(): int
 	{

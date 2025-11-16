@@ -9,7 +9,6 @@ class Logic_IP_Lock extends Logic
 
 	/**
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function applyFilters(): bool
 	{
@@ -43,7 +42,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function cancel(Entity_IP_Lock $lock ): bool
 	{
@@ -60,7 +58,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function countView(Entity_IP_Lock $lock ): void
 	{
@@ -74,7 +71,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		int|string		$ipLockId
 	 *	@param		bool			$strict
 	 *	@return		?Entity_IP_Lock
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function get( int|string $ipLockId, bool $strict = TRUE ): ?Entity_IP_Lock
 	{
@@ -101,7 +97,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		array		$orders
 	 *	@param		array		$limits
 	 *	@return		array<Entity_IP_Lock>
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getAll( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
@@ -115,7 +110,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		string		$ip
 	 *	@param		bool		$strict
 	 *	@return		?Entity_IP_Lock
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getByIp( string $ip, bool $strict = TRUE ): ?Entity_IP_Lock
 	{
@@ -167,7 +161,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		string		$ip
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function isLockedIp( string $ip ): bool
 	{
@@ -180,7 +173,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function lock(Entity_IP_Lock $lock ): bool
 	{
@@ -199,7 +191,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		int|string|NULL		$reasonId
 	 *	@param		object|NULL			$filter
 	 *	@return		Entity_IP_Lock
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function lockIp( string $ip, int|string|NULL $reasonId = NULL, ?object $filter = NULL ): Entity_IP_Lock
 	{
@@ -224,7 +215,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove(Entity_IP_Lock $lock ): bool
 	{
@@ -244,7 +234,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function requestUnlock(Entity_IP_Lock $lock ): bool
 	{
@@ -257,7 +246,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@param		int						$status
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus(Entity_IP_Lock $lock, int $status ): bool
 	{
@@ -275,7 +263,6 @@ class Logic_IP_Lock extends Logic
 	 *	@param		Entity_IP_Lock|string	$lockOrIp
 	 *	@param		bool $strict
 	 *	@return		bool|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unlockIfOverdue(Entity_IP_Lock|string $lockOrIp, bool $strict = TRUE ): ?bool
 	{
@@ -294,7 +281,6 @@ class Logic_IP_Lock extends Logic
 	/**
 	 *	@param		Entity_IP_Lock	$lock
 	 *	@return		bool|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function unlock(Entity_IP_Lock $lock ): bool|NULL
 	{

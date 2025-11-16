@@ -17,7 +17,6 @@ class Controller_Manage_Blog_Category extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -40,7 +39,6 @@ class Controller_Manage_Blog_Category extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $categoryId ): void
 	{
@@ -98,7 +96,6 @@ class Controller_Manage_Blog_Category extends Controller
 	 *	@param		int|string		$categoryId
 	 *	@param		bool			$strict
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkCategory( int|string $categoryId, bool $strict = FALSE ): object
 	{

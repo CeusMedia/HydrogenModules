@@ -55,6 +55,7 @@ abstract class Mail_Shop_Abstract extends Mail_Abstract
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		InvalidArgumentException		if order ID in mail data is missing
 	 *	@throws		InvalidArgumentException		if order ID in mail data is invalid
+	 *	@throws		ReflectionException
 	 */
 	protected function getContentTemplateData( int $outputFormat ): array
 	{

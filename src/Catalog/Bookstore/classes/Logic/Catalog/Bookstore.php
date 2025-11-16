@@ -43,7 +43,6 @@ class Logic_Catalog_Bookstore extends Logic
 	 *	@param		integer			$change			Negative value on paid order, positive value on restock.
 	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function changeQuantity( int|string $articleId, int $change, bool $strict = TRUE ): int|FALSE
 	{
@@ -60,7 +59,7 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
@@ -72,7 +71,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
@@ -85,7 +84,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
@@ -121,7 +120,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticle( int|string $articleId ): object
@@ -136,7 +135,7 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticleCoverUrl( object|int|string $articleOrId, string $size = 'm', bool $absolute = FALSE, bool $urlEncoded = FALSE ): ?string
@@ -164,7 +163,6 @@ class Logic_Catalog_Bookstore extends Logic
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleTag( int|string $articleTagId ): ?object
 	{
@@ -262,7 +260,6 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		code doc
 	 */
 	public function getArticleUri( object|int|string $articleOrId, bool $absolute = FALSE ): string
@@ -281,7 +278,6 @@ class Logic_Catalog_Bookstore extends Logic
 	}
 
 	/**
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		use cache
 	 */
 	public function getAuthor( int|string $authorId ): ?object
@@ -326,7 +322,6 @@ class Logic_Catalog_Bookstore extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getAuthorUri( object|int|string $authorOrId, bool $absolute = FALSE ): string
 	{

@@ -32,7 +32,6 @@ class Controller_Manage_Blog extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -85,7 +84,6 @@ class Controller_Manage_Blog extends Controller
 	 *	@param		int|string		$postId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addComment( int|string $postId ): void
 	{
@@ -117,7 +115,6 @@ class Controller_Manage_Blog extends Controller
 	/**
 	 *	@param		int|string|NULL		$postId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string|NULL $postId = NULL ): void
 	{
@@ -173,7 +170,6 @@ class Controller_Manage_Blog extends Controller
 	/**
 	 *	@param		int|NULL		$page
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int $page = NULL ): void
 	{
@@ -230,7 +226,6 @@ class Controller_Manage_Blog extends Controller
 	 *	@param		int|string		$postId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPost( int|string $postId, bool $strict = FALSE ): ?object
 	{

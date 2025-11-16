@@ -12,7 +12,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	/**
 	 *	@param		string		$reasonId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function activate( string $reasonId ): void
 	{
@@ -24,7 +23,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -42,7 +40,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	/**
 	 *	@param		string		$reasonId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function deactivate( string $reasonId ): void
 	{
@@ -55,7 +52,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	/**
 	 *	@param		string		$reasonId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( string $reasonId ): void
 	{
@@ -97,7 +93,6 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 	/**
 	 *	@param		string		$reasonId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $reasonId ): void
 	{

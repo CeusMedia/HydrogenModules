@@ -30,7 +30,6 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		integer			$change			Negative value on paid order, positive value on restock.
 	 *	@return		integer						Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function changeQuantity( int|string $articleId, int $change ): int
 	{
@@ -51,7 +50,6 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId		ID of article
 	 *	@return		object|FALSE					Bridged article data object if found
 	 *	@throws		InvalidArgumentException		if not found
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function check( int|string $articleId, bool $strict = TRUE ): object|FALSE
 	{
@@ -70,6 +68,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		integer			$quantity
 	 *	@return		Entity_Shop_Bridge_Article
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function get( int|string $articleId, int $quantity = 1 ): object
 	{
@@ -109,7 +108,6 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getDescription( int|string $articleId ): string
 	{
@@ -122,7 +120,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getLink( int|string $articleId ): string
 	{
@@ -137,7 +135,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		boolean			$absolute
 	 *	@return		string
 	 *	@todo		implement absolute mode
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getPicture( int|string $articleId, bool $absolute = FALSE ): string
 	{
@@ -153,7 +151,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$amount
 	 *	@return		float
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getPrice( int|string $articleId, int $amount = 1 ): float
 	{
@@ -167,7 +165,7 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@param		int|string		$articleId
 	 *	@param		integer			$amount
 	 *	@return		float
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getTax( int|string $articleId, int $amount = 1 ): float
 	{
@@ -180,7 +178,6 @@ class Logic_ShopBridge_Clothing extends Logic_ShopBridge_Abstract
 	 *	@access		public
 	 *	@param		int|string		$articleId
 	 *	@return		string
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTitle( int|string $articleId ): string
 	{

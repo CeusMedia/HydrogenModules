@@ -34,7 +34,6 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@param		int|string		$templateId		ID of template to export
 	 *	@param		string			$output			Type of output (download|print)
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( int|string $templateId, string $output = 'download' ): void
 	{
@@ -68,7 +67,6 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@param		int|string		$templateId		Template ID
 	 *	@param		bool			$strict
 	 *	@return		Entity_Mail_Template|FALSE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkTemplate( int|string $templateId, bool $strict = TRUE ): Entity_Mail_Template|FALSE
 	{
@@ -87,7 +85,6 @@ class Controller_Admin_Mail_Template_Export extends Controller
 	 *	@param		int|string		$templateId		ID of mail template
 	 *	@return		string
 	 *	@throws		RangeException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function generateJson( int|string $templateId ): string
 	{

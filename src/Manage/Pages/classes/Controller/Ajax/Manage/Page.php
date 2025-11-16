@@ -40,7 +40,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function blacklistSuggestedKeywords(): void
 	{
@@ -95,7 +95,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function orderPages(): void
 	{
@@ -108,7 +108,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function saveContent(): void
 	{
@@ -176,7 +176,7 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function suggestKeywords(): void
 	{
@@ -206,7 +206,6 @@ class Controller_Ajax_Manage_Page extends AjaxController
 	 *	@param		int|string		$pageId
 	 *	@param		bool		$strict
 	 *	@return		Entity_Page|FALSE
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkPageId( int|string $pageId, bool $strict = FALSE ): Entity_Page|FALSE
 	{

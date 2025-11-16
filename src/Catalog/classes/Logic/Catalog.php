@@ -39,7 +39,6 @@ class Logic_Catalog extends Logic
 	 *	@param		integer			$change			Negative value on paid order, positive value on restock.
 	 *	@return		integer|FALSE				Article quantity in stock after change
 	 *	@throws		InvalidArgumentException	if not found
-	 *	@throws		SimpleCacheInvalidArgumentException	if not found
 	 */
 	public function changeQuantity( int|string $articleId, int $change, bool $strict = TRUE ): int|FALSE
 	{
@@ -56,7 +55,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function checkArticleId( int|string $articleId, bool $throwException = FALSE ): bool
 	{
@@ -69,7 +68,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function checkAuthorId( int|string $authorId, bool $throwException = FALSE ): bool
 	{
@@ -82,7 +81,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function checkCategoryId( int|string $categoryId, bool $throwException = FALSE ): bool
 	{
@@ -117,7 +116,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getArticle( int|string $articleId ): object
 	{
@@ -132,7 +131,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getArticleCoverUrl( object|int|string $articleOrId, bool $thumbnail = FALSE, bool $absolute = FALSE ): ?string
 	{
@@ -154,7 +153,6 @@ class Logic_Catalog extends Logic
 	/**
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getArticleTag( int|string $articleTagId ): ?object
 	{
@@ -269,7 +267,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		use cache
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getAuthor( int|string $authorId ): ?object
 	{
@@ -293,7 +291,7 @@ class Logic_Catalog extends Logic
 	 *	@access		public
 	 *	@param		int|string		$articleId			Article ID
 	 *	@return		array
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getAuthorsOfArticle( int|string $articleId ): array
 	{
@@ -313,7 +311,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getAuthorUri( object|int|string $authorOrId, bool $absolute = FALSE ): string
 	{
@@ -347,7 +345,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getCategoriesOfArticle( int|string $articleId ): array
 	{
@@ -368,7 +366,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getCategory( int|string $categoryId ): object
 	{
@@ -384,7 +382,7 @@ class Logic_Catalog extends Logic
 	 *	@todo		clean up
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getCategoryArticles( object $category, array $orders = [], array $limits = [] ): array
 	{
@@ -406,7 +404,7 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		InvalidArgumentException
 	 */
 	public function getCategoryOfArticle( int|string $articleId ): object
 	{
@@ -419,7 +417,6 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getCategoryUri( object|int|string $categoryOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
@@ -460,7 +457,6 @@ class Logic_Catalog extends Logic
 
 	/**
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function getTagUri( object|int|string $tagOrId, string $language = 'en', bool $absolute = FALSE ): string
 	{
@@ -496,7 +492,6 @@ class Logic_Catalog extends Logic
 	 *	@todo		check if this method is used or deprecated
 	 *	@todo		use cache if possible
 	 *	@todo		code doc
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public function isFuture( int|string $articleId ): bool
 	{

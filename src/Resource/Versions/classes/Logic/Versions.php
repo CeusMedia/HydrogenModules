@@ -30,7 +30,6 @@ class Logic_Versions
 	 *	@param		string				$content
 	 *	@param		int|string|NULL		$authorId
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add( string $module, string $id, string $content, int|string|NULL $authorId = NULL ): string
 	{
@@ -107,7 +106,6 @@ class Logic_Versions
 	/**
 	 *	@param		int|string		$versionId
 	 *	@return		object|NULL
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getById( int|string $versionId ): ?object
 	{
@@ -158,7 +156,6 @@ class Logic_Versions
 	/**
 	 *	@param		int|string		$versionId
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function hasById( int|string $versionId ): bool
 	{
@@ -170,7 +167,6 @@ class Logic_Versions
 	 *	@param		string		$id
 	 *	@param		string		$version
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( string $module, string $id, string $version ): bool
 	{

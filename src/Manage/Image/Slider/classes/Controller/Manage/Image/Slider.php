@@ -20,7 +20,6 @@ class Controller_Manage_Image_Slider extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add(): void
 	{
@@ -47,7 +46,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$sliderId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addSlide( int|string $sliderId ): void
 	{
@@ -119,7 +117,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$sliderId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function demo( int|string $sliderId ): void
 	{
@@ -136,7 +133,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$sliderId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $sliderId ): void
 	{
@@ -170,7 +166,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$slideId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function editSlide( int|string $slideId ): void
 	{
@@ -257,7 +252,6 @@ class Controller_Manage_Image_Slider extends Controller
 	 *	@param		int|string			$slideId
 	 *	@param		int|string		$moveBy
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function rankSlide( int|string $slideId, int|string $moveBy ): void
 	{
@@ -274,7 +268,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$sliderId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $sliderId ): void
 	{
@@ -297,7 +290,6 @@ class Controller_Manage_Image_Slider extends Controller
 	 *	@param		int|string		$slideId
 	 *	@param		bool		$removeSourceBackup
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeSlide( int|string $slideId, bool $removeSourceBackup = FALSE ): void
 	{
@@ -343,7 +335,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$slideId
 	 *	@return		Entity_Image_Slide
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkSlideId( int|string $slideId ): Entity_Image_Slide
 	{
@@ -360,7 +351,6 @@ class Controller_Manage_Image_Slider extends Controller
 	/**
 	 *	@param		int|string		$sliderId
 	 *	@return		Entity_Image_Slider
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function checkSliderId( int|string $sliderId ): Entity_Image_Slider
 	{
@@ -378,7 +368,6 @@ class Controller_Manage_Image_Slider extends Controller
 	 *	@param		int|string		$sliderId
 	 *	@param		bool		$takeNewerFirst
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function reorderSlides( int|string $sliderId, bool $takeNewerFirst = TRUE ): bool
 	{
@@ -402,7 +391,6 @@ class Controller_Manage_Image_Slider extends Controller
 	 *	@param		string			$posX
 	 *	@param		string			$posY
 	 *	@return		bool
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		RuntimeException	if image file is not existing
 	 *	@throws		RuntimeException	if image file is not readable
 	 *	@throws		RuntimeException	if image file is not an image

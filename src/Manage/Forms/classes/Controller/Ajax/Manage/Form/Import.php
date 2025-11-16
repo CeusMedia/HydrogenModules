@@ -8,7 +8,7 @@ class Controller_Ajax_Manage_Form_Import extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		JsonException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function testRules(): void
 	{

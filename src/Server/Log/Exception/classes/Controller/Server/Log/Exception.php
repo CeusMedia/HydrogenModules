@@ -66,9 +66,6 @@ class Controller_Server_Log_Exception extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
-	/**
-	 * @throws \Psr\SimpleCache\InvalidArgumentException
-	 */
 	public function remove( string $id, $test = FALSE ): void
 	{
 		if( $test )
@@ -82,7 +79,6 @@ class Controller_Server_Log_Exception extends Controller
 	/**
 	 *	@param		string		$id
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $id ): void
 	{
@@ -96,7 +92,6 @@ class Controller_Server_Log_Exception extends Controller
 
 	/**
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function __onInit(): void
 	{
@@ -110,7 +105,6 @@ class Controller_Server_Log_Exception extends Controller
 	 *	@param		string		$id
 	 *	@param		bool		$strict
 	 *	@return		object|array
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function check( string $id, bool $strict = TRUE ): object|array
 	{

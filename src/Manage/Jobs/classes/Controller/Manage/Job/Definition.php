@@ -83,7 +83,6 @@ class Controller_Manage_Job_Definition extends Controller
 	/**
 	 *	@param		int|string		$jobDefinitionId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $jobDefinitionId ): void
 	{
@@ -116,7 +115,6 @@ class Controller_Manage_Job_Definition extends Controller
 	 *	@param		int|string		$jobDefinitionId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function setStatus( int|string $jobDefinitionId, $status ): void
 	{

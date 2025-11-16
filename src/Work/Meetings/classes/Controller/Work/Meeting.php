@@ -56,7 +56,6 @@ class Controller_Work_Meeting extends Controller
 	 *	@param		int|string		$meetingId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function addParticipants( int|string $meetingId ): void
 	{
@@ -106,7 +105,6 @@ class Controller_Work_Meeting extends Controller
 	 *	@param		int|string		$meetingId
 	 *	@param		int|string		$userId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeParticipant( int|string $meetingId, int|string $userId ): void
 	{
@@ -128,6 +126,7 @@ class Controller_Work_Meeting extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
 	 */
 	public function edit( int|string $meetingId, bool $editMode = FALSE ): void
 	{
@@ -208,6 +207,7 @@ class Controller_Work_Meeting extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		DateInvalidOperationException
 	 */
 	public function setStatus( int|string $meetingId, int $status ): void
 	{
@@ -270,7 +270,6 @@ class Controller_Work_Meeting extends Controller
 	 *	@param		int|string|NULL		$meetingId
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string|NULL $meetingId = NULL ): void
 	{

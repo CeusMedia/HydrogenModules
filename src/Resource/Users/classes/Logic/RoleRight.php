@@ -11,7 +11,6 @@ class Logic_RoleRight extends SharedLogic
 	 *	@param		string			$controller
 	 *	@param		string			$action
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function add( Entity_Role|int|string $role, string $controller, string $action ): int
 	{
@@ -79,7 +78,6 @@ class Logic_RoleRight extends SharedLogic
 	 *	@param		string			$controller
 	 *	@param		string			$action
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( Entity_Role|int|string $role, string $controller, string $action ): int
 	{
@@ -96,7 +94,6 @@ class Logic_RoleRight extends SharedLogic
 	 *	Removes all rights of a role.
 	 *	@param		Entity_Role|int|string	$role
 	 *	@return		int						Number of removed rights
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeAll( Entity_Role|int|string $role ): int
 	{

@@ -37,7 +37,6 @@ class Controller_Manage_Catalog_Category extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function edit( int|string $categoryId ): void
 	{
@@ -70,7 +69,6 @@ class Controller_Manage_Catalog_Category extends Controller
 	/**
 	 *	@param		int|string		$categoryId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $categoryId ): void
 	{

@@ -179,7 +179,7 @@ class Logic_IP_Lock_Transport extends Logic
 	/**
 	 *	@param		object		$data
 	 *	@return		object
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	protected function importByMerge( object $data ): object
 	{

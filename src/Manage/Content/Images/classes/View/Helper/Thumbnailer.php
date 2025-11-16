@@ -20,7 +20,6 @@ class View_Helper_Thumbnailer
 	 *	@param		int		$maxWidth
 	 *	@param		int		$maxHeight
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function __construct( Environment $env, int $maxWidth = 120, int $maxHeight = 80 )
 	{
@@ -42,7 +41,7 @@ class View_Helper_Thumbnailer
 	 *	@param		int|NULL		$maxWidth
 	 *	@param		int|NULL		$maxHeight
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		RuntimeException
 	 */
 	public function get( string $imagePath, ?int $maxWidth = NULL, ?int $maxHeight = NULL ): string
 	{
@@ -105,7 +104,6 @@ class View_Helper_Thumbnailer
 	/**
 	 *	@param		string		$folderPath
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function uncacheFolder( string $folderPath ): int
 	{
@@ -115,7 +113,6 @@ class View_Helper_Thumbnailer
 	/**
 	 *	@param		string		$imagePath
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function uncacheFile( string $imagePath ): int
 	{
@@ -129,7 +126,6 @@ class View_Helper_Thumbnailer
 
 	/**
 	 *	@return		int
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function flushCache(): int
 	{
