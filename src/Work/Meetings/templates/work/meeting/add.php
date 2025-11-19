@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -9,12 +10,24 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View $view */
 /** @var array $words */
 /** @var object $meeting */
+/** @var Dictionary $moduleConfig */
 
 $w			= (object) $words['add'];
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
 $iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 
 $optRoles	= HtmlElements::Options( $words['types'] );
+
+$useRoles	= $moduleConfig->get( 'useRoles' );
+
+$fieldParticipation	= '';
+if( $useRoles ){
+	$fieldParticipation	= '
+		<div class="span3">
+			<label for="input_role">'.$w->labelParticipation.'</label>
+			<select name="role" id="input_role" class="span12">'.$optRoles.'</select>
+		</div>';
+}
 
 $panelAdd	= '
 <div class="content-panel">
@@ -36,11 +49,8 @@ $panelAdd	= '
 								</div>
 							</div>
 							<div class="row-fluid">
-								<div class="span3">
-									<label for="input_role">'.$w->labelParticipation.'</label>
-									<select name="role" id="input_role" class="span12">'.$optRoles.'</select>
-								</div>
-								<div class="span9">
+								'.$fieldParticipation.'
+								<div class="'.( $useRoles ? 'span9' : 'span12' ).'">
 									<label for="input_link">'.$w->labelLink.'</label>
 									<input type="text" name="link" id="input_link" class="span12" value="'.htmlentities( $meeting->link ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 								</div>

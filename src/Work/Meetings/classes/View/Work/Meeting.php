@@ -26,12 +26,13 @@ class View_Work_Meeting extends View
 	public function view(): void
 	{
 	}
+
 	/**
 	 *	@param		array				$words
 	 *	@param		Entity_Work_Meeting	$meeting
 	 *	@return		string
 	 */
-	function renderEditPanel( array $words, Entity_Work_Meeting $meeting ): string
+	public function renderEditPanel( array $words, Entity_Work_Meeting $meeting ): string
 	{
 		$w			= (object) $words['edit'];
 		$iconBack	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
@@ -128,12 +129,17 @@ class View_Work_Meeting extends View
 		$modal		= '';
 		$buttonAdd	= '';
 		if( Model_Work_Meeting::STATUS_NEW === $meeting->status ){
-			$modal		= $this->renderEditParticipantsPanelModal( $words, $meeting, $roles, $groups, $users );
-			$buttonAdd	= View_Helper_Bootstrap_Modal_Trigger::create( $this->env )
-				->setModalId( 'meeting-participants-add' )
-				->setLabel( $iconAdd.'hinzufügen' )
+			$modal		= new View_Modal_Work_Meeting_Participants( $this->env );
+			$modal->setMeeting( $meeting )
+				->setRoles( $roles )
+				->setGroups( $groups )
+				->setUsers( $users )
+//				->setClass( 'modal-wide')
+				->setAttributes( ['class' => 'modal-wide'] )
+				->render();
+			$buttonAdd	= $modal->trigger
+				->setLabel( $iconAdd.'&nbsp;hinzufügen' )
 				->setClass( 'btn btn-primary' )
-				->setClass( 'modal-wide')
 				->render();
 		}
 		return '
@@ -149,139 +155,6 @@ class View_Work_Meeting extends View
 			</div>
 		</div>
 	'.$modal;
-	}
-
-	/**
-	 *	@param		array				$words
-	 *	@param		Entity_Work_Meeting	$meeting
-	 *	@param		array				$roles
-	 *	@param		array				$groups
-	 *	@param		array				$users
-	 *	@return		string
-	 */
-	public function renderEditParticipantsPanelModal( array $words, Entity_Work_Meeting $meeting, array $roles = [], array $groups = [], array $users = [] ): string
-	{
-		$list	= [];
-		foreach( $roles as $role ){
-			if( 0 === $role->nrUsers )
-				continue;
-			$input	= HtmlTag::create( 'input', NULL, [
-				'type'	=> 'checkbox',
-				'name'	=> 'roleIds[]',
-				'value'	=> $role->roleId,
-			] );
-			$nr			= HtmlTag::create( 'small', '('.$role->nrUsers.')', ['class' => 'muted'] );
-			$label		= HtmlTag::create( 'label', $input.'&nbsp;'.$role->title.'&nbsp;'.$nr, ['class' => 'checkbox'] );
-			$list[$role->title]		= HtmlTag::create( 'li', $label );
-		}
-		uksort( $list, 'strnatcasecmp' );
-		$listRoles	= [] === $list ? '' : HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
-
-		$list	= [];
-		foreach( $groups as $group ){
-			if( 0 === $group->nrUsers )
-				continue;
-			$input	= HtmlTag::create( 'input', NULL, [
-				'type'	=> 'checkbox',
-				'name'	=> 'groupIds[]',
-				'value'	=> $group->groupId,
-			] );
-			$nr			= HtmlTag::create( 'small', '('.$group->nrUsers.')', ['class' => 'muted'] );
-			$label		= HtmlTag::create( 'label', $input.'&nbsp;'.$group->title.'&nbsp;'.$nr, ['class' => 'checkbox'] );
-			$list[$group->title]		= HtmlTag::create( 'li', $label );
-		}
-		uksort( $list, 'strnatcasecmp' );
-		$listGroups	= [] === $list ? '' : HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
-
-		$list	= [];
-		foreach( $users as $user ){
-			$input	= HtmlTag::create( 'input', NULL, [
-				'type'	=> 'checkbox',
-				'name'	=> 'userIds[]',
-				'value'	=> $user->userId,
-			] );
-			$label		= HtmlTag::create( 'label', $input.'&nbsp;'.$user->username, ['class' => 'checkbox'] );
-			$list[$user->username]		= HtmlTag::create( 'li', $label );
-		}
-		uksort( $list, 'strnatcasecmp' );
-		$listUsers	= [] === $list ? '' : HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
-
-		$optionByRoles	= '';
-		if( '' !== $listRoles )
-			$optionByRoles	= '
-			<div class="span4">
-				<label class="radio">
-					<input type="radio" name="source" value="roles" class="has-optionals" checked/>
-					Rollen
-				</label>
-			</div>';
-
-		$optionByGroups	= '';
-		if( '' !== $listGroups )
-			$optionByGroups	= '
-			<div class="span4">
-				<label class="radio">
-					<input type="radio" name="source" value="groups" class="has-optionals"/>
-					Gruppen
-				</label>
-			</div>';
-
-		$optionByUsers	= '';
-		if( '' !== $listUsers )
-			$optionByUsers	= '
-			<div class="span4">
-				<label class="radio">
-					<input type="radio" name="source" value="users" class="has-optionals"/>
-					einzelne Benutzer
-				</label>
-			</div>';
-
-		$optType	= HtmlElements::Options( $words['types'], (string) Model_Work_Meeting_Participant::TYPE_CONTRIBUTOR );
-		$form		= '
-<!--		<input type="hidden" name="meetingId" value="'.$meeting->meetingId.'"/>-->
-		<div class="row-fluid">
-			<div class="span4">
-				<label for="input_type">Art der Teilnahme</label>
-				<select name="type" id="input_type">'.$optType.'</select>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<label>Benutzer auswählen aus</label>
-			'.$optionByRoles.'
-			'.$optionByGroups.'
-			'.$optionByUsers.'
-		</div>
-		<div class="row-fluid optional source source-roles">
-			<label>Rollenbenutzer</label>
-			<div class="boxed boxed-small">
-				'.$listRoles.'
-			</div>
-		</div>
-		<div class="row-fluid optional source source-groups">
-			<label>Gruppenbenutzer</label>
-			<div class="boxed boxed-small">
-				'.$listGroups.'
-			</div>
-		</div>
-		<div class="row-fluid optional source source-users">
-			<label>Benutzer</label>
-			<div class="boxed boxed-small">
-				'.$listUsers.'
-			</div>
-		</div>
-		';
-
-		$iconBack	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
-		$iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
-
-		return View_Helper_Bootstrap_Modal::create( $this->env )
-			->setId( 'meeting-participants-add' )
-			->setHeading( 'Teilnehmer hinzufügen' )
-			->setFormAction( 'work/meeting/addParticipants/'.$meeting->meetingId )
-			->setButtonLabelCancel( $iconBack.'abbrechen' )
-			->setButtonLabelSubmit( $iconSave.'hinzufügen')
-			->setBody( $form )
-			->render();
 	}
 
 	/**

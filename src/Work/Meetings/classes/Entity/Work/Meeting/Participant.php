@@ -13,7 +13,7 @@ class Entity_Work_Meeting_Participant extends Entity
 	/** @var Entity_Work_Meeting_Participant[] $participants */
 	public array $participants				= [];
 
-	/** @var Entity_User[] $user */
+	/** @var Entity_User|NULL $user */
 	public ?Entity_User $user				= NULL;
 
 	protected static array $mandatoryFields	= [

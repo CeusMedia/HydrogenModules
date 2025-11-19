@@ -31,13 +31,13 @@ class Controller_Work_Meeting extends Controller
 			$entity->createdAt	= time();
 			$entity->modifiedAt	= time();
 
-			$meetingId	= $this->modelMeeting->add( $entity->toArray() );
+			$meetingId	= $this->modelMeeting->add( $entity );
 			/** @var Entity_Work_Meeting $meeting */
 			$meeting	= $this->modelMeeting->get( $meetingId );
 			$entity->content	= $data->get( 'content' );
 			$this->modelMeeting->edit( $meetingId, $entity, FALSE );
 
-			$role	= $data->get( 'role' );
+			$role	= $data->get( 'role', Model_Work_Meeting_Participant::TYPE_UNSPECIFIED );
 			$entity	= new Entity_Work_Meeting_Participant();
 			$entity->meetingId	= $meetingId;
 			$entity->type		= $role;
@@ -320,6 +320,8 @@ class Controller_Work_Meeting extends Controller
 		$this->logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
+		$this->moduleConfig		= $this->env->getModules()->get( 'Work_Meetings' )->getConfigAsDictionary();
+		$this->addData( 'moduleConfig', $this->moduleConfig );
 	}
 
 	/**
