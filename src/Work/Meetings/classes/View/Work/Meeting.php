@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\View as View;
 
 class View_Work_Meeting extends View
 {
+	protected bool $useRoles	= TRUE;
+
 	public function add(): void
 	{
 	}
@@ -329,7 +331,7 @@ class View_Work_Meeting extends View
 				if( Model_Work_Meeting_Participant::TYPE_INFORMED !== $participant->type )
 					$nrParticipants++;
 				if( $currentUserId == $participant->userId ){
-					$myRole	= $words['types'][$participant->type];
+					$myRole	= $words['types'][$participant->type] ?? '';
 				}
 			}
 			/** @var int $timestampStart */
@@ -351,15 +353,19 @@ class View_Work_Meeting extends View
 			if( '' !== ( $meeting->link ?? '' ) )
 				$location	= HtmlTag::create( 'a', $location, ['href' => $meeting->link] );
 
-			$modals[]	= $this->renderViewModal( $words, $meeting );
+			$modals[]	= View_Modal_Work_Meeting_Display::create( $this->env )->setMeeting( $meeting )->useRoles( $this->useRoles );
 			$trigger	= $this->renderViewModalTrigger( $words, $meeting );
+
+			$labelCount	= '<strong>'.$nrParticipants.'</strong> Teilnehmer';
+			if( $this->useRoles )
+				$labelCount	.= ', du bist <strong>'.$myRole.'</strong>';
 
 			$list[]	= HtmlTag::create( 'li', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
 						HtmlTag::create( 'h4', $meeting->title ),
 						HtmlTag::create( 'p', [
-							HtmlTag::create( 'div', '<strong>'.$nrParticipants.'</strong> Teilnehmer, du bist <strong>'.$myRole.'</strong>' ),
+							HtmlTag::create( 'div', $labelCount ),
 							HtmlTag::create( 'div', 'Wann: '.$dateTimeRange.' Uhr' ),
 							HtmlTag::create( 'div', 'Wo: '.$location ),
 						], ['class' => ''] ),
@@ -371,83 +377,6 @@ class View_Work_Meeting extends View
 		return HtmlTag::create( 'ul', $list, ['class' => 'meeting-cards thumbnails'] ).join( $modals );
 	}
 
-	public function renderViewModal( array $words, Entity_Work_Meeting $meeting ): string
-	{
-		$location	= $meeting->location;
-		if( '' !== ( $meeting->link ?? '' ) )
-			$location	= HtmlTag::create( 'a', $location, ['href' => $meeting->link] );
-		$blockLocation = join( [
-			HtmlTag::create( 'div', 'Ort', ['class' => 'form-view-label'] ),
-			HtmlTag::create( 'div', $location, ['class' => 'form-view-value'] ),
-		] );
-
-		$participants	= [];
-		foreach( $meeting->participants as $participant )
-			$participants[]	= HtmlTag::create( 'div', $this->renderParticipant( $words, $meeting, $participant ), [ 'class' => 'user-avatar-item' ] );
-		$blockParticipants = join( [
-			HtmlTag::create( 'div', 'Teilnehmer', ['class' => 'form-view-label'] ),
-			HtmlTag::create( 'div', $participants, ['class' => 'user-avatar-list'] ),
-		] );
-
-		$blockContent	= '';
-		if( '' !== ( $meeting->content ?? '' ) )
-			$blockContent = join( [
-				HtmlTag::create( 'div', 'Beschreibung', ['class' => 'form-view-label'] ),
-				HtmlTag::create( 'div', $meeting->content, ['class' => ''] ),
-			] );
-
-		$status	= $words['statuses'][$meeting->status];
-
-		$w	= (object) $words['edit'];
-		$blockDateTime	= '
-					<div class="row-fluid">
-						<div class="span4">
-							<div class="form-view-label">'.$w->labelDateStart_date.'</div>
-							<div class="form-view-value">'.date( 'Y-m-d', strtotime( $meeting->dateStart ) ).'</div>
-						</div>
-						<div class="span4">
-							<div class="form-view-label">'.$w->labelDateEnd_date.'</div>
-							<div class="form-view-value">'.date( 'Y-m-d', strtotime( $meeting->dateEnd ) ).'</div>
-						</div>
-						<div class="span4">
-							'.join( [
-								HtmlTag::create( 'div', 'Ort', ['class' => 'form-view-label'] ),
-								HtmlTag::create( 'div', $location, ['class' => 'form-view-value'] ),
-							] ).'
-						</div>
-					</div>
-					<div class="row-fluid">
-						<div class="span4">
-							<div class="form-view-label">'.$w->labelDateStart_time.'</div>
-							<div class="form-view-value">'.date( 'H:i:s', strtotime( $meeting->dateStart ) ).'</div>
-						</div>
-						<div class="span4">
-							<div class="form-view-label">'.$w->labelDateEnd_time.'</div>
-							<div class="form-view-value">'.date( 'H:i:s', strtotime( $meeting->dateEnd ) ).'</div>
-						</div>
-						<div class="span4">
-							'.join( [
-								HtmlTag::create( 'div', 'aktueller Zustand', ['class' => 'form-view-label'] ),
-								HtmlTag::create( 'div', $status, ['class' => 'form-view-value'] ),
-							] ).'
-						</div>
-					</div>
-		';
-
-		$body	= '
-<h4>'.$meeting->title.'</h4>
-'.$blockParticipants.'<br/>
-'.$blockDateTime.'
-'.$blockContent;
-
-		$modal		= new View_Helper_Bootstrap_Modal( $this->env );
-		return $modal->setId('meeting-'.$meeting->meetingId )
-			->setHeading( 'Meeting' )
-			->setBody( $body )
-			->setFade( FALSE )
-			->setButtonLabelCancel( 'Okay' )
-			->render();
-	}
 
 	public function renderViewModalTrigger( array $words, Entity_Work_Meeting $meeting ): string
 	{
@@ -481,12 +410,16 @@ class View_Work_Meeting extends View
 				'title'	=> 'entfernen',
 			] );
 
-		$type		= HtmlTag::create( 'small', $words['types'][$participant->type], ['class' => 'muted'] );
+		if( $this->useRoles )
+			$subtext	= HtmlTag::create( 'small', $this->moduleWords['types'][$participant->type], ['class' => 'muted'] );
+		else
+			$subtext	= HtmlTag::create( 'small', $participant->user->firstname.' '.$participant->user->surname, ['class' => 'muted'] );
+
 		$username	= HtmlTag::create( 'div', $participant->user->username.$remove, [
 			'class'		=> 'username',
 			'title'		=> $participant->user->firstname.' '.$participant->user->surname],
 		);
-		return $gravatar.$username.$type;
+		return $gravatar.$username.$subtext;
 	}
 
 	/**
@@ -511,5 +444,7 @@ class View_Work_Meeting extends View
 	{
 //		$this->env->getPage()->js->addModuleFile( 'module.work.meetings.js' );
 		$this->env->getPage()->addCommonStyle( 'module.work.meetings.css' );
+		$this->useRoles	= $this->env->getModules()->get( 'Work_Meetings' )->getConfigAsDictionary()->get( 'useRoles' );
+		$this->addData( 'useRoles', $this->useRoles );
 	}
 }

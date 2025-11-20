@@ -151,7 +151,8 @@ class View_Modal_Work_Meeting_Participants extends View_Helper_Bootstrap_Modal
 	 */
 	public function render(): string
 	{
-		return $this->setBody( $this->renderForm() )->render();
+		$this->body	= $this->renderForm();
+		return parent::render();
 	}
 
 	/**
@@ -194,7 +195,7 @@ class View_Modal_Work_Meeting_Participants extends View_Helper_Bootstrap_Modal
 				</label>
 			</div>';
 
-		$useRoles	= $this->env->getModules()->get( 'Work_Meeting' )->getConfigAsDictionary()->get( 'useRoles' );
+		$useRoles	= $this->env->getModules()->get( 'Work_Meetings' )->getConfigAsDictionary()->get( 'useRoles' );
 
 		$fieldRole	= '';
 		if( $useRoles ){
