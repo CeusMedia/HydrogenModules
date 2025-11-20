@@ -17,7 +17,7 @@ This module comes with:
 
 ]]></description>
 	<category>Work</category>
-	<version>0.2.6</version>
+	<version>0.2.7</version>
 	<log version="0.1">Initial prototype of module.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add mails and jobs.</log>
@@ -26,6 +26,7 @@ This module comes with:
 	<log version="0.2.4">Use job scheduler instead of crond.</log>
 	<log version="0.2.5">Remove meeting participation on user removal.</log>
 	<log version="0.2.6">Extract modal for meeting participants.</log>
+	<log version="0.2.7">Add modal to display meeting.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -42,6 +43,7 @@ This module comes with:
 		<class>Mail/Work/Meeting/Updated.php</class>
 		<class>Model/Work/Meeting.php</class>
 		<class>Model/Work/Meeting/Participant.php</class>
+		<class>View/Modal/Work/Meeting/Display.php</class>
 		<class>View/Modal/Work/Meeting/Participants.php</class>
 		<class>View/Work/Meeting.php</class>
 		<locale>de/work/meeting.ini</locale>

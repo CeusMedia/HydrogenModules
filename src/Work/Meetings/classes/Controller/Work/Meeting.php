@@ -1,6 +1,8 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File\ICal\Builder as IcalBuilder;
+use CeusMedia\Common\XML\DOM\Node;
 use CeusMedia\HydrogenFramework\Controller;
 
 class Controller_Work_Meeting extends Controller
@@ -19,7 +21,7 @@ class Controller_Work_Meeting extends Controller
 		if( $this->env->getRequest()->getMethod()->isPost() ){
 			/** @var Dictionary $data */
 			$data			= $this->env->getRequest()->getAllFromSource( 'POST', TRUE );
-			$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+			$currentUserId	= $this->logicAuth->getCurrentUserId();
 			$entity			= new Entity_Work_Meeting();
 			$entity->creatorId	= $currentUserId;
 			$entity->dateStart	= $data->get( 'dateStart_date' ).' '.$data->get( 'dateStart_time' );
@@ -89,16 +91,66 @@ class Controller_Work_Meeting extends Controller
 				foreach( $userIds as $userId ){
 					if( in_array( $userId, $participantIds ) )
 						continue;
-					$this->modelParticipant->add( [
+					$this->modelParticipant->add( Entity_Work_Meeting_Participant::fromArray( [
 						'meetingId'	=> $meetingId,
 						'userId'	=> $userId,
-						'type'		=> $data->get( 'type' ),
+						'type'		=> $data->get( 'type', Model_Work_Meeting_Participant::TYPE_UNSPECIFIED ),
 						'timestamp'	=> time(),
-					] );
+					] ) );
 				}
 			}
 		}
 		$this->restart( 'edit/'.$meetingId, TRUE );
+	}
+
+	/**
+	 *	Prototype of calender export.
+	 *	Exports meetings of current user.
+	 *	Needs Basic Auth for external/direct access.
+	 *	@return void
+	 *	@throws ReflectionException
+	 */
+	public function cal(): void
+	{
+		$currentUserId	= $this->logicAuth->getCurrentUserId();
+		if( !$currentUserId ){
+			$auth	= new BasicAuthentication( $this->env, 'iCal Export' );
+			$currentUserId	= $auth->authenticate();
+			if( !$currentUserId )
+				die( 'Access denied.' );
+			$this->logic->setCurrentUserId( $currentUserId );
+		}
+
+		/** @var Entity_Work_Meeting[] $meetings */
+		$meetings	= $this->logic->getActiveMeetingsOfCurrentUser();
+
+		$tree		= new Node( 'test' );
+		$cal		= new Node( "vcalendar" );
+		$cal->addChild( new Node( "version", "2.0" ) );
+		foreach( $meetings as $meeting ){
+			$start		= strtotime( $meeting->dateStart );
+			$end		= strtotime( $meeting->dateEnd );
+			$event		= new Node( "vevent" );
+			$start		= new Node( "dtstart", date( "Ymd", $start ) );
+			$end		= new Node( "dtend", date( "Ymd", $end ) );
+			$summary	= new Node( "summary", $meeting->title );
+			$location	= new Node( "location", $meeting->location );
+			$content	= new Node( "description", strip_tags( $meeting->content ) );
+			$event->addChild( $start );
+			$event->addChild( $end );
+			$event->addChild( $summary );
+			$event->addChild( $location );
+			$event->addChild( $content );
+			$cal->addChild( $event );
+		}
+		$tree->addChild( $cal );
+
+		$builder	= new IcalBuilder();
+		$ics		= $builder->build( $tree );
+		$response	= $this->env->getResponse();
+		$response->setHeader( 'Content-Type', 'text/calendar' );
+		$response->setBody( $ics );
+		$response->send();
 	}
 
 	/**
@@ -306,7 +358,7 @@ class Controller_Work_Meeting extends Controller
 			}
 		}
 
-		$currentUserId	= Logic_Authentication::getInstance( $this->env )->getCurrentUserId();
+		$currentUserId	= $this->logicAuth->getCurrentUserId();
 		$this->addData( 'currentUserId', $currentUserId );
 	}
 

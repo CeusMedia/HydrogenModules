@@ -38,5 +38,4 @@ class Model_Work_Meeting_Participant extends CeusMedia\HydrogenFramework\Model\D
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
 	protected ?string $className	= Entity_Work_Meeting_Participant::class;
-
 }

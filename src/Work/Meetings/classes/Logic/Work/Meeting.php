@@ -8,6 +8,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	protected Model_Work_Meeting $modelMeeting;
 	protected Model_Work_Meeting_Participant $modelParticipant;
 	protected Model_Job_Schedule $modelSchedule;
+	protected int|string $currentUserId				= 0;
 
 	/**
 	 *	@param		Entity_Work_Meeting		$meeting
@@ -49,7 +50,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 
 		$myMeetingIds	= $this->modelParticipant->getAllByIndices( [
 			'meetingId'	=> $activeMeetingIds,
-			'userId'	=> $this->logicAuth->getCurrentUserId(),
+			'userId'	=> $this->currentUserId,
 		], [], [], ['meetingId'] );
 		if( [] === $myMeetingIds )
 			return [];
@@ -145,12 +146,11 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	public function sendMailsOnCancelled( Entity_Work_Meeting $meeting ): int
 	{
 		$logicMail		= Logic_Mail::getInstance( $this->env );
-		$currentUserId	= $this->logicAuth->getCurrentUserId();
 		$language		= $this->env->getLanguage()->getLanguage();
 		/** @var Entity_Work_Meeting_Participant[] $participants */
 		$participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
 		foreach( $participants as $participant ){
-			if( $participant->userId === $currentUserId )
+			if( $participant->userId === $this->currentUserId )
 				continue;
 			$user	= $this->logicUser->getUser( $participant->userId );
 
@@ -171,12 +171,11 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	 */
 	public function sendMailsOnCreated( Entity_Work_Meeting $meeting ): int
 	{
-		$currentUserId	= $this->logicAuth->getCurrentUserId();
 		$language		= $this->env->getLanguage()->getLanguage();
 		/** @var Entity_Work_Meeting_Participant[] $participants */
 		$participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
 		foreach( $participants as $participant ){
-			if( $participant->userId === $currentUserId )
+			if( $participant->userId === $this->currentUserId )
 				continue;
 			$user	= $this->logicUser->getUser( $participant->userId );
 
@@ -240,6 +239,18 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 			$this->logicMail->enqueueMail( $mail, $language, $user );
 		}
 		return count( $participants );
+	}
+
+	/**
+	 *	Sets another user to be in focus.
+	 *	Only needed to override the current session based user.
+	 *	@param		int|string		$currentUserId
+	 *	@return		self
+	 */
+	public function setCurrentUserId( int|string $currentUserId ): self
+	{
+		$this->currentUserId	= $currentUserId;
+		return $this;
 	}
 
 	/**
@@ -335,5 +346,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
+		$this->currentUserId	= $this->logicAuth->getCurrentUserId();
 	}
 }
