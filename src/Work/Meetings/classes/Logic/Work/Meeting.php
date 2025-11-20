@@ -261,17 +261,16 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	 */
 	public function setJobSchedule( Entity_Work_Meeting $meeting ): void
 	{
-		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
 		$reminderDate		= Datetime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateStart )
 			->sub( new DateInterval( "PT1H" ) );
 		$closeDate		= Datetime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateEnd );
 
 		if( 0 !== $meeting->jobScheduleIdRemind ){
-			$modelJobSchedule->edit( $meeting->jobScheduleIdRemind, [
+			$this->modelSchedule->edit( $meeting->jobScheduleIdRemind, [
 				'expression'	=> $reminderDate->format( 'Y-m-d H:i' ),
 				'modifiedAt'	=> time(),
 			] );
-			$modelJobSchedule->edit( $meeting->jobScheduleIdClose, [
+			$this->modelSchedule->edit( $meeting->jobScheduleIdClose, [
 				'expression'	=> $closeDate->format( 'Y-m-d H:i' ),
 				'modifiedAt'	=> time(),
 			] );
@@ -280,7 +279,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 			$modelJobDefinition	= new Model_Job_Definition( $this->env );
 
 			$jobDefinitionId	= $modelJobDefinition->getByIndex( 'identifier', 'Work.Meeting.remind', [], ['jobDefinitionId'] );
-			$jobScheduleIdRemind	= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
+			$jobScheduleIdRemind	= $this->modelSchedule->add( Entity_Job_Schedule::fromArray( [
 				'jobDefinitionId'	=> $jobDefinitionId,
 				'title'				=> 'Meeting Reminder #'.$meeting->meetingId,
 				'type'				=> Model_Job_Schedule::TYPE_DATETIME,
@@ -297,7 +296,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 			] );
 
 			$jobDefinitionId	= $modelJobDefinition->getByIndex( 'identifier', 'Work.Meeting.close', [], ['jobDefinitionId'] );
-			$jobScheduleIdRemind	= $modelJobSchedule->add( Entity_Job_Schedule::fromArray( [
+			$jobScheduleIdRemind	= $this->modelSchedule->add( Entity_Job_Schedule::fromArray( [
 				'jobDefinitionId'	=> $jobDefinitionId,
 				'title'				=> 'Meeting Closer #'.$meeting->meetingId,
 				'type'				=> Model_Job_Schedule::TYPE_DATETIME,
@@ -318,15 +317,13 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	/**
 	 *	@param		Entity_Work_Meeting		$meeting
 	 *	@return		void
-	 *	@throws		ReflectionException
 	 */
 	public function unsetJobSchedule( Entity_Work_Meeting $meeting ): void
 	{
 		if( 0 === $meeting->jobScheduleIdRemind )
 			return;
-		$modelJobSchedule	= Model_Job_Schedule::getInstance( $this->env );
-		$modelJobSchedule->remove( $meeting->jobScheduleIdRemind );
-		$modelJobSchedule->remove( $meeting->jobScheduleIdClose );
+		$this->modelSchedule->remove( $meeting->jobScheduleIdRemind );
+		$this->modelSchedule->remove( $meeting->jobScheduleIdClose );
 		$this->modelMeeting->edit( $meeting->meetingId, [
 			'jobScheduleIdRemind'	=> 0,
 			'jobScheduleIdClose'	=> 0,
