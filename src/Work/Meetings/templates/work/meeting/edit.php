@@ -12,9 +12,9 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Entity_User[] $users */
 /** @var bool $editMode */
 
-$panelEdit			= $editMode ? $view->renderEditPanel( $words, $meeting ) : $view->renderEditViewPanel( $words, $meeting );
-$panelParticipants	= $view->renderEditParticipantsPanel( $words, $meeting, $roles, $groups, $users );
-$panelStatus		= $view->renderEditStatusPanel( $words, $meeting );
+$panelEdit			= $editMode ? $view->renderEditPanel( $meeting ) : $view->renderEditViewPanel( $meeting );
+$panelParticipants	= $view->renderEditParticipantsPanel( $meeting, $roles, $groups, $users );
+$panelStatus		= $view->renderEditStatusPanel( $meeting );
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/meeting/edit/', ['words' => $words] ) );
 

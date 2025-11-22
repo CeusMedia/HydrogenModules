@@ -8,7 +8,7 @@ class View_Modal_Work_Meeting_Display extends View_Helper_Bootstrap_Modal
 
 	protected ?Entity_Work_Meeting $meeting		= NULL;
 	protected array $moduleWords;
-	protected bool $userRoles					= TRUE;
+	protected bool $useRoles					= TRUE;
 
 	public function __construct( Environment $env )
 	{
