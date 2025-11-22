@@ -30,13 +30,12 @@ class View_Work_Meeting extends View
 	}
 
 	/**
-	 *	@param		array				$words
 	 *	@param		Entity_Work_Meeting	$meeting
 	 *	@return		string
 	 */
-	public function renderEditPanel( array $words, Entity_Work_Meeting $meeting ): string
+	public function renderEditPanel( Entity_Work_Meeting $meeting ): string
 	{
-		$w			= (object) $words['edit'];
+		$w			= $this->getWords( 'edit', NULL, TRUE );
 		$iconBack	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
 		$iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 		$iconView	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-eye"] ).'&nbsp;';
@@ -117,14 +116,13 @@ class View_Work_Meeting extends View
 	}
 
 	/**
-	 *	@param		array				$words
 	 *	@param		Entity_Work_Meeting	$meeting
 	 *	@param		array				$roles
 	 *	@param		array				$groups
 	 *	@param		array				$users
 	 *	@return		string
 	 */
-	public function renderEditParticipantsPanel( array $words, Entity_Work_Meeting $meeting, array $roles = [], array $groups = [], array $users = [] ): string
+	public function renderEditParticipantsPanel( Entity_Work_Meeting $meeting, array $roles = [], array $groups = [], array $users = [] ): string
 	{
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-plus"] ).'&nbsp;';
 
@@ -149,7 +147,7 @@ class View_Work_Meeting extends View
 			<h4>Teilnehmer</h4>
 			<div class="content-panel-inner">
 				<div class="boxed not-boxed-large user-avatar-list">
-					'.$this->renderParticipantsList( $words, $meeting, $meeting->participants, Model_Work_Meeting::STATUS_NEW === $meeting->status ).'
+					'.$this->renderParticipantsList( $meeting, $meeting->participants, Model_Work_Meeting::STATUS_NEW === $meeting->status ).'
 				</div>
 				<div class="buttonbar">
 					'.$buttonAdd.'
@@ -160,14 +158,13 @@ class View_Work_Meeting extends View
 	}
 
 	/**
-	 *	@param		array				$words
 	 *	@param		Entity_Work_Meeting	$meeting
 	 *	@return		string
 	 *	@throws		DateInvalidOperationException
 	 */
-	public function renderEditStatusPanel( array $words, Entity_Work_Meeting $meeting ): string
+	public function renderEditStatusPanel( Entity_Work_Meeting $meeting ): string
 	{
-		$w	= (object) ( $words['panel-status'] ?? [] );
+		$w	= $this->getWords( 'panel-status', NULL, TRUE );
 		$dateStart	= DateTime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateStart );
 		$dateEnd	= DateTime::createFromFormat( 'Y-m-d H:i:s', $meeting->dateEnd );
 
@@ -178,18 +175,18 @@ class View_Work_Meeting extends View
 			$dateValidBefore	= $dateStart->sub( new DateInterval( 'PT1H' ) );
 			$isValid			= new DateTime() < $dateValidBefore;
 			if( $isValid ){
-				$text	= HtmlTag::create( 'div', '<strong>Das Meeting kann jetzt aktiviert werden.</strong><br/>Damit wird es für die Teilnehmer sichtbar, die auch eine E-Mail dazu bekommen.', [
+				$text	= HtmlTag::create( 'div', $w->msgActivate, [
 					'class'	=> 'alert alert-info'
 				] );
-				$button	= HtmlTag::create( 'a', $iconPlay.'&nbsp;aktivieren', [
+				$button	= HtmlTag::create( 'a', $iconPlay.'&nbsp;'.$w->btnActivate, [
 					'href'	=> './work/meeting/setStatus/'.$meeting->meetingId.'/'.Model_Work_Meeting::STATUS_ACTIVE,
 					'class'	=> 'btn btn-large btn-success',
 				] );
 			} else {
-				$text	= HtmlTag::create( 'div', 'Das Meeting kann nicht aktiviert werden - Zeitpunkt passt nicht', [
+				$text	= HtmlTag::create( 'div', $w->msgInvalid, [
 					'class'	=> 'alert alert-warning'
 				] );
-				$button	= HtmlTag::create( 'button', $iconPlay.'&nbsp;aktivieren', [
+				$button	= HtmlTag::create( 'button', $iconPlay.'&nbsp;'.$w->btnActivate, [
 					'type'		=> 'button',
 					'class'		=> 'btn btn-large btn-success btn-disabled',
 					'disabled'	=> 'disabled',
@@ -200,29 +197,29 @@ class View_Work_Meeting extends View
 			$iconStop	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 			if( time() > $dateEnd->getTimestamp()  )
 				return '';
-			$text	= HtmlTag::create( 'div', '<strong>Das Meeting kann noch abgesagt werden.</strong><br/>Dabei bleibt es für die Teilnehmer als "abgesagt" sichtbar und eine E-Mail geht dazu raus.', [
+			$text	= HtmlTag::create( 'div', $w->msgCancel, [
 				'class'	=> 'alert alert-info'
 			] );
-			$button	= HtmlTag::create( 'a', $iconStop.'&nbsp;absagen', [
+			$button	= HtmlTag::create( 'a', $iconStop.'&nbsp;'.$w->btnCancel, [
 				'href'	=> './work/meeting/setStatus/'.$meeting->meetingId.'/'.Model_Work_Meeting::STATUS_CANCELLED,
 				'class'	=> 'btn btn-large',
 			] );
 		}
 		else if( Model_Work_Meeting::STATUS_CANCELLED === $meeting->status ){
 			$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
-			$button		= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+			$button		= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->btnRemove, [
 				'href'	=> './work/meeting/remove/'.$meeting->meetingId,
 				'class'	=> 'btn btn-large btn-primary',
 			] );
 			$iconReuse	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
-			$button		= HtmlTag::create( 'a', $iconReuse.'&nbsp;zu neuem Meeting machen', [
+			$button		= HtmlTag::create( 'a', $iconReuse.'&nbsp;'.$w->btnRecycle, [
 				'href'	=> './work/meeting/reuse/'.$meeting->meetingId,
 				'class'	=> 'btn btn-large',
 			] );
 		}
 		else if( Model_Work_Meeting::STATUS_OUTDATED === $meeting->status || Model_Work_Meeting::STATUS_DONE === $meeting->status ){
 			$iconReuse	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
-			$button		= HtmlTag::create( 'a', $iconReuse.'&nbsp;zu neuem Meeting machen', [
+			$button		= HtmlTag::create( 'a', $iconReuse.'&nbsp;'.$w->btnRecycle, [
 				'href'	=> './work/meeting/reuse/'.$meeting->meetingId,
 				'class'	=> 'btn btn-large',
 			] );
@@ -240,14 +237,13 @@ class View_Work_Meeting extends View
 
 	/**
 	 *	@param		Entity_Work_Meeting	$meeting
-	 *	@param		array				$words
 	 *	@return		string
 	 */
-	function renderEditViewPanel( array $words, Entity_Work_Meeting $meeting ): string
+	function renderEditViewPanel( Entity_Work_Meeting $meeting ): string
 	{
-		$w			= (object) $words['edit'];
-		$iconBack		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
-		$iconEdit		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-pencil"] ).'&nbsp;';
+		$w			= $this->getWords( 'edit', NULL, TRUE );
+		$iconBack	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
+		$iconEdit	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-pencil"] ).'&nbsp;';
 
 		$buttonEdit	= '';
 		if( in_array( $meeting->status, [Model_Work_Meeting::STATUS_NEW, Model_Work_Meeting::STATUS_ACTIVE] ) )
@@ -320,7 +316,12 @@ class View_Work_Meeting extends View
 </div>';
 	}
 
-	public function renderViewCards( $words, $meetings, $currentUserId ): string
+	/**
+	 *	@param		Entity_Work_Meeting[]	$meetings
+	 *	@param		int|string				$currentUserId
+	 *	@return		string
+	 */
+	public function renderViewCards( array $meetings, int|string $currentUserId ): string
 	{
 		$list	= [];
 		$modals	= [];
@@ -331,15 +332,15 @@ class View_Work_Meeting extends View
 				if( Model_Work_Meeting_Participant::TYPE_INFORMED !== $participant->type )
 					$nrParticipants++;
 				if( $currentUserId == $participant->userId ){
-					$myRole	= $words['types'][$participant->type] ?? '';
+					$myRole	= $this->getWords( 'types', NULL, FALSE )[$participant->type] ?? '';
 				}
 			}
 			/** @var int $timestampStart */
 			$timestampStart	= strtotime( $meeting->dateStart );
 			/** @var int $timestampEnd */
 			$timestampEnd	= strtotime( $meeting->dateEnd );
-			$weekdayStart	= $words['weekdays-short'][date( 'w',  )].', ';
-			$weekdayEnd		= $words['weekdays-short'][date( 'w', $timestampEnd )].', ';
+			$weekdayStart	= $this->getWords( 'weekdays-short', NULL, FALSE )[date( 'w',  )].', ';
+			$weekdayEnd		= $this->getWords( 'weekdays-short', NULL, FALSE )[date( 'w', $timestampEnd )].', ';
 			$dateStart	= date( 'j.n.y', $timestampStart );
 			$dateEnd	= date( 'j.n.y', $timestampEnd );
 			$timeStart	= date( 'H:i', $timestampStart );
@@ -354,7 +355,7 @@ class View_Work_Meeting extends View
 				$location	= HtmlTag::create( 'a', $location, ['href' => $meeting->link] );
 
 			$modals[]	= View_Modal_Work_Meeting_Display::create( $this->env )->setMeeting( $meeting )->useRoles( $this->useRoles );
-			$trigger	= $this->renderViewModalTrigger( $words, $meeting );
+			$trigger	= $this->renderViewModalTrigger( $meeting );
 
 			$labelCount	= '<strong>'.$nrParticipants.'</strong> Teilnehmer';
 			if( $this->useRoles )
@@ -363,6 +364,7 @@ class View_Work_Meeting extends View
 			$list[]	= HtmlTag::create( 'li', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
+						HtmlTag::create( 'div', $this->renderTimeLeft( $meeting ) ),
 						HtmlTag::create( 'h4', $meeting->title ),
 						HtmlTag::create( 'p', [
 							HtmlTag::create( 'div', $labelCount ),
@@ -377,8 +379,11 @@ class View_Work_Meeting extends View
 		return HtmlTag::create( 'ul', $list, ['class' => 'meeting-cards thumbnails'] ).join( $modals );
 	}
 
-
-	public function renderViewModalTrigger( array $words, Entity_Work_Meeting $meeting ): string
+	/**
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		string
+	 */
+	public function renderViewModalTrigger( Entity_Work_Meeting $meeting ): string
 	{
 		$iconEye	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye' ] );
 		$trigger	= new View_Helper_Bootstrap_Modal_Trigger( $this->env );
@@ -390,13 +395,12 @@ class View_Work_Meeting extends View
 	}
 
 	/**
-	 *	@param		array							$words
 	 *	@param		Entity_Work_Meeting				$meeting
 	 *	@param		Entity_Work_Meeting_Participant	$participant
 	 *	@param		bool							$editMode		Flag: add remove button, default: no
 	 *	@return		string
 	 */
-	public function renderParticipant( array $words, Entity_Work_Meeting $meeting, Entity_Work_Meeting_Participant $participant, bool $editMode = FALSE ): string
+	public function renderParticipant( Entity_Work_Meeting $meeting, Entity_Work_Meeting_Participant $participant, bool $editMode = FALSE ): string
 	{
 		$gravatar	= 'https://www.gravatar.com/avatar/'.md5( strtolower( trim( $participant->user->email ) ) ).'?s=32&d=mm&r=g';
 		$gravatar	= HtmlTag::create( 'img', NULL, ['src' => $gravatar, 'class' => 'avatar'] );
@@ -411,7 +415,7 @@ class View_Work_Meeting extends View
 			] );
 
 		if( $this->useRoles )
-			$subtext	= HtmlTag::create( 'small', $this->moduleWords['types'][$participant->type], ['class' => 'muted'] );
+			$subtext	= HtmlTag::create( 'small', $this->getWords( 'types' )[$participant->type], ['class' => 'muted'] );
 		else
 			$subtext	= HtmlTag::create( 'small', $participant->user->firstname.' '.$participant->user->surname, ['class' => 'muted'] );
 
@@ -423,28 +427,59 @@ class View_Work_Meeting extends View
 	}
 
 	/**
-	 *	@param		array<string,array<string,int|float|string>>	$words
 	 *	@param		Entity_Work_Meeting								$meeting
 	 *	@param		Entity_Work_Meeting_Participant[]				$participants
 	 *	@param		bool											$editMode			Flag: add remove button, default: no
 	 *	@return		string
 	 */
-	public function renderParticipantsList( array $words, Entity_Work_Meeting $meeting, array $participants, bool $editMode = FALSE ): string
+	public function renderParticipantsList( Entity_Work_Meeting $meeting, array $participants, bool $editMode = FALSE ): string
 	{
-		$w		= (object) $words['panel-edit-results'];
+		$w		= (object) $this->getWords( 'panel-edit-results' );
 		$list	= [];
 		foreach( $participants as $participant )
-			$list[]	= HtmlTag::create( 'li', $this->renderParticipant( $words, $meeting, $participant, $editMode ) );
+			$list[]	= HtmlTag::create( 'li', $this->renderParticipant( $meeting, $participant, $editMode ) );
 		if( [] === $list )
 			$list[]	= HtmlTag::create( 'div', $w->labelRecipientsEmpty, ['class' => 'alert alert-info'] );
 		return HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 	}
 
+	/**
+	 *	@return		void
+	 */
 	protected function __onInit(): void
 	{
 //		$this->env->getPage()->js->addModuleFile( 'module.work.meetings.js' );
 		$this->env->getPage()->addCommonStyle( 'module.work.meetings.css' );
 		$this->useRoles	= $this->env->getModules()->get( 'Work_Meetings' )->getConfigAsDictionary()->get( 'useRoles' );
 		$this->addData( 'useRoles', $this->useRoles );
+	}
+
+	/**
+	 *	@param		Entity_Work_Meeting		$meeting
+	 *	@return		string
+	 */
+	protected function renderTimeLeft( Entity_Work_Meeting $meeting ): string
+	{
+		/** @var int $timestampStart */
+		$timestampStart	= strtotime( $meeting->dateStart );
+		if( $timestampStart < time() )
+			return '';
+		$seconds	= $timestampStart - time();
+
+		$class	= 'important';
+		if( $seconds > 24 * 60 * 60 )
+			$class	= 'success';
+		else if( $seconds > 60 * 60 )
+			$class	= 'warning';
+
+		if( $this->env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
+			$helperTime	= new View_Helper_TimePhraser( $this->env );
+			$timeLeft	= 'noch '.$helperTime->convert( $timestampStart - 2 * $seconds );
+		}
+		else if( $this->env->getModules()->has( 'UI_Helper_Datetime' ) ){
+			$helperTime	= new View_Helper_Datetime( $this->env );
+			$timeLeft	= 'noch '.$helperTime->getDurationPhraseFromSeconds( $seconds );
+		}
+		return HtmlTag::create( 'span', $timeLeft, ['class' => 'label label-'.$class] );
 	}
 }

@@ -54,5 +54,5 @@ This module can be used to view all collected information about the exception.
 	<link access="public" path="system/exception/index"/>
 	<link access="public" path="system/exception/reset"/>
 	<link access="public" path="system/exception/test"/>
-	<hook type="resource" resource="App" event="onException">Hook_System_Exception::onAppException</hook>
+	<hook type="resource" resource="App" event="onException" level="7">Hook_System_Exception::onAppException</hook>
 </module>

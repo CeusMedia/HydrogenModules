@@ -14,7 +14,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var bool $useRoles */
 
 if( [] !== $meetings )
-	$list	= $view->renderViewCards( $words, $meetings, $currentUserId );
+	$list	= $view->renderViewCards( $meetings, $currentUserId );
 else
 	$list	= HtmlTag::create( 'div', $words['view']['msgEmpty'], ['class' => 'alert alert-success'] );
 
