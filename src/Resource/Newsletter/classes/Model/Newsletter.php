@@ -48,6 +48,7 @@ class Model_Newsletter extends Model
 		'trackingCode',
 		'plain',
 		'html',
+//		'attachments',
 		'createdAt',
 		'modifiedAt',
 		'sentAt',

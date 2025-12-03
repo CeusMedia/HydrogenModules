@@ -86,7 +86,7 @@ extract( $view->populateTexts(
 ) );
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter' ) : '';
 
 return $textTop.'
 <script>

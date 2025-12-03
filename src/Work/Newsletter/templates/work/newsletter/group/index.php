@@ -7,7 +7,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $words */
 /** @var bool $tabbedLinks */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/group' ) : '';
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/group/index/', ['words' => $words] ) );
 

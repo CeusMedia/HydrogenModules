@@ -107,9 +107,29 @@ class Dispatcher extends GeneralDispatcher
 
 		/** @var Controller $instance */
 		$instance	= $controllerInstanceOrFirstGuess;
-		$this->checkClassAction( $instance, $action );												//  ensure action method
-		if( $this->checkClassActionArguments )														//  action method arguments are to be checked
-			$this->checkClassActionArguments( $instance, $action );									//  ensure action method arguments
+		try{
+			$this->checkClassAction( $instance, $action );												//  ensure action method
+			if( $this->checkClassActionArguments )														//  action method arguments are to be checked
+				$this->checkClassActionArguments( $instance, $action );									//  ensure action method arguments
+		}
+		catch( RuntimeException $e ){
+			$payload	= [
+				'controller'	=> $controller,
+				'action'		=> $action,
+				'arguments'		=> $arguments,
+				'exception'		=> $e,
+				'view'			=> '',
+			];
+			$handled	= $this->env->getCaptain()->callHookWithPayload(
+				'Dispatcher',
+				'onError',
+				$this,
+				$payload
+			);
+			if( $handled )
+				return $payload['view'];
+			throw $e;
+		}
 
 		$data	= ObjectMethodFactory::staticCallObjectMethod( $instance, $action, $arguments );	//  call action method in controller class with arguments
 		$this->noteLastCall( $instance );															//  store this call to avoid loops

@@ -37,9 +37,9 @@ $panelForm		= '
 extract( $view->populateTexts( ['top', 'info', 'bottom'], 'html/work/newsletter/template/style/' ) );
 
 return $textTop.HtmlTag::create( 'div', [
-	HtmlTag::create( 'div', $panelForm, ['class' => 'span6'] ),
+	HtmlTag::create( 'div', $panelForm, ['class' => 'span8'] ),
 	HtmlTag::create( 'div', [
 		$textInfo,
 		$view->renderHtmlPreviewPanel( $template )
-	], ['class' => 'span6'] )
+	], ['class' => 'span4'] )
 ], ['class' => 'row-fluid'] ).$textBottom;

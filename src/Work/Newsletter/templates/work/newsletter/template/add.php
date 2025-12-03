@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $templates */
 /** @var object $template */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/template' ) : '';
 
 $optTemplate	= ['' => '-'];
 foreach( $templates as $item )
@@ -52,7 +52,7 @@ $panelAdd	= '
 								</div>
 							</div>
 						</div>
-						<div class="span4 optional templateId templateId-">
+<!--						<div class="span4 optional templateId templateId-">
 							<label for="input_imprint" class="mandatory">'.$words->add->labelImprint.'</label>
 							'.HtmlTag::create( 'textarea', htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ), [
 								'name'		=> 'imprint',
@@ -61,7 +61,7 @@ $panelAdd	= '
 								'rows'		=> 8,
 								'required'	=> 'required',
 							] ).'
-						</div>
+						</div>-->
 					</div>
 					<div class="row-fluid optional templateId templateId-">
 						<div class="span12">
@@ -84,7 +84,7 @@ $panelAdd	= '
 					<div class="row-fluid optional templateId templateId-">
 						<div class="span12">
 							<label for="input_imprint" class="mandatory">'.$words->add->labelImprint.'</label>
-							<textarea name="style" id="input_style" class="span12 CodeMirror-auto" rows="10" required="required">'.htmlentities( $template->style, ENT_QUOTES, 'UTF-8' ).'</textarea>
+							<textarea name="style" id="input_imprint" class="span12 CodeMirror-auto" rows="10" required="required">'.htmlentities( $template->imprint, ENT_QUOTES, 'UTF-8' ).'</textarea>
 						</div>
 					</div>
 					<div class="row-fluid">

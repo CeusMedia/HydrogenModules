@@ -142,15 +142,15 @@ body.moduleWorkNewsletter #newsletter-preview.half-size {
 	height: 300px;
 	}
 body.moduleWorkNewsletter #newsletter-preview-container {
-	width: 166.66%;
-	height: 166.66%;
+	width: 300%;
+	height: 300%;
 	overflow: hidden;
 	transform-origin: 0 0;
 	-webkit-transform-origin: 0 0;
 	-ms-transform-origin: 0 0;
-	transform: scale(.6);
-	-ms-transform: scale(.6); /* IE 9 */
-	-webkit-transform: scale(.6); /* Safari and Chrome */
+	transform: scale(.33);
+	-ms-transform: scale(.33); /* IE 9 */
+	-webkit-transform: scale(.33); /* Safari and Chrome */
 	}
 body.moduleWorkNewsletter #newsletter-preview-iframe-container {
 	width: 100%;

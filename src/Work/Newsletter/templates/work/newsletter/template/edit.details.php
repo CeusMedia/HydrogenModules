@@ -253,9 +253,9 @@ return HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [$panelCopy], ['class' => 'span6'] ),
 			HtmlTag::create( 'div', [$panelRemove, $panelNewsletters], ['class' => 'span6'] ),
 		], ['class' => 'row-fluid'] ),
-	], ['class' => 'span7'] ),
+	], ['class' => 'span8'] ),
 	HtmlTag::create( 'div', [
 		$view->renderHtmlPreviewPanel( $template, 'half-size' ),
 		$view->renderTextPreviewPanel( $template, 'half-size' ),
-	], ['class' => 'span5'] ),
+	], ['class' => 'span4'] ),
 ], ['class' => 'row-fluid'] );

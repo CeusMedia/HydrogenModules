@@ -44,6 +44,7 @@ var ModuleWorkNewsletter = {
 					var styleUrl = baseUrlBackend + 'work/newsletter/template/ajaxGetStyle/' + templateId + '/1';
 					this.cssSources.unshift(styleUrl + '?' + new Date().getTime());
 					var options = tinymce.Config.apply({
+						license_key: 'gpl',
 						selector: "textarea#input_html",
 						language: settings.JS_TinyMCE.auto_language,
 						content_css: ModuleWorkNewsletter.cssSources.join(','),

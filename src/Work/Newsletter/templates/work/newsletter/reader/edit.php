@@ -13,7 +13,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $readerLetters */
 /** @var array $readerGroups */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/reader' ) : '';
 
 $statusIcons	= [
 	-1		=> 'remove',

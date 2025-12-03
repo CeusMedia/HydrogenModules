@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
@@ -149,7 +149,7 @@ foreach( $folders as $folder ){
 		HtmlTag::create( 'td', $buttons ),
 	] );
 }
-if( $files ){
+if( $folders || $files ){
 	foreach( $files as $fileName ){
 		$label	= HtmlTag::create( 'big', $fileName );
 		$fileCode		= base64_encode( $selectedPath.$fileName );

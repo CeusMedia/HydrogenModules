@@ -130,7 +130,7 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 	if( $canBulk )
 		$cols[]	= '22px';
 	$cols[]		= '';
-	$cols[]		= '150px';
+	$cols[]		= '160px';
 	$cols[]		= '80px';
 
 	return HtmlTag::create( 'table', [

@@ -118,6 +118,9 @@ class Model_Newsletter_Theme
 	public function getAll(): array
 	{
 		$themes	= [];
+		if( !file_exists( $this->themePath ) )
+			return $themes;
+
 		$index	= new DirectoryIterator( $this->themePath );
 		foreach( $index as $entry ){
 			if( $entry->isDot() || !$entry->isDir() )
