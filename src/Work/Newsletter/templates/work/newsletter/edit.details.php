@@ -310,13 +310,13 @@ $panelGroups		= $helperPanelGroups
 
 return '
 <div class="row-fluid">
-	<div class="span7">
+	<div class="span8">
 		'.$panelDetails.'
 		'.$panelGroups.'
 		'.$panelFlow.'
 		'.$panelRemove.'
 	</div>
-	<div class="span5">
+	<div class="span4">
 		'.$panelPreview.'
 	</div>
 </div>';

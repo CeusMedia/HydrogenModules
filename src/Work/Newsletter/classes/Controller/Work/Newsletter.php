@@ -431,7 +431,7 @@ class Controller_Work_Newsletter extends Controller
 		$sourceNewsletterId		= $this->request->get( 'newsletterId', '' );
 
 		$data	= [];																					//  start to prepare data
-		if( '' !== $sourceNewsletterId ){																//  from source newsletter
+		if( 0 !== (int) $sourceNewsletterId ){																//  from source newsletter
 			$data	= (array) $this->logic->getNewsletter( $sourceNewsletterId );						//  take all data from former newsletter
 			unset( $data['status'], $data['modifiedAt'], $data['sentAt'], $data['trackingCode'] );		//  ... but reset status, timestamps and tracking code
 		}

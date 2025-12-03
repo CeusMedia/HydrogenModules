@@ -197,7 +197,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->restart( NULL, TRUE );
 		}
 
-		$imprint	= $this->getView()->loadcontentFile( 'html/work/newsletter/template/imprint.txt' );
+		$imprint	= $this->getView()->loadContentFile( 'html/work/newsletter/template/imprint.txt' );
 		if( $theme->imprint )
 			$imprint	= $theme->imprint;
 

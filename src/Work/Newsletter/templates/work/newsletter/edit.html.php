@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $newsletterId */
 /** @var array $styles */
 
-$env->getPage()->js->addScriptOnReady( 'ModuleWorkNewsletter.init("'.$env->url.'");' );
+$env->getPage()->js->addScriptOnReady( 'ModuleWorkNewsletter.init("'.$env->url.'", '.$newsletter->newsletterTemplateId.', 0);' );
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] ).'&nbsp;';
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
@@ -143,10 +143,10 @@ $panelForm		= '
 
 return '
 <div class="row-fluid">
-	<div class="span7">
+	<div class="span8">
 		'.$panelForm.'
 	</div>
-	<div class="span5">
+	<div class="span4">
 		'.$panelPreview.'
 	</div>
 </div>

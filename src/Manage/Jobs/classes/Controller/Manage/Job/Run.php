@@ -68,7 +68,8 @@ class Controller_Manage_Job_Run extends Controller
 		}
 		foreach( $filters as $filterKey ){
 			$value	= $this->compactFilterInput( $this->request->get( $filterKey ) );
-			$this->session->set( $this->filterPrefix.$filterKey, $value );
+			if( $value )
+				$this->session->set( $this->filterPrefix.$filterKey, $value );
 		}
 /*print_m( $this->request->getAll() );
 print_m( $this->session->getAll( $this->filterPrefix ) );

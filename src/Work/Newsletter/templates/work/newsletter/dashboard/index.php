@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $tabbedLinks */
 /** @var array<int,int> $readers */
 
-$tabsMain	= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain	= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter' ) : '';
 
 extract( $view->populateTexts( ['index.top', 'index.bottom'], 'html/work/newsletter/dashboard/' ) );
 

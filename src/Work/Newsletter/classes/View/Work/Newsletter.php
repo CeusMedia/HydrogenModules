@@ -33,15 +33,15 @@ class View_Work_Newsletter extends View
 		$this->addData( 'words', $words );
 	}
 
-	public function renderMainTabs(): string
+	public function renderMainTabs( ?string $current = NULL ): string
 	{
-		$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.tab' );
+//		$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.tab' );
 		$tabs			= (object) $this->getWords( 'tabsMain', 'work/newsletter' );
 		$list		= [];
 		foreach( $tabs as $key => $value ){
 			$attributes	= ['href'	=> './'.$key];
 			$link		= HtmlTag::create( 'a', $value, $attributes );
-			$attributes	= ['class'	=> $key === $currentTab ? 'active' : NULL];
+			$attributes	= ['class'	=> $key === $current ? 'active' : NULL];
 			$list[]	= HtmlTag::create( 'li', $link, $attributes );
 		}
 		return HtmlTag::create( 'ul', $list, ['class' => "nav nav-tabs"] );

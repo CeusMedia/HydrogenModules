@@ -13,7 +13,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $templateId */
 /** @var string $format */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/template' ) : '';
 
 $isUsed			= FALSE;
 $currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.template.content.tab' );

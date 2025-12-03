@@ -72,7 +72,7 @@ $formAdd	= '
 </form>
 ';
 
-$tabsMain	= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain	= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter' ) : '';
 
 extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/add/' ) );
 

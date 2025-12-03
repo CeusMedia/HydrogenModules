@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\Exception\IO as IoException;
@@ -180,7 +180,6 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_Mail_Attachment( $this->env );
-		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail	= Logic_Mail::getInstance( $this->env );
 		$this->logicUpload	= new Logic_Upload( $this->env );
 		$this->basePath		= $this->logicMail->getMailAttachmentPath();
@@ -192,7 +191,7 @@ class Controller_Admin_Mail_Attachment_Folder extends Controller
 	protected function getMimeTypeOfFile( string $fileName ): bool|string
 	{
 		if( !file_exists( $this->basePath.$fileName ) )
-			throw new RuntimeException( 'File "'.$fileName.'" is not existing is attachments folder.' );
+			throw new RuntimeException( 'File "'.$fileName.'" is not existing in attachments folder.' );
 		$info	= finfo_open( FILEINFO_MIME_TYPE/*, '/usr/share/file/magic'*/ );
 		return finfo_file( $info, $this->basePath.$fileName );
 	}

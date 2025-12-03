@@ -68,9 +68,9 @@ return $textTop.HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] )
 			], ['class' => 'content-panel-inner'] ),
 		], ['class' => 'content-panel'] )
-	], ['class' => 'span6'] ),
+	], ['class' => 'span8'] ),
 	HtmlTag::create( 'div', [
 		$textInfo,
 		$view->renderHtmlPreviewPanel( $template )
-	], ['class' => 'span6'] ),
+	], ['class' => 'span4'] ),
 ], ['class' => 'row-fluid'] ).$textBottom;

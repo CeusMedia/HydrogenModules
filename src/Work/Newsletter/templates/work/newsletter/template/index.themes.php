@@ -10,6 +10,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $themes */
 /** @var string $pathNewsletterThemes */
 
+if( [] === $themes )
+	return '';
+
 if( !$this->env->getAcl()->has( 'work/newsletter/template', 'installTheme' ) )
 	return '';
 

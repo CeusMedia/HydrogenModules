@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $newsletter */
 /** @var bool $tabbedLinks */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter' ) : '';
 
 $panelAdd		= $view->loadTemplateFile( 'work/newsletter/index.add.php' );
 $panelFilter	= $view->loadTemplateFile( 'work/newsletter/index.filter.php', ['inlineFilter' => FALSE] );

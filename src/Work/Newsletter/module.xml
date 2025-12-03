@@ -59,7 +59,7 @@
 	<log version="1.3.4">Remove module Info:Pages.</log>
 	<log version="1.3.5">Use new module UI:Helper:Pagination:PrevNext in newsletter editor.</log>
 	<log version="1.3.6">Improve reader CSV export.</log>
-	<log version="1.4">Imported module from protected repositry.</log>
+	<log version="1.4">Imported module from protected repository.</log>
 	<log version="1.4.1">Improve code style.</log>
 	<log version="1.4.2">Use UI:Helper:StatusBadge.</log>
 	<log version="1.4.3">Use configurable theme path of Resource:Newsletter.</log>
@@ -265,11 +265,13 @@
 	<config type="string" protected="no" mandatory="no" name="themes.path">contents/themes</config>
 	<relations>
 		<needs type="module">JS_Ace</needs>
+		<needs type="module">JS_CodeMirror</needs>
 		<needs type="module">JS_TinyMCE</needs>
 		<needs type="module">JS_Form_Changes</needs>
 		<needs type="module">Resource_Jobs</needs>
 		<needs type="module">Resource_Mail</needs>
 		<needs type="module">Resource_Newsletter</needs>
+		<needs type="module">Tool_PhantomJS</needs>
 		<needs type="module">UI_Font_FontAwesome</needs>
 		<needs type="module">UI_Helper_Pagination</needs>
 		<needs type="module">UI_Helper_Pagination_PrevNext</needs>
@@ -277,7 +279,6 @@
 		<needs type="module">UI_Helper_StatusBadge</needs>
 		<needs type="module">UI_JS_fancyBox</needs>
 		<needs type="module">UI_JS_fancyBox</needs>
-		<needs type="module">Tool_PhantomJS</needs>
 	</relations>
 	<link access="public" path="work/newsletter/template/previewTheme"></link>
 	<link xml:lang="de" access="acl" path="work/newsletter" rank="30">Newsletters</link>

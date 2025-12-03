@@ -25,7 +25,7 @@ $textarea		= HtmlTag::create( 'textarea', $template->plain, [
 
 $content	= $textTop.'
 <div class="row-fluid">
-	<div class="span7">
+	<div class="span8">
 		<div class="content-panel">
 			<h3>
 				'.$words->edit->labelPlain.'
@@ -39,7 +39,7 @@ $content	= $textTop.'
 			</div>
 		</div>
 	</div>
-	<div class="span5">
+	<div class="span4">
 		'.$textInfo.'
 		'.$view->renderTextPreviewPanel( $template ).'
 	</div>

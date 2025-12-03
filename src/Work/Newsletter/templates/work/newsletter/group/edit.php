@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -15,7 +16,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var bool $useUserGroupRelations */
 /** @var bool $canManageGroupRelations */
 
-$tabsMain		= $tabbedLinks ? $view->renderMainTabs() : '';
+$tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/group' ) : '';
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';

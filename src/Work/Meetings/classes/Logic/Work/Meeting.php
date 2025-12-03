@@ -41,7 +41,8 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 	{
 		$conditions	= [
 			'status'	=> Model_Work_Meeting::STATUS_ACTIVE,
-//			'dateStart'	=> '>'.DateTime::...->sub(new DateInterval("PT1H")->format( 'Y-m-d H:i:s' ),
+//			'dateStart'	=> '> '.DateTime::...->sub(new DateInterval("PT1H")->format( 'Y-m-d H:i:s' ),
+			'dateEnd'	=> '> '.date( 'Y-m-d H:i:s' ),
 		];
 		$orders		= ['dateStart' => 'ASC'];
 		$activeMeetingIds	= $this->modelMeeting->getAll( $conditions, $orders, [], ['meetingId'] );
@@ -343,6 +344,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
-		$this->currentUserId	= $this->logicAuth->getCurrentUserId();
+		$this->currentUserId	= $this->logicAuth->getCurrentUserId( FALSE ) ?? '';
 	}
 }
