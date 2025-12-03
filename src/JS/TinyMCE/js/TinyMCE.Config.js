@@ -24,6 +24,7 @@ if(typeof tinymce !== "undefined"){
 			options.selector = settings.JS_TinyMCE.auto_selector;
 			options.plugins = settings.JS_TinyMCE.auto_plugins;
 			options.height = settings.JS_TinyMCE.auto_height;			//  @todo not working right now
+			options.menubar = settings.JS_TinyMCE.auto_menubar;
 			options.language = tinymce.Config.language;
 			options.document_base_url = this.frontendUri;
 			options.style_formats = this.styleFormats;
