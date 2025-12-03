@@ -3,8 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Resource: Import</title>
-	<subtitle>Provider for import connections.</subtitle>
-	<description><![CDATA[]]></description>
+	<description><![CDATA[Provider for import connections.]]></description>
 	<category>Resource</category>
 	<version>0.2.8</version>
 	<log version="0.1">Initial prototype.</log>

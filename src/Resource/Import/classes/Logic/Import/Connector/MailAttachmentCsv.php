@@ -28,7 +28,7 @@ class Logic_Import_Connector_MailAttachmentCsv extends Logic_Import_Connector_Ma
 					continue;
 				$item->data[$fileName]	= $this->readAttachmentFromMessagePart( $part );
 			}
-			if( [] === $item->data )
+			if( [] !== $item->data )
 				$list[]	= $this->fixEncodingOnSourceItemWithDataFiles( $item );
 		}
 		return $list;
