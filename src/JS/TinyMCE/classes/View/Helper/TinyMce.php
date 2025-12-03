@@ -46,9 +46,10 @@ class View_Helper_TinyMce extends Abstraction
 		$page		= $env->getPage();
 		$language	= self::getLanguage( $env );
 		$config		= $env->getConfig()->getAll( 'module.js_tinymce.', TRUE );
+		$version	= $config->get( 'version' );
 		$scriptsPathLocal	= $env->getConfig()->get( 'path.scripts' );
 
-		$scriptsUri	= $scriptsPathLocal.'tinymce/';
+		$scriptsUri	= $scriptsPathLocal.'tinymce/'.$version.'/';
 		if( $config->get( 'CDN' ) )
 			$scriptsUri	= rtrim( $config->get( 'CDN.URI' ), '/' ).'/';
 
