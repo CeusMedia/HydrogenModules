@@ -54,7 +54,7 @@ Please use composer to require <code>"paquettg/php-html-parser": "^1.7"</code>!
 	<relations>
 <!--		<needs type="module">JS_jQuery_UI</needs>-->
 	</relations>
-	<hook env="resource" resource="ContextHelp" event="register">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
-	<hook env="resource" resource="Controller" event="onDetectPath">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
-	<hook env="resource" resource="Page" event="applyModules">Hook_UI_ContextHelp::onPageApplyModules</hook>
+	<hook type="resource" resource="ContextHelp" event="register">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
+	<hook type="resource" resource="Controller" event="onDetectPath">Hook_UI_ContextHelp::onRegisterContextHelp</hook>
+	<hook type="resource" resource="Page" event="applyModules">Hook_UI_ContextHelp::onPageApplyModules</hook>
 </module>
