@@ -34,5 +34,5 @@
 		<style load="auto">module.tool.calculator.css</style>
 	</files>
 	<link access="public">tool/calculator/index</link>
-	<hook env="resource" resource="Page" event="build">Hook_Tool_Calculator::onPageBuild</hook>
+	<hook type="resource" resource="Page" event="build">Hook_Tool_Calculator::onPageBuild</hook>
 </module>

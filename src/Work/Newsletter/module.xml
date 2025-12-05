@@ -257,11 +257,11 @@
 		<template>work/newsletter/template/index.themes.php</template>
 		<template>work/newsletter/template/viewTheme.php</template>
 	</files>
-	<config type="string" protected="no" mandatory="no" name="editor.newsletter" value="CodeMirror,TinyMCE">TinyMCE</config>
-	<config type="string" protected="no" mandatory="no" name="editor.template" value="CodeMirror,TinyMCE">Ace</config>
-	<config type="boolean" protected="yes" mandatory="no" name="group.allowToCopyUsersFromGroups" value="yes,no">yes</config>
-	<config type="boolean" protected="yes" mandatory="no" name="tabbedLinks" value="yes,no">yes</config>
-    <config type="boolean" protected="yes" mandatory="no" name="useUserGroupRelations" value="yes,no">no</config>
+	<config type="string" protected="no" mandatory="no" name="editor.newsletter" values="CodeMirror,TinyMCE">TinyMCE</config>
+	<config type="string" protected="no" mandatory="no" name="editor.template" values="CodeMirror,TinyMCE">Ace</config>
+	<config type="boolean" protected="yes" mandatory="no" name="group.allowToCopyUsersFromGroups" values="yes,no">yes</config>
+	<config type="boolean" protected="yes" mandatory="no" name="tabbedLinks" values="yes,no">yes</config>
+    <config type="boolean" protected="yes" mandatory="no" name="useUserGroupRelations" values="yes,no">no</config>
 	<config type="string" protected="no" mandatory="no" name="themes.path">contents/themes</config>
 	<relations>
 		<needs type="module">JS_Ace</needs>

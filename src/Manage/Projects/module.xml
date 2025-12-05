@@ -169,7 +169,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>project_users` (
   KEY `userId` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
-	<sql on="update" type="mysql" version-from="0.3.3" version-to="0.3.4"><![CDATA[
+	<sql on="update" type="mysql" version="0.3.4"><![CDATA[
 ALTER TABLE `<%?prefix%>projects` ADD `priority` TINYINT(1) UNSIGNED NOT NULL DEFAULT '3' AFTER `status` ,
 ADD INDEX ( `priority` ) ;
 ]]></sql>

@@ -122,7 +122,7 @@ code>
 	<log version="0.9.71">Use modal from UI:Bootstrap:Modal.</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
-	<author email="christian.wuerker@ceusmedia.de" link="https://ceusmedia.de/">Christian W&#xFC;rker</author>
+	<author email="christian.wuerker@ceusmedia.de" site="https://ceusmedia.de/">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Ajax/Work/Mission.php</class>
 		<class>Controller/Ajax/Work/Mission/Archive.php</class>
