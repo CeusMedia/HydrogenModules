@@ -119,16 +119,16 @@ You need to set this header in your Apache configuration. For example in .htacce
 		<needs type="module">Resource_Disclosure</needs>
 		<needs type="module">UI_Navigation_Bootstrap_Tabs</needs>
 	</relations>
-	<link xml:lang="de" rank="10" access="outside" path="auth/login">Login</link>
+	<link xml:lang="de" rank="10" access="public" path="auth/login">Login</link>
 	<link xml:lang="de" rank="11" access="outside" path="auth/password">Passwort</link>
 	<link xml:lang="de" rank="12" access="outside" path="auth/register">Registrieren</link>
 	<link xml:lang="de" rank="13" access="outside" path="auth/confirm">Konto bestätigen</link>
-	<link xml:lang="de" rank="99" access="inside" path="auth/logout">Logout</link>
-	<link xml:lang="en" rank="10" access="outside" path="auth/login">Login</link>
+	<link xml:lang="de" rank="99" access="public" path="auth/logout">Logout</link>
+	<link xml:lang="en" rank="10" access="public" path="auth/login">Login</link>
 	<link xml:lang="en" rank="11" access="outside" path="auth/password">Password</link>
 	<link xml:lang="en" rank="12" access="outside" path="auth/register">Register Account</link>
 	<link xml:lang="en" rank="13" access="outside" path="auth/confirm">Confirm Account</link>
-	<link xml:lang="en" rank="99" access="inside" path="auth/logout">Logout</link>
+	<link xml:lang="en" rank="99" access="public" path="auth/logout">Logout</link>
 	<link rank="99" access="public" path="auth/index"></link>
 	<link rank="99" access="public" path="ajax/auth/isAuthenticated"></link>
 	<hook type="resource" resource="Page" event="applyModules">Hook_Auth::onPageApplyModules</hook>

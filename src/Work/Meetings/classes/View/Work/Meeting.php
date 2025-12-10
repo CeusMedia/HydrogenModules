@@ -480,6 +480,8 @@ class View_Work_Meeting extends View
 			$helperTime	= new View_Helper_Datetime( $this->env );
 			$timeLeft	= 'noch '.$helperTime->getDurationPhraseFromSeconds( $seconds );
 		}
+		else
+			return '';
 		return HtmlTag::create( 'span', $timeLeft, ['class' => 'label label-'.$class] );
 	}
 }
