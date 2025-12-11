@@ -25,16 +25,17 @@ class View_Helper_News
 		);
 		$list	= [];
 		foreach( $news as $item ){
-			if( $item->startsAt && (int)time() < (int) $item->startsAt )
+			if( $item->startsAt && time() < (int) $item->startsAt )
 				continue;
-			if( $item->endsAt && (int)time() > (int) $item->endsAt )
+			if( $item->endsAt && time() > (int) $item->endsAt )
 				continue;
 			$list[]	= $item;
 		}
 		$list	= array_slice( $list, 0, $this->limit );
 
 		foreach( $list as $nr => $item ){
-			$date		= $item->createdAt ? date( "d.m.Y H:i", $item->createdAt ) : "";
+			$date		= ( $item->modifiedAt ?? $item->startsAt ) ?? $item->createdAt;
+			$date		= $date ? date( "d.m.Y H:i", $date ) : "";
 			$list[$nr]	= '
 <div class="news-list-entry">
 	<h4 class="news-list-entry-title">'.$item->title.'</h4>
