@@ -41,7 +41,7 @@ class View_Helper_CSRF
 	 */
 	public function render( ?string $formName = NULL ): string
 	{
-		if( !( $this->env->getModules()->get( 'Security_CSRF' )?->isActive ?? FALSE ) )
+		if( !$this->env->getModules()->has( 'Security_CSRF' ) )
 			return '';
 		$formName	= $formName ?: $this->formName;
 		if( !$formName )
