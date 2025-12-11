@@ -307,7 +307,7 @@ class Controller_Auth_Local extends Controller
 				$this->cookie	= $this->env->getCookie();
 		$this->messenger	= $this->env->getMessenger();
 		$this->modules		= $this->env->getModules();
-		$this->useCsrf		= $this->modules->get( 'Security_CSRF' )?->isActive ?? FALSE;
+		$this->useCsrf		= $this->modules->has( 'Security_CSRF' );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logic		= $this->env->getLogic()->get( 'Authentication_Backend_Local' );
 
