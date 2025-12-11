@@ -19,29 +19,33 @@ class Controller_Manage_News extends Controller
 	{
 		$words	= $this->getWords();
 		if( $this->request->has( 'save' ) ){
-			$data	= array(
+			$data	= [
 				'status'		=> (int) $this->request->get( 'status' ),
 				'title'			=> $this->request->get( 'title' ),
-				'content'		=> $this->request->get( 'content' ),
+				'content'		=> '',
 				'columns'		=> 1,//$this->request->get( 'columns' ),
 				'createdAt'		=> time(),
-			);
+				'modifiedAt'	=> time(),
+				'startsAt'		=> 0,
+				'endsAt'		=> 0,
+			];
 			if( $this->request->get( 'startsAt' ) && @strtotime( $this->request->get( 'startsAt' ) ) )
 				$data['startsAt']	= strtotime( $this->request->get( 'startsAt' ) );
 			if( $this->request->get( 'endsAt' ) && @strtotime( $this->request->get( 'endsAt' ) ) )
 				$data['endsAt']		= strtotime( $this->request->get( 'endsAt' ) );
-			$newsId	= $this->model->add( $data, FALSE );
+			$newsId	= $this->model->add( $data );
+			$this->model->edit( $newsId, ['content' => $this->request->get( 'content' )], FALSE );
 			$this->messenger->noteSuccess( $words['msg']['successAdded'] );
 			$this->restart( 'manage/news/edit/'.$newsId );
 		}
-		$news	= (object) array(
-			'status'		=> (int) $this->request->get( 'status' ),
-			'title'			=> $this->request->get( 'title' ),
-			'content'		=> $this->request->get( 'content' ),
-			'columns'		=> 1,//$this->request->get( 'columns' ),
-			'startsAt'		=> $this->request->get( 'startsAt' ),
-			'endsAt'		=> $this->request->get( 'endsAt' ),
-		);
+		$news	= (object) [
+			'status'	=> (int) $this->request->get( 'status' ),
+			'title'		=> $this->request->get( 'title' ),
+			'content'	=> $this->request->get( 'content' ),
+			'columns'	=> 1,//$this->request->get( 'columns' ),
+			'startsAt'	=> $this->request->get( 'startsAt' ),
+			'endsAt'	=> $this->request->get( 'endsAt' ),
+		];
 		$this->addData( 'news', $news, FALSE );
 	}
 
@@ -54,22 +58,31 @@ class Controller_Manage_News extends Controller
 		$words	= $this->getWords();
 		if( !( strlen( trim( $newsId ) ) && (int) $newsId ) )
 			throw new OutOfRangeException( 'No news ID given' );
+
+		/** @var object $news */
 		$news	= $this->model->get( (int) $newsId );
-		if( !$news )
+		if( NULL === $news )
 			throw new OutOfRangeException( 'Invalid news ID given' );
 
-		if( $this->request->has( 'save' ) ){
-			$data	= array(
+		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
+			$data	= [
 				'status'		=> (int) $this->request->get( 'status' ),
 				'title'			=> $this->request->get( 'title' ),
-				'content'		=> $this->request->get( 'content' ),
 				'columns'		=> 1,//$this->request->get( 'columns' ),
-			);
+				'startsAt'		=> 0,
+				'endsAt'		=> 0,
+				'modifiedAt'	=> time(),
+			];
 			if( $this->request->get( 'startsAt' ) && @strtotime( $this->request->get( 'startsAt' ) ) )
 				$data['startsAt']	= strtotime( $this->request->get( 'startsAt' ) );
 			if( $this->request->get( 'endsAt' ) && @strtotime( $this->request->get( 'endsAt' ) ) )
 				$data['endsAt']		= strtotime( $this->request->get( 'endsAt' ) );
-			$this->model->edit( $newsId, $data, FALSE );
+			$this->model->edit( $newsId, $data );
+
+			$content	= $this->request->get( 'content', '' );
+			if( '' !== $content && $news->content !== $content )
+				$this->model->edit( $newsId, ['content' => $content], FALSE );
+
 			$this->messenger->noteSuccess( $words['msg']['successModified'] );
 			$this->restart( NULL, TRUE );
 		}
@@ -100,16 +113,20 @@ class Controller_Manage_News extends Controller
 	public function index( int $pageNr = 0, int $limit = 15 ): void
 	{
 		$limit		= max( 10, min( 100, abs( $limit ) ) );
-		$filterQuery	= $this->session->get( 'filter_manage_news_query' );
-		$filterStatus	= $this->session->get( 'filter_manage_news_status' );
+		$filterQuery	= trim( $this->session->get( 'filter_manage_news_query', '' ) );
+		$filterStatus	= trim( $this->session->get( 'filter_manage_news_status', '' ) );
 
 		$conditions	= [];
-		if( strlen( trim( $filterQuery ) ) )
+		if( '' !== $filterQuery )
 			$conditions['title']	= '%'.str_replace( ' ', '%', $filterQuery );
-		if( strlen( $filterStatus ) )
+		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
 
-		$orders		= ['newsId' => 'DESC'];
+		$orders		= [
+//			'newsId'	=> 'DESC',
+			'endsAt'	=> 'DESC',
+			'startsAt'	=> 'DESC',
+		];
 		$limits		= [$pageNr * $limit, $limit];
 		$this->addData( 'pageNr', $pageNr );
 		$this->addData( 'limit', $limit );
@@ -127,8 +144,9 @@ class Controller_Manage_News extends Controller
 	public function remove( int|string $newsId ): void
 	{
 		$words	= $this->getWords();
+		/** @var object $news */
 		$news	= $this->model->get( $newsId );
-		if( $news ){
+		if( NULL !== $news ){
 			$this->model->remove( $newsId );
 			$this->messenger->noteSuccess( $words['msg']['successRemoved'], htmlentities( $news->title, ENT_QUOTES, 'UTF-8' ) );
 		}
