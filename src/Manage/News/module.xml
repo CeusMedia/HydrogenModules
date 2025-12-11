@@ -5,7 +5,7 @@
 	<title>Manage: News</title>
 	<description></description>
 	<category>Management</category>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 	<log version="0.4.2">Add action to remove news.</log>
 	<log version="0.4.3">Updated JavaScript according to Hydrogen changes.</log>
 	<log version="0.4.4">Improved check for module JS:jQuery:UI.</log>
@@ -25,6 +25,7 @@
 	<log version="0.5.8">Imported module from protected repository.</log>
 	<log version="0.5.9">Adjust to new shortcode handling.</log>
 	<log version="0.6.0">Migration to PHP 8.</log>
+	<log version="0.6.1">Add new status: outdated.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

@@ -13,9 +13,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $colors	= [
-	Model_News::STATUS_HIDDEN	=> 'info',
+	Model_News::STATUS_HIDDEN	=> 'danger',
 	Model_News::STATUS_NEW		=> 'warning',
-	Model_News::STATUS_PUBLIC	=> 'success'
+	Model_News::STATUS_PUBLIC	=> 'success',
+	Model_News::STATUS_OUTDATED	=> 'info',
 ];
 
 $table	= HtmlTag::create( 'div', $words['index']['empty'], ['class' => 'alert alert-info'] );
@@ -34,19 +35,34 @@ if( $news ){
 		else if( $ends )
 	 		$duration	= 'bis '.$ends;
 
-		$cells		= array(
+		$isVisible	= FALSE;
+		if( Model_News::STATUS_PUBLIC === (int) $item->status ){
+			if( 0 !== (int) $item->startsAt && 0 !== (int) $item->endsAt )
+				$isVisible	= $item->startsAt < time() && $item->endsAt > time();
+			else if( 0 === (int) $item->startsAt && 0 === (int) $item->endsAt )
+				$isVisible	= TRUE;
+			else if( 0 !== (int) $item->endsAt )
+				$isVisible	= $item->endsAt > time();
+			else if( 0 !== (int) $item->startsAt )
+				$isVisible	= $item->startsAt < time();
+		}
+
+		$cells		= [
 			HtmlTag::create( 'td', $link, ['class' => 'autocut'] ),
+			HtmlTag::create( 'td', $isVisible ? HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] ) : '' ),
 			HtmlTag::create( 'td', $duration ),
 	//		HtmlTag::create( 'td', date( 'd.m.Y', $item->createdAt ).' '.date( 'H:i', $item->createdAt ) ),
-		);
+		];
 		$rows[]	= HtmlTag::create( 'tr', $cells, ['class' => $colors[$item->status]] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( [
 		'*',
+		'25px',
 		'30%',
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 		$words['index']['headTitle'],
+		'',
 		$words['index']['headRange'],
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );

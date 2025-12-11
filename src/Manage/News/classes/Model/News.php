@@ -14,6 +14,18 @@ use CeusMedia\HydrogenFramework\Model;
  */
 class Model_News extends Model
 {
+	public const STATUS_HIDDEN		= -1;
+	public const STATUS_NEW			= 0;
+	public const STATUS_PUBLIC		= 1;
+	public const STATUS_OUTDATED	= 2;
+
+	public const STATUSES			= [
+		self::STATUS_HIDDEN,
+		self::STATUS_NEW,
+		self::STATUS_PUBLIC,
+		self::STATUS_OUTDATED,
+	];
+
 	protected string $name			= 'news';
 
 	protected array $columns		= [
@@ -25,6 +37,7 @@ class Model_News extends Model
 		'startsAt',
 		'endsAt',
 		'createdAt',
+		'modifiedAt',
 	];
 
 	protected string $primaryKey	= 'newsId';
@@ -32,6 +45,11 @@ class Model_News extends Model
 	protected array $indices		= [
 		'status',
 		'title',
+		'columns',
+		'startsAt',
+		'endsAt',
+		'createdAt',
+		'modifiedAt',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_OBJ;

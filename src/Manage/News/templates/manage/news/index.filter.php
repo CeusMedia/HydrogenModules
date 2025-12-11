@@ -11,10 +11,10 @@ $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] )
 
 $w			= (object) $words['filter'];
 
-$optStatus	= ['' => '- alle -'];
+$optStatuses	= ['' => '- alle -'];
 foreach( $words['states'] as $key => $value )
-	$optStatus[$key]	= $value;
-$optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
+	$optStatuses[$key]	= $value;
+$optStatus	= HtmlElements::Options( $optStatuses, $filterStatus );
 
 
 $buttonFilter	= HtmlTag::create( 'button', $iconFilter.'&nbsp;'.$w->buttonFilter, [
