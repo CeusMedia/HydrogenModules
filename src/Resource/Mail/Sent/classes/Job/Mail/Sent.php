@@ -57,7 +57,7 @@ class Job_Mail_Sent extends Job_Abstract
 	 */
 	public function pull(): void
 	{
-		$strategy	= strtoupper( $this->parameters->get( '--strategy', self::STRATEGY_BUILD ) );
+		$strategy	= strtolower( $this->parameters->get( '--strategy', self::STRATEGY_BUILD ) );
 
 		$mailIds	= $this->pickMailIds();
 		$nrMails	= count( $mailIds );
@@ -116,12 +116,13 @@ class Job_Mail_Sent extends Job_Abstract
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
 		$this->logicMail	= new Logic_Mail( $this->env );
 		$this->modelMail	= new Model_Mail( $this->env );
-		require_once $this->env->path.'/vendor/ceus-media/common/src/compat8.php';					//  enable compatibility mode
+		require_once $this->env->uri.'/vendor/ceus-media/common/src/compat8.php';					//  enable compatibility mode
 	}
 
 	/**
@@ -140,8 +141,8 @@ class Job_Mail_Sent extends Job_Abstract
 		$recipient	= MailAddress::getInstance( $mail->receiverAddress );
 		if( '' !== ( $mail->receiverName ?? '' ) )
 			$recipient->setName( $mail->receiverName );
-		$message->addHeader( new MailHeaderField( 'To', $recipient->get() ) );
-		$message->addHeader( new MailHeaderField( 'Date', date( 'r', $mail->sentAt ) ) );
+		$message->getHeaders()->setFieldPair( 'To', $recipient->get() );
+		$message->getHeaders()->setFieldPair( 'Date', date( 'r', $mail->sentAt ?? $mail->enqueuedAt ) );
 		return $upload->storeMessage( $message );						//  upload mail message
 	}
 
