@@ -30,7 +30,7 @@ class Logic_Job extends Logic
 			if( !in_array( $jobRun->status, $statusesNotArchivable ) ){
 				$this->modelRun->edit( $jobRunId, [
 					'archived'			=> Model_Job_Run::ARCHIVED_YES,
-					'processId'			=> NULL,
+					'processId'			=> 0,
 					'reportMode'		=> Model_Job_Run::REPORT_MODE_NEVER,
 					'reportChannel'		=> Model_Job_Run::REPORT_CHANNEL_NONE,
 					'reportReceivers'	=> NULL,

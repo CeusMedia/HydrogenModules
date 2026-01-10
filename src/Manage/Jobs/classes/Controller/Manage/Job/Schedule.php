@@ -97,7 +97,8 @@ class Controller_Manage_Job_Schedule extends Controller
 	 */
 	public function index( int $page = 0 ): void
 	{
-		$schedule		= $this->modelSchedule->getAll( [], [] );
+		$orders		= ['title' => 'ASC'];
+		$schedule	= $this->modelSchedule->getAll( [], $orders );
 		foreach( $schedule as $item ){
 			$item->definition	= $this->allDefinitions[(int) $item->jobDefinitionId];
 		}

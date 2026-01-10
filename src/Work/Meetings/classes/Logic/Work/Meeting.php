@@ -51,7 +51,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 
 		$myMeetingIds	= $this->modelParticipant->getAllByIndices( [
 			'meetingId'	=> $activeMeetingIds,
-			'userId'	=> $this->currentUserId,
+			'userId'	=> (string) $this->currentUserId,
 		], [], [], ['meetingId'] );
 		if( [] === $myMeetingIds )
 			return [];
@@ -151,7 +151,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		/** @var Entity_Work_Meeting_Participant[] $participants */
 		$participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
 		foreach( $participants as $participant ){
-			if( $participant->userId === $this->currentUserId )
+			if( (string) $participant->userId === (string) $this->currentUserId )
 				continue;
 			$user	= $this->logicUser->getUser( $participant->userId );
 
@@ -176,7 +176,7 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		/** @var Entity_Work_Meeting_Participant[] $participants */
 		$participants	= $this->modelParticipant->getAllByIndex( 'meetingId', $meeting->meetingId );
 		foreach( $participants as $participant ){
-			if( $participant->userId === $this->currentUserId )
+			if( (string) $participant->userId === (string) $this->currentUserId )
 				continue;
 			$user	= $this->logicUser->getUser( $participant->userId );
 
@@ -344,6 +344,6 @@ class Logic_Work_Meeting extends CeusMedia\HydrogenFramework\Logic\Shared
 		$this->modelMeeting		= new Model_Work_Meeting( $this->env );
 		$this->modelParticipant	= new Model_Work_Meeting_Participant( $this->env );
 		$this->modelSchedule	= new Model_Job_Schedule( $this->env );
-		$this->currentUserId	= $this->logicAuth->getCurrentUserId( FALSE ) ?? '';
+		$this->currentUserId	= $this->logicAuth->getCurrentUserId( FALSE ) ?? 0;
 	}
 }
