@@ -99,6 +99,8 @@ die;*/
 		$conditions	= [
 			'archived'	=> (int) $filterArchived,
 		];
+		if( is_array( $filterStatus ) )
+			$filterStatus	= array_filter( $filterStatus, function( $item ){return '' !== $item;} );
 		if( is_array( $filterStatus ) && count( $filterStatus ) )
 			$conditions['status']		= $filterStatus;
 		if( '' !== $filterType && in_array( (int) $filterType, Model_Job_Run::TYPES ) )
