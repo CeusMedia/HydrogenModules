@@ -15,6 +15,8 @@ class Controller_Csrf extends Controller
 	 */
 	public function checkToken( bool $redirect = TRUE, ?string $redirectUrl = NULL ): bool
 	{
+		if( !$this->logic->isActive() )
+			return TRUE;
 		$token		= $this->env->getRequest()->get( 'csrf_token', '' );					//  get token from request
 		$formName	= $this->env->getRequest()->get( 'csrf_form_name', '' );				//  get form name from request
 

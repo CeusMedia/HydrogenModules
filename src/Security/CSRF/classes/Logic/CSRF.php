@@ -73,6 +73,9 @@ class Logic_CSRF extends Logic
 	 */
 	public function getToken( string $formName ): string
 	{
+		if( !$this->moduleConfig->get( 'active' ) )
+			return '';
+
 		$this->cancelOldTokensOfForm( $formName );
 		$token		= md5( $this->ip.$this->sessionId.$formName.microtime( TRUE ) );
 		$this->model->add( [
@@ -96,12 +99,24 @@ class Logic_CSRF extends Logic
 	}
 
 	/**
+	 *	Indicates whether CSRF module is enabled (=set to be active).
+	 *	@return		bool
+	 */
+	public function isActive(): bool
+	{
+		return $this->moduleConfig->get( 'active', FALSE );
+	}
+
+	/**
 	 *	@param		string		$formName
 	 *	@param		string		$token
 	 *	@return		int
 	 */
 	public function verifyToken( string $formName, string $token ): int
 	{
+		if( !$this->moduleConfig->get( 'active' ) )
+			return self::CHECK_OK;
+
 		if( '' === trim( $formName ) )
 			return self::CHECK_FORM_NAME_MISSING;
 		if( '' === trim( $token ) )
@@ -129,6 +144,9 @@ class Logic_CSRF extends Logic
 	 */
 	protected function cancelOutdatedTokens(): ?int
 	{
+		if( !$this->moduleConfig->get( 'active' ) )
+			return 0;
+
 		$duration	= (int) $this->moduleConfig->get( 'duration', 0 );
 		if( 0 === $duration )
 			return 0;
@@ -150,6 +168,9 @@ class Logic_CSRF extends Logic
 	 */
 	protected function cancelOldTokensOfForm( string $formName ): int
 	{
+		if( !$this->moduleConfig->get( 'active' ) )
+			return 0;
+
 		return $this->model->editByIndices( [
 			'status'	=> self::STATUS_OPEN,
 			'sessionId'	=> $this->sessionId,
@@ -166,6 +187,9 @@ class Logic_CSRF extends Logic
 	 */
 	public function removeOldTokens(): int
 	{
+		if( !$this->moduleConfig->get( 'active' ) )
+			return 0;
+
 		return $this->model->removeByIndices( [
 			'status'	=> [self::STATUS_USED, self::STATUS_NOT_USED, self::STATUS_OUTDATED],
 			'timestamp'	=> '< '.( time() - $this->moduleConfig->get( 'duration' ) ),

@@ -178,10 +178,10 @@ class Logic_User extends Logic
 		$groupIds	= $this->modelGroupUser->getAllByIndex( 'userId', $userId, [], [], ['groupId'] );
 		if( [] === $groupIds )
 			return [];
-		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds );
+		return $this->modelGroup->getAllByIndex( 'groupId', $groupIds, ['title' => 'ASC'] );
 	}
 
-	public function hasGroupAccessToModuleEntity( int|string|Entity_User $user, ModuleDefinition|string $module, int|string $entityId ): bool
+	public function hasGroupAccessToModuleEntity( Entity_User|int|string $user, ModuleDefinition|int|string $module, int|string $entityId ): bool
 	{
 		$userId		= is_object( $user ) ? $user->userId : $user;
 		$moduleId	= is_object( $module ) ? $module->id : $module;
