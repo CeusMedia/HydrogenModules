@@ -206,73 +206,20 @@ else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED && $allowedToSe
 }
 
 /*  --  PANEL: PREVIEW: HTML  --  */
-$urlPreview		= './work/newsletter/preview/html/'.$newsletterId;
-$iframeHtml		= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewHtml	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreviewHtml	= '
-<div id="newsletter-preview" class="half-size">
-	<div id="newsletter-preview-container">
- 		<div id="newsletter-preview-iframe-container">
-			'.$iframeHtml.'
-		</div>
-	</div>
-</div>';
+$helper	= new View_Helper_Work_Newsletter_Preview( $env );
+$helper->setFormat( View_Helper_Work_Newsletter_Preview::FORMAT_HTML );
+$helper->setMode( View_Helper_Work_Newsletter_Preview::MODE_NEWSLETTER );
+$helper->setResource( $newsletter );
+$helper->setClass( 'scale-2x half-size' );
+$panelPreviewHtml	= $helper->render();
 
 /*  --  PANEL: PREVIEW: TEXT  --  */
-$urlPreview		= './work/newsletter/preview/text/'.$newsletterId;
-$iframeText		= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewText	= HtmlTag::create( 'button', $iconPreview.'Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreviewText	= '
-<div id="newsletter-preview" class="half-size">
-	<div id="newsletter-preview-container">
- 		<div id="newsletter-preview-iframe-container">
-			'.$iframeText.'
-		</div>
-	</div>
-</div>';
-
-$panelPreview		= '
-<div class="content-panel">
-	<h4>
-		<span>HTML-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewHtml.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		'.$panelPreviewHtml.'
-	</div>
-</div>
-<div class="content-panel">
-	<h4>
-		<span>Text-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewText.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		'.$panelPreviewText.'
-	</div>
-</div>';
-
+$helper	= new View_Helper_Work_Newsletter_Preview( $env );
+$helper->setFormat( View_Helper_Work_Newsletter_Preview::FORMAT_PLAIN );
+$helper->setMode( View_Helper_Work_Newsletter_Preview::MODE_NEWSLETTER );
+$helper->setResource( $newsletter );
+$helper->setClass( 'scale-2x half-size' );
+$panelPreviewText	= $helper->render();
 
 $panelRemove		= '';
 if( $canRemove && $newsletter->status < Model_Newsletter::STATUS_SENT ){
@@ -317,6 +264,7 @@ return '
 		'.$panelRemove.'
 	</div>
 	<div class="span4">
-		'.$panelPreview.'
+		'.$panelPreviewHtml.'
+		'.$panelPreviewText.'
 	</div>
 </div>';

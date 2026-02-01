@@ -108,7 +108,7 @@ class Controller_Manage_Group extends Controller
 		$this->addData( 'words', $words );
 		$this->addData( 'userCount', $this->modelUser->countByIndex( 'groupId', $groupId ) );
 
-		$disclosure	= new Disclosure( $this->env );
+/*		$disclosure	= new Disclosure( $this->env );
 		$options	= ['classPrefix' => 'Controller_', 'readParameters' => FALSE];
 
 		$list		= [];
@@ -129,7 +129,7 @@ class Controller_Manage_Group extends Controller
 		$this->addData( 'actions', $disclosure->reflect( 'classes/Controller/', $options ) );
 		$this->addData( 'controllerActions', $list );
 		$this->addData( 'acl', $this->env->getAcl() );
-		$this->addData( 'groupId', $groupId );
+		$this->addData( 'groupId', $groupId );*/
 
 		$logicUser	= Logic_User::getInstance( $this->env );
 
@@ -140,11 +140,13 @@ class Controller_Manage_Group extends Controller
 			$list[]	= $logicUser->checkId( $relation->userId, Logic_User::EXTEND_ROLE );
 		}
 		$this->addData( 'users', $list );
+		$this->addData( 'hasRightToEditUser', $this->env->getAcl()->has( 'manage_user', 'edit' ) );
 	}
 
 	public function index(): void
 	{
-		$groups	= $this->modelGroup->getAll();
+		$orders	= ['title' => 'ASC'];
+		$groups	= $this->modelGroup->getAll( [], $orders);
 		/** @var Entity_Group $group */
 		foreach( $groups as $group ){
 			$userIds		= $this->modelGroupUser->getAllByIndex( 'groupId', $group->groupId, [], [], ['userId'] );

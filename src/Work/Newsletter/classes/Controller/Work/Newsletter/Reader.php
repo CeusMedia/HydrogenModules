@@ -248,7 +248,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		 					$row[]	= $statuses[$reader->status];
 						else if( $header === 'groups' ){
 							$list	= [];
-							foreach( $this->logic->getGroupsOfReader( $reader->newsletterReaderId ) as $group )
+							foreach( $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], [], FALSE ) as $group )
 								$list[]	= $group->title;
 							$value	= join( ',', $list );
 						}

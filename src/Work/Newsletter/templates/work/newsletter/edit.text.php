@@ -20,36 +20,12 @@ $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&n
 
 
 //  --  PANEL: PREVIEW  --  //
-$urlPreview			= './work/newsletter/preview/text/'.$newsletter->newsletterId;
-$iframeText			= HtmlTag::create( 'iframe', '', [
-	'src'			=> $urlPreview,
-	'frameborder'	=> '0',
-] );
-$buttonPreviewText	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-eye"></i>&nbsp;Vorschau', [
-	'type'			=> 'button',
-	'class'			=> 'btn btn-info btn-mini',
-	'data-toggle'	=> 'modal',
-	'data-target'	=> '#modal-preview',
-	'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-] );
-$panelPreview	= '
-<div class="content-panel">
-	<h4>
-		<span>HTML-Vorschau</span>
-		<div style="float: right">
-			'.$buttonPreviewText.'
-		</div>
-	</h4>
-	<div class="content-panel-inner">
-		<div id="newsletter-preview">
-			<div id="newsletter-preview-container">
-		 		<div id="newsletter-preview-iframe-container">
-					'.$iframeText.'
-				</div>
-			</div>
-		</div>
-	</div>
-</div>';
+$helper	= new View_Helper_Work_Newsletter_Preview( $env );
+$helper->setFormat( View_Helper_Work_Newsletter_Preview::FORMAT_PLAIN );
+$helper->setMode( View_Helper_Work_Newsletter_Preview::MODE_NEWSLETTER );
+$helper->setResource( $newsletter );
+$helper->setClass( 'scale-2x' );
+$panelPreview	= $helper->render();
 
 //  --  PANEL: FORM  --  //
 $w				= (object) $words->edit_text;

@@ -213,7 +213,7 @@ class Controller_Info_Newsletter extends Controller
 				$this->messenger->noteError( $words->msgInvalidEmail, $email );
 				$this->restart( 'unregister', TRUE );
 			}
-			$reader->groups	= $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], ['title' => 'ASC'] );
+			$reader->groups	= $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], ['title' => 'ASC'], FALSE );
 			if( $this->request->has( 'save' ) ){
 				$mode	= $this->request->get( 'mode' );
 				if( $this->request->has( 'disable' ) )

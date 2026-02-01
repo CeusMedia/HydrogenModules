@@ -1,11 +1,14 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection;
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\HydrogenFramework\Logic\Shared as SharedLogic;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 
 class Logic_Newsletter extends SharedLogic
 {
+	public static string $defaultPath				= 'contents/newsletter-themes/';
+
 	/**	@var		Model_Newsletter_Group			$modelGroup */
 	protected Model_Newsletter_Group $modelGroup;
 
@@ -27,7 +30,9 @@ class Logic_Newsletter extends SharedLogic
 	/**	@var		Model_Newsletter_Template		$modelTemplate */
 	protected Model_Newsletter_Template $modelTemplate;
 
-	public static string $defaultPath				= 'contents/newsletter-themes/';
+	protected Dictionary $moduleConfig;
+
+	protected bool $useUserGroupRelations		= FALSE;
 
 	/**
 	 *	@param		array		$data
@@ -51,7 +56,7 @@ class Logic_Newsletter extends SharedLogic
 	{
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
-		$has	= $this->getGroupsOfReader( $readerId, ['newsletterGroupId' => $groupId] );
+		$has	= $this->getGroupsOfReader( $readerId, ['newsletterGroupId' => $groupId], FALSE );
 		if( $has )
 			return $has[0]->newsletterReaderGroupId;
 		$data	= [
@@ -70,8 +75,12 @@ class Logic_Newsletter extends SharedLogic
 	 */
 	public function checkGroupId( int|string $groupId, bool $throwException = FALSE ): bool
 	{
-		if( $this->modelGroup->has( $groupId ) )
-			return TRUE;
+		if( $this->modelGroup->has( $groupId ) ){
+			if( !$this->useUserGroupRelations )
+				return TRUE;
+			if( $this->hasGroupAccessToNewsletterGroup( $groupId ) )
+				return TRUE;
+		}
 		if( $throwException )
 			throw new InvalidArgumentException( 'Invalid newsletter group ID '.$groupId );
 		return FALSE;
@@ -221,12 +230,13 @@ class Logic_Newsletter extends SharedLogic
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		array
+	 * @todo improve performance on higher scale
 	 */
 	public function getGroupReaders( int|string $groupId ): array
 	{
 		$list		= [];
 		$readers	= [];
-		foreach( $this->modelReader->getAllByIndex( 'status', '> 0' ) as $reader )
+		foreach( $this->modelReader->getAllByIndex( 'status', Model_Newsletter_Reader::STATUS_CONFIRMED ) as $reader )
 			$readers[$reader->newsletterReaderId]	= $reader;
 		$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );
 		foreach( $relations as $relation )
@@ -243,6 +253,17 @@ class Logic_Newsletter extends SharedLogic
 	public function getGroups( array $conditions = [], array $orders = [] ): array
 	{
 		$list	= [];
+
+		if( $this->useUserGroupRelations ){
+			if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
+				$logic		= Logic_GroupRelation::getInstance( $this->env );
+				$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' ) ?: [0];
+				if( isset( $conditions['newsletterGroupId'] ) )
+					$entityIds	= array_intersect( $conditions['newsletterGroupId'], $entityIds );
+				$conditions['newsletterGroupId']	= $entityIds;
+			}
+		}
+
 		foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
 			$list[$group->newsletterGroupId]	= $group;
 		return $list;
@@ -254,20 +275,24 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array			$orders
 	 *	@return		array
 	 */
-	public function getGroupsOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
+	public function getGroupsOfReader( int|string $readerId, array $conditions = [], array $orders = [], $useRelations = TRUE ): array
 	{
 		$this->checkReaderId( $readerId, TRUE );
-		$list		= [];
-		$groupIds	= [];
+
 		$conditions['newsletterReaderId']	= $readerId;
-		$relations	= $this->modelReaderGroup->getAll( $conditions );
-		foreach( $relations as $relation )
+		if( $useRelations && $this->useUserGroupRelations )
+			if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
+				$conditions['newsletterGroupId']	= Logic_GroupRelation::getInstance( $this->env )
+					->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' ) ?: [0];
+
+		$groupIds	= [];
+		foreach( $this->modelReaderGroup->getAllByIndices( $conditions ) as $relation )
 			$groupIds[]	= $relation->newsletterGroupId;
-		if( $groupIds ){
-			$conditions	= ['newsletterGroupId' => $groupIds];
-			foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
+
+		$list		= [];
+		if( $groupIds )
+			foreach( $this->getGroups( ['newsletterGroupId' => $groupIds], $orders ) as $group )
 				$list[$group->newsletterGroupId]	= $group;
-		}
 		return $list;
 	}
 
@@ -282,6 +307,12 @@ class Logic_Newsletter extends SharedLogic
 		try{
 			$this->checkReaderId( $readerId, TRUE );
 			$indices	= array_merge( $conditions, ['newsletterReaderId' => $readerId] );
+			if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
+//				newsletterReaderLetterId <- newsletterId <- groupId <- session
+				$newsletterIds	= Logic_GroupRelation::getInstance( $this->env )
+					->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter' ) ?: [0];
+				$indices	= array_merge( $conditions, ['newsletterId' => $newsletterIds] );
+			}
 			$letters	= $this->modelReaderLetter->getAllByIndices( $indices, $orders  );
 			foreach( $letters as $letter )
 				$letter->newsletter	= $this->getNewsletter( $letter->newsletterId );
@@ -561,6 +592,42 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
+	 * @param int $newsletterId
+	 * @return bool
+	 * @throws ReflectionException
+	 */
+	public function hasGroupAccessToNewsletter( int $newsletterId ): bool
+	{
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		if( !$moduleConfig->get( 'useUserGroupRelations', FALSE ) )
+			return TRUE;
+
+		if( Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
+			return TRUE;
+
+		return in_array( $newsletterId, Logic_GroupRelation::getInstance( $this->env )
+			->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter' ) );
+	}
+
+	/**
+	 * @param int $newsletterGroupId
+	 * @return bool
+	 * @throws ReflectionException
+	 */
+	public function hasGroupAccessToNewsletterGroup( int $newsletterGroupId ): bool
+	{
+		$moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		if( !$moduleConfig->get( 'useUserGroupRelations', FALSE ) )
+			return TRUE;
+
+		if( Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
+			return TRUE;
+
+		return in_array( $newsletterGroupId, Logic_GroupRelation::getInstance( $this->env )
+			->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' ) );
+	}
+
+	/**
 	 *	@param		int|string		$readerId
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
@@ -640,6 +707,9 @@ class Logic_Newsletter extends SharedLogic
 		$this->modelReaderLetter	= new Model_Newsletter_Reader_Letter( $this->env );
 		$this->modelTemplate		= new Model_Newsletter_Template( $this->env );
 		$this->modelQueue			= new Model_Newsletter_Queue( $this->env );
+
+		$this->moduleConfig				= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
+		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
 	}
 }
 

@@ -70,7 +70,7 @@ $buttonExport	= HtmlTag::create( 'a', $iconExport.$words->edit->buttonExport, [
 $buttons		= HtmlTag::create( 'div', join( ' ', [
 	$buttonCancel,
 	$buttonSave,
-	$buttonPreview,
+//	$buttonPreview,
 	$buttonExport,
 //	$buttonRemove,
 //	$buttonCopy,

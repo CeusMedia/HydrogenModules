@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var object $group */
 /** @var int $userCount */
 /** @var Entity_User[] $users */
+/** @var bool $hasRightToEditUser */
 
 $optType	= [];
 foreach( $words['types'] as $key => $label ){
@@ -75,15 +76,18 @@ $w		= (object) $words['info'];
 $rows	= [];
 foreach( $users as $user ){
 	$loggedAt	= $helperTime->convert( $user->loggedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
+	$username	= $user->username;
+	if( $hasRightToEditUser )
+		$username	= HtmlTag::create( 'a', $username, ['href' => 'manage/user/edit/'.$user->userId] );
 	$rows[]		= HtmlTag::create( 'tr', [
-		HtmlTag::create( 'td', $user->username ),
+		HtmlTag::create( 'td', $username ),
 		HtmlTag::create( 'td', $user->firstname.' '.$user->surname ),
 		HtmlTag::create( 'td', $user->role?->title ),
 		HtmlTag::create( 'td', $loggedAt ),
 	] );
 }
 
-$columnGroup	= HtmlElements::ColumnGroup( ['20%', '30%', '', '10%'] );
+$columnGroup	= HtmlElements::ColumnGroup( ['20%', '30%', '', '140px'] );
 $thead			= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
 	$w->headUsername,
 	$w->headPerson,

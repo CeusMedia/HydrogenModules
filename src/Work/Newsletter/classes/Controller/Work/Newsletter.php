@@ -112,9 +112,19 @@ class Controller_Work_Newsletter extends Controller
 			$queue		= $this->logic->getQueue( $queueId );						//  get queue data object
 		}
 
-		if( !is_array( $readerIds ) || !count( $readerIds ) ){
+		if( !is_array( $readerIds ) || [] === $readerIds ){
 			$this->messenger->noteError( 'No receivers selected.' );
 			$this->restart( 'edit/'.$newsletterId, TRUE );
+		}
+		if( ['*'] === $readerIds ){
+			$selectedGroupIds	= $this->request->get( 'groupIds', '' );
+			if( '' === $selectedGroupIds )
+				$this->restart( 'edit/'.$newsletterId );
+			$groupIds	= explode( ',', $selectedGroupIds );
+			$readerIds	= [];
+			foreach( $groupIds as $groupId )
+				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
+					$readerIds[]	= $reader->newsletterReaderId;
 		}
 
 		$numberSent		= 0;
@@ -415,6 +425,12 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
 			$this->restart( NULL, TRUE );
 		}
+
+		if( !$this->logic->hasGroupAccessToNewsletter( $newsletterId ) ){
+			$words		= (object) $this->getWords( 'edit' );
+			$this->messenger->noteError( $words->msgErrorInvalidId, $newsletterId );
+			$this->restart( NULL, TRUE );
+		}
 	}
 
 	/**
@@ -460,19 +476,33 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( $words->msgErrorTitleExists );									//  note error
 			return;																						//  ... and quit without redirect to GET
 		}
+		/** @var Resource_Database $db */
+		$db 	= $this->env->getDatabase();
+		/** @var Resource_Database_Connection $dbc */
+		$dbc	= $db->getConnection();
+
+		$dbc->beginTransaction();
+		
 		unset( $data['newsletterId'] );																	//  clear newsletter ID in prepared data
 		$newsletterId		= $this->logic->addNewsletter( $data );										//  save model data to database
 
 		if( $this->useUserGroupRelations ){																//  apply group relations
 			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );							//  get logic for group relations to module entities
-			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
 			if( '' !== $sourceNewsletterId )															//  from source newsletter
-				$groups	= $logicRelation->getGroups( $entityModuleId, $sourceNewsletterId );			//  ... copy group relations
-			else																						//  current default solution is uncool :(
-				$groups	= Logic_Authentication::getInstance( $this->env )->getCurrentGroups();			//  set group relations of current user
-			foreach( $groups as $group )																//  iterate groups to relate
-				$logicRelation->addModuleEntityRelation( $group, $entityModuleId, $newsletterId );		//  add relation between newsletter and group
+				$relatedGroups	= $logicRelation->getGroups( $entityModuleId, $sourceNewsletterId );	//  ... copy group relations
+			else																						//  from request
+				$relatedGroups	= $this->request->get( 'relationGroupIds' );						//  ..  by form data
+			if( [] === $relatedGroups ){
+				$this->messenger->noteError( 'Mindestens eine Gruppenzuweisung ist notwendig.' );
+				$dbc->rollBack();
+				$this->restart( 'work/newsletter/add' );
+			}
+			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
+			foreach( $relatedGroups as $relatedGroup )														//  iterate groups to relate
+				$logicRelation->addModuleEntityRelation( $relatedGroup, $entityModuleId, $newsletterId );	//  add relation between newsletter and group
 		}
+		$dbc->commit();
+
 		$this->messenger->noteSuccess( $words->msgSuccess );
 		$this->setContentTab( $newsletterId, 1 );
 		$this->restart( 'edit/'.$newsletterId, TRUE );
@@ -561,14 +591,6 @@ class Controller_Work_Newsletter extends Controller
 		//  newsletter groups for testing and sending
 		$groups			= [];
 		$conditions		= ['status' => Model_Newsletter_Group::STATUS_USABLE];
-		if( $this->useUserGroupRelations ){
-			$logicAuth	= Logic_Authentication::getInstance( $this->env );
-			if( !$logicAuth->hasFullAccess() ){
-				$logic		= Logic_GroupRelation::getInstance( $this->env );
-				$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
-				$conditions['newsletterGroupId']	= $entityIds;
-			}
-		}
 		foreach( $this->logic->getGroups( $conditions, ['title' => 'ASC'] ) as $group ){
 			$group->readers	= $this->logic->getGroupReaders( $group->newsletterGroupId );
 			$groups[$group->newsletterGroupId]	= $group;

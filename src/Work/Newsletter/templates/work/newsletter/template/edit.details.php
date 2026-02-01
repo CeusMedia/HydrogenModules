@@ -255,7 +255,7 @@ return HtmlTag::create( 'div', [
 		], ['class' => 'row-fluid'] ),
 	], ['class' => 'span8'] ),
 	HtmlTag::create( 'div', [
-		$view->renderHtmlPreviewPanel( $template, 'half-size' ),
-		$view->renderTextPreviewPanel( $template, 'half-size' ),
+		$view->renderHtmlPreviewPanel( $template, 'scale-2x half-size' ),
+		$view->renderTextPreviewPanel( $template, 'scale-2x half-size' ),
 	], ['class' => 'span4'] ),
 ], ['class' => 'row-fluid'] );

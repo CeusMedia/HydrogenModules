@@ -70,17 +70,30 @@ $list		= '<div class="alert"><em class="not-muted">Noch keine Empfängerliste ge
 $disabled	= ' disabled="disabled"';
 if( $readers ){
 	$list	= [];
-	foreach( $readers as $reader ){
-		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
+	if( count( $readers ) > 0 ){
+		$label	= 'An alle Abonnenten. <small class="muted">(Die vollständige Liste wird bei '.count( $readers ).' Empfängern nicht angezeigt.)</small>';
 		$input	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'name'		=> 'readerIds[]',
 			'checked'	=> 'checked',
-			'value'		=> $reader->newsletterReaderId,
+			'value'		=> '*',
 		] );
-		$tester		= $reader->tester ? HtmlTag::create( 'span', 'Tester', ['class' => 'label label-info pull-right'] ) : '';
-		$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label.$tester, ['class' => 'checkbox'] );
+		$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label, ['class' => 'checkbox'] );
 	}
+	else{
+		foreach( $readers as $reader ){
+			$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
+			$input	= HtmlTag::create( 'input', NULL, [
+				'type'		=> 'checkbox',
+				'name'		=> 'readerIds[]',
+				'checked'	=> 'checked',
+				'value'		=> $reader->newsletterReaderId,
+			] );
+			$tester		= $reader->tester ? HtmlTag::create( 'span', 'Tester', ['class' => 'label label-info pull-right'] ) : '';
+			$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label.$tester, ['class' => 'checkbox'] );
+		}
+	}
+
 	$list	= join( '', $list );
 	$disabled	= '';
 	$list		= '
@@ -88,6 +101,7 @@ if( $readers ){
 			<h3>Empfänger bestätigen</h3>
 			<div class="content-panel-inner">
 				<form action="./work/newsletter/enqueue/'.$newsletterId.'" method="post">
+					<input type="hidden" name="groupIds" value="'.join( ',', $groupIds ).'"/>
 					<div class="row-fluid">
 <!--						<div class="alert alert-info">
 							Das Absenden dieser Liste reiht die Newsletter in der Warteschlange des Versandsystems ein.<br/>

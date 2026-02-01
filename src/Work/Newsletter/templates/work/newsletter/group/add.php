@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $words */
 /** @var bool $tabbedLinks */
 /** @var object $group */
+/** @var bool $useUserGroupRelations */
 
 $tabsMain	= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/group' ) : '';
 
@@ -40,6 +41,33 @@ if( $env->getModules()->get( 'Work_Newsletter' )->getConfigAsDictionary()->get( 
 					</div>
 ';
 
+$groupRelations	= '';
+if( $useUserGroupRelations ){
+	$list	= [];
+	foreach( Logic_Authentication::getInstance( $env )->getCurrentGroups() as $currentGroup ){
+		$checkbox	= HtmlTag::create( 'input', NULL, [
+			'type'		=> 'checkbox',
+			'checked'	=> 'checked',
+			'name'		=> 'relationGroupIds[]',
+			'value'		=> $currentGroup->groupId,
+		] );
+		$list[] = HtmlTag::create( 'label', $checkbox.' '.$currentGroup->title, ['class' => 'checkbox'] );
+	}
+
+	$groupRelations	= '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_useGroupRelations">geerbte Gruppenzuweisung</label>
+				<input type="hidden" name="useGroupRelations" id="input_useGroupRelations" value="1"/>
+				<div class="checkbox-list" id="group-group-relations">
+					'.join( $list ).'
+				</div>
+			</div>
+		</div>
+';
+}
+
+
 $panelAdd	= '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
@@ -59,6 +87,7 @@ $panelAdd	= '
 					</div>
 					<hr/>
 					'.$copyUsersFromGroups.'
+					'.$groupRelations.'
 					<div class="row-fluid">
 						<div class="buttonbar">
 							<a href="./work/newsletter/group" class="btn btn-small">'.$iconCancel.$w->buttonCancel.'</a>
@@ -83,4 +112,15 @@ return $textTop.'
 			'.$textInfo.'
 		</div>
 	</div>
-</div>'.$textBottom;
+</div>'.$textBottom.'
+<script>
+jQuery(document).ready(function(){
+	jQuery("#group-group-relations input").on("change", function(){
+		let container = jQuery("#group-group-relations");
+		if (container.find("input:checked").length === 0) {
+			$(this).prop("checked", true);
+		}
+	});
+});
+</script>
+';

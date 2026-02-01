@@ -1,7 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
-use CeusMedia\Common\UI\HTML\Tag as Html;
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\View;
 
@@ -16,8 +16,8 @@ use View_Helper_Bootstrap_Modal as BootstrapModalDialog;
 
 $w	= (object) $words->add;
 
-$iconCancel	= Html::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
-$iconSave	= Html::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
+$iconCancel	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
+$iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';
 
 $optTemplate	= [];
 foreach( $addTemplates as $entry )
@@ -29,6 +29,33 @@ krsort( $addNewsletters );
 foreach( $addNewsletters as $item )
 	$optNewsletter[$item->newsletterId]	= $item->title;
 $optNewsletter	= HtmlElements::Options( $optNewsletter, 0 );
+
+$groupRelations	= '';
+if( $useUserGroupRelations ){
+	$list	= [];
+	foreach( Logic_Authentication::getInstance( $env )->getCurrentGroups() as $currentGroup ){
+		$checkbox	= HtmlTag::create( 'input', NULL, [
+			'type'		=> 'checkbox',
+			'checked'	=> 'checked',
+			'name'		=> 'relationGroupIds[]',
+			'value'		=> $currentGroup->groupId,
+		] );
+		$list[] = HtmlTag::create( 'label', $checkbox.' '.$currentGroup->title, ['class' => 'checkbox'] );
+	}
+
+	$groupRelations	= '
+		<div class="row-fluid">
+			<div class="span12">
+				<label for="input_useGroupRelations">geerbte Gruppenzuweisung</label>
+				<input type="hidden" name="useGroupRelations" id="input_useGroupRelations" value="1"/>
+				<div class="checkbox-list" id="newsletter-group-relations" >
+					'.join( $list ).'
+				</div>
+			</div>
+		</div>
+';
+}
+
 
 $formAdd	= '
 <div class="row-fluid">
@@ -69,6 +96,7 @@ $formAdd	= '
 				<input type="text" name="trackingCode" id="input_trackingCode" class="span12"/>
 			</div>
 		</div>-->
+		'.$groupRelations.'
 	</div>
 </div>
 <script>
@@ -77,6 +105,12 @@ jQuery(document).ready(function(){
 		let subject = jQuery("#modal-add #input_subject");
 		let title = jQuery("#modal-add #input_title");
 		subject.val(title.val());
+	});
+	jQuery("#modal-add #newsletter-group-relations input").on("change", function(){
+		let container = jQuery("#modal-add #newsletter-group-relations");
+		if (container.find("input:checked").length === 0) {
+			$(this).prop("checked", true);
+		}
 	});
 });
 </script>

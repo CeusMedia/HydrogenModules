@@ -15,91 +15,77 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var ?Logic_Limiter $limiter */
 /** @var bool $useUserGroupRelations */
 /** @var bool $canManageGroupRelations */
+/** @var bool $canExport */
+/** @var bool $canImport */
 
 $tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/group' ) : '';
 
-$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
-$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 $iconExport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] ).'&nbsp;';
+$iconImport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] ).'&nbsp;';
 
 //  --  PANEL: FORM  --  //
 $w			= (object) $words['edit'];
 
-$optStatus	= HtmlElements::Options( $words['states'], $group->status );
-$optType	= HtmlElements::Options( $words['types'], $group->type );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.$w->buttonCancel, [
-	'href'		=> './work/newsletter/group',
-	'class'		=> 'btn btn-small',
-] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.$w->buttonSave, [
-	'type'		=> 'submit',
-	'class'		=> 'btn btn-primary',
-	'name'		=> 'save',
-] );
-$buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, [
-	'href'		=> './work/newsletter/group/export/'.$groupId,
-	'class'		=> 'btn btn-small not-btn-info',
-] );
+$panelForm	= $view->loadTemplateFile( 'work/newsletter/group/edit.details.php' );
 
-if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
-	$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, [
-		'type'		=> 'button',
-		'class'		=> 'btn btn-small not-btn-info disabled',
-		'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
+
+//  --  PANEL: EXPORT  --  //
+
+$panelImport	= '';
+if( $canExport ){
+	$buttonImport	= HtmlTag::create( 'a', $iconImport.$w->buttonImport, [
+		'href'			=> '#modalImportCsv',
+		'class'			=> 'btn btn-small not-btn-info',
+		'role'			=> 'button',
+		'data-toggle'	=> 'modal',
 	] );
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
-	'href'		=> './work/newsletter/group/remove/'.$groupId,
-	'class'		=> 'btn btn-danger btn-small',
-	'onclick'	=> "if(!confirm('Wirklich?')) return false;",
-] );
-if( !$groupReaders )
-	$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
-		'href'		=> './work/newsletter/group/remove/'.$groupId,
-		'class'		=> 'btn btn-danger btn-small',
-		'onclick'	=> "return false;",
-		'disabled'	=> 'disabled',
-	] );
-
-$buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, [
-	'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
-	'class'		=> 'btn btn-success btn-small',
-] );
-
-$panelForm	= '
-<div class="content-panel">
-	<h3>'.$w->heading.'</h3>
-	<div class="content-panel-inner">
-		<form action="./work/newsletter/group/edit/'.$groupId.'" method="post">
-			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
-					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $group->title, ENT_QUOTES, 'UTF-8' ).'"required/>
-				</div>
-			</div>
-			<div class="row-fluid">
-				<div class="span6">
-					<label for="input_type">'.$w->labelType.'</label>
-					<select name="type" id="input_type" class="span12" required>'.$optType.'</select>
-				</div>
-				<div class="span6">
-					<label for="input_status">'.$w->labelStatus.'</label>
-					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
-				</div>
-			</div>
+	$modalImportCsv		= $view->loadTemplateFile( 'work/newsletter/group/modal.import.csv.php' );
+	$panelImport	= '
+	<div class="content-panel">
+		<h3>Import</h3>
+		<div class="content-panel-inner">
+			<p>
+				CSV-Listen lassen sich in die Liste importieren.<br/>
+			</p>
 			<div class="buttonbar">
-				'.$buttonCancel.'
-				'.$buttonSave.'
-				'.$buttonRemove.'
-				'.$buttonExport.'
-				'.$buttonReader.'
+				'.$buttonImport.'
 			</div>
-		</form>
+		</div>
+	</div>'.$modalImportCsv;
+}
+
+
+//  --  PANEL: EXPORT  --  //
+$panelExport	= '';
+if( $canExport ){
+	$buttonExport	= HtmlTag::create( 'a', $iconExport.$w->buttonExport, [
+		'href'		=> './work/newsletter/group/export/'.$groupId,
+		'class'		=> 'btn btn-small not-btn-info',
+	] );
+
+	if( $limiter && $limiter->denies( 'Work.Newsletter.Group:allowExport' ) )
+		$buttonExport	= HtmlTag::create( 'button', $iconExport.$w->buttonExport, [
+			'type'		=> 'button',
+			'class'		=> 'btn btn-small not-btn-info disabled',
+			'onclick'	=> 'alert("Exportieren von Kategorien ist in dieser Demo-Installation nicht möglich.")',
+		] );
+
+	$panelExport	= '
+<div class="content-panel">
+	<h3>Export</h3>
+	<div class="content-panel-inner">
+		<p>
+			Die aktuelle Liste kann im CSV-Format exportiert werden.<br/>
+		</p>
+		<div class="buttonbar">
+			'.$buttonExport.'
+		</div>
 	</div>
 </div>';
+
+}
 
 
 //  --  PANEL: READERS  --  //
@@ -110,11 +96,11 @@ $helperReaders->setReaders( $groupReaders );
 $helperReaders->setWords( $words );
 $panelReaders	= $helperReaders->render();
 
-
 //  --  PANEL: USER GROUPS  --  //
 $helperPanelGroups = new View_Helper_Manage_Group_EntityRelationEditor( $this->env );
 $panelGroups	= $helperPanelGroups
 	->setModule( 'Resource_Newsletter.Group' )
+	->visible( $useUserGroupRelations )
 	->enable( $useUserGroupRelations && $canManageGroupRelations )
 	->setFrom( 'work/newsletter/group/edit/'.$groupId )
 	->setEntityId( $groupId )
@@ -132,6 +118,8 @@ return $textTop.'
 		<div class="span6">
 			'.$panelForm.'
 			'.$panelGroups.'
+			'.$panelImport.'
+			'.$panelExport.'
 		</div>
 		<div class="span6">
 			'.$panelReaders.'
