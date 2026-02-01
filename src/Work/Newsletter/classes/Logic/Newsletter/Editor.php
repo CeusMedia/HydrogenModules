@@ -222,7 +222,7 @@ return $html;
 	public function removeReader( int|string $readerId ): void
 	{
 		$this->checkReaderId( $readerId );
-		$groups		= $this->getGroupsOfReader( $readerId );
+		$groups		= $this->getGroupsOfReader( $readerId, [], [], FALSE );
 		$letters	= $this->getLettersOfReader( $readerId );
 		foreach( $groups as $group )
 			$this->removeReaderFromGroup( $readerId, $group->newsletterGroupId );

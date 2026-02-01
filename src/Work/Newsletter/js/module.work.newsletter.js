@@ -81,5 +81,17 @@ var ModuleWorkNewsletter = {
 	},
 	showPreview: function(url){
 		$("#modal-preview iframe").get(0).src = url;
+	},
+	toggleScaled: function(element){
+		let parent = $(element).closest(".content-panel");
+		let container = parent.find(".newsletter-preview");
+		if(container.hasClass('scale-1x'))
+			container.addClass('scale-2x').removeClass('scale-1x');
+		else if(container.hasClass('scale-2x'))
+			container.addClass('scale-3x').removeClass('scale-2x');
+		else if(container.hasClass('scale-3x'))
+			container.removeClass('scale-3x');
+		else
+			container.addClass('scale-1x');
 	}
 };

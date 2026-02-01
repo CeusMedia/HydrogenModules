@@ -16,6 +16,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	protected Dictionary $moduleConfig;
 	protected ?Logic_Limiter $limiter			= NULL;
 	protected bool $useUserGroupRelations		= FALSE;
+	protected bool $allowToCopyUsersFromGroups	= FALSE;
 
 	/**
 	 *	@return		void
@@ -27,20 +28,8 @@ class Controller_Work_Newsletter_Group extends Controller
 		if( $this->request->has( 'save' ) ){
 			$groupId	= $this->logic->addGroup( $this->request->getAll() );
 			$this->messenger->noteSuccess( $words->msgSuccess );
-			$copyUsersOfGroupIds	= $this->request->get( 'copyUsersOfGroupIds' );
-			if( is_array( $copyUsersOfGroupIds ) ){
-				$readerIds	= [];
-				foreach( $copyUsersOfGroupIds as $copyGroupId ){
-					foreach( $this->logic->getGroupReaders( $copyGroupId ) as $reader ){
-						if( !in_array( $reader->newsletterReaderId, $readerIds ) ){
-							$readerIds[]	= $reader->newsletterReaderId;
-							$this->logic->addReaderToGroup( $reader->newsletterReaderId, $groupId );
-						}
-					}
-				}
-				if( 0 !== count( $readerIds ) )
-					$this->messenger->noteNotice( $words->msgGroupUsersImported, count( $readerIds ) );
-			}
+			$this->onAddCopyReadersOfFormerGroups( $groupId );
+			$this->onAddSetGroupRelations( $groupId );
 			$this->restart( './work/newsletter/group/edit/'.$groupId );
 		}
 		$group	= (object) [
@@ -48,9 +37,15 @@ class Controller_Work_Newsletter_Group extends Controller
 			'type'		=> $this->request->get( 'type' ),
 		];
 		$this->addData( 'group', $group );
-		$groups	= $this->logic->getGroups( ['type' => [0, 2]], ['title' => 'ASC'] );
-		foreach( $groups as $group )
-			$group->count	= $this->logic->countGroupReaders( $group->newsletterGroupId );
+
+		//  former group to copy
+		$groups	= [];
+		if( $this->allowToCopyUsersFromGroups ){
+			$conditions	= ['type' => [0, 2]];
+			$groups	= $this->logic->getGroups( $conditions, ['title' => 'ASC'] );
+			foreach( $groups as $group )
+				$group->count	= $this->logic->countGroupReaders( $group->newsletterGroupId );
+		}
 		$this->addData( 'groups', $groups );
 
 		$model		= new Model_Newsletter_Group( $this->env );
@@ -70,7 +65,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	public function edit( int|string $groupId ): void
 	{
 		$words		= (object) $this->getWords( 'edit' );
-		if( !$this->logic->checkGroupId( $groupId ) ){
+		if( !$this->logic->checkGroupId( $groupId ) || !$this->logic->hasGroupAccessToNewsletterGroup( $groupId ) ){
 			$this->messenger->noteError( $words->msgErrorInvalidId, $groupId );
 			$this->restart( NULL, TRUE );
 		}
@@ -87,6 +82,9 @@ class Controller_Work_Newsletter_Group extends Controller
 		$this->addData( 'groupReaders', $readers );
 
 		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relate' ) );
+		$this->addData( 'canExport', $this->env->getAcl()->has( 'manage/group', 'export' ) );
+		$this->addData( 'canImport', $this->env->getAcl()->has( 'manage/group', 'import' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'manage/group', 'remove' ) );
 
 	}
 
@@ -131,6 +129,54 @@ class Controller_Work_Newsletter_Group extends Controller
 	/**
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@todo		finish implementation: Semco / Custom CSV Data Mapping Strategies 
+	 */
+	public function import(): void
+	{
+		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Group:allowImport' ) ){
+			$this->messenger->noteNotice( 'Importieren ist deaktiviert. Vorgang abgebrochen.' );
+			$this->restart( NULL, TRUE );
+		}
+		$groupId = $this->request->get( 'groupId' );
+
+
+		$fileName	= 'import_newsletter_group_'.$groupId.'_'.date( 'Y-m-d:H:i:s' ).'.csv';
+		$upload		= new Logic_Upload( $this->env );
+		try{
+			$upload->setUpload( $this->request->get( 'upload' ) );
+			$upload->saveTo( $fileName );
+			$reader	= new CsvFileReader( $fileName, TRUE );
+			$csv	= $reader->toArray();
+
+			//  @todo !!! add Semco CSV Mappper here !!!
+
+			foreach( $csv as $entry ){
+				$conditions	= ['email' => strtolower( $entry['email'] )];
+				$existing	= $this->logic->getReaders( $conditions );						//  get others by address
+				if( $existing )																//  address is already existing
+					$readerId	= $existing[0]->newsletterReaderId;							//  get ID of existing reader
+				else{																		//  new reader
+					try{
+						$readerId	= $this->logic->addReader( $entry );						//  add to database
+					}
+					catch( Throwable $e ){
+						$this->messenger->noteError( 'Fehler beim Import: '.$e->getMessage() );
+						$this->restart( './work/newsletter/group/edit/'.$groupId );
+					}
+				}
+				$this->logic->addReaderToGroup( $readerId, $groupId );						//  add reader to group
+			}
+			$this->messenger->noteSuccess( 'Added '.count( $csv ).' readers to this group.' );
+		}
+		catch( Exception $e ){
+			$this->messenger->noteFailure( 'Error: '.$e->getMessage() );
+		}
+		$this->restart( './work/newsletter/group/edit/'.$groupId );
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
@@ -144,13 +190,6 @@ class Controller_Work_Newsletter_Group extends Controller
 			$conditions['title']	= '%'.$filterQuery.'%';
 		if( '' !== $filterStatus )
 			$conditions['status']	= $filterStatus;
-
-		$logicAuth	= Logic_Authentication::getInstance( $this->env );
-		if( $this->useUserGroupRelations && !$logicAuth->hasFullAccess() ){
-			$logic		= Logic_GroupRelation::getInstance( $this->env );
-			$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
-			$conditions['newsletterGroupId']	= $entityIds;
-		}
 
 		$groups		= $this->logic->getGroups( $conditions, $orders );
 		foreach( $groups as $group )
@@ -169,6 +208,9 @@ class Controller_Work_Newsletter_Group extends Controller
 	 */
 	public function remove( int|string $groupId ): void
 	{
+		if( !$this->logic->hasGroupAccessToNewsletterGroup( $groupId ) )
+			return;
+			
 		$words		= (object) $this->getWords( 'remove' );
 		$this->logic->removeGroup( $groupId );
 		$this->messenger->noteSuccess( $words->msgSuccess );
@@ -200,8 +242,54 @@ class Controller_Work_Newsletter_Group extends Controller
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
 
-		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
+		$this->useUserGroupRelations		= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
+		$this->allowToCopyUsersFromGroups	= $this->moduleConfig->get( 'group.allowToCopyUsersFromGroups', FALSE );
 		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
+		$this->addData( 'allowToCopyUsersFromGroups', $this->allowToCopyUsersFromGroups );
+	}
 
+	protected function onAddCopyReadersOfFormerGroups( int|string $groupId ): void
+	{
+		if( !$this->allowToCopyUsersFromGroups )
+			return;
+
+		$copyUsersOfGroupIds	= $this->request->get( 'copyUsersOfGroupIds' );
+		if( is_array( $copyUsersOfGroupIds ) ){
+			$readerIds	= [];
+			foreach( $copyUsersOfGroupIds as $copyGroupId ){
+				foreach( $this->logic->getGroupReaders( $copyGroupId ) as $reader ){
+					if( !in_array( $reader->newsletterReaderId, $readerIds ) ){
+						$readerIds[]	= $reader->newsletterReaderId;
+						$this->logic->addReaderToGroup( $reader->newsletterReaderId, $groupId );
+					}
+				}
+			}
+			if( 0 !== count( $readerIds ) ){
+				$words = (object) $this->getWords( 'add' );
+				$this->messenger->noteNotice( $words->msgGroupUsersImported, count( $readerIds ) );
+			}
+		}
+	}
+
+	/**
+	 *	On adding a group, set relation between groups and newsletter groups.
+	 *	Takes list of newsletter group IDs from request pair "relationGroupIds".
+	 *	Sets relation for module key "Resource_Newsletter.Group".
+	 *	@param		int|string		$groupId
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function onAddSetGroupRelations( int|string $groupId ): void
+	{
+		if( !$this->useUserGroupRelations )
+			return;
+
+//		if( !$this->request->get( 'useGroupRelations' ) )
+//			return;
+
+		$logicRelation		= Logic_GroupRelation::getInstance( $this->env );
+		$relatedGroupIds	= $this->request->get( 'relationGroupIds' );
+		foreach( $relatedGroupIds as $relatedGroupId )
+			$logicRelation->addModuleEntityRelation( $groupId, 'Resource_Newsletter.Group', $relatedGroupId );
 	}
 }

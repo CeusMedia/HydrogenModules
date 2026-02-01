@@ -41,7 +41,7 @@ $content	= $textTop.'
 	</div>
 	<div class="span4">
 		'.$textInfo.'
-		'.$view->renderTextPreviewPanel( $template ).'
+		'.$view->renderTextPreviewPanel( $template, 'scale-1x' ).'
 	</div>
 </div>'.$textBottom.$textPlaceholders;
 

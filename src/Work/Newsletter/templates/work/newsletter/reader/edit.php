@@ -15,96 +15,9 @@ use CeusMedia\HydrogenFramework\View;
 
 $tabsMain		= $tabbedLinks ? $view->renderMainTabs( 'work/newsletter/reader' ) : '';
 
-$statusIcons	= [
-	-1		=> 'remove',
-	0		=> 'star',
-	1		=> 'ok',
-];
-
 $optStatus	= HtmlElements::Options( (array) $words->states, $reader->status );
 $optGender	= HtmlElements::Options( (array) $words->gender, $reader->gender );
 
-$optGroup	= [];
-foreach( $groups as $group )
-	if( !array_key_exists( $group->newsletterGroupId, $readerGroups ) )
-		$optGroup[$group->newsletterGroupId]	= $group->title;
-$hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
-$optGroup	= HtmlElements::Options( $optGroup, array_keys( $readerGroups ) );
-
-$listGroups	= HtmlTag::create( 'div', 'Keine Empfängerlisten zugewiesen.', ['class' => 'alert alert-info'] );
-if( $readerGroups ){
-	$listGroups	= [];
-	foreach( $readerGroups as $readerGroup ){
-		$label			= $readerGroup->title;
-		$urlRemove		= './work/newsletter/reader/removeGroup/'.$reader->newsletterReaderId.'/'.$readerGroup->newsletterGroupId;
-		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'icon-'.$statusIcons[$readerGroup->status]] );
-		$attributes		= [
-			'href'		=> $urlRemove,
-			'class'		=> 'btn btn-mini btn-inverse',
-		];
-		$linkRemove		= HtmlTag::create( 'a', '<i class="fa fa-remove"></i>', $attributes );
-		$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
-		$urlGroup		= './work/newsletter/group/edit/'.$readerGroup->newsletterGroupId;
-		$linkGroup		= HtmlTag::create( 'a', /*$iconStatus.' '.*/$label, ['href' => $urlGroup] );
-
-		$listGroups[]	= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'td', $linkGroup, ['class' => ''] ),
-			HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
-		] );
-	}
-	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
-	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Empfängerlisten', ''] );
-	$thead			= HtmlTag::create( 'thead', $tableHeads );
-	$tbody			= HtmlTag::create( 'tbody', $listGroups );
-	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
-		'class'	=> "table table-condensed table-striped table-fixed"
-	] );
-}
-
-$listLetters	= '<div class="alert alert-info">Dieser Abonnent hat noch keinen Newsletter erhalten.</div>';
-
-if( $readerLetters ){
-	$stats		= (object) [
-		'sent'		=> 0,
-		'opened'	=> 0,
-		'ratio'		=> 0,
-	];
-	$listLetters	= [];
-	foreach( $readerLetters as $letter ){
-		$attributes		= [
-			'href'	=> './work/newsletter/edit/'.$letter->newsletterId
-		];
-		$class	= 'label label-error';
-		if( $letter->status >= 1 ){
-			$stats->sent++;
-			$class	= 'label label-warning';
-		}
-		if( $letter->status >= 2 ){
-			$stats->opened++;
-			$class	= 'label label-success';
-		}
-		if( $stats->sent > 0 )
-			$stats->ratio	= round( $stats->opened / $stats->sent * 100, 1 );
-
-		$indicator		= HtmlTag::create( 'span', '&nbsp;&nbsp;&nbsp;', ['class' => $class] );
-		$link			= HtmlTag::create( 'a', $letter->newsletter->title, $attributes );
-		$listLetters[]	= HtmlTag::create( 'li', $indicator.'&nbsp;'.$link, ['class' => 'autocut'] );
-	}
-	$listLetters	= HtmlTag::create( 'ul', $listLetters, ['class' => 'unstyled'] );
-	$listLetters	= HtmlTag::create( 'div', $listLetters, ['id' => 'reader-newsletter-list'] );
-	if( $stats->sent > 0 ){
-		$list	= [];
-		$list[]	= HtmlTag::create( 'dt', 'Zugestellt' );
-		$list[]	= HtmlTag::create( 'dd', $stats->sent );
-		$list[]	= HtmlTag::create( 'dt', 'Geöffnet' );
-		$list[]	= HtmlTag::create( 'dd', $stats->opened );
-		$list[]	= HtmlTag::create( 'dt', 'Rate' );
-		$list[]	= HtmlTag::create( 'dd', $stats->ratio.'%' );
-		$listLetters	.= '<hr/>'.HtmlTag::create( 'dl', $list, ['class' => "dl-horizontal"] );
-	}
-}
-
-$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 $iconConfirm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] ).'&nbsp;';
@@ -128,19 +41,11 @@ if( (int) $reader->status !== 0 )
 //if( (int) $reader->status > 0 )
 //	$buttonRemove		= '<button disabled="disabled" type="button" class="btn btn-danger">'.$labelButtonRemove.'</button>';
 
-extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/edit/', ['words' => $words, 'reader' => $reader] ) );
-
-return $textTop.'
-<div class="newsletter-content">
-	'.$tabsMain.'
-<!--	<a href="./work/newsletter/reader" class="btn btn-mini">'.$iconCancel.$words->edit->buttonList.'</a>-->
-	'.$textAbove.'
-	<div class="row-fluid">
-		<div class="span8">
+$panelDetailEditor	= '
 			<div class="content-panel">
 				<h3>Daten</h3>
 				<div class="content-panel-inner">
-					<form action="./work/newsletter/reader/edit/'.$readerId.'" method="post">
+					<form action="./work/newsletter/reader/edit/'.$reader->newsletterReaderId.'" method="post">
 						<div class="row-fluid">
 							<div class="span9">
 								<label for="input_email" class="mandatory">'.$words->edit->labelEmail.'</label>
@@ -199,31 +104,26 @@ return $textTop.'
 					</form>
 				</div>
 			</div>
-			<div class="content-panel">
-				<h3>Erhaltende Newsletter</h3>
-				<div class="content-panel-inner">
-					'.$listLetters.'
-				</div>
-			</div>
+';
+
+$panelGroupEditor	= $view->loadTemplateFile( 'work/newsletter/reader/edit.groups.php' );
+$panelLetterList	= $view->loadTemplateFile( 'work/newsletter/reader/edit.letters.php' );
+
+
+extract( $view->populateTexts( ['above', 'bottom', 'top'], 'html/work/newsletter/reader/edit/', ['words' => $words, 'reader' => $reader] ) );
+
+return $textTop.'
+<div class="newsletter-content">
+	'.$tabsMain.'
+<!--	<a href="./work/newsletter/reader" class="btn btn-mini">'.$iconCancel.$words->edit->buttonList.'</a>-->
+	'.$textAbove.'
+	<div class="row-fluid">
+		<div class="span8">
+			'.$panelDetailEditor.'
+			'.$panelLetterList.'
 		</div>
 		<div class="span4">
-			<div class="content-panel">
-				<h3>Empfängerlisten</h3>
-				<div class="content-panel-inner">
-					'.$listGroups.'
-					<div class="row-fluid" '.$hideGroupAdd.'>
-						<hr style="margin: -3px 0 6px 0"/>
-						<form action="./work/newsletter/reader/addGroup/'.$reader->newsletterReaderId.'" method="post">
-							<div class="span9">
-								<select name="groupId" class="span12">'.$optGroup.'</select>
-							</div>
-							<div class="span3">
-								<button type="submit" name="save" class="btn btn-success">'.$iconAdd.'</button>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
+			'.$panelGroupEditor.'
 		</div>
 	</div>
 </div>

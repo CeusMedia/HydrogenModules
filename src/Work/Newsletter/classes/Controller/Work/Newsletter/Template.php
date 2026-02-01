@@ -135,7 +135,9 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->restart( 'edit/'.$templateId, TRUE );
 		}
 		$conditions		= ['newsletterTemplateId' => $templateId];
-		$newsletters	= $this->logic->getNewsletters( $conditions );
+		$orders			= ['newsletterId' => 'DESC'];
+		$limits			= [0, 10];
+		$newsletters	= $this->logic->getNewsletters( $conditions, $orders, $limits );
 
 		$conditions		= ['newsletterTemplateId' => $templateId, 'status' => 2];
 		$isUsed			= count( $this->logic->getNewsletters( $conditions ) );
@@ -267,7 +269,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			switch( strtolower( $format ) ){
 				case 'text':
 					$mail->setMode( View_Helper_Newsletter_Mail::MODE_PLAIN );
-					$content	= HtmlTag::create( 'pre', $mail->render() );
+					$content	= HtmlTag::create( 'pre', $mail->render(), ['style' => 'text-wrap-mode: wrap; font-size: 1em; overflow: hidden'] );
 					break;
 				case 'html':
 					$mail->setMode( View_Helper_Newsletter_Mail::MODE_HTML );

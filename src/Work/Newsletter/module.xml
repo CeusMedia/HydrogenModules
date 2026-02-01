@@ -5,7 +5,7 @@
 	<title>Work: Newsletter</title>
 	<description><![CDATA[Creating and sending newsletter mails.]]></description>
 	<category>Work</category>
-	<version>1.4.9</version>
+	<version>1.5.1</version>
 	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
 	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
 	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
@@ -69,6 +69,8 @@
 	<log version="1.4.7">Apply module entity group relations if used.</log>
     <log version="1.4.8">Add tester flag in reader model.</log>
     <log version="1.4.9">Add link views.</log>
+    <log version="1.5.0">Support group relations.</log>
+    <log version="1.5.1">Improve preview, add responsive views.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -91,6 +93,7 @@
 		<class>View/Work/Newsletter/Template.php</class>
 		<class>View/Helper/FormNextAction.php</class>
 		<class>View/Helper/Work/Newsletter/GroupReaders.php</class>
+		<class>View/Helper/Work/Newsletter/Preview.php</class>
 		<class>View/Helper/Work/Newsletter/ThemeFacts.php</class>
 		<class>View/Helper/Work/Newsletter/ThemeList.php</class>
 		<locale>de/work/newsletter.ini</locale>
@@ -229,14 +232,18 @@
 		<template>work/newsletter/dashboard/index.php</template>
 		<template>work/newsletter/group/add.php</template>
 		<template>work/newsletter/group/edit.php</template>
+		<template>work/newsletter/group/edit.details.php</template>
 		<template>work/newsletter/group/index.php</template>
 		<template>work/newsletter/group/index.filter.php</template>
 		<template>work/newsletter/group/index.list.php</template>
 		<template>work/newsletter/group/index.list.filter.php</template>
+		<template>work/newsletter/group/modal.import.csv.php</template>
 		<template>work/newsletter/link/index.php</template>
 		<template>work/newsletter/link/view.php</template>
 		<template>work/newsletter/reader/add.php</template>
 		<template>work/newsletter/reader/edit.php</template>
+		<template>work/newsletter/reader/edit.groups.php</template>
+		<template>work/newsletter/reader/edit.letters.php</template>
 		<template>work/newsletter/reader/index.php</template>
 		<template>work/newsletter/reader/index.filter.php</template>
 		<template>work/newsletter/reader/index.list.php</template>

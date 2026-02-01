@@ -1,49 +1,73 @@
 <?php
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment;
 
-class View_Work_Newsletter_Template extends View_Work_Newsletter
+class View_Helper_Work_Newsletter_Preview
 {
-	public function add(): void
+	public const int MODE_NEWSLETTER	= 1;
+	public const int MODE_TEMPLATE		= 2;
+
+	public const int FORMAT_HTML		= 1;
+	public const int FORMAT_PLAIN		= 2;
+
+	protected Environment $env;
+	protected ?object $resource			= NULL;
+	protected int $format				= self::FORMAT_HTML;
+	protected int $mode					= self::MODE_NEWSLETTER;
+	protected string $class				= '';
+
+	public function __construct( Environment $env )
 	{
-		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
-		$words->add			= (object) $words->add;
-		$this->addData( 'words', $words );
+		$this->env = $env;
 	}
 
-	public function edit(): void
+	public function render(): string
 	{
-		$words				= (object) $this->getWords( NULL, 'work/newsletter/template' );
-		$words->edit		= (object) $words->edit;
-		$words->preview		= (object) $words->preview;
-		$words->addStyle	= (object) $words->addStyle;
-		$words->styles		= (object) $words->styles;
-		$this->addData( 'words', $words );
+		if( NULL === $this->resource )
+			throw new RuntimeException( 'No resource set' );
+		if( self::FORMAT_HTML === $this->format )
+			return $this->renderHtmlPreviewPanel( $this->resource, $this->class );
+		return $this->renderTextPreviewPanel( $this->resource, $this->class );
 	}
 
-	public function export(): void
+	public function setClass( string $class ): self
 	{
+		$this->class	= $class;
+		return $this;
 	}
 
-	public function index(): void
+	public function setFormat( int $format ): self
 	{
-		$words			= (object) $this->getWords( NULL, 'work/newsletter/template' );
-		$words->index	= (object) $words->index;
-		$this->addData( 'words', $words );
+		$this->format	= $format;
+		return $this;
 	}
 
-	public function viewTheme()
+	public function setMode( int $mode ): self
 	{
+		$this->mode		= $mode;
+		return $this;
 	}
+
+	public function setResource( object $newsletterOrTemplate ): self
+	{
+		$this->resource	= $newsletterOrTemplate;
+		return $this;
+	}
+
+
+	//  --  PROTECTED  --  //
+
 
 	/**
-	 *	@param		object		$template
-	 *	@param		string		$class			CSS class to apply to newsletter preview div
 	 *	@return		string
 	 */
-	public function renderHtmlPreviewPanel( object $template, string $class = '' ): string
+	protected function renderHtmlPreviewPanel(): string
 	{
-		$urlPreview	= './work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
+		$urlPreview	= './work/newsletter/template/preview/html/'.$this->resource->newsletterTemplateId;
+		if( self::MODE_NEWSLETTER === $this->mode )
+			$urlPreview	= './work/newsletter/preview/html/'.$this->resource->newsletterId;
+
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
 				HtmlTag::create( 'span', 'HTML-Vorschau' ),
@@ -79,14 +103,17 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 							] )
 						], ['class' => 'newsletter-preview-iframe-container'] ),
 					], ['class' => 'newsletter-preview-container'] ),
-				], ['class' => 'newsletter-preview '.$class] ),
+				], ['class' => 'newsletter-preview '.$this->class] ),
 			], ['class' => 'content-panel-inner'] )
 		], ['class' => 'content-panel'] );
 	}
 
-	public function renderTextPreviewPanel( object $template, string $class = '' ): string
+	protected function renderTextPreviewPanel(): string
 	{
-		$urlPreview	= './work/newsletter/template/preview/text/'.$template->newsletterTemplateId;
+		$urlPreview	= './work/newsletter/template/preview/text/'.$this->resource->newsletterTemplateId;
+		if( self::MODE_NEWSLETTER === $this->mode )
+			$urlPreview	= './work/newsletter/preview/text/'.$this->resource->newsletterId;
+
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
 				HtmlTag::create( 'span', 'Text-Vorschau' ),
@@ -117,14 +144,8 @@ class View_Work_Newsletter_Template extends View_Work_Newsletter
 							] )
 						], ['class' => 'newsletter-preview-iframe-container'] ),
 					], ['class' => 'newsletter-preview-container'] ),
-				], ['class' => 'newsletter-preview '.$class] ),
+				], ['class' => 'newsletter-preview '.$this->class] ),
 			], ['class' => 'content-panel-inner'] )
 		], ['class' => 'content-panel'] );
-	}
-
-	protected function __onInit(): void
-	{
-		$this->env->getPage()->js->addModuleFile( 'module.work.newsletter.js' );
-		$this->env->getPage()->css->theme->addUrl( 'module.work.newsletter.css' );
 	}
 }

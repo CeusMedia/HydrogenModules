@@ -27,6 +27,7 @@ $optStatus	= HtmlElements::Options( $optStatus, Model_Newsletter_Reader::STATUS_
 $optGender	= HtmlElements::Options( $words->gender, $reader->gender );
 
 $listGroups	= [];
+$selectedGroups	= [current( $groups )->newsletterGroupId];
 foreach( $groups as $group ){
 	$checkbox	= HtmlTag::create( 'input', NULL, [
 		'type'	=> 'checkbox',
@@ -103,7 +104,9 @@ return $textTop.'
 						<div class="row-fluid">
 							<div class="span12">
 								<h4>Empfängerlistenzuordnung:</h4>
-								'.$listGroups.'
+								<div class="checkbox-list" id="reader-group-relations">
+									'.$listGroups.'
+								</div>
 							</div>
 						</div>
 						<div class="row-fluid">
@@ -123,4 +126,15 @@ return $textTop.'
 		</div>
 	</div>
 </div>
-'.$textBottom;
+'.$textBottom.'
+<script>
+jQuery(document).ready(function(){
+	jQuery("#reader-group-relations input").on("change", function(){
+		let container = jQuery("#reader-group-relations");
+		if (container.find("input:checked").length === 0) {
+			$(this).prop("checked", true);
+		}
+	});
+});
+</script>
+';
