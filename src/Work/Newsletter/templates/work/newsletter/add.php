@@ -12,6 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $templates */
 /** @var array $newsletters */
 /** @var object $newsletter */
+/** @var bool $useUserGroupRelations */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] ).'&nbsp;';
 $iconSave	= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] ).'&nbsp;';

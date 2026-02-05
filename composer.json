@@ -62,7 +62,8 @@
         "dragonmantank/cron-expression": "3.x-dev",
         "amenadiel/jpgraph": "^4",
         "influxdata/influxdb-client-php": "^3.0",
-        "guzzlehttp/guzzle": "*"
+        "guzzlehttp/guzzle": "*",
+        "phpoffice/phpspreadsheet": "dev-master"
     },
     "suggest": {
         "ext-rrd": "*"
