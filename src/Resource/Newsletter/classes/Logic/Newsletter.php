@@ -35,30 +35,40 @@ class Logic_Newsletter extends SharedLogic
 	protected bool $useUserGroupRelations		= FALSE;
 
 	/**
-	 *	@param		array		$data
+	 *	@param		Entity_Newsletter_Reader|array		$data
 	 *	@return		string
 	 */
-	public function addReader( array $data ): string
+	public function addReader( Entity_Newsletter_Reader|array $data ): string
 	{
-		if( !isset( $data['registeredAt'] ) )
-			$data['registeredAt']	= time();
+		if( is_object( $data ) )
+			if( !isset( $data->registeredAt ) )
+				$data->registeredAt	= time();
+		if( is_array( $data ) )
+			if( !isset( $data['registeredAt'] ) )
+				$data['registeredAt']	= time();
 		return $this->modelReader->add( $data );
 	}
 
 	/**
-	 *	@param		int|string		$readerId
+	 *	@param		Entity_Newsletter_Reader|int|string		$reader
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
 	 *	@return		string
 	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and strict mode
+	 *	@throws		ReflectionException
 	 */
-	public function addReaderToGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): string
+	public function addReaderToGroup( Entity_Newsletter_Reader|int|string $reader, int|string $groupId, bool $strict = TRUE ): string
 	{
+		/** @var int|string $readerId */
+		$readerId	= is_object( $reader ) ? $reader->newsletterReaderId : $reader;
+
 		$this->checkReaderId( $readerId, $strict );
 		$this->checkGroupId( $groupId, $strict );
-		$has	= $this->getGroupsOfReader( $readerId, ['newsletterGroupId' => $groupId], FALSE );
-		if( $has )
-			return $has[0]->newsletterReaderGroupId;
+
+		$readerGroups	= $this->getGroupsOfReader( $reader, ['newsletterGroupId' => $groupId], [], FALSE );
+		if( [] !== $readerGroups )
+			return $readerGroups[0]->newsletterReaderGroupId;
+
 		$data	= [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterGroupId'		=> $groupId,
@@ -72,6 +82,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		bool			$throwException
 	 *	@return		bool
 	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
+	 *	@throws		ReflectionException
 	 */
 	public function checkGroupId( int|string $groupId, bool $throwException = FALSE ): bool
 	{
@@ -155,11 +166,12 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string 		$groupId
+	 *	@param		Entity_Newsletter_Group|int|string 		$group
 	 *	@return		int
 	 */
-	public function countGroupReaders( int|string $groupId ): int
+	public function countGroupReaders( Entity_Newsletter_Group|int|string $group ): int
 	{
+		$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 		return $this->modelReaderGroup->countByIndex( 'newsletterGroupId', $groupId );
 	}
 
@@ -173,25 +185,27 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$newsletterId
+	 *	@param		Entity_Newsletter|int|string	$newsletter
 	 *	@param		array			$data
 	 *	@return		int
 	 */
-	public function editNewsletter( int|string $newsletterId, array $data ): int
+	public function editNewsletter( Entity_Newsletter|int|string $newsletter, array $data ): int
 	{
+		$newsletterId	= is_object( $newsletter ) ? $newsletter->newsletterId : $newsletter;
 		$this->checkNewsletterId( $newsletterId, TRUE );
 		$data['modifiedAt']	= time();
 		return $this->modelNewsletter->edit( $newsletterId, $data, FALSE );
 	}
 
 	/**
-	 *	@param		int|string		$readerId
+	 *	@param		Entity_Newsletter_Reader|int|string		$reader
 	 *	@param		array 			$data
 	 *	@param		bool			$strict
 	 *	@return		int
 	 */
-	public function editReader( int|string $readerId, array $data, bool $strict = TRUE ): int
+	public function editReader( Entity_Newsletter_Reader|int|string $reader, array $data, bool $strict = TRUE ): int
 	{
+		$readerId	= is_object( $reader ) ? $reader->newsletterReaderId : $reader;
 		$this->checkReaderId( $readerId, $strict );
 		return $this->modelReader->edit( $readerId, $data );
 	}
@@ -220,6 +234,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$groupId
 	 *	@param		bool			$strict
 	 *	@return		object|NULL
+	 *	@throws		ReflectionException
 	 */
 	public function getGroup( int|string $groupId, bool $strict = TRUE ): ?object
 	{
@@ -228,12 +243,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$groupId
+	 *	@param		Entity_Newsletter_Group|int|string		$group
 	 *	@return		array
 	 * @todo improve performance on higher scale
 	 */
-	public function getGroupReaders( int|string $groupId ): array
+	public function getGroupReaders( Entity_Newsletter_Group|int|string $group ): array
 	{
+		$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 		$list		= [];
 		$readers	= [];
 		foreach( $this->modelReader->getAllByIndex( 'status', Model_Newsletter_Reader::STATUS_CONFIRMED ) as $reader )
@@ -248,9 +264,11 @@ class Logic_Newsletter extends SharedLogic
 	/**
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
+	 *	@param		array		$limits
 	 *	@return		array
+	 *	@throws		ReflectionException
 	 */
-	public function getGroups( array $conditions = [], array $orders = [] ): array
+	public function getGroups( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
 
@@ -264,19 +282,24 @@ class Logic_Newsletter extends SharedLogic
 			}
 		}
 
-		foreach( $this->modelGroup->getAll( $conditions, $orders ) as $group )
+		foreach( $this->modelGroup->getAll( $conditions, $orders, $limits ) as $group )
 			$list[$group->newsletterGroupId]	= $group;
 		return $list;
 	}
 
 	/**
-	 *	@param		int|string		$readerId
+	 *	@param		Entity_Newsletter_Reader|int|string		$reader
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
+	 *	@param		bool			$useRelations			Flag: use group relations
 	 *	@return		array
+	 *	@throws		ReflectionException
 	 */
-	public function getGroupsOfReader( int|string $readerId, array $conditions = [], array $orders = [], $useRelations = TRUE ): array
+	public function getGroupsOfReader( Entity_Newsletter_Reader|int|string $reader, array $conditions = [], array $orders = [], bool $useRelations = TRUE ): array
 	{
+		/** @var int|string $readerId */
+		$readerId	= is_object( $reader ) ? $reader->newsletterReaderId : $reader;
+
 		$this->checkReaderId( $readerId, TRUE );
 
 		$conditions['newsletterReaderId']	= $readerId;
@@ -297,13 +320,14 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$readerId
+	 *	@param		Entity_Newsletter_Reader|int|string		$reader
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
 	 *	@return		array
 	 */
-	public function getLettersOfReader( int|string $readerId, array $conditions = [], array $orders = [] ): array
+	public function getLettersOfReader( Entity_Newsletter_Reader|int|string $reader, array $conditions = [], array $orders = [] ): array
 	{
+		$readerId	= is_object( $reader ) ? $reader->newsletterReaderId : $reader;
 		try{
 			$this->checkReaderId( $readerId, TRUE );
 			$indices	= array_merge( $conditions, ['newsletterReaderId' => $readerId] );
@@ -425,6 +449,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		int|string		$newsletterId
 	 *	@param		bool			$extended
 	 *	@return		array
+	 *	@throws		ReflectionException
 	 */
 	public function getQueuesOfNewsletter( int|string $newsletterId, bool $extended = FALSE ): array
 	{
@@ -504,18 +529,19 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$groupId
+	 *	@param		Entity_Newsletter_Group|int|string		$group
 	 *	@param		array			$conditions
 	 *	@param		array			$orders
 	 *	@return		array
 	 */
-	public function getReadersOfGroup( int|string $groupId, array $conditions = [], array $orders = [] ): array
+	public function getReadersOfGroup( Entity_Newsletter_Group|int|string $group, array $conditions = [], array $orders = [] ): array
 	{
+		$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 		return $this->getReadersOfGroups( [$groupId], $conditions, $orders );
 	}
 
 	/**
-	 *	@param		array<int|string|object>	$groups		List of group objects or IDs
+	 *	@param		array<Entity_Newsletter_Group|int|string>	$groups		List of group objects or IDs
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@return		array
@@ -525,7 +551,7 @@ class Logic_Newsletter extends SharedLogic
 		$list		= [];
 		$readerIds	= [];
 		foreach( $groups as $group ){
-			$groupId	= is_object( $group ) ? $group->groupId : $group;
+			$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 			$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );
 			foreach( $relations as $relation )
 				$readerIds[]	= $relation->newsletterReaderId;
@@ -557,6 +583,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@return		array
+	 *	@throws		ReflectionException
 	 */
 	public function getTemplates( array $conditions = [], array $orders = [] ): array
 	{
@@ -592,12 +619,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 * @param int $newsletterId
-	 * @return bool
-	 * @throws ReflectionException
+	 *	@param		Entity_Newsletter|int|string		$newsletter
+	 *	@return		bool
+	 *	@throws		ReflectionException
 	 */
-	public function hasGroupAccessToNewsletter( int $newsletterId ): bool
+	public function hasGroupAccessToNewsletter( Entity_Newsletter|int|string $newsletter ): bool
 	{
+		$newsletterId	= is_object( $newsletter ) ? $newsletter->newsletterId : $newsletter;
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
 		if( !$moduleConfig->get( 'useUserGroupRelations', FALSE ) )
 			return TRUE;
@@ -610,12 +638,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 * @param int $newsletterGroupId
-	 * @return bool
-	 * @throws ReflectionException
+	 *	@param		Entity_Newsletter_Group|int|string		$newsletterGroup
+	 *	@return		bool
+	 *	@throws		ReflectionException
 	 */
-	public function hasGroupAccessToNewsletterGroup( int $newsletterGroupId ): bool
+	public function hasGroupAccessToNewsletterGroup( Entity_Newsletter_Group|int|string $newsletterGroup ): bool
 	{
+		$groupId		= is_object( $newsletterGroup ) ? $newsletterGroup->newsletterGroupId : $newsletterGroup;
 		$moduleConfig	= $this->env->getConfig()->getAll( 'module.work_newsletter.', TRUE );
 		if( !$moduleConfig->get( 'useUserGroupRelations', FALSE ) )
 			return TRUE;
@@ -623,18 +652,20 @@ class Logic_Newsletter extends SharedLogic
 		if( Logic_Authentication::getInstance( $this->env )->hasFullAccess() )
 			return TRUE;
 
-		return in_array( $newsletterGroupId, Logic_GroupRelation::getInstance( $this->env )
+		return in_array( $groupId, Logic_GroupRelation::getInstance( $this->env )
 			->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' ) );
 	}
 
 	/**
-	 *	@param		int|string		$readerId
-	 *	@param		int|string		$groupId
+	 *	@param		Entity_Newsletter_Reader|int|string		$reader
+	 *	@param		Entity_Newsletter_Group|int|string		$group
 	 *	@param		bool			$strict
 	 *	@return		int
 	 */
-	public function removeReaderFromGroup( int|string $readerId, int|string $groupId, bool $strict = TRUE ): int
+	public function removeReaderFromGroup( Entity_Newsletter_Reader|int|string $reader, Entity_Newsletter_Group|int|string $group, bool $strict = TRUE ): int
 	{
+		$readerId	= is_object( $reader ) ? $reader->newsletterReaderId : $reader;
+		$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 		try{
 			$this->checkReaderId( $readerId, $strict );
 			$this->checkGroupId( $groupId, $strict );
@@ -651,12 +682,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$queueId
+	 *	@param		Entity_Newsletter_Queue|int|string		$queue
 	 *	@param		int				$status
 	 *	@return		int
 	 */
-	public function setQueueStatus( int|string $queueId, int $status ): int
+	public function setQueueStatus( Entity_Newsletter_Queue|int|string $queue, int $status ): int
 	{
+		$queueId	= is_object( $queue ) ? $queue->newsletterQueueId : $queue;
 		return $this->modelQueue->edit( $queueId, [
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
@@ -664,12 +696,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$readerLetterId
+	 *	@param		Entity_Newsletter_Reader_Letter|int|string		$readerLetter
 	 *	@param		int				$status
 	 *	@return		int
 	 */
-	public function setReaderLetterStatus( int|string $readerLetterId, int $status ): int
+	public function setReaderLetterStatus( Entity_Newsletter_Reader_Letter|int|string $readerLetter, int $status ): int
 	{
+		$readerLetterId	= is_object( $readerLetter ) ? $readerLetter->newsletterReaderId : $readerLetter;
 		$readerLetter	= $this->modelReaderLetter->get( $readerLetterId );
 		if( !$readerLetter || $readerLetter->status >= $status )
 			return 0;
@@ -685,12 +718,13 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
-	 *	@param		int|string		$readerLetterId
+	 *	@param		Entity_Newsletter_Reader_Letter|int|string		$readerLetter
 	 *	@param		int|string		$mailId
 	 *	@return		int
 	 */
-	public function setReaderLetterMailId( int|string $readerLetterId, int|string $mailId ): int
+	public function setReaderLetterMailId( Entity_Newsletter_Reader_Letter|int|string $readerLetter, int|string $mailId ): int
 	{
+		$readerLetterId	= is_object( $readerLetter ) ? $readerLetter->newsletterReaderLetterId : $readerLetter;
 		return $this->modelReaderLetter->edit( $readerLetterId, ['mailId' => $mailId] );
 	}
 

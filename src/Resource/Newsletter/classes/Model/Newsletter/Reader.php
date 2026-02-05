@@ -27,6 +27,15 @@ class Model_Newsletter_Reader extends Model
 		self::STATUS_CONFIRMED,
 	];
 
+	public const GENDER_FEMALE			= 0;
+	public const GENDER_MALE			= 1;
+	public const GENDER_OTHERS			= 2;
+	public const GENDERS				= [
+		self::GENDER_FEMALE,
+		self::GENDER_MALE,
+		self::GENDER_OTHERS,
+	];
+
 	protected string $name			= 'newsletter_readers';
 
 	protected array $columns		= [
@@ -52,5 +61,8 @@ class Model_Newsletter_Reader extends Model
 		'tester',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className			= Entity_Newsletter_Reader::class;
 }

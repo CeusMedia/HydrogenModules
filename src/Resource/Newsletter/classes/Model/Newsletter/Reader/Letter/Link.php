@@ -36,5 +36,8 @@ class Model_Newsletter_Reader_Letter_Link extends Model
 		'timestamp',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className			= Entity_Newsletter_Reader_Letter_Link::class;
 }
