@@ -22,12 +22,10 @@ class Controller_Work_Newsletter extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{
-		$words		= (object) $this->getWords( 'add' );
 		if( $this->request->getMethod()->isPost() )
 			$this->handleAddRequest();
 		$this->prepareAddData();
@@ -47,7 +45,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function edit( string $newsletterId ): void
@@ -70,6 +67,7 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function editFull( string $newsletterId ): void
 	{
@@ -86,7 +84,7 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function enqueue( string $newsletterId ): void
 	{
@@ -160,6 +158,11 @@ class Controller_Work_Newsletter extends Controller
 		$this->restart( NULL, TRUE );
 	}
 
+	/**
+	 *	@param		int		$page
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function index( $page = 0 ): void
 	{
 		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
@@ -200,7 +203,6 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@param		bool		$simulateOffline
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function preview( string $format, string $newsletterId, bool $simulateOffline = FALSE ): void
@@ -278,6 +280,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@param		string		$tabKey
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function setContentTab( string $newsletterId, string $tabKey ): void
 	{
@@ -290,7 +293,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@param		string		$newsletterId
 	 *	@param		$status
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function setStatus( string $newsletterId, $status ): void
 	{
@@ -314,7 +317,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function test( string $newsletterId ): void
@@ -341,7 +343,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$readerLetterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( string $readerLetterId ): void
 	{
@@ -381,6 +382,7 @@ class Controller_Work_Newsletter extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
@@ -417,6 +419,7 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		int|string		$newsletterId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function checkNewsletterId( int|string $newsletterId ): void
 	{
@@ -435,7 +438,6 @@ class Controller_Work_Newsletter extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	protected function handleAddRequest(): void
@@ -488,16 +490,16 @@ class Controller_Work_Newsletter extends Controller
 
 		if( $this->useUserGroupRelations ){																//  apply group relations
 			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );							//  get logic for group relations to module entities
+			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
 			if( '' !== $sourceNewsletterId )															//  from source newsletter
 				$relatedGroups	= $logicRelation->getGroups( $entityModuleId, $sourceNewsletterId );	//  ... copy group relations
 			else																						//  from request
-				$relatedGroups	= $this->request->get( 'relationGroupIds' );						//  ..  by form data
+				$relatedGroups	= $this->request->get( 'relationGroupIds' );						//  ...  by form data
 			if( [] === $relatedGroups ){
 				$this->messenger->noteError( 'Mindestens eine Gruppenzuweisung ist notwendig.' );
 				$dbc->rollBack();
 				$this->restart( 'work/newsletter/add' );
 			}
-			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
 			foreach( $relatedGroups as $relatedGroup )														//  iterate groups to relate
 				$logicRelation->addModuleEntityRelation( $relatedGroup, $entityModuleId, $newsletterId );	//  add relation between newsletter and group
 		}
@@ -511,7 +513,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function handleEditRequest( string $newsletterId ): void
 	{
@@ -552,7 +553,6 @@ class Controller_Work_Newsletter extends Controller
 	 */
 	protected function prepareAddData(): void
 	{
-		$words		= (object) $this->getWords( 'add' );
 		$templates	= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		if( [] === $templates ){
 			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
@@ -579,8 +579,6 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
-	 *	@throws		ReflectionException
 	 */
 	protected function prepareEditData( string $newsletterId ): void
 	{

@@ -1,5 +1,7 @@
 <?php
+use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Net\API\Premailer;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Logic_Newsletter_Editor extends Logic_Newsletter
 {
@@ -53,6 +55,10 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		string		$html
 	 *	@param		int			$wrap
 	 *	@return		string
+	 *	@throws		InvalidArgumentException
+	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		IoException
+	 *	@throws		Exception			Premailer exceptions
 	 */
 	public function convertHtmlToText( string $html, int $wrap = 65 ): string
 	{
@@ -90,7 +96,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		foreach( $replacements as $regex => $replacement )
 			$html	= preg_replace( $regex, $replacement, $html );
 		$html	= $wrap ? wordwrap( $html, $wrap ) : $html;
-return $html;
+		return $html;
 		return strip_tags( $html );
 	}
 
@@ -191,7 +197,6 @@ return $html;
 	 *	@param		int|string		$groupId
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeGroup( int|string $groupId ): bool
 	{
@@ -217,7 +222,6 @@ return $html;
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function removeReader( int|string $readerId ): void
 	{

@@ -13,6 +13,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View_Work_Newsletter $view */
 /** @var bool $useUserGroupRelations */
 /** @var bool $canManageGroupRelations */
+/** @var bool $useUserGroupRelations */
 
 const TAB_DETAILS	= 1;
 const TAB_HTML		= 2;
@@ -23,7 +24,7 @@ const TAB_QUEUE		= 6;
 const TAB_HISTORY	= 7;
 const TAB_STATS		= 8;
 
-$currentTab		= (int) $this->env->getSession()->get( 'work.newsletter.content.tab' );
+$currentTab		= (int) $env->getSession()->get( 'work.newsletter.content.tab' );
 
 $disabledTabs	= match( (int) $newsletter->status ){
 	Model_Newsletter::STATUS_ABORTED	=> [TAB_HTML, TAB_TEXT, TAB_TEST, TAB_SEND, TAB_QUEUE, TAB_HISTORY, TAB_STATS],

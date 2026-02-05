@@ -8,6 +8,12 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResou
 
 class Controller_Work_Newsletter_Group extends Controller
 {
+	public const IMPORT_MODE_ADDITIONAL	= 1;
+	public const IMPORT_MODE_FRESH		= 2;
+
+	public const IMPORT_FORMAT_DEFAULT	= 1;
+	public const IMPORT_FORMAT_SEMCO	= 2;
+
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected Logic_Newsletter_Editor $logic;
 	protected PartitionSession $session;
@@ -60,7 +66,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
-	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $groupId ): void
 	{
@@ -128,8 +134,7 @@ class Controller_Work_Newsletter_Group extends Controller
 
 	/**
 	 *	@return		void
-	 *	@throws		ReflectionException
-	 *	@todo		finish implementation: Semco / Custom CSV Data Mapping Strategies 
+	 *	@todo		finish implementation: Semco / Custom CSV Data Mapping Strategies
 	 */
 	public function import(): void
 	{
@@ -137,36 +142,43 @@ class Controller_Work_Newsletter_Group extends Controller
 			$this->messenger->noteNotice( 'Importieren ist deaktiviert. Vorgang abgebrochen.' );
 			$this->restart( NULL, TRUE );
 		}
-		$groupId = $this->request->get( 'groupId' );
+		$mode		= $this->request->get( 'import_mode' );
+		$groupId	= $this->request->get( 'groupId' );
 
+		if( $this->logic->checkGroupId( $groupId ) ){
+			$this->messenger->noteError( 'Ungültige Gruppe.' );
+			$this->restart( './work/newsletter/group/edit/'.$groupId );
+		}
 
-		$fileName	= 'import_newsletter_group_'.$groupId.'_'.date( 'Y-m-d:H:i:s' ).'.csv';
+		$format		= $this->request->get( 'format', '' );
+		$fileName	= 'import_newsletter_group_'.$groupId.'_'.date( 'Y-m-d:H:i:s' ).'.dat';
 		$upload		= new Logic_Upload( $this->env );
 		try{
 			$upload->setUpload( $this->request->get( 'upload' ) );
 			$upload->saveTo( $fileName );
-			$reader	= new CsvFileReader( $fileName, TRUE );
-			$csv	= $reader->toArray();
 
-			//  @todo !!! add Semco CSV Mappper here !!!
-
-			foreach( $csv as $entry ){
-				$conditions	= ['email' => strtolower( $entry['email'] )];
-				$existing	= $this->logic->getReaders( $conditions );						//  get others by address
-				if( $existing )																//  address is already existing
-					$readerId	= $existing[0]->newsletterReaderId;							//  get ID of existing reader
-				else{																		//  new reader
-					try{
-						$readerId	= $this->logic->addReader( $entry );						//  add to database
-					}
-					catch( Throwable $e ){
-						$this->messenger->noteError( 'Fehler beim Import: '.$e->getMessage() );
-						$this->restart( './work/newsletter/group/edit/'.$groupId );
-					}
-				}
-				$this->logic->addReaderToGroup( $readerId, $groupId );						//  add reader to group
+			if( self::IMPORT_MODE_FRESH === $mode ){
+				if( $this->logic->countGroupReaders( $groupId ) > 100 )					//  the fast / direct way for groups with many readers: remove without further checks
+					Model_Newsletter_Reader_Group::getInstance( $this->env )			//  use model
+						->removeByIndex( 'newsletterGroupId', $groupId );				//  ... to remove relations directly
+				else																	//  the slow / stable way: use logic methods with checks
+					foreach( $this->logic->getReadersOfGroup( $groupId ) as $reader )	//  iterate over all group users
+						$this->logic->removeReaderFromGroup( $reader, $groupId );		//  remove each one with checks
 			}
-			$this->messenger->noteSuccess( 'Added '.count( $csv ).' readers to this group.' );
+
+			if( self::IMPORT_FORMAT_SEMCO === $format )
+				$logicImportStrategy	= Logic_Newsletter_Import_Strategy_SemcoSpreadsheet::getInstance( $this->env );
+			else
+				$logicImportStrategy	= Logic_Newsletter_Import_Strategy_OwnCsv::getInstance( $this->env );
+
+			try{
+				$count	= $logicImportStrategy->import( $fileName, $groupId );
+				$this->messenger->noteSuccess( 'Added '.$count.' readers to this group.' );
+			}
+			catch( Throwable $e ){
+				$this->messenger->noteError( 'Fehler beim Import: '.$e->getMessage() );
+				$this->restart( './work/newsletter/group/edit/'.$groupId );
+			}
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( 'Error: '.$e->getMessage() );
@@ -205,6 +217,7 @@ class Controller_Work_Newsletter_Group extends Controller
 	/**
 	 *	@param		int|string		$groupId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function remove( int|string $groupId ): void
 	{

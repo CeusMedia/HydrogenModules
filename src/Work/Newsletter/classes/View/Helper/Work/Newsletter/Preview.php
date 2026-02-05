@@ -5,11 +5,11 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Work_Newsletter_Preview
 {
-	public const int MODE_NEWSLETTER	= 1;
-	public const int MODE_TEMPLATE		= 2;
+	public const MODE_NEWSLETTER	= 1;
+	public const MODE_TEMPLATE		= 2;
 
-	public const int FORMAT_HTML		= 1;
-	public const int FORMAT_PLAIN		= 2;
+	public const FORMAT_HTML		= 1;
+	public const FORMAT_PLAIN		= 2;
 
 	protected Environment $env;
 	protected ?object $resource			= NULL;
@@ -27,8 +27,8 @@ class View_Helper_Work_Newsletter_Preview
 		if( NULL === $this->resource )
 			throw new RuntimeException( 'No resource set' );
 		if( self::FORMAT_HTML === $this->format )
-			return $this->renderHtmlPreviewPanel( $this->resource, $this->class );
-		return $this->renderTextPreviewPanel( $this->resource, $this->class );
+			return $this->renderHtmlPreviewPanel();
+		return $this->renderTextPreviewPanel();
 	}
 
 	public function setClass( string $class ): self
@@ -68,40 +68,43 @@ class View_Helper_Work_Newsletter_Preview
 		if( self::MODE_NEWSLETTER === $this->mode )
 			$urlPreview	= './work/newsletter/preview/html/'.$this->resource->newsletterId;
 
+		$buttonScale	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [
+			'type'			=> 'button',
+			'class'			=> 'btn btn-mini',
+			'onclick'		=> 'ModuleWorkNewsletter.toggleScaled(this);',
+		] );
+		$buttonModal	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-window-maximize"></i><!--&nbsp;Ansicht-->', [
+			'type'			=> 'button',
+			'class'			=> 'btn not-btn-info btn-mini',
+			'data-toggle'	=> 'modal',
+			'data-target'	=> '#modal-preview',
+			'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
+		] );
+		$buttonOpen		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-external-link"></i><!--&nbsp;Tab-->', [
+			'href'			=> $urlPreview,
+			'class'			=> 'btn btn-mini',
+			'target'		=> '_modal-preview_',
+		] );
+		$buttons	= HtmlTag::create( 'div', [
+			$buttonScale,
+			$buttonModal,
+			$buttonOpen
+		], ['class' => 'btn-group'] );
+
+		$iframe	= HtmlTag::create('iframe', '', [
+			'src'			=> $urlPreview,
+			'frameborder'	=> '0',
+		] );
+
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
 				HtmlTag::create( 'span', 'HTML-Vorschau' ),
-				HtmlTag::create( 'div', [
-					HtmlTag::create( 'div', [
-						HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [
-							'type'			=> 'button',
-							'class'			=> 'btn btn-mini',
-							'onclick'		=> 'ModuleWorkNewsletter.toggleScaled(this);',
-						] ),
-						HtmlTag::create( 'button', '<i class="fa fa-fw fa-window-maximize"></i><!--&nbsp;Ansicht-->', [
-							'type'			=> 'button',
-							'class'			=> 'btn not-btn-info btn-mini',
-							'data-toggle'	=> 'modal',
-							'data-target'	=> '#modal-preview',
-							'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-						] ),
-						HtmlTag::create( 'a', '<i class="fa fa-fw fa-external-link"></i><!--&nbsp;Tab-->', [
-							'href'			=> $urlPreview,
-							'class'			=> 'btn btn-mini',
-							'target'		=> '_modal-preview_',
-						] )
-					], ['class' => 'btn-group'] )
-				], ['style' => 'float: right'] ),
+				HtmlTag::create( 'div', $buttons, ['style' => 'float: right'] ),
 			] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
-						HtmlTag::create( 'div', [
-							HtmlTag::create('iframe', '', [
-								'src'			=> $urlPreview,
-								'frameborder'	=> '0',
-							] )
-						], ['class' => 'newsletter-preview-iframe-container'] ),
+						HtmlTag::create( 'div', $iframe, ['class' => 'newsletter-preview-iframe-container'] ),
 					], ['class' => 'newsletter-preview-container'] ),
 				], ['class' => 'newsletter-preview '.$this->class] ),
 			], ['class' => 'content-panel-inner'] )
@@ -114,35 +117,37 @@ class View_Helper_Work_Newsletter_Preview
 		if( self::MODE_NEWSLETTER === $this->mode )
 			$urlPreview	= './work/newsletter/preview/text/'.$this->resource->newsletterId;
 
+		$buttonScale	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [
+			'type'			=> 'button',
+			'class'			=> 'btn btn-mini',
+			'onclick'		=> 'ModuleWorkNewsletter.toggleScaled(this);',
+		] );
+		$buttonModal	= HtmlTag::create( 'button', '<i class="fa fa-fw fa-window-maximize"></i><!--&nbsp;Ansicht-->', [
+			'type'			=> 'button',
+			'class'			=> 'btn not-btn-info btn-mini',
+			'data-toggle'	=> 'modal',
+			'data-target'	=> '#modal-preview',
+			'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
+		] );
+		$buttons	= HtmlTag::create( 'div', [
+			$buttonScale,
+			$buttonModal,
+		], ['class' => 'btn-group'] );
+
+		$iframe		= HtmlTag::create('iframe', '', [
+			'src'			=> $urlPreview,
+			'frameborder'	=> '0',
+		] );
+
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
 				HtmlTag::create( 'span', 'Text-Vorschau' ),
-				HtmlTag::create( 'div', [
-					HtmlTag::create( 'div', [
-						HtmlTag::create( 'button', '<i class="fa fa-fw fa-mobile fa-mobile-alt"></i>&nbsp;<i class="fa fa-fw fa-tablet"></i>&nbsp;<i class="fa fa-fw fa-desktop"></i>', [
-							'type'			=> 'button',
-							'class'			=> 'btn btn-mini',
-							'onclick'		=> 'ModuleWorkNewsletter.toggleScaled(this);',
-						] ),
-						HtmlTag::create( 'button', '<i class="fa fa-fw fa-window-maximize"></i><!--&nbsp;Ansicht-->', [
-							'type'			=> 'button',
-							'class'			=> 'btn not-btn-info btn-mini',
-							'data-toggle'	=> 'modal',
-							'data-target'	=> '#modal-preview',
-							'onclick'		=> 'ModuleWorkNewsletter.showPreview("'.$urlPreview.'");',
-						] )
-					], ['class' => 'btn-group'] )
-				], ['style' => 'float: right'] ),
+				HtmlTag::create( 'div', $buttons, ['style' => 'float: right'] ),
 			] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', [
-						HtmlTag::create( 'div', [
-							HtmlTag::create('iframe', '', [
-								'src'			=> $urlPreview,
-								'frameborder'	=> '0',
-							] )
-						], ['class' => 'newsletter-preview-iframe-container'] ),
+						HtmlTag::create( 'div', $iframe, ['class' => 'newsletter-preview-iframe-container'] ),
 					], ['class' => 'newsletter-preview-container'] ),
 				], ['class' => 'newsletter-preview '.$this->class] ),
 			], ['class' => 'content-panel-inner'] )

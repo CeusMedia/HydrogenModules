@@ -31,7 +31,7 @@ $helperUpload->setLabel( $iconFile );
 $helperUpload->setRequired( TRUE );
 
 return '
-<form action="./work/newsletter/group/import/csv" method="post" enctype="multipart/form-data">
+<form action="./work/newsletter/group/import" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="groupId" value="'.( $groupId ?? 0 ).'"/>
 	<div id="modalImportCsv" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
@@ -46,12 +46,12 @@ return '
 						<label class="control-label"><strong>Import-Modus</strong></label>
 						<div class="controls radio-group">
 							<label class="radio radio-block">
-								<input type="radio" name="import_mode" value="1" checked="checked">
+								<input type="radio" name="import_mode" value="'.Controller_Work_Newsletter_Group::IMPORT_MODE_ADDITIONAL.'" checked="checked">
 								<span>Zusätzlicher Import</span><br>
 								<span class="muted">Bestehende Abonnenten bleiben bestehen.</span>
 							</label>
 							<label class="radio radio-block">
-								<input type="radio" name="import_mode" value="2">
+								<input type="radio" name="import_mode" value="'.Controller_Work_Newsletter_Group::IMPORT_MODE_FRESH.'">
 								<span>Frischer Import</span><br>
 								<span class="muted">Die Liste wird vor dem Import gelöscht.</span>
 							</label>
@@ -69,8 +69,15 @@ return '
   				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
-					<label for="input_upload">CSV-Exportdatei</label>
+				<div class="span3">
+					<label for="input_format" class="mandatory">Format / Quelle</label>
+					<select name="format" id="input_format" class="span12">
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_DEFAULT.'">intern</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_SEMCO.'">Semco XLS</option>
+					</select>
+  				</div>
+				<div class="span9">
+					<label for="input_upload">Importdatei</label>
 					'.$helperUpload->render().'
 				</div>
 			</div>
