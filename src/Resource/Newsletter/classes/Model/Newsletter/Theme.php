@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\XML\Converter as XmlConverter;
 use CeusMedia\Common\XML\ElementReader as XmlElementReader;
 use CeusMedia\HydrogenFramework\Environment;
 
@@ -50,6 +51,7 @@ class Model_Newsletter_Theme
 	 *	@param		string		$templateId
 	 *	@param		array		$data
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function createFromTemplate( string $templateId, array $data ): void
 	{
@@ -105,15 +107,19 @@ class Model_Newsletter_Theme
 			$this->env->getMessenger()->noteFailure( $error );
 	}
 
+	/**
+	 *	@param		string		$theme
+	 *	@return		Entity_Newsletter_Theme
+	 */
 	public function get( string $theme ): Entity_Newsletter_Theme
 	{
 		return $this->getFromFolder( $theme );
 	}
 
 	/**
-	 * @return Entity_Newsletter_Theme[]
-	 * @throws UnexpectedValueException if the path cannot be opened.
-	 * @throws RuntimeException if the path is an empty string.
+	 *	@return		Entity_Newsletter_Theme[]
+	 *	@throws		UnexpectedValueException	if the path cannot be opened.
+	 *	@throws		RuntimeException			if the path is an empty string.
 	 */
 	public function getAll(): array
 	{
@@ -135,6 +141,10 @@ class Model_Newsletter_Theme
 		return $list;
 	}
 
+	/**
+	 *	@param		string		$theme
+	 *	@return		Entity_Newsletter_Theme
+	 */
 	public function getFromFolder( string $theme ): Entity_Newsletter_Theme
 	{
 		if( file_exists( $this->themePath.$theme.'/template.json' ) )
@@ -156,6 +166,10 @@ class Model_Newsletter_Theme
 
 	//  --  PROTECTED  --  //
 
+	/**
+	 *	@param		string		$theme
+	 *	@return		Entity_Newsletter_Theme
+	 */
 	protected function getFromFolderJson( string $theme ): Entity_Newsletter_Theme
 	{
 		$json	= file_get_contents( $this->themePath.$theme.'/template.json' );
@@ -175,6 +189,11 @@ class Model_Newsletter_Theme
 		return $entity;
 	}
 
+	/**
+	 *	@param		string		$theme
+	 *	@return		Entity_Newsletter_Theme
+	 *	@throws		Exception
+	 */
 	protected function getFromFolderXml( string $theme ): Entity_Newsletter_Theme
 	{
 		$xml	= XmlElementReader::readFile( $this->themePath.$theme.'/template.xml' );
@@ -214,7 +233,7 @@ class Model_Newsletter_Theme
 
 		$xml->addChild( 'id', $theme );
 		$entity	= new Entity_Newsletter_Theme();
-		$object	= \CeusMedia\Common\XML\Converter::toPlainObject( $xml );
+		$object	= XmlConverter::toPlainObject( $xml );
 		foreach( $object as $key => $value )
 			$entity->$key	= $value;
 		$entity->folder	= $theme;

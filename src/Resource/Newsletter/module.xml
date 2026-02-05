@@ -9,7 +9,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.4</version>
+	<version>0.5.6</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -36,10 +36,22 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 	<log version="0.5.2">Add config for themes path.</log>
     <log version="0.5.3">Add tester flag in reader model.</log>
     <log version="0.5.4">Add models for links and click tracking.</log>
+    <log version="0.5.5">Add first entity classes.</log>
+    <log version="0.5.6">Finish implementation of entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
 	<files>
+		<class>Entity/Newsletter.php</class>
+		<class>Entity/Newsletter/Group.php</class>
+		<class>Entity/Newsletter/Link.php</class>
+		<class>Entity/Newsletter/Queue.php</class>
+		<class>Entity/Newsletter/Reader.php</class>
+		<class>Entity/Newsletter/Reader/Group.php</class>
+		<class>Entity/Newsletter/Reader/Letter.php</class>
+		<class>Entity/Newsletter/Reader/Letter/Link.php</class>
+		<class>Entity/Newsletter/Template.php</class>
+		<class>Entity/Newsletter/Theme.php</class>
 		<class>Logic/Newsletter.php</class>
 		<class>Mail/Newsletter.php</class>
 		<class>Model/Newsletter.php</class>
@@ -52,7 +64,6 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 		<class>Model/Newsletter/Reader/Letter/Link.php</class>
 		<class>Model/Newsletter/Template.php</class>
 		<class>Model/Newsletter/Theme.php</class>
-		<class>Entity/Newsletter/Theme.php</class>
 		<class>View/Helper/Newsletter.php</class>
 		<class>View/Helper/Newsletter/Mail.php</class>
 		<class>View/Helper/HtmlToPlainText.php</class>

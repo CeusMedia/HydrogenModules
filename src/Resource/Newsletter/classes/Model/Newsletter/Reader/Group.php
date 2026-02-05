@@ -49,5 +49,8 @@ class Model_Newsletter_Reader_Group extends Model
 		'status',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className			= Entity_Newsletter_Reader_Group::class;
 }

@@ -64,5 +64,8 @@ class Model_Newsletter extends Model
 		'subject',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode				= PDO::FETCH_CLASS;
+
+	/** @var	?string		$className		Entity class to use */
+	protected ?string $className			= Entity_Newsletter::class;
 }
