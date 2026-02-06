@@ -20,6 +20,7 @@ class Entity_Log_Request extends Entity
 	public ?float $responseTime		= NULL;
 	public ?string $responseType	= NULL;
 	public ?string $responseContent	= NULL;
+	public ?string $body			= NULL;
 	public string $timestamp;
 
 	protected static array $mandatoryFields	= [
