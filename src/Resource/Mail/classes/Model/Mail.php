@@ -29,11 +29,47 @@ class Model_Mail extends Model
 	public const STATUS_REPLIED			= 5;
 	public const STATUS_ARCHIVED		= 6;
 
+	public const STATUSES				= [
+		self::STATUS_ABORTED,
+		self::STATUS_FAILED,
+		self::STATUS_RETRY,
+//		self::STATUS_PAUSED,
+		self::STATUS_NEW,
+		self::STATUS_SENDING,
+		self::STATUS_SENT,
+		self::STATUS_RECEIVED,
+		self::STATUS_OPENED,
+		self::STATUS_REPLIED,
+		self::STATUS_ARCHIVED,
+	];
+
 	public const COMPRESSION_UNKNOWN	= 0;
 	public const COMPRESSION_NONE		= 1;
 	public const COMPRESSION_BASE64		= 2;
 	public const COMPRESSION_GZIP		= 3;
 	public const COMPRESSION_BZIP		= 4;
+
+	public const COMPRESSIONS			= [
+		self::COMPRESSION_UNKNOWN,
+		self::COMPRESSION_NONE,
+		self::COMPRESSION_BASE64,
+		self::COMPRESSION_GZIP,
+		self::COMPRESSION_BZIP,
+	];
+
+	public const PRIORITY_LOWEST		= -2;
+	public const PRIORITY_LOW			= -1;
+	public const PRIORITY_DEFAULT		= 0;
+	public const PRIORITY_HIGH			= 1;
+	public const PRIORITY_HIGHEST		= 2;
+
+	public const PRIORITIES				= [
+		self::PRIORITY_LOWEST,
+		self::PRIORITY_LOW,
+		self::PRIORITY_DEFAULT,
+		self::PRIORITY_HIGH,
+		self::PRIORITY_HIGHEST,
+	];
 
 	public static array $transitions	= [
 		self::STATUS_ABORTED	=> [
@@ -88,6 +124,7 @@ class Model_Mail extends Model
 		'senderId',
 		'receiverId',
 		'templateId',
+		'priority',
 		'status',
 		'attempts',
 		'language',
@@ -110,6 +147,7 @@ class Model_Mail extends Model
 		'senderId',
 		'receiverId',
 		'templateId',
+		'priority',
 		'status',
 		'attempts',
 		'language',

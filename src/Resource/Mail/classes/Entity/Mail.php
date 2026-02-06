@@ -13,6 +13,7 @@ class Entity_Mail extends Entity
 	public int|string $senderId			= 0;
 	public int|string $receiverId		= 0;
 	public int|string|NULL $templateId	= 0;
+	public int $priority				= Model_Mail::PRIORITY_DEFAULT;
 	public int $status					= Model_Mail::STATUS_NEW;
 	public int $attempts				= 0;
 	public string $language				= '';

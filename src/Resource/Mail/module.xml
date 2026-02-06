@@ -35,7 +35,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 
 ]]></description>
 	<category>Resource</category>
-	<version>1.1.2</version>
+	<version>1.1.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -109,6 +109,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 	<log version="1.1.0">Use entity for mail model.</log>
 	<log version="1.1.1">Use entity for attachment and template models.</log>
 	<log version="1.1.2">Use new entity base class from framework.</log>
+	<log version="1.1.3">Add mail priority on mail object and queue.</log>
 <!--	<log version="1.1">Code style review and strict type hinting.</log>-->
 <!--	<log version="1.2">Support pausing mails.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
@@ -188,6 +189,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   `senderId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `receiverId` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `templateId` int(10) UNSIGNED NULL DEFAULT '0',
+  `priority` tinyint(1) NOT NULL DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `attempts` smallint(5) UNSIGNED NOT NULL DEFAULT '0',
   `language` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
@@ -206,6 +208,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
   KEY `senderId` (`senderId`),
   KEY `receiverId` (`receiverId`),
   KEY `templateId` (`templateId`),
+  KEY `priority` (`priority`),
   KEY `status` (`status`),
   KEY `attempts` (`attempts`),
   KEY `language` (`language`),
@@ -357,11 +360,17 @@ ALTER TABLE `<%?prefix%>mail_templates` CHANGE `styles` `styles` TEXT CHARACTER 
 ALTER TABLE `<%?prefix%>mail_attachments` CHANGE `countAttached` `countAttached` INT(11) NULL DEFAULT '0';
 	]]></sql>
 	<sql on="update" version="0.8.2" type="mysql"><![CDATA[
-ALTER TABLE  `<%?prefix%>mails` ADD `templateId` INT UNSIGNED NULL DEFAULT '0' AFTER `receiverId` ,
-ADD INDEX ( `templateId` ) ;
+ALTER TABLE  `<%?prefix%>mails`
+  ADD COLUMN `templateId` INT UNSIGNED NULL DEFAULT '0' AFTER `receiverId`,
+  ADD INDEX `templateId` (`templateId`);
 	]]></sql>
 	<sql on="update" version="0.9.1" type="mysql"><![CDATA[
 ALTER TABLE `<%?prefix%>mails` ADD `raw` LONGBLOB NULL AFTER `object`;
+	]]></sql>
+	<sql on="update" version="1.1.3" type="mysql"><![CDATA[
+ALTER TABLE `<%?prefix%>mails`
+  ADD COLUMN `priority` TINYINT(1) NOT NULL DEFAULT '0' AFTER `templateId`,
+  ADD INDEX `priority` (`priority`);
 	]]></sql>
 	<!-- new notation using SQL files, activate later
 	<sql on="install" type="mysql" version="final">install.sql</sql>

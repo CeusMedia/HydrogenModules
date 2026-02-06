@@ -82,6 +82,9 @@ abstract class Mail_Abstract
 	/** @var		int|string				$templateId		ID of template to force to use on rendering of mail contents */
 	protected int|string $templateId		= 0;
 
+	/** @var		int						$priority		Priority to set on mail queue */
+	protected int $priority					= Model_Mail::PRIORITY_DEFAULT;
+
 	/** @var		string					$encodingHtml	Default encoding for HTML */
 	protected string $encodingHtml			= 'quoted-printable';
 
@@ -183,6 +186,17 @@ abstract class Mail_Abstract
 	}
 
 	/**
+	 *	Returns priority to set on mail queue.
+	 *	One of Model_Mail::PRIORITY_*.
+	 *	Default: Model_Mail::PRIORITY_DEFAULT.
+	 *	@return		int
+	 */
+	public function getPriority(): int
+	{
+		return $this->priority;
+	}
+
+	/**
 	 *	Returns set subject of mail.
 	 *	@access		public
 	 *	@return		string		Subject set for mail
@@ -278,6 +292,20 @@ abstract class Mail_Abstract
 	public function setEnv( Environment $env ): static
 	{
 		$this->env		= $env;
+		return $this;
+	}
+
+	/**
+	 *	Set priority to set on mail queue.
+	 *	See Model_Mail::PRIORITY_*.
+	 *	@param		int			$priority
+	 *	@return		static
+	 */
+	public function setPriority( int $priority ): static
+	{
+		if( !in_array( $priority, Model_Mail::PRIORITIES ) )
+			throw new RangeException( 'Invalid priority' );
+		$this->priority	= $priority;
 		return $this;
 	}
 
