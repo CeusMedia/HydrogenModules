@@ -221,6 +221,7 @@ class Logic_Server_Log_Request extends SharedLogic
 			'headers'	=> json_encode( $headers ),
 			'referer'	=> $_SERVER['HTTP_REFERER'] ?? '',
 			'userAgent'	=> $_SERVER['HTTP_USER_AGENT'] ?? '',
+			'body'		=> file_get_contents( "php://input" ) ?: NULL,
 			'timestamp'	=> $date->format( 'Y-m-d H:i:s.u' ),
 		] );
 	}
