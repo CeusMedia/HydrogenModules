@@ -50,6 +50,8 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$inputs	= $data['inputs'] ?? [];
 			$this->filterData( $inputs );
 			$this->checkCaptcha( $form, $inputs );
+			$this->checkIsNotSpam( $form, $inputs );
+
 			$fillId	= $this->createFillFromInputs( $form, $inputs );
 			$this->applyActionsOnCreatedFill( $form, $fillId );
 
@@ -183,6 +185,29 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			throw new Exception( 'Invalid form ID given.' );
 
 		return $formId;
+	}
+
+	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		array			$inputs
+	 *	@param		bool			$strict		Flag: throw exception if is SPAM and strict mode (default)
+	 *	@return		bool
+	 *	@throws		ReflectionException
+	 */
+	protected function checkIsNotSpam( Entity_Form $form, array & $inputs, bool $strict = TRUE ): bool
+	{
+		$payload	= [
+			'form'		=> $form,
+			'inputs'	=> $inputs,
+			'isSpam'	=> FALSE,
+		];
+		$this->env->getCaptain()->callHookWithPayload( 'Form:Fill', 'checkSpam', $this, $payload );
+
+		if( !$payload['isSpam'] )
+			return TRUE;
+		if( $strict )
+			throw new RuntimeException( 'SPAM detected' );
+		return FALSE;
 	}
 
 	/**
