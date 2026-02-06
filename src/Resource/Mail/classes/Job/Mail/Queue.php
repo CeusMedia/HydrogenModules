@@ -40,7 +40,11 @@ class Job_Mail_Queue extends Job_Abstract
 			],
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		];
-		$orders		= ['status' => 'ASC', 'mailId' => 'ASC'];		//  FIFO
+		$orders		= [
+			'status'	=> 'ASC',		//  order: NEW, RETRY
+			'priority'	=> 'DESC',		//  order: HIGHEST, HIGH, DEFAULT, LOW, LOWEST
+			'mailId'	=> 'ASC'		//  FIFO
+		];
 		$count		= $this->logic->countQueue( $conditions );
 
 		if( $this->dryMode ){

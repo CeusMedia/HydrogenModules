@@ -429,10 +429,11 @@ class Logic_Mail extends Logic
 			throw new InvalidArgumentException( 'Receiver object is missing "email"' );
 
 		$mailDataObject		= Entity_Mail::fromArray( [
-			'templateId'		=> $mail->getTemplateId(),
 			'senderId'			=> (int) $senderId,
-			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
 			'receiverId'		=> $receiver->userId ?? 0,
+			'templateId'		=> $mail->getTemplateId(),
+			'priority'			=> $mail->getPriority(),
+			'senderAddress'		=> $mail->mail->getSender()->getAddress(),
 			'receiverAddress'	=> $receiver->email,
 			'receiverName'		=> $receiver->username ?? NULL,
 			'language'			=> strtolower( trim( $language ) ),
@@ -682,7 +683,7 @@ class Logic_Mail extends Logic
 	 *	Send prepared mail right now.
 	 *	@access		public
 	 *	@param		int|string		$mailId
-	 *	@param		boolean		$forceResent	Flag: send mail again although last attempt was successful
+	 *	@param		boolean			$forceResent	Flag: send mail again although last attempt was successful
 	 *	@return		boolean
 	 *	@throws		RuntimeException			if mail already has been sent or enqueued
 	 *	@todo		use logging on exception (=sending mail failed)
