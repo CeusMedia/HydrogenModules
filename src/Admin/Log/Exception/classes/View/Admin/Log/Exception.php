@@ -175,17 +175,18 @@ class View_Admin_Log_Exception extends View
 	{
 		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
 		$realPath	= preg_replace( '@admin/?$@', '', realpath( $exceptionEnv['uri'] ) );
+		$realPath	= rtrim( $realPath, '/' ).'/';
 
 		if( isset( $exception->traceAsHtml ) )
 			$trace	= $exception->traceAsHtml;
 		else if( isset( $exception->traceAsString ) ){
 			$trace	= $exception->traceAsString;
-			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ./', $trace );
+			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ', $trace );
 			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
 		}
 		else{
 			$trace	= $exception->trace;
-			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ./', $trace );
+			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ', $trace );
 			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
 		}
 		return HtmlTag::create( 'h4', 'Stack Trace' ).$trace;

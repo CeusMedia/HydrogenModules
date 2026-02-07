@@ -13,9 +13,9 @@ class Hook_Work_Notification extends Hook
 
 		try{
 			$logicAuth		= Logic_Authentication::getInstance( $this->env );
-			$roleId			= $logicAuth->getCurrentRoleId();
 			if( !$logicAuth->isAuthenticated() )
 				return FALSE;
+			$roleId			= $logicAuth->getCurrentRoleId();
 			if( !$this->env->getAcl()->hasRight( $roleId, 'work/notification', 'view' ) )
 				return FALSE;
 
