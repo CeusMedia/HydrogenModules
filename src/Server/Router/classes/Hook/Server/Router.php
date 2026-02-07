@@ -45,7 +45,7 @@ class Hook_Server_Router extends Hook
 					exit;
 				}
 				if( (int) $route->code >= 300 )
-					self::restart( $env, $env->url.$route->target, FALSE, $route->code );
+					self::restart( $env, $env->url.$route->target, $route->code, $route->code );
 				else{
 					$request->set( '__path', $route->target );
 					self::redirect( $env, $route->target, 'index' );
