@@ -259,7 +259,7 @@ class Logic_Download extends Logic
 		while( $folderId ){
 			$folder	= $this->modelFolder->get( $folderId );
 			if( NULL === $folder )
-				throw new RuntimeException( 'Invalid folder ID: %s', $folderId );
+				throw new RuntimeException( sprintf( 'Invalid folder ID: %s', $folderId ) );
 			$path		= $folder->title.'/'.$path;
 			$folderId	= $folder->parentId;
 		}
