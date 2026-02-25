@@ -26,13 +26,13 @@ let FormEditor = {
 		});
 		textarea.data('ace-editor', editor);*/
 	},
-	initTabs: function(){
+	initTabs: function(formId){
 		jQuery("#tabs-form>li>a").on("click", function(){
 			let tabId = jQuery(this).attr("href").replace(/^#/, "");
 			jQuery.ajax({
-				url: "./manage/form/setTab/'.$form->formId.'/"+tabId
+				url: "./ajax/manage/form/setTab/"+formId+"/"+tabId
 			});
-		})
+		});
 	}
 };
 

@@ -6,8 +6,22 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as Controller;
 class Controller_Ajax_Manage_Form extends Controller
 {
 	/**
+	 *	@param		string		$formId
+	 *	@param		string		$tabId
 	 *	@return		void
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 */
+	public function setTab( string $formId, string $tabId ): void
+	{
+		$this->session->set( 'manage_forms_tab', $tabId );
+		$this->respondData( 'ok' );
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function testTransferRules(): void
 	{

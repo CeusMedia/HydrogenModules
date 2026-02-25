@@ -91,7 +91,7 @@ jQuery(document).ready(function(){
 	let formId = '.$form->formId.';
 	RuleManager.init(formId);
 	RuleManager.loadFormView();
-	FormEditor.initTabs();
+	FormEditor.initTabs(formId);
 	FormEditor.applyAceEditor("#input_content");
 });
 </script>';
