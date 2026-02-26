@@ -10,5 +10,5 @@ class Entity_Newsletter_Group extends Entity
 	public int $type						= Model_Newsletter_Group::TYPE_DEFAULT;
 	public string $title					= '';
 	public int $createdAt					= 0;
-	public int $modifiedAt					= 0;
+	public ?int $modifiedAt					= NULL;
 }

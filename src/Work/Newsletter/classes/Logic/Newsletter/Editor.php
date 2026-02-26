@@ -216,6 +216,18 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 			if( !$this->getGroupsOfReader( $reader->newsletterReaderId ) )
 				$this->modelReader->remove( $reader->newsletterReaderId );
 		}
+		if( $this->useUserGroupRelations ){
+			$logic	= Logic_GroupRelation::getInstance( $this->env );
+			$groups	= $logic->getGroups( 'Resource_Newsletter.Group', $groupId );
+			foreach( $groups as $group )
+				$logic->removeModuleEntityRelation(
+					$group->groupId,
+					'Resource_Newsletter.Group',
+					$groupId
+				);
+		}
+
+
 		return $this->modelGroup->remove( $groupId );
 	}
 

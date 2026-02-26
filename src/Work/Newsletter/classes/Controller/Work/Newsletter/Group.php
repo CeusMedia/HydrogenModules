@@ -303,6 +303,6 @@ class Controller_Work_Newsletter_Group extends Controller
 		$logicRelation		= Logic_GroupRelation::getInstance( $this->env );
 		$relatedGroupIds	= $this->request->get( 'relationGroupIds' );
 		foreach( $relatedGroupIds as $relatedGroupId )
-			$logicRelation->addModuleEntityRelation( $groupId, 'Resource_Newsletter.Group', $relatedGroupId );
+			$logicRelation->addModuleEntityRelation( $relatedGroupId, 'Resource_Newsletter.Group', $groupId );
 	}
 }

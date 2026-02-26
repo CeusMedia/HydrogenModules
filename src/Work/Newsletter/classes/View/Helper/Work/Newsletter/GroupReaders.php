@@ -56,6 +56,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 		$w			= (object) $this->words['edit_readers'];
 
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
+		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
 		$iconNew		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-star'] ).'&nbsp;';
 		$iconReady		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 		$iconGone		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-unlink'] ).'&nbsp;';
@@ -86,8 +87,9 @@ class View_Helper_Work_Newsletter_GroupReaders
 			$attributes		= [
 				'href'		=> $urlRemove,
 				'class'		=> 'btn btn-mini btn-inverse',
+				'title'		=> $w->buttonRemove,
 			];
-			$linkRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, $attributes );
+			$linkRemove		= HtmlTag::create( 'a', $iconRemove, $attributes );
 			$linkRemove		= HtmlTag::create( 'div', $linkRemove, ['class' => 'pull-right'] );
 
 			$status			= $helperStatus->setStatus( $reader->status )->render();
@@ -99,7 +101,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 			] );
 		}
 		$numberBadge	= HtmlTag::create( 'span', '('.count( $this->readers ).')', ['class' => 'muted'] );
-		$colgroup		= HtmlElements::ColumnGroup( '', '', '100px', '120px' );
+		$colgroup		= HtmlElements::ColumnGroup( '', '', '100px', '40px' );
 		$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser '.$numberBadge] );
 		$thead			= HtmlTag::create( 'thead', $tableHeads );
 		$tbody			= HtmlTag::create( 'tbody', $list );

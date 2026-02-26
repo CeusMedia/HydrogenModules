@@ -73,7 +73,7 @@ class Logic_GroupRelation extends Logic
 	/**
 	 *	@param		ModuleDefinition|string		$module
 	 *	@param		int|string					$entityId
-	 *	@return		array
+	 *	@return		array<int|string,Entity_Group>
 	 *	@throws		ReflectionException
 	 */
 	public function getGroups( ModuleDefinition|string $module, int|string $entityId ): array
