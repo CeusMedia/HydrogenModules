@@ -12,7 +12,7 @@ class Entity_Newsletter extends Entity
 	public string $senderName					= '';
 	public string $title						= '';
 	public string $subject						= '';
-	public string $description					= '';
+	public ?string $description					= NULL;
 	public string $heading						= '';
 	public int $generatePlain					= 0;
 	public string $trackingCode					= '';
@@ -20,6 +20,6 @@ class Entity_Newsletter extends Entity
 	public string $html							= '';
 //	public string $attachments;
 	public int $createdAt						= 0;
-	public int $modifiedAt						= 0;
-	public int $sentAt							= 0;
+	public ?int $modifiedAt						= NULL;
+	public ?int $sentAt							= NULL;
 }

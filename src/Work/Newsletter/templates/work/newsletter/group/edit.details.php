@@ -47,7 +47,7 @@ if( $canRemove ){
 		'class'		=> 'btn btn-danger btn-small',
 		'onclick'	=> "if(!confirm('Wirklich?')) return false;",
 	] );
-	if( !$groupReaders )
+	if( $groupReaders )
 		$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 			'href'		=> './work/newsletter/group/remove/'.$groupId,
 			'class'		=> 'btn btn-danger btn-small',
