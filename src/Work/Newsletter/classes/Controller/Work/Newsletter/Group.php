@@ -87,10 +87,10 @@ class Controller_Work_Newsletter_Group extends Controller
 		$readers	= $this->logic->getReadersOfGroup( $groupId, [], $orders );
 		$this->addData( 'groupReaders', $readers );
 
-		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relate' ) );
-		$this->addData( 'canExport', $this->env->getAcl()->has( 'manage/group', 'export' ) );
-		$this->addData( 'canImport', $this->env->getAcl()->has( 'manage/group', 'import' ) );
-		$this->addData( 'canRemove', $this->env->getAcl()->has( 'manage/group', 'remove' ) );
+		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relation' ) );
+		$this->addData( 'canExport', $this->env->getAcl()->has( 'work/newsletter/group', 'export' ) );
+		$this->addData( 'canImport', $this->env->getAcl()->has( 'work/newsletter/group', 'import' ) );
+		$this->addData( 'canRemove', $this->env->getAcl()->has( 'work/newsletter/group', 'remove' ) );
 
 	}
 

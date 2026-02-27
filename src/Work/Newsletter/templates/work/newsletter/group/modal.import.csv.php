@@ -36,12 +36,11 @@ return '
 	<div id="modalImportCsv" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">CSV-Exportdatei importieren</h3>
+			<h3 id="myModalLabel">CSV-Liste oder Excel-Datei importieren</h3>
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
 				<div class="span12">
-
 					<div class="control-group">
 						<label class="control-label"><strong>Import-Modus</strong></label>
 						<div class="controls radio-group">
@@ -72,8 +71,8 @@ return '
 				<div class="span3">
 					<label for="input_format" class="mandatory">Format / Quelle</label>
 					<select name="format" id="input_format" class="span12">
-						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_DEFAULT.'">intern</option>
-						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_SEMCO.'">Semco XLS</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_DEFAULT.'">CSV-Liste</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_SEMCO.'">Excel-Datei</option>
 					</select>
   				</div>
 				<div class="span9">

@@ -37,55 +37,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 */
 	public function add(): void
 	{
-		$words		= (object) $this->getWords( 'add' );
-		if( $this->request->has( 'save' ) ){
-			$data		= $this->request->getAll();
-			$groupIds	= $this->request->get( 'groupIds' );
-			$groupIds	= is_array( $groupIds ) ? $groupIds : [];
-			if( !strlen( trim( $data['email'] ) ) )
-				$this->messenger->noteError( $words->msgErrorMailMissing );
-			else if( !strlen( trim( $data['firstname'] ) ) )
-				$this->messenger->noteError( $words->msgErrorFirstnameMissing );
-			else if( !strlen( trim( $data['surname'] ) ) )
-				$this->messenger->noteError( $words->msgErrorSurnameMissing );
-			else{
-				$readerId	= $this->logic->addReader( $this->request->getAll() );
-				$reader		= $this->logic->getReader( $readerId );
-				$this->messenger->noteSuccess( $words->msgSuccess );
-				$groups		= [];
-				if( $groupIds ){
-					foreach( $groupIds as $groupId ){
-						$this->logic->addReaderToGroup( $readerId, $groupId );
-						$groups[]	= $this->logic->getGroup( $groupId );
-					}
-				}
-				$data	= [
-					'readerId'	=> $readerId,
-					'reader'	=> $reader,
-					'groups'	=> $groups,
-				];
-				$status	= (int) $this->request->get( 'status' );
-				if( $this->request->has( 'inform' ) || $status === Model_Newsletter_Reader::STATUS_REGISTERED ){
-					$mail	= new Mail_Work_Newsletter_Invite( $this->env, $data );
-					if( $status === Model_Newsletter_Reader::STATUS_CONFIRMED )
-						$mail	= new Mail_Work_Newsletter_Add( $this->env, $data );
-					$receiver	= (object) [
-						'username'	=> $this->request->get( 'firstname' ).' '.$this->request->get( 'surname' ),
-						'email'		=> $this->request->get( 'email' ),
-					];
-					$language		= $this->env->getLanguage()->getLanguage();
-					$logicMail		= Logic_Mail::getInstance( $this->env );
-					$logicMail->appendRegisteredAttachments( $mail, $language );
-					$logicMail->handleMail( $mail, $receiver, $language );
-				}
+		$this->handleAddPostRequest();
 
-				$this->restart( match( strtolower( $this->request->get( 'nextAction' ) ) ){
-					'add'		=> 'add',
-					'edit'		=> 'edit/'.$readerId,
-					default		=> NULL,
-				}, TRUE );
-			}
-		}
 		$reader		= (object) [
 			'status'		=> $this->request->get( 'status' ),
 			'gender'		=> $this->request->get( 'gender' ),
@@ -127,6 +80,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@param		int|string			$readerId
 	 *	@param		int|string|NULL		$groupId
 	 *	@return		void
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and strict mode
+	 *	@throws		ReflectionException
 	 */
 	public function addGroup( int|string $readerId, int|string|NULL $groupId = NULL ): void
 	{
@@ -139,7 +94,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $readerId ): void
 	{
@@ -163,7 +118,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		string		$mode
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function export( string $mode = 'csv' ): void
 	{
@@ -194,13 +149,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 		$filterOrder	= ['email' => 'ASC'];
 
-		$statuses		= [
-			-2	=> 'deactivated',
-			-1	=> 'unregistered',
-			0	=> 'registered',
-			1	=> 'confirmed',
-		];
-
 		$readers		= $this->logic->getReaders( $conditions, $filterOrder );
 		switch( strtolower( $mode ) ){
 			case 'list':
@@ -218,49 +166,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 				print( HtmlTag::create( 'xmp', join( ', ', $list ) ) );
 				exit;
 			case 'csv':
-				$headers	= [
-					'nr'			=> NULL,
-					'id'			=> NULL,
-					'email'			=> TRUE,
-					'status'		=> TRUE,
-					'gender'		=> TRUE,
-					'prefix'		=> TRUE,
-					'firstname'		=> TRUE,
-					'surname'		=> TRUE,
-					'institution'	=> TRUE,
-					'groups'		=> TRUE,
-					'registeredAt'	=> TRUE,
-				];
-				$data	= [join( ';', array_keys( $headers ) )];
-				foreach( array_values( $readers ) as $nr => $reader ){
-					$row	= [];
-					foreach( $headers as $header => $toBeQuoted ){
-						$value	= $reader->$header ?? '';
-						if( $header === 'nr' )
-							$value	= $nr + 1;
-						else if( $header === 'id' )
-							$value	= $reader->newsletterReaderId;
-						else if( $header === 'registeredAt' )
-							$value	= date( 'Y-m-d H:i:s', $reader->registeredAt );
-						else if( $header == 'gender' )
-		 					$value	= $reader->gender == 2 ? 'male' : 'female';
-						else if( $header == 'status' )
-		 					$row[]	= $statuses[$reader->status];
-						else if( $header === 'groups' ){
-							$list	= [];
-							foreach( $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], [], FALSE ) as $group )
-								$list[]	= $group->title;
-							$value	= join( ',', $list );
-						}
-
-						if( $toBeQuoted !== NULL )
-							$value	= $toBeQuoted ? '"'.$value.'"' : $value;
-						$row[]	= $value;
-					}
-					$data[]	= join( ';', $row );
-				}
-				$csv	= join( PHP_EOL, $data ).PHP_EOL;
-				HttpDownload::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv" );
+				$this->exportAsCsvDownload( $readers );
+				
 		}
 	}
 
@@ -286,6 +193,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		string		$mode
 	 *	@return		void
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and strict mode
+	 *	@throws		ReflectionException
 	 */
 	public function import( string $mode = 'csv' ): void
 	{
@@ -324,21 +233,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 				$upload		= new Logic_Upload( $this->env );
 				try{
 					$upload->setUpload( $this->request->get( 'upload' ) );
-					$upload->saveTo( $fileName );
-					$reader	= new CsvFileReader( $fileName, TRUE );
-					$csv	= $reader->toArray();
-					foreach( $csv as $entry ){
-						$conditions	= ['email' => strtolower( $entry['email'] )];
-						$existing	= $this->logic->getReaders( $conditions );						//  get others by address
-						if( $existing )																//  address is already existing
-							$readerId	= $existing[0]->newsletterReaderId;							//  get ID of existing reader
-						else																		//  new reader
-							$readerId	= $this->logic->addReader( $entry );						//  add to database
-						$this->logic->addReaderToGroup( $readerId, $groupId );						//  add reader to group
-					}
-					$this->messenger->noteSuccess( 'Added '.count( $csv ).' readers to this group.' );
+					$nrImported	= $this->importFromCsvUpload( $upload, $groupId );
+					$this->messenger->noteSuccess( 'Added '.$nrImported.' readers to this group.' );
 				}
 				catch( Exception $e ){
+					$this->env->getLog()->logException( $e );
 					$this->messenger->noteFailure( 'Error: '.$e->getMessage() );
 				}
 				break;
@@ -350,7 +249,6 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 *	@param		?int		$page
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function index( ?int $page = NULL ): void
 	{
@@ -436,14 +334,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 
 		$this->addData( 'canImport', $this->env->getAcl()->has( 'work/newsletter/reader', 'import' ) );
 		$this->addData( 'canExport', $this->env->getAcl()->has( 'work/newsletter/reader', 'export' ) );
-
-
 	}
 
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function remove( int|string $readerId ): void
 	{
@@ -492,5 +387,154 @@ class Controller_Work_Newsletter_Reader extends Controller
 
 		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
 		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
+	}
+
+	/**
+	 *	@param		array<int|string,Entity_Newsletter_Reader>	$readers
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
+	protected function exportAsCsvDownload( array $readers ): void
+	{
+		$headers	= [
+			'nr'			=> NULL,
+			'id'			=> NULL,
+			'email'			=> TRUE,
+			'status'		=> TRUE,
+			'gender'		=> TRUE,
+			'prefix'		=> TRUE,
+			'firstname'		=> TRUE,
+			'surname'		=> TRUE,
+			'institution'	=> TRUE,
+			'groups'		=> TRUE,
+			'registeredAt'	=> TRUE,
+		];
+		$statuses		= [
+			Model_Newsletter_Reader::STATUS_DEACTIVATED		=> 'deactivated',
+			Model_Newsletter_Reader::STATUS_UNREGISTERED	=> 'unregistered',
+			Model_Newsletter_Reader::STATUS_REGISTERED		=> 'registered',
+			Model_Newsletter_Reader::STATUS_CONFIRMED		=> 'confirmed',
+		];
+		$data	= [join( ';', array_keys( $headers ) )];
+		/**
+		 * @var int $nr
+		 * @var Entity_Newsletter_Reader $reader
+		 */
+		foreach( array_values( $readers ) as $nr => $reader ){
+			$row	= [];
+			foreach( $headers as $header => $toBeQuoted ){
+				$value	= $reader->$header ?? '';
+				if( $header === 'nr' )
+					$value	= $nr + 1;
+				else if( $header === 'id' )
+					$value	= $reader->newsletterReaderId;
+				else if( $header === 'registeredAt' )
+					$value	= date( 'Y-m-d H:i:s', $reader->registeredAt );
+				else if( $header == 'gender' )
+					$value	= $reader->gender == 2 ? 'male' : 'female';
+				else if( $header == 'status' )
+					$row[]	= $statuses[$reader->status];
+				else if( $header === 'groups' ){
+					$list	= [];
+					foreach( $this->logic->getGroupsOfReader( $reader->newsletterReaderId, [], [], FALSE ) as $group )
+						$list[]	= $group->title;
+					$value	= join( ',', $list );
+				}
+
+				if( $toBeQuoted !== NULL )
+					$value	= $toBeQuoted ? '"'.$value.'"' : $value;
+				$row[]	= $value;
+			}
+			$data[]	= join( ';', $row );
+		}
+		$csv	= join( PHP_EOL, $data ).PHP_EOL;
+		HttpDownload::sendString( $csv, "export_".date( "Y-m-d_H:i:s" ).".csv" );
+	}
+
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function handleAddPostRequest(): void
+	{
+		if( !$this->request->has( 'save' ) )
+			return;
+		$words		= (object) $this->getWords( 'add' );
+		$data		= $this->request->getAll();
+		$groupIds	= $this->request->get( 'groupIds' );
+		$groupIds	= is_array( $groupIds ) ? $groupIds : [];
+		if( '' === trim( $data['email'] ) ){
+			$this->messenger->noteError( $words->msgErrorMailMissing );
+			return;
+		}
+		if( '' === trim( $data['firstname'] ) ){
+			$this->messenger->noteError( $words->msgErrorFirstnameMissing );
+			return;
+		}
+		if( '' === trim( $data['surname'] ) ){
+			$this->messenger->noteError( $words->msgErrorSurnameMissing );
+			return;
+		}
+
+		$readerId	= $this->logic->addReader( $this->request->getAll() );
+		$reader		= $this->logic->getReader( $readerId );
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$groups		= [];
+		if( $groupIds ){
+			foreach( $groupIds as $groupId ){
+				$this->logic->addReaderToGroup( $readerId, $groupId );
+				$groups[]	= $this->logic->getGroup( $groupId );
+			}
+		}
+		$data	= [
+			'readerId'	=> $readerId,
+			'reader'	=> $reader,
+			'groups'	=> $groups,
+		];
+		$status	= (int) $this->request->get( 'status' );
+		if( Model_Newsletter_Reader::STATUS_REGISTERED === $status || $this->request->has( 'inform' ) ){
+			$mail	= new Mail_Work_Newsletter_Invite( $this->env, $data );
+			if( Model_Newsletter_Reader::STATUS_CONFIRMED === $status )
+				$mail	= new Mail_Work_Newsletter_Add( $this->env, $data );
+			$receiver	= (object) [
+				'username'	=> $this->request->get( 'firstname' ).' '.$this->request->get( 'surname' ),
+				'email'		=> $this->request->get( 'email' ),
+			];
+			$language		= $this->env->getLanguage()->getLanguage();
+			$logicMail		= Logic_Mail::getInstance( $this->env );
+			$logicMail->appendRegisteredAttachments( $mail, $language );
+			$logicMail->handleMail( $mail, $receiver, $language );
+		}
+		$this->restart( match( strtolower( $this->request->get( 'nextAction' ) ) ){
+			'add'		=> 'add',
+			'edit'		=> 'edit/'.$readerId,
+			default		=> NULL,
+		}, TRUE );
+	}
+
+	/**
+	 *	@param		Logic_Upload	$upload
+	 *	@param		int|string		$groupId
+	 *	@return		int
+	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and strict mode
+	 *	@throws		ReflectionException
+	 */
+	protected function importFromCsvUpload( Logic_Upload $upload, int|string $groupId ): int
+	{
+		$fileName	= 'import_'.date( 'Y-m-d:H:i:s' ).'.csv';
+		$upload->saveTo( $fileName );
+		$reader	= new CsvFileReader( $fileName, TRUE );
+		$csv	= $reader->toArray();
+		foreach( $csv as $entry ){
+			$conditions	= ['email' => strtolower( $entry['email'] )];
+			$existing	= $this->logic->getReaders( $conditions );						//  get others by address
+			if( $existing )																//  address is already existing
+				$readerId	= $existing[0]->newsletterReaderId;							//  get ID of existing reader
+			else																		//  new reader
+				$readerId	= $this->logic->addReader( $entry );						//  add to database
+			$this->logic->addReaderToGroup( $readerId, $groupId );						//  add reader to group
+		}
+		return count( $csv );
 	}
 }
