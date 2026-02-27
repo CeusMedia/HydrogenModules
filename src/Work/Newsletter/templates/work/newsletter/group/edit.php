@@ -47,7 +47,7 @@ if( $canExport ){
 		<h3>Import</h3>
 		<div class="content-panel-inner">
 			<p>
-				CSV-Listen lassen sich in die Liste importieren.<br/>
+				CSV-Listen oder Excel-Dateien lassen sich in die Liste importieren.<br/>
 			</p>
 			<div class="buttonbar">
 				'.$buttonImport.'

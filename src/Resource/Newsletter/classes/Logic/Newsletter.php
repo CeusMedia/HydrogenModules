@@ -265,7 +265,7 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		array<int|string,Entity_Newsletter_Group>
 	 *	@throws		ReflectionException
 	 */
 	public function getGroups( array $conditions = [], array $orders = [], array $limits = [] ): array
@@ -282,6 +282,7 @@ class Logic_Newsletter extends SharedLogic
 			}
 		}
 
+		/** @var Entity_Newsletter_Group $group */
 		foreach( $this->modelGroup->getAll( $conditions, $orders, $limits ) as $group )
 			$list[$group->newsletterGroupId]	= $group;
 		return $list;
@@ -518,11 +519,12 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@return		array<int|string,Entity_Newsletter_Reader>
 	 */
 	public function getReaders( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
+		/** @var Entity_Newsletter_Reader $reader */
 		foreach( $this->modelReader->getAll( $conditions, $orders, $limits ) as $reader )
 			$list[$reader->newsletterReaderId]	= $reader;
 		return $list;

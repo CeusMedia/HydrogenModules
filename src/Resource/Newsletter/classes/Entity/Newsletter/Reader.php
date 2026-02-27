@@ -17,4 +17,7 @@ class Entity_Newsletter_Reader extends Entity
 
 	public ?Entity_Address $address			= NULL;
 	public int $validUntil					= 0;
+
+	/** @var array<Entity_Newsletter_Group> $groups */
+	public array $groups					= [];
 }
