@@ -86,6 +86,9 @@ class Controller_Admin_Mail_Queue extends Controller
 			case 'abort':
 				$this->bulkAbort( $ids );
 				break;
+			case 'pause':
+				$this->bulkPause( $ids );
+				break;
 			case 'retry':
 				$this->bulkRetry( $ids );
 				break;
@@ -389,9 +392,30 @@ class Controller_Admin_Mail_Queue extends Controller
 				Model_Mail::STATUS_FAILED,
 				Model_Mail::STATUS_RETRY,
 				Model_Mail::STATUS_NEW,
+				Model_Mail::STATUS_PAUSED,
 			]], [], [], ['mailId'] );
 		$data	= [
 			'status'		=> Model_Mail::STATUS_ABORTED,
+			'modifiedAt'	=> time(),
+		];
+		return $this->model->editByIndices( ['mailId' => $mailIds], $data );
+	}
+
+	/**
+	 *	@param		array<int|string>		$mailIds		List of mail IDs
+	 *	@return		int
+	 */
+	protected function bulkPause( array $mailIds ): int
+	{
+		if( !count( $mailIds ) )
+			return 0;
+		$mailIds	= $this->model->getAll( [
+			'mailId'	=> $mailIds,
+			'status'	=> [
+				Model_Mail::STATUS_NEW,
+			]], [], [], ['mailId'] );
+		$data	= [
+			'status'		=> Model_Mail::STATUS_PAUSED,
 			'modifiedAt'	=> time(),
 		];
 		return $this->model->editByIndices( ['mailId' => $mailIds], $data );

@@ -162,15 +162,17 @@ if( $mails ){
 	$table			= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped table-fixed'] );
 
 	$itemList		= [];
-//	$itemList[]		= HtmlTag::create( 'li',
-//		HtmlTag::create( 'a', '<i class="fa fa-remove"></i> <del>abbrechen</del>', ['class' => '#', 'id' => 'action-button-abort'] )
-//	);
-//	$itemList[]		= HtmlTag::create( 'li',
-//		HtmlTag::create( 'a', '<i class="fa fa-refresh"></i> <del>erneut versuchen</del>', ['class' => '#', 'id' => 'action-button-retry'] )
-//	);
+	if( $canRemove )		//  @todo replace by real right, canRemove is used as hack here
+		$itemList[]		= HtmlTag::create( 'li',
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i> abbrechen', ['class' => '#', 'id' => 'action-button-abort'] )
+		);
+	if( $canRemove )		//  @todo replace by real right, canRemove is used as hack here
+		$itemList[]		= HtmlTag::create( 'li',
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-refresh"></i> erneut versuchen', ['class' => '#', 'id' => 'action-button-retry'] )
+		);
 	if( $canRemove )
 		$itemList[]	= HtmlTag::create( 'li',
-			HtmlTag::create( 'a', '<i class="fa fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
+			HtmlTag::create( 'a', '<i class="fa fa-fw fa-trash"></i> entfernen', ['class' => '#', 'id' => 'action-button-remove'] )
 		);
 
 	$dropdown	= '';
