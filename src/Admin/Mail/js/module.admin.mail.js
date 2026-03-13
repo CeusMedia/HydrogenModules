@@ -8,6 +8,28 @@ ModuleAdminMail.Queue = {
 			let value = jQuery(this).prop('checked');
 			boxes.prop('checked', value);
 		});
+		form.find('#action-button-abort').on('click', function(){
+			let ids = [];
+			boxes.each(function(){
+				let box = jQuery(this);
+				if(box.prop('checked'))
+					ids.push(box.data('id'));
+			});
+			form.find('#input_type').val('abort');
+			form.find('#input_ids').val(ids.join(','));
+			form.submit();
+		});
+		form.find('#action-button-retry').on('click', function(){
+			let ids = [];
+			boxes.each(function(){
+				let box = jQuery(this);
+				if(box.prop('checked'))
+					ids.push(box.data('id'));
+			});
+			form.find('#input_type').val('retry');
+			form.find('#input_ids').val(ids.join(','));
+			form.submit();
+		});
 		form.find('#action-button-remove').on('click', function(){
 			let ids = [];
 			boxes.each(function(){

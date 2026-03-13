@@ -1,10 +1,11 @@
 <?php
 
+use CeusMedia\Common\Alg\UnitFormater;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var View_Admin_Mail_Queue $view */
 /** @var array<array<string,string>> $words */
-/** @var object $mail */
+/** @var Entity_Mail $mail */
 /** @var int $page */
 
 $iconBack		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
@@ -31,7 +32,7 @@ else{
 		'class'		=> 'btn btn-inverse btn-small'
 	] );
 }
-if( $mail->status == 2 || $mail->status == -2 ){
+if( in_array( $mail->status, [Model_Mail::STATUS_SENT, Model_Mail::STATUS_FAILED, Model_Mail::STATUS_ABORTED], TRUE ) ){
 	$buttons[]	= HtmlTag::create( 'a', $iconAgain.'&nbsp;noch einmal versenden', [
 		'href'	=> './admin/mail/queue/resend/'.$mail->mailId,
 		'class'	=> 'btn btn-primary btn-small'
@@ -43,6 +44,9 @@ $buttons[]	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
 ] );
 $buttons	= join( ' ', $buttons );
 
+$mailData	= $mail->toDictionary();
+$mailData->set( 'rawSize', UnitFormater::formatBytes( mb_strlen( $mail->raw ) ) );
+
 $listKeys	= [
 	'mailId',
 	'subject',
@@ -53,10 +57,11 @@ $listKeys	= [
 	'receiverId',
 	'mailClass',
 	'language',
+	'rawSize',
 ];
 $list	= [];
 foreach( $listKeys as $key )
-	if( $fact = $view->renderFact( $key, $mail->{$key} ) )
+	if( $fact = $view->renderFact( $key, $mailData->get( $key ) ) )
 		$list[]	= $fact;
 
 $listLeft	= HtmlTag::create( 'dl', $list, ['class' => 'dl-horizontal'] );
