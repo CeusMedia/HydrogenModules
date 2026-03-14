@@ -14,7 +14,7 @@ For sending mails you need to setup a cron job:
 
 ]]></description>
 	<category>Info</category>
-	<version>0.7.4</version>
+	<version>0.7.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Finished data structure.</log>
@@ -50,6 +50,7 @@ For sending mails you need to setup a cron job:
 	<log version="0.7.2">Provide hook for shop service panels.</log>
 	<log version="0.7.3">Improve preview of latest newsletter.</log>
 	<log version="0.7.4">Support tracking of reader letter link clicks.</log>
+	<log version="0.7.5">Refactor to use mail template around newsletter template.</log>
 <!--	<log version="0.7.5">Refactor JavaScript components.</log>-->
 <!--	<log version="0.7.6">Finish extracting locales and clean up.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
