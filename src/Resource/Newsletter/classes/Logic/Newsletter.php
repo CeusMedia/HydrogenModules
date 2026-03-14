@@ -254,7 +254,7 @@ class Logic_Newsletter extends SharedLogic
 
 	/**
 	 *	@param		Entity_Newsletter_Group|int|string		$group
-	 *	@return		array
+	 *	@return		array<Entity_Newsletter_Reader>
 	 * @todo improve performance on higher scale
 	 */
 	public function getGroupReaders( Entity_Newsletter_Group|int|string $group ): array
@@ -262,6 +262,7 @@ class Logic_Newsletter extends SharedLogic
 		$groupId	= is_object( $group ) ? $group->newsletterGroupId : $group;
 		$list		= [];
 		$readers	= [];
+		/** @var Entity_Newsletter_Reader $reader */
 		foreach( $this->modelReader->getAllByIndex( 'status', Model_Newsletter_Reader::STATUS_CONFIRMED ) as $reader )
 			$readers[$reader->newsletterReaderId]	= $reader;
 		$relations	= $this->modelReaderGroup->getAllByIndex( 'newsletterGroupId', $groupId );

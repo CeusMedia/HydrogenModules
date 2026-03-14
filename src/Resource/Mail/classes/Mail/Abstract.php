@@ -209,7 +209,6 @@ abstract class Mail_Abstract
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function getTemplateId(): string
 	{
@@ -488,7 +487,6 @@ abstract class Mail_Abstract
 	 *	@return		string
 	 *	@throws		IoException
 	 *	@throws		NotSupportedException		Remote images are not supported, yet
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyTemplateToHtml( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): string
 	{
@@ -566,7 +564,6 @@ abstract class Mail_Abstract
 	 *	@param		string			$content		...
 	 *	@param		int|string|NULL		$templateId		ID of template to use in favor of defaults (must be usable)
 	 *	@return		string						Fully rendered content
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function applyTemplateToText( string $content, int|string $templateId = NULL, array $additionalPlaceholders = [] ): string
 	{
@@ -632,7 +629,6 @@ abstract class Mail_Abstract
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
 	 *	@return		Entity_Mail_Template|NULL				Model entity object of detected mail template
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getTemplateToUse( string $preferredTemplateId = '0', bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
 	{
@@ -715,7 +711,6 @@ abstract class Mail_Abstract
 	 *	@return		static
 	 *	@throws		IoException
 	 *	@throws		NotSupportedException			Remote images are not supported, yet
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setHtml( string $content, int|string $templateId = 0, array $additionalPlaceholders = [], bool $strict = TRUE ): static
 	{
@@ -751,11 +746,10 @@ abstract class Mail_Abstract
 	 *	Stores given (generated) and rendered contents.
 	 *	Adds rendered content as new mail part.
 	 *	@access		protected
-	 *	@param		string		$content		Plain text mail body to set
-	 *	@param		int|string		$templateId		ID of mail template to use in favour
-	 *	@param		array 		$additionalPlaceholders
+	 *	@param		string			$content		Plain text mail body to set
+	 *	@param		int|string		$templateId		ID of mail template to use in favor
+	 *	@param		array 			$additionalPlaceholders
 	 *	@return		static
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function setText( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): static
 	{
@@ -778,7 +772,6 @@ abstract class Mail_Abstract
 	 *	@param		int|string		$templateId
 	 *	@param		array			$additionalPlaceholders
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function wrapHtmlIntoTemplate( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): string
 	{

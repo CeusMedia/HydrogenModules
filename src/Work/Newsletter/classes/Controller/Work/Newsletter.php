@@ -163,7 +163,7 @@ class Controller_Work_Newsletter extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function index( $page = 0 ): void
+	public function index( int $page = 0 ): void
 	{
 		$templates		= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		$newsletters	= $this->logic->getNewsletters( [], ['title' => 'ASC'] );
@@ -208,6 +208,32 @@ class Controller_Work_Newsletter extends Controller
 	public function preview( string $format, string $newsletterId, bool $simulateOffline = FALSE ): void
 	{
 		$this->checkNewsletterId( $newsletterId );
+
+		$data	= [
+			'newsletterId'	=> $newsletterId,
+			'preview'		=> TRUE,
+		];
+
+
+		$mail		= new Mail_Newsletter( $this->env, $data );
+		$response	= $this->env->getResponse();
+		switch( strtolower( trim( $format ) ) ){
+			case 'html':
+				$content	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED );
+				$response->setHeader( 'Content-Type', 'text/html' );
+				break;
+			case 'text':
+			default:
+				$content	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_TEXT_RENDERED );
+				$response->setHeader( 'Content-Type', 'text/plain' );
+				break;
+		}
+		$response->setBody( $content );
+		$response->send();
+		die;
+
+
+
 		$words		= (object) $this->getWords( 'preview' );
 		$newsletter	= $this->logic->getNewsletter( $newsletterId );
 //		$template	= $this->logic->getTemplate( $newsletter->newsletterTemplateId );
@@ -413,7 +439,7 @@ class Controller_Work_Newsletter extends Controller
 
 		$this->useUserGroupRelations	= $this->moduleConfig->get( 'useUserGroupRelations', FALSE );
 		$this->addData( 'useUserGroupRelations', $this->useUserGroupRelations );
-		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relate' ) );
+		$this->addData( 'canManageGroupRelations', $this->env->getAcl()->has( 'manage/group', 'relation' ) );
 	}
 
 	/**
@@ -458,6 +484,8 @@ class Controller_Work_Newsletter extends Controller
 			$data		= [																				//  extend prepared data by newsletter template data
 				'senderName'	=> $template->senderName,												//  ... carry sender name
 				'senderAddress'	=> $template->senderAddress,											//  ... carry sender address
+				'html'			=> str_replace( '[#app.url#]', '', $template->html ),
+				'plain'			=> str_replace( '[#app.url#]', '', $template->plain ),
 			];
 		}
 
@@ -491,7 +519,7 @@ class Controller_Work_Newsletter extends Controller
 		if( $this->useUserGroupRelations ){																//  apply group relations
 			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );							//  get logic for group relations to module entities
 			$entityModuleId	= 'Resource_Newsletter';													//  entity relation module key
-			if( '' !== $sourceNewsletterId )															//  from source newsletter
+			if( 0 !== (int) $sourceNewsletterId )														//  from source newsletter
 				$relatedGroups	= $logicRelation->getGroups( $entityModuleId, $sourceNewsletterId );	//  ... copy group relations
 			else																						//  from request
 				$relatedGroups	= $this->request->get( 'relationGroupIds' );						//  ...  by form data
@@ -513,6 +541,8 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
+	 *	@throws		InvalidArgumentException			if newsletter is not exising and $throwException is TRUE
+	 *	@throws		Exception			Premailer exceptions
 	 */
 	protected function handleEditRequest( string $newsletterId ): void
 	{
@@ -550,6 +580,7 @@ class Controller_Work_Newsletter extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function prepareAddData(): void
 	{
@@ -579,6 +610,7 @@ class Controller_Work_Newsletter extends Controller
 	/**
 	 *	@param		string		$newsletterId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function prepareEditData( string $newsletterId ): void
 	{
@@ -599,20 +631,31 @@ class Controller_Work_Newsletter extends Controller
 			$groupIds	= [current( $groups )->newsletterGroupId];
 
 		$readers		= [];
-		if( $groupIds )
+		$nrReaders		= 0;
+		if( $groupIds ){
 			foreach( $groupIds as $groupId )
-				foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
-					$readers[$reader->newsletterReaderId]	= $reader;
+				$nrReaders += $this->logic->countGroupReaders( $groupId );
+			if( $nrReaders <= 50 )
+				foreach( $groupIds as $groupId )
+					foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
+						$readers[$reader->newsletterReaderId]	= $reader;
+		}
 
 		$queues			= $this->logic->getQueuesOfNewsletter( $newsletterId );
-		$letterQueue	= $this->logic->getReaderLetters( [
-			'newsletterId'	=> $newsletterId,
-			'status'		=> 0
-		] );
-		$letterHistory	= $this->logic->getReaderLetters( [
-			'newsletterId'	=> $newsletterId,
-			'status'		=> '!= 0'
-		] );
+
+		$letterQueue	= [];
+		$letterHistory	= [];
+		$nrLetters	= $this->logic->countReaderLetters( ['newsletterId' => $newsletterId] );
+		if( $nrLetters <= 0 ){
+			$letterQueue	= $this->logic->getReaderLetters( [
+				'newsletterId'	=> $newsletterId,
+				'status'		=> 0
+			] );
+			$letterHistory	= $this->logic->getReaderLetters( [
+				'newsletterId'	=> $newsletterId,
+				'status'		=> '!= 0'
+			] );
+		}
 
 		$isUsed	= $newsletter->status >= Model_Newsletter::STATUS_SENT;
 		$this->addData( 'isUsed', $isUsed );
@@ -623,8 +666,10 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'template', $template );
 		$this->addData( 'groups', $groups );
 		$this->addData( 'groupIds', $groupIds );
+		$this->addData( 'nrReaders', $nrReaders );
 		$this->addData( 'readers', $readers );
 		$this->addData( 'queues', $queues );
+		$this->addData( 'nrLetters', $nrLetters );
 		$this->addData( 'letterQueue', $letterQueue );
 		$this->addData( 'letterHistory', $letterHistory );
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $newsletter->newsletterTemplateId, 'styles' ) );

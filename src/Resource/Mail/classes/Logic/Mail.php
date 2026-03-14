@@ -327,7 +327,6 @@ class Logic_Mail extends Logic
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
 	 *	@return		Entity_Mail_Template|NULL				Model entity object of detected mail template
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@todo		see code doc
 	 */
 	public function detectTemplateToUse( int $preferredTemplateId = 0, bool $considerFrontend = FALSE, bool $strict = TRUE ): ?Entity_Mail_Template

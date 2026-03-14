@@ -1,7 +1,6 @@
 <?php
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Net\API\Premailer;
-use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 class Logic_Newsletter_Editor extends Logic_Newsletter
 {
@@ -56,7 +55,6 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		int			$wrap
 	 *	@return		string
 	 *	@throws		InvalidArgumentException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		IoException
 	 *	@throws		Exception			Premailer exceptions
 	 */
@@ -97,7 +95,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 			$html	= preg_replace( $regex, $replacement, $html );
 		$html	= $wrap ? wordwrap( $html, $wrap ) : $html;
 		return $html;
-		return strip_tags( $html );
+//		return strip_tags( $html );
 	}
 
 	/**
@@ -124,7 +122,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	public function dequeue( int|string $readerLetterId ): bool
 	{
 		$letter	= $this->getReaderLetter( $readerLetterId );
-		if( (int) $letter->status > 0 )
+		if( $letter->status > 0 )
 			throw new RuntimeException( 'Letter has been sent and cannot be removed' );
 		return $this->modelReaderLetter->remove( $readerLetterId );
 	}
@@ -133,7 +131,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		int|string		$groupId
 	 *	@param		array			$data
 	 *	@return		void
-	 *	@throws		InvalidArgumentException		if newsletter group ID is invalid
+	 *	@throws		ReflectionException
 	 */
 	public function editGroup( int|string $groupId, array $data ): void
 	{
@@ -194,6 +192,18 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	}
 
 	/**
+	 *	Returns preview of CSS provided by newsletter template,
+	 *	Appends mail template CSS, if enabled
+	 *	@param		Entity_Newsletter_Template	$template
+	 *	@return		Entity_Mail_Template
+	 *	@throws		ReflectionException
+	 */
+	public function getMailTemplateFromTemplate( Entity_Newsletter_Template $template ): Entity_Mail_Template
+	{
+		return $this->getModel( 'MailTemplate' )->get( $template->mailTemplateId );
+	}
+
+	/**
 	 *	@param		int|string		$groupId
 	 *	@return		bool
 	 *	@throws		ReflectionException
@@ -234,6 +244,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function removeReader( int|string $readerId ): void
 	{

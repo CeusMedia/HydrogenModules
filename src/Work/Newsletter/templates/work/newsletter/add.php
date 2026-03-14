@@ -55,14 +55,14 @@ $formAdd	= '
 					<label for="input_subject">'.$words->add->labelSubject.'</label>
 					<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $newsletter->subject, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
-				<div class="span4 optional newsletterId newsletterId-0">
+<!--				<div class="span4 optional newsletterId newsletterId-0">
 					<label for="input_senderAddress">'.$words->add->labelSenderAddress.'</label>
 					<input type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required" value="'.htmlentities( $newsletter->senderAddress, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span4 optional newsletterId newsletterId-0">
 					<label for="input_senderName">'.$words->add->labelSenderName.'</label>
 					<input type="text" name="senderName" id="input_senderName" class="span12" value="'.htmlentities( $newsletter->senderName, ENT_QUOTES, 'UTF-8' ).'"/>
-				</div>
+				</div>-->
 			</div>
 			<div class="buttonbar">
 				<a href="./work/newsletter" class="btn btn-small">'.$iconCancel.$words->add->buttonCancel.'</span></a>

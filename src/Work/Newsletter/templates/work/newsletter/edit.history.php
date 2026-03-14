@@ -11,6 +11,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $tabbedLinks */
 /** @var array $letterHistory */
 /** @var string $frontendUrl */
+/** @var int $nrLetters */
 
 $rowColors	= [
 	-1	=> 'error',
@@ -22,7 +23,10 @@ $labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edi
 $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
 $labelLetterButtonRetry		= '<i class="icon-refresh icon-white"></i> '.$words->edit->buttonQueueRetry;
 $table						= '<em><small class="muted">Nichts versendet bisher.</small></em>';
-if( $letterHistory ){
+if( 0 !== $nrLetters && [] === $letterHistory ){
+	return '<div class="alert alert-info"><em class="not-muted">Der Newsletter wurde an '.$nrLetters.' Empfänger verschickt. Die Liste ist zu groß, um hier angezeigt zu werden.</em></div>';
+}
+else if( [] !== $letterHistory ){
 	$rows	= [];
 	foreach( $letterHistory as $readerLetter ){
 		if( $readerLetter->status == 0 )

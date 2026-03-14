@@ -37,6 +37,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	 */
 	public function add(): void
 	{
+		$words		= (object) $this->getWords( 'add' );
 		$this->handleAddPostRequest();
 
 		$reader		= (object) [

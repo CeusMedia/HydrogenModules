@@ -69,7 +69,6 @@ class Controller_Work_Newsletter_Template extends Controller
 		];
 		if( $copyTemplateId ){
 			$template	= $this->logic->getTemplate( $copyTemplateId );
-			$template->templateId	= (int) $this->request->get( 'templateId' );
 		}
 
 		if( $this->request->has( 'plain' ) )
@@ -89,6 +88,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'totalTemplates', $totalTemplates );
+		$this->addData( 'mailTemplates', Logic_Mail::getInstance( $this->env )->getTemplates() );
 	}
 
 	public function addStyle( int $templateId, $url = NULL ): void
@@ -105,13 +105,16 @@ class Controller_Work_Newsletter_Template extends Controller
 	 *	@param		int|string		$templateId		ID of template
 	 *	@param		boolean			$inEditor		Flag: set additional style for TinyMCE editor
 	 *	@return		never
+	 *	@throws		ReflectionException
 	 */
 	public function ajaxGetStyle( int|string $templateId, bool $inEditor = FALSE ): never
 	{
-		$template	= $this->logic->getTemplate( $templateId );
 		header( 'Content-Type: text/css' );
+		$template	= $this->logic->getTemplate( $templateId );
 		print $template->style;
+
 		if( $inEditor ){
+			print $this->logic->getMailTemplateFromTemplate( $template )->css;
 			$pathThemeStyle	= $this->env->getPage()->getThemePath().'css/';
 			print FileReader::load( $pathThemeStyle.'module.work.newsletter.css' );
 		}
@@ -121,6 +124,7 @@ class Controller_Work_Newsletter_Template extends Controller
 	/**
 	 *	@param		int|string		$templateId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function edit( int|string $templateId ): void
 	{
@@ -130,9 +134,7 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->has( 'save' ) ){
-			$this->logic->editTemplate( $templateId, $this->request->getAll() );
-			$this->messenger->noteSuccess( $words->msgSuccess );
-			$this->restart( 'edit/'.$templateId, TRUE );
+			$this->handleEditRequest( $templateId, $words );
 		}
 		$conditions		= ['newsletterTemplateId' => $templateId];
 		$orders			= ['newsletterId' => 'DESC'];
@@ -151,12 +153,13 @@ class Controller_Work_Newsletter_Template extends Controller
 		$this->addData( 'styles', $this->logic->getTemplateAttributeList( $templateId, 'styles' ) );
 		$this->addData( 'isUsed', $isUsed );
 		$this->addData( 'format', $format );
+		$this->addData( 'mailTemplates', Logic_Mail::getInstance( $this->env )->getTemplates() );
 	}
 
 	/**
 	 *	@param		int|string		$templateId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function export( int|string $templateId ): void
 	{
@@ -175,6 +178,7 @@ class Controller_Work_Newsletter_Template extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index(): void
 	{
@@ -239,14 +243,13 @@ class Controller_Work_Newsletter_Template extends Controller
 	 *	@param		int|string		$templateId
 	 *	@param		bool			$simulateOffline
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function preview( string $format, int|string $templateId, bool $simulateOffline = FALSE ): void
 	{
 		try{
 			$words		= (object) $this->getWords( 'preview' );
 			$template	= $this->logic->getTemplate( $templateId );
-			$data		= [
+			$data		= array_merge( [
 				'title'				=> sprintf( $words->title, $template->title ),
 				'content'			=> wordwrap( $words->content ),
 				'salutation'		=> $words->salutation,
@@ -258,27 +261,40 @@ class Controller_Work_Newsletter_Template extends Controller
 				'linkUnregister'	=> "javascript:alert('".$words->alertDisabledInPreview."')",
 				'linkView'			=> "javascript:alert('".$words->alertDisabledInPreview."')",
 				'preview'			=> TRUE,
-			];
+			], [
+				'newsletterId'	=> 0,
+				'templateId'	=> $templateId,
+				'preview'		=> TRUE,
+			] );
 			if( strtolower( $format ) == 'text' ){
 				$data['linkUnregister']	= '['.$words->alertDisabledInPreview.']';
 				$data['linkView']		= '['.$words->alertDisabledInPreview.']';
 			}
-			$mail	= new View_Helper_Newsletter_Mail( $this->env );
-			$mail->setTemplateId( $templateId );
-			$mail->setData( $data );
-			switch( strtolower( $format ) ){
-				case 'text':
-					$mail->setMode( View_Helper_Newsletter_Mail::MODE_PLAIN );
-					$content	= HtmlTag::create( 'pre', $mail->render(), ['style' => 'text-wrap-mode: wrap; font-size: 1em; overflow: hidden'] );
+
+			$mail		= new Mail_Newsletter( $this->env, $data );
+			$response	= $this->env->getResponse();
+			switch( strtolower( trim( $format ) ) ){
+				case 'css':
+					$content	= $template->style;
+					if( '0' !== (string) $template->mailTemplateId ){
+						$mailTemplate	= $this->logic->getMailTemplateFromTemplate( $template );
+						$content	.= $mailTemplate->css;
+					}
+					$response->setHeader( 'Content-Type', 'text/css' );
 					break;
 				case 'html':
-					$mail->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
-					$content	= $mail->render();
+					$content	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED );
+					$response->setHeader( 'Content-Type', 'text/html' );
 					break;
+				case 'text':
 				default:
-					throw new InvalidArgumentException( 'Format "'.$format.'" is not supported' );
+					$content	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_TEXT_RENDERED );
+					$response->setHeader( 'Content-Type', 'text/plain' );
+					break;
 			}
-			print( $content );
+			$response->setBody( $content );
+			$response->send();
+			die;
 		}
 		catch( Exception $e ){
 //			print( "There has been an error." );
@@ -308,7 +324,7 @@ class Controller_Work_Newsletter_Template extends Controller
 				$html	= str_replace( "[#".$key."#]", $value, $html );
 			$html	= preg_replace( "/\[#.+#\]/", '', $html );
 			$page	= new HtmlPage();
-			foreach( $theme->style as $style )
+			foreach( $theme->styles ?? [] as $style )
 				$page->addStylesheet( (string) $style );
 			$page->addHead( HtmlTag::create( 'style', $css ) );
 			$page->addBody( $html );
@@ -365,6 +381,10 @@ class Controller_Work_Newsletter_Template extends Controller
 		}
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	protected function __onInit(): void
 	{
 		$this->session		= $this->env->getSession();
@@ -379,5 +399,47 @@ class Controller_Work_Newsletter_Template extends Controller
 			$this->limiter	= Logic_Limiter::getInstance( $this->env );
 		$this->addData( 'limiter', $this->limiter );
 		$this->addData( 'pathNewsletterThemes', $this->logic->getNewsletterThemesPath() );
+	}
+
+	/**
+	 *	This catches all POST requests on template properties:
+	 *	- Details
+	 *	- HTML
+	 *	- Plaintext
+	 *	- CSS
+	 *	Style files are handled by addStyle and removeStyle.
+	 *	@param		int|string	$templateId
+	 *	@param		object		$words
+	 *	@return		void
+	 */
+	protected function handleEditRequest( int|string $templateId, object $words ): void
+	{
+		$mayBeComing = [
+			'mailTemplateId',
+			'title',
+			'senderAddress',
+			'senderAddress',
+			'senderName',
+			'authorName',
+			'authorEmail',
+			'authorCompany',
+			'authorUrl',
+			'imprint',
+			'html',
+			'plain',
+			'style',
+		];
+		$update	= [];
+		if( $this->request->has( 'title' ) )
+			$update['status']	= (int) $this->request->get( 'status', 0 );
+		foreach( $mayBeComing as $may )
+			if( $this->request->has( $may ) )
+				$update[$may] = $this->request->get( $may );
+
+		if( [] !== $update )
+			$this->logic->editTemplate( $templateId, $update );
+
+		$this->messenger->noteSuccess( $words->msgSuccess );
+		$this->restart( 'edit/'.$templateId, TRUE );
 	}
 }
