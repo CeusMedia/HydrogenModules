@@ -33,6 +33,7 @@ class Model_Newsletter_Template extends Model
 
 	protected array $columns		= [
 		'newsletterTemplateId',
+		'mailTemplateId',
 		'creatorId',
 		'themeId',
 		'version',

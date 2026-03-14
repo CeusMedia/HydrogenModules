@@ -11,6 +11,8 @@ class Entity_Newsletter_Reader_Letter extends Entity
 	public int|string $mailId					= 0;
 	public int $status							= Model_Newsletter_Reader_Letter::STATUS_ENQUEUED;
 	public int $enqueuedAt						= 0;
-	public int $sentAt							= 0;
-	public int $openedAt						= 0;
+	public ?int $sentAt							= NULL;
+	public ?int $openedAt						= NULL;
+
+	public ?Entity_Newsletter_Reader $reader	= NULL;
 }

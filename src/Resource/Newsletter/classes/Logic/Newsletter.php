@@ -185,6 +185,16 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
+	 *	Count reader letters by conditions, like: reader letters sent by a specific newsletter.
+	 *	@param		array		$conditions
+	 *	@return		int
+	 */
+	public function countReaderLetters( array $conditions = [] ): int
+	{
+		return $this->modelReaderLetter->count( $conditions );
+	}
+
+	/**
 	 *	@param		Entity_Newsletter|int|string	$newsletter
 	 *	@param		array			$data
 	 *	@return		int
@@ -352,7 +362,7 @@ class Logic_Newsletter extends SharedLogic
 	/**
 	 *	@param		int|string		$newsletterId
 	 *	@param		bool			$strict
-	 *	@return		object|NULL
+	 *	@return		Entity_Newsletter|NULL
 	 *	@throws		InvalidArgumentException			if newsletter is not exising and strict mode
 	 */
 	public function getNewsletter( int|string $newsletterId, bool $strict = TRUE ): ?object
@@ -479,19 +489,22 @@ class Logic_Newsletter extends SharedLogic
 	/**
 	 *	@param		int|string		$readerId
 	 *	@param		bool			$strict
-	 *	@return		object|NULL
+	 *	@return		Entity_Newsletter_Reader|NULL
 	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
 	 */
-	public function getReader( int|string $readerId, bool $strict = TRUE ): ?object
+	public function getReader( int|string $readerId, bool $strict = TRUE ): ?Entity_Newsletter_Reader
 	{
-		if( $this->checkReaderId( $readerId, $strict ) )
-			return $this->modelReader->get( $readerId );
+		if( $this->checkReaderId( $readerId, $strict ) ){
+			/** @var Entity_Newsletter_Reader $reader */
+			$reader	= $this->modelReader->get( $readerId );
+			return $reader;
+		}
 		return NULL;
 	}
 
 	/**
 	 *	@param		int|string		$readerLetterId
-	 *	@return		object|NULL
+	 *	@return		Entity_Newsletter_Reader_Letter|NULL
 	 */
 	public function getReaderLetter( int|string $readerLetterId ): ?object
 	{
@@ -508,7 +521,9 @@ class Logic_Newsletter extends SharedLogic
 	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [] ): array
 	{
 		$list	= [];
-		foreach( $this->modelReaderLetter->getAll( $conditions, $orders, $limits ) as $letter ){
+		/** @var array<Entity_Newsletter_Reader_Letter> $letters */
+		$letters	= $this->modelReaderLetter->getAll( $conditions, $orders, $limits );
+		foreach( $letters as $letter ){
 			$letter->reader		= $this->getReader( $letter->newsletterReaderId );
 			$list[$letter->newsletterReaderLetterId]	= $letter;
 		}
@@ -572,13 +587,16 @@ class Logic_Newsletter extends SharedLogic
 	 *	@access		public
 	 *	@param		int|string		$templateId		ID of template to get data object for
 	 *	@param		boolean			$strict			Strict mode: throw exception if checks fail
-	 *	@return		object							Data object of template
+	 *	@return		?Entity_Newsletter_Template		Data object of template
 	 *	@throws		InvalidArgumentException		if newsletter template is not exising and strict mode
 	 */
-	public function getTemplate( int|string $templateId, bool $strict = TRUE ): object
+	public function getTemplate( int|string $templateId, bool $strict = TRUE ): ?Entity_Newsletter_Template
 	{
-		$this->checkTemplateId( $templateId, $strict );
-		return $this->modelTemplate->get( $templateId );
+		if( !$this->checkTemplateId( $templateId, $strict ) )
+			return NULL;
+		/** @var Entity_Newsletter_Template $template */
+		$template	= $this->modelTemplate->get( $templateId );
+		return $template;
 	}
 
 	/**

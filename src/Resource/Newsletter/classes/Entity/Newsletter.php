@@ -15,11 +15,21 @@ class Entity_Newsletter extends Entity
 	public ?string $description					= NULL;
 	public string $heading						= '';
 	public int $generatePlain					= 0;
-	public string $trackingCode					= '';
-	public string $plain						= '';
-	public string $html							= '';
+	public ?string $trackingCode				= NULL;
+	public ?string $plain						= NULL;
+	public ?string $html						= NULL;
 //	public string $attachments;
 	public int $createdAt						= 0;
 	public ?int $modifiedAt						= NULL;
 	public ?int $sentAt							= NULL;
+
+	protected static array $mandatoryFields		= [
+		'newsletterTemplateId',
+		'creatorId',
+		'senderAddress',
+		'title',
+		'subject',
+		'heading',
+		'createdAt',
+	];
 }
