@@ -16,6 +16,7 @@ var ModuleAce = {
 		width: "100%",
 		height: "auto",
 		options: {
+			fontSize: 12,									//  default: 12
 			lineHeight: 1.15,								//  add top and bottom padding, @see https://stackoverflow.com/a/37976142
 			minLines: 4,									//  show atleast 4 lines
 			maxLines: 'Infinity',							//  ...
@@ -50,7 +51,6 @@ var ModuleAce = {
 			readOnly: true
 		}],
 		flags: {
-			fontSize: 16,							//  default: 12
 			highlightSelectedWord: false,			//  default: true
 //
 //		Default values:
@@ -185,6 +185,8 @@ var ModuleAce = {
 			editor.setTheme(config.theme);												//  set editor theme
 		if(config.mode)																	//  editor mode is configured
 			editor.session.setMode(config.mode);										//  set editor mode
+		if(config.fontSize)																//  editor font size is configured
+			editor.setFontSize(config.fontSize);										//  set editor font size
 
 		for(i=0; i<config.hotkeys.length; i++){											//  iterate configured hotkeys
 			ModuleAce.log( "AceEditor: Set hotkey \"%s\"", config.hotkeys[i].key );
