@@ -38,6 +38,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
     <log version="0.5.4">Add models for links and click tracking.</log>
     <log version="0.5.5">Add first entity classes.</log>
     <log version="0.5.6">Finish implementation of entity classes.</log>
+    <log version="0.5.7">Refactor to use mail template around newsletter template.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -335,6 +336,11 @@ CREATE TABLE `<%?prefix%>newsletter_reader_letter_links` (
   KEY `newsletterId` (`newsletterId`),
   KEY `timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+	]]></sql>
+	<sql on="update" type="mysql" version="0.5.7"><![CDATA[
+ALTER TABLE `<%?prefix%>newsletter_templates`
+  ADD COLUMN `mailTemplateId` INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `newsletterTemplateId`,
+  ADD INDEX `mailTemplateId` (`mailTemplateId`);
 	]]></sql>
     <sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_queues`;

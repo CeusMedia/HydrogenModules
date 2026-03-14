@@ -11,4 +11,6 @@ class Entity_Newsletter_Group extends Entity
 	public string $title					= '';
 	public int $createdAt					= 0;
 	public ?int $modifiedAt					= NULL;
+
+	public bool $isChecked					= FALSE;
 }

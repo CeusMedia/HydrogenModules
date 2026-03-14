@@ -20,13 +20,14 @@ class View_Helper_Newsletter_Mail
 
 	protected Environment $env;
 	protected Logic_Newsletter $logic;
-	protected int $mode				= self::MODE_PLAIN;
-	protected array $data			= [];
-	protected ?object $letter		= NULL;
-	protected ?object $newsletter	= NULL;
-	protected ?object $reader		= NULL;
-	protected ?object $template		= NULL;
-	protected string $cachePath		= 'contents/cache/';
+	protected int $mode									= self::MODE_PLAIN;
+	protected array $data								= [];
+	protected array $originalData						= [];
+	protected ?Entity_Newsletter_Reader_Letter $letter	= NULL;
+	protected ?Entity_Newsletter $newsletter			= NULL;
+	protected ?Entity_Newsletter_Reader $reader			= NULL;
+	protected ?Entity_Newsletter_Template $template		= NULL;
+	protected string $cachePath							= 'contents/cache/';
 
 	public function __construct( $env/*, $templateId = NULL*/ )
 	{
@@ -34,6 +35,11 @@ class View_Helper_Newsletter_Mail
 		$this->logic	= new Logic_Newsletter( $env );
 		if( !file_exists( $this->cachePath ) )
 			FolderEditor::createFolder( $this->cachePath );
+	}
+
+	public function getData(): array
+	{
+		return $this->data;
 	}
 
 	/**
@@ -44,27 +50,56 @@ class View_Helper_Newsletter_Mail
 	{
 		if( !$this->template )
 			throw new RuntimeException( 'No mail template set' );
-		if( !$this->data )
-			throw new RuntimeException( 'No mail data set' );
+//		if( !$this->data )
+//			throw new RuntimeException( 'No mail data set' );
 		if( in_array( $this->mode, [self::MODE_HTML, self::MODE_HTML_TRACKING] ) )
 			return $this->renderHtml();
 		return $this->renderPlain();
 	}
 
+	public function setNewsletter( Entity_Newsletter $newsletter ): self
+	{
+		$this->newsletter	= $newsletter;
+		return $this;
+	}
+
+	public function setTemplate( Entity_Newsletter_Template $template ): self
+	{
+		$this->template	= $template;
+		return $this;
+	}
+
+	public function setReader( Entity_Newsletter_Reader $reader ): self
+	{
+		$this->reader	= $reader;
+		return $this;
+	}
+
+	public function setReaderLetter( Entity_Newsletter_Reader_Letter $readerLetter ): self
+	{
+		$this->letter	= $readerLetter;
+		return $this;
+	}
+
 	public function setData( $data ): self
 	{
+		$this->originalData	= $data;
 		$this->data	= $data;
 		return $this;
 	}
 
 	/**
-	 *	Set rendering mode, one of MODE_PLAIN, MODE_HTML, MODE_HTML_TRACKING
+	 *	Set rendering mode, one of MODE_PLAIN, MODE_HTML, MODE_HTML_TRACKING.
+	 *	Runs prepareData.
 	 *	@param		int		$mode
 	 *	@return		self
 	 */
 	public function setMode( int $mode = self::MODE_PLAIN ): self
 	{
+		if( [] === $this->data )
+			throw new RuntimeException( 'Set data, first!' );
 		$this->mode	= $mode;
+		$this->prepareData( $mode );
 		return $this;
 	}
 
@@ -87,7 +122,7 @@ class View_Helper_Newsletter_Mail
 	public function setReaderLetterId( int|string $readerLetterId ): self
 	{
 		$this->logic->checkReaderLetterId( $readerLetterId, TRUE );
-		$this->letter	= $this->logic->getReaderLetter( $readerLetterId );
+		$this->setReaderLetter( $this->logic->getReaderLetter( $readerLetterId ) );
 		$this->setNewsletterId( $this->letter->newsletterId );
 		$this->setReaderId( $this->letter->newsletterReaderId );
 		return $this;
@@ -137,7 +172,7 @@ class View_Helper_Newsletter_Mail
 
 	protected function prepareData( int $mode = self::MODE_PLAIN ): array
 	{
-		$data		= $this->data;
+		$data		= $this->originalData;
 		$words		= $this->env->getLanguage()->getWords( 'resource/newsletter' );
 		$w			= (object) $words['send'];
 
@@ -145,7 +180,12 @@ class View_Helper_Newsletter_Mail
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$baseUrl	= Logic_Frontend::getInstance( $this->env )->getUrl();
 		$data['baseUrl']		= $baseUrl;
-		$data['templateId']		= $this->template->newsletterTemplateId;
+
+		if( $this->template ){
+			$data['templateId']		= $this->template->newsletterTemplateId;
+			$data['linkTracking']		= '';
+			$data['imprint']		= $this->template->imprint;
+		}
 
 		if( $this->newsletter ){
 			$data['nr']				= $this->newsletter->newsletterId;
@@ -172,7 +212,7 @@ class View_Helper_Newsletter_Mail
 			$data['linkConfirm']		= $urlConfirm;
 		}
 
-		if( $this->letter ){
+		if( $this->reader && $this->letter ){
 			$data['readerId']			= $this->reader->newsletterReaderId;
 			$emailHash	= base64_encode( $this->reader->email );
 			$urlView	= $baseUrl.'info/newsletter/view/'.$this->letter->newsletterReaderLetterId;
@@ -183,10 +223,27 @@ class View_Helper_Newsletter_Mail
 			$data['linkTracking']		= $urlTrack;
 			$data['tracking']			= HtmlTag::create( 'img', NULL, ['src' => $urlTrack] );
 		}
+
+		if( (bool) ( $this->data['preview'] ?? FALSE ) ){
+			if( $mode === self::MODE_HTML ){
+				$data['linkView']		= "javascript: alert('Disabled in preview.'); void(0);";
+				$data['linkUnregister']	= "javascript: alert('Disabled in preview.'); void(0);";
+				$data['linkTracking']	= "";
+				$data['tracking']		= "";
+			}
+			else if( $mode === self::MODE_PLAIN ){
+				$data['linkView']		= "[Disabled in preview]";
+				$data['linkUnregister']	= "[Disabled in preview]";
+				$data['linkTracking']	= "";
+				$data['tracking']		= "[trackingLink=[#trackingUrl#]]";
+			}
+		}
+		
 //		print_m( $data ); die();
 /*		else{
 			$urlTrack	= 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';			//  just embed an empty image
 		}*/
+		$this->data	= $data;
 		return $data;
 	}
 
@@ -207,85 +264,6 @@ class View_Helper_Newsletter_Mail
 				break;
 		}
 		return $content;
-	}
-
-	/**
-	 *	@param		boolean		$strict
-	 *	@return		string
-	 *	@throws		IoException
-	 */
-	protected function renderHtml( bool $strict = TRUE ): string
-	{
-		$data	= $this->prepareData( self::MODE_HTML );
-		$data['imprint']	= $this->renderImprint( TRUE );
-		$page		= new HtmlPage();
-		$page->addHead( HtmlTag::create( 'meta', NULL, ['charset' => 'utf-8'] ) );
-		$page->addHead( HtmlTag::create( 'meta', NULL, ['name' => 'x-apple-disable-message-reformatting'] ) );
-		$page->addHead( '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->' );
-		$page->addMetaTag( "name", "viewport", "width=device-width" );
-		$page->addMetaTag( "http-equiv", "X-UA-Compatible", "IE=edge" );
-		$page->setBaseHref( $data['baseUrl'] );
-
-		if( isset( $data['title'] ) )
-			$page->setTitle( $data['title'] );
-
-		$styles		= "";
-		foreach( $this->template->styles as $url ){
-			if( file_exists( $this->cachePath.md5( $url ) ) )
-				$styles		.= FileReader::load( $this->cachePath.md5( $url ) );
-			else{
-				$content	= NetReader::readUrl( $url );
-				FileWriter::save( $this->cachePath.md5( $url ), $content );
-				$styles		.= $content;
-			}
-		}
-		$styles		.= trim( $this->template->style );
-		if( ( $styles = trim( CssFileCompressor::compressString( $styles ) ) ) )
-			$page->addHead( HtmlTag::create( 'style', $styles ) );
-
-		$page->addHead( "<!--[if mso]><style>* {font-family: sans-serif !important;}</style><![endif]-->" );
-
-/*		// JavaScript is not working within user email clients
-		$scripts		= [];
-		foreach( $this->template->scripts as $url ){
-			if( file_exists( $this->cachePath.md5( $url ) ) )
-				$scripts[]	= FileReader::load( $this->cachePath.md5( $url ) );
-			else{
-				$content	= NetReader::readUrl( $url );
-				FileWriter::save( $this->cachePath.md5( $url ), $content );
-				$scripts[]	= $content;
-			}
-		}
-		$scripts[]	= trim( $this->template->script );
-		$scripts	= trim( join( "\n", $scripts ) );
-		if( strlen( $scripts ) )
-			$page->addHead( HtmlTag::create( 'script', $scripts ) );*/
-
-		$data['tracking']	= '';
-		$isPreview	= isset( $data['preview'] ) && $data['preview'];
-		if( !$isPreview ){
-			$script	= 'document.getElementById("browser-link").remove();';							//  script to remove browser link in browser view
-			$page->addScript( 'window.addEventListener("load", function(){'.$script.'});' );	//  add script to HTML page
-			if( isset( $data['linkTracking'] ) && $data['linkTracking'] ){							//  tracking link is defined
-				$data['tracking']	= HtmlTag::create( 'img', NULL, [					//  create tracking pixel image
-					'src' => $data['linkTracking']													//  ... pointing to tracking URL
-				] );
-			}
-		}
-
-		$content	= $this->template->html;														//  get HTML template
-		foreach( $data as $key => $value )															//  iterate template content data
-			$content	= str_replace( '[#'.$key.'#]', $value, $content );					//  replace placeholder
-		if( $strict )
-			$content	= preg_replace( "/\[#.+#\]/U", "", $content );			//  remove not replace placeholders
-		$content	= $this->realizeColumns( $content, 1 );									//
-		if( self::MODE_HTML_TRACKING === $this->mode )
-			$content	= $this->makeHtmlLinksTrackable( $content );
-		$page->addBody( $content );																	//  set final HTML as page body
-		return $page->build( [																		//  return rendered HTML page
-			'class'		=> 'mail',
-			'style'		=> 'mso-line-height-rule: exactly;',
-		] );
 	}
 
 	protected function makeHtmlLinksTrackable( string $html ): string
@@ -326,6 +304,30 @@ class View_Helper_Newsletter_Mail
 	}
 
 	/**
+	 *	@param		boolean		$strict
+	 *	@return		string
+	 *	@throws		IoException
+	 */
+	protected function renderHtml( bool $strict = TRUE ): string
+	{
+		$this->data['imprint']	= $this->renderImprint( TRUE );
+
+		if( $this->newsletter )
+			$content	= $this->newsletter->html;													//  get HTML from newsletter
+		else if( $this->template )
+			$content	= $this->template->html;													//  get HTML from newsletter template
+		else
+			throw new RuntimeException( 'Neither newsletter not template set' );
+
+		foreach( $this->data as $key => $value )													//  iterate template content data
+			$content	= str_replace( '[#'.$key.'#]', $value, $content );					//  replace placeholder
+		$content	= $this->realizeColumns( $content, 1 );									//
+		if( self::MODE_HTML_TRACKING === $this->mode )
+			$content	= $this->makeHtmlLinksTrackable( $content );
+		return $content;
+	}
+
+	/**
 	 *	@param		bool		$asHtml
 	 *	@return		string
 	 */
@@ -345,10 +347,16 @@ class View_Helper_Newsletter_Mail
 	 */
 	protected function renderPlain(): string
 	{
-		$data	= $this->prepareData();
-		$data['imprint']	= $this->renderImprint();
-		$content	= $this->template->plain;
-		foreach( $data as $key => $value )
+		$this->data['imprint']	= $this->renderImprint();
+
+		if( $this->newsletter )
+			$content	= $this->newsletter->plain;													//  get plaintext from newsletter
+		else if( $this->template )
+			$content	= $this->template->plain;													//  get plaintext from newsletter template
+		else
+			throw new RuntimeException( 'Neither newsletter not template set' );
+
+		foreach( $this->data as $key => $value )
 			$content	= str_replace( '[#'.$key.'#]', $value, $content );
 		$content	= $this->realizeColumns( $content, 0 );
 		return wordwrap( $content, 78 );

@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\Entity;
 class Entity_Newsletter_Template extends Entity
 {
 	public int|string $newsletterTemplateId		= 0;
+	public int|string $mailTemplateId			= 0;
 	public int|string $creatorId				= 0;
 	public ?string $themeId						= NULL;
 	public string $version						= '1';
