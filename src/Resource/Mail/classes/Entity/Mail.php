@@ -32,6 +32,7 @@ class Entity_Mail extends Entity
 	public Mail_Abstract|NULL $objectInstance	= NULL;
 	public string|NULL $objectSerial			= NULL;
 	public string|NULL $rawInflated				= NULL;
+	public array $parts					= [];
 
 	protected static function checkValues( array $data ): void
 	{

@@ -6,7 +6,7 @@ class Job_Mail extends Job_Abstract
 	 *	Allows to test direct mail sending using the transports of mail classes.
 	 *	Allows to test queue based mail sending. Needs queue to be enabled in module config .
 	 *	Supports verbose mode.
-	 *	Does not Support dry mode.
+	 *	Does not support dry mode.
 	 *
 	 *	Parameters:
 	 *		--to=EMAIL_ADDRESS
