@@ -62,8 +62,19 @@ class Job_Job extends Job_Abstract
 		if( [] !== $list ){
 			$this->out( 'Discovered '.count( $list ).' new jobs:' );
 			foreach( $list as $job ){
-				if( $this->parameters->get( '--verbose' ) )
-					$this->out( '- '.$job->identifier );
+				$this->out( '- '.$job->identifier );
+				if( $this->verbose ){
+					$mode = match($job->mode){
+						1 => 'single',
+						2 => 'multiple',
+						3 => 'exclusive',
+					};
+					$this->out( '  - Run Mode: '.$mode );
+					$this->out( '  - Class Name: '.$job->className );
+					$this->out( '  - Method Name: '.$job->methodName );
+					$this->out( '  - Identifier: '.$job->identifier );
+					$this->out( '  - Definition ID: '.$job->jobDefinitionId );
+				}
 			}
 		}
 		return count( $list );
