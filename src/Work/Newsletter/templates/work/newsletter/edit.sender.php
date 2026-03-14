@@ -10,6 +10,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $groups */
 /** @var array $groupIds */
 /** @var string $newsletterId */
+/** @var int $nrReaders */
 /** @var array $readers */
 
 $iconSelect		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
@@ -68,10 +69,11 @@ $panelGroups	= '
 
 $list		= '<div class="alert"><em class="not-muted">Noch keine Empfängerliste gewählt.</em></div>';
 $disabled	= ' disabled="disabled"';
-if( $readers ){
-	$list	= [];
-	if( count( $readers ) > 0 ){
-		$label	= 'An alle Abonnenten. <small class="muted">(Die vollständige Liste wird bei '.count( $readers ).' Empfängern nicht angezeigt.)</small>';
+
+$list	= [];
+if( $nrReaders || [] !== $readers ){
+	if( $nrReaders && [] === $readers ) {
+		$label	= 'An alle Abonnenten. <small class="muted">(Die vollständige Liste wird bei '.$nrReaders.' Empfängern nicht angezeigt.)</small>';
 		$input	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'name'		=> 'readerIds[]',
@@ -80,7 +82,7 @@ if( $readers ){
 		] );
 		$list[]	= HtmlTag::create( 'label', $input.'&nbsp;'.$label, ['class' => 'checkbox'] );
 	}
-	else{
+	else if( [] !== $readers ){
 		foreach( $readers as $reader ){
 			$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
 			$input	= HtmlTag::create( 'input', NULL, [

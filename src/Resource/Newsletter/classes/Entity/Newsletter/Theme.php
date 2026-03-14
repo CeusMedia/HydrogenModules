@@ -10,17 +10,17 @@ class Entity_Newsletter_Theme
 	public string $created;
 	public string $modified;
 	/** @var ?object{address: string, name: ?string} $sender */
-	public ?object $sender		= NULL;
-	public ?string $imprint		= NULL;
-	public ?string $styles		= NULL;
+	public ?object $sender				= NULL;
+	public ?string $imprint				= NULL;
+	public string|array|NULL $styles	= NULL;
 
 	/** @var ?object{name: string, email: ?string, company: ?string, url: ?string} $author */
-	public ?object $author		= NULL;
-	public ?string $license		= NULL;
-	public ?string $licenseUrl	= NULL;
-	public ?string $description	= NULL;
+	public ?object $author				= NULL;
+	public ?string $license				= NULL;
+	public ?string $licenseUrl			= NULL;
+	public ?string $description			= NULL;
 
-	public ?string $folder		= NULL;
+	public ?string $folder				= NULL;
 
 	public function __construct()
 	{

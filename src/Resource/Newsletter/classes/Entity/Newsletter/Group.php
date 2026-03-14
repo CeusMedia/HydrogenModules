@@ -12,5 +12,7 @@ class Entity_Newsletter_Group extends Entity
 	public int $createdAt					= 0;
 	public ?int $modifiedAt					= NULL;
 
+	/** @var array<Entity_Newsletter_Reader> $readers */
+	public array $readers					= [];
 	public bool $isChecked					= FALSE;
 }

@@ -13,6 +13,7 @@ use View_Helper_Bootstrap_Modal as BootstrapModalDialog;
 /** @var object $newsletter */
 /** @var array<object> $addTemplates */
 /** @var array<object> $addNewsletters */
+/** @var bool $useUserGroupRelations */
 
 $w	= (object) $words->add;
 
@@ -76,7 +77,7 @@ $formAdd	= '
 				<select name="newsletterTemplateId" id="input_newsletterTemplateId" class="span12" required="required">'.$optTemplate.'</select>
 			</div>
 		</div>
-		<div class="row-fluid optional newsletterId newsletterId-0">
+<!--		<div class="row-fluid optional newsletterId newsletterId-0">
 			<div class="span6">
 				<label for="input_senderAddress">'.$w->labelSenderAddress.'</label>
 				<input type="text" name="senderAddress" id="input_senderAddress" class="span12" required="required"/>
@@ -85,7 +86,7 @@ $formAdd	= '
 				<label for="input_senderName">'.$w->labelSenderName.'</label>
 				<input type="text" name="senderName" id="input_senderName" class="span12"/>
 			</div>
-		</div>
+		</div>-->
 <!--		<div class="row-fluid" style="display: none">
 			<div class="span9">
 				<label for="input_subject">'.$w->labelSubject.'</label>

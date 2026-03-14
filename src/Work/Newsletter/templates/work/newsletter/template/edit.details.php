@@ -8,12 +8,14 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var View_Work_Newsletter_Template $view */
 /** @var object $words */
 /** @var bool $tabbedLinks */
-/** @var object $template */
+/** @var Entity_Newsletter_Template $template */
 /** @var array $newsletters */
+/** @var array<Entity_Mail_Template> $mailTemplates */
 /** @var string $templateId */
 /** @var bool $isUsed */
 /** @var array $buttons */
 
+/** @var object $w */
 $w		= $words->edit;
 
 $iconCopy		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-clone'] ).'&nbsp;';
@@ -33,6 +35,11 @@ if( [] !== $newsletters ){
 	$listNewsletters	= HtmlTag::create( 'ul', $listNewsletters, ['class' => 'unstyled nav nav-pills nav-stacked'] );
 }
 
+$optMailTemplate = [];
+foreach( $mailTemplates as $mailTemplate )
+	$optMailTemplate[$mailTemplate->mailTemplateId]	= $mailTemplate->title;
+$optMailTemplate	= HtmlElements::Options( $optMailTemplate, $template->mailTemplateId );
+
 $panelNewsletters	= '';
 if( isset( $newsletters ) && count( $newsletters ) )
 	$panelNewsletters	= '
@@ -47,7 +54,7 @@ if( isset( $newsletters ) && count( $newsletters ) )
 
 
 /*  --  PANEL: COPY  --  */
-$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$words->edit->buttonCopy, [
+$buttonCopy		= HtmlTag::create( 'a', $iconCopy.$w->buttonCopy, [
 	'class'		=> "btn btn-success",
 	'href'		=> "./work/newsletter/template/add?templateId=".$templateId
 ] );
@@ -74,11 +81,11 @@ $panelCopy		= '
 </div>';
 
 /*  --  PANEL: REMOVE  --  */
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$words->edit->buttonRemove, [
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
-	'onclick'	=> $isUsed ? "alert('".$words->edit->buttonRemoveDisabled."'); return false;" : NULL,
+	'onclick'	=> $isUsed ? "alert('".$w->buttonRemoveDisabled."'); return false;" : NULL,
 ] );
 
 $panelRemove	= '';
@@ -101,28 +108,64 @@ if( isset( $newsletters ) && !count( $newsletters ) )
 
 $panelEdit		= '
 <div class="content-panel">
-	<h3>'.$words->edit->heading.'</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
-			<div class="span8">
-				<div class="row-fluid">
-					<div class="span12">
-						<label for="input_title" class="mandatory">'.$words->edit->labelTitle.'</label>
-<!--						<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>-->
+			<div class="span6">
+				<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
+<!--			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ).'"/>-->
 						'.HtmlTag::create( 'input', NULL, [
-							'type'		=> 'text',
-							'name'		=> 'title',
-							'id'		=> 'input_title',
-							'class'		=> 'span12',
-							'value'		=> $template->title,
-							'required'	=> 'required',
-							'readonly'	=> $isUsed ? 'readonly' : NULL,
-						] ).'
-					</div>
-				</div>
+		'type'		=> 'text',
+		'name'		=> 'title',
+		'id'		=> 'input_title',
+		'class'		=> 'span12',
+		'value'		=> $template->title,
+		'required'	=> 'required',
+		'readonly'	=> $isUsed ? 'readonly' : NULL,
+	] ).'
+			</div>
+			<div class="span6">
+				<label for="input_mailTemplateId" class="mandatory">'.$w->labelMailTemplateId.'</label>
+						'.HtmlTag::create( 'select', $optMailTemplate, [
+		'name'		=> 'mailTemplateId',
+		'id'		=> 'input_mailTemplateId',
+		'class'		=> 'span12',
+	] ).'
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
+				<label for="input_senderAddress" class="mandatory">'.$w->labelSenderAddress.'</label>
+						'.HtmlTag::create( 'input', NULL, [
+		'type'		=> "text",
+		'name'		=> "senderAddress",
+		'id'		=> "input_senderAddress",
+		'class'		=> "span12",
+		'value'		=> htmlentities( $template->senderAddress ?? '', ENT_QUOTES, 'UTF-8' ),
+		'required'	=> 'required',
+		'readonly'	=> $isUsed ? 'readonly' : NULL,
+		'disabled'	=> $isUsed ? 'disabled' : NULL,
+	] ).'
+			</div>
+			<div class="span6">
+				<label for="input_senderName" class="mandatory">'.$w->labelSenderName.'</label>
+				'.HtmlTag::create( 'input', NULL, [
+		'type'		=> "text",
+		'name'		=> "senderName",
+		'id'		=> "input_senderName",
+		'class'		=> "span12",
+		'value'		=> htmlentities( $template->senderName ?? '', ENT_QUOTES, 'UTF-8' ),
+		'required'	=> 'required',
+		'readonly'	=> $isUsed ? 'readonly' : NULL,
+		'disabled'	=> $isUsed ? 'disabled' : NULL,
+	] ).'
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
 <!--				<div class="row-fluid">
 					<div class="span4">
-						<label for="input_status">'.$words->edit->labelStatus.'</label>
+						<label for="input_status">'.$w->labelStatus.'</label>
 						'.HtmlTag::create( 'select', $optStatus, [
 							'name'		=> 'status',
 							'id'		=> 'input_status',
@@ -133,51 +176,7 @@ $panelEdit		= '
 					</div>
 				</div>-->
 				<div class="row-fluid">
-					<div class="span6">
-						<label for="input_senderAddress" class="mandatory">'.$words->edit->labelSenderAddress.'</label>
-						'.HtmlTag::create( 'input', NULL, [
-							'type'		=> "text",
-							'name'		=> "senderAddress",
-							'id'		=> "input_senderAddress",
-							'class'		=> "span12",
-							'value'		=> htmlentities( $template->senderAddress ?? '', ENT_QUOTES, 'UTF-8' ),
-							'required'	=> 'required',
-							'readonly'	=> $isUsed ? 'readonly' : NULL,
-							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						] ).'
-					</div>
-					<div class="span6">
-						<label for="input_senderName" class="mandatory">'.$words->edit->labelSenderName.'</label>
-						'.HtmlTag::create( 'input', NULL, [
-							'type'		=> "text",
-							'name'		=> "senderName",
-							'id'		=> "input_senderName",
-							'class'		=> "span12",
-							'value'		=> htmlentities( $template->senderName ?? '', ENT_QUOTES, 'UTF-8' ),
-							'required'	=> 'required',
-							'readonly'	=> $isUsed ? 'readonly' : NULL,
-							'disabled'	=> $isUsed ? 'disabled' : NULL,
-						] ).'
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span6">
-						<label for="input_status" class="checkbox">
-						'.HtmlTag::create( 'input', NULL, [
-							'type'		=> 'checkbox',
-							'name'		=> 'status',
-							'value'		=> Model_Newsletter_Template::STATUS_READY,
-							'id'		=> 'input_status',
-							'readonly'	=> $isUsed ? 'readonly' : NULL,
-							'disabled'	=> $isUsed ? 'disabled' : NULL,
-							'checked'	=> $template->status >= Model_Newsletter_Template::STATUS_READY ? 'checked' : NULL,
-						] ).'
-							'.$words->edit->labelReady.'
-						</label>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span6">
+					<div class="span12">
 						<label for="input_authorName">'.$w->labelAuthorName.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
@@ -189,7 +188,9 @@ $panelEdit		= '
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						] ).'
 					</div>
-					<div class="span6">
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
 						<label for="input_authorName">'.$w->labelAuthorEmail.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
@@ -203,8 +204,8 @@ $panelEdit		= '
 					</div>
 				</div>
 				<div class="row-fluid">
-					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorCompany.'</label>
+					<div class="span12">
+						<label for="input_authorCompany">'.$w->labelAuthorCompany.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorCompany",
@@ -215,8 +216,10 @@ $panelEdit		= '
 							'disabled'	=> $isUsed ? 'disabled' : NULL,
 						] ).'
 					</div>
-					<div class="span6">
-						<label for="input_authorName">'.$w->labelAuthorUrl.'</label>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_authorUrl">'.$w->labelAuthorUrl.'</label>
 						'.HtmlTag::create( 'input', NULL, [
 							'type'		=> "text",
 							'name'		=> "authorUrl",
@@ -229,17 +232,37 @@ $panelEdit		= '
 					</div>
 				</div>
 			</div>
-			<div class="span4">
-				<label for="input_imprint">'.$words->edit->labelImprint.'</label>
-				'.HtmlTag::create( 'textarea', htmlentities( $template->imprint ?? '', ENT_QUOTES, 'UTF-8' ), [
-					'name'		=> 'imprint',
-					'id'		=> 'input_imprint',
-					'class'		=> 'span12',
-					'rows'		=> 12,
-					'required'	=> 'required',
-					'readonly'	=> $isUsed ? 'readonly' : NULL,
-					'disabled'	=> $isUsed ? 'disabled' : NULL,
-				] ).'
+			<div class="span6">
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_imprint">'.$w->labelImprint.'</label>
+						'.HtmlTag::create( 'textarea', htmlentities( $template->imprint ?? '', ENT_QUOTES, 'UTF-8' ), [
+							'name'		=> 'imprint',
+							'id'		=> 'input_imprint',
+							'class'		=> 'span12',
+							'rows'		=> 9,
+							'required'	=> 'required',
+							'readonly'	=> $isUsed ? 'readonly' : NULL,
+							'disabled'	=> $isUsed ? 'disabled' : NULL,
+						] ).'
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_status" class="checkbox">
+							'.HtmlTag::create( 'input', NULL, [
+								'type'		=> 'checkbox',
+								'name'		=> 'status',
+								'value'		=> Model_Newsletter_Template::STATUS_READY,
+								'id'		=> 'input_status',
+								'readonly'	=> $isUsed ? 'readonly' : NULL,
+								'disabled'	=> $isUsed ? 'disabled' : NULL,
+								'checked'	=> $template->status >= Model_Newsletter_Template::STATUS_READY ? 'checked' : NULL,
+							] ).'
+								'.$w->labelReady.'
+						</label>
+					</div>
+				</div>
 			</div>
 		</div>
 		'.$buttons.'
