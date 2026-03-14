@@ -20,7 +20,6 @@ class Controller_Info_Newsletter extends Controller
 	 *	@param		int|string		$readerId
 	 *	@param		?string			$key
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function confirm( int|string $readerId, ?string $key = NULL ): void
 	{
@@ -131,6 +130,7 @@ class Controller_Info_Newsletter extends Controller
 	/**
 	 *	@param		$arg1
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function index( $arg1 = NULL ): void
 	{
@@ -168,7 +168,6 @@ class Controller_Info_Newsletter extends Controller
 	/**
 	 *	@param		int|string|NULL		$newsletterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function preview( int|string|NULL $newsletterId = NULL ): void
 	{
@@ -199,7 +198,7 @@ class Controller_Info_Newsletter extends Controller
 	 *	@param		?string				$emailHash
 	 *	@param		int|string|NULL		$readerLetterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function unregister( ?string $emailHash = NULL, int|string|NULL $readerLetterId = NULL ): void
 	{
@@ -266,6 +265,7 @@ class Controller_Info_Newsletter extends Controller
 	 *	@param		int|string			$letterId
 	 *	@param		int|string|NULL		$linkId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function track( int|string $letterId, int|string|NULL $linkId = NULL ): void
 	{
@@ -308,23 +308,12 @@ class Controller_Info_Newsletter extends Controller
 	/**
 	 *	@param		int|string		$readerLetterId
 	 *	@return		void
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function view( int|string $readerLetterId ): void
 	{
 		try{
-			$letter		= $this->logic->getReaderLetter( $readerLetterId );
-			$helper		= new View_Helper_Newsletter_Mail( $this->env );
-			$helper->setMode( View_Helper_Newsletter_Mail::MODE_HTML );
-			$helper->setReaderLetterId( $readerLetterId );
-			$helper->setReaderId( $letter->newsletterReaderId );
-//			$helper->setNewsletterId( $letter->newsletterId );
-			$helper->setData( [
-				'readerLetterId'	=> $readerLetterId,
-				'newsletterId'		=> $letter->newsletterId,
-				'preview'			=> $this->request->has( 'dry' ),
-			] );
-			print( $helper->render() );
+			$mail	= new Mail_Newsletter( $this->env, ['readerLetterId' => $readerLetterId] );
+			print( $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED ) );
 			exit;
 		}
 		catch( Exception $e ){

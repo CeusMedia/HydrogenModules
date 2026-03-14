@@ -81,29 +81,28 @@ class Job_Newsletter extends Job_Abstract
 	}
 
 	/**
-	 *	@param		bool		$verbose
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function migrate( bool $verbose = FALSE ): void
+	public function migrate(): void
 	{
-		if( $verbose ){
+		if( $this->verbose ){
 			$this->out( '' );
 			$this->out( 'Migration::recoverReaderLetterQueueIds' );
 		}
 		$results	= $this->recoverReaderLetterQueueIds();
-		if( $verbose && ( 1 || $results->letters ) )
+		if( $this->verbose && ( 1 || $results->letters ) )
 			$this->out( vsprintf( "Migrated %d letters into %d queues.", [
 				$results->letters,
 				$results->queues
 			] ) );
 
-		if( $verbose ){
+		if( $this->verbose ){
 			$this->out( '' );
 			$this->out( 'Migration::recoverReaderLetterMailIds' );
 		}
-		$results	= $this->recoverReaderLetterMailIds( $verbose );
-		if( $verbose && ( 1 || $results->newsletters ) )
+		$results	= $this->recoverReaderLetterMailIds();
+		if( $this->verbose && ( 1 || $results->newsletters ) )
 			$this->out( vsprintf( 'Scanned %d newsletters, found %d reader letters and recovered %d mail ID.', [
 				$results->newsletters,
 				$results->letters,
@@ -112,13 +111,16 @@ class Job_Newsletter extends Job_Abstract
 	}
 
 	/**
+	 *	Supports verbose mode.
+	 *	Does support dry mode.
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function send(): void
 	{
-		$verbose	= (bool) $this->parameters->get( '--verbose', TRUE );
+		if( $this->dryMode )
+			$this->out( 'DRY RUN - no changes will be made.' );
 		$words		= (object) $this->words->send;												//  get words or like date formats
 		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
 		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
@@ -141,15 +143,15 @@ class Job_Newsletter extends Job_Abstract
 			'newsletterQueueId'	=> $queueIds,
 		];
 		$number		= 0;																		//  prepare counter for round limit
-		$orders		= [];																	//  no order
-		$limits		= [0, $max];															//  limit letters
+		$orders		= [];																		//  no order
+		$limits		= [0, $max];																//  limit letters
 		$letters	= $this->logic->getReaderLetters( $conditions, $orders, $limits );			//  get letters to send
 		$start		= microtime( TRUE );
 		if( $letters ){
 			while( $letters && ( $max == 0 || $number < $max ) ){								//  iterate letters
 				if( $number && $sleep )															//  sleep time is defined and not first mail
-					usleep( $sleep * pow( 10, 6 ) );											//  sleep n seconds
-				$letter		= array_shift( $letters );											//  get next letter
+					usleep( $sleep * pow( 10, 6 ) );					//  sleep n seconds
+				$letter		= array_shift( $letters );									//  get next letter
 				$reader		= $letter->reader;													//  shortcut letter reader
 				$mail		= new Mail_Newsletter( $this->env, [
 					'readerLetterId'	=> $letter->newsletterReaderLetterId,
@@ -157,25 +159,38 @@ class Job_Newsletter extends Job_Abstract
 				$language	= $this->env->getLanguage()->getLanguage();
 				$receiver	= $this->logic->getReader( $letter->newsletterReaderId );
 				$logicMail->appendRegisteredAttachments( $mail, $language );
-				if( $verbose )
+				if( $this->verbose )
 					$this->out( sprintf( 'Sending mail to %s ...', $letter->reader->email ) );
 
 //				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
 //				if( is_int( $mailId ) )
 //					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 
-				$mailId	= $logicMail->enqueueMail( $mail, $language, $receiver );
-				$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+				if( !$this->dryMode ){
+					$mailId	= $logicMail->enqueueMail( $mail, $language, $receiver );
+					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+					$this->logic->setReaderLetterStatus(
+						$letter->newsletterReaderLetterId,
+						Model_Newsletter_Reader_Letter::STATUS_SENT
+					);
+				}
 
-				$this->logic->setReaderLetterStatus(
-					$letter->newsletterReaderLetterId,
-					Model_Newsletter_Reader_Letter::STATUS_SENT
-				);
 				$number++;																		//  increase counter for round limit
 			}
 		}
-		$time	= round( microtime( TRUE ) - $start, 3 ) * 1000;
+
+		$resultStatus	= 0 !== $number ? Model_Job_Run::STATUS_SUCCESS : Model_Job_Run::STATUS_DONE;
+		$resultData		= [];
+
+		$microtime	= microtime( TRUE ) - $start;
+		$time		= round( $microtime, 3 ) * 1000;
 		$this->log( sprintf( 'sent %d mails in %d ms', $number, $time ) );
+
+		$resultData['nrDone']		= $number;
+		$resultData['runtime']		= $time.'ms';
+		$resultData['ratio']		= round( $number / $microtime, 1 ).' mails/second' ;
+		$this->setResult( $resultStatus, $number, $resultData );
+
 		foreach( $queues as $queue ){
 			$conditions	= [
 				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
@@ -184,13 +199,15 @@ class Job_Newsletter extends Job_Abstract
 			if( !count( $this->logic->getReaderLetters( $conditions ) ) ){
 				$newsletter	= $this->logic->getNewsletter( $queue->newsletterId );
 				$this->log( sprintf( 'Newsletter %s is done.', $newsletter->title ) );
-				$this->logic->editNewsletter( $queue->newsletterId, [
-					'status'	=> Model_Newsletter::STATUS_SENT
-				] );
-				$this->logic->setQueueStatus(
-					$queue->newsletterQueueId,
-					Model_Newsletter_Queue::STATUS_DONE
-				);
+				if( !$this->dryMode ){
+					$this->logic->editNewsletter( $queue->newsletterId, [
+						'status'	=> Model_Newsletter::STATUS_SENT
+					] );
+					$this->logic->setQueueStatus(
+						$queue->newsletterQueueId,
+						Model_Newsletter_Queue::STATUS_DONE
+					);
+				}
 			//	@todo		send mail
 			}
 		}
@@ -211,11 +228,10 @@ class Job_Newsletter extends Job_Abstract
 	}
 
 	/**
-	 *	@param		bool		$verbose
 	 *	@return		object
 	 *	@throws		ReflectionException
 	 */
-	protected function recoverReaderLetterMailIds( bool $verbose = FALSE ): object
+	protected function recoverReaderLetterMailIds(): object
 	{
 		$modelMail		= new Model_Mail( $this->env );
 		$countLetters	= 0;
@@ -258,12 +274,12 @@ class Job_Newsletter extends Job_Abstract
 					$countRecovered	+= 1;
 				}
 			}
-			if( $verbose ){
+			if( $this->verbose ){
 				$sign	= $countRecoveredOld != $countRecovered ? '+' : '.';
 				$this->showProgress( $nr + 1, count( $entries ), $sign );
 			}
 		}
-		if( $verbose && $newsletters )
+		if( $this->verbose && $newsletters )
 			$this->out();
 		return (object) [
 			'newsletters'	=> count( $entries ),
