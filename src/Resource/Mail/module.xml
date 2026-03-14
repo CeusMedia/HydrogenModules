@@ -35,7 +35,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 
 ]]></description>
 	<category>Resource</category>
-	<version>1.1.3</version>
+	<version>1.1.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -110,6 +110,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 	<log version="1.1.1">Use entity for attachment and template models.</log>
 	<log version="1.1.2">Use new entity base class from framework.</log>
 	<log version="1.1.3">Add mail priority on mail object and queue.</log>
+	<log version="1.1.4">HTML mail rendering supports module based placeholders.</log>
 <!--	<log version="1.1">Code style review and strict type hinting.</log>-->
 <!--	<log version="1.2">Support pausing mails.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>

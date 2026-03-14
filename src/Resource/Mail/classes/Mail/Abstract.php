@@ -50,8 +50,8 @@ abstract class Mail_Abstract
 	/** @var		HtmlPage $page			Empty page object for HTML mails */
 	protected HtmlPage $page;
 
-	/** @var		object					$transport		Mail transport object, build on construction */
-	protected object $transport;
+	/** @var		SmtpMailTransport|LocalMailTransport	$transport		Mail transport object, build on construction */
+	protected SmtpMailTransport|LocalMailTransport $transport;
 
 //	/** @var		View 					$view			General view instance */
 //	protected View $view;
@@ -124,6 +124,7 @@ abstract class Mail_Abstract
 		$this->page->setBaseHref( $this->baseUrl );
 
 		$this->initTransport();
+		$this->mail->addHeaderPair( 'X-Auto-Response-Suppress', 'All' );
 		$this->mail->setSender( $this->options->get( 'sender.system' ) );
 		$this->data		= $data;
 		$this->__onInit();
@@ -483,12 +484,13 @@ abstract class Mail_Abstract
 	/**
 	 *	@param		string			$content
 	 *	@param		int|string		$templateId
+	 *	@param		array			$additionalPlaceholders
 	 *	@return		string
 	 *	@throws		IoException
 	 *	@throws		NotSupportedException		Remote images are not supported, yet
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyTemplateToHtml( string $content, int|string $templateId = '0' ): string
+	protected function applyTemplateToHtml( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): string
 	{
 		$messenger	= $this->env->getMessenger();
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
@@ -496,18 +498,17 @@ abstract class Mail_Abstract
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
 		$baseUrl		= $this->env->getBaseUrl();
-		$replacements	= [
-			'content'		=> $content,
-			'template.css'	=> $template->css,
+
+		$contentFull	= $this->realizePlaceholders( $template->html, ['content' => $content] );
+		$contentFull	= $this->realizePlaceholders( $contentFull, [
 			'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
 			'app.url'		=> $baseUrl,
 			'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
 			'app.path'		=> rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' ),
 			'app.title'		=> $wordsMain['main']['title'],
-		];
-		$contentFull	= $template->html;
-		foreach( $replacements as $key => $value )
-		 	$contentFull	= str_replace( '[#'.$key.'#]', $value ?? '', $contentFull );
+			'template.css'	=> $template->css,
+		] );
+		$contentFull	= $this->realizePlaceholders( $contentFull, $additionalPlaceholders );
 
 		if( $template->images ){
 			if( strlen( trim( $template->images ) ) && preg_match( "/^[a-z0-9]/", $template->images ) )
@@ -567,26 +568,23 @@ abstract class Mail_Abstract
 	 *	@return		string						Fully rendered content
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyTemplateToText( string $content, int|string $templateId = NULL ): string
+	protected function applyTemplateToText( string $content, int|string $templateId = NULL, array $additionalPlaceholders = [] ): string
 	{
 		$template	= $this->getTemplateToUse( $templateId, TRUE, FALSE );
 		if( !$template )
 			return $content;
 		$wordsMain		= $this->env->getLanguage()->getWords( 'main' );
 		$baseUrl		= $this->env->getBaseUrl();
-		$replacements	= [
-			'content'		=> $content,
-			'template.css'	=> $template->css,
-			'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
-			'app.url'		=> $baseUrl,
-			'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
-			'app.path'		=> rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' ),
-			'app.title'		=> $wordsMain['main']['title'],
-		];
-		$contentFull	= $template->plain;
-		foreach( $replacements as $key => $value )
-		 	$contentFull	= str_replace( '[#'.$key.'#]', $value ?? '', $contentFull );
-		return $contentFull;
+		return $this->realizePlaceholders(
+			$this->realizePlaceholders( $template->plain, [
+				'content'		=> $content,
+				'template.css'	=> $template->css,
+				'app.email'		=> $this->env->getConfig()->get( 'app.email' ),
+				'app.url'		=> $baseUrl,
+				'app.host'		=> parse_url( $baseUrl, PHP_URL_HOST ),
+				'app.path'		=> rtrim( parse_url( $baseUrl, PHP_URL_PATH ), '/' ),
+				'app.title'		=> $wordsMain['main']['title'],
+			] ), $additionalPlaceholders );
 	}
 
 	/**
@@ -633,7 +631,7 @@ abstract class Mail_Abstract
 	 *	@param		string			$preferredTemplateId	Template ID to override database and module defaults, if usable
 	 *	@param		boolean			$considerFrontend		Flag: consider mail resource module of frontend, if available
 	 *	@param		boolean			$strict					Flag: throw exception if something goes wrong
-	 *	@return		object|NULL		Model entity object of detected mail template
+	 *	@return		Entity_Mail_Template|NULL				Model entity object of detected mail template
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	protected function getTemplateToUse( string $preferredTemplateId = '0', bool $considerFrontend = FALSE, bool $strict = TRUE ): ?object
@@ -676,6 +674,18 @@ abstract class Mail_Abstract
 	}
 
 	/**
+	 * @param string $content
+	 * @param array $replacements
+	 * @return string
+	 */
+	protected function realizePlaceholders( string $content, array $replacements = [] ): string
+	{
+		foreach( $replacements as $key => $value )
+			$content	= str_replace( '[#'.$key.'#]', $value ?? '', $content );
+		return $content;
+	}
+
+	/**
 	 *	Sends mail to directly email address using configured transport.
 	 *	ATTENTION: You SHOULD NOT use this method unless you REALLY NEED to.
 	 *	Please use one of these methods instead: sendToUser(int $userId), sendTo(obj $user)
@@ -693,41 +703,27 @@ abstract class Mail_Abstract
 
 	/**
 	 *	Sets HTML body part of mail.
-	 *	Applies mail template and adds rendered content as new mail part.
+	 *	Applies mail template.
+	 *	Realizes left placeholder by set data.
 	 *	Stores given (generated) and rendered contents.
+	 *	Adds rendered content as new mail part.
 	 *	@access		protected
-	 *	@param		string		$content	HTML mail body to set
-	 *	@param		int|string		$templateId		ID of mail template to use in favour
+	 *	@param		string			$content			HTML mail body to set
+	 *	@param		int|string		$templateId			ID of mail template to use in favor
+	 *	@param		array			$additionalPlaceholders
+	 *	@param		bool			$strict
 	 *	@return		static
 	 *	@throws		IoException
 	 *	@throws		NotSupportedException			Remote images are not supported, yet
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setHtml( string $content, int|string $templateId = '0' ): static
+	protected function setHtml( string $content, int|string $templateId = 0, array $additionalPlaceholders = [], bool $strict = TRUE ): static
 	{
-		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
-			$templateId	= $this->data['mailTemplateId' ];
+		$contentFull	= $this->wrapHtmlIntoTemplate( $content, $templateId, $additionalPlaceholders );
+		$contentFull	= $this->realizePlaceholders( $contentFull, $additionalPlaceholders );
+		if( $strict )
+			$contentFull	= preg_replace( "/\[#.+#\]/U", "", $contentFull );			//  remove not replaced placeholders
 
-		$contentFull	= $this->applyTemplateToHtml( $content, $templateId );
-
-		if( !preg_match( '/(<html>|<head>)/', $contentFull ) ){
-			$page	= $this->getPage();
-			$page->addBody( $contentFull );
-
-	/*		$page->addMetaTag( 'name', 'viewport', join( ', ', [
-				'width=device-width',
-				'initial-scale=1.0',
-				'minimum-scale=0.75',
-				'maximum-scale=2.0',
-				'user-scalable=yes',
-			] ) );*/
-
-			$classes	= array_merge( ['mail'], $this->bodyClasses );
-			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
-			if( count( $options->getAll() ) )
-				$classes[]	= 'content-panel-style-'.$options->get( 'style' );
-			$contentFull	= $page->build( ['class' => $classes] );
-		}
 		$this->contents[self::CONTENT_TYPE_HTML_GENERATED]	= $content;
 		$this->contents[self::CONTENT_TYPE_HTML_RENDERED]	= $contentFull;
 		$this->mail->addHTML( $contentFull, 'UTF-8', $this->encodingHtml );
@@ -750,22 +746,68 @@ abstract class Mail_Abstract
 
 	/**
 	 *	Sets plain text body part of mail.
-	 *	Applies mail template and adds rendered content as new mail part.
+	 *	Applies mail template.
+	 *	Realizes left placeholder by set data.
 	 *	Stores given (generated) and rendered contents.
+	 *	Adds rendered content as new mail part.
 	 *	@access		protected
 	 *	@param		string		$content		Plain text mail body to set
 	 *	@param		int|string		$templateId		ID of mail template to use in favour
+	 *	@param		array 		$additionalPlaceholders
 	 *	@return		static
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function setText( string $content, int|string $templateId = '0' ): static
+	protected function setText( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): static
 	{
 		if( !$templateId && isset( $this->data['mailTemplateId' ] ) )
 			$templateId	= $this->data['mailTemplateId' ];
 		$contentFull	= $this->applyTemplateToText( $content, $templateId );
+		$contentFull	= $this->realizePlaceholders( $contentFull, $additionalPlaceholders );
 		$this->contents[self::CONTENT_TYPE_TEXT_GENERATED]	= $content;
 		$this->contents[self::CONTENT_TYPE_TEXT_RENDERED]	= $contentFull;
 		$this->mail->addText( $contentFull, 'UTF-8', $this->encodingText );
 		return $this;
+	}
+
+	/**
+	 *	Wraps, if needed, HTML into template.
+	 *	Template will be detected or set by argument.
+	 *	Setting templateId to 0 forces to skip wrapping at all.
+	 *	Otherwise, applies template to HTML.
+	 *	@param		string			$content
+	 *	@param		int|string		$templateId
+	 *	@param		array			$additionalPlaceholders
+	 *	@return		string
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 */
+	protected function wrapHtmlIntoTemplate( string $content, int|string $templateId = '0', array $additionalPlaceholders = [] ): string
+	{
+		if( preg_match( '/(<html>|<html |<head>)/', substr( $content, 0, 200 ) ) )		//  content already is full HTML
+			return $content;
+		if( isset( $this->data['mailTemplateId' ] ) )														//  override: take template ID from mail data
+			$templateId	= $this->data['mailTemplateId' ];
+
+		$contentFull	= $this->applyTemplateToHtml( $content, $templateId, $additionalPlaceholders );
+
+		//  Fallback: use old prototype custom solution, if newer template detection failed
+		if( !preg_match( '/(<html>|<html |<head>)/', $contentFull ) ){
+			$page		= $this->getPage();
+			$page->addBody( $contentFull );
+
+	/*		$page->addMetaTag( 'name', 'viewport', join( ', ', [
+				'width=device-width',
+				'initial-scale=1.0',
+				'minimum-scale=0.75',
+				'maximum-scale=2.0',
+				'user-scalable=yes',
+			] ) );*/
+
+			$classes	= array_merge( ['mail'], $this->bodyClasses );
+			$options	= $this->env->getConfig()->getAll( 'module.ui_css_panel.', TRUE );
+			if( count( $options->getAll() ) )
+				$classes[]	= 'content-panel-style-'.$options->get( 'style' );
+			$contentFull	= $page->build( ['class' => $classes] );
+		}
+		return $contentFull;
 	}
 }

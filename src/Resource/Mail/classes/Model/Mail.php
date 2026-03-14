@@ -20,8 +20,8 @@ class Model_Mail extends Model
 	public const STATUS_ABORTED			= -3;
 	public const STATUS_FAILED			= -2;
 	public const STATUS_RETRY			= -1;
-//	public const STATUS_PAUSED			= -1;
 	public const STATUS_NEW				= 0;
+	public const STATUS_PAUSED			= 10;
 	public const STATUS_SENDING			= 1;
 	public const STATUS_SENT			= 2;
 	public const STATUS_RECEIVED		= 3;
@@ -33,8 +33,8 @@ class Model_Mail extends Model
 		self::STATUS_ABORTED,
 		self::STATUS_FAILED,
 		self::STATUS_RETRY,
-//		self::STATUS_PAUSED,
 		self::STATUS_NEW,
+		self::STATUS_PAUSED,
 		self::STATUS_SENDING,
 		self::STATUS_SENT,
 		self::STATUS_RECEIVED,
@@ -86,9 +86,14 @@ class Model_Mail extends Model
 			self::STATUS_NEW,
 		],
 		self::STATUS_NEW		=> [
+			self::STATUS_PAUSED,
 			self::STATUS_ABORTED,
 			self::STATUS_SENDING,
 			self::STATUS_SENT,
+		],
+		self::STATUS_PAUSED		=> [
+			self::STATUS_ABORTED,
+			self::STATUS_NEW,
 		],
 		self::STATUS_SENDING	=> [
 			self::STATUS_FAILED,
@@ -136,6 +141,8 @@ class Model_Mail extends Model
 		'compression',
 		'object',
 		'raw',
+//		'bytesSent',
+//		'bytesStored',
 		'enqueuedAt',
 		'attemptedAt',
 		'sentAt',

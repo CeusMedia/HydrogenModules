@@ -609,6 +609,15 @@ class Logic_Mail extends Logic
 	}
 
 	/**
+	 *	Returns list of available mail templates.
+	 *	@return		array<Entity_Mail_Template>
+	 */
+	public function getTemplates()
+	{
+		return $this->modelTemplate->getAll();
+	}
+
+	/**
 	 *	Return map of mail classes used in all queued mails and the number of related mails.
 	 *	@access		public
 	 *	@param		array			$conditions		Map of Conditions to include in SQL Query
@@ -663,7 +672,12 @@ class Logic_Mail extends Logic
 	 *	@access		public
 	 *	@param		Mail_Abstract	$mail			Mail to be sent
 	 *	@param		integer|object	$receiver		User ID or data object of receiver (must have member 'email', should have 'userId' and 'username')
-	 *	@return		boolean			TRUE if success
+	 *	@return		boolean							TRUE if success
+	 *	@throws		RuntimeException				if message has no mail sender
+	 *	@throws		RuntimeException				if message has no mail receivers
+	 *	@throws		RuntimeException				if message has no mail body parts
+	 *	@throws		RuntimeException				if connection to SMTP server failed
+	 *	@throws		RuntimeException				if sending mail failed
 	 *	@throws		ReflectionException
 	 */
 	public function sendMail( Mail_Abstract $mail, int|object $receiver ): bool
@@ -715,6 +729,7 @@ class Logic_Mail extends Logic
 			}
 			$this->modelQueue->edit( $mailId, [
 				'status'		=> Model_Mail::STATUS_SENT,
+//				'bytesSent'		=> mb_strlen( MailMessageRendererV2::render( $mail->objectInstance->mail ) ),
 				'sentAt'		=> time()
 			] );
 			return TRUE;
@@ -791,30 +806,29 @@ class Logic_Mail extends Logic
 	 */
 	protected function __onInit(): void
 	{
-		$this->options			= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		/*  --  INIT QUEUE  --  */
+		$this->modelQueue		= new Model_Mail( $this->env );
+		$this->modelTemplate	= new Model_Mail_Template( $this->env );
+		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
+
+		/*  --  DEFAULT PATHS  --  */
+		$this->options	= $this->env->getConfig()->getAll( 'module.resource_mail.', TRUE );
+		$this->frontendPath		= './';
+		$this->pathAttachments	= $this->options->get( 'path.attachments' );
+
+		/*  --  PATHS WITH FRONTEND  --  */
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend	= Logic_Frontend::getInstance( $this->env );
-			$this->options	= new Dictionary( $frontend->getModuleConfigValues( 'Resource_Mail' ) );
+			$frontend				= Logic_Frontend::getInstance( $this->env );
+			$this->options			= new Dictionary( $frontend->getModuleConfigValues( 'Resource_Mail' ) );
+			$this->frontendPath		= $frontend->getPath();
+			$this->pathAttachments	= $this->frontendPath.$this->pathAttachments;
 			foreach( ['attachments', 'classes'] as $type )
 				$this->options->set( 'path.'.$type, $frontend->getPath().$this->options->get( 'path.'.$type ) );
 		}
 
-		/*  --  INIT QUEUE  --  */
-		$this->modelQueue		= new Model_Mail( $this->env );
-		$this->modelTemplate	= new Model_Mail_Template( $this->env );
-
 //		$this->detectTemplateToUse();
 
-		/*  --  INIT ATTACHMENTS  --  */
-		$this->modelAttachment	= new Model_Mail_Attachment( $this->env );
-		$this->pathAttachments	= $this->options->get( 'path.attachments' );
-
-		$this->frontendPath		= './';
-		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
-			$frontend				= Logic_Frontend::getInstance( $this->env );
-			$this->frontendPath		= $frontend->getPath();
-			$this->pathAttachments	= $this->frontendPath.$this->pathAttachments;
-		}
+		/*  --  ENSURE ATTACHMENTS FOLDER  --  */
 		if( !file_exists( $this->pathAttachments ) ){
 			mkdir( $this->pathAttachments, 0755, TRUE );
 			if( !file_exists( $this->pathAttachments.'.htaccess' ) )
