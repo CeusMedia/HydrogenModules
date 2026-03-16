@@ -2,6 +2,15 @@
 /** @var View_Manage_Content_Image $view */
 /** @var array $words */
 /** @var string $path */
+/** @var bool $canAddFolder */
+/** @var bool $canAddImage */
+/** @var bool $canEditFolder */
+/** @var bool $canEditImage */
+/** @var bool $canProcess */
+/** @var bool $canRemoveFolder */
+/** @var bool $canRemoveImage */
+/** @var bool $canScale */
+
 $w				= (object) $words['index.list'];
 $listFolders	= $view->listFolders( $path );
 

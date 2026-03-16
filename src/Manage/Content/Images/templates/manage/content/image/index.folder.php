@@ -1,7 +1,18 @@
 <?php
+
+use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+
 /** @var View_Manage_Content_Image $view */
 /** @var array $words */
 /** @var string $path */
+/** @var bool $canAddFolder */
+/** @var bool $canAddImage */
+/** @var bool $canEditFolder */
+/** @var bool $canEditImage */
+/** @var bool $canProcess */
+/** @var bool $canRemoveFolder */
+/** @var bool $canRemoveImage */
+/** @var bool $canScale */
 
 $w	= (object) $words['index.folder'];
 
@@ -10,21 +21,26 @@ if( !$listImages )
 	$listImages		= '<div><em><small class="muted">'.$w->noEntries.'</small></em></div><br/>';
 
 $linkEditFolder	= '';
-if( $path != "." )
+if( $canEditFolder && $path != "." )
 	$linkEditFolder	= '&nbsp;&nbsp;<a class="btn btn-mini" href="./manage/content/image/editFolder" title="ändern" alt="ändern"><i class="icon-pencil"></i></a>';
 
 $labelFolder	= preg_replace( "/^\.\//", "", $path );
 
-return '
-<script>
-$(document).ready(function(){
-	$(".thumbs>li").on("click", function(){
-		var url = "./manage/content/image/editImage/"+$(this).data("image-hash");
-		document.location.href = url;
-	});
-});
-</script>
-<script>
+$buttons	= [];
+if( $canAddImage ){
+	$icon		= '<i class="icon-plus icon-white"></i>&nbsp;';
+	$icon		= '<i class="fa fa-fw fa-upload"></i>&nbsp;';
+	$buttons[]	= HtmlTag::create( 'a', $icon.$w->buttonAddFile, [
+		'href'	=> "./manage/content/image/addImage",
+		'class'	=> "btn btn-small not-btn-info btn-success"
+	] );
+}
+$buttonbar	= '';
+if( [] !== $buttons ){
+	$buttonbar	= HtmlTag::create( 'div', $buttons, ['class' => 'buttonbar'] );
+}
+
+$scriptNavListResize	= '
 function resizeNavList(selector, offsetBottom){
 	var list = $(selector);
 	if(list.length){
@@ -40,9 +56,21 @@ function resizeNavList(selector, offsetBottom){
 
 $(document).ready(function(){
 //	resizeNavList(".nav-resizing", 60);
-})
+})';
 
-</script>
+$scriptImageClick	= '
+$(document).ready(function(){
+	$(".thumbs>li").on("click", function(){
+		var url = "./manage/content/image/editImage/"+$(this).data("image-hash");
+		document.location.href = url;
+	});
+});';
+//if( !$canEditImage )
+//	$scriptImageClick	= '';
+
+return '
+<script>'.$scriptImageClick.'</script>
+<script>'.$scriptNavListResize.'</script>
 <div class="content-panel">
 	<h3>'.sprintf( $w->heading, $labelFolder.$linkEditFolder ).'</h4>
 	<div class="content-panel-inner">
@@ -50,8 +78,6 @@ $(document).ready(function(){
 			'.$listImages.'
 			<div style="clear: left"></div>
 		</div>
-		<div class="buttonbar">
-			<a href="./manage/content/image/addImage" class="btn btn-small not-btn-info btn-success"><i class="icon-plus icon-white"></i>&nbsp;'.$w->buttonAddFile.'</a>
-		</div>
+		'.$buttonbar.'
 	</div>
 </div>';

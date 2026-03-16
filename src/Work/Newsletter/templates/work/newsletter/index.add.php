@@ -127,7 +127,7 @@ $modalAdd->setButtonLabelSubmit( $iconSave.$w->buttonSave );
 
 return $modalAdd->render();
 
-
+/*
 return $textTop.'
 <div class="newsletter-content">
 	'.$tabsMain.'
@@ -144,3 +144,4 @@ return $textTop.'
 	</div>
 </div>
 '.$textBottom;
+*/

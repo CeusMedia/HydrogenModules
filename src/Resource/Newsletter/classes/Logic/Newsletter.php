@@ -383,7 +383,8 @@ class Logic_Newsletter extends SharedLogic
 	{
 		$list	= [];
 		foreach( $this->modelNewsletter->getAll( $conditions, $orders, $limits ) as $newsletter )
-			$list[$newsletter->newsletterId]	= $newsletter;
+			if( $this->hasGroupAccessToNewsletter( $newsletter ) )
+				$list[$newsletter->newsletterId]	= $newsletter;
 		return $list;
 	}
 

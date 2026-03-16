@@ -5,7 +5,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -38,6 +38,7 @@
 	<log version="0.4.8">Condense folder list.</log>
 	<log version="0.4.9">Support SVG images in thumbnail helper.</log>
 	<log version="0.5.0">Extract hooks to own class.</log>
+	<log version="0.5.1">Use role rights.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
