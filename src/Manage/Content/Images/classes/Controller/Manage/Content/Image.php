@@ -439,6 +439,20 @@ class Controller_Manage_Content_Image extends Controller
 		$this->addData( 'frontend', $this->frontend );
 		$this->addData( 'moduleConfig', $this->moduleConfig );
 		$this->addData( 'helperThumbnailer', $this->thumbnailer );
+
+		$canActions	= [
+			'addFolder',
+			'addImage',
+			'editFolder',
+			'editImage',
+			'process',
+			'removeFolder',
+			'removeImage',
+			'scale',
+		];
+		$rights	= $this->env->getAcl()->getControllerActionRightsAsDictionary( 'manage/content/image', $canActions );
+		foreach( $canActions as $canAction )
+			$this->addData( 'can'.ucfirst( $canAction ), $rights[$canAction] );
 	}
 
 	/**

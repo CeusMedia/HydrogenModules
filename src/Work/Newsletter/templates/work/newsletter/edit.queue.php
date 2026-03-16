@@ -36,6 +36,8 @@ $buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;
 $hasRunningQueue	= FALSE;
 
 foreach( $queues as $queue ){
+	if( 0 === $queue->countLetters )
+		continue;
 	if( $queue->status < Model_Newsletter_Queue::STATUS_DONE )
 		$hasRunningQueue	= TRUE;
 	$bar	= new Progress();

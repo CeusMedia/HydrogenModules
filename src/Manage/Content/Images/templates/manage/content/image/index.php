@@ -1,5 +1,13 @@
 <?php
 /** @var View_Manage_Content_Image $view */
+/** @var bool $canAddFolder */
+/** @var bool $canAddImage */
+/** @var bool $canEditFolder */
+/** @var bool $canEditImage */
+/** @var bool $canProcess */
+/** @var bool $canRemoveFolder */
+/** @var bool $canRemoveImage */
+/** @var bool $canScale */
 
 $panelList		= $view->loadTemplateFile( 'manage/content/image/folders.php' );
 $panelFolder	= $view->loadTemplateFile( 'manage/content/image/index.folder.php' );
