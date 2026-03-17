@@ -130,6 +130,7 @@ $panelEdit		= '
 		'name'		=> 'mailTemplateId',
 		'id'		=> 'input_mailTemplateId',
 		'class'		=> 'span12',
+		'readonly'	=> $isUsed ? 'readonly' : NULL,
 	] ).'
 			</div>
 		</div>
@@ -255,8 +256,8 @@ $panelEdit		= '
 								'name'		=> 'status',
 								'value'		=> Model_Newsletter_Template::STATUS_READY,
 								'id'		=> 'input_status',
-								'readonly'	=> $isUsed ? 'readonly' : NULL,
-								'disabled'	=> $isUsed ? 'disabled' : NULL,
+								'readonly'	=> NULL,//$isUsed ? 'readonly' : NULL,
+								'disabled'	=> NULL,//$isUsed ? 'disabled' : NULL,
 								'checked'	=> $template->status >= Model_Newsletter_Template::STATUS_READY ? 'checked' : NULL,
 							] ).'
 								'.$w->labelReady.'

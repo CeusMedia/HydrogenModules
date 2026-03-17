@@ -10,4 +10,10 @@ class Entity_Newsletter_Queue extends Entity
 	public int $status						= Model_Newsletter_Queue::STATUS_NEW;
 	public int $createdAt					= 0;
 	public ?int $modifiedAt					= NULL;
+
+	public ?Entity_User $creator			= NULL;
+
+	/** @var int  */
+	public int $countLetters				= 0;
+	public array $countLettersByStatus		= [];
 }

@@ -646,14 +646,14 @@ class Controller_Work_Newsletter extends Controller
 		$letterQueue	= [];
 		$letterHistory	= [];
 		$nrLetters	= $this->logic->countReaderLetters( ['newsletterId' => $newsletterId] );
-		if( $nrLetters <= 0 ){
+		if( $nrLetters <= 50 ){
 			$letterQueue	= $this->logic->getReaderLetters( [
 				'newsletterId'	=> $newsletterId,
-				'status'		=> 0
+				'status'		=> Model_Newsletter_Reader_Letter::STATUS_ENQUEUED,
 			] );
 			$letterHistory	= $this->logic->getReaderLetters( [
 				'newsletterId'	=> $newsletterId,
-				'status'		=> '!= 0'
+				'status'		=> '!= '.Model_Newsletter_Reader_Letter::STATUS_ENQUEUED,
 			] );
 		}
 
