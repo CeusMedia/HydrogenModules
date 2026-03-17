@@ -18,11 +18,16 @@ $rowColors	= [
 	1	=> 'warning',
 	2	=> 'success',
 ];
-$labelLetterButtonSend		= '<i class="icon-envelope icon-white"></i> '.$words->edit->buttonQueueAgain;
-$labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edit->buttonQueueRemove;
-$labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
-$labelLetterButtonRetry		= '<i class="icon-refresh icon-white"></i> '.$words->edit->buttonQueueRetry;
 
+$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
+$iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
+$iconSend		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+
+$labelLetterButtonRemove	= $iconRemove.' '.$words->edit->buttonQueueRemove;
+$labelLetterButtonRetry		= $iconRefresh.' '.$words->edit->buttonQueueRetry;
+$labelLetterButtonView		= $iconView.' '.$words->edit->buttonQueueView;
+$labelLetterButtonSend		= $iconSend.' '.$words->edit->buttonQueueAgain;
 
 if( $nrLetters > 50 && [] === $letterHistory ){
 	return '<div class="alert alert-info"><em class="not-muted">Der Newsletter wurde an '.$nrLetters.' Empfänger verschickt. Die Liste ist zu groß, um hier angezeigt zu werden.</em></div>';
@@ -41,15 +46,15 @@ else if( [] !== $letterHistory ){
 		$buttonRemove	= '<a class="btn btn-small btn-danger" href="'.$urlRemove.'">'.$labelLetterButtonRemove.'</a>';
 		$buttonView		= '<a class="btn btn-small" href="'.$urlView.'" target="_blank">'.$labelLetterButtonView.'</a>';
 		switch( $readerLetter->status ){
-			case -1:
-				$buttonSend		= '<button disabled="disabled" class="btn btn-small btn-primary" type="button" onclick="document.location.href=\'./work/newsletter/retryLetter/'.$readerLetter->newsletterReaderLetterId.'\';">'.$labelLetterButtonRetry.'</button>';
+			case Model_Newsletter_Reader_Letter::STATUS_FAILED:
+//				$buttonSend		= '<button disabled="disabled" class="btn btn-small btn-primary" type="button" onclick="document.location.href=\'./work/newsletter/retryLetter/'.$readerLetter->newsletterReaderLetterId.'\';">'.$labelLetterButtonRetry.'</button>';
 				break;
-			case 1:
-				$buttonRemove	= "";
+			case Model_Newsletter_Reader_Letter::STATUS_SENT:
+				$buttonRemove	= '';
 				break;
-			case 2:
-				$buttonSend	= "";
-				$buttonRemove	= "";
+			case Model_Newsletter_Reader_Letter::STATUS_OPENED:
+				$buttonSend		= '';
+				$buttonRemove	= '';
 				break;
 		}
 		$rows[]	= '<tr class="'.$rowColor.'"><td>'.implode( '</td><td>', [
@@ -59,7 +64,7 @@ else if( [] !== $letterHistory ){
 			$buttonView.' '.$buttonSend.' '.$buttonRemove
 		] ).'</td></tr>';
 	}
-	$columns	= HtmlElements::ColumnGroup( "25%", "30%", "20%", "25%" );
+	$columns	= HtmlElements::ColumnGroup( "25%", "30%", "15%", "30%" );
 	$thead		= '<thead><tr><th>Empfänger</th><th>E-Mail-Adresse</th><th>Zustand</th><th>Aktion</th></tr></thead>';
 	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';
