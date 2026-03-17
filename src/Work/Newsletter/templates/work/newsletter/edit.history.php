@@ -22,8 +22,9 @@ $labelLetterButtonSend		= '<i class="icon-envelope icon-white"></i> '.$words->ed
 $labelLetterButtonRemove	= '<i class="icon-remove icon-white"></i> '.$words->edit->buttonQueueRemove;
 $labelLetterButtonView		= '<i class="icon-eye-open"></i> '.$words->edit->buttonQueueView;
 $labelLetterButtonRetry		= '<i class="icon-refresh icon-white"></i> '.$words->edit->buttonQueueRetry;
-$table						= '<em><small class="muted">Nichts versendet bisher.</small></em>';
-if( 0 !== $nrLetters && [] === $letterHistory ){
+
+
+if( $nrLetters > 50 && [] === $letterHistory ){
 	return '<div class="alert alert-info"><em class="not-muted">Der Newsletter wurde an '.$nrLetters.' Empfänger verschickt. Die Liste ist zu groß, um hier angezeigt zu werden.</em></div>';
 }
 else if( [] !== $letterHistory ){
@@ -63,6 +64,8 @@ else if( [] !== $letterHistory ){
 	$tbody		= '<tbody>'.join( $rows ).'</tbody>';
 	$table		= '<table class="table table-condensed">'.$columns.$thead.$tbody.'</table>';
 }
+else
+	$table		= '<em><small class="muted">Nichts versendet bisher.</small></em>';
 
 return '
 <div class="content-panel">

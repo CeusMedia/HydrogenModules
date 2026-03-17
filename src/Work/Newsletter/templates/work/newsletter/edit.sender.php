@@ -67,7 +67,6 @@ $panelGroups	= '
 	</div>
 </div>';
 
-$list		= '<div class="alert"><em class="not-muted">Noch keine Empfängerliste gewählt.</em></div>';
 $disabled	= ' disabled="disabled"';
 
 $list	= [];
@@ -127,6 +126,8 @@ if( $nrReaders || [] !== $readers ){
 			</div>
 		</div>';
 }
+else
+	$list		= '<div class="alert"><em class="not-muted">Noch keine Empfängerliste gewählt.</em></div>';
 
 return '
 <div class="row-fluid">
