@@ -50,7 +50,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.6.0</version>
+	<version>0.6.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -69,10 +69,14 @@ Please think about using the hook instead.
 	<log version="0.5.8">Improve import.</log>
 	<log version="0.5.9">Improve index.</log>
 	<log version="0.6.0">Migration to PHP 8 and strict types.</log>
+	<log version="0.6.1">Reduce log entry size by using Server:Log:Request.</log>
+	<log version="0.6.2">Add entity classes.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Controller/Server/Log/Exception.php</class>
+		<class>Entity/Log/Exception.php</class>
+		<class>Entity/Log/Exception/FileLogEntry.php</class>
 		<class>Hook/Server/Log/Exception.php</class>
 		<class>Job/Server/Log/Exception.php</class>
 		<class>Logic/Log/Exception.php</class>
@@ -100,6 +104,7 @@ Please think about using the hook instead.
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
   `exceptionId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `requestId` int(11) UNSIGNED DEFAULT 0,
   `status` tinyint(1) NOT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `message` text COLLATE utf8_unicode_ci NOT NULL,
@@ -112,11 +117,12 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
   `subject` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `resource` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `env` text COLLATE utf8_unicode_ci NOT NULL,
-  `request` text COLLATE utf8_unicode_ci,
-  `session` text COLLATE utf8_unicode_ci,
+  `request` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  `session` text COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) UNSIGNED NOT NULL,
   `modifiedAt` decimal(12,0) UNSIGNED NOT NULL,
   PRIMARY KEY (`exceptionId`),
+  KEY `requestId` (`requestId`),
   KEY `status` (`status`),
   KEY `type` (`type`),
   KEY `code` (`code`),
@@ -124,6 +130,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
   KEY `createdAt` (`createdAt`),
   KEY `modifiedAt` (`modifiedAt`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.6.1"><![CDATA[
+ALTER TABLE `<%?prefix%>log_exceptions`
+  CHANGE COLUMN `request` `request` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  CHANGE COLUMN `session` `session` text COLLATE utf8_unicode_ci DEFAULT NULL,
+  ADD COLUMN `requestId` int(11) UNSIGNED DEFAULT 0 AFTER `exceptionId`,
+  ADD INDEX `requestId` (`requestId`);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;

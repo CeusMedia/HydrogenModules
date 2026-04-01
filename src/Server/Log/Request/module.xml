@@ -57,8 +57,8 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>log_requests` (
   `cookie` text DEFAULT NULL,
   `headers` text DEFAULT NULL,
   `body` MEDIUMTEXT NULL DEFAULT NULL,
-  `responseCode` DECIMAL(3,0) UNSIGNED NULL DEFAULT NULL,
-  `responseTime` DECIMAL(8,3) UNSIGNED NULL DEFAULT NULL,
+  `responseCode` DECIMAL(4,0) UNSIGNED NULL DEFAULT NULL,
+  `responseTime` DECIMAL(13,3) UNSIGNED NULL DEFAULT NULL,
   `responseType` VARCHAR(63) NULL DEFAULT NULL,
   `responseContent` MEDIUMTEXT NULL DEFAULT NULL,
   `timestamp` datetime(6) NOT NULL,
@@ -108,7 +108,9 @@ ALTER TABLE `<%?prefix%>log_requests`
 ]]></sql>
 	<sql type="mysql" on="update" version="0.2.7"><![CDATA[
 ALTER TABLE `<%?prefix%>log_requests`
-    ADD COLUMN `body` MEDIUMTEXT NULL DEFAULT NULL AFTER `headers`;
+  ADD COLUMN `body` MEDIUMTEXT NULL DEFAULT NULL AFTER `headers`,
+  CHANGE COLUMN `responseCode` `responseCode` DECIMAL(4,0) UNSIGNED NULL DEFAULT NULL,
+  CHANGE COLUMN `responseTime` `responseTime` DECIMAL(13,3) UNSIGNED NULL DEFAULT NULL;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_requests`;

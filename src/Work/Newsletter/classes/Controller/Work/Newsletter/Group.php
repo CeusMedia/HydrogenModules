@@ -145,7 +145,7 @@ class Controller_Work_Newsletter_Group extends Controller
 		$mode		= $this->request->get( 'import_mode' );
 		$groupId	= $this->request->get( 'groupId' );
 
-		if( $this->logic->checkGroupId( $groupId ) ){
+		if( !$this->logic->checkGroupId( $groupId ) ){
 			$this->messenger->noteError( 'Ungültige Gruppe.' );
 			$this->restart( './work/newsletter/group/edit/'.$groupId );
 		}

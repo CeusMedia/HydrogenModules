@@ -51,13 +51,40 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
+	 *	@param		Entity_Log_Request		$request
+	 *	@return		string|NULL
+	 */
+	public function renderRequestSection2( Entity_Log_Request $request ): ?string
+	{
+		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
+
+		$sectionRequestHeaders	= '';
+		$methodLine				= 'Method: '.$request->method.PHP_EOL;
+		$lines					= join( PHP_EOL, json_decode( $request->headers, TRUE ) );
+		$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
+		$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
+		$pairs					= json_decode( $request->request, TRUE );
+		$sectionRequestData		= HtmlTag::create( 'h4', 'Request Data' ).$this->renderMapTable( $pairs );
+		return $sectionRequestHeaders.'<hr/>'.$sectionRequestData;
+	}
+
+	/**
 	 *	@param		object		$exception
 	 *	@param		array		$exceptionEnv
-	 *	@param		HttpRequest|Dictionary	$exceptionRequest
+	 *	@param		HttpRequest|Dictionary|Entity_Log_Request	$exceptionRequest
 	 *	@return		string
 	 */
-	public function renderFactsSection( object $exception, array $exceptionEnv, HttpRequest|Dictionary $exceptionRequest ): string
+	public function renderFactsSection( object $exception, array $exceptionEnv, HttpRequest|Dictionary|Entity_Log_Request $exceptionRequest ): string
 	{
+		if( $exceptionRequest instanceof Entity_Log_Request ){
+			$requestedPairs		= json_decode( $exceptionRequest->request, TRUE );
+			$requestedPath		= $requestedPairs['__path'];
+			$exceptionRequest	= Dictionary::create( $requestedPairs );
+		}
+		else{
+			$requestedPath		= $exceptionRequest->get( '__path' );
+
+		}
 		$file		= preg_replace( "/^".preg_quote( $exceptionEnv['uri'], '/' )."/", './', $exception->file );
 		$file		= preg_replace( "/^".preg_quote( $this->env->uri, '/' )."/", './', $file );
 		$date		= date( 'Y.m.d', $exception->createdAt );
@@ -71,7 +98,7 @@ class View_Admin_Log_Exception extends View
 			$facts['Code']	= $exception->code;
 		$facts['File (Line)']	= $file.' ('.$exception->line.')';
 		$facts['Date (Time)']	= $date.' <small class="muted">('.$time.')</small>';
-		$facts['Request Path']	= $exceptionRequest->get( '__path' );
+		$facts['Request Path']	= $requestedPath;
 		$facts['App Name']		= $exceptionEnv['appName'];
 		$facts['Base URL']		= $exceptionEnv['url'];
 		$facts['Environment']	= $exceptionEnv['class'];
@@ -163,6 +190,20 @@ class View_Admin_Log_Exception extends View
 			return NULL;
 
 		$sessionData	= $this->renderMapTable( $exceptionSession->getAll() );
+		return HtmlTag::create( 'h4', 'Session Data' ).$sessionData;
+	}
+
+	/**
+	 *	@param		Entity_Log_Request	$request
+	 *	@return		string|NULL
+	 */
+	public function renderSessionSection2( Entity_Log_Request $request ): ?string
+	{
+		$data = json_decode( $request->session, TRUE );
+		if( !$data || [] === $data )
+			return NULL;
+
+		$sessionData	= $this->renderMapTable( $data );
 		return HtmlTag::create( 'h4', 'Session Data' ).$sessionData;
 	}
 
