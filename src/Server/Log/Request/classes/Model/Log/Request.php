@@ -7,7 +7,9 @@ use CeusMedia\HydrogenFramework\Model\Database\Table as DatabaseModel;
 class Model_Log_Request extends DatabaseModel
 {
 	protected string $name			= 'log_requests';
+
 	protected string $primaryKey	= 'requestId';
+
 	protected array $columns		= [
 		'requestId',
 		'ip',
@@ -25,6 +27,7 @@ class Model_Log_Request extends DatabaseModel
 		'body',
 		'timestamp',
 	];
+
 	protected array $indices		= [
 		'ip',
 		'sessionId',
@@ -34,5 +37,8 @@ class Model_Log_Request extends DatabaseModel
 		'responseType',
 		'timestamp',
 	];
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= 'Entity_Log_Request';
 }

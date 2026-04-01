@@ -214,6 +214,7 @@ CREATE TABLE `<%?prefix%>newsletter_reader_letter_links` (
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_templates`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_templates` (
   `newsletterTemplateId` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `mailTemplateId` int(10) unsigned NOT NULL DEFAULT 0,
   `creatorId` int(10) unsigned DEFAULT '0',
   `status` tinyint(1) NOT NULL DEFAULT '0',
   `themeId` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -236,6 +237,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletter_templates` (
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned NOT NULL,
   PRIMARY KEY (`newsletterTemplateId`),
+  KEY `mailTemplateId` (`mailTemplateId`),
   KEY `authorId` (`creatorId`),
   KEY `status` (`status`),
   KEY `themeId` (`themeId`)

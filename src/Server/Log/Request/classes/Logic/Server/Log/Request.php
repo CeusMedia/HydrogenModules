@@ -91,6 +91,15 @@ class Logic_Server_Log_Request extends SharedLogic
 	}
 
 	/**
+	 *	Returns ID of logged request, if and after logCurrentRequest has been called.
+	 *	@return		string|NULL
+	 */
+	public function getCurrentRequestId() : ?string
+	{
+		return $this->currentRequestId;
+	}
+
+	/**
 	 *	Tries to import file log entries to database.
 	 *	@return		int
 	 */
@@ -131,7 +140,6 @@ class Logic_Server_Log_Request extends SharedLogic
 			return;
 
 		$data	= $this->collectData();
-
 		$this->currentRequestId = match( $this->module->config['saveTo']->value ){
 			'file'	=> $this->logRequestEntityToFile( $data ),
 			default	=> $this->model->add( $data ),
@@ -155,6 +163,7 @@ class Logic_Server_Log_Request extends SharedLogic
 			'responseType'		=> $mimeType,
 			'responseContent'	=> $content,
 		];
+
 		switch( $this->module->config['saveTo']->value ){
 			case 'file':
 				$this->logResponseToFile( $data );
@@ -182,19 +191,21 @@ class Logic_Server_Log_Request extends SharedLogic
 	 */
 	protected function collectData(): Entity_Log_Request
 	{
-		$ip			= '';
-		$sessionId	= '';
-		$method		= 'CLI';
-		$url		= NULL;
+		$ip				= '';
+		$sessionId		= '';
+		$method			= 'CLI';
+		$url			= NULL;
 		$cookieData		= NULL;
 		$sessionData	= NULL;
-		$headers	= NULL;
+		$headers		= NULL;
 
 		if( !CeusMedia\Common\Env::isCli() ){
 			$ip			= getenv( 'REMOTE_ADDR' );
 			/** @var HttpPartitionSession $session */
-			$session		= $this->env->getSession();
-			$sessionId		= $session->getSessionID();
+			$session	= $this->env->getSession();
+			$sessionId	= '';
+			if( $session instanceof HttpPartitionSession )
+				$sessionId	= $session->getSessionID();
 			$sessionData	= $session->getAll();
 			$method		= getenv( 'REQUEST_METHOD' );
 			$url		= substr( getenv( 'REQUEST_URI' ) ?: '', 0, 255 );

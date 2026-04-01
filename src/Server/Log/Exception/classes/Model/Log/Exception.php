@@ -27,6 +27,7 @@ class Model_Log_Exception extends Model
 
 	protected array $columns		= [
 		'exceptionId',
+		'requestId',
 		'status',
 		'type',
 		'message',
@@ -48,6 +49,7 @@ class Model_Log_Exception extends Model
 	protected string $primaryKey	= 'exceptionId';
 
 	protected array $indices		= [
+		'requestId',
 		'status',
 		'type',
 		'code',
@@ -56,5 +58,7 @@ class Model_Log_Exception extends Model
 		'modifiedAt',
 	];
 
-	protected int $fetchMode		= PDO::FETCH_OBJ;
+	protected int $fetchMode		= PDO::FETCH_CLASS;
+
+	protected ?string $className	= Entity_Log_Exception::class;
 }

@@ -9,7 +9,8 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var View_Admin_Log_Exception $view */
 /** @var array<array<string,string>> $words */
 /** @var object $server */
-/** @var object $exception */
+/** @var Entity_Log_Exception $exception */
+/** @var ?Entity_Log_Request $request */
 /** @var int $page */
 /** @var array $exceptionEnv */
 /** @var HttpRequest|Dictionary $exceptionRequest */
@@ -21,14 +22,28 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$sections	= [
-	'facts'		=> $view->renderFactsSection( $exception, $exceptionEnv, $exceptionRequest ),
-	'file'		=> $view->renderFileSection( $exception ),
-	'trace'		=> $view->renderTraceSection( $exception, $exceptionEnv ),
-	'request'	=> $view->renderRequestSection( $exception, $exceptionRequest ),
-	'session'	=> $view->renderSessionSection( $exception, $exceptionSession ),
-	'user'		=> $view->renderUserSection( $exception, $user ),
-];
+if( NULL !== $request ){
+	$sections	= [
+		'facts'		=> $view->renderFactsSection( $exception, $exceptionEnv, $request ),
+		'file'		=> $view->renderFileSection( $exception ),
+		'trace'		=> $view->renderTraceSection( $exception, $exceptionEnv ),
+		'request'	=> $view->renderRequestSection2( $request ),
+		'session'	=> $view->renderSessionSection2( $request ),
+		'user'		=> $view->renderUserSection( $exception, $user ),
+	];
+
+}
+else{
+	$sections	= [
+		'facts'		=> $view->renderFactsSection( $exception, $exceptionEnv, $exceptionRequest ),
+		'file'		=> $view->renderFileSection( $exception ),
+		'trace'		=> $view->renderTraceSection( $exception, $exceptionEnv ),
+		'request'	=> $view->renderRequestSection( $exception, $exceptionRequest ),
+		'session'	=> $view->renderSessionSection( $exception, $exceptionSession ),
+		'user'		=> $view->renderUserSection( $exception, $user ),
+	];
+
+}
 $buttonCancel	= '';
 if( $canIndex )
 	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zur Liste', [

@@ -172,9 +172,30 @@ class Controller_Admin_Log_Exception extends Controller
 		}
 
 		$exceptionEnv		= unserialize( $exception->env );
-		/** @var Request|Dictionary $exceptionRequest */
-		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary( unserialize( $exception->session ?? 'b:0;' ) ?: [] );
+		if( 0 !== (int) $exception->requestId ){
+			$request = Model_Log_Request::getInstance( $this->env )->get( $exception->requestId );
+			$exceptionRequest = new Dictionary( json_decode( $request->request, TRUE ) );
+			$exceptionSession = new Dictionary( json_decode( $request->session, TRUE ) );
+			$this->addData( 'request', $request );
+			$this->addData( 'requestMethod', new \CeusMedia\Common\Net\HTTP\Method( $request->method ) );
+		}
+		else if( '' !== ( $exception->request ?? '' ) ){
+			/** @var Request|Dictionary $exceptionRequest */
+			$exceptionRequest	= unserialize( $exception->request );
+
+
+			if( NULL !== $exception->session ){
+				$sessionData	= unserialize( $exception->session ?? 'b:0;' ) ?: [];
+				if( $sessionData instanceof Dictionary )
+					$exceptionSession	= $sessionData;
+				else
+					$exceptionSession	= new Dictionary( $sessionData );
+			}
+			$this->addData( 'requestMethod', $exceptionRequest->getMethod() );
+		}
+		else{
+			$exceptionSession	= new Dictionary();
+		}
 
 		$user	= NULL;
 		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
@@ -184,8 +205,8 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$this->addData( 'exception', $exception );
 		$this->addData( 'exceptionEnv', $exceptionEnv );
-		$this->addData( 'exceptionRequest', $exceptionRequest );
-		$this->addData( 'exceptionSession', $exceptionSession );
+		$this->addData( 'exceptionRequest', $exceptionRequest ?? new Dictionary() );
+		$this->addData( 'exceptionSession', $exceptionSession ?? new Dictionary() );
 		$this->addData( 'user', $user );
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 		$this->addData( 'canIndex', $this->env->getAcl()->has( 'admin/log/exception', 'index' ) );

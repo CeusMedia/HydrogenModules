@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Logic;
 
 class Logic_Log_Exception extends Logic
@@ -34,66 +35,58 @@ class Logic_Log_Exception extends Logic
 	 */
 	public function collectData( Throwable $exception ): object
 	{
+		$content	= Entity_Log_Exception_FileLogEntry::fromArray( [
+			'class'				=> get_class( $exception ),
+			'classParents'		=> class_parents( get_class( $exception ) ),
+			'classInterfaces'	=> class_implements( get_class( $exception ) ),
+			'env'	=> [
+				'appName'	=> $this->env->getConfig()->get( 'app.name' ),
+				'class'		=> get_class( $this->env ),
+				'url'		=> $this->env->url,
+				'uri'		=> $this->env->uri,
+			],
+			'timestamp'		=> time(),
+		] );
 		try{
 			@serialize( $exception );
-			$content	= (object) [
-				'exception'		=> $exception,
-		//		'traceAsHtml'	=> HtmlExceptionTrace::render( $exception ),
-				'trace'			=> '',
-				'timestamp'		=> time(),
-			];
+			$content->exception	= $exception;
 		}
 		catch( Throwable ){
-			$content	= (object) [
-				'message'		=> $exception->getMessage(),
-				'code'			=> $exception->getCode(),
-				'file'			=> $exception->getFile(),
-				'line'			=> $exception->getLine(),
-				'trace'			=> $exception->getTraceAsString(),
-				'previous'		=> $exception->getPrevious(),
-				'timestamp'		=> time(),
-			];
+			$content->message	= $exception->getMessage();
+			$content->code		= $exception->getCode();
+			$content->file		= $exception->getFile();
+			$content->line		= $exception->getLine();
+			$content->trace		= $exception->getTraceAsString();
+			$content->previous	= $exception->getPrevious();
 		}
-		$content->env				= [
-			'appName'	=> $this->env->getConfig()->get( 'app.name' ),
-			'class'		=> get_class( $this->env ),
-			'url'		=> $this->env->url,
-			'uri'		=> $this->env->uri,
-		];
-		try{
-			$content->request			= $this->env->getRequest();
-		} catch( Throwable ){}
-		try{
-			$sessionData	= $this->env->getSession()->getAll();
-			if( isset( $sessionData['exception'] ) )
-				unset( $sessionData['exception'] );
-			if( isset( $sessionData['exceptionRequest'] ) )
-				unset( $sessionData['exceptionRequest'] );
-			if( isset( $sessionData['exceptionUrl'] ) )
-				unset( $sessionData['exceptionUrl'] );
-			$content->session			= $sessionData;
-		} catch( Throwable ){}
-	//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
-		$content->previous			= $exception->getPrevious();
-		$content->class				= get_class( $exception );
-		$content->classParents		= [];
-		$content->classInterfaces	= [];
-		$content->sqlState			= NULL;
-		if( $content->class ){
-			$content->classParents		= class_parents( $content->class );
-			$content->classInterfaces	= class_implements( $content->class );
+
+		if( $this->env->getModules()->has( 'Server_Log_Request' ) ){
+			$singletonRequestLogLogic	= Logic_Server_Log_Request::getInstance( $this->env );
+			$content->requestId			= (int) $singletonRequestLogLogic->getCurrentRequestId();
 		}
+		else{
+			try{
+				$content->request			= $this->env->getRequest();
+			} catch( Throwable ){}
+			try{
+				$sessionData	= $this->env->getSession()->getAll( NULL, TRUE );
+				$sessionData->remove( 'exception' );
+				$sessionData->remove( 'exceptionRequest' );
+				$sessionData->remove( 'exceptionUrl' );
+				$content->session	= $sessionData->getAll( NULL, TRUE );
+			} catch( Throwable ){}
+		//	$content->cookie			= $this->env->getCookie()->getAll();		// @todo activate for Hydrogen 0.8.6.5+
+		}
+
 		if( method_exists( $exception, 'getSQLSTATE' ) )
 			$content->sqlState	= $exception->getSQLSTATE();
 
 		$classes	= array_values( [$content->class] + $content->classParents );
-
-		$content->resource		= NULL;
-		if( in_array( 'Exception_IO', $classes ) )
+		if( in_array( 'CeusMedia\Common\Exception\IO', $classes ) )
 			$content->resource		= $exception->getResource();
-		$content->subject		= NULL;
-		if( in_array( 'Exception_Logic', $classes ) )
+		if( in_array( 'CeusMedia\Common\Exception\Logic', $classes ) )
 			$content->subject		= $exception->getSubject();
+
 		return $content;
 	}
 
@@ -172,6 +165,8 @@ class Logic_Log_Exception extends Logic
 			$data['request']	= serialize( $object->request );
 		if( property_exists( $object, 'session' ) && !empty( $object->session ) )
 			$data['session']	= serialize( $object->session );
+		if( property_exists( $object, 'requestId' ) && !empty( $object->requestId ) )
+			$data['requestId']	= $object->requestId;
 		return $this->model->add( $data, FALSE );
 	}
 

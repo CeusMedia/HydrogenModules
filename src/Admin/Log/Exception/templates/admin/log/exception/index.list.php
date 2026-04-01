@@ -13,7 +13,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var array<array<string,string>> $words */
 /** @var object $instances */
-/** @var array<object> $exceptions */
+/** @var array<Entity_Log_Exception> $exceptions */
 /** @var int $page */
 /** @var int $total */
 /** @var int $limit */
@@ -25,7 +25,7 @@ use CeusMedia\HydrogenFramework\View;
 
 /**
  *	@param		WebEnvironment	$env
- *	@param		array			$exceptions
+ *	@param		Entity_Log_Exception[]	$exceptions
  *	@param		bool			$canView
  *	@param		bool			$canRemove
  *	@param		bool			$canBulk
@@ -45,12 +45,43 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 	$iconDate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-clock-o'] );
 	$list		= [];
 	foreach( $exceptions as $nr => $exception ){
-//print_m($exception);die;
 		$exceptionEnv		= unserialize( $exception->env );
-		$exceptionRequest	= unserialize( $exception->request );
-		$exceptionSession	= new Dictionary();
-		if( NULL !== $exception->session )
-			$exceptionSession	= new Dictionary( unserialize( $exception->session ) );
+
+		if( 0 !== ( (int) $exception->requestId ) ){
+			$modelRequest	= new Model_Log_Request( $env );
+			/** @var Entity_Log_Request $request */
+			$request		= $modelRequest->get( $exception->requestId );
+			$exceptionRequest	= Dictionary::create( json_decode( $request->request, TRUE ) );
+			$exceptionSession	= Dictionary::create( json_decode( $request->session, TRUE ) );
+			$requestMethod		= $request->method;
+			$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
+		}
+		else if( $exception->request ){
+			$exceptionRequest	= unserialize( $exception->request );
+			$exceptionSession	= new Dictionary();
+			if( NULL !== $exception->session ){
+				$sessionData	= unserialize( $exception->session );
+				if( $sessionData instanceof Dictionary )
+					$exceptionSession	= $sessionData;
+				else
+					$exceptionSession	= new Dictionary( $sessionData );
+			}
+
+			$requestPath	= join( ' ', $exceptionRequest->get( 'arguments', [] ) ).' '.join( ' ', $exceptionRequest->get( 'commands', [] ) );
+			$requestMethod	= 'CLI';
+			if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
+				try{
+					$requestMethod	= $exceptionRequest->getMethod()->get();
+					$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
+				}
+				catch( Error $e ){}
+			}
+		}
+		else{
+			$exceptionRequest	= new Dictionary();
+			$exceptionSession	= new Dictionary();
+			$requestMethod		= '?';
+		}
 
 		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
 		$date	= date( 'Y-m-d', $exception->createdAt );
@@ -75,35 +106,28 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 			'data-id'	=> $exception->exceptionId,
 		] );
 
-		$requestPath	= join( ' ', $exceptionRequest->get( 'arguments', [] ) ).' '.join( ' ', $exceptionRequest->get( 'commands', [] ) );
-		$method			= 'CLI';
-		if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
-			try{
-				$method	= $exceptionRequest->getMethod();
-				$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
-			}
-			catch( Error $e ){}
-		}
 		$envClass		= preg_replace( '/^(\\\\CeusMedia\\\\HydrogenFramework\\\\Environment\\\\)/', '<small class="muted">\\1</small>', $exceptionEnv['class'] );
 		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';
 
 		$icons	= [];
 		$factUser	= '';
-		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
-			$user	= $logicUser->getUser( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
-/*			if( NULL !== $user )
-				$icons['user']	= HtmlTag::create( 'span', $iconUser, [
-					'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
-				] );*/
-			$factUser	= HtmlTag::create( 'span', $iconUser.'&nbsp;'.$user->username, [
-				'title'	=> $user->firstname.' '.$user->surname
-			] );
+		if( NULL !== $exceptionRequest ){
+			if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
+				$user	= $logicUser->getUser( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
+	/*			if( NULL !== $user )
+					$icons['user']	= HtmlTag::create( 'span', $iconUser, [
+						'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
+					] );*/
+				$factUser	= HtmlTag::create( 'span', $iconUser.'&nbsp;'.$user->username, [
+					'title'	=> $user->firstname.' '.$user->surname
+				] );
+			}
 		}
 
 		$list[]			= HtmlTag::create( 'tr', [
 			$canBulk ? HtmlTag::create( 'td', $checkbox ) : '',
-			HtmlTag::create( 'td', join( '<br/>', [$link, $method.' '.$requestPath, $typeClass] ), ['class' => 'autocut'] ),
+			HtmlTag::create( 'td', join( '<br/>', [$link, $requestMethod.' '.$requestPath, $typeClass] ), ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
 //			HtmlTag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
 
