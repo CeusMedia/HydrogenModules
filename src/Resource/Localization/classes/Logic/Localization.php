@@ -38,33 +38,44 @@ class Logic_Localization extends Logic
 	}
 
 	/**
+	 *	Returns found content for translation ID in current language.
+	 *	Fallback to given content.
+	 *
+	 *  Also supports adding new translation or update existing by giving translated content.
+	 *	Returns ID of translation.
+	 *
 	 *	@param		string			$id
-	 *	@param		string			$content
+	 *	@param		string|NULL		$content
 	 *	@param		string|NULL		$translated
 	 *	@return		int|string
 	 */
-	public function translate( string $id, string $content, ?string $translated = NULL ): int|string
+	public function translate( string $id, ?string $content = NULL, ?string $translated = NULL ): int|string
 	{
 		$this->env->getLog()->log("debug", "trying to translate $id to $this->language", $this);
 		$indices		= ['language' => $this->language, 'id' => $id];
 		$translation	= $this->model->getByIndices( $indices );
 
-		if( $translated !== NULL && strlen( trim( $translated ) ) ){
+		//  ADD / SAVE MODE
+		if( NULL !== $translated && '' !== trim( $translated ) ){
 			if( $this->language === $this->default )
 				return 0;
 			$data	= array_merge( $indices, ['content' => $translated] );
 			if( !$translation )
 				return $this->model->add( $data, FALSE );
-			return $this->model->edit( $translation->localizationId, $data, FALSE );
+			$this->model->edit( $translation->localizationId, $data, FALSE );
+			return $translation->localizationId;
 		}
+
 		if( $translation )
 			return $translation->content;
-		return $content;
+
+		return $content ?? '';
 	}
 
 	/**
 	 *	@return		void
-	 *	@throws		\CeusMedia\HydrogenFramework\Environment\Exception
+	 *	@throws		CeusMedia\HydrogenFramework\Environment\Exception
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{
