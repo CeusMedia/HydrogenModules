@@ -18,6 +18,9 @@
 	<files>
 		<class>Controller/Ajax/Manage/Download.php</class>
 		<class>Controller/Manage/Download.php</class>
+		<class>Logic/Download/File.php</class>
+		<class>Model/Download/File.php</class>
+		<class>Model/Download/Folder.php</class>
 		<class>View/Manage/Download.php</class>
 		<locale>de/manage/download.ini</locale>
 		<locale>de/html/manage/download/index.bottom.html</locale>

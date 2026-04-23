@@ -23,10 +23,13 @@ $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] 
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
 $iconTransfer   = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
 
-$statuses	= [
+$statusLabels	= [
 	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-info'] ),
 	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
+	Model_Form_Fill::STATUS_CUSTOMER	=> HtmlTag::create( 'label', 'Kunde', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_BOOKING		=> HtmlTag::create( 'label', 'Buchung', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_ORDER		=> HtmlTag::create( 'label', 'Kauf', ['class' => 'label label-success'] ),
 ];
 
 $helperTime		= new View_Helper_TimePhraser( $env );
@@ -78,17 +81,23 @@ foreach( $fills as $fill ){
 		] );
 	}
 
+	$statuses	= [];
+	$statusBits	= new \CeusMedia\Common\ADT\Bitmask( $fill->status );
+	foreach( $statusLabels as $status => $statusLabel )
+		if( $statusBits->has( $status ) )
+			$statuses[]	= $statusLabel;
+
 	$rows[]		= HtmlTag::create( 'tr', [
 		HtmlTag::create( 'td', HtmlTag::create( 'small', $fill->fillId ) ),
 		HtmlTag::create( 'td', $title ),
-		HtmlTag::create( 'td', HtmlTag::create( 'div', $form, ['class' => 'autocut', 'style' => 'font-size: 0.9em'] ) ),
-		HtmlTag::create( 'td', $statuses[(int) $fill->status].'&nbsp;'.$transfers ),
+		HtmlTag::create( 'td', HtmlTag::create( 'div', $form.'<br/><small>'.join( ' ', $statuses ).'</small>' , ['class' => 'autocut', 'style' => 'font-size: 0.9em'] ) ),
+//		HtmlTag::create( 'td', $statuses[(int) $fill->status].'&nbsp;'.$transfers ),
 		HtmlTag::create( 'td', $date ),
 		HtmlTag::create( 'td', $buttons ),
 	] );
 }
-$colgroup	= HtmlElements::ColumnGroup( '50px', '', '', '95px', '120px', '75px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular', 'Zustand', 'Alter / Datum', ''] ) );
+$colgroup	= HtmlElements::ColumnGroup( '50px', '', ''/*, '95px'*/, '120px', '75px' );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular'/*, 'Zustand'*/, 'Alter / Datum', ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped not-table-condensed'] );
 
