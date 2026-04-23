@@ -148,7 +148,7 @@ class Controller_Manage_Form_Fill extends Controller
 		if( 0 !== count( array_filter( $filterFormId ) ) )
 			$conditions['formId']	= array_filter( $filterFormId );
 		if( 0 !== strlen( trim( $filterStatus ) ) )
-			$conditions['status']	= $filterStatus;
+			$conditions['status']	= '& '.$filterStatus;
 
 		$limit		= 10;
 		$pages		= ceil( $this->modelFill->count( $conditions ) / $limit );
