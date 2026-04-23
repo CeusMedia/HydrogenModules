@@ -4,8 +4,43 @@ use PhpOffice\PhpSpreadsheet\IOFactory as SpreadsheetLoader;
 
 class Logic_Newsletter_Import_Strategy_SemcoSpreadsheet extends Logic_Newsletter_Import_AbstractStrategy
 {
+	public static $columnMap	= [
+		'firstname'	=> 'Vorname',
+		'surname'	=> 'Nachname',
+		'gender'	=> 'E-Mail-Adresse',
+		'email'		=> 'Anrede',
+	];
+
 	protected Logic_Newsletter_Editor $logic;
-//	protected Entity_Newsletter_Group|int|string $group;
+
+	/**
+	 * @param array $row
+	 * @return Entity_Newsletter_Reader
+	 * @todo implement status
+	 */
+	public static function convertSpreadsheetRowToReaderEntity( array $row ): Entity_Newsletter_Reader
+	{
+		$mandatoryFields	= array_values( self::$columnMap );
+		$missingFields		= array_diff( $mandatoryFields, array_keys( $row ) );
+		if( [] !== $missingFields )
+			throw new InvalidArgumentException( 'Missing atleast one of these columns: '.join( ', ', $missingFields ) );
+
+		$entity	= new Entity_Newsletter_Reader();
+		$entity->firstname		= $row[self::$columnMap['firstname']];
+		$entity->surname		= $row[self::$columnMap['surname']];
+		$entity->email			= $row[self::$columnMap['email']];
+		$entity->registeredAt	= time();
+		$entity->gender			= match( $row[self::$columnMap['gender']] ){
+			'Herr'	=> Model_Newsletter_Reader::GENDER_MALE,
+			'Frau'	=> Model_Newsletter_Reader::GENDER_FEMALE,
+			default	=> Model_Newsletter_Reader::GENDER_OTHERS,
+		};
+
+		// @todo map status from row value
+		$entity->status		= Model_Newsletter_Reader::STATUS_CONFIRMED;
+
+		return $entity;
+	}
 
 	public function import( string $filePath, int|string $groupId ): int
 	{
@@ -54,27 +89,4 @@ class Logic_Newsletter_Import_Strategy_SemcoSpreadsheet extends Logic_Newsletter
 		return 0;
 	}
 
-	/**
-	 * @param array $row
-	 * @return Entity_Newsletter_Reader
-	 * @todo implement status
-	 */
-	protected function convertSpreadsheetRowToReaderEntity( array $row ): Entity_Newsletter_Reader
-	{
-		$entity	= new Entity_Newsletter_Reader();
-		$entity->firstname		= $row['Vorname'];
-		$entity->surname		= $row['Nachname'];
-		$entity->email			= $row['E-Mail-Adresse'];
-		$entity->registeredAt	= time();
-		$entity->gender			= match( $row['Anrede'] ){
-			'Herr'	=> Model_Newsletter_Reader::GENDER_MALE,
-			'Frau'	=> Model_Newsletter_Reader::GENDER_FEMALE,
-			default	=> Model_Newsletter_Reader::GENDER_OTHERS,
-		};
-
-		// @todo map status from row value
-		$entity->status		= Model_Newsletter_Reader::STATUS_CONFIRMED;
-
-		return $entity;
-	}
 }
