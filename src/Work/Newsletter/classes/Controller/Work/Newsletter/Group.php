@@ -11,8 +11,9 @@ class Controller_Work_Newsletter_Group extends Controller
 	public const IMPORT_MODE_ADDITIONAL	= 1;
 	public const IMPORT_MODE_FRESH		= 2;
 
-	public const IMPORT_FORMAT_DEFAULT	= 1;
-	public const IMPORT_FORMAT_SEMCO	= 2;
+	public const IMPORT_FORMAT_CSV_DEFAULT	= 1;
+	public const IMPORT_FORMAT_CSV_SEMCO	= 2;
+	public const IMPORT_FORMAT_XLS_SEMCO	= 3;
 
 	/**	@var	Logic_Newsletter_Editor		$logic 		Instance of newsletter editor logic */
 	protected Logic_Newsletter_Editor $logic;
@@ -166,10 +167,11 @@ class Controller_Work_Newsletter_Group extends Controller
 						$this->logic->removeReaderFromGroup( $reader, $groupId );		//  remove each one with checks
 			}
 
-			if( self::IMPORT_FORMAT_SEMCO === $format )
-				$logicImportStrategy	= Logic_Newsletter_Import_Strategy_SemcoSpreadsheet::getInstance( $this->env );
-			else
-				$logicImportStrategy	= Logic_Newsletter_Import_Strategy_OwnCsv::getInstance( $this->env );
+			$logicImportStrategy = match( (int) $format ){
+				self::IMPORT_FORMAT_XLS_SEMCO => Logic_Newsletter_Import_Strategy_SemcoSpreadsheet::getInstance( $this->env ),
+				self::IMPORT_FORMAT_CSV_SEMCO => Logic_Newsletter_Import_Strategy_SemcoCsv::getInstance( $this->env ),
+				default => Logic_Newsletter_Import_Strategy_OwnCsv::getInstance( $this->env ),
+			};
 
 			try{
 				$count	= $logicImportStrategy->import( $fileName, $groupId );

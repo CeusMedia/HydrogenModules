@@ -8,14 +8,11 @@ class Controller_Index extends Controller
 	protected array $pathsSelf		= ['', 'index', 'index/index'];
 
 	/**
-	 *	@param		?string		$arg1
-	 *	@param		?string		$arg2
-	 *	@param		?string		$arg3
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( string $arg1 = NULL, string $arg2 = NULL, string $arg3 = NULL ): void
+	public function index(): void
 	{
 		$config			= $this->env->getConfig();
 		$session		= $this->env->getSession();

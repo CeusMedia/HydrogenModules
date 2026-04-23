@@ -71,8 +71,9 @@ return '
 				<div class="span3">
 					<label for="input_format" class="mandatory">Format / Quelle</label>
 					<select name="format" id="input_format" class="span12">
-						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_DEFAULT.'">CSV-Liste</option>
-						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_SEMCO.'">Excel-Datei</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_CSV_DEFAULT.'">CSV-Datei (internes Format)</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_CSV_SEMCO.'">Semco-CSV-Datei</option>
+						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_XLS_SEMCO.'">Semco-Excel-Datei</option>
 					</select>
   				</div>
 				<div class="span9">
