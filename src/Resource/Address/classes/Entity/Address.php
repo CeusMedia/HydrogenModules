@@ -22,6 +22,13 @@ class Entity_Address extends Entity
 	public ?string $institution		= NULL;
 	public ?string $firstname		= NULL;
 	public ?string $surname			= NULL;
-	public string $createdAt;
-	public ?string $modifiedAt		= NULL;
+	public int $createdAt;
+	public ?int $modifiedAt		= NULL;
+
+	protected static function presetDynamicValues( array $array ): array
+	{
+		return array_merge( $array, [
+			'createdAt'		=> time(),
+		] );
+	}
 }

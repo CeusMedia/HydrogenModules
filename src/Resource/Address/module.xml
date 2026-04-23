@@ -5,13 +5,14 @@
 	<title><![CDATA[Resource: Address]]></title>
 	<description><![CDATA[Address store for several other modules.]]></description>
 	<category>Resource</category>
-	<version>0.2.4</version>
-	<log version="0.1">Initital prototype.</log>
+	<version>0.2.5</version>
+	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locale support.</log>
 	<log version="0.2.2">Translate to english.</log>
 	<log version="0.2.3">Add entity class.</log>
 	<log version="0.2.4">Add hooks for user relations.</log>
+	<log version="0.2.5">Update entity.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -47,8 +47,17 @@ class Model_Address extends Model
 		'relationId',
 		'relationType',
 		'type',
+		'country',
+		'city',
+		'postcode',
+		'street',
 		'latitude',
 		'longitude',
+		'phone',
+		'email',
+		'institution',
+		'firstname',
+		'surname',
 	];
 
 	protected int $fetchMode		= PDO::FETCH_CLASS;
