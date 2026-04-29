@@ -8,7 +8,8 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Net\HTTP\Request;
+use CeusMedia\Common\Net\HTTP\Method as HttpMethod;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
@@ -29,7 +30,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 	protected Dictionary $moduleConfig;
 
-	protected Request $request;
+	protected HttpRequest $request;
 
 	protected Dictionary $session;
 
@@ -164,37 +165,36 @@ class Controller_Admin_Log_Exception extends Controller
 	 */
 	public function view( int|string $id ): void
 	{
-		/** @var ?object $exception */
+		/** @var ?Entity_Log_Exception $exception */
 		$exception	= $this->model->get( $id );
-		if( !$exception ){
+		if( NULL === $exception ){
 			$this->messenger->noteError( 'Invalid exception number.' );
 			$this->restart( NULL, TRUE );
 		}
 
 		$exceptionEnv		= unserialize( $exception->env );
+		$exceptionRequest	= new Dictionary();
+		$exceptionSession	= new Dictionary();
+
 		if( 0 !== (int) $exception->requestId ){
 			$request = Model_Log_Request::getInstance( $this->env )->get( $exception->requestId );
 			$exceptionRequest = new Dictionary( json_decode( $request->request, TRUE ) );
 			$exceptionSession = new Dictionary( json_decode( $request->session, TRUE ) );
 			$this->addData( 'request', $request );
-			$this->addData( 'requestMethod', new \CeusMedia\Common\Net\HTTP\Method( $request->method ) );
+			$this->addData( 'requestMethod', new HttpMethod( $request->method ) );
 		}
 		else if( '' !== ( $exception->request ?? '' ) ){
-			/** @var Request|Dictionary $exceptionRequest */
+			/** @var HttpRequest|Dictionary $exceptionRequest */
 			$exceptionRequest	= unserialize( $exception->request );
 
-
-			if( NULL !== $exception->session ){
-				$sessionData	= unserialize( $exception->session ?? 'b:0;' ) ?: [];
+			if( '' !== ( $exception->session ?? '' ) ){
+				$sessionData	= unserialize( $exception->session ) ?: [];
 				if( $sessionData instanceof Dictionary )
 					$exceptionSession	= $sessionData;
 				else
 					$exceptionSession	= new Dictionary( $sessionData );
 			}
 			$this->addData( 'requestMethod', $exceptionRequest->getMethod() );
-		}
-		else{
-			$exceptionSession	= new Dictionary();
 		}
 
 		$user	= NULL;
@@ -205,8 +205,8 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$this->addData( 'exception', $exception );
 		$this->addData( 'exceptionEnv', $exceptionEnv );
-		$this->addData( 'exceptionRequest', $exceptionRequest ?? new Dictionary() );
-		$this->addData( 'exceptionSession', $exceptionSession ?? new Dictionary() );
+		$this->addData( 'exceptionRequest', $exceptionRequest );
+		$this->addData( 'exceptionSession', $exceptionSession );
 		$this->addData( 'user', $user );
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 		$this->addData( 'canIndex', $this->env->getAcl()->has( 'admin/log/exception', 'index' ) );
