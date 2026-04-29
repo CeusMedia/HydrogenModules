@@ -9,6 +9,15 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 	protected ?Resource_REST_Client $client;
 	protected Dictionary $session;
 
+	public function authenticate( int|string $username, string $password ): object
+	{
+		$parameters	= [
+			'username'	=> $username,
+			'password'	=> $password,
+		];
+		return $this->client->post( 'authenticate', $parameters );
+	}
+
 	public function checkEmail( string $email )
 	{
 		$parameters	= ['email' => $email];
@@ -21,7 +30,8 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 			'username'	=> $username,
 			'password'	=> $password,
 		];
-		return $this->client->post( 'authenticate', $parameters );
+		$response = $this->client->post( 'password/check', $parameters );
+		return $response->data;
 	}
 
 	public function checkUsername( string $username )
@@ -30,6 +40,10 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 		return $this->client->post( 'username/check', $parameters )->data;
 	}
 
+	/**
+	 *	@return		void
+	 *	@throws		ReflectionException
+	 */
 	public function clearCurrentUser(): void
 	{
 		$this->session->remove( Logic_Authentication::$sessionKeyAuthUserId );
@@ -55,9 +69,14 @@ class Logic_Authentication_Backend_Rest extends Logic implements Logic_Authentic
 		return $this->client->post( 'confirm', $parameters )->data;
 	}
 
+	/**
+	 *	@param		bool		$strict
+	 *	@return		object|NULL
+	 *	@throws		RuntimeException	if no user authenticated
+	 *	@throws		RuntimeException	if no valid role identified
+	 */
 	public function getCurrentRole( bool $strict = TRUE ): NULL|object
 	{
-return NULL;
 		$roleId	= $this->getCurrentRoleId( $strict );
 		if( $roleId ){
 			$role	= $this->client->post( 'role/get', [$roleId] );
@@ -70,12 +89,12 @@ return NULL;
 	}
 
 	/**
-	 * @param		bool	$strict
-	 * @return		int|string|NULL
+	 *	@param		bool	$strict
+	 *	@return		int|string|NULL
+	 *	@throws		RuntimeException	if no user authenticated
 	 */
 	public function getCurrentRoleId( bool $strict = TRUE ): int|string|NULL
 	{
-		return NULL;
 		if( !$this->isAuthenticated() ){
 			if( $strict )
 				throw new RuntimeException( 'No user authenticated' );
@@ -87,7 +106,10 @@ return NULL;
 	/**
 	 *	@param		bool		$strict
 	 *	@param		int			$extensions		Flags: extend user entity, default: Logic_User::EXTEND_NOTHING
-	 *	@return		object|mixed|null
+	 *	@return		object|NULL
+	 *	@throws		RuntimeException	if no valid user identified in current session
+	 *	@throws		RuntimeException	if role extension and no user authenticated
+	 *	@throws		RuntimeException	if role extension and valid role identified
 	 */
 	public function getCurrentUser( bool $strict = TRUE, int $extensions = Logic_User::EXTEND_NOTHING ): ?object
 	{

@@ -193,7 +193,7 @@ class Resource_REST_Client
 		$config		= $this->moduleConfig->getAll( 'cache.', TRUE );
 		if( !$this->moduleConfig->get( 'cache.enabled' ) )
 			return;
-		if( !class_exists( '\CeusMedia\Cache\Factory' ) )
+		if( !class_exists( '\CeusMedia\Cache\SimpleCacheFactory' ) )
 			throw new RuntimeException( 'Cache library "CeusMedia/Cache" is not installed' );
 		$type		= $config->get( 'type' ) ?: 'NOOP';
 		$resource	= $config->get( 'resource' );
