@@ -630,15 +630,20 @@ class Controller_Work_Newsletter extends Controller
 		if( 1 === count( $groups ) && [] === $groupIds )
 			$groupIds	= [current( $groups )->newsletterGroupId];
 
+		$testers		= [];
 		$readers		= [];
 		$nrReaders		= 0;
 		if( $groupIds ){
 			foreach( $groupIds as $groupId )
 				$nrReaders += $this->logic->countGroupReaders( $groupId );
-			if( $nrReaders <= 50 )
-				foreach( $groupIds as $groupId )
-					foreach( $this->logic->getGroupReaders( $groupId ) as $reader )
+			foreach( $groupIds as $groupId ){
+				foreach( $this->logic->getGroupReaders( $groupId ) as $reader ){
+					if( $nrReaders <= 50 )
 						$readers[$reader->newsletterReaderId]	= $reader;
+					if( $reader->tester )
+						$testers[$reader->newsletterReaderId]	= $reader;
+				}
+			}
 		}
 
 		$queues			= $this->logic->getQueuesOfNewsletter( $newsletterId );
@@ -668,6 +673,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'groupIds', $groupIds );
 		$this->addData( 'nrReaders', $nrReaders );
 		$this->addData( 'readers', $readers );
+		$this->addData( 'testers', $testers );
 		$this->addData( 'queues', $queues );
 		$this->addData( 'nrLetters', $nrLetters );
 		$this->addData( 'letterQueue', $letterQueue );
