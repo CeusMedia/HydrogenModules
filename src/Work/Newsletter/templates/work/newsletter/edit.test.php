@@ -11,7 +11,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $groups */
 /** @var array $groupIds */
 /** @var string $newsletterId */
-/** @var array $readers */
+/** @var array<int, Entity_Newsletter_Reader> $readers */
+/** @var array<int, Entity_Newsletter_Reader> $testers */
 /** @var bool $askForReady */
 
 $iconSelect		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
@@ -82,11 +83,9 @@ else
 	$panelReaders	= '<div class="alert alert-error">'.$iconWarn.'&nbsp;Keine Test-Abonnenten vorhanden.</div>';
 
 $disabled		= ' disabled="disabled"';
-if( $readers ){
+if( $testers ){
 	$list	= [];
-	foreach( $readers as $reader ){
-		if( FALSE === (bool) (int) $reader->tester ?? 0 )
-			continue;
+	foreach( $testers as $reader ){
 		$label	= $reader->firstname.' '.$reader->surname.' <small class="muted">&lt;'.$reader->email.'&gt;</small>';
 		$input	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
