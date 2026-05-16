@@ -10,6 +10,7 @@ class Model_Form_Fill extends Model
 	public const STATUS_CUSTOMER	= 4;
 	public const STATUS_BOOKING		= 8;
 	public const STATUS_ORDER		= 16;
+	public const STATUS_NEWSLETTER	= 32;
 
 	public const STATUSES			= [
 		self::STATUS_NEW,
@@ -18,6 +19,7 @@ class Model_Form_Fill extends Model
 		self::STATUS_CUSTOMER,
 		self::STATUS_BOOKING,
 		self::STATUS_ORDER,
+		self::STATUS_NEWSLETTER,
 	];
 
 	protected array $columns		= [
@@ -38,6 +40,15 @@ class Model_Form_Fill extends Model
 		'email',
 	];
 
+	protected array $generated		= [
+		'hasStatusConfirmed',
+		'hasStatusHandled',
+		'hasStatusCustomer',
+		'hasStatusBooking',
+		'hasStatusOrder',
+		'hasStatusNewsletter',
+	];
+	
 	protected string $primaryKey	= 'fillId';
 
 	protected string $name			= 'form_fills';

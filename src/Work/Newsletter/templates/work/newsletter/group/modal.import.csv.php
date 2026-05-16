@@ -68,7 +68,7 @@ return '
   				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span3">
+				<div class="span5">
 					<label for="input_format" class="mandatory">Format / Quelle</label>
 					<select name="format" id="input_format" class="span12">
 						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_CSV_DEFAULT.'">CSV-Datei (internes Format)</option>
@@ -76,7 +76,7 @@ return '
 						<option value="'.Controller_Work_Newsletter_Group::IMPORT_FORMAT_XLS_SEMCO.'">Semco-Excel-Datei</option>
 					</select>
   				</div>
-				<div class="span9">
+				<div class="span7">
 					<label for="input_upload">Importdatei</label>
 					'.$helperUpload->render().'
 				</div>

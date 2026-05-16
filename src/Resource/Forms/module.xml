@@ -6,7 +6,7 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -23,6 +23,7 @@
 	<log version="0.4.1">Add transfer target interface and request/result entities.</log>
 	<log version="0.4.2">Import Logic_Form_Fill from Manage:Forms.</log>
 	<log version="0.4.3">Add entities for all other models.</log>
+	<log version="0.4.4">Add generated status columns.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -397,6 +398,23 @@ ALTER TABLE `<%?prefix%>form_rules` ADD `filePath` VARCHAR(255) CHARACTER SET ut
 ]]></sql>
 	<sql type="mysql" on="update" version="0.4.0"><![CDATA[
 ALTER TABLE `<%?prefix%>forms` ADD `forwardOnSuccess` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER `receivers`;
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.4"><![CDATA[
+ALTER TABLE `<%?prefix%>form_fills`
+  ADD COLUMN hasStatusConfirmed TINYINT GENERATED ALWAYS AS (status & 1 != 0) STORED,
+  ADD COLUMN hasStatusHandled TINYINT GENERATED ALWAYS AS (status & 2 != 0) STORED,
+  ADD COLUMN hasStatusCustomer TINYINT GENERATED ALWAYS AS (status & 4 != 0) STORED,
+  ADD COLUMN hasStatusBooking TINYINT GENERATED ALWAYS AS (status & 8 != 0) STORED,
+  ADD COLUMN hasStatusOrder TINYINT GENERATED ALWAYS AS (status & 16 != 0) STORED,
+  ADD COLUMN hasStatusNewsletter TINYINT GENERATED ALWAYS AS (status & 32 != 0) STORED,
+  ADD INDEX hasStatusNew (hasStatusNew),
+  ADD INDEX hasStatusConfirmed (hasStatusConfirmed),
+  ADD INDEX hasStatusHandled (hasStatusHandled),
+  ADD INDEX hasStatusCustomer (hasStatusCustomer),
+  ADD INDEX hasStatusBooking (hasStatusBooking),
+  ADD INDEX hasStatusOrder (hasStatusOrder),
+  ADD INDEX hasStatusNewsletter (hasStatusNewsletter)
+;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 		DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;

@@ -57,10 +57,6 @@ if( $canRemove ){
 }
 
 
-$buttonReader	= HtmlTag::create( 'a', $iconAdd.$w->buttonReader, [
-	'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
-	'class'		=> 'btn btn-success btn-small',
-] );
 
 return '
 <div class="content-panel">
@@ -87,7 +83,6 @@ return '
 				'.$buttonCancel.'
 				'.$buttonSave.'
 				'.$buttonRemove.'
-				'.$buttonReader.'
 			</div>
 		</form>
 	</div>

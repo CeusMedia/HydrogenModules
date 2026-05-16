@@ -115,13 +115,13 @@ return $textTop.'
 	<!--<a href="./work/newsletter/group" class="btn btn-mini">'.$iconCancel.$w->buttonList.'</a>-->
 	'.$textAbove.'
 	<div class="row-fluid">
-		<div class="span6">
+		<div class="span4">
 			'.$panelForm.'
-			'.$panelGroups.'
 			'.$panelImport.'
 			'.$panelExport.'
 		</div>
-		<div class="span6">
+		<div class="span8">
+			'.$panelGroups.'
 			'.$panelReaders.'
 		</div>
 	</div>
