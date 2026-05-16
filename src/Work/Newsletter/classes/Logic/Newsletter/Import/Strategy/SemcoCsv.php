@@ -12,8 +12,6 @@ class Logic_Newsletter_Import_Strategy_SemcoCsv extends Logic_Newsletter_Import_
 		$iterator	= new CsvIterator( $filePath, TRUE );
 		while( $iterator->valid() ){
 			$entry	= $iterator->current();
-			if( !isset( $entry['email'] ) )
-				throw new RuntimeException( 'Invalid format. Columns must be: email, firstname, surname, gender' );
 			$entity = Logic_Newsletter_Import_Strategy_SemcoSpreadsheet::convertSpreadsheetRowToReaderEntity( $entry );
 			$this->tryToAddReaderAndAssignToGroup( $entity, $groupId );
 			$counter++;

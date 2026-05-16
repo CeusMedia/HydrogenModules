@@ -147,8 +147,24 @@ class Controller_Manage_Form_Fill extends Controller
 //		if( strlen( trim( $filterFormId ) ) )
 		if( 0 !== count( array_filter( $filterFormId ) ) )
 			$conditions['formId']	= array_filter( $filterFormId );
-		if( 0 !== strlen( trim( $filterStatus ) ) )
-			$conditions['status']	= '& '.$filterStatus;
+		if( 0 !== strlen( trim( $filterStatus ) ) ){
+			if( '0' === trim( $filterStatus ) )			//  special case: there is no bitmask flag index for 0
+				$conditions['status']	= 0;
+			else{
+				if( $filterStatus & Model_Form_Fill::STATUS_CONFIRMED )
+					$conditions['hasStatusConfirmed']	= 1;
+				if( $filterStatus & Model_Form_Fill::STATUS_HANDLED )
+					$conditions['hasStatusHandled']		= 1;
+				if( $filterStatus & Model_Form_Fill::STATUS_CUSTOMER )
+					$conditions['hasStatusCustomer']	= 1;
+				if( $filterStatus & Model_Form_Fill::STATUS_BOOKING )
+					$conditions['hasStatusBooking']		= 1;
+				if( $filterStatus & Model_Form_Fill::STATUS_ORDER )
+					$conditions['hasStatusBooking']		= 1;
+				if( $filterStatus & Model_Form_Fill::STATUS_NEWSLETTER )
+					$conditions['hasStatusNewsletter']	= 1;
+			}
+		}
 
 		$limit		= 10;
 		$pages		= ceil( $this->modelFill->count( $conditions ) / $limit );

@@ -7,8 +7,8 @@ class Logic_Newsletter_Import_Strategy_SemcoSpreadsheet extends Logic_Newsletter
 	public static $columnMap	= [
 		'firstname'	=> 'Vorname',
 		'surname'	=> 'Nachname',
-		'gender'	=> 'E-Mail-Adresse',
-		'email'		=> 'Anrede',
+		'gender'	=> 'Anrede',
+		'email'		=> 'E-Mail-Adresse',
 	];
 
 	protected Logic_Newsletter_Editor $logic;
@@ -77,13 +77,13 @@ class Logic_Newsletter_Import_Strategy_SemcoSpreadsheet extends Logic_Newsletter
 		if( -4 === $readerId ){																		//  reader not registered yet
 			$readerId	= $this->logic->addReader( $entity );										//  add to database
 			if( 0 !== (int) $groupId )																//  group to assign is set
-				$this->logic->addReaderToGroup( $readerId, $this->groupId );						//  add reader to group
+				$this->logic->addReaderToGroup( $readerId, $groupId );								//  add reader to group
 			return $readerId;
 		}
 		if( $readerId > 0 ){
 			if( 0 !== (int) $groupId )																//  group to assign is set
-				if( 0 === $this->logicDeduplication->findReaderGroup( $readerId, $this->groupId ) )	//  group not assigned yet
-					$this->logic->addReaderToGroup( $readerId, $this->groupId );					//  add reader to group
+				if( 0 === $this->logicDeduplication->findReaderGroup( $readerId, $groupId ) )		//  group not assigned yet
+					$this->logic->addReaderToGroup( $readerId, $groupId );							//  add reader to group
 			return $readerId;
 		}
 		return 0;

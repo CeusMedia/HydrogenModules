@@ -11,38 +11,31 @@ class View_Helper_Work_Newsletter_GroupReaders
 	protected ?object $group		= NULL;
 	protected array $readers		= [];
 	protected array $words			= [];
+	protected int $maxItems			= 50;
+	protected int $nrItems			= 0;
 
 	public function __construct( Environment $env )
 	{
 		$this->env	= $env;
 	}
 
-	public function setGroup( object $group ): self
-	{
-		$this->group	= $group;
-		return $this;
-	}
-	public function setWords( array $words ): self
-	{
-		$this->words	= $words;
-		return $this;
-	}
-
-	public function setReaders( array $readers ): self
-	{
-		$this->readers	= $readers;
-		return $this;
-	}
 	public function render(): string
 	{
-		$w			= (object) $this->words['edit_readers'];
+		$w	= (object) $this->words['edit_readers'];
 
 		$labelEmpty		= HtmlTag::create( 'em', $w->empty, ['class' => 'muted'] );
 		$listReaders	= HtmlTag::create( 'div', $labelEmpty, ['class' => 'alert alert-info'] );
 		if( [] !== $this->readers )
 			$listReaders	= $this->renderReaders();
 
+		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
+		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->buttonAdd, [
+			'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
+			'class'		=> 'btn btn-success btn-small',
+		] );
+
 		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'div', $buttonAdd, ['class' => 'pull-right', 'style' => 'margin-top: 15px;'] ),
 			HtmlTag::create( 'h3', $w->heading ),
 			HtmlTag::create( 'div', $listReaders, [
 				'class'	=> 'content-panel-inner',
@@ -50,6 +43,41 @@ class View_Helper_Work_Newsletter_GroupReaders
 			] ),
 		], ['class' => 'content-panel'] );
 	}
+
+	/**
+	 *	@param		object		$group
+	 *	@return		static
+	 */
+	public function setGroup( object $group ): self
+	{
+		$this->group	= $group;
+		return $this;
+	}
+
+	/**
+	 *	@param		array		$readers
+	 *	@return		static
+	 */
+	public function setReaders( array $readers ): self
+	{
+		$this->nrItems	= count( $readers );
+		$this->readers	= array_slice( $readers, 0, $this->maxItems );
+		return $this;
+	}
+
+	/**
+	 *	@param		array		$words
+	 *	@return		static
+	 */
+	public function setWords( array $words ): self
+	{
+		$this->words	= $words;
+		return $this;
+	}
+
+
+	//  --  PROTECTED  --  //
+
 
 	protected function renderReaders(): string
 	{
@@ -71,10 +99,10 @@ class View_Helper_Work_Newsletter_GroupReaders
 			View_Helper_StatusBadge::STATUS_NEGATIVE	=> -2,
 		] );
 		$helperStatus->setLabelMap( [
-			View_Helper_StatusBadge::STATUS_POSITIVE	=> $iconReady.'&nbsp;ready',
-			View_Helper_StatusBadge::STATUS_TRANS		=> $iconNew.'&nbsp;new',
-			View_Helper_StatusBadge::STATUS_NEUTRAL		=> $iconGone.'&nbsp;gone',
-			View_Helper_StatusBadge::STATUS_NEGATIVE	=> $iconBanned.'&nbsp;banned',
+			View_Helper_StatusBadge::STATUS_POSITIVE	=> $iconReady.'&nbsp;'.$this->words['reader_statuses'][View_Helper_StatusBadge::STATUS_POSITIVE],
+			View_Helper_StatusBadge::STATUS_TRANS		=> $iconNew.'&nbsp;'.$this->words['reader_statuses'][View_Helper_StatusBadge::STATUS_TRANS],
+			View_Helper_StatusBadge::STATUS_NEUTRAL		=> $iconGone.'&nbsp;'.$this->words['reader_statuses'][View_Helper_StatusBadge::STATUS_NEUTRAL],
+			View_Helper_StatusBadge::STATUS_NEGATIVE	=> $iconBanned.'&nbsp;'.$this->words['reader_statuses'][View_Helper_StatusBadge::STATUS_NEGATIVE],
 		] );
 
 		foreach( $this->readers as $reader ){
@@ -95,12 +123,21 @@ class View_Helper_Work_Newsletter_GroupReaders
 			$status			= $helperStatus->setStatus( $reader->status )->render();
 			$list[]			= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', $linkReader, ['class' => ''] ),
-				HtmlTag::create( 'td', $reader->email, ['class' => ''] ),
+				HtmlTag::create( 'td', '<small>'.$reader->email.'</small>', ['class' => ''] ),
 				HtmlTag::create( 'td', $status, ['class' => ''] ),
 				HtmlTag::create( 'td', $linkRemove, ['class' => ''] ),
 			] );
 		}
-		$numberBadge	= HtmlTag::create( 'span', '('.count( $this->readers ).')', ['class' => 'muted'] );
+
+		if( $this->maxItems < $this->nrItems ){
+			$nrMore		= $this->nrItems - $this->maxItems;
+			$textMore	= '<p><center>... und '.$nrMore.' Weitere.</center></p>';
+			$list[]		= HtmlTag::create( 'tr', [
+				HtmlTag::create( 'td', $textMore, ['colspan' => 4] ),
+			] );
+		}
+
+		$numberBadge	= HtmlTag::create( 'span', '('.$this->nrItems.')', ['class' => 'muted'] );
 		$colgroup		= HtmlElements::ColumnGroup( '', '', '100px', '40px' );
 		$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser '.$numberBadge] );
 		$thead			= HtmlTag::create( 'thead', $tableHeads );
@@ -108,6 +145,5 @@ class View_Helper_Work_Newsletter_GroupReaders
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
 			'class'	=> 'table table-condensed table-striped table-fixed'
 		] );
-
 	}
 }
