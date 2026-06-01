@@ -15,6 +15,11 @@ class Entity_Form_Fill extends Entity
 	public int $createdAt			= 0;
 	public int $modifiedAt			= 0;
 
-	public array $transfers			= [];
 	public ?Entity_Form $form		= NULL;
+
+	public int $nrImports			= 0;
+	public int $nrTransfers			= 0;
+
+	public array $imports			= [];
+	public array $transfers			= [];
 }

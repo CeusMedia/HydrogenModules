@@ -161,10 +161,9 @@ class Controller_Manage_Form extends Controller
 			'formId'	=> $formId,
 		] ) );
 
-		/** @var Entity_Form_Fill[] $fills */
-		$fills	= $this->modelFill->getAll( ['formId' => $formId] );
-		$this->addData( 'fills', $fills );
-		$this->addData( 'hasFills', count( $fills ) > 0 );
+		$nrFills	= $this->modelFill->countByIndex( 'formId', $formId );
+		$this->addData( 'nrFills', $nrFills );
+		$this->addData( 'hasFills', 0 !== $nrFills );
 
 		$parameterBlacklist	= ['gclid', 'fclid'];
 		$references	= $this->modelFill->getDistinct( 'referer', ['formId' => $formId], ['referer' => 'ASC'] );
@@ -262,8 +261,11 @@ class Controller_Manage_Form extends Controller
 		$orders		= ['status' => 'DESC', 'title' => 'ASC'];
 		$limits		= [$page * $limit, $limit];
 		$total		= $this->modelForm->count( $conditions );
+		/** @var Entity_Form_Fill[] $forms */
 		$forms		= $this->modelForm->getAll( $conditions, $orders, $limits );
 		foreach( $forms as $form ){
+			$form->nrTransfers	= $this->modelTransferRule->countByIndex( 'formId', $form->formId );
+			$form->nrImports	= $this->modelImportRule->countByIndex( 'formId', $form->formId );
 			$form->transfers	= $this->modelTransferRule->getAllByIndex( 'formId', $form->formId );
 			$form->imports		= $this->modelImportRule->getAllByIndex( 'formId', $form->formId );
 		}

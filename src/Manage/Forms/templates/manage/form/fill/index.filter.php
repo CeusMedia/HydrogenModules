@@ -2,7 +2,11 @@
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
 
+/** @var WebEnvironment $env */
+/** @var View $view */
 /** @var array<Entity_Form> $forms */
 /** @var int|string $filterStatus */
 /** @var array<string> $filterFormId */
@@ -47,15 +51,23 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'E-Mail <small class="muted">(ungefähr)</small>', ['for' => 'input_email'] ),
+					HtmlTag::create( 'label', 'E-Mail <small class="muted">(min. 3 Zeichen)</small>', ['for' => 'input_email'] ),
 					HtmlTag::create( 'input', NULL, [
-						'type'		=> 'text',
-						'name'		=> 'email',
-						'id'		=> 'input_email',
-						'class'		=> 'span12',
-						'value'		=> htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ),
+						'type'				=> 'text',
+						'name'				=> 'email',
+						'id'				=> 'input_email',
+						'class'				=> 'span12 autocomplete-query',
+						'autocomplete'		=> 'off',
+						'autocorrect'		=> 'off',
+    					'autocapitalize'	=> 'off',
+    					'spellcheck'		=> 'false',
+						'value'				=> htmlentities( $filterEmail, ENT_QUOTES, 'UTF-8' ),
 					] ),
-				], ['class' => 'span12'] ),
+					HtmlTag::create( 'div', '', [
+						'id'		=> 'input_email-autocomplete-list',
+						'class'		=> 'autocomplete-list',
+					] ),
+				], ['class' => 'span12 autocomplete-wrapper'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
