@@ -1,13 +1,16 @@
-<?php
+<?php /** @noinspection ALL */
 
 use CeusMedia\Bootstrap\Nav\Tabs;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var View_Manage_Form $view */
 /** @var object $form */
 /** @var array<object> $transferTargets */
 /** @var array<object> $rulesCustomer */
 /** @var array<object> $rulesManager */
 /** @var array<object> $rulesAttachment */
+/** @var int $nrFills */
+/** @var bool $hasFills */
 /** @var int|string|NULL $activeTab */
 /** @var array<string,string|HtmlTag> $navButtons */
 

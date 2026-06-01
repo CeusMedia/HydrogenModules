@@ -1,13 +1,14 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
+use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var View $view */
 /** @var array $transferTargets */
 /** @var array $forms */
 /** @var int $page */
@@ -96,22 +97,20 @@ foreach( $forms as $form ){
 	$receivers	= HtmlTag::create( 'small', $receivers );
 
 	$transfers	= '';
-	if( count( $form->transfers ) ){
+	if( 0 !== $form->nrTransfers ){
 		$list	= [];
-		foreach( $form->transfers as $transfer ){
+		foreach( $form->transfers as $transfer )
 			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
-		}
 		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->transfers );
 		$transfers	= HtmlTag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
 	}
 
 	$importers	= '';
-	if( count( $form->imports ) ){
+	if( 0 !== $form->nrImports ){
 		$list	= [];
-		foreach( $form->imports as $import ){
+		foreach( $form->imports as $import )
 			$list[]	= $import->title;
-		}
 		$list		= 'Imports:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->imports );
 		$importers	= HtmlTag::create( 'span', $iconImport.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );

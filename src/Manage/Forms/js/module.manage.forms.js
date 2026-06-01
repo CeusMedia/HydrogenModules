@@ -312,3 +312,96 @@ let FormsImportRuleTest = {
 		FormsImportRuleTest.testImportRules(ruleId, rules, callback);
 	}
 }
+
+class AutocompleteFormFillEmail {
+
+	constructor(options) {
+		this.$input = $(options.input);
+		this.$list = $(options.list);
+		this.url = options.url;
+		this.minLength = options.minLength || 2;
+		this.debounceTime = options.debounceTime || 300;
+		this.debounceTimer = null;
+		this.init();
+	}
+
+	init() {
+		this.bindInput();
+		this.bindOutsideClick();
+	}
+
+	bindInput() {
+		this.$input.on('input', () => {
+			const query = this.$input.val().trim();
+			clearTimeout(this.debounceTimer);
+			this.debounceTimer = setTimeout(() => {
+				if (query.length < this.minLength) {
+					this.hideList();
+					return;
+				}
+				this.fetchData(query);
+			}, this.debounceTime);
+		});
+	}
+
+	fetchData(query) {
+		$.ajax({
+			url: this.url,
+			method: 'POST',
+			data: { q: query },
+			dataType: 'json',
+			success: (response) => {
+				if (!response || !response.data) return;
+				this.renderList(response.data);
+			}
+		});
+	}
+
+	renderList(emails) {
+		this.$list.empty();
+		if (!emails.length) {
+			this.hideList();
+			return;
+		}
+		emails.forEach(email => {
+			const $entry = $('<div class="autocomplete-item"></div>');
+			$entry.html(`
+                <div class="autocomplete-name">${this.escapeHtml(email)}</div>
+            `);
+			$entry.on('click', () => {
+				this.selectItem(email);
+			});
+			this.$list.append($entry);
+		});
+		this.showList();
+	}
+
+	selectItem(email) {
+		this.$input.val(email);
+		this.hideList();
+		this.$input.trigger('email:selected', email);        // Optional: Custom Event
+		this.$input.get(0).form.submit();
+	}
+
+	bindOutsideClick() {
+		$(document).on('click', (e) => {
+			if (!$(e.target).closest(this.$input).length &&
+				!$(e.target).closest(this.$list).length) {
+				this.hideList();
+				this.$input.val('');
+			}
+		});
+	}
+
+	showList() {
+		this.$list.show();
+	}
+
+	hideList() {
+		this.$list.hide();
+	}
+
+	escapeHtml(text) {
+		return $('<div>').text(text).html();
+	}
+}

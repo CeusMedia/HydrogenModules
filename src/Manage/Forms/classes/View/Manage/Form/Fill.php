@@ -10,6 +10,15 @@ class View_Manage_Form_Fill extends View
 	 */
 	public function index(): void
 	{
+		$script	= '
+const autocomplete = new AutocompleteFormFillEmail({
+	input: "#input_email",
+	list: "#input_email-autocomplete-list",
+	url: "./ajax/manage/form/fill/findEmail",
+	minLength: 3,
+	debounceTime: 300
+});';
+		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
 	/**
