@@ -27,6 +27,7 @@ class Model_Newsletter_Reader extends Model
 		self::STATUS_CONFIRMED,
 	];
 
+//	public const GENDER_UNSPECIFIED		= 0;
 	public const GENDER_FEMALE			= 0;
 	public const GENDER_MALE			= 1;
 	public const GENDER_OTHERS			= 2;

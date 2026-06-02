@@ -29,7 +29,8 @@ $optStatus		= [
 	Model_Form_Fill::STATUS_HANDLED		=> 'behandelt',
 	Model_Form_Fill::STATUS_CUSTOMER	=> 'Kunde',
 	Model_Form_Fill::STATUS_BOOKING		=> 'Buchung',
-//	Model_Form_Fill::STATUS_ORDER		=> 'Kauf',
+	Model_Form_Fill::STATUS_ORDER		=> 'Kauf',
+	Model_Form_Fill::STATUS_NEWSLETTER	=> 'Newsletter',
 ];
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
 

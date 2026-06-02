@@ -196,7 +196,11 @@ die;*/
 	 */
 	public function view( int|string $jobRunId ): void
 	{
+		/** @var ?Entity_Job_Run $jobRun */
 		$jobRun			= $this->modelRun->get( $jobRunId );
+		if( NULL === $jobRun )
+			$this->restart( NULL, TRUE );
+
 		$jobDefinition	= $this->modelDefinition->get( $jobRun->jobDefinitionId );
 		$jobSchedule	= NULL;
 		if( $jobRun->jobScheduleId ){

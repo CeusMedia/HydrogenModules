@@ -22,4 +22,11 @@ class Entity_Form_Fill extends Entity
 
 	public array $imports			= [];
 	public array $transfers			= [];
+
+	public bool $hasStatusConfirmed		= FALSE;
+	public bool $hasStatusHandled		= FALSE;
+	public bool $hasStatusCustomer		= FALSE;
+	public bool $hasStatusBooking		= FALSE;
+	public bool $hasStatusOrder			= FALSE;
+	public bool $hasStatusNewsletter	= FALSE;
 }
