@@ -30,6 +30,7 @@ $statusLabels	= [
 	Model_Form_Fill::STATUS_CUSTOMER	=> HtmlTag::create( 'label', 'Kunde', ['class' => 'label label-success'] ),
 	Model_Form_Fill::STATUS_BOOKING		=> HtmlTag::create( 'label', 'Buchung', ['class' => 'label label-success'] ),
 	Model_Form_Fill::STATUS_ORDER		=> HtmlTag::create( 'label', 'Kauf', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_NEWSLETTER	=> HtmlTag::create( 'label', 'Newsletter', ['class' => 'label label-success'] ),
 ];
 
 $helperTime		= new View_Helper_TimePhraser( $env );
