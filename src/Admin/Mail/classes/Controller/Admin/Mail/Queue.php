@@ -233,7 +233,7 @@ class Controller_Admin_Mail_Queue extends Controller
 		$conditions	= [];
 
 		if( $filters->get( 'subject' ) )
-			$conditions['subject'] = '%'.$filters->get( 'subject' ).'%';
+			$conditions['subject'] = $filters->get( 'subject' );
 		if( $filters->get( 'receiverAddress' ) )
 			$conditions['receiverAddress'] = '%'.$filters->get( 'receiverAddress' ).'%';
 		if( $filters->get( 'status' ) )

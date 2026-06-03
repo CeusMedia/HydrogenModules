@@ -143,7 +143,7 @@ class Controller_Manage_Form_Fill extends Controller
 		if( 0 !== strlen( trim( $filterFillId ) ) )
 			$conditions['fillId']	= $filterFillId;
 		if( 0 !== strlen( trim( $filterEmail ) ) )
-			$conditions['email']	= '%'.$filterEmail.'%';
+			$conditions['email']	= $filterEmail;
 //		if( strlen( trim( $filterFormId ) ) )
 		if( 0 !== count( array_filter( $filterFormId ) ) )
 			$conditions['formId']	= array_filter( $filterFormId );
