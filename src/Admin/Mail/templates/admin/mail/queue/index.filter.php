@@ -60,20 +60,30 @@ return '
 			<form action="./admin/mail/queue/filter" method="post">
 				<div class="row-fluid">
 					<div class="span12">
-						<label for="input_subject">'.$wf->labelSubject.'</label>
-						<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $filters->get( 'subject', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span12">
 						<label for="input_receiverAddress">'.$wf->labelReceiverAddress.'</label>
-						<input type="text" name="receiverAddress" id="input_receiverAddress" class="span12" value="'.htmlentities( $filters->get( 'receiverAddress', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
+						<input
+							type="text"
+							name="receiverAddress"
+							id="input_receiverAddress"
+							class="span12"
+							value="'.htmlentities( $filters->get( 'receiverAddress', '' ), ENT_QUOTES, 'UTF-8' ).'"
+							autocomplete="off"
+							autocorrect="off"
+							autocapitalize="off"
+							spellcheck="false"
+    				    />
 					</div>
 				</div>
 				<div class="row-fluid">
 					<div class="span12">
 						<label for="input_status">'.$wf->labelStatus.'</label>
 						<select name="status[]" id="input_status" class="span12" multiple="multiple" size="11">'.$optStatus.'</select>
+					</div>
+				</div>
+				<div class="row-fluid">
+					<div class="span12">
+						<label for="input_subject">'.$wf->labelSubject.'</label>
+						<input type="text" name="subject" id="input_subject" class="span12" value="'.htmlentities( $filters->get( 'subject', '' ), ENT_QUOTES, 'UTF-8' ).'"/>
 					</div>
 				</div>
 				<div class="row-fluid">

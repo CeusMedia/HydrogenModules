@@ -28,8 +28,10 @@ class View_Admin_Mail_Queue extends View
 
 	public function index(): void
 	{
-		$script	= 'ModuleAdminMail.Queue.init();';
-		$this->env->getPage()->js->addScriptOnReady( $script );
+		$this->env->getPage()->js->addScriptOnReady( join( [
+			'ModuleAdminMail.Queue.init();',
+			'ModuleAdminMail.Queue.Filter.init();',
+		] ) );
 	}
 
 	public function renderFact( string $key, $value ): string

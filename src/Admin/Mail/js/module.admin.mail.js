@@ -43,6 +43,27 @@ ModuleAdminMail.Queue = {
 		});
 	}
 };
+
+ModuleAdminMail.Queue.Filter = {
+	init: function(){
+		new ModuleAdminMailBootstrapTypeahead('#input_receiverAddress', {
+			url: 'ajax/admin/mail/queue/findReceiverAddress',
+			minLength: 3,
+		}).init();
+
+		$("#input_receiverAddress").bind('change input', function(event){
+			$("#input_receiverAddress").data('last-change-valid', ('undefined' !== typeof event.isTrigger));
+		});
+		$("#input_receiverAddress").bind('blur', function(event){
+			if(0 !== this.value.length){
+				let container = $(this);
+				if(!container.data('last-change-valid'))
+					container.val('');
+			}
+		});
+	}
+};
+
 ModuleAdminMail.TemplateEditor	= {
 	templateId: 0,
 	init: function(templateId){
@@ -92,3 +113,41 @@ ModuleAdminMail.TemplateEditor	= {
 		});
 	}
 };
+
+class ModuleAdminMailBootstrapTypeahead {
+	constructor(selector, options) {
+		this.$elements = $(selector);
+		this.options = $.extend({
+			url: '',
+			queryParam: 'q',
+			minLength: 1,
+			items: 8
+		}, options || {});
+	}
+
+	init() {
+		var self = this;
+		self.$elements.typeahead({
+			minLength: self.options.minLength,
+			items: self.options.items,
+			source: function (query, process) {
+				var data = {};
+				data[self.options.queryParam] = query;
+				$.ajax({
+					url: self.options.url,
+					type: 'GET',
+					data: data,
+					dataType: 'json',
+					success: function (response) {
+						// response must be an array
+						process(response.data.items);
+					},
+					error: function () {
+						process([]);
+					}
+				});
+			}
+		});
+		return self;
+	}
+}

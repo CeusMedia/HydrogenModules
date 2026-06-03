@@ -19,6 +19,24 @@ class Controller_Ajax_Admin_Mail_Queue extends AjaxController
 		365		=> 'Jahr',
 	];
 
+	public function findReceiverAddress(): void
+	{
+		$query	= $this->env->getRequest()->get( 'q' );
+		$data	= [
+			'count'	=> 0,
+			'items'	=> [],
+		];
+		if( strlen( trim( $query ) ) > 2 ){
+			$model	= new Model_Mail( $this->env );
+			$conditions	= ['receiverAddress' => '% %'.str_replace( '*', '%', trim( $query ) ).'%'];
+			$orders		= ['receiverAddress' => 'ASC'];
+			$limits		= [0, 10];
+			$data['items']	= $model->getDistinct( 'receiverAddress', $conditions, $orders, $limits );
+			$data['count']	= count( $data['items'] );
+		}
+		$this->respondData( $data );
+	}
+
 	/**
 	 *	@param		?string		$panelId
 	 *	@return		int
