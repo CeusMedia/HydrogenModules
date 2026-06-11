@@ -96,13 +96,12 @@ class Model_Newsletter_Theme
 		file_put_contents( $folder.'/template.txt', $data->plain );
 		file_put_contents( $folder.'/template.css', $data->style );
 
-		$pathJs		= $this->env->getConfig()->get( 'path.scripts' );
-
-		$error	= Resource_PhantomJS::getInstance( $this->env )->setDebug( 1 )->execute(
-			$pathJs.'phantomjs/screenshot.js',
-			$this->env->url.'work/newsletter/template/preview/html/'.$templateId,
-			$folder.'/template.png'
-		);
+		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
+		$url	= $this->env->url.'work/newsletter/template/preview/html/'.$templateId;
+		$error	= Resource_PhantomJS::getInstance( $this->env )
+			->setDebug( 1 )
+			->setScript( $pathJs.'phantomjs/screenshot.js' )
+			->execute( $url, $folder.'/template.png' );
 		if( $error )
 			$this->env->getMessenger()->noteFailure( $error );
 	}
