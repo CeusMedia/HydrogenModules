@@ -79,10 +79,10 @@ For sending mails you need to setup a cron job:
 	<config protected="yes" mandatory="no" type="float" name="send.sleepBetweenMails" title="Float of seconds to pause after each mail">0.1</config>
 	<config protected="no" mandatory="no" type="boolean" name="register.showLatest" title="Show latest newsletter on registration">yes</config>
 	<hook type="resource" resource="Shop" event="renderServicePanel">Hook_Info_Newsletter::onShopRenderServicePanels</hook>
-	<link xml:lang="de" access="outside" path="info/newsletter/index">bestellen</link>
-	<link xml:lang="de" access="outside" path="info/newsletter/unregister">abbestellen</link>
-	<link xml:lang="en" access="outside" path="info/newsletter/index">join</link>
-	<link xml:lang="en" access="outside" path="info/newsletter/unregister">leave</link>
+	<link xml:lang="de" access="public" path="info/newsletter/index">bestellen</link>
+	<link xml:lang="de" access="public" path="info/newsletter/unregister">abbestellen</link>
+	<link xml:lang="en" access="public" path="info/newsletter/index">join</link>
+	<link xml:lang="en" access="public" path="info/newsletter/unregister">leave</link>
 	<link access="public" path="info/newsletter/confirm"/>
 	<link access="public" path="info/newsletter/preview"/>
 	<link access="public" path="info/newsletter/register"/>
