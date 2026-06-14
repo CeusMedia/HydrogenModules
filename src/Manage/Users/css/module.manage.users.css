@@ -349,3 +349,30 @@ legend.user-add {
 legend.user-edit {
 	background-image:  url(//cdn.ceusmedia.de/icons/famfamfam/silk/user_edit.png);
 	}
+
+
+/*  ##  GROUP ENTITY RELATION EDITOR  ##  */
+
+.group-entity-relation-editor .group-selector-list {
+	height: 72px;
+	overflow-y: auto;
+	padding: 3px 4px;
+	border-radius: 0.3em;
+	border: 1px solid rgba(127, 127, 127, 0.25);
+	}
+.group-entity-relation-editor.size-3 .group-selector-list {
+	height: 72px;
+	}
+.group-entity-relation-editor.size-4 .group-selector-list {
+	height: 96px;
+	}
+.group-entity-relation-editor.size-5 .group-selector-list {
+	height: 120px;
+	}
+.group-entity-relation-editor.size-6 .group-selector-list {
+	height: 144px;
+	}
+.group-entity-relation-editor .group-selector-list .list-group {
+	height: 23px;
+	padding-bottom: 1px;
+	}

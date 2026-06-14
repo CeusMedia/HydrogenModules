@@ -82,15 +82,17 @@ class Logic_GroupRelation extends Logic
 			return [];
 		$moduleId	= is_object( $module ) ? $module->id : $module;
 
-		$relations	= $this->modelRelation->getAllByIndices( [
+		$relationGroupIds	= $this->modelRelation->getAllByIndices( [
 			'moduleId'	=> $moduleId,
 			'entityId'	=> $entityId,
-		] );
+		], [], [], ['groupId'] );
 
 		$list	= [];
 		$modelGroup	= new Model_Group( $this->env );
-		foreach( $relations as $relation )
-			$list[$relation->groupId]	= $modelGroup->get( $relation->groupId );
+		/** @var Entity_Group[] $groups */
+		$groups		= $modelGroup->getAllByIndex( 'groupId', $relationGroupIds, ['title' => 'ASC'] );
+		foreach( $groups as $group )
+			$list[$group->groupId]	= $group;
 		return $list;
 	}
 

@@ -275,10 +275,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
 			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );
 			$groupIds		= $logicRelation->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
-			$filterGroupId	= in_array( $filterGroupId, $groupIds ) ? $filterGroupId : NULL;
-			$groups			= $this->logic->getGroups( ['newsletterGroupId' => $groupIds], ['title' => 'ASC'] );
-			foreach( $this->logic->getReadersOfGroups( $groupIds ) as $reader )
-				$readerIds[]	 = $reader->newsletterReaderId;
+			if( [] !== $groupIds ){
+				$filterGroupId	= in_array( $filterGroupId, $groupIds ) ? $filterGroupId : NULL;
+				$groups			= $this->logic->getGroups( ['newsletterGroupId' => $groupIds], ['title' => 'ASC'] );
+				foreach( $this->logic->getReadersOfGroups( $groupIds ) as $reader )
+					$readerIds[]	 = $reader->newsletterReaderId;
+			}
 		}
 		else{
 			$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );

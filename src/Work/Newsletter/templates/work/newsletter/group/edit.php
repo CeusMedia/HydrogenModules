@@ -104,6 +104,7 @@ $panelGroups	= $helperPanelGroups
 	->enable( $useUserGroupRelations && $canManageGroupRelations )
 	->setFrom( 'work/newsletter/group/edit/'.$groupId )
 	->setEntityId( $groupId )
+	->setSize( 4 )
 	->render();
 
 

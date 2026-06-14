@@ -253,6 +253,7 @@ $panelGroups		= $helperPanelGroups
 	->enable( $canManageGroupRelations && $newsletter->status < Model_Newsletter::STATUS_SENT )
 	->setFrom( 'work/newsletter/edit/'.$newsletterId )
 	->setEntityId( $newsletterId )
+	->setSize( 4 )
 	->render();
 
 return '

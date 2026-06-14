@@ -12,6 +12,7 @@ class View_Helper_Manage_Group_EntityRelationEditor
 	protected string $moduleId		= '';
 	protected int|string $entityId	= 0;
 	protected string $from			= '';
+	protected int $size				= 3;
 
 	/**
 	 *	@param		WebEnvironment		$env
@@ -19,6 +20,7 @@ class View_Helper_Manage_Group_EntityRelationEditor
 	public function __construct( WebEnvironment $env )
 	{
 		$this->env	= $env;
+		$this->env->getPage()->addThemeStyle( 'module.manage.users.css' );
 	}
 
 	/**
@@ -41,14 +43,17 @@ class View_Helper_Manage_Group_EntityRelationEditor
 			return '';
 		$panelGroups	= '';
 		$logicUser			= Logic_User::getInstance( $this->env );
-		$groupsAssigned		= Logic_GroupRelation::getInstance( $this->env )->getGroups( $this->moduleId, $this->entityId );
+		$logicRelation		= Logic_GroupRelation::getInstance( $this->env );
+		$groupsAssigned		= $logicRelation->getGroups( $this->moduleId, $this->entityId );
 		$groupsAvailable	= [];
 
-		foreach( $logicUser->getGroups( [/*'status' => Model_Group::STATUS_ENABLED*/] ) as $group )
+		foreach( $logicUser->getGroups( [/*'status' => Model_Group::STATUS_ENABLED*/], ['title' => 'ASC'] ) as $group )
 			$groupsAvailable[$group->groupId]	= $group;
 
-		$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-plus'] );
-		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-minus'] );
+//		$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-plus'] );
+//		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-minus'] );
+		$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-chevron-left'] );
+		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-chevron-right'] );
 		$listGroupsAssigned		= [];
 		$listGroupsAvailable	= [];
 		$listGroups	= [];
@@ -76,17 +81,21 @@ class View_Helper_Manage_Group_EntityRelationEditor
 		$iconHidden		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye-slash'] );
 
 		return '
-			<div class="content-panel">
+			<div class="content-panel group-entity-relation-editor size-'.$this->size.'">
 				<h3>Gruppensichtbarkeit</h3>
 				<div class="content-panel-inner">
 					<div class="row-fluid">
 						<div class="span6">
 							<h5>'.$iconVisible.'&nbsp;Sichtbar für</h5>
-							'.join( '', $listGroupsAssigned ).'
+							<div class="group-selector-list">
+								'.join( '', $listGroupsAssigned ).'
+							</div>
 						</div>
 						<div class="span6">
 							<h5>'.$iconHidden.'&nbsp;Unsichtbar für</h5>
-							'.join( '', $listGroupsAvailable ).'
+							<div class="group-selector-list">
+								'.join( '', $listGroupsAvailable ).'
+							</div>
 						</div>
 					</div>
 				</div>
@@ -120,6 +129,16 @@ class View_Helper_Manage_Group_EntityRelationEditor
 	public function setModule( ModuleDefinition|string $module ): self
 	{
 		$this->moduleId	= is_object( $module ) ? $module->id : $module;
+		return $this;
+	}
+
+	/**
+	 *	@param		size		$size		Number of items (3 to 6)
+	 *	@return		self
+	 */
+	public function setSize( int $size ): self
+	{
+		$this->size		= $size;
 		return $this;
 	}
 

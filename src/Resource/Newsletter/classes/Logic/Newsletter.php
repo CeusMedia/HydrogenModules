@@ -276,19 +276,21 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
+	 *	@param		bool		$useRelations		Flag: use group relations
 	 *	@return		array<int|string,Entity_Newsletter_Group>
 	 *	@throws		ReflectionException
 	 */
-	public function getGroups( array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getGroups( array $conditions = [], array $orders = [], array $limits = [], bool $useRelations = TRUE ): array
 	{
 		$list	= [];
 
-		if( $this->useUserGroupRelations ){
+		if( $useRelations && $this->useUserGroupRelations ){
 			if( !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
 				$logic		= Logic_GroupRelation::getInstance( $this->env );
 				$entityIds	= $logic->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' ) ?: [0];
 				if( isset( $conditions['newsletterGroupId'] ) )
 					$entityIds	= array_intersect( $conditions['newsletterGroupId'], $entityIds );
+				$entityIds	= [] === $entityIds ? [0] : $entityIds;
 				$conditions['newsletterGroupId']	= $entityIds;
 			}
 		}
@@ -326,7 +328,7 @@ class Logic_Newsletter extends SharedLogic
 
 		$list		= [];
 		if( $groupIds )
-			foreach( $this->getGroups( ['newsletterGroupId' => $groupIds], $orders ) as $group )
+			foreach( $this->getGroups( ['newsletterGroupId' => $groupIds], $orders, [], FALSE ) as $group )
 				$list[$group->newsletterGroupId]	= $group;
 		return $list;
 	}
