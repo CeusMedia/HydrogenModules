@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -25,7 +25,7 @@ $trigger->setLabel( $iconOpen );
 $trigger->setModalId( 'modal-admin-mail-template-select-image' );
 $trigger->setInputId( 'input_template_image' );
 
-$listImages	= '<em class="muted">'.$words['edit-image-list']['empty'].'</em>';
+$listImages	= '<div class="alert alert-warning"><em class="muted">'.$words['edit-image-list']['empty'].'</em></div>';
 if( $template->images ){
 	$list	= [];
 	foreach( json_decode( $template->images, TRUE ) as $nr => $item ){
