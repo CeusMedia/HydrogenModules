@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -27,7 +28,8 @@ $trigger->setModalId( 'modal-admin-mail-template-select-style' );
 $trigger->setInputId( 'input_template_style' );
 $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
-$listStyles	= '<em class="muted">Keine.</em>';
+$listStyles	= '<div class="alert alert-warning"><em class="muted">'.$words['edit-style-list']['empty'].'</em></div>';
+
 if( $template->styles ){
 	$list	= [];
 	foreach( json_decode( $template->styles, TRUE ) as $item ){
