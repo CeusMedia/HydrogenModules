@@ -95,18 +95,36 @@ abstract class Mail_Abstract
 	protected string $encodingText			= 'quoted-printable';
 
 	/**
+	 *	Static constructor.
+	 *	@param		Environment		$env			Environment object
+	 *	@param		array			$data			Map of template mail data
+	 * 	@param		?string			$language		Language
+	 *	@return		static
+	 */
+	public static function getInstance( Environment $env, array $data = [], ?string $language = NULL ): static
+	{
+		$className	= static::class;
+		return new $className( $env, $data, $language );
+	}
+
+	/**
 	 *	Constructor.
 	 *	@access		public
 	 *	@param		Environment		$env			Environment object
 	 *	@param		array			$data			Map of template mail data
+	 *	@param		?string			$language		Language
 	 *	@throws		ReflectionException
 	 */
-	public function __construct( Environment $env, array $data = [] )
+	public function __construct( Environment $env, array $data = [], ?string $language = NULL )
 	{
-		$this->setEnv( $env );
-		$this->modelTemplate	= new Model_Mail_Template( $env );
+		$envClone	= clone( $env );
+		if( $envClone->getLanguage()->getLanguage() !== $language )
+			$envClone->getLanguage()->setLanguage( $language );
+
+		$this->setEnv( $envClone );
+		$this->modelTemplate	= new Model_Mail_Template( $envClone );
 		$this->mail				= new MailMessage();
-//		$this->view				= new View( $env );
+//		$this->view				= new View( $envClone );
 		$this->page				= new HtmlPage();
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 		$this->logicMail		= $this->env->getLogic()->get( 'Mail' );
@@ -118,7 +136,7 @@ abstract class Mail_Abstract
 		$this->encodingSubject		= $this->options->get( 'encoding.subject', $this->encodingSubject );
 		$this->encodingText			= $this->options->get( 'encoding.text', $this->encodingText );
 
-		$this->baseUrl	= !empty( $env->baseUrl ) ? $env->baseUrl : $this->config->get( 'app.base.url' );
+		$this->baseUrl	= !empty( $envClone->baseUrl ) ? $envClone->baseUrl : $this->config->get( 'app.base.url' );
 		if( !$this->baseUrl )
 			throw new RuntimeException( 'Mailing requires "app.base.url" to be set in application base config file' );
 		$this->page->setBaseHref( $this->baseUrl );
