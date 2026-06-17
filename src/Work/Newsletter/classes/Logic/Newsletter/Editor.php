@@ -355,14 +355,14 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 			throw new RuntimeException( 'Module "Resource_Mail" is not installed' );
 
 		$logicMail		= Logic_Mail::getInstance( $this->env );
+		$reader			= $this->getReader( $readerId );
 
 		$mail			= new Mail_Newsletter( $this->env, [
-			'newsletterId'	=> $newsletterId,
-			'readerId'		=> $readerId,
+			'newsletter'	=> $this->getNewsletter( $newsletterId ),
+			'reader'		=> $reader,
 		] );
 //		$logicMail->appendRegisteredAttachments( $mail, $language );
 
-		$reader		= $this->getReader( $readerId );
 		$receiver	= (object) [
 			'username'	=> $reader->firstname.' '.$reader->surname,
 			'email'		=> $reader->email,

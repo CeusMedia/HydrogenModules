@@ -154,10 +154,10 @@ class Job_Newsletter extends Job_Abstract
 				$letter		= array_shift( $letters );									//  get next letter
 				$reader		= $letter->reader;													//  shortcut letter reader
 				$mail		= new Mail_Newsletter( $this->env, [
-					'readerLetterId'	=> $letter->newsletterReaderLetterId,
+					'readerLetter'		=> $letter,
+//					'readerLetterId'	=> $letter->newsletterReaderLetterId,
 				] );
 				$language	= $this->env->getLanguage()->getLanguage();
-				$receiver	= $this->logic->getReader( $letter->newsletterReaderId );
 				$logicMail->appendRegisteredAttachments( $mail, $language );
 				if( $this->verbose )
 					$this->out( sprintf( 'Sending mail to %s ...', $letter->reader->email ) );
@@ -167,11 +167,11 @@ class Job_Newsletter extends Job_Abstract
 //					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
 
 				if( !$this->dryMode ){
-					$mailId	= $logicMail->enqueueMail( $mail, $language, $receiver );
-					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
-					$this->logic->setReaderLetterStatus(
+					$mailId	= $this->logic->sendReaderLetterMail(
 						$letter->newsletterReaderLetterId,
-						Model_Newsletter_Reader_Letter::STATUS_SENT
+						$mail,
+						$language,
+						$this->logic->getReader( $letter->newsletterReaderId )
 					);
 				}
 

@@ -79,7 +79,7 @@ $filter		= $view->loadTemplateFile( 'work/newsletter/group/index.list.filter.php
 
 return '
 <div class="content-panel">
-	<h3>'.$w->heading.'</h3>
+<!--	<h3>'.$w->heading.'</h3>-->
 	<div class="content-panel-inner">
 		'.$filter.'
 		'.$list.'

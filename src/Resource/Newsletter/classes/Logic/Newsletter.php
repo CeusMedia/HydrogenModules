@@ -706,6 +706,31 @@ class Logic_Newsletter extends SharedLogic
 	}
 
 	/**
+	 *	Sends already generated (newsletter reader letter) mail to reader (by using the mail queue) and note mail ID and status on reader letter.
+	 *	Returns mail ID on mail queue.
+	 *	@param		Entity_Newsletter_Reader_Letter		$readerLetter
+	 *	@param		Mail_Abstract						$mail
+	 *	@param		string								$language
+	 *	@param		int|object							$receiver
+	 *	@param		?string								$senderId
+	 *	@param		?int								$toBeSentAt
+	 *	@return		int|string							Mail ID on queue
+	 *	@throws		ReflectionException
+	 */
+	public function sendReaderLetterMail( Entity_Newsletter_Reader_Letter $readerLetter, Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL, ?int $toBeSentAt = NULL ): int|string
+	{
+		$logicMail	= Logic_Mail::getInstance( $this->env );
+		$mailId		= $logicMail->enqueueMail( $mail, $language, $receiver, $senderId, $toBeSentAt );
+		$this->setReaderLetterMailId( $readerLetter->newsletterReaderLetterId, $mailId );
+		$this->setReaderLetterStatus(
+			$readerLetter->newsletterReaderLetterId,
+			Model_Newsletter_Reader_Letter::STATUS_SENT
+		);
+		return $mailId;
+	}
+
+
+	/**
 	 *	@param		Entity_Newsletter_Queue|int|string		$queue
 	 *	@param		int				$status
 	 *	@return		int
