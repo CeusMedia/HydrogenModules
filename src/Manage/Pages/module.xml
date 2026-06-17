@@ -100,6 +100,7 @@
 		<needs type="module">JS_TinyMCE</needs>
 		<needs type="module">Resource_Frontend</needs>
 		<needs type="module">Resource_Pages</needs>
+		<supports type="module">Resource_Localization</supports>
 	</relations>
 	<link access="acl" path="manage/page" xml:lang="de">Seiten</link>
 	<link access="acl" path="manage/page" xml:lang="en">Pages</link>

@@ -9,7 +9,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.4.8</version>
+	<version>0.4.9</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Minor fixes.</log>
@@ -34,6 +34,7 @@ Version <0.2.6: Please run Model_User::migrate after module update and make a ne
 	<log version="0.4.6">Extend logic by countRoleUsers, getRoles, getRoleUsers and getUser.</log>
 	<log version="0.4.7">Add group relation table for module entity grouping.</log>
 	<log version="0.4.8">Add logic classes for group relations, roles and role rights.</log>
+	<log version="0.4.9">Add language column on user model.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -121,9 +122,10 @@ surname.mandatory		-> user.surname.mandatory
 	<config protected="yes" type="integer" name="password.salt.decay.seconds">86400</config>
 	<config protected="yes" type="string" name="password.pepper" title="string to pepper password with"/>
 	<config protected="no" type="boolean" name="address.mandatory" title="user needs an address">0</config>
+	<hook type="resource" resource="Page" event="applyModules" level="1">Hook_Resource_User::onPageApplyModules</hook>
+	<hook type="resource" resource="Language" event="changeLanguage" level="3">Hook_Resource_User::onChangeLanguage</hook>
 	<hook type="resource" resource="User" event="remove" level="9">Hook_Resource_User::onUserRemove</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `userId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `accountId` int(11) unsigned DEFAULT '0',
@@ -145,6 +147,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   `number` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fax` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `language` varchar(15) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` decimal(12,0) NOT NULL,
   `modifiedAt` decimal(12,0) DEFAULT NULL,
   `loggedAt` decimal(12,0) DEFAULT NULL,
@@ -156,13 +159,13 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>users` (
   KEY `email` (`email`),
   KEY `username` (`username`),
   KEY `gender` (`gender`),
-  KEY `country` (`country`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  KEY `country` (`country`),
+  KEY `language` (`language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 INSERT INTO `<%?prefix%>users` (`userId`, `roleId`, `companyId`, `roomId`, `status`, `email`, `username`, `password`, `gender`, `salutation`, `firstname`, `surname`, `postcode`, `city`, `street`, `number`, `phone`, `fax`, `createdAt`, `modifiedAt`, `loggedAt`, `activeAt`) VALUES
 (1, 1, 0, 0, 1, 'root@localhost', 'root', '63a9f0ea7bb98050796b649e85481845', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1383589432, NULL, NULL, 1383589432);
 
-DROP TABLE IF EXISTS `<%?prefix%>roles`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>roles` (
   `roleId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `access` tinyint(1) unsigned NOT NULL,
@@ -182,7 +185,6 @@ INSERT INTO `<%?prefix%>roles` (`roleId`, `access`, `register`, `title`, `descri
 (4, 64, 128, 'User', '', '1294083995', '0'),
 (5, 0, 64, 'Guest', '', '1294084004', '0');
 
-DROP TABLE IF EXISTS `<%?prefix%>role_rights`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
   `roleRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `roleId` int(11) unsigned NOT NULL,
@@ -193,7 +195,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>role_rights` (
   KEY `roleId` (`roleId`,`controller`,`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>user_passwords`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
   `userPasswordId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userId` int(11) unsigned NOT NULL,
@@ -214,7 +215,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>user_passwords` (
   KEY `failsLast` (`failsLast`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
   `groupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `accountId` int(11) unsigned DEFAULT '0',
@@ -238,7 +238,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
 INSERT INTO `<%?prefix%>groups` (`groupId`, `title`, `createdAt`, `modifiedAt`) VALUES
 (1, 'Default', '1294083736', '1294083736');
 
-DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
   `groupRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -251,7 +250,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
   KEY `action` (`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>group_users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
   `groupUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -264,7 +262,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_relations` (
   `groupRelationId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -321,7 +318,6 @@ ALTER TABLE `<%?prefix%>users` DROP INDEX `accountId`, ADD INDEX `accountId` (`a
 ALTER TABLE `<%?prefix%>users` CHANGE `status` `status` TINYINT(1) NULL DEFAULT '0';
 ]]></sql>
 	<sql on="update" type="mysql" version="0.4"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>user_tokens`;
 CREATE TABLE `<%?prefix%>user_tokens` (
   `userTokenId` int(11) UNSIGNED NOT NULL,
   `userId` int(11) UNSIGNED NOT NULL,
@@ -345,7 +341,6 @@ ALTER TABLE `<%?prefix%>user_tokens`
 ALTER TABLE `<%?prefix%>user_tokens` ADD `scope` VARCHAR(127) NULL DEFAULT '' AFTER `status`, ADD INDEX (`scope`);
 ]]></sql>
 	<sql on="update" type="mysql" version="0.4.3"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>groups`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
   `groupId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `accountId` int(11) unsigned DEFAULT '0',
@@ -369,7 +364,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>groups` (
 INSERT INTO `<%?prefix%>groups` (`groupId`, `title`, `createdAt`, `modifiedAt`) VALUES
 (1, 'Default', '1294083736', '1294083736');
 
-DROP TABLE IF EXISTS `<%?prefix%>group_rights`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
   `groupRightId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -382,7 +376,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_rights` (
   KEY `action` (`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `<%?prefix%>group_users`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
   `groupUserId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -396,7 +389,6 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 ]]></sql>
 	<sql on="update" type="mysql" version="0.4.7"><![CDATA[
-DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>group_relations` (
   `groupRelationId` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `groupId` int(11) unsigned NOT NULL,
@@ -408,6 +400,11 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>group_relations` (
   KEY `moduleId` (`moduleId`),
   KEY `entityId` (`entityId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+]]></sql>
+	<sql on="update" type="mysql" version="0.4.9"><![CDATA[
+ALTER TABLE `<%?prefix%>users`
+  ADD `language` VARCHAR(15) DEFAULT NULL AFTER `fax`,
+  ADD INDEX (`language`);
 ]]></sql>
 	<sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>group_relations`;
