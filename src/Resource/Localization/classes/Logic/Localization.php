@@ -42,14 +42,17 @@ class Logic_Localization extends Logic
 	 *	Fallback to given content.
 	 *
 	 *  Also supports adding new translation or update existing by giving translated content.
-	 *	Returns ID of translation.
+	 *	Returns ID of translation in this case.
 	 *
-	 *	@param		string			$id
-	 *	@param		string|NULL		$content
-	 *	@param		string|NULL		$translated
+	 *	@param		string			$id					ID of to find for current language
+	 *	@param		string|NULL		$content			Content to find translation for
+	 *	@param		string|NULL		$translated			Translation to add or update
+	 *	@param		bool			$stripTagsOnAdd		Default: yes
 	 *	@return		int|string
+	 *	@todo		returning int also is very uncool, think about the way, reading and writing translations could be done cooler
+	 *	@todo		add / save is disable if current language is default language - why?
 	 */
-	public function translate( string $id, ?string $content = NULL, ?string $translated = NULL ): int|string
+	public function translate( string $id, ?string $content = NULL, ?string $translated = NULL, bool $stripTagsOnAdd = TRUE ): int|string
 	{
 		$this->env->getLog()->log("debug", "trying to translate $id to $this->language", $this);
 		$indices		= ['language' => $this->language, 'id' => $id];
@@ -62,7 +65,7 @@ class Logic_Localization extends Logic
 			$data	= array_merge( $indices, ['content' => $translated] );
 			if( !$translation )
 				return $this->model->add( $data, FALSE );
-			$this->model->edit( $translation->localizationId, $data, FALSE );
+			$this->model->edit( $translation->localizationId, $data, $stripTagsOnAdd );
 			return $translation->localizationId;
 		}
 

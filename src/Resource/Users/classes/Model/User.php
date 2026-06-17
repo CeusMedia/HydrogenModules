@@ -84,6 +84,7 @@ class Model_User extends Model
 		'number',
 		'phone',
 		'fax',
+		'language',
 		'createdAt',
 		'modifiedAt',
 		'loggedAt',
@@ -101,6 +102,7 @@ class Model_User extends Model
 		'email',
 		'gender',
 		'country',
+		'language',
 	];
 
 	protected int $fetchMode				= PDO::FETCH_CLASS;

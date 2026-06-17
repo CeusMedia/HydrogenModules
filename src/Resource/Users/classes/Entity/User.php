@@ -29,6 +29,7 @@ class Entity_User extends Entity
 	public ?string $number				= NULL;
 	public ?string $phone				= NULL;
 	public ?string $fax					= NULL;
+	public ?string $language			= NULL;
 	public string $createdAt;
 	public ?string $modifiedAt			= NULL;
 	public ?string $loggedAt			= NULL;
