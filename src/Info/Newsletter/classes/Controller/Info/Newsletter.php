@@ -312,15 +312,20 @@ class Controller_Info_Newsletter extends Controller
 	public function view( int|string $readerLetterId ): void
 	{
 		try{
-			$mail	= new Mail_Newsletter( $this->env, ['readerLetterId' => $readerLetterId] );
+			$this->logic->checkReaderLetterId( $readerLetterId, TRUE );
+			$mail	= new Mail_Newsletter( $this->env, [
+				'readerLetterId'	=> $this->logic->getReaderLetter( $readerLetterId )
+			] );
 			print( $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED ) );
 			exit;
 		}
-		catch( Exception $e ){
-			HtmlExceptionPage::display( $e );
-			die;
+		catch( InvalidArgumentException $e ){
 			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
 			$this->restart( NULL, TRUE );
+		}
+		catch( Throwable $e ){
+			HtmlExceptionPage::display( $e );
+			die;
 		}
 	}
 

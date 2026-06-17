@@ -23,9 +23,9 @@ class View_Helper_Newsletter_Mail
 	protected int $mode									= self::MODE_PLAIN;
 	protected array $data								= [];
 	protected array $originalData						= [];
-	protected ?Entity_Newsletter_Reader_Letter $letter	= NULL;
 	protected ?Entity_Newsletter $newsletter			= NULL;
 	protected ?Entity_Newsletter_Reader $reader			= NULL;
+	protected ?Entity_Newsletter_Reader_Letter $letter	= NULL;
 	protected ?Entity_Newsletter_Template $template		= NULL;
 	protected string $cachePath							= 'contents/cache/';
 
