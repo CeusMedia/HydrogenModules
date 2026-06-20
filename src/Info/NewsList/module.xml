@@ -5,17 +5,19 @@
 	<title>Info: NewsList</title>
 	<description><![CDATA[Collects news from modules as list for index page.]]></description>
 	<category>Info</category>
-	<version>0.2.4</version>
+	<version>0.2.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Added relation to time phraser.</log>
 	<log version="0.2.2">Use UI:Shortcode with hook class.</log>
 	<log version="0.2.3">Adjust to new shortcode handling.</log>
 	<log version="0.2.4">Improve code style.</log>
+	<log version="0.2.5">Add english language file.</log>
 	<files>
 		<class>Hook/Info/NewsList.php</class>
 		<class>View/Helper/NewsList.php</class>
 		<locale>de/info/newslist.ini</locale>
+		<locale>en/info/newslist.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">UI_Helper_TimePhraser</needs>
