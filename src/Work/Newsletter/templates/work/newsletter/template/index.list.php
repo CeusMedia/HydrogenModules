@@ -80,7 +80,7 @@ if( $limiter && $limiter->denies( 'Work.Newsletter.Template:maxItems', count( $t
 }
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', $w->heading ),
+	HtmlTag::create( 'h3', $w->heading ?? '' ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
