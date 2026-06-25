@@ -144,6 +144,7 @@ class Model_Mail extends Model
 //		'bytesSent',
 //		'bytesStored',
 		'enqueuedAt',
+		'toBeSentAt',
 		'attemptedAt',
 		'sentAt',
 	];
@@ -165,6 +166,7 @@ class Model_Mail extends Model
 		'mailClass',
 		'compression',
 		'enqueuedAt',
+		'toBeSentAt',
 		'attemptedAt',
 		'sentAt',
 	];

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>mails` (
 `mailClass` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
 `compression` tinyint(1) UNSIGNED NOT NULL COMMENT '0: UNKNOWN, 1: BASE64, 2: GZIP, 3: BZIP',
 `object` longblob NOT NULL,
+`toBeSentAt` decimal(12,0) UNSIGNED DEFAULT '0',
 `enqueuedAt` decimal(12,0) UNSIGNED NOT NULL,
 `attemptedAt` decimal(12,0) UNSIGNED DEFAULT '0',
 `sentAt` decimal(12,0) UNSIGNED DEFAULT '0',

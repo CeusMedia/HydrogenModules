@@ -94,6 +94,9 @@ abstract class Mail_Abstract
 	/** @var		string					$encodingHtml	Default encoding for text */
 	protected string $encodingText			= 'quoted-printable';
 
+	/** @var		int						$toBeSentAt		Timestamp in future to send mail */
+	protected int $toBeSentAt				= 0;
+
 	/**
 	 *	Static constructor.
 	 *	@param		Environment		$env			Environment object
@@ -118,7 +121,7 @@ abstract class Mail_Abstract
 	public function __construct( Environment $env, array $data = [], ?string $language = NULL )
 	{
 		$envClone	= clone( $env );
-		if( $envClone->getLanguage()->getLanguage() !== $language )
+		if( NULL !== $language && $envClone->getLanguage()->getLanguage() !== $language )
 			$envClone->getLanguage()->setLanguage( $language );
 
 		$this->setEnv( $envClone );
@@ -237,6 +240,15 @@ abstract class Mail_Abstract
 	}
 
 	/**
+	 *	Returns timestamp mail to be sent at or after.
+	 *	@return int
+	 */
+	public function getToBeSentAt(): int
+	{
+		return $this->toBeSentAt;
+	}
+
+	/**
 	 *	@param		bool		$verbose
 	 *	@return		static
 	 *	@throws		ReflectionException
@@ -300,6 +312,16 @@ abstract class Mail_Abstract
 		if( !$user )
 			throw new RuntimeException( 'User with ID '.$userId.' is not existing' );
 		return $this->sendTo( $user );
+	}
+
+	public function setToBeSentAt( DateTime|int $toBeSentAt ): static
+	{
+		if( $toBeSentAt instanceof DateTime )
+			$this->toBeSentAt	= $toBeSentAt->getTimestamp();
+		else
+			$this->toBeSentAt	= $toBeSentAt;
+
+		return $this;
 	}
 
 	/**

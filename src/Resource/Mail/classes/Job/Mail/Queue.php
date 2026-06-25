@@ -10,7 +10,7 @@ class Job_Mail_Queue extends Job_Abstract
 
 	public function countQueuedMails(): void
 	{
-		$conditions		= ['status' => [Model_Mail::STATUS_NEW]];
+		$conditions		= ['status' => [Model_Mail::STATUS_NEW, 'toBeSentAt' < time()]];
 		$countNew		= $this->logic->countQueue( $conditions );
 		$conditions		= ['status' => [Model_Mail::STATUS_RETRY]];
 		$countRetry		= $this->logic->countQueue( $conditions );
@@ -38,6 +38,7 @@ class Job_Mail_Queue extends Job_Abstract
 				Model_Mail::STATUS_NEW,
 				Model_Mail::STATUS_RETRY
 			],
+			'toBeSentAt'	< time(),
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		];
 		$orders		= [
