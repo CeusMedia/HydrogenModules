@@ -12,7 +12,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $canChangePassword */
 
 if( !$canChangePassword )
-	return '';
+	return 'Not allowed.';
 
 $pathJsLib	= $env->getConfig()->get( 'path.scripts.lib' );
 $env->getPage()->js->addUrl( $pathJsLib.'jquery/pstrength/2.1.0.min.js' );

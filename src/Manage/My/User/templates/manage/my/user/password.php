@@ -10,7 +10,6 @@ use CeusMedia\HydrogenFramework\View;
 $panelPassword	= $view->loadTemplateFile( 'manage/my/user/index.password.php' );
 $panelPasswords	= $view->loadTemplateFile( 'manage/my/user/index.passwords.php' );
 
-
 $tabs	= View_Manage_My_User::renderTabs( $env, 'password' );
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/user/password' ) );

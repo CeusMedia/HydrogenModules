@@ -8,11 +8,18 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<string,array<string|int,string|int>> $words */
 /** @var object $user */
 /** @var array<string,string> $countries */
+/** @var array<string,string> $languages */
 /** @var bool $mandatoryFirstname */
 /** @var bool $mandatorySurname */
 /** @var bool $mandatoryAddress */
 
 $w		= (object) $words['edit'];
+
+$languageLabels	= array_combine( $languages, $languages );
+$languageWords	= $env->getLanguage()->getWords( 'language', FALSE ) ?: ['languages' => $languageLabels];
+$languageMap	= $languageWords['languages'];
+
+$languageMap['_selected']	= $user->language;
 
 $optGender	= HTML::Options( $words['gender'], $user->gender );
 
@@ -123,13 +130,17 @@ return HTML::DivClass( 'content-panel content-panel-form', [
 			),
 //			HTML::HR,
 			HTML::DivClass( 'row-fluid',
-				HTML::DivClass( 'span3',
+				HTML::DivClass( 'span4',
 					HTML::Label( 'phone', $w->labelPhone ).
 					HTML::Input( 'phone', $user->phone, 'span12' )
 				).
-				HTML::DivClass( 'span3',
+				HTML::DivClass( 'span4',
 					HTML::Label( 'fax', $w->labelFax ).
 					HTML::Input( 'fax', (string) $user->fax, 'span12' )
+				).
+				HTML::DivClass( 'span4 offset0',
+					HTML::Label( 'language', $w->labelLanguage ).
+					HTML::Select( 'language', $languageMap, 'span12' )
 				)
 			),
 			HTML::Buttons( [
