@@ -10,6 +10,7 @@ class Controller_Ajax_Manage_Catalog_Article extends AjaxController
 	/**
 	 *	@return		int
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function getTags(): int
 	{
@@ -30,6 +31,7 @@ class Controller_Ajax_Manage_Catalog_Article extends AjaxController
 	/**
 	 *	@return		int
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function getIsns(): int
 	{
@@ -52,6 +54,7 @@ class Controller_Ajax_Manage_Catalog_Article extends AjaxController
 	 *	@param		string		$tabKey
 	 *	@return		int
 	 *	@throws		JsonException
+	 *	@throws		ReflectionException
 	 */
 	public function setTab( string $tabKey ): int
 	{

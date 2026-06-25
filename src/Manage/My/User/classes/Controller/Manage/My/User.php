@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
+use CeusMedia\Database\PDO\Connection as DatabasePdoConnection;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Resource\Messenger as MessengerResource;
 
@@ -29,7 +30,7 @@ class Controller_Manage_My_User extends Controller
 		$this->checkConfirmationPassword();
 
 		$words		= (object) $this->getWords( 'edit' );
-		/** @var ?Entity_User $user */
+		/** @var Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
@@ -88,7 +89,7 @@ class Controller_Manage_My_User extends Controller
 
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'email' );
-		/** @var ?Entity_User $user */
+		/** @var Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
 		$email		= trim( $this->request->get( 'email' ) );
 
@@ -108,7 +109,7 @@ class Controller_Manage_My_User extends Controller
 				'userId'	=> '!= '.$this->userId,
 //				'status'	=> '>= -1',																//  disabled for integrity
 			];
-			if( $this->modelUser->getByIndices( $indices ) ){
+			if( $this->modelUser->countByIndices( $indices ) ){
 				$this->messenger->noteError( $words->msgEmailExisting, $email );
 				$this->restart( NULL, TRUE );
 			}
@@ -127,12 +128,10 @@ class Controller_Manage_My_User extends Controller
 		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$roleId		= $this->session->get( Logic_Authentication::$sessionKeyAuthRoleId );
 
-		if( !$this->userId ){
-			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
-			$this->restart( './' );
-		}
+		/** @var Entity_User $user */
 		$user		= Logic_User::getInstance( $this->env )->getUser( $this->userId );
 		$user->role	= Logic_Role::getInstance( $this->env )->get( $user->roleId );
+
 		if( class_exists( 'Model_Company' ) ){
 			$modelCompany	= new Model_Company( $this->env );
 			$user->company	= $modelCompany->get( $user->companyId );
@@ -151,6 +150,8 @@ class Controller_Manage_My_User extends Controller
 		$this->addData( 'mandatorySurname', $options->get( 'surname.mandatory' ) );
 		$this->addData( 'mandatoryAddress', $options->get( 'address.mandatory' ) );
 		$this->addData( 'countries', $this->env->getLanguage()->getWords( 'countries' ) );
+		$this->addData( 'languages', $this->env->getLanguage()->getLanguages() );
+		$this->addData( 'defaultLanguage', $this->env->getLanguage()->getDefaultLanguage()  );
 
 		$acl	= $this->env->getAcl();
 		$this->addData( 'canChangeEmail', $acl->has( 'manage/my/user', 'email' ) );
@@ -164,50 +165,17 @@ class Controller_Manage_My_User extends Controller
 	 */
 	public function password(): void
 	{
-		$words		= (object) $this->getWords( 'password' );
-		/** @var ?Entity_User $user */
-		$user		= $this->modelUser->get( $this->userId );
+		if( !$this->userId ){
+			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
+			$this->restart( './' );
+		}
 
 		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$pwdMinLength	= (int) $options->get( 'password.length.min' );
 		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
-		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
 
-		if( $this->request->getMethod()->isPost() ){
-			$data				= $this->request->getAllFromSource( 'POST', TRUE );
-			$passwordOld		= $data->get( 'passwordOld', '' );
-			$passwordNew		= $data->get( 'passwordNew', '' );
-			$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
-
-			if( '' === $passwordOld )
-				$this->messenger->noteError( $words->msgPasswordOldMissing );
-			else if( '' === $passwordNew )
-				$this->messenger->noteError( $words->msgPasswordNewMissing );
-			else if( '' === $passwordConfirm )
-				$this->messenger->noteError( $words->msgPasswordConfirmMissing );
-			else if( $passwordOld === $passwordNew )
-				$this->messenger->noteError( $words->msgPasswordNewSame );
-			else if( $passwordNew !== $passwordConfirm )
-				$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
-			else if( !$this->checkPassword( $user, $passwordOld ) )
-				$this->messenger->noteError( $words->msgPasswordOldMismatch );
-			else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
-				$this->messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
-			//		else if( $pwdMinStrength && ... < $pwdMinStrength )
-			//			$this->messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
-			else{
-				if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
-					$logic			= Logic_UserPassword::getInstance( $this->env );
-					$userPassword	= $logic->addPassword( $user, $passwordNew );
-					$logic->activatePassword( $userPassword );
-				}
-				else{
-					$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
-				}
-				$this->messenger->noteSuccess( $words->msgSuccess );
-			}
-			$this->restart( './manage/my/user' );
-		}
+		if( $this->request->getMethod()->isPost() )
+			$this->handlePasswortPostRequest();
 
 		$modelPassword	= new Model_User_Password( $this->env );
 		$passwords		= $modelPassword->getAll( ['userId' => $this->userId] );
@@ -216,6 +184,9 @@ class Controller_Manage_My_User extends Controller
 		$this->addData( 'passwords', $passwords );
 		$this->addData( 'pwdMinLength', $pwdMinLength );
 		$this->addData( 'pwdMinStrength', $pwdMinStrength );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canChangePassword', $acl->has( 'manage/my/user', 'password' ) );
 	}
 
 	/**
@@ -234,6 +205,7 @@ class Controller_Manage_My_User extends Controller
 			$controller->checkToken();
 
 			$this->checkConfirmationPassword( 'manage/my/user/remove' );
+			/** @var DatabasePdoConnection $dbc */
 			$dbc	= $this->env->getDatabase();
 			$dbc->beginTransaction();
 			try{
@@ -263,7 +235,6 @@ class Controller_Manage_My_User extends Controller
 	{
 		$this->checkConfirmationPassword();
 
-		$options	= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
 		$words		= (object) $this->getWords( 'username' );
 		/** @var ?Entity_User $user */
 		$user		= $this->modelUser->get( $this->userId );
@@ -334,7 +305,9 @@ class Controller_Manage_My_User extends Controller
 				$this->restart( $from );
 			$this->restart( NULL, TRUE );
 		}
-		if( !$this->checkPassword( $this->modelUser->get( $this->userId ), $password ) ){
+		/** @var Entity_User $user */
+		$user	= $this->modelUser->get( $this->userId );
+		if( !$this->checkPassword( $user, $password ) ){
 			$this->messenger->noteError( $msg->errorPasswordMismatch );
 			if( $from )
 				$this->restart( $from );
@@ -364,5 +337,51 @@ class Controller_Manage_My_User extends Controller
 		if( $user->password === md5( $password.$pepper ) )
 			return TRUE;
 		return FALSE;
+	}
+
+	protected function handlePasswortPostRequest(): void
+	{
+		$words		= (object) $this->getWords( 'password' );
+		/** @var ?Entity_User $user */
+		$user		= $this->modelUser->get( $this->userId );
+
+		$options		= $this->env->getConfig()->getAll( 'module.resource_users.', TRUE );
+		$pwdMinLength	= (int) $options->get( 'password.length.min' );
+//		$pwdMinStrength	= (int) $options->get( 'password.strength.min' );
+		$passwordPepper	= trim( $options->get( 'password.pepper' ) );								//  string to pepper password with
+
+		$data				= $this->request->getAllFromSource( 'POST', TRUE );
+		$passwordOld		= $data->get( 'passwordOld', '' );
+		$passwordNew		= $data->get( 'passwordNew', '' );
+		$passwordConfirm	= trim( $data->get( 'passwordConfirm', '' ) );
+
+		if( '' === $passwordOld )
+			$this->messenger->noteError( $words->msgPasswordOldMissing );
+		else if( '' === $passwordNew )
+			$this->messenger->noteError( $words->msgPasswordNewMissing );
+		else if( '' === $passwordConfirm )
+			$this->messenger->noteError( $words->msgPasswordConfirmMissing );
+		else if( $passwordOld === $passwordNew )
+			$this->messenger->noteError( $words->msgPasswordNewSame );
+		else if( $passwordNew !== $passwordConfirm )
+			$this->messenger->noteError( $words->msgPasswordConfirmMismatch );
+		else if( !$this->checkPassword( $user, $passwordOld ) )
+			$this->messenger->noteError( $words->msgPasswordOldMismatch );
+		else if( $pwdMinLength && strlen( $passwordNew ) < $pwdMinLength )
+			$this->messenger->noteError( $words->msgPasswordNewTooShort, $pwdMinLength );
+//		else if( $pwdMinStrength && ... < $pwdMinStrength )
+//			$this->messenger->noteError( $words->msgPasswordNewTooWeek, $pwdMinStrength );
+		else{
+			if( class_exists( 'Logic_UserPassword' ) ){												//  @todo  remove line if old user password support decays
+				$logic			= Logic_UserPassword::getInstance( $this->env );
+				$userPassword	= $logic->addPassword( $user, $passwordNew );
+				$logic->activatePassword( $userPassword );
+			}
+			else{
+				$this->modelUser->edit( $this->userId, ['password' => md5( $passwordNew.$passwordPepper )] );
+			}
+			$this->messenger->noteSuccess( $words->msgSuccess );
+		}
+		$this->restart( './manage/my/user/password' );
 	}
 }
