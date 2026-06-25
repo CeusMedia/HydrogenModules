@@ -22,9 +22,10 @@ class Entity_Mail extends Entity
 	public string $senderAddress;
 	public string $subject;
 	public string $mailClass;
+	public int $compression				= Model_Mail::COMPRESSION_UNKNOWN;
 	public string|NULL $object			= NULL;
 	public string|NULL $raw				= NULL;
-	public int $compression				= Model_Mail::COMPRESSION_UNKNOWN;
+	public int|NULL $toBeSentAt			= NULL;
 	public int $enqueuedAt;
 	public int|NULL $attemptedAt		= NULL;
 	public int|NULL $sentAt				= NULL;

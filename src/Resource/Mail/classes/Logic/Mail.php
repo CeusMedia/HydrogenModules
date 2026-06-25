@@ -413,7 +413,6 @@ class Logic_Mail extends Logic
 	 *	@param		string|NULL		$senderId		Optional: ID of sending user
 	 *	@return		string							ID of queued mail
 	 *	@throws		InvalidArgumentException
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function enqueueMail( Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): string
@@ -442,6 +441,7 @@ class Logic_Mail extends Logic
 			'object'			=> NULL,
 			'objectInstance'	=> $mail,
 			'raw'				=> NULL,
+			'toBeSentAt'		=> $mail->getToBeSentAt(),
 			'enqueuedAt'		=> time(),
 			'attemptedAt'		=> 0,
 			'sentAt'			=> 0,
@@ -521,15 +521,16 @@ class Logic_Mail extends Logic
 	 *	@deprecated	this method has no real value and will be removed
 	 *	@todo		remove this method
 	 *	@throws		SimpleCacheInvalidArgumentException
+	 *	@throws		RuntimeException		if mail object is not extending Mail_Abstract
 	 */
 	public function getMailHeaders( Mail_Abstract|string $mail ): array
 	{
-		$mail		= $this->getMailFromObjectOrId( $mail );
+		$mail	= $this->getMailFromObjectOrId( $mail );
 		if( !is_object( $mail->objectInstance ) )
 			$this->decompressMailObject( $mail );
 		if( !is_a( $mail->objectInstance, 'Mail_Abstract' ) )											//  stored mail object os not a known mail class
 			throw new RuntimeException( 'Mail object is not extending Mail_Abstract' );
-		$list		= [];
+		$list	= [];
 		foreach( $mail->objectInstance->mail->getHeaders()->getFields() as $headerField )
 			$list[$headerField->getName()]	= $headerField->getValue();
 		return $list;
@@ -564,12 +565,14 @@ class Logic_Mail extends Logic
 	{
 		$configKey			= 'path.attachments';
 
-		/** @var ?ModuleDefinition $module */
-		$module	= $this->env->getModules()->get( 'Resource_Frontend' );
-		if( NULL !== $module && ( './' !== $module->getConfigAsDictionary()->get( 'path' ) ) ){
-			$frontend	= Logic_Frontend::getInstance( $this->env );
-			$path		= $frontend->getModuleConfigValue( 'Resource_Mail', $configKey );
-			return $frontend->getUri().$path;
+		if( $this->env->getModules()->has( 'Resource_Frontend' ) ){
+			/** @var ModuleDefinition $module */
+			$module	= $this->env->getModules()->get( 'Resource_Frontend' );
+			if( './' !== $module->getConfigAsDictionary()->get( 'path' ) ){
+				$frontend	= Logic_Frontend::getInstance( $this->env );
+				$path		= $frontend->getModuleConfigValue( 'Resource_Mail', $configKey );
+				return $frontend->getUri().$path;
+			}
 		}
 
 		$path	= $this->env->getConfig()->get( 'module.resource_mail.'.$configKey );
@@ -645,7 +648,6 @@ class Logic_Mail extends Logic
 	 *	@param		string			$language		Language key
 	 *	@param		boolean			$forceSendNow	Flag: override module settings and avoid queue
 	 *	@return		boolean			TRUE if success
-	 *	@throws		SimpleCacheInvalidArgumentException
 	 *	@throws		ReflectionException
 	 */
 	public function handleMail( Mail_Abstract $mail, object $receiver, string $language, bool $forceSendNow = NULL ): bool
