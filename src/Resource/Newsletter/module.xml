@@ -9,7 +9,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.9</version>
+	<version>0.6.0</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -41,6 +41,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
     <log version="0.5.7">Refactor to use mail template around newsletter template.</log>
 	<log version="0.5.8">Refactor logic to support entities as method arguments.</log>
 	<log version="0.5.9">Add english language file.</log>
+	<log version="0.6.0">Support reader letters to be sent in future.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -71,6 +72,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 		<class>View/Helper/Newsletter/Mail.php</class>
 		<class>View/Helper/HtmlToPlainText.php</class>
 		<locale>de/resource/newsletter.ini</locale>
+		<locale>en/resource/newsletter.ini</locale>
 	</files>
 	<config access="protected" type="string" name="path.themes" title="folder for newsletter themes (may be absolute)">contents/newsletter-themes/</config>
 	<config access="protected" type="boolean" name="premailer.html" title="Use Premailer API to work on mail HTML content">no</config>
@@ -99,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletters` (
   `html` text COLLATE utf8_unicode_ci,
   `createdAt` decimal(12,0) unsigned NOT NULL,
   `modifiedAt` decimal(12,0) unsigned DEFAULT NULL,
+  `enqueuedAt` decimal(12,0) unsigned DEFAULT NULL,
   `sentAt` decimal(12,0) unsigned DEFAULT NULL,
   PRIMARY KEY (`newsletterId`),
   KEY `newsletterTemplateId` (`newsletterTemplateId`),
@@ -345,6 +348,22 @@ CREATE TABLE `<%?prefix%>newsletter_reader_letter_links` (
 ALTER TABLE `<%?prefix%>newsletter_templates`
   ADD COLUMN `mailTemplateId` INT(10) UNSIGNED NOT NULL DEFAULT 0 AFTER `newsletterTemplateId`,
   ADD INDEX `mailTemplateId` (`mailTemplateId`);
+	]]></sql>
+	<sql on="update" type="mysql" version="0.6.0"><![CDATA[
+--  Newsletter: status sent changed from 1 to 2
+--  Newsletter: new status enqueued is 1, now
+UPDATE `<%?prefix%>newsletters` SET status=2 WHERE status=1;
+ALTER TABLE `<%?prefix%>newsletters`
+  ADD COLUMN `enqueuedAt` DECIMAL(12,0) UNSIGNED DEFAULT NULL AFTER `modifiedAt`;
+
+--  Reader Letter: status opened changed from 2 to 3
+--  Reader Letter: status sent changed from 1 to 2
+--  Reader Letter: new status enqueued is 1, now
+UPDATE `<%?prefix%>newsletter_reader_letters` SET status=3 WHERE status=2;
+UPDATE `<%?prefix%>newsletter_reader_letters` SET status=2 WHERE status=1;
+ALTER TABLE `<%?prefix%>newsletter_queues`
+  ADD COLUMN `toBeSentAt` DECIMAL(12,0) UNSIGNED DEFAULT 0 AFTER `status`,
+  ADD INDEX `toBeSentAt` (`toBeSentAt`);
 	]]></sql>
     <sql on="uninstall" type="mysql"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>newsletter_queues`;

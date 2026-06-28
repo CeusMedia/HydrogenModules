@@ -320,7 +320,8 @@ class View_Helper_Newsletter_Mail
 			throw new RuntimeException( 'Neither newsletter not template set' );
 
 		foreach( $this->data as $key => $value )													//  iterate template content data
-			$content	= str_replace( '[#'.$key.'#]', $value, $content );					//  replace placeholder
+			if( !is_object( $value ) )																//  skip assigned entity objects
+				$content	= str_replace( '[#'.$key.'#]', $value, $content );				//  replace placeholder
 		$content	= $this->realizeColumns( $content, 1 );									//
 		if( self::MODE_HTML_TRACKING === $this->mode )
 			$content	= $this->makeHtmlLinksTrackable( $content );
@@ -356,8 +357,9 @@ class View_Helper_Newsletter_Mail
 		else
 			throw new RuntimeException( 'Neither newsletter not template set' );
 
-		foreach( $this->data as $key => $value )
-			$content	= str_replace( '[#'.$key.'#]', $value, $content );
+		foreach( $this->data as $key => $value )													//  iterate template content data
+			if( !is_object( $value ) )																//  skip assigned entity objects
+				$content	= str_replace( '[#'.$key.'#]', $value, $content );				//  replace placeholder
 		$content	= $this->realizeColumns( $content, 0 );
 		return wordwrap( $content, 78 );
 	}

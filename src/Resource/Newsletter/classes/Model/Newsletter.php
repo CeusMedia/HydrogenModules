@@ -22,7 +22,8 @@ class Model_Newsletter extends Model
 	public const STATUS_ABORTED		= -1;
 	public const STATUS_NEW			= 0;
 	public const STATUS_READY		= 1;
-	public const STATUS_SENT		= 2;
+	public const STATUS_ENQUEUED	= 2;
+	public const STATUS_SENT		= 3;
 
 	public const STATUSES			= [
 		self::STATUS_ABORTED,
@@ -51,6 +52,7 @@ class Model_Newsletter extends Model
 //		'attachments',
 		'createdAt',
 		'modifiedAt',
+		'enqueuedAt',
 		'sentAt',
 	];
 
