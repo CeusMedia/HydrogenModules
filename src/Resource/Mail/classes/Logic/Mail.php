@@ -696,6 +696,7 @@ class Logic_Mail extends Logic
 
 	/**
 	 *	Send prepared mail right now.
+	 *	Calls hook Mail::onSent (with mail ID as payload) after mail has given to transport.
 	 *	@access		public
 	 *	@param		int|string		$mailId
 	 *	@param		boolean			$forceResent	Flag: send mail again although last attempt was successful
@@ -706,7 +707,7 @@ class Logic_Mail extends Logic
 	 */
 	public function sendQueuedMail( int|string $mailId, bool $forceResent = FALSE ): bool
 	{
-		$mail		= $this->getMail( $mailId );
+		$mail	= $this->getMail( $mailId );
 		$this->decompressMailObject( $mail );
 		if( $mail->status > Model_Mail::STATUS_SENDING && !$forceResent )
 			throw new RuntimeException( 'Mail already has been sent' );
@@ -733,6 +734,8 @@ class Logic_Mail extends Logic
 //				'bytesSent'		=> mb_strlen( MailMessageRendererV2::render( $mail->objectInstance->mail ) ),
 				'sentAt'		=> time()
 			] );
+			$payload	= ['mailId'	=> $mailId];
+			$this->env->getCaptain()->callHookWithPayload( 'Mail', 'sent', $this, $payload );
 			return TRUE;
 		}
 		catch( Exception $e ){
