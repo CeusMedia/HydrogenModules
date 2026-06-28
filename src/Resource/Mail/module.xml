@@ -35,7 +35,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 
 ]]></description>
 	<category>Resource</category>
-	<version>1.1.6</version>
+	<version>1.1.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Extended configuration by mandatory attributes.</log>
 	<log version="0.3">Added example mail class.</log>
@@ -115,6 +115,7 @@ code>* * * * * cd /path/to/project && ./job.php Mail.Archive.clean --age=3M</cod
 <!--	<log version="1.2">Support pausing mails.</log>-->
 	<log version="1.1.5">Add static constructor on abstract mail class and support mail language.</log>
 	<log version="1.1.6">Add model column for timestamp to sent mail at.</log>
+	<log version="1.1.7">Add call for hook Mail::onSent after mail has given to transport.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
