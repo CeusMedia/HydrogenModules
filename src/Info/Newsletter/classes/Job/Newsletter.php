@@ -61,17 +61,14 @@ class Job_Newsletter extends Job_Abstract
 	 */
 	public function count(): void
 	{
-		$words		= (object) $this->words->send;													//  get words or like date formats
-
 		$total		= 0;
 		$conditions	= ['status' => [
 			Model_Newsletter_Queue::STATUS_NEW,
-			Model_Newsletter_Queue::STATUS_RUNNING
 		]];
 		$queues		= $this->logic->getQueues( $conditions );
 		foreach( $queues as $queue ){
 			$conditions	= [
-				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
+				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_NEW],
 				'newsletterQueueId'	=> $queue->newsletterQueueId,
 			];
 			$letters	= $this->logic->getReaderLetters( $conditions );							//  get letters to send
@@ -121,96 +118,85 @@ class Job_Newsletter extends Job_Abstract
 	{
 		if( $this->dryMode )
 			$this->out( 'DRY RUN - no changes will be made.' );
-		$words		= (object) $this->words->send;												//  get words or like date formats
-		$max		= abs( (int) $this->options->get( 'mailsPerRun' ) );						//  get max number of mails to send in one round
-		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
-		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$conditions	= ['status' => [
-			Model_Newsletter_Queue::STATUS_NEW,
-			Model_Newsletter_Queue::STATUS_RUNNING
-		]];
-		$queues		= $this->logic->getQueues( $conditions );
-		$queueIds	= [];
-		foreach( $queues as $queue ){
-			$queueIds[]	= $queue->newsletterQueueId;
-			if( $queue->status == Model_Newsletter_Queue::STATUS_NEW )
-				$this->logic->setQueueStatus( $queue->newsletterQueueId, 1 );
-		}
-		if( !$queueIds )
-			return;
-		$conditions	= [
-			'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
-			'newsletterQueueId'	=> $queueIds,
-		];
-		$number		= 0;																		//  prepare counter for round limit
-		$orders		= [];																		//  no order
-		$limits		= [0, $max];																//  limit letters
-		$letters	= $this->logic->getReaderLetters( $conditions, $orders, $limits );			//  get letters to send
+
+		$number		= 0;																			//  prepare counter
+		$resultData	= [];
 		$start		= microtime( TRUE );
-		if( $letters ){
-			while( $letters && ( $max == 0 || $number < $max ) ){								//  iterate letters
-				if( $number && $sleep )															//  sleep time is defined and not first mail
-					usleep( $sleep * pow( 10, 6 ) );					//  sleep n seconds
-				$letter		= array_shift( $letters );									//  get next letter
-				$reader		= $letter->reader;													//  shortcut letter reader
-				$mail		= new Mail_Newsletter( $this->env, [
-					'readerLetter'		=> $letter,
-//					'readerLetterId'	=> $letter->newsletterReaderLetterId,
-				] );
+		$sleep		= abs( (float) $this->options->get( 'sleepBetweenMails' ) );				//  get seconds to sleep after each mail
+
+		$logicMail		= Logic_Mail::getInstance( $this->env );
+		$modelLetter	= new Model_Newsletter_Reader_Letter( $this->env );
+		$modelReader	= new Model_Newsletter_Reader( $this->env );
+		$modelQueue		= new Model_Newsletter_Queue( $this->env );
+
+		/** @var ?Entity_Newsletter_Queue $queue */
+		$queue	= $modelQueue->getByIndices(
+			['status' => Model_Newsletter_Queue::STATUS_NEW],
+			['toBeSent' => 'ASC'],
+		);
+		if( NULL !== $queue ){
+			$resultData['queue']	= $queue->newsletterQueueId;
+			$this->logic->setQueueStatus( $queue->newsletterQueueId, Model_Newsletter_Queue::STATUS_RUNNING );
+
+			$letterIds	= $modelLetter->getAllByIndices( [
+				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_NEW],
+				'newsletterQueueId'	=> $queue->newsletterQueueId,
+			], [], [], ['newsletterReaderLetterId'] );
+
+			foreach( $letterIds as $letterId ){													//  iterate letters
+				/** @var Entity_Newsletter_Reader_Letter $letter */
+				$letter		= $modelLetter->get( $letterId );
+				/** @var Entity_Newsletter_Reader $reader */
+				$reader		= $modelReader->get( $letter->newsletterReaderId );
+				if( $reader->status < Model_Newsletter_Reader::STATUS_CONFIRMED )				//  reader has been disabled meanwhile
+					continue;
+
 				$language	= $this->env->getLanguage()->getLanguage();
+				$mail		= new Mail_Newsletter( $this->env, ['readerLetter' => $letter], $language );
+				$mail->setToBeSentAt( $queue->toBeSentAt );
 				$logicMail->appendRegisteredAttachments( $mail, $language );
 				if( $this->verbose )
-					$this->out( sprintf( 'Sending mail to %s ...', $letter->reader->email ) );
-
-//				$mailId	= $logicMail->handleMail( $mail, $receiver, $language );
-//				if( is_int( $mailId ) )
-//					$this->logic->setReaderLetterMailId( $letter->newsletterReaderLetterId, $mailId );
+					$this->out( sprintf( 'Sending mail to %s ...', $reader->email ) );
 
 				if( !$this->dryMode ){
-					$mailId	= $this->logic->sendReaderLetterMail(
-						$letter->newsletterReaderLetterId,
+					$this->logic->sendReaderLetterMail(
+						$letter,
 						$mail,
 						$language,
-						$this->logic->getReader( $letter->newsletterReaderId )
+						$reader
 					);
 				}
-
 				$number++;																		//  increase counter for round limit
+				unset( $letter, $reader	);
+				if( $sleep )																	//  sleep time is defined
+					usleep( $sleep * pow( 10, 6 ) );					//  sleep n seconds
 			}
+
+			if( !$this->dryMode ){
+				$this->logic->editNewsletter( $queue->newsletterId, [
+					'status'	=> Model_Newsletter::STATUS_SENT,
+					'sentAt'	=> time(),
+				] );
+				$this->logic->setQueueStatus( $queue, Model_Newsletter_Queue::STATUS_DONE );
+			}
+			$newsletter	= $this->logic->getNewsletter( $queue->newsletterId );
+			$this->log( sprintf( 'Newsletter %s is done.', $newsletter->title ) );
 		}
 
 		$resultStatus	= 0 !== $number ? Model_Job_Run::STATUS_SUCCESS : Model_Job_Run::STATUS_DONE;
-		$resultData		= [];
 
 		$microtime	= microtime( TRUE ) - $start;
 		$time		= round( $microtime, 3 ) * 1000;
 		$this->log( sprintf( 'sent %d mails in %d ms', $number, $time ) );
 
+		$ratio	= '';
+		if( 0 !== $number && 0 !== $microtime )
+			$ratio	= round( $number / $microtime, 1 ).' mails/second';
+
 		$resultData['nrDone']		= $number;
 		$resultData['runtime']		= $time.'ms';
-		$resultData['ratio']		= round( $number / $microtime, 1 ).' mails/second' ;
+		$resultData['ratio']		= $ratio;
 		$this->setResult( $resultStatus, $number, $resultData );
-
-		foreach( $queues as $queue ){
-			$conditions	= [
-				'status'			=> [Model_Newsletter_Reader_Letter::STATUS_ENQUEUED],
-				'newsletterQueueId'	=> $queue->newsletterQueueId,
-			];
-			if( !count( $this->logic->getReaderLetters( $conditions ) ) ){
-				$newsletter	= $this->logic->getNewsletter( $queue->newsletterId );
-				$this->log( sprintf( 'Newsletter %s is done.', $newsletter->title ) );
-				if( !$this->dryMode ){
-					$this->logic->editNewsletter( $queue->newsletterId, [
-						'status'	=> Model_Newsletter::STATUS_SENT
-					] );
-					$this->logic->setQueueStatus(
-						$queue->newsletterQueueId,
-						Model_Newsletter_Queue::STATUS_DONE
-					);
-				}
-			//	@todo		send mail
-			}
-		}
 	}
 
 	//  --  PROTECTED  --  //
