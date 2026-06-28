@@ -108,16 +108,19 @@ class Controller_Work_Newsletter extends Controller
 			$this->session->set( 'queueId-'.$newsletterId, $queueId );								//  note queue in session
 		}
 
+		/** @var Entity_Newsletter_Queue $queue */
+		$queue	= $this->logic->getQueue( $queueId );												//  get queue data object
+
+		//  create queue, if current session queue has been shut down
 		$negativeStatues	= [
 			Model_Newsletter_Queue::STATUS_REJECTED,
 			Model_Newsletter_Queue::STATUS_CANCELLED,
 		];
-		$newsletter	= $this->logic->getNewsletter( $newsletterId );					//  get newsletter data object for later
-		$queue		= $this->logic->getQueue( $queueId );							//  get queue data object
-		if( in_array( $queue->status, $negativeStatues ) ){							//  queue has been rejected or cancelled
-			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId );	//  create a new queue
-			$this->session->set( 'queueId-'.$newsletterId, $queueId );				//  note queue in session
-			$queue		= $this->logic->getQueue( $queueId );						//  get queue data object
+		if( in_array( $queue->status, $negativeStatues ) ){											//  queue has been rejected or canceled
+			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId, $toBeSentAt );		//  create a new queue
+			$this->session->set( 'queueId-'.$newsletterId, $queueId );								//  note queue in session
+			/** @var Entity_Newsletter_Queue $queue */
+			$queue		= $this->logic->getQueue( $queueId );										//  get queue data object
 		}
 
 		if( !is_array( $readerIds ) || [] === $readerIds ){
@@ -135,14 +138,16 @@ class Controller_Work_Newsletter extends Controller
 					$readerIds[]	= $reader->newsletterReaderId;
 		}
 
+		$newsletter	= $this->logic->getNewsletter( $newsletterId );					//  get newsletter data object
+
 		$numberSent		= 0;
 		$numberSkipped	= 0;
 		foreach( $readerIds as $readerId )
-			$this->logic->enqueue( $queueId, $readerId, $newsletterId, TRUE ) ? $numberSent++ : $numberSkipped++;	//
+			$this->logic->enqueueReaderLetter( $queueId, $readerId, $newsletterId, TRUE ) ? $numberSent++ : $numberSkipped++;	//
 		if( $numberSent ){
 			$this->messenger->noteSuccess( $words->msgSuccess, $numberSent );
 			$this->logic->editNewsletter( $newsletterId, [
-				'status'	=> Model_Newsletter::STATUS_SENT,
+				'status'	=> Model_Newsletter::STATUS_ENQUEUED,
 				'sentAt'	=> time()
 			] );
 			$this->logic->setTemplateStatus( $newsletter->newsletterTemplateId, Model_Newsletter_Template::STATUS_USED );
@@ -306,7 +311,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->messenger->noteError( 'Invalid letter ID.' );
 		else {
 			$reader		= $this->logic->getReader( $letter->newsletterReaderId );
-			$this->logic->enqueue( $letter->newsletterQueueId, $letter->newsletterReaderId, $letter->newsletterId, TRUE );
+			$this->logic->enqueueReaderLetter( $letter->newsletterQueueId, $letter->newsletterReaderId, $letter->newsletterId, TRUE );
 			$this->messenger->noteSuccess( 'Newsletter sent to '.$reader->firstname.' '.$reader->surname.' <cite>&lt;'.$reader->email.'&gt;</cite>.' );
 		}
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
@@ -664,11 +669,11 @@ class Controller_Work_Newsletter extends Controller
 		if( $nrLetters <= 50 ){
 			$letterQueue	= $this->logic->getReaderLetters( [
 				'newsletterId'	=> $newsletterId,
-				'status'		=> Model_Newsletter_Reader_Letter::STATUS_ENQUEUED,
+				'status'		=> Model_Newsletter_Reader_Letter::STATUS_NEW,
 			] );
 			$letterHistory	= $this->logic->getReaderLetters( [
 				'newsletterId'	=> $newsletterId,
-				'status'		=> '!= '.Model_Newsletter_Reader_Letter::STATUS_ENQUEUED,
+				'status'		=> '!= '.Model_Newsletter_Reader_Letter::STATUS_NEW,
 			] );
 		}
 

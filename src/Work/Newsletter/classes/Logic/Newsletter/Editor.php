@@ -99,16 +99,18 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	}
 
 	/**
-	 *	@param		int|string			$newsletterId
-	 *	@param		int|string|NULL		$creatorId
+	 *	@param		int|string		$newsletterId
+	 *	@param		int|string		$creatorId				Default: 0
+	 *	@param		int				$toBeSentAt				Timestamp if to be sent in futre, default: 0 (send asap)
 	 *	@return		string
 	 */
-	public function createQueue( int|string $newsletterId, int|string|NULL $creatorId = NULL ): string
+	public function createQueue( int|string $newsletterId, int|string $creatorId = 0, int $toBeSentAt = 0 ): string
 	{
 		return $this->modelQueue->add( [
 			'newsletterId'	=> $newsletterId,
 			'creatorId'		=> (int) $creatorId,
 			'status'		=> Model_Newsletter_Queue::STATUS_NEW,
+			'toBeSentAt'	=> $toBeSentAt,
 			'createdAt'		=> time(),
 			'modifiedAt'	=> time(),
 		] );
@@ -171,7 +173,7 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 	 *	@param		bool			$allowDoubles
 	 *	@return		int|string
 	 */
-	public function enqueue( int|string $queueId, int|string $readerId, int|string $newsletterId, bool $allowDoubles = FALSE ): int|string
+	public function enqueueReaderLetter(int|string $queueId, int|string $readerId, int|string $newsletterId, bool $allowDoubles = FALSE ): int|string
 	{
 		$indices	= [
 			'newsletterReaderId'	=> $readerId,
@@ -181,14 +183,13 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		];
 		if( !$allowDoubles && $this->modelReaderLetter->getByIndices( $indices ) )
 			return 0;
-		$data		= [
+
+		return $this->modelReaderLetter->add( Entity_Newsletter_Reader_Letter::fromArray( [
 			'newsletterReaderId'	=> $readerId,
 			'newsletterQueueId'		=> $queueId,
 			'newsletterId'			=> $newsletterId,
-			'status'				=> 0,
 			'enqueuedAt'			=> time()
-		];
-		return $this->modelReaderLetter->add( $data );
+		] ) );
 	}
 
 	/**
