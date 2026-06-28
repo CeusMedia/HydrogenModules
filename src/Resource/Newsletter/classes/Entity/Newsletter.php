@@ -21,6 +21,7 @@ class Entity_Newsletter extends Entity
 //	public string $attachments;
 	public int $createdAt						= 0;
 	public ?int $modifiedAt						= NULL;
+	public ?int $enqueuedAt						= NULL;
 	public ?int $sentAt							= NULL;
 
 	protected static array $mandatoryFields		= [

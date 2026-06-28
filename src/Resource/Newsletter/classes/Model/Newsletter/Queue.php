@@ -36,6 +36,7 @@ class Model_Newsletter_Queue extends Model
 		'newsletterId',
 		'creatorId',
 		'status',
+		'toBeSentAt',
 		'createdAt',
 		'modifiedAt',
 	];
@@ -46,6 +47,7 @@ class Model_Newsletter_Queue extends Model
 		'newsletterId',
 		'creatorId',
 		'status',
+		'toBeSentAt',
 	];
 
 	protected int $fetchMode				= PDO::FETCH_CLASS;

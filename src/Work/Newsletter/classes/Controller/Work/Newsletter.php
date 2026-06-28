@@ -91,11 +91,21 @@ class Controller_Work_Newsletter extends Controller
 		$this->checkNewsletterId( $newsletterId );
 		$words		= (object) $this->getWords( 'enqueue' );
 		$readerIds	= $this->request->get( 'readerIds' );
-		$creatorId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );						//  get current user
+		$creatorId	= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );			//  get current user
 
-		if( !( $queueId = $this->session->get( 'queueId-'.$newsletterId ) ) ){		//  no queue within this session yet
-			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId );	//  create a new queue
-			$this->session->set( 'queueId-'.$newsletterId, $queueId );				//  note queue in session
+		//  calculate send time, if configured
+		$toBeSentAt	= 0;
+		$sendLater	= $this->request->has( 'sendLater' );										//  get checkbox status
+		$sendAtDate	= trim( $this->request->get( 'sendAt_date', '' ) );					//  get input date
+		$sendAtTime	= trim( $this->request->get( 'sendAt_time', '' ) );					//  get input time
+		if( $sendLater && '' !== $sendAtDate && '' !== $sendAtTime )								//  checkbox enabled and date and time are set
+			$toBeSentAt	= strtotime( $sendAtDate.' '.$sendAtTime.':00' );					//  calculate timestamp of given date and time
+
+		//  create queue if not done yet in this session for this newsletter
+		$queueId = (int) $this->session->get( 'queueId-'.$newsletterId, '' );
+		if( 0 === $queueId ){																		//  no queue within this session yet
+			$queueId	= $this->logic->createQueue( $newsletterId, $creatorId, $toBeSentAt );		//  create a new queue
+			$this->session->set( 'queueId-'.$newsletterId, $queueId );								//  note queue in session
 		}
 
 		$negativeStatues	= [

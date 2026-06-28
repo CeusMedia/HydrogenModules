@@ -519,16 +519,18 @@ class Logic_Newsletter extends SharedLogic
 	 *	@param		array		$conditions
 	 *	@param		array		$orders
 	 *	@param		array		$limits
-	 *	@return		array
+	 *	@param		bool		$decorateWithReader		Default: yes
+	 *	@return		array<int,Entity_Newsletter_Reader_Letter>
 	 *	@throws		InvalidArgumentException			if newsletter reader is not exising and $throwException is TRUE
 	 */
-	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [] ): array
+	public function getReaderLetters( array $conditions = [], array $orders = [], array $limits = [], bool $decorateWithReader = TRUE ): array
 	{
 		$list	= [];
 		/** @var array<Entity_Newsletter_Reader_Letter> $letters */
 		$letters	= $this->modelReaderLetter->getAll( $conditions, $orders, $limits );
 		foreach( $letters as $letter ){
-			$letter->reader		= $this->getReader( $letter->newsletterReaderId );
+			if( $decorateWithReader )
+				$letter->reader		= $this->getReader( $letter->newsletterReaderId );
 			$list[$letter->newsletterReaderLetterId]	= $letter;
 		}
 		return $list;
@@ -707,24 +709,25 @@ class Logic_Newsletter extends SharedLogic
 
 	/**
 	 *	Sends already generated (newsletter reader letter) mail to reader (by using the mail queue) and note mail ID and status on reader letter.
+	 *	Binds new mail ID to reader letter as relation for later.
+	 *	Also sets reader letter status to "sent".
 	 *	Returns mail ID on mail queue.
 	 *	@param		Entity_Newsletter_Reader_Letter		$readerLetter
 	 *	@param		Mail_Abstract						$mail
 	 *	@param		string								$language
 	 *	@param		int|object							$receiver
 	 *	@param		?string								$senderId
-	 *	@param		?int								$toBeSentAt
 	 *	@return		int|string							Mail ID on queue
 	 *	@throws		ReflectionException
 	 */
-	public function sendReaderLetterMail( Entity_Newsletter_Reader_Letter $readerLetter, Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL, ?int $toBeSentAt = NULL ): int|string
+	public function sendReaderLetterMail( Entity_Newsletter_Reader_Letter $readerLetter, Mail_Abstract $mail, string $language, int|object $receiver, ?string $senderId = NULL ): int|string
 	{
 		$logicMail	= Logic_Mail::getInstance( $this->env );
-		$mailId		= $logicMail->enqueueMail( $mail, $language, $receiver, $senderId, $toBeSentAt );
+		$mailId		= $logicMail->enqueueMail( $mail, $language, $receiver, $senderId );
 		$this->setReaderLetterMailId( $readerLetter->newsletterReaderLetterId, $mailId );
 		$this->setReaderLetterStatus(
 			$readerLetter->newsletterReaderLetterId,
-			Model_Newsletter_Reader_Letter::STATUS_SENT
+			Model_Newsletter_Reader_Letter::STATUS_ENQUEUED
 		);
 		return $mailId;
 	}
@@ -759,9 +762,9 @@ class Logic_Newsletter extends SharedLogic
 			'status'		=> $status,
 			'modifiedAt'	=> time(),
 		];
-		if( $status == Model_Newsletter_Reader_Letter::STATUS_SENT )
+		if( Model_Newsletter_Reader_Letter::STATUS_SENT === $status )
 			$data['sentAt']	= time();
-		if( $status == Model_Newsletter_Reader_Letter::STATUS_OPENED )
+		if( Model_Newsletter_Reader_Letter::STATUS_OPENED === $status )
 			$data['openedAt']	= time();
 		return $this->modelReaderLetter->edit( $readerLetterId, $data );
 	}
