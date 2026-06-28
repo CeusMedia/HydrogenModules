@@ -9,7 +9,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -42,6 +42,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 	<log version="0.5.8">Refactor logic to support entities as method arguments.</log>
 	<log version="0.5.9">Add english language file.</log>
 	<log version="0.6.0">Support reader letters to be sent in future.</log>
+	<log version="0.6.1">Add hook for Mail::onSent to note mail transport happened.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -56,6 +57,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 		<class>Entity/Newsletter/Reader/Letter/Link.php</class>
 		<class>Entity/Newsletter/Template.php</class>
 		<class>Entity/Newsletter/Theme.php</class>
+		<class>Hook/Resource/Newsletter.php</class>
 		<class>Logic/Newsletter.php</class>
 		<class>Mail/Newsletter.php</class>
 		<class>Model/Newsletter.php</class>
@@ -82,6 +84,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 	<relations>
 		<needs type="module">Resource_Database</needs>
 	</relations>
+	<hook type="resource" resource="Mail" event="sent">Hook_Resource_Newsletter::onMailSent</hook>
 	<sql on="install" type="mysql" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>newsletters`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>newsletters` (
