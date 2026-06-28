@@ -104,23 +104,40 @@ if( $nrReaders || [] !== $readers ){
 				<form action="./work/newsletter/enqueue/'.$newsletterId.'" method="post">
 					<input type="hidden" name="groupIds" value="'.join( ',', $groupIds ).'"/>
 					<div class="row-fluid">
-<!--						<div class="alert alert-info">
-							Das Absenden dieser Liste reiht die Newsletter in der Warteschlange des Versandsystems ein.<br/>
-							Die E-Mails an die Leser werden dann automatisch verschickt.<br/>
-						</div>-->
-						<label>Leser in gewählten Empfängerlisten</label>
-						<div class="checkbox-list">'.$list.'</div>
-						<div class="buttonbar">
-							<div class="alert alert-info">
-								<small>Der Newsletter wird für die ausgewählten Empfänger in der Newsletter-Queue eingereiht.<br/>
-								Die E-Mails werden dann sukzessive erzeugt und <abbr title="in die E-Mail-Queue">zum Versand eingereiht</abbr>.<br/>
-								Die Newsletter-E-Mails werden dann mit der Zeit ausgeliefert.</small>
-							</div>
-							<div class="alert alert-danger">
-								<strong>'.$iconWarn.'&nbsp;Achtung:</strong> Dieser Vorgang kann nicht mehr unterbrochen werden.
-							</div>
-							<button type="submit" name="send" class="btn btn-primary"'.$disabled.'>'.$iconSend.'versenden</button>
+						<div class="span12">
+<!--							<div class="alert alert-info">
+								Das Absenden dieser Liste reiht die Newsletter in der Warteschlange des Versandsystems ein.<br/>
+								Die E-Mails an die Leser werden dann automatisch verschickt.<br/>
+							</div>-->
+							<label>Leser in gewählten Empfängerlisten</label>
+							<div class="checkbox-list">'.$list.'</div>
 						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<label for="input_sendLater" class="checkbox"><input type="checkbox" name="sendLater" id="input_sendLater" class="has-optionals" value="yes" data-animation="slide"/>&nbsp;nicht jetzt, sondern später senden</label>
+						</div>
+					</div>
+					<div class="row-fluid optional sendLater sendLater-true" style="display: none">
+						<div class="span3">
+							<label for="input_sendAt_date">Senden am</label>
+							<input type="date" name="sendAt_date" id="input_sendAt_date" class="span12"/>
+						</div>
+						<div class="span2">
+							<label for="input_sendAt_time">um</label>
+							<input type="time" name="sendAt_time" id="input_sendAt_time" class="span12"/>
+						</div>
+					</div>
+					<div class="buttonbar">
+						<div class="alert alert-info">
+							<small>Der Newsletter wird für die ausgewählten Empfänger in der Newsletter-Queue eingereiht.<br/>
+							Die E-Mails werden dann sukzessive erzeugt und <abbr title="in die E-Mail-Queue">zum Versand eingereiht</abbr>.<br/>
+							Die Newsletter-E-Mails werden dann mit der Zeit ausgeliefert.</small>
+						</div>
+						<div class="alert alert-danger">
+							<strong>'.$iconWarn.'&nbsp;Achtung:</strong> Dieser Vorgang kann nicht mehr unterbrochen werden.
+						</div>
+						<button type="submit" name="send" class="btn btn-primary"'.$disabled.'>'.$iconSend.'versenden</button>
 					</div>
 				</form>
 			</div>
