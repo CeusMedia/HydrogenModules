@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\CLI\ArgumentParser;
 use CeusMedia\Common\Net\HTTP\Method as HttpMethod;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
@@ -184,7 +185,7 @@ class Controller_Admin_Log_Exception extends Controller
 			$this->addData( 'requestMethod', new HttpMethod( $request->method ) );
 		}
 		else if( '' !== ( $exception->request ?? '' ) ){
-			/** @var HttpRequest|Dictionary $exceptionRequest */
+			/** @var ArgumentParser|HttpRequest|Dictionary $exceptionRequest */
 			$exceptionRequest	= unserialize( $exception->request );
 
 			if( '' !== ( $exception->session ?? '' ) ){

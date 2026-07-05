@@ -2,6 +2,8 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\CLI\ArgumentParser;
+use CeusMedia\Common\Exception\IO as IoException;
+use CeusMedia\Common\Exception\Logic as LogicException;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -26,28 +28,31 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
-	 *	@param		object		$exception
-	 *	@param		HttpRequest|Dictionary		$exceptionRequest
+	 *	@param		Entity_Log_Exception		$exception
 	 *	@return		string|NULL
 	 */
-	public function renderRequestSection( object $exception, HttpRequest|Dictionary $exceptionRequest ): ?string
+	public function renderRequestSection( Entity_Log_Exception $exception ): ?string
 	{
-		if( !$exceptionRequest )
+		$exceptionRequest	= $exception->request;
+		if( NULL === $exceptionRequest )
 			return NULL;
 
 		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
 
+		/** @var ArgumentParser|HttpRequest|Dictionary $exceptionRequest */
+		$exceptionRequest		= unserialize( $exception->request );
 		$sectionRequestHeaders	= '';
-		if( get_class( $exceptionRequest ) !== ArgumentParser::class ){
-			if( $exceptionRequest instanceof HttpRequest ){
-				$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
-				$lines					= $exceptionRequest->getHeaders()->render();
-				$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
-				$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders;
-			}
+		if( $exceptionRequest instanceof HttpRequest ){
+			$methodLine				= 'Method: '.$exceptionRequest->getMethod()->get().PHP_EOL;
+			$lines					= $exceptionRequest->getHeaders()->render();
+			$requestHeaders			= HtmlTag::create( 'xmp', $methodLine.$lines, ['style' => $xmpStyle] );
+			$sectionRequestHeaders	= HtmlTag::create( 'h4', 'Request Headers' ).$requestHeaders.'<hr/>';
 		}
-		$sectionRequestData		= HtmlTag::create( 'h4', 'Request Data' ).$this->renderMapTable( $exceptionRequest->getAll() );
-		return $sectionRequestHeaders.'<hr/>'.$sectionRequestData;
+		$heading				= HtmlTag::create( 'h4', 'Request Data' );
+		$table					= $this->renderMapTable( $exceptionRequest->getAll() );
+		$sectionRequestData		= $heading.$table;
+
+		return $sectionRequestHeaders.$sectionRequestData;
 	}
 
 	/**
@@ -69,12 +74,12 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
-	 *	@param		object		$exception
-	 *	@param		array		$exceptionEnv
+	 *	@param		Entity_Log_Exception	$exception
+	 *	@param		array					$exceptionEnv
 	 *	@param		HttpRequest|Dictionary|Entity_Log_Request	$exceptionRequest
 	 *	@return		string
 	 */
-	public function renderFactsSection( object $exception, array $exceptionEnv, HttpRequest|Dictionary|Entity_Log_Request $exceptionRequest ): string
+	public function renderFactsSection( Entity_Log_Exception $exception, array $exceptionEnv, HttpRequest|Dictionary|Entity_Log_Request $exceptionRequest ): string
 	{
 		if( $exceptionRequest instanceof Entity_Log_Request ){
 			$requestedPairs		= json_decode( $exceptionRequest->request, TRUE );
@@ -104,6 +109,12 @@ class View_Admin_Log_Exception extends View
 		$facts['Environment']	= $exceptionEnv['class'];
 		$facts['Error Type']	= $exception->type;
 
+		if( is_a( $exception->type, IoException::class, TRUE ) && '' !== trim( $exception->resource ?? '' ) )
+			$facts['Resource']	= $exception->resource;
+		if( is_a( $exception->type, LogicException::class, TRUE ) && '' !== trim( $exception->subject ?? '' ) )
+			$facts['Subject']	= $exception->subject;
+
+
 		$list	= [];
 		foreach( $facts as $key => $value )
 			$list[]	= HtmlTag::create( 'dt', $key ).HtmlTag::create( 'dd', $value ?: '&nbsp;' );
@@ -111,10 +122,10 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
-	 *	@param		object		$exception
+	 *	@param		Entity_Log_Exception	$exception
 	 *	@return		string|NULL
 	 */
-	public function renderFileSection( object $exception ): ?string
+	public function renderFileSection( Entity_Log_Exception $exception ): ?string
 	{
 		if( !file_exists( $exception->file ) )
 			return NULL;
@@ -180,11 +191,11 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
-	 *	@param		object				$exception
-	 *	@param		Dictionary|NULL		$exceptionSession
+	 *	@param		Entity_Log_Exception	$exception
+	 *	@param		Dictionary|NULL			$exceptionSession
 	 *	@return		string|NULL
 	 */
-	public function renderSessionSection( object $exception, ?Dictionary $exceptionSession ): ?string
+	public function renderSessionSection( Entity_Log_Exception $exception, ?Dictionary $exceptionSession ): ?string
 	{
 		if( !$exceptionSession || !$exceptionSession->count() )
 			return NULL;
@@ -208,37 +219,29 @@ class View_Admin_Log_Exception extends View
 	}
 
 	/**
-	 *	@param		object		$exception
-	 *	@param		array		$exceptionEnv
+	 *	@param		Entity_Log_Exception	$exception
+	 *	@param		array					$exceptionEnv
 	 *	@return		string
 	 */
-	public function renderTraceSection( object $exception, array $exceptionEnv ): string
+	public function renderTraceSection( Entity_Log_Exception $exception, array $exceptionEnv ): string
 	{
 		$xmpStyle	= 'overflow: auto; border: 1px solid gray; background-color: #EFEFEF; padding: 1em 2em';
 		$realPath	= preg_replace( '@admin/?$@', '', realpath( $exceptionEnv['uri'] ) );
 		$realPath	= rtrim( $realPath, '/' ).'/';
 
-		if( isset( $exception->traceAsHtml ) )
-			$trace	= $exception->traceAsHtml;
-		else if( isset( $exception->traceAsString ) ){
-			$trace	= $exception->traceAsString;
-			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ', $trace );
-			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
-		}
-		else{
-			$trace	= $exception->trace;
-			$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ', $trace );
-			$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
-		}
+		$trace	= $exception->trace;
+		$trace	= preg_replace( "/ ".preg_quote( $realPath, '/' )."/s", ' ', $trace );
+		$trace	= '<xmp style="'.$xmpStyle.'">'.$trace.'</xmp>';
+
 		return HtmlTag::create( 'h4', 'Stack Trace' ).$trace;
 	}
 
 	/**
-	 *	@param		object			$exception
+	 *	@param		Entity_Log_Exception			$exception
 	 *	@param		object|NULL		$user
 	 *	@return		string|NULL
 	 */
-	public function renderUserSection( object $exception, ?object $user ): ?string
+	public function renderUserSection( Entity_Log_Exception $exception, ?object $user ): ?string
 	{
 		if( !$user )
 			return NULL;
