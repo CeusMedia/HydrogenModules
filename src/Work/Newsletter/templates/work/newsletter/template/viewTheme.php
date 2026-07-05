@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\FS\File;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -18,12 +19,17 @@ $helper	= new View_Helper_Work_Newsletter_ThemeFacts( $env );
 $helper->setThemeData( $theme );
 //$helper->setListAttributes( ['class' => 'dl-horizontal'] );
 
-$base64	= base64_encode( FileReader::load( $themePath.$theme->folder.'/template.png' ) );
-$image	= HtmlTag::create( 'img', NULL, [
-	'src'	=> 'data:image/jpeg;base64,'.$base64,
-	'style'	=> 'max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray',
-	'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
-], ['class' => 'img-polaroid'] );
+$image			= '';
+$thumbnailUri	= $this->themePath.$theme->folder.'/template.png';
+$thumbnailFile	= File::new( $thumbnailUri );
+if( $thumbnailFile->exists() ){
+	$base64	= base64_encode( $thumbnailFile->getContent( $thumbnailUri ) );
+	$image	= HtmlTag::create( 'img', NULL, [
+		'src'	=> 'data:image/jpeg;base64,'.$base64,
+		'style'	=> 'max-height: 400px; border: 1px solid gray; box-shadow: 1px 2px 4px gray',
+		'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+	], ['class' => 'img-polaroid'] );
+}
 
 return '
 <div class="content-panel">

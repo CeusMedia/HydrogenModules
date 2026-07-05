@@ -1,10 +1,11 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\Alg\ID;
+use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\Net\HTTP\Cookie as HttpCookie;
 use CeusMedia\Common\Net\HTTP\Header\Field as HeaderField;
 use CeusMedia\Common\Net\HTTP\PartitionSession as HttpPartitionSession;
-use CeusMedia\Common\FS\File\Reader as FileReader;
+use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Definition as ModuleDefinition;
 use CeusMedia\HydrogenFramework\Logic\Shared as SharedLogic;
 
@@ -203,7 +204,6 @@ class Logic_Server_Log_Request extends SharedLogic
 			$ip			= getenv( 'REMOTE_ADDR' );
 			/** @var HttpPartitionSession $session */
 			$session	= $this->env->getSession();
-			$sessionId	= '';
 			if( $session instanceof HttpPartitionSession )
 				$sessionId	= $session->getSessionID();
 			$sessionData	= $session->getAll();
@@ -214,9 +214,11 @@ class Logic_Server_Log_Request extends SharedLogic
 				$cookie		= $this->env->get( 'cookie' );
 				$cookieData	= $cookie->getAll();
 			}
-			$headers	= array_map( static function( HeaderField $field ){
-				return $field->toString();
-			}, $this->env->getRequest()->getHeaders()->getFields() );
+			$headers	= [];
+			if( $this->env->getRequest() instanceof HttpRequest )
+				$headers	= array_map( static function( HeaderField $field ){
+					return $field->toString();
+				}, $this->env->getRequest()->getHeaders()->getFields() );
 		}
 
 		$date	= DateTime::createFromFormat( 'U.u', (string) microtime( TRUE ) );

@@ -8,10 +8,16 @@ use CeusMedia\HydrogenFramework\Environment;
 class View_Helper_Work_Newsletter_GroupReaders
 {
 	protected Environment $env;
-	protected ?object $group		= NULL;
+
+	protected ?Entity_Newsletter_Group $group		= NULL;
+
+	/** @var array<Entity_Newsletter_Reader> $readers */
 	protected array $readers		= [];
+
 	protected array $words			= [];
+
 	protected int $maxItems			= 50;
+
 	protected int $nrItems			= 0;
 
 	public function __construct( Environment $env )
@@ -30,7 +36,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 
 		$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 		$buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->buttonAdd, [
-			'href'		=> './work/newsletter/reader/add/?groups[]='.$groupId,
+			'href'		=> './work/newsletter/reader/add/?groups[]='.$this->group->newsletterGroupId,
 			'class'		=> 'btn btn-success btn-small',
 		] );
 
@@ -45,10 +51,10 @@ class View_Helper_Work_Newsletter_GroupReaders
 	}
 
 	/**
-	 *	@param		object		$group
+	 *	@param		Entity_Newsletter_Group	$group
 	 *	@return		static
 	 */
-	public function setGroup( object $group ): self
+	public function setGroup( Entity_Newsletter_Group $group ): self
 	{
 		$this->group	= $group;
 		return $this;
@@ -81,7 +87,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 
 	protected function renderReaders(): string
 	{
-		$w			= (object) $this->words['edit_readers'];
+		$w		= (object) $this->words['edit_readers'];
 
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );

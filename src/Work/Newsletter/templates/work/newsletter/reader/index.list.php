@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
@@ -9,7 +9,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var Environment $env */
 /** @var View $view */
 /** @var object $words */
-/** @var array<object> $readers */
+/** @var array<Entity_Newsletter_Reader> $readers */
 /** @var ?string $filterLimit */
 /** @var ?string $filterPage */
 /** @var int $total */
@@ -44,13 +44,13 @@ if( $readers ){
 		$fullname		= '<br/><small class="muted">'.trim( $prefix.' '.$reader->firstname.' '.$reader->surname ).'&nbsp;</small>';
 		$link			= HtmlTag::create( 'a', $label, $attributes );
 		$groups			= [];
+
 		foreach( $reader->groups as $group )
 			$groups[]		= $group->title;
 	//	$groups			= HtmlTag::create( 'span', count( $groups ), ['class' => 'badge', 'title' => join( ', ', $groups] ) );
-		$groups			= join( ', ', $groups );
 		$cellTitle		= HtmlTag::create( 'td', $link.$fullname, ['class' => 'autocut'] );
 		$cellStatus		= HtmlTag::create( 'td', $iconStatus.' '.$words->states[$reader->status] );
-		$cellGroups		= HtmlTag::create( 'td', $groups );
+		$cellGroups		= HtmlTag::create( 'td', join( ', ', $groups ) );
 		$cellRegistered	= HtmlTag::create( 'td', date( 'd.m.Y', $reader->registeredAt ) );
 		$rowColor		= $reader->status == 1 ? 'success' : ( $reader->status == -1 ? 'error' : 'warning' );
 		$cells			= [$cellTitle, $cellGroups, $cellStatus, $cellRegistered];

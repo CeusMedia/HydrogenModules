@@ -307,10 +307,11 @@ class Controller_Work_Newsletter_Template extends Controller
 	{
 		try{
 			$path	= $this->logic->getNewsletterThemesPath();
+			/** @var ?Entity_Newsletter_Theme $theme */
 			$theme	= $this->modelTheme->get( $themeId );
 
-			$css	= FileReader::load( $path.$theme->id.'/template.css' );
-			$html	= FileReader::load( $path.$theme->id.'/template.html' );
+			$css	= FileReader::load( $path.$theme->folder.'/template.css' );
+			$html	= FileReader::load( $path.$theme->folder.'/template.html' );
 
 			$view		= new View( $this->env );
 			$imprint	= $view->loadContentFile( 'html/work/newsletter/template/imprint.txt' );
@@ -324,10 +325,18 @@ class Controller_Work_Newsletter_Template extends Controller
 				$html	= str_replace( "[#".$key."#]", $value, $html );
 			$html	= preg_replace( "/\[#.+#\]/", '', $html );
 			$page	= new HtmlPage();
-			foreach( $theme->styles ?? [] as $style )
-				$page->addStylesheet( (string) $style );
+			foreach( explode( ',', $theme->styles ) as $style )
+				if( '' !== trim( $style ) )
+					$page->addStylesheet( (string) $style );
 			$page->addHead( HtmlTag::create( 'style', $css ) );
 			$page->addBody( $html );
+
+			$mail	= new Mail_Example( $this->env, [
+				'html'	=> $html,
+			] );
+			$html	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED );
+			print( $html );
+			exit;
 
 			print( $page->build( ['class' => 'mail'] ) );
 			exit;

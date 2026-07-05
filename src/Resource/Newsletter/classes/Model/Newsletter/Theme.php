@@ -56,6 +56,7 @@ class Model_Newsletter_Theme
 	public function createFromTemplate( string $templateId, array $data ): void
 	{
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
+		/** @var Entity_Newsletter_Template $template */
 		$template		= $modelTemplate->get( $templateId );
 		$data			= (object) array_merge( (array) $template, $data );
 
@@ -96,14 +97,27 @@ class Model_Newsletter_Theme
 		file_put_contents( $folder.'/template.txt', $data->plain );
 		file_put_contents( $folder.'/template.css', $data->style );
 
+		$this->createThumbnail( $template, $themeKey );
+	}
+
+	/**
+	 *	Tries to create a theme preview thumbnail file.
+	 *	@param		Entity_Newsletter_Template	$template
+	 *	@param		string						$themeKey
+	 *	@return		bool
+	 */
+	public function createThumbnail( Entity_Newsletter_Template $template, string $themeKey ): bool
+	{
+		$folder	= $this->themePath.$themeKey;
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
-		$url	= $this->env->url.'work/newsletter/template/preview/html/'.$templateId;
+		$url	= $this->env->url.'work/newsletter/template/preview/html/'.$template->newsletterTemplateId;
 		$error	= Resource_PhantomJS::getInstance( $this->env )
 			->setDebug( 1 )
 			->setScript( $pathJs.'phantomjs/screenshot.js' )
 			->execute( $url, $folder.'/template.png' );
 		if( $error )
 			$this->env->getMessenger()->noteFailure( $error );
+		return !$error;
 	}
 
 	/**
@@ -143,6 +157,7 @@ class Model_Newsletter_Theme
 	/**
 	 *	@param		string		$theme
 	 *	@return		Entity_Newsletter_Theme
+	 *	@throws		RangeException		if meta file is not existing
 	 */
 	public function getFromFolder( string $theme ): Entity_Newsletter_Theme
 	{

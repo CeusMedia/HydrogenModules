@@ -272,19 +272,12 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$filterLimit		= (int) $this->session->get( $this->filterPrefix.'limit' );
 
 		$readerIds	= [0];
-		if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
-			$logicRelation	= Logic_GroupRelation::getInstance( $this->env );
-			$groupIds		= $logicRelation->getModuleEntityIdsFromCurrentGroups( 'Resource_Newsletter.Group' );
-			if( [] !== $groupIds ){
-				$filterGroupId	= in_array( $filterGroupId, $groupIds ) ? $filterGroupId : NULL;
-				$groups			= $this->logic->getGroups( ['newsletterGroupId' => $groupIds], ['title' => 'ASC'] );
-				foreach( $this->logic->getReadersOfGroups( $groupIds ) as $reader )
+		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
+
+		foreach( $groups as $group )
+			if( '' === ( $filterGroupId ?? '' ) || (int) $filterGroupId === (int) $group->newsletterGroupId )
+				foreach( $this->logic->getReadersOfGroup( $group->newsletterGroupId ) as $reader )
 					$readerIds[]	 = $reader->newsletterReaderId;
-			}
-		}
-		else{
-			$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
-		}
 
 		$conditions	= [];
 		if( '' !== trim( $filterStatus ?? '' ) )
@@ -295,7 +288,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 			$conditions['firstname']	= '%'.$filterFirstname.'%';
 		if( '' !== trim( $filterSurname ?? '' ) )
 			$conditions['surname']	= '%'.$filterSurname.'%';
-		if( '' !== trim( $filterGroupId ?? '' ) ){
+/*		if( '' !== trim( $filterGroupId ?? '' ) ){
 			$readerIds	= [0];
 			foreach( $this->logic->getReadersOfGroup( $filterGroupId ) as $reader )
 				$readerIds[]	= $reader->newsletterReaderId;
@@ -303,7 +296,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 		}
 		else if( $this->useUserGroupRelations && !Logic_Authentication::getInstance( $this->env )->hasFullAccess() ){
 			$conditions['newsletterReaderId']	= $readerIds;
-		}
+		}*/
+		$conditions['newsletterReaderId']	= $readerIds;
 
 		$filterOrder		= ['firstname' => 'ASC', 'surname' => 'ASC'];
 		$filterOrder		= ['registeredAt' => 'DESC'];
@@ -316,7 +310,8 @@ class Controller_Work_Newsletter_Reader extends Controller
 			$conditions	= ['newsletterReaderId' => $reader->newsletterReaderId];
 			$list		= [];
 			foreach( $model->getAll( $conditions ) as $relation )
-				$list[]	= $groups[$relation->newsletterGroupId];
+				if( array_key_exists( $relation->newsletterGroupId, $groups ) )
+					$list[]	= $groups[$relation->newsletterGroupId];
 			$reader->groups	= $list;
 		}
 		$this->addData( 'found', count( $readers ) );
@@ -342,6 +337,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	/**
 	 *	@param		int|string		$readerId
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function remove( int|string $readerId ): void
 	{
