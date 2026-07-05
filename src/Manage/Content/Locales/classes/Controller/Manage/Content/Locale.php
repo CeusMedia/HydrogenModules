@@ -8,6 +8,7 @@
  */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\Exception\FileNotExisting as FileNotExistingException;
 use CeusMedia\Common\FS\File\Editor as FileEditor;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\FS\Folder\Lister as FolderLister;
@@ -248,17 +249,22 @@ class Controller_Manage_Content_Locale extends Controller
 							if( str_starts_with( $pathName, 'mail/' ) )
 								continue;
 						}
-						$content	= FileReader::load( $item->getPathname() );
-						$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
-						$pathName	= substr( $pathName, strlen( $folderPath ) );
-						$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
-						$list[$root.'_'.$pathName]	= (object) [
-							'pathName'	=> $pathName,
-							'fileName'	=> $item->getFilename(),
-							'baseName'	=> pathinfo( $item->getFilename(), PATHINFO_FILENAME ),
-							'extension'	=> pathinfo( $item->getFilename(), PATHINFO_EXTENSION ),
-							'size'		=> strlen( trim( $content ) ),
-						];
+						try{
+							$content	= FileReader::load( $item->getPathname() );
+							$content	= preg_replace( "/<!--(.|\s)*?-->/", "", $content );			//  @todo better: ungreedy
+							$pathName	= substr( $pathName, strlen( $folderPath ) );
+							$root		= preg_match( '/\//', $pathName ) ? 1 : 0;
+							$list[$root.'_'.$pathName]	= (object) [
+								'pathName'	=> $pathName,
+								'fileName'	=> $item->getFilename(),
+								'baseName'	=> pathinfo( $item->getFilename(), PATHINFO_FILENAME ),
+								'extension'	=> pathinfo( $item->getFilename(), PATHINFO_EXTENSION ),
+								'size'		=> strlen( trim( $content ) ),
+							];
+						}
+						catch ( FileNotExistingException $e ){
+							$this->messenger->noteError( 'Error: '.$e->getResource() );
+						}
 					}
 				}
 			}

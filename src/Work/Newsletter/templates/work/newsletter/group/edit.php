@@ -9,8 +9,8 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var View_Work_Newsletter_Group $this */
 /** @var object $words */
 /** @var bool $tabbedLinks */
-/** @var array<object> $groupReaders */
-/** @var object $group */
+/** @var array<Entity_Newsletter_Reader> $groupReaders */
+/** @var Entity_Newsletter_Group $group */
 /** @var int|string $groupId */
 /** @var ?Logic_Limiter $limiter */
 /** @var bool $useUserGroupRelations */

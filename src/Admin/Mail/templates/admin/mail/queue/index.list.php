@@ -95,7 +95,14 @@ if( $mails ){
 
 		$statusClass	= $statusLabelClasses[$mail->status];
 
-		$status		= HtmlTag::create( 'span', $words['states'][$mail->status], ['class' => 'label label-'.$statusClass] );
+		$statusLabel	= $words['states'][$mail->status];
+		if( Model_Mail::STATUS_NEW === $mail->status && 0 !== $mail->toBeSentAt ){
+			$sendData		= date( 'j.n.y H:i', $mail->toBeSentAt );
+			$sendData		= HtmlTag::create( 'small', $sendData, ['style' => 'font-weight: normal'] );
+			$statusLabel	= $statusLabel.': '.$sendData;
+		}
+
+		$status		= HtmlTag::create( 'span', $statusLabel, ['class' => 'label label-'.$statusClass] );
 		$checkbox	= HtmlTag::create( 'input', NULL, [
 			'type'		=> 'checkbox',
 			'class'		=> 'checkbox-mail',
@@ -112,7 +119,6 @@ if( $mails ){
 				$features[]	= $iconAttachment;
 		}
 		catch( Throwable $e ){
-//			print_m( $mail );die;
 			$features[]	= $iconBroken;
 			$link		= HtmlTag::create( 'span', $mail->subject, ['class' => 'muted'] );
 		}

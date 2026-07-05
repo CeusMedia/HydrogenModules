@@ -19,8 +19,8 @@ class Mail_Example extends Mail_Abstract
 	 */
 	protected function generate(): static
 	{
-		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
-		$this->setSubject( $wordsModule->subject );
+//		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
+//		$this->setSubject( $wordsModule->subject );
 
 		$configModule	= $this->env->getConfig()->getAll( 'module.myModule.', TRUE );				//  @todo change this!
 		$templateId		= (int) $configModule->get( 'mailTemplateId' );
@@ -42,12 +42,16 @@ class Mail_Example extends Mail_Abstract
 			return $helper->setFileKey( 'mails/myModule/myAction.html' )
 				->setData( $this->data )
 				->render();
-		return '
+
+		$content	= '
 <div id="layout-mail">
 	<div id="layout-content">
 		This is an example mail.
 	</div>
 </div>';
+		if( '' !== ( $this->data['html'] ?? '' ) )
+			$content	= $this->data['html'];
+		return $content;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
+use CeusMedia\Common\FS\File;
 use CeusMedia\Common\FS\File\Reader as FileReader;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment;
@@ -60,18 +61,27 @@ class View_Helper_Work_Newsletter_ThemeList
 		return $this;
 	}
 
-	protected function renderItem( $theme ): string
+
+	//  --  PROTECTED  --  //
+
+
+	protected function renderItem( Entity_Newsletter_Theme $theme ): string
 	{
-		$base64	= base64_encode( FileReader::load( $this->themePath.$theme->folder.'/template.png' ) );
-		$image	= HtmlTag::create( 'img', NULL, [
-			'src'	=> 'data:image/jpeg;base64,'.$base64,
-			'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
-			'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
-		], ['class' => 'img-polaroid'] );
-		$linkedImage	= HtmlTag::create( 'a', $image, [
-			'href'	=> 'data:image/jpeg;base64,'.$base64,
-			'class'	=> 'fancybox-auto',
-		] );
+		$linkedImage	= '';
+		$thumbnailUri	= $this->themePath.$theme->folder.'/template.png';
+		$thumbnailFile	= File::new( $thumbnailUri );
+		if( $thumbnailFile->exists() ){
+			$base64	= base64_encode( $thumbnailFile->getContent() );
+			$image	= HtmlTag::create( 'img', NULL, [
+				'src'	=> 'data:image/jpeg;base64,'.$base64,
+				'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
+				'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+			], ['class' => 'img-polaroid'] );
+			$linkedImage	= HtmlTag::create( 'a', $image, [
+				'href'	=> 'data:image/jpeg;base64,'.$base64,
+				'class'	=> 'fancybox-auto',
+			] );
+		}
 		$linkedTitle	= HtmlTag::create( 'a', $theme->title, [
 			'href'	=> './work/newsletter/template/viewTheme/'.$theme->id,
 		] );
