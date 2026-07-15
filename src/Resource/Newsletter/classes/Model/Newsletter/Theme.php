@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\XML\Converter as XmlConverter;
 use CeusMedia\Common\XML\ElementReader as XmlElementReader;
@@ -58,32 +59,33 @@ class Model_Newsletter_Theme
 		$modelTemplate	= new Model_Newsletter_Template( $this->env );
 		/** @var Entity_Newsletter_Template $template */
 		$template		= $modelTemplate->get( $templateId );
-		$data			= (object) array_merge( (array) $template, $data );
+		$data			= new Dictionary( array_merge( $template->toArray(), $data ) );
 
 		$entity			= new Entity_Newsletter_Theme();
-		$entity->title		= $data->title;
-		$entity->version	= $data->version;
-		$entity->created	= date( 'c', $data->createdAt );
-		$entity->modified	= date( 'c', $data->modifiedAt );
-		$entity->sender		= (object) [
-			'address'	=> $data->senderAddress,
-			'name'		=> $data->senderName,
+		$entity->mailTemplateId	= $template->mailTemplateId;
+		$entity->title			= $data->get( 'title' );
+		$entity->version		= $data->get( 'version' );
+		$entity->created		= date( 'c', $data->get( 'createdAt' ) );
+		$entity->modified		= date( 'c', $data->get( 'modifiedAt' ) );
+		$entity->sender			= (object) [
+			'address'	=> $data->get( 'senderAddress' ),
+			'name'		=> $data->get( 'senderName' ),
 		];
-		$entity->imprint	= $data->imprint;
-		$entity->styles	= $data->styles;
-		$entity->author		= (object) [
-			'name'		=> $data->authorName,
-			'email'		=> $data->authorEmail,
-			'company'	=> $data->authorCompany,
-			'url'		=> $data->authorUrl,
+		$entity->imprint		= $data->get( 'imprint' );
+		$entity->styles			= $data->get( 'styles' );
+		$entity->author			= (object) [
+			'name'		=> $data->get( 'authorName' ),
+			'email'		=> $data->get( 'authorEmail' ),
+			'company'	=> $data->get( 'authorCompany' ),
+			'url'		=> $data->get( 'authorUrl' ),
 		];
-		$entity->license	= $data->license;
-		$entity->licenseUrl	= $data->licenseUrl;
-		$entity->description	= $data->description;
+		$entity->license		= $data->get( 'license' );
+		$entity->licenseUrl		= $data->get( 'licenseUrl' );
+		$entity->description	= $data->get( 'description' );
 
-		$themeKey		= strtolower( $data->title );
+		$themeKey		= strtolower( $data->get( 'title' ) );
 		$themeKey		= preg_replace( '/[^a-z0-9 ]/', '', $themeKey );
-		$themeKey		= str_replace( ' ', '_', $themeKey ).'_v'.$data->version;
+		$themeKey		= str_replace( ' ', '_', $themeKey ).'_v'.$data->get( 'version' );
 		$version		= 0;
 		$folder			= $this->themePath.$themeKey;
 		while( file_exists( $folder ) ){
@@ -93,11 +95,26 @@ class Model_Newsletter_Theme
 		mkdir( $folder );
 		$json	= json_encode( $entity, JSON_PRETTY_PRINT );
 		file_put_contents( $folder.'/template.json', $json );
-		file_put_contents( $folder.'/template.html', $data->html );
-		file_put_contents( $folder.'/template.txt', $data->plain );
-		file_put_contents( $folder.'/template.css', $data->style );
+		file_put_contents( $folder.'/template.html', $data->get( 'html' ) );
+		file_put_contents( $folder.'/template.txt', $data->get( 'plain' ) );
+		file_put_contents( $folder.'/template.css', $data->get( 'style' ) );
 
-		$this->createThumbnail( $template, $themeKey );
+		$this->createThumbnailFromTheme( 0 === $version ? $themeKey : $themeKey.'_'.$version );
+	}
+
+	/**
+	 *	Tries to create a theme preview thumbnail file.
+	 *	@param		string		$themeKey
+	 *	@return		bool
+	 */
+	public function createThumbnailFromTheme( string $themeKey ): bool
+	{
+		$folder		= $this->themePath.$themeKey;
+		$url		= $this->env->url.'work/newsletter/template/previewTheme/'.$themeKey;
+
+//		$this->captureUrlViewUsingWebKit( $url, $folder.'/template.png' );
+		$this->captureUrlViewUsingPhantom( $url, $folder.'/template.png' );
+		return true;
 	}
 
 	/**
@@ -106,7 +123,7 @@ class Model_Newsletter_Theme
 	 *	@param		string						$themeKey
 	 *	@return		bool
 	 */
-	public function createThumbnail( Entity_Newsletter_Template $template, string $themeKey ): bool
+	public function createThumbnailFromTemplate( Entity_Newsletter_Template $template, string $themeKey ): bool
 	{
 		$folder	= $this->themePath.$themeKey;
 		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
@@ -179,6 +196,45 @@ class Model_Newsletter_Theme
 	}
 
 	//  --  PROTECTED  --  //
+
+	protected function captureUrlViewUsingPhantom( string $url, string $targetFilePath ): bool
+	{
+		$pathJs	= $this->env->getConfig()->get( 'path.scripts' );
+		$error	= Resource_PhantomJS::getInstance( $this->env )
+			->setDebug( 1 )
+			->setScript( $pathJs.'phantomjs/screenshot.js' )
+			->execute( $url, $targetFilePath, ...array_values( [
+				'width'		=> 1024,
+				'height'	=> 768,
+//				'zoom'		=> 0.5,
+			] ) );
+		if( is_string( $error ) )
+			$this->env->getMessenger()->noteFailure( $error );
+		return !$error;
+	}
+
+	protected function captureUrlViewUsingWebKit( string $url, string $targetFilePath ): bool
+	{
+		$params		= [
+			'width'		=> 1024,
+			'height'	=> 768,
+//			'zoom'		=> 0.5,
+			'quality'	=> 85,
+		];
+		array_walk( $params, function( &$value, $key ) {$value = '--'.$key.' '.$value;} );
+		$command	= vsprintf( 'wkhtmltoimage %s %s %s', [
+			join( ' ', $params ),
+			escapeshellarg( $url ),
+			escapeshellarg( $targetFilePath ),
+		] );
+
+		$output		= [];
+		exec( $command, $output, $error );
+		// @todo handle errors
+//		print_m($error);
+//		print_m($output);
+		return TRUE;
+	}
 
 	/**
 	 *	@param		string		$theme

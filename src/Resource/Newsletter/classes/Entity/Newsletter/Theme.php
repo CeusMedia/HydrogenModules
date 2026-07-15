@@ -5,6 +5,7 @@ use CeusMedia\Common\Alg\ID;
 class Entity_Newsletter_Theme
 {
 	public string $id;
+	public int|string|NULL $mailTemplateId	= NULL;
 	public string $title;
 	public string $version;
 	public string $created;
