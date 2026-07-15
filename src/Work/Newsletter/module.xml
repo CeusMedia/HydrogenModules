@@ -5,7 +5,7 @@
 	<title>Work: Newsletter</title>
 	<description><![CDATA[Creating and sending newsletter mails.]]></description>
 	<category>Work</category>
-	<version>1.5.5</version>
+	<version>1.5.6</version>
 	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
 	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
 	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
@@ -75,6 +75,7 @@
     <log version="1.5.3">Refactor to use mail template around newsletter template.</log>
     <log version="1.5.4">Upgrade import strategies.</log>
     <log version="1.5.5">Support queues to send reader letter mails in future.</log>
+    <log version="1.5.6">Improve template snapshot (theme) handling.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -94,6 +95,7 @@
 		<class>Logic/Newsletter/Import/Strategy/SemcoSpreadsheet.php</class>
 		<class>Mail/Work/Newsletter/Add.php</class>
 		<class>Mail/Work/Newsletter/Invite.php</class>
+		<class>Mail/Work/Newsletter/Theme.php</class>
 		<class>View/Work/Newsletter.php</class>
 		<class>View/Work/Newsletter/Dashboard.php</class>
 		<class>View/Work/Newsletter/Group.php</class>
