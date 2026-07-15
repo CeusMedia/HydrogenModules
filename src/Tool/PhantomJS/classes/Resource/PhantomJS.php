@@ -64,9 +64,14 @@ class Resource_PhantomJS
 		if( NULL === $this->script )
 			throw new RuntimeException( 'No script to execute set' );
 
+		$exports	= [
+			'OPENSSL_CONF=/dev/null',
+		];
+
 		// Escape
 		$arguments	= func_get_args();
 		$command	= escapeshellcmd( implode( ' ', [
+			join( ' ', $exports ),
 			$this->binaryPath,
 			$this->script,
 			implode( ' ', $arguments )
@@ -76,10 +81,10 @@ class Resource_PhantomJS
 
 		// Execute
 		$result = shell_exec( $command );
-		if( $this->debugLevel )
-			return $result;
 		if( $result === NULL )
 			return FALSE;
+		if( $this->debugLevel )
+			return $result;
 
 		// Return
 		if( !str_starts_with( $result, '{' ) )					 // not JSON
