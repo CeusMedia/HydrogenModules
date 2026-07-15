@@ -3,9 +3,10 @@ var RenderToFile, args, system;
 
 system = require("system");
 
-RenderToFile = function(url, filename, width, height, username, password) {
-	width = typeof width === "undefined" ? 800 : width;
-	height = typeof height === "undefined" ? 600 : height;
+RenderToFile = function(url, filename, width, height, zoom, username, password) {
+	width = typeof width === "undefined" ? 800 : parseInt(width);
+	height = typeof height === "undefined" ? 600 : parseInt(height);
+	zoom = typeof zoom === "undefined" ? 1 : parseFloat(zoom);
 	var page = require('webpage').create();
 
 	if(typeof username !== "undefined")
@@ -17,6 +18,11 @@ RenderToFile = function(url, filename, width, height, username, password) {
 		width: width,
 		height: height
 	};
+	page.clipRect = {
+		width: width,
+		height: height
+	};
+	page.zoomFactor = zoom;
 	page.open(url, function() {
 		page.render(filename);
 		phantom.exit();
