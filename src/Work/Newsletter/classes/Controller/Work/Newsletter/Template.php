@@ -303,44 +303,17 @@ class Controller_Work_Newsletter_Template extends Controller
 		exit;
 	}
 
+	/**
+	 *	Displays a HTML view of a template snapshot (theme).
+	 *	@param		string		$themeId
+	 *	@return		void
+	 */
 	public function previewTheme( string $themeId ): void
 	{
 		try{
-			$path	= $this->logic->getNewsletterThemesPath();
-			/** @var ?Entity_Newsletter_Theme $theme */
-			$theme	= $this->modelTheme->get( $themeId );
-
-			$css	= FileReader::load( $path.$theme->folder.'/template.css' );
-			$html	= FileReader::load( $path.$theme->folder.'/template.html' );
-
-			$view		= new View( $this->env );
-			$imprint	= $view->loadContentFile( 'html/work/newsletter/template/imprint.txt' );
-			$imprint	= preg_replace( "/(https?:\/\/(\S+)\/?)/", '<a href="\\1">\\2</a>', $imprint );
-			$imprint	= preg_replace( "/(\S+@\S+)/", '<a href="mailto:\\1">\\1</a>', $imprint );
-			$imprint	= preg_replace( "/\n/", "<br/>", $imprint );
-			$html		= str_replace( "[#imprint#]", $imprint, $html );
-			$words		= $this->getWords( 'preview' );
-			$words['title']	= sprintf( $words['title'], $theme->title );
-			foreach( $words as $key => $value )
-				$html	= str_replace( "[#".$key."#]", $value, $html );
-			$html	= preg_replace( "/\[#.+#\]/", '', $html );
-			$page	= new HtmlPage();
-			foreach( explode( ',', $theme->styles ) as $style )
-				if( '' !== trim( $style ) )
-					$page->addStylesheet( (string) $style );
-			$page->addHead( HtmlTag::create( 'style', $css ) );
-			$page->addBody( $html );
-
-			$mail	= new Mail_Example( $this->env, [
-				'html'	=> $html,
-			] );
+			$mail	= new Mail_Work_Newsletter_Theme( $this->env, ['themeId' => $themeId] );
 			$html	= $mail->getContent( Mail_Abstract::CONTENT_TYPE_HTML_RENDERED );
-			print( $html );
-			exit;
-
-			print( $page->build( ['class' => 'mail'] ) );
-			exit;
-
+			$this->env->getResponse()->setBody( $html )->send();
 		}
 		catch( Exception $e ){
 			$this->messenger->noteError( $e->getMessage() );

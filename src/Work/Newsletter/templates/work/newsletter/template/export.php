@@ -25,13 +25,14 @@ return '
 						<div class="span8">
 							<div class="row-fluid">
 								<div class="span6">
-									<label for="input_title">'.$w->labelTitle.'</label>
+									<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
 									'.HtmlTag::create( 'input', NULL, [
 										'name'		=> 'title',
 										'type'		=> 'text',
 										'id'		=> 'input_title',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->title, ENT_QUOTES, 'UTF-8' ),
+										'required'	=> 'required',
 									] ).'
 								</div>
 								<div class="span2">
@@ -55,19 +56,22 @@ return '
 									] ).'
 								</div>
 							</div>
+							<hr/>
+							<h4>E-Mail-Absender</h4>
 							<div class="row-fluid">
 								<div class="span6">
-									<label for="input_senderName">'.$w->labelSenderName.'</label>
+									<label for="input_senderName" class="mandatory">'.$w->labelSenderName.'</label>
 									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'senderName',
 										'id'		=> 'input_senderName',
 										'class'		=> 'span12',
 										'value'		=> htmlentities( $template->senderName, ENT_QUOTES, 'UTF-8' ),
+										'required'	=> 'required',
 									] ).'
 								</div>
 								<div class="span6">
-									<label for="input_senderAddress">'.$w->labelSenderAddress.'</label>
+									<label for="input_senderAddress" class="mandatory">'.$w->labelSenderAddress.'</label>
 									'.HtmlTag::create( 'input', NULL, [
 										'type'		=> 'text',
 										'name'		=> 'senderAddress',
@@ -77,6 +81,8 @@ return '
 									] ).'
 								</div>
 							</div>
+							<hr/>
+							<h4>Ersteller dieser Vorlage</h4>
 							<div class="row-fluid">
 								<div class="span6">
 									<label for="input_authorName">'.$w->labelAuthorName.'</label>

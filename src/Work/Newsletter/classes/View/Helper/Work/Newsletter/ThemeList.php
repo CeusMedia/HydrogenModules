@@ -70,18 +70,22 @@ class View_Helper_Work_Newsletter_ThemeList
 		$linkedImage	= '';
 		$thumbnailUri	= $this->themePath.$theme->folder.'/template.png';
 		$thumbnailFile	= File::new( $thumbnailUri );
-		if( $thumbnailFile->exists() ){
-			$base64	= base64_encode( $thumbnailFile->getContent() );
-			$image	= HtmlTag::create( 'img', NULL, [
-				'src'	=> 'data:image/jpeg;base64,'.$base64,
-				'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
-				'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
-			], ['class' => 'img-polaroid'] );
-			$linkedImage	= HtmlTag::create( 'a', $image, [
-				'href'	=> 'data:image/jpeg;base64,'.$base64,
-				'class'	=> 'fancybox-auto',
-			] );
+		if( !$thumbnailFile->exists() ){
+			$path	= Logic_Newsletter::getInstance( $this->env )->getNewsletterThemesPath();
+			$modelTheme	= new Model_Newsletter_Theme( $this->env, $path );
+			$modelTheme->createThumbnailFromTheme( $theme->folder );
 		}
+
+		$base64	= base64_encode( $thumbnailFile->getContent( $thumbnailUri ) );
+		$image	= HtmlTag::create( 'img', NULL, [
+			'src'	=> 'data:image/jpeg;base64,'.$base64,
+			'style'	=> 'height: 200px; border: 1px solid rgba(127, 127, 127, 0.5);',
+			'alt'	=> htmlentities( $theme->title, ENT_QUOTES, 'UTF-8' ),
+		], ['class' => 'img-polaroid'] );
+		$linkedImage	= HtmlTag::create( 'a', $image, [
+			'href'	=> 'data:image/jpeg;base64,'.$base64,
+			'class'	=> 'fancybox-auto',
+		] );
 		$linkedTitle	= HtmlTag::create( 'a', $theme->title, [
 			'href'	=> './work/newsletter/template/viewTheme/'.$theme->id,
 		] );
