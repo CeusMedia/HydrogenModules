@@ -14,34 +14,41 @@ class View_Helper_Form extends Abstraction
 
 	protected ?Environment $env;
 	protected array $blocks						= [];
-	protected ?object $form						= NULL;
+	protected ?Entity_Form $form				= NULL;
 	protected int|string|NULL $formId			= NULL;
 	protected Model_Form_Block $modelBlock;
 	protected Model_Form $modelForm;
 	protected int $returnCode;
 	protected ?string $mode						= NULL;
+	protected string $label						= 'abschicken';
 
 	/**
 	 *	@param		Environment		$env
 	 *	@param		int|string		$formId
 	 *	@param		string|NULL		$mode		Rendering mode: 'extended' or empty string
 	 *	@param		int|NULL		$onReturnCode
+	 *	@param		string|NULL		$label
 	 *	@return		string
+	 *	@throws		ReflectionException
 	 */
-	public static function renderStatic( Environment $env, int|string $formId, ?string $mode = NULL, ?int $onReturnCode = self::RETURN_CODE_NONE ): string
+	public static function renderStatic( Environment $env, int|string $formId, ?string $mode = NULL, ?int $onReturnCode = self::RETURN_CODE_NONE, ?string $label = NULL ): string
 	{
 		$helper	= new View_Helper_Form( $env );
 		$helper->setId( $formId )->setMode( $mode );
-		$helper->returnCode	= $onReturnCode;
+		if( NULL !== $onReturnCode )
+			$helper->returnCode	= $onReturnCode;
+		if( NULL !== $label )
+			$helper->setLabel( $label );
 		return $helper->render();
 	}
 
 	/**
 	 *	@param		Environment		$env
+	 *	@throws		ReflectionException
 	 */
 	public function __construct( Environment $env )
 	{
-		$this->env	= $env;
+		$this->env			= $env;
 		$this->modelForm	= new Model_Form( $this->env );
 		$this->modelBlock	= new Model_Form_Block( $this->env );
 		foreach( $this->modelBlock->getAll() as $item )
@@ -78,11 +85,22 @@ class View_Helper_Form extends Abstraction
 	 */
 	public function setId( int|string $formId ): self
 	{
+		/** @var ?Entity_Form $form */
 		$form	= $this->modelForm->get( $formId );
 		if( !$form )
 			throw new RangeException( 'Invalid form ID given: '.$formId );
 		$this->form		= $form;
 		$this->formId	= $formId;
+		return $this;
+	}
+
+	/**
+	 *	@param		string	$label
+	 *	@return		self
+	 */
+	public function setLabel( string $label ): self
+	{
+		$this->label	= $label;
 		return $this;
 	}
 
@@ -96,6 +114,25 @@ class View_Helper_Form extends Abstraction
 			$this->mode	= (string) $mode;
 		}
 		return $this;
+	}
+
+
+	//  --  PROTECTED  --  //
+
+
+	protected function getDefaultSubmitButtonIfNoneFound( Entity_Form $form ): string
+	{
+		if( substr_count( $form->content, '[block_row_button]' ) )
+			return '';
+		if( substr_count( $form->content, '[block_row_button' ) )
+			return '';
+		return HtmlTag::create( 'div', [
+			HtmlTag::create( 'button', $this->label, [
+				'type'	=> 'submit',
+				'name'	=> 'send',
+				'class'	=> 'cmsmasters_button btn btn-primary'
+			] ),
+		], ['class' => 'cmforms-row'] );
 	}
 
 	/**
@@ -135,7 +172,7 @@ class View_Helper_Form extends Abstraction
 					'title'			=> $this->blocks[$identifier]->title,
 				] );
 			}
-			$content		= preg_replace( $pattern, $replace, $content, 1 );
+			$content	= preg_replace( $pattern, $replace, $content, 1 );
 		}
 		return $content;
 	}
@@ -146,12 +183,9 @@ class View_Helper_Form extends Abstraction
 	 */
 	protected function renderForm( bool $injectBlocksAndCaptcha = TRUE ): string
 	{
+		/** @var Entity_Form $form */
 		$form		= $this->modelForm->get( $this->formId );
-		$button		= HtmlTag::create( 'div', [
-			HtmlTag::create( 'button', 'abschicken', ['type' => 'submit', 'name' => 'send', 'class' => 'cmsmasters_button btn btn-primary'] ),
-		], ['class' => 'cmforms-row'] );
-		if( substr_count( $form->content, '[block_row_button]' ) )
-			$button	= '';
+
 		$content	= HtmlTag::create( 'form', [
 			HtmlTag::create( 'input', NULL, [
 				'type'		=> 'hidden',
@@ -160,7 +194,7 @@ class View_Helper_Form extends Abstraction
 				'value'		=> $this->formId,
 			] ),
 			$form->content,
-			$button,
+			$this->getDefaultSubmitButtonIfNoneFound( $form ),
 		], [
 			'id'			=> 'form-'.$this->formId,
 			'data-id'		=> $this->formId,
@@ -202,8 +236,9 @@ class View_Helper_Form extends Abstraction
 				'style'		=> 'display: none',
 			] );
 		}
-		$form		= $this->modelForm->get( $this->formId );
-		if( Model_Form::TYPE_CONFIRM == $form->type ){
+		/** @var ?Entity_Form $form */
+		$form	= $this->modelForm->get( $this->formId );
+		if( Model_Form::TYPE_CONFIRM === $form->type ){
 			if( isset( $blocks['success_confirm'] ) ){
 				$messageSuccess	= HtmlTag::create( 'div', $blocks['success_confirm']->content, [
 					'class'	=> 'form-message-success',
