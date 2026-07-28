@@ -40,6 +40,7 @@ class View_Manage_Form extends View
 		$mode	= $this->getData( 'mode', '' );
 
 		$helper = new View_Helper_Form( $this->env );
+		$helper->setLabel( 'abschicken' );
 		if( $mode )
 			$helper->setMode( $mode );
 		print $helper->setId( $formId )->render();
