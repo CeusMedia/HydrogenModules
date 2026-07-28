@@ -171,7 +171,7 @@ class Controller_Manage_Form_Block extends Controller
 					'[block_'.$newIdentifier.']',
 					$form->content
 				),
-			] );
+			], FALSE );
 		}
 		foreach( $blocks as $block ){
 			$this->modelBlock->edit( $block->blockId, [
@@ -180,7 +180,7 @@ class Controller_Manage_Form_Block extends Controller
 					'[block_'.$newIdentifier.']',
 					$block->content
 				),
-			] );
+			], FALSE );
 		}
 		return [
 			'forms'		=> count( $forms ),
