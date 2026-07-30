@@ -5,7 +5,7 @@
 	<title>Admin: Log: Exception</title>
 	<description><![CDATA[Viewer for logged exceptions.]]></description>
 	<category>Administration</category>
-	<version>0.6.6</version>
+	<version>0.6.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.1.1">Testable alpha version.</log>
 	<log version="0.1.2">Replace file and folder class calls to use CeusMedia:Common.</log>
@@ -21,6 +21,7 @@
 	<log version="0.6.4">Add filters.</log>
 	<log version="0.6.5">Migration to PHP 8.</log>
 	<log version="0.6.6">Implement rights and index and view.</log>
+	<log version="0.6.7">Add public statistics (as JSON).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -37,4 +38,5 @@
  	</files>
 	<relations/>
 	<link path="admin/log/exception" access="acl" rank="96">Exception-Log</link>
+	<link path="admin/log/exception/stats" access="public"/>
 </module>
