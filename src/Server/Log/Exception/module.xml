@@ -50,7 +50,7 @@ Please think about using the hook instead.
 
 ]]></description>
 	<category>Server</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Use new mailer \CeusMedia\Mail from GitHub.</log>
@@ -71,6 +71,7 @@ Please think about using the hook instead.
 	<log version="0.6.0">Migration to PHP 8 and strict types.</log>
 	<log version="0.6.1">Reduce log entry size by using Server:Log:Request.</log>
 	<log version="0.6.2">Add entity classes.</log>
+	<log version="0.6.3">Add public stats.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
@@ -100,6 +101,7 @@ Please think about using the hook instead.
 	</relations>
 	<hook type="resource" resource="Env" event="logException">Hook_Server_Log_Exception::onEnvLogException</hook>
 	<job id="Server.Log.Exception.import">Server_Log_Exception::import</job>
+	<link path="server/log/exception/stats" access="public"/>
 	<sql type="mysql" on="install" version="final"><![CDATA[
 DROP TABLE IF EXISTS `<%?prefix%>log_exceptions`;
 CREATE TABLE IF NOT EXISTS `<%?prefix%>log_exceptions` (
