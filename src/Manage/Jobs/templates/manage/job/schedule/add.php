@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -24,12 +25,10 @@ $buttonAdd		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$words['add']['butto
 $optStatus	= $wordsGeneral['job-definition-statuses'];
 $optStatus	= HtmlElements::Options( $optStatus );
 
-
 $optDefinition	= [];
 foreach( $definitionMap as $definitionId => $definition )
 	$optDefinition[$definitionId]	= $definition->identifier;
 $optDefinition	= HtmlElements::Options( $optDefinition );
-
 
 $optFormat			= [
 	'cron-month'	=> 'Cron: Monatstage',
@@ -79,7 +78,6 @@ $optDay	= [];
 for( $i=1; $i<=31; $i++ )
 	$optDay[$i]	= $i;
 $optDay		= HtmlElements::Options( $optDay );
-
 
 $optMonth	= [
 	1		=> 'Januar',
@@ -572,7 +570,7 @@ $form		= HtmlTag::create( 'div', [
 	], ['class' => 'row-fluid'] ),
 ] );
 
-$buttons	= HtmlTag::create( 'div', $buttonCancel.' '.$buttonAdd, [] );
+$buttons	= HtmlTag::create( 'div', $buttonCancel.' '.$buttonAdd );
 
 $tabs		= View_Manage_Job::renderTabs( $env, 'schedule' );
 

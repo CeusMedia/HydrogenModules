@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -6,7 +7,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array $wordsGeneral */
 /** @var array $words */
-/** @var array<object> $definitions */
+/** @var array<Entity_Job_Definition> $definitions */
 /** @var ?string $filterStatus */
 /** @var ?string $filterType */
 /** @var ?string $filterClassName */
