@@ -64,6 +64,7 @@ class Controller_Admin_Log_Exception extends Controller
 				$this->session->remove( $this->filterPrefix.$key );
 		}
 		else{
+			$this->session->set( $this->filterPrefix.'exceptionId', $this->request->get( 'exceptionId' ) );
 			$this->session->set( $this->filterPrefix.'message', $this->request->get( 'message' ) );
 			$this->session->set( $this->filterPrefix.'type', $this->request->get( 'type' ) );
 			$this->session->set( $this->filterPrefix.'dateStart', $this->request->get( 'dateStart' ) );
@@ -88,12 +89,15 @@ class Controller_Admin_Log_Exception extends Controller
 
 		$limit	= $limit ?: $this->session->get( $this->filterPrefix.'limit', 10 );
 
+		$filterId			= $this->session->get( $this->filterPrefix.'exceptionId', '' );
 		$filterMessage		= $this->session->get( $this->filterPrefix.'message', '' );
 		$filterType			= $this->session->get( $this->filterPrefix.'type', '' );
 		$filterDateStart	= $this->session->get( $this->filterPrefix.'dateStart', '' );
 		$filterDateEnd		= $this->session->get( $this->filterPrefix.'dateEnd', '' );
 
 		$conditions		= [];
+		if( '' !== trim( $filterId ) )
+			$conditions['exceptionId']	= trim( $filterId );
 		if( '' !== trim( $filterMessage ) )
 			$conditions['message']	= '%'.trim( $filterMessage ).'%';
 		if( '' !== trim( $filterType ) )
@@ -125,6 +129,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$this->addData( 'total', $count );
 		$this->addData( 'page', $page );
 		$this->addData( 'limit', $limit );
+		$this->addData( 'filterId', $filterId );
 		$this->addData( 'filterMessage', $filterMessage );
 		$this->addData( 'filterType', $filterType );
 		$this->addData( 'filterDateStart', $filterDateStart );
