@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\Alg\Time\Duration;
@@ -9,8 +9,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var array $wordsGeneral */
 /** @var array $words */
-/** @var object[] $definitions */
-/** @var object[] $runs */
+/** @var array<Entity_Job_Definition> $definitions */
+/** @var array<Entity_Job_Run> $runs */
 /** @var int $page */
 /** @var int $limit */
 /** @var int $total */
@@ -107,8 +107,10 @@ if( $runs ){
 			'href'	=> './manage/job/run/view/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' )
 		] );
 		$buttons	= HtmlTag::create( 'div', [$buttonAbort, $buttonTerminate, $buttonArchive, $buttonRemove], ['class' => 'btn-group'] );
+
+		$compactId	= strlen( $item->jobRunId ) > 4 ? '..'.substr( $item->jobRunId, -5 ) : $item->jobRunId;
 		$rows[]	= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'td', '<small class="muted">'.$item->jobRunId.'</small>' ),
+			HtmlTag::create( 'td', '<small class="muted">'.$compactId.'</small>' ),
 //			HtmlTag::create( 'td', '<a href="./manage/job/definition/view/'.$definition->jobDefinitionId.'">'.$title.'</a>' ),
 			HtmlTag::create( 'td', $link ),
 			HtmlTag::create( 'td', $helperAttribute->setAttribute( View_Helper_Job_Attribute::ATTRIBUTE_RUN_TYPE )->render() ),

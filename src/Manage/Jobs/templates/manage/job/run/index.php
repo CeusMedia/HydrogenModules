@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -8,7 +8,7 @@ use View_Manage_Job_Run as View;
 /** @var View $view */
 /** @var array $wordsGeneral */
 /** @var array $words */
-/** @var array<object> $definitions */
+/** @var array<Entity_Job_Definition> $definitions */
 
 $tabs	= View_Manage_Job::renderTabs( $env, 'run' );
 
