@@ -77,6 +77,39 @@ class Controller_Server_Log_Exception extends Controller
 	}
 
 	/**
+	 *	Collects number of exceptions in several time ranges and basic information about latest exception.
+	 *	Sends response as JSON and quits.
+	 *	@return		void
+	 */
+	public function stats(): void
+	{
+//		throw new Exception( 'Test 4' );
+		$latestMinuteRanges	= [5, 15, 60];
+		foreach( $latestMinuteRanges as $latestMinuteRange ){
+			$counts[$latestMinuteRange]	= $this->model->count( [
+				'status'	=> Model_Log_Exception::STATUS_NONE,
+				'createdAt'	=> '> '.( time() - $latestMinuteRange * 60 ),
+			] );
+		}
+		/** @var ?Entity_Log_Exception $latestException */
+		$latestException	= current( $this->model->getAll( [
+			'status'	=> Model_Log_Exception::STATUS_NONE,
+			'createdAt'	=> '> '.( time() - 60 * 60 ),
+		], ['createdAt' => 'DESC'], [0, 1] ) );
+
+		$this->env->getResponse()
+			->setHeader( 'Content-Type', 'application/json' )
+			->setBody( json_encode( [
+				'counts'	=> $counts,
+				'latest'	=> $latestException ? [
+					'type'		=> $latestException->type,
+					'message'	=> $latestException->message,
+				] : [],
+			] ) )
+			->send();
+	}
+
+	/**
 	 *	@param		string		$id
 	 *	@return		void
 	 */
