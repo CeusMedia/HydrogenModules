@@ -70,9 +70,13 @@ return '
 				</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span12">
+				<div class="span9">
 					<label for="input_message">'.$w->labelMessage.'</label>
 					<input type="text" name="message" id="input_message" class="span12" value="'.htmlentities( $filterMessage ?? '', ENT_QUOTES, 'utf-8' ).'"/>
+				</div>
+				<div class="span3">
+					<label for="input_exceptionId">'.$w->labelId.'</label>
+					<input type="text" name="exceptionId" id="input_exceptionId" class="span12" value="'.htmlentities( $filterId ?? '', ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			'.$rowType.'
