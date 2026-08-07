@@ -182,7 +182,7 @@ class Controller_Admin_Log_Exception extends Controller
 		$exceptionRequest	= new Dictionary();
 		$exceptionSession	= new Dictionary();
 
-		if( 0 !== (int) $exception->requestId ){
+		if( 0 !== (int) $exception->requestId && class_exists( 'Model_Log_Request' ) ){
 			$request = Model_Log_Request::getInstance( $this->env )->get( $exception->requestId );
 			$exceptionRequest = new Dictionary( json_decode( $request->request, TRUE ) );
 			$exceptionSession = new Dictionary( json_decode( $request->session, TRUE ) );
@@ -221,6 +221,7 @@ class Controller_Admin_Log_Exception extends Controller
 
 	public function stats( $minutes = 5 ): void
 	{
+//		throw new Exception( 'Test 4' );
 		$latestMinuteRanges	= [5, 15, 60];
 		foreach( $latestMinuteRanges as $latestMinuteRange ){
 			$counts[$latestMinuteRange]	= $this->model->count( [
