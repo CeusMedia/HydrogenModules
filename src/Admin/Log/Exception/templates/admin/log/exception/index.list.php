@@ -47,7 +47,7 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 	foreach( $exceptions as $nr => $exception ){
 		$exceptionEnv		= unserialize( $exception->env );
 
-		if( 0 !== ( (int) $exception->requestId ) ){
+		if( 0 !== ( (int) $exception->requestId ) && class_exists( 'Model_Log_Request' ) ){
 			$modelRequest	= new Model_Log_Request( $env );
 			/** @var Entity_Log_Request $request */
 			$request		= $modelRequest->get( $exception->requestId );
