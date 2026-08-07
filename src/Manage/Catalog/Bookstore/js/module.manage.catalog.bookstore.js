@@ -4,7 +4,7 @@ var ModuleManageCatalogBookstore = {
 		"use strict";
 		$(window).resize(function(){
 			list.css({overflow: "auto", "overflow-y": "scroll"}).show();
-			var height = $(window).height();
+			let height = $(window).height();
 			height -= list.offset().top;
 			height -= parseInt($("#layout-content").css("margin-bottom"), 10);
 			height -= parseInt(list.css("padding-top"), 10);
@@ -21,14 +21,15 @@ var ModuleManageCatalogBookstore = {
 		}).trigger("resize");
 	},
 	init: function(){
+		let list;
 		"use strict";
 		if($("body.moduleManageCatalogBookstoreArticle").length){
-			var list = $("body.moduleManageCatalogBookstoreArticle ul.nav-pills").eq(0);
+			list = $("body.moduleManageCatalogBookstoreArticle ul.nav-pills").eq(0);
 			ModuleManageCatalogBookstore.bindListResize(list);
 			ModuleManageCatalogBookstore.scrollToActiveListItem(list);
 		}
 		if($("body.moduleManageCatalogBookstoreAuthor").length){
-			var list = $("body.moduleManageCatalogBookstoreAuthor ul.nav-pills").eq(0);
+			list = $("body.moduleManageCatalogBookstoreAuthor ul.nav-pills").eq(0);
 			ModuleManageCatalogBookstore.bindListResize(list);
 			ModuleManageCatalogBookstore.scrollToActiveListItem(list);
 			$("#input_search").on("keyup", ModuleManageCatalogBookstore.onSearchChangeFilterList).focus();
@@ -36,7 +37,7 @@ var ModuleManageCatalogBookstore = {
 				$("#input_firstname").focus();
 		}
 		if($("body.moduleManageCatalogBookstoreCategory").length){
-			var list = $("body.moduleManageCatalogBookstoreCategory ul.nav-pills.main").eq(0);
+			list = $("body.moduleManageCatalogBookstoreCategory ul.nav-pills.main").eq(0);
 			ModuleManageCatalogBookstore.bindListResize(list);
 			ModuleManageCatalogBookstore.scrollToActiveListItem(list);
 			$("#input_search").on("keyup", ModuleManageCatalogBookstore.onSearchChangeFilterList).focus();
@@ -46,16 +47,16 @@ var ModuleManageCatalogBookstore = {
 	},
 	onSearchChangeFilterList: function(event){
 		"use strict";
-		var input = $(this);
-		var query = input.val();
-		var list  = input.next("ul");
+		const input = $(this);
+		const query = input.val();
+		const list = input.next("ul");
 		if(list.length){
 			if(query !== input.data("latestQuery")){
 				if(query.length){
 					list.find("li").each(function(){
-						var item = $(this);
-						var anchor = item.children("a");
-						var selector = ":containsIgnoreCase(" + query + ")";
+						const item = $(this);
+						const anchor = item.children("a");
+						const selector = ":containsIgnoreCase(" + query + ")";
 						anchor.is(selector) ? item.show() : item.hide();
 					});
 				}else{
@@ -73,7 +74,7 @@ var ModuleManageCatalogBookstore = {
 	scrollToActiveListItem: function(list){
 		"use strict";
 		if(list.find("li.active").length){
-			var pos = list.find("li.active").offset().top;
+			let pos = list.find("li.active").offset().top;
 			pos -= list.offset().top;
 			if(pos > list.height() / 2){
 				pos -= list.height() / 2;
@@ -86,15 +87,15 @@ var ModuleManageCatalogBookstore = {
 	},
 	setArticleTab: function(tabKey){
 		"use strict";
-		$.ajax("./manage/catalog/bookstore/article/ajaxSetTab/"+tabKey);
+		$.ajax("./ajax/manage/catalog/bookstore/article/setTab/"+tabKey);
 	},
 	setAuthorTab: function(tabKey){
 		"use strict";
-		$.ajax("./manage/catalog/bookstore/author/ajaxSetTab/"+tabKey);
+		$.ajax("./ajax/manage/catalog/bookstore/author/setTab/"+tabKey);
 	},
 	setCategoryTab: function(tabKey){
 		"use strict";
-		$.ajax("./manage/catalog/bookstore/category/ajaxSetTab/"+tabKey);
+		$.ajax("./ajax/manage/catalog/bookstore/category/setTab/"+tabKey);
 	}
 };
 
