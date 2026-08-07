@@ -52,7 +52,9 @@ class View_Helper_CSRF
 		$input1	= HtmlTag::create( 'input', NULL, [
 			'type'	=> 'hidden',
 			'name'	=> 'csrf_token',
-			'value'	=> $token
+			'value'	=> $token,
+			'data-invocation'	=> self::class,
+			'data-form'			=> $formName,
 		] );
 		$input2	= HtmlTag::create( 'input', NULL, [
 			'type'	=> 'hidden',
