@@ -45,7 +45,12 @@ class View_Helper_Newsletter
 		$helper			= new View_Helper_Newsletter( $this->env, $newsletter->newsletterTemplateId, $this->preview );
 		$data			= $helper->prepareReaderDataForLetter( $readerLetterId );
 //print_m( $data );die;
-		return new Mail_Newsletter( $this->env, $data );
+
+		$envClone	= $this->env->getModules()->has( 'Resource_Frontend' ) ?
+			Logic_Frontend::getInstance( $this->env )->getEnv() :
+			clone( $this->env );
+
+		return new Mail_Newsletter( $envClone, $data );
 	}
 
 	/**

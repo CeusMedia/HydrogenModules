@@ -358,7 +358,11 @@ class Logic_Newsletter_Editor extends Logic_Newsletter
 		$logicMail		= Logic_Mail::getInstance( $this->env );
 		$reader			= $this->getReader( $readerId );
 
-		$mail			= new Mail_Newsletter( $this->env, [
+		$envClone	= $this->env->getModules()->has( 'Resource_Frontend' ) ?
+			Logic_Frontend::getInstance( $this->env )->getEnv() :
+			clone( $this->env );
+
+		$mail			= new Mail_Newsletter( $envClone, [
 			'newsletter'	=> $this->getNewsletter( $newsletterId ),
 			'reader'		=> $reader,
 		] );

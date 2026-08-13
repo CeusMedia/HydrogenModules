@@ -229,8 +229,11 @@ class Controller_Work_Newsletter extends Controller
 			'preview'		=> TRUE,
 		];
 
+		$envClone	= $this->env->getModules()->has( 'Resource_Frontend' ) ?
+			Logic_Frontend::getInstance( $this->env )->getEnv() :
+			clone( $this->env );
 
-		$mail		= new Mail_Newsletter( $this->env, $data );
+		$mail		= new Mail_Newsletter( $envClone, $data );
 		$response	= $this->env->getResponse();
 		switch( strtolower( trim( $format ) ) ){
 			case 'html':
