@@ -271,7 +271,11 @@ class Controller_Work_Newsletter_Template extends Controller
 				$data['linkView']		= '['.$words->alertDisabledInPreview.']';
 			}
 
-			$mail		= new Mail_Newsletter( $this->env, $data );
+			$envClone	= $this->env->getModules()->has( 'Resource_Frontend' ) ?
+				Logic_Frontend::getInstance( $this->env )->getEnv() :
+				clone( $this->env );
+
+			$mail		= new Mail_Newsletter( $envClone, $data );
 			$response	= $this->env->getResponse();
 			switch( strtolower( trim( $format ) ) ){
 				case 'css':
