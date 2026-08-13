@@ -10,6 +10,9 @@ class View_Helper_Shop
 	protected array $words;
 	protected string $language;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -18,7 +21,13 @@ class View_Helper_Shop
 		$this->language	= $env->getLanguage()->getLanguage();
 	}
 
-	public function formatPrice( $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
+	/**
+	 *	@param		float		$price
+	 *	@param		bool		$spaceBeforeCurrency
+	 *	@param		bool		$asHtml
+	 *	@return		string
+	 */
+	public function formatPrice( float $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
 	{
 		$decimals	= (int) $this->config->get( 'price.accuracy' );
 		$currency	= (string) $this->config->get( 'price.currency' );
@@ -28,6 +37,11 @@ class View_Helper_Shop
 		return number_format( $price, $decimals, $decPoint, NULL ).$space.$currency;
 	}
 
+	/**
+	 *	@param		array		$positions
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function renderCartPanelAsText( array $positions ): string
 	{
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
@@ -37,6 +51,11 @@ class View_Helper_Shop
 		return $helper->render();
 	}
 
+	/**
+	 *	@param		array		$positions
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function renderCartPanel( array $positions ): string
 	{
 		$helper	= new View_Helper_Shop_CartPositions( $this->env );
@@ -46,6 +65,10 @@ class View_Helper_Shop
 		return '<h4>Warenkorb</h4>'.$helper->render();
 	}
 
+	/**
+	 *	@param $data
+	 *	@return string
+	 */
 	public function renderCustomerPanel( $data ): string
 	{
 		$words	= (object) $this->words['panel-customer'];

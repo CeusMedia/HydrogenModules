@@ -21,19 +21,11 @@ class View_Helper_Shop_CartPositions_OutputStrategy_HtmlList extends View_Helper
 		$footRows		= [];
 		$priceShipping	= $this->enqueueShippingHtmlRowAndReturnPrice( $footRows, $taxes, $words, $totalWeight );
 		$pricePayment	= $this->enqueuePaymentHtmlRowAndReturnPrice( $footRows, $taxes, $words, $totalPrice );
-
-		$priceTax		= $this->formatPrice( $totalTax );
-		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
-		foreach( $taxes as $rate => $amount ){
-			$amount	= $this->formatPrice( $amount );
-			$footRows[]	= HtmlTag::create( 'tr', [
-				HtmlTag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), ['class' => 'autocut', 'colspan' => 2] ),
-				HtmlTag::create( 'td', $amount, ['class' => 'price'] )
-			], ['class' => 'tax'] );
-		}
+		$priceTaxes		= $this->enqueueTaxesHtmlRowAndReturnPrice( $footRows, $taxes, $words, $totalTax );
 
 		$priceTotal		= $totalPrice + $priceShipping + $pricePayment;
-		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $totalTax );
+		$priceTotal		+= ( $this->config->get( 'tax.included' ) ? 0 : $priceTaxes );
+
 		$footRows[]		= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $words->labelTotal, ['class' => 'autocut', 'colspan' => 2] ),
 			HtmlTag::create( 'td', $this->formatPrice( $priceTotal ), ['class' => 'price'] )
@@ -204,6 +196,14 @@ class View_Helper_Shop_CartPositions_OutputStrategy_HtmlList extends View_Helper
 	 */
 	private function enqueueTaxesHtmlRowAndReturnPrice( array & $rows, array & $taxes, object $words, float $totalTax ): float
 	{
+		$taxMode		= $this->config->get( 'tax.included' ) ? $words->taxInclusive : $words->taxExclusive;
+		foreach( $taxes as $rate => $amount ){
+			$amount	= $this->formatPrice( $amount );
+			$rows[]	= HtmlTag::create( 'tr', [
+				HtmlTag::create( 'td', sprintf( $taxMode.' '.$words->labelTax.' %s%%', $rate ), ['class' => 'autocut', 'colspan' => 2] ),
+				HtmlTag::create( 'td', $amount, ['class' => 'price'] )
+			], ['class' => 'tax'] );
+		}
 		return $totalTax;
 	}
 

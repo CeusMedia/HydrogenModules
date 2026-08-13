@@ -5,6 +5,7 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller_Manage_Cata
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	public function add(): void
 	{

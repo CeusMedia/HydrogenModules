@@ -66,14 +66,15 @@ class Logic_Shop_Shipping extends Logic
 	 */
 	public function getGradeFromWeight( int|float $weight ): object
 	{
-		$grades	= $this->modelGrade->getAll( ['fallback' => 0], ['weight' => 'ASC'] );
+		/** @var array<object> $grades */
+		$grades	= $this->modelGrade->getAll( [], ['fallback' => 'ASC', 'weight' => 'ASC'] );
+		/** @var object{gradeId: int, title: string, weight: int|string, fallback: int} $grade */
 		foreach( $grades as $grade ){
-			if( (int) $grade->weight = $weight )
+			if( 1 === $grade->fallback )
+				return $grade;
+			if( $grade->weight >= $weight )
 				return $grade;
 		}
-		$grade	= $this->modelGrade->getByIndex( 'fallback', 1 );
-		if( $grade )
-			return $grade;
 		throw new RangeException( 'No grade found for weight: '.$weight );
 	}
 

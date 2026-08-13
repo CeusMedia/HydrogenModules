@@ -12,11 +12,18 @@ class View_Helper_Shop_Shipping
 	protected array $positions = [];
 	protected ?float $totalWeight		= NULL;
 
+	/**
+	 *	@param		Environment			$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env = $env;
 	}
 
+	/**
+	 *	@return		string
+	 *	@throws		ReflectionException
+	 */
 	public function render(): string
 	{
 		try{
@@ -78,43 +85,76 @@ class View_Helper_Shop_Shipping
 		], ['class' => 'table table-fixed table-bordered'] );
 	}
 
+	/**
+	 *	@param		Entity_Address		$deliveryAddress
+	 *	@return		self
+	 */
 	public function setDeliveryAddress( Entity_Address $deliveryAddress ): self
 	{
 		$this->deliveryAddress	= $deliveryAddress;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$deliveryCountry
+	 *	@return		self
+	 */
 	public function setDeliveryCountry( string $deliveryCountry ): self
 	{
 		$this->deliveryCountry	= $deliveryCountry;
 		return $this;
 	}
 
+	/**
+	 *	@param		Entity_Shop_Order $order
+	 *	@return		self
+	 */
 	public function setOrder( Entity_Shop_Order $order ): self
 	{
 		$this->order	= $order;
 		return $this;
 	}
 
+	/**
+	 *	@param		array		$positions
+	 *	@return		self
+	 */
 	public function setPositions( array $positions ): self
 	{
 		$this->positions	= $positions;
 		return $this;
 	}
 
+	/**
+	 *	@param		float		$totalWeight
+	 *	@return		self
+	 */
 	public function setTotalWeight( float $totalWeight ): self
 	{
 		$this->totalWeight	= $totalWeight;
 		return $this;
 	}
 
+
 	//  --  PROTECTED  --  //
 
+
+	/**
+	 *	@param		float		$price
+	 *	@param		bool		$spaceBeforeCurrency
+	 *	@param		bool		$asHtml
+	 *	@return		string
+	 */
 	protected function formatPrice( float $price, bool $spaceBeforeCurrency = TRUE, bool $asHtml = TRUE ): string
 	{
 		$helper		= new View_Helper_Shop( $this->env );
 		return $helper->formatPrice( $price, $spaceBeforeCurrency, $asHtml );
 	}
+
+	/**
+	 *	@return		float
+	 *	@throws		ReflectionException
+	 */
 	protected function getTotalWeight(): float
 	{
 		if( NULL !== $this->totalWeight )
@@ -133,6 +173,10 @@ class View_Helper_Shop_Shipping
 		throw new RuntimeException( 'None of these set: totalWeight, positions, order' );
 	}
 
+	/**
+	 *	@return		string|NULL
+	 *	@throws		ReflectionException
+	 */
 	protected function getDeliveryCountry(): ?string
 	{
 		if( NULL !== $this->deliveryCountry )

@@ -3,7 +3,7 @@
 class Mail_Shop_Manager_Ordered extends Mail_Shop_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */

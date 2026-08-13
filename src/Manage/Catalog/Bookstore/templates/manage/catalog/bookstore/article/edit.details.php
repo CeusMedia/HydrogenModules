@@ -8,6 +8,7 @@ use CeusMedia\HydrogenFramework\View;
 /** @var View_Manage_Catalog_Bookstore_Article $view */
 /** @var array<string,array<string,int|string>> $words */
 /** @var object $article */
+/** @var object $w */
 
 $optStatus	= HtmlElements::Options( $words['states'], $article->status );
 $optType	= HtmlElements::Options( $words['types'], $article->series );
@@ -41,7 +42,7 @@ return '
 				</div>
 				<div class="span3">
 					<label for="input_weight">'.$w->labelWeight.'</label>
-					<input class="span12" type="text" name="weight" id="input_weight" value="'.number_format( $article->weight ).'"/>
+					<input class="span12" type="text" name="weight" id="input_weight" value="'.number_format( $article->weight, 0, ',', '' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">

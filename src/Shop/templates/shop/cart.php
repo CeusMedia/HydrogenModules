@@ -17,7 +17,10 @@ $tablePositions	= '<p><em class="muted">'.$w->empty.'</em></p>';
 $tableShipping	= '';
 $buttonbar		= '';
 
-if( count( $positions = $cart->get( 'positions' ) ) ){
+$positions		= $cart->get( 'positions' );
+$hasPositions	= is_array( $positions ) && [] !== $positions;
+
+if( $hasPositions ){
 	$helperCart		= new View_Helper_Shop_CartPositions( $env );
 	$helperCart->setPositions( $positions );
 	$helperCart->setPaymentBackends( $paymentBackends );
@@ -25,15 +28,23 @@ if( count( $positions = $cart->get( 'positions' ) ) ){
 		$helperCart->setPaymentBackend( $cart->get( 'paymentMethod' ) );
 	if( is_object( $address ) )
 		$helperCart->setDeliveryAddress( $address );
-	$helperCart->setChangeable( TRUE );
+	$helperCart->setChangeable();
 	$tablePositions	= $helperCart->render();
-	$buttonbar		= HtmlTag::create( 'div', new LinkButton(
+	$buttonNext		= new LinkButton(
 		'./shop/customer',
 		$w->buttonToCustomer,
 		'btn-success not-pull-right',
 		'fa fa-fw fa-arrow-right',
 		!$positions
-	), ['class' => 'buttonbar well well-small'] );
+	);
+	$buttonForget	= new LinkButton(
+		'./shop/forget',
+		$w->buttonForget,
+		'btn pull-right',
+		'fa fa-fw fa-trash',
+		!$positions
+	);
+	$buttonbar		= HtmlTag::create( 'div', [$buttonNext, $buttonForget], ['class' => 'buttonbar well well-small'] );
 
 	$helperShipping	= new View_Helper_Shop_Shipping( $env );
 	$helperShipping->setPositions( $positions );

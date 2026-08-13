@@ -14,6 +14,9 @@ class View_Helper_Shop_Tabs
 	protected ?string $current			= NULL;
 	protected bool $whiteIcons			= FALSE;
 
+	/**
+	 *	@param		Environment		$env
+	 */
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
@@ -22,6 +25,7 @@ class View_Helper_Shop_Tabs
 
 	/**
 	 *	@return		string
+	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function __toString(): string
@@ -31,8 +35,8 @@ class View_Helper_Shop_Tabs
 
 	/**
 	 *	@return		string
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 *	@throws		ReflectionException
+	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function render(): string
 	{
@@ -117,30 +121,50 @@ class View_Helper_Shop_Tabs
 		return $tabs->render();
 	}
 
+	/**
+	 *	@param		float		$cartTotal
+	 *	@return		self
+	 */
 	public function setCartTotal( float $cartTotal ): self
 	{
 		$this->cartTotal	= $cartTotal;
 		return $this;
 	}
 
+	/**
+	 *	@param		string		$content
+	 *	@return		self
+	 */
 	public function setContent( string $content ): self
 	{
 		$this->content	= $content;
 		return $this;
 	}
 
-	public function setCurrent( $current ): self
+	/**
+	 *	@param		string		$current
+	 *	@return		self
+	 */
+	public function setCurrent( string $current ): self
 	{
 		$this->current	= $current;
 		return $this;
 	}
 
+	/**
+	 *	@param		Model_Shop_Payment_BackendRegister	$backends
+	 *	@return		self
+	 */
 	public function setPaymentBackends(Model_Shop_Payment_BackendRegister $backends ): self
 	{
 		$this->backends	= $backends;
 		return $this;
 	}
 
+	/**
+	 *	@param		bool		$bool
+	 *	@return		self
+	 */
 	public function setWhiteIcons( bool $bool ): self
 	{
 		$this->whiteIcons	= $bool;
