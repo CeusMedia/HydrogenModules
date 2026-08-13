@@ -1,6 +1,5 @@
 <?php
 
-use CeusMedia\HydrogenFramework\Environment;
 use CeusMedia\HydrogenFramework\Hook;
 use CeusMedia\HydrogenFramework\View;
 
@@ -8,19 +7,16 @@ class Hook_Shop_FinishPanel extends Hook
 {
 	/**
 	 *	...
-	 *	@static
 	 *	@access		public
-	 *	@param		Environment		$env			Environment instance
-	 *	@param		object			$context		Hook context object
-	 *	@param		object			$module			Module object
-	 *	@param		array			$payload		Map of hook arguments
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
-	public static function onRenderServicePanels( Environment $env, object $context, object $module, array & $payload ): void
+	public function onRenderServicePanels(): void
 	{
+		$payload	= $this->getPayload() ?? [];
 		if( empty( $payload['orderId'] ) || empty( $payload['paymentBackends']->getAll() ) )
 			return;
-		$view		= new View( $env );
+		$view		= new View( $this->env );
 //		$modelOrder	= new Model_Shop_Order( $env );
 //		$order		= $modelOrder->get( $payload['orderId'] );
 
@@ -35,7 +31,7 @@ class Hook_Shop_FinishPanel extends Hook
 		foreach( $files as $priority => $file ){
 			if( $view->hasContentFile( $path.$file ) ){
 				$content	= $view->loadContentFile( $path.$file );
-				$context->registerServicePanel( 'Shop:'.$priority, $content, $priority );
+				$this->context->registerServicePanel( 'Shop:'.$priority, $content, $priority );
 			}
 		}
 	}

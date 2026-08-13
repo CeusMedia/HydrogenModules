@@ -163,9 +163,14 @@ class View_Helper_Shop_CartPositions_OutputStrategy_HTML extends View_Helper_Sho
 					$this->deliveryAddress->country,
 					$totalWeight
 				);
+				$label	= $words->labelShipping;
+				if( 0 !== (int) $totalWeight ){
+					$label	= $label.' <small class="muted">(Gewicht: [#weight#]g)</small>';
+					$label	= str_replace( '[#weight#]', $totalWeight, $label );
+				}
 				$rows[]	= HtmlTag::create( 'tr', [
 					HtmlTag::create( 'td', '&nbsp;' ),
-					HtmlTag::create( 'td', $words->labelShipping, ['class' => 'autocut'] ),
+					HtmlTag::create( 'td', $label, ['class' => 'autocut'] ),
 					HtmlTag::create( 'td', '&nbsp;', ['class' => 'column-cart-quantity'] ),
 					HtmlTag::create( 'td', $this->formatPrice( $priceShipping ), ['class' => 'price'] )
 				] );

@@ -43,9 +43,8 @@ class Controller_Shop_Customer extends Controller
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 */
-	public function address( string $addressId, $type = NULL, bool $remove = NULL ): void
+	public function address( string $addressId, int $type = 0, bool $remove = FALSE ): void
 	{
-		$type			= (int) $type;
 		$customerMode	= $this->modelCart->get( 'customerMode' );
 //		$countries		= $this->env->getLanguage()->getWords( 'countries' );
 		$relationType	= 'user';
@@ -88,7 +87,7 @@ class Controller_Shop_Customer extends Controller
 				$this->modelAddress->edit( $addressId, $data->getAll() );
 			}
 			else{
-				if( !$type || !in_array( (int) $type, [Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING] ) ){
+				if( !$type || !in_array( $type, [Model_Address::TYPE_DELIVERY, Model_Address::TYPE_BILLING] ) ){
 				//	@todo: handle this situation!
 				}
 				$mandatory	= [
@@ -156,12 +155,12 @@ class Controller_Shop_Customer extends Controller
 	/**
 	 *	...
 	 *	@access		public
-	 *	@param		string		$mode		Optional: Customer mode to set (account|guest)
+	 *	@param		string|int|NULL		$mode		Optional: Customer mode to set (account|guest)
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function index( $mode = NULL ): void
+	public function index( string|int|NULL $mode = NULL ): void
 	{
 		if( $mode === 'account' && $this->useAuth )
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_ACCOUNT;
@@ -171,7 +170,7 @@ class Controller_Shop_Customer extends Controller
 			$mode	= Model_Shop_Cart::CUSTOMER_MODE_UNKNOWN;
 		if( is_int( $mode ) ){
 //			$logicShop	= new Logic_Shop( $this->env );
-			$this->modelCart->set( 'customerMode', (int) $mode );
+			$this->modelCart->set( 'customerMode', $mode );
 			$this->restart( NULL, TRUE );
 		}
 		if( !$this->modelCart->get( 'positions' ) ){
@@ -213,7 +212,6 @@ class Controller_Shop_Customer extends Controller
 
 		if( $this->env->getModules()->has( 'Resource_Authentication' ) ){
 			$this->useAuth		= TRUE;
-			/** @noinspection PhpFieldAssignmentTypeMismatchInspection */
 			$this->logicAuth	= Logic_Authentication::getInstance( $this->env );
 		}
 
@@ -333,20 +331,6 @@ class Controller_Shop_Customer extends Controller
 			$this->restart( 'shop/conditions' );
 		}
 
-		$user	= (object) [
-			'firstname'	=> NULL,
-			'surname'	=> NULL,
-			'email'		=> NULL,
-			'street'	=> NULL,
-			'city'		=> NULL,
-			'postcode'	=> NULL,
-			'country'	=> NULL,
-			'region'	=> NULL,
-			'phone'		=> NULL,
-		];
-		if( $addressBilling && !$addressDelivery ){
-			$user	= $addressBilling;
-		}
 		$this->addData( 'user', $this->modelUser->get( $userId ) );
 	}
 }

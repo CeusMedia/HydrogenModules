@@ -243,11 +243,21 @@ class Controller_Shop extends Controller
 		$this->restart( 'service', TRUE );
 	}
 
+	public function forget(): void
+	{
+		$this->modelCart->clear();
+		$this->restart( 'cart', TRUE );
+	}
+
 	public function index(): void
 	{
 		$this->restart( 'cart', TRUE );
 	}
 
+	/**
+	 *	@return void
+	 *	@throws ReflectionException
+	 */
 	public function payment(): void
 	{
 		if( $this->cartTotal == 0 || count( $this->backends->getAll() ) === 1 ){

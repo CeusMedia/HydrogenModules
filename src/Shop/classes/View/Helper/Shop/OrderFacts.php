@@ -5,21 +5,21 @@ use CeusMedia\HydrogenFramework\Environment;
 
 class View_Helper_Shop_OrderFacts
 {
-	public const DISPLAY_UNKNOWN		= 0;
-	public const DISPLAY_BROWSER		= 1;
-	public const DISPLAY_MAIL			= 2;
+	public const DISPLAY_UNKNOWN			= 0;
+	public const DISPLAY_BROWSER			= 1;
+	public const DISPLAY_MAIL				= 2;
 
-	public const DISPLAYS				= [
+	public const DISPLAYS					= [
 		self::DISPLAY_UNKNOWN,
 		self::DISPLAY_BROWSER,
 		self::DISPLAY_MAIL,
 	];
 
-	public const OUTPUT_UNKNOWN			= 0;
-	public const OUTPUT_TEXT			= 1;
-	public const OUTPUT_HTML			= 2;
+	public const OUTPUT_UNKNOWN				= 0;
+	public const OUTPUT_TEXT				= 1;
+	public const OUTPUT_HTML				= 2;
 
-	public const OUTPUTS				= [
+	public const OUTPUTS					= [
 		self::OUTPUT_UNKNOWN,
 		self::OUTPUT_TEXT,
 		self::OUTPUT_HTML,
@@ -30,12 +30,12 @@ class View_Helper_Shop_OrderFacts
 	protected Logic_ShopBridge $logicBridge;
 	protected Logic_Shop $logicShop;
 	protected View_Helper_Shop $helperShop;
-	protected int $display				= self::DISPLAY_BROWSER;
-	protected int $output				= self::OUTPUT_HTML;
+	protected int $display					= self::DISPLAY_BROWSER;
+	protected int $output					= self::OUTPUT_HTML;
 	protected array $words;
-	protected ?object $paymentBackend	= NULL;
-	protected ?object $order			= NULL;
-	protected array $facts				= [];
+	protected ?object $paymentBackend		= NULL;
+	protected ?Entity_Shop_Order $order		= NULL;
+	protected array $facts					= [];
 
 	/**
 	 *	Constructor.

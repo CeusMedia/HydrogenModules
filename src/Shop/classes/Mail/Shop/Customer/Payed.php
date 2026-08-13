@@ -1,11 +1,9 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-use CeusMedia\Common\Exception\FileNotExisting as FileNotExistingException;
-
 class Mail_Shop_Customer_Payed extends Mail_Shop_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */

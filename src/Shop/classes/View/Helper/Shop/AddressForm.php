@@ -39,7 +39,7 @@ class View_Helper_Shop_AddressForm
 		'.$this->textTop.'
 		<form action="./shop/customer/address/'.$addressId.'/'.$this->type.'" method="post">
 			<!--	HACK: Force autocomplete to be off for newer Chrome versions.
-					DESC: Chrome has new AutoFill feature whichs need autocomplete="false" which breaks other browsers.
+					DESC: Chrome has new AutoFill feature which need autocomplete="false" which breaks other browsers.
 					LINK: https://stackoverflow.com/a/33766566
 					CODE: https://bugs.chromium.org/p/chromium/issues/detail?id=468153#hc41
 		 	-->

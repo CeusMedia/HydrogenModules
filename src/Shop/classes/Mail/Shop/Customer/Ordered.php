@@ -3,7 +3,7 @@
 class Mail_Shop_Customer_Ordered extends Mail_Shop_Abstract
 {
 	/**
-	 *	@return		self
+	 *	@return		static
 	 *	@throws		RangeException
 	 *	@throws		InvalidArgumentException
 	 *	@throws		ReflectionException
