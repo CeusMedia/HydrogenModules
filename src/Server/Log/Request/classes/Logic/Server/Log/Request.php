@@ -79,15 +79,16 @@ class Logic_Server_Log_Request extends SharedLogic
 
 		if( NULL !== $since && NULL !== $until )
 			$indices['timestamp']	= vsprintf( '>< %s %s', [
-				$this->convertSomeDateInputsToDateTime( $since )->format( 'Y-m-d H:i:s' ),
-				$this->convertSomeDateInputsToDateTime( $until )->format( 'Y-m-d H:i:s' ),
+				$this->convertSomeDateInputsToDateTime( $since )->format( 'Y-m-d H:i:s.u' ),
+				$this->convertSomeDateInputsToDateTime( $until )->format( 'Y-m-d H:i:s.u' ),
 			] );
 		else if( NULL !== $since )
 			$indices['timestamp']	= '>= '.$this->convertSomeDateInputsToDateTime( $since )
-				->format( 'Y-m-d H:i:s' );
+				->format( 'Y-m-d H:i:s.u' );
 		else if( NULL !== $until )
 			$indices['timestamp']	= '<= '.$this->convertSomeDateInputsToDateTime( $until )
-				->format( 'Y-m-d H:i:s' );
+				->format( 'Y-m-d H:i:s.u' );
+
 		return $this->model->count( $indices );
 	}
 
@@ -221,7 +222,7 @@ class Logic_Server_Log_Request extends SharedLogic
 				}, $this->env->getRequest()->getHeaders()->getFields() );
 		}
 
-		$date	= DateTime::createFromFormat( 'U.u', (string) microtime( TRUE ) );
+		$date		= new DateTime( 'now' );
 
 		return Entity_Log_Request::fromArray( [
 			'ip'		=> $ip,
@@ -259,7 +260,7 @@ class Logic_Server_Log_Request extends SharedLogic
 		else if( is_int( $input ) ){
 			if( $input < 100 * 24 * 60 * 60 )
 				return $this->convertSomeDateInputsToDateTime( $input.' seconds' );
-			$date	= new DateTime();
+			$date	= new DateTime( 'now' );
 			$date->setTimestamp( $input );
 			return $date;
 		}
