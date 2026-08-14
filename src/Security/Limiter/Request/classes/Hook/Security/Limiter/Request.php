@@ -9,6 +9,10 @@ use CeusMedia\HydrogenFramework\Hook;
 
 class Hook_Security_Limiter_Request extends Hook
 {
+	const INTERVAL_SECOND	= 1;
+	const INTERVAL_MINUTE	= 2;
+	const INTERVAL_HOUR		= 3;
+
 	public function checkLimits(): void
 	{
 		if( CommonEnv::isCli() ) return;													//  bypass CLI requests
@@ -31,37 +35,36 @@ class Hook_Security_Limiter_Request extends Hook
 
 	protected function applyLimits( Dictionary $config, string $remoteIp, HttpRequest $request ): void
 	{
-		$model			= new Model_Log_Request( $this->env );
-		$method			= strtoupper( $request->getMethod()->get() );
+		$logic		= new Logic_Server_Log_Request( $this->env );
+		$method		= strtoupper( $request->getMethod()->get() );
+
 		$configPrefix	= match( $method ){
 			'GET'	=> 'limit.get.',
 			default	=> 'limit.other.',
 		};
 
-		$generalIndices		= [
-			'ip'		=> $remoteIp,
-			'method'	=> $method,
-		];
-
 		$limitPerSecond	= $config->get( $configPrefix.'second' );
 		if( 0 !== $limitPerSecond ){
-			$indices	= array_merge( $generalIndices, ['timestamp' => time() - 1] );
-			if( $model->countByIndices( $indices ) >= $limitPerSecond )
-				$this->respondError();
+			$since		= new DateInterval( 'PT1S' );
+			$nrRequests	= $logic->countRequestsOfIp( $remoteIp, $method, NULL, $since );
+			if( $nrRequests >= $limitPerSecond )
+				$this->respondError( $method, self::INTERVAL_SECOND, $limitPerSecond, $nrRequests );
 		}
 
 		$limitPerMinute	= $config->get( $configPrefix.'minute' );
 		if( 0 !== $limitPerMinute ){
-			$indices	= array_merge( $generalIndices, ['timestamp' => time() - 60] );
-			if( $model->countByIndices( $indices ) >= $limitPerMinute )
-				$this->respondError();
+			$since		= new DateInterval( 'PT1M' );
+			$nrRequests	= $logic->countRequestsOfIp( $remoteIp, $method, NULL, $since );
+			if( $nrRequests >= $limitPerMinute )
+				$this->respondError( $method, self::INTERVAL_MINUTE, $limitPerMinute, $nrRequests );
 		}
 
 		$limitPerHour	= $config->get( $configPrefix.'hour' );
 		if( 0 !== $limitPerHour ){
-			$indices	= array_merge( $generalIndices, ['timestamp' => time() - 24 * 60] );
-			if( $model->countByIndices( $indices ) >= $limitPerHour )
-				$this->respondError();
+			$since		= new DateInterval( 'PT1H' );
+			$nrRequests	= $logic->countRequestsOfIp( $remoteIp, $method, NULL, $since );
+			if( $nrRequests >= $limitPerHour )
+				$this->respondError( $method, self::INTERVAL_HOUR, $limitPerHour, $nrRequests );
 		}
 	}
 
@@ -73,13 +76,16 @@ class Hook_Security_Limiter_Request extends Hook
 			return FALSE;
 
 		$whitelistedIps	= preg_split( '/\s*,\s*/', trim( $configuredIps ) );
-		return in_array( $remoteIp, $whitelistedIps );
+		return in_array( $remoteIp, $whitelistedIps, TRUE );
 	}
 
 	protected function passByWhitelistSelf( Dictionary $config, string $remoteIp ): bool
 	{
 		if( !$config->get( 'whitelist.self' ) )
 			return FALSE;
+
+		if( '::1' === $remoteIp )
+			return TRUE;
 
 		$baseUrl	= $this->env->getBaseUrl();
 		if( '' === $baseUrl )
@@ -96,14 +102,38 @@ class Hook_Security_Limiter_Request extends Hook
 		return TRUE;
 	}
 
-	protected function respondError(): void
+	protected function respondError( string $method, int $interval, int $limit, int $number ): void
 	{
-		$body	= '429 Too Many Requests';
+		$language	= $this->env->getLanguage();
+		$title		= "Error 429 - Too Many Requests";
+
+		$mainWords	= $language->getSection( 'main', 'main' );
+		$hookWords	= $language->getWords( 'security/limiter/request' )['hook'] ?? [];
+
+		if( '' !== trim( $hookWords['title'] ?? '' ) )
+			$title	= $hookWords['title'];
+
+		if( '' !== trim( $mainWords['title'] ?? '' ) )
+			$title	.= ' | '.$mainWords['title'];
+
+		$timeNeeded	= $this->env->getRuntime()->get( 3, 0 );
+		$body	= '
+<html lang="'.$this->env->getLanguage()->getLanguage().'">
+	<head>
+		<meta charset="UTF-8">
+		<title>'.$title.'</title>
+	</head>
+	<body data-time-needed="'.$timeNeeded.'ms">
+		<h1>'.( $hookWords['heading'] ?? '429 Too Many Requests' ).'</h1>
+		<div style="margin-bottom: 1.5rem">'.( $hookWords['message'] ?? '' ).'</div>
+	</body>
+</html>';
+
 		/** @var HttpResponse $response */
 		$response	= $this->env->getResponse();
 		$response->setStatus( 429 );
 		$response->setHeader( 'Content-type', 'text/html; charset=utf-8' );
-		$response->setBody( 'Request limit reached' );
+		$response->setBody( $body );
 		$response->send();
 	}
 }

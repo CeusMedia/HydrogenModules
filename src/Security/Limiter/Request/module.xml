@@ -5,9 +5,10 @@
     <title>Security: Limiter: Request</title>
     <description file="readme.md"><![CDATA[Request Limiter.]]></description>
     <category>Security</category>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <log version="0.1">Initial prototype.</log>
     <log version="0.2">Separation to Hydrogen module.</log>
+    <log version="0.2.1">Use logic of log module to count requests.</log>
     <company site="https://ceusmedia.de/">Ceus Media</company>
     <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
     <files>
@@ -18,10 +19,10 @@
     <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
     <config protected="yes" type="integer" name="limit.get.second" title="Max. requests / second / IP">10</config>
     <config protected="yes" type="integer" name="limit.get.minute" title="Max. requests / minute / IP">100</config>
-    <config protected="yes" type="integer" name="limit.get.hour" title="Max. requests / hour / IP">2000</config>
-    <config protected="yes" type="integer" name="limit.other.second" title="Max. requests / second / IP">3</config>
-    <config protected="yes" type="integer" name="limit.other.minute" title="Max. requests / minute / IP">20</config>
-    <config protected="yes" type="integer" name="limit.other.hour" title="Max. requests / hour / IP">400</config>
+    <config protected="yes" type="integer" name="limit.get.hour" title="Max. requests / hour / IP">1000</config>
+    <config protected="yes" type="integer" name="limit.other.second" title="Max. requests / second / IP">5</config>
+    <config protected="yes" type="integer" name="limit.other.minute" title="Max. requests / minute / IP">50</config>
+    <config protected="yes" type="integer" name="limit.other.hour" title="Max. requests / hour / IP">500</config>
     <config protected="yes" type="boolean" name="whitelist.ajax" title="Ignore AJAX requests">yes</config>
     <config protected="yes" type="boolean" name="whitelist.self" title="Ignore requests from own IP">yes</config>
     <config protected="no" type="string" name="whitelist.ips" title="Comma separated list of IP address to whitelist"></config>
