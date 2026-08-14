@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
+    <title>Security: Limiter: Request</title>
+    <description file="readme.md"><![CDATA[Request Limiter.]]></description>
+    <category>Security</category>
+    <version>0.2.0</version>
+    <log version="0.1">Initial prototype.</log>
+    <log version="0.2">Separation to Hydrogen module.</log>
+    <company site="https://ceusmedia.de/">Ceus Media</company>
+    <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+    <files>
+        <class>Hook/Security/Limiter/Request.php</class>
+        <locale>de/security/limiter/request.ini</locale>
+        <locale>en/security/limiter/request.ini</locale>
+    </files>
+    <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
+    <config protected="yes" type="integer" name="limit.get.second" title="Max. requests / second / IP">10</config>
+    <config protected="yes" type="integer" name="limit.get.minute" title="Max. requests / minute / IP">100</config>
+    <config protected="yes" type="integer" name="limit.get.hour" title="Max. requests / hour / IP">2000</config>
+    <config protected="yes" type="integer" name="limit.other.second" title="Max. requests / second / IP">3</config>
+    <config protected="yes" type="integer" name="limit.other.minute" title="Max. requests / minute / IP">20</config>
+    <config protected="yes" type="integer" name="limit.other.hour" title="Max. requests / hour / IP">400</config>
+    <config protected="yes" type="boolean" name="whitelist.ajax" title="Ignore AJAX requests">yes</config>
+    <config protected="yes" type="boolean" name="whitelist.self" title="Ignore requests from own IP">yes</config>
+    <config protected="no" type="string" name="whitelist.ips" title="Comma separated list of IP address to whitelist"></config>
+    <relations>
+        <needs type="module">Server_Log_Request</needs>
+    </relations>
+    <hook type="resource" resource="Env" event="constructEnd">Hook_Security_Limiter_Request::checkLimits</hook>
+</module>
