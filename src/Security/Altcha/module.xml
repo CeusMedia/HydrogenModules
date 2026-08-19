@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--suppress CheckTagEmptyBody -->
+<module xmlns="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
+    <title>Security: ALTCHA</title>
+    <description format="markdown"><![CDATA[ALTCHA server.]]></description>
+    <category>Security</category>
+    <version>0.2.0</version>
+    <log version="0.1">Initial prototype.</log>
+    <log version="0.2">Separation to Hydrogen module.</log>
+    <company site="https://ceusmedia.de/">Ceus Media</company>
+    <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
+    <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
+    <files>
+        <class>Controller/Api/Altcha.php</class>
+    </files>
+    <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
+    <config protected="yes" type="string" name="secret">example-hmac-secret</config>
+    <relations>
+        <needs type="extension">php-imap</needs>
+        <needs type="package" version="2.1.0">altcha-org/altcha</needs>
+        <supports type="module">Server_Log_Request</supports>
+    </relations>
+    <link access="public" path="api/form/import/index"/>
+    <link access="acl" path="ajax/manage/form/import/testImportRules"/>
+    <link access="acl" path="ajax/manage/form/import/testRules"/>
+</module>
