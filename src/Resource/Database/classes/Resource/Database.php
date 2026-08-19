@@ -146,10 +146,19 @@ class Resource_Database
 
 		$log		= $this->options->getAll( 'log.', TRUE);
 		$pathLogs	= $this->env->getConfig()->get( 'path.logs' );
-		if( $log->get( 'statements' ) && $log->get( 'file.statements' ) )
-			$dbc->setStatementLogFile( $pathLogs.$log->get( 'file.statements' ) );
-		if( $log->get( 'errors' ) && $log->get( 'file.errors' ) )
-			$dbc->setErrorLogFile( $pathLogs.$log->get( 'file.errors' ) );
+		
+		$logLevel	= PdoDatabaseConnection\Base::LOG_LEVEL_NONE;
+		if( '' !== trim( $log->get( 'file.statements', '' ) ) ){
+			$dbc->setStatementLogFile( $pathLogs.trim( $log->get( 'file.statements' ) ) );
+			if( $log->get( 'statements' ) )
+				$logLevel	|= PdoDatabaseConnection\Base::LOG_LEVEL_STATEMENT;
+		}
+		if( '' !== trim( $log->get( 'file.errors', '' ) ) ){
+			$dbc->setErrorLogFile( $pathLogs.trim( $log->get( 'file.errors' ) ) );
+			if( $log->get( 'errors' ) )
+				$logLevel	|= PdoDatabaseConnection\Base::LOG_LEVEL_ERROR;
+		}
+		$dbc->setLogLevel( $logLevel );
 #		if( $charset && $this->driver == 'mysql' )													//  a character set is configured on a MySQL database
 #			$this->exec( "SET NAMES '".$charset."';" );												//  set character set
 
