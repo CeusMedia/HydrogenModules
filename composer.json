@@ -63,7 +63,8 @@
         "amenadiel/jpgraph": "^4",
         "influxdata/influxdb-client-php": "^3.0",
         "guzzlehttp/guzzle": "*",
-        "phpoffice/phpspreadsheet": "dev-master"
+        "phpoffice/phpspreadsheet": "dev-master",
+        "altcha-org/altcha": "2.1.0"
     },
     "suggest": {
         "ext-rrd": "*"
