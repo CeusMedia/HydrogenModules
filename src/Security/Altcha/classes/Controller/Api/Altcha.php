@@ -65,12 +65,14 @@ class Controller_Api_Altcha extends ApiController
 		if( !$verified )
 			$this->respondError( 'Verification failed', 0, 403 );
 
-		// Payload verified — process form data
+		$this->respondData( ['verified' => $result] );
+
+/*		// Payload verified — process form data
 		$formData	= $this->env->getRequest()->getAllFromSource( 'POST' );
 		$this->respondData( [
 			'data'			=> $formData,
 			'verification'	=> $result,
-		] );
+		] );*/
 	}
 
 	protected function __onInit(): void

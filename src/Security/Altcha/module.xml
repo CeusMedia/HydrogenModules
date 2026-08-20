@@ -14,6 +14,8 @@
     <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
     <files>
         <class>Controller/Api/Altcha.php</class>
+        <class>Logic/Altcha.php</class>
+        <script>altcha.js</script>
     </files>
     <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
     <config protected="yes" type="string" name="secret">example-hmac-secret</config>
