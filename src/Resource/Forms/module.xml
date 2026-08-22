@@ -6,7 +6,7 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -24,6 +24,7 @@
 	<log version="0.4.2">Import Logic_Form_Fill from Manage:Forms.</log>
 	<log version="0.4.3">Add entities for all other models.</log>
 	<log version="0.4.4">Add generated status columns.</log>
+	<log version="0.4.5">Support ALTCHA and redirect on submit.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -413,8 +414,12 @@ ALTER TABLE `<%?prefix%>form_fills`
   ADD INDEX hasStatusCustomer (hasStatusCustomer),
   ADD INDEX hasStatusBooking (hasStatusBooking),
   ADD INDEX hasStatusOrder (hasStatusOrder),
-  ADD INDEX hasStatusNewsletter (hasStatusNewsletter)
-;
+  ADD INDEX hasStatusNewsletter (hasStatusNewsletter);
+]]></sql>
+	<sql type="mysql" on="update" version="0.4.5"><![CDATA[
+ALTER TABLE `<%?prefix%>forms`
+  ADD COLUMN useAltcha TINYINT(1) NOT NULL DEFAULT '0' after status,
+  ADD COLUMN forwardOnSubmit VARCHAR(255) COLLATE utf8_unicode_ci NULL DEFAULT NULL AFTER receivers;
 ]]></sql>
 	<sql type="mysql" on="uninstall"><![CDATA[
 		DROP TABLE IF EXISTS `<%?prefix%>form_import_rules`;

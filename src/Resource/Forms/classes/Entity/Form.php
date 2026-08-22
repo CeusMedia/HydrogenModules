@@ -10,9 +10,11 @@ class Entity_Form extends Entity
 	public int|string $managerMailId	= 0;
 	public int $type					= Model_Form::TYPE_NORMAL;
 	public int $status					= Model_Form::STATUS_NEW;
+	public bool $useAltcha				= FALSE;
 	public string $title				= '';
 	public ?string $receivers			= NULL;
 	public string $content				= '';
+	public ?string $forwardOnSubmit		= NULL;
 	public ?string $forwardOnSuccess	= NULL;
 	public int $timestamp				= 0;
 
