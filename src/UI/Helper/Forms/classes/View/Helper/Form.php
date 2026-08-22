@@ -136,6 +136,30 @@ class View_Helper_Form extends Abstraction
 	}
 
 	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		string			$content
+	 *	@return		string
+	 */
+	protected function injectAltcha( Entity_Form $form, string $content ): string
+	{
+		$placeholder	= '[altcha]';
+		if( !$form->useAltcha )
+			return str_replace( $placeholder, '', $content );
+		if( !$this->env->getModules()->has( 'Security_Altcha' ) )
+			return str_replace( $placeholder, '', $content );
+		$pattern	= '/'.preg_quote( $placeholder, '/' ).'/';
+		if( !preg_match( $pattern, $content ) )
+			return $content;
+
+		$baseUrl		= $this->env->getBaseUrl();
+		$pathScripts	= $this->env->getConfig()->get( 'path.scripts' );
+		$challengeUrl	= $baseUrl.'api/altcha/challenge';
+		$widget			= '<altcha-widget challenge="'.$challengeUrl.'"></altcha-widget>';
+		$script			= '<script src="'.$baseUrl.$pathScripts.'altcha.js"></script>';
+		return preg_replace( $pattern, $widget.$script, $content );
+	}
+
+	/**
 	 *	@param		string		$content
 	 *	@return		string
 	 */
@@ -205,6 +229,7 @@ class View_Helper_Form extends Abstraction
 		] );
 		if( $injectBlocksAndCaptcha ){
 			$content	= $this->injectFormBlocks( $content );
+			$content	= $this->injectAltcha( $form, $content );
 			$content	= $this->injectCaptcha( $content );
 		}
 		return $content;
