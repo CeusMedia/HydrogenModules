@@ -163,7 +163,7 @@ class Controller_Catalog_Bookstore extends Controller
 			'measurement'	=> 'shop_category',
 			'tags'		=> [
 				'id'	=> $category->categoryId,
-				'title'	=> $category->title,
+				'title'	=> $category->label_de,
 				'url'	=> $this->logic->getCategoryUri( $category, 'de', TRUE ),
 			],
 			'fields'	=> ['count' => '1i'],
