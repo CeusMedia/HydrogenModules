@@ -17,9 +17,11 @@ class Model_Form extends Model
 		'managerMailId',
 		'type',
 		'status',
+		'useAltcha',
 		'title',
 		'receivers',
 		'content',
+		'forwardOnSubmit',
 		'forwardOnSuccess',
 		'timestamp',
 	];
