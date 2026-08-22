@@ -4,11 +4,22 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
     <title>Security: ALTCHA</title>
-    <description format="markdown"><![CDATA[ALTCHA server.]]></description>
+    <description format="markdown"><![CDATA[
+## ALTCHA server.
+
+[Client Library](https://www.jsdelivr.com/package/npm/altcha)
+[Server Library](https://github.com/altcha-org/altcha-lib-php)
+
+```
+composer require altcha-org/altcha:2.1.0
+```
+
+]]></description>
     <category>Security</category>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <log version="0.1">Initial prototype.</log>
     <log version="0.2">Separation to Hydrogen module.</log>
+    <log version="0.2.1">Add JS module for client-side verification.</log>
     <company site="https://ceusmedia.de/">Ceus Media</company>
     <author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
     <license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -16,6 +27,7 @@
         <class>Controller/Api/Altcha.php</class>
         <class>Logic/Altcha.php</class>
         <script>altcha.js</script>
+        <script>Module.Security.Altcha.js</script>
     </files>
     <config protected="yes" type="boolean" name="active" title="Module main switch">yes</config>
     <config protected="yes" type="string" name="secret">example-hmac-secret</config>
