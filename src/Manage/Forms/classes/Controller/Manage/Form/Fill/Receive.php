@@ -50,6 +50,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$inputs	= $data['inputs'] ?? [];
 			$this->filterData( $inputs );
 			$this->checkCaptcha( $form, $inputs );
+			$this->checkAltcha( $form, $inputs );
 			$this->checkIsNotSpam( $form, $inputs );
 
 			$fillId	= $this->createFillFromInputs( $form, $inputs );
@@ -116,12 +117,43 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	 *	@param		Entity_Form		$form
 	 *	@param		array			$inputs
 	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 */
+	protected function checkAltcha( Entity_Form $form, array & $inputs ): void
+	{
+		if( !$form->useAltcha )
+			return;
+		$module	= $this->env->getModules()->get( 'Security_Altcha', TRUE, FALSE );
+		if( NULL === $module )
+			return;
+
+		$altcha	= '';
+		foreach( $inputs as $nr => $input ){
+			if( 'altcha' === $input['name'] ?? '' ){
+				$altcha	= trim( $input['value'] );
+				unset( $inputs[$nr] );
+			}
+		}
+		if( '' === $altcha )
+			throw new RuntimeException( 'Form field "altcha" is missing' );
+		$logic	= Logic_Altcha::getInstance( $this->env );
+		$result	= $logic->verify( $altcha );
+		if( !$result->verified )
+			throw new RuntimeException( 'Invalid solution of ALTCHA challenge' );
+
+	}
+
+	/**
+	 *	@param		Entity_Form		$form
+	 *	@param		array			$inputs
+	 *	@return		void
 	 */
 	protected function checkCaptcha( Entity_Form $form, array & $inputs ): void
 	{
 		$captcha	= '';
 		foreach( $inputs as $nr => $input ){
-			if( $input['name'] === 'captcha' ){
+			if( 'captcha' === $input['name'] ?? '' ){
 				$captcha	= $input['value'];
 				unset( $inputs[$nr] );
 			}

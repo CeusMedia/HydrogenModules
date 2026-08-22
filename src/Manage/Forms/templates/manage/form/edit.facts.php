@@ -113,8 +113,28 @@ return '
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
+					<label for="input_forwardOnSubmit">URL-Weiterleitung nach Submit<!-- <small class="muted">(...)</small>--></label>
+					<input type="text" name="forwardOnSubmit" id="input_forwardOnSubmit" class="span12" value="'.htmlentities( $form->forwardOnSubmit ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
 					<label for="input_forwardOnSuccess">URL-Weiterleitung bei Erfolg<!-- <small class="muted">(...)</small>--></label>
 					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12" value="'.htmlentities( $form->forwardOnSuccess ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<label for="input_useAltcha" class="checkbox">
+						'.HtmlTag::create( 'input', NULL, [
+							'type'	=> "checkbox",
+							'name'	=> "useAltcha",
+							'id'	=> "input_useAltcha",
+							'value'	=> "1",
+							'checked'	=> $form->useAltcha ? 'checked' : NULL,
+						] ).'
+						benutze ALTCHA-Prüfung<!-- <small class="muted">(...)</small>-->
+					</label>
 				</div>
 			</div>
 			<div class="buttonbar">
