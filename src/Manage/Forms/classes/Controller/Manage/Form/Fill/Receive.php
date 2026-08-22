@@ -61,6 +61,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 				'formId'	=> $form->formId,
 				'formType'	=> $form->type,
 				'fillId'	=> $fillId,
+				'redirect'	=> $form->forwardOnSubmit,
 			];
 		}
 		catch( Exception $e ){
