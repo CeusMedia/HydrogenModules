@@ -38,7 +38,7 @@ class Job_Mail_Queue extends Job_Abstract
 				Model_Mail::STATUS_NEW,
 				Model_Mail::STATUS_RETRY
 			],
-			'toBeSentAt'	< time(),
+			'toBeSentAt'	=> '< '.time(),
 			'attemptedAt'	=> '< '.( time() - $this->options->get( 'retry.delay' ) ),
 		];
 		$orders		= [

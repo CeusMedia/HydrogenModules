@@ -614,7 +614,7 @@ class Logic_Mail extends Logic
 	 *	Returns list of available mail templates.
 	 *	@return		array<Entity_Mail_Template>
 	 */
-	public function getTemplates()
+	public function getTemplates(): array
 	{
 		return $this->modelTemplate->getAll();
 	}
