@@ -131,7 +131,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 
 		$altcha	= '';
 		foreach( $inputs as $nr => $input ){
-			if( 'altcha' === $input['name'] ?? '' ){
+			if( 'altcha' === ( $input['name'] ?? '' ) ){
 				$altcha	= trim( $input['value'] );
 				unset( $inputs[$nr] );
 			}
@@ -154,7 +154,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	{
 		$captcha	= '';
 		foreach( $inputs as $nr => $input ){
-			if( 'captcha' === $input['name'] ?? '' ){
+			if( 'captcha' === ( $input['name'] ?? '' ) ){
 				$captcha	= $input['value'];
 				unset( $inputs[$nr] );
 			}
@@ -270,7 +270,8 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	protected function filterData( array & $inputs ): void
 	{
 		foreach( $inputs as $input )
-			$input['value'] = trim( strip_tags( $input['value'] ) );
+			if( isset( $input['value'] ) )
+				$input['value'] = trim( strip_tags( $input['value'] ) );
 	}
 
 	protected function sendAllowOriginHeaders(): void

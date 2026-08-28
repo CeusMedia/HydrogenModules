@@ -36,7 +36,8 @@ composer require altcha-org/altcha:2.1.0
         <needs type="package" version="2.1.0">altcha-org/altcha</needs>
         <supports type="module">Server_Log_Request</supports>
     </relations>
-    <link access="public" path="api/form/import/index"/>
+    <link access="public" path="api/altcha/challenge"/>
+    <link access="public" path="api/altcha/verify"/>
     <link access="acl" path="ajax/manage/form/import/testImportRules"/>
     <link access="acl" path="ajax/manage/form/import/testRules"/>
 </module>
