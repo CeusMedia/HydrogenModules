@@ -132,6 +132,7 @@ class Controller_Manage_Form extends Controller
 		if( $this->request->has( 'save' ) ){
 			$this->checkIsPost();
 			$data	= $this->request->getAll();
+			$data['useAltcha']	= $this->request->has( 'useAltcha' );
 			$data['timestamp']	= time();
 			$this->modelForm->edit( $formId, $data, FALSE );
 			$this->restart( 'edit/'.$formId, TRUE );
