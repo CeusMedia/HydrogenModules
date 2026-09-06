@@ -166,9 +166,9 @@ class Controller_Manage_Form extends Controller
 		$this->addData( 'nrFills', $nrFills );
 		$this->addData( 'hasFills', 0 !== $nrFills );
 
-		$parameterBlacklist	= ['gclid', 'fclid'];
-		$references	= $this->modelFill->getDistinct( 'referer', ['formId' => $formId], ['referer' => 'ASC'] );
 		$list		= [];
+/*		$parameterBlacklist	= ['gclid', 'fclid'];
+		$references	= $this->modelFill->getDistinct( 'referer', ['formId' => $formId], ['referer' => 'ASC'] );
 		foreach( array_filter( $references ) as $reference ){
 			if( str_contains( $reference, '&preview=true' ) )
 				continue;
@@ -181,7 +181,7 @@ class Controller_Manage_Form extends Controller
 			}
 			$url->setQuery( http_build_query( $parameters, NULL, '&' ) );
 			$list[]	= $url->getAbsolute();
-		}
+		}*/
 		$this->addData( 'references', array_unique( $list ) );
 	}
 

@@ -1,15 +1,17 @@
-<?php
+<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\HydrogenFramework\View;
 
-/** @var \CeusMedia\HydrogenFramework\View $view */
+/** @var View $view */
 /** @var object $form */
 /** @var array<object> $mailsCustomer */
 /** @var array<object> $mailsManager */
 /** @var bool $hasFills */
 /** @var array<string,string|HtmlTag> $navButtons */
+/** @var array<string> $references */
 
 $iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
@@ -41,41 +43,46 @@ foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager		= HtmlElements::Options( $optMailManager, $form->managerMailId );
 
-$listReferences = '<em class="muted">Keine.</em>';
-
-if( !empty( $references ) ){
-	$domains	= [];
-	foreach( $references as $reference ){
-		$url	= new Url( $reference );
-		$domain	= $url->getHost();
-		if( strlen( $url->getPath().$url->getQuery() ) < 2 )
-			continue;
-		if( !array_key_exists( $domain, $domains ) )
-			$domains[$domain]   = [];
-		$title  = preg_replace( '/^\//', '', $url->getPath() );
-		if( strlen( $url->getQuery() ) > 0 ){
-			$title	.= '<small class="muted">?'.$url->getQuery().'</small>';
+$panelReferrers	= '';
+if( 0 ){
+	$listReferences = '<em class="muted">Keine.</em>';
+	if( [] !== $references ){
+		$domains	= [];
+		foreach( $references as $reference ){
+			$url	= new Url( $reference );
+			$domain	= $url->getHost();
+			if( strlen( $url->getPath().$url->getQuery() ) < 2 )
+				continue;
+			if( !array_key_exists( $domain, $domains ) )
+				$domains[$domain]   = [];
+			$title  = preg_replace( '/^\//', '', $url->getPath() );
+			if( strlen( $url->getQuery() ) > 0 ){
+				$title	.= '<small class="muted">?'.$url->getQuery().'</small>';
+			}
+			$domains[$domain][] = HtmlTag::create( 'li', [
+				HtmlTag::create( 'a', $title, [
+					'href'		=> $reference,
+					'target'	=> '_blank',
+				])
+			], ['class' => 'autocut']);
 		}
-		$domains[$domain][] = HtmlTag::create( 'li', [
-			HtmlTag::create( 'a', $title, [
-				'href'		=> $reference,
-				'target'	=> '_blank',
-			])
-		], ['class' => 'autocut']);
+		$lists = [];
+		foreach( $domains as $domain => $domainReferences ){
+			$list		= HtmlTag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
+			$lists[]	= HtmlTag::create( 'h5', $domain ).$list;
+		}
+		$listReferences = HtmlTag::create( 'div', $lists );
 	}
-	$lists = [];
-	foreach( $domains as $domain => $domainReferences ){
-		$list		= HtmlTag::create( 'ul', $domainReferences, ['class' => 'unstyled'] );
-		$lists[]	= HtmlTag::create( 'h5', $domain ).$list;
-	}
-    $listReferences = HtmlTag::create( 'div', $lists );
+
+	$panelReferrers	= HtmlTag::create( 'div', [
+		HtmlTag::create( 'h3', 'Verwendung' ),
+		HtmlTag::create( 'div', [
+			$listReferences
+		], ['class' => 'content-panel-inner'] )
+	], ['class' => 'content-panel'] );
 }
 
-
-
-return '
-<div class="content-panel">
-	<div class="content-panel-inner">
+$form	= '
 		<form action="./manage/form/edit/'.$form->formId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span1">
@@ -152,13 +159,12 @@ return '
 					'onclick'	=> "return confirm('Wirklich ?');",
 				] ).'
 			</div>
-		</form>
-	</div>
-</div>
-<div class="content-panel">
-	<div class="content-panel-inner">
-		<h3>Verwendung</h3>
-		'.$listReferences.'
-	</div>
-</div>
-';
+		</form>';
+
+$panelDetails	= HtmlTag::create( 'div', [
+	HtmlTag::create( 'div', [
+		$form
+	], ['class' => 'content-panel-inner'] )
+], ['class' => 'content-panel'] );
+
+return $panelDetails.$panelReferrers;

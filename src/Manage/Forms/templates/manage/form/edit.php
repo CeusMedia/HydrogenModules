@@ -13,6 +13,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var bool $hasFills */
 /** @var int|string|NULL $activeTab */
 /** @var array<string,string|HtmlTag> $navButtons */
+/** @var array<string> $references */
 
 /**
  *	@param		int|string 		$formId
