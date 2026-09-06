@@ -51,8 +51,8 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 			$modelRequest	= new Model_Log_Request( $env );
 			/** @var Entity_Log_Request $request */
 			$request		= $modelRequest->get( $exception->requestId );
-			$exceptionRequest	= Dictionary::create( json_decode( $request->request, TRUE ) );
-			$exceptionSession	= Dictionary::create( json_decode( $request->session, TRUE ) );
+			$exceptionRequest	= Dictionary::create( json_decode( $request->request, TRUE ) ?? [] );
+			$exceptionSession	= Dictionary::create( json_decode( $request->session, TRUE ) ?? [] );
 			$requestMethod		= $request->method;
 			$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
 		}
