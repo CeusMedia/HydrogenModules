@@ -124,5 +124,12 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Filter( $this->env );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canAdd', $acl->has( 'manage/ip/lock/filter', 'add' ) );
+		$this->addData( 'canEdit', $acl->has( 'manage/ip/lock/filter', 'edit' ) );
+		$this->addData( 'canActivate', $acl->has( 'manage/ip/lock/filter', 'activate' ) );
+		$this->addData( 'canDeactivate', $acl->has( 'manage/ip/lock/filter', 'deactivate' ) );
+		$this->addData( 'canRemove', $acl->has( 'manage/ip/lock/filter', 'remove' ) );
 	}
 }

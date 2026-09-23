@@ -164,5 +164,13 @@ class Controller_Manage_IP_Lock extends Controller
 	{
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canAdd', $acl->has( 'manage/ip/lock', 'add' ) );
+		$this->addData( 'canCancel', $acl->has( 'manage/ip/lock', 'cancel' ) );
+		$this->addData( 'canEdit', $acl->has( 'manage/ip/lock', 'edit' ) );
+		$this->addData( 'canLock', $acl->has( 'manage/ip/lock', 'lock' ) );
+		$this->addData( 'canOrder', $acl->has( 'manage/ip/lock', 'order' ) );
+		$this->addData( 'canUnlock', $acl->has( 'manage/ip/lock', 'unlock' ) );
 	}
 }

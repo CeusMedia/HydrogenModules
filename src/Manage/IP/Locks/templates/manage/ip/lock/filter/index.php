@@ -1,10 +1,17 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
 /** @var array<Entity_IP_Lock_Filter> $filters */
+/** @var bool $canAdd */
+/** @var bool $canEdit */
+/** @var bool $canActivate */
+/** @var bool $canDeactivate */
+/** @var bool $canRemove */
 
 $statuses	= [
 	Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
@@ -12,12 +19,27 @@ $statuses	= [
 	Model_IP_Lock_Filter::STATUS_ENABLED			=> 'aktiv',
 ];
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
+$statusLabels	= [
+	Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON	=> HtmlTag::create( 'span', '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>', ['class' => 'label label-inverse'] ),
+	Model_IP_Lock_Filter::STATUS_DISABLED			=> HtmlTag::create( 'span', 'inaktiv', ['class' => 'label label-inverse'] ),
+	Model_IP_Lock_Filter::STATUS_ENABLED			=> HtmlTag::create( 'span', 'aktiv', ['class' => 'label label-success'] ),
+];
+
+
+
+$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
+$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
+$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 $iconActivate	= HtmlTag::create( 'i', '', ['class' => 'icon-ok icon-white'] );
 $iconDeactivate	= HtmlTag::create( 'i', '', ['class' => 'icon-remove icon-white'] );
-if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
+if( $env->getModules()->has( 'UI_Bootstrap' ) ){
+	$iconAdd		= new Icon( 'plus' );
+	$iconEdit		= new Icon( 'pencil' );
+	$iconRemove		= new Icon( 'trash' );
+	$iconActivate	= new Icon( 'check' );
+	$iconDeactivate	= new Icon( 'times' );
+}
+else if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAdd		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus fa-inverse'] );
 	$iconEdit		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-pencil'] );
 	$iconRemove		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-trash fa-inverse'] );
@@ -46,21 +68,23 @@ if( $filters ){
 		if( $filter->reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
 			$filter->status	= Model_IP_Lock_Filter::STATUS_DISABLED_BY_REASON;
 
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
-			'href'		=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId,
-			'class'		=> 'btn not-btn-primary btn-small btn-mini',
-			'title'		=> 'edit',
-		] );
+		$buttonEdit		= '';
+		if( $canEdit )
+			$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
+				'href'		=> './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId,
+				'class'		=> 'btn not-btn-primary btn-small btn-mini',
+				'title'		=> 'edit',
+			] );
 		$buttonStatus	= "";
 
-		if( Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
+		if( $canActivate && Model_IP_Lock_Filter::STATUS_DISABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 				'href'		=> './manage/ip/lock/filter/activate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-success btn-small btn-mini',
 				'title'		=> 'aktivieren',
 			] );
 		}
-		else if( Model_IP_Lock_Filter::STATUS_ENABLED === $filter->status ){
+		else if( $canDeactivate && Model_IP_Lock_Filter::STATUS_ENABLED === $filter->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/ip/lock/filter/deactivate/'.$filter->ipLockFilterId,
 				'class'		=> 'btn btn-inverse btn-small btn-mini',
@@ -79,7 +103,11 @@ if( $filters ){
 		$method		= $filter->method ?: '<span class="muted">alle</span>';
 		$lockStatus	= $lockStates[$filter->lockStatus];
 		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
-		$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
+
+		$link		= $filter->title;
+		if( $canEdit )
+			$link		= HtmlTag::create( 'a', $filter->title, ['href' => './manage/ip/lock/filter/edit/'.$filter->ipLockFilterId] );
+
 		$title		= HtmlTag::create( 'div', $link, ['class' => 'autocut'] );
 		$rowClass	= 'success';
 		if( $filter->status < Model_IP_Lock_Filter::STATUS_ENABLED )
@@ -93,10 +121,10 @@ if( $filters ){
 			HtmlTag::create( 'td', $title, ['class' => 'lock-filter-title'] ),
 			HtmlTag::create( 'td', $reason, ['class' => 'lock-filter-reason'] ),
 			HtmlTag::create( 'td', $lockStatus, ['class' => 'lock-filter-lock-status'] ),
-			HtmlTag::create( 'td', $statuses[$filter->status], ['class' => 'lock-filter-status'] ),
+			HtmlTag::create( 'td', $statusLabels[$filter->status], ['class' => 'lock-filter-status'] ),
 			HtmlTag::create( 'td', '<small>'.$appliedAt.'</small>', ['class' => 'lock-filter-applied'] ),
 			HtmlTag::create( 'td', $buttons, ['class' => 'lock-buttons'] ),
-		], ['class' => $rowClass] );
+		] );
 	}
 	$heads	= [
 		'Methode',

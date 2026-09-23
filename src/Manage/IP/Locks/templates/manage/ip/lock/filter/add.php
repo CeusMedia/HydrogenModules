@@ -5,6 +5,11 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
 /** @var array<Entity_IP_Lock_Reason> $reasons */
+/** @var bool $canAdd */
+/** @var bool $canEdit */
+/** @var bool $canActivate */
+/** @var bool $canDeactivate */
+/** @var bool $canRemove */
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );

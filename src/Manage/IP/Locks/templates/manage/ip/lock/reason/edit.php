@@ -5,6 +5,10 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
 /** @var object $reason */
+/** @var bool $canAdd */
+/** @var bool $canActivate */
+/** @var bool $canDeactivate */
+/** @var bool $canRemove */
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );

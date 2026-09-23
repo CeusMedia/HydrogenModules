@@ -4,6 +4,11 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
 /** @var Entity_IP_Lock $lock */
+/** @var bool $canAdd */
+/** @var bool $canCancel */
+/** @var bool $canLock */
+/** @var bool $canOrder */
+/** @var bool $canUnlock */
 
 $data	= print_m( $lock, NULL, NULL, TRUE );
 

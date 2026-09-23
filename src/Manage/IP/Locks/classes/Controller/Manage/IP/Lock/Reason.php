@@ -117,5 +117,12 @@ class Controller_Manage_IP_Lock_Reason extends Controller
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
 		$this->model		= new Model_IP_Lock_Reason( $this->env );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canAdd', $acl->has( 'manage/ip/lock/reason', 'add' ) );
+		$this->addData( 'canEdit', $acl->has( 'manage/ip/lock/reason', 'edit' ) );
+		$this->addData( 'canActivate', $acl->has( 'manage/ip/lock/reason', 'activate' ) );
+		$this->addData( 'canDeactivate', $acl->has( 'manage/ip/lock/reason', 'deactivate' ) );
+		$this->addData( 'canRemove', $acl->has( 'manage/ip/lock/reason', 'remove' ) );
 	}
 }

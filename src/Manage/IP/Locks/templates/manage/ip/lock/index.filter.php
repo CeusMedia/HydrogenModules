@@ -7,6 +7,7 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var ?string $filterStatus */
 /** @var ?string $filterSort */
 /** @var ?string $filterOrder */
+/** @var bool $canOrder */
 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'icon-search icon-white'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'icon-zoom-out icon-white'] );
