@@ -37,6 +37,7 @@ class Controller_Manage_User extends Controller
 
 	protected array $filters	= [
 		'username',
+		'email',
 		'roomId',
 		'roleId',
 		'status',
@@ -216,13 +217,15 @@ class Controller_Manage_User extends Controller
 //		$limit		= ( (int) $limit <= 0 || (int) $limit > 1000 ) ? 10 : (int) $limit;		//  ensure that limit is within bounds
 		$offset		= $page * $limit;						//  get offset from request or reset
 
-		$filters	= [];																//  prepare filters map
+		$filters	= [];																	//  prepare filters map
 		foreach( $session->getAll() as $key => $value ){									//  iterate session settings
 			if( str_starts_with( $key, 'filter-user-' ) ){									//  if setting is users filter
-				$column	= preg_replace( '/^filter-user-/', '', $key );						//  extract database module column
-				if( !in_array( $column, ['order', 'direction', 'limit'] ) ){			// 	filter is within list of allowed filters
-					if( $column === 'username' )											//  filter is username
-						$value = preg_replace( "/\*/", "%", $value );						//  transform for SQL: * -> %
+				$column	= preg_replace( '/^filter-user-/', '', $key );	//  extract database module column
+				if( !in_array( $column, ['order', 'direction', 'limit'] ) ){				// 	filter is within list of allowed filters
+					if( $column === 'username' || $column === 'email' )						//  filter is username or email
+						$value = preg_replace( "/\*/", "%", $value );		//  transform for SQL: * -> %
+					if( $column === 'email' )												//  filter is email
+						$value = '% %'.$value.'%';												//  wrap in LIKE
 					$filters[$column] = $value;												//  enlist filter
 				}
 			}
@@ -245,7 +248,12 @@ class Controller_Manage_User extends Controller
 		$total		= $this->modelUser->count( $filters );
 		$list		= $this->modelUser->getAll( $filters, $orders, [$offset, $limit] );
 
-		$this->addData( 'username', $session->get( 'filter-user-username' ) );
+		$this->addData( 'filterUsername', $session->get( 'filter-user-username' ) );
+		$this->addData( 'filterEmail', $session->get( 'filter-user-email' ) );
+		$this->addData( 'filterRoleId', $session->get( 'filter-user-roleId' ) );
+		$this->addData( 'filterStatus', $session->get( 'filter-user-status' ) );
+		$this->addData( 'filterOrder', $order );
+		$this->addData( 'filterDirection', $dir );
 		$this->addData( 'roles', $roleMap );
 #		$this->addData( 'rooms', $server->getData( 'room', 'index' ) );
 		$this->addData( 'all', $all );

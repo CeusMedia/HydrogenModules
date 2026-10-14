@@ -9,6 +9,7 @@ use CeusMedia\HydrogenFramework\Environment\Exception as EnvironmentException;
 use CeusMedia\HydrogenFramework\Environment\Remote as RemoteEnvironment;
 use CeusMedia\HydrogenFramework\Environment\Resource\Module\Reader as HydrogenModuleReader;
 use CeusMedia\HydrogenFramework\Logic;
+use Psr\SimpleCache\InvalidArgumentException as SimpleCacheInvalidArgumentException;
 
 /**
  *	@todo		remove singleton to have several frontend logics for different environments
@@ -41,7 +42,7 @@ class Logic_Frontend extends Logic
 	 *	@param		Environment		$parentEnv
 	 *	@param		array			$options
 	 *	@return		RemoteEnvironment
-	 *	@throws		EnvironmentException
+	 *	@throws		SimpleCacheInvalidArgumentException
 	 */
 	public static function getRemoteEnv( Environment $parentEnv, array $options = [] ): RemoteEnvironment
 	{
