@@ -209,7 +209,7 @@ class Resource_Database_Connection extends DatabasePdoConnection
 	{
 		parent::__construct( $this->dsn, $this->auth->username, $this->auth->password, $this->driverOptions );			//  connect to database
 		$this->status = self::STATUS_CONNECTED;
-		$this->query( 'USE '.$this->getName().';' );
+		$this->query( 'USE `'.$this->getName().'`;' );
 	}
 }
 

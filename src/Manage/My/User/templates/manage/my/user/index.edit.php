@@ -19,7 +19,7 @@ $languageLabels	= array_combine( $languages, $languages );
 $languageWords	= $env->getLanguage()->getWords( 'language', FALSE ) ?: ['languages' => $languageLabels];
 $languageMap	= $languageWords['languages'];
 
-$languageMap['_selected']	= $user->language;
+$languageMap['_selected']	= $user->language ?? 'de';
 
 $optGender	= HTML::Options( $words['gender'], $user->gender );
 
