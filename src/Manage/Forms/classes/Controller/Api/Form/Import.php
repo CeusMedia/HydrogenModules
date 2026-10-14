@@ -71,6 +71,7 @@ class Controller_Api_Form_Import extends Controller
 	 *	Skips any checks if module Server:Log:Request is not installed or no limits are set in configuration.
 	 *	@return		void
 	 *	@throws		ReflectionException
+	 *	@throws		DateInvalidOperationException
 	 */
 	protected function checkLimits(): void
 	{

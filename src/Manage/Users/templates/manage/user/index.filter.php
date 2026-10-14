@@ -8,7 +8,12 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<string,array<string|int,string|int>> $words */
 /** @var array<object> $roles */
 /** @var int $limit */
-/** @var ?string $username */
+/** @var ?string $filterUsername */
+/** @var ?string $filterEmail */
+/** @var ?string $filterRoleId */
+/** @var ?string $filterStatus */
+/** @var ?string $filterOrder */
+/** @var ?string $filterDirection */
 
 //  --  FILTER  --  //
 $w			= (object) $words['indexFilter'];
@@ -16,7 +21,7 @@ $session	= $env->getSession();
 
 $optRole	= [HtmlElements::Option( '', '' )];
 foreach( array_reverse( $roles ) as $role ){
-	$selected	= $role->roleId == $session->get( 'filter-user-roleId' );
+	$selected	= $role->roleId == $filterRoleId;
 	$class		= 'role role'.$role->roleId;
 	$optRole[]	= HtmlElements::Option( $role->roleId, $role->title, $selected, FALSE, $class );
 }
@@ -25,7 +30,7 @@ $optRole	= join( $optRole );
 krsort( $states );
 $optStatus	= [HtmlElements::Option( '', '' )];
 foreach( $states as $status => $label ){
-	$selected	= (string) $status === (string) $session->get( 'filter-user-status' );
+	$selected	= (string) $status === (string) $filterStatus;
 	$class		= 'user-status status'.$status;
 	$optStatus[]	= HtmlElements::Option( (string) $status, $label, $selected, FALSE, $class );
 }
@@ -33,14 +38,14 @@ $optStatus	= join( $optStatus );
 
 $optOrder	= ['' => '-'];
 foreach( $words['indexFilterOrders'] as $column => $label ){
-	$selected	= $column == $session->get( 'filter-user-order' );
+	$selected	= $column == $filterOrder;
 	$optOrder[]	= HtmlElements::Option( $column, $label, $selected );
 }
 $optOrder   = join( $optOrder );
 
 $optDirection	= [HtmlElements::Option( '', '' )];
 foreach( $words['indexFilterDirections'] as $key => $label ){
-	$selected	= $key == $session->get( 'filter-user-direction' );
+	$selected	= $key == $filterDirection;
 	$class		= 'direction direction'.$key;
 	$optDirection[]	= HtmlElements::Option( $key, $label, $selected, FALSE, $class );
 }
@@ -68,7 +73,13 @@ return '
 			<div class="bs2-row-fluid bs3-row bs4-row">
 				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
 					<label for="username">'.$w->labelUsername.'</label>
-					'.HtmlElements::Input( 'username', $username, 'bs2-span12 bs3-form-control bs4-form-control complete-username' ).'
+					'.HtmlElements::Input( 'username', $filterUsername, 'bs2-span12 bs3-form-control bs4-form-control complete-username' ).'
+				</div>
+			</div>
+			<div class="bs2-row-fluid bs3-row bs4-row">
+				<div class="bs2-span12 bs3-col-md-12 bs3-form-group bs4-col-md-12 bs4-form-group">
+					<label for="email">'.$w->labelEmail.'</label>
+					'.HtmlElements::Input( 'email', $filterEmail, 'bs2-span12 bs3-form-control bs4-form-control complete-email' ).'
 				</div>
 			</div>
 			<div class="bs2-row-fluid bs3-row bs4-row">
