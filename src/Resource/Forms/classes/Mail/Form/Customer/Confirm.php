@@ -23,6 +23,8 @@ class Mail_Form_Customer_Confirm extends Mail_Form_Abstract
 
 		$content		= $mail->content;
 		$linkConfirm	= $this->env->getConfig()->get( 'app.base.url' ).'manage/form/fill/confirm/'.$fill->fillId;
+		if( '' !== ( $fill->token ?? '' ) )
+			$linkConfirm	= $this->env->getConfig()->get( 'app.base.url' ).'manage/form/fill/confirm/'.$fill->token;
 		$content		= str_replace( "[form_title]", $form->title, $content );
 		$content		= str_replace( "[link_confirm]", $linkConfirm, $content );
 		if( Model_Form_Mail::FORMAT_HTML === $mail->format ){

@@ -38,9 +38,8 @@ class Logic_Form_Fill extends Logic
 			return [];
 
 		$formData	= [];
-		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters ){
+		foreach( json_decode( $fill->data ) as $fieldName => $fieldParameters )
 			$formData[$fieldName]	= $fieldParameters->value;
-		}
 
 //		/** @var Entity_Form $form */
 //		$form		= $this->modelForm->get( $fill->formId );
@@ -165,7 +164,6 @@ class Logic_Form_Fill extends Logic
 	 *	@param		int|string		$fillId
 	 *	@return		bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendConfirmMail( int|string $fillId ): bool
 	{
@@ -206,7 +204,6 @@ class Logic_Form_Fill extends Logic
 	 *	@param		int|string		$fillId
 	 *	@return		?bool
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendCustomerResultMail( int|string $fillId ): ?bool
 	{
@@ -300,7 +297,6 @@ class Logic_Form_Fill extends Logic
 	 *	@param		$data
 	 *	@return		void
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendManagerErrorMail( int|string $formId, $data ): void
 	{
@@ -326,7 +322,6 @@ class Logic_Form_Fill extends Logic
 	 *	@param		int|string		$fillId
 	 *	@return		?int
 	 *	@throws		ReflectionException
-	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
 	public function sendManagerResultMails( int|string $fillId ): ?int
 	{

@@ -26,6 +26,7 @@ class Model_Form_Fill extends Model
 		'fillId',
 		'formId',
 		'status',
+		'token',
 		'email',
 		'data',
 		'referer',
@@ -37,6 +38,7 @@ class Model_Form_Fill extends Model
 	protected array $indices		= [
 		'formId',
 		'status',
+		'token',
 		'email',
 	];
 

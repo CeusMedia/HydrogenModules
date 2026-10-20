@@ -8,6 +8,7 @@ class Entity_Form_Fill extends Entity
 	public int|string $fillId;
 	public int|string $formId;
 	public int $status				= Model_Form_Fill::STATUS_NEW;
+	public string $token			= '';
 	public string $email			= '';
 	public object|string|NULL $data	= NULL;
 	public string|NULL $referer		= NULL;
