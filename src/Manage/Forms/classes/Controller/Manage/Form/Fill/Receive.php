@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Common\Alg\ID;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -54,7 +55,9 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			$this->checkIsNotSpam( $form, $inputs );
 
 			$fillId	= $this->createFillFromInputs( $form, $inputs );
-			$this->applyActionsOnCreatedFill( $form, $fillId );
+			/** @var Entity_Form_Fill $fill */
+			$fill	= $this->modelFill->get( $fillId );
+			$this->applyActionsOnCreatedFill( $form, $fill );
 
 			$status	= 'ok';
 			$data	= [
@@ -96,21 +99,21 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 	}
 
 	/**
-	 *	@param		Entity_Form		$form
-	 *	@param		int|string		$fillId
+	 *	@param		Entity_Form			$form
+	 *	@param		Entity_Form_Fill	$fill
 	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	protected function applyActionsOnCreatedFill( Entity_Form $form, int|string $fillId ): void
+	protected function applyActionsOnCreatedFill( Entity_Form $form, Entity_Form_Fill $fill ): void
 	{
 		if( Model_Form::TYPE_NORMAL === $form->type ){
-			$this->logicFill->sendCustomerResultMail( $fillId );
-			$this->logicFill->sendManagerResultMails( $fillId );
-			$this->logicFill->applyTransfers( $fillId );
+			$this->logicFill->sendCustomerResultMail( $fill );
+			$this->logicFill->sendManagerResultMails( $fill );
+			$this->logicFill->applyTransfers( $fill );
 		}
 		else if( Model_Form::TYPE_CONFIRM === $form->type ){
-			$this->logicFill->sendConfirmMail( $fillId );
+			$this->logicFill->sendConfirmMail( $fill );
 		}
 	}
 
@@ -255,7 +258,7 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			default						=> Model_Form_Fill::STATUS_CONFIRMED,
 		};
 
-		return $this->modelFill->add( Entity_Form_Fill::fromArray( [
+		$entity	= Entity_Form_Fill::fromArray( [
 			'formId'	=> $form->formId,
 			'status'	=> $status,
 			'email'		=> $inputs['email']['value'] ?? '',
@@ -264,7 +267,11 @@ class Controller_Manage_Form_Fill_Receive extends Controller
 			'referer'	=> getEnv( 'HTTP_REFERER' ) ? strip_tags( getEnv( 'HTTP_REFERER' ) ) : '',
 			'agent'		=> strip_tags( getEnv( 'HTTP_USER_AGENT' ) ),
 			'createdAt'	=> time(),
-		] ), FALSE );
+		] );
+		if( Model_Form_Fill::STATUS_NEW === $entity->status )
+			if( property_exists( $entity, 'token' ) )
+				$entity->token	= sha1( ID::uuid() );
+		return $this->modelFill->add( $entity, FALSE );
 	}
 
 	protected function filterData( array & $inputs ): void

@@ -1,13 +1,15 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**	@var object $form */
 /**	@var array<string,string|HtmlTag> $navButtons */
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
+$iconList	= new Icon( 'list' );
+$iconSave	= new Icon( 'check' );
+$iconPrev	= new Icon( 'arrow-left' );
+$iconNext	= new Icon( 'arrow-right' );
 
 return '
 <div class="content-panel">

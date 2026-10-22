@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
@@ -11,12 +13,12 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var object $form */
 /** @var array<string,string|HtmlTag> $navButtons */
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconTest	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+$iconAdd	= new Icon( 'plus' );
+$iconEdit	= new Icon( 'pencil' );
+$iconSave	= new Icon( 'check' );
+$iconTest	= new Icon( 'cogs' );
+$iconRemove	= new Icon( 'remove' );
+$iconMail	= new Icon( 'envelope' );
 
 $listRules	= HtmlTag::create( 'div', 'Keine Regeln vorhanden.', ['class' => 'alert alert-info'] );
 if( $transferRules ){

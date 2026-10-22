@@ -1,7 +1,7 @@
 <?php
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\ADT\URL as Url;
+//use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\FS\Folder\RecursiveLister as RecursiveFolderLister;
 use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\HydrogenFramework\Controller;
@@ -419,6 +419,9 @@ class Controller_Manage_Form extends Controller
 		return $transferRule;
 	}
 
+	/**
+	 *	@return 	array<Entity_Form_Mail>
+	 */
 	protected function getAvailableCustomerMails( $conditions = [], $orders = [] ): array
 	{
 //		$conditions	= ['identifier' => 'customer_result_%'];

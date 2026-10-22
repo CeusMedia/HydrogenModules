@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -7,16 +8,14 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var Entity_Form_Block $block */
 /** @var array<Entity_Form> $withinForms */
 /** @var array<Entity_Form_Block> $withinBlocks */
+/** @var array<string,Entity_Form_Block> $blocksByIdentifier */
 
-//$modelForm	= new Model_Form( $env );
-$modelBlock	= new Model_Form_Block( $env );
-
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconBlock	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
-$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+$iconList	= new Icon( 'list' );
+$iconView	= new Icon( 'eye' );
+$iconSave	= new Icon( 'check' );
+$iconRemove	= new Icon( 'trash' );
+$iconBlock	= new Icon( 'square' );
+$iconForm	= new Icon( 'th' );
 
 $listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $withinForms ){
@@ -48,8 +47,8 @@ preg_match_all( '/\[block_(\S+)\]/', $block->content, $matches );
 if( isset( $matches[0] ) && count( $matches[0] ) ){
 	$list	= [];
 	foreach( array_keys( $matches[0] ) as $nr ){
-		$item	= $modelBlock->getByIndex( 'identifier', $matches[1][$nr] );
-		if( !$item )
+		$item	= $blocksByIdentifier[$matches[1][$nr]] ?? FALSE;
+		if( FALSE === $item )
 			continue;
 		$link	= HtmlTag::create( 'a', $iconBlock.'&nbsp;'.$item->title, [
 			'href'	=> './manage/form/block/edit/'.$item->blockId,

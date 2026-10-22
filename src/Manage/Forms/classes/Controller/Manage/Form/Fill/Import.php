@@ -36,6 +36,7 @@ class Controller_Manage_Form_Fill_Import extends Controller
 	 *	@param		bool			$dryMode
 	 *	@return		void
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
+	 *	@throws		ReflectionException
 	 */
 	public function index( int|string $importRuleId, bool $verbose = FALSE, bool $dryMode = FALSE ): void
 	{
@@ -99,6 +100,7 @@ class Controller_Manage_Form_Fill_Import extends Controller
 	/**
 	 *	@param		int|string		$importRuleId
 	 *	@return		Entity_Form_Import_Rule
+	 *	@throws		ReflectionException
 	 */
 	protected function checkImportRuleExists( int|string $importRuleId ): Entity_Form_Import_Rule
 	{

@@ -85,6 +85,7 @@ class Controller_Manage_Form_Target extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

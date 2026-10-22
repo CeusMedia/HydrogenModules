@@ -1,12 +1,14 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<string,string|HtmlTag> $navButtons */
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
-$iconBlock	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
+$iconList	= new Icon( 'list' );
+$iconPrev	= new Icon( 'arrow-left' );
+$iconNext	= new Icon( 'arrow-right' );
+$iconBlock	= new Icon( 'square' );
 
 $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 if( $blocksWithin = $this->getData( 'blocksWithin', [] ) ){

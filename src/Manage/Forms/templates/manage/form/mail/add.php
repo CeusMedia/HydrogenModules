@@ -1,9 +1,11 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconList	= new Icon( 'list' );
+$iconSave	= new Icon( 'check' );
 
 $optRoleType	= [
 	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',

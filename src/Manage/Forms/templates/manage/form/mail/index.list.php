@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -10,10 +11,10 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var int $page */
 /** @var int $pages */
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+$iconAdd	= new Icon( 'plus' );
+$iconView	= new Icon( 'eye' );
+$iconEdit	= new Icon( 'pencil' );
+$iconForm	= new Icon( 'th' );
 
 $formats	= [
 	0	=> 'nicht definiert',

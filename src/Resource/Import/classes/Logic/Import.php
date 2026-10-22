@@ -152,14 +152,16 @@ class Logic_Import extends Logic
 			return 0;
 
 		$fillId		= $this->modelFill->add( $data, FALSE );
+		/** @var Entity_Form_Fill $fill */
+		$fill		= $this->modelFill->get( $fillId );
 		if( $verbose ){
 			remark( 'Fill Entry Data:' );
 			print_m( $data );
 			remark( 'Fill ID: '.$fillId );
 		}
-		$this->logicFill->sendCustomerResultMail( $fillId );
-		$this->logicFill->sendManagerResultMails( $fillId );
-		$this->logicFill->applyTransfers( $fillId );
+		$this->logicFill->sendCustomerResultMail( $fill );
+		$this->logicFill->sendManagerResultMails( $fill );
+		$this->logicFill->applyTransfers( $fill );
 		return $fillId;
 	}
 

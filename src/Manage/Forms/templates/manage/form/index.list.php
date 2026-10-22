@@ -23,25 +23,25 @@ Icon::$defaultSize	= ['fixed'];
 $iconAdd		= new Icon( 'plus' );
 */
 
-$iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconAdd		= new Icon( 'plus' );
+$iconView		= new Icon( 'eye' );
+$iconEdit		= new Icon( 'pencil' );
 
-$iconMail		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope-o'] );
-$iconReceiver	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-at'] );
-$iconTransfer	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
-$iconImport		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
-$iconExchange	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exchange'] );
+$iconMail		= new Icon( 'envelope-o' );
+$iconReceiver	= new Icon( 'at' );
+$iconTransfer	= new Icon( 'upload' );
+$iconImport		= new Icon( 'download' );
+$iconExchange	= new Icon( 'exchange' );
 
 $iconsType		= [
-	Model_Form::TYPE_NORMAL		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] ),
-	Model_Form::TYPE_CONFIRM	=> HtmlTag::create( 'i', '', ['class' =>'fa fa-fw fa-check'] ),
+	Model_Form::TYPE_NORMAL		=> new Icon( 'arrow-right' ),
+	Model_Form::TYPE_CONFIRM	=> new Icon( 'check' ),
 ];
 
 $iconsStatus	= [
-	Model_Form::STATUS_DISABLED		=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ),
-	Model_Form::STATUS_NEW			=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] ),
-	Model_Form::STATUS_ACTIVATED	=> HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-play'] ),
+	Model_Form::STATUS_DISABLED		=> new Icon( 'remove' ),
+	Model_Form::STATUS_NEW			=> new Icon( 'pencil' ),
+	Model_Form::STATUS_ACTIVATED	=> new Icon( 'play' ),
 ];
 
 $statuses	= [

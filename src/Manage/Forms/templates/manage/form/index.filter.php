@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -11,8 +13,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array $mailsCustomer */
 /** @var array $mailsManager */
 
-$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
-$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
+$iconFilter		= new Icon( 'search' );
+$iconReset		= new Icon( 'search-minus' );
 
 $statuses	= [
 	-1		=> 'deaktiviert',

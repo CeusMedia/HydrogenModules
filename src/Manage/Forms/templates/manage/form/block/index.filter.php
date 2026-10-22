@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -8,8 +9,8 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var Dictionary $filters */
 /** @var array<string> $identifiers */
 
-$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
-$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
+$iconFilter		= new Icon( 'search' );
+$iconReset		= new Icon( 'search-minus' );
 
 $buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', [
 	'type'	=> 'submit',

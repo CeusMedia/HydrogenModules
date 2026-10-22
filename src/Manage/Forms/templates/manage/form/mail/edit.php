@@ -2,6 +2,7 @@
 
 /** @noinspection DuplicatedCode */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -12,12 +13,12 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 $modelForm	= new Model_Form( $env );
 //$modelMail	= new Model_Form_Mail( $env );
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
-$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
+$iconList	= new Icon( 'list' );
+$iconView	= new Icon( 'eye' );
+$iconSave	= new Icon( 'check' );
+$iconRemove	= new Icon( 'remove' );
+$iconMail	= new Icon( 'square' );
+$iconForm	= new Icon( 'th' );
 
 $withinForms		= array_merge(
 	$modelForm->getAllByIndex( 'customerMailId', $mail->mailId ),

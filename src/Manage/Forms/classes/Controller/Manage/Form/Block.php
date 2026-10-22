@@ -55,6 +55,10 @@ class Controller_Manage_Form_Block extends Controller
 			['content'	=> '%[block_'.$block->identifier.']%'] ,
 			['title'		=> 'ASC']
 		) );
+		$blocks	= [];
+		foreach( $this->modelBlock->getAll() as $block )
+			$blocks[$block->identifier]	= $block;
+		$this->addData( 'blocksByIdentifier', $blocks );
 	}
 
 	/**
@@ -148,6 +152,7 @@ class Controller_Manage_Form_Block extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

@@ -2,6 +2,7 @@
 
 use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\PageControl;
+use CeusMedia\Common\ADT\Bitmask;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -13,15 +14,12 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var int $page */
 /** @var int $pages */
 
-$modelForm	= new Model_Form( $env );
-$modelFill	= new Model_Form_Fill( $env );
-
-$iconView		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
-$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
-$iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
-$iconTransfer   = HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-upload'] );
+$iconView		= new Icon( 'eye' );
+$iconRemove		= new Icon( 'remove' );
+$iconFilter		= new Icon( 'search' );
+$iconReset		= new Icon( 'search-minus' );
+$iconDownload	= new Icon( 'download' );
+$iconTransfer   = new Icon( 'upload' );
 
 $statusLabels	= [
 	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
@@ -83,7 +81,7 @@ foreach( $fills as $fill ){
 	}
 
 	$statuses	= [];
-	$statusBits	= new \CeusMedia\Common\ADT\Bitmask( $fill->status );
+	$statusBits	= new Bitmask( $fill->status );
 	foreach( $statusLabels as $status => $statusLabel )
 		if( $statusBits->has( $status ) )
 			$statuses[]	= $statusLabel;

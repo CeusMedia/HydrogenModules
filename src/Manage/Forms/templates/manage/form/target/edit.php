@@ -1,15 +1,16 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Entity_Form_Transfer_Target $target */
-/** @var array<Entity_Form_Fill> $fails List of failed fills */
+/** @var array<object> $fails List of failed fills */
 
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconCancel		= new Icon( 'arrow-left' );
+$iconSave		= new Icon( 'check' );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['class' => 'btn btn-small', 'href' => './manage/form/target'] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'class' => 'btn btn-primary'] );
@@ -23,6 +24,10 @@ $optStatus		= HtmlElements::Options( $optStatus, $target->status );
 $table		= '';
 if( count( $fails ) ){
 	$rows	= [];
+	/**
+	 * @var int $nr
+	 * @var Entity_Form_Fill $fail
+	 */
 	foreach( $fails as $nr => $fail )
 	{
 		$link	= HtmlTag::create( 'a', $fail->fillId, ['href' => './manage/form/fill/view/'.$fail->fillId] );

@@ -145,6 +145,7 @@ class Controller_Manage_Form_Mail extends Controller
 
 	/**
 	 *	@return		void
+	 *	@throws		ReflectionException
 	 */
 	protected function __onInit(): void
 	{

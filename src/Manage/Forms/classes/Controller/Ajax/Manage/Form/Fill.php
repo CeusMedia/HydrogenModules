@@ -4,6 +4,11 @@ use CeusMedia\HydrogenFramework\Controller\Ajax as AjaxController;
 
 class Controller_Ajax_Manage_Form_Fill extends AjaxController
 {
+	/**
+	 *	@return		void
+	 *	@throws		JsonException
+	 *	@throws		ReflectionException
+	 */
 	public function findEmail(): void
 	{
 		$query	= trim( $this->env->getRequest()->get( 'q', '' ) );

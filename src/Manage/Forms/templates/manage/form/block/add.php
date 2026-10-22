@@ -1,13 +1,13 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
-use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconList	= new Icon( 'list' );
+$iconSave	= new Icon( 'check' );
 
 $env->getPage()->js->addScriptOnReady('FormEditor.applyAceEditor("#input_content");');
 
