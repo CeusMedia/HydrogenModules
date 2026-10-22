@@ -1,8 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
 use CeusMedia\Bootstrap\Nav\PageControl;
-use CeusMedia\Common\ADT\Collection\Dictionary;
-use CeusMedia\Common\Net\HTTP\Request as HttpRequest;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -23,6 +21,14 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $canBulk */
 /** @var bool $canSetInstance */
 
+$instanceSelector	= renderInstanceSelector( $instances, $currentInstance, $canSetInstance );
+$table				= renderTable( $env, $exceptions, $canView, $canRemove, $canBulk );
+$buttonbar			= renderButtonBar( $words, $page, $limit, $total, count( $exceptions ), $canRemove );
+
+$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
+
+
+
 /**
  *	@param		WebEnvironment	$env
  *	@param		Entity_Log_Exception[]	$exceptions
@@ -30,58 +36,31 @@ use CeusMedia\HydrogenFramework\View;
  *	@param		bool			$canRemove
  *	@param		bool			$canBulk
  *	@return		string
- *	@throws		ReflectionException
- *	@throws		\Psr\SimpleCache\InvalidArgumentException
  */
 function renderTable( WebEnvironment $env, array $exceptions, bool $canView, bool $canRemove, bool $canBulk ): string
 {
 	if( [] === $exceptions )
 		return HtmlTag::create( 'div', 'No exceptions logged.', ['class' => "alert alert-success"] );
 
-	$logicUser	= Logic_User::getInstance( $env );
+	$helper		= new View_Helper_Admin_Log_Exception();
+	$helper->setEnv( $env );
+
 	$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-eye'] );
 	$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-remove'] );
 	$iconUser	= HtmlTag::create( 'i', '', ['class' => 'fa fa-user'] );
 	$iconDate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-clock-o'] );
 	$list		= [];
 	foreach( $exceptions as $nr => $exception ){
+		$helper->setExceptionEntity( $exception );
+
+		$requestParameters	= $helper->getExceptionRequestParameters();
+		$requestMethod		= $helper->getExceptionRequestMethod();
 		$exceptionEnv		= unserialize( $exception->env );
 
-		if( 0 !== ( (int) $exception->requestId ) && class_exists( 'Model_Log_Request' ) ){
-			$modelRequest	= new Model_Log_Request( $env );
-			/** @var Entity_Log_Request $request */
-			$request		= $modelRequest->get( $exception->requestId );
-			$exceptionRequest	= Dictionary::create( json_decode( $request->request, TRUE ) );
-			$exceptionSession	= Dictionary::create( json_decode( $request->session, TRUE ) );
-			$requestMethod		= $request->method;
-			$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
-		}
-		else if( $exception->request ){
-			$exceptionRequest	= unserialize( $exception->request );
-			$exceptionSession	= new Dictionary();
-			if( NULL !== $exception->session ){
-				$sessionData	= unserialize( $exception->session );
-				if( $sessionData instanceof Dictionary )
-					$exceptionSession	= $sessionData;
-				else
-					$exceptionSession	= new Dictionary( $sessionData );
-			}
-
-			$requestPath	= join( ' ', $exceptionRequest->get( 'arguments', [] ) ).' '.join( ' ', $exceptionRequest->get( 'commands', [] ) );
-			$requestMethod	= 'CLI';
-			if( str_contains( $exceptionEnv['class'], 'Web' ) && $exceptionRequest instanceof HttpRequest ){
-				try{
-					$requestMethod	= $exceptionRequest->getMethod()->get();
-					$requestPath	= '<small class="muted">'.htmlentities( $exceptionRequest->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
-				}
-				catch( Error $e ){}
-			}
-		}
-		else{
-			$exceptionRequest	= new Dictionary();
-			$exceptionSession	= new Dictionary();
-			$requestMethod		= '?';
-		}
+		if( 'CLI' === $requestMethod )
+			$requestPath	= '<tt>'.$requestParameters->get( 'script' ).' '.join( ' ', $requestParameters->get( 'commands', [] ) ).'</tt>';
+		else
+			$requestPath	= '<small class="muted">'.htmlentities( $requestParameters->get( '__path', '???' ), ENT_QUOTES, 'utf-8' ).'</small>';
 
 		$link	= HtmlTag::create( 'a', $exception->message, ['href' => './admin/log/exception/view/'.$exception->exceptionId] );
 		$date	= date( 'Y-m-d', $exception->createdAt );
@@ -110,19 +89,12 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 		$exceptionClass	= preg_replace( '/Exception$/', '', $exception->type );
 		$typeClass		= '<small class="muted">'.$exceptionClass.'</small>';
 
-		$icons	= [];
+		$user		= $helper->getRelatedUserEntity();
 		$factUser	= '';
-		if( NULL !== $exceptionRequest ){
-			if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
-				$user	= $logicUser->getUser( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
-	/*			if( NULL !== $user )
-					$icons['user']	= HtmlTag::create( 'span', $iconUser, [
-						'title'	=> $user->username.' ('.$user->firstname.' '.$user->surname.')'
-					] );*/
-				$factUser	= HtmlTag::create( 'span', $iconUser.'&nbsp;'.$user->username, [
-					'title'	=> $user->firstname.' '.$user->surname
-				] );
-			}
+		if( NULL !== $user ){
+			$factUser	= HtmlTag::create( 'span', $iconUser.'&nbsp;'.$user->username, [
+				'title'	=> $user->firstname.' '.$user->surname
+			] );
 		}
 
 		$list[]			= HtmlTag::create( 'tr', [
@@ -130,8 +102,6 @@ function renderTable( WebEnvironment $env, array $exceptions, bool $canView, boo
 			HtmlTag::create( 'td', join( '<br/>', [$link, $requestMethod.' '.$requestPath, $typeClass] ), ['class' => 'autocut'] ),
 //			HtmlTag::create( 'td', $envClass ),
 //			HtmlTag::create( 'td', '<small class="muted">'.$exceptionClass.'</small>' ),
-
-//			HtmlTag::create( 'td', $icons ),
 			HtmlTag::create( 'td', join( '<br/>', [$factDate, $factUser] ) ),
 			HtmlTag::create( 'td', HtmlTag::create( 'div', $buttons, ['class' => 'btn-group'] ) ),
 		] );
@@ -207,7 +177,6 @@ function renderInstanceSelector( array $instances, ?string $currentInstance, boo
 	if( !$canSetInstance || 1 === count( $instances ) )
 		return '';
 
-	$selectInstance	= '';
 	$optInstance	= [];
 	foreach( $instances as $instanceKey => $instanceData )
 		$optInstance[$instanceKey]	= $instanceData->title;
@@ -219,14 +188,6 @@ function renderInstanceSelector( array $instances, ?string $currentInstance, boo
 	] );
 	return HtmlTag::create( 'div', $selectInstance, ['style' => "position: absolute; right: 1em; top: 0.65em; width: 150px;"] );
 }
-
-$instanceSelector	= renderInstanceSelector( $instances, $currentInstance, $canSetInstance );
-$table				= renderTable( $env, $exceptions, $canView, $canRemove, $canBulk );
-$buttonbar			= renderButtonBar( $words, $page, $limit, $total, count( $exceptions ), $canRemove );
-
-$from		= 'admin/log/exception'.( $page ? '/'.$page : '' );
-
-
 
 return '
 <form action="admin/log/exception/bulk" method="post" id="form-admin-log-exception">

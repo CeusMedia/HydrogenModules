@@ -1,0 +1,81 @@
+
+body.site-admin-log-exception-view .section-content-container {
+	border: 1px solid rgba(127, 127, 127, 0.5);
+	max-height: 400px;
+	overflow-y: auto;
+	}
+
+body.site-admin-log-exception-view .section-content-container .section-table-key {
+	font-family: monospace;
+	font-size: 0.85em;
+	letter-spacing: -0.5px;
+	}
+
+body.site-admin-log-exception-view .stacktrace {
+	font: 12px/1.1 monospace;
+	color: #333;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-entry {
+	padding: 10px 12px;
+	background: linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 0.025) 0%,
+		rgba(255, 255, 255, 0.0) 100%
+	);
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-entry + .stacktrace-entry {
+	border-top: 1px solid #ededed;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-call {
+	font-size: 13px;
+	font-weight: normal;
+	overflow-wrap: anywhere;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-number {
+	color: #999;
+	font-weight: normal;
+	display: none;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-location {
+	display: flex;
+	gap: 10px;
+	margin-top: 2px;
+	font-size: 11px;
+	color: #777;
+	overflow-wrap: anywhere;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-line {
+	flex-shrink: 0;
+	color: #4e4e4e;
+	font-weight: bold;
+	}
+body.site-admin-log-exception-view .stacktrace .stacktrace-file {
+	overflow-wrap: anywhere;
+	}
+body.site-admin-log-exception-view .section-content-container xmp {
+	margin: 0;
+	padding: 0.5em 1em;
+	background-color: #EFEFEF;
+	word-wrap: break-word;
+	text-wrap: wrap;
+	}
+
+/*  CODE LINES  */
+body.site-admin-log-exception-view .section-content-container.lines table{
+	margin: 0;
+	border-width: 0;
+	}
+body.site-admin-log-exception-view .section-content-container.lines th,
+body.site-admin-log-exception-view .section-content-container.lines td {
+	padding: 2px 3px;
+	font-family: monospace; font-size: 0.85em; white-space: pre; tab-size: 4;
+	border-top: none;
+	}
+body.site-admin-log-exception-view .section-content-container.lines th {
+	font-weight: normal;
+	text-align: right;
+	}
+body.site-admin-log-exception-view .section-content-container.lines th {
+	border-right: 1px solid rgba(0,0,0,0.1);
+	padding-right: 4px;
+	}

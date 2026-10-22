@@ -177,43 +177,7 @@ class Controller_Admin_Log_Exception extends Controller
 			$this->messenger->noteError( 'Invalid exception number.' );
 			$this->restart( NULL, TRUE );
 		}
-
-		$exceptionEnv		= unserialize( $exception->env );
-		$exceptionRequest	= new Dictionary();
-		$exceptionSession	= new Dictionary();
-
-		if( 0 !== (int) $exception->requestId && class_exists( 'Model_Log_Request' ) ){
-			$request = Model_Log_Request::getInstance( $this->env )->get( $exception->requestId );
-			$exceptionRequest = new Dictionary( json_decode( $request->request, TRUE ) );
-			$exceptionSession = new Dictionary( json_decode( $request->session, TRUE ) );
-			$this->addData( 'request', $request );
-			$this->addData( 'requestMethod', new HttpMethod( $request->method ) );
-		}
-		else if( '' !== ( $exception->request ?? '' ) ){
-			/** @var ArgumentParser|HttpRequest|Dictionary $exceptionRequest */
-			$exceptionRequest	= unserialize( $exception->request );
-
-			if( '' !== ( $exception->session ?? '' ) ){
-				$sessionData	= unserialize( $exception->session ) ?: [];
-				if( $sessionData instanceof Dictionary )
-					$exceptionSession	= $sessionData;
-				else
-					$exceptionSession	= new Dictionary( $sessionData );
-			}
-			$this->addData( 'requestMethod', $exceptionRequest->getMethod() );
-		}
-
-		$user	= NULL;
-		if( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) ){
-			$model	= new Model_User( $this->env );
-			$user	= $model->get( $exceptionSession->get( Logic_Authentication::$sessionKeyAuthUserId ) );
-		}
-
 		$this->addData( 'exception', $exception );
-		$this->addData( 'exceptionEnv', $exceptionEnv );
-		$this->addData( 'exceptionRequest', $exceptionRequest );
-		$this->addData( 'exceptionSession', $exceptionSession );
-		$this->addData( 'user', $user );
 		$this->addData( 'page', $this->session->get( $this->filterPrefix.'page' ) );
 		$this->addData( 'canIndex', $this->env->getAcl()->has( 'admin/log/exception', 'index' ) );
 		$this->addData( 'canRemove', $this->env->getAcl()->has( 'admin/log/exception', 'remove' ) );

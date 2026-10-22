@@ -1,17 +1,17 @@
-var ModuleAdminLogException	= {};
+let ModuleAdminLogException	= {};
 ModuleAdminLogException.Index = {
 	init: function(){
-		var form = jQuery('#form-admin-log-exception');
-		var master = form.find('#admin-log-exception-list-all-items-toggle');
-		var boxes = form.find('.checkbox-item');
+		let form = jQuery('#form-admin-log-exception');
+		let master = form.find('#admin-log-exception-list-all-items-toggle');
+		let boxes = form.find('.checkbox-item');
 		master.on('input', function(){
-			var value = jQuery(this).prop('checked');
+			let value = jQuery(this).prop('checked');
 			boxes.prop('checked', value);
 		});
 		form.find('#action-button-remove').on('click', function(){
-			var ids = [];
+			let ids = [];
 			boxes.each(function(){
-				var box = jQuery(this);
+				let box = jQuery(this);
 				if(box.prop('checked'))
 					ids.push(box.data('id'));
 			});
