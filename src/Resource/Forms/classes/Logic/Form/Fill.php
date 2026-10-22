@@ -20,18 +20,13 @@ class Logic_Form_Fill extends Logic
 	protected array $transferTargetMap	= [];
 
 	/**
-	 *	@param		int|string		$fillId
+	 *	@param		Entity_Form_Fill		$fill
 	 *	@return		array
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function applyTransfers( int|string $fillId ): array
+	public function applyTransfers( Entity_Form_Fill $fill ): array
 	{
-		/** @var ?Entity_Form_Fill $fill */
-		$fill	= $this->modelFill->get( $fillId );
-		if( NULL === $fill )
-			throw new DomainException( 'Invalid fill given' );
-
 		/** @var Entity_Form_Transfer_Rule[] $rules */
 		$rules	= $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId );
 		if( !$rules )
@@ -68,7 +63,7 @@ class Logic_Form_Fill extends Logic
 				'formId'				=> $transfer->rule->formId,
 				'formTransferRuleId'	=> $transfer->rule->formTransferRuleId,
 				'formTransferTargetId'	=> $transfer->target->formTransferTargetId,
-				'fillId'				=> $fillId,
+				'fillId'				=> $fill->fillId,
 				'status'				=> Model_Form_Fill_Transfer::STATUS_UNKNOWN,
 				'data'					=> json_encode( $transferData ),
 				'createdAt'				=> time(),
@@ -161,16 +156,19 @@ class Logic_Form_Fill extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$fillId
+	 *	@param		int|string|Entity_Form_Fill		$fill
 	 *	@return		bool
 	 *	@throws		ReflectionException
 	 */
-	public function sendConfirmMail( int|string $fillId ): bool
+	public function sendConfirmMail( int|string|Entity_Form_Fill $fill ): bool
 	{
-		/** @var ?Entity_Form_Fill $fill */
-		$fill	= $this->modelFill->get( $fillId );
+		if( !is_object( $fill ) )
+			/** @var ?Entity_Form_Fill $fill */
+			$fill	= $this->modelFill->get( $fill );
+
 		if( NULL === $fill )
 			throw new DomainException( 'Invalid fill given' );
+
 		if( !$fill->email )
 			return FALSE;
 		/** @var ?Entity_Form $form */
@@ -201,13 +199,12 @@ class Logic_Form_Fill extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$fillId
+	 *	@param		Entity_Form_Fill		$fill
 	 *	@return		?bool
 	 *	@throws		ReflectionException
 	 */
-	public function sendCustomerResultMail( int|string $fillId ): ?bool
+	public function sendCustomerResultMail( Entity_Form_Fill $fill ): ?bool
 	{
-		$fill	= $this->checkId( $fillId );
 		if( '' === trim( $fill->email ) )
 			return NULL;
 
@@ -319,16 +316,17 @@ class Logic_Form_Fill extends Logic
 	}
 
 	/**
-	 *	@param		int|string		$fillId
+	 *	@param		Entity_Form_Fill		$fill
 	 *	@return		?int
 	 *	@throws		ReflectionException
 	 */
-	public function sendManagerResultMails( int|string $fillId ): ?int
+	public function sendManagerResultMails( Entity_Form_Fill $fill ): ?int
 	{
-		$fill		= $this->get( $fillId );
+		/** @var ?Entity_Form $form */
 		$form		= $this->modelForm->get( $fill->formId );
 		$data		= json_decode( $fill->data, TRUE );
 		$receivers	= [];
+		/** @var array<Entity_Form_Rule> $rulesets */
 		$rulesets	= $this->modelRule->getAllByIndices( [
 			'formId'	=> $fill->formId,
 			'type'		=> Model_Form_Rule::TYPE_MANAGER,

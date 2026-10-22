@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
@@ -7,16 +8,14 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var Entity_Form_Block $block */
 /** @var Entity_Form_Block[] $blocks */
 
-foreach( $blocks as $item ){
-	if( preg_match( '/\[block_'.$item->identifier.'\]/', $block->content ) ){
-		$block->content	= preg_replace( '/\[block_'.$item->identifier.'\]/', $item->content, $block->content );
-	}
-}
+foreach( $blocks as $item )
+	if( preg_match( '/\[block_'.$item->identifier.']/', $block->content ) )
+		$block->content	= preg_replace( '/\[block_'.$item->identifier.']/', $item->content, $block->content );
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconList	= new Icon( 'list' );
+$iconView	= new Icon( 'eye' );
+$iconEdit	= new Icon( 'pencil' );
+$iconSave	= new Icon( 'check' );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
 	'href'	=> './manage/form/block',

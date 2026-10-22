@@ -1,19 +1,21 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
 /** @var object $form */
-/** @var array<string,string> $mailsCustomer */
+/** @var array<Entity_Form_Mail> $mailsCustomer */
 /** @var array<object> $rulesCustomer */
 /** @var array<string,string|HtmlTag> $navButtons */
 
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+$iconAdd	= new Icon( 'plus' );
+$iconSave	= new Icon( 'check' );
+$iconRemove	= new Icon( 'remove' );
+$iconMail	= new Icon( 'envelope' );
 
 $optMailCustomer	= [];
 //if( count( $mailsCustomer ) != 1 )

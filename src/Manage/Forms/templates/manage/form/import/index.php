@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -37,7 +38,7 @@ if( count( $rules ) ){
 	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped table-fixed not-table-bordered'] );
 }
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
+$iconAdd	= new Icon( 'plus' );
 $buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['class' => 'btn btn-success', 'href' => './manage/form/import/add'] );
 
 return '<div class="content-panel">

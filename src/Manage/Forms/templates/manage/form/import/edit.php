@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -10,9 +11,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<Entity_Form> $forms */
 /** @var array<string,string> $folders */
 
-$iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconTest		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-cogs'] );
+$iconCancel		= new Icon( 'arrow-left' );
+$iconSave		= new Icon( 'check' );
+$iconTest		= new Icon( 'cogs' );
 
 $buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['class' => 'btn btn-small', 'href' => './manage/form/import'] );
 $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'class' => 'btn btn-primary'] );

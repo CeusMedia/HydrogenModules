@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -13,8 +14,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var string $filterFillId */
 /** @var string $filterEmail */
 
-$iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
-$iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] );
+$iconFilter		= new Icon( 'search' );
+$iconReset		= new Icon( 'search-minus' );
 
 $optForm		= ['' => '- alle -'];
 foreach( $forms as $item )

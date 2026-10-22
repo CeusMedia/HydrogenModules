@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<string,string|HtmlTag> $navButtons */
@@ -9,7 +11,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 */
 
 $blocksWithin		= $this->getData( 'blocksWithin', [] );
-$iconBlock			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-square'] );
+$iconBlock			= new Icon( 'square' );
 $listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
 
 if( $blocksWithin ){

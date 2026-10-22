@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as BootstrapModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as BootstrapModalTrigger;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
@@ -6,14 +8,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object $form */
 /** @var array<string> $mailDomains */
-/** @var array<string,string> $mailsManager */
+/** @var array<Entity_Form_Mail> $mailsManager */
 /** @var array<object> $rulesManager */
 /**	@var array<string,string|HtmlTag> $navButtons */
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconMail	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-envelope'] );
+$iconAdd	= new Icon( 'plus' );
+$iconSave	= new Icon( 'check' );
+$iconRemove	= new Icon( 'remove' );
+$iconMail	= new Icon( 'envelope' );
 
 $optMailManager	= [];
 //if( count( $mailsManager ) != 1 )

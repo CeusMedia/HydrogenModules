@@ -1,4 +1,6 @@
 <?php
+
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
@@ -9,11 +11,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var int $page */
 /** @var int $pages */
 
-$modelForm	= new Model_Form( $env );
-$modelBlock	= new Model_Form_Block( $env );
-
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
+$iconList	= new Icon( 'list' );
+$iconSave	= new Icon( 'check' );
 
 $statuses	= [
 	-1		=> 'deaktiviert',

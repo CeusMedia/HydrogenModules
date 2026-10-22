@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Modal\Dialog as ModalDialog;
 use CeusMedia\Bootstrap\Modal\Trigger as ModalTrigger;
 use CeusMedia\Common\ADT\JSON\Parser as JsonParser;
@@ -14,16 +15,16 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $page		= (int) $env->getRequest()->get( 'page' );
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
-$iconCheck	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconResend	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-reload'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconForm	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
-$iconExport	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-download'] );
-$iconInfo	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-info'] );
+$iconList	= new Icon( 'list' );
+$iconView	= new Icon( 'eye' );
+$iconEdit	= new Icon( 'pencil' );
+$iconCheck	= new Icon( 'check' );
+$iconSave	= new Icon( 'check' );
+$iconResend	= new Icon( 'reload' );
+$iconRemove	= new Icon( 'remove' );
+$iconForm	= new Icon( 'th' );
+$iconExport	= new Icon( 'download' );
+$iconInfo	= new Icon( 'info' );
 
 $statuses	= [
 	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),

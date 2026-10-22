@@ -1,5 +1,6 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\ADT\URL as Url;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -13,12 +14,12 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array<string,string|HtmlTag> $navButtons */
 /** @var array<string> $references */
 
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
-$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-$iconPrev	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$iconNext	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
+$iconList	= new Icon( 'list' );
+$iconAdd	= new Icon( 'plus' );
+$iconSave	= new Icon( 'check' );
+$iconRemove	= new Icon( 'remove' );
+$iconPrev	= new Icon( 'arrow-left' );
+$iconNext	= new Icon( 'arrow-right' );
 
 $statuses	= [
 	-1		=> 'deaktiviert',

@@ -28,15 +28,33 @@ class Controller_Manage_Form_Fill extends Controller
 	];
 
 	/**
-	 *	@param		string		$fillId
+	 *	@param		string		$fillIdOrToken
 	 *	@return		void
 	 *	@throws		DomainException		if given fill ID is invalid
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function confirm( string $fillId ): void
+	public function confirm( string $fillIdOrToken ): void
 	{
-		$fill	= $this->checkId( $fillId );
+		if( property_exists( Entity_Form_Fill::class, 'token' ) ){
+			if( 40 !== strlen( $fillIdOrToken ) ){
+//				throw new InvalidArgumentException( 'Invalid token' );
+				/** @var ?Entity_Form_Fill $fill */
+				$fill	= $this->checkId( $fillIdOrToken );
+			}
+			else{
+				/** @var ?Entity_Form_Fill $fill */
+				$fill	= $this->modelFill->getByIndex( 'token', $fillIdOrToken );
+			}
+		}
+		else{
+			/** @var ?Entity_Form_Fill $fill */
+			$fill	= $this->checkId( $fillIdOrToken );
+
+		}
+		if( NULL === $fill )
+			throw new DomainException( 'Invalid identifier' );
+
 		if( Model_Form_Fill::STATUS_NEW !== $fill->status ){
 			if( $fill->referer ){
 				$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
@@ -44,13 +62,24 @@ class Controller_Manage_Form_Fill extends Controller
 			}
 			throw new DomainException( 'Fill already confirmed' );
 		}
-		$this->modelFill->edit( $fillId, [
+		if( '' !== ( $fill->token ?? '' ) ){
+			if( $fill->token !== $fillIdOrToken ){
+				if( $fill->referer ){
+					$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
+					$this->restart( $fill->referer.$urlGlue.'rc=4', FALSE, NULL, TRUE );
+				}
+				throw new DomainException( 'Invalid token' );
+			}
+		}
+		$this->modelFill->edit( $fill->fillId, [
 			'status'		=> Model_Form_Fill::STATUS_CONFIRMED,
 			'modifiedAt'	=> time(),
 		] );
-		$this->logicFill->sendCustomerResultMail( $fillId );
-		$this->logicFill->sendManagerResultMails( $fillId );
-		$this->logicFill->applyTransfers( $fillId );
+		$fill	= $this->logicFill->get( $fill->fillId );
+
+		$this->logicFill->sendCustomerResultMail( $fill );
+		$this->logicFill->sendManagerResultMails( $fill );
+		$this->logicFill->applyTransfers( $fill );
 
 		/** @var ?Entity_Form $form */
 		$form	= $this->modelForm->get( $fill->formId );
@@ -62,7 +91,7 @@ class Controller_Manage_Form_Fill extends Controller
 		$urlGlue	= preg_match( '/\?/', $fill->referer ) ? '&' : '?';
 		if( $fill->referer )
 			$this->restart( $fill->referer.$urlGlue.'rc=2', FALSE, NULL, TRUE );
-		$this->restart( 'confirmed/'.$fillId, TRUE );
+		$this->restart( 'confirmed/'.$fill->fillId, TRUE );
 	}
 
 	/**
@@ -73,8 +102,10 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function testResultMails( string $fillId ): void
 	{
-		$this->logicFill->sendCustomerResultMail( $fillId );
-//		$this->logicFill->sendManagerResultMails( $fillId );
+		$fill	= $this->checkId( $fillId );
+
+		$this->logicFill->sendCustomerResultMail( $fill );
+//		$this->logicFill->sendManagerResultMails( $fill );
 		$this->env->getMessenger()->noteSuccess( 'Result-Mails versendet' );
 		$this->restart( 'view/'.$fillId, TRUE );
 	}
@@ -87,7 +118,8 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function testTransfer( string $fillId ): never
 	{
-		print_m( $this->logicFill->applyTransfers( $fillId ) );
+		$fill	= $this->checkId( $fillId );
+		print_m( $this->logicFill->applyTransfers( $fill ) );
 		exit;
 	}
 
@@ -211,9 +243,11 @@ class Controller_Manage_Form_Fill extends Controller
 		$this->modelFill->edit( $fillId, [
 			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
 		] );
-		$this->logicFill->sendManagerResultMails( $fillId );
-		$this->logicFill->applyTransfers( $fillId );
-		$page		= (int) $this->request->get( 'page' );
+		/** @var Entity_Form_Fill $fill */
+		$fill	= $this->checkId( $fillId );
+		$this->logicFill->sendManagerResultMails( $fill );
+		$this->logicFill->applyTransfers( $fill );
+		$page	= (int) $this->request->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
 
@@ -258,7 +292,8 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function resendManagerMails( string $fillId ): void
 	{
-		$this->logicFill->sendManagerResultMails( $fillId );
+		$fill	= $this->checkId( $fillId );
+		$this->logicFill->sendManagerResultMails( $fill );
 		$page	= (int) $this->request->get( 'page' );
 		$this->restart( 'view/'.$fillId.( $page ? '?page='.$page : '' ), TRUE );
 	}
@@ -316,6 +351,8 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	protected function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
-		return $this->logicFill->get( $fillId, $strict );
+		/** @var ?Entity_Form_Fill $fill */
+		$fill	= $this->logicFill->get( $fillId, $strict );
+		return $fill;
 	}
 }

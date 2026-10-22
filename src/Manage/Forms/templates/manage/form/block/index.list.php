@@ -1,6 +1,7 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 declare(strict_types=1);
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\PageControl;
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
@@ -9,9 +10,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var int $page */
 /** @var int $pages */
 
-$iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
-$iconView	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
-$iconEdit	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
+$iconAdd	= new Icon( 'plus' );
+$iconView	= new Icon( 'eye' );
+$iconEdit	= new Icon( 'pencil' );
 
 $rows		= [];
 foreach( $blocks as $block ){

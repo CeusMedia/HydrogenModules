@@ -1,5 +1,6 @@
 <?php /** @noinspection ALL */
 
+use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Bootstrap\Nav\Tabs;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
@@ -24,14 +25,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
  */
 function renderNavButton( int|string $formId, ?string $tabId, ?string $label, string $dir ): string
 {
-	$iconClass	= 'fa fa-fw fa-arrow-'.( $dir === 'prev' ? 'left' : 'right' );
-	$icon		= HtmlTag::create( 'i', '', ['class' => $iconClass] );
+	$icon	= new Icon( 'arrow-'.( $dir === 'prev' ? 'left' : 'right' ) );
 	return HtmlTag::create( 'a', $icon.'&nbsp;'.$label, [
 		'href'		=> './manage/form/setTab/'.$formId.'/'.$tabId,
 		'class'		=> 'btn',
 	] );
 }
-$iconList	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
+$iconList	= new Icon( 'list' );
 
 $navButtons	= [
 	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
