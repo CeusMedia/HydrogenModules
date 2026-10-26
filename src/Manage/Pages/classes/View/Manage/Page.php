@@ -38,7 +38,7 @@ class View_Manage_Page extends View
 		foreach( $tree as $item ){
 			$sublist	= '';
 			if( [] !== $item->pages ){
-				$sublist	= [];
+				$sublistItems	= [];
 				foreach( $item->pages as $subitem ){
 					$classes	= [];
 					if( $currentPageId && $currentPageId == $subitem->pageId )
@@ -50,15 +50,13 @@ class View_Manage_Page extends View
 					$url	= './manage/page/edit/'.$subitem->pageId;
 					$label	= $this->getPageIcon( $subitem ).' <small>'.$subitem->title.'</small>';
 					$link	= HtmlTag::create( 'a', $label, ['href' => $url, 'class' => 'autocut'] );
-					$sublist[]	= HtmlTag::create( 'li', $link, [
+					$sublistItems[]	= HtmlTag::create( 'li', $link, [
 						'class'			=> join( ' ', $classes ),
 						'data-page-id'	=> $subitem->pageId,
 					] );
 				}
-				if( $sublist )
-					$sublist	= HtmlTag::create( 'ul', $sublist, ['class' => 'nav nav-pills nav-stacked'] );
-				else
-					$sublist	= '';
+				if( [] !== $sublistItems )
+					$sublist	= HtmlTag::create( 'ul', $sublistItems, ['class' => 'nav nav-pills nav-stacked'] );
 			}
 			$classes	= ['autocut'];
 			if( $currentPageId && $currentPageId == $item->pageId )

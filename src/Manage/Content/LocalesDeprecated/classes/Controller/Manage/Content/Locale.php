@@ -13,9 +13,12 @@ use CeusMedia\HydrogenFramework\Controller;
  *	Content Controller.
  *	@author			Christian Würker <christian.wuerker@ceusmedia.de>
  *	@copyright		2011-2025 Ceus Media (https://ceusmedia.de/)
+ *	@deprecated
  */
 class Controller_Manage_Content_Locale extends Controller
 {
+	public static string $filterPrefix	= 'filter_manage_content_locale_';
+
 	protected Logic_Frontend $frontend;
 	protected array $languages	= [];
 	protected array $types		= [

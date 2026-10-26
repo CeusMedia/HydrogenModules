@@ -93,7 +93,7 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 		else if( NULL !== $this->exceptionEntity ){
 			$object	= $this->getExceptionRequestObject();
 			if( NULL !== $object )
-				return $object->getAll();
+				return $object->getAll( NULL, TRUE );
 		}
 		return new Dictionary();
 	}
@@ -124,8 +124,9 @@ class View_Helper_Admin_Log_Exception extends CeusMedia\HydrogenFramework\View\H
 			TRUE	=> json_decode( $this->exceptionRequestEntity->session ?? '[]', TRUE ) ?? [],
 			FALSE	=> unserialize( $this->exceptionEntity->session ?? 'a:0:{}' ) ?: [],
 		};
-
-		$this->sessionDictionary	= Dictionary::create( $data );
+		if( is_array( $data ) )
+			$data	= Dictionary::create( $data );
+		$this->sessionDictionary	= $data;
 		return $this->sessionDictionary;
 	}
 
