@@ -93,6 +93,17 @@ class Logic_Server_Log_Request extends SharedLogic
 	}
 
 	/**
+	 *	Returns logged request by ID.
+	 *	@return		Entity_Log_Request|NULL
+	 */
+	public function get( int|string $requestId ) : ?Entity_Log_Request
+	{
+		/** @var ?Entity_Log_Request $request */
+		$request	= $this->model->get( $requestId );
+		return $request;
+	}
+
+	/**
 	 *	Returns ID of logged request, if and after logCurrentRequest has been called.
 	 *	@return		string|NULL
 	 */
