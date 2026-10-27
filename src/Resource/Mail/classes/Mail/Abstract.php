@@ -2,6 +2,7 @@
 
 use CeusMedia\Common\ADT\Collection\Dictionary;
 use CeusMedia\Common\Alg\Text\Trimmer as TextTrimmer;
+use CeusMedia\Common\Exception\Data\Missing as DataMissingException;
 use CeusMedia\Common\Exception\FileNotExisting as FileNotExistingException;
 use CeusMedia\Common\Exception\IO as IoException;
 use CeusMedia\Common\Exception\NotSupported as NotSupportedException;
@@ -251,66 +252,79 @@ abstract class Mail_Abstract
 	/**
 	 *	@param		bool		$verbose
 	 *	@return		static
-	 *	@throws		ReflectionException
+	 *	@throws		ReflectionException			if mail logic construction failed
+	 *	@throws		NotSupportedException		if configured transport type is invalid
 	 */
 	public function initTransport( bool $verbose = FALSE ): static
 	{
-		if( empty( $this->logicMail ) )
-			$this->logicMail	= Logic_Mail::getInstance( $this->env );
-		$options	= $this->env->getConfig()->getAll( 'module.resource_mail.transport.', TRUE );
-		switch( strtolower( $options->get( 'type' ) ) ){
-			case 'smtp':
-				$this->transport	= SmtpMailTransport::getInstance(
-					$options->get( 'hostname' ),
-					$options->get( 'port' ),
-					$options->get( 'username' ),
-					$options->get( 'password' )
-				);
-				$this->transport->setSecure( $options->get( 'secure' ) );
-				$this->transport->setVerbose( $verbose );
-				break;
-			case 'local':
-			case 'default':
-			case 'sendmail':
-				$this->transport	= new LocalMailTransport();
-				break;
-			default:
-				throw new RuntimeException( 'No mail transport configured' );
-		}
+		$this->transport	= Logic_Mail_Transporter::getInstance( $this->env )->getTransportByConfig( $verbose );
 		return $this;
 	}
 
 	/**
 	 *	Sends mail to an email address.
 	 *	@access		public
-	 *	@param		object|array		$user		User model object
-	 *	@return		boolean		TRUE if success
+	 *	@param		object|array			$user		User model object
+	 *	@return		boolean					TRUE if success
+	 *	@throws		DataMissingException	If user has no email address
+	 *	@throws		RuntimeException		If message has no mail sender
+	 *	@throws		RuntimeException		If message has no mail receivers
+	 *	@throws		RuntimeException		If message has no mail body parts
+	 *	@throws		RuntimeException		If connection to SMTP server failed
+	 *	@throws		RuntimeException		If sending mail failed
 	 */
 	public function sendTo( object|array $user ): bool
 	{
 		if( is_array( $user ) )
 			$user	= (object) $user;
 		if( empty( $user->email ) )
-			throw new RuntimeException( 'User object invalid: no email address' );
+			throw new DataMissingException( 'User object invalid: no email address' );
 		return $this->sendToAddress( $user->email );
+	}
+
+	/**
+	 *	Sends mail to user by its entity object.
+	 *	@access		public
+	 *	@param		Entity_User			$user		Entity of User to send mail to
+	 *	@return		boolean				TRUE if success
+	 *	@throws		RuntimeException	If user has no email address
+	 *	@throws		RuntimeException	If message has no mail sender
+	 *	@throws		RuntimeException	If message has no mail receivers
+	 *	@throws		RuntimeException	If message has no mail body parts
+	 *	@throws		RuntimeException	If connection to SMTP server failed
+	 *	@throws		RuntimeException	If sending mail failed
+	 */
+	public function sendToUser( Entity_User $user ): bool
+	{
+		return $this->sendTo( $user );
 	}
 
 	/**
 	 *	Sends mail to user by its user ID.
 	 *	Attention: Module "Users" must be installed to use this feature.
 	 *	@access		public
-	 *	@param		string		$userId		ID of user to send mail to
-	 *	@return		boolean		TRUE if success
+	 *	@param		int|string		$userId		ID of user to send mail to
+	 *	@return		boolean						TRUE if success
 	 *	@throws		ReflectionException
+	 *	@throws		RuntimeException			If module Resource_Users is not installed
+	 *	@throws		RuntimeException			If user ID is not existing
+	 *	@throws		RuntimeException			If user has no email address
+	 *	@throws		RuntimeException			If message has no mail sender
+	 *	@throws		RuntimeException			If message has no mail receivers
+	 *	@throws		RuntimeException			If message has no mail body parts
+	 *	@throws		RuntimeException			If connection to SMTP server failed
+	 *	@throws		RuntimeException			If sending mail failed
 	 */
-	public function sendToUser( string $userId ): bool
+	public function sendToUserId( int|string $userId ): bool
 	{
 		if( !$this->env->getModules()->has( 'Resource_Users' ) )
 			throw new RuntimeException( 'Module "Resource_Users" is not installed' );
-		$model	= new Model_User( $this->env );
-		$user	= $model->get( $userId );
-		if( !$user )
+
+		/** @var ?Entity_User $user */
+		$user	= ( new Model_User( $this->env ) )->get( $userId );
+		if( NULL === $user )
 			throw new RuntimeException( 'User with ID '.$userId.' is not existing' );
+
 		return $this->sendTo( $user );
 	}
 
@@ -421,6 +435,13 @@ abstract class Mail_Abstract
 		return $this;
 	}
 
+	protected function addCommonStyle( string $filePath ): bool
+	{
+		$config		= $this->env->getConfig();
+		$path		= $config->get( 'path.themes' ).'/common/css/';
+		return $this->addStyle( $path.$filePath );
+	}
+
 	/**
 	 *	Adds HTML body part to mail. Alias for setHtml.
 	 *	@access		protected
@@ -504,13 +525,6 @@ abstract class Mail_Abstract
 		$this->page->addHead( $tag );
 		$this->addedStyles[]	= $filePath;
 		return TRUE;
-	}
-
-	protected function addCommonStyle( string $filePath ): bool
-	{
-		$config		= $this->env->getConfig();
-		$path		= $config->get( 'path.themes' ).'/common/css/';
-		return $this->addStyle( $path.$filePath );
 	}
 
 	protected function addThemeStyle( string $filePath ): bool
@@ -728,6 +742,11 @@ abstract class Mail_Abstract
 	 *	@access		protected
 	 *	@param		Address|string		$email		Target email address
 	 *	@return		boolean				TRUE if success
+	 *	@throws		RuntimeException	if message has no mail sender
+	 *	@throws		RuntimeException	if message has no mail receivers
+	 *	@throws		RuntimeException	if message has no mail body parts
+	 *	@throws		RuntimeException	if connection to SMTP server failed
+	 *	@throws		RuntimeException	if sending mail failed
 	 *	@todo		Notwendigkeit dieser Methode prüfen.
 	 */
 	protected function sendToAddress( Address|string $email ): bool

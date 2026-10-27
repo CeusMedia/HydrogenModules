@@ -22,11 +22,11 @@ class Mail_Example extends Mail_Abstract
 //		$wordsModule	= (object) $this->getWords( 'myModule', 'myMailSection' );					//  @todo change this!
 //		$this->setSubject( $wordsModule->subject );
 
-		$configModule	= $this->env->getConfig()->getAll( 'module.myModule.', TRUE );				//  @todo change this!
-		$templateId		= (int) $configModule->get( 'mailTemplateId' );
+//		$configModule	= $this->env->getConfig()->getAll( 'module.myModule.', TRUE );				//  @todo change this!
+//		$templateId		= (int) $configModule->get( 'mailTemplateId' );
 
-		$this->setHtml( $this->renderBodyHtml(), $templateId );
-		$this->setText( $this->renderBodyText(), $templateId );
+		$this->setHtml( $this->renderBodyHtml() );
+		$this->setText( $this->renderBodyText() );
 
 		return $this;
 	}
@@ -37,21 +37,22 @@ class Mail_Example extends Mail_Abstract
 	 */
 	protected function renderBodyHtml(): string
 	{
+		$content	= trim( $this->data['html'] ?? '' );
+		if( '' !== $content )
+			return $content;
+
 		$helper	= new ContentHelper( $this->env );
 		if( $helper->has( 'mails/myModule/myAction.html' ) )
 			return $helper->setFileKey( 'mails/myModule/myAction.html' )
 				->setData( $this->data )
 				->render();
 
-		$content	= '
+		return '
 <div id="layout-mail">
 	<div id="layout-content">
 		This is an example mail.
 	</div>
 </div>';
-		if( '' !== ( $this->data['html'] ?? '' ) )
-			$content	= $this->data['html'];
-		return $content;
 	}
 
 	/**
