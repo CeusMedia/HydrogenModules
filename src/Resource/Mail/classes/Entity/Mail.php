@@ -25,6 +25,7 @@ class Entity_Mail extends Entity
 	public int $compression				= Model_Mail::COMPRESSION_UNKNOWN;
 	public string|NULL $object			= NULL;
 	public string|NULL $raw				= NULL;
+//	public string|NULL $error			= NULL;
 	public int|NULL $toBeSentAt			= NULL;
 	public int $enqueuedAt;
 	public int|NULL $attemptedAt		= NULL;
