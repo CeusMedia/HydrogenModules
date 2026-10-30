@@ -2,7 +2,8 @@
 declare(strict_types=1);
 
 use CeusMedia\HydrogenFramework\Entity;
-use Entity_Form_Transfer_Result as ResultEntity;
+use Entity_Form_Transfer_Result as TransferResultEntity;
+use Entity_Form_Transfer_Target as TransferTargetEntity;
 
 /**
  * Data exchange object for storing transfer requests towards transfer target implementation.
@@ -19,9 +20,14 @@ class Entity_Form_Transfer_Quest extends Entity
 
 	public string $status			= 'none';
 	public object $rule;
-	public object $target;
+
+	public TransferTargetEntity $target;
+
 	public array $formData;
+
 	public ?array $data				= NULL;
+
 	public ?string $error			= NULL;
-	public ?ResultEntity $result	= NULL;
+
+	public ?TransferResultEntity $result	= NULL;
 }

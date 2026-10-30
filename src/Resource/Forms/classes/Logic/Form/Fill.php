@@ -20,12 +20,13 @@ class Logic_Form_Fill extends Logic
 	protected array $transferTargetMap	= [];
 
 	/**
-	 *	@param		Entity_Form_Fill		$fill
-	 *	@return		array
+	 *	@param		Entity_Form_Fill	$fill
+	 *	@param		bool				$send		Flag: send data, default: yes
+	 *	@return		array<Entity_Form_Transfer_Quest>	List of tranfer quests, containing form data, transfer data, transport target and target response on send
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function applyTransfers( Entity_Form_Fill $fill ): array
+	public function applyTransfers( Entity_Form_Fill $fill, bool $send = TRUE ): array
 	{
 		/** @var Entity_Form_Transfer_Rule[] $rules */
 		$rules	= $this->modelTransferRule->getAllByIndex( 'formId', $fill->formId );
@@ -71,31 +72,47 @@ class Logic_Form_Fill extends Logic
 			try{
 				$ruleSet				= $parser->parse( $rule->rules );
 				$transfer->status		= 'parsed';
-				$transferData			= $mapper->applyRulesToFormData( $formData, $ruleSet );
+
+				if( !isset( $ruleSet->use ) ){
+					$ruleSet	= (object) [
+						'use'	=> 'mapper',
+						'map'	=> $ruleSet,
+					];
+				}
+
+				$transferData	= match( $ruleSet->use ){
+					'processor'	=> Logic_Form_Transfer_DataProcessor::getInstance( $this->env )
+									->process( $formData, $ruleSet->process ),
+					'mapper'	=> Logic_Form_Transfer_DataMapper::getInstance( $this->env )
+									->applyRulesToFormData( $formData, $ruleSet->map ),
+				};
+
 				$transfer->data			= $transferData;
 				$transfer->status		= 'applied';
 
 				$targetId				= $transfer->target->formTransferTargetId;
 				$factory				= new ObjectFactory( [$this->env] );
-				$transferInstance		= $factory->create( $transfer->target->className );
-				$transfer->result		= $transferInstance->transfer( $targetId, $transfer );
-				$reportData['status']	= (int) $transfer->result->status;
-				switch( (int) $transfer->result->status ){
-					case Model_Form_Fill_Transfer::STATUS_SUCCESS:
-						$transfer->status		= 'transferred';
-						break;
-					case Model_Form_Fill_Transfer::STATUS_ERROR:
-						$transfer->status		= 'error';
-//						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
-						$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
-						break;
-					case Model_Form_Fill_Transfer::STATUS_EXCEPTION:
-						$transfer->status		= 'exception';
-//						$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
-						$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
-						if( !empty( $transfer->result->trace ) )
-							$reportData['trace']	= $transfer->result->trace;
-						break;
+				if( $send ){
+					$transferInstance		= $factory->create( $transfer->target->className );
+					$transfer->result		= $transferInstance->transfer( $targetId, $transfer );
+					$reportData['status']	= (int) $transfer->result->status;
+					switch( (int) $transfer->result->status ){
+						case Model_Form_Fill_Transfer::STATUS_SUCCESS:
+							$transfer->status		= 'transferred';
+							break;
+						case Model_Form_Fill_Transfer::STATUS_ERROR:
+							$transfer->status		= 'error';
+//							$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+							$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
+							break;
+						case Model_Form_Fill_Transfer::STATUS_EXCEPTION:
+							$transfer->status		= 'exception';
+//							$reportData['message']	= join( PHP_EOL, $transfer->result->errors );
+							$reportData['message']	= json_encode( $transfer->result->errors, JSON_PRETTY_PRINT );
+							if( !empty( $transfer->result->trace ) )
+								$reportData['trace']	= $transfer->result->trace;
+							break;
+					}
 				}
 			}
 			catch( Throwable $t ){
