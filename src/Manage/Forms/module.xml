@@ -100,6 +100,7 @@ The form action will save the entered data and send mails according to rules.
 		<template>manage/form/fill/index.php</template>
 		<template>manage/form/fill/index.filter.php</template>
 		<template>manage/form/fill/index.list.php</template>
+		<template>manage/form/fill/testTransfer.php</template>
 		<template>manage/form/fill/view.php</template>
 		<template>manage/form/import/add.php</template>
 		<template>manage/form/import/edit.php</template>

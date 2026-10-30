@@ -112,15 +112,17 @@ class Controller_Manage_Form_Fill extends Controller
 
 	/**
 	 *	@param		string		$fillId
-	 *	@return		never
+	 *	@param		bool		$send		Flag: also try to transmit data to transfer target
+	 *	@return		void
 	 *	@throws		ReflectionException
 	 *	@throws		\Psr\SimpleCache\InvalidArgumentException
 	 */
-	public function testTransfer( string $fillId ): never
+	public function testTransfer( string $fillId, bool $send = FALSE ): void
 	{
-		$fill	= $this->checkId( $fillId );
-		print_m( $this->logicFill->applyTransfers( $fill ) );
-		exit;
+		$fill		= $this->checkId( $fillId );
+		$results	= $this->logicFill->applyTransfers( $fill, $send );
+		$this->addData( 'results', $results );
+		$this->addData( 'sent', $send );
 	}
 
 	/**
@@ -239,12 +241,10 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	public function markAsConfirmed( string $fillId ): void
 	{
-		$this->checkId( $fillId );
+		$fill	= $this->checkId( $fillId );
 		$this->modelFill->edit( $fillId, [
 			'status'	=> Model_Form_Fill::STATUS_CONFIRMED
 		] );
-		/** @var Entity_Form_Fill $fill */
-		$fill	= $this->checkId( $fillId );
 		$this->logicFill->sendManagerResultMails( $fill );
 		$this->logicFill->applyTransfers( $fill );
 		$page	= (int) $this->request->get( 'page' );
@@ -351,8 +351,6 @@ class Controller_Manage_Form_Fill extends Controller
 	 */
 	protected function checkId( int|string $fillId, bool $strict = TRUE ): ?Entity_Form_Fill
 	{
-		/** @var ?Entity_Form_Fill $fill */
-		$fill	= $this->logicFill->get( $fillId, $strict );
-		return $fill;
+		return $this->logicFill->get( $fillId, $strict );
 	}
 }

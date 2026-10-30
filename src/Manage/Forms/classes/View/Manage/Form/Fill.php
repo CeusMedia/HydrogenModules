@@ -21,6 +21,10 @@ const autocomplete = new AutocompleteFormFillEmail({
 		$this->env->getPage()->js->addScriptOnReady( $script );
 	}
 
+	public function testTransfer(): void
+	{
+	}
+
 	/**
 	 *	Will automatically load template manage/form/fill/view and return to app flow.
 	 *	@return		void
