@@ -6,7 +6,7 @@
 	<title>Resource: Forms</title>
 	<description><![CDATA[Basic handling for forms.]]></description>
 	<category>Resource</category>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -26,6 +26,7 @@
 	<log version="0.4.4">Add generated status columns.</log>
 	<log version="0.4.5">Support ALTCHA and redirect on submit.</log>
 	<log version="0.4.6">Add fill token for confirmation.</log>
+	<log version="0.4.7">Add form transfer data processor, next data mapper.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -46,6 +47,7 @@
 		<class>Entity/Form/Transfer/Target.php</class>
 		<class>Logic/Form/Fill.php</class>
 		<class>Logic/Form/Transfer/DataMapper.php</class>
+		<class>Logic/Form/Transfer/DataProcessor.php</class>
 		<class>Logic/Form/Transfer/Target/Interface.php</class>
 		<class>Mail/Form/Abstract.php</class>
 		<class>Mail/Form/Customer/Confirm.php</class>

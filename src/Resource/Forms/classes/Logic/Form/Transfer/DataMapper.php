@@ -15,22 +15,17 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	 */
 	public function applyRulesToFormData( array $formData, object $rules ): array
 	{
-		$input	= new Dictionary( $formData );
-		$output	= new Dictionary();
-
-		$this->applySets( (array) $rules->set ?? [], $input, $output );
-		$this->applyTranslation( (array) ( $rules->translate ?? [] ), $input, $output );
-		$this->applyFilters( (array) ( $rules->filter ?? [] ), $input, $output );
-		$this->applyDatabaseSearches( (array) ( $rules->db ?? [] ), $input, $output );
-
-		$this->applyCreations( (array) ( $rules->create ?? [] ), $input, $output );
-		$this->applyCopies( (array) ( $rules->copy ?? [] ), $input, $output );
-		$this->applyMappings( (array) ( $rules->map ?? [] ), $input, $output );
-
+		$mode	= 'fixed';
+		$output	= match( $mode ){
+			'fixed'	=> $this->applyRulesToFormDataInFixedOrder( $formData, $rules ),
+			'flow'	=> $this->applyRulesToFormDataInFlowOrder( $formData, $rules ),
+		};
 		return $output->getAll();
 	}
 
+
 	//  --  PROTECTED  --  //
+
 
 	/**
 	 *	...
@@ -50,12 +45,12 @@ class Logic_Form_Transfer_DataMapper extends Logic
 			}
 			$functions	= ['datetime', 'date', 'time'];
 			foreach( $functions as $function ){
-				$regex	= '/\[!'.preg_quote( $function, '/' ).'\]/';
+				$regex	= '/\[!'.preg_quote( $function, '/' ).']/';
 				$value	= $this->resolveFunction( $function );
 				$buffer	= preg_replace( $regex, $value, $buffer );
 			}
 			foreach( $input->getAll() as $key => $value ){
-				$regex	= '/\[@'.preg_quote( $key, '/' ).'\]/';
+				$regex	= '/\[@'.preg_quote( $key, '/' ).']/';
 				$buffer	= preg_replace( $regex, $value, $buffer );
 			}
 			$input->set( $fieldName, $buffer );
@@ -75,71 +70,59 @@ class Logic_Form_Transfer_DataMapper extends Logic
 	{
 		/**
 		 * @var string $fieldName
-		 * @var object{condition: string, onEmpty: string, action: ?string, operation: ?string, else: ?string} $parameters
+		 * @var object{condition: string, onEmpty: string, action: ?object{operation: ?string, to: ?string, value: int|string|NULL}, operation: ?string, else: ?string} $parameters
 		 */
-		foreach( $filters as $fieldName => $parameters ){
-			if( !$input->has( $fieldName ) ){
-				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "skip" )
-					continue;
-				if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "set" )
-					$input->set( $fieldName, '' );
-				else
-					throw new RuntimeException( 'Filter: No data available for "'.$fieldName.'"' );
+		foreach( $filters as $fieldName => $parametersObjectOrList ){
+			if( is_array( $parametersObjectOrList ) ){
+				$listOfParameters	= $parametersObjectOrList;
+				foreach( $listOfParameters as $parameters )
+					/** @var object{condition: string, onEmpty: string, action: ?object{operation: ?string, to: ?string, value: int|string|NULL}, operation: ?string, else: ?string} $parameters */
+					$this->applyFilterOnInputField( $input, $fieldName, $parameters );
 			}
-			$inputValue	= $input->get( $fieldName );
-			if( empty( $parameters->condition ) || empty( $parameters->action ) ){
-				continue;
+			if( is_object( $parametersObjectOrList ) ){
+				/** @var object{condition: string, onEmpty: string, action: ?object{operation: ?string, to: ?string, value: int|string|NULL}, operation: ?string, else: ?string} $parameters */
+				$parameters	= $parametersObjectOrList;
+				$this->applyFilterOnInputField( $input, $fieldName, $parameters );
 			}
-			$condition	= $parameters->condition;
-			if( empty( $condition->operator ) || !isset( $condition->match ) ){
-				continue;
+		}
+	}
+
+	protected function applyFilterOnInputField( Dictionary $input, string $fieldName, object $parameters ): void
+	{
+		if( !$input->has( $fieldName ) ){
+			if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "skip" )
+				return;
+			if( isset( $parameters->onEmpty ) && $parameters->onEmpty === "set" )
+				$input->set( $fieldName, '' );
+			else
+				throw new RuntimeException( 'Filter: No data available for "'.$fieldName.'"' );
+		}
+		if( empty( $parameters->condition ) || empty( $parameters->action ) )
+			return;
+
+		$condition	= $parameters->condition;
+		if( empty( $condition->operator ) || !isset( $condition->match ) )
+			return;
+		$truth	= $this->evaluateCondition( $condition, $input, $fieldName );
+
+		if( $truth ){
+			$action		= $parameters->action;
+			if( !empty( $action->operation ) ){
+				$operation	= strtolower( $action->operation );
+				$value		= $action->value ?? $input->get( $fieldName );
+				$value		= $this->resolveOperation( $operation, $value, $input );
+				$target		= $action->to ?? $fieldName;
+				NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
 			}
-			$truth	= FALSE;
-			$match	= $this->resolveValue( $condition->match, $input );
-			switch( strtolower( $condition->operator ) ){
-				case 'equals':
-				case '==':
-					$truth	= $inputValue == $condition->match;
-					break;
-				case 'startswith':
-				case '[=':
-					$cut	= substr( $inputValue, 0, strlen( $condition->match ) );
-					$truth	= $cut === $condition->match;
-					break;
-				case 'endswith':
-				case '=]':
-					$cut	= substr( $inputValue, -1 * strlen( $condition->match ) );
-					$truth	= $cut === $condition->match;
-					break;
-				case 'contains':
-				case '~=':
-					$truth	= str_contains( $inputValue, (string) $condition->match );
-					break;
-				case 'regex':
-					$truth	= preg_match( $condition->match, $inputValue );
-					break;
-			}
-			if( $truth ){
-				if( !empty( $parameters->action ) ){
-					$action		= $parameters->action;
-					if( !empty( $action->operation ) ){
-						$operation	= strtolower( $action->operation );
-						$value		= $action->value ?? $input->get( $fieldName );
-						$value		= $this->resolveOperation( $operation, $value, $input );
-						$target		= $action->to ?? $fieldName;
-						NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
-					}
-				}
-			}
-			else{
-				if( !empty( $parameters->else ) ){
-					$action		= $parameters->else;
-					$operation	= strtolower( $action->operation ?? 'set' );
-					$value		= $action->value ?? $input->get( $fieldName );
-					$value		= $this->resolveOperation( $operation, $value, $input );
-					$target		= $action->to ?? $fieldName;
-					NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
-				}
+		}
+		else{
+			if( !empty( $parameters->else ) ){
+				$action		= $parameters->else;
+				$operation	= strtolower( $action->operation ?? 'set' );
+				$value		= $action->value ?? $input->get( $fieldName );
+				$value		= $this->resolveOperation( $operation, $value, $input );
+				$target		= $action->to ?? $fieldName;
+				NULL === $value ? $input->remove( $target ) : $input->set( $target, $value );
 			}
 		}
 	}
@@ -254,6 +237,41 @@ class Logic_Form_Transfer_DataMapper extends Logic
 				$output->set( $outputFieldName, $input->get( $inputFieldName ) );
 	}
 
+	protected function applyRulesToFormDataInFixedOrder( array $formData, object $rules ): Dictionary
+	{
+		$input	= new Dictionary( $formData );
+		$output	= new Dictionary();
+
+		$this->applySets( (array) $rules->set ?? [], $input, $output );
+		$this->applyTranslation( (array) ( $rules->translate ?? [] ), $input, $output );
+		$this->applyFilters( (array) ( $rules->filter ?? [] ), $input, $output );
+		$this->applyDatabaseSearches( (array) ( $rules->db ?? [] ), $input, $output );
+
+		$this->applyCreations( (array) ( $rules->create ?? [] ), $input, $output );
+		$this->applyCopies( (array) ( $rules->copy ?? [] ), $input, $output );
+		$this->applyMappings( (array) ( $rules->map ?? [] ), $input, $output );
+
+		return $output;
+	}
+
+	protected function applyRulesToFormDataInFlowOrder( array $formData, object $rules ): Dictionary
+	{
+		$input	= new Dictionary( $formData );
+		$output	= new Dictionary();
+		foreach( get_object_vars( $rules ) as $ruleKey => $ruleSet ){
+			match( $ruleKey	){
+				'set'		=> $this->applySets( $ruleSet, $input, $output ),
+				'translate'	=> $this->applyTranslation( $ruleSet, $input, $output ),
+				'filter'	=> $this->applyFilters( $ruleSet, $input, $output ),
+				'db'		=> $this->applyDatabaseSearches( $ruleSet, $input, $output ),
+				'create'	=> $this->applyCreations( $ruleSet, $input, $output ),
+				'copy'		=> $this->applyCopies( $ruleSet, $input, $output ),
+				'map'		=> $this->applyMappings( $ruleSet, $input, $output ),
+			};
+		}
+		return $output;
+	}
+
 	/**
 	 *	Applies map of output values to set directly.
 	 *
@@ -268,6 +286,37 @@ class Logic_Form_Transfer_DataMapper extends Logic
 		foreach( $map as $name => $value ){
 			$output->set( $name, $this->resolveValue( $value, $input ) );
 		}
+	}
+
+	protected function evaluateCondition( object $condition, Dictionary $input, string $fieldName ): bool
+	{
+		$truth		= FALSE;
+		$inputValue	= $input->get( $fieldName );
+		$match		= $this->resolveValue( $condition->match, $input );
+		switch( strtolower( $condition->operator ) ){
+			case 'equals':
+			case '==':
+				$truth	= $inputValue == $match;
+				break;
+			case 'startswith':
+			case '[=':
+				$cut	= substr( $inputValue, 0, strlen( $match ) );
+				$truth	= $cut === $match;
+				break;
+			case 'endswith':
+			case '=]':
+				$cut	= substr( $inputValue, -1 * strlen( $match ) );
+				$truth	= $cut === $match;
+				break;
+			case 'contains':
+			case '~=':
+				$truth	= str_contains( $inputValue, (string) $match );
+				break;
+			case 'regex':
+				$truth	= preg_match( $match, $inputValue );
+				break;
+		}
+		return $truth;
 	}
 
 	/**
