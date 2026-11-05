@@ -40,13 +40,8 @@ class Hook_Resource_Address extends Hook
 				$linkable		= FALSE;
 		}
 */
-		$modelAddress	= new Model_Address( $this->env );
-		$orders			= ['addressId' => 'DESC'];
-		$indices		= [
-			'relationId'	=> $this->payload['userId'],
-			'relationType'	=> 'user',
-		];
-		$addresses		= $modelAddress->getAllByIndices( $indices, $orders );
+		$addresses		= Logic_Address::getInstance( $this->env )
+			->getAllByRelation( 'user', $this->payload['userId'], [], ['addressId' => 'DESC'] );
 
 		$words			= $this->env->getLanguage()->getWords( 'address' );
 		$wordsRelations	= (object) $words['hook-relations'];
