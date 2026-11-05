@@ -22,11 +22,8 @@ class Hook_JS_TinyMce extends Hook
 			if( $env->getModules()->has( 'Resource_Frontend' ) )
 				$baseUrl	= Logic_Frontend::getInstance( $env )->getUrl();
 
-			/* @todo extract to language file after rethinking this solution */
-			$labels	= [
-				'de'	=> 'Deutsch',
-				'en'	=> 'Englisch',
-			];
+			$labels	= $env->getLanguage()->getSection( 'js/tinymce', 'languages' );
+			$wsf	= (object) $env->getLanguage()->getSection( 'js/tinymce', 'style-formats' );
 
 			/* @todo	WHY? please implement self::getLanguages similar to self::getLanguage */
 			$languages	= [];
@@ -42,89 +39,89 @@ class Hook_JS_TinyMce extends Hook
 
 			$styleFormats	= [
 				[
-					'title'		=> 'Blöcke',
+					'title'		=> $wsf->blocks,
 					'items'		=> [
 						[
-							'title'				=> 'Absatz',
+							'title'				=> $wsf->blockParagraph,
 							'block'				=> 'p',
 						],
 						[
-							'title'				=> 'Textblock',
+							'title'				=> $wsf->blockDiv,
 							'block'				=> 'div',
 						],
 						[
-							'title'				=> 'Zitatblock',
+							'title'				=> $wsf->blockQuote,
 							'block'				=> 'blockquote',
 							'wrapper'			=> TRUE,
 						],
 						[
-							'title'				=> 'vorformatierter Text',
+							'title'				=> $wsf->blockPre,
 							'block'				=> 'pre',
 						],
 						[
-							'title'				=> 'Abbildung',
+							'title'				=> $wsf->blockFigure,
 							'block'				=> 'figure',
 							'wrapper'			=> TRUE,
 						],
 						[
-							'title'				=> 'HTML5: Sektion',
+							'title'				=> $wsf->blockSection,
 							'block'				=> 'section',
 							'wrapper'			=> TRUE,
 							'merge_siblings'	=> FALSE,
 						],
 						[
-							'title'				=> 'HTML5: Artikel',
+							'title'				=> $wsf->blockArticle,
 							'block'				=> 'article',
 							'wrapper'			=> TRUE,
 							'merge_siblings'	=> FALSE,
 						],
 						[
-							'title'				=> 'HTML5: Marginale',
+							'title'				=> $wsf->blockAside,
 							'block'				=> 'aside',
 							'wrapper'			=> TRUE,
 						],
 					]
 				],
 				[
-					'title'		=> 'Bildformatierung',
+					'title'		=> $wsf->images,
 					'items'		=> [
 						[
-							'title'		=> 'Ausrichtung',
+							'title'		=> $wsf->imageAlignment,
 							'items'		=> [
 								[
-									'title'		=> 'links',
+									'title'		=> $wsf->imageAlignLeft,
 									'selector'	=> 'img',
 									'styles'	=> ['float' => 'left', 'margin' => '0 20px 10px 0px'],
 								],
 								[
-									'title'		=> 'rechts',
+									'title'		=> $wsf->imageAlignRight,
 									'selector'	=> 'img',
 									'styles'	=> ['float' => 'right', 'margin' => '0 0 10px 20px'],
 								],
 							]
 						],
 						[
-							'title'		=> 'Dekoration',
+							'title'		=> $wsf->imageDecoration,
 							'items'		=> [
 								[
-									'title'		=> 'abgerundet',
+									'title'		=> $wsf->imageRounded,
 									'selector'	=> 'img',
 									'classes'	=> 'img-rounded',
 								],
 								[
-									'title'		=> 'kreisrund',
+									'title'		=> $wsf->imageCircle,
 									'selector'	=> 'img',
 									'classes'	=> 'img-circle',
 								],
 								[
-									'title'		=> 'Polaroid',
+									'title'		=> $wsf->imagePolaroid,
 									'selector'	=> 'img',
 									'classes'	=> 'img-polaroid',
 								],
 							]
 						],
 						[
-							'title'				=> 'In Lightbox öffnen',
+							'title'				=> $wsf->imageLightbox,
 							'selector'			=> 'a',
 							'classes'			=> 'fancybox-auto',
 						],

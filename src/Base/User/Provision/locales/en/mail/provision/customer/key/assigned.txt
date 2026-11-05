@@ -1,0 +1,17 @@
+License key received
+--------------------
+
+Hello <%?user.firstname%> <%?user.surname%>!
+
+You have received a license key for your <%product.title%> account "<%?user.username%>".
+
+Address:      <%product.url%>
+License:      <%productLicense.title%>
+ordered:      by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%>
+valid for:    <%userLicense.duration%>
+
+If you already have a license key for <%product.title%>, this key will be
+added and only used once your previous license keys have expired.
+
+Visit "<%appTitle%>" to see an overview of your license keys.
+Address: <%appBaseUrl%>manage/my/provision

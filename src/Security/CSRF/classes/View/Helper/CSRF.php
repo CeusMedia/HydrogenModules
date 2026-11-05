@@ -75,14 +75,15 @@ class View_Helper_CSRF
 		}
 		else if( $useHint && $useLifetime ){
 			$message	= '';
+			$words		= (object) $this->env->getLanguage()->getSection( 'csrf', 'hint' );
 			if( $hasDatetimeHelper ){
 				$helperTime		= new View_Helper_Datetime( $this->env );
 				$tokenLifetime	= $helperTime->getDurationPhraseFromSeconds( $logic->getTokenDuration() );
-				$message		= sprintf( 'Dieses gesicherte Formular ist nur %s gültig.', $tokenLifetime );
+				$message		= sprintf( $words->lifetime, $tokenLifetime );
 			}
 			else{
 				$tokenLifetime	= floor( $logic->getTokenDuration() / 60 );
-				$message	= sprintf( 'Dieses gesicherte Formular ist nur %d Minuten gültig.', $tokenLifetime );
+				$message	= sprintf( $words->lifetimeMinutes, $tokenLifetime );
 			}
 			if( '' !== $message )
 				$hint	= HtmlTag::create( 'div', $message, ['class' => 'alert alert-info'] );

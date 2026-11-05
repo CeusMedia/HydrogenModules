@@ -1,0 +1,12 @@
+License deactivated
+-------------------
+
+Hello <%?user.firstname%> <%?user.surname%>!
+
+...
+
+Address:      <%product.url%>
+License:      <%productLicense.title%>
+
+Visit "<%appTitle%>" to see an overview of your license keys.
+Address: <%appBaseUrl%>manage/my/provision

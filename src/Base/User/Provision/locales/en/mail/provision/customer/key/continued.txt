@@ -1,0 +1,16 @@
+License key renewed
+-------------------
+
+Hello <%?user.firstname%> <%?user.surname%>!
+
+Your license key "<%productLicense.title%>" for the product <%product.title%> expired today.
+The next available key has been activated automatically.
+So you can continue to use "<%product.title%>" as usual.
+
+Address:      <%product.url%>
+License:      <%productLicense.title%>
+ordered:      by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%>
+valid for:    <%userLicense.duration%>
+
+Visit "<%appTitle%>" to see an overview of your license keys.
+Address: <%appBaseUrl%>manage/my/provision

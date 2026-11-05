@@ -120,7 +120,7 @@ class Controller_Member extends Controller
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->messenger->noteError( $words->errorRelationIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		try{
@@ -159,7 +159,7 @@ class Controller_Member extends Controller
 		$words		= (object) $this->getWords( 'msg' );
 		$relation	= $this->modelRelation->get( $userRelationId );
 		if( !$relation ){
-			$this->messenger->noteError( 'Invalid user relation ID.' );
+			$this->messenger->noteError( $words->errorRelationIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		try{
@@ -175,7 +175,7 @@ class Controller_Member extends Controller
 			] );
 			$this->logicMail->handleMail( $mail, $receiver, $language );
 			$this->modelRelation->remove( $relation->userRelationId );
-			$this->messenger->noteSuccess( $words->successReleased );
+			$this->messenger->noteSuccess( $words->successRevoked );
 		}
 		catch( Exception $e ){
 			$this->messenger->noteFailure( $words->failureMail );

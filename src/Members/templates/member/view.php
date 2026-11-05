@@ -86,7 +86,7 @@ if( $user->userId !== $currentUserId ){
 			$buttonRevoke	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRevoke, [
 				'href'		=> './member/release/'.$relation->userRelationId.'?from='.$from,
 				'class'		=> 'btn btn-small btn-inverse',
-				'onclick'	=> "if(!confirm('Wirklich?')) return false;",
+				'onclick'	=> "if(!confirm('".addslashes( $w->buttonRevoke_confirm )."')) return false;",
 			] );
 		}
 	}

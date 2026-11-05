@@ -1,0 +1,24 @@
+<h2>License key expired</h2>
+<p>
+	Hello <%?user.firstname%> <%?user.surname%>!
+</p>
+<p>
+	Your license key "<%productLicense.title%>" for the product <%product.title%> expired today.<br/>
+	Unfortunately, there is no further key available that could be activated automatically now.<br/>
+</p>
+<table>
+	<tbody>
+		<tr><th>Address</th><td><%product.url%></td></tr>
+		<tr><th>License</th><td><%productLicense.title%></td></tr>
+		<tr><th>ordered</th><td> by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%></td></tr>
+		<tr><th>was valid for</th><td> <%userLicense.duration%></td></tr>
+	</tbody>
+</table>
+<p>
+	If you want to continue using "<%product.title%>", you can order a license and thereby new keys.<br/>
+	Visit <a href="<%appBaseUrl%>manage/my/provision"><%appTitle%></a> to see an overview of your license keys.
+</p>
+<p>
+	Otherwise, we thank you for using our service.<br/>
+	Kind regards
+</p>

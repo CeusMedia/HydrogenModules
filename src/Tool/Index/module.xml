@@ -4,7 +4,8 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Tools: Index</title>
 	<description><![CDATA[Poster of available tools.]]></description>
-	<version>0.1</version>
+	<version>0.1.1</version>
+	<log version="0.1.1">Add English locales.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,6 +15,7 @@
 		<class>View/Tool/Index.php</class>
 		<template>tool/index/index.php</template>
 		<locale>de/tool/index.ini</locale>
+		<locale>en/tool/index.ini</locale>
 		<script>tool.index.js</script>
 		<style>site.tool.index.css</style>
 	</files>

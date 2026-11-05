@@ -23,9 +23,10 @@ Currently, supports 2 versions:
   - 8.2.2 -> modern
 
 ]]></description>
-	<version>8.2.2</version>
+	<version>8.2.2-p1</version>
 	<log version="4.5.7-p8">Support module configured auto height.</log>
 	<log version="8.2.2">Support version 8.2.2.</log>
+	<log version="8.2.2-p1">Extract hard-coded texts to locales (de, en).</log>
 	<category>JavaScript</category>
 	<company site="https://www.tiny.cloud/features">www.tiny.cloud</company>
 	<author><![CDATA[Moxiecode Systems AB]]></author>
