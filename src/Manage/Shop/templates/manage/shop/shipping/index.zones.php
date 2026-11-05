@@ -6,6 +6,10 @@ use CeusMedia\Common\UI\HTML\Tag as Html;
 /** @var object $zones */
 /** @var object $grades */
 /** @var string[] $zoneCountries */
+/** @var array<string,string> $countryMap */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['zones'];
 
 $iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
@@ -46,7 +50,7 @@ $listCountries	= Html::create( 'ul', $listCountries, ['class' => 'unstyled'] );
 $modalBody	= Html::create( 'div', array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
+			Html::create( 'label', $w->labelTitle, ['class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',
@@ -58,7 +62,7 @@ $modalBody	= Html::create( 'div', array(
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Länder' ),
+			Html::create( 'label', $w->labelCountries ),
 			Html::create( 'div', Html::create( 'label', join( array(
 				Html::create( 'input', NULL, array(
 					'type'		=> 'checkbox',
@@ -67,7 +71,7 @@ $modalBody	= Html::create( 'div', array(
 					'value'		=> '1',
 					'oninput'	=> 'ModuleManageShopShipping.toggleModalCountries()',
 				) ),
-				'&nbsp;weltweit'
+				'&nbsp;'.$w->labelFallback
 			) ), ['class' => 'checkbox'] ) ),
 			Html::create( 'div', $listCountries, array(
 				'id'	=> 'modal-countries',
@@ -78,28 +82,28 @@ $modalBody	= Html::create( 'div', array(
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Preise' ),
+			Html::create( 'label', $w->labelPrices ),
 			$listGrades
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 ) );
 $modalZone	= new BootstrapModalDialog( 'modalAddZone' );
-$modalZone->setBody( $modalBody )->setHeading( 'Neue Zone' );
+$modalZone->setBody( $modalBody )->setHeading( $w->modalHeading );
 $modalZone->setFormAction( './manage/shop/shipping/addZone' );
 $modalZone->setSubmitButtonClass( 'btn btn-primary' );
-$modalZone->setSubmitButtonLabel( 'speichern' );
+$modalZone->setSubmitButtonLabel( $w->buttonSave );
 $modalZone->setSubmitButtonIconClass( 'fa fa-fw fa-check' );
 $modalZone->setCloseButtonClass( 'btn' );
-$modalZone->setCloseButtonLabel( 'abbrechen' );
+$modalZone->setCloseButtonLabel( $w->buttonCancel );
 $modalZone->setCloseButtonIconClass( 'fa fa-fw fa-arrow-left' );
 
 $modalZoneTrigger	= new BootstrapModalTrigger( 'modalAddZone' );
-$modalZoneTrigger->setLabel( 'neue Zone' )->setIcon( 'fa fa-fw fa-plus' );
+$modalZoneTrigger->setLabel( $w->buttonAdd )->setIcon( 'fa fa-fw fa-plus' );
 $modalZoneTrigger->setAttributes( ['class' => 'btn btn-success'] );
 //$buttonAdd	= Html::create( 'a', $iconAdd.'&nbsp;neue Zone', ['href' => './manage/shop/shipping/addZone', 'class' => 'btn btn-success'] );
 $rows	= [];
 foreach( $zones as $zone ){
-	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', ['href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-danger btn-small'] );
+	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, ['href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-danger btn-small'] );
 	$buttonRemove	= Html::create( 'a', $iconRemove, ['href' => './manage/shop/shipping/removeZone/'.$zone->zoneId, 'class' => 'btn btn-inverse btn-mini'] );
 	if( $zone->fallback )
 		$countries	= '*';
@@ -115,12 +119,12 @@ foreach( $zones as $zone ){
 		Html::create( 'td', $buttonRemove, ['style' => 'text-align: right'] ),
 	) );
 }
-$thead	= Html::create( 'tr', [Html::create( 'th', 'Titel' ), Html::create( 'th', 'Länder' )] );
+$thead	= Html::create( 'tr', [Html::create( 'th', $w->headTitle ), Html::create( 'th', $w->headCountries )] );
 $thead	= Html::create( 'thead', $thead );
 $tbody	= Html::create( 'tbody', $rows );
 $table	= Html::create( 'table', [$thead, $tbody], ['class' => 'table'] );
 $panelZones	= Html::create( 'div', array(
-	Html::create( 'h3', 'Zonen' ),
+	Html::create( 'h3', $w->heading ),
 	Html::create( 'div', array(
 		$table,
 		Html::create( 'div', $modalZoneTrigger, ['class' => 'buttonbar'] ),

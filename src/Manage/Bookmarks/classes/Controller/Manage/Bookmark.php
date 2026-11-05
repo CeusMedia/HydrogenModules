@@ -14,20 +14,21 @@ class Controller_Manage_Bookmark extends Controller
 		$request	= $this->env->getRequest();
 		if( $request->has( 'save' ) ){
 			$messenger	= $this->env->getMessenger();
+			$words		= (object) $this->getWords( 'msg' );
 			$data	= [
 				'url'	=> $request->get( 'url' ),
 				'title'	=> $request->get( 'title' ),
 			];
 			if( !strlen( trim( $data['url'] ) ) )
-				$messenger->noteError( 'Die Adresse fehlt.' );
+				$messenger->noteError( $words->errorUrlMissing );
 			else if( !preg_match( "/^(ht|f)tps?:\/\//", $data['url'] ) )
-				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. https://).' );
+				$messenger->noteError( $words->errorUrlInvalid );
 			else if( !strlen( trim( $data['title'] ) ) )
-				$messenger->noteError( 'Der Titel fehlt.' );
+				$messenger->noteError( $words->errorTitleMissing );
 			else{
 				$data['createdAt']	= time();
 				$bookmarkId	= $this->model->add( $data );
-				$messenger->noteSuccess( 'Das Lesezeichen "%s" wurde hinzugefügt.', $data['title'] );
+				$messenger->noteSuccess( $words->successAdded, $data['title'] );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -41,9 +42,10 @@ class Controller_Manage_Bookmark extends Controller
 	{
 		$request	= $this->env->getRequest();
 		$messenger	= $this->env->getMessenger();
+		$words		= (object) $this->getWords( 'msg' );
 		$bookmark	= $this->model->get( $bookmarkId );
 		if( NULL === $bookmark ){
-			$messenger->noteError( 'Dieses Lesezeichen ist nicht vorhanden. Weiterleitung zur Liste.' );
+			$messenger->noteError( $words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $request->has( 'save' ) ){
@@ -52,15 +54,15 @@ class Controller_Manage_Bookmark extends Controller
 				'title'	=> $request->get( 'title' ),
 			];
 			if( !strlen( trim( $data['url'] ) ) )
-				$messenger->noteError( 'Die Adresse fehlt.' );
+				$messenger->noteError( $words->errorUrlMissing );
 			else if( !preg_match( "/^(http|https|ftp):\/\//", $data['url'] ) )
-				$messenger->noteError( 'Die Adresse ist ungültig: Das Protokoll fehlt (z.B. https://).' );
+				$messenger->noteError( $words->errorUrlInvalid );
 			else if( !strlen( trim( $data['title'] ) ) )
-				$messenger->noteError( 'Der Titel fehlt.' );
+				$messenger->noteError( $words->errorTitleMissing );
 			else{
 				$data['modifiedAt']	= time();
 				$this->model->edit( $bookmarkId, $data );
-				$messenger->noteSuccess( 'Das Lesezeichen "%s" wurde gespeichert.', $data['title'] );
+				$messenger->noteSuccess( $words->successSaved, $data['title'] );
 				$this->restart( NULL, TRUE );
 			}
 		}

@@ -8,10 +8,14 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 class View_Helper_Manage_IP_Lock_List
 {
 	protected WebEnvironment $env;
+	protected array $words;
+	protected object $w;
 
 	public function __construct( WebEnvironment $env )
 	{
-		$this->env	= $env;
+		$this->env		= $env;
+		$this->words	= $this->env->getLanguage()->getWords( 'manage/ip/lock' );
+		$this->w		= (object) $this->words['index.list'];
 	}
 
 	public function renderAddButton(): string
@@ -21,7 +25,7 @@ class View_Helper_Manage_IP_Lock_List
 			$iconAdd		= new Icon( 'plus' );
 		else if( $this->env->getModules()->has( 'UI_Font_FontAwesome' ) )
 			$iconAdd	= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-plus'] );
-		return HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
+		return HtmlTag::create( 'a', $iconAdd.' '.$this->w->buttonAdd, [
 			'href'	=> './manage/ip/lock/add',
 			'class'	=> 'btn btn-primary',
 		] );
@@ -30,7 +34,7 @@ class View_Helper_Manage_IP_Lock_List
 	public function renderList( array $locks, string $urlSuffixFrom, $helperTime ): string
 	{
 		if( [] === $locks )
-			return '<div><em><small>Keine IP-Locks gefunden.</small></em></div>';
+			return '<div><em><small>'.$this->w->noEntries.'</small></em></div>';
 
 		$list	= [];
 		foreach( $locks as $lock ){
@@ -40,12 +44,12 @@ class View_Helper_Manage_IP_Lock_List
 		}
 
 		$heads	= [
-			'IP-Adresse',
-			'Zustand',
-			'Sperrung',
-			'Aufhebung',
-			'Grund',
-			'Aktion',
+			$this->w->headIp,
+			$this->w->headStatus,
+			$this->w->headLockedAt,
+			$this->w->headUnlockAt,
+			$this->w->headReason,
+			$this->w->headActions,
 		];
 		$colgroup	= HtmlElements::ColumnGroup( "140px", "12%", "120px", "130px", "", "90px" );
 		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
@@ -65,21 +69,15 @@ class View_Helper_Manage_IP_Lock_List
 				$spanTo		= '<span class="list-number-to">'.( $page * $limit + $count ).'</span>';
 				$spanRange	= '<span class="list-number-range">'.$spanFrom.'&minus;'.$spanTo.'</span>';
 			}
-			$label	= $spanRange.' von '.$spanTotal;
+			$label	= sprintf( $this->w->listRange, $spanRange, $spanTotal );
 		}
 		return HtmlTag::create( 'small', '('.$label.')', ['class' => 'muted'] );
 	}
 
 	protected function renderRow( Entity_IP_Lock $lock, string $urlSuffixFrom, $helperTime ): string
 	{
-		$statuses	= [
-			Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>',
-			Model_IP_Lock::STATUS_UNLOCKED				=> 'unlocked',
-			Model_IP_Lock::STATUS_CANCELLED				=> '...',
-			Model_IP_Lock::STATUS_REQUEST_LOCK			=> 'lock requested',
-			Model_IP_Lock::STATUS_LOCKED				=> 'locked',
-			Model_IP_Lock::STATUS_REQUEST_UNLOCK		=> 'unlock requested',
-		];
+		$statuses	= $this->words['statuses'];
+		$statuses[Model_IP_Lock::STATUS_DISABLED_BY_REASON]	= '<abbr title="'.htmlentities( $this->w->hintDisabledByReason, ENT_QUOTES, 'UTF-8' ).'">'.$statuses[Model_IP_Lock::STATUS_DISABLED_BY_REASON].'</abbr>';
 
 		$lockedAt	= $this->renderRowLockDate( $lock, $helperTime );
 		$unlockAt	= $this->renderRowUnlockDate( $lock );
@@ -92,12 +90,12 @@ class View_Helper_Manage_IP_Lock_List
 //	$link	= HtmlTag::create( 'span', '<kbd><small>'.$lock->IP.'</small></kbd>' );
 
 		$statusLabels	= [
-			Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> HtmlTag::create( 'span', '<abbr title="Grund für diese Sperre wurde deaktiviert">deaktiviert</abbr>', ['class' => 'label label-important'] ),
-			Model_IP_Lock::STATUS_UNLOCKED				=> HtmlTag::create( 'span', 'deaktiviert', ['class' => 'label label-inverse'] ),
-			Model_IP_Lock::STATUS_CANCELLED				=> HtmlTag::create( 'span', '...', ['class' => 'label label-important'] ),
-			Model_IP_Lock::STATUS_REQUEST_LOCK			=> HtmlTag::create( 'span', 'lock requested', ['class' => 'label label-warning'] ),
-			Model_IP_Lock::STATUS_LOCKED				=> HtmlTag::create( 'span', 'locked', ['class' => 'label label-success'] ),
-			Model_IP_Lock::STATUS_REQUEST_UNLOCK		=> HtmlTag::create( 'span', 'unlock requested', ['class' => 'label label-success'] ),
+			Model_IP_Lock::STATUS_DISABLED_BY_REASON	=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_DISABLED_BY_REASON], ['class' => 'label label-important'] ),
+			Model_IP_Lock::STATUS_UNLOCKED				=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_UNLOCKED], ['class' => 'label label-inverse'] ),
+			Model_IP_Lock::STATUS_CANCELLED				=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_CANCELLED], ['class' => 'label label-important'] ),
+			Model_IP_Lock::STATUS_REQUEST_LOCK			=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_REQUEST_LOCK], ['class' => 'label label-warning'] ),
+			Model_IP_Lock::STATUS_LOCKED				=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_LOCKED], ['class' => 'label label-success'] ),
+			Model_IP_Lock::STATUS_REQUEST_UNLOCK		=> HtmlTag::create( 'span', $statuses[Model_IP_Lock::STATUS_REQUEST_UNLOCK], ['class' => 'label label-success'] ),
 		];
 
 		$reason	= HtmlTag::create( 'div', $lock->reason->title, ['class' => 'autocut'] );
@@ -132,7 +130,7 @@ class View_Helper_Manage_IP_Lock_List
 		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/ip/lock/edit/'.$lock->ipLockId,
 			'class'		=> 'btn btn-small',
-			'title'		=> 'bearbeiten',
+			'title'		=> $this->w->buttonEdit,
 		] );
 		$buttonStatus	= '';
 		$statusesLockable		= [
@@ -152,14 +150,14 @@ class View_Helper_Manage_IP_Lock_List
 			$buttonStatus	= HtmlTag::create( 'a', $iconLock, [
 				'href'		=> './manage/ip/lock/lock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-success',
-				'title'		=> 'aktivieren',
+				'title'		=> $this->w->buttonActivate,
 			] );
 		}
 		else if( in_array( $lock->status, $statusesUnlockable, TRUE ) ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconUnlock, [
 				'href'		=> './manage/ip/lock/unlock/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-inverse',
-				'title'		=> 'deaktivieren',
+				'title'		=> $this->w->buttonDeactivate,
 			] );
 		}
 		$buttonRemove	= '';
@@ -167,7 +165,7 @@ class View_Helper_Manage_IP_Lock_List
 			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 				'href'		=> './manage/ip/lock/cancel/'.$lock->ipLockId.$urlSuffixFrom,
 				'class'		=> 'btn btn-small btn-danger',
-				'title'		=> 'cancel lock',
+				'title'		=> $this->w->buttonCancel,
 			] );
 		}
 
@@ -180,13 +178,13 @@ class View_Helper_Manage_IP_Lock_List
 	{
 		$lockedAt	= date( 'Y-m-d H:i:s', $lock->lockedAt );
 		if( $helperTime )
-			$lockedAt	= $helperTime->convert( $lock->lockedAt, TRUE, 'vor ' );
+			$lockedAt	= $helperTime->convert( $lock->lockedAt, TRUE, $this->w->timePrefix, $this->w->timeSuffix );
 		return $lockedAt;
 	}
 
 	protected function renderRowUnlockDate(Entity_IP_Lock $lock ): string
 	{
-		$unlockAt	= '<small class="muted">nie</small>';
+		$unlockAt	= '<small class="muted">'.$this->w->never.'</small>';
 		if( $lock->reason->duration ){
 			$unlockAt	= $lock->lockedAt + $lock->reason->duration;
 			$unlockDate	= HtmlTag::create( 'span', date( "Y-m-d", $unlockAt ), [

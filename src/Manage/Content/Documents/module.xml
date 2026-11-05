@@ -5,7 +5,7 @@
 	<title>Manage: Content: Documents</title>
 	<description>Basic management of available made documents.</description>
 	<category>Management</category>
-	<version>0.5.7</version>
+	<version>0.5.8</version>
 	<log version="0.4.3">Added relation to time phrase helper.</log>
 	<log version="0.4.4">Use frontend resource.</log>
 	<log version="0.4.5">Updated TinyMCE link collection.</log>
@@ -24,6 +24,7 @@
 	<log version="0.5.5">Add pagination to list.</log>
 	<log version="0.5.6">Extract hook to own class.</log>
 	<log version="0.5.7">Update code quality of model.</log>
+	<log version="0.5.8">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -35,6 +36,9 @@
 		<locale>de/manage/content/document.ini</locale>
 		<locale>de/html/manage/content/document/bottom.html</locale>
 		<locale>de/html/manage/content/document/top.html</locale>
+		<locale>en/manage/content/document.ini</locale>
+		<locale>en/html/manage/content/document/bottom.html</locale>
+		<locale>en/html/manage/content/document/top.html</locale>
 		<template>manage/content/document/index.php</template>
 		<template>manage/content/document/index.add.php</template>
 		<template>manage/content/document/index.list.php</template>

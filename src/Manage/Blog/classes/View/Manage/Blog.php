@@ -19,9 +19,10 @@ class View_Manage_Blog extends View
 
 	public function renderTabs( $current = NULL ): string
 	{
+		$words	= $this->env->getLanguage()->getSection( 'manage/blog', 'tabs' );
 		$tabs	= [
-			''				=> 'Blog-Einträge',
-			'/category'		=> 'Kategorien',
+			''				=> $words['posts'],
+			'/category'		=> $words['categories'],
 		];
 		$list	= [];
 		$badge	= '';

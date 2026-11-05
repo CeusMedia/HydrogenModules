@@ -29,7 +29,7 @@ if( $file ){
 		'class'		=> 'btn btn-primary',
 		'disabled'	=> $readonly ? 'disabled' : NULL,
 	] );
-	$noteReadonly	= '&nbsp;<em class="muted">File is read-only.</em>';
+	$noteReadonly	= '&nbsp;<em class="muted">'.$w->noteReadonly.'</em>';
 	if( !$readonly )
 		$noteReadonly	= '';
 	return '

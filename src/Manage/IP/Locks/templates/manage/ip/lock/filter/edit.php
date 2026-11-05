@@ -11,27 +11,30 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var bool $canActivate */
 /** @var bool $canDeactivate */
 /** @var bool $canRemove */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['edit'];
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'icon-trash icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './manage/ip/lock/filter',
 	'class'	=> 'btn btn-small',
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ] );
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 	'href'	=> './manage/ip/lock/filter/remove/'.$filter->ipLockFilterId,
 	'class'	=> 'btn btn-danger btn-small',
 ] );
 
 $optMethod	= HtmlElements::Options( [
-	''		=> 'alle',
+	''		=> $w->optionMethodAll,
 	'GET'	=> 'GET',
 	'HEAD'	=> 'HEAD',
 	'POST'	=> 'POST',
@@ -39,13 +42,13 @@ $optMethod	= HtmlElements::Options( [
 ], $filter->method );
 
 $optLockStatus	= HtmlElements::Options( [
-	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> 'aktive Sperre',
-	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> 'nur Sperrantrag',
+	Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE	=> $words['lockStatuses'][Model_IP_Lock_Filter::LOCK_STATUS_IMMEDIATE],
+	Model_IP_Lock_Filter::LOCK_STATUS_REQUEST	=> $words['lockStatuses'][Model_IP_Lock_Filter::LOCK_STATUS_REQUEST],
 ], $filter->lockStatus );
 
 $optStatus	= HtmlElements::Options( [
-	Model_IP_Lock_Filter::STATUS_ENABLED	=> 'aktiv',
-	Model_IP_Lock_Filter::STATUS_DISABLED	=> 'inaktiv',
+	Model_IP_Lock_Filter::STATUS_ENABLED	=> $words['statuses'][Model_IP_Lock_Filter::STATUS_ENABLED],
+	Model_IP_Lock_Filter::STATUS_DISABLED	=> $words['statuses'][Model_IP_Lock_Filter::STATUS_DISABLED],
 ], $filter->status );
 
 $optReason	= [];
@@ -59,38 +62,38 @@ foreach( $reasons as $reason )
 
 $panelEdit	= '
 <div class="content-panel">
-	<h3><a class="muted" href="./manage/ip/lock/filter">IP-Sperr-Filter:</a> '.$filter->title.'</h3>
+	<h3><a class="muted" href="./manage/ip/lock/filter">'.$w->heading.'</a> '.$filter->title.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/ip/lock/filter/edit/'.$filter->ipLockFilterId.'" method="post">
 			<div class="row-fluid">
 				<div class="span6">
-					<label for="input_title" class="required mandatory">Titel</label>
+					<label for="input_title" class="required mandatory">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" required="required" value="'.htmlentities( $filter->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
-					<label for="input_method">HTTP-Methode</label>
+					<label for="input_method">'.$w->labelMethod.'</label>
 					<select name="method" id="input_method" class="span12">'.$optMethod.'</select>
 				</div>
 				<div class="span4">
-					<label for="input_pattern" class="required mandatory">URI-Muster</label>
+					<label for="input_pattern" class="required mandatory">'.$w->labelPattern.'</label>
 					<input type="text" name="pattern" id="input_pattern" class="span12" required="required" value="'.htmlentities( $filter->pattern, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_reasonId">Grund</label>
+					<label for="input_reasonId">'.$w->labelReason.'</label>
 					<select name="reasonId" id="input_reasonId" class="span12">'.$optReason.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_duration">Dauer <small class="muted">(in Sekunden)</small></label>
+					<label for="input_duration">'.$w->labelDuration.' <small class="muted">'.$w->labelDuration_suffix.'</small></label>
 					<input type="text" name="duration" id="input_duration" class="span12" readonly="readonly" disabled="disabled"/>
 				</div>
 				<div class="span2">
-					<label for="input_lockStatus">Sperrstatus</label>
+					<label for="input_lockStatus">'.$w->labelLockStatus.'</label>
 					<select name="lockStatus" id="input_lockStatus" class="span12">'.$optLockStatus.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_status">Filterstatus</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>

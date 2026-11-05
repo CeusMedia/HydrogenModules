@@ -2,13 +2,16 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
-$wordsShop	= $env->getLanguage()->getWords( 'shop' );
+/** @var array $words */
 
-$table	= HtmlTag::create( 'div', 'Noch keine vorhanden.', ['class' => 'alert alert-info'] );
+$wordsShop	= $env->getLanguage()->getWords( 'shop' );
+$w			= (object) $words['index'];
+
+$table	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 if( $orders ){
 	$rows	= [];
 	foreach( $orders as $item ){
-		$link	= HtmlTag::create( 'a', 'Bestellung am '.date( 'd.m.Y', $item->createdAt ), [
+		$link	= HtmlTag::create( 'a', sprintf( $w->linkOrder, date( 'd.m.Y', $item->createdAt ) ), [
 			'href'	=> './manage/my/order/view/'.$item->orderId,
 		] );
 		$status	= $wordsShop['statuses-order'][$item->status];
@@ -24,7 +27,7 @@ if( $orders ){
 		) );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '100px', '200px', '100px' );
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Bestellung', 'Preis', 'Bezahlmethode', 'Zustand'] ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headOrder, $w->headPrice, $w->headPaymentMethod, $w->headStatus] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped table-fixed'] );
 }
@@ -32,7 +35,7 @@ if( $orders ){
 $pagination	= new \CeusMedia\Bootstrap\PageControl( 'manage/my/order/view', $page, $pages );
 
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'h3', 'Meine Bestellungen' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		$table,
 		HtmlTag::create( 'div', $pagination, ['class' => 'buttonbar'] ),

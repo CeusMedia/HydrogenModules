@@ -56,7 +56,7 @@ $panelEdit	= '
 					'.HtmlElements::LinkButton( './manage/role', '<i class="fa fa-fw fa-arrow-left"></i> '.$words['edit']['buttonCancel'], 'btn btn-small' ).'
 					'.HtmlElements::Button( 'saveRole', '<i class="fa fa-fw fa-check"></i> '.$words['edit']['buttonSave'], 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/role/remove/'.$role->roleId, '<i class="fa fa-fw fa-remove"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', 'Wirklich?' ).'
+					'.HtmlElements::LinkButton( './manage/role/remove/'.$role->roleId, '<i class="fa fa-fw fa-remove"></i> '.$words['edit']['buttonRemove'], 'btn btn-small btn-danger', $words['edit']['buttonRemove_confirm'] ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.HtmlElements::LinkButton( './manage/user/add?roleId='.$role->roleId, '<i class="fa fa-fw fa-plus"></i> '.$words['edit']['buttonAddUser'], 'btn btn-info btn-small' ).'
 					'.HtmlElements::LinkButton( './manage/user/filter?roleId='.$role->roleId, '<i class="fa fa-fw fa-magnifying-class"></i> '.$words['edit']['buttonFilter'], 'btn btn-small' ).'

@@ -71,7 +71,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonRemove, [
 ] );
 
 $panel	= HTML::DivClass( 'content-panel', [
-	HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Benutzer: ', ['class' => 'muted'] ).$user->username ),
+	HtmlTag::create( 'h3', HtmlTag::create( 'span', $w->headingPrefix, ['class' => 'muted'] ).$user->username ),
 	HTML::DivClass( 'content-panel-inner', [
 		HTML::Form( './manage/my/user/remove/confirmed', 'manageMyUserRemove', [
 			HTML::H4( $w->heading ),
@@ -98,7 +98,7 @@ $panel	= HTML::DivClass( 'content-panel', [
 ] );
 
 return $tabs.'<div class="content-panel">
-	<h3>Konto entfernen</h3>
+	<h3>'.$words['remove']['headingRemove'].'</h3>
 	<div class="content-panel-inner">
 		'.$textPanelRemoveAbove.'
 	</div>

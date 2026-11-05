@@ -40,7 +40,7 @@ return '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" class="btn btn-small btn-info"><i class="icon-search icon-white"></i> filtern</button>
+				<button type="submit" class="btn btn-small btn-info"><i class="icon-search icon-white"></i> '.$w->buttonFilter.'</button>
 				<a href="./manage/shop/order/filter/reset" class="btn btn-small btn-inverse"><i class="icon-remove-circle icon-white"></i> '.$w->buttonReset.'</a>
 			</div>
 		</div>

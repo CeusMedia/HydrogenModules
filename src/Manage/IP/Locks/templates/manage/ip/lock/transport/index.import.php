@@ -2,26 +2,29 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index.import'];
 
 $iconUpload		= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-upload'] );
 
 $upload	= new View_Helper_Input_File( $env );
-$upload->setLabel( 'Datei' );
+$upload->setLabel( $w->labelUpload );
 $upload->setName( 'upload' );
 
 $panelImport	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Import' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Datei aus vorherigem Export', ['for' => 'input_upload'] ),
+					HtmlTag::create( 'label', $w->labelFile, ['for' => 'input_upload'] ),
 					$upload->render()
 				] ),
 			] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'h4', 'Typ der Installation' ),
+					HtmlTag::create( 'h4', $w->headingType ),
 					HtmlTag::create( 'label', [
 						HtmlTag::create( 'input', NULL, [
 							'type'		=> 'radio',
@@ -31,9 +34,9 @@ $panelImport	= HtmlTag::create( 'div', [
 							'checked'	=> 'checked',
 						] ),
 						HtmlTag::create( 'div', [
-							HtmlTag::create( 'strong', 'Aktuellen Bestand erweitern' ),
+							HtmlTag::create( 'strong', $w->labelTypeMerge ),
 							HtmlTag::create( 'br' ),
-							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren bleiben erhalten und neue Regeln werden hinzugefügt.', ['class' => 'muted'] ),
+							HtmlTag::create( 'small', $w->labelTypeMerge_hint, ['class' => 'muted'] ),
 						] ),
 					], ['class' => 'radio'] ),
 					HtmlTag::create( 'label', [
@@ -44,9 +47,9 @@ $panelImport	= HtmlTag::create( 'div', [
 							'id'		=> 'input_type-fresh',
 						] ),
 						HtmlTag::create( 'div', [
-							HtmlTag::create( 'strong', 'Frische Installation' ),
+							HtmlTag::create( 'strong', $w->labelTypeFresh ),
 							HtmlTag::create( 'br' ),
-							HtmlTag::create( 'small', 'Bestehende Regeln und Sperren werden vor der Installation entfernt.', ['class' => 'muted'] ),
+							HtmlTag::create( 'small', $w->labelTypeFresh_hint, ['class' => 'muted'] ),
 						] ),
 					], ['class' => 'radio'] ),
 
@@ -54,7 +57,7 @@ $panelImport	= HtmlTag::create( 'div', [
 				] ),
 			] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', $iconUpload.'&nbsp;importieren', [
+				HtmlTag::create( 'button', $iconUpload.'&nbsp;'.$w->buttonImport, [
 					'name'	=> 'save',
 					'type'	=> 'submit',
 					'class'	=> 'btn btn-primary'

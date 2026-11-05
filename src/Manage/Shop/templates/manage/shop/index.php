@@ -5,19 +5,22 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var WebEnvironment $env */
 /** @var View $view */
+/** @var array<string,array<string,string>> $words */
 /** @var array<object> $ordersTotal */
 /** @var array<object> $ordersNotPayed */
 /** @var array<object> $ordersNotDelivered */
 /** @var array<object> $ordersNotFinished */
 
+$w	= (object) $words['index'];
+
 $panelOpenOrders	= '
 <div class="content-panel">
-	<h3>Offen</h3>
+	<h3>'.$w->headingOpen.'</h3>
 	<div class="content-panel-inner">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="./manage/shop/order/filter?status[]=2">'.number_format( count( $ordersNotPayed ), 0, ',', '.' ).' nicht bezahlt</a></li>
-			<li><a href="./manage/shop/order/filter?status[]=3&status[]=4">'.number_format( count( $ordersNotDelivered ), 0, ',', '.' ).' nicht zugestellt</a></li>
-			<li><a href="./manage/shop/order/filter?status[]=2&status[]=3&status[]=4&status[]=5">'.number_format( count( $ordersNotFinished ), 0, ',', '.' ).' nicht abgeschlossen</a></li>
+			<li><a href="./manage/shop/order/filter?status[]=2">'.sprintf( $w->linkNotPayed, number_format( count( $ordersNotPayed ), 0, ',', '.' ) ).'</a></li>
+			<li><a href="./manage/shop/order/filter?status[]=3&status[]=4">'.sprintf( $w->linkNotDelivered, number_format( count( $ordersNotDelivered ), 0, ',', '.' ) ).'</a></li>
+			<li><a href="./manage/shop/order/filter?status[]=2&status[]=3&status[]=4&status[]=5">'.sprintf( $w->linkNotFinished, number_format( count( $ordersNotFinished ), 0, ',', '.' ) ).'</a></li>
 		</ul>
 	</div>
 </div>';
@@ -31,19 +34,19 @@ foreach( $ordersTotal as $order ){
 
 $panelTotal	= '
 <div class="content-panel">
-	<h3>Gesamt</h3>
+	<h3>'.$w->headingTotal.'</h3>
 	<div class="content-panel-inner">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="./manage/shop/order/filter?status[]=2&status[]=3&status[]=4&status[]=5&status[]=6">'.number_format( count( $ordersTotal ), 0, ',', '.' ).' Bestellungen</a></li>
-			<li><a>'.number_format( $totalPrice, 2, ',', '.' ).' € netto</a></li>
-			<li><a>'.number_format( $totalTaxed, 2, ',', '.' ).' € brutto</a></li>
+			<li><a href="./manage/shop/order/filter?status[]=2&status[]=3&status[]=4&status[]=5&status[]=6">'.sprintf( $w->linkOrders, number_format( count( $ordersTotal ), 0, ',', '.' ) ).'</a></li>
+			<li><a>'.sprintf( $w->priceNet, number_format( $totalPrice, 2, ',', '.' ) ).'</a></li>
+			<li><a>'.sprintf( $w->priceGross, number_format( $totalTaxed, 2, ',', '.' ) ).'</a></li>
 		</ul>
 	</div>
 </div>';
 
 $panelEmpty	= '
 <div class="content-panel">
-	<h3>Leeres Panel</h3>
+	<h3>'.$w->headingEmpty.'</h3>
 	<div class="content-panel-inner">
 	</div>
 </div>';

@@ -28,9 +28,9 @@ $filterSource	= HtmlTag::create( 'input', NULL, ['type' => 'hidden', 'name' => '
 if( count( $sources ) > 1 ){
 	$sourceMap = [];
 	$sourceLabels	= [
-		'Database'	=> 'Database Pages',
-		'Config'	=> 'Config Pages',
-		'Modules'	=> 'Module Pages'
+		'Database'	=> $words['filter']['sourceDatabase'],
+		'Config'	=> $words['filter']['sourceConfig'],
+		'Modules'	=> $words['filter']['sourceModules']
 	];
 	array_map(static function( $key ) use ( $sourceLabels, &$sourceMap ){
 		$sourceMap[$key]    = $sourceLabels[$key];
@@ -39,7 +39,7 @@ if( count( $sources ) > 1 ){
 	$filterSource	= '
 		<div class="row-fluid">
 			<div class="span12">
-				<label for="input_source" class="mandatory">Quelle './*$words['filter']['labelSource'].*/'</label>
+				<label for="input_source" class="mandatory">'.$words['filter']['labelSource'].'</label>
 				<select name="source" id="input_source" class="span12" onchange="document.location.href=\'./manage/page/setSource/\'+this.value;">'.$optSource.'</select>
 			</div>
 		</div>';
@@ -79,7 +79,7 @@ if( !empty( $pageId ) && isset( $page ) )
 else if( !empty( $parentId ) && isset( $page ) )
 	$urlAdd	.= "/".$parentId;
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Seite', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['tree']['buttonAdd'], [
 	'href'		=> $urlAdd,
 	'class'		=> 'btn btn-small btn-success',
 ] );

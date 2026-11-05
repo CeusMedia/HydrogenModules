@@ -40,7 +40,7 @@ foreach( $definitions as $jobId => $definition )
 ksort( $optClassName );
 $optClassName	= HtmlElements::Options( $optClassName, $filterClassName );
 
-$optArchived	= [0 => 'no', 1 => 'yes'];
+$optArchived	= [0 => $words['filter-archived'][0], 1 => $words['filter-archived'][1]];
 $optArchived	= HtmlElements::Options( $optArchived, $filterArchived );
 
 $panelFilter	= HtmlTag::create( 'div', [

@@ -7,10 +7,12 @@ extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/provision/lice
 
 $tabs	= View_Manage_My_License::renderTabs( $env, 'key' );
 
+$wp		= (object) $words['position'];
+
 return $tabs.$textTop.'
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<span href="./manage/my/provision/license/key">Schlüsselliste</span>
+	<big>&nbsp;'.$wp->label.' </big>
+	<span href="./manage/my/provision/license/key">'.$wp->keyList.'</span>
 	<hr/>
 </div>
 <div class="row-fluid">

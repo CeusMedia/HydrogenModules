@@ -5,12 +5,13 @@
 	<title>Manage: Companies</title>
 	<description>Management for company accounts.</description>
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies and Resource:Companies instead!</deprecation>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated templates.</log>
 	<log version="0.2.2">Use module UI:Helper:TimePhraser.</log>
 	<log version="0.3">End of life: Use Manage:Companies instead.</log>
+	<log version="0.3.1">Complete German and English locales.</log>
 	<category>Management</category>
 <!--	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -23,6 +24,7 @@
 		<template>manage/company/edit.php</template>
 		<template>manage/company/index.php</template>
 		<locale>de/manage/company.ini</locale>
+		<locale>en/manage/company.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>

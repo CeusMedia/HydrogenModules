@@ -38,7 +38,7 @@ if( $page->type == 0 ){
 		'id'			=> 'btn-meta-suggest',
 		'data-page-id'	=> $page->pageId,
 		'data-target'	=> '#input_page_keywords',
-		'data-question'	=> 'Wörter ausschließen, getrennt mit Leerzeichen',
+		'data-question'	=> $wMeta->questionBlacklist,
 	] );
 	$buttonBlacklist	= HtmlTag::create( 'button', $iconExclude.'&nbsp;'.$wMeta->buttonBlacklist, [
 		'type'			=> "button",
@@ -46,7 +46,7 @@ if( $page->type == 0 ){
 		'id'			=> 'btn-meta-blacklist',
 		'data-page-id'	=> $page->pageId,
 		'data-target'	=> '#input_page_keywords',
-		'data-question'	=> 'Wörter ausschließen, getrennt mit Leerzeichen',
+		'data-question'	=> $wMeta->questionBlacklist,
 	] );
 }
 
@@ -57,12 +57,12 @@ return '
 			<!--<h3>'.$wMeta->heading.'</h3>-->
 			<div class="row-fluid">
 				<div class="span6">
-					<h4>Werte für diese Seite</h4>
-					<p><small class="muted">Wenn keine Werte gespeichert wurden, werden die Standartwerte benutzt.</small></p>
+					<h4>'.$wMeta->headingPage.'</h4>
+					<p><small class="muted">'.$wMeta->hintPage.'</small></p>
 				</div>
 				<div class="span6">
-					<h4>Standardwerte</h4>
-					<div><small class="muted">Diese Werte wurden im Meta-Modul der Website definiert.</small></div>
+					<h4>'.$wMeta->headingDefaults.'</h4>
+					<div><small class="muted">'.$wMeta->hintDefaults.'</small></div>
 				</div>
 			</div>
 			<div id="meta-defaults" data-todo="refactor this element and its jQuery bindings">
@@ -76,7 +76,7 @@ return '
 						<textarea class="span12" rows="2" name="page_default_description" id="input_page_default_description">'.htmlentities( $meta['description'] ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							<button type="button" class="btn btn-mini" id="btn-copy-description">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
-							<button type="button" class="btn btn-mini" disabled="disabled">save</button>
+							<button type="button" class="btn btn-mini" disabled="disabled">'.$wMeta->buttonSave.'</button>
 						</div>
 					</div>
 				</div>
@@ -94,7 +94,7 @@ return '
 						<textarea class="span12" rows="4" name="page_default_keywords" id="input_page_default_keywords">'.htmlentities( $meta['keywords'] ?? '', ENT_QUOTES, 'UTF-8' ).'</textarea>
 						<div class="btn-group">
 							<button type="button" class="btn btn-mini" id="btn-copy-keywords">'.$iconCopy.' '.$wMeta->buttonCopy.'</button>
-							<button type="button" class="btn btn-mini" disabled="disabled">save</button>
+							<button type="button" class="btn btn-mini" disabled="disabled">'.$wMeta->buttonSave.'</button>
 						</div>
 					</div>
 				</div>

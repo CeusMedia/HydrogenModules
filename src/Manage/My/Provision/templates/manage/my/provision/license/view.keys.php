@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$w	= (object) $words['view.keys'];
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
 $iconRevoke		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
@@ -29,13 +31,13 @@ foreach( $userLicense->keys as $key ){
 		$user	= $helper->render();
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_NEW ){
-		$buttonAssign	= HtmlTag::create( 'a', $iconAdd.'&nbsp;vergeben', [
+		$buttonAssign	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAssign, [
 			'href'	=> './manage/my/provision/license/assign/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-success btn-small'
 		] );
 	}
 	if( $key->status == Model_Provision_User_License_Key::STATUS_ASSIGNED ){
-		$buttonAssign	= HtmlTag::create( 'a', $iconRevoke.'&nbsp;entziehen', [
+		$buttonAssign	= HtmlTag::create( 'a', $iconRevoke.'&nbsp;'.$w->buttonRevoke, [
 			'href'	=> './manage/my/provision/license/revoke/'.$key->userLicenseKeyId,
 			'class'	=> 'btn btn-inverse btn-small'
 		] );
@@ -58,7 +60,7 @@ foreach( $userLicense->keys as $key ){
 	) );
 }
 $colgroup	= HtmlElements::ColumnGroup( array( "15%", "25%", "30%") );
-$heads	= HtmlElements::TableHeads( ['Schlüssel', 'Zustand', 'Besitzer'] );
+$heads	= HtmlElements::TableHeads( [$w->headKey, $w->headStatus, $w->headOwner] );
 $thead	= HtmlTag::create( 'thead', $heads );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table'] );
@@ -76,7 +78,7 @@ span.user img {
 	}
 </style>
 <div class="content-panel">
-	<h3>Schlüssel dieser Lizenz</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>

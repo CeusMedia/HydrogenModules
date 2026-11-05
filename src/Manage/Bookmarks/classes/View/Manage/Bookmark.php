@@ -21,7 +21,7 @@ class View_Manage_Bookmark extends View
 	{
 		$bookmarks	= $this->getData( 'bookmarks', [] );
 		if( [] === $bookmarks )
-			return '<div><small class="muted"><em>Keine vorhanden.</em></small></div>';
+			return '<div><small class="muted"><em>'.$this->getWords( 'list' )->empty.'</em></small></div>';
 
 		$list	= [];
 		foreach( $bookmarks as $entry ){

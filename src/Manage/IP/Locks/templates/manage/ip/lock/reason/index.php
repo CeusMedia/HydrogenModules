@@ -13,6 +13,9 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 /** @var bool $canActivate */
 /** @var bool $canDeactivate */
 /** @var bool $canRemove */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index'];
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
 $iconEdit	= HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] );
@@ -39,31 +42,31 @@ if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) ){
 }
 
 $statusLabels	= [
-	Model_IP_Lock_Reason::STATUS_DISABLED	=> HtmlTag::create( 'span', 'inaktiv', ['class' => 'label label-inverse'] ),
-	Model_IP_Lock_Reason::STATUS_ENABLED	=> HtmlTag::create( 'span', 'aktiv', ['class' => 'label label-success'] ),
+	Model_IP_Lock_Reason::STATUS_DISABLED	=> HtmlTag::create( 'span', $words['statuses'][Model_IP_Lock_Reason::STATUS_DISABLED], ['class' => 'label label-inverse'] ),
+	Model_IP_Lock_Reason::STATUS_ENABLED	=> HtmlTag::create( 'span', $words['statuses'][Model_IP_Lock_Reason::STATUS_ENABLED], ['class' => 'label label-success'] ),
 ];
 
 
 
-$list	= '<div><em><small>Keine IP-Lock-Gründe gefunden.</small></em></div>';
+$list	= '<div><em><small>'.$w->noEntries.'</small></em></div>';
 if( $reasons ){
 	$list	= [];
 	foreach( $reasons as $reason ){
 		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/ip/lock/reason/edit/'.$reason->ipLockReasonId,
 			'class'		=> 'btn not-btn-primary btn-small btn-mini',
-			'title'		=> 'bearbeiten',
+			'title'		=> $w->buttonEdit,
 		] );
 		$buttonStatus	= HtmlTag::create( 'a', $iconActivate, [
 			'href'		=> './manage/ip/lock/reason/activate/'.$reason->ipLockReasonId,
 			'class'		=> 'btn btn-success btn-small btn-mini',
-			'title'		=> 'aktivieren',
+			'title'		=> $w->buttonActivate,
 		] );
 		if( Model_IP_Lock_Reason::STATUS_ENABLED === $reason->status ){
 			$buttonStatus	= HtmlTag::create( 'a', $iconDeactivate, [
 				'href'		=> './manage/ip/lock/reason/deactivate/'.$reason->ipLockReasonId,
 				'class'		=> 'btn btn-inverse btn-small btn-mini',
-				'title'		=> 'deaktivieren',
+				'title'		=> $w->buttonDeactivate,
 			] );
 		}
 /*		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
@@ -73,14 +76,14 @@ if( $reasons ){
 		] );*/
 		$createdAt	= $reason->createdAt ? date( 'd.m.Y H:i:s', $reason->createdAt ) : '-';
 		if( $reason->createdAt && $helperTime )
-			$createdAt	= 'vor '.$helperTime->convert( $reason->createdAt, TRUE );
+			$createdAt	= $helperTime->convert( $reason->createdAt, TRUE, $w->timePrefix, $w->timeSuffix );
 		$appliedAt	= $reason->appliedAt ? date( 'd.m.Y H:i:s', $reason->appliedAt ) : '-';
 		if( $reason->appliedAt && $helperTime )
-			$appliedAt	= 'vor '.$helperTime->convert( $reason->appliedAt, TRUE );
+			$appliedAt	= $helperTime->convert( $reason->appliedAt, TRUE, $w->timePrefix, $w->timeSuffix );
 		$httpCode	= HtmlTag::create( 'abbr', $reason->code, ['title' => HttpStatus::getText( $reason->code )] );
 		$duration	= $reason->duration ?: '-';
 		if( $reason->duration && $helperTime )
-			$duration	= 'nach '.$helperTime->convert( time() - $reason->duration, !TRUE );
+			$duration	= $helperTime->convert( time() - $reason->duration, !TRUE, $w->durationPrefix );
 
 		$link		= HtmlTag::create( 'a', $reason->title, ['href' => './manage/ip/lock/reason/edit/'.$reason->ipLockReasonId] );
 		$buttons	= HtmlTag::create( 'div', $buttonEdit.$buttonStatus/*.$buttonRemove*/, ['class' => 'btn-group'] );
@@ -95,13 +98,13 @@ if( $reasons ){
 		] );
 	}
 	$heads	= [
-		HtmlTag::create( 'abbr', 'Code', ['title' => 'HTTP-Status-Code'] ),
-		'Titel',
-		HtmlTag::create( 'abbr', 'Aufhebung', ['title' => 'Automatische Aufhebung der Sperre'] ),
-		'Zustand',
-		'Erstellung',
-		HtmlTag::create( 'abbr', 'Anwendung', ['title' => 'Letzte Sperrung aus diesem Grund'] ),
-		'Aktion',
+		HtmlTag::create( 'abbr', $w->headCode, ['title' => $w->headCode_title] ),
+		$w->headTitle,
+		HtmlTag::create( 'abbr', $w->headDuration, ['title' => $w->headDuration_title] ),
+		$w->headStatus,
+		$w->headCreatedAt,
+		HtmlTag::create( 'abbr', $w->headAppliedAt, ['title' => $w->headAppliedAt_title] ),
+		$w->headActions,
 	];
 	$colgroup	= HtmlElements::ColumnGroup( "50", "", "120", "100", "110", "110", "100" );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );
@@ -109,13 +112,13 @@ if( $reasons ){
 	$list		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-condensed'] );
 }
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' hinzufügen', [
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'href'	=> './manage/ip/lock/reason/add',
 	'class'	=> 'btn btn-primary',
 ] );
 
 $panelList	= HTML::DivClass( 'content-panel',
-	HtmlTag::create( 'h3', 'IP-Sperr-Gründe' ).
+	HtmlTag::create( 'h3', $w->heading ).
 	HTML::DivClass( 'content-panel-inner',
 		$list.
 		HTML::DivClass( 'buttonbar',

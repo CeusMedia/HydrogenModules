@@ -5,7 +5,7 @@
 	<title>Manage: Catalog: Bookstore</title>
 	<description><![CDATA[Bookstore Catalog Management.]]></description>
 	<category>Management</category>
-	<version>0.7.8</version>
+	<version>0.7.9</version>
 	<log version="0.3.11">Made paths to images and documents configurable.</log>
 	<log version="0.3.12">Made images dimensions configurable.</log>
 	<log version="0.3.13">Fixed bug in language file.</log>
@@ -47,6 +47,7 @@
 	<log version="0.7.6">Extract AJAX methods to own controller classes.</log>
 	<log version="0.7.7">Extract hooks to own classes.</log>
 	<log version="0.7.8">Code update.</log>
+	<log version="0.7.9">Complete German and English locales and extract hard-coded texts.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -79,11 +80,20 @@
 		<class>View/Manage/Catalog/Bookstore/Tag.php</class>
 		<locale>de/catalog.ini</locale>
 		<locale>de/html/manage/catalog/bookstore/article/index.html</locale>
+		<locale>de/html/manage/catalog/bookstore/article/top.html</locale>
 		<locale>de/manage/catalog/bookstore.ini</locale>
 		<locale>de/manage/catalog/bookstore/article.ini</locale>
 		<locale>de/manage/catalog/bookstore/author.ini</locale>
 		<locale>de/manage/catalog/bookstore/category.ini</locale>
 		<locale>de/manage/catalog/bookstore/tag.ini</locale>
+		<locale>en/catalog.ini</locale>
+		<locale>en/html/manage/catalog/bookstore/article/index.html</locale>
+		<locale>en/html/manage/catalog/bookstore/article/top.html</locale>
+		<locale>en/manage/catalog/bookstore.ini</locale>
+		<locale>en/manage/catalog/bookstore/article.ini</locale>
+		<locale>en/manage/catalog/bookstore/author.ini</locale>
+		<locale>en/manage/catalog/bookstore/category.ini</locale>
+		<locale>en/manage/catalog/bookstore/tag.ini</locale>
 		<template>manage/catalog/bookstore/article/add.php</template>
 		<template>manage/catalog/bookstore/article/edit.php</template>
 		<template>manage/catalog/bookstore/article/edit.authors.php</template>

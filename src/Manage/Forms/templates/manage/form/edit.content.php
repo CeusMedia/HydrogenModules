@@ -5,6 +5,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /**	@var object $form */
 /**	@var array<string,string|HtmlTag> $navButtons */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['edit.content'];
 
 $iconList	= new Icon( 'list' );
 $iconSave	= new Icon( 'check' );
@@ -17,7 +20,7 @@ return '
 		<form action="./manage/form/edit/'.$form->formId.'" method="post">
 			<div class="row-fluid" style="margin-bottom: 1em">
 				<div class="span12">
-					<label for="input_content">Inhalt</label>
+					<label for="input_content">'.$w->labelContent.'</label>
 					<textarea name="content" id="input_content" class="span12" rows="20">'.htmlentities( $form->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
@@ -25,7 +28,7 @@ return '
 				'.$navButtons['list'].'
 <!--				'./*$navButtons['prevBlocks'].*/'-->
 				'.$navButtons['prevView'].'
-				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',

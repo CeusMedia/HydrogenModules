@@ -10,87 +10,83 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<object> $mailsManager */
 /** @var int $page */
 /** @var int $pages */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['add'];
 
 $iconList	= new Icon( 'list' );
 $iconSave	= new Icon( 'check' );
 
-$statuses	= [
-	-1		=> 'deaktiviert',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-];
+$statuses	= $words['statuses'];
 $optStatus	= HtmlElements::Options( $statuses );
 
-$types		= [
-	0		=> 'direkter Versand',
-	1		=> 'mit Double-Opt-In',
-];
+$types		= $words['types'];
 $optType	= HtmlElements::Options( $types );
 
-$optMailCustomer	= ['' => '- keine -'];
+$optMailCustomer	= ['' => $w->optionNone];
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
 $optMailCustomer	= HtmlElements::Options( $optMailCustomer );
 
-$optMailManager		= ['' => '- keine -'];
+$optMailManager		= ['' => $w->optionNone];
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager		= HtmlElements::Options( $optMailManager );
 
 return '
-<h2><span class="muted">Formular:</span> Neu</h2>
+<h2><span class="muted">'.$w->headingPrefix.'</span> '.$w->heading.'</h2>
 <div class="content-panel">
 	<div class="content-panel-inner">
 		<form action="./manage/form/add" method="post">
 			<div class="row-fluid">
 				<div class="span1">
-					<label for="input_formId">ID</label>
+					<label for="input_formId">'.$w->labelId.'</label>
 					<input type="text" name="formId" id="input_formId" class="span12" disabled="disabled"/>
 				</div>
 				<div class="span7">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12"/>
 				</div>
 				<div class="span2">
-					<label for="input_type">Typ</label>
+					<label for="input_type">'.$w->labelType.'</label>
 					<select name="type" id="input_type" class="span12">'.$optType.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_status">Zustand</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_receivers">Empfänger <small class="muted">(mit Komma getrennt)</small></label>
+					<label for="input_receivers">'.$w->labelReceivers.' <small class="muted">'.$w->labelReceiversSuffix.'</small></label>
 					<input type="text" name="receivers" id="input_receivers" class="span12"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span6">
-					<label for="input_customerMailId">Ergebnis-Email an Kunden <small class="muted">(=Absender)</small></label>
+					<label for="input_customerMailId">'.$w->labelCustomerMail.' <small class="muted">'.$w->labelCustomerMailSuffix.'</small></label>
 					<select name="customerMailId" id="input_customerMailId" class="span12">'.$optMailCustomer.'</select>
 				</div>
 				<div class="span6">
-					<label for="input_managerMailId">Ergebnis-Email an Manager <small class="muted">(=Empfänger)</small></label>
+					<label for="input_managerMailId">'.$w->labelManagerMail.' <small class="muted">'.$w->labelManagerMailSuffix.'</small></label>
 					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_forwardOnSuccess">URL-Weiterleitung bei Erfolg<!-- <small class="muted">(...)</small>--></label>
+					<label for="input_forwardOnSuccess">'.$w->labelForwardOnSuccess.'<!-- <small class="muted">(...)</small>--></label>
 					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12"/>
 				</div>
 			</div>
 			<div class="row-fluid" style="margin-bottom: 1em">
 				<div class="span12">
-					<label for="input_content">Inhalt</label>
+					<label for="input_content">'.$w->labelContent.'</label>
 					<textarea name="content" id="input_content" class="span12" rows="20"></textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/form" class="btn">'.$iconList.'&nbsp;zur Liste</a>
-				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'&nbsp;speichern</button>
+				<a href="./manage/form" class="btn">'.$iconList.'&nbsp;'.$w->buttonList.'</a>
+				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'&nbsp;'.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

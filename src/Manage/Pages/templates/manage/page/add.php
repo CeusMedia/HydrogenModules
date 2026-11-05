@@ -53,7 +53,7 @@ return '
 			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./manage/page/add" method="post" class="cmFormChange-auto">
-					<h4>Erscheinungsbild</h4>
+					<h4>'.$words['edit']['sectionSettingsAppearance'].'</h4>
 					<div class="row-fluid">
 						<div class="span6">
 							<label for="input_page_title" class="mandatory required">'.$w->labelTitle.'</label>
@@ -74,7 +74,7 @@ return '
 						</div>
 					</div>
 <!--					<hr/>-->
-					<h4>Einordnung</h4>
+					<h4>'.$words['edit']['sectionSettingsPosition'].'</h4>
 					<div class="row-fluid">
 						<div class="span5">
 							<label for="input_page_scope">'.$w->labelScope.'</label>
@@ -90,7 +90,7 @@ return '
 						</div>
 					</div>
 <!--					<hr/>-->
-					<h4>Inhalt</h4>
+					<h4>'.$words['edit']['sectionSettingsContent'].'</h4>
 					<div class="row-fluid">
 						<div class="span4">
 							<label for="input_page_type">'.$w->labelType.'</label>
@@ -114,7 +114,7 @@ return '
 						</div>
 					</div>
 <!--					<hr/>-->
-					<h4>Erreichbarkeit</h4>
+					<h4>'.$words['edit']['sectionSettingsAccess'].'</h4>
 					<div class="row-fluid">
 						<div class="span3">
 							<label for="input_page_status">'.$w->labelStatus.'</label>

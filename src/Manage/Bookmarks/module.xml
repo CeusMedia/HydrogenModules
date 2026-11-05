@@ -5,7 +5,7 @@
 	<title>Manage: Bookmarks</title>
 	<description>Basic management of noted links for use on e.G. HTML-Editors or some sort of stored locations or blog article references.</description>
 	<category>Management</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.3.2">Updated TinyMCE link collection.</log>
 	<log version="0.3.3">Apply panel style.</log>
 	<log version="0.3.4">Update button colors.</log>
@@ -13,6 +13,7 @@
 	<log version="0.3.6">Extend allowed protocols by HTTPS.</log>
 	<log version="0.3.7">Apply module UI:Font:FontAwesome.</log>
 	<log version="0.3.8">Extract hook to own class.</log>
+	<log version="0.3.9">Extract hard-coded texts to locales (de, en).</log>
 <!--	<log version="0.4">Support locales.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -22,8 +23,10 @@
 		<class>Hook/Manage/Bookmark.php</class>
 		<class>Model/Bookmark.php</class>
 		<class>View/Manage/Bookmark.php</class>
-<!--		<locale>de/manage/bookmark.ini</locale>-->
-<!--		<locale>en/manage/bookmark.ini</locale>-->
+		<locale>de/manage/bookmark.ini</locale>
+		<locale>de/html/manage/bookmark/index.html</locale>
+		<locale>en/manage/bookmark.ini</locale>
+		<locale>en/html/manage/bookmark/index.html</locale>
 		<template>manage/bookmark/add.php</template>
 		<template>manage/bookmark/edit.php</template>
 		<template>manage/bookmark/index.php</template>

@@ -1,19 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$w		= (object) $words['assign'];
+$wp		= (object) $words['position'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
 $iconSearch		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconUser		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user'] );
 
-$buttonSearch	= HtmlTag::create( 'a', $iconSearch.' suchen', [
+$buttonSearch	= HtmlTag::create( 'a', $iconSearch.' '.$w->buttonSearch, [
 	'href'			=> '#modalSelectUser',
 	'role'			=> 'button',
 	'class'			=> 'btn btn-success btn-small',
 	'data-toggle'	=> 'modal',
 ] );
-$buttonAssignSelf	= HtmlTag::create( 'a', $iconUser.' selbst verwenden', [
+$buttonAssignSelf	= HtmlTag::create( 'a', $iconUser.' '.$w->buttonAssignSelf, [
 	'href'		=> './manage/my/provision/license/assign/'.$userLicense->userLicenseId.'/?userId='.$currentUserId.'&save',
 	'class'		=> 'btn btn-small',
 ] );
@@ -32,18 +35,18 @@ $user	= '<div id="user-container">
 
 
 $data	= [];
-$data['Produkt']				= $userLicense->product->title;
-$data['Lizenz']					= $userLicense->productLicense->title;
-$data['Lizenznummer']			= $userLicense->uid;
-$data['Zeitraum']				= $words['durations'][$userLicense->duration];
-$data['Schlüssel in Lizenz']	= $userLicense->users;
+$data[$w->labelProduct]			= $userLicense->product->title;
+$data[$w->labelLicense]			= $userLicense->productLicense->title;
+$data[$w->labelLicenseNumber]	= $userLicense->uid;
+$data[$w->labelDuration]		= $words['durations'][$userLicense->duration];
+$data[$w->labelKeysInLicense]	= $userLicense->users;
 //$data1['davon vergeben']		= $userLicense->users;
 
 $factsLicense	= View_Manage_My_License::renderDefinitionList( $data );
 
 $panelLicense	= '
 <div class="content-panel content-panel-form">
-	<h3>Lizenz</h3>
+	<h3>'.$w->headingLicense.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span12">
@@ -51,7 +54,7 @@ $panelLicense	= '
 			</div>
 		</div>
 		<div class="buttonbar">
-			<a href="./manage/my/provision/license/view/'.$userLicense->userLicenseId.'" class="btn btn-small"><i class="icon-arrow-left"></i> zurück</a>
+			<a href="./manage/my/provision/license/view/'.$userLicense->userLicenseId.'" class="btn btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
 		</div>
 	</div>
 </div>';
@@ -59,20 +62,20 @@ $panelLicense	= '
 
 
 $data	= [];
-$data['Produkt']				= $userLicense->product->title;
-$data['Lizenz']					= $userLicense->productLicense->title;
-//$data['Lizenznummer']			= $userLicense->uid;
-$data['Zeitraum']				= $words['durations'][$userLicense->duration];
-//$data['Schlüssel in Lizenz']	= $userLicense->users;
-$data['Schlüsselnummer']		= $userLicenseKey->uid;
-$data['Benutzer']				= $user;
+$data[$w->labelProduct]			= $userLicense->product->title;
+$data[$w->labelLicense]			= $userLicense->productLicense->title;
+//$data[$w->labelLicenseNumber]	= $userLicense->uid;
+$data[$w->labelDuration]		= $words['durations'][$userLicense->duration];
+//$data[$w->labelKeysInLicense]	= $userLicense->users;
+$data[$w->labelKeyNumber]		= $userLicenseKey->uid;
+$data[$w->labelUser]			= $user;
 //$data1['davon vergeben']		= $userLicense->users;
 
 $factsAssign	= View_Manage_My_License::renderDefinitionList( $data );
 
 $panelAssign	= '
 <div class="content-panel content-panel-form">
-	<h3>Schlüssel an Benutzer vergeben</h3>
+	<h3>'.$w->headingAssign.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/my/provision/license/assign/'.$userLicenseKey->userLicenseKeyId.'" method="post">
 			<div class="row-fluid">
@@ -83,8 +86,8 @@ $panelAssign	= '
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/my/provision/license/view/'.$userLicense->userLicenseId.'" class="btn btn-small"><i class="icon-arrow-left"></i> zurück</a>
-				<button type="submit" name="save" class="btn btn-primary" id="btn-save" disabled="disabled"><i class="icon-ok icon-white"></i> speichern</button>
+				<a href="./manage/my/provision/license/view/'.$userLicense->userLicenseId.'" class="btn btn-small"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
+				<button type="submit" name="save" class="btn btn-primary" id="btn-save" disabled="disabled"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>
@@ -94,12 +97,12 @@ $panelAssign	= '
 <div id="modalSelectUser" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		<h3 id="myModalLabel">Benutzer suchen</h3>
+		<h3 id="myModalLabel">'.$w->headingModal.'</h3>
 	</div>
 	<div class="modal-body">
 		<div class="row-fluid">
 			<div class="span6">
-				<label>Benutzer suchen</label>
+				<label>'.$w->labelQuery.'</label>
 				<input type="text" name="query" id="input_query" onkeyup="ManageMyLicense.suggestUsers()" class="span12" autocomplete="off"/>
 			</div>
 		</div>
@@ -108,32 +111,31 @@ $panelAssign	= '
 			<div id="user-list-container">
 			</div>
 			<div id="user-list-empty" style="display: none">
-				<em class="muted">Keinen Benutzer gefunden.</em>
+				<em class="muted">'.$w->textNoUserFound.'</em>
 			</div>
 			<div id="user-list-hint">
-				<h4>Anleitung</h4>
+				<h4>'.$w->headingHint.'</h4>
 				<p>
 					<small>
-						Suche hier noch dem Benutzer, der den Schlüssel erhalten soll.<br/>
-						Du kannst dabei nach dem Benutzernamen oder dem Vor- und Nachnamen suchen.
+						'.$w->textHint1.'
 					</small>
 				</p>
 				<p>
 					<small>
-						Klicke auf den gefundenen Benutzer, um die Auswahl zu übernehmen.
+						'.$w->textHint2.'
 					</small>
 				</p>
 				<p>
 					<small>
-						<b>Anmerkung:</b><br/>
-						Es ist nicht möglich, mehrere Schlüssel einer Lizenz an den selben Benutzer zu vergeben.
+						<b>'.$w->labelNote.'</b><br/>
+						'.$w->textNote.'
 					</small>
 				</p>
 			</div>
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn" data-dismiss="modal" aria-hidden="true">Abbrechen</button>
+		<button class="btn" data-dismiss="modal" aria-hidden="true">'.$w->buttonClose.'</button>
 	</div>
 </div>';
 
@@ -196,15 +198,15 @@ var ManageMyLicense = {
 
 return $tabs.$textTop.'
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<a href="./manage/my/provision/license">Lizenzliste</a>
+	<big>&nbsp;'.$wp->label.' </big>
+	<a href="./manage/my/provision/license">'.$wp->licenseList.'</a>
 	<i class="fa fa-fw fa-chevron-right"></i>
 	<a href="./manage/my/provision/license/view/'.$userLicense->userLicenseId.'">
 		<strong>'.$product->title.'</strong>
 		<em>'.$userLicense->productLicense->title.'</em>
 	</a>
 	<i class="fa fa-fw fa-chevron-right"></i>
-	<span>Schlüssel <!--<span class="muted">'.$userLicenseKey->uid.'</span>--> vergeben</span>
+	<span>'.$wp->assignKey.'<!--<span class="muted">'.$userLicenseKey->uid.'</span>--></span>
 	<hr/>
 </div>
 <div class="row-fluid">

@@ -4,6 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var object $zones */
 /** @var object $grades */
 /** @var array<int|string,array<int|string,float|int|string>> $priceMatrix */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['prices'];
 
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
@@ -13,7 +16,7 @@ $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $panelPrices	= '';
 if( $zones || $grades ){
 	$rows	= [];
-	$thead	= [HtmlTag::create( 'th', 'Zonen \ Gewichtsklassen' )];
+	$thead	= [HtmlTag::create( 'th', $w->headZonesGrades )];
 	foreach( $grades as $grade )
 		$thead[]	= HtmlTag::create( 'th', $grade->title, ['class' => 'cell-price'] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', $thead ) );
@@ -39,12 +42,12 @@ if( $zones || $grades ){
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table'] );
 	$panelPrices	= HtmlTag::create( 'div', array(
-		HtmlTag::create( 'h3', 'Versandkosten' ),
+		HtmlTag::create( 'h3', $w->heading ),
 		HtmlTag::create( 'div', array(
 			HtmlTag::create( 'form', array(
 				$table,
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+					HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 						'type'	=> 'submit',
 						'name'	=> 'save',
 						'class'	=> 'btn btn-primary',

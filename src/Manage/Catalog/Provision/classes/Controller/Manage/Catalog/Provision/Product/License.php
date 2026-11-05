@@ -15,7 +15,8 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 	public function add( $productId = NULL ): void
 	{
 		if( !$productId ){
-			$this->messenger->noteError( "Please select a product,first!" );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorNoProduct );
 			$this->restart( './manage/catalog/provision/product' );
 		}
 		if( $this->request->has( 'save' ) ){
@@ -27,7 +28,8 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 			$data['productId']	= $productId;
 			$data['createdAt']	= time();
 			$licenseId	= $this->modelLicense->add( $data, FALSE );
-			$this->messenger->noteSuccess( 'Product license added.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( './manage/catalog/provision/product/edit/'.$productId );
 		}
 		$license	= [];
@@ -42,14 +44,16 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 	{
 		$license	= $this->modelLicense->get( $licenseId );
 		if( !$license ){
-			$this->messenger->noteError( 'Invalid license ID.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorInvalidId );
 			$this->restart( 'manage/catalog/provision/product' );
 		}
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
 			$data['modifiedAt']	= time();
 			$projectId	= $this->modelLicense->edit( $licenseId, $data, FALSE );
-			$this->messenger->noteSuccess( 'Product license saved.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 			$this->restart( './manage/catalog/provision/product/edit/'.$license->productId );
 		}
 		$this->addData( 'license', $license );
@@ -61,7 +65,8 @@ class Controller_Manage_Catalog_Provision_Product_License extends Controller
 	public function index( $productId = NULL ): void
 	{
 		if( !$productId ){
-			$this->messenger->noteError( "Please select a product,first!" );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorNoProduct );
 			$this->restart( './manage/catalog/provision/product' );
 		}
 		$licenses	= $this->modelLicense->getAll();

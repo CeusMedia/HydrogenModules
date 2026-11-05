@@ -35,14 +35,14 @@ class Controller_Manage_Project extends Controller
 		];
 		$relation	= $this->modelProjectUser->getByIndices( $indices );
 		if( !$relation ){
-			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNoInvitation'] );
 		}
 		else{
 			$this->modelProjectUser->edit( $relation->projectUserId, [
 				'status'		=> 1,
 				'modifiedAt'	=> time(),
 			] );
-			$this->messenger->noteSuccess( 'Die Einladung wurde zu einer Mitgliedschaft am Projekt umgewandelt.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successInvitationAccepted'] );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -83,7 +83,7 @@ class Controller_Manage_Project extends Controller
 					$this->env->getDatabase()->commit();
 					$this->messenger->noteSuccess( $words->msgSuccess );
 					if( $this->request->get( 'from' ) ){
-						$this->messenger->noteNotice( 'Weiterleitung zurück zum Ausgangspunkt.' );
+						$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeRedirectBack'] );
 						$this->restart( $this->request->get( 'from' ) );
 					}
 					$this->restart( 'edit/'.$projectId, TRUE );
@@ -155,14 +155,14 @@ class Controller_Manage_Project extends Controller
 		];
 		$relation	= $this->modelProjectUser->getByIndices( $indices );
 		if( !$relation ){
-			$this->messenger->noteError( 'Keine Einladung zu diesem Projekt vorhanden.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNoInvitation'] );
 		}
 		else{
 			$this->modelProjectUser->edit( $relation->projectUserId, [
 				'status'		=> -1,
 				'modifiedAt'	=> time(),
 			] );
-			$this->messenger->noteSuccess( 'Die Einladung zum Projekt wurde abgelehnt.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successInvitationDeclined'] );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -554,7 +554,7 @@ class Controller_Manage_Project extends Controller
 	{
 		$project		= $this->modelProject->get( $projectId );
 		if( !$project ){
-			$this->messenger->noteError( 'Invalid project. Redirection to index.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidProject'] );
 			$this->restart( NULL, TRUE );
 		}
 		if( $checkMembership ){
@@ -563,7 +563,7 @@ class Controller_Manage_Project extends Controller
 				'userId'	=> $this->userId,
 			] );
 			if( !$isMember && !$this->isAdmin ){
-				$this->messenger->noteError( 'You cannot access this project. Redirection to index.' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorNoAccess'] );
 				$this->restart( NULL, TRUE );
 			}
 		}

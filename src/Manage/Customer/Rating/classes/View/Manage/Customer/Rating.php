@@ -23,6 +23,7 @@ class View_Manage_Customer_Rating extends View
 
 	public static function ___onRegisterTab( Environment $env, $context, $module, $data )
 	{
-		View_Manage_Customer::registerTab( 'rating/'.$data['customerId'], '+Bewertungen', 7 );
+		$words	= $env->getLanguage()->getWords( 'manage/customer/rating' );
+		View_Manage_Customer::registerTab( 'rating/'.$data['customerId'], $words['tabs']['rating'], 7 );
 	}
 }

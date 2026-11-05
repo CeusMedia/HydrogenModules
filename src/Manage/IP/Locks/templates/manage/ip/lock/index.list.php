@@ -16,6 +16,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var bool $canLock */
 /** @var bool $canOrder */
 /** @var bool $canUnlock */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index.list'];
 
 $helperTime = FALSE;
 if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
@@ -34,7 +37,7 @@ $pagination		= new PageControl( './manage/ip/lock/15', $page, ceil( $total / 15 
 $listNumbers	= $helper->renderListNumbers( $page, $limit, $count, $total );
 
 $panelList	= HTML::DivClass( 'content-panel',
-	HtmlTag::create( 'h3', 'IP-Sperren&nbsp;'.$listNumbers ).
+	HtmlTag::create( 'h3', $w->heading.'&nbsp;'.$listNumbers ).
 	HTML::DivClass( 'content-panel-inner',
 		$table.
 		HTML::DivClass( 'buttonbar',

@@ -5,8 +5,9 @@
 	<title>Manage: Branches</title>
 	<description>Management for company branches.</description>
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Manage/Companies">End of life: Use module Manage:Companies instead!</deprecation>
-	<version>0.3</version>
+	<version>0.3.1</version>
 	<log version="0.3">End of life: Use Manage:Companies instead.</log>
+	<log version="0.3.1">Extract hard-coded texts to locales and add English locales.</log>
 	<category>Management</category>
 <!--	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -21,6 +22,7 @@
 		<template>manage/branch/edit.php</template>
 		<template>manage/branch/index.php</template>
 		<locale>de/manage/branch.ini</locale>
+		<locale>en/manage/branch.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Manage_Company</needs>

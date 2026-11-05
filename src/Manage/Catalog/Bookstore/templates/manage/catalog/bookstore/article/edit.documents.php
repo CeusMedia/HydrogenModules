@@ -16,7 +16,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $article */
 /** @var Dictionary $moduleConfig */
 
-$panelDocuments	= '<div class="alert alert-error">Noch keine Dokumente gespeichert.</div>';
+$wd	= (object) $words['edit.documents'];
+
+$panelDocuments	= '<div class="alert alert-error">'.$wd->noEntries.'</div>';
 
 $iconRemove		= '<i class="icon-remove icon-white"></i>';
 
@@ -25,7 +27,7 @@ if( $articleDocuments ){
 	foreach( $articleDocuments as $item ){
 		$idPrefix		= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT ).'_';
 		$urlRemove		= './manage/catalog/bookstore/article/removeDocument/'.$article->articleId.'/'.$item->articleDocumentId;
-		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="Dokument entfernen">'.$iconRemove.'</a>';
+		$buttonRemove	= '<a class="btn btn-mini btn-danger" href="'.$urlRemove.'" title="'.htmlentities( $wd->buttonRemove, ENT_QUOTES, 'UTF-8' ).'">'.$iconRemove.'</a>';
 		$link			= HtmlTag::create( 'a', $item->title, [
 			'href'		=> 'file/bookstore/document/'.$item->url,
 			'target'	=> '_blank'
@@ -40,8 +42,8 @@ if( $articleDocuments ){
 	'.HtmlElements::ColumnGroup( '', '70px' ).'
 	<thead>
 		<tr>
-			<th>Dokument</th>
-			<th>entfernen</th>
+			<th>'.$wd->headDocument.'</th>
+			<th>'.$wd->headRemove.'</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -50,7 +52,7 @@ if( $articleDocuments ){
 </table>';
 	$panelDocuments	= '
 <div class="content-panel">
-	<h4>Dokumente</h4>
+	<h4>'.$wd->heading.'</h4>
 	<div class="content-panel-inner">
 		'.$listDocuments.'
 	</div>
@@ -77,29 +79,29 @@ $helperUpload->setRequired( TRUE );
 
 $panelAdd	= '
 <div class="content-panel">
-	<h4>Dokumente hinzufügen</h4>
+	<h4>'.$wd->headingAdd.'</h4>
 	<div class="content-panel-inner form-changes-auto">
 		<div class="alert">
-			<b>Dateitypen: </b>
+			<b>'.$wd->labelFileTypes.' </b>
 			<span>'.$documentExtensions.'</span><br/>
-			<b>Größe: </b>
-			<span>max. '.$documentMaxSize.'</span>
+			<b>'.$wd->labelFileSize.' </b>
+			<span>'.sprintf( $wd->valueFileSizeMax, $documentMaxSize ).'</span>
 		</div>
 		<form action="./manage/catalog/bookstore/article/addDocument/'.$article->articleId.'" method="post" enctype="multipart/form-data">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_document">lokale Dokumentdatei <small class="muted"></small></label>
+					<label for="input_document">'.$wd->labelFile.' <small class="muted"></small></label>
 					'.$helperUpload.'
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">unter dem Titel</label>
+					<label for="input_title">'.$wd->labelTitle.'</label>
 					<input class="span12" type="text" name="title" id="input_title"/><br/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" class="btn btn-primary" name="save"><i class="icon-plus icon-white"></i> hinzufügen</button>
+				<button type="submit" class="btn btn-primary" name="save"><i class="icon-plus icon-white"></i> '.$wd->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

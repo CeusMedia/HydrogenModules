@@ -57,7 +57,7 @@ else{
 					</label>
 				</div>-->
 				<div class="span4 pull-right text-right">
-					<label>Format</label>
+					<label>'.$w->labelFormat.'</label>
 					<span class="muted" style="font-size: 2em">'.$format.'</span>
 				</div>
 			</div>

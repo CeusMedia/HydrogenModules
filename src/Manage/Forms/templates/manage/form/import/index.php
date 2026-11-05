@@ -7,19 +7,16 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var array<Entity_Form_Import_Rule> $rules List of import rules */
+/** @var array<string,array<string,string>> $words */
 
-$table	= HtmlTag::create( 'div', 'Keine Importregeln definiert. <a href="./manage/form/import/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );
+$w	= (object) $words['index'];
 
-$statuses	= [
-	Model_Form_Import_Rule::STATUS_NEW		=> 'neu',
-	Model_Form_Import_Rule::STATUS_TEST		=> 'Testmodus',
-	Model_Form_Import_Rule::STATUS_ACTIVE	=> 'aktiviert',
-	Model_Form_Import_Rule::STATUS_PAUSED	=> 'pausiert',
-	Model_Form_Import_Rule::STATUS_DISABLED	=> 'deaktiviert',
-];
+$table	= HtmlTag::create( 'div', $w->noEntries.' <a href="./manage/form/import/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAdd.'</a>', ['class' => 'alert alert-info'] );
+
+$statuses	= $words['statuses'];
 
 $helper	= new View_Helper_TimePhraser( $env );
-$helper->setTemplate( 'vor %s' );
+$helper->setTemplate( $w->timePhrase );
 if( count( $rules ) ){
 	$rows	= [];
 	foreach( $rules as $rule ){
@@ -33,16 +30,16 @@ if( count( $rules ) ){
 //			HtmlTag::create( 'td', $rule->usedAt ? $helper->setTimestamp( $rule->usedAt )->render() : '-' ),
 		] );
 	}
-	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Titel', 'Zustand'/*, 'Implementierung'*/, 'Formular'/*, 'Verwendung'*/] ) );
+	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headStatus/*, 'Implementierung'*/, $w->headForm/*, 'Verwendung'*/] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped table-fixed not-table-bordered'] );
 }
 
 $iconAdd	= new Icon( 'plus' );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['class' => 'btn btn-success', 'href' => './manage/form/import/add'] );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, ['class' => 'btn btn-success', 'href' => './manage/form/import/add'] );
 
 return '<div class="content-panel">
-	<h3>Importquellen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

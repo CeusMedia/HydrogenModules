@@ -12,7 +12,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $article */
 
 $listTags	= '';
-$panelTags	= '<div class="alert alert-error">Noch kein Schlagwort vergeben.</div>';
+$wt	= (object) $words['edit.tags'];
+
+$panelTags	= '<div class="alert alert-error">'.$wt->noEntries.'</div>';
 
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 $iconPlus	= '<i class="icon-plus icon-white"></i>';
@@ -36,10 +38,10 @@ if( $articleTags ){
 		'class'	=> 'span12',
 		'name'	=> 'tag',
 		'id'	=> 'input_type',
-		'placeholder'	=> 'neues Schlagwort',
+		'placeholder'	=> $wt->labelTag,
 	] );
 
-	$buttonSave	= HtmlTag::create( 'button', $iconPlus.' hinzufügen', [
+	$buttonSave	= HtmlTag::create( 'button', $iconPlus.' '.$wt->buttonSave, [
 		'class'		=> 'btn btn-primary',
 		'type'		=> 'submit',
 		'name'		=> 'save',
@@ -56,7 +58,7 @@ if( $articleTags ){
 
 	$panelTags	= '
 		<div class="content-panel">
-			<h4>Schlagwörter</h4>
+			<h4>'.$wt->heading.'</h4>
 			<div class="content-panel-inner">
 				<div class="row-fluid">
 					<div class="span12">
@@ -69,16 +71,16 @@ if( $articleTags ){
 
 $panelAdd	= '
 	<div class="content-panel">
-		<h4>Schlagwort vergeben</h4>
+		<h4>'.$wt->headingAdd.'</h4>
 		<div class="content-panel-inner form-changes-auto">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_tag">neues Schlagwort</label>
+					<label for="input_tag">'.$wt->labelTag.'</label>
 					<input class="span12" type="text" name="tag" id="input_tag"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i> hinzufügen</button>
+				<button type="submit" class="btn btn-primary"><i class="icon-plus icon-white"></i> '.$wt->buttonSave.'</button>
 			</div>
 		</div>
 	</div>';

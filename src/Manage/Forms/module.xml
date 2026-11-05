@@ -17,7 +17,7 @@ The form action will save the entered data and send mails according to rules.
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.7.0</version>
+	<version>0.7.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support delivery rules.</log>
@@ -54,6 +54,7 @@ The form action will save the entered data and send mails according to rules.
 	<log version="0.6.8">Add AJAX controller for form fill filters.</log>
 	<log version="0.6.9">Support ALTCHA and redirect on submit.</log>
 	<log version="0.7.0">Use fill token for confirmation.</log>
+	<log version="0.7.1">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -114,6 +115,18 @@ The form action will save the entered data and send mails according to rules.
 		<template>manage/form/target/add.php</template>
 		<template>manage/form/target/edit.php</template>
 		<template>manage/form/target/index.php</template>
+		<locale>de/manage/form.ini</locale>
+		<locale>de/manage/form/block.ini</locale>
+		<locale>de/manage/form/fill.ini</locale>
+		<locale>de/manage/form/import.ini</locale>
+		<locale>de/manage/form/mail.ini</locale>
+		<locale>de/manage/form/target.ini</locale>
+		<locale>en/manage/form.ini</locale>
+		<locale>en/manage/form/block.ini</locale>
+		<locale>en/manage/form/fill.ini</locale>
+		<locale>en/manage/form/import.ini</locale>
+		<locale>en/manage/form/mail.ini</locale>
+		<locale>en/manage/form/target.ini</locale>
 		<script load="auto">module.manage.forms.js</script>
 		<style source="theme">module.manage.forms.css</style>
 	</files>

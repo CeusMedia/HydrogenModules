@@ -1,11 +1,13 @@
 <?php
 
+$w	= (object) $words['edit'];
+
 $panelFilter	= '';//$view->loadTemplateFile( 'manage/catalog/provision/license/index.filter.php' );
 $panelList		= '';
 
 $panelEdit		= '
 <div class="content-panel">
-	<h3><span class="muted">Lizenz: </span>'.$license->title.'</h3>
+	<h3><span class="muted">'.$w->heading.': </span>'.$license->title.'</h3>
 	<div class="content-panel-inner">
 		...
 	</div>

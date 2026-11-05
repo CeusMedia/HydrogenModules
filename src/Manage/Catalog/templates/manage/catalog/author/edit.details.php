@@ -35,7 +35,7 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/catalog/author/remove/'.$author->authorId,
 	'disabled'	=> $articles ? 'disabled' : NULL,
 	'class'		=> "btn btn-small btn-danger",
-	'onclick'	=> "if(!confirm('Wirklich?')) return false",
+	'onclick'	=> "if(!confirm('".htmlspecialchars( addslashes( $w->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' )."')) return false",
 ] );
 
 return '

@@ -10,37 +10,25 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<object> $mails List of form mails */
 /** @var int $page */
 /** @var int $pages */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index.list'];
 
 $iconAdd	= new Icon( 'plus' );
 $iconView	= new Icon( 'eye' );
 $iconEdit	= new Icon( 'pencil' );
 $iconForm	= new Icon( 'th' );
 
-$formats	= [
-	0	=> 'nicht definiert',
-	1	=> 'Text',
-	2	=> 'HTML',
-];
+$formats	= $words['formats'];
 
-$roleTypeMap	= [
-	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT	=> 'Kunde: Reaktion',
-	Model_Form_Mail::ROLE_TYPE_LEADER_ALL		=> 'Leiter',
-	Model_Form_Mail::ROLE_TYPE_LEADER_RESULT	=> 'Leiter: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_LEADER_REACT		=> 'Leiter: Reaktion',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
-];
+$roleTypeMap	= $words['roleTypes'];
 
 
 $modelForm	= new Model_Form( $env );
 
 $rows		= [];
 foreach( $mails as $mail ){
-	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
+	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;'.$w->buttonView, [
 		'href'	=> './manage/form/mail/view/'.$mail->mailId,
 		'class'	=> 'btn btn-mini btn-info',
 	] );
@@ -58,17 +46,17 @@ foreach( $mails as $mail ){
 }
 $colgroup	= HtmlElements::ColumnGroup( '40px', '', /*'30%',*/ '140px', '70px', '40px', '100px' );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-	HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
-	HtmlTag::create( 'th', 'Titel' ),
+	HtmlTag::create( 'th', $w->headId, ['style' => 'text-align: right'] ),
+	HtmlTag::create( 'th', $w->headTitle ),
 /*	HtmlTag::create( 'th', 'Shortcode' ),*/
-	HtmlTag::create( 'th', 'Nutzung' ),
-	HtmlTag::create( 'th', 'Format' ),
-	HtmlTag::create( 'th', HtmlTag::create( 'abbr', $iconForm, ['title' => 'Formulare'] ), ['style' => 'text-align: right'] ),
+	HtmlTag::create( 'th', $w->headRoleType ),
+	HtmlTag::create( 'th', $w->headFormat ),
+	HtmlTag::create( 'th', HtmlTag::create( 'abbr', $iconForm, ['title' => $w->headForms] ), ['style' => 'text-align: right'] ),
 ] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Formular-E-Mail', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/form/mail/add',
 	'class'	=> 'btn btn-success'
 ] );
@@ -77,7 +65,7 @@ $pagination	= new PageControl( './manage/form/mail', $page, $pages );
 
 return '
 <div class="content-panel">
-	<h3>E-Mails</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

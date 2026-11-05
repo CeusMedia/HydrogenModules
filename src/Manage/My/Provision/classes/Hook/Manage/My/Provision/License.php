@@ -37,7 +37,7 @@ class Hook_Manage_My_Provision_License extends Hook
 
 	protected static function renderTabLabel( Environment $env, $labelKey, $count = 0, $icon = NULL )
 	{
-		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision' );					//  load words
+		$words	= (object) $env->getLanguage()->getWords( 'manage/my/provision/license' );			//  load words
 		$label	= $words->tabs[$labelKey];
 		if( $count )
 			$label	.= '&nbsp;&nbsp;<span class="badge badge-info">'.$count.'</span>&nbsp;';

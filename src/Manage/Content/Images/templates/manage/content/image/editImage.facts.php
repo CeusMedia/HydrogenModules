@@ -51,7 +51,7 @@ $panelFacts		= '
 					<dt>'.$w->labelFileType.'</dt>
 					<dd>'.$imageMimeType.'</dd>
 					<dt>'.$w->labelImageSize.'</dt>
-					<dd>'.$imageMegaPixels.' <abbr title="Megapixel">MP</abbr> <small class="muted">('.$imageWidth.' x '.$imageHeight.' Pixel)</small></dd>
+					<dd>'.$imageMegaPixels.' <abbr title="'.$w->unitMegaPixels.'">MP</abbr> <small class="muted">('.$imageWidth.' x '.$imageHeight.' '.$w->unitPixels.')</small></dd>
 					<dt>'.$w->labelUrl.'</dt>
 					<dd><small><a href="'.$imageUri.'" class="autocut">'.substr( $imageFolder, 2 ).$imageName.'</a></small></dd>
 				</dl>

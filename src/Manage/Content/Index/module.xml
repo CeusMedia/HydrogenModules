@@ -5,8 +5,9 @@
 	<title>Content Management Index</title>
 	<description>Central content management site with tabs.</description>
 	<category>Management</category>
-	<version>0.3.1</version>
+	<version>0.3.2</version>
 	<log version="0.3.1">Adjust to changes in Hydrogen Framework version 0.8.7.3.</log>
+	<log version="0.3.2">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,7 +15,10 @@
 		<class>Controller/Manage/Content.php</class>
 		<class>View/Manage/Content.php</class>
 <!--		<locale>de/manage/content/document.ini</locale>-->
+		<locale>de/manage/content.ini</locale>
 		<locale>de/html/manage/content/index.html</locale>
+		<locale>en/manage/content.ini</locale>
+		<locale>en/html/manage/content/index.html</locale>
 		<template>manage/content/index.php</template>
 	</files>
 	<relations/>

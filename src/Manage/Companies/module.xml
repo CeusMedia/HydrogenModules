@@ -4,7 +4,7 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title><![CDATA[Manage: Companies & Branches]]></title>
 	<description>Management for companies and their branches.</description>
-	<version>0.2.12</version>
+	<version>0.2.13</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Updated templates.</log>
@@ -19,6 +19,7 @@
 	<log version="0.2.10">Added description.</log>
 	<log version="0.2.11">Extended states.</log>
 	<log version="0.2.12">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.2.13">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -38,6 +39,8 @@
 		<template>manage/company/branch/index.php</template>
 		<locale>de/manage/company.ini</locale>
 		<locale>de/manage/company/branch.ini</locale>
+		<locale>en/manage/company.ini</locale>
+		<locale>en/manage/company/branch.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Companies</needs>

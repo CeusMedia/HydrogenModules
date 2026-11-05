@@ -20,7 +20,8 @@ class Controller_Manage_Content_Style extends Controller
 	{
 		if( strlen( trim( $file ) ) ){
 			if( !file_exists( $this->pathCss.$file ) ){
-				$this->messenger->noteError( 'Invalid file' );
+				$words	= (object) $this->getWords( 'msg' );
+				$this->messenger->noteError( $words->errorFileInvalid );
 				$this->restart( NULL, TRUE );
 			}
 			if( $this->request->has( 'save' ) ){

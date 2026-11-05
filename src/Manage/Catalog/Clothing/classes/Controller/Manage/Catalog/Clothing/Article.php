@@ -24,7 +24,8 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
 			$articleId	= $this->modelArticle->add( $data );
-			$this->messenger->noteSuccess( 'Added.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( 'edit/'.$articleId, TRUE );
 		}
 	}
@@ -44,7 +45,8 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 					unset( $data['description'] );
 			}
 			$this->modelArticle->edit( $articleId, $data );
-			$this->messenger->noteSuccess( 'Saved.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
@@ -99,7 +101,8 @@ class Controller_Manage_Catalog_Clothing_Article extends Controller
 	{
 		$this->addData( 'article', $this->modelArticle->get( $articleId ) );
 		$this->modelArticle->remove( $articleId );
-		$this->messenger->noteSuccess( 'Removed.' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successRemoved );
 		$this->restart( NULL, TRUE );
 	}
 

@@ -15,7 +15,7 @@ class Controller_Manage_Company extends Controller
 		$model			= new Model_Company( $this->env );
 		$model->edit( $companyId, ['status' => 1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
-		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successActivated'], $company->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -30,7 +30,7 @@ class Controller_Manage_Company extends Controller
 		$model			= new Model_Company( $this->env );
 		$model->edit( $companyId, ['status' => -1, 'modifiedAt' => time()] );
 		$company		= $model->get( $companyId );
-		$messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successDeactivated'], $company->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -84,11 +84,11 @@ class Controller_Manage_Company extends Controller
 		$model			= new Model_Company( $this->env );
 		$data			= $model->get( $companyId );
 		if( !$data ){
-			$messenger->noteError( 'Invalid ID: '.$companyId );
+			$messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'], $companyId );
 			$this->restart( NULL, TRUE );
 		}
 		$model->remove( $companyId );
-		$messenger->noteSuccess( 'Removed: '.$data['title'] );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'], $data['title'] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -139,7 +139,7 @@ class Controller_Manage_Company extends Controller
 
 	public function filter(): void
 	{
-		$this->env->getMessenger()->noteSuccess( "Companies have been filtered." );
+		$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successFiltered'] );
 		$this->restart( NULL, TRUE );
 	}
 

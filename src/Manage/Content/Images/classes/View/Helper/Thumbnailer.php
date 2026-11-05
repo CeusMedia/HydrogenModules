@@ -31,7 +31,8 @@ class View_Helper_Thumbnailer
 		if( !( $env instanceof RemoteEnvironment ) ){
 			if( $this->env->getRequest()->has( 'flushCache' ) ){
 				$number	= $this->flushCache();
-				$this->env->getMessenger()->noteNotice( 'Thumbnail cache cleared (%s entries).', $number );
+				$words	= $this->env->getLanguage()->getSection( 'manage/content/image', 'msg' );
+				$this->env->getMessenger()->noteNotice( $words['noticeThumbnailCacheCleared'], $number );
 			}
 		}
 	}

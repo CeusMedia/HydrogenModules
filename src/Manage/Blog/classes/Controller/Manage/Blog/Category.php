@@ -103,7 +103,8 @@ class Controller_Manage_Blog_Category extends Controller
 		if( !$category ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid category ID' );
-			$this->messenger->noteError( 'Invalid category ID.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		return $category;

@@ -228,11 +228,11 @@ class Controller_Manage_Image_Slider extends Controller
 			}
 			catch( Exception $e ){
 				$this->modelSlide->remove( $slideId );
-				$this->messenger->noteFailure( 'Import of "'.$entry->getFilename().'" failed: '.$e->getMessage() );
+				$this->messenger->noteFailure( $this->getWords( 'msg' )['errorImportFailed'], $entry->getFilename(), $e->getMessage() );
 			}
 		}
 		if( $list ){
-			$this->messenger->noteSuccess( count( $list).' image imported: '.HtmlTag::create( 'ul', $list ) );
+			$this->messenger->noteSuccess( sprintf( $this->getWords( 'msg' )['successSlidesImported'], count( $list ), HtmlTag::create( 'ul', $list ) ) );
 		}
 		$this->restart( 'edit/'.$sliderId, TRUE );
 	}
@@ -325,7 +325,7 @@ class Controller_Manage_Image_Slider extends Controller
 
 		$pathImages		= $this->frontend->getPath( 'images' );
 		if( !$this->frontend->hasModule( 'UI_Image_Slider' ) ){
-			$this->messenger->noteFailure( 'Module "UI_Image_Slider" is not installed in frontend instance. Your request has been reset to start.' );
+			$this->messenger->noteFailure( $this->getWords( 'msg' )['errorFrontendModuleMissing'] );
 			$this->restart();
 		}
 		$pathSliders	= $this->frontend->getModuleConfigValue( 'UI_Image_Slider', 'path' );

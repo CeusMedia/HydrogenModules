@@ -88,7 +88,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller_Manage_Cata
 				}
 			}
 			catch( Exception $e ){
-				$this->messenger->noteFailure( 'Upload Error: '.$e->getMessage() );
+				$words	= (object) $this->getWords( 'msg' );
+				$this->messenger->noteFailure( $words->error_upload_exception, $e->getMessage() );
 			}
 		}
 		$this->restart( 'manage/catalog/bookstore/article/edit/'.$articleId );
@@ -288,7 +289,8 @@ class Controller_Manage_Catalog_Bookstore_Article extends Controller_Manage_Cata
 				}
 			}
 			catch( Exception $e ){
-				$this->messenger->noteFailure( 'Upload Error: '.$e->getMessage() );
+				$words	= (object) $this->getWords( 'msg' );
+				$this->messenger->noteFailure( $words->error_upload_exception, $e->getMessage() );
 			}
 		}
 		$this->restart( 'edit/'.$articleId, TRUE );

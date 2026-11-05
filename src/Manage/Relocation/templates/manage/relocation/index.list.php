@@ -68,12 +68,12 @@ if( $relocations ){
 	$table	= HtmlTag::create( 'table', $columns.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/relocation/add',
 	'class'	=> 'btn btn-success'
 ] );
 
-$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;exportieren', [
+$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;'.$w->buttonExport, [
 	'href'	=> './manage/relocation/export',
 	'class'	=> 'btn not-btn-info'
 ] );
@@ -83,7 +83,7 @@ $abbrTotal	= HtmlTag::create( 'abbr', $total, ['title' => $w->titleTotal] );
 
 return '
 		<div class="content-panel">
-			<h3>Einträge <small>('.$abbrCount.'/'.$abbrTotal.')</small></h3>
+			<h3>'.$w->heading.' <small>('.$abbrCount.'/'.$abbrTotal.')</small></h3>
 			<div class="content-panel-inner">
 				'.$table.'
 				<div class="btn-toolbar">

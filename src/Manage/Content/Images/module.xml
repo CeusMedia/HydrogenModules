@@ -5,7 +5,7 @@
 	<title>Manage: Content: Images</title>
 	<description>Basic management of available made images.</description>
 	<category>Management</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.3.3">Use frontend resource.</log>
 	<log version="0.3.4">Updated TinyMCE link collection.</log>
 	<log version="0.3.5">Updated image viewer.</log>
@@ -39,6 +39,7 @@
 	<log version="0.4.9">Support SVG images in thumbnail helper.</log>
 	<log version="0.5.0">Extract hooks to own class.</log>
 	<log version="0.5.1">Use role rights.</log>
+	<log version="0.5.2">Complete English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -58,6 +59,10 @@
 		<locale>en/manage/content/image.ini</locale>
 		<locale>en/html/manage/content/image/bottom.html</locale>
 		<locale>en/html/manage/content/image/top.html</locale>
+		<locale>en/html/manage/content/image/add.folder.right.html</locale>
+		<locale>en/html/manage/content/image/add.image.right.html</locale>
+		<locale>en/html/manage/content/image/edit.folder.right.html</locale>
+		<locale>en/html/manage/content/image/edit.image.right.html</locale>
 		<style load="auto" source="theme">module.manage.content.images.css</style>
 		<template>manage/content/image/index.php</template>
 		<template>manage/content/image/index.folder.php</template>

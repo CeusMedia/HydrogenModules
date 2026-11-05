@@ -11,7 +11,7 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var object $user */
 
 if( !$env->getModules()->has( 'Resource_Disclosure' ) )
-	return Alert::create( 'Install module <strong><kbd>Resource_Disclosure</kbd></strong> to show a visual rights map.' )
+	return Alert::create( $words['editRights']['hintDisclosureMissing'] )
 		->setClass(Alert::CLASS_INFO);
 
 //$w		= (object) $words['editRights'];

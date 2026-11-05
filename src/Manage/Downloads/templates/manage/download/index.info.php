@@ -21,7 +21,7 @@ foreach( $files as $entry ){
 }
 
 return join( [
-	HtmlTag::create( 'h4', 'Informationen' ),
+	HtmlTag::create( 'h4', $w->heading ),
 	HtmlTag::create( 'ul', [
 		HtmlTag::create( 'li', sprintf( $w->filesInFolders, count( $files ), count( $folders ) ) ),
 		HtmlTag::create( 'li', sprintf( $w->downloads, $downloads ) ),

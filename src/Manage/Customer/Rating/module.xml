@@ -5,7 +5,8 @@
 	<title>Manage: Customer: Rating</title>
 	<description><![CDATA[Extension for customer ratings.]]></description>
 	<category>Management</category>
-	<version>0.3.0-p1</version>
+	<version>0.3.1</version>
+	<log version="0.3.1">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -15,6 +16,8 @@
 		<class>Model/Customer/Rating.php</class>
 		<template>manage/customer/rating/add.php</template>
 		<template>manage/customer/rating/index.php</template>
+		<locale>de/manage/customer/rating.ini</locale>
+		<locale>en/manage/customer/rating.ini</locale>
 		<script load="auto">ManageCustomerRating.js</script>
 	</files>
 	<relations>

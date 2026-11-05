@@ -27,7 +27,7 @@ $buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 $buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 	'href'		=> './manage/news/remove/'.$news->newsId,
 	'class'		=> 'btn btn-small btn-danger',
-	'onclick'	=> "return confirm('Wirklich?');",
+	'onclick'	=> "return confirm('".htmlspecialchars( addslashes( $w->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' )."');",
 ] );
 
 $editorClass	= View_Manage_News::getEditorClass( $env );

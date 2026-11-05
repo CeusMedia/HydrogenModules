@@ -13,7 +13,7 @@ $iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart']
 
 $w	= (object) $words['index.filter'];
 
-$optProduct	= ['' => ' - alle - '];
+$optProduct	= ['' => $w->optionAll];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
 $optProduct	= HtmlElements::Options( $optProduct, $filterProductId );

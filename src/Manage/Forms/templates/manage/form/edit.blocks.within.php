@@ -4,6 +4,9 @@ use CeusMedia\Bootstrap\Icon;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<string,string|HtmlTag> $navButtons */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['edit.blocks.within'];
 
 /**
  *	@deprecated		shown in view tab
@@ -12,7 +15,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $blocksWithin		= $this->getData( 'blocksWithin', [] );
 $iconBlock			= new Icon( 'square' );
-$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
+$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">'.$w->noBlocks.'</em>' );
 
 if( $blocksWithin ){
 	$list	= [];
@@ -31,7 +34,7 @@ return '
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span6">
-				<h4>Verwendete Blöcke</h4>
+				<h4>'.$w->headingBlocks.'</h4>
 				'.$listBlocksWithin.'
 			</div>
 		</div>

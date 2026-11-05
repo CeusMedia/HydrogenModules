@@ -31,8 +31,9 @@ class Hook_Manage_Catalog extends Hook
 			}
 			$cache->set( 'catalog.tinymce.images.articles', $list );
 		}
+		$words	= $this->env->getLanguage()->getWords( 'manage/catalog' );
 		$this->context->list  = array_merge( $this->context->list, [(object) [				//  extend global collection by submenu with list of items
-			'title'	=> 'Veröffentlichungen:',												//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['articles'],							//  label of submenu
 			'menu'	=> array_values( $list ),												//  items of submenu
 		]] );
 	}
@@ -63,8 +64,9 @@ class Hook_Manage_Catalog extends Hook
 			}
 			$cache->set( 'catalog.tinymce.links.articles', $articles );
 		}
+		$words	= $this->env->getLanguage()->getWords( 'manage/catalog' );
 		$this->context->list	= array_merge( $this->context->list, [(object) [
-			'title'	=> 'Veröffentlichungen:',
+			'title'	=> $words['tinymce-menu-links']['articles'],
 			'menu'	=> array_values( $articles ),
 		]] );
 
@@ -82,7 +84,7 @@ class Hook_Manage_Catalog extends Hook
 			$cache->set( 'catalog.tinymce.links.documents', $documents );
 		}
 		$this->context->list	= array_merge( $this->context->list, [(object) [
-			'title'	=> 'Dokuments:',
+			'title'	=> $words['tinymce-menu-links']['documents'],
 			'menu'	=> array_values( $documents ),
 		]] );
 	}

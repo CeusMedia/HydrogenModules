@@ -1,12 +1,14 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
+$wc	= (object) $words['edit.categories'];
+
+$panelCategories	= '<div class="alert alert-error">'.$wc->noEntries.'</div>';
 
 if( $articleCategories ){
 	$listCategories	= [];
 	foreach( $articleCategories as $item ){
-		$labelVolume	= $item->volume ? '<span class="muted">Band </span>'.$item->volume : "";
+		$labelVolume	= $item->volume ? '<span class="muted">'.$wc->prefixVolume.' </span>'.$item->volume : "";
 		if( $item->parentId ){
 			$label	= '
 			<div class="autocut" style="font-size: 1.1em; font-weight: bold">
@@ -55,7 +57,7 @@ if( $articleCategories ){
 <div class="content-panel">
 	<div class="content-panel-inner">
 		<div class="row-fluid">
-			<h4>Kategorien</h4>
+			<h4>'.$wc->heading.'</h4>
 			'.$listCategories.'
 		</div>
 	</div>
@@ -95,20 +97,20 @@ $optCategory	= join( $optCategory );
 $panelAdd	= '
 <div class="content-panel">
 	<div class="content-panel-inner form-changes-auto">
-		<h4>Kategorie zuweisen</h4>
+		<h4>'.$wc->headingAdd.'</h4>
 		<form action="./manage/catalog/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span10">
-					<label for="input_categoryId">Kategorie</label>
+					<label for="input_categoryId">'.$wc->labelCategory.'</label>
 					<select class="span12" name="categoryId" id="input_categoryId">'.$optCategory.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_volume">Band</label>
+					<label for="input_volume">'.$wc->labelVolume.'</label>
 					<input type="text" class="span12" name="volume" id="input_volume"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> speichern</button>
+				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> '.$wc->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

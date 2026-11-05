@@ -13,6 +13,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var bool $hasFills */
 /** @var array<string,string|HtmlTag> $navButtons */
 /** @var array<string> $references */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['edit.facts'];
 
 $iconList	= new Icon( 'list' );
 $iconAdd	= new Icon( 'plus' );
@@ -21,32 +24,25 @@ $iconRemove	= new Icon( 'remove' );
 $iconPrev	= new Icon( 'arrow-left' );
 $iconNext	= new Icon( 'arrow-right' );
 
-$statuses	= [
-	-1		=> 'deaktiviert',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-];
+$statuses	= $words['statuses'];
 $optStatus	= HtmlElements::Options( $statuses, $form->status );
 
-$types		= [
-	0		=> 'direkter Versand',
-	1		=> 'mit Double-Opt-In',
-];
+$types		= $words['types'];
 $optType	= HtmlElements::Options( $types, $form->type );
 
-$optMailCustomer	= ['' => '- keine -'];
+$optMailCustomer	= ['' => $w->optionNone];
 foreach( $mailsCustomer as $item )
 	$optMailCustomer[$item->mailId]	= $item->title;
 $optMailCustomer	= HtmlElements::Options( $optMailCustomer, $form->customerMailId );
 
-$optMailManager		= ['' => '- keine -'];
+$optMailManager		= ['' => $w->optionNone];
 foreach( $mailsManager as $item )
 	$optMailManager[$item->mailId]	= $item->title;
 $optMailManager		= HtmlElements::Options( $optMailManager, $form->managerMailId );
 
 $panelReferrers	= '';
 if( 0 ){
-	$listReferences = '<em class="muted">Keine.</em>';
+	$listReferences = '<em class="muted">'.$w->noReferrers.'</em>';
 	if( [] !== $references ){
 		$domains	= [];
 		foreach( $references as $reference ){
@@ -76,7 +72,7 @@ if( 0 ){
 	}
 
 	$panelReferrers	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h3', 'Verwendung' ),
+		HtmlTag::create( 'h3', $w->headingReferrers ),
 		HtmlTag::create( 'div', [
 			$listReferences
 		], ['class' => 'content-panel-inner'] )
@@ -87,47 +83,47 @@ $form	= '
 		<form action="./manage/form/edit/'.$form->formId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span1">
-					<label for="input_formId">ID</label>
+					<label for="input_formId">'.$w->labelId.'</label>
 					<input type="text" name="formId" id="input_formId" class="span12" disabled="disabled" value="'.htmlentities( $form->formId, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span7">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $form->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
-					<label for="input_type">Typ</label>
+					<label for="input_type">'.$w->labelType.'</label>
 					<select name="type" id="input_type" class="span12">'.$optType.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_status">Zustand</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_receivers">Empfänger <small class="muted">(mit Komma getrennt)</small></label>
+					<label for="input_receivers">'.$w->labelReceivers.' <small class="muted">'.$w->labelReceiversSuffix.'</small></label>
 					<input type="text" name="receivers" id="input_receivers" class="span12" value="'.htmlentities( $form->receivers, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span6">
-					<label for="input_customerMailId">Ergebnis-Email an Kunden <small class="muted">(=Absender)</small></label>
+					<label for="input_customerMailId">'.$w->labelCustomerMail.' <small class="muted">'.$w->labelCustomerMailSuffix.'</small></label>
 					<select name="customerMailId" id="input_customerMailId" class="span12">'.$optMailCustomer.'</select>
 				</div>
 				<div class="span6">
-					<label for="input_managerMailId">Ergebnis-Email an Manager <small class="muted">(=Empfänger)</small></label>
+					<label for="input_managerMailId">'.$w->labelManagerMail.' <small class="muted">'.$w->labelManagerMailSuffix.'</small></label>
 					<select name="managerMailId" id="input_managerMailId" class="span12">'.$optMailManager.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_forwardOnSubmit">URL-Weiterleitung nach Submit<!-- <small class="muted">(...)</small>--></label>
+					<label for="input_forwardOnSubmit">'.$w->labelForwardOnSubmit.'<!-- <small class="muted">(...)</small>--></label>
 					<input type="text" name="forwardOnSubmit" id="input_forwardOnSubmit" class="span12" value="'.htmlentities( $form->forwardOnSubmit ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_forwardOnSuccess">URL-Weiterleitung bei Erfolg<!-- <small class="muted">(...)</small>--></label>
+					<label for="input_forwardOnSuccess">'.$w->labelForwardOnSuccess.'<!-- <small class="muted">(...)</small>--></label>
 					<input type="text" name="forwardOnSuccess" id="input_forwardOnSuccess" class="span12" value="'.htmlentities( $form->forwardOnSuccess ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
@@ -141,23 +137,23 @@ $form	= '
 							'value'	=> "1",
 							'checked'	=> $form->useAltcha ? 'checked' : NULL,
 						] ).'
-						benutze ALTCHA-Prüfung<!-- <small class="muted">(...)</small>-->
+						'.$w->labelUseAltcha.'<!-- <small class="muted">(...)</small>-->
 					</label>
 				</div>
 			</div>
 			<div class="buttonbar">
 				'.$navButtons['list'].'
-				'.HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+				'.HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'		=> 'submit',
 					'name'		=> 'save',
 					'class'		=> 'btn btn-primary',
 				] ).'
 				'.$navButtons['nextView'].'
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 					'href'		=> './manage/form/remove/'.$form->formId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> $hasFills ? 'disabled' : NULL,
-					'onclick'	=> "return confirm('Wirklich ?');",
+					'onclick'	=> "return confirm('".addslashes( $w->buttonRemoveConfirm )."');",
 				] ).'
 			</div>
 		</form>';

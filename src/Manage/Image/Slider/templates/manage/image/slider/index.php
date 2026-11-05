@@ -40,12 +40,12 @@ if( $sliders ){
 		if( $slider->width < $slider->height )
 			$iconFormat	= $iconFormatPortrait;
 		$dimensions	= join( '<br/>', [
-			$iconSlides.' '.count( $slider->slides ).' Slides',
+			$iconSlides.' '.sprintf( $words['index']['labelSlides'], count( $slider->slides ) ),
 			$iconFormat.' '.$slider->width.'&times;'.$slider->height.'px',
 		] );
 		$transition	= join( ', ', [
-			'Animation: '.$words['optAnimation'][$slider->animation],
-			'Übergang: '.$words['optEasing'][$slider->easing],
+			sprintf( $words['index']['labelAnimation'], $words['optAnimation'][$slider->animation] ),
+			sprintf( $words['index']['labelEasing'], $words['optEasing'][$slider->easing] ),
 		] );
 		$durations	= join( '<br/>', [
 			$iconDurationShow.' '.$helperDuration->formatDuration( $slider->durationShow ).'s',
@@ -64,11 +64,11 @@ if( $sliders ){
 		], ['class' => $rowClass, 'style' => 'height: 70px'] );
 	}
 	$heads	= [
-		'Cover',
-		'Title / Path',
-		'Dimensions',
-		'Durations',
-		'Views since',
+		$words['index']['headImage'],
+		$words['index']['headTitle'],
+		$words['index']['headDimensions'],
+		$words['index']['headDurations'],
+		$words['index']['headViews'],
 	];
 	$colgroup	= HtmlElements::ColumnGroup( "84px", "", "130px", "120px", "135px" );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( $heads ) );

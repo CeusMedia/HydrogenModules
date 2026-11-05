@@ -6,22 +6,19 @@ $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] )
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 
-$optStatus		= [
-	-2		=> 'deaktiviert',
-	-1		=> 'versteckt',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-];
+$w	= (object) $words['edit'];
+
+$optStatus		= $words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $category->status );
 
 $panelFacts		= '
 <div class="content-panel">
-	<h3>Kategorie</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/catalog/clothing/category/edit/'.$category->categoryId.'" method="post">
 			<div class="row-fluid">
 				<div class="span10">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					'.HtmlTag::create( 'input', NULL, [
 						'type'		=> "text",
 						'id'		=> "input_title",
@@ -32,19 +29,19 @@ $panelFacts		= '
 					] ).'
 				</div>
 				<div class="span2">
-					<label for="input_status">Zustand</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_description">Beschreibung</label>
+					<label for="input_description">'.$w->labelDescription.'</label>
 					<textarea name="description" id="input_description" class="span12" rows="6">'.$category->description.'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/catalog/clothing/category" class="btn btn-small">'.$iconCancel.'abbrechen</a>
-				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'speichern</button>
+				<a href="./manage/catalog/clothing/category" class="btn btn-small">'.$iconCancel.$w->buttonCancel.'</a>
+				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.$w->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

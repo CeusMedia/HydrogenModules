@@ -57,23 +57,24 @@ class Controller_Manage_Form_Import extends Controller
 	 */
 	public function edit( int|string $ruleId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$rule		= $this->modelRule->get( $ruleId );
 		if( NULL === $rule ){
-			$this->env->getMessenger()->noteError( 'Invalid Rule ID' );
+			$this->env->getMessenger()->noteError( $words->errorInvalidRuleId );
 			$this->restart( NULL, TRUE );
 		}
 
 		/** @var ?Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $rule->importConnectionId );
 		if( NULL === $connection ){
-			$this->env->getMessenger()->noteError( 'Related connections ID is invalid' );
+			$this->env->getMessenger()->noteError( $words->errorInvalidConnectionId );
 			$this->restart( NULL, TRUE );
 		}
 
 		/** @var ?Entity_Import_Connector $connector */
 		$connector	= $this->modelConnector->get( $connection->importConnectorId );
 		if( NULL === $connector ){
-			$this->env->getMessenger()->noteError( 'Related connector ID is invalid' );
+			$this->env->getMessenger()->noteError( $words->errorInvalidConnectorId );
 			$this->restart( NULL, TRUE );
 		}
 

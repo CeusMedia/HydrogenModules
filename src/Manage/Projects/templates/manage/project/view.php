@@ -108,7 +108,7 @@ $factUrl	= $project->url ? HtmlTag::create( 'a', htmlentities( $project->url, EN
 
 $panelFacts		= '
 <div class="content-panel">
-	<h3><a href="./manage/project" class="muted">Projekt:</a> '.htmlentities( $project->title, ENT_QUOTES, 'UTF-8' ).'</h3>
+	<h3><a href="./manage/project" class="muted">'.$words['view']['headingPrefix'].'</a> '.htmlentities( $project->title, ENT_QUOTES, 'UTF-8' ).'</h3>
 	<div class="content-panel-inner">
 		<div>'.$view->renderContent( $project->description, 'markdown' ).'</div>
 		<br/>

@@ -34,7 +34,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 return HTML::DivClass( 'row-fluid', array(
 	HTML::DivClass( 'span8', array(
 		HTML::DivClass( 'content-panel', array(
-			HtmlTag::create( 'h3', HtmlTag::create( 'span', 'Projekt: ', ['class' => 'muted'] ).$project->title ),
+			HtmlTag::create( 'h3', HtmlTag::create( 'span', $w->headingPrefix.' ', ['class' => 'muted'] ).$project->title ),
 			HTML::DivClass( 'content-panel-inner', array(
 				HTML::Form( './manage/project/remove/'.$project->projectId.'/confirmed', 'removeProject', array(
 					HTML::H4( $w->heading ),

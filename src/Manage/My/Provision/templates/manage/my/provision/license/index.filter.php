@@ -9,7 +9,7 @@ $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] 
 $iconFilter		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] );
 $iconReset		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-times-circle'] );
 
-$optProduct	= ['' => ' - alle - '];
+$optProduct	= ['' => $w->optionAll];
 foreach( $products as $item )
 	$optProduct[$item->productId]	= $item->title;
 $optProduct	= HtmlElements::Options( $optProduct, $filterProductId );

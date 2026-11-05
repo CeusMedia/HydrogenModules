@@ -15,6 +15,7 @@ class Hook_Manage_Gallery extends Hook
 		$virtualPathImages	= substr( $remotePathImages, strlen( $frontend->getPath() ) );
 		$words				= $this->env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes			= (object) $words['link-prefixes'];
+		$wordsHook			= (object) $this->env->getLanguage()->getSection( 'manage/gallery', 'tinymce' );
 		$list				= [];
 
 		$modelGallery		= new Model_Gallery( $this->env );
@@ -34,7 +35,7 @@ class Hook_Manage_Gallery extends Hook
 		}
 
 		$list   = array( (object) array(
-			'title'	=> "Galerie-Bild:",//$prefixes->image,
+			'title'	=> $wordsHook->prefixImage,//$prefixes->image,
 			'menu'	=> array_values( $list ),
 		) );
 //		$this->context->list	= array_merge( $this->context->list, array_values( $list ) );
@@ -51,6 +52,7 @@ class Hook_Manage_Gallery extends Hook
 		$pathFrontend	= $frontend->getPath();
 		$words			= $this->env->getLanguage()->getWords( 'js/tinymce' );
 		$prefixes		= (object) $words['link-prefixes'];
+		$wordsHook		= (object) $this->env->getLanguage()->getSection( 'manage/gallery', 'tinymce' );
 		$list			= [];
 
 		$modelGallery	= new Model_Gallery( $this->env );
@@ -65,7 +67,7 @@ class Hook_Manage_Gallery extends Hook
 		}
 
 		$list   = array( (object) array(
-			'title'	=> "Galerie:",//$prefixes->image,
+			'title'	=> $wordsHook->prefixGallery,//$prefixes->image,
 			'menu'	=> array_values( $list ),
 		) );
 //		$this->context->list	= array_merge( $this->context->list, array_values( $list ) );

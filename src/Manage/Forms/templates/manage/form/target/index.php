@@ -8,8 +8,11 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var WebEnvironment $env */
 /** @var object $target */
 /** @var array<object> $targets List of transfer targets */
+/** @var array<string,array<string,string>> $words */
 
-$table	= HtmlTag::create( 'div', 'Keine Transferziele definiert. <a href="./manage/form/target/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;hinzufügen</a>', ['class' => 'alert alert-info'] );
+$w	= (object) $words['index'];
+
+$table	= HtmlTag::create( 'div', $w->noEntries.' <a href="./manage/form/target/add" class="btn btn-success btn-mini"><i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAdd.'</a>', ['class' => 'alert alert-info'] );
 
 $statusHelper	= View_Helper_StatusBadge::create()
 	->setType( View_Helper_StatusBadge::TYPE_LABEL )
@@ -18,12 +21,12 @@ $statusHelper	= View_Helper_StatusBadge::create()
 		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 0,
 	] )
 	->setLabelMap( [
-		View_Helper_StatusBadge::STATUS_POSITIVE	=> 'aktiv',
-		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'inaktiv',
+		View_Helper_StatusBadge::STATUS_POSITIVE	=> $words['statuses'][1],
+		View_Helper_StatusBadge::STATUS_NEGATIVE	=> $words['statuses'][0],
 	] );
 
 $helper	= new View_Helper_TimePhraser( $env );
-$helper->setTemplate( 'vor %s' );
+$helper->setTemplate( $w->timePhrase );
 if( count( $targets ) ){
 	$rows	= [];
 	foreach( $targets as $target ){
@@ -40,16 +43,16 @@ if( count( $targets ) ){
 		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '10%', '10%', '10%', '10%', '10%'] );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Titel', 'Zustand', 'Formulare', 'Transfers', 'Fails', 'Verwendung'] ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headStatus, $w->headForms, $w->headTransfers, $w->headFails, $w->headUsedAt] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-striped table-fixed not-table-bordered'] );
 }
 
 $iconAdd	= new Icon( 'plus' );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['class' => 'btn btn-success', 'href' => './manage/form/target/add'] );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, ['class' => 'btn btn-success', 'href' => './manage/form/target/add'] );
 
 return '<div class="content-panel">
-	<h3><span class="muted">Transferziele</h3>
+	<h3><span class="muted">'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

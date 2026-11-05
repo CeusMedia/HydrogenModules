@@ -4,11 +4,12 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Manage: My User OAuth2</title>
 	<description>Management for own OAuth2 connections.</description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add HTML blocks.</log>
 	<log version="0.2.2">Extract hook.</log>
+	<log version="0.2.3">Complete German and English locales.</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -22,6 +23,10 @@
 		<locale>de/html/manage/my/user/oauth2/bottom.html</locale>
 		<locale>de/html/manage/my/user/oauth2/info.html</locale>
 		<locale>de/html/manage/my/user/oauth2/top.html</locale>
+		<locale>en/manage/my/user/oauth2.ini</locale>
+		<locale>en/html/manage/my/user/oauth2/bottom.html</locale>
+		<locale>en/html/manage/my/user/oauth2/info.html</locale>
+		<locale>en/html/manage/my/user/oauth2/top.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication_Backend_OAuth2</needs>

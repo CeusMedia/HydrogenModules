@@ -1,12 +1,17 @@
 <?php
 use CeusMedia\Common\UI\HTML\Indicator;
 
+/** @var array<string,array<string,string>> $words */
+
+$w				= (object) $words['index'];
+$wc				= (object) $words['criteria'];
+
 $url			= './manage/customer/rating/add/'.$customer->customerId;
 $iconAdd		= '<i class="icon-plus icon-white"></i>';
-$buttonAdd		= '<button type="button" class="btn btn-small btn-primary" onclick="document.location.href=\''.$url.'\';">'.$iconAdd.' bewerten</button>';
+$buttonAdd		= '<button type="button" class="btn btn-small btn-primary" onclick="document.location.href=\''.$url.'\';">'.$iconAdd.' '.$w->buttonAdd.'</button>';
 
 $panelInfo		= '
-<div class="muted"><em><small>Keine Bewertungen bisher.</small></em></div><br/>
+<div class="muted"><em><small>'.$w->noEntries.'</small></em></div><br/>
 '.$buttonAdd.'
 ';
 $panelRatings	= '';
@@ -50,35 +55,35 @@ if( $customer->ratings ){
 		$tendency	= '<span class="tendency-down">&minus;'.round( abs( $customer->tendency * 50 ), 0 ).'%</span>';
 
 	$panelInfo	= '
-<h4>Zusammenfassung</h4>
+<h4>'.$w->headingSummary.'</h4>
 <div class="row-fluid">
 	<div class="span3">
 		<dl class="dl-horizontal ratings">
-			<dt>letzter Index</dt>
+			<dt>'.$w->labelLastIndex.'</dt>
 			<dd class="rate" data-value="'.( $customer->lastRate ).'">'.number_format( $customer->lastRate, 1, ',', '.' ).'</dd>
-			<dt>Index-&empty;</dt>
+			<dt>'.$w->labelAverageIndex.'</dt>
 			<dd class="rate" data-value="'.$customer->index.'">'.number_format( $customer->index, 1, ',', '.' ).'</dd>
-			<dt>Varianz</dt>
+			<dt>'.$w->labelVariance.'</dt>
 			<dd>'.number_format( $customer->variance, 1, ',', '.' ).'</dd>
-			<dt>Tendenz</dt>
+			<dt>'.$w->labelTendency.'</dt>
 			<dd>'.$tendency.'</dd>
 		</dl>
 	</div>
 	<div class="span3">
 		<dl class="dl-horizontal ratings">
-			<dt>Umgänglichkeit</dt>
+			<dt>'.$wc->affability.'</dt>
 			<dd class="rate" data-value="'.$averages[0].'">'.number_format( $averages[0], 1, ',', '.' ).'</dd>
-			<dt>Beratbarkeit</dt>
+			<dt>'.$wc->guidability.'</dt>
 			<dd class="rate" data-value="'.$averages[1].'">'.number_format( $averages[1], 1, ',', '.' ).'</dd>
-			<dt>Wachstum</dt>
+			<dt>'.$wc->growthRate.'</dt>
 			<dd class="rate" data-value="'.$averages[2].'">'.number_format( $averages[2], 1, ',', '.' ).'</dd>
-			<dt>Rentabilität</dt>
+			<dt>'.$wc->profitability.'</dt>
 			<dd class="rate" data-value="'.$averages[3].'">'.number_format( $averages[3], 1, ',', '.' ).'</dd>
-			<dt>Zahlungsmoral</dt>
+			<dt>'.$wc->paymentMoral.'</dt>
 			<dd class="rate" data-value="'.$averages[4].'">'.number_format( $averages[4], 1, ',', '.' ).'</dd>
-			<dt>Termintreue</dt>
+			<dt>'.$wc->adherence.'</dt>
 			<dd class="rate" data-value="'.$averages[5].'">'.number_format( $averages[5], 1, ',', '.' ).'</dd>
-			<dt>Nervfaktor</dt>
+			<dt>'.$wc->uptightness.'</dt>
 			<dd class="rate" data-value="'.$averages[6].'" data-inverse="1">'.number_format( $averages[6], 1, ',', '.' ).'</dd>
 		</dl>
 	</div>
@@ -87,7 +92,7 @@ if( $customer->ratings ){
 
 	$panelRatings	= '
 <div id="panel-customer-ratings">
-	<h4>Bewertungen</h4>
+	<h4>'.$w->headingList.'</h4>
 	<table class="table ratings table-striped table-condensed">
 		<colgroup>
 			<col width="13%"/>
@@ -103,16 +108,16 @@ if( $customer->ratings ){
 		</colgroup>
 		<thead>
 			<tr>
-			<th>Datum</th>
+			<th>'.$w->headDate.'</th>
 			<th>&empty;</th>
-			<th>Index</th>
-			<th><small class="-muted">Umgänglichkeit</small></th>
-			<th><small class="-muted">Beratbarkeit</small></th>
-			<th><small class="-muted">Wachstum</small></th>
-			<th><small class="-muted">Rentabilität</small></th>
-			<th><small class="-muted">Zahlungsmoral</small></th>
-			<th><small class="-muted">Termintreue</small></th>
-			<th><small class="-muted">Nervfaktor</small></th>
+			<th>'.$w->headIndex.'</th>
+			<th><small class="-muted">'.$wc->affability.'</small></th>
+			<th><small class="-muted">'.$wc->guidability.'</small></th>
+			<th><small class="-muted">'.$wc->growthRate.'</small></th>
+			<th><small class="-muted">'.$wc->profitability.'</small></th>
+			<th><small class="-muted">'.$wc->paymentMoral.'</small></th>
+			<th><small class="-muted">'.$wc->adherence.'</small></th>
+			<th><small class="-muted">'.$wc->uptightness.'</small></th>
 		</tr>
 		</thead>
 		<tbody>
@@ -127,7 +132,7 @@ if( $customer->ratings ){
 $tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'rating/'.$customerId );
 
 return '
-<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
+<h3><span class="muted">'.$w->headingPrefix.'</span> '.$customer->title.'</h3>
 '.$tabs.'
 '.$panelInfo.'
 '.$panelRatings.'

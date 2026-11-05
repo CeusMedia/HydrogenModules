@@ -17,7 +17,9 @@ use CeusMedia\HydrogenFramework\View;
 
 $urlBase	= $frontend->getUrl().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
-$panelCover	= '<div class="alert alert-info">Noch kein Cover-Bild hochgeladen.</div>';
+$wc	= (object) $words['edit.cover'];
+
+$panelCover	= '<div class="alert alert-info">'.$wc->noEntries.'</div>';
 
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
@@ -40,7 +42,7 @@ if( $article->cover ){
 
 	$panelCover	= '
 <div class="content-panel">
-	<h4>Cover-Bild</h4>
+	<h4>'.$wc->heading.'</h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span6">
@@ -54,11 +56,11 @@ if( $article->cover ){
 				</div>
 			</div>
 			<div class="span6">
-				<h5>Adressen</h5>
+				<h5>'.$wc->headingUrls.'</h5>
 				<ul>
-					<li><a target="_blank" href="'.$urlLarge.'">Vollbild</a></li>
-					<li><a target="_blank" href="'.$urlMedium.'">Normalbild</a></li>
-					<li><a target="_blank" href="'.$urlSmall.'">Kleinbild</a></li>
+					<li><a target="_blank" href="'.$urlLarge.'">'.$wc->linkFull.'</a></li>
+					<li><a target="_blank" href="'.$urlMedium.'">'.$wc->linkMedium.'</a></li>
+					<li><a target="_blank" href="'.$urlSmall.'">'.$wc->linkThumb.'</a></li>
 				</ul>
 <!--				<div class="row-fluid">
 					<br/>
@@ -70,7 +72,7 @@ if( $article->cover ){
 			</div>
 		</div>
 		<div class="buttonbar">
-			<a href="./manage/catalog/bookstore/article/removeCover/'.$article->articleId.'" class="btn btn-small btn-inverse"><i class="icon-remove icon-white"></i>&nbsp;entfernen</a>
+			<a href="./manage/catalog/bookstore/article/removeCover/'.$article->articleId.'" class="btn btn-small btn-inverse"><i class="icon-remove icon-white"></i>&nbsp;'.$wc->buttonRemove.'</a>
 		</div>
 	</div>
 </div>';
@@ -96,21 +98,21 @@ $helperUpload->setRequired( TRUE );
 
 $panelUpload	= '
 <div class="content-panel">
-	<h4>Cover-Bild hochladen</h4>
+	<h4>'.$wc->headingUpload.'</h4>
 	<div class="content-panel-inner form-changes-auto">
 		<div class="alert">
-			<b>Dateitypen: </b>
+			<b>'.$wc->labelFileTypes.' </b>
 			<span>'.$imageExtensions.'</span><br/>
-			<b>Dateigröße: </b>
-			<span>max. '.$imageMaxSize.'</span><br/>
-			<b>Bildgröße: </b>
-			<span>min. '.$minSize.' Pixel hoch/breit</span>
+			<b>'.$wc->labelFileSize.' </b>
+			<span>'.sprintf( $wc->valueFileSizeMax, $imageMaxSize ).'</span><br/>
+			<b>'.$wc->labelImageSize.' </b>
+			<span>'.sprintf( $wc->valueImageSizeMin, $minSize ).'</span>
 		</div>
 		<form action="./manage/catalog/bookstore/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
-			<label for="input_image">Bilddatei <small class="muted"></small></label>
+			<label for="input_image">'.$wc->labelImage.' <small class="muted"></small></label>
 			'.$helperUpload.'
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> '.$wc->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

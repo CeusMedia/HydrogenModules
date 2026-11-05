@@ -16,7 +16,7 @@ class Controller_Manage_My_Branch extends Controller
 		$model			= new Model_Branch( $this->env );
 		$model->edit( $branchId, ['status' => 1] );
 		$branch			= $model->get( $branchId );
-		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successActivated'], $branch->title );
 		$this->restart( './manage/my/branch' );
 	}
 
@@ -57,7 +57,7 @@ class Controller_Manage_My_Branch extends Controller
 				$data['createdAt']	= time();
 				$branchId			= $model->add( $data );
 				$model->extendWithGeocodes( $branchId );
-				$messenger->noteSuccess( 'Added: '.$data['title'] );
+				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
 				$this->restart( './manage/my/branch' );
 			}
 		}
@@ -113,7 +113,7 @@ class Controller_Manage_My_Branch extends Controller
 			'uploadedAt'	=> time()
 		];
 		$model->add( $data );
-		$messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successImageUploaded'] );
 		$this->restart( './manage/my/branch/edit/'.$branchId );
 	}
 
@@ -143,7 +143,7 @@ class Controller_Manage_My_Branch extends Controller
 		$model			= new Model_Branch( $this->env );
 		$model->edit( $branchId, ['status' => -1] );
 		$branch			= $model->get( $branchId );
-		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successDeactivated'], $branch->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -179,7 +179,7 @@ class Controller_Manage_My_Branch extends Controller
 			if( !$messenger->gotError() ){
 				$data['modifiedAt']	= time();
 				$modelBranch->edit( $branchId, $data );
-				$messenger->noteSuccess( 'Updated: '.$data['title'] );
+				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
 #				if( !$modelBranch->get( $branchId )->x )
 					$modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( NULL, TRUE );
@@ -247,17 +247,17 @@ class Controller_Manage_My_Branch extends Controller
 		$modelCompany	= new Model_Company( $this->env );
 
 		if( !$userId ){
-			$messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
+			$messenger->noteFailure( $this->getWords( 'msg' )['failureNotLoggedIn'] );
 			$this->restart( './' );
 		}
 		$user		= $modelUser->get( $userId );
 		if( !$user ){
-			$messenger->noteFailure( 'Ungültiger Benutzer. Zugriff verweigert.' );
+			$messenger->noteFailure( $this->getWords( 'msg' )['failureInvalidUser'] );
 			$this->restart( './manage/my' );
 		}
 		$company	= $modelCompany->get( $user->companyId );
 		if( !$company ){
-			$messenger->noteFailure( 'Ungültiges Unternehmen. Zugriff verweigert.' );
+			$messenger->noteFailure( $this->getWords( 'msg' )['failureInvalidCompany'] );
 			$this->restart( './manage/my' );
 		}
 

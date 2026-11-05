@@ -12,6 +12,10 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var Entity_Form_Fill $fill */
 /** @var Entity_Form $form */
 /** @var object[] $transferTargetMap */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['view'];
+$wordsStatus	= $words['statuses'];
 
 $page		= (int) $env->getRequest()->get( 'page' );
 
@@ -27,9 +31,9 @@ $iconExport	= new Icon( 'download' );
 $iconInfo	= new Icon( 'info' );
 
 $statuses	= [
-	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-success'] ),
-	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
+	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', $wordsStatus[Model_Form_Fill::STATUS_NEW], ['class' => 'label'] ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', $wordsStatus[Model_Form_Fill::STATUS_CONFIRMED], ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', $wordsStatus[Model_Form_Fill::STATUS_HANDLED], ['class' => 'label label-info'] ),
 ];
 
 $helperPerson	= new View_Helper_Form_Fill_Person( $env );
@@ -43,17 +47,17 @@ $helperData->setMode( View_Helper_Form_Fill_Data::MODE_EXTENDED );
 
 
 //  --  PANEL: FACTS  --  //
-$datetime	= HtmlTag::create( 'div', 'Zeitpunkt: '.date( 'd.m.Y H:i:s', $fill->createdAt ) );
-$status		= HtmlTag::create( 'div', 'Zustand: '.$statuses[$fill->status] );
+$datetime	= HtmlTag::create( 'div', $w->labelDateTime.' '.date( 'd.m.Y H:i:s', $fill->createdAt ) );
+$status		= HtmlTag::create( 'div', $w->labelStatus.' '.$statuses[$fill->status] );
 $referer	= '';
 if( $fill->referer ){
-	$referer	= HtmlTag::create( 'a', 'ausgefülltes Formular', ['href' => $fill->referer, 'target' => '_blank'] );
-	$referer	= HtmlTag::create( 'div', 'Webseite: '.$referer );
+	$referer	= HtmlTag::create( 'a', $w->linkReferer, ['href' => $fill->referer, 'target' => '_blank'] );
+	$referer	= HtmlTag::create( 'div', $w->labelReferer.' '.$referer );
 }
 $formLink	= HtmlTag::create( 'a', $iconForm.'&nbsp;'.$form->title, ['href' => './manage/form/edit/'.$form->formId] );
-$formLink	= HtmlTag::create( 'div', 'Formular: '.$formLink );
+$formLink	= HtmlTag::create( 'div', $w->labelForm.' '.$formLink );
 $panelFacts	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Fakten' ),
+	HtmlTag::create( 'h3', $w->headingFacts ),
 	HtmlTag::create( 'div', [
 		$datetime,
 		$referer,
@@ -72,9 +76,9 @@ if( $fillTransfers ){
 	$modals	= [];
 	foreach( $fillTransfers as $fillTransfer ){
 		$targetTitle	= $transferTargetMap[$fillTransfer->formTransferTargetId]->title;
-		$status			= $iconCheck.'&nbsp;erfolgreich';
+		$status			= $iconCheck.'&nbsp;'.$w->transferSuccess;
 		if( (int) $fillTransfer->status !== Model_Form_Fill_Transfer::STATUS_SUCCESS )
-			$status	= HtmlTag::create( 'abbr', $iconRemove.'&nbsp;gescheitert', ['title' => $fillTransfer->message] );
+			$status	= HtmlTag::create( 'abbr', $iconRemove.'&nbsp;'.$w->transferFailed, ['title' => $fillTransfer->message] );
 
 		$button			= '';
 		if( $fillTransfer->data ){
@@ -86,28 +90,28 @@ if( $fillTransfers ){
 			}
 			catch( Exception $e ){
 				$transferData	= [];
-				$env->getMessenger()->noteFailure( 'Export-Regeln lassen sich nicht anwenden. Fehler: '.$e->getMessage() );
+				$env->getMessenger()->noteFailure( sprintf( $w->errorTransferRules, $e->getMessage() ) );
 			}
 
 			$modalBody	= [
-				HtmlTag::create( 'h4', 'Formulardaten' ),
+				HtmlTag::create( 'h4', $w->headingFormData ),
 				arrayToTable( $formData ),
-				HtmlTag::create( 'h4', 'Transferdaten' ),
+				HtmlTag::create( 'h4', $w->headingTransferData ),
 				arrayToTable( $transferData ),
 			];
 			if( in_array( (int) $fillTransfer->status, [Model_Form_Fill_Transfer::STATUS_ERROR, Model_Form_Fill_Transfer::STATUS_EXCEPTION] ) ){
-				$modalBody[]	= HtmlTag::create( 'h4', 'Fehlermeldung' );
+				$modalBody[]	= HtmlTag::create( 'h4', $w->headingError );
 				$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->message ), ['style' => 'font-size: 10px'] );
 				if( !empty( $fillTransfer->trace ) ){
-					$modalBody[]	= HtmlTag::create( 'h4', 'Aufrufstapel' );
+					$modalBody[]	= HtmlTag::create( 'h4', $w->headingTrace );
 					$modalBody[]    = HtmlTag::create( 'pre', str_replace( $this->env->uri, '', $fillTransfer->trace ), ['style' => 'font-size: 10px'] );
 				}
 			}
 
 			$modal	= new ModalDialog( $modalId );
-			$modal->setHeading( 'Datenweitergabe an '.$targetTitle );
+			$modal->setHeading( sprintf( $w->modalHeading, $targetTitle ) );
 			$modal->setBody( join( $modalBody ) );
-			$modal->setCloseButtonLabel( 'schließen' );
+			$modal->setCloseButtonLabel( $w->buttonClose );
 			$modal->setCloseButtonIconClass( 'fa fa-fw fa-close' );
 			$modals[]	= $modal;
 
@@ -123,7 +127,7 @@ if( $fillTransfers ){
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$panelTransfers	= HtmlTag::create( 'div', [
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'h3', 'Datenweitergabe' ),
+			HtmlTag::create( 'h3', $w->headingTransfers ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'table', $tbody, ['class' => 'table table-condensed'] ),
 			] ),
@@ -132,31 +136,31 @@ if( $fillTransfers ){
 }
 
 //  --  BUTTONS  --  //
-$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
+$buttonList	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 	'href'	=> './manage/form/fill'.( $page ? '/'.$page : '' ),
 	'class'	=> 'btn',
 ] );
-$buttonConfirm	= HtmlTag::create( 'a', $iconCheck.'&nbsp;als bestätigt markieren', [
+$buttonConfirm	= HtmlTag::create( 'a', $iconCheck.'&nbsp;'.$w->buttonConfirm, [
 	'href'	=> './manage/form/fill/markAsConfirmed/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-success',
 ] );
 if( $fill->status != Model_Form_Fill::STATUS_NEW )
 	$buttonConfirm	= '';
 
-$buttonHandled	= HtmlTag::create( 'a', $iconCheck.'&nbsp;als behandelt markieren', [
+$buttonHandled	= HtmlTag::create( 'a', $iconCheck.'&nbsp;'.$w->buttonHandled, [
 	'href'	=> './manage/form/fill/markAsHandled/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'	=> 'btn btn-info',
 ] );
 if( $fill->status != Model_Form_Fill::STATUS_CONFIRMED )
 	$buttonHandled	= '';
 
-$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 	'href'		=> './manage/form/fill/remove/'.$fill->fillId.( $page ? '&page='.$page : '' ),
 	'class'		=> 'btn btn-danger',
-	'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
+	'onclick'	=> "if(!confirm('".addslashes( $w->buttonRemoveConfirm )."'))return false;"
 ] );
 
-$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;exportieren', [
+$buttonExport	= HtmlTag::create( 'a', $iconExport.'&nbsp;'.$w->buttonExport, [
 	'href'		=> './manage/form/fill/export/csv/fill/'.$fill->fillId,
 	'class'		=> 'btn',
 ] );
@@ -166,7 +170,7 @@ $buttonbar	= HtmlTag::create( 'div', $buttons, ['class' => 'buttonbar'] );
 
 
 $heading	= HtmlTag::create( 'h2', [
-	HtmlTag::create( 'span', 'Eintrag: ', ['class' => 'muted'] ),
+	HtmlTag::create( 'span', $w->headingPrefix.' ', ['class' => 'muted'] ),
 	$form->title,
 ] );
 

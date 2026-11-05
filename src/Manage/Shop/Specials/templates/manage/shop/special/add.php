@@ -4,6 +4,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<object> $catalogs */
 
+/** @var array<string,array<string,string>> $words */
+$w	= (object) $words['add'];
+
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
 $bridgeMap	= [];
@@ -12,7 +15,7 @@ foreach( $catalogs as $bridge )
 
 $optBridge	= [];
 if( count($bridgeMap) > 1 )
-	$optBridge['']	= '- auswählen -';
+	$optBridge['']	= $w->optionSelect;
 foreach( $bridgeMap as $bridgeId => $label )
 	$optBridge[$bridgeId]	= $label;
 $optBridge	= HtmlElements::Options( $optBridge );
@@ -48,12 +51,12 @@ jQuery(document).ready(function(){
 ';
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Neue Spezialität' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Katalog', ['for' => 'input_bridgeId'] ),
+					HtmlTag::create( 'label', $w->labelCatalog, ['for' => 'input_bridgeId'] ),
 					HtmlTag::create( 'select', $optBridge, [
 						'name'	=> 'bridgeId',
 						'id'	=> 'input_bridgeId',
@@ -61,7 +64,7 @@ return HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span3'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Artikel', ['for' => 'input_articleId'] ),
+					HtmlTag::create( 'label', $w->labelArticle, ['for' => 'input_articleId'] ),
 					HtmlTag::create( 'select', '', [
 						'name'	=> 'articleId',
 						'id'	=> 'input_articleId',
@@ -71,7 +74,7 @@ return HtmlTag::create( 'div', [
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
+					HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title'] ),
 					HtmlTag::create( 'input', NULL, [
 						'type'	=> 'text',
 						'name'	=> 'title',
@@ -81,7 +84,7 @@ return HtmlTag::create( 'div', [
 				], ['class' => 'span6'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+				HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',

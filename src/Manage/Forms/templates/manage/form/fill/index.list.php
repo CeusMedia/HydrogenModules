@@ -13,6 +13,10 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var ?string $filterStatus */
 /** @var int $page */
 /** @var int $pages */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['index.list'];
+$statuses	= $words['statuses'];
 
 $iconView		= new Icon( 'eye' );
 $iconRemove		= new Icon( 'remove' );
@@ -22,13 +26,13 @@ $iconDownload	= new Icon( 'download' );
 $iconTransfer   = new Icon( 'upload' );
 
 $statusLabels	= [
-	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', 'unbestätigt', ['class' => 'label'] ),
-	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', 'gültig', ['class' => 'label label-info'] ),
-	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', 'behandelt', ['class' => 'label label-info'] ),
-	Model_Form_Fill::STATUS_CUSTOMER	=> HtmlTag::create( 'label', 'Kunde', ['class' => 'label label-success'] ),
-	Model_Form_Fill::STATUS_BOOKING		=> HtmlTag::create( 'label', 'Buchung', ['class' => 'label label-success'] ),
-	Model_Form_Fill::STATUS_ORDER		=> HtmlTag::create( 'label', 'Kauf', ['class' => 'label label-success'] ),
-	Model_Form_Fill::STATUS_NEWSLETTER	=> HtmlTag::create( 'label', 'Newsletter', ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_NEW			=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_NEW], ['class' => 'label'] ),
+	Model_Form_Fill::STATUS_CONFIRMED	=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_CONFIRMED], ['class' => 'label label-info'] ),
+	Model_Form_Fill::STATUS_HANDLED		=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_HANDLED], ['class' => 'label label-info'] ),
+	Model_Form_Fill::STATUS_CUSTOMER	=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_CUSTOMER], ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_BOOKING		=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_BOOKING], ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_ORDER		=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_ORDER], ['class' => 'label label-success'] ),
+	Model_Form_Fill::STATUS_NEWSLETTER	=> HtmlTag::create( 'label', $statuses[Model_Form_Fill::STATUS_NEWSLETTER], ['class' => 'label label-success'] ),
 ];
 
 $helperTime		= new View_Helper_TimePhraser( $env );
@@ -41,13 +45,13 @@ foreach( $fills as $fill ){
 	$linkView	= HtmlTag::create( 'a', $iconView, [
 		'href'	=> './manage/form/fill/view/'.$fill->fillId.'?page='.$page,
 		'class'	=> 'btn btn-mini btn-info',
-		'title'	=> 'anzeigen',
+		'title'	=> $w->buttonView,
 	] );
 	$linkRemove	= HtmlTag::create( 'a', $iconRemove, [
 		'href'		=> './manage/form/fill/remove/'.$fill->fillId.'?page='.$page,
 		'class'		=> 'btn btn-mini btn-danger',
-		'title'		=> 'entfernen',
-		'onclick'	=> "if(!confirm('Wirklich ?'))return false;"
+		'title'		=> $w->buttonRemove,
+		'onclick'	=> "if(!confirm('".addslashes( $w->buttonRemoveConfirm )."'))return false;"
 	] );
 	$buttons	= HtmlTag::create( 'div', [$linkView, $linkRemove], ['class' => 'btn-group'] );
 	$date		= $helperTime->setTimestamp( $fill->createdAt );
@@ -72,7 +76,7 @@ foreach( $fills as $fill ){
 				$success	= FALSE;
 			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
 		}
-		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$list		= $w->labelTransfers.':'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $fill->transfers );
 		$transfers	= HtmlTag::create( 'span', $iconTransfer.'&nbsp;'.$label, [
 			'class'	=> 'label '.( $success ? 'label-success' : 'label-important' ),
@@ -96,17 +100,17 @@ foreach( $fills as $fill ){
 	] );
 }
 $colgroup	= HtmlElements::ColumnGroup( '50px', '', ''/*, '95px'*/, '120px', '75px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['ID', 'Name / E-Mail', 'Formular'/*, 'Zustand'*/, 'Alter / Datum', ''] ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headId, $w->headName, $w->headForm/*, 'Zustand'*/, $w->headDate, ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped not-table-condensed'] );
 
-$buttonExport	= HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', [
+$buttonExport	= HtmlTag::create( 'button', $iconDownload.'&nbsp;'.$w->buttonExport, [
 	'type'		=> 'button',
 	'disabled'	=> 'disabled',
 	'class'		=> 'btn',
 ] );
 if( !empty( $filterFormId ) && 0 !== count( array_filter( $filterFormId ) ) )
-	$buttonExport	= HtmlTag::create( 'a', $iconDownload.'&nbsp;exportieren', [
+	$buttonExport	= HtmlTag::create( 'a', $iconDownload.'&nbsp;'.$w->buttonExport, [
 		'href'		=> './manage/form/fill/export/csv/form/'.join( ',', $filterFormId ).'/'.$filterStatus,
 		'class'		=> 'btn',
 	] );
@@ -120,7 +124,7 @@ if( $pages > 1 ){
 $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$buttonExport, $pagination] ), ['class' => 'buttonbar'] );
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Einträge' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,

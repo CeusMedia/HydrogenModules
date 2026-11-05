@@ -27,7 +27,7 @@ if( $branch->longitude ){
 	$addr		= utf8_decode( $geocoder->getAddress( $query ) );
 	$tags		= (object) $geocoder->getGeoTags( $query );
 
-	$panelMap	= HTML::H3( 'Geoinformationen' ).'
+	$panelMap	= HTML::H3( $w->headingMap ).'
 	<div style="border: 1px solid black; width: 100%; height: 500px">
 		'.HtmlTag::create( 'div', '', array(
 			'id'	=> "map_canvas",
@@ -39,14 +39,14 @@ if( $branch->longitude ){
 	</div>
 	<div>
 		<dl class="dl-horizontal">
-			<dt>Adresse</dt>
+			<dt>'.$w->labelAddress.'</dt>
 			<dd>'.$addr.'</dd>
-			<dt>Breitengrad</dt>
+			<dt>'.$w->labelLatitude.'</dt>
 			<dd>'.$branch->latitude.'</dd>
-			<dt>Längengrad</dt>
+			<dt>'.$w->labelLongitude.'</dt>
 			<dd>'.$branch->longitude.'</dd>
-			<dt>Vollansicht</dt>
-			<dd><a href="#">bei Google</a></dd>
+			<dt>'.$w->labelFullView.'</dt>
+			<dd><a href="#">'.$w->linkGoogle.'</a></dd>
 		</dl>
 	</div>
 	<script>$(document).ready(function(){loadMap("map_canvas");});</script>

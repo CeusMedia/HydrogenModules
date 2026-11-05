@@ -6,7 +6,8 @@
 	<title>Manage: Contents: Statics</title>
 	<description>Basic content management for HTML files.</description>
 	<category>Management</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
+	<log version="0.2.2">Add English locales.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -14,6 +15,7 @@
 		<class>Controller/Manage/Content/Static.php</class>
 		<class>View/Manage/Content/Static.php</class>
 		<locale>de/manage/content/static.ini</locale>
+		<locale>en/manage/content/static.ini</locale>
 		<template>manage/content/static/edit.php</template>
 		<template>manage/content/static/index.php</template>
 		<template>manage/content/static/filter.php</template>

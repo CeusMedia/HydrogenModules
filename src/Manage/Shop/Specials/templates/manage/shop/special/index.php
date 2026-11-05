@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$w	= (object) $words['index'];
+
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
 $bridgeMap	= [];
@@ -19,19 +22,19 @@ foreach( $specials as $special ){
 	) );
 }
 $buttonbar	= HtmlTag::create( 'div', array(
-	HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Spezialität', [
+	HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 		'href'	=> './manage/shop/special/add',
 		'class'	=> 'btn btn-primary',
 	] )
 ), ['class' => 'buttonbar'] );
 $colgroup	= HtmlElements::ColumnGroup( '30%', '70%' );
-$tableHeads	= HtmlElements::TableHeads( ['Katalog', 'Artikel'] );
+$tableHeads	= HtmlElements::TableHeads( [$w->headCatalog, $w->headArticle] );
 $thead	= HtmlTag::create( 'thead', $tableHeads );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'h3', 'Spezialitäten' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,

@@ -6,7 +6,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $urlBase	= $frontend->getUri().$frontend->getConfigValue( 'path.contents' ).$moduleConfig->get( 'path.covers' );
 
-$panelCover	= '<div class="alert alert-error">Noch kein Cover-Bild hochgeladen.</div>';
+$wc	= (object) $words['edit.cover'];
+
+$panelCover	= '<div class="alert alert-error">'.$wc->noEntries.'</div>';
 
 if( $article->cover ){
 	$id			= str_pad( $article->articleId, 5, "0", STR_PAD_LEFT );
@@ -22,7 +24,7 @@ if( $article->cover ){
 
 	$panelCover	= '
 <div class="content-panel">
-	<h4>Cover-Bild</h4>
+	<h4>'.$wc->heading.'</h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span6">
@@ -36,10 +38,10 @@ if( $article->cover ){
 				</div>
 			</div>
 			<div class="span6">
-				<h5>Adressen</h5>
+				<h5>'.$wc->headingUrls.'</h5>
 				<ul>
-					<li><a href="'.$urlFull.'">Vollbild</a></li>
-					<li><a href="'.$urlThumb.'">Kleinbild</a></li>
+					<li><a href="'.$urlFull.'">'.$wc->linkFull.'</a></li>
+					<li><a href="'.$urlThumb.'">'.$wc->linkThumb.'</a></li>
 				</ul>
 <!--				<div class="row-fluid">
 					<br/>
@@ -69,21 +71,21 @@ $minSize		= $env->getConfig()->get( 'module.manage_catalog.article.image.maxHeig
 
 $panelUpload	= '
 <div class="content-panel">
-	<h4>Cover-Bild hochladen</h4>
+	<h4>'.$wc->headingUpload.'</h4>
 	<div class="content-panel-inner form-changes-auto">
 		<div class="alert">
-			<b>Dateitypen: </b>
+			<b>'.$wc->labelFileTypes.' </b>
 			<span>'.$documentExtensions.'</span><br/>
-			<b>Dateigröße: </b>
-			<span>max. '.$documentMaxSize.'</span><br/>
-			<b>Bildgröße: </b>
-			<span>min. '.$minSize.' Pixel hoch/breit</span>
+			<b>'.$wc->labelFileSize.' </b>
+			<span>'.sprintf( $wc->valueFileSizeMax, $documentMaxSize ).'</span><br/>
+			<b>'.$wc->labelImageSize.' </b>
+			<span>'.sprintf( $wc->valueImageSizeMin, $minSize ).'</span>
 		</div>
 		<form action="./manage/catalog/article/setCover/'.$article->articleId.'" method="post" enctype="multipart/form-data">
-			<label for="input_image">Bilddatei <small class="muted"></small></label>
-			'.View_Helper_Input_File::renderStatic( $env, 'image', '<i class="icon-folder-open icon-white"></i>', 'Bild auswählen...' ).'
+			<label for="input_image">'.$wc->labelImage.' <small class="muted"></small></label>
+			'.View_Helper_Input_File::renderStatic( $env, 'image', '<i class="icon-folder-open icon-white"></i>', $wc->buttonSelect ).'
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> speichern</button>
+				<button type="submit" name="save" class="btn btn-primary"><i class="icon-plus icon-white"></i> '.$wc->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

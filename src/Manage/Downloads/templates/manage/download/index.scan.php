@@ -1,19 +1,21 @@
 <?php
 
 /** @var array<string> $rights */
+/** @var array<string,array<string,string>> $words */
 
 if( !in_array( 'scan', $rights ) )
 	return '';
+$w	= (object) $words['scan'];
+
 return '
 <div class="content-panel">
-	<h4>Dateien scannen</h4>
+	<h4>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		<p>
-			Wurden neue Dateien oder Ordner per FTP hochgeladen?
-			Damit diese hier aufgelistet werden, müssen Sie den gesamten Dateienordner scannen.
+			'.$w->text.'
 		</p>
 		<div class="buttonbar">
-			<a href="./manage/download/scan" class="btn btn-mini"><i class="icon-repeat"></i> nach neuen Dateien scannen</a>
+			<a href="./manage/download/scan" class="btn btn-mini"><i class="icon-repeat"></i> '.$w->buttonScan.'</a>
 		</div>
 	</div>
 </div>';
