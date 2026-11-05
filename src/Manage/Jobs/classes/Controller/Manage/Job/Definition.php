@@ -88,7 +88,7 @@ class Controller_Manage_Job_Definition extends Controller
 	{
 		$definition	= $this->modelDefinition->get( $jobDefinitionId );
 		if( !$definition ){
-			$this->env->getMessenger()->noteError( 'Invalid Job Definition ID.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 

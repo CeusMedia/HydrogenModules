@@ -13,6 +13,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var array $forms */
 /** @var int $page */
 /** @var int $pages */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['index.list'];
 
 //print_m( $transferTargets );die;
 
@@ -44,15 +47,8 @@ $iconsStatus	= [
 	Model_Form::STATUS_ACTIVATED	=> new Icon( 'play' ),
 ];
 
-$statuses	= [
-	-1		=> 'deaktiviert',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-];
-$types		= [
-	0		=> 'direkter Versand',
-	1		=> 'Double-Opt-In',
-];
+$statuses	= $words['statuses'];
+$types		= $words['types.short'];
 
 $listLabelsStatus	= [
 	Model_Form::STATUS_DISABLED		=> HtmlTag::create( 'label', $iconsStatus[Model_Form::STATUS_DISABLED].' '.$statuses[Model_Form::STATUS_DISABLED], ['class' => 'label label-inverse'] ),
@@ -70,7 +66,7 @@ $modelMail	= new Model_Form_Mail( $env );
 
 $rows		= [];
 foreach( $forms as $form ){
-	$customerMail	= HtmlTag::create( 'small', '- keine Empfänger-E-Mail zugewiesen -', ['class' => "muted"] );
+	$customerMail	= HtmlTag::create( 'small', $w->noCustomerMail, ['class' => "muted"] );
 	if( $form->customerMailId > 0 ){
 		$mail			= $modelMail->get( $form->customerMailId );
 		$customerMail	= HtmlTag::create( 'small', [
@@ -78,7 +74,7 @@ foreach( $forms as $form ){
 		] );
 	}
 
-	$managerMail	= HtmlTag::create( 'em', '- keine -', ['class' => "muted"] );
+	$managerMail	= HtmlTag::create( 'em', $w->noManagerMail, ['class' => "muted"] );
 	if( $form->managerMailId > 0 ){
 		$mail			= $modelMail->get( $form->managerMailId );
 		$managerMail	= HtmlTag::create( 'small', [
@@ -101,7 +97,7 @@ foreach( $forms as $form ){
 		$list	= [];
 		foreach( $form->transfers as $transfer )
 			$list[]	= $transferTargets[$transfer->formTransferTargetId]->title;
-		$list		= 'Transfers:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$list		= $w->labelTransfers.':'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->transfers );
 		$transfers	= HtmlTag::create( 'span', $iconTransfer.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
 	}
@@ -111,7 +107,7 @@ foreach( $forms as $form ){
 		$list	= [];
 		foreach( $form->imports as $import )
 			$list[]	= $import->title;
-		$list		= 'Imports:'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
+		$list		= $w->labelImports.':'.PHP_EOL.' - '.implode( PHP_EOL.' - ', $list );
 		$label		= count( $form->imports );
 		$importers	= HtmlTag::create( 'span', $iconImport.'&nbsp;'.$label, ['class' => 'label label-info', 'title' => $list] );
 	}
@@ -126,17 +122,17 @@ foreach( $forms as $form ){
 }
 $colgroup	= HtmlElements::ColumnGroup( '40px', '', '160px', '260px', '40px' );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-	HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
-	HtmlTag::create( 'th', 'Titel / E-Mail an Absender' ),
-	HtmlTag::create( 'th', 'Typ / Zustand' ),
-	HtmlTag::create( 'th', 'Empfänger und -E-Mail' ),
-	HtmlTag::create( 'th', HtmlTag::create( 'acronym', $iconExchange, ['title' => 'Datenübertragung'] ) ),
+	HtmlTag::create( 'th', $w->headId, ['style' => 'text-align: right'] ),
+	HtmlTag::create( 'th', $w->headTitle ),
+	HtmlTag::create( 'th', $w->headTypeStatus ),
+	HtmlTag::create( 'th', $w->headReceivers ),
+	HtmlTag::create( 'th', HtmlTag::create( 'acronym', $iconExchange, ['title' => $w->headTransfer] ) ),
 ] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
-$heading	= HtmlTag::create( 'h2', 'Formulare' );
-$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neues Formular', [
+$heading	= HtmlTag::create( 'h2', $w->heading );
+$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/form/add',
 	'class'	=> 'btn btn-success',
 ] );
@@ -150,7 +146,7 @@ if( $pages > 1 ){
 $buttonbar	= HtmlTag::create( 'div', join( '&nbsp;', [$linkAdd, $pagination] ), ['class' => 'buttonbar'] );
 
 return HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Formulare' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		$buttonbar,

@@ -62,7 +62,7 @@ $panelAdd	= '
 					<input type="text" name="price" id="input_price" class="span12" value="'.$entity->price.'"/>
 				</div>
 <!--				<div class="span3">
-					<label for="input_type">Type</label>
+					<label for="input_type">'.$w->labelType.'</label>
 					<input type="text" name="type" id="input_type" class="span12" value="'.$entity->type.'"/>
 				</div>-->
 				<div class="span3">

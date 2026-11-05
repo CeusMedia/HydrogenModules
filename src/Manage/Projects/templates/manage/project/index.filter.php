@@ -83,7 +83,7 @@ $panelFilter = '
 		<form name="" action="./manage/project/filter" method="post">
 			<div class="row-fluid">
 				<div class="span10">
-					<label for="input_query">Suchbegriff</label>
+					<label for="input_query">'.$w->labelQuery.'</label>
 					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery ?? '', ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 				<div class="span2">
@@ -93,25 +93,25 @@ $panelFilter = '
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_status">Status</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status[]" multiple id="input_status" size="6" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_priority">Priorität</label>
+					<label for="input_priority">'.$w->labelPriority.'</label>
 					<select name="priority[]" multiple id="input_priority" size="6" class="span12">'.$optPriority.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_user">Mitarbeiter</label>
+					<label for="input_user">'.$w->labelUser.'</label>
 					<select name="user[]" multiple id="input_user" size="6" class="span12">'.$optUser.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span7">
-					<label for="input_status">Sortierung</label>
+					<label for="input_status">'.$w->labelOrder.'</label>
 					<select name="order" id="input_order" class="span12" onchange="this.form.submit()">'.$optOrder.'</select>
 				</div>
 				<div class="span5">
@@ -124,7 +124,7 @@ $panelFilter = '
 					<input type="text" name="limit" id="input_limit" class="span12" value="'.htmlentities( $filterLimit, ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 				<div class="span9" style="padding-top: 4px">
-					<label for="input_status">pro Seite</label>
+					<label for="input_status">'.$w->labelLimit.'</label>
 				</div>
 			</div>
 			<div class="buttonbar">

@@ -4,31 +4,34 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<Entity_Form_Transfer_Quest> $results */
 /** @var bool $sent */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['testTransfer'];
 
 $list		= [];
 foreach( $results as $quest ){
 	$panelRule		= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'Rule: '.$quest->target->title ),
+		HtmlTag::create( 'h4', sprintf( $w->headingRule, $quest->target->title ) ),
 		HtmlTag::create( 'div', [
 			HtmlTag::create( 'xmp', str_replace( '    ', '  ', $quest->rule->rules ), ['style' => 'max-height: 300px; overflow-y: auto; border: 1px solid gray; font-size: 0.85em; padding: 0.5em 1em; line-height: 14px;'] ),
 		], ['class' => 'panel-inner', 'style' => ''] ),
 	], ['class' => 'panel'] );
 
 	$panelFormData	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'Form Fill' ),
+		HtmlTag::create( 'h4', $w->headingFormFill ),
 		HtmlTag::create( 'div', [
 			print_m( $quest->formData, NULL, NULL, TRUE ),
 		], ['class' => 'panel-inner'] )
 	], ['class' => 'panel'] );
 
 	$panelTransmitData	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'Transfer' ),
+		HtmlTag::create( 'h4', $w->headingTransfer ),
 		HtmlTag::create( 'div', [
 			print_m( $quest->data, NULL, NULL, TRUE ),
 		], ['class' => 'panel-inner'] )
 	], ['class' => 'panel'] );
 
-	$heading	= HtmlTag::create( 'h3', 'Transfer: '.$quest->rule->title.' &rArr; '.$quest->target->title );
+	$heading	= HtmlTag::create( 'h3', sprintf( $w->headingTransferItem, $quest->rule->title.' &rArr; '.$quest->target->title ) );
 
 
 	$result			= ['status' => $quest->status, 'errors' => [], 'trace' => ''];
@@ -38,7 +41,7 @@ foreach( $results as $quest ){
 	}
 
 	$panelResult	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h4', 'Transfer Status / Result' ),
+		HtmlTag::create( 'h4', $w->headingResult ),
 		HtmlTag::create( 'div', [
 			print_m( $result, NULL, NULL, TRUE ),
 		], ['class' => 'panel-inner'] )
@@ -64,7 +67,7 @@ foreach( $results as $quest ){
 			HtmlTag::create( 'div', $panelResult, ['class' => 'span6'] ),
 		], ['class' => 'row-fluid'] ),
 		HtmlTag::create( 'hr' ),
-		HtmlTag::create( 'h3', 'Data' ),
+		HtmlTag::create( 'h3', $w->headingData ),
 		HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', $panelFormData, ['class' => 'span6'] ),
 			HtmlTag::create( 'div', $panelTransmitData, ['class' => 'span6'] ),
@@ -73,4 +76,4 @@ foreach( $results as $quest ){
 		HtmlTag::create( 'hr' ),
 	] );
 }
-return HtmlTag::create( 'h3', count( $results ).' Transfer'.( 1 === count( $results ) ? '' : 's' ) ).join( '', $list );
+return HtmlTag::create( 'h3', sprintf( 1 === count( $results ) ? $w->headingCountOne : $w->headingCountMany, count( $results ) ) ).join( '', $list );

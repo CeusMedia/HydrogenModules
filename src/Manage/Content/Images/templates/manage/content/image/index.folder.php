@@ -22,7 +22,7 @@ if( !$listImages )
 
 $linkEditFolder	= '';
 if( $canEditFolder && $path != "." )
-	$linkEditFolder	= '&nbsp;&nbsp;<a class="btn btn-mini" href="./manage/content/image/editFolder" title="ändern" alt="ändern"><i class="icon-pencil"></i></a>';
+	$linkEditFolder	= '&nbsp;&nbsp;<a class="btn btn-mini" href="./manage/content/image/editFolder" title="'.htmlentities( $w->buttonEditFolder, ENT_QUOTES, 'UTF-8' ).'" alt="'.htmlentities( $w->buttonEditFolder, ENT_QUOTES, 'UTF-8' ).'"><i class="icon-pencil"></i></a>';
 
 $labelFolder	= preg_replace( "/^\.\//", "", $path );
 

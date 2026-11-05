@@ -55,10 +55,10 @@ class Controller_Manage_Role extends Controller
 					$this->restart( 'edit/'.$roleId, TRUE );
 				}
 				else
-					$this->messenger->noteError( 'role_title_existing' );
+					$this->messenger->noteError( $words['add']['msgError-2'] );
 			}
 			else
-				$this->messenger->noteError( 'role_title_missing' );
+				$this->messenger->noteError( $words['add']['msgError-1'] );
 		}
 
 		$postDataArray	= $this->request->getAllFromSource( 'POST' );

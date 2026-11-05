@@ -3,14 +3,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
+$wf	= (object) $words['index.filter'];
+$wl	= (object) $words['index.list'];
+
 $panelFilter	= '
 <div class="content-panel">
-	<h3>Filter</h3>
+	<h3>'.$wf->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/catalog/clothing/article/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<em class="muted">... kommt noch ...</em>
+					<em class="muted">'.$wf->comingSoon.'</em>
 				</div>
 			</div>
 		</form>
@@ -29,14 +32,14 @@ foreach( $categories as $category ){
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', $tbody, ['class' => 'table table-fixed'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neue Kategorie', [
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.$wl->buttonAdd, [
 	'href'	=> './manage/catalog/clothing/category/add',
 	'class'	=> 'btn btn-success',
 ] );
 
 $panelList	= '
 <div class="content-panel">
-	<h3>Kategorien</h3>
+	<h3>'.$wl->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

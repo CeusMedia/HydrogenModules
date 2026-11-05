@@ -4,6 +4,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var int|string $currentUserId */
+/** @var array $words */
 
 $panelRelations		= '';
 $helperRelations	= new View_Helper_ItemRelationLister( $env );
@@ -19,7 +20,7 @@ $helperRelations->setHintTextForRelations( '' );
 
 if( $helperRelations->hasRelations() ){
 	$panelRelations	= HTML::DivClass( 'content-panel content-panel-form', [
-		HtmlTag::create( 'h4', 'Zugehörige Daten' ),
+		HtmlTag::create( 'h4', $words['relations']['heading'] ),
 		HTML::DivClass( 'content-panel-inner', [
 			$helperRelations->render()
 		] ),

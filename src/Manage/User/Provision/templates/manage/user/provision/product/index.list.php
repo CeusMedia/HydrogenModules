@@ -2,6 +2,8 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$w	= (object) $words['index.list'];
+
 $iconsStatus = array(
 	-1	=> HtmlTag::create( 'i', '', ['class' => 'icon-remove'] ),
 	0	=> HtmlTag::create( 'i', '', ['class' => 'icon-pencil'] ),
@@ -9,7 +11,7 @@ $iconsStatus = array(
 	2	=> HtmlTag::create( 'i', '', ['class' => 'icon-ok'] ),
 );
 
-$list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
+$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div><br/>';
 if( $licenses ){
 	$list	= [];
 	foreach( $licenses as $license ){
@@ -34,7 +36,7 @@ if( $licenses ){
 }
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', array(
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, array(
 //	'href'	=> '#modal-license-add',
 	'href'	=> './manage/catalog/provision/license/add/'.(int) $filterProductId.'/'.(int) $filterProductLicenseId,
 	'role'	=> 'button',
@@ -50,7 +52,7 @@ $pagination	= '';
 
 return '
 <div class="content-panel">
-	<h3>Benutzer-Lizenzen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span12">

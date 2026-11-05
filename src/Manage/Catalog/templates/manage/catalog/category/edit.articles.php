@@ -2,7 +2,7 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /*  --  ARTICLES IN CATEGORY  --  */
-$listArticles	= '<em class="muted">Keine vorhanden.</em>';
+$listArticles	= '<em class="muted">'.$w->noArticles.'</em>';
 if( $articles ){
 	$rows	= [];
 	foreach( $articles as $article ){
@@ -14,8 +14,8 @@ if( $articles ){
 		] );
 	}
 	$heads		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Veröffentlichung' ),
-		HtmlTag::create( 'th', 'Band', ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headArticle ),
+		HtmlTag::create( 'th', $w->headVolume, ['style' => 'text-align: right'] ),
 	] ) );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$listArticles	= HtmlTag::create( 'table', $heads.$tbody, ['class' => 'table table-striped table-small'] );

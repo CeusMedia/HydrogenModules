@@ -6,6 +6,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var Entity_Form_Mail $mail */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['view'];
 
 $modelMail	= new Model_Form_Mail( $env );
 
@@ -14,11 +17,11 @@ $iconView	= new Icon( 'eye' );
 $iconEdit	= new Icon( 'pencil' );
 $iconSave	= new Icon( 'check' );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
+$buttonCancel	= HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 	'href'	=> './manage/form/mail',
 	'class'	=> 'btn',
 ] );
-$buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', [
+$buttonEdit	= HtmlTag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, [
 	'href'	=> './manage/form/mail/edit/'.$mail->mailId,
 	'class'	=> 'btn btn-primary',
 ] );
@@ -27,7 +30,7 @@ if( $mail->format == Model_Form_Mail::FORMAT_TEXT )
 
 return HtmlTag::create( 'div', [
 	HtmlTag::create( 'div', [
-		HtmlTag::create( 'h2', '<span class="muted">Mail:</span> '.$mail->title ),
+		HtmlTag::create( 'h2', '<span class="muted">'.$w->headingPrefix.'</span> '.$mail->title ),
 	] ),
 	HtmlTag::create( 'br' ),
 	HtmlTag::create( 'div', $mail->content, [

@@ -5,6 +5,7 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 /** @var WebEnvironment $env */
 /** @var View_Manage_Bookmark $view */
+/** @var array<string,array<string,string>> $words */
 /** @var object $bookmark */
 
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'icon-list'] );
@@ -16,11 +17,13 @@ if( $env->getModules()->get( 'UI_Font_FontAwesome' ) ){
 	$iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 }
 
+$w	= (object) $words['edit'];
+
 return '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3>Lesezeichen</h3>
+			<h3>'.$words['list']['heading'].'</h3>
 			<div class="content-panel-inner">
 				'.$view->renderList( $bookmark->bookmarkId ).'
 			</div>
@@ -28,25 +31,25 @@ return '
 	</div>
 	<div class="span6">
 		<div class="content-panel">
-			<h3>Lesezeichen verändern</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./manage/bookmark/edit/'.$bookmark->bookmarkId.'" method="post">
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_url">Internet-Adresse <small class="muted">(vollständige URL)</small></label>
+							<label for="input_url">'.$w->labelUrl.' <small class="muted">'.$w->labelUrl_suffix.'</small></label>
 							<input class="span12" type="text" name="url" id="input_url" required="required" value="'.htmlentities( $bookmark->url, ENT_QUOTES, 'UTF-8' ).'">
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_title">Titel</label>
+							<label for="input_title">'.$w->labelTitle.'</label>
 							<input class="span12" type="text" name="title" id="input_title" required="required" value="'.htmlentities( $bookmark->title, ENT_QUOTES, 'UTF-8' ).'">
 						</div>
 					</div>
 					<div class="buttonbar">
-						<a class="btn btn-small" href="./manage/bookmark">'.$iconList.' Liste</a>
-						<button type="submit" name="save" class="btn not-btn-small btn-primary">'.$iconSave.' speichern</button>
-						<a class="btn btn-small btn-danger" href="./manage/bookmark/remove/'.$bookmark->bookmarkId.'">'.$iconRemove.' entfernen</a>
+						<a class="btn btn-small" href="./manage/bookmark">'.$iconList.' '.$w->buttonList.'</a>
+						<button type="submit" name="save" class="btn not-btn-small btn-primary">'.$iconSave.' '.$w->buttonSave.'</button>
+						<a class="btn btn-small btn-danger" href="./manage/bookmark/remove/'.$bookmark->bookmarkId.'">'.$iconRemove.' '.$w->buttonRemove.'</a>
 					</div>
 				</form>
 			</div>

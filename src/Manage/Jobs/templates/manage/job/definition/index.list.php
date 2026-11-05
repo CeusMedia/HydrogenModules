@@ -31,11 +31,11 @@ $buttonAdd		= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['index']['buttonAdd
 	'class'	=> 'btn btn-success',
 ] );
 
-$table	= HtmlTag::create( 'div', 'Noch keine Jobs geplant.', ['class' => 'alert'] );
+$table	= HtmlTag::create( 'div', $words['index']['noEntries'], ['class' => 'alert'] );
 
 if( $definitions ){
 	$helperTime		= new View_Helper_TimePhraser( $env );
-	$helperTime->setTemplate( '%s ago' );
+	$helperTime->setTemplate( $words['index']['timestampTemplate'] );
 	$helperTime->setMode( View_Helper_TimePhraser::MODE_BREAK );
 
 	$rows	= [];
@@ -49,7 +49,7 @@ if( $definitions ){
 		$identifier	= join( '.', $parts );
 		$link	= HtmlTag::create( 'a', $identifier, [
 			'href'		=> './manage/job/definition/view/'.$item->jobDefinitionId,
-			'title'		=> 'Details anzeigen',
+			'title'		=> $words['index']['linkTitleView'],
 		] );
 /*		$buttonEdit		= HtmlTag::create( 'a', $iconEdit, [
 			'href'		=> './manage/job/definition/edit/'.$item->jobDefinitionId,
@@ -81,8 +81,8 @@ if( $definitions ){
 		], ['class' => 'btn-group'] );*/
 
 
-		$runs	= $item->runs ? '<div>'.$item->runs.' Runs</div>' : '-';
-		$fails	= $item->fails ? '<div><span class="text-error">'.$item->fails.' Fails</span></div>' : '';
+		$runs	= $item->runs ? '<div>'.sprintf( $words['index']['labelRuns'], $item->runs ).'</div>' : '-';
+		$fails	= $item->fails ? '<div><span class="text-error">'.sprintf( $words['index']['labelFails'], $item->fails ).'</span></div>' : '';
 		$rows[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $link.'<br/><small class="muted">'.$item->className.' >> '.$item->methodName.'</small>', ['class' => ''] ),
 			HtmlTag::create( 'td', $runs.$fails, ['class' => ''] ),

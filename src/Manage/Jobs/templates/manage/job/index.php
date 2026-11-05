@@ -10,7 +10,7 @@ $panel	= '
 <div class="content-panel">
 	<h3>'.$words['index']['heading'].'</h3>
 	<div class="content-panel-inner">
-		<div class="alert alert-info">Noch keine Dashboard verfügbar.</div>
+		<div class="alert alert-info">'.$words['index']['noDashboard'].'</div>
 	</div>
 </div>';
 

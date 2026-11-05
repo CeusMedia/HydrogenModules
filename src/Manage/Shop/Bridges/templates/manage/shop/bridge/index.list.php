@@ -3,6 +3,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 //print_m( $bridges );die;
 
+/** @var array<string,array<string,string>> $words */
+$w	= (object) $words['index.list'];
+
 $list	= [];
 foreach( $bridges as $bridge ){
 	$label	= $bridge->title ?: $bridge->class;
@@ -16,11 +19,11 @@ $table	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] 
 
 return '
 <div class="content-panel">
-	<h3>Shop Bridges</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">
-			<a href="./manage/shop/bridge/add" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> add</a>
+			<a href="./manage/shop/bridge/add" class="btn btn-small btn-success"><i class="icon-plus icon-white"></i> '.$w->buttonAdd.'</a>
 		</div>
 	</div>
 </div>';

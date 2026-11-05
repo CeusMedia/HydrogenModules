@@ -14,6 +14,10 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var bool $hasFills */
 /** @var int|string|NULL $activeTab */
 /** @var array<string,string|HtmlTag> $navButtons */
+/** @var array<string> $references */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['edit'];
 
 /**
  *	@param		int|string 		$formId
@@ -33,29 +37,29 @@ function renderNavButton( int|string $formId, ?string $tabId, ?string $label, st
 $iconList	= new Icon( 'list' );
 
 $navButtons	= [
-	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
+	'list'			=> HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 		'href'		=> './manage/form',
 		'class'		=> 'btn',
 	] ),
-	'prevFacts'			=> renderNavButton( $form->formId, 'facts', 'Fakten', 'prev' ),
-	'prevView'			=> renderNavButton( $form->formId, 'view', 'Ansicht', 'prev' ),
+	'prevFacts'			=> renderNavButton( $form->formId, 'facts', $w->tabFacts, 'prev' ),
+	'prevView'			=> renderNavButton( $form->formId, 'view', $w->tabView, 'prev' ),
 //	'prevBlocks'		=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'prev' ),
-	'prevContent'		=> renderNavButton( $form->formId, 'content', 'Inhalt', 'prev' ),
-	'prevManager'		=> renderNavButton( $form->formId, 'rulesManager', 'Manager-Mail-Regeln', 'prev' ),
-	'prevCustomer'		=> renderNavButton( $form->formId, 'rulesCustomer', 'Kunden-Mail-Regeln', 'prev' ),
-	'prevTransfer'		=> renderNavButton( $form->formId, 'formTransfer', 'Transfer-Regeln', 'prev' ),
-	'prevAttachment'	=> renderNavButton( $form->formId, 'rulesAttachment', 'Anhänge', 'prev' ),
+	'prevContent'		=> renderNavButton( $form->formId, 'content', $w->tabContent, 'prev' ),
+	'prevManager'		=> renderNavButton( $form->formId, 'rulesManager', $w->tabRulesManager, 'prev' ),
+	'prevCustomer'		=> renderNavButton( $form->formId, 'rulesCustomer', $w->tabRulesCustomer, 'prev' ),
+	'prevTransfer'		=> renderNavButton( $form->formId, 'formTransfer', $w->tabRulesTransfer, 'prev' ),
+	'prevAttachment'	=> renderNavButton( $form->formId, 'rulesAttachment', $w->tabRulesAttachment, 'prev' ),
 
-	'nextView'			=> renderNavButton( $form->formId, 'view', 'Ansicht', 'next' ),
+	'nextView'			=> renderNavButton( $form->formId, 'view', $w->tabView, 'next' ),
 //	'nextBlocks'		=> renderNavButton( $form->formId, 'blocks', 'Blöcke', 'next' ),
-	'nextContent'		=> renderNavButton( $form->formId, 'content', 'Inhalt', 'next' ),
-	'nextManager'		=> renderNavButton( $form->formId, 'rulesManager', 'Manager-Mail-Regeln', 'next' ),
-	'nextCustomer'		=> renderNavButton( $form->formId, 'rulesCustomer', 'Kunden-Mail-Regeln', 'next' ),
-	'nextTransfer'		=> renderNavButton( $form->formId, 'formTransfer', 'Transfer-Regeln', 'next' ),
-	'nextAttachment'	=> renderNavButton( $form->formId, 'rulesAttachment', 'Anhänge', 'next' ),
+	'nextContent'		=> renderNavButton( $form->formId, 'content', $w->tabContent, 'next' ),
+	'nextManager'		=> renderNavButton( $form->formId, 'rulesManager', $w->tabRulesManager, 'next' ),
+	'nextCustomer'		=> renderNavButton( $form->formId, 'rulesCustomer', $w->tabRulesCustomer, 'next' ),
+	'nextTransfer'		=> renderNavButton( $form->formId, 'formTransfer', $w->tabRulesTransfer, 'next' ),
+	'nextAttachment'	=> renderNavButton( $form->formId, 'rulesAttachment', $w->tabRulesAttachment, 'next' ),
 
 
-	'nextFills'			=> renderNavButton( $form->formId, 'fills', 'Einträge', 'next' ),
+	'nextFills'			=> renderNavButton( $form->formId, 'fills', $w->tabFills, 'next' ),
 ];
 
 $panelFacts				= $view->loadTemplateFile( 'manage/form/edit.facts.php', ['navButtons' => $navButtons] );
@@ -71,24 +75,24 @@ $countRulesCustomer		= count( $rulesCustomer ) ? ' <small class="muted">('.count
 $countRulesAttachment	= count( $rulesAttachment ) ? ' <small class="muted">('.count( $rulesAttachment ).')</small>' : '';
 
 $tabs	= new Tabs( 'tabs-form' );
-$tabs->add( 'facts', '#', 'Fakten', $panelFacts );
-$tabs->add( 'view', '#', 'Ansicht', $panelView );
+$tabs->add( 'facts', '#', $w->tabFacts, $panelFacts );
+$tabs->add( 'view', '#', $w->tabView, $panelView );
 //$tabs->add( 'blocks', '#', 'Blöcke', $panelBlocksWithin );
-$tabs->add( 'content', '#', 'Inhalt', $panelContent );
-$tabs->add( 'rulesManager', '#', 'Manager-Mail-Regeln'.$countRulesManager, $panelRulesManager );
-$tabs->add( 'rulesCustomer', '#', 'Kunden-Mail-Regeln'.$countRulesCustomer, $panelRulesCustomer );
-$tabs->add( 'rulesAttachment', '#', 'Anhänge'.$countRulesAttachment, $panelRulesAttachment );
+$tabs->add( 'content', '#', $w->tabContent, $panelContent );
+$tabs->add( 'rulesManager', '#', $w->tabRulesManager.$countRulesManager, $panelRulesManager );
+$tabs->add( 'rulesCustomer', '#', $w->tabRulesCustomer.$countRulesCustomer, $panelRulesCustomer );
+$tabs->add( 'rulesAttachment', '#', $w->tabRulesAttachment.$countRulesAttachment, $panelRulesAttachment );
 
 if( count( $transferTargets ) ){
 //	$panelFormTransfer	= '...';
 	$panelFormTransfer	= $view->loadTemplateFile( 'manage/form/edit.rules.transfer.php', ['navButtons' => $navButtons] );
-	$tabs->add( 'formTransfer', '#', 'Datenweitergabe', $panelFormTransfer );
+	$tabs->add( 'formTransfer', '#', $w->tabTransfer, $panelFormTransfer );
 }
 
 $tabs->setActive( $activeTab ?: 'facts' );
 
 return '
-<h2><a href="./manage/form" class="muted">Formular:</a> '.$form->title.'</h2>'.$tabs->render().'
+<h2><a href="./manage/form" class="muted">'.$w->headingPrefix.'</a> '.$form->title.'</h2>'.$tabs->render().'
 <script>
 jQuery(document).ready(function(){
 	let formId = '.$form->formId.';

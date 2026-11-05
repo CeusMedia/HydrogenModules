@@ -263,7 +263,7 @@ class Controller_Manage_Content_Locale extends Controller
 							];
 						}
 						catch ( FileNotExistingException $e ){
-							$this->messenger->noteError( 'Error: '.$e->getResource() );
+							$this->messenger->noteError( sprintf( $this->getWords( 'msg' )['errorError'], $e->getResource() ) );
 						}
 					}
 				}

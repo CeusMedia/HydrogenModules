@@ -102,7 +102,7 @@ $panelEdit	= '
 		<form name="" action="./manage/project/edit/'.$project->projectId.'" method="post">
 			<div class="row-fluid">
 				<div class="span12 autocut">
-					<span class="muted">Projekt:</span> <big><strong>'.$project->title.'</strong></big>
+					<span class="muted">'.$w->headingPrefix.'</span> <big><strong>'.$project->title.'</strong></big>
 				</div>
 			</div>
 			<div class="row-fluid">
@@ -145,7 +145,7 @@ $panelEdit	= '
 				</div>
 			</div>
 <!--			<li class="">
-				<label for="input_companyId">Unternehmen</label>
+				<label for="input_companyId">'.$w->labelCompanyId.'</label>
 				<select name="companyId" id="input_companyId" class="max">'.$optCompany.'</select>
 			</li>-->
 		</form>

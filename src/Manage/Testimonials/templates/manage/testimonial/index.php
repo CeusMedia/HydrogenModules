@@ -4,17 +4,14 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$optStatus	= [
-	0	=> 'nicht sichtbar',
-	1	=> 'sichtbar',
-];
+$optStatus	= $words['states'];
 
-$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> neuer Eintrag', [
+$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, [
 	'href'	=> './manage/testimonial/add',
 	'class'	=> 'btn btn-small btn-success',
 ] );
 
-$list	= '<div class="muted"><em>Keine gefunden.</em></div>';
+$list	= '<div class="muted"><em>'.$w->noEntries.'</em></div>';
 if( $testimonials ){
 	$list	= [];
 	foreach( $testimonials as $testimonial ){
@@ -30,7 +27,7 @@ if( $testimonials ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['', '20%', '15%', '20%'] );
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Überschrift', 'Autor', 'Zustand', 'Zeitpunkt'
+		$w->headTitle, $w->headAuthor, $w->headStatus, $w->headDatetime
 	] ) );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );

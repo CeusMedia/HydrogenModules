@@ -12,11 +12,12 @@ class View_Manage_Content extends View
 	public function renderTabs(): string
 	{
 		$current	= $this->env->getRequest()->get( '__controller' );
+		$words		= $this->env->getLanguage()->getSection( 'manage/content', 'tabs' );
 		$tabs	    = [
-			'manage/content'			=> 'Übersicht',
-			'manage/content/link'		=> 'Links',
-			'manage/content/document'	=> 'Dokumente',
-			'manage/content/image'		=> 'Bilder',
+			'manage/content'			=> $words['index'],
+			'manage/content/link'		=> $words['link'],
+			'manage/content/document'	=> $words['document'],
+			'manage/content/image'		=> $words['image'],
 		];
 		$list   = [];
 		foreach( $tabs as $key => $value ){

@@ -32,7 +32,7 @@ if( $useProjects )
 $tabs		= View_Manage_Customer::renderTabs( $env, $customerId );
 
 return '
-<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
+<h3><span class="muted">'.$words['edit']['headingPrefix'].'</span> '.$customer->title.'</h3>
 '.$tabs.'
 <div class="content-panel">
 	<div class="content-panel-inner">

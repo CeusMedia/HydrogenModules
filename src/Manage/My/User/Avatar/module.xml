@@ -4,7 +4,7 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Manage: My User Avatar</title>
 	<description>Extends own user management by avatar settings.</description>
-	<version>0.4.7</version>
+	<version>0.4.8</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Support tabs.</log>
@@ -20,6 +20,7 @@
 	<log version="0.4.5">Add tab icon.</log>
 	<log version="0.4.6">Use UUID as filename.</log>
 	<log version="0.4.7">Add hook for user removal.</log>
+	<log version="0.4.8">Extract hard-coded texts to locales (de, en).</log>
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>

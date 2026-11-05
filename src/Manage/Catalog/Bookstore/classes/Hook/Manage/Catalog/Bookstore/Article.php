@@ -31,8 +31,9 @@ class Hook_Manage_Catalog_Bookstore_Article extends Hook
 			}
 			$cache->set( 'catalog.tinymce.images.catalog.bookstore.articles', $list );
 		}
+		$words	= $this->env->getLanguage()->getWords( 'manage/catalog/bookstore' );
 		$this->context->list	= array_merge( $this->context->list, [(object) [				//  extend global collection by submenu with list of items
-			'title'	=> 'Veröffentlichungen:',									//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['articles'],					//  label of submenu
 			'menu'	=> array_values( $list ),									//  items of submenu
 		]] );
 	}

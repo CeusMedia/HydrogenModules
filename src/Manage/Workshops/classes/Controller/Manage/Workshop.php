@@ -11,6 +11,7 @@ class Controller_Manage_Workshop extends Controller
 	protected PartitionSession $session;
 	protected MessengerResource $messenger;
 	protected Model_Workshop $model;
+	protected object $words;
 
 	/**
 	 *	@return		void
@@ -23,7 +24,7 @@ class Controller_Manage_Workshop extends Controller
 				'modifiedAt'	=> time(),
 			) );
 			$workshopId	= $this->model->add( $data, FALSE );
-			$this->messenger->noteSuccess( 'Added.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$this->restart( './edit/'.$workshopId, TRUE );
 		}
 		$data	= [];
@@ -48,12 +49,12 @@ class Controller_Manage_Workshop extends Controller
 	{
 		$workshop	= $this->model->get( $workshopId );
 		if( !$workshop ){
-			$this->messenger->noteError( 'Invalid workshop ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() && $this->request->has( 'save' ) ){
 			$this->model->edit( $workshopId, $this->request->getAll(), FALSE );
-			$this->messenger->noteSuccess( 'Updated.' );
+			$this->messenger->noteSuccess( $this->words->successUpdated );
 			$this->restart( './edit/'.$workshopId, TRUE );
 		}
 		$this->addData( 'workshop', $workshop );
@@ -74,11 +75,11 @@ class Controller_Manage_Workshop extends Controller
 	{
 		$workshop	= $this->model->get( $workshopId );
 		if( !$workshop ){
-			$this->messenger->noteError( 'Invalid workshop ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		$this->model->remove( $workshopId );
-		$this->messenger->noteSuccess( 'Removed.' );
+		$this->messenger->noteSuccess( $this->words->successRemoved );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -87,6 +88,7 @@ class Controller_Manage_Workshop extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
 		$this->model		= new Model_Workshop( $this->env );
 
 		$moduleConfigTinyMce	= $this->env->getConfig()->getAll( 'module.js_tinymce.auto.', TRUE );

@@ -99,7 +99,7 @@ $panelEdit	= HTML::DivClass( 'content-panel',
 			).
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',
-					HTML::Label( 'url', 'Beschreibung' ).
+					HTML::Label( 'url', $w->labelDescription ).
 					HtmlTag::create( 'textarea', $branch->description, [
 						'name'	=> 'description',
 						'id'	=> 'input_description',

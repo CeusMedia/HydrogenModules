@@ -53,10 +53,10 @@ class Controller_Manage_Group extends Controller
 						$this->restart( NULL, TRUE );
 				}
 				else
-					$this->messenger->noteError( 'group_title_existing' );
+					$this->messenger->noteError( $words['add']['msgError-2'] );
 			}
 			else
-				$this->messenger->noteError( 'group_title_missing' );
+				$this->messenger->noteError( $words['add']['msgError-1'] );
 		}
 
 		$postDataArray	= $this->request->getAllFromSource( 'POST' );

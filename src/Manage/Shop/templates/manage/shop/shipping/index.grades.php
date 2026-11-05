@@ -5,6 +5,9 @@ use CeusMedia\Common\UI\HTML\Tag as Html;
 
 /** @var object $zones */
 /** @var object $grades */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['grades'];
 
 $iconRemove	= Html::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
@@ -31,7 +34,7 @@ $listZones	= Html::create( 'table', [$thead, $tbody], ['class' => 'table table-c
 $modalBody	= Html::create( 'div', array(
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Titel', ['class' => 'mandatory required'] ),
+			Html::create( 'label', $w->labelTitle, ['class' => 'mandatory required'] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'title',
@@ -43,7 +46,7 @@ $modalBody	= Html::create( 'div', array(
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Gewicht in Gramm' ),
+			Html::create( 'label', $w->labelWeight ),
 			Html::create( 'div', array(
 				Html::create( 'div', array(
 					Html::create( 'input', NULL, [
@@ -62,7 +65,7 @@ $modalBody	= Html::create( 'div', array(
 							'value'		=> 1,
 							'oninput'	=> 'ModuleManageShopShipping.toggleModalWeight()',
 						) ),
-						'&nbsp;alles Andere'
+						'&nbsp;'.$w->labelFallback
 					) ), ['class' => 'checkbox'] ),
 				), ['class' => 'span6'] ),
 			) ),
@@ -70,28 +73,28 @@ $modalBody	= Html::create( 'div', array(
 	), ['class' => 'row-fluid'] ),
 	Html::create( 'div', array(
 		Html::create( 'div', array(
-			Html::create( 'label', 'Preise' ),
+			Html::create( 'label', $w->labelPrices ),
 			$listZones
 		), ['class' => 'span12'] ),
 	), ['class' => 'row-fluid'] ),
 ) );
 $modalGrade	= new BootstrapModalDialog( 'modalAddGrade' );
-$modalGrade->setBody( $modalBody )->setHeading( 'Neue Gewichtsklasse' );
+$modalGrade->setBody( $modalBody )->setHeading( $w->modalHeading );
 $modalGrade->setFormAction( './manage/shop/shipping/addGrade' );
 $modalGrade->setSubmitButtonClass( 'btn btn-primary' );
-$modalGrade->setSubmitButtonLabel( 'speichern' );
+$modalGrade->setSubmitButtonLabel( $w->buttonSave );
 $modalGrade->setSubmitButtonIconClass( 'fa fa-fw fa-check' );
 $modalGrade->setCloseButtonClass( 'btn' );
-$modalGrade->setCloseButtonLabel( 'abbrechen' );
+$modalGrade->setCloseButtonLabel( $w->buttonCancel );
 $modalGrade->setCloseButtonIconClass( 'fa fa-fw fa-arrow-left' );
 
 $modalGradeTrigger	= new BootstrapModalTrigger( 'modalAddGrade' );
-$modalGradeTrigger->setLabel( 'neue Gewichtsklasse' )->setIcon( 'fa fa-fw fa-plus' );
+$modalGradeTrigger->setLabel( $w->buttonAdd )->setIcon( 'fa fa-fw fa-plus' );
 $modalGradeTrigger->setAttributes( ['class' => 'btn btn-success'] );
 
 $rows	= [];
 foreach( $grades as $grade ){
-	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;entfernen', ['href' => './manage/shop/shipping/removeGrade/'.$grade->gradeId, 'class' => 'btn btn-danger btn-small'] );
+	$buttonRemove	= Html::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, ['href' => './manage/shop/shipping/removeGrade/'.$grade->gradeId, 'class' => 'btn btn-danger btn-small'] );
 	$buttonRemove	= Html::create( 'a', $iconRemove, ['href' => './manage/shop/shipping/removeGrade/'.$grade->gradeId, 'class' => 'btn btn-inverse btn-mini'] );
 	$weight			= $grade->weight.' g';
 	if( $grade->fallback )
@@ -102,12 +105,12 @@ foreach( $grades as $grade ){
 		Html::create( 'td', $buttonRemove, ['style' => 'text-align: right'] ),
 	) );
 }
-$thead	= Html::create( 'tr', [Html::create( 'th', 'Titel' ), Html::create( 'th', 'Maximalgewicht' )] );
+$thead	= Html::create( 'tr', [Html::create( 'th', $w->headTitle ), Html::create( 'th', $w->headWeight )] );
 $thead	= Html::create( 'thead', $thead );
 $tbody	= Html::create( 'tbody', $rows );
 $table	= Html::create( 'table', [$thead, $tbody], ['class' => 'table'] );
 $panelGrades	= Html::create( 'div', array(
-	Html::create( 'h3', 'Gewichtsklassen' ),
+	Html::create( 'h3', $w->heading ),
 	Html::create( 'div', array(
 		$table,
 		Html::create( 'div', $modalGradeTrigger, ['class' => 'buttonbar'] ),

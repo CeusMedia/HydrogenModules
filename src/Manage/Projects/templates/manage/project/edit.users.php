@@ -61,9 +61,9 @@ foreach( $users as $user )
 			$optUser[$user->userId]	= $user->username;
 $optUser	= HtmlElements::Options( $optUser );
 
-$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary' );
+$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary' );
 if( !$canEdit )
-	$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' hinzufügen', 'btn btn-small btn-primary disabled', NULL, TRUE );
+	$buttonAdd	= HtmlElements::Button( 'addUser', $iconAdd.' '.$w->buttonAdd, 'btn btn-small btn-primary disabled', NULL, TRUE );
 
 return '
 <div class="content-panel content-panel-form">
@@ -78,7 +78,7 @@ return '
 			<br/>
 			<div class="row-fluid">
 				<div class="span12">
-					<label class="not-mandatory">Benutzer</label>
+					<label class="not-mandatory">'.$w->labelUser.'</label>
 					<select name="userId" id="input_userId" class="span12 max not-mandatory">'.$optUser.'</select>
 				</div>
 			</div>

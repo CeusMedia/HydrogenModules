@@ -11,7 +11,7 @@ $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] )
 
 $w			= (object) $words['filter'];
 
-$optStatuses	= ['' => '- alle -'];
+$optStatuses	= ['' => $w->optionAll];
 foreach( $words['states'] as $key => $value )
 	$optStatuses[$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatuses, $filterStatus );

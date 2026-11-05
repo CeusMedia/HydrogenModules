@@ -1,18 +1,22 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
-$subject	= 'Einladung zu "%s"';
+$w			= (object) $words['invite'];
+
+$subject	= $w->subject;
 $subject	= sprintf( $subject, $config->get( 'app.name' ) );
 if( $request->get( 'subject' ) )
 	$subject	= $request->get( 'subject' );
-$message	= 'Hallo!
-
-Ich lade dich hiermit ein, bei "%1$s" teilzunehmen.
-Du bekommst dazu einen meiner exklusiven Einladungs-Codes.
-Klicke den unten stehenden Link, um zur Registrierung zu kommen.
-
-Liebe Grüße,
-%2$s';
+$message	= join( "\n", [
+	$w->messageGreeting,
+	'',
+	$w->messageText1,
+	$w->messageText2,
+	$w->messageText3,
+	'',
+	$w->messageClosing,
+	'%2$s',
+] );
 if( $request->get( 'message' ) )
 	$message	= $request->get( 'message' );
 $userName	= $user->username;
@@ -36,28 +40,28 @@ return '
 <div class="column-left-70">
 	<form action="./manage/my/user/invite/invite" method="post">
 		<fieldset>
-			<legend class="icon edit">Einladung</legend>
+			<legend class="icon edit">'.$w->legend.'</legend>
 			<ul class="input">
 				<li class="column-left-30">
-					<label for="input_email" class="mandatory">E-Mail-Adresse</label><br/>
+					<label for="input_email" class="mandatory">'.$w->labelEmail.'</label><br/>
 					<input type="text" name="email" id="input_email" class="max mandatory" value="'.htmlentities( $request->get( 'email' ), ENT_COMPAT, 'UTF-8' ).'"/>
 				</li>
 				<li class="column-left-40">
-					<label for="input_subject" class="not-mandatory">Betreff</label><br/>
+					<label for="input_subject" class="not-mandatory">'.$w->labelSubject.'</label><br/>
 					<input type="text" name="subject" id="input_subject" class="max mandatory" value="'.htmlentities( $subject, ENT_COMPAT, 'UTF-8' ).'"/>
 				</li>
 				<li class="column-left-30">
-					<label for="input_projectId" class="">Projekt</label><br/>
+					<label for="input_projectId" class="">'.$w->labelProject.'</label><br/>
 					<select name="projectId" id="input_projectId" class="max">'.$optProject.'</select>
 				</li>
 				<li>
-					<label for="input_message" class="not-mandatory">Nachricht <small>(Link zur Registrierung wird automatisch eingetragen)</small></label><br/>
+					<label for="input_message" class="not-mandatory">'.$w->labelMessage.' <small>'.$w->labelMessageHint.'</small></label><br/>
 					<textarea name="message" id="input_message" class="max mandatory" rows="10">'.$message.'</textarea>
 				</li>
 			</ul>
 			<div class="buttonbar">
-				'.HtmlElements::LinkButton( './manage/my/user/invite', 'zurück', 'button cancel' ).'
-				'.HtmlElements::Button( 'send', 'senden', 'button save' ).'
+				'.HtmlElements::LinkButton( './manage/my/user/invite', $w->buttonCancel, 'button cancel' ).'
+				'.HtmlElements::Button( 'send', $w->buttonSend, 'button save' ).'
 			</div>
 		</fieldset>
 	</form>

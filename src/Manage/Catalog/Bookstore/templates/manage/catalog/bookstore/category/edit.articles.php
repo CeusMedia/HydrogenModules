@@ -10,7 +10,7 @@ $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
 $iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
 
 /*  --  ARTICLES IN CATEGORY  --  */
-$listArticles	= '<em class="muted">Keine vorhanden.</em>';
+$listArticles	= '<em class="muted">'.$w->noArticles.'</em>';
 if( $articles ){
 	$rows	= [];
 	foreach( $articles as $article ){
@@ -32,9 +32,9 @@ if( $articles ){
 		] );
 	}
 	$heads		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Veröffentlichung' ),
-		HtmlTag::create( 'th', 'Band', ['style' => 'text-align: right'] ),
-		HtmlTag::create( 'th', 'Rank' ),
+		HtmlTag::create( 'th', $w->headArticle ),
+		HtmlTag::create( 'th', $w->headVolume, ['style' => 'text-align: right'] ),
+		HtmlTag::create( 'th', $w->headRank ),
 	] ) );
 	$tbody			= HtmlTag::create( 'tbody', $rows );
 	$colgroup		= HtmlElements::ColumnGroup( ['', '20%', '15%'] );

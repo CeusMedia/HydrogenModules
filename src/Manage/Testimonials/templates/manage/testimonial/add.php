@@ -7,7 +7,7 @@ $optStatus	= HtmlElements::Options( $words['states'], $testimonial->status );
 
 $panelContent = '
 <div class="content-panel content-panel-form">
-	<h3>Neuer Eintrag</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/testimonial/add" method="post">
 			<div class="row-fluid">

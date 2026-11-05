@@ -9,6 +9,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array<Entity_Form> $withinForms */
 /** @var array<Entity_Form_Block> $withinBlocks */
 /** @var array<string,Entity_Form_Block> $blocksByIdentifier */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['edit'];
 
 $iconList	= new Icon( 'list' );
 $iconView	= new Icon( 'eye' );
@@ -17,7 +20,7 @@ $iconRemove	= new Icon( 'trash' );
 $iconBlock	= new Icon( 'square' );
 $iconForm	= new Icon( 'th' );
 
-$listWithinForms	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
+$listWithinForms	= HtmlTag::create( 'p', '<em class="muted">'.$w->noEntries.'</em>' );
 if( $withinForms ){
 	$list	= [];
 	foreach( $withinForms as $item ){
@@ -29,7 +32,7 @@ if( $withinForms ){
 	$listWithinForms	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
-$listWithinBlocks	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
+$listWithinBlocks	= HtmlTag::create( 'p', '<em class="muted">'.$w->noEntries.'</em>' );
 if( $withinBlocks ){
 	$list	= [];
 	foreach( $withinBlocks as $item ){
@@ -41,7 +44,7 @@ if( $withinBlocks ){
 	$listWithinBlocks	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 
-$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">Keine.</em>' );
+$listBlocksWithin	= HtmlTag::create( 'p', '<em class="muted">'.$w->noEntries.'</em>' );
 $matches		= [];
 preg_match_all( '/\[block_(\S+)\]/', $block->content, $matches );
 if( isset( $matches[0] ) && count( $matches[0] ) ){
@@ -62,35 +65,35 @@ if( isset( $matches[0] ) && count( $matches[0] ) ){
 $env->getPage()->js->addScriptOnReady('FormEditor.applyAceEditor("#input_content");');
 
 return '
-<h2><span class="muted">Block:</span> '.$block->title.'</h2>
+<h2><span class="muted">'.$w->headingPrefix.'</span> '.$block->title.'</h2>
 <div class="content-panel">
 	<div class="content-panel-inner">
 		<form action="./manage/form/block/edit/'.$block->blockId.'" method="post">
 			<div class="row-fluid">
 				<div class="span6">
-					<label for="input_title" class="mandatory">Titel</label>
+					<label for="input_title" class="mandatory">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $block->title, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 				<div class="span6">
-					<label for="input_identifier" class="mandatory">Shortcode</label>
+					<label for="input_identifier" class="mandatory">'.$w->labelIdentifier.'</label>
 					<input type="text" name="identifier" id="input_identifier" class="span12" value="'.htmlentities( $block->identifier, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 				</div>
 			</div>
 			<div class="row-fluid" style="margin-bottom: 1em">
 				<div class="span12">
-					<label for="input_content">Inhalt</label>
+					<label for="input_content">'.$w->labelContent.'</label>
 					<textarea name="content" id="input_content" class="span12" rows="25">'.htmlentities( $block->content, ENT_QUOTES, 'UTF-8' ).'</textarea>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/form/block" class="btn">'.$iconList.' zur Liste</a>
-				<a href="./manage/form/block/view/'.$block->blockId.'" class="btn btn-info">'.$iconView.' anzeigen</a>
-				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' speichern</button>
-				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+				<a href="./manage/form/block" class="btn">'.$iconList.' '.$w->buttonList.'</a>
+				<a href="./manage/form/block/view/'.$block->blockId.'" class="btn btn-info">'.$iconView.' '.$w->buttonView.'</a>
+				<button type="submit" name="save" class="btn btn-primary">'.$iconSave.' '.$w->buttonSave.'</button>
+				'.HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 					'href'		=> ( $withinForms || $withinBlocks ) ? NULL : './manage/form/block/remove/'.$block->blockId,
 					'class'		=> 'btn btn-danger',
 					'disabled'	=> ( $withinForms || $withinBlocks ) ? 'disabled' : NULL,
-					'onclick'	=> 'return confirm("Wirklich ?");',
+					'onclick'	=> 'return confirm('.json_encode( $w->buttonRemoveConfirm ).');',
 				] ).'
 			</div>
 		</form>
@@ -101,15 +104,15 @@ return '
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span6">
-				<h4>Verwendung in Formularen</h4>
+				<h4>'.$w->headingWithinForms.'</h4>
 				'.$listWithinForms.'
 			</div>
 			<div class="span3">
-				<h4>Verwendung in Blöcken</h4>
+				<h4>'.$w->headingWithinBlocks.'</h4>
 				'.$listWithinBlocks.'
 			</div>
 			<div class="span3">
-				<h4>Verwendete Blöcke</h4>
+				<h4>'.$w->headingBlocksWithin.'</h4>
 				'.$listBlocksWithin.'
 			</div>
 		</div>

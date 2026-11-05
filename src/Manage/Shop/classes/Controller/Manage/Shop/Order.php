@@ -4,9 +4,10 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 {
 	public function edit( $orderId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		if( !$order ){
-			$this->env->getMessenger()->noteError( 'Invalid order ID.' );
+			$this->env->getMessenger()->noteError( $words->errorInvalidOrderId );
 			$this->restart( NULL, TRUE );
 		}
 		foreach( $order->positions as $nr => $position ){
@@ -17,7 +18,7 @@ class Controller_Manage_Shop_Order extends Controller_Manage_Shop
 				$order->positions[$nr]->article	= $this->logicBridge->getArticle( $bridgeId, $position->articleId );
 			}
 			else{
-				$this->messenger->noteNotice( "This order contains articles, which has been removed from catalog. Therefore these articles are not shown here." );
+				$this->messenger->noteNotice( $words->noticeArticlesRemoved );
 				unset( $order->positions[$nr] );
 			}
 		}

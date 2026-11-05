@@ -12,13 +12,13 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 
 $w				= (object) $words['index.filter'];
 
-$optStatus		= ['' => '- alle -'] + $words['states'];
+$optStatus		= ['' => $w->optionAll] + $words['states'];
 $inputStatus	= HtmlTag::create( 'select', HtmlElements::Options( $optStatus, $filterStatus ), [
 	'name'	=> 'status',
 	'id'	=> 'input_status',
 ] );
 
-$optCategory	= ['' => '- alle -'];
+$optCategory	= ['' => $w->optionAll];
 foreach( $categories as $item )
 	$optCategory[$item->categoryId]	= $item->title;
 $inputCategoryId	= HtmlTag::create( 'select', HtmlElements::Options( $optCategory, $filterCategoryId ), [

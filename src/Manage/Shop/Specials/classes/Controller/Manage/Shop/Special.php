@@ -43,7 +43,7 @@ class Controller_Manage_Shop_Special extends Controller
 				'modifiedAt'	=> time(),
 			);
 			$specialId	= $this->modelSpecial->add( $data );
-			$this->messenger->noteSuccess( 'Spezialität hinzugefügt.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successAdded'] );
 			$this->restart( 'edit/'.$specialId, TRUE );
 		}
 		$this->addData( 'specials', $this->modelSpecial->getAll() );
@@ -52,7 +52,7 @@ class Controller_Manage_Shop_Special extends Controller
 	public function edit( string $specialId ): void
 	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
-			$this->messenger->noteError( 'Ungültige ID.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorIdInvalid'] );
 			$this->restart( NULL, TRUE );
 		}
 		$bridge	= $this->logicBridge->getBridge( $special->bridgeId );
@@ -82,7 +82,7 @@ class Controller_Manage_Shop_Special extends Controller
 
 		if( $this->request->getMethod()->isPost() ){
 			$specialId	= $this->modelSpecial->add( [] );
-			$this->messenger->noteSuccess( 'Spezialität hinzugefügt.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successAdded'] );
 			$this->restart( 'edit/'.$specialId, TRUE );
 		}
 		$this->addData( 'specials', $this->modelSpecial->getAll() );
@@ -96,7 +96,7 @@ class Controller_Manage_Shop_Special extends Controller
 	public function removeStyleFile( $specialId, $nr ): void
 	{
 		if( !( $special = $this->checkId( $specialId, FALSE ) ) ){
-			$this->messenger->noteError( 'Ungültige ID.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorIdInvalid'] );
 			$this->restart( NULL, TRUE );
 		}
 		if( !strlen( trim( $special->styleFiles ) ) )

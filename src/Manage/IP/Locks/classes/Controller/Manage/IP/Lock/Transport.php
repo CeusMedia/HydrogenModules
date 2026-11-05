@@ -63,14 +63,15 @@ class Controller_Manage_IP_Lock_Transport extends Controller
 //		print_m( $this->env->getRequest()->getAll() );
 
 		$upload	= new Logic_Upload( $this->env );
+		$words	= (object) $this->getWords( 'msg' );
 		try{
 			$upload->setUpload( $request->get( 'upload' ) );
 			if( !$upload->checkSize( '1MB' ) )
-				throw new RuntimeException( 'Die Datei ist zu groß (max. 1MB)' );
+				throw new RuntimeException( $words->errorFileTooLarge );
 			if( !$upload->checkExtension( ['json'] ) )
-				throw new RuntimeException( 'Die Datei muss eine JSON-Datei sein (endet auf <tt>.json</tt>)' );
+				throw new RuntimeException( $words->errorNoJsonFile );
 			if( !$upload->checkMimeType( ['application/json'] ) )
-				throw new RuntimeException( 'Datei muss Daten im JSON-Format beinhalten.' );
+				throw new RuntimeException( $words->errorNoJsonData );
 			if( !$upload->getError() ){
 				$data	= json_decode( $upload->getContent(), FALSE );
 				$reset	= 'fresh' === $request->get( 'type', 'merge' );

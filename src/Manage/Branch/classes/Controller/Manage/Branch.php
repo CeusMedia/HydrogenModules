@@ -13,7 +13,7 @@ class Controller_Manage_Branch extends Controller
 		$model			= new Model_Branch( $this->env );
 		$model->edit( $branchId, ['status' => 1] );
 		$branch			= $model->get( $branchId );
-		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" aktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successActivated'], $branch->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -24,7 +24,7 @@ class Controller_Manage_Branch extends Controller
 		$model			= new Model_Branch( $this->env );
 		$model->edit( $branchId, ['status' => -1] );
 		$branch			= $model->get( $branchId );
-		$messenger->noteSuccess( 'Filiale "'.$branch->title.'" deaktiviert.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successDeactivated'], $branch->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -62,20 +62,21 @@ class Controller_Manage_Branch extends Controller
 			'uploadedAt'	=> time()
 		];
 		$model->add( $data );
-		$messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
+		$messenger->noteSuccess( $this->getWords( 'msg' )['successImageUploaded'] );
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
 
 	public function removeImage( $branchId, $imageId ){
 		$messenger		= $this->env->getMessenger();
+		$words			= (object) $this->getWords( 'msg' );
 		$model			= new Model_Branch_Image( $this->env );
 		$image			= $model->get( $imageId );
 		if( !$image )
-			$messenger->noteFailure( 'Invalid imageId' );
+			$messenger->noteFailure( $words->errorImageInvalid );
 		if( !$messenger->gotError() ){
 			@unlink( './images/branches/'.$image->filename);
 			$model->remove( $imageId );
-			$messenger->noteSuccess( 'Das Bild "'.$image->title.'" wurde entfernt.' );
+			$messenger->noteSuccess( $words->successImageRemoved, $image->title );
 		}
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}
@@ -106,7 +107,7 @@ class Controller_Manage_Branch extends Controller
 			if( !$messenger->gotError() ){
 				$data['createdAt']	= time();
 				$model->add( $data );
-				$messenger->noteSuccess( 'Added: '.$data['title'] );
+				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
 				$this->restart( NULL, TRUE );
 			}
 		}
@@ -123,15 +124,16 @@ class Controller_Manage_Branch extends Controller
 	{
 		$request		= $this->env->getRequest();
 		$messenger		= $this->env->getMessenger();
+		$words			= (object) $this->getWords( 'msg' );
 		$model			= new Model_Branch( $this->env );
 		$data			= $model->get( $branchId );
 		if( !$data ){
-			$messenger->noteError( 'Invalid ID: '.$branchId );
+			$messenger->noteError( $words->errorInvalidId, $branchId );
 			$this->restart( NULL, TRUE );
 			return;
 		}
 		$model->remove( $branchId );
-		$messenger->noteSuccess( 'Removed: '.$data['title'] );
+		$messenger->noteSuccess( $words->successRemoved, $data['title'] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -164,7 +166,7 @@ class Controller_Manage_Branch extends Controller
 			if( !$messenger->gotError() ){
 				$data['modifiedAt']	= time();
 				$modelBranch->edit( $branchId, $data );
-				$messenger->noteSuccess( 'Updated: '.$data['title'] );
+				$messenger->noteSuccess( $words->msgSuccess, $data['title'] );
 				$modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( NULL, TRUE );
 			}
@@ -186,7 +188,7 @@ class Controller_Manage_Branch extends Controller
 	}
 
 	public function filter(){
-		$this->env->getMessenger()->noteSuccess( "Companies have been filtered." );
+		$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successFiltered'] );
 		$this->restart( NULL, TRUE );
 	}
 

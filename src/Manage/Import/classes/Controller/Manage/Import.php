@@ -45,7 +45,7 @@ class Controller_Manage_Import extends Controller
 		/** @var Entity_Import_Connection $connection */
 		$connection	= $this->modelConnection->get( $connectionId );
 		if( NULL === $connection ){
-			$this->env->getMessenger()->noteError( 'Invalid Connection ID' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 

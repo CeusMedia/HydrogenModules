@@ -32,7 +32,7 @@ class Controller_Manage_Customer_Rating extends Controller
 				'timestamp'		=> time()
 			);
 			$this->modelRating->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
+			$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successSaved'] );
 			$this->restart( './manage/customer/rating/'.$customerId );
 		}
 		$this->addData( 'customerId', $customerId );

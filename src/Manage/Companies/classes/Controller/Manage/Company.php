@@ -14,12 +14,13 @@ class Controller_Manage_Company extends Controller
 
 	public function activate( $companyId )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, [
 			'status'		=> 2,
 			'modifiedAt'	=> time()
 		] );
-		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" aktiviert.' );
+		$this->messenger->noteSuccess( $words->successActivated, $company->title );
 		$this->restart( './manage/company' );
 	}
 
@@ -57,12 +58,13 @@ class Controller_Manage_Company extends Controller
 
 	public function deactivate( $companyId )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, [
 			'status'	=> -2,
 			'modifiedAt' => time()
 		] );
-		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" deaktiviert.' );
+		$this->messenger->noteSuccess( $words->successDeactivated, $company->title );
 		$this->restart( './manage/company' );
 	}
 
@@ -108,7 +110,8 @@ class Controller_Manage_Company extends Controller
 
 	public function filter()
 	{
-		$this->messenger->noteSuccess( "Companies have been filtered." );
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successFiltered );
 		$this->restart( './manage/company' );
 	}
 
@@ -119,17 +122,19 @@ class Controller_Manage_Company extends Controller
 
 	public function reject( $companyId )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$this->modelCompany->edit( $companyId, [
 			'status'	=> -1,
 			'modifiedAt' => time()
 		] );
-		$this->messenger->noteSuccess( 'Unternehmen "'.$company->title.'" abgelehnt.' );
+		$this->messenger->noteSuccess( $words->successRejected, $company->title );
 		$this->restart( './manage/company' );
 	}
 
 	public function remove( $companyId )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$payload	= ['companyId' => $companyId];
 		$this->env->getCaptain()->callHook( 'Company', 'remove', $this, $payload );
@@ -138,12 +143,13 @@ class Controller_Manage_Company extends Controller
 		$modelUser		= new Model_Company_User( $this->env );
 		$modelUser->removeByIndex( 'companyId', $companyId );
 		$this->modelCompany->remove( $companyId );
-		$this->messenger->noteSuccess( 'Removed: '.$company->title );
+		$this->messenger->noteSuccess( $words->successRemoved, $company->title );
 		$this->restart( './manage/company' );
 	}
 
 	public function uploadLogo( $companyId )
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
 		try{
@@ -152,9 +158,9 @@ class Controller_Manage_Company extends Controller
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
-				$this->messenger->noteError( 'Das ist kein Bild.' );
+				$this->messenger->noteError( $words->errorNoImage );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration
-				$this->messenger->noteError( 'Das Bild ist zu groß.' );
+				$this->messenger->noteError( $words->errorImageTooLarge );
 			else{
 				$extension	= pathinfo( $image['name'], PATHINFO_EXTENSION );
 				$imageName	= $companyId.'_'.md5( time() ).'.'.$extension;
@@ -174,11 +180,11 @@ class Controller_Manage_Company extends Controller
 				if( $company->logo )
 					unlink( $imagePath.$company->logo );
 				$this->modelCompany->edit( $companyId, $data );
-				$this->messenger->noteSuccess( 'Das Bild wurde hochgeladen und gespeichert.' );
+				$this->messenger->noteSuccess( $words->successLogoUploaded );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}

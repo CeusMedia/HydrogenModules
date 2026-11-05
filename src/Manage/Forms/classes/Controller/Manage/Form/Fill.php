@@ -106,7 +106,8 @@ class Controller_Manage_Form_Fill extends Controller
 
 		$this->logicFill->sendCustomerResultMail( $fill );
 //		$this->logicFill->sendManagerResultMails( $fill );
-		$this->env->getMessenger()->noteSuccess( 'Result-Mails versendet' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->env->getMessenger()->noteSuccess( $words->successResultMailsSent );
 		$this->restart( 'view/'.$fillId, TRUE );
 	}
 

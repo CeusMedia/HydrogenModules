@@ -45,7 +45,8 @@ class Controller_Manage_Company_Branch extends Controller
 			'modifiedAt'	=> time(),
 		] );
 		$branch		= $this->modelBranch->get( $branchId );
-		$this->messenger->noteSuccess( 'Filiale "%s" aktiviert.', $branch->title );
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successActivated, $branch->title );
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
@@ -56,7 +57,8 @@ class Controller_Manage_Company_Branch extends Controller
 			'modifiedAt'	=> time(),
 		] );
 		$branch		= $this->modelBranch->get( $branchId );
-		$this->messenger->noteSuccess( 'Filiale "%s" deaktiviert.', $branch->title );
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successDeactivated, $branch->title );
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}
 
@@ -67,7 +69,8 @@ class Controller_Manage_Company_Branch extends Controller
 			'modifiedAt'	=> time(),
 		] );
 		$branch		= $this->modelBranch->get( $branchId );
-		$this->messenger->noteSuccess( 'Filiale "%s" deaktiviert.', $branch->title );
+		$words		= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successRejected, $branch->title );
 		$this->restart( './manage/company/branch' );
 	}
 
@@ -94,7 +97,7 @@ class Controller_Manage_Company_Branch extends Controller
 			if( !$this->messenger->gotError() ){
 				$data['createdAt']	= time();
 				$branchId	= $this->modelBranch->add( $data );
-				$this->messenger->noteSuccess( 'Added: '.$data['title'] );
+				$this->messenger->noteSuccess( $words->successAdded, $data['title'] );
 				$this->modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( './manage/company/branch/'.$branchId );
 			}
@@ -115,6 +118,7 @@ class Controller_Manage_Company_Branch extends Controller
 
 	public function addImage( int|string $branchId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		try{
 			$image		= $this->request->get( 'image' );
 			$imagePath	= $this->frontend->getPath( 'images' ).'branches/';		//  @todo to configuration
@@ -122,9 +126,9 @@ class Controller_Manage_Company_Branch extends Controller
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );				//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
-				$this->messenger->noteError( 'Das ist kein Bild.' );
+				$this->messenger->noteError( $words->errorNoImage );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration
-				$this->messenger->noteError( 'Das Bild ist zu groß.' );
+				$this->messenger->noteError( $words->errorImageTooLarge );
 			else{
 				$extension	= pathinfo( $image['name'], PATHINFO_EXTENSION );
 				$imageName	= $branchId.'_'.md5( time() ).'.'.$extension;
@@ -137,11 +141,11 @@ class Controller_Manage_Company_Branch extends Controller
 				);
 				$this->modelImage->add( $data );
 //				$this->modelBranch->edit( $branchId, ['modifiedAt' => time()] );
-				$this->messenger->noteSuccess( 'Das Bild wurde hochgeladen und gespeichert.' );
+				$this->messenger->noteSuccess( $words->successImageUploaded );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 
 /*		if( $image['error'] ){
@@ -224,7 +228,7 @@ class Controller_Manage_Company_Branch extends Controller
 			if( !$this->messenger->gotError() ){
 				$data['modifiedAt']	= time();
 				$this->modelBranch->edit( $branchId, $data );
-				$this->messenger->noteSuccess( 'Updated: '.$data['title'] );
+				$this->messenger->noteSuccess( $words->successModified, $data['title'] );
 				$this->modelBranch->extendWithGeocodes( $branchId );
 				$this->restart( './manage/company/branch/'.$branchId );
 			}
@@ -262,9 +266,10 @@ class Controller_Manage_Company_Branch extends Controller
 
 	public function remove( int|string $branchId ): void
 	{
+		$words	= (object) $this->getWords( 'msg' );
 		$branch	= $this->modelBranch->get( $branchId );
 		if( !$branch ){
-			$this->messenger->noteError( 'Invalid ID: '.$branchId );
+			$this->messenger->noteError( $words->errorBranchInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$images	= $this->modelImage->getAllByIndex( 'branchId', $branchId );
@@ -274,20 +279,21 @@ class Controller_Manage_Company_Branch extends Controller
 		}
 		$this->modelTag->removeByIndex( 'branchId', $branchId );
 		$this->modelBranch->remove( $branchId );
-		$this->messenger->noteSuccess( 'Removed: '.$branch->title );
+		$this->messenger->noteSuccess( $words->successRemoved, $branch->title );
 		$this->restart( './manage/company/branch' );
 	}
 
 	public function removeImage( int|string $branchId, int|string $imageId ): void
 	{
+		$words			= (object) $this->getWords( 'msg' );
 		$image			= $this->modelImage->get( $imageId );
 		if( !$image )
-			$this->messenger->noteFailure( 'Invalid imageId' );
+			$this->messenger->noteFailure( $words->errorImageInvalid );
 		if( !$this->messenger->gotError() ){
 			$imagePath	= $this->frontend->getPath().'images/branches/';		//  @todo to configuration
 			@unlink( $imagePath.$image->filename );
 			$this->modelImage->remove( $imageId );
-			$this->messenger->noteSuccess( 'Das Bild wurde entfernt.' );
+			$this->messenger->noteSuccess( $words->successImageRemoved );
 		}
 		$this->restart( './manage/company/branch/edit/'.$branchId );
 	}

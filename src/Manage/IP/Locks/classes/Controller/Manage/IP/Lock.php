@@ -7,6 +7,7 @@ class Controller_Manage_IP_Lock extends Controller
 {
 	protected Logic_IP_Lock $logic;
 	protected Messenger $messenger;
+	protected object $words;
 	protected string $filterSessionPrefix	= 'filter_manage_ip_lock_';
 
 	/**
@@ -17,7 +18,7 @@ class Controller_Manage_IP_Lock extends Controller
 		$request	= $this->env->getRequest();
 		if( $request->get( 'ip' ) && $request->get( 'reasonId' ) ){
 			$this->logic->lockIp( $request->get( 'ip' ), $request->get( 'reasonId' ) );
-			$this->messenger->noteSuccess( 'Lock added.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$this->restart( NULL, TRUE );
 		}
 		else{
@@ -37,7 +38,7 @@ class Controller_Manage_IP_Lock extends Controller
 		if( NULL === $lock )
 			throw new RuntimeException( 'Invalid lock ID given' );
 		if( $this->logic->cancel( $lock ) )
-			$this->messenger->noteSuccess( 'IP lock cancelled.' );
+			$this->messenger->noteSuccess( $this->words->successCancelled );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
 		$this->restart( NULL, TRUE );
@@ -51,11 +52,11 @@ class Controller_Manage_IP_Lock extends Controller
 	{
 		$lock	= $this->logic->get( $ipLockId, FALSE );
 		if( NULL === $lock ){
-			$this->messenger->noteError( 'Invalid lock ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		if( $lock->reason->status < Model_IP_Lock_Reason::STATUS_ENABLED )
-			$this->messenger->noteNotice( 'This lock is not active since its reason has been disabled.' );
+			$this->messenger->noteNotice( $this->words->noticeDisabledByReason );
 		$this->addData( 'lock', $lock );
 	}
 
@@ -110,7 +111,7 @@ class Controller_Manage_IP_Lock extends Controller
 		if( NULL === $lock )
 			throw new RuntimeException( 'Invalid lock ID given' );
 		if( $this->logic->lock( $lock ) )
-			$this->messenger->noteSuccess( 'IP locked.' );
+			$this->messenger->noteSuccess( $this->words->successLocked );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
 		$this->restart( NULL, TRUE );
@@ -150,7 +151,7 @@ class Controller_Manage_IP_Lock extends Controller
 		if( NULL === $lock )
 			throw new RuntimeException( 'Invalid lock ID given' );
 		if( $this->logic->unlock( $lock ) )
-			$this->messenger->noteSuccess( 'IP unlocked.' );
+			$this->messenger->noteSuccess( $this->words->successUnlocked );
 		if( ( $from = $this->env->getRequest()->get( 'from' ) ) )
 			$this->restart( $from );
 		$this->restart( NULL, TRUE );
@@ -164,5 +165,14 @@ class Controller_Manage_IP_Lock extends Controller
 	{
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
+
+		$acl	= $this->env->getAcl();
+		$this->addData( 'canAdd', $acl->has( 'manage/ip/lock', 'add' ) );
+		$this->addData( 'canCancel', $acl->has( 'manage/ip/lock', 'cancel' ) );
+		$this->addData( 'canEdit', $acl->has( 'manage/ip/lock', 'edit' ) );
+		$this->addData( 'canLock', $acl->has( 'manage/ip/lock', 'lock' ) );
+		$this->addData( 'canOrder', $acl->has( 'manage/ip/lock', 'order' ) );
+		$this->addData( 'canUnlock', $acl->has( 'manage/ip/lock', 'unlock' ) );
 	}
 }

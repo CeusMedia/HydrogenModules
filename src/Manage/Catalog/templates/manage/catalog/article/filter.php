@@ -13,16 +13,16 @@ $filterOrder	= !empty( $filters['order'] ) ? $filters['order'] : "timestamp:DESC
 
 $filterStatus	= isset( $filters['status'] ) && strlen( $filters['status'] ) ? $filters['status'] : "";
 
-$optStatus	= ['' => '- alle -'];
+$optStatus	= ['' => $w->optionAll];
 foreach( $words['states'] as $key => $value )
 	$optStatus[(string)$key]	= $value;
 $optStatus	= HtmlElements::Options( $optStatus, (string) $filterStatus );
 
 $optOrder	= [
-	'title:ASC'			=> 'Titel aufsteigend',
-	'title:DESC'		=> 'Titel absteigend',
-	'createdAt:ASC'		=> 'Erstellung aufsteigend',
-	'createdAt:DESC'	=> 'Erstellung absteigend',
+	'title:ASC'			=> $w->orderTitleAsc,
+	'title:DESC'		=> $w->orderTitleDesc,
+	'createdAt:ASC'		=> $w->orderCreatedAtAsc,
+	'createdAt:DESC'	=> $w->orderCreatedAtDesc,
 ];
 $optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
@@ -33,58 +33,58 @@ return '
 		<form action="./manage/catalog/article/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_term">Suchtext</label>
+					<label for="input_term">'.$w->labelTerm.'</label>
 					<input class="span12" type="text" name="term" id="input_term" value="'.$filterTerm.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_tag">Schlagwort</label>
+					<label for="input_tag">'.$w->labelTag.'</label>
 					<input class="span12" type="text" name="tag" id="input_tag" value="'.$filterTag.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_author">Autor</label>
+					<label for="input_author">'.$w->labelAuthor.'</label>
 					<input class="span12" type="text" name="author" id="input_author" value="'.$filterAuthor.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_isn">ISBN/ISSN</label>
+					<label for="input_isn">'.$w->labelIsn.'</label>
 					<input class="span12" type="text" name="isn" id="input_isn" value="'.$filterIsn.'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_status">Status</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select class="span12" name="status" id="input_status">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_new" class="checkbox">Neuerscheinung
+					<label for="input_new" class="checkbox">'.$w->labelNew.'
 						<input type="checkbox" name="new" id="input_new" value="1"'.$filterNew.'/>
 					</label>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_cover" class="checkbox">nur mit Bild
+					<label for="input_cover" class="checkbox">'.$w->labelCover.'
 						<input type="checkbox" name="cover" id="input_cover" value="1"'.$filterCover.'/>
 					</label>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_order">Sortierung nach Spalte</label>
+					<label for="input_order">'.$w->labelOrder.'</label>
 					<select class="span12" name="order" id="input_order">'.$optOrder.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
 				<div class="btn-group">
-					<button type="submit" class="btn btn-small btn-info"><i class="icon-search icon-white"></i> filtern</button>
-					<a href="./manage/catalog/article/filter/reset" class="btn btn-small btn-inverse" title="zurücksetzen"><i class="icon-zoom-out icon-white"></i></a>
+					<button type="submit" class="btn btn-small btn-info"><i class="icon-search icon-white"></i> '.$w->buttonFilter.'</button>
+					<a href="./manage/catalog/article/filter/reset" class="btn btn-small btn-inverse" title="'.htmlentities( $w->buttonReset, ENT_QUOTES, 'UTF-8' ).'"><i class="icon-zoom-out icon-white"></i></a>
 				</div>
 			</div>
 		</form>

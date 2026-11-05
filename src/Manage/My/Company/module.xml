@@ -4,7 +4,7 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title><![CDATA[Manage: My Company & Branches]]></title>
 	<description>Management for companies and branches assigned to current user.</description>
-	<version>0.4.6</version>
+	<version>0.4.7</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Fusion with module Manage:My:Branch.</log>
@@ -15,6 +15,7 @@
 	<log version="0.4.4">Use module Resource:Upload to check uploaded images.</log>
 	<log version="0.4.5">Added support for company logo image.</log>
 	<log version="0.4.6">Replace file and folder class calls to use CeusMedia:Common.</log>
+	<log version="0.4.7">Add English locales and extract hard-coded texts.</log>
 <!--	<log version="0.4.1">Integrate map using module UI:Map.</log>-->
 	<category>Management</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
@@ -34,6 +35,8 @@
 		<template>manage/my/company/branch/index.php</template>
 		<locale>de/manage/my/company.ini</locale>
 		<locale>de/manage/my/company/branch.ini</locale>
+		<locale>en/manage/my/company.ini</locale>
+		<locale>en/manage/my/company/branch.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Authentication</needs>

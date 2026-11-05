@@ -11,7 +11,7 @@ class Controller_Manage_My_Order extends Controller
 	public function index( $page = 0 ): void
 	{
 		if( !$this->logicAuth->isAuthenticated() ){
-			$this->env->getMessenger()->noteError( 'Access denied.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorAccessDenied'] );
 			$this->restart();
 		}
 		$limit		= 10;
@@ -53,7 +53,7 @@ class Controller_Manage_My_Order extends Controller
 	{
 		$order	= $this->logicShop->getOrder( $orderId, TRUE );
 		if( $order->userId !== $this->logicAuth->getCurrentUserId() ){
-			$this->env->getMessenger()->noteError( 'Zugriff verweigert.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorAccessDenied'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'order', $order );

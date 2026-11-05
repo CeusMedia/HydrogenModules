@@ -166,7 +166,7 @@ class Controller_Manage_My_User extends Controller
 	public function password(): void
 	{
 		if( !$this->userId ){
-			$this->messenger->noteFailure( 'Nicht eingeloggt. Zugriff verweigert.' );
+			$this->messenger->noteFailure( $this->getWords( 'msg' )['errorNotAuthenticated'] );
 			$this->restart( './' );
 		}
 

@@ -45,8 +45,8 @@ foreach( $images as $image ){
 			HTML::DivClass( 'image-item',
 				HTML::H4( $image->title ).
 				HTML::UlClass( 'image-info',
-					HTML::Li( 'Datum: '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
-					HTML::Li( 'Größe: '.$img->getWidth().' x '.$img->getHeight() )
+					HTML::Li( $words['images']['labelDate'].': '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
+					HTML::Li( $words['images']['labelSize'].': '.$img->getWidth().' x '.$img->getHeight() )
 				).
 				HTML::LinkButton( $urlRemove, $words['images']['buttonRemove'], 'button remove' )
 			)

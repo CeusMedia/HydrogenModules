@@ -33,8 +33,9 @@ class Hook_Manage_Catalog_Category extends Hook
 			}
 			$cache->set( 'catalog.tinymce.links.categories', $categories );
 		}
+		$words	= $this->env->getLanguage()->getWords( 'manage/catalog' );
 		$this->context->list  = array_merge( $this->context->list, [(object) [				//  extend global collection by submenu with list of items
-			'title'	=> 'Kategorien:',											//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['categories'],				//  label of submenu
 			'menu'	=> array_values( $categories ),									//  items of submenu
 		]] );
 	}

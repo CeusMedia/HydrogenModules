@@ -79,20 +79,21 @@ class View_Helper_Manage_Group_EntityRelationEditor
 		}
 		$iconVisible	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 		$iconHidden		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye-slash'] );
+		$w				= (object) $this->env->getLanguage()->getSection( 'manage/group', 'entity-relation-editor' );
 
 		return '
 			<div class="content-panel group-entity-relation-editor size-'.$this->size.'">
-				<h3>Gruppensichtbarkeit</h3>
+				<h3>'.$w->heading.'</h3>
 				<div class="content-panel-inner">
 					<div class="row-fluid">
 						<div class="span6">
-							<h5>'.$iconVisible.'&nbsp;Sichtbar für</h5>
+							<h5>'.$iconVisible.'&nbsp;'.$w->headVisible.'</h5>
 							<div class="group-selector-list">
 								'.join( '', $listGroupsAssigned ).'
 							</div>
 						</div>
 						<div class="span6">
-							<h5>'.$iconHidden.'&nbsp;Unsichtbar für</h5>
+							<h5>'.$iconHidden.'&nbsp;'.$w->headHidden.'</h5>
 							<div class="group-selector-list">
 								'.join( '', $listGroupsAvailable ).'
 							</div>

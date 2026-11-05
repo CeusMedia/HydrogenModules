@@ -5,15 +5,18 @@ use CeusMedia\HydrogenFramework\Environment\Web;
 
 /** @var Web $env */
 /** @var array<Entity_IP_Lock_Reason> $reasons */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['add'];
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-left'] );
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'icon-check icon-white'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './manage/ip/lock',
 	'class'	=> 'btn btn-small',
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-success',
@@ -43,19 +46,19 @@ $(document).ready(function(){
 });
 </script>
 
-<h2><span class="muted">IP-Locks:</span> Neu</h2>
+<h2><span class="muted">'.$w->heading.'</span> '.$w->headingNew.'</h2>
 <form action="./manage/ip/lock/add" method="post">
 	<div class="row-fluid">
 		<div class="span2">
-			<label for="input_ip" class="required mandatory">IP-Adresse</label>
+			<label for="input_ip" class="required mandatory">'.$w->labelIp.'</label>
 			<input type="text" name="ip" id="input_id" class="span12" required="required"/>
 		</div>
 		<div class="span4">
-			<label for="input_reasonId">Grund</label>
+			<label for="input_reasonId">'.$w->labelReason.'</label>
 			<select name="reasonId" id="input_reasonId" class="span12">'.$optReason.'</select>
 		</div>
 		<div class="span2">
-			<label for="input_duration">Dauer <small class="muted">(in Sekunden)</small></label>
+			<label for="input_duration">'.$w->labelDuration.' <small class="muted">'.$w->labelDuration_suffix.'</small></label>
 			<input type="text" name="duration" id="input_duration" class="span12" readonly="readonly" disabled="disabled"/>
 		</div>
 	</div>

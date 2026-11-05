@@ -61,7 +61,7 @@ if( $env->getModules()->has( 'UI_Helper_TimePhraser' ) )
 $iconSave		= HtmlTag::create( 'b', '', ['class' => 'fa fa-fw fa-check'] );
 
 $atLeastOne		= !TRUE;
-$history		= '<div class="alert alert-info">Keine.</div>';
+$history		= '<div class="alert alert-info">'.$w->noPasswordHistory.'</div>';
 if( !$atLeastOne || count( $passwords ) > 1 ){
 	$passwordCryptTypes = array_flip( Constants::getAll( 'PASSWORD_' ) );
 
@@ -101,9 +101,9 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		], ['class' => $rowClass] );
 	}
 	$heads	= HtmlElements::tableHeads( [
-		'erstellt',
-		'zuletzt genutzt',
-		'Zustand',
+		$w->headCreatedAt,
+		$w->headUsedAt,
+		$w->headStatus,
 //		'Kryptografie',
 //		'gescheiterte Login',
 	] );
@@ -159,7 +159,7 @@ $panelPassword	= HTML::DivClass( 'content-panel content-panel-form', [
 			] ),
 			HTML::DivClass( 'row-fluid password-history', [
 				HTML::DivClass( 'span12', [
-					HTML::Label( '', 'Passwörter bisher' ),
+					HTML::Label( '', $w->labelPasswordHistory ),
 					$history,
 				] )
 			] ),

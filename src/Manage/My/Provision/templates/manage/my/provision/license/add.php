@@ -3,13 +3,14 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w		= (object) $words['add'];
+$wp		= (object) $words['position'];
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 //$iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );
 
 if( !$productId ){
-	$list	= 'Keine Produkte vorhanden.';
+	$list	= $w->textNoProducts;
 	if( $products ){
 		$list	= [];
 		foreach( $products as $itemProduct ){
@@ -27,16 +28,16 @@ if( !$productId ){
 
 	$position	= '
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<span>Neue Lizenz erwerben</span>
+	<big>&nbsp;'.$wp->label.' </big>
+	<span>'.$wp->newLicense.'</span>
 	<i class="fa fa-fw fa-chevron-right"></i>
-	<span>Produktliste</span>
+	<span>'.$wp->productList.'</span>
 	<hr/>
 </div>';
 
 	$panelAdd	= '
 <div class="content-panel content-panel-form">
-	<h3>Produkte</h3>
+	<h3>'.$w->headingProducts.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 	</div>
@@ -60,14 +61,14 @@ else if( !$productLicenseId ){
 	if( $list )
 		$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled list-licenses'] );
 	else
-		$list	= 'Keine Lizenzen für dieses Produkt vorhanden.';
+		$list	= $w->textNoLicenses;
 
 	$position	= '
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<span>Neue Lizenz erwerben</span>
+	<big>&nbsp;'.$wp->label.' </big>
+	<span>'.$wp->newLicense.'</span>
 	<i class="fa fa-fw fa-chevron-right"></i>
-	<a href="./manage/my/provision/license/add">Produktliste</a>
+	<a href="./manage/my/provision/license/add">'.$wp->productList.'</a>
 	<i class="fa fa-fw fa-chevron-right"></i>
 	<strong>'.$product->title.'</strong>
 	<hr/>
@@ -75,11 +76,11 @@ else if( !$productLicenseId ){
 
 	$panelAdd	= '
 <div class="content-panel content-panel-form">
-	<h3><span class="muted">Lizenzen für </span>'.$product->title.'</h3>
+	<h3><span class="muted">'.$w->headingLicensesFor.'</span>'.$product->title.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">
-			<a href="./manage/my/provision/license/add" class="btn btn-small">'.$iconCancel.'&nbsp;Produktliste</a>
+			<a href="./manage/my/provision/license/add" class="btn btn-small">'.$iconCancel.'&nbsp;'.$w->buttonProductList.'</a>
 		</div>
 	</div>
 </div>';
@@ -120,10 +121,10 @@ else{
 
 	$position	= '
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<span>Neue Lizenz erwerben</span>
+	<big>&nbsp;'.$wp->label.' </big>
+	<span>'.$wp->newLicense.'</span>
 	<i class="fa fa-fw fa-chevron-right"></i>
-	<a href="./manage/my/provision/license/add">Produktliste</a>
+	<a href="./manage/my/provision/license/add">'.$wp->productList.'</a>
 	<i class="fa fa-fw fa-chevron-right"></i>
 	<strong><a href="./manage/my/provision/license/add/'.$product->productId.'">'.$product->title.'</a></strong>
 	<i class="fa fa-fw fa-chevron-right"></i>
@@ -165,8 +166,8 @@ else{
 				</div>
 			</div>
 			<div class="buttonbar">
-				<a href="./manage/my/provision/license/add/'.$productLicense->productId.'" class="btn btn-small">'.$iconCancel.'&nbsp;zurück</a>
-				<button type="submit" name="save" class="btn btn-primary" value="1">'.$iconOrder.'&nbsp;bestellen</button>
+				<a href="./manage/my/provision/license/add/'.$productLicense->productId.'" class="btn btn-small">'.$iconCancel.'&nbsp;'.$w->buttonCancel.'</a>
+				<button type="submit" name="save" class="btn btn-primary" value="1">'.$iconOrder.'&nbsp;'.$w->buttonOrder.'</button>
 			</div>
 		</form>
 	</div>
@@ -199,17 +200,17 @@ return $tabs.$textTop.'
 	</div>
 	<div class="span3">
 		<div class="content-panel content-panel-info">
-			<h3>Steps</h3>
+			<h3>'.$w->headingSteps.'</h3>
 			<div class="content-panel-inner">
-				<h4>Step 1</h4>
+				<h4>'.$w->headingStep1.'</h4>
 				<p>
-					1. First, select the license you need.
+					'.$w->textStep1.'
 				</p>
 				<p>
-					2. You will see all details of the license.
+					'.$w->textStep2.'
 				</p>
 				<p>
-					3. Select a payment type, if needed.
+					'.$w->textStep3.'
 				</p>
 			</div>
 		</div>

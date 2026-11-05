@@ -18,7 +18,7 @@ extract( $view->populateTexts( [
 ], 'html/manage/my/user/' ) );
 
 return '<div class="content-panel">
-	<h3>Konto entfernen</h3>
+	<h3>'.$words['remove']['headingRemove'].'</h3>
 	<div class="content-panel-inner">
 		'.$textPanelRemoveAbove.'
 	</div>

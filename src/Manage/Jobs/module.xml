@@ -5,7 +5,7 @@
 	<title><![CDATA[Manage: Jobs]]></title>
 	<description><![CDATA[...]]></description>
 	<category>Management</category>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add definition index.</log>
@@ -22,6 +22,7 @@
 	<log version="0.3.2">Improve job run filter.</log>
 	<log version="0.3.3">Support removal of archivable job runs.</log>
 	<log version="0.3.4">Shorten job run ID in list.</log>
+	<log version="0.3.5">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -69,4 +70,8 @@
 	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="86">Job-Ausführungen</link>
 	<link xml:lang="de" access="acl" path="manage/job/schedule" rank="86">Job-Zeitplan</link>
 	<link xml:lang="de" access="acl" path="manage/job/definition" rank="87">Job-Liste</link>
+	<link xml:lang="en" access="acl" path="manage/job" rank="85">Job Dashboard</link>
+	<link xml:lang="en" access="acl" path="manage/job/schedule" rank="86">Job Runs</link>
+	<link xml:lang="en" access="acl" path="manage/job/schedule" rank="86">Job Schedule</link>
+	<link xml:lang="en" access="acl" path="manage/job/definition" rank="87">Job List</link>
 </module>

@@ -2,6 +2,10 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['index'];
+
 $tabs		= View_Manage_Customer::renderTabs( $env, $customerId, 'project/'.$customerId );
 
 $table		= '';
@@ -17,7 +21,7 @@ if( $relations ){
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'class'		=> 'btn btn-small btn-danger',
 			'href'		=> $urlRemove,
-			'title'		=> 'entfernen',
+			'title'		=> $w->buttonRemove,
 		] );
 		$rows[]	= HtmlTag::create( 'tr', array(
 			HtmlTag::create( 'td', $link ),
@@ -26,13 +30,13 @@ if( $relations ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( "100%" );
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Titel'
+		$w->headTitle
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> hinzufügen', ['href' => './manage/customer/project/add', 'class' => 'btn btn-success'] );
+$buttonAdd	= HtmlTag::create( 'a', '<i class="icon-plus icon-white"></i> '.$w->buttonAdd, ['href' => './manage/customer/project/add', 'class' => 'btn btn-success'] );
 
 
 /*
@@ -52,13 +56,13 @@ $optProject	= HtmlElements::Options( $optProject );
 $optType	= HtmlElements::Options( $words['types'] );
 
 return '
-<h3><span class="muted">Kunde</span> '.$customer->title.'</h3>
+<h3><span class="muted">'.$w->headingPrefix.'</span> '.$customer->title.'</h3>
 '.$tabs.'
 <div class="row-fluid">
 	<div class="span8">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4>...</h4>
+				<h4>'.$w->heading.'</h4>
 				'.$table.'
 			</div>
 		</div>
@@ -66,17 +70,17 @@ return '
 	<div class="span4">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4>Zuweisen</h4>
+				<h4>'.$w->headingAdd.'</h4>
 				<form action="./manage/customer/project/add/'.$customerId.'" method="post">
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_projectId">Projekt</label>
+							<label for="input_projectId">'.$w->labelProject.'</label>
 							<select id="input_projectId" name="projectId" onchange="this.form.submit()">'.$optProject.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_type">Art der Verbindung</label>
+							<label for="input_type">'.$w->labelType.'</label>
 							<select id="input_type" name="type">'.$optType.'</select>
 						</div>
 					</div>

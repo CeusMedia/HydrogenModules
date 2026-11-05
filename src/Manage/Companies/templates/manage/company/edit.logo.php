@@ -6,7 +6,7 @@ $w	= (object) $words['edit-logo'];
 $iconSave	= HTML::Icon( 'ok', TRUE );
 $iconOpen	= HTML::Icon( 'folder-open', TRUE );
 
-$logo	= '<div><em><small class="muted">Kein Logo vorhanden.</small></em></div>';
+$logo	= '<div><em><small class="muted">'.$w->noLogo.'</small></em></div>';
 if( $company->logo ){
 	$logo	= HtmlTag::create( 'img', NULL, [
 		'src'	=> $frontend->getPath().'images/companies/'.$company->logo,
@@ -24,7 +24,7 @@ return '
 			<div class="row-fluid">
 				<div class="span12">
 					<label for="input_image">'.$w->labelImage.'</label>
-					'.View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, 'Datei auswählen...' ).'
+					'.View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, $w->placeholderFile ).'
 				</div>
 			</div>
 			<div class="buttonbar">

@@ -47,7 +47,7 @@ $path	= preg_replace( '@^(https?://)(.+)$@', '<small class="muted">\\1</small><s
 $isWritable	= in_array( $source, [Logic_Page::SOURCE_DATABASE, Logic_Page::SOURCE_CONFIG], TRUE );		//  not writable for 'Config' or 'Modules'
 $hints		= [];
 if( !$isWritable )
-	$hints[]	= '<div class="alert alert-warning">Pages of source "'.$source.'" are not writable right now.</div>';
+	$hints[]	= '<div class="alert alert-warning">'.sprintf( $w->hintNotWritable, $source ).'</div>';
 $hints	= join( $hints );
 
 return $hints.'

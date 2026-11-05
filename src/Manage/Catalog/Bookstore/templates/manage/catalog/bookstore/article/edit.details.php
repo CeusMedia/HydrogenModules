@@ -80,7 +80,7 @@ return '
 			<div class="buttonbar">
 				<a class="btn btn-small" href="./manage/catalog/bookstore/article"><i class="icon-arrow-left"></i> '.$w->buttonCancel.'</a>
 				<button type="submit" class="btn btn-primary" name="save"><i class="icon-ok icon-white"></i> '.$w->buttonSave.'</button>
-				<button type="button" class="btn btn-small btn-danger" onclick="if(confirm(\'Wirklick?\')){document.location.href=\'./manage/catalog/bookstore/article/remove/'.$article->articleId.'\';}"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
+				<button type="button" class="btn btn-small btn-danger" onclick="if(confirm(\''.htmlspecialchars( addslashes( $w->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' ).'\')){document.location.href=\'./manage/catalog/bookstore/article/remove/'.$article->articleId.'\';}"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
 				<a href="'.$frontend->getUri().'catalog/article/'.$article->articleId.'" class="btn btn-small btn-info" target="_blank"><i class="icon icon-eye-open icon-white"></i> '.$w->buttonView.'</a>
 			</div>
 		</form>

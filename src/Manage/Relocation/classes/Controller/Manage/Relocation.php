@@ -116,13 +116,14 @@ class Controller_Manage_Relocation extends Controller
 
 		$data	= $this->model->getAll( $conditions, $orders );
 		$states	= $this->getWords( 'states' );
+		$wordsExport	= (object) $this->getWords( 'export' );
 		$keys	= [
-			'relocationId'	=> 'ID',
-			'status'		=> 'Zustand',
-			'views'			=> 'Klicks',
-			'usedAt'		=> 'zuletzt',
-			'title'			=> 'Titel',
-			'url'			=> 'Zieladresse'
+			'relocationId'	=> $wordsExport->headId,
+			'status'		=> $wordsExport->headStatus,
+			'views'			=> $wordsExport->headViews,
+			'usedAt'		=> $wordsExport->headUsedAt,
+			'title'			=> $wordsExport->headTitle,
+			'url'			=> $wordsExport->headUrl
 		];
 		$lines  = [join( ';', $keys )];
 		$helper	= new View_Helper_TimePhraser( $this->env );

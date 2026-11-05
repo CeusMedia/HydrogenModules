@@ -28,16 +28,16 @@ $buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, [
 $optStatus		= HtmlElements::Options( $words['states'], $filterStatus );
 
 $optOrderColumn	= [
-	'title'			=> 'Titel',
-	'views'			=> 'Klicks',
-	'usedAt' 		=> 'Nutzung',
-	'relocationId'	=> 'ID',
+	'title'			=> $w->orderTitle,
+	'views'			=> $w->orderViews,
+	'usedAt' 		=> $w->orderUsedAt,
+	'relocationId'	=> $w->orderId,
 ];
 $optOrderColumn	= HtmlElements::Options( $optOrderColumn, $filterOrderColumn );
 
 $optOrderDirection	= [
-	'asc' 	=> 'aufsteigend',
-	'desc'	=> 'absteigend',
+	'asc' 	=> $w->directionAsc,
+	'desc'	=> $w->directionDesc,
 ];
 $optOrderDirection	= HtmlElements::Options( $optOrderDirection, $filterOrderDirection );
 

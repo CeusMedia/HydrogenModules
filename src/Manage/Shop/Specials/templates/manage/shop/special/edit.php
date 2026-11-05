@@ -1,6 +1,9 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$w	= (object) $words['edit'];
+
 $iconSave	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconSelect	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-folder-open'] );
@@ -19,7 +22,7 @@ $trigger->setModalId( 'modal-manage-shop-special-select-style' );
 $trigger->setInputId( 'input_styleFile' );
 $trigger->setMode( View_Helper_Input_ResourceTrigger::MODE_STYLE );
 
-$listStyleFiles	= [HtmlTag::create( 'li', HtmlTag::create( 'em', '- keine -', ['class' => 'muted'] ) )];
+$listStyleFiles	= [HtmlTag::create( 'li', HtmlTag::create( 'em', $w->noStyleFiles, ['class' => 'muted'] ) )];
 if( $special->styleFiles ){
 	$listStyleFiles	= [];
 	foreach( $special->styleFiles as $nr => $styleFile ){
@@ -46,12 +49,12 @@ if( $special->styleFiles ){
 $listStyleFiles	= HtmlTag::create( 'table', $listStyleFiles, ['class' => 'table table-condensed table-striped'] );
 
 return HtmlTag::create( 'div', array(
-	HtmlTag::create( 'h3', 'Spezialität bearbeiten' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', array(
 		HtmlTag::create( 'form', array(
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Katalog', ['for' => 'input_bridgeId'] ),
+					HtmlTag::create( 'label', $w->labelCatalog, ['for' => 'input_bridgeId'] ),
 					HtmlTag::create( 'input', '', [
 						'type'		=> 'text',
 						'name'		=> 'bridgeId',
@@ -62,7 +65,7 @@ return HtmlTag::create( 'div', array(
 					] ),
 				), ['class' => 'span3'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Artikel', ['for' => 'input_articleId'] ),
+					HtmlTag::create( 'label', $w->labelArticle, ['for' => 'input_articleId'] ),
 					HtmlTag::create( 'input', '', [
 						'type'		=> 'text',
 						'name'		=> 'articleId',
@@ -75,7 +78,7 @@ return HtmlTag::create( 'div', array(
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
+					HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title'] ),
 					HtmlTag::create( 'input', NULL, [
 						'type'	=> 'text',
 						'name'	=> 'title',
@@ -88,7 +91,7 @@ return HtmlTag::create( 'div', array(
 			HtmlTag::create( 'hr', NULL ),
 			HtmlTag::create( 'div', array(
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Style-Angaben', ['for' => 'input_styleRules'] ),
+					HtmlTag::create( 'label', $w->labelStyleRules, ['for' => 'input_styleRules'] ),
 					HtmlTag::create( 'textarea', $special->styleRules, [
 						'name'			=> 'styleRules',
 						'id'			=> 'input_styleRules',
@@ -98,11 +101,11 @@ return HtmlTag::create( 'div', array(
 					] ),
 				), ['class' => 'span6'] ),
 				HtmlTag::create( 'div', array(
-					HtmlTag::create( 'label', 'Style-Dateien' ),
+					HtmlTag::create( 'label', $w->labelStyleFiles ),
 					$listStyleFiles,
 					HtmlTag::create( 'div', array(
 						HtmlTag::create( 'div', array(
-							HtmlTag::create( 'label', 'Datei hinzufügen' ),
+							HtmlTag::create( 'label', $w->labelStyleFileAdd ),
 							HtmlTag::create( 'input', NULL, [
 								'type'		=> 'text',
 								'name'		=> 'styleFile',
@@ -120,16 +123,16 @@ return HtmlTag::create( 'div', array(
 				), ['class' => 'span6'] ),
 			), ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', join( ' ', array(
-				HtmlTag::create( 'a', $iconList.'&nbsp;zur Liste', [
+				HtmlTag::create( 'a', $iconList.'&nbsp;'.$w->buttonList, [
 					'href'	=> './manage/shop/special',
 					'class'	=> 'btn',
 				] ),
-				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', [
+				HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary',
 				] ),
-				HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', [
+				HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, [
 					'href'	=> './manage/shop/special/remove/'.$special->shopSpecialId,
 					'class'	=> 'btn btn-danger',
 				] ) ,

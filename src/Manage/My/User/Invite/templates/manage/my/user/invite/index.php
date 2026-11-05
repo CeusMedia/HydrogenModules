@@ -2,13 +2,15 @@
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$w			= (object) $words['index'];
+
 $modelUser	= new Model_User( $env );
 $userId		= $session->get( Logic_Authentication::$sessionKeyAuthUserId );
 $user		= $modelUser->get( $userId );
 
-$buttonInvite	= HtmlElements::LinkButton( './manage/my/user/invite/invite', 'jemanden einladen', 'button icon add' );
+$buttonInvite	= HtmlElements::LinkButton( './manage/my/user/invite/invite', $w->buttonInvite, 'button icon add' );
 
-$listInvites	= '<em><small>Noch keine Einladungen verschickt.</em></small><br/>';
+$listInvites	= '<em><small>'.$w->textEmpty.'</em></small><br/>';
 if( $invites->all ){
 	$listInvites	= [];
 	foreach( $invites->all as $invite ){
@@ -19,10 +21,10 @@ if( $invites->all ){
 		if( $invite->type == 1 ){
 			if( $invite->status == 1 ){
 				$expire	= date( 'd.m.Y', $invite->createdAt + $daysValid * 24 * 60 * 60 );
-				$expire	= sprintf( 'verfällt am %s', $expire );
+				$expire	= sprintf( $w->textExpires, $expire );
 				$image	= HtmlTag::create( 'img', NULL, ['src' => 'https://cdn.ceusmedia.de/img/famfamfam/silk/error.png'] );
 				$date	.= '&nbsp;'.HtmlTag::create( 'span', $image, ['title' => $expire] );
-				$buttons[]	= HtmlElements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, 'abbrechen' );
+				$buttons[]	= HtmlElements::LinkButton( './manage/my/user/invite/cancel/'.$invite->userInviteId, '', 'button tiny remove', NULL, NULL, $w->buttonCancel );
 			}
 		}
 		$cells		= [];
@@ -34,7 +36,7 @@ if( $invites->all ){
 	}
 	$listInvites	= join( $listInvites );
 	$colgroup		= HtmlElements::ColumnGroup( '140px', '120px', '', '50px' );
-	$tableHeads		= HtmlElements::TableHeads( ['Datum', 'Status', 'E-Mail-Adresse', ''] );
+	$tableHeads		= HtmlElements::TableHeads( [$w->headDate, $w->headStatus, $w->headEmail, ''] );
 	$listInvites	= '
 <style>
 .invite-status.status-2{
@@ -59,7 +61,7 @@ td.invite-actions{
 	}
 </style>
 <fieldset>
-	<legend class="icon info">Einladungen</legend>
+	<legend class="icon info">'.$w->legendList.'</legend>
 	<table>
 		'.$colgroup.'
 		<thead>
@@ -107,7 +109,7 @@ return '
 </div>
 <div class="column-right-30">
 	<fieldset>
-		<legend class="icon info">Informationen</legend>
+		<legend class="icon info">'.$w->legendInfo.'</legend>
 		'.View_Helper_ContentConverter::render( $env, $text ).'
 	</fieldset>
 </div>

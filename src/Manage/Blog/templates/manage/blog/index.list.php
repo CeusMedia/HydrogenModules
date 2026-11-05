@@ -37,7 +37,7 @@ if( $posts ){
 Icon::$defaultSet	= 'FontAwesome';
 $pagination	= new PageControl( "./manage/blog/", $page ?? 1, $pages ?? 0 );
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/blog/add',
 	'class'	=> 'btn btn-success',
 ] );

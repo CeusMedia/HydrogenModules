@@ -38,7 +38,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 
 return $view->renderTabs().'
 <div class="content-panel content-panel-form">
-	<h3><span class="muted">Eintrag: </span>'.$post->title.'</h3>
+	<h3><span class="muted">'.$w->headingPrefix.'</span>'.$post->title.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/blog/edit/'.$post->postId.'" method="post">
 			<div class="row-fluid">

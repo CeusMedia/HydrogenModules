@@ -9,6 +9,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var array<object> $blocks */
 /** @var int $page */
 /** @var int $pages */
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['index.list'];
 
 $iconAdd	= new Icon( 'plus' );
 $iconView	= new Icon( 'eye' );
@@ -16,7 +19,7 @@ $iconEdit	= new Icon( 'pencil' );
 
 $rows		= [];
 foreach( $blocks as $block ){
-	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;anzeigen', [
+	$linkView	= HtmlTag::create( 'a', $iconView.'&nbsp;'.$w->buttonView, [
 		'href'	=> './manage/form/block/view/'.$block->blockId,
 		'class'	=> 'btn btn-mini btn-info',
 	] );
@@ -30,14 +33,14 @@ foreach( $blocks as $block ){
 }
 $colgroup	= HtmlElements::ColumnGroup( '40px', '', '35%', '100px' );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-	HtmlTag::create( 'th', 'ID', ['style' => 'text-align: right'] ),
-	HtmlTag::create( 'th', 'Titel' ),
-	HtmlTag::create( 'th', 'Shortcode' ),
+	HtmlTag::create( 'th', $w->headId, ['style' => 'text-align: right'] ),
+	HtmlTag::create( 'th', $w->headTitle ),
+	HtmlTag::create( 'th', $w->headIdentifier ),
 ] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table table-fixed table-striped table-condensed'] );
 
-$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Block', [
+$linkAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/form/block/add',
 	'class'	=> 'btn btn-success'
 ] );
@@ -46,7 +49,7 @@ $pagination	= new PageControl( './manage/form/block', $page, $pages );
 
 return '
 <div class="content-panel">
-	<h3>Blöcke</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

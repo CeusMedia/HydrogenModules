@@ -31,7 +31,7 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 		], ['class' => $rowClass] );
 	}
 	$panelPasswords	= HTML::DivClass( 'content-panel content-panel-form', [
-		HtmlTag::create( 'h4', 'Passwörter' ),
+		HtmlTag::create( 'h4', $words['passwords']['heading'] ),
 		HTML::DivClass( 'content-panel-inner', [
 			HtmlTag::create( 'table', [
 				HtmlElements::ColumnGroup( [
@@ -42,9 +42,9 @@ if( !$atLeastOne || count( $passwords ) > 1 ){
 //					'',
 				] ),
 				HtmlTag::create( 'thead', HtmlElements::tableHeads( [
-					'erstellt',
-					'zuletzt genutzt',
-					'Zustand',
+					$words['passwords']['headCreated'],
+					$words['passwords']['headUsed'],
+					$words['passwords']['headStatus'],
 //					'Kryptografie',
 //					'gescheiterte Login',
 				] ) ),

@@ -37,13 +37,14 @@ class Controller_Manage_Blog extends Controller
 	{
 		$logicAuth		= Logic_Authentication::getInstance( $this->env );
 		$language		= $this->env->getLanguage();
+		$words			= (object) $this->getWords( 'msg' );
 		if( $this->request->has( 'save' ) ){
 			if( !trim( $this->request->get( 'title' ) ) )
-				$this->messenger->noteError( 'Title is missing.' );
+				$this->messenger->noteError( $words->errorTitleMissing );
 			else if( !trim( strip_tags( $this->request->get( 'content' ) ) ) )
-				$this->messenger->noteError( 'Post content is missing.' );
+				$this->messenger->noteError( $words->errorContentMissing );
 			else if( !trim( strip_tags( $this->request->get( 'abstract' ) ) ) )
-				$this->messenger->noteError( 'Post abstract is missing.' );
+				$this->messenger->noteError( $words->errorAbstractMissing );
 			else{
 				$data		= [
 					'authorId'		=> $this->request->get( 'authorId' ),
@@ -56,8 +57,8 @@ class Controller_Manage_Blog extends Controller
 					'createdAt'		=> time(),
 				];
 				$postId	= $this->modelPost->add( $data, FALSE );
-				$this->messenger->noteSuccess( 'Der neue Eintrag wurde gespeichert.' );
-				$this->messenger->noteNotice( 'Bitte überarbeite jetzt deinen Eintrag!<br/>Wenn du fertig bist, kannst du den Eintrag mit dem Status "öffentlich" sichtbar machen.' );
+				$this->messenger->noteSuccess( $words->successAdded );
+				$this->messenger->noteNotice( $words->noticeAdded );
 				$this->restart( './manage/blog/edit/'.$postId );
 			}
 
@@ -106,7 +107,8 @@ class Controller_Manage_Blog extends Controller
 				'createdAt'	=> time(),
 			];
 			$commentId	= $this->modelComment->add( $data );
-			$this->messenger->noteSuccess( 'Your comment has been added.' );
+			$words		= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successCommentAdded );
 //			$this->informAboutNewComment( $commentId );
 		}
 		$this->restart( 'post/'.$post->postId, TRUE );
@@ -134,7 +136,8 @@ class Controller_Manage_Blog extends Controller
 				'modifiedAt'	=> time(),
 			];
 			$this->modelPost->edit( $post->postId, $data, FALSE );
-			$this->messenger->noteSuccess( 'Der Eintrag wurde gespeichert.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successEdited );
 			$this->restart( 'edit/'.$post->postId, TRUE );
 		}
 
@@ -233,7 +236,8 @@ class Controller_Manage_Blog extends Controller
 		if( !$post ){
 			if( $strict )
 				throw new OutOfRangeException( 'Invalid post ID' );
-			$this->messenger->noteError( 'Invalid post ID.' );
+			$words	= (object) $this->getWords( 'msg', 'manage/blog' );
+			$this->messenger->noteError( $words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		return $post;

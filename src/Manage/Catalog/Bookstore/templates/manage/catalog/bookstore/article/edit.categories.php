@@ -16,7 +16,9 @@ $iconUp		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-up'] );
 $iconDown	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-chevron-down'] );
 $iconRemove	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-$panelCategories	= '<div class="alert alert-error">Noch keine Kategorie zugewiesen.</div>';
+$wc	= (object) $words['edit.categories'];
+
+$panelCategories	= '<div class="alert alert-error">'.$wc->noEntries.'</div>';
 
 if( $articleCategories ){
 	$listCategories	= [];
@@ -32,7 +34,7 @@ if( $articleCategories ){
 				<small class="muted">'.$item->rank.'.</small>
 				<a href="./manage/catalog/bookstore/category/edit/'.$item->categoryId.'">'.$item->label_de.'</a>
 			</div>
-			<div style="font-size: 0.99em; font-weight: not-lighter"><span class="muted">Band:</span> '.$labelVolume.' | <span class="muted">Rang:</span> '.$item->rank.'</div>
+			<div style="font-size: 0.99em; font-weight: not-lighter"><span class="muted">'.$wc->prefixVolume.':</span> '.$labelVolume.' | <span class="muted">'.$wc->prefixRank.':</span> '.$item->rank.'</div>
 			';
 		}
 		else{
@@ -42,13 +44,13 @@ if( $articleCategories ){
 				<a href="./manage/catalog/bookstore/category/edit/'.$item->categoryId.'">'.$item->label_de.'</a>
 			</div>
 			<div class="autocut"></div>
-			<div style="font-size: 0.9em; font-weight: lighter"><span class="muted">Band:</span> '.$labelVolume.' | <span class="muted">Rang:</span> '.$item->rank.'</div>
+			<div style="font-size: 0.9em; font-weight: lighter"><span class="muted">'.$wc->prefixVolume.':</span> '.$labelVolume.' | <span class="muted">'.$wc->prefixRank.':</span> '.$item->rank.'</div>
 			';
 		}
 		$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './manage/catalog/bookstore/article/removeCategory/'.$article->articleId.'/'.$item->categoryId,
 			'class'		=> 'btn btn-mini btn-danger',
-			'onclick'	=> 'if(!confirm(\'Wirklich ?\'))return false;',
+			'onclick'	=> 'if(!confirm(\''.htmlspecialchars( addslashes( $wc->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' ).'\'))return false;',
 		] );
 		$listCategories[]	= '<tr>
 		<td>'.$label.'</td>
@@ -72,7 +74,7 @@ if( $articleCategories ){
 <div class="content-panel">
 	<div class="content-panel-inner">
 		<div class="row-fluid">
-			<h4>Kategorien</h4>
+			<h4>'.$wc->heading.'</h4>
 			'.$listCategories.'
 		</div>
 	</div>
@@ -112,24 +114,24 @@ $optCategory	= join( $optCategory );
 $panelAdd	= '
 <div class="content-panel">
 	<div class="content-panel-inner form-changes-auto">
-		<h4>Kategorie zuweisen</h4>
+		<h4>'.$wc->headingAdd.'</h4>
 		<form action="./manage/catalog/bookstore/article/addCategory/'.$article->articleId.'" method="post">
 			<div class="row-fluid">
 				<div class="span8">
-					<label for="input_categoryId">Kategorie</label>
+					<label for="input_categoryId">'.$wc->labelCategory.'</label>
 					<select class="span12" name="categoryId" id="input_categoryId">'.$optCategory.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_volume">Band</label>
+					<label for="input_volume">'.$wc->labelVolume.'</label>
 					<input type="text" class="span12" name="volume" id="input_volume"/>
 				</div>
 				<div class="span2">
-					<label for="input_rank">Rang</label>
+					<label for="input_rank">'.$wc->labelRank.'</label>
 					<input type="number" class="span12" name="rank" id="input_rank" value=""/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> speichern</button>
+				<button class="btn btn-primary" type="submit" name="save"><i class="icon-ok icon-white"></i> '.$wc->buttonSave.'</button>
 			</div>
 		</form>
 	</div>

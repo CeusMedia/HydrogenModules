@@ -3,7 +3,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w			= (object) $words['edit'];
 
-$list		= '<div><em class="muted">Keine Veröffentlichungen vorhanden.</em></div>';
+$list		= '<div><em class="muted">'.$w->noArticles.'</em></div>';
 if( $articles ){
 	$list		= [];
 //	$rows		= [];

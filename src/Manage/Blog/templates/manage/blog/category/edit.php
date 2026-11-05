@@ -42,7 +42,7 @@ return $view->renderTabs( '/category' ).'
 		<form action="./manage/blog/category/edit/'.$category->categoryId.'" method="post">
 			<div class="row-fluid">
 				<div class="span7">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $category->title, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span3">

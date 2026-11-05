@@ -16,12 +16,15 @@ use CeusMedia\HydrogenFramework\View;
 $baseUrl	= './manage/shop/order/setStatus/'.$order->orderId.'/';
 $buttons	= [new LinkButton( './manage/shop/order', '', 'btn-small', 'arrow-left' )];
 
+$wStates	= (object) $words['edit-states'];
+$wEdit		= (object) $words['edit'];
+
 $states	= [
 	(object) [
 		'enabled'	=> TRUE,
 		'from'		=> [-5, -4, 3],
 		'to'		=> -6,
-		'label'		=> 'erstattet',
+		'label'		=> $wStates->refunded,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -29,7 +32,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [4, 5, 6],
 		'to'		=> -5,
-		'label'		=> 'reklamiert',
+		'label'		=> $wStates->complained,
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-left',
 	],
@@ -37,7 +40,7 @@ $states	= [
 		'enabled'	=> FALSE,
 		'from'		=> [3],
 		'to'		=> -4,
-		'label'		=> 'nicht zugestellt',
+		'label'		=> $wStates->notDelivered,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -45,7 +48,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [2],
 		'to'		=> -3,
-		'label'		=> 'nicht bezahlt',
+		'label'		=> $wStates->notPayed,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -53,7 +56,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [2],
 		'to'		=> -2,
-		'label'		=> 'storniert',
+		'label'		=> $wStates->cancelled,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -61,7 +64,7 @@ $states	= [
 		'enabled'	=> FALSE,
 		'from'		=> [0],
 		'to'		=> -1,
-		'label'		=> 'abbrechen',
+		'label'		=> $wStates->aborted,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -69,7 +72,7 @@ $states	= [
 		'enabled'	=> FALSE,
 		'from'		=> [2],
 		'to'		=> 1,
-		'label'		=> 'nicht bezahlt',
+		'label'		=> $wStates->notPayed,
 		'class'		=> 'btn-danger',
 		'icon'		=> 'remove',
 	],
@@ -77,7 +80,7 @@ $states	= [
 		'enabled'	=> FALSE,
 		'from'		=> [ -6, -2],
 		'to'		=> 2,
-		'label'		=> 'bestellt',
+		'label'		=> $wStates->ordered,
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
 	],
@@ -85,7 +88,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [-3, 2],
 		'to'		=> 3,
-		'label'		=> 'bezahlt',
+		'label'		=> $wStates->payed,
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
 	],
@@ -93,7 +96,7 @@ $states	= [
 		'enabled'	=> FALSE,
 		'from'		=> [-4, 3],
 		'to'		=> 4,
-		'label'		=> 'teilweise',
+		'label'		=> $wStates->partlyDelivered,
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
 	],
@@ -101,7 +104,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [3, 4],
 		'to'		=> 5,
-		'label'		=> 'zugestellt',
+		'label'		=> $wStates->delivered,
 		'class'		=> 'btn-warning',
 		'icon'		=> 'arrow-right',
 	],
@@ -109,7 +112,7 @@ $states	= [
 		'enabled'	=> TRUE,
 		'from'		=> [5],
 		'to'		=> 6,
-		'label'		=> 'fertig!',
+		'label'		=> $wStates->completed,
 		'class'		=> 'btn-success',
 		'icon'		=> 'ok',
 	],
@@ -159,14 +162,14 @@ $panels	= [];
 $panels[]	= '
 	<div class="span4">
 		<div class="content-panel">
-			<h4>Bestellung</h4>
+			<h4>'.$wEdit->heading.'</h4>
 			<div class="content-panel-inner">
 				<dl class="dl-horizontal">
-					<dt>Order-ID</dt><dd>'.$order->orderId.'</dd>
-					<dt>Kunden-ID</dt><dd>'.$order->userId.'</dd>
-					<dt>Datum</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
-					<dt>Bezahlung</dt><dd>'.$order->paymentMethod.'</dd>
-					<dt>Status</dt><dd>'.$words['states'][$order->status].'<dd>
+					<dt>'.$wEdit->labelOrderId.'</dt><dd>'.$order->orderId.'</dd>
+					<dt>'.$wEdit->labelCustomerId.'</dt><dd>'.$order->userId.'</dd>
+					<dt>'.$wEdit->labelDate.'</dt><dd>'.date( "d.m.Y", $order->createdAt ).' <small><em>'.date( "H:i:s", $order->createdAt ).'</em></small><dd>
+					<dt>'.$wEdit->labelPayment.'</dt><dd>'.$order->paymentMethod.'</dd>
+					<dt>'.$wEdit->labelStatus.'</dt><dd>'.$words['states'][$order->status].'<dd>
 		<!--			<dt>Status</dt><dd><select name="status" id="input_status">'.$optStatus.'</select><dd>-->
 				</dl>
 				'.$buttons.'
@@ -177,7 +180,7 @@ if( $order->customer )
 	$panels[]	= '
 	<div class="span4">
 		<div class="content-panel">
-			<h4>Lieferanschrift</h4>
+			<h4>'.$wEdit->headingDelivery.'</h4>
 			<div class="content-panel-inner">
 				'.renderDataList( $keysCustomer, $labelsCustomer, $order->customer->addressDelivery ).'
 			</div>
@@ -187,7 +190,7 @@ if( $order->customer && $order->customer->addressBilling )
 	$panels[]	= '
 	<div class="span4">
 		<div class="content-panel">
-			<h4>Rechnungsanschrift</h4>
+			<h4>'.$wEdit->headingBilling.'</h4>
 			<div class="content-panel-inner">
 				'.renderDataList( $keysCustomer, $labelsCustomer, $order->customer->addressBilling ).'
 			</div>
@@ -208,14 +211,14 @@ foreach( $order->positions as $position ){
 	$cellStatus		= HtmlTag::create( 'td', new ButtonGroup( [
 		new LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/1',
-			'bestellt',
+			$w->buttonOrdered,
 			'btn-small btn-warning',
 			'arrow-right',
 			$order->status < 1 || $position->status != 0
 		),
 		new LinkButton(
 			'./manage/shop/order/setPositionStatus/'.$position->positionId.'/2',
-			'geliefert',
+			$w->buttonDelivered,
 			'btn-small btn-success',
 			'ok',
 			$order->status < 1 || $position->status == 2
@@ -239,7 +242,7 @@ $tableHead		= HtmlTag::create( 'thead', $tableHeads );
 $tableBody		= HtmlTag::create( 'tbody', $rows );
 $tableArticles	= HtmlTag::create( 'table', $tableColumns.$tableHead.$tableBody, ['class' => 'table table-condensed table-hover table-striped'] );
 
-$linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;zurück</a>';
+$linkBack	= '<a href="./manage/shop/order">&laquo;&nbsp;'.$wEdit->linkBack.'</a>';
 #$linkBack	= new \CeusMedia\Bootstrap\LinkButton( './manage/shop/order', 'zurück', 'btn-small', 'arrow-left' );
 
 $tabs		= View_Manage_Shop::renderTabs( $env, 'order' );
@@ -264,12 +267,12 @@ table.table td.cell-position-quantity {
 	}
 </style>
 <div>
-	<h3><span class="muted">Bestellung</span> <span>#'.$order->orderId.'</span></h3>
+	<h3><span class="muted">'.$wEdit->heading.'</span> <span>#'.$order->orderId.'</span></h3>
 	<div class="row-fluid panels">
 		'.join( $panels ).'
 	</div>
 	<div class="content-panel">
-		<h4>Artikel</h4>
+		<h4>'.$wEdit->headingArticles.'</h4>
 		<div class="content-panel-inner">
 			'.$tableArticles.'
 		</div>

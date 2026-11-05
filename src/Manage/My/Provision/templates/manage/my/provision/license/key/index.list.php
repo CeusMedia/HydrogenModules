@@ -11,7 +11,7 @@ $iconsStatus	= array(
 	Model_Provision_User_License_Key::STATUS_EXPIRED	=> HtmlTag::create( 'i', '', ['class' => 'icon-stop'] ),
 );
 
-$list	= '<div class="muted"><em>Keine vorhanden.</em></div><br/>';
+$list	= '<div class="muted"><em>'.$w->textEmpty.'</em></div><br/>';
 
 $rowColors	= [
 	0	=> '',
@@ -34,12 +34,12 @@ if( $userLicenseKeys ){
 		if( $userLicenseKey->status == 2 ){
 			$dateStart	= date( 'd.m.Y', $userLicenseKey->startsAt );
 			$dateEnd 	= date( 'd.m.Y', $userLicenseKey->endsAt );
-			$duration	= 'läuft: '.$dateStart.' - '.$dateEnd;
+			$duration	= sprintf( $w->textRunning, $dateStart, $dateEnd );
 		}
 		if( $userLicenseKey->status == 3 ){
 			$dateStart	= date( 'd.m.Y', $userLicenseKey->startsAt );
 			$dateEnd 	= date( 'd.m.Y', $userLicenseKey->endsAt );
-			$duration	= 'lief: '.$dateStart.' - '.$dateEnd;
+			$duration	= sprintf( $w->textRan, $dateStart, $dateEnd );
 		}
 		if( $userLicenseKey->status == 1 ){
 		}
@@ -64,18 +64,18 @@ if( $userLicenseKeys ){
 		] );
 
 		$list[]	= HtmlTag::create( 'tr', array(
-			HtmlTag::create( 'td', 'Lizenznummer: '.$licenseUid.'<br/>Lizenz: '.$userLicenseKey->productLicense->title.'<br/>Produkt: '.$product.'<br/>Besitzer: '.$userName ),
+			HtmlTag::create( 'td', $w->labelLicenseNumber.': '.$licenseUid.'<br/>'.$w->labelLicense.': '.$userLicenseKey->productLicense->title.'<br/>'.$w->labelProduct.': '.$product.'<br/>'.$w->labelOwner.': '.$userName ),
 			HtmlTag::create( 'td', $status.'<br/>'.$duration ),
-			HtmlTag::create( 'td', 'Schlüssernummer: '.$userLicenseKey->uid ),
+			HtmlTag::create( 'td', $w->labelKeyNumber.': '.$userLicenseKey->uid ),
 		), ['class' => $rowColors[$userLicenseKey->status]] );
 	}
 }
-$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( ['Lizenz', 'Zustand', 'Lizenzschlüssel'] ) );
+$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headLicense, $w->headStatus, $w->headKey] ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
 $list	= HtmlTag::create( 'table', $thead.$tbody, ['class' => 'table'] );
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neue Lizenz', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> './manage/my/provision/license/add',
 	'class'	=> 'btn btn-success',
 ] );

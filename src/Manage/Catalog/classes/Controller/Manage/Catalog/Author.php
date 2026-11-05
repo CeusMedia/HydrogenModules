@@ -80,7 +80,7 @@ class Controller_Manage_Catalog_Author extends Controller
 	 */
 	public function remove( int|string $authorId ): void
 	{
-		$words	= $this->getWords( 'remove' );
+		$words	= (object) $this->getWords( 'remove' );
 		if( $this->logic->getArticlesFromAuthor( $authorId ) )
 			$this->messenger->noteError( $words->msgErrorNotEmpty );
 		else{

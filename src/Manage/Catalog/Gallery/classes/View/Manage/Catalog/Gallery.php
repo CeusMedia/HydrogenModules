@@ -51,8 +51,9 @@ class View_Manage_Catalog_Gallery extends View
 				'menu'	=> array_values( $images ),
 			);
 		}
+		$words	= $env->getLanguage()->getWords( 'manage/catalog/gallery' );
 		$list	= array( (object) [
-			'title'	=> 'Bilder in Galerien:',
+			'title'	=> $words['tinymce']['images'],
 			'menu'	=> $list,
 		] );
 		$context->list	= array_merge( $context->list, $list );
@@ -98,8 +99,9 @@ class View_Manage_Catalog_Gallery extends View
 				'menu'	=> array_values( $images ),
 			);
 		}
+		$words	= $env->getLanguage()->getWords( 'manage/catalog/gallery' );
 		$list	= array( (object) [
-			'title'	=> 'Bilder in Galerien:',
+			'title'	=> $words['tinymce']['images'],
 			'menu'	=> $list,
 		] );
 		$context->list	= array_merge( $context->list, $list );

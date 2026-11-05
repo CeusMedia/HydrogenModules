@@ -83,7 +83,7 @@ $panelEdit  	= '
 							<input type="text" name="price" id="input_price" class="span12" value="'.$category->price.'" readonly="readonly"/>
 						</div>
 <!--						<div class="span3">
-							<label for="input_type">Type</label>
+							<label for="input_type">'.$w->labelType.'</label>
 							<input type="text" name="type" id="input_type" class="span12" value="'.$image->type.'"/>
 						</div>-->
 						<div class="span3">
@@ -128,10 +128,10 @@ $panelInfo	= '
 					<dd>'.$width.'&times;'.$height.' px</dd>
 					<dt>'.$w->labelSize.'</dt>
 					<dd>'.$pixels.' MP</dd>
-					<dt>Resources</dt>
-					<dd><a href="'.$uriOriginal.'?'.time().'" target="_blank">Original</a></dd>
-					<dd><a href="'.$uriPreview.'?'.time().'" target="_blank">Preview</a></dd>
-					<dd><a href="'.$uriThumbnail.'?'.time().'" target="_blank">Thumbnail</a></dd>
+					<dt>'.$w->labelResources.'</dt>
+					<dd><a href="'.$uriOriginal.'?'.time().'" target="_blank">'.$w->linkOriginal.'</a></dd>
+					<dd><a href="'.$uriPreview.'?'.time().'" target="_blank">'.$w->linkPreview.'</a></dd>
+					<dd><a href="'.$uriThumbnail.'?'.time().'" target="_blank">'.$w->linkThumbnail.'</a></dd>
 				</dl>
 			</div>
 		</div>
@@ -153,7 +153,7 @@ if( $env->getModules()->has( 'UI_Image_Slider' ) ){
 
 	$panelSlider	= '
 	<div class="content-panel">
-		<h3>In Slider einfügen</h3>
+		<h3>'.$w->heading.'</h3>
 		<div class="content-panel-inner">
 			<form action="./manage/catalog/gallery/addImageToSlider/'.$image->galleryImageId.'" method="post">
 				<div class="row-fluid">

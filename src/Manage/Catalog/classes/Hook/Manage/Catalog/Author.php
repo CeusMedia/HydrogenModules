@@ -33,8 +33,9 @@ class Hook_Manage_Catalog_Author extends Hook
 			}
 			$cache->set( 'catalog.tinymce.images.authors', $list );
 		}
+		$words	= $this->env->getLanguage()->getWords( 'manage/catalog' );
 		$this->context->list  = array_merge( $this->context->list, [(object) [			//  extend global collection by submenu with list of items
-			'title'	=> 'Autoren:',												//  label of submenu @todo extract
+			'title'	=> $words['tinymce-menu-links']['authors'],					//  label of submenu
 			'menu'	=> array_values( $list ),								//  items of submenu
 		]] );
 	}

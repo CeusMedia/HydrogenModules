@@ -39,9 +39,9 @@ class Controller_Manage_My_Company extends Controller
 			if( empty( $data['postcode'] ) )
 				$this->messenger->noteError( $words->errorPostcodeMissing );
 			if( empty( $data['street'] ) )
-				$this->messenger->noteError( $words->errorStreetExisting );
+				$this->messenger->noteError( $words->errorStreetMissing );
 			if( empty( $data['number'] ) )
-				$this->messenger->noteError( $words->errorNumberExisting );
+				$this->messenger->noteError( $words->errorNumberMissing );
 			if( !$this->messenger->gotError() ){
 				$data['modifiedAt']	= time();
 				$this->modelCompany->edit( $companyId, $data );
@@ -82,6 +82,7 @@ class Controller_Manage_My_Company extends Controller
 	 */
 	public function uploadLogo( int|string $companyId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$company	= $this->checkCompany( $companyId );
 		$image		= $this->request->get( 'image' );
 		try{
@@ -90,9 +91,9 @@ class Controller_Manage_My_Company extends Controller
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
-				$this->messenger->noteError( 'Das ist kein Bild.' );
+				$this->messenger->noteError( $words->errorNoImage );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration
-				$this->messenger->noteError( 'Das Bild ist zu groß.' );
+				$this->messenger->noteError( $words->errorImageTooLarge );
 			else{
 				$extension	= pathinfo( $image['name'], PATHINFO_EXTENSION );
 				$imageName	= $companyId.'_'.md5( time() ).'.'.$extension;
@@ -112,11 +113,11 @@ class Controller_Manage_My_Company extends Controller
 				if( $company->logo )
 					unlink( $imagePath.$company->logo );
 				$this->modelCompany->edit( $companyId, $data );
-				$this->messenger->noteSuccess( 'Das Bild wurde hochgeladen und gespeichert.' );
+				$this->messenger->noteSuccess( $words->successLogoUploaded );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 		$this->restart( 'edit/'.$companyId, TRUE );
 	}

@@ -64,7 +64,7 @@ return '
 				<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 				<a href="./manage/catalog/gallery/addImage/'.$categoryId.'" class="btn btn-success"><i class="icon-plus icon-white"></i>&nbsp;'.$w->buttonAddImage.'</a>
 				<a href="./manage/catalog/gallery/removeCategory/'.$categoryId.'" onclick="if(!confirm(\''.$w->buttonRemove_confirm.'\')) return false;" class="btn btn-danger btn-small"><i class="icon-trash icon-white"></i>&nbsp;'.$w->buttonRemove.'</a>
-				<button type="button" onclick="document.location.href=\'./manage/catalog/gallery/removeCategoryCover/'.$categoryId.'\';" class="btn btn-mini" '.( !$category->image ? 'disabled="disabled"' : '' ).'><i class="icon-remove"></i>&nbsp;remove cover</a>
+				<button type="button" onclick="document.location.href=\'./manage/catalog/gallery/removeCategoryCover/'.$categoryId.'\';" class="btn btn-mini" '.( !$category->image ? 'disabled="disabled"' : '' ).'><i class="icon-remove"></i>&nbsp;'.$w->buttonRemoveCover.'</a>
 			</div>
 		</form>
 	</div>

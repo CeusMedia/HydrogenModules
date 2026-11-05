@@ -57,7 +57,7 @@ class View_Manage_My_Provision_License extends View
 				case 'price':
 					$value	= $productLicense->price.' &euro;';
 					if( !$productLicense->price )
-						$value	= '<span class="for-free">kostenlos</span> <small class="muted">(0 &euro;)</small>';
+						$value	= '<span class="for-free">'.$words['add']['textForFree'].'</span> <small class="muted">(0 &euro;)</small>';
 					break;
 				case 'productTitle':
 					$value	= $productLicense->product->title;

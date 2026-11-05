@@ -44,7 +44,7 @@ return '
 			<button type="button" class="btn btn-small btn-danger" onclick="if(confirm(\''.addslashes( $w->buttonRemoveConfirm ).'\'))document.location.href=\'./manage/gallery/remove/'.$gallery->galleryId.'\';"><i class="icon-remove icon-white"></i> '.$w->buttonRemove.'</button>
 		</form>
 		<hr/>
-		<h4>Short-Code</h4>
+		<h4>'.$w->headingCode.'</h4>
 		<div class="row-fluid">
 			<div class="span9">
 				<p>'.$words['edit']['code'].'</p>

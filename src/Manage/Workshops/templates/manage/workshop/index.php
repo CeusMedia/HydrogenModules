@@ -8,9 +8,11 @@ use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 /** @var object[] $workshops */
 /** @var object $workshop */
 
+$w	= (object) $words['index'];
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-plus'] );
 
-$list	= '<em>Keine Workshops vorhanden.</em>';
+$list	= '<em>'.$w->noEntries.'</em>';
 if( $workshops ){
 	$list	= [];
 	foreach( $workshops as $item ){
@@ -26,18 +28,18 @@ if( $workshops ){
 			HtmlTag::create( 'td', date( 'd.m.Y H:i', $item->modifiedAt ) ),
 		] );
 	}
-	$heads	= HtmlElements::TableHeads( ['Bezeichnung', 'Zustand', 'Anordnung', 'letzte Änderung'] );
+	$heads	= HtmlElements::TableHeads( [$w->headTitle, $w->headStatus, $w->headRank, $w->headModified] );
 	$thead	= HtmlTag::create( 'thead', $heads );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-striped'] );
 }
 
 $panelList	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Workshops' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$list,
 		HtmlTag::create( 'div', [
-			HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Workshop', ['href' => './manage/workshop/add', 'class' => 'btn btn-success'] ),
+			HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, ['href' => './manage/workshop/add', 'class' => 'btn btn-success'] ),
 		], ['class' => 'buttonbar'] ),
 	], ['class' => 'content-panel-inner'] ),
 ], ['class' => 'content-panel'] );

@@ -71,7 +71,8 @@ class Controller_Manage_Content_Document extends Controller
 		$name		= $this->request->get( 'name' );
 		$path		= $this->moduleConfig->get( 'path.documents' );
 		if( !file_exists( $path.$document ) ){
-			$this->messenger->noteError( "Dokument nicht gefunden." );
+			$words		= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorDocumentNotFound );
 			$this->restart( NULL, TRUE );
 		}
 		rename( $path.$document, str_replace( " ", "_", $name ) );

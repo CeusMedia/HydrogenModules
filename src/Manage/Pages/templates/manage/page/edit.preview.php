@@ -32,7 +32,7 @@ else if( in_array( $page->controller, $controllers ) )
 if( $noPreview ){
 	return '
 <div class="alert alert-info">
-	<big>Keine Vorschau für diese Seite.</big><br/>
+	<big>'.$words['edit']['noPreview'].'</big><br/>
 </div>';
 }
 

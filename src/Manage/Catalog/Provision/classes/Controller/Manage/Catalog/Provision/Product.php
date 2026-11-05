@@ -18,7 +18,8 @@ class Controller_Manage_Catalog_Provision_Product extends Controller
 			$data		= $this->request->getAll();
 			$data['createdAt']	= time();
 			$productId	= $this->modelProduct->add( $data, FALSE );
-			$this->messenger->noteSuccess( 'Product added.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( 'edit/'.$productId, TRUE );
 		}
 		$product	= [];
@@ -33,7 +34,8 @@ class Controller_Manage_Catalog_Provision_Product extends Controller
 			$data		= $this->request->getAll();
 			$data['modifiedAt']	= time();
 			$projectId	= $this->modelProduct->edit( $productId, $data, FALSE );
-			$this->messenger->noteSuccess( 'Product saved.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 			$this->restart( 'edit/'.$productId, TRUE );
 		}
 		$licenses	= $this->logicProvision->getProductLicenses( $productId );

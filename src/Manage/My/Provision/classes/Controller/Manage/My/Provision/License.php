@@ -75,7 +75,7 @@ class Controller_Manage_My_Provision_License extends Controller
 //				$dbc->commit();
 				$this->session->remove( 'register.licenseId' );										//  remove noted interest for license
 				$this->session->remove( 'register.productId' );										//  remove noted interest for product
-				$this->messenger->noteSuccess( 'User license and user license keys have been added.'  );
+				$this->messenger->noteSuccess( $words->successAdded );
 				$this->restart( 'shop/addArticle/'.$bridgeId.'/'.$productLicenseId );
 			}
 			catch( Exception $e ){
@@ -133,16 +133,17 @@ class Controller_Manage_My_Provision_License extends Controller
 	 */
 	public function deactivate( int|string $userLicenseId ): void
 	{
+		$words			= (object) $this->getWords( 'msg' );
 		$userLicense	= $this->logicProvision->getUserLicense( $userLicenseId );
 		if( !$userLicense )
-			$this->messenger->noteError( 'Diese Lizenz existiert nicht.' );
+			$this->messenger->noteError( $words->errorLicenseNotFound );
 		else if( $userLicense->userId != $this->userId )
-			$this->messenger->noteError( 'Diese Lizenz wurde nicht von Ihnen bestellt.' );
+			$this->messenger->noteError( $words->errorLicenseNotOwned );
 		else if( Model_Provision_User_License::STATUS_ACTIVE != $userLicense->status )
-			$this->messenger->noteError( 'Diese Lizenz kann nicht abgebrochen werden, da sie derzeit nicht aktiv ist.' );
+			$this->messenger->noteError( $words->errorLicenseNotActive );
 		else {
 			$this->logicProvision->removeDesertedUserLicense( $userLicenseId );
-			$this->messenger->noteSuccess( 'Diese Lizenzbestelltung wurde abgebrochen.' );
+			$this->messenger->noteSuccess( $words->successOrderCancelled );
 		}
 		$this->restart( NULL, TRUE );
 	}
@@ -164,7 +165,7 @@ class Controller_Manage_My_Provision_License extends Controller
 			$userId				= $this->request->get( 'userId' );
 
 			if( $userLicense->userId !== $this->userId ){
-				$this->messenger->noteError( 'Diese Lizenz gehört einem anderen Benutzer.' );
+				$this->messenger->noteError( $words->errorLicenseOfOtherUser );
 				$this->restart( 'assign/'.$userLicenseKeyId, TRUE );
 			}
 
@@ -175,11 +176,11 @@ class Controller_Manage_My_Provision_License extends Controller
 					if( $key->userId )
 						$userIds[]	= $key->userId;
 				if( in_array( $userId, $userIds ) ){
-					$this->messenger->noteError( 'Dieser Benutzer hat bereits einen Schlüssel von dieser Lizenz.' );
+					$this->messenger->noteError( $words->errorUserHasKey );
 					$this->restart( 'assign/'.$userLicenseKeyId, TRUE );
 				}
 				$this->logicProvision->assignUserKeyOfUserLicenseToUser( $userLicenseKeyId, $userId );
-				$this->messenger->noteSuccess( 'Der Lizenzschlüssel wurde dem Benutzer zugewiesen.' );
+				$this->messenger->noteSuccess( $words->successKeyAssigned );
 
 				$receiver	= $this->logicProvision->getUser( $userId );
 				$owner		= $this->logicProvision->getUser( $userLicense->userId );
@@ -191,7 +192,7 @@ class Controller_Manage_My_Provision_License extends Controller
 				] );
 				$language	= $this->env->getLanguage()->getLanguage();
 				$this->logicMail->handleMail( $mail, $receiver, $language );
-				$this->messenger->noteNotice( 'Der Benutzer wurde per Mail über den Lizenzschlüssel informiert.' );
+				$this->messenger->noteNotice( $words->noticeUserInformed );
 				$this->restart( 'view/'.$userLicense->userLicenseId, TRUE );
 			}
 		}
@@ -207,16 +208,17 @@ class Controller_Manage_My_Provision_License extends Controller
 	 */
 	public function cancel( int|string $userLicenseId ): void
 	{
+		$words			= (object) $this->getWords( 'msg' );
 		$userLicense	= $this->logicProvision->getUserLicense( $userLicenseId );
 		if( !$userLicense )
-			$this->messenger->noteError( 'Diese Lizenz existiert nicht.' );
+			$this->messenger->noteError( $words->errorLicenseNotFound );
 		else if( $userLicense->userId != $this->userId )
-			$this->messenger->noteError( 'Diese Lizenz wurde nicht von Ihnen bestellt.' );
+			$this->messenger->noteError( $words->errorLicenseNotOwned );
 		else if( $userLicense->status > 0 )
-			$this->messenger->noteError( 'Diese Lizenz kann nicht abgebrochen werden, da sie bereits aktiv ist.' );
+			$this->messenger->noteError( $words->errorLicenseAlreadyActive );
 		else {
 			$this->logicProvision->removeDesertedUserLicense( $userLicenseId );
-			$this->messenger->noteSuccess( 'Diese Lizenz wurde abgebrochen.' );
+			$this->messenger->noteSuccess( $words->successCancelled );
 		}
 		$this->restart( NULL, TRUE );
 	}

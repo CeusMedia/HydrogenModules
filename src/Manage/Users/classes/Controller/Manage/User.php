@@ -146,7 +146,7 @@ class Controller_Manage_User extends Controller
 		/** @var Entity_User $user */
 		$user	= $this->logic->checkId( $userId, Logic_User::EXTEND_GROUPS | Logic_User::EXTEND_ROLE );
 		if( NULL === $user ){
-			$this->messenger->noteError( 'Invalid user ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidUserId'] );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -284,13 +284,13 @@ class Controller_Manage_User extends Controller
 		$input			= $this->request->getAllFromSource( 'POST', TRUE );
 
 		if( !$this->request->getMethod()->isPost() ){
-			$this->messenger->noteError( 'Access denied' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorAccessDenied'] );
 			$this->restart( 'edit/'.$userId, TRUE );
 		}
 
 		$user		= $this->logic->checkId( $userId );
 		if( NULL === $user ){
-			$this->messenger->noteError( 'Invalid user ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidUserId'] );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -615,7 +615,7 @@ class Controller_Manage_User extends Controller
 		}
 		catch( Exception $e ){
 			//	 @todo handle exception
-			$this->messenger->noteError( 'Failed: '.$e->getMessage() );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorFailed'], $e->getMessage() );
 			$dbc->rollBack();
 		}
 //		$this->modelUser->remove( $user->userId );

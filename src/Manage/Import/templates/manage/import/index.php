@@ -8,9 +8,14 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var array $connections */
 /** @var array $connectorMap */
 
+/** @var array<string,array<string,string>> $words */
+
+$w			= (object) $words['index'];
+$wc			= (object) $words['index.connectors'];
+
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$table		= HtmlTag::create( 'div', 'No connections found.', array ('class' => 'hint' ) );
+$table		= HtmlTag::create( 'div', $w->empty, array ('class' => 'hint' ) );
 
 //print_m( $connectorMap );
 
@@ -23,15 +28,11 @@ $statusHelper	= View_Helper_StatusBadge::create()
 	->setLabelMap( [
 //		View_Helper_StatusBadge::STATUS_POSITIVE	=> \CeusMedia\Bootstrap\Icon::create( 'toggle-on' ).'&nbsp;aktiviert',
 //		View_Helper_StatusBadge::STATUS_NEGATIVE	=> \CeusMedia\Bootstrap\Icon::create( 'toggle-off' ).'&nbsp;deaktiviert',
-		View_Helper_StatusBadge::STATUS_POSITIVE	=> 'aktiviert',
-		View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'deaktiviert',
+		View_Helper_StatusBadge::STATUS_POSITIVE	=> $words['states'][1],
+		View_Helper_StatusBadge::STATUS_NEGATIVE	=> $words['states'][0],
 	] );
 
-$authTypes	= [
-	0	=> 'keine',
-	1	=> 'per Login',
-	2	=> 'mit Schlüssel',
-];
+$authTypes	= $words['authTypes'];
 
 if( count( $connections ) > 0 ){
 	$rows	= [];
@@ -43,24 +44,24 @@ if( count( $connections ) > 0 ){
 			HtmlTag::create( 'td', $statusHelper->setStatus( $connection->status ) ),
 			HtmlTag::create( 'td', $authTypes[$connection->authType] ),
 			HtmlTag::create( 'td', $connectorMap[$connection->importConnectorId]->title ),
-			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connection->createdAt, TRUE, 'vor' ) ),
-			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connection->modifiedAt, TRUE, 'vor' ) ),
+			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connection->createdAt, TRUE, $w->timePrefix, $w->timeSuffix ) ),
+			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connection->modifiedAt, TRUE, $w->timePrefix, $w->timeSuffix ) ),
 		]);
 	}
-	$thead	= HtmlElements::TableHeads( ['ID', 'Titel', 'Zustand', 'Zugang', 'Connector', 'erstellt', 'verändert'] );
+	$thead	= HtmlElements::TableHeads( [$w->headId, $w->headTitle, $w->headStatus, $w->headAuthType, $w->headConnector, $w->headCreatedAt, $w->headModifiedAt] );
 	$tbody	= HtmlTag::create( 'tbody', $rows );
 
 	$colgroup	= HtmlElements::ColumnGroup( ['4%', '', '8%', '10%', '25%', '12%', '12%'] );
 	$table	= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, [
 	'href'	=> 'manage/import/add',
 	'class'	=> 'btn btn-success']
 );
 
 $panelConnectionList	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Importverbindungen' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$table,
 		HtmlTag::create( 'div', $buttonAdd, ['class' => 'buttonbar'] ),
@@ -83,13 +84,7 @@ if( [] !== $connectorMap ){
 			View_Helper_StatusBadge::STATUS_POSITIVE	=> 'aktiviert',
 			View_Helper_StatusBadge::STATUS_NEGATIVE	=> 'deaktiviert',
 		] );*/
-	$types	= [
-		0	=> 'unbekannt',
-		1	=> 'Pull: asynchron',
-		2	=> 'Pull: synchron',
-		3	=> 'Push: POST',
-		4	=> 'Push: PUT',
-	];
+	$types	= $words['connectorTypes'];
 
 	foreach( $connectorMap as $connector ){
 		$title	= $connector->title;
@@ -104,16 +99,16 @@ if( [] !== $connectorMap ){
 			HtmlTag::create( 'td', $types[$connector->type] ),
 			HtmlTag::create( 'td', $connector->mimeTypes ),
 //			HtmlTag::create( 'td', $connector->className ),
-			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->createdAt, TRUE, 'vor' ) ),
-			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->modifiedAt, TRUE, 'vor' ) ),
+			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->createdAt, TRUE, $w->timePrefix, $w->timeSuffix ) ),
+			HtmlTag::create( 'td', View_Helper_TimePhraser::convertStatic( $env, $connector->modifiedAt, TRUE, $w->timePrefix, $w->timeSuffix ) ),
 		] );
 	}
 	$colgroup	= HtmlElements::ColumnGroup( ['4%', '', '8%', '10%', '14%'/*, '26%'*/, '12%', '12%'] );
-	$thead		= HtmlElements::TableHeads( ['ID', 'Titel / Klasse', 'Zustand', 'Zugang', 'MIME-Type'/*, 'Connector'*/, 'erstellt', 'verändert'] );
+	$thead		= HtmlElements::TableHeads( [$wc->headId, $wc->headTitle, $wc->headStatus, $wc->headType, $wc->headMimeTypes/*, 'Connector'*/, $wc->headCreatedAt, $wc->headModifiedAt] );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', [$colgroup, $thead, $tbody], ['class' => 'table'] );
 	$panelConnectorList	= HtmlTag::create( 'div', [
-		HtmlTag::create( 'h3', 'Connectors' ),
+		HtmlTag::create( 'h3', $wc->heading ),
 		HtmlTag::create( 'div', [
 			$table,
 		], ['class' => 'content-panel-inner'] ),

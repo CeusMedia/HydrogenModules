@@ -14,7 +14,7 @@ $iconEdit		= HtmlTag::create( 'i', '', ['class' => 'icon-pencil not-icon-white']
 $iconRankUp		= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-up'] );
 $iconRankDown	= HtmlTag::create( 'i', '', ['class' => 'icon-arrow-down'] );
 
-$list	= '<div><em class="muted">No slides available.</em></div>';
+$list	= '<div><em class="muted">'.$w->noEntries.'</em></div>';
 if( $slider->slides ){
 	$list	= [];
 	foreach( $slider->slides as $nr => $slide ){
@@ -27,7 +27,7 @@ if( $slider->slides ){
 			$buttonDown	= HtmlTag::create( 'a', $iconRankDown, ['class' => 'btn btn-mini disabled'] );
 		$thumb		= HtmlTag::create( 'img', NULL, ['src' => $basePath.$slider->path.$slide->source, 'width' => '60px'] );
 		$thumb		= HtmlTag::create( 'a', $thumb, ['href' => $basePath.$slider->path.$slide->source, 'class' => 'fancybox-auto', 'rel' => 'slides'] );
-		$title		= $slide->title ?: '<em>- ohne Titel -</em>';
+		$title		= $slide->title ?: '<em>'.$w->noTitle.'</em>';
 		$title		= HtmlTag::create( 'span', $title, ['class' => ''] );
 		$title		= HtmlTag::create( 'a', $title, ['href' => './manage/image/slider/editSlide/'.$slide->sliderSlideId] );
 		$source		= HtmlTag::create( 'small', $slide->source, ['class' => 'muted'] );

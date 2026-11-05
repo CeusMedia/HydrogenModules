@@ -5,7 +5,7 @@
 	<title>Manage: Galleries</title>
 	<description></description>
 	<category>Management</category>
-	<version>0.6</version>
+	<version>0.6.1</version>
 	<log version="0.3.5">Use frontend resource.</log>
 	<log version="0.3.6">Apply content panels.</log>
 	<log version="0.4">Language support.</log>
@@ -24,6 +24,7 @@
 	<log version="0.5.2">Move hooks to own hook class.</log>
 	<log version="0.5.3">Condense galleries list.</log>
 	<log version="0.6">Imported module from protected SVN repository.</log>
+	<log version="0.6.1">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>

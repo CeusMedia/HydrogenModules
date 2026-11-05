@@ -44,7 +44,7 @@ class Controller_Manage_Job_Schedule extends Controller
 				$data['expression']	= $this->request->get( 'expressionDatetime' );
 			}
 			$jobScheduleId	= $this->modelSchedule->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Gespeichert.' );
+			$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successSaved'] );
 			$this->restart( 'edit/'.$jobScheduleId, TRUE );
 		}
 	}
@@ -56,7 +56,7 @@ class Controller_Manage_Job_Schedule extends Controller
 	public function edit( int|string $jobScheduleId ): void
 	{
 		if( !( $jobSchedule = $this->modelSchedule->get( $jobScheduleId ) ) ){
-			$this->env->getMessenger()->noteError( 'Ungültige ID gegeben. Weiterleitung zur Liste.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->getMethod()->isPost() ){
@@ -85,7 +85,7 @@ class Controller_Manage_Job_Schedule extends Controller
 				$data['expression']	= $this->request->get( 'expressionDatetime' );
 			}
 			$this->modelSchedule->edit( $jobScheduleId, $data );
-			$this->env->getMessenger()->noteSuccess( 'Gespeichert.' );
+			$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successSaved'] );
 			$this->restart( 'edit/'.$jobScheduleId, TRUE );
 		}
 		$this->addData( 'item', $jobSchedule );

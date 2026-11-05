@@ -51,7 +51,7 @@ class Mail_Manage_Project_Changed extends Mail_Manage_Project_Abstract
 		$body	= '
 <div class="alert alert-info">'.sprintf( $w->headingHtml, $project->title ).'</div>
 <div class="content-panel">
-	<h3>Aktuelle Projektinformationen</h3>
+	<h3>'.$words['mails']['headingCurrent'].'</h3>
 	<div class="content-panel-inner">
 		<h4>'.$w->headingFacts.'</h4>
 		'.$helperFacts->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'

@@ -6,6 +6,7 @@ use CeusMedia\HydrogenFramework\Environment\Resource\Messenger;
 class Controller_Manage_IP_Lock_Filter extends Controller
 {
 	protected Messenger $messenger;
+	protected object $words;
 	protected Model_IP_Lock_Filter $model;
 	protected Logic_IP_Lock $logic;
 
@@ -32,7 +33,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 			$data	= Entity_IP_Lock_Filter::fromArray( $request->getAll() );
 			$data->createdAt	= time();
 			$filterId	= $this->model->add( $data );
-			$this->messenger->noteSuccess( 'Filter added.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$this->restart( NULL, TRUE );
 		}
 		$this->setData( $request->getAll() );
@@ -63,14 +64,14 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		/** @var ?Entity_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
 		if( NULL === $filter ){
-			$this->messenger->noteError( 'Invalid filter ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart();
 		}
 		if( $request->has( 'save' ) ){
 			$data		= $request->getAll();
 			$data['modifiedAt']	= time();
 			$this->model->edit( $filterId, $data );
-			$this->messenger->noteSuccess( 'Filter saved.' );
+			$this->messenger->noteSuccess( $this->words->successSaved );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'filter', $filter );
@@ -104,14 +105,14 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 		/** @var ?Entity_IP_Lock_Filter $filter */
 		$filter		= $this->model->get( $filterId );
 		if( NULL === $filter ){
-			$this->messenger->noteError( 'Invalid filter ID.' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart();
 		}
 		$locks		= $this->logic->getAll( ['filterId' => $filterId] );
 		foreach( $locks as $lock )
 			$this->logic->remove( $lock );
 		$this->model->remove( $filterId );
-		$this->messenger->noteSuccess( 'Filter and related locks removed.' );
+		$this->messenger->noteSuccess( $this->words->successRemoved );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -123,6 +124,7 @@ class Controller_Manage_IP_Lock_Filter extends Controller
 	{
 		$this->logic		= Logic_IP_Lock::getInstance( $this->env );
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
 		$this->model		= new Model_IP_Lock_Filter( $this->env );
 	}
 }

@@ -61,12 +61,12 @@ class Controller_Manage_Page extends Controller
 
 			$indices		= ['parentId' => $parentId, 'identifier' => $data['identifier']];
 			if( $this->model->getByIndices( $indices ) )
-				$this->messenger->noteError( 'Identifier "'.$data['identifier'].'" already taken' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorIdentifierTaken'], $data['identifier'] );
 			else{
 				$pageId		= $this->model->add( $data );
 				$logic		= new Logic_Page( $this->env );
 				$logic->updateFullpath( $pageId );
-				$this->env->getMessenger()->noteSuccess( 'Neue Seite "'.$data['title'].'" angelegt.' );
+				$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successCreated'], $data['title'] );
 				$this->restart( 'edit/'.$pageId, TRUE );
 			}
 		}
@@ -499,7 +499,7 @@ ModuleManagePages.PageEditor.init();
 
 			if( 'frontend' === $this->appFocus ){
 				if( !$this->envManaged->hasModule( 'Resource_Pages' ) ){
-					$this->messenger->noteFailure( 'No support for pages available in frontend environment. Access denied.' );
+					$this->messenger->noteFailure( $this->getWords( 'msg' )['failureNoFrontendSupport'] );
 					$this->session->set( $this->sessionPrefix.'app', 'self' );
 					$this->restart();
 				}

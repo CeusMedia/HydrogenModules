@@ -14,7 +14,7 @@ return '
 			<div class="pull-right">
 				<a href="./manage/catalog/bookstore/category/add" class="btn btn-success btn-mini" title="'.$w->buttonAdd.'"><i class="icon-plus icon-white"></i></a>
 			</div>
-			<h4>Kategorien</h4>
+			<h4>'.$w->heading.'</h4>
 			<div class="content-panel-inner">
 				'.$listMain.'
 			</div>

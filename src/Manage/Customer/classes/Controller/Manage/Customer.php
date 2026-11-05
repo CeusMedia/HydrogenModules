@@ -28,9 +28,9 @@ class Controller_Manage_Customer extends Controller
 			$data['userId']		= (int) $this->env->getSession()->get( Logic_Authentication::$sessionKeyAuthUserId );
 			$data['createdAt']	= time();
 			$customerId			= $this->modelCustomer->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Customer has been saved.' );
+			$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successAdded'] );
 			if( !$this->resolveGeocode( $customerId ) )
-				$this->messenger->noteNotice( 'Für diese Adresse konnte keine Geokoordinaten ermittelt werden.' );
+				$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeNoGeocode'] );
 			$this->restart( NULL, TRUE );
 		}
 		$customer	= [];
@@ -48,7 +48,7 @@ class Controller_Manage_Customer extends Controller
 		$request	= $this->env->getRequest();
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
-			$this->messenger->noteError( 'Invalid customer' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( './manage/customer' );
 		}
 
@@ -56,12 +56,12 @@ class Controller_Manage_Customer extends Controller
 			$data	= $request->getAll();
 			$data['modifiedAt']	= time();
 			$this->modelCustomer->edit( $customerId, $data );
-			$this->messenger->noteSuccess( 'Gespeichert.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successSaved'] );
 			$addressOld	= $customer->city.', '.$customer->street.' '.$customer->nr;
 			$addressNew	= $data['city'].', '.$data['street'].' '.$data['nr'];
 			if( $addressOld !== $addressNew || !($customer->longitude.$customer->latitude) ){
 				if( !$this->resolveGeocode( $customerId ) )
-					$this->messenger->noteNotice( 'Für diese Adresse konnte keine Geokoordinaten ermittelt werden.' );
+					$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeNoGeocode'] );
 			}
 			$this->restart( './manage/customer/edit/'.$customerId );
 		}
@@ -94,7 +94,7 @@ class Controller_Manage_Customer extends Controller
 	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
-			$this->messenger->noteError( 'Invalid customer' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( './manage/customer' );
 		}
 		$this->addData( 'customerId', $customerId );
@@ -111,7 +111,7 @@ class Controller_Manage_Customer extends Controller
 
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
-			$this->messenger->noteError( 'Invalid customer' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( './manage/customer' );
 		}
 
@@ -128,7 +128,7 @@ class Controller_Manage_Customer extends Controller
 				'timestamp'		=> time()
 			];
 			$this->modelRating->add( $data );
-			$this->env->getMessenger()->noteSuccess( 'Rating has been saved.' );
+			$this->env->getMessenger()->noteSuccess( $this->getWords( 'msg' )['successRated'] );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -144,7 +144,7 @@ class Controller_Manage_Customer extends Controller
 	{
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
-			$this->messenger->noteError( 'Invalid customer' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( './manage/customer' );
 		}
 		try{

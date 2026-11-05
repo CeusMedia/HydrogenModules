@@ -6,7 +6,7 @@ $w	= (object) $words['edit-tags'];
 $iconSave	= HTML::Icon( 'ok', TRUE );
 $iconRemove	= HTML::Icon( 'trash', TRUE );
 
-$list		= '<div><em><small class="muted">(Noch nicht implementiert.)</small></em></div>';
+$list		= '<div><em><small class="muted">'.$w->noEntries.'</small></em></div>';
 if( $branch->tags ){
 	$list	= [];
 	foreach( $branch->tags as $tag ){

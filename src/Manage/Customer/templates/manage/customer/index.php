@@ -31,16 +31,16 @@ if( $customers ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '60%', '10%', '30%' );
 	$heads		= HtmlElements::TableHeads( [
-		'Kunde',
-		'Index',
-		'Graph',
+		$w->headTitle,
+		$w->headIndex,
+		$w->headGraph,
 	] );
 	$thead		= HtmlTag::create( 'thead', $heads );
 	$tbody		= HtmlTag::create( 'tbody', $list );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neuer Kunde', ['href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary'] );
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, ['href' => './manage/customer/add', 'class' => 'btn not-btn-small btn-primary'] );
 
 return '
 <h3>'.$w->heading.'</h3>

@@ -31,9 +31,9 @@ if( $news ){
 		if( $starts && $ends )
 	 		$duration	= $starts.' - '.$ends;
 		else if( $starts )
-	 		$duration	= 'ab '.$starts;
+	 		$duration	= sprintf( $words['index']['rangeFrom'], $starts );
 		else if( $ends )
-	 		$duration	= 'bis '.$ends;
+	 		$duration	= sprintf( $words['index']['rangeUntil'], $ends );
 
 		$isVisible	= FALSE;
 		if( Model_News::STATUS_PUBLIC === (int) $item->status ){

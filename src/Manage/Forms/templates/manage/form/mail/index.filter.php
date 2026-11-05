@@ -6,16 +6,19 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Dictionary $filters */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index.filter'];
 
 $iconFilter		= new Icon( 'search' );
 $iconReset		= new Icon( 'search-minus' );
 
-$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' filtern', [
+$buttonSubmit	= HtmlTag::create( 'button', $iconFilter.' '.$w->buttonFilter, [
 	'type'	=> 'submit',
 	'name'	=> 'filter',
 	'class'	=> 'btn btn-small btn-info'
 ] );
-$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;leeren', [
+$buttonReset	= HtmlTag::create( 'a', $iconReset.'&nbsp;'.$w->buttonReset, [
 	'href'	=> './manage/form/mail/filter/reset',
 	'class'	=> 'btn btn-small btn-inverse'
 ] );
@@ -26,57 +29,46 @@ foreach( $identifiers as $identifier )
 $optIdentifier	= HtmlElements::Options( $optIdentifier, $filterIdentifier );
 */
 $formatMap	= [
-	Model_Form_Mail::FORMAT_HTML	=> 'HTML',
-	Model_Form_Mail::FORMAT_TEXT	=> 'Text',
+	Model_Form_Mail::FORMAT_HTML	=> $words['formats'][Model_Form_Mail::FORMAT_HTML],
+	Model_Form_Mail::FORMAT_TEXT	=> $words['formats'][Model_Form_Mail::FORMAT_TEXT],
 ];
 
-$optFormat	= ['' => '- alle -'];
+$optFormat	= ['' => $w->optionAll];
 foreach( $formatMap as $formatKey => $formatLabel )
 	$optFormat[$formatKey]	= $formatLabel;
 $optFormat	= HtmlElements::Options( $optFormat, $filters->get( 'format' ) );
 
-$roleTypeMap	= [
-	Model_Form_Mail::ROLE_TYPE_NONE				=> 'keinen',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_ALL		=> 'Kunde',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_RESULT	=> 'Kunde: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_CUSTOMER_REACT	=> 'Kunde: Reaktion',
-	Model_Form_Mail::ROLE_TYPE_LEADER_ALL		=> 'Leiter',
-	Model_Form_Mail::ROLE_TYPE_LEADER_RESULT	=> 'Leiter: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_LEADER_REACT		=> 'Leiter: Reaktion',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_ALL		=> 'Manager',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_RESULT	=> 'Manager: Ergebnis',
-	Model_Form_Mail::ROLE_TYPE_MANAGER_REACT	=> 'Manager: Reaktion',
-];
+$roleTypeMap	= $words['roleTypes'];
 
-$optRoleType	= ['' => '- egal -'];
+$optRoleType	= ['' => $w->optionAny];
 foreach( $roleTypeMap as $roleTypeKey => $roleTypeLabel )
 	$optRoleType[$roleTypeKey]	= $roleTypeLabel;
 $optRoleType	= HtmlElements::Options( $optRoleType, $filters->get( 'roleType' ) );
 
 return '
 <div class="content-panel">
-	<h3>Filter</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/form/mail/filter" method="post">
 			<div class="row-fluid">
 				<div class="span4">
-					<label for="input_mailId">ID</label>
+					<label for="input_mailId">'.$w->labelId.'</label>
 					<input type="text" name="mailId" id="input_mailId" class="span12" value="'.htmlentities( $filters->get( 'mailId' ), ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 				<div class="span8">
-					<label for="input_format">Format</label>
+					<label for="input_format">'.$w->labelFormat.'</label>
 					<select name="format" id="input_format" class="span12">'.$optFormat.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_title">Titel <small class="muted">(ungefähr)</small></label>
+					<label for="input_title">'.$w->labelTitle.' <small class="muted">'.$w->labelApproximate.'</small></label>
 					<input type="text"  name="title" id="input_title" class="span12" value="'.htmlentities( $filters->get( 'title' ), ENT_QUOTES, 'utf-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_roleType">Nutzbar für </label>
+					<label for="input_roleType">'.$w->labelRoleType.' </label>
 					<select name="roleType" id="input_roleType" class="span12">'.$optRoleType.'</select>
 				</div>
 			</div>

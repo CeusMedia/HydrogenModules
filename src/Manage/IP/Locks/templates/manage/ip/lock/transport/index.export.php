@@ -3,6 +3,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var array<object> $reasons */
 /** @var object $filters */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index.export'];
 
 $iconDownload	= HtmlTag::create( 'i', '', ['class' => 'fa fw fa-download'] );
 
@@ -53,7 +56,7 @@ $listFilters	= HtmlTag::create( 'ul', $listFilters, [
 ] );
 
 $panelExport	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Export' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'input', NULL, [
@@ -62,15 +65,11 @@ $panelExport	= HtmlTag::create( 'div', [
 				'value'	=> 'all',
 			] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'div', join( '<br/>', [
-					'Bestehende Gründe und Regeln werden in eine JSON-Datei gespeichert.',
-					'Aktuelle Sperren werden dabei nicht exportiert.',
-					'Die JSON-Datei kann zur Archivierung abgelegt oder in einer anderen Applikation importiert werden.'
-				 ] ) ),
+				HtmlTag::create( 'div', $w->description ),
 			], ['class' => 'alert alert-success'] ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'h4', 'Gründe' ),
+					HtmlTag::create( 'h4', $w->headingReasons ),
 					HtmlTag::create( 'label', [
 						HtmlTag::create( 'input', NULL, [
 							'type'				=> 'checkbox',
@@ -81,11 +80,11 @@ $panelExport	= HtmlTag::create( 'div', [
 							'class'				=> 'has-optionals',
 							'data-animation'	=> 'slide',
 						] ),
-						HtmlTag::create( 'div', 'alle Gründe' ),
+						HtmlTag::create( 'div', $w->labelAllReasons ),
 					], ['class' => 'checkbox'] ),
 					HtmlTag::create( 'div', [
 						$listReasons,
-						HtmlTag::create( 'h4', 'Filter' ),
+						HtmlTag::create( 'h4', $w->headingFilters ),
 						HtmlTag::create( 'label', [
 							HtmlTag::create( 'input', NULL, [
 								'type'				=> 'checkbox',
@@ -96,7 +95,7 @@ $panelExport	= HtmlTag::create( 'div', [
 								'class'				=> 'has-optionals',
 								'data-animation'	=> 'slide',
 							] ),
-							HtmlTag::create( 'div', 'alle Filter' ),
+							HtmlTag::create( 'div', $w->labelAllFilters ),
 						], ['class' => 'checkbox'] ),
 						HtmlTag::create( 'div', [
 							$listFilters,
@@ -108,7 +107,7 @@ $panelExport	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'br' ),
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Dateiname', ['for' => 'input_filename'] ),
+					HtmlTag::create( 'label', $w->labelFilename, ['for' => 'input_filename'] ),
 					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'filename',
@@ -119,7 +118,7 @@ $panelExport	= HtmlTag::create( 'div', [
 				], ['class' => 'span12'] ),
 			], ['class' => 'row-fluid'] ),
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'button', $iconDownload.'&nbsp;exportieren', [
+				HtmlTag::create( 'button', $iconDownload.'&nbsp;'.$w->buttonExport, [
 					'type'	=> 'submit',
 					'name'	=> 'save',
 					'class'	=> 'btn btn-primary'

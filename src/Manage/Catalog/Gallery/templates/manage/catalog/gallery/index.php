@@ -23,7 +23,7 @@ return '
 		'.$panelCategories.'
 	</div>
 	<div class="span8">
-		<div class="muted"><em><small>Bitte wähle eine Galerie!</small></em></div>
+		<div class="muted"><em><small>'.$words['index']['selectGallery'].'</small></em></div>
 	</div>
 
 </div>';

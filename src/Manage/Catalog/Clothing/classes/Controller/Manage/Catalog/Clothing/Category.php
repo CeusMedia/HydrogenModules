@@ -16,7 +16,8 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 			$data				= $this->request->getAll();
 			$data['createdAt']	= time();
 			$categoryId	= $this->modelCategory->add( $data );
-			$this->messenger->noteSuccess( 'Added.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successAdded );
 			$this->restart( 'edit/'.$categoryId, TRUE );
 		}
 	}
@@ -27,7 +28,8 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 			$data	= $this->request->getAll();
 			$data['modifiedAt']	= time();
 			$this->modelCategory->edit( $categoryId, $data );
-			$this->messenger->noteSuccess( 'Saved.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteSuccess( $words->successSaved );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
@@ -42,7 +44,8 @@ class Controller_Manage_Catalog_Clothing_Category extends Controller
 	{
 		$this->addData( 'category', $this->modelCategory->get( $categoryId ) );
 		$this->modelCategory->remove( $categoryId );
-		$this->messenger->noteSuccess( 'Removed.' );
+		$words	= (object) $this->getWords( 'msg' );
+		$this->messenger->noteSuccess( $words->successRemoved );
 		$this->restart( NULL, TRUE );
 	}
 

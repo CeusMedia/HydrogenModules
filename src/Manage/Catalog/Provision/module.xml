@@ -5,7 +5,7 @@
 	<title>Manage: Catalog: Provision</title>
 	<description><![CDATA[Management for provisioning of products, licenses and their keys.]]></description>
 	<category>Management</category>
-	<version>0.5</version>
+	<version>0.5.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -19,6 +19,7 @@
 	<log version="0.4">Migrated Manage:Accounts to Manage:Catalog:Provision.</log>
 	<log version="0.4.1">Use own logic class, forked from module Catalog:Provision.</log>
 	<log version="0.5">Use new module Base:Catalog:Provision instead of own model and logic classes.</log>
+	<log version="0.5.1">Complete German and English locales and extract hard-coded texts.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

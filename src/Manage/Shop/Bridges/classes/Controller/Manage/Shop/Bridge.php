@@ -9,6 +9,7 @@ class Controller_Manage_Shop_Bridge extends Controller
 	protected $messenger;
 	protected $model;
 	protected $request;
+	protected object $words;
 
 	public function add()
 	{
@@ -16,7 +17,7 @@ class Controller_Manage_Shop_Bridge extends Controller
 			$data	= $this->request->getAll();
 			$data['createdAt']	= time();
 			$bridgeId	= $this->model->add( $data );
-			$this->messenger->noteSuccess( 'Bridge added.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$this->restart( NULL, TRUE );
 		}
 		$data	= [];
@@ -30,13 +31,13 @@ class Controller_Manage_Shop_Bridge extends Controller
 	{
 		$bridge	= $this->model->get( $bridgeId );
 		if( !$bridge ){
-			$this->messenger->noteError( 'Invalid bridge ID.' );
+			$this->messenger->noteError( $this->words->errorIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		if( $this->request->has( 'save' ) ){
 			$data		= $this->request->getAll();
 			$this->model->edit( $bridgeId, $data );
-			$this->messenger->noteSuccess( 'Bridge saved.' );
+			$this->messenger->noteSuccess( $this->words->successSaved );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'bridge', $bridge );
@@ -55,11 +56,11 @@ class Controller_Manage_Shop_Bridge extends Controller
 	{
 		$bridge	= $this->model->get( $bridgeId );
 		if( !$bridge ){
-			$this->messenger->noteError( 'Invalid bridge ID.' );
+			$this->messenger->noteError( $this->words->errorIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$this->model->remove( $bridgeId );
-		$this->messenger->noteSuccess( 'Bridge "%s" removed.', $bridge->title );
+		$this->messenger->noteSuccess( $this->words->successRemoved, $bridge->title );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -67,6 +68,7 @@ class Controller_Manage_Shop_Bridge extends Controller
 	{
 		$this->request		= $this->env->getRequest();
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
 		$this->model		= new Model_Shop_Bridge( $this->env );
 		$this->logicBridge	= new Logic_ShopBridge( $this->env );
 		foreach( $this->logicBridge->getBridges() as $bridge ){

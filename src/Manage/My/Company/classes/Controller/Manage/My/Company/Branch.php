@@ -73,15 +73,16 @@ class Controller_Manage_My_Company_Branch extends Controller
 	 */
 	public function addImage( int|string $branchId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$this->checkBranch( $branchId );
 		$image		= $this->request->get( 'image' );
 		try{
 			$upload		= new Logic_Upload( $this->env );
 			$upload->setUpload( $image );										//  @todo handle upload errors before
 			if( !$upload->checkIsImage() )
-				$this->messenger->noteError( 'Das ist kein Bild.' );
+				$this->messenger->noteError( $words->errorNoImage );
 			else if( !$upload->checkSize( 1048576 ) )							//  @todo to configuration
-				$this->messenger->noteError( 'Das Bild ist zu groß.' );
+				$this->messenger->noteError( $words->errorImageTooLarge );
 			else{
 				$extension	= pathinfo( $image['name'], PATHINFO_EXTENSION );
 				$imageName	= $branchId.'_'.md5( time() ).'.'.$extension;
@@ -94,11 +95,11 @@ class Controller_Manage_My_Company_Branch extends Controller
 					'uploadedAt'	=> time()
 				];
 				$this->modelBranchImage->add( $data );
-				$this->messenger->noteSuccess( 'Bild erfolgreich hochgeladen.' );
+				$this->messenger->noteSuccess( $words->successImageAdded );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $words->errorException, $e->getMessage() );
 		}
 		$this->restart( 'edit/'.$branchId, TRUE );
 	}

@@ -20,7 +20,9 @@ $authorRelationsByAuthorId	= [];
 foreach( $articleAuthors as $item )
 	$authorRelationsByAuthorId[$item->authorId]	= $item;
 
-$panelAuthors	= '<div class="alert alert-error">Noch keine Autoren/Herausgeber zugewiesen.</div>';
+$wa	= (object) $words['edit.authors'];
+
+$panelAuthors	= '<div class="alert alert-error">'.$wa->noEntries.'</div>';
 
 if( $articleAuthors ){
 	$listAuthors	= [];
@@ -44,8 +46,8 @@ if( $articleAuthors ){
 		'.HtmlElements::ColumnGroup( '', '150px', '40px' ).'
 		<thead>
 			<tr>
-				<th>Autor / Herausgeber</th>
-				<th>Rolle</th>
+				<th>'.$wa->headAuthor.'</th>
+				<th>'.$wa->headRole.'</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -56,7 +58,7 @@ if( $articleAuthors ){
 
 	$panelAuthors	= '
 <div class="content-panel">
-	<h4>Autoren <small class="muted">(und Herausgeber)</small></h4>
+	<h4>'.$wa->heading.' <small class="muted">'.$wa->headingSuffix.'</small></h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			'.$listAuthors.'
@@ -79,7 +81,7 @@ $optRole	= HtmlElements::Options( $optRole );
 
 $panelAdd	= '
 <div class="content-panel">
-	<h4>Autor zuweisen</h4>
+	<h4>'.$wa->headingAdd.'</h4>
 	<div class="content-panel-inner form-changes-auto">
 		<form action="./manage/catalog/bookstore/article/addAuthor/'.$article->articleId.'" method="post">
 			<div class="row-fluid">

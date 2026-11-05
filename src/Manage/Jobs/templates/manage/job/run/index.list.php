@@ -28,7 +28,7 @@ $iconAbort		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconTerminate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
 
-$table		= HtmlTag::create( 'div', 'Keine Ausführungen gefunden.', ['class' => 'alert alert-warning'] );
+$table		= HtmlTag::create( 'div', $words['index']['noEntries'], ['class' => 'alert alert-warning'] );
 if( $runs ){
 	$rows	= [];
 	foreach( $runs as $item ){
@@ -74,7 +74,7 @@ if( $runs ){
 			$buttonArchive	= HtmlTag::create( 'a', $iconArchive, [
 				'href'	=> './manage/job/run/archive/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-inverse',
-				'title'	=> 'archivieren',
+				'title'	=> $words['index']['buttonArchive'],
 			] );
 		}
 		$buttonAbort	= '';
@@ -82,7 +82,7 @@ if( $runs ){
 			$buttonAbort	= HtmlTag::create( 'a', $iconAbort, [
 				'href'	=> './manage/job/run/abort/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
-				'title'	=> 'verhindern',
+				'title'	=> $words['index']['buttonAbort'],
 			] );
 		}
 		$buttonTerminate	= '';
@@ -90,7 +90,7 @@ if( $runs ){
 			$buttonTerminate	= HtmlTag::create( 'a', $iconTerminate, [
 				'href'	=> './manage/job/run/terminate/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
-				'title'	=> 'abbrechen',
+				'title'	=> $words['index']['buttonTerminate'],
 			] );
 		}
 		$buttonRemove	= '';
@@ -98,7 +98,7 @@ if( $runs ){
 			$buttonRemove	= HtmlTag::create( 'a', $iconRemove, [
 				'href'	=> './manage/job/run/remove/'.$item->jobRunId.( $page ? '?from=manage/job/run/'.$page : '' ),
 				'class'	=> 'btn btn-mini btn-danger',
-				'title'	=> 'entfernen',
+				'title'	=> $words['index']['buttonRemove'],
 			] );
 		}
 

@@ -17,8 +17,8 @@ $number		= 0;
 $helperTime	= new View_Helper_TimePhraser( $env );
 foreach( $branches as $entry ){
 	$class				= $entry->status == 2 ? 'success' : ( $entry->status < 0 ? 'error' : 'warning' );
-	$createdAt			= $helperTime->convert( $entry->createdAt, TRUE, 'vor ' );
-	$modifiedAt			= $entry->modifiedAt ? $helperTime->convert( $entry->modifiedAt, TRUE, 'vor ' ) : '-';
+	$createdAt			= $helperTime->convert( $entry->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
+	$modifiedAt			= $entry->modifiedAt ? $helperTime->convert( $entry->modifiedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix ) : '-';
 	$url				= './manage/company/branch/edit/'.$entry->branchId;
 	$link				= HtmlElements::Link( $url, $entry->title );
 	$company			= $entry->company->title;
@@ -68,7 +68,7 @@ $panelList	= '<div class="content-panel">
 </div>';
 
 $panelFilter	= '<div class="content-panel">
-	<h3 class="muted">Filter</h3>
+	<h3 class="muted">'.$words['filter']['heading'].'</h3>
 	<div class="content-panel-inner">
 		<p class="muted">...</p>
 		<div class="buttonbar">

@@ -41,7 +41,8 @@ class View_Manage_Form extends View
 		$mode	= $this->getData( 'mode', '' );
 
 		$helper = new View_Helper_Form( $this->env );
-		$helper->setLabel( 'abschicken' );
+		$words	= (object) $this->getWords( 'view', 'manage/form' );
+		$helper->setLabel( $words->buttonSubmit );
 		if( $mode )
 			$helper->setMode( $mode );
 		print $helper->setId( $formId )->render();

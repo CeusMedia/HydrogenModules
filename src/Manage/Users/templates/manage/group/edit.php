@@ -56,7 +56,7 @@ $panelEdit	= '
 					'.HtmlElements::LinkButton( './manage/group', $iconCancel.' '.$w->buttonCancel, 'btn btn-small' ).'
 					'.HtmlElements::Button( 'saveGroup', $iconSave.' '.$w->buttonSave, 'btn btn-primary' ).'
 					&nbsp;&nbsp;|&nbsp;&nbsp;
-					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, $iconRemove.' '.$w->buttonRemove, 'btn btn-small btn-danger', 'Wirklich?' ).'
+					'.HtmlElements::LinkButton( './manage/group/remove/'.$group->groupId, $iconRemove.' '.$w->buttonRemove, 'btn btn-small btn-danger', $w->buttonRemove_confirm ).'
 <!--					&nbsp;&nbsp;|&nbsp;&nbsp;
 					'.HtmlElements::LinkButton( './manage/user/add?groupId='.$group->groupId, $iconAddUser.' '.$w->buttonAddUser, 'btn btn-info btn-small' ).'
 					'.HtmlElements::LinkButton( './manage/user/filter?groupId='.$group->groupId, $iconUsers.' '.$w->buttonFilter, 'btn btn-small' ).'
@@ -98,7 +98,7 @@ $tbody			= HtmlTag::create( 'tbody', $rows );
 $table			= HtmlTag::create( 'table', [$columnGroup, $thead, $tbody], ['class' => 'table'] );
 $panelUsers		= '
 <div class="content-panel">
-	<h3>'.count( $users ).' Benutzer</h3>
+	<h3>'.sprintf( $w->headingUsers, count( $users ) ).'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 	</div>
@@ -139,7 +139,7 @@ $panelEntities	= '
 
 $w				= (object) $words['info'];
 $createdAt		= $helperTime->convert( $group->createdAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix );
-$modifiedAt		= $group->modifiedAt ? 'vor '.$helperTime->convert( $group->modifiedAt, TRUE ) : '-';
+$modifiedAt		= $group->modifiedAt ? $helperTime->convert( $group->modifiedAt, TRUE, $w->timePhrasePrefix, $w->timePhraseSuffix ) : '-';
 $nrEntityRelations	= Model_Group_Relation::getInstance( $env )->countByIndex( 'groupId', $group->groupId );
 $panelInfo		= '
 <div class="content-panel content-panel-info">
@@ -152,7 +152,7 @@ $panelInfo		= '
 			<dd>'.$createdAt.'</dd>
 			<dt>'.$w->labelModifiedAt.'</dt>
 			<dd>'.$modifiedAt.'</dd>
-			<dt>Module Entity Relations</dt>
+			<dt>'.$w->labelEntityRelations.'</dt>
 			<dd>'.$nrEntityRelations.'</dd>
 		</dl>
 	</div>

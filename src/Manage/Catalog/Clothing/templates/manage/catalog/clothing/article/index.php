@@ -4,12 +4,15 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;';
 
-$optCategory	= ['' => '- alle -'];
+$wf	= (object) $words['index.filter'];
+$wl	= (object) $words['index.list'];
+
+$optCategory	= ['' => $wf->optionAll];
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->title;
 $optCategory	= HtmlElements::Options( $optCategory, $filterCategoryId );
 
-$optSize	= ['' => '- alle -'];
+$optSize	= ['' => $wf->optionAll];
 foreach( ['S', 'M', 'L', 'XL'] as $size )
 	$optSize[$size]	= $size;
 $optSize	= HtmlElements::Options( $optSize, $filterSize );
@@ -32,31 +35,31 @@ else
 
 $panelFilter	= '
 <div class="content-panel">
-	<h3>Filter</h3>
+	<h3>'.$wf->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./manage/catalog/clothing/article/filter" method="post">
 			'.$filterLanguage.'
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_categoryId">Kategorie</label>
+					<label for="input_categoryId">'.$wf->labelCategory.'</label>
 					<select name="categoryId" id="input_categoryId" class="span12">'.$optCategory.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_size">Größe</label>
+					<label for="input_size">'.$wf->labelSize.'</label>
 					<select name="size" id="input_size" class="span12">'.$optSize.'</select>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_limit">pro Seite</label>
+					<label for="input_limit">'.$wf->labelLimit.'</label>
 					<input type="number" min="1" max="200" step="1" name="limit" id="input_limit" class="span12" value="'.htmlentities( $filterLimit, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="filter" class="btn btn-small btn-primary">filtern</button>
-				<a href="./manage/catalog/clothing/article/filter/reset" class="btn btn-small btn-inverse">reset</a>
+				<button type="submit" name="filter" class="btn btn-small btn-primary">'.$wf->buttonFilter.'</button>
+				<a href="./manage/catalog/clothing/article/filter/reset" class="btn btn-small btn-inverse">'.$wf->buttonReset.'</a>
 			</div>
 		</form>
 	</div>
@@ -89,18 +92,18 @@ foreach( $articles as $article ){
 $colgroup	= HtmlElements::ColumnGroup( ['40', '', '15%', '10%', '10%', '10%', '5%', '10%'] );
 $thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', array(
 	HtmlTag::create( 'th', '' ),
-	HtmlTag::create( 'th', 'Bezeichnung' ),
-	HtmlTag::create( 'th', 'Kategorie' ),
-	HtmlTag::create( 'th', '...' ),
-	HtmlTag::create( 'th', 'Farbe' ),
-	HtmlTag::create( 'th', 'Größe' ),
-	HtmlTag::create( 'th', 'Lager' ),
-	HtmlTag::create( 'th', 'Preis', ['style' => 'text-align: right'] ),
+	HtmlTag::create( 'th', $wl->headTitle ),
+	HtmlTag::create( 'th', $wl->headCategory ),
+	HtmlTag::create( 'th', $wl->headForm ),
+	HtmlTag::create( 'th', $wl->headColor ),
+	HtmlTag::create( 'th', $wl->headSize ),
+	HtmlTag::create( 'th', $wl->headQuantity ),
+	HtmlTag::create( 'th', $wl->headPrice, ['style' => 'text-align: right'] ),
 ) ) );
 $tbody	= HtmlTag::create( 'tbody', $rows );
 $table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 
-$buttonAdd		= HtmlTag::create( 'a', $iconAdd.'neues Produkt', [
+$buttonAdd		= HtmlTag::create( 'a', $iconAdd.$wl->buttonAdd, [
 	'href'	=> './manage/catalog/clothing/article/add',
 	'class'	=> 'btn btn-success',
 ] );
@@ -121,7 +124,7 @@ table td.cell-article-image {
 
 </style>
 <div class="content-panel">
-	<h3>Produkte</h3>
+	<h3>'.$wl->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

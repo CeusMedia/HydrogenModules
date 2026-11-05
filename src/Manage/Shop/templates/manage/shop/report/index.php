@@ -6,6 +6,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var WebEnvironment $env */
 /** @var View $view */
 /** @var array<object> $ordersPerYear */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['index'];
 
 $dataYearsPieOrders	= [];
 foreach( $ordersPerYear as $nr => $entry )
@@ -36,7 +39,7 @@ $factor	= ( date( "L" ) ? 366 : 365)  / date( "z" );
 
 
 $dataYearsTable["Summe"]	= [
-	"Summe",
+	$w->labelSum,
 	[
 		'v'	=> (float) $sumOrders,
 		'f'	=> number_format( $sumOrders, 0, ",", "." )
@@ -48,7 +51,7 @@ $dataYearsTable["Summe"]	= [
 ];
 
 $dataYearsTable["Trend"]	= [
-	'Trend',
+	$w->labelTrend,
 	round( $dataYearsTable[$entry->year][1] * $factor ),
 	[
 		'v'	=> (float) $dataYearsTable[$entry->year][2]['v'] * $factor,
@@ -57,7 +60,7 @@ $dataYearsTable["Trend"]	= [
 ];
 
 $sum	= 0;
-$dataYearsChartOrders	= [["Jahr", "Bestellungen", "Trend"]];
+$dataYearsChartOrders	= [[$w->labelYear, $w->labelOrders, $w->labelTrend]];
 foreach( $ordersPerYear as $nr => $entry ){
 //	if( $entry->year == date( "Y" ) )
 //		$entry->orders	*= $factor;
@@ -70,7 +73,7 @@ foreach( $ordersPerYear as $nr => $entry ){
 }
 
 $sum	= 0;
-$dataYearsChartTurnover	= [["Jahr", "Umsatz", "Trend"]];
+$dataYearsChartTurnover	= [[$w->labelYear, $w->labelTurnover, $w->labelTrend]];
 foreach( $ordersPerYear as $nr => $entry ){
 //	if( $entry->year == date( "Y" ) )
 //		$entry->turnover	*= $factor;
@@ -95,7 +98,7 @@ $selector	= '';
 $tabs	= View_Manage_Shop::renderTabs( $env, 'report' );
 
 return $tabs.$selector.'
-<h3>Bestellungen und Umsätze über die Jahre</h3>
+<h3>'.$w->heading.'</h3>
 <div class="row-fluid">
 	<div class="span8">
 		<div id="chart_years_chart_orders"></div>
@@ -105,7 +108,7 @@ return $tabs.$selector.'
 		<div id="chart_years_table"></div>
 	</div>
 </div>
-<h4>Verteilung von Bestellungen und Umsätzen</h4>
+<h4>'.$w->headingDistribution.'</h4>
 <div class="row-fluid">
 	<div class="span6">
 		<div id="chart_years_pie_orders"></div>
@@ -135,11 +138,11 @@ return $tabs.$selector.'
 	function drawYearsPieOrders() {
 		let chart	= new google.visualization.PieChart(document.getElementById("chart_years_pie_orders"));
 		let data	= new google.visualization.DataTable();
-		data.addColumn("string", "Jahr");
-		data.addColumn("number", "Bestellungen");
+		data.addColumn("string", '.json_encode( $w->labelYear ).');
+		data.addColumn("number", '.json_encode( $w->labelOrders ).');
 		data.addRows(dataYearsPieOrders);
 		let options = {
-			title	: "Bestellungen pro Jahr",
+			title	: '.json_encode( $w->titlePieOrders ).',
 			width	: "100%",
 			height	: 300
 		};
@@ -149,11 +152,11 @@ return $tabs.$selector.'
 	function drawYearsPieTurnover() {
 		let chart	= new google.visualization.PieChart(document.getElementById("chart_years_pie_turnover"));
 		let data	= new google.visualization.DataTable();
-		data.addColumn("string", "Jahr");
-		data.addColumn("number", "Umsatz");
+		data.addColumn("string", '.json_encode( $w->labelYear ).');
+		data.addColumn("number", '.json_encode( $w->labelTurnover ).');
 		data.addRows(dataYearsPieTurnover);
 		let options = {
-			title	: "Umsatz pro Jahr",
+			title	: '.json_encode( $w->titlePieTurnover ).',
 			width	: "100%",
 			height	: 300
 		};
@@ -163,9 +166,9 @@ return $tabs.$selector.'
 	function drawYearsTable() {
 		let table = new google.visualization.Table(document.getElementById("chart_years_table"));
 		let data = new google.visualization.DataTable();
-		data.addColumn("string", "Jahr");
-		data.addColumn("number", "Bestellungen");
-		data.addColumn("number", "Jahresumsatz in €");
+		data.addColumn("string", '.json_encode( $w->labelYear ).');
+		data.addColumn("number", '.json_encode( $w->labelOrders ).');
+		data.addColumn("number", '.json_encode( $w->labelTurnoverYear ).');
 		data.addRows(dataYearsTable);
 		let options = {showRowNumber: false};
 		table.draw(data, options);
@@ -175,10 +178,10 @@ return $tabs.$selector.'
 		let chart = new google.visualization.AreaChart(document.getElementById("chart_years_chart_orders"));
 		let data = google.visualization.arrayToDataTable(dataYearsChartOrders);
 		let options = {
-			title: "Bestellungen pro Jahr mit Trend",
+			title: '.json_encode( $w->titleChartOrders ).',
 			width: "100%",
 			height: "100%",
-			vAxis: {title: "Bestellungen",  titleTextStyle: {color: "#333"}, minValue: 0}
+			vAxis: {title: '.json_encode( $w->labelOrders ).',  titleTextStyle: {color: "#333"}, minValue: 0}
 		};
 		chart.draw(data, options);
 	}
@@ -187,10 +190,10 @@ return $tabs.$selector.'
 		let chart = new google.visualization.AreaChart(document.getElementById("chart_years_chart_turnover"));
 		let data = google.visualization.arrayToDataTable(dataYearsChartTurnover);
 		let options = {
-			title: "Jahresumsatz in € pro Jahr mit Trend",
+			title: '.json_encode( $w->titleChartTurnover ).',
 			width: "100%",
 			height: "100%",
-			vAxis: {title: "Jahresumsatz in €",  titleTextStyle: {color: "#333"}, minValue: 0}
+			vAxis: {title: '.json_encode( $w->labelTurnoverYear ).',  titleTextStyle: {color: "#333"}, minValue: 0}
 		};
 		chart.draw(data, options);
 	}

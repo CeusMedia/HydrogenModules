@@ -23,7 +23,7 @@ class Controller_Manage_Job_Run extends Controller
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_PREPARED ){
-			$msg	= 'Der Job "%s" konnte nicht mehr verhindert werden.';
+			$msg	= $this->getWords( 'msg' )['errorAbortNotPossible'];
 			$title	= $jobRun->title;
 			if( !$title )
 				$title	= $this->modelDefinition->get( $jobRun->jobDefinitionId, 'identifier' );
@@ -173,7 +173,7 @@ die;*/
 	{
 		$jobRun	= $this->modelRun->get( $jobRunId );
 		if( (int) $jobRun->status !== Model_Job_Run::STATUS_RUNNING ){
-			$msg	= 'Der Job "%s" konnte nicht mehr abgebrochen werden.';
+			$msg	= $this->getWords( 'msg' )['errorTerminateNotPossible'];
 			$title	= $jobRun->title;
 			if( !$title )
 				$title	= $this->modelDefinition->get( $jobRun->jobDefinitionId, 'identifier' );

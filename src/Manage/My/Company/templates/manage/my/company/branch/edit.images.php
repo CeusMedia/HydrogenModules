@@ -21,7 +21,7 @@ if( $branch->images ){
 		$urlImage		= 'images/branches/'.$image->filename;
 		$urlRemove		= './manage/my/company/branch/removeImage/'.$branch->branchId.'/'.$image->branchImageId;
 		$img			= new Image( $urlImage );
-		$title			= $image->title ?: '<small class="muted"><em>Kein Titel.</em></small>';
+		$title			= $image->title ?: '<small class="muted"><em>'.$words['images']['noTitle'].'</em></small>';
 		$listImages[]	= HtmlTag::create( 'tr',
 			HtmlTag::create( 'td',
 				HtmlTag::create( 'a', HTML::Image( $urlImage, $image->title, 'medium thumbnail' ), [
@@ -35,8 +35,8 @@ if( $branch->images ){
 				HTML::DivClass( 'image-item',
 					HtmlTag::create( 'big', $title, ['class' => 'autocut'] ).
 					HTML::UlClass( 'not-image-info unstyled',
-						HTML::Li( 'Datum: '.date( 'd.m.Y H:i', $image->uploadedAt ) ).
-						HTML::Li( 'Größe: '.$img->getWidth().' x '.$img->getHeight() )
+						HTML::Li( sprintf( $words['images']['labelDate'], date( 'd.m.Y H:i', $image->uploadedAt ) ) ).
+						HTML::Li( sprintf( $words['images']['labelSize'], $img->getWidth().' x '.$img->getHeight() ) )
 					).
 					HtmlTag::create( 'a', $iconRemove, [
 						'href'	=> $urlRemove,
@@ -64,7 +64,7 @@ $panelAddImage	= 	HTML::DivClass( 'content-panel',
 		HTML::Form( './manage/my/company/branch/addImage/'.$branch->branchId, 'my_branch_image_add',
 			HTML::Label( 'image_title', $words['addImage']['labelImage'], '' ).
 			HTML::DivClass( 'row-fluid',
-				View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, 'Datei auswählen...' )
+				View_Helper_Input_File::renderStatic( $env, 'image', $iconOpen, $words['addImage']['labelChooseFile'] )
 			).
 			HTML::DivClass( 'row-fluid',
 				HTML::DivClass( 'span12',

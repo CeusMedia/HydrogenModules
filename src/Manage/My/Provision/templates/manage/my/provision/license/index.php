@@ -8,10 +8,12 @@ extract( $view->populateTexts( ['top', 'bottom'], 'html/manage/my/provision/lice
 
 $tabs	= View_Manage_My_Provision_License::renderTabs( $env, '' );
 
+$wp		= (object) $words['position'];
+
 return $tabs.$textTop.'
 <div class="position-bar" style="font-size: 1.1em">
-	<big>&nbsp;Position: </big>
-	<span href="./manage/my/provision/license">Lizenzliste</span>
+	<big>&nbsp;'.$wp->label.' </big>
+	<span href="./manage/my/provision/license">'.$wp->licenseList.'</span>
 	<hr/>
 </div>
 <div class="row-fluid">

@@ -6,6 +6,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as Environment;
 /** @var Environment $env */
 /** @var array<string,array<string,string>> $words */
 
+$w	= (object) $words['add'];
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-arrow-left"] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-check"] );
 $iconOpen		= HtmlTag::create( 'i', '', ['class' => "fa fa-fw fa-folder-open"] );
@@ -38,13 +40,13 @@ $optImageAlignV	= array_diff_key( $words['image-align-v'], [0] );
 $optImageAlignV	= HtmlElements::Options( $optImageAlignV, $workshop->imageAlignV );
 
 $panelEdit	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'neuer Workshop' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Titel', ['for' => 'input_title'] ),
+					HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title'] ),
 					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'title',
@@ -54,7 +56,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span7'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Zustand', ['for' => 'input_status'] ),
+					HtmlTag::create( 'label', $w->labelStatus, ['for' => 'input_status'] ),
 					HtmlTag::create( 'select', $optStatus, [
 						'name'		=> 'status',
 						'id'		=> 'input_status',
@@ -62,7 +64,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span3'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Rang', ['for' => 'input_rank'] ),
+					HtmlTag::create( 'label', $w->labelRank, ['for' => 'input_rank'] ),
 					HtmlTag::create( 'select', $optRank, [
 						'name'		=> 'rank',
 						'id'		=> 'input_rank',
@@ -73,7 +75,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', '<acronym title="Inhalt der Detailansicht">Inhalt</acronym>', ['for' => 'input_description'] ),
+					HtmlTag::create( 'label', '<acronym title="'.htmlentities( $w->labelDescription_title, ENT_QUOTES, 'UTF-8' ).'">'.$w->labelDescription.'</acronym>', ['for' => 'input_description'] ),
 					HtmlTag::create( 'textarea', $workshop->description, [
 						'name'		=> 'description',
 						'id'		=> 'input_description',
@@ -87,7 +89,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', '<acronym title="Kurzbeschreibung für Darstellung in der Übersicht, wird in Detailansicht nicht verwendet">Abstrakt</acronym>', ['for' => 'input_abstract'] ),
+					HtmlTag::create( 'label', '<acronym title="'.htmlentities( $w->labelAbstract_title, ENT_QUOTES, 'UTF-8' ).'">'.$w->labelAbstract.'</acronym>', ['for' => 'input_abstract'] ),
 					HtmlTag::create( 'textarea', $workshop->abstract, [
 						'name'		=> 'abstract',
 						'id'		=> 'input_abstract',
@@ -101,7 +103,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Bild', ['for' => 'input_image'] ),
+					HtmlTag::create( 'label', $w->labelImage, ['for' => 'input_image'] ),
 					HtmlTag::create( 'input', NULL, [
 						'type'		=> 'text',
 						'name'		=> 'image',
@@ -115,7 +117,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 					$trigger
 				], ['class' => 'span1'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Horizontal', ['for' => 'input_imageAlignH'] ),
+					HtmlTag::create( 'label', $w->labelImageAlignH, ['for' => 'input_imageAlignH'] ),
 					HtmlTag::create( 'select', $optImageAlignH, [
 						'name'		=> 'imageAlignH',
 						'id'		=> 'input_imageAlignH',
@@ -123,7 +125,7 @@ $panelEdit	= HtmlTag::create( 'div', [
 					] ),
 				], ['class' => 'span2'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Vertikal', ['for' => 'input_imageAlignV'] ),
+					HtmlTag::create( 'label', $w->labelImageAlignV, ['for' => 'input_imageAlignV'] ),
 					HtmlTag::create( 'select', $optImageAlignV, [
 						'name'		=> 'imageAlignV',
 						'id'		=> 'input_imageAlignV',
@@ -135,8 +137,8 @@ $panelEdit	= HtmlTag::create( 'div', [
 
 
 			HtmlTag::create( 'div', join( ' ', [
-				HtmlTag::create( 'a', $iconCancel.'&nbsp;zurück', ['href' => './manage/workshop', 'class' => 'btn'] ),
-				HtmlTag::create( 'button', $iconSave.'&nbsp;speichern', ['type' => 'submit', 'name' => 'save', 'class' => 'btn btn-primary'] ),
+				HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel, ['href' => './manage/workshop', 'class' => 'btn'] ),
+				HtmlTag::create( 'button', $iconSave.'&nbsp;'.$w->buttonSave, ['type' => 'submit', 'name' => 'save', 'class' => 'btn btn-primary'] ),
 			] ), ['class' => 'buttonbar'] ),
 
 		], ['method' => 'post', 'action' => './manage/workshop/add'] ),

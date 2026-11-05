@@ -15,11 +15,11 @@ class Controller_Manage_Customer_Project extends Controller
 		$type		= $request->get( 'type' );
 		$customer	= $this->modelCustomer->get( $customerId );
 		if( !$customer ){
-			$this->messenger->noteError( 'Invalid customer ID.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidCustomerId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->logic->add( $customerId, $projectId, $type );
-		$this->messenger->noteSuccess( 'Relation added.' );
+		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successAdded'] );
 		$this->restart( (string) $customerId, TRUE );
 	}
 
@@ -44,7 +44,7 @@ class Controller_Manage_Customer_Project extends Controller
 	public function remove( $customerId, $projectId )
 	{
 		if( $this->logic->remove( $customerId, $projectId ) )
-			$this->messenger->noteSuccess( 'Relation removed.' );
+			$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'] );
 		$this->restart( (string) $customerId, TRUE );
 	}
 
