@@ -5,10 +5,11 @@
 	<title>Base: User: Provision</title>
 	<description><![CDATA[Management for user-ordered provisioning of products, licenses and their keys.]]></description>
 	<category>Base</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Replace job file by module configuration.</log>
+	<log version="0.2.2">Add English locales.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -45,7 +46,28 @@
 		<locale>de/mail/provision/customer/license/replaced.txt</locale>
 		<locale>de/mail/provision/customer/license/revoked.html</locale>
 		<locale>de/mail/provision/customer/license/revoked.txt</locale>
+		<locale>de/mail/provision/outdated.txt</locale>
 		<locale>de/user/provision.ini</locale>
+		<locale>en/mail/provision/customer/key/assigned.html</locale>
+		<locale>en/mail/provision/customer/key/assigned.txt</locale>
+		<locale>en/mail/provision/customer/key/continued.html</locale>
+		<locale>en/mail/provision/customer/key/continued.txt</locale>
+		<locale>en/mail/provision/customer/key/expired.html</locale>
+		<locale>en/mail/provision/customer/key/expired.txt</locale>
+		<locale>en/mail/provision/customer/key/revoked.html</locale>
+		<locale>en/mail/provision/customer/key/revoked.txt</locale>
+		<locale>en/mail/provision/customer/license/activated.html</locale>
+		<locale>en/mail/provision/customer/license/activated.txt</locale>
+		<locale>en/mail/provision/customer/license/deactivated.html</locale>
+		<locale>en/mail/provision/customer/license/deactivated.txt</locale>
+		<locale>en/mail/provision/customer/license/expired.html</locale>
+		<locale>en/mail/provision/customer/license/expired.txt</locale>
+		<locale>en/mail/provision/customer/license/replaced.html</locale>
+		<locale>en/mail/provision/customer/license/replaced.txt</locale>
+		<locale>en/mail/provision/customer/license/revoked.html</locale>
+		<locale>en/mail/provision/customer/license/revoked.txt</locale>
+		<locale>en/mail/provision/outdated.txt</locale>
+		<locale>en/user/provision.ini</locale>
 	</files>
 	<config protected="yes" type="boolean" name="REST">1</config>
 	<relations/>

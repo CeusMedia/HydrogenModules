@@ -20,15 +20,19 @@ if( $users ){
 }
 */
 
+/** @var array<string,array<string,string>> $words */
+
+$w		= (object) $words['search'];
+
 $panelSearch	= '
 <div class="content-panel">
-	<h3>Mitglied finden</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./member/search" method="post">
-			<label for="input_username">Benutzername</label>
+			<label for="input_username">'.$w->labelUsername.'</label>
 			<input type="text" name="username" id="input_username" class="span12" value="'.htmlentities( $username, ENT_QUOTES, 'UTF-8' ).'" required="required"/>
 			<div class="buttonbar">
-				<button type="submit" name="view" class="btn"><i class="icon-search"></i> find</button>
+				<button type="submit" name="view" class="btn"><i class="icon-search"></i> '.$w->buttonSearch.'</button>
 			</div>
 		</form>
 	</div>
@@ -37,7 +41,7 @@ $panelSearch	= '
 
 $panelList	= '';
 if( $username ){
-	$list	= '<div><em><small class="muted">Keine gefunden.</small></em></div><br/>';
+	$list	= '<div><em><small class="muted">'.$w->empty.'</small></em></div><br/>';
 	if( $users ){
 		$list	= [];
 		$helperMember	= new View_Helper_Member( $env );
@@ -52,7 +56,7 @@ if( $username ){
 
 	$panelList	= '
 	<div class="content-panel">
-		<h3>Gefunde Mitglieder</h3>
+		<h3>'.$w->headingResults.'</h3>
 		<div class="content-panel-inner">
 			'.$list.'
 		</div>
@@ -68,7 +72,7 @@ if( isset( $advices ) && $advices ){
 	}
 	$panelAdvice	= '
 	<div class="content-panel">
-		<h3>Vorschläge</h3>
+		<h3>'.$w->headingAdvices.'</h3>
 		<div class="content-panel-inner">
 			'.$list.'
 		</div>

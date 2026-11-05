@@ -1,0 +1,15 @@
+
+Hello <%?keyOwner.firstname%> <%?keyOwner.surname%>!
+
+A license key assigned to your <%product.title%> account "<%?user.username%>" has been revoked.
+
+Address:      <%product.url%>
+License:      <%productLicense.title%>
+ordered:      by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%>
+was valid:    <%userLicense.duration%>
+
+If you no longer have a valid license key for <%product.title%>, you can
+purchase a license key yourself.
+
+Visit "<%appTitle%>" for further information and an overview of your license keys.
+Address: <%appBaseUrl%>manage/my/provision

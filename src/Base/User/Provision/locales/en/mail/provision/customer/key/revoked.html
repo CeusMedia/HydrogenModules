@@ -1,0 +1,22 @@
+<h2>License key revoked</h2>
+<p>
+	Hello <%?keyOwner.firstname%> <%?keyOwner.surname%>!
+</p>
+<p>
+	A license key assigned to your <%product.title%> account "<%?user.username%>" has been revoked.
+</p>
+<table>
+	<tbody>
+		<tr><th>Address</th><td><%product.url%></td></tr>
+		<tr><th>License</th><td><%productLicense.title%></td></tr>
+		<tr><th>ordered</th><td> by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%></td></tr>
+		<tr><th>was valid for</th><td> <%userLicense.duration%></td></tr>
+	</tbody>
+</table>
+<p>
+	If you no longer have a valid license key for <%product.title%>, you can
+	purchase a license key yourself.
+</p>
+<p>
+	Visit <a href="<%appBaseUrl%>manage/my/provision"><%appTitle%></a> to see an overview of your license keys.
+</p>

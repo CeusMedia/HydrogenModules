@@ -1,0 +1,19 @@
+License key expired
+-------------------
+
+Hello <%?user.firstname%> <%?user.surname%>!
+
+Your license key "<%productLicense.title%>" for the product <%product.title%> expired today.
+Unfortunately, there is no further key available that could be activated automatically now.
+
+Address:      <%product.url%>
+License:      <%productLicense.title%>
+ordered:      by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%>
+was valid:    <%userLicense.duration%>
+
+If you want to continue using "<%product.title%>", you can order a license and thereby new keys.
+Visit "<%appTitle%>" to see an overview of your license keys.
+Address: <%appBaseUrl%>manage/my/provision
+
+Otherwise, we thank you for using our service.
+Kind regards

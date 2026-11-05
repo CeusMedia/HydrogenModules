@@ -1,0 +1,22 @@
+<h2>License key received</h2>
+<p>
+	Hello <%?user.firstname%> <%?user.surname%>!
+</p>
+<p>
+	You have received a license key for your <%product.title%> account "<%?user.username%>".
+</p>
+<table>
+	<tbody>
+		<tr><th>Address</th><td><%product.url%></td></tr>
+		<tr><th>License</th><td><%productLicense.title%></td></tr>
+		<tr><th>ordered</th><td> by <%userLicense.user.username%> (<%?userLicense.user.firstname%> <%?userLicense.user.surname%>) on <%userLicense.date%></td></tr>
+		<tr><th>valid for</th><td> <%userLicense.duration%></td></tr>
+	</tbody>
+</table>
+<p>
+	If you already have a license key for <%product.title%>, this key will be
+	added and only used once your previous license keys have expired.
+</p>
+<p>
+	Visit <a href="<%appBaseUrl%>manage/my/provision"><%appTitle%></a> to see an overview of your license keys.
+</p>

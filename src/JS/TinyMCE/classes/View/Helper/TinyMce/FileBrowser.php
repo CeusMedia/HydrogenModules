@@ -18,6 +18,7 @@ class View_Helper_TinyMce_FileBrowser
 	protected int|string|NULL $topicId	= NULL;
 	protected array $topics;
 	protected string $path;
+	protected object $words;
 
 	public const DISPLAY_MODE_LIST		= 0;
 	public const DISPLAY_MODE_GRID		= 1;
@@ -133,6 +134,7 @@ class View_Helper_TinyMce_FileBrowser
 		if( $this->env->getModules()->has( 'Resource_Frontend' ) )
 			$this->baseUrl	= Logic_Frontend::getInstance( $this->env )->getPath();
 		$this->timePhraser	= new View_Helper_TimePhraser( $this->env );
+		$this->words		= (object) $this->env->getLanguage()->getSection( 'js/tinymce', 'file-browser' );
 	}
 
 	/**
@@ -184,7 +186,7 @@ class View_Helper_TinyMce_FileBrowser
 	{
 		$facts		= [];
 		if( is_int( $count ) && $count > 0 ){
-			$facts[]	= sprintf( $count > 1 ? '%d Einträge' : '%d Eintrag', $count );
+			$facts[]	= sprintf( $count > 1 ? $this->words->entries : $this->words->entry, $count );
 		}
 		$facts	= HtmlTag::create( 'small', join( '&nbsp;|&nbsp;', $facts ), ['class' => 'muted'] );
 
@@ -244,17 +246,17 @@ class View_Helper_TinyMce_FileBrowser
 		try{
 			$image		= new Image( $remoteFilePath );
 			$facts		= HtmlTag::create( 'dl', [
-				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
-				sprintf( '<dt>Auflösung</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
-				sprintf( '<dt>Qualität</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
-				sprintf( '<dt>Typ</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
-				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
+				sprintf( '<dt>'.$this->words->labelSize.'</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>'.$this->words->labelResolution.'</dt><dd>%s&times;%s px</dd>', $image->getWidth(), $image->getHeight() ),
+				sprintf( '<dt>'.$this->words->labelQuality.'</dt><dd class="fact-quality">%s %%</dd>', $image->getQuality() ),
+				sprintf( '<dt>'.$this->words->labelType.'</dt><dd class="fact-mime">%s</dd>', $image->getMimeType() ),
+				sprintf( '<dt>'.$this->words->labelAge.'</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
 			], ['class' => 'dl-inline'] );
 		}
 		catch( Exception ){
 			$facts		= HtmlTag::create( 'dl', [
-				sprintf( '<dt>Größe</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
-				sprintf( '<dt>Alter</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
+				sprintf( '<dt>'.$this->words->labelSize.'</dt><dd>%s</dd>', UnitFormater::formatBytes( filesize( $remoteFilePath ) ) ),
+				sprintf( '<dt>'.$this->words->labelAge.'</dt><dd>%s</dd>', $this->timePhraser->convert( filectime( $remoteFilePath ), TRUE ) ),
 			], ['class' => 'dl-inline'] );
 		}
 		$facts		= HtmlTag::create( 'small', $facts, ['class' => 'muted'] );
@@ -302,8 +304,8 @@ class View_Helper_TinyMce_FileBrowser
 		if( $this->path ){
 			$parts		= explode( '/', $this->path );
 			$pathBack	= implode( '/', array_slice( $parts, 0, -1 ) );
-			$title		= 'zurück';
-			$desc		= HtmlTag::create( 'small', 'zum Überordner', ['class' => 'muted'] );
+			$title		= $this->words->back;
+			$desc		= HtmlTag::create( 'small', $this->words->backHint, ['class' => 'muted'] );
 			$list[]		= $this->renderFolderItem( $pathBack, $title.'<br/>'.$desc, NULL, 'arrow-left' );
 		}
 
@@ -375,7 +377,7 @@ class View_Helper_TinyMce_FileBrowser
 		if( $this->path ){
 			$parts		= explode( "/", $this->path );
 			$pathBack	= implode( "/", array_slice( $parts, 0, -1 ) );
-			$list[]		= $this->renderFolderItem( $pathBack, 'zurück', NULL, 'arrow-left' );
+			$list[]		= $this->renderFolderItem( $pathBack, $this->words->back, NULL, 'arrow-left' );
 		}
 
 		foreach( $folders as $label => $count ){
@@ -432,19 +434,19 @@ class View_Helper_TinyMce_FileBrowser
 		}
 		$pathLabel[]	= $part;
 		$pathLabel		= join( ' / ', $pathLabel );
-		$position		= '<b><small>Position:</small></b> '.$pathLabel;
+		$position		= '<b><small>'.$this->words->labelPosition.'</small></b> '.$pathLabel;
 
-		$sourceModeLabel	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? 'Bild-Quelle' : 'Link-Quelle';
-		$sourceMode			= '<b><small>Modus:</small></b> '.$sourceModeLabel;
+		$sourceModeLabel	= $this->sourceMode == self::SOURCE_MODE_IMAGE ? $this->words->modeImage : $this->words->modeLink;
+		$sourceMode			= '<b><small>'.$this->words->labelMode.'</small></b> '.$sourceModeLabel;
 
 		return HtmlTag::create( 'div', $sourceMode.'&nbsp;&nbsp;|&nbsp;&nbsp;'.$position, ['class' => 'position autocut'] ).
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'a', $iconList.'&nbsp;Liste', [
+					HtmlTag::create( 'a', $iconList.'&nbsp;'.$this->words->buttonList, [
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_LIST,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_LIST ? 'disabled' : NULL ),
 					] ),
-					HtmlTag::create( 'a', $iconGrid.'&nbsp;Kacheln', [
+					HtmlTag::create( 'a', $iconGrid.'&nbsp;'.$this->words->buttonGrid, [
 						'href'		=> './manage/tinyMce/setDisplayMode/'.$mode.'/'.self::DISPLAY_MODE_GRID,
 						'class'		=> 'btn not-btn-small '.( $this->displayMode == self::DISPLAY_MODE_GRID ? 'disabled' : NULL ),
 					] ),

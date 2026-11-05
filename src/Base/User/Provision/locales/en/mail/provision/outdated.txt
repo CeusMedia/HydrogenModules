@@ -1,0 +1,14 @@
+
+Hello <%?keyOwner.firstname%> <%?keyOwner.surname%>!
+
+The current license key for your <%product.title%> account "<%?keyOwner.username%>" has expired.
+
+Address:      <%product.url%>
+License:      <%license.title%>
+ordered:      by <%licenseOwner.username%> (<%?licenseOwner.firstname%> <%?licenseOwner.surname%>) on <%dateLicense%>
+valid for:    <%duration%>
+
+If you no longer have a valid license key for <%product.title%>, you can
+purchase a license key yourself.
+Visit "<%appTitle%>" for further information and an overview of your license keys.
+Address: <%appBaseUrl%>
