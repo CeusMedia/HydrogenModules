@@ -12,7 +12,7 @@ class View_Helper_Input_ResourceTrigger
 	protected ?string $modalId		= NULL;
 	protected string $mode			= 'image';
 	protected ?string $inputId		= NULL;
-	protected string $label			= 'select';
+	protected string $label			= '';
 	protected string $class			= 'btn';
 	protected array $paths			= [];
 
@@ -22,6 +22,7 @@ class View_Helper_Input_ResourceTrigger
 	public function __construct( WebEnvironment $env )
 	{
 		$this->env		= $env;
+		$this->label	= $env->getLanguage()->getWords( 'helper/input/resource' )['trigger']['label'];
 	}
 
 	/**

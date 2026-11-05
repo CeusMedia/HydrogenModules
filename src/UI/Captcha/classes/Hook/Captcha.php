@@ -44,7 +44,8 @@ class Hook_Captcha extends Hook
 					);
 				}
 				catch( Exception $e ){
-					$env->getMessenger()->noteFailure( 'Short code failed: '.$e->getMessage() );
+					$words	= $env->getLanguage()->getSection( 'captcha', 'hook' );
+					$env->getMessenger()->noteFailure( $words['failureShortcode'], $e->getMessage() );
 					break;
 				}
 			}

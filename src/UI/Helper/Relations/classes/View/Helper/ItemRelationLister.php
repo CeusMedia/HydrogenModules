@@ -231,7 +231,7 @@ class View_Helper_ItemRelationLister
 				$items[]	= HtmlTag::create( 'li', $label, ['class' => 'autocut'] );
 			}
 			if( $this->limit > 0 && $total > count( $items ) ){
-				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
+				$label		= sprintf( $this->words['list']['moreItems'], $total - count( $items ) );
 				$items[]	= HtmlTag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
 			$items	= HtmlTag::create( 'ul', $items, ['class' => 'unstyled '.$this->tableClass] );
@@ -277,7 +277,7 @@ class View_Helper_ItemRelationLister
 				$items[]	= HtmlTag::create( 'li', $label, ['class' => 'autocut'] );
 			}
 			if( $this->limit > 0 && $total > count( $items ) ){
-				$label		= sprintf( 'und %s weitere', $total - count( $items ) );
+				$label		= sprintf( $this->words['list']['moreItems'], $total - count( $items ) );
 				$items[]	= HtmlTag::create( 'li', $iconMore.'&nbsp;'.$label );
 			}
 
@@ -294,8 +294,8 @@ class View_Helper_ItemRelationLister
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "30%", "" );
 		$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-			"Typ",
-			"Verknüpfungen / Einträge",
+			$this->words['list']['headType'],
+			$this->words['list']['headItems'],
 		] ) );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [

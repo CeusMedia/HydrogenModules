@@ -5,15 +5,18 @@
 	<title>UI: Layout: Footer</title>
 	<description><![CDATA[]]></description>
 	<category>User Interface</category>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extract hook to own class.</log>
+	<log version="0.2.2">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<files>
 		<class>Hook/UI/Layout/Footer.php</class>
 		<style source="theme" load="auto" level="end">layout.footer.css</style>
+		<locale>de/ui/layout/footer.ini</locale>
+		<locale>en/ui/layout/footer.ini</locale>
 	</files>
 	<relations/>
 	<hook type="resource" resource="Page" event="build">Hook_UI_Layout_Footer::onPageBuild</hook>

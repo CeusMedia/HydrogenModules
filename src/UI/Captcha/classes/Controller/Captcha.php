@@ -20,11 +20,12 @@ class Controller_Captcha extends Controller
 		$session	= $this->env->getSession();
 		$messenger	= $this->env->getMessenger();
 		if( $request->getMethod()->isPost() ){
+			$words	= (object) $this->getWords( 'msg' );
 			$code	= $request->get( 'captcha' );
 			if( View_Helper_Captcha::checkCaptcha( $this->env, $code ) )
-				$messenger->noteSuccess( 'Der CAPTCHA-Code war richtig.' );
+				$messenger->noteSuccess( $words->successCorrect );
 			else
-				$messenger->noteError( 'Der CAPTCHA-Code war nicht richtig.' );
+				$messenger->noteError( $words->errorIncorrect );
 		}
 	}
 }
