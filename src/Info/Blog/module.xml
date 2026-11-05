@@ -6,7 +6,7 @@
 	<title>Info: Blog</title>
 	<description><![CDATA[Simple blog module.]]></description>
 	<category>Info</category>
-	<version>0.4.4</version>
+	<version>0.4.5</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add locales.</log>
@@ -26,6 +26,7 @@
 	<log version="0.4.2">Improve code style.</log>
 	<log version="0.4.3">Extract hook to own class.</log>
 	<log version="0.4.4">Extract Ajax actions to own controller class.</log>
+	<log version="0.4.5">Extract hard-coded texts to locales and add English locales.</log>
 <!--	<log version="0.4">Add support for categories.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -53,6 +54,15 @@
 		<locale>de/mail/info/blog/comment.txt</locale>
 		<locale>de/mail/info/blog/followup.html</locale>
 		<locale>de/mail/info/blog/followup.txt</locale>
+		<locale>en/info/blog.ini</locale>
+		<locale>en/html/info/blog/index.bottom.html</locale>
+		<locale>en/html/info/blog/index.top.html</locale>
+		<locale>en/html/info/blog/post.bottom.html</locale>
+		<locale>en/html/info/blog/post.top.html</locale>
+		<locale>en/mail/info/blog/comment.html</locale>
+		<locale>en/mail/info/blog/comment.txt</locale>
+		<locale>en/mail/info/blog/followup.html</locale>
+		<locale>en/mail/info/blog/followup.txt</locale>
 		<script>module.info.blog.js</script>
 		<style load="auto">module.info.blog.css</style>
 	</files>

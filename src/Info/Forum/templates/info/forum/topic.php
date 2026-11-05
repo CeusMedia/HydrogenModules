@@ -28,7 +28,7 @@ $userCanEdit	= $env->getAcl()->has( 'ajax/info/forum', 'renameThread' );
 $userCanRemove	= in_array( 'removeThread', $rights );
 $userIsManager	= in_array( 'removeTopic', $rights );
 
-$table		= '<em><small class="muted">Keine.</small></em>';
+$table		= '<em><small class="muted">'.$words['topic']['labelEmpty'].'</small></em>';
 if( $threads ){
 	$rows	= [];
 	foreach( $threads as $thread ){
@@ -51,7 +51,7 @@ if( $threads ){
 		}
 		if( $userCanRemove && $userCanChange ){
 			$buttons[]	= HtmlTag::create( 'button', $iconRemove, [
-				'onclick'	=> 'if(confirm(\'Wirklich ?\')) document.location.href = \'./info/forum/removeThread/'.$thread->threadId.'\';',
+				'onclick'	=> 'if(confirm(\''.htmlspecialchars( addslashes( $words['topic']['confirmRemove'] ), ENT_QUOTES, 'UTF-8' ).'\')) document.location.href = \'./info/forum/removeThread/'.$thread->threadId.'\';',
 				'class'	=> 'btn not-btn-small btn-danger',
 				'title'	=> $words['topic']['buttonRemove']
 			] );
@@ -65,7 +65,7 @@ if( $threads ){
 			$link	= $iconSticky.' '.$link;
 		}
 		$modifiedAt	= $helper->convert( $thread->createdAt, TRUE );
-		$underline	= 'Einträge: '.$thread->posts.', Latest: vor '.$modifiedAt;
+		$underline	= sprintf( $words['topic']['labelFacts'], $thread->posts, $modifiedAt );
 		$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
 		$buttons	= HtmlTag::create( 'div', $buttons, ['class' => 'btn-group pull-right'] );
 		$cells		= [

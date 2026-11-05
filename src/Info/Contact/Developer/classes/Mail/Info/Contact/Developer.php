@@ -9,10 +9,11 @@ class Mail_Info_Contact_Developer extends Mail_Abstract
 		$data['date']		= date( "r" );
 		$data['message']	= htmlentities( $data['message'], ENT_COMPAT, 'UTF-8' );
 
-		$subject	= 'Report to Developer';
+		$words		= (object) $this->getWords( 'info/contact/developer', 'mail' );
+		$subject	= $words->subject;
 		$body		= $this->loadContentFile( 'mail/info/contact/developer.html', $data ) ?? '';
 
-		$this->page->addBody( '<h3><span class="muted">'.$appName.'</span> Report to Developer</h3>' );
+		$this->page->addBody( '<h3><span class="muted">'.$appName.'</span> '.$words->heading.'</h3>' );
 		$this->page->addBody( $body );
 		if( $this->env->getModules()->has( 'UI_Bootstrap' ) )
 			$this->addThemeStyle( 'bootstrap.min.css' );

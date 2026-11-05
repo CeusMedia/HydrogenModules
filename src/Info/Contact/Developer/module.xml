@@ -6,9 +6,10 @@
 	<title>Info: Contact: Developer</title>
 	<description><![CDATA[Contact developer via mail form.]]></description>
 	<category>Info</category>
-	<version>0.2</version>
+	<version>0.2.1</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
+	<log version="0.2.1">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -21,6 +22,10 @@
 		<locale>de/html/info/contact/developer/bottom.html</locale>
 		<locale>de/info/contact/developer.ini</locale>
 		<locale>de/mail/info/contact/developer.html</locale>
+		<locale>en/html/info/contact/developer/top.html</locale>
+		<locale>en/html/info/contact/developer/bottom.html</locale>
+		<locale>en/info/contact/developer.ini</locale>
+		<locale>en/mail/info/contact/developer.html</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Mail</needs>
@@ -32,5 +37,5 @@
 	<config protected="yes" type="string" name="captcha.path"></config>
 	<config protected="yes" type="boolean" name="honeypot.enable">yes</config>
 <!--	<link xml:lang="de" rank="89" access="public" path="info/contact/developer/index" link="info/contact/developer">Probleme</link>
-	<link xml:lang="en" rank="89" access="public" path="info/contact/developer/index" link="info/contact/developer">Contact</link>-->
+	<link xml:lang="en" rank="89" access="public" path="info/contact/developer/index" link="info/contact/developer">Problems</link>-->
 </module>

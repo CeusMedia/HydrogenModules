@@ -25,7 +25,7 @@ list>
 <list
 This module can be localized.
 ]]></description>
-	<version>0.8.0</version>
+	<version>0.8.1</version>
 	<log version="0.6.3">Extract CSS to style file.</log>
 	<log version="0.6.4">Add support for serverside Markdown rendering.</log>
 	<log version="0.6.5">Add configuration and detection of renderer.</log>
@@ -44,6 +44,7 @@ This module can be localized.
 	<log version="0.7.8">Use specific markdown renderer.</log>
 	<log version="0.7.9">Code update.</log>
 	<log version="0.8.0">Use model entities.</log>
+	<log version="0.8.1">Complete German and English locales and extract hard-coded texts.</log>
 <!--	<log version="0.8.x">Use editor configuration switch for read-only mode.</log>-->
 <!--	<log version="0.8.x">Replace CodeMirror as Markdown editor by SimpleMDE.</log>-->
 <!--	<log version="0.8.x">Remove file based solution.</log>-->
@@ -77,6 +78,9 @@ This module can be localized.
 		<locale>de/info/manual.ini</locale>
 		<locale>de/info/manual/demo.syntax.md</locale>
 		<locale>de/info/manual/order.list</locale>
+		<locale>en/info/manual.ini</locale>
+		<locale>en/info/manual/demo.syntax.md</locale>
+		<locale>en/info/manual/order.list</locale>
 		<script>Info.Manual.js</script>
 		<style>module.info.manual.css</style>
 	</files>

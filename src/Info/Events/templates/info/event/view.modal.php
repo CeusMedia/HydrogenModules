@@ -2,6 +2,9 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object $event */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['view.modal'];
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -20,14 +23,14 @@ return	'
 	<hr/>
 	<div class="row-fluid">
 		<div class="span7">
-			<h4>Ort und Adresse</h4>
+			<h4>'.$w->headingPlace.'</h4>
 			'.$factLabelPlace.'<br/>
 			'.$factLabelAddress.'
 		</div>
 		<div class="span5">
-			<h4>Datum und Zeit</h4>
-			am '.$factLabelDate.'<br/>
-			um '.$factLabelTime.' Uhr
+			<h4>'.$w->headingDate.'</h4>
+			'.sprintf( $w->valueDate, $factLabelDate ).'<br/>
+			'.sprintf( $w->valueTime, $factLabelTime ).'
 		</div>
 	</div>
 <!--	<hr/>-->

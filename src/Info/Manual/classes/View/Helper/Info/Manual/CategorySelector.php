@@ -38,6 +38,7 @@ class View_Helper_Info_Manual_CategorySelector
 			$options[$category->manualCategoryId]	= $category->title;
 		}
 		$options	= HtmlElements::Options( $options, $categoryId );
+		$words		= $this->env->getLanguage()->getWords( 'info/manual' );
 		$select		= HtmlTag::create( 'select', $options, [
 			'id'		=> 'select_category',
 			'class'		=> 'span12',
@@ -46,7 +47,7 @@ class View_Helper_Info_Manual_CategorySelector
 		return '
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="select_category">Kategorie</label>
+					<label for="select_category">'.$words['list']['labelCategory'].'</label>
 					'.$select.'
 				</div>
 			</div>

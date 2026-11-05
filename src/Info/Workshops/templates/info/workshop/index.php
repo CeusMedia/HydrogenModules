@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var View_Info_Workshop $view */
 /** @var array<object> $workshops */
 /** @var string $pathImages */
+/** @var array<array<string,string>> $words */
 
 $imageAlignH	= [
 	Model_Workshop::IMAGE_ALIGN_H_AUTO		=> 'auto',
@@ -18,7 +19,7 @@ $imageAlignV	= [
 	Model_Workshop::IMAGE_ALIGN_V_BOTTOM	=> 'bottom',
 ];
 
-$list	= '<em>Momentan werden keine Workshops angeboten.</em>';
+$list	= '<em>'.$words['index']['noEntries'].'</em>';
 if( $workshops ){
 	$list	= [];
 	foreach( $workshops as $workshop ){

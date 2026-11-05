@@ -25,7 +25,7 @@ class Controller_Info_Workshop extends Controller
 		$id	= (int) $id;
 		$workshop	= $this->model->get( $id );
 		if( !$workshop ){
-			$this->env->getMessenger()->noteError( 'Kein Workshop unter dieser Adresse gefunden. Weiterleitung zur Übersicht.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'workshop', $this->model->get( $id ) );

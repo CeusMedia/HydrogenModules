@@ -10,9 +10,10 @@ class View_Info_Blog extends View
 {
 	public static function renderCommentInfoBarStatic( Environment $env, $comment ): string
 	{
+		$w		= (object) $env->getLanguage()->getSection( 'info/blog', 'facts' );
 		$facts	= [
-			'Autor: '	=> $comment->username,
-			'Datum: '	=> date( 'd.m.Y H:i', $comment->createdAt ),
+			$w->labelAuthor	=> $comment->username,
+			$w->labelDate	=> date( $w->formatDateTime, $comment->createdAt ),
 		];
 		$facts		= self::renderFactsStatic( $env, $facts, 'dl-inline' );
 		return HtmlTag::create( 'div', $facts, ['class' => 'infobar blog-comment-info'] );
@@ -118,10 +119,11 @@ class View_Info_Blog extends View
 		$authorName	= $post->author->username;
 		if( isset( $post->author->firstname ) && isset( $post->author->surname ) )
 			$authorName	= $post->author->firstname.' '.$post->author->surname;
+		$w		= (object) $env->getLanguage()->getSection( 'info/blog', 'facts' );
 		$facts	= [
-			'Autor: '	=> $authorName,
-			'Datum: '	=> date( 'd.m.Y H:i', $post->createdAt ),
-			'Gelesen: '	=> $post->nrViews.' mal',
+			$w->labelAuthor	=> $authorName,
+			$w->labelDate	=> date( $w->formatDateTime, $post->createdAt ),
+			$w->labelViews	=> sprintf( $w->valueViews, $post->nrViews ),
 //			'Kommentare: '	=> count( $post->comments ),
 		];
 

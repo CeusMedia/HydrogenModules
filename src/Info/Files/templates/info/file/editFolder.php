@@ -10,6 +10,9 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var array $folders */
 /** @var array $files */
 /** @var array $rights */
+/** @var array<array<string,string>> $words */
+
+$w				= (object) $words['editFolder'];
 
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -35,33 +38,33 @@ $selectFolder	= HtmlTag::create( 'select', $optFolder, [
 	//		'required'	=> 'required',
 ] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zurück', [
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'		=> './info/file/index/'.$folder->parentId,
 	'class'		=> 'btn',
 ] );
-$buttonSave		= HtmlTag::create( 'button', $iconSave.' speichern', [
+$buttonSave		= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
 ] );
 $buttonRemove	= '';
 if( in_array( 'remove', $rights ) && count( $files ) === 0 )
-	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' entfernen', [
+	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.' '.$w->buttonRemove, [
 		'href'		=> './info/file/removeFolder/'.$folder->downloadFolderId,
 		'class'		=> 'btn btn-danger',
 	] );
 
 $panelEdit	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Ordner verändern <small class="muted">(umbenennen oder verschieben)</small>' ),
+	HtmlTag::create( 'h3', $w->heading.' <small class="muted">'.$w->heading_suffix.'</small>' ),
 	HtmlTag::create( 'div', [
 		HtmlTag::create( 'form', [
 			HtmlTag::create( 'div', [
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'Ordnername', ['for' => 'input_title'] ),
+					HtmlTag::create( 'label', $w->labelTitle, ['for' => 'input_title'] ),
 					$inputTitle,
 				], ['class' => 'span6'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'label', 'In Ordner', ['for' => 'input_parentId'] ),
+					HtmlTag::create( 'label', $w->labelFolder, ['for' => 'input_parentId'] ),
 					$selectFolder,
 				], ['class' => 'span6'] ),
 			], ['class' => 'row-fluid'] ),

@@ -44,7 +44,7 @@ class Controller_Info_Blog extends Controller
 			];
 			$commentId	= $this->modelComment->add( $data );
 			$words		= (object )$this->getWords( 'msg' );
-			$this->messenger->noteSuccess( $words->successSaved );
+			$this->messenger->noteSuccess( $words->successCommentAdded );
 			$this->informAboutNewComment( $commentId );
 		}
 		$this->restart( View_Info_Blog::renderPostUrlStatic( $this->env, $post ) );
@@ -118,7 +118,7 @@ class Controller_Info_Blog extends Controller
 		if( $this->moduleConfig->get( 'mail' ) ){
 			if( !$this->env->getModules()->has( 'Resource_Mail' ) ){
 				$words		= (object )$this->getWords( 'msg' );
-				$this->messenger->noteFailure( $words->failureMailModuleMissing );
+				$this->messenger->noteFailure( $words->failureNoMailModule );
 			}
 		}
 		$this->addData( 'moduleConfig', $this->moduleConfig );

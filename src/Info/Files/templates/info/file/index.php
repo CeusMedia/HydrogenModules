@@ -81,13 +81,13 @@ foreach( $folders as $item ){
 	$url	= './info/file/index/'.$item->downloadFolderId;
 	$label	= $item->title.'<br/>';
 	if( $item->nrFiles && $item->nrFolders )
-		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien und '.$item->nrFolders.' Unterordner', ['class' => 'muted'] );
+		$info	= HtmlTag::create( 'small', sprintf( $w->infoFilesAndFolders, $item->nrFiles, $item->nrFolders ), ['class' => 'muted'] );
 	else if( $item->nrFiles )
-		$info	= HtmlTag::create( 'small', $item->nrFiles.' Dateien', ['class' => 'muted'] );
+		$info	= HtmlTag::create( 'small', sprintf( $w->infoFiles, $item->nrFiles ), ['class' => 'muted'] );
 	else if( $item->nrFolders )
-		$info	= HtmlTag::create( 'small', $item->nrFolders.' Unterordner', ['class' => 'muted'] );
+		$info	= HtmlTag::create( 'small', sprintf( $w->infoFolders, $item->nrFolders ), ['class' => 'muted'] );
 	else
-		$info	= '<small class="muted">leer</small>';
+		$info	= '<small class="muted">'.$w->infoEmpty.'</small>';
 	$label	= HtmlTag::create( 'a', $label.$info, ['class' => 'name', 'href' => $url] );
 
 	$buttons	= [];

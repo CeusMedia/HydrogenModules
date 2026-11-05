@@ -46,7 +46,7 @@ class View_Helper_Info_Contact_Form_Modal
 //		$modal->setFormAction( './info/contact/form'.( $this->from ? '?from='.$this->from : '' ) );
 		$modal->setFormAction( './ajax/info/contact/form' );
 		$modal->setFormSubmit( 'ModuleInfoContactForm.sendContactForm(this)' );
-		$modal->setHeading( $this->heading ?: $this->moduleWords['form']['heading'] );
+		$modal->setHeading( $this->heading ?: $w->heading );
 		$modal->setBody( $form );
 		$modal->setFade( !FALSE );
 		$modal->setAttributes( ['class' => 'modal-info-contact-form'] );
@@ -204,7 +204,7 @@ class View_Helper_Info_Contact_Form_Modal
 			] ),
 		];
 		$fieldPostcode	= [
-			Html::create( 'label', 'PLZ', ['for' => 'input_postcode'/*, 'class' => 'mandatory required'*/] ),
+			Html::create( 'label', $w->labelPostcode, ['for' => 'input_postcode'/*, 'class' => 'mandatory required'*/] ),
 			Html::create( 'input', NULL, [
 				'type'		=> 'text',
 				'name'		=> 'postcode',

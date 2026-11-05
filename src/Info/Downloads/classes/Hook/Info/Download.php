@@ -10,11 +10,12 @@ class Hook_Info_Download extends Hook
 		$logic		= new Logic_Download( $this->env, $options->get( 'path' ) );
 		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $logic->findFiles( $conditions, ['uploadedAt' => 'DESC'] );
+		$typeLabel	= $this->env->getLanguage()->getSection( 'info/download', 'hook' )['typeLabel'];
 		foreach( $files as $file ){
 			$this->context->add( (object) [
 				'module'	=> 'Info_Downloads',
 				'type'		=> 'file',
-				'typeLabel'	=> 'Datei',
+				'typeLabel'	=> $typeLabel,
 				'id'		=> $file->downloadFolderId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,
@@ -29,11 +30,12 @@ class Hook_Info_Download extends Hook
 		$logic		= new Logic_Download( $this->env, $options->get( 'path' ) );
 		$conditions	= ['uploadedAt' => '> '.( time() - 270 * 24 * 60 * 60 )];
 		$files		= $logic->findFiles( $conditions, ['uploadedAt' => 'DESC'] );
+		$typeLabel	= $this->env->getLanguage()->getSection( 'info/download', 'hook' )['typeLabel'];
 		foreach( $files as $file ){
 			$this->context->add( (object) [
 				'module'	=> 'Info_Downloads',
 				'type'		=> 'file',
-				'typeLabel'	=> 'Datei',
+				'typeLabel'	=> $typeLabel,
 				'id'		=> $file->downloadFolderId,
 				'title'		=> $file->title,
 				'timestamp'	=> $file->uploadedAt,

@@ -41,7 +41,7 @@ if( !$reader ){
 </div>'.$textUnregisterBottom;
 }
 
-$listGroups	= HtmlTag::create( 'em', 'Keine Bereiche mehr abonniert.', ['class' => 'muted'] );
+$listGroups	= HtmlTag::create( 'em', $w->noGroups, ['class' => 'muted'] );
 if( $groups ){
 	$list	= [];
 	foreach( $groups as $group ){

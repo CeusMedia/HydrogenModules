@@ -4,6 +4,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var View_Info_Workshop $view */
 /** @var object $workshop */
 /** @var string $pathImages */
+/** @var array<array<string,string>> $words */
 
 $imageAlignH	= [
 	Model_Workshop::IMAGE_ALIGN_H_AUTO		=> 'auto',
@@ -19,7 +20,7 @@ $imageAlignV	= [
 ];
 
 $heading		= HtmlTag::create( 'h3', $workshop->title );
-$buttonCancel	= HtmlTag::create( 'a', 'zur Übersicht', ['href' => './info/workshop', 'class' => 'btn'] );
+$buttonCancel	= HtmlTag::create( 'a', $words['view']['buttonCancel'], ['href' => './info/workshop', 'class' => 'btn'] );
 
 $image		= '';
 if( $workshop->image ){

@@ -216,7 +216,8 @@ class Controller_Info_Manual extends Controller
 					@unlink( $this->docPath.$fileName );
 				}
 			}
-			$message	= vsprintf( 'Imported %d pages into category "%s".', [
+			$words		= (object) $this->getWords( 'import' );
+			$message	= vsprintf( $words->msgSuccess, [
 				count( $newPages ),
 				$category->title,
 			] );
@@ -392,7 +393,7 @@ class Controller_Info_Manual extends Controller
 		if( !$markdownOnServer && str_starts_with( $renderer, 'server' ) )
 			$renderer	= 'client';
 		if( !$markdownOnClient && $renderer === 'client' )
-			$this->messenger->noteFailure( 'No Markdown renderer installed.' );
+			$this->messenger->noteFailure( $words->msgErrorNoRenderer );
 
 		$this->addData( 'file', $page->title );
 		$this->addData( 'files', $this->files );

@@ -18,7 +18,7 @@ class View_Helper_Info_Event_Calendar
 	{
 		$this->env		= $env;
 		$this->today	= new DateTime( date( 'Y-m-d', time() ) );
-		$this->words	= $this->env->getLanguage()->load( 'info/event' );
+		$this->words	= $this->env->getLanguage()->getWords( 'info/event' );
 		$this->year		= date( "Y" );
 		$this->month	= date( "m" );
 	}
@@ -70,7 +70,8 @@ class View_Helper_Info_Event_Calendar
 			}
 		}
 		$colgroup	= HtmlElements::ColumnGroup( "2%", "14%", "14%", "14%", "14%", "14%", "14%", "14%" );
-		$heads		= HtmlElements::TableHeads( ["KW", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"] );
+		$w			= (object) $this->words['calendar'];
+		$heads		= HtmlElements::TableHeads( [$w->headWeek, $w->headMonday, $w->headTuesday, $w->headWednesday, $w->headThursday, $w->headFriday, $w->headSaturday, $w->headSunday] );
 		$thead		= HtmlTag::create( 'thead', $heads );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$tableLarge	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-large"] );
@@ -112,7 +113,7 @@ class View_Helper_Info_Event_Calendar
 			$rows[]	= join( $row );
 		}
 		$colgroup	= HtmlElements::ColumnGroup( /*"5%", "95%"*/"100%" );
-		$heads		= HtmlElements::TableHeads( ["KW", "..."] );
+		$heads		= HtmlElements::TableHeads( [$w->headWeek, "..."] );
 		$thead		= HtmlTag::create( 'thead', ""/*$heads*/ );
 		$tbody		= HtmlTag::create( 'tbody', $rows );
 		$tableSmall	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['id' => "mission-calendar-small"] );
@@ -143,6 +144,7 @@ $(document).ready(function(){
 
 	protected function renderControls(): string
 	{
+		$w			= (object) $this->words['calendar'];
 		$isNow		= $this->year	=== date( "Y" ) && $this->month === date( "m" );
 
 		$nextYear		= $this->year;
@@ -163,23 +165,23 @@ $(document).ready(function(){
 		$btnControlPrev	= HtmlTag::create( 'a', '&laquo;',  [
 			'href'		=> './info/event/setMonth/'.$prevYear.'/'.$prevMonth,
 			'class'		=> 'btn btn-large',
-			'title'		=> '1 Monat vor',
+			'title'		=> $w->buttonPrev_title,
 		] );
 		$btnControlNext	= HtmlTag::create( 'a', '&raquo;',  [
 			'href'		=> './info/event/setMonth/'.$nextYear.'/'.$nextMonth,
 			'class'		=> 'btn btn-large',
-			'title'		=> '1 Monat weiter',
+			'title'		=> $w->buttonNext_title,
 		] );
 		$btnControlNow	= HtmlTag::create( 'a', '&Omicron;',  [
 			'href'		=> './info/event/setMonth/'.date( 'Y' ).'/'.date( 'm' ),
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
-			'title'		=> 'aktueller Monat',
+			'title'		=> $w->buttonNow_title,
 			'disabled'	=> $isNow ? 'disabled' : NULL,
 		] );
 
 		$label		= $this->renderLabel( $this->year, $this->month );
 
-		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> '.$w->buttonExport, [
 			'href'		=> './info/event/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',

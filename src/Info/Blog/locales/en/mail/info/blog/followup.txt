@@ -1,0 +1,18 @@
+
+New comment
+===========
+
+There is a new comment on the blog entry "<%post.title%>".
+You are receiving this message because you have also commented on this entry.
+
+-------------------------------------------------
+
+Your comment from <%myComment.date%> at <%myComment.time%>:
+
+<%myComment.content%>
+
+-------------------------------------------------
+
+<%comment.username%> replied on <%comment.date%> at <%comment.time%>:
+
+<%comment.content%>

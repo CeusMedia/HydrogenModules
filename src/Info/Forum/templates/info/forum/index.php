@@ -35,7 +35,7 @@ foreach( $topics as $topic ){
 		$buttons[]	= HtmlTag::create( 'a', $iconDown, [
 			'href'	=> './info/forum/rankTopic/'.$topic->topicId.'/down',
 			'class'	=> 'btn not-btn-small',
-			'title'	=> $words['index']['buttonUp'],
+			'title'	=> $words['index']['buttonDown'],
 		] );
 	}
 	if( $env->getAcl()->has( 'ajax/info/forum', 'renameTopic' ) ){
@@ -56,7 +56,7 @@ foreach( $topics as $topic ){
 	$url		= './info/forum/topic/'.$topic->topicId;
 	$link		= HtmlTag::create( 'a', $topic->title, ['href' => $url] );
 	$modifiedAt	= $helper->convert( $topic->createdAt, TRUE );
-	$underline	= 'Themen: '.$topic->threads.' | Beiträge: '.$topic->posts.' | Letzter Beitrag: vor '.$modifiedAt;
+	$underline	= sprintf( $words['index']['labelFacts'], $topic->threads, $topic->posts, $modifiedAt );
 	$label		= $link.'<br/><small class="muted">'.$underline.'</small>';
 	$cells		= [
 		HtmlTag::create( 'td', $label, ['class' => 'topic-label'] ),

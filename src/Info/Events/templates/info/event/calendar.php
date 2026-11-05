@@ -3,6 +3,9 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 use CeusMedia\HydrogenFramework\View;
 
 /** @var View $view */
+/** @var array<string,array<string,string>> $words */
+
+$wm	= (object) $words['modal'];
 
 $iconDetails		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] );
 $iconParticipate	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
@@ -22,11 +25,11 @@ return $panelSearch.$helper->render().'
 	<div id="modal-event-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Wichtigste Informationen</h3>
+			<h3 id="myModalLabel">'.$wm->heading.'</h3>
 		</div>
 		<div class="modal-body"></div>
 		<div class="modal-footer">
-			<button type="button" class="btn btn-primary" id="modal-button-details">'.$iconDetails.'&nbsp;weitere Informationen</button>
+			<button type="button" class="btn btn-primary" id="modal-button-details">'.$iconDetails.'&nbsp;'.$wm->buttonDetails.'</button>
 			<button data-dismiss="modal" class="btn btn-inverse" aria-hidden="true">'.$iconClose.'</button>
 		</div>
 	</div>

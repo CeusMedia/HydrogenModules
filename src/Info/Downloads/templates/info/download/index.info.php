@@ -22,7 +22,7 @@ foreach( $files as $entry ){
 }
 
 return '
-<h4>Informationen</h4>
+<h4>'.$w->heading.'</h4>
 <ul>
 	<li>'.sprintf( $w->filesInFolders, count( $files ), count( $folders ) ).'</li>
 	<li>'.sprintf( $w->downloads, $downloads ).'</li>

@@ -1,0 +1,15 @@
+
+New comment in the blog
+=======================
+
+Blog entry:
+<%post.title%>
+
+Name:
+<%comment.username%>
+
+E-mail:
+<%comment.email%>
+
+Comment:
+<%comment.content%>

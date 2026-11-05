@@ -47,7 +47,7 @@ if( $files ){
 	$list	= HtmlTag::create( 'ul', $list, ['class' => 'nav nav-pills nav-stacked'] );
 }
 */
-$optParentId	= ['0' => '- ohne -'];
+$optParentId	= ['0' => $words['add']['optionParentNone']];
 foreach( $folders as $folder )
 	$optParentId[$folder->manualPageId] = $folder->title;
 $optParentId	= HtmlElements::Options( $optParentId );

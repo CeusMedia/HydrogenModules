@@ -4,11 +4,12 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title><![CDATA[Info: Companies & Branches]]></title>
 	<description></description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Integrate map module.</log>
 	<log version="0.2.2">Improve code style.</log>
+	<log version="0.2.3">Extract hard-coded texts to locales (de, en).</log>
 	<category>Info</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -24,6 +25,8 @@
 		<template>company/branch/view.php</template>
 		<locale>de/company.ini</locale>
 		<locale>de/company/branch.ini</locale>
+		<locale>en/company.ini</locale>
+		<locale>en/company/branch.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Companies</needs>

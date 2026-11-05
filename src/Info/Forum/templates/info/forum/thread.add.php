@@ -8,8 +8,8 @@ return '
 			<div class="row-fluid">
 				<div class="span8">
 					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1" data-toggle="tab">Text</a></li>
-						<li><a href="#tab2" data-toggle="tab">Bild</a></li>
+						<li class="active"><a href="#tab1" data-toggle="tab">'.$w->tabText.'</a></li>
+						<li><a href="#tab2" data-toggle="tab">'.$w->tabImage.'</a></li>
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane active" id="tab1">

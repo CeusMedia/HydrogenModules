@@ -1,0 +1,11 @@
+<%salutation%> <%reader.firstname%>,
+
+thank you for your interest and for subscribing to the newsletter.
+
+To activate the subscription, the validity of the e-mail address must be confirmed.
+To do so, please open the following link in your browser with a click:
+
+<%baseUrl%>info/newsletter/confirm/<%readerId%>/<%key%>
+
+If you have received this e-mail WITHOUT having subscribed to the newsletter, you can ignore this e-mail.
+The subscription will then expire automatically.

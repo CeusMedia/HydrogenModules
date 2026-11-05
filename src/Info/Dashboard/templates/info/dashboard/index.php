@@ -7,10 +7,12 @@ use CeusMedia\HydrogenFramework\View;
 
 /** @var Environment $env */
 /** @var View $view */
-/** @var object $words */
+/** @var array<string,array<string,string>> $words */
 /** @var array $dashboards */
 /** @var ?object $dashboard */
 /** @var ?array $panels */
+
+$w	= (object) $words['index'];
 
 extract( $view->populateTexts( ['top', 'bottom'], 'html/info/dashboard/' ) );
 
@@ -44,13 +46,13 @@ try{
 		$buttonAddBoard		= HtmlTag::create( 'button', $iconAddBoard, [
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAdd',
-			'title'		=> $countUserBoards >= $maxUserBoards ? 'Maximum erreicht' : 'neues Dashboard',
+			'title'		=> $countUserBoards >= $maxUserBoards ? $w->hintMaximumReached : $w->buttonAddBoard,
 			'disabled'	=> $countUserBoards >= $maxUserBoards ? 'disabled' : NULL,
 		] );
 		$buttonAddPanel		= HtmlTag::create( 'button', $iconAddPanel, [
 			'type'		=> 'button',
 			'class'		=> 'btn not-btn-small btn-success trigger-myModalInfoDashboardAddPanel',
-			'title'		=> $countUserPanels >= $maxUserPanels ? 'Maximum erreicht' : 'neues Panel im Dashboard',
+			'title'		=> $countUserPanels >= $maxUserPanels ? $w->hintMaximumReached : $w->buttonAddPanel,
 			'disabled'	=> $countUserPanels >= $maxUserPanels ? 'disabled' : NULL,
 		] );
 		$buttonEditTitle	= HtmlTag::create( 'button', $iconEditTitle, [
@@ -62,8 +64,8 @@ try{
 		$buttonRemoveBoard	= HtmlTag::create( 'a', $iconRemove, [
 			'href'		=> './info/dashboard/remove/'.$dashboard->dashboardId,
 			'class'		=> 'btn btn-small btn-inverse',
-			'title'		=> 'aktuelles Dashboard verwerfen',
-			'onclick'	=> 'if(!confirm(\'Wirklich das aktuelle Dashboard auflösen?\'))return false;',
+			'title'		=> $w->buttonRemoveBoard,
+			'onclick'	=> 'if(!confirm(\''.addslashes( $w->buttonRemoveBoard_confirm ).'\'))return false;',
 		] );
 
 		$optDashboardId	= [];
@@ -92,7 +94,7 @@ try{
 		return $textTop.'
 		<div class="row-fluid">
 			<div class="span6">
-				<h3 class="autocut"><span class="muted">Dashboard: </span> '.$dashboard->title.'</h3>
+				<h3 class="autocut"><span class="muted">'.$w->headingPrefix.'</span> '.$dashboard->title.'</h3>
 			</div>
 			<div class="span6 visible-desktop">
 				<div class="pull-right">
@@ -108,7 +110,7 @@ try{
 		</div>
 		'.$textBottom.$modalAdd.$modalAddPanel;
 	}
-	$heading	= HtmlTag::create( 'h3', 'Dashboard' );
+	$heading	= HtmlTag::create( 'h3', $w->heading );
 	return $textTop.$heading.$helper->render().$textBottom;
 }
 catch( Exception $e ){

@@ -1,16 +1,18 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+$w	= (object) $words['view'];
+
 $listBranches	="";
 if( $branches ){
 	$list	= [];
 	foreach( $branches as $entry){
-		$label	= $entry->title.' in '.$entry->city;
+		$label	= sprintf( $w->labelInCity, $entry->title, $entry->city );
 		$link	= HtmlTag::create( 'a', $label, ['href' => './company/branch/'.$entry->branchId, 'class' => ''] );
 		$list[]	= HtmlTag::create( 'li', $link, ['class' => ''] );
 	}
 	$listBranches	= '
-		<h4>Branches of Company</h4>
+		<h4>'.$w->headingBranches.'</h4>
 		'.HtmlTag::create( 'ul', $list, ['class' => ''] ).'
 	';
 }
@@ -23,9 +25,9 @@ return '
 <hr/>
 <div class="row-fluid">
 	<div class="span6">
-		<h4>Branch</h4>
+		<h4>'.$w->headingBranch.'</h4>
 		<dl class="dl-horizontal">
-			<dt>Anschrift</dt>
+			<dt>'.$w->labelAddress.'</dt>
 			<dd>'.$branch->street.' '.$branch->number.'<br/>'.$branch->postcode.' '.$branch->city.'</dd>
 		</dl>
 //		'.print_m( $branch, NULL, NULL, TRUE ).'
@@ -36,7 +38,7 @@ return '
 </div>
 <div class="row-fluid">
 	<div class="span6">
-		<h4>Company of Branch</h4>
+		<h4>'.$w->headingCompany.'</h4>
 		'.print_m( $company, NULL, NULL, TRUE ).'
 	</div>
 </div>

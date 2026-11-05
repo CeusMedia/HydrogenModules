@@ -11,7 +11,7 @@ $w	= (object) $words['panel-search'];
 
 $panelSearch	= '
 <div class="content-panel">
-	<h3>Search</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./info/event/filter" method="post">
 			<input type="hidden" name="from" value="'.htmlentities( $from, ENT_QUOTES, 'UTF-8').'"/>
@@ -34,10 +34,10 @@ $panelSearch	= '
 			<div class="buttonbar">
 				<div class="btn-toolbar">
 					<button type="submit" name="filter" class="btn btn-primary">
-						<i class="icon-search icon-white"></i>&nbsp;suchen
+						<i class="icon-search icon-white"></i>&nbsp;'.$w->buttonFilter.'
 					</button>
 					<a href="./info/event/filter/reset" class="btn btn-small">
-						<i class="icon-zoom-out"></i>&nbsp;zurücksetzen
+						<i class="icon-zoom-out"></i>&nbsp;'.$w->buttonReset.'
 					</a>
 				</div>
 			</div>
@@ -69,8 +69,8 @@ $panelSearch2	= '
 				</div>
 				<div class="span2">
 					<div class="btn-toolbar">
-						<button type="submit" name="filter" class="btn btn-primary btn-large" title="'.$w->buttonFilter_title.'">
-							'.$iconFilter.' Suchen
+						<button type="submit" name="filter" class="btn btn-primary btn-large" title="'.htmlentities( $w->buttonFilter_title, ENT_QUOTES, 'UTF-8' ).'">
+							'.$iconFilter.' '.$w->buttonFilter.'
 						</button>
 					</div>
 				</div>

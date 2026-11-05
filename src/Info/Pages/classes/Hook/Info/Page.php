@@ -261,7 +261,7 @@ class Hook_Info_Page extends Hook
 			$page			= $logic->getPageFromPath( $path, TRUE );
 			$replacement	= '';
 			if( !$page )
-				$this->env->getMessenger()->noteFailure( 'Die eingebundene Seite "'.$path.'" existiert nicht.' );
+				$this->env->getMessenger()->noteFailure( $this->env->getLanguage()->getSection( 'info/pages', 'hook-dispatch' )['errorInvalidPath'], htmlentities( $path, ENT_QUOTES, 'UTF-8' ) );
 			else{
 				$content	= $page->content;															//  load nested page content
 				$content	= preg_replace( "/<h1>.*<\/h1>/u", '', $content );		//  remove headings @ level 1

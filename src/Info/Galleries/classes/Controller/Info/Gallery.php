@@ -31,7 +31,7 @@ class Controller_Info_Gallery extends Controller
 		if( !$galleryId )
 			$this->restart( NULL, TRUE );
 		if( !( $gallery = $modelGallery->get( $galleryId ) ) ){
-			$this->env->getMessenger()->noteError( 'Invalid gallery ID.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorInvalidId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'gallery', $gallery );

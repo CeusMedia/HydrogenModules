@@ -7,6 +7,7 @@ class Controller_Ajax_Info_Event extends AjaxController
 {
 	protected Model_Event_Address $modelAddress;
 	protected Model_Event $modelEvent;
+	protected array $words;
 
 	/**
 	 *	@param		?string		$startsWith
@@ -37,10 +38,10 @@ class Controller_Ajax_Info_Event extends AjaxController
 	{
 		$event	= $this->modelEvent->get( $eventId );
 		if( !$event )
-			$this->respondError( 0, 'No event found.' );
+			$this->respondError( 0, $this->words['msg']['errorNoEventFound'] );
 		$event->address	= $this->modelAddress->get( $event->addressId );
 		$view	= new View( $this->env );
-		$html	= $view->loadTemplateFile( 'info/event/view.modal.php', ['event' => $event] );
+		$html	= $view->loadTemplateFile( 'info/event/view.modal.php', ['event' => $event, 'words' => $this->words] );
 		$this->respondData( $html );
 	}
 
@@ -48,5 +49,6 @@ class Controller_Ajax_Info_Event extends AjaxController
 	{
 		$this->modelAddress	= new Model_Event_Address( $this->env );
 		$this->modelEvent	= new Model_Event( $this->env );
+		$this->words		= $this->env->getLanguage()->getWords( 'info/event' );
 	}
 }

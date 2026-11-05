@@ -123,7 +123,7 @@ class Controller_Info_Event extends Controller
 	{
 		$event	= $this->modelEvent->get( $eventId );
 		if( !$event ){
-			$this->messenger->noteError( 'Invalid event ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidEventId'] );
 			$this->restart( NULL, TRUE );
 		}
 		$event->address	= $this->modelAddress->get( $event->addressId );
