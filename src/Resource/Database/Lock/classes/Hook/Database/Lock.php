@@ -24,10 +24,11 @@ class Hook_Database_Lock extends Hook
 	{
 		if( !$this->env->getAcl()->has( 'ajax/database/lock', 'renderDashboardPanel' ) )
 			return;
+		$words	= $this->env->getLanguage()->getWords( 'database/lock' );
 		$this->context->registerPanel( 'resource-database-locks', [
 			'url'			=> 'ajax/database/lock/renderDashboardPanel',
-			'title'			=> 'Datenbank-Sperren',
-			'heading'		=> 'Datenbank-Sperren',
+			'title'			=> $words['dashboard']['title'],
+			'heading'		=> $words['dashboard']['heading'],
 			'icon'			=> 'fa fa-fw fa-lock',
 			'rank'			=> 90,
 			'refresh'		=> 10,

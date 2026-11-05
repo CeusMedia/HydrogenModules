@@ -9,7 +9,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.6.2</version>
+	<version>0.6.3</version>
 	<log version="0.2.1">Updated members of logic class.</log>
 	<log version="0.3">Migrate models from Info:Newsletter.</log>
 	<log version="0.3.1">Migrate mail generation from Info:Newsletter and Work:Newsletter.</log>
@@ -44,6 +44,7 @@ Defines models for readers of topic groups getting delivered with newsletters, b
 	<log version="0.6.0">Support reader letters to be sent in future.</log>
 	<log version="0.6.1">Add hook for Mail::onSent to note mail transport happened.</log>
 	<log version="0.6.2">Extend theme (template snapshot) by mail template ID.</log>
+	<log version="0.6.3">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>

@@ -12,7 +12,8 @@ class Mail_Info_Mail_Group_Members_MemberActivated extends Mail_Abstract
 		$this->setSender( $sender );
 
 		$member	= $data['member']->title ?: $data['member']->address;
-		$this->setSubject( 'Mitglied '.$member.' in der Gruppe "'.$data['group']->title.'" wurde aktiviert' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['membersMemberActivated'], $data['group']->title, $member ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

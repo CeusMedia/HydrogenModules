@@ -5,8 +5,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var \CeusMedia\HydrogenFramework\View $view */
 /** @var ?string $from */
 /** @var array<object> $providers */
+/** @var array<string,array<string,string>> $words */
 
-$list	= HtmlTag::create( 'div', 'Keine OAuth2-Provider verfügbar.', ['class' => 'alert alert-error'] );
+$w		= (object) $words['login'];
+
+$list	= HtmlTag::create( 'div', $w->noProviders, ['class' => 'alert alert-error'] );
 
 if( $providers ){
 	$list	= [];
@@ -23,7 +26,7 @@ if( $providers ){
 	$list	= HtmlTag::create( 'ul', $list, ['class' => 'unstyled'] );
 }
 $panelProviders	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Anmelden mit Anbieter-Konto' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$list,
 	], ['class' => 'content-panel-inner'] ),

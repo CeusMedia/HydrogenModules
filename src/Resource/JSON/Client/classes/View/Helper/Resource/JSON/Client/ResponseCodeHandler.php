@@ -102,7 +102,9 @@ class View_Helper_Resource_JSON_Client_ResponseCodeHandler extends Abstraction
 		}
 		catch( Exception $e ){}
 
-		if( $code < 1 )
-			$messenger->noteFailure( 'Unexpected error while calling action "'.$action.'" in controller "'.$controller.'".');
+		if( $code < 1 ){
+			$words	= $this->env->getLanguage()->getSection( 'resource/json/client', 'msg' );
+			$messenger->noteFailure( $words['failureUnexpected'], $action, $controller );
+		}
 	}
 }

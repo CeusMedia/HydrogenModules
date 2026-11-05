@@ -45,7 +45,7 @@ class Hook_Provision extends Hook
 						$cache->set( 'userId-'.$userId, TRUE, 'Provision.userLicenseKey' );
 				}
 				catch( Exception $e ){
-					$message	= 'Der Provision-Server ist zur Zeit nicht erreichbar (%s). Bitte später noch einmal probieren!';
+					$message	= $this->env->getLanguage()->getWords( 'provision' )['msg']['errorServerUnavailable'];
 					$this->env->getMessenger()->noteError( sprintf( $message, $e->getMessage() ) );
 				}
 			}
@@ -73,6 +73,7 @@ class Hook_Provision extends Hook
 		if( !$registerLicense || empty( $data['userId'] ) )
 			return;
 
+		$wordsMsg	= $this->env->getLanguage()->getWords( 'provision' )['msg'];
 		$resource	= new Resource_Provision_Client( $this->env );
 		$licenses	= $resource->getProductLicenses( $productId );
 		foreach( $licenses as $license ){
@@ -94,10 +95,10 @@ class Hook_Provision extends Hook
 					'activate'			=> TRUE,
 				];
 				if( $resource->request( 'provision/rest/orderLicense', $postData ) )
-					$this->env->getMessenger()->noteSuccess( 'Die Lizenz "'.$license->title.'" wurde aktiviert.' );
+					$this->env->getMessenger()->noteSuccess( $wordsMsg['successLicenseActivated'], $license->title );
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteFailure( 'Die Aktivierung der Lizenz "'.$license->title.'" ist fehlgeschlagen.' );
+				$this->env->getMessenger()->noteFailure( $wordsMsg['errorLicenseActivationFailed'], $license->title );
 			}
 		}
 	}
@@ -123,7 +124,8 @@ return;
 				}
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteError( '__Der Provision-Server ist zur Zeit nicht erreichbar ('.$e->getMessage().'). Bitte später noch einmal probieren!' );
+				$message	= $this->env->getLanguage()->getWords( 'provision' )['msg']['errorServerUnavailable'];
+				$this->env->getMessenger()->noteError( $message, $e->getMessage() );
 			}
 		}
 	}

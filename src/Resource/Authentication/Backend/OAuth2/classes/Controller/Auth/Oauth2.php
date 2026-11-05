@@ -140,7 +140,7 @@ class Controller_Auth_Oauth2 extends Controller
 				$this->session->set( Logic_Authentication::$sessionKeyAuthBackend, 'Oauth2' );
 			$provider	= $this->modelProvider->get( $providerId );
 			if( !$provider ){
-				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
+				$this->messenger->noteError( $messages->msgErrorProviderInvalid );
 				$this->restart( 'auth/local/login' );
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );
@@ -257,7 +257,7 @@ class Controller_Auth_Oauth2 extends Controller
 		if( NULL !== $providerId ){
 			$provider	= $this->modelProvider->get( $providerId );
 			if( !$provider ){
-				$this->messenger->noteError( 'Invalid OAuth2 provider ID.' );
+				$this->messenger->noteError( $messages->msgErrorProviderInvalid );
 				$this->restart( 'login', TRUE );
 			}
 			$this->session->set( 'oauth2_providerId', $providerId );

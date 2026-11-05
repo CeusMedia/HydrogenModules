@@ -1,0 +1,9 @@
+Hello <%?member.title%>!
+
+You have written an e-mail to the mail group "<%group.title%>".
+By doing so, you have automatically joined the mail group.
+
+By joining, you agree to the terms of use and the privacy policy.
+If you do not agree with these terms, please unsubscribe from the group.
+
+Unsubscribe link: <%link.leave%>

@@ -23,7 +23,7 @@ list>
 
 ]]></description>
 	<category>Resource</category>
-	<version>0.5.1</version>
+	<version>0.5.2</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -38,6 +38,7 @@ list>
 	<log version="0.4.4">Redesign module configuration.</log>
 	<log version="0.5">Migrate from Resource:Tracker:Piwik to Resource:Tracker:Matomo.</log>
 	<log version="0.5.1">Refactor hooks.</log>
+	<log version="0.5.2">Add English locale.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -47,6 +48,7 @@ list>
 		<class>View/Matomo.php</class>
 		<template>matomo/index.php</template>
 		<locale>de/html/matomo/index.html</locale>
+		<locale>en/html/matomo/index.html</locale>
 		<script>module.tracker.matomo.js</script>
 	</files>
 	<relations/>

@@ -74,7 +74,7 @@ class View_Helper_Form_Fill_Data
 			}
 
 			if( !strlen( $value ) )
-				$value		= '<em class="muted">keine Angabe</em>';
+				$value		= '<em class="muted">'.$this->env->getLanguage()->getSection( 'resource/forms', 'fill' )['noValue'].'</em>';
 			else if( preg_match( '/iban/i', $name ) )
 				$value = join( ' ', str_split( $value, 4 ) );
 
@@ -84,7 +84,7 @@ class View_Helper_Form_Fill_Data
 		if( [] === $listInfo )
 			return '';
 		return HtmlTag::create( 'div', [
-			HtmlTag::create( 'h3', 'Angaben' ),
+			HtmlTag::create( 'h3', $this->env->getLanguage()->getSection( 'resource/forms', 'fill' )['headingData'] ),
 			$this->renderTable( $listInfo ),
 		] );
 	}

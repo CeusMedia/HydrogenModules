@@ -30,11 +30,11 @@ if( $useOauth2 ?? FALSE ){
 	$iconUnbind			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 	$helper				= new View_Helper_Oauth_ProviderButtons( $this->env );
 	if( $helper->count() ){
-		$helper->setDropdownLabel( 'weitere' );
+		$helper->setDropdownLabel( $w->labelOauth2More );
 		$helper->setLinkPath( './auth/oauth2/login/' );
 		$fieldOauth2	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'label', 'Anmelden mit' ),
+				HtmlTag::create( 'label', $w->labelOauth2 ),
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', $helper->render(), ['class' => 'bs2-span12 bs3-col-md-12 bs4-col-md-12'] ),
 				], ['class' => 'bs2-row-fluid bs3-row bs4-row'] ),

@@ -51,7 +51,7 @@ class Hook_Resource_Mail_Group extends Hook
 
 		$member		= $logicGroup->checkMemberId( $action->mailGroupMemberId );
 		if( $member->status == Model_Mail_Group_Member::STATUS_REJECTED ){
-			$this->env->getMessenger()->noteError( 'Ihr Beitritt wurde bereits vom Verwalter der Gruppe abgelehnt.' );
+			$this->env->getMessenger()->noteError( $this->env->getLanguage()->getSection( 'info/mail/group', 'hook' )['errorJoinRejected'] );
 			return TRUE;
 		}
 
@@ -60,7 +60,7 @@ class Hook_Resource_Mail_Group extends Hook
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
 			] );
-			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt und freigegeben. Sie können jetzt E-Mails an die Gruppe schicken.' );
+			$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'info/mail/group', 'hook' )['successJoinConfirmedActivated'] );
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
 				'group'		=> $group,
@@ -100,7 +100,7 @@ class Hook_Resource_Mail_Group extends Hook
 				'status'		=> Model_Mail_Group_Member::STATUS_ACTIVATED,
 				'modifiedAt'	=> time(),
 			] );
-			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Sie können jetzt mit der Gruppe kommunizieren.' );
+			$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'info/mail/group', 'hook' )['successJoinConfirmed'] );
 
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
@@ -140,7 +140,7 @@ class Hook_Resource_Mail_Group extends Hook
 				'status'		=> Model_Mail_Group_Member::STATUS_CONFIRMED,
 				'modifiedAt'	=> time(),
 			] );
-			$this->env->getMessenger()->noteSuccess( 'Ihr Beitritt wurde bestätigt. Die Freigabe durch den Verwalter steht noch aus.' );
+			$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'info/mail/group', 'hook' )['successJoinConfirmedPending'] );
 
 			$manager	= $modelUser->get( $group->managerId );
 			$mailData	= array(
@@ -175,7 +175,7 @@ class Hook_Resource_Mail_Group extends Hook
 			'status'		=> Model_Mail_Group_Member::STATUS_UNREGISTERED,
 			'modifiedAt'	=> time(),
 		] );
-		$this->env->getMessenger()->noteSuccess( 'Ihr Austritt ist nun vollständig. Sie erhalten ab jetzt keine weiteren E-Mails von der Gruppe.' );
+		$this->env->getMessenger()->noteSuccess( $this->env->getLanguage()->getSection( 'info/mail/group', 'hook' )['successLeft'] );
 
 		$manager	= $modelUser->get( $group->managerId );
 		$mailData	= array(

@@ -7,7 +7,8 @@ class Mail_Info_Mail_Group_Manager_GroupDeactivated extends Mail_Abstract
 		$wordsMain	= $this->env->getLanguage()->getWords( 'main' );
 //		$wordsMails	= $this->env->getLanguage()->getWords( 'auth/local', 'mails' );
 
-		$this->setSubject( 'Gruppe "'.$data['group']->title.'" deaktiviert' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['managerGroupDeactivated'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

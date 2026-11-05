@@ -24,7 +24,7 @@ list>
 ]]></description>
 	<deprecation url="https://github.com/CeusMedia/HydrogenModules/tree/master/Resource/Tracker/Matomo">End of life: Use module Resource:Tracker:Matomo instead!</deprecation>
 	<category>Resource</category>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Add hooks for server and client.</log>
@@ -38,6 +38,7 @@ list>
 	<log version="0.4.3">Announce deprecation. Use Resource:Tracker:Matomo instead.</log>
 	<log version="0.4.4">Use general module main switch.</log>
 	<log version="0.4.5">Extract hook to own class.</log>
+	<log version="0.4.6">Add English locale.</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -47,6 +48,7 @@ list>
 		<class>View/Piwik.php</class>
 		<template>piwik/index.php</template>
 		<locale>de/html/piwik/index.html</locale>
+		<locale>en/html/piwik/index.html</locale>
 		<script>piwik.js</script>
 	</files>
 	<relations/>

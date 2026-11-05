@@ -1,0 +1,16 @@
+
+Member left group "<%group.title%>"
+--------------------------------------------------------------------------------
+
+Member:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+- Link:      <%member.link%>
+
+Group:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>
+
+Farewell:
+<%?greeting%>

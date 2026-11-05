@@ -1,0 +1,12 @@
+
+Member registration in group "<%group.title%>" rejected
+--------------------------------------------------------------------------------
+
+Member:
+- Name:      <%?member.title%>
+- E-Mail:    <%member.address%>
+
+Group:
+- Name:      <%group.title%>
+- E-Mail:    <%group.address%>
+- Link:      <%link.group%>

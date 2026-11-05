@@ -1,0 +1,9 @@
+
+The mail group "<%group.title%>" has been activated
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>
+
+You can now send e-mails to the group, which will be forwarded to all other
+members.

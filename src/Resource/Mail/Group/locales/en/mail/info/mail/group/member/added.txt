@@ -1,0 +1,11 @@
+Hello <%?member.title%>!
+
+Your e-mail address <%member.address%> has been added to the mail group "<%group.title%>".
+
+You can send e-mails to the group, which will be delivered automatically to all members of the group.
+The members reply to your e-mail to the group again and thereby to everyone.
+
+By using this service, you agree to the terms of use and the privacy policy.
+If you do not agree with these terms, please unsubscribe from the group.
+
+Unsubscribe link: <%link.leave%>

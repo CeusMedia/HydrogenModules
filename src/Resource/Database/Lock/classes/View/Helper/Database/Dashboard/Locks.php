@@ -27,8 +27,9 @@ class View_Helper_Database_Dashboard_Locks
 	{
 		if( NULL === $this->locks )
 			throw new RuntimeException( 'No locks set' );
+		$words	= $this->env->getLanguage()->getWords( 'database/lock' );
 		if( [] === $this->locks )
-			return HtmlTag::create( 'div', 'Keine vorhanden.', ['class' => 'alert alert-info'] );
+			return HtmlTag::create( 'div', $words['dashboard']['noEntries'], ['class' => 'alert alert-info'] );
 
 		$context	= new View_Helper_Work_Time_Timer( $this->env );
 		$payload	= [];

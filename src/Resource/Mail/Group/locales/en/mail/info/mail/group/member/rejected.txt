@@ -1,0 +1,5 @@
+Hello <%?name%>!
+
+Your membership in the group "<%group.title%>" has been rejected.
+
+You cannot write e-mails to the group.

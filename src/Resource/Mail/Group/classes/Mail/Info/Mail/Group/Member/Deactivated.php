@@ -12,7 +12,8 @@ class Mail_Info_Mail_Group_Member_Deactivated extends Mail_Abstract
 		$this->setSender( $sender );
 
 		$member	= $data['member']->title ?: $data['member']->address;
-		$this->setSubject( 'Mitgliedschaft in der Gruppe "'.$data['group']->title.'" deaktiviert' );
+		$wordsMails	= $this->env->getLanguage()->getSection( 'info/mail/group', 'mails' );
+		$this->setSubject( sprintf( $wordsMails['memberDeactivated'], $data['group']->title ) );
 
 		$data['appTitle']	= $wordsMain['main']['title'];
 		$data['appBaseUrl']	= $this->env->url;

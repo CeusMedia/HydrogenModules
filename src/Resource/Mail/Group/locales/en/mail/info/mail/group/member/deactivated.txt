@@ -1,0 +1,5 @@
+Hello <%?member.title%>!
+
+Your membership in the group "<%group.title%>" has been deactivated.
+
+You can no longer write e-mails to the group.

@@ -94,7 +94,7 @@ class View_Helper_Form_Fill_Person
 					$value	= $input['valueLabel'].'<br/><tt>('.$input['value'].')</tt>';
 
 				if( !strlen( $value ) )
-					$value		= '<em class="muted">keine Angabe</em>';
+					$value		= '<em class="muted">'.$this->env->getLanguage()->getSection( 'resource/forms', 'fill' )['noValue'].'</em>';
 				$listInfo[]	= (object) ['label' => $input['label'], 'value' => $value];
 				unset( $inputs[$name] );
 			}
@@ -103,7 +103,7 @@ class View_Helper_Form_Fill_Person
 		$dataPerson		= '';
 		if( $listInfo ){
 			$dataPerson	= HtmlTag::create( 'div', [
-				HtmlTag::create( 'h3', 'Person' ),
+				HtmlTag::create( 'h3', $this->env->getLanguage()->getSection( 'resource/forms', 'fill' )['headingPerson'] ),
 				$this->renderTable( $listInfo ),
 			] );
 		}

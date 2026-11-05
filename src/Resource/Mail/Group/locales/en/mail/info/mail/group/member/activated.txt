@@ -1,0 +1,8 @@
+Hello <%?member.title%>!
+
+Your membership in the mail group "<%group.title%>" has been activated.
+
+From now on, you can send e-mails to the group and thereby to its members.
+You will now also receive all e-mails that other members write to this group.
+
+E-mails you have written to the group so far will now be delivered.

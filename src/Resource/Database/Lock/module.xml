@@ -4,7 +4,7 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Resource: Database: Lock</title>
 	<description><![CDATA[Simple lock for database entries.]]></description>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add module activity switch.</log>
@@ -17,6 +17,7 @@
 	<log version="0.3.6">Improve code style.</log>
 	<log version="0.3.7">Extract dashboard panel to view helper and AJAX controller.</log>
 	<log version="0.3.8">Add model entity.</log>
+	<log version="0.3.9">Extract hard-coded texts to locales (de, en).</log>
 	<category>Resource</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" site="https://ceusmedia.de/">Christian W&#xFC;rker</author>
@@ -31,6 +32,7 @@
 		<class>View/Helper/Database/Dashboard/Locks.php</class>
 		<template>database/lock/index.php</template>
 		<locale>de/database/lock.ini</locale>
+		<locale>en/database/lock.ini</locale>
 	</files>
 	<relations>
 		<needs type="module">Resource_Database</needs>

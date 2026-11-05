@@ -37,7 +37,7 @@ class Controller_Database_Lock extends Controller
 		/** @var ?Entity_Database_Lock $lock */
 		$lock	= $this->model->get( $lockId );
 		if( NULL === $lock )
-			$this->env->getMessenger()->noteError( 'Diese Sperre existiert nicht mehr.' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorLockNotExisting'] );
 		else
 			$this->model->remove( $lockId );
 		$this->restart( NULL, TRUE );
@@ -59,7 +59,7 @@ class Controller_Database_Lock extends Controller
 	 */
 	protected function getEntryTitle( Entity_Database_Lock $lock ): string
 	{
-		$title	= '<em><small class="muted">unbekannt</small></em>';
+		$title	= '<em><small class="muted">'.$this->getWords( 'index' )['titleUnknown'].'</small></em>';
 		$uri	= NULL;
 		switch( $lock->subject ){
 			case 'WorkMission':

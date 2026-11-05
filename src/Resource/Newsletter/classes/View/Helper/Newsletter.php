@@ -240,8 +240,8 @@ class View_Helper_Newsletter
 		$content	= $this->template->plain;
 
 		if( $this->preview ){
-			$data['linkView']		= "[Disabled in preview]";
-			$data['linkUnregister']	= "[Disabled in preview]";
+			$data['linkView']		= $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledPlain'];
+			$data['linkUnregister']	= $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledPlain'];
 			$data['tracking']		= "[trackingLink=[#trackingUrl#]]";
 		}
 
@@ -292,8 +292,8 @@ class View_Helper_Newsletter
 			$page->addHead( HtmlTag::create( 'style', $styles ) );
 
 		if( $this->preview ){
-			$data['linkView']		= "javascript: alert('Disabled in preview.'); void(0);";
-			$data['linkUnregister']	= "javascript: alert('Disabled in preview.'); void(0);";
+			$data['linkView']		= "javascript: alert('".addslashes( $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledAlert'] )."'); void(0);";
+			$data['linkUnregister']	= "javascript: alert('".addslashes( $this->env->getLanguage()->getSection( 'resource/newsletter', 'preview' )['disabledAlert'] )."'); void(0);";
 			$data['tracking']		= "";
 		}
 

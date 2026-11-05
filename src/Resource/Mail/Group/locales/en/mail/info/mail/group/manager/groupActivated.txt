@@ -1,0 +1,6 @@
+
+The mail group "<%group.title%>" has been activated
+--------------------------------------------------------------------------------
+
+E-Mail:    <%group.address%>
+Link:      <%link.group%>

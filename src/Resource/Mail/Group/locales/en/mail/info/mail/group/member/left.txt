@@ -1,0 +1,6 @@
+Hello <%?member.title%>!
+
+You have requested and confirmed leaving the mail group "<%group.title%>".
+
+You have therefore been unsubscribed from the group.
+You can no longer write e-mails to the group and will not receive any further e-mails from the other members.

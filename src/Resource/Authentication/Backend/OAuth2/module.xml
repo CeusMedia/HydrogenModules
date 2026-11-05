@@ -38,7 +38,7 @@ list>
 <list
 
 ]]></description>
-	<version>0.4.5</version>
+	<version>0.4.6</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Extend model by scopes.</log>
@@ -55,6 +55,7 @@ list>
 	<log version="0.4.3">Refactoring to support new identified state.</log>
 	<log version="0.4.4">Improve code style.</log>
 	<log version="0.4.5">Support user logic extensions.</log>
+	<log version="0.4.6">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian Würker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -68,6 +69,7 @@ list>
 		<class>View/Helper/Oauth/ProviderButtons.php</class>
 		<template>auth/oauth2/login.php</template>
 		<locale>de/auth/oauth2.ini</locale>
+		<locale>en/auth/oauth2.ini</locale>
 	</files>
 	<config protected="yes" type="boolean" name="active" title="Main switch: Use this module">yes</config>
 	<config protected="yes" type="string" name="loginMode" values="buttons,tab">buttons</config>

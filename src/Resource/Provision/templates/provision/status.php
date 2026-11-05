@@ -27,7 +27,7 @@ if( $data->code == 0 ){
 }
 
 return '
-<h3><span class="muted">Zugangsbedingungen: </span>Status</h3>
+<h3>'.$words['status']['heading'].'</h3>
 
 '.$content.'
 <hr/>

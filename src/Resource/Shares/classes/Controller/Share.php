@@ -18,12 +18,12 @@ class Controller_Share extends Controller
 		if( $this->request->getMethod()->isPost() ){
 			$captcha	= $this->request->get( 'captcha' );
 			if( $captcha !== $this->session->get( 'captcha' ) ){
-				$this->messenger->noteError( 'Der Sicherheitscode wurde nicht korrekt eingegeben. Bitte noch einmal!' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorCaptchaInvalid'] );
 				$this->restart( $uuid, TRUE );
 			}
 			$share	= $this->logic->getByUuid( $uuid );
 			if( !$share ){
-				$this->messenger->noteError( 'Für diesen Share-Code existiert kein Dokument.' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorShareInvalid'] );
 				$this->restart( $uuid, TRUE );
 			}
 			$this->restart( 'file/'.$share->path );

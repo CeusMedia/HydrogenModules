@@ -169,7 +169,7 @@ class Controller_Auth_Rest extends Controller
 			$data	= $this->request->getAllFromSource( 'POST', TRUE );
 			$result	= $this->logic->register( $data );
 			if( is_array( $result ) ){
-				$this->messenger->noteSuccess( 'Account has been created. Now, please confirm you account!' );
+				$this->messenger->noteSuccess( $words->msgSuccess );
 				$from	= $this->request->get( 'from' );
 				if( $from ){
 //					if( preg_match( '/:\/\//', $from ) )

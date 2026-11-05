@@ -38,8 +38,8 @@ class Hook_Resource_JSON_Client extends Hook
 			}
 		}
 		catch( Exception $e ){
-			$message	= "Der Server ist momentan nicht erreichbar.";
-			$env->getMessenger()->noteFailure( $message );
+			$words		= $env->getLanguage()->getSection( 'resource/json/client', 'msg' );
+			$env->getMessenger()->noteFailure( $words['failureServerUnavailable'] );
 			return;
 		}
 	}
