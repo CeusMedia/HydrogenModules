@@ -1,0 +1,15 @@
+Hello <%?user.firstname%> <%?user.surname%>!
+
+*<%values.type%> "<%missionBefore.title%>" has been edited by <%values.modifier%>.*
+
+
+Facts
+----------------------------------------
+
+<%lists.facts%>
+
+
+Description
+----------------------------------------
+
+<%?values.content%>

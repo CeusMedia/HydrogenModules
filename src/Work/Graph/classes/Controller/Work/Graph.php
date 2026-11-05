@@ -168,7 +168,8 @@ class Controller_Work_Graph extends Controller
 	{
 		$graph	= $this->modelGraph->get( $graphId );
 		if( !$graph ){
-			$this->messenger->noteError( 'Invalid graph ID.' );
+			$words	= (object) $this->getWords( 'msg' );
+			$this->messenger->noteError( $words->errorInvalidGraphId );
 		}
 		else{
 			$this->session->set( 'work_graph_id', (int) $graphId );

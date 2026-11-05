@@ -56,7 +56,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 
 		$groups		= $this->logic->getGroups( [], ['title' => 'ASC'] );
 		if( !$groups ){
-			$this->messenger->noteNotice( 'Es ist noch keine Empfängerliste vorhanden. Weiterleitung zu den Empfängerlisten.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeNoGroups'] );
 			$this->restart( 'work/newsletter/group' );
 		}
 		foreach( $groups as $group ){
@@ -71,7 +71,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$model		= new Model_Newsletter_Reader( $this->env );
 		$totalReaders	= $model->count();
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:maxItems', $totalReaders + 1 ) ){
-			$this->messenger->noteNotice( 'Limit erreicht. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeLimitReached'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'totalReaders', $totalReaders );
@@ -124,7 +124,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	public function export( string $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowExport' ) ){
-			$this->messenger->noteNotice( 'Exportieren ist deaktiviert. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeExportDisabled'] );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -200,7 +200,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 	public function import( string $mode = 'csv' ): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Reader:allowImport' ) ){
-			$this->messenger->noteNotice( 'Importieren ist deaktiviert. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeImportDisabled'] );
 			$this->restart( NULL, TRUE );
 		}
 		$words		= (object) $this->getWords( 'add' );
@@ -227,7 +227,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 					if( $groupId )
 						$this->logic->addReaderToGroup( $readerId, $groupId );
 				}
-				$this->messenger->noteSuccess( 'Added '.count( $list ).' readers to this group.' );
+				$this->messenger->noteSuccess( $this->getWords( 'msg' )['successImported'], count( $list ) );
 				break;
 			case 'csv':
 				$fileName	= 'import_'.date( 'Y-m-d:H:i:s' ).'.csv';
@@ -235,11 +235,11 @@ class Controller_Work_Newsletter_Reader extends Controller
 				try{
 					$upload->setUpload( $this->request->get( 'upload' ) );
 					$nrImported	= $this->importFromCsvUpload( $upload, $groupId );
-					$this->messenger->noteSuccess( 'Added '.$nrImported.' readers to this group.' );
+					$this->messenger->noteSuccess( $this->getWords( 'msg' )['successImported'], $nrImported );
 				}
 				catch( Exception $e ){
 					$this->env->getLog()->logException( $e );
-					$this->messenger->noteFailure( 'Error: '.$e->getMessage() );
+					$this->messenger->noteFailure( $this->getWords( 'msg' )['failureImport'], $e->getMessage() );
 				}
 				break;
 		}
@@ -464,7 +464,7 @@ class Controller_Work_Newsletter_Reader extends Controller
 		$groupIds	= $this->request->get( 'groupIds' );
 		$groupIds	= is_array( $groupIds ) ? $groupIds : [];
 		if( '' === trim( $data['email'] ) ){
-			$this->messenger->noteError( $words->msgErrorMailMissing );
+			$this->messenger->noteError( $words->msgErrorEmailMissing );
 			return;
 		}
 		if( '' === trim( $data['firstname'] ) ){

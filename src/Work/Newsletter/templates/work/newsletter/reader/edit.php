@@ -33,8 +33,10 @@ $labelButtonRemove	= $iconRemove.$words->edit->buttonRemove;
 
 $buttonCancel		= '<a class="btn btn-small" href="'.$urlCancel.'">'.$labelButtonCancel.'</a>';
 $buttonSave			= '<button type="submit" class="btn btn-primary" name="save">'.$labelButtonSave.'</button>';
-$buttonConfirm		= '<button disabled="disabled" type="button" class="btn btn-info" onclick="if(confirm(\'Wirklich?\'))document.location.href=\''.$urlConfirm.'\';">'.$labelButtonConfirm.'</button>';
-$buttonRemove		= '<a class="btn btn-danger" onclick="if(!confirm(\'Wirklich?\')) return false;" href="'.$urlRemove.'">'.$labelButtonRemove.'</a>';
+$confirmConfirm		= htmlspecialchars( addslashes( $words->edit->buttonConfirmConfirm ), ENT_QUOTES, 'UTF-8' );
+$confirmRemove		= htmlspecialchars( addslashes( $words->edit->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' );
+$buttonConfirm		= '<button disabled="disabled" type="button" class="btn btn-info" onclick="if(confirm(\''.$confirmConfirm.'\'))document.location.href=\''.$urlConfirm.'\';">'.$labelButtonConfirm.'</button>';
+$buttonRemove		= '<a class="btn btn-danger" onclick="if(!confirm(\''.$confirmRemove.'\')) return false;" href="'.$urlRemove.'">'.$labelButtonRemove.'</a>';
 
 if( (int) $reader->status !== 0 )
 	$buttonConfirm		= '<button disabled="disabled" type="button" class="btn btn-info">'.$labelButtonConfirm.'</button>';
@@ -43,7 +45,7 @@ if( (int) $reader->status !== 0 )
 
 $panelDetailEditor	= '
 			<div class="content-panel">
-				<h3>Daten</h3>
+				<h3>'.$words->edit->headingData.'</h3>
 				<div class="content-panel-inner">
 					<form action="./work/newsletter/reader/edit/'.$reader->newsletterReaderId.'" method="post">
 						<div class="row-fluid">
@@ -80,11 +82,11 @@ $panelDetailEditor	= '
 								<input type="text" name="institution" id="input_institution" class="span12" value="'.htmlentities( $reader->institution, ENT_QUOTES, 'UTF-8' ).'"/>
 							</div>
 							<div class="span3">
-								<label for="">registriert am</label>
+								<label for="">'.$words->edit->labelRegisteredAt.'</label>
 								<input type="text" name="" id="input_registeredAt" class="span12 disabled readonly" readonly="readonly" value="'.date( 'd.m.Y', $reader->registeredAt ).'"/>
 							</div>
 							<div class="span2">
-								<label for="">Testempfänger</label>
+								<label for="">'.$words->edit->labelTester.'</label>
 								'.HtmlTag::create( 'input', NULL, [
 									'type'	=> 'checkbox',
 									'name'	=> 'tester',

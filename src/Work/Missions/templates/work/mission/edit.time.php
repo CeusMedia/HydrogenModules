@@ -12,6 +12,8 @@ use CeusMedia\HydrogenFramework\View;
 if( !$useTimer )
 	return '';
 
+$w	= (object) $words['edit-time'];
+
 $helperAdd		= new View_Helper_Work_Time_Modal_Add( $env );
 $helperAdd->setModule( 'Work_Missions' );
 $helperAdd->setModuleId( $mission->missionId );
@@ -27,13 +29,13 @@ $helperShortList->setModuleId( $mission->missionId );
 $helperShortList->setProjectId( $mission->projectId );
 $list				= $helperShortList->render();
 if( !$list )
-	$list	= HtmlTag::create( 'div', 'Noch keine.', ['class' => 'alert alert-notice'] );
+	$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-notice'] );
 
 $helperTimer	= new View_Helper_Work_Time_Timer( $env );
 $helperTimer->setModule( 'Work_Missions' );
 $helperTimer->setModuleId( $mission->missionId );
 
-$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;neue Aktivität', [
+$buttonNew	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] ).'&nbsp;'.$w->buttonNew, [
 	'type'		=> 'button',
 	'onclick'	=> '$("#myModalWorkTimeAdd").modal("toggle");',
 	'class'		=> 'btn btn-small btn-success',
@@ -49,7 +51,7 @@ if( $unrelatedTimers ){
 	$helperAssign->setFrom( './work/mission/edit/'.$mission->missionId );
 	$modalAssign	= $helperAssign->render();
 
-	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-link'] ).'&nbsp;zuordnen', [
+	$buttonAssign	= HtmlTag::create( 'button', HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-link'] ).'&nbsp;'.$w->buttonAssign, [
 		'type'		=> 'button',
 		'onclick'	=> '$("#myModalWorkTimeAssign").modal("toggle");',
 		'class'		=> 'btn btn-small',
@@ -58,7 +60,7 @@ if( $unrelatedTimers ){
 
 return '
 <div class="content-panel content-panel-form">
-	<h3>Zeiterfassung</h4>
+	<h3>'.$w->heading.'</h4>
 	<div class="content-panel-inner">
 		'.$list.'
 <!--		'.$helperTimer->render().'-->

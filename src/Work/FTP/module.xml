@@ -5,9 +5,10 @@
         xsi:schemaLocation="https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd https://schema.ceusmedia.de/hydrogen/module-1.0.0.xsd">
 	<title>Work: FTP</title>
 	<description><![CDATA[Basic FTP file management client.]]></description>
-	<version>0.2.5</version>
+	<version>0.2.6</version>
 	<log version="0.2.4">Improve code style.</log>
 	<log version="0.2.5">Extract AJAX controller.</log>
+	<log version="0.2.6">Complete English locale and extract hard-coded texts to locales (de, en).</log>
 	<category>Work</category>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de" site="https://ceusmedia.de/">Christian W&#xFC;rker</author>

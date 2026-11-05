@@ -102,6 +102,7 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		if( !$timer )
 			return '';
 		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
+		$w	= (object) $this->getWords( 'timer', 'work/time' );
 
 		$linkProject	= HtmlTag::create( 'a', $timer->project->title, [
 			'href'	=> './manage/project/view/'.$timer->project->projectId,
@@ -117,21 +118,21 @@ class View_Helper_Work_Time_Timer extends View_Helper_Work_Time
 		<div class="row-fluid">
 			<div class="span10">
 					<dl class="dl-horizontal">
-					<dt>Projekt</dt>
+					<dt>'.$w->labelProject.'</dt>
 					<dd>'.$linkProject.'</dd>
-					<dt>Aufgabe</dt>
+					<dt>'.$w->labelRelation.'</dt>
 					<dd>'.$linkModule.'</dd>
-					<dt>Aktivität</dt>
+					<dt>'.$w->labelActivity.'</dt>
 					<dd><div class="autocut">'.$timer->title.'&nbsp;</div></dd>
-					<dt>geplante Zeit</dt>
+					<dt>'.$w->labelTimePlanned.'</dt>
 					<dd>'.View_Helper_Work_Time::formatSeconds( $timer->secondsPlanned ).'</dd>
-					<dt>erfasste Zeit</dt>
+					<dt>'.$w->labelTimeNeeded.'</dt>
 					<dd id="timer" data-value="'.$secondsNeeded.'">'.View_Helper_Work_Time::formatSeconds( $secondsNeeded ).'</dd>
 				</dl>
 			</div>
 			<div class="span2 pull-right">
 				<br/>
-				<a href="./work/time/pause/'.$timer->workTimerId.'?from='.$this->from.'" class="btn btn-large not-btn-danger pull-right" title="pausieren"><i class="icon-pause not-icon-white"></i></a>
+				<a href="./work/time/pause/'.$timer->workTimerId.'?from='.$this->from.'" class="btn btn-large not-btn-danger pull-right" title="'.htmlentities( $w->buttonPause, ENT_QUOTES, 'UTF-8' ).'"><i class="icon-pause not-icon-white"></i></a>
 			</div>
 		</div>
 	</div>

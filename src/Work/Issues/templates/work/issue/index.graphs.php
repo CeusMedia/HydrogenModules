@@ -67,7 +67,7 @@ $width	= $env->getConfig()->get( 'module.work_issues.graph.all.width' );
 #die;
 
 $iconAdd	= HtmlTag::create( 'i', '', ['class' => 'icon-plus icon-white'] );
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;neuer Eintrag', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$words['graphs']['buttonAdd'], [
 	'href'	=> './work/issue/add',
 	'class'	=> 'btn btn-success'
 ] );
@@ -104,44 +104,44 @@ $(document).ready(function(){
 </script>
 <div class="not-column-left-60" style="float: left; width: '.( $width + 40 ).'px">
 	<div class="content-panel">
-		<h3>Übersicht</h3>
+		<h3>'.$words['graphs']['heading'].'</h3>
 		<div class="content-panel-inner">
 			<div class="row-fluid">
-				<h4>Einträge nach Status</h4>
+				<h4>'.$words['graphs']['headingByStatus'].'</h4>
 				'.$graphStatus.'
 			</div>
 			<div class="row-fluid">
-				<h4>Einträge nach Priorität</h4>
+				<h4>'.$words['graphs']['headingByPriority'].'</h4>
 				'.$graphPriority.'
 			</div>
 			<div class="row-fluid">
-				<h4>Einträge nach Typ</h4>
+				<h4>'.$words['graphs']['headingByType'].'</h4>
 				'.$graphType.'
 			</div>
 		</div>
 	</div>
 	<div class="content-panel">
-		<h3>Notierte Probleme</h3>
+		<h3>'.$words['graphs']['headingIssues'].'</h3>
 		<div class="content-panel-inner">
 			<div class="row-fluid">
 				<table id="table-issues-done" class="issues table table-striped">
 					<thead>
 						<tr>
-							<th colspan="3">bearbeitet und abnahmenbereit oder geschlossen</th>
+							<th colspan="3">'.$words['graphs']['headDone'].'</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td></td><td><em><small>keine</small></em></td></tr>
+						<tr><td></td><td><em><small>'.$words['graphs']['noEntries'].'</small></em></td></tr>
 					</tbody>
 				</table>
 				<table id="table-issues-open" class="issues table table-striped">
 					<thead>
 						<tr>
-							<th colspan="3">neu oder offen oder in Arbeit</th>
+							<th colspan="3">'.$words['graphs']['headOpen'].'</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr><td></td><td><em><small>keine</small></em></td></tr>
+						<tr><td></td><td><em><small>'.$words['graphs']['noEntries'].'</small></em></td></tr>
 					</tbody>
 				</table>
 			</div>

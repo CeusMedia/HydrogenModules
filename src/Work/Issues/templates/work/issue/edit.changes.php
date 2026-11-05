@@ -16,7 +16,7 @@ try{
 
 	return '
 	<div class="content-panel">
-		<h3>Entwicklung</h3>
+		<h3>'.$words['edit']['headingChanges'].'</h3>
 		<div class="content-panel-inner">
 			'.$list.'
 		</div>

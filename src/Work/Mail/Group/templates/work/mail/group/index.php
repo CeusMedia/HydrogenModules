@@ -9,6 +9,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object[] $groups */
 /** @var array $words */
 
+$w	= (object) $words['index'];
+
 $iconAdd			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconCancel			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
 $iconUsers			= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-users'] );
@@ -25,7 +27,7 @@ $statusClasses		= [
 	3	=> 'label-success',
 ];
 
-$list	= HtmlTag::create( 'div', 'Keine gefunden.', ['class' => 'alert alert-info'] );
+$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 if( count( $groups ) ){
 	$list	= [];
 	foreach( $groups as $group ){
@@ -36,27 +38,27 @@ if( count( $groups ) ){
 			HtmlTag::create( 'td', $group->address ),
 			HtmlTag::create( 'td', $status ),
 			HtmlTag::create( 'td', count( $group->members ) ),
-			HtmlTag::create( 'td', $helperTimestamp->convert( $group->createdAt, TRUE, 'vor' ) ),
+			HtmlTag::create( 'td', $helperTimestamp->convert( $group->createdAt, TRUE, $w->timePrefix, $w->timeSuffix ) ),
 		] );
 	}
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Titel',
-		'Adresse',
-		'Zustand',
+		$w->headTitle,
+		$w->headAddress,
+		$w->headStatus,
 		$iconUsers,
-		'erstellt',
+		$w->headCreated,
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', [$thead, $tbody], ['class' => 'table table-fixed'] );
 }
 
 $panelGroups	= HtmlTag::create( 'div', [
-	HtmlTag::create( 'h3', 'Heading' ),
+	HtmlTag::create( 'h3', $w->heading ),
 	HtmlTag::create( 'div', [
 		$list,
 		HtmlTag::create( 'div', [
 /*			HtmlTag::create( 'a', $iconCancel.'&nbsp;...', ['href' => './work/mail/group', 'class' => 'btn'] ),*/
-			HtmlTag::create( 'a', $iconAdd.'&nbsp;hinzufügen', ['href' => './work/mail/group/add', 'class' => 'btn btn-primary'] ),
+			HtmlTag::create( 'a', $iconAdd.'&nbsp;'.$w->buttonAdd, ['href' => './work/mail/group/add', 'class' => 'btn btn-primary'] ),
 		], ['class' => 'buttonbar'] )
 	], ['class' => 'content-panel-inner'] )
 ], ['class' => 'content-panel'] );

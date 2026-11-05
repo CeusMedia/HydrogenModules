@@ -171,25 +171,25 @@ $(document).ready(function(){
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
-			'title'		=> '1 Monat vor',
+			'title'		=> $this->words['calendar']['buttonPrevious'],
 		] );
 		$btnControlNext	= HtmlTag::create( 'button', '&raquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
-			'title'		=> '1 Monat weiter',
+			'title'		=> $this->words['calendar']['buttonNext'],
 		] );
 		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
-			'title'		=> 'aktueller Monat',
+			'title'		=> $this->words['calendar']['buttonCurrent'],
 			'disabled'	=> $isNow ? 'disabled' : NULL,
 		] );
 
 		$label		= $this->renderLabel( $year, $month );
 
-		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> iCal-Export', [
+		$btnExport		= HtmlTag::create( 'a', '<i class="icon-calendar icon-white"></i> '.$this->words['calendar']['buttonExportIcalShort'], [
 			'href'		=> './work/mission/export/ical',
 			'target'	=> '_blank',
 			'class'		=> 'btn not-btn-small btn-warning',

@@ -19,7 +19,7 @@ $w				= (object) $words->styles;
 $value			= htmlentities( $template->style, ENT_QUOTES, 'UTF-8' );
 $panelForm		= '
 <div class="content-panel">
-	<h3>Style-Angaben für HTML-Format <small class="muted"></small></h3>
+	<h3>'.$words->edit->headingStyle.' <small class="muted"></small></h3>
 	<div class="content-panel-inner">
 <!--		<label for="input_style">'.$words->edit->labelStyle.'</label>-->
 		'.HtmlTag::create( 'textarea', $value, [

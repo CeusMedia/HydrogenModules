@@ -22,7 +22,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		$this->prepareFacts( $data );
 
 		$issue	= $data['issue'];
-		$this->setSubject( 'Problemreport #'.$issue->issueId.': ['.$this->labelsStates[$issue->status].'] '.$issue->title );
+		$this->setSubject( sprintf( $this->words['mail']['subjectChange'], $issue->issueId, $this->labelsStates[$issue->status], $issue->title ) );
 		$this->setHtml( $this->renderHtmlBody() );
 		$this->setText( $this->renderTextBody() );
 		return $this;
@@ -64,17 +64,17 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 		$panelNote	= '';
 		if( $this->note ){
 			$worker		= $this->renderUser( $this->note->user, TRUE );
-			$message[]	= $worker.' hat einen Problemreport bearbeitet.';
+			$message[]	= sprintf( $this->words['mail']['messageChangedBy'], $worker );
 			$panelFacts	= '
 				<div class="content-panel">
-					<h3>Änderungen</h3>
+					<h3>'.$this->words['mail']['headingChanges'].'</h3>
 					<div class="content-panel-inner">
 						'.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 					</div>
 				</div>';
 			$panelNote	= '
 				<div class="content-panel">
-					<h3>Notiz zur Änderung</h3>
+					<h3>'.$this->words['mail']['headingNote'].'</h3>
 					<div class="content-panel-inner">
 						'.$this->changeNote->render().'
 					</div>
@@ -82,10 +82,10 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 
 		}
 		else
-			$message[]	= 'Ein Problemreport wurde bearbeitet.';
+			$message[]	= $this->words['mail']['messageChanged'];
 		if( $issue->projectId ){
 			$projectLink	= HtmlElements::Link( './manage/project/view/'.$issue->projectId, $issue->project->title );
-			$message[]		= 'Du bekommst diese Mail, da du im Projekt '.$projectLink.' involviert bist.';
+			$message[]		= sprintf( $this->words['mail']['messageInvolved'], $projectLink );
 		}
 		$message	= HtmlTag::create( 'div', join( '<br/>', $message ), ['class' => 'alert alert-info'] );
 
@@ -93,7 +93,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 <div>
 	'.$message.'
 	<div class="content-panel">
-		<h3>Eintrag</h3>
+		<h3>'.$this->words['mail']['headingIssue'].'</h3>
 		<div class="content-panel-inner">
 			'.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
@@ -101,7 +101,7 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 	'.$panelFacts.'
 	'.$panelNote.'
 	<div class="content-panel">
-		<h3>Informationen</h3>
+		<h3>'.$this->words['mail']['headingInfo'].'</h3>
 		<div class="content-panel-inner">
 			'.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_HTML )->render().'
 		</div>
@@ -121,21 +121,21 @@ class Mail_Work_Issue_Change extends Mail_Work_Issue_Abstract
 
 		$message	= [];
 		if( $this->note )
-			$message[]	= $this->renderUser( $this->note->user, FALSE ).' hat einen neuen Problemreport geschrieben.';
+			$message[]	= sprintf( $this->words['mail']['messageNewBy'], $this->renderUser( $this->note->user, FALSE ) );
 		else
-			$message[]	= 'Ein neuer Problemreport wurde geschrieben.';
+			$message[]	= $this->words['mail']['messageNew'];
 		if( $issue->projectId )
-			$message[]	= 'Du bekommst diese Mail, da du im Projekt "'.$issue->project->title.'" involviert bist.';
+			$message[]	= sprintf( $this->words['mail']['messageInvolved'], '"'.$issue->project->title.'"' );
 		$message	= join( PHP_EOL, $message );
 
 		$body		= '
-'.View_Helper_Mail_Text::underscore( 'Neuer Problemreport', '=' ).PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( $this->words['mail']['headingNew'], '=' ).PHP_EOL.'
 '.$message.PHP_EOL.'
-'.View_Helper_Mail_Text::underscore( 'Eintrag' ).PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( $this->words['mail']['headingIssue'] ).PHP_EOL.'
 '.$this->factsMain->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
-'.View_Helper_Mail_Text::underscore( 'Änderungen' ).PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( $this->words['mail']['headingChanges'] ).PHP_EOL.'
 '.$this->factsChanges->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL.PHP_EOL.'
-'.View_Helper_Mail_Text::underscore( 'Informationen' ).PHP_EOL.'
+'.View_Helper_Mail_Text::underscore( $this->words['mail']['headingInfo'] ).PHP_EOL.'
 '.$this->factsAll->setFormat( View_Helper_Mail_Facts::FORMAT_TEXT )->render().PHP_EOL;
 
 		$list	= [];

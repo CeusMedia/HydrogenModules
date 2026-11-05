@@ -5,15 +5,17 @@ use CeusMedia\HydrogenFramework\Environment;
 /** @var Environment $env */
 /** @var object $person */
 
+$w		= (object) $env->getLanguage()->getSection( 'work/billing', 'person-edit' );
+
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list-alt'] );
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 
-$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' zur Liste', [
+$buttonCancel	= HtmlTag::create( 'a', $iconCancel.' '.$w->buttonCancel, [
 	'href'	=> './work/billing/person',
 	'class'	=> 'btn btn',
 ] );
 
-$buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
+$buttonSave	= HtmlTag::create( 'button', $iconSave.' '.$w->buttonSave, [
 	'type'	=> 'submit',
 	'name'	=> 'save',
 	'class'	=> 'btn btn-primary',
@@ -21,46 +23,46 @@ $buttonSave	= HtmlTag::create( 'button', $iconSave.' speichern', [
 
 $panelFacts		= '
 <div class="content-panel">
-	<h3>Person</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/billing/person/edit/'.$person->personId.'" method="post" class="form-changes-auto">
 			<div class="row-fluid">
 				<div class="span2">
-					<label for="input_firstname">Vorname</label>
+					<label for="input_firstname">'.$w->labelFirstname.'</label>
 					<input type="text" name="firstname" id="input_firstname" class="span12" required="required" value="'.htmlentities( $person->firstname, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span3">
-					<label for="input_surname">Nachname</label>
+					<label for="input_surname">'.$w->labelSurname.'</label>
 					<input type="text" name="surname" id="input_surname" class="span12" required="required" value="'.htmlentities( $person->surname, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span5">
-					<label for="input_email">E-Mail-Adresse</label>
+					<label for="input_email">'.$w->labelEmail.'</label>
 					<input type="text" name="email" id="input_email" class="span12" required="required" value="'.htmlentities( $person->email, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
-					<label for="input_balance">Kontostand</label>
+					<label for="input_balance">'.$w->labelBalance.'</label>
 					<input type="number" step="0.01" name="balance" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2, '.', '' ).'"/><span class="suffix">&euro;</span>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span2">
-					<label for="input_income">Einnahmen</label>
+					<label for="input_income">'.$w->labelIncome.'</label>
 					<input type="text" id="input_income" class="span10 input-number" disabled="disabled" value="'.number_format( $income, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span2">
-					<label for="input_outcome">Ausgaben</label>
+					<label for="input_outcome">'.$w->labelOutcome.'</label>
 					<input type="text" id="input_outcome" class="span10 input-number" disabled="disabled" value="'.number_format( $outcome, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span3">
-					<label for="input_balance">Kontostand (berechnet)</label>
+					<label for="input_balance">'.$w->labelBalanceCalculated.'</label>
 					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( ( $income - $outcome ), 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span3">
-					<label for="input_balance">Kontostand (kumuliert)</label>
+					<label for="input_balance">'.$w->labelBalanceCumulated.'</label>
 					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( $person->balance, 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
 				<div class="span2">
-					<label for="input_balance">Abweichung</label>
+					<label for="input_balance">'.$w->labelDeviation.'</label>
 					<input type="text" id="input_balance" class="span10 input-number" disabled="disabled" value="'.number_format( ( $person->balance - $income + $outcome ), 2, ',', '.' ).'"/><span class="suffix">&euro;</span>
 				</div>
 			</div>
@@ -73,7 +75,7 @@ $panelFacts		= '
 </div>';
 
 $tabs		= View_Work_Billing_Person::renderTabs( $env, $person->personId );
-$heading	= '<h2 class="autocut"><span class="muted">Person</span> '.$person->firstname.' '.$person->surname.'</h2>';
+$heading	= '<h2 class="autocut"><span class="muted">'.$w->headingPrefix.'</span> '.$person->firstname.' '.$person->surname.'</h2>';
 
 return $heading.$tabs.'
 <div class="row-fluid">

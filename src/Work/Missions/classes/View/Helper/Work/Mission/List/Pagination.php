@@ -42,7 +42,8 @@ class View_Helper_Work_Mission_List_Pagination extends Abstraction
 		}
 		$buttonPrev	= HtmlTag::create( 'button', '<', $attrBtnPrev );
 		$buttonNext	= HtmlTag::create( 'button', '>', $attrBtnNext );
-		$buttonPos	= HtmlTag::create( 'button', 'Seite '.( $page + 1 ).' / '. $pages, [
+		$words		= $this->env->getLanguage()->getSection( 'work/mission', 'list' );
+		$buttonPos	= HtmlTag::create( 'button', sprintf( $words['labelPage'], $page + 1, $pages ), [
 			'type'	=> 'button',
 			'class'	=> 'btn disabled'
 		] );

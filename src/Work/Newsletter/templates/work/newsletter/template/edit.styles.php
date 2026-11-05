@@ -49,7 +49,7 @@ if( [] !== $styles ){
 		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( '', '120px' );
-	$tableHeads		= HtmlElements::TableHeads( ['Einträge', ''] );
+	$tableHeads		= HtmlElements::TableHeads( [$w->columnEntries, ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $styles );
 	$listStyles		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [

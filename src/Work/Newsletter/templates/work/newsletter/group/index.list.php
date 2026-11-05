@@ -34,7 +34,7 @@ if( $groups ){
 
 		$iconStatus		= HtmlTag::create( 'i', "", ['class' => 'fa fa-fw fa-'.$statusIcons[$group->status]] );
 		$link			= HtmlTag::create( 'a', $group->title, $attributes );
-		$label			= $link.'&nbsp;<small class="muted">('.count( $group->readers ).' Leser)</small>';
+		$label			= $link.'&nbsp;<small class="muted">'.sprintf( $w->labelReaders, count( $group->readers ) ).'</small>';
 	//	$label			= HtmlTag::create( 'span', $label, ['class' => ''] );
 	#	$groups	= [];
 	#	foreach( $reader->groups as $group )
@@ -72,7 +72,7 @@ $buttonAdd	= HtmlTag::create( 'a', $iconAdd.$w->link_add, [
 if( $limiter && $limiter->denies( 'Work.Newsletter.Group:maxItems', $totalGroups + 1 ) )
 	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
 		'class'		=> 'btn btn-small btn-success disabled',
-		'onclick'	=> 'alert("Weitere Kategorien sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertLimitReached ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 
 $filter		= $view->loadTemplateFile( 'work/newsletter/group/index.list.filter.php' );

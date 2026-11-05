@@ -25,7 +25,7 @@ $optStatus		= HtmlElements::Options( $words->states, $template->status );
 
 /*  --  PANEL: NEWSLETTERS  --  */
 
-$listNewsletters	= '<em><small class="muted">Nicht verwendet.</small></em>';
+$listNewsletters	= '<em><small class="muted">'.$w->noUsage.'</small></em>';
 if( [] !== $newsletters ){
 	$listNewsletters	= [];
 	foreach( $newsletters as $newsletter ){
@@ -44,7 +44,7 @@ $panelNewsletters	= '';
 if( isset( $newsletters ) && count( $newsletters ) )
 	$panelNewsletters	= '
 <div class="content-panel">
-	<h3>Verwendung</h3>
+	<h3>'.$w->headingUsage.'</h3>
 	<div class="content-panel-inner">
 		<div style="max-height: 400px; overflow-x: hidden; overflow-y: auto;">
 			'.$listNewsletters.'
@@ -60,19 +60,10 @@ $buttonCopy		= HtmlTag::create( 'a', $iconCopy.$w->buttonCopy, [
 ] );
 $panelCopy		= '
 <div class="content-panel">
-	<h3>Vorlage kopieren</h3>
+	<h3>'.$w->headingCopy.'</h3>
 	<div class="content-panel-inner">
 		<div data-class="alert alert-info">
-			Eine neue Vorlage erstellen und dabei diese Vorlage als Vorgabe verwenden.<br/>
-			Dabei werden folgende Angaben übernommen:
-			<ul>
-				<li>HTML-Gerüst</li>
-				<li>Text-Gerüst</li>
-				<li>Style-Angaben</li>
-				<li>Style-Dateiverweise</li>
-				<li>Absender-Angaben</li>
-				<li>Impressum</li>
-			</ul>
+			'.$w->textCopy.'
 		</div>
 		<div class="buttonbar">
 			'.$buttonCopy.'
@@ -85,20 +76,20 @@ $buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 	'class'		=> "btn btn-danger",
 	'href'		=> $isUsed ? '#' : "./work/newsletter/template/remove/".$templateId,
 	'disabled'	=> $isUsed ? 'disabled' : NULL,
-	'onclick'	=> $isUsed ? "alert('".$w->buttonRemoveDisabled."'); return false;" : NULL,
+	'onclick'	=> $isUsed ? "alert('".htmlspecialchars( addslashes( $w->buttonRemoveDisabled ), ENT_QUOTES, 'UTF-8' )."'); return false;" : NULL,
 ] );
 
 $panelRemove	= '';
 if( isset( $newsletters ) && !count( $newsletters ) )
 	$panelRemove	= '
 <div class="content-panel">
-	<h3>Vorlage entfernen</h3>
+	<h3>'.$w->headingRemove.'</h3>
 	<div class="content-panel-inner">
 		<p>
-			Diese Vorlage wurde noch nicht verwendet und kann daher entfernt werden, wenn sie nicht mehr benötigt wird.
+			'.$w->textRemove.'
 		</p>
 		<div class="alert alert-info">
-			Sobald eine Kampagne mit dieser Vorlage versendet wird, kann die Vorlage nicht mehr entfernt werden.
+			'.$w->hintRemove.'
 		</div>
 		<div class="buttonbar">
 			'.$buttonRemove.'

@@ -4,6 +4,9 @@ use CeusMedia\HydrogenFramework\Environment;
 
 /** @var Environment $env */
 /** @var object[] $groups */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['export'];
 
 $optType	= ['CSV' => 'CSV'];
 $optType	= HtmlElements::Options( $optType, key( $optType ) );
@@ -13,11 +16,7 @@ foreach( $groups as $group )
 	$optGroup[$group->mailCheckGroupId]	= $group->title;
 $optGroup	= HtmlElements::Options( $optGroup, $groups ? $groups[0]->mailCheckGroupId : NULL );
 
-$statuses	= [
-	-2	=> 'nicht erreichbar',
-	-1	=> 'abgelehnt',
-	2	=> 'erreichbar',
-];
+$statuses	= $words['export-statuses'];
 
 $optStatus	= array_map( function ($label) {return $label;}, $statuses );
 $optStatus	= HtmlElements::Options( $optStatus, [2] );
@@ -27,27 +26,27 @@ return $tabs.'
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3>Export</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./work/mail/check/export" method="post" enctype="multipart/form-data">
 					<div class="row-fluid">
 						<div class="span8">
-							<label for="input_groupId">Gruppe</label>
+							<label for="input_groupId">'.$w->labelGroup.'</label>
 							<select name="groupId" id="input_groupId" class="span12">'.$optGroup.'</select>
 						</div>
 						<div class="span4">
-							<label for="input_type">Dateiformat</label>
+							<label for="input_type">'.$w->labelType.'</label>
 							<select name="type" id="input_type" class="span12">'.$optType.'</select>
 						</div>
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_status">Zustand</label>
+							<label for="input_status">'.$w->labelStatus.'</label>
 							<select name="status[]" id="input_status" class="span12" multiple="multiple" size="3">'.$optStatus.'</select>
 						</div>
 					</div>
 					<div class="buttonbar">
-						<button type="submit" name="save" class="btn btn-primary"><i class="icon-download icon-white"></i>&nbsp;runterladen</button>
+						<button type="submit" name="save" class="btn btn-primary"><i class="icon-download icon-white"></i>&nbsp;'.$w->buttonDownload.'</button>
 					</div>
 				</form>
 			</div>

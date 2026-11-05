@@ -7,22 +7,22 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 /** @var Dictionary $filters */
 /** @var array $words */
 
+$w	= (object) $words['index-filter'];
+
 $optType		= /*array( '' => '- alle -' ) + */$words['types'];
 $optType		= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
 $optStatus		= /*array( '' => '- alle -' ) + */$words['states'];
 $optStatus		= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
-$optOrder		= ['date' => 'Fälligkeit', 'status' => 'Status', 'type' => 'Typ'];
+$optOrder		= ['date' => $w->orderDate, 'status' => $w->orderStatus, 'type' => $w->orderType];
 $optOrder		= HtmlElements::Options( $optOrder, $filters->get( 'order' ) );
 
-$optDirection	= ['ASC' => 'aufsteigend', 'DESC' => 'absteigend'];
+$optDirection	= ['ASC' => $w->directionAsc, 'DESC' => $w->directionDesc];
 $optDirection	= HtmlElements::Options( $optDirection, $filters->get( 'direction' ) );
 
 $filterStart	= $filters->get( 'start' );
 $filterEnd		= $filters->get( 'end' );
-
-$w	= (object) $words['index-filter'];
 
 return '
 <div class="content-panel">
@@ -91,8 +91,8 @@ $(document).ready(function(){
 //		gotoCurrent: true,
 //		autoSize: true,
 		firstDay: 1,
-		nextText: "nächster Monat",
-		prevText: "vorheriger Monat",
+		nextText: '.json_encode( $words['datepicker']['nextText'] ).',
+		prevText: '.json_encode( $words['datepicker']['prevText'] ).',
 		yearRange: "c-10:c+10",
 		monthNames: monthNames
 	});

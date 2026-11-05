@@ -22,7 +22,7 @@ if( $useTimer ){
 		$minutes	= ceil( $seconds / 60 );
 
 	if( $openTimers ){
-		$hint		= HtmlTag::create( 'div', 'Bitte vorher die Aktivitäten beenden!', ['class' => 'alert alert-danger'] );
+		$hint		= HtmlTag::create( 'div', $w->hintOpenTimers, ['class' => 'alert alert-danger'] );
 	}
 }
 

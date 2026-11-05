@@ -19,7 +19,7 @@ if( !is_array( $tags ) )
 $iconAdd	= '<i class="icon-plus icon-white"></i>';
 $iconRemove	= '<i class="icon-remove icon-white"></i>';
 
-$optOrder	= ['' => '-', 'modifiedAt' => 'letzte Änderung', 'createdAt' => 'Erstellungsdatum'];
+$optOrder	= ['' => '-'] + $words['filter-orders'];
 $optOrder	= HtmlElements::Options( $optOrder, $filterOrder );
 
 /*
@@ -66,7 +66,7 @@ $optAuthor		= HtmlElements::Options( $optAuthor, $filterAuthor );
 $optPublic		= $words['filter-public'];
 $optPublic		= HtmlElements::Options( $optPublic, $filterPublic );
 
-$optProject		= ['' => '- alle -', '0' => '- ohne Projektbezug -'];
+$optProject		= ['' => $w->optionAll, '0' => $w->optionNoProject];
 foreach( $projects as $project )
 	$optProject[$project->projectId]	= $project->title;
 $optProject		= HtmlElements::Options( $optProject, $filterProjectId );

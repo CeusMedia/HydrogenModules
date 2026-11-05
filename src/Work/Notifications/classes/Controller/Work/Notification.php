@@ -50,7 +50,7 @@ class Controller_Work_Notification extends Controller
 		/** @var Entity_Notification_Message|NULL $message */
 		$message	= $this->modelMessage->get( $messageId );
 		if( NULL === $message ){
-			$this->env->getMessenger()->noteError( 'No message found' );
+			$this->env->getMessenger()->noteError( $this->getWords( 'msg' )['errorNotFound'] );
 			$this->restart( NULL, TRUE );
 		}
 

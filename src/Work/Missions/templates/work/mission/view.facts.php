@@ -118,12 +118,12 @@ $isOverrunTracked	= $totalMinsProjected && $totalMinsTracked > $totalMinsProject
 
 
 if( $totalMinsProjected )
-	$list[]	= HtmlTag::create( 'dd', 'geplant: '.renderDuration( $totalMinsProjected, $useTimer ), [] );
+	$list[]	= HtmlTag::create( 'dd', $w->prefixProjected.' '.renderDuration( $totalMinsProjected, $useTimer ), [] );
 if( $totalMinsTracked ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsTracked ) * 60 );
 	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsTracked * 60 );
-	$list[]	= HtmlTag::create( 'dd', 'erfasst: '.$time.' '.$diff, [
+	$list[]	= HtmlTag::create( 'dd', $w->prefixTracked.' '.$time.' '.$diff, [
 		'class' => $isOverrunTracked ? 'warning' : NULL,
 	] );
 }
@@ -131,7 +131,7 @@ if( $totalMinsRequired ){
 	$diff	= View_Work_Mission::formatSeconds( abs( $totalMinsProjected - $totalMinsRequired ) );
 	$diff	= HtmlTag::create( 'small', '('.$diff.')', ['class' => 'muted'] );
 	$time	= View_Work_Mission::formatSeconds( $totalMinsRequired );
-	$list[]	= HtmlTag::create( 'dd', 'benötigt: '.$time.' '.$diff, [
+	$list[]	= HtmlTag::create( 'dd', $w->prefixRequired.' '.$time.' '.$diff, [
 		'class' => $isOverrunRequired ? 'warning' : NULL,
 	] );
 }
@@ -188,7 +188,7 @@ dl dd.warning {
 					</div>
 					<div style="float: left; width: 50%">
 						<dl class="dl-horizontal">
-							<dt>erstellt am</dt>
+							<dt>'.$w->labelCreated.'</dt>
 							<dd>'.date( "d.m.Y", $mission->createdAt ).'</dd>
 							<dt>'.$w->labelCreator.'</dt>
 							<dd>'.$creator.'</span></dd>

@@ -9,7 +9,7 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 $w	= (object) $words['index'];
 
-$table	= HtmlTag::create( 'div', 'Keine', ['class' => 'alert alert-info'] );
+$table	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 
 $statusClasses	= [
 	Model_Notification_Message::STATUS_ABORTED	=> 'error',
@@ -38,13 +38,13 @@ if( [] !== $messages ){
 		], ['class' => $statusClasses[$message->status]] );
 	}
 	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Titel',
-		'Empfänger',
-		'Gelesen',
-		'Leserate',
-		'Zustand',
-		'Start',
-		'Ende',
+		$w->headTitle,
+		$w->headRecipients,
+		$w->headSeen,
+		$w->headRatio,
+		$w->headStatus,
+		$w->headStart,
+		$w->headEnd,
 	] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$colgroup	= HtmlElements::ColumnGroup( ['', '10%', '10%', '10%', '10%', '10%', '10%'] );

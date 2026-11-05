@@ -1,7 +1,7 @@
 <%salutation%> <%reader.firstname%> <%reader.surname%>,
 
 vielen Dank für Ihr Interesse an uns und unserem Newsletter!
-wir haben Sie an unserem Newsletter angemeldet und folgenden Themengruppen zugeordnet:
+Wir haben Sie an unserem Newsletter angemeldet und folgenden Themengruppen zugeordnet:
 <%groups%>
 
 Damit die Anmeldung aktiv wird, muss die Gültigkeit der E-Mail-Adresse bestätigen.

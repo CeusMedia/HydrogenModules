@@ -17,7 +17,7 @@ $optStatus	= $words->states;
 unset( $optStatus[-1] );
 $optStatus	= HtmlElements::Options( $optStatus );
 
-$w	= (object) $words->add;
+$w	= (object) $words->import_csv;
 
 $optGroupId	= [];
 foreach( $groups as $group )
@@ -34,23 +34,23 @@ return '
 	<div id="modalImportCsv" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">CSV-Exportdatei importieren</h3>
+			<h3 id="myModalLabel">'.$w->heading.'</h3>
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
 				<div class="span5">
-					<label for="input_groupId">In Empfängerliste</label>
+					<label for="input_groupId">'.$w->labelGroupId.'</label>
 					<select name="groupId" id="input_groupId" class="span12">'.$optGroupId.'</select>
 				</div>
 				<div class="span7">
-					<label for="input_upload">CSV-Exportdatei</label>
+					<label for="input_upload">'.$w->labelUpload.'</label>
 					'.$helperUpload->render().'
 				</div>
 			</div>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">'.$iconCancel.'abbrechen</button>
-			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.'importieren</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">'.$iconCancel.$w->buttonCancel.'</button>
+			<button type="submit" name="save" class="btn btn-primary">'.$iconSave.$w->buttonSave.'</button>
 		</div>
 	</div>
 </form>';

@@ -63,7 +63,7 @@ foreach( $timers as $timer ){
 
 	View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer );
 
-	$linkRelation	= 'unbekannt';
+	$linkRelation	= $w->unknownRelation;
 	if( $timer->moduleId )
 		$linkRelation	= HtmlTag::create( 'a', htmlentities( $timer->relationTitle, ENT_QUOTES, 'UTF-8' ), [
 			'href'	=> $timer->relationLink,
@@ -82,11 +82,11 @@ foreach( $timers as $timer ){
 
 $colgroup	= HtmlElements::ColumnGroup( "", "10%", "20%", "25%", "120" );
 $thead		= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-	HtmlTag::create( 'th', 'Aktivität' ),
-	HtmlTag::create( 'th', 'Typ <small class="muted">(Modul)</small>' ),
-	HtmlTag::create( 'th', 'Aufgabe' ),
-	HtmlTag::create( 'th', 'Projekt' ),
-	HtmlTag::create( 'th', 'Zeit', ['class' => 'pull-right'] ),
+	HtmlTag::create( 'th', $w->headActivity ),
+	HtmlTag::create( 'th', $w->headType ),
+	HtmlTag::create( 'th', $w->headRelation ),
+	HtmlTag::create( 'th', $w->headProject ),
+	HtmlTag::create( 'th', $w->headTime, ['class' => 'pull-right'] ),
 ] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
@@ -94,7 +94,7 @@ $pagination	= new PageControl( './work/time/archive/'.$limit, $page, ceil( $tota
 
 return '
 <div class="content-panel conten-panel-table">
-	<h3>Aktivitäten</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">

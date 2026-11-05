@@ -18,6 +18,7 @@ class Controller_Work_Mail_Group extends Controller
 	protected Model_User $modelUser;
 	protected Logic_Mail_Group $logicGroup;
 	protected Logic_Mail $logicMail;
+	protected object $words;
 
 	public function add(): void
 	{
@@ -25,11 +26,11 @@ class Controller_Work_Mail_Group extends Controller
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
 			if( $this->modelGroup->getByIndex( 'title', $title ) ){
-				$this->messenger->noteError( 'Title "%s" is already existing.' );
+				$this->messenger->noteError( $this->words->errorTitleExists, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 				$this->restart( 'add', TRUE );
 			}
 			if( $this->modelGroup->getByIndex( 'address', $address ) ){
-				$this->messenger->noteError( 'Address "%s" is already existing.' );
+				$this->messenger->noteError( $this->words->errorAddressExists, htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 				$this->restart( 'add', TRUE );
 			}
 			$data		= [
@@ -48,7 +49,7 @@ class Controller_Work_Mail_Group extends Controller
 				'modifiedAt'		=> time(),
 			];
 			$groupId	= $this->modelGroup->add( $data );
-			$this->messenger->noteSuccess( 'Added.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
@@ -115,11 +116,11 @@ class Controller_Work_Mail_Group extends Controller
 			$title		= trim( $this->request->get( 'title' ) );
 			$address	= trim( $this->request->get( 'address' ) );
 			if( $this->modelGroup->getAll( ['title' => $title, 'mailGroupId' => '!= '.$groupId] ) ){
-				$this->messenger->noteError( 'Title "%s" is already existing.' );
+				$this->messenger->noteError( $this->words->errorTitleExists, htmlentities( $title, ENT_QUOTES, 'UTF-8' ) );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
 			if( $this->modelGroup->getAll( ['address' => $address, 'mailGroupId' => '!= '.$groupId] ) ){
-				$this->messenger->noteError( 'Address "%s" is already existing.' );
+				$this->messenger->noteError( $this->words->errorAddressExists, htmlentities( $address, ENT_QUOTES, 'UTF-8' ) );
 				$this->restart( 'edit/'.$groupId, TRUE );
 			}
 			$data		= [
@@ -138,7 +139,7 @@ class Controller_Work_Mail_Group extends Controller
 			if( strlen( trim( $this->request->get( 'password' ) ) ) )
 				$data['password']	= trim( $this->request->get( 'password' ) );
 			$this->modelGroup->edit( $groupId, $data );
-			$this->messenger->noteSuccess( 'Saved.' );
+			$this->messenger->noteSuccess( $this->words->successSaved );
 			$this->restart( 'edit/'.$groupId, TRUE );
 		}
 		$this->addData( 'servers', $this->modelServer->getAll() );
@@ -190,11 +191,11 @@ class Controller_Work_Mail_Group extends Controller
 		$message	= '';
 		if( $this->logicGroup->setMemberStatus( $mailGroupId, $mailGroupMemberId, $status ) ){
 			if( $status == Model_Mail_Group_Member::STATUS_ACTIVATED )
-				$message	= 'Das Mitglied wurde aktiviert und darüber informiert.';
+				$message	= $this->words->successMemberActivated;
 			else if( $status == Model_Mail_Group_Member::STATUS_DEACTIVATED )
-				$message	= 'Das Mitglied wurde deaktiviert und darüber informiert.';
+				$message	= $this->words->successMemberDeactivated;
 			else if( $status == Model_Mail_Group_Member::STATUS_REJECTED )
-				$message	= 'Das Mitglied wurde abgelehnt und darüber informiert.';
+				$message	= $this->words->successMemberRejected;
 			if( $message )
 				$this->messenger->noteSuccess( $message );
 		}
@@ -206,6 +207,7 @@ class Controller_Work_Mail_Group extends Controller
 		$this->request		= $this->env->getRequest();
 		$this->session		= $this->env->getSession();
 		$this->messenger	= $this->env->getMessenger();
+		$this->words		= (object) $this->getWords( 'msg' );
 
 		$this->modelGroup	= new Model_Mail_Group( $this->env );
 		$this->modelMember	= new Model_Mail_Group_Member( $this->env );

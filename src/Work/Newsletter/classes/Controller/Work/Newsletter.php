@@ -124,7 +124,7 @@ class Controller_Work_Newsletter extends Controller
 		}
 
 		if( !is_array( $readerIds ) || [] === $readerIds ){
-			$this->messenger->noteError( 'No receivers selected.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNoReceivers'] );
 			$this->restart( 'edit/'.$newsletterId, TRUE );
 		}
 		if( ['*'] === $readerIds ){
@@ -309,13 +309,14 @@ class Controller_Work_Newsletter extends Controller
 	 */
 	public function sendLetter( string $readerLetterId ): void
 	{
+		$words		= (object) $this->getWords( 'msg' );
 		$letter		= $this->logic->getReaderLetter( $readerLetterId );
 		if( !$letter )
-			$this->messenger->noteError( 'Invalid letter ID.' );
+			$this->messenger->noteError( $words->errorInvalidLetterId );
 		else {
 			$reader		= $this->logic->getReader( $letter->newsletterReaderId );
 			$this->logic->enqueueReaderLetter( $letter->newsletterQueueId, $letter->newsletterReaderId, $letter->newsletterId, TRUE );
-			$this->messenger->noteSuccess( 'Newsletter sent to '.$reader->firstname.' '.$reader->surname.' <cite>&lt;'.$reader->email.'&gt;</cite>.' );
+			$this->messenger->noteSuccess( sprintf( $words->successLetterSent, $reader->firstname, $reader->surname, $reader->email ) );
 		}
 		$this->restart( 'edit/'.$letter->newsletterId, TRUE );
 	}
@@ -349,7 +350,7 @@ class Controller_Work_Newsletter extends Controller
 			$this->restart( './work/newsletter' );
 		}
 		if( !in_array( (int) $status, [-1, 0, 1, 2], TRUE ) ){
-			$this->messenger->noteError( 'Invalid status.', $newsletterId );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidStatus'], $newsletterId );
 			$this->restart( './work/newsletter' );
 		}
 		$this->logic->editNewsletter( $newsletterId, ['status' => (int) $status] );
@@ -370,7 +371,7 @@ class Controller_Work_Newsletter extends Controller
 		$w			= (object) $this->getWords( 'test' );
 		$readerIds	= $this->request->get( 'readerIds' );
 		if( !is_array( $readerIds ) || !count( $readerIds ) ){
-			$this->messenger->noteError( 'No receivers selected.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNoReceivers'] );
 			$this->restart( 'edit/'.$newsletterId, TRUE );
 		}
 		foreach( $readerIds as $readerId )
@@ -406,7 +407,7 @@ class Controller_Work_Newsletter extends Controller
 			}
 		}
 		catch( Exception ){
-			$this->messenger->noteError( 'Der gewählte Newsletter existiert nicht mehr. Weiterleitung zur Übersicht.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNewsletterGone'] );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -420,7 +421,7 @@ class Controller_Work_Newsletter extends Controller
 	{
 		$this->checkNewsletterId( $newsletterId );
 		$this->logic->removeNewsletter( $newsletterId );
-		$this->messenger->noteSuccess( 'Kampagne entfernt.' );
+		$this->messenger->noteSuccess( $this->getWords( 'msg' )['successRemoved'] );
 		$this->restart( NULL, TRUE );
 	}
 
@@ -448,7 +449,7 @@ class Controller_Work_Newsletter extends Controller
 		$this->addData( 'limiter', $this->limiter );
 
 		if( !count( $this->logic->getTemplates( ['status' => '> 0'] ) ) ){
-			$this->messenger->noteNotice( '<b>Keine verwendbare Vorlage vorhanden.</b><br/>Bitte zuerst eine Vorlage erstellen und auf "bereit" stellen!' );
+			$this->messenger->noteNotice( $this->getWords( 'msg', 'work/newsletter' )['noticeNoUsableTemplate'] );
 			$this->restart( 'template', TRUE );
 		}
 
@@ -542,7 +543,7 @@ class Controller_Work_Newsletter extends Controller
 			else																						//  from request
 				$relatedGroups	= $this->request->get( 'relationGroupIds' );						//  ...  by form data
 			if( [] === $relatedGroups ){
-				$this->messenger->noteError( 'Mindestens eine Gruppenzuweisung ist notwendig.' );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorGroupRelationMissing'] );
 				$dbc->rollBack();
 				$this->restart( 'work/newsletter/add' );
 			}
@@ -604,7 +605,7 @@ class Controller_Work_Newsletter extends Controller
 	{
 		$templates	= $this->logic->getTemplates( ['status' => '> 0'], ['title' => 'ASC'] );
 		if( [] === $templates ){
-			$this->messenger->noteNotice( 'Es ist noch keine verwendbare Vorlage vorhanden. Weiterleitung zu den Vorlagen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeNoUsableTemplateRedirect'] );
 			$this->restart( 'work/newsletter/template' );
 		}
 

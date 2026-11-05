@@ -82,7 +82,7 @@ function updateSlider(value, opacity){
 
 </script>
 <div class="content-panel">
-	<h3>Eintrag bearbeiten</h3>
+	<h3>'.$words['edit']['headingEmerge'].'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/issue/emerge/'.$issue->issueId.'" method="post" class="cmFormChange-auto">
 			<div class="row-fluid">
@@ -124,7 +124,7 @@ function updateSlider(value, opacity){
 					<div id="progress-slider" style="display: none; margin-top: 1em"></div>
 				</div>
 				<div class="span1 muted">
-					<label for="input_time"><abbr title="Aufwand in Stunden und Minuten">Zeit</abbr></label>
+					<label for="input_time"><abbr title="'.htmlentities( $words['edit']['labelTime_title'], ENT_QUOTES, 'UTF-8' ).'">'.$words['edit']['labelTime'].'</abbr></label>
 					<input type="text" name="time" id="input_time" class="span12 -numeric" value="0:00">
 				</div>
 <!--				<div class="4">
@@ -137,7 +137,7 @@ function updateSlider(value, opacity){
 					<strike>
 					<label class="checkbox">
 						<input type="checkbox" name="inform" id="input_inform" value="1" checked="checked"/>
-						Beteiligte per E-Mail informieren
+						'.$words['edit']['labelInform'].'
 					</label>
 				</strike>
 				</div>
@@ -147,7 +147,7 @@ function updateSlider(value, opacity){
 				'.HtmlTag::create( 'textarea', '', ['name' => 'note', 'class' => 'span12 -max CodeMirror-auto', 'rows' => 8] ).'
 			</div>
 			<div class="buttonbar">
-				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> aktualisieren</button>
+				<button type="submit" name="save" class="btn btn-small btn-info"><i class="icon-ok icon-white"></i> '.$words['edit']['buttonUpdate'].'</button>
 			</div>
 		</form>
 	</div>

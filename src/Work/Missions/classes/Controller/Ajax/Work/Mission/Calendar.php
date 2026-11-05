@@ -150,35 +150,35 @@ $(document).ready(function(){
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(-1)',
-			'title'		=> '1 Monat vor',
+			'title'		=> $this->words['calendar']['buttonPrevious'],
 		] );
 		$btnControlNext	= HtmlTag::create( 'button', '&raquo;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large',
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(1)',
-			'title'		=> '1 Monat weiter',
+			'title'		=> $this->words['calendar']['buttonNext'],
 		] );
 		$btnControlNow	= HtmlTag::create( 'button', '&Omicron;', [
 			'type'		=> 'button',
 			'class'		=> 'btn btn-large '.( $isNow ? 'disabled' : NULL ),
 			'onclick'	=> 'WorkMissionsCalendar.setMonth(0)',
-			'title'		=> 'aktueller Monat',
+			'title'		=> $this->words['calendar']['buttonCurrent'],
 			'disabled'	=> $isNow ? 'disabled' : NULL,
 		] );
 
 		$label			= $this->renderLabel( $year, $month );
 
 		$btnExport		= HtmlTag::create( 'div', [
-			HtmlTag::create( 'a', 'Export <span class="caret"></span>', ['href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown'] ),
+			HtmlTag::create( 'a', $this->words['calendar']['buttonExport'].' <span class="caret"></span>', ['href' => '#', 'class' => 'btn dropdown-toggle', 'data-toggle' => 'dropdown'] ),
 			HtmlTag::create( 'ul', [
 				HtmlTag::create( 'li', [
-					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im iCal-Format', [
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;'.$this->words['calendar']['buttonExportIcal'], [
 						'href'		=> './work/mission/export/ical',
 						'target'	=> '_blank',
 					] ),
 				], ['style' => 'text-align: left'] ),
 				HtmlTag::create( 'li', [
-					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;im CSV-Format', [
+					HtmlTag::create( 'a', '<i class="fa fa-download"></i>&nbsp;'.$this->words['calendar']['buttonExportCsv'], [
 						'href'		=> './work/mission/export/csv',
 						'target'	=> '_blank',
 					] ),

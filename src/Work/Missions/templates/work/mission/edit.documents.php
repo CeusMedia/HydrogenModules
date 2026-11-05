@@ -20,7 +20,7 @@ if( $documents ){
 	foreach( $documents as $document ){
 
 		$modifiedAt	= max( $document->createdAt, $document->modifiedAt );
-		$modifiedAt	= 'vor '.$phraser->convert( $modifiedAt, TRUE );
+		$modifiedAt	= sprintf( $w->timeAgo, $phraser->convert( $modifiedAt, TRUE ) );
 /*		$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', [
 			'href'	=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small not-btn-info',
@@ -29,12 +29,12 @@ if( $documents ){
 		$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', [
 			'href'	=> './work/mission/downloadDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small btn-info',
-			'title'	=> 'runterladen',
+			'title'	=> $w->buttonDownload,
 		] );
 		$buttonRemove	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-remove"></i>', [
 			'href'	=> './work/mission/removeDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 			'class'	=> 'btn btn-small btn-inverse',
-			'title'	=> 'entfernen',
+			'title'	=> $w->buttonRemove,
 		] );
 		$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload.$buttonRemove], ['class' => 'btn-group'] );
 		$label			= HtmlTag::create( 'a', $document->filename, [
@@ -50,7 +50,7 @@ if( $documents ){
 	}
 
 	$colgroup	= HtmlElements::ColumnGroup( '*', '140px', '100px' );
-	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, 'Speicherung', ''] ) );
+	$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headModifiedAt, ''] ) );
 	$tbody		= HtmlTag::create( 'tbody', $rows );
 	$table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 }
@@ -70,7 +70,7 @@ if( $env->getAcl()->has( 'work/mission', 'addDocument' ) ){
 					'.$helperUpload->render().'
 				</div>
 				<div class="span6">
-					<button type="submit" name="save" value="document" class="btn btn-success not-btn-small"><i class="fa fa-upload"></i>&nbsp;hochladen</button>
+					<button type="submit" name="save" value="document" class="btn btn-success not-btn-small"><i class="fa fa-upload"></i>&nbsp;'.$w->buttonUpload.'</button>
 				</div>
 			</div>
 		</div>

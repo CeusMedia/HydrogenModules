@@ -11,6 +11,8 @@ use CeusMedia\HydrogenFramework\View;
 /** @var object $message */
 /** @var array $words */
 
+$w	= (object) $words['edit.members'];
+
 $iconAdd		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconEdit		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 $iconCancel		= Html::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
@@ -39,62 +41,58 @@ foreach( $roles as $role )
 	$optRoleId[$role->mailGroupRoleId]	= $role->title;
 $optRoleId	= HtmlElements::Options( $optRoleId, $group->defaultRoleId );
 
-$optStatus		= HtmlElements::Options( [
-	-1		=> 'deaktiviert',
-	0		=> 'in Arbeit',
-	1		=> 'aktiviert',
-], $group->status );
+$optStatus		= HtmlElements::Options( $words['status-options'], $group->status );
 
 $body	= '
 <div class="row-fluid">
 	<div class="span8">
-		<label for="input_member_title" class="mandatory">Name</label>
+		<label for="input_member_title" class="mandatory">'.$w->labelName.'</label>
 		<input type="text" name="title" id="input_member_title" class="span12" required="required"/>
 	</div>
 	<div class="span4">
-		<label for="input_member_roleId">Rolle</label>
+		<label for="input_member_roleId">'.$w->labelRole.'</label>
 		<select name="roleId" id="input_member_roleId" class="span12">'.$optRoleId.'</select>
 	</div>
 </div>
 <div class="row-fluid">
 	<div class="span12">
-		<label for="input_member_address" class="mandatory">E-Mail-Adresse</label>
+		<label for="input_member_address" class="mandatory">'.$w->labelAddress.'</label>
 		<input type="email" name="address" id="input_member_address" class="span12" required="required"/>
 	</div>
 <!--				<div class="span4">
-		<label for="input_status">Zustand</label>
+		<label for="input_status">'.$w->labelStatus.'</label>
 		<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 	</div>-->
 </div>
 <div class="row-fluid">
 	<div class="span12">
 		<label class="checkbox">
-			<input type="checkbox" name="invite" value="1" checked="checked" class="has-optionals" data-animation="slide"/>Einladen - muss durch Mitglied bestätigt werden.
+			<input type="checkbox" name="invite" value="1" checked="checked" class="has-optionals" data-animation="slide"/>'.$w->labelInvite.'
 		</label>
 	</div>
 </div>
 <div class="row-fluid optional invite invite-false">
 	<div class="span12">
 		<label class="checkbox">
-			<input type="checkbox" name="quiet" value="1"/>Die anderen Mitglieder nicht über den Zugang informieren.
+			<input type="checkbox" name="quiet" value="1"/>'.$w->labelQuiet.'
 		</label>
 		<div class="alert alert-info">
-			Der Teilnehmer bekommt trotzdem eine E-Mail mit Informationen über seinen Beitritt, Nutzungsbedingungen und Datenschutzbestimmungen sowie den Abmeldelink.
+			'.$w->hintQuiet.'
 		</div>
 	</div>
 </div>';
 
 $modalMemberAdd	= new BootstrapModalDialog( 'modalWorkMailGroupMemberAdd' );
-$modalMemberAdd->setHeading( 'Mitglied hinzufügen' );
+$modalMemberAdd->setHeading( $w->headingAdd );
 $modalMemberAdd->setBody( $body );
-$modalMemberAdd->setCloseButtonLabel( $iconCancel.'&nbsp;abbrechen' );
-$modalMemberAdd->setSubmitButtonLabel( $iconSave.'&nbsp;speichern' );
+$modalMemberAdd->setCloseButtonLabel( $iconCancel.'&nbsp;'.$w->buttonCancel );
+$modalMemberAdd->setSubmitButtonLabel( $iconSave.'&nbsp;'.$w->buttonSave );
 $modalMemberAdd->setSubmitButtonClass( 'btn btn-primary' );
 $modalMemberAdd->setFormAction( './work/mail/group/addMember/'.$group->mailGroupId );
 
 $modalMemberAddTrigger	= new BootstrapModalTrigger( 'modalWorkMailGroupMemberAddTrigger' );
 $modalMemberAddTrigger->setModalId( 'modalWorkMailGroupMemberAdd' );
-$modalMemberAddTrigger->setLabel( $iconAdd.'&nbsp;hinzufügen' );
+$modalMemberAddTrigger->setLabel( $iconAdd.'&nbsp;'.$w->buttonAdd );
 $modalMemberAddTrigger->setAttributes( ['class' => 'btn btn-success'] );
 
 //  --  MEMBERS LIST  --  //
@@ -111,22 +109,22 @@ if( $members ){
 		$buttonActivate	= Html::create( 'a', $iconActivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/2',
 			'class'	=> 'btn btn-success btn-mini',
-			'title'	=> 'aktivieren',
+			'title'	=> $w->titleActivate,
 		] );
 		$buttonDeactivate	= Html::create( 'a', $iconDeactivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-3',
 			'class'	=> 'btn btn-inverse btn-mini',
-			'title'	=> 'deaktivieren',
+			'title'	=> $w->titleDeactivate,
 		] );
 		$buttonReject	= Html::create( 'a', $iconDeactivate, [
 			'href'	=> './work/mail/group/setMemberStatus/'.$group->mailGroupId.'/'.$member->mailGroupMemberId.'/-2',
 			'class'	=> 'btn btn-inverse btn-mini',
-			'title'	=> 'ablehnen',
+			'title'	=> $w->titleReject,
 		] );
 		$buttonRemove	= Html::create( 'a', $iconRemove, [
 			'href'	=> './work/mail/group/removeMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId,
 			'class'	=> 'btn btn-danger btn-mini',
-			'title'	=> 'entfernen',
+			'title'	=> $w->titleRemove,
 		] );
 		if( $member->status == Model_Mail_Group_Member::STATUS_REJECTED )
 			$buttons	= [$buttonEdit, $buttonActivate, $buttonRemove];
@@ -159,15 +157,15 @@ if( $members ){
 		$optRoleId	= HtmlElements::Options( $optRoleId, $member->roleId );
 
 		$modal	= new BootstrapModalDialog( 'modal-edit-'.$member->mailGroupMemberId );
-		$modal->setHeading( 'Mitglied bearbeiten' );
+		$modal->setHeading( $w->headingEdit );
 		$modal->setSubmitButtonClass( 'btn btn-primary' );
 		$modal->setFormAction( './work/mail/group/editMember/'.$group->mailGroupId.'/'.$member->mailGroupMemberId );
-		$modal->setSubmitButtonLabel( $iconSave.' speichern' );
-		$modal->setCloseButtonLabel( $iconCancel.' abbrechen' );
+		$modal->setSubmitButtonLabel( $iconSave.' '.$w->buttonSave );
+		$modal->setCloseButtonLabel( $iconCancel.' '.$w->buttonCancel );
 		$modal->setBody( Html::create( 'div', [
 			Html::create( 'div', [
 				Html::create( 'div', [
-					Html::create( 'label', 'Name', ['for' => 'input_title'] ),
+					Html::create( 'label', $w->labelName, ['for' => 'input_title'] ),
 					Html::create( 'input', NULL, [
 						'type'	=> 'text',
 						'id'	=> 'input_title',
@@ -177,7 +175,7 @@ if( $members ){
 					] ),
 				], ['class' => 'span8'] ),
 				Html::create( 'div', [
-					Html::create( 'label', 'Rolle', ['for' => 'input_'] ),
+					Html::create( 'label', $w->labelRole, ['for' => 'input_'] ),
 					Html::create( 'select', $optRoleId, [
 						'id'	=> 'input_roleId',
 						'name'	=> 'roleId',
@@ -187,7 +185,7 @@ if( $members ){
 			], ['class' => 'row-fluid'] ),
 			Html::create( 'div', [
 				Html::create( 'div', [
-					Html::create( 'label', 'E-Mail-Adresse', ['for' => 'input_address'] ),
+					Html::create( 'label', $w->labelAddress, ['for' => 'input_address'] ),
 					Html::create( 'input', NULL, [
 						'type'	=> 'text',
 						'id'	=> 'input_address',
@@ -202,8 +200,8 @@ if( $members ){
 	}
 	$colgroup	= HtmlElements::ColumnGroup( '', '20%', '100px' );
 	$thead		= Html::create( 'thead', HtmlElements::TableHeads( [
-		'Name & E-Mail-Adresse',
-		'Rolle',
+		$w->headNameAddress,
+		$w->headRole,
 		'',
 	] ) );
 	$tbody		= Html::create( 'tbody', $list );
@@ -211,7 +209,7 @@ if( $members ){
 }
 
 return Html::create( 'div', [
-	Html::create( 'h3', 'Mitglieder der Gruppe' ),
+	Html::create( 'h3', $w->heading ),
 	Html::create( 'div', [
 		Html::create( 'div', [
 			Html::create( 'div', [

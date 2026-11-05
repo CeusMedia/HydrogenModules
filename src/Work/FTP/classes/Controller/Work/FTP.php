@@ -95,12 +95,12 @@ class Controller_Work_FTP extends Controller
 				);
 			}
 			catch( Exception $e ){
-				$this->env->getMessenger()->noteError( 'Die Verbindung ist fehlgeschlagen. Bitte die Zugangsdaten überprüfen.' );
+				$this->env->getMessenger()->noteError( $this->getWords( 'msg', 'work/ftp' )['errorConnectionFailed'] );
 				$this->restart( 'login', TRUE );
 			}
 		}
 		else{
-			$this->env->getMessenger()->noteNotice( 'Die Zugangsdaten fehlen, sind unvollständig oder falsch. Bitte korrigieren.' );
+			$this->env->getMessenger()->noteNotice( $this->getWords( 'msg', 'work/ftp' )['noticeAccessMissing'] );
 			$this->restart( 'login', TRUE );
 		}
 	}

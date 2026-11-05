@@ -18,17 +18,19 @@ $iconStop		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-stop'] );
 $iconRefresh	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-refresh'] );
 $iconList		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-list'] );
 
+$w		= (object) $words->edit_queue;
+
 $list	= [];
 
-$buttonRunDisabled	= HtmlTag::create( 'button', $iconRun.'&nbsp;starten&nbsp;', [
+$buttonRunDisabled	= HtmlTag::create( 'button', $iconRun.'&nbsp;'.$w->buttonStart.'&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-success disabled',
 ] );
-$buttonStopDisabled	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', [
+$buttonStopDisabled	= HtmlTag::create( 'a', $iconStop.'&nbsp;'.$w->buttonStop.'&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-warning disabled',
 ] );
-$buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', [
+$buttonCancelDisabled	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel.'&nbsp;', [
 	'type'	=> 'button',
 	'class'	=> 'btn btn-mini btn-danger disabled',
 ] );
@@ -54,15 +56,15 @@ foreach( $queues as $queue ){
 		Progress::BAR_CLASS_DANGER
 	);
 
-	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;starten&nbsp;', [
+	$buttonRun	= HtmlTag::create( 'a', $iconRun.'&nbsp;'.$w->buttonStart.'&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-success',
 	] );
-	$buttonStop	= HtmlTag::create( 'a', $iconStop.'&nbsp;stoppen&nbsp;', [
+	$buttonStop	= HtmlTag::create( 'a', $iconStop.'&nbsp;'.$w->buttonStop.'&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-warning',
 	] );
-	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;abbrechen&nbsp;', [
+	$buttonCancel	= HtmlTag::create( 'a', $iconCancel.'&nbsp;'.$w->buttonCancel.'&nbsp;', [
 		'href'	=> '#',
 		'class'	=> 'btn btn-mini btn-danger',
 	] );
@@ -96,13 +98,13 @@ foreach( $queues as $queue ){
 }
 $columnGroup	= HtmlElements::columnGroup( ['100px', '100px', '120px', '120px', '', '140px', '140px'/*, '260px'*/] );
 $thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-	'Queue',
-	'Empfänger',
-	'Zustand',
-	'Fortschritt',
+	$w->columnQueue,
+	$w->columnReceivers,
+	$w->columnStatus,
+	$w->columnProgress,
 	'',
-	'Ersteller',
-	'erstellt vor',
+	$w->columnCreator,
+	$w->columnCreatedAt,
 //	'Fortschritt',
 ] ) );
 $tbody	= HtmlTag::create( 'tbody', $list );
@@ -111,11 +113,11 @@ $list	= HtmlTag::create( 'table', $columnGroup.$thead.$tbody, ['class' => 'table
 $buttonList		= HtmlTag::create( 'a', $iconList.'&nbsp;'.$words->edit->buttonList, ['href' => "./work/newsletter", 'class' => "btn"] );
 $buttonReload	= '';
 if( $hasRunningQueue )
-	$buttonReload	= HtmlTag::create( 'a', $iconRefresh.'&nbsp;aktualisieren', ['href' => './work/newsletter/edit/'.$newsletterId, 'class' => "btn"] );
+	$buttonReload	= HtmlTag::create( 'a', $iconRefresh.'&nbsp;'.$w->buttonReload, ['href' => './work/newsletter/edit/'.$newsletterId, 'class' => "btn"] );
 
 $panelList	= '
 <div class="content-panel">
-	<h3>Sendevorgänge</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">

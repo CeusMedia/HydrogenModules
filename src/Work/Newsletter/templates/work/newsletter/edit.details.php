@@ -25,6 +25,8 @@ $iconPreview	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-eye'] ).'&nbsp
 $iconAbort		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 $iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] ).'&nbsp;';
 
+$wd			= (object) $words->edit_details;
+
 $disabled		= (int) $newsletter->status !== 0 ? 'disabled="disabled"' : "";
 
 $optStatus		= HtmlElements::Options( $words->states, $newsletter->status );
@@ -66,7 +68,7 @@ $panelDetails	= '
 	<div class="span12">
 		<form action="./work/newsletter/edit/'.$newsletterId.'" method="post">
 			<div class="content-panel">
-				<h3>Grundlegende Daten</h3>
+				<h3>'.$wd->heading.'</h3>
 				<div class="content-panel-inner">
 					<div class="row-fluid">
 						<div class="span4">
@@ -141,18 +143,17 @@ if( $newsletter->status == Model_Newsletter::STATUS_NEW && $allowedToSetStatus )
 	$url		= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_READY.'/?forwardTo='.urlencode( 'setContentTab/'.$newsletterId.'/3' );
 	$panelFlow	= '
 <div class="content-panel">
-	<h3>Bereit zum Versand?</h3>
+	<h3>'.$wd->headingReady.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span8">
 				<p>
-					Wenn Sie alle Inhalte der Kampagne eingegeben und mit der Vorschau geprüft haben,
-					können Sie die Kampagne auf "bereit" stellen und damit den Versand ermöglichen.<br/>
-					<span class="label label-warning">Achtung: Die Kampagne kann dann nicht mehr verändert werden.</span>
+					'.$wd->textReady.'<br/>
+					<span class="label label-warning">'.$wd->labelReadyWarning.'</span>
 				</p>
 			</div>
 			<div class="span4">
-				<a class="btn btn-large btn-primary" href="'.$url.'">bereitmachen</a>
+				<a class="btn btn-large btn-primary" href="'.$url.'">'.$wd->buttonReady.'</a>
 			</div>
 		</div>
 	</div>
@@ -163,20 +164,18 @@ else if( $newsletter->status == Model_Newsletter::STATUS_READY && $allowedToSetS
 	$url		= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_NEW;
 	$panelFlow	= '
 <div class="content-panel">
-	<h3>Doch nicht fertig zum Versand?</h3>
+	<h3>'.$wd->headingUnready.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span7">
 				<p>
-					Falls Sie diese versandbereite Kampagne doch noch einmal ändern müssen,
-					können Sie die Kampagne hier wieder für Änderungen freischalten.<br/>
-					Die Kampagne muss dann wieder getestet werden.
+					'.$wd->textUnready.'
 				</p>
 			</div>
 			<div class="span1">
 			</div>
 			<div class="span4">
-				<a class="btn btn-large btn-primary" href="'.$url.'">weiter bearbeiten</a>
+				<a class="btn btn-large btn-primary" href="'.$url.'">'.$wd->buttonUnready.'</a>
 			</div>
 		</div>
 	</div>
@@ -186,19 +185,18 @@ else if( $newsletter->status == Model_Newsletter::STATUS_ABORTED && $allowedToSe
 	$url	= './work/newsletter/setStatus/'.$newsletterId.'/'.Model_Newsletter::STATUS_NEW;
 	$panelFlow	= '
 <div class="content-panel">
-	<h3>Arbeit am Newsletter wieder aufnehmen</h3>
+	<h3>'.$wd->headingReopen.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span7">
 				<p>
-					Falls Sie diese verworfene Kampagne doch weiter bearbeiten wollen,
-					können Sie die Kampagne hier wieder für Änderungen freischalten.<br/>
+					'.$wd->textReopen.'<br/>
 				</p>
 			</div>
 			<div class="span1">
 			</div>
 			<div class="span4">
-				<a class="btn btn-large btn-primary" href="'.$url.'">wieder öffnen</a>
+				<a class="btn btn-large btn-primary" href="'.$url.'">'.$wd->buttonReopen.'</a>
 			</div>
 		</div>
 	</div>
@@ -230,13 +228,13 @@ if( $canRemove && $newsletter->status < Model_Newsletter::STATUS_SENT ){
 	] );
 	$panelRemove	= '
 <div class="content-panel">
-	<h3>Kampagne entfernen</h3>
+	<h3>'.$wd->headingRemove.'</h3>
 	<div class="content-panel-inner">
 		<p>
-			Diese Kampagne wurde noch nicht verwendet und kann daher entfernt werden, wenn sie nicht mehr benötigt wird.
+			'.$wd->textRemove.'
 		</p>
 		<div class="alert alert-info">
-			Sobald eine Kampagne versendet wurde, kann sie nicht mehr entfernt werden.
+			'.$wd->alertRemove.'
 		</div>
 		<div class="buttonbar">
 			'.$buttonRemove.'

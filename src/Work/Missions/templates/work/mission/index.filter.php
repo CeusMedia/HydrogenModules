@@ -11,6 +11,8 @@ use CeusMedia\HydrogenFramework\View;
 if( empty( $wordsFilter ) )
 	$wordsFilter	= $words;
 
+$wf				= (object) $wordsFilter['index'];
+
 $toolbar1		= new View_Helper_MultiButtonGroupMultiToolbar();
 $toolbar2		= new View_Helper_MultiButtonGroupMultiToolbar();
 
@@ -23,10 +25,10 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconAddTask	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-thumb-tack'] );
 }
 $toolbar1->addButton( 'toolbar-views', 'view-type', HtmlTag::create( 'div', [
-	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="Neuer Eintrag"><i class="fa fa-fw fa-plus"></i></button>
+	'<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" title="'.htmlentities( $wf->buttonAddEntry, ENT_QUOTES, 'UTF-8' ).'"><i class="fa fa-fw fa-plus"></i></button>
 	<ul class="dropdown-menu">
-		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;Termin</a></li>
-		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;Aufgabe</a></li>
+		<li><a href="./work/mission/add?type=1">'.$iconAddEvent.'&nbsp;'.$wordsFilter['types'][1].'</a></li>
+		<li><a href="./work/mission/add?type=0">'.$iconAddTask.'&nbsp;'.$wordsFilter['types'][0].'</a></li>
 	</ul>'
 ], ['class' => 'btn-group'] ) );
 

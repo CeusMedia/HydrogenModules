@@ -49,7 +49,7 @@ return $textEditTop.'
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel content-panel-form">
-			<h3>Vorgang bearbeiten</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./work/time/edit/'.$timer->workTimerId.'" method="post">
 					<input type="hidden" name="from" value="'.htmlentities( $from, ENT_QUOTES, 'UTF-8' ).'">
@@ -103,7 +103,7 @@ return $textEditTop.'
 								'name'		=> 'time_needed',
 								'id'		=> 'input_time_needed',
 								'class'		=> 'span12',
-								'value'		=> $timer->status == 1 ? 'wird erfasst' : $timeNeeded,
+								'value'		=> $timer->status == 1 ? $w->valueTimeRunning : $timeNeeded,
 								'readonly'	=> $timer->status == 1 ? 'readonly' : NULL,
 								'disabled'	=> $timer->status == 1 ? 'disabled' : NULL,
 							] ).'

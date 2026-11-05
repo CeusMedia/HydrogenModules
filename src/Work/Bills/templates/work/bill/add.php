@@ -39,8 +39,8 @@ return '
 		</div>
 	</div>
 	<div class="buttonbar">
-		<a href="./work/bill" class="btn"><i class="icon-arrow-left"></i>&nbsp;zurück</a>
-		<button type="submit" class="btn btn-success" name="save"><i class="icon-ok icon-white"></i>&nbsp;speichern</button>
+		<a href="./work/bill" class="btn"><i class="icon-arrow-left"></i>&nbsp;'.$w->buttonCancel.'</a>
+		<button type="submit" class="btn btn-success" name="save"><i class="icon-ok icon-white"></i>&nbsp;'.$w->buttonSave.'</button>
 	</div>
 </form>
 <script>
@@ -54,8 +54,8 @@ $(document).ready(function(){
 //		gotoCurrent: true,
 //		autoSize: true,
 		firstDay: 1,
-		nextText: "nächster Monat",
-		prevText: "vorheriger Monat",
+		nextText: '.json_encode( $words['datepicker']['nextText'] ).',
+		prevText: '.json_encode( $words['datepicker']['prevText'] ).',
 		yearRange: "c-2:c+3",
 		monthNames: monthNames
 	});

@@ -11,7 +11,9 @@ use CeusMedia\Mail\Transport\SMTP\Code as SmtpCode;
 /** @var array<string,array<string,string>> $words */
 /** @var object $address */
 
-$checks		= HtmlTag::create( 'div', 'Keine Prüfungen bisher.', ['class' => 'text text-info'] );
+$wa	= (object) $words['address'];
+
+$checks		= HtmlTag::create( 'div', $wa->noChecks, ['class' => 'text text-info'] );
 if( $address->checks ){
 	$rows	= [];
 	foreach( $address->checks as $check ){
@@ -22,10 +24,10 @@ if( $address->checks ){
 		$errorDesc		= $words['errorLabels'][$check->error];
 
 		$facts	= renderFacts( [
-			'SMTP-Code'			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
-			'Fehler'			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
-			'Servermeldung'		=> '<not-pre>'.$check->message.'</not-pre>',
-			'Datum / Uhrzeit'	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
+			$wa->factCode			=> $codeLabel.' <small class="muted">'.$codeDesc.'</small>',
+			$wa->factError			=> $errorLabel.' <small class="muted">'.$errorDesc.'</small>',
+			$wa->factMessage		=> '<not-pre>'.$check->message.'</not-pre>',
+			$wa->factDatetime	=> date( 'Y-m-d', $check->createdAt ).' <small class="muted">'.date( 'H:i:s', $check->createdAt ).'</small>',
 		] );
 
 		$rows[]	= HtmlTag::create( 'tr', [
@@ -38,8 +40,8 @@ if( $address->checks ){
 /** @noinspection XmlDeprecatedElement */
 /** @noinspection HtmlDeprecatedTag */
 return '
-<big><span class="muted">Adresse: </span>'.$address->address.'</big>
-<h4>Prüfungen <small class="muted">('.count( $address->checks ).')</small></h4>
+<big>'.sprintf( $wa->heading, $address->address ).'</big>
+<h4>'.$wa->headingChecks.' <small class="muted">('.count( $address->checks ).')</small></h4>
 '.$checks.'
 <br/>
 <br/>';

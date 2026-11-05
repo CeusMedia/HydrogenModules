@@ -111,8 +111,8 @@ return HtmlTag::create( 'div', [
 					], ['class' => 'row-fluid'] ),
 				], ['class' => 'span9'] ),
 				HtmlTag::create( 'div', [
-					HtmlTag::create( 'h4', 'Empfänger' ),
-					HtmlTag::create( 'div', 'Die Benutzer dieser Rollen werden die Nachricht sehen.', ['class' => 'alert alert-info'] ),
+					HtmlTag::create( 'h4', $w->headingRecipients ),
+					HtmlTag::create( 'div', $w->hintRecipients, ['class' => 'alert alert-info'] ),
 					HtmlTag::create( 'div', $listRoles ),
 				], ['class' => 'span3'] ),
 			], ['class' => 'row-fluid'] ),

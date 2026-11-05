@@ -5,7 +5,7 @@
 	<title>Work: Newsletter</title>
 	<description><![CDATA[Creating and sending newsletter mails.]]></description>
 	<category>Work</category>
-	<version>1.5.6</version>
+	<version>1.5.7</version>
 	<log version="0.8.3">Added simple text export of grouped readers for manual mails.</log>
 	<log version="0.8.4">Removed locking from job in favour of locking mechanism in jobber class in module Resource:Jobs.</log>
 	<log version="0.8.5">Prepare to remove usage of TinyMCE module config key auto_baseUrl.</log>
@@ -76,6 +76,7 @@
     <log version="1.5.4">Upgrade import strategies.</log>
     <log version="1.5.5">Support queues to send reader letter mails in future.</log>
     <log version="1.5.6">Improve template snapshot (theme) handling.</log>
+    <log version="1.5.7">Extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -108,8 +109,9 @@
 		<class>View/Helper/Work/Newsletter/ThemeFacts.php</class>
 		<class>View/Helper/Work/Newsletter/ThemeList.php</class>
 		<locale>de/work/newsletter.ini</locale>
-		<locale>en/work/newsletter/dashboard.ini</locale>
+		<locale>de/work/newsletter/dashboard.ini</locale>
 		<locale>de/work/newsletter/group.ini</locale>
+		<locale>de/work/newsletter/link.ini</locale>
 		<locale>de/work/newsletter/reader.ini</locale>
 		<locale>de/work/newsletter/template.ini</locale>
 		<locale>de/html/work/newsletter/above.html</locale>
@@ -148,6 +150,7 @@
 		<locale>de/html/work/newsletter/reader/index/top.html</locale>
 		<locale>de/html/work/newsletter/reader/index/bottom.html</locale>
 		<locale>de/html/work/newsletter/template/default.css</locale>
+		<locale>de/html/work/newsletter/template/default.js</locale>
 		<locale>de/html/work/newsletter/template/default.html</locale>
 		<locale>de/html/work/newsletter/template/default.txt</locale>
 		<locale>de/html/work/newsletter/template/imprint.txt</locale>
@@ -168,6 +171,7 @@
 		<locale>en/work/newsletter.ini</locale>
 		<locale>en/work/newsletter/dashboard.ini</locale>
 		<locale>en/work/newsletter/group.ini</locale>
+		<locale>en/work/newsletter/link.ini</locale>
 		<locale>en/work/newsletter/reader.ini</locale>
 		<locale>en/work/newsletter/template.ini</locale>
 		<locale>en/html/work/newsletter/above.html</locale>
@@ -206,6 +210,7 @@
 		<locale>en/html/work/newsletter/reader/index/top.html</locale>
 		<locale>en/html/work/newsletter/reader/index/bottom.html</locale>
 		<locale>en/html/work/newsletter/template/default.css</locale>
+		<locale>en/html/work/newsletter/template/default.js</locale>
 		<locale>en/html/work/newsletter/template/default.html</locale>
 		<locale>en/html/work/newsletter/template/default.txt</locale>
 		<locale>en/html/work/newsletter/template/imprint.txt</locale>
@@ -305,6 +310,12 @@
 	<link xml:lang="de" access="acl" path="work/newsletter/group" rank="34">Gruppe</link>
 	<link xml:lang="de" access="acl" path="work/newsletter/template" rank="35">Vorlagen</link>
 	<link xml:lang="de" access="acl" path="work/newsletter/link" rank="36">Links</link>
+	<link xml:lang="en" access="acl" path="work/newsletter" rank="30">Newsletters</link>
+	<link xml:lang="en" access="acl" path="work/newsletter/dashboard" rank="31">Overview</link>
+	<link xml:lang="en" access="acl" path="work/newsletter/reader" rank="33">Readers</link>
+	<link xml:lang="en" access="acl" path="work/newsletter/group" rank="34">Groups</link>
+	<link xml:lang="en" access="acl" path="work/newsletter/template" rank="35">Templates</link>
+	<link xml:lang="en" access="acl" path="work/newsletter/link" rank="36">Links</link>
 	<link access="public" path="work/newsletter/template/preview"/>
 	<hook type="resource" resource="HintHelper" event="registerHints">Hook_Work_Newsletter::onRegisterHints</hook>
 </module>

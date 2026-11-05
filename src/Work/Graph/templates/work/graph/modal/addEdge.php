@@ -1,6 +1,11 @@
 <?php
 use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 
+/** @var array<string,array<string,string>> $words */
+$wg	= (object) $words['general'];
+$wf	= (object) $words['fields'];
+$wm	= (object) $words['modal.addEdge'];
+
 $nodeId	= $nodeId ?? NULL;
 
 $optGraph	= [];
@@ -16,7 +21,7 @@ $optToNode		= HtmlElements::Options( $optNode, $nodeId );
 
 $panelDetails	= '
 <div class="content-panel">
-	<h4>Add an edge</h4>
+	<h4>'.$wm->headingDetails.'</h4>
 	<div class="content-panel-inner">
 		<input type="hidden" name="graphId" value="'.$graphId.'"/>
 <!--		<div class="row-fluid">
@@ -27,17 +32,17 @@ $panelDetails	= '
 		</div>-->
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="input_fromNodeId">From node</label>
+				<label for="input_fromNodeId">'.$wf->labelFromNode.'</label>
 				<select name="fromNodeId" id="input_fromNodeId" class="span12">'.$optFromNode.'</select>
 			</div>
 			<div class="span6">
-				<label for="input_toNodeId">to node</label>
+				<label for="input_toNodeId">'.$wf->labelToNode.'</label>
 				<select name="toNodeId" id="input_toNodeId" class="span12">'.$optToNode.'</select>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span12">
-				<label for="input_label">Label <small class="muted">(should be unique)</small></label>
+				<label for="input_label">'.$wf->labelLabel.' <small class="muted">'.$wf->hintShouldBeUnique.'</small></label>
 				<input type="text" name="label" id="input_label" class="span12"/>
 			</div>
 		</div>
@@ -46,29 +51,29 @@ $panelDetails	= '
 
 $panelStyle	= '
 <div class="content-panel">
-	<h4>Edge style</h4>
+	<h4>'.$wm->headingStyle.'</h4>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 			<div class="span6">
-				<label for="input_arrowhead">Arrow head <small class="muted"></small></label>
+				<label for="input_arrowhead">'.$wf->labelArrowHead.' <small class="muted"></small></label>
 				<input type="text" name="arrowhead" id="input_arrowhead" class="span12"/>
 			</div>
 			<div class="span3">
-				<label for="input_arrowsize">Arrow size <small class="muted"></small></label>
+				<label for="input_arrowsize">'.$wf->labelArrowSize.' <small class="muted"></small></label>
 				<input type="text" name="arrowsize" id="input_arrowsize" class="span9"/>
 			</div>
 			<div class="span3">
-				<label for="input_color">Line color <small class="muted"></small></label>
+				<label for="input_color">'.$wf->labelLineColor.' <small class="muted"></small></label>
 				<input type="text" name="color" id="input_color" class="span12"/>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span3">
-				<label for="input_fontcolor">Font color <small class="muted"></small></label>
+				<label for="input_fontcolor">'.$wf->labelFontColor.' <small class="muted"></small></label>
 				<input type="text" name="fontcolor" id="input_fontcolor" class="span12"/>
 			</div>
 			<div class="span3">
-				<label for="input_fontsize">Font size <small class="muted"></small></label>
+				<label for="input_fontsize">'.$wf->labelFontSize.' <small class="muted"></small></label>
 				<input type="text" name="fontsize" id="input_fontsize" class="span9"/>
 			</div>
 		</div>
@@ -80,7 +85,7 @@ return '
 	<div id="modalAddEdge" class="modal hide not-fade">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h3>Add a new edge</h3>
+			<h3>'.$wm->heading.'</h3>
 		</div>
 		<div class="modal-body">
 			<div class="row-fluid">
@@ -95,8 +100,8 @@ return '
 			</div>
 		</div>
 		<div class="modal-footer">
-			<a class="btn" data-dismiss="modal">Close</a>
-			<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> Save</button>
+			<a class="btn" data-dismiss="modal">'.$wg->buttonClose.'</a>
+			<button type="submit" name="save" class="btn btn-primary"><i class="icon-ok icon-white"></i> '.$wg->buttonSave.'</button>
 		</div>
 	</div>
 </form>

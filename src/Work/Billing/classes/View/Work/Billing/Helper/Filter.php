@@ -32,13 +32,14 @@ class View_Work_Billing_Helper_Filter
 		if( !$this->sessionPrefix )
 			throw new RuntimeException( 'No filter session prefix set' );
 
+		$w				= (object) $this->env->getLanguage()->getSection( 'work/billing', 'filter' );
 		$formFields		= [];
 		foreach( $this->filters as $filter ){
 			$value		= $this->session->get( $this->sessionPrefix.$filter );
 			switch( $filter ){
 				case 'year':
 					$optYear	= [
-						''	=> '- alle -',
+						''	=> $w->optAll,
 					];
 					$optYear[date( "Y" )]	= date( "Y" );
 					$optYear[date( "Y" )-1]	= date( "Y" )-1;
@@ -46,30 +47,30 @@ class View_Work_Billing_Helper_Filter
 					$optYear	= HtmlElements::Options( $optYear, $value );
 					$formFields[]	= '
 					<div class="span2">
-						<label for="input_year">Jahr</label>
+						<label for="input_year">'.$w->labelYear.'</label>
 						<select name="year" id="input_year" class="span12" onchange="this.form.submit()">'.$optYear.'</select>
 					</div>';
 					break;
 				case 'month':
 					$optMonth	= [
-						''		=> '- alle -',
-						'01'	=> 'Januar',
-						'02'	=> 'Februar',
-						'03'	=> 'März',
-						'04'	=> 'April',
-						'05'	=> 'Mai',
-						'06'	=> 'Juni',
-						'07'	=> 'Juli',
-						'08'	=> 'August',
-						'09'	=> 'September',
-						'10'	=> 'Oktober',
-						'11'	=> 'November',
-						'12'	=> 'Dezember',
+						''		=> $w->optAll,
+						'01'	=> $w->month01,
+						'02'	=> $w->month02,
+						'03'	=> $w->month03,
+						'04'	=> $w->month04,
+						'05'	=> $w->month05,
+						'06'	=> $w->month06,
+						'07'	=> $w->month07,
+						'08'	=> $w->month08,
+						'09'	=> $w->month09,
+						'10'	=> $w->month10,
+						'11'	=> $w->month11,
+						'12'	=> $w->month12,
 					];
 					$optMonth	= HtmlElements::Options( $optMonth, $value );
 					$formFields[]	= '
 					<div class="span2">
-						<label for="input_month">Monat</label>
+						<label for="input_month">'.$w->labelMonth.'</label>
 						<select name="month" id="input_month" class="span12" onchange="this.form.submit()">'.$optMonth.'</select>
 					</div>';
 					break;

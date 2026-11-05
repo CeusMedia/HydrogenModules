@@ -26,7 +26,7 @@ return $textAddTop.'
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel content-panel-form">
-			<h3>Zeit erfassen</h3>
+			<h3>'.$w->heading.'</h3>
 			<div class="content-panel-inner">
 				<form action="./work/time/add" method="post">
 					<input type="hidden" name="from" value="'.$from.'"/>

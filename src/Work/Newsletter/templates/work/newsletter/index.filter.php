@@ -17,7 +17,7 @@ $iconFilter	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search'] ).'&nb
 $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] ).'&nbsp;';
 
 
-$optStatus	= array_merge( ['' => '- egal -'], $words->states );
+$optStatus	= array_merge( ['' => $w->optionStatusAll], $words->states );
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optLimit	= [5, 10, 15, 20, 25, 50, 100];
@@ -53,15 +53,15 @@ return '
 <form action="./work/newsletter/filter" method="post">
 	<div class="row-fluid">
 		<div class="span2">
-			<label for="input_title">Titel</label>
+			<label for="input_title">'.$w->labelTitle.'</label>
 			<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 		</div>
 		<div class="span2">
-			<label for="input_status">Zustand</label>
+			<label for="input_status">'.$w->labelStatus.'</label>
 			<select name="status" id="input_status" class="span12" onchange="this.form.submit()">'.$optStatus.'</select>
 		</div>
 		<div class="span2 offset3">
-			<label for="input_limit">pro Seite</label>
+			<label for="input_limit">'.$w->labelLimit.'</label>
 			<select name="limit" id="input_limit" class="span6" onchange="this.form.submit()">'.$optLimit.'</select>
 		</div>
 		<div class="span3" data-style="text-align: right">

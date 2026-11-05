@@ -59,6 +59,11 @@ class View_Helper_Work_Newsletter_Preview
 	//  --  PROTECTED  --  //
 
 
+	protected function getWords(): array
+	{
+		return $this->env->getLanguage()->getSection( 'work/newsletter', 'helper_preview' );
+	}
+
 	/**
 	 *	@return		string
 	 */
@@ -98,7 +103,7 @@ class View_Helper_Work_Newsletter_Preview
 
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
-				HtmlTag::create( 'span', 'HTML-Vorschau' ),
+				HtmlTag::create( 'span', $this->getWords()['headingHtml'] ),
 				HtmlTag::create( 'div', $buttons, ['style' => 'float: right'] ),
 			] ),
 			HtmlTag::create( 'div', [
@@ -141,7 +146,7 @@ class View_Helper_Work_Newsletter_Preview
 
 		return HtmlTag::create( 'div', [
 			HtmlTag::create( 'h4', [
-				HtmlTag::create( 'span', 'Text-Vorschau' ),
+				HtmlTag::create( 'span', $this->getWords()['headingText'] ),
 				HtmlTag::create( 'div', $buttons, ['style' => 'float: right'] ),
 			] ),
 			HtmlTag::create( 'div', [

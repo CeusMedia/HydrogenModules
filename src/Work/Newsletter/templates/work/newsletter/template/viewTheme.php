@@ -19,6 +19,8 @@ $helper	= new View_Helper_Work_Newsletter_ThemeFacts( $env );
 $helper->setThemeData( $theme );
 //$helper->setListAttributes( ['class' => 'dl-horizontal'] );
 
+$w				= (object) $words['viewTheme'];
+
 $image			= '';
 $thumbnailUri	= $this->themePath.$theme->folder.'/template.png';
 $thumbnailFile	= File::new( $thumbnailUri );
@@ -33,7 +35,7 @@ if( $thumbnailFile->exists() ){
 
 return '
 <div class="content-panel">
-	<h3>Theme</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<div class="row-fluid">
 		 	<div class="span6">
@@ -46,8 +48,8 @@ return '
 			</div>
 		</div>
 		<div class="buttonbar">
-			<a href="./work/newsletter/template/" class="btn">'.$iconCancel.'&nbsp;zurück</a>
-			<a href="./work/newsletter/template/installTheme/'.$theme->id.'" class="btn btn-success">'.$iconInstall.'&nbsp;installieren</a>
+			<a href="./work/newsletter/template/" class="btn">'.$iconCancel.'&nbsp;'.$w->buttonCancel.'</a>
+			<a href="./work/newsletter/template/installTheme/'.$theme->id.'" class="btn btn-success">'.$iconInstall.'&nbsp;'.$w->buttonInstall.'</a>
 		</div>
 	</div>
 </div>';

@@ -16,6 +16,7 @@ class Controller_Work_Time extends Controller
 	protected Model_Work_Timer $modelTimer;
 	protected array $projectMap;
 	protected array $modules			= [];
+	protected object $words;
 
 	/**
 	 *	@return		void
@@ -53,7 +54,7 @@ class Controller_Work_Time extends Controller
 			];
 
 			$timerId	= $this->modelTimer->add( $data );
-			$this->messenger->noteSuccess( 'Timer saved.' );
+			$this->messenger->noteSuccess( $this->words->successAdded );
 			$status		= (int) $this->request->get( 'status' );
 			if( $status === 1 )
 				$this->logicTimer->start( $timerId );
@@ -80,7 +81,7 @@ class Controller_Work_Time extends Controller
 		$timerIds	= $this->request->get( 'timerIds' );
 
 		if( !$module || !$moduleId ){
-			$this->messenger->noteError( 'No valid module relation given.' );
+			$this->messenger->noteError( $this->words->errorRelationInvalid );
 		}
 		else{
 			$count	= 0;
@@ -90,7 +91,7 @@ class Controller_Work_Time extends Controller
 					'moduleId'	=> $moduleId,
 				] );
 			}
-			$this->messenger->noteSuccess( '%d Timer(s) assigned.', $count );
+			$this->messenger->noteSuccess( $this->words->successAssigned, $count );
 		}
 		if( $this->request->get( 'from' ) )
 			$this->restart( $this->request->get( 'from' ) );
@@ -107,7 +108,7 @@ class Controller_Work_Time extends Controller
 	{
 		$timer	= $this->modelTimer->get( $timerId );
 		if( !$timer ){
-			$this->messenger->noteError( 'Invalid timer ID' );
+			$this->messenger->noteError( $this->words->errorInvalidId );
 			$this->restart( NULL, TRUE );
 		}
 		View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
@@ -153,7 +154,7 @@ class Controller_Work_Time extends Controller
 						] );
 				}
 			}
-			$this->messenger->noteSuccess( 'Timer saved.' );
+			$this->messenger->noteSuccess( $this->words->successModified );
 			if( $this->request->get( 'from' ) )
 				$this->restart( $this->request->get( 'from' ) );
 			$this->restart( 'edit/'.$timerId, TRUE );
@@ -241,7 +242,7 @@ class Controller_Work_Time extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $this->words->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -268,7 +269,7 @@ class Controller_Work_Time extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $this->words->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 	}
@@ -286,7 +287,7 @@ class Controller_Work_Time extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		catch( Exception $e ){
-			$this->messenger->noteError( 'Fehler: '.$e->getMessage() );
+			$this->messenger->noteError( $this->words->errorException, $e->getMessage() );
 			$this->restart( NULL, TRUE );
 		}
 
@@ -306,6 +307,7 @@ class Controller_Work_Time extends Controller
 		$this->request			= $this->env->getRequest();
 		$this->session			= $this->env->getSession();
 		$this->messenger		= $this->env->getMessenger();
+		$this->words			= (object) $this->getWords( 'msg' );
 		$this->userId			= $this->session->get( Logic_Authentication::$sessionKeyAuthUserId );
 		$this->logicTimer		= Logic_Work_Timer::getInstance( $this->env );
 		/** @noinspection PhpFieldAssignmentTypeMismatchInspection */

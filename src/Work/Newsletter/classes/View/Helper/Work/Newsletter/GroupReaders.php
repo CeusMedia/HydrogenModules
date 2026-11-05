@@ -88,6 +88,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 	protected function renderReaders(): string
 	{
 		$w		= (object) $this->words['edit_readers'];
+		$wh		= (object) $this->env->getLanguage()->getSection( 'work/newsletter', 'helper_groupReaders' );
 
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] ).'&nbsp;';
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-trash'] );
@@ -137,7 +138,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 
 		if( $this->maxItems < $this->nrItems ){
 			$nrMore		= $this->nrItems - $this->maxItems;
-			$textMore	= '<p><center>... und '.$nrMore.' Weitere.</center></p>';
+			$textMore	= '<p><center>'.sprintf( $wh->textMore, $nrMore ).'</center></p>';
 			$list[]		= HtmlTag::create( 'tr', [
 				HtmlTag::create( 'td', $textMore, ['colspan' => 4] ),
 			] );
@@ -145,7 +146,7 @@ class View_Helper_Work_Newsletter_GroupReaders
 
 		$numberBadge	= HtmlTag::create( 'span', '('.$this->nrItems.')', ['class' => 'muted'] );
 		$colgroup		= HtmlElements::ColumnGroup( '', '', '100px', '40px' );
-		$tableHeads		= HtmlElements::TableHeads( ['Zugeordnete Leser '.$numberBadge] );
+		$tableHeads		= HtmlElements::TableHeads( [$wh->headingReaders.' '.$numberBadge] );
 		$thead			= HtmlTag::create( 'thead', $tableHeads );
 		$tbody			= HtmlTag::create( 'tbody', $list );
 		return HtmlTag::create( 'table', $colgroup.$thead.$tbody, [

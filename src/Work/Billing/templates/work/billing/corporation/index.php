@@ -4,11 +4,13 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var object[] $corporations */
 
+$w		= (object) $env->getLanguage()->getSection( 'work/billing', 'corporation-index' );
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 $iconPerson		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-user-o'] );
 $iconCompany	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-building-o'] );
 
-$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
+$list	= HtmlTag::create( 'div', HtmlTag::create( 'em', $w->noEntries, ['class' => 'muted'] ), ['class' => 'alert alert-info'] );
 
 if( $corporations ){
 	$list	= [];
@@ -26,21 +28,21 @@ if( $corporations ){
 		'100',
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Bezeichnung' ),
-		HtmlTag::create( 'th', 'Balance', ['class' => 'cell-number'] )
+		HtmlTag::create( 'th', $w->headTitle ),
+		HtmlTag::create( 'th', $w->headBalance, ['class' => 'cell-number'] )
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neues Unternehmen', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'href'	=> './work/billing/corporation/add',
 	'class'	=> 'btn btn-success',
 ] );
 
 return '
 <div class="content-panel">
-	<h3>Unternehmen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$list.'
 		<div class="buttonbar">

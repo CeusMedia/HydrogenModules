@@ -9,13 +9,17 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var int $page */
 /** @var int $pages */
 
+$w		= (object) $env->getLanguage()->getSection( 'work/billing', 'bill-index' );
+
+$wf		= (object) $env->getLanguage()->getSection( 'work/billing', 'filter' );
+
 $iconAdd		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 
-$list	= HtmlTag::create( 'em', 'Keine gefunden.', ['class' => 'muted'] );
+$list	= HtmlTag::create( 'em', $w->noEntries, ['class' => 'muted'] );
 
 $statuses	= [
-	0	=> 'in Arbeit',
-	1	=> 'gebucht',
+	0	=> $w->statusWorking,
+	1	=> $w->statusBooked,
 ];
 
 if( $bills ){
@@ -49,15 +53,15 @@ if( $bills ){
 		'90',
 	] );
 	$thead	= HtmlTag::create( 'thead', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'th', 'Nr' ),
-		HtmlTag::create( 'th', 'Bezug' ),
-		HtmlTag::create( 'th', 'Betrag', ['class' => 'cell-number'] ),
-		HtmlTag::create( 'th', '<small>MwSt</small>', ['class' => 'cell-number'] ),
-		HtmlTag::create( 'th', '<small>gebucht</small>', ['class' => 'cell-number'] ),
-		HtmlTag::create( 'th', '<small>Zustand</small>' ),
+		HtmlTag::create( 'th', $w->headNumber ),
+		HtmlTag::create( 'th', $w->headTitle ),
+		HtmlTag::create( 'th', $w->headAmount, ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', '<small>'.$w->headTax.'</small>', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', '<small>'.$w->headBooked.'</small>', ['class' => 'cell-number'] ),
+		HtmlTag::create( 'th', '<small>'.$w->headStatus.'</small>' ),
 	] ) );
 	$tfoot	= HtmlTag::create( 'tfoot', HtmlTag::create( 'tr', [
-		HtmlTag::create( 'td', 'Gesamt', ['colspan' => 2] ),
+		HtmlTag::create( 'td', $w->total, ['colspan' => 2] ),
 		HtmlTag::create( 'td', number_format( $totalAmount, 2, ',', '.' ).'&nbsp;&euro;', ['class' => 'cell-number'] ),
 		HtmlTag::create( 'td', '' ),
 		HtmlTag::create( 'td', '' ),
@@ -67,20 +71,20 @@ if( $bills ){
 	$list	= HtmlTag::create( 'table', $colgroup.$thead.$tbody.$tfoot, ['class' => 'table table-fixed'] );
 }
 
-$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' neue Rechnung', [
+$buttonAdd	= HtmlTag::create( 'a', $iconAdd.' '.$w->buttonAdd, [
 	'href'	=> './work/billing/bill/add',
 	'class'	=> 'btn btn-success',
 ] );
 
 $optStatus	= [
-	''	=> '- alle -',
-	'0'	=> 'in Arbeit',
-	'1'	=> 'gebucht',
+	''	=> $wf->optAll,
+	'0'	=> $w->statusWorking,
+	'1'	=> $w->statusBooked,
 ];
 $optStatus	= HtmlElements::Options( $optStatus, $filterStatus );
 
 $optYear	= [
-	''	=> '- alle -',
+	''	=> $wf->optAll,
 ];
 $optYear[date( "Y" )]	= date( "Y" );
 $optYear[date( "Y" )-1]	= date( "Y" )-1;
@@ -88,19 +92,19 @@ $optYear[date( "Y" )-2]	= date( "Y" )-2;
 $optYear	= HtmlElements::Options( $optYear, $filterYear );
 
 $optMonth	= [
-	''		=> '- alle -',
-	'01'	=> 'Januar',
-	'02'	=> 'Februar',
-	'03'	=> 'März',
-	'04'	=> 'April',
-	'05'	=> 'Mai',
-	'06'	=> 'Juni',
-	'07'	=> 'Juli',
-	'08'	=> 'August',
-	'09'	=> 'September',
-	'10'	=> 'Oktober',
-	'11'	=> 'November',
-	'12'	=> 'Dezember',
+	''		=> $wf->optAll,
+	'01'	=> $wf->month01,
+	'02'	=> $wf->month02,
+	'03'	=> $wf->month03,
+	'04'	=> $wf->month04,
+	'05'	=> $wf->month05,
+	'06'	=> $wf->month06,
+	'07'	=> $wf->month07,
+	'08'	=> $wf->month08,
+	'09'	=> $wf->month09,
+	'10'	=> $wf->month10,
+	'11'	=> $wf->month11,
+	'12'	=> $wf->month12,
 ];
 $optMonth	= HtmlElements::Options( $optMonth, $filterMonth );
 
@@ -117,28 +121,28 @@ $buttonFilter	= HtmlTag::create( 'button', $iconFilter, [
 
 return '
 <div class="content-panel">
-	<h3>Rechnungen</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/billing/bill/filter" class="form-list-filter" method="post">
 			<div class="row-fluid">
 				<div class="span2">
-					<label for="input_number">Nummer</label>
+					<label for="input_number">'.$w->labelNumber.'</label>
 					<input type="text" name="number" id="input_number" class="span12" value="'.htmlentities( $filterNumber, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
-					<label for="input_title">Titel</label>
+					<label for="input_title">'.$w->labelTitle.'</label>
 					<input type="text" name="title" id="input_title" class="span12" value="'.htmlentities( $filterTitle, ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 				<div class="span2">
-					<label for="input_status">Zustand</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12" onchange="this.form.submit()">'.$optStatus.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_year">Jahr</label>
+					<label for="input_year">'.$wf->labelYear.'</label>
 					<select name="year" id="input_year" class="span12" onchange="this.form.submit()">'.$optYear.'</select>
 				</div>
 				<div class="span2">
-					<label for="input_month">Monat</label>
+					<label for="input_month">'.$wf->labelMonth.'</label>
 					<select name="month" id="input_month" class="span12" onchange="this.form.submit()">'.$optMonth.'</select>
 				</div>
 			</div>

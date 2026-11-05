@@ -38,8 +38,8 @@ class Hook_Work_Issue extends Hook
 			return;
 		$this->context->registerPanel( 'work-issues', [
 			'url'			=> 'ajax/work/issue/renderDashboardPanel',
-			'title'			=> 'offene Probleme',
-			'heading'		=> 'offene Probleme',
+			'title'			=> $this->env->getLanguage()->getSection( 'work/issue', 'dashboard' )['title'],
+			'heading'		=> $this->env->getLanguage()->getSection( 'work/issue', 'dashboard' )['title'],
 			'icon'			=> 'fa fa-fw fa-exclamation',
 			'rank'			=> 20,
 		] );
@@ -79,9 +79,9 @@ class Hook_Work_Issue extends Hook
 			$indices['status']	= $this->statusesActive;
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$icons			= [
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[0]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[1]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[2]] ),
 		];
 		$words			= $this->env->getLanguage()->getWords( 'work/issue' );
 		$reportedIssues	= $modelIssue->getAll( $indices, $orders );
@@ -181,9 +181,9 @@ class Hook_Work_Issue extends Hook
 		$orders			= ['type' => 'ASC', 'title' => 'ASC'];
 		$issues			= $modelIssue->getAllByIndices( $indices, $orders );	//  ...
 		$icons			= [
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => 'Fehler'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => 'Aufgabe'] ),
-			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => 'Wunsch/Idee'] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-exclamation', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[0]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-wrench', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[1]] ),
+			HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-lightbulb-o', 'title' => $this->env->getLanguage()->getSection( 'work/issue', 'types' )[2]] ),
 		];
 		$words		= $language->getWords( 'work/issue' );
 		foreach( $issues as $issue ){

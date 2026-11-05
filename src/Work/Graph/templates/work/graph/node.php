@@ -1,5 +1,9 @@
 <?php
 
+/** @var array<string,array<string,string>> $words */
+$wg	= (object) $words['general'];
+$wfa	= (object) $words['facts'];
+
 /** @var View_Work_Graph $view */
 /** @var object $graph */
 /** @var object $node */
@@ -12,16 +16,16 @@ if( $node->label )
 $description	= strlen( trim( $node->description ) ) ? trim( $node->description )."\n" : '';
 
 $facts	= [
-	['ID', $node->ID, NULL],
-	['Label', $node->label, NULL],
-	['Shape', $node->shape, $graph->nodeShape],
-	['Style', $node->style, $graph->nodeStyle],
-	['Color', $node->color, $graph->nodeColor],
-	['Fill Color', $node->fillcolor, $graph->nodeFillcolor],
-	['Width', $node->width, $graph->nodeWidth],
-	['Height', $node->height, $graph->nodeHeight],
-	['Font Size', $node->fontsize, $graph->nodeFontsize],
-	['Font Color', $node->fontcolor, $graph->nodeFontcolor],
+	[$wfa->id, $node->ID, NULL],
+	[$wfa->label, $node->label, NULL],
+	[$wfa->shape, $node->shape, $graph->nodeShape],
+	[$wfa->style, $node->style, $graph->nodeStyle],
+	[$wfa->color, $node->color, $graph->nodeColor],
+	[$wfa->fillColor, $node->fillcolor, $graph->nodeFillcolor],
+	[$wfa->width, $node->width, $graph->nodeWidth],
+	[$wfa->height, $node->height, $graph->nodeHeight],
+	[$wfa->fontSize, $node->fontsize, $graph->nodeFontsize],
+	[$wfa->fontColor, $node->fontcolor, $graph->nodeFontcolor],
 ];
 
 return '
@@ -32,7 +36,7 @@ return '
 	</div>
 	<div class="span9">
 		<div class="content-panel">
-			<h3>Graph image</h3>
+			<h3>'.$wg->headingImage.'</h3>
 			<div class="content-panel-inner">
 				<a href="./work/graph/view/'.$graphId.'"><img src="./work/graph/view/'.$graphId.'"/></a>
 			</div>
@@ -43,7 +47,7 @@ return '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3><span class="muted">Node: </span>'.$label.'</h3>
+			<h3><span class="muted">'.$wg->prefixNode.'</span>'.$label.'</h3>
 			<div class="content-panel-inner">
 				<p>
 					'.nl2br( $description ).'
@@ -52,14 +56,14 @@ return '
 					'.$view->renderFacts( $facts ).'
 				</p>
 				<div class="buttonbar">
-					<a href="./work/graph" role="button" class="btn btn-small"><i class="icon-arrow-left"></i> Graph</a>
+					<a href="./work/graph" role="button" class="btn btn-small"><i class="icon-arrow-left"></i> '.$wg->buttonBackToGraph.'</a>
 					<div class="btn-group">
-						<a href="#modalEditNode" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> Edit</a>
-						<a href="./work/graph/removeEdge/'.$node->nodeId.'" role="button" class="btn btn-inverse btn-small"><i class="icon-trash icon-white"></i> Remove</a>
+						<a href="#modalEditNode" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> '.$wg->buttonEdit.'</a>
+						<a href="./work/graph/removeEdge/'.$node->nodeId.'" role="button" class="btn btn-inverse btn-small"><i class="icon-trash icon-white"></i> '.$wg->buttonRemove.'</a>
 					</div>
 					<div class="btn-group">
-						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Node</a>
-						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Edge</a>
+						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddNode.'</a>
+						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddEdge.'</a>
 					</div>
 				</div>
 			</div>

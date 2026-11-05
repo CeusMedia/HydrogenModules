@@ -5,7 +5,7 @@
 	<title>Work: Notes</title>
 	<description><![CDATA[Note storage with editor supporting several formats.]]></description>
 	<category>Work</category>
-	<version>0.5.</version>
+	<version>0.5.3</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.3">Support projects.</log>
@@ -29,6 +29,7 @@
 	<log version="0.5">Add status to note tag relations to allow ignored tags.</log>
 	<log version="0.5.1">Update code style.</log>
 	<log version="0.5.2">Code update.</log>
+	<log version="0.5.3">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -49,6 +50,8 @@
 		<template>work/note/view.php</template>
 		<locale>de/work/note.ini</locale>
 		<locale>de/html/work/note/add.info.html</locale>
+		<locale>en/work/note.ini</locale>
+		<locale>en/html/work/note/add.info.html</locale>
 		<style load="auto">site.work.note.css</style>
 		<style load="auto" source="lib">xmp.formats.css</style>
 		<script load="auto" source="lib">String.pregQuote.js</script>

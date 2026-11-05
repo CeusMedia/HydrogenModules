@@ -5,8 +5,11 @@ use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 /** @var \CeusMedia\HydrogenFramework\Environment $env */
 /** @var array<object> $hosts */
 /** @var array<object> $syncs */
+/** @var array<string,array<string,string>> $words */
 
-$table	= '<div class="alert alert-info">Keine.</div>';
+$w	= (object) $words['index'];
+
+$table	= '<div class="alert alert-info">'.$w->noEntries.'</div>';
 if( $hosts ){
 	$list	= [];
 	foreach( $hosts as $host ){
@@ -18,23 +21,16 @@ if( $hosts ){
 	$table	= HtmlTag::create( 'table', $list, ['class' => 'table table-fixed'] );
 }
 $panelHosts	= '<div class="content-panel">
-	<h3>Hosts</h3>
+	<h3>'.$w->headingHosts.'</h3>
 	<div class="content-panel-inner">
 		'.$table.'
 		<div class="buttonbar">
-			<a href="./work/mail/sync/addHost" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;neuer Host</a>
+			<a href="./work/mail/sync/addHost" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAddHost.'</a>
 		</div>
 	</div>
 </div>';
 
-$statusLabels	= [
-	-1		=> "Fehler",
-	0		=> "neu",
-	1		=> "bereit",
-	2		=> "in Arbeit",
-	3		=> "synchronisiert",
-	4		=> "abgeschlossen",
-];
+$statusLabels	= $words['statuses'];
 $statusClasses	= [
 	-1		=> "progress-danger",
 	0		=> "",
@@ -46,7 +42,7 @@ $statusClasses	= [
 
 $helperTimestamp	= new View_Helper_TimePhraser( $env );
 
-$table	= '<div class="alert alert-info">Keine.</div>';
+$table	= '<div class="alert alert-info">'.$w->noEntries.'</div>';
 if( $syncs ){
 	$list	= [];
 	foreach( $syncs as $sync ){
@@ -79,10 +75,10 @@ if( $syncs ){
 		$iconEdit		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-pencil'] );
 		$iconRemove		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
 
-		$buttonActivate	= HtmlTag::create( 'a', $iconActivate.'&nbsp;aktivieren', ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/1'] );
-		$buttonClose	= HtmlTag::create( 'a', $iconClose.'&nbsp;schließen', ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4'] );
-		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;bearbeiten', ['href' => './work/mail/sync/editSync/'.$sync->mailSyncId] );
-		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;entfernen', ['href' => './work/mail/sync/removeSync/'.$sync->mailSyncId] );
+		$buttonActivate	= HtmlTag::create( 'a', $iconActivate.'&nbsp;'.$w->buttonActivate, ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/1'] );
+		$buttonClose	= HtmlTag::create( 'a', $iconClose.'&nbsp;'.$w->buttonClose, ['href' => './work/mail/sync/setSyncStatus/'.$sync->mailSyncId.'/4'] );
+		$buttonEdit		= HtmlTag::create( 'a', $iconEdit.'&nbsp;'.$w->buttonEdit, ['href' => './work/mail/sync/editSync/'.$sync->mailSyncId] );
+		$buttonRemove	= HtmlTag::create( 'a', $iconRemove.'&nbsp;'.$w->buttonRemove, ['href' => './work/mail/sync/removeSync/'.$sync->mailSyncId] );
 
 		$buttons	= [];
 		if( $sync->status == Model_Mail_Sync::STATUS_NEW ){
@@ -125,18 +121,18 @@ if( $syncs ){
 		$list[]	= HtmlTag::create( 'tr', [
 			HtmlTag::create( 'td', $sync->sourceUsername.'<br/><small class="muted">'.$sourceHost.'</small>'  ),
 			HtmlTag::create( 'td', $sync->targetUsername.'<br/><small class="muted">'.$targetHost.'</small>'  ),
-			HtmlTag::create( 'td', $status.'<br/><small class="muted">'.$helperTimestamp->convert( $sync->modifiedAt, TRUE, 'vor' ).'</small>' ),
+			HtmlTag::create( 'td', $status.'<br/><small class="muted">'.$helperTimestamp->convert( $sync->modifiedAt, TRUE, $w->timePrefix, $w->timeSuffix ).'</small>' ),
 			HtmlTag::create( 'td', HtmlTag::create( 'span', count( $sync->runs ), ['class' => 'badge '.( count( $sync->runs ) ? 'badge-info' : '' )] ) ),
 			HtmlTag::create( 'td', HtmlTag::create( 'span', $messages, ['class' => 'badge '.( $messages ? 'badge-success' : '' )] ) ),
 			HtmlTag::create( 'td', $buttons ),
 		] );
 	}
 	$thead	= HtmlTag::create( 'thead', HtmlElements::TableHeads( [
-		'Quelle',
-		'Ziel',
-		'Zustand',
-		'<i class="fa fa-fw fa-repeat" title="Durchläufe"></i>',
-		'<i class="fa fa-fw fa-envelope" title="Nachrichten übertragen"></i>',
+		$w->headSource,
+		$w->headTarget,
+		$w->headStatus,
+		'<i class="fa fa-fw fa-repeat" title="'.htmlentities( $w->headRuns, ENT_QUOTES, 'UTF-8' ).'"></i>',
+		'<i class="fa fa-fw fa-envelope" title="'.htmlentities( $w->headMessages, ENT_QUOTES, 'UTF-8' ).'"></i>',
 		'',
 	] ) );
 	$tbody	= HtmlTag::create( 'tbody', $list );
@@ -144,13 +140,13 @@ if( $syncs ){
 	$table	= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-fixed'] );
 }
 $panelSyncs	= '<div class="content-panel">
-	<h3>Synchronisierungen</h3>
+	<h3>'.$w->headingSyncs.'</h3>
 	<div class="content-panel-inner">
 		<tbody>
 			'.$table.'
 		</tbody>
 		<div class="buttonbar">
-			<a href="./work/mail/sync/addSync" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;neue Synchronisierung</a>
+			<a href="./work/mail/sync/addSync" class="btn btn-success"><i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAddSync.'</a>
 		</div>
 	</div>
 </div>';

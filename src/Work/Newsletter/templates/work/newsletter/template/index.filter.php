@@ -17,7 +17,7 @@ return '
 <div class="content-panel">
 	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
-		<p><small class="muted">Noch keine Filter vorhanden.</small></p>
+		<p><small class="muted">'.$w->noFilters.'</small></p>
 		<div class="buttonbar">
 			<div class="btn-group">
 				<button type="submit" name="filter" class="btn btn-small btn-info" disabled="disabled">'.$iconFilter.$w->buttonFilter.'</button>

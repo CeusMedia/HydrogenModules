@@ -21,14 +21,15 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 
 	public function render(): string
 	{
+		$w	= (object) $this->env->getLanguage()->getSection( 'work/mission', 'dashboard-panel-my-tasks' );
 		if( !count( $this->projects ) )
 //			throw new RuntimeException( 'No user projects set or available' );
-			return HtmlTag::create( 'div', 'Keine Projekte vorhanden.', ['class' => 'alert alert-info'] );
+			return HtmlTag::create( 'div', $w->noProjects, ['class' => 'alert alert-info'] );
 
 //		$words			= $this->getWords();
 		$showLimit			= 10;
 		$userProjects		= $this->projects;
-		$content			= HtmlTag::create( 'div', 'Keine Termine.', ['class' => 'alert alert-info'] );
+		$content			= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 		$helperDaysBadge	= new View_Helper_Work_Mission_DaysBadge( $this->env );
 		$count				= count( $this->tasks );
 		$tasks				= array_slice( $this->tasks, 0, $showLimit );
@@ -71,10 +72,10 @@ class View_Helper_Work_Mission_Dashboard_MyTasks extends Abstraction
 				'class'	=> 'table table-condensed table-fixed'
 			] );
 			if( $count > $showLimit ){
-				$content	.= HtmlTag::create( 'div', 'Und '.( $count - $showLimit ).' Weitere.', ['class' => 'alert alert-info'] );
+				$content	.= HtmlTag::create( 'div', sprintf( $w->more, $count - $showLimit ), ['class' => 'alert alert-info'] );
 			}
 		}
-		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neue Aufgabe', [
+		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAdd, [
 			'href'	=> './work/mission/add?type=0',
 			'class'	=> 'btn btn-block btn-success',
 		] );

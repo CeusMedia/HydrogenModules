@@ -6,6 +6,9 @@ use CeusMedia\Bootstrap\Progress as ProgressBar;
 /** @var int $open */
 /** @var int $negative */
 /** @var int $positive */
+/** @var array<string,array<string,string>> $words */
+
+$w	= (object) $words['status'];
 
 $percentTested	= round( ( $positive + $negative ) / $total * 100, 2 );
 $percentQuality	= $positive + $negative ? round( $positive / ( $positive + $negative ) * 100, 1 ) : 0;
@@ -26,25 +29,25 @@ $bar3->addBar( $percentQuality, ProgressBar::BAR_CLASS_SUCCESS, $percentQuality.
 
 	$content	= '
 <div>
-	<h4>Getestet</h4>
+	<h4>'.$w->headTested.'</h4>
 	'.$bar1.'
-	<h4>Ergebnis</h4>
+	<h4>'.$w->headResult.'</h4>
 	'.$bar2.'
-	<h4>Qualität <small class="muted">(Verhältnis erreichbarer und nicht erreichbarer Adressen zu einander)</small></h4>
+	<h4>'.$w->headQuality.' <small class="muted">'.$w->headQuality_suffix.'</small></h4>
 	'.$bar3.'
 	<dl class="dl-horizontal">
-		<dt>Noch zu testen</dt>
+		<dt>'.$w->labelOpen.'</dt>
 		<dd>'.$open.'</dd>
-		<dt>von insgesamt</dt>
+		<dt>'.$w->labelTotal.'</dt>
 		<dd>'.$total.'</dd>
-		<dt>davon erreichbar</dt>
+		<dt>'.$w->labelPositive.'</dt>
 		<dd>'.$positive.'</dd>
-		<dt>und NICHT erreichbar</dt>
+		<dt>'.$w->labelNegative.'</dt>
 		<dd>'.$negative.'</dd>
-		<dt>Qualität</dt>
+		<dt>'.$w->labelQuality.'</dt>
 		<dd>'.( $positive + $negative ? round( $positive / ( $positive + $negative ) * 100, 1 ).'%' : '-' ).'</dd>
 	</dl>
-	<a href="./work/mail/check" class="btn btn-small"><i class="fa fa-fw fa-arrow-left"></i>&nbsp;zurück</a>
+	<a href="./work/mail/check" class="btn btn-small"><i class="fa fa-fw fa-arrow-left"></i>&nbsp;'.$w->buttonBack.'</a>
 </div>
 <script>
 $(document).ready(function(){
@@ -56,7 +59,7 @@ $(document).ready(function(){
 
 return '
 <div class="content-panel">
-	<h3>Stats</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		'.$content.'
 	</div>

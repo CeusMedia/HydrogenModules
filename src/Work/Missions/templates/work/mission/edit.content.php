@@ -14,11 +14,12 @@ $mode	= 'tabbed';
 
 $w	= (object) $words['edit-content'];
 
+$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, [
+	'href'		=> $w->hintMarkdownLink,
+	'target'	=> '_blank',
+] );
+
 if( 'tabbed' === $mode ){
-	$linkMarkdown	= HtmlTag::create( 'a', $w->hintMarkdownLabel, [
-		'href'		=> $w->hintMarkdownLink,
-		'target'	=> '_blank',
-	] );
 	$hintMarkdown	= HtmlTag::create( 'small', sprintf( $w->hintMarkdown, $linkMarkdown ), ['class' => 'muted'] );
 	$panelContentTabbed	= '
 <div class="content-panel">
@@ -54,21 +55,18 @@ if( 'tabbed' === $mode ){
 				<div class="row-fluid">
 					<div class="span6">
 						<p>
-							Diese Beschreibung ist im <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown</a>-Format.
-							Alternativ dazu kann dieser Text auch mit einem HTML-Editor bearbeitet werden.
+							'.sprintf( $w->convertFormat, '<a href="'.$w->hintMarkdownLink.'" target="_blank">Markdown</a>' ).'
 						</p>
 						<p>
-							Dazu kann man diese Beschreibung von Markdown in HTML überführen.
-							Bei zukünftigen Veränderungen wird danach immer der HTML-Editor angezeigt.
-							Das betrifft auch ggf. Andere, die diesen Eintrag bearbeiten können.
+							'.$w->convertDescription.'
 						</p>
 					</div>
 					<div class="span6">
 						<div class="alert alert-danger">
-							<b>Achtung: </b>Dieser Vorgang kann nicht rückgängig gemacht werden.<br/>
+							<b>'.$w->convertWarningLabel.' </b>'.$w->convertWarning.'<br/>
 						</div>
 						<p>'.
-							HtmlTag::create( 'a', 'Konvertieren: Markdown -> HTML', [
+							HtmlTag::create( 'a', $w->buttonConvertToHtml, [
 								'href'	=> './work/mission/convertContent/'.$mission->missionId.'/markdown/html',
 								'class'	=> 'btn btn-inverse',
 							] ).'
@@ -88,8 +86,8 @@ $panelContentSplit	= '
 		<div class="content-panel content-panel-form">
 			<div class="content-panel-inner">
 				<form>
-					<h3>Editor</h3>
-					<div id="work-missions-loader" style=""><em class="muted">... lade Inhalte ...</em></div>
+					<h3>'.$w->tabEdit.'</h3>
+					<div id="work-missions-loader" style=""><em class="muted">'.$w->messageLoading.'</em></div>
 					'.HtmlTag::create( 'textarea', htmlentities( $mission->content, ENT_QUOTES, 'utf-8' ), [
 						'id'		=> 'input_content',
 						'name'		=> 'content',
@@ -98,7 +96,7 @@ $panelContentSplit	= '
 						'style'		=> 'visibility: hidden;',
 					] ).'
 					<p>
-						<span class="muted">Du kannst hier den <a href="https://de.wikipedia.org/wiki/Markdown" target="_blank">Markdown-Syntax</a> benutzen.</span>
+						<span class="muted">'.sprintf( $w->hintMarkdown, $linkMarkdown ).'</span>
 					</p>
 				</form>
 			</div>
@@ -107,7 +105,7 @@ $panelContentSplit	= '
 	<div class="span6">
 		<div class="content-panel content-panel-form">
 			<div class="content-panel-inner">
-				<h3>Beschreibung / Inhalt</h3>
+				<h3>'.$w->headingContent.'</h3>
 				<div id="content-editor">
 					<div id="mission-content-html"></div>
 				</div>

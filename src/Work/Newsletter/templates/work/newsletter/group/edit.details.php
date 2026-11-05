@@ -45,7 +45,7 @@ if( $canRemove ){
 	$buttonRemove	= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [
 		'href'		=> './work/newsletter/group/remove/'.$groupId,
 		'class'		=> 'btn btn-danger btn-small',
-		'onclick'	=> "if(!confirm('Wirklich?')) return false;",
+		'onclick'	=> "if(!confirm('".htmlspecialchars( addslashes( $w->buttonRemoveConfirm ), ENT_QUOTES, 'UTF-8' )."')) return false;",
 	] );
 	if( $groupReaders )
 		$buttonRemove		= HtmlTag::create( 'a', $iconRemove.$w->buttonRemove, [

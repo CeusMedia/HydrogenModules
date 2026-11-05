@@ -6,7 +6,7 @@
 	<deprecation version="0.4.3">Moved to GitLab::CeusMedia:MailGroup.</deprecation>
 	<description/>
 	<category>Work</category>
-	<version>0.4.3</version>
+	<version>0.4.4</version>
 	<log version="0.1">Initial prototype.</log>
 	<log version="0.2">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Add database models for groups and members.</log>
@@ -25,6 +25,7 @@
 	<log version="0.4.1">Apply Bootstrap to HTML view of message.</log>
 	<log version="0.4.2">Improve code style.</log>
 	<log version="0.4.3">EOL: Moved to GitLab::CeusMedia:MailGroup.</log>
+	<log version="0.4.4">Add English locales and extract hard-coded texts to locales (de, en).</log>
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
 	<license source="https://www.gnu.org/licenses/gpl-3.0.txt">GPL 3</license>
@@ -40,6 +41,12 @@
 		<class>View/Work/Mail/Group/Server.php</class>
 		<locale>de/work/mail/group.ini</locale>
 		<locale>de/work/mail/group/message.ini</locale>
+		<locale>de/work/mail/group/role.ini</locale>
+		<locale>de/work/mail/group/server.ini</locale>
+		<locale>en/work/mail/group.ini</locale>
+		<locale>en/work/mail/group/message.ini</locale>
+		<locale>en/work/mail/group/role.ini</locale>
+		<locale>en/work/mail/group/server.ini</locale>
 		<template>work/mail/group/add.php</template>
 		<template>work/mail/group/edit.php</template>
 		<template>work/mail/group/edit.details.php</template>

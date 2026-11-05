@@ -118,22 +118,23 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 //			$tableHeads[]	= "";
 //		}
 
+		$wl				= (object) $this->words['list'];
 		if( $showPriority ){
 			$colgroup[]		= "30px";
-			$tableHeads[]	= HtmlTag::create( 'div', 'Prio'/*'Priorität'*/, ['data-column' => 'priority'] );
+			$tableHeads[]	= HtmlTag::create( 'div', $wl->headPriority, ['data-column' => 'priority'] );
 		}
 		$colgroup[]		= "";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Titel', ['data-column' => 'title'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headTitle, ['data-column' => 'title'] );
 		$colgroup[]		= "160px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Bearbeiter', ['data-column' => 'workerId'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headWorker, ['data-column' => 'workerId'] );
 		$colgroup[]		= "160px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Projekt', ['data-column' => 'projectId'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headProject, ['data-column' => 'projectId'] );
 		if( $showDate ){
 			$colgroup[]		= "80px";
-			$tableHeads[]	= HtmlTag::create( 'div', 'Datum', ['data-column' => 'dayStart'] );
+			$tableHeads[]	= HtmlTag::create( 'div', $wl->headDate, ['data-column' => 'dayStart'] );
 		}
 		$colgroup[]		= "120px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Zeit', ['data-column' => 'time'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headTime, ['data-column' => 'time'] );
 		if( $showActions && $tense ){
 			$colgroup[]		= "65px";
 			$tableHeads[]	= HtmlTag::create( 'div', ''/*'Aktion'*/, ['class' => 'right', 'data-column' => NULL] );
@@ -168,22 +169,23 @@ class View_Helper_Work_Mission_List extends View_Helper_Work_Mission_Abstract
 //			$tableHeads[]	= "";
 //		}
 
+		$wl				= (object) $this->words['list'];
 		if( $showPriority ){
 			$colgroup[]		= "30px";
-			$tableHeads[]	= HtmlTag::create( 'div', 'Prio'/*'Priorität'*/, ['class' => 'sortable', 'data-column' => 'priority'] );
+			$tableHeads[]	= HtmlTag::create( 'div', $wl->headPriority, ['class' => 'sortable', 'data-column' => 'priority'] );
 		}
 		$colgroup[]		= "";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Titel', ['class' => 'sortable', 'data-column' => 'title'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headTitle, ['class' => 'sortable', 'data-column' => 'title'] );
 		$colgroup[]		= "160px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Bearbeiter', ['class' => 'sortable', 'data-column' => 'workerId'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headWorker, ['class' => 'sortable', 'data-column' => 'workerId'] );
 		$colgroup[]		= "160px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Projekt', ['class' => 'sortable', 'data-column' => 'projectId'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headProject, ['class' => 'sortable', 'data-column' => 'projectId'] );
 		if( $showDate ){
 			$colgroup[]		= "80px";
-			$tableHeads[]	= HtmlTag::create( 'div', 'Datum', ['class' => 'sortable', 'data-column' => 'dayStart'] );
+			$tableHeads[]	= HtmlTag::create( 'div', $wl->headDate, ['class' => 'sortable', 'data-column' => 'dayStart'] );
 		}
 		$colgroup[]		= "120px";
-		$tableHeads[]	= HtmlTag::create( 'div', 'Zustand', ['class' => 'sortable', 'data-column' => 'status'] );
+		$tableHeads[]	= HtmlTag::create( 'div', $wl->headStatus, ['class' => 'sortable', 'data-column' => 'status'] );
 		if( $showActions && $tense ){
 			$colgroup[]		= "65px";
 			$tableHeads[]	= HtmlTag::create( 'div', ''/*'Aktion'*/, ['class' => 'not-sortable right', 'data-column' => NULL] );

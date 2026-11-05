@@ -58,7 +58,7 @@ class Controller_Work_Newsletter_Group extends Controller
 		$model		= new Model_Newsletter_Group( $this->env );
 		$totalGroups	= $model->count();
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Group:maxItems', $totalGroups + 1 ) ){
-			$this->messenger->noteNotice( 'Limit erreicht. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeLimitReached'] );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'totalGroups', $totalGroups );
@@ -140,14 +140,14 @@ class Controller_Work_Newsletter_Group extends Controller
 	public function import(): void
 	{
 		if( $this->limiter && $this->limiter->denies( 'Work.Newsletter.Group:allowImport' ) ){
-			$this->messenger->noteNotice( 'Importieren ist deaktiviert. Vorgang abgebrochen.' );
+			$this->messenger->noteNotice( $this->getWords( 'msg' )['noticeImportDisabled'] );
 			$this->restart( NULL, TRUE );
 		}
 		$mode		= $this->request->get( 'import_mode' );
 		$groupId	= $this->request->get( 'groupId' );
 
 		if( !$this->logic->checkGroupId( $groupId ) ){
-			$this->messenger->noteError( 'Ungültige Gruppe.' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidGroup'] );
 			$this->restart( './work/newsletter/group/edit/'.$groupId );
 		}
 
@@ -175,15 +175,15 @@ class Controller_Work_Newsletter_Group extends Controller
 
 			try{
 				$count	= $logicImportStrategy->import( $fileName, $groupId );
-				$this->messenger->noteSuccess( 'Added '.$count.' readers to this group.' );
+				$this->messenger->noteSuccess( $this->getWords( 'msg' )['successImported'], $count );
 			}
 			catch( Throwable $e ){
-				$this->messenger->noteError( 'Fehler beim Import: '.$e->getMessage() );
+				$this->messenger->noteError( $this->getWords( 'msg' )['errorImport'], $e->getMessage() );
 				$this->restart( './work/newsletter/group/edit/'.$groupId );
 			}
 		}
 		catch( Exception $e ){
-			$this->messenger->noteFailure( 'Error: '.$e->getMessage() );
+			$this->messenger->noteFailure( $this->getWords( 'msg' )['failureImport'], $e->getMessage() );
 		}
 		$this->restart( './work/newsletter/group/edit/'.$groupId );
 	}

@@ -1,6 +1,10 @@
 <?php
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
+/** @var array<string,array<string,string>> $words */
+$wg	= (object) $words['general'];
+$wfa	= (object) $words['facts'];
+
 /** @var View_Work_Graph $view */
 /** @var array<object> $nodes */
 /** @var object $edge */
@@ -17,14 +21,14 @@ if( $edge->label )
 $description	= strlen( trim( $graph->description ) ) ? trim( $graph->description )."\n\n" : '';
 
 $factsEdge		= [
-	['Source Node', HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], ['href' => './work/graph/node/'.$edge->fromNodeId] ), NULL],
-	['TargetNode', HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], ['href' => './work/graph/node/'.$edge->toNodeId] ), NULL],
-	['Title', $edge->label, NULL],
-	['Arrow Head', $edge->arrowhead, NULL],
-	['Arrow Size', $edge->arrowsize, NULL],
-	['Color', $edge->color, NULL],
-	['Font Color', $edge->fontcolor, NULL],
-	['Font Size', $edge->fontsize, NULL],
+	[$wfa->sourceNode, HtmlTag::create( 'a', $nodeIndex[$edge->fromNodeId], ['href' => './work/graph/node/'.$edge->fromNodeId] ), NULL],
+	[$wfa->targetNode, HtmlTag::create( 'a', $nodeIndex[$edge->toNodeId], ['href' => './work/graph/node/'.$edge->toNodeId] ), NULL],
+	[$wfa->title, $edge->label, NULL],
+	[$wfa->arrowHead, $edge->arrowhead, NULL],
+	[$wfa->arrowSize, $edge->arrowsize, NULL],
+	[$wfa->color, $edge->color, NULL],
+	[$wfa->fontColor, $edge->fontcolor, NULL],
+	[$wfa->fontSize, $edge->fontsize, NULL],
 ];
 
 return '
@@ -35,7 +39,7 @@ return '
 	</div>
 	<div class="span9">
 		<div class="content-panel">
-			<h3>Graph image</h3>
+			<h3>'.$wg->headingImage.'</h3>
 			<div class="content-panel-inner">
 				<a href="./work/graph/view/'.$graphId.'"><img src="./work/graph/view/'.$graphId.'"/></a>
 			</div>
@@ -46,23 +50,23 @@ return '
 <div class="row-fluid">
 	<div class="span6">
 		<div class="content-panel">
-			<h3><span class="muted">Edge: </span>'.$label.'</h3>
+			<h3><span class="muted">'.$wg->prefixEdge.'</span>'.$label.'</h3>
 			<div class="content-panel-inner">
 				<p>
 					'.$view->renderFacts( $factsEdge ).'
 				</p>
 				<div class="buttonbar">
 					<div class="btn-group">
-						<a href="./work/graph" role="button" class="btn btn-small"><i class="icon-arrow-left"></i> Graph</a>
-						<button type="button" onclick="document.location.href = \'./work/graph/node/'.$nodeId.'\';" role="button" class="btn btn-small" '.( $nodeId ? '' : 'disabled="disabled"').'><i class="icon-arrow-left"></i> Node</button>
+						<a href="./work/graph" role="button" class="btn btn-small"><i class="icon-arrow-left"></i> '.$wg->buttonBackToGraph.'</a>
+						<button type="button" onclick="document.location.href = \'./work/graph/node/'.$nodeId.'\';" role="button" class="btn btn-small" '.( $nodeId ? '' : 'disabled="disabled"').'><i class="icon-arrow-left"></i> '.$wg->buttonBackToNode.'</button>
 					</div>
 					<div class="btn-group">
-						<a href="#modalEditEdge" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> Edit</a>
-						<a href="./work/graph/removeEdge/'.$edge->edgeId.'" role="button" class="btn btn-inverse btn-small"><i class="icon-trash icon-white"></i> Remove</a>
+						<a href="#modalEditEdge" role="button" class="btn btn-primary btn-small" data-toggle="modal"><i class="icon-pencil icon-white"></i> '.$wg->buttonEdit.'</a>
+						<a href="./work/graph/removeEdge/'.$edge->edgeId.'" role="button" class="btn btn-inverse btn-small"><i class="icon-trash icon-white"></i> '.$wg->buttonRemove.'</a>
 					</div>
 					<div class="btn-group">
-						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Node</a>
-						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> Edge</a>
+						<a href="#modalAddNode" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddNode.'</a>
+						<a href="#modalAddEdge" role="button" class="btn btn-success btn-small" data-toggle="modal"><i class="icon-plus icon-white"></i> '.$wg->buttonAddEdge.'</a>
 					</div>
 				</div>
 			</div>

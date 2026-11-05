@@ -24,7 +24,9 @@ foreach( $groups as $group )
 $hideGroupAdd	= count( $optGroup ) ? '' : 'style="display: none"';
 $optGroup	= HtmlElements::Options( $optGroup, array_keys( $readerGroups ) );
 
-$listGroups	= HtmlTag::create( 'div', 'Keine Empfängerlisten zugewiesen.', ['class' => 'alert alert-info'] );
+$w			= (object) $words->edit_groups;
+
+$listGroups	= HtmlTag::create( 'div', $w->empty, ['class' => 'alert alert-info'] );
 if( $readerGroups ){
 	$listGroups	= [];
 	foreach( $readerGroups as $readerGroup ){
@@ -46,7 +48,7 @@ if( $readerGroups ){
 		] );
 	}
 	$colgroup		= HtmlElements::ColumnGroup( "", "35px" );
-	$tableHeads		= HtmlElements::TableHeads( ['Zugewiesene Empfängerlisten', ''] );
+	$tableHeads		= HtmlElements::TableHeads( [$w->columnGroup, ''] );
 	$thead			= HtmlTag::create( 'thead', $tableHeads );
 	$tbody			= HtmlTag::create( 'tbody', $listGroups );
 	$listGroups		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, [
@@ -56,7 +58,7 @@ if( $readerGroups ){
 
 return '
 			<div class="content-panel">
-				<h3>Empfängerlisten</h3>
+				<h3>'.$w->heading.'</h3>
 				<div class="content-panel-inner">
 					'.$listGroups.'
 					<div class="row-fluid" '.$hideGroupAdd.'>

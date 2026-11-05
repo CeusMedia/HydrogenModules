@@ -69,7 +69,7 @@ $modalPreview	= '
 	<div class="modal-footer">
 <!--		<button type="button" class="btn btn-info" id="preview-refresh"><i class="icon-refresh icon-white"></i> aktualisieren</button>-->
 <!--		<a type="button" class="btn btn-small btn-warning" href="./work/newsletter/preview/html/'.$newsletterId.'/1/1" target="_blank"><small>Offline-Modus simulieren</small></a>-->
-		<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i> schließen</button>
+		<button type="button" class="btn" data-dismiss="modal" aria-hidden="true"><i class="icon-remove"></i> '.$words->edit->buttonClose.'</button>
 	</div>
 </div>';
 

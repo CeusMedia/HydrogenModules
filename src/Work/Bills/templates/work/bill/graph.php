@@ -6,6 +6,8 @@ use CeusMedia\Common\UI\HTML\Elements as HtmlElements;
 /** @var array $words */
 /** @var string $userId */
 
+$w	= (object) $words['graph'];
+
 
 $model	= new Model_Bill( $this->env );
 
@@ -46,7 +48,7 @@ $conditions	= [
 $orders		= ['date' => 'ASC'];
 $bills		= $model->getAll( $conditions, $orders );
 
-$dataGraph	= [["Tag", "Stand"]];
+$dataGraph	= [[$w->chartColumnDay, $w->chartColumnBalance]];
 $balance	= $sum;
 $year		= date( 'Y' );
 $month		= date( 'm' );
@@ -62,10 +64,10 @@ for( $i=0; $i<$daysFuture; $i++ ){
 
 
 /*  --  FILTERS  --  */
-$optType	= ['' => '- alle -'] + $words['types'];
+$optType	= ['' => $w->optAll] + $words['types'];
 $optType	= HtmlElements::Options( $optType, $env->getSession()->get( 'filter_work_bill_type' ) );
 
-$optStatus	= ['' => '- alle -'] +$words['states'];
+$optStatus	= ['' => $w->optAll] +$words['states'];
 $optStatus	= HtmlElements::Options( $optStatus, $env->getSession()->get( 'filter_work_bill_status' ) );
 
 $tabs	= View_Work_Bill::renderTabs( $env, 'graph' );
@@ -77,7 +79,7 @@ return '
 	<div class="span4">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4>Berechnung</h4>
+				<h4>'.$w->headingCalculation.'</h4>
 				<table class="table table-stiped">
 					<colgroup>
 						<col width="70%"/>
@@ -85,14 +87,14 @@ return '
 					</colgroup>
 					<tbody>
 						<tr>
-							<th colspan="2">Vergangenheit</th>
+							<th colspan="2">'.$w->labelPast.'</th>
 						</tr>
 						<tr>
-							<td>offen: Vergangenheit</td>
+							<td>'.$w->labelOpenPast.'</td>
 							<td style="text-align: right">'.$view->renderPrice( $sum,  $sum < 0, '&nbsp;&euro;' ).'</td>
 						</tr>
 						<tr>
-							<td>Endstand <small class="muted">('.date( 'j.n', strtotime( $dateFuture ) ).')</small></td>
+							<td>'.$w->labelBalanceEnd.' <small class="muted">('.date( 'j.n', strtotime( $dateFuture ) ).')</small></td>
 							<td style="text-align: right"><b>'.$view->renderPrice( $balance,  $balance < 0, '&nbsp;&euro;' ).'</b></td>
 						</tr>
 					</tbody>
@@ -109,7 +111,7 @@ return '
 	<div class="span6">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4><span class="muted">offene Rechnungen: </span>Vergangenheit</h4>
+				<h4><span class="muted">'.$w->headingOpenPrefix.'</span>'.$w->headingOpenPast.'</h4>
 				'.$listOpenPast.'
 			</div>
 		</div>
@@ -117,7 +119,7 @@ return '
 	<div class="span6">
 		<div class="content-panel">
 			<div class="content-panel-inner">
-				<h4><span class="muted">offene Rechnungen: </span>Zukunft</h4>
+				<h4><span class="muted">'.$w->headingOpenPrefix.'</span>'.$w->headingOpenFuture.'</h4>
 				'.$listOpenFuture.'
 			</div>
 		</div>
@@ -135,10 +137,10 @@ google.setOnLoadCallback(function () {
 	let chart = new google.visualization.AreaChart(document.getElementById("chart_balance"));
 	let data = google.visualization.arrayToDataTable(dataGraph);
 	let options = {
-		title: "Prognose",
+		title: '.json_encode( $w->chartTitle ).',
 		width: "100%",
 		height: "100%",
-		vAxis: {title: "Kontostand",  titleTextStyle: {color: "#333"}, minValue: 0}
+		vAxis: {title: '.json_encode( $w->chartAxisBalance ).',  titleTextStyle: {color: "#333"}, minValue: 0}
 	};
 	chart.draw(data, options);
 });

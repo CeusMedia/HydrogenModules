@@ -22,9 +22,10 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 	public function render(): string
 	{
 		$words			= $this->env->getLanguage()->getWords( 'work/mission' );
+		$w				= (object) $words['dashboard-panel-my-today'];
 		$today			= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'small', HtmlTag::create( 'abbr', 'KW', ['title' => "Kalenderwoche"] ) ),
+				HtmlTag::create( 'small', HtmlTag::create( 'abbr', $w->labelWeek, ['title' => $w->labelWeekTitle] ) ),
 				HtmlTag::create( 'br' ),
 				HtmlTag::create( 'span', (int) date( 'W' ), [
 					'style' => 'font-size: 2em;'
@@ -38,7 +39,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 				] ),
 			], ['style' => 'text-align: center'] ),
 		] );
-		$content	= HtmlTag::create( 'div', 'Keine Termine.', ['class' => 'alert alert-info'] );
+		$content	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-info'] );
 		if( $this->events ){
 			$rows	= [];
 			foreach( $this->events as $event ){
@@ -67,7 +68,7 @@ class View_Helper_Work_Mission_Dashboard_MyEvents extends Abstraction
 				'class'	=> 'table table-condensed table-fixed'
 			] );
 		}
-		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;neuer Termin', [
+		$buttonAdd	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-plus"></i>&nbsp;'.$w->buttonAdd, [
 			'href'	=> './work/mission/add?type=1',
 			'class'	=> 'btn btn-block btn-success',
 		] );

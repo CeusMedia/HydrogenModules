@@ -21,7 +21,7 @@ if( !$documents )
 $rows	= [];
 foreach( $documents as $document ){
 	$modifiedAt	= max( $document->createdAt, $document->modifiedAt );
-	$modifiedAt	= 'vor '.$phraser->convert( $modifiedAt, TRUE );
+	$modifiedAt	= sprintf( $w->timeAgo, $phraser->convert( $modifiedAt, TRUE ) );
 /*	$buttonView		= HtmlTag::create( 'a', '<i class="fa fa-fw fa-eye"></i>', [
 		'href'	=> './work/mission/viewDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'class'	=> 'btn btn-small not-btn-info',
@@ -30,7 +30,7 @@ foreach( $documents as $document ){
 	$buttonDownload	= HtmlTag::create( 'a', '<i class="fa fa-fw fa-download"></i>', [
 		'href'	=> './work/mission/downloadDocument/'.$mission->missionId.'/'.$document->missionDocumentId,
 		'class'	=> 'btn btn-small btn-info',
-		'title'	=> 'runterladen',
+		'title'	=> $w->buttonDownload,
 	] );
 	$buttons		= HtmlTag::create( 'div', [/*$buttonView.*/$buttonDownload], ['class' => 'btn-group'] );
 	$label			= HtmlTag::create( 'a', $document->filename, [
@@ -46,7 +46,7 @@ foreach( $documents as $document ){
 }
 
 $colgroup	= HtmlElements::ColumnGroup( '*', '150px', '50px' );
-$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, 'Speicherung', ''] ) );
+$thead		= HtmlTag::create( 'thead', HtmlElements::TableHeads( [$w->headTitle, $w->headModifiedAt, ''] ) );
 $tbody		= HtmlTag::create( 'tbody', $rows );
 $table		= HtmlTag::create( 'table', $colgroup.$thead.$tbody, ['class' => 'table table-striped'] );
 

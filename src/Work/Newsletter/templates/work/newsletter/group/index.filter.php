@@ -10,7 +10,9 @@ use CeusMedia\HydrogenFramework\View;
 /** @var ?string $filterStatus */
 /** @var ?string $filterQuery */
 
-$optStatus		= ['' => 'alle'];
+$w				= (object) $words['index_filter'];
+
+$optStatus		= ['' => $w->optionAll];
 foreach( $words['states'] as $key => $label )
 	$optStatus[$key]	= $label;
 $optStatus		= HtmlElements::Options( $optStatus, $filterStatus );
@@ -20,25 +22,25 @@ $iconReset	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-search-minus'] )
 
 return '
 <div class="content-panel">
-	<h3>Filter</h3>
+	<h3>'.$w->heading.'</h3>
 	<div class="content-panel-inner">
 		<form action="./work/newsletter/group/filter" method="post">
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_query">Suchwort</label>
+					<label for="input_query">'.$w->labelQuery.'</label>
 					<input type="text" name="query" id="input_query" class="span12" value="'.htmlentities( $filterQuery ?? '', ENT_QUOTES, 'UTF-8' ).'"/>
 				</div>
 			</div>
 			<div class="row-fluid">
 				<div class="span12">
-					<label for="input_status">Zustand</label>
+					<label for="input_status">'.$w->labelStatus.'</label>
 					<select name="status" id="input_status" class="span12">'.$optStatus.'</select>
 				</div>
 			</div>
 			<div class="buttonbar">
 				<div class="btn-group">
-					<button type="submit" name="filter" class="btn btn-small btn-info">'.$iconFilter.'suchen</button>
-					<a href="./work/newsletter/group/filter/reset" class="btn btn-small btn-inverse">'.$iconReset.'alle</a>
+					<button type="submit" name="filter" class="btn btn-small btn-info">'.$iconFilter.$w->buttonFilter.'</button>
+					<a href="./work/newsletter/group/filter/reset" class="btn btn-small btn-inverse">'.$iconReset.$w->buttonReset.'</a>
 				</div>
 			</div>
 		</form>

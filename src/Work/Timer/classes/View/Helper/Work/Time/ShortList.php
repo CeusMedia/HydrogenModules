@@ -38,13 +38,14 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 		if( !$timers )
 			return '';
 
+		$w			= (object) $this->getWords( 'short-list', 'work/time' );
 		$rows		= [];
 		foreach( $timers as $timer ){
 			View_Helper_Work_Time_Timer::decorateTimer( $this->env, $timer, FALSE );
 
 			$linkRelation	= $this->renderRelationLink( $timer );
-			$title			= $this->renderTitleLink( $timer );
-			$worker			= $this->renderWorker( $timer );
+			$title			= $this->renderTitleLink( $timer, $w->untitled );
+			$worker			= $this->renderWorker( $timer, $w->labelWorker );
 			$time			= $this->renderTimes( $timer );
 			$buttonGroup	= $this->renderButtons( $timer );
 
@@ -64,7 +65,7 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 			], ['class' => $rowClass] );
 		}
 		$tableHeads	= HtmlTag::create( 'tr', [
-			HtmlTag::create( 'th', 'Aktivität' ),
+			HtmlTag::create( 'th', $w->headActivity ),
 		] );
 		$table		= HtmlTag::create( 'table', [
 			HtmlTag::create( 'thead', $tableHeads ),
@@ -232,27 +233,29 @@ class View_Helper_Work_Time_ShortList extends View_Helper_Work_Time
 
 	/**
 	 *	@param		object		$timer
+	 *	@param		string		$labelUntitled
 	 *	@return		string
 	 */
-	protected function renderTitleLink( object $timer ): string
+	protected function renderTitleLink( object $timer, string $labelUntitled ): string
 	{
-		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">unbenannt</em>';
+		$title	= strlen( trim( $timer->title ) ) ? htmlentities( $timer->title, ENT_QUOTES, 'UTF-8' ) : '<em class="muted">'.$labelUntitled.'</em>';
 		$title	= HtmlTag::create( 'a', $title, ['href' => './work/time/edit/'.$timer->workTimerId.'?from='.$this->from] );
 		return HtmlTag::create( 'div', $title, ['class' => 'autocut'] );
 	}
 
 	/**
 	 *	@param		object		$timer
+	 *	@param		string		$labelWorker
 	 *	@return		string
 	 */
-	protected function renderWorker( object $timer ): string
+	protected function renderWorker( object $timer, string $labelWorker ): string
 	{
 		if( !class_exists( 'View_Helper_Member' ) )
 			return '';
 		$helper	= new View_Helper_Member( $this->env );
 		$helper->setUser( $timer->workerId );
 		$helper->setMode( 'inline' );
-		$label	= HtmlTag::create( 'span', 'Bearbeiter: ', ['class' => 'muted'] );
+		$label	= HtmlTag::create( 'span', $labelWorker.' ', ['class' => 'muted'] );
 		return HtmlTag::create( 'div', $label.$helper->render(), ['class' => 'autocut'] );
 	}
 }

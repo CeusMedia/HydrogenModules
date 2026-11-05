@@ -40,7 +40,7 @@ if( $templates ){
 		$cellLink		= HtmlTag::create( 'td', $link, ['class' => 'autocut'] );
 		$theme			= HtmlTag::create( 'small', $w->noTheme, ['class' => 'muted'] );
 		if( $template->themeId && $template->theme )
-		 	$theme		= $template->theme->title.' '.HtmlTag::create( 'small', '(Version '.$template->theme->version.')', ['class' => 'muted'] );
+		 	$theme		= $template->theme->title.' '.HtmlTag::create( 'small', sprintf( $w->labelThemeVersion, $template->theme->version ), ['class' => 'muted'] );
 		$cellTheme		= HtmlTag::create( 'td', $theme );
 		$cellStatus		= HtmlTag::create( 'td', $iconStatus.' '.$words->states[$template->status] );
 		$cellCreated	= HtmlTag::create( 'td', date( 'd.m.Y', $template->createdAt ) );
@@ -67,15 +67,15 @@ $buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, [
 	'class'	=> 'btn not-btn-small'
 ] );
 if( $limiter && $limiter->denies( 'Work.Newsletter.Template:maxItems', count( $templates ) + 1 ) ){
-	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->link_add, [
+	$buttonAdd	= HtmlTag::create( 'button', $iconAdd.$w->linkAdd, [
 		'type'		=> 'button',
 		'class'		=> 'btn not-btn-small btn-success disabled',
-		'onclick'	=> 'alert("Weitere Templates sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertLimitReached ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 	$buttonInstall	= HtmlTag::create( 'a', $iconInstall.$w->linkInstall, [
 		'type'		=> 'button',
 		'class'		=> 'btn not-btn-small disabled',
-		'onclick'	=> 'alert("Weitere Templates sind in dieser Demo-Installation nicht möglich.")',
+		'onclick'	=> 'alert('.htmlspecialchars( json_encode( $w->alertLimitReached ), ENT_QUOTES, 'UTF-8' ).')',
 	] );
 }
 

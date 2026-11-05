@@ -51,7 +51,7 @@ foreach( $notes['list'] as $note ){
 	}
 	ksort( $listTags );
 //	$listTags	= '<div class="pull-right">'.join( ' ', $listTags ).'</div>';
-	$listTags	= $listTags ? '<i class="icon-tags"></i> '.join( ', ', $listTags ) : '<em><small class="muted">Keine Tags.</small></em>';
+	$listTags	= $listTags ? '<i class="icon-tags"></i> '.join( ', ', $listTags ) : '<em><small class="muted">'.$w->noTags.'</small></em>';
 	$spanTags	= '<span class="">'.$listTags.'</span>';
 	$spanAuthor	= '';
 	if( $note->user )
@@ -66,7 +66,7 @@ foreach( $notes['list'] as $note ){
 if( $list )
 	$list	= '<ul class="results">'.join( $list ).'</ul>';
 else
-	$list	= '<p><em>Nichts gefunden.</em></p>';
+	$list	= '<p><em>'.$w->noEntries.'</em></p>';
 
 $pagination	= $pagination->render();
 

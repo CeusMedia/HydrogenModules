@@ -36,13 +36,13 @@ if( $issue->managerId ){
 if( empty( $issue->project ) ){
 	$issue->project	= (object) [
 		'status'	=> '',
-		'title'		=> '<em><small class="muted">unbekannt</small></em>',
+		'title'		=> '<em><small class="muted">'.$words['edit']['unknown'].'</small></em>',
 	];
 }
 
 return '
 <div class="content-panel">
-	<h3>Informationen</h3>
+	<h3>'.$words['edit']['headingInfo'].'</h3>
 	<div class="content-panel-inner">
 		<dl class="not-info not-list facts-vertical">
 			<dt>'.$words['edit']['labelId'].'</dt>

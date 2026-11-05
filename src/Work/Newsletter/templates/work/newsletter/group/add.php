@@ -22,7 +22,7 @@ extract( $view->populateTexts( ['above', 'bottom', 'info', 'top'], 'html/work/ne
 $iconCancel		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] ).'&nbsp;';
 $iconSave		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] ).'&nbsp;';
 
-$optGroup	= ['' => 'keine'];
+$optGroup	= ['' => $w->optionNone];
 foreach( $groups as $item )
 	$optGroup[$item->newsletterGroupId]	= $item->title.' ('.$item->count.')';
 $optGroup	= HtmlElements::Options( $optGroup );
@@ -32,12 +32,12 @@ if( $env->getModules()->get( 'Work_Newsletter' )->getConfigAsDictionary()->get( 
 	$copyUsersFromGroups	= '
 					<div class="row-fluid">
 						<div class="span12">
-							<label for="input_copyUsersOfGroupIds">Leser diese Empfängerliste(n) übernehmen</label>
+							<label for="input_copyUsersOfGroupIds">'.$w->labelCopyUsersOfGroupIds.'</label>
 							<select name="copyUsersOfGroupIds[]" id="input_copyUsersOfGroupIds" multiple="multiple" size="8" class="span12 multiple">'.$optGroup.'</select>
 						</div>
 					</div>
 					<div class="alert alert-info">
-						<strong>Hinweis:</strong> Das Übernehmen von Lesern aus anderen Empfängerlisten muss rechtlich abgesichert sein, also in den Nutzungsbedingungen oder Datenschutzrechtlinien explizit erlaubt worden sein.
+						'.$w->hintCopyUsers.'
 					</div>
 ';
 
@@ -57,7 +57,7 @@ if( $useUserGroupRelations ){
 	$groupRelations	= '
 		<div class="row-fluid">
 			<div class="span12">
-				<label for="input_useGroupRelations">geerbte Gruppenzuweisung</label>
+				<label for="input_useGroupRelations">'.$w->labelGroupRelations.'</label>
 				<input type="hidden" name="useGroupRelations" id="input_useGroupRelations" value="1"/>
 				<div class="checkbox-list" id="group-group-relations">
 					'.join( $list ).'
