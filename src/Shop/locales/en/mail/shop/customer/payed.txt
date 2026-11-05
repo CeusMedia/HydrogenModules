@@ -1,7 +1,7 @@
 <%?words.heading%>
 
-Wir haben den Betrag dankend erhalten und senden die Ware nun an die Lieferadresse.
-Über Lieferverzögerungen werden wir Sie rechtzeitig informieren.
+We have gratefully received the payment and will now send the goods to the delivery address.
+We will inform you in good time about any delivery delays.
 
 
 <%?words.mail.headingFacts%>

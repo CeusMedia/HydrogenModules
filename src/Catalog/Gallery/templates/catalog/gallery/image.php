@@ -11,6 +11,10 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var string $pathImages */
 /** @var int $bridgeId */
 /** @var ?object $image */
+/** @var array $words */
+/** @var int|float $tax */
+
+$w	= (object) $words['image'];
 
 $iconCategory	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-th'] );
 $iconPrev		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
@@ -52,28 +56,28 @@ $isInCart	= $logic->countArticleInCart( $bridgeId, $articleId );
 
 $buttonOrder		= "";
 if( $hasShop ){
-	$buttonOrder	= '<button type="button" disabled="disabled" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;in den Warenkorb</button>';
+	$buttonOrder	= '<button type="button" disabled="disabled" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;'.$w->buttonCart.'</button>';
 	if( !$isInCart )
-		$buttonOrder	= '<a href="./catalog/gallery/order/'.$image->galleryImageId.'" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;in den Warenkorb</a>';
+		$buttonOrder	= '<a href="./catalog/gallery/order/'.$image->galleryImageId.'" class="btn btn btn-success"><i class="icon icon-shopping-cart icon-white"></i>&nbsp;'.$w->buttonCart.'</a>';
 }
 
 $buttonBack	= HtmlTag::create( 'a', $iconCategory, [
 	'href'		=> './catalog/gallery/category/'.$category->galleryCategoryId,
 	'class'		=> 'btn not-btn-small btn-large',
-	'alt'		=> 'zur Kategorie',
-	'title'		=> 'zur Kategorie',
+	'alt'		=> $w->buttonCategory,
+	'title'		=> $w->buttonCategory,
 ] );
 $buttonPrev		= HtmlTag::create( 'a', $iconPrev, [
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
-	'title'		=> 'zum Vorherigen',
-	'alt'		=> 'zum Vorherigen',
+	'title'		=> $w->buttonPrev,
+	'alt'		=> $w->buttonPrev,
 ] );
 $buttonNext		= HtmlTag::create( 'a', $iconNext, [
 	'class'		=> 'btn not-btn-small btn-large',
 	'disabled'	=> 'disabled',
-	'title'		=> 'zum Nächsten',
-	'alt'		=> 'zum Nächsten',
+	'title'		=> $w->buttonNext,
+	'alt'		=> $w->buttonNext,
 ] );
 
 if( $pos > 0 ){
@@ -81,8 +85,8 @@ if( $pos > 0 ){
 	$buttonPrev		= HtmlTag::create( 'a', $iconPrev, [
 		'href'		=> './catalog/gallery/image/'.$imagePrev->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
-		'title'		=> 'zum Vorherigen',
-		'alt'		=> 'zum Vorherigen',
+		'title'		=> $w->buttonPrev,
+		'alt'		=> $w->buttonPrev,
 	] );
 }
 if( $pos < count( $images ) - 1 ){
@@ -90,8 +94,8 @@ if( $pos < count( $images ) - 1 ){
 	$buttonNext		= HtmlTag::create( 'a', $iconNext, [
 		'href'		=> './catalog/gallery/image/'.$imageNext->galleryImageId,
 		'class'		=> 'btn not-btn-small btn-large',
-		'title'		=> 'zum Nächsten',
-		'alt'		=> 'zum Nächsten',
+		'title'		=> $w->buttonNext,
+		'alt'		=> $w->buttonNext,
 	] );
 }
 
@@ -127,18 +131,18 @@ return '
 			</div>
 			<div class="span3" id="catalog-gallery-view-facts">
 				<dl class="facts">
-					<dt>Titel</dt>
+					<dt>'.$w->labelTitle.'</dt>
 					<dd>'.$image->title.'</dd>
-					<dt>Dateiname</dt>
+					<dt>'.$w->labelFilename.'</dt>
 					<dd>'.$image->filename.'</dd>
-					<dt>Dateigröße</dt>
+					<dt>'.$w->labelFileSize.'</dt>
 					<dd>'.UnitFormater::formatBytes( filesize( $pathOriginal.$image->filename ) ).'</dd>
-					<dt>Auflösung</dt>
+					<dt>'.$w->labelResolution.'</dt>
 					<dd>'.$source->getWidth().' × '.$source->getHeight().'px</dd>
-					<dt>Preis</dt>
+					<dt>'.$w->labelPrice.'</dt>
 					<dd>
 						'.number_format( $image->price, 2, ',', NULL ).'&nbsp;&euro;<br/>
-						<small class="muted">inklusive '.$tax.'% MwSt.</small>
+						<small class="muted">'.sprintf( $w->textTax, $tax ).'</small>
 					</dd>
 				</dl>
 				<div class="buttonbar">

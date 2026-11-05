@@ -32,7 +32,7 @@ class Controller_Catalog extends Controller
 		/** @var object $article */
 		$article	= $this->logic->getArticle( $articleId );
 		if( !$article ){
-			$this->messenger->noteError( 'Der angeforderte Artikel existiert nicht.' );
+			$this->messenger->noteError( $this->getWords( 'msg', 'catalog' )['errorInvalidArticle'] );
 			$this->restart( NULL, TRUE );
 		}
 		$logicShop	= new Logic_Shop( $this->env );

@@ -13,18 +13,16 @@ if( !in_array( $article->status, [-1, 0, 1] ) )
 
 $w				= (object) $words['article'];
 
-/*  @todo extract locales to new section 'article-panel-order' */
-//$w				= (object) $words['article-panel-order'];
-//$labelHeading		= 'Bestellen';
-$labelHeading		= '';
-$labelButtonOrder	= 'bestellen';
-$labelButtonCart	= 'zum Warenkorb';
+$wo				= (object) $words['article-panel-order'];
+$labelHeading		= $wo->heading;
+$labelButtonOrder	= $wo->buttonOrder;
+$labelButtonCart	= $wo->buttonCart;
 
 $iconOrder		= HtmlTag::create( 'i', '', ['class' => 'icon-plus'] );
 $iconCart		= HtmlTag::create( 'i', '', ['class' => 'icon-shopping-cart icon-white'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
-	$labelButtonOrder	= 'in den Warenkorb';
-	$labelButtonCart	= 'weiter zur Kasse';
+	$labelButtonOrder	= $wo->buttonOrderToCart;
+	$labelButtonCart	= $wo->buttonCartCheckout;
 	$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-plus'] );
 	$iconOrder		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-check'] );
 	$iconCart		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-shopping-cart'] );

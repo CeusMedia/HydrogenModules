@@ -48,7 +48,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 		if( !( $sourceId = $this->request->get( 'source' ) ) )
 			$this->restart( 'shop/payment' );
 		if( $sourceId != $this->session->get( 'shop_payment_stripe_sourceId' ) ){
-			$this->messenger->noteError( 'Invalid payment source ID' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidSource'] );
 			$this->restart( 'shop/payment' );
 		}
 		$source	= Source::retrieve( $sourceId );
@@ -57,11 +57,11 @@ class Controller_Shop_Payment_Stripe extends Controller
 				case 'succeeded':
 					$this->logicPayment->updatePayment( $source );
 					$this->logicShop->setOrderStatus( $this->orderId, Model_Shop_Order::STATUS_PAYED );
-					$this->messenger->noteSuccess( 'Die Bezahlung wurde erfolgreich durchgeführt.' );
+					$this->messenger->noteSuccess( $this->getWords( 'msg' )['successPayed'] );
 					$this->restart( 'shop/finish' );
 				case 'failed':
 					$this->logicPayment->updatePayment( $source );
-					$this->messenger->noteSuccess( 'Die Bezahlung wurde abgebrochen.' );
+					$this->messenger->noteSuccess( $this->getWords( 'msg' )['noticeCancelled'] );
 					$this->restart( 'shop/checkout' );
 			}
 		}
@@ -102,7 +102,7 @@ class Controller_Shop_Payment_Stripe extends Controller
  					$this->request->get( 'stripeToken' )
 				);
 				$this->logicPayment->notePayment( $charge, $this->userId, $this->orderId );
-				$this->messenger->noteSuccess( 'Die Bezahlung wurde erfolgreich durchgeführt.' );
+				$this->messenger->noteSuccess( $this->getWords( 'msg' )['successPayed'] );
 				$this->restart( 'shop/finish' );
 			}
 			catch( Exception $e ){
@@ -253,7 +253,7 @@ class Controller_Shop_Payment_Stripe extends Controller
 	{
 		$orderId		= $this->modelCart->get( 'orderId' );
 		if( !$orderId ){
-			$this->messenger->noteError( 'Invalid order' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidOrder'] );
 			$this->restart( 'shop' );
 		}
 		return $this->logicShop->getOrder( $orderId );
@@ -269,11 +269,11 @@ class Controller_Shop_Payment_Stripe extends Controller
 		$modelAddress		= new Model_Address( $this->env );
 
 		if( !$this->localUserId ){
-			$this->messenger->noteError( 'Not authenticated' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorNotAuthenticated'] );
 			$this->restart( 'shop/customer' );
 		}
 		if( $order->userId != $this->localUserId ){
-			$this->messenger->noteError( 'Access to order denied for current user' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorAccessDenied'] );
 			$this->restart( 'shop/customer' );
 		}
 		$modelUser	= new Model_User( $this->env );

@@ -1,2 +1,5 @@
 <?php
-return '<em class="muted">Noch nicht implementiert.</em>';
+
+/** @var array<array<string,string>> $words */
+
+return '<em class="muted">'.$words['index']['notImplemented'].'</em>';

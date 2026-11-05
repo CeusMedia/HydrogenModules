@@ -21,12 +21,12 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 $helper	= new View_Helper_Catalog( $env );
 $words	= (object) $words['search'];
 
-$optAuthor	= ['' => 'alle'];
+$optAuthor	= ['' => $words->optionAll];
 foreach( $authors as $author )
 	$optAuthor[$author->authorId]	= $author->lastname.', '.$author->firstname;
 $optAuthor	= HtmlElements::Options( $optAuthor, $searchAuthorId );
 
-$optCategory	= ['' => 'alle'];
+$optCategory	= ['' => $words->optionAll];
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->label_de;
 $optCategory	= HtmlElements::Options( $optCategory, $searchCategoryId );

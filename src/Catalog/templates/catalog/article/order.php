@@ -12,7 +12,7 @@ $iconCart		= '<i class="icon-shopping-cart icon-white"></i>';
 
 $panelOrder		= '';
 if( in_array( $article->status, [-1, 0, 1] ) ){
-	$buttonCart		= '&nbsp;<a href="./shop/cart" class="btn btn-success btn-small">'.$iconCart.' zum Warenkorb</a>';
+	$buttonCart		= '&nbsp;<a href="./shop/cart" class="btn btn-success btn-small">'.$iconCart.' '.$w->button_cart.'</a>';
 	if( !$cart )
 		$buttonCart		= '';
 
@@ -25,7 +25,7 @@ if( in_array( $article->status, [-1, 0, 1] ) ){
 				<input type="hidden" name="articleId" value="'.$article->articleId.'"/>
 				<label for="input_quantity">'.$w->quantity.'</label>
 				<input type="text" name="quantity" id="input_quantity" class="span2 numeric" required="required" value="'.$quantity.'"/>
-				<button type="submit" name="order" class="btn not-btn-small"><i class="icon-plus"></i> bestellen</button>
+				<button type="submit" name="order" class="btn not-btn-small"><i class="icon-plus"></i> '.$w->button_order.'</button>
 				'.$buttonCart.'
 			</form>
 		</div>

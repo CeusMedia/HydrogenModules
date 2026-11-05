@@ -23,12 +23,12 @@ use CeusMedia\HydrogenFramework\View;
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 $words	= (object) $words['search'];
 
-$optAuthor	= ['' => 'alle'];
+$optAuthor	= ['' => $words->optAll];
 foreach( $authors as $author )
 	$optAuthor[$author->authorId]	= $author->lastname.', '.$author->firstname;
 $optAuthor	= HtmlElements::Options( $optAuthor, $searchAuthorId );
 
-$optCategory	= ['' => 'alle'];
+$optCategory	= ['' => $words->optAll];
 foreach( $categories as $category )
 	$optCategory[$category->categoryId]	= $category->label_de;
 $optCategory	= HtmlElements::Options( $optCategory, $searchCategoryId );

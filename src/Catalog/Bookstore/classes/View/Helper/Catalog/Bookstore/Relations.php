@@ -9,13 +9,15 @@ class View_Helper_Catalog_Bookstore_Relations
 	protected Logic_Catalog_Bookstore $logic;
 	protected int|string $articleId		= '0';
 	protected int $limit				= 20;
-	protected string $heading			= "Ähnliche Veröffentlichungen";
+	protected string $heading			= '';
 	protected array $tags				= [];
 
 	public function __construct( Environment $env )
 	{
 		$this->env		= $env;
 		$this->logic	= new Logic_Catalog_Bookstore( $env );
+		$words			= $env->getLanguage()->getWords( 'catalog/bookstore' );
+		$this->heading	= $words['article-relations']['heading'];
 	}
 
 	public function render(): string

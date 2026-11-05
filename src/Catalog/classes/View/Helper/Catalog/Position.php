@@ -65,8 +65,10 @@ class View_Helper_Catalog_Position
 	{
 		$level		= count( $categories );
 		$labelKey	= 'label_'.$this->language->getLanguage();
+		$labelRoot	= $this->language->getSection( 'catalog', 'index' )['position_root'];
 		array_unshift( $categories, (object) [
-			'label_de'		=> 'Übersicht',
+			'label_de'		=> $labelRoot,
+			$labelKey		=> $labelRoot,
 			'categoryId'	=> 0,
 		]);
 		$list	= [];

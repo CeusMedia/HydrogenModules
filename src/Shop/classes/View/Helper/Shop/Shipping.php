@@ -55,7 +55,8 @@ class View_Helper_Shop_Shipping
 		$grades		= $modelGrade->getAll();
 		$list		= [];
 		$row		= [];
-		$row[]		= HtmlTag::create( 'th', '<big><strong>Versandkosten</strong></big>' );
+		$wordsCart	= $this->env->getLanguage()->getWords( 'shop' )['panel-cart'];
+		$row[]		= HtmlTag::create( 'th', '<big><strong>'.$wordsCart['labelShipping'].'</strong></big>' );
 		foreach( $grades as $grade )
 			$row[]	= HtmlTag::create( 'th', $grade->title );
 		$list[]		= HtmlTag::create( 'tr', $row );

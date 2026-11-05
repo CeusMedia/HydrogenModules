@@ -1,8 +1,8 @@
 <%?words.heading%>
 
-Leider ist die Bezahlung Ihrer Bestellung fehlgeschlagen.
-Die Bestellung wurde daher abgebrochen.
-Sollten Sie noch immer Interesse haben, lösen Sie bitte eine neue Bestellung aus.
+Unfortunately, the payment of your order has failed.
+Therefore the order has been cancelled.
+If you are still interested, please place a new order.
 
 
 <%?words.mail.headingFacts%>

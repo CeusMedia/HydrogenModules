@@ -5,7 +5,7 @@
 	<title>Catalog: Gallery</title>
 	<description><![CDATA[Development meta package]]></description>
 	<category>Catalog</category>
-	<version>0.3.8</version>
+	<version>0.3.9</version>
 	<log version="0.1.0">Initial prototype.</log>
 	<log version="0.2.0">Separation to Hydrogen module.</log>
 	<log version="0.2.1">Improved views.</log>
@@ -24,6 +24,7 @@
 	<log version="0.3.6">Add single flag on image model.</log>
 	<log version="0.3.7">Add view helper for shop service panel.</log>
 	<log version="0.3.8">Extend bridge logic for quantity changes.</log>
+	<log version="0.3.9">Complete German and English locales and extract hard-coded texts.</log>
 <!--	<log version="0.4">Support localization.</log>-->
 	<company site="https://ceusmedia.de/">Ceus Media</company>
 	<author email="christian.wuerker@ceusmedia.de">Christian W&#xFC;rker</author>
@@ -44,6 +45,15 @@
 		<locale>de/html/catalog/gallery/index/content.html</locale>
 		<locale>de/html/catalog/gallery/index/top.html</locale>
 		<locale>de/html/catalog/gallery/delivery.html</locale>
+		<locale>en/catalog/gallery.ini</locale>
+		<locale>en/html/catalog/gallery/category/bottom.html</locale>
+		<locale>en/html/catalog/gallery/category/top.html</locale>
+		<locale>en/html/catalog/gallery/image/bottom.html</locale>
+		<locale>en/html/catalog/gallery/image/top.html</locale>
+		<locale>en/html/catalog/gallery/index/bottom.html</locale>
+		<locale>en/html/catalog/gallery/index/content.html</locale>
+		<locale>en/html/catalog/gallery/index/top.html</locale>
+		<locale>en/html/catalog/gallery/delivery.html</locale>
 		<template>catalog/gallery/image.php</template>
 		<template>catalog/gallery/index.php</template>
 		<template>catalog/gallery/category.php</template>

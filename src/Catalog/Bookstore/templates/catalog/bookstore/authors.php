@@ -2,7 +2,10 @@
 use CeusMedia\Common\UI\HTML\Tag as HtmlTag;
 
 /** @var Environment $env */
+/** @var array $words */
 /** @var object[] $authors */
+
+$w		= (object) $words['authors'];
 
 $helper	= new View_Helper_Catalog_Bookstore( $env );
 
@@ -14,6 +17,6 @@ foreach( $authors as $author ){
 $list	= HtmlTag::create( 'ul', $list );
 
 return '
-<h3>Autoren</h3>
+<h3>'.$w->heading.'</h3>
 '.$list.'
 ';

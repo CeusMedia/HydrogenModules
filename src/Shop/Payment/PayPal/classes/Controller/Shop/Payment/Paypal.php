@@ -129,9 +129,10 @@ class Controller_Shop_Payment_Paypal extends Controller
 	public function pay(): void
 	{
 		$messenger	= $this->env->getMessenger();
+		$words		= (object) $this->getWords( 'msg' );
 		$paymentId	= $this->session->get( 'paymentId' );
 		if( !$paymentId ){
-			$messenger->noteError( 'Kein Bezahlvorgang eingeleitet. Weiterleitung zum Warenkorb.' );
+			$messenger->noteError( $words->errorNoPayment );
 			$this->restart( './shop/cart' );
 		}
 
@@ -140,7 +141,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 			$this->logicShop->setOrderStatus( $payment->orderId, 3 );
 		}
 		catch( Exception $e ){
-			$messenger->noteError( 'Ungültiger Bezahlvorgang. Weiterleitung zum Warenkorb.' );
+			$messenger->noteError( $words->errorInvalidPayment );
 			$this->restart( './shop/cart' );
 		}
 		if( self::STRATEGY_REST === $this->strategy ){
@@ -151,7 +152,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 				$this->restart( './shop/finish' );
 			}
 			catch( Exception $e ){
-				$messenger->noteError( 'Bezahlvorgang gescheitert. Weiterleitung zum Warenkorb.' );
+				$messenger->noteError( $words->errorPaymentFailed );
 				$this->restart( './shop/cart' );
 			}
 		}
@@ -174,7 +175,7 @@ class Controller_Shop_Payment_Paypal extends Controller
 		$modelCart			= new Model_Shop_Cart( $this->env );
 		$this->orderId		= $modelCart->get( 'orderId' );
 		if( !$this->orderId ){
-			$this->messenger->noteError( 'Invalid order' );
+			$this->messenger->noteError( $this->getWords( 'msg' )['errorInvalidOrder'] );
 			$this->restart( 'shop' );
 		}
 		$this->order		= $this->logicShop->getOrder( $this->orderId );

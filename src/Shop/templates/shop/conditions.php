@@ -13,7 +13,7 @@ $tabContent	= '
 <form action="./shop/conditions" method="post">
 	'.$textConditions.'
 	<br/>
-	<h4>Geschäftsbedingungen</h4>
+	<h4>'.$w->headingConditions.'</h4>
 	<div class="alert alert-success">
 		<div style="float: left; width: 30px;">
 			<div class="pull-right" style="padding-top: 7px">

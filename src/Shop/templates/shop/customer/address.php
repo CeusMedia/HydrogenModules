@@ -21,7 +21,7 @@ if( strlen( trim( $w->textTop ) ) )
 $tabContent	= $helperForm->render();
 
 $iconCancel	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-left'] );
-$hint		= HtmlTag::create( 'a', $iconCancel.' zurück zur Auswahl', [
+$hint		= HtmlTag::create( 'a', $iconCancel.' '.$words['customer']['buttonBackToSelection'], [
 	'href'		=> './shop/customer',
 	'class'		=> 'btn btn-small',
 ] );

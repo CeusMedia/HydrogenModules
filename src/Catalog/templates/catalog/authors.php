@@ -16,6 +16,6 @@ foreach( $authors as $author ){
 $list	= HtmlTag::create( 'ul', $list );
 
 return '
-<h3>Autoren</h3>
+<h3>'.$words['authors']['heading'].'</h3>
 '.$list.'
 ';

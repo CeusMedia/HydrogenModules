@@ -7,6 +7,8 @@ use CeusMedia\HydrogenFramework\Environment\Web as WebEnvironment;
 /** @var object[] $products */
 /** @var Logic_Catalog_Provision $logic */
 
+$w	= (object) $env->getLanguage()->getSection( 'catalog/provision', 'product.index' );
+
 $iconProducts	= '';
 $iconLicense	= HtmlTag::create( 'i', '', ['class' => 'arrow-right'] );
 if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
@@ -14,7 +16,7 @@ if( $env->getModules()->has( 'UI_Font_FontAwesome' ) ){
 	$iconLicense	= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-arrow-right'] );
 }
 
-$list	= HtmlTag::create( 'div', 'Keine Produkte vorhanden.', ['class' => 'alert alert-notice'] );
+$list	= HtmlTag::create( 'div', $w->noEntries, ['class' => 'alert alert-notice'] );
 if( $products ){
 	$list	= [];
 	foreach( $products as $product ){
@@ -23,7 +25,7 @@ if( $products ){
 				HtmlTag::create( 'h4', $product->title ),
 				HtmlTag::create( 'p', $product->description ),
 				HtmlTag::create( 'p', [
-					HtmlTag::create( 'a', $iconLicense.'&nbsp;weiter', [
+					HtmlTag::create( 'a', $iconLicense.'&nbsp;'.$w->buttonNext, [
 	//					'href'		=> './catalog/provision/product/'.$product->productId.'-'.$logic->getUriPart( $product->title ),
 						'href'		=> $logic->getProductUri( $product ),
 					 	'class'		=> 'btn btn-large',
@@ -36,6 +38,6 @@ if( $products ){
 }
 
 extract( $view->populateTexts( ['top', 'bottom'], 'catalog/provision/product/index' ) );
-$textTop	= $textTop ?: '<h2>'.$iconProducts.'&nbsp;Produkte</h2>';
+$textTop	= $textTop ?: '<h2>'.$iconProducts.'&nbsp;'.$w->heading.'</h2>';
 
 return $textTop.$list.$textBottom;

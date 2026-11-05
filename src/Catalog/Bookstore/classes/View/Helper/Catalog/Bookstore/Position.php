@@ -63,8 +63,9 @@ class View_Helper_Catalog_Bookstore_Position
 	{
 		$level		= count( $categories );
 		$labelKey	= 'label_'.$this->language->getLanguage();
+		$words		= $this->language->getWords( 'catalog/bookstore' );
 		array_unshift( $categories, (object) [
-			'label_de'		=> 'Übersicht',
+			$labelKey		=> $words['position']['overview'],
 			'categoryId'	=> 0,
 		] );
 		$list	= [];
@@ -77,6 +78,6 @@ class View_Helper_Catalog_Bookstore_Position
 			$list[]	= $link;
 		}
 		$list	= join( '&nbsp;>&nbsp;', $list );
-		return '<div id="layout-position">Position: '.$list.'</div>';
+		return '<div id="layout-position">'.$words['position']['label'].': '.$list.'</div>';
 	}
 }

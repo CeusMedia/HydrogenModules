@@ -15,12 +15,12 @@ if( isset( $useOauth2 ) && $useOauth2 ){
 	$helper				= new View_Helper_Oauth_ProviderButtons( $env );
 	if( $helper->count() ){
 		$iconUnbind		= HtmlTag::create( 'i', '', ['class' => 'fa fa-fw fa-remove'] );
-		$helper->setDropdownLabel( 'weitere' );
+		$helper->setDropdownLabel( $wLogin->labelOauth2More );
 		$helper->setLinkPath( './auth/oauth2/login/' );
 		$helper->setFrom( 'shop/customer' );
 		$fieldOauth2	= HtmlTag::create( 'div', [
 			HtmlTag::create( 'div', [
-				HtmlTag::create( 'label', 'Anmelden mit' ),
+				HtmlTag::create( 'label', $wLogin->labelOauth2 ),
 				HtmlTag::create( 'div', [
 					HtmlTag::create( 'div', $helper->render(), ['class' => 'span12'] ),
 				], ['class' => 'row-fluid'] ),

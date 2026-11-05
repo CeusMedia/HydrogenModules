@@ -79,7 +79,7 @@ class Controller_Shop_Customer extends Controller
 				$mismatchingType	= $relationType === $address->relationType;
 				$mismatchingId		= $address->relationId == $relationId;
 				if( !$mismatchingType || !$mismatchingId ){
-					$this->messenger->noteError( 'Access to address denied.' );
+					$this->messenger->noteError( $this->words->errorAddressAccessDenied );
 					$this->restart( NULL, TRUE );
 				}
 //				$data->set( 'country', $countryKey );
@@ -140,13 +140,13 @@ class Controller_Shop_Customer extends Controller
 			$this->restart( NULL, TRUE );
 		}
 		if( !$addressId ){
-			$this->messenger->noteError( 'No address ID given.' );
+			$this->messenger->noteError( $this->words->errorAddressIdMissing );
 			$this->restart( NULL, TRUE );
 		}
 		/** @var ?Entity_Address $address */
 		$address	= $this->modelAddress->get( $addressId );
 		if( !$address ){
-			$this->messenger->noteError( 'Invalid address ID given.' );
+			$this->messenger->noteError( $this->words->errorAddressIdInvalid );
 			$this->restart( NULL, TRUE );
 		}
 		$this->addData( 'address', $address );
